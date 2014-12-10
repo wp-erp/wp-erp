@@ -60,7 +60,7 @@ class WeDevs_ERP {
         static $instance = false;
 
         if ( ! $instance ) {
-            $instance = new WeDevs_ERP();
+            $instance = new self();
         }
 
         return $instance;
@@ -99,6 +99,7 @@ class WeDevs_ERP {
         define( 'WPERP_FILE', __FILE__ );
         define( 'WPERP_PATH', dirname( WPERP_FILE ) );
         define( 'WPERP_INCLUDES', WPERP_PATH . '/includes' );
+        define( 'WPERP_MODULES', WPERP_PATH . '/modules' );
         define( 'WPERP_URL', plugins_url( '', WPERP_FILE ) );
         define( 'WPERP_ASSETS', WPERP_URL . '/assets' );
     }
@@ -111,6 +112,7 @@ class WeDevs_ERP {
     private function includes() {
         include_once WPERP_INCLUDES . '/functions.php';
         include_once WPERP_INCLUDES . '/class-install.php';
+        include_once WPERP_MODULES . '/modules.php';
 
         if ( is_admin() ) {
             include_once WPERP_INCLUDES . '/admin/functions.php';
@@ -127,6 +129,7 @@ class WeDevs_ERP {
 
         // Localize our plugin
         add_action( 'init', array( $this, 'localization_setup' ) );
+        add_action( 'init', array( $this, 'load_module' ) );
 
         // Loads frontend scripts and styles
         add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
@@ -151,26 +154,23 @@ class WeDevs_ERP {
      * @uses wp_enqueue_style
      */
     public function admin_enqueue_scripts() {
-
-        /**
-         * All styles goes here
-         */
         wp_enqueue_style( 'wp-erp-styles', WPERP_ASSETS . '/css/admin/admin.css', false, date( 'Ymd' ) );
+    }
 
-        /**
-         * All scripts goes here
-         */
-        // wp_enqueue_script( 'wp-erp-scripts', plugins_url( 'js/script.js', __FILE__ ), array( 'jquery' ), false, true );
+    /**
+     * Load the current ERP module
+     *
+     * We don't load every module at once, just load
+     * what is necessary
+     *
+     * @return void
+     */
+    public function load_module() {
+        $current_module = erp_get_current_module();
 
-
-        /**
-         * Example for setting up text strings from Javascript files for localization
-         *
-         * Uncomment line below and replace with proper localization variables.
-         */
-        // $translation_array = array( 'some_string' => __( 'Some string to translate', 'wp-erp' ), 'a_value' => '10' );
-        // wp_localize_script( 'base-plugin-scripts', 'wp-erp', $translation_array ) );
-
+        if ( $current_module ) {
+            do_action( 'wp-erp-load-module_' . $current_module['slug'], $current_module );
+        }
     }
 
 } // WeDevs_ERP

@@ -15,7 +15,7 @@ class WDP_Admin_Menu {
     public function __construct() {
         add_action( 'init', array( $this, 'do_mode_switch' ) );
 
-        add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+        // add_action( 'admin_menu', array( $this, 'admin_menu' ) );
         add_action( 'admin_menu', array( $this, 'hide_admin_menus' ) );
 
         add_action( 'admin_bar_menu', array( $this, 'admin_bar_mode_switch' ), 9999 );
@@ -43,7 +43,7 @@ class WDP_Admin_Menu {
         }
 
         $modules      = erp_get_modules();
-        $current_mode = erp_admin_get_current_mode();
+        $current_mode = erp_get_current_module();
 
         $title        = __( 'Switch ERP Mode', 'wp-erp' );
         $icon         = '<span class="ab-icon dashicons-randomize"></span>';
@@ -97,15 +97,7 @@ class WDP_Admin_Menu {
 
         update_user_meta( $current_user->ID, '_erp_mode', $_REQUEST['erp-mode'] );
 
-        $redirect_to = remove_query_arg( array(
-            'erp-mode', 'erp_mode_nonce',
-            'user_switched', 'switched_off', 'switched_back',
-            'message', 'update', 'updated', 'settings-updated', 'saved',
-            'activated', 'activate', 'deactivate', 'enabled', 'disabled',
-            'locked', 'skipped', 'deleted', 'trashed', 'untrashed',
-        ) );
-
-        wp_redirect( $redirect_to );
+        wp_redirect( admin_url( 'index.php' ) );
         exit;
     }
 
