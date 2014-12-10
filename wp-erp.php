@@ -7,7 +7,7 @@
  * Author URI: http://wedevs.com
  * Version: 1.0
  * License: GPL2
- * Text Domain: payroll
+ * Text Domain: wp-erp
  * Domain Path: languages
  *
  * Copyright (c) 2014 Tareq Hasan (email: info@wedevs.com). All rights reserved.
@@ -86,7 +86,7 @@ class WeDevs_ERP {
         $this->init_actions();
 
         // Loaded action
-        do_action( 'payroll_loaded' );
+        do_action( 'erp_loaded' );
     }
 
     /**
@@ -100,6 +100,7 @@ class WeDevs_ERP {
         define( 'WPERP_PATH', dirname( WPERP_FILE ) );
         define( 'WPERP_INCLUDES', WPERP_PATH . '/includes' );
         define( 'WPERP_URL', plugins_url( '', WPERP_FILE ) );
+        define( 'WPERP_ASSETS', WPERP_URL . '/assets' );
     }
 
     /**
@@ -108,6 +109,7 @@ class WeDevs_ERP {
      * @return void
      */
     private function includes() {
+        include_once WPERP_INCLUDES . '/functions.php';
         include_once WPERP_INCLUDES . '/class-install.php';
 
         if ( is_admin() ) {
@@ -127,7 +129,7 @@ class WeDevs_ERP {
         add_action( 'init', array( $this, 'localization_setup' ) );
 
         // Loads frontend scripts and styles
-        // add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+        add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
     }
 
     /**
@@ -148,17 +150,17 @@ class WeDevs_ERP {
      * @uses wp_localize_script()
      * @uses wp_enqueue_style
      */
-    public function enqueue_scripts() {
+    public function admin_enqueue_scripts() {
 
         /**
          * All styles goes here
          */
-        wp_enqueue_style( 'wp-erp-styles', plugins_url( 'css/style.css', __FILE__ ), false, date( 'Ymd' ) );
+        wp_enqueue_style( 'wp-erp-styles', WPERP_ASSETS . '/css/admin/admin.css', false, date( 'Ymd' ) );
 
         /**
          * All scripts goes here
          */
-        wp_enqueue_script( 'wp-erp-scripts', plugins_url( 'js/script.js', __FILE__ ), array( 'jquery' ), false, true );
+        // wp_enqueue_script( 'wp-erp-scripts', plugins_url( 'js/script.js', __FILE__ ), array( 'jquery' ), false, true );
 
 
         /**
@@ -166,8 +168,8 @@ class WeDevs_ERP {
          *
          * Uncomment line below and replace with proper localization variables.
          */
-        // $translation_array = array( 'some_string' => __( 'Some string to translate', 'payroll' ), 'a_value' => '10' );
-        // wp_localize_script( 'base-plugin-scripts', 'payroll', $translation_array ) );
+        // $translation_array = array( 'some_string' => __( 'Some string to translate', 'wp-erp' ), 'a_value' => '10' );
+        // wp_localize_script( 'base-plugin-scripts', 'wp-erp', $translation_array ) );
 
     }
 

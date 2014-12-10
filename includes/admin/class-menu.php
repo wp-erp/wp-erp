@@ -13,8 +13,12 @@ class WDP_Admin_Menu {
      * @return void
      */
     public function __construct() {
+        add_action( 'init', array( $this, 'do_mode_switch' ) );
+
         add_action( 'admin_menu', array( $this, 'admin_menu' ) );
         add_action( 'admin_menu', array( $this, 'hide_admin_menus' ) );
+
+        add_action( 'admin_bar_menu', array( $this, 'admin_bar_mode_switch' ), 9999 );
     }
 
     /**
@@ -24,6 +28,85 @@ class WDP_Admin_Menu {
      */
     public function get_menu_position() {
         return apply_filters( 'payroll_menu_position', null );
+    }
+
+
+    /**
+     * Mode/Context switch for ERP
+     *
+     * @param WP_Admin_Bar $wp_admin_bar The admin bar object
+     */
+    public function admin_bar_mode_switch( $wp_admin_bar ) {
+        // bail if current user doesnt have cap
+        if ( ! current_user_can( 'manage_options' ) ) {
+            return;
+        }
+
+        $modules      = erp_get_modules();
+        $current_mode = erp_admin_get_current_mode();
+
+        $title        = __( 'Switch ERP Mode', 'wp-erp' );
+        $icon         = '<span class="ab-icon dashicons-randomize"></span>';
+        $text         = sprintf( '%s: %s', __( 'ERP Mode', 'wp-erp' ), $current_mode['title'] );
+
+
+        $wp_admin_bar->add_menu( array(
+            'id'        => 'erp-mode-switch',
+            'title'     => $icon . $text,
+            'href'      => '#',
+            'position'  => 0,
+            'meta'      => array(
+                'title' => $title
+            )
+        ) );
+
+        foreach ($modules as $key => $module) {
+            $wp_admin_bar->add_menu( array(
+                'id'     => 'erp-mode-' . $key,
+                'parent' => 'erp-mode-switch',
+                'title'  => $module['title'],
+                'href'   => wp_nonce_url( add_query_arg( 'erp-mode', $key ), 'erp_mode_nonce', 'erp_mode_nonce' )
+            ) );
+        }
+    }
+
+    /**
+     * Do the admin mode switch
+     *
+     * @return void
+     */
+    public function do_mode_switch() {
+        global $current_user;
+
+        // bail if current user doesnt have cap
+        if ( ! current_user_can( 'manage_options' ) ) {
+            return;
+        }
+
+        // check for our nonce
+        if ( ! isset( $_GET['erp_mode_nonce'] ) || ! wp_verify_nonce( $_GET['erp_mode_nonce'], 'erp_mode_nonce' ) ) {
+            return;
+        }
+
+        $modules = erp_get_modules();
+
+        // now check for our query string
+        if ( ! isset( $_REQUEST['erp-mode'] ) || ! array_key_exists( $_REQUEST['erp-mode'], $modules ) ) {
+            return;
+        }
+
+        update_user_meta( $current_user->ID, '_erp_mode', $_REQUEST['erp-mode'] );
+
+        $redirect_to = remove_query_arg( array(
+            'erp-mode', 'erp_mode_nonce',
+            'user_switched', 'switched_off', 'switched_back',
+            'message', 'update', 'updated', 'settings-updated', 'saved',
+            'activated', 'activate', 'deactivate', 'enabled', 'disabled',
+            'locked', 'skipped', 'deleted', 'trashed', 'untrashed',
+        ) );
+
+        wp_redirect( $redirect_to );
+        exit;
     }
 
     /**
