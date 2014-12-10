@@ -30,17 +30,6 @@ class Admin_Menu {
         add_submenu_page( 'erp-hr', __( 'Departments', 'wp-erp' ), __( 'Departments', 'wp-erp' ), 'manage_options', 'erp-hr-depts', array( $this, 'dashboard_page' ) );
         add_submenu_page( 'erp-hr', __( 'Positions', 'wp-erp' ), __( 'Positions', 'wp-erp' ), 'manage_options', 'erp-hr-positions', array( $this, 'dashboard_page' ) );
 
-        /** Payroll Management **/
-        add_menu_page( __( 'Payroll', 'wp-erp' ), __( 'Payroll', 'wp-erp' ), 'manage_options', 'erp-payroll', array( $this, 'dashboard_page' ), 'dashicons-category', null );
-
-        add_submenu_page( 'erp-payroll', __( 'Overview', 'wp-erp' ), __( 'Overview', 'wp-erp' ), 'manage_options', 'erp-payroll', array( $this, 'dashboard_page' ) );
-        add_submenu_page( 'erp-payroll', __( 'Compensation', 'wp-erp' ), __( 'Compensation', 'wp-erp' ), 'manage_options', 'erp-payroll-comp', array( $this, 'dashboard_page' ) );
-        add_submenu_page( 'erp-payroll', __( 'Salary Structure', 'wp-erp' ), __( 'Salary Structure', 'wp-erp' ), 'manage_options', 'erp-payroll-structure', array( $this, 'dashboard_page' ) );
-        add_submenu_page( 'erp-payroll', __( 'Pay Grade', 'wp-erp' ), __( 'Pay Grade', 'wp-erp' ), 'manage_options', 'erp-payroll-grade', array( $this, 'dashboard_page' ) );
-        add_submenu_page( 'erp-payroll', __( 'Benefits', 'wp-erp' ), __( 'Benefits', 'wp-erp' ), 'manage_options', 'erp-payroll-benefits', array( $this, 'dashboard_page' ) );
-        add_submenu_page( 'erp-payroll', __( 'Reports', 'wp-erp' ), __( 'Reports', 'wp-erp' ), 'manage_options', 'erp-payroll-reports', array( $this, 'dashboard_page' ) );
-        add_submenu_page( 'erp-payroll', __( 'History', 'wp-erp' ), __( 'History', 'wp-erp' ), 'manage_options', 'erp-payroll-history', array( $this, 'dashboard_page' ) );
-
         /** Leave Management **/
         add_menu_page( __( 'Leave Management', 'wp-erp' ), __( 'Leave Manage', 'wp-erp' ), 'manage_options', 'erp-leave', array( $this, 'dashboard_page' ), 'dashicons-arrow-right-alt', null );
 
