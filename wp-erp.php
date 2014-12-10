@@ -1,0 +1,186 @@
+<?php
+/**
+ * Plugin Name: WP ERP
+ * Description: ERP solution for WordPress
+ * Plugin URI: http://wedevs.com/plugin/erp/
+ * Author: Tareq Hasan
+ * Author URI: http://wedevs.com
+ * Version: 1.0
+ * License: GPL2
+ * Text Domain: payroll
+ * Domain Path: languages
+ *
+ * Copyright (c) 2014 Tareq Hasan (email: info@wedevs.com). All rights reserved.
+ *
+ * Released under the GPL license
+ * http://www.opensource.org/licenses/gpl-license.php
+ *
+ * This is an add-on for WordPress
+ * http://wordpress.org/
+ *
+ * **********************************************************************
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * **********************************************************************
+ */
+
+// don't call the file directly
+if ( !defined( 'ABSPATH' ) ) exit;
+
+/**
+ * WeDevs_ERP class
+ *
+ * @class WeDevs_ERP The class that holds the entire WeDevs_ERP plugin
+ */
+class WeDevs_ERP {
+
+    /**
+     * @var string
+     */
+    public $version = '0.1';
+
+    /**
+     * Initializes the WeDevs_ERP() class
+     *
+     * Checks for an existing WeDevs_ERP() instance
+     * and if it doesn't find one, creates it.
+     */
+    public static function init() {
+        static $instance = false;
+
+        if ( ! $instance ) {
+            $instance = new WeDevs_ERP();
+        }
+
+        return $instance;
+    }
+
+    /**
+     * Constructor for the WeDevs_ERP class
+     *
+     * Sets up all the appropriate hooks and actions
+     * within our plugin.
+     *
+     * @return void
+     */
+    public function __construct() {
+
+        // Define constants
+        $this->define_constants();
+
+        // Include required files
+        $this->includes();
+
+        // Initialize the action hooks
+        $this->init_actions();
+
+        // Loaded action
+        do_action( 'payroll_loaded' );
+    }
+
+    /**
+     * Define the plugin constants
+     *
+     * @return void
+     */
+    private function define_constants() {
+        define( 'WPERP_VERSION', $this->version );
+        define( 'WPERP_FILE', __FILE__ );
+        define( 'WPERP_PATH', dirname( WPERP_FILE ) );
+        define( 'WPERP_INCLUDES', WPERP_PATH . '/includes' );
+        define( 'WPERP_URL', plugins_url( '', WPERP_FILE ) );
+    }
+
+    /**
+     * Include the required files
+     *
+     * @return void
+     */
+    private function includes() {
+        include_once WPERP_INCLUDES . '/class-install.php';
+
+        if ( is_admin() ) {
+            include_once WPERP_INCLUDES . '/admin/functions.php';
+            include_once WPERP_INCLUDES . '/admin/class-menu.php';
+        }
+    }
+
+    /**
+     * Initialize WordPress action hooks
+     *
+     * @return void
+     */
+    private function init_actions() {
+
+        // Localize our plugin
+        add_action( 'init', array( $this, 'localization_setup' ) );
+
+        // Loads frontend scripts and styles
+        // add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+    }
+
+    /**
+     * Initialize plugin for localization
+     *
+     * @uses load_plugin_textdomain()
+     */
+    public function localization_setup() {
+        load_plugin_textdomain( 'wp-erp', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+    }
+
+    /**
+     * Enqueue admin scripts
+     *
+     * Allows plugin assets to be loaded.
+     *
+     * @uses wp_enqueue_script()
+     * @uses wp_localize_script()
+     * @uses wp_enqueue_style
+     */
+    public function enqueue_scripts() {
+
+        /**
+         * All styles goes here
+         */
+        wp_enqueue_style( 'wp-erp-styles', plugins_url( 'css/style.css', __FILE__ ), false, date( 'Ymd' ) );
+
+        /**
+         * All scripts goes here
+         */
+        wp_enqueue_script( 'wp-erp-scripts', plugins_url( 'js/script.js', __FILE__ ), array( 'jquery' ), false, true );
+
+
+        /**
+         * Example for setting up text strings from Javascript files for localization
+         *
+         * Uncomment line below and replace with proper localization variables.
+         */
+        // $translation_array = array( 'some_string' => __( 'Some string to translate', 'payroll' ), 'a_value' => '10' );
+        // wp_localize_script( 'base-plugin-scripts', 'payroll', $translation_array ) );
+
+    }
+
+} // WeDevs_ERP
+
+/**
+ * Init the wperp plugin
+ *
+ * @return WeDevs_ERP the plugin object
+ */
+function wperp() {
+    return WeDevs_ERP::init();
+}
+
+// kick it off
+wperp();
