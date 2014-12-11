@@ -16,7 +16,9 @@ class WDP_Admin_Menu {
         add_action( 'init', array( $this, 'do_mode_switch' ) );
 
         add_action( 'admin_menu', array( $this, 'admin_menu' ), 99 );
-        add_action( 'admin_menu', array( $this, 'hide_admin_menus' ) );
+        add_action( 'admin_menu', array( $this, 'hide_admin_menus' ), 100 );
+
+        add_action( 'init', array( $this, 'tools_page_handler' ) );
 
         add_action( 'admin_bar_menu', array( $this, 'admin_bar_mode_switch' ), 9999 );
     }
@@ -27,7 +29,7 @@ class WDP_Admin_Menu {
      * @return int the position of the menu
      */
     public function get_menu_position() {
-        return apply_filters( 'payroll_menu_position', null );
+        return apply_filters( 'payroll_menu_position', 9999 );
     }
 
 
@@ -110,6 +112,7 @@ class WDP_Admin_Menu {
         add_menu_page( __( 'ERP', 'wp-erp' ), __( 'ERP Settings', 'wp-erp' ), 'manage_options', 'erp-dashboard', array( $this, 'dashboard_page' ), 'dashicons-admin-tools', $this->get_menu_position() );
 
         add_submenu_page( 'erp-dashboard', __( 'Company', 'wp-erp' ), __( 'Company', 'wp-erp' ), 'manage_options', 'erp-company', array( $this, 'company_page' ) );
+        add_submenu_page( 'erp-dashboard', __( 'Tools', 'wp-erp' ), __( 'Tools', 'wp-erp' ), 'manage_options', 'erp-tools', array( $this, 'tools_page' ) );
         add_submenu_page( 'erp-dashboard', __( 'Settings', 'wp-erp' ), __( 'Settings', 'wp-erp' ), 'manage_options', 'erp-settings', array( $this, 'employee_page' ) );
     }
 
@@ -119,16 +122,49 @@ class WDP_Admin_Menu {
      * @return void
      */
     function hide_admin_menus() {
-        // remove_menu_page( 'index.php' );                  //Dashboard
-        remove_menu_page( 'edit.php' );                   //Posts
-        remove_menu_page( 'upload.php' );                 //Media
-        remove_menu_page( 'edit.php?post_type=page' );    //Pages
-        remove_menu_page( 'edit-comments.php' );          //Comments
-        remove_menu_page( 'themes.php' );                 //Appearance
-        // remove_menu_page( 'plugins.php' );                //Plugins
-        remove_menu_page( 'users.php' );                  //Users
-        remove_menu_page( 'tools.php' );                  //Tools
-        // remove_menu_page( 'options-general.php' );        //Settings
+        global $menu;
+
+        $menus = get_option( '_erp_admin_menu', array() );
+
+        if ( ! $menus ) {
+            return;
+        }
+
+        foreach ($menus as $item) {
+            remove_menu_page( $item );
+        }
+
+        remove_menu_page( 'edit-tags.php?taxonomy=link_category' );
+        remove_menu_page( 'separator1' );
+        remove_menu_page( 'separator2' );
+        remove_menu_page( 'separator-last' );
+
+        $position = 9998;
+        $menu[$position] = array(
+            0   =>  '',
+            1   =>  'read',
+            2   =>  'separator' . $position,
+            3   =>  '',
+            4   =>  'wp-menu-separator'
+        );
+    }
+
+    /**
+     * Handle all the forms in the tools page
+     *
+     * @return void
+     */
+    public function tools_page_handler() {
+
+        // admin menu form
+        if ( isset( $_POST['erp_admin_menu'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'erp-remove-menu-nonce' ) ) {
+            if ( ! isset( $_POST['menu'] ) ) {
+                return;
+            }
+
+            $menu = array_map( 'strip_tags', $_POST['menu'] );
+            update_option( '_erp_admin_menu', $menu );
+        }
     }
 
     /**
@@ -165,6 +201,15 @@ class WDP_Admin_Menu {
      */
     public function locations_page() {
         include_once dirname( __FILE__ ) . '/views/locations.php';
+    }
+
+    /**
+     * Handles the tools page
+     *
+     * @return void
+     */
+    public function tools_page() {
+        include_once dirname( __FILE__ ) . '/views/tools.php';
     }
 }
 
