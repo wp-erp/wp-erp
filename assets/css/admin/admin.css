@@ -1,3 +1,15 @@
 #wp-admin-bar-erp-mode-switch .ab-icon.dashicons-randomize {
   padding-top: 7px !important;
 }
+table.vendor-list-table th.col-username,
+table.vendor-list-table td.col-username {
+  width: 40%;
+}
+table.vendor-list-table th.col-balance,
+table.vendor-list-table td.col-balance {
+  width: 15%;
+}
+table.invoice-list-table td.col-inv-no,
+table.invoice-list-table th.col-inv-no {
+  width: 12%;
+}
