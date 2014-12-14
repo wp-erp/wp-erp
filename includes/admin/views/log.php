@@ -34,6 +34,17 @@ $history = array(
             </tr>
         </thead>
 
+        <tfoot>
+            <tr>
+                <th class="col-date"><?php _e( 'Date', 'accounting' ); ?></th>
+                <th class="col"><?php _e( 'User', 'accounting' ); ?></th>
+                <th class="col"><?php _e( 'Event', 'accounting' ); ?></th>
+                <th class="col"><?php _e( 'Name', 'accounting' ); ?></th>
+                <th class="col-amount"><?php _e( 'Amount', 'accounting' ); ?></th>
+                <th class="col-action"><?php _e( 'Action', 'accounting' ); ?></th>
+            </tr>
+        </tfoot>
+
         <tbody>
             <?php foreach( $history as $num => $row ) { ?>
                 <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
