@@ -13,6 +13,18 @@ table.invoice-list-table td.col-inv-no,
 table.invoice-list-table th.col-inv-no {
   width: 12%;
 }
+table.audit-log-table td.col-action,
+table.audit-log-table th.col-action {
+  width: 8%;
+}
+table.audit-log-table td.col-amount,
+table.audit-log-table th.col-amount {
+  width: 12%;
+}
+table.audit-log-table td.col-date,
+table.audit-log-table th.col-date {
+  width: 11%;
+}
 .company-accounts .account:before,
 .company-accounts .account:after {
   content: " ";
