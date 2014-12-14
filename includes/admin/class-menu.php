@@ -113,6 +113,7 @@ class WDP_Admin_Menu {
 
         add_submenu_page( 'erp-dashboard', __( 'Company', 'wp-erp' ), __( 'Company', 'wp-erp' ), 'manage_options', 'erp-company', array( $this, 'company_page' ) );
         add_submenu_page( 'erp-dashboard', __( 'Tools', 'wp-erp' ), __( 'Tools', 'wp-erp' ), 'manage_options', 'erp-tools', array( $this, 'tools_page' ) );
+        add_submenu_page( 'erp-dashboard', __( 'Audit Log', 'wp-erp' ), __( 'Audit Log', 'wp-erp' ), 'manage_options', 'erp-audit-log', array( $this, 'log_page' ) );
         add_submenu_page( 'erp-dashboard', __( 'Settings', 'wp-erp' ), __( 'Settings', 'wp-erp' ), 'manage_options', 'erp-settings', array( $this, 'employee_page' ) );
     }
 
@@ -210,6 +211,15 @@ class WDP_Admin_Menu {
      */
     public function tools_page() {
         include_once dirname( __FILE__ ) . '/views/tools.php';
+    }
+
+    /**
+     * Handles the log page
+     *
+     * @return void
+     */
+    public function log_page() {
+        include_once dirname( __FILE__ ) . '/views/log.php';
     }
 }
 
