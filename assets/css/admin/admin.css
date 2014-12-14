@@ -13,3 +13,36 @@ table.invoice-list-table td.col-inv-no,
 table.invoice-list-table th.col-inv-no {
   width: 12%;
 }
+.company-accounts .account:before,
+.company-accounts .account:after {
+  content: " ";
+  display: table;
+}
+.company-accounts .account:after {
+  clear: both;
+}
+.company-accounts h2 a {
+  text-decoration: none;
+  font-size: 12px;
+  background: #e0e0e0;
+  border-radius: 2px;
+  padding: 0px 8px;
+  margin-left: 4px;
+  font-weight: 600;
+}
+.company-accounts h2 a:hover {
+  background: #363b3f;
+  color: #fff;
+}
+.company-accounts .logo-area {
+  float: left;
+  width: 15%;
+  margin-right: 15px;
+}
+.company-accounts .logo-area img {
+  max-width: 100%;
+}
+.company-accounts .content-area {
+  float: left;
+  width: 80%;
+}

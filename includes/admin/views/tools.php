@@ -28,5 +28,5 @@
                 </form>
             </div><!-- .inside -->
         </div><!-- .postbox -->
-  </div>
+    </div><!-- .metabox-holder -->
 </div>

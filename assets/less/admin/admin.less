@@ -1,3 +1,15 @@
+.clearfix() {
+    &:before,
+    &:after {
+        content: " "; // 1
+        display: table; // 2
+    }
+
+    &:after {
+        clear: both;
+    }
+}
+
 #wp-admin-bar-erp-mode-switch .ab-icon.dashicons-randomize {
     padding-top: 7px !important;
 }
@@ -15,5 +27,43 @@ table.vendor-list-table {
 table.invoice-list-table {
     td.col-inv-no, th.col-inv-no {
         width: 12%;
+    }
+}
+
+.company-accounts {
+    .account {
+        .clearfix();
+    }
+
+    h2 {
+        a {
+            text-decoration: none;
+            font-size: 12px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            padding: 0px 8px;
+            margin-left: 4px;
+            font-weight: 600;
+
+            &:hover {
+                background: #363b3f;
+                color: #fff;
+            }
+        }
+    }
+
+    .logo-area {
+        float: left;
+        width: 15%;
+        margin-right: 15px;
+
+        img {
+            max-width: 100%;
+        }
+    }
+
+    .content-area {
+        float: left;
+        width: 80%;
     }
 }
