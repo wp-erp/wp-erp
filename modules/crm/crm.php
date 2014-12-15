@@ -51,6 +51,7 @@ class Customer_Relationship {
     private function define_constants() {
         define( 'WPERP_CRM_FILE', __FILE__ );
         define( 'WPERP_CRM_PATH', dirname( __FILE__ ) );
+        define( 'WPERP_CRM_VIEWS', dirname( __FILE__ ) . '/views' );
     }
 
     /**

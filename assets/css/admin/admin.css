@@ -1,3 +1,129 @@
+.crm-dashboard .badge-container {
+  margin-top: 15px;
+}
+.crm-dashboard .badge-container:before,
+.crm-dashboard .badge-container:after {
+  content: " ";
+  display: table;
+}
+.crm-dashboard .badge-container:after {
+  clear: both;
+}
+.crm-dashboard .badge-container .badge-aqua {
+  background-color: #00c0ef;
+}
+.crm-dashboard .badge-container .badge-green {
+  background-color: #00a65a;
+}
+.crm-dashboard .badge-container .badge-red {
+  background-color: #f56954;
+}
+.crm-dashboard .badge-container .badge-wrap {
+  float: left;
+  width: 25%;
+  color: #fff;
+  margin-right: 10px;
+}
+.crm-dashboard .badge-container .badge-wrap .badge-inner {
+  padding: 15px 0 0 15px;
+}
+.crm-dashboard .badge-container .badge-wrap h3 {
+  color: #fff;
+  font-size: 34px;
+  margin: 10px 0 20px 0;
+}
+.crm-dashboard .badge-container .badge-wrap .badge-footer {
+  text-align: center;
+  background: rgba(0, 0, 0, 0.15);
+  padding: 5px 0;
+}
+.crm-dashboard .badge-container .badge-wrap .badge-footer:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+.crm-dashboard .badge-container .badge-wrap .badge-footer a {
+  color: #fff;
+  text-decoration: none;
+  display: block;
+}
+.erp-leads-single .erp-lead-wrap {
+  margin-top: 10px;
+}
+.erp-leads-single .erp-lead-wrap:before,
+.erp-leads-single .erp-lead-wrap:after {
+  content: " ";
+  display: table;
+}
+.erp-leads-single .erp-lead-wrap:after {
+  clear: both;
+}
+.erp-leads-single .erp-lead-wrap .leads-left {
+  width: 72%;
+  min-width: 463px;
+  float: left;
+  margin-right: 10px;
+}
+.erp-leads-single .erp-lead-wrap .leads-right {
+  float: right;
+  width: 25%;
+}
+.erp-leads-single .erp-lead-wrap .leads-right h3.hndle {
+  font-size: 14px;
+  padding: 8px 12px;
+  margin: 0;
+  line-height: 1.4;
+}
+.erp-leads-single .erp-lead-wrap .leads-right .inside {
+  margin: 6px 0 0;
+  padding: 0 12px 12px;
+}
+.erp-leads-single .erp-lead-wrap .leads-right .leads-quick-actions a {
+  text-decoration: none;
+}
+.erp-leads-single .erp-lead-wrap .leads-right .leads-actions .inside {
+  padding: 15px 12px 25px 12px;
+}
+.erp-leads-single .erp-lead-wrap .leads-profile-view {
+  margin-bottom: 15px;
+}
+.erp-leads-single .erp-lead-wrap .leads-profile-view:before,
+.erp-leads-single .erp-lead-wrap .leads-profile-view:after {
+  content: " ";
+  display: table;
+}
+.erp-leads-single .erp-lead-wrap .leads-profile-view:after {
+  clear: both;
+}
+.erp-leads-single .erp-lead-wrap .leads-profile-view .leads-avatar {
+  float: left;
+  width: 128px;
+}
+.erp-leads-single .erp-lead-wrap .leads-profile-view .leads-avatar img {
+  max-width: 100%;
+  margin-top: 15px;
+}
+.erp-leads-single .erp-lead-wrap .leads-profile-view .leads-user-info {
+  float: left;
+  margin-left: 25px;
+  width: 80%;
+}
+.erp-leads-single .erp-lead-wrap .leads-profile-view .leads-user-info h3 {
+  margin: 15px 0;
+}
+.erp-leads-single .erp-lead-wrap .leads-profile-view .leads-user-info h3 span.company {
+  font-weight: normal;
+}
+.erp-leads-single .erp-lead-wrap .leads-profile-view .leads-user-info .lead-info label {
+  width: 120px;
+  display: inline-block;
+  color: #777;
+}
+.erp-leads-single .erp-lead-wrap .leads-profile-view .leads-user-info .lead-info span.sep {
+  width: 15px;
+  display: inline-block;
+}
+.erp-leads-single .erp-lead-wrap .leads-profile-view .leads-user-info .lead-info a {
+  text-decoration: none;
+}
 #wp-admin-bar-erp-mode-switch .ab-icon.dashicons-randomize {
   padding-top: 7px !important;
 }
