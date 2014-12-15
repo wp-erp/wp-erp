@@ -40,6 +40,34 @@
     }
 }
 
+ul.erp-list {
+    width: 100%;
+
+    &.two-col {
+        .clearfix();
+
+        li {
+            line-height:1.5em;
+            float:left;
+            display:inline;
+            width: 50%;
+        }
+    }
+
+    &.separated {
+        label {
+            min-width: 110px;
+            display: inline-block;
+            color: #777;
+        }
+
+        span.sep {
+            width: 15px;
+            display: inline-block;
+        }
+    }
+}
+
 table.vendor-list-table {
     th.col-username, td.col-username {
         width: 40%;
