@@ -54,6 +54,7 @@ class Human_Resource {
     private function define_constants() {
         define( 'WPERP_HRM_FILE', __FILE__ );
         define( 'WPERP_HRM_PATH', dirname( __FILE__ ) );
+        define( 'WPERP_HRM_VIEWS', dirname( __FILE__ ) . '/views' );
     }
 
     /**
