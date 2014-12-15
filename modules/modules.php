@@ -105,7 +105,7 @@ add_action( 'wp-erp-load-module_erp-crm', 'erp_module_load_crm' );
  *
  * @return string  new url to redirect to
  */
-function erp_switch_redirect( $url, $new_mode ) {
+function erp_module_switch_redirect( $url, $new_mode ) {
     if ( 'crm' == $new_mode ) {
         return admin_url( 'admin.php?page=erp-sales' );
     } elseif ( 'hrm' == $new_mode ) {
@@ -115,4 +115,4 @@ function erp_switch_redirect( $url, $new_mode ) {
     return $url;
 }
 
-add_filter( 'erp_switch_redirect_to', 'erp_switch_redirect', 10, 2 );
+add_filter( 'erp_switch_redirect_to', 'erp_module_switch_redirect', 10, 2 );
