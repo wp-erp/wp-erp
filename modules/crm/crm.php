@@ -40,6 +40,9 @@ class Customer_Relationship {
         // Initialize the action hooks
         $this->init_actions();
 
+        // Initialize the filter hooks
+        $this->init_filters();
+
         do_action( 'erp_crm_loaded' );
     }
 
@@ -69,6 +72,15 @@ class Customer_Relationship {
      * @return void
      */
     private function init_actions() {
+
+    }
+
+    /**
+     * Initialize WordPress filter hooks
+     *
+     * @return void
+     */
+    private function init_filters() {
 
     }
 }

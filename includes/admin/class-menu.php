@@ -13,7 +13,7 @@ class WDP_Admin_Menu {
      * @return void
      */
     public function __construct() {
-        add_action( 'init', array( $this, 'do_mode_switch' ) );
+        add_action( 'init', array( $this, 'do_mode_switch' ), 99 );
 
         add_action( 'admin_menu', array( $this, 'admin_menu' ), 99 );
         add_action( 'admin_menu', array( $this, 'hide_admin_menus' ), 100 );
@@ -97,9 +97,12 @@ class WDP_Admin_Menu {
             return;
         }
 
-        update_user_meta( $current_user->ID, '_erp_mode', $_REQUEST['erp-mode'] );
+        $new_mode = $_REQUEST['erp-mode'];
 
-        wp_redirect( admin_url( 'index.php' ) );
+        update_user_meta( $current_user->ID, '_erp_mode', $new_mode );
+
+        $redirect_to = apply_filters( 'erp_switch_redirect_to', admin_url( 'index.php' ), $new_mode );
+        wp_redirect( $redirect_to );
         exit;
     }
 

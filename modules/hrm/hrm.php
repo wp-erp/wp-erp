@@ -40,6 +40,9 @@ class Human_Resource {
         // Initialize the action hooks
         $this->init_actions();
 
+        // Initialize the filter hooks
+        $this->init_filters();
+
         do_action( 'erp_hrm_loaded' );
     }
 
@@ -68,6 +71,15 @@ class Human_Resource {
      * @return void
      */
     private function init_actions() {
+
+    }
+
+    /**
+     * Initialize WordPress filter hooks
+     *
+     * @return void
+     */
+    private function init_filters() {
 
     }
 }
