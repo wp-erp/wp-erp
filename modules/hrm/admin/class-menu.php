@@ -27,9 +27,8 @@ class Admin_Menu {
 
         add_submenu_page( 'erp-hr', __( 'Overview', 'wp-erp' ), __( 'Overview', 'wp-erp' ), 'manage_options', 'erp-hr', array( $this, 'dashboard_page' ) );
         add_submenu_page( 'erp-hr', __( 'Employee', 'wp-erp' ), __( 'Employee', 'wp-erp' ), 'manage_options', 'erp-hr-employee', array( $this, 'employee_page' ) );
-        add_submenu_page( 'erp-hr', __( 'Contractors', 'wp-erp' ), __( 'Contractors', 'wp-erp' ), 'manage_options', 'erp-hr-contractors', array( $this, 'dashboard_page' ) );
-        add_submenu_page( 'erp-hr', __( 'Departments', 'wp-erp' ), __( 'Departments', 'wp-erp' ), 'manage_options', 'erp-hr-depts', array( $this, 'dashboard_page' ) );
-        add_submenu_page( 'erp-hr', __( 'Positions', 'wp-erp' ), __( 'Positions', 'wp-erp' ), 'manage_options', 'erp-hr-positions', array( $this, 'dashboard_page' ) );
+        add_submenu_page( 'erp-hr', __( 'Departments', 'wp-erp' ), __( 'Departments', 'wp-erp' ), 'manage_options', 'erp-hr-depts', array( $this, 'department_page' ) );
+        add_submenu_page( 'erp-hr', __( 'Designation', 'wp-erp' ), __( 'Designation', 'wp-erp' ), 'manage_options', 'erp-hr-designation', array( $this, 'designation_page' ) );
 
         /** Leave Management **/
         add_menu_page( __( 'Leave Management', 'wp-erp' ), __( 'Leave Manage', 'wp-erp' ), 'manage_options', 'erp-leave', array( $this, 'dashboard_page' ), 'dashicons-arrow-right-alt', null );
@@ -49,7 +48,7 @@ class Admin_Menu {
      * @return void
      */
     public function dashboard_page() {
-        echo "Dashboard!";
+        include WPERP_HRM_VIEWS . '/dashboard.php';
     }
 
     /**
@@ -76,6 +75,36 @@ class Admin_Menu {
         if ( file_exists( $template ) ) {
             include $template;
         }
+    }
+
+    /**
+     * Handles the dashboard page
+     *
+     * @return void
+     */
+    public function department_page() {
+        $action = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
+        $id     = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
+
+        switch ($action) {
+            case 'view':
+                $template = WPERP_HRM_VIEWS . '/departments/single.php';
+                break;
+
+            default:
+                $template = WPERP_HRM_VIEWS . '/departments.php';
+                break;
+        }
+
+        $template = apply_filters( 'erp_hr_department_templates', $template, $action, $id );
+
+        if ( file_exists( $template ) ) {
+            include $template;
+        }
+    }
+
+    public function designation_page() {
+        include WPERP_HRM_VIEWS . '/designation.php';
     }
 }
 

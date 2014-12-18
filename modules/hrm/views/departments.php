@@ -1,14 +1,18 @@
 <div class="wrap">
 
-    <h2>Employee <a href="#" class="add-new-h2">Add New</a></h2>
+    <h2>Departments <a href="#" class="add-new-h2">Add New</a></h2>
 
 <?php
 $vendors = array(
-    array( 'Parvez Akhter', 'Software Engineer', 'Engineering', 'Full-Time Permanent', '1 Dec, 2013' ),
-    array( 'Hasin Hayder', 'CTO', 'Engineering', 'Full-Time Permanent', '11 Jun, 2010' ),
-    array( 'Nizam Uddin', 'Finance Manager', 'Sales', 'Full-Time Contract', '4 Mar, 2013' ),
-    array( 'Kowsher Ahmed', 'QA Engineer', 'Engineering', 'internee', '5 Apr, 2013' ),
-    array( 'M Asif Rahman', 'Sales Executive', 'Sales', 'Full-time Contract', '6 Nov, 2012' ),
+    array( 'Engineering', 'John Doe', 11 ),
+    array( 'HR', '', 0 ),
+    array( 'Marketing', 'Nizam Uddin', 4 ),
+    array( 'Production', 'Sabbir Ahmed', 4 ),
+    array( '&#8212; Quality', '', 2 ),
+    array( '&#8212; Purchase', '', 2 ),
+    array( '&#8212; &#8212; Another', '', 2 ),
+    array( 'Sales', '', 0 ),
+    array( 'R&D', '', 0 ),
 );
 
 ?>
@@ -18,7 +22,6 @@ $vendors = array(
             <label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label>
             <select name="action" id="bulk-action-selector-top">
                 <option value="-1" selected="selected">Bulk Actions</option>
-                <option value="email">Send Email</option>
                 <option value="trash">Move to Trash</option>
             </select>
             <input type="submit" name="" id="doaction" class="button action" value="Apply">
@@ -31,13 +34,22 @@ $vendors = array(
                 <th scope="col" id="cb" class="manage-column column-cb check-column" style="">
                     <input id="cb-select-all-1" type="checkbox">
                 </th>
-                <th class="col-"><?php _e( 'Name', 'accounting' ); ?></th>
-                <th class="col-"><?php _e( 'Job Title', 'accounting' ); ?></th>
                 <th class="col-"><?php _e( 'Department', 'accounting' ); ?></th>
-                <th class="col-"><?php _e( 'Employment Status', 'accounting' ); ?></th>
-                <th class="col-"><?php _e( 'Joined', 'accounting' ); ?></th>
+                <th class="col-"><?php _e( 'Department Lead', 'accounting' ); ?></th>
+                <th class="col-"><?php _e( 'No. of Employees', 'accounting' ); ?></th>
             </tr>
         </thead>
+
+        <tfoot>
+            <tr>
+                <th scope="col" id="cb" class="manage-column column-cb check-column" style="">
+                    <input id="cb-select-all-1" type="checkbox">
+                </th>
+                <th class="col-"><?php _e( 'Department', 'accounting' ); ?></th>
+                <th class="col-"><?php _e( 'Department Lead', 'accounting' ); ?></th>
+                <th class="col-"><?php _e( 'No. of Employees', 'accounting' ); ?></th>
+            </tr>
+        </tfoot>
 
         <tbody id="the-list">
             <?php foreach( $vendors as $num => $row ) { ?>
@@ -45,8 +57,7 @@ $vendors = array(
                 <th scope="row" class="check-column">
                     <input id="cb-select-1" type="checkbox" name="post[]" value="1">
                 </th>
-                <td class="username col- column-username">
-                    <?php echo get_avatar( $row['2'], 32 ); ?>
+                <td class="col-">
 
                     <strong><a href="<?php echo erp_hr_url_single_employee(1); ?>"><?php echo $row[0]; ?></a></strong>
 
@@ -55,10 +66,8 @@ $vendors = array(
                         <span class="trash"><a class="submitdelete" title="Delete this item" href="#">Delete</a></span>
                     </div>
                 </td>
-                <td class="col-"><?php echo $row[1]; ?></td>
+                <td class="col-"><?php echo empty( $row[1] ) ? '-' : $row[1]; ?></td>
                 <td class="col-"><?php echo isset( $row[2] ) ? $row[2] : '-'; ?></td>
-                <td class="col-"><?php echo isset( $row[3] ) ? $row[3] : '-'; ?></td>
-                <td class="col-"><?php echo isset( $row[4] ) ? $row[4] : '-'; ?></td>
             </tr>
             <?php } ?>
         </tbody>
