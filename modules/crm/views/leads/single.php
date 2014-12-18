@@ -1,17 +1,17 @@
-<div class="wrap erp-leads-single">
+<div class="wrap erp erp-leads-single">
     <h2>Leads <a href="#" class="add-new-h2">Add New</a></h2>
 
-    <div class="erp-lead-wrap">
-        <div class="leads-left">
-            <div class="leads-profile-view">
-                <div class="leads-avatar">
+    <div class="erp-single-container">
+        <div class="erp-area-left">
+            <div class="erp-profile-top">
+                <div class="erp-avatar">
                     <?php echo get_avatar( 'john@doe.com', 128 ); ?>
                 </div>
 
-                <div class="leads-user-info">
+                <div class="erp-user-info">
                     <h3><span class="title">Mr. John Doe</span> <span class="company">- ABC Company</span></h3>
 
-                    <ul class="lead-info">
+                    <ul class="erp-list separated">
                         <li>
                             <label>Lead Owner</label> <span class="sep">:</span> <span class="value">Tareq Hasan</span>
                         </li>
@@ -45,7 +45,7 @@
 
         </div><!-- .leads-left -->
 
-        <div class="leads-right">
+        <div class="erp-area-right">
             <div class="postbox leads-actions">
                 <h3 class="hndle"><span>Actions</span></h3>
                 <div class="inside">
