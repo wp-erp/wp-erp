@@ -45,87 +45,62 @@
   text-decoration: none;
   display: block;
 }
-.erp-leads-single .erp-lead-wrap {
+.erp-leads-single .erp-user-info h3 {
+  margin: 15px 0;
+}
+.erp-leads-single .erp-user-info h3 span.company {
+  font-weight: normal;
+}
+#wp-admin-bar-erp-mode-switch .ab-icon.dashicons-randomize {
+  padding-top: 7px !important;
+}
+.erp .erp-single-container {
   margin-top: 10px;
 }
-.erp-leads-single .erp-lead-wrap:before,
-.erp-leads-single .erp-lead-wrap:after {
+.erp .erp-single-container:before,
+.erp .erp-single-container:after {
   content: " ";
   display: table;
 }
-.erp-leads-single .erp-lead-wrap:after {
+.erp .erp-single-container:after {
   clear: both;
 }
-.erp-leads-single .erp-lead-wrap .leads-left {
+.erp .erp-single-container .erp-area-left {
   width: 72%;
   min-width: 463px;
   float: left;
   margin-right: 10px;
 }
-.erp-leads-single .erp-lead-wrap .leads-right {
-  float: right;
-  width: 25%;
-}
-.erp-leads-single .erp-lead-wrap .leads-right h3.hndle {
-  font-size: 14px;
-  padding: 8px 12px;
-  margin: 0;
-  line-height: 1.4;
-}
-.erp-leads-single .erp-lead-wrap .leads-right .inside {
-  margin: 6px 0 0;
-  padding: 0 12px 12px;
-}
-.erp-leads-single .erp-lead-wrap .leads-right .leads-quick-actions a {
-  text-decoration: none;
-}
-.erp-leads-single .erp-lead-wrap .leads-right .leads-actions .inside {
-  padding: 15px 12px 25px 12px;
-}
-.erp-leads-single .erp-lead-wrap .leads-profile-view {
+.erp .erp-single-container .erp-area-left .erp-profile-top {
   margin-bottom: 15px;
 }
-.erp-leads-single .erp-lead-wrap .leads-profile-view:before,
-.erp-leads-single .erp-lead-wrap .leads-profile-view:after {
+.erp .erp-single-container .erp-area-left .erp-profile-top:before,
+.erp .erp-single-container .erp-area-left .erp-profile-top:after {
   content: " ";
   display: table;
 }
-.erp-leads-single .erp-lead-wrap .leads-profile-view:after {
+.erp .erp-single-container .erp-area-left .erp-profile-top:after {
   clear: both;
 }
-.erp-leads-single .erp-lead-wrap .leads-profile-view .leads-avatar {
+.erp .erp-single-container .erp-area-left .erp-profile-top .erp-avatar {
   float: left;
   width: 128px;
 }
-.erp-leads-single .erp-lead-wrap .leads-profile-view .leads-avatar img {
+.erp .erp-single-container .erp-area-left .erp-profile-top .erp-avatar img {
   max-width: 100%;
   margin-top: 15px;
 }
-.erp-leads-single .erp-lead-wrap .leads-profile-view .leads-user-info {
+.erp .erp-single-container .erp-area-left .erp-profile-top .erp-user-info {
   float: left;
   margin-left: 25px;
   width: 80%;
 }
-.erp-leads-single .erp-lead-wrap .leads-profile-view .leads-user-info h3 {
-  margin: 15px 0;
-}
-.erp-leads-single .erp-lead-wrap .leads-profile-view .leads-user-info h3 span.company {
-  font-weight: normal;
-}
-.erp-leads-single .erp-lead-wrap .leads-profile-view .leads-user-info .lead-info label {
-  width: 120px;
-  display: inline-block;
-  color: #777;
-}
-.erp-leads-single .erp-lead-wrap .leads-profile-view .leads-user-info .lead-info span.sep {
-  width: 15px;
-  display: inline-block;
-}
-.erp-leads-single .erp-lead-wrap .leads-profile-view .leads-user-info .lead-info a {
+.erp .erp-single-container .erp-area-left .erp-profile-top .erp-user-info a {
   text-decoration: none;
 }
-#wp-admin-bar-erp-mode-switch .ab-icon.dashicons-randomize {
-  padding-top: 7px !important;
+.erp .erp-single-container .erp-area-right {
+  float: right;
+  width: 25%;
 }
 .erp .postbox h3.hndle {
   font-size: 14px;

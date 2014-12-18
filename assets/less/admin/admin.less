@@ -17,26 +17,71 @@
     padding-top: 7px !important;
 }
 
-.erp .postbox {
-    h3.hndle {
-        font-size: 14px;
-        padding: 8px 12px;
-        margin: 0;
-        line-height: 1.4;
+.erp {
+
+    .erp-single-container {
+        .clearfix();
+        margin-top: 10px;
+
+        .erp-area-left {
+            width: 72%;
+            min-width: 463px;
+            float: left;
+            margin-right: 10px;
+
+            .erp-profile-top {
+                .clearfix();
+                margin-bottom: 15px;
+
+                .erp-avatar {
+                    float: left;
+                    width: 128px;
+
+                    img {
+                        max-width: 100%;
+                        margin-top: 15px;
+                    }
+                }
+
+                .erp-user-info {
+                    float: left;
+                    margin-left: 25px;
+                    width: 80%;
+
+                    a {
+                        text-decoration: none;
+                    }
+                }
+            }
+        }
+
+        .erp-area-right {
+            float: right;
+            width: 25%;
+        }
     }
 
-    .handlediv::before {
-        content: '\f142';
-        right: 12px;
-        font: 400 20px/1 dashicons;
-        speak: none;
-        display: inline-block;
-        padding: 8px 10px;
-        top: 0;
-        position: relative;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        text-decoration: none!important;
+    .postbox {
+        h3.hndle {
+            font-size: 14px;
+            padding: 8px 12px;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .handlediv::before {
+            content: '\f142';
+            right: 12px;
+            font: 400 20px/1 dashicons;
+            speak: none;
+            display: inline-block;
+            padding: 8px 10px;
+            top: 0;
+            position: relative;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-decoration: none!important;
+        }
     }
 }
 
