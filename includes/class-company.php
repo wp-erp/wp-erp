@@ -72,9 +72,10 @@ class Company {
         $logo_id = (int) $this->logo;
 
         if ( ! $logo_id ) {
-            $url = $this->placeholder_logo();
+            $url   = $this->placeholder_logo();
         } else {
-            $url = wp_get_attachment_image_src( $logo_id, 'medium' )[0];
+            $image = wp_get_attachment_image_src( $logo_id, 'medium' );
+            $url   = $image[0];
         }
 
         $image = sprintf( '<img src="%s" alt="%s" />', esc_url( $url ), esc_attr( $this->name ) );
