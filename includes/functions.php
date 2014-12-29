@@ -82,7 +82,7 @@ function erp_get_currencies_dropdown( $selected = '' ) {
 
     foreach ($currencies as $key => $value) {
         $select  = ( $key == $selected ) ? ' selected="selected"' : '';
-        $options .= sprintf( "<option value='%s'%s>%s</option>\n", esc_attr( $key ), $selected, $value );
+        $options .= sprintf( "<option value='%s'%s>%s</option>\n", esc_attr( $key ), $select, $value );
     }
 
     return $options;
@@ -177,6 +177,7 @@ function erp_create_company( $args = array() ) {
 
     $defaults = array(
         'name'      => '',
+        'id'        => 0,
         'logo'      => 0,
         'address_1' => '',
         'address_2' => '',
@@ -196,11 +197,31 @@ function erp_create_company( $args = array() ) {
     $fields = wp_parse_args( $args, $defaults );
     $fields = apply_filters( 'erp_create_compnay_args', $fields );
 
-    if ( $wpdb->insert( $wpdb->prefix . 'erp_companies', $fields ) ) {
+    // unset the company id
+    $company_id = $fields['id'];
+    unset( $fields['id'] );
 
-        do_action( 'erp_company_new', $wpdb->insert_id, $fields );
+    if ( ! $company_id ) {
 
-        return $wpdb->insert_id;
+        // it's a new compnay
+        if ( $wpdb->insert( $wpdb->prefix . 'erp_companies', $fields ) ) {
+
+            do_action( 'erp_company_new', $wpdb->insert_id, $fields );
+
+            return $wpdb->insert_id;
+        }
+    } else {
+
+        // do update method here
+        unset( $fields['created'] );
+        unset( $fields['status'] );
+
+        if ( $wpdb->update( $wpdb->prefix . 'erp_companies', $fields, array( 'id' => $company_id ) ) ) {
+
+            do_action( 'erp_company_updated', $company_id, $fields );
+
+            return true;
+        }
     }
 
     return false;

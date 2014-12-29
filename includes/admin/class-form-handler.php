@@ -42,6 +42,7 @@ class Form_Handler {
 
         $args = array(
             'name'      => $posted['company_name'],
+            'id'        => intval( $posted['company_id'] ),
             'logo'      => isset( $posted['company_logo_id'] ) ? absint( $posted['company_logo_id'] ) : 0,
             'address_1' => $posted['address_1'],
             'address_2' => $posted['address_2'],
@@ -58,7 +59,14 @@ class Form_Handler {
         $company_id = erp_create_company( $args );
 
         if ( $company_id ) {
-            $redirect_to = admin_url( 'admin.php?page=erp-company&action=edit&id=' . $company_id );
+
+            // if it's an update
+            if ( true === $company_id ) {
+                $redirect_to = admin_url( 'admin.php?page=erp-company&action=edit&msg=updated&id=' . $posted['company_id'] );
+            } else {
+                $redirect_to = admin_url( 'admin.php?page=erp-company&action=edit&msg=created&id=' . $company_id );
+            }
+
             wp_redirect( $redirect_to );
             exit;
         }

@@ -32,6 +32,9 @@
 
                 $('#postimagediv').on( 'click', '#set-company-thumbnail', this.setCompanyLogo );
                 $('#postimagediv').on( 'click', 'a.remove-logo', this.removeCompanyLogo );
+
+                // fire change events
+                $('select#erp-country').change();
             },
 
             hideModal: function() {

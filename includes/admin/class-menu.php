@@ -220,10 +220,23 @@ class Admin_Menu {
      */
     public function company_page() {
         $action = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
+        $id     = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
 
         switch ($action) {
             case 'new':
-                $template = WPERP_VIEWS . '/company-new.php';
+
+                // create a dummy company
+                $temp       = new \stdClass();
+                $temp->id   = 0;
+                $temp->name = '';
+                $company    = new \WeDevs\ERP\Company( $temp );
+
+                $template   = WPERP_VIEWS . '/company-editor.php';
+                break;
+
+            case 'edit':
+                $company    = new \WeDevs\ERP\Company( $id );
+                $template = WPERP_VIEWS . '/company-editor.php';
                 break;
 
             default:

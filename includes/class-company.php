@@ -33,7 +33,7 @@ class Company {
      */
     public function __get( $key ) {
         if ( isset( $this->data->$key ) ) {
-            return $this->data->$key;
+            return stripslashes( $this->data->$key );
         }
     }
 
@@ -45,8 +45,8 @@ class Company {
      * @return void
      */
     private function populate( $company ) {
-        $this->id   = $company->id;
-        $this->name = $company->name;
+        $this->id   = (int) $company->id;
+        $this->name = stripslashes( $company->name );
         $this->data = $company;
     }
 
@@ -61,6 +61,15 @@ class Company {
         global $wpdb;
 
         return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}erp_companies WHERE id = %d", $company_id ) );
+    }
+
+    /**
+     * Check if a company has logo
+     *
+     * @return boolean
+     */
+    public function has_logo() {
+        return (int) $this->logo;
     }
 
     /**
@@ -119,7 +128,7 @@ class Company {
      */
     public function get_edit_url() {
         $url = add_query_arg(
-            array( 'action' => 'view', 'id' => $this->id ),
+            array( 'action' => 'edit', 'id' => $this->id ),
             admin_url( 'admin.php?page=erp-company' )
         );
 
