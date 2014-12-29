@@ -9,7 +9,10 @@
                 <p><?php _e( 'Remove default admin sidebar menus', 'wp-erp' ); ?></p>
 
                 <form method="post" action="<?php echo admin_url( 'admin.php?page=erp-tools' ); ?>">
-                    <?php $menus = get_option( '_erp_admin_menu', array() ); ?>
+                    <?php
+                    $menus          = get_option( '_erp_admin_menu', array() );
+                    $adminbar_menus = get_option( '_erp_adminbar_menu', array() );
+                    ?>
                     <p>
                         <label><input type="checkbox" name="menu[]" value="index.php" <?php checked( in_array( 'index.php', $menus), true ); ?>><?php _e( 'Dashboard', 'wp-erp' ); ?></label>&nbsp;
                         <label><input type="checkbox" name="menu[]" value="edit.php" <?php checked( in_array( 'edit.php', $menus), true ); ?>><?php _e( 'Posts', 'wp-erp' ); ?></label>&nbsp;
@@ -21,6 +24,15 @@
                         <label><input type="checkbox" name="menu[]" value="users.php" <?php checked( in_array( 'users.php', $menus), true ); ?>><?php _e( 'Users', 'wp-erp' ); ?></label>&nbsp;
                         <label><input type="checkbox" name="menu[]" value="tools.php" <?php checked( in_array( 'tools.php', $menus), true ); ?>><?php _e( 'Tools', 'wp-erp' ); ?></label>&nbsp;
                         <label><input type="checkbox" name="menu[]" value="options-general.php" <?php checked( in_array( 'options-general.php', $menus), true ); ?>><?php _e( 'Settings', 'wp-erp' ); ?></label>&nbsp;
+                    </p>
+
+                    <h4><?php _e( 'Admin Bar Menu', 'wp-erp' ); ?></h4>
+                    <p>
+                        <label><input type="checkbox" name="admin_menu[]" value="wp-logo" <?php checked( in_array( 'wp-logo', $adminbar_menus), true ); ?>><?php _e( 'WordPress Logo', 'wp-erp' ); ?></label>&nbsp;
+                        <label><input type="checkbox" name="admin_menu[]" value="site-name" <?php checked( in_array( 'site-name', $adminbar_menus), true ); ?>><?php _e( 'Site Name', 'wp-erp' ); ?></label>&nbsp;
+                        <label><input type="checkbox" name="admin_menu[]" value="updates" <?php checked( in_array( 'updates', $adminbar_menus), true ); ?>><?php _e( 'Updates', 'wp-erp' ); ?></label>&nbsp;
+                        <label><input type="checkbox" name="admin_menu[]" value="comments" <?php checked( in_array( 'comments', $adminbar_menus), true ); ?>><?php _e( 'Comments', 'wp-erp' ); ?></label>&nbsp;
+                        <label><input type="checkbox" name="admin_menu[]" value="new-content" <?php checked( in_array( 'new-content', $adminbar_menus), true ); ?>><?php _e( 'New Posts', 'wp-erp' ); ?></label>&nbsp;
                     </p>
 
                     <?php wp_nonce_field( 'erp-remove-menu-nonce' ); ?>

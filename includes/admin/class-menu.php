@@ -18,6 +18,7 @@ class Admin_Menu {
 
         add_action( 'admin_menu', array( $this, 'admin_menu' ), 99 );
         add_action( 'admin_menu', array( $this, 'hide_admin_menus' ), 100 );
+        add_action( 'wp_before_admin_bar_render', array( $this, 'hide_admin_bar_links' ), 100 );
 
         add_action( 'init', array( $this, 'tools_page_handler' ) );
 
@@ -156,6 +157,24 @@ class Admin_Menu {
     }
 
     /**
+     * Hide default admin bar links
+     *
+     * @return void
+     */
+    function hide_admin_bar_links() {
+        global $wp_admin_bar;
+
+        $adminbar_menus = get_option( '_erp_adminbar_menu', array() );
+        if ( ! $adminbar_menus ) {
+            return;
+        }
+
+        foreach ($adminbar_menus as $item) {
+            $wp_admin_bar->remove_menu( $item );
+        }
+    }
+
+    /**
      * Handle all the forms in the tools page
      *
      * @return void
@@ -164,12 +183,15 @@ class Admin_Menu {
 
         // admin menu form
         if ( isset( $_POST['erp_admin_menu'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'erp-remove-menu-nonce' ) ) {
-            if ( ! isset( $_POST['menu'] ) ) {
-                return;
+            if ( isset( $_POST['menu'] ) ) {
+                $menu = array_map( 'strip_tags', $_POST['menu'] );
+                update_option( '_erp_admin_menu', $menu );
             }
 
-            $menu = array_map( 'strip_tags', $_POST['menu'] );
-            update_option( '_erp_admin_menu', $menu );
+            if ( isset( $_POST['admin_menu'] ) ) {
+                $bar_menu = array_map( 'strip_tags', $_POST['admin_menu'] );
+                update_option( '_erp_adminbar_menu', $bar_menu );
+            }
         }
     }
 
