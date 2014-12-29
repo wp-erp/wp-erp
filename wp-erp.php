@@ -75,6 +75,7 @@ class WeDevs_ERP {
      * @return void
      */
     public function __construct() {
+        // register_activation_hook( __FILE__, array( $this, 'activate' ) );
 
         // Define constants
         $this->define_constants();
@@ -87,6 +88,10 @@ class WeDevs_ERP {
 
         // Loaded action
         do_action( 'erp_loaded' );
+    }
+
+    public function activate() {
+        echo 'hi';
     }
 
     /**
@@ -102,6 +107,7 @@ class WeDevs_ERP {
         define( 'WPERP_MODULES', WPERP_PATH . '/modules' );
         define( 'WPERP_URL', plugins_url( '', WPERP_FILE ) );
         define( 'WPERP_ASSETS', WPERP_URL . '/assets' );
+        define( 'WPERP_VIEWS', WPERP_INCLUDES . '/admin/views' );
     }
 
     /**
@@ -110,13 +116,19 @@ class WeDevs_ERP {
      * @return void
      */
     private function includes() {
-        include_once WPERP_INCLUDES . '/functions.php';
-        include_once WPERP_INCLUDES . '/class-install.php';
-        include_once WPERP_MODULES . '/modules.php';
+        require_once WPERP_INCLUDES . '/functions.php';
+        require_once WPERP_INCLUDES . '/class-install.php';
+        require_once WPERP_INCLUDES . '/class-countries.php';
+        require_once WPERP_INCLUDES . '/class-company.php';
+        require_once WPERP_INCLUDES . '/admin/class-form-handler.php';
+        require_once WPERP_MODULES . '/modules.php';
+
+        require_once WPERP_MODULES . '/hrm/includes/class-employee.php';
 
         if ( is_admin() ) {
-            include_once WPERP_INCLUDES . '/admin/functions.php';
-            include_once WPERP_INCLUDES . '/admin/class-menu.php';
+            require_once WPERP_INCLUDES . '/admin/functions.php';
+            require_once WPERP_INCLUDES . '/admin/class-menu.php';
+            require_once WPERP_INCLUDES . '/admin/class-admin.php';
         }
     }
 
@@ -130,9 +142,6 @@ class WeDevs_ERP {
         // Localize our plugin
         add_action( 'init', array( $this, 'localization_setup' ) );
         add_action( 'init', array( $this, 'load_module' ) );
-
-        // Loads frontend scripts and styles
-        add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
     }
 
     /**
@@ -142,19 +151,6 @@ class WeDevs_ERP {
      */
     public function localization_setup() {
         load_plugin_textdomain( 'wp-erp', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-    }
-
-    /**
-     * Enqueue admin scripts
-     *
-     * Allows plugin assets to be loaded.
-     *
-     * @uses wp_enqueue_script()
-     * @uses wp_localize_script()
-     * @uses wp_enqueue_style
-     */
-    public function admin_enqueue_scripts() {
-        wp_enqueue_style( 'wp-erp-styles', WPERP_ASSETS . '/css/admin/admin.css', false, date( 'Ymd' ) );
     }
 
     /**

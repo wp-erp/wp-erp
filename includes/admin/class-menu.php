@@ -1,11 +1,12 @@
 <?php
+namespace WeDevs\ERP;
 
 /**
  * Administration Menu Class
  *
  * @package payroll
  */
-class WDP_Admin_Menu {
+class Admin_Menu {
 
     /**
      * Kick-in the class
@@ -196,7 +197,21 @@ class WDP_Admin_Menu {
      * @return void
      */
     public function company_page() {
-        include_once dirname( __FILE__ ) . '/views/company.php';
+        $action = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
+
+        switch ($action) {
+            case 'new':
+                $template = WPERP_VIEWS . '/company-new.php';
+                break;
+
+            default:
+                $template = WPERP_VIEWS . '/company.php';
+                break;
+        }
+
+        if ( file_exists( $template ) ) {
+            include $template;
+        }
     }
 
     /**
@@ -236,4 +251,4 @@ class WDP_Admin_Menu {
     }
 }
 
-return new WDP_Admin_Menu();
+return new Admin_Menu();

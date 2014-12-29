@@ -17,7 +17,15 @@
     padding-top: 7px !important;
 }
 
+span.required {
+    color: red;
+}
+
 .erp {
+
+    .clearfix {
+        .clearfix();
+    }
 
     .erp-single-container {
         .clearfix();
@@ -82,11 +90,28 @@
             -moz-osx-font-smoothing: grayscale;
             text-decoration: none!important;
         }
+
+        &.company-postbox {
+            #major-publishing-actions {
+                margin: -12px -12px -23px -12px;
+            }
+        }
+    }
+
+    table.form-table td {
+        padding: 6px 10px;
     }
 }
 
 ul.erp-list {
     width: 100%;
+
+    &.list-inline {
+        li {
+            display: inline-block;
+            margin-right: 10px;
+        }
+    }
 
     &.two-col {
         .clearfix();
@@ -146,6 +171,10 @@ table.audit-log-table {
 .company-accounts {
     .account {
         .clearfix();
+
+        .inside {
+            padding: 0 11px;
+        }
     }
 
     h2 {
@@ -179,4 +208,134 @@ table.audit-log-table {
         float: left;
         width: 80%;
     }
+}
+
+.loading {
+    bottom: 50%;
+    position: absolute;
+    top: 50%;
+    width: 100%;
+
+    span {
+        color: #999;
+    }
+}
+
+.erp-modal {
+    background: #fff;
+    position: fixed;
+    top: 10%;
+    bottom: 10%;
+    right: 15%;
+    left: 15%;
+    // display: block;
+    display: none;
+    box-shadow: 0 1px 20px 5px rgba(0, 0, 0, 0.1);
+    z-index: 160000;
+
+    * { box-sizing: border-box; }
+
+    .close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        font: 300 1.71429em "dashicons" !important;
+        color: #777;
+        content: '\f335';
+        display: inline-block;
+        padding: 10px 20px;
+        z-index: 5;
+        text-decoration: none;
+        height: 50px;
+        border-left: 1px solid #ddd;
+
+        &:hover {
+            background: #eee;
+            opacity: 0.8;
+        }
+
+        &:active {
+            background: #eee;
+            opacity: 0.4;
+        }
+    }
+
+    .modal-header {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 50px;
+        z-index: 4;
+        border-bottom: 1px solid #ddd;
+        padding-left: 15px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+
+        h2 {
+            line-height: 50px;
+            text-align: left;
+            margin-top: 0;
+            color: #5d6d74;
+            font-size: 24px;
+            text-shadow: 0 1px 1px #fff;
+        }
+    }
+
+    .content-container {
+        position: absolute;
+        top: 50px;
+        right: 0;
+        bottom: 50px;
+        left: 0;
+        overflow: auto;
+        padding: 2.14286em 5em;
+    }
+
+    .content {
+        margin: 0 auto;
+        max-width: 900px;
+        text-align: left;
+    }
+
+
+    p {
+        font-size: 1.10em;
+    }
+
+    footer {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        padding: 12px 20px;
+        border-top: 1px solid #ddd;
+        background: #fff;
+        text-align: right;
+
+        ul {
+            margin: 0;
+        }
+        li {
+            display: inline-block;
+            margin: 0;
+        }
+    }
+    .button-secondary,
+    .button-primary:active {
+        // fixing weird core bug thingy
+        vertical-align: baseline;
+    }
+}
+
+.erp-modal-backdrop {
+    position: fixed;
+    z-index: 159999;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    min-height: 360px;
+    background: #000;
+    opacity: .7;
+    display: none;
 }

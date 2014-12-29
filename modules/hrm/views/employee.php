@@ -1,6 +1,6 @@
 <div class="wrap">
 
-    <h2>Employee <a href="#" class="add-new-h2">Add New</a></h2>
+    <h2>Employee <a href="#" id="erp-employee-new" class="add-new-h2">Add New</a></h2>
 
 <?php
 $vendors = array(

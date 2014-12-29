@@ -33,10 +33,6 @@
                 'general' => array(
                     'title'    => __( 'General', 'wp-erp' ),
                     'callback' => 'erp_hr_employee_single_tab_general'
-                ),
-                'compensasion' => array(
-                    'title'    => __( 'Compensation', 'wp-erp' ),
-                    'callback' => ''
                 )
             ) );
             ?>
@@ -50,9 +46,10 @@
             </h2>
 
             <?php
+            $employee = new stdClass();
             // call the tab callback function
             if ( array_key_exists( $active_tab, $tabs ) && is_callable( $tabs[$active_tab]['callback'] ) ) {
-                call_user_func( $tabs[$active_tab]['callback'] );
+                call_user_func_array( $tabs[$active_tab]['callback'], array( $employee ) );
             }
             ?>
 

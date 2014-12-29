@@ -51,8 +51,52 @@
 .erp-leads-single .erp-user-info h3 span.company {
   font-weight: normal;
 }
+.hrm-dashboard .badge-container:before,
+.hrm-dashboard .badge-container:after {
+  content: " ";
+  display: table;
+}
+.hrm-dashboard .badge-container:after {
+  clear: both;
+}
+.hrm-dashboard .badge-container .badge-wrap {
+  float: left;
+  width: 32%;
+  margin-right: 10px;
+  background: #fff;
+}
+.hrm-dashboard .badge-container .badge-wrap .badge-inner {
+  padding: 15px 0 0 15px;
+}
+.hrm-dashboard .badge-container .badge-wrap h3 {
+  font-size: 34px;
+  margin: 10px 0 20px 0;
+}
+.hrm-dashboard .badge-container .badge-wrap .badge-footer {
+  text-align: center;
+  padding: 5px 0;
+}
+.hrm-dashboard .badge-container .badge-wrap .badge-footer:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+.hrm-dashboard .badge-container .badge-wrap .badge-footer a {
+  color: #fff;
+  text-decoration: none;
+  display: block;
+}
 #wp-admin-bar-erp-mode-switch .ab-icon.dashicons-randomize {
   padding-top: 7px !important;
+}
+span.required {
+  color: red;
+}
+.erp .clearfix:before,
+.erp .clearfix:after {
+  content: " ";
+  display: table;
+}
+.erp .clearfix:after {
+  clear: both;
 }
 .erp .erp-single-container {
   margin-top: 10px;
@@ -121,8 +165,18 @@
   -moz-osx-font-smoothing: grayscale;
   text-decoration: none!important;
 }
+.erp .postbox.company-postbox #major-publishing-actions {
+  margin: -12px -12px -23px -12px;
+}
+.erp table.form-table td {
+  padding: 6px 10px;
+}
 ul.erp-list {
   width: 100%;
+}
+ul.erp-list.list-inline li {
+  display: inline-block;
+  margin-right: 10px;
 }
 ul.erp-list.two-col:before,
 ul.erp-list.two-col:after {
@@ -179,6 +233,9 @@ table.audit-log-table th.col-date {
 .company-accounts .account:after {
   clear: both;
 }
+.company-accounts .account .inside {
+  padding: 0 11px;
+}
 .company-accounts h2 a {
   text-decoration: none;
   font-size: 12px;
@@ -203,4 +260,118 @@ table.audit-log-table th.col-date {
 .company-accounts .content-area {
   float: left;
   width: 80%;
+}
+.loading {
+  bottom: 50%;
+  position: absolute;
+  top: 50%;
+  width: 100%;
+}
+.loading span {
+  color: #999;
+}
+.erp-modal {
+  background: #fff;
+  position: fixed;
+  top: 10%;
+  bottom: 10%;
+  right: 15%;
+  left: 15%;
+  display: none;
+  box-shadow: 0 1px 20px 5px rgba(0, 0, 0, 0.1);
+  z-index: 160000;
+}
+.erp-modal * {
+  box-sizing: border-box;
+}
+.erp-modal .close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font: 300 1.71429em "dashicons" !important;
+  color: #777;
+  content: '\f335';
+  display: inline-block;
+  padding: 10px 20px;
+  z-index: 5;
+  text-decoration: none;
+  height: 50px;
+  border-left: 1px solid #ddd;
+}
+.erp-modal .close:hover {
+  background: #eee;
+  opacity: 0.8;
+}
+.erp-modal .close:active {
+  background: #eee;
+  opacity: 0.4;
+}
+.erp-modal .modal-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  z-index: 4;
+  border-bottom: 1px solid #ddd;
+  padding-left: 15px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+.erp-modal .modal-header h2 {
+  line-height: 50px;
+  text-align: left;
+  margin-top: 0;
+  color: #5d6d74;
+  font-size: 24px;
+  text-shadow: 0 1px 1px #fff;
+}
+.erp-modal .content-container {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  bottom: 50px;
+  left: 0;
+  overflow: auto;
+  padding: 2.14286em 5em;
+}
+.erp-modal .content {
+  margin: 0 auto;
+  max-width: 900px;
+  text-align: left;
+}
+.erp-modal p {
+  font-size: 1.10em;
+}
+.erp-modal footer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 12px 20px;
+  border-top: 1px solid #ddd;
+  background: #fff;
+  text-align: right;
+}
+.erp-modal footer ul {
+  margin: 0;
+}
+.erp-modal footer li {
+  display: inline-block;
+  margin: 0;
+}
+.erp-modal .button-secondary,
+.erp-modal .button-primary:active {
+  vertical-align: baseline;
+}
+.erp-modal-backdrop {
+  position: fixed;
+  z-index: 159999;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  min-height: 360px;
+  background: #000;
+  opacity: .7;
+  display: none;
 }
