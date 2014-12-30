@@ -11,7 +11,8 @@ class Company {
      *
      * @param int|object  the company numeric id or a wpdb row
      */
-    public function __construct( $company ) {
+    public function __construct( $company = null ) {
+
         if ( is_object( $company ) ) {
 
             $this->populate( $company );
@@ -133,5 +134,25 @@ class Company {
         );
 
         return $url;
+    }
+
+    /**
+     * Check if the employee belongs to the company
+     *
+     * @param  int   employee id
+     *
+     * @return boolean
+     */
+    public function has_employee( $employee_id ) {
+        global $wpdb;
+
+        $sql = "SELECT id FROM {$wpdb->prefix}erp_hr_employees WHERE employee_id = %d AND company_id = %d";
+        $row = $wpdb->get_row( $wpdb->prepare( $sql, $employee_id, $this->id ) );
+
+        if ( $row ) {
+            return true;
+        }
+
+        return false;
     }
 }
