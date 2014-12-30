@@ -6,20 +6,6 @@
 ;(function($, window) {
     'use strict';
 
-    // function erp_show_modal( title, content, button ) {
-    //     var $modal = $( '.erp-modal' );
-
-    //     title      = title || '';
-    //     content    = content || '';
-    //     button     = button || 'Submit';
-
-    //     $( '.erp-modal-backdrop' ).show();
-    //     $modal.find('h2').text( title );
-    //     $modal.find('.button-primary').text( button );
-    //     $modal.find( '.content').empty().html(content);
-    //     $modal.show();
-    // }
-
     $(function() {
 
         var WeDevs_ERP = {
@@ -27,27 +13,44 @@
             initialize: function() {
                 this.self = this;
 
-                $('#erp-employee-new').on('click', $.proxy(this.modalNewEmployee, this) );
-                $('select#erp-country').on('change', this.populateState );
+                console.log(window);
 
-                $('#postimagediv').on( 'click', '#set-company-thumbnail', this.setCompanyLogo );
-                $('#postimagediv').on( 'click', 'a.remove-logo', this.removeCompanyLogo );
+                $( 'select#erp-country').on( 'change', this.populateState );
+
+                $( '#postimagediv').on( 'click', '#set-company-thumbnail', this.setCompanyLogo );
+                $( '#postimagediv').on( 'click', 'a.remove-logo', this.removeCompanyLogo );
+
+                // modal windows
+                $( 'a#erp-new-dept').on( 'click', this.modalNewDepartment );
+
+                // this.modalNewDepartment();
 
                 // fire change events
-                $('select#erp-country').change();
+                $( 'select#erp-country').change();
             },
 
             hideModal: function() {
 
             },
 
-            modalNewEmployee: function(e) {
-                e.preventDefault();
+            modalNewDepartment: function(e) {
+                if ( typeof e !== 'undefined' ) {
+                    e.preventDefault();
+                }
 
-                // var form = $('#erp-tmpl-employee').html();
-                // erp_show_modal( 'New Employee', form, 'Create Employee');
-                // console.log('hello');
-                $('#dd').defaultPluginName({});
+                $.erpPopup({
+                    title: wpErp.popup.dept_title,
+                    button: wpErp.popup.dept_submit,
+                    content: $('#erp-tmpl-new-dept').html(),
+                    extraClass: 'smaller',
+                    onSubmit: function() {
+                        var input = this.serialize();
+
+                        $.post(wpErp.ajaxurl, input, function(resp) {
+                            console.log(resp);
+                        });
+                    }
+                });
             },
 
             setCompanyLogo: function(e) {
@@ -63,9 +66,7 @@
 
                 frame = wp.media({
                     title: wpErp.upload_logo,
-                    button: {
-                        text: wpErp.set_logo,
-                    }
+                    button: { text: wpErp.set_logo }
                 });
 
                 frame.on('select', function() {
@@ -126,20 +127,6 @@
         };
 
         WeDevs_ERP.initialize();
-
-        // close the modal window
-        $('.erp-modal-backdrop, .erp-modal .close').on('click', function ( event ) {
-            $('.erp-modal-backdrop, .erp-modal').hide();
-            event.preventDefault();
-        });
-
-        // If pressing ESC close the modal
-        $( window ).on( 'keydown', function( e ) {
-            if ( 27 === e.keyCode ) {
-                $( '.erp-modal-backdrop, .erp-modal' ).hide();
-            }
-        });
-
     });
 
 })(jQuery, this);

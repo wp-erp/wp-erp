@@ -22,13 +22,19 @@ class Admin_Page {
     public function admin_scripts( $hook ) {
         // var_dump( $hook );
 
-        wp_enqueue_script( 'wp-erp-popup', WPERP_ASSETS . '/js/jquery-popup.js', array( 'jquery', 'backbone', 'underscore' ), date( 'Ymd' ), true );
+        wp_enqueue_script( 'wp-erp-popup', WPERP_ASSETS . '/js/jquery-popup.js', array( 'jquery' ), date( 'Ymd' ), true );
         wp_enqueue_script( 'wp-erp-script', WPERP_ASSETS . '/js/admin-script.js', array( 'jquery', 'backbone', 'underscore' ), date( 'Ymd' ), true );
 
         wp_localize_script( 'wp-erp-script', 'wpErp', array(
+            'ajaxurl'     => admin_url( 'admin-ajax.php' ),
             'set_logo'    => __( 'Set company logo', 'wp-erp' ),
             'upload_logo' => __( 'Upload company logo', 'wp-erp' ),
-            'remove_logo' => __( 'Remove company logo', 'wp-erp' )
+            'remove_logo' => __( 'Remove company logo', 'wp-erp' ),
+            'popup' => array(
+                'dept_title'  => __( 'New Department', 'wp-erp' ),
+                'dept_submit' => __( 'Create Department', 'wp-erp' ),
+                'dept_update' => __( 'Update Department', 'wp-erp' )
+            )
         ) );
 
         // load country/state JSON on new company page

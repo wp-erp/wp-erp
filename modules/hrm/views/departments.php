@@ -1,6 +1,6 @@
 <div class="wrap">
 
-    <h2>Departments <a href="#" class="add-new-h2">Add New</a></h2>
+    <h2>Departments <a href="#" id="erp-new-dept" class="add-new-h2">Add New</a></h2>
 
 <?php
 $vendors = array(
@@ -52,24 +52,37 @@ $vendors = array(
         </tfoot>
 
         <tbody id="the-list">
-            <?php foreach( $vendors as $num => $row ) { ?>
-            <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
-                <th scope="row" class="check-column">
-                    <input id="cb-select-1" type="checkbox" name="post[]" value="1">
-                </th>
-                <td class="col-">
+            <?php
 
-                    <strong><a href="<?php echo erp_hr_url_single_employee(1); ?>"><?php echo $row[0]; ?></a></strong>
+            $departments = erp_hr_get_departments( erp_get_current_company_id() );
 
-                    <div class="row-actions">
-                        <span class="edit"><a href="#" title="Edit this item">Edit</a> | </span>
-                        <span class="trash"><a class="submitdelete" title="Delete this item" href="#">Delete</a></span>
-                    </div>
-                </td>
-                <td class="col-"><?php echo empty( $row[1] ) ? '-' : $row[1]; ?></td>
-                <td class="col-"><?php echo isset( $row[2] ) ? $row[2] : '-'; ?></td>
-            </tr>
-            <?php } ?>
+            if ( $departments ) {
+                foreach( $departments as $num => $row ) {
+                    $department = new \WeDevs\ERP\HRM\Department( $row );
+                    ?>
+                    <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>" id="erp-dept-<?php echo $department->id; ?>">
+                        <th scope="row" class="check-column">
+                            <input id="cb-select-1" type="checkbox" name="post[]" value="1">
+                        </th>
+                        <td class="col-">
+
+                            <strong><a href="#"><?php echo $department->name; ?></a></strong>
+
+                            <div class="row-actions">
+                                <span class="edit"><a href="#" title="Edit this item">Edit</a> | </span>
+                                <span class="trash"><a class="submitdelete" title="Delete this item" href="#">Delete</a></span>
+                            </div>
+                        </td>
+                        <td class="col-"><?php echo $department->get_lead(); ?></td>
+                        <td class="col-"><?php echo $department->num_of_employees(); ?></td>
+                    </tr>
+
+                    <?php
+                }
+            } else {
+                echo 'No departments found!';
+            }
+            ?>
         </tbody>
     </table>
 
