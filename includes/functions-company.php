@@ -30,6 +30,12 @@ function erp_create_company( $args = array() ) {
         'status'    => 1
     );
     $fields = wp_parse_args( $args, $defaults );
+
+    // validation
+    if ( empty( $fields['name'] ) ) {
+        return new WP_Error( 'no-name', __( 'No company name provided.', 'wp-erp' ) );
+    }
+
     $fields = apply_filters( 'erp_create_compnay_args', $fields );
 
     // unset the company id
