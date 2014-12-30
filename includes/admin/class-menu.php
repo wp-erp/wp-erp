@@ -15,6 +15,7 @@ class Admin_Menu {
      */
     public function __construct() {
         add_action( 'init', array( $this, 'do_mode_switch' ), 99 );
+        add_action( 'init', array( $this, 'do_company_switch' ), 99 );
 
         add_action( 'admin_menu', array( $this, 'admin_menu' ), 99 );
         add_action( 'admin_menu', array( $this, 'hide_admin_menus' ), 100 );
@@ -49,10 +50,10 @@ class Admin_Menu {
         $modules      = erp_get_modules();
         $current_mode = erp_get_current_module();
 
+        // ERP Mode
         $title        = __( 'Switch ERP Mode', 'wp-erp' );
         $icon         = '<span class="ab-icon dashicons-randomize"></span>';
         $text         = sprintf( '%s: %s', __( 'ERP Mode', 'wp-erp' ), $current_mode['title'] );
-
 
         $wp_admin_bar->add_menu( array(
             'id'        => 'erp-mode-switch',
@@ -71,6 +72,35 @@ class Admin_Menu {
                 'title'  => $module['title'],
                 'href'   => wp_nonce_url( add_query_arg( 'erp-mode', $key ), 'erp_mode_nonce', 'erp_mode_nonce' )
             ) );
+        }
+
+        // Company Mode
+        $companies       = erp_get_companies();
+        $current_company = erp_get_current_company();
+        $com_label       = ( false === $current_company ) ? __( '- None -', 'wp-erp' ) : $current_company->name;
+
+        $com_icon        = '<span class="ab-icon dashicons-admin-home"></span>';
+        $com_text        = sprintf( '%s: %s', __( 'Company', 'wp-erp' ), $com_label );
+
+        $wp_admin_bar->add_menu( array(
+            'id'        => 'erp-comp-switch',
+            'title'     => $com_icon . $com_text,
+            'href'      => '#',
+            'position'  => 0,
+            'meta'      => array(
+                'title' => __( 'Switch Company', 'wp-erp' )
+            )
+        ) );
+
+        if ( $companies ) {
+            foreach ($companies as $key => $company) {
+                $wp_admin_bar->add_menu( array(
+                    'id'     => 'erp-comp-' . $key,
+                    'parent' => 'erp-comp-switch',
+                    'title'  => $company->name,
+                    'href'   => wp_nonce_url( add_query_arg( 'erp-comp', $company->id ), 'erp_comp_swt_nonce', 'erp_comp_swt_nonce' )
+                ) );
+            }
         }
     }
 
@@ -104,6 +134,35 @@ class Admin_Menu {
         update_user_meta( $current_user->ID, '_erp_mode', $new_mode );
 
         $redirect_to = apply_filters( 'erp_switch_redirect_to', admin_url( 'index.php' ), $new_mode );
+        wp_redirect( $redirect_to );
+        exit;
+    }
+
+    /**
+     * Do the company switch from admin bar
+     *
+     * @return void
+     */
+    public function do_company_switch() {
+        global $current_user;
+
+        // check for our nonce
+        if ( ! isset( $_GET['erp_comp_swt_nonce'] ) || ! wp_verify_nonce( $_GET['erp_comp_swt_nonce'], 'erp_comp_swt_nonce' ) ) {
+            return;
+        }
+
+        $companies   = erp_get_companies();
+        $company_ids = array_map( 'intval', wp_list_pluck( $companies, 'id' ) );
+
+        // now check for our query string
+        if ( ! isset( $_REQUEST['erp-comp'] ) || ! in_array( $_REQUEST['erp-comp'], $company_ids ) ) {
+            return;
+        }
+
+        $company_id = (int) $_REQUEST['erp-comp'];
+        update_user_meta( $current_user->ID, '_erp_company', $company_id );
+
+        $redirect_to = apply_filters( 'erp_comp_switch_redirect_to', admin_url( 'index.php' ), $company_id );
         wp_redirect( $redirect_to );
         exit;
     }

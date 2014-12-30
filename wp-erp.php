@@ -118,6 +118,7 @@ class WeDevs_ERP {
         }
 
         require_once WPERP_INCLUDES . '/functions.php';
+        require_once WPERP_INCLUDES . '/functions-company.php';
         require_once WPERP_INCLUDES . '/class-countries.php';
         require_once WPERP_INCLUDES . '/class-company.php';
         require_once WPERP_INCLUDES . '/admin/class-form-handler.php';
