@@ -284,6 +284,12 @@ table.audit-log-table th.col-date {
 .erp-modal * {
   box-sizing: border-box;
 }
+.erp-modal.smaller {
+  bottom: 35%;
+  top: 15%;
+  left: 30%;
+  right: 30%;
+}
 .erp-modal .close {
   position: absolute;
   top: 0;
@@ -322,7 +328,7 @@ table.audit-log-table th.col-date {
   text-align: left;
   margin-top: 0;
   color: #5d6d74;
-  font-size: 24px;
+  font-size: 20px;
   text-shadow: 0 1px 1px #fff;
 }
 .erp-modal .content-container {
@@ -338,6 +344,23 @@ table.audit-log-table th.col-date {
   margin: 0 auto;
   max-width: 900px;
   text-align: left;
+}
+.erp-modal .content .row {
+  margin-bottom: 12px;
+}
+.erp-modal .content .row:before,
+.erp-modal .content .row:after {
+  content: " ";
+  display: table;
+}
+.erp-modal .content .row:after {
+  clear: both;
+}
+.erp-modal .content .row label {
+  min-width: 130px;
+  line-height: 1.5em;
+  display: inline-block;
+  vertical-align: top;
 }
 .erp-modal p {
   font-size: 1.10em;

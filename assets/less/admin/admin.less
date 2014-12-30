@@ -235,6 +235,13 @@ table.audit-log-table {
 
     * { box-sizing: border-box; }
 
+    &.smaller {
+        bottom: 35%;
+        top: 15%;
+        left: 30%;
+        right: 30%;
+    }
+
     .close {
         position: absolute;
         top: 0;
@@ -276,7 +283,7 @@ table.audit-log-table {
             text-align: left;
             margin-top: 0;
             color: #5d6d74;
-            font-size: 24px;
+            font-size: 20px;
             text-shadow: 0 1px 1px #fff;
         }
     }
@@ -295,8 +302,19 @@ table.audit-log-table {
         margin: 0 auto;
         max-width: 900px;
         text-align: left;
-    }
 
+        .row {
+            .clearfix();
+            margin-bottom: 12px;
+
+            label {
+                min-width: 130px;
+                line-height: 1.5em;
+                display: inline-block;
+                vertical-align: top;
+            }
+        }
+    }
 
     p {
         font-size: 1.10em;
