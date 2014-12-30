@@ -107,3 +107,18 @@ function erp_get_current_company() {
     $first = reset( $companies );
     return new \WeDevs\ERP\Company( $first );
 }
+
+/**
+ * Get the ID of current company
+ *
+ * @return int the company id
+ */
+function erp_get_current_company_id() {
+    $company = erp_get_current_company();
+
+    if ( false === $company ) {
+        return false;
+    }
+
+    return $company->id;
+}
