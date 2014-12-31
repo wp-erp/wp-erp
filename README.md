@@ -1,3 +1,6 @@
 # WP ERP
 
-A ERP solution for WordPress
+An open-source ERP solution for WordPress
+
+## Author
+[Tareq Hasan](http://tareq.wedevs.com)
