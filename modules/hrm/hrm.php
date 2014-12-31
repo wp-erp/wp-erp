@@ -55,6 +55,7 @@ class Human_Resource {
         define( 'WPERP_HRM_FILE', __FILE__ );
         define( 'WPERP_HRM_PATH', dirname( __FILE__ ) );
         define( 'WPERP_HRM_VIEWS', dirname( __FILE__ ) . '/views' );
+        define( 'WPERP_HRM_ASSETS', plugins_url( '/assets', __FILE__ ) );
     }
 
     /**
@@ -65,8 +66,10 @@ class Human_Resource {
     private function includes() {
         require_once WPERP_HRM_PATH . '/admin/class-menu.php';
         require_once WPERP_HRM_PATH . '/includes/functions.php';
-        require_once WPERP_HRM_PATH . '/includes/functions-departments.php';
+        require_once WPERP_HRM_PATH . '/includes/functions-department.php';
         require_once WPERP_HRM_PATH . '/includes/class-department.php';
+        require_once WPERP_HRM_PATH . '/includes/class-walker-department.php';
+        require_once WPERP_HRM_PATH . '/includes/class-designation.php';
         require_once WPERP_HRM_PATH . '/includes/class-ajax.php';
     }
 
@@ -76,7 +79,7 @@ class Human_Resource {
      * @return void
      */
     private function init_actions() {
-
+        add_action( 'admin_enqueue_scripts', array($this, 'admin_scripts' ) );
     }
 
     /**
@@ -86,6 +89,19 @@ class Human_Resource {
      */
     private function init_filters() {
 
+    }
+
+    /**
+     * Load admin scripts and styles
+     *
+     * @param  string
+     *
+     * @return void
+     */
+    public function admin_scripts( $hook ) {
+        $suffix = ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) ? '' : '.min';
+
+        wp_enqueue_script( 'wp-erp-hr', WPERP_HRM_ASSETS . "/js/hrm$suffix.js", array( 'wp-erp-script' ), date( 'Ymd' ), true );
     }
 }
 

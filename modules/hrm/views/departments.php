@@ -42,28 +42,10 @@
             $departments = erp_hr_get_departments( erp_get_current_company_id() );
 
             if ( $departments ) {
-                foreach( $departments as $num => $row ) {
-                    $department = new \WeDevs\ERP\HRM\Department( $row );
-                    ?>
-                    <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>" id="erp-dept-<?php echo $department->id; ?>">
-                        <th scope="row" class="check-column">
-                            <input id="cb-select-1" type="checkbox" name="dept[]" value="1">
-                        </th>
-                        <td class="col-">
 
-                            <strong><a href="#"><?php echo $department->name; ?></a></strong>
+                $walker = new \WeDevs\ERP\HRM\Department_Walker();
+                $walker->walk( $departments, 5 );
 
-                            <div class="row-actions">
-                                <span class="edit"><a href="#" title="Edit this item">Edit</a> | </span>
-                                <span class="trash"><a class="submitdelete" title="Delete this item" href="#">Delete</a></span>
-                            </div>
-                        </td>
-                        <td class="col-"><?php echo $department->get_lead(); ?></td>
-                        <td class="col-"><?php echo $department->num_of_employees(); ?></td>
-                    </tr>
-
-                    <?php
-                }
             } else {
                 ?>
                 <tr class="alternate no-rows">
