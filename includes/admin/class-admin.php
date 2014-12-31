@@ -22,8 +22,10 @@ class Admin_Page {
     public function admin_scripts( $hook ) {
         // var_dump( $hook );
 
-        wp_enqueue_script( 'wp-erp-popup', WPERP_ASSETS . '/js/jquery-popup.js', array( 'jquery' ), date( 'Ymd' ), true );
-        wp_enqueue_script( 'wp-erp-script', WPERP_ASSETS . '/js/admin-script.js', array( 'jquery', 'backbone', 'underscore' ), date( 'Ymd' ), true );
+        $suffix = ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) ? '' : '.min';
+
+        wp_enqueue_script( 'wp-erp-popup', WPERP_ASSETS . "/js/jquery-popup$suffix.js", array( 'jquery' ), date( 'Ymd' ), true );
+        wp_enqueue_script( 'wp-erp-script', WPERP_ASSETS . "/js/erp$suffix.js", array( 'jquery', 'backbone', 'underscore' ), date( 'Ymd' ), true );
 
         wp_localize_script( 'wp-erp-script', 'wpErp', array(
             'ajaxurl'     => admin_url( 'admin-ajax.php' ),
