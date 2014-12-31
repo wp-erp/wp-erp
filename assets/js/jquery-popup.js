@@ -61,7 +61,7 @@
         formSubmit: function(e) {
             e.preventDefault();
 
-            this.settings.onSubmit.call( $(e.currentTarget) );
+            this.settings.onSubmit.call( $(e.currentTarget), this );
         },
 
         /**
