@@ -44,7 +44,13 @@ class Ajax_Handler {
             wp_send_json_error( $dept_id->get_error_message() );
         }
 
-        wp_send_json_success( $_POST );
+        wp_send_json_success( array(
+            'id'       => $dept_id,
+            'title'    => $title,
+            'lead'     => $lead,
+            'parent'   => $parent,
+            'employee' => 0
+        ) );
     }
 }
 

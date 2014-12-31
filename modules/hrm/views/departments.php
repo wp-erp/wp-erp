@@ -1,21 +1,6 @@
-<div class="wrap">
+<div class="wrap erp-hr-depts">
 
-    <h2>Departments <a href="#" id="erp-new-dept" class="add-new-h2">Add New</a></h2>
-
-<?php
-$vendors = array(
-    array( 'Engineering', 'John Doe', 11 ),
-    array( 'HR', '', 0 ),
-    array( 'Marketing', 'Nizam Uddin', 4 ),
-    array( 'Production', 'Sabbir Ahmed', 4 ),
-    array( '&#8212; Quality', '', 2 ),
-    array( '&#8212; Purchase', '', 2 ),
-    array( '&#8212; &#8212; Another', '', 2 ),
-    array( 'Sales', '', 0 ),
-    array( 'R&D', '', 0 ),
-);
-
-?>
+    <h2><?php _e( 'Departments', 'wp-erp' ); ?> <a href="#" id="erp-new-dept" class="add-new-h2"><?php _e( 'Add New', 'wp-erp' ); ?></a></h2>
 
     <div class="tablenav top">
         <div class="alignleft actions bulkactions">
@@ -28,7 +13,7 @@ $vendors = array(
         </div>
     </div>
 
-    <table class="wp-list-table widefat fixed vendor-list-table">
+    <table class="wp-list-table widefat fixed department-list-table">
         <thead>
             <tr>
                 <th scope="col" id="cb" class="manage-column column-cb check-column" style="">
@@ -62,7 +47,7 @@ $vendors = array(
                     ?>
                     <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>" id="erp-dept-<?php echo $department->id; ?>">
                         <th scope="row" class="check-column">
-                            <input id="cb-select-1" type="checkbox" name="post[]" value="1">
+                            <input id="cb-select-1" type="checkbox" name="dept[]" value="1">
                         </th>
                         <td class="col-">
 
@@ -80,7 +65,13 @@ $vendors = array(
                     <?php
                 }
             } else {
-                echo 'No departments found!';
+                ?>
+                <tr class="alternate no-rows">
+                    <td colspan="4">
+                        <?php _e( 'No departments found!', 'wp-erp' ); ?>
+                    </td>
+                </tr>
+                <?php
             }
             ?>
         </tbody>

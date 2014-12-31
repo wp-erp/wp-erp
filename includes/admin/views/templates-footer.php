@@ -25,12 +25,12 @@
 </div>
 <div class="erp-modal-backdrop"></div>
 
-<script type="text/template" id="erp-tmpl-employee">
+<script type="text/html" id="erp-tmpl-employee">
     <input type="text">
     <input type="text">
 </script>
 
-<script type="text/template" id="erp-tmpl-new-dept">
+<script type="text/html" id="erp-tmpl-new-dept">
     <div class="row">
         <label for="dept-title"><?php _e( 'Department Title', 'wp-erp' ); ?> <span class="required">*</span></label>
         <span class="field">
@@ -65,4 +65,23 @@
 
     <?php wp_nonce_field( 'erp-new-dept' ); ?>
     <input type="hidden" name="action" value="erp-new-dept">
+</script>
+
+<script type="text/html" id="erp-tmpl-dept-row">
+    <tr class="<%= cls %>" id="erp-dept-<%= id %>">
+        <th scope="row" class="check-column">
+            <input id="cb-select-1" type="checkbox" name="dept[]" value="<%= id %>">
+        </th>
+        <td class="col-">
+
+            <strong><a href="#"><%= title %></a></strong>
+
+            <div class="row-actions">
+                <span class="edit"><a href="#" title="Edit this item" data-id="<%= id %>"><?php _e( 'Edit', 'wp-erp' ); ?></a> | </span>
+                <span class="trash"><a class="submitdelete" title="<?php esc_attr_e( 'Delete this item', 'wp-erp' ); ?>" href="#"><?php _e( 'Delete', 'wp-erp' ); ?></a></span>
+            </div>
+        </td>
+        <td class="col-"><%= lead %></td>
+        <td class="col-"><%= employee %></td>
+    </tr>
 </script>
