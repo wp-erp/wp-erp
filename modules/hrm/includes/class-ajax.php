@@ -27,8 +27,8 @@ class Ajax_Handler {
             wp_send_json_error();
         }
 
-        $title  = isset( $_POST['title'] ) ? strip_tags( $_POST['title'] ) : '';
-        $desc   = isset( $_POST['dept-desc'] ) ? strip_tags( $_POST['dept-desc'] ) : '';
+        $title  = isset( $_POST['title'] ) ? trim( strip_tags( $_POST['title'] ) ) : '';
+        $desc   = isset( $_POST['dept-desc'] ) ? trim( strip_tags( $_POST['dept-desc'] ) ) : '';
         $lead   = isset( $_POST['lead'] ) ? intval( $_POST['lead'] ) : 0;
         $parent = isset( $_POST['parent'] ) ? intval( $_POST['parent'] ) : 0;
 
