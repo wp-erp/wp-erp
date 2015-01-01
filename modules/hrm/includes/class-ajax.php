@@ -67,6 +67,11 @@ class Ajax_Handler {
         $lead    = isset( $_POST['lead'] ) ? intval( $_POST['lead'] ) : 0;
         $parent  = isset( $_POST['parent'] ) ? intval( $_POST['parent'] ) : 0;
 
+        // on update, ensure $parent != $dept_id
+        if ( $dept_id == $parent ) {
+            $parent = 0;
+        }
+
         $dept_id = erp_hr_create_department( array(
             'id'          => $dept_id,
             'company_id'  => erp_get_current_company_id(),

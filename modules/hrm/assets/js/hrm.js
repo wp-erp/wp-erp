@@ -94,6 +94,9 @@
                                 $('#dept-parent', modal).val( response.data.parent );
                                 $('#dept-id', modal).val( response.id );
                                 $('#dept-action', modal).val( 'erp-hr-update-dept' );
+
+                                // disable current one
+                                $('#dept-parent option[value="' + self.data('id') + '"]', modal).attr( 'disabled', 'disabled' );
                             }
                         });
                     },
