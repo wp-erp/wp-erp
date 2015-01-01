@@ -44,7 +44,7 @@
 
                             if ( table ) {
                                 var cls = $('tr:last', table).attr('class'),
-                                    cls = ( cls === 'odd' ) ? 'alternate' : 'odd';
+                                    cls = ( cls === 'even' ) ? 'alternate' : 'even';
 
                                 resp.data.cls = cls;
                                 row = _.template( row, resp.data );
