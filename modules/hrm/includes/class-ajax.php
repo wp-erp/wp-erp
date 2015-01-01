@@ -16,6 +16,8 @@ class Ajax_Handler {
     public function __construct() {
         add_action( 'wp_ajax_erp-new-dept', array($this, 'department_create') );
         add_action( 'wp_ajax_erp-hr-del-dept', array($this, 'department_delete') );
+        add_action( 'wp_ajax_erp-hr-get-dept', array($this, 'department_get') );
+        add_action( 'wp_ajax_erp-hr-update-dept', array($this, 'department_create') );
     }
 
     /**
@@ -32,6 +34,24 @@ class Ajax_Handler {
     }
 
     /**
+     * Get a department
+     *
+     * @return void
+     */
+    public function department_get() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+
+        if ( $id ) {
+            $department = new \WeDevs\ERP\HRM\Department( $id );
+            wp_send_json_success( $department );
+        }
+
+        wp_send_json_success( __( 'Something went wrong!', 'wp-erp' ) );
+    }
+
+    /**
      * Create a new department
      *
      * @return void
@@ -41,12 +61,14 @@ class Ajax_Handler {
 
         // @TODO: check permission
 
-        $title  = isset( $_POST['title'] ) ? trim( strip_tags( $_POST['title'] ) ) : '';
-        $desc   = isset( $_POST['dept-desc'] ) ? trim( strip_tags( $_POST['dept-desc'] ) ) : '';
-        $lead   = isset( $_POST['lead'] ) ? intval( $_POST['lead'] ) : 0;
-        $parent = isset( $_POST['parent'] ) ? intval( $_POST['parent'] ) : 0;
+        $title   = isset( $_POST['title'] ) ? trim( strip_tags( $_POST['title'] ) ) : '';
+        $desc    = isset( $_POST['dept-desc'] ) ? trim( strip_tags( $_POST['dept-desc'] ) ) : '';
+        $dept_id = isset( $_POST['dept_id'] ) ? intval( $_POST['dept_id'] ) : 0;
+        $lead    = isset( $_POST['lead'] ) ? intval( $_POST['lead'] ) : 0;
+        $parent  = isset( $_POST['parent'] ) ? intval( $_POST['parent'] ) : 0;
 
         $dept_id = erp_hr_create_department( array(
+            'id'          => $dept_id,
             'company_id'  => erp_get_current_company_id(),
             'title'       => $title,
             'description' => $desc,

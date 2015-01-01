@@ -261,15 +261,6 @@ table.audit-log-table th.col-date {
   float: left;
   width: 80%;
 }
-.loading {
-  bottom: 50%;
-  position: absolute;
-  top: 50%;
-  width: 100%;
-}
-.loading span {
-  color: #999;
-}
 .erp-modal {
   background: #fff;
   position: fixed;
@@ -289,6 +280,14 @@ table.audit-log-table th.col-date {
   top: 15%;
   left: 30%;
   right: 30%;
+}
+.erp-modal .loader {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #ffffff url('../../images/spinner-2x.gif') center center no-repeat;
+  z-index: 99;
+  display: none;
 }
 .erp-modal .close {
   position: absolute;

@@ -50,7 +50,7 @@ function erp_hr_create_department( $args = array() ) {
 
             do_action( 'erp_hr_dept_updated', $dept_id, $fields );
 
-            return true;
+            return $dept_id;
         }
 
     }
