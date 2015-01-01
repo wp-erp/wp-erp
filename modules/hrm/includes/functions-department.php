@@ -72,6 +72,19 @@ function erp_hr_get_departments( $company_id ) {
 }
 
 /**
+ * Delete a department
+ *
+ * @param  int  department id
+ *
+ * @return bool
+ */
+function erp_hr_delete_department( $department_id ) {
+    global $wpdb;
+
+    return $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}erp_hr_depts WHERE id = %d", $department_id ) );
+}
+
+/**
  * Get company departments dropdown
  *
  * @param  int  company id

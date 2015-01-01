@@ -1,8 +1,6 @@
 /* jshint devel:true */
-/* global wpErp */
 /* global wpErpHr */
 /* global wp */
-/* global _ */
 
 ;(function($) {
     'use strict';
@@ -17,6 +15,7 @@
         initialize: function() {
             // Department
             $( '.erp-hr-depts').on( 'click', 'a#erp-new-dept', this.modalNewDepartment );
+            $( '.erp-hr-depts').on( 'click', 'a.submitdelete', this.deleteDepartment );
 
             // Designation
             $( '.erp-hr-designation').on( 'click', 'a#erp-new-designation', this.modalNewDesignation );
@@ -60,6 +59,34 @@
                     });
                 } // onSubmit
             }); //popup
+        },
+
+        /**
+         * Delete a department
+         *
+         * @param  {event}
+         */
+        deleteDepartment: function(e) {
+            e.preventDefault();
+
+            var self = $(this);
+
+            if ( confirm( wpErpHr.delConfirmDept ) ) {
+                wp.ajax.send( 'erp-hr-del-dept', {
+                    data: {
+                        '_wpnonce': wpErpHr.nonce,
+                        id: self.data( 'id' )
+                    },
+                    success: function() {
+                        self.closest('tr').fadeOut( 'fast', function() {
+                            $(this).remove();
+                        });
+                    },
+                    error: function(response) {
+                        alert( response );
+                    }
+                });
+            }
         },
 
         modalNewDesignation: function(e) {

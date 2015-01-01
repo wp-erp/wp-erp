@@ -15,6 +15,20 @@ class Ajax_Handler {
      */
     public function __construct() {
         add_action( 'wp_ajax_erp-new-dept', array($this, 'department_create') );
+        add_action( 'wp_ajax_erp-hr-del-dept', array($this, 'department_delete') );
+    }
+
+    /**
+     * Verify request nonce
+     *
+     * @param  string  the nonce action name
+     *
+     * @return void
+     */
+    public function verify_nonce( $action ) {
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], $action ) ) {
+            wp_send_json_error( __( 'Error: Nonce verification failed', 'wp-erp' ) );
+        }
     }
 
     /**
@@ -23,9 +37,9 @@ class Ajax_Handler {
      * @return void
      */
     public function department_create() {
-        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-new-dept' ) ) {
-            wp_send_json_error( __( 'Nonce verification failed', 'wp-erp' ) );
-        }
+        $this->verify_nonce( 'erp-new-dept' );
+
+        // @TODO: check permission
 
         $title  = isset( $_POST['title'] ) ? trim( strip_tags( $_POST['title'] ) ) : '';
         $desc   = isset( $_POST['dept-desc'] ) ? trim( strip_tags( $_POST['dept-desc'] ) ) : '';
@@ -51,6 +65,23 @@ class Ajax_Handler {
             'parent'   => $parent,
             'employee' => 0
         ) );
+    }
+
+    /**
+     * Delete a department
+     *
+     * @return void
+     */
+    public function department_delete() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+        if ( $id ) {
+            // @TODO: check permission
+            erp_hr_delete_department( $id );
+        }
+
+        wp_send_json_success( __( 'Department has been deleted', 'wp-erp' ) );
     }
 }
 
