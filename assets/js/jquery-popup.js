@@ -14,6 +14,7 @@
             content: '',
             button: 'Submit',
             extraClass: '',
+            onReady: function() {},
             onSubmit: function() {}
         };
 
@@ -81,6 +82,9 @@
             $modal.find('.button-primary').text( this.settings.button );
             $modal.find( '.content').empty().html(this.element);
             $modal.show();
+
+            // call the onReady callback
+            this.settings.onReady.call( $modal, this );
         },
 
         /**
