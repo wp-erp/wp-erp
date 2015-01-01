@@ -1,5 +1,7 @@
 /* jshint devel:true */
 /* global wpErp */
+/* global wpErpHr */
+/* global wp */
 /* global _ */
 
 ;(function($) {
@@ -13,8 +15,11 @@
          * @return {void}
          */
         initialize: function() {
-            // new department
-            $( '.erp-hr-depts').on( 'click', 'a#erp-new-dept', this.modalNewDepartment ); // new department
+            // Department
+            $( '.erp-hr-depts').on( 'click', 'a#erp-new-dept', this.modalNewDepartment );
+
+            // Designation
+            $( '.erp-hr-designation').on( 'click', 'a#erp-new-designation', this.modalNewDesignation );
         },
 
         /**
@@ -28,38 +33,51 @@
             e.preventDefault();
 
             $.erpPopup({
-                title: wpErp.popup.dept_title,
-                button: wpErp.popup.dept_submit,
-                content: $('#erp-tmpl-new-dept').html(),
+                title: wpErpHr.popup.dept_title,
+                button: wpErpHr.popup.dept_submit,
+                content: wp.template('erp-new-dept')(),
                 extraClass: 'smaller',
                 onSubmit: function(modal) {
-                    var input = this.serialize();
 
-                    $.post(wpErp.ajaxurl, input, function(resp) {
-                        // console.log(resp.data);
-
-                        if ( resp.success === true ) {
-                            var row   = $('#erp-tmpl-dept-row').html(),
+                    wp.ajax.send( {
+                        data: this.serialize(),
+                        success: function(response) {
+                            var row   = wp.template('erp-dept-row'),
                                 table = $('table.department-list-table');
 
                             if ( table ) {
-                                var cls = $('tr:last', table).attr('class'),
-                                    cls = ( cls === 'even' ) ? 'alternate' : 'even';
+                                var cls = ( $('tr:last', table).attr('class') === 'even' ) ? 'alternate' : 'even';
 
-                                resp.data.cls = cls;
-                                row = _.template( row, resp.data );
-                                table.append(row);
+                                response.cls = cls;
+                                table.append( row(response) );
 
                                 modal.closeModal();
                             }
-                        } else {
-                            alert( resp.data );
+                        },
+                        error: function(error) {
+                            alert( error );
                         }
-                    }); // $.post
+                    });
                 } // onSubmit
             }); //popup
         },
+
+        modalNewDesignation: function(e) {
+            e.preventDefault();
+
+            $.erpPopup({
+                title: wpErpHr.popup.desig_title,
+                button: wpErpHr.popup.desig_submit,
+                content: $('#erp-tmpl-new-dept').html(),
+                extraClass: 'smaller',
+                onSubmit: function(modal) {
+
+                    console.log(modal);
+                }
+            });
+        }
     };
+
 
     $(function() {
         WeDevs_ERP_HR.initialize();

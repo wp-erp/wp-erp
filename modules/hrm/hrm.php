@@ -102,6 +102,16 @@ class Human_Resource {
         $suffix = ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) ? '' : '.min';
 
         wp_enqueue_script( 'wp-erp-hr', WPERP_HRM_ASSETS . "/js/hrm$suffix.js", array( 'wp-erp-script' ), date( 'Ymd' ), true );
+        wp_localize_script( 'wp-erp-hr', 'wpErpHr', array(
+            'popup' => array(
+                'dept_title'   => __( 'New Department', 'wp-erp' ),
+                'dept_submit'  => __( 'Create Department', 'wp-erp' ),
+                'dept_update'  => __( 'Update Department', 'wp-erp' ),
+                'desig_title'  => __( 'New Designation', 'wp-erp' ),
+                'desig_submit' => __( 'Create Designation', 'wp-erp' ),
+                'desig_update' => __( 'Update Designation', 'wp-erp' )
+            )
+        ) );
     }
 }
 
