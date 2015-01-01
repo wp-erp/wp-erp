@@ -23,8 +23,8 @@ class Ajax_Handler {
      * @return void
      */
     public function department_create() {
-        if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-new-dept' ) ) {
-            wp_send_json_error();
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-new-dept' ) ) {
+            wp_send_json_error( __( 'Nonce verification failed', 'wp-erp' ) );
         }
 
         $title  = isset( $_POST['title'] ) ? trim( strip_tags( $_POST['title'] ) ) : '';
