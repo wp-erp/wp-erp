@@ -81,6 +81,8 @@ function erp_hr_get_departments( $company_id ) {
 function erp_hr_delete_department( $department_id ) {
     global $wpdb;
 
+    do_action( 'erp_hr_dept_delete', $department_id );
+
     return $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}erp_hr_depts WHERE id = %d", $department_id ) );
 }
 

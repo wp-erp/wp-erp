@@ -19,7 +19,9 @@
             $( '.erp-hr-depts').on( 'click', 'span.edit a', this.department.edit );
 
             // Designation
-            $( '.erp-hr-designation').on( 'click', 'a#erp-new-designation', this.modalNewDesignation );
+            $( '.erp-hr-designation').on( 'click', 'a#erp-new-designation', this.designation.create );
+            $( '.erp-hr-designation').on( 'click', 'a.submitdelete', this.designation.remove );
+            $( '.erp-hr-designation').on( 'click', 'span.edit a', this.designation.edit );
         },
 
         department: {
@@ -104,10 +106,9 @@
                         wp.ajax.send( {
                             data: this.serialize(),
                             success: function(response) {
-                                var row   = wp.template('erp-dept-row'),
-                                    table = $('table.department-list-table');
+                                var row   = wp.template('erp-dept-row');
 
-                                response.cls = $('tr:last', table).attr('class');
+                                response.cls = self.closest('tr').attr('class');
                                 self.closest('tr').replaceWith( row(response) );
 
                                 modal.closeModal();
@@ -150,19 +151,122 @@
 
         },
 
-        modalNewDesignation: function(e) {
-            e.preventDefault();
+        designation: {
 
-            $.erpPopup({
-                title: wpErpHr.popup.desig_title,
-                button: wpErpHr.popup.desig_submit,
-                content: $('#erp-tmpl-new-dept').html(),
-                extraClass: 'smaller',
-                onSubmit: function(modal) {
-                    console.log(modal);
+            create: function(e) {
+                e.preventDefault();
+
+                $.erpPopup({
+                    title: wpErpHr.popup.desig_title,
+                    button: wpErpHr.popup.desig_submit,
+                    content: wp.template( 'erp-new-desig' )(),
+                    extraClass: 'smaller',
+                    onSubmit: function(modal) {
+                        wp.ajax.send( {
+                            data: this.serialize(),
+                            success: function(response) {
+                                var row   = wp.template('erp-desig-row'),
+                                    table = $('table.designation-list-table');
+
+                                if ( table ) {
+                                    var cls = ( $('tr:last', table).attr('class') === 'even' ) ? 'alternate' : 'even';
+
+                                    response.cls = cls;
+                                    table.append( row(response) );
+
+                                    modal.closeModal();
+                                }
+                            },
+                            error: function(error) {
+                                alert( error );
+                            }
+                        });
+                    }
+                });
+            },
+
+            /**
+             * Edit a department in popup
+             *
+             * @param  {event}
+             */
+            edit: function(e) {
+                e.preventDefault();
+
+                var self = $(this);
+
+                $.erpPopup({
+                    title: wpErpHr.popup.desig_update,
+                    button: wpErpHr.popup.desig_update,
+                    content: wp.template( 'erp-new-desig' )(),
+                    extraClass: 'smaller',
+                    onReady: function() {
+                        var modal = this;
+
+                        $( 'header', modal).after( $('<div class="loader"></div>').show() );
+
+                        wp.ajax.send( 'erp-hr-get-desig', {
+                            data: {
+                                id: self.data('id'),
+                                _wpnonce: wpErpHr.nonce
+                            },
+                            success: function(response) {
+                                $( '.loader', modal).remove();
+
+                                $('#desig-title', modal).val( response.name );
+                                $('#desig-desc', modal).val( response.data.description );
+                                $('#desig-id', modal).val( response.id );
+                                $('#desig-action', modal).val( 'erp-hr-update-desig' );
+                            }
+                        });
+                    },
+                    onSubmit: function(modal) {
+                        wp.ajax.send( {
+                            data: this.serialize(),
+                            success: function(response) {
+                                var row   = wp.template('erp-desig-row');
+
+                                response.cls = self.closest('tr').attr('class');
+                                self.closest('tr').replaceWith( row(response) );
+
+                                modal.closeModal();
+                            },
+                            error: function(error) {
+                                alert( error );
+                            }
+                        });
+                    }
+                });
+            },
+
+            /**
+             * Delete a department
+             *
+             * @param  {event}
+             */
+            remove: function(e) {
+                e.preventDefault();
+
+                var self = $(this);
+
+                if ( confirm( wpErpHr.delConfirmDept ) ) {
+                    wp.ajax.send( 'erp-hr-del-desig', {
+                        data: {
+                            '_wpnonce': wpErpHr.nonce,
+                            id: self.data( 'id' )
+                        },
+                        success: function() {
+                            self.closest('tr').fadeOut( 'fast', function() {
+                                $(this).remove();
+                            });
+                        },
+                        error: function(response) {
+                            alert( response );
+                        }
+                    });
                 }
-            });
-        }
+            },
+        },
     };
 
     $(function() {

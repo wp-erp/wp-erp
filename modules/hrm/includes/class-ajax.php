@@ -14,10 +14,15 @@ class Ajax_Handler {
      * @return void
      */
     public function __construct() {
-        add_action( 'wp_ajax_erp-new-dept', array($this, 'department_create') );
+        add_action( 'wp_ajax_erp-hr-new-dept', array($this, 'department_create') );
         add_action( 'wp_ajax_erp-hr-del-dept', array($this, 'department_delete') );
         add_action( 'wp_ajax_erp-hr-get-dept', array($this, 'department_get') );
         add_action( 'wp_ajax_erp-hr-update-dept', array($this, 'department_create') );
+
+        add_action( 'wp_ajax_erp-hr-new-desig', array($this, 'designation_create') );
+        add_action( 'wp_ajax_erp-hr-get-desig', array($this, 'designation_get') );
+        add_action( 'wp_ajax_erp-hr-update-desig', array($this, 'designation_create') );
+        add_action( 'wp_ajax_erp-hr-del-desig', array($this, 'designation_delete') );
     }
 
     /**
@@ -109,6 +114,71 @@ class Ajax_Handler {
         }
 
         wp_send_json_success( __( 'Department has been deleted', 'wp-erp' ) );
+    }
+
+    /**
+     * Create a new designnation
+     *
+     * @return void
+     */
+    function designation_create() {
+        $this->verify_nonce( 'erp-new-desig' );
+
+        $title    = isset( $_POST['title'] ) ? trim( strip_tags( $_POST['title'] ) ) : '';
+        $desc     = isset( $_POST['desig-desc'] ) ? trim( strip_tags( $_POST['desig-desc'] ) ) : '';
+        $desig_id = isset( $_POST['desig_id'] ) ? intval( $_POST['desig_id'] ) : 0;
+
+        $desig_id = erp_hr_create_designation( array(
+            'id'          => $desig_id,
+            'company_id'  => erp_get_current_company_id(),
+            'title'       => $title,
+            'description' => $desc
+        ) );
+
+        if ( is_wp_error( $desig_id ) ) {
+            wp_send_json_error( $desig_id->get_error_message() );
+        }
+
+        wp_send_json_success( array(
+            'id'       => $desig_id,
+            'title'    => $title,
+            'employee' => 0
+        ) );
+    }
+
+    /**
+     * Get a department
+     *
+     * @return void
+     */
+    public function designation_get() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+
+        if ( $id ) {
+            $designation = new \WeDevs\ERP\HRM\Designation( $id );
+            wp_send_json_success( $designation );
+        }
+
+        wp_send_json_success( __( 'Something went wrong!', 'wp-erp' ) );
+    }
+
+    /**
+     * Delete a department
+     *
+     * @return void
+     */
+    public function designation_delete() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+        if ( $id ) {
+            // @TODO: check permission
+            erp_hr_delete_designation( $id );
+        }
+
+        wp_send_json_success( __( 'Designation has been deleted', 'wp-erp' ) );
     }
 }
 

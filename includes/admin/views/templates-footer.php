@@ -59,8 +59,28 @@
     </div>
 
     <?php wp_nonce_field( 'erp-new-dept' ); ?>
-    <input type="hidden" name="action" id="dept-action" value="erp-new-dept">
+    <input type="hidden" name="action" id="dept-action" value="erp-hr-new-dept">
     <input type="hidden" name="dept_id" id="dept-id" value="0">
+</script>
+
+<script type="text/html" id="tmpl-erp-new-desig">
+    <div class="row">
+        <label for="desig-title"><?php _e( 'Designation Title', 'wp-erp' ); ?> <span class="required">*</span></label>
+        <span class="field">
+            <input type="text" id="desig-title" name="title" value="" required="required">
+        </span>
+    </div>
+
+    <div class="row">
+        <label for="desig-desc"><?php _e( 'Description', 'wp-erp' ); ?></label>
+        <span class="field">
+            <textarea name="desig-desc" id="desig-desc" rows="2" cols="20" placeholder="<?php _e( 'Optional', 'wp-erp' ); ?>"></textarea>
+        </span>
+    </div>
+
+    <?php wp_nonce_field( 'erp-new-desig' ); ?>
+    <input type="hidden" name="action" id="desig-action" value="erp-hr-new-desig">
+    <input type="hidden" name="desig_id" id="desig-id" value="0">
 </script>
 
 <script type="text/html" id="tmpl-erp-dept-row">
@@ -78,6 +98,24 @@
             </div>
         </td>
         <td class="col-">{{ data.lead }}</td>
+        <td class="col-">{{ data.employee }}</td>
+    </tr>
+</script>
+
+<script type="text/html" id="tmpl-erp-desig-row">
+    <tr class="{{ data.cls }}" id="erp-dept-{{ data.id }}">
+        <th scope="row" class="check-column">
+            <input id="cb-select-1" type="checkbox" name="desig[]" value="{{ data.id }}">
+        </th>
+        <td class="col-">
+
+            <strong><a href="#">{{ data.title }}</a></strong>
+
+            <div class="row-actions">
+                <span class="edit"><a href="#" title="Edit this item" data-id="{{ data.id }}"><?php _e( 'Edit', 'wp-erp' ); ?></a> | </span>
+                <span class="trash"><a class="submitdelete" data-id="{{ data.id }}" title="<?php esc_attr_e( 'Delete this item', 'wp-erp' ); ?>" href="#"><?php _e( 'Delete', 'wp-erp' ); ?></a></span>
+            </div>
+        </td>
         <td class="col-">{{ data.employee }}</td>
     </tr>
 </script>
