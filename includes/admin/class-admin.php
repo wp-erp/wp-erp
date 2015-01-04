@@ -7,7 +7,7 @@ namespace WeDevs\ERP;
 class Admin_Page {
 
     function __construct() {
-        add_action( 'admin_footer', array($this, 'site_js_templates' ) );
+        add_action( 'admin_footer', array($this, 'erp_modal_markup' ) );
 
         add_action( 'admin_enqueue_scripts', array($this, 'admin_scripts' ) );
     }
@@ -46,8 +46,13 @@ class Admin_Page {
         wp_enqueue_style( 'wp-erp-styles', WPERP_ASSETS . '/css/admin/admin.css', false, date( 'Ymd' ) );
     }
 
-    public function site_js_templates() {
-        include WPERP_INCLUDES . '/admin/views/templates-footer.php';
+    /**
+     * Prints the ERP modal window markup
+     *
+     * @return void
+     */
+    public function erp_modal_markup() {
+        include WPERP_INCLUDES . '/admin/views/erp-modal.php';
     }
 }
 

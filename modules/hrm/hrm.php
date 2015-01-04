@@ -55,6 +55,7 @@ class Human_Resource {
         define( 'WPERP_HRM_FILE', __FILE__ );
         define( 'WPERP_HRM_PATH', dirname( __FILE__ ) );
         define( 'WPERP_HRM_VIEWS', dirname( __FILE__ ) . '/views' );
+        define( 'WPERP_HRM_JS_TMPL', WPERP_HRM_VIEWS . '/js-templates' );
         define( 'WPERP_HRM_ASSETS', plugins_url( '/assets', __FILE__ ) );
     }
 
@@ -83,6 +84,7 @@ class Human_Resource {
      */
     private function init_actions() {
         add_action( 'admin_enqueue_scripts', array($this, 'admin_scripts' ) );
+        add_action( 'admin_footer', array($this, 'admin_js_templates' ) );
     }
 
     /**
@@ -114,10 +116,28 @@ class Human_Resource {
                 'dept_update'  => __( 'Update Department', 'wp-erp' ),
                 'desig_title'  => __( 'New Designation', 'wp-erp' ),
                 'desig_submit' => __( 'Create Designation', 'wp-erp' ),
-                'desig_update' => __( 'Update Designation', 'wp-erp' )
+                'desig_update' => __( 'Update Designation', 'wp-erp' ),
+                'employee_title' => __( 'New Employee', 'wp-erp' ),
+                'employee_create' => __( 'Create Employee', 'wp-erp' ),
+                'employee_update' => __( 'Update Employee', 'wp-erp' )
             ),
             'delConfirmDept' => __( 'Are you sure to delete this department?', 'wp-erp' )
         ) );
+    }
+
+    /**
+     * Print JS templates in footer
+     *
+     * @return void
+     */
+    public function admin_js_templates() {
+        erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-dept.php', 'erp-new-dept' );
+        erp_get_js_template( WPERP_HRM_JS_TMPL . '/row-dept.php', 'erp-dept-row' );
+
+        erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-designation.php', 'erp-new-desig' );
+        erp_get_js_template( WPERP_HRM_JS_TMPL . '/row-desig.php', 'erp-desig-row' );
+
+        erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-employee.php', 'erp-new-employee' );
     }
 }
 

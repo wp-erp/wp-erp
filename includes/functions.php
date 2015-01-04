@@ -164,3 +164,19 @@ function erp_get_currency_symbol( $currency = '' ) {
 
     return apply_filters( 'erp_currency_symbol', $currency_symbol, $currency );
 }
+
+/**
+ * Embed a JS template page with its ID
+ *
+ * @param  string  the file path of the file
+ * @param  string  the script id
+ *
+ * @return void
+ */
+function erp_get_js_template( $file_path, $id ) {
+    if ( file_exists( $file_path ) ) {
+        echo '<script type="text/html" id="tmpl-' . $id . '">' . "\n";
+        include_once $file_path;
+        echo "\n" . '</script>' . "\n";
+    }
+}
