@@ -87,6 +87,26 @@ function erp_hr_delete_department( $department_id ) {
 }
 
 /**
+ * Get the raw departments dropdown
+ *
+ * @param  int  company id
+ *
+ * @return array  the key-value paired departments
+ */
+function erp_hr_get_departments_dropdown_raw( $company_id ) {
+    $departments = erp_hr_get_departments( $company_id );
+    $dropdown    = array( 0 => __( '- Select Department -' ) );
+
+    if ( $departments ) {
+        foreach ($departments as $key => $department) {
+            $dropdown[$department->id] = stripslashes( $department->title );
+        }
+    }
+
+    return $dropdown;
+}
+
+/**
  * Get company departments dropdown
  *
  * @param  int  company id
@@ -95,12 +115,12 @@ function erp_hr_delete_department( $department_id ) {
  * @return string  the dropdown
  */
 function erp_hr_get_departments_dropdown( $company_id, $selected = '' ) {
-    $departments = erp_hr_get_departments( $company_id );
-    $dropdown = '<option value="0">' . __( '- Select Department -' ) . '</option>';
+    $departments = erp_hr_get_departments_dropdown_raw( $company_id );
+    $dropdown    = '';
 
     if ( $departments ) {
-        foreach ($departments as $key => $department) {
-            $dropdown .= sprintf( "<option value='%s'>%s</option>\n", $department->id, stripslashes( $department->title ) );
+        foreach ($departments as $key => $title) {
+            $dropdown .= sprintf( "<option value='%s'>%s</option>\n", $key, $title );
         }
     }
 

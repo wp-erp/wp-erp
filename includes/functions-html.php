@@ -74,16 +74,19 @@ function erp_html_form_input( $args = array() ) {
         'wrapper_class' => '',
         'label'         => '',
         'name'          => '',
+        'id'            => '',
         'value'         => '',
         'help'          => '',
-        'custom_attr'   => array()
+        'custom_attr'   => array(),
+        'options'       => array()
     );
 
-    $field = wp_parse_args( $args, $defaults );
+    $field    = wp_parse_args( $args, $defaults );
+    $field_id = empty( $field['id'] ) ? $field['name'] : $field['id'];
 
     $field_attributes = array_merge( array(
         'name'        => $field['name'],
-        'id'          => $field['name'],
+        'id'          => $field_id,
         'class'       => $field['class'],
         'placeholder' => $field['placeholder'],
     ), $field['custom_attr'] );
@@ -95,12 +98,22 @@ function erp_html_form_input( $args = array() ) {
     }
 
     if ( ! empty( $field['label'] ) ) {
-        erp_html_form_label( $field['label'], $field['name'], $field['required'] );
+        erp_html_form_label( $field['label'], $field_id, $field['required'] );
     }
 
     switch ( $field['type'] ) {
         case 'text':
-            echo '<input type="text" ' . implode( ' ', $custom_attributes ) . ' />';
+            echo '<input type="text" value="' . esc_attr( $field['value'] ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+            break;
+
+        case 'select':
+            if ( $field['options'] ) {
+                echo '<select ' . implode( ' ', $custom_attributes ) . '>';
+                foreach ($field['options'] as $key => $value) {
+                    printf( "<option value='%s'%s>%s</option>\n", $key, selected( $field['value'], $key, false ), $value );
+                }
+                echo '</select>';
+            }
             break;
 
         default:

@@ -14,14 +14,19 @@
          */
         initialize: function() {
             // Department
-            $( '.erp-hr-depts').on( 'click', 'a#erp-new-dept', this.department.create );
-            $( '.erp-hr-depts').on( 'click', 'a.submitdelete', this.department.remove );
-            $( '.erp-hr-depts').on( 'click', 'span.edit a', this.department.edit );
+            $( '.erp-hr-depts' ).on( 'click', 'a#erp-new-dept', this.department.create );
+            $( '.erp-hr-depts' ).on( 'click', 'a.submitdelete', this.department.remove );
+            $( '.erp-hr-depts' ).on( 'click', 'span.edit a', this.department.edit );
 
             // Designation
-            $( '.erp-hr-designation').on( 'click', 'a#erp-new-designation', this.designation.create );
-            $( '.erp-hr-designation').on( 'click', 'a.submitdelete', this.designation.remove );
-            $( '.erp-hr-designation').on( 'click', 'span.edit a', this.designation.edit );
+            $( '.erp-hr-designation' ).on( 'click', 'a#erp-new-designation', this.designation.create );
+            $( '.erp-hr-designation' ).on( 'click', 'a.submitdelete', this.designation.remove );
+            $( '.erp-hr-designation' ).on( 'click', 'span.edit a', this.designation.edit );
+
+            // employee
+            $( '.erp-hr-employees' ).on( 'click', 'a#erp-employee-new', this.employee.create );
+            $( '.erp-hr-employees' ).on( 'click', 'span.edit a', this.employee.create );
+            // this.employee.create();
         },
 
         department: {
@@ -267,6 +272,29 @@
                 }
             },
         },
+
+        employee: {
+
+            create: function(e) {
+                if ( typeof e !== 'undefined' ) {
+                    e.preventDefault();
+                }
+
+                $.erpPopup({
+                    title: wpErpHr.popup.employee_title,
+                    button: wpErpHr.popup.employee_create,
+                    content: wp.template('erp-new-employee')(),
+                });
+            },
+
+            edit: function() {
+
+            },
+
+            remove: function() {
+
+            }
+        }
     };
 
     $(function() {

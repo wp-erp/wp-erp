@@ -9,6 +9,14 @@
 .crm-dashboard .badge-container:after {
   clear: both;
 }
+.crm-dashboard .badge-container:before,
+.crm-dashboard .badge-container:after {
+  content: " ";
+  display: table;
+}
+.crm-dashboard .badge-container:after {
+  clear: both;
+}
 .crm-dashboard .badge-container .badge-aqua {
   background-color: #00c0ef;
 }
@@ -59,6 +67,14 @@
 .hrm-dashboard .badge-container:after {
   clear: both;
 }
+.hrm-dashboard .badge-container:before,
+.hrm-dashboard .badge-container:after {
+  content: " ";
+  display: table;
+}
+.hrm-dashboard .badge-container:after {
+  clear: both;
+}
 .hrm-dashboard .badge-container .badge-wrap {
   float: left;
   width: 32%;
@@ -84,22 +100,132 @@
   text-decoration: none;
   display: block;
 }
+.erp-employee-form ol,
+.erp-employee-form li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.erp-employee-form .photo-container {
+  display: inline-block;
+  width: 70%;
+  position: relative;
+}
+.erp-employee-form .photo-container .remove {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.5);
+  width: 80px;
+  height: 80px;
+  color: red;
+  text-align: center;
+  text-decoration: none;
+  font-size: 50px;
+  padding-top: 30px;
+  display: none;
+}
+.erp-employee-form .photo-container:hover .remove {
+  display: inline-block;
+}
+.erp-employee-form ol.form-fields:before,
+.erp-employee-form ol.form-fields:after {
+  content: " ";
+  display: table;
+}
+.erp-employee-form ol.form-fields:after {
+  clear: both;
+}
+.erp-employee-form ol.form-fields:before,
+.erp-employee-form ol.form-fields:after {
+  content: " ";
+  display: table;
+}
+.erp-employee-form ol.form-fields:after {
+  clear: both;
+}
+.erp-employee-form ol.form-fields > li {
+  float: left;
+  width: 100%;
+  padding-bottom: 5px;
+}
+.erp-employee-form ol.form-fields > li label {
+  width: 15%;
+  display: inline-block;
+  vertical-align: top;
+}
+.erp-employee-form ol.form-fields.two-col li {
+  width: 50%;
+}
+.erp-employee-form ol.form-fields.two-col li label {
+  width: 30%;
+}
+.erp-employee-form ol.form-fields.two-col li:nth-child(2n+1) {
+  clear: both;
+}
+.erp-employee-form ol.form-fields li.name-container {
+  width: 100%;
+  float: none;
+}
+.erp-employee-form ol.form-fields li.name-container > label {
+  float: left;
+  width: 15%;
+  margin-top: 22px;
+}
+.erp-employee-form ol.form-fields li.name-container ol {
+  float: left;
+  width: 85%;
+}
+.erp-employee-form ol.form-fields li.name-container ol label {
+  display: block;
+  color: #aaa;
+  width: 100%;
+}
+.erp-employee-form ol.form-fields li.name-container ol li.middle-name {
+  width: 185px;
+}
+.erp-employee-form ol.form-fields li.name-container ol li.middle-name input {
+  width: 98%;
+}
+.erp-employee-form fieldset {
+  margin-bottom: 20px;
+  border-top: 1px solid #eee;
+}
+.erp-employee-form fieldset.no-border {
+  border-top: none;
+}
+.erp-employee-form fieldset legend {
+  font-weight: bold;
+  padding-right: 20px;
+  margin-bottom: 10px;
+}
+.erp-employee-form ol.fields-inline li {
+  display: inline-block;
+}
 #wp-admin-bar-erp-mode-switch .ab-icon.dashicons-randomize {
   padding-top: 7px !important;
 }
 span.required {
   color: red;
 }
-.erp .clearfix:before,
-.erp .clearfix:after {
+.clearfix:before,
+.clearfix:after {
   content: " ";
   display: table;
 }
-.erp .clearfix:after {
+.clearfix:after {
   clear: both;
 }
 .erp .erp-single-container {
   margin-top: 10px;
+}
+.erp .erp-single-container:before,
+.erp .erp-single-container:after {
+  content: " ";
+  display: table;
+}
+.erp .erp-single-container:after {
+  clear: both;
 }
 .erp .erp-single-container:before,
 .erp .erp-single-container:after {
@@ -117,6 +243,14 @@ span.required {
 }
 .erp .erp-single-container .erp-area-left .erp-profile-top {
   margin-bottom: 15px;
+}
+.erp .erp-single-container .erp-area-left .erp-profile-top:before,
+.erp .erp-single-container .erp-area-left .erp-profile-top:after {
+  content: " ";
+  display: table;
+}
+.erp .erp-single-container .erp-area-left .erp-profile-top:after {
+  clear: both;
 }
 .erp .erp-single-container .erp-area-left .erp-profile-top:before,
 .erp .erp-single-container .erp-area-left .erp-profile-top:after {
@@ -186,6 +320,14 @@ ul.erp-list.two-col:after {
 ul.erp-list.two-col:after {
   clear: both;
 }
+ul.erp-list.two-col:before,
+ul.erp-list.two-col:after {
+  content: " ";
+  display: table;
+}
+ul.erp-list.two-col:after {
+  clear: both;
+}
 ul.erp-list.two-col li {
   line-height: 1.5em;
   float: left;
@@ -224,6 +366,14 @@ table.audit-log-table th.col-amount {
 table.audit-log-table td.col-date,
 table.audit-log-table th.col-date {
   width: 11%;
+}
+.company-accounts .account:before,
+.company-accounts .account:after {
+  content: " ";
+  display: table;
+}
+.company-accounts .account:after {
+  clear: both;
 }
 .company-accounts .account:before,
 .company-accounts .account:after {
@@ -346,6 +496,14 @@ table.audit-log-table th.col-date {
 }
 .erp-modal .content .row {
   margin-bottom: 12px;
+}
+.erp-modal .content .row:before,
+.erp-modal .content .row:after {
+  content: " ";
+  display: table;
+}
+.erp-modal .content .row:after {
+  clear: both;
 }
 .erp-modal .content .row:before,
 .erp-modal .content .row:after {

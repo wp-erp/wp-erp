@@ -1,6 +1,6 @@
-<div class="wrap">
+<div class="wrap erp-hr-employees">
 
-    <h2>Employee <a href="#" id="erp-employee-new" class="add-new-h2">Add New</a></h2>
+    <h2><?php _e( 'Employee', 'wp-erp' ); ?> <a href="#" id="erp-employee-new" class="add-new-h2"><?php _e( 'Add New', 'wp-erp' ); ?></a></h2>
 
 <?php
 $vendors = array(

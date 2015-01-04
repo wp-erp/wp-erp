@@ -83,3 +83,43 @@ function erp_hr_delete_designation( $designation ) {
 
     return $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}erp_hr_designations WHERE id = %d", $designation ) );
 }
+
+/**
+ * Get the raw designations dropdown
+ *
+ * @param  int  company id
+ *
+ * @return array  the key-value paired designations
+ */
+function erp_hr_get_designation_dropdown_raw( $company_id ) {
+    $designations = erp_hr_get_designations( $company_id );
+    $dropdown     = array( 0 => __( '- Select Designation -' ) );
+
+    if ( $designations ) {
+        foreach ($designations as $key => $designation) {
+            $dropdown[$designation->id] = stripslashes( $designation->title );
+        }
+    }
+
+    return $dropdown;
+}
+
+/**
+ * Get company designations dropdown
+ *
+ * @param  int  company id
+ * @param  string  selected designation
+ *
+ * @return string  the dropdown
+ */
+function erp_hr_get_designation_dropdown( $company_id, $selected = '' ) {
+    $designations = erp_hr_get_designation_dropdown_raw( $company_id );
+
+    if ( $designations ) {
+        foreach ($designations as $key => $title) {
+            $dropdown .= sprintf( "<option value='%s'>%s</option>\n", $key, $title );
+        }
+    }
+
+    return $dropdown;
+}
