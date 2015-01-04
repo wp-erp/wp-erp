@@ -74,7 +74,7 @@
     <div class="row">
         <label for="desig-desc"><?php _e( 'Description', 'wp-erp' ); ?></label>
         <span class="field">
-            <textarea name="desig-desc" id="desig-desc" rows="2" cols="20" placeholder="<?php _e( 'Optional', 'wp-erp' ); ?>"></textarea>
+            <textarea name="desig-desc" id="desig-desc" rows="6" cols="25" placeholder="<?php _e( 'Optional', 'wp-erp' ); ?>"></textarea>
         </span>
     </div>
 

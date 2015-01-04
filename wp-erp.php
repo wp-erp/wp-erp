@@ -119,12 +119,15 @@ class WeDevs_ERP {
 
         require_once WPERP_INCLUDES . '/functions.php';
         require_once WPERP_INCLUDES . '/functions-company.php';
+
+        require_once WPERP_INCLUDES . '/class-abstract-item.php';
         require_once WPERP_INCLUDES . '/class-countries.php';
         require_once WPERP_INCLUDES . '/class-company.php';
+        require_once WPERP_MODULES . '/hrm/includes/class-employee.php';
+
         require_once WPERP_INCLUDES . '/admin/class-form-handler.php';
         require_once WPERP_MODULES . '/modules.php';
 
-        require_once WPERP_MODULES . '/hrm/includes/class-employee.php';
 
         if ( is_admin() ) {
             require_once WPERP_INCLUDES . '/admin/functions.php';

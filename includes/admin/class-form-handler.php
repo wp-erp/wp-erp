@@ -41,7 +41,7 @@ class Form_Handler {
         }
 
         $args = array(
-            'name'      => $posted['company_name'],
+            'title'     => $posted['company_name'],
             'id'        => intval( $posted['company_id'] ),
             'logo'      => isset( $posted['company_logo_id'] ) ? absint( $posted['company_logo_id'] ) : 0,
             'address_1' => $posted['address_1'],

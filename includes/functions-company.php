@@ -11,7 +11,7 @@ function erp_create_company( $args = array() ) {
     global $wpdb;
 
     $defaults = array(
-        'name'      => '',
+        'title'      => '',
         'id'        => 0,
         'logo'      => 0,
         'address_1' => '',
@@ -32,7 +32,7 @@ function erp_create_company( $args = array() ) {
     $fields = wp_parse_args( $args, $defaults );
 
     // validation
-    if ( empty( $fields['name'] ) ) {
+    if ( empty( $fields['title'] ) ) {
         return new WP_Error( 'no-name', __( 'No company name provided.', 'wp-erp' ) );
     }
 

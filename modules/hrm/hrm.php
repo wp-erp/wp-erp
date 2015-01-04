@@ -104,6 +104,7 @@ class Human_Resource {
     public function admin_scripts( $hook ) {
         $suffix = ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) ? '' : '.min';
 
+        wp_enqueue_media( );
         wp_enqueue_script( 'wp-erp-hr', WPERP_HRM_ASSETS . "/js/hrm$suffix.js", array( 'wp-erp-script' ), date( 'Ymd' ), true );
         wp_localize_script( 'wp-erp-hr', 'wpErpHr', array(
             'nonce' => wp_create_nonce( 'wp-erp-hr-nonce' ),

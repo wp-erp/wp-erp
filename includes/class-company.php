@@ -4,52 +4,7 @@ namespace WeDevs\ERP;
 /**
  * Company class
  */
-class Company {
-
-    /**
-     * Initialize a company
-     *
-     * @param int|object  the company numeric id or a wpdb row
-     */
-    public function __construct( $company = null ) {
-
-        if ( is_object( $company ) ) {
-
-            $this->populate( $company );
-
-        } elseif ( is_int( $company ) ) {
-
-            $fetched = $this->get_by_id( $company );
-            $this->populate( $fetched );
-
-        }
-    }
-
-    /**
-     * Magic method to get company data values
-     *
-     * @param  string
-     *
-     * @return string
-     */
-    public function __get( $key ) {
-        if ( isset( $this->data->$key ) ) {
-            return stripslashes( $this->data->$key );
-        }
-    }
-
-    /**
-     * [populate description]
-     *
-     * @param  object  the company wpdb object
-     *
-     * @return void
-     */
-    private function populate( $company ) {
-        $this->id   = (int) $company->id;
-        $this->name = stripslashes( $company->name );
-        $this->data = $company;
-    }
+class Company extends Item {
 
     /**
      * Get a company by ID
@@ -58,7 +13,7 @@ class Company {
      *
      * @return object  wpdb object
      */
-    private function get_by_id( $company_id ) {
+    protected function get_by_id( $company_id ) {
         global $wpdb;
 
         return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}erp_companies WHERE id = %d", $company_id ) );

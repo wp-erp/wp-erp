@@ -77,7 +77,7 @@ class Admin_Menu {
         // Company Mode
         $companies       = erp_get_companies();
         $current_company = erp_get_current_company();
-        $com_label       = ( false === $current_company ) ? __( '- None -', 'wp-erp' ) : $current_company->name;
+        $com_label       = ( false === $current_company ) ? __( '- None -', 'wp-erp' ) : $current_company->title;
 
         $com_icon        = '<span class="ab-icon dashicons-admin-home"></span>';
         $com_text        = sprintf( '%s: %s', __( 'Company', 'wp-erp' ), $com_label );
@@ -97,7 +97,7 @@ class Admin_Menu {
                 $wp_admin_bar->add_menu( array(
                     'id'     => 'erp-comp-' . $key,
                     'parent' => 'erp-comp-switch',
-                    'title'  => $company->name,
+                    'title'  => $company->title,
                     'href'   => wp_nonce_url( add_query_arg( 'erp-comp', $company->id ), 'erp_comp_swt_nonce', 'erp_comp_swt_nonce' )
                 ) );
             }
@@ -285,10 +285,10 @@ class Admin_Menu {
             case 'new':
 
                 // create a dummy company
-                $temp       = new \stdClass();
-                $temp->id   = 0;
-                $temp->name = '';
-                $company    = new \WeDevs\ERP\Company( $temp );
+                $temp        = new \stdClass();
+                $temp->id    = 0;
+                $temp->title = '';
+                $company     = new \WeDevs\ERP\Company( $temp );
 
                 $template   = WPERP_VIEWS . '/company-editor.php';
                 break;
