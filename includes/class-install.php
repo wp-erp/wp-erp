@@ -65,7 +65,50 @@ class WeDevs_ERP_Installer {
             }
         }
 
+        $table_schema = "CREATE TABLE `{$wpdb->prefix}erp_companies` (
+          `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+          `title` varchar(100) DEFAULT NULL,
+          `logo` bigint(20) unsigned DEFAULT NULL,
+          `address_1` varchar(255) DEFAULT NULL,
+          `address_2` varchar(255) DEFAULT NULL,
+          `city` varchar(100) DEFAULT NULL,
+          `state` varchar(100) DEFAULT NULL,
+          `zip` int(5) DEFAULT NULL,
+          `country` varchar(2) DEFAULT NULL,
+          `currency` varchar(10) DEFAULT NULL,
+          `phone` varchar(20) DEFAULT NULL,
+          `fax` varchar(20) DEFAULT NULL,
+          `mobile` varchar(20) DEFAULT NULL,
+          `website` varchar(255) DEFAULT NULL,
+          `status` tinyint(2) DEFAULT NULL,
+          `created` datetime DEFAULT NULL,
+          PRIMARY KEY (`id`)
+        ) $collate;
+
+        CREATE TABLE `{$wpdb->prefix}erp_hr_depts` (
+          `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+          `company_id` int(11) unsigned NOT NULL DEFAULT '0',
+          `title` varchar(200) NOT NULL DEFAULT '',
+          `description` text,
+          `lead` int(11) unsigned DEFAULT '0',
+          `parent` int(11) unsigned DEFAULT '0',
+          `status` tinyint(1) unsigned DEFAULT '1',
+          PRIMARY KEY (`id`),
+          KEY `company_id` (`company_id`)
+        ) $collate;
+
+        CREATE TABLE `{$wpdb->prefix}erp_hr_designations` (
+          `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+          `company_id` int(11) NOT NULL DEFAULT '0',
+          `title` varchar(200) NOT NULL DEFAULT '',
+          `description` text,
+          `status` tinyint(1) DEFAULT '1',
+          PRIMARY KEY (`id`),
+          KEY `company_id` (`company_id`)
+        ) $collate;";
+
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+        dbDelta( $table_schema );
     }
 
     /**
