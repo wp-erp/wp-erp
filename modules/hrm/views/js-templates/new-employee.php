@@ -237,5 +237,7 @@
         </ol>
     </fieldset>
 
+    <input type="hidden" name="employee_id" id="erp-employee-id" value="0">
+    <?php wp_nonce_field( 'erp_hr_employee' ); ?>
     <?php do_action( 'erp_hr_employee_form' ); ?>
 </div>
