@@ -111,7 +111,11 @@
   width: 70%;
   position: relative;
 }
-.erp-employee-form .photo-container .remove {
+.erp-employee-form .photo-container img {
+  max-width: 80px;
+  height: auto;
+}
+.erp-employee-form .photo-container .erp-remove-photo {
   position: absolute;
   top: 0;
   left: 0;
@@ -125,7 +129,7 @@
   padding-top: 30px;
   display: none;
 }
-.erp-employee-form .photo-container:hover .remove {
+.erp-employee-form .photo-container:hover .erp-remove-photo {
   display: inline-block;
 }
 .erp-employee-form ol.form-fields:before,
