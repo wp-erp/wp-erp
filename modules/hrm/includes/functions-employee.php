@@ -16,7 +16,7 @@ function erp_hr_employee_on_initialize( $user_id ) {
     if ( 'employee' == $role ) {
         $wpdb->insert( $wpdb->prefix . 'erp_hr_employees', array(
             'employee_id' => $user_id,
-            'company_id'  => 0,
+            'company_id'  => erp_get_current_company_id(),
             'designation' => 0,
             'department'  => 0,
             'status'      => 1
