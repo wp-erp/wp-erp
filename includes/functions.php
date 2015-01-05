@@ -180,3 +180,47 @@ function erp_get_js_template( $file_path, $id ) {
         echo "\n" . '</script>' . "\n";
     }
 }
+
+if ( ! function_exists( 'strip_tags_deep' ) ) {
+
+    /**
+     * Strip tags from string or array
+     *
+     * @param  mixed  array or string to strip
+     *
+     * @return mixed  stripped value
+     */
+    function strip_tags_deep( $value ) {
+        if ( is_array( $value ) ) {
+            foreach ($value as $key => $val) {
+                $value[ $key ] = strip_tags_deep( $val );
+            }
+        } elseif ( is_string( $value ) ) {
+            $value = strip_tags( $value );
+        }
+
+        return $value;
+    }
+}
+
+if ( ! function_exists( 'trim_deep' ) ) {
+
+    /**
+     * Trim from string or array
+     *
+     * @param  mixed  array or string to trim
+     *
+     * @return mixed  timmed value
+     */
+    function trim_deep( $value ) {
+        if ( is_array( $value ) ) {
+            foreach ($value as $key => $val) {
+                $value[ $key ] = trim_deep( $val );
+            }
+        } elseif ( is_string( $value ) ) {
+            $value = trim( $value );
+        }
+
+        return $value;
+    }
+}

@@ -70,6 +70,7 @@ class Human_Resource {
         require_once WPERP_HRM_PATH . '/includes/functions.php';
         require_once WPERP_HRM_PATH . '/includes/functions-department.php';
         require_once WPERP_HRM_PATH . '/includes/functions-designation.php';
+        require_once WPERP_HRM_PATH . '/includes/functions-employee.php';
 
         require_once WPERP_HRM_PATH . '/includes/class-department.php';
         require_once WPERP_HRM_PATH . '/includes/class-walker-department.php';
@@ -104,11 +105,12 @@ class Human_Resource {
      * @return void
      */
     public function admin_scripts( $hook ) {
+        // var_dump( $hook );
         $suffix = ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) ? '' : '.min';
 
         wp_enqueue_media( );
         wp_enqueue_script( 'wp-erp-hr', WPERP_HRM_ASSETS . "/js/hrm$suffix.js", array( 'wp-erp-script' ), date( 'Ymd' ), true );
-        wp_localize_script( 'wp-erp-hr', 'wpErpHr', array(
+        $localize_script = apply_filters( 'erp_hr_localize_script', array(
             'nonce' => wp_create_nonce( 'wp-erp-hr-nonce' ),
             'popup' => array(
                 'dept_title'   => __( 'New Department', 'wp-erp' ),
@@ -121,8 +123,18 @@ class Human_Resource {
                 'employee_create' => __( 'Create Employee', 'wp-erp' ),
                 'employee_update' => __( 'Update Employee', 'wp-erp' )
             ),
-            'delConfirmDept' => __( 'Are you sure to delete this department?', 'wp-erp' )
+            'emp_upload_photo' => __( 'Upload Employee Photo', 'wp-erp' ),
+            'emp_set_photo'    => __( 'Set Photo', 'wp-erp' ),
+            'delConfirmDept'   => __( 'Are you sure to delete this department?', 'wp-erp' )
         ) );
+
+        // if its an employee page
+        if ( 'hr-management_page_erp-hr-employee' == $hook ) {
+            $employee                          = new Employee();
+            $localize_script['employee_empty'] = $employee->to_array();
+        }
+
+        wp_localize_script( 'wp-erp-hr', 'wpErpHr', $localize_script );
     }
 
     /**
@@ -131,6 +143,8 @@ class Human_Resource {
      * @return void
      */
     public function admin_js_templates() {
+        global $current_screen;
+
         erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-dept.php', 'erp-new-dept' );
         erp_get_js_template( WPERP_HRM_JS_TMPL . '/row-dept.php', 'erp-dept-row' );
 
@@ -138,6 +152,7 @@ class Human_Resource {
         erp_get_js_template( WPERP_HRM_JS_TMPL . '/row-desig.php', 'erp-desig-row' );
 
         erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-employee.php', 'erp-new-employee' );
+        erp_get_js_template( WPERP_HRM_JS_TMPL . '/row-employee.php', 'erp-employee-row' );
     }
 }
 

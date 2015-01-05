@@ -26,7 +26,8 @@
             // employee
             $( '.erp-hr-employees' ).on( 'click', 'a#erp-employee-new', this.employee.create );
             $( '.erp-hr-employees' ).on( 'click', 'span.edit a', this.employee.create );
-            // this.employee.create();
+            $( 'body' ).on( 'click', 'a#erp-set-emp-photo', this.employee.setPhoto );
+            $( 'body' ).on( 'click', 'a.erp-remove-photo', this.employee.removePhoto );
         },
 
         department: {
@@ -275,15 +276,112 @@
 
         employee: {
 
+            /**
+             * Set photo popup
+             *
+             * @param {event}
+             */
+            setPhoto: function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                var frame;
+
+                if ( frame ) {
+                    frame.open();
+                    return;
+                }
+
+                frame = wp.media({
+                    title: wpErpHr.emp_upload_photo,
+                    button: { text: wpErpHr.emp_set_photo }
+                });
+
+                frame.on('select', function() {
+                    var selection = frame.state().get('selection');
+
+                    selection.map( function( attachment ) {
+                        attachment = attachment.toJSON();
+
+                        var html = '<img src="' + attachment.url + '" alt="" />';
+                            html += '<input type="hidden" id="emp-photo-id" name="photo_id" value="' + attachment.id + '" />';
+                            html += '<a href="#" class="erp-remove-photo">&times;</a>';
+
+                        $( '.photo-container', '.erp-employee-form' ).html( html );
+                    });
+                });
+
+                frame.open();
+            },
+
+            /**
+             * Remove an employees avatar
+             *
+             * @param  {event}
+             */
+            removePhoto: function(e) {
+                e.preventDefault();
+
+                var html = '<a href="#" id="erp-set-emp-photo" class="button button-small">' + wpErpHr.emp_upload_photo + '</a>';
+                    html += '<input type="hidden" name="photo_id" id="emp-photo-id" value="0">';
+
+                $( '.photo-container', '.erp-employee-form' ).html( html );
+            },
+
+            /**
+             * Create a new employee modal
+             *
+             * @param  {event}
+             */
             create: function(e) {
                 if ( typeof e !== 'undefined' ) {
                     e.preventDefault();
                 }
 
+                if ( typeof wpErpHr.employee_empty === 'undefined' ) {
+                    return;
+                }
+
                 $.erpPopup({
                     title: wpErpHr.popup.employee_title,
                     button: wpErpHr.popup.employee_create,
-                    content: wp.template('erp-new-employee')(),
+                    content: wp.template('erp-new-employee')( wpErpHr.employee_empty ),
+
+                    /**
+                     * Hack method to select the dropdowns
+                     *
+                     * @return {void}
+                     */
+                    onReady: function() {
+                        var modal = this;
+
+                        $( 'li[data-selected]', modal ).each(function() {
+                            var self = $(this),
+                                selected = self.data('selected');
+
+                            if ( selected !== '' ) {
+                                self.find( 'select' ).val( selected );
+                            }
+                        });
+                    },
+
+                    onSubmit: function(modal) {
+                        wp.ajax.send( 'erp-hr-employee-new', {
+                            data: this.serialize(),
+                            success: function(response) {
+
+                                console.log(response);
+                                var row = wp.template( 'erp-employee-row');
+                                response.class = 'hello';
+                                $( 'table.erp-employee-list-table' ).append( row(response) );
+
+                                modal.closeModal();
+                            },
+                            error: function(error) {
+                                alert( error );
+                            }
+                        });
+                    }
                 });
             },
 

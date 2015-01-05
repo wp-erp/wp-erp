@@ -23,6 +23,9 @@ class Ajax_Handler {
         add_action( 'wp_ajax_erp-hr-get-desig', array($this, 'designation_get') );
         add_action( 'wp_ajax_erp-hr-update-desig', array($this, 'designation_create') );
         add_action( 'wp_ajax_erp-hr-del-desig', array($this, 'designation_delete') );
+
+        add_action( 'wp_ajax_erp-hr-employee-new', array($this, 'employee_create') );
+        add_action( 'wp_ajax_erp-hr-emp-get', array($this, 'employee_get') );
     }
 
     /**
@@ -179,6 +182,47 @@ class Ajax_Handler {
         }
 
         wp_send_json_success( __( 'Designation has been deleted', 'wp-erp' ) );
+    }
+
+    /**
+     * Create a new employee
+     *
+     * @return void
+     */
+    public function employee_create() {
+        $this->verify_nonce( 'wp-erp-hr-employee-nonce' );
+
+        // @TODO: check permission
+        $posted = array_map( 'strip_tags_deep', $_POST );
+        unset( $posted['_wp_http_referer'] );
+        unset( $posted['_wpnonce'] );
+
+        $employee_id = erp_hr_employee_create( $posted );
+
+        if ( is_wp_error( $employee_id ) ) {
+            wp_send_json_error( $employee_id->get_error_message() );
+        }
+
+        $employee               = new Employee( $employee_id );
+        $data                   = $employee->to_array();
+        $data['work']['joined'] = $employee->get_joined_date();
+        $data['work']['type']   = $employee->get_type();
+        $data['url']            = $employee->get_details_url();
+
+        wp_send_json_success( $data );
+    }
+
+    public function employee_get() {
+        $employee_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+
+        $emp = new Employee( $employee_id );
+        // $user = new \WP_User(3);
+        // $data = array();
+
+        // var_dump( $emp->to_array() );
+        // var_dump( $user->to_array() );
+
+        wp_send_json_success( $emp->to_array() );
     }
 }
 

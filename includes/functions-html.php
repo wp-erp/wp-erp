@@ -103,7 +103,9 @@ function erp_html_form_input( $args = array() ) {
 
     switch ( $field['type'] ) {
         case 'text':
-            echo '<input type="text" value="' . esc_attr( $field['value'] ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+        case 'email':
+        case 'url':
+            echo '<input type="' . $field['type'] . '" value="' . esc_attr( $field['value'] ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
             break;
 
         case 'select':
@@ -114,6 +116,10 @@ function erp_html_form_input( $args = array() ) {
                 }
                 echo '</select>';
             }
+            break;
+
+        case 'textarea':
+            echo '<textarea ' . implode( ' ', $custom_attributes ) . '>' . esc_textarea( $field['value'] ) . '</textarea>';
             break;
 
         default:
