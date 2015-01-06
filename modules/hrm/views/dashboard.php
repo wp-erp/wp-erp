@@ -5,37 +5,44 @@
 
         <div class="erp-area-left">
 
+            <?php
+            $company_id   = erp_get_current_company_id();
+            $employees    = erp_hr_get_employees( $company_id );
+            $departments  = erp_hr_get_departments( $company_id );
+            $designations = erp_hr_get_designations( $company_id );
+            ?>
+
             <div class="badge-container">
                 <div class="badge-wrap badge-green">
                     <div class="badge-inner">
-                        <h3>26</h3>
-                        <p>Employees</p>
+                        <h3><?php echo number_format_i18n( count( $employees ), 0 ); ?></h3>
+                        <p><?php _e( 'Employees', 'wp-erp' ); ?></p>
                     </div>
 
                     <div class="badge-footer wp-ui-highlight">
-                        <a href="<?php echo admin_url( 'admin.php?page=erp-hr-employee' ); ?>">View Employees</a>
+                        <a href="<?php echo admin_url( 'admin.php?page=erp-hr-employee' ); ?>"><?php _e( 'View Employees', 'wp-erp' ); ?></a>
                     </div>
                 </div><!-- .badge-wrap -->
 
                 <div class="badge-wrap badge-red">
                     <div class="badge-inner">
-                        <h3>5</h3>
-                        <p>Departments</p>
+                        <h3><?php echo number_format_i18n( count( $departments ), 0 ); ?></h3>
+                        <p><?php _e( 'Departments', 'wp-erp' ); ?></p>
                     </div>
 
                     <div class="badge-footer wp-ui-highlight">
-                        <a href="<?php echo admin_url( 'admin.php?page=erp-hr-depts' ); ?>">View Departments</a>
+                        <a href="<?php echo admin_url( 'admin.php?page=erp-hr-depts' ); ?>"><?php _e( 'View Departments', 'wp-erp' ); ?></a>
                     </div>
                 </div><!-- .badge-wrap -->
 
                 <div class="badge-wrap badge-aqua">
                     <div class="badge-inner">
-                        <h3>10</h3>
-                        <p>Designation</p>
+                        <h3><?php echo number_format_i18n( count( $designations ), 0 ); ?></h3>
+                        <p><?php _e( 'Designation', 'wp-erp' ); ?></p>
                     </div>
 
                     <div class="badge-footer wp-ui-highlight">
-                        <a href="<?php echo admin_url( 'admin.php?page=erp-hr-designation' ); ?>">View Designation</a>
+                        <a href="<?php echo admin_url( 'admin.php?page=erp-hr-designation' ); ?>"><?php _e( 'View Designation', 'wp-erp' ); ?></a>
                     </div>
                 </div><!-- .badge-wrap -->
             </div><!-- .badge-container -->

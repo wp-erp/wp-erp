@@ -2,17 +2,6 @@
 
     <h2><?php _e( 'Designation', 'wp-erp' ); ?> <a href="#" id="erp-new-designation" class="add-new-h2"><?php _e( 'Add New', 'wp-erp' ); ?></a></h2>
 
-<?php
-$vendors = array(
-    array( 'Senior Developer', 11 ),
-    array( 'Junior Developer', 11 ),
-    array( 'Marketing Manager', 11 ),
-    array( 'Translator', 11 ),
-    array( 'Marketing Executive', 11 ),
-);
-
-?>
-
     <div class="tablenav top">
         <div class="alignleft actions bulkactions">
             <label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label>
