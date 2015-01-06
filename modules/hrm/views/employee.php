@@ -2,17 +2,6 @@
 
     <h2><?php _e( 'Employee', 'wp-erp' ); ?> <a href="#" id="erp-employee-new" class="add-new-h2"><?php _e( 'Add New', 'wp-erp' ); ?></a></h2>
 
-<?php
-$vendors = array(
-    array( 'Parvez Akhter', 'Software Engineer', 'Engineering', 'Full-Time Permanent', '1 Dec, 2013' ),
-    array( 'Hasin Hayder', 'CTO', 'Engineering', 'Full-Time Permanent', '11 Jun, 2010' ),
-    array( 'Nizam Uddin', 'Finance Manager', 'Sales', 'Full-Time Contract', '4 Mar, 2013' ),
-    array( 'Kowsher Ahmed', 'QA Engineer', 'Engineering', 'internee', '5 Apr, 2013' ),
-    array( 'M Asif Rahman', 'Sales Executive', 'Sales', 'Full-time Contract', '6 Nov, 2012' ),
-);
-
-?>
-
     <div class="tablenav top">
         <div class="alignleft actions bulkactions">
             <label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label>

@@ -144,7 +144,8 @@ function erp_hr_employee_create( $args = array() ) {
     $not_meta = array(
         'department',
         'designation',
-        'company_id'
+        'company_id',
+        'user_email'
     );
 
     // update the erp table
@@ -168,7 +169,15 @@ function erp_hr_employee_create( $args = array() ) {
 
             foreach ($value as $new_key => $new_value) {
                 if ( ! in_array( $new_key, $not_meta ) ) {
-                    update_user_meta( $user_id, $new_key, $new_value );
+
+                    // except "name", save others to $parent_$child key name
+                    if ( in_array( $key, array( 'name' ) ) ) {
+                        $meta_key = $new_key;
+                    } else {
+                        $meta_key = $key . '_' . $new_key;
+                    }
+
+                    update_user_meta( $user_id, $meta_key, $new_value );
                 }
             }
 

@@ -37,7 +37,7 @@ class Ajax_Handler {
      * @return void
      */
     public function verify_nonce( $action ) {
-        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], $action ) ) {
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], $action ) ) {
             wp_send_json_error( __( 'Error: Nonce verification failed', 'wp-erp' ) );
         }
     }
@@ -198,9 +198,10 @@ class Ajax_Handler {
         unset( $_POST['_wpnonce'] );
         unset( $_POST['action'] );
 
-        $posted = array_map( 'strip_tags_deep', $_POST );
+        $posted               = array_map( 'strip_tags_deep', $_POST );
+        $posted['company_id'] = erp_get_current_company_id(); // make sure it's not exploited
 
-        $employee_id = erp_hr_employee_create( $posted );
+        $employee_id          = erp_hr_employee_create( $posted );
 
         if ( is_wp_error( $employee_id ) ) {
             wp_send_json_error( $employee_id->get_error_message() );

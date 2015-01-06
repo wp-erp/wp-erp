@@ -47,6 +47,23 @@ class Employee {
     }
 
     /**
+     * Magic method to get item data values
+     *
+     * @param  string
+     *
+     * @return string
+     */
+    public function __get( $key ) {
+        if ( isset( $this->user->$key ) ) {
+            return stripslashes( $this->user->$key );
+        }
+
+        if ( isset( $this->erp->$key ) ) {
+            return stripslashes( $this->erp->$key );
+        }
+    }
+
+    /**
      * Get the user info as an array
      *
      * @return array
@@ -93,11 +110,30 @@ class Employee {
             )
         );
 
+        $erp_fields = array(
+            'company_id',
+            'department',
+            'department_title',
+            'designation',
+            'designation_title'
+        );
+
         if ( $this->id ) {
             foreach ($fields as $key => $value) {
                 if ( is_array( $value ) ) {
 
-                    if ( $key == 'avatar' ) {
+                    if ( $key == 'name' ) {
+
+                        $fields['name'] = array(
+                            'first_name'  => $this->first_name,
+                            'last_name'   => $this->last_name,
+                            'middle_name' => $this->middle_name,
+                            'full_name'   => $this->get_full_name()
+                        );
+                        continue;
+
+                    } elseif ( $key == 'avatar' ) {
+
                         $avatar_id                 = (int) $this->user->photo_id;
                         $fields['avatar']['id']    = $avatar_id;
                         $fields['avatar']['image'] = $this->get_avatar();
@@ -108,49 +144,20 @@ class Employee {
                         continue;
                     }
 
-                    if ( $key == 'name' ) {
-                        $fields['name']['full_name'] = $this->get_full_name();
-                    }
-
                     foreach ($value as $n_key => $n_value) {
-                        switch ( $n_key ) {
-                            case 'department':
-                                $fields[ $key ][ $n_key ] = (int) $this->erp->department;
-                                break;
 
-                            case 'department_title':
-                                $fields[ $key ][ $n_key ] = $this->erp->dept_title;
-                                break;
-
-                            case 'designation':
-                                $fields[ $key ][ $n_key ] = (int) $this->erp->designation;
-                                break;
-
-                            case 'designation_title':
-                                $fields[ $key ][ $n_key ] = $this->erp->job_title;
-                                break;
-
-                            case 'company_id':
-                                $fields[ $key ][ $n_key ] = (int) $this->erp->company_id;
-                                break;
-
-                            default:
-                                $fields[ $key ][ $n_key ] = $this->user->$n_key;
-                                break;
+                        // if not erp_fields, fetch them as $key_$value
+                        if ( in_array( $n_key, $erp_fields ) ) {
+                            $fields[ $key ][ $n_key ] = $this->$n_key;
+                        } else {
+                            $meta_key                 = $key . '_' . $n_key;
+                            $fields[ $key ][ $n_key ] = $this->$meta_key;
                         }
                     }
 
                 } else {
 
-                    switch ( $key ) {
-                        case 'id':
-                            $fields[ $key ] = $this->id;
-                            break;
-
-                        default:
-                            $fields[ $key ] = $this->user->$key;
-                            break;
-                    }
+                    $fields[ $key ] = $this->$key;
                 }
             }
         }
@@ -171,7 +178,7 @@ class Employee {
             $row       = wp_cache_get( $cache_key, 'wp-erp' );
 
             if ( false === $row ) {
-                $query = "SELECT e.*, d.title as job_title, dpt.title as dept_title
+                $query = "SELECT e.*, d.title as designation_title, dpt.title as department_title
                     FROM {$wpdb->prefix}erp_hr_employees AS e
                     LEFT JOIN {$wpdb->prefix}erp_hr_designations AS d ON d.id = e.designation
                     LEFT JOIN {$wpdb->prefix}erp_hr_depts AS dpt ON dpt.id = e.department
@@ -186,10 +193,17 @@ class Employee {
         return false;
     }
 
+    /**
+     * Get an employee avatar
+     *
+     * @param  integer  avatar size in pixels
+     *
+     * @return string   image with HTML tag
+     */
     public function get_avatar( $size = 32 ) {
         if ( $this->id && ! empty( $this->user->photo_id ) ) {
             $image = wp_get_attachment_thumb_url( $this->user->photo_id );
-            return sprintf( '<img src="%1$s" alt="" class="avatar avatar-%2$s photo" height="%2$s" width="%2$s" />', $image, $size );
+            return sprintf( '<img src="%1$s" alt="" class="avatar avatar-%2$s photo" height="auto" width="%2$s" />', $image, $size );
         }
 
         return get_avatar( $this->id, $size );
@@ -235,8 +249,8 @@ class Employee {
      * @return string
      */
     public function get_job_title() {
-        if ( $this->id && isset( $this->erp->job_title ) ) {
-            return stripslashes( $this->erp->job_title );
+        if ( $this->id && isset( $this->erp->designation_title ) ) {
+            return stripslashes( $this->erp->designation_title );
         }
     }
 
@@ -246,8 +260,8 @@ class Employee {
      * @return string
      */
     public function get_department_title() {
-        if ( $this->id && isset( $this->erp->dept_title ) ) {
-            return stripslashes( $this->erp->dept_title );
+        if ( $this->id && isset( $this->erp->department_title ) ) {
+            return stripslashes( $this->erp->department_title );
         }
     }
 
@@ -272,11 +286,11 @@ class Employee {
      * @return string
      */
     public function get_type() {
-        if ( ! empty( $this->user->type ) ) {
+        if ( ! empty( $this->user->work_type ) ) {
             $types = erp_hr_get_employee_types();
 
-            if ( array_key_exists( $this->user->type, $types ) ) {
-                return $types[ $this->user->type ];
+            if ( array_key_exists( $this->user->work_type, $types ) ) {
+                return $types[ $this->user->work_type ];
             }
         }
     }
@@ -287,8 +301,8 @@ class Employee {
      * @return string
      */
     public function get_joined_date() {
-        if ( ! empty( $this->user->joined ) ) {
-            return date_i18n( get_option( 'date_format' ), strtotime( $this->user->joined ) );
+        if ( ! empty( $this->user->work_joined ) ) {
+            return date_i18n( get_option( 'date_format' ), strtotime( $this->user->work_joined ) );
         }
     }
 
