@@ -27,7 +27,7 @@ class Department extends \WeDevs\ERP\Item {
     public function num_of_employees() {
         global $wpdb;
 
-        $sql = "SELECT SUM(id) FROM {$wpdb->prefix}erp_hr_employees WHERE status = 1 AND department = %d";
+        $sql = "SELECT COUNT(id) FROM {$wpdb->prefix}erp_hr_employees WHERE status = 1 AND department = %d";
         $number = (int) $wpdb->get_var( $wpdb->prepare( $sql, $this->id ) );
 
         return $number;
