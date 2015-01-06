@@ -244,6 +244,15 @@ class Employee {
     }
 
     /**
+     * Get an HTML link to single employee view
+     *
+     * @return string url to details
+     */
+    public function get_link() {
+        return sprintf( '<a href="%s">%s</a>', $this->get_details_url(), $this->get_full_name() );
+    }
+
+    /**
      * Get the job title
      *
      * @return string

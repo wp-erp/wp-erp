@@ -33,9 +33,18 @@ class Department extends \WeDevs\ERP\Item {
         return $number;
     }
 
+    /**
+     * Get the name of department lead
+     *
+     * @return string
+     */
     public function get_lead() {
-        if ( ! $this->lead ) {
-            return '-';
+        $employee = new Employee( intval( $this->lead ) );
+
+        if ( ! $employee->id ) {
+            return false;
         }
+
+        return $employee;
     }
 }

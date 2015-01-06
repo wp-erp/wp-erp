@@ -16,7 +16,7 @@
     <label for="dept-lead"><?php _e( 'Department Lead', 'wp-erp' ); ?></label>
     <span class="field">
         <select name="lead" id="dept-lead">
-            <option value="0"><?php _e( '- Select Lead -', 'wp-erp' ); ?></option>
+            <?php echo erp_hr_get_employees_dropdown( erp_get_current_company_id() ); ?>
         </select>
     </span>
 </div>

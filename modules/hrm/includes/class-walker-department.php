@@ -44,7 +44,15 @@ class Department_Walker extends \Walker {
                     <span class="trash"><a class="submitdelete" data-id="<?php echo $department->id; ?>" title="Delete this item" href="#"><?php _e( 'Delete', 'wp-erp' ); ?></a></span>
                 </div>
             </td>
-            <td class="col-"><?php echo $department->get_lead(); ?></td>
+            <td class="col-">
+                <?php
+                if ( $lead = $department->get_lead() ) {
+                    echo $lead->get_link();
+                } else {
+                    echo '-';
+                }
+                ?>
+            </td>
             <td class="col-"><?php echo $department->num_of_employees(); ?></td>
         </tr>
         <?php
