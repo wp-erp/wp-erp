@@ -18,7 +18,12 @@
         <ul class="erp-list two-col separated">
             <li><?php erp_print_key_value( __( 'Department', 'wp-erp' ), $employee->get_department_title() ); ?></li>
             <li><?php erp_print_key_value( __( 'Title', 'wp-erp' ), $employee->get_job_title() ); ?></li>
-            <li><?php erp_print_key_value( __( 'Reporting To', 'wp-erp' ), $employee->get_reporting_to() ); ?></li>
+
+            <?php
+            $reporting_to = $employee->get_reporting_to();
+            $reporting_to = $reporting_to ? $reporting_to->get_link() : '-';
+            ?>
+            <li><?php erp_print_key_value( __( 'Reporting To', 'wp-erp' ), $reporting_to ); ?></li>
             <li><?php erp_print_key_value( __( 'Joined', 'wp-erp' ), $employee->get_joined_date() ); ?></li>
             <li><?php erp_print_key_value( __( 'Source of Hire', 'wp-erp' ), $employee->get_hiring_source() ); ?></li>
             <li><?php erp_print_key_value( __( 'Employee Status', 'wp-erp' ), $employee->get_status() ); ?></li>

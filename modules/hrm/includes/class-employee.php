@@ -397,9 +397,11 @@ class Employee {
             $user    = new Employee( $user_id );
 
             if ( $user->id ) {
-                return $user->get_full_name();
+                return $user;
             }
         }
+
+        return false;
     }
 
     /**
