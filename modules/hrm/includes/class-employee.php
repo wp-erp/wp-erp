@@ -27,7 +27,7 @@ class Employee {
                 $this->erp  = $this->get_erp_row();
             }
 
-        } elseif ( $employee instanceof WP_User ) {
+        } elseif ( is_a( $employee, 'WP_User' ) ) {
 
             $this->id   = $employee->ID;
             $this->user = $employee;
@@ -98,8 +98,9 @@ class Employee {
                 if ( is_array( $value ) ) {
 
                     if ( $key == 'avatar' ) {
-                        $avatar_id              = (int) $this->user->photo_id;
-                        $fields['avatar']['id'] = $avatar_id;
+                        $avatar_id                 = (int) $this->user->photo_id;
+                        $fields['avatar']['id']    = $avatar_id;
+                        $fields['avatar']['image'] = $this->get_avatar();
 
                         if ( $avatar_id ) {
                             $fields['avatar']['url'] = wp_get_attachment_url( $avatar_id );
@@ -183,6 +184,15 @@ class Employee {
         }
 
         return false;
+    }
+
+    public function get_avatar( $size = 32 ) {
+        if ( $this->id && ! empty( $this->user->photo_id ) ) {
+            $image = wp_get_attachment_thumb_url( $this->user->photo_id );
+            return sprintf( '<img src="%1$s" alt="" class="avatar avatar-%2$s photo" height="%2$s" width="%2$s" />', $image, $size );
+        }
+
+        return get_avatar( $this->id, $size );
     }
 
     /**

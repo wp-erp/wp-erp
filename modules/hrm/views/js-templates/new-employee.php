@@ -105,7 +105,8 @@
                     'name'    => 'work[reporting_to]',
                     'value'   => '{{ data.work.reporting_to }}',
                     'type'    => 'select',
-                    'options' => array( 0 => '- Select -' )
+                    'id'      => 'work_reporting_to',
+                    'options' => erp_hr_get_employees_dropdown_raw( erp_get_current_company_id() )
                 ) ); ?>
             </li>
 
@@ -192,7 +193,8 @@
                 <?php erp_html_form_input( array(
                     'label'   => __( 'Date of Birth', 'wp-erp' ),
                     'name'    => 'personal[dob]',
-                    'value'   => '{{ data.personal.dob }}'
+                    'value'   => '{{ data.personal.dob }}',
+                    'class'   => 'erp-date-field'
                 ) ); ?>
             </li>
 

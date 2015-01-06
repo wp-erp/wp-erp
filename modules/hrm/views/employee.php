@@ -64,7 +64,7 @@ $vendors = array(
                             <input id="cb-select-1" type="checkbox" name="post[]" value="1">
                         </th>
                         <td class="username col- column-username">
-                            <?php echo get_avatar( '', 32 ); ?>
+                            <?php echo $employee->get_avatar(); ?>
 
                             <strong><a href="<?php echo erp_hr_url_single_employee( $employee->id ); ?>"><?php echo $employee->get_full_name(); ?></a></strong>
 

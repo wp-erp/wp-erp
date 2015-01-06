@@ -95,7 +95,7 @@ function erp_hr_delete_department( $department_id ) {
  */
 function erp_hr_get_departments_dropdown_raw( $company_id ) {
     $departments = erp_hr_get_departments( $company_id );
-    $dropdown    = array( 0 => __( '- Select Department -' ) );
+    $dropdown    = array( 0 => __( '- Select Department -', 'wp-erp' ) );
 
     if ( $departments ) {
         foreach ($departments as $key => $department) {
@@ -120,7 +120,7 @@ function erp_hr_get_departments_dropdown( $company_id, $selected = '' ) {
 
     if ( $departments ) {
         foreach ($departments as $key => $title) {
-            $dropdown .= sprintf( "<option value='%s'>%s</option>\n", $key, $title );
+            $dropdown .= sprintf( "<option value='%s'%s>%s</option>\n", $key, selected( $selected, $key, false ), $title );
         }
     }
 

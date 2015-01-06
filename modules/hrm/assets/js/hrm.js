@@ -25,7 +25,9 @@
 
             // employee
             $( '.erp-hr-employees' ).on( 'click', 'a#erp-employee-new', this.employee.create );
-            $( '.erp-hr-employees' ).on( 'click', 'span.edit a', this.employee.create );
+            $( '.erp-hr-employees' ).on( 'click', 'span.edit a', this.employee.edit );
+            $( '.erp-hr-employees' ).on( 'click', 'a.submitdelete', this.employee.remove );
+
             $( 'body' ).on( 'click', 'a#erp-set-emp-photo', this.employee.setPhoto );
             $( 'body' ).on( 'click', 'a.erp-remove-photo', this.employee.removePhoto );
         },
@@ -347,32 +349,27 @@
                     button: wpErpHr.popup.employee_create,
                     content: wp.template('erp-new-employee')( wpErpHr.employee_empty ),
 
-                    /**
-                     * Hack method to select the dropdowns
-                     *
-                     * @return {void}
-                     */
                     onReady: function() {
-                        var modal = this;
-
-                        $( 'li[data-selected]', modal ).each(function() {
-                            var self = $(this),
-                                selected = self.data('selected');
-
-                            if ( selected !== '' ) {
-                                self.find( 'select' ).val( selected );
-                            }
+                        $( '.erp-date-field').datepicker({
+                            dateFormat: 'yy-mm-dd'
                         });
                     },
 
+                    /**
+                     * Handle the onsubmit function
+                     *
+                     * @param  {modal}
+                     */
                     onSubmit: function(modal) {
+                        $( 'button[type=submit]', '.erp-modal' ).attr( 'disabled', 'disabled' );
+
                         wp.ajax.send( 'erp-hr-employee-new', {
                             data: this.serialize(),
                             success: function(response) {
 
-                                console.log(response);
                                 var row = wp.template( 'erp-employee-row');
                                 response.class = 'hello';
+
                                 $( 'table.erp-employee-list-table' ).append( row(response) );
 
                                 modal.closeModal();
@@ -385,12 +382,99 @@
                 });
             },
 
-            edit: function() {
+            /**
+             * Edit an employee
+             *
+             * @param  {event}
+             */
+            edit: function(e) {
+                e.preventDefault();
 
+                var self = $(this);
+
+                $.erpPopup({
+                    title: wpErpHr.popup.employee_update,
+                    button: wpErpHr.popup.employee_update,
+                    onReady: function() {
+                        var modal = this;
+
+                        $( 'header', modal).after( $('<div class="loader"></div>').show() );
+
+                        wp.ajax.send( 'erp-hr-emp-get', {
+                            data: {
+                                id: self.data('id'),
+                                _wpnonce: wpErpHr.nonce
+                            },
+                            success: function(response) {
+                                var html = wp.template('erp-new-employee')( response );
+                                $( '.content', modal ).html( html );
+                                $( '.loader', modal).remove();
+
+                                $( '.erp-date-field').datepicker({
+                                    dateFormat: 'yy-mm-dd'
+                                });
+
+                                $( 'li[data-selected]', modal ).each(function() {
+                                    var self = $(this),
+                                        selected = self.data('selected');
+
+                                    if ( selected !== '' ) {
+                                        self.find( 'select' ).val( selected );
+                                    }
+                                });
+
+                                // disable current one
+                                $('#work_reporting_to option[value="' + response.id + '"]', modal).attr( 'disabled', 'disabled' );
+                            }
+                        });
+                    },
+                    onSubmit: function(modal) {
+                        modal.disableButton();
+
+                        wp.ajax.send( {
+                            data: this.serialize(),
+                            success: function(response) {
+                                var row = wp.template( 'erp-employee-row');
+
+                                response.class = self.closest('tr').attr('class');
+                                self.closest('tr').replaceWith( row(response) );
+
+                                modal.closeModal();
+                            },
+                            error: function(error) {
+                                alert( error );
+                            }
+                        });
+                    }
+                });
             },
 
-            remove: function() {
+            /**
+             * Remove an employee
+             *
+             * @param  {event}
+             */
+            remove: function(e) {
+                e.preventDefault();
 
+                var self = $(this);
+
+                if ( confirm( wpErpHr.delConfirmEmployee ) ) {
+                    wp.ajax.send( 'erp-hr-emp-delete', {
+                        data: {
+                            '_wpnonce': wpErpHr.nonce,
+                            id: self.data( 'id' )
+                        },
+                        success: function() {
+                            self.closest('tr').fadeOut( 'fast', function() {
+                                $(this).remove();
+                            });
+                        },
+                        error: function(response) {
+                            alert( response );
+                        }
+                    });
+                }
             }
         }
     };

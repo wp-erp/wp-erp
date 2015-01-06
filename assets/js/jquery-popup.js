@@ -91,13 +91,29 @@
          * If pressing ESC close the modal
          *
          * @param  {event}
-         *
-         * @return {void}
          */
         onEscapeKey: function(e) {
             if ( 27 === e.keyCode ) {
                 this.closeModal();
             }
+        },
+
+        /**
+         * Disable the submit button
+         *
+         * @return {void}
+         */
+        disableButton: function() {
+            $( 'button[type=submit]', '.erp-modal' ).attr( 'disabled', 'disabled' );
+        },
+
+        /**
+         * Enable the submit button
+         *
+         * @return {void}
+         */
+        enableButton: function() {
+            $( 'button[type=submit]', '.erp-modal' ).removeAttr( 'disabled' );
         },
 
         /**
@@ -112,16 +128,20 @@
                 e.preventDefault();
             }
 
+            var modal = $( '.erp-modal' );
+
             // empty and hide the modal
-            $('.erp-modal .content').empty();
-            $('.erp-modal-backdrop, .erp-modal').hide();
+            $( '.content', modal ).empty();
+            $( '.erp-modal-backdrop, .erp-modal').hide();
 
             // remove the event handler
-            $('.erp-modal form.erp-modal-form').off('submit', this.formSubmit);
+            $( 'form.erp-modal-form', modal ).off('submit', this.formSubmit);
 
             if ( this.settings.extraClass !== '' ) {
-                $('.erp-modal').removeClass( this.settings.extraClass );
+                modal.removeClass( this.settings.extraClass );
             }
+
+            this.enableButton();
         }
     });
 

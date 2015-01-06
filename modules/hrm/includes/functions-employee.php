@@ -155,13 +155,12 @@ function erp_hr_employee_create( $args = array() ) {
     ), array( 'employee_id' => $user_id ) );
 
     // unset some non-required fields
-    if ( isset( $data['action'] ) ) {
-        unset( $data['action'] );
-    }
-
     if ( isset( $data['user_id'] ) ) {
         unset( $data['user_id'] );
     }
+
+    // make sure reporting_to != user_id
+    $data['work']['reporting_to'] = ( $user_id != $data['work']['reporting_to'] ) ? intval( $data['work']['reporting_to'] ) : 0;
 
     // if reached here, seems like we have success creating the user
     foreach ($data as $key => $value) {
@@ -213,6 +212,47 @@ function erp_hr_get_employees( $company_id ) {
     }
 
     return $users;
+}
+
+/**
+ * Get the raw employees dropdown
+ *
+ * @param  int  company id
+ *
+ * @return array  the key-value paired employees
+ */
+function erp_hr_get_employees_dropdown_raw( $company_id ) {
+    $employees = erp_hr_get_employees( $company_id );
+    $dropdown  = array( 0 => __( '- Select Employee -', 'wp-erp' ) );
+
+    if ( $employees ) {
+        foreach ($employees as $key => $employee) {
+            $dropdown[$employee->id] = $employee->get_full_name();
+        }
+    }
+
+    return $dropdown;
+}
+
+/**
+ * Get company employees dropdown
+ *
+ * @param  int  company id
+ * @param  string  selected department
+ *
+ * @return string  the dropdown
+ */
+function erp_hr_get_employees_dropdown( $company_id, $selected = '' ) {
+    $employees = erp_hr_get_employees_dropdown_raw( $company_id );
+    $dropdown  = '';
+
+    if ( $employees ) {
+        foreach ($employees as $key => $title) {
+            $dropdown .= sprintf( "<option value='%s'%s>%s</option>\n", $key, selected( $selected, $key, false ), $title );
+        }
+    }
+
+    return $dropdown;
 }
 
 /**

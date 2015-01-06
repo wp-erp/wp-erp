@@ -3,7 +3,7 @@
         <input id="cb-select-1" type="checkbox" name="employee[]" value="{{ data.id }}">
     </th>
     <td class="username col- column-username">
-        <img src="{{ data.avatar.url }}" class="avatar avatar-32 photo" height="32" width="32" alt="avatar">
+        {{{ data.avatar.image }}}
 
         <strong><a href="{{ data.url }}">{{ data.name.full_name }}</a></strong>
 

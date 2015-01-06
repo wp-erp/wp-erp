@@ -26,6 +26,7 @@ class Ajax_Handler {
 
         add_action( 'wp_ajax_erp-hr-employee-new', array($this, 'employee_create') );
         add_action( 'wp_ajax_erp-hr-emp-get', array($this, 'employee_get') );
+        add_action( 'wp_ajax_erp-hr-emp-delete', array($this, 'employee_remove') );
     }
 
     /**
@@ -185,7 +186,7 @@ class Ajax_Handler {
     }
 
     /**
-     * Create a new employee
+     * Create/update an employee
      *
      * @return void
      */
@@ -193,9 +194,11 @@ class Ajax_Handler {
         $this->verify_nonce( 'wp-erp-hr-employee-nonce' );
 
         // @TODO: check permission
+        unset( $_POST['_wp_http_referer'] );
+        unset( $_POST['_wpnonce'] );
+        unset( $_POST['action'] );
+
         $posted = array_map( 'strip_tags_deep', $_POST );
-        unset( $posted['_wp_http_referer'] );
-        unset( $posted['_wpnonce'] );
 
         $employee_id = erp_hr_employee_create( $posted );
 
@@ -212,17 +215,38 @@ class Ajax_Handler {
         wp_send_json_success( $data );
     }
 
+    /**
+     * Get an employee for ajax
+     *
+     * @return void
+     */
     public function employee_get() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        $employee_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+        $user        = get_user_by( 'id', $employee_id );
+
+        if ( ! $user ) {
+            wp_send_json_error( __( 'Employee does not exists.', 'wp-erp' ) );
+        }
+
+        $employee = new Employee( $user );
+        wp_send_json_success( $employee->to_array() );
+    }
+
+    /**
+     * Remove an employee from the company
+     *
+     * @return void
+     */
+    public function employee_remove() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
         $employee_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
 
-        $emp = new Employee( $employee_id );
-        // $user = new \WP_User(3);
-        // $data = array();
-
-        // var_dump( $emp->to_array() );
-        // var_dump( $user->to_array() );
-
-        wp_send_json_success( $emp->to_array() );
+        // @TODO: check permission
+        erp_hr_employee_on_delete( $employee_id );
+        wp_send_json_success( __( 'Employee has been removed successfully', 'wp-erp' ) );
     }
 }
 

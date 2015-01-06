@@ -158,6 +158,9 @@
   display: inline-block;
   vertical-align: top;
 }
+.erp-employee-form ol.form-fields > li select {
+  max-width: 55%;
+}
 .erp-employee-form ol.form-fields.two-col li {
   width: 50%;
 }
@@ -442,6 +445,7 @@ table.audit-log-table th.col-date {
   background: #ffffff url('../../images/spinner-2x.gif') center center no-repeat;
   z-index: 99;
   display: none;
+  background-size: 20px;
 }
 .erp-modal .close {
   position: absolute;
