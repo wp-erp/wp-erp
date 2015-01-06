@@ -224,3 +224,32 @@ if ( ! function_exists( 'trim_deep' ) ) {
         return $value;
     }
 }
+
+/**
+ * Helper function to print a label and value with a separator
+ *
+ * @param  string  the label
+ * @param  string  the value to print
+ * @param  string  separator
+ *
+ * @return void
+ */
+function erp_print_key_value( $label, $value, $sep = ' : ' ) {
+    printf( '<label>%s</label> <span class="sep">%s</span> <span class="value">%s</span>', $label, $sep, $value );
+}
+
+/**
+ * Get a clickable phone or email address link
+ *
+ * @param  string  type. e.g: email|phone
+ * @param  string  the value
+ *
+ * @return string  the link
+ */
+function erp_get_clickable( $type = 'email', $value = '' ) {
+    if ( 'email' == $type ) {
+        return sprintf( '<a href="mailto:%1$s">%1$s</a>', $value );
+    } elseif ( 'phone' == $type ) {
+        return sprintf( '<a href="tel:%1$s">%1$s</a>', $value );
+    }
+}

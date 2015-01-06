@@ -62,6 +62,16 @@ class Admin_Menu {
 
         switch ($action) {
             case 'view':
+                $employee = new Employee( $id );
+                if ( ! $employee->id ) {
+                    wp_die( __( 'Employee not found!', 'wp-erp' ) );
+                }
+
+                $company = erp_get_current_company();
+                if ( ! $company->has_employee( $employee->id ) ) {
+                    wp_die( __( 'This employee does not belong to this company', 'wp-erp' ) );
+                }
+
                 $template = WPERP_HRM_VIEWS . '/employee/single.php';
                 break;
 

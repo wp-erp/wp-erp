@@ -271,11 +271,11 @@ class Employee {
      * @return string
      */
     public function get_status() {
-        if ( ! empty( $this->user->status ) ) {
+        if ( ! empty( $this->user->work_status ) ) {
             $statuses = erp_hr_get_employee_statuses();
 
-            if ( array_key_exists( $this->user->status, $statuses ) ) {
-                return $statuses[ $this->user->status ];
+            if ( array_key_exists( $this->user->work_status, $statuses ) ) {
+                return $statuses[ $this->user->work_status ];
             }
         }
     }
@@ -296,6 +296,66 @@ class Employee {
     }
 
     /**
+     * Get the employee work_hiring_source
+     *
+     * @return string
+     */
+    public function get_hiring_source() {
+        if ( ! empty( $this->user->work_hiring_source ) ) {
+            $sources = erp_hr_get_employee_sources();
+
+            if ( array_key_exists( $this->user->work_hiring_source, $sources ) ) {
+                return $sources[ $this->user->work_hiring_source ];
+            }
+        }
+    }
+
+    /**
+     * Get the employee gender
+     *
+     * @return string
+     */
+    public function get_gender() {
+        if ( ! empty( $this->user->personal_gender ) ) {
+            $genders = erp_hr_get_genders();
+
+            if ( array_key_exists( $this->user->personal_gender, $genders ) ) {
+                return $genders[ $this->user->personal_gender ];
+            }
+        }
+    }
+
+    /**
+     * Get the marital status
+     *
+     * @return string
+     */
+    public function get_marital_status() {
+        if ( ! empty( $this->user->personal_marital_status ) ) {
+            $statuses = erp_hr_get_marital_statuses();
+
+            if ( array_key_exists( $this->user->personal_marital_status, $statuses ) ) {
+                return $statuses[ $this->user->personal_marital_status ];
+            }
+        }
+    }
+
+    /**
+     * Get the employee nationalit
+     *
+     * @return string
+     */
+    public function get_nationality() {
+        if ( ! empty( $this->user->personal_nationality ) ) {
+            $countries = \WeDevs\ERP\Countries::instance()->get_countries();
+
+            if ( array_key_exists( $this->user->personal_nationality, $countries ) ) {
+                return $countries[ $this->user->personal_nationality ];
+            }
+        }
+    }
+
+    /**
      * Get joined date
      *
      * @return string
@@ -306,11 +366,90 @@ class Employee {
         }
     }
 
-    public function get_educations() {
-
+    /**
+     * Get birth date
+     *
+     * @return string
+     */
+    public function get_birthday() {
+        if ( ! empty( $this->user->personal_dob ) ) {
+            return date_i18n( get_option( 'date_format' ), strtotime( $this->user->personal_dob ) );
+        }
     }
 
-    public function get_experiences() {
+    /**
+     * Get the name of reporting user
+     *
+     * @return string
+     */
+    public function get_reporting_to() {
+        if ( ! empty( $this->user->work_reporting_to ) ) {
+            $user_id = (int) $this->user->work_reporting_to;
+            $user    = new Employee( $user_id );
 
+            if ( $user->id ) {
+                return $user->get_full_name();
+            }
+        }
+    }
+
+    /**
+     * Get a phone number
+     *
+     * @param  string  type of phone. work|mobile|phone
+     *
+     * @return string
+     */
+    public function get_phone( $which = 'work' ) {
+        $phone = '';
+
+        switch ( $which ) {
+            case 'mobile':
+                $phone = $this->personal_mobile;
+                break;
+
+            case 'phone':
+                $phone = $this->personal_phone;
+                break;
+
+            default:
+                $phone = $this->work_phone;
+                break;
+        }
+
+        return $phone;
+    }
+
+    /**
+     * Get educational qualifications
+     *
+     * @return array the qualifications
+     */
+    public function get_educations() {
+        $educations = array();
+
+        return $educations;
+    }
+
+    /**
+     * Get work experiences
+     *
+     * @return array
+     */
+    public function get_experiences() {
+        $experiences = array();
+
+        return $experiences;
+    }
+
+    /**
+     * Get dependents
+     *
+     * @return array
+     */
+    public function get_dependents() {
+        $dependents = array();
+
+        return $dependents;
     }
 }

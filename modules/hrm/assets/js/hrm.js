@@ -434,10 +434,16 @@
                         wp.ajax.send( {
                             data: this.serialize(),
                             success: function(response) {
-                                var row = wp.template( 'erp-employee-row');
+                                var single = ( self.data( 'single' ) === true ) ? true : false;
 
-                                response.class = self.closest('tr').attr('class');
-                                self.closest('tr').replaceWith( row(response) );
+                                if ( single ) {
+                                    $( '.erp-area-left' ).load( window.location.href + ' #erp-area-left-inner' );
+                                } else {
+                                    var row = wp.template( 'erp-employee-row');
+
+                                    response.class = self.closest('tr').attr('class');
+                                    self.closest('tr').replaceWith( row(response) );
+                                }
 
                                 modal.closeModal();
                             },

@@ -1,134 +1,171 @@
 <div class="postbox leads-actions">
-    <div class="handlediv" title="Click to toggle"><br></div>
-    <h3 class="hndle"><span>Basic Info</span></h3>
+    <div class="handlediv" title="<?php _e( 'Click to toggle', 'wp-erp' ); ?>"><br></div>
+    <h3 class="hndle"><span><?php _e( 'Basic Info', 'wp-erp' ); ?></span></h3>
     <div class="inside">
         <ul class="erp-list two-col separated">
-            <li><label>First Name</label> <span class="sep"> : </span> <span class="value">John</span></li>
-            <li><label>Last Name</label> <span class="sep"> : </span> <span class="value">Doe</span></li>
-            <li><label>Employee ID</label> <span class="sep"> : </span> <span class="value">1</span></li>
-            <li><label>Email</label> <span class="sep"> : </span> <span class="value"><a href="mailto:john@doe.com">john@doe.com</a></span></li>
+            <li><?php erp_print_key_value( __( 'First Name', 'wp-erp' ), $employee->first_name ); ?></li>
+            <li><?php erp_print_key_value( __( 'Last Name', 'wp-erp' ), $employee->last_name ); ?></li>
+            <li><?php erp_print_key_value( __( 'Employee ID', 'wp-erp' ), $employee->employee_id ); ?></li>
+            <li><?php erp_print_key_value( __( 'Email', 'wp-erp' ), erp_get_clickable( 'email', $employee->user_email ) ); ?></li>
         </ul>
     </div>
 </div><!-- .postbox -->
 
 <div class="postbox leads-actions">
-    <div class="handlediv" title="Click to toggle"><br></div>
-    <h3 class="hndle"><span>Work</span></h3>
+    <div class="handlediv" title="<?php _e( 'Click to toggle', 'wp-erp' ); ?>"><br></div>
+    <h3 class="hndle"><span><?php _e( 'Work', 'wp-erp' ); ?></span></h3>
     <div class="inside">
         <ul class="erp-list two-col separated">
-            <li><label>Department</label> <span class="sep"> : </span> <span class="value">Engineering</span></li>
-            <li><label>Title</label> <span class="sep"> : </span> <span class="value">Developer</span></li>
-            <li><label>Reporting To</label> <span class="sep"> : </span> <span class="value">Jane Doe</span></li>
-            <li><label>Joined</label> <span class="sep"> : </span> <span class="value">08 Dec, 2013</span></li>
-            <li><label>Source of Hire</label> <span class="sep"> : </span> <span class="value">Direct</span></li>
-            <li><label>Employee Status</label> <span class="sep"> : </span> <span class="value">Permanent</span></li>
-            <li><label>Work Phone</label> <span class="sep"> : </span> <span class="value"><a href="tel:+8801827273838">+8801827273838</a></span></li>
+            <li><?php erp_print_key_value( __( 'Department', 'wp-erp' ), $employee->get_department_title() ); ?></li>
+            <li><?php erp_print_key_value( __( 'Title', 'wp-erp' ), $employee->get_job_title() ); ?></li>
+            <li><?php erp_print_key_value( __( 'Reporting To', 'wp-erp' ), $employee->get_reporting_to() ); ?></li>
+            <li><?php erp_print_key_value( __( 'Joined', 'wp-erp' ), $employee->get_joined_date() ); ?></li>
+            <li><?php erp_print_key_value( __( 'Source of Hire', 'wp-erp' ), $employee->get_hiring_source() ); ?></li>
+            <li><?php erp_print_key_value( __( 'Employee Status', 'wp-erp' ), $employee->get_status() ); ?></li>
+            <li><?php erp_print_key_value( __( 'Work Phone', 'wp-erp' ), erp_get_clickable( 'phone', $employee->get_phone( 'work' ) ) ); ?></li>
         </ul>
     </div>
 </div><!-- .postbox -->
 
 <div class="postbox leads-actions">
-    <div class="handlediv" title="Click to toggle"><br></div>
-    <h3 class="hndle"><span>Personal Details</span></h3>
+    <div class="handlediv" title="<?php _e( 'Click to toggle', 'wp-erp' ); ?>"><br></div>
+    <h3 class="hndle"><span><?php _e( 'Personal Details', 'wp-erp' ); ?></span></h3>
     <div class="inside">
         <ul class="erp-list two-col separated">
-            <li><label>Mobile</label> <span class="sep"> : </span> <span class="value"><a href="tel:+8801475454545">+8801475454545</a></span></li>
-            <li><label>Address</label> <span class="sep"> : </span> <span class="value">Mohammadpur, Dhaka</span></li>
-            <li><label>Other Email</label> <span class="sep"> : </span> <span class="value"><a href="mailto:fake@email.com">fake@email.com</a></span></li>
-            <li><label>Date of Birth</label> <span class="sep"> : </span> <span class="value">01 Dec, 2010</span></li>
-            <li><label>Gender</label> <span class="sep"> : </span> <span class="value">Male</span></li>
-            <li><label>Nationality</label> <span class="sep"> : </span> <span class="value">Bangladeshi</span></li>
-            <li><label>Marital Status</label> <span class="sep"> : </span> <span class="value">Single</span></li>
-            <li><label>Driving License</label> <span class="sep"> : </span> <span class="value">QZ454545425</span></li>
-            <li><label>Hobbies</label> <span class="sep"> : </span> <span class="value">Travelling, Reading</span></li>
+            <li><?php erp_print_key_value( __( 'Mobile', 'wp-erp' ), erp_get_clickable( 'phone', $employee->get_phone( 'personal' ) ) ); ?></li>
+            <li><?php erp_print_key_value( __( 'Address', 'wp-erp' ), $employee->personal_address ); ?></li>
+            <li><?php erp_print_key_value( __( 'Other Email', 'wp-erp' ), erp_get_clickable( 'email', $employee->personal_other_email ) ); ?></li>
+            <li><?php erp_print_key_value( __( 'Date of Birth', 'wp-erp' ), $employee->get_birthday() ); ?></li>
+            <li><?php erp_print_key_value( __( 'Gender', 'wp-erp' ), $employee->get_gender() ); ?></li>
+            <li><?php erp_print_key_value( __( 'Nationality', 'wp-erp' ), $employee->get_nationality() ); ?></li>
+            <li><?php erp_print_key_value( __( 'Marital Status', 'wp-erp' ), $employee->get_marital_status() ); ?></li>
+            <li><?php erp_print_key_value( __( 'Driving License', 'wp-erp' ), $employee->personal_driving_license ); ?></li>
+            <li><?php erp_print_key_value( __( 'Hobbies', 'wp-erp' ), $employee->personal_hobbies ); ?></li>
         </ul>
     </div>
 </div><!-- .postbox -->
 
 <div class="postbox leads-actions">
-    <div class="handlediv" title="Click to toggle"><br></div>
-    <h3 class="hndle"><span>Work Experience</span></h3>
+    <div class="handlediv" title="<?php _e( 'Click to toggle', 'wp-erp' ); ?>"><br></div>
+    <h3 class="hndle"><span><?php _e( 'Work Experience', 'wp-erp' ); ?></span></h3>
     <div class="inside">
 
-        <table class="widefat">
-            <thead>
-                <tr>
-                    <th>Previous Company</th>
-                    <th>Job Title</th>
-                    <th>From</th>
-                    <th>To</th>
-                    <th>Job Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="alternate">
-                    <td>ABC Company</td>
-                    <td>Software Engineer</td>
-                    <td>15 Jan, 2013</td>
-                    <td>30 Feb, 2015</td>
-                    <td>-</td>
-                </tr>
-                <tr>
-                    <td>ABC Company</td>
-                    <td>Software Engineer</td>
-                    <td>15 Jan, 2013</td>
-                    <td>30 Feb, 2015</td>
-                    <td>-</td>
-                </tr>
-            </tbody>
-        </table>
+        <?php
+        $experiences = $employee->get_experiences();
+
+        if ( $experiences ) {
+            ?>
+            <table class="widefat">
+                <thead>
+                    <tr>
+                        <th><?php _e( 'Previous Company', 'wp-erp' ); ?></th>
+                        <th><?php _e( 'Job Title', 'wp-erp' ); ?></th>
+                        <th><?php _e( 'From', 'wp-erp' ); ?></th>
+                        <th><?php _e( 'To', 'wp-erp' ); ?></th>
+                        <th><?php _e( 'Job Description', 'wp-erp' ); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($experiences as $key => $experience) { ?>
+
+                        <tr class="<?php echo $key % 2 == 0 ? 'alternate' : 'odd'; ?>">
+                            <td><?php echo $experience['company_name'] ?></td>
+                            <td><?php echo $experience['job_title'] ?></td>
+                            <td><?php echo $experience['from'] ?></td>
+                            <td><?php echo $experience['to'] ?></td>
+                            <td><?php echo $experience['description'] ?></td>
+                        </tr>
+
+                    <?php } ?>
+                </tbody>
+            </table>
+        <?php } else { ?>
+
+            <?php _e( 'No work experiences found.', 'wp-erp' ); ?>
+
+        <?php } ?>
 
     </div>
 </div><!-- .postbox -->
 
 <div class="postbox leads-actions">
-    <div class="handlediv" title="Click to toggle"><br></div>
-    <h3 class="hndle"><span>Education</span></h3>
+    <div class="handlediv" title="<?php _e( 'Click to toggle', 'wp-erp' ); ?>"><br></div>
+    <h3 class="hndle"><span><?php _e( 'Education', 'wp-erp' ); ?></span></h3>
     <div class="inside">
-        <table class="widefat">
-            <thead>
-                <tr>
-                    <th>School Name</th>
-                    <th>Degree</th>
-                    <th>Field(s) of Study</th>
-                    <th>Date of Completion</th>
-                    <th>Additional Notes</th>
-                    <th>Interests</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>ABC School</td>
-                    <td>SSC</td>
-                    <td>Science</td>
-                    <td>2004</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-            </tbody>
-        </table>
+        <?php
+        $educations = $employee->get_educations();
+
+        if ( $educations ) {
+            ?>
+            <table class="widefat">
+                <thead>
+                    <tr>
+                        <th><?php _e( 'School Name', 'wp-erp' ); ?></th>
+                        <th><?php _e( 'Degree', 'wp-erp' ); ?></th>
+                        <th><?php _e( 'Field(s) of Study', 'wp-erp' ); ?></th>
+                        <th><?php _e( 'Date of Completion', 'wp-erp' ); ?></th>
+                        <th><?php _e( 'Additional Notes', 'wp-erp' ); ?></th>
+                        <th><?php _e( 'Interests', 'wp-erp' ); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($educations as $key => $education) { ?>
+
+                        <tr class="<?php echo $key % 2 == 0 ? 'alternate' : 'odd'; ?>">
+                            <td><?php echo $education['school'] ?></td>
+                            <td><?php echo $education['degree'] ?></td>
+                            <td><?php echo $education['field'] ?></td>
+                            <td><?php echo $education['finished'] ?></td>
+                            <td><?php echo $education['notes'] ?></td>
+                            <td><?php echo $education['interests'] ?></td>
+                        </tr>
+
+                    <?php } ?>
+                </tbody>
+            </table>
+        <?php } else { ?>
+
+            <?php _e( 'No education information found.', 'wp-erp' ); ?>
+
+        <?php } ?>
     </div>
 </div><!-- .postbox -->
 
 <div class="postbox leads-actions">
-    <div class="handlediv" title="Click to toggle"><br></div>
-    <h3 class="hndle"><span>Dependents</span></h3>
+    <div class="handlediv" title="<?php _e( 'Click to toggle', 'wp-erp' ); ?>"><br></div>
+    <h3 class="hndle"><span><?php _e( 'Dependents', 'wp-erp' ); ?></span></h3>
     <div class="inside">
-        <table class="widefat">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Relationship</th>
-                    <th>Date of Birth</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>John Doe</td>
-                    <td>Father</td>
-                    <td>1 Dec, 1960</td>
-                </tr>
-            </tbody>
-        </table>
+
+        <?php
+        $dependents = $employee->get_dependents();
+
+        if ( $dependents ) {
+            ?>
+            <table class="widefat">
+                <thead>
+                    <tr>
+                        <th><?php _e( 'Name', 'wp-erp' ); ?></th>
+                        <th><?php _e( 'Relationship', 'wp-erp' ); ?></th>
+                        <th><?php _e( 'Date of Birth', 'wp-erp' ); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($dependents as $key => $dependent) { ?>
+
+                        <tr class="<?php echo $key % 2 == 0 ? 'alternate' : 'odd'; ?>">
+                            <td><?php echo $dependent['name'] ?></td>
+                            <td><?php echo $dependent['relation'] ?></td>
+                            <td><?php echo $dependent['dob'] ?></td>
+                        </tr>
+
+                    <?php } ?>
+                </tbody>
+            </table>
+        <?php } else { ?>
+
+            <?php _e( 'No dependent information found.', 'wp-erp' ); ?>
+
+        <?php } ?>
+
     </div>
 </div><!-- .postbox -->
