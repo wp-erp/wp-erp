@@ -162,7 +162,14 @@ class Admin_Menu {
         $company_id = (int) $_REQUEST['erp-comp'];
         update_user_meta( $current_user->ID, '_erp_company', $company_id );
 
-        $redirect_to = apply_filters( 'erp_comp_switch_redirect_to', admin_url( 'index.php' ), $company_id );
+        $redirect_to = remove_query_arg( array(
+            'erp-comp', 'erp_comp_swt_nonce',
+            'user_switched', 'switched_off', 'switched_back',
+            'message', 'update', 'updated', 'settings-updated', 'saved',
+            'activated', 'activate', 'deactivate', 'enabled', 'disabled',
+            'locked', 'skipped', 'deleted', 'trashed', 'untrashed',
+        ) );
+        $redirect_to = apply_filters( 'erp_comp_switch_redirect_to', $redirect_to );
         wp_redirect( $redirect_to );
         exit;
     }
