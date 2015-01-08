@@ -111,13 +111,20 @@ class Ajax_Handler {
     public function department_delete() {
         $this->verify_nonce( 'wp-erp-hr-nonce' );
 
+        // @TODO: check permission
+
         $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
         if ( $id ) {
-            // @TODO: check permission
-            erp_hr_delete_department( $id );
+            $deleted = erp_hr_delete_department( $id );
+
+            if ( is_wp_error( $deleted ) ) {
+                wp_send_json_error( $deleted->get_error_message() );
+            }
+
+            wp_send_json_success( __( 'Department has been deleted', 'wp-erp' ) );
         }
 
-        wp_send_json_success( __( 'Department has been deleted', 'wp-erp' ) );
+        wp_send_json_error( __( 'Something went worng!', 'wp-erp' ) );
     }
 
     /**
@@ -165,7 +172,7 @@ class Ajax_Handler {
             wp_send_json_success( $designation );
         }
 
-        wp_send_json_success( __( 'Something went wrong!', 'wp-erp' ) );
+        wp_send_json_error( __( 'Something went wrong!', 'wp-erp' ) );
     }
 
     /**
@@ -179,10 +186,16 @@ class Ajax_Handler {
         $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
         if ( $id ) {
             // @TODO: check permission
-            erp_hr_delete_designation( $id );
+            $deleted = erp_hr_delete_designation( $id );
+
+            if ( is_wp_error( $deleted ) ) {
+                wp_send_json_error( $deleted->get_error_message() );
+            }
+
+            wp_send_json_success( __( 'Designation has been deleted', 'wp-erp' ) );
         }
 
-        wp_send_json_success( __( 'Designation has been deleted', 'wp-erp' ) );
+        wp_send_json_error( __( 'Something went wrong!', 'wp-erp' ) );
     }
 
     /**

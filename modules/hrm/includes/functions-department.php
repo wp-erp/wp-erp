@@ -81,6 +81,11 @@ function erp_hr_get_departments( $company_id ) {
 function erp_hr_delete_department( $department_id ) {
     global $wpdb;
 
+    $department = new \WeDevs\ERP\HRM\Department( $department_id );
+    if ( $department->num_of_employees() ) {
+        return new WP_Error( 'not-empty', __( 'You can not delete this department because it contains employees.', 'wp-erp' ) );
+    }
+
     do_action( 'erp_hr_dept_delete', $department_id );
 
     return $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}erp_hr_depts WHERE id = %d", $department_id ) );

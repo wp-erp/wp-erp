@@ -76,12 +76,17 @@ function erp_hr_get_designations( $company_id ) {
  *
  * @return bool
  */
-function erp_hr_delete_designation( $designation ) {
+function erp_hr_delete_designation( $designation_id ) {
     global $wpdb;
 
-    do_action( 'erp_hr_desig_delete', $designation );
+    $designation = new \WeDevs\ERP\HRM\Designation( $designation_id );
+    if ( $designation->num_of_employees() ) {
+        return new WP_Error( 'not-empty', __( 'You can not delete this designation because it contains employees.', 'wp-erp' ) );
+    }
 
-    return $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}erp_hr_designations WHERE id = %d", $designation ) );
+    do_action( 'erp_hr_desig_delete', $designation_id );
+
+    return $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}erp_hr_designations WHERE id = %d", $designation_id ) );
 }
 
 /**
