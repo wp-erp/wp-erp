@@ -131,6 +131,8 @@ class Human_Resource {
 
         // if its an employee page
         if ( 'hr-management_page_erp-hr-employee' == $hook ) {
+            wp_enqueue_script( 'post' );
+
             $employee                          = new Employee();
             $localize_script['employee_empty'] = $employee->to_array();
         }

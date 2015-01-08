@@ -351,7 +351,9 @@
 
                     onReady: function() {
                         $( '.erp-date-field').datepicker({
-                            dateFormat: 'yy-mm-dd'
+                            dateFormat: 'yy-mm-dd',
+                            changeMonth: true,
+                            changeYear: true
                         });
                     },
 
@@ -411,7 +413,9 @@
                                 $( '.loader', modal).remove();
 
                                 $( '.erp-date-field').datepicker({
-                                    dateFormat: 'yy-mm-dd'
+                                    dateFormat: 'yy-mm-dd',
+                                    changeMonth: true,
+                                    changeYear: true
                                 });
 
                                 $( 'li[data-selected]', modal ).each(function() {

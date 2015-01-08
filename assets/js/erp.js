@@ -90,9 +90,6 @@
             var country = $(this).val(),
                 empty = '<option val="-1">-------------</option>';
 
-            console.log( country);
-            console.log( wpErpCountries[ country ] );
-
             if ( wpErpCountries[ country ] ) {
                 var options = '',
                     state = wpErpCountries[ country ];
