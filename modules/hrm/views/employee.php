@@ -4,13 +4,27 @@
 
     <div class="tablenav top">
         <div class="alignleft actions bulkactions">
-            <label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label>
+            <label for="bulk-action-selector-top" class="screen-reader-text"><?php _e( 'Select bulk action', 'wp-erp' ); ?></label>
             <select name="action" id="bulk-action-selector-top">
                 <option value="-1" selected="selected">Bulk Actions</option>
                 <option value="email">Send Email</option>
                 <option value="trash">Move to Trash</option>
             </select>
             <input type="submit" name="" id="doaction" class="button action" value="Apply">
+        </div>
+
+        <div class="alignleft actions">
+            <label for="bulk-action-selector-top" class="screen-reader-text"><?php _e( 'Select by job title', 'wp-erp' ); ?></label>
+            <select name="job_title" id="erp-job-title">
+                <?php echo erp_hr_get_designation_dropdown( erp_get_current_company_id() ) ?>
+            </select>
+
+            <label for="bulk-action-selector-top" class="screen-reader-text"><?php _e( 'Select by department', 'wp-erp' ); ?></label>
+            <select name="job_title" id="erp-job-title">
+                <?php echo erp_hr_get_departments_dropdown( erp_get_current_company_id() ) ?>
+            </select>
+
+            <input type="submit" name="" id="doaction" class="button action" value="<?php _e( 'Filter', 'wp-erp' ); ?>">
         </div>
     </div>
 
@@ -21,7 +35,7 @@
                     <input id="cb-select-all-1" type="checkbox">
                 </th>
                 <th class="col-"><?php _e( 'Name', 'accounting' ); ?></th>
-                <th class="col-"><?php _e( 'Job Title', 'accounting' ); ?></th>
+                <th class="col-"><?php _e( 'Designation', 'accounting' ); ?></th>
                 <th class="col-"><?php _e( 'Department', 'accounting' ); ?></th>
                 <th class="col-"><?php _e( 'Employment Type', 'accounting' ); ?></th>
                 <th class="col-"><?php _e( 'Joined', 'accounting' ); ?></th>
@@ -34,7 +48,7 @@
                     <input id="cb-select-all-1" type="checkbox">
                 </th>
                 <th class="col-"><?php _e( 'Name', 'accounting' ); ?></th>
-                <th class="col-"><?php _e( 'Job Title', 'accounting' ); ?></th>
+                <th class="col-"><?php _e( 'Designation', 'accounting' ); ?></th>
                 <th class="col-"><?php _e( 'Department', 'accounting' ); ?></th>
                 <th class="col-"><?php _e( 'Employment Type', 'accounting' ); ?></th>
                 <th class="col-"><?php _e( 'Joined', 'accounting' ); ?></th>
