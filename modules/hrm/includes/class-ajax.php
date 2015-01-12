@@ -27,6 +27,8 @@ class Ajax_Handler {
         add_action( 'wp_ajax_erp-hr-employee-new', array($this, 'employee_create') );
         add_action( 'wp_ajax_erp-hr-emp-get', array($this, 'employee_get') );
         add_action( 'wp_ajax_erp-hr-emp-delete', array($this, 'employee_remove') );
+        add_action( 'wp_ajax_erp-hr-emp-update-status', array($this, 'employee_update_employment') );
+        add_action( 'wp_ajax_erp-hr-emp-update-comp', array($this, 'employee_update_compensation') );
     }
 
     /**
@@ -261,6 +263,76 @@ class Ajax_Handler {
         // @TODO: check permission
         erp_hr_employee_on_delete( $employee_id );
         wp_send_json_success( __( 'Employee has been removed successfully', 'wp-erp' ) );
+    }
+
+    /**
+     * Update employment status
+     *
+     * @return void
+     */
+    public function employee_update_employment() {
+        $this->verify_nonce( 'employee_update_employment' );
+
+        // @TODO: check permission
+        $employee_id = isset( $_REQUEST['employee_id'] ) ? intval( $_REQUEST['employee_id'] ) : 0;
+        $date        = ( empty( $_POST['date'] ) ) ? current_time( 'mysql' ) : $_POST['date'];
+        $comment     = strip_tags( $_POST['comment'] );
+        $status      = strip_tags( $_POST['status'] );
+        $types       = erp_hr_get_employee_types();
+
+        if ( ! array_key_exists( $status, $types ) ) {
+            wp_send_json_error( __( 'Status error', 'wp-erp' ) );
+        }
+
+        $employee = new Employee( $employee_id );
+
+        if ( $employee->id ) {
+            $employee->update_employment_status( $status, $date, $comment );
+            wp_send_json_success();
+        }
+
+        wp_send_json_error( __( 'Something went wrong!', 'wp-erp' ) );
+    }
+
+    /**
+     * Update employee compensation
+     *
+     * @return void
+     */
+    public function employee_update_compensation() {
+        $this->verify_nonce( 'employee_update_compensation' );
+
+        // @TODO: check permission
+        $employee_id = isset( $_REQUEST['employee_id'] ) ? intval( $_REQUEST['employee_id'] ) : 0;
+        $date        = ( empty( $_POST['date'] ) ) ? current_time( 'mysql' ) : $_POST['date'];
+        $comment     = strip_tags( $_POST['comment'] );
+        $pay_rate    = intval( $_POST['pay_rate'] );
+        $pay_type    = strip_tags( $_POST['pay_type'] );
+        $reason      = strip_tags( $_POST['change-reason'] );
+
+        $types       = erp_hr_get_pay_type();
+        $reasons     = erp_hr_get_pay_change_reasons();
+
+        if ( ! $pay_rate ) {
+            wp_send_json_error( __( 'Enter a valid pay rate.', 'wp-erp' ) );
+        }
+
+        if ( ! array_key_exists( $pay_type, $types ) ) {
+            wp_send_json_error( __( 'Pay Type does not exists.', 'wp-erp' ) );
+        }
+
+        if ( ! array_key_exists( $reason, $reasons ) ) {
+            wp_send_json_error( __( 'Reason does not exists.', 'wp-erp' ) );
+        }
+
+        $employee = new Employee( $employee_id );
+
+        if ( $employee->id ) {
+            $employee->update_compensation( $pay_rate, $pay_type, $reason, $date, $comment );
+            wp_send_json_success();
+        }
+
+        wp_send_json_error( __( 'Something went wrong!', 'wp-erp' ) );
     }
 }
 

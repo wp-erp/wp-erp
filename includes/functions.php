@@ -253,3 +253,14 @@ function erp_get_clickable( $type = 'email', $value = '' ) {
         return sprintf( '<a href="tel:%1$s">%1$s</a>', $value );
     }
 }
+
+/**
+ * Get a formatted date from WordPress format
+ *
+ * @param  string  $date the date
+ *
+ * @return string  formatted date
+ */
+function erp_format_date( $date ) {
+    return date_i18n( get_option( 'date_format' ), strtotime( $date ) );
+}

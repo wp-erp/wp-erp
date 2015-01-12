@@ -209,6 +209,22 @@
 .erp-employee-form ol.fields-inline li {
   display: inline-block;
 }
+.job-tab-wrap table.widefat {
+  margin-bottom: 20px;
+}
+.job-tab-wrap table.widefat a.remove {
+  visibility: hidden;
+  color: #999;
+}
+.job-tab-wrap table.widefat tr:hover a.remove {
+  visibility: visible;
+}
+.job-tab-wrap a.action {
+  float: right;
+  margin-top: -38px;
+  padding-bottom: 10px;
+  text-decoration: none;
+}
 #wp-admin-bar-erp-mode-switch .ab-icon.dashicons-randomize {
   padding-top: 7px !important;
 }
@@ -248,6 +264,11 @@ span.required {
   float: left;
   margin-right: 10px;
 }
+.erp .erp-single-container .erp-area-left.full-width {
+  width: 100%;
+  float: none;
+  margin-right: 0;
+}
 .erp .erp-single-container .erp-area-left .erp-profile-top {
   margin-bottom: 15px;
 }
@@ -278,7 +299,7 @@ span.required {
 .erp .erp-single-container .erp-area-left .erp-profile-top .erp-user-info {
   float: left;
   margin-left: 25px;
-  width: 80%;
+  width: 60%;
 }
 .erp .erp-single-container .erp-area-left .erp-profile-top .erp-user-info a {
   text-decoration: none;
@@ -418,6 +439,46 @@ table.audit-log-table th.col-date {
   float: left;
   width: 80%;
 }
+.erp-ui-dialog.ui-dialog {
+  padding: 0;
+  z-index: 160000;
+}
+.erp-ui-dialog.ui-dialog .ui-dialog-titlebar-close {
+  top: 22%;
+  right: 0;
+  width: 45px;
+  height: 45px;
+}
+.erp-ui-dialog.ui-dialog .ui-dialog-title {
+  line-height: 30px;
+  color: #5d6d74;
+  font-size: 20px;
+  text-shadow: 0 1px 1px #fff;
+  font-weight: 400;
+}
+.erp-ui-dialog.ui-widget-content {
+  border: none;
+}
+.erp-ui-dialog.ui-corner-all,
+.erp-ui-dialog .ui-corner-all {
+  border-radius: 0 !important;
+}
+.erp-ui-dialog .ui-widget-header {
+  border: none;
+  border-bottom: 1px solid #ddd;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+.erp-ui-dialog .ui-widget-header .ui-state-default {
+  border: none;
+  border-left: 1px solid #ddd;
+  background: #fff;
+}
+.ui-widget-overlay {
+  z-index: 159999;
+  background: #000;
+  opacity: .7;
+}
 .erp-modal {
   background: #fff;
   position: fixed;
@@ -526,6 +587,9 @@ table.audit-log-table th.col-date {
   line-height: 1.5em;
   display: inline-block;
   vertical-align: top;
+}
+.erp-modal .content .row label.block {
+  display: block;
 }
 .erp-modal p {
   font-size: 1.10em;

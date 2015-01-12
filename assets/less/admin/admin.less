@@ -37,6 +37,12 @@ span.required {
             float: left;
             margin-right: 10px;
 
+            &.full-width {
+                width: 100%;
+                float: none;
+                margin-right: 0;
+            }
+
             .erp-profile-top {
                 .clearfix();
                 margin-bottom: 15px;
@@ -54,7 +60,7 @@ span.required {
                 .erp-user-info {
                     float: left;
                     margin-left: 25px;
-                    width: 80%;
+                    width: 60%;
 
                     a {
                         text-decoration: none;
@@ -210,6 +216,56 @@ table.audit-log-table {
     }
 }
 
+.erp-ui-dialog {
+    &.ui-dialog {
+        padding: 0;
+        z-index: 160000;
+
+        .ui-dialog-titlebar-close {
+            top: 22%;
+            right: 0;
+            width: 45px;
+            height: 45px;
+        }
+
+        .ui-dialog-title {
+            line-height: 30px;
+            color: #5d6d74;
+            font-size: 20px;
+            text-shadow: 0 1px 1px #fff;
+            font-weight: 400;
+        }
+    }
+
+    &.ui-widget-content {
+        // border: 1px solid #ddd;
+        border: none;
+    }
+
+    &.ui-corner-all, .ui-corner-all {
+        border-radius: 0 !important;
+    }
+
+    .ui-widget-header {
+        border: none;
+        border-bottom: 1px solid #ddd;
+        background: #fff;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+
+        .ui-state-default {
+            border: none;
+            border-left: 1px solid #ddd;
+            background: #fff;
+        }
+    }
+}
+
+.ui-widget-overlay {
+    z-index: 159999;
+    background: #000;
+    opacity: .7;
+}
+
 .erp-modal {
     background: #fff;
     position: fixed;
@@ -311,6 +367,10 @@ table.audit-log-table {
                 line-height: 1.5em;
                 display: inline-block;
                 vertical-align: top;
+
+                &.block {
+                    display: block;
+                }
             }
         }
     }

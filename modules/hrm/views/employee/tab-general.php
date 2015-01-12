@@ -24,10 +24,11 @@
             $reporting_to = $reporting_to ? $reporting_to->get_link() : '-';
             ?>
             <li><?php erp_print_key_value( __( 'Reporting To', 'wp-erp' ), $reporting_to ); ?></li>
-            <li><?php erp_print_key_value( __( 'Joined', 'wp-erp' ), $employee->get_joined_date() ); ?></li>
+            <li><?php erp_print_key_value( __( 'Date of Hire', 'wp-erp' ), $employee->get_joined_date() ); ?></li>
             <li><?php erp_print_key_value( __( 'Source of Hire', 'wp-erp' ), $employee->get_hiring_source() ); ?></li>
             <li><?php erp_print_key_value( __( 'Employee Status', 'wp-erp' ), $employee->get_status() ); ?></li>
             <li><?php erp_print_key_value( __( 'Work Phone', 'wp-erp' ), erp_get_clickable( 'phone', $employee->get_phone( 'work' ) ) ); ?></li>
+            <li><?php erp_print_key_value( __( 'Employee Type', 'wp-erp' ), $employee->get_type() ); ?></li>
         </ul>
     </div>
 </div><!-- .postbox -->
@@ -38,14 +39,14 @@
     <div class="inside">
         <ul class="erp-list two-col separated">
             <li><?php erp_print_key_value( __( 'Mobile', 'wp-erp' ), erp_get_clickable( 'phone', $employee->get_phone( 'personal' ) ) ); ?></li>
-            <li><?php erp_print_key_value( __( 'Address', 'wp-erp' ), $employee->personal_address ); ?></li>
-            <li><?php erp_print_key_value( __( 'Other Email', 'wp-erp' ), erp_get_clickable( 'email', $employee->personal_other_email ) ); ?></li>
+            <li><?php erp_print_key_value( __( 'Address', 'wp-erp' ), $employee->address ); ?></li>
+            <li><?php erp_print_key_value( __( 'Other Email', 'wp-erp' ), erp_get_clickable( 'email', $employee->other_email ) ); ?></li>
             <li><?php erp_print_key_value( __( 'Date of Birth', 'wp-erp' ), $employee->get_birthday() ); ?></li>
             <li><?php erp_print_key_value( __( 'Gender', 'wp-erp' ), $employee->get_gender() ); ?></li>
             <li><?php erp_print_key_value( __( 'Nationality', 'wp-erp' ), $employee->get_nationality() ); ?></li>
             <li><?php erp_print_key_value( __( 'Marital Status', 'wp-erp' ), $employee->get_marital_status() ); ?></li>
-            <li><?php erp_print_key_value( __( 'Driving License', 'wp-erp' ), $employee->personal_driving_license ); ?></li>
-            <li><?php erp_print_key_value( __( 'Hobbies', 'wp-erp' ), $employee->personal_hobbies ); ?></li>
+            <li><?php erp_print_key_value( __( 'Driving License', 'wp-erp' ), $employee->driving_license ); ?></li>
+            <li><?php erp_print_key_value( __( 'Hobbies', 'wp-erp' ), $employee->hobbies ); ?></li>
         </ul>
     </div>
 </div><!-- .postbox -->

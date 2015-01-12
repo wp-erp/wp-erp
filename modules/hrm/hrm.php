@@ -113,19 +113,21 @@ class Human_Resource {
         $localize_script = apply_filters( 'erp_hr_localize_script', array(
             'nonce' => wp_create_nonce( 'wp-erp-hr-nonce' ),
             'popup' => array(
-                'dept_title'   => __( 'New Department', 'wp-erp' ),
-                'dept_submit'  => __( 'Create Department', 'wp-erp' ),
-                'dept_update'  => __( 'Update Department', 'wp-erp' ),
-                'desig_title'  => __( 'New Designation', 'wp-erp' ),
-                'desig_submit' => __( 'Create Designation', 'wp-erp' ),
-                'desig_update' => __( 'Update Designation', 'wp-erp' ),
-                'employee_title' => __( 'New Employee', 'wp-erp' ),
-                'employee_create' => __( 'Create Employee', 'wp-erp' ),
-                'employee_update' => __( 'Update Employee', 'wp-erp' )
+                'dept_title'        => __( 'New Department', 'wp-erp' ),
+                'dept_submit'       => __( 'Create Department', 'wp-erp' ),
+                'dept_update'       => __( 'Update Department', 'wp-erp' ),
+                'desig_title'       => __( 'New Designation', 'wp-erp' ),
+                'desig_submit'      => __( 'Create Designation', 'wp-erp' ),
+                'desig_update'      => __( 'Update Designation', 'wp-erp' ),
+                'employee_title'    => __( 'New Employee', 'wp-erp' ),
+                'employee_create'   => __( 'Create Employee', 'wp-erp' ),
+                'employee_update'   => __( 'Update Employee', 'wp-erp' ),
+                'employment_status' => __( 'Employment Status', 'wp-erp' ),
+                'update_status'     => __( 'Update', 'wp-erp' ),
             ),
-            'emp_upload_photo' => __( 'Upload Employee Photo', 'wp-erp' ),
-            'emp_set_photo'    => __( 'Set Photo', 'wp-erp' ),
-            'delConfirmDept'   => __( 'Are you sure to delete this department?', 'wp-erp' ),
+            'emp_upload_photo'   => __( 'Upload Employee Photo', 'wp-erp' ),
+            'emp_set_photo'      => __( 'Set Photo', 'wp-erp' ),
+            'delConfirmDept'     => __( 'Are you sure to delete this department?', 'wp-erp' ),
             'delConfirmEmployee' => __( 'Are you sure to delete this employee?', 'wp-erp' )
         ) );
 
@@ -156,6 +158,8 @@ class Human_Resource {
 
         erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-employee.php', 'erp-new-employee' );
         erp_get_js_template( WPERP_HRM_JS_TMPL . '/row-employee.php', 'erp-employee-row' );
+        erp_get_js_template( WPERP_HRM_JS_TMPL . '/employment-status.php', 'erp-employment-status' );
+        erp_get_js_template( WPERP_HRM_JS_TMPL . '/compensation.php', 'erp-employment-compensation' );
     }
 }
 

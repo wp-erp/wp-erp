@@ -27,9 +27,21 @@
             $( '.erp-hr-employees' ).on( 'click', 'a#erp-employee-new', this.employee.create );
             $( '.erp-hr-employees' ).on( 'click', 'span.edit a', this.employee.edit );
             $( '.erp-hr-employees' ).on( 'click', 'a.submitdelete', this.employee.remove );
+            $( '.erp-hr-employees' ).on( 'click', 'a#erp-empl-status', this.employee.updateJobStatus );
+            $( '.erp-hr-employees' ).on( 'click', 'a#erp-empl-compensation', this.employee.updateJobStatus );
 
             $( 'body' ).on( 'click', 'a#erp-set-emp-photo', this.employee.setPhoto );
             $( 'body' ).on( 'click', 'a.erp-remove-photo', this.employee.removePhoto );
+
+            // this.employee.updateCompensation();
+        },
+
+        initDateField: function() {
+            $( '.erp-date-field').datepicker({
+                dateFormat: 'yy-mm-dd',
+                changeMonth: true,
+                changeYear: true
+            });
         },
 
         department: {
@@ -377,6 +389,7 @@
                                 modal.closeModal();
                             },
                             error: function(error) {
+                                modal.enableButton();
                                 alert( error );
                             }
                         });
@@ -485,8 +498,38 @@
                         }
                     });
                 }
-            }
+            },
+
+            updateJobStatus: function(e) {
+                if ( typeof e !== 'undefined' ) {
+                    e.preventDefault();
+                }
+
+                var self = $(this);
+
+                $.erpPopup({
+                    title: self.data('title'),
+                    button: wpErpHr.popup.update_status,
+                    content: wp.template( self.data('template') )({ id: self.data('id') }),
+                    extraClass: 'smaller',
+                    onReady: WeDevs_ERP_HR.initDateField,
+                    onSubmit: function(modal) {
+                        wp.ajax.send( {
+                            data: this.serializeObject(),
+                            success: function() {
+                                $( '.erp-area-left' ).load( window.location.href + ' #erp-area-left-inner' );
+                                modal.closeModal();
+                            },
+                            error: function(error) {
+                                modal.enableButton();
+                                alert( error );
+                            }
+                        });
+                    }
+                });
+            },
         }
+
     };
 
     $(function() {
