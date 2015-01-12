@@ -6,7 +6,7 @@
                 <?php erp_html_form_label( __( 'Employee Photo', 'wp-erp' ), 'full-name' ); ?>
 
                 <div class="photo-container">
-                    <input type="hidden" name="photo_id" id="emp-photo-id" value="{{ data.avatar.id }}">
+                    <input type="hidden" name="personal[photo_id]" id="emp-photo-id" value="{{ data.avatar.id }}">
 
                     <# if ( data.avatar.id ) { #>
                         <img src="{{ data.avatar.url }}" alt="" />
@@ -24,7 +24,7 @@
                     <li>
                         <?php erp_html_form_input( array(
                             'label'       => __( 'First Name', 'wp-erp' ),
-                            'name'        => 'name[first_name]',
+                            'name'        => 'personal[first_name]',
                             'id'          => 'first_name',
                             'value'       => '{{ data.name.first_name }}',
                             'required'    => true,
@@ -34,7 +34,7 @@
                     <li class="middle-name">
                         <?php erp_html_form_input( array(
                             'label'       => __( 'Middle Name', 'wp-erp' ),
-                            'name'        => 'name[middle_name]',
+                            'name'        => 'personal[middle_name]',
                             'id'          => 'middle_name',
                             'value'       => '{{ data.name.middle_name }}',
                             'custom_attr' => array( 'maxlength' => 30 )
@@ -43,7 +43,7 @@
                     <li>
                         <?php erp_html_form_input( array(
                             'label'       => __( 'Last Name', 'wp-erp' ),
-                            'name'        => 'name[last_name]',
+                            'name'        => 'personal[last_name]',
                             'id'          => 'last_name',
                             'value'       => '{{ data.name.last_name }}',
                             'required'    => true,
@@ -58,7 +58,7 @@
             <li>
                 <?php erp_html_form_input( array(
                     'label' => __( 'Employee ID', 'wp-erp' ),
-                    'name'  => 'employee_id',
+                    'name'  => 'personal[employee_id]',
                     'value' => '{{ data.employee_id }}'
                 ) ); ?>
             </li>
@@ -79,6 +79,8 @@
         <legend><?php _e( 'Work', 'wp-erp' ) ?></legend>
 
         <ol class="form-fields two-col">
+
+        <# if ( ! data.id ) { #>
             <li data-selected="{{ data.work.department }}">
                 <?php erp_html_form_input( array(
                     'label'   => __( 'Department', 'wp-erp' ),
@@ -99,6 +101,16 @@
                 ) ); ?>
             </li>
 
+            <li data-selected="{{ data.work.location }}">
+                <?php erp_html_form_input( array(
+                    'label'   => __( 'Location', 'wp-erp' ),
+                    'name'    => 'work[location]',
+                    'value'   => '{{ data.work.location }}',
+                    'type'    => 'select',
+                    'options' => array_merge( array( 0 => __( '- Select -', 'wp-erp' ) ), array() )
+                ) ); ?>
+            </li>
+
             <li data-selected="{{ data.work.reporting_to }}">
                 <?php erp_html_form_input( array(
                     'label'   => __( 'Reporting To', 'wp-erp' ),
@@ -110,23 +122,13 @@
                 ) ); ?>
             </li>
 
-            <li>
+            <li data-selected="{{ data.work.type }}">
                 <?php erp_html_form_input( array(
-                    'label'   => __( 'Joining Date', 'wp-erp' ),
-                    'name'    => 'work[joined]',
-                    'value'   => '{{ data.work.joined }}',
-                    'type'    => 'text',
-                    'class'   => 'erp-date-field'
-                ) ); ?>
-            </li>
-
-            <li data-selected="{{ data.work.hiring_source }}">
-                <?php erp_html_form_input( array(
-                    'label'   => __( 'Source of Hire', 'wp-erp' ),
-                    'name'    => 'work[hiring_source]',
-                    'value'   => '{{ data.work.hiring_source }}',
+                    'label'   => __( 'Employee Type', 'wp-erp' ),
+                    'name'    => 'work[type]',
+                    'value'   => '{{ data.work.type }}',
                     'type'    => 'select',
-                    'options' => array_merge( array( 0 => __( '- Select -', 'wp-erp' ) ), erp_hr_get_employee_sources() )
+                    'options' => array_merge( array( 0 => __( '- Select -', 'wp-erp' ) ), erp_hr_get_employee_types() )
                 ) ); ?>
             </li>
 
@@ -140,23 +142,59 @@
                 ) ); ?>
             </li>
 
-            <li>
+        <# } #>
+
+            <li data-selected="{{ data.work.hiring_source }}">
                 <?php erp_html_form_input( array(
-                    'label'   => __( 'Work Phone', 'wp-erp' ),
-                    'name'    => 'work[phone]',
-                    'value'   => '{{ data.work.phone }}'
+                    'label'   => __( 'Source of Hire', 'wp-erp' ),
+                    'name'    => 'work[hiring_source]',
+                    'value'   => '{{ data.work.hiring_source }}',
+                    'type'    => 'select',
+                    'options' => array_merge( array( 0 => __( '- Select -', 'wp-erp' ) ), erp_hr_get_employee_sources() )
                 ) ); ?>
             </li>
 
-            <li data-selected="{{ data.work.type }}">
+            <li>
                 <?php erp_html_form_input( array(
-                    'label'   => __( 'Employee Type', 'wp-erp' ),
-                    'name'    => 'work[type]',
-                    'value'   => '{{ data.work.type }}',
-                    'type'    => 'select',
-                    'options' => array_merge( array( 0 => __( '- Select -', 'wp-erp' ) ), erp_hr_get_employee_types() )
+                    'label'   => __( 'Date of Hire', 'wp-erp' ),
+                    'name'    => 'work[hiring_date]',
+                    'value'   => '{{ data.work.hiring_date }}',
+                    'type'    => 'text',
+                    'class'   => 'erp-date-field'
                 ) ); ?>
             </li>
+
+            <# if ( ! data.id ) { #>
+
+                <li>
+                    <?php erp_html_form_input( array(
+                        'label'   => __( 'Pay Rate', 'wp-erp' ),
+                        'name'    => 'work[pay_rate]',
+                        'value'   => '{{ data.work.pay_rate }}',
+                        'type'    => 'text'
+                    ) ); ?>
+                </li>
+
+                <li data-selected="{{ data.work.pay_type }}">
+                    <?php erp_html_form_input( array(
+                        'label'   => __( 'Pay Type', 'wp-erp' ),
+                        'name'    => 'work[pay_type]',
+                        'value'   => '{{ data.work.pay_type }}',
+                        'type'    => 'select',
+                        'options' => array_merge( array( 0 => __( '- Select -', 'wp-erp' ) ), erp_hr_get_pay_type() )
+                    ) ); ?>
+                </li>
+
+            <# } #>
+
+            <li>
+                <?php erp_html_form_input( array(
+                    'label'   => __( 'Work Phone', 'wp-erp' ),
+                    'name'    => 'personal[work_phone]',
+                    'value'   => '{{ data.personal.work_phone }}'
+                ) ); ?>
+            </li>
+
         </ol>
     </fieldset>
 
@@ -192,8 +230,8 @@
             <li>
                 <?php erp_html_form_input( array(
                     'label'   => __( 'Date of Birth', 'wp-erp' ),
-                    'name'    => 'personal[dob]',
-                    'value'   => '{{ data.personal.dob }}',
+                    'name'    => 'work[date_of_birth]',
+                    'value'   => '{{ data.work.date_of_birth }}',
                     'class'   => 'erp-date-field'
                 ) ); ?>
             </li>

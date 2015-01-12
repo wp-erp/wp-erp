@@ -62,34 +62,35 @@ function erp_hr_employee_create( $args = array() ) {
     global $wpdb;
 
     $defaults = array(
-        'employee_id'     => 0,
         'user_email'      => '',
-        'photo_id'        => 0,
         'company_id'      => erp_get_current_company_id(),
-        'name'            => array(
-            'first_name'      => '',
-            'middle_name'     => '',
-            'last_name'       => ''
-        ),
         'work'            => array(
-            'department'        => '',
-            'designation'       => '',
-            'reporting_to'      => '',
-            'joined'            => '',
-            'hiring_source'     => '',
-            'status'            => '',
-            'type'              => '',
-            'phone'             => '',
+            'designation'   => 0,
+            'department'    => 0,
+            'location'      => '',
+            'hiring_source' => '',
+            'hiring_date'   => '',
+            'date_of_birth' => '',
+            'reporting_to'  => 0,
+            'pay_rate'      => '',
+            'pay_type'      => '',
+            'type'          => '',
+            'status'        => '',
         ),
         'personal'        => array(
+            'photo_id'        => 0,
+            'employee_id'     => 0,
+            'first_name'      => '',
+            'middle_name'     => '',
+            'last_name'       => '',
+            'other_email'     => '',
             'phone'           => '',
+            'work_phone'      => '',
             'mobile'          => '',
             'address'         => '',
-            'other_email'     => '',
-            'dob'             => '',
             'gender'          => '',
-            'nationality'     => '',
             'marital_status'  => '',
+            'nationality'     => '',
             'driving_license' => '',
             'hobbies'         => '',
             'user_url'        => '',
@@ -102,11 +103,11 @@ function erp_hr_employee_create( $args = array() ) {
     $data   = wp_parse_args( $posted, $defaults );
 
     // some basic validation
-    if ( empty( $data['name']['first_name'] ) ) {
+    if ( empty( $data['personal']['first_name'] ) ) {
         return new WP_Error( 'empty-first-name', __( 'Please provide the first name.', 'wp-erp' ) );
     }
 
-    if ( empty( $data['name']['last_name'] ) ) {
+    if ( empty( $data['personal']['last_name'] ) ) {
         return new WP_Error( 'empty-last-name', __( 'Please provide the last name.', 'wp-erp' ) );
     }
 
@@ -120,8 +121,8 @@ function erp_hr_employee_create( $args = array() ) {
         'user_login' => $data['user_email'],
         'user_pass'  => $password,
         'user_email' => $data['user_email'],
-        'first_name' => $data['name']['first_name'],
-        'last_name'  => $data['name']['last_name'],
+        'first_name' => $data['personal']['first_name'],
+        'last_name'  => $data['personal']['last_name'],
         'role'       => 'employee'
     );
 
@@ -141,51 +142,38 @@ function erp_hr_employee_create( $args = array() ) {
         return $user_id;
     }
 
-    $not_meta = array(
-        'department',
-        'designation',
-        'company_id',
-        'user_email'
-    );
+    // if reached here, seems like we have success creating the user
+    $employee = new \WeDevs\ERP\HRM\Employee( $user_id );
+
+    // inserting the user for the first time
+    if ( ! $update ) {
+
+        $work = $data['work'];
+
+        if ( ! empty( $work['type'] ) ) {
+            $employee->update_employment_status( $work['type'] );
+        }
+
+        // update compensation
+        if ( ! empty( $work['pay_rate'] ) ) {
+            $pay_type = ( ! empty( $work['pay_type'] ) ) ? $work['pay_type'] : 'monthly';
+            $employee->update_compensation( $work['pay_rate'], $pay_type );
+        }
+
+        // update job info
+        $employee->update_job_info( $work['department'], $work['designation'], $work['reporting_to'], $work['location'] );
+    }
 
     // update the erp table
     $wpdb->update( $wpdb->prefix . 'erp_hr_employees', array(
-        'company_id'  => (int) $data['company_id'],
-        'department'  => (int) $data['work']['department'],
-        'designation' => (int) $data['work']['designation']
+        'company_id'    => (int) $data['company_id'],
+        'hiring_source' => $data['work']['hiring_source'],
+        'hiring_date'   => $data['work']['hiring_date'],
+        'date_of_birth' => $data['work']['date_of_birth']
     ), array( 'employee_id' => $user_id ) );
 
-    // unset some non-required fields
-    if ( isset( $data['user_id'] ) ) {
-        unset( $data['user_id'] );
-    }
-
-    // make sure reporting_to != user_id
-    $data['work']['reporting_to'] = ( $user_id != $data['work']['reporting_to'] ) ? intval( $data['work']['reporting_to'] ) : 0;
-
-    // if reached here, seems like we have success creating the user
-    foreach ($data as $key => $value) {
-        if ( is_array( $value ) ) {
-
-            foreach ($value as $new_key => $new_value) {
-                if ( ! in_array( $new_key, $not_meta ) ) {
-
-                    // except "name", save others to $parent_$child key name
-                    if ( in_array( $key, array( 'name' ) ) ) {
-                        $meta_key = $new_key;
-                    } else {
-                        $meta_key = $key . '_' . $new_key;
-                    }
-
-                    update_user_meta( $user_id, $meta_key, $new_value );
-                }
-            }
-
-        } else {
-            if ( ! in_array( $key, $not_meta ) ) {
-                update_user_meta( $user_id, $key, $value );
-            }
-        }
+    foreach ($data['personal'] as $key => $value) {
+        update_user_meta( $user_id, $key, $value );
     }
 
     if ( $update ) {
@@ -207,12 +195,18 @@ function erp_hr_employee_create( $args = array() ) {
 function erp_hr_get_employees( $company_id ) {
     global $wpdb;
 
-    $sql = "SELECT employee_id as user_id
-        FROM {$wpdb->prefix}erp_hr_employees
-        WHERE company_id = %d";
+    $cache_key = 'erp-get-employees-' . $company_id;
+    $results   = wp_cache_get( $cache_key, 'wp-erp' );
+    $users     = array();
 
-    $results = $wpdb->get_results( $wpdb->prepare( $sql, $company_id ) );
-    $users   = array();
+    if ( false === $results ) {
+        $sql = "SELECT employee_id as user_id
+            FROM {$wpdb->prefix}erp_hr_employees
+            WHERE company_id = %d";
+
+        $results = $wpdb->get_results( $wpdb->prepare( $sql, $company_id ) );
+        wp_cache_set( $cache_key, $results, 'wp-erp' );
+    }
 
     if ( $results ) {
         foreach ($results as $key => $row) {
@@ -287,7 +281,8 @@ function erp_hr_get_employee_statuses() {
  */
 function erp_hr_get_employee_types() {
     $types = array(
-        'permanent' => __( 'Permanent', 'wp-erp' ),
+        'permanent' => __( 'Full Time', 'wp-erp' ),
+        'parttime'  => __( 'Part Time', 'wp-erp' ),
         'contract'  => __( 'On Contract', 'wp-erp' ),
         'temporary' => __( 'Temporary', 'wp-erp' ),
         'trainee'   => __( 'Trainee', 'wp-erp' )
@@ -346,6 +341,72 @@ function erp_hr_get_genders() {
 }
 
 /**
+ * Get marital statuses
+ *
+ * @return array all the statuses
+ */
+function erp_hr_get_pay_type() {
+    $genders = array(
+        'hourly'   => __( 'Hourly', 'wp-erp' ),
+        'daily'    => __( 'Daily', 'wp-erp' ),
+        'weekly'   => __( 'Weekly', 'wp-erp' ),
+        'monthly'  => __( 'Monthly', 'wp-erp' ),
+        'yearly'   => __( 'Yearly', 'wp-erp' ),
+        'contract' => __( 'Contract', 'wp-erp' ),
+    );
+
+    return apply_filters( 'erp_hr_pay_type', $genders );
+}
+
+/**
+ * Get marital statuses
+ *
+ * @return array all the statuses
+ */
+function erp_hr_get_pay_change_reasons() {
+    $genders = array(
+        'promotion'   => __( 'Promotion', 'wp-erp' ),
+        'performance' => __( 'Performance', 'wp-erp' )
+    );
+
+    return apply_filters( 'erp_hr_pay_change_reasons', $genders );
+}
+
+/**
+ * Add a new item in employee history table
+ *
+ * @param  array   $args
+ *
+ * @return void
+ */
+function erp_hr_employee_add_history( $args = array() ) {
+    global $wpdb;
+
+    $defaults = array(
+        'employee_id' => 0,
+        'module'      => '',
+        'category'    => '',
+        'type'        => '',
+        'comment'     => '',
+        'data'        => '',
+        'date'        => current_time( 'mysql' )
+    );
+
+    $data = wp_parse_args( $args, $defaults );
+    $format = array(
+        '%d',
+        '%s',
+        '%s',
+        '%s',
+        '%s',
+        '%s',
+        '%s'
+    );
+
+    $wpdb->insert( $wpdb->prefix . 'erp_hr_employee_history', $data, $format );
+}
+
+/**
  * [erp_hr_url_single_employee description]
  *
  * @param  int  employee id
@@ -365,4 +426,13 @@ function erp_hr_url_single_employee( $employee_id ) {
  */
 function erp_hr_employee_single_tab_general( $employee ) {
     include WPERP_HRM_VIEWS . '/employee/tab-general.php';
+}
+
+/**
+ * [erp_hr_employee_single_tab_general description]
+ *
+ * @return void
+ */
+function erp_hr_employee_single_tab_job( $employee ) {
+    include WPERP_HRM_VIEWS . '/employee/tab-job.php';
 }

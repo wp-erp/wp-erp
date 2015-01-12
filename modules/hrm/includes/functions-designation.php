@@ -98,7 +98,7 @@ function erp_hr_delete_designation( $designation_id ) {
  */
 function erp_hr_get_designation_dropdown_raw( $company_id ) {
     $designations = erp_hr_get_designations( $company_id );
-    $dropdown     = array( 0 => __( '- Select Designation -' ) );
+    $dropdown     = array( 0 => __( '- Select Designation -', 'wp-erp' ) );
 
     if ( $designations ) {
         foreach ($designations as $key => $designation) {
