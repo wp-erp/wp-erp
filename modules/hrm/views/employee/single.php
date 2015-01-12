@@ -3,7 +3,7 @@
     <h2><?php _e( 'Employee', 'wp-erp' ); ?> <a href="#" id="erp-employee-new" class="add-new-h2"><?php _e( 'Add New', 'wp-erp' ); ?></a></h2>
 
     <div class="erp-single-container">
-        <div class="erp-area-left">
+        <div class="erp-area-left full-width">
             <div id="erp-area-left-inner">
                 <div class="erp-profile-top">
                     <div class="erp-avatar">
@@ -41,16 +41,50 @@
                                 </li>
                             <?php } ?>
                         </ul>
-                    </div><!-- .leads-user-info -->
-                </div><!-- .leads-profile-view -->
+                    </div><!-- .erp-user-info -->
+
+                    <div class="erp-area-right">
+                        <div class="postbox leads-actions">
+                            <h3 class="hndle"><span><?php _e( 'Actions', 'wp-erp' ); ?></span></h3>
+                            <div class="inside">
+                                <span class="edit"><a class="button button-primary" data-id="<?php echo $employee->id; ?>" data-single="true" href="#"><?php _e( 'Edit', 'wp-erp' ); ?></a></span>
+                                <a class="button" href="#"><?php _e( 'Terminate', 'wp-erp' ); ?></a>
+                                <a class="button" href="#"><?php _e( 'Print', 'wp-erp' ); ?></a>
+                            </div>
+                        </div><!-- .postbox -->
+                    </div><!-- .leads-right -->
+
+                    <?php do_action( 'erp_hr_employee_single_after_info', $employee ); ?>
+
+                </div><!-- .erp-profile-top -->
 
                 <?php
                 $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'general';
                 $tabs = apply_filters( 'erp_hr_employee_single_tabs', array(
                     'general' => array(
-                        'title'    => __( 'General', 'wp-erp' ),
+                        'title'    => __( 'General Info', 'wp-erp' ),
                         'callback' => 'erp_hr_employee_single_tab_general'
-                    )
+                    ),
+                    'job' => array(
+                        'title' => __( 'Job', 'wp-erp' ),
+                        'callback' => 'erp_hr_employee_single_tab_job'
+                    ),
+                    'leave' => array(
+                        'title' => __( 'Leave', 'wp-erp' ),
+                        'callback' => ''
+                    ),
+                    'notes' => array(
+                        'title' => __( 'Notes', 'wp-erp' ),
+                        'callback' => ''
+                    ),
+                    'benefits' => array(
+                        'title' => __( 'Benefits', 'wp-erp' ),
+                        'callback' => ''
+                    ),
+                    'performance' => array(
+                        'title' => __( 'Performance', 'wp-erp' ),
+                        'callback' => ''
+                    ),
                 ) );
                 ?>
 
@@ -58,7 +92,7 @@
                     <?php foreach ($tabs as $key => $tab) {
                         $active_class = ( $key == $active_tab ) ? ' nav-tab-active' : '';
                         ?>
-                        <a href="<?php echo add_query_arg( array( 'tab' => $key ), erp_hr_url_single_employee(1) ); ?>" class="nav-tab<?php echo $active_class; ?>"><?php echo $tab['title'] ?></a>
+                        <a href="<?php echo add_query_arg( array( 'tab' => $key ), erp_hr_url_single_employee( $employee->id ) ); ?>" class="nav-tab<?php echo $active_class; ?>"><?php echo $tab['title'] ?></a>
                     <?php } ?>
                 </h2>
 
@@ -69,18 +103,10 @@
                 }
                 ?>
 
+                <?php do_action( 'erp_hr_employee_single_bottom', $employee ); ?>
+
             </div><!-- #erp-area-left-inner -->
         </div><!-- .leads-left -->
 
-        <div class="erp-area-right">
-            <div class="postbox leads-actions">
-                <h3 class="hndle"><span><?php _e( 'Actions', 'wp-erp' ); ?></span></h3>
-                <div class="inside">
-                    <span class="edit"><a class="button button-primary" data-id="<?php echo $employee->id; ?>" data-single="true" href="#"><?php _e( 'Edit', 'wp-erp' ); ?></a></span>
-                    <a class="button" href="#"><?php _e( 'Terminate', 'wp-erp' ); ?></a>
-                    <a class="button" href="#"><?php _e( 'Print', 'wp-erp' ); ?></a>
-                </div>
-            </div><!-- .postbox -->
-        </div><!-- .leads-right -->
     </div><!-- .erp-leads-wrap -->
 </div>
