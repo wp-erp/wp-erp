@@ -13,30 +13,10 @@ function erp_get_modules() {
             'callback' => '\WeDevs\ERP\Human_Resource',
             'modules' => apply_filters( 'erp_hr_modules', array() )
         ),
-        'crm' => array(
-            'title'   => __( 'CRM', 'wp-erp' ),
-            'slug'    => 'erp-crm',
-            'modules' => apply_filters( 'erp_crm_modules', array() )
-        ),
-        // 'accounting' => array(
-        //     'title'   => __( 'Accounting', 'wp-erp' ),
-        //     'slug'    => 'erp-accounting',
-        //     'modules' => apply_filters( 'erp_accounting_modules', array() )
-        // ),
-        // 'pm' => array(
-        //     'title'   => __( 'Project Management', 'wp-erp' ),
-        //     'slug'    => 'erp-pm',
-        //     'modules' => apply_filters( 'erp_pm_modules', array() )
-        // ),
-        // 'inventory' => array(
-        //     'title'   => __( 'Inventory Management', 'wp-erp' ),
-        //     'slug'    => 'erp-inventory',
-        //     'modules' => apply_filters( 'erp_inventory_modules', array() )
-        // ),
-        // 'warehouse' => array(
-        //     'title'   => __( 'Warehouse Management', 'wp-erp' ),
-        //     'slug'    => 'erp-warehouse',
-        //     'modules' => apply_filters( 'erp_warehouse_modules', array() )
+        // 'crm' => array(
+        //     'title'   => __( 'CRM', 'wp-erp' ),
+        //     'slug'    => 'erp-crm',
+        //     'modules' => apply_filters( 'erp_crm_modules', array() )
         // ),
     );
 

@@ -29,6 +29,7 @@ class Admin_Menu {
         add_submenu_page( 'erp-hr', __( 'Employee', 'wp-erp' ), __( 'Employee', 'wp-erp' ), 'manage_options', 'erp-hr-employee', array( $this, 'employee_page' ) );
         add_submenu_page( 'erp-hr', __( 'Departments', 'wp-erp' ), __( 'Departments', 'wp-erp' ), 'manage_options', 'erp-hr-depts', array( $this, 'department_page' ) );
         add_submenu_page( 'erp-hr', __( 'Designation', 'wp-erp' ), __( 'Designation', 'wp-erp' ), 'manage_options', 'erp-hr-designation', array( $this, 'designation_page' ) );
+        add_submenu_page( 'erp-hr', __( 'Settings', 'wp-erp' ), __( 'Settings', 'wp-erp' ), 'manage_options', 'erp-hr-settings', array( $this, 'settings_page' ) );
 
         /** Leave Management **/
         // add_menu_page( __( 'Leave Management', 'wp-erp' ), __( 'Leave Manage', 'wp-erp' ), 'manage_options', 'erp-leave', array( $this, 'dashboard_page' ), 'dashicons-arrow-right-alt', null );
@@ -115,6 +116,10 @@ class Admin_Menu {
 
     public function designation_page() {
         include WPERP_HRM_VIEWS . '/designation.php';
+    }
+
+    public function settings_page() {
+        include WPERP_HRM_VIEWS . '/settings.php';
     }
 }
 
