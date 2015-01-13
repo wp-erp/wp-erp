@@ -224,12 +224,16 @@ function erp_hr_get_employees( $company_id ) {
  *
  * @return array  the key-value paired employees
  */
-function erp_hr_get_employees_dropdown_raw( $company_id ) {
+function erp_hr_get_employees_dropdown_raw( $company_id, $exclude = null ) {
     $employees = erp_hr_get_employees( $company_id );
     $dropdown  = array( 0 => __( '- Select Employee -', 'wp-erp' ) );
 
     if ( $employees ) {
         foreach ($employees as $key => $employee) {
+            if ( $exclude && $employee->id == $exclude ) {
+                continue;
+            }
+
             $dropdown[$employee->id] = $employee->get_full_name();
         }
     }
@@ -404,6 +408,19 @@ function erp_hr_employee_add_history( $args = array() ) {
     );
 
     $wpdb->insert( $wpdb->prefix . 'erp_hr_employee_history', $data, $format );
+}
+
+/**
+ * Remove an item from the history
+ *
+ * @param  int  $history_id
+ *
+ * @return bool
+ */
+function erp_hr_employee_remove_history( $history_id ) {
+    global $wpdb;
+
+    return $wpdb->delete( $wpdb->prefix . 'erp_hr_employee_history', array( 'id' => $history_id ) );
 }
 
 /**

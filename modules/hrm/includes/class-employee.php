@@ -562,7 +562,7 @@ class Employee {
      *
      * @return void
      */
-    public function update_job_info( $department_id, $designation_id, $reporting_to = 0, $location = 0 ) {
+    public function update_job_info( $department_id, $designation_id, $reporting_to = 0, $location = 0, $date = '' ) {
         global $wpdb;
 
         $wpdb->update( $wpdb->prefix . 'erp_hr_employees', array(
@@ -581,6 +581,7 @@ class Employee {
 
         // force update the value if cached
         $this->erp = $this->get_erp_row( true );
+        $date = empty( $date ) ? current_time( 'mysql' ) : $date;
 
         $data = array(
             'employee_id' => $this->id,
@@ -589,6 +590,7 @@ class Employee {
             'type'        => $this->get_work_location(),
             'comment'     => $this->get_job_title(),
             'data'        => $reporting_to,
+            'date'        => $date
         );
         erp_hr_employee_add_history( $data );
     }

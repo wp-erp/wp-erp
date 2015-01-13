@@ -127,6 +127,7 @@ class Human_Resource {
             ),
             'emp_upload_photo'   => __( 'Upload Employee Photo', 'wp-erp' ),
             'emp_set_photo'      => __( 'Set Photo', 'wp-erp' ),
+            'confirm'            => __( 'Are you sure?', 'wp-erp' ),
             'delConfirmDept'     => __( 'Are you sure to delete this department?', 'wp-erp' ),
             'delConfirmEmployee' => __( 'Are you sure to delete this employee?', 'wp-erp' )
         ) );
@@ -160,6 +161,7 @@ class Human_Resource {
         erp_get_js_template( WPERP_HRM_JS_TMPL . '/row-employee.php', 'erp-employee-row' );
         erp_get_js_template( WPERP_HRM_JS_TMPL . '/employment-status.php', 'erp-employment-status' );
         erp_get_js_template( WPERP_HRM_JS_TMPL . '/compensation.php', 'erp-employment-compensation' );
+        erp_get_js_template( WPERP_HRM_JS_TMPL . '/job-info.php', 'erp-employment-jobinfo' );
     }
 }
 

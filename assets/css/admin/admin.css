@@ -216,6 +216,10 @@
   visibility: hidden;
   color: #999;
 }
+.job-tab-wrap table.widefat td.action,
+.job-tab-wrap table.widefat th.action {
+  width: 4%;
+}
 .job-tab-wrap table.widefat tr:hover a.remove {
   visibility: visible;
 }
@@ -494,7 +498,7 @@ table.audit-log-table th.col-date {
   box-sizing: border-box;
 }
 .erp-modal.smaller {
-  bottom: 35%;
+  bottom: 30%;
   top: 15%;
   left: 30%;
   right: 30%;

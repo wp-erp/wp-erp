@@ -29,6 +29,8 @@ class Ajax_Handler {
         add_action( 'wp_ajax_erp-hr-emp-delete', array($this, 'employee_remove') );
         add_action( 'wp_ajax_erp-hr-emp-update-status', array($this, 'employee_update_employment') );
         add_action( 'wp_ajax_erp-hr-emp-update-comp', array($this, 'employee_update_compensation') );
+        add_action( 'wp_ajax_erp-hr-emp-delete-history', array($this, 'employee_remove_history') );
+        add_action( 'wp_ajax_erp-hr-emp-update-jobinfo', array($this, 'employee_update_job_info') );
     }
 
     /**
@@ -329,6 +331,40 @@ class Ajax_Handler {
 
         if ( $employee->id ) {
             $employee->update_compensation( $pay_rate, $pay_type, $reason, $date, $comment );
+            wp_send_json_success();
+        }
+
+        wp_send_json_error( __( 'Something went wrong!', 'wp-erp' ) );
+    }
+
+    /**
+     * Remove an history
+     *
+     * @return [type] [description]
+     */
+    public function employee_remove_history() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+        erp_hr_employee_remove_history( $id );
+
+        wp_send_json_success();
+    }
+
+    public function employee_update_job_info() {
+        $this->verify_nonce( 'employee_update_jobinfo' );
+
+        $employee_id  = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+        $location     = isset( $_POST['location'] ) ? intval( $_POST['location'] ) : 0;
+        $department   = isset( $_POST['department'] ) ? intval( $_POST['department'] ) : 0;
+        $designation  = isset( $_POST['designation'] ) ? intval( $_POST['designation'] ) : 0;
+        $reporting_to = isset( $_POST['reporting_to'] ) ? intval( $_POST['reporting_to'] ) : 0;
+        $date         = ( empty( $_POST['date'] ) ) ? current_time( 'mysql' ) : $_POST['date'];
+
+        $employee = new Employee( $employee_id );
+
+        if ( $employee->id ) {
+            $employee->update_job_info( $department, $designation, $reporting_to, $location, $date );
             wp_send_json_success();
         }
 

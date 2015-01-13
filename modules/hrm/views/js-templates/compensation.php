@@ -9,7 +9,7 @@
     <div class="row">
         <label for="pay-rate" class=""><?php _e( 'Pay Rate', 'wp-erp' ); ?></label>
         <span class="field">
-            <input type="text" id="pay-rate" name="pay_rate" value="">
+            <input type="text" id="pay-rate" name="pay_rate" value="{{ data.work.pay_rate }}">
         </span>
     </div>
 

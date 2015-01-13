@@ -1,13 +1,13 @@
 <div class="status-form-wrap">
     <div class="row">
-        <label for="status-date" class="block"><?php _e( 'Date', 'wp-erp' ); ?></label>
+        <label for="status-date"><?php _e( 'Date', 'wp-erp' ); ?></label>
         <span class="field">
             <input type="text" id="status-date" name="date" value="<?php echo date( 'Y-m-d', current_time( 'timestamp' ) ); ?>" class="erp-date-field">
         </span>
     </div>
 
     <div class="row">
-        <label for="status" class="block"><?php _e( 'Employment Status', 'wp-erp' ); ?></label>
+        <label for="status"><?php _e( 'Employment Status', 'wp-erp' ); ?></label>
         <span class="field">
             <select name="status" id="status">
                 <?php
@@ -22,9 +22,9 @@
     </div>
 
     <div class="row">
-        <label for="comment" class="block"><?php _e( 'Comment', 'wp-erp' ); ?></label>
+        <label for="comment"><?php _e( 'Comment', 'wp-erp' ); ?></label>
         <span class="field">
-            <textarea name="comment" id="comment" rows="8" cols="30" placeholder="<?php _e( 'Optional comment', 'wp-erp' ); ?>"></textarea>
+            <textarea name="comment" id="comment" rows="4" cols="25" placeholder="<?php _e( 'Optional comment', 'wp-erp' ); ?>"></textarea>
         </span>
     </div>
 

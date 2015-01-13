@@ -5,6 +5,11 @@
     <div class="erp-single-container">
         <div class="erp-area-left full-width">
             <div id="erp-area-left-inner">
+
+                <script type="text/javascript">
+                    window.wpErpCurrentEmployee = <?php echo json_encode( $employee->to_array() ); ?>
+                </script>
+
                 <div class="erp-profile-top">
                     <div class="erp-avatar">
                         <?php echo $employee->get_avatar( 150 ); ?>
