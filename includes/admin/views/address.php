@@ -8,8 +8,6 @@
         ) ); ?>
     </li>
 
-    <# console.log( _.escape( data.address_1 ) ); #>
-
     <li class="row">
         <?php erp_html_form_input( array(
             'label'    => __( 'Address Line 1', 'wp-erp' ),
@@ -57,8 +55,8 @@
 
     <li class="row" data-selected="{{ data.country }}">
         <label for="erp-popup-country"><?php _e( 'Country', 'wp-erp' ); ?> <span class="required">*</span></label>
-        <?php $country = \WeDevs\ERP\Countries::instance(); ?>
         <select name="country" id="erp-popup-country" class="erp-country-select" data-parent="ul">
+            <?php $country = \WeDevs\ERP\Countries::instance(); ?>
             <?php echo $country->country_dropdown(); ?>
         </select>
     </li>
