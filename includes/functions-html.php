@@ -104,6 +104,7 @@ function erp_html_form_input( $args = array() ) {
     switch ( $field['type'] ) {
         case 'text':
         case 'email':
+        case 'number':
         case 'url':
             echo '<input type="' . $field['type'] . '" value="' . esc_attr( $field['value'] ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
             break;
@@ -133,4 +134,24 @@ function erp_html_form_input( $args = array() ) {
     if ( ! empty( $field['tag'] ) ) {
         echo '</' . $field['tag'] . '>';
     }
+}
+
+/**
+ * Generate an HTML dropdown option by provided values
+ *
+ * @param  array   $values
+ * @param  string  $selected
+ *
+ * @return string
+ */
+function erp_html_generate_dropdown( $values = array(), $selected = null ) {
+    $dropdown  = '';
+
+    if ( $values ) {
+        foreach ($values as $key => $label) {
+            $dropdown .= sprintf( "<option value='%s'%s>%s</option>\n", $key, selected( $selected, $key, false ), $label );
+        }
+    }
+
+    return $dropdown;
 }

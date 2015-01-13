@@ -15,13 +15,16 @@
          */
         initialize: function() {
 
-            $( 'select#erp-country').on( 'change', this.populateState );
 
             $( '#postimagediv').on( 'click', '#set-company-thumbnail', this.setCompanyLogo );
             $( '#postimagediv').on( 'click', 'a.remove-logo', this.removeCompanyLogo );
 
-            // fire change events
-            $( 'select#erp-country').change();
+            $( '.erp-company-single').on( 'click', 'a#erp-company-new-location', this.newCompanyLocation );
+            $( '.erp-company-single').on( 'click', 'a.edit-location', this.editCompanyLocation );
+            $( '.erp-company-single').on( 'click', 'a.remove-location', this.removeCompanyLocation );
+
+            // on popup, country change event
+            $( 'body' ).on('change', 'select.erp-country-select', this.populateState );
         },
 
         /**
@@ -87,7 +90,9 @@
                 return false;
             }
 
-            var country = $(this).val(),
+            var self = $(this),
+                country = self.val(),
+                parent = self.closest( self.data('parent') ),
                 empty = '<option val="-1">-------------</option>';
 
             if ( wpErpCountries[ country ] ) {
@@ -99,14 +104,103 @@
                 }
 
                 if ( $.isArray( wpErpCountries[ country ] ) ) {
-                    $('#erp-state').html( empty );
+                    parent.find('select.erp-state-select').html( empty );
                 } else {
-                    $('#erp-state').html( options );
+                    parent.find('select.erp-state-select').html( options );
                 }
 
                 // console.log(options);
             } else {
-                $('#erp-state').html( empty );
+                parent.find('select.erp-state-select').html( empty );
+            }
+        },
+
+        newCompanyLocation: function(e) {
+            e.preventDefault();
+
+            var self = $(this);
+
+            $.erpPopup({
+                title: self.data('title'),
+                button: wpErp.create,
+                content: wp.template( 'erp-address' )({ data: null }),
+                extraClass: 'medium',
+                onSubmit: function(modal) {
+                    wp.ajax.send( {
+                        data: this.serializeObject(),
+                        success: function() {
+                            $('#company-locations').load( window.location.href + ' #company-locations-inside' );
+
+                            modal.closeModal();
+                        },
+                        error: function(error) {
+                            alert( error );
+                        }
+                    });
+                }
+            });
+        },
+
+        editCompanyLocation: function(e) {
+            e.preventDefault();
+
+            var self = $(this);
+
+            $.erpPopup({
+                title: wpErp.update_location,
+                button: wpErp.update_location,
+                content: wp.template( 'erp-address' )( self.data('data') ),
+                extraClass: 'medium',
+                onReady: function() {
+                    $( 'li[data-selected]', this ).each(function() {
+                        var self = $(this),
+                            selected = self.data('selected');
+
+                        if ( selected !== '' ) {
+                            self.find( 'select' ).val( selected );
+                        }
+                    });
+
+                    $( 'select.erp-country-select').change();
+
+                    $( 'li[data-selected]', this ).each(function() {
+                        var self = $(this),
+                            selected = self.data('selected');
+
+                        if ( selected !== '' ) {
+                            self.find( 'select' ).val( selected );
+                        }
+                    });
+                },
+                onSubmit: function(modal) {
+                    wp.ajax.send( {
+                        data: this.serializeObject(),
+                        success: function() {
+                            $('#company-locations').load( window.location.href + ' #company-locations-inside' );
+
+                            modal.closeModal();
+                        },
+                        error: function(error) {
+                            alert( error );
+                        }
+                    });
+                }
+            });
+        },
+
+        removeCompanyLocation: function(e) {
+            e.preventDefault();
+
+            if ( confirm( wpErpHr.confirm ) ) {
+                wp.ajax.send( 'erp-delete-comp-location', {
+                    data: {
+                        id: $(this).data('id'),
+                        _wpnonce: wpErp.nonce
+                    },
+                    success: function() {
+                        $('#company-locations').load( window.location.href + ' #company-locations-inside' );
+                    }
+                });
             }
         }
     };

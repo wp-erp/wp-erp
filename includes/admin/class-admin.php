@@ -28,10 +28,14 @@ class Admin_Page {
         wp_enqueue_script( 'wp-erp-script', WPERP_ASSETS . "/js/erp$suffix.js", array( 'jquery', 'backbone', 'underscore', 'wp-util', 'jquery-ui-datepicker' ), date( 'Ymd' ), true );
 
         wp_localize_script( 'wp-erp-script', 'wpErp', array(
-            'ajaxurl'     => admin_url( 'admin-ajax.php' ),
-            'set_logo'    => __( 'Set company logo', 'wp-erp' ),
-            'upload_logo' => __( 'Upload company logo', 'wp-erp' ),
-            'remove_logo' => __( 'Remove company logo', 'wp-erp' )
+            'nonce'           => wp_create_nonce( 'erp-nonce' ),
+            'ajaxurl'         => admin_url( 'admin-ajax.php' ),
+            'set_logo'        => __( 'Set company logo', 'wp-erp' ),
+            'upload_logo'     => __( 'Upload company logo', 'wp-erp' ),
+            'remove_logo'     => __( 'Remove company logo', 'wp-erp' ),
+            'update_location' => __( 'Update Location', 'wp-erp' ),
+            'create'          => __( 'Create', 'wp-erp' ),
+            'update'          => __( 'Update', 'wp-erp' )
         ) );
 
         // load country/state JSON on new company page
@@ -54,6 +58,8 @@ class Admin_Page {
      */
     public function erp_modal_markup() {
         include WPERP_INCLUDES . '/admin/views/erp-modal.php';
+
+        erp_get_js_template( WPERP_INCLUDES . '/admin/views/address.php', 'erp-address' );
     }
 }
 

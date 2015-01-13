@@ -1,0 +1,69 @@
+<?php
+namespace WeDevs\ERP;
+
+/**
+ * The ajax handler class
+ *
+ * Handles the requests from core ERP, not from modules
+ */
+class Ajax extends Abstract_Ajax {
+
+    /**
+     * Bind events
+     *
+     * @return void
+     */
+    public function __construct() {
+        add_action( 'wp_ajax_erp-company-location', array($this, 'location_create') );
+        add_action( 'wp_ajax_erp-delete-comp-location', array($this, 'location_remove') );
+    }
+
+    /**
+     * Create a new company location
+     *
+     * @return void
+     */
+    public function location_create() {
+        $this->verify_nonce( 'erp-company-location' );
+
+        $location_name = isset( $_POST['location_name'] ) ? sanitize_text_field( $_POST['location_name'] ) : '';
+        $address_1     = isset( $_POST['address_1'] ) ? sanitize_text_field( $_POST['address_1'] ) : '';
+        $address_2     = isset( $_POST['address_2'] ) ? sanitize_text_field( $_POST['address_2'] ) : '';
+        $city          = isset( $_POST['city'] ) ? sanitize_text_field( $_POST['city'] ) : '';
+        $state         = isset( $_POST['state'] ) ? sanitize_text_field( $_POST['state'] ) : '';
+        $zip           = isset( $_POST['zip'] ) ? intval( $_POST['zip'] ) : '';
+        $country       = isset( $_POST['country'] ) ? sanitize_text_field( $_POST['country'] ) : '';
+        $location_id   = isset( $_POST['location_id'] ) ? intval( $_POST['location_id'] ) : 0;
+
+        $location_id = erp_create_company_location( array(
+            'id'         => $location_id,
+            'name'       => $location_name,
+            'address_1'  => $address_1,
+            'address_2'  => $address_2,
+            'city'       => $city,
+            'state'      => $state,
+            'zip'        => $zip,
+            'country'    => $country,
+        ) );
+
+        if ( is_wp_error( $location_id ) ) {
+            $this->send_error( $location_id->get_error_message() );
+        }
+
+        $this->send_success();
+    }
+
+    public function location_remove() {
+        $this->verify_nonce( 'erp-nonce' );
+
+        $location_id   = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+
+        if ( $location_id ) {
+            erp_company_location_delete( $location_id );
+        }
+
+        $this->send_success();
+    }
+}
+
+new Ajax();

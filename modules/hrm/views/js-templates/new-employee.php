@@ -107,7 +107,7 @@
                     'name'    => 'work[location]',
                     'value'   => '{{ data.work.location }}',
                     'type'    => 'select',
-                    'options' => array_merge( array( 0 => __( '- Select -', 'wp-erp' ) ), array() )
+                    'options' => array_merge( array( 0 => __( '- Select -', 'wp-erp' ) ), erp_get_company_location_dropdown_raw( erp_get_current_company_id() ) )
                 ) ); ?>
             </li>
 

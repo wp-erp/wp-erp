@@ -443,6 +443,30 @@ table.audit-log-table th.col-date {
   float: left;
   width: 80%;
 }
+.erp-company-single #company-locations {
+  margin-top: 15px;
+}
+.erp-company-single .postbox.company-location {
+  width: 240px;
+  min-width: 220px;
+  float: left;
+  margin-right: 15px;
+  margin-bottom: 15px;
+}
+.erp-company-single .postbox.company-location .inside {
+  min-height: 90px;
+}
+.erp-company-single .postbox.company-location .actions {
+  text-align: right;
+  padding: 0 5px 5px 0;
+}
+.erp-company-single .postbox.company-location .actions a {
+  text-decoration: none;
+  color: #999;
+}
+.erp-company-single .postbox.company-location .actions a:hover {
+  color: #0099d5;
+}
 .erp-ui-dialog.ui-dialog {
   padding: 0;
   z-index: 160000;
@@ -502,6 +526,12 @@ table.audit-log-table th.col-date {
   top: 15%;
   left: 30%;
   right: 30%;
+}
+.erp-modal.medium {
+  bottom: 20%;
+  top: 10%;
+  left: 25%;
+  right: 25%;
 }
 .erp-modal .loader {
   position: absolute;
@@ -595,6 +625,9 @@ table.audit-log-table th.col-date {
 .erp-modal .content .row label.block {
   display: block;
 }
+.erp-modal .content .row select {
+  max-width: 62%;
+}
 .erp-modal p {
   font-size: 1.10em;
 }
@@ -630,4 +663,38 @@ table.audit-log-table th.col-date {
   background: #000;
   opacity: .7;
   display: none;
+}
+ul.edit-address li {
+  display: block;
+  clear: both;
+  padding-bottom: 5px;
+}
+ul.edit-address label {
+  display: block;
+}
+ul.edit-address li.city-wrap {
+  width: 100%;
+}
+ul.edit-address li.city-wrap:before,
+ul.edit-address li.city-wrap:after {
+  content: " ";
+  display: table;
+}
+ul.edit-address li.city-wrap:after {
+  clear: both;
+}
+ul.edit-address li.city-wrap:before,
+ul.edit-address li.city-wrap:after {
+  content: " ";
+  display: table;
+}
+ul.edit-address li.city-wrap:after {
+  clear: both;
+}
+ul.edit-address li.city-wrap input {
+  max-width: 90%;
+}
+ul.edit-address li.city-wrap span {
+  float: left;
+  width: 30%;
 }

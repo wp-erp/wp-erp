@@ -216,6 +216,39 @@ table.audit-log-table {
     }
 }
 
+.erp-company-single {
+
+    #company-locations {
+        margin-top: 15px;
+    }
+
+    .postbox.company-location {
+        width: 240px;
+        min-width: 220px;
+        float: left;
+        margin-right: 15px;
+        margin-bottom: 15px;
+
+        .inside {
+            min-height: 90px;
+        }
+
+        .actions {
+            text-align: right;
+            padding: 0 5px 5px 0;
+
+            a {
+                text-decoration: none;
+                color: #999;
+
+                &:hover {
+                    color: #0099d5;
+                }
+            }
+        }
+    }
+}
+
 .erp-ui-dialog {
     &.ui-dialog {
         padding: 0;
@@ -285,6 +318,13 @@ table.audit-log-table {
         top: 15%;
         left: 30%;
         right: 30%;
+    }
+
+    &.medium {
+        bottom: 20%;
+        top: 10%;
+        left: 25%;
+        right: 25%;
     }
 
     .loader {
@@ -372,6 +412,10 @@ table.audit-log-table {
                     display: block;
                 }
             }
+
+            select {
+                max-width: 62%;
+            }
         }
     }
 
@@ -415,4 +459,31 @@ table.audit-log-table {
     background: #000;
     opacity: .7;
     display: none;
+}
+
+ul.edit-address {
+
+    li {
+        display: block;
+        clear: both;
+        padding-bottom: 5px;
+    }
+
+    label {
+        display: block;
+    }
+
+    li.city-wrap {
+        .clearfix();
+        width: 100%;
+
+        input {
+            max-width: 90%;
+        }
+
+        span {
+            float: left;
+            width: 30%;
+        }
+    }
 }

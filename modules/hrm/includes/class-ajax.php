@@ -1,12 +1,14 @@
 <?php
 namespace WeDevs\ERP\HRM;
 
+use WeDevs\ERP\Abstract_Ajax;
+
 /**
  * Ajax handler
  *
  * @package WP-ERP
  */
-class Ajax_Handler {
+class Ajax_Handler extends Abstract_Ajax {
 
     /**
      * Bind all the ajax event for HRM
@@ -34,19 +36,6 @@ class Ajax_Handler {
     }
 
     /**
-     * Verify request nonce
-     *
-     * @param  string  the nonce action name
-     *
-     * @return void
-     */
-    public function verify_nonce( $action ) {
-        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], $action ) ) {
-            wp_send_json_error( __( 'Error: Nonce verification failed', 'wp-erp' ) );
-        }
-    }
-
-    /**
      * Get a department
      *
      * @return void
@@ -58,10 +47,10 @@ class Ajax_Handler {
 
         if ( $id ) {
             $department = new \WeDevs\ERP\HRM\Department( $id );
-            wp_send_json_success( $department );
+            $this->send_success( $department );
         }
 
-        wp_send_json_success( __( 'Something went wrong!', 'wp-erp' ) );
+        $this->send_success( __( 'Something went wrong!', 'wp-erp' ) );
     }
 
     /**
@@ -95,10 +84,10 @@ class Ajax_Handler {
         ) );
 
         if ( is_wp_error( $dept_id ) ) {
-            wp_send_json_error( $dept_id->get_error_message() );
+            $this->send_error( $dept_id->get_error_message() );
         }
 
-        wp_send_json_success( array(
+        $this->send_success( array(
             'id'       => $dept_id,
             'title'    => $title,
             'lead'     => $lead,
@@ -122,13 +111,13 @@ class Ajax_Handler {
             $deleted = erp_hr_delete_department( $id );
 
             if ( is_wp_error( $deleted ) ) {
-                wp_send_json_error( $deleted->get_error_message() );
+                $this->send_error( $deleted->get_error_message() );
             }
 
-            wp_send_json_success( __( 'Department has been deleted', 'wp-erp' ) );
+            $this->send_success( __( 'Department has been deleted', 'wp-erp' ) );
         }
 
-        wp_send_json_error( __( 'Something went worng!', 'wp-erp' ) );
+        $this->send_error( __( 'Something went worng!', 'wp-erp' ) );
     }
 
     /**
@@ -151,10 +140,10 @@ class Ajax_Handler {
         ) );
 
         if ( is_wp_error( $desig_id ) ) {
-            wp_send_json_error( $desig_id->get_error_message() );
+            $this->send_error( $desig_id->get_error_message() );
         }
 
-        wp_send_json_success( array(
+        $this->send_success( array(
             'id'       => $desig_id,
             'title'    => $title,
             'employee' => 0
@@ -173,10 +162,10 @@ class Ajax_Handler {
 
         if ( $id ) {
             $designation = new \WeDevs\ERP\HRM\Designation( $id );
-            wp_send_json_success( $designation );
+            $this->send_success( $designation );
         }
 
-        wp_send_json_error( __( 'Something went wrong!', 'wp-erp' ) );
+        $this->send_error( __( 'Something went wrong!', 'wp-erp' ) );
     }
 
     /**
@@ -193,13 +182,13 @@ class Ajax_Handler {
             $deleted = erp_hr_delete_designation( $id );
 
             if ( is_wp_error( $deleted ) ) {
-                wp_send_json_error( $deleted->get_error_message() );
+                $this->send_error( $deleted->get_error_message() );
             }
 
-            wp_send_json_success( __( 'Designation has been deleted', 'wp-erp' ) );
+            $this->send_success( __( 'Designation has been deleted', 'wp-erp' ) );
         }
 
-        wp_send_json_error( __( 'Something went wrong!', 'wp-erp' ) );
+        $this->send_error( __( 'Something went wrong!', 'wp-erp' ) );
     }
 
     /**
@@ -221,7 +210,7 @@ class Ajax_Handler {
         $employee_id          = erp_hr_employee_create( $posted );
 
         if ( is_wp_error( $employee_id ) ) {
-            wp_send_json_error( $employee_id->get_error_message() );
+            $this->send_error( $employee_id->get_error_message() );
         }
 
         $employee               = new Employee( $employee_id );
@@ -230,7 +219,7 @@ class Ajax_Handler {
         $data['work']['type']   = $employee->get_type();
         $data['url']            = $employee->get_details_url();
 
-        wp_send_json_success( $data );
+        $this->send_success( $data );
     }
 
     /**
@@ -245,11 +234,11 @@ class Ajax_Handler {
         $user        = get_user_by( 'id', $employee_id );
 
         if ( ! $user ) {
-            wp_send_json_error( __( 'Employee does not exists.', 'wp-erp' ) );
+            $this->send_error( __( 'Employee does not exists.', 'wp-erp' ) );
         }
 
         $employee = new Employee( $user );
-        wp_send_json_success( $employee->to_array() );
+        $this->send_success( $employee->to_array() );
     }
 
     /**
@@ -264,7 +253,7 @@ class Ajax_Handler {
 
         // @TODO: check permission
         erp_hr_employee_on_delete( $employee_id );
-        wp_send_json_success( __( 'Employee has been removed successfully', 'wp-erp' ) );
+        $this->send_success( __( 'Employee has been removed successfully', 'wp-erp' ) );
     }
 
     /**
@@ -283,17 +272,17 @@ class Ajax_Handler {
         $types       = erp_hr_get_employee_types();
 
         if ( ! array_key_exists( $status, $types ) ) {
-            wp_send_json_error( __( 'Status error', 'wp-erp' ) );
+            $this->send_error( __( 'Status error', 'wp-erp' ) );
         }
 
         $employee = new Employee( $employee_id );
 
         if ( $employee->id ) {
             $employee->update_employment_status( $status, $date, $comment );
-            wp_send_json_success();
+            $this->send_success();
         }
 
-        wp_send_json_error( __( 'Something went wrong!', 'wp-erp' ) );
+        $this->send_error( __( 'Something went wrong!', 'wp-erp' ) );
     }
 
     /**
@@ -316,25 +305,25 @@ class Ajax_Handler {
         $reasons     = erp_hr_get_pay_change_reasons();
 
         if ( ! $pay_rate ) {
-            wp_send_json_error( __( 'Enter a valid pay rate.', 'wp-erp' ) );
+            $this->send_error( __( 'Enter a valid pay rate.', 'wp-erp' ) );
         }
 
         if ( ! array_key_exists( $pay_type, $types ) ) {
-            wp_send_json_error( __( 'Pay Type does not exists.', 'wp-erp' ) );
+            $this->send_error( __( 'Pay Type does not exists.', 'wp-erp' ) );
         }
 
         if ( ! array_key_exists( $reason, $reasons ) ) {
-            wp_send_json_error( __( 'Reason does not exists.', 'wp-erp' ) );
+            $this->send_error( __( 'Reason does not exists.', 'wp-erp' ) );
         }
 
         $employee = new Employee( $employee_id );
 
         if ( $employee->id ) {
             $employee->update_compensation( $pay_rate, $pay_type, $reason, $date, $comment );
-            wp_send_json_success();
+            $this->send_success();
         }
 
-        wp_send_json_error( __( 'Something went wrong!', 'wp-erp' ) );
+        $this->send_error( __( 'Something went wrong!', 'wp-erp' ) );
     }
 
     /**
@@ -348,7 +337,7 @@ class Ajax_Handler {
         $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
         erp_hr_employee_remove_history( $id );
 
-        wp_send_json_success();
+        $this->send_success();
     }
 
     public function employee_update_job_info() {
@@ -365,10 +354,10 @@ class Ajax_Handler {
 
         if ( $employee->id ) {
             $employee->update_job_info( $department, $designation, $reporting_to, $location, $date );
-            wp_send_json_success();
+            $this->send_success();
         }
 
-        wp_send_json_error( __( 'Something went wrong!', 'wp-erp' ) );
+        $this->send_error( __( 'Something went wrong!', 'wp-erp' ) );
     }
 }
 

@@ -18,6 +18,7 @@ class Employee {
         'department',
         'department_title',
         'location',
+        'location_name',
         'hiring_source',
         'hiring_date',
         'date_of_birth',
@@ -191,10 +192,11 @@ class Employee {
             $row       = wp_cache_get( $cache_key, 'wp-erp', $force );
 
             if ( false === $row ) {
-                $query = "SELECT e.*, d.title as designation_title, dpt.title as department_title
+                $query = "SELECT e.*, d.title as designation_title, dpt.title as department_title, loc.name as location_name
                     FROM {$wpdb->prefix}erp_hr_employees AS e
                     LEFT JOIN {$wpdb->prefix}erp_hr_designations AS d ON d.id = e.designation
                     LEFT JOIN {$wpdb->prefix}erp_hr_depts AS dpt ON dpt.id = e.department
+                    LEFT JOIN {$wpdb->prefix}erp_company_locations AS loc ON loc.id = e.location
                     WHERE employee_id = %d";
                 $row   = $wpdb->get_row( $wpdb->prepare( $query, $this->id ) );
                 wp_cache_set( $cache_key, $row, 'wp-erp' );
@@ -293,7 +295,7 @@ class Employee {
      * @return string
      */
     public function get_work_location() {
-        return false;
+        return $this->location_name;
     }
 
     /**

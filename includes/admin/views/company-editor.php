@@ -1,5 +1,7 @@
-<div class="wrap erp">
+<div class="wrap erp erp-company-single">
     <h2><?php _e( 'Company', 'wp-erp' ); ?> <a href="<?php echo admin_url( 'admin.php?page=erp-company&action=new' ); ?>" class="add-new-h2"><?php _e( 'New Company', 'wp-erp' ); ?></a></h2>
+
+    <?php $country = \WeDevs\ERP\Countries::instance(); ?>
 
     <form action="" method="post" id="erp-new-company">
         <div class="erp-single-container">
@@ -12,8 +14,9 @@
                 </div>
 
                 <div class="postbox company-postbox">
-                    <h3 class="hndle"><span><?php _e( 'Company Address', 'wp-erp' ); ?></span></h3>
+                    <h3 class="hndle"><span><?php _e( 'Company Information', 'wp-erp' ); ?></span></h3>
                     <div class="inside">
+
                         <table class="form-table">
                             <tr>
                                 <td><label for="address_1"><?php _e( 'Address Line 1 ', 'wp-erp' ); ?></label></td>
@@ -31,20 +34,27 @@
                             </tr>
 
                             <tr>
-                                <td><label for="erp-country"><?php _e( 'Country', 'wp-erp' ); ?></label> <span class="required">*</span></td>
+                                <td><label for="state"><?php _e( 'Province / State', 'wp-erp' ); ?></label></td>
                                 <td>
-                                    <?php $country = \WeDevs\ERP\Countries::instance(); ?>
-                                    <select name="country" id="erp-country">
-                                        <?php echo $country->country_dropdown( $company->country ); ?>
+                                    <select name="state" id="erp-state" class="erp-state-select">
+                                        <?php
+                                        if ( $company->country ) {
+                                            $states = $country->get_states( $company->country );
+                                            echo erp_html_generate_dropdown( $states, $company->state );
+                                        } else {
+                                            ?>
+                                            <option value="-1"><?php _e( '- Select -', 'wp-erp' ); ?></option>
+                                        <?php } ?>
+
                                     </select>
                                 </td>
                             </tr>
 
                             <tr>
-                                <td><label for="state"><?php _e( 'Province / State', 'wp-erp' ); ?></label></td>
+                                <td><label for="erp-country"><?php _e( 'Country', 'wp-erp' ); ?></label> <span class="required">*</span></td>
                                 <td>
-                                    <select name="state" id="erp-state">
-                                        <option value="-1"><?php _e( '- Select -', 'wp-erp' ); ?></option>
+                                    <select name="country" id="erp-country" data-parent="table" class="erp-country-select">
+                                        <?php echo $country->country_dropdown( $company->country ); ?>
                                     </select>
                                 </td>
                             </tr>
@@ -85,6 +95,55 @@
                         </table>
                     </div><!-- .inside -->
                 </div><!-- .postbox -->
+
+                <div class="company-location-wrap">
+                    <h2>
+                        <?php _e( 'Locations', 'wp-erp' ); ?>
+
+                        <a href="#" id="erp-company-new-location" class="add-new-h2" data-title="<?php _e( 'New Location', 'wp-erp' ); ?>" data-id="<?php echo $company->id; ?>"><?php _e( 'Create New Location', 'wp-erp' ); ?></a>
+                    </h2>
+
+                    <div id="company-locations">
+                        <div id="company-locations-inside">
+                        <?php
+                        $locations = erp_get_company_locations( $company->id );
+
+                        if ( $locations ) {
+                            foreach ($locations as $num => $location) {
+                                ?>
+                                <div class="company-location postbox">
+                                    <h3 class="hndle"><?php echo wp_kses_post( $location->name ); ?></h3>
+
+                                    <div class="inside">
+                                        <address class="address">
+                                            <?php
+                                            echo $country->get_formatted_address( array(
+                                                'address_1' => $location->address_1,
+                                                'address_2' => $location->address_2,
+                                                'city'      => $location->city,
+                                                'state'     => $location->state,
+                                                'postcode'  => $location->zip,
+                                                'country'   => $location->country
+                                            ) );
+                                            ?>
+                                        </address>
+                                    </div><!-- .inside -->
+
+                                    <div class="actions">
+                                        <a href="#" class="edit-location" data-data='<?php echo json_encode( $location ); ?>'><span class="dashicons dashicons-edit"></span></a>
+                                        <a href="#" class="remove-location" data-id="<?php echo $location->id; ?>"><span class="dashicons dashicons-trash"></span></a>
+                                    </div>
+                                </div>
+
+                                <?php
+                            }
+                        } else {
+                            _e( 'No extra locations found!', 'wp-erp' );
+                        }
+                        ?>
+                        </div><!-- #company-locations-inside -->
+                    </div><!-- #company-locations -->
+                </div><!-- .company-location-wrap -->
             </div><!-- .erp-area-left -->
 
             <div class="erp-area-right">

@@ -126,6 +126,8 @@ class WeDevs_ERP {
         require_once WPERP_INCLUDES . '/class-company.php';
         require_once WPERP_MODULES . '/hrm/includes/class-employee.php';
 
+        require_once WPERP_INCLUDES . '/class-abstract-ajax.php';
+        require_once WPERP_INCLUDES . '/admin/class-ajax.php';
         require_once WPERP_INCLUDES . '/admin/class-form-handler.php';
         require_once WPERP_MODULES . '/modules.php';
 
