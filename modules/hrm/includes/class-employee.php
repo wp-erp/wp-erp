@@ -83,6 +83,10 @@ class Employee {
 
         // echo "getting: $key <br>";
 
+        if ( $key == 'employee_id' ) {
+            return $this->user->employee_id;
+        }
+
         if ( isset( $this->erp->$key ) ) {
             return stripslashes( $this->erp->$key );
         }

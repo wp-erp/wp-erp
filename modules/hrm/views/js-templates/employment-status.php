@@ -1,31 +1,33 @@
 <div class="status-form-wrap">
     <div class="row">
-        <label for="status-date"><?php _e( 'Date', 'wp-erp' ); ?></label>
-        <span class="field">
-            <input type="text" id="status-date" name="date" value="<?php echo date( 'Y-m-d', current_time( 'timestamp' ) ); ?>" class="erp-date-field">
-        </span>
+        <?php erp_html_form_input( array(
+            'label'    => __( 'Date', 'wp-erp' ),
+            'name'     => 'date',
+            'value'    => date( 'Y-m-d', current_time( 'timestamp' ) ),
+            'required' => true,
+            'class'    => 'erp-date-field'
+        ) ); ?>
     </div>
 
     <div class="row">
-        <label for="status"><?php _e( 'Employment Status', 'wp-erp' ); ?></label>
-        <span class="field">
-            <select name="status" id="status">
-                <?php
-                $types = erp_hr_get_employee_types();
-
-                foreach ($types as $key => $value) {
-                    printf( "<option value='%s'>%s</option>\n", $key, $value );
-                }
-                ?>
-            </select>
-        </span>
+        <?php erp_html_form_input( array(
+            'label'   => __( 'Employment Status', 'wp-erp' ),
+            'name'    => 'status',
+            'value'   => '',
+            'type'    => 'select',
+            'options' => array_merge( array( 0 => __( '- Select -', 'wp-erp' ) ), erp_hr_get_employee_types() )
+        ) ); ?>
     </div>
 
     <div class="row">
-        <label for="comment"><?php _e( 'Comment', 'wp-erp' ); ?></label>
-        <span class="field">
-            <textarea name="comment" id="comment" rows="4" cols="25" placeholder="<?php _e( 'Optional comment', 'wp-erp' ); ?>"></textarea>
-        </span>
+        <?php erp_html_form_input( array(
+            'label'       => __( 'Comment', 'wp-erp' ),
+            'name'        => 'comment',
+            'value'       => '',
+            'placeholder' => __( 'Optional comment', 'wp-erp' ),
+            'type'        => 'textarea',
+            'custom_attr' => array( 'rows' => 4, 'cols' => 25 )
+        ) ); ?>
     </div>
 
     <?php wp_nonce_field( 'employee_update_employment' ); ?>
