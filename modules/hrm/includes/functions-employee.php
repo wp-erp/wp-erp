@@ -15,7 +15,7 @@ function erp_hr_employee_on_initialize( $user_id ) {
 
     if ( 'employee' == $role ) {
         $wpdb->insert( $wpdb->prefix . 'erp_hr_employees', array(
-            'employee_id' => $user_id,
+            'user_id'     => $user_id,
             'company_id'  => erp_get_current_company_id(),
             'designation' => 0,
             'department'  => 0,
@@ -44,7 +44,7 @@ function erp_hr_employee_on_delete( $user_id ) {
         do_action( 'erp_hr_employee_delete', $user_id, $user );
 
         $wpdb->delete( $wpdb->prefix . 'erp_hr_employees', array(
-            'employee_id' => $user_id
+            'user_id' => $user_id
         ) );
     }
 }
@@ -79,7 +79,7 @@ function erp_hr_employee_create( $args = array() ) {
         ),
         'personal'        => array(
             'photo_id'        => 0,
-            'employee_id'     => 0,
+            'user_id'         => 0,
             'first_name'      => '',
             'middle_name'     => '',
             'last_name'       => '',
@@ -170,7 +170,7 @@ function erp_hr_employee_create( $args = array() ) {
         'hiring_source' => $data['work']['hiring_source'],
         'hiring_date'   => $data['work']['hiring_date'],
         'date_of_birth' => $data['work']['date_of_birth']
-    ), array( 'employee_id' => $user_id ) );
+    ), array( 'user_id' => $user_id ) );
 
     foreach ($data['personal'] as $key => $value) {
         update_user_meta( $user_id, $key, $value );
@@ -200,7 +200,7 @@ function erp_hr_get_employees( $company_id ) {
     $users     = array();
 
     if ( false === $results ) {
-        $sql = "SELECT employee_id as user_id
+        $sql = "SELECT user_id
             FROM {$wpdb->prefix}erp_hr_employees
             WHERE company_id = %d";
 
@@ -387,13 +387,13 @@ function erp_hr_employee_add_history( $args = array() ) {
     global $wpdb;
 
     $defaults = array(
-        'employee_id' => 0,
-        'module'      => '',
-        'category'    => '',
-        'type'        => '',
-        'comment'     => '',
-        'data'        => '',
-        'date'        => current_time( 'mysql' )
+        'user_id'  => 0,
+        'module'   => '',
+        'category' => '',
+        'type'     => '',
+        'comment'  => '',
+        'data'     => '',
+        'date'     => current_time( 'mysql' )
     );
 
     $data = wp_parse_args( $args, $defaults );

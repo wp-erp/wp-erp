@@ -13,6 +13,7 @@ class Employee {
      * @var array
      */
     private $erp_rows = array(
+        'employee_id',
         'designation',
         'designation_title',
         'department',
@@ -80,12 +81,6 @@ class Employee {
         // only then query to get those row
         if ( in_array( $key, $this->erp_rows ) ) {
             $this->erp = $this->get_erp_row();
-        }
-
-        // echo "getting: $key <br>";
-
-        if ( $key == 'employee_id' ) {
-            return $this->user->employee_id;
         }
 
         if ( isset( $this->erp->$key ) ) {
@@ -197,7 +192,7 @@ class Employee {
                     LEFT JOIN {$wpdb->prefix}erp_hr_designations AS d ON d.id = e.designation
                     LEFT JOIN {$wpdb->prefix}erp_hr_depts AS dpt ON dpt.id = e.department
                     LEFT JOIN {$wpdb->prefix}erp_company_locations AS loc ON loc.id = e.location
-                    WHERE employee_id = %d";
+                    WHERE user_id = %d";
                 $row   = $wpdb->get_row( $wpdb->prepare( $query, $this->id ) );
                 wp_cache_set( $cache_key, $row, 'wp-erp' );
             }
@@ -501,7 +496,7 @@ class Employee {
         $wpdb->update( $wpdb->prefix . 'erp_hr_employees', array(
             'type'      => $new_status
         ), array(
-            'employee_id' => $this->id,
+            'user_id' => $this->id,
         ), array(
             '%s'
         ) );
@@ -509,11 +504,11 @@ class Employee {
         // add in history
         $date = empty( $date ) ? current_time( 'mysql' ) : $date;
         $data = array(
-            'employee_id' => $this->id,
-            'module'      => 'employment',
-            'type'        => $new_status,
-            'comment'     => $comment,
-            'date'        => $date
+            'user_id' => $this->id,
+            'module'  => 'employment',
+            'type'    => $new_status,
+            'comment' => $comment,
+            'date'    => $date
         );
 
         erp_hr_employee_add_history( $data );
@@ -537,7 +532,7 @@ class Employee {
             'pay_rate'    => $rate,
             'pay_type'    => $type
         ), array(
-            'employee_id' => $this->id,
+            'user_id'     => $this->id,
         ), array(
             '%d',
             '%s'
@@ -546,7 +541,7 @@ class Employee {
         // add in history
         $date = empty( $date ) ? current_time( 'mysql' ) : $date;
         $data = array(
-            'employee_id' => $this->id,
+            'user_id'     => $this->id,
             'module'      => 'compensation',
             'category'    => $type,
             'type'        => $rate,
@@ -577,7 +572,7 @@ class Employee {
             'location'     => $location,
             'reporting_to' => $reporting_to,
         ), array(
-            'employee_id' => $this->id,
+            'user_id'      => $this->id,
         ), array(
             '%d',
             '%d',
@@ -590,7 +585,7 @@ class Employee {
         $date = empty( $date ) ? current_time( 'mysql' ) : $date;
 
         $data = array(
-            'employee_id' => $this->id,
+            'user_id'     => $this->id,
             'module'      => 'job',
             'category'    => $this->get_department_title(),
             'type'        => $this->get_work_location(),
@@ -613,7 +608,7 @@ class Employee {
 
         $sql = "SELECT *
                 FROM {$wpdb->prefix}erp_hr_employee_history
-                WHERE employee_id = %d
+                WHERE user_id = %d
                 ORDER BY id DESC";
 
         $history = array( 'job' => array(), 'compensation' => array(), 'employment' => array() );
