@@ -33,6 +33,8 @@ class Ajax_Handler extends Abstract_Ajax {
         add_action( 'wp_ajax_erp-hr-emp-update-comp', array($this, 'employee_update_compensation') );
         add_action( 'wp_ajax_erp-hr-emp-delete-history', array($this, 'employee_remove_history') );
         add_action( 'wp_ajax_erp-hr-emp-update-jobinfo', array($this, 'employee_update_job_info') );
+
+        add_action( 'wp_ajax_erp-hr-leave-policy-create', array($this, 'leave_policy_create') );
     }
 
     /**
@@ -358,6 +360,33 @@ class Ajax_Handler extends Abstract_Ajax {
         }
 
         $this->send_error( __( 'Something went wrong!', 'wp-erp' ) );
+    }
+
+    /**
+     * Create or update a leave policy
+     *
+     * @return void
+     */
+    public function leave_policy_create() {
+        $this->verify_nonce( 'erp-leave-policy' );
+
+        $policy_id = isset( $_POST['policy-id'] ) ? intval( $_POST['policy-id'] ) : 0;
+        $name      = isset( $_POST['name'] ) ? sanitize_text_field( $_POST['name'] ) : '';
+        $days      = isset( $_POST['days'] ) ? intval( $_POST['days'] ) : '';
+        $color     = isset( $_POST['color'] ) ? sanitize_text_field( $_POST['color'] ) : '';
+
+        $policy_id = erp_hr_leave_insert_policy( array(
+            'id'    => $policy_id,
+            'name'  => $name,
+            'value' => $days,
+            'color' => $color
+        ) );
+
+        if ( is_wp_error( $policy_id ) ) {
+            $this->send_error( $policy_id->get_error_message() );
+        }
+
+        $this->send_success();
     }
 }
 

@@ -71,6 +71,7 @@ class Human_Resource {
         require_once WPERP_HRM_PATH . '/includes/functions-department.php';
         require_once WPERP_HRM_PATH . '/includes/functions-designation.php';
         require_once WPERP_HRM_PATH . '/includes/functions-employee.php';
+        require_once WPERP_HRM_PATH . '/includes/functions-leave.php';
 
         require_once WPERP_HRM_PATH . '/includes/class-department.php';
         require_once WPERP_HRM_PATH . '/includes/class-walker-department.php';
@@ -110,6 +111,7 @@ class Human_Resource {
 
         wp_enqueue_media( );
         wp_enqueue_script( 'wp-erp-hr', WPERP_HRM_ASSETS . "/js/hrm$suffix.js", array( 'wp-erp-script' ), date( 'Ymd' ), true );
+        wp_enqueue_script( 'wp-erp-hr-leave', WPERP_HRM_ASSETS . "/js/leave$suffix.js", array( 'wp-erp-script', 'wp-color-picker' ), date( 'Ymd' ), true );
         $localize_script = apply_filters( 'erp_hr_localize_script', array(
             'nonce' => wp_create_nonce( 'wp-erp-hr-nonce' ),
             'popup' => array(
@@ -124,6 +126,8 @@ class Human_Resource {
                 'employee_update'   => __( 'Update Employee', 'wp-erp' ),
                 'employment_status' => __( 'Employment Status', 'wp-erp' ),
                 'update_status'     => __( 'Update', 'wp-erp' ),
+                'policy'            => __( 'Leave Policy', 'wp-erp' ),
+                'policy_create'     => __( 'Create Policy', 'wp-erp' ),
             ),
             'emp_upload_photo'   => __( 'Upload Employee Photo', 'wp-erp' ),
             'emp_set_photo'      => __( 'Set Photo', 'wp-erp' ),
@@ -141,6 +145,8 @@ class Human_Resource {
         }
 
         wp_localize_script( 'wp-erp-hr', 'wpErpHr', $localize_script );
+
+        wp_enqueue_style( 'wp-color-picker' );
     }
 
     /**
@@ -162,6 +168,8 @@ class Human_Resource {
         erp_get_js_template( WPERP_HRM_JS_TMPL . '/employment-status.php', 'erp-employment-status' );
         erp_get_js_template( WPERP_HRM_JS_TMPL . '/compensation.php', 'erp-employment-compensation' );
         erp_get_js_template( WPERP_HRM_JS_TMPL . '/job-info.php', 'erp-employment-jobinfo' );
+
+        erp_get_js_template( WPERP_HRM_JS_TMPL . '/leave-policy.php', 'erp-leave-policy' );
     }
 }
 

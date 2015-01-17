@@ -8,8 +8,6 @@ class Admin_Menu {
 
     /**
      * Kick-in the class
-     *
-     * @return void
      */
     public function __construct() {
         add_action( 'admin_menu', array( $this, 'admin_menu' ) );
@@ -32,15 +30,12 @@ class Admin_Menu {
         add_submenu_page( 'erp-hr', __( 'Settings', 'wp-erp' ), __( 'Settings', 'wp-erp' ), 'manage_options', 'erp-hr-settings', array( $this, 'settings_page' ) );
 
         /** Leave Management **/
-        // add_menu_page( __( 'Leave Management', 'wp-erp' ), __( 'Leave Manage', 'wp-erp' ), 'manage_options', 'erp-leave', array( $this, 'dashboard_page' ), 'dashicons-arrow-right-alt', null );
+         add_menu_page( __( 'Leave Management', 'wp-erp' ), __( 'Leave', 'wp-erp' ), 'manage_options', 'erp-leave', array( $this, 'empty_page' ), 'dashicons-arrow-right-alt', null );
 
-        // add_submenu_page( 'erp-leave', __( 'Leave Requests', 'wp-erp' ), __( 'Leave Requests', 'wp-erp' ), 'manage_options', 'erp-leave', array( $this, 'dashboard_page' ) );
-        // add_submenu_page( 'erp-leave', __( 'Assign Leave', 'wp-erp' ), __( 'Assign Leave', 'wp-erp' ), 'manage_options', 'erp-leave-assign', array( $this, 'dashboard_page' ) );
-        // add_submenu_page( 'erp-leave', __( 'Allocation Request', 'wp-erp' ), __( 'Allocation Request', 'wp-erp' ), 'manage_options', 'erp-leave-alloc', array( $this, 'dashboard_page' ) );
-        // add_submenu_page( 'erp-leave', __( 'Leave Types', 'wp-erp' ), __( 'Leave Types', 'wp-erp' ), 'manage_options', 'erp-leave-types', array( $this, 'dashboard_page' ) );
-        // add_submenu_page( 'erp-leave', __( 'Working Days', 'wp-erp' ), __( 'Working Days', 'wp-erp' ), 'manage_options', 'erp-leave-workdays', array( $this, 'dashboard_page' ) );
-        // add_submenu_page( 'erp-leave', __( 'Holidays', 'wp-erp' ), __( 'Holidays', 'wp-erp' ), 'manage_options', 'erp-leave-holidays', array( $this, 'dashboard_page' ) );
-        // add_submenu_page( 'erp-leave', __( 'Leave Calendar', 'wp-erp' ), __( 'Leave Calendar', 'wp-erp' ), 'manage_options', 'erp-leave-calendar', array( $this, 'dashboard_page' ) );
+         add_submenu_page( 'erp-leave', __( 'Leave Requests', 'wp-erp' ), __( 'Leave Requests', 'wp-erp' ), 'manage_options', 'erp-leave', array( $this, 'empty_page' ) );
+         add_submenu_page( 'erp-leave', __( 'Assign Leave', 'wp-erp' ), __( 'Assign Leave', 'wp-erp' ), 'manage_options', 'erp-leave-assign', array( $this, 'empty_page' ) );
+         add_submenu_page( 'erp-leave', __( 'Leave Policies', 'wp-erp' ), __( 'Leave Policies', 'wp-erp' ), 'manage_options', 'erp-leave-policies', array( $this, 'leave_policy_page' ) );
+         // add_submenu_page( 'erp-leave', __( 'Leave Calendar', 'wp-erp' ), __( 'Leave Calendar', 'wp-erp' ), 'manage_options', 'erp-leave-calendar', array( $this, 'empty_page' ) );
     }
 
     /**
@@ -121,6 +116,30 @@ class Admin_Menu {
     public function settings_page() {
         include WPERP_HRM_VIEWS . '/settings.php';
     }
+
+    public function leave_policy_page() {
+        include WPERP_HRM_VIEWS . '/leave/leave-policies.php';
+    }
+
+    public function empty_page() {
+        // var_dump( erp_hr_leave_insert_policy( array(
+        //     'id' => 2,
+        //     'name' => 'Medical Leave',
+        //     'value' => 12
+        // ) ) );
+        // $request = erp_hr_leave_insert_request( array(
+        //     'user_id'      => 20,
+        //     'leave_policy' => 1,
+        //     'start_date'   => '2015-01-25',
+        //     'end_date'     => '2015-01-28',
+        //     'comment'      => 'He called me and asked not to come today'
+        // ) );
+
+        // if ( is_wp_error( $request ) ) {
+        //     echo $request->get_error_message();
+        // }
+    }
+
 }
 
 new Admin_Menu();

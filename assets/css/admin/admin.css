@@ -229,6 +229,12 @@
   padding-bottom: 10px;
   text-decoration: none;
 }
+.erp-hr-leave-policy td span.leave-color {
+  border-radius: 3px;
+  display: block;
+  height: 20px;
+  width: 50px;
+}
 #wp-admin-bar-erp-mode-switch .ab-icon.dashicons-randomize {
   padding-top: 7px !important;
 }
@@ -627,6 +633,11 @@ table.audit-log-table th.col-date {
 }
 .erp-modal .content .row select {
   max-width: 62%;
+}
+.erp-modal .content .row span.description {
+  display: block;
+  margin-left: 130px;
+  padding: 5px 0 0 0;
 }
 .erp-modal p {
   font-size: 1.10em;
