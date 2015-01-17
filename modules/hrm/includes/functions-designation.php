@@ -66,7 +66,15 @@ function erp_hr_create_designation( $args = array() ) {
 function erp_hr_get_designations( $company_id ) {
     global $wpdb;
 
-    return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}erp_hr_designations WHERE company_id = %d", $company_id ) );
+    $cache_key = 'erp-designations-' . $company_id;
+    $designations = wp_cache_get( $cache_key, 'wp-erp' );
+
+    if ( false === $designations ) {
+        $designations = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}erp_hr_designations WHERE company_id = %d", $company_id ) );
+        wp_cache_set( $cache_key, $designations, 'wp-erp' );
+    }
+
+    return $designations;
 }
 
 /**
