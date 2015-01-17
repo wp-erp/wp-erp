@@ -12,22 +12,22 @@ function erp_create_company( $args = array() ) {
 
     $defaults = array(
         'title'      => '',
-        'id'        => 0,
-        'logo'      => 0,
-        'address_1' => '',
-        'address_2' => '',
-        'city'      => '',
-        'state'     => '',
-        'zip'       => '',
-        'country'   => '',
-        'currency'  => '',
-        'phone'     => '',
-        'fax'       => '',
-        'fax'       => '',
-        'mobile'    => '',
-        'website'   => '',
-        'created'   => current_time( 'mysql' ),
-        'status'    => 1
+        'id'         => 0,
+        'logo'       => 0,
+        'address_1'  => '',
+        'address_2'  => '',
+        'city'       => '',
+        'state'      => '',
+        'zip'        => '',
+        'country'    => '',
+        'currency'   => '',
+        'phone'      => '',
+        'fax'        => '',
+        'fax'        => '',
+        'mobile'     => '',
+        'website'    => '',
+        'created_on' => current_time( 'mysql' ),
+        'status'     => 1
     );
     $fields = wp_parse_args( $args, $defaults );
 
@@ -54,8 +54,10 @@ function erp_create_company( $args = array() ) {
     } else {
 
         // do update method here
-        unset( $fields['created'] );
+        unset( $fields['created_on'] );
         unset( $fields['status'] );
+
+        $fields['updated_on'] = current_time( 'mysql' );
 
         if ( $wpdb->update( $wpdb->prefix . 'erp_companies', $fields, array( 'id' => $company_id ) ) ) {
 
