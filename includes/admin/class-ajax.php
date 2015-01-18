@@ -35,7 +35,7 @@ class Ajax extends Abstract_Ajax {
         $country       = isset( $_POST['country'] ) ? sanitize_text_field( $_POST['country'] ) : '';
         $location_id   = isset( $_POST['location_id'] ) ? intval( $_POST['location_id'] ) : 0;
 
-        $location_id = erp_create_company_location( array(
+        $location_id = erp_company_create_location( array(
             'id'         => $location_id,
             'name'       => $location_name,
             'address_1'  => $address_1,

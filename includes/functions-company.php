@@ -138,7 +138,7 @@ function erp_get_current_company_id() {
  *
  * @return int
  */
-function erp_create_company_location( $args = array() ) {
+function erp_company_create_location( $args = array() ) {
     global $wpdb;
 
     $defaults = array(
@@ -219,7 +219,7 @@ function erp_company_location_delete( $location_id ) {
  *
  * @return array
  */
-function erp_get_company_locations( $company_id ) {
+function erp_company_get_locations( $company_id ) {
     global $wpdb;
 
     $cache_key = 'erp_company-location-' . $company_id;
@@ -240,8 +240,8 @@ function erp_get_company_locations( $company_id ) {
  *
  * @return array
  */
-function erp_get_company_location_dropdown_raw( $company_id ) {
-    $locations = erp_get_company_locations( $company_id );
+function erp_company_get_location_dropdown_raw( $company_id ) {
+    $locations = erp_company_get_locations( $company_id );
     $dropdown  = array();
 
     foreach ($locations as $location) {
@@ -249,4 +249,32 @@ function erp_get_company_location_dropdown_raw( $company_id ) {
     }
 
     return $dropdown;
+}
+
+/**
+ * Get working days of a company
+ *
+ * @param  int  $company_id
+ *
+ * @return array
+ */
+function erp_company_get_working_days( $company_id ) {
+    $default = array(
+        'mon' => 8,
+        'tue' => 8,
+        'wed' => 8,
+        'thu' => 8,
+        'fri' => 8,
+        'sat' => 0,
+        'sun' => 0
+    );
+
+    $option_key = 'erp_hr_work_days_' . $company_id;
+    $saved = get_option( $option_key, $default );
+
+    if ( ! is_array( $saved ) || count( $saved ) < 7 ) {
+        return $default;
+    }
+
+    return array_map( 'absint', $saved );
 }

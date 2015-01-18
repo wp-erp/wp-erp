@@ -17,7 +17,7 @@
             'name'     => 'location',
             'value'    => '',
             'type'    => 'select',
-            'options'  => array_merge( array( 0 => __( '- Select -', 'wp-erp' ) ), erp_get_company_location_dropdown_raw( erp_get_current_company_id() ) )
+            'options'  => array_merge( array( 0 => __( '- Select -', 'wp-erp' ) ), erp_company_get_location_dropdown_raw( erp_get_current_company_id() ) )
         ) ); ?>
     </div>
 

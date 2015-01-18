@@ -106,7 +106,7 @@
                     <div id="company-locations">
                         <div id="company-locations-inside">
                         <?php
-                        $locations = erp_get_company_locations( $company->id );
+                        $locations = erp_company_get_locations( $company->id );
 
                         if ( $locations ) {
                             foreach ($locations as $num => $location) {
