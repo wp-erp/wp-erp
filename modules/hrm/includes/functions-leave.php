@@ -38,7 +38,7 @@ function erp_hr_leave_insert_policy( $args = array() ) {
         // it's new
         if ( $wpdb->insert( $wpdb->prefix . 'erp_hr_leave_policies', $args ) ) {
 
-            do_action( 'erp_leave_policy_new', $wpdb->insert_id, $args );
+            do_action( 'erp_hr_leave_policy_new', $wpdb->insert_id, $args );
 
             return $wpdb->insert_id;
         }
@@ -50,7 +50,7 @@ function erp_hr_leave_insert_policy( $args = array() ) {
 
         if ( $wpdb->update( $wpdb->prefix . 'erp_hr_leave_policies', $args, array( 'id' => $policy_id ) ) ) {
 
-            do_action( 'erp_leave_policy_updated', $policy_id, $args );
+            do_action( 'erp_hr_leave_policy_updated', $policy_id, $args );
 
             return $policy_id;
         }
@@ -70,13 +70,28 @@ function erp_hr_leave_get_policies( $company_id ) {
 
     if ( false === $policies ) {
         $policies = $wpdb->get_results(
-            $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}erp_hr_leave_policies WHERE company_id = %d", $company_id )
+            $wpdb->prepare( "SELECT id, name, value, color FROM {$wpdb->prefix}erp_hr_leave_policies WHERE company_id = %d", $company_id )
         );
 
         wp_cache_set( $cache_key, $policies, 'wp-erp' );
     }
 
     return $policies;
+}
+
+/**
+ * Delete a policy
+ *
+ * @param  int  policy id
+ *
+ * @return bool
+ */
+function erp_hr_leave_policy_delete( $policy_id ) {
+    global $wpdb;
+
+    do_action( 'erp_hr_leave_policy_delete', $policy_id );
+
+    return $wpdb->delete( $wpdb->prefix . 'erp_hr_leave_policies', array( 'id' => $policy_id ) );
 }
 
 function erp_hr_leave_insert_entitlement( $args = array() ) {

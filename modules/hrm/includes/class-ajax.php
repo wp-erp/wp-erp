@@ -35,6 +35,7 @@ class Ajax_Handler extends Abstract_Ajax {
         add_action( 'wp_ajax_erp-hr-emp-update-jobinfo', array($this, 'employee_update_job_info') );
 
         add_action( 'wp_ajax_erp-hr-leave-policy-create', array($this, 'leave_policy_create') );
+        add_action( 'wp_ajax_erp-hr-leave-policy-delete', array($this, 'leave_policy_delete') );
     }
 
     /**
@@ -387,6 +388,30 @@ class Ajax_Handler extends Abstract_Ajax {
         }
 
         $this->send_success();
+    }
+
+    /**
+     * Delete a leave policy
+     *
+     * @return void
+     */
+    public function leave_policy_delete() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        // @TODO: check permission
+
+        $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+        if ( $id ) {
+            $deleted = erp_hr_leave_policy_delete( $id );
+
+            if ( is_wp_error( $deleted ) ) {
+                $this->send_error( $deleted->get_error_message() );
+            }
+
+            $this->send_success( __( 'Policy has been deleted', 'wp-erp' ) );
+        }
+
+        $this->send_error( __( 'Something went worng!', 'wp-erp' ) );
     }
 }
 

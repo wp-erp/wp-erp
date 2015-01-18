@@ -45,7 +45,7 @@
                     if ( $policies ) {
 
                         foreach( $policies as $num => $policy ) { ?>
-                            <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
+                            <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>" data-json='<?php echo json_encode( $policy ); ?>'>
                                 <th scope="row" class="check-column">
                                     <input id="cb-select-1" type="checkbox" name="policy_id[]" value="<?php echo $policy->id; ?>">
                                 </th>

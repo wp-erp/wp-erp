@@ -13,7 +13,7 @@
         <?php erp_html_form_input( array(
             'label'    => __( 'Days', 'wp-erp' ),
             'name'     => 'days',
-            'value'    => '{{ data.days }}',
+            'value'    => '{{ data.value }}',
             'required' => true,
             'help'     => __( 'Days in a calendar year.', 'wp-erp' )
         ) ); ?>
@@ -31,5 +31,5 @@
 
     <?php wp_nonce_field( 'erp-leave-policy' ); ?>
     <input type="hidden" name="action" value="erp-hr-leave-policy-create">
-    <input type="hidden" name="policy-id" value="0">
+    <input type="hidden" name="policy-id" value="{{ data.id }}">
 </div>
