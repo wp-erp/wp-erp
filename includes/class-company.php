@@ -101,7 +101,7 @@ class Company extends Item {
     public function has_employee( $employee_id ) {
         global $wpdb;
 
-        $sql = "SELECT id FROM {$wpdb->prefix}erp_hr_employees WHERE employee_id = %d AND company_id = %d";
+        $sql = "SELECT id FROM {$wpdb->prefix}erp_hr_employees WHERE user_id = %d AND company_id = %d";
         $row = $wpdb->get_row( $wpdb->prepare( $sql, $employee_id, $this->id ) );
 
         if ( $row ) {
