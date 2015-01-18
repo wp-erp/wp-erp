@@ -127,6 +127,7 @@ function erp_hr_get_designation_dropdown_raw( $company_id ) {
  */
 function erp_hr_get_designation_dropdown( $company_id, $selected = '' ) {
     $designations = erp_hr_get_designation_dropdown_raw( $company_id );
+    $dropdown     = '';
 
     if ( $designations ) {
         foreach ($designations as $key => $title) {
