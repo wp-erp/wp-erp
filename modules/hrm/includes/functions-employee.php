@@ -188,11 +188,13 @@ function erp_hr_employee_create( $args = array() ) {
 /**
  * Get all employees from a company
  *
- * @param  int  company id
+ * @param  int   $company_id  company id
+ * @param bool $no_object     if set true, Employee object will be
+ *                            returned as array. $wpdb rows otherwise
  *
  * @return array  the employees
  */
-function erp_hr_get_employees( $company_id ) {
+function erp_hr_get_employees( $company_id, $no_object = false ) {
     global $wpdb;
 
     $cache_key = 'erp-get-employees-' . $company_id;
@@ -200,8 +202,9 @@ function erp_hr_get_employees( $company_id ) {
     $users     = array();
 
     if ( false === $results ) {
-        $sql = "SELECT user_id
-            FROM {$wpdb->prefix}erp_hr_employees
+        $sql = "SELECT e.user_id, u.display_name
+            FROM {$wpdb->prefix}erp_hr_employees AS e
+            LEFT JOIN {$wpdb->users} AS u ON u.ID = e.user_id
             WHERE company_id = %d";
 
         $results = $wpdb->get_results( $wpdb->prepare( $sql, $company_id ) );
@@ -210,7 +213,12 @@ function erp_hr_get_employees( $company_id ) {
 
     if ( $results ) {
         foreach ($results as $key => $row) {
-            $users[] = new \WeDevs\ERP\HRM\Employee( intval( $row->user_id ) );
+
+            if ( $no_object ) {
+                $users[] = $row;
+            } else {
+                $users[] = new \WeDevs\ERP\HRM\Employee( intval( $row->user_id ) );
+            }
         }
     }
 
@@ -225,16 +233,16 @@ function erp_hr_get_employees( $company_id ) {
  * @return array  the key-value paired employees
  */
 function erp_hr_get_employees_dropdown_raw( $company_id, $exclude = null ) {
-    $employees = erp_hr_get_employees( $company_id );
+    $employees = erp_hr_get_employees( $company_id, true );
     $dropdown  = array( 0 => __( '- Select Employee -', 'wp-erp' ) );
 
     if ( $employees ) {
         foreach ($employees as $key => $employee) {
-            if ( $exclude && $employee->id == $exclude ) {
+            if ( $exclude && $employee->user_id == $exclude ) {
                 continue;
             }
 
-            $dropdown[$employee->id] = $employee->get_full_name();
+            $dropdown[$employee->user_id] = $employee->display_name;
         }
     }
 
