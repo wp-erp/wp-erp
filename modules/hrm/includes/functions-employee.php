@@ -118,12 +118,13 @@ function erp_hr_employee_create( $args = array() ) {
     // attempt to create the user
     $password = wp_generate_password( 12 );
     $userdata = array(
-        'user_login' => $data['user_email'],
-        'user_pass'  => $password,
-        'user_email' => $data['user_email'],
-        'first_name' => $data['personal']['first_name'],
-        'last_name'  => $data['personal']['last_name'],
-        'role'       => 'employee'
+        'user_login'   => $data['user_email'],
+        'user_pass'    => $password,
+        'user_email'   => $data['user_email'],
+        'first_name'   => $data['personal']['first_name'],
+        'last_name'    => $data['personal']['last_name'],
+        'display_name' => $data['personal']['first_name'] . ' ' . $data['personal']['last_name'],
+        'role'         => 'employee'
     );
 
     // if user id exists, do an update
@@ -268,6 +269,36 @@ function erp_hr_get_employees_dropdown( $company_id, $selected = '' ) {
     }
 
     return $dropdown;
+}
+
+/**
+ * Fetch employees by location and department
+ *
+ * @param  int  $company_id
+ * @param  int  $location_id
+ * @param  int  $department_id
+ *
+ * @return array
+ */
+function erp_hr_employees_get_by_location_department( $company_id, $location_id = 0, $department_id = 0 ) {
+    global $wpdb;
+
+    $where = '';
+
+    if ( $location_id ) {
+        $where .= sprintf( ' AND e.location = %d ', $location_id );
+    }
+
+    if ( $department_id ) {
+        $where .= sprintf( ' AND e.department = %d ', $department_id );
+    }
+
+    $sql = "SELECT e.user_id, u.display_name
+        FROM {$wpdb->prefix}erp_hr_employees AS e
+        LEFT JOIN {$wpdb->users} AS u ON u.ID = e.user_id
+        WHERE company_id = %d $where";
+
+    return $wpdb->get_results( $wpdb->prepare( $sql, $company_id ) );
 }
 
 /**
