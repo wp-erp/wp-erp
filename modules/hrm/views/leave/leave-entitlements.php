@@ -109,7 +109,7 @@
                 'name'     => 'comment',
                 'type'     => 'textarea',
                 'tag'      => 'li',
-                'placeholder' => __( '(optional comment)', 'wp-erp' ),
+                'placeholder' => __( 'Optional Comment', 'wp-erp' ),
             ) );
 
             ?>
@@ -146,9 +146,9 @@
                         <input id="cb-select-all-1" type="checkbox">
                     </th>
                     <th><?php _e( 'Employee Name', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'Policy', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'From', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'To', 'wp-erp' ); ?></th>
+                    <th><?php _e( 'Leave Policy', 'wp-erp' ); ?></th>
+                    <th><?php _e( 'Valid From', 'wp-erp' ); ?></th>
+                    <th><?php _e( 'Valid To', 'wp-erp' ); ?></th>
                     <th><?php _e( 'Days', 'wp-erp' ); ?></th>
                     <th><?php _e( 'Scheduled', 'wp-erp' ); ?></th>
                     <th><?php _e( 'Available', 'wp-erp' ); ?></th>
@@ -161,9 +161,9 @@
                         <input id="cb-select-all-1" type="checkbox">
                     </th>
                     <th><?php _e( 'Employee Name', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'Policy', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'From', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'To', 'wp-erp' ); ?></th>
+                    <th><?php _e( 'Leave Policy', 'wp-erp' ); ?></th>
+                    <th><?php _e( 'Valid From', 'wp-erp' ); ?></th>
+                    <th><?php _e( 'Valid To', 'wp-erp' ); ?></th>
                     <th><?php _e( 'Days', 'wp-erp' ); ?></th>
                     <th><?php _e( 'Scheduled', 'wp-erp' ); ?></th>
                     <th><?php _e( 'Available', 'wp-erp' ); ?></th>
