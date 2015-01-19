@@ -32,7 +32,7 @@ class Admin_Menu {
         /** Leave Management **/
          add_menu_page( __( 'Leave Management', 'wp-erp' ), __( 'Leave', 'wp-erp' ), 'manage_options', 'erp-leave', array( $this, 'empty_page' ), 'dashicons-arrow-right-alt', null );
 
-         add_submenu_page( 'erp-leave', __( 'Requests', 'wp-erp' ), __( 'Requests', 'wp-erp' ), 'manage_options', 'erp-leave', array( $this, 'empty_page' ) );
+         add_submenu_page( 'erp-leave', __( 'Requests', 'wp-erp' ), __( 'Requests', 'wp-erp' ), 'manage_options', 'erp-leave', array( $this, 'leave_requests' ) );
          add_submenu_page( 'erp-leave', __( 'Leave Entitlements', 'wp-erp' ), __( 'Leave Entitlements', 'wp-erp' ), 'manage_options', 'erp-leave-assign', array( $this, 'leave_entitilements' ) );
          add_submenu_page( 'erp-leave', __( 'Policies', 'wp-erp' ), __( 'Policies', 'wp-erp' ), 'manage_options', 'erp-leave-policies', array( $this, 'leave_policy_page' ) );
          // add_submenu_page( 'erp-leave', __( 'Leave Calendar', 'wp-erp' ), __( 'Leave Calendar', 'wp-erp' ), 'manage_options', 'erp-leave-calendar', array( $this, 'empty_page' ) );
@@ -109,39 +109,58 @@ class Admin_Menu {
         }
     }
 
+    /**
+     * Render the designation page
+     *
+     * @return void
+     */
     public function designation_page() {
         include WPERP_HRM_VIEWS . '/designation.php';
     }
 
+    /**
+     * Render the settings page
+     *
+     * @return void
+     */
     public function settings_page() {
         include WPERP_HRM_VIEWS . '/settings.php';
     }
 
+    /**
+     * Render the leave policy page
+     *
+     * @return void
+     */
     public function leave_policy_page() {
         include WPERP_HRM_VIEWS . '/leave/leave-policies.php';
     }
 
+    /**
+     * Render the leave entitlements page
+     *
+     * @return void
+     */
     public function leave_entitilements() {
         include WPERP_HRM_VIEWS . '/leave/leave-entitlements.php';
     }
 
-    public function empty_page() {
-        // var_dump( erp_hr_leave_insert_policy( array(
-        //     'id' => 2,
-        //     'name' => 'Medical Leave',
-        //     'value' => 12
-        // ) ) );
-        // $request = erp_hr_leave_insert_request( array(
-        //     'user_id'      => 20,
-        //     'leave_policy' => 1,
-        //     'start_date'   => '2015-01-25',
-        //     'end_date'     => '2015-01-28',
-        //     'comment'      => 'He called me and asked not to come today'
-        // ) );
+    /**
+     * Render the leave requests page
+     *
+     * @return void
+     */
+    public function leave_requests() {
+        include WPERP_HRM_VIEWS . '/leave/requests.php';
+    }
 
-        // if ( is_wp_error( $request ) ) {
-        //     echo $request->get_error_message();
-        // }
+    /**
+     * An empty page for testing purposes
+     *
+     * @return void
+     */
+    public function empty_page() {
+
     }
 
 }
