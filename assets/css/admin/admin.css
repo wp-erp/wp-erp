@@ -377,11 +377,13 @@ ul.erp-list.two-col li {
 ul.erp-list.separated label {
   min-width: 110px;
   display: inline-block;
-  color: #777;
 }
 ul.erp-list.separated span.sep {
   width: 15px;
   display: inline-block;
+}
+ul.erp-list.separated.blur label {
+  color: #777;
 }
 table.vendor-list-table th.col-username,
 table.vendor-list-table td.col-username {

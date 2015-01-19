@@ -24,17 +24,17 @@ class Admin_Menu {
         add_menu_page( __( 'Human Resource', 'wp-erp' ), __( 'HR Management', 'wp-erp' ), 'manage_options', 'erp-hr', array( $this, 'dashboard_page' ), 'dashicons-groups', null );
 
         add_submenu_page( 'erp-hr', __( 'Overview', 'wp-erp' ), __( 'Overview', 'wp-erp' ), 'manage_options', 'erp-hr', array( $this, 'dashboard_page' ) );
-        add_submenu_page( 'erp-hr', __( 'Employee', 'wp-erp' ), __( 'Employee', 'wp-erp' ), 'manage_options', 'erp-hr-employee', array( $this, 'employee_page' ) );
+        add_submenu_page( 'erp-hr', __( 'Employees', 'wp-erp' ), __( 'Employees', 'wp-erp' ), 'manage_options', 'erp-hr-employee', array( $this, 'employee_page' ) );
         add_submenu_page( 'erp-hr', __( 'Departments', 'wp-erp' ), __( 'Departments', 'wp-erp' ), 'manage_options', 'erp-hr-depts', array( $this, 'department_page' ) );
-        add_submenu_page( 'erp-hr', __( 'Designation', 'wp-erp' ), __( 'Designation', 'wp-erp' ), 'manage_options', 'erp-hr-designation', array( $this, 'designation_page' ) );
+        add_submenu_page( 'erp-hr', __( 'Designations', 'wp-erp' ), __( 'Designations', 'wp-erp' ), 'manage_options', 'erp-hr-designation', array( $this, 'designation_page' ) );
         add_submenu_page( 'erp-hr', __( 'Settings', 'wp-erp' ), __( 'Settings', 'wp-erp' ), 'manage_options', 'erp-hr-settings', array( $this, 'settings_page' ) );
 
         /** Leave Management **/
          add_menu_page( __( 'Leave Management', 'wp-erp' ), __( 'Leave', 'wp-erp' ), 'manage_options', 'erp-leave', array( $this, 'empty_page' ), 'dashicons-arrow-right-alt', null );
 
-         add_submenu_page( 'erp-leave', __( 'Leave Requests', 'wp-erp' ), __( 'Leave Requests', 'wp-erp' ), 'manage_options', 'erp-leave', array( $this, 'empty_page' ) );
-         add_submenu_page( 'erp-leave', __( 'Assign Leave', 'wp-erp' ), __( 'Assign Leave', 'wp-erp' ), 'manage_options', 'erp-leave-assign', array( $this, 'empty_page' ) );
-         add_submenu_page( 'erp-leave', __( 'Leave Policies', 'wp-erp' ), __( 'Leave Policies', 'wp-erp' ), 'manage_options', 'erp-leave-policies', array( $this, 'leave_policy_page' ) );
+         add_submenu_page( 'erp-leave', __( 'Requests', 'wp-erp' ), __( 'Requests', 'wp-erp' ), 'manage_options', 'erp-leave', array( $this, 'empty_page' ) );
+         add_submenu_page( 'erp-leave', __( 'Leave Entitlements', 'wp-erp' ), __( 'Leave Entitlements', 'wp-erp' ), 'manage_options', 'erp-leave-assign', array( $this, 'leave_entitilements' ) );
+         add_submenu_page( 'erp-leave', __( 'Policies', 'wp-erp' ), __( 'Policies', 'wp-erp' ), 'manage_options', 'erp-leave-policies', array( $this, 'leave_policy_page' ) );
          // add_submenu_page( 'erp-leave', __( 'Leave Calendar', 'wp-erp' ), __( 'Leave Calendar', 'wp-erp' ), 'manage_options', 'erp-leave-calendar', array( $this, 'empty_page' ) );
     }
 
@@ -119,6 +119,10 @@ class Admin_Menu {
 
     public function leave_policy_page() {
         include WPERP_HRM_VIEWS . '/leave/leave-policies.php';
+    }
+
+    public function leave_entitilements() {
+        include WPERP_HRM_VIEWS . '/leave/leave-entitlements.php';
     }
 
     public function empty_page() {
