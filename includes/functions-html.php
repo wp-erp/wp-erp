@@ -123,6 +123,10 @@ function erp_html_form_input( $args = array() ) {
             echo '<textarea ' . implode( ' ', $custom_attributes ) . '>' . esc_textarea( $field['value'] ) . '</textarea>';
             break;
 
+        case 'checkbox':
+            echo '<input type="checkbox" value="' . esc_attr( $field['value'] ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+            break;
+
         default:
             # code...
             break;
@@ -154,4 +158,20 @@ function erp_html_generate_dropdown( $values = array(), $selected = null ) {
     }
 
     return $dropdown;
+}
+
+/**
+ * Print notices for WordPress
+ *
+ * @param  string  $text
+ * @param  string  $type
+ *
+ * @return void
+ */
+function erp_html_show_notice( $text, $type = 'updated' ) {
+    ?>
+    <div class="<?php echo esc_attr( $type ); ?>">
+        <p><strong><?php echo $text; ?></strong></p>
+    </div>
+    <?php
 }
