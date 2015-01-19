@@ -278,6 +278,31 @@ function erp_hr_leave_has_employee_entitlement( $employee_id, $policy_id, $year 
 }
 
 /**
+ * Get all the leave entitlements of a calendar year
+ *
+ * @param  int  $year
+ *
+ * @return array
+ */
+function erp_hr_leave_get_entitlements( $year ) {
+    global $wpdb;
+
+    $from_date = $year . '-01-01';
+    $to_date   = $year . '-12-31';
+
+    $query = "SELECT en.*, u.display_name as employee_name, pol.name as policy_name
+        FROM `{$wpdb->prefix}erp_hr_leave_entitlements` AS en
+        LEFT JOIN {$wpdb->prefix}erp_hr_leave_policies AS pol ON pol.id = en.policy_id
+        LEFT JOIN {$wpdb->users} AS u ON en.user_id = u.ID
+        WHERE en.from_date >= '$from_date' AND en.to_date <= '$to_date'
+        ORDER BY en.user_id, en.created_on DESC";
+
+    $results = $wpdb->get_results( $query );
+
+    return $results;
+}
+
+/**
  * Employee leave entitlement form handler
  *
  * @return void
@@ -294,11 +319,12 @@ function erp_hr_leave_entitlement_handler() {
     $page_url        = admin_url( 'admin.php?page=erp-leave-assign&tab=assignment' );
 
     $is_single       = ! isset( $_POST['assignment_to'] );
-    $leave_policy    = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy']) : 0;
-    $leave_period    = isset( $_POST['leave_period'] ) ? intval( $_POST['leave_period']) : 0;
-    $single_employee = isset( $_POST['single_employee'] ) ? intval( $_POST['single_employee']) : 0;
-    $location        = isset( $_POST['location'] ) ? intval( $_POST['location']) : 0;
-    $department      = isset( $_POST['department'] ) ? intval( $_POST['department']) : 0;
+    $leave_policy    = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : 0;
+    $leave_period    = isset( $_POST['leave_period'] ) ? intval( $_POST['leave_period'] ) : 0;
+    $single_employee = isset( $_POST['single_employee'] ) ? intval( $_POST['single_employee'] ) : 0;
+    $location        = isset( $_POST['location'] ) ? intval( $_POST['location'] ) : 0;
+    $department      = isset( $_POST['department'] ) ? intval( $_POST['department'] ) : 0;
+    $comment         = isset( $_POST['comment'] ) ? wp_kses_post( $_POST['comment'] ) : 0;
 
     if ( ! $leave_policy ) {
         $errors[] = 'invalid-policy';
@@ -352,6 +378,7 @@ function erp_hr_leave_entitlement_handler() {
                     'days'      => $policy->value,
                     'from_date' => $from_date,
                     'to_date'   => $to_date,
+                    'comments'  => $comment,
                     'status'    => 1
                 );
 

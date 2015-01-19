@@ -377,6 +377,7 @@ ul.erp-list.two-col li {
 ul.erp-list.separated label {
   min-width: 110px;
   display: inline-block;
+  vertical-align: top;
 }
 ul.erp-list.separated span.sep {
   width: 15px;
