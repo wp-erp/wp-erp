@@ -7,9 +7,28 @@ namespace WeDevs\ERP;
 class Admin_Page {
 
     function __construct() {
+        $this->init_actions();
+        $this->init_classes();
+    }
+
+    /**
+     * Initialize action hooks
+     *
+     * @return void
+     */
+    public function init_actions() {
         add_action( 'admin_footer', array($this, 'erp_modal_markup' ) );
 
         add_action( 'admin_enqueue_scripts', array($this, 'admin_scripts' ) );
+    }
+
+    /**
+     * Initialize required classes
+     *
+     * @return void
+     */
+    public function init_classes() {
+        \WeDevs\ERP\Settings::init();
     }
 
     /**
@@ -24,6 +43,7 @@ class Admin_Page {
 
         $suffix = ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) ? '' : '.min';
 
+        wp_enqueue_script( 'jquery-chosen', WPERP_ASSETS . "/vendor/chosen/chosen.jquery$suffix.js", array( 'jquery' ), date( 'Ymd' ), true );
         wp_enqueue_script( 'wp-erp-popup', WPERP_ASSETS . "/js/jquery-popup$suffix.js", array( 'jquery' ), date( 'Ymd' ), true );
         wp_enqueue_script( 'wp-erp-script', WPERP_ASSETS . "/js/erp$suffix.js", array( 'jquery', 'backbone', 'underscore', 'wp-util', 'jquery-ui-datepicker' ), date( 'Ymd' ), true );
 
@@ -47,7 +67,9 @@ class Admin_Page {
             wp_localize_script( 'wp-erp-script', 'wpErpCountries', $country->load_country_states() );
         }
 
-        wp_enqueue_style( 'jquery-ui', WPERP_ASSETS . '/css/jquery-ui-1.9.1.custom.css' );
+        wp_enqueue_style( 'jquery-ui', WPERP_ASSETS . '/vendor/jquery-ui/jquery-ui-1.9.1.custom.css' );
+        wp_enqueue_style( 'jquery-chosen', WPERP_ASSETS . "/vendor/chosen/chosen$suffix.css" );
+
         wp_enqueue_style( 'wp-erp-styles', WPERP_ASSETS . '/css/admin/admin.css', false, date( 'Ymd' ) );
     }
 
