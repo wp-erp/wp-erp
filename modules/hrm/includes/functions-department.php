@@ -103,12 +103,17 @@ function erp_hr_delete_department( $department_id ) {
  * Get the raw departments dropdown
  *
  * @param  int  company id
+ * @param string  $select_label pass any string to be as the first element
  *
  * @return array  the key-value paired departments
  */
-function erp_hr_get_departments_dropdown_raw( $company_id ) {
+function erp_hr_get_departments_dropdown_raw( $company_id, $select_label = null ) {
     $departments = erp_hr_get_departments( $company_id );
     $dropdown    = array( 0 => __( '- Select Department -', 'wp-erp' ) );
+
+    if ( $select_label ) {
+        $dropdown    = array( 0 => $select_label );
+    }
 
     if ( $departments ) {
         foreach ($departments as $key => $department) {

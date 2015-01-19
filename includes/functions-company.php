@@ -236,13 +236,18 @@ function erp_company_get_locations( $company_id ) {
 /**
  * Get a company location prepared for dropdown
  *
- * @param  int  $company_id
+ * @param int     $company_id
+ * @param string  $select_label pass any string to be as the first element
  *
  * @return array
  */
-function erp_company_get_location_dropdown_raw( $company_id ) {
+function erp_company_get_location_dropdown_raw( $company_id, $select_label = null ) {
     $locations = erp_company_get_locations( $company_id );
-    $dropdown  = array();
+    $dropdown  = array( 0 => __( '- Select Location -', 'wp-erp' ) );
+
+    if ( $select_label ) {
+        $dropdown    = array( 0 => $select_label );
+    }
 
     foreach ($locations as $location) {
         $dropdown[ $location->id ] = $location->name;
@@ -270,7 +275,7 @@ function erp_company_get_working_days( $company_id ) {
     );
 
     $option_key = 'erp_hr_work_days_' . $company_id;
-    $saved = get_option( $option_key, $default );
+    $saved      = get_option( $option_key, $default );
 
     if ( ! is_array( $saved ) || count( $saved ) < 7 ) {
         return $default;
