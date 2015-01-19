@@ -1,22 +1,14 @@
 <?php
-$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'custom';
-$tabs = apply_filters( 'erp_hr_employee_single_tabs', array(
-    'custom' => array(
-        'title'    => __( 'Custom Fields', 'wp-erp' ),
-        'callback' => ''
-    ),
-    'termination' => array(
-        'title'    => __( 'Termination Reasons', 'wp-erp' ),
-        'callback' => ''
-    ),
-) );
+$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'workdays';
+$settings   = \WeDevs\ERP\HRM\Settings::init();
+$tabs       = $settings->get_tabs();
 ?>
 
 <h2 class="nav-tab-wrapper" style="margin-bottom: 15px;">
     <?php foreach ($tabs as $key => $tab) {
         $active_class = ( $key == $active_tab ) ? ' nav-tab-active' : '';
         ?>
-        <a href="<?php echo add_query_arg( array( 'tab' => $key ), erp_hr_url_single_employee(1) ); ?>" class="nav-tab<?php echo $active_class; ?>"><?php echo $tab['title'] ?></a>
+        <a href="<?php echo add_query_arg( array( 'tab' => $key ), admin_url( 'admin.php?page=erp-hr-settings' ) ); ?>" class="nav-tab<?php echo $active_class; ?>"><?php echo esc_html( $tab['title'] ); ?></a>
     <?php } ?>
 </h2>
 
