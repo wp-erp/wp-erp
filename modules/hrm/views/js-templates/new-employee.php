@@ -107,7 +107,7 @@
                     'name'    => 'work[location]',
                     'value'   => '{{ data.work.location }}',
                     'type'    => 'select',
-                    'options' => array_merge( array( 0 => __( '- Select -', 'wp-erp' ) ), erp_company_get_location_dropdown_raw( erp_get_current_company_id() ) )
+                    'options' => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_company_get_location_dropdown_raw( erp_get_current_company_id() )
                 ) ); ?>
             </li>
 
@@ -128,7 +128,7 @@
                     'name'    => 'work[type]',
                     'value'   => '{{ data.work.type }}',
                     'type'    => 'select',
-                    'options' => array_merge( array( 0 => __( '- Select -', 'wp-erp' ) ), erp_hr_get_employee_types() )
+                    'options' => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_employee_types()
                 ) ); ?>
             </li>
 
@@ -138,7 +138,7 @@
                     'name'    => 'work[status]',
                     'value'   => '{{ data.work.status }}',
                     'type'    => 'select',
-                    'options' => array_merge( array( 0 => __( '- Select -', 'wp-erp' ) ), erp_hr_get_employee_statuses() )
+                    'options' => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_employee_statuses()
                 ) ); ?>
             </li>
 
@@ -150,7 +150,7 @@
                     'name'    => 'work[hiring_source]',
                     'value'   => '{{ data.work.hiring_source }}',
                     'type'    => 'select',
-                    'options' => array_merge( array( 0 => __( '- Select -', 'wp-erp' ) ), erp_hr_get_employee_sources() )
+                    'options' => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_employee_sources()
                 ) ); ?>
             </li>
 
@@ -181,7 +181,7 @@
                         'name'    => 'work[pay_type]',
                         'value'   => '{{ data.work.pay_type }}',
                         'type'    => 'select',
-                        'options' => array_merge( array( 0 => __( '- Select -', 'wp-erp' ) ), erp_hr_get_pay_type() )
+                        'options' => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_pay_type()
                     ) ); ?>
                 </li>
 

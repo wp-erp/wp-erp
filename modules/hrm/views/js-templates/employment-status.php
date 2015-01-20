@@ -15,7 +15,7 @@
             'name'    => 'status',
             'value'   => '',
             'type'    => 'select',
-            'options' => array_merge( array( 0 => __( '- Select -', 'wp-erp' ) ), erp_hr_get_employee_types() )
+            'options' => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_employee_types()
         ) ); ?>
     </div>
 

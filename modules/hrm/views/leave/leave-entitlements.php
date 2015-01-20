@@ -61,7 +61,7 @@
                 'class'    => 'chosen-select',
                 'tag'      => 'li',
                 'required' => true,
-                'options'  => array_merge( array( 0 => __( '- Select -', 'wp-erp' ) ), erp_hr_leave_get_policies_dropdown_raw( $company_id ) )
+                'options'  => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_hr_leave_get_policies_dropdown_raw( $company_id )
             ) );
 
             erp_html_form_input( array(

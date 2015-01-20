@@ -24,7 +24,7 @@
             'name'    => 'pay_type',
             'value'   => '',
             'type'    => 'select',
-            'options' => array_merge( array( 0 => __( '- Select -', 'wp-erp' ) ), erp_hr_get_pay_type() )
+            'options' => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_pay_type()
         ) ); ?>
     </div>
 
@@ -34,7 +34,7 @@
             'name'    => 'change-reason',
             'value'   => '',
             'type'    => 'select',
-            'options' => array_merge( array( 0 => __( '- Select -', 'wp-erp' ) ), erp_hr_get_pay_change_reasons() )
+            'options' => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_pay_change_reasons()
         ) ); ?>
     </div>
 
