@@ -253,6 +253,28 @@ function erp_hr_leave_insert_request( $args = array() ) {
 }
 
 /**
+ * Get leave requests status
+ *
+ * @param  int|boolean  $status
+ *
+ * @return array|string
+ */
+function erp_hr_leave_request_get_statuses( $status = false ) {
+    $statuses = array(
+        'all' => __( 'All', 'wp-erp' ),
+        '1'   => __( 'Approved', 'wp-erp' ),
+        '0'   => __( 'Pending', 'wp-erp' ),
+        '2'   => __( 'Rejected', 'wp-erp' )
+    );
+
+    if ( false !== $status && array_key_exists( $status, $statuses ) ) {
+        return $statuses[ $status ];
+    }
+
+    return $statuses;
+}
+
+/**
  * Entitlement checking
  *
  * Check if an employee has already entitled to a policy in
