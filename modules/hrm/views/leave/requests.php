@@ -92,7 +92,7 @@ class Leave_Requests_List_Table extends WP_List_Table {
             'days'     => __( 'Days', 'wp-erp' ),
             'balance'  => __( 'Balance', 'wp-erp' ),
             'status'   => __( 'Status', 'wp-erp' ),
-            'comments' => __( 'Comments', 'wp-erp' )
+            'reason'   => __( 'Reason', 'wp-erp' )
         );
         return $columns;
     }

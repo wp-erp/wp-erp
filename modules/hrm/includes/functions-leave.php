@@ -300,7 +300,7 @@ function erp_hr_leave_get_requests( $args = array() ) {
     $cache_key = 'erp_hr_leave_requests_' . md5( serialize( $args ) );
     $requests  = wp_cache_get( $cache_key, 'wp-erp' );
 
-    $sql = "SELECT req.id, req.user_id, u.display_name, req.policy_id, pol.name as policy_name, req.status, req.comments, req.created_on, ( SELECT count(id) FROM wp_erp_hr_leaves WHERE request_id = req.id) as days
+    $sql = "SELECT req.id, req.user_id, u.display_name, req.policy_id, pol.name as policy_name, req.status, req.reason, req.comments, req.created_on, ( SELECT count(id) FROM wp_erp_hr_leaves WHERE request_id = req.id) as days
         FROM {$wpdb->prefix}erp_hr_leave_requests AS req
         LEFT JOIN {$wpdb->prefix}erp_hr_leave_policies AS pol ON pol.id = req.policy_id
         LEFT JOIN $wpdb->users AS u ON req.user_id = u.ID
