@@ -237,6 +237,51 @@
   margin-top: 12px;
   background-color: #ddd;
 }
+table.erp-hr-leave-requests td.column-status {
+  color: #fff;
+  font-size: 11px;
+  font-weight: bold;
+}
+table.erp-hr-leave-requests td.column-status span {
+  padding: 2px 5px;
+  border-radius: 3px;
+  margin-top: 10px;
+  display: inline-block;
+}
+table.erp-hr-leave-requests td.column-status .status-1 {
+  background: #7ad03a;
+}
+table.erp-hr-leave-requests td.column-status .status-0 {
+  background: #dd3d36;
+}
+table.erp-hr-leave-requests td.column-status .status-2 {
+  background: #ffba00;
+}
+.erp-hr-leave-request-new .show-days {
+  width: 97%;
+}
+.erp-hr-leave-request-new .show-days .table-wrap {
+  border: 1px solid #ddd;
+}
+.erp-hr-leave-request-new .show-days .table-wrap .total {
+  border-top: 1px solid #ddd;
+  background: #fff;
+  font-weight: bold;
+  padding: 8px 0 8px 10px;
+}
+.erp-hr-leave-request-new .show-days table.list-days {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+.erp-hr-leave-request-new .show-days table.list-days tbody td {
+  padding: 2px 0 2px 15px;
+  margin: 0;
+  border: none;
+}
+.erp-hr-leave-request-new .show-days table.list-days tr:nth-child(2n+1) {
+  background-color: #fff;
+}
 #wp-admin-bar-erp-mode-switch .ab-icon.dashicons-randomize {
   padding-top: 7px !important;
 }
@@ -383,8 +428,39 @@ ul.erp-list.separated span.sep {
   width: 15px;
   display: inline-block;
 }
-ul.erp-list.separated.blur label {
+ul.erp-list.blur label {
   color: #777;
+}
+ul.erp-list.blocked li {
+  margin-bottom: 8px;
+}
+ul.erp-list.blocked label {
+  display: block;
+  padding-bottom: 5px;
+}
+ul.erp-list li.two-col:before,
+ul.erp-list li.two-col:after {
+  content: " ";
+  display: table;
+}
+ul.erp-list li.two-col:after {
+  clear: both;
+}
+ul.erp-list li.two-col:before,
+ul.erp-list li.two-col:after {
+  content: " ";
+  display: table;
+}
+ul.erp-list li.two-col:after {
+  clear: both;
+}
+ul.erp-list li.two-col .cols {
+  float: left;
+  width: 48%;
+  margin-right: 2%;
+}
+ul.erp-list li.two-col .cols.last {
+  margin-right: 0;
 }
 table.vendor-list-table th.col-username,
 table.vendor-list-table td.col-username {

@@ -25,6 +25,16 @@
 
             // on popup, country change event
             $( 'body' ).on('change', 'select.erp-country-select', this.populateState );
+
+            this.initDateField();
+        },
+
+        initDateField: function() {
+            $( '.erp-date-field').datepicker({
+                dateFormat: 'yy-mm-dd',
+                changeMonth: true,
+                changeYear: true
+            });
         },
 
         /**

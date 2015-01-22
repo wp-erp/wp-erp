@@ -141,10 +141,35 @@ ul.erp-list {
             width: 15px;
             display: inline-block;
         }
+    }
 
-        &.blur {
-            label {
-                color: #777;
+    &.blur {
+        label {
+            color: #777;
+        }
+    }
+
+    &.blocked {
+        li {
+            margin-bottom: 8px;
+        }
+
+        label {
+            display: block;
+            padding-bottom: 5px;
+        }
+    }
+
+    li.two-col {
+        .clearfix();
+
+        .cols {
+            float: left;
+            width: 48%;
+            margin-right: 2%;
+
+            &.last {
+                margin-right: 0;
             }
         }
     }

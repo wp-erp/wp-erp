@@ -151,7 +151,17 @@ class Admin_Menu {
      * @return void
      */
     public function leave_requests() {
-        include WPERP_HRM_VIEWS . '/leave/requests.php';
+        $view = isset( $_GET['view'] ) ? $_GET['view'] : 'list';
+
+        switch ($view) {
+            case 'new':
+                include WPERP_HRM_VIEWS . '/leave/new-request.php';
+                break;
+
+            default:
+                include WPERP_HRM_VIEWS . '/leave/requests.php';
+                break;
+        }
     }
 
     /**

@@ -261,6 +261,41 @@ function erp_get_clickable( $type = 'email', $value = '' ) {
  *
  * @return string  formatted date
  */
-function erp_format_date( $date ) {
-    return date_i18n( get_option( 'date_format' ), strtotime( $date ) );
+function erp_format_date( $date, $format = false ) {
+    if ( ! $format ) {
+        $format = get_option( 'date_format' );
+    }
+
+    return date_i18n( $format, strtotime( $date ) );
+}
+
+/**
+ * Extract dates between two date range
+ *
+ * @param  string  $start_date
+ * @param  string  $end_date
+ *
+ * @return array
+ */
+function erp_extract_dates( $start_date, $end_date ) {
+    $start_date = new DateTime( $start_date );
+    $end_date   = new DateTime( $end_date );
+    $end_date->modify( '+1 day' ); // to get proper days in duration
+    $diff = $start_date->diff( $end_date );
+
+    // we got a negative date
+    if ( $diff->invert || ! $diff->days ) {
+        return new WP_Error( 'invalid-date', __( 'Invalid date provided', 'wp-erp' ) );
+    }
+
+    $interval = DateInterval::createFromDateString( '1 day' );
+    $period   = new DatePeriod( $start_date, $interval, $end_date );
+
+    // prepare the periods
+    $dates = array();
+    foreach ( $period as $dt ) {
+        $dates[] = $dt->format( 'Y-m-d' );
+    }
+
+    return $dates;
 }

@@ -200,3 +200,62 @@
         background-color: #ddd;
     }
 }
+
+table.erp-hr-leave-requests {
+    td.column-status {
+        color: #fff;
+        font-size: 11px;
+        font-weight: bold;
+
+        span {
+            padding: 2px 5px;
+            border-radius: 3px;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        .status-1 {
+            background: #7ad03a;
+        }
+
+        .status-0 {
+            background: #dd3d36;
+        }
+
+        .status-2 {
+            background: #ffba00;
+        }
+    }
+}
+
+.erp-hr-leave-request-new {
+    .show-days {
+        width: 97%;
+
+        .table-wrap {
+            border: 1px solid #ddd;
+
+            .total {
+                border-top: 1px solid #ddd;
+                background: #fff;
+                font-weight: bold;
+                padding: 8px 0 8px 10px;
+            }
+        }
+        table.list-days {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+
+            tbody td {
+                padding: 2px 0 2px 15px;
+                margin: 0;
+                border: none;
+            }
+
+            tr:nth-child(2n+1) {
+                background-color: #fff;
+            }
+        }
+    }
+}

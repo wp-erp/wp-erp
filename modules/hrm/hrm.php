@@ -77,6 +77,7 @@ class Human_Resource {
         require_once WPERP_HRM_PATH . '/includes/class-walker-department.php';
         require_once WPERP_HRM_PATH . '/includes/class-designation.php';
         require_once WPERP_HRM_PATH . '/includes/class-ajax.php';
+        require_once WPERP_HRM_PATH . '/includes/class-form-handler.php';
         require_once WPERP_HRM_PATH . '/includes/class-settings.php';
     }
 

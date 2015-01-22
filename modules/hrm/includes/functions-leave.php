@@ -182,7 +182,7 @@ function erp_hr_leave_insert_request( $args = array() ) {
         'leave_policy' => 0,
         'start_date'   => current_time('mysql'),
         'end_date'     => current_time('mysql'),
-        'comment'      => '',
+        'reason'       => '',
         'status'       => 0
     );
 
@@ -197,30 +197,29 @@ function erp_hr_leave_insert_request( $args = array() ) {
         return new WP_Error( 'no-policy', __( 'No leave policy provided.', 'wp-error' ) );
     }
 
-    $start_date = new DateTime( $start_date );
-    $end_date   = new DateTime( $end_date );
-    $end_date->modify( '+1 day' ); // to get proper days in duration
-    $diff = $start_date->diff( $end_date );
+    $period = erp_hr_get_work_days_between_dates( $start_date, $end_date );
 
-    // we got a negative date
-    if ( $diff->invert || ! $diff->days ) {
-        return new WP_Error( 'invalid-date', __( 'Invalid date provided', 'wp-erp' ) );
+    if ( is_wp_error( $period ) ) {
+        return $period;
     }
-
-    $interval = DateInterval::createFromDateString( '1 day' );
-    $period   = new DatePeriod( $start_date, $interval, $end_date );
 
     // prepare the periods
     $leaves = array();
-    foreach ( $period as $dt ) {
-        $leaves[] = array(
-            'date'          => $dt->format( 'Y-m-d' ),
-            'length_hours'  => '08:00:00',
-            'length_days'   => '1.00',
-            'start_time'    => '00:00:00',
-            'end_time'      => '00:00:00',
-            'duration_type' => 1
-        );
+    if ( $period['days'] ) {
+        foreach ($period['days'] as $date) {
+            if ( ! $date['count'] ) {
+                continue;
+            }
+
+            $leaves[] = array(
+                'date'          => $date['date'],
+                'length_hours'  => '08:00:00',
+                'length_days'   => '1.00',
+                'start_time'    => '00:00:00',
+                'end_time'      => '00:00:00',
+                'duration_type' => 1
+            );
+        }
     }
 
     if ( $leaves ) {
@@ -228,7 +227,7 @@ function erp_hr_leave_insert_request( $args = array() ) {
         $request = array(
             'user_id'    => $user_id,
             'policy_id'  => $leave_policy,
-            'comments'   => wp_kses_post( $comment ),
+            'reason'     => wp_kses_post( $reason ),
             'status'     => 0,
             'created_by' => get_current_user_id(),
             'created_on' => current_time( 'mysql' ),
@@ -250,6 +249,108 @@ function erp_hr_leave_insert_request( $args = array() ) {
     }
 
     return false;
+}
+
+/**
+ * Fetch the leave requests
+ *
+ * @param  array   $args
+ *
+ * @return array
+ */
+function erp_hr_leave_get_requests( $args = array() ) {
+    global $wpdb;
+
+    $defaults = array(
+        'number'  => 20,
+        'offset'  => 0,
+        'user_id' => 0,
+        'status'  => '',
+        'orderby' => 'created_on',
+        'order'   => 'DESC',
+    );
+
+    $args  = wp_parse_args( $args, $defaults );
+    $where = '';
+
+    if ( 'all' != $args['status'] && $args['status'] != '' ) {
+
+        if ( empty( $where ) ) {
+            $where .= " WHERE";
+        } else {
+            $where .= " AND";
+        }
+
+        if ( is_array( $args['status'] ) ) {
+            $where .= " `status` IN('" . implode( "','", array_map( 'intval', $args['status'] ) ) . "') ";
+        } else {
+            $where .= " `status` = '" . intval( $args['status'] ) . "' ";
+        }
+    }
+
+    if ( $args['user_id'] != '0' ) {
+
+        if ( empty( $where ) ) {
+            $where .= " WHERE req.user_id = " . intval( $args['user_id'] );
+        } else {
+            $where .= " AND req.user_id = " . intval( $args['user_id'] );
+        }
+    }
+
+    $cache_key = 'erp_hr_leave_requests_' . md5( serialize( $args ) );
+    $requests  = wp_cache_get( $cache_key, 'wp-erp' );
+
+    $sql = "SELECT req.id, req.user_id, u.display_name, req.policy_id, pol.name as policy_name, req.status, req.comments, req.created_on, ( SELECT count(id) FROM wp_erp_hr_leaves WHERE request_id = req.id) as days
+        FROM {$wpdb->prefix}erp_hr_leave_requests AS req
+        LEFT JOIN {$wpdb->prefix}erp_hr_leave_policies AS pol ON pol.id = req.policy_id
+        LEFT JOIN $wpdb->users AS u ON req.user_id = u.ID
+        $where
+        ORDER BY {$args['orderby']} {$args['order']}
+        LIMIT %d,%d;";
+    // echo $sql;
+
+    if ( $requests === false ) {
+        $requests = $wpdb->get_results( $wpdb->prepare( $sql, absint( $args['offset'] ), absint( $args['number'] ) ) );
+        wp_cache_set( $cache_key, $requests, 'wp-erp', HOUR_IN_SECONDS );
+    }
+
+    return $requests;
+}
+
+/**
+ * Get leave requests count
+ *
+ * @return array
+ */
+function erp_hr_leave_get_requests_count() {
+    global $wpdb;
+
+    $statuses = erp_hr_leave_request_get_statuses();
+    $counts   = array();
+
+    foreach ($statuses as $status => $label) {
+        $counts[ $status ] = array( 'count' => 0, 'label' => $label );
+    }
+
+    $cache_key = 'erp-hr-leave-request-counts';
+    $results = wp_cache_get( $cache_key, 'wp-erp' );
+
+    if ( false === $results ) {
+        $sql     = "SELECT status, COUNT(id) as num FROM {$wpdb->prefix}erp_hr_leave_requests GROUP BY status;";
+        $results = $wpdb->get_results( $sql );
+
+        wp_cache_set( $cache_key, $results, 'wp-erp' );
+    }
+
+    foreach ($results as $row) {
+        if ( array_key_exists( $row->status, $counts ) ) {
+            $counts[ $row->status ]['count'] = (int) $row->num;
+        }
+
+        $counts['all']['count'] += (int) $row->num;
+    }
+
+    return $counts;
 }
 
 /**
@@ -323,99 +424,3 @@ function erp_hr_leave_get_entitlements( $year ) {
 
     return $results;
 }
-
-/**
- * Employee leave entitlement form handler
- *
- * @return void
- */
-function erp_hr_leave_entitlement_handler() {
-    if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-hr-leave-assign' ) ) {
-        die( __( 'Something went wrong!', 'wp-erp' ) );
-    }
-
-    $affected        = 0;
-    $errors          = array();
-    $employees       = array();
-    $cur_year        = (int) date( 'Y' );
-    $page_url        = admin_url( 'admin.php?page=erp-leave-assign&tab=assignment' );
-
-    $is_single       = ! isset( $_POST['assignment_to'] );
-    $leave_policy    = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : 0;
-    $leave_period    = isset( $_POST['leave_period'] ) ? intval( $_POST['leave_period'] ) : 0;
-    $single_employee = isset( $_POST['single_employee'] ) ? intval( $_POST['single_employee'] ) : 0;
-    $location        = isset( $_POST['location'] ) ? intval( $_POST['location'] ) : 0;
-    $department      = isset( $_POST['department'] ) ? intval( $_POST['department'] ) : 0;
-    $comment         = isset( $_POST['comment'] ) ? wp_kses_post( $_POST['comment'] ) : 0;
-
-    if ( ! $leave_policy ) {
-        $errors[] = 'invalid-policy';
-    }
-
-    if ( ! in_array( $leave_period, array( $cur_year, $cur_year + 1 ) ) ) {
-        $errors[] = 'invalid-period';
-    }
-
-    if ( $is_single && ! $single_employee ) {
-        $errors[] = 'invalid-employee';
-    }
-
-    // bail out if error found
-    if ( $errors ) {
-        $first_error = reset( $errors );
-        $redirect_to = add_query_arg( array( 'error' => $first_error ), $page_url );
-        wp_safe_redirect( $redirect_to );
-        exit;
-    }
-
-    // fetch employees if not single
-    if ( ! $is_single ) {
-        $company_id = erp_get_current_company_id();
-
-        $employees = erp_hr_employees_get_by_location_department( $company_id, $location, $department );
-    } else {
-
-        $user              = get_user_by( 'id', $single_employee );
-        $emp               = new \stdClass();
-        $emp->user_id      = $user->ID;
-        $emp->display_name = $user->display_name;
-
-        $employees[] = $emp;
-    }
-
-    if ( $employees ) {
-        $from_date = $leave_period . '-01-01';
-        $to_date   = $leave_period . '-12-31';
-        $policy    = erp_hr_leave_get_policy( $leave_policy );
-
-        if ( ! $policy ) {
-            return;
-        }
-
-        foreach ($employees as $employee) {
-            if ( ! erp_hr_leave_has_employee_entitlement( $employee->user_id, $leave_policy, $leave_period ) ) {
-                $data = array(
-                    'user_id'   => $employee->user_id,
-                    'policy_id' => $leave_policy,
-                    'days'      => $policy->value,
-                    'from_date' => $from_date,
-                    'to_date'   => $to_date,
-                    'comments'  => $comment,
-                    'status'    => 1
-                );
-
-                $inserted = erp_hr_leave_insert_entitlement( $data );
-
-                if ( ! is_wp_error( $inserted ) ) {
-                    $affected += 1;
-                }
-            }
-        }
-
-        $redirect_to = add_query_arg( array( 'affected' => $affected ), $page_url );
-        wp_safe_redirect( $redirect_to );
-        exit;
-    }
-}
-
-add_action( 'erp_action_hr-leave-assign-policy', 'erp_hr_leave_entitlement_handler' );

@@ -36,6 +36,8 @@ class Ajax_Handler extends Abstract_Ajax {
 
         add_action( 'wp_ajax_erp-hr-leave-policy-create', array($this, 'leave_policy_create') );
         add_action( 'wp_ajax_erp-hr-leave-policy-delete', array($this, 'leave_policy_delete') );
+
+        add_action( 'wp_ajax_erp-hr-leave-request-req-date', array($this, 'leave_request_dates') );
     }
 
     /**
@@ -412,6 +414,37 @@ class Ajax_Handler extends Abstract_Ajax {
         }
 
         $this->send_error( __( 'Something went worng!', 'wp-erp' ) );
+    }
+
+    /**
+     * Gets the leave dates
+     *
+     * Returns the date list between the start and end date of the
+     * two dates
+     *
+     * @return void
+     */
+    public function leave_request_dates() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        $id         = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : get_current_user_id();
+        $start_date = isset( $_POST['from'] ) ? sanitize_text_field( $_POST['from'] ) : date_i18n( 'Y-m-d' );
+        $end_date   = isset( $_POST['to'] ) ? sanitize_text_field( $_POST['to'] ) : date_i18n( 'Y-m-d' );
+
+        $days = erp_hr_get_work_days_between_dates( $start_date, $end_date );
+
+        if ( is_wp_error( $days ) ) {
+            $this->send_error( $days->get_error_message() );
+        }
+
+        // just a bit more readable date format
+        foreach ($days['days'] as &$date) {
+            $date['date'] = erp_format_date( $date['date'], 'D, M d' );
+        }
+
+        $days['total'] = sprintf( '%d %s', $days['total'], _n( 'day', 'days', $days['total'], 'wp-erp' ) );
+
+        $this->send_success( $days );
     }
 }
 

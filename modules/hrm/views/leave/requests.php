@@ -9,11 +9,11 @@ class Leave_Requests_List_Table extends WP_List_Table {
 
         parent::__construct( array(
             'singular' => 'leave',
-            'plural'   => 'erp-hr-leave-requests',
-            'ajax'     => false        //does this table support ajax?
+            'plural'   => 'leaves',
+            'ajax'     => false
         ) );
 
-        $this->admin_header();
+        $this->table_css();
     }
 
     /**
@@ -21,11 +21,7 @@ class Leave_Requests_List_Table extends WP_List_Table {
      *
      * @return void
      */
-    function admin_header() {
-        $page = ( isset( $_GET['page'] ) ) ? esc_attr( $_GET['page'] ) : false;
-        if ( 'erp-leave' != $page )
-            return;
-
+    function table_css() {
         echo '<style type="text/css">';
         echo '.wp-list-table .column-days { width: 8%; }';
         echo '.wp-list-table .column-balance { width: 8%; }';
@@ -61,7 +57,7 @@ class Leave_Requests_List_Table extends WP_List_Table {
                 return stripslashes( $item->policy_name );
 
             case 'status':
-                return erp_hr_leave_request_get_statuses( $item->status );
+                return '<span class="status-' . $item->status . '">' . erp_hr_leave_request_get_statuses( $item->status ) . '</span>';
 
             default:
                 return isset( $item->$column_name ) ? $item->$column_name : '';
@@ -109,10 +105,27 @@ class Leave_Requests_List_Table extends WP_List_Table {
      * @return string
      */
     function column_name( $item ) {
-        $actions = array(
-            'edit'   => sprintf( '<a href="?page=%s&action=%s&book=%s">Edit</a>', $_REQUEST['page'], 'edit', $item->id ),
-            'delete' => sprintf( '<a href="?page=%s&action=%s&book=%s">Delete</a>', $_REQUEST['page'], 'delete', $item->id ),
-        );
+        $tpl        = '?page=erp-leave&action=%s&id=%d';
+        $nonce      = 'erp-hr-leave-req-nonce';
+        $actions    = array();
+
+        $delete_url = wp_nonce_url( sprintf( $tpl, 'delete', $item->id ), $nonce );
+        $reject_url = wp_nonce_url( sprintf( $tpl, 'reject', $item->id ), $nonce );
+
+        $actions['delete'] = sprintf( '<a href="%s">%s</a>', $delete_url, __( 'Delete', 'wp-erp' ) );
+        $actions['reject'] = sprintf( '<a href="%s">%s</a>', $reject_url, __( 'Reject', 'wp-erp' ) );
+
+        if ( $item->status == '0' ) {
+            $approve_url = wp_nonce_url( sprintf( $tpl, 'approve', $item->id ), $nonce );
+
+            $actions['approved'] = sprintf( '<a href="%s">%s</a>', $approve_url, __( 'Approve', 'wp-erp' ) );
+
+        } elseif ( $item->status == '1' ) {
+            $pending_url = wp_nonce_url( sprintf( $tpl, 'pending', $item->id ), $nonce );
+
+            $actions['approved'] = sprintf( '<a href="%s">%s</a>', $pending_url, __( 'Pending', 'wp-erp' ) );
+
+        }
 
         return sprintf( '<a href="%3$s"><strong>%1$s</strong></a> %2$s', $item->display_name, $this->row_actions( $actions ), erp_hr_url_single_employee( $item->user_id ) );
     }
@@ -145,109 +158,15 @@ class Leave_Requests_List_Table extends WP_List_Table {
     }
 
     /**
-     * Fetch the leave requests
-     *
-     * @param  array   $args
-     *
-     * @return array
-     */
-    public function fetch_requests( $args = array() ) {
-        global $wpdb;
-
-        $defaults = array(
-            'number'  => 20,
-            'offset'  => 0,
-            'user_id' => 0,
-            'status'  => '',
-            'orderby' => 'created_on',
-            'order'   => 'DESC',
-        );
-
-        $args  = wp_parse_args( $args, $defaults );
-        $where = '';
-
-        if ( 'all' != $args['status'] && $args['status'] != '' ) {
-
-            if ( empty( $where ) ) {
-                $where .= " WHERE";
-            } else {
-                $where .= " AND";
-            }
-
-            if ( is_array( $args['status'] ) ) {
-                $where .= " `status` IN('" . implode( "','", array_map( 'intval', $args['status'] ) ) . "') ";
-            } else {
-                $where .= " `status` = '" . intval( $args['status'] ) . "' ";
-            }
-        }
-
-        $cache_key = md5( 'erp_hr_leave_requests' . serialize( $args ) );
-        $requests  = wp_cache_get( $cache_key, 'wp-erp' );
-
-        $sql = "SELECT req.id, req.user_id, u.display_name, req.policy_id, pol.name as policy_name, req.status, req.comments, req.created_on, ( SELECT count(id) FROM wp_erp_hr_leaves WHERE request_id = req.id) as days
-            FROM {$wpdb->prefix}erp_hr_leave_requests AS req
-            LEFT JOIN {$wpdb->prefix}erp_hr_leave_policies AS pol ON pol.id = req.policy_id
-            LEFT JOIN $wpdb->users AS u ON req.user_id = u.ID
-            $where
-            ORDER BY {$args['orderby']} {$args['order']}
-            LIMIT %d,%d;";
-        // echo $sql;
-
-        if ( $requests === false ) {
-            $requests = $wpdb->get_results( $wpdb->prepare( $sql, absint( $args['offset'] ), absint( $args['number'] ) ) );
-            wp_cache_set( $cache_key, $requests, 'wp-erp', HOUR_IN_SECONDS );
-        }
-
-        return $requests;
-    }
-
-    /**
-     * Get leave requests cound
-     *
-     * @return array
-     */
-    public function get_counts() {
-        global $wpdb;
-
-        $statuses = erp_hr_leave_request_get_statuses();
-        $counts   = array();
-
-        foreach ($statuses as $status => $label) {
-            $counts[ $status ] = array( 'count' => 0, 'label' => $label );
-        }
-
-        $cache_key = 'erp-hr-leave-request-counts';
-        $results = wp_cache_get( $cache_key, 'wp-erp' );
-
-        if ( false === $results ) {
-            $sql     = "SELECT status, COUNT(id) as num FROM {$wpdb->prefix}erp_hr_leave_requests GROUP BY status;";
-            $results = $wpdb->get_results( $sql );
-
-            wp_cache_set( $cache_key, $results, 'wp-erp' );
-        }
-
-        foreach ($results as $row) {
-            if ( array_key_exists( $row->status, $counts ) ) {
-                $counts[ $row->status ]['count'] = (int) $row->num;
-            }
-
-            $counts['all']['count'] += (int) $row->num;
-        }
-
-        return $counts;
-    }
-
-    /**
      * Set the views
      *
      * @return array
      */
     public function get_views() {
-        $counts       = $this->get_counts();
         $status_links = array();
         $base_link    = admin_url( 'admin.php?page=erp-leave' );
 
-        foreach ($counts as $key => $value) {
+        foreach ($this->counts as $key => $value) {
             if ( $value['count'] ) {
                 $status_links[ $key ] = sprintf( '<a href="%s">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => $key ), $base_link ), $value['label'], $value['count'] );
             }
@@ -270,7 +189,6 @@ class Leave_Requests_List_Table extends WP_List_Table {
         $per_page              = 20;
         $current_page          = $this->get_pagenum();
         $offset                = ( $current_page -1 ) * $per_page;
-        $count                 = $this->get_counts();
         $status                = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : 'all';
 
         // only ncessary because we have sample data
@@ -280,10 +198,11 @@ class Leave_Requests_List_Table extends WP_List_Table {
             'status' => $status
         );
 
-        $this->items = $this->fetch_requests( $args );
+        $this->counts = erp_hr_leave_get_requests_count();
+        $this->items  = erp_hr_leave_get_requests( $args );
 
         $this->set_pagination_args( array(
-            'total_items' => $count[ $status ]['count'],
+            'total_items' => $this->counts[ $status ]['count'],
             'per_page'    => $per_page
         ) );
     }
@@ -294,17 +213,22 @@ class Leave_Requests_List_Table extends WP_List_Table {
 
 <div class="wrap erp-hr-leave-requests">
 
-    <h2><?php _e( 'Leave Requests', 'wp-erp' ); ?></h2>
+    <h2><?php _e( 'Leave Requests', 'wp-erp' ); ?> <a href="<?php echo add_query_arg( array( 'view' => 'new' ) ); ?>" class="add-new-h2"><?php _e( 'New Request', 'wp-erp' ); ?></a></h2>
 
-    <form method="post">
-        <input type="hidden" name="page" value="ttest_list_table">
-        <?php
-        $myListTable = new Leave_Requests_List_Table();
-        $myListTable->prepare_items();
-        echo $myListTable->views();
+    <div class="list-table-wrap">
+        <div class="list-table-inner">
 
-        $myListTable->display();
-        ?>
-    </form>
+            <form method="post">
+                <input type="hidden" name="page" value="erp-leave">
+                <?php
+                $requests_table = new Leave_Requests_List_Table();
+                $requests_table->prepare_items();
+                $requests_table->views();
 
-</div>
+                $requests_table->display();
+                ?>
+            </form>
+
+        </div><!-- .list-table-inner -->
+    </div><!-- .list-table-wrap -->
+</div><!-- .wrap -->

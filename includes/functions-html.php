@@ -90,6 +90,11 @@ function erp_html_form_input( $args = array() ) {
         'class'       => $field['class'],
         'placeholder' => $field['placeholder'],
     ), $field['custom_attr'] );
+
+    if ( $field['required'] ) {
+        $field_attributes['required'] = 'required';
+    }
+
     $custom_attributes = erp_html_form_custom_attr( $field_attributes );
 
     // open tag

@@ -13,6 +13,8 @@
             $( '.erp-hr-leave-policy').on( 'click', 'a#erp-leave-policy-new', self, this.policy.create );
             $( '.erp-hr-leave-policy').on( 'click', 'a.link, span.edit a', self, this.policy.edit );
             $( '.erp-hr-leave-policy').on( 'click', 'a.submitdelete', self, this.policy.remove );
+
+            $( '.erp-hr-leave-request-new').on( 'change', '.erp-date-field', self, this.leave.requestDates );
         },
 
         policy: {
@@ -88,6 +90,38 @@
                     });
                 }
             },
+        },
+
+        leave: {
+            requestDates: function() {
+                var from = $('#leave_from').val(),
+                    to = $('#leave_to').val(),
+                    submit = $(this).closest('form').find('input[type=submit]'),
+                    user_id = parseInt( $( '#employee_id').val() );
+
+                if ( from !== '' && to !== '' ) {
+
+                    wp.ajax.send( 'erp-hr-leave-request-req-date', {
+                        data: {
+                            '_wpnonce': wpErpHr.nonce,
+                            from: from,
+                            to: to,
+                            employee_id: user_id
+                        },
+                        success: function(resp) {
+                            var html = wp.template('erp-leave-days')(resp);
+
+                            $('li.show-days').html( html );
+                            submit.removeAttr('disabled');
+                        },
+                        error: function(response) {
+                            $('li.show-days').empty();
+                            submit.attr( 'disabled', 'disable' );
+                            alert( response );
+                        }
+                    });
+                }
+            }
         }
     };
 
