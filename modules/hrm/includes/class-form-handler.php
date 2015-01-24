@@ -2,15 +2,32 @@
 namespace WeDevs\ERP\HRM;
 
 /**
- * Handle the form submission
+ * Handle the form submissions
+ *
+ * Although our most of the forms uses ajax and popup, some
+ * are needed to submit via regular form submits. This class
+ * Handles those form submission in this module
+ *
+ * @package WP ERP
+ * @subpackage HRM
  */
 class Form_Handler {
 
+    /**
+     * Hook 'em all
+     */
     public function __construct() {
         add_action( 'erp_action_hr-leave-assign-policy', array( $this, 'leave_entitlement' ) );
         add_action( 'erp_action_hr-leave-req-new', array( $this, 'leave_request' ) );
+
+        add_action( 'admin_init', array( $this, 'leave_request_status_change' ) );
     }
 
+    /**
+     * Add entitlement with leave policies to employees
+     *
+     * @return void
+     */
     public function leave_entitlement() {
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-hr-leave-assign' ) ) {
             die( __( 'Something went wrong!', 'wp-erp' ) );
@@ -100,6 +117,11 @@ class Form_Handler {
         }
     }
 
+    /**
+     * Submit a new leave request
+     *
+     * @return void
+     */
     public function leave_request() {
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-leave-req-new' ) ) {
             die( __( 'Something went wrong!', 'wp-erp' ) );
@@ -127,6 +149,61 @@ class Form_Handler {
 
         wp_redirect( $redirect_to );
         exit;
+    }
+
+    public function leave_request_status_change() {
+
+        if ( ! isset( $_GET['leave_action'] ) ) {
+            return;
+        }
+
+        if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'erp-hr-leave-req-nonce' ) ) {
+            return;
+        }
+
+        $action  = $_GET['leave_action'];
+        $stauses = array(
+            'delete',
+            'reject',
+            'approve',
+            'pending'
+        );
+
+        if ( ! in_array( $action, $stauses ) ) {
+            return;
+        }
+
+        // @TODO: Permission check
+        $request_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
+        $status     = null;
+
+        switch ( $action ) {
+            case 'delete':
+                $status = 3;
+                break;
+
+            case 'reject':
+                $status = 3;
+                break;
+
+            case 'approve':
+                $status = 1;
+                break;
+
+            case 'pending':
+                $status = 2;
+                break;
+        }
+
+        if ( null !== $status ) {
+            erp_hr_leave_request_update_status( $request_id, $status );
+
+            $redirect_to = remove_query_arg( array('status'), admin_url( 'admin.php?page=erp-leave' ) );
+            $redirect_to = add_query_arg( array( 'status' => $status ), $redirect_to );
+
+            wp_redirect( $redirect_to );
+            exit;
+        }
     }
 }
 

@@ -237,24 +237,24 @@
   margin-top: 12px;
   background-color: #ddd;
 }
-table.erp-hr-leave-requests td.column-status {
+table.leaves td.column-status {
   color: #fff;
   font-size: 11px;
   font-weight: bold;
 }
-table.erp-hr-leave-requests td.column-status span {
+table.leaves td.column-status span {
   padding: 2px 5px;
   border-radius: 3px;
   margin-top: 10px;
   display: inline-block;
 }
-table.erp-hr-leave-requests td.column-status .status-1 {
+table.leaves td.column-status .status-1 {
   background: #7ad03a;
 }
-table.erp-hr-leave-requests td.column-status .status-0 {
+table.leaves td.column-status .status-2 {
   background: #dd3d36;
 }
-table.erp-hr-leave-requests td.column-status .status-2 {
+table.leaves td.column-status .status-3 {
   background: #ffba00;
 }
 .erp-hr-leave-request-new .show-days {

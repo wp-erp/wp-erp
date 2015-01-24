@@ -228,7 +228,7 @@ function erp_hr_leave_insert_request( $args = array() ) {
             'user_id'    => $user_id,
             'policy_id'  => $leave_policy,
             'reason'     => wp_kses_post( $reason ),
-            'status'     => 0,
+            'status'     => 2, // default is pending
             'created_by' => get_current_user_id(),
             'created_on' => current_time( 'mysql' ),
         );
@@ -336,7 +336,7 @@ function erp_hr_leave_get_requests_count() {
     $results = wp_cache_get( $cache_key, 'wp-erp' );
 
     if ( false === $results ) {
-        $sql     = "SELECT status, COUNT(id) as num FROM {$wpdb->prefix}erp_hr_leave_requests GROUP BY status;";
+        $sql     = "SELECT status, COUNT(id) as num FROM {$wpdb->prefix}erp_hr_leave_requests WHERE status != 0 GROUP BY status;";
         $results = $wpdb->get_results( $sql );
 
         wp_cache_set( $cache_key, $results, 'wp-erp' );
@@ -353,6 +353,15 @@ function erp_hr_leave_get_requests_count() {
     return $counts;
 }
 
+function erp_hr_leave_request_update_status( $request_id, $status ) {
+    global $wpdb;
+
+    return $wpdb->update( $wpdb->prefix . 'erp_hr_leave_requests',
+        array( 'status' => $status ),
+        array( 'id' => $request_id )
+    );
+}
+
 /**
  * Get leave requests status
  *
@@ -364,8 +373,8 @@ function erp_hr_leave_request_get_statuses( $status = false ) {
     $statuses = array(
         'all' => __( 'All', 'wp-erp' ),
         '1'   => __( 'Approved', 'wp-erp' ),
-        '0'   => __( 'Pending', 'wp-erp' ),
-        '2'   => __( 'Rejected', 'wp-erp' )
+        '2'   => __( 'Pending', 'wp-erp' ),
+        '3'   => __( 'Rejected', 'wp-erp' )
     );
 
     if ( false !== $status && array_key_exists( $status, $statuses ) ) {

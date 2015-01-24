@@ -105,26 +105,28 @@ class Leave_Requests_List_Table extends WP_List_Table {
      * @return string
      */
     function column_name( $item ) {
-        $tpl        = '?page=erp-leave&action=%s&id=%d';
-        $nonce      = 'erp-hr-leave-req-nonce';
-        $actions    = array();
+        $tpl         = '?page=erp-leave&leave_action=%s&id=%d';
+        $nonce       = 'erp-hr-leave-req-nonce';
+        $actions     = array();
 
-        $delete_url = wp_nonce_url( sprintf( $tpl, 'delete', $item->id ), $nonce );
-        $reject_url = wp_nonce_url( sprintf( $tpl, 'reject', $item->id ), $nonce );
+        $delete_url  = wp_nonce_url( sprintf( $tpl, 'delete', $item->id ), $nonce );
+        $reject_url  = wp_nonce_url( sprintf( $tpl, 'reject', $item->id ), $nonce );
+        $approve_url = wp_nonce_url( sprintf( $tpl, 'approve', $item->id ), $nonce );
+        $pending_url = wp_nonce_url( sprintf( $tpl, 'pending', $item->id ), $nonce );
 
         $actions['delete'] = sprintf( '<a href="%s">%s</a>', $delete_url, __( 'Delete', 'wp-erp' ) );
-        $actions['reject'] = sprintf( '<a href="%s">%s</a>', $reject_url, __( 'Reject', 'wp-erp' ) );
 
-        if ( $item->status == '0' ) {
-            $approve_url = wp_nonce_url( sprintf( $tpl, 'approve', $item->id ), $nonce );
+        if ( $item->status == '2' ) {
 
+            $actions['reject']   = sprintf( '<a href="%s">%s</a>', $reject_url, __( 'Reject', 'wp-erp' ) );
             $actions['approved'] = sprintf( '<a href="%s">%s</a>', $approve_url, __( 'Approve', 'wp-erp' ) );
 
         } elseif ( $item->status == '1' ) {
-            $pending_url = wp_nonce_url( sprintf( $tpl, 'pending', $item->id ), $nonce );
 
-            $actions['approved'] = sprintf( '<a href="%s">%s</a>', $pending_url, __( 'Pending', 'wp-erp' ) );
+            $actions['pending'] = sprintf( '<a href="%s">%s</a>', $pending_url, __( 'Mark Pending', 'wp-erp' ) );
 
+        } elseif ( $item->status == '3') {
+            $actions['approved'] = sprintf( '<a href="%s">%s</a>', $approve_url, __( 'Approve', 'wp-erp' ) );
         }
 
         return sprintf( '<a href="%3$s"><strong>%1$s</strong></a> %2$s', $item->display_name, $this->row_actions( $actions ), erp_hr_url_single_employee( $item->user_id ) );
@@ -163,13 +165,12 @@ class Leave_Requests_List_Table extends WP_List_Table {
      * @return array
      */
     public function get_views() {
-        $status_links = array();
-        $base_link    = admin_url( 'admin.php?page=erp-leave' );
+        $status_links   = array();
+        $base_link      = admin_url( 'admin.php?page=erp-leave' );
 
         foreach ($this->counts as $key => $value) {
-            if ( $value['count'] ) {
-                $status_links[ $key ] = sprintf( '<a href="%s">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => $key ), $base_link ), $value['label'], $value['count'] );
-            }
+            $class = ( $key == $this->page_status ) ? 'current' : 'status-' . $key;
+            $status_links[ $key ] = sprintf( '<a href="%s" class="%s">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => $key ), $base_link ), $class, $value['label'], $value['count'] );
         }
 
         return $status_links;
@@ -189,20 +190,20 @@ class Leave_Requests_List_Table extends WP_List_Table {
         $per_page              = 20;
         $current_page          = $this->get_pagenum();
         $offset                = ( $current_page -1 ) * $per_page;
-        $status                = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : 'all';
+        $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '2';
 
         // only ncessary because we have sample data
         $args = array(
             'offset' => $offset,
             'number' => $per_page,
-            'status' => $status
+            'status' => $this->page_status
         );
 
         $this->counts = erp_hr_leave_get_requests_count();
         $this->items  = erp_hr_leave_get_requests( $args );
 
         $this->set_pagination_args( array(
-            'total_items' => $this->counts[ $status ]['count'],
+            'total_items' => $this->counts[ $this->page_status ]['count'],
             'per_page'    => $per_page
         ) );
     }
