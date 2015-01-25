@@ -172,7 +172,7 @@
 
             <tbody id="the-list">
                 <?php
-                $entitlements = erp_hr_leave_get_entitlements( $cur_year );
+                $entitlements = erp_hr_leave_get_entitlements( array( 'year' => $cur_year ) );
 
                 if ( $entitlements ) {
 

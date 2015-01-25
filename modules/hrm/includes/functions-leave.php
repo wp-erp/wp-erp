@@ -416,20 +416,53 @@ function erp_hr_leave_has_employee_entitlement( $employee_id, $policy_id, $year 
  *
  * @return array
  */
-function erp_hr_leave_get_entitlements( $year ) {
+function erp_hr_leave_get_entitlements( $args = array() ) {
     global $wpdb;
 
-    $from_date = $year . '-01-01';
-    $to_date   = $year . '-12-31';
+    $defaults = array(
+        'company_id'  => erp_get_current_company_id(),
+        'employee_id' => 0,
+        'policy_id'   => 0,
+        'year'        => date( 'Y' ),
+        'number'      => 20,
+        'offset'      => 0,
+        'orderby'     => 'en.user_id, en.created_on',
+        'order'       => 'DESC',
+        'debug'       => false
+    );
+
+    $args  = wp_parse_args( $args, $defaults );
+    $where = 'WHERE pol.company_id = ' . intval( $args['company_id'] );
+
+    if ( ! empty( $args['year'] ) ) {
+        $from_date = $args['year'] . '-01-01';
+        $to_date   = $args['year'] . '-12-31';
+
+        $where .= " AND en.from_date >= date('$from_date') AND en.to_date <= date('$to_date')";
+    }
+
+    if ( $args['employee_id'] ) {
+        $where .= " AND en.user_id = " . intval( $args['employee_id'] );
+    }
+
+    if ( $args['policy_id'] ) {
+        $where .= " AND en.policy_id = " . intval( $args['policy_id'] );
+    }
 
     $query = "SELECT en.*, u.display_name as employee_name, pol.name as policy_name
         FROM `{$wpdb->prefix}erp_hr_leave_entitlements` AS en
         LEFT JOIN {$wpdb->prefix}erp_hr_leave_policies AS pol ON pol.id = en.policy_id
         LEFT JOIN {$wpdb->users} AS u ON en.user_id = u.ID
-        WHERE en.from_date >= '$from_date' AND en.to_date <= '$to_date'
-        ORDER BY en.user_id, en.created_on DESC";
+        $where
+        ORDER BY {$args['orderby']} {$args['order']}
+        LIMIT %d,%d;";
 
-    $results = $wpdb->get_results( $query );
+    $sql     = $wpdb->prepare( $query, absint( $args['offset'] ), absint( $args['number'] ) );
+    $results = $wpdb->get_results( $sql );
+
+    if ( $args['debug'] ) {
+        printf( '<pre>%s</pre>', print_r( $sql, true ) );
+    }
 
     return $results;
 }
