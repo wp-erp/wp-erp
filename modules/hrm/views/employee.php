@@ -112,7 +112,7 @@ class Employee_List_Table extends WP_List_Table {
         $actions['edit']   = sprintf( '<a href="%s" data-id="%d">%s</a>', $delete_url, $employee->id, __( 'Edit', 'wp-erp' ) );
         $actions['delete'] = sprintf( '<a href="%s">%s</a>', $delete_url, __( 'Delete', 'wp-erp' ) );
 
-        return sprintf( '%4$s <a href="%3$s"><strong>%1$s</strong></a> %2$s', $employee->get_full_name(), $this->row_actions( $actions ), erp_hr_url_single_employee( $employee->user_id ), $employee->get_avatar() );
+        return sprintf( '%4$s <a href="%3$s"><strong>%1$s</strong></a> %2$s', $employee->get_full_name(), $this->row_actions( $actions ), erp_hr_url_single_employee( $employee->id ), $employee->get_avatar() );
     }
 
     /**
