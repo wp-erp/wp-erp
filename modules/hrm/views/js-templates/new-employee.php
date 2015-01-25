@@ -1,5 +1,7 @@
 <div class="erp-employee-form">
 
+    <?php do_action( 'erp-hr-employee-form-top' ); ?>
+
     <fieldset class="no-border">
         <ol class="form-fields">
             <li>
@@ -72,6 +74,8 @@
                     'type'     => 'email'
                 ) ); ?>
             </li>
+
+            <?php do_action( 'erp-hr-employee-form-basic' ); ?>
         </ol>
     </fieldset>
 
@@ -195,6 +199,8 @@
                 ) ); ?>
             </li>
 
+            <?php do_action( 'erp-hr-employee-form-work' ); ?>
+
         </ol>
     </fieldset>
 
@@ -309,8 +315,12 @@
                 ) ); ?>
             </li>
 
+            <?php do_action( 'erp-hr-employee-form-personal' ); ?>
+
         </ol>
     </fieldset>
+
+    <?php do_action( 'erp-hr-employee-form-bottom' ); ?>
 
     <input type="hidden" name="user_id" id="erp-employee-id" value="{{ data.id }}">
     <input type="hidden" name="action" id="erp-employee-action" value="erp-hr-employee-new">

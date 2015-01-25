@@ -1,3 +1,5 @@
+<?php do_action( 'erp-hr-employee-single-top', $employee ); ?>
+
 <div class="postbox leads-actions">
     <div class="handlediv" title="<?php _e( 'Click to toggle', 'wp-erp' ); ?>"><br></div>
     <h3 class="hndle"><span><?php _e( 'Basic Info', 'wp-erp' ); ?></span></h3>
@@ -7,6 +9,8 @@
             <li><?php erp_print_key_value( __( 'Last Name', 'wp-erp' ), $employee->last_name ); ?></li>
             <li><?php erp_print_key_value( __( 'Employee ID', 'wp-erp' ), $employee->employee_id ); ?></li>
             <li><?php erp_print_key_value( __( 'Email', 'wp-erp' ), erp_get_clickable( 'email', $employee->user_email ) ); ?></li>
+
+            <?php do_action( 'erp-hr-employee-single-basic', $employee ); ?>
         </ul>
     </div>
 </div><!-- .postbox -->
@@ -29,6 +33,8 @@
             <li><?php erp_print_key_value( __( 'Employee Status', 'wp-erp' ), $employee->get_status() ); ?></li>
             <li><?php erp_print_key_value( __( 'Work Phone', 'wp-erp' ), erp_get_clickable( 'phone', $employee->get_phone( 'work' ) ) ); ?></li>
             <li><?php erp_print_key_value( __( 'Employee Type', 'wp-erp' ), $employee->get_type() ); ?></li>
+
+            <?php do_action( 'erp-hr-employee-single-work', $employee ); ?>
         </ul>
     </div>
 </div><!-- .postbox -->
@@ -47,9 +53,13 @@
             <li><?php erp_print_key_value( __( 'Marital Status', 'wp-erp' ), $employee->get_marital_status() ); ?></li>
             <li><?php erp_print_key_value( __( 'Driving License', 'wp-erp' ), $employee->driving_license ); ?></li>
             <li><?php erp_print_key_value( __( 'Hobbies', 'wp-erp' ), $employee->hobbies ); ?></li>
+
+            <?php do_action( 'erp-hr-employee-single-personal', $employee ); ?>
         </ul>
     </div>
 </div><!-- .postbox -->
+
+<?php do_action( 'erp-hr-employee-single-after-personal', $employee ); ?>
 
 <div class="postbox leads-actions">
     <div class="handlediv" title="<?php _e( 'Click to toggle', 'wp-erp' ); ?>"><br></div>
@@ -175,3 +185,5 @@
 
     </div>
 </div><!-- .postbox -->
+
+<?php do_action( 'erp-hr-employee-single-bottom', $employee ); ?>
