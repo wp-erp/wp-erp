@@ -71,7 +71,11 @@ class Form_Handler {
         if ( ! $is_single ) {
             $company_id = erp_get_current_company_id();
 
-            $employees = erp_hr_employees_get_by_location_department( $company_id, $location, $department );
+            $employees = erp_hr_get_employees( array(
+                'company_id' => $company_id,
+                'location'   => $location,
+                'department' => $department
+            ) );
         } else {
 
             $user              = get_user_by( 'id', $single_employee );

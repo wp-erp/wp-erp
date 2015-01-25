@@ -195,10 +195,38 @@ function erp_hr_employee_create( $args = array() ) {
  *
  * @return array  the employees
  */
-function erp_hr_get_employees( $company_id, $no_object = false ) {
+function erp_hr_get_employees( $args = array() ) {
     global $wpdb;
 
-    $cache_key = 'erp-get-employees-' . $company_id;
+    $defaults = array(
+        'company_id' => erp_get_current_company_id(),
+        'number'     => 20,
+        'offset'     => 0,
+        'orderby'    => 'hiring_date',
+        'order'      => 'DESC',
+        'no_object'  => false
+    );
+
+    $args  = wp_parse_args( $args, $defaults );
+    $where = 'WHERE e.company_id = ' . intval( $args['company_id'] );
+
+    if ( isset( $args['designation'] ) && ! empty( $args['designation'] ) ) {
+        $where .= " AND e.designation = " . intval( $args['designation'] );
+    }
+
+    if ( isset( $args['department'] ) && ! empty( $args['department'] ) ) {
+        $where .= " AND e.department = " . intval( $args['department'] );
+    }
+
+    if ( isset( $args['location'] ) && ! empty( $args['location'] ) ) {
+        $where .= " AND e.location = " . intval( $args['location'] );
+    }
+
+    if ( isset( $args['status'] ) && ! empty( $args['status'] ) ) {
+        $where .= " AND e.status = '" . $args['status'] . "'";
+    }
+
+    $cache_key = 'erp-get-employees-' . md5( serialize( $args ) );
     $results   = wp_cache_get( $cache_key, 'wp-erp' );
     $users     = array();
 
@@ -206,16 +234,18 @@ function erp_hr_get_employees( $company_id, $no_object = false ) {
         $sql = "SELECT e.user_id, u.display_name
             FROM {$wpdb->prefix}erp_hr_employees AS e
             LEFT JOIN {$wpdb->users} AS u ON u.ID = e.user_id
-            WHERE company_id = %d";
+            $where
+            ORDER BY {$args['orderby']} {$args['order']}
+            LIMIT %d,%d;";
 
-        $results = $wpdb->get_results( $wpdb->prepare( $sql, $company_id ) );
-        wp_cache_set( $cache_key, $results, 'wp-erp' );
+        $results = $wpdb->get_results( $wpdb->prepare( $sql, absint( $args['offset'] ), absint( $args['number'] ) ) );
+        wp_cache_set( $cache_key, $results, 'wp-erp', HOUR_IN_SECONDS );
     }
 
     if ( $results ) {
         foreach ($results as $key => $row) {
 
-            if ( $no_object ) {
+            if ( true === $args['no_object'] ) {
                 $users[] = $row;
             } else {
                 $users[] = new \WeDevs\ERP\HRM\Employee( intval( $row->user_id ) );
@@ -269,36 +299,6 @@ function erp_hr_get_employees_dropdown( $company_id, $selected = '' ) {
     }
 
     return $dropdown;
-}
-
-/**
- * Fetch employees by location and department
- *
- * @param  int  $company_id
- * @param  int  $location_id
- * @param  int  $department_id
- *
- * @return array
- */
-function erp_hr_employees_get_by_location_department( $company_id, $location_id = 0, $department_id = 0 ) {
-    global $wpdb;
-
-    $where = '';
-
-    if ( $location_id ) {
-        $where .= sprintf( ' AND e.location = %d ', $location_id );
-    }
-
-    if ( $department_id ) {
-        $where .= sprintf( ' AND e.department = %d ', $department_id );
-    }
-
-    $sql = "SELECT e.user_id, u.display_name
-        FROM {$wpdb->prefix}erp_hr_employees AS e
-        LEFT JOIN {$wpdb->users} AS u ON u.ID = e.user_id
-        WHERE company_id = %d $where";
-
-    return $wpdb->get_results( $wpdb->prepare( $sql, $company_id ) );
 }
 
 /**
