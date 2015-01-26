@@ -76,7 +76,7 @@
                     ),
                     'leave' => array(
                         'title' => __( 'Leave', 'wp-erp' ),
-                        'callback' => ''
+                        'callback' => 'erp_hr_employee_single_tab_leave'
                     ),
                     'notes' => array(
                         'title' => __( 'Notes', 'wp-erp' ),

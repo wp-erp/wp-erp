@@ -485,10 +485,19 @@ function erp_hr_employee_single_tab_general( $employee ) {
 }
 
 /**
- * [erp_hr_employee_single_tab_general description]
+ * [erp_hr_employee_single_tab_job description]
  *
  * @return void
  */
 function erp_hr_employee_single_tab_job( $employee ) {
     include WPERP_HRM_VIEWS . '/employee/tab-job.php';
+}
+
+/**
+ * [erp_hr_employee_single_tab_leave description]
+ *
+ * @return void
+ */
+function erp_hr_employee_single_tab_leave( $employee ) {
+    include WPERP_HRM_VIEWS . '/employee/tab-leave.php';
 }
