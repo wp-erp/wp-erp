@@ -229,6 +229,7 @@ function erp_hr_leave_insert_request( $args = array() ) {
             'policy_id'  => $leave_policy,
             'days'       => count( $leaves ),
             'start_date' => $start_date,
+            'end_date'   => $end_date,
             'reason'     => wp_kses_post( $reason ),
             'status'     => 2, // default is pending
             'created_by' => get_current_user_id(),
@@ -264,12 +265,14 @@ function erp_hr_leave_get_requests( $args = array() ) {
     global $wpdb;
 
     $defaults = array(
-        'number'  => 20,
-        'offset'  => 0,
-        'user_id' => 0,
-        'status'  => '',
-        'orderby' => 'created_on',
-        'order'   => 'DESC',
+        'user_id'   => 0,
+        'policy_id' => 0,
+        'status'    => 1,
+        'year'      => date( 'Y' ),
+        'number'    => 20,
+        'offset'    => 0,
+        'orderby'   => 'created_on',
+        'order'     => 'DESC',
     );
 
     $args  = wp_parse_args( $args, $defaults );
@@ -284,9 +287,9 @@ function erp_hr_leave_get_requests( $args = array() ) {
         }
 
         if ( is_array( $args['status'] ) ) {
-            $where .= " `status` IN('" . implode( "','", array_map( 'intval', $args['status'] ) ) . "') ";
+            $where .= " `status` IN(" . implode( ",", array_map( 'intval', $args['status'] ) ) . ") ";
         } else {
-            $where .= " `status` = '" . intval( $args['status'] ) . "' ";
+            $where .= " `status` = " . intval( $args['status'] ) . " ";
         }
     }
 
@@ -299,10 +302,30 @@ function erp_hr_leave_get_requests( $args = array() ) {
         }
     }
 
+    if ( $args['policy_id'] ) {
+
+        if ( empty( $where ) ) {
+            $where .= " WHERE req.policy_id = " . intval( $args['policy_id'] );
+        } else {
+            $where .= " AND req.policy_id = " . intval( $args['policy_id'] );
+        }
+    }
+
+    if ( ! empty( $args['year'] ) ) {
+        $from_date = $args['year'] . '-01-01';
+        $to_date   = $args['year'] . '-12-31';
+
+        if ( empty( $where ) ) {
+            $where .= " WHRE req.start_date >= date('$from_date') AND req.start_date <= date('$to_date')";
+        } else {
+            $where .= " AND req.start_date >= date('$from_date') AND req.start_date <= date('$to_date')";
+        }
+    }
+
     $cache_key = 'erp_hr_leave_requests_' . md5( serialize( $args ) );
     $requests  = wp_cache_get( $cache_key, 'wp-erp' );
 
-    $sql = "SELECT req.id, req.user_id, u.display_name, req.policy_id, pol.name as policy_name, req.status, req.reason, req.comments, req.created_on, ( SELECT count(id) FROM wp_erp_hr_leaves WHERE request_id = req.id) as days
+    $sql = "SELECT req.id, req.user_id, u.display_name, req.policy_id, pol.name as policy_name, req.status, req.reason, req.comments, req.created_on, req.days, req.start_date, req.end_date
         FROM {$wpdb->prefix}erp_hr_leave_requests AS req
         LEFT JOIN {$wpdb->prefix}erp_hr_leave_policies AS pol ON pol.id = req.policy_id
         LEFT JOIN $wpdb->users AS u ON req.user_id = u.ID
