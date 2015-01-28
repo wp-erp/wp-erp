@@ -30,7 +30,6 @@ if ( $policies ) {
                 $current   = 0;
                 $scheduled = 0;
                 $available = 0;
-                $accrual   = 0;
 
                 if ( array_key_exists( $policy->id, $balance ) ) {
                     $current   = $balance[ $policy->id ]['entitlement'];
@@ -89,7 +88,7 @@ $requests   = erp_hr_leave_get_requests( array(
 ) );
 ?>
 
-<form action="#">
+<form action="#" id="erp-hr-empl-leave-history">
     <?php erp_html_form_input( array(
         'name'     => 'leave_policy',
         'type'     => 'select',
@@ -116,30 +115,6 @@ $requests   = erp_hr_leave_get_requests( array(
     </thead>
 
     <tbody>
-        <?php
-        if ( $requests ) {
-
-            foreach ($requests as $num => $request) {
-                ?>
-                <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
-                    <td>
-                        <?php
-                        printf( '%s - %s', erp_format_date( $request->start_date, 'd M' ), erp_format_date( $request->end_date, 'd M' ) );
-                        ?>
-                    </td>
-                    <td><?php echo esc_html( $request->policy_name ); ?></td>
-                    <td><?php echo !empty( $request->reason ) ? esc_html( $request->reason ) : '-'; ?></td>
-                    <td><?php echo number_format_i18n( $request->days ); ?></td>
-                </tr>
-
-            <?php } ?>
-
-        <?php } else { ?>
-            <tr class="alternate">
-                <td colspan="4">
-                    <?php _e( 'No history found!', 'wp-erp' ); ?>
-                </td>
-            </tr>
-        <?php } ?>
+        <?php include dirname( __FILE__ ) . '/tab-leave-history.php'; ?>
     </tbody>
 </table>
