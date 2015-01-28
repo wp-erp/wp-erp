@@ -316,7 +316,7 @@ function erp_hr_leave_get_requests( $args = array() ) {
         $to_date   = $args['year'] . '-12-31';
 
         if ( empty( $where ) ) {
-            $where .= " WHRE req.start_date >= date('$from_date') AND req.start_date <= date('$to_date')";
+            $where .= " WHERE req.start_date >= date('$from_date') AND req.start_date <= date('$to_date')";
         } else {
             $where .= " AND req.start_date >= date('$from_date') AND req.start_date <= date('$to_date')";
         }
