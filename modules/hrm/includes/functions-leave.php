@@ -227,6 +227,8 @@ function erp_hr_leave_insert_request( $args = array() ) {
         $request = array(
             'user_id'    => $user_id,
             'policy_id'  => $leave_policy,
+            'days'       => count( $leaves ),
+            'start_date' => $start_date,
             'reason'     => wp_kses_post( $reason ),
             'status'     => 2, // default is pending
             'created_by' => get_current_user_id(),
@@ -465,4 +467,56 @@ function erp_hr_leave_get_entitlements( $args = array() ) {
     }
 
     return $results;
+}
+
+function erp_hr_leave_get_balance( $user_id ) {
+    global $wpdb;
+
+    $query = "SELECT req.id, req.days, req.policy_id, req.start_date, en.days as entitlement
+        FROM {$wpdb->prefix}erp_hr_leave_requests AS req
+        LEFT JOIN {$wpdb->prefix}erp_hr_leave_entitlements AS en ON ( ( en.policy_id = req.policy_id ) AND (en.user_id = req.user_id ) )
+        WHERE req.status = 1 and req.user_id = %d";
+
+    $sql     = $wpdb->prepare( $query, $user_id );
+    $results = $wpdb->get_results( $sql );
+
+    $temp         = array();
+    $balance      = array();
+    $current_time = current_time( 'timestamp' );
+
+    if ( $results ) {
+        // group by policy
+        foreach ($results as $request) {
+            $temp[ $request->policy_id ][] = $request;
+        }
+
+        // calculate each policy
+        foreach ($temp as $policy_id => $requests) {
+            $balance[$policy_id] = array(
+                'policy_id'   => $policy_id,
+                'scheduled'   => 0,
+                'entitlement' => 0,
+                'total'       => 0,
+                'available'   => 0
+            );
+
+            foreach ($requests as $request) {
+                $balance[$policy_id]['entitlement'] = (int) $request->entitlement;
+                $balance[$policy_id]['total']       += $request->days;
+
+                if ( $current_time < strtotime( $request->start_date ) ) {
+                    $balance[$policy_id]['scheduled'] += $request->days;
+                }
+            }
+        }
+
+        // calculate available
+        foreach ($balance as &$policy) {
+            $policy['available'] = $policy['entitlement'] - $policy['total'];
+        }
+
+        return $balance;
+    }
+
+    return false;
 }

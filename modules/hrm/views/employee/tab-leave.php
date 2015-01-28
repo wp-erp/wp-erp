@@ -4,6 +4,7 @@
 $policies         = erp_hr_leave_get_policies( erp_get_current_company_id() );
 $entitlements     = erp_hr_leave_get_entitlements( array( 'employee_id' => $employee->id ) );
 $entitlements_pol = wp_list_pluck( $entitlements, 'policy_id' );
+$balance          = erp_hr_leave_get_balance( $employee->id );
 
 if ( $policies ) {
     ?>
@@ -23,8 +24,19 @@ if ( $policies ) {
             <?php foreach ($policies as $num => $policy) {
                 // var_dump( $policy );
 
-                $key = array_search( $policy->id, $entitlements_pol );
-                $en = false;
+                $key       = array_search( $policy->id, $entitlements_pol );
+                $en        = false;
+                $name      = esc_html( $policy->name );
+                $current   = 0;
+                $scheduled = 0;
+                $available = 0;
+                $accrual   = 0;
+
+                if ( array_key_exists( $policy->id, $balance ) ) {
+                    $current   = $balance[ $policy->id ]['entitlement'];
+                    $scheduled = $balance[ $policy->id ]['scheduled'];
+                    $available = $balance[ $policy->id ]['entitlement'] - $balance[ $policy->id ]['total'];
+                }
 
                 if ( false !== $key ) {
                     $en = $entitlements[ $key ];
@@ -34,8 +46,18 @@ if ( $policies ) {
             <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
                 <td><?php echo esc_html( $policy->name ); ?></td>
                 <td><?php echo $en ? number_format_i18n( $en->days ) : '-'; ?></td>
-                <td><?php echo $en ? '' : '-'; ?></td>
-                <td><?php echo $en ? '' : '-'; ?></td>
+                <td><?php echo $scheduled ? number_format_i18n( $scheduled ) : '-'; ?></td>
+                <td>
+                    <?php
+                    if ( $available < 0 ) {
+                        printf( '<span class="red">%d</span>', number_format_i18n( $available ) );
+                    } elseif ( $available > 0 ) {
+                        printf( '<span class="green">%d</span>', number_format_i18n( $available ) );
+                    } else {
+                        echo '-';
+                    }
+                    ?>
+                </td>
                 <td><?php echo $en ? '-' : __( 'No Policy', 'wp-erp' ); ?></td>
             </tr>
 

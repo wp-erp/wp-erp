@@ -216,6 +216,8 @@ class WeDevs_ERP_Installer {
             `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
             `user_id` bigint(20) unsigned NOT NULL,
             `policy_id` int(11) unsigned NOT NULL,
+            `days` tinyint(3) unsigned DEFAULT NULL,
+            `last_date` datetime DEFAULT NULL,
             `comments` text,
             `status` tinyint(2) unsigned DEFAULT NULL,
             `created_by` bigint(20) unsigned DEFAULT NULL,
