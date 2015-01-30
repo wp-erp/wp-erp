@@ -15,6 +15,8 @@
             $( '.erp-hr-leave-policy').on( 'click', 'a.submitdelete', self, this.policy.remove );
 
             $( '.erp-hr-leave-request-new').on( 'change', '.erp-date-field', self, this.leave.requestDates );
+
+            $( '.erp-employee-single' ).on('submit', 'form#erp-hr-empl-leave-history', this.leave.showHistory );
         },
 
         policy: {
@@ -121,6 +123,19 @@
                         }
                     });
                 }
+            },
+
+            showHistory: function(e) {
+                e.preventDefault();
+
+                var form = $(this);
+
+                wp.ajax.send( 'erp-hr-empl-leave-history', {
+                    data: form.serializeObject(),
+                    success: function(resp) {
+                        $('table#erp-hr-empl-leave-history tbody').html(resp);
+                    }
+                } );
             }
         }
     };

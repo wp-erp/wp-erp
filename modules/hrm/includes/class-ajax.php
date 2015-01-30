@@ -38,6 +38,7 @@ class Ajax_Handler extends Abstract_Ajax {
         add_action( 'wp_ajax_erp-hr-leave-policy-delete', array($this, 'leave_policy_delete') );
 
         add_action( 'wp_ajax_erp-hr-leave-request-req-date', array($this, 'leave_request_dates') );
+        add_action( 'wp_ajax_erp-hr-empl-leave-history', array($this, 'get_employee_leave_history') );
     }
 
     /**
@@ -445,6 +446,38 @@ class Ajax_Handler extends Abstract_Ajax {
         $days['total'] = sprintf( '%d %s', $days['total'], _n( 'day', 'days', $days['total'], 'wp-erp' ) );
 
         $this->send_success( $days );
+    }
+
+    /**
+     * Get employee leave history
+     *
+     * @return void
+     */
+    public function get_employee_leave_history() {
+        $this->verify_nonce( 'erp-hr-empl-leave-history' );
+
+        $year        = isset( $_POST['year'] ) ? intval( $_POST['year'] ) : date( 'Y' );
+        $employee_id = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+        $policy      = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : 'all';
+
+        $args = array(
+            'year'      => $year,
+            'user_id'   => $employee_id,
+            'status'    => 1,
+            'orderby'   => 'req.start_date'
+        );
+
+        if ( $policy != 'all' ) {
+            $args['policy_id'] = $policy;
+        }
+
+        $requests = erp_hr_leave_get_requests( $args );
+
+        ob_start();
+        include WPERP_HRM_VIEWS . '/employee/tab-leave-history.php';
+        $content = ob_get_clean();
+
+        $this->send_success( $content );
     }
 }
 

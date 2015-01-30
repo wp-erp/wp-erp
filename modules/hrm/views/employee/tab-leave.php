@@ -83,7 +83,6 @@ $requests   = erp_hr_leave_get_requests( array(
     'year'    => $cur_year,
     'user_id' => $employee->id,
     'status'  => 1,
-    'year'    => $cur_year,
     'orderby' => 'req.start_date'
 ) );
 ?>
@@ -101,10 +100,13 @@ $requests   = erp_hr_leave_get_requests( array(
         <?php } ?>
     </select>
 
+    <input type="hidden" name="employee_id" value="<?php echo esc_attr( $employee->id ); ?>">
+
+    <?php wp_nonce_field( 'erp-hr-empl-leave-history' ); ?>
     <?php submit_button( __( 'Filter', 'wp-erp' ), 'secondary', 'submit', false ); ?>
 </form>
 
-<table class="widefat">
+<table class="widefat" id="erp-hr-empl-leave-history">
     <thead>
         <tr>
             <th><?php _e( 'Date', 'wp-erp' ) ?></th>
