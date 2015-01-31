@@ -82,13 +82,13 @@
                         'title' => __( 'Notes', 'wp-erp' ),
                         'callback' => 'erp_hr_employee_single_tab_notes'
                     ),
-                    'benefits' => array(
-                        'title' => __( 'Benefits', 'wp-erp' ),
-                        'callback' => ''
-                    ),
+                    // 'benefits' => array(
+                    //     'title' => __( 'Benefits', 'wp-erp' ),
+                    //     'callback' => ''
+                    // ),
                     'performance' => array(
                         'title' => __( 'Performance', 'wp-erp' ),
-                        'callback' => ''
+                        'callback' => 'erp_hr_employee_single_tab_performance'
                     ),
                 ) );
                 ?>

@@ -503,10 +503,19 @@ function erp_hr_employee_single_tab_leave( $employee ) {
 }
 
 /**
- * [erp_hr_employee_single_tab_leave description]
+ * [erp_hr_employee_single_tab_notes description]
  *
  * @return void
  */
 function erp_hr_employee_single_tab_notes( $employee ) {
     include WPERP_HRM_VIEWS . '/employee/tab-notes.php';
+}
+
+/**
+ * [erp_hr_employee_single_tab_performance description]
+ *
+ * @return void
+ */
+function erp_hr_employee_single_tab_performance( $employee ) {
+    include WPERP_HRM_VIEWS . '/employee/tab-performance.php';
 }
