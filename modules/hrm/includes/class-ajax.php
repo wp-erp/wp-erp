@@ -33,12 +33,13 @@ class Ajax_Handler extends Abstract_Ajax {
         add_action( 'wp_ajax_erp-hr-emp-update-comp', array($this, 'employee_update_compensation') );
         add_action( 'wp_ajax_erp-hr-emp-delete-history', array($this, 'employee_remove_history') );
         add_action( 'wp_ajax_erp-hr-emp-update-jobinfo', array($this, 'employee_update_job_info') );
+        add_action( 'wp_ajax_erp-hr-empl-leave-history', array($this, 'get_employee_leave_history') );
+        add_action( 'wp_ajax_erp-hr-employee-new-note', array($this, 'employee_add_note') );
 
         add_action( 'wp_ajax_erp-hr-leave-policy-create', array($this, 'leave_policy_create') );
         add_action( 'wp_ajax_erp-hr-leave-policy-delete', array($this, 'leave_policy_delete') );
 
         add_action( 'wp_ajax_erp-hr-leave-request-req-date', array($this, 'leave_request_dates') );
-        add_action( 'wp_ajax_erp-hr-empl-leave-history', array($this, 'get_employee_leave_history') );
     }
 
     /**
@@ -335,7 +336,7 @@ class Ajax_Handler extends Abstract_Ajax {
     /**
      * Remove an history
      *
-     * @return [type] [description]
+     * @return void
      */
     public function employee_remove_history() {
         $this->verify_nonce( 'wp-erp-hr-nonce' );
@@ -346,6 +347,11 @@ class Ajax_Handler extends Abstract_Ajax {
         $this->send_success();
     }
 
+    /**
+     * Update job information
+     *
+     * @return void
+     */
     public function employee_update_job_info() {
         $this->verify_nonce( 'employee_update_jobinfo' );
 
@@ -364,6 +370,27 @@ class Ajax_Handler extends Abstract_Ajax {
         }
 
         $this->send_error( __( 'Something went wrong!', 'wp-erp' ) );
+    }
+
+    /**
+     * Add a new note
+     *
+     * @return void
+     */
+    public function employee_add_note() {
+        $this->verify_nonce( 'wp-erp-hr-employee-nonce' );
+
+        $employee_id = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
+        $note        = isset( $_POST['note'] ) ? strip_tags( $_POST['note'] ) : 0;
+        $note_by     = get_current_user_id();
+
+        $employee = new Employee( $employee_id );
+
+        if ( $employee->id ) {
+            $employee->add_note( $note, $note_by );
+        }
+
+        $this->send_success();
     }
 
     /**

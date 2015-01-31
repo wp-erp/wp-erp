@@ -80,7 +80,7 @@
                     ),
                     'notes' => array(
                         'title' => __( 'Notes', 'wp-erp' ),
-                        'callback' => ''
+                        'callback' => 'erp_hr_employee_single_tab_notes'
                     ),
                     'benefits' => array(
                         'title' => __( 'Benefits', 'wp-erp' ),

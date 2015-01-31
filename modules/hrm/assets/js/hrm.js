@@ -32,6 +32,8 @@
             $( '.erp-hr-employees' ).on( 'click', 'a#erp-empl-jobinfo', this.employee.updateJobStatus );
             $( '.erp-hr-employees' ).on( 'click', 'td.action a.remove', this.employee.removeHistory );
 
+            $( '.erp-hr-employees' ).on( 'submit', '.note-tab-wrap form', this.employee.addNote );
+
             $( 'body' ).on( 'click', 'a#erp-set-emp-photo', this.employee.setPhoto );
             $( 'body' ).on( 'click', 'a.erp-remove-photo', this.employee.removePhoto );
 
@@ -562,6 +564,27 @@
                         }
                     });
                 }
+            },
+
+            addNote: function(e) {
+                e.preventDefault();
+
+                var form = $(this),
+                    submit = form.find( 'input[type=submit]');
+
+                submit.attr('disabled', 'disabled');
+
+                wp.ajax.send({
+                    data: form.serializeObject(),
+                    success: function() {
+                        $.get( window.location.href, function(data) {
+                            $('.note-tab-wrap').replaceWith( $(data).find( '.note-tab-wrap' ) );
+                        });
+                    },
+                    error: function() {
+                        submit.removeAttr('disabled');
+                    }
+                });
             }
         }
     };

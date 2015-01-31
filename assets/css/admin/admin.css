@@ -288,6 +288,99 @@ table.leaves td.column-status .status-3 {
 .erp-hr-leave-request-new .show-days table.list-days tr:nth-child(2n+1) {
   background-color: #fff;
 }
+/**
+ * Employee notes tab
+ */
+.note-tab-wrap .note-form {
+  padding: 15px;
+  border: 1px solid #ddd;
+  max-width: 500px;
+}
+.note-tab-wrap .note-form:before,
+.note-tab-wrap .note-form:after {
+  content: " ";
+  display: table;
+}
+.note-tab-wrap .note-form:after {
+  clear: both;
+}
+.note-tab-wrap .note-form:before,
+.note-tab-wrap .note-form:after {
+  content: " ";
+  display: table;
+}
+.note-tab-wrap .note-form:after {
+  clear: both;
+}
+.note-tab-wrap .note-form textarea {
+  width: 100%;
+  padding: 10px;
+}
+.note-tab-wrap .note-form p.submit {
+  margin: 15px 0 0 0;
+  padding: 0;
+  float: right;
+}
+.note-tab-wrap ul.notes-list .avatar-wrap {
+  float: left;
+  width: 32px;
+  margin-right: 15px;
+}
+.note-tab-wrap ul.notes-list .avatar-wrap img {
+  max-width: 32px;
+  height: auto;
+}
+.note-tab-wrap ul.notes-list .note-wrap {
+  float: left;
+  width: 90%;
+}
+.note-tab-wrap ul.notes-list .note-wrap .by {
+  padding-bottom: 10px;
+  font-size: 12px;
+}
+.note-tab-wrap ul.notes-list .note-wrap .by a.author {
+  text-decoration: none;
+  font-weight: bold;
+  color: #444;
+}
+.note-tab-wrap ul.notes-list .note-wrap .by .date {
+  color: #999;
+  margin-left: 10px;
+}
+.note-tab-wrap ul.notes-list .note-wrap p {
+  margin: 0 0 1em 0;
+}
+.note-tab-wrap ul.notes-list .note-wrap p:last-child {
+  margin: 0;
+}
+.note-tab-wrap ul.notes-list li {
+  border-bottom: 1px solid #ddd;
+  border-top: 1px solid #fff;
+  padding: 10px 0;
+  margin: 0;
+}
+.note-tab-wrap ul.notes-list li:before,
+.note-tab-wrap ul.notes-list li:after {
+  content: " ";
+  display: table;
+}
+.note-tab-wrap ul.notes-list li:after {
+  clear: both;
+}
+.note-tab-wrap ul.notes-list li:before,
+.note-tab-wrap ul.notes-list li:after {
+  content: " ";
+  display: table;
+}
+.note-tab-wrap ul.notes-list li:after {
+  clear: both;
+}
+.note-tab-wrap ul.notes-list li:last-child {
+  border-bottom: none;
+}
+.note-tab-wrap ul.notes-list li:first-child {
+  border-top: none;
+}
 #wp-admin-bar-erp-mode-switch .ab-icon.dashicons-randomize {
   padding-top: 7px !important;
 }

@@ -629,4 +629,58 @@ class Employee {
 
         return $history;
     }
+
+    /**
+     * Add a new note
+     *
+     * @param string  $note the note to be added
+     * @param int  $comment_by
+     *
+     * @return int note id
+     */
+    public function add_note( $note, $comment_by ) {
+        global $wpdb;
+
+        $inserted = $wpdb->insert( $wpdb->prefix . 'erp_hr_employee_notes', array(
+            'user_id'    => $this->id,
+            'comment'    => wp_kses_post( $note ),
+            'comment_by' => $comment_by,
+            'created_on' => current_time( 'mysql' )
+        ), array(
+            '%d',
+            '%s',
+            '%d',
+            '%s'
+        ) );
+
+        if ( $inserted ) {
+            $note_id = $wpdb->insert_id;
+            do_action( 'erp_hr_employee_note_new', $note_id, $this->id );
+
+            return $note_id;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get all notes
+     *
+     * @param  int  $limit
+     * @param  int  $offset
+     *
+     * @return array
+     */
+    public function get_notes( $limit = 30, $offset = 0 ) {
+        global $wpdb;
+
+        $query = "SELECT no.*, u.display_name as by_name, u.user_email as by_email
+            FROM {$wpdb->prefix}erp_hr_employee_notes AS no
+            LEFT JOIN $wpdb->users AS u ON u.ID = no.comment_by
+            WHERE no.user_id = {$this->id}
+            ORDER BY no.created_on DESC
+            LIMIT $offset, $limit";
+
+        return $wpdb->get_results( $query );
+    }
 }

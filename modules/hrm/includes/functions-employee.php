@@ -501,3 +501,11 @@ function erp_hr_employee_single_tab_job( $employee ) {
 function erp_hr_employee_single_tab_leave( $employee ) {
     include WPERP_HRM_VIEWS . '/employee/tab-leave.php';
 }
+/**
+ * [erp_hr_employee_single_tab_leave description]
+ *
+ * @return void
+ */
+function erp_hr_employee_single_tab_notes( $employee ) {
+    include WPERP_HRM_VIEWS . '/employee/tab-notes.php';
+}
