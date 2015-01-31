@@ -25,7 +25,7 @@
                         'value'    => '',
                         'required' => true,
                         'type'     => 'select',
-                        'options'  => array( '' => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_employees_dropdown_raw( $company_id )
+                        'options'  => erp_hr_get_employees_dropdown_raw( $company_id )
                     ) ); ?>
                 </li>
             <?php } ?>

@@ -264,7 +264,7 @@ function erp_hr_get_employees( $args = array() ) {
  * @return array  the key-value paired employees
  */
 function erp_hr_get_employees_dropdown_raw( $company_id, $exclude = null ) {
-    $employees = erp_hr_get_employees( $company_id, true );
+    $employees = erp_hr_get_employees( array( 'company_id' => $company_id, 'no_object' => true ) );
     $dropdown  = array( 0 => __( '- Select Employee -', 'wp-erp' ) );
 
     if ( $employees ) {
@@ -501,6 +501,7 @@ function erp_hr_employee_single_tab_job( $employee ) {
 function erp_hr_employee_single_tab_leave( $employee ) {
     include WPERP_HRM_VIEWS . '/employee/tab-leave.php';
 }
+
 /**
  * [erp_hr_employee_single_tab_leave description]
  *
