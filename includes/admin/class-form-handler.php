@@ -1,5 +1,5 @@
 <?php
-namespace WeDevs\ERP;
+namespace WeDevs\ERP\Admin;
 
 /**
  * Admin form handler

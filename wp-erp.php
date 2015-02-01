@@ -38,6 +38,8 @@
 // don't call the file directly
 if ( !defined( 'ABSPATH' ) ) exit;
 
+include dirname( __FILE__ ) . '/vendor/autoload.php';
+
 /**
  * WeDevs_ERP class
  *
@@ -71,8 +73,6 @@ class WeDevs_ERP {
      *
      * Sets up all the appropriate hooks and actions
      * within our plugin.
-     *
-     * @return void
      */
     public function __construct() {
 
@@ -113,7 +113,7 @@ class WeDevs_ERP {
     private function includes() {
         require_once WPERP_INCLUDES . '/class-install.php';
 
-        if ( version_compare( PHP_VERSION, '5.3.0', '<=' ) ) {
+        if ( version_compare( PHP_VERSION, '5.4.0', '<=' ) ) {
             return;
         }
 
@@ -121,14 +121,6 @@ class WeDevs_ERP {
         require_once WPERP_INCLUDES . '/functions-html.php';
         require_once WPERP_INCLUDES . '/functions-company.php';
 
-        require_once WPERP_INCLUDES . '/class-abstract-item.php';
-        require_once WPERP_INCLUDES . '/class-countries.php';
-        require_once WPERP_INCLUDES . '/class-company.php';
-        require_once WPERP_MODULES . '/hrm/includes/class-employee.php';
-
-        require_once WPERP_INCLUDES . '/class-abstract-ajax.php';
-        require_once WPERP_INCLUDES . '/admin/class-ajax.php';
-        require_once WPERP_INCLUDES . '/admin/class-form-handler.php';
         require_once WPERP_MODULES . '/modules.php';
 
 

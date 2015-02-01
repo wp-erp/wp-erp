@@ -1,5 +1,6 @@
 <?php
 namespace WeDevs\ERP\HRM;
+use WeDevs\ERP\Framework\Traits\Hooker;
 
 /**
  * The HRM Class
@@ -7,6 +8,8 @@ namespace WeDevs\ERP\HRM;
  * This is loaded in `init` action hook
  */
 class Human_Resource {
+
+    use Hooker;
 
     /**
      * Initializes the WeDevs_ERP() class
@@ -26,8 +29,6 @@ class Human_Resource {
 
     /**
      * Kick-in the class
-     *
-     * @return void
      */
     public function __construct() {
 
@@ -72,13 +73,6 @@ class Human_Resource {
         require_once WPERP_HRM_PATH . '/includes/functions-designation.php';
         require_once WPERP_HRM_PATH . '/includes/functions-employee.php';
         require_once WPERP_HRM_PATH . '/includes/functions-leave.php';
-
-        require_once WPERP_HRM_PATH . '/includes/class-department.php';
-        require_once WPERP_HRM_PATH . '/includes/class-walker-department.php';
-        require_once WPERP_HRM_PATH . '/includes/class-designation.php';
-        require_once WPERP_HRM_PATH . '/includes/class-ajax.php';
-        require_once WPERP_HRM_PATH . '/includes/class-form-handler.php';
-        require_once WPERP_HRM_PATH . '/includes/class-settings.php';
     }
 
     /**
@@ -87,8 +81,8 @@ class Human_Resource {
      * @return void
      */
     private function init_actions() {
-        add_action( 'admin_enqueue_scripts', array($this, 'admin_scripts' ) );
-        add_action( 'admin_footer', array($this, 'admin_js_templates' ) );
+        $this->action( 'admin_enqueue_scripts', 'admin_scripts' );
+        $this->action( 'admin_footer', 'admin_js_templates' );
     }
 
     /**

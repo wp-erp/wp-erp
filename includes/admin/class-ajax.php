@@ -1,5 +1,5 @@
 <?php
-namespace WeDevs\ERP;
+namespace WeDevs\ERP\Admin;
 
 /**
  * The ajax handler class
