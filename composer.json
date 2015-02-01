@@ -12,9 +12,7 @@
         }
     ],
     "require": {
-        "php": ">=5.4.0",
-        "composer/installers" : "~1.0",
-        "mustache/mustache"  : "~2.4"
+        "php": ">=5.4.0"
     },
     "autoload" : {
         "psr-4" : {
