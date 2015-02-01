@@ -1,3 +1,4 @@
 config.codekit
 .idea
 .codekit-cache
+/vendor/

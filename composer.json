@@ -1,0 +1,25 @@
+{
+    "name": "tareq1988/wp-erp",
+    "description": "An ERP Solution for WordPress",
+    "keywords": ["wordpress", "plugin", "erp", "hrm", "crm"],
+    "homepage": "http://wperp.com",
+    "type": "wordpress-plugin",
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "Tareq Hasan",
+            "email": "tareq@wedevs.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "composer/installers" : "~1.0",
+        "mustache/mustache"  : "~2.4"
+    },
+    "autoload" : {
+        "psr-4" : {
+            "WeDevs\\ERP\\": "includes/",
+            "WeDevs\\ERP\\HRM\\": "modules/hrm/includes"
+        }
+    }
+}

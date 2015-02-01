@@ -18,6 +18,8 @@
  */
 class WeDevs_ERP_Installer {
 
+    private $min_php = '5.4.0';
+
     function __construct() {
         register_activation_hook( WPERP_FILE, array( $this, 'activate' ) );
         register_deactivation_hook( WPERP_FILE, array( $this, 'deactivate' ) );
@@ -30,10 +32,10 @@ class WeDevs_ERP_Installer {
      */
     public function activate() {
 
-        // bail out if the php version is lower than 5.3.0
-        if ( version_compare( PHP_VERSION, '5.3.0', '<=' ) ) {
+        // bail out if the php version is lower than
+        if ( version_compare( PHP_VERSION, $this->min_php, '<' ) ) {
             deactivate_plugins( basename( WPERP_FILE ) );
-            wp_die( __( '<p>The <strong>WP ERP</strong> plugin requires PHP version 5.3 or greater', 'wp-erp' ), __( 'Plugin Activation Error', 'wp-erp' ), array( 'response' => 200, 'back_link' => true ) );
+            wp_die( '<p>The <strong>WP ERP</strong> plugin requires PHP version ' . $this->min_php . ' or greater', 'Plugin Activation Error', array( 'response' => 200, 'back_link' => true ) );
         }
 
         $this->create_tables();
