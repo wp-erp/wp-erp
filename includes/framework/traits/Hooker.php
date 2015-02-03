@@ -1,5 +1,10 @@
 <?php namespace WeDevs\ERP\Framework\Traits;
 
+/**
+ * Class Hooker
+ *
+ * @package WeDevs\ERP\Framework\Traits
+ */
 trait Hooker {
 
     /**

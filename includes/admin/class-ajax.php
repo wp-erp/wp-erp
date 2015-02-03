@@ -1,21 +1,23 @@
 <?php
 namespace WeDevs\ERP\Admin;
+use WeDevs\ERP\Framework\Traits\Hooker;
 
 /**
  * The ajax handler class
  *
  * Handles the requests from core ERP, not from modules
  */
-class Ajax extends Abstract_Ajax {
+class Ajax {
+
+    use \WeDevs\ERP\Framework\Traits\Ajax;
+    use Hooker;
 
     /**
      * Bind events
-     *
-     * @return void
      */
     public function __construct() {
-        add_action( 'wp_ajax_erp-company-location', array($this, 'location_create') );
-        add_action( 'wp_ajax_erp-delete-comp-location', array($this, 'location_remove') );
+        $this->action( 'wp_ajax_erp-company-location', 'location_create');
+        $this->action( 'wp_ajax_erp-delete-comp-location', 'location_remove');
     }
 
     /**
@@ -53,6 +55,11 @@ class Ajax extends Abstract_Ajax {
         $this->send_success();
     }
 
+    /**
+     * Remove a location
+     *
+     * @return void
+     */
     public function location_remove() {
         $this->verify_nonce( 'erp-nonce' );
 

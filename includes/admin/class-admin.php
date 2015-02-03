@@ -1,10 +1,13 @@
 <?php
 namespace WeDevs\ERP\Admin;
+use WeDevs\ERP\Framework\Traits\Hooker;
 
 /**
  * sdlfkj
  */
 class Admin_Page {
+
+    use Hooker;
 
     function __construct() {
         $this->init_actions();
@@ -17,9 +20,9 @@ class Admin_Page {
      * @return void
      */
     public function init_actions() {
-        add_action( 'admin_footer', array($this, 'erp_modal_markup' ) );
+        $this->action( 'admin_footer', 'erp_modal_markup' );
 
-        add_action( 'admin_enqueue_scripts', array($this, 'admin_scripts' ) );
+        $this->action( 'admin_enqueue_scripts', 'admin_scripts' );
     }
 
     /**

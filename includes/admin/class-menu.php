@@ -1,5 +1,6 @@
 <?php
 namespace WeDevs\ERP\Admin;
+use WeDevs\ERP\Framework\Traits\Hooker;
 
 /**
  * Administration Menu Class
@@ -8,22 +9,22 @@ namespace WeDevs\ERP\Admin;
  */
 class Admin_Menu {
 
+    use Hooker;
+
     /**
      * Kick-in the class
-     *
-     * @return void
      */
     public function __construct() {
-        add_action( 'init', array( $this, 'do_mode_switch' ), 99 );
-        add_action( 'init', array( $this, 'do_company_switch' ), 99 );
+        $this->action( 'init', 'do_mode_switch', 99 );
+        $this->action( 'init', 'do_company_switch', 99 );
 
-        add_action( 'admin_menu', array( $this, 'admin_menu' ), 99 );
-        add_action( 'admin_menu', array( $this, 'hide_admin_menus' ), 100 );
-        add_action( 'wp_before_admin_bar_render', array( $this, 'hide_admin_bar_links' ), 100 );
+        $this->action( 'admin_menu', 'admin_menu', 99 );
+        $this->action( 'admin_menu', 'hide_admin_menus', 100 );
+        $this->action( 'wp_before_admin_bar_render', 'hide_admin_bar_links', 100 );
 
-        add_action( 'init', array( $this, 'tools_page_handler' ) );
+        $this->action( 'init', 'tools_page_handler' );
 
-        add_action( 'admin_bar_menu', array( $this, 'admin_bar_mode_switch' ), 9999 );
+        $this->action( 'admin_bar_menu', 'admin_bar_mode_switch', 9999 );
     }
 
     /**

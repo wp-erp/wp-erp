@@ -1,5 +1,6 @@
 <?php
 namespace WeDevs\ERP\Admin;
+use WeDevs\ERP\Framework\Traits\Hooker;
 
 /**
  * Admin form handler
@@ -8,13 +9,20 @@ namespace WeDevs\ERP\Admin;
  */
 class Form_Handler {
 
+    use Hooker;
+
     /**
      * [__construct description]
      */
     public function __construct() {
-        add_action( 'erp_action_create_new_company', array($this, 'create_new_company') );
+        $this->action( 'erp_action_create_new_company', 'create_new_company' );
     }
 
+    /**
+     * Create a new company
+     *
+     * @return void
+     */
     public function create_new_company() {
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-new-company' ) ) {
             wp_die( __( 'Cheating?', 'wp-erp' ) );
@@ -70,9 +78,6 @@ class Form_Handler {
             wp_redirect( $redirect_to );
             exit;
         }
-
-        // var_dump( $posted );
-        // die();
     }
 }
 
