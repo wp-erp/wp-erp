@@ -1,45 +1,48 @@
 <?php
 namespace WeDevs\ERP\HRM;
 
-use WeDevs\ERP\Abstract_Ajax;
+use WeDevs\ERP\Framework\Traits\Ajax;
+use WeDevs\ERP\Framework\Traits\Hooker;
 
 /**
  * Ajax handler
  *
  * @package WP-ERP
  */
-class Ajax_Handler extends Abstract_Ajax {
+class Ajax_Handler {
+
+    use Ajax;
+    use Hooker;
 
     /**
      * Bind all the ajax event for HRM
      *
-     * @return void
      */
     public function __construct() {
-        add_action( 'wp_ajax_erp-hr-new-dept', array($this, 'department_create') );
-        add_action( 'wp_ajax_erp-hr-del-dept', array($this, 'department_delete') );
-        add_action( 'wp_ajax_erp-hr-get-dept', array($this, 'department_get') );
-        add_action( 'wp_ajax_erp-hr-update-dept', array($this, 'department_create') );
+        $this->action( 'wp_ajax_erp-hr-new-dept', 'department_create' );
+        $this->action( 'wp_ajax_erp-hr-del-dept', 'department_delete' );
+        $this->action( 'wp_ajax_erp-hr-get-dept', 'department_get' );
+        $this->action( 'wp_ajax_erp-hr-update-dept', 'department_create' );
 
-        add_action( 'wp_ajax_erp-hr-new-desig', array($this, 'designation_create') );
-        add_action( 'wp_ajax_erp-hr-get-desig', array($this, 'designation_get') );
-        add_action( 'wp_ajax_erp-hr-update-desig', array($this, 'designation_create') );
-        add_action( 'wp_ajax_erp-hr-del-desig', array($this, 'designation_delete') );
+        $this->action( 'wp_ajax_erp-hr-new-desig', 'designation_create' );
+        $this->action( 'wp_ajax_erp-hr-get-desig', 'designation_get' );
+        $this->action( 'wp_ajax_erp-hr-update-desig', 'designation_create' );
+        $this->action( 'wp_ajax_erp-hr-del-desig', 'designation_delete' );
 
-        add_action( 'wp_ajax_erp-hr-employee-new', array($this, 'employee_create') );
-        add_action( 'wp_ajax_erp-hr-emp-get', array($this, 'employee_get') );
-        add_action( 'wp_ajax_erp-hr-emp-delete', array($this, 'employee_remove') );
-        add_action( 'wp_ajax_erp-hr-emp-update-status', array($this, 'employee_update_employment') );
-        add_action( 'wp_ajax_erp-hr-emp-update-comp', array($this, 'employee_update_compensation') );
-        add_action( 'wp_ajax_erp-hr-emp-delete-history', array($this, 'employee_remove_history') );
-        add_action( 'wp_ajax_erp-hr-emp-update-jobinfo', array($this, 'employee_update_job_info') );
-        add_action( 'wp_ajax_erp-hr-empl-leave-history', array($this, 'get_employee_leave_history') );
-        add_action( 'wp_ajax_erp-hr-employee-new-note', array($this, 'employee_add_note') );
+        $this->action( 'wp_ajax_erp-hr-employee-new', 'employee_create' );
+        $this->action( 'wp_ajax_erp-hr-emp-get', 'employee_get' );
+        $this->action( 'wp_ajax_erp-hr-emp-delete', 'employee_remove' );
+        $this->action( 'wp_ajax_erp-hr-emp-update-status', 'employee_update_employment' );
+        $this->action( 'wp_ajax_erp-hr-emp-update-comp', 'employee_update_compensation' );
+        $this->action( 'wp_ajax_erp-hr-emp-delete-history', 'employee_remove_history' );
+        $this->action( 'wp_ajax_erp-hr-emp-update-jobinfo', 'employee_update_job_info' );
+        $this->action( 'wp_ajax_erp-hr-empl-leave-history', 'get_employee_leave_history' );
+        $this->action( 'wp_ajax_erp-hr-employee-new-note', 'employee_add_note' );
 
-        add_action( 'wp_ajax_erp-hr-leave-policy-create', array($this, 'leave_policy_create') );
-        add_action( 'wp_ajax_erp-hr-leave-policy-delete', array($this, 'leave_policy_delete') );
+        $this->action( 'wp_ajax_erp-hr-leave-policy-create', 'leave_policy_create' );
+        $this->action( 'wp_ajax_erp-hr-leave-policy-delete', 'leave_policy_delete' );
 
-        add_action( 'wp_ajax_erp-hr-leave-request-req-date', array($this, 'leave_request_dates') );
+        $this->action( 'wp_ajax_erp-hr-leave-request-req-date', 'leave_request_dates' );
     }
 
     /**
@@ -53,7 +56,7 @@ class Ajax_Handler extends Abstract_Ajax {
         $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
 
         if ( $id ) {
-            $department = new \WeDevs\ERP\HRM\Department( $id );
+            $department = new Department( $id );
             $this->send_success( $department );
         }
 
@@ -168,7 +171,7 @@ class Ajax_Handler extends Abstract_Ajax {
         $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
 
         if ( $id ) {
-            $designation = new \WeDevs\ERP\HRM\Designation( $id );
+            $designation = new Designation( $id );
             $this->send_success( $designation );
         }
 
@@ -507,5 +510,3 @@ class Ajax_Handler extends Abstract_Ajax {
         $this->send_success( $content );
     }
 }
-
-new Ajax_Handler();

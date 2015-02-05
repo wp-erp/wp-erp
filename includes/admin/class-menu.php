@@ -123,7 +123,7 @@ class Admin_Menu {
             return;
         }
 
-        $modules = erp_get_modules();
+        $modules = wperp()->modules->get_modules();
 
         // now check for our query string
         if ( ! isset( $_REQUEST['erp-mode'] ) || ! array_key_exists( $_REQUEST['erp-mode'], $modules ) ) {

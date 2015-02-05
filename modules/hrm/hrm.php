@@ -38,6 +38,8 @@ class Human_Resource {
         // Include required files
         $this->includes();
 
+        $this->init_classes();
+
         // Initialize the action hooks
         $this->init_actions();
 
@@ -92,6 +94,15 @@ class Human_Resource {
      */
     private function init_filters() {
 
+    }
+
+    /**
+     * Init classes
+     *
+     * @return void
+     */
+    private function init_classes() {
+        new Ajax_Handler();
     }
 
     /**
