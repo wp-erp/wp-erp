@@ -12,22 +12,6 @@ class Human_Resource {
     use Hooker;
 
     /**
-     * Initializes the WeDevs_ERP() class
-     *
-     * Checks for an existing WeDevs_ERP() instance
-     * and if it doesn't find one, creates it.
-     */
-    public static function init() {
-        static $instance = false;
-
-        if ( ! $instance ) {
-            $instance = new self();
-        }
-
-        return $instance;
-    }
-
-    /**
      * Kick-in the class
      */
     public function __construct() {
@@ -190,5 +174,3 @@ class Human_Resource {
         }
     }
 }
-
-Human_Resource::init();

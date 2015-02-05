@@ -37,7 +37,7 @@ class Modules {
             'hrm' => [
                 'title'    => __( 'HR Management', 'wp-erp' ),
                 'slug'     => 'erp-hrm',
-                'callback' => '\WeDevs\ERP\Human_Resource',
+                'callback' => '\WeDevs\ERP\HRM\Human_Resource',
                 'modules'  => apply_filters( 'erp_hr_modules', [ ] )
             ],
         ];
@@ -101,7 +101,7 @@ class Modules {
      *
      * @return string|void
      */
-    private function module_switch_redirect( $url, $new_mode ) {
+    public function module_switch_redirect( $url, $new_mode ) {
         if ( 'crm' == $new_mode ) {
             return admin_url( 'admin.php?page=erp-sales' );
         } elseif ( 'hrm' == $new_mode ) {
