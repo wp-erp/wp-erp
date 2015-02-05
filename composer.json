@@ -12,12 +12,17 @@
         }
     ],
     "require": {
-        "php": ">=5.4.0"
+        "php": ">=5.4.0",
+        "illuminate/database": "4.2.*"
     },
     "autoload" : {
         "psr-4" : {
             "WeDevs\\ERP\\": "includes/",
             "WeDevs\\ERP\\HRM\\": "modules/hrm/includes"
-        }
+        },
+        "classmap": [
+            "modules/hrm/hrm.php",
+            "modules/crm/crm.php"
+        ]
     }
 }

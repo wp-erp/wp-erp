@@ -48,8 +48,8 @@ class Admin_Menu {
             return;
         }
 
-        $modules      = erp_get_modules();
-        $current_mode = erp_get_current_module();
+        $modules      = wperp()->modules->get_modules();
+        $current_mode = wperp()->modules->get_current_module();
 
         // ERP Mode
         $title        = __( 'Switch ERP Mode', 'wp-erp' );

@@ -45,12 +45,13 @@ include dirname( __FILE__ ) . '/vendor/autoload.php';
  *
  * @class WeDevs_ERP The class that holds the entire WeDevs_ERP plugin
  */
-class WeDevs_ERP {
+final class WeDevs_ERP {
 
     /**
      * @var string
      */
     public $version = '0.1';
+    private $container = array();
 
     /**
      * Initializes the WeDevs_ERP() class
@@ -82,11 +83,51 @@ class WeDevs_ERP {
         // Include required files
         $this->includes();
 
+        // instantiate classes
+        $this->instantiate();
+
         // Initialize the action hooks
         $this->init_actions();
 
         // Loaded action
         do_action( 'erp_loaded' );
+    }
+
+    /**
+     * Magic getter to bypass referencing plugin.
+     *
+     * @param $prop
+     * @return mixed
+     */
+    public function __get( $prop ) {
+        if ( array_key_exists( $prop, $this->container ) ) {
+            return $this->container[$prop];
+        }
+
+        return $this->{$prop};
+    }
+
+    /**
+     * Magic isset to bypass referencing plugin.
+     *
+     * @param $prop
+     * @return mixed
+     */
+    public function __isset( $prop ) {
+        return isset($this->{$prop}) || isset($this->container[$prop]);
+    }
+
+    /**
+     * Check if the PHP version is supported
+     *
+     * @return bool
+     */
+    public function is_supported_php() {
+        if ( version_compare( PHP_VERSION, '5.4.0', '<=' ) ) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -113,16 +154,13 @@ class WeDevs_ERP {
     private function includes() {
         require_once WPERP_INCLUDES . '/class-install.php';
 
-        if ( version_compare( PHP_VERSION, '5.4.0', '<=' ) ) {
+        if ( ! $this->is_supported_php() ) {
             return;
         }
 
         require_once WPERP_INCLUDES . '/functions.php';
         require_once WPERP_INCLUDES . '/functions-html.php';
         require_once WPERP_INCLUDES . '/functions-company.php';
-
-        require_once WPERP_MODULES . '/modules.php';
-
 
         if ( is_admin() ) {
             require_once WPERP_INCLUDES . '/admin/functions.php';
@@ -132,11 +170,29 @@ class WeDevs_ERP {
     }
 
     /**
+     * Instantiate classes
+     *
+     * @return void
+     */
+    private function instantiate() {
+        if ( ! $this->is_supported_php() ) {
+            return;
+        }
+
+        // $this->container['database'] = new \WeDevs\ERP\Framework\Database();
+        $this->container['modules'] = new \WeDevs\ERP\Framework\Modules();
+    }
+
+    /**
      * Initialize WordPress action hooks
      *
      * @return void
      */
     private function init_actions() {
+
+        if ( ! $this->is_supported_php() ) {
+            return;
+        }
 
         // Localize our plugin
         add_action( 'init', array( $this, 'localization_setup' ) );
@@ -161,10 +217,10 @@ class WeDevs_ERP {
      * @return void
      */
     public function load_module() {
-        $current_module = erp_get_current_module();
+        $current_module = $this->modules->get_current_module();
 
-        if ( $current_module ) {
-            do_action( 'wp-erp-load-module_' . $current_module['slug'], $current_module );
+        if ( $current_module && class_exists( $current_module['callback'] ) ) {
+            new $current_module['callback'];
         }
     }
 
