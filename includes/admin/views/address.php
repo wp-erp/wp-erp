@@ -62,6 +62,7 @@
     </li>
 
     <input type="hidden" name="location_id" value="{{ data.id }}">
+    <input type="hidden" name="company_id" value="{{ data.company_id }}">
     <input type="hidden" name="action" value="erp-company-location">
     <?php wp_nonce_field( 'erp-company-location' ); ?>
 </ul>

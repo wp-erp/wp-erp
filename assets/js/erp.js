@@ -133,7 +133,7 @@
             $.erpPopup({
                 title: self.data('title'),
                 button: wpErp.create,
-                content: wp.template( 'erp-address' )({ data: null }),
+                content: wp.template( 'erp-address' )({ company_id: self.data('id') }),
                 extraClass: 'medium',
                 onSubmit: function(modal) {
                     wp.ajax.send( {
