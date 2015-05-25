@@ -1,5 +1,6 @@
 <?php
 namespace WeDevs\ERP\HRM;
+
 use WeDevs\ERP\Framework\Traits\Hooker;
 
 /**
@@ -11,10 +12,16 @@ class Human_Resource {
 
     use Hooker;
 
+    private $plugin;
+
     /**
      * Kick-in the class
+     *
+     * @param \WeDevs_ERP $plugin
      */
-    public function __construct() {
+    public function __construct( \WeDevs_ERP $plugin ) {
+
+        $this->plugin = $plugin;
 
         // Define constants
         $this->define_constants();
@@ -22,6 +29,7 @@ class Human_Resource {
         // Include required files
         $this->includes();
 
+        // Initialize the classes
         $this->init_classes();
 
         // Initialize the action hooks
@@ -87,6 +95,7 @@ class Human_Resource {
      */
     private function init_classes() {
         new Ajax_Handler();
+        new Form_Handler();
     }
 
     /**
@@ -98,14 +107,17 @@ class Human_Resource {
      */
     public function admin_scripts( $hook ) {
         // var_dump( $hook );
-        $suffix = ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) ? '' : '.min';
+        $suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
-        wp_enqueue_media( );
+        wp_enqueue_media();
         wp_enqueue_script( 'wp-erp-hr', WPERP_HRM_ASSETS . "/js/hrm$suffix.js", array( 'wp-erp-script' ), date( 'Ymd' ), true );
-        wp_enqueue_script( 'wp-erp-hr-leave', WPERP_HRM_ASSETS . "/js/leave$suffix.js", array( 'wp-erp-script', 'wp-color-picker' ), date( 'Ymd' ), true );
+        wp_enqueue_script( 'wp-erp-hr-leave', WPERP_HRM_ASSETS . "/js/leave$suffix.js", array(
+            'wp-erp-script',
+            'wp-color-picker'
+        ), date( 'Ymd' ), true );
         $localize_script = apply_filters( 'erp_hr_localize_script', array(
-            'nonce' => wp_create_nonce( 'wp-erp-hr-nonce' ),
-            'popup' => array(
+            'nonce'              => wp_create_nonce( 'wp-erp-hr-nonce' ),
+            'popup'              => array(
                 'dept_title'        => __( 'New Department', 'wp-erp' ),
                 'dept_submit'       => __( 'Create Department', 'wp-erp' ),
                 'dept_update'       => __( 'Update Department', 'wp-erp' ),
