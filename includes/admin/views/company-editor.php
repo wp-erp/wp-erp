@@ -20,17 +20,35 @@
                         <table class="form-table">
                             <tr>
                                 <td><label for="address_1"><?php _e( 'Address Line 1 ', 'wp-erp' ); ?></label></td>
-                                <td><input type="text" id="address_1" class="regular-text" name="address_1" value="<?php echo esc_attr( $company->address_1 ); ?>"></td>
+                                <td>
+                                    <?php erp_html_form_input(array(
+                                        'name'  => 'address_1',
+                                        'value' => $company->address_1,
+                                        'class' => 'regular-text'
+                                    )); ?>
+                                </td>
                             </tr>
 
                             <tr>
                                 <td><label for="address_2"><?php _e( 'Address Line 2 ', 'wp-erp' ); ?></label></td>
-                                <td><input type="text" id="address_2" class="regular-text" name="address_2" value="<?php echo esc_attr( $company->address_2 ); ?>"></td>
+                                <td>
+                                    <?php erp_html_form_input(array(
+                                        'name'  => 'address_2',
+                                        'value' => $company->address_2,
+                                        'class' => 'regular-text'
+                                    )); ?>
+                                </td>
                             </tr>
 
                             <tr>
                                 <td><label for="city"><?php _e( 'City', 'wp-erp' ); ?></label></td>
-                                <td><input type="text" id="city" class="regular-text" name="city" value="<?php echo esc_attr( $company->city ); ?>"></td>
+                                <td>
+                                    <?php erp_html_form_input(array(
+                                        'name'  => 'city',
+                                        'value' => $company->city,
+                                        'class' => 'regular-text'
+                                    )); ?>
+                                </td>
                             </tr>
 
                             <tr>
@@ -53,7 +71,7 @@
                             <tr>
                                 <td><label for="erp-country"><?php _e( 'Country', 'wp-erp' ); ?></label> <span class="required">*</span></td>
                                 <td>
-                                    <select name="country" id="erp-country" data-parent="table" class="erp-country-select">
+                                    <select name="country" id="erp-country" data-parent="table" class="erp-country-select" required="required">
                                         <?php echo $country->country_dropdown( $company->country ); ?>
                                     </select>
                                 </td>
@@ -61,27 +79,58 @@
 
                             <tr>
                                 <td><label for="zip"><?php _e( 'Postal / Zip Code', 'wp-erp' ); ?></label></td>
-                                <td><input type="number" id="zip" class="regular-text" name="zip" value="<?php echo esc_attr( $company->zip ); ?>"></td>
+                                <td>
+                                    <?php erp_html_form_input(array(
+                                        'name'  => 'zip',
+                                        'value' => $company->zip,
+                                        'class' => 'regular-text'
+                                    )); ?>
+                                </td>
                             </tr>
 
                             <tr>
                                 <td><label for="phone"><?php _e( 'Phone', 'wp-erp' ); ?></label></td>
-                                <td><input type="text" id="phone" class="regular-text" name="phone" value="<?php echo esc_attr( $company->phone ); ?>"></td>
+                                <td>
+                                    <?php erp_html_form_input(array(
+                                        'name'  => 'phone',
+                                        'value' => $company->phone,
+                                        'class' => 'regular-text'
+                                    )); ?>
+                                </td>
                             </tr>
 
                             <tr>
                                 <td><label for="fax"><?php _e( 'Fax', 'wp-erp' ); ?></label></td>
-                                <td><input type="text" id="fax" class="regular-text" name="fax" value="<?php echo esc_attr( $company->fax ); ?>"></td>
+                                <td>
+                                    <?php erp_html_form_input(array(
+                                        'name'  => 'fax',
+                                        'value' => $company->fax,
+                                        'class' => 'regular-text'
+                                    )); ?>
+                                </td>
                             </tr>
 
                             <tr>
                                 <td><label for="mobile"><?php _e( 'Mobile', 'wp-erp' ); ?></label></td>
-                                <td><input type="text" id="mobile" class="regular-text" name="mobile" value="<?php echo esc_attr( $company->mobile ); ?>"></td>
+                                <td>
+                                    <?php erp_html_form_input(array(
+                                        'name'  => 'mobile',
+                                        'value' => $company->mobile,
+                                        'class' => 'regular-text'
+                                    )); ?>
+                                </td>
                             </tr>
 
                             <tr>
                                 <td><label for="website"><?php _e( 'Website', 'wp-erp' ); ?></label></td>
-                                <td><input type="url" id="website" class="regular-text" name="website" value="<?php echo esc_url( $company->website ); ?>"></td>
+                                <td>
+                                    <?php erp_html_form_input(array(
+                                        'name'  => 'website',
+                                        'type'  => 'url',
+                                        'value' => $company->website,
+                                        'class' => 'regular-text'
+                                    )); ?>
+                                </td>
                             </tr>
 
                             <tr>
