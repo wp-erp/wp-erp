@@ -5,7 +5,7 @@
  * Plugin URI: http://wedevs.com/plugin/erp/
  * Author: Tareq Hasan
  * Author URI: http://wedevs.com
- * Version: 1.0
+ * Version: 0.1
  * License: GPL2
  * Text Domain: wp-erp
  * Domain Path: languages
@@ -36,7 +36,9 @@
  */
 
 // don't call the file directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
 include dirname( __FILE__ ) . '/vendor/autoload.php';
 
@@ -48,9 +50,17 @@ include dirname( __FILE__ ) . '/vendor/autoload.php';
 final class WeDevs_ERP {
 
     /**
+     * Plugin version
+     *
      * @var string
      */
     public $version = '0.1';
+
+    /**
+     * Holds various class instances
+     *
+     * @var array
+     */
     private $container = array();
 
     /**
@@ -97,11 +107,12 @@ final class WeDevs_ERP {
      * Magic getter to bypass referencing plugin.
      *
      * @param $prop
+     *
      * @return mixed
      */
     public function __get( $prop ) {
         if ( array_key_exists( $prop, $this->container ) ) {
-            return $this->container[$prop];
+            return $this->container[ $prop ];
         }
 
         return $this->{$prop};
@@ -111,10 +122,11 @@ final class WeDevs_ERP {
      * Magic isset to bypass referencing plugin.
      *
      * @param $prop
+     *
      * @return mixed
      */
     public function __isset( $prop ) {
-        return isset($this->{$prop}) || isset($this->container[$prop]);
+        return isset( $this->{$prop} ) || isset( $this->container[ $prop ] );
     }
 
     /**
@@ -179,7 +191,6 @@ final class WeDevs_ERP {
             return;
         }
 
-        // $this->container['database'] = new \WeDevs\ERP\Framework\Database();
         $this->container['modules'] = new \WeDevs\ERP\Framework\Modules();
     }
 
@@ -220,7 +231,7 @@ final class WeDevs_ERP {
         $current_module = $this->modules->get_current_module();
 
         if ( $current_module && class_exists( $current_module['callback'] ) ) {
-            new $current_module['callback'];
+            new $current_module['callback']( $this );
         }
     }
 
