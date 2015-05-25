@@ -4,6 +4,9 @@
  */
 class Leave_Requests_List_Table extends WP_List_Table {
 
+    private $counts = array();
+    private $page_status;
+
     function __construct() {
         global $status, $page;
 
