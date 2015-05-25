@@ -31,7 +31,8 @@ class Admin_Page {
      * @return void
      */
     public function init_classes() {
-
+        new Form_Handler();
+        new Ajax();
     }
 
     /**
