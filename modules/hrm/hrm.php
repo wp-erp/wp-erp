@@ -162,27 +162,33 @@ class Human_Resource {
 
         // var_dump( $current_screen );
 
-        // load department templates only
-        if ( 'hr-management_page_erp-hr-depts' == $current_screen->base ) {
-            erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-dept.php', 'erp-new-dept' );
-            erp_get_js_template( WPERP_HRM_JS_TMPL . '/row-dept.php', 'erp-dept-row' );
+        switch ($current_screen->base) {
+            case 'hr-management_page_erp-hr-depts':
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-dept.php', 'erp-new-dept' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/row-dept.php', 'erp-dept-row' );
+                break;
+
+            case 'hr-management_page_erp-hr-designation':
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-designation.php', 'erp-new-desig' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/row-desig.php', 'erp-desig-row' );
+                break;
+
+            case 'hr-management_page_erp-hr-employee':
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-employee.php', 'erp-new-employee' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/row-employee.php', 'erp-employee-row' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/employment-status.php', 'erp-employment-status' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/compensation.php', 'erp-employment-compensation' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/job-info.php', 'erp-employment-jobinfo' );
+                break;
+
+            case 'leave_page_erp-leave-policies':
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/leave-policy.php', 'erp-leave-policy' );
+                break;
+
+            default:
+                # code...
+                break;
         }
 
-        if ( 'hr-management_page_erp-hr-designation' == $current_screen->base ) {
-            erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-designation.php', 'erp-new-desig' );
-            erp_get_js_template( WPERP_HRM_JS_TMPL . '/row-desig.php', 'erp-desig-row' );
-        }
-
-        if ( 'hr-management_page_erp-hr-employee' == $current_screen->base ) {
-            erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-employee.php', 'erp-new-employee' );
-            erp_get_js_template( WPERP_HRM_JS_TMPL . '/row-employee.php', 'erp-employee-row' );
-            erp_get_js_template( WPERP_HRM_JS_TMPL . '/employment-status.php', 'erp-employment-status' );
-            erp_get_js_template( WPERP_HRM_JS_TMPL . '/compensation.php', 'erp-employment-compensation' );
-            erp_get_js_template( WPERP_HRM_JS_TMPL . '/job-info.php', 'erp-employment-jobinfo' );
-        }
-
-        if ( 'leave_page_erp-leave-policies' == $current_screen->base ) {
-            erp_get_js_template( WPERP_HRM_JS_TMPL . '/leave-policy.php', 'erp-leave-policy' );
-        }
     }
 }
