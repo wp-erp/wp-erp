@@ -1,5 +1,5 @@
 <?php
-$working_days = erp_company_get_working_days( erp_get_current_company_id() );
+$working_days = erp_company_get_working_days();
 $options = array(
     '8' => __( 'Full Day', 'wp-erp' ),
     '4' => __( 'Half Day', 'wp-erp' ),

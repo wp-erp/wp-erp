@@ -39,7 +39,7 @@
         <tbody id="the-list">
             <?php
 
-            $departments = erp_hr_get_departments( erp_get_current_company_id() );
+            $departments = erp_hr_get_departments();
 
             if ( $departments ) {
 

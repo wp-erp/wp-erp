@@ -1,7 +1,7 @@
 <h3><?php _e( 'Balances', 'wp-erp' ) ?></h3>
 
 <?php
-$policies         = erp_hr_leave_get_policies( erp_get_current_company_id() );
+$policies         = erp_hr_leave_get_policies();
 $entitlements     = erp_hr_leave_get_entitlements( array( 'employee_id' => $employee->id ) );
 $entitlements_pol = wp_list_pluck( $entitlements, 'policy_id' );
 $balance          = erp_hr_leave_get_balance( $employee->id );
@@ -78,7 +78,6 @@ if ( $policies ) {
 
 <?php
 $cur_year   = date( 'Y' );
-$company_id = erp_get_current_company_id();
 $requests   = erp_hr_leave_get_requests( array(
     'year'    => $cur_year,
     'user_id' => $employee->id,
@@ -91,7 +90,7 @@ $requests   = erp_hr_leave_get_requests( array(
     <?php erp_html_form_input( array(
         'name'     => 'leave_policy',
         'type'     => 'select',
-        'options'  => array( 'all' => __( 'All Policy', 'wp-erp' ) ) + erp_hr_leave_get_policies_dropdown_raw( $company_id )
+        'options'  => array( 'all' => __( 'All Policy', 'wp-erp' ) ) + erp_hr_leave_get_policies_dropdown_raw()
     ) ); ?>
 
     <select name="year" id="year">

@@ -65,14 +65,14 @@ function erp_hr_create_department( $args = array() ) {
  *
  * @return array  list of departments
  */
-function erp_hr_get_departments( $company_id ) {
+function erp_hr_get_departments() {
     global $wpdb;
 
-    $cache_key = 'erp-get-departments-' . $company_id;
+    $cache_key = 'erp-get-departments';
     $results   = wp_cache_get( $cache_key, 'wp-erp' );
 
     if ( false === $results ) {
-        $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}erp_hr_depts WHERE company_id = %d", $company_id ) );
+        $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}erp_hr_depts" );
         wp_cache_set( $cache_key, $results, 'wp-erp' );
     }
 
@@ -107,8 +107,8 @@ function erp_hr_delete_department( $department_id ) {
  *
  * @return array  the key-value paired departments
  */
-function erp_hr_get_departments_dropdown_raw( $company_id, $select_label = null ) {
-    $departments = erp_hr_get_departments( $company_id );
+function erp_hr_get_departments_dropdown_raw($select_label = null ) {
+    $departments = erp_hr_get_departments();
     $dropdown    = array( 0 => __( '- Select Department -', 'wp-erp' ) );
 
     if ( $select_label ) {

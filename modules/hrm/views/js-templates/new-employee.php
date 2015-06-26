@@ -91,7 +91,7 @@
                     'name'    => 'work[department]',
                     'value'   => '',
                     'type'    => 'select',
-                    'options' => erp_hr_get_departments_dropdown_raw( erp_get_current_company_id() )
+                    'options' => erp_hr_get_departments_dropdown_raw()
                 ) ); ?>
             </li>
 
@@ -101,7 +101,7 @@
                     'name'    => 'work[designation]',
                     'value'   => '{{ data.work.designation }}',
                     'type'    => 'select',
-                    'options' => erp_hr_get_designation_dropdown_raw( erp_get_current_company_id() )
+                    'options' => erp_hr_get_designation_dropdown_raw()
                 ) ); ?>
             </li>
 
@@ -111,7 +111,7 @@
                     'name'    => 'work[location]',
                     'value'   => '{{ data.work.location }}',
                     'type'    => 'select',
-                    'options' => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_company_get_location_dropdown_raw( erp_get_current_company_id() )
+                    'options' => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_company_get_location_dropdown_raw()
                 ) ); ?>
             </li>
 
@@ -122,7 +122,7 @@
                     'value'   => '{{ data.work.reporting_to }}',
                     'type'    => 'select',
                     'id'      => 'work_reporting_to',
-                    'options' => erp_hr_get_employees_dropdown_raw( erp_get_current_company_id() )
+                    'options' => erp_hr_get_employees_dropdown_raw()
                 ) ); ?>
             </li>
 

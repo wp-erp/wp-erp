@@ -63,14 +63,14 @@ function erp_hr_create_designation( $args = array() ) {
  *
  * @return array  list of departments
  */
-function erp_hr_get_designations( $company_id ) {
+function erp_hr_get_designations() {
     global $wpdb;
 
-    $cache_key = 'erp-designations-' . $company_id;
+    $cache_key = 'erp-designations';
     $designations = wp_cache_get( $cache_key, 'wp-erp' );
 
     if ( false === $designations ) {
-        $designations = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}erp_hr_designations WHERE company_id = %d", $company_id ) );
+        $designations = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}erp_hr_designations" );
         wp_cache_set( $cache_key, $designations, 'wp-erp' );
     }
 
@@ -104,8 +104,8 @@ function erp_hr_delete_designation( $designation_id ) {
  *
  * @return array  the key-value paired designations
  */
-function erp_hr_get_designation_dropdown_raw( $company_id ) {
-    $designations = erp_hr_get_designations( $company_id );
+function erp_hr_get_designation_dropdown_raw() {
+    $designations = erp_hr_get_designations();
     $dropdown     = array( 0 => __( '- Select Designation -', 'wp-erp' ) );
 
     if ( $designations ) {

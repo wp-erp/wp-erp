@@ -62,16 +62,14 @@ function erp_hr_leave_insert_policy( $args = array() ) {
  *
  * @return array
  */
-function erp_hr_leave_get_policies( $company_id ) {
+function erp_hr_leave_get_policies() {
     global $wpdb;
 
-    $cache_key = 'erp-leave-pol-' . $company_id;
+    $cache_key = 'erp-leave-pol';
     $policies = wp_cache_get( $cache_key, 'wp-erp' );
 
     if ( false === $policies ) {
-        $policies = $wpdb->get_results(
-            $wpdb->prepare( "SELECT id, name, value, color FROM {$wpdb->prefix}erp_hr_leave_policies WHERE company_id = %d", $company_id )
-        );
+        $policies = $wpdb->get_results( "SELECT id, name, value, color FROM {$wpdb->prefix}erp_hr_leave_policies" );
 
         wp_cache_set( $cache_key, $policies, 'wp-erp' );
     }
@@ -97,12 +95,10 @@ function erp_hr_leave_get_policy( $policy_id ) {
 /**
  * Get policies as formatted for dropdown
  *
- * @param  int  $company_id
- *
  * @return array
  */
-function erp_hr_leave_get_policies_dropdown_raw( $company_id ) {
-    $policies = erp_hr_leave_get_policies( $company_id );
+function erp_hr_leave_get_policies_dropdown_raw() {
+    $policies = erp_hr_leave_get_policies();
     $dropdown = array();
 
     foreach ($policies as $policy) {
@@ -445,7 +441,6 @@ function erp_hr_leave_get_entitlements( $args = array() ) {
     global $wpdb;
 
     $defaults = array(
-        'company_id'  => erp_get_current_company_id(),
         'employee_id' => 0,
         'policy_id'   => 0,
         'year'        => date( 'Y' ),
@@ -457,7 +452,7 @@ function erp_hr_leave_get_entitlements( $args = array() ) {
     );
 
     $args  = wp_parse_args( $args, $defaults );
-    $where = 'WHERE pol.company_id = ' . intval( $args['company_id'] );
+    $where = 'WHERE 1 = 1';
 
     if ( ! empty( $args['year'] ) ) {
         $from_date = $args['year'] . '-01-01';

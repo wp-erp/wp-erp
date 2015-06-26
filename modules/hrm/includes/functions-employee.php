@@ -199,7 +199,6 @@ function erp_hr_get_employees( $args = array() ) {
     global $wpdb;
 
     $defaults = array(
-        'company_id' => erp_get_current_company_id(),
         'number'     => 20,
         'offset'     => 0,
         'orderby'    => 'hiring_date',
@@ -208,7 +207,7 @@ function erp_hr_get_employees( $args = array() ) {
     );
 
     $args  = wp_parse_args( $args, $defaults );
-    $where = 'WHERE e.company_id = ' . intval( $args['company_id'] );
+    $where = 'WHERE 1=1';
 
     if ( isset( $args['designation'] ) && ! empty( $args['designation'] ) ) {
         $where .= " AND e.designation = " . intval( $args['designation'] );
@@ -263,8 +262,8 @@ function erp_hr_get_employees( $args = array() ) {
  *
  * @return array  the key-value paired employees
  */
-function erp_hr_get_employees_dropdown_raw( $company_id, $exclude = null ) {
-    $employees = erp_hr_get_employees( array( 'company_id' => $company_id, 'no_object' => true ) );
+function erp_hr_get_employees_dropdown_raw( $exclude = null ) {
+    $employees = erp_hr_get_employees( array( 'no_object' => true ) );
     $dropdown  = array( 0 => __( '- Select Employee -', 'wp-erp' ) );
 
     if ( $employees ) {
@@ -288,8 +287,8 @@ function erp_hr_get_employees_dropdown_raw( $company_id, $exclude = null ) {
  *
  * @return string  the dropdown
  */
-function erp_hr_get_employees_dropdown( $company_id, $selected = '' ) {
-    $employees = erp_hr_get_employees_dropdown_raw( $company_id );
+function erp_hr_get_employees_dropdown( $selected = '' ) {
+    $employees = erp_hr_get_employees_dropdown_raw();
     $dropdown  = '';
 
     if ( $employees ) {

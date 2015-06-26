@@ -22,14 +22,14 @@ function erp_company_location_delete( $location_id ) {
  *
  * @return array
  */
-function erp_company_get_locations( $company_id ) {
+function erp_company_get_locations() {
     global $wpdb;
 
-    $cache_key = 'erp_company-location-' . $company_id;
+    $cache_key = 'erp_company-location';
     $locations = wp_cache_get( $cache_key, 'wp-erp' );
 
     if ( false === $locations ) {
-        $locations = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}erp_company_locations WHERE company_id = %d", $company_id ) );
+        $locations = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}erp_company_locations" );
         wp_cache_set( $cache_key, $locations, 'wp-erp' );
     }
 
@@ -62,11 +62,9 @@ function erp_company_get_location_dropdown_raw( $company_id, $select_label = nul
 /**
  * Get working days of a company
  *
- * @param  int  $company_id
- *
  * @return array
  */
-function erp_company_get_working_days( $company_id ) {
+function erp_company_get_working_days() {
     $default = array(
         'mon' => 8,
         'tue' => 8,
@@ -77,7 +75,7 @@ function erp_company_get_working_days( $company_id ) {
         'sun' => 0
     );
 
-    $option_key = 'erp_hr_work_days_' . $company_id;
+    $option_key = 'erp_hr_work_days';
     $saved      = get_option( $option_key, $default );
 
     if ( ! is_array( $saved ) || count( $saved ) < 7 ) {

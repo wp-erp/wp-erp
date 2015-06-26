@@ -17,7 +17,7 @@
             'name'     => 'location',
             'value'    => '',
             'type'    => 'select',
-            'options'  => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_company_get_location_dropdown_raw( erp_get_current_company_id() )
+            'options'  => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_company_get_location_dropdown_raw()
         ) ); ?>
     </div>
 
@@ -27,7 +27,7 @@
             'name'    => 'department',
             'value'   => '',
             'type'    => 'select',
-            'options' => erp_hr_get_departments_dropdown_raw( erp_get_current_company_id() )
+            'options' => erp_hr_get_departments_dropdown_raw()
         ) ); ?>
     </div>
 
@@ -37,7 +37,7 @@
             'name'    => 'designation',
             'value'   => '',
             'type'    => 'select',
-            'options' => erp_hr_get_designation_dropdown_raw( erp_get_current_company_id() )
+            'options' => erp_hr_get_designation_dropdown_raw()
         ) ); ?>
     </div>
 
@@ -47,7 +47,7 @@
             'name'    => 'reporting_to',
             'value'   => '',
             'type'    => 'select',
-            'options' => erp_hr_get_employees_dropdown_raw( erp_get_current_company_id(), $employee_id )
+            'options' => erp_hr_get_employees_dropdown_raw( $employee_id )
         ) ); ?>
     </div>
 

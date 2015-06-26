@@ -6,10 +6,9 @@
         <div class="erp-area-left">
 
             <?php
-            $company_id   = erp_get_current_company_id();
-            $employees    = erp_hr_get_employees( $company_id, true );
-            $departments  = erp_hr_get_departments( $company_id );
-            $designations = erp_hr_get_designations( $company_id );
+            $employees    = erp_hr_get_employees();
+            $departments  = erp_hr_get_departments();
+            $designations = erp_hr_get_designations();
             ?>
 
             <div class="badge-container">

@@ -44,8 +44,6 @@
 
             <ul class="erp-list separated">
             <?php
-            $company_id = erp_get_current_company_id();
-
             erp_html_form_input( array(
                 'label'    => __( 'Assignment', 'wp-erp' ),
                 'name'     => 'assignment_to',
@@ -61,7 +59,7 @@
                 'class'    => 'chosen-select',
                 'tag'      => 'li',
                 'required' => true,
-                'options'  => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_hr_leave_get_policies_dropdown_raw( $company_id )
+                'options'  => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_hr_leave_get_policies_dropdown_raw()
             ) );
 
             erp_html_form_input( array(
@@ -83,7 +81,7 @@
                 'type'     => 'select',
                 'class'    => 'chosen-select show-if-single',
                 'tag'      => 'li',
-                'options'  => erp_hr_get_employees_dropdown_raw( $company_id )
+                'options'  => erp_hr_get_employees_dropdown_raw()
             ) );
 
             erp_html_form_input( array(
@@ -92,7 +90,7 @@
                 'type'     => 'select',
                 'class'    => 'chosen-select show-if-multiple',
                 'tag'      => 'li',
-                'options'  => erp_company_get_location_dropdown_raw( $company_id, __( 'All Locations', 'wp-erp' ) )
+                'options'  => erp_company_get_location_dropdown_raw( __( 'All Locations', 'wp-erp' ) )
             ) );
 
             erp_html_form_input( array(
@@ -101,7 +99,7 @@
                 'type'     => 'select',
                 'class'    => 'chosen-select show-if-multiple',
                 'tag'      => 'li',
-                'options'  => erp_hr_get_departments_dropdown_raw( $company_id, __( 'All Departments', 'wp-erp' ) )
+                'options'  => erp_hr_get_departments_dropdown_raw( __( 'All Departments', 'wp-erp' ) )
             ) );
 
             erp_html_form_input( array(

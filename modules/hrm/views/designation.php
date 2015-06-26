@@ -37,7 +37,7 @@
         <tbody id="the-list">
             <?php
 
-            $designations = erp_hr_get_designations( erp_get_current_company_id() );
+            $designations = erp_hr_get_designations();
 
             if ( $designations ) {
                 foreach( $designations as $num => $row ) {
