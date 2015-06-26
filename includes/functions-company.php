@@ -44,9 +44,9 @@ function erp_company_get_locations() {
  *
  * @return array
  */
-function erp_company_get_location_dropdown_raw( $company_id, $select_label = null ) {
-    $locations = erp_company_get_locations( $company_id );
-    $dropdown  = array( 0 => __( '- Select Location -', 'wp-erp' ) );
+function erp_company_get_location_dropdown_raw( $select_label = null ) {
+    $locations = erp_company_get_locations();
+    $dropdown  = array( 0 => __( 'Main Location', 'wp-erp' ) );
 
     if ( $select_label ) {
         $dropdown    = array( 0 => $select_label );
