@@ -1,5 +1,6 @@
 <?php
 namespace WeDevs\ERP\Admin;
+use WeDevs\ERP\Company;
 use WeDevs\ERP\Framework\Traits\Hooker;
 
 /**
@@ -18,6 +19,14 @@ class Form_Handler {
         $this->action( 'erp_action_create_new_company', 'create_new_company' );
     }
 
+    public function is_valid_input( $array, $key ) {
+        if ( ! isset( $array[$key]) || empty( $array[$key] ) || $array[$key] == '-1' ) {
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * Create a new company
      *
@@ -28,19 +37,23 @@ class Form_Handler {
             wp_die( __( 'Cheating?', 'wp-erp' ) );
         }
 
-        $posted   = array_map( 'strip_tags', $_POST );
-        $posted   = array_map( 'trim', $posted );
+        $posted   = array_map( 'strip_tags_deep', $_POST );
+        $posted   = array_map( 'trim_deep', $posted );
 
-        $required = array(
-            'company_name' => __( 'Company name', 'wp-erp' ),
-            'country'      => __( 'Country', 'wp-erp' )
-        );
-        $errors   = array();
+        $errors   = [];
+        $required = [
+            'name'    => __( 'Company name', 'wp-erp' ),
+            'address' => [
+                'country' => __( 'Country', 'wp-erp' )
+            ]
+        ];
 
-        foreach ($required as $key => $value) {
-            if ( ! isset( $posted[$key]) || empty( $posted[$key] ) || $posted[$key] == '-1' ) {
-                $errors[] = sprintf( __( '%s is required', 'wp-erp' ), $value );
-            }
+        if ( ! $this->is_valid_input( $posted, 'name' ) ) {
+            $errors[] = __( 'Company name is required', 'wp-erp' );
+        }
+
+        if ( ! $this->is_valid_input( $posted['address'], 'country' ) ) {
+            $errors[] = __( 'Country is required', 'wp-erp' );
         }
 
         if ( $errors ) {
@@ -48,36 +61,30 @@ class Form_Handler {
             die();
         }
 
-        $args = array(
-            'title'     => $posted['company_name'],
-            'id'        => intval( $posted['company_id'] ),
-            'logo'      => isset( $posted['company_logo_id'] ) ? absint( $posted['company_logo_id'] ) : 0,
-            'address_1' => $posted['address_1'],
-            'address_2' => $posted['address_2'],
-            'city'      => $posted['city'],
-            'state'     => $posted['state'],
-            'zip'       => $posted['zip'],
-            'country'   => $posted['country'],
-            'currency'  => $posted['currency'],
+        $args = [
+            'logo'    => isset( $posted['company_logo_id'] ) ? absint( $posted['company_logo_id'] ) : 0,
+            'name'    => $posted['name'],
+            'address' => [
+                'address_1' => $posted['address']['address_1'],
+                'address_2' => $posted['address']['address_2'],
+                'city'      => $posted['address']['city'],
+                'state'     => $posted['address']['state'],
+                'zip'       => $posted['address']['zip'],
+                'country'   => $posted['address']['country'],
+            ],
             'phone'     => $posted['phone'],
             'fax'       => $posted['fax'],
             'mobile'    => $posted['mobile'],
             'website'   => $posted['website'],
-        );
-        $company_id = erp_create_company( $args );
+            'currency'  => $posted['currency'],
+        ];
 
-        if ( $company_id ) {
+        $company = new Company();
+        $company->update( $args );
 
-            // if it's an update
-            if ( true === $company_id ) {
-                $redirect_to = admin_url( 'admin.php?page=erp-company&action=edit&msg=updated&id=' . $posted['company_id'] );
-            } else {
-                $redirect_to = admin_url( 'admin.php?page=erp-company&action=edit&msg=created&id=' . $company_id );
-            }
-
-            wp_redirect( $redirect_to );
-            exit;
-        }
+        $redirect_to = admin_url( 'admin.php?page=erp-company&action=edit&msg=updated' );
+        wp_redirect( $redirect_to );
+        exit;
     }
 }
 

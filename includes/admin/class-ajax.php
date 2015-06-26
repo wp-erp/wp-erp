@@ -1,5 +1,7 @@
 <?php
 namespace WeDevs\ERP\Admin;
+use WeDevs\ERP\Admin\Models\Company_Locations;
+use WeDevs\ERP\Company;
 use WeDevs\ERP\Framework\Traits\Hooker;
 
 /**
@@ -36,19 +38,20 @@ class Ajax {
         $zip           = isset( $_POST['zip'] ) ? intval( $_POST['zip'] ) : '';
         $country       = isset( $_POST['country'] ) ? sanitize_text_field( $_POST['country'] ) : '';
         $location_id   = isset( $_POST['location_id'] ) ? intval( $_POST['location_id'] ) : 0;
-        $company_id    = isset( $_POST['company_id'] ) ? intval( $_POST['company_id'] ) : 0;
 
-        $location_id = erp_company_create_location( array(
+        $args = [
             'id'         => $location_id,
-            'company_id' => $company_id,
             'name'       => $location_name,
             'address_1'  => $address_1,
             'address_2'  => $address_2,
             'city'       => $city,
             'state'      => $state,
             'zip'        => $zip,
-            'country'    => $country,
-        ) );
+            'country'    => $country
+        ];
+
+        $company = new Company();
+        $location_id = $company->create_location( $args );
 
         if ( is_wp_error( $location_id ) ) {
             $this->send_error( $location_id->get_error_message() );
@@ -68,7 +71,7 @@ class Ajax {
         $location_id   = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
 
         if ( $location_id ) {
-            erp_company_location_delete( $location_id );
+            Company_Locations::find( $location_id )->delete();
         }
 
         $this->send_success();

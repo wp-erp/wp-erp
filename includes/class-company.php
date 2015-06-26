@@ -1,22 +1,86 @@
 <?php
 namespace WeDevs\ERP;
+use WeDevs\ERP\Admin\Models\Company_Locations;
 
 /**
  * Company class
  */
-class Company extends Item {
+class Company {
 
     /**
-     * Get a company by ID
+     * Holds the company data array
      *
-     * @param  int  company id
-     *
-     * @return object  wpdb object
+     * @var array
      */
-    protected function get_by_id( $company_id ) {
-        global $wpdb;
+    private $data;
 
-        return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}erp_companies WHERE id = %d", $company_id ) );
+    /**
+     * Option name in wp_options table
+     */
+    const key = '_erp_company';
+
+    /**
+     * Constructor
+     */
+    public function __construct() {
+        $this->data = get_option( self::key, $this->defaults() );
+    }
+
+    /**
+     * Get some defaults if no data found
+     *
+     * @return array
+     */
+    public function defaults() {
+        $defaults = [
+            'logo'    => 0,
+            'name'    => __( 'Untitled Company', 'wp-erp' ),
+            'address' => [
+                'address_1' => 'Street Address 1',
+                'address_2' => 'Address Line 2',
+                'city'      => 'City',
+                'state'     => 'State',
+                'postcode'  => '12345',
+                'country'   => 'US'
+            ],
+            'phone'    => '',
+            'fax'      => '',
+            'mobile'   => '',
+            'website'  => '',
+            'currency' => 'USD'
+        ];
+
+        return apply_filters( 'erp_company_defaults', $defaults );
+    }
+
+    /**
+     * Magic method to get item data values
+     *
+     * @param  string
+     *
+     * @return string
+     */
+    public function __get( $key ) {
+        if ( isset( $this->data[ $key ] ) ) {
+            if ( is_array( $this->data[ $key ] ) ) {
+                return $this->data[ $key ];
+            }
+
+            return stripslashes( $this->data[ $key ] );
+        }
+    }
+
+    /**
+     * Update company data
+     *
+     * @param  array   $args
+     *
+     * @return void
+     */
+    public function update( $args = [] ) {
+        $value = wp_parse_args( $args, $this->defaults() );
+
+        update_option( self::key, $value );
     }
 
     /**
@@ -65,15 +129,15 @@ class Company extends Item {
      * @return string address
      */
     public function get_formatted_address() {
-        $country = \WeDevs\ERP\Countries::instance();
+        $country = Countries::instance();
 
         return $country->get_formatted_address( array(
-            'address_1' => $this->address_1,
-            'address_2' => $this->address_2,
-            'city'      => $this->city,
-            'state'     => $this->state,
-            'postcode'  => $this->zip,
-            'country'   => $this->country
+            'address_1' => $this->address['address_1'],
+            'address_2' => $this->address['address_2'],
+            'city'      => $this->address['city'],
+            'state'     => $this->address['state'],
+            'postcode'  => $this->address['zip'],
+            'country'   => $this->address['country']
         ) );
     }
 
@@ -84,7 +148,7 @@ class Company extends Item {
      */
     public function get_edit_url() {
         $url = add_query_arg(
-            array( 'action' => 'edit', 'id' => $this->id ),
+            array( 'action' => 'edit' ),
             admin_url( 'admin.php?page=erp-company' )
         );
 
@@ -99,15 +163,58 @@ class Company extends Item {
      * @return boolean
      */
     public function has_employee( $employee_id ) {
-        global $wpdb;
+        return true;
+    }
 
-        $sql = "SELECT id FROM {$wpdb->prefix}erp_hr_employees WHERE user_id = %d AND company_id = %d";
-        $row = $wpdb->get_row( $wpdb->prepare( $sql, $employee_id, $this->id ) );
+    public function get_locations() {
+        $locations = new Company_Locations();
 
-        if ( $row ) {
-            return true;
+        return $locations::all()->toArray();
+    }
+
+    /**
+     * @param array $args
+     *
+     * @return \WP_Error
+     */
+    public function create_location( $args = [] ) {
+        $defaults = array(
+            'id'         => 0,
+            'name'       => '',
+            'address_1'  => '',
+            'address_2'  => '',
+            'city'       => '',
+            'state'      => '',
+            'zip'        => '',
+            'country'    => '',
+        );
+        $fields = wp_parse_args( $args, $defaults );
+        $location_id = intval( $fields['id'] );
+        unset( $fields['id'] );
+
+        // validation
+        if ( empty( $fields['name'] ) ) {
+            return new \WP_Error( 'no-name', __( 'No location name provided.', 'wp-erp' ) );
         }
 
-        return false;
+        if ( empty( $fields['address_1'] ) ) {
+            return new \WP_Error( 'no-address_1', __( 'No address provided.', 'wp-erp' ) );
+        }
+
+        if ( empty( $fields['country'] ) ) {
+            return new \WP_Error( 'no-country', __( 'No country provided.', 'wp-erp' ) );
+        }
+
+        $location = new Company_Locations();
+
+        if ( ! $location_id ) {
+            $location->create( $fields );
+
+            do_action( 'erp_company_location_new', $location->id, $fields );
+        } else {
+            $location->find( $location_id )->update( $fields );
+
+            do_action( 'erp_company_location_updated', $location_id, $fields );
+        }
     }
 }

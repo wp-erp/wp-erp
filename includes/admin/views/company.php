@@ -1,33 +1,77 @@
-<div class="wrap erp">
-    <h2><?php _e( 'Company', 'wp-erp' ); ?> <a href="<?php echo admin_url( 'admin.php?page=erp-company&action=new' ); ?>" class="add-new-h2"><?php _e( 'New Company', 'wp-erp' ); ?></a></h2>
+<div class="wrap erp erp-company-single">
+    <h2><?php _e( 'Company Details', 'wp-erp' ); ?></h2>
 
     <div class="metabox-holder company-accounts">
         <?php
-        $companies = erp_get_companies();
+        $company = new \WeDevs\ERP\Company();
 
-        if ( $companies ) {
-            foreach ($companies as $index => $comp) {
-                $company = new \WeDevs\ERP\Company( $comp );
-                ?>
-                <div class="postbox account">
-                    <div class="inside clearfix">
-                        <div class="logo-area">
-                            <?php echo $company->get_logo(); ?>
-                        </div><!-- .logo-area -->
-
-                        <div class="content-area">
-                            <h2><?php echo $company->name; ?> <a href="<?php echo $company->get_edit_url(); ?>">Edit</a></h2>
-
-                            <address class="address">
-                                <?php echo $company->get_formatted_address(); ?>
-                            </address>
-                        </div><!-- .content-area -->
-                    </div><!-- .inside -->
-                </div><!-- .account -->
-                <?php
-            }
-        }
+        $company->get_locations();
         ?>
+        <div class="postbox account">
+            <div class="inside clearfix">
+                <div class="logo-area">
+                    <?php echo $company->get_logo(); ?>
+                </div><!-- .logo-area -->
+
+                <div class="content-area">
+                    <h2><?php echo $company->name; ?> <a href="<?php echo $company->get_edit_url(); ?>">Edit</a></h2>
+
+                    <address class="address">
+                        <?php echo $company->get_formatted_address(); ?>
+                    </address>
+                </div><!-- .content-area -->
+            </div><!-- .inside -->
+        </div><!-- .account -->
+
+        <div class="company-location-wrap">
+            <h2>
+                <?php _e( 'Locations', 'wp-erp' ); ?>
+
+                <a href="#" id="erp-company-new-location" class="add-new-h2" data-title="<?php _e( 'New Location', 'wp-erp' ); ?>" data-id="<?php echo $company->id; ?>"><?php _e( 'Create New Location', 'wp-erp' ); ?></a>
+            </h2>
+
+            <div id="company-locations">
+                <div id="company-locations-inside">
+                <?php
+                $locations = $company->get_locations();
+                $country = \WeDevs\ERP\Countries::instance();
+
+                if ( $locations ) {
+                    foreach ($locations as $num => $location) {
+                        ?>
+                        <div class="company-location postbox">
+                            <h3 class="hndle"><?php echo wp_kses_post( $location['name'] ); ?></h3>
+
+                            <div class="inside">
+                                <address class="address">
+                                    <?php
+                                    echo $country->get_formatted_address( array(
+                                        'address_1' => $location['address_1'],
+                                        'address_2' => $location['address_2'],
+                                        'city'      => $location['city'],
+                                        'state'     => $location['state'],
+                                        'postcode'  => $location['zip'],
+                                        'country'   => $location['country']
+                                    ) );
+                                    ?>
+                                </address>
+                            </div><!-- .inside -->
+
+                            <div class="actions">
+                                <a href="#" class="edit-location" data-data='<?php echo json_encode( $location ); ?>'><span class="dashicons dashicons-edit"></span></a>
+                                <a href="#" class="remove-location" data-id="<?php echo $location['id']; ?>"><span class="dashicons dashicons-trash"></span></a>
+                            </div>
+                        </div>
+
+                        <?php
+                    }
+                } else {
+                    _e( 'No extra locations found!', 'wp-erp' );
+                }
+                ?>
+                </div><!-- #company-locations-inside -->
+            </div><!-- #company-locations -->
+        </div><!-- .company-location-wrap -->
     </div><!-- .metabox-holder -->
 
 </div>

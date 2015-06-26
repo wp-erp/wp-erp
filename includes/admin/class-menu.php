@@ -16,7 +16,6 @@ class Admin_Menu {
      */
     public function __construct() {
         $this->action( 'init', 'do_mode_switch', 99 );
-        $this->action( 'init', 'do_company_switch', 99 );
 
         $this->action( 'admin_menu', 'admin_menu', 99 );
         $this->action( 'admin_menu', 'hide_admin_menus', 100 );
@@ -74,35 +73,6 @@ class Admin_Menu {
                 'href'   => wp_nonce_url( add_query_arg( 'erp-mode', $key ), 'erp_mode_nonce', 'erp_mode_nonce' )
             ) );
         }
-
-        // Company Mode
-        $companies       = erp_get_companies();
-        $current_company = erp_get_current_company();
-        $com_label       = ( false === $current_company ) ? __( '- None -', 'wp-erp' ) : $current_company->title;
-
-        $com_icon        = '<span class="ab-icon dashicons-admin-home"></span>';
-        $com_text        = sprintf( '%s: %s', __( 'Company', 'wp-erp' ), $com_label );
-
-        $wp_admin_bar->add_menu( array(
-            'id'        => 'erp-comp-switch',
-            'title'     => $com_icon . $com_text,
-            'href'      => '#',
-            'position'  => 0,
-            'meta'      => array(
-                'title' => __( 'Switch Company', 'wp-erp' )
-            )
-        ) );
-
-        if ( $companies ) {
-            foreach ($companies as $key => $company) {
-                $wp_admin_bar->add_menu( array(
-                    'id'     => 'erp-comp-' . $key,
-                    'parent' => 'erp-comp-switch',
-                    'title'  => $company->title,
-                    'href'   => wp_nonce_url( add_query_arg( 'erp-comp', $company->id ), 'erp_comp_swt_nonce', 'erp_comp_swt_nonce' )
-                ) );
-            }
-        }
     }
 
     /**
@@ -135,42 +105,6 @@ class Admin_Menu {
         update_user_meta( $current_user->ID, '_erp_mode', $new_mode );
 
         $redirect_to = apply_filters( 'erp_switch_redirect_to', admin_url( 'index.php' ), $new_mode );
-        wp_redirect( $redirect_to );
-        exit;
-    }
-
-    /**
-     * Do the company switch from admin bar
-     *
-     * @return void
-     */
-    public function do_company_switch() {
-        global $current_user;
-
-        // check for our nonce
-        if ( ! isset( $_GET['erp_comp_swt_nonce'] ) || ! wp_verify_nonce( $_GET['erp_comp_swt_nonce'], 'erp_comp_swt_nonce' ) ) {
-            return;
-        }
-
-        $companies   = erp_get_companies();
-        $company_ids = array_map( 'intval', wp_list_pluck( $companies, 'id' ) );
-
-        // now check for our query string
-        if ( ! isset( $_REQUEST['erp-comp'] ) || ! in_array( $_REQUEST['erp-comp'], $company_ids ) ) {
-            return;
-        }
-
-        $company_id = (int) $_REQUEST['erp-comp'];
-        update_user_meta( $current_user->ID, '_erp_company', $company_id );
-
-        $redirect_to = remove_query_arg( array(
-            'erp-comp', 'erp_comp_swt_nonce',
-            'user_switched', 'switched_off', 'switched_back',
-            'message', 'update', 'updated', 'settings-updated', 'saved',
-            'activated', 'activate', 'deactivate', 'enabled', 'disabled',
-            'locked', 'skipped', 'deleted', 'trashed', 'untrashed',
-        ) );
-        $redirect_to = apply_filters( 'erp_comp_switch_redirect_to', $redirect_to );
         wp_redirect( $redirect_to );
         exit;
     }
@@ -287,22 +221,10 @@ class Admin_Menu {
      */
     public function company_page() {
         $action = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
-        $id     = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
 
         switch ($action) {
-            case 'new':
-
-                // create a dummy company
-                $temp        = new \stdClass();
-                $temp->id    = 0;
-                $temp->title = '';
-                $company     = new \WeDevs\ERP\Company( $temp );
-
-                $template   = WPERP_VIEWS . '/company-editor.php';
-                break;
-
             case 'edit':
-                $company    = new \WeDevs\ERP\Company( $id );
+                $company    = new \WeDevs\ERP\Company();
                 $template = WPERP_VIEWS . '/company-editor.php';
                 break;
 

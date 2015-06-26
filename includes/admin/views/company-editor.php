@@ -1,5 +1,11 @@
 <div class="wrap erp erp-company-single">
-    <h2><?php _e( 'Company', 'wp-erp' ); ?> <a href="<?php echo admin_url( 'admin.php?page=erp-company&action=new' ); ?>" class="add-new-h2"><?php _e( 'New Company', 'wp-erp' ); ?></a></h2>
+    <h2><?php _e( 'Company', 'wp-erp' ); ?></h2>
+
+    <?php if ( isset( $_GET['msg'] ) && $_GET['msg'] == 'updated' ) { ?>
+        <div class="updated">
+            <p><?php _e( 'Company information has been updated!', 'wp-erp' ); ?></p>
+        </div>
+    <?php } ?>
 
     <?php $country = \WeDevs\ERP\Countries::instance(); ?>
 
@@ -9,7 +15,7 @@
                 <div id="titlediv" style="margin-bottom: 20px;">
                     <div id="titlewrap">
                         <label class="screen-reader-text" id="title-prompt-text" for="title"><?php _e( 'Enter company name here', 'wp-erp' ); ?></label>
-                        <input type="text" name="company_name" size="30" value="<?php echo esc_attr( $company->name ); ?>" id="title" autocomplete="off">
+                        <input type="text" name="name" size="30" value="<?php echo esc_attr( $company->name ); ?>" id="title" autocomplete="off">
                     </div>
                 </div>
 
@@ -22,8 +28,8 @@
                                 <td><label for="address_1"><?php _e( 'Address Line 1 ', 'wp-erp' ); ?></label></td>
                                 <td>
                                     <?php erp_html_form_input(array(
-                                        'name'  => 'address_1',
-                                        'value' => $company->address_1,
+                                        'name'  => 'address[address_1]',
+                                        'value' => $company->address['address_1'],
                                         'class' => 'regular-text'
                                     )); ?>
                                 </td>
@@ -33,8 +39,8 @@
                                 <td><label for="address_2"><?php _e( 'Address Line 2 ', 'wp-erp' ); ?></label></td>
                                 <td>
                                     <?php erp_html_form_input(array(
-                                        'name'  => 'address_2',
-                                        'value' => $company->address_2,
+                                        'name'  => 'address[address_2]',
+                                        'value' => $company->address['address_2'],
                                         'class' => 'regular-text'
                                     )); ?>
                                 </td>
@@ -44,8 +50,8 @@
                                 <td><label for="city"><?php _e( 'City', 'wp-erp' ); ?></label></td>
                                 <td>
                                     <?php erp_html_form_input(array(
-                                        'name'  => 'city',
-                                        'value' => $company->city,
+                                        'name'  => 'address[city]',
+                                        'value' => $company->address['city'],
                                         'class' => 'regular-text'
                                     )); ?>
                                 </td>
@@ -54,11 +60,11 @@
                             <tr>
                                 <td><label for="state"><?php _e( 'Province / State', 'wp-erp' ); ?></label></td>
                                 <td>
-                                    <select name="state" id="erp-state" class="erp-state-select">
+                                    <select name="address[state]" id="erp-state" class="erp-state-select">
                                         <?php
-                                        if ( $company->country ) {
-                                            $states = $country->get_states( $company->country );
-                                            echo erp_html_generate_dropdown( $states, $company->state );
+                                        if ( $company->address['country'] ) {
+                                            $states = $country->get_states( $company->address['country'] );
+                                            echo erp_html_generate_dropdown( $states, $company->address['state'] );
                                         } else {
                                             ?>
                                             <option value="-1"><?php _e( '- Select -', 'wp-erp' ); ?></option>
@@ -71,8 +77,8 @@
                             <tr>
                                 <td><label for="erp-country"><?php _e( 'Country', 'wp-erp' ); ?></label> <span class="required">*</span></td>
                                 <td>
-                                    <select name="country" id="erp-country" data-parent="table" class="erp-country-select" required="required">
-                                        <?php echo $country->country_dropdown( $company->country ); ?>
+                                    <select name="address[country]" id="erp-country" data-parent="table" class="erp-country-select" required="required">
+                                        <?php echo $country->country_dropdown( $company->address['country'] ); ?>
                                     </select>
                                 </td>
                             </tr>
@@ -81,8 +87,8 @@
                                 <td><label for="zip"><?php _e( 'Postal / Zip Code', 'wp-erp' ); ?></label></td>
                                 <td>
                                     <?php erp_html_form_input(array(
-                                        'name'  => 'zip',
-                                        'value' => $company->zip,
+                                        'name'  => 'address[zip]',
+                                        'value' => $company->address['zip'],
                                         'class' => 'regular-text'
                                     )); ?>
                                 </td>
@@ -144,55 +150,6 @@
                         </table>
                     </div><!-- .inside -->
                 </div><!-- .postbox -->
-
-                <div class="company-location-wrap">
-                    <h2>
-                        <?php _e( 'Locations', 'wp-erp' ); ?>
-
-                        <a href="#" id="erp-company-new-location" class="add-new-h2" data-title="<?php _e( 'New Location', 'wp-erp' ); ?>" data-id="<?php echo $company->id; ?>"><?php _e( 'Create New Location', 'wp-erp' ); ?></a>
-                    </h2>
-
-                    <div id="company-locations">
-                        <div id="company-locations-inside">
-                        <?php
-                        $locations = erp_company_get_locations( $company->id );
-
-                        if ( $locations ) {
-                            foreach ($locations as $num => $location) {
-                                ?>
-                                <div class="company-location postbox">
-                                    <h3 class="hndle"><?php echo wp_kses_post( $location->name ); ?></h3>
-
-                                    <div class="inside">
-                                        <address class="address">
-                                            <?php
-                                            echo $country->get_formatted_address( array(
-                                                'address_1' => $location->address_1,
-                                                'address_2' => $location->address_2,
-                                                'city'      => $location->city,
-                                                'state'     => $location->state,
-                                                'postcode'  => $location->zip,
-                                                'country'   => $location->country
-                                            ) );
-                                            ?>
-                                        </address>
-                                    </div><!-- .inside -->
-
-                                    <div class="actions">
-                                        <a href="#" class="edit-location" data-data='<?php echo json_encode( $location ); ?>'><span class="dashicons dashicons-edit"></span></a>
-                                        <a href="#" class="remove-location" data-id="<?php echo $location->id; ?>"><span class="dashicons dashicons-trash"></span></a>
-                                    </div>
-                                </div>
-
-                                <?php
-                            }
-                        } else {
-                            _e( 'No extra locations found!', 'wp-erp' );
-                        }
-                        ?>
-                        </div><!-- #company-locations-inside -->
-                    </div><!-- #company-locations -->
-                </div><!-- .company-location-wrap -->
             </div><!-- .erp-area-left -->
 
             <div class="erp-area-right">
@@ -227,11 +184,10 @@
 
                                 <div id="publishing-action">
 
-                                    <?php $button_text = $company->id ? __( 'Update Company', 'wp-erp' ) : __( 'Create Company', 'wp-erp' ); ?>
                                     <?php wp_nonce_field( 'erp-new-company' ); ?>
                                     <input type="hidden" name="erp-action" value="create_new_company">
                                     <input type="hidden" name="company_id" value="<?php echo $company->id; ?>">
-                                    <input name="save" type="submit" class="button button-primary button-large" id="publish" accesskey="p" value="<?php echo $button_text; ?>">
+                                    <input name="save" type="submit" class="button button-primary button-large" id="publish" accesskey="p" value="<?php echo __( 'Update Company', 'wp-erp' ); ?>">
                                 </div>
 
                                 <div class="clear"></div>
