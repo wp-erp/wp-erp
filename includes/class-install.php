@@ -71,28 +71,7 @@ class WeDevs_ERP_Installer {
             }
         }
 
-        $table_schema = "CREATE TABLE `{$wpdb->prefix}erp_companies` (
-            `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-            `title` varchar(100) DEFAULT NULL,
-            `logo` bigint(20) unsigned DEFAULT NULL,
-            `address_1` varchar(255) DEFAULT NULL,
-            `address_2` varchar(255) DEFAULT NULL,
-            `city` varchar(100) DEFAULT NULL,
-            `state` varchar(100) DEFAULT NULL,
-            `zip` int(5) DEFAULT NULL,
-            `country` varchar(2) DEFAULT NULL,
-            `currency` varchar(10) DEFAULT NULL,
-            `phone` varchar(20) DEFAULT NULL,
-            `fax` varchar(20) DEFAULT NULL,
-            `mobile` varchar(20) DEFAULT NULL,
-            `website` varchar(255) DEFAULT NULL,
-            `status` tinyint(2) DEFAULT NULL,
-            `created_on` datetime DEFAULT NULL,
-            `updated_on` datetime DEFAULT NULL,
-            PRIMARY KEY (`id`)
-        ) $collate;
-
-        CREATE TABLE `{$wpdb->prefix}erp_company_locations` (
+        $table_schema = "CREATE TABLE `{$wpdb->prefix}erp_company_locations` (
             `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
             `company_id` int(11) unsigned DEFAULT NULL,
             `name` varchar(255) DEFAULT NULL,
@@ -112,29 +91,24 @@ class WeDevs_ERP_Installer {
 
         CREATE TABLE `{$wpdb->prefix}erp_hr_depts` (
             `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-            `company_id` int(11) unsigned NOT NULL DEFAULT '0',
             `title` varchar(200) NOT NULL DEFAULT '',
             `description` text,
             `lead` int(11) unsigned DEFAULT '0',
             `parent` int(11) unsigned DEFAULT '0',
             `status` tinyint(1) unsigned DEFAULT '1',
-            PRIMARY KEY (`id`),
-            KEY `company_id` (`company_id`)
+            PRIMARY KEY (`id`)
         ) $collate;
 
         CREATE TABLE `{$wpdb->prefix}erp_hr_designations` (
             `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-            `company_id` int(11) NOT NULL DEFAULT '0',
             `title` varchar(200) NOT NULL DEFAULT '',
             `description` text,
             `status` tinyint(1) DEFAULT '1',
-            PRIMARY KEY (`id`),
-            KEY `company_id` (`company_id`)
+            PRIMARY KEY (`id`)
         ) $collate;
 
         CREATE TABLE `{$wpdb->prefix}erp_hr_employees` (
             `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-            `company_id` int(11) unsigned NOT NULL DEFAULT '0',
             `user_id` bigint(20) unsigned NOT NULL DEFAULT '0',
             `employee_id` varchar(20) DEFAULT NULL,
             `designation` int(11) unsigned NOT NULL DEFAULT '0',
@@ -150,7 +124,6 @@ class WeDevs_ERP_Installer {
             `type` varchar(20) NOT NULL,
             `status` varchar(10) NOT NULL DEFAULT '',
             PRIMARY KEY (`id`),
-            KEY `company_id` (`company_id`),
             KEY `employee_id` (`user_id`)
         ) $collate;
 
@@ -179,15 +152,13 @@ class WeDevs_ERP_Installer {
 
         CREATE TABLE `{$wpdb->prefix}erp_hr_leave_policies` (
             `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-            `company_id` int(11) unsigned NOT NULL,
             `name` varchar(20) DEFAULT NULL,
             `unit` varchar(20) DEFAULT NULL,
             `value` mediumint(5) DEFAULT NULL,
             `color` varchar(7) DEFAULT NULL,
             `created_on` datetime NOT NULL,
             `updated_on` datetime NOT NULL,
-            PRIMARY KEY (`id`),
-            KEY `company_id` (`company_id`)
+            PRIMARY KEY (`id`)
         ) $collate;
 
         CREATE TABLE `{$wpdb->prefix}erp_hr_leave_entitlements` (
@@ -223,13 +194,16 @@ class WeDevs_ERP_Installer {
             `user_id` bigint(20) unsigned NOT NULL,
             `policy_id` int(11) unsigned NOT NULL,
             `days` tinyint(3) unsigned DEFAULT NULL,
-            `last_date` datetime DEFAULT NULL,
+            `start_date` datetime NOT NULL,
+            `end_date` datetime NOT NULL,
             `comments` text,
+            `reason` text NOT NULL,
             `status` tinyint(2) unsigned DEFAULT NULL,
             `created_by` bigint(20) unsigned DEFAULT NULL,
             `updated_by` bigint(20) unsigned DEFAULT NULL,
             `created_on` datetime NOT NULL,
             `updated_on` datetime DEFAULT NULL,
+            `last_date` datetime DEFAULT NULL,
             PRIMARY KEY (`id`),
             KEY `employee_id` (`user_id`),
             KEY `policy_id` (`policy_id`)
