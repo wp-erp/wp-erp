@@ -17,7 +17,7 @@
         <label for="dept-lead"><?php _e( 'Department Lead', 'wp-erp' ); ?></label>
         <span class="field">
             <select name="lead" id="dept-lead">
-                <?php echo erp_hr_get_employees_dropdown( erp_get_current_company_id() ); ?>
+                <?php echo erp_hr_get_employees_dropdown(); ?>
             </select>
         </span>
     </div>
@@ -26,7 +26,7 @@
         <label for="parent-dept"><?php _e( 'Parent Department', 'wp-erp' ); ?></label>
         <span class="field">
             <select name="parent" id="dept-parent">
-                <?php echo erp_hr_get_departments_dropdown( erp_get_current_company_id() ); ?>
+                <?php echo erp_hr_get_departments_dropdown(); ?>
             </select>
         </span>
     </div>

@@ -12,7 +12,6 @@ function erp_hr_create_department( $args = array() ) {
 
     $defaults = array(
         'id'          => 0,
-        'company_id'  => 0,
         'title'       => '',
         'description' => '',
         'lead'        => 0,
@@ -23,10 +22,6 @@ function erp_hr_create_department( $args = array() ) {
     $fields = wp_parse_args( $args, $defaults );
 
     // validation
-    if ( ! $fields['company_id'] ) {
-        return new WP_Error( 'no-company-id', __( 'No company provided.', 'wp-erp' ) );
-    }
-
     if ( empty( $fields['title'] ) ) {
         return new WP_Error( 'no-name', __( 'No department name provided.', 'wp-erp' ) );
     }
@@ -132,8 +127,8 @@ function erp_hr_get_departments_dropdown_raw($select_label = null ) {
  *
  * @return string  the dropdown
  */
-function erp_hr_get_departments_dropdown( $company_id, $selected = '' ) {
-    $departments = erp_hr_get_departments_dropdown_raw( $company_id );
+function erp_hr_get_departments_dropdown( $selected = '' ) {
+    $departments = erp_hr_get_departments_dropdown_raw();
     $dropdown    = '';
 
     if ( $departments ) {

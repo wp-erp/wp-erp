@@ -86,7 +86,6 @@ class Ajax_Handler {
 
         $dept_id = erp_hr_create_department( array(
             'id'          => $dept_id,
-            'company_id'  => erp_get_current_company_id(),
             'title'       => $title,
             'description' => $desc,
             'lead'        => $lead,
@@ -144,7 +143,6 @@ class Ajax_Handler {
 
         $desig_id = erp_hr_create_designation( array(
             'id'          => $desig_id,
-            'company_id'  => erp_get_current_company_id(),
             'title'       => $title,
             'description' => $desc
         ) );
@@ -215,8 +213,6 @@ class Ajax_Handler {
         unset( $_POST['action'] );
 
         $posted               = array_map( 'strip_tags_deep', $_POST );
-        $posted['company_id'] = erp_get_current_company_id(); // make sure it's not exploited
-
         $employee_id          = erp_hr_employee_create( $posted );
 
         if ( is_wp_error( $employee_id ) ) {

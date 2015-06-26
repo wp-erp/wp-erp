@@ -12,7 +12,6 @@ function erp_hr_create_designation( $args = array() ) {
 
     $defaults = array(
         'id'          => 0,
-        'company_id'  => 0,
         'title'       => '',
         'description' => '',
         'status'      => 1
@@ -21,10 +20,6 @@ function erp_hr_create_designation( $args = array() ) {
     $fields = wp_parse_args( $args, $defaults );
 
     // validation
-    if ( ! $fields['company_id'] ) {
-        return new WP_Error( 'no-company-id', __( 'No company provided.', 'wp-erp' ) );
-    }
-
     if ( empty( $fields['title'] ) ) {
         return new WP_Error( 'no-name', __( 'No department name provided.', 'wp-erp' ) );
     }
