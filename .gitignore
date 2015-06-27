@@ -2,3 +2,4 @@ config.codekit
 .idea
 .codekit-cache
 /vendor/
+node_modules
