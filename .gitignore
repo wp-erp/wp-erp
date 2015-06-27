@@ -3,3 +3,4 @@ config.codekit
 .codekit-cache
 /vendor/
 node_modules
+build
