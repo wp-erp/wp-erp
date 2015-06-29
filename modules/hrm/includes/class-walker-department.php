@@ -27,7 +27,7 @@ class Department_Walker extends \Walker {
     public function start_el( &$output, $elem, $depth = 0, $args = array(), $id = 0 ) {
         static $alternate;
 
-        $department = new \WeDevs\ERP\HRM\Department( $elem );
+        $department = new Department( $elem );
         $alternate  = ( 'alternate' == $alternate ) ? 'even' : 'alternate';
         $padding    = str_repeat( '&#8212; ', $depth );
         ?>

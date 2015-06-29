@@ -8,7 +8,6 @@
  * @return int|false
  */
 function erp_hr_create_department( $args = array() ) {
-    global $wpdb;
 
     $defaults = array(
         'id'          => 0,
@@ -30,24 +29,22 @@ function erp_hr_create_department( $args = array() ) {
     $dept_id = $fields['id'];
     unset( $fields['id'] );
 
+    $department = new \WeDevs\ERP\HRM\Models\Department();
+
     if ( ! $dept_id ) {
+        $department->create( $fields );
 
-        if ( $wpdb->insert( $wpdb->prefix . 'erp_hr_depts', $fields ) ) {
+        do_action( 'erp_hr_dept_new', $wpdb->insert_id, $fields );
 
-            do_action( 'erp_hr_dept_new', $wpdb->insert_id, $fields );
-
-            return $wpdb->insert_id;
-        }
+        return $department->id;
 
     } else {
 
-        if ( $wpdb->update( $wpdb->prefix . 'erp_hr_depts', $fields, array( 'id' => $dept_id ) ) ) {
+        $department->find( $dept_id )->update( $fields );
 
-            do_action( 'erp_hr_dept_updated', $dept_id, $fields );
+        do_action( 'erp_hr_dept_updated', $dept_id, $fields );
 
-            return $dept_id;
-        }
-
+        return $dept_id;
     }
 
     return false;
@@ -61,13 +58,13 @@ function erp_hr_create_department( $args = array() ) {
  * @return array  list of departments
  */
 function erp_hr_get_departments() {
-    global $wpdb;
 
     $cache_key = 'erp-get-departments';
     $results   = wp_cache_get( $cache_key, 'wp-erp' );
 
     if ( false === $results ) {
-        $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}erp_hr_depts" );
+        $results = erp_array_to_object( \WeDevs\ERP\HRM\Models\Department::all()->toArray() );
+
         wp_cache_set( $cache_key, $results, 'wp-erp' );
     }
 
@@ -82,7 +79,6 @@ function erp_hr_get_departments() {
  * @return bool
  */
 function erp_hr_delete_department( $department_id ) {
-    global $wpdb;
 
     $department = new \WeDevs\ERP\HRM\Department( $department_id );
     if ( $department->num_of_employees() ) {
@@ -91,7 +87,7 @@ function erp_hr_delete_department( $department_id ) {
 
     do_action( 'erp_hr_dept_delete', $department_id );
 
-    return $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}erp_hr_depts WHERE id = %d", $department_id ) );
+    return \WeDevs\ERP\HRM\Models\Department::find( $department_id )->delete();
 }
 
 /**
@@ -122,7 +118,6 @@ function erp_hr_get_departments_dropdown_raw($select_label = null ) {
 /**
  * Get company departments dropdown
  *
- * @param  int  company id
  * @param  string  selected department
  *
  * @return string  the dropdown
