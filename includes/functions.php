@@ -299,3 +299,22 @@ function erp_extract_dates( $start_date, $end_date ) {
 
     return $dates;
 }
+
+/**
+ * Convert an two dimentational array to one dimentional array object
+ *
+ * @param  array   $array array of arrays
+ *
+ * @return array
+ */
+function erp_array_to_object( $array = [] ) {
+    $new_array = [];
+
+    if ( $array ) {
+        foreach ($array as $key => $value) {
+            $new_array[] = (object) $value;
+        }
+    }
+
+    return $new_array;
+}
