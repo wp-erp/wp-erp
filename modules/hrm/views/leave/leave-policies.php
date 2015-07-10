@@ -40,7 +40,7 @@
 
                 <tbody id="the-list">
                     <?php
-                    $policies = erp_hr_leave_get_policies( erp_get_current_company_id() );
+                    $policies = erp_hr_leave_get_policies();
 
                     if ( $policies ) {
 

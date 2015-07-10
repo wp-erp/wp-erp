@@ -10,7 +10,6 @@ function erp_hr_leave_insert_policy( $args = array() ) {
 
     $defaults = array(
         'id'         => null,
-        'company_id' => erp_get_current_company_id(),
         'name'       => '',
         'unit'       => 'day',
         'value'      => 0,
