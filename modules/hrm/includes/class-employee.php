@@ -1,6 +1,10 @@
 <?php
 namespace WeDevs\ERP\HRM;
 
+use WeDevs\ERP\HRM\Models\Dependents;
+use WeDevs\ERP\HRM\Models\Education;
+use WeDevs\ERP\HRM\Models\Work_Experience;
+
 /**
  * Employee Class
  */
@@ -456,9 +460,7 @@ class Employee {
      * @return array the qualifications
      */
     public function get_educations() {
-        $educations = array();
-
-        return $educations;
+        return Education::where( 'employee_id', '=', $this->id )->get();
     }
 
     /**
@@ -467,9 +469,7 @@ class Employee {
      * @return array
      */
     public function get_experiences() {
-        $experiences = array();
-
-        return $experiences;
+        return Work_Experience::where( 'employee_id', '=', $this->id )->get();
     }
 
     /**
@@ -478,9 +478,7 @@ class Employee {
      * @return array
      */
     public function get_dependents() {
-        $dependents = array();
-
-        return $dependents;
+        return Dependents::where( 'employee_id', '=', $this->id )->get();
     }
 
     /**

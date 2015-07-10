@@ -32,12 +32,19 @@
             $( '.erp-hr-employees' ).on( 'click', 'a#erp-empl-jobinfo', this.employee.updateJobStatus );
             $( '.erp-hr-employees' ).on( 'click', 'td.action a.remove', this.employee.removeHistory );
 
+            // work experience
+            $( '.erp-hr-employees' ).on( 'click', 'a#erp-empl-add-exp', this.employee.addWorkExperience );
+            $( '.erp-hr-employees' ).on( 'click', 'a.work-experience-edit', this.employee.editWorkExperience );
+            $( '.erp-hr-employees' ).on( 'click', 'a.work-experience-delete', this.employee.removeExperience );
+
+            // notes
             $( '.erp-hr-employees' ).on( 'submit', '.note-tab-wrap form', this.employee.addNote );
 
+            // photos
             $( 'body' ).on( 'click', 'a#erp-set-emp-photo', this.employee.setPhoto );
             $( 'body' ).on( 'click', 'a.erp-remove-photo', this.employee.removePhoto );
 
-            // this.employee.updateCompensation();
+            // this.employee.addWorkExperience();
         },
 
         initDateField: function() {
@@ -503,6 +510,83 @@
                         },
                         error: function(response) {
                             alert( response );
+                        }
+                    });
+                }
+            },
+
+            addWorkExperience: function(e) {
+                if ( typeof e !== 'undefined' ) {
+                    e.preventDefault();
+                }
+
+                var self = $(this);
+
+                $.erpPopup({
+                    title: self.data('title'),
+                    content: wp.template( self.data('template' ) )({ employee_id: self.data('id')}),
+                    extraClass: 'smaller',
+                    onReady: function() {
+                        WeDevs_ERP_HR.initDateField();
+                    },
+                    onSubmit: function(modal) {
+                        wp.ajax.send( {
+                            data: this.serializeObject(),
+                            success: function() {
+                                WeDevs_ERP_HR.reloadPage();
+                                modal.closeModal();
+                            },
+                            error: function(error) {
+                                modal.enableButton();
+                                alert( error );
+                            }
+                        });
+                    }
+                });
+            },
+
+            editWorkExperience: function(e) {
+                if ( typeof e !== 'undefined' ) {
+                    e.preventDefault();
+                }
+
+                var self = $(this);
+
+                $.erpPopup({
+                    title: self.data('title'),
+                    content: wp.template( self.data('template' ) )( self.data('data') ),
+                    extraClass: 'smaller',
+                    button: self.data('button'),
+                    onReady: function() {
+                        WeDevs_ERP_HR.initDateField();
+                    },
+                    onSubmit: function(modal) {
+                        wp.ajax.send( {
+                            data: this.serializeObject(),
+                            success: function() {
+                                WeDevs_ERP_HR.reloadPage();
+                                modal.closeModal();
+                            },
+                            error: function(error) {
+                                modal.enableButton();
+                                alert( error );
+                            }
+                        });
+                    }
+                });
+            },
+
+            removeExperience: function(e) {
+                e.preventDefault();
+
+                if ( confirm( wpErpHr.confirm ) ) {
+                    wp.ajax.send( 'erp-hr-emp-delete-exp', {
+                        data: {
+                            id: $(this).data('id'),
+                            _wpnonce: wpErpHr.nonce
+                        },
+                        success: function() {
+                            WeDevs_ERP_HR.reloadPage();
                         }
                     });
                 }

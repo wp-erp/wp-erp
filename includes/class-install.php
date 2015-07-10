@@ -207,7 +207,21 @@ class WeDevs_ERP_Installer {
             PRIMARY KEY (`id`),
             KEY `employee_id` (`user_id`),
             KEY `policy_id` (`policy_id`)
-        ) $collate;";
+        ) $collate;
+
+        CREATE TABLE `{$wpdb->prefix}erp_hr_work_exp` (
+          `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+          `employee_id` int(11) DEFAULT NULL,
+          `company_name` varchar(100) DEFAULT NULL,
+          `job_title` varchar(100) DEFAULT NULL,
+          `from` date DEFAULT NULL,
+          `to` date DEFAULT NULL,
+          `description` text,
+          `created_at` datetime DEFAULT NULL,
+          `updated_at` datetime DEFAULT NULL,
+          PRIMARY KEY (`id`),
+          KEY `employee_id` (`employee_id`)
+        ) $collate";
 
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
         dbDelta( $table_schema );

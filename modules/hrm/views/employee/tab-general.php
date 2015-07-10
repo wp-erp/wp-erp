@@ -71,7 +71,7 @@
 
         if ( $experiences ) {
             ?>
-            <table class="widefat">
+            <table class="widefat" style="margin-bottom: 15px;">
                 <thead>
                     <tr>
                         <th><?php _e( 'Previous Company', 'wp-erp' ); ?></th>
@@ -79,17 +79,22 @@
                         <th><?php _e( 'From', 'wp-erp' ); ?></th>
                         <th><?php _e( 'To', 'wp-erp' ); ?></th>
                         <th><?php _e( 'Job Description', 'wp-erp' ); ?></th>
+                        <th width="10%">&nbsp;</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($experiences as $key => $experience) { ?>
 
                         <tr class="<?php echo $key % 2 == 0 ? 'alternate' : 'odd'; ?>">
-                            <td><?php echo $experience['company_name'] ?></td>
-                            <td><?php echo $experience['job_title'] ?></td>
-                            <td><?php echo $experience['from'] ?></td>
-                            <td><?php echo $experience['to'] ?></td>
-                            <td><?php echo $experience['description'] ?></td>
+                            <td><?php echo esc_html( $experience->company_name ); ?></td>
+                            <td><?php echo esc_html( $experience->job_title ); ?></td>
+                            <td><?php echo erp_format_date( $experience->from ); ?></td>
+                            <td><?php echo erp_format_date( $experience->to ); ?></td>
+                            <td><?php echo esc_html( $experience->description ); ?></td>
+                            <td width="10%">
+                                <a href="#" class="work-experience-edit" data-template="erp-employment-work-experience" data-title="<?php esc_attr_e( 'Work Experience', 'wp-erp' ); ?>" data-data='<?php echo json_encode( $experience ); ?>' data-button="<?php esc_attr_e( 'Update Experience', 'wp-erp' ); ?>"><span class="dashicons dashicons-edit"></span></a>
+                                <a href="#" class="work-experience-delete" data-id="<?php echo $experience->id; ?>"><span class="dashicons dashicons-trash"></span></a>
+                            </td>
                         </tr>
 
                     <?php } ?>
@@ -100,6 +105,8 @@
             <?php _e( 'No work experiences found.', 'wp-erp' ); ?>
 
         <?php } ?>
+
+        <a class="button button-secondary" id="erp-empl-add-exp" href="#" data-id="<?php echo $employee->id; ?>"  data-template="erp-employment-work-experience" data-title="<?php esc_attr_e( 'Work Experience', 'wp-erp' ); ?>"><?php _e( '+ Add Experience', 'wp-erp' ); ?></a>
 
     </div>
 </div><!-- .postbox -->
@@ -113,27 +120,29 @@
 
         if ( $educations ) {
             ?>
-            <table class="widefat">
+            <table class="widefat" style="margin-bottom: 15px;">
                 <thead>
                     <tr>
                         <th><?php _e( 'School Name', 'wp-erp' ); ?></th>
                         <th><?php _e( 'Degree', 'wp-erp' ); ?></th>
                         <th><?php _e( 'Field(s) of Study', 'wp-erp' ); ?></th>
-                        <th><?php _e( 'Date of Completion', 'wp-erp' ); ?></th>
+                        <th><?php _e( 'Year of Completion', 'wp-erp' ); ?></th>
                         <th><?php _e( 'Additional Notes', 'wp-erp' ); ?></th>
                         <th><?php _e( 'Interests', 'wp-erp' ); ?></th>
+                        <th>&nbsp;</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($educations as $key => $education) { ?>
 
                         <tr class="<?php echo $key % 2 == 0 ? 'alternate' : 'odd'; ?>">
-                            <td><?php echo $education['school'] ?></td>
-                            <td><?php echo $education['degree'] ?></td>
-                            <td><?php echo $education['field'] ?></td>
-                            <td><?php echo $education['finished'] ?></td>
-                            <td><?php echo $education['notes'] ?></td>
-                            <td><?php echo $education['interests'] ?></td>
+                            <td><?php echo $education->school; ?></td>
+                            <td><?php echo $education->degree; ?></td>
+                            <td><?php echo $education->field; ?></td>
+                            <td><?php echo $education->finished; ?></td>
+                            <td><?php echo $education->notes; ?></td>
+                            <td><?php echo $education->interests; ?></td>
+                            <td>&nbsp;</td>
                         </tr>
 
                     <?php } ?>
@@ -144,6 +153,8 @@
             <?php _e( 'No education information found.', 'wp-erp' ); ?>
 
         <?php } ?>
+
+        <a class="button button-secondary erp-empl-add-edu" href="#" data-template="" data-title=""><?php _e( '+ Add Education', 'wp-erp' ); ?></a>
     </div>
 </div><!-- .postbox -->
 
@@ -157,7 +168,7 @@
 
         if ( $dependents ) {
             ?>
-            <table class="widefat">
+            <table class="widefat" style="margin-bottom: 15px;">
                 <thead>
                     <tr>
                         <th><?php _e( 'Name', 'wp-erp' ); ?></th>
@@ -182,6 +193,8 @@
             <?php _e( 'No dependent information found.', 'wp-erp' ); ?>
 
         <?php } ?>
+
+        <a class="button button-secondary erp-empl-add-depend" href="#"><?php _e( '+ Add Dependents', 'wp-erp' ); ?></a>
 
     </div>
 </div><!-- .postbox -->

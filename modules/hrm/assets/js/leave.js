@@ -142,8 +142,6 @@
 
     $(function() {
         Leave.initialize();
-
-        console.log('leave initialize');
     });
 
 })(jQuery);

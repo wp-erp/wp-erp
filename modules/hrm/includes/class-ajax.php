@@ -3,6 +3,7 @@ namespace WeDevs\ERP\HRM;
 
 use WeDevs\ERP\Framework\Traits\Ajax;
 use WeDevs\ERP\Framework\Traits\Hooker;
+use WeDevs\ERP\HRM\Models\Work_Experience;
 
 /**
  * Ajax handler
@@ -38,6 +39,8 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-hr-emp-update-jobinfo', 'employee_update_job_info' );
         $this->action( 'wp_ajax_erp-hr-empl-leave-history', 'get_employee_leave_history' );
         $this->action( 'wp_ajax_erp-hr-employee-new-note', 'employee_add_note' );
+        $this->action( 'wp_ajax_erp-hr-create-work-exp', 'employee_work_experience_create' );
+        $this->action( 'wp_ajax_erp-hr-emp-delete-exp', 'employee_work_experience_delete' );
 
         $this->action( 'wp_ajax_erp-hr-leave-policy-create', 'leave_policy_create' );
         $this->action( 'wp_ajax_erp-hr-leave-policy-delete', 'leave_policy_delete' );
@@ -387,6 +390,74 @@ class Ajax_Handler {
 
         if ( $employee->id ) {
             $employee->add_note( $note, $note_by );
+        }
+
+        $this->send_success();
+    }
+
+    /**
+     * Add/edit work experience
+     *
+     * @return void
+     */
+    public function employee_work_experience_create() {
+        $this->verify_nonce( 'erp-work-exp-form' );
+
+        // TODO: permission check
+
+        $employee_id  = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+        $exp_id       = isset( $_POST['exp_id'] ) ? intval( $_POST['exp_id'] ) : 0;
+        $company_name = isset( $_POST['company_name'] ) ? strip_tags( $_POST['company_name'] ) : '';
+        $job_title    = isset( $_POST['job_title'] ) ? strip_tags( $_POST['job_title'] ) : '';
+        $from         = isset( $_POST['from'] ) ? strip_tags( $_POST['from'] ) : '';
+        $to           = isset( $_POST['to'] ) ? strip_tags( $_POST['to'] ) : '';
+        $description  = isset( $_POST['description'] ) ? strip_tags( $_POST['description'] ) : '';
+
+        // some basic validations
+        $requires = [
+            'company_name' => __( 'Company Name', 'wp-erp' ),
+            'job_title'    => __( 'Job Title', 'wp-erp' ),
+            'from'         => __( 'From date', 'wp-erp' ),
+            'to'           => __( 'To date', 'wp-erp' ),
+        ];
+
+        foreach ($requires as $var_name => $label) {
+            if ( ! $$var_name ) {
+                $this->send_error( sprintf( __( '%s is required', 'wp-erp' ), $label ) );
+            }
+        }
+
+        $fields = [
+            'employee_id'  => $employee_id,
+            'company_name' => $company_name,
+            'job_title'    => $job_title,
+            'from'         => $from,
+            'to'           => $to,
+            'description'  => $description
+        ];
+
+        if ( ! $exp_id ) {
+            Work_Experience::create( $fields );
+        } else {
+            Work_Experience::find( $exp_id )->update( $fields );
+        }
+
+        $this->send_success();
+    }
+
+    /**
+     * Delete a work experience
+     *
+     * @return void
+     */
+    public function employee_work_experience_delete() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        // @TODO: check permission
+        $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+
+        if ( $id ) {
+            Work_Experience::find( $id )->delete();
         }
 
         $this->send_success();
