@@ -136,13 +136,16 @@
                     <?php foreach ($educations as $key => $education) { ?>
 
                         <tr class="<?php echo $key % 2 == 0 ? 'alternate' : 'odd'; ?>">
-                            <td><?php echo $education->school; ?></td>
-                            <td><?php echo $education->degree; ?></td>
-                            <td><?php echo $education->field; ?></td>
+                            <td><?php echo esc_html( $education->school ); ?></td>
+                            <td><?php echo esc_html( $education->degree ); ?></td>
+                            <td><?php echo esc_html( $education->field ); ?></td>
                             <td><?php echo $education->finished; ?></td>
-                            <td><?php echo $education->notes; ?></td>
-                            <td><?php echo $education->interests; ?></td>
-                            <td>&nbsp;</td>
+                            <td><?php echo $education->notes ? esc_html( $education->notes ) : '-'; ?></td>
+                            <td><?php echo $education->interest ? esc_html( $education->interest ) : '-'; ?></td>
+                            <td width="10%">
+                                <a href="#" class="education-edit" data-template="erp-employment-education" data-title="<?php esc_attr_e( 'Education', 'wp-erp' ); ?>" data-data='<?php echo json_encode( $education ); ?>' data-button="<?php esc_attr_e( 'Update Info', 'wp-erp' ); ?>"><span class="dashicons dashicons-edit"></span></a>
+                                <a href="#" class="education-delete" data-id="<?php echo $education->id; ?>"><span class="dashicons dashicons-trash"></span></a>
+                            </td>
                         </tr>
 
                     <?php } ?>
@@ -154,7 +157,7 @@
 
         <?php } ?>
 
-        <a class="button button-secondary erp-empl-add-edu" href="#" data-template="" data-title=""><?php _e( '+ Add Education', 'wp-erp' ); ?></a>
+        <a class="button button-secondary" id="erp-empl-add-education" href="#" data-data='<?php echo json_encode( array( 'employee_id' => $employee->id ) ); ?>'  data-template="erp-employment-education" data-title="<?php esc_attr_e( 'Education', 'wp-erp' ); ?>"><?php _e( '+ Add Education', 'wp-erp' ); ?></a>
     </div>
 </div><!-- .postbox -->
 

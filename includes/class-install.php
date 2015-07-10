@@ -221,7 +221,22 @@ class WeDevs_ERP_Installer {
           `updated_at` datetime DEFAULT NULL,
           PRIMARY KEY (`id`),
           KEY `employee_id` (`employee_id`)
-        ) $collate";
+        ) $collate;
+
+        CREATE TABLE `{$wpdb->prefix}erp_hr_education` (
+          `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+          `employee_id` int(11) unsigned DEFAULT NULL,
+          `school` varchar(100) DEFAULT NULL,
+          `degree` varchar(100) DEFAULT NULL,
+          `field` varchar(100) DEFAULT NULL,
+          `finished` int(4) unsigned DEFAULT NULL,
+          `notes` text,
+          `interest` text,
+          `created_at` datetime DEFAULT NULL,
+          `updated_at` datetime DEFAULT NULL,
+          PRIMARY KEY (`id`),
+          KEY `employee_id` (`employee_id`)
+        ) $collate;";
 
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
         dbDelta( $table_schema );

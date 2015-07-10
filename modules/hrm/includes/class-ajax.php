@@ -3,6 +3,7 @@ namespace WeDevs\ERP\HRM;
 
 use WeDevs\ERP\Framework\Traits\Ajax;
 use WeDevs\ERP\Framework\Traits\Hooker;
+use WeDevs\ERP\HRM\Models\Education;
 use WeDevs\ERP\HRM\Models\Work_Experience;
 
 /**
@@ -39,9 +40,16 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-hr-emp-update-jobinfo', 'employee_update_job_info' );
         $this->action( 'wp_ajax_erp-hr-empl-leave-history', 'get_employee_leave_history' );
         $this->action( 'wp_ajax_erp-hr-employee-new-note', 'employee_add_note' );
+
+        // work experience
         $this->action( 'wp_ajax_erp-hr-create-work-exp', 'employee_work_experience_create' );
         $this->action( 'wp_ajax_erp-hr-emp-delete-exp', 'employee_work_experience_delete' );
 
+        // education
+        $this->action( 'wp_ajax_erp-hr-create-education', 'employee_education_create' );
+        $this->action( 'wp_ajax_erp-hr-emp-delete-education', 'employee_education_delete' );
+
+        // leave policy
         $this->action( 'wp_ajax_erp-hr-leave-policy-create', 'leave_policy_create' );
         $this->action( 'wp_ajax_erp-hr-leave-policy-delete', 'leave_policy_delete' );
 
@@ -458,6 +466,76 @@ class Ajax_Handler {
 
         if ( $id ) {
             Work_Experience::find( $id )->delete();
+        }
+
+        $this->send_success();
+    }
+
+    /**
+     * Create/edit educational experiences
+     *
+     * @return void
+     */
+    public function employee_education_create() {
+        $this->verify_nonce( 'erp-hr-education-form' );
+
+        // TODO: permission check
+
+        $employee_id = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+        $edu_id      = isset( $_POST['edu_id'] ) ? intval( $_POST['edu_id'] ) : 0;
+        $school      = isset( $_POST['school'] ) ? strip_tags( $_POST['school'] ) : '';
+        $degree      = isset( $_POST['degree'] ) ? strip_tags( $_POST['degree'] ) : '';
+        $field       = isset( $_POST['field'] ) ? strip_tags( $_POST['field'] ) : '';
+        $finished    = isset( $_POST['finished'] ) ? intval( $_POST['finished'] ) : '';
+        $notes       = isset( $_POST['notes'] ) ? strip_tags( $_POST['notes'] ) : '';
+        $interest    = isset( $_POST['interest'] ) ? strip_tags( $_POST['interest'] ) : '';
+
+        // some basic validations
+        $requires = [
+            'school' => __( 'School Name', 'wp-erp' ),
+            'degree'      => __( 'Degree', 'wp-erp' ),
+            'field'       => __( 'Field', 'wp-erp' ),
+            'finished'    => __( 'Completion date', 'wp-erp' ),
+        ];
+
+        foreach ($requires as $var_name => $label) {
+            if ( ! $$var_name ) {
+                $this->send_error( sprintf( __( '%s is required', 'wp-erp' ), $label ) );
+            }
+        }
+
+        $fields = [
+            'employee_id' => $employee_id,
+            'school' => $school,
+            'degree'      => $degree,
+            'field'       => $field,
+            'finished'    => $finished,
+            'notes'       => $notes,
+            'interest'    => $interest
+        ];
+
+        if ( ! $edu_id ) {
+            Education::create( $fields );
+        } else {
+            Education::find( $edu_id )->update( $fields );
+        }
+
+        $this->send_success();
+    }
+
+    /**
+     * Delete a work experience
+     *
+     * @return void
+     */
+    public function employee_education_delete() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        // @TODO: check permission
+        $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+
+        if ( $id ) {
+            Education::find( $id )->delete();
         }
 
         $this->send_success();
