@@ -236,6 +236,18 @@ class WeDevs_ERP_Installer {
           `updated_at` datetime DEFAULT NULL,
           PRIMARY KEY (`id`),
           KEY `employee_id` (`employee_id`)
+        ) $collate;
+
+        CREATE TABLE `{$wpdb->prefix}erp_hr_dependents` (
+          `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+          `employee_id` int(11) DEFAULT NULL,
+          `name` varchar(100) DEFAULT NULL,
+          `relation` varchar(100) DEFAULT NULL,
+          `dob` date DEFAULT NULL,
+          `created_at` datetime DEFAULT NULL,
+          `updated_at` datetime DEFAULT NULL,
+          PRIMARY KEY (`id`),
+          KEY `employee_id` (`employee_id`)
         ) $collate;";
 
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );

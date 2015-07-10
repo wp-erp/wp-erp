@@ -69,7 +69,7 @@
         <?php
         $experiences = $employee->get_experiences();
 
-        if ( $experiences ) {
+        if ( ! $experiences->isEmpty() ) {
             ?>
             <table class="widefat" style="margin-bottom: 15px;">
                 <thead>
@@ -92,8 +92,10 @@
                             <td><?php echo erp_format_date( $experience->to ); ?></td>
                             <td><?php echo esc_html( $experience->description ); ?></td>
                             <td width="10%">
-                                <a href="#" class="work-experience-edit" data-template="erp-employment-work-experience" data-title="<?php esc_attr_e( 'Work Experience', 'wp-erp' ); ?>" data-data='<?php echo json_encode( $experience ); ?>' data-button="<?php esc_attr_e( 'Update Experience', 'wp-erp' ); ?>"><span class="dashicons dashicons-edit"></span></a>
-                                <a href="#" class="work-experience-delete" data-id="<?php echo $experience->id; ?>"><span class="dashicons dashicons-trash"></span></a>
+                                <div class="row-actions">
+                                    <a href="#" class="work-experience-edit" data-template="erp-employment-work-experience" data-title="<?php esc_attr_e( 'Work Experience', 'wp-erp' ); ?>" data-data='<?php echo json_encode( $experience ); ?>' data-button="<?php esc_attr_e( 'Update Experience', 'wp-erp' ); ?>"><span class="dashicons dashicons-edit"></span></a>
+                                    <a href="#" class="work-experience-delete" data-id="<?php echo $experience->id; ?>" data-action="erp-hr-emp-delete-exp"><span class="dashicons dashicons-trash"></span></a>
+                                </div>
                             </td>
                         </tr>
 
@@ -106,7 +108,7 @@
 
         <?php } ?>
 
-        <a class="button button-secondary" id="erp-empl-add-exp" href="#" data-id="<?php echo $employee->id; ?>"  data-template="erp-employment-work-experience" data-title="<?php esc_attr_e( 'Work Experience', 'wp-erp' ); ?>"><?php _e( '+ Add Experience', 'wp-erp' ); ?></a>
+        <a class="button button-secondary" id="erp-empl-add-exp" href="#" data-data='<?php echo json_encode( [ 'employee_id' => $employee->id ] ); ?>' data-button="<?php esc_attr_e( 'Create Experience', 'wp-erp' ); ?>"  data-template="erp-employment-work-experience" data-title="<?php esc_attr_e( 'Work Experience', 'wp-erp' ); ?>"><?php _e( '+ Add Experience', 'wp-erp' ); ?></a>
 
     </div>
 </div><!-- .postbox -->
@@ -118,7 +120,7 @@
         <?php
         $educations = $employee->get_educations();
 
-        if ( $educations ) {
+        if ( ! $educations->isEmpty() ) {
             ?>
             <table class="widefat" style="margin-bottom: 15px;">
                 <thead>
@@ -143,8 +145,10 @@
                             <td><?php echo $education->notes ? esc_html( $education->notes ) : '-'; ?></td>
                             <td><?php echo $education->interest ? esc_html( $education->interest ) : '-'; ?></td>
                             <td width="10%">
-                                <a href="#" class="education-edit" data-template="erp-employment-education" data-title="<?php esc_attr_e( 'Education', 'wp-erp' ); ?>" data-data='<?php echo json_encode( $education ); ?>' data-button="<?php esc_attr_e( 'Update Info', 'wp-erp' ); ?>"><span class="dashicons dashicons-edit"></span></a>
-                                <a href="#" class="education-delete" data-id="<?php echo $education->id; ?>"><span class="dashicons dashicons-trash"></span></a>
+                                <div class="row-actions">
+                                    <a href="#" class="education-edit" data-template="erp-employment-education" data-title="<?php esc_attr_e( 'Education', 'wp-erp' ); ?>" data-data='<?php echo json_encode( $education ); ?>' data-button="<?php esc_attr_e( 'Update Info', 'wp-erp' ); ?>"><span class="dashicons dashicons-edit"></span></a>
+                                    <a href="#" class="education-delete" data-id="<?php echo $education->id; ?>" data-action="erp-hr-emp-delete-education"><span class="dashicons dashicons-trash"></span></a>
+                                </div>
                             </td>
                         </tr>
 
@@ -157,7 +161,7 @@
 
         <?php } ?>
 
-        <a class="button button-secondary" id="erp-empl-add-education" href="#" data-data='<?php echo json_encode( array( 'employee_id' => $employee->id ) ); ?>'  data-template="erp-employment-education" data-title="<?php esc_attr_e( 'Education', 'wp-erp' ); ?>"><?php _e( '+ Add Education', 'wp-erp' ); ?></a>
+        <a class="button button-secondary" id="erp-empl-add-education" href="#" data-data='<?php echo json_encode( array( 'employee_id' => $employee->id ) ); ?>'  data-template="erp-employment-education" data-title="<?php esc_attr_e( 'Education', 'wp-erp' ); ?>" data-button="<?php esc_attr_e( 'Add Education', 'wp-erp' ); ?>"><?php _e( '+ Add Education', 'wp-erp' ); ?></a>
     </div>
 </div><!-- .postbox -->
 
@@ -169,7 +173,7 @@
         <?php
         $dependents = $employee->get_dependents();
 
-        if ( $dependents ) {
+        if ( ! $dependents->isEmpty() ) {
             ?>
             <table class="widefat" style="margin-bottom: 15px;">
                 <thead>
@@ -177,15 +181,22 @@
                         <th><?php _e( 'Name', 'wp-erp' ); ?></th>
                         <th><?php _e( 'Relationship', 'wp-erp' ); ?></th>
                         <th><?php _e( 'Date of Birth', 'wp-erp' ); ?></th>
+                        <th>&nbsp;</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($dependents as $key => $dependent) { ?>
 
                         <tr class="<?php echo $key % 2 == 0 ? 'alternate' : 'odd'; ?>">
-                            <td><?php echo $dependent['name'] ?></td>
-                            <td><?php echo $dependent['relation'] ?></td>
-                            <td><?php echo $dependent['dob'] ?></td>
+                            <td><?php echo esc_html( $dependent->name ); ?></td>
+                            <td><?php echo esc_html( $dependent->relation ); ?></td>
+                            <td><?php echo erp_format_date( $dependent->dob ); ?></td>
+                            <td width="10%">
+                                <div class="row-actions">
+                                    <a href="#" class="dependent-edit" data-template="erp-employment-dependent" data-title="<?php esc_attr_e( 'Dependents', 'wp-erp' ); ?>" data-data='<?php echo json_encode( $dependent ); ?>' data-button="<?php esc_attr_e( 'Update Dependent', 'wp-erp' ); ?>"><span class="dashicons dashicons-edit"></span></a>
+                                    <a href="#" class="dependent-delete" data-id="<?php echo $dependent->id; ?>" data-action="erp-hr-emp-delete-dependent"><span class="dashicons dashicons-trash"></span></a>
+                                </div>
+                            </td>
                         </tr>
 
                     <?php } ?>
@@ -197,7 +208,7 @@
 
         <?php } ?>
 
-        <a class="button button-secondary erp-empl-add-depend" href="#"><?php _e( '+ Add Dependents', 'wp-erp' ); ?></a>
+        <a class="button button-secondary" id="erp-empl-add-dependent" href="#" data-data='<?php echo json_encode( array( 'employee_id' => $employee->id ) ); ?>'  data-template="erp-employment-dependent" data-title="<?php esc_attr_e( 'Dependent', 'wp-erp' ); ?>" data-button="<?php esc_attr_e( 'Add Dependent', 'wp-erp' ); ?>"><?php _e( '+ Add Dependents', 'wp-erp' ); ?></a>
 
     </div>
 </div><!-- .postbox -->

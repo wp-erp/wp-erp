@@ -3,6 +3,7 @@ namespace WeDevs\ERP\HRM;
 
 use WeDevs\ERP\Framework\Traits\Ajax;
 use WeDevs\ERP\Framework\Traits\Hooker;
+use WeDevs\ERP\HRM\Models\Dependents;
 use WeDevs\ERP\HRM\Models\Education;
 use WeDevs\ERP\HRM\Models\Work_Experience;
 
@@ -48,6 +49,10 @@ class Ajax_Handler {
         // education
         $this->action( 'wp_ajax_erp-hr-create-education', 'employee_education_create' );
         $this->action( 'wp_ajax_erp-hr-emp-delete-education', 'employee_education_delete' );
+
+        // dependents
+        $this->action( 'wp_ajax_erp-hr-create-dependent', 'employee_dependent_create' );
+        $this->action( 'wp_ajax_erp-hr-emp-delete-dependent', 'employee_dependent_delete' );
 
         // leave policy
         $this->action( 'wp_ajax_erp-hr-leave-policy-create', 'leave_policy_create' );
@@ -492,10 +497,10 @@ class Ajax_Handler {
 
         // some basic validations
         $requires = [
-            'school' => __( 'School Name', 'wp-erp' ),
-            'degree'      => __( 'Degree', 'wp-erp' ),
-            'field'       => __( 'Field', 'wp-erp' ),
-            'finished'    => __( 'Completion date', 'wp-erp' ),
+            'school'   => __( 'School Name', 'wp-erp' ),
+            'degree'   => __( 'Degree', 'wp-erp' ),
+            'field'    => __( 'Field', 'wp-erp' ),
+            'finished' => __( 'Completion date', 'wp-erp' ),
         ];
 
         foreach ($requires as $var_name => $label) {
@@ -506,7 +511,7 @@ class Ajax_Handler {
 
         $fields = [
             'employee_id' => $employee_id,
-            'school' => $school,
+            'school'      => $school,
             'degree'      => $degree,
             'field'       => $field,
             'finished'    => $finished,
@@ -536,6 +541,68 @@ class Ajax_Handler {
 
         if ( $id ) {
             Education::find( $id )->delete();
+        }
+
+        $this->send_success();
+    }
+
+    /**
+     * Create/edit dependents
+     *
+     * @return void
+     */
+    public function employee_dependent_create() {
+        $this->verify_nonce( 'erp-hr-dependent-form' );
+
+        // TODO: permission check
+
+        $employee_id = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+        $dep_id      = isset( $_POST['dep_id'] ) ? intval( $_POST['dep_id'] ) : 0;
+        $name        = isset( $_POST['name'] ) ? strip_tags( $_POST['name'] ) : '';
+        $relation    = isset( $_POST['relation'] ) ? strip_tags( $_POST['relation'] ) : '';
+        $dob         = isset( $_POST['dob'] ) ? strip_tags( $_POST['dob'] ) : '';
+
+        // some basic validations
+        $requires = [
+            'name'     => __( 'Name', 'wp-erp' ),
+            'relation' => __( 'Relation', 'wp-erp' ),
+        ];
+
+        foreach ($requires as $var_name => $label) {
+            if ( ! $$var_name ) {
+                $this->send_error( sprintf( __( '%s is required', 'wp-erp' ), $label ) );
+            }
+        }
+
+        $fields = [
+            'employee_id' => $employee_id,
+            'name'        => $name,
+            'relation'    => $relation,
+            'dob'         => $dob,
+        ];
+
+        if ( ! $dep_id ) {
+            Dependents::create( $fields );
+        } else {
+            Dependents::find( $dep_id )->update( $fields );
+        }
+
+        $this->send_success();
+    }
+
+    /**
+     * Delete a dependent
+     *
+     * @return void
+     */
+    public function employee_dependent_delete() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        // @TODO: check permission
+        $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+
+        if ( $id ) {
+            Dependents::find( $id )->delete();
         }
 
         $this->send_success();
