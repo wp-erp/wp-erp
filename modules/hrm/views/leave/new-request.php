@@ -1,8 +1,6 @@
 <div class="wrap erp erp-hr-leave-request-new">
     <h2><?php _e( 'New Leave Request', 'wp-erp' ); ?></h2>
 
-    <?php $company_id = erp_get_current_company_id(); ?>
-
     <?php if ( isset( $_GET['msg'] ) ) {
 
         if ( $_GET['msg'] == 'submitted' ) {
@@ -25,7 +23,7 @@
                         'value'    => '',
                         'required' => true,
                         'type'     => 'select',
-                        'options'  => erp_hr_get_employees_dropdown_raw( $company_id )
+                        'options'  => erp_hr_get_employees_dropdown_raw()
                     ) ); ?>
                 </li>
             <?php } ?>
@@ -37,7 +35,7 @@
                     'value'    => '',
                     'required' => true,
                     'type'     => 'select',
-                    'options'  => array( '' => __( '- Select -', 'wp-erp' ) ) + erp_hr_leave_get_policies_dropdown_raw( $company_id )
+                    'options'  => array( '' => __( '- Select -', 'wp-erp' ) ) + erp_hr_leave_get_policies_dropdown_raw()
                 ) ); ?>
             </li>
 

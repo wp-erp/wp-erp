@@ -7,11 +7,7 @@
  *
  * @return array
  */
-function erp_hr_get_work_days( $company_id = null ) {
-    if ( ! $company_id ) {
-        $company_id = erp_get_current_company_id();
-    }
-
+function erp_hr_get_work_days() {
     $default = array(
         'mon' => 8,
         'tue' => 8,
@@ -22,7 +18,7 @@ function erp_hr_get_work_days( $company_id = null ) {
         'sun' => 0
     );
 
-    $option_key = 'erp_hr_work_days_' . $company_id;
+    $option_key = 'erp_hr_work_days';
 
     return get_option( $option_key, $default );
 }
