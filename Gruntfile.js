@@ -63,11 +63,15 @@ module.exports = function(grunt) {
                 src: [
                     '**',
                     '!node_modules/**',
+                    '!.codekit-cache/**',
+                    '!.idea/**',
                     '!build/**',
                     '!bin/**',
                     '!.git/**',
                     '!Gruntfile.js',
                     '!package.json',
+                    '!composer.json',
+                    '!composer.lock',
                     '!debug.log',
                     '!phpunit.xml',
                     '!.gitignore',
@@ -79,9 +83,8 @@ module.exports = function(grunt) {
                     '!nbproject/*',
                     '!assets/less/**',
                     '!tests/**',
-                    '!**/Gruntfile.js',
-                    '!**/package.json',
-                    '!**/README.md',
+                    '!README.md',
+                    '!CONTRIBUTING.md',
                     '!**/*~'
                 ],
                 dest: 'build/'
