@@ -96,6 +96,7 @@ class Human_Resource {
     private function init_classes() {
         new Ajax_Handler();
         new Form_Handler();
+        new Settings();
     }
 
     /**

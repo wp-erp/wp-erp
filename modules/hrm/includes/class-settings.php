@@ -75,8 +75,7 @@ class Settings {
             die();
         }
 
-        $company_id = erp_get_current_company_id();
-        $option_key = 'erp_hr_work_days_' . $company_id;
+        $option_key = 'erp_hr_work_days';
         $days       = array_map( 'absint', $_POST['day'] );
 
         if ( count( $days ) == 7 ) {
