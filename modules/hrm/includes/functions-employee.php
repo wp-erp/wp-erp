@@ -16,7 +16,6 @@ function erp_hr_employee_on_initialize( $user_id ) {
     if ( 'employee' == $role ) {
         $wpdb->insert( $wpdb->prefix . 'erp_hr_employees', array(
             'user_id'     => $user_id,
-            'company_id'  => erp_get_current_company_id(),
             'designation' => 0,
             'department'  => 0,
             'status'      => 1
@@ -63,7 +62,6 @@ function erp_hr_employee_create( $args = array() ) {
 
     $defaults = array(
         'user_email'      => '',
-        'company_id'      => erp_get_current_company_id(),
         'work'            => array(
             'designation'   => 0,
             'department'    => 0,
@@ -167,7 +165,6 @@ function erp_hr_employee_create( $args = array() ) {
 
     // update the erp table
     $wpdb->update( $wpdb->prefix . 'erp_hr_employees', array(
-        'company_id'    => (int) $data['company_id'],
         'hiring_source' => $data['work']['hiring_source'],
         'hiring_date'   => $data['work']['hiring_date'],
         'date_of_birth' => $data['work']['date_of_birth']
