@@ -13,51 +13,54 @@
         </div>
     </div>
 
-    <table class="wp-list-table widefat fixed department-list-table">
-        <thead>
-            <tr>
-                <th scope="col" id="cb" class="manage-column column-cb check-column" style="">
-                    <input id="cb-select-all-1" type="checkbox">
-                </th>
-                <th class="col-"><?php _e( 'Department', 'accounting' ); ?></th>
-                <th class="col-"><?php _e( 'Department Lead', 'accounting' ); ?></th>
-                <th class="col-"><?php _e( 'No. of Employees', 'accounting' ); ?></th>
-            </tr>
-        </thead>
+    <div id="erp-dept-table-wrap">
 
-        <tfoot>
-            <tr>
-                <th scope="col" id="cb" class="manage-column column-cb check-column" style="">
-                    <input id="cb-select-all-1" type="checkbox">
-                </th>
-                <th class="col-"><?php _e( 'Department', 'accounting' ); ?></th>
-                <th class="col-"><?php _e( 'Department Lead', 'accounting' ); ?></th>
-                <th class="col-"><?php _e( 'No. of Employees', 'accounting' ); ?></th>
-            </tr>
-        </tfoot>
-
-        <tbody id="the-list">
-            <?php
-
-            $departments = erp_hr_get_departments();
-
-            if ( $departments ) {
-
-                $walker = new \WeDevs\ERP\HRM\Department_Walker();
-                $walker->walk( $departments, 5 );
-
-            } else {
-                ?>
-                <tr class="alternate no-rows">
-                    <td colspan="4">
-                        <?php _e( 'No departments found!', 'wp-erp' ); ?>
-                    </td>
+        <table class="wp-list-table widefat fixed department-list-table">
+            <thead>
+                <tr>
+                    <th scope="col" id="cb" class="manage-column column-cb check-column" style="">
+                        <input id="cb-select-all-1" type="checkbox">
+                    </th>
+                    <th class="col-"><?php _e( 'Department', 'accounting' ); ?></th>
+                    <th class="col-"><?php _e( 'Department Lead', 'accounting' ); ?></th>
+                    <th class="col-"><?php _e( 'No. of Employees', 'accounting' ); ?></th>
                 </tr>
+            </thead>
+
+            <tfoot>
+                <tr>
+                    <th scope="col" id="cb" class="manage-column column-cb check-column" style="">
+                        <input id="cb-select-all-1" type="checkbox">
+                    </th>
+                    <th class="col-"><?php _e( 'Department', 'accounting' ); ?></th>
+                    <th class="col-"><?php _e( 'Department Lead', 'accounting' ); ?></th>
+                    <th class="col-"><?php _e( 'No. of Employees', 'accounting' ); ?></th>
+                </tr>
+            </tfoot>
+
+            <tbody id="the-list">
                 <?php
-            }
-            ?>
-        </tbody>
-    </table>
+
+                $departments = erp_hr_get_departments();
+
+                if ( $departments ) {
+
+                    $walker = new \WeDevs\ERP\HRM\Department_Walker();
+                    $walker->walk( $departments, 5 );
+
+                } else {
+                    ?>
+                    <tr class="alternate no-rows">
+                        <td colspan="4">
+                            <?php _e( 'No departments found!', 'wp-erp' ); ?>
+                        </td>
+                    </tr>
+                    <?php
+                }
+                ?>
+            </tbody>
+        </table>
+    </div><!-- #erp-dept-table-wrap -->
 
     <div class="tablenav bottom">
         <div class="alignleft actions bulkactions">

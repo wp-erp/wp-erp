@@ -72,6 +72,15 @@
         department: {
 
             /**
+             * Reload the department area
+             *
+             * @return {void}
+             */
+            reload: function() {
+                $( '#erp-dept-table-wrap' ).load( window.location.href + ' table.department-list-table' );
+            },
+
+            /**
              * Create new department
              *
              * @param  {event}
@@ -87,18 +96,9 @@
                     onSubmit: function(modal) {
                         wp.ajax.send( {
                             data: this.serialize(),
-                            success: function(response) {
-                                var row   = wp.template('erp-dept-row'),
-                                    table = $('table.department-list-table');
-
-                                if ( table ) {
-                                    var cls = ( $('tr:last', table).attr('class') === 'even' ) ? 'alternate' : 'even';
-
-                                    response.cls = cls;
-                                    table.append( row(response) );
-
-                                    modal.closeModal();
-                                }
+                            success: function() {
+                                WeDevs_ERP_HR.department.reload();
+                                modal.closeModal();
                             },
                             error: function(error) {
                                 alert( error );
@@ -150,11 +150,8 @@
                     onSubmit: function(modal) {
                         wp.ajax.send( {
                             data: this.serialize(),
-                            success: function(response) {
-                                var row   = wp.template('erp-dept-row');
-
-                                response.cls = self.closest('tr').attr('class');
-                                self.closest('tr').replaceWith( row(response) );
+                            success: function() {
+                                WeDevs_ERP_HR.department.reload();
 
                                 modal.closeModal();
                             },
@@ -198,6 +195,22 @@
 
         designation: {
 
+            /**
+             * Reload the department area
+             *
+             * @return {void}
+             */
+            reload: function() {
+                $( '#erp-desig-table-wrap' ).load( window.location.href + ' table.designation-list-table' );
+            },
+
+            /**
+             * Create designation
+             *
+             * @param  {event}
+             *
+             * @return {void}
+             */
             create: function(e) {
                 e.preventDefault();
 
@@ -209,18 +222,10 @@
                     onSubmit: function(modal) {
                         wp.ajax.send( {
                             data: this.serialize(),
-                            success: function(response) {
-                                var row   = wp.template('erp-desig-row'),
-                                    table = $('table.designation-list-table');
+                            success: function() {
+                                WeDevs_ERP_HR.designation.reload();
 
-                                if ( table ) {
-                                    var cls = ( $('tr:last', table).attr('class') === 'even' ) ? 'alternate' : 'even';
-
-                                    response.cls = cls;
-                                    table.append( row(response) );
-
-                                    modal.closeModal();
-                                }
+                                modal.closeModal();
                             },
                             error: function(error) {
                                 alert( error );
@@ -268,11 +273,8 @@
                     onSubmit: function(modal) {
                         wp.ajax.send( {
                             data: this.serialize(),
-                            success: function(response) {
-                                var row   = wp.template('erp-desig-row');
-
-                                response.cls = self.closest('tr').attr('class');
-                                self.closest('tr').replaceWith( row(response) );
+                            success: function() {
+                                WeDevs_ERP_HR.designation.reload();
 
                                 modal.closeModal();
                             },

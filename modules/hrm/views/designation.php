@@ -13,65 +13,68 @@
         </div>
     </div>
 
-    <table class="wp-list-table widefat fixed designation-list-table">
-        <thead>
-            <tr>
-                <th scope="col" id="cb" class="manage-column column-cb check-column" style="">
-                    <input id="cb-select-all-1" type="checkbox">
-                </th>
-                <th class="col-"><?php _e( 'Title', 'accounting' ); ?></th>
-                <th class="col-"><?php _e( 'No. of Employees', 'accounting' ); ?></th>
-            </tr>
-        </thead>
+    <div id="erp-desig-table-wrap">
 
-        <tfoot>
-            <tr>
-                <th scope="col" id="cb" class="manage-column column-cb check-column" style="">
-                    <input id="cb-select-all-1" type="checkbox">
-                </th>
-                <th class="col-"><?php _e( 'Title', 'accounting' ); ?></th>
-                <th class="col-"><?php _e( 'No. of Employees', 'accounting' ); ?></th>
-            </tr>
-        </tfoot>
-
-        <tbody id="the-list">
-            <?php
-
-            $designations = erp_hr_get_designations();
-
-            if ( $designations ) {
-                foreach( $designations as $num => $row ) {
-                    $designation = new \WeDevs\ERP\HRM\Designation( $row );
-                    ?>
-                    <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
-                        <th scope="row" class="check-column">
-                            <input id="cb-select-1" type="checkbox" name="post[]" value="1">
-                        </th>
-                        <td class="col-">
-
-                            <strong><a href="<?php echo ''; ?>"><?php echo esc_html( $designation->name ); ?></a></strong>
-
-                            <div class="row-actions">
-                                <span class="edit"><a href="#" data-id="<?php echo $designation->id; ?>" title="Edit this item"><?php _e( 'Edit', 'wp-erp' ); ?></a> | </span>
-                                <span class="trash"><a class="submitdelete" data-id="<?php echo $designation->id; ?>" title="Delete this item" href="#"><?php _e( 'Delete', 'wp-erp' ); ?></a></span>
-                            </div>
-                        </td>
-                        <td class="col-"><?php echo $designation->num_of_employees(); ?></td>
-                    </tr>
-                <?php
-                }
-            } else {
-                ?>
-                <tr class="alternate no-rows">
-                    <td colspan="3">
-                        <?php _e( 'No designations found!', 'wp-erp' ); ?>
-                    </td>
+        <table class="wp-list-table widefat fixed designation-list-table">
+            <thead>
+                <tr>
+                    <th scope="col" id="cb" class="manage-column column-cb check-column" style="">
+                        <input id="cb-select-all-1" type="checkbox">
+                    </th>
+                    <th class="col-"><?php _e( 'Title', 'accounting' ); ?></th>
+                    <th class="col-"><?php _e( 'No. of Employees', 'accounting' ); ?></th>
                 </tr>
+            </thead>
+
+            <tfoot>
+                <tr>
+                    <th scope="col" id="cb" class="manage-column column-cb check-column" style="">
+                        <input id="cb-select-all-1" type="checkbox">
+                    </th>
+                    <th class="col-"><?php _e( 'Title', 'accounting' ); ?></th>
+                    <th class="col-"><?php _e( 'No. of Employees', 'accounting' ); ?></th>
+                </tr>
+            </tfoot>
+
+            <tbody id="the-list">
                 <?php
-            }
-            ?>
-        </tbody>
-    </table>
+
+                $designations = erp_hr_get_designations();
+
+                if ( $designations ) {
+                    foreach( $designations as $num => $row ) {
+                        $designation = new \WeDevs\ERP\HRM\Designation( $row );
+                        ?>
+                        <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
+                            <th scope="row" class="check-column">
+                                <input id="cb-select-1" type="checkbox" name="post[]" value="1">
+                            </th>
+                            <td class="col-">
+
+                                <strong><a href="<?php echo ''; ?>"><?php echo esc_html( $designation->name ); ?></a></strong>
+
+                                <div class="row-actions">
+                                    <span class="edit"><a href="#" data-id="<?php echo $designation->id; ?>" title="Edit this item"><?php _e( 'Edit', 'wp-erp' ); ?></a> | </span>
+                                    <span class="trash"><a class="submitdelete" data-id="<?php echo $designation->id; ?>" title="Delete this item" href="#"><?php _e( 'Delete', 'wp-erp' ); ?></a></span>
+                                </div>
+                            </td>
+                            <td class="col-"><?php echo $designation->num_of_employees(); ?></td>
+                        </tr>
+                    <?php
+                    }
+                } else {
+                    ?>
+                    <tr class="alternate no-rows">
+                        <td colspan="3">
+                            <?php _e( 'No designations found!', 'wp-erp' ); ?>
+                        </td>
+                    </tr>
+                    <?php
+                }
+                ?>
+            </tbody>
+        </table>
+    </div><!-- #erp-desig-table-wrap -->
 
     <div class="tablenav bottom">
         <div class="alignleft actions bulkactions">

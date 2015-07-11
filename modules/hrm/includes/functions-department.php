@@ -32,9 +32,9 @@ function erp_hr_create_department( $args = array() ) {
     $department = new \WeDevs\ERP\HRM\Models\Department();
 
     if ( ! $dept_id ) {
-        $department->create( $fields );
+        $dept = $department->create( $fields );
 
-        do_action( 'erp_hr_dept_new', $wpdb->insert_id, $fields );
+        do_action( 'erp_hr_dept_new', $dept->id, $fields );
 
         return $department->id;
 
