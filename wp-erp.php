@@ -5,7 +5,7 @@
  * Plugin URI: http://wedevs.com/plugin/erp/
  * Author: Tareq Hasan
  * Author URI: http://wedevs.com
- * Version: 0.1
+ * Version: 0.1-alpha
  * License: GPL2
  * Text Domain: wp-erp
  * Domain Path: languages
