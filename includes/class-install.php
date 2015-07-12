@@ -16,11 +16,21 @@ if ( !defined( 'ABSPATH' ) ) exit;
  */
 class WeDevs_ERP_Installer {
 
+    use \WeDevs\ERP\Framework\Traits\Hooker;
+
     private $min_php = '5.4.0';
 
+    /**
+     * Bind the events
+     */
     function __construct() {
         register_activation_hook( WPERP_FILE, array( $this, 'activate' ) );
         register_deactivation_hook( WPERP_FILE, array( $this, 'deactivate' ) );
+
+        $this->action( 'admin_menu', 'welcome_screen_menu' );
+        $this->action( 'admin_head', 'welcome_screen_menu_remove' );
+
+        $this->action( 'activated_plugin', 'welcome_redirect' );
     }
 
     /**
@@ -45,7 +55,21 @@ class WeDevs_ERP_Installer {
         $this->create_tables();
         $this->create_roles();
 
-        update_option( 'wp_erp_version', WPERP_VERSION );
+        update_option( 'wp_erp_version', erp_get_version() );
+    }
+
+    /**
+     * Redirect to plugin welcome screen after activation
+     *
+     * @param  string  $plugin
+     *
+     * @return void
+     */
+    public function welcome_redirect( $plugin ) {
+        if ( $plugin == 'wp-erp/wp-erp.php' ) {
+            wp_safe_redirect( admin_url( 'index.php?page=wp-erp-welcome' ) );
+            die();
+        }
     }
 
     /**
@@ -55,6 +79,18 @@ class WeDevs_ERP_Installer {
      */
     public function deactivate() {
 
+    }
+
+    public function welcome_screen_menu() {
+        add_dashboard_page( __( 'Welcome to WP ERP', 'wp-erp' ), 'WP ERP', 'read', 'wp-erp-welcome', array( $this, 'welcome_screen_content' ) );
+    }
+
+    public function welcome_screen_menu_remove() {
+        remove_submenu_page( 'index.php', 'wp-erp-welcome' );
+    }
+
+    public function welcome_screen_content() {
+        include WPERP_VIEWS . '/welcome-screen.php';
     }
 
     public function create_tables() {

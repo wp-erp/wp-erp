@@ -15,6 +15,15 @@ function erp_process_actions() {
 add_action( 'admin_init', 'erp_process_actions' );
 
 /**
+ * Return the WP ERP version
+ *
+ * @return string The WP ERP version
+ */
+function erp_get_version() {
+    return wperp()->version;
+}
+
+/**
  * Get full list of currency codes.
  *
  * @return array
