@@ -69,10 +69,8 @@ class Form_Handler {
 
         // fetch employees if not single
         if ( ! $is_single ) {
-            $company_id = erp_get_current_company_id();
 
             $employees = erp_hr_get_employees( array(
-                'company_id' => $company_id,
                 'location'   => $location,
                 'department' => $department
             ) );
