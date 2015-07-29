@@ -109,8 +109,8 @@ class Employee_List_Table extends WP_List_Table {
     function column_name( $employee ) {
         $actions           = array();
         $delete_url        = '';
-        $actions['edit']   = sprintf( '<a href="%s" data-id="%d">%s</a>', $delete_url, $employee->id, __( 'Edit', 'wp-erp' ) );
-        $actions['delete'] = sprintf( '<a href="%s">%s</a>', $delete_url, __( 'Delete', 'wp-erp' ) );
+        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $employee->id, __( 'Edit this item', 'wp-erp' ), __( 'Edit', 'wp-erp' ) );
+        $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $employee->id, __( 'Delete this item', 'wp-erp' ), __( 'Delete', 'wp-erp' ) );
 
         return sprintf( '%4$s <a href="%3$s"><strong>%1$s</strong></a> %2$s', $employee->get_full_name(), $this->row_actions( $actions ), erp_hr_url_single_employee( $employee->id ), $employee->get_avatar() );
     }

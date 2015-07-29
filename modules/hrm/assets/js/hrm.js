@@ -407,7 +407,7 @@
                                 var row = wp.template( 'erp-employee-row');
                                 response.class = 'hello';
 
-                                $( 'table.erp-employee-list-table' ).append( row(response) );
+                                $( 'table.employees' ).append( row(response) );
 
                                 modal.closeModal();
                             },

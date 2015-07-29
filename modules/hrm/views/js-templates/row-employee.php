@@ -9,7 +9,7 @@
 
         <div class="row-actions">
             <span class="edit"><a href="#" data-id="{{ data.id }}" title="<?php echo esc_attr( 'Edit this item', 'wp-erp' ); ?>"><?php _e( 'Edit', 'wp-erp' ); ?></a> | </span>
-            <span class="trash"><a class="submitdelete" data-id="{{ data.id }}" title="<?php echo esc_attr( 'Delete this item', 'wp-erp' ); ?>" href="#"><?php _e( 'Delete', 'wp-erp' ); ?></a></span>
+            <span class="delete"><a class="submitdelete" data-id="{{ data.id }}" title="<?php echo esc_attr( 'Delete this item', 'wp-erp' ); ?>" href="#"><?php _e( 'Delete', 'wp-erp' ); ?></a></span>
         </div>
     </td>
     <td class="col-">{{ data.work.designation_title }}</td>
