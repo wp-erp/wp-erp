@@ -119,8 +119,8 @@ class WeDevs_ERP_Installer {
             `country` varchar(5) DEFAULT NULL,
             `fax` varchar(20) DEFAULT NULL,
             `phone` varchar(20) DEFAULT NULL,
-            `created` datetime NOT NULL,
-            `updated` datetime NOT NULL,
+            `created_at` datetime NOT NULL,
+            `updated_at` datetime NOT NULL,
             PRIMARY KEY (`id`),
             KEY `company_id` (`company_id`)
         ) $collate;
@@ -132,8 +132,8 @@ class WeDevs_ERP_Installer {
             `lead` int(11) unsigned DEFAULT '0',
             `parent` int(11) unsigned DEFAULT '0',
             `status` tinyint(1) unsigned DEFAULT '1',
-            `created` datetime NOT NULL,
-            `updated` datetime NOT NULL,
+            `created_at` datetime NOT NULL,
+            `updated_at` datetime NOT NULL,
             PRIMARY KEY (`id`)
         ) $collate;
 
@@ -142,8 +142,8 @@ class WeDevs_ERP_Installer {
             `title` varchar(200) NOT NULL DEFAULT '',
             `description` text,
             `status` tinyint(1) DEFAULT '1',
-            `created` datetime NOT NULL,
-            `updated` datetime NOT NULL,
+            `created_at` datetime NOT NULL,
+            `updated_at` datetime NOT NULL,
             PRIMARY KEY (`id`)
         ) $collate;
 
