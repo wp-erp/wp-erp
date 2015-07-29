@@ -10,5 +10,5 @@ use WeDevs\ERP\Framework\Model;
  */
 class Department extends Model {
     protected $table = 'erp_hr_depts';
-    protected $fillable = [ 'company_id', 'title', 'description', 'lead', 'parent', 'status' ];
+    protected $fillable = [ 'title', 'description', 'lead', 'parent', 'status' ];
 }
