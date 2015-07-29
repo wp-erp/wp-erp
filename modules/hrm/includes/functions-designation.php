@@ -28,23 +28,23 @@ function erp_hr_create_designation( $args = array() ) {
     $desig_id = $fields['id'];
     unset( $fields['id'] );
 
+    $designation = new \WeDevs\ERP\HRM\Models\Designation();
+
     if ( ! $desig_id ) {
 
-        if ( $wpdb->insert( $wpdb->prefix . 'erp_hr_designations', $fields ) ) {
+        $desig = $designation->create( $fields );
 
-            do_action( 'erp_hr_desig_new', $wpdb->insert_id, $fields );
+        do_action( 'erp_hr_desig_new', $desig->id, $fields );
 
-            return $wpdb->insert_id;
-        }
+        return $desig->id;
 
     } else {
 
-        if ( $wpdb->update( $wpdb->prefix . 'erp_hr_designations', $fields, array( 'id' => $desig_id ) ) ) {
+        $designation->find( $desig_id )->update( $fields );
 
-            do_action( 'erp_hr_desig_updated', $desig_id, $fields );
+        do_action( 'erp_hr_desig_updated', $desig_id, $fields );
 
-            return $desig_id;
-        }
+        return $desig_id;
 
     }
 
@@ -65,7 +65,8 @@ function erp_hr_get_designations() {
     $designations = wp_cache_get( $cache_key, 'wp-erp' );
 
     if ( false === $designations ) {
-        $designations = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}erp_hr_designations" );
+        $designations = erp_array_to_object( \WeDevs\ERP\HRM\Models\Designation::all()->toArray() );
+
         wp_cache_set( $cache_key, $designations, 'wp-erp' );
     }
 
@@ -89,7 +90,7 @@ function erp_hr_delete_designation( $designation_id ) {
 
     do_action( 'erp_hr_desig_delete', $designation_id );
 
-    return $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}erp_hr_designations WHERE id = %d", $designation_id ) );
+    return \WeDevs\ERP\HRM\Models\Designation::find( $designation_id )->delete();
 }
 
 /**
