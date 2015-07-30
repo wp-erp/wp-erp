@@ -111,7 +111,7 @@ class Human_Resource {
         $suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
         wp_enqueue_media();
-        wp_enqueue_script( 'erp_select2' );
+        wp_enqueue_script( 'erp-select2' );
         wp_enqueue_script( 'wp-erp-hr', WPERP_HRM_ASSETS . "/js/hrm$suffix.js", array( 'wp-erp-script' ), date( 'Ymd' ), true );
         wp_enqueue_script( 'wp-erp-hr-leave', WPERP_HRM_ASSETS . "/js/leave$suffix.js", array(
             'wp-erp-script',
@@ -152,7 +152,8 @@ class Human_Resource {
         wp_localize_script( 'wp-erp-hr', 'wpErpHr', $localize_script );
 
         wp_enqueue_style( 'wp-color-picker' );
-        wp_enqueue_style( 'erp_select2' );
+        wp_enqueue_style( 'erp-select2' );
+        wp_enqueue_style( 'erp-style' );
     }
 
     /**

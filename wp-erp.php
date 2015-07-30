@@ -202,10 +202,13 @@ final class WeDevs_ERP {
     function init_script_register() {
         
         // Register select2 scripts
-        wp_register_script( 'erp_select2', WPERP_ASSETS . '/js/select2.full.min.js', false, false, true );
+        wp_register_script( 'erp-select2', WPERP_ASSETS . '/js/select2.full.min.js', false, false, true );
 
-        // Rregister select2 style
-        wp_register_style( 'erp_select2', WPERP_ASSETS . '/css/select2.min.css' );
+        // Register select2 style
+        wp_register_style( 'erp-select2', WPERP_ASSETS . '/css/select2.min.css' );
+
+        // Register main style
+        wp_register_style( 'erp-style', WPERP_ASSETS . '/css/style.css' );
     }
 
     /**

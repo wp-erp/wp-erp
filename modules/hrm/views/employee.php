@@ -192,7 +192,7 @@ class Employee_List_Table extends WP_List_Table {
 
 ?>
 
-<div class="wrap erp-hr-employees">
+<div class="wrap erp-hr-employees" id="wp-erp">
 
     <h2><?php _e( 'Employee', 'wp-erp' ); ?> <a href="#" id="erp-employee-new" class="add-new-h2"><?php _e( 'Add New', 'wp-erp' ); ?></a></h2>
 

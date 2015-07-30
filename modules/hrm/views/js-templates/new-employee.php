@@ -191,6 +191,7 @@
                         'label'   => __( 'Pay Type', 'wp-erp' ),
                         'name'    => 'work[pay_type]',
                         'value'   => '{{ data.work.pay_type }}',
+                        'class'   => 'erp-hrm-select2',
                         'type'    => 'select',
                         'options' => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_pay_type()
                     ) ); ?>
@@ -254,6 +255,7 @@
                     'label'   => __( 'Nationality', 'wp-erp' ),
                     'name'    => 'personal[nationality]',
                     'value'   => '{{ data.personal.nationality }}',
+                    'class'   => 'erp-hrm-select2',
                     'type'    => 'select',
                     'options' => \WeDevs\ERP\Countries::instance()->get_countries()
                 ) ); ?>
@@ -264,6 +266,7 @@
                     'label'   => __( 'Gender', 'wp-erp' ),
                     'name'    => 'personal[gender]',
                     'value'   => '{{ data.personal.gender }}',
+                    'class'   => 'erp-hrm-select2',
                     'type'    => 'select',
                     'options' => erp_hr_get_genders()
                 ) ); ?>
@@ -274,6 +277,7 @@
                     'label'   => __( 'Marital Status', 'wp-erp' ),
                     'name'    => 'personal[marital_status]',
                     'value'   => '{{ data.personal.marital_status }}',
+                    'class'   => 'erp-hrm-select2',
                     'type'    => 'select',
                     'options' => erp_hr_get_marital_statuses()
                 ) ); ?>

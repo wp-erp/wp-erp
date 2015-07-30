@@ -6,7 +6,8 @@ module.exports = function(grunt) {
         dirs: {
             css: 'assets/css',
             images: 'assets/images',
-            js: 'assets/js'
+            js: 'assets/js',
+            less: 'assets/less'
         },
 
         // Compile all .less files.
@@ -15,13 +16,14 @@ module.exports = function(grunt) {
             // one to one
             front: {
                 files: {
-                    '<%= dirs.css %>/frontend-forms.css': '<%= dirs.css %>/frontend-forms.less'
+                    '<%= dirs.css %>/frontend-forms.css': '<%= dirs.css %>/frontend-forms.less',
                 }
             },
 
             admin: {
                 files: {
-                    '<%= dirs.css %>/formbuilder.css': ['<%= dirs.css %>/formbuilder.less']
+                    '<%= dirs.css %>/formbuilder.css': ['<%= dirs.css %>/formbuilder.less'],
+                    '<%= dirs.css %>/style.css': '<%= dirs.less %>/style.less'
                 }
             }
         },
@@ -44,7 +46,7 @@ module.exports = function(grunt) {
 
         watch: {
             less: {
-                files: ['<%= dirs.css %>/*.less'],
+                files: ['<%= dirs.less %>/*.less'],
                 tasks: ['less:front', 'less:admin'],
                 options: {
                     livereload: true
