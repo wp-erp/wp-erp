@@ -99,6 +99,9 @@ final class WeDevs_ERP {
         // Initialize the action hooks
         $this->init_actions();
 
+        // Initialize register scripts
+        $this->init_script_register();
+
         // Loaded action
         do_action( 'erp_loaded' );
     }
@@ -192,6 +195,20 @@ final class WeDevs_ERP {
         }
 
         $this->container['modules'] = new \WeDevs\ERP\Framework\Modules();
+    }
+
+    /**
+     * Initialize erp script register
+     *
+     * @return void
+     */
+    function init_script_register() {
+        
+        // Register select2 scripts
+        wp_register_script( 'erp_select2', WPERP_ASSETS . '/js/select2.full.min.js', false, false, true );
+
+        // Rregister select2 style
+        wp_register_style( 'erp_select2', WPERP_ASSETS . '/css/select2.min.css' );
     }
 
     /**
