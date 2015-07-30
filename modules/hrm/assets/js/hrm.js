@@ -390,6 +390,7 @@
 
                     onReady: function() {
                         WeDevs_ERP_HR.initDateField();
+                        WeDevs_ERP_HR.employee.select2();
                     },
 
                     /**
@@ -417,6 +418,17 @@
                             }
                         });
                     }
+                });
+            },
+
+            /**
+             * select2
+             *
+             * @return  {void}
+             */
+            select2: function() {
+                $('.erp-hrm-select2').select2({
+                  theme: "classic"
                 });
             },
 
