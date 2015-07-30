@@ -427,8 +427,18 @@
              * @return  {void}
              */
             select2: function() {
+
                 $('.erp-hrm-select2').select2({
-                  theme: "classic"
+                    width: 'element',
+                    "language": {
+                        noResults: function(){
+                           return "<a href='#' class='btn btn-danger'>Add New</a>";
+                        }
+                    },
+                    escapeMarkup: function (markup) {
+                        return markup;
+                    }   
+                
                 });
             },
 

@@ -92,7 +92,7 @@
                     'value'   => '',
                     'class'   => 'erp-hrm-select2',
                     'type'    => 'select',
-                    'options' => array( '1' => 'asldf', '2' => 'asdlfsf', 'ads' => 'alskdjhsd' ), //erp_hr_get_departments_dropdown_raw()
+                    'options' => array( '0' => 'asdfasdf', '1' => 'dfgsrg', '2' => 'sadfasdf' ), //erp_hr_get_departments_dropdown_raw()
                 ) ); ?>
             </li>
 
@@ -338,4 +338,7 @@
     <?php wp_nonce_field( 'wp-erp-hr-employee-nonce' ); ?>
     <?php do_action( 'erp_hr_employee_form' ); ?>
 </div>
+
+
+
 

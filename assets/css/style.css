@@ -1,3 +1,4 @@
-.select2-container {
+.select2-container,
+.select2-drop {
   z-index: 9999999;
 }
