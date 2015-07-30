@@ -99,9 +99,6 @@ final class WeDevs_ERP {
         // Initialize the action hooks
         $this->init_actions();
 
-        // Initialize register scripts
-        $this->init_script_register();
-
         // Loaded action
         do_action( 'erp_loaded' );
     }
@@ -225,6 +222,7 @@ final class WeDevs_ERP {
         // Localize our plugin
         add_action( 'init', array( $this, 'localization_setup' ) );
         add_action( 'init', array( $this, 'load_module' ) );
+        add_action( 'admin_enqueue_scripts', array( $this, 'init_script_register' ) );
     }
 
     /**

@@ -90,8 +90,9 @@
                     'label'   => __( 'Department', 'wp-erp' ),
                     'name'    => 'work[department]',
                     'value'   => '',
+                    'class'   => 'erp-hrm-select2',
                     'type'    => 'select',
-                    'options' => erp_hr_get_departments_dropdown_raw()
+                    'options' => array( '1' => 'asldf', '2' => 'asdlfsf', 'ads' => 'alskdjhsd' ), //erp_hr_get_departments_dropdown_raw()
                 ) ); ?>
             </li>
 
@@ -100,6 +101,7 @@
                     'label'   => __( 'Job Title', 'wp-erp' ),
                     'name'    => 'work[designation]',
                     'value'   => '{{ data.work.designation }}',
+                    'class'   => 'erp-hrm-select2',
                     'type'    => 'select',
                     'options' => erp_hr_get_designation_dropdown_raw()
                 ) ); ?>
@@ -110,6 +112,7 @@
                     'label'   => __( 'Location', 'wp-erp' ),
                     'name'    => 'work[location]',
                     'value'   => '{{ data.work.location }}',
+                    'class'   => 'erp-hrm-select2',
                     'type'    => 'select',
                     'options' => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_company_get_location_dropdown_raw()
                 ) ); ?>
@@ -120,6 +123,7 @@
                     'label'   => __( 'Reporting To', 'wp-erp' ),
                     'name'    => 'work[reporting_to]',
                     'value'   => '{{ data.work.reporting_to }}',
+                    'class'   => 'erp-hrm-select2',
                     'type'    => 'select',
                     'id'      => 'work_reporting_to',
                     'options' => erp_hr_get_employees_dropdown_raw()
@@ -131,6 +135,7 @@
                     'label'   => __( 'Employee Type', 'wp-erp' ),
                     'name'    => 'work[type]',
                     'value'   => '{{ data.work.type }}',
+                    'class'   => 'erp-hrm-select2',
                     'type'    => 'select',
                     'options' => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_employee_types()
                 ) ); ?>
@@ -141,6 +146,7 @@
                     'label'   => __( 'Employee Status', 'wp-erp' ),
                     'name'    => 'work[status]',
                     'value'   => '{{ data.work.status }}',
+                    'class'   => 'erp-hrm-select2',
                     'type'    => 'select',
                     'options' => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_employee_statuses()
                 ) ); ?>
@@ -153,6 +159,7 @@
                     'label'   => __( 'Source of Hire', 'wp-erp' ),
                     'name'    => 'work[hiring_source]',
                     'value'   => '{{ data.work.hiring_source }}',
+                    'class'   => 'erp-hrm-select2',
                     'type'    => 'select',
                     'options' => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_employee_sources()
                 ) ); ?>
@@ -327,3 +334,4 @@
     <?php wp_nonce_field( 'wp-erp-hr-employee-nonce' ); ?>
     <?php do_action( 'erp_hr_employee_form' ); ?>
 </div>
+
