@@ -275,7 +275,9 @@ function erp_format_date( $date, $format = false ) {
         $format = get_option( 'date_format' );
     }
 
-    return date_i18n( $format, strtotime( $date ) );
+    $date_str = strtotime( $date );
+
+    return ( $date_str > 0 ) ? date_i18n( $format, strtotime( $date ) ) : '';
 }
 
 /**
