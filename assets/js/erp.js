@@ -133,6 +133,7 @@
             $.erpPopup({
                 title: self.data('title'),
                 button: wpErp.create,
+                id: 'erp-new-location',
                 content: wp.template( 'erp-address' )({ company_id: self.data('id') }),
                 extraClass: 'medium',
                 onSubmit: function(modal) {

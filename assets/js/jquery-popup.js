@@ -12,6 +12,7 @@
         defaults = {
             title: '',
             content: '',
+            id: '',
             button: 'Submit',
             extraClass: '',
             onReady: function() {},
@@ -22,6 +23,7 @@
     function Plugin(options) {
         this.settings = $.extend({}, defaults, options);
         this.element = $(this.settings.content);
+        this.id = this.settings.id;
         this._defaults = defaults;
         this._name = pluginName;
         this.init();
@@ -47,9 +49,13 @@
          */
         bindEvents: function() {
             // close the modal window
-            $('.erp-modal-backdrop, .erp-modal .close').on('click', $.proxy(this.closeModal, this) );
+            
             $('.erp-modal form.erp-modal-form').on('submit', $.proxy(this.formSubmit, this) );
-            $( window ).on( 'keydown', $.proxy(this.onEscapeKey, this) );
+            $('.erp-modal-backdrop, .erp-modal .close').on('click', $.proxy(this.closeModal, this) );
+            
+            $('body').on( 'keydown', '#'+this.id, $.proxy(this.onEscapeKey, this) );
+            $('#'+this.id).focus();
+            
         },
 
         /**
@@ -71,20 +77,50 @@
          * @return {void}
          */
         show_modal: function() {
-            var $modal = $( '.erp-modal' );
 
-            if ( this.settings.extraClass !== '' ) {
-                $modal.addClass( this.settings.extraClass );
+            if ( this.id === '' ) {
+                return;
             }
 
-            $( '.erp-modal-backdrop' ).show();
-            $modal.find('h2').text( this.settings.title );
-            $modal.find('.button-primary').text( this.settings.button );
-            $modal.find( '.content').empty().html(this.element);
-            $modal.show();
+            if ( $('#'+this.id).length ) {
+                return;
+            }
+
+            var $modal = $( '#erp-modal' ).find( '.erp-modal' ),
+                $clone_modal = $modal.clone();
+
+
+            if ( this.settings.extraClass !== '' ) {
+                $clone_modal.addClass( this.settings.extraClass );
+            }
+          
+            $clone_modal.attr( 'id', this.id );
+            $clone_modal.attr( 'tabindex', -1 );
+            $clone_modal.addClass( 'erp-count-class' );
+            $clone_modal.find('h2').text( this.settings.title );
+            $clone_modal.find('.button-primary').text( this.settings.button );
+            $clone_modal.find( '.content').empty().html(this.element);
+           
+            $clone_modal.show();
+
+            $('body').append( $clone_modal );
+            
+            var zindexContent = '10'+$('body').find('.erp-count-class').length,
+                zindexback = zindexContent-1;
+
+            $("#"+this.id).css('z-index', zindexContent );
+            $("#"+this.id).after( '<div style="z-index: '+zindexback+'" class="erp-modal-backdrop '+this.id+'"></div>');
+            $('.'+this.id).show();
+
+            // $( '.erp-modal-backdrop' ).show();
+            // $modal.find('h2').text( this.settings.title );
+            // $modal.find('.button-primary').text( this.settings.button );
+            // $modal.find( '.content').empty().html(this.element);
+            // $modal.show();
 
             // call the onReady callback
-            this.settings.onReady.call( $modal, this );
+            this.settings.onReady.call( $clone_modal, this );
+            
         },
 
         /**
@@ -94,7 +130,7 @@
          */
         onEscapeKey: function(e) {
             if ( 27 === e.keyCode ) {
-                this.closeModal();
+                this.closeModal(e);
             }
         },
 
@@ -127,8 +163,11 @@
             if ( typeof e !== 'undefined' ) {
                 e.preventDefault();
             }
-
-            var modal = $( '.erp-modal' );
+     
+            $('#'+this.id).remove(); 
+            $('.'+this.id).remove();
+            return;
+            var modal = $('.erp-modal' );
 
             // empty and hide the modal
             $( '.content', modal ).empty();

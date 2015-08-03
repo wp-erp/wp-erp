@@ -87,12 +87,13 @@
         <# if ( ! data.id ) { #>
             <li data-selected="{{ data.work.department }}">
                 <?php erp_html_form_input( array(
-                    'label'   => __( 'Department', 'wp-erp' ),
-                    'name'    => 'work[department]',
-                    'value'   => '',
-                    'class'   => 'erp-hrm-select2',
-                    'type'    => 'select',
-                    'options' => array( '0' => 'asdfasdf', '1' => 'dfgsrg', '2' => 'sadfasdf' ), //erp_hr_get_departments_dropdown_raw()
+                    'label'       => __( 'Department', 'wp-erp' ),
+                    'name'        => 'work[department]',
+                    'value'       => '',
+                    'class'       => 'erp-hrm-select2-add-more',
+                    'custom_attr' => array( 'data-id' => 'erp-hr-new-department', 'data-tmp_id' => 'erp-new-dept' ),
+                    'type'        => 'select',
+                    'options'     => array( '0' => 'asdfasdf', '1' => 'dfgsrg', '2' => 'sadfasdf' ), //erp_hr_get_departments_dropdown_raw()
                 ) ); ?>
             </li>
 
@@ -101,7 +102,8 @@
                     'label'   => __( 'Job Title', 'wp-erp' ),
                     'name'    => 'work[designation]',
                     'value'   => '{{ data.work.designation }}',
-                    'class'   => 'erp-hrm-select2',
+                    'class'   => 'erp-hrm-select2-add-more',
+                    'custom_attr' => array( 'data-id' => 'erp-hr-new-job-title', 'data-tmp_id' => 'erp-new-desig' ),
                     'type'    => 'select',
                     'options' => erp_hr_get_designation_dropdown_raw()
                 ) ); ?>
@@ -112,7 +114,8 @@
                     'label'   => __( 'Location', 'wp-erp' ),
                     'name'    => 'work[location]',
                     'value'   => '{{ data.work.location }}',
-                    'class'   => 'erp-hrm-select2',
+                    'custom_attr' => array( 'data-id' => 'erp-hr-new-location', 'data-tmp_id' => 'erp-address' ),
+                    'class'   => 'erp-hrm-select2-add-more',
                     'type'    => 'select',
                     'options' => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_company_get_location_dropdown_raw()
                 ) ); ?>

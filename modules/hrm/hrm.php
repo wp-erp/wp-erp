@@ -164,7 +164,7 @@ class Human_Resource {
     public function admin_js_templates() {
         global $current_screen;
 
-        // var_dump( $current_screen );
+        //var_dump( $current_screen ); die();
 
         switch ($current_screen->base) {
             case 'hr-management_page_erp-hr-depts':
@@ -186,6 +186,8 @@ class Human_Resource {
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/work-experience.php', 'erp-employment-work-experience' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/education-form.php', 'erp-employment-education' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/dependents.php', 'erp-employment-dependent' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-dept.php', 'erp-new-dept' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-designation.php', 'erp-new-desig' );
                 break;
 
             case 'leave_page_erp-leave-policies':
