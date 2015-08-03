@@ -324,6 +324,16 @@ table.leaves {
                 }
             }
 
+            .row-actions {
+                font-size:12px;
+                margin-top: 5px;
+
+                a {
+                   text-decoration: none;
+                }
+            }
+
+
             p {
                 margin: 0 0 1em 0;
 
@@ -339,6 +349,12 @@ table.leaves {
             border-top: 1px solid #fff;
             padding: 10px 0;
             margin: 0;
+
+            &:hover {
+                .row-actions {
+                    visibility:visible;
+                }
+            }
 
             &:last-child {
                 border-bottom: none;

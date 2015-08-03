@@ -49,6 +49,8 @@
 
             // notes
             $( '.erp-hr-employees' ).on( 'submit', '.note-tab-wrap form', this.employee.addNote );
+            $( '.erp-hr-employees' ).on( 'click', '.note-tab-wrap input#erp-load-notes', this.employee.loadNotes );
+            $( '.erp-hr-employees' ).on( 'click', '.note-tab-wrap a.delete_note', this.employee.deleteNote );
 
             // photos
             $( 'body' ).on( 'click', 'a#erp-set-emp-photo', this.employee.setPhoto );
@@ -519,14 +521,13 @@
              * @return  {void}
              */
             select2: function() {
+
                 var selects = $('.erp-hrm-select2');
                 $.each( selects, function( key, element ) {
-                    var tmp_id = $(element).data('tmp_id');
                     $(element).select2({
                         width: 'element',
                     });
                 });
-                
             },
 
             /**
@@ -753,13 +754,77 @@
                     data: form.serializeObject(),
                     success: function() {
                         $.get( window.location.href, function(data) {
-                            $('.note-tab-wrap').replaceWith( $(data).find( '.note-tab-wrap' ) );
+                            $('ul.notes-list').prepend( $(data).find( 'ul.notes-list li' ).first() );
+                            $('ul.notes-list li').last().remove();
+                            form.find('textarea').val('');
+                            submit.removeAttr( 'disabled' );
                         });
+
                     },
                     error: function() {
                         submit.removeAttr('disabled');
                     }
                 });
+            },
+
+            loadNotes: function(e) {
+                e.preventDefault();
+
+                var self = $(this),
+                    data = {
+                        action : 'erp-load-more-notes',
+                        user_id : self.data('user_id'),
+                        total_no : self.data('total_no'),
+                        offset_no : self.data('offset_no')
+                    };
+
+                var spiner = '<span class="erp-loader" style="margin:4px 0px 0px 10px"></span>';
+
+                self.closest('p')
+                    .append( spiner )
+                    .find('.erp-loader')
+                    .show();
+
+                self.attr( 'disabled', true );
+
+                wp.ajax.send({
+                    data: data,
+                    success: function( resp ) {
+                        self.data( 'offset_no', parseInt(data.total_no)+parseInt(data.offset_no) );
+                        $(resp.content).appendTo(self.closest('.note-tab-wrap').find('ul.notes-list')).hide().fadeIn();
+                        self.removeAttr( 'disabled' );
+                        $('.erp-loader').remove();
+                    },
+                    error: function( error ) {
+                        alert(error);
+                    }
+                });
+            },
+
+            deleteNote: function(e) {
+                e.preventDefault();
+
+                if ( confirm( wpErpHr.delConfirmEmployeeNote ) ) {
+
+                    var self = $(this),
+                        data = {
+                            action: 'erp-delete-employee-note',
+                            note_id: self.data('note_id'),
+                            _wpnonce : wpErpHr.nonce
+                        };
+
+                    wp.ajax.send({
+                        data: data,
+                        success: function( resp ) {
+                            self.closest('li').fadeOut( 400, function() {
+                                $(this).remove();
+                            });
+                        },
+                        error: function( error ) {
+                            alert(error);
+                        }
+                    });
+                }
             }
         }
     };

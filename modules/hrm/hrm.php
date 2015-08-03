@@ -138,7 +138,8 @@ class Human_Resource {
             'emp_set_photo'      => __( 'Set Photo', 'wp-erp' ),
             'confirm'            => __( 'Are you sure?', 'wp-erp' ),
             'delConfirmDept'     => __( 'Are you sure to delete this department?', 'wp-erp' ),
-            'delConfirmEmployee' => __( 'Are you sure to delete this employee?', 'wp-erp' )
+            'delConfirmEmployee' => __( 'Are you sure to delete this employee?', 'wp-erp' ),
+            'delConfirmEmployeeNote' => __( 'Are you sure to delete this employee note?', 'wp-erp' ),
         ) );
 
         // if its an employee page
