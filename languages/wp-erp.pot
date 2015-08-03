@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP ERP 0.1-alpha\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/support\n"
-"POT-Creation-Date: 2015-07-30 06:39:48+00:00\n"
+"POT-Creation-Date: 2015-08-02 07:39:42+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4731,7 +4731,7 @@ msgstr ""
 #: modules/hrm/views/js-templates/new-employee.php:140
 #: modules/hrm/views/js-templates/new-employee.php:151
 #: modules/hrm/views/js-templates/new-employee.php:164
-#: modules/hrm/views/js-templates/new-employee.php:195
+#: modules/hrm/views/js-templates/new-employee.php:196
 #: modules/hrm/views/leave/leave-entitlements.php:62
 #: modules/hrm/views/leave/new-request.php:38
 msgid "- Select -"
@@ -4765,7 +4765,7 @@ msgstr ""
 
 #: includes/admin/views/company-editor.php:98 modules/crm/views/leads.php:36
 #: modules/crm/views/leads.php:48
-#: modules/hrm/views/js-templates/new-employee.php:228
+#: modules/hrm/views/js-templates/new-employee.php:229
 msgid "Phone"
 msgstr ""
 
@@ -4775,12 +4775,12 @@ msgstr ""
 
 #: includes/admin/views/company-editor.php:120
 #: modules/hrm/views/employee/tab-general.php:47
-#: modules/hrm/views/js-templates/new-employee.php:220
+#: modules/hrm/views/js-templates/new-employee.php:221
 msgid "Mobile"
 msgstr ""
 
 #: includes/admin/views/company-editor.php:131
-#: modules/hrm/views/js-templates/new-employee.php:300
+#: modules/hrm/views/js-templates/new-employee.php:304
 msgid "Website"
 msgstr ""
 
@@ -5002,7 +5002,7 @@ msgstr ""
 msgid "-- select --"
 msgstr ""
 
-#: includes/class-install.php:305 modules/hrm/views/employee/single.php:3
+#: includes/class-install.php:306 modules/hrm/views/employee/single.php:3
 #: modules/hrm/views/employee.php:197
 #: modules/hrm/views/leave/leave-entitlements.php:79
 #: modules/hrm/views/leave/new-request.php:21
@@ -5841,7 +5841,7 @@ msgid "Employee Status"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:34
-#: modules/hrm/views/js-templates/new-employee.php:203
+#: modules/hrm/views/js-templates/new-employee.php:204
 msgid "Work Phone"
 msgstr ""
 
@@ -5851,49 +5851,49 @@ msgid "Employee Type"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:44
-#: modules/hrm/views/js-templates/new-employee.php:215
+#: modules/hrm/views/js-templates/new-employee.php:216
 msgid "Personal Details"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:48
-#: modules/hrm/views/js-templates/new-employee.php:309
+#: modules/hrm/views/js-templates/new-employee.php:313
 msgid "Address"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:49
-#: modules/hrm/views/js-templates/new-employee.php:236
+#: modules/hrm/views/js-templates/new-employee.php:237
 msgid "Other Email"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:50
 #: modules/hrm/views/employee/tab-general.php:183
 #: modules/hrm/views/js-templates/dependents.php:25
-#: modules/hrm/views/js-templates/new-employee.php:245
+#: modules/hrm/views/js-templates/new-employee.php:246
 msgid "Date of Birth"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:51
-#: modules/hrm/views/js-templates/new-employee.php:264
+#: modules/hrm/views/js-templates/new-employee.php:266
 msgid "Gender"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:52
-#: modules/hrm/views/js-templates/new-employee.php:254
+#: modules/hrm/views/js-templates/new-employee.php:255
 msgid "Nationality"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:53
-#: modules/hrm/views/js-templates/new-employee.php:274
+#: modules/hrm/views/js-templates/new-employee.php:277
 msgid "Marital Status"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:54
-#: modules/hrm/views/js-templates/new-employee.php:284
+#: modules/hrm/views/js-templates/new-employee.php:288
 msgid "Driving License"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:55
-#: modules/hrm/views/js-templates/new-employee.php:292
+#: modules/hrm/views/js-templates/new-employee.php:296
 msgid "Hobbies"
 msgstr ""
 
@@ -6328,7 +6328,7 @@ msgstr ""
 msgid "Middle Name"
 msgstr ""
 
-#: modules/hrm/views/js-templates/new-employee.php:318
+#: modules/hrm/views/js-templates/new-employee.php:322
 msgid "Biography"
 msgstr ""
 

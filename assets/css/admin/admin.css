@@ -347,6 +347,13 @@ table.leaves td.column-status .status-3 {
   color: #999;
   margin-left: 10px;
 }
+.note-tab-wrap ul.notes-list .note-wrap .row-actions {
+  font-size: 12px;
+  margin-top: 5px;
+}
+.note-tab-wrap ul.notes-list .note-wrap .row-actions a {
+  text-decoration: none;
+}
 .note-tab-wrap ul.notes-list .note-wrap p {
   margin: 0 0 1em 0;
 }
@@ -375,6 +382,9 @@ table.leaves td.column-status .status-3 {
 .note-tab-wrap ul.notes-list li:after {
   clear: both;
 }
+.note-tab-wrap ul.notes-list li:hover .row-actions {
+  visibility: visible;
+}
 .note-tab-wrap ul.notes-list li:last-child {
   border-bottom: none;
 }
@@ -383,6 +393,17 @@ table.leaves td.column-status .status-3 {
 }
 #wp-admin-bar-erp-mode-switch .ab-icon.dashicons-randomize {
   padding-top: 7px !important;
+}
+.erp-hide {
+  display: none;
+}
+.erp-loader {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: url('../../images/spinner-2x.gif') center center no-repeat;
+  z-index: 99;
+  background-size: 20px;
 }
 span.required {
   color: red;

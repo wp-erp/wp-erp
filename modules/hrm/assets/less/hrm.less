@@ -308,6 +308,15 @@ table.leaves {
             float: left;
             width: 90%;
 
+            .row-actions {
+                font-size:12px;
+                margin-top: 5px;
+
+                a {
+                   text-decoration: none;
+                }
+            }
+
             .by {
                 padding-bottom: 10px;
                 font-size: 12px;
@@ -320,7 +329,6 @@ table.leaves {
 
                 .date {
                     color: #999;
-                    margin-left: 10px;
                 }
             }
 
@@ -339,6 +347,12 @@ table.leaves {
             border-top: 1px solid #fff;
             padding: 10px 0;
             margin: 0;
+
+            &:hover {
+                .row-actions {
+                    visibility:visible;
+                }
+            }
 
             &:last-child {
                 border-bottom: none;

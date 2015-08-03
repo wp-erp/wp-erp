@@ -639,20 +639,16 @@ class Employee {
     public function add_note( $note, $comment_by ) {
         global $wpdb;
 
-        $inserted = $wpdb->insert( $wpdb->prefix . 'erp_hr_employee_notes', array(
+        $data = array(
             'user_id'    => $this->id,
-            'comment'    => wp_kses_post( $note ),
+            'comment'    => $note,
             'comment_by' => $comment_by,
-            'created_on' => current_time( 'mysql' )
-        ), array(
-            '%d',
-            '%s',
-            '%d',
-            '%s'
-        ) );
+        );
 
-        if ( $inserted ) {
-            $note_id = $wpdb->insert_id;
+        $inserted = \WeDevs\ERP\HRM\Models\Employee_Note::create( $data );
+
+        if ( $inserted->id ) {
+            $note_id = $inserted->id;
             do_action( 'erp_hr_employee_note_new', $note_id, $this->id );
 
             return $note_id;
@@ -670,15 +666,36 @@ class Employee {
      * @return array
      */
     public function get_notes( $limit = 30, $offset = 0 ) {
-        global $wpdb;
 
-        $query = "SELECT no.*, u.display_name as by_name, u.user_email as by_email
-            FROM {$wpdb->prefix}erp_hr_employee_notes AS no
-            LEFT JOIN $wpdb->users AS u ON u.ID = no.comment_by
-            WHERE no.user_id = {$this->id}
-            ORDER BY no.created_on DESC
-            LIMIT $offset, $limit";
-
-        return $wpdb->get_results( $query );
+        return \WeDevs\ERP\HRM\Models\Hr_User::find( $this->id )
+                ->notes()
+                ->skip($offset)
+                ->take($limit)
+                ->get();
     }
+
+    /**
+     * Get all notes
+     *
+     * @param integer $note_id
+     *
+     * @return boolean
+     */
+    public function delete_note( $note_id ) {
+        return \WeDevs\ERP\HRM\Models\Employee_Note::find( $note_id )->delete();
+    }
+
+
+    /**
+     * Get all notes
+     *
+     * @return integer
+     */
+    public function count_notes() {
+
+        return \WeDevs\ERP\HRM\Models\Hr_User::find( $this->id )
+                ->notes()
+                ->count();
+    }
+
 }

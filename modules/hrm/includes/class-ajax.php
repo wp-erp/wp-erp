@@ -41,6 +41,8 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-hr-emp-update-jobinfo', 'employee_update_job_info' );
         $this->action( 'wp_ajax_erp-hr-empl-leave-history', 'get_employee_leave_history' );
         $this->action( 'wp_ajax_erp-hr-employee-new-note', 'employee_add_note' );
+        $this->action( 'wp_ajax_erp-load-more-notes', 'employee_load_note' );
+        $this->action( 'wp_ajax_erp-delete-employee-note', 'employee_delete_note' );
 
         // work experience
         $this->action( 'wp_ajax_erp-hr-create-work-exp', 'employee_work_experience_create' );
@@ -406,6 +408,46 @@ class Ajax_Handler {
         }
 
         $this->send_success();
+    }
+
+    /**
+     * Employee Load more note
+     *
+     * @return json
+     */
+    public function employee_load_note() {
+        $employee_id = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
+        $total_no = isset( $_POST['total_no'] ) ? intval( $_POST['total_no'] ) : 0;
+        $offset_no = isset( $_POST['offset_no'] ) ? intval( $_POST['offset_no'] ) : 0;
+
+        $employee = new Employee( $employee_id );
+
+        $notes = $employee->get_notes( $total_no, $offset_no );
+
+        ob_start();
+        include WPERP_HRM_VIEWS . '/employee/tab-notes-row.php';
+        $content = ob_get_clean();
+
+        $this->send_success( array( 'content' => $content ) );
+    }
+
+    /**
+     * Delete Note
+     *
+     * @return json
+     */
+    public function employee_delete_note() {
+        check_admin_referer( 'wp-erp-hr-nonce' );
+
+        $note_id     = isset( $_POST['note_id'] ) ? intval( $_POST['note_id'] ) : 0;
+
+        $employee = new Employee();
+
+        if ( $employee->delete_note( $note_id ) ) {
+            $this->send_success();
+        } else {
+            $this->send_error();
+        }
     }
 
     /**

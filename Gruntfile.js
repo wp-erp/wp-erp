@@ -23,7 +23,8 @@ module.exports = function(grunt) {
             admin: {
                 files: {
                     '<%= dirs.css %>/formbuilder.css': ['<%= dirs.css %>/formbuilder.less'],
-                    '<%= dirs.css %>/style.css': '<%= dirs.less %>/style.less'
+                    '<%= dirs.css %>/style.css': '<%= dirs.less %>/style.less',
+                    '<%= dirs.css %>/admin/admin.css': '<%= dirs.less %>/admin/admin.less'
                 }
             }
         },
@@ -46,7 +47,7 @@ module.exports = function(grunt) {
 
         watch: {
             less: {
-                files: ['<%= dirs.less %>/*.less'],
+                files: ['<%= dirs.less %>/*.less', '<%= dirs.less %>/admin/*.less', ],
                 tasks: ['less:front', 'less:admin'],
                 options: {
                     livereload: true
