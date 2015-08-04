@@ -36,7 +36,7 @@ function erp_hr_create_department( $args = array() ) {
 
         do_action( 'erp_hr_dept_new', $dept->id, $fields );
 
-        return $department->id;
+        return $dept->id;
 
     } else {
 

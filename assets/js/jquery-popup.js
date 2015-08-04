@@ -85,7 +85,7 @@
             if ( $('#'+this.id).length ) {
                 return;
             }
-
+          
             var $modal = $( '#erp-modal' ).find( '.erp-modal' ),
                 $clone_modal = $modal.clone();
 

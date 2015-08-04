@@ -122,6 +122,8 @@ class Human_Resource {
             'popup'              => array(
                 'dept_title'        => __( 'New Department', 'wp-erp' ),
                 'dept_submit'       => __( 'Create Department', 'wp-erp' ),
+                'location_title'        => __( 'New Location', 'wp-erp' ),
+                'location_submit'       => __( 'Create Location', 'wp-erp' ),
                 'dept_update'       => __( 'Update Department', 'wp-erp' ),
                 'desig_title'       => __( 'New Designation', 'wp-erp' ),
                 'desig_submit'      => __( 'Create Designation', 'wp-erp' ),

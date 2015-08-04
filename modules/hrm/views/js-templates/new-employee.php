@@ -91,9 +91,9 @@
                     'name'        => 'work[department]',
                     'value'       => '',
                     'class'       => 'erp-hrm-select2-add-more',
-                    'custom_attr' => array( 'data-id' => 'erp-hr-new-department', 'data-tmp_id' => 'erp-new-dept' ),
+                    'custom_attr' => array( 'data-id' => 'erp-new-dept' ),
                     'type'        => 'select',
-                    'options'     => array( '0' => 'asdfasdf', '1' => 'dfgsrg', '2' => 'sadfasdf' ), //erp_hr_get_departments_dropdown_raw()
+                    'options'     => erp_hr_get_departments_dropdown_raw()
                 ) ); ?>
             </li>
 

@@ -14,7 +14,7 @@
          */
         initialize: function() {
             // Department
-            $( '.erp-hr-depts' ).on( 'click', 'a#erp-new-dept', this.department.create );
+            $( 'body' ).on( 'click', 'a#erp-new-dept', this.department.create );
             $( '.erp-hr-depts' ).on( 'click', 'a.submitdelete', this.department.remove );
             $( '.erp-hr-depts' ).on( 'click', 'span.edit a', this.department.edit );
 
@@ -57,7 +57,12 @@
             $( 'body' ).on( 'click', 'a.erp-remove-photo', this.employee.removePhoto );
 
             // Add more 
-            $( 'body' ).on( 'click', 'a.erp-hr-add-more', this.employee.addMore );
+           // $( 'body' ).on( 'click', 'a.erp-hr-add-more', this.employee.addMore );
+            $('body').on( 'erp-hr-after-new-dept', function(e, res) {
+               // console.log($('select.erp-hrm-select2-add-more'));
+               $('.erp-hrm-select2-add-more').append('<option value="'+res.id+'">'+res.title+'</option>');
+               // $('#erp-new-employee-popup').load( window.location.href + ' #erp-new-employee-popup', function() {});
+            } );
 
             // this.employee.addWorkExperience();
         },
@@ -92,19 +97,22 @@
              */
             create: function(e) {
                 e.preventDefault();
-
+                var self = $(this),
+                    id = 'erp-hr-new-department';
                 $.erpPopup({
                     title: wpErpHr.popup.dept_title,
                     button: wpErpHr.popup.dept_submit,
-                    id: 'erp-hr-new-department',
+                    id: id,
                     content: wp.template('erp-new-dept')(),
                     extraClass: 'smaller',
                     onSubmit: function(modal) {
                         wp.ajax.send( {
                             data: this.serialize(),
-                            success: function() {
+                            success: function(res) {
                                 WeDevs_ERP_HR.department.reload();
+                                $('body').trigger( 'erp-hr-after-new-dept', [res]);
                                 modal.closeModal();
+
                             },
                             error: function(error) {
                                 alert( error );
@@ -332,26 +340,26 @@
              */
             addMore: function(e) {
                 e.preventDefault();
-                
+          
                 var self     = $(this),
                     id       = self.data('id'),
                     tmp_id = self.data('tmp_id');
                
                 switch(tmp_id) {
                     case 'erp-new-dept':
-                        var title = 'New Department',
-                            button = 'Create Department',
+                        var title = wpErpHr.popup.dept_title,
+                            button = wpErpHr.popup.dept_submit,
                             tmp_name = 'erp-new-dept';
                         break;
                     case 'erp-new-desig':
-                        var title = 'New Job Title',
-                            button = 'Create Job Title',
+                        var title = wpErpHr.popup.desig_title,
+                            button = wpErpHr.popup.desig_submit,
                             tmp_name = 'erp-new-desig';
                         break;
 
                     case 'erp-address':
-                        var title = 'New Location',
-                            button = 'Create Location',
+                        var title = wpErpHr.popup.location_title,
+                            button = wpErpHr.popup.location_submit,
                             tmp_name = 'erp-address';
                         break;
                     default:
@@ -498,12 +506,12 @@
             select2AddMore: function() {
                 var selects = $('.erp-hrm-select2-add-more');
                 $.each( selects, function( key, element ) {
-                    var tmp_id = $(element).data('tmp_id');
+                    var id = $(element).data('id');
                     $(element).select2({
                         width: 'element',
                         "language": {
                             noResults: function(){
-                               return '<a href="#" class="button button-primary erp-hr-add-more" data-tmp_id="'+tmp_id+'" data-id="erp-hr-add-more">Add New</a>';
+                               return '<a href="#" class="button button-primary" id="'+id+'">Add New</a>';
                             }
                         },
                         escapeMarkup: function (markup) {
@@ -536,6 +544,7 @@
              * @param  {event}
              */
             edit: function(e) {
+                console.log('asdkjsdf');
                 e.preventDefault();
 
                 var self = $(this);
@@ -543,7 +552,7 @@
                 $.erpPopup({
                     title: wpErpHr.popup.employee_update,
                     button: wpErpHr.popup.employee_update,
-                    id: 'erp-employee-new',
+                    id: 'erp-employee-edit',
                     onReady: function() {
                         var modal = this;
 
