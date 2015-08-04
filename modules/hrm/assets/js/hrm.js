@@ -19,7 +19,7 @@
             $( '.erp-hr-depts' ).on( 'click', 'span.edit a', this.department.edit );
 
             // Designation
-            $( '.erp-hr-designation' ).on( 'click', 'a#erp-new-designation', this.designation.create );
+            $( 'body' ).on( 'click', 'a#erp-new-designation', this.designation.create );
             $( '.erp-hr-designation' ).on( 'click', 'a.submitdelete', this.designation.remove );
             $( '.erp-hr-designation' ).on( 'click', 'span.edit a', this.designation.edit );
 
@@ -56,13 +56,10 @@
             $( 'body' ).on( 'click', 'a#erp-set-emp-photo', this.employee.setPhoto );
             $( 'body' ).on( 'click', 'a.erp-remove-photo', this.employee.removePhoto );
 
-            // Add more 
-           // $( 'body' ).on( 'click', 'a.erp-hr-add-more', this.employee.addMore );
-            $('body').on( 'erp-hr-after-new-dept', function(e, res) {
-               // console.log($('select.erp-hrm-select2-add-more'));
-               $('.erp-hrm-select2-add-more').append('<option value="'+res.id+'">'+res.title+'</option>');
-               // $('#erp-new-employee-popup').load( window.location.href + ' #erp-new-employee-popup', function() {});
-            } );
+            // Trigger 
+            $('body').on( 'erp-hr-after-new-dept', this.department.afterNew );
+            $('body').on( 'erp-hr-after-new-desig', this.designation.afterNew );
+           
 
             // this.employee.addWorkExperience();
         },
@@ -82,6 +79,15 @@
         department: {
 
             /**
+             * After create new department
+             *
+             * @return {void}
+             */
+            afterNew: function( e, res ) {
+                $('.erp-hr-dept-drop-down').append('<option selected="selected" value="'+res.id+'">'+res.title+'</option>');
+            },
+
+            /**
              * Reload the department area
              *
              * @return {void}
@@ -97,12 +103,11 @@
              */
             create: function(e) {
                 e.preventDefault();
-                var self = $(this),
-                    id = 'erp-hr-new-department';
+                var self = $(this);
                 $.erpPopup({
                     title: wpErpHr.popup.dept_title,
                     button: wpErpHr.popup.dept_submit,
-                    id: id,
+                    id: 'erp-hr-new-department',
                     content: wp.template('erp-new-dept')(),
                     extraClass: 'smaller',
                     onSubmit: function(modal) {
@@ -211,6 +216,15 @@
         designation: {
 
             /**
+             * After create new desination
+             *
+             * @return {void}
+             */
+            afterNew: function( e, res ) {
+                $('.erp-hr-desi-drop-down').append('<option selected="selected" value="'+res.id+'">'+res.title+'</option>');
+            },
+
+            /**
              * Reload the department area
              *
              * @return {void}
@@ -238,9 +252,9 @@
                     onSubmit: function(modal) {
                         wp.ajax.send( {
                             data: this.serialize(),
-                            success: function() {
+                            success: function(res) {
                                 WeDevs_ERP_HR.designation.reload();
-
+                                $('body').trigger( 'erp-hr-after-new-desig', [res] );
                                 modal.closeModal();
                             },
                             error: function(error) {
@@ -338,59 +352,59 @@
              *
              * @param {event}
              */
-            addMore: function(e) {
-                e.preventDefault();
+            // addMore: function(e) {
+            //     e.preventDefault();
           
-                var self     = $(this),
-                    id       = self.data('id'),
-                    tmp_id = self.data('tmp_id');
+            //     var self     = $(this),
+            //         id       = self.data('id'),
+            //         tmp_id = self.data('tmp_id');
                
-                switch(tmp_id) {
-                    case 'erp-new-dept':
-                        var title = wpErpHr.popup.dept_title,
-                            button = wpErpHr.popup.dept_submit,
-                            tmp_name = 'erp-new-dept';
-                        break;
-                    case 'erp-new-desig':
-                        var title = wpErpHr.popup.desig_title,
-                            button = wpErpHr.popup.desig_submit,
-                            tmp_name = 'erp-new-desig';
-                        break;
+            //     switch(tmp_id) {
+            //         case 'erp-new-dept':
+            //             var title = wpErpHr.popup.dept_title,
+            //                 button = wpErpHr.popup.dept_submit,
+            //                 tmp_name = 'erp-new-dept';
+            //             break;
+            //         case 'erp-new-desig':
+            //             var title = wpErpHr.popup.desig_title,
+            //                 button = wpErpHr.popup.desig_submit,
+            //                 tmp_name = 'erp-new-desig';
+            //             break;
 
-                    case 'erp-address':
-                        var title = wpErpHr.popup.location_title,
-                            button = wpErpHr.popup.location_submit,
-                            tmp_name = 'erp-address';
-                        break;
-                    default:
-                        var title = '',
-                            button = '',
-                            tmp_name = '';
-                        break;
-                }
+            //         case 'erp-address':
+            //             var title = wpErpHr.popup.location_title,
+            //                 button = wpErpHr.popup.location_submit,
+            //                 tmp_name = 'erp-address';
+            //             break;
+            //         default:
+            //             var title = '',
+            //                 button = '',
+            //                 tmp_name = '';
+            //             break;
+            //     }
              
-                $.erpPopup({
-                    title: title,
-                    button: button,
-                    id: id,
-                    extraClass: 'smaller',
-                    content: wp.template(tmp_name)( wpErpHr.employee_empty ).trim(),
+            //     $.erpPopup({
+            //         title: title,
+            //         button: button,
+            //         id: id,
+            //         extraClass: 'smaller',
+            //         content: wp.template(tmp_name)( wpErpHr.employee_empty ).trim(),
 
-                    onReady: function() {
-                        WeDevs_ERP_HR.initDateField();
-                        WeDevs_ERP_HR.employee.select2();
-                    },
+            //         onReady: function() {
+            //             WeDevs_ERP_HR.initDateField();
+            //             WeDevs_ERP_HR.employee.select2();
+            //         },
 
-                    /**
-                     * Handle the onsubmit function
-                     *
-                     * @param  {modal}
-                     */
-                    onSubmit: function(modal) {
+            //         /**
+            //          * Handle the onsubmit function
+            //          *
+            //          * @param  {modal}
+            //          */
+            //         onSubmit: function(modal) {
                         
-                    }
-                });
-            },
+            //         }
+            //     });
+            // },
 
             /**
              * Set photo popup

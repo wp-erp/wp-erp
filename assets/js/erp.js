@@ -19,14 +19,19 @@
             $( '#postimagediv').on( 'click', '#set-company-thumbnail', this.setCompanyLogo );
             $( '#postimagediv').on( 'click', 'a.remove-logo', this.removeCompanyLogo );
 
-            $( '.erp-company-single').on( 'click', 'a#erp-company-new-location', this.newCompanyLocation );
+            $( 'body').on( 'click', 'a#erp-company-new-location', this.newCompanyLocation );
             $( '.erp-company-single').on( 'click', 'a.edit-location', this.editCompanyLocation );
             $( '.erp-company-single').on( 'click', 'a.remove-location', this.removeCompanyLocation );
 
             // on popup, country change event
             $( 'body' ).on('change', 'select.erp-country-select', this.populateState );
+            $('body').on( 'erp-hr-after-new-location', this.afterNewLocation );
 
             this.initDateField();
+        },
+
+        afterNewLocation: function(e, res) {
+            $('.erp-hr-location-drop-down').append('<option selected="selected" value="'+res.id+'">'+res.title+'</option>');
         },
 
         initDateField: function() {
@@ -139,9 +144,9 @@
                 onSubmit: function(modal) {
                     wp.ajax.send( {
                         data: this.serializeObject(),
-                        success: function() {
+                        success: function(res) {
                             $('#company-locations').load( window.location.href + ' #company-locations-inside' );
-
+                            $('body').trigger( 'erp-hr-after-new-location', [res]);
                             modal.closeModal();
                         },
                         error: function(error) {
