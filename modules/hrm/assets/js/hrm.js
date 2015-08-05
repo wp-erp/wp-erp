@@ -85,6 +85,7 @@
              */
             afterNew: function( e, res ) {
                 $('.erp-hr-dept-drop-down').append('<option selected="selected" value="'+res.id+'">'+res.title+'</option>');
+                $('.erp-hr-dept-drop-down').select2("val", res.id);
             },
 
             /**
@@ -222,6 +223,7 @@
              */
             afterNew: function( e, res ) {
                 $('.erp-hr-desi-drop-down').append('<option selected="selected" value="'+res.id+'">'+res.title+'</option>');
+                $('.erp-hr-desi-drop-down').select2("val", res.id);
             },
 
             /**
