@@ -31,6 +31,7 @@
         },
 
         afterNewLocation: function(e, res) {
+            console.log( $('.erp-hr-location-drop-down'), res );
             $('.erp-hr-location-drop-down').append('<option selected="selected" value="'+res.id+'">'+res.title+'</option>');
             $('.erp-hr-location-drop-down').select2("val", res.id);
         },

@@ -482,8 +482,8 @@
 
                     onReady: function() {
                         WeDevs_ERP_HR.initDateField();
-                        WeDevs_ERP_HR.employee.select2();
-                        WeDevs_ERP_HR.employee.select2AddMore();
+                        WeDevs_ERP_HR.employee.select2Content();
+                        WeDevs_ERP_HR.employee.select2AddMoreContent();
                     },
 
                     /**
@@ -515,42 +515,60 @@
             },
 
             /**
-             * select2 with add more button
+             * select2 with add more button content
              *
              * @return  {void}
              */
-            select2AddMore: function() {
+            select2AddMoreContent: function() {
                 var selects = $('.erp-hrm-select2-add-more');
                 $.each( selects, function( key, element ) {
-                    var id = $(element).data('id');
-                    $(element).select2({
-                        width: 'element',
-                        "language": {
-                            noResults: function(){
-                               return '<a href="#" class="button button-primary" id="'+id+'">Add New</a>';
-                            }
-                        },
-                        escapeMarkup: function (markup) {
-                            return markup;
-                        }   
-                    
-                    });
+                   WeDevs_ERP_HR.employee.select2AddMoreActive(element);
                 });
                 
             },
 
             /**
-             * select2
+             * select2 with add more button active
              *
              * @return  {void}
              */
-            select2: function() {
+            select2AddMoreActive: function(element) {
+                var id = $(element).data('id');
+                $(element).select2({
+                    width: 'element',
+                    "language": {
+                        noResults: function(){
+                           return '<a href="#" class="button button-primary" id="'+id+'">Add New</a>';
+                        }
+                    },
+                    escapeMarkup: function (markup) {
+                        return markup;
+                    }   
+                
+                });
+            },
+            
+            /**
+             * select2 
+             *
+             * @return  {void}
+             */
+            select2Content: function() {
 
                 var selects = $('.erp-hrm-select2');
                 $.each( selects, function( key, element ) {
-                    $(element).select2({
-                        width: 'element',
-                    });
+                    WeDevs_ERP_HR.employee.select2Action(element);
+                });
+            },
+
+            /**
+             * select2 action
+             *
+             * @return  {void}
+             */
+            select2Action: function(element) {
+                $(element).select2({
+                    width: 'element',
                 });
             },
 
