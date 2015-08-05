@@ -3,8 +3,23 @@
 /* global wp */
 /* global wpErp */
 
+window.wperp = window.wperp || {};
+
 ;(function($) {
     'use strict';
+
+    wperp.template = function ( id ) {
+        var options = {
+            evaluate:    /<#([\s\S]+?)#>/g,
+            interpolate: /\{\{\{([\s\S]+?)\}\}\}/g,
+            escape:      /\{\{([^\}]+?)\}\}(?!\})/g,
+            variable:    'data'
+        };
+
+        return function ( data ) {
+            return _.template( $( '#tmpl-' + id ).html(), null, options )( data );
+        };
+    };
 
     var WeDevs_ERP = {
 

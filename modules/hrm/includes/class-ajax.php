@@ -61,6 +61,15 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-hr-leave-policy-delete', 'leave_policy_delete' );
 
         $this->action( 'wp_ajax_erp-hr-leave-request-req-date', 'leave_request_dates' );
+
+        // script reload
+        $this->action( 'wp_ajax_erp_hr_script_reload', 'script_reload' );
+    }
+
+    function script_reload() {
+        ob_start();
+        include WPERP_HRM_JS_TMPL . '/new-employee.php';
+        $this->send_success( array( 'content' => ob_get_clean() ) );
     }
 
     /**
