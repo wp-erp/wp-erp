@@ -57,7 +57,7 @@ class Ajax {
             $this->send_error( $location_id->get_error_message() );
         }
 
-        $this->send_success();
+        $this->send_success( array( 'id' => $location_id, 'title' => $location_name ) );
     }
 
     /**
