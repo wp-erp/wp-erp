@@ -104,8 +104,9 @@
             $clone_modal.show();
 
             $('body').append( $clone_modal );
+
             
-            var zindexContent = '10'+$('body').find('.erp-count-class').length,
+            var zindexContent = 600*$('body').find('.erp-count-class').length,
                 zindexback = zindexContent-1;
 
             $("#"+this.id).css('z-index', zindexContent );

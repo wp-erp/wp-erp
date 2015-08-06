@@ -64,20 +64,6 @@
             // this.employee.addWorkExperience();
         },
 
-        scriptReload: function( action, id ) {
-            wp.ajax.send( {
-                data: {
-                    action: action, 
-                },          
-                success: function(res) {
-                    $('#'+id).html(res.content);
-                },
-                error: function(error) {
-                    alert( error );
-                }
-            });
-        },
-
         initDateField: function() {
             $( '.erp-date-field').datepicker({
                 dateFormat: 'yy-mm-dd',
@@ -100,10 +86,9 @@
             afterNew: function( e, res ) {
                 var selectdrop = $('.erp-hr-dept-drop-down');
                    
-                WeDevs_ERP_HR.scriptReload( 'erp_hr_script_reload', 'tmpl-erp-new-employee' );
+                wperp.scriptReload( 'erp_hr_script_reload', 'tmpl-erp-new-employee' );
                 selectdrop.append('<option selected="selected" value="'+res.id+'">'+res.title+'</option>');
                 selectdrop.select2("val", res.id);
-                //WeDevs_ERP_HR.employee.select2AddMoreActive('erp-hr-dept-drop-down');
             },
 
             /**
@@ -242,6 +227,7 @@
             afterNew: function( e, res ) {
                 var selectdrop = $('.erp-hr-desi-drop-down');
 
+                wperp.scriptReload( 'erp_hr_script_reload', 'tmpl-erp-new-employee' );
                 selectdrop.append('<option selected="selected" value="'+res.id+'">'+res.title+'</option>');
                 WeDevs_ERP_HR.employee.select2AddMoreActive('erp-hr-desi-drop-down');
                 selectdrop.select2("val", res.id);

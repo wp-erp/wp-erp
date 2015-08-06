@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP ERP 0.1-alpha\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/support\n"
-"POT-Creation-Date: 2015-08-02 07:39:42+00:00\n"
+"POT-Creation-Date: 2015-08-06 06:10:37+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4630,7 +4630,7 @@ msgstr ""
 msgid "Create"
 msgstr ""
 
-#: includes/admin/class-admin.php:62 modules/hrm/hrm.php:133
+#: includes/admin/class-admin.php:62 modules/hrm/hrm.php:135
 msgid "Update"
 msgstr ""
 
@@ -4727,11 +4727,11 @@ msgstr ""
 #: modules/hrm/views/js-templates/compensation.php:37
 #: modules/hrm/views/js-templates/employment-status.php:18
 #: modules/hrm/views/js-templates/job-info.php:20
-#: modules/hrm/views/js-templates/new-employee.php:117
-#: modules/hrm/views/js-templates/new-employee.php:140
-#: modules/hrm/views/js-templates/new-employee.php:151
-#: modules/hrm/views/js-templates/new-employee.php:164
-#: modules/hrm/views/js-templates/new-employee.php:196
+#: modules/hrm/views/js-templates/new-employee.php:120
+#: modules/hrm/views/js-templates/new-employee.php:143
+#: modules/hrm/views/js-templates/new-employee.php:154
+#: modules/hrm/views/js-templates/new-employee.php:167
+#: modules/hrm/views/js-templates/new-employee.php:199
 #: modules/hrm/views/leave/leave-entitlements.php:62
 #: modules/hrm/views/leave/new-request.php:38
 msgid "- Select -"
@@ -4765,7 +4765,7 @@ msgstr ""
 
 #: includes/admin/views/company-editor.php:98 modules/crm/views/leads.php:36
 #: modules/crm/views/leads.php:48
-#: modules/hrm/views/js-templates/new-employee.php:229
+#: modules/hrm/views/js-templates/new-employee.php:232
 msgid "Phone"
 msgstr ""
 
@@ -4775,12 +4775,12 @@ msgstr ""
 
 #: includes/admin/views/company-editor.php:120
 #: modules/hrm/views/employee/tab-general.php:47
-#: modules/hrm/views/js-templates/new-employee.php:221
+#: modules/hrm/views/js-templates/new-employee.php:224
 msgid "Mobile"
 msgstr ""
 
 #: includes/admin/views/company-editor.php:131
-#: modules/hrm/views/js-templates/new-employee.php:304
+#: modules/hrm/views/js-templates/new-employee.php:307
 msgid "Website"
 msgstr ""
 
@@ -4809,7 +4809,7 @@ msgstr ""
 msgid "Locations"
 msgstr ""
 
-#: includes/admin/views/company.php:30
+#: includes/admin/views/company.php:30 modules/hrm/hrm.php:125
 msgid "New Location"
 msgstr ""
 
@@ -4821,15 +4821,15 @@ msgstr ""
 msgid "No extra locations found!"
 msgstr ""
 
-#: includes/admin/views/erp-modal.php:3
+#: includes/admin/views/erp-modal.php:4
 msgid "Modal window. Press escape to close."
 msgstr ""
 
-#: includes/admin/views/erp-modal.php:4
+#: includes/admin/views/erp-modal.php:5
 msgid "Close modal window"
 msgstr ""
 
-#: includes/admin/views/erp-modal.php:12
+#: includes/admin/views/erp-modal.php:13
 msgid "Loading"
 msgstr ""
 
@@ -4860,7 +4860,7 @@ msgid "Event"
 msgstr ""
 
 #: includes/admin/views/log.php:31 includes/admin/views/log.php:42
-#: modules/hrm/includes/class-ajax.php:567
+#: modules/hrm/includes/class-ajax.php:618
 #: modules/hrm/views/employee/tab-general.php:181
 #: modules/hrm/views/js-templates/dependents.php:5
 msgid "Name"
@@ -5304,176 +5304,184 @@ msgstr ""
 msgid "Create Department"
 msgstr ""
 
-#: modules/hrm/hrm.php:125
-msgid "Update Department"
-msgstr ""
-
 #: modules/hrm/hrm.php:126
-msgid "New Designation"
+msgid "Create Location"
 msgstr ""
 
 #: modules/hrm/hrm.php:127
-msgid "Create Designation"
+msgid "Update Department"
 msgstr ""
 
 #: modules/hrm/hrm.php:128
-msgid "Update Designation"
+msgid "New Designation"
 msgstr ""
 
 #: modules/hrm/hrm.php:129
-msgid "New Employee"
+msgid "Create Designation"
 msgstr ""
 
 #: modules/hrm/hrm.php:130
-msgid "Create Employee"
+msgid "Update Designation"
 msgstr ""
 
 #: modules/hrm/hrm.php:131
+msgid "New Employee"
+msgstr ""
+
+#: modules/hrm/hrm.php:132
+msgid "Create Employee"
+msgstr ""
+
+#: modules/hrm/hrm.php:133
 msgid "Update Employee"
 msgstr ""
 
-#: modules/hrm/hrm.php:132 modules/hrm/views/employee/tab-job.php:5
+#: modules/hrm/hrm.php:134 modules/hrm/views/employee/tab-job.php:5
 #: modules/hrm/views/employee/tab-job.php:7
 #: modules/hrm/views/employee/tab-job.php:12
 #: modules/hrm/views/js-templates/employment-status.php:14
 msgid "Employment Status"
 msgstr ""
 
-#: modules/hrm/hrm.php:134 modules/hrm/views/leave/leave-entitlements.php:56
+#: modules/hrm/hrm.php:136 modules/hrm/views/leave/leave-entitlements.php:56
 #: modules/hrm/views/leave/leave-entitlements.php:147
 #: modules/hrm/views/leave/leave-entitlements.php:162
 #: modules/hrm/views/leave/requests.php:94
 msgid "Leave Policy"
 msgstr ""
 
-#: modules/hrm/hrm.php:135
+#: modules/hrm/hrm.php:137
 msgid "Create Policy"
 msgstr ""
 
-#: modules/hrm/hrm.php:137 modules/hrm/views/js-templates/new-employee.php:17
+#: modules/hrm/hrm.php:139 modules/hrm/views/js-templates/new-employee.php:17
 msgid "Upload Employee Photo"
 msgstr ""
 
-#: modules/hrm/hrm.php:138
+#: modules/hrm/hrm.php:140
 msgid "Set Photo"
 msgstr ""
 
-#: modules/hrm/hrm.php:139
+#: modules/hrm/hrm.php:141
 msgid "Are you sure?"
 msgstr ""
 
-#: modules/hrm/hrm.php:140
+#: modules/hrm/hrm.php:142
 msgid "Are you sure to delete this department?"
 msgstr ""
 
-#: modules/hrm/hrm.php:141
+#: modules/hrm/hrm.php:143
 msgid "Are you sure to delete this employee?"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:79
-#: modules/hrm/includes/class-ajax.php:192
-#: modules/hrm/includes/class-ajax.php:215
-#: modules/hrm/includes/class-ajax.php:307
-#: modules/hrm/includes/class-ajax.php:348
-#: modules/hrm/includes/class-ajax.php:387
+#: modules/hrm/hrm.php:144
+msgid "Are you sure to delete this employee note?"
+msgstr ""
+
+#: modules/hrm/includes/class-ajax.php:90
+#: modules/hrm/includes/class-ajax.php:203
+#: modules/hrm/includes/class-ajax.php:226
+#: modules/hrm/includes/class-ajax.php:318
+#: modules/hrm/includes/class-ajax.php:359
+#: modules/hrm/includes/class-ajax.php:398
 #: modules/hrm/includes/class-form-handler.php:33
 #: modules/hrm/includes/class-form-handler.php:129
 msgid "Something went wrong!"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:142
+#: modules/hrm/includes/class-ajax.php:153
 msgid "Department has been deleted"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:145
-#: modules/hrm/includes/class-ajax.php:659
+#: modules/hrm/includes/class-ajax.php:156
+#: modules/hrm/includes/class-ajax.php:710
 msgid "Something went worng!"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:212
+#: modules/hrm/includes/class-ajax.php:223
 msgid "Designation has been deleted"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:259
+#: modules/hrm/includes/class-ajax.php:270
 msgid "Employee does not exists."
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:278
+#: modules/hrm/includes/class-ajax.php:289
 msgid "Employee has been removed successfully"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:297
+#: modules/hrm/includes/class-ajax.php:308
 msgid "Status error"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:330
+#: modules/hrm/includes/class-ajax.php:341
 msgid "Enter a valid pay rate."
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:334
+#: modules/hrm/includes/class-ajax.php:345
 msgid "Pay Type does not exists."
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:338
+#: modules/hrm/includes/class-ajax.php:349
 msgid "Reason does not exists."
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:431
+#: modules/hrm/includes/class-ajax.php:482
 msgid "Company Name"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:432
+#: modules/hrm/includes/class-ajax.php:483
 #: modules/hrm/views/employee/tab-general.php:78
 #: modules/hrm/views/employee/tab-job.php:106
 #: modules/hrm/views/js-templates/job-info.php:36
-#: modules/hrm/views/js-templates/new-employee.php:101
+#: modules/hrm/views/js-templates/new-employee.php:102
 #: modules/hrm/views/js-templates/work-experience.php:15
 msgid "Job Title"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:433
+#: modules/hrm/includes/class-ajax.php:484
 msgid "From date"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:434
+#: modules/hrm/includes/class-ajax.php:485
 msgid "To date"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:439
-#: modules/hrm/includes/class-ajax.php:508
-#: modules/hrm/includes/class-ajax.php:573
+#: modules/hrm/includes/class-ajax.php:490
+#: modules/hrm/includes/class-ajax.php:559
+#: modules/hrm/includes/class-ajax.php:624
 msgid "%s is required"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:500
+#: modules/hrm/includes/class-ajax.php:551
 #: modules/hrm/views/employee/tab-general.php:128
 #: modules/hrm/views/js-templates/education-form.php:5
 msgid "School Name"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:501
+#: modules/hrm/includes/class-ajax.php:552
 #: modules/hrm/views/employee/tab-general.php:129
 #: modules/hrm/views/js-templates/education-form.php:15
 msgid "Degree"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:502
+#: modules/hrm/includes/class-ajax.php:553
 msgid "Field"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:503
+#: modules/hrm/includes/class-ajax.php:554
 msgid "Completion date"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:568
+#: modules/hrm/includes/class-ajax.php:619
 msgid "Relation"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:656
+#: modules/hrm/includes/class-ajax.php:707
 msgid "Policy has been deleted"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:688
+#: modules/hrm/includes/class-ajax.php:739
 #: modules/hrm/views/js-templates/leave-days.php:7
 msgid "day"
 msgid_plural "days"
@@ -5821,79 +5829,79 @@ msgstr ""
 #: modules/hrm/views/employee/tab-general.php:30
 #: modules/hrm/views/employee/tab-performance.php:7
 #: modules/hrm/views/js-templates/job-info.php:46
-#: modules/hrm/views/js-templates/new-employee.php:123
+#: modules/hrm/views/js-templates/new-employee.php:126
 msgid "Reporting To"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:31
-#: modules/hrm/views/js-templates/new-employee.php:170
+#: modules/hrm/views/js-templates/new-employee.php:173
 msgid "Date of Hire"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:32
-#: modules/hrm/views/js-templates/new-employee.php:159
+#: modules/hrm/views/js-templates/new-employee.php:162
 msgid "Source of Hire"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:33
-#: modules/hrm/views/js-templates/new-employee.php:146
+#: modules/hrm/views/js-templates/new-employee.php:149
 msgid "Employee Status"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:34
-#: modules/hrm/views/js-templates/new-employee.php:204
+#: modules/hrm/views/js-templates/new-employee.php:207
 msgid "Work Phone"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:35
-#: modules/hrm/views/js-templates/new-employee.php:135
+#: modules/hrm/views/js-templates/new-employee.php:138
 msgid "Employee Type"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:44
-#: modules/hrm/views/js-templates/new-employee.php:216
+#: modules/hrm/views/js-templates/new-employee.php:219
 msgid "Personal Details"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:48
-#: modules/hrm/views/js-templates/new-employee.php:313
+#: modules/hrm/views/js-templates/new-employee.php:316
 msgid "Address"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:49
-#: modules/hrm/views/js-templates/new-employee.php:237
+#: modules/hrm/views/js-templates/new-employee.php:240
 msgid "Other Email"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:50
 #: modules/hrm/views/employee/tab-general.php:183
 #: modules/hrm/views/js-templates/dependents.php:25
-#: modules/hrm/views/js-templates/new-employee.php:246
+#: modules/hrm/views/js-templates/new-employee.php:249
 msgid "Date of Birth"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:51
-#: modules/hrm/views/js-templates/new-employee.php:266
+#: modules/hrm/views/js-templates/new-employee.php:269
 msgid "Gender"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:52
-#: modules/hrm/views/js-templates/new-employee.php:255
+#: modules/hrm/views/js-templates/new-employee.php:258
 msgid "Nationality"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:53
-#: modules/hrm/views/js-templates/new-employee.php:277
+#: modules/hrm/views/js-templates/new-employee.php:280
 msgid "Marital Status"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:54
-#: modules/hrm/views/js-templates/new-employee.php:288
+#: modules/hrm/views/js-templates/new-employee.php:291
 msgid "Driving License"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:55
-#: modules/hrm/views/js-templates/new-employee.php:296
+#: modules/hrm/views/js-templates/new-employee.php:299
 msgid "Hobbies"
 msgstr ""
 
@@ -6041,13 +6049,13 @@ msgstr ""
 
 #: modules/hrm/views/employee/tab-job.php:57
 #: modules/hrm/views/js-templates/compensation.php:14
-#: modules/hrm/views/js-templates/new-employee.php:182
+#: modules/hrm/views/js-templates/new-employee.php:185
 msgid "Pay Rate"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-job.php:58
 #: modules/hrm/views/js-templates/compensation.php:23
-#: modules/hrm/views/js-templates/new-employee.php:191
+#: modules/hrm/views/js-templates/new-employee.php:194
 msgid "Pay Type"
 msgstr ""
 
@@ -6066,7 +6074,7 @@ msgstr ""
 
 #: modules/hrm/views/employee/tab-job.php:104
 #: modules/hrm/views/js-templates/job-info.php:16
-#: modules/hrm/views/js-templates/new-employee.php:112
+#: modules/hrm/views/js-templates/new-employee.php:114
 #: modules/hrm/views/leave/leave-entitlements.php:88
 msgid "Location"
 msgstr ""
@@ -6143,16 +6151,22 @@ msgstr ""
 msgid "Days"
 msgstr ""
 
+#: modules/hrm/views/employee/tab-notes-row.php:11
+#: modules/hrm/views/employee/tab-notes.php:37
+msgid "M j, Y \\a\\t g:i a"
+msgstr ""
+
+#: modules/hrm/views/employee/tab-notes-row.php:19
+#: modules/hrm/views/employee/tab-notes.php:45
+msgid "Delete Permanently"
+msgstr ""
+
 #: modules/hrm/views/employee/tab-notes.php:8
 msgid "Add a note..."
 msgstr ""
 
 #: modules/hrm/views/employee/tab-notes.php:17
 msgid "Add Note"
-msgstr ""
-
-#: modules/hrm/views/employee/tab-notes.php:35
-msgid "M j, Y \\a\\t g:i a"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-performance.php:1
@@ -6328,7 +6342,7 @@ msgstr ""
 msgid "Middle Name"
 msgstr ""
 
-#: modules/hrm/views/js-templates/new-employee.php:322
+#: modules/hrm/views/js-templates/new-employee.php:325
 msgid "Biography"
 msgstr ""
 
