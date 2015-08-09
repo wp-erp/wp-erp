@@ -18,8 +18,8 @@ class Hr_User extends User {
         return $this->hasMany( 'WeDevs\ERP\HRM\Models\Employee_Note', 'user_id' )->orderBy( 'created_at', 'desc');
     }
 
-    public function getTable()
-    {
+    public function getTable() {
         return $this->getConnection()->db->prefix . 'users';
     }
+
 }

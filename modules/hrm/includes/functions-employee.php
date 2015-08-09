@@ -204,22 +204,28 @@ function erp_hr_get_employees( $args = array() ) {
     );
 
     $args  = wp_parse_args( $args, $defaults );
-    $where = 'WHERE 1=1';
+    $where = array();
+
+    $employee = new \WeDevs\ERP\HRM\Models\Employee();
 
     if ( isset( $args['designation'] ) && ! empty( $args['designation'] ) ) {
-        $where .= " AND e.designation = " . intval( $args['designation'] );
+        $designation = array( 'designation' => $args['designation'] );
+        $where = array_merge( $designation, $where );
     }
 
     if ( isset( $args['department'] ) && ! empty( $args['department'] ) ) {
-        $where .= " AND e.department = " . intval( $args['department'] );
+        $department = array( 'department' => $args['department'] );
+        $where = array_merge( $where, $department );
     }
 
     if ( isset( $args['location'] ) && ! empty( $args['location'] ) ) {
-        $where .= " AND e.location = " . intval( $args['location'] );
+        $location = array( 'location' => $args['location'] );
+        $where = array_merge( $where, $location );
     }
 
     if ( isset( $args['status'] ) && ! empty( $args['status'] ) ) {
-        $where .= " AND e.status = '" . $args['status'] . "'";
+        $status = array( 'status' => $args['status'] );
+        $where = array_merge( $where, $status );
     }
 
     $cache_key = 'erp-get-employees-' . md5( serialize( $args ) );
@@ -227,14 +233,18 @@ function erp_hr_get_employees( $args = array() ) {
     $users     = array();
 
     if ( false === $results ) {
-        $sql = "SELECT e.user_id, u.display_name
-            FROM {$wpdb->prefix}erp_hr_employees AS e
-            LEFT JOIN {$wpdb->users} AS u ON u.ID = e.user_id
-            $where
-            ORDER BY {$args['orderby']} {$args['order']}
-            LIMIT %d,%d;";
 
-        $results = $wpdb->get_results( $wpdb->prepare( $sql, absint( $args['offset'] ), absint( $args['number'] ) ) );
+        $results = $employee
+            ->leftjoin( $wpdb->users, 'user_id', '=', $wpdb->users . '.ID' )
+            ->where( $where )
+            ->select( array( 'user_id', 'display_name' ) )
+            ->skip( $args['offset'] )
+            ->take( $args['number'] )
+            ->orderBy( $args['orderby'], $args['order'] )
+            ->get()
+            ->toArray();
+
+        $results = erp_array_to_object( $results );
         wp_cache_set( $cache_key, $results, 'wp-erp', HOUR_IN_SECONDS );
     }
 
@@ -251,6 +261,49 @@ function erp_hr_get_employees( $args = array() ) {
 
     return $users;
 }
+
+
+/**
+ * Get all employees from a company
+ *
+ * @param  int   $company_id  company id
+ * @param bool $no_object     if set true, Employee object will be
+ *                            returned as array. $wpdb rows otherwise
+ *
+ * @return array  the employees
+ */
+function erp_hr_count_employees() {
+
+    $where = array();
+
+    $employee = new \WeDevs\ERP\HRM\Models\Employee();
+
+    if ( isset( $args['designation'] ) && ! empty( $args['designation'] ) ) {
+        $designation = array( 'designation' => $args['designation'] );
+        $where = array_merge( $designation, $where );
+    }
+
+    if ( isset( $args['department'] ) && ! empty( $args['department'] ) ) {
+        $department = array( 'department' => $args['department'] );
+        $where = array_merge( $where, $department );
+    }
+
+    if ( isset( $args['location'] ) && ! empty( $args['location'] ) ) {
+        $location = array( 'location' => $args['location'] );
+        $where = array_merge( $where, $location );
+    }
+
+    if ( isset( $args['status'] ) && ! empty( $args['status'] ) ) {
+        $status = array( 'status' => $args['status'] );
+        $where = array_merge( $where, $status );
+    }
+
+    $counts = $employee->where( $where )->count();
+
+    return $counts;
+}
+
+
 
 /**
  * Get the raw employees dropdown
