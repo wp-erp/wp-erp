@@ -3,8 +3,42 @@
 /* global wp */
 /* global wpErp */
 
+window.wperp = window.wperp || {};
+
 ;(function($) {
     'use strict';
+
+    wperp.template = function ( id ) {
+        var options = {
+            evaluate:    /<#([\s\S]+?)#>/g,
+            interpolate: /\{\{\{([\s\S]+?)\}\}\}/g,
+            escape:      /\{\{([^\}]+?)\}\}(?!\})/g,
+            variable:    'data'
+        };
+
+        return function ( data ) {
+            return _.template( $( '#tmpl-' + id ).html(), null, options )( data );
+        };
+    };
+
+    /**
+     * Load script after dom replace
+     *
+     * @return {void}
+     */
+    wperp.scriptReload =  function( action, id ) {
+        wp.ajax.send( {
+            data: {
+                action: action, 
+            },          
+            success: function(res) {
+                $('#'+id).html(res.content);
+            },
+            error: function(error) {
+                alert( error );
+            }
+        });
+    };
 
     var WeDevs_ERP = {
 
@@ -31,6 +65,7 @@
         },
 
         afterNewLocation: function(e, res) {
+            wperp.scriptReload( 'erp_hr_script_reload', 'tmpl-erp-new-employee' );
             $('.erp-hr-location-drop-down').append('<option selected="selected" value="'+res.id+'">'+res.title+'</option>');
             $('.erp-hr-location-drop-down').select2("val", res.id);
         },

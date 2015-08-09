@@ -56,7 +56,7 @@ class Ajax {
         if ( is_wp_error( $location_id ) ) {
             $this->send_error( $location_id->get_error_message() );
         }
-
+        
         $this->send_success( array( 'id' => $location_id, 'title' => $location_name ) );
     }
 

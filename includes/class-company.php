@@ -208,13 +208,18 @@ class Company {
         $location = new Company_Locations();
 
         if ( ! $location_id ) {
-            $location->create( $fields );
+            $new_location = $location->create( $fields );
 
             do_action( 'erp_company_location_new', $location->id, $fields );
+
+            return $new_location->id;
+            
         } else {
             $location->find( $location_id )->update( $fields );
 
             do_action( 'erp_company_location_updated', $location_id, $fields );
+
+            return $location_id;
         }
     }
 }

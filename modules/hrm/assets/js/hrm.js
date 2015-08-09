@@ -84,8 +84,11 @@
              * @return {void}
              */
             afterNew: function( e, res ) {
-                $('.erp-hr-dept-drop-down').append('<option selected="selected" value="'+res.id+'">'+res.title+'</option>');
-                $('.erp-hr-dept-drop-down').select2("val", res.id);
+                var selectdrop = $('.erp-hr-dept-drop-down');
+
+                wperp.scriptReload( 'erp_hr_script_reload', 'tmpl-erp-new-employee' );
+                selectdrop.append('<option selected="selected" value="'+res.id+'">'+res.title+'</option>');
+                selectdrop.select2("val", res.id);
             },
 
             /**
@@ -222,8 +225,12 @@
              * @return {void}
              */
             afterNew: function( e, res ) {
-                $('.erp-hr-desi-drop-down').append('<option selected="selected" value="'+res.id+'">'+res.title+'</option>');
-                $('.erp-hr-desi-drop-down').select2("val", res.id);
+                var selectdrop = $('.erp-hr-desi-drop-down');
+
+                wperp.scriptReload( 'erp_hr_script_reload', 'tmpl-erp-new-employee' );
+                selectdrop.append('<option selected="selected" value="'+res.id+'">'+res.title+'</option>');
+                WeDevs_ERP_HR.employee.select2AddMoreActive('erp-hr-desi-drop-down');
+                selectdrop.select2("val", res.id);
             },
 
             /**
@@ -349,64 +356,6 @@
         },
 
         employee: {
-            /**
-             * Add more popup
-             *
-             * @param {event}
-             */
-            // addMore: function(e) {
-            //     e.preventDefault();
-
-            //     var self     = $(this),
-            //         id       = self.data('id'),
-            //         tmp_id = self.data('tmp_id');
-
-            //     switch(tmp_id) {
-            //         case 'erp-new-dept':
-            //             var title = wpErpHr.popup.dept_title,
-            //                 button = wpErpHr.popup.dept_submit,
-            //                 tmp_name = 'erp-new-dept';
-            //             break;
-            //         case 'erp-new-desig':
-            //             var title = wpErpHr.popup.desig_title,
-            //                 button = wpErpHr.popup.desig_submit,
-            //                 tmp_name = 'erp-new-desig';
-            //             break;
-
-            //         case 'erp-address':
-            //             var title = wpErpHr.popup.location_title,
-            //                 button = wpErpHr.popup.location_submit,
-            //                 tmp_name = 'erp-address';
-            //             break;
-            //         default:
-            //             var title = '',
-            //                 button = '',
-            //                 tmp_name = '';
-            //             break;
-            //     }
-
-            //     $.erpPopup({
-            //         title: title,
-            //         button: button,
-            //         id: id,
-            //         extraClass: 'smaller',
-            //         content: wp.template(tmp_name)( wpErpHr.employee_empty ).trim(),
-
-            //         onReady: function() {
-            //             WeDevs_ERP_HR.initDateField();
-            //             WeDevs_ERP_HR.employee.select2();
-            //         },
-
-            //         /**
-            //          * Handle the onsubmit function
-            //          *
-            //          * @param  {modal}
-            //          */
-            //         onSubmit: function(modal) {
-
-            //         }
-            //     });
-            // },
 
             /**
              * Set photo popup
@@ -478,12 +427,12 @@
                     title: wpErpHr.popup.employee_title,
                     button: wpErpHr.popup.employee_create,
                     id: "erp-new-employee-popup",
-                    content: wp.template('erp-new-employee')( wpErpHr.employee_empty ).trim(),
+                    content: wperp.template('erp-new-employee')( wpErpHr.employee_empty ).trim(),
 
                     onReady: function() {
                         WeDevs_ERP_HR.initDateField();
-                        WeDevs_ERP_HR.employee.select2();
-                        WeDevs_ERP_HR.employee.select2AddMore();
+                        WeDevs_ERP_HR.employee.select2Action('erp-hrm-select2');
+                        WeDevs_ERP_HR.employee.select2AddMoreContent();
                     },
 
                     /**
@@ -515,41 +464,46 @@
             },
 
             /**
-             * select2 with add more button
+             * select2 with add more button content
              *
              * @return  {void}
              */
-            select2AddMore: function() {
+            select2AddMoreContent: function() {
                 var selects = $('.erp-hrm-select2-add-more');
                 $.each( selects, function( key, element ) {
-                    var id = $(element).data('id');
-                    $(element).select2({
-                        width: 'element',
-                        "language": {
-                            noResults: function(){
-                               return '<a href="#" class="button button-primary" id="'+id+'">Add New</a>';
-                            }
-                        },
-                        escapeMarkup: function (markup) {
-                            return markup;
-                        }
-                    });
+                   WeDevs_ERP_HR.employee.select2AddMoreActive(element);
                 });
-
             },
 
             /**
-             * select2
+             * select2 with add more button active
              *
              * @return  {void}
              */
-            select2: function() {
+            select2AddMoreActive: function(element) {
+                var id = $(element).data('id');
+                $(element).select2({
+                    width: 'element',
+                    "language": {
+                        noResults: function(){
+                           return '<a href="#" class="button button-primary" id="'+id+'">Add New</a>';
+                        }
+                    },
+                    escapeMarkup: function (markup) {
+                        return markup;
+                    }
 
-                var selects = $('.erp-hrm-select2');
-                $.each( selects, function( key, element ) {
-                    $(element).select2({
-                        width: 'element',
-                    });
+                });
+            },
+
+            /**
+             * select2 action
+             *
+             * @return  {void}
+             */
+            select2Action: function(element) {
+                $('.'+element).select2({
+                    width: 'element',
                 });
             },
 

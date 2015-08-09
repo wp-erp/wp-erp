@@ -85,7 +85,7 @@
         <ol class="form-fields two-col">
 
         <# if ( ! data.id ) { #>
-            <li data-selected="{{ data.work.department }}">
+            <li class="erp-hr-js-department" data-selected="{{ data.work.department }}">
                 <?php erp_html_form_input( array(
                     'label'       => __( 'Department', 'wp-erp' ),
                     'name'        => 'work[department]',
