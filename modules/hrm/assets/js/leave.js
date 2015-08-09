@@ -13,9 +13,7 @@
             $( '.erp-hr-leave-policy').on( 'click', 'a#erp-leave-policy-new', self, this.policy.create );
             $( '.erp-hr-leave-policy').on( 'click', 'a.link, span.edit a', self, this.policy.edit );
             $( '.erp-hr-leave-policy').on( 'click', 'a.submitdelete', self, this.policy.remove );
-
             $( '.erp-hr-leave-request-new').on( 'change', '.erp-date-field', self, this.leave.requestDates );
-
             $( '.erp-employee-single' ).on('submit', 'form#erp-hr-empl-leave-history', this.leave.showHistory );
         },
 
@@ -35,10 +33,12 @@
                 });
             },
             create: function(e) {
+                e.preventDefault();
 
                 $.erpPopup({
                     title: wpErpHr.popup.policy,
                     button: wpErpHr.popup.policy_create,
+                    id: 'erp-hr-leave-policy-create-popup',
                     content: wp.template('erp-leave-policy')({ data: null }),
                     extraClass: 'smaller',
                     onReady: function() {
@@ -59,6 +59,7 @@
                 $.erpPopup({
                     title: wpErpHr.popup.policy,
                     button: wpErpHr.popup.update_status,
+                    id: 'erp-hr-leave-policy-edit-popup',
                     content: wp.template('erp-leave-policy')(data),
                     extraClass: 'smaller',
                     onReady: function() {

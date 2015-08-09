@@ -56,10 +56,10 @@
             $( 'body' ).on( 'click', 'a#erp-set-emp-photo', this.employee.setPhoto );
             $( 'body' ).on( 'click', 'a.erp-remove-photo', this.employee.removePhoto );
 
-            // Trigger 
+            // Trigger
             $('body').on( 'erp-hr-after-new-dept', this.department.afterNew );
             $('body').on( 'erp-hr-after-new-desig', this.designation.afterNew );
-           
+
 
             // this.employee.addWorkExperience();
         },
@@ -356,11 +356,11 @@
              */
             // addMore: function(e) {
             //     e.preventDefault();
-          
+
             //     var self     = $(this),
             //         id       = self.data('id'),
             //         tmp_id = self.data('tmp_id');
-               
+
             //     switch(tmp_id) {
             //         case 'erp-new-dept':
             //             var title = wpErpHr.popup.dept_title,
@@ -384,7 +384,7 @@
             //                 tmp_name = '';
             //             break;
             //     }
-             
+
             //     $.erpPopup({
             //         title: title,
             //         button: button,
@@ -403,7 +403,7 @@
             //          * @param  {modal}
             //          */
             //         onSubmit: function(modal) {
-                        
+
             //         }
             //     });
             // },
@@ -502,7 +502,7 @@
                                 response.class = 'hello';
 
                                 $( 'table.employees' ).append( row(response) );
-
+                                modal.enableButton();
                                 modal.closeModal();
                             },
                             error: function(error) {
@@ -532,11 +532,10 @@
                         },
                         escapeMarkup: function (markup) {
                             return markup;
-                        }   
-                    
+                        }
                     });
                 });
-                
+
             },
 
             /**
@@ -616,10 +615,11 @@
                                     response.class = self.closest('tr').attr('class');
                                     self.closest('tr').replaceWith( row(response) );
                                 }
-
+                                modal.enableButton();
                                 modal.closeModal();
                             },
                             error: function(error) {
+                                modal.enableButton();
                                 alert( error );
                             }
                         });

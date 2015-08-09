@@ -57,14 +57,23 @@ function erp_hr_create_department( $args = array() ) {
  *
  * @return array  list of departments
  */
-function erp_hr_get_departments() {
+function erp_hr_get_departments( $args = [] ) {
 
     $cache_key = 'erp-get-departments';
     $results   = wp_cache_get( $cache_key, 'wp-erp' );
 
+    $department = new \WeDevs\ERP\HRM\Models\Department();
+
+    if ( isset( $args['s'] ) ) {
+        $results = erp_array_to_object( \WeDevs\ERP\HRM\Models\Department::where( 'title', 'LIKE', '%'.$_GET['s'].'%' )->get() );
+    }
+
+    // if ( isset( $_GET['s'] ) && !empty( $_GET['s'] ) ) {
+    //     $results = erp_array_to_object( \WeDevs\ERP\HRM\Models\Department::where( 'title', 'LIKE', '%'.$_GET['s'].'%' )->get() );
+    // }
+
     if ( false === $results ) {
         $results = erp_array_to_object( \WeDevs\ERP\HRM\Models\Department::all()->toArray() );
-
         wp_cache_set( $cache_key, $results, 'wp-erp' );
     }
 

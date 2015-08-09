@@ -179,11 +179,11 @@ class Employee_List_Table extends WP_List_Table {
             'number' => $per_page,
         );
 
-        $this->counts = erp_hr_leave_get_requests_count();
+        // $this->counts = ;
         $this->items  = erp_hr_get_employees( $args );
 
         $this->set_pagination_args( array(
-            'total_items' => $this->counts[ $this->page_status ]['count'],
+            'total_items' => 100,
             'per_page'    => $per_page
         ) );
     }
