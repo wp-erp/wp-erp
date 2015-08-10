@@ -234,8 +234,7 @@ function erp_hr_get_employees( $args = array() ) {
 
     if ( false === $results ) {
 
-        $results = $employee
-            ->leftjoin( $wpdb->users, 'user_id', '=', $wpdb->users . '.ID' )
+        $results = $employee->leftjoin( $wpdb->users, 'user_id', '=', $wpdb->users . '.ID' )
             ->where( $where )
             ->select( array( 'user_id', 'display_name' ) )
             ->skip( $args['offset'] )

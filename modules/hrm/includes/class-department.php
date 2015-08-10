@@ -6,6 +6,7 @@ namespace WeDevs\ERP\HRM;
  */
 class Department extends \WeDevs\ERP\Item {
 
+
     /**
      * Get a company by ID
      *
@@ -14,9 +15,8 @@ class Department extends \WeDevs\ERP\Item {
      * @return object  wpdb object
      */
     protected function get_by_id( $department_id ) {
-        global $wpdb;
 
-        return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}erp_hr_depts WHERE id = %d", $department_id ) );
+        return \WeDevs\ERP\HRM\Models\Department::find( $department_id );
     }
 
     /**
@@ -46,5 +46,29 @@ class Department extends \WeDevs\ERP\Item {
         }
 
         return $employee;
+    }
+
+    /**
+     * Get the name of department lead
+     *
+     * @return string
+     */
+    public function get_depth( $department, $max_depth = 5 ) {
+        $depth = 0;
+        $parent_id = $department->parent;
+        while( $parent_id > 0 ){
+
+            if ( $depth > $max_depth ) {
+                continue;
+            }
+            $parent_id = $this->get_parent_id( $parent_id );
+            $depth++;
+        }
+     
+        return $depth;
+    }
+
+    function get_parent_id( $parent_id ) {
+        return \WeDevs\ERP\HRM\Models\Department::select( array( 'parent' ) )->find( $parent_id )->parent;
     }
 }
