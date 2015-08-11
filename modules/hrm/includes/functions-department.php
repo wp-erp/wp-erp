@@ -79,7 +79,7 @@ function erp_hr_get_departments( $args = [] ) {
                 ->where( 'title', 'LIKE', '%'.$_GET['s'].'%' )
                 ->skip($args['offset'])
                 ->take( $args['number'])
-                ->orderBy( 'parent', 'desc' )
+                ->orderBy('title', 'desc')
                 ->get()
                 ->toArray();
         $results = erp_array_to_object( $results );
@@ -89,14 +89,16 @@ function erp_hr_get_departments( $args = [] ) {
         $results = $department
                 ->skip($args['offset'])
                 ->take( $args['number'])
-                ->orderBy( 'parent', 'desc' )
+                ->orderBy('title', 'asc')
                 ->get()
                 ->toArray();
-    
+
         $results = erp_array_to_object( $results );
         wp_cache_set( $cache_key, $results, 'wp-erp' );
     }
-  
+
+    $results = erp_parent_sort( $results );
+
     if ( $results ) {
         foreach ($results as $key => $row) {
 
@@ -189,4 +191,22 @@ function erp_hr_get_departments_dropdown( $selected = '' ) {
     }
 
     return $dropdown;
+}
+
+
+function erp_elm_compare( $a, $b ) {
+    var_dump( $a );
+    if ( $a->parent == 0 ) return -1;
+    if ( $b->parent == 0 ) return 1;
+
+    if ( $a->id == $b->parent ) return -1;
+    if ( $b->id == $a->parent ) return 1;
+
+    return 0;
+}
+
+
+function erp_short_heararchycal_elem( $elem ) {
+    usort( $elem, 'erp_elm_compare');
+    return $elem;
 }

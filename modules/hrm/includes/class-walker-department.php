@@ -30,6 +30,7 @@ class Department_Walker extends \Walker {
         $department = new Department( $elem );
         $alternate  = ( 'alternate' == $alternate ) ? 'even' : 'alternate';
         $padding    = str_repeat( '&#8212; ', $depth );
+
         ?>
         <tr class="<?php echo $alternate; ?>" id="erp-dept-<?php echo $department->id; ?>">
             <th scope="row" class="check-column">

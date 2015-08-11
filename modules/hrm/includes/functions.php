@@ -49,3 +49,25 @@ function erp_hr_get_work_days_between_dates( $start_date, $end_date ) {
 
     return $dates;
 }
+
+/**
+ * sort parents before children
+ *
+ * @param array   $objects input objects with attributes 'id' and 'parent'
+ * @param array   $result  (optional, reference) internal
+ * @param integer $parent  (optional) internal
+ * @param integer $depth   (optional) internal
+ *
+ * @return array           output
+ */
+function erp_parent_sort( array $objects, array &$result=array(), $parent=0, $depth=0 ) {
+    foreach ($objects as $key => $object) {
+        if ($object->parent == $parent) {
+            $object->depth = $depth;
+            array_push($result, $object);
+            unset($objects[$key]);
+            erp_parent_sort($objects, $result, $object->id, $depth + 1);
+        }
+    }
+    return $result;
+}

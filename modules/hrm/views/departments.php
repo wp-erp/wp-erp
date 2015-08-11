@@ -8,8 +8,8 @@ class Deparment_List_Table extends WP_List_Table {
         global $status, $page;
 
         parent::__construct( array(
-            'singular' => 'employee',
-            'plural'   => 'employees',
+            'singular' => 'department',
+            'plural'   => 'departments',
             'ajax'     => false
         ) );
 
@@ -31,12 +31,12 @@ class Deparment_List_Table extends WP_List_Table {
     }
 
     /**
-     * Message to show if no employee found
+     * Message to show if no department found
      *
      * @return void
      */
     function no_items() {
-        _e( 'No employee found.', 'wp-erp' );
+        _e( 'No department found.', 'wp-erp' );
     }
 
     /**
@@ -58,9 +58,8 @@ class Deparment_List_Table extends WP_List_Table {
 
         switch ( $column_name ) {
             case 'name':
-                 $padding    = str_repeat( '&#8212; ', $department->get_depth( $department, 5 ) );
-                echo $padding . $department->title;
-            
+                echo $department->title;
+
             case 'lead':
                 return $lead_link;
 
@@ -113,7 +112,7 @@ class Deparment_List_Table extends WP_List_Table {
 
         $padding    = str_repeat( '&#8212; ', $department->get_depth( $department, 5 ) );
 
-     
+
         $actions           = array();
         $delete_url        = '';
         $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $department->id, __( 'Edit this item', 'wp-erp' ), __( 'Edit', 'wp-erp' ) );
@@ -129,7 +128,7 @@ class Deparment_List_Table extends WP_List_Table {
      */
     function get_bulk_actions() {
         $actions = array(
-            'email'  => __( 'Send Email', 'wp-erp' ),
+            'trash'  => __( 'Move to Trash', 'wp-erp' ),
         );
         return $actions;
     }
@@ -143,7 +142,7 @@ class Deparment_List_Table extends WP_List_Table {
      */
     function column_cb( $item ) {
         return sprintf(
-            '<input type="checkbox" name="employee_id[]" value="%s" />', $item->id
+            '<input type="checkbox" name="dept[]" value="%s" />', $item->id
         );
     }
 
@@ -198,15 +197,16 @@ class Deparment_List_Table extends WP_List_Table {
 
 ?>
 
-<div class="wrap erp-hr-employees" id="wp-erp">
+<div class="wrap erp-hr-depts">
 
-    <h2><?php _e( 'Employee', 'wp-erp' ); ?> <a href="#" id="erp-employee-new" class="add-new-h2"><?php _e( 'Add New', 'wp-erp' ); ?></a></h2>
+    <h2><?php _e( 'Departments', 'wp-erp' ); ?> <a href="#" id="erp-new-dept" class="add-new-h2"><?php _e( 'Add New', 'wp-erp' ); ?></a></h2>
 
-    <div class="list-table-wrap">
+    <div id="erp-dept-table-wrap">
+
         <div class="list-table-inner">
 
             <form method="post">
-                <input type="hidden" name="page" value="erp-hr-employee">
+                <input type="hidden" name="page" value="erp-hr-depts">
                 <?php
                 $employee_table = new Deparment_List_Table();
                 $employee_table->prepare_items();
