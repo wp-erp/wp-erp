@@ -79,7 +79,6 @@ function erp_hr_get_departments( $args = [] ) {
                 ->where( 'title', 'LIKE', '%'.$_GET['s'].'%' )
                 ->skip($args['offset'])
                 ->take( $args['number'])
-                ->orderBy('title', 'desc')
                 ->get()
                 ->toArray();
         $results = erp_array_to_object( $results );
@@ -89,7 +88,6 @@ function erp_hr_get_departments( $args = [] ) {
         $results = $department
                 ->skip($args['offset'])
                 ->take( $args['number'])
-                ->orderBy('title', 'asc')
                 ->get()
                 ->toArray();
 
