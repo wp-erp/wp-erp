@@ -431,15 +431,3 @@ class Deparment_List_Table extends WP_List_Table {
     </div><!-- .list-table-wrap -->
 
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
