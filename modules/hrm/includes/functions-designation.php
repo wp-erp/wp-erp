@@ -58,17 +58,37 @@ function erp_hr_create_designation( $args = array() ) {
  *
  * @return array  list of departments
  */
-function erp_hr_get_designations() {
+function erp_hr_get_designations( $args = array() ) {
     global $wpdb;
+
+     $defaults = array(
+        'number'     => 20,
+        'offset'     => 0,
+        'orderby'    => 'title',
+        'order'      => 'ASC',
+    );
+
+    $args = wp_parse_args( $args, $defaults );
 
     $cache_key = 'erp-designations';
     $designations = wp_cache_get( $cache_key, 'wp-erp' );
 
+    $designation = new \WeDevs\ERP\HRM\Models\Designation();
+
     if ( false === $designations ) {
-        $designations = erp_array_to_object( \WeDevs\ERP\HRM\Models\Designation::all()->toArray() );
+
+        $results = $designation
+                ->skip( $args['offset'] )
+                ->take( $args['number'] )
+                ->orderBy( $args['orderby'], $args['order'] )
+                ->get()
+                ->toArray();
+
+        $designations = erp_array_to_object( $results );
 
         wp_cache_set( $cache_key, $designations, 'wp-erp' );
     }
+
 
     return $designations;
 }
@@ -132,4 +152,8 @@ function erp_hr_get_designation_dropdown( $company_id, $selected = '' ) {
     }
 
     return $dropdown;
+}
+
+function erp_hr_count_designation() {
+    return \WeDevs\ERP\HRM\Models\Designation::count();
 }

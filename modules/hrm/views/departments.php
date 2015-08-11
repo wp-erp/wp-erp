@@ -271,9 +271,6 @@ class Deparment_List_Table extends WP_List_Table {
     //         case 'lead':
     //             return $lead_link;
 
-    //         case 'number_employee':
-    //             return $department->num_of_employees();
-
     //         default:
     //             return isset( $department->$column_name ) ? $department->$column_name : '';
     //     }
@@ -321,10 +318,14 @@ class Deparment_List_Table extends WP_List_Table {
     //     $padding    = str_repeat( '&#8212; ', $department->get_depth( $department, 5 ) );
 
 
+
     //     $actions           = array();
     //     $delete_url        = '';
     //     $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $department->id, __( 'Edit this item', 'wp-erp' ), __( 'Edit', 'wp-erp' ) );
     //     $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $department->id, __( 'Delete this item', 'wp-erp' ), __( 'Delete', 'wp-erp' ) );
+
+   
+
 
     //     return sprintf( '<a href="#"><strong>%1$s</strong></a> %2$s', $padding.$department->title, $this->row_actions( $actions ) );
     // }
