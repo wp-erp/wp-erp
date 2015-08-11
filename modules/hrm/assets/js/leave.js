@@ -39,7 +39,7 @@
                     title: wpErpHr.popup.policy,
                     button: wpErpHr.popup.policy_create,
                     id: 'erp-hr-leave-policy-create-popup',
-                    content: wp.template('erp-leave-policy')({ data: null }),
+                    content: wp.template('erp-leave-policy')({ data: null }).trim(),
                     extraClass: 'smaller',
                     onReady: function() {
                         $('.erp-color-picker').wpColorPicker();
@@ -60,7 +60,7 @@
                     title: wpErpHr.popup.policy,
                     button: wpErpHr.popup.update_status,
                     id: 'erp-hr-leave-policy-edit-popup',
-                    content: wp.template('erp-leave-policy')(data),
+                    content: wp.template('erp-leave-policy')(data).trim(),
                     extraClass: 'smaller',
                     onReady: function() {
                         $('.erp-color-picker').wpColorPicker();
