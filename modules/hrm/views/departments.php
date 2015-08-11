@@ -58,7 +58,6 @@ class Deparment_List_Table extends WP_List_Table {
 
         switch ( $column_name ) {
             case 'name':
-                echo $department->title;
 
             case 'lead':
                 return $lead_link;
@@ -111,7 +110,6 @@ class Deparment_List_Table extends WP_List_Table {
     function column_name( $department ) {
 
         $padding    = str_repeat( '&#8212; ', $department->get_depth( $department, 5 ) );
-
 
         $actions           = array();
         $delete_url        = '';

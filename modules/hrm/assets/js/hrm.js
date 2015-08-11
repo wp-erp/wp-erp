@@ -239,7 +239,7 @@
              * @return {void}
              */
             reload: function() {
-                $( '#erp-desig-table-wrap' ).load( window.location.href + ' table.designation-list-table' );
+                $( '.erp-hr-designation' ).load( window.location.href + ' .erp-hr-designation' );
             },
 
             /**
