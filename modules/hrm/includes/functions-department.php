@@ -59,26 +59,73 @@ function erp_hr_create_department( $args = array() ) {
  */
 function erp_hr_get_departments( $args = [] ) {
 
+    $defaults = array(
+        'number'     => 20,
+        'offset'     => 0,
+        'orderby'    => 'title',
+        'order'      => 'ASC',
+        'no_object'  => false
+    );
+
+    $args  = wp_parse_args( $args, $defaults );
+
     $cache_key = 'erp-get-departments';
     $results   = wp_cache_get( $cache_key, 'wp-erp' );
 
     $department = new \WeDevs\ERP\HRM\Models\Department();
 
     if ( isset( $args['s'] ) ) {
-        $results = erp_array_to_object( \WeDevs\ERP\HRM\Models\Department::where( 'title', 'LIKE', '%'.$_GET['s'].'%' )->get() );
+        $results = $department
+                ->where( 'title', 'LIKE', '%'.$_GET['s'].'%' )
+                ->skip($args['offset'])
+                ->take( $args['number'])
+                ->orderBy( 'parent', 'desc' )
+                ->get()
+                ->toArray();
+        $results = erp_array_to_object( $results );
     }
-
-    // if ( isset( $_GET['s'] ) && !empty( $_GET['s'] ) ) {
-    //     $results = erp_array_to_object( \WeDevs\ERP\HRM\Models\Department::where( 'title', 'LIKE', '%'.$_GET['s'].'%' )->get() );
-    // }
 
     if ( false === $results ) {
-        $results = erp_array_to_object( \WeDevs\ERP\HRM\Models\Department::all()->toArray() );
+        $results = $department
+                ->skip($args['offset'])
+                ->take( $args['number'])
+                ->orderBy( 'parent', 'desc' )
+                ->get()
+                ->toArray();
+    
+        $results = erp_array_to_object( $results );
         wp_cache_set( $cache_key, $results, 'wp-erp' );
     }
+  
+    if ( $results ) {
+        foreach ($results as $key => $row) {
 
-    return $results;
+            if ( true === $args['no_object'] ) {
+                $departments[] = $row;
+            } else {
+
+                $departments[] = new WeDevs\ERP\HRM\Department( intval( $row->id ));
+            }
+        }
+    }
+
+    return $departments;
 }
+
+/**
+ * Get all department from a company
+ *
+ * @param  int   $company_id  company id
+ * @param bool $no_object     if set true, Department object will be
+ *                            returned as array. $wpdb rows otherwise
+ *
+ * @return array  the department
+ */
+function erp_hr_count_departments() {
+
+    return \WeDevs\ERP\HRM\Models\Department::count();
+}
+
 
 /**
  * Delete a department
