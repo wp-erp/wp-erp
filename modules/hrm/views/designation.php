@@ -104,7 +104,7 @@ class Designation_List_Table extends WP_List_Table {
      */
     function get_sortable_columns() {
         $sortable_columns = array(
-            'title' => array( 'title', true ),
+            'name' => array( 'name', true ),
         );
 
         return $sortable_columns;
@@ -175,10 +175,15 @@ class Designation_List_Table extends WP_List_Table {
             'number' => $per_page,
         );
 
+        if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {
+            $args['orderby'] = 'title';
+            $args['order'] = $_REQUEST['order'] ;
+        }
+
         $this->items  = erp_hr_get_designations( $args );
 
         $this->set_pagination_args( array(
-            'total_items' => erp_hr_count_designation(),
+            'total_items' => erp_hr_count_designation( $args ),
             'per_page'    => $per_page
         ) );
     }
