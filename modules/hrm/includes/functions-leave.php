@@ -59,8 +59,17 @@ function erp_hr_leave_insert_policy( $args = array() ) {
  *
  * @return array
  */
-function erp_hr_leave_get_policies() {
-    global $wpdb;
+function erp_hr_leave_get_policies( $args = array() ) {
+
+    $defaults = array(
+        'number'     => 20,
+        'offset'     => 0,
+        'orderby'    => 'name',
+        'order'      => 'ASC',
+    );
+
+    $args = wp_parse_args( $args, $defaults );
+
 
     $cache_key = 'erp-leave-pol';
     $policies = wp_cache_get( $cache_key, 'wp-erp' );
@@ -69,6 +78,9 @@ function erp_hr_leave_get_policies() {
 
         $policies = erp_array_to_object(
                         \WeDevs\ERP\HRM\Models\Leave_Policies::select( array( 'id', 'name', 'value', 'color' ) )
+                        ->skip( $args['offset'] )
+                        ->take( $args['number'] )
+                        ->orderBy( $args['orderby'], $args['order'] )
                         ->get()
                         ->toArray()
                     );
@@ -92,6 +104,15 @@ function erp_hr_leave_get_policy( $policy_id ) {
                 ->toArray();
 
     return  (object) $policy;
+}
+
+/**
+ * Count total leave policies
+ *
+ * @return integer
+ */
+function erp_hr_count_leave_policies() {
+    return \WeDevs\ERP\HRM\Models\Leave_Policies::count();
 }
 
 /**
