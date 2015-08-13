@@ -14,7 +14,6 @@ function erp_hr_leave_insert_policy( $args = array() ) {
         'unit'       => 'day',
         'value'      => 0,
         'color'      => '',
-        'created_on' => current_time( 'mysql' )
     );
 
     $args = wp_parse_args( $args, $defaults );
@@ -33,24 +32,23 @@ function erp_hr_leave_insert_policy( $args = array() ) {
     $policy_id = (int) $args['id'];
     unset( $args['id'] );
 
+    $leave_policies = new \WeDevs\ERP\HRM\Models\Leave_Policies();
+
     if ( ! $policy_id ) {
-        // it's new
-        if ( $wpdb->insert( $wpdb->prefix . 'erp_hr_leave_policies', $args ) ) {
+        // insert a new
+        $leave_policy = $leave_policies->create( $args );
+
+        if ( $leave_policy ) {
 
             do_action( 'erp_hr_leave_policy_new', $wpdb->insert_id, $args );
-
-            return $wpdb->insert_id;
+            return $leave_policy->id;
         }
 
     } else {
         // do update method here
-        unset( $args['created_on'] );
-        $args['updated_on'] = current_time( 'mysql' );
-
-        if ( $wpdb->update( $wpdb->prefix . 'erp_hr_leave_policies', $args, array( 'id' => $policy_id ) ) ) {
+        if ( $leave_policies->find( $policy_id )->update( $args ) ) {
 
             do_action( 'erp_hr_leave_policy_updated', $policy_id, $args );
-
             return $policy_id;
         }
     }
@@ -61,14 +59,31 @@ function erp_hr_leave_insert_policy( $args = array() ) {
  *
  * @return array
  */
-function erp_hr_leave_get_policies() {
-    global $wpdb;
+function erp_hr_leave_get_policies( $args = array() ) {
+
+    $defaults = array(
+        'number'     => 20,
+        'offset'     => 0,
+        'orderby'    => 'name',
+        'order'      => 'ASC',
+    );
+
+    $args = wp_parse_args( $args, $defaults );
+
 
     $cache_key = 'erp-leave-pol';
     $policies = wp_cache_get( $cache_key, 'wp-erp' );
 
     if ( false === $policies ) {
-        $policies = $wpdb->get_results( "SELECT id, name, value, color FROM {$wpdb->prefix}erp_hr_leave_policies" );
+
+        $policies = erp_array_to_object(
+                        \WeDevs\ERP\HRM\Models\Leave_Policies::select( array( 'id', 'name', 'value', 'color' ) )
+                        ->skip( $args['offset'] )
+                        ->take( $args['number'] )
+                        ->orderBy( $args['orderby'], $args['order'] )
+                        ->get()
+                        ->toArray()
+                    );
 
         wp_cache_set( $cache_key, $policies, 'wp-erp' );
     }
@@ -84,11 +99,20 @@ function erp_hr_leave_get_policies() {
 function erp_hr_leave_get_policy( $policy_id ) {
     global $wpdb;
 
-    $policy = $wpdb->get_row(
-        $wpdb->prepare( "SELECT id, name, value, color FROM {$wpdb->prefix}erp_hr_leave_policies WHERE id = %d", $policy_id )
-    );
+    $policy = \WeDevs\ERP\HRM\Models\Leave_Policies::select( array( 'id', 'name', 'value', 'color' ) )
+                ->find( $policy_id )
+                ->toArray();
 
-    return $policy;
+    return  (object) $policy;
+}
+
+/**
+ * Count total leave policies
+ *
+ * @return integer
+ */
+function erp_hr_count_leave_policies() {
+    return \WeDevs\ERP\HRM\Models\Leave_Policies::count();
 }
 
 /**
@@ -115,11 +139,10 @@ function erp_hr_leave_get_policies_dropdown_raw() {
  * @return bool
  */
 function erp_hr_leave_policy_delete( $policy_id ) {
-    global $wpdb;
 
     do_action( 'erp_hr_leave_policy_delete', $policy_id );
 
-    return $wpdb->delete( $wpdb->prefix . 'erp_hr_leave_policies', array( 'id' => $policy_id ) );
+    return \WeDevs\ERP\HRM\Models\Leave_Policies::find( $policy_id )->delete();
 }
 
 /**

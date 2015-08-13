@@ -59,9 +59,8 @@ function erp_hr_create_designation( $args = array() ) {
  * @return array  list of departments
  */
 function erp_hr_get_designations( $args = array() ) {
-    global $wpdb;
 
-     $defaults = array(
+    $defaults = array(
         'number'     => 20,
         'offset'     => 0,
         'orderby'    => 'title',
