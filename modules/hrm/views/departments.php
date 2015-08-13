@@ -40,67 +40,40 @@ class Deparment_List_Table extends WP_List_Table {
     }
 
     /**
-     * @global WP_Query $wp_query
-     * @global int $per_page
-     * @param array $posts
+     * @param array $departments
      * @param int $level
      */
     public function display_rows( $departments = array(), $level = 0 ) {
         
         global $per_page;
-        $departments = erp_array_to_object( \WeDevs\ERP\HRM\Models\Department::all()->toArray() );
-      
-        if ( empty( $departments ) )
-            $departments = array();
 
-        //if ( $this->hierarchical_display ) {
-            $this->_display_rows_hierarchical( $departments, $this->get_pagenum(), $per_page );
-        //} else {
-         //   $this->_display_rows( $posts, $level );
-        //}
+        $departments = erp_array_to_object( \WeDevs\ERP\HRM\Models\Department::all()->toArray() );
+        $this->_display_rows_hierarchical( $departments, $this->get_pagenum(), $per_page );
     }
 
     /**
-     * @global wpdb $wpdb
-     * @param array $pages
+     * @param array departments
      * @param int $pagenum
      * @param int $per_page
-     * @return false|null
      */
-    private function _display_rows_hierarchical( $pages, $pagenum = 1, $per_page = 20 ) {
-       
-
+    private function _display_rows_hierarchical( $departments, $pagenum = 1, $per_page = 20 ) {
+    
         $level = 0;
 
-
-        /*
-         * Arrange pages into two parts: top level pages and children_pages
-         * children_pages is two dimensional array, eg.
-         * children_pages[10][] contains all sub-pages whose parent is 10.
-         * It only takes O( N ) to arrange this and it takes O( 1 ) for subsequent lookup operations
-         * If searching, ignore hierarchy and treat everything as top level
-         */
         if ( empty( $_REQUEST['s'] ) ) {
 
-            $top_level_pages = array();
-            $children_pages = array();
+            $top_level_departments = array();
+            $children_departments = array();
 
-            foreach ( $pages as $page ) {
-
-                // Catch and repair bad pages.
-                // if ( $page->post_parent == $page->ID ) {
-                //     $page->post_parent = 0;
-                //     $wpdb->update( $wpdb->posts, array( 'post_parent' => 0 ), array( 'ID' => $page->ID ) );
-                //     clean_post_cache( $page );
-                // }
+            foreach ( $departments as $page ) {
 
                 if ( 0 == $page->parent )
-                    $top_level_pages[] = $page;
+                    $top_level_departments[] = $page;
                 else
-                    $children_pages[ $page->parent ][] = $page;
+                    $children_departments[ $page->parent ][] = $page;
             }
 
-            $pages = &$top_level_pages;
+            $departments = &$top_level_departments;
         }
   
         $count = 0;
@@ -108,7 +81,7 @@ class Deparment_List_Table extends WP_List_Table {
         $end = $start + $per_page;
         $to_display = array();
 
-        foreach ( $pages as $page ) {
+        foreach ( $departments as $page ) {
             if ( $count >= $end )
                 break;
 
@@ -118,13 +91,13 @@ class Deparment_List_Table extends WP_List_Table {
 
             $count++;
 
-            if ( isset( $children_pages ) )
-                $this->_page_rows( $children_pages, $count, $page->id, $level + 1, $pagenum, $per_page, $to_display );
+            if ( isset( $children_departments ) )
+                $this->_page_rows( $children_departments, $count, $page->id, $level + 1, $pagenum, $per_page, $to_display );
         }
 
-        // If it is the last pagenum and there are orphaned pages, display them with paging as well.
-        if ( isset( $children_pages ) && $count < $end ){
-            foreach ( $children_pages as $orphans ){
+        // If it is the last pagenum and there are orphaned departments, display them with paging as well.
+        if ( isset( $children_departments ) && $count < $end ){
+            foreach ( $children_departments as $orphans ){
                 foreach ( $orphans as $op ) {
                     if ( $count >= $end )
                         break;
@@ -138,20 +111,14 @@ class Deparment_List_Table extends WP_List_Table {
             }
         }
      
-        foreach ( $to_display as $page_id => $level ) {
+        foreach ( $to_display as $department_id => $level ) {
            
-            $this->single_row( $page_id, $level );
+            $this->single_row( $department_id, $level );
         }
     }
 
-        /**
-     * Given a top level page ID, display the nested hierarchy of sub-pages
-     * together with paging support
-     *
-     * @since 3.1.0 (Standalone function exists since 2.6.0)
-     * @since 4.2.0 Added the `$to_display` parameter.
-     *
-     * @param array $children_pages
+    /**
+     * @param array $children_departments
      * @param int $count
      * @param int $parent
      * @param int $level
@@ -159,15 +126,15 @@ class Deparment_List_Table extends WP_List_Table {
      * @param int $per_page
      * @param array $to_display List of pages to be displayed. Passed by reference.
      */
-    private function _page_rows( &$children_pages, &$count, $parent, $level, $pagenum, $per_page, &$to_display ) {
+    private function _page_rows( &$children_departments, &$count, $parent, $level, $pagenum, $per_page, &$to_display ) {
 
-        if ( ! isset( $children_pages[$parent] ) )
+        if ( ! isset( $children_departments[$parent] ) )
             return;
 
         $start = ( $pagenum - 1 ) * $per_page;
         $end = $start + $per_page;
        
-        foreach ( $children_pages[$parent] as $page ) {
+        foreach ( $children_departments[$parent] as $page ) {
 
             if ( $count >= $end )
                 break;
@@ -202,46 +169,69 @@ class Deparment_List_Table extends WP_List_Table {
 
             $count++;
 
-            $this->_page_rows( $children_pages, $count, $page->id, $level + 1, $pagenum, $per_page, $to_display );
+            $this->_page_rows( $children_departments, $count, $page->id, $level + 1, $pagenum, $per_page, $to_display );
         }
 
-        unset( $children_pages[$parent] ); //required in order to keep track of orphans
+        unset( $children_departments[$parent] ); //required in order to keep track of orphans
     }
 
     /**
-     * @global string $mode
-     * @param WP_Post $post
+     * @param init $department_id
      * @param int $level
      */
-    public function single_row( $post, $level = 0 ) {
+    public function single_row( $department_id, $level = 0 ) {
       
-        //  if ( $lead = $department->get_lead() ) {
-        //     $lead_link = $lead->get_link();
-        // } else {
-        //     $lead_link = '-';
-        // }
-        $department = (object) \WeDevs\ERP\HRM\Models\Department::find($post)->toArray();
-        
+        $department = new \WeDevs\ERP\HRM\Department( $department_id );
+    
         echo '<tr>';
         foreach ( reset( $this->get_column_info() ) as $column_name => $column_title ) {
             switch ( $column_name ) {
+                case 'cb':
+                    ?>
+                    <th scope="row" class="check-column">
+                      
+                        <label class="screen-reader-text" for="cb-select-<?php the_ID(); ?>"><?php printf( __( 'Select %s' ), $department->title ); ?></label>
+                        <input id="cb-select-<?php the_ID(); ?>" type="checkbox" name="department_id[]" value="<?php echo $department->id; ?>" />
+                        <div class="locked-indicator"></div>
+                       
+                    </th>
+                    <?php
+                    break;
+                
                 case 'name':
-                        echo '<td>';
-                    $pad = str_repeat( '&#8212; ', $level );
-                    echo $pad.$department->title;
+                    echo '<td>';
+                        $pad = str_repeat( '&#8212; ', $level );
+                       
+                        $actions           = array();
+                        $delete_url        = '';
+                        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $department->id, __( 'Edit this item', 'wp-erp' ), __( 'Edit', 'wp-erp' ) );
+                        $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $department->id, __( 'Delete this item', 'wp-erp' ), __( 'Delete', 'wp-erp' ) );
+
+                        printf( '<a href="#"><strong>%1$s %2$s</strong></a> %3$s', $pad, $department->title, $this->row_actions( $actions ) );
                     echo '</td>';
+                    break;
+                
                 case 'lead':
-                     echo '<td>';
-                    echo 'lead';
+                    echo '<td>';
+                        if ( $new_lead = $department->get_lead() ) {
+                             echo $new_lead->get_link();
+                        } else {
+                           echo '-';
+                        }
                     echo '</td>';
+                    break;
+                
                 case 'number_employee':
-                     echo '<td>';
-                    echo 'number of employee';
+                    echo '<td>';
+                        echo $department->num_of_employees();
                     echo '</td>';
+                    break;
+                
                 default:
                     echo '<td>';
-                    echo '';
+                        echo '';
                     echo '</td>';
+                    break;
             }
         }
         echo '</tr>';
@@ -349,28 +339,28 @@ class Deparment_List_Table extends WP_List_Table {
      *
      * @return string
      */
-    function column_cb( $item ) {
-        return sprintf(
-            '<input type="checkbox" name="dept[]" value="%s" />', $item->id
-        );
-    }
+    // function column_cb( $item ) {
+    //     return sprintf(
+    //         '<input type="checkbox" name="dept[]" value="%s" />', $item->id
+    //     );
+    // }
 
     /**
      * Set the views
      *
      * @return array
      */
-    public function get_views_() {
-        $status_links   = array();
-        $base_link      = admin_url( 'admin.php?page=erp-leave' );
+    // public function get_views_() {
+    //     $status_links   = array();
+    //     $base_link      = admin_url( 'admin.php?page=erp-leave' );
 
-        foreach ($this->counts as $key => $value) {
-            $class = ( $key == $this->page_status ) ? 'current' : 'status-' . $key;
-            $status_links[ $key ] = sprintf( '<a href="%s" class="%s">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => $key ), $base_link ), $class, $value['label'], $value['count'] );
-        }
+    //     foreach ($this->counts as $key => $value) {
+    //         $class = ( $key == $this->page_status ) ? 'current' : 'status-' . $key;
+    //         $status_links[ $key ] = sprintf( '<a href="%s" class="%s">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => $key ), $base_link ), $class, $value['label'], $value['count'] );
+    //     }
 
-        return $status_links;
-    }
+    //     return $status_links;
+    // }
 
     /**
      * Prepare the class items

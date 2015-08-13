@@ -97,7 +97,7 @@
              * @return {void}
              */
             reload: function() {
-                $( '#erp-dept-table-wrap' ).load( window.location.href + ' table.department-list-table' );
+                $( '#erp-dept-table-wrap' ).load( window.location.href + ' #erp-dept-table-wrap' );
             },
 
             /**

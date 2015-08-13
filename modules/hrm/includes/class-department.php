@@ -34,8 +34,9 @@ class Department extends \WeDevs\ERP\Item {
      * @return string
      */
     public function get_lead() {
+        
         $employee = new Employee( intval( $this->lead ) );
-
+       
         if ( ! $employee->id ) {
             return false;
         }
