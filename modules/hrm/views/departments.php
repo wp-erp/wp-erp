@@ -335,7 +335,7 @@ class Deparment_List_Table extends WP_List_Table {
 
 <div class="wrap erp-hr-depts">
 
-    <h2><?php _e( 'Departments', 'wp-erp' ); ?> <a href="#" id="erp-new-dept" class="add-new-h2"><?php _e( 'Add New', 'wp-erp' ); ?></a></h2>
+    <h2><?php _e( 'Departments', 'wp-erp' ); ?> <a href="#" id="erp-new-dept" class="add-new-h2" data-single="1"><?php _e( 'Add New', 'wp-erp' ); ?></a></h2>
 
     <div id="erp-dept-table-wrap">
 

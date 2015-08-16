@@ -194,7 +194,7 @@ class Designation_List_Table extends WP_List_Table {
 
 <div class="wrap erp erp-hr-designation">
 
-    <h2><?php _e( 'Designation', 'wp-erp' ); ?> <a href="#" id="erp-new-designation" class="add-new-h2"><?php _e( 'Add New', 'wp-erp' ); ?></a></h2>
+    <h2><?php _e( 'Designation', 'wp-erp' ); ?> <a href="#" id="erp-new-designation" data-single="1" class="add-new-h2"><?php _e( 'Add New', 'wp-erp' ); ?></a></h2>
 
     <div id="erp-desig-table-wrap">
 

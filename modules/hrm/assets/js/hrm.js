@@ -107,7 +107,9 @@
              */
             create: function(e) {
                 e.preventDefault();
-                var self = $(this);
+                var self = $(this),
+                    is_single = self.data('single');
+                
                 $.erpPopup({
                     title: wpErpHr.popup.dept_title,
                     button: wpErpHr.popup.dept_submit,
@@ -119,7 +121,9 @@
                             data: this.serialize(),
                             success: function(res) {
                                 WeDevs_ERP_HR.department.reload();
--                               $('body').trigger( 'erp-hr-after-new-dept', [res]);
+                                if ( is_single != '1' ) {
+                                    $('body').trigger( 'erp-hr-after-new-dept', [res]);
+                                }                            
                                 modal.closeModal();
                             },
                             error: function(error) {
@@ -250,7 +254,7 @@
              */
             create: function(e) {
                 e.preventDefault();
-
+                var is_single = $(this).data('single');
                 $.erpPopup({
                     title: wpErpHr.popup.desig_title,
                     button: wpErpHr.popup.desig_submit,
@@ -262,7 +266,9 @@
                             data: this.serialize(),
                             success: function(res) {
                                 WeDevs_ERP_HR.designation.reload();
-                                $('body').trigger( 'erp-hr-after-new-desig', [res] );
+                                if ( is_single != '1' ) {
+                                    $('body').trigger( 'erp-hr-after-new-desig', [res] );
+                                }
                                 modal.closeModal();
                             },
                             error: function(error) {
