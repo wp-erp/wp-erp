@@ -85,7 +85,7 @@
              */
             afterNew: function( e, res ) {
                 var selectdrop = $('.erp-hr-dept-drop-down');
-
+                console.log('reqest aise');
                 wperp.scriptReload( 'erp_hr_script_reload', 'tmpl-erp-new-employee' );
                 selectdrop.append('<option selected="selected" value="'+res.id+'">'+res.title+'</option>');
                 selectdrop.select2("val", res.id);
@@ -119,7 +119,7 @@
                             data: this.serialize(),
                             success: function(res) {
                                 WeDevs_ERP_HR.department.reload();
-
+-                               $('body').trigger( 'erp-hr-after-new-dept', [res]);
                                 modal.closeModal();
                             },
                             error: function(error) {
