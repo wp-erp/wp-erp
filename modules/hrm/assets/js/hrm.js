@@ -219,6 +219,20 @@
         designation: {
 
             /**
+             * After create new desination
+             *
+             * @return {void}
+             */
+            afterNew: function( e, res ) {
+                var selectdrop = $('.erp-hr-desi-drop-down');
+
+                wperp.scriptReload( 'erp_hr_script_reload', 'tmpl-erp-new-employee' );
+                selectdrop.append('<option selected="selected" value="'+res.id+'">'+res.title+'</option>');
+                WeDevs_ERP_HR.employee.select2AddMoreActive('erp-hr-desi-drop-down');
+                selectdrop.select2("val", res.id);
+            },
+
+            /**
              * Reload the department area
              *
              * @return {void}
@@ -248,6 +262,7 @@
                             data: this.serialize(),
                             success: function(res) {
                                 WeDevs_ERP_HR.designation.reload();
+                                $('body').trigger( 'erp-hr-after-new-desig', [res] );
                                 modal.closeModal();
                             },
                             error: function(error) {
