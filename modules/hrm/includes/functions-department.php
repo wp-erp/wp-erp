@@ -62,8 +62,8 @@ function erp_hr_get_departments( $args = [] ) {
     $defaults = array(
         'number'     => 20,
         'offset'     => 0,
-        'orderby'    => 'title',
-        'order'      => 'ASC',
+        'orderby'    => 'id',
+        'order'      => 'asc',
         'no_object'  => false
     );
 

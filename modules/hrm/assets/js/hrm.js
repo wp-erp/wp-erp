@@ -119,7 +119,7 @@
                             data: this.serialize(),
                             success: function(res) {
                                 WeDevs_ERP_HR.department.reload();
-                                $('body').trigger( 'erp-hr-after-new-dept', [res]);
+                               
                                 modal.closeModal();
                             },
                             error: function(error) {
