@@ -77,8 +77,6 @@ function erp_hr_get_departments( $args = [] ) {
     if ( isset( $args['s'] ) ) {
         $results = $department
                 ->where( 'title', 'LIKE', '%'.$_GET['s'].'%' )
-                //->skip($args['offset'])
-                //->take( $args['number'])
                 ->get()
                 ->toArray();
         $results = erp_array_to_object( $results );
@@ -86,15 +84,13 @@ function erp_hr_get_departments( $args = [] ) {
 
     if ( false === $results ) {
         $results = $department
-                //->skip($args['offset'])
-                //->take( $args['number'])
                 ->get()
                 ->toArray();
 
         $results = erp_array_to_object( $results );
         wp_cache_set( $cache_key, $results, 'wp-erp' );
     }
- 
+
     $results = erp_parent_sort( $results );
 
     if ( $results ) {
@@ -193,7 +189,7 @@ function erp_hr_get_departments_dropdown( $selected = '' ) {
 
 
 function erp_elm_compare( $a, $b ) {
-   
+
     if ( $a->parent == 0 ) return -1;
     if ( $b->parent == 0 ) return 1;
 

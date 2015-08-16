@@ -50,8 +50,8 @@ class Deparment_List_Table extends WP_List_Table {
     public function display_rows( $departments = array(), $level = 0 ) {
 
         global $per_page;
-
-        $departments = erp_array_to_object( \WeDevs\ERP\HRM\Models\Department::all()->toArray() );
+        $results = new \WeDevs\ERP\HRM\Models\Department();
+        $departments = erp_array_to_object( $results->orderby('id', 'desc')->get()->toArray() );
         $this->_display_rows_hierarchical( $departments, $this->get_pagenum(), $per_page );
     }
 
@@ -310,7 +310,7 @@ class Deparment_List_Table extends WP_List_Table {
         $sortable              = $this->get_sortable_columns();
         $this->_column_headers = array( $columns, $hidden, $sortable );
 
-        $per_page              = 2;
+        $per_page              = 20;
         $current_page          = $this->get_pagenum();
         $offset                = ( $current_page -1 ) * $per_page;
         $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '2';

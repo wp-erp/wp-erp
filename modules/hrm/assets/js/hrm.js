@@ -112,14 +112,14 @@
                     title: wpErpHr.popup.dept_title,
                     button: wpErpHr.popup.dept_submit,
                     id: 'erp-hr-new-department',
-                    content: wp.template('erp-new-dept')(),
+                    content: wp.template('erp-new-dept')().trim(),
                     extraClass: 'smaller',
                     onSubmit: function(modal) {
                         wp.ajax.send( {
                             data: this.serialize(),
                             success: function(res) {
                                 WeDevs_ERP_HR.department.reload();
-                               
+
                                 modal.closeModal();
                             },
                             error: function(error) {
@@ -144,7 +144,7 @@
                     title: wpErpHr.popup.dept_update,
                     button: wpErpHr.popup.dept_update,
                     id: 'erp-hr-new-department',
-                    content: wp.template('erp-new-dept')(),
+                    content: wp.template('erp-new-dept')().trim(),
                     extraClass: 'smaller',
                     onReady: function() {
                         var modal = this;
@@ -241,7 +241,7 @@
                     title: wpErpHr.popup.desig_title,
                     button: wpErpHr.popup.desig_submit,
                     id: 'erp-hr-new-designation',
-                    content: wp.template( 'erp-new-desig' )(),
+                    content: wp.template( 'erp-new-desig' )().trim(),
                     extraClass: 'smaller',
                     onSubmit: function(modal) {
                         wp.ajax.send( {
@@ -271,7 +271,7 @@
                 $.erpPopup({
                     title: wpErpHr.popup.desig_update,
                     button: wpErpHr.popup.desig_update,
-                    content: wp.template( 'erp-new-desig' )(),
+                    content: wp.template( 'erp-new-desig' )().trim(),
                     id: 'erp-hr-new-designation',
                     extraClass: 'smaller',
                     onReady: function() {
