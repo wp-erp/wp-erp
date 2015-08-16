@@ -40,11 +40,15 @@ class Deparment_List_Table extends WP_List_Table {
     }
 
     /**
+     * Display Row
+     *
      * @param array $departments
      * @param int $level
+     *
+     * @return void
      */
     public function display_rows( $departments = array(), $level = 0 ) {
-        
+
         global $per_page;
 
         $departments = erp_array_to_object( \WeDevs\ERP\HRM\Models\Department::all()->toArray() );
@@ -52,12 +56,16 @@ class Deparment_List_Table extends WP_List_Table {
     }
 
     /**
+     * Display Row hierarchical
+     *
      * @param array departments
-     * @param int $pagenum
-     * @param int $per_page
+     * @param integer $pagenum
+     * @param integer $per_page
+     *
+     * @return void
      */
     private function _display_rows_hierarchical( $departments, $pagenum = 1, $per_page = 20 ) {
-    
+
         $level = 0;
 
         if ( empty( $_REQUEST['s'] ) ) {
@@ -75,7 +83,7 @@ class Deparment_List_Table extends WP_List_Table {
 
             $departments = &$top_level_departments;
         }
-  
+
         $count = 0;
         $start = ( $pagenum - 1 ) * $per_page;
         $end = $start + $per_page;
@@ -110,21 +118,25 @@ class Deparment_List_Table extends WP_List_Table {
                 }
             }
         }
-     
+
         foreach ( $to_display as $department_id => $level ) {
-           
+
             $this->single_row( $department_id, $level );
         }
     }
 
     /**
+     * Single Page row
+     *
      * @param array $children_departments
-     * @param int $count
-     * @param int $parent
-     * @param int $level
-     * @param int $pagenum
-     * @param int $per_page
+     * @param integer $count
+     * @param integer $parent
+     * @param integer $level
+     * @param integer $pagenum
+     * @param integer $per_page
      * @param array $to_display List of pages to be displayed. Passed by reference.
+     *
+     * @return void
      */
     private function _page_rows( &$children_departments, &$count, $parent, $level, $pagenum, $per_page, &$to_display ) {
 
@@ -133,7 +145,7 @@ class Deparment_List_Table extends WP_List_Table {
 
         $start = ( $pagenum - 1 ) * $per_page;
         $end = $start + $per_page;
-       
+
         foreach ( $children_departments[$parent] as $page ) {
 
             if ( $count >= $end )
@@ -176,32 +188,36 @@ class Deparment_List_Table extends WP_List_Table {
     }
 
     /**
+     * Render Single row
+     *
      * @param init $department_id
-     * @param int $level
+     * @param integer $level
+     *
+     * @return void [html]
      */
     public function single_row( $department_id, $level = 0 ) {
-      
+
         $department = new \WeDevs\ERP\HRM\Department( $department_id );
-    
+
         echo '<tr>';
         foreach ( reset( $this->get_column_info() ) as $column_name => $column_title ) {
             switch ( $column_name ) {
                 case 'cb':
                     ?>
                     <th scope="row" class="check-column">
-                      
+
                         <label class="screen-reader-text" for="cb-select-<?php the_ID(); ?>"><?php printf( __( 'Select %s' ), $department->title ); ?></label>
                         <input id="cb-select-<?php the_ID(); ?>" type="checkbox" name="department_id[]" value="<?php echo $department->id; ?>" />
                         <div class="locked-indicator"></div>
-                       
+
                     </th>
                     <?php
                     break;
-                
+
                 case 'name':
                     echo '<td>';
                         $pad = str_repeat( '&#8212; ', $level );
-                       
+
                         $actions           = array();
                         $delete_url        = '';
                         $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $department->id, __( 'Edit this item', 'wp-erp' ), __( 'Edit', 'wp-erp' ) );
@@ -210,7 +226,7 @@ class Deparment_List_Table extends WP_List_Table {
                         printf( '<a href="#"><strong>%1$s %2$s</strong></a> %3$s', $pad, $department->title, $this->row_actions( $actions ) );
                     echo '</td>';
                     break;
-                
+
                 case 'lead':
                     echo '<td>';
                         if ( $new_lead = $department->get_lead() ) {
@@ -220,13 +236,13 @@ class Deparment_List_Table extends WP_List_Table {
                         }
                     echo '</td>';
                     break;
-                
+
                 case 'number_employee':
                     echo '<td>';
                         echo $department->num_of_employees();
                     echo '</td>';
                     break;
-                
+
                 default:
                     echo '<td>';
                         echo '';
@@ -237,34 +253,6 @@ class Deparment_List_Table extends WP_List_Table {
         echo '</tr>';
 
     }
-
-    /**
-     * Default column values if no callback found
-     *
-     * @param  object  $item
-     * @param  string  $column_name
-     *
-     * @return string
-     */
-    // function column_default( $department, $column_name ) {
-        
-    //     if ( $lead = $department->get_lead() ) {
-    //         $lead_link = $lead->get_link();
-    //     } else {
-    //         $lead_link = '-';
-    //     }
-
-    //     switch ( $column_name ) {
-    //         case 'name':
-    //             echo $department->title;
-
-    //         case 'lead':
-    //             return $lead_link;
-
-    //         default:
-    //             return isset( $department->$column_name ) ? $department->$column_name : '';
-    //     }
-    // }
 
     /**
      * Get sortable columns
@@ -296,29 +284,6 @@ class Deparment_List_Table extends WP_List_Table {
         return apply_filters( 'erp_hr_department_table_cols', $columns );
     }
 
-    /**
-     * Render the employee name column
-     *
-     * @param  object  $item
-     *
-     * @return string
-     */
-    // function column_name( $department ) {
-
-    //     $padding    = str_repeat( '&#8212; ', $department->get_depth( $department, 5 ) );
-
-
-
-    //     $actions           = array();
-    //     $delete_url        = '';
-    //     $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $department->id, __( 'Edit this item', 'wp-erp' ), __( 'Edit', 'wp-erp' ) );
-    //     $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $department->id, __( 'Delete this item', 'wp-erp' ), __( 'Delete', 'wp-erp' ) );
-
-   
-
-
-    //     return sprintf( '<a href="#"><strong>%1$s</strong></a> %2$s', $padding.$department->title, $this->row_actions( $actions ) );
-    // }
 
     /**
      * Set the bulk actions
@@ -333,36 +298,6 @@ class Deparment_List_Table extends WP_List_Table {
     }
 
     /**
-     * Render the checkbox column
-     *
-     * @param  object  $item
-     *
-     * @return string
-     */
-    // function column_cb( $item ) {
-    //     return sprintf(
-    //         '<input type="checkbox" name="dept[]" value="%s" />', $item->id
-    //     );
-    // }
-
-    /**
-     * Set the views
-     *
-     * @return array
-     */
-    // public function get_views_() {
-    //     $status_links   = array();
-    //     $base_link      = admin_url( 'admin.php?page=erp-leave' );
-
-    //     foreach ($this->counts as $key => $value) {
-    //         $class = ( $key == $this->page_status ) ? 'current' : 'status-' . $key;
-    //         $status_links[ $key ] = sprintf( '<a href="%s" class="%s">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => $key ), $base_link ), $class, $value['label'], $value['count'] );
-    //     }
-
-    //     return $status_links;
-    // }
-
-    /**
      * Prepare the class items
      *
      * @return void
@@ -375,7 +310,7 @@ class Deparment_List_Table extends WP_List_Table {
         $sortable              = $this->get_sortable_columns();
         $this->_column_headers = array( $columns, $hidden, $sortable );
 
-        $per_page       = 2;
+        $per_page              = 2;
         $current_page          = $this->get_pagenum();
         $offset                = ( $current_page -1 ) * $per_page;
         $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '2';
