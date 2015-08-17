@@ -92,7 +92,7 @@ function erp_hr_get_departments( $args = [] ) {
     }
 
     $results = erp_parent_sort( $results );
-
+    $departments = [];
     if ( $results ) {
         foreach ($results as $key => $row) {
 
