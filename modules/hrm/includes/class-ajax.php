@@ -63,12 +63,19 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-hr-leave-request-req-date', 'leave_request_dates' );
 
         // script reload
-        $this->action( 'wp_ajax_erp_hr_script_reload', 'script_reload' );
+        $this->action( 'wp_ajax_erp_hr_script_reload', 'employee_template_refresh' );
+        $this->action( 'wp_ajax_erp_hr_new_dept_tmp_reload', 'new_dept_tmp_reload' );
     }
 
-    function script_reload() {
+    function employee_template_refresh() {
         ob_start();
         include WPERP_HRM_JS_TMPL . '/new-employee.php';
+        $this->send_success( array( 'content' => ob_get_clean() ) );
+    }
+
+    function new_dept_tmp_reload() {
+        ob_start();
+        include WPERP_HRM_JS_TMPL . '/new-dept.php';
         $this->send_success( array( 'content' => ob_get_clean() ) );
     }
 

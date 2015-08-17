@@ -85,7 +85,6 @@
              */
             afterNew: function( e, res ) {
                 var selectdrop = $('.erp-hr-dept-drop-down');
-                console.log('reqest aise');
                 wperp.scriptReload( 'erp_hr_script_reload', 'tmpl-erp-new-employee' );
                 selectdrop.append('<option selected="selected" value="'+res.id+'">'+res.title+'</option>');
                 selectdrop.select2("val", res.id);
@@ -97,7 +96,16 @@
              * @return {void}
              */
             reload: function() {
-                $( '#erp-dept-table-wrap' ).load( window.location.href + ' #erp-dept-table-wrap' );
+                $( '#erp-dept-table-wrap' ).load( window.location.href + ' #erp-dept-table-wrap' ); 
+            },
+
+            /**
+             * Template reload after insert, edit, delete 
+             *
+             * @return {void}
+             */
+            tempReload: function() {
+                wperp.scriptReload( 'erp_hr_new_dept_tmp_reload', 'tmpl-erp-new-dept' );
             },
 
             /**
@@ -114,16 +122,20 @@
                     title: wpErpHr.popup.dept_title,
                     button: wpErpHr.popup.dept_submit,
                     id: 'erp-hr-new-department',
-                    content: wp.template('erp-new-dept')().trim(),
+                    content: wperp.template('erp-new-dept')().trim(),
                     extraClass: 'smaller',
                     onSubmit: function(modal) {
                         wp.ajax.send( {
                             data: this.serialize(),
                             success: function(res) {
                                 WeDevs_ERP_HR.department.reload();
+                             
                                 if ( is_single != '1' ) {
                                     $('body').trigger( 'erp-hr-after-new-dept', [res]);
-                                }                            
+                                } else {
+                                    WeDevs_ERP_HR.department.tempReload();
+                                }    
+
                                 modal.closeModal();
                             },
                             error: function(error) {
@@ -162,7 +174,7 @@
                             },
                             success: function(response) {
                                 $( '.loader', modal).remove();
-
+                                
                                 $('#dept-title', modal).val( response.name );
                                 $('#dept-desc', modal).val( response.data.description );
                                 $('#dept-parent', modal).val( response.data.parent );
@@ -171,6 +183,7 @@
 
                                 // disable current one
                                 $('#dept-parent option[value="' + self.data('id') + '"]', modal).attr( 'disabled', 'disabled' );
+                                
                             }
                         });
                     },
@@ -179,7 +192,7 @@
                             data: this.serialize(),
                             success: function() {
                                 WeDevs_ERP_HR.department.reload();
-
+                                WeDevs_ERP_HR.department.tempReload();
                                 modal.closeModal();
                             },
                             error: function(error) {
@@ -209,6 +222,7 @@
                         success: function() {
                             self.closest('tr').fadeOut( 'fast', function() {
                                 $(this).remove();
+                                WeDevs_ERP_HR.department.tempReload();
                             });
                         },
                         error: function(response) {
