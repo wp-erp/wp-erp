@@ -197,10 +197,11 @@ class Deparment_List_Table extends WP_List_Table {
      */
     public function single_row( $department_id, $level = 0 ) {
 
-        $department = new \WeDevs\ERP\HRM\Department( $department_id );
-
+        $department  = new \WeDevs\ERP\HRM\Department( $department_id );
+        $colume_info = $this->get_column_info(); 
+        
         echo '<tr>';
-        foreach ( reset( $this->get_column_info() ) as $column_name => $column_title ) {
+        foreach ( reset( $colume_info ) as $column_name => $column_title ) {
             switch ( $column_name ) {
                 case 'cb':
                     ?>
