@@ -197,8 +197,8 @@ class WeDevs_ERP_Installer {
                     `unit` varchar(20) DEFAULT NULL,
                     `value` mediumint(5) DEFAULT NULL,
                     `color` varchar(7) DEFAULT NULL,
-                    `created_on` datetime NOT NULL,
-                    `updated_on` datetime NOT NULL,
+                    `created_at` datetime NOT NULL,
+                    `updated_at` datetime NOT NULL,
                     PRIMARY KEY (`id`)
             ) $collate;
 
