@@ -21,10 +21,30 @@
         },
 
         initDateField: function() {
-            $( '.erp-date-field').datepicker({
+            $( '.erp-leave-date-field').datepicker({
                 dateFormat: 'yy-mm-dd',
                 changeMonth: true,
                 changeYear: true
+            });
+
+            $( ".erp-leave-date-picker-from" ).datepicker({
+                dateFormat: 'yy-mm-dd',
+                changeYear: true,
+                changeMonth: true,
+                numberOfMonths: 1,
+                onClose: function( selectedDate ) {
+
+                    $( ".erp-leave-date-picker-to" ).datepicker( "option", "minDate", selectedDate );
+                }
+            });
+            $( ".erp-leave-date-picker-to" ).datepicker({
+                dateFormat: 'yy-mm-dd',
+                changeMonth: true,
+                changeYear: true,
+                numberOfMonths: 1,
+                onClose: function( selectedDate ) {
+                    $( ".erp-leave-date-picker-from" ).datepicker( "option", "maxDate", selectedDate );
+                }
             });
         },
 

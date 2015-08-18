@@ -15,8 +15,7 @@
             'name'     => 'start_date',
             'value'    => '{{ data.value }}',
             'required' => true,
-            'class'    => 'erp-date-field',
-            'help'     => __( 'Days in a calendar year.', 'wp-erp' )
+            'class'    => 'erp-leave-date-picker-from',
         ) ); ?>
     </div>
 
@@ -26,8 +25,7 @@
             'name'     => 'end_date',
             'value'    => '{{ data.value }}',
             'required' => true,
-            'class'    => 'erp-date-field',
-            'help'     => __( 'Days in a calendar year.', 'wp-erp' )
+            'class'    => 'erp-leave-date-picker-to',
         ) ); ?>
     </div>
 
