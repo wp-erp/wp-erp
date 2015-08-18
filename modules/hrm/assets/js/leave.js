@@ -51,7 +51,7 @@
         holiday: {
             create: function(e) {
                 e.preventDefault();
-                console.log('adlskjfadsf');
+             
                 $.erpPopup({
                     title: wpErpHr.popup.holiday,
                     button: wpErpHr.popup.holiday_create,

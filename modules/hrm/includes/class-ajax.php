@@ -62,6 +62,9 @@ class Ajax_Handler {
 
         $this->action( 'wp_ajax_erp-hr-leave-request-req-date', 'leave_request_dates' );
 
+        //leave holiday
+        $this->action( 'wp_ajax_erp_hr_holiday_create', 'holiday_create' );
+
         // script reload
         $this->action( 'wp_ajax_erp_hr_script_reload', 'employee_template_refresh' );
         $this->action( 'wp_ajax_erp_hr_new_dept_tmp_reload', 'new_dept_tmp_reload' );
@@ -688,6 +691,35 @@ class Ajax_Handler {
 
         if ( is_wp_error( $policy_id ) ) {
             $this->send_error( $policy_id->get_error_message() );
+        }
+
+        $this->send_success();
+    }
+
+    /**
+     * Create or update a holiday
+     *
+     * @return void
+     */
+    public function holiday_create() {
+        $this->verify_nonce( 'erp-leave-holiday' );
+
+        $holiday_id  = isset( $_POST['holiday_id'] ) ? intval( $_POST['holiday_id'] ) : 0;
+        $title       = isset( $_POST['name'] ) ? sanitize_text_field( $_POST['name'] ) : '';
+        $start_date  = isset( $_POST['start_date'] ) ? $_POST['start_date']  : '';
+        $end_date    = isset( $_POST['end_date'] ) ? $_POST['end_date'] : '';
+        $description = isset( $_POST['description'] ) ? $_POST['description'] : '';
+
+        $holiday_id = erp_hr_leave_insert_policy( array(
+            'id'          => $holiday_id,
+            'title'       => $title,
+            'start'       => $start_date,
+            'end'         => $end_date,
+            'description' => $description,
+        ) );
+
+        if ( is_wp_error( $holiday_id ) ) {
+            $this->send_error( $holiday_id->get_error_message() );
         }
 
         $this->send_success();
