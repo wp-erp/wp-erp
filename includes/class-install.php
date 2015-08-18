@@ -202,6 +202,17 @@ class WeDevs_ERP_Installer {
                     PRIMARY KEY (`id`)
             ) $collate;
 
+            CREATE TABLE `{$wpdb->prefix}erp_hr_holiday` (
+                    `id` bigint(20) NOT NULL,
+                    `title` varchar(200) NOT NULL,
+                    `start` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    `end` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+                    `description` text NOT NULL,
+                    `created_at` datetime NOT NULL,
+                    `updated_at` datetime NOT NULL,
+                    PRIMARY KEY (`id`)
+            ) $collate;
+
             CREATE TABLE `{$wpdb->prefix}erp_hr_leave_entitlements` (
                     `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
                     `user_id` bigint(20) unsigned NOT NULL,
