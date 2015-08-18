@@ -34,6 +34,7 @@ class Admin_Menu {
 
          add_submenu_page( 'erp-leave', __( 'Requests', 'wp-erp' ), __( 'Requests', 'wp-erp' ), 'manage_options', 'erp-leave', array( $this, 'leave_requests' ) );
          add_submenu_page( 'erp-leave', __( 'Leave Entitlements', 'wp-erp' ), __( 'Leave Entitlements', 'wp-erp' ), 'manage_options', 'erp-leave-assign', array( $this, 'leave_entitilements' ) );
+         add_submenu_page( 'erp-leave', __( 'Holidays', 'wp-erp' ), __( 'Holidays', 'wp-erp' ), 'manage_options', 'erp-holiday-assign', array( $this, 'holiday_page' ) );
          add_submenu_page( 'erp-leave', __( 'Policies', 'wp-erp' ), __( 'Policies', 'wp-erp' ), 'manage_options', 'erp-leave-policies', array( $this, 'leave_policy_page' ) );
          // add_submenu_page( 'erp-leave', __( 'Leave Calendar', 'wp-erp' ), __( 'Leave Calendar', 'wp-erp' ), 'manage_options', 'erp-leave-calendar', array( $this, 'empty_page' ) );
     }
@@ -129,6 +130,15 @@ class Admin_Menu {
      */
     public function leave_policy_page() {
         include WPERP_HRM_VIEWS . '/leave/leave-policies.php';
+    }
+
+    /**
+     * Render the holiday page
+     *
+     * @return void
+     */
+    public function holiday_page() {
+        include WPERP_HRM_VIEWS . '/leave/holiday.php';
     }
 
     /**

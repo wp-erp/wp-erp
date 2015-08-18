@@ -135,6 +135,8 @@ class Human_Resource {
                 'update_status'     => __( 'Update', 'wp-erp' ),
                 'policy'            => __( 'Leave Policy', 'wp-erp' ),
                 'policy_create'     => __( 'Create Policy', 'wp-erp' ),
+                'holiday'            => __( 'Holiday', 'wp-erp' ),
+                'holiday_create'     => __( 'Create Holiday', 'wp-erp' ),
             ),
             'emp_upload_photo'   => __( 'Upload Employee Photo', 'wp-erp' ),
             'emp_set_photo'      => __( 'Set Photo', 'wp-erp' ),
@@ -195,6 +197,10 @@ class Human_Resource {
 
             case 'leave_page_erp-leave-policies':
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/leave-policy.php', 'erp-leave-policy' );
+                break;
+
+            case 'leave_page_erp-holiday-assign':
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/holiday.php', 'erp-hr-holiday-js-tmp' );
                 break;
 
             default:

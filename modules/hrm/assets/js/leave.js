@@ -15,6 +15,37 @@
             $( '.erp-hr-leave-policy').on( 'click', 'a.submitdelete', self, this.policy.remove );
             $( '.erp-hr-leave-request-new').on( 'change', '.erp-date-field', self, this.leave.requestDates );
             $( '.erp-employee-single' ).on('submit', 'form#erp-hr-empl-leave-history', this.leave.showHistory );
+
+            //Holiday
+            $( '.erp-hr-holiday-wrap').on( 'click', 'a#erp-hr-new-holiday', self, this.holiday.create );
+        },
+
+        initDateField: function() {
+            $( '.erp-date-field').datepicker({
+                dateFormat: 'yy-mm-dd',
+                changeMonth: true,
+                changeYear: true
+            });
+        },
+
+        holiday: {
+            create: function(e) {
+                e.preventDefault();
+                console.log('adlskjfadsf');
+                $.erpPopup({
+                    title: wpErpHr.popup.holiday,
+                    button: wpErpHr.popup.holiday_create,
+                    id: 'erp-hr-holiday-create-popup',
+                    content: wperp.template('erp-hr-holiday-js-tmp')({ data: null }).trim(),
+                    extraClass: 'smaller',
+                    onReady: function() {
+                        Leave.initDateField();
+                    },
+                    onSubmit: function(modal) {
+                        e.data.policy.submit.call(this, modal);
+                    }
+                }); //popup
+            },
         },
 
         policy: {
