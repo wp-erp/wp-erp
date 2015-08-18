@@ -55,6 +55,64 @@ function erp_hr_leave_insert_policy( $args = array() ) {
 }
 
 /**
+ * Insert a leave holiday
+ *
+ * @param array $args
+ */
+function erp_hr_leave_insert_holiday( $args = array() ) {
+    global $wpdb;
+
+    $defaults = array(
+        'id'          => null,
+        'title'       => '',
+        'start'       => current_filter('mysql'),
+        'end'         => '',
+        'description' => '',
+    );
+
+    $args = wp_parse_args( $args, $defaults );
+
+    // some validation
+    if ( empty( $args['title'] ) ) {
+        return new WP_Error( 'no-name', __( 'No title provided.', 'wp-error' ) );
+    }
+
+    if ( intval( $args['start'] ) ) {
+        return new WP_Error( 'no-value', __( 'No start date provided.', 'wp-error' ) );
+    }
+
+    if ( intval( $args['end'] ) ) {
+        return new WP_Error( 'no-value', __( 'No end date provided.', 'wp-error' ) );
+    }
+
+    $args['title'] = sanitize_text_field( $args['title'] );
+
+    $holiday_id = (int) $args['id'];
+    unset( $args['id'] );
+
+    $holiday = new \WeDevs\ERP\HRM\Models\Leave_Holiday();
+
+    if ( ! $holiday_id ) {
+        // insert a new
+        $leave_policy = $holiday->create( $args );
+
+        if ( $leave_policy ) {
+
+            do_action( 'erp_hr_new_holiday', $wpdb->insert_id, $args );
+            return $leave_policy->id;
+        }
+
+    } else {
+        // do update method here
+        if ( $holiday->find( $holiday_id )->update( $args ) ) {
+
+            do_action( 'erp_hr_update_holiday', $holiday_id, $args );
+            return $holiday_id;
+        }
+    }
+}
+
+/**
  * Fetch leave policies by company
  *
  * @return array
