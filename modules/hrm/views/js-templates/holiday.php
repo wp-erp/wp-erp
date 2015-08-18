@@ -3,8 +3,8 @@
     <div class="row">
         <?php erp_html_form_input( array(
             'label'    => __( 'Holiday Name', 'wp-erp' ),
-            'name'     => 'name',
-            'value'    => '{{ data.name }}',
+            'name'     => 'title',
+            'value'    => '{{ data.title }}',
             'required' => true,
         ) ); ?>
     </div>

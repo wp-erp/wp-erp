@@ -703,14 +703,14 @@ class Ajax_Handler {
      */
     public function holiday_create() {
         $this->verify_nonce( 'erp-leave-holiday' );
-
+       
         $holiday_id  = isset( $_POST['holiday_id'] ) ? intval( $_POST['holiday_id'] ) : 0;
-        $title       = isset( $_POST['name'] ) ? sanitize_text_field( $_POST['name'] ) : '';
+        $title       = isset( $_POST['title'] ) ? sanitize_text_field( $_POST['title'] ) : '';
         $start_date  = isset( $_POST['start_date'] ) ? $_POST['start_date']  : '';
         $end_date    = isset( $_POST['end_date'] ) ? $_POST['end_date'] : '';
         $description = isset( $_POST['description'] ) ? $_POST['description'] : '';
 
-        $holiday_id = erp_hr_leave_insert_policy( array(
+        $holiday_id = erp_hr_leave_insert_holiday( array(
             'id'          => $holiday_id,
             'title'       => $title,
             'start'       => $start_date,

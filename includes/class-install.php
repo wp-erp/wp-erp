@@ -203,7 +203,7 @@ class WeDevs_ERP_Installer {
             ) $collate;
 
             CREATE TABLE `{$wpdb->prefix}erp_hr_holiday` (
-                    `id` bigint(20) NOT NULL,
+                    `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
                     `title` varchar(200) NOT NULL,
                     `start` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     `end` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',

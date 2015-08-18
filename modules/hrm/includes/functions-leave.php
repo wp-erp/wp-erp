@@ -77,11 +77,11 @@ function erp_hr_leave_insert_holiday( $args = array() ) {
         return new WP_Error( 'no-name', __( 'No title provided.', 'wp-error' ) );
     }
 
-    if ( intval( $args['start'] ) ) {
+    if ( empty( $args['start'] ) ) {
         return new WP_Error( 'no-value', __( 'No start date provided.', 'wp-error' ) );
     }
 
-    if ( intval( $args['end'] ) ) {
+    if ( empty( $args['end'] ) ) {
         return new WP_Error( 'no-value', __( 'No end date provided.', 'wp-error' ) );
     }
 
