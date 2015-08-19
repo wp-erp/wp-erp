@@ -313,12 +313,12 @@ class WeDevs_ERP_Installer {
      */
     public function create_roles() {
 
-            // Employee role
-            add_role( 'employee', __( 'Employee', 'wp-erp' ), array(
-                    'read'                      => true,
-                    'edit_posts'                => false,
-                    'delete_posts'              => false
-            ) );
+        // Employee role
+        add_role( 'employee', __( 'Employee', 'wp-erp' ), array(
+            'read'                      => true,
+            'edit_posts'                => false,
+            'delete_posts'              => false
+        ) );
     }
 }
 

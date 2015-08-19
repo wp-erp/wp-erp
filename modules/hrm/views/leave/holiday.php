@@ -2,14 +2,14 @@
 /**
  * List table class
  */
-class Leave_Policies_List_Table extends WP_List_Table {
+class Leave_Holiday_List_Table extends WP_List_Table {
 
     function __construct() {
         global $status, $page;
 
         parent::__construct( array(
-            'singular' => 'leave_policy',
-            'plural'   => 'leave_policies',
+            'singular' => 'holiday',
+            'plural'   => 'holiday',
             'ajax'     => false
         ) );
 
@@ -55,19 +55,21 @@ class Leave_Policies_List_Table extends WP_List_Table {
      *
      * @return string
      */
-    function column_default( $leave_policy, $column_name ) {
-
+    function column_default( $holiday, $column_name ) {
+       
         switch ( $column_name ) {
             case 'name':
+                return $holiday->title;
+            case 'start':
+                return $holiday->start;
 
-            case 'leave_day':
-                return number_format_i18n( $leave_policy->value, 0 );
+            case 'end':
+                return $holiday->end;
 
-            case 'calendar_color':
-                return '<span class="leave-color" style="background-color: ' . $leave_policy->color . ' "></span>';
-
+            case 'description':
+                return $holiday->description;
             default:
-                return isset( $leave_policy->$column_name ) ? $leave_policy->$column_name : '';
+                return '';
         }
     }
 
@@ -78,14 +80,14 @@ class Leave_Policies_List_Table extends WP_List_Table {
      */
     function get_columns() {
         $columns = array(
-            'cb'             => '<input type="checkbox" />',
-            'name'           => __( 'Policy Name', 'wp-erp' ),
-            'leave_day'      => __( 'Leave Days', 'wp-erp' ),
-            'leave_day'      => __( 'Leave Days', 'wp-erp' ),
-            'calendar_color' => __( 'Calendar Color', 'wp-erp' )
+			'cb'          => '<input type="checkbox" />',
+			'name'       => __( 'Title', 'wp-erp' ),
+			'start'       => __( 'Start Days', 'wp-erp' ),
+			'end'         => __( 'End Days', 'wp-erp' ),
+			'description' => __( 'Description', 'wp-erp' )
         );
 
-        return apply_filters( 'erp_hr_leave_policy_table_cols', $columns );
+        return apply_filters( 'erp_hr_holiday_table_cols', $columns );
     }
 
     /**
@@ -95,14 +97,14 @@ class Leave_Policies_List_Table extends WP_List_Table {
      *
      * @return string
      */
-    function column_name( $leave_policy ) {
+    function column_name( $holiday ) {
 
         $actions           = array();
         $delete_url        = '';
-        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $leave_policy->id, __( 'Edit this item', 'wp-erp' ), __( 'Edit', 'wp-erp' ) );
-        $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $leave_policy->id, __( 'Delete this item', 'wp-erp' ), __( 'Delete', 'wp-erp' ) );
+        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $holiday->id, __( 'Edit this item', 'wp-erp' ), __( 'Edit', 'wp-erp' ) );
+        $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $holiday->id, __( 'Delete this item', 'wp-erp' ), __( 'Delete', 'wp-erp' ) );
 
-        return sprintf( '<a href="#" class="link" data-id="%3$s"><strong>%1$s</strong></a> %2$s', esc_html( $leave_policy->name ), $this->row_actions( $actions ), $leave_policy->id );
+        return sprintf( '<a href="#" class="link" data-id="%3$s"><strong>%1$s</strong></a> %2$s', esc_html( $holiday->title ), $this->row_actions( $actions ), $holiday->id );
     }
 
     /**
@@ -127,7 +129,7 @@ class Leave_Policies_List_Table extends WP_List_Table {
      */
     function get_sortable_columns() {
         $sortable_columns = array(
-            'name' => array( 'name', true ),
+            'title' => array( 'title', true ),
         );
 
         return $sortable_columns;
@@ -154,7 +156,7 @@ class Leave_Policies_List_Table extends WP_List_Table {
      */
     function column_cb( $item ) {
         return sprintf(
-            '<input type="checkbox" name="policy_id[]" value="%s" />', $item->id
+            '<input type="checkbox" name="holiday_id[]" value="%s" />', $item->id
         );
     }
 
@@ -203,10 +205,10 @@ class Leave_Policies_List_Table extends WP_List_Table {
             $args['order'] = $_REQUEST['order'] ;
         }
 
-        $this->items  = erp_hr_leave_get_policies( $args );
+        $this->items  = erp_hr_get_holidays( $args );
 
         $this->set_pagination_args( array(
-            'total_items' => erp_hr_count_leave_policies(),
+            'total_items' => erp_hr_count_holidays(),
             'per_page'    => $per_page
         ) );
     }
@@ -224,11 +226,11 @@ class Leave_Policies_List_Table extends WP_List_Table {
             <form method="post">
                 <input type="hidden" name="page" value="erp-hr-designation">
                 <?php
-                $leave_policy = new Leave_Policies_List_Table();
-                $leave_policy->prepare_items();
-                $leave_policy->views();
+                $holiday = new Leave_Holiday_List_Table();
+                $holiday->prepare_items();
+                $holiday->views();
 
-                $leave_policy->display();
+                $holiday->display();
                 ?>
             </form>
 

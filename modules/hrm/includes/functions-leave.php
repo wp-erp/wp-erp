@@ -174,6 +174,62 @@ function erp_hr_count_leave_policies() {
 }
 
 /**
+ * Fetch holidays by company
+ *
+ * @return array
+ */
+function erp_hr_get_holidays( $args = [] ) {
+    $defaults = array(
+        'number' => 20,
+        'offset' => 0,
+    );
+
+    $args  = wp_parse_args( $args, $defaults );
+
+    if ( isset( $args['id'] ) && ! empty( $args['id'] ) ) {
+        $id = intval( $args['id'] );
+    }
+
+    $cache_key = 'erp-get-holidays-' . md5( serialize( $args ) );
+    $holidays = wp_cache_get( $cache_key, 'wp-erp' );
+
+    if ( false === $holidays ) {
+        if ( isset( $id ) ) {
+            $holidays = erp_array_to_object(
+                        \WeDevs\ERP\HRM\Models\Leave_Holiday::select( array( 'id', 'title', 'start', 'end', 'description' ) )
+                        ->where( 'id', '=', $id )
+                        ->skip( $args['offset'] )
+                        ->take( $args['number'] )
+                        ->get()
+                        ->toArray()
+                    );
+        } else {
+            $holidays = erp_array_to_object(
+                        \WeDevs\ERP\HRM\Models\Leave_Holiday::select( array( 'id', 'title', 'start', 'end', 'description' ) )
+                        ->skip( $args['offset'] )
+                        ->take( $args['number'] )
+                        ->get()
+                        ->toArray()
+                    );
+        }
+        
+
+        wp_cache_set( $cache_key, $holidays, 'wp-erp' );
+    }
+
+    return $holidays;
+}
+
+/**
+ * count total holidays
+ *
+ * @return \stdClass
+ */
+function erp_hr_count_holidays() { 
+    return \WeDevs\ERP\HRM\Models\Leave_Holiday::count();   
+}
+
+/**
  * Get policies as formatted for dropdown
  *
  * @return array
