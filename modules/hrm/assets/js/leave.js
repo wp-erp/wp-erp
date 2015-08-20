@@ -89,14 +89,17 @@
                             },
                             success: function(response) {
                                 $( '.loader', modal).remove();
-                                $('#dept-title', modal).val( response.name );
-                                $('#dept-desc', modal).val( response.data.description );
-                                $('#dept-parent', modal).val( response.data.parent );
-                                $('#dept-id', modal).val( response.id );
-                                $('#dept-action', modal).val( 'erp-hr-update-dept' );
+                                var holiday = response.holiday[0];
+                             
+                                $('#erp-hr-holiday-title', modal).val( holiday.title );
+                                $('#erp-hr-holiday-start', modal).val( holiday.start );
+                                $('#erp-hr-holiday-end', modal).val( holiday.end );
+                                $('#erp-hr-holiday-id', modal).val( holiday.id );
+                                $('#erp-hr-holiday-description', modal).val( holiday.description );
+                                $('#erp-hr-holiday-action', modal).val( 'erp_hr_holiday_create' );
 
                                 // disable current one
-                                $('#dept-parent option[value="' + self.data('id') + '"]', modal).attr( 'disabled', 'disabled' );
+                                //$('#dept-parent option[value="' + self.data('id') + '"]', modal).attr( 'disabled', 'disabled' );
                                 
                             }
                         });
