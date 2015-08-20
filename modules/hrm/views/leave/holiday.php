@@ -73,6 +73,10 @@ class Leave_Holiday_List_Table extends WP_List_Table {
         }
     }
 
+    function process_bulk_action() {
+        var_dump( $_POST ); die();
+    }
+
     /**
      * Get the column names
      *
@@ -224,7 +228,7 @@ class Leave_Holiday_List_Table extends WP_List_Table {
         <div class="list-wrap-inner">
 
             <form method="post">
-                <input type="hidden" name="page" value="erp-hr-designation">
+                <input type="hidden" name="page" value="erp-holiday-assign">
                 <?php
                 $holiday = new Leave_Holiday_List_Table();
                 $holiday->prepare_items();
