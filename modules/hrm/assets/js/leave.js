@@ -18,6 +18,7 @@
 
             //Holiday
             $( '.erp-hr-holiday-wrap').on( 'click', 'a#erp-hr-new-holiday', self, this.holiday.create );
+            $( '.erp-hr-holiday-wrap').on( 'click', '.erp-hr-holiday-edit', self, this.holiday.edit );
         },
 
         initDateField: function() {
@@ -66,6 +67,45 @@
                     }
                 }); //popup
             },
+
+            edit: function(e) {
+                e.preventDefault();
+                var self = $(this);
+                $.erpPopup({
+                    title: wpErpHr.popup.holiday,
+                    button: wpErpHr.popup.holiday_create,
+                    id: 'erp-hr-holiday-create-popup',
+                    content: wperp.template('erp-hr-holiday-js-tmp')({ data: null }).trim(),
+                    extraClass: 'smaller',
+                    onReady: function() {
+                        Leave.initDateField();
+                        var modal = this;
+                        $( 'header', modal).after( $('<div class="loader"></div>').show() );
+
+                        wp.ajax.send( 'erp-hr-get-holiday', {
+                            data: {
+                                id: self.data('id'),
+                                _wpnonce: wpErpHr.nonce
+                            },
+                            success: function(response) {
+                                $( '.loader', modal).remove();
+                                $('#dept-title', modal).val( response.name );
+                                $('#dept-desc', modal).val( response.data.description );
+                                $('#dept-parent', modal).val( response.data.parent );
+                                $('#dept-id', modal).val( response.id );
+                                $('#dept-action', modal).val( 'erp-hr-update-dept' );
+
+                                // disable current one
+                                $('#dept-parent option[value="' + self.data('id') + '"]', modal).attr( 'disabled', 'disabled' );
+                                
+                            }
+                        });
+                    },
+                    onSubmit: function(modal) {
+                        e.data.policy.submit.call(this, modal);
+                    }
+                }); //popup
+            }
         },
 
         policy: {

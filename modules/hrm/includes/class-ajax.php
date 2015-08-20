@@ -64,18 +64,40 @@ class Ajax_Handler {
 
         //leave holiday
         $this->action( 'wp_ajax_erp_hr_holiday_create', 'holiday_create' );
+        $this->action( 'wp_ajax_erp-hr-get-holiday', 'get_holiday' );
 
         // script reload
         $this->action( 'wp_ajax_erp_hr_script_reload', 'employee_template_refresh' );
         $this->action( 'wp_ajax_erp_hr_new_dept_tmp_reload', 'new_dept_tmp_reload' );
     }
 
+    /**
+     * Get Holiday
+     *
+     * @return void
+     */
+    function get_holiday() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+        $holiday = erp_hr_get_holidays( array( 'id' => intval( $_POST['id'] ) ) );
+        $this->send_success( array( 'holiday' => $holiday ) );
+    }
+
+    /**
+     * Get employee template
+     *
+     * @return void
+     */
     function employee_template_refresh() {
         ob_start();
         include WPERP_HRM_JS_TMPL . '/new-employee.php';
         $this->send_success( array( 'content' => ob_get_clean() ) );
     }
 
+    /**
+     * Get department template
+     *
+     * @return void
+     */
     function new_dept_tmp_reload() {
         ob_start();
         include WPERP_HRM_JS_TMPL . '/new-dept.php';

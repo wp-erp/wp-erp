@@ -80,11 +80,11 @@ class Leave_Holiday_List_Table extends WP_List_Table {
      */
     function get_columns() {
         $columns = array(
-			'cb'          => '<input type="checkbox" />',
-			'name'       => __( 'Title', 'wp-erp' ),
-			'start'       => __( 'Start Days', 'wp-erp' ),
-			'end'         => __( 'End Days', 'wp-erp' ),
-			'description' => __( 'Description', 'wp-erp' )
+            'cb'          => '<input type="checkbox" />',
+            'name'        => __( 'Title', 'wp-erp' ),
+            'start'       => __( 'Start Days', 'wp-erp' ),
+            'end'         => __( 'End Days', 'wp-erp' ),
+            'description' => __( 'Description', 'wp-erp' )
         );
 
         return apply_filters( 'erp_hr_holiday_table_cols', $columns );
@@ -101,7 +101,7 @@ class Leave_Holiday_List_Table extends WP_List_Table {
 
         $actions           = array();
         $delete_url        = '';
-        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $holiday->id, __( 'Edit this item', 'wp-erp' ), __( 'Edit', 'wp-erp' ) );
+        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" class="erp-hr-holiday-edit" title="%s">%s</a>', $delete_url, $holiday->id, __( 'Edit this item', 'wp-erp' ), __( 'Edit', 'wp-erp' ) );
         $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $holiday->id, __( 'Delete this item', 'wp-erp' ), __( 'Delete', 'wp-erp' ) );
 
         return sprintf( '<a href="#" class="link" data-id="%3$s"><strong>%1$s</strong></a> %2$s', esc_html( $holiday->title ), $this->row_actions( $actions ), $holiday->id );
