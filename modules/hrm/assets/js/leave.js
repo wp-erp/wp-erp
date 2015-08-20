@@ -19,6 +19,7 @@
             //Holiday
             $( '.erp-hr-holiday-wrap').on( 'click', 'a#erp-hr-new-holiday', self, this.holiday.create );
             $( '.erp-hr-holiday-wrap').on( 'click', '.erp-hr-holiday-edit', self, this.holiday.edit );
+            $( '.erp-hr-holiday-wrap').on( 'click', '.erp-hr-holiday-delete', self, this.holiday.remove );
         },
 
         initDateField: function() {
@@ -108,7 +109,35 @@
                         e.data.policy.submit.call(this, modal);
                     }
                 }); //popup
-            }
+            },
+
+            /**
+             * Remove holiday
+             *
+             * @param  {event}
+             */
+            remove: function(e) {
+                e.preventDefault();
+
+                var self = $(this);
+
+                if ( confirm( wpErpHr.delConfirmEmployee ) ) {
+                    wp.ajax.send( 'erp-hr-holiday-delete', {
+                        data: {
+                            '_wpnonce': wpErpHr.nonce,
+                            id: self.data( 'id' )
+                        },
+                        success: function() {
+                            self.closest('tr').fadeOut( 'fast', function() {
+                                $(this).remove();
+                            });
+                        },
+                        error: function(response) {
+                            alert( response );
+                        }
+                    });
+                }
+            },
         },
 
         policy: {

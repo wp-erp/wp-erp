@@ -69,6 +69,18 @@ class Ajax_Handler {
         // script reload
         $this->action( 'wp_ajax_erp_hr_script_reload', 'employee_template_refresh' );
         $this->action( 'wp_ajax_erp_hr_new_dept_tmp_reload', 'new_dept_tmp_reload' );
+        $this->action( 'wp_ajax_erp-hr-holiday-delete', 'dept_remove' );
+    }
+
+    /**
+     * Remove Holiday
+     *
+     * @return void
+     */
+    function dept_remove() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+        $holiday = erp_hr_delete_holidays( array( 'id' => intval( $_POST['id'] ) ) );
+        $this->send_success();
     }
 
     /**
