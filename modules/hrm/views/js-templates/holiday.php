@@ -34,16 +34,6 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'name'     => 'id',
-            'id'       => 'erp-hr-holiday-id',
-            'value'    => '{{ data.id }}',
-            'type'     => 'hidden',
-            
-        ) ); ?>
-    </div>
-
-    <div class="row">
-        <?php erp_html_form_input( array(
             'type'     => 'textarea',
             'label'    => __( 'Description', 'wp-erp' ),
             'name'     => 'description',
@@ -56,5 +46,5 @@
 
     <?php wp_nonce_field( 'erp-leave-holiday' ); ?>
     <input type="hidden" name="action" id="erp-hr-holiday-action" value="erp_hr_holiday_create">
-    <input type="hidden" name="holiday_id" value="{{ data.id }}">
+    <input type="hidden" name="holiday_id" id="erp-hr-holiday-id" value="{{ data.id }}">
 </div>
