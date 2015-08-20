@@ -72,11 +72,7 @@ class Leave_Holiday_List_Table extends WP_List_Table {
                 return '';
         }
     }
-
-    function process_bulk_action() {
-        var_dump( $_POST ); die();
-    }
-
+    
     /**
      * Get the column names
      *

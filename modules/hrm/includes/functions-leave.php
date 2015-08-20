@@ -237,9 +237,11 @@ function erp_hr_count_holidays() {
 function erp_hr_delete_holidays( $holidays_id ) {
 
     if ( is_array( $holidays_id ) ) {
+
         foreach ( $holidays_id as $key => $holiday_id ) {
             do_action( 'erp_hr_leave_holiday_delete', $holiday_id );
         }
+        
         \WeDevs\ERP\HRM\Models\Leave_Holiday::destroy( $holidays_id );
     
     } else {
