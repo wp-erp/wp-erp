@@ -186,48 +186,6 @@ function erp_hr_get_holidays( $args = [] ) {
 
     $args  = wp_parse_args( $args, $defaults );
 
-    $holidays = erp_hr_holiday_search( $args );
-
-    if ( $holidays !== false ) {
-        return $holidays;
-    }
-
-    //if not search then execute nex code
-    if ( isset( $args['id'] ) && ! empty( $args['id'] ) ) {
-        $id = intval( $args['id'] );
-    }
-
-    $cache_key = 'erp-get-holidays-' . md5( serialize( $args ) );
-    $holidays = wp_cache_get( $cache_key, 'wp-erp' );
-
-    if ( false === $holidays ) {
-        if ( isset( $id ) ) {
-            $holidays = erp_array_to_object(
-                \WeDevs\ERP\HRM\Models\Leave_Holiday::select( array( 'id', 'title', 'start', 'end', 'description' ) )
-                ->where( 'id', '=', $id )
-                ->skip( $args['offset'] )
-                ->take( $args['number'] )
-                ->get()
-                ->toArray()
-            );
-        } else {
-            $holidays = erp_array_to_object(
-                \WeDevs\ERP\HRM\Models\Leave_Holiday::select( array( 'id', 'title', 'start', 'end', 'description' ) )
-                ->skip( $args['offset'] )
-                ->take( $args['number'] )
-                ->get()
-                ->toArray()
-            );
-        }
-
-
-        wp_cache_set( $cache_key, $holidays, 'wp-erp' );
-    }
-
-    return $holidays;
-}
-
-function erp_hr_holiday_search( $args ) {
 
     $args_s = isset( $args['s'] ) ? $args['s'] : '';
 
@@ -239,25 +197,38 @@ function erp_hr_holiday_search( $args ) {
         $holiday_results = $holiday_results->where( 'title', 'LIKE',  "%$args_s%" );
     }
 
-    if ( isset( $args['from'] ) && ! empty( $args['from'] ) ) {
-        $holiday_results = $holiday_results->Where( 'start', '>=', $args['from'] );
-    }
-
-    if ( isset( $args['to'] ) && ! empty( $args['to'] ) ) {
-        $holiday_results = $holiday_results->Where( 'end', '<=', $args['to'] );
-    }
-
     if ( isset( $args['s'] ) && ! empty( $args['s'] ) ) {
         $holiday_results = $holiday_results->orWhere( 'description', 'LIKE',  "%$args_s%" );
     }
 
+    if ( isset( $args['from'] ) && ! empty( $args['from'] ) ) {
+        $holiday_results = $holiday_results->where( 'start', '>=', $args['from'] );
+    }
 
-    $holidays = erp_array_to_object(
-        $holiday_results->skip( $args['offset'] )
-                        ->take( $args['number'] )
-                        ->get()
-                        ->toArray()
-    );
+    if ( isset( $args['to'] ) && ! empty( $args['to'] ) ) {
+        $holiday_results = $holiday_results->where( 'end', '<=', $args['to'] );
+    }
+
+    //if not search then execute nex code
+    if ( isset( $args['id'] ) && ! empty( $args['id'] ) ) {
+        $id = intval( $args['id'] );
+        $holiday_results = $holiday_results->where( 'id', '=',  "$id" );
+    }
+
+    $cache_key = 'erp-get-holidays-' . md5( serialize( $args ) );
+    $holidays = wp_cache_get( $cache_key, 'wp-erp' );
+
+    if ( false === $holidays ) {
+
+        $holidays = erp_array_to_object(
+            $holiday_results->skip( $args['offset'] )
+                            ->take( $args['number'] )
+                            ->get()
+                            ->toArray()
+        );
+       
+        wp_cache_set( $cache_key, $holidays, 'wp-erp' );
+    }
 
     return $holidays;
 }
@@ -279,11 +250,11 @@ function erp_hr_count_holidays( $args ) {
     }
 
     if ( isset( $args['from'] ) && ! empty( $args['from'] ) ) {
-        $$holiday = $holiday->Where( 'start', '>=', $args['from'] );
+        $holiday = $holiday->where( 'start', '>=', $args['from'] );
     }
 
     if ( isset( $args['to'] ) && ! empty( $args['to'] ) ) {
-        $holiday = $holiday->Where( 'end', '<=', $args['to'] );
+        $holiday = $holiday->where( 'end', '<=', $args['to'] );
     }
 
     if ( isset( $args['s'] ) && ! empty( $args['s'] ) ) {

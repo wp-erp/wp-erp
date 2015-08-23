@@ -21,7 +21,7 @@ class Form_Handler {
         add_action( 'erp_action_hr-leave-req-new', array( $this, 'leave_request' ) );
 
         add_action( 'admin_init', array( $this, 'leave_request_status_change' ) );
-        add_action('load-leave_page_erp-holiday-assign', array( $this, 'holiday_remove') );
+        add_action('load-leave_page_erp-holiday-assign', array( $this, 'holiday_action') );
     }
 
     /**
@@ -29,7 +29,7 @@ class Form_Handler {
      *
      * @return void
      */
-    function holiday_remove() {
+    function holiday_action() {
 
         if ( ! isset( $_GET['_wpnonce'] ) || ! isset( $_GET['page'] ) ) {
             return;
