@@ -186,28 +186,11 @@ function erp_hr_get_holidays( $args = [] ) {
 
     $args  = wp_parse_args( $args, $defaults );
 
-
-    $args_s = isset( $args['s'] ) ? $args['s'] : '';
-
     $holiday = new \WeDevs\ERP\HRM\Models\Leave_Holiday();
 
     $holiday_results = $holiday->select( array( 'id', 'title', 'start', 'end', 'description' ) );
 
-    if ( $args_s && ! empty( $args['s'] ) ) {
-        $holiday_results = $holiday_results->where( 'title', 'LIKE',  "%$args_s%" );
-    }
-
-    if ( isset( $args['s'] ) && ! empty( $args['s'] ) ) {
-        $holiday_results = $holiday_results->orWhere( 'description', 'LIKE',  "%$args_s%" );
-    }
-
-    if ( isset( $args['from'] ) && ! empty( $args['from'] ) ) {
-        $holiday_results = $holiday_results->where( 'start', '>=', $args['from'] );
-    }
-
-    if ( isset( $args['to'] ) && ! empty( $args['to'] ) ) {
-        $holiday_results = $holiday_results->where( 'end', '<=', $args['to'] );
-    }
+    $holiday_results = erp_hr_holiday_filter_param( $holiday_results, $args );
 
     //if not search then execute nex code
     if ( isset( $args['id'] ) && ! empty( $args['id'] ) ) {
@@ -226,7 +209,7 @@ function erp_hr_get_holidays( $args = [] ) {
                             ->get()
                             ->toArray()
         );
-       
+
         wp_cache_set( $cache_key, $holidays, 'wp-erp' );
     }
 
@@ -240,10 +223,15 @@ function erp_hr_get_holidays( $args = [] ) {
  */
 function erp_hr_count_holidays( $args ) {
 
+    $holiday = new \WeDevs\ERP\HRM\Models\Leave_Holiday();
+    $holiday = erp_hr_holiday_filter_param( $holiday, $args );
+
+    return $holiday->count();
+}
+
+function erp_hr_holiday_filter_param( $holiday, $args ) {
 
     $args_s = isset( $args['s'] ) ? $args['s'] : '';
-
-    $holiday = new \WeDevs\ERP\HRM\Models\Leave_Holiday();
 
     if ( $args_s && ! empty( $args['s'] ) ) {
         $holiday = $holiday->where( 'title', 'LIKE',  "%$args_s%" );
@@ -261,7 +249,8 @@ function erp_hr_count_holidays( $args ) {
         $holiday = $holiday->orWhere( 'description', 'LIKE',  "%$args_s%" );
     }
 
-    return $holiday->count();
+    return $holiday;
+
 }
 
 /**

@@ -48,10 +48,10 @@ class Leave_Holiday_List_Table extends WP_List_Table {
 
 
         <label class="screen-reader-text" for="new_role"><?php _e( 'From', 'erp' ) ?></label>
-        <input type="text" name="from" value="<?php echo $from; ?>" class="erp-leave-date-picker-from">
+        <input type="text" placeholder="<?php _e( 'From date', 'wp-erp' ); ?>" name="from" value="<?php echo $from; ?>" class="erp-leave-date-picker-from">
 
         <label class="screen-reader-text" for="new_role"><?php _e( 'To', 'erp' ) ?></label>
-        <input type="text" name="to" value="<?php echo $to; ?>" class="erp-leave-date-picker-to">
+        <input type="text" placeholder="<?php _e( 'To date', 'wp-erp' ); ?>" name="to" value="<?php echo $to; ?>" class="erp-leave-date-picker-to">
     <?php
             submit_button( __( 'Filter' ), 'button', 'filter', false );
 
