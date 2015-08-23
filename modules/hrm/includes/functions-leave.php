@@ -186,6 +186,13 @@ function erp_hr_get_holidays( $args = [] ) {
 
     $args  = wp_parse_args( $args, $defaults );
 
+    $holidays = erp_hr_holiday_search( $args );
+    
+    if ( $holidays !== false ) {
+        return $holidays;
+    }
+
+    //if not search then execute nex code
     if ( isset( $args['id'] ) && ! empty( $args['id'] ) ) {
         $id = intval( $args['id'] );
     }
@@ -196,21 +203,21 @@ function erp_hr_get_holidays( $args = [] ) {
     if ( false === $holidays ) {
         if ( isset( $id ) ) {
             $holidays = erp_array_to_object(
-                        \WeDevs\ERP\HRM\Models\Leave_Holiday::select( array( 'id', 'title', 'start', 'end', 'description' ) )
-                        ->where( 'id', '=', $id )
-                        ->skip( $args['offset'] )
-                        ->take( $args['number'] )
-                        ->get()
-                        ->toArray()
-                    );
+                \WeDevs\ERP\HRM\Models\Leave_Holiday::select( array( 'id', 'title', 'start', 'end', 'description' ) )
+                ->where( 'id', '=', $id )
+                ->skip( $args['offset'] )
+                ->take( $args['number'] )
+                ->get()
+                ->toArray()
+            );
         } else {
             $holidays = erp_array_to_object(
-                        \WeDevs\ERP\HRM\Models\Leave_Holiday::select( array( 'id', 'title', 'start', 'end', 'description' ) )
-                        ->skip( $args['offset'] )
-                        ->take( $args['number'] )
-                        ->get()
-                        ->toArray()
-                    );
+                \WeDevs\ERP\HRM\Models\Leave_Holiday::select( array( 'id', 'title', 'start', 'end', 'description' ) )
+                ->skip( $args['offset'] )
+                ->take( $args['number'] )
+                ->get()
+                ->toArray()
+            );
         }
         
 
@@ -219,6 +226,30 @@ function erp_hr_get_holidays( $args = [] ) {
 
     return $holidays;
 }
+
+function erp_hr_holiday_search( $args ) {
+    if ( ! isset( $args['s'] ) ) {
+        return false;
+    }
+
+    if ( empty( $args['s'] ) ) {
+        return false;
+    }
+    
+    $s = $args['s'];
+
+    $holidays = erp_array_to_object(
+        \WeDevs\ERP\HRM\Models\Leave_Holiday::select( array( 'id', 'title', 'start', 'end', 'description' ) )
+        ->where( 'title', 'LIKE', "%$s%" )
+        ->whereOr( 'description', 'LIKE', "%$s%" )
+        ->skip( $args['offset'] )
+        ->take( $args['number'] )
+        ->get()
+        ->toArray()
+    );
+
+    return $holidays;
+} 
 
 /**
  * count total holidays

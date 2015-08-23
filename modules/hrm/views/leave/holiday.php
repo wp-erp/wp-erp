@@ -38,13 +38,48 @@ class Leave_Holiday_List_Table extends WP_List_Table {
         echo '</style>';
     }
 
+    function extra_tablenav( $which ) {
+     
+    ?>
+  
+       
+        <label class="screen-reader-text" for="new_role"><?php _e( 'From', 'erp' ) ?></label>
+        <select name="from" id="new_role">
+            <option value="-1"><?php _e( '--Select--', 'erp' ); ?></option>
+            <?php
+            foreach ( $this->items as $key => $item ) {
+                ?>
+                    <option value="<?php echo erp_format_date( $item->start ); ?>"><?php echo erp_format_date( $item->start );  ?></option>
+                <?php
+            }
+            ?>
+        </select>
+
+        <label class="screen-reader-text" for="new_role"><?php _e( 'To', 'erp' ) ?></label>
+        <select name="to" id="new_role">
+            <option value="-1"><?php _e( '--Select--', 'erp' ); ?></option>
+            <?php
+            foreach ( $this->items as $key => $item ) {
+                ?>
+                    <option value="<?php echo erp_format_date( $item->end ); ?>"><?php echo erp_format_date( $item->end );  ?></option>
+                <?php
+            }
+            ?>
+        </select>
+    <?php
+            submit_button( __( 'Filter' ), 'button', 'filter', false );
+       
+
+       
+    }
+
     /**
      * Message to show if no policy found
      *
      * @return void
      */
     function no_items() {
-        _e( 'No policies found.', 'wp-erp' );
+        _e( 'No holiday record found!', 'wp-erp' );
     }
 
     /**
@@ -61,10 +96,10 @@ class Leave_Holiday_List_Table extends WP_List_Table {
             case 'name':
                 return $holiday->title;
             case 'start':
-                return $holiday->start;
+                return erp_format_date( $holiday->start );
 
             case 'end':
-                return $holiday->end;
+                return erp_format_date( $holiday->end );
 
             case 'description':
                 return $holiday->description;
@@ -200,11 +235,15 @@ class Leave_Holiday_List_Table extends WP_List_Table {
             'number' => $per_page,
         );
 
+        if ( ! empty( $_GET['s'] ) ) {
+            $args['s'] = $_GET['s'];
+        }
+
         if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {
             $args['orderby'] = $_REQUEST['orderby'];
             $args['order'] = $_REQUEST['order'] ;
         }
-
+        
         $this->items  = erp_hr_get_holidays( $args );
 
         $this->set_pagination_args( array(
