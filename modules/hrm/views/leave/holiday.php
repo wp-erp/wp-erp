@@ -225,11 +225,11 @@ class Leave_Holiday_List_Table extends WP_List_Table {
             $args['s'] = $_GET['s'];
         }
 
-        if ( isset( $_GET['from'] ) && $_GET['from'] != '-1' ) {
+        if ( isset( $_GET['from'] ) && $_GET['from'] != '' ) {
             $args['from'] = date( 'Y-m-d', strtotime( $_GET['from'] ) );
         }
 
-        if ( isset( $_GET['to'] ) && $_GET['to'] != '-1' ) {
+        if ( isset( $_GET['to'] ) && $_GET['to'] != '' ) {
             $args['to'] = date( 'Y-m-d', strtotime( $_GET['to'] ) );
         }
 
@@ -241,7 +241,7 @@ class Leave_Holiday_List_Table extends WP_List_Table {
         $this->items  = erp_hr_get_holidays( $args );
 
         $this->set_pagination_args( array(
-            'total_items' => erp_hr_count_holidays(),
+            'total_items' => erp_hr_count_holidays( $args ),
             'per_page'    => $per_page
         ) );
     }

@@ -267,8 +267,30 @@ function erp_hr_holiday_search( $args ) {
  *
  * @return \stdClass
  */
-function erp_hr_count_holidays() {
-    return \WeDevs\ERP\HRM\Models\Leave_Holiday::count();
+function erp_hr_count_holidays( $args ) {
+
+
+    $args_s = isset( $args['s'] ) ? $args['s'] : '';
+
+    $holiday = new \WeDevs\ERP\HRM\Models\Leave_Holiday();
+
+    if ( $args_s && ! empty( $args['s'] ) ) {
+        $holiday = $holiday->where( 'title', 'LIKE',  "%$args_s%" );
+    }
+
+    if ( isset( $args['from'] ) && ! empty( $args['from'] ) ) {
+        $$holiday = $holiday->Where( 'start', '>=', $args['from'] );
+    }
+
+    if ( isset( $args['to'] ) && ! empty( $args['to'] ) ) {
+        $holiday = $holiday->Where( 'end', '<=', $args['to'] );
+    }
+
+    if ( isset( $args['s'] ) && ! empty( $args['s'] ) ) {
+        $holiday = $holiday->orWhere( 'description', 'LIKE',  "%$args_s%" );
+    }
+
+    return $holiday->count();
 }
 
 /**
