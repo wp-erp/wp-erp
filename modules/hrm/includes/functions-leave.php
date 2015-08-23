@@ -250,7 +250,6 @@ function erp_hr_holiday_filter_param( $holiday, $args ) {
     }
 
     return $holiday;
-
 }
 
 /**
