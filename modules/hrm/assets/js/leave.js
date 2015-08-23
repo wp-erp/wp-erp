@@ -20,6 +20,8 @@
             $( '.erp-hr-holiday-wrap').on( 'click', 'a#erp-hr-new-holiday', self, this.holiday.create );
             $( '.erp-hr-holiday-wrap').on( 'click', '.erp-hr-holiday-edit', self, this.holiday.edit );
             $( '.erp-hr-holiday-wrap').on( 'click', '.erp-hr-holiday-delete', self, this.holiday.remove );
+
+            this.initDateField();
         },
 
         initDateField: function() {

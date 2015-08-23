@@ -40,32 +40,18 @@ class Leave_Holiday_List_Table extends WP_List_Table {
 
     function extra_tablenav( $which ) {
         if ( $which != 'top' ) return;
+
+        $get_holidays = erp_hr_get_holidays();
+        $from = isset( $_GET['from'] ) ? $_GET['from'] : '';
+        $to = isset( $_GET['to'] ) ? $_GET['to'] : '';
     ?>
 
 
         <label class="screen-reader-text" for="new_role"><?php _e( 'From', 'erp' ) ?></label>
-        <select name="from" id="new_role">
-            <option value="-1"><?php _e( '--Select--', 'erp' ); ?></option>
-            <?php
-            foreach ( $this->items as $key => $item ) {
-                ?>
-                    <option value="<?php echo erp_format_date( $item->start ); ?>"><?php echo erp_format_date( $item->start );  ?></option>
-                <?php
-            }
-            ?>
-        </select>
+        <input type="text" name="from" value="<?php echo $from; ?>" class="erp-leave-date-picker-from">
 
         <label class="screen-reader-text" for="new_role"><?php _e( 'To', 'erp' ) ?></label>
-        <select name="to" id="new_role">
-            <option value="-1"><?php _e( '--Select--', 'erp' ); ?></option>
-            <?php
-            foreach ( $this->items as $key => $item ) {
-                ?>
-                    <option value="<?php echo erp_format_date( $item->end ); ?>"><?php echo erp_format_date( $item->end );  ?></option>
-                <?php
-            }
-            ?>
-        </select>
+        <input type="text" name="to" value="<?php echo $to; ?>" class="erp-leave-date-picker-to">
     <?php
             submit_button( __( 'Filter' ), 'button', 'filter', false );
 

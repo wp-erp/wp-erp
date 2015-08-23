@@ -229,7 +229,6 @@ function erp_hr_get_holidays( $args = [] ) {
 
 function erp_hr_holiday_search( $args ) {
 
-    // $where = [];
     $args_s = isset( $args['s'] ) ? $args['s'] : '';
 
     $holiday = new \WeDevs\ERP\HRM\Models\Leave_Holiday();
