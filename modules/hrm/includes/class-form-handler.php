@@ -38,14 +38,14 @@ class Form_Handler {
         if ( $_GET['page'] != 'erp-holiday-assign' ) {
             return;
         }
-
+      
         if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'bulk-holiday' ) ) {
             die( __( 'Something went wrong!', 'wp-erp' ) );
         }
 
         $this->remove_holiday( $_GET );
         
-        $query_arg = add_query_arg( array( 's' => $_GET['s'] ), $_GET['_wp_http_referer'] );
+        $query_arg = add_query_arg( array( 's' => $_GET['s'], 'fromm' => $_GET['from'], 'to' => $_GET['to'] ), $_GET['_wp_http_referer'] );
         wp_redirect( $query_arg );
         exit();
         

@@ -39,7 +39,7 @@ class Leave_Holiday_List_Table extends WP_List_Table {
     }
 
     function extra_tablenav( $which ) {
-     
+        if ( $which != 'top' ) return;
     ?>
   
        
@@ -237,6 +237,14 @@ class Leave_Holiday_List_Table extends WP_List_Table {
 
         if ( ! empty( $_GET['s'] ) ) {
             $args['s'] = $_GET['s'];
+        }
+
+        if ( isset( $_GET['from'] ) && $_GET['from'] != '-1' ) {
+            $args['from'] = $_GET['from'];
+        }
+
+        if ( isset( $_GET['to'] ) && $_GET['to'] != '-1' ) {
+            $args['to'] = $_GET['to'];
         }
 
         if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {
