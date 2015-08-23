@@ -34,26 +34,26 @@ class Form_Handler {
         if ( ! isset( $_GET['_wpnonce'] ) || ! isset( $_GET['page'] ) ) {
             return;
         }
-    
+
         if ( $_GET['page'] != 'erp-holiday-assign' ) {
             return;
         }
-      
+
         if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'bulk-holiday' ) ) {
             die( __( 'Something went wrong!', 'wp-erp' ) );
         }
 
         $this->remove_holiday( $_GET );
-        
-        $query_arg = add_query_arg( array( 's' => $_GET['s'], 'fromm' => $_GET['from'], 'to' => $_GET['to'] ), $_GET['_wp_http_referer'] );
+
+        $query_arg = add_query_arg( array( 's' => $_GET['s'], 'from' => $_GET['from'], 'to' => $_GET['to'] ), $_GET['_wp_http_referer'] );
         wp_redirect( $query_arg );
         exit();
-        
+
     }
 
     function remove_holiday( $get ) {
         if ( $get['action'] != 'trash' ) {
-            return false; 
+            return false;
         }
 
         if ( isset( $get['holiday_id'] ) ) {

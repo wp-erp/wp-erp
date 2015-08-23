@@ -187,7 +187,7 @@ function erp_hr_get_holidays( $args = [] ) {
     $args  = wp_parse_args( $args, $defaults );
 
     $holidays = erp_hr_holiday_search( $args );
-    
+
     if ( $holidays !== false ) {
         return $holidays;
     }
@@ -219,7 +219,7 @@ function erp_hr_get_holidays( $args = [] ) {
                 ->toArray()
             );
         }
-        
+
 
         wp_cache_set( $cache_key, $holidays, 'wp-erp' );
     }
@@ -228,36 +228,48 @@ function erp_hr_get_holidays( $args = [] ) {
 }
 
 function erp_hr_holiday_search( $args ) {
-    if ( ! isset( $args['s'] ) ) {
-        return false;
+
+    // $where = [];
+    $args_s = isset( $args['s'] ) ? $args['s'] : '';
+
+    $holiday = new \WeDevs\ERP\HRM\Models\Leave_Holiday();
+
+    $holiday_results = $holiday->select( array( 'id', 'title', 'start', 'end', 'description' ) );
+
+    if ( $args_s && ! empty( $args['s'] ) ) {
+        $holiday_results = $holiday_results->where( 'title', 'LIKE',  "%$args_s%" );
     }
 
-    if ( empty( $args['s'] ) ) {
-        return false;
+    if ( isset( $args['from'] ) && ! empty( $args['from'] ) ) {
+        $holiday_results = $holiday_results->Where( 'start', '>=', $args['from'] );
     }
-    
-    $s = $args['s'];
+
+    if ( isset( $args['to'] ) && ! empty( $args['to'] ) ) {
+        $holiday_results = $holiday_results->Where( 'end', '<=', $args['to'] );
+    }
+
+    if ( isset( $args['s'] ) && ! empty( $args['s'] ) ) {
+        $holiday_results = $holiday_results->orWhere( 'description', 'LIKE',  "%$args_s%" );
+    }
+
 
     $holidays = erp_array_to_object(
-        \WeDevs\ERP\HRM\Models\Leave_Holiday::select( array( 'id', 'title', 'start', 'end', 'description' ) )
-        ->where( 'title', 'LIKE', "%$s%" )
-        ->whereOr( 'description', 'LIKE', "%$s%" )
-        ->skip( $args['offset'] )
-        ->take( $args['number'] )
-        ->get()
-        ->toArray()
+        $holiday_results->skip( $args['offset'] )
+                        ->take( $args['number'] )
+                        ->get()
+                        ->toArray()
     );
 
     return $holidays;
-} 
+}
 
 /**
  * count total holidays
  *
  * @return \stdClass
  */
-function erp_hr_count_holidays() { 
-    return \WeDevs\ERP\HRM\Models\Leave_Holiday::count();   
+function erp_hr_count_holidays() {
+    return \WeDevs\ERP\HRM\Models\Leave_Holiday::count();
 }
 
 /**
@@ -272,9 +284,9 @@ function erp_hr_delete_holidays( $holidays_id ) {
         foreach ( $holidays_id as $key => $holiday_id ) {
             do_action( 'erp_hr_leave_holiday_delete', $holiday_id );
         }
-        
+
         \WeDevs\ERP\HRM\Models\Leave_Holiday::destroy( $holidays_id );
-    
+
     } else {
         do_action( 'erp_hr_leave_holiday_delete', $holidays_id );
 

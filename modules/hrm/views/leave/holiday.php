@@ -41,8 +41,8 @@ class Leave_Holiday_List_Table extends WP_List_Table {
     function extra_tablenav( $which ) {
         if ( $which != 'top' ) return;
     ?>
-  
-       
+
+
         <label class="screen-reader-text" for="new_role"><?php _e( 'From', 'erp' ) ?></label>
         <select name="from" id="new_role">
             <option value="-1"><?php _e( '--Select--', 'erp' ); ?></option>
@@ -68,9 +68,9 @@ class Leave_Holiday_List_Table extends WP_List_Table {
         </select>
     <?php
             submit_button( __( 'Filter' ), 'button', 'filter', false );
-       
 
-       
+
+
     }
 
     /**
@@ -91,7 +91,7 @@ class Leave_Holiday_List_Table extends WP_List_Table {
      * @return string
      */
     function column_default( $holiday, $column_name ) {
-       
+
         switch ( $column_name ) {
             case 'name':
                 return $holiday->title;
@@ -107,7 +107,7 @@ class Leave_Holiday_List_Table extends WP_List_Table {
                 return '';
         }
     }
-    
+
     /**
      * Get the column names
      *
@@ -240,18 +240,18 @@ class Leave_Holiday_List_Table extends WP_List_Table {
         }
 
         if ( isset( $_GET['from'] ) && $_GET['from'] != '-1' ) {
-            $args['from'] = $_GET['from'];
+            $args['from'] = date( 'Y-m-d', strtotime( $_GET['from'] ) );
         }
 
         if ( isset( $_GET['to'] ) && $_GET['to'] != '-1' ) {
-            $args['to'] = $_GET['to'];
+            $args['to'] = date( 'Y-m-d', strtotime( $_GET['to'] ) );
         }
 
         if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {
             $args['orderby'] = $_REQUEST['orderby'];
             $args['order'] = $_REQUEST['order'] ;
         }
-        
+
         $this->items  = erp_hr_get_holidays( $args );
 
         $this->set_pagination_args( array(
@@ -269,15 +269,15 @@ class Leave_Holiday_List_Table extends WP_List_Table {
 
     <div class="list-table-wrap">
         <div class="list-wrap-inner">
-        
+
             <form method="get">
                 <input type="hidden" name="page" value="erp-holiday-assign">
                 <?php
-            
+
                 $holiday = new Leave_Holiday_List_Table();
                 $holiday->prepare_items();
                 $holiday->search_box( __( 'Search Holiday', 'wp-erp' ), 'erp-hr-holiday-serach');
-                
+
                 $holiday->views();
 
                 $holiday->display();
