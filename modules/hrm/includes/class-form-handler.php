@@ -30,21 +30,25 @@ class Form_Handler {
      * @return void
      */
     function holiday_remove() {
-        if ( ! isset( $_POST['_wpnonce'] ) || ! isset( $_POST['page'] ) || ! isset( $_POST['holiday_id'] ) ) {
+
+        if ( ! isset( $_GET['_wpnonce'] ) || ! isset( $_GET['page'] ) || ! isset( $_GET['holiday_id'] ) ) {
+            return;
+        }
+        
+        if ( $_GET['page'] != 'erp-holiday-assign' ) {
             return;
         }
 
-        if ( $_POST['page'] != 'erp-holiday-assign' ) {
-            return;
-        }
-
-        if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'bulk-holiday' ) ) {
+        if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'bulk-holiday' ) ) {
             die( __( 'Something went wrong!', 'wp-erp' ) );
         }
 
-        if ( $_POST['action'] == 'trash' ) {
-            erp_hr_delete_holidays( $_POST['holiday_id'] );
+        if ( $_GET['action'] == 'trash' ) {
+            erp_hr_delete_holidays( $_GET['holiday_id'] );
         }
+
+        wp_redirect( $_GET['_wp_http_referer'] );
+        exit();
     }
 
     /**

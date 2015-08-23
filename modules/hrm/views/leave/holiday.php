@@ -222,12 +222,15 @@ class Leave_Holiday_List_Table extends WP_List_Table {
 
     <div class="list-table-wrap">
         <div class="list-wrap-inner">
-
-            <form method="post">
+        
+            <form method="get">
                 <input type="hidden" name="page" value="erp-holiday-assign">
                 <?php
+            
                 $holiday = new Leave_Holiday_List_Table();
                 $holiday->prepare_items();
+                $holiday->search_box( __( 'Search Holiday', 'wp-erp' ), 'erp-hr-holiday-serach');
+                
                 $holiday->views();
 
                 $holiday->display();
