@@ -39,7 +39,6 @@
             'name'     => 'description',
             'id'       => 'erp-hr-holiday-description',
             'value'    => '{{ data.description }}',
-            'required' => true,
             'class'    => 'erp-hr-leave-holiday-description'
         ) ); ?>
     </div>

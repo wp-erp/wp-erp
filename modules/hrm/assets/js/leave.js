@@ -66,7 +66,7 @@
                         Leave.initDateField();
                     },
                     onSubmit: function(modal) {
-                        e.data.policy.submit.call(this, modal);
+                        e.data.holiday.submit.call(this, modal);
                     }
                 }); //popup
             },
@@ -108,7 +108,7 @@
                         });
                     },
                     onSubmit: function(modal) {
-                        e.data.policy.submit.call(this, modal);
+                        e.data.holiday.submit.call(this, modal);
                     }
                 }); //popup
             },
@@ -139,6 +139,23 @@
                         }
                     });
                 }
+            },
+
+            submit: function(modal) {
+                wp.ajax.send( {
+                    data: this.serializeObject(),
+                    success: function() {
+                        modal.closeModal();
+
+                        $( '.list-table-wrap' ).load( window.location.href + ' .list-wrap-inner', function() {
+                            Leave.initDateField();
+                        } );
+                    },
+                    error: function(error) {
+                        modal.enableButton();
+                        alert( error );
+                    }
+                });
             },
         },
 
