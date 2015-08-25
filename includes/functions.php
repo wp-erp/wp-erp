@@ -352,3 +352,26 @@ function erp_check_date_in_range( $start_date, $end_date, $date_from_user ) {
 
     return false;
 }
+
+/**
+ * Check date range any point in range or not
+ *
+ * @param  date   $start_date
+ * @param  date   $end_date
+ * @param  date   $user_date_start
+ * @param  date   $user_date_end
+ *
+ * @return boolen
+ */
+function erp_check_date_range_in_range_exist( $start_date, $end_date, $user_date_start, $user_date_end ) {
+
+    if ( erp_check_date_in_range( $start_date, $end_date, $user_date_start ) ) {
+        return true;
+    }
+
+    if ( erp_check_date_in_range( $start_date, $end_date, $user_date_end ) ) {
+        return true;
+    }
+
+    return false;
+}

@@ -203,12 +203,16 @@ function erp_hr_get_holidays( $args = [] ) {
 
     if ( false === $holidays ) {
 
-        $holidays = erp_array_to_object(
-            $holiday_results->skip( $args['offset'] )
-                            ->take( $args['number'] )
-                            ->get()
-                            ->toArray()
-        );
+        if ( $args['number'] == '-1' ) {
+            $holidays = erp_array_to_object( $holiday_results->get()->toArray() );
+        } else {
+            $holidays = erp_array_to_object(
+                $holiday_results->skip( $args['offset'] )
+                                ->take( $args['number'] )
+                                ->get()
+                                ->toArray()
+            );
+        } 
 
         wp_cache_set( $cache_key, $holidays, 'wp-erp' );
     }

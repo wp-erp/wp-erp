@@ -78,7 +78,7 @@ function erp_html_form_input( $args = array() ) {
         'value'         => '',
         'help'          => '',
         'custom_attr'   => array(),
-        'options'       => array()
+        'options'       => array(),
     );
 
     $field    = wp_parse_args( $args, $defaults );
@@ -129,7 +129,7 @@ function erp_html_form_input( $args = array() ) {
             break;
 
         case 'checkbox':
-            echo '<input type="checkbox" value="' . esc_attr( $field['value'] ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+            echo '<input type="checkbox" '.checked( $field['value'], 'on', false ).' value="on" ' . implode( ' ', $custom_attributes ) . ' />';
             break;
 
         default:

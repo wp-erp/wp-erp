@@ -20,6 +20,7 @@
             $( '.erp-hr-holiday-wrap').on( 'click', 'a#erp-hr-new-holiday', self, this.holiday.create );
             $( '.erp-hr-holiday-wrap').on( 'click', '.erp-hr-holiday-edit', self, this.holiday.edit );
             $( '.erp-hr-holiday-wrap').on( 'click', '.erp-hr-holiday-delete', self, this.holiday.remove );
+            $( 'body').on( 'change', '.erp-hr-holiday-date-range', self, this.holiday.checkRange );
 
             this.initDateField();
         },
@@ -53,6 +54,16 @@
         },
 
         holiday: {
+            checkRange: function() {
+                var self = $('input[name="range"]');
+                
+                if ( self.is(':checked') ) {
+                    $('input[name="end_date"]').closest('.row').show();
+                } else {
+                    $('input[name="end_date"]').closest('.row').hide();
+                }
+            },
+
             create: function(e) {
                 e.preventDefault();
              
@@ -64,6 +75,7 @@
                     extraClass: 'smaller',
                     onReady: function() {
                         Leave.initDateField();
+                        Leave.holiday.checkRange();
                     },
                     onSubmit: function(modal) {
                         e.data.holiday.submit.call(this, modal);
@@ -82,6 +94,7 @@
                     extraClass: 'smaller',
                     onReady: function() {
                         Leave.initDateField();
+                        Leave.holiday.checkRange();
                         var modal = this;
                         $( 'header', modal).after( $('<div class="loader"></div>').show() );
 

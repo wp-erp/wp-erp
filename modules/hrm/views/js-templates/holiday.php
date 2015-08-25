@@ -23,11 +23,21 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
+            'label'    => __( 'Range', 'wp-erp' ),
+            'name'     => 'range',
+            'value'    => '{{ data.range }}',
+            'help'     => __( 'Enable', 'wp-erp' ),
+            'type'     => 'checkbox',
+            'class'    => 'erp-hr-holiday-date-range',
+        ) ); ?>
+    </div>
+
+    <div class="row">
+        <?php erp_html_form_input( array(
             'label'    => __( 'End Date', 'wp-erp' ),
             'name'     => 'end_date',
             'id'       => 'erp-hr-holiday-end',
             'value'    => '{{ data.end_date }}',
-            'required' => true,
             'class'    => 'erp-leave-date-picker-to',
         ) ); ?>
     </div>

@@ -738,11 +738,34 @@ class Ajax_Handler {
     public function holiday_create() {
         $this->verify_nonce( 'erp-leave-holiday' );
        
-        $holiday_id  = isset( $_POST['holiday_id'] ) ? intval( $_POST['holiday_id'] ) : 0;
-        $title       = isset( $_POST['title'] ) ? sanitize_text_field( $_POST['title'] ) : '';
-        $start_date  = isset( $_POST['start_date'] ) ? $_POST['start_date']  : '';
-        $end_date    = isset( $_POST['end_date'] ) ? $_POST['end_date'] : '';
-        $description = isset( $_POST['description'] ) ? $_POST['description'] : '';
+        $holiday_id   = isset( $_POST['holiday_id'] ) ? intval( $_POST['holiday_id'] ) : 0;
+        $title        = isset( $_POST['title'] ) ? sanitize_text_field( $_POST['title'] ) : '';
+        $start_date   = isset( $_POST['start_date'] ) ? $_POST['start_date']  : '';
+        $end_date     = isset( $_POST['end_date'] ) && ! empty( $_POST['end_date'] ) ? $_POST['end_date'] : $start_date;
+        $description  = isset( $_POST['description'] ) ? $_POST['description'] : '';
+        $range_status = isset( $_POST['range'] ) ? $_POST['range'] : 'off';
+        $error        = true;
+
+        $holidays = erp_hr_get_holidays( array( 'number' => '-1' ) );
+
+        if ( $holidays ) {
+            foreach ( $holidays as $holiday ) {
+                $prev_start = date( 'Y-m-d', strtotime( $holiday->start ) );
+                $prev_end   = date( 'Y-m-d', strtotime( $holiday->end ) );
+
+                if ( erp_check_date_range_in_range_exist( $prev_start, $prev_end, $start_date, $end_date ) ) {
+                    $error = new \WP_Error( 'msg', __( 'Holiday exist in your selected date', 'wp-erp' ) );
+                }
+
+                if ( erp_check_date_range_in_range_exist( $start_date, $end_date, $prev_start, $prev_end ) ) {
+                    $error = new \WP_Error( 'msg', __( 'Holiday exist in your selected date', 'wp-erp' ) );
+                }
+            }
+        }
+
+        if ( is_wp_error( $error ) ) {
+            $this->send_error( $error->get_error_message() );
+        }
 
         $holiday_id = erp_hr_leave_insert_holiday( array(
             'id'          => $holiday_id,
