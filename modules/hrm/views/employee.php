@@ -74,8 +74,7 @@ class Employee_List_Table extends WP_List_Table {
      */
     function get_sortable_columns() {
         $sortable_columns = array(
-            'date' => array( 'created_on', true ),
-            'days' => array( 'days', false ),
+            'date_of_hire' => array( 'hiring_date', false ),
         );
 
         return $sortable_columns;
@@ -179,6 +178,18 @@ class Employee_List_Table extends WP_List_Table {
             'number' => $per_page,
         );
 
+        if ( isset( $_REQUEST['s'] ) && !empty( $_REQUEST['s'] ) ) {
+            $args['s'] = $_REQUEST['s'];
+        }
+
+        if ( isset( $_REQUEST['orderby'] ) && !empty( $_REQUEST['orderby'] ) ) {
+            $args['orderby'] = $_REQUEST['orderby'];
+        }
+
+        if ( isset( $_REQUEST['order'] ) && !empty( $_REQUEST['order'] ) ) {
+            $args['order'] = $_REQUEST['order'];
+        }
+
         $this->items  = erp_hr_get_employees( $args );
 
         $this->set_pagination_args( array(
@@ -198,11 +209,12 @@ class Employee_List_Table extends WP_List_Table {
     <div class="list-table-wrap">
         <div class="list-table-inner">
 
-            <form method="post">
+            <form method="get">
                 <input type="hidden" name="page" value="erp-hr-employee">
                 <?php
                 $employee_table = new Employee_List_Table();
                 $employee_table->prepare_items();
+                $employee_table->search_box( __( 'Search Employee', 'wp-erp' ), 'erp-employee-search' );
                 $employee_table->views();
 
                 $employee_table->display();
