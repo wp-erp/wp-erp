@@ -210,6 +210,7 @@ class WeDevs_ERP_Installer {
                 `start` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `end` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
                 `description` text NOT NULL,
+                `range_status` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
                 `created_at` datetime NOT NULL,
                 `updated_at` datetime NOT NULL,
                 PRIMARY KEY (`id`)

@@ -329,3 +329,49 @@ function erp_array_to_object( $array = [] ) {
 
     return $new_array;
 }
+
+/**
+ * Check date in range or not
+ *
+ * @param  date   $start_date
+ * @param  date   $end_date
+ * @param  date   $date_from_user
+ *
+ * @return boolen
+ */
+function erp_check_date_in_range( $start_date, $end_date, $date_from_user ) {
+    // Convert to timestamp
+    $start_ts = strtotime( $start_date );
+    $end_ts   = strtotime( $end_date );
+    $user_ts  = strtotime( $date_from_user );
+
+    // Check that user date is between start & end
+    if ( ($user_ts >= $start_ts) && ($user_ts <= $end_ts) ) {
+    return true;
+    } 
+
+    return false;
+}
+
+/**
+ * Check date range any point in range or not
+ *
+ * @param  date   $start_date
+ * @param  date   $end_date
+ * @param  date   $user_date_start
+ * @param  date   $user_date_end
+ *
+ * @return boolen
+ */
+function erp_check_date_range_in_range_exist( $start_date, $end_date, $user_date_start, $user_date_end ) {
+
+    if ( erp_check_date_in_range( $start_date, $end_date, $user_date_start ) ) {
+        return true;
+    }
+
+    if ( erp_check_date_in_range( $start_date, $end_date, $user_date_end ) ) {
+        return true;
+    }
+
+    return false;
+}
