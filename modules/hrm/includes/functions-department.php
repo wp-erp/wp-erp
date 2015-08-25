@@ -177,7 +177,6 @@ function erp_hr_get_departments_dropdown_raw($select_label = null ) {
 function erp_hr_get_departments_dropdown( $selected = '' ) {
     $departments = erp_hr_get_departments_dropdown_raw();
     $dropdown    = '';
-
     if ( $departments ) {
         foreach ($departments as $key => $title) {
             $dropdown .= sprintf( "<option value='%s'%s>%s</option>\n", $key, selected( $selected, $key, false ), $title );

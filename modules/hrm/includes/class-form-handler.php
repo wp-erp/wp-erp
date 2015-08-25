@@ -21,7 +21,59 @@ class Form_Handler {
         add_action( 'erp_action_hr-leave-req-new', array( $this, 'leave_request' ) );
 
         add_action( 'admin_init', array( $this, 'leave_request_status_change' ) );
-        add_action('load-leave_page_erp-holiday-assign', array( $this, 'holiday_action') );
+        add_action( 'load-leave_page_erp-holiday-assign', array( $this, 'holiday_action') );
+        add_action( 'load-hr-management_page_erp-hr-employee', array( $this, 'employee_bulk_action') );
+    }
+
+    public function verify_current_page_screen( $page_id, $bulk_action ) {
+
+        if ( ! isset( $_GET['_wpnonce'] ) || ! isset( $_GET['page'] ) ) {
+            return false;
+        }
+
+        if ( $_GET['page'] != $page_id ) {
+            return false;
+        }
+
+        if ( ! wp_verify_nonce( $_GET['_wpnonce'], $bulk_action ) ) {
+            die( __( 'Something went wrong!', 'wp-erp' ) );
+        }
+
+        return true;
+    }
+
+    public function employee_bulk_action() {
+
+        if ( ! $this->verify_current_page_screen( 'erp-hr-employee', 'bulk-employees' ) ) {
+            return;
+        }
+
+        $employee_table = new \WeDevs\ERP\HRM\Employee_List_Table();
+        $action = $employee_table->current_action();
+
+        if ( $action ) {
+
+            $redirect = remove_query_arg( array('_wp_http_referer', '_wpnonce', 'filter_employee' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
+
+            switch ( $action ) {
+
+                case 'action' :
+
+                    break;
+                case 'action2' :
+
+                    break;
+
+                case 'filter_employee':
+                    wp_redirect( $redirect );
+                    exit();
+
+                case 'employee_search':
+                    $redirect = remove_query_arg( array( 'employee_search' ), $redirect );
+                    wp_redirect( $redirect );
+                    exit();
+            }
+        }
     }
 
     /**
@@ -31,16 +83,8 @@ class Form_Handler {
      */
     function holiday_action() {
 
-        if ( ! isset( $_GET['_wpnonce'] ) || ! isset( $_GET['page'] ) ) {
+        if ( ! $this->verify_current_page_screen( 'erp-holiday-assign', 'bulk-holiday' ) ) {
             return;
-        }
-
-        if ( $_GET['page'] != 'erp-holiday-assign' ) {
-            return;
-        }
-
-        if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'bulk-holiday' ) ) {
-            die( __( 'Something went wrong!', 'wp-erp' ) );
         }
 
         $this->remove_holiday( $_GET );
