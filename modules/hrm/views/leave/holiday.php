@@ -87,8 +87,13 @@ class Leave_Holiday_List_Table extends WP_List_Table {
             case 'end':
                 return erp_format_date( $holiday->end );
 
+            case 'duration':
+
+                $days = erp_date_duration( $holiday->start, $holiday->end ) + 1;
+                return $days .' '. _n( __( 'day', 'wp-erp' ), __( 'days', 'wp-erp' ), $days );
+
             case 'description':
-                return $holiday->description;
+                return ! empty( $holiday->description ) ? $holiday->description : '--';
             default:
                 return '';
         }
@@ -105,6 +110,7 @@ class Leave_Holiday_List_Table extends WP_List_Table {
             'name'        => __( 'Title', 'wp-erp' ),
             'start'       => __( 'Start Days', 'wp-erp' ),
             'end'         => __( 'End Days', 'wp-erp' ),
+            'duration'    => __( 'Duration', 'wp-erp' ),
             'description' => __( 'Description', 'wp-erp' )
         );
 
