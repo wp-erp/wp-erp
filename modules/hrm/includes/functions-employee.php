@@ -121,7 +121,7 @@ function erp_hr_employee_create( $args = array() ) {
         'user_email'   => $data['user_email'],
         'first_name'   => $data['personal']['first_name'],
         'last_name'    => $data['personal']['last_name'],
-        'display_name' => $data['personal']['first_name'] . ' ' . $data['personal']['last_name'],
+        'display_name' => $data['personal']['first_name'] . ' ' . $data['personal']['middle_name'] . ' ' . $data['personal']['last_name'],
         'role'         => 'employee'
     );
 
@@ -207,25 +207,50 @@ function erp_hr_get_employees( $args = array() ) {
     $where = array();
 
     $employee = new \WeDevs\ERP\HRM\Models\Employee();
+    $employee_result = $employee->leftjoin( $wpdb->users, 'user_id', '=', $wpdb->users . '.ID' )->select( array( 'user_id', 'display_name' ) );
+
 
     if ( isset( $args['designation'] ) && ! empty( $args['designation'] ) ) {
-        $designation = array( 'designation' => $args['designation'] );
-        $where = array_merge( $designation, $where );
+
+        $employee_result = $employee_result->where( 'designation', $args['designation'] );
+        // $designation = array( 'designation' => $args['designation'] );
+        // $where = array_merge( $designation, $where );
     }
 
     if ( isset( $args['department'] ) && ! empty( $args['department'] ) ) {
-        $department = array( 'department' => $args['department'] );
-        $where = array_merge( $where, $department );
+        $employee_result = $employee_result->where( 'department', $args['department'] );
+
+        // $department = array( 'department' => $args['department'] );
+        // $where = array_merge( $where, $department );
     }
 
     if ( isset( $args['location'] ) && ! empty( $args['location'] ) ) {
-        $location = array( 'location' => $args['location'] );
-        $where = array_merge( $where, $location );
+        $employee_result = $employee_result->where( 'location', $args['location'] );
+
+        // $location = array( 'location' => $args['location'] );
+        // $where = array_merge( $where, $location );
+    }
+
+    if ( isset( $args['type'] ) && ! empty( $args['type'] ) ) {
+        $employee_result = $employee_result->where( 'type', $args['type'] );
+
+        // $location = array( 'location' => $args['location'] );
+        // $where = array_merge( $where, $location );
     }
 
     if ( isset( $args['status'] ) && ! empty( $args['status'] ) ) {
-        $status = array( 'status' => $args['status'] );
-        $where = array_merge( $where, $status );
+        $employee_result = $employee_result->where( 'status', $args['status'] );
+
+        // $status = array( 'status' => $args['status'] );
+        // $where = array_merge( $where, $status );
+    }
+
+    if ( isset( $args['s'] ) && ! empty( $args['s'] ) ) {
+        $arg_s = $args['s'];
+        $employee_result = $employee_result->where( 'display_name', 'LIKE', "%$arg_s%" );
+
+        // $status = array( 'status' => $args['status'] );
+        // $where = array_merge( $where, $status );
     }
 
     $cache_key = 'erp-get-employees-' . md5( serialize( $args ) );
@@ -233,15 +258,11 @@ function erp_hr_get_employees( $args = array() ) {
     $users     = array();
 
     if ( false === $results ) {
-
-        $results = $employee->leftjoin( $wpdb->users, 'user_id', '=', $wpdb->users . '.ID' )
-            ->where( $where )
-            ->select( array( 'user_id', 'display_name' ) )
-            ->skip( $args['offset'] )
-            ->take( $args['number'] )
-            ->orderBy( $args['orderby'], $args['order'] )
-            ->get()
-            ->toArray();
+        $results = $employee_result->skip( $args['offset'] )
+                    ->take( $args['number'] )
+                    ->orderBy( $args['orderby'], $args['order'] )
+                    ->get()
+                    ->toArray();
 
         $results = erp_array_to_object( $results );
         wp_cache_set( $cache_key, $results, 'wp-erp', HOUR_IN_SECONDS );

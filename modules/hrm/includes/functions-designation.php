@@ -140,13 +140,13 @@ function erp_hr_get_designation_dropdown_raw() {
  *
  * @return string  the dropdown
  */
-function erp_hr_get_designation_dropdown( $company_id, $selected = '' ) {
-    $designations = erp_hr_get_designation_dropdown_raw( $company_id );
+function erp_hr_get_designation_dropdown( $selected = '' ) {
+    $designations = erp_hr_get_designation_dropdown_raw();
     $dropdown     = '';
 
     if ( $designations ) {
         foreach ($designations as $key => $title) {
-            $dropdown .= sprintf( "<option value='%s'>%s</option>\n", $key, $title );
+            $dropdown .= sprintf( "<option value='%s'%s>%s</option>\n", $key, selected( $selected, $key, false ), $title );
         }
     }
 
