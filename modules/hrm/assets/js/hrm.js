@@ -68,7 +68,8 @@
             $( '.erp-date-field').datepicker({
                 dateFormat: 'yy-mm-dd',
                 changeMonth: true,
-                changeYear: true
+                changeYear: true,
+                yearRange: '-80:+0',
             });
         },
 
@@ -96,11 +97,11 @@
              * @return {void}
              */
             reload: function() {
-                $( '#erp-dept-table-wrap' ).load( window.location.href + ' #erp-dept-table-wrap' ); 
+                $( '#erp-dept-table-wrap' ).load( window.location.href + ' #erp-dept-table-wrap' );
             },
 
             /**
-             * Template reload after insert, edit, delete 
+             * Template reload after insert, edit, delete
              *
              * @return {void}
              */
@@ -117,7 +118,7 @@
                 e.preventDefault();
                 var self = $(this),
                     is_single = self.data('single');
-                
+
                 $.erpPopup({
                     title: wpErpHr.popup.dept_title,
                     button: wpErpHr.popup.dept_submit,
@@ -129,12 +130,12 @@
                             data: this.serialize(),
                             success: function(res) {
                                 WeDevs_ERP_HR.department.reload();
-                             
+
                                 if ( is_single != '1' ) {
                                     $('body').trigger( 'erp-hr-after-new-dept', [res]);
                                 } else {
                                     WeDevs_ERP_HR.department.tempReload();
-                                }    
+                                }
 
                                 modal.closeModal();
                             },
@@ -174,7 +175,7 @@
                             },
                             success: function(response) {
                                 $( '.loader', modal).remove();
-                                
+
                                 $('#dept-title', modal).val( response.name );
                                 $('#dept-desc', modal).val( response.data.description );
                                 $('#dept-parent', modal).val( response.data.parent );
@@ -183,7 +184,7 @@
 
                                 // disable current one
                                 $('#dept-parent option[value="' + self.data('id') + '"]', modal).attr( 'disabled', 'disabled' );
-                                
+
                             }
                         });
                     },

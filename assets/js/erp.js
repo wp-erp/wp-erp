@@ -29,8 +29,8 @@ window.wperp = window.wperp || {};
     wperp.scriptReload =  function( action, id ) {
         wp.ajax.send( {
             data: {
-                action: action, 
-            },          
+                action: action,
+            },
             success: function(res) {
                 $('#'+id).html(res.content);
             },
@@ -74,7 +74,8 @@ window.wperp = window.wperp || {};
             $( '.erp-date-field').datepicker({
                 dateFormat: 'yy-mm-dd',
                 changeMonth: true,
-                changeYear: true
+                changeYear: true,
+                yearRange: '-100:+0',
             });
         },
 
