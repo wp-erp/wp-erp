@@ -375,3 +375,19 @@ function erp_check_date_range_in_range_exist( $start_date, $end_date, $user_date
 
     return false;
 }
+
+/**
+ * Get durataion between two date
+ *
+ * @param  date   $start_date
+ * @param  date   $end_date
+ *
+ * @return integer
+ */
+function erp_date_duration( $start_date, $end_date ) {
+    $datetime1 = new DateTime( $start_date );
+    $datetime2 = new DateTime( $end_date );
+    $interval  = $datetime1->diff( $datetime2 );
+    
+    return $interval->format('%a');
+}
