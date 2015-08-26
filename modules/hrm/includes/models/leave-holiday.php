@@ -10,5 +10,5 @@ use WeDevs\ERP\Framework\Model;
  */
 class Leave_Holiday extends Model {
     protected $table = 'erp_hr_holiday';
-    protected $fillable = [ 'title', 'start', 'end', 'description' ];
+    protected $fillable = [ 'title', 'start', 'end', 'description', 'range_status', 'created_at', 'updated_at' ];
 }

@@ -30,15 +30,20 @@ function erp_hr_get_work_days_between_dates( $start_date, $end_date ) {
         return $between_dates;
     }
 
-    $dates     = array( 'days' => array(), 'total' => 0 );
-    $work_days = erp_hr_get_work_days();
-
+    $dates         = array( 'days' => array(), 'total' => 0 );
+    $work_days     = erp_hr_get_work_days();
+    $holiday_exist = erp_hr_leave_get_holiday_between_date_range( $start_date, $end_date );
+    
     foreach ($between_dates as $date) {
         $key       = strtolower( date( 'D', strtotime( $date ) ) );
         $is_holidy = ( $work_days[$key] === 0 ) ? true : false;
 
+        if ( ! $is_holidy ) {
+            $is_holidy = in_array( $date, $holiday_exist ) ? true : false;
+        }
+
         $dates['days'][] = array(
-            'date'    => $date,
+            'date'  => $date,
             'count' => (int) ! $is_holidy
         );
 
@@ -49,6 +54,8 @@ function erp_hr_get_work_days_between_dates( $start_date, $end_date ) {
 
     return $dates;
 }
+
+
 
 /**
  * sort parents before children

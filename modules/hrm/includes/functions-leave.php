@@ -1,4 +1,49 @@
 <?php
+/**
+ * Get holiday between two date
+ *
+ * @param  date  $start_date
+ * @param  date  $end_date
+ *
+ * @return array 
+ */
+function erp_hr_leave_get_holiday_between_date_range( $start_date, $end_date ) {
+    $holiday = new \WeDevs\ERP\HRM\Models\Leave_Holiday();
+    
+    $holiday = $holiday->where( function( $condition ) use( $start_date ) {
+        $condition->where( 'start', '<=', $start_date );
+        $condition->where( 'end', '>=', $start_date );
+    } );
+        
+    $holiday = $holiday->orWhere( function( $condition ) use( $end_date ) {
+        $condition->where( 'start', '<=', $end_date );
+        $condition->where( 'end', '>=', $end_date );
+    } );
+  
+
+    $holiday = $holiday->orWhere( function( $condition ) use( $start_date, $end_date ) {
+        $condition->where( 'start', '>=', $start_date );
+        $condition->where( 'start', '<=', $end_date );
+    } );
+
+    $holiday = $holiday->orWhere( function( $condition ) use( $start_date, $end_date ) {
+        $condition->where( 'end', '>=', $start_date );
+        $condition->where( 'end', '<=', $end_date );
+    } );
+
+    $results = $holiday->get()->toArray();
+
+    $holiday_extrat    = [];
+    $given_date_extrat = erp_extract_dates( $start_date, $end_date );
+    
+    foreach ( $results as $result ) {
+        $date_extrat    = erp_extract_dates( $result['start'], $result['end'] );
+        $holiday_extrat = array_merge( $holiday_extrat, $date_extrat );
+    }
+
+    $extract = array_intersect( $given_date_extrat, $holiday_extrat );
+    return $extract;
+}
 
 /**
  * Insert a new leave policy
