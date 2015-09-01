@@ -482,6 +482,34 @@ class Employee {
     }
 
     /**
+     * Get Performance
+     *
+     * @return array
+     */
+    public function get_performance( $type = '' ) {
+
+        $performance = array( 'reviews' => array(), 'comments' => array(), 'goals' => array() );
+        $results = erp_array_to_object( \WeDevs\ERP\HRM\Models\Performance::all()->toArray() );
+
+        if ( $results ) {
+
+            foreach ( $results as $key => $value ) {
+                if ( isset( $performance[ $value->type ] ) ) {
+                    $performance[ $value->type ][] = $value;
+                }
+            }
+        }
+
+        if ( ! empty( $type ) && isset( $performance[ $type ] ) ) {
+            return $performance[ $type ];
+        }
+
+        return $performance;
+
+    }
+
+
+    /**
      * Update employment status
      *
      * @param string  $new_status   the employee status

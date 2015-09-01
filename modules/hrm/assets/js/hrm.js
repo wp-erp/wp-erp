@@ -32,6 +32,11 @@
             $( '.erp-hr-employees' ).on( 'click', 'a#erp-empl-jobinfo', this.employee.updateJobStatus );
             $( '.erp-hr-employees' ).on( 'click', 'td.action a.remove', this.employee.removeHistory );
 
+            // Performance
+            $( '.erp-hr-employees' ).on( 'click', 'a#erp-empl-performance-reviews', this.employee.updatePerformance );
+            $( '.erp-hr-employees' ).on( 'click', 'a#erp-empl-performance-comments', this.employee.updatePerformance );
+            $( '.erp-hr-employees' ).on( 'click', 'a#erp-empl-performance-goals', this.employee.updatePerformance );
+            $( '.erp-hr-employees' ).on( 'click', '.performance-tab-wrap td.action a.performance-remove', this.employee.removePerformance );
             // work experience
             $( '.erp-hr-employees' ).on( 'click', 'a#erp-empl-add-exp', this.employee.general.create );
             $( '.erp-hr-employees' ).on( 'click', 'a.work-experience-edit', this.employee.general.create );
@@ -68,7 +73,8 @@
             $( '.erp-date-field').datepicker({
                 dateFormat: 'yy-mm-dd',
                 changeMonth: true,
-                changeYear: true
+                changeYear: true,
+                yearRange: '-100:+0',
             });
         },
 
@@ -96,11 +102,11 @@
              * @return {void}
              */
             reload: function() {
-                $( '#erp-dept-table-wrap' ).load( window.location.href + ' #erp-dept-table-wrap' ); 
+                $( '#erp-dept-table-wrap' ).load( window.location.href + ' #erp-dept-table-wrap' );
             },
 
             /**
-             * Template reload after insert, edit, delete 
+             * Template reload after insert, edit, delete
              *
              * @return {void}
              */
@@ -117,7 +123,7 @@
                 e.preventDefault();
                 var self = $(this),
                     is_single = self.data('single');
-                
+
                 $.erpPopup({
                     title: wpErpHr.popup.dept_title,
                     button: wpErpHr.popup.dept_submit,
@@ -129,12 +135,12 @@
                             data: this.serialize(),
                             success: function(res) {
                                 WeDevs_ERP_HR.department.reload();
-                             
+
                                 if ( is_single != '1' ) {
                                     $('body').trigger( 'erp-hr-after-new-dept', [res]);
                                 } else {
                                     WeDevs_ERP_HR.department.tempReload();
-                                }    
+                                }
 
                                 modal.closeModal();
                             },
@@ -174,7 +180,7 @@
                             },
                             success: function(response) {
                                 $( '.loader', modal).remove();
-                                
+
                                 $('#dept-title', modal).val( response.name );
                                 $('#dept-desc', modal).val( response.data.description );
                                 $('#dept-parent', modal).val( response.data.parent );
@@ -183,7 +189,7 @@
 
                                 // disable current one
                                 $('#dept-parent option[value="' + self.data('id') + '"]', modal).attr( 'disabled', 'disabled' );
-                                
+
                             }
                         });
                     },
@@ -823,7 +829,70 @@
                         }
                     });
                 }
-            }
+            },
+
+            updatePerformance: function(e) {
+
+                if ( typeof e !== 'undefined' ) {
+                    e.preventDefault();
+                }
+
+                var self = $(this);
+
+                $.erpPopup({
+                    title: self.data('title'),
+                    button: wpErpHr.popup.update_status,
+                    id: 'erp-hr-update-performance',
+                    content: '',
+                    extraClass: 'smaller',
+                    onReady: function() {
+                        var html = wp.template( self.data('template') )(window.wpErpCurrentEmployee);
+                        $( '.content', this ).html( html );
+                        WeDevs_ERP_HR.initDateField();
+                        WeDevs_ERP_HR.employee.select2Action('erp-hrm-select2');
+
+                        $( '.row[data-selected]', this ).each(function() {
+                            var self = $(this),
+                                selected = self.data('selected');
+
+                            if ( selected !== '' ) {
+                                self.find( 'select' ).val( selected );
+                            }
+                        });
+                    },
+                    onSubmit: function(modal) {
+                        wp.ajax.send( {
+                            data: this.serializeObject(),
+                            success: function() {
+                                WeDevs_ERP_HR.reloadPage();
+                                modal.closeModal();
+                            },
+                            error: function(error) {
+                                modal.enableButton();
+                                alert( error );
+                            }
+                        });
+                    }
+                });
+            },
+
+            removePerformance: function(e) {
+                e.preventDefault();
+
+                if ( confirm( wpErpHr.confirm ) ) {
+                    wp.ajax.send({
+                        data: {
+                            action: 'erp-hr-emp-delete-performance',
+                            id: $(this).data('id'),
+                            _wpnonce: wpErpHr.nonce
+                        },
+                        success: function() {
+                            WeDevs_ERP_HR.reloadPage();
+                        }
+                    });
+                }
+            },
+
         }
     };
 

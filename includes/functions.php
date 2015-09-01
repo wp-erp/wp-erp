@@ -348,7 +348,7 @@ function erp_check_date_in_range( $start_date, $end_date, $date_from_user ) {
     // Check that user date is between start & end
     if ( ($user_ts >= $start_ts) && ($user_ts <= $end_ts) ) {
     return true;
-    } 
+    }
 
     return false;
 }
@@ -388,6 +388,33 @@ function erp_date_duration( $start_date, $end_date ) {
     $datetime1 = new DateTime( $start_date );
     $datetime2 = new DateTime( $end_date );
     $interval  = $datetime1->diff( $datetime2 );
-    
+
     return $interval->format('%a');
 }
+
+/**
+ * Performance rating elemet
+ *
+ * @since 0.1
+ *
+ * @param  string $selected
+ *
+ * @return array
+ */
+function erp_performance_rating( $selected = '' ) {
+
+    $rating = apply_filters( 'erp_performance_rating', array(
+        '1' => __( 'Very Bad', 'wp-erp' ),
+        '2' => __( 'Poor', 'wp-erp' ),
+        '3' => __( 'Average', 'wp-erp' ),
+        '4' => __( 'Good', 'wp-erp' ),
+        '5' => __( 'Excellent', 'wp-erp' )
+    ) );
+
+    if ( $selected ) {
+        return isset( $rating[$selected] ) ? $rating[$selected] : '';
+    }
+
+    return $rating;
+}
+

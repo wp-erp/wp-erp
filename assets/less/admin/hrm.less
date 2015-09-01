@@ -197,11 +197,12 @@ span.green {
     }
 }
 
-.job-tab-wrap {
+.job-tab-wrap,
+.performance-tab-wrap {
     table.widefat {
         margin-bottom: 20px;
 
-        a.remove {
+        a.remove,a.performance-remove {
             visibility: hidden;
             color: #999;
         }
@@ -211,7 +212,7 @@ span.green {
         }
 
         tr:hover {
-            a.remove {
+            a.remove, a.performance-remove {
                 visibility: visible;
             }
         }
@@ -222,8 +223,22 @@ span.green {
         margin-top: -38px;
         padding-bottom: 10px;
         text-decoration: none;
+
+        span.erp-performance-dashicon {
+            line-height: 30px;
+            font-size: 13px;
+        }
     }
 }
+
+.performance-form-wrap {
+    .row {
+        label {
+            min-width:190px !important;
+        }
+    }
+}
+
 
 .erp-hr-leave-policy {
     td span.leave-color {

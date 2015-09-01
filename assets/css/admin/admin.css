@@ -229,25 +229,43 @@ span.green {
 .erp-employee-form ol.fields-inline li {
   display: inline-block;
 }
-.job-tab-wrap table.widefat {
+.job-tab-wrap table.widefat,
+.performance-tab-wrap table.widefat {
   margin-bottom: 20px;
 }
-.job-tab-wrap table.widefat a.remove {
+.job-tab-wrap table.widefat a.remove,
+.performance-tab-wrap table.widefat a.remove,
+.job-tab-wrap table.widefat a.performance-remove,
+.performance-tab-wrap table.widefat a.performance-remove {
   visibility: hidden;
   color: #999;
 }
 .job-tab-wrap table.widefat td.action,
-.job-tab-wrap table.widefat th.action {
+.performance-tab-wrap table.widefat td.action,
+.job-tab-wrap table.widefat th.action,
+.performance-tab-wrap table.widefat th.action {
   width: 4%;
 }
-.job-tab-wrap table.widefat tr:hover a.remove {
+.job-tab-wrap table.widefat tr:hover a.remove,
+.performance-tab-wrap table.widefat tr:hover a.remove,
+.job-tab-wrap table.widefat tr:hover a.performance-remove,
+.performance-tab-wrap table.widefat tr:hover a.performance-remove {
   visibility: visible;
 }
-.job-tab-wrap a.action {
+.job-tab-wrap a.action,
+.performance-tab-wrap a.action {
   float: right;
   margin-top: -38px;
   padding-bottom: 10px;
   text-decoration: none;
+}
+.job-tab-wrap a.action span.erp-performance-dashicon,
+.performance-tab-wrap a.action span.erp-performance-dashicon {
+  line-height: 30px;
+  font-size: 13px;
+}
+.performance-form-wrap .row label {
+  min-width: 190px !important;
 }
 .erp-hr-leave-policy td span.leave-color {
   border-radius: 3px;

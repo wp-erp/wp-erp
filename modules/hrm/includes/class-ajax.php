@@ -44,6 +44,13 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-load-more-notes', 'employee_load_note' );
         $this->action( 'wp_ajax_erp-delete-employee-note', 'employee_delete_note' );
 
+        // Performance
+        $this->action( 'wp_ajax_erp-hr-emp-update-performance-reviews', 'employee_update_performance' );
+        $this->action( 'wp_ajax_erp-hr-emp-update-performance-comments', 'employee_update_performance' );
+        $this->action( 'wp_ajax_erp-hr-emp-update-performance-goals', 'employee_update_performance' );
+        $this->action( 'wp_ajax_erp-hr-emp-delete-performance', 'employee_delete_performance' );
+
+
         // work experience
         $this->action( 'wp_ajax_erp-hr-create-work-exp', 'employee_work_experience_create' );
         $this->action( 'wp_ajax_erp-hr-emp-delete-exp', 'employee_work_experience_delete' );
@@ -504,6 +511,133 @@ class Ajax_Handler {
     }
 
     /**
+     * Employee Update Performance Reviews
+     *
+     * @since 0.1
+     *
+     * @return json
+     */
+    public function employee_update_performance() {
+
+        $this->verify_nonce( 'employee_update_performance' );
+
+        // TODO: permission check
+        $type = isset( $_POST['type'] ) ? $_POST['type'] : '';
+
+        if ( $type && $type == 'reviews' ) {
+            $employee_id      = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+            $review_id        = isset( $_POST['review_id'] ) ? intval( $_POST['review_id'] ) : 0;
+            $reporting_to     = isset( $_POST['reporting_to'] ) ? intval( $_POST['reporting_to'] ) : 0;
+            $job_knowledge    = isset( $_POST['job_knowledge'] ) ? intval( $_POST['job_knowledge'] ) : 0;
+            $work_quality     = isset( $_POST['work_quality'] ) ? intval( $_POST['work_quality'] ) : 0;
+            $attendance       = isset( $_POST['attendance'] ) ? intval( $_POST['attendance'] ) : 0;
+            $communication    = isset( $_POST['communication'] ) ? intval( $_POST['communication'] ) : 0;
+            $dependablity     = isset( $_POST['dependablity'] ) ? intval( $_POST['dependablity'] ) : 0;
+            $performance_date = ( empty( $_POST['performance_date'] ) ) ? current_time( 'mysql' ) : $_POST['performance_date'];
+
+            // some basic validations
+            $requires = [
+                'performance_date' => __( 'Review Date', 'wp-erp' ),
+                'reporting_to'     => __( 'Reporting To', 'wp-erp' ),
+            ];
+
+            $fields = [
+                'employee_id'      => $employee_id,
+                'reporting_to'     => $reporting_to,
+                'job_knowledge'    => $job_knowledge,
+                'work_quality'     => $work_quality,
+                'attendance'       => $attendance,
+                'communication'    => $communication,
+                'dependablity'     => $dependablity,
+                'type'             => $type,
+                'performance_date' => $performance_date
+            ];
+        }
+
+        if ( $type && $type == 'comments' ) {
+
+            $employee_id      = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+            $review_id        = isset( $_POST['review_id'] ) ? intval( $_POST['review_id'] ) : 0;
+            $reviewer         = isset( $_POST['reviewer'] ) ? intval( $_POST['reviewer'] ) : 0;
+            $comments         = isset( $_POST['comments'] ) ? esc_textarea( $_POST['comments'] ) : '';
+            $performance_date = ( empty( $_POST['performance_date'] ) ) ? current_time( 'mysql' ) : $_POST['performance_date'];
+
+            // some basic validations
+            $requires = [
+                'performance_date' => __( 'Reference Date', 'wp-erp' ),
+                'reviewer'         => __( 'Reviewer', 'wp-erp' ),
+            ];
+
+            $fields = [
+                'employee_id'      => $employee_id,
+                'reviewer'         => $reviewer,
+                'comments'         => $comments,
+                'type'             => $type,
+                'performance_date' => $performance_date
+            ];
+        }
+
+        if ( $type && $type == 'goals' ) {
+
+            $employee_id           = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+            $review_id             = isset( $_POST['review_id'] ) ? intval( $_POST['review_id'] ) : 0;
+            $completion_date       = ( empty( $_POST['completion_date'] ) ) ? current_time( 'mysql' ) : $_POST['completion_date'];
+            $goal_description      = isset( $_POST['goal_description'] ) ? esc_textarea( $_POST['goal_description'] ) : '';
+            $employee_assessment   = isset( $_POST['employee_assessment'] ) ? esc_textarea( $_POST['employee_assessment'] ) : '';
+            $supervisor            = isset( $_POST['supervisor'] ) ? intval( $_POST['supervisor'] ) : 0;
+            $supervisor_assessment = isset( $_POST['supervisor_assessment'] ) ? esc_textarea( $_POST['supervisor_assessment'] ) : '';
+            $performance_date      = ( empty( $_POST['performance_date'] ) ) ? current_time( 'mysql' ) : $_POST['performance_date'];
+
+            // some basic validations
+            $requires = [
+                'performance_date' => __( 'Reference Date', 'wp-erp' ),
+                'completion_date' => __( 'Completion Date', 'wp-erp' ),
+            ];
+
+            $fields = [
+                'employee_id'           => $employee_id,
+                'completion_date'       => $completion_date,
+                'goal_description'      => $goal_description,
+                'employee_assessment'   => $employee_assessment,
+                'supervisor'            => $supervisor,
+                'supervisor_assessment' => $supervisor_assessment,
+                'type'                  => $type,
+                'performance_date'      => $performance_date
+            ];
+        }
+
+
+        foreach ( $requires as $var_name => $label ) {
+            if ( ! $$var_name ) {
+                $this->send_error( sprintf( __( '%s is required', 'wp-erp' ), $label ) );
+            }
+        }
+
+        if ( ! $review_id ) {
+            \WeDevs\ERP\HRM\Models\Performance::create( $fields );
+        } else {
+            \WeDevs\ERP\HRM\Models\Performance::find( $review_id )->update( $fields );
+        }
+
+        $this->send_success();
+    }
+
+    /**
+     * Remove an Prformance
+     *
+     * @return void
+     */
+    public function employee_delete_performance() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+
+        \WeDevs\ERP\HRM\Models\Performance::find( $id )->delete();
+
+        $this->send_success();
+    }
+
+    /**
      * Add/edit work experience
      *
      * @return void
@@ -737,7 +871,7 @@ class Ajax_Handler {
      */
     public function holiday_create() {
         $this->verify_nonce( 'erp-leave-holiday' );
-       
+
         $holiday_id   = isset( $_POST['holiday_id'] ) ? intval( $_POST['holiday_id'] ) : 0;
         $title        = isset( $_POST['title'] ) ? sanitize_text_field( $_POST['title'] ) : '';
         $start_date   = isset( $_POST['start_date'] ) ? $_POST['start_date']  : '';

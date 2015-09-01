@@ -190,6 +190,9 @@ class Human_Resource {
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/job-info.php', 'erp-employment-jobinfo' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/work-experience.php', 'erp-employment-work-experience' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/education-form.php', 'erp-employment-education' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/performance-reviews.php', 'erp-employment-performance-reviews' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/performance-comments.php', 'erp-employment-performance-comments' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/performance-goals.php', 'erp-employment-performance-goals' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/dependents.php', 'erp-employment-dependent' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-dept.php', 'erp-new-dept' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-designation.php', 'erp-new-desig' );
