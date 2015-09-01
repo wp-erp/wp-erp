@@ -303,14 +303,37 @@ class WeDevs_ERP_Installer {
                 `updated_at` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`),
                 KEY `employee_id` (`employee_id`)
+            ) $collate;",
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_employee_performance` (
+                `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+                `employee_id` int(11) unsigned DEFAULT NULL,
+                `reporting_to` int(11) unsigned DEFAULT NULL,
+                `job_knowledge` varchar(100) DEFAULT NULL,
+                `work_quality` varchar(100) DEFAULT NULL,
+                `attendance` varchar(100) DEFAULT NULL,
+                `communication` varchar(100) DEFAULT NULL,
+                `dependablity` varchar(100) DEFAULT NULL,
+                `reviewer` int(11) unsigned DEFAULT NULL,
+                `comments` text,
+                `completion_date` datetime DEFAULT NULL,
+                `goal_description` text,
+                `employee_assessment` text,
+                `supervisor` int(11) unsigned DEFAULT NULL,
+                `supervisor_assessment` text,
+                `type` text,
+                `performance_date` datetime DEFAULT NULL,
+                PRIMARY KEY (`id`),
+                KEY `employee_id` (`employee_id`)
             ) $collate;"
+
         ];
 
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
         foreach ( $table_schema as $table ) {
             dbDelta( $table );
         }
-        
+
     }
 
     /**
