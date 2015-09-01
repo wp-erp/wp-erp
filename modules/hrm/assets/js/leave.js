@@ -255,7 +255,8 @@
                 var from = $('#leave_from').val(),
                     to = $('#leave_to').val(),
                     submit = $(this).closest('form').find('input[type=submit]'),
-                    user_id = parseInt( $( '#employee_id').val() );
+                    user_id = parseInt( $( '#employee_id').val() ),
+                    type = $('#leave_policy').val();
 
                 if ( from !== '' && to !== '' ) {
 
@@ -264,7 +265,8 @@
                             '_wpnonce': wpErpHr.nonce,
                             from: from,
                             to: to,
-                            employee_id: user_id
+                            employee_id: user_id,
+                            type : type
                         },
                         success: function(resp) {
                             var html = wp.template('erp-leave-days')(resp);
