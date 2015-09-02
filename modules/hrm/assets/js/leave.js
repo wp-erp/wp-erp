@@ -215,10 +215,29 @@
                     title: wpErpHr.popup.policy,
                     button: wpErpHr.popup.update_status,
                     id: 'erp-hr-leave-policy-edit-popup',
-                    content: wp.template('erp-leave-policy')(data).trim(),
+                    content: wperp.template('erp-leave-policy')(data).trim(),
                     extraClass: 'smaller',
                     onReady: function() {
+                        var modal = this;
                         $('.erp-color-picker').wpColorPicker();
+
+                        $( 'div.row[data-selected]', modal ).each(function() {
+                            var self = $(this),
+                                selected = self.data('selected');
+
+                            if ( selected !== '' ) {
+                                self.find( 'select' ).val( selected );
+                            }                            
+                        });
+
+                        $( 'div.row[data-checked]', modal ).each(function() {
+                            var self = $(this),
+                                checked = self.data('checked');
+
+                            if ( checked !== '' ) {
+                                self.find( 'input' ).attr( 'checked', 'checed' );
+                            }
+                        });
                     },
                     onSubmit: function(modal) {
                         e.data.policy.submit.call(this, modal);

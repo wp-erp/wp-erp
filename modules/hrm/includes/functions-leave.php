@@ -105,11 +105,11 @@ function erp_hrm_is_valid_policy( $start_date, $end_date, $type, $user_id ) {
     $user_request->where( array( 'user_id' => $user_id, 'policy' => $type ) );
 
     $user_enti_count = $user_request->sum('days');
-    
+
     $policy_count    = $policy->where( 'id', '=', $type )->pluck('value'); 
     $apply_days      = count( erp_extract_dates( $start_date, $end_date ) ) + $user_enti_count;
 
-    if ( $user_enti_count >=  $policy_count ) {
+    if ( $apply_days >=  $policy_count ) {
         return false;
     }
 
@@ -251,7 +251,7 @@ function erp_hr_leave_get_policies( $args = array() ) {
     if ( false === $policies ) {
 
         $policies = erp_array_to_object(
-                        \WeDevs\ERP\HRM\Models\Leave_Policies::select( array( 'id', 'name', 'value', 'color' ) )
+                        \WeDevs\ERP\HRM\Models\Leave_Policies::select( array( 'id', 'name', 'value', 'color', 'department', 'designation', 'gender', 'marital' ) )
                         ->skip( $args['offset'] )
                         ->take( $args['number'] )
                         ->orderBy( $args['orderby'], $args['order'] )
