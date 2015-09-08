@@ -70,6 +70,18 @@
         ) ); ?>
     </div>
 
+    <div class="row" data-selected="{{ data.rate_transition }}">
+        <?php erp_html_form_input( array(
+            'label'   => __( 'Rate Transitions Happen', 'wp-erp' ),
+            'name'    => 'rateTransitions',
+            'value'   => '{{ data.rate_transition }}',
+            'class'   => 'erp-hrm-select2-add-more erp-hr-desi-drop-down',
+            'type'    => 'select',
+            'help'    => __( 'New rate will apply immediately when the employee is eligible', 'wp-erp' ),
+            'options' => array( '1' => __('Immediately', 'wp-erp'), '2' => __('At the end of each period', 'wp-erp') )
+        ) ); ?>
+    </div>
+
     <?php wp_nonce_field( 'erp-leave-policy' ); ?>
     <input type="hidden" name="action" value="erp-hr-leave-policy-create">
     <input type="hidden" name="policy-id" value="{{ data.id }}">

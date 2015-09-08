@@ -203,6 +203,7 @@ class WeDevs_ERP_Installer {
                 `designation` int(11) NOT NULL,
                 `gender` int(11) NOT NULL,
                 `marital` int(11) NOT NULL,
+                `rate_transition` INT(2) NOT NULL,
                 `created_at` datetime NOT NULL,
                 `updated_at` datetime NOT NULL,
                 PRIMARY KEY (`id`)

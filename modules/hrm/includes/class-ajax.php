@@ -853,6 +853,8 @@ class Ajax_Handler {
         $designation    = isset( $_POST['designation'] ) ? intval( $_POST['designation'] ) : 0;
         $gender         = isset( $_POST['gender'] ) ? intval( $_POST['gender'] ) : 0;
         $marital_status = isset( $_POST['maritial'] ) ? intval( $_POST['maritial'] ) : 0;
+        $rateTransitions = isset( $_POST['rateTransitions'] ) ? intval( $_POST['rateTransitions'] ) : 1;
+
 
         $policy_id = erp_hr_leave_insert_policy( array(
             'id'          => $policy_id,
@@ -862,7 +864,8 @@ class Ajax_Handler {
             'department'  => $department,
             'designation' => $designation,
             'gender'      => $gender,
-            'marital'     => $marital_status
+            'marital'     => $marital_status,
+            'rate_transition' => $rateTransitions
         ) );
 
         if ( is_wp_error( $policy_id ) ) {
