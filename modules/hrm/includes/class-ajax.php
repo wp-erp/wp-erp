@@ -845,16 +845,27 @@ class Ajax_Handler {
     public function leave_policy_create() {
         $this->verify_nonce( 'erp-leave-policy' );
 
-        $policy_id = isset( $_POST['policy-id'] ) ? intval( $_POST['policy-id'] ) : 0;
-        $name      = isset( $_POST['name'] ) ? sanitize_text_field( $_POST['name'] ) : '';
-        $days      = isset( $_POST['days'] ) ? intval( $_POST['days'] ) : '';
-        $color     = isset( $_POST['color'] ) ? sanitize_text_field( $_POST['color'] ) : '';
+        $policy_id      = isset( $_POST['policy-id'] ) ? intval( $_POST['policy-id'] ) : 0;
+        $name           = isset( $_POST['name'] ) ? sanitize_text_field( $_POST['name'] ) : '';
+        $days           = isset( $_POST['days'] ) ? intval( $_POST['days'] ) : '';
+        $color          = isset( $_POST['color'] ) ? sanitize_text_field( $_POST['color'] ) : '';
+        $department     = isset( $_POST['department'] ) ? intval( $_POST['department'] ) : 0;
+        $designation    = isset( $_POST['designation'] ) ? intval( $_POST['designation'] ) : 0;
+        $gender         = isset( $_POST['gender'] ) ? intval( $_POST['gender'] ) : 0;
+        $marital_status = isset( $_POST['maritial'] ) ? intval( $_POST['maritial'] ) : 0;
+        $rateTransitions = isset( $_POST['rateTransitions'] ) ? intval( $_POST['rateTransitions'] ) : 1;
+
 
         $policy_id = erp_hr_leave_insert_policy( array(
-            'id'    => $policy_id,
-            'name'  => $name,
-            'value' => $days,
-            'color' => $color
+            'id'          => $policy_id,
+            'name'        => $name,
+            'value'       => $days,
+            'color'       => $color,
+            'department'  => $department,
+            'designation' => $designation,
+            'gender'      => $gender,
+            'marital'     => $marital_status,
+            'rate_transition' => $rateTransitions
         ) );
 
         if ( is_wp_error( $policy_id ) ) {
@@ -954,8 +965,10 @@ class Ajax_Handler {
         $id         = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : get_current_user_id();
         $start_date = isset( $_POST['from'] ) ? sanitize_text_field( $_POST['from'] ) : date_i18n( 'Y-m-d' );
         $end_date   = isset( $_POST['to'] ) ? sanitize_text_field( $_POST['to'] ) : date_i18n( 'Y-m-d' );
-
+        $type       = isset( $_POST['type'] ) && $_POST['type'] ? $_POST['type'] : false;
+   
         $days = erp_hr_get_work_days_between_dates( $start_date, $end_date );
+
 
         if ( is_wp_error( $days ) ) {
             $this->send_error( $days->get_error_message() );
@@ -964,6 +977,18 @@ class Ajax_Handler {
         // just a bit more readable date format
         foreach ($days['days'] as &$date) {
             $date['date'] = erp_format_date( $date['date'], 'D, M d' );
+        }
+
+        $leave_record_exisst = erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $id );
+
+        if ( $leave_record_exisst ) {
+            $this->send_error(__( 'Leave recored found withing this range!', 'wp-erp' ) );
+        }
+
+        $is_policy_valid = erp_hrm_is_valid_policy( $start_date, $end_date, $type, $id );
+        
+        if ( ! $is_policy_valid ) {
+            $this->send_error(__( 'Your leave duration exceeded entitlement!', 'wp-erp' ) );
         }
 
         $days['total'] = sprintf( '%d %s', $days['total'], _n( 'day', 'days', $days['total'], 'wp-erp' ) );

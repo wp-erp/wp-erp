@@ -215,10 +215,29 @@
                     title: wpErpHr.popup.policy,
                     button: wpErpHr.popup.update_status,
                     id: 'erp-hr-leave-policy-edit-popup',
-                    content: wp.template('erp-leave-policy')(data).trim(),
+                    content: wperp.template('erp-leave-policy')(data).trim(),
                     extraClass: 'smaller',
                     onReady: function() {
+                        var modal = this;
                         $('.erp-color-picker').wpColorPicker();
+
+                        $( 'div.row[data-selected]', modal ).each(function() {
+                            var self = $(this),
+                                selected = self.data('selected');
+
+                            if ( selected !== '' ) {
+                                self.find( 'select' ).val( selected );
+                            }                            
+                        });
+
+                        $( 'div.row[data-checked]', modal ).each(function() {
+                            var self = $(this),
+                                checked = self.data('checked');
+
+                            if ( checked !== '' ) {
+                                self.find( 'input' ).attr( 'checked', 'checed' );
+                            }
+                        });
                     },
                     onSubmit: function(modal) {
                         e.data.policy.submit.call(this, modal);
@@ -255,7 +274,8 @@
                 var from = $('#leave_from').val(),
                     to = $('#leave_to').val(),
                     submit = $(this).closest('form').find('input[type=submit]'),
-                    user_id = parseInt( $( '#employee_id').val() );
+                    user_id = parseInt( $( '#employee_id').val() ),
+                    type = $('#leave_policy').val();
 
                 if ( from !== '' && to !== '' ) {
 
@@ -264,7 +284,8 @@
                             '_wpnonce': wpErpHr.nonce,
                             from: from,
                             to: to,
-                            employee_id: user_id
+                            employee_id: user_id,
+                            type : type
                         },
                         success: function(resp) {
                             var html = wp.template('erp-leave-days')(resp);

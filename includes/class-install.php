@@ -199,6 +199,11 @@ class WeDevs_ERP_Installer {
                 `unit` varchar(20) DEFAULT NULL,
                 `value` mediumint(5) DEFAULT NULL,
                 `color` varchar(7) DEFAULT NULL,
+                `department` int(11) NOT NULL,
+                `designation` int(11) NOT NULL,
+                `gender` int(11) NOT NULL,
+                `marital` int(11) NOT NULL,
+                `rate_transition` INT(2) NOT NULL,
                 `created_at` datetime NOT NULL,
                 `updated_at` datetime NOT NULL,
                 PRIMARY KEY (`id`)

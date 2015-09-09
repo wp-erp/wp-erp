@@ -132,6 +132,15 @@ function erp_html_form_input( $args = array() ) {
             echo '<input type="checkbox" '.checked( $field['value'], 'on', false ).' value="on" ' . implode( ' ', $custom_attributes ) . ' />';
             break;
 
+        case 'radio':
+            if ( $field['options'] ) {
+                foreach ( $field['options'] as $key => $value) {
+                    echo '<input type="radio" '.checked( $field['value'], $key, false ).' value="'.$key.'" ' . implode( ' ', $custom_attributes ) . ' /> '. $value;
+
+                }
+            }
+            break;
+
         default:
             # code...
             break;

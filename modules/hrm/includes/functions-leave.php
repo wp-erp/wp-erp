@@ -45,6 +45,77 @@ function erp_hr_leave_get_holiday_between_date_range( $start_date, $end_date ) {
     return $extract;
 }
 
+function erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $user_id  ) {
+    $start_date = date( 'Y-m-d', strtotime( $start_date ) );
+    $end_date   = date( 'Y-m-d', strtotime( $end_date ) );
+    
+    $holiday = new \WeDevs\ERP\HRM\Models\Leave_request();
+    
+    $holiday->where( 'user_id', '=', $user_id );
+  
+
+    $holiday = $holiday->where( function( $condition ) use( $start_date, $user_id ) {
+        $condition->where( 'start_date', '<=', $start_date );
+        $condition->where( 'end_date', '>=', $start_date );
+        $condition->where( 'user_id', '=', $user_id );
+    } );
+        
+    $holiday = $holiday->orWhere( function( $condition ) use( $end_date, $user_id ) {
+        $condition->where( 'start_date', '<=', $end_date );
+        $condition->where( 'end_date', '>=', $end_date );
+        $condition->where( 'user_id', '=', $user_id );
+    } );
+  
+
+    $holiday = $holiday->orWhere( function( $condition ) use( $start_date, $end_date, $user_id ) {
+        $condition->where( 'start_date', '>=', $start_date );
+        $condition->where( 'start_date', '<=', $end_date );
+        $condition->where( 'user_id', '=', $user_id );
+    } );
+
+    $holiday = $holiday->orWhere( function( $condition ) use( $start_date, $end_date, $user_id ) {
+        $condition->where( 'end_date', '>=', $start_date );
+        $condition->where( 'end_date', '<=', $end_date );
+        $condition->where( 'user_id', '=', $user_id );
+    } );
+
+    $results = $holiday->get()->toArray();
+
+    $holiday_extrat    = [];
+    $given_date_extrat = erp_extract_dates( $start_date, $end_date );
+    
+    foreach ( $results as $result ) {
+        $date_extrat    = erp_extract_dates( $result['start_date'], $result['end_date'] );
+        $holiday_extrat = array_merge( $holiday_extrat, $date_extrat );
+    }
+
+    $extract = array_intersect( $given_date_extrat, $holiday_extrat );
+  
+    return $extract;
+}
+
+function erp_hrm_is_valid_policy( $start_date, $end_date, $type, $user_id ) {
+    if ( !$user_id || !$type ) {
+        return true;
+    }
+
+    $user_request = new \WeDevs\ERP\HRM\Models\Leave_request();
+    $policy      = new \WeDevs\ERP\HRM\Models\Leave_Policies();
+
+    $user_request->where( array( 'user_id' => $user_id, 'policy' => $type ) );
+
+    $user_enti_count = $user_request->sum('days');
+
+    $policy_count    = $policy->where( 'id', '=', $type )->pluck('value'); 
+    $apply_days      = count( erp_extract_dates( $start_date, $end_date ) ) + $user_enti_count;
+
+    if ( $apply_days >=  $policy_count ) {
+        return false;
+    }
+
+    return true;
+}
+
 /**
  * Insert a new leave policy
  *
@@ -180,7 +251,7 @@ function erp_hr_leave_get_policies( $args = array() ) {
     if ( false === $policies ) {
 
         $policies = erp_array_to_object(
-                        \WeDevs\ERP\HRM\Models\Leave_Policies::select( array( 'id', 'name', 'value', 'color' ) )
+                        \WeDevs\ERP\HRM\Models\Leave_Policies::select( array( 'id', 'name', 'value', 'color', 'department', 'designation', 'gender', 'marital' ) )
                         ->skip( $args['offset'] )
                         ->take( $args['number'] )
                         ->orderBy( $args['orderby'], $args['order'] )
