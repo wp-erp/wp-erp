@@ -18,7 +18,7 @@ function erp_hr_employee_on_initialize( $user_id ) {
             'user_id'     => $user_id,
             'designation' => 0,
             'department'  => 0,
-            'status'      => 1
+            'status'      => 'active'
         ) );
     }
 }
@@ -167,10 +167,11 @@ function erp_hr_employee_create( $args = array() ) {
     $wpdb->update( $wpdb->prefix . 'erp_hr_employees', array(
         'hiring_source' => $data['work']['hiring_source'],
         'hiring_date'   => $data['work']['hiring_date'],
-        'date_of_birth' => $data['work']['date_of_birth']
+        'date_of_birth' => $data['work']['date_of_birth'],
+        'status'        => $data['work']['status']
     ), array( 'user_id' => $user_id ) );
 
-    foreach ($data['personal'] as $key => $value) {
+    foreach ( $data['personal'] as $key => $value ) {
         update_user_meta( $user_id, $key, $value );
     }
 
@@ -323,6 +324,48 @@ function erp_hr_count_employees() {
     return $counts;
 }
 
+
+/**
+ * Get leave requests count
+ *
+ * @return array
+ */
+function erp_hr_employee_get_status_count() {
+    global $wpdb;
+
+    $statuses = array( 'all' => __( 'All', 'wp-erp' ) ) + erp_hr_get_employee_statuses();
+    $counts   = array();
+
+    foreach ( $statuses as $status => $label ) {
+        $counts[ $status ] = array( 'count' => 0, 'label' => $label );
+    }
+
+    $cache_key = 'erp-hr-employee-status-counts';
+    $results = wp_cache_get( $cache_key, 'wp-erp' );
+
+    if ( false === $results ) {
+
+        $employee = new \WeDevs\ERP\HRM\Models\Employee();
+        $db = new \WeDevs\ORM\Eloquent\Database();
+
+        $results = $employee->select( array( 'status', $db->raw('COUNT(id) as num') ) )
+                            ->where( 'status', '!=', '0' )
+                            ->groupBy('status')
+                            ->get()->toArray();
+
+        wp_cache_set( $cache_key, $results, 'wp-erp' );
+    }
+
+    foreach ( $results as $row ) {
+        if ( array_key_exists( $row['status'], $counts ) ) {
+            $counts[ $row['status'] ]['count'] = (int) $row['num'];
+        }
+
+        $counts['all']['count'] += (int) $row['num'];
+    }
+
+    return $counts;
+}
 
 
 /**
