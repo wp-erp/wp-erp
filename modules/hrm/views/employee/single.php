@@ -13,6 +13,10 @@
                 <div class="erp-profile-top">
                     <div class="erp-avatar">
                         <?php echo $employee->get_avatar( 150 ); ?>
+
+                        <?php if ( $employee->get_status() == 'Terminated' ): ?>
+                            <span class="inactive"></span>
+                        <?php endif ?>
                     </div>
 
                     <div class="erp-user-info">
@@ -53,7 +57,11 @@
                             <h3 class="hndle"><span><?php _e( 'Actions', 'wp-erp' ); ?></span></h3>
                             <div class="inside">
                                 <span class="edit"><a class="button button-primary" data-id="<?php echo $employee->id; ?>" data-single="true" href="#"><?php _e( 'Edit', 'wp-erp' ); ?></a></span>
-                                <a class="button" href="#"><?php _e( 'Terminate', 'wp-erp' ); ?></a>
+                                <?php if ( $employee->get_status() == 'Terminated' ): ?>
+                                    <a class="button" href="#" id="erp-employee-activate" data-id="<?php echo $employee->id; ?>"><?php _e( 'Active', 'wp-erp' ); ?></a>
+                                <?php else: ?>
+                                    <a class="button" href="#" id="erp-employee-terminate" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-terminate" data-title="<?php _e( 'Terminate Employee', 'wp-erp' ); ?>"><?php _e( 'Terminate', 'wp-erp' ); ?></a>
+                                <?php endif; ?>
                                 <a class="button" href="#"><?php _e( 'Print', 'wp-erp' ); ?></a>
                             </div>
                         </div><!-- .postbox -->

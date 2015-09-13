@@ -481,6 +481,63 @@ function erp_hr_get_marital_statuses() {
 }
 
 /**
+ * Get Terminate Type
+ *
+ * @return array all the type
+ */
+function erp_hr_get_terminate_type( $selected = NULL ) {
+    $type = apply_filters( 'erp_hr_terminate_type', array(
+        'voluntary'   => __( 'Voluntary', 'wp-erp' ),
+        'involuntary' => __( 'Involuntary', 'wp-erp' ),
+        'death'       => __( 'Death', 'wp-erp' )
+    ) );
+
+    if ( $selected ) {
+        return ( isset( $type[$selected] ) ) ? $type[$selected] : '';
+    }
+
+    return $type;
+}
+
+/**
+ * Get Terminate Reason
+ *
+ * @return array all the reason
+ */
+function erp_hr_get_terminate_reason( $selected = NULL ) {
+    $reason = apply_filters( 'erp_hr_terminate_reason', array(
+        'attendance'        => __( 'Attendance', 'wp-erp' ),
+        'other_employement' => __( 'Other Employment', 'wp-erp' ),
+        'relocation'        => __( 'Relocation', 'wp-erp' )
+    ) );
+
+    if ( $selected ) {
+        return ( isset( $reason[$selected] ) ) ? $reason[$selected] : '';
+    }
+
+    return $reason;
+}
+
+/**
+ * Get Terminate Reason
+ *
+ * @return array all the reason
+ */
+function erp_hr_get_terminate_rehire_options( $selected = NULL ) {
+    $reason = apply_filters( 'erp_hr_terminate_rehire_option', array(
+        'yes'         => __( 'Yes', 'wp-erp' ),
+        'no'          => __( 'No', 'wp-erp' ),
+        'upon_review' => __( 'Upon Review', 'wp-erp' )
+    ) );
+
+    if ( $selected ) {
+        return ( isset( $reason[$selected] ) ) ? $reason[$selected] : '';
+    }
+
+    return $reason;
+}
+
+/**
  * Get marital statuses
  *
  * @return array all the statuses
