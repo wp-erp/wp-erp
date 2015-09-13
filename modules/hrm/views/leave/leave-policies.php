@@ -222,7 +222,7 @@ class Leave_Policies_List_Table extends WP_List_Table {
         <div class="list-wrap-inner">
 
             <form method="post">
-                <input type="hidden" name="page" value="erp-hr-designation">
+                <input type="hidden" name="page" value="erp-hr-policies">
                 <?php
                 $leave_policy = new Leave_Policies_List_Table();
                 $leave_policy->prepare_items();

@@ -23,11 +23,12 @@ class Form_Handler {
         add_action( 'admin_init', array( $this, 'leave_request_status_change' ) );
         add_action( 'load-leave_page_erp-holiday-assign', array( $this, 'holiday_action') );
         add_action( 'load-hr-management_page_erp-hr-employee', array( $this, 'employee_bulk_action') );
+        add_action( 'load-leave_page_erp-leave-policies', array( $this, 'leave_policies') );
     }
 
     public function verify_current_page_screen( $page_id, $bulk_action ) {
-
-        if ( ! isset( $_GET['_wpnonce'] ) || ! isset( $_GET['page'] ) ) {
+       
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! isset( $_GET['page'] ) ) {
             return false;
         }
 
@@ -35,8 +36,23 @@ class Form_Handler {
             return false;
         }
 
-        if ( ! wp_verify_nonce( $_GET['_wpnonce'], $bulk_action ) ) {
+        if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], $bulk_action ) ) {
             die( __( 'Something went wrong!', 'wp-erp' ) );
+        }
+
+        return true;
+    }
+
+    public function leave_policies() {
+      
+        if ( ! $this->verify_current_page_screen( 'erp-leave-policies', 'bulk-leave_policies' ) ) {
+            return;
+        }
+
+        if ( isset( $_POST['action'] ) && $_POST['action'] == 'trash' ) {
+            if ( isset( $_POST['policy_id'] ) ) {
+                erp_hr_leave_policy_delete( $_POST['policy_id'] );
+            }
         }
 
         return true;

@@ -251,7 +251,7 @@ function erp_hr_leave_get_policies( $args = array() ) {
     if ( false === $policies ) {
 
         $policies = erp_array_to_object(
-                        \WeDevs\ERP\HRM\Models\Leave_Policies::select( array( 'id', 'name', 'value', 'color', 'department', 'designation', 'gender', 'marital' ) )
+                        \WeDevs\ERP\HRM\Models\Leave_Policies::select( array( 'id', 'name', 'value', 'color', 'department', 'designation', 'gender', 'marital', 'rate_transition' ) )
                         ->skip( $args['offset'] )
                         ->take( $args['number'] )
                         ->orderBy( $args['orderby'], $args['order'] )
@@ -418,6 +418,13 @@ function erp_hr_leave_get_policies_dropdown_raw() {
  * @return bool
  */
 function erp_hr_leave_policy_delete( $policy_id ) {
+
+    if ( is_array( $policy_id ) ) {
+        foreach ( $policy_id as $key => $id ) {
+            do_action( 'erp_hr_leave_policy_delete', $id );
+        }
+        return \WeDevs\ERP\HRM\Models\Leave_Policies::destroy( $policy_id );
+    }
 
     do_action( 'erp_hr_leave_policy_delete', $policy_id );
 

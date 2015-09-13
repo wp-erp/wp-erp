@@ -230,12 +230,12 @@
                             }                            
                         });
 
-                        $( 'div.row[data-checked]', modal ).each(function() {
+                        $( 'div.row[data-checked]', modal ).each(function( key, val ) {
                             var self = $(this),
                                 checked = self.data('checked');
-
+                                
                             if ( checked !== '' ) {
-                                self.find( 'input' ).attr( 'checked', 'checed' );
+                                self.find( 'input[value="'+checked+'"]' ).attr( 'checked', 'checked' );
                             }
                         });
                     },
