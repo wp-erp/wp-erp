@@ -6,6 +6,8 @@ namespace WeDevs\ERP\HRM;
  */
 class Employee_List_Table extends \WP_List_Table {
 
+    private $counts = array();
+
     function __construct() {
         global $status, $page;
 
@@ -39,7 +41,7 @@ class Employee_List_Table extends \WP_List_Table {
 
             <label class="screen-reader-text" for="new_role"><?php _e( 'Filter by Employment Type', 'wp-erp' ) ?></label>
             <select name="filter_employment_type" id="filter_employment_type">
-                <option value=""><?php _e( '- Select Employment Type -') ?></option>
+                <option value=""><?php _e( '- Select Employment Type -', 'wp-erp' ) ?></option>
                 <?php
                     $types = erp_hr_get_employee_types();
 
@@ -184,9 +186,9 @@ class Employee_List_Table extends \WP_List_Table {
      *
      * @return array
      */
-    public function get_views_() {
+    public function get_views() {
         $status_links   = array();
-        $base_link      = admin_url( 'admin.php?page=erp-leave' );
+        $base_link      = admin_url( 'admin.php?page=erp-hr-employee' );
 
         foreach ($this->counts as $key => $value) {
             $class = ( $key == $this->page_status ) ? 'current' : 'status-' . $key;
@@ -202,14 +204,25 @@ class Employee_List_Table extends \WP_List_Table {
 
         $input_id = $input_id . '-search-input';
 
-        if ( ! empty( $_REQUEST['orderby'] ) )
+        if ( ! empty( $_REQUEST['orderby'] ) ) {
             echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
-        if ( ! empty( $_REQUEST['order'] ) )
+        }
+
+        if ( ! empty( $_REQUEST['order'] ) ) {
             echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
-        if ( ! empty( $_REQUEST['post_mime_type'] ) )
+        }
+
+        if ( ! empty( $_REQUEST['status'] ) ) {
+            echo '<input type="hidden" name="status" value="' . esc_attr( $_REQUEST['status'] ) . '" />';
+        }
+
+        if ( ! empty( $_REQUEST['post_mime_type'] ) ) {
             echo '<input type="hidden" name="post_mime_type" value="' . esc_attr( $_REQUEST['post_mime_type'] ) . '" />';
-        if ( ! empty( $_REQUEST['detached'] ) )
+        }
+
+        if ( ! empty( $_REQUEST['detached'] ) ) {
             echo '<input type="hidden" name="detached" value="' . esc_attr( $_REQUEST['detached'] ) . '" />';
+        }
         ?>
         <p class="search-box">
             <label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
@@ -249,6 +262,12 @@ class Employee_List_Table extends \WP_List_Table {
             $args['orderby'] = $_REQUEST['orderby'];
         }
 
+        if ( isset( $_REQUEST['status'] ) && !empty( $_REQUEST['status'] ) ) {
+            if ( $_REQUEST['status'] != 'all' ) {
+                $args['status'] = $_REQUEST['status'];
+            }
+        }
+
         if ( isset( $_REQUEST['order'] ) && !empty( $_REQUEST['order'] ) ) {
             $args['order'] = $_REQUEST['order'];
         }
@@ -265,6 +284,8 @@ class Employee_List_Table extends \WP_List_Table {
             $args['type'] = $_REQUEST['filter_employment_type'];
         }
 
+
+        $this->counts = erp_hr_employee_get_status_count();
         $this->items  = erp_hr_get_employees( $args );
 
         $this->set_pagination_args( array(

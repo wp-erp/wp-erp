@@ -43,6 +43,8 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-hr-employee-new-note', 'employee_add_note' );
         $this->action( 'wp_ajax_erp-load-more-notes', 'employee_load_note' );
         $this->action( 'wp_ajax_erp-delete-employee-note', 'employee_delete_note' );
+        $this->action( 'wp_ajax_erp-hr-emp-update-terminate-reason', 'employee_terminate' );
+        $this->action( 'wp_ajax_erp-hr-emp-activate', 'employee_termination_reactive' );
 
         // Performance
         $this->action( 'wp_ajax_erp-hr-emp-update-performance-reviews', 'employee_update_performance' );
@@ -511,6 +513,73 @@ class Ajax_Handler {
     }
 
     /**
+     * Employee Termination
+     *
+     * @since 0.1
+     *
+     * @return json
+     */
+    public function employee_terminate() {
+        $this->verify_nonce( 'employee_update_terminate' );
+
+        $employee_id         = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+        $terminate_date      = ( empty( $_POST['terminate_date'] ) ) ? current_time( 'mysql' ) : $_POST['terminate_date'];
+        $termination_type    = isset( $_POST['termination_type'] ) ?  $_POST['termination_type'] : '';
+        $termination_reason  = isset( $_POST['termination_reason'] ) ?  $_POST['termination_reason'] : '';
+        $eligible_for_rehire = isset( $_POST['eligible_for_rehire'] ) ? $_POST['eligible_for_rehire'] : '';
+
+        $requires = [
+            'terminate_date'      => __( 'Termination Date', 'wp-erp' ),
+            'termination_type'    => __( 'Termination Type', 'wp-erp' ),
+            'termination_reason'  => __( 'Termination Reason', 'wp-erp' ),
+            'eligible_for_rehire' => __( 'Eligible for Hire', 'wp-erp' ),
+        ];
+
+        $fields = [
+            'terminate_date'      => $terminate_date,
+            'termination_type'    => $termination_type,
+            'termination_reason'  => $termination_reason,
+            'eligible_for_rehire' => $eligible_for_rehire
+        ];
+
+        foreach ( $requires as $var_name => $label ) {
+            if ( ! $$var_name ) {
+                $this->send_error( sprintf( __( '%s is required', 'wp-erp' ), $label ) );
+            }
+        }
+
+        $employee = new \WeDevs\ERP\HRM\Models\Employee();
+
+        $employee->where( 'user_id', $employee_id )->update( ['status'=>'terminated'] );
+        update_user_meta( $employee_id, '_erp_hr_termination', $fields );
+        $this->send_success();
+
+    }
+
+    /**
+     * Reactive terminate employees
+     *
+     * @since 0.1
+     *
+     * @return json
+     */
+    public function employee_termination_reactive() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+
+        if ( ! $id ) {
+            $this->send_error( __( 'Something wrong', 'wp-erp' ) );
+        }
+
+        \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $id )->update( ['status'=>'active'] );
+
+        delete_user_meta( $id, '_erp_hr_termination' );
+
+        $this->send_success();
+    }
+
+    /**
      * Employee Update Performance Reviews
      *
      * @since 0.1
@@ -966,7 +1035,7 @@ class Ajax_Handler {
         $start_date = isset( $_POST['from'] ) ? sanitize_text_field( $_POST['from'] ) : date_i18n( 'Y-m-d' );
         $end_date   = isset( $_POST['to'] ) ? sanitize_text_field( $_POST['to'] ) : date_i18n( 'Y-m-d' );
         $type       = isset( $_POST['type'] ) && $_POST['type'] ? $_POST['type'] : false;
-   
+
         $days = erp_hr_get_work_days_between_dates( $start_date, $end_date );
 
 
@@ -986,7 +1055,7 @@ class Ajax_Handler {
         }
 
         $is_policy_valid = erp_hrm_is_valid_policy( $start_date, $end_date, $type, $id );
-        
+
         if ( ! $is_policy_valid ) {
             $this->send_error(__( 'Your leave duration exceeded entitlement!', 'wp-erp' ) );
         }

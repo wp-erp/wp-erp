@@ -135,8 +135,9 @@ class Human_Resource {
                 'update_status'     => __( 'Update', 'wp-erp' ),
                 'policy'            => __( 'Leave Policy', 'wp-erp' ),
                 'policy_create'     => __( 'Create Policy', 'wp-erp' ),
-                'holiday'            => __( 'Holiday', 'wp-erp' ),
-                'holiday_create'     => __( 'Create Holiday', 'wp-erp' ),
+                'holiday'           => __( 'Holiday', 'wp-erp' ),
+                'holiday_create'    => __( 'Create Holiday', 'wp-erp' ),
+                'terminate'         => __( 'Terminate', 'wp-erp' ),
             ),
             'emp_upload_photo'   => __( 'Upload Employee Photo', 'wp-erp' ),
             'emp_set_photo'      => __( 'Set Photo', 'wp-erp' ),
@@ -196,6 +197,7 @@ class Human_Resource {
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/dependents.php', 'erp-employment-dependent' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-dept.php', 'erp-new-dept' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-designation.php', 'erp-new-desig' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/employee-terminate.php', 'erp-employment-terminate' );
                 break;
 
             case 'leave_page_erp-leave-policies':

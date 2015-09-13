@@ -58,11 +58,25 @@ span.required {
 
             .erp-profile-top {
                 .clearfix();
-                margin-bottom: 15px;
+                margin-bottom: 45px;
 
                 .erp-avatar {
                     float: left;
                     width: 128px;
+                    position: relative;
+
+                    .inactive {
+                        background: url('../../images/inactive.png') no-repeat;
+                        background-position: 50%;
+                        position: absolute;
+                        background-size: 105px 31px;
+                        height: 31px;
+                        width: 100%;
+                        -ms-transform: rotate(-8deg); /* IE 9 */
+                        -webkit-transform: rotate(-8deg); /* Chrome, Safari, Opera */
+                        transform: rotate(-8deg);
+                    }
+
 
                     img {
                         max-width: 100%;
@@ -534,6 +548,14 @@ ul.edit-address {
         span {
             float: left;
             width: 30%;
+        }
+    }
+}
+
+.terminate-form-wrap {
+    .row {
+        label {
+            width: 155px !important;
         }
     }
 }

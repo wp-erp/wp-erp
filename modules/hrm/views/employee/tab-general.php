@@ -213,4 +213,26 @@
     </div>
 </div><!-- .postbox -->
 
+<?php if ( $employee->get_status() == 'Terminated' ): ?>
+
+    <div class="postbox leads-actions">
+        <div class="handlediv" title="<?php _e( 'Click to toggle', 'wp-erp' ); ?>"><br></div>
+        <h3 class="hndle"><span><?php _e( 'Termination', 'wp-erp' ); ?></span></h3>
+        <div class="inside">
+
+            <?php $termination_data = get_user_meta( $employee->id, '_erp_hr_termination', true ); ?>
+
+            <p><?php _e( 'Termination Date', 'wp-erp' ); ?> : <?php echo isset( $termination_data['terminate_date'] ) ? erp_format_date( $termination_data['terminate_date'] ) : ''; ?></p>
+            <p><?php _e( 'Termination Type', 'wp-erp' ); ?> : <?php echo isset( $termination_data['termination_type'] ) ? erp_hr_get_terminate_type( $termination_data['termination_type'] ) : ''; ?></p>
+            <p><?php _e( 'Termination Reason', 'wp-erp' ); ?> : <?php echo isset( $termination_data['termination_reason'] ) ? erp_hr_get_terminate_reason( $termination_data['termination_reason'] ) : ''; ?></p>
+            <p><?php _e( 'Eligible for Hire', 'wp-erp' ); ?> : <?php echo isset( $termination_data['eligible_for_rehire'] ) ? erp_hr_get_terminate_rehire_options( $termination_data['eligible_for_rehire'] ) : ''; ?></p>
+
+
+            <a class="button button-secondary" id="erp-employee-terminate" href="#" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-terminate" data-data='<?php echo json_encode( $termination_data ); ?>' data-title="<?php esc_attr_e( 'Update Termination', 'wp-erp' ); ?>" data-button="<?php esc_attr_e( 'Change Termination', 'wp-erp' ); ?>"><?php _e( 'Change Termination', 'wp-erp' ); ?></a>
+
+        </div>
+    </div><!-- .postbox -->
+
+<?php endif; ?>
+
 <?php do_action( 'erp-hr-employee-single-bottom', $employee ); ?>

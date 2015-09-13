@@ -18,7 +18,7 @@ function erp_hr_employee_on_initialize( $user_id ) {
             'user_id'     => $user_id,
             'designation' => 0,
             'department'  => 0,
-            'status'      => 1
+            'status'      => 'active'
         ) );
     }
 }
@@ -167,10 +167,11 @@ function erp_hr_employee_create( $args = array() ) {
     $wpdb->update( $wpdb->prefix . 'erp_hr_employees', array(
         'hiring_source' => $data['work']['hiring_source'],
         'hiring_date'   => $data['work']['hiring_date'],
-        'date_of_birth' => $data['work']['date_of_birth']
+        'date_of_birth' => $data['work']['date_of_birth'],
+        'status'        => $data['work']['status']
     ), array( 'user_id' => $user_id ) );
 
-    foreach ($data['personal'] as $key => $value) {
+    foreach ( $data['personal'] as $key => $value ) {
         update_user_meta( $user_id, $key, $value );
     }
 
@@ -324,6 +325,48 @@ function erp_hr_count_employees() {
 }
 
 
+/**
+ * Get leave requests count
+ *
+ * @return array
+ */
+function erp_hr_employee_get_status_count() {
+    global $wpdb;
+
+    $statuses = array( 'all' => __( 'All', 'wp-erp' ) ) + erp_hr_get_employee_statuses();
+    $counts   = array();
+
+    foreach ( $statuses as $status => $label ) {
+        $counts[ $status ] = array( 'count' => 0, 'label' => $label );
+    }
+
+    $cache_key = 'erp-hr-employee-status-counts';
+    $results = wp_cache_get( $cache_key, 'wp-erp' );
+
+    if ( false === $results ) {
+
+        $employee = new \WeDevs\ERP\HRM\Models\Employee();
+        $db = new \WeDevs\ORM\Eloquent\Database();
+
+        $results = $employee->select( array( 'status', $db->raw('COUNT(id) as num') ) )
+                            ->where( 'status', '!=', '0' )
+                            ->groupBy('status')
+                            ->get()->toArray();
+
+        wp_cache_set( $cache_key, $results, 'wp-erp' );
+    }
+
+    foreach ( $results as $row ) {
+        if ( array_key_exists( $row['status'], $counts ) ) {
+            $counts[ $row['status'] ]['count'] = (int) $row['num'];
+        }
+
+        $counts['all']['count'] += (int) $row['num'];
+    }
+
+    return $counts;
+}
+
 
 /**
  * Get the raw employees dropdown
@@ -435,6 +478,63 @@ function erp_hr_get_marital_statuses() {
     );
 
     return apply_filters( 'erp_hr_marital_statuses', $statuses );
+}
+
+/**
+ * Get Terminate Type
+ *
+ * @return array all the type
+ */
+function erp_hr_get_terminate_type( $selected = NULL ) {
+    $type = apply_filters( 'erp_hr_terminate_type', array(
+        'voluntary'   => __( 'Voluntary', 'wp-erp' ),
+        'involuntary' => __( 'Involuntary', 'wp-erp' ),
+        'death'       => __( 'Death', 'wp-erp' )
+    ) );
+
+    if ( $selected ) {
+        return ( isset( $type[$selected] ) ) ? $type[$selected] : '';
+    }
+
+    return $type;
+}
+
+/**
+ * Get Terminate Reason
+ *
+ * @return array all the reason
+ */
+function erp_hr_get_terminate_reason( $selected = NULL ) {
+    $reason = apply_filters( 'erp_hr_terminate_reason', array(
+        'attendance'        => __( 'Attendance', 'wp-erp' ),
+        'other_employement' => __( 'Other Employment', 'wp-erp' ),
+        'relocation'        => __( 'Relocation', 'wp-erp' )
+    ) );
+
+    if ( $selected ) {
+        return ( isset( $reason[$selected] ) ) ? $reason[$selected] : '';
+    }
+
+    return $reason;
+}
+
+/**
+ * Get Terminate Reason
+ *
+ * @return array all the reason
+ */
+function erp_hr_get_terminate_rehire_options( $selected = NULL ) {
+    $reason = apply_filters( 'erp_hr_terminate_rehire_option', array(
+        'yes'         => __( 'Yes', 'wp-erp' ),
+        'no'          => __( 'No', 'wp-erp' ),
+        'upon_review' => __( 'Upon Review', 'wp-erp' )
+    ) );
+
+    if ( $selected ) {
+        return ( isset( $reason[$selected] ) ) ? $reason[$selected] : '';
+    }
+
+    return $reason;
 }
 
 /**
