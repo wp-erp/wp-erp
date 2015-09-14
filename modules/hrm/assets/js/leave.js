@@ -173,6 +173,17 @@
         },
 
         policy: {
+            periodField: function() {
+                $('.erp-hr-leave-period').on( 'change', function() {
+                    var self = $(this).val();
+                    if ( self == 2 ) {
+                        $('.showifschedule').slideDown();
+                    } else {
+                        $('.showifschedule').slideUp(); 
+                    };
+                });
+            },
+
             submit: function(modal) {
                 wp.ajax.send( {
                     data: this.serializeObject(),
@@ -197,7 +208,9 @@
                     content: wp.template('erp-leave-policy')({ data: null }).trim(),
                     extraClass: 'smaller',
                     onReady: function() {
+                        Leave.initDateField();
                         $('.erp-color-picker').wpColorPicker();
+                        Leave.policy.periodField();
                     },
                     onSubmit: function(modal) {
                         e.data.policy.submit.call(this, modal);
@@ -219,6 +232,7 @@
                     extraClass: 'smaller',
                     onReady: function() {
                         var modal = this;
+                        Leave.initDateField();
                         $('.erp-color-picker').wpColorPicker();
 
                         $( 'div.row[data-selected]', modal ).each(function() {
