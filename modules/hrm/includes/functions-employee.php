@@ -507,11 +507,11 @@ function erp_hr_get_employee_statuses_icons( $selected = NULL ) {
         'resigned'   => sprintf( '<span class="erp-tips dashicons dashicons-warning" title="%s"></span>', __( 'Resigned', 'wp-erp' ) )
     ) );
 
-    if ( $selected ) {
+    if ( $selected && array_key_exists( $selected, $statuses ) ) {
         return $statuses[$selected];
     }
 
-    return  $statuses;
+    return false;
 }
 
 
