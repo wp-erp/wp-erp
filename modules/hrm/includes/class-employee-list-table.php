@@ -89,6 +89,9 @@ class Employee_List_Table extends \WP_List_Table {
             case 'date_of_hire':
                 return $employee->get_joined_date();
 
+            case 'status':
+                return erp_hr_get_employee_statuses_icons( $employee->status );
+
             default:
                 return isset( $employee->$column_name ) ? $employee->$column_name : '';
         }
@@ -134,6 +137,7 @@ class Employee_List_Table extends \WP_List_Table {
             'department'   => __( 'Department', 'wp-erp' ),
             'type'         => __( 'Employment Type', 'wp-erp' ),
             'date_of_hire' => __( 'Joined', 'wp-erp' ),
+            'status'       => __( 'Status', 'wp-erp' ),
         );
 
         return apply_filters( 'erp_hr_employee_table_cols', $columns );
@@ -163,8 +167,16 @@ class Employee_List_Table extends \WP_List_Table {
     function get_bulk_actions() {
         $actions = array(
             'email'  => __( 'Send Email', 'wp-erp' ),
-            'delete'  => __( 'Delete', 'wp-erp' ),
+            'delete'  => __( 'Move to Trash', 'wp-erp' ),
         );
+
+        if ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) {
+            unset( $actions['delete'] );
+
+            $actions['permanent_delete'] = __( 'Permanent Delete', 'wp-erp' );
+            $actions['restore'] = __( 'Restore', 'wp-erp' );
+        }
+
         return $actions;
     }
 
@@ -194,6 +206,8 @@ class Employee_List_Table extends \WP_List_Table {
             $class = ( $key == $this->page_status ) ? 'current' : 'status-' . $key;
             $status_links[ $key ] = sprintf( '<a href="%s" class="%s">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => $key ), $base_link ), $class, $value['label'], $value['count'] );
         }
+
+        $status_links[ 'trash' ] = sprintf( '<a href="%s" class="status-trash">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'trash' ), $base_link ), __( 'Trash', 'wp-erp' ), erp_hr_count_trashed_employees() );
 
         return $status_links;
     }
@@ -239,7 +253,7 @@ class Employee_List_Table extends \WP_List_Table {
      */
     function prepare_items() {
         $columns               = $this->get_columns();
-        $hidden                = array( );
+        $hidden                = array();
         $sortable              = $this->get_sortable_columns();
         $this->_column_headers = array( $columns, $hidden, $sortable );
 
@@ -283,7 +297,6 @@ class Employee_List_Table extends \WP_List_Table {
         if ( isset( $_REQUEST['filter_employment_type'] ) && $_REQUEST['filter_employment_type'] ) {
             $args['type'] = $_REQUEST['filter_employment_type'];
         }
-
 
         $this->counts = erp_hr_employee_get_status_count();
         $this->items  = erp_hr_get_employees( $args );

@@ -27,7 +27,7 @@ class Form_Handler {
     }
 
     public function verify_current_page_screen( $page_id, $bulk_action ) {
-       
+
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! isset( $_GET['page'] ) ) {
             return false;
         }
@@ -44,7 +44,7 @@ class Form_Handler {
     }
 
     public function leave_policies() {
-      
+
         if ( ! $this->verify_current_page_screen( 'erp-leave-policies', 'bulk-leave_policies' ) ) {
             return;
         }
@@ -73,12 +73,30 @@ class Form_Handler {
 
             switch ( $action ) {
 
-                case 'action' :
+                case 'delete' :
 
-                    break;
-                case 'action2' :
+                    if ( isset( $_GET['employee_id'] ) && !empty( $_GET['employee_id'] ) ) {
+                        erp_employee_delete( $_GET['employee_id'], false );
+                    }
 
-                    break;
+                    wp_redirect( $redirect );
+                    exit();
+
+                case 'permanent_delete' :
+                    if ( isset( $_GET['employee_id'] ) && !empty( $_GET['employee_id'] ) ) {
+                        erp_employee_delete( $_GET['employee_id'], true );
+                    }
+
+                    wp_redirect( $redirect );
+                    exit();
+
+                case 'restore' :
+                    if ( isset( $_GET['employee_id'] ) && !empty( $_GET['employee_id'] ) ) {
+                        erp_employee_restore( $_GET['employee_id'] );
+                    }
+
+                    wp_redirect( $redirect );
+                    exit();
 
                 case 'filter_employee':
                     wp_redirect( $redirect );
