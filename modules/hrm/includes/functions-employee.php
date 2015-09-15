@@ -774,3 +774,12 @@ function erp_hr_employee_single_tab_notes( $employee ) {
 function erp_hr_employee_single_tab_performance( $employee ) {
     include WPERP_HRM_VIEWS . '/employee/tab-performance.php';
 }
+
+/**
+ * [erp_hr_employee_single_tab_permission description]
+ *
+ * @return void
+ */
+function erp_hr_employee_single_tab_permission( $employee ) {
+    include WPERP_HRM_VIEWS . '/employee/tab-permission.php';
+}
