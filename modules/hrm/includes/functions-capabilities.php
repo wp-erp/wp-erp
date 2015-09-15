@@ -21,7 +21,7 @@ function erp_hr_get_manager_role() {
 }
 
 /**
- * Maps HR capabilities
+ * Maps HR capabilities to employee or HR manager
  *
  * @param array $caps Capabilities for meta capability
  * @param string $cap Capability name
@@ -33,6 +33,7 @@ function erp_hr_get_manager_role() {
 function erp_hr_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
 
     $hr_manager_role = erp_hr_get_manager_role();
+    $is_manager      = user_can( $user_id, $hr_manager_role );
 
     // What capability is being checked?
     switch ( $cap ) {
@@ -40,55 +41,68 @@ function erp_hr_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args =
         /** Employees **********************************************************/
 
         case 'read_employee':
-            # code...
-            break;
-
         case 'edit_employee':
-            # code...
+            $employee_id = $args[0];
+
+            if ( $user_id == $employee_id ) {
+                $caps[] = 'employee';
+            } else {
+
+                // HR manager can read any employee
+                if ( $is_manager ) {
+                    $caps = array( $hr_manager_role );
+                }
+            }
+
             break;
 
         case 'list_employee':
-            # code...
-            break;
-
         case 'manage_employee':
-            # code...
+
+            if ( $is_manager ) {
+                $caps = array( $hr_manager_role );
+            }
+
             break;
 
         /** Departments **********************************************************/
 
         case 'manage_department':
-            # code...
+            if ( $is_manager ) {
+                $caps = array( $hr_manager_role );
+            }
+
             break;
 
         /** Designations **********************************************************/
 
         case 'manage_designations':
-            # code...
+            if ( $is_manager ) {
+                $caps = array( $hr_manager_role );
+            }
+
             break;
 
         /** Leave and Holidays ****************************************************/
 
         case 'leave_list_policies':
-            # code...
-            break;
-
         case 'leave_manage_policies':
-            # code...
-            break;
-
         case 'leave_manage_requests':
-            # code...
+        case 'manage_holiday':
+
+            if ( $is_manager ) {
+                $caps = array( $hr_manager_role );
+            }
+
             break;
 
         case 'list_holiday':
-            # code...
-            break;
 
-        case 'manage_holiday':
-            # code...
-            break;
+            if ( user_can( $user_id, 'employee' ) || $is_manager ) {
+                $caps = array( $hr_manager_role );
+            }
 
+            break;
     }
 
     return apply_filters( 'erp_hr_map_meta_caps', $caps, $cap, $user_id, $args );
