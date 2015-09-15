@@ -33,7 +33,6 @@ function erp_hr_get_manager_role() {
 function erp_hr_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
 
     $hr_manager_role = erp_hr_get_manager_role();
-    $is_manager      = user_can( $user_id, $hr_manager_role );
 
     // What capability is being checked?
     switch ( $cap ) {
@@ -49,7 +48,7 @@ function erp_hr_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args =
             } else {
 
                 // HR manager can read any employee
-                if ( $is_manager ) {
+                if ( user_can( $user_id, $hr_manager_role ) ) {
                     $caps = array( $hr_manager_role );
                 }
             }
@@ -59,7 +58,7 @@ function erp_hr_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args =
         case 'list_employee':
         case 'manage_employee':
 
-            if ( $is_manager ) {
+            if ( user_can( $user_id, $hr_manager_role ) ) {
                 $caps = array( $hr_manager_role );
             }
 
@@ -68,7 +67,7 @@ function erp_hr_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args =
         /** Departments **********************************************************/
 
         case 'manage_department':
-            if ( $is_manager ) {
+            if ( user_can( $user_id, $hr_manager_role ) ) {
                 $caps = array( $hr_manager_role );
             }
 
@@ -77,7 +76,7 @@ function erp_hr_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args =
         /** Designations **********************************************************/
 
         case 'manage_designations':
-            if ( $is_manager ) {
+            if ( user_can( $user_id, $hr_manager_role ) ) {
                 $caps = array( $hr_manager_role );
             }
 
@@ -90,7 +89,7 @@ function erp_hr_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args =
         case 'leave_manage_requests':
         case 'manage_holiday':
 
-            if ( $is_manager ) {
+            if ( user_can( $user_id, $hr_manager_role ) ) {
                 $caps = array( $hr_manager_role );
             }
 
