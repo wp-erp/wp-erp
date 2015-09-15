@@ -12,8 +12,6 @@ function erp_process_actions() {
     }
 }
 
-add_action( 'admin_init', 'erp_process_actions' );
-
 /**
  * Return the WP ERP version
  *
@@ -21,6 +19,19 @@ add_action( 'admin_init', 'erp_process_actions' );
  */
 function erp_get_version() {
     return wperp()->version;
+}
+
+/**
+ * Maps various caps to built in WordPress caps
+ *
+ *
+ * @param array $caps Capabilities for meta capability
+ * @param string $cap Capability name
+ * @param int $user_id User id
+ * @param mixed $args Arguments
+ */
+function erp_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
+    return apply_filters( 'erp_map_meta_caps', $caps, $cap, $user_id, $args );
 }
 
 /**
@@ -347,7 +358,7 @@ function erp_check_date_in_range( $start_date, $end_date, $date_from_user ) {
 
     // Check that user date is between start & end
     if ( ($user_ts >= $start_ts) && ($user_ts <= $end_ts) ) {
-    return true;
+        return true;
     }
 
     return false;

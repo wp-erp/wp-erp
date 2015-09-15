@@ -171,6 +171,7 @@ final class WeDevs_ERP {
         }
 
         require_once WPERP_INCLUDES . '/functions.php';
+        require_once WPERP_INCLUDES . '/actions-filters.php';
         require_once WPERP_INCLUDES . '/functions-html.php';
         require_once WPERP_INCLUDES . '/functions-company.php';
 
