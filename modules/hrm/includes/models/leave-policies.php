@@ -11,5 +11,5 @@ use WeDevs\ERP\Framework\Model;
  */
 class Leave_Policies extends Model {
     protected $table = 'erp_hr_leave_policies';
-    protected $fillable = [ 'name', 'unit', 'value', 'color', 'department', 'designation', 'gender', 'marital', 'rate_transition' ];
+    protected $fillable = [ 'name', 'value', 'color', 'department', 'designation', 'gender', 'marital', 'description', 'location', 'effective_date', 'activate', 'execute_day' ];
 }
