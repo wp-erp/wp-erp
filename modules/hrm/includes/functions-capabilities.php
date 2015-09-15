@@ -41,7 +41,7 @@ function erp_hr_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args =
 
         case 'read_employee':
         case 'edit_employee':
-            $employee_id = $args[0];
+            $employee_id = isset( $args[0] ) ? $args[0] : false;
 
             if ( $user_id == $employee_id ) {
                 $caps[] = 'employee';
