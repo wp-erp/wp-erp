@@ -23,8 +23,6 @@ function erp_hr_employee_on_initialize( $user_id ) {
     }
 }
 
-add_action( 'user_register', 'erp_hr_employee_on_initialize' );
-
 /**
  * Delete an employee if removed from WordPress usre table
  *
@@ -47,8 +45,6 @@ function erp_hr_employee_on_delete( $user_id ) {
         ) );
     }
 }
-
-add_action( 'delete_user', 'erp_hr_employee_on_delete' );
 
 /**
  * Create a new employee
