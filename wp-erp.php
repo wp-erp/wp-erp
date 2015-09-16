@@ -171,6 +171,7 @@ final class WeDevs_ERP {
         }
 
         require_once WPERP_INCLUDES . '/functions.php';
+        require_once WPERP_INCLUDES . '/actions-filters.php';
         require_once WPERP_INCLUDES . '/functions-html.php';
         require_once WPERP_INCLUDES . '/functions-company.php';
 
@@ -200,12 +201,18 @@ final class WeDevs_ERP {
      * @return void
      */
     function init_script_register() {
-        
+
         // Register select2 scripts
         wp_register_script( 'erp-select2', WPERP_ASSETS . '/js/select2.full.min.js', false, false, true );
 
         // Register select2 style
         wp_register_style( 'erp-select2', WPERP_ASSETS . '/css/select2.min.css' );
+
+        // Register TipTip jquery plugin
+        wp_register_script( 'erp-tiptip', WPERP_ASSETS . '/js/jquery.tipTip.min.js', array( 'jquery' ), false, true );
+
+        // Register select2 style
+        wp_register_style( 'erp-tiptip', WPERP_ASSETS . '/css/tipTip.css' );
 
         // Register main style
         wp_register_style( 'erp-style', WPERP_ASSETS . '/css/style.css' );

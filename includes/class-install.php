@@ -165,6 +165,7 @@ class WeDevs_ERP_Installer {
                 `pay_type` varchar(20) NOT NULL DEFAULT '',
                 `type` varchar(20) NOT NULL,
                 `status` varchar(10) NOT NULL DEFAULT '',
+                `deleted_at` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`),
                 KEY `employee_id` (`user_id`)
             ) $collate;",

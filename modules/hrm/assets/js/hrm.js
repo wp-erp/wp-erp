@@ -69,8 +69,17 @@
             $('body').on( 'erp-hr-after-new-dept', this.department.afterNew );
             $('body').on( 'erp-hr-after-new-desig', this.designation.afterNew );
 
+            this.initTipTip();
 
             // this.employee.addWorkExperience();
+        },
+
+        initTipTip: function() {
+            $( '.erp-tips' ).tipTip( {
+                defaultPosition: "top",
+                fadeIn: 100,
+                fadeOut: 100
+            } );
         },
 
         initDateField: function() {

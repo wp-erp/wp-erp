@@ -97,7 +97,7 @@ class Deparment_List_Table extends \WP_List_Table {
                         break;
 
                     if ( $count >= $start ) {
-                        $to_display[$op->ID] = 0;
+                        $to_display[$op->id] = 0;
                     }
 
                     $count++;

@@ -23,8 +23,6 @@ function erp_hr_employee_on_initialize( $user_id ) {
     }
 }
 
-add_action( 'user_register', 'erp_hr_employee_on_initialize' );
-
 /**
  * Delete an employee if removed from WordPress usre table
  *
@@ -47,8 +45,6 @@ function erp_hr_employee_on_delete( $user_id ) {
         ) );
     }
 }
-
-add_action( 'delete_user', 'erp_hr_employee_on_delete' );
 
 /**
  * Create a new employee
@@ -212,46 +208,32 @@ function erp_hr_get_employees( $args = array() ) {
 
 
     if ( isset( $args['designation'] ) && ! empty( $args['designation'] ) ) {
-
         $employee_result = $employee_result->where( 'designation', $args['designation'] );
-        // $designation = array( 'designation' => $args['designation'] );
-        // $where = array_merge( $designation, $where );
     }
 
     if ( isset( $args['department'] ) && ! empty( $args['department'] ) ) {
         $employee_result = $employee_result->where( 'department', $args['department'] );
-
-        // $department = array( 'department' => $args['department'] );
-        // $where = array_merge( $where, $department );
     }
 
     if ( isset( $args['location'] ) && ! empty( $args['location'] ) ) {
         $employee_result = $employee_result->where( 'location', $args['location'] );
-
-        // $location = array( 'location' => $args['location'] );
-        // $where = array_merge( $where, $location );
     }
 
     if ( isset( $args['type'] ) && ! empty( $args['type'] ) ) {
         $employee_result = $employee_result->where( 'type', $args['type'] );
-
-        // $location = array( 'location' => $args['location'] );
-        // $where = array_merge( $where, $location );
     }
 
     if ( isset( $args['status'] ) && ! empty( $args['status'] ) ) {
-        $employee_result = $employee_result->where( 'status', $args['status'] );
-
-        // $status = array( 'status' => $args['status'] );
-        // $where = array_merge( $where, $status );
+        if ( $args['status'] == 'trash' ) {
+            $employee_result = $employee_result->onlyTrashed();
+        } else {
+            $employee_result = $employee_result->where( 'status', $args['status'] );
+        }
     }
 
     if ( isset( $args['s'] ) && ! empty( $args['s'] ) ) {
         $arg_s = $args['s'];
         $employee_result = $employee_result->where( 'display_name', 'LIKE', "%$arg_s%" );
-
-        // $status = array( 'status' => $args['status'] );
-        // $where = array_merge( $where, $status );
     }
 
     $cache_key = 'erp-get-employees-' . md5( serialize( $args ) );
@@ -367,6 +349,85 @@ function erp_hr_employee_get_status_count() {
     return $counts;
 }
 
+/**
+ * Count trash employee
+ *
+ * @since 0.1
+ *
+ * @return int [no of trash employee]
+ */
+function erp_hr_count_trashed_employees() {
+    $employee = new \WeDevs\ERP\HRM\Models\Employee();
+
+    return $employee->onlyTrashed()->count();
+}
+
+/**
+ * Employee Restore from trash
+ *
+ * @since 0.1
+ *
+ * @param  array|int $employee_ids
+ *
+ * @return void
+ */
+function erp_employee_restore( $employee_ids ) {
+    if ( empty( $employee_ids ) ) {
+        return;
+    }
+
+    if ( is_array( $employee_ids ) ) {
+
+        foreach ( $employee_ids as $key => $user_id ) {
+            \WeDevs\ERP\HRM\Models\Employee::withTrashed()->where( 'user_id', $user_id )->restore();
+        }
+
+    }
+
+    if ( is_int( $employee_ids ) ) {
+        \WeDevs\ERP\HRM\Models\Employee::withTrashed()->where( 'user_id', $employee_ids )->restore();
+    }
+}
+
+
+/**
+ * Employee Delete
+ *
+ * @param  array|int $employee_ids
+ *
+ * @return void
+ */
+function erp_employee_delete( $employee_ids, $hard = false ) {
+
+    if ( empty( $employee_ids ) ) {
+        return;
+    }
+
+    do_action( 'erp_hr_delete_employee', $employee_ids, $hard );
+
+    if ( is_array( $employee_ids ) ) {
+        foreach ( $employee_ids as $key => $user_id ) {
+
+            if ( $hard ) {
+                \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $user_id )->forceDelete();
+                wp_delete_user( $user_id );
+            } else {
+                \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $user_id )->delete();
+            }
+        }
+    }
+
+    if ( is_int( $employee_ids ) ) {
+
+        if ( $hard ) {
+            \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $employee_ids )->forceDelete();
+            wp_delete_user( $employee_ids );
+        } else {
+            \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $employee_ids )->delete();
+        }
+    }
+}
+
 
 /**
  * Get the raw employees dropdown
@@ -428,6 +489,27 @@ function erp_hr_get_employee_statuses() {
 
     return apply_filters( 'erp_hr_employee_statuses', $statuses );
 }
+
+/**
+ * Get the registered employee statuses
+ *
+ * @return array the employee statuses
+ */
+function erp_hr_get_employee_statuses_icons( $selected = NULL ) {
+    $statuses = apply_filters( 'erp_hr_employee_statuses_icons', array(
+        'active'     => sprintf( '<span class="erp-tips dashicons dashicons-yes" title="%s"></span>', __( 'Active', 'wp-erp' ) ),
+        'terminated' => sprintf( '<span class="erp-tips dashicons dashicons-dismiss" title="%s"></span>', __( 'Terminated', 'wp-erp' ) ),
+        'deceased'   => sprintf( '<span class="erp-tips dashicons dashicons-marker" title="%s"></span>', __( 'Deceased', 'wp-erp' ) ),
+        'resigned'   => sprintf( '<span class="erp-tips dashicons dashicons-warning" title="%s"></span>', __( 'Resigned', 'wp-erp' ) )
+    ) );
+
+    if ( $selected && array_key_exists( $selected, $statuses ) ) {
+        return $statuses[$selected];
+    }
+
+    return false;
+}
+
 
 /**
  * Get the registered employee statuses
@@ -687,4 +769,13 @@ function erp_hr_employee_single_tab_notes( $employee ) {
  */
 function erp_hr_employee_single_tab_performance( $employee ) {
     include WPERP_HRM_VIEWS . '/employee/tab-performance.php';
+}
+
+/**
+ * [erp_hr_employee_single_tab_permission description]
+ *
+ * @return void
+ */
+function erp_hr_employee_single_tab_permission( $employee ) {
+    include WPERP_HRM_VIEWS . '/employee/tab-permission.php';
 }

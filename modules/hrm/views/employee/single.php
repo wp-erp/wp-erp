@@ -79,24 +79,24 @@
                         'callback' => 'erp_hr_employee_single_tab_general'
                     ),
                     'job' => array(
-                        'title' => __( 'Job', 'wp-erp' ),
+                        'title'    => __( 'Job', 'wp-erp' ),
                         'callback' => 'erp_hr_employee_single_tab_job'
                     ),
                     'leave' => array(
-                        'title' => __( 'Leave', 'wp-erp' ),
+                        'title'    => __( 'Leave', 'wp-erp' ),
                         'callback' => 'erp_hr_employee_single_tab_leave'
                     ),
                     'notes' => array(
-                        'title' => __( 'Notes', 'wp-erp' ),
+                        'title'    => __( 'Notes', 'wp-erp' ),
                         'callback' => 'erp_hr_employee_single_tab_notes'
                     ),
-                    // 'benefits' => array(
-                    //     'title' => __( 'Benefits', 'wp-erp' ),
-                    //     'callback' => ''
-                    // ),
                     'performance' => array(
-                        'title' => __( 'Performance', 'wp-erp' ),
+                        'title'    => __( 'Performance', 'wp-erp' ),
                         'callback' => 'erp_hr_employee_single_tab_performance'
+                    ),
+                    'permission' => array(
+                        'title'    => __( 'Permission', 'wp-erp' ),
+                        'callback' => 'erp_hr_employee_single_tab_permission'
                     ),
                 ) );
                 ?>
