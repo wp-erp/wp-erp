@@ -146,6 +146,28 @@ ul.erp-list {
         }
     }
 
+    &.list-two-side {
+        li {
+            clear:both;
+
+            span {
+                float: right;
+            }
+        }
+
+    }
+
+    &.list-sep {
+        li {
+            border-bottom: 1px dotted #eee;
+            padding: 0px 0px 8px;
+
+            &:last-child {
+                border-bottom: none;
+            }
+        }
+    }
+
     &.two-col {
         .clearfix();
 

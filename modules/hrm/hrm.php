@@ -62,6 +62,7 @@ class Human_Resource {
     private function includes() {
         require_once WPERP_HRM_PATH . '/admin/class-menu.php';
 
+        require_once WPERP_HRM_PATH . '/includes/functions-url.php';
         require_once WPERP_HRM_PATH . '/includes/functions.php';
         require_once WPERP_HRM_PATH . '/includes/functions-department.php';
         require_once WPERP_HRM_PATH . '/includes/functions-designation.php';

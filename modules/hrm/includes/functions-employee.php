@@ -428,6 +428,26 @@ function erp_employee_delete( $employee_ids, $hard = false ) {
     }
 }
 
+/**
+ * Get Todays Birthday
+ *
+ * @return object [collection of user_id]
+ */
+function erp_hr_get_todays_birthday() {
+
+    return erp_array_to_object( \WeDevs\ERP\HRM\Models\Employee::select('user_id')->where( 'date_of_birth', \Carbon\Carbon::today()->toDateString() )
+            ->get()
+            ->toArray() );
+}
+
+function erp_hr_get_next_seven_days_birthday() {
+    return erp_array_to_object( \WeDevs\ERP\HRM\Models\Employee::select( 'user_id', 'date_of_birth' )
+            ->where( 'date_of_birth', '>', \Carbon\Carbon::today()->toDateString() )
+            ->where( 'date_of_birth', '<=', \Carbon\Carbon::tomorrow()->addWeek()->toDateString() )
+            ->get()
+            ->toArray() );
+}
+
 
 /**
  * Get the raw employees dropdown
