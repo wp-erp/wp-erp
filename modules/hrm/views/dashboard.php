@@ -52,37 +52,54 @@
             <div class="postbox leads-actions">
                 <h3 class="hndle"><span><?php _e( 'Birthday Buddies', 'wp-erp' ); ?></span></h3>
                 <div class="inside">
-                    <p><?php _e( 'Today\'s Birthday', 'wp-erp' ); ?></p>
-                    <ul class="erp-list list-inline">
-                        <?php
-                            $todays_birthday = erp_hr_get_todays_birthday();
-                            foreach ( $todays_birthday as $key => $user ) {
-                                $employee = new \WeDevs\ERP\HRM\Employee( intval( $user->user_id ) );
-                                ?>
-                                    <li><a href="<?php echo $employee->get_details_url(); ?>" class="erp-tips" title="<?php echo $employee->get_full_name(); ?>"><?php echo $employee->get_avatar( 32 ); ?></a></li>
-                                <?php
-                            }
-                        ?>
-                    </ul>
+                    <h4><?php _e( 'Today\'s Birthday', 'wp-erp' ); ?></h4>
 
-                    <p><?php _e( 'Upcoming Birthday', 'wp-erp' ); ?></p>
+                    <?php $todays_birthday = erp_hr_get_todays_birthday(); ?>
+
+                    <?php if ( $todays_birthday ): ?>
+
+                        <ul class="erp-list list-inline">
+
+                            <?php foreach ( $todays_birthday as $key => $user ) : ?>
+                                <?php $employee = new \WeDevs\ERP\HRM\Employee( intval( $user->user_id ) ); ?>
+                                <li><a href="<?php echo $employee->get_details_url(); ?>" class="erp-tips" title="<?php echo $employee->get_full_name(); ?>"><?php echo $employee->get_avatar( 32 ); ?></a></li>
+                            <?php  endforeach; ?>
+
+                        </ul>
+
+                    <?php else: ?>
+
+                        <p><?php _e( 'No birthday Buddies found', 'wp-erp' ); ?></p>
+
+                    <?php endif ?>
+
+
+                    <h4><?php _e( 'Upcoming Birthday', 'wp-erp' ); ?></h4>
 
                     <?php $upcoming_birtday = erp_hr_get_next_seven_days_birthday(); ?>
 
-                    <ul class="erp-list list-two-side list-sep">
+                    <?php if ( $upcoming_birtday ): ?>
 
-                        <?php foreach ( $upcoming_birtday as $key => $user ): ?>
+                        <ul class="erp-list list-two-side list-sep">
 
-                            <?php $employee = new \WeDevs\ERP\HRM\Employee( intval( $user->user_id ) ); ?>
+                            <?php foreach ( $upcoming_birtday as $key => $user ): ?>
 
-                            <li>
-                                <a href="<?php echo $employee->get_details_url(); ?>"><?php echo $employee->get_full_name(); ?></a>
-                                <span><?php echo erp_format_date( $user->date_of_birth, 'M, d' ); ?></span>
-                            </li>
+                                <?php $employee = new \WeDevs\ERP\HRM\Employee( intval( $user->user_id ) ); ?>
 
-                        <?php endforeach; ?>
+                                <li>
+                                    <a href="<?php echo $employee->get_details_url(); ?>"><?php echo $employee->get_full_name(); ?></a>
+                                    <span><?php echo erp_format_date( $user->date_of_birth, 'M, d' ); ?></span>
+                                </li>
 
-                    </ul>
+                            <?php endforeach; ?>
+
+                        </ul>
+
+                    <?php else: ?>
+
+                        <p><?php _e( 'No birthday Buddies found', 'wp-erp' ); ?></p>
+
+                    <?php endif ?>
 
                 </div>
             </div><!-- .postbox -->
