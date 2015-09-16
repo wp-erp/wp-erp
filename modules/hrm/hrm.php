@@ -69,6 +69,7 @@ class Human_Resource {
         require_once WPERP_HRM_PATH . '/includes/functions-employee.php';
         require_once WPERP_HRM_PATH . '/includes/functions-leave.php';
         require_once WPERP_HRM_PATH . '/includes/functions-capabilities.php';
+        require_once WPERP_HRM_PATH . '/includes/functions-dashboard-widgets.php';
         require_once WPERP_HRM_PATH . '/includes/actions-filters.php';
     }
 
