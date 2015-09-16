@@ -46,9 +46,12 @@
                 </div><!-- .badge-wrap -->
             </div><!-- .badge-container -->
 
+            <?php do_action( 'erp_hr_dashboard_widgets_left' ); ?>
+
         </div><!-- .erp-area-left -->
 
         <div class="erp-area-right">
+
             <div class="postbox leads-actions">
                 <h3 class="hndle"><span><?php _e( 'Birthday Buddies', 'wp-erp' ); ?></span></h3>
                 <div class="inside">
@@ -103,6 +106,9 @@
 
                 </div>
             </div><!-- .postbox -->
+
+            <?php do_action( 'erp_hr_dashboard_widgets_right' ); ?>
+
         </div>
 
     </div>
