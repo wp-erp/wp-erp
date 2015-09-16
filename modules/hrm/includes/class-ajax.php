@@ -913,7 +913,7 @@ class Ajax_Handler {
      */
     public function leave_policy_create() {
         $this->verify_nonce( 'erp-leave-policy' );
-
+ 
         $policy_id      = isset( $_POST['policy-id'] ) ? intval( $_POST['policy-id'] ) : 0;
         $name           = isset( $_POST['name'] ) ? sanitize_text_field( $_POST['name'] ) : '';
         $days           = isset( $_POST['days'] ) ? intval( $_POST['days'] ) : '';
@@ -922,19 +922,26 @@ class Ajax_Handler {
         $designation    = isset( $_POST['designation'] ) ? intval( $_POST['designation'] ) : 0;
         $gender         = isset( $_POST['gender'] ) ? intval( $_POST['gender'] ) : 0;
         $marital_status = isset( $_POST['maritial'] ) ? intval( $_POST['maritial'] ) : 0;
-        $rateTransitions = isset( $_POST['rateTransitions'] ) ? intval( $_POST['rateTransitions'] ) : 1;
-
+        $activate       = isset( $_POST['rateTransitions'] ) ? intval( $_POST['rateTransitions'] ) : 1;
+        $description    = isset( $_POST['description'] ) ? $_POST['description'] : '';
+        $after_x_day    = isset( $_POST['no_of_days'] ) ? $_POST['no_of_days'] : '';
+        $effective_date = isset( $_POST['effective_date'] ) ? $_POST['effective_date'] : '';
+        $location       = isset( $_POST['location'] ) ? $_POST['location'] : '';
 
         $policy_id = erp_hr_leave_insert_policy( array(
-            'id'          => $policy_id,
-            'name'        => $name,
-            'value'       => $days,
-            'color'       => $color,
-            'department'  => $department,
-            'designation' => $designation,
-            'gender'      => $gender,
-            'marital'     => $marital_status,
-            'rate_transition' => $rateTransitions
+            'id'             => $policy_id,
+            'name'           => $name,
+            'description'    => $description,
+            'value'          => $days,
+            'color'          => $color,
+            'department'     => $department,
+            'designation'    => $designation,
+            'gender'         => $gender,
+            'marital'        => $marital_status,
+            'activate'       => $activate,
+            'execute_day'    => $after_x_day,
+            'effective_date' => $effective_date,
+            'location'       => $location
         ) );
 
         if ( is_wp_error( $policy_id ) ) {

@@ -105,11 +105,11 @@
         ) ); ?>
     </div>
 
-    <div class="row" data-selected="{{ data.rate_transition }}">
+    <div class="row" data-selected="{{ data.activate }}">
         <?php erp_html_form_input( array(
             'label'   => __( 'Activate', 'wp-erp' ),
             'name'    => 'rateTransitions',
-            'value'   => '{{ data.rate_transition }}',
+            'value'   => '{{ data.activate }}',
             'class'   => 'erp-hrm-select2-add-more erp-hr-desi-drop-down erp-hr-leave-period',
             'type'    => 'select',
             'help'    => __( '', 'wp-erp' ),
@@ -121,21 +121,22 @@
         <?php erp_html_form_input( array(
             'label'    => __( 'How many days', 'wp-erp' ),
             'name'     => 'no_of_days',
-            'value'    => '',
+            'value'    => '{{ data.execute_day }}',
             'required' => true,
             'help'     => __( 'No of days from hire', 'wp-erp' ),
             'placeholder' => 60
         ) ); ?>
     </div>
-
-    <div class="row">
-        <?php erp_html_form_input( array(
-            'label'    => __( 'Apply', 'wp-erp' ),
-            'name'     => 'apply',
-            'type'     => 'checkbox',
-            'help'    => __('Apply immediately for existing users', 'wp-erp')
-        ) ); ?>
-    </div>
+    <# if ( ! data.id ) { #>
+        <div class="row">
+            <?php erp_html_form_input( array(
+                'label'    => __( 'Apply', 'wp-erp' ),
+                'name'     => 'apply',
+                'type'     => 'checkbox',
+                'help'    => __('Apply immediately for existing users', 'wp-erp')
+            ) ); ?>
+        </div>
+    <# } #>
 
     <?php wp_nonce_field( 'erp-leave-policy' ); ?>
     <input type="hidden" name="action" value="erp-hr-leave-policy-create">

@@ -174,6 +174,7 @@
 
         policy: {
             periodField: function() {
+               
                 $('.erp-hr-leave-period').on( 'change', function() {
                     var self = $(this).val();
                     if ( self == 2 ) {
@@ -252,6 +253,9 @@
                                 self.find( 'input[value="'+checked+'"]' ).attr( 'checked', 'checked' );
                             }
                         });
+
+                        Leave.policy.periodField();
+                        $('.erp-hr-leave-period').trigger('change');
                     },
                     onSubmit: function(modal) {
                         e.data.policy.submit.call(this, modal);

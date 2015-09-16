@@ -251,7 +251,7 @@ function erp_hr_leave_get_policies( $args = array() ) {
     if ( false === $policies ) {
 
         $policies = erp_array_to_object(
-                        \WeDevs\ERP\HRM\Models\Leave_Policies::select( array( 'id', 'name', 'value', 'color', 'department', 'designation', 'gender', 'marital', 'rate_transition' ) )
+                        \WeDevs\ERP\HRM\Models\Leave_Policies::select( array( 'id', 'name', 'value', 'color', 'department', 'designation', 'gender', 'marital', 'activate', 'execute_day', 'effective_date', 'location', 'description' ) )
                         ->skip( $args['offset'] )
                         ->take( $args['number'] )
                         ->orderBy( $args['orderby'], $args['order'] )
@@ -846,3 +846,4 @@ function erp_hr_leave_get_balance( $user_id ) {
 
     return false;
 }
+
