@@ -30,6 +30,19 @@ function erp_hr_get_employee_role() {
 }
 
 /**
+ * Get restricted roles
+ *
+ * These are the roles we don't want to assign users publicly
+ *
+ * @return array
+ */
+function erp_hr_get_restricted_roles() {
+    $roles = [ erp_hr_get_manager_role() ];
+
+    return apply_filters( 'erp_hr_get_restricted_roles', $roles );
+}
+
+/**
  * Returns an array of capabilities based on the role that is being requested.
  *
  * @param  string  $role
@@ -139,3 +152,27 @@ function erp_hr_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args =
     return apply_filters( 'erp_hr_map_meta_caps', $caps, $cap, $user_id, $args );
 }
 
+/**
+ * Removes the HR roles from the editable roles array
+ *
+ * @param array $all_roles All registered roles
+ *
+ * @return array
+ */
+function erp_hr_filter_editable_roles( $all_roles = [] ) {
+    $blocked = erp_hr_get_restricted_roles();
+
+    foreach ($blocked as $hr_role) {
+
+        // Loop through WordPress roles
+        foreach ( array_keys( $all_roles ) as $wp_role ) {
+
+            // If keys match, unset
+            if ( $wp_role === $hr_role ) {
+                unset( $all_roles[$wp_role] );
+            }
+        }
+    }
+
+    return $all_roles;
+}
