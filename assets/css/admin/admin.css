@@ -935,6 +935,26 @@ table.audit-log-table th.col-date {
   opacity: .7;
   display: none;
 }
+form.erp-form .erp-form-field:before,
+form.erp-form .erp-form-field:after {
+  content: " ";
+  display: table;
+}
+form.erp-form .erp-form-field:after {
+  clear: both;
+}
+form.erp-form .erp-form-field:before,
+form.erp-form .erp-form-field:after {
+  content: " ";
+  display: table;
+}
+form.erp-form .erp-form-field:after {
+  clear: both;
+}
+form.erp-form .erp-form-field label {
+  float: left;
+  min-width: 100px;
+}
 ul.edit-address li {
   display: block;
   clear: both;
