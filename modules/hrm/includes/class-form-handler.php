@@ -20,33 +20,36 @@ class Form_Handler {
         add_action( 'erp_action_hr-leave-assign-policy', array( $this, 'leave_entitlement' ) );
         add_action( 'erp_action_hr-leave-req-new', array( $this, 'leave_request' ) );
 
+        // permission
+        add_action( 'erp_action_erp-hr-employee-permission', array( $this, 'employee_permission' ) );
+
         add_action( 'admin_init', array( $this, 'leave_request_status_change' ) );
         add_action( 'load-leave_page_erp-holiday-assign', array( $this, 'holiday_action') );
         add_action( 'load-hr-management_page_erp-hr-employee', array( $this, 'employee_bulk_action') );
         add_action( 'load-leave_page_erp-leave-policies', array( $this, 'leave_policies') );
 
         //After create employee apply leave policy
-        add_action( 'erp_hr_employee_new', array( $this, 'apply_new_employee_policy' ), 10, 2 ); 
+        add_action( 'erp_hr_employee_new', array( $this, 'apply_new_employee_policy' ), 10, 2 );
     }
 
     /**
      * After create employee apply leave policy
-     * @param  int $user_id 
-     * @param  array $data    
-     * @return void          
+     * @param  int $user_id
+     * @param  array $data
+     * @return void
      */
     function apply_new_employee_policy( $user_id ) {
         $employee_obj = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
-    
+
         $employee    = $employee_obj->to_array();
         $department  = isset( $employee['work']['department'] ) ? $employee['work']['department'] : '';
         $designation = isset( $employee['work']['designation'] ) ? $employee['work']['designation'] : '';
         $gender      = isset( $employee['personal']['gender'] ) ? $employee['personal']['gender'] : '';
         $location    = isset( $employee['work']['location'] ) ? $employee['work']['location'] : '';
         $marital     = isset( $employee['personal']['marital_status'] ) ? $employee['personal']['marital_status'] : '';
-    
+
         $policies = \WeDevs\ERP\HRM\Models\Leave_Policies::all()->toArray();
-      
+
         $selected_policy = [];
         $schedule        = [];
 
@@ -61,26 +64,26 @@ class Form_Handler {
             }
 
             if ( $policy['designation'] != '-1' && $policy['designation'] != $designation ) {
-                continue; 
+                continue;
             }
 
             if ( $policy['gender'] != '-1' && $policy['gender'] != $gender ) {
-                continue; 
+                continue;
             }
 
             if ( $policy['location'] != '-1' && $policy['location'] != $location ) {
-                continue; 
+                continue;
             }
 
             if ( $policy['marital'] != '-1' && $policy['marital'] != $marital ) {
-                continue; 
+                continue;
             }
-            $schedule[]        = $policy['activate'] == '2' ? true : false; 
+            $schedule[]        = $policy['activate'] == '2' ? true : false;
             $selected_policy[] = $policy;
         }
-       
+
         foreach ( $selected_policy as $key => $leave_policy ) {
-            
+
             if ( $schedule[$key] ) {
                 erp_hr_apply_schedule_leave_policy( $user_id, $leave_policy );
             } else {
@@ -101,7 +104,7 @@ class Form_Handler {
         }
 
         if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], $bulk_action ) ) {
-            die( __( 'Something went wrong!', 'wp-erp' ) );
+            return false;
         }
 
         return true;
@@ -388,6 +391,41 @@ class Form_Handler {
 
             wp_redirect( $redirect_to );
             exit;
+        }
+    }
+
+    /**
+     * Employee Permission Management
+     *
+     * @return void
+     */
+    public function employee_permission() {
+        if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'wp-erp-hr-employee-permission-nonce' ) ) {
+            return;
+        }
+
+        $hr_manager_role = erp_hr_get_manager_role();
+
+        if ( ! current_user_can( $hr_manager_role ) ) {
+            wp_die( __( 'Permission Denied!', 'wp-erp' ) );
+        }
+
+        $employee_id    = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+        $enable_manager = isset( $_POST['enable_manager'] ) ? sanitize_text_field( $_POST['enable_manager'] ) : 'off';
+
+        if ( ! in_array( $enable_manager, [ 'on', 'off' ] ) ) {
+            return;
+        }
+
+        $user = get_user_by( 'id', $employee_id );
+
+        if ( 'on' == $enable_manager && ! user_can( $user, $hr_manager_role ) ) {
+
+            $user->add_role( $hr_manager_role );
+
+        } else if ( 'off' == $enable_manager && user_can( $user, $hr_manager_role ) ) {
+
+            $user->remove_role( $hr_manager_role );
         }
     }
 }
