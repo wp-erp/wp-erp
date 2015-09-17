@@ -24,6 +24,70 @@ class Form_Handler {
         add_action( 'load-leave_page_erp-holiday-assign', array( $this, 'holiday_action') );
         add_action( 'load-hr-management_page_erp-hr-employee', array( $this, 'employee_bulk_action') );
         add_action( 'load-leave_page_erp-leave-policies', array( $this, 'leave_policies') );
+
+        //After create employee apply leave policy
+        add_action( 'erp_hr_employee_new', array( $this, 'apply_new_employee_policy' ), 10, 2 ); 
+    }
+
+    /**
+     * After create employee apply leave policy
+     * @param  int $user_id 
+     * @param  array $data    
+     * @return void          
+     */
+    function apply_new_employee_policy( $user_id ) {
+        $employee_obj = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
+    
+        $employee    = $employee_obj->to_array();
+        $department  = isset( $employee['work']['department'] ) ? $employee['work']['department'] : '';
+        $designation = isset( $employee['work']['designation'] ) ? $employee['work']['designation'] : '';
+        $gender      = isset( $employee['personal']['gender'] ) ? $employee['personal']['gender'] : '';
+        $location    = isset( $employee['work']['location'] ) ? $employee['work']['location'] : '';
+        $marital     = isset( $employee['personal']['marital_status'] ) ? $employee['personal']['marital_status'] : '';
+    
+        $policies = \WeDevs\ERP\HRM\Models\Leave_Policies::all()->toArray();
+      
+        $selected_policy = [];
+        $schedule        = [];
+
+        foreach ( $policies as $key => $policy ) {
+
+            if ( $policy['activate'] == 3 ) {
+                continue;
+            }
+
+            if ( $policy['department'] != '-1' && $policy['department'] != $department) {
+                continue;
+            }
+
+            if ( $policy['designation'] != '-1' && $policy['designation'] != $designation ) {
+                continue; 
+            }
+
+            if ( $policy['gender'] != '-1' && $policy['gender'] != $gender ) {
+                continue; 
+            }
+
+            if ( $policy['location'] != '-1' && $policy['location'] != $location ) {
+                continue; 
+            }
+
+            if ( $policy['marital'] != '-1' && $policy['marital'] != $marital ) {
+                continue; 
+            }
+            $schedule[]        = $policy['activate'] == '2' ? true : false; 
+            $selected_policy[] = $policy;
+        }
+       
+        foreach ( $selected_policy as $key => $leave_policy ) {
+            
+            if ( $schedule[$key] ) {
+                erp_hr_apply_schedule_leave_policy( $user_id, $leave_policy );
+            } else {
+                erp_hr_apply_leave_policy( $user_id, $leave_policy );
+            }
+        }
+
     }
 
     public function verify_current_page_screen( $page_id, $bulk_action ) {

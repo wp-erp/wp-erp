@@ -920,11 +920,11 @@ class Ajax_Handler {
         $color          = isset( $_POST['color'] ) ? sanitize_text_field( $_POST['color'] ) : '';
         $department     = isset( $_POST['department'] ) ? intval( $_POST['department'] ) : 0;
         $designation    = isset( $_POST['designation'] ) ? intval( $_POST['designation'] ) : 0;
-        $gender         = isset( $_POST['gender'] ) ? intval( $_POST['gender'] ) : 0;
-        $marital_status = isset( $_POST['maritial'] ) ? intval( $_POST['maritial'] ) : 0;
+        $gender         = isset( $_POST['gender'] ) ?  $_POST['gender']  : 0;
+        $marital_status = isset( $_POST['maritial'] ) ? $_POST['maritial'] : 0;
         $activate       = isset( $_POST['rateTransitions'] ) ? intval( $_POST['rateTransitions'] ) : 1;
         $description    = isset( $_POST['description'] ) ? $_POST['description'] : '';
-        $after_x_day    = isset( $_POST['no_of_days'] ) ? $_POST['no_of_days'] : '';
+        $after_x_day    = isset( $_POST['no_of_days'] ) ? intval( $_POST['no_of_days'] ) : '';
         $effective_date = isset( $_POST['effective_date'] ) ? $_POST['effective_date'] : '';
         $location       = isset( $_POST['location'] ) ? $_POST['location'] : '';
 

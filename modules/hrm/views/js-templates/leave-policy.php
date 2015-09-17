@@ -74,24 +74,24 @@
         ) ); ?>
     </div>
 
-    <div class="row" data-checked="{{ data.gender }}">
+    <div class="row" data-selected="{{ data.gender }}">
         <?php erp_html_form_input( array(
             'label'       => __( 'Gender', 'wp-erp' ),
             'name'        => 'gender',
             'value'       => '{{ data.gender }}',
-            'type'        => 'radio',
-            'options' => array( '1' => __('All', 'wp-erp'), '2' => __('Male', 'wp-erp'), '3' => __( 'Female', 'wp-erp' ) )
+            'type'        => 'select',
+            'options' => erp_hr_get_genders( __( 'All', 'wp-erp' ) )
         ) ); ?>
     </div>
 
-    <div class="row" data-checked="{{ data.marital }}">
+    <div class="row" data-selected="{{ data.marital }}">
         <?php erp_html_form_input( array(
             'label'   => __( 'Marital Status', 'wp-erp' ),
             'name'    => 'maritial',
             'value'   => '{{ data.marital }}',
             'class'   => 'erp-hrm-select2-add-more erp-hr-desi-drop-down',
-            'type'    => 'radio',
-            'options' => array( '1' => __( 'All', 'wp-erp' ), '2' => __( 'Single', 'wp-erp' ), '3' => __( 'Married', 'wp-erp' ) )
+            'type'    => 'select',
+            'options' => erp_hr_get_marital_statuses( __( 'All', 'wp-erp' ) )
         ) ); ?>
     </div>
 
@@ -122,7 +122,6 @@
             'label'    => __( 'How many days', 'wp-erp' ),
             'name'     => 'no_of_days',
             'value'    => '{{ data.execute_day }}',
-            'required' => true,
             'help'     => __( 'No of days from hire', 'wp-erp' ),
             'placeholder' => 60
         ) ); ?>

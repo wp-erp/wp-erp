@@ -847,3 +847,20 @@ function erp_hr_leave_get_balance( $user_id ) {
     return false;
 }
 
+function erp_hr_apply_schedule_leave_policy( $user_id, $leave_policy ) {
+
+}
+
+function erp_hr_apply_leave_policy( $user_id, $leave_policy ) {
+    $policy = array(
+        'user_id'    => $user_id,
+        'policy_id'  => $leave_policy['id'],
+        'days'       => $leave_policy['value'],
+        'from_date'  => '2015-01-01',
+        'to_date'    => '2015-12-31',
+        'comments'   => $leave_policy['description']
+    );
+
+    erp_hr_leave_insert_entitlement( $policy );
+}
+
