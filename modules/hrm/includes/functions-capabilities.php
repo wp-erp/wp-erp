@@ -30,16 +30,26 @@ function erp_hr_get_employee_role() {
 }
 
 /**
- * Get restricted roles
- *
- * These are the roles we don't want to assign users publicly
+ * Get dynamic roles for HR
  *
  * @return array
  */
-function erp_hr_get_restricted_roles() {
-    $roles = [ erp_hr_get_manager_role() ];
+function erp_hr_get_roles() {
+    $roles = [
+        erp_hr_get_manager_role() => [
+            'name'         => __( 'HR Manager', 'wp-erp' ),
+            'public'       => false,
+            'capabilities' => erp_hr_get_caps_for_role( erp_hr_get_manager_role() )
+        ],
 
-    return apply_filters( 'erp_hr_get_restricted_roles', $roles );
+        erp_hr_get_employee_role() => [
+            'name'         => __( 'Employee', 'wp-erp' ),
+            'public'       => true,
+            'capabilities' => erp_hr_get_caps_for_role( erp_hr_get_employee_role() )
+        ]
+    ];
+
+    return apply_filters( 'erp_hr_get_roles', $roles );
 }
 
 /**
@@ -153,26 +163,63 @@ function erp_hr_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args =
 }
 
 /**
- * Removes the HR roles from the editable roles array
+ * Removes the non-public HR roles from the editable roles array
  *
  * @param array $all_roles All registered roles
  *
  * @return array
  */
 function erp_hr_filter_editable_roles( $all_roles = [] ) {
-    $blocked = erp_hr_get_restricted_roles();
+    $roles = erp_hr_get_roles();
 
-    foreach ($blocked as $hr_role) {
+    foreach ($roles as $hr_role_key => $hr_role) {
 
-        // Loop through WordPress roles
-        foreach ( array_keys( $all_roles ) as $wp_role ) {
+        if ( isset( $hr_role['public'] ) && $hr_role['public'] === false ) {
 
-            // If keys match, unset
-            if ( $wp_role === $hr_role ) {
-                unset( $all_roles[$wp_role] );
+            // Loop through WordPress roles
+            foreach ( array_keys( $all_roles ) as $wp_role ) {
+
+                // If keys match, unset
+                if ( $wp_role === $hr_role_key ) {
+                    unset( $all_roles[$wp_role] );
+                }
             }
         }
+
     }
 
     return $all_roles;
+}
+
+/**
+ * Return a user's HR role
+ *
+ * @param int $user_id
+ *
+ * @return string
+ */
+function erp_hr_get_user_role( $user_id = 0 ) {
+
+    // Validate user id
+    $user = get_userdata( $user_id );
+    $role = false;
+
+    // User has roles so look for a HR one
+    if ( ! empty( $user->roles ) ) {
+
+        // Look for a HR role
+        $roles = array_intersect(
+            array_values( $user->roles ),
+            array_keys( erp_hr_get_roles() )
+        );
+
+        // If there's a role in the array, use the first one. This isn't very
+        // smart, but since roles aren't exactly hierarchical, and HR
+        // does not yet have a UI for multiple user roles, it's fine for now.
+        if ( !empty( $roles ) ) {
+            $role = array_shift( $roles );
+        }
+    }
+
+    return apply_filters( 'erp_hr_get_user_role', $role, $user_id, $user );
 }

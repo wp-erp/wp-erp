@@ -60,7 +60,6 @@ class Human_Resource {
      * @return void
      */
     private function includes() {
-        require_once WPERP_HRM_PATH . '/admin/class-menu.php';
 
         require_once WPERP_HRM_PATH . '/includes/functions-url.php';
         require_once WPERP_HRM_PATH . '/includes/functions.php';
@@ -101,6 +100,8 @@ class Human_Resource {
         new Ajax_Handler();
         new Form_Handler();
         new Settings();
+        new Admin\Admin_Menu();
+        new Admin\User_Profile();
     }
 
     /**

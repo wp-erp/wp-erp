@@ -1,5 +1,5 @@
 <?php
-namespace WeDevs\ERP\HRM;
+namespace WeDevs\ERP\HRM\Admin;
 
 /**
  * Admin Menu
@@ -179,5 +179,3 @@ class Admin_Menu {
     }
 
 }
-
-new Admin_Menu();
