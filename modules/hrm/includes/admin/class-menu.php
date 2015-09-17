@@ -1,5 +1,6 @@
 <?php
 namespace WeDevs\ERP\HRM\Admin;
+use WeDevs\ERP\HRM\Employee;
 
 /**
  * Admin Menu
