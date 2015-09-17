@@ -96,11 +96,11 @@ final class WeDevs_ERP {
         // instantiate classes
         $this->instantiate();
 
-        // load the modules
-        $this->load_module();
-
         // Initialize the action hooks
         $this->init_actions();
+
+        // load the modules
+        $this->load_module();
 
         // Loaded action
         do_action( 'erp_loaded' );
