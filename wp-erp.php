@@ -99,6 +99,9 @@ final class WeDevs_ERP {
         // Initialize the action hooks
         $this->init_actions();
 
+        // load the modules
+        $this->load_module();
+
         // Loaded action
         do_action( 'erp_loaded' );
     }
@@ -231,7 +234,6 @@ final class WeDevs_ERP {
 
         // Localize our plugin
         add_action( 'init', array( $this, 'localization_setup' ) );
-        add_action( 'init', array( $this, 'load_module' ) );
         add_action( 'admin_enqueue_scripts', array( $this, 'init_script_register' ) );
     }
 
@@ -253,10 +255,14 @@ final class WeDevs_ERP {
      * @return void
      */
     public function load_module() {
-        $current_module = $this->modules->get_current_module();
+        $modules = $this->modules->get_modules();
 
-        if ( $current_module && class_exists( $current_module['callback'] ) ) {
-            new $current_module['callback']( $this );
+        if ( $modules ) {
+            foreach ($modules as $key => $module) {
+                if ( isset( $module['callback'] ) && class_exists( $module['callback'] ) ) {
+                    new $module['callback']( $this );
+                }
+            }
         }
     }
 

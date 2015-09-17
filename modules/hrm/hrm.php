@@ -62,12 +62,14 @@ class Human_Resource {
     private function includes() {
         require_once WPERP_HRM_PATH . '/admin/class-menu.php';
 
+        require_once WPERP_HRM_PATH . '/includes/functions-url.php';
         require_once WPERP_HRM_PATH . '/includes/functions.php';
         require_once WPERP_HRM_PATH . '/includes/functions-department.php';
         require_once WPERP_HRM_PATH . '/includes/functions-designation.php';
         require_once WPERP_HRM_PATH . '/includes/functions-employee.php';
         require_once WPERP_HRM_PATH . '/includes/functions-leave.php';
         require_once WPERP_HRM_PATH . '/includes/functions-capabilities.php';
+        require_once WPERP_HRM_PATH . '/includes/functions-dashboard-widgets.php';
         require_once WPERP_HRM_PATH . '/includes/actions-filters.php';
     }
 

@@ -46,19 +46,14 @@
                 </div><!-- .badge-wrap -->
             </div><!-- .badge-container -->
 
+            <?php do_action( 'erp_hr_dashboard_widgets_left' ); ?>
+
         </div><!-- .erp-area-left -->
 
         <div class="erp-area-right">
-            <div class="postbox leads-actions">
-                <h3 class="hndle"><span>Birthday Buddies</span></h3>
-                <div class="inside">
-                    <ul class="erp-list list-inline">
-                        <li><a href="#"><?php echo get_avatar( 'john@doe.com', 32 ); ?></a></li>
-                        <li><a href="#"><?php echo get_avatar( 'john@doe.com', 32 ); ?></a></li>
-                        <li><a href="#"><?php echo get_avatar( 'john@doe.com', 32 ); ?></a></li>
-                    </ul>
-                </div>
-            </div><!-- .postbox -->
+
+            <?php do_action( 'erp_hr_dashboard_widgets_right' ); ?>
+
         </div>
 
     </div>

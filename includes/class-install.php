@@ -30,7 +30,7 @@ class WeDevs_ERP_Installer {
         $this->action( 'admin_menu', 'welcome_screen_menu' );
         $this->action( 'admin_head', 'welcome_screen_menu_remove' );
 
-        $this->action( 'activated_plugin', 'welcome_redirect' );
+        // $this->action( 'activated_plugin', 'welcome_redirect' );
     }
 
     /**
@@ -40,7 +40,7 @@ class WeDevs_ERP_Installer {
      */
     public function activate() {
 
-            // bail out if the php version is lower than
+        // bail out if the php version is lower than
         if ( version_compare( PHP_VERSION, $this->min_php, '<' ) ) {
                 deactivate_plugins( basename( WPERP_FILE ) );
 
@@ -352,12 +352,11 @@ class WeDevs_ERP_Installer {
      */
     public function create_roles() {
 
+        // Manager role
+        add_role( erp_hr_get_manager_role(), __( 'HR Manager', 'wp-erp' ), erp_hr_get_caps_for_role( erp_hr_get_manager_role() ) );
+
         // Employee role
-        add_role( 'employee', __( 'Employee', 'wp-erp' ), array(
-            'read'                      => true,
-            'edit_posts'                => false,
-            'delete_posts'              => false
-        ) );
+        add_role( erp_hr_get_employee_role(), __( 'Employee', 'wp-erp' ), erp_hr_get_caps_for_role( erp_hr_get_employee_role() ) );
     }
 }
 

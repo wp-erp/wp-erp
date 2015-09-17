@@ -563,6 +563,19 @@ ul.erp-list.list-inline li {
   display: inline-block;
   margin-right: 10px;
 }
+ul.erp-list.list-two-side li {
+  clear: both;
+}
+ul.erp-list.list-two-side li span {
+  float: right;
+}
+ul.erp-list.list-sep li {
+  border-bottom: 1px dotted #eee;
+  padding: 0px 0px 8px;
+}
+ul.erp-list.list-sep li:last-child {
+  border-bottom: none;
+}
 ul.erp-list.two-col:before,
 ul.erp-list.two-col:after {
   content: " ";

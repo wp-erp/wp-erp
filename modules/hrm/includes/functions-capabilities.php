@@ -21,6 +21,76 @@ function erp_hr_get_manager_role() {
 }
 
 /**
+ * The manager role for HR employees
+ *
+ * @return string
+ */
+function erp_hr_get_employee_role() {
+    return apply_filters( 'erp_hr_get_employee_role', 'employee' );
+}
+
+/**
+ * Returns an array of capabilities based on the role that is being requested.
+ *
+ * @param  string  $role
+ *
+ * @return array
+ */
+function erp_hr_get_caps_for_role( $role = '' ) {
+    $caps = [];
+
+    // Which role are we looking for?
+    switch ( $role ) {
+
+        case erp_hr_get_manager_role():
+            $caps = [
+                'read'                     => true,
+
+                // employee
+                'erp_list_employee'        => true,
+                'erp_create_employee'      => true,
+                'erp_view_employee'        => true,
+                'erp_edit_employee'        => true,
+
+                'erp_create_review'        => true,
+                'erp_delete_review'        => true,
+                'erp_manage_review'        => true,
+
+                'erp_manage_announcement'  => true,
+
+                'erp_manage_jobinfo'       => true,
+                'erp_view_jobinfo'         => true,
+
+                // department
+                'erp_manage_department'    => true,
+
+                // designation
+                'erp_manage_designation'   => true,
+
+                // leave and holidays
+                'erp_leave_create_request' => true,
+                'erp_leave_manage'         => true,
+            ];
+            break;
+
+        case erp_hr_get_employee_role():
+
+            $caps = [
+                'read'                     => true,
+                'erp_list_employee'        => true,
+                'erp_view_employee'        => true,
+                'erp_edit_employee'        => true,
+                'erp_view_jobinfo'         => true,
+                'erp_leave_create_request' => true,
+            ];
+
+            break;
+    }
+
+    return apply_filters( 'erp_hr_get_caps_for_role', $caps, $role );
+}
+
+/**
  * Maps HR capabilities to employee or HR manager
  *
  * @param array $caps Capabilities for meta capability
@@ -32,20 +102,18 @@ function erp_hr_get_manager_role() {
  */
 function erp_hr_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
 
-    $hr_manager_role = erp_hr_get_manager_role();
-
     // What capability is being checked?
     switch ( $cap ) {
 
-        /** Employees **********************************************************/
-
-        case 'read_employee':
-        case 'edit_employee':
+        case 'erp_view_employee':
+        case 'erp_edit_employee':
             $employee_id = isset( $args[0] ) ? $args[0] : false;
 
             if ( $user_id == $employee_id ) {
-                $caps[] = 'employee';
+                $caps = [ $cap ];
             } else {
+
+                $hr_manager_role = erp_hr_get_manager_role();
 
                 // HR manager can read any employee
                 if ( user_can( $user_id, $hr_manager_role ) ) {
@@ -55,50 +123,14 @@ function erp_hr_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args =
 
             break;
 
-        case 'list_employee':
-        case 'manage_employee':
+        case 'erp_create_review':
+            $employee_id = isset( $args[0] ) ? $args[0] : false;
+            $employee    = new Employee( $employee_id );
 
-            if ( user_can( $user_id, $hr_manager_role ) ) {
-                $caps = array( $hr_manager_role );
-            }
-
-            break;
-
-        /** Departments **********************************************************/
-
-        case 'manage_department':
-            if ( user_can( $user_id, $hr_manager_role ) ) {
-                $caps = array( $hr_manager_role );
-            }
-
-            break;
-
-        /** Designations **********************************************************/
-
-        case 'manage_designations':
-            if ( user_can( $user_id, $hr_manager_role ) ) {
-                $caps = array( $hr_manager_role );
-            }
-
-            break;
-
-        /** Leave and Holidays ****************************************************/
-
-        case 'leave_list_policies':
-        case 'leave_manage_policies':
-        case 'leave_manage_requests':
-        case 'manage_holiday':
-
-            if ( user_can( $user_id, $hr_manager_role ) ) {
-                $caps = array( $hr_manager_role );
-            }
-
-            break;
-
-        case 'list_holiday':
-
-            if ( user_can( $user_id, 'employee' ) || $is_manager ) {
-                $caps = array( $hr_manager_role );
+            if ( $employee->get_reporting_to() && $employee->get_reporting_to()->ID == $user_id ) {
+                $caps = [ 'employee' ];
+            } else {
+                $caps = [ $cap ];
             }
 
             break;
