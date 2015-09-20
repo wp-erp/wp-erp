@@ -54,6 +54,7 @@ function erp_hr_employee_on_delete( $user_id ) {
  * @return int  employee id
  */
 function erp_hr_employee_create( $args = array() ) {
+
     global $wpdb;
 
     $defaults = array(

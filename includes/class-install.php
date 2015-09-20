@@ -56,6 +56,8 @@ class WeDevs_ERP_Installer {
         $this->create_roles();
 
         update_option( 'wp_erp_version', erp_get_version() );
+
+        wp_schedule_event( time(), 'daily', 'erp_hr_policy_schedule' );
     }
 
     /**
