@@ -294,7 +294,7 @@ class Ajax_Handler {
 
         $posted               = array_map( 'strip_tags_deep', $_POST );
         $employee_id          = erp_hr_employee_create( $posted );
-
+      
         if ( is_wp_error( $employee_id ) ) {
             $this->send_error( $employee_id->get_error_message() );
         }

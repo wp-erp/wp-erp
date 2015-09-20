@@ -22,10 +22,6 @@ function erp_hr_apply_new_employee_policy( $user_id ) {
 
     foreach ( $policies as $key => $policy ) {
 
-        if ( $policy['activate'] == 3 ) {
-            continue;
-        }
-
         if ( $policy['department'] != '-1' && $policy['department'] != $department) {
             continue;
         }
@@ -523,6 +519,14 @@ function erp_hr_leave_insert_entitlement( $args = array() ) {
         return new WP_Error( 'no-date', __( 'No date provided.', 'wp-erp' ) );
     }
 
+    
+    $entitlement = \WeDevs\ERP\HRM\Models\Leave_Entitlement::where( array( 'user_id' => $fields['user_id'], 'policy_id' => $fields['policy_id'] ) )->get()->toArray();
+    
+    if ( $entitlement ) {
+        $entitlement = reset( $entitlement );
+        return $entitlement['id'];
+    }                                                   
+
     return $wpdb->insert( $wpdb->prefix . 'erp_hr_leave_entitlements', $fields );
 }
 
@@ -902,9 +906,6 @@ function erp_hr_leave_get_balance( $user_id ) {
     return false;
 }
 
-function erp_hr_apply_schedule_leave_policy( $user_id, $leave_policy ) {
-
-}
 
 function erp_hr_apply_leave_policy( $user_id, $leave_policy ) {
     $policy = array(
@@ -921,6 +922,52 @@ function erp_hr_apply_leave_policy( $user_id, $leave_policy ) {
 
 function erp_hr_apply_policy_schedule() {
 
+    $active_employes = \WeDevs\ERP\HRM\Models\Employee::select('user_id')->where( 'status', 'active' )->get()->toArray();
+    $policies        = \WeDevs\ERP\HRM\Models\Leave_Policies::where( 'activate', '2' )->get()->toArray();
+    $selected_policy = [];
+    
+    foreach ( $active_employes as $key => $employee ) {
+        
+        $employee_obj  = new \WeDevs\ERP\HRM\Employee( intval( $employee['user_id'] ) );
+        $employee_data = $employee_obj->to_array();
+        $department    = isset( $employee_data['work']['department'] ) ? $employee_data['work']['department'] : '';
+        $designation   = isset( $employee_data['work']['designation'] ) ? $employee_data['work']['designation'] : '';
+        $gender        = isset( $employee_data['personal']['gender'] ) ? $employee_data['personal']['gender'] : '';
+        $location      = isset( $employee_data['work']['location'] ) ? $employee_data['work']['location'] : '';
+        $marital       = isset( $employee_data['personal']['marital_status'] ) ? $employee_data['personal']['marital_status'] : '';
+        $hire_date     = isset( $employee_data['work']['hiring_date'] ) ? $employee_data['work']['hiring_date'] : '';
+        $current_time  = current_time( 'mysql' );
+        $daydiff       = count( erp_extract_dates( $hire_date, $current_time ) ) - 1;
+       
+        foreach ( $policies as $key => $policy ) {
+            if ( $daydiff <= $policy['execute_day'] ) {
+                continue;
+            }
+
+            if ( $policy['department'] != '-1' && $policy['department'] != $department) {
+                continue;
+            }
+
+            if ( $policy['designation'] != '-1' && $policy['designation'] != $designation ) {
+                continue; 
+            }
+
+            if ( $policy['gender'] != '-1' && $policy['gender'] != $gender ) {
+                continue; 
+            }
+
+            if ( $policy['location'] != '-1' && $policy['location'] != $location ) {
+                continue; 
+            }
+
+            if ( $policy['marital'] != '-1' && $policy['marital'] != $marital ) {
+                continue; 
+            }
+     
+            erp_hr_apply_leave_policy( intval( $employee['user_id'] ), $policy );
+        }
+    }
+    
 }
 
 
