@@ -20,13 +20,14 @@ class Form_Handler {
         add_action( 'erp_action_hr-leave-assign-policy', array( $this, 'leave_entitlement' ) );
         add_action( 'erp_action_hr-leave-req-new', array( $this, 'leave_request' ) );
 
+        // permission
+        add_action( 'erp_action_erp-hr-employee-permission', array( $this, 'employee_permission' ) );
+
         add_action( 'admin_init', array( $this, 'leave_request_status_change' ) );
         add_action( 'load-leave_page_erp-holiday-assign', array( $this, 'holiday_action') );
         add_action( 'load-hr-management_page_erp-hr-employee', array( $this, 'employee_bulk_action') );
         add_action( 'load-leave_page_erp-leave-policies', array( $this, 'leave_policies') );
     }
-
-
 
     public function verify_current_page_screen( $page_id, $bulk_action ) {
 
@@ -39,7 +40,7 @@ class Form_Handler {
         }
 
         if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], $bulk_action ) ) {
-            die( __( 'Something went wrong!', 'wp-erp' ) );
+            return false;
         }
 
         return true;
@@ -326,6 +327,41 @@ class Form_Handler {
 
             wp_redirect( $redirect_to );
             exit;
+        }
+    }
+
+    /**
+     * Employee Permission Management
+     *
+     * @return void
+     */
+    public function employee_permission() {
+        if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'wp-erp-hr-employee-permission-nonce' ) ) {
+            return;
+        }
+
+        $hr_manager_role = erp_hr_get_manager_role();
+
+        if ( ! current_user_can( $hr_manager_role ) ) {
+            wp_die( __( 'Permission Denied!', 'wp-erp' ) );
+        }
+
+        $employee_id    = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+        $enable_manager = isset( $_POST['enable_manager'] ) ? sanitize_text_field( $_POST['enable_manager'] ) : 'off';
+
+        if ( ! in_array( $enable_manager, [ 'on', 'off' ] ) ) {
+            return;
+        }
+
+        $user = get_user_by( 'id', $employee_id );
+
+        if ( 'on' == $enable_manager && ! user_can( $user, $hr_manager_role ) ) {
+
+            $user->add_role( $hr_manager_role );
+
+        } else if ( 'off' == $enable_manager && user_can( $user, $hr_manager_role ) ) {
+
+            $user->remove_role( $hr_manager_role );
         }
     }
 }

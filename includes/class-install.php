@@ -353,12 +353,13 @@ class WeDevs_ERP_Installer {
      * @return void
      */
     public function create_roles() {
+        $roles = erp_hr_get_roles();
 
-        // Manager role
-        add_role( erp_hr_get_manager_role(), __( 'HR Manager', 'wp-erp' ), erp_hr_get_caps_for_role( erp_hr_get_manager_role() ) );
-
-        // Employee role
-        add_role( erp_hr_get_employee_role(), __( 'Employee', 'wp-erp' ), erp_hr_get_caps_for_role( erp_hr_get_employee_role() ) );
+        if ( $roles ) {
+            foreach ($roles as $key => $role) {
+                add_role( $key, $role['name'], $role['capabilities'] );
+            }
+        }
     }
 }
 
