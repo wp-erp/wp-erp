@@ -1,5 +1,60 @@
 <?php
 /**
+ * After create employee apply leave policy
+ * @param  int $user_id 
+ * @param  array $data    
+ * @return void          
+ */
+function erp_hr_apply_new_employee_policy( $user_id ) {
+    $employee_obj = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
+
+    $employee    = $employee_obj->to_array();
+    $department  = isset( $employee['work']['department'] ) ? $employee['work']['department'] : '';
+    $designation = isset( $employee['work']['designation'] ) ? $employee['work']['designation'] : '';
+    $gender      = isset( $employee['personal']['gender'] ) ? $employee['personal']['gender'] : '';
+    $location    = isset( $employee['work']['location'] ) ? $employee['work']['location'] : '';
+    $marital     = isset( $employee['personal']['marital_status'] ) ? $employee['personal']['marital_status'] : '';
+
+    $policies = \WeDevs\ERP\HRM\Models\Leave_Policies::where( 'activate', '1' )->get()->toArray();
+  
+    $selected_policy = [];
+ 
+
+    foreach ( $policies as $key => $policy ) {
+
+        if ( $policy['activate'] == 3 ) {
+            continue;
+        }
+
+        if ( $policy['department'] != '-1' && $policy['department'] != $department) {
+            continue;
+        }
+
+        if ( $policy['designation'] != '-1' && $policy['designation'] != $designation ) {
+            continue; 
+        }
+
+        if ( $policy['gender'] != '-1' && $policy['gender'] != $gender ) {
+            continue; 
+        }
+
+        if ( $policy['location'] != '-1' && $policy['location'] != $location ) {
+            continue; 
+        }
+
+        if ( $policy['marital'] != '-1' && $policy['marital'] != $marital ) {
+            continue; 
+        }
+ 
+        $selected_policy[] = $policy;
+    }
+     
+    foreach ( $selected_policy as $key => $leave_policy ) {
+        erp_hr_apply_leave_policy( $user_id, $leave_policy );
+    }
+}
+
+/**
  * Get holiday between two date
  *
  * @param  date  $start_date
@@ -863,4 +918,10 @@ function erp_hr_apply_leave_policy( $user_id, $leave_policy ) {
 
     erp_hr_leave_insert_entitlement( $policy );
 }
+
+function erp_hr_apply_policy_schedule() {
+
+}
+
+
 
