@@ -30,19 +30,19 @@ function erp_hr_employee_on_initialize( $user_id ) {
  *
  * @return void
  */
-function erp_hr_employee_on_delete( $user_id ) {
+function erp_hr_employee_on_delete( $user_id, $hard = 0 ) {
     global $wpdb;
 
     $user = get_user_by( 'id', $user_id );
+
+    if ( ! $user ) {
+        return;
+    }
+
     $role = reset( $user->roles );
 
     if ( 'employee' == $role ) {
-
-        do_action( 'erp_hr_employee_delete', $user_id, $user );
-
-        $wpdb->delete( $wpdb->prefix . 'erp_hr_employees', array(
-            'user_id' => $user_id
-        ) );
+        \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $user_id )->withTrashed()->forceDelete();
     }
 }
 
@@ -160,13 +160,19 @@ function erp_hr_employee_create( $args = array() ) {
         $employee->update_job_info( $work['department'], $work['designation'], $work['reporting_to'], $work['location'] );
     }
 
-    // update the erp table
-    $wpdb->update( $wpdb->prefix . 'erp_hr_employees', array(
+
+    $employee_table_data = array(
         'hiring_source' => $data['work']['hiring_source'],
         'hiring_date'   => $data['work']['hiring_date'],
-        'date_of_birth' => $data['work']['date_of_birth'],
-        'status'        => $data['work']['status']
-    ), array( 'user_id' => $user_id ) );
+        'date_of_birth' => $data['work']['date_of_birth']
+    );
+
+    if ( ! $update ) {
+        $employee_table_data['status'] = $data['work']['status'];
+    }
+
+    // update the erp table
+    $wpdb->update( $wpdb->prefix . 'erp_hr_employees', $employee_table_data, array( 'user_id' => $user_id ) );
 
     foreach ( $data['personal'] as $key => $value ) {
         update_user_meta( $user_id, $key, $value );
@@ -403,13 +409,13 @@ function erp_employee_delete( $employee_ids, $hard = false ) {
         return;
     }
 
-    do_action( 'erp_hr_delete_employee', $employee_ids, $hard );
+    do_action( 'erp_hr_delete_employee', $employee_ids );
 
     if ( is_array( $employee_ids ) ) {
         foreach ( $employee_ids as $key => $user_id ) {
 
             if ( $hard ) {
-                \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $user_id )->forceDelete();
+                \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $user_id )->withTrashed()->forceDelete();
                 wp_delete_user( $user_id );
             } else {
                 \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $user_id )->delete();
@@ -420,7 +426,7 @@ function erp_employee_delete( $employee_ids, $hard = false ) {
     if ( is_int( $employee_ids ) ) {
 
         if ( $hard ) {
-            \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $employee_ids )->forceDelete();
+            \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $employee_ids )->withTrashed()->forceDelete();
             wp_delete_user( $employee_ids );
         } else {
             \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $employee_ids )->delete();
@@ -661,9 +667,9 @@ function erp_hr_get_terminate_rehire_options( $selected = NULL ) {
  * @return array all the statuses
  */
 function erp_hr_get_genders( $select_text = null ) {
-   
+
     $select_text    = $select_text ? array( '-1' => $select_text ) : array();
-   
+
     $genders = array(
         'male'   => __( 'Male', 'wp-erp' ),
         'female' => __( 'Female', 'wp-erp' ),

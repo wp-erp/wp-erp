@@ -333,12 +333,26 @@ class Ajax_Handler {
      * @return void
      */
     public function employee_remove() {
+
         $this->verify_nonce( 'wp-erp-hr-nonce' );
 
+        global $wpdb;
+
         $employee_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+        $hard        = isset( $_REQUEST['hard'] ) ? intval( $_REQUEST['hard'] ) : 0;
+        $user        = get_user_by( 'id', $employee_id );
+
+        if ( ! $user ) {
+            $this->send_error( __( 'No employee found', 'wp-erp' ) );
+        }
+
+        $role = reset( $user->roles );
+
+        if ( 'employee' == $role ) {
+            erp_employee_delete( $employee_id, $hard );
+        }
 
         // @TODO: check permission
-        erp_hr_employee_on_delete( $employee_id );
         $this->send_success( __( 'Employee has been removed successfully', 'wp-erp' ) );
     }
 
@@ -913,7 +927,7 @@ class Ajax_Handler {
      */
     public function leave_policy_create() {
         $this->verify_nonce( 'erp-leave-policy' );
- 
+
         $policy_id      = isset( $_POST['policy-id'] ) ? intval( $_POST['policy-id'] ) : 0;
         $name           = isset( $_POST['name'] ) ? sanitize_text_field( $_POST['name'] ) : '';
         $days           = isset( $_POST['days'] ) ? intval( $_POST['days'] ) : '';
