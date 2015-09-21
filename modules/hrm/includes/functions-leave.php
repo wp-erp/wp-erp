@@ -519,11 +519,21 @@ function erp_hr_leave_insert_entitlement( $args = array() ) {
         return new WP_Error( 'no-date', __( 'No date provided.', 'wp-erp' ) );
     }
 
+    $entitlement = new \WeDevs\ERP\HRM\Models\Leave_Entitlement();
+    $user_id     = intval( $fields['user_id'] );
+    $policy_id   = intval( $fields['policy_id'] );
     
-    $entitlement = \WeDevs\ERP\HRM\Models\Leave_Entitlement::where( array( 'user_id' => $fields['user_id'], 'policy_id' => $fields['policy_id'] ) )->get()->toArray();
-    
-    if ( $entitlement ) {
-        $entitlement = reset( $entitlement );
+    $entitlement = $entitlement->where( function( $condition ) use( $user_id, $policy_id ) {
+        $to_date = current_time( 'mysql' );
+        $condition->where( 'to_date', '>=', $to_date );
+        $condition->where( 'user_id', '=', $user_id );
+        $condition->where( 'policy_id', '=', $policy_id );
+    } );
+
+    $results = $entitlement->get()->toArray();
+
+    if ( $results ) {
+        $entitlement = reset( $results );
         return $entitlement['id'];
     }                                                   
 
