@@ -396,6 +396,15 @@
         employee: {
 
             /**
+             * Reload the department area
+             *
+             * @return {void}
+             */
+            reload: function() {
+                $( '.erp-hr-employees' ).load( window.location.href + ' .erp-hr-employees' );
+            },
+
+            /**
              * Set photo popup
              *
              * @param {event}
@@ -484,11 +493,7 @@
                         wp.ajax.send( 'erp-hr-employee-new', {
                             data: this.serialize(),
                             success: function(response) {
-
-                                var row = wp.template( 'erp-employee-row');
-                                response.class = 'hello';
-
-                                $( 'table.employees' ).append( row(response) );
+                                WeDevs_ERP_HR.employee.reload();
                                 modal.enableButton();
                                 modal.closeModal();
                             },
@@ -597,16 +602,7 @@
                         wp.ajax.send( {
                             data: this.serialize(),
                             success: function(response) {
-                                var single = ( self.data( 'single' ) === true ) ? true : false;
-
-                                if ( single ) {
-                                    $( '.erp-area-left' ).load( window.location.href + ' #erp-area-left-inner' );
-                                } else {
-                                    var row = wp.template( 'erp-employee-row');
-
-                                    response.class = self.closest('tr').attr('class');
-                                    self.closest('tr').replaceWith( row(response) );
-                                }
+                                WeDevs_ERP_HR.employee.reload();
                                 modal.enableButton();
                                 modal.closeModal();
                             },
@@ -633,11 +629,13 @@
                     wp.ajax.send( 'erp-hr-emp-delete', {
                         data: {
                             '_wpnonce': wpErpHr.nonce,
-                            id: self.data( 'id' )
+                            id: self.data( 'id' ),
+                            hard: self.data( 'hard' )
                         },
                         success: function() {
                             self.closest('tr').fadeOut( 'fast', function() {
                                 $(this).remove();
+                                WeDevs_ERP_HR.employee.reload();
                             });
                         },
                         error: function(response) {
