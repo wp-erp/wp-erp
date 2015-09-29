@@ -80,7 +80,7 @@ class WeDevs_ERP_Installer {
      * Nothing being called here yet.
      */
     public function deactivate() {
-
+        wp_clear_scheduled_hook( 'erp_hr_policy_schedule' );
     }
 
     public function welcome_screen_menu() {
