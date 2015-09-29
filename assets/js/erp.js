@@ -59,9 +59,9 @@ window.wperp = window.wperp || {};
 
             // on popup, country change event
             $( 'body' ).on('change', 'select.erp-country-select', this.populateState );
-            $('body').on( 'erp-hr-after-new-location', this.afterNewLocation );
+            $( 'body' ).on( 'erp-hr-after-new-location', this.afterNewLocation );
 
-            this.initDateField();
+            this.initFields();
         },
 
         afterNewLocation: function(e, res) {
@@ -70,13 +70,15 @@ window.wperp = window.wperp || {};
             $('.erp-hr-location-drop-down').select2("val", res.id);
         },
 
-        initDateField: function() {
+        initFields: function() {
             $( '.erp-date-field').datepicker({
                 dateFormat: 'yy-mm-dd',
                 changeMonth: true,
                 changeYear: true,
                 yearRange: '-100:+0',
             });
+
+            $( '.select2' ).select2();
         },
 
         /**
