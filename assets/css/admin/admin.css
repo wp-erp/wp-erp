@@ -617,6 +617,9 @@ ul.erp-list.blocked label {
   display: block;
   padding-bottom: 5px;
 }
+ul.erp-list.no-style li {
+  list-style: none;
+}
 ul.erp-list li.two-col:before,
 ul.erp-list li.two-col:after {
   content: " ";
@@ -991,4 +994,30 @@ ul.edit-address li.city-wrap span {
 }
 .terminate-form-wrap .row label {
   width: 155px !important;
+}
+.align-right {
+  text-align: right !important;
+}
+.input-group {
+  display: table;
+}
+.input-group input,
+.input-group select {
+  margin: 0;
+}
+.input-group .input-group-addon {
+  width: 1%;
+  white-space: nowrap;
+  vertical-align: middle;
+  background-color: #f5f5f5;
+  padding: 3px 12px;
+  display: table-cell;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+.input-group .input-group-addon:first-child {
+  border-right: 0;
+}
+.input-group .input-group-addon:last-child {
+  border-left: 0;
 }

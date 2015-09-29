@@ -77,6 +77,8 @@ function erp_html_form_input( $args = array() ) {
         'id'            => '',
         'value'         => '',
         'help'          => '',
+        'addon'         => '',
+        'addon_pos'     => 'before',
         'custom_attr'   => array(),
         'options'       => array(),
     );
@@ -104,6 +106,14 @@ function erp_html_form_input( $args = array() ) {
 
     if ( ! empty( $field['label'] ) ) {
         erp_html_form_label( $field['label'], $field_id, $field['required'] );
+    }
+
+    if ( ! empty( $field['addon'] ) ) {
+        echo '<div class="input-group">';
+
+        if ( $field['addon_pos'] == 'before' ) {
+            echo '<span class="input-group-addon">' . $field['addon'] . '</span>';
+        }
     }
 
     switch ( $field['type'] ) {
@@ -145,6 +155,15 @@ function erp_html_form_input( $args = array() ) {
         default:
             # code...
             break;
+    }
+
+    if ( ! empty( $field['addon'] ) ) {
+
+        if ( $field['addon_pos'] == 'after' ) {
+            echo '<span class="input-group-addon">' . $field['addon'] . '</span>';
+        }
+
+        echo '</div>';
     }
 
     erp_html_form_help( $field['help'] );
