@@ -336,7 +336,15 @@ class WeDevs_ERP_Installer {
                 `performance_date` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`),
                 KEY `employee_id` (`employee_id`)
-            ) $collate;"
+            ) $collate;",
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_announcement` (
+               `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+               `user_id` bigint(20) unsigned NOT NULL,
+               `post_id` bigint(11) NOT NULL,
+               `status` varchar(30) NOT NULL,
+              PRIMARY KEY (id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;"
 
         ];
 

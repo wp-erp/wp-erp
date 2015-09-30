@@ -4,6 +4,7 @@
 
 function erp_hr_dashboard_widget_birthday_callback() {
     erp_admin_dash_metabox( __( 'Birthday Buddies', 'wp-erp' ), 'erp_hr_dashboard_widget_birthday' );
+    erp_admin_dash_metabox( __( 'Latest Announcement', 'wp-erp' ), 'erp_hr_dashboard_widget_latest_announcement' );
 }
 
 add_action( 'erp_hr_dashboard_widgets_right', 'erp_hr_dashboard_widget_birthday_callback' );
@@ -60,3 +61,19 @@ function erp_hr_dashboard_widget_birthday() {
         _e( 'No one has birthdays this week!', 'wp-erp' );
     }
 }
+
+/**
+ * Latest Announcement Widget
+ *
+ * @since 0.1 
+ * 
+ * @return void 
+ */
+function erp_hr_dashboard_widget_latest_announcement(){
+    
+}
+
+
+
+
+

@@ -99,6 +99,7 @@ class Human_Resource {
     private function init_classes() {
         new Ajax_Handler();
         new Form_Handler();
+        new Announcement();
         new Settings();
         new Admin\Admin_Menu();
         new Admin\User_Profile();
