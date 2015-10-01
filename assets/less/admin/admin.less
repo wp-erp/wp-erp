@@ -230,6 +230,49 @@ ul.erp-list {
     }
 }
 
+ul.erp-dashboard-announcement {
+    li {
+        padding:10px;
+        position:relative;
+        h4 {
+            margin: 0px 0px 5px;
+            font-size: 14px;
+
+            span.announcement-date {
+                font-size: 12px;
+                font-weight: normal;
+                margin-right: 50px;
+            }
+        }
+        p {
+            margin: 2px 0px 0px;
+        }
+
+        .announcement-row-actions {
+            visibility: hidden;
+            position: absolute;
+            top:10px;
+            right: 12px;
+            a {
+                margin-left: 3px;
+                font-size: 10px;
+                color: #222;
+            }
+        }
+
+        &.unread {
+            background :#fafafa;
+        }
+
+        &:hover {
+            background: #fafafa;
+            .announcement-row-actions {
+                visibility: visible;
+            }
+        }
+    }
+}
+
 table.vendor-list-table {
     th.col-username, td.col-username {
         width: 40%;

@@ -4,10 +4,15 @@
 
 function erp_hr_dashboard_widget_birthday_callback() {
     erp_admin_dash_metabox( __( 'Birthday Buddies', 'wp-erp' ), 'erp_hr_dashboard_widget_birthday' );
+}
+
+function erp_hr_dashboard_widget_announcement_callback() {
     erp_admin_dash_metabox( __( 'Latest Announcement', 'wp-erp' ), 'erp_hr_dashboard_widget_latest_announcement' );
 }
 
+
 add_action( 'erp_hr_dashboard_widgets_right', 'erp_hr_dashboard_widget_birthday_callback' );
+add_action( 'erp_hr_dashboard_widgets_left', 'erp_hr_dashboard_widget_announcement_callback' );
 
 /** Widgets *****************************/
 
@@ -69,8 +74,25 @@ function erp_hr_dashboard_widget_birthday() {
  * 
  * @return void 
  */
-function erp_hr_dashboard_widget_latest_announcement(){
-    
+function erp_hr_dashboard_widget_latest_announcement() {
+    $announcements = erp_hr_employee_dashboard_announcement( get_current_user_id() );
+    ?>
+    <ul class="erp-list erp-dashboard-announcement">
+        <?php foreach ( $announcements as $key => $announcement ): ?>
+            <li <?php echo ( $announcement->status == 'unread' ) ? 'class="unread"' : ''; ?>>
+                <h4>
+                    <?php echo $announcement->post_title; ?>
+                    | <span class="announcement-date"><?php echo erp_format_date( $announcement->post_date ); ?></span>
+                </h4>
+                <p><?php echo wp_trim_words( $announcement->post_content, 40 ); ?></p>
+                <div class="announcement-row-actions">
+                    <a href="#" class="mark-read erp-tips" title="<?php _e( 'Mark as Read', 'wp-erp' ); ?>" data-row_id="<?php echo $announcement->id; ?>"><i class="fa fa-circle-o-notch"></i></a>
+                    <a href="#" class="view-full erp-tips" title="<?php _e( 'View full announcement', 'wp-erp' ); ?>" data-row_id="<?php echo $announcement->post_id; ?>"><i class="fa fa-book"></i></a>
+                </div>           
+            </li>        
+        <?php endforeach ?>    
+    </ul>
+    <?php
 }
 
 

@@ -98,7 +98,13 @@
             $clone_modal.attr( 'tabindex', -1 );
             $clone_modal.addClass( 'erp-count-class' );
             $clone_modal.find('h2').text( this.settings.title );
-            $clone_modal.find('.button-primary').text( this.settings.button );
+
+            if ( this.settings.button === '' ) {
+                $clone_modal.find('footer').remove();
+            } else {
+                $clone_modal.find('.button-primary').text( this.settings.button );
+            }
+
             $clone_modal.find( '.content').empty().html(this.element);
            
             $clone_modal.show();

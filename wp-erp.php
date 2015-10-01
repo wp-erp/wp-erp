@@ -208,6 +208,9 @@ final class WeDevs_ERP {
         // Register select2 scripts
         wp_register_script( 'erp-select2', WPERP_ASSETS . '/js/select2.full.min.js', false, false, true );
 
+        // Register Fontawesome font icons
+        wp_register_style( 'erp-select2', WPERP_ASSETS . '/css/font-awesome.min.css' );
+
         // Register select2 style
         wp_register_style( 'erp-select2', WPERP_ASSETS . '/css/select2.min.css' );
 

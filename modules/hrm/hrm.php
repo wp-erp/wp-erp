@@ -127,24 +127,24 @@ class Human_Resource {
         $localize_script = apply_filters( 'erp_hr_localize_script', array(
             'nonce'              => wp_create_nonce( 'wp-erp-hr-nonce' ),
             'popup'              => array(
-                'dept_title'        => __( 'New Department', 'wp-erp' ),
-                'dept_submit'       => __( 'Create Department', 'wp-erp' ),
-                'location_title'        => __( 'New Location', 'wp-erp' ),
-                'location_submit'       => __( 'Create Location', 'wp-erp' ),
-                'dept_update'       => __( 'Update Department', 'wp-erp' ),
-                'desig_title'       => __( 'New Designation', 'wp-erp' ),
-                'desig_submit'      => __( 'Create Designation', 'wp-erp' ),
-                'desig_update'      => __( 'Update Designation', 'wp-erp' ),
-                'employee_title'    => __( 'New Employee', 'wp-erp' ),
-                'employee_create'   => __( 'Create Employee', 'wp-erp' ),
-                'employee_update'   => __( 'Update Employee', 'wp-erp' ),
-                'employment_status' => __( 'Employment Status', 'wp-erp' ),
-                'update_status'     => __( 'Update', 'wp-erp' ),
-                'policy'            => __( 'Leave Policy', 'wp-erp' ),
-                'policy_create'     => __( 'Create Policy', 'wp-erp' ),
-                'holiday'           => __( 'Holiday', 'wp-erp' ),
-                'holiday_create'    => __( 'Create Holiday', 'wp-erp' ),
-                'terminate'         => __( 'Terminate', 'wp-erp' ),
+                'dept_title'         => __( 'New Department', 'wp-erp' ),
+                'dept_submit'        => __( 'Create Department', 'wp-erp' ),
+                'location_title'     => __( 'New Location', 'wp-erp' ),
+                'location_submit'    => __( 'Create Location', 'wp-erp' ),
+                'dept_update'        => __( 'Update Department', 'wp-erp' ),
+                'desig_title'        => __( 'New Designation', 'wp-erp' ),
+                'desig_submit'       => __( 'Create Designation', 'wp-erp' ),
+                'desig_update'       => __( 'Update Designation', 'wp-erp' ),
+                'employee_title'     => __( 'New Employee', 'wp-erp' ),
+                'employee_create'    => __( 'Create Employee', 'wp-erp' ),
+                'employee_update'    => __( 'Update Employee', 'wp-erp' ),
+                'employment_status'  => __( 'Employment Status', 'wp-erp' ),
+                'update_status'      => __( 'Update', 'wp-erp' ),
+                'policy'             => __( 'Leave Policy', 'wp-erp' ),
+                'policy_create'      => __( 'Create Policy', 'wp-erp' ),
+                'holiday'            => __( 'Holiday', 'wp-erp' ),
+                'holiday_create'     => __( 'Create Holiday', 'wp-erp' ),
+                'terminate'          => __( 'Terminate', 'wp-erp' ),
             ),
             'emp_upload_photo'   => __( 'Upload Employee Photo', 'wp-erp' ),
             'emp_set_photo'      => __( 'Set Photo', 'wp-erp' ),
@@ -178,7 +178,7 @@ class Human_Resource {
     public function admin_js_templates() {
         global $current_screen;
 
-        //var_dump( $current_screen ); die();
+        // var_dump( $current_screen ); die();
 
         switch ($current_screen->base) {
             case 'hr-management_page_erp-hr-depts':

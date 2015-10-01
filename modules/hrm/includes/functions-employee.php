@@ -772,6 +772,26 @@ function erp_hr_url_single_employee( $employee_id ) {
 }
 
 /**
+ * Get Employee Announcement List
+ *
+ * @since 0.1
+ * 
+ * @param  integer $user_id 
+ * 
+ * @return array
+ */
+function erp_hr_employee_dashboard_announcement( $user_id ) {
+    global $wpdb;
+
+    return erp_array_to_object( \WeDevs\ERP\HRM\Models\Announcement::join( $wpdb->posts, 'post_id', '=', $wpdb->posts . '.ID' )
+            ->where( 'user_id', '=', $user_id )
+            ->orderby( $wpdb->posts . '.post_date', 'desc' )
+            ->take(8)
+            ->get()
+            ->toArray() );
+}
+
+/**
  * [erp_hr_employee_single_tab_general description]
  *
  * @return void
