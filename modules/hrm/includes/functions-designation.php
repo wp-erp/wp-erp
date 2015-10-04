@@ -100,16 +100,39 @@ function erp_hr_get_designations( $args = array() ) {
  * @return bool
  */
 function erp_hr_delete_designation( $designation_id ) {
-    global $wpdb;
-
-    $designation = new \WeDevs\ERP\HRM\Designation( $designation_id );
-    if ( $designation->num_of_employees() ) {
-        return new WP_Error( 'not-empty', __( 'You can not delete this designation because it contains employees.', 'wp-erp' ) );
-    }
 
     do_action( 'erp_hr_desig_delete', $designation_id );
 
-    return \WeDevs\ERP\HRM\Models\Designation::find( $designation_id )->delete();
+    if ( is_array( $designation_id ) ) {
+        $exist_employee = [];
+        $not_exist_employee = [];
+        
+        foreach ( $designation_id as $key => $designation ) {
+            $desig = new \WeDevs\ERP\HRM\Designation( intval( $designation ) );
+
+            if ( $desig->num_of_employees() ) {
+                $exist_employee[] = $designation;
+            } else {
+                $not_exist_employee[] = $designation; 
+            }
+        }
+        
+        if ( $not_exist_employee ) {
+            \WeDevs\ERP\HRM\Models\Designation::destroy( $not_exist_employee );
+        }
+
+        return $exist_employee;        
+
+    } else {
+        $designation = new \WeDevs\ERP\HRM\Designation( $designation_id );
+        if ( $designation->num_of_employees() ) {
+            return new WP_Error( 'not-empty', __( 'You can not delete this designation because it contains employees.', 'wp-erp' ) );
+        }
+        
+        return \WeDevs\ERP\HRM\Models\Designation::find( $designation_id )->delete();
+    }
+
+
 }
 
 /**

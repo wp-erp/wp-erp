@@ -132,14 +132,24 @@ function erp_hr_count_departments() {
  */
 function erp_hr_delete_department( $department_id ) {
 
-    $department = new \WeDevs\ERP\HRM\Department( $department_id );
+    $department = new \WeDevs\ERP\HRM\Department( intval( $department_id ) );
+
     if ( $department->num_of_employees() ) {
-        return new WP_Error( 'not-empty', __( 'You can not delete this department because it contains employees.', 'wp-erp' ) );
+        return false;
     }
 
     do_action( 'erp_hr_dept_delete', $department_id );
+    $parent_id = \WeDevs\ERP\HRM\Models\Department::where( 'id', '=', $department_id )->pluck('parent'); 
+    
+    if ( $parent_id ) {
+        \WeDevs\ERP\HRM\Models\Department::where( 'parent', '=', $department_id )->update( ['parent' => $parent_id ] );
+    } else {
+        \WeDevs\ERP\HRM\Models\Department::where( 'parent', '=', $department_id )->update( ['parent' => 0 ] );
+    }
+    
+    $resp = \WeDevs\ERP\HRM\Models\Department::find( $department_id )->delete();
 
-    return \WeDevs\ERP\HRM\Models\Department::find( $department_id )->delete();
+    return $resp;
 }
 
 /**

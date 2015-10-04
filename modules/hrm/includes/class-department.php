@@ -25,7 +25,7 @@ class Department extends \WeDevs\ERP\Item {
      * @return int
      */
     public function num_of_employees() {
-        return \WeDevs\ERP\HRM\Models\Employee::where( array( 'status' => 1, 'department' => $this->id ) )->count();
+        return \WeDevs\ERP\HRM\Models\Employee::where( array( 'status' => 'active', 'department' => $this->id ) )->count();
     }
 
     /**

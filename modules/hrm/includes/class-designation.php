@@ -25,11 +25,6 @@ class Designation extends \WeDevs\ERP\Item {
      * @return int
      */
     public function num_of_employees() {
-        global $wpdb;
-
-        $sql = "SELECT COUNT(id) FROM {$wpdb->prefix}erp_hr_employees WHERE status = 1 AND designation = %d";
-        $number = (int) $wpdb->get_var( $wpdb->prepare( $sql, $this->id ) );
-
-        return $number;
+        return \WeDevs\ERP\HRM\Models\Employee::where( array( 'status' => 'active', 'designation' => $this->id ) )->count();
     }
 }
