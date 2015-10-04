@@ -28,7 +28,6 @@ class Admin_Menu {
         add_submenu_page( 'erp-hr', __( 'Employees', 'wp-erp' ), __( 'Employees', 'wp-erp' ), 'erp_list_employee', 'erp-hr-employee', array( $this, 'employee_page' ) );
         add_submenu_page( 'erp-hr', __( 'Departments', 'wp-erp' ), __( 'Departments', 'wp-erp' ), 'erp_manage_department', 'erp-hr-depts', array( $this, 'department_page' ) );
         add_submenu_page( 'erp-hr', __( 'Designations', 'wp-erp' ), __( 'Designations', 'wp-erp' ), 'erp_manage_designation', 'erp-hr-designation', array( $this, 'designation_page' ) );
-        add_submenu_page( 'erp-hr', __( 'Designations', 'wp-erp' ), __( 'Designations', 'wp-erp' ), 'erp_manage_designation', 'erp-hr-designation', array( $this, 'designation_page' ) );
         add_submenu_page( 'erp-hr', __( 'Announcement', 'wp-erp' ), __( 'Announcement', 'wp-erp' ), 'erp_manage_announcement', 'edit.php?post_type=erp_hr_announcement' );
         add_submenu_page( 'erp-hr', __( 'Settings', 'wp-erp' ), __( 'Settings', 'wp-erp' ), 'erp_manage_hr_settings', 'erp-hr-settings', array( $this, 'settings_page' ) );
 
