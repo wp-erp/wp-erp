@@ -3,11 +3,11 @@
 /** Callbacks *****************************/
 
 function erp_hr_dashboard_widget_birthday_callback() {
-    erp_admin_dash_metabox( __( 'Birthday Buddies', 'wp-erp' ), 'erp_hr_dashboard_widget_birthday' );
+    erp_admin_dash_metabox( __( '<i class="fa fa-birthday-cake"></i> Birthday Buddies', 'wp-erp' ), 'erp_hr_dashboard_widget_birthday' );
 }
 
 function erp_hr_dashboard_widget_announcement_callback() {
-    erp_admin_dash_metabox( __( 'Latest Announcement', 'wp-erp' ), 'erp_hr_dashboard_widget_latest_announcement' );
+    erp_admin_dash_metabox( __( '<i class="fa fa-microphone"></i> Latest Announcement', 'wp-erp' ), 'erp_hr_dashboard_widget_latest_announcement' );
 }
 
 
@@ -76,8 +76,10 @@ function erp_hr_dashboard_widget_birthday() {
  */
 function erp_hr_dashboard_widget_latest_announcement() {
     $announcements = erp_hr_employee_dashboard_announcement( get_current_user_id() );
+    
+    if ( $announcements ) {
     ?>
-    <ul class="erp-list erp-dashboard-announcement">
+      <ul class="erp-list erp-dashboard-announcement">
         <?php foreach ( $announcements as $key => $announcement ): ?>
             <li <?php echo ( $announcement->status == 'unread' ) ? 'class="unread"' : ''; ?>>
                 <h4>
@@ -91,8 +93,11 @@ function erp_hr_dashboard_widget_latest_announcement() {
                 </div>           
             </li>        
         <?php endforeach ?>    
-    </ul>
+    </ul>  
     <?php
+    } else {
+        _e( 'No announcement found', 'wp-erp' );
+    }
 }
 
 

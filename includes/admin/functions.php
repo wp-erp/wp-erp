@@ -11,7 +11,7 @@
 function erp_admin_dash_metabox( $title = '', $callback = null ) {
     ?>
     <div class="postbox">
-        <h3 class="hndle"><span><?php echo esc_html( $title ); ?></span></h3>
+        <h3 class="hndle"><span><?php echo $title; ?></span></h3>
         <div class="inside">
             <div class="main">
                 <?php if ( is_callable( $callback ) ) {
