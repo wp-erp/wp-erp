@@ -1,54 +1,4 @@
 <?php
-/**
- * After create employee apply leave policy
- * @param  int $user_id 
- * @param  array $data    
- * @return void          
- */
-function erp_hr_apply_new_employee_policy( $user_id ) {
-    $employee_obj = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
-
-    $employee    = $employee_obj->to_array();
-    $department  = isset( $employee['work']['department'] ) ? $employee['work']['department'] : '';
-    $designation = isset( $employee['work']['designation'] ) ? $employee['work']['designation'] : '';
-    $gender      = isset( $employee['personal']['gender'] ) ? $employee['personal']['gender'] : '';
-    $location    = isset( $employee['work']['location'] ) ? $employee['work']['location'] : '';
-    $marital     = isset( $employee['personal']['marital_status'] ) ? $employee['personal']['marital_status'] : '';
-
-    $policies = \WeDevs\ERP\HRM\Models\Leave_Policies::where( 'activate', '1' )->get()->toArray();
-  
-    $selected_policy = [];
- 
-
-    foreach ( $policies as $key => $policy ) {
-
-        if ( $policy['department'] != '-1' && $policy['department'] != $department) {
-            continue;
-        }
-
-        if ( $policy['designation'] != '-1' && $policy['designation'] != $designation ) {
-            continue; 
-        }
-
-        if ( $policy['gender'] != '-1' && $policy['gender'] != $gender ) {
-            continue; 
-        }
-
-        if ( $policy['location'] != '-1' && $policy['location'] != $location ) {
-            continue; 
-        }
-
-        if ( $policy['marital'] != '-1' && $policy['marital'] != $marital ) {
-            continue; 
-        }
- 
-        $selected_policy[] = $policy;
-    }
-     
-    foreach ( $selected_policy as $key => $leave_policy ) {
-        erp_hr_apply_leave_policy( $user_id, $leave_policy );
-    }
-}
 
 /**
  * Get holiday between two date
@@ -916,6 +866,63 @@ function erp_hr_leave_get_balance( $user_id ) {
     return false;
 }
 
+/**
+ * After create employee apply leave policy
+ * @param  int $user_id 
+ * @param  array $data    
+ * @return void          
+ */
+function erp_hr_apply_new_employee_policy( $user_id ) {
+    $employee_obj = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
+
+    $employee    = $employee_obj->to_array();
+    $department  = isset( $employee['work']['department'] ) ? $employee['work']['department'] : '';
+    $designation = isset( $employee['work']['designation'] ) ? $employee['work']['designation'] : '';
+    $gender      = isset( $employee['personal']['gender'] ) ? $employee['personal']['gender'] : '';
+    $location    = isset( $employee['work']['location'] ) ? $employee['work']['location'] : '';
+    $marital     = isset( $employee['personal']['marital_status'] ) ? $employee['personal']['marital_status'] : '';
+    $today       = date( 'Y-m-d', strtotime( current_time( 'mysql' ) ) );
+
+    $policies    = \WeDevs\ERP\HRM\Models\Leave_Policies::where( 'activate', '1' )->get()->toArray();
+  
+    $selected_policy = [];
+ 
+
+    foreach ( $policies as $key => $policy ) {
+        $effective_date = date( 'Y-m-d', strtotime( $policy['effective_date'] ) );
+
+        if ( $today < $effective_date ) {
+            continue;
+        }
+
+        if ( $policy['department'] != '-1' && $policy['department'] != $department) {
+            continue;
+        }
+
+        if ( $policy['designation'] != '-1' && $policy['designation'] != $designation ) {
+            continue; 
+        }
+
+        if ( $policy['gender'] != '-1' && $policy['gender'] != $gender ) {
+            continue; 
+        }
+
+        if ( $policy['location'] != '-1' && $policy['location'] != $location ) {
+            continue; 
+        }
+
+        if ( $policy['marital'] != '-1' && $policy['marital'] != $marital ) {
+            continue; 
+        }
+ 
+        $selected_policy[] = $policy;
+    }
+     
+    foreach ( $selected_policy as $key => $leave_policy ) {
+        erp_hr_apply_leave_policy( $user_id, $leave_policy );
+    }
+}
+
 
 function erp_hr_apply_leave_policy( $user_id, $leave_policy ) {
     $policy = array(
@@ -935,7 +942,8 @@ function erp_hr_apply_policy_schedule() {
     $active_employes = \WeDevs\ERP\HRM\Models\Employee::select('user_id')->where( 'status', 'active' )->get()->toArray();
     $policies        = \WeDevs\ERP\HRM\Models\Leave_Policies::where( 'activate', '2' )->get()->toArray();
     $selected_policy = [];
-    
+    $today           = date( 'Y-m-d', strtotime( current_time( 'mysql' ) ) );
+
     foreach ( $active_employes as $key => $employee ) {
         
         $employee_obj  = new \WeDevs\ERP\HRM\Employee( intval( $employee['user_id'] ) );
@@ -950,6 +958,12 @@ function erp_hr_apply_policy_schedule() {
         $daydiff       = count( erp_extract_dates( $hire_date, $current_time ) ) - 1;
        
         foreach ( $policies as $key => $policy ) {
+            $effective_date = date( 'Y-m-d', strtotime( $policy['effective_date'] ) );
+
+            if ( $today < $effective_date ) {
+                continue;
+            }
+
             if ( $daydiff <= $policy['execute_day'] ) {
                 continue;
             }
@@ -978,6 +992,12 @@ function erp_hr_apply_policy_schedule() {
         }
     }
     
+}
+
+function erp_hr_apply_policy_existance_employee( $policy_id, $args ) {
+    if ( $args['instant_apply'] ) {
+       erp_hr_apply_policy_schedule(); 
+    }
 }
 
 
