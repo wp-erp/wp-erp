@@ -4,7 +4,7 @@ namespace WeDevs\ERP\HRM;
 /**
  * List table class
  */
-class Deparment_List_Table extends \WP_List_Table {
+class Department_List_Table extends \WP_List_Table {
 
     function __construct() {
         global $status, $page;
@@ -279,7 +279,7 @@ class Deparment_List_Table extends \WP_List_Table {
      */
     function get_bulk_actions() {
         $actions = array(
-            'trash'  => __( 'Move to Trash', 'wp-erp' ),
+            'delete_department'  => __( 'Move to Trash', 'wp-erp' ),
         );
         return $actions;
     }

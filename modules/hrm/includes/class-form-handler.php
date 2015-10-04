@@ -26,9 +26,21 @@ class Form_Handler {
         add_action( 'admin_init', array( $this, 'leave_request_status_change' ) );
         add_action( 'load-leave_page_erp-holiday-assign', array( $this, 'holiday_action') );
         add_action( 'load-hr-management_page_erp-hr-employee', array( $this, 'employee_bulk_action') );
+        add_action( 'load-hr-management_page_erp-hr-designation', array( $this, 'designation_bulk_action') );
+        add_action( 'load-hr-management_page_erp-hr-depts', array( $this, 'department_bulk_action') );
         add_action( 'load-leave_page_erp-leave-policies', array( $this, 'leave_policies') );
     }
 
+    /**
+     * Check is current page actions
+     *
+     * @since 0.1 
+     * 
+     * @param  integer $page_id     
+     * @param  integer $bulk_action 
+     * 
+     * @return boolean
+     */
     public function verify_current_page_screen( $page_id, $bulk_action ) {
 
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! isset( $_GET['page'] ) ) {
@@ -46,6 +58,13 @@ class Form_Handler {
         return true;
     }
 
+    /**
+     * Handle leave policies bulk action
+     *
+     * @since 0.1 
+     * 
+     * @return void [redirection]
+     */
     public function leave_policies() {
 
         if ( ! $this->verify_current_page_screen( 'erp-leave-policies', 'bulk-leave_policies' ) ) {
@@ -61,6 +80,13 @@ class Form_Handler {
         return true;
     }
 
+    /**
+     * Handle Employee Bulk actions
+     *
+     * @since 0.1 
+     * 
+     * @return void [redirection]
+     */
     public function employee_bulk_action() {
 
         if ( ! $this->verify_current_page_screen( 'erp-hr-employee', 'bulk-employees' ) ) {
@@ -107,6 +133,84 @@ class Form_Handler {
 
                 case 'employee_search':
                     $redirect = remove_query_arg( array( 'employee_search' ), $redirect );
+                    wp_redirect( $redirect );
+                    exit();
+            }
+        }
+    }
+
+    /**
+     * Handle designation bulk action
+     *
+     * @since 0.1 
+     * 
+     * @return void [redirection]
+     */
+    public function designation_bulk_action() {
+        if ( ! $this->verify_current_page_screen( 'erp-hr-designation', 'bulk-designations' ) ) {
+            return;
+        }
+
+        $employee_table = new \WeDevs\ERP\HRM\Designation_List_Table();
+        $action = $employee_table->current_action();
+
+        if ( $action ) {
+
+            $redirect = remove_query_arg( array('_wp_http_referer', '_wpnonce', 'action', 'action2' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
+
+            switch ( $action ) {
+
+                case 'designation_delete' :
+
+                    if ( isset( $_GET['desig'] ) && !empty( $_GET['desig'] ) ) {
+                        $not_deleted_item = erp_hr_delete_designation( $_GET['desig'] );
+                    }
+
+                    if ( ! empty ( $not_deleted_item ) ) {
+                        $redirect = add_query_arg( array( 'desig_delete' => implode( ',', $not_deleted_item ) ), $redirect );   
+                    }
+                    
+                    wp_redirect( $redirect );
+                    exit();
+            }
+        }
+    }
+
+    /**
+     * Department handle bulk action
+     *
+     * @since 0.1 
+     * 
+     * @return void [redirection]
+     */
+    public function department_bulk_action() {
+
+        if ( ! $this->verify_current_page_screen( 'erp-hr-depts', 'bulk-departments' ) ) {
+            return;
+        }
+
+        $employee_table = new \WeDevs\ERP\HRM\Department_List_Table();
+        $action         = $employee_table->current_action();
+
+        if ( $action ) {
+
+            $redirect = remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'action', 'action2' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
+            $resp     = [];
+
+            switch ( $action ) {
+
+                case 'delete_department' :
+
+                    if ( isset( $_GET['department_id'] ) && $_GET['department_id'] ) {
+                        foreach ( $_GET['department_id'] as $key => $dept_id ) {
+                            $resp[] = erp_hr_delete_department( $dept_id );
+                        }
+                    }
+
+                    if ( in_array ( false, $resp ) ) {
+                        $redirect = add_query_arg( array( 'department_delete' => 'item_deleted' ), $redirect );   
+                    }
+                    
                     wp_redirect( $redirect );
                     exit();
             }

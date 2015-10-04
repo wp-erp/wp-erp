@@ -104,7 +104,7 @@ class Designation_List_Table extends \WP_List_Table {
      */
     function get_bulk_actions() {
         $actions = array(
-            'trash'  => __( 'Move to Trash', 'wp-erp' ),
+            'designation_delete'  => __( 'Delete', 'wp-erp' ),
         );
         return $actions;
     }
