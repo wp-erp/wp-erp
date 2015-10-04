@@ -165,6 +165,7 @@ class Human_Resource {
         wp_localize_script( 'wp-erp-hr', 'wpErpHr', $localize_script );
 
         wp_enqueue_style( 'wp-color-picker' );
+        wp_enqueue_style( 'erp-fontawesome' );
         wp_enqueue_style( 'erp-select2' );
         wp_enqueue_style( 'erp-tiptip' );
         wp_enqueue_style( 'erp-style' );
