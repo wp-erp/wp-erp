@@ -867,15 +867,23 @@ function erp_hr_leave_get_balance( $user_id ) {
 }
 
 /**
- * After create employee apply leave policy
- * @param  int $user_id 
- * @param  array $data    
+ * After create employee apply leave policy, you can also create leave policy by passing employee id.
+ * @param  int $employee 
+ * @param  array $policies    
  * @return void          
  */
-function erp_hr_apply_new_employee_policy( $user_id ) {
-    $employee_obj = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
+function erp_hr_apply_new_employee_policy( $employee = false, $policies = false ) {
 
-    $employee    = $employee_obj->to_array();
+    if ( ! $employee ) {
+        $user_id  = intval( $employee );
+        $employee_obj = new \WeDevs\ERP\HRM\Employee( intval( $employee ) );
+        $employee     = $employee_obj->to_array();
+
+    } else {
+        $user_id  = intval( $employee['id'] );
+    }
+    
+    
     $department  = isset( $employee['work']['department'] ) ? $employee['work']['department'] : '';
     $designation = isset( $employee['work']['designation'] ) ? $employee['work']['designation'] : '';
     $gender      = isset( $employee['personal']['gender'] ) ? $employee['personal']['gender'] : '';
@@ -883,15 +891,21 @@ function erp_hr_apply_new_employee_policy( $user_id ) {
     $marital     = isset( $employee['personal']['marital_status'] ) ? $employee['personal']['marital_status'] : '';
     $today       = date( 'Y-m-d', strtotime( current_time( 'mysql' ) ) );
 
-    $policies    = \WeDevs\ERP\HRM\Models\Leave_Policies::where( 'activate', '1' )->get()->toArray();
-  
+    if ( ! $policies ) {
+        $policies    = \WeDevs\ERP\HRM\Models\Leave_Policies::where( 'activate', '1' )->get()->toArray();
+    } else {
+        $policies    = array( $policies );
+    }
+    
+                                                                                                                                               
     $selected_policy = [];
  
 
     foreach ( $policies as $key => $policy ) {
+
         $effective_date = date( 'Y-m-d', strtotime( $policy['effective_date'] ) );
 
-        if ( $today < $effective_date ) {
+        if ( strtotime( $effective_date ) < 0 && $today < $effective_date ) {
             continue;
         }
 
@@ -917,13 +931,19 @@ function erp_hr_apply_new_employee_policy( $user_id ) {
  
         $selected_policy[] = $policy;
     }
-     
+    
     foreach ( $selected_policy as $key => $leave_policy ) {
         erp_hr_apply_leave_policy( $user_id, $leave_policy );
     }
 }
 
-
+/**
+ * Assign entitlement
+ * 
+ * @param  int $user_id 
+ * @param  array $leave_policy    
+ * @return void          
+ */
 function erp_hr_apply_leave_policy( $user_id, $leave_policy ) {
     $policy = array(
         'user_id'    => $user_id,
@@ -937,10 +957,15 @@ function erp_hr_apply_leave_policy( $user_id, $leave_policy ) {
     erp_hr_leave_insert_entitlement( $policy );
 }
 
+/**
+ * Assign for schedule leave policy   
+ * 
+ * @return void          
+ */
 function erp_hr_apply_policy_schedule() {
 
     $active_employes = \WeDevs\ERP\HRM\Models\Employee::select('user_id')->where( 'status', 'active' )->get()->toArray();
-    $policies        = \WeDevs\ERP\HRM\Models\Leave_Policies::where( 'activate', '2' )->get()->toArray();
+    $policies        = \WeDevs\ERP\HRM\Models\Leave_Policies::get()->toArray();
     $selected_policy = [];
     $today           = date( 'Y-m-d', strtotime( current_time( 'mysql' ) ) );
 
@@ -956,14 +981,18 @@ function erp_hr_apply_policy_schedule() {
         $hire_date     = isset( $employee_data['work']['hiring_date'] ) ? $employee_data['work']['hiring_date'] : '';
         $current_time  = current_time( 'mysql' );
         $daydiff       = count( erp_extract_dates( $hire_date, $current_time ) ) - 1;
-       
+  
         foreach ( $policies as $key => $policy ) {
-            $effective_date = date( 'Y-m-d', strtotime( $policy['effective_date'] ) );
-
-            if ( $today < $effective_date ) {
+            if ( $policy['activate'] == 1 ) {
+                erp_hr_apply_new_employee_policy( $employee_data, $policy );
                 continue;
             }
-
+            $effective_date = date( 'Y-m-d', strtotime( $policy['effective_date'] ) );
+            
+            if ( strtotime( $effective_date ) < 0 && $today < $effective_date ) {
+                continue;
+            }
+          
             if ( $daydiff <= $policy['execute_day'] ) {
                 continue;
             }
@@ -995,8 +1024,20 @@ function erp_hr_apply_policy_schedule() {
 }
 
 function erp_hr_apply_policy_existance_employee( $policy_id, $args ) {
-    if ( $args['instant_apply'] ) {
+
+    if ( $args['instant_apply'] !== true ) {
+        return;
+    }
+
+    if ( $args['activate'] == 2 ) {
        erp_hr_apply_policy_schedule(); 
+    }
+
+    if ( $args['activate'] == 1 ) {
+        $active_employes = \WeDevs\ERP\HRM\Models\Employee::select('user_id')->where( 'status', 'active' )->get()->toArray();
+        foreach ( $active_employes as $key => $employee ) {
+            erp_hr_apply_new_employee_policy( intval( $employee['user_id'] ) );
+        }
     }
 }
 

@@ -300,6 +300,30 @@ function erp_format_date( $date, $format = false ) {
  * @return array
  */
 function erp_extract_dates( $start_date, $end_date ) {
+
+    // if ( strtotime( $start_date) < 0 || strtotime( $end_date ) < 0 ) {
+    //     return 0;
+    // }
+
+    // $start = date( 'Y-m-d', strtotime( $start_date) );
+    // $end   = date( 'Y-m-d', strtotime( $end_date ) );
+
+    // if( $start > $end ) {
+    //     return 0;
+    // }
+
+    // $total = [];
+    // while( $start <= $end ) {
+       
+    //     $total[] = $start;
+    //     $start = date( 'Y-m-d', strtotime( $start . '+1 days') );
+    // }
+
+    // return $total;
+
+
+
+
     $start_date = new DateTime( $start_date );
     $end_date   = new DateTime( $end_date );
     $end_date->modify( '+1 day' ); // to get proper days in duration

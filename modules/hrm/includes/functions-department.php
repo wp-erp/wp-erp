@@ -160,12 +160,12 @@ function erp_hr_delete_department( $department_id ) {
  *
  * @return array  the key-value paired departments
  */
-function erp_hr_get_departments_dropdown_raw($select_label = null ) {
+function erp_hr_get_departments_dropdown_raw( $select_label = null ) {
     $departments = erp_hr_get_departments();
-    $dropdown    = array( 0 => __( '- Select Department -', 'wp-erp' ) );
+    $dropdown    = array( '-1' => __( '- Select Department -', 'wp-erp' ) );
 
     if ( $select_label ) {
-        $dropdown    = array( 0 => $select_label );
+        $dropdown    = array( '-1' => $select_label );
     }
 
     if ( $departments ) {

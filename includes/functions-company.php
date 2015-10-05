@@ -46,10 +46,10 @@ function erp_company_get_locations() {
  */
 function erp_company_get_location_dropdown_raw( $select_label = null ) {
     $locations = erp_company_get_locations();
-    $dropdown  = array( 0 => __( 'Main Location', 'wp-erp' ) );
+    $dropdown  = array( '-1' => __( 'Main Location', 'wp-erp' ) );
 
     if ( $select_label ) {
-        $dropdown    = array( 0 => $select_label );
+        $dropdown    = array( '-1' => $select_label );
     }
 
     foreach ($locations as $location) {

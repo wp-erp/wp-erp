@@ -593,15 +593,23 @@ function erp_hr_get_employee_sources() {
  * @return array all the statuses
  */
 function erp_hr_get_marital_statuses( $select_text = null ) {
-    $select_text    = $select_text ? array( '0' => $select_text ) : array();
 
-    $statuses = array(
-        'single'  => __( 'Single', 'wp-erp' ),
-        'married' => __( 'Married', 'wp-erp' ),
-        'widowed' => __( 'Widowed', 'wp-erp' )
-    );
-
-    return apply_filters( 'erp_hr_marital_statuses', array_merge( $select_text, $statuses ) );
+    if ( $select_text ) {
+        $statuses = array(
+            '-1'      => $select_text,
+            'single'  => __( 'Single', 'wp-erp' ),
+            'married' => __( 'Married', 'wp-erp' ),
+            'widowed' => __( 'Widowed', 'wp-erp' )
+        );
+    } else {
+        $statuses = array(
+            'single'  => __( 'Single', 'wp-erp' ),
+            'married' => __( 'Married', 'wp-erp' ),
+            'widowed' => __( 'Widowed', 'wp-erp' )
+        ); 
+    }
+    
+    return apply_filters( 'erp_hr_marital_statuses',  $statuses );
 }
 
 /**
@@ -668,15 +676,22 @@ function erp_hr_get_terminate_rehire_options( $selected = NULL ) {
  */
 function erp_hr_get_genders( $select_text = null ) {
 
-    $select_text    = $select_text ? array( '-1' => $select_text ) : array();
+    if ( $select_text ) {
+        $genders = array(
+            '-1'     => $select_text,
+            'male'   => __( 'Male', 'wp-erp' ),
+            'female' => __( 'Female', 'wp-erp' ),
+            'other'  => __( 'Other', 'wp-erp' )
+        );
+    } else {
+        $genders = array(
+            'male'   => __( 'Male', 'wp-erp' ),
+            'female' => __( 'Female', 'wp-erp' ),
+            'other'  => __( 'Other', 'wp-erp' )
+        );
+    }
 
-    $genders = array(
-        'male'   => __( 'Male', 'wp-erp' ),
-        'female' => __( 'Female', 'wp-erp' ),
-        'other'  => __( 'Other', 'wp-erp' )
-    );
-
-    return apply_filters( 'erp_hr_genders', array_merge( $select_text, $genders ) );
+    return apply_filters( 'erp_hr_genders', $genders );
 }
 
 /**
