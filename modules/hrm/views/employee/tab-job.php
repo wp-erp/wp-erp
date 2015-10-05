@@ -1,6 +1,24 @@
 <div class="job-tab-wrap">
 
     <?php $history = $employee->get_history(); ?>
+    
+    <h3><?php _e( 'Employee Main Status', 'wp-erp' ); ?></h3>
+
+    <form action="" method="post">
+        <?php erp_html_form_input( array(
+            'label'   => __( 'Employee Status : ', 'wp-erp' ),
+            'name'    => 'employee_status',
+            'value'   => $employee->erp->status,
+            'class'   => 'select2',
+            'type'    => 'select',
+            'options' => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_employee_statuses()
+        ) ); ?>
+
+        <input type="hidden" name="user_id" id="erp-employee-id" value="<?php echo $employee->id; ?>">
+        <input type="hidden" name="action" id="erp-employee-status-action" value="erp-hr-employee-status">
+        <?php wp_nonce_field( 'wp-erp-hr-employee-update-nonce' ); ?>
+        <input type="submit" class="button" name="employee_update_status" value="<?php esc_attr_e( 'Update', 'wp-erp' ); ?>">
+    </form>
 
     <h3><?php _e( 'Employment Status', 'wp-erp' ) ?></h3>
 
