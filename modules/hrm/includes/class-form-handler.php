@@ -24,6 +24,7 @@ class Form_Handler {
         add_action( 'erp_action_erp-hr-employee-permission', array( $this, 'employee_permission' ) );
 
         add_action( 'admin_init', array( $this, 'leave_request_status_change' ) );
+        add_action( 'admin_init', array( $this, 'handle_employee_status_update' ) );
         add_action( 'load-leave_page_erp-holiday-assign', array( $this, 'holiday_action') );
         add_action( 'load-hr-management_page_erp-hr-employee', array( $this, 'employee_bulk_action') );
         add_action( 'load-hr-management_page_erp-hr-designation', array( $this, 'designation_bulk_action') );
@@ -379,6 +380,13 @@ class Form_Handler {
         exit;
     }
 
+    /**
+     * Leave Request Status change
+     *
+     * @since 0,1 
+     *        
+     * @return void
+     */
     public function leave_request_status_change() {
 
         if ( ! isset( $_GET['leave_action'] ) ) {
@@ -432,6 +440,28 @@ class Form_Handler {
             wp_redirect( $redirect_to );
             exit;
         }
+    }
+
+    /**
+     * Employee Status Update
+     *
+     * @since 0.1 
+     *            
+     * @return void
+     */
+    public function handle_employee_status_update() {
+    
+        if ( ! isset( $_POST['employee_update_status'] ) ) {
+            return;
+        }
+
+        if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'wp-erp-hr-employee-update-nonce' ) ) {
+            return;
+        }
+
+        \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', '=', $_POST['user_id'] )->update( ['status' => $_POST['employee_status'] ] );
+        wp_redirect( $_POST['_wp_http_referer'] );
+        exit();
     }
 
     /**
