@@ -139,7 +139,7 @@ function erp_html_form_input( $args = array() ) {
             break;
 
         case 'checkbox':
-            echo '<input type="hidden" value="off" name="' . $field['name'] . '" />';
+            //echo '<input type="hidden" value="off" name="' . $field['name'] . '" />';
             echo '<input type="checkbox" '.checked( $field['value'], 'on', false ).' value="on" ' . implode( ' ', $custom_attributes ) . ' />';
             break;
 

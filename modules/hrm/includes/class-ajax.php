@@ -975,8 +975,7 @@ class Ajax_Handler {
      */
     public function leave_policy_create() {
         $this->verify_nonce( 'erp-leave-policy' );
-        var_dump( $_POST );
-        die();
+
         $policy_id      = isset( $_POST['policy-id'] ) ? intval( $_POST['policy-id'] ) : 0;
         $name           = isset( $_POST['name'] ) ? sanitize_text_field( $_POST['name'] ) : '';
         $days           = isset( $_POST['days'] ) ? intval( $_POST['days'] ) : '';
@@ -990,6 +989,7 @@ class Ajax_Handler {
         $after_x_day    = isset( $_POST['no_of_days'] ) ? intval( $_POST['no_of_days'] ) : '';
         $effective_date = isset( $_POST['effective_date'] ) ? $_POST['effective_date'] : '';
         $location       = isset( $_POST['location'] ) ? $_POST['location'] : '';
+        $instant_apply  = ( isset( $_POST['apply'] ) ) && ( $_POST['apply'] == 'on' ) ? true : false; 
 
 
         $policy_id = erp_hr_leave_insert_policy( array(
@@ -1005,7 +1005,8 @@ class Ajax_Handler {
             'activate'       => $activate,
             'execute_day'    => $after_x_day,
             'effective_date' => $effective_date,
-            'location'       => $location
+            'location'       => $location,
+            'instant_apply'  => $instant_apply
         ) );
 
         if ( is_wp_error( $policy_id ) ) {
