@@ -117,7 +117,7 @@
                     'custom_attr' => array( 'data-id' => 'erp-company-new-location' ),
                     'class'   => 'erp-hrm-select2-add-more erp-hr-location-drop-down',
                     'type'    => 'select',
-                    'options' => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_company_get_location_dropdown_raw()
+                    'options' => erp_company_get_location_dropdown_raw()
                 ) ); ?>
             </li>
 

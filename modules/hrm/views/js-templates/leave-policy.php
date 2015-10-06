@@ -64,13 +64,13 @@
         ) ); ?>
     </div>
 
-    <div class="row" data-selected="{{ data.designation }}">
+    <div class="row" data-selected="{{ data.location }}">
         <?php erp_html_form_input( array(
             'label'   => __( 'Location', 'wp-erp' ),
             'name'    => 'location',
             'value'   => '{{ data.location }}',
             'type'    => 'select',
-            'options' => erp_company_get_location_dropdown_raw( __( 'All Location', 'wp-erp' ) )
+            'options' => array('-1' => __( 'All Location', 'wp-erp' ) ) + erp_company_get_location_dropdown_raw()
         ) ); ?>
     </div>
 
