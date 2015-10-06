@@ -1102,5 +1102,37 @@ function erp_hr_apply_policy_existance_employee( $policy_id, $args ) {
     }
 }
 
+/**
+ * Get cuurent month approve leave request list
+ *
+ * @since 0.1  
+ * 
+ * @return array 
+ */
+function erp_hr_get_current_month_leave_list() {
+    $db = new \WeDevs\ORM\Eloquent\Database();
+    return erp_array_to_object( \WeDevs\ERP\HRM\Models\Leave_request::select('user_id', 'start_date', 'end_date' )
+            ->where( $db->raw("DATE_FORMAT( `start_date`, '%m %Y' )" ), \Carbon\Carbon::today()->format('m Y') )
+            ->where('status', 1 )
+            ->get()
+            ->toArray() );  
+}
+
+/**
+ * Get newxt month leave request approved list
+ *
+ * @since 0.1 
+ * 
+ * @return array 
+ */
+function erp_hr_get_next_month_leave_list() {
+    $db = new \WeDevs\ORM\Eloquent\Database();
+    return erp_array_to_object( \WeDevs\ERP\HRM\Models\Leave_request::select('user_id', 'start_date', 'end_date' )
+            ->where( $db->raw("DATE_FORMAT( `start_date`, '%m %Y' )" ), \Carbon\Carbon::today()->addMonth(1)->format('m Y') )
+            ->where('status', 1 )
+            ->get()
+            ->toArray() );  
+}
+
 
 
