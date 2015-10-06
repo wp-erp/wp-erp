@@ -923,15 +923,14 @@ function erp_hr_leave_get_balance( $user_id ) {
  */
 function erp_hr_apply_new_employee_policy( $employee = false, $policies = false ) {
 
-    if ( ! $employee ) {
+    if ( is_int( $employee ) ) {
         $user_id  = intval( $employee );
-        $employee_obj = new \WeDevs\ERP\HRM\Employee( intval( $employee ) );
+        $employee_obj = new \WeDevs\ERP\HRM\Employee( $user_id );
         $employee     = $employee_obj->to_array();
 
     } else {
         $user_id  = intval( $employee['id'] );
     }
-    
     
     $department  = isset( $employee['work']['department'] ) ? $employee['work']['department'] : '';
     $designation = isset( $employee['work']['designation'] ) ? $employee['work']['designation'] : '';
@@ -977,7 +976,7 @@ function erp_hr_apply_new_employee_policy( $employee = false, $policies = false 
         if ( $policy['marital'] != '-1' && $policy['marital'] != $marital ) {
             continue; 
         }
- 
+
         $selected_policy[] = $policy;
     }
     
