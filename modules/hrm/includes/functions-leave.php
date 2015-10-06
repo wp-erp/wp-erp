@@ -338,8 +338,10 @@ function erp_hr_get_holidays( $args = [] ) {
 }
 
 /**
- * count total holidays
+ * Count total holidays
  *
+ * @since 0.1 
+ * 
  * @return \stdClass
  */
 function erp_hr_count_holidays( $args ) {
@@ -350,6 +352,16 @@ function erp_hr_count_holidays( $args ) {
     return $holiday->count();
 }
 
+/**
+ * Filter parameter for holidays
+ *
+ * @since 0.1 
+ *        
+ * @param  object $holiday
+ * @param  array $args   
+ * 
+ * @return object         
+ */
 function erp_hr_holiday_filter_param( $holiday, $args ) {
 
     $args_s = isset( $args['s'] ) ? $args['s'] : '';
@@ -374,8 +386,10 @@ function erp_hr_holiday_filter_param( $holiday, $args ) {
 }
 
 /**
- * Remove holiday
+ * Remove holidays
  *
+ * @since 0.1 
+ * 
  * @return \stdClass
  */
 function erp_hr_delete_holidays( $holidays_id ) {
@@ -414,9 +428,11 @@ function erp_hr_leave_get_policies_dropdown_raw() {
 /**
  * Delete a policy
  *
- * @param  int  policy id
+ * @since 0.1
+ * 
+ * @param  integer  policy_id
  *
- * @return bool
+ * @return boolean
  */
 function erp_hr_leave_policy_delete( $policy_id ) {
 
@@ -493,9 +509,11 @@ function erp_hr_leave_insert_entitlement( $args = array() ) {
 /**
  * Add a new leave request
  *
- * @param  array   $args
+ * @since 0.1 
+ * 
+ * @param  array $args
  *
- * @return int  request id
+ * @return integet request_id
  */
 function erp_hr_leave_insert_request( $args = array() ) {
     global $wpdb;
@@ -580,6 +598,8 @@ function erp_hr_leave_insert_request( $args = array() ) {
 /**
  * Fetch the leave requests
  *
+ * @since 0.1
+ * 
  * @param  array   $args
  *
  * @return array
@@ -668,6 +688,8 @@ function erp_hr_leave_get_requests( $args = array() ) {
 /**
  * Get leave requests count
  *
+ * @since 0.1 
+ * 
  * @return array
  */
 function erp_hr_leave_get_requests_count() {
@@ -701,6 +723,16 @@ function erp_hr_leave_get_requests_count() {
     return $counts;
 }
 
+/**
+ * Update leave request status
+ *
+ * @since 0.1 
+ * 
+ * @param  integer $request_id 
+ * @param  string $status     
+ * 
+ * @return array
+ */
 function erp_hr_leave_request_update_status( $request_id, $status ) {
     global $wpdb;
 
@@ -713,6 +745,8 @@ function erp_hr_leave_request_update_status( $request_id, $status ) {
 /**
  * Get leave requests status
  *
+ * @since 0.1 
+ * 
  * @param  int|boolean  $status
  *
  * @return array|string
@@ -738,9 +772,11 @@ function erp_hr_leave_request_get_statuses( $status = false ) {
  * Check if an employee has already entitled to a policy in
  * a certain calendar year
  *
- * @param  int  $employee_id
- * @param  int  $policy_id
- * @param  int  $year
+ * @since 0.1 
+ * 
+ * @param  integer  $employee_id
+ * @param  integer  $policy_id
+ * @param  integer  $year
  *
  * @return bool
  */
@@ -760,7 +796,7 @@ function erp_hr_leave_has_employee_entitlement( $employee_id, $policy_id, $year 
 /**
  * Get all the leave entitlements of a calendar year
  *
- * @param  int  $year
+ * @param  integer  $year
  *
  * @return array
  */
@@ -814,6 +850,15 @@ function erp_hr_leave_get_entitlements( $args = array() ) {
     return $results;
 }
 
+/**
+ * Erp get leave balance
+ *
+ * @since 0.1 
+ * 
+ * @param  integer $user_id 
+ * 
+ * @return float|boolean
+ */
 function erp_hr_leave_get_balance( $user_id ) {
     global $wpdb;
 
@@ -868,8 +913,12 @@ function erp_hr_leave_get_balance( $user_id ) {
 
 /**
  * After create employee apply leave policy, you can also create leave policy by passing employee id.
+ *
+ * @since 0.1 
+ * 
  * @param  int $employee 
  * @param  array $policies    
+ * 
  * @return void          
  */
 function erp_hr_apply_new_employee_policy( $employee = false, $policies = false ) {
@@ -899,7 +948,7 @@ function erp_hr_apply_new_employee_policy( $employee = false, $policies = false 
     
                                                                                                                                                
     $selected_policy = [];
- 
+    
 
     foreach ( $policies as $key => $policy ) {
 
@@ -939,9 +988,12 @@ function erp_hr_apply_new_employee_policy( $employee = false, $policies = false 
 
 /**
  * Assign entitlement
+ *
+ * @since 0.1 
  * 
  * @param  int $user_id 
- * @param  array $leave_policy    
+ * @param  array $leave_policy  
+ *   
  * @return void          
  */
 function erp_hr_apply_leave_policy( $user_id, $leave_policy ) {
@@ -1023,6 +1075,16 @@ function erp_hr_apply_policy_schedule() {
     
 }
 
+/**
+ * Apply policy in existing employee
+ *
+ * @since 0.1 
+ * 
+ * @param  integer $policy_id 
+ * @param  array $args
+ * 
+ * @return void
+ */
 function erp_hr_apply_policy_existance_employee( $policy_id, $args ) {
 
     if ( $args['instant_apply'] !== true ) {
