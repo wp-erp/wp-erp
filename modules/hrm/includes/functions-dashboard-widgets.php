@@ -4,6 +4,7 @@
 
 function erp_hr_dashboard_widget_birthday_callback() {
     erp_admin_dash_metabox( __( '<i class="fa fa-birthday-cake"></i> Birthday Buddies', 'wp-erp' ), 'erp_hr_dashboard_widget_birthday' );
+    erp_admin_dash_metabox( __( '<i class="fa fa-paper-plane"></i> Who is out', 'wp-erp' ), 'erp_hr_dashboard_widget_whoisout' );
 }
 
 function erp_hr_dashboard_widget_announcement_callback() {
@@ -98,6 +99,50 @@ function erp_hr_dashboard_widget_latest_announcement() {
     } else {
         _e( 'No announcement found', 'wp-erp' );
     }
+}
+
+/**
+ * Erp dashboard who is out widget
+ *
+ * @since 0.1 
+ * 
+ * @return void 
+ */
+function erp_hr_dashboard_widget_whoisout() {
+    $leave_requests           = erp_hr_get_current_month_leave_list();
+    $leave_requests_nextmonth = erp_hr_get_next_month_leave_list();
+    ?>
+    <h4><?php _e( 'This Month', 'wp-erp' ); ?></h4>
+    <?php if ( $leave_requests ): ?>
+        <ul class="erp-list list-two-side list-sep">
+            <?php foreach ( $leave_requests as $key => $leave ): ?>
+                <?php $employee = new \WeDevs\ERP\HRM\Employee( intval( $leave->user_id ) ); ?>
+                <li>
+                    <a href="<?php echo $employee->get_details_url(); ?>"><?php echo $employee->get_full_name(); ?></a>
+                    <span><i class="fa fa-calendar"></i> <?php echo erp_format_date( $leave->start_date, 'M d,y' ) . ' - '. erp_format_date( $leave->end_date, 'M d,y' ); ?></span>
+                </li>
+            <?php endforeach ?>
+        </ul>
+    <?php else: ?>
+        <?php _e( 'No one is in vacation', 'wp-erp' ); ?>
+    <?php endif ?>
+    <hr>
+    <h4><?php _e( 'Next Month', 'wp-erp' ); ?></h4>
+    <?php if ( $leave_requests_nextmonth ): ?>
+        <ul class="erp-list list-two-side list-sep">
+            <?php foreach ( $leave_requests_nextmonth as $key => $leave ): ?>
+                <?php $employee = new \WeDevs\ERP\HRM\Employee( intval( $leave->user_id ) ); ?>
+                <li>
+                    <a href="<?php echo $employee->get_details_url(); ?>"><?php echo $employee->get_full_name(); ?></a>
+                    <span><i class="fa fa-calendar"></i> <?php echo erp_format_date( $leave->start_date, 'M d,y' ) . ' - '. erp_format_date( $leave->end_date, 'M d,y' ); ?></span>
+                </li>
+            <?php endforeach ?>
+        </ul>
+    <?php else: ?>
+        <?php _e( 'No one is vacation on next month', 'wp-erp' ); ?>
+    <?php endif ?>
+
+    <?php
 }
 
 
