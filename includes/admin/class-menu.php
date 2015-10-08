@@ -16,7 +16,6 @@ class Admin_Menu {
      */
     public function __construct() {
         $this->action( 'init', 'do_mode_switch', 99 );
-
         $this->action( 'admin_menu', 'admin_menu', 99 );
         $this->action( 'admin_menu', 'hide_admin_menus', 100 );
         $this->action( 'wp_before_admin_bar_render', 'hide_admin_bar_links', 100 );
@@ -115,13 +114,24 @@ class Admin_Menu {
      * @return void
      */
     public function admin_menu() {
+
         add_menu_page( __( 'ERP', 'wp-erp' ), __( 'ERP Settings', 'wp-erp' ), 'manage_options', 'erp-company', array( $this, 'company_page' ), 'dashicons-admin-settings', $this->get_menu_position() );
 
         add_submenu_page( 'erp-company', __( 'Company', 'wp-erp' ), __( 'Company', 'wp-erp' ), 'manage_options', 'erp-company', array( $this, 'company_page' ) );
         add_submenu_page( 'erp-company', __( 'Tools', 'wp-erp' ), __( 'Tools', 'wp-erp' ), 'manage_options', 'erp-tools', array( $this, 'tools_page' ) );
         add_submenu_page( 'erp-company', __( 'Audit Log', 'wp-erp' ), __( 'Audit Log', 'wp-erp' ), 'manage_options', 'erp-audit-log', array( $this, 'log_page' ) );
-        add_submenu_page( 'erp-company', __( 'Settings', 'wp-erp' ), __( 'Settings', 'wp-erp' ), 'manage_options', 'erp-settings', array( $this, 'employee_page' ) );
+        add_submenu_page( 'erp-company', __( 'Settings', 'wp-erp' ), __( 'Settings', 'wp-erp' ), 'manage_options', 'erp-settings', array( $this, 'settings_page' ) );
         add_submenu_page( 'erp-company', __( 'Add-Ons', 'wp-erp' ), __( 'Add-Ons', 'wp-erp' ), 'manage_options', 'erp-addons', array( $this, 'addon_page' ) );
+      
+    }
+
+    /**
+     * Erp Settings page
+     *
+     * @return void
+     */
+    function settings_page() {
+        new \WeDevs\ERP\Admin\setting\ERP_Settings();
     }
 
     /**
