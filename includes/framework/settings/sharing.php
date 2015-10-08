@@ -3,12 +3,12 @@
 /**
  * General class
  */
-class bedIQ_Settings_Sharing extends bedIQ_Settings_Page {
+class ERP_Settings_Sharing extends ERP_Settings_Page {
 
 
     function __construct() {
         $this->id = 'sharing';
-        $this->label = __( 'Sharing', 'bediq' );
+        $this->label = __( 'Sharing', 'erp' );
     }
 
     function get_post_types() {
@@ -36,7 +36,7 @@ class bedIQ_Settings_Sharing extends bedIQ_Settings_Page {
             'pinterest' => 'Pinterest'
         );
 
-        return apply_filters( 'bediq_sharing_services', $services );
+        return apply_filters( 'erp_sharing_services', $services );
     }
 
     /**
@@ -50,26 +50,26 @@ class bedIQ_Settings_Sharing extends bedIQ_Settings_Page {
 
         $fields = array(
 
-            array( 'title' => __( 'Sharing Settings', 'bediq' ), 'type' => 'title', 'desc' => __( 'Add sharing buttons to your blog and allow your visitors to share posts with their friends.', 'bediq' ) ),
+            array( 'title' => __( 'Sharing Settings', 'erp' ), 'type' => 'title', 'desc' => __( 'Add sharing buttons to your blog and allow your visitors to share posts with their friends.', 'erp' ) ),
 
             array(
-                'title'   => __( 'Open links in', 'bediq' ),
+                'title'   => __( 'Open links in', 'erp' ),
                 'id'      => 'open_links',
                 'default' => 'blank',
                 'type'    => 'select',
                 'options' => array(
-                    'blank' => __( 'New Window', 'bediq' ),
-                    'self'  => __( 'Same Window', 'bediq' )
+                    'blank' => __( 'New Window', 'erp' ),
+                    'self'  => __( 'Same Window', 'erp' )
                 )
             ),
             array(
-                'title'   => __( 'Show Services', 'bediq' ),
+                'title'   => __( 'Show Services', 'erp' ),
                 'id'      => 'services',
                 'type'    => 'multicheck',
                 'options' => $this->get_services()
             ),
             array(
-                'title'   => __( 'Show share buttons on', 'bediq' ),
+                'title'   => __( 'Show share buttons on', 'erp' ),
                 'id'      => 'sharing_on',
                 'default' => array( 'post' ),
                 'type'    => 'multicheck',
@@ -80,8 +80,8 @@ class bedIQ_Settings_Sharing extends bedIQ_Settings_Page {
 
         ); // End general settings
 
-        return apply_filters( 'bediq_settings_seo', $fields );
+        return apply_filters( 'erp_settings_seo', $fields );
     }
 }
 
-return new bedIQ_Settings_Sharing();
+return new ERP_Settings_Sharing();

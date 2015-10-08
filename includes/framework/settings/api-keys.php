@@ -3,7 +3,7 @@
 /**
  * General class
  */
-class bedIQ_Settings_API_Keys extends bedIQ_Settings_Page {
+class ERP_Settings_API_Keys extends ERP_Settings_Page {
 
 
     function __construct() {
@@ -20,12 +20,12 @@ class bedIQ_Settings_API_Keys extends bedIQ_Settings_Page {
 
         $fields = array(
 
-            array( 'title' => __( 'API Keys', 'bediq' ), 'type' => 'title', 'desc' => __( 'Various API keys and secrets that are needed for various services!', 'bediq' ), 'id' => 'general_options' ),
+            array( 'title' => __( 'API Keys', 'erp' ), 'type' => 'title', 'desc' => __( 'Various API keys and secrets that are needed for various services!', 'erp' ), 'id' => 'general_options' ),
 
             array(
-                'title' => __( 'Google Analytics', 'bediq' ),
+                'title' => __( 'Google Analytics', 'erp' ),
                 'id'    => 'google_analytics',
-                'desc'    => __( 'Enter your google analytics account ID.', 'bediq'),
+                'desc'    => __( 'Enter your google analytics account ID.', 'erp'),
                 'type'  => 'text',
             ),
 
@@ -33,8 +33,8 @@ class bedIQ_Settings_API_Keys extends bedIQ_Settings_Page {
 
         ); // End general settings
 
-        return apply_filters( 'bediq_settings_api_keys', $fields );
+        return apply_filters( 'erp_settings_api_keys', $fields );
     }
 }
 
-return new bedIQ_Settings_API_Keys();
+return new ERP_Settings_API_Keys();

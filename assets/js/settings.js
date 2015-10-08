@@ -10,11 +10,11 @@ jQuery(function($) {
     	'delay' : 200
     });
 
-    var bedIQ_Image_Uploader = {
+    var erp_Image_Uploader = {
 
         init: function() {
-            $('a.bediq-image-upload').on('click', this.imageUpload);
-            $('a.bediq-remove-image').on('click', this.removeBanner);
+            $('a.erp-image-upload').on('click', this.imageUpload);
+            $('a.erp-remove-image').on('click', this.removeBanner);
         },
 
         imageUpload: function(e) {
@@ -45,17 +45,17 @@ jQuery(function($) {
                 var wrap = self.closest('td');
                 console.log(wrap, self);
 
-                wrap.find('input.bediq-file-field').val(attachment.id);
+                wrap.find('input.erp-file-field').val(attachment.id);
 
                 if ( typeof attachment.sizes.thumbnail !== 'undefined' ) {
-                    wrap.find('img.bediq-option-image').attr('src', attachment.sizes.thumbnail.url);
+                    wrap.find('img.erp-option-image').attr('src', attachment.sizes.thumbnail.url);
                 } else {
-                    wrap.find('img.bediq-option-image').attr('src', attachment.url);
+                    wrap.find('img.erp-option-image').attr('src', attachment.url);
                 }
 
-                $('.image-wrap', wrap).removeClass('bediq-hide');
+                $('.image-wrap', wrap).removeClass('erp-hide');
 
-                $('.button-area', wrap).addClass('bediq-hide');
+                $('.button-area', wrap).addClass('erp-hide');
             });
 
             file_frame.open();
@@ -69,11 +69,11 @@ jQuery(function($) {
             var wrap = self.closest('.image-wrap');
             var instruction = wrap.siblings('.button-area');
 
-            wrap.find('input.bediq-file-field').val('0');
-            wrap.addClass('bediq-hide');
-            instruction.removeClass('bediq-hide');
+            wrap.find('input.erp-file-field').val('0');
+            wrap.addClass('erp-hide');
+            instruction.removeClass('erp-hide');
         },
     };
 
-    bedIQ_Image_Uploader.init();
+    erp_Image_Uploader.init();
 });

@@ -1,9 +1,9 @@
 <?php
 
 /**
- * bedIQ Admin settings class
+ * ERP Admin settings class
  */
-class bedIQ_Admin_Settings {
+class ERP_Admin_Settings {
 
     private static $settings = array();
 
@@ -24,7 +24,7 @@ class bedIQ_Admin_Settings {
             $settings[] = include __DIR__ . '/settings/api-keys.php';
             $settings[] = include __DIR__ . '/settings/others.php';
 
-            self::$settings = apply_filters( 'bediq_settings_pages', $settings );
+            self::$settings = apply_filters( 'erp_settings_pages', $settings );
         }
 
         return self::$settings;
@@ -56,7 +56,7 @@ class bedIQ_Admin_Settings {
 
             echo '</h2>';
 
-            if ( is_a( $current_class, 'bedIQ_Settings_Page' ) ) {
+            if ( is_a( $current_class, 'ERP_Settings_Page' ) ) {
 
                 $current_class->save();
                 $current_class->output();

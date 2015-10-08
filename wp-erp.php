@@ -205,6 +205,8 @@ final class WeDevs_ERP {
      */
     function init_script_register() {
 
+        $suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+
         // Register select2 scripts
         wp_register_script( 'erp-select2', WPERP_ASSETS . '/js/select2.full.min.js', false, false, true );
 
@@ -222,6 +224,12 @@ final class WeDevs_ERP {
 
         // Register main style
         wp_register_style( 'erp-style', WPERP_ASSETS . '/css/style.css' );
+
+        //Settings script
+        wp_register_script( 'erp-admin-settings', WPERP_ASSETS . '/js/settings' . $suffix . '.js', array( 'jquery' ), false, true );
+
+        //Settings style
+        wp_register_style( 'erp-admin-settings', WPERP_ASSETS . '/css/admin/settings' . $suffix . '.css' );
     }
 
     /**

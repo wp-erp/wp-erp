@@ -1,9 +1,9 @@
 <?php
 
 /**
- * bedIQ Settings page main class
+ * Erp Settings page main class
  */
-class bedIQ_Settings_Page {
+class ERP_Settings_Page {
 
     protected $id    = '';
     protected $label = '';
@@ -24,7 +24,7 @@ class bedIQ_Settings_Page {
      * @return string
      */
     public function get_option_id() {
-        return 'bediq_settings_' . $this->id;
+        return 'erp_settings_' . $this->id;
     }
 
     /**
@@ -48,7 +48,7 @@ class bedIQ_Settings_Page {
     public function save() {
         global $current_class;
 
-        if ( isset( $_POST['_wpnonce']) && wp_verify_nonce( $_POST['_wpnonce'], 'bediq-settings-nonce' ) ) {
+        if ( isset( $_POST['_wpnonce']) && wp_verify_nonce( $_POST['_wpnonce'], 'erp-settings-nonce' ) ) {
             $options = $this->get_settings();
 
             // Options to update will be stored here
@@ -132,7 +132,7 @@ class bedIQ_Settings_Page {
                     // Custom handling
                     default :
 
-                        do_action( 'bediq_update_option_' . $type, $value );
+                        do_action( 'erp_update_option_' . $type, $value );
 
                         break;
 
@@ -166,7 +166,7 @@ class bedIQ_Settings_Page {
                 }
 
                 // Custom handling
-                do_action( 'bediq_update_option', $value );
+                do_action( 'erp_update_option', $value );
             }
 
             // finally, update the option
@@ -255,7 +255,7 @@ class bedIQ_Settings_Page {
 
                 } elseif ( $tip ) {
 
-                    $tip = '<img class="help_tip" data-tip="' . esc_attr( $tip ) . '" src="' . WPERP_URL . '/includes/admin/setting/assets/images/help.png" height="16" width="16" />';
+                    $tip = '<img class="help_tip" data-tip="' . esc_attr( $tip ) . '" src="' . WPERP_ASSETS . '/images/help.png" height="16" width="16" />';
 
                 }
 
@@ -272,19 +272,19 @@ class bedIQ_Settings_Page {
                         }
                         echo '<table class="form-table">'. "\n\n";
                         if ( ! empty( $value['id'] ) ) {
-                            do_action( 'bediq_settings_' . sanitize_title( $value['id'] ) );
+                            do_action( 'erp_settings_' . sanitize_title( $value['id'] ) );
                         }
                     break;
 
                     // Section Ends
                     case 'sectionend':
                         if ( ! empty( $value['id'] ) ) {
-                            do_action( 'bediq_settings_' . sanitize_title( $value['id'] ) . '_end' );
+                            do_action( 'erp_settings_' . sanitize_title( $value['id'] ) . '_end' );
                         }
                         echo '</table>';
 
                         if ( ! empty( $value['id'] ) ) {
-                            do_action( 'bediq_settings_' . sanitize_title( $value['id'] ) . '_after' );
+                            do_action( 'erp_settings_' . sanitize_title( $value['id'] ) . '_after' );
                         }
                     break;
 
@@ -339,15 +339,15 @@ class bedIQ_Settings_Page {
                             </th>
 
                             <td>
-                                <div class="image-wrap<?php echo $option_value ? '' : ' bediq-hide'; ?>">
-                                    <input type="hidden" class="bediq-file-field" name="<?php echo esc_attr( $value['id'] ); ?>" value="<?php echo esc_attr( $option_value ); ?>">
-                                    <img class="bediq-option-image" src="<?php echo esc_url( $image_url ); ?>">
+                                <div class="image-wrap<?php echo $option_value ? '' : ' erp-hide'; ?>">
+                                    <input type="hidden" class="erp-file-field" name="<?php echo esc_attr( $value['id'] ); ?>" value="<?php echo esc_attr( $option_value ); ?>">
+                                    <img class="erp-option-image" src="<?php echo esc_url( $image_url ); ?>">
 
-                                    <a class="bediq-remove-image" title="<?php _e( 'Delete this image?', 'bediq' ); ?>">&times;</a>
+                                    <a class="erp-remove-image" title="<?php _e( 'Delete this image?', 'erp' ); ?>">&times;</a>
                                 </div>
 
-                                <div class="button-area<?php echo $option_value ? ' bediq-hide' : ''; ?>">
-                                    <a href="#" class="bediq-image-upload button"><?php _e( 'Upload Image', 'bediq' ); ?></a>
+                                <div class="button-area<?php echo $option_value ? ' erp-hide' : ''; ?>">
+                                    <a href="#" class="erp-image-upload button"><?php _e( 'Upload Image', 'erp' ); ?></a>
                                     <?php echo $description; ?>
                                 </div>
 
@@ -577,7 +577,7 @@ class bedIQ_Settings_Page {
 
                                 <input name="<?php echo esc_attr( $value['id'] ); ?>[width]" id="<?php echo esc_attr( $value['id'] ); ?>-width" type="text" size="3" value="<?php echo $width; ?>" /> &times; <input name="<?php echo esc_attr( $value['id'] ); ?>[height]" id="<?php echo esc_attr( $value['id'] ); ?>-height" type="text" size="3" value="<?php echo $height; ?>" />px
 
-                                <label><input name="<?php echo esc_attr( $value['id'] ); ?>[crop]" id="<?php echo esc_attr( $value['id'] ); ?>-crop" type="checkbox" <?php echo $crop; ?> /> <?php _e( 'Hard Crop?', 'bediq' ); ?></label>
+                                <label><input name="<?php echo esc_attr( $value['id'] ); ?>[crop]" id="<?php echo esc_attr( $value['id'] ); ?>-crop" type="checkbox" <?php echo $crop; ?> /> <?php _e( 'Hard Crop?', 'erp' ); ?></label>
 
                                 </td>
                         </tr><?php
@@ -604,14 +604,14 @@ class bedIQ_Settings_Page {
                         ?><tr valign="top" class="single_select_page">
                             <th scope="row" class="titledesc"><?php echo esc_html( $value['title'] ) ?> <?php echo $tip; ?></th>
                             <td class="forminp">
-                                <?php echo str_replace(' id=', " data-placeholder='" . __( 'Select a page&hellip;', 'bediq' ) .  "' style='" . $value['css'] . "' class='" . $value['class'] . "' id=", wp_dropdown_pages( $args ) ); ?> <?php echo $description; ?>
+                                <?php echo str_replace(' id=', " data-placeholder='" . __( 'Select a page&hellip;', 'erp' ) .  "' style='" . $value['css'] . "' class='" . $value['class'] . "' id=", wp_dropdown_pages( $args ) ); ?> <?php echo $description; ?>
                             </td>
                         </tr><?php
                     break;
 
                     // Default: run an action
                     default:
-                        do_action( 'bediq_admin_field_' . $value['type'], $value );
+                        do_action( 'erp_admin_field_' . $value['type'], $value );
                     break;
                 }
             }

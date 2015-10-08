@@ -131,7 +131,7 @@ class Admin_Menu {
      * @return void
      */
     function settings_page() {
-        new \WeDevs\ERP\Admin\setting\ERP_Settings();
+        new \WeDevs\ERP\Settings();
     }
 
     /**
