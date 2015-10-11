@@ -1060,3 +1060,24 @@ ul.edit-address li.city-wrap span {
 .input-group .input-group-addon:last-child {
   border-left: 0;
 }
+.erp-settings .erp-subsubsub {
+  list-style: none;
+  font-size: 13px;
+  color: #666;
+}
+.erp-settings .erp-subsubsub li {
+  display: inline-block;
+  padding: 0px;
+  margin: 0px;
+  white-space: nowrap;
+}
+.erp-settings .erp-subsubsub li a {
+  text-decoration: none;
+  font-weight: 600;
+  border: none;
+  line-height: 2;
+  padding: .2em;
+}
+.erp-settings .erp-nav-tab-active {
+  color: #000;
+}

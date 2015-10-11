@@ -10,6 +10,7 @@ class ERP_Settings_Design extends ERP_Settings_Page {
     function __construct() {
         $this->id = 'design';
         $this->label = 'Design';
+        $this->sections = $this->get_sections();
     }
 
     /**
@@ -95,6 +96,77 @@ class ERP_Settings_Design extends ERP_Settings_Page {
         );
 
         return apply_filters( 'erp_settings_design_fields', $settings );
+    }
+
+
+    public function get_section_fields( $section = '' ) {
+
+        $fields[''] = array(
+
+            array( 'title' => __( 'General Options', 'erp' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
+
+            array(
+                'title' => __( 'Site Name', 'erp' ),
+                'id'    => 'blogname',
+                'desc'  => __( 'The name of your site. If you don\'t use a logo, this name will be displayed instead.', 'erp' ),
+                'type'  => 'text',
+            ),
+            array(
+                'title' => __( 'Site Description', 'erp' ),
+                'id'    => 'blogdescription',
+                'desc'  => __( 'This will help peoples and search engines to find your site.', 'erp' ),
+                'type'  => 'text',
+            ),
+
+            array(
+                'title' => __( 'Site Descriptionffffff', 'erp' ),
+                'id'    => 'blogdescripfftion',
+                'desc'  => __( 'This will help peoples and search engines to find your site.', 'erp' ),
+                'type'  => 'text',
+            ),
+
+
+            array( 'type' => 'sectionend', 'id' => 'script_styling_options' ),
+
+        ); // End general settings
+
+        $fields['mishu'] = array(
+
+            array( 'title' => __( 'Mishu', 'erp' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
+
+            array(
+                'title' => __( 'Site Name', 'erp' ),
+                'id'    => 'blogname',
+                'desc'  => __( 'The name of your site. If you don\'t use a logo, this name will be displayed instead.', 'erp' ),
+                'type'  => 'text',
+            ),
+            array(
+                'title' => __( 'Site Description', 'erp' ),
+                'id'    => 'blogdescription',
+                'desc'  => __( 'This will help peoples and search engines to find your site.', 'erp' ),
+                'type'  => 'text',
+            ),
+
+            array( 'type' => 'sectionend', 'id' => 'script_styling_options' ),
+
+        ); // End general settings
+       
+        return $section === false ? $fields[''] : $fields[$section];
+    } 
+
+    /**
+     * Get sections
+     *
+     * @return array
+     */
+    public function get_sections() {
+        $sections = array(
+            '' => __( 'Checkout Options', 'erp' ),
+            'mishu' => __( 'Mishu', 'erp' )
+        );
+
+        
+        return apply_filters( 'erp_get_sections_' . $this->id, $sections );
     }
 }
 

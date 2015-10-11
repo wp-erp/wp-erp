@@ -195,8 +195,23 @@ class ERP_Settings_Page {
         return array();
     }
 
-    public function output() {
-        $fields = $this->get_settings();
+        /**
+     * Get sections
+     *
+     * @return array
+     */
+    public function get_section_fields( $section = false ) {
+        return array();
+    }
+
+    public function output( $section = false ) {
+        $fields         = $this->get_settings();
+        $sections       = $this->get_sections();
+        $section_fields = $this->get_section_fields($section);
+
+        if ( count( $sections ) ) {
+            $fields = $section_fields;
+        }
 
         $defaults = array(
             'id'                => '',
@@ -211,7 +226,7 @@ class ERP_Settings_Page {
 
         if ( $fields ) {
             foreach ($fields as $field) {
-
+                
                 if ( ! isset( $field['type'] ) ) {
                     continue;
                 }
@@ -616,6 +631,29 @@ class ERP_Settings_Page {
                 }
             }
         }
+    }
+
+    /**
+     * Output sections
+     */
+    public function output_sections() {
+        global $current_section;
+
+        $sections = $this->get_sections();
+
+        if ( empty( $sections ) ) {
+            return;
+        }
+
+        echo '<ul class="subsubsub">';
+
+        $array_keys = array_keys( $sections );
+
+        foreach ( $sections as $id => $label ) {
+            echo '<li><a href="' . admin_url( 'admin.php?page=wc-settings&tab=' . $this->id . '&section=' . sanitize_title( $id ) ) . '" class="' . ( $current_section == $id ? 'current' : '' ) . '">' . $label . '</a> ' . ( end( $array_keys ) == $id ? '' : '|' ) . ' </li>';
+        }
+
+        echo '</ul><br class="clear" />';
     }
 
     /**
