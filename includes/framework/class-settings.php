@@ -70,7 +70,7 @@ class ERP_Admin_Settings {
                 foreach ( $sections as $slug => $label ) {
                     $url    = 'admin.php?page=erp-settings&tab='.$obj->get_id().'&section='.$slug;
                     $class  = ( $current_section == $slug ) ? ' erp-nav-tab-active' : '';
-                    $link[] = '<a class="erp-nav-tab'.$class.'" href="'.$url.'">'.$label.'</a>';
+                    $link[] = '<a class="erp-nav-tab'.$class.'" href="'.$url.'">'.__( $label, 'wp-erp' ).'</a>';
                 }
                 
                 echo implode( ' | </li><li>', $link );
