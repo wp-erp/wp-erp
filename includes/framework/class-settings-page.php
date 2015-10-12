@@ -195,7 +195,7 @@ class ERP_Settings_Page {
         return array();
     }
 
-        /**
+    /**
      * Get sections
      *
      * @return array
@@ -208,8 +208,9 @@ class ERP_Settings_Page {
         $fields         = $this->get_settings();
         $sections       = $this->get_sections();
         $section_fields = $this->get_section_fields($section);
+        $query_arg      = ERP_Admin_Settings::get_current_tab_and_section();
 
-        if ( count( $sections ) ) {
+        if ( count( $sections ) && $query_arg['subtab'] ) {
             $fields = $section_fields;
         }
 

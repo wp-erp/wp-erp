@@ -56,9 +56,14 @@ class ERP_Settings_General extends ERP_Settings_Page {
         return apply_filters( 'erp_settings_general', $fields );
     }
 
+    /**
+     * Get sections fields
+     *
+     * @return array
+     */
     public function get_section_fields( $section = '' ) {
-
-        $fields[''] = array(
+        
+        $fields['checkout'] = array(
 
             array( 'title' => __( 'General Options', 'erp' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
 
@@ -100,7 +105,8 @@ class ERP_Settings_General extends ERP_Settings_Page {
 
         ); // End general settings
        
-        return $section === false ? $fields[''] : $fields[$section];
+        $section = $section === false ? $fields['checkout'] : $fields[$section];
+        return apply_filters( 'erp_settings_general_section', $section );
     } 
 
     /**
@@ -109,8 +115,9 @@ class ERP_Settings_General extends ERP_Settings_Page {
      * @return array
      */
     public function get_sections() {
+
         $sections = array(
-            '' => __( 'Checkout Options', 'erp' ),
+            'checkout' => __( 'Checkout Options', 'erp' ),
             'mishu' => __( 'Mishu', 'erp' )
         );
 

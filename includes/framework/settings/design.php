@@ -101,7 +101,7 @@ class ERP_Settings_Design extends ERP_Settings_Page {
 
     public function get_section_fields( $section = '' ) {
 
-        $fields[''] = array(
+        $fields['jjjj'] = array(
 
             array( 'title' => __( 'General Options', 'erp' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
 
@@ -161,7 +161,7 @@ class ERP_Settings_Design extends ERP_Settings_Page {
      */
     public function get_sections() {
         $sections = array(
-            '' => __( 'Checkout Options', 'erp' ),
+            'jjjj' => __( 'Checkout Options', 'erp' ),
             'mishu' => __( 'Mishu', 'erp' )
         );
 
