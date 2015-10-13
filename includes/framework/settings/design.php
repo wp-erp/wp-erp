@@ -9,7 +9,7 @@ class ERP_Settings_Design extends ERP_Settings_Page {
     function __construct() {
         $this->id = 'design';
         $this->label = 'Design';
-        $this->sections = $this->get_sections();
+       // $this->sections = $this->get_sections();
     }
 
     /**

@@ -3,14 +3,14 @@
 /**
  * General class
  */
-class ERP_Settings_General extends ERP_Settings_Page {
+class ERP_Settings_Example extends ERP_Settings_Page {
 
 
     function __construct() {
-        $this->id = 'general';
-        $this->label = 'General';
+        $this->id = 'example';
+        $this->label = __( 'Example', 'erp' );
         $this->single_option = true;
-        //$this->sections = $this->get_sections();
+        $this->sections = $this->get_sections();
     }
 
     /**
@@ -22,34 +22,33 @@ class ERP_Settings_General extends ERP_Settings_Page {
 
         $fields = array(
 
-            array( 'title' => __( 'General Options', 'erp' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
-            
-            array(
-                'title'   => __( 'Company Start Date', 'wp-erp' ),
-                'id'      => 'gen_com_start',
-                'type'    => 'text',
-                'desc'      => __( 'The date the company officially started.', 'erp' ),
-                'class'   => 'erp-date-field',
-                'tooltip'   =>  true,
-            ),
+            array( 'title' => __( 'Example Settings', 'erp' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
 
             array(
-                'title'   => __( 'First Month of Financial Year', 'wp-erp' ),
-                'id'      => 'gen_financial_month',
-                'type'    => 'select',
-                'options' => erp_months_dropdown(),
-                'desc'      => __( 'Financial and tax calculation starts from this month of every year.', 'erp' ),
+                'title' => __( 'Admin Color Scheme', 'erp' ),
+                'desc'      => __( 'Select the color scheme of the admin area.', 'erp' ),
+                'id'        => 'admin_color_scheme',
+                'default'   => 'green',
+                'type'      => 'radio',
                 'tooltip'   =>  true,
+                'options' => array(
+                    'green'    => __( 'Green', 'erp' ),
+                    'blue'     => __( 'Blue', 'erp' ),
+                    'orange'   => __( 'Orange', 'erp' ),
+                    'black'    => __( 'Black', 'erp' ),
+                    'alizarin' => __( 'Alizarin', 'erp' ),
+                    'pumpkin'  => __( 'Pumpkin', 'erp' ),
+                )
             ),
 
             array( 'type' => 'sectionend', 'id' => 'script_styling_options' ),
 
         ); // End general settings
 
-        return apply_filters( 'erp_settings_general', $fields );
+        return apply_filters( 'erp_settings_example', $fields );
     }
 
-    /**
+        /**
      * Get sections fields
      *
      * @return array
@@ -119,4 +118,4 @@ class ERP_Settings_General extends ERP_Settings_Page {
     }
 }
 
-return new ERP_Settings_General();
+return new ERP_Settings_Example();

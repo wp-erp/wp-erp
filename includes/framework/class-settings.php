@@ -26,7 +26,7 @@ class ERP_Admin_Settings {
             $settings[] = include __DIR__ . '/settings/sharing.php';
             $settings[] = include __DIR__ . '/settings/content.php';
             $settings[] = include __DIR__ . '/settings/api-keys.php';
-            $settings[] = include __DIR__ . '/settings/others.php';
+            $settings[] = include __DIR__ . '/settings/example.php';
 
             self::$settings = apply_filters( 'erp_settings_pages', $settings );
         }
