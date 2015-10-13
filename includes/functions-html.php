@@ -140,14 +140,18 @@ function erp_html_form_input( $args = array() ) {
 
         case 'checkbox':
             //echo '<input type="hidden" value="off" name="' . $field['name'] . '" />';
+            echo '<span class="checkbox">';
+            echo '<label for="' . esc_attr( $field_attributes['id'] ) . '">';
             echo '<input type="checkbox" '.checked( $field['value'], 'on', false ).' value="on" ' . implode( ' ', $custom_attributes ) . ' />';
+            echo wp_kses_post( $field['help'] );
+            echo '</label>';
+            echo '</span>';
             break;
 
         case 'radio':
             if ( $field['options'] ) {
                 foreach ( $field['options'] as $key => $value) {
                     echo '<input type="radio" '.checked( $field['value'], $key, false ).' value="'.$key.'" ' . implode( ' ', $custom_attributes ) . ' />'. $value . '&nbsp;';
-
                 }
             }
             break;
@@ -166,7 +170,9 @@ function erp_html_form_input( $args = array() ) {
         echo '</div>';
     }
 
-    erp_html_form_help( $field['help'] );
+    if ( $field['type'] != 'checkbox' ) {
+        erp_html_form_help( $field['help'] );
+    }
 
     // closing tag
     if ( ! empty( $field['tag'] ) ) {
