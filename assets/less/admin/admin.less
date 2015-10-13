@@ -597,12 +597,27 @@ table.audit-log-table {
 }
 
 form.erp-form {
+    ol.erp-form-fields,
+    ul.erp-form-fields {
+        list-style: none;
+        margin-left: 0;
+    }
+
     .erp-form-field {
         .clearfix();
+        padding: 10px 0;
 
-        label {
+        > label {
             float: left;
-            min-width: 100px;
+            min-width: 150px;
+            font-weight: bold;
+            vertical-align: top;;
+            color: #23282d;
+            font-size: 14px;
+        }
+
+        .description {
+            margin-left: 5px;
         }
     }
 }
