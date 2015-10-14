@@ -19,6 +19,7 @@ $inactive_color     = $tab == 'inactive' ? 'erp-nav-tab-active' : '';
 
 ?>
 <div class="wrap erp-settings">
+	<h2><?php _e( 'Modules', 'wp-erp' ); ?></h2>
 	<ul class="erp-subsubsub">
 		<li><a class="erp-nav-tab <?php echo $all_color; ?>" href="<?php echo $all_url; ?>"><?php printf( __( 'All (%s) |', 'wp-erp' ), $count_all ); ?></a></li>
 		<li><a class="erp-nav-tab <?php echo $active_color ; ?>" href="<?php echo $active_url; ?>"><?php printf( __( 'Active (%s) |', 'wp-erp' ), $count_active ); ?></a></li>
@@ -31,16 +32,16 @@ $inactive_color     = $tab == 'inactive' ? 'erp-nav-tab-active' : '';
 		<thead>
 			<tr>
 				<th scope="col" id="cb" class="manage-column column-cb check-column">&nbsp;</th>
-				<th scope="col" id="name" class="manage-column column-name" style="width: 190px;">Component</th>
-				<th scope="col" id="description" class="manage-column column-description">Description</th>
+				<th scope="col" id="name" class="manage-column column-name" style="width: 190px;"><?php _e( 'Title', 'wp-erp' ); ?></th>
+				<th scope="col" id="description" class="manage-column column-description"><?php _e( 'Description', 'wp-erp' ); ?></th>
 			</tr>
 		</thead>
 
 		<tfoot>
 			<tr>
 				<th scope="col" class="manage-column column-cb check-column">&nbsp;</th>
-				<th scope="col" class="manage-column column-name" style="width: 190px;">Component</th>
-				<th scope="col" class="manage-column column-description">Description</th>
+				<th scope="col" class="manage-column column-name" style="width: 190px;"><?php _e( 'Title', 'wp-erp' ); ?></th>
+				<th scope="col" class="manage-column column-description"><?php _e( 'Description', 'wp-erp' ); ?></th>
 			</tr>
 		</tfoot>
 
