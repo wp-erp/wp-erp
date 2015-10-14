@@ -65,6 +65,10 @@ class Admin_Menu {
         ) );
 
         foreach ($modules as $key => $module) {
+            if ( ! wperp()->modules->is_module_active( $key ) ) {
+                continue;
+            }
+            
             $wp_admin_bar->add_menu( array(
                 'id'     => 'erp-mode-' . $key,
                 'parent' => 'erp-mode-switch',
@@ -121,6 +125,7 @@ class Admin_Menu {
         add_submenu_page( 'erp-company', __( 'Tools', 'wp-erp' ), __( 'Tools', 'wp-erp' ), 'manage_options', 'erp-tools', array( $this, 'tools_page' ) );
         add_submenu_page( 'erp-company', __( 'Audit Log', 'wp-erp' ), __( 'Audit Log', 'wp-erp' ), 'manage_options', 'erp-audit-log', array( $this, 'log_page' ) );
         add_submenu_page( 'erp-company', __( 'Settings', 'wp-erp' ), __( 'Settings', 'wp-erp' ), 'manage_options', 'erp-settings', array( $this, 'settings_page' ) );
+        add_submenu_page( 'erp-company', __( 'Module', 'wp-erp' ), __( 'Module', 'wp-erp' ), 'manage_options', 'erp-module', array( $this, 'module' ) );
         add_submenu_page( 'erp-company', __( 'Add-Ons', 'wp-erp' ), __( 'Add-Ons', 'wp-erp' ), 'manage_options', 'erp-addons', array( $this, 'addon_page' ) );
       
     }
@@ -132,6 +137,15 @@ class Admin_Menu {
      */
     function settings_page() {
         new \WeDevs\ERP\Settings();
+    }
+
+    /**
+     * Erp module 
+     *
+     * @return void
+     */
+    function module() {
+        new \WeDevs\ERP\Admin\Admin_Module();
     }
 
     /**

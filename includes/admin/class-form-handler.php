@@ -17,6 +17,36 @@ class Form_Handler {
      */
     public function __construct() {
         $this->action( 'erp_action_create_new_company', 'create_new_company' );
+        $this->action( 'admin_init', 'save_settings' );
+    }
+
+    function save_settings() {
+        if ( ! isset( $_POST['erp_module_status'] ) ) {
+            return;
+        }
+
+        if ( ! wp_verify_nonce( $_POST['erp_settings'], 'erp_nonce' ) ) {
+            return;
+        }
+        
+        $inactive    =  ( isset( $_GET['tab'] ) && $_GET['tab'] == 'inactive' ) ? true : false;
+        $modules     = isset( $_POST['modules'] ) ? $_POST['modules'] : array();
+        $all_modules = wperp()->modules->get_modules();
+
+        foreach ( $all_modules as $key => $module ) {
+            if ( ! in_array( $key, $modules ) ) {
+                unset( $all_modules[$key] );
+            }
+        }
+
+        if ( $inactive ) {
+            $active_modules = wperp()->modules->get_active_modules();
+            $all_modules    = array_merge( $all_modules, $active_modules );
+        }
+
+        update_option( 'erp_modules', $all_modules );
+        wp_redirect( $_POST['_wp_http_referer'] );
+        exit();
     }
 
     public function is_valid_input( $array, $key ) {

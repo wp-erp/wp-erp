@@ -101,7 +101,7 @@ final class WeDevs_ERP {
 
         // load the modules
         $this->load_module();
-
+       
         // Loaded action
         do_action( 'erp_loaded' );
     }
@@ -266,14 +266,19 @@ final class WeDevs_ERP {
      * @return void
      */
     public function load_module() {
-        $modules = $this->modules->get_modules();
-
+        $modules       = $this->modules->get_modules();
+   
         if ( $modules ) {
             foreach ($modules as $key => $module) {
+                
+                if ( ! $this->modules->is_module_active( $key ) ) {
+                    continue;
+                }
+
                 if ( isset( $module['callback'] ) && class_exists( $module['callback'] ) ) {
                     new $module['callback']( $this );
                 }
-            }
+            } 
         }
     }
 
