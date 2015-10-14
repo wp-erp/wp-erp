@@ -977,6 +977,14 @@ table.audit-log-table th.col-date {
   opacity: .7;
   display: none;
 }
+form.erp-form ol.erp-form-fields,
+form.erp-form ul.erp-form-fields {
+  list-style: none;
+  margin-left: 0;
+}
+form.erp-form .erp-form-field {
+  padding: 10px 0;
+}
 form.erp-form .erp-form-field:before,
 form.erp-form .erp-form-field:after {
   content: " ";
@@ -993,9 +1001,16 @@ form.erp-form .erp-form-field:after {
 form.erp-form .erp-form-field:after {
   clear: both;
 }
-form.erp-form .erp-form-field label {
+form.erp-form .erp-form-field > label {
   float: left;
-  min-width: 100px;
+  min-width: 150px;
+  font-weight: bold;
+  vertical-align: top;
+  color: #23282d;
+  font-size: 14px;
+}
+form.erp-form .erp-form-field .description {
+  margin-left: 5px;
 }
 ul.edit-address li {
   display: block;
