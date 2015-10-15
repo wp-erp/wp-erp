@@ -55,7 +55,7 @@
 
     <li class="row" data-selected="{{ data.country }}">
         <label for="erp-popup-country"><?php _e( 'Country', 'wp-erp' ); ?> <span class="required">*</span></label>
-        <select name="country" id="erp-popup-country" class="erp-country-select" data-parent="ul">
+        <select name="country" id="erp-popup-country" class="erp-country-select select2" data-parent="ul">
             <?php $country = \WeDevs\ERP\Countries::instance(); ?>
             <?php echo $country->country_dropdown(); ?>
         </select>

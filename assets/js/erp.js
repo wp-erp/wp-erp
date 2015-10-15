@@ -49,7 +49,6 @@ window.wperp = window.wperp || {};
          */
         initialize: function() {
 
-
             $( '#postimagediv').on( 'click', '#set-company-thumbnail', this.setCompanyLogo );
             $( '#postimagediv').on( 'click', 'a.remove-logo', this.removeCompanyLogo );
 
@@ -163,7 +162,6 @@ window.wperp = window.wperp || {};
                     parent.find('select.erp-state-select').html( options );
                 }
 
-                // console.log(options);
             } else {
                 parent.find('select.erp-state-select').html( empty );
             }
@@ -178,14 +176,19 @@ window.wperp = window.wperp || {};
                 title: self.data('title'),
                 button: wpErp.create,
                 id: 'erp-new-location',
-                content: wp.template( 'erp-address' )({ company_id: self.data('id') }),
+                content: wp.template( 'erp-address' )({ company_id: self.data('id') }).trim(),
                 extraClass: 'medium',
+                onReady: function() {
+                    $( '.select2' ).select2();
+                },
                 onSubmit: function(modal) {
                     wp.ajax.send( {
-                        data: this.serializeObject(),
+                        data: this.serialize(),
                         success: function(res) {
                             $('#company-locations').load( window.location.href + ' #company-locations-inside' );
-                            $('body').trigger( 'erp-hr-after-new-location', [res]);
+                            if ( ! self.hasClass('erp-add-new-location') ) {
+                                $('body').trigger( 'erp-hr-after-new-location', [res]);
+                            };
                             modal.closeModal();
                         },
                         error: function(error) {
@@ -204,9 +207,12 @@ window.wperp = window.wperp || {};
             $.erpPopup({
                 title: wpErp.update_location,
                 button: wpErp.update_location,
+                id: 'erp-edit-location',
                 content: wp.template( 'erp-address' )( self.data('data') ),
                 extraClass: 'medium',
                 onReady: function() {
+                    $( '.select2' ).select2();
+
                     $( 'li[data-selected]', this ).each(function() {
                         var self = $(this),
                             selected = self.data('selected');
@@ -232,7 +238,6 @@ window.wperp = window.wperp || {};
                         data: this.serializeObject(),
                         success: function() {
                             $('#company-locations').load( window.location.href + ' #company-locations-inside' );
-
                             modal.closeModal();
                         },
                         error: function(error) {
