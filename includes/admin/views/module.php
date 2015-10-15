@@ -7,9 +7,9 @@ $count_all          = count( wperp()->modules->get_modules() );
 $count_active       = count( $all_active_modules );
 $count_inactive     = count( wperp()->modules->get_inactive_modules() );
 
-$all_url            = admin_url( 'admin.php/?page=erp-module' );
-$active_url         = admin_url( 'admin.php/?page=erp-module&tab=active' );
-$inactive_url       = admin_url( 'admin.php/?page=erp-module&tab=inactive' );
+$all_url            = admin_url( 'admin.php/?page=erp-modules' );
+$active_url         = admin_url( 'admin.php/?page=erp-modules&tab=active' );
+$inactive_url       = admin_url( 'admin.php/?page=erp-modules&tab=inactive' );
 
 $all_color          = ! $tab ? 'erp-nav-tab-active' : '';
 $active_color       = $tab == 'active' ? 'erp-nav-tab-active' : '';
