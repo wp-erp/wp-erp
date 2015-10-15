@@ -101,7 +101,7 @@ final class WeDevs_ERP {
 
         // load the modules
         $this->load_module();
-
+       
         // Loaded action
         do_action( 'erp_loaded' );
     }
@@ -230,6 +230,9 @@ final class WeDevs_ERP {
 
         //Settings style
         wp_register_style( 'erp-admin-settings', WPERP_ASSETS . '/css/admin/settings' . $suffix . '.css' );
+        
+        // Enqueue scripts in globally wp-erp
+        wp_enqueue_script( 'erp-select2' );
     }
 
     /**
@@ -266,14 +269,19 @@ final class WeDevs_ERP {
      * @return void
      */
     public function load_module() {
-        $modules = $this->modules->get_modules();
-
+        $modules       = $this->modules->get_modules();
+   
         if ( $modules ) {
             foreach ($modules as $key => $module) {
+                
+                if ( ! $this->modules->is_module_active( $key ) ) {
+                    continue;
+                }
+
                 if ( isset( $module['callback'] ) && class_exists( $module['callback'] ) ) {
                     new $module['callback']( $this );
                 }
-            }
+            } 
         }
     }
 

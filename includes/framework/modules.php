@@ -35,11 +35,19 @@ class Modules {
     public function init_modules() {
         $this->modules = [
             'hrm' => [
-                'title'    => __( 'HR Management', 'wp-erp' ),
-                'slug'     => 'erp-hrm',
-                'callback' => '\WeDevs\ERP\HRM\Human_Resource',
-                'modules'  => apply_filters( 'erp_hr_modules', [ ] )
+                'title'       => __( 'HR Management', 'wp-erp' ),
+                'slug'        => 'erp-hrm',
+                'description' => __( 'Human Resource Mnanagement', 'wp-erp' ),
+                'callback'    => '\WeDevs\ERP\HRM\Human_Resource',
+                'modules'     => apply_filters( 'erp_hr_modules', [ ] )
             ],
+            'crm' => [
+                'title'       => __( 'CR Management', 'wp-erp' ),
+                'slug'        => 'erp-crm',
+                'description' => __( 'Client Resource Mnanagement', 'wp-erp' ),
+                'callback'    => '\WeDevs\ERP\CRM\Customer_Relationship',
+                'modules'     => apply_filters( 'erp_crm_modules', [ ] )
+            ]
         ];
     }
 
@@ -110,4 +118,79 @@ class Modules {
 
         return $url;
     }
+
+    /**
+     * Get module status
+     *
+     * @param string $module_key
+     *
+     * @since 0.1
+     *
+     * @return boolen
+     */
+    public function is_module_active( $module_key ) {
+        $modules = $this->get_active_modules();
+        
+        if ( array_key_exists( $module_key, $modules ) ) {
+            return true;
+        } 
+
+        return false;
+    }
+
+    /**
+     * Get active modules
+     *
+     * @since 0.1
+     *
+     * @return array
+     */
+    public function get_active_modules() {
+        return get_option( 'erp_modules', array() );
+    }
+
+    /**
+     * Get inactive modules
+     *
+     * @since 0.1
+     *
+     * @return array
+     */
+    public function get_inactive_modules() {
+        $all_modules    = $this->get_modules();
+        $active_modules = $this->get_active_modules();
+
+        foreach ( $active_modules as $key => $module ) {
+            unset( $all_modules[$key] );
+        }
+
+        return $all_modules;
+    }
+
+    /**
+     * Get modules by query pram
+     *
+     * @param string $tab
+     *
+     * @since 0.1
+     *
+     * @return array
+     */
+    public function get_query_modules( $tab = false ) {
+
+        switch ( $tab ) {
+            case 'active':
+                return $this->get_active_modules();
+                break;
+
+            case 'inactive':
+                return $this->get_inactive_modules();
+                break;
+            
+            default:
+                return $this->get_modules();
+                break;
+        }
+    }
+
 }

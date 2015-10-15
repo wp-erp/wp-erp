@@ -63,10 +63,10 @@ class Admin_Page {
         ) );
 
         // load country/state JSON on new company page
-        if ( 'toplevel_page_erp-company' == $hook && isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'new', 'edit' ) ) ) {
+        if ( 'toplevel_page_erp-company' == $hook || isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'new', 'edit' ) ) ) {
             wp_enqueue_script( 'post' );
             wp_enqueue_media();
-
+            
             $country = \WeDevs\ERP\Countries::instance();
             wp_localize_script( 'wp-erp-script', 'wpErpCountries', $country->load_country_states() );
         }

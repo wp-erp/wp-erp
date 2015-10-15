@@ -22,10 +22,10 @@ class ERP_Admin_Settings {
             $settings = array();
 
             $settings[] = include __DIR__ . '/settings/general.php';
-            $settings[] = include __DIR__ . '/settings/design.php';
-            $settings[] = include __DIR__ . '/settings/sharing.php';
-            $settings[] = include __DIR__ . '/settings/content.php';
-            $settings[] = include __DIR__ . '/settings/api-keys.php';
+           // $settings[] = include __DIR__ . '/settings/design.php';
+           // $settings[] = include __DIR__ . '/settings/sharing.php';
+           // $settings[] = include __DIR__ . '/settings/content.php';
+            //$settings[] = include __DIR__ . '/settings/api-keys.php';
             $settings[] = include __DIR__ . '/settings/example.php';
 
             self::$settings = apply_filters( 'erp_settings_pages', $settings );

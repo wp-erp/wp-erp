@@ -77,7 +77,7 @@
                             <tr>
                                 <td><label for="erp-country"><?php _e( 'Country', 'wp-erp' ); ?></label> <span class="required">*</span></td>
                                 <td>
-                                    <select name="address[country]" id="erp-country" data-parent="table" class="erp-country-select" required="required">
+                                    <select name="address[country]" id="erp-country" data-parent="table" class="erp-country-select select2" required="required">
                                         <?php echo $country->country_dropdown( $company->address['country'] ); ?>
                                     </select>
                                 </td>

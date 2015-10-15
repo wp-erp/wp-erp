@@ -27,7 +27,7 @@
             <h2>
                 <?php _e( 'Locations', 'wp-erp' ); ?>
 
-                <a href="#" id="erp-company-new-location" class="add-new-h2" data-title="<?php _e( 'New Location', 'wp-erp' ); ?>" data-id="<?php echo $company->id; ?>"><?php _e( 'Create New Location', 'wp-erp' ); ?></a>
+                <a href="#" id="erp-company-new-location" class="add-new-h2 erp-add-new-location" data-title="<?php _e( 'New Location', 'wp-erp' ); ?>" data-id="<?php echo $company->id; ?>"><?php _e( 'Create New Location', 'wp-erp' ); ?></a>
             </h2>
 
             <div id="company-locations">

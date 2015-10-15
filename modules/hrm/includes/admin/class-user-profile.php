@@ -51,6 +51,7 @@ class User_Profile {
         }
 
         $hr_roles = erp_hr_get_roles();
+
         ?>
 
         <h3><?php esc_html_e( 'WP-ERP HR Role', 'wp-erp' ); ?></h3>
