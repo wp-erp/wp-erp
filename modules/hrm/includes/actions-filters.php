@@ -12,4 +12,4 @@ add_action( 'erp_hr_policy_schedule', 'erp_hr_apply_policy_schedule' );
 add_action( 'erp_hr_leave_policy_new', 'erp_hr_apply_policy_existance_employee', 10, 2 );
 
 // Filters *****************************************************************/
-add_filter( 'erp_map_meta_caps', 'erp_hr_map_meta_caps', 10, 4 )
+add_filter( 'erp_map_meta_caps', 'erp_hr_map_meta_caps', 10, 4 );
