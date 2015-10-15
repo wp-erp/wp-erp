@@ -88,6 +88,7 @@ function erp_hr_get_caps_for_role( $role = '' ) {
                 'erp_create_employee'      => true,
                 'erp_view_employee'        => true,
                 'erp_edit_employee'        => true,
+                'erp_delete_employee'      => true,
 
                 'erp_create_review'        => true,
                 'erp_delete_review'        => true,
@@ -123,7 +124,7 @@ function erp_hr_get_caps_for_role( $role = '' ) {
 
             break;
         
-        case erp_hr_get_employee_role():
+        case erp_hr_get_reporting_manager_role():
 
             $caps = [
                 'read'                     => true,
@@ -152,7 +153,6 @@ function erp_hr_get_caps_for_role( $role = '' ) {
  * @return array Actual capabilities for meta capability
  */
 function erp_hr_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
-
     // What capability is being checked?
     switch ( $cap ) {
 
@@ -163,12 +163,12 @@ function erp_hr_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args =
             if ( $user_id == $employee_id ) {
                 $caps = [ $cap ];
             } else {
-
                 $hr_manager_role = erp_hr_get_manager_role();
-
                 // HR manager can read any employee
                 if ( user_can( $user_id, $hr_manager_role ) ) {
                     $caps = array( $hr_manager_role );
+                } else {
+                    $caps = ['do_not_allow'];
                 }
             }
 

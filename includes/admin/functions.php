@@ -23,15 +23,3 @@ function erp_admin_dash_metabox( $title = '', $callback = null ) {
     <?php
 }
 
-/**
- * ERP current user access by capability 
- *
- * @param  string  $capability
- *
- * @since 0.1
- *
- * @return boolean
- */
-function erp_current_user_can( $capability ) {
-    return current_user_can( $capability );
-}
