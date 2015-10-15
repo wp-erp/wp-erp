@@ -230,6 +230,9 @@ final class WeDevs_ERP {
 
         //Settings style
         wp_register_style( 'erp-admin-settings', WPERP_ASSETS . '/css/admin/settings' . $suffix . '.css' );
+        
+        // Enqueue scripts in globally wp-erp
+        wp_enqueue_script( 'erp-select2' );
     }
 
     /**
