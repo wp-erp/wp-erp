@@ -1,6 +1,15 @@
 <div class="wrap erp-hr-employees" id="wp-erp">
 
-    <h2><?php _e( 'Employee', 'wp-erp' ); ?> <a href="#" id="erp-employee-new" class="add-new-h2"><?php _e( 'Add New', 'wp-erp' ); ?></a></h2>
+    <h2>
+        <?php _e( 'Employee', 'wp-erp' ); ?> 
+        <?php
+        if ( erp_current_user_can( 'erp_create_employee' ) ) {
+            ?>
+                <a href="#" id="erp-employee-new" class="add-new-h2"><?php _e( 'Add New', 'wp-erp' ); ?></a>
+            <?php
+        }
+        ?>
+    </h2>
 
     <div class="list-table-wrap">
         <div class="list-table-inner">
