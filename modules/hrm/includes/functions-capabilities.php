@@ -176,7 +176,7 @@ function erp_hr_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args =
 
         case 'erp_create_review':
             $employee_id = isset( $args[0] ) ? $args[0] : false;
-            $employee    = new Employee( $employee_id );
+            $employee    = new \WeDevs\ERP\HRM\Employee( $employee_id );
 
             if ( $employee->get_reporting_to() && $employee->get_reporting_to()->ID == $user_id ) {
                 $caps = [ 'employee' ];
