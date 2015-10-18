@@ -1000,7 +1000,7 @@ function erp_hr_apply_leave_policy( $user_id, $leave_policy ) {
         'user_id'    => $user_id,
         'policy_id'  => $leave_policy['id'],
         'days'       => $leave_policy['value'],
-        'from_date'  => erp_numaric_month_to_current_date( erp_get_option( 'gen_financial_month' ) ),
+        'from_date'  => date( 'Y-m-d', mktime( 0, 0, 0,  erp_get_option( 'gen_financial_month' ) ) ),
         'to_date'    => date( 'Y', strtotime( current_time( 'mysql' ) ) ).'-12-31',
         'comments'   => $leave_policy['description']
     );
