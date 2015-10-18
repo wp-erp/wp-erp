@@ -42,10 +42,10 @@ class ERP_Admin_Settings {
      * @return array()
      */
     public static function get_current_tab_and_section() {
-        
+
         $settings        = self::get_settings();
         $query_arg       = array( 'tab' => false, 'subtab' => false );
-        
+
         if ( ! isset( $settings[0] ) ) {
             return $query_arg;
         }
@@ -59,7 +59,7 @@ class ERP_Admin_Settings {
         foreach ( $settings as $obj ) {
             $sections[$obj->get_id()] = isset( $obj->sections ) ? $obj->sections : array();
         }
-  
+
         if ( ! isset( $sections[$current_tab] ) ) {
             return $query_arg;
         }
@@ -86,7 +86,7 @@ class ERP_Admin_Settings {
      */
     public static function output() {
         global $current_section, $current_tab, $current_class;
-       
+
         $settings        = self::get_settings();
         $query_arg       = self::get_current_tab_and_section();
         $current_tab     = $query_arg['tab'];
@@ -96,7 +96,7 @@ class ERP_Admin_Settings {
         if ( ! $settings ) {
             return;
         }
-  
+
         echo '<h2 class="nav-tab-wrapper woo-nav-tab-wrapper">';
 
         foreach ( $settings as $obj ) {
@@ -116,7 +116,7 @@ class ERP_Admin_Settings {
 
         $current_class->save();
         $current_class->output( $current_section );
-     
+
     }
 
     /**
@@ -136,25 +136,30 @@ class ERP_Admin_Settings {
         if ( ! $current_section ) {
             return;
         }
-      
+
         foreach ( $settings as $obj ) {
             $sections[$obj->get_id()] = isset( $obj->sections ) ? $obj->sections : array();
         }
 
         $tab_sections = $sections[$current_tab];
 
+        // don't print sub-sections if only one section available
+        if ( count( $tab_sections ) < 2 ) {
+            return;
+        }
+
         echo '<ul class="erp-subsubsub">';
-          
+
             echo '<li>';
             foreach ( $tab_sections as $slug => $label ) {
                 $url    = 'admin.php?page=erp-settings&tab='.$current_tab.'&section='.$slug;
                 $class  = ( $current_section == $slug ) ? ' erp-nav-tab-active' : '';
                 $link[] = '<a class="erp-nav-tab'.$class.'" href="'.$url.'">'.__( $label, 'wp-erp' ).'</a>';
             }
-            
+
             echo implode( ' | </li><li>', $link );
             echo '</li>';
-          
+
         echo '</ul>';
 
     }

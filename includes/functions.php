@@ -515,17 +515,3 @@ function erp_months_dropdown( $title = false ) {
     return $months;
  
 }
-
-/**
- * Get current date for numaric valu of month
- *
- * @param int $numaric_month
- *
- * @since  0.1 
- *
- * @return date string
- */
-function erp_numaric_month_to_current_date( $numaric_month ) {
-    return erp_format_date( date( 'Y-M-d', mktime( 0,0,0,$numaric_month ) ) );
-}
-
