@@ -107,7 +107,6 @@ class Employee_List_Table extends \WP_List_Table {
             return 'employee_search';
         }
 
-
         return parent::current_action();
     }
 

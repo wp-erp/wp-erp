@@ -72,13 +72,15 @@ class Ajax_Handler {
         // leave policy
         $this->action( 'wp_ajax_erp-hr-leave-policy-create', 'leave_policy_create' );
         $this->action( 'wp_ajax_erp-hr-leave-policy-delete', 'leave_policy_delete' );
-
         $this->action( 'wp_ajax_erp-hr-leave-request-req-date', 'leave_request_dates' );
 
         //leave holiday
         $this->action( 'wp_ajax_erp_hr_holiday_create', 'holiday_create' );
         $this->action( 'wp_ajax_erp-hr-get-holiday', 'get_holiday' );
 
+        //leave entitlement
+        $this->action( 'wp_ajax_erp-hr-leave-entitlement-delete', 'remove_entitlement' );
+        
         // script reload
         $this->action( 'wp_ajax_erp_hr_script_reload', 'employee_template_refresh' );
         $this->action( 'wp_ajax_erp_hr_new_dept_tmp_reload', 'new_dept_tmp_reload' );
@@ -105,6 +107,20 @@ class Ajax_Handler {
         $this->verify_nonce( 'wp-erp-hr-nonce' );
         $holiday = erp_hr_get_holidays( array( 'id' => intval( $_POST['id'] ) ) );
         $this->send_success( array( 'holiday' => $holiday ) );
+    }
+
+    public function remove_entitlement() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+        $id        = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+        $user_id   = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
+        $policy_id = isset( $_POST['policy_id'] ) ? intval( $_POST['policy_id'] ) : 0;
+
+        if ( $id && $user_id && $policy_id ) {
+            erp_hr_delete_entitlement( $id, $user_id, $policy_id );
+            $this->send_success();
+        } else {
+            $this->send_error( __( 'Somthing wrong !', 'wp-erp' ) );
+        }
     }
 
     /**
