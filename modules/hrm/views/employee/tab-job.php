@@ -2,27 +2,35 @@
 
     <?php $history = $employee->get_history(); ?>
     
-    <h3><?php _e( 'Employee Main Status', 'wp-erp' ); ?></h3>
+    <?php
+    if ( current_user_can( 'erp_manage_jobinfo' ) ) {
+        ?>
+        <h3><?php _e( 'Employee Main Status', 'wp-erp' ); ?></h3>
 
-    <form action="" method="post">
-        <?php erp_html_form_input( array(
-            'label'   => __( 'Employee Status : ', 'wp-erp' ),
-            'name'    => 'employee_status',
-            'value'   => $employee->erp->status,
-            'class'   => 'select2',
-            'type'    => 'select',
-            'options' => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_employee_statuses()
-        ) ); ?>
+        <form action="" method="post">
+            <?php erp_html_form_input( array(
+                'label'   => __( 'Employee Status : ', 'wp-erp' ),
+                'name'    => 'employee_status',
+                'value'   => $employee->erp->status,
+                'class'   => 'select2',
+                'type'    => 'select',
+                'options' => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_employee_statuses()
+            ) ); ?>
 
-        <input type="hidden" name="user_id" id="erp-employee-id" value="<?php echo $employee->id; ?>">
-        <input type="hidden" name="action" id="erp-employee-status-action" value="erp-hr-employee-status">
-        <?php wp_nonce_field( 'wp-erp-hr-employee-update-nonce' ); ?>
-        <input type="submit" class="button" name="employee_update_status" value="<?php esc_attr_e( 'Update', 'wp-erp' ); ?>">
-    </form>
+            <input type="hidden" name="user_id" id="erp-employee-id" value="<?php echo $employee->id; ?>">
+            <input type="hidden" name="action" id="erp-employee-status-action" value="erp-hr-employee-status">
+            <?php wp_nonce_field( 'wp-erp-hr-employee-update-nonce' ); ?>
+            <input type="submit" class="button" name="employee_update_status" value="<?php esc_attr_e( 'Update', 'wp-erp' ); ?>">
+        </form>
+        <?php
+    }
+    ?>
+
 
     <h3><?php _e( 'Employment Status', 'wp-erp' ) ?></h3>
-
-    <a href="#" id="erp-empl-status" class="action button" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-status" data-title="<?php _e( 'Employment Status', 'wp-erp' ); ?>"><?php _e( 'Update Status', 'wp-erp' ); ?></a>
+    <?php if ( current_user_can( 'erp_manage_jobinfo' ) ) { ?>
+        <a href="#" id="erp-empl-status" class="action button" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-status" data-title="<?php _e( 'Employment Status', 'wp-erp' ); ?>"><?php _e( 'Update Status', 'wp-erp' ); ?></a>
+    <?php } ?>
     <table class="widefat">
         <thead>
             <tr>
@@ -66,8 +74,10 @@
     <hr />
 
     <h3><?php _e( 'Compensation', 'wp-erp' ) ?></h3>
+    <?php if ( current_user_can( 'erp_manage_jobinfo' ) ) { ?>
+        <a href="#" id="erp-empl-compensation" class="action button" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-compensation" data-title="<?php _e( 'Update Compensation', 'wp-erp' ); ?>"><?php _e( 'Update Compensation', 'wp-erp' ); ?></a>
+    <?php } ?>
 
-    <a href="#" id="erp-empl-compensation" class="action button" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-compensation" data-title="<?php _e( 'Update Compensation', 'wp-erp' ); ?>"><?php _e( 'Update Compensation', 'wp-erp' ); ?></a>
     <table class="widefat">
         <thead>
             <tr>
@@ -113,8 +123,9 @@
 
     <hr />
     <h3><?php _e( 'Job Information', 'wp-erp' ) ?></h3>
-
-    <a href="#" id="erp-empl-jobinfo" class="action button" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-jobinfo" data-title="<?php _e( 'Update Compensation', 'wp-erp' ); ?>"><?php _e( 'Update Job Information', 'wp-erp' ); ?></a>
+    <?php if ( current_user_can( 'erp_manage_jobinfo' ) ) { ?>
+        <a href="#" id="erp-empl-jobinfo" class="action button" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-jobinfo" data-title="<?php _e( 'Update Compensation', 'wp-erp' ); ?>"><?php _e( 'Update Job Information', 'wp-erp' ); ?></a>
+    <?php } ?>
     <table class="widefat">
         <thead>
             <tr>

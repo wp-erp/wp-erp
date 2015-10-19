@@ -5,8 +5,15 @@
     <?php $performance_rating = erp_performance_rating(); ?>
 
     <h3><?php _e( 'Performance Reviews', 'wp-erp' ); ?></h3>
+    <?php
+    if ( current_user_can( 'erp_create_review' ) ) {
+        ?>
+        <a href="#" id="erp-empl-performance-reviews" class="action button" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-performance-reviews" data-title="<?php _e( 'Performance Reviews', 'wp-erp' ); ?>"><span class="dashicons dashicons-plus erp-performance-dashicon"></span> <?php _e( 'Add Performance Reviews', 'wp-erp' ); ?></a>
+        <?php
+    }
+    ?>
 
-    <a href="#" id="erp-empl-performance-reviews" class="action button" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-performance-reviews" data-title="<?php _e( 'Performance Reviews', 'wp-erp' ); ?>"><span class="dashicons dashicons-plus erp-performance-dashicon"></span> <?php _e( 'Add Performance Reviews', 'wp-erp' ); ?></a>
+    
 
     <table class="widefat">
         <thead>
@@ -51,8 +58,11 @@
                         <td><?php echo isset( $performance_rating[$row->dependablity] ) ? $performance_rating[$row->dependablity] : '-'; ?></td>
 
                         <td class="action">
-                            <a href="#" class="performance-remove" data-id="<?php echo $row->id; ?>"><span class="dashicons dashicons-trash"></span></a>
+                            <?php if ( current_user_can( 'erp_delete_review' ) ) { ?>
+                                <a href="#" class="performance-remove" data-id="<?php echo $row->id; ?>"><span class="dashicons dashicons-trash"></span></a>
+                            <?php } ?>
                         </td>
+                        
                     </tr>
                     <?php
                 }
@@ -66,9 +76,9 @@
     </table>
 
     <h3><?php _e( 'Performance Comments', 'wp-erp' ); ?></h3>
-
-    <a href="#" id="erp-empl-performance-comments" class="action button" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-performance-comments" data-title="<?php _e( 'Performance Comments', 'wp-erp' ); ?>"><span class="dashicons dashicons-plus erp-performance-dashicon"></span> <?php _e( 'Add Performance Comments', 'wp-erp' ); ?></a>
-
+    <?php if ( current_user_can( 'erp_create_review' ) ) { ?>
+        <a href="#" id="erp-empl-performance-comments" class="action button" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-performance-comments" data-title="<?php _e( 'Performance Comments', 'wp-erp' ); ?>"><span class="dashicons dashicons-plus erp-performance-dashicon"></span> <?php _e( 'Add Performance Comments', 'wp-erp' ); ?></a>
+    <?php } ?>
     <table class="widefat">
         <thead>
             <tr>
@@ -98,10 +108,13 @@
                         </td>
 
                         <td><?php echo esc_textarea( $row->comments ); ?></td>
-
+                        
                         <td class="action">
-                            <a href="#" class="performance-remove" data-id="<?php echo $row->id; ?>"><span class="dashicons dashicons-trash"></span></a>
+                            <?php if ( current_user_can( 'erp_delete_review' ) ) { ?>
+                                <a href="#" class="performance-remove" data-id="<?php echo $row->id; ?>"><span class="dashicons dashicons-trash"></span></a>
+                            <?php } ?>
                         </td>
+                        
                     </tr>
                     <?php
                 }
@@ -115,9 +128,9 @@
     </table>
 
     <h3><?php _e( 'Performance Goals', 'wp-erp' ); ?></h3>
-
-    <a href="#" id="erp-empl-performance-goals" class="action button" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-performance-goals" data-title="<?php _e( 'Performance Goals', 'wp-erp' ); ?>"><span class="dashicons dashicons-plus erp-performance-dashicon"></span> <?php _e( 'Add Performance Goals', 'wp-erp' ); ?></a>
-
+    <?php if ( current_user_can( 'erp_create_review' ) ) { ?>
+        <a href="#" id="erp-empl-performance-goals" class="action button" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-performance-goals" data-title="<?php _e( 'Performance Goals', 'wp-erp' ); ?>"><span class="dashicons dashicons-plus erp-performance-dashicon"></span> <?php _e( 'Add Performance Goals', 'wp-erp' ); ?></a>
+    <?php } ?>
     <table class="widefat">
         <thead>
             <tr>
@@ -149,10 +162,13 @@
                             ?>
                         </td>
                         <td><?php echo esc_textarea( $row->supervisor_assessment ); ?></td>
-
+                        
                         <td class="action">
-                            <a href="#" class="performance-remove" data-id="<?php echo $row->id; ?>"><span class="dashicons dashicons-trash"></span></a>
+                            <?php if ( current_user_can( 'erp_delete_review' ) ) { ?>
+                                <a href="#" class="performance-remove" data-id="<?php echo $row->id; ?>"><span class="dashicons dashicons-trash"></span></a>
+                            <?php } ?>
                         </td>
+                        
                     </tr>
                     <?php
                 }
