@@ -5,6 +5,9 @@
 // process erp actions on admin_init
 add_action( 'admin_init', 'erp_process_actions' );
 
+//Financial end date
+add_action( 'admin_init', 'new_financial_end_date' );
+
 
 /** Filters *******************************************************************/
 

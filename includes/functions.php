@@ -524,7 +524,12 @@ function erp_months_dropdown( $title = false ) {
  * @return string date
  */
 function erp_financial_date() {
-    return date( 'Y-m-d H:i:s', mktime( 0, 0, 0,  erp_get_option( 'gen_financial_month' ) ) );
+    return date( 'Y-m-d H:i:s', mktime( 0, 0, 0,  erp_get_option( 'gen_financial_month' ), 1 ) );
+}
+
+function erp_financial_start_date() {
+    $end_date = erp_financial_end_date();
+    return date( 'Y-m-d H:i:s', strtotime( '-11 month', strtotime( $end_date ) ) );
 }
 
 /**
@@ -534,7 +539,31 @@ function erp_financial_date() {
  *
  * @return string date
  */
-function erp_financial_date_after_one_year() {
-    $financial_date = erp_financial_date();
-    return date( 'Y-m-d H:i:s', strtotime( '+1 year', strtotime( $financial_date ) ) );
+function erp_financial_end_date() {
+    return erp_get_option( 'erp_financial_end_date', false );
+}
+
+/**
+ * New financial end date
+ *
+ * @since  0.1 
+ *
+ * @return void
+ */
+function new_financial_end_date() {
+    $end_date = erp_financial_end_date();
+    
+    if ( $end_date ) {
+        if ( $end_date < current_time( 'mysql' ) ) {
+            $financial_month = date( 'Y-m-d H:i:s', mktime( 0, 0, 0,  erp_get_option( 'gen_financial_month' ), 1 ) );
+            $new_end_date = date( 'Y-m-d H:i:s', strtotime( '+11 month', strtotime( $financial_month ) ) );
+            update_option( 'erp_financial_end_date', $new_end_date );            
+        }
+
+    } else {
+
+        $financial_month = date( 'Y-m-d H:i:s', mktime( 0, 0, 0,  erp_get_option( 'gen_financial_month' ), 1 ) );
+        $new_end_date = date( 'Y-m-d H:i:s', strtotime( '+11 month', strtotime( $financial_month ) ) );
+        update_option( 'erp_financial_end_date', $new_end_date );
+    }
 }
