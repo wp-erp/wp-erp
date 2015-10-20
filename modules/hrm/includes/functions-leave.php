@@ -1039,15 +1039,13 @@ function erp_hr_apply_new_employee_policy( $employee = false, $policies = false 
  * @return void          
  */
 function erp_hr_apply_leave_policy( $user_id, $leave_policy ) {
-    $from = date( 'Y-m-d', mktime( 0, 0, 0,  erp_get_option( 'gen_financial_month' ) ) );
-    $to   = date( 'Y-m-d', strtotime( '+1 year', strtotime( $from ) ) );
-    
+
     $policy = array(
         'user_id'    => $user_id,
         'policy_id'  => $leave_policy['id'],
         'days'       => $leave_policy['value'],
-        'from_date'  => $from,
-        'to_date'    => $to, // @TODO -- Analysis remaining
+        'from_date'  => erp_financial_date(),
+        'to_date'    => erp_financial_date_after_one_year(), // @TODO -- Analysis remaining
         'comments'   => $leave_policy['description']
     );
 
@@ -1179,6 +1177,8 @@ function erp_hr_get_next_month_leave_list() {
             ->get()
             ->toArray() );  
 }
+
+
 
 
 

@@ -515,3 +515,26 @@ function erp_months_dropdown( $title = false ) {
     return $months;
  
 }
+
+/**
+ * Get Company financial date
+ *
+ * @since  0.1 
+ *
+ * @return string date
+ */
+function erp_financial_date() {
+    return date( 'Y-m-d H:i:s', mktime( 0, 0, 0,  erp_get_option( 'gen_financial_month' ) ) );
+}
+
+/**
+ * Get Company financial date
+ *
+ * @since  0.1 
+ *
+ * @return string date
+ */
+function erp_financial_date_after_one_year() {
+    $financial_date = erp_financial_date();
+    return date( 'Y-m-d H:i:s', strtotime( '+1 year', strtotime( $financial_date ) ) );
+}
