@@ -995,12 +995,12 @@ function erp_hr_apply_new_employee_policy( $employee = false, $policies = false 
     foreach ( $policies as $key => $policy ) {
 
         $effective_date = date( 'Y-m-d', strtotime( $policy['effective_date'] ) );
-
-        if ( strtotime( $effective_date ) < 0 && $today < $effective_date ) {
+       
+        if ( strtotime( $effective_date ) < 0 || $today < $effective_date ) {
             continue;
         }
 
-        if ( $policy['department'] != '-1' && $policy['department'] != $department) {
+        if ( $policy['department'] != '-1' && $policy['department'] != $department ) {
             continue;
         }
 
@@ -1022,7 +1022,7 @@ function erp_hr_apply_new_employee_policy( $employee = false, $policies = false 
 
         $selected_policy[] = $policy;
     }
-    
+
     foreach ( $selected_policy as $key => $leave_policy ) {
         erp_hr_apply_leave_policy( $user_id, $leave_policy );
     }
@@ -1039,12 +1039,13 @@ function erp_hr_apply_new_employee_policy( $employee = false, $policies = false 
  * @return void          
  */
 function erp_hr_apply_leave_policy( $user_id, $leave_policy ) {
+
     $policy = array(
         'user_id'    => $user_id,
         'policy_id'  => $leave_policy['id'],
         'days'       => $leave_policy['value'],
-        'from_date'  => date( 'Y-m-d', mktime( 0, 0, 0,  erp_get_option( 'gen_financial_month' ) ) ),
-        'to_date'    => date( 'Y', strtotime( current_time( 'mysql' ) ) ).'-12-31', // @TODO -- Analysis remaining
+        'from_date'  => erp_financial_date(),
+        'to_date'    => erp_financial_date_after_one_year(), // @TODO -- Analysis remaining
         'comments'   => $leave_policy['description']
     );
 
@@ -1176,6 +1177,8 @@ function erp_hr_get_next_month_leave_list() {
             ->get()
             ->toArray() );  
 }
+
+
 
 
 
