@@ -952,12 +952,12 @@ function erp_hr_apply_new_employee_policy( $employee = false, $policies = false 
     foreach ( $policies as $key => $policy ) {
 
         $effective_date = date( 'Y-m-d', strtotime( $policy['effective_date'] ) );
-
-        if ( strtotime( $effective_date ) < 0 && $today < $effective_date ) {
+       
+        if ( strtotime( $effective_date ) < 0 || $today < $effective_date ) {
             continue;
         }
 
-        if ( $policy['department'] != '-1' && $policy['department'] != $department) {
+        if ( $policy['department'] != '-1' && $policy['department'] != $department ) {
             continue;
         }
 
@@ -979,7 +979,7 @@ function erp_hr_apply_new_employee_policy( $employee = false, $policies = false 
 
         $selected_policy[] = $policy;
     }
-    
+
     foreach ( $selected_policy as $key => $leave_policy ) {
         erp_hr_apply_leave_policy( $user_id, $leave_policy );
     }
@@ -996,6 +996,9 @@ function erp_hr_apply_new_employee_policy( $employee = false, $policies = false 
  * @return void          
  */
 function erp_hr_apply_leave_policy( $user_id, $leave_policy ) {
+    $from = date( 'Y-m-d', mktime( 0, 0, 0,  erp_get_option( 'gen_financial_month' ) ) );
+    $to   = date( 'Y-m-d', strtotime( '+1 year', strtotime( $from ) ) );
+    
     $policy = array(
         'user_id'    => $user_id,
         'policy_id'  => $leave_policy['id'],

@@ -140,7 +140,7 @@
                     'value'   => '{{ data.work.type }}',
                     'class'   => 'erp-hrm-select2',
                     'type'    => 'select',
-                    'options' => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_employee_types()
+                    'options' => array( '-1' => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_employee_types()
                 ) ); ?>
             </li>
 
@@ -151,7 +151,7 @@
                     'value'   => '{{ data.work.status }}',
                     'class'   => 'erp-hrm-select2',
                     'type'    => 'select',
-                    'options' => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_employee_statuses()
+                    'options' => array( '-1' => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_employee_statuses()
                 ) ); ?>
             </li>
 
@@ -164,7 +164,7 @@
                     'value'   => '{{ data.work.hiring_source }}',
                     'class'   => 'erp-hrm-select2',
                     'type'    => 'select',
-                    'options' => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_employee_sources()
+                    'options' => array( '-1' => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_employee_sources()
                 ) ); ?>
             </li>
 
@@ -196,7 +196,7 @@
                         'value'   => '{{ data.work.pay_type }}',
                         'class'   => 'erp-hrm-select2',
                         'type'    => 'select',
-                        'options' => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_pay_type()
+                        'options' => array( '-1' => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_pay_type()
                     ) ); ?>
                 </li>
 
