@@ -911,7 +911,7 @@ function erp_hr_leave_get_balance( $user_id ) {
         FROM {$wpdb->prefix}erp_hr_leave_requests AS req
         LEFT JOIN {$wpdb->prefix}erp_hr_leave_entitlements AS en ON ( ( en.policy_id = req.policy_id ) AND (en.user_id = req.user_id ) )
         WHERE req.status = 1 and req.user_id = %d";
-
+        
     $sql     = $wpdb->prepare( $query, $user_id );
     $results = $wpdb->get_results( $sql );
 
@@ -953,7 +953,7 @@ function erp_hr_leave_get_balance( $user_id ) {
         return $balance;
     }
 
-    return false;
+    return $balance;
 }
 
 /**
