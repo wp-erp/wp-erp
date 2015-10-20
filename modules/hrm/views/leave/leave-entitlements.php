@@ -1,22 +1,17 @@
-<div class="wrap erp-hr-leave-entitlements">
-    <h2><?php _e( 'Leave Entitlements', 'wp-erp' ); ?></h2>
-
-    <?php
-    $cur_year   = date( 'Y' );
-    $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'assignment';
-    $tabs = array(
-        'assignment'   => __( 'Assignment', 'wp-erp' ),
-        'entitlements' => __( 'Entitlements', 'wp-erp' )
-    );
-    ?>
-
-    <h2 class="nav-tab-wrapper" style="margin-bottom: 15px;">
-        <?php foreach ($tabs as $key => $tab) {
-            $active_class = ( $key == $active_tab ) ? ' nav-tab-active' : '';
-            ?>
-            <a href="<?php echo add_query_arg( array( 'tab' => $key ), admin_url( 'admin.php?page=erp-leave-assign' ) ); ?>" class="nav-tab<?php echo $active_class; ?>"><?php echo esc_html( $tab ); ?></a>
-        <?php } ?>
-    </h2>
+<?php
+$cur_year   = date( 'Y' );
+$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : '';
+?>
+<div class="wrap erp-hr-employees" id="wp-erp">
+    
+    <h2>
+        <?php _e( 'Leave Entitlements', 'wp-erp' ); ?>
+        <?php if ( 'assignment' == $active_tab ): ?>
+            <a href="<?php echo admin_url( 'admin.php?page=erp-leave-assign' ); ?>" id="erp-new-leave-request" class="add-new-h2"><?php _e( 'Back to Entitlement list', 'wp-erp' ); ?></a>
+        <?php else: ?>
+            <a href="<?php echo add_query_arg( array( 'tab' => 'assignment' ), admin_url( 'admin.php?page=erp-leave-assign' ) ); ?>" id="erp-new-leave-request" class="add-new-h2"><?php _e( 'Add New', 'wp-erp' ); ?></a>
+        <?php endif ?>
+    </h2>    
 
     <?php if ( 'assignment' == $active_tab ) { ?>
 
@@ -155,6 +150,5 @@
 
             </div><!-- .list-table-inner -->
         </div><!-- .list-table-wrap -->
-
     <?php } ?>
 </div>
