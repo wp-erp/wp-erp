@@ -28,7 +28,7 @@ class ERP_Settings_General extends ERP_Settings_Page {
                 'title'   => __( 'Company Start Date', 'wp-erp' ),
                 'id'      => 'gen_com_start',
                 'type'    => 'text',
-                'desc'      => __( 'The date the company officially started.', 'erp' ),
+                'desc'      => __( 'The date the company officially started.', 'wp-erp' ),
                 'class'   => 'erp-date-field',
                 'tooltip'   =>  true,
             ),
@@ -38,8 +38,18 @@ class ERP_Settings_General extends ERP_Settings_Page {
                 'id'      => 'gen_financial_month',
                 'type'    => 'select',
                 'options' => erp_months_dropdown(),
-                'desc'      => __( 'Financial and tax calculation starts from this month of every year.', 'erp' ),
+                'desc'      => __( 'Financial and tax calculation starts from this month of every year.', 'wp-erp' ),
                 'tooltip'   =>  true,
+            ),
+
+            array(
+                'title'   => __( 'Enable Debug mood', 'wp-erp' ),
+                'id'      => 'erp_debug_mode',
+                'type'    => 'select',
+                'options' => [ 1 => __('On', 'wp-erp'), 0 => __( 'Off', 'wp-erp') ],
+                'desc'      => __( 'Switching testing or producting mood', 'wp-erp' ),
+                'tooltip'   =>  true,
+                'default'   =>  0,
             ),
 
             array( 'type' => 'sectionend', 'id' => 'script_styling_options' ),

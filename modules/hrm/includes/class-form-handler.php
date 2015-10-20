@@ -30,6 +30,7 @@ class Form_Handler {
         add_action( 'load-hr-management_page_erp-hr-designation', array( $this, 'designation_bulk_action') );
         add_action( 'load-hr-management_page_erp-hr-depts', array( $this, 'department_bulk_action') );
         add_action( 'load-leave_page_erp-leave-policies', array( $this, 'leave_policies') );
+        add_action( 'load-leave_page_erp-leave-assign', array( $this, 'entitlement_bulk_action') );
     }
 
     /**
@@ -73,12 +74,44 @@ class Form_Handler {
         }
 
         if ( isset( $_POST['action'] ) && $_POST['action'] == 'trash' ) {
+
             if ( isset( $_POST['policy_id'] ) ) {
                 erp_hr_leave_policy_delete( $_POST['policy_id'] );
             }
         }
 
         return true;
+    }
+
+    public function entitlement_bulk_action() {
+        if ( ! $this->verify_current_page_screen( 'erp-leave-assign', 'bulk-entitlements' ) ) {
+            return;
+        }
+
+        $employee_table = new \WeDevs\ERP\HRM\Entitlement_List_Table();
+        $action = $employee_table->current_action();
+
+        if ( $action ) {
+            $redirect = remove_query_arg( array('_wp_http_referer', '_wpnonce', 'filter_entitlement' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
+
+            if ( $action == 'filter_entitlement' ) {
+                wp_redirect( $redirect );
+                exit();
+            }
+
+            if ( $action == 'entitlement_delete' ) {
+                if ( isset( $_GET['entitlement_id'] ) && !empty( $_GET['entitlement_id'] ) ) {
+                    foreach ( $_GET['entitlement_id'] as $key => $ent_id ) {
+                        $entitlement_data = \WeDevs\ERP\HRM\Models\Leave_Entitlement::select( 'user_id','policy_id' )->find( $ent_id )->toArray();
+                        erp_hr_delete_entitlement( $ent_id, $entitlement_data['user_id'], $entitlement_data['policy_id'] );
+                    }
+                }
+
+                wp_redirect( $redirect );
+                exit();
+
+            }
+        }
     }
 
     /**

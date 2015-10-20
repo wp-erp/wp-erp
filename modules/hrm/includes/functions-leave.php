@@ -851,6 +851,49 @@ function erp_hr_leave_get_entitlements( $args = array() ) {
 }
 
 /**
+ * Count leave entitlement
+ *
+ * @since 0.1 
+ * 
+ * @param  array  $args 
+ * 
+ * @return integer 
+ */
+function erp_hr_leave_count_entitlements( $args = array() ) {
+    $defaults = array(
+        'year'        => date( 'Y' ),
+    );
+
+    $args  = wp_parse_args( $args, $defaults );
+
+    $from_date = $args['year'] . '-01-01';
+    $to_date   = $args['year'] . '-12-31';
+
+    return \WeDevs\ERP\HRM\Models\Leave_Entitlement::where('from_date', '>=', $from_date )
+            ->where( 'to_date', '<=', $to_date )
+            ->count();
+}
+
+/**
+ * Delete entitlement with leave request
+ *
+ * @since 0.1 
+ * 
+ * @param  integer $id       
+ * @param  integer $user_id  
+ * @param  integer $policy_id
+ * 
+ * @return void
+ */
+function erp_hr_delete_entitlement( $id, $user_id, $policy_id ) {
+    if ( \WeDevs\ERP\HRM\Models\Leave_Entitlement::find( $id )->delete() ) {
+        return \WeDevs\ERP\HRM\Models\Leave_request::where( 'user_id', '=', $user_id )
+                ->where( 'policy_id', '=', $policy_id )
+                ->delete();
+    }
+}
+
+/**
  * Erp get leave balance
  *
  * @since 0.1 
@@ -1004,7 +1047,7 @@ function erp_hr_apply_leave_policy( $user_id, $leave_policy ) {
         'policy_id'  => $leave_policy['id'],
         'days'       => $leave_policy['value'],
         'from_date'  => date( 'Y-m-d', mktime( 0, 0, 0,  erp_get_option( 'gen_financial_month' ) ) ),
-        'to_date'    => date( 'Y', strtotime( current_time( 'mysql' ) ) ).'-12-31',
+        'to_date'    => date( 'Y', strtotime( current_time( 'mysql' ) ) ).'-12-31', // @TODO -- Analysis remaining
         'comments'   => $leave_policy['description']
     );
 

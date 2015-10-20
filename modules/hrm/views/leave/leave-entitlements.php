@@ -137,72 +137,24 @@
 
     <?php } else { ?>
 
-        <table class="widefat">
-            <thead>
-                <tr>
-                    <th scope="col" id="cb" class="manage-column column-cb check-column" style="">
-                        <input id="cb-select-all-1" type="checkbox">
-                    </th>
-                    <th><?php _e( 'Employee Name', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'Leave Policy', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'Valid From', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'Valid To', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'Days', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'Scheduled', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'Available', 'wp-erp' ); ?></th>
-                </tr>
-            </thead>
+        <div id="erp-entitlement-table-wrap">
 
-            <tfoot>
-                <tr>
-                    <th scope="col" id="cb" class="manage-column column-cb check-column" style="">
-                        <input id="cb-select-all-1" type="checkbox">
-                    </th>
-                    <th><?php _e( 'Employee Name', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'Leave Policy', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'Valid From', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'Valid To', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'Days', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'Scheduled', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'Available', 'wp-erp' ); ?></th>
-                </tr>
-            </tfoot>
+            <div class="list-table-inner">
 
-            <tbody id="the-list">
-                <?php
-                $entitlements = erp_hr_leave_get_entitlements( array( 'year' => $cur_year ) );
+                <form method="get">
+                    <input type="hidden" name="page" value="erp-leave-assign">
+                    <input type="hidden" name="tab" value="entitlements">
+                    <?php                    
+                    $entitlement = new \WeDevs\ERP\HRM\Entitlement_List_Table();
+                    $entitlement->prepare_items();
+                    $entitlement->views();
 
-                if ( $entitlements ) {
+                    $entitlement->display();
+                    ?>
+                </form>
 
-                    foreach( $entitlements as $num => $entitlement ) { ?>
-                        <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
-                            <th scope="row" class="check-column">
-                                <input id="cb-select-1" type="checkbox" name="id[]" value="<?php echo $entitlement->id; ?>">
-                            </th>
-                            <td class="col-">
-
-                                <strong><a href="<?php echo erp_hr_url_single_employee( $entitlement->id ); ?>"><?php echo esc_html( $entitlement->employee_name ); ?></a></strong>
-
-                            </td>
-                            <td class="col-"><?php echo esc_html( $entitlement->policy_name ); ?></td>
-                            <td class="col-"><?php echo erp_format_date( $entitlement->from_date ); ?></td>
-                            <td class="col-"><?php echo erp_format_date( $entitlement->to_date ); ?></td>
-                            <td class="col-"><?php echo number_format_i18n( $entitlement->days ); ?></td>
-                            <td class="col-"></td>
-                            <td class="col-"></td>
-                        </tr>
-                    <?php } ?>
-                <?php } else { ?>
-
-                    <tr>
-                        <td colspan="6">
-                            <?php _e( 'No entitlements found!', 'wp-erp' ); ?>
-                        </td>
-                    </tr>
-
-                <?php } ?>
-            </tbody>
-        </table>
+            </div><!-- .list-table-inner -->
+        </div><!-- .list-table-wrap -->
 
     <?php } ?>
 </div>

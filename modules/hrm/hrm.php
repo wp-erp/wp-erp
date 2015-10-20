@@ -151,6 +151,7 @@ class Human_Resource {
             'delConfirmDept'     => __( 'Are you sure to delete this department?', 'wp-erp' ),
             'delConfirmEmployee' => __( 'Are you sure to delete this employee?', 'wp-erp' ),
             'delConfirmEmployeeNote' => __( 'Are you sure to delete this employee note?', 'wp-erp' ),
+            'delConfirmEntitlement' => __( 'Are you sure to delete this Entitlement? If yes, then all leave request under this entitlement also permanently deleted', 'wp-erp' ),
         ) );
 
         // if its an employee page
