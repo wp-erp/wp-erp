@@ -5,10 +5,6 @@
 // process erp actions on admin_init
 add_action( 'admin_init', 'erp_process_actions' );
 
-//Financial end date
-add_action( 'admin_init', 'new_financial_end_date' );
-
-
 /** Filters *******************************************************************/
 
 add_filter( 'map_meta_cap', 'erp_map_meta_caps', 10, 4 );

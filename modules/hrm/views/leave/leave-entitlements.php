@@ -64,10 +64,7 @@ $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : '';
                 'tag'      => 'li',
                 'required' => true,
                 'class'    => 'chosen-select',
-                'options'  => erp_hr_leave_period(), array(
-                    $cur_year        => sprintf( '%s - %s', erp_format_date( '01-01-' . $cur_year ), erp_format_date( '31-12-' . $cur_year ) ),
-                    ($cur_year + 1 ) => sprintf( '%s - %s', erp_format_date( '01-01-' . ( $cur_year + 1 ) ), erp_format_date( '31-12-' . ( $cur_year + 1 ) ) ),
-                )
+                'options'  => erp_hr_leave_period(), 
             ) );
 
             erp_html_form_input( array(
