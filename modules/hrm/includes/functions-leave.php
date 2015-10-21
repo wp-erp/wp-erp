@@ -1217,10 +1217,12 @@ function erp_hr_apply_entitlement_after_one_year() {
 
 function erp_hr_leave_period() {
 
-    $next = date( 'Y-m-01', strtotime( '+1 year', strtotime(erp_financial_start_date()) ) );
+    $next_sart_date = date( 'Y-m-01 H:i:s', strtotime( '+1 year', strtotime( erp_financial_start_date() ) ) );
+    $next_end_date = date( 'Y-m-t H:i:s', strtotime( '+1 year', strtotime( erp_financial_end_date() ) ) );
+
     $date = [
         erp_financial_start_date() => erp_format_date( erp_financial_start_date() ) . ' - ' . erp_format_date( erp_financial_end_date() ),
-        $next => erp_format_date( $next ) . ' - ' . erp_format_date( date( 'Y-m-t', strtotime( '+1 year', strtotime( erp_financial_end_date() ) ) ) )
+        $next_sart_date => erp_format_date( $next_sart_date ) . ' - ' . erp_format_date( $next_end_date )
     ];
 
     return $date;
