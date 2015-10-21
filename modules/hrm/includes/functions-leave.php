@@ -820,7 +820,7 @@ function erp_hr_leave_get_entitlements( $args = array() ) {
     $where = 'WHERE 1 = 1';
 
     if ( ! empty( $args['year'] ) ) {
-        $from_date = erp_financial_date();
+        $from_date = erp_financial_start_date();
         $to_date   = erp_financial_end_date();
 
         $where .= " AND en.from_date >= date('$from_date') AND en.to_date <= date('$to_date')";
@@ -868,7 +868,7 @@ function erp_hr_leave_count_entitlements( $args = array() ) {
 
     $args  = wp_parse_args( $args, $defaults );
 
-    $from_date = erp_financial_date();
+    $from_date = erp_financial_start_date();
     $to_date   = erp_financial_end_date();
 
     return \WeDevs\ERP\HRM\Models\Leave_Entitlement::where('from_date', '>=', $from_date )
@@ -1215,7 +1215,16 @@ function erp_hr_apply_entitlement_after_one_year() {
     }
 }
 
+function erp_hr_leave_period() {
 
+    $next = date( 'Y-m-01', strtotime( '+1 year', strtotime(erp_financial_start_date()) ) );
+    $date = [
+        erp_financial_start_date() => erp_format_date( erp_financial_start_date() ) . ' - ' . erp_format_date( erp_financial_end_date() ),
+        $next => erp_format_date( $next ) . ' - ' . erp_format_date( date( 'Y-m-t', strtotime( '+1 year', strtotime( erp_financial_end_date() ) ) ) )
+    ];
+
+    return $date;
+}
 
 
 
