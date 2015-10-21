@@ -489,9 +489,9 @@ function erp_hr_leave_insert_entitlement( $args = array() ) {
     $user_id     = intval( $fields['user_id'] );
     $policy_id   = intval( $fields['policy_id'] );
     
-    $entitlement = $entitlement->where( function( $condition ) use( $user_id, $policy_id ) {
-        $financial_end_date = erp_financial_end_date();
-        $financial_start_date = date( 'Y-m-d H:i:s', strtotime( '-1 year', strtotime( $financial_end_date ) ) );
+    $entitlement = $entitlement->where( function( $condition ) use( $user_id, $policy_id, $fields ) {
+        $financial_start_date = $fields['from_date'] ? $fields['from_date'] : erp_financial_start_date();
+        $financial_end_date   = $fields['to_date'] ? $fields['to_date'] :  erp_financial_end_date();
         $condition->where( 'from_date', '>=', $financial_start_date );
         $condition->where( 'to_date', '<=', $financial_end_date );
         $condition->where( 'user_id', '=', $user_id );
@@ -1178,39 +1178,41 @@ function erp_hr_get_next_month_leave_list() {
             ->where('status', 1 )
             ->get()
             ->toArray() );  
-}
+} 
 
+/**
+ * After one later add entitlement automatically 
+ *
+ * @since 0.1 
+ * 
+ * @return void 
+ */
 function erp_hr_apply_entitlement_after_one_year() {
-  return;
-    var_dump( erp_financial_start_date(), erp_financial_end_date() ); die();
-  return;
-    $financial_end_date      = erp_financial_end_date();
-    $financial_start_date    = date( 'Y-m-d H:i:s', strtotime( '-1 year', strtotime( $financial_end_date ) ) );
-    
-    $new_financial_from_date = date( 'Y-m-d H:i:s', strtotime( $financial_end_date ) );
-    $new_financial_to_date   = date( 'Y-m-d H:i:s', strtotime( '+1 year', strtotime( $new_financial_from_date ) ) );
-var_dump($financial_start_date, $financial_end_date, $new_financial_from_date,  $new_financial_to_date ); die();
+
     $entitlement = new \WeDevs\ERP\HRM\Models\Leave_Entitlement();
-    $entitlement = $entitlement->where( function( $condition ) use( $financial_start_date, $financial_end_date ) {
+
+    $entitlement = $entitlement->where( function( $condition ) {
+        $financial_start_date = erp_financial_start_date();
+        $financial_end_date   = erp_financial_end_date();
         $condition->where( 'from_date', '>=', $financial_start_date );
         $condition->where( 'to_date', '<=', $financial_end_date );
-    } );
+    });
+
     $entitlements = $entitlement->get()->toArray();
-    var_dump( $financial_end_date, $financial_start_date, $entitlements ); die();
+
     foreach ( $entitlements as $key => $entitlement ) {
-        var_dump( $entitlement ); die();
+
         $policy = array(
             'user_id'    => $entitlement['user_id'],
             'policy_id'  => $entitlement['id'],
             'days'       => $entitlement['value'],
-            'from_date'  => $new_financial_from_date,
-            'to_date'    => erp_financial_end_date(), // @TODO -- Analysis remaining
+            'from_date'  => erp_financial_start_date(),
+            'to_date'    => erp_financial_end_date(), 
             'comments'   => $leave_policy['description']
         );
 
         erp_hr_leave_insert_entitlement( $policy );
     }
-
 }
 
 
