@@ -301,7 +301,7 @@ class Form_Handler {
 
         $is_single       = ! isset( $_POST['assignment_to'] );
         $leave_policy    = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : 0;
-        $leave_period    = isset( $_POST['leave_period'] ) ? intval( $_POST['leave_period'] ) : 0;
+        $leave_period    = isset( $_POST['leave_period'] ) ? $_POST['leave_period'] : 0;
         $single_employee = isset( $_POST['single_employee'] ) ? intval( $_POST['single_employee'] ) : 0;
         $location        = isset( $_POST['location'] ) ? intval( $_POST['location'] ) : 0;
         $department      = isset( $_POST['department'] ) ? intval( $_POST['department'] ) : 0;
@@ -345,8 +345,8 @@ class Form_Handler {
         }
 
         if ( $employees ) {
-            $from_date = $leave_period . '-01-01';
-            $to_date   = $leave_period . '-12-31';
+            $from_date = $leave_period;
+            $to_date   = date( 'Y-m-t H:i:s', strtotime( '+11 month', strtotime( $leave_period ) ) );
             $policy    = erp_hr_leave_get_policy( $leave_policy );
 
             if ( ! $policy ) {
@@ -354,22 +354,20 @@ class Form_Handler {
             }
 
             foreach ($employees as $employee) {
-                if ( ! erp_hr_leave_has_employee_entitlement( $employee->user_id, $leave_policy, $leave_period ) ) {
-                    $data = array(
-                        'user_id'   => $employee->user_id,
-                        'policy_id' => $leave_policy,
-                        'days'      => $policy->value,
-                        'from_date' => $from_date,
-                        'to_date'   => $to_date,
-                        'comments'  => $comment,
-                        'status'    => 1
-                    );
+                $data = array(
+                    'user_id'   => $employee->user_id,
+                    'policy_id' => $leave_policy,
+                    'days'      => $policy->value,
+                    'from_date' => $from_date,
+                    'to_date'   => $to_date,
+                    'comments'  => $comment,
+                    'status'    => 1
+                );
 
-                    $inserted = erp_hr_leave_insert_entitlement( $data );
+                $inserted = erp_hr_leave_insert_entitlement( $data );
 
-                    if ( ! is_wp_error( $inserted ) ) {
-                        $affected += 1;
-                    }
+                if ( ! is_wp_error( $inserted ) ) {
+                    $affected += 1;
                 }
             }
 
