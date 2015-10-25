@@ -426,6 +426,26 @@ table.leaves td.column-status .status-3 {
 .note-tab-wrap ul.notes-list li:first-child {
   border-top: none;
 }
+@media print {
+  .erp-hide-print {
+    display: none !important;
+  }
+  .erp-work-experience-wrap {
+    margin-top: 150px !important;
+  }
+  #wpadminbar,
+  #adminmenumain,
+  #wpfooter {
+    display: none;
+  }
+  #adminmenuback,
+  #adminmenuwrap {
+    width: 0px;
+  }
+  #wpcontent {
+    margin-left: 0px;
+  }
+}
 #wp-admin-bar-erp-mode-switch .ab-icon.dashicons-randomize {
   padding-top: 7px !important;
 }

@@ -35,6 +35,7 @@
             $( '.erp-hr-employees' ).on( 'click', 'a#erp-empl-compensation', this.employee.updateJobStatus );
             $( '.erp-hr-employees' ).on( 'click', 'a#erp-empl-jobinfo', this.employee.updateJobStatus );
             $( '.erp-hr-employees' ).on( 'click', 'td.action a.remove', this.employee.removeHistory );
+            $( '.erp-hr-employees' ).on( 'click', 'a#erp-employee-print', this.employee.printData );
 
             // Single Employee
             $( '.erp-employee-single' ).on( 'click', 'a#erp-employee-terminate', this.employee.terminateEmployee );
@@ -807,6 +808,11 @@
                         }
                     });
                 }
+            },
+
+            printData: function(e) {
+                e.preventDefault();
+                window.print();
             },
 
             addNote: function(e) {
