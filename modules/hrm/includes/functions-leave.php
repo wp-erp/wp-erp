@@ -472,7 +472,7 @@ function erp_hr_leave_insert_entitlement( $args = array() ) {
     );
 
     $fields = wp_parse_args( $args, $defaults );
-
+    
     if ( ! intval( $fields['user_id'] ) ) {
         return new WP_Error( 'no-user', __( 'No employee provided.', 'wp-erp' ) );
     }
@@ -1046,7 +1046,7 @@ function erp_hr_apply_leave_policy( $user_id, $leave_policy ) {
         'user_id'    => $user_id,
         'policy_id'  => $leave_policy['id'],
         'days'       => $leave_policy['value'],
-        'from_date'  => erp_financial_date(),
+        'from_date'  => erp_financial_start_date(),
         'to_date'    => erp_financial_end_date(), // @TODO -- Analysis remaining
         'comments'   => $leave_policy['description']
     );
@@ -1180,40 +1180,7 @@ function erp_hr_get_next_month_leave_list() {
             ->toArray() );  
 } 
 
-/**
- * After one later add entitlement automatically 
- *
- * @since 0.1 
- * 
- * @return void 
- */
-function erp_hr_apply_entitlement_after_one_year() {
 
-    $entitlement = new \WeDevs\ERP\HRM\Models\Leave_Entitlement();
-
-    $entitlement = $entitlement->where( function( $condition ) {
-        $financial_start_date = erp_financial_start_date();
-        $financial_end_date   = erp_financial_end_date();
-        $condition->where( 'from_date', '>=', $financial_start_date );
-        $condition->where( 'to_date', '<=', $financial_end_date );
-    });
-
-    $entitlements = $entitlement->get()->toArray();
-
-    foreach ( $entitlements as $key => $entitlement ) {
-
-        $policy = array(
-            'user_id'    => $entitlement['user_id'],
-            'policy_id'  => $entitlement['id'],
-            'days'       => $entitlement['value'],
-            'from_date'  => erp_financial_start_date(),
-            'to_date'    => erp_financial_end_date(), 
-            'comments'   => $leave_policy['description']
-        );
-
-        erp_hr_leave_insert_entitlement( $policy );
-    }
-}
 
 function erp_hr_leave_period() {
 
@@ -1226,6 +1193,46 @@ function erp_hr_leave_period() {
     ];
 
     return $date;
+}
+
+/**
+ * Apply entitlement yearly 
+ *
+ * @since 0.1 
+ * 
+ * @return void 
+ */
+function erp_hr_apply_entitlement_yearly() {
+  
+    $financial_start_date = erp_financial_start_date();
+    $financial_end_date   = erp_financial_end_date();
+
+    $before_financial_start_date = date( 'Y-m-01 H:i:s', strtotime( '-1 year', strtotime( $financial_start_date ) ) );
+    $before_financial_end_date   = date( 'Y-m-t H:i:s', strtotime( '+11 month', strtotime( $before_financial_start_date ) ) );
+
+    $entitlement = new \WeDevs\ERP\HRM\Models\Leave_Entitlement();
+
+    $entitlement = $entitlement->where( function( $condition ) use( $before_financial_start_date, $before_financial_end_date ) {
+        $condition->where( 'from_date', '>=', $before_financial_start_date );
+        $condition->where( 'to_date', '<=', $before_financial_end_date );
+    });
+
+    $entitlements = $entitlement->get()->toArray();
+   
+    foreach ( $entitlements as $key => $entitlement ) {
+
+        $policy = array(
+            'user_id'    => $entitlement['user_id'],
+            'policy_id'  => $entitlement['policy_id'],
+            'days'       => $entitlement['days'],
+            'from_date'  => erp_financial_start_date(),
+            'to_date'    => erp_financial_end_date(), 
+            'comments'   => $entitlement['comments']
+        );
+
+        erp_hr_leave_insert_entitlement( $policy );
+    }
+
 }
 
 
