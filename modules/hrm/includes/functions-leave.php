@@ -1177,11 +1177,17 @@ function erp_hr_get_next_month_leave_list() {
             ->where( $db->raw("DATE_FORMAT( `start_date`, '%m %Y' )" ), \Carbon\Carbon::today()->addMonth(1)->format('m Y') )
             ->where('status', 1 )
             ->get()
-            ->toArray() );  
+            ->toArray());  
 } 
 
 
-
+/**
+ * Leave period dropdown at entitlement create time 
+ *
+ * @since 0.1 
+ * 
+ * @return void 
+ */
 function erp_hr_leave_period() {
 
     $next_sart_date = date( 'Y-m-01 H:i:s', strtotime( '+1 year', strtotime( erp_financial_start_date() ) ) );
@@ -1189,7 +1195,7 @@ function erp_hr_leave_period() {
 
     $date = [
         erp_financial_start_date() => erp_format_date( erp_financial_start_date() ) . ' - ' . erp_format_date( erp_financial_end_date() ),
-        $next_sart_date => erp_format_date( $next_sart_date ) . ' - ' . erp_format_date( $next_end_date )
+        $next_sart_date            => erp_format_date( $next_sart_date ) . ' - ' . erp_format_date( $next_end_date )
     ];
 
     return $date;
