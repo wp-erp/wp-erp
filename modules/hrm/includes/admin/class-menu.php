@@ -38,8 +38,20 @@ class Admin_Menu {
         add_submenu_page( 'erp-leave', __( 'Leave Entitlements', 'wp-erp' ), __( 'Leave Entitlements', 'wp-erp' ), 'erp_leave_manage', 'erp-leave-assign', array( $this, 'leave_entitilements' ) );
         add_submenu_page( 'erp-leave', __( 'Holidays', 'wp-erp' ), __( 'Holidays', 'wp-erp' ), 'erp_leave_manage', 'erp-holiday-assign', array( $this, 'holiday_page' ) );
         add_submenu_page( 'erp-leave', __( 'Policies', 'wp-erp' ), __( 'Policies', 'wp-erp' ), 'erp_leave_manage', 'erp-leave-policies', array( $this, 'leave_policy_page' ) );
-        add_submenu_page( 'erp-leave', __( 'Calendar', 'wp-erp' ), __( 'Calendar', 'wp-erp' ), 'erp_leave_manage', 'erp-leave-calendar', array( $this, 'leave_calendar_page' ) );
+        $calendar = add_submenu_page( 'erp-leave', __( 'Calendar', 'wp-erp' ), __( 'Calendar', 'wp-erp' ), 'erp_leave_manage', 'erp-leave-calendar', array( $this, 'leave_calendar_page' ) );
         // add_submenu_page( 'erp-leave', __( 'Leave Calendar', 'wp-erp' ), __( 'Leave Calendar', 'wp-erp' ), 'manage_options', 'erp-leave-calendar', array( $this, 'empty_page' ) );
+        
+        add_action( 'admin_print_styles-' . $calendar, array( $this, 'hr_calendar_script' ) );
+    }
+
+    /**
+     * Handles HR calendar script
+     *
+     * @return void
+     */
+    function hr_calendar_script() {
+        wp_enqueue_script( 'erp-admin-calendar' );
+        wp_enqueue_style( 'erp-admin-calendar' );
     }
 
     /**
