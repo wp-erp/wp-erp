@@ -523,6 +523,6 @@ function erp_financial_end_date() {
  * @return instance
  */
 function erp_log() {
-    return new \WeDevs\ERP\Log();
+    return \WeDevs\ERP\Log::instance();
 }
 

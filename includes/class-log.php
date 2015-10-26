@@ -12,9 +12,9 @@ namespace WeDevs\ERP;
 class Log {
 	
 	/**
-     * Initializes the Countries() class
+     * Initializes the Log class
      *
-     * Checks for an existing Countries() instance
+     * Checks for an existing Log instance
      * and if it doesn't find one, creates it.
      */
     public static function instance() {
