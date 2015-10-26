@@ -344,7 +344,21 @@ class WeDevs_ERP_Installer {
                `post_id` bigint(11) NOT NULL,
                `status` varchar(30) NOT NULL,
               PRIMARY KEY (id)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;"
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_audit_log` (
+              `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+              `component` varchar(50) NOT NULL DEFAULT '',
+              `sub_component` varchar(50) NOT NULL DEFAULT '',
+              `old_value` longtext,
+              `new_value` longtext,
+              `message` longtext,
+              `changetype` varchar(10) DEFAULT NULL,
+              `created_by` bigint(20) unsigned DEFAULT NULL,
+              `created_at` datetime DEFAULT NULL,
+              `updated_at` datetime DEFAULT NULL,
+              PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
 
         ];
 
