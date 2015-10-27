@@ -97,7 +97,7 @@ class ERP_Admin_Settings {
             return;
         }
 
-        echo '<h2 class="nav-tab-wrapper woo-nav-tab-wrapper">';
+        echo '<h2 class="nav-tab-wrapper erp-nav-tab-wrapper">';
 
         foreach ( $settings as $obj ) {
 
