@@ -1,28 +1,13 @@
 
-<style>
+<div class="wrap">
+    <div id="erp-hr-calendar"></div>
+</div>
 
-    body {
-        margin: 40px 10px;
-        padding: 0;
-        font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
-        font-size: 14px;
-    }
-
-    #calendar {
-        max-width: 900px;
-        margin: 0 auto;
-    }
-
-</style>
-
-
-
-    <div id='calendar'></div>
 <script>
 
     jQuery(document).ready(function($) {
         
-        $('#calendar').fullCalendar({
+        $('#erp-hr-calendar').fullCalendar({
             header: {
                 left: 'prev,next today',
                 center: 'title',

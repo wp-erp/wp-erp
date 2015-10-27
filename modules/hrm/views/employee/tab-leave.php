@@ -79,7 +79,7 @@ if ( $policies ) {
 
 <?php
 $cur_year   = date( 'Y' );
-$requests   = erp_hr_leave_get_requests( array(
+$requests   = erp_hr_get_leave_requests( array(
     'year'    => $cur_year,
     'user_id' => $employee->id,
     'status'  => 1,

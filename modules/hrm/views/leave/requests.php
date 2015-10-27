@@ -203,7 +203,7 @@ class Leave_Requests_List_Table extends WP_List_Table {
         );
 
         $this->counts = erp_hr_leave_get_requests_count();
-        $this->items  = erp_hr_leave_get_requests( $args );
+        $this->items  = erp_hr_get_leave_requests( $args );
 
         $this->set_pagination_args( array(
             'total_items' => $this->counts[ $this->page_status ]['count'],

@@ -606,7 +606,7 @@ function erp_hr_leave_insert_request( $args = array() ) {
  *
  * @return array
  */
-function erp_hr_leave_get_requests( $args = array() ) {
+function erp_hr_get_leave_requests( $args = array() ) {
     global $wpdb;
 
     $defaults = array(
@@ -989,11 +989,9 @@ function erp_hr_apply_new_employee_policy( $employee = false, $policies = false 
     } else {
         $policies    = array( $policies );
     }
-    
-                                                                                                                                               
+                                                                                                                                            
     $selected_policy = [];
     
-
     foreach ( $policies as $key => $policy ) {
 
         $effective_date = date( 'Y-m-d', strtotime( $policy['effective_date'] ) );
@@ -1238,8 +1236,9 @@ function erp_hr_apply_entitlement_yearly() {
 
         erp_hr_leave_insert_entitlement( $policy );
     }
-
 }
+
+
 
 
 
