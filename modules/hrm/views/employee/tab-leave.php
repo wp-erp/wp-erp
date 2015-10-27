@@ -21,15 +21,16 @@ if ( $policies ) {
         </thead>
 
         <tbody>
+
             <?php foreach ($policies as $num => $policy) {
-                // var_dump( $policy );
 
                 $key       = array_search( $policy->id, $entitlements_pol );
                 $en        = false;
                 $name      = esc_html( $policy->name );
                 $current   = 0;
                 $scheduled = 0;
-                $available = 0;
+                $available = 0; 
+
 
                 if ( array_key_exists( $policy->id, $balance ) ) {
                     $current   = $balance[ $policy->id ]['entitlement'];
@@ -78,7 +79,7 @@ if ( $policies ) {
 
 <?php
 $cur_year   = date( 'Y' );
-$requests   = erp_hr_leave_get_requests( array(
+$requests   = erp_hr_get_leave_requests( array(
     'year'    => $cur_year,
     'user_id' => $employee->id,
     'status'  => 1,

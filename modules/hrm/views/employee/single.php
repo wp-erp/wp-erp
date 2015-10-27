@@ -1,20 +1,21 @@
 <div class="wrap erp erp-hr-employees erp-employee-single">
 
-    <h2><?php _e( 'Employee', 'wp-erp' ); 
+    <h2 class="erp-hide-print"><?php _e( 'Employee', 'wp-erp' ); 
+
      if ( current_user_can( 'erp_create_employee' ) ) {
             ?>
-    <a href="#" id="erp-employee-new" class="add-new-h2"><?php _e( 'Add New', 'wp-erp' ); ?></a></h2>
+    <a href="#" id="erp-employee-new" class="add-new-h2 erp-hide-print"><?php _e( 'Add New', 'wp-erp' ); ?></a></h2>
             <?php
     }
     ?>
-    <div class="erp-single-container">
+    <div class="erp-single-container" id="erp-single-container-wrap">
         <div class="erp-area-left full-width">
             <div id="erp-area-left-inner">
 
                 <script type="text/javascript">
                     window.wpErpCurrentEmployee = <?php echo json_encode( $employee->to_array() ); ?>
                 </script>
-
+                
                 <div class="erp-profile-top">
                     <div class="erp-avatar">
                         <?php echo $employee->get_avatar( 150 ); ?>
@@ -57,17 +58,30 @@
                         </ul>
                     </div><!-- .erp-user-info -->
 
-                    <div class="erp-area-right">
+                    <div class="erp-area-right erp-hide-print">
                         <div class="postbox leads-actions">
                             <h3 class="hndle"><span><?php _e( 'Actions', 'wp-erp' ); ?></span></h3>
                             <div class="inside">
-                                <span class="edit"><a class="button button-primary" data-id="<?php echo $employee->id; ?>" data-single="true" href="#"><?php _e( 'Edit', 'wp-erp' ); ?></a></span>
-                                <?php if ( $employee->get_status() == 'Terminated' ): ?>
-                                    <a class="button" href="#" id="erp-employee-activate" data-id="<?php echo $employee->id; ?>"><?php _e( 'Active', 'wp-erp' ); ?></a>
-                                <?php else: ?>
-                                    <a class="button" href="#" id="erp-employee-terminate" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-terminate" data-title="<?php _e( 'Terminate Employee', 'wp-erp' ); ?>"><?php _e( 'Terminate', 'wp-erp' ); ?></a>
-                                <?php endif; ?>
-                                <a class="button" href="#"><?php _e( 'Print', 'wp-erp' ); ?></a>
+                                <?php
+                                if ( current_user_can( 'erp_edit_employee', $employee->id ) ) {
+                                    ?>
+                                    <span class="edit"><a class="button button-primary" data-id="<?php echo $employee->id; ?>" data-single="true" href="#"><?php _e( 'Edit', 'wp-erp' ); ?></a></span>
+                                    <?php
+                                    }
+                                    
+                                    if ( $employee->get_status() == 'Terminated' && current_user_can( 'erp_create_employee' ) ): ?>
+                                        <a class="button" href="#" id="erp-employee-activate" data-id="<?php echo $employee->id; ?>"><?php _e( 'Active', 'wp-erp' ); ?></a>
+                                    <?php 
+                                else: 
+                                    if ( current_user_can( 'erp_create_employee' ) ) {
+                                    ?>
+                                        <a class="button" href="#" id="erp-employee-terminate" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-terminate" data-title="<?php _e( 'Terminate Employee', 'wp-erp' ); ?>"><?php _e( 'Terminate', 'wp-erp' ); ?></a>
+                                    <?php
+                                    }
+                                endif; ?>
+                                <?php if ( ( isset( $_GET['tab'] ) && $_GET['tab'] == 'general' ) || !isset( $_GET['tab'] )  ): ?>
+                                    <a class="button" id="erp-employee-print" href="#"><?php _e( 'Print', 'wp-erp' ); ?></a>
+                                <?php endif ?>
                             </div>
                         </div><!-- .postbox -->
                     </div><!-- .leads-right -->
@@ -104,9 +118,16 @@
                         'callback' => 'erp_hr_employee_single_tab_permission'
                     ),
                 ) );
+
+                if ( ! current_user_can( 'erp_create_review' ) && isset( $tabs['permission'] ) && isset( $tabs['performance'] ) && isset( $tabs['notes'] ) ) {
+                    unset( $tabs['permission'] );
+                    unset( $tabs['performance'] );
+                    unset( $tabs['notes'] );
+                }
+    
                 ?>
 
-                <h2 class="nav-tab-wrapper" style="margin-bottom: 15px;">
+                <h2 class="nav-tab-wrapper erp-hide-print" style="margin-bottom: 15px;">
                     <?php foreach ($tabs as $key => $tab) {
                         $active_class = ( $key == $active_tab ) ? ' nav-tab-active' : '';
                         ?>

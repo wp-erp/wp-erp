@@ -231,6 +231,15 @@ final class WeDevs_ERP {
         //Settings style
         wp_register_style( 'erp-admin-settings', WPERP_ASSETS . '/css/admin/settings' . $suffix . '.css' );
 
+        //jQuery full calendar moment script
+        wp_register_script( 'erp-admin-calendar-moment', WPERP_ASSETS . '/js/moment.min.js', false, false, true );
+
+        //jQuery full calendar script
+        wp_register_script( 'erp-admin-calendar', WPERP_ASSETS . '/js/fullcalendar' . $suffix . '.js', array( 'jquery', 'erp-admin-calendar-moment' ), false, true );
+
+        //jQuery full calendar style
+        wp_register_style( 'erp-admin-calendar', WPERP_ASSETS . '/css/fullcalendar' . $suffix . '.css' );
+
         // Enqueue scripts in globally wp-erp
         wp_enqueue_script( 'erp-select2' );
         wp_enqueue_style( 'erp-select2' );

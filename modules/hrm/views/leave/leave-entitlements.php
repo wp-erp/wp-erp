@@ -1,22 +1,17 @@
-<div class="wrap erp-hr-leave-entitlements">
-    <h2><?php _e( 'Leave Entitlements', 'wp-erp' ); ?></h2>
-
-    <?php
-    $cur_year   = date( 'Y' );
-    $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'assignment';
-    $tabs = array(
-        'assignment'   => __( 'Assignment', 'wp-erp' ),
-        'entitlements' => __( 'Entitlements', 'wp-erp' )
-    );
-    ?>
-
-    <h2 class="nav-tab-wrapper" style="margin-bottom: 15px;">
-        <?php foreach ($tabs as $key => $tab) {
-            $active_class = ( $key == $active_tab ) ? ' nav-tab-active' : '';
-            ?>
-            <a href="<?php echo add_query_arg( array( 'tab' => $key ), admin_url( 'admin.php?page=erp-leave-assign' ) ); ?>" class="nav-tab<?php echo $active_class; ?>"><?php echo esc_html( $tab ); ?></a>
-        <?php } ?>
-    </h2>
+<?php
+$cur_year   = date( 'Y' );
+$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : '';
+?>
+<div class="wrap erp-hr-employees" id="wp-erp">
+    
+    <h2>
+        <?php _e( 'Leave Entitlements', 'wp-erp' ); ?>
+        <?php if ( 'assignment' == $active_tab ): ?>
+            <a href="<?php echo admin_url( 'admin.php?page=erp-leave-assign' ); ?>" id="erp-new-leave-request" class="add-new-h2"><?php _e( 'Back to Entitlement list', 'wp-erp' ); ?></a>
+        <?php else: ?>
+            <a href="<?php echo add_query_arg( array( 'tab' => 'assignment' ), admin_url( 'admin.php?page=erp-leave-assign' ) ); ?>" id="erp-new-leave-request" class="add-new-h2"><?php _e( 'Add New', 'wp-erp' ); ?></a>
+        <?php endif ?>
+    </h2>    
 
     <?php if ( 'assignment' == $active_tab ) { ?>
 
@@ -69,10 +64,7 @@
                 'tag'      => 'li',
                 'required' => true,
                 'class'    => 'chosen-select',
-                'options'  => array(
-                    $cur_year        => sprintf( '%s - %s', erp_format_date( '01-01-' . $cur_year ), erp_format_date( '31-12-' . $cur_year ) ),
-                    ($cur_year + 1 ) => sprintf( '%s - %s', erp_format_date( '01-01-' . ( $cur_year + 1 ) ), erp_format_date( '31-12-' . ( $cur_year + 1 ) ) ),
-                )
+                'options'  => erp_hr_leave_period(), 
             ) );
 
             erp_html_form_input( array(
@@ -137,72 +129,23 @@
 
     <?php } else { ?>
 
-        <table class="widefat">
-            <thead>
-                <tr>
-                    <th scope="col" id="cb" class="manage-column column-cb check-column" style="">
-                        <input id="cb-select-all-1" type="checkbox">
-                    </th>
-                    <th><?php _e( 'Employee Name', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'Leave Policy', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'Valid From', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'Valid To', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'Days', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'Scheduled', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'Available', 'wp-erp' ); ?></th>
-                </tr>
-            </thead>
+        <div id="erp-entitlement-table-wrap">
 
-            <tfoot>
-                <tr>
-                    <th scope="col" id="cb" class="manage-column column-cb check-column" style="">
-                        <input id="cb-select-all-1" type="checkbox">
-                    </th>
-                    <th><?php _e( 'Employee Name', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'Leave Policy', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'Valid From', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'Valid To', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'Days', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'Scheduled', 'wp-erp' ); ?></th>
-                    <th><?php _e( 'Available', 'wp-erp' ); ?></th>
-                </tr>
-            </tfoot>
+            <div class="list-table-inner">
 
-            <tbody id="the-list">
-                <?php
-                $entitlements = erp_hr_leave_get_entitlements( array( 'year' => $cur_year ) );
+                <form method="get">
+                    <input type="hidden" name="page" value="erp-leave-assign">
+                    <input type="hidden" name="tab" value="entitlements">
+                    <?php                    
+                    $entitlement = new \WeDevs\ERP\HRM\Entitlement_List_Table();
+                    $entitlement->prepare_items();
+                    $entitlement->views();
 
-                if ( $entitlements ) {
+                    $entitlement->display();
+                    ?>
+                </form>
 
-                    foreach( $entitlements as $num => $entitlement ) { ?>
-                        <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
-                            <th scope="row" class="check-column">
-                                <input id="cb-select-1" type="checkbox" name="id[]" value="<?php echo $entitlement->id; ?>">
-                            </th>
-                            <td class="col-">
-
-                                <strong><a href="<?php echo erp_hr_url_single_employee( $entitlement->id ); ?>"><?php echo esc_html( $entitlement->employee_name ); ?></a></strong>
-
-                            </td>
-                            <td class="col-"><?php echo esc_html( $entitlement->policy_name ); ?></td>
-                            <td class="col-"><?php echo erp_format_date( $entitlement->from_date ); ?></td>
-                            <td class="col-"><?php echo erp_format_date( $entitlement->to_date ); ?></td>
-                            <td class="col-"><?php echo number_format_i18n( $entitlement->days ); ?></td>
-                            <td class="col-"></td>
-                            <td class="col-"></td>
-                        </tr>
-                    <?php } ?>
-                <?php } else { ?>
-
-                    <tr>
-                        <td colspan="6">
-                            <?php _e( 'No entitlements found!', 'wp-erp' ); ?>
-                        </td>
-                    </tr>
-
-                <?php } ?>
-            </tbody>
-        </table>
-
+            </div><!-- .list-table-inner -->
+        </div><!-- .list-table-wrap -->
     <?php } ?>
 </div>

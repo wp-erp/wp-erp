@@ -300,30 +300,6 @@ function erp_format_date( $date, $format = false ) {
  * @return array
  */
 function erp_extract_dates( $start_date, $end_date ) {
-
-    // if ( strtotime( $start_date) < 0 || strtotime( $end_date ) < 0 ) {
-    //     return 0;
-    // }
-
-    // $start = date( 'Y-m-d', strtotime( $start_date) );
-    // $end   = date( 'Y-m-d', strtotime( $end_date ) );
-
-    // if( $start > $end ) {
-    //     return 0;
-    // }
-
-    // $total = [];
-    // while( $start <= $end ) {
-       
-    //     $total[] = $start;
-    //     $start = date( 'Y-m-d', strtotime( $start . '+1 days') );
-    // }
-
-    // return $total;
-
-
-
-
     $start_date = new DateTime( $start_date );
     $end_date   = new DateTime( $end_date );
     $end_date->modify( '+1 day' ); // to get proper days in duration
@@ -517,15 +493,36 @@ function erp_months_dropdown( $title = false ) {
 }
 
 /**
- * Get current date for numaric valu of month
- *
- * @param int $numaric_month
+ * Get Company financial start date
  *
  * @since  0.1 
  *
- * @return date string
+ * @return string date
  */
-function erp_numaric_month_to_current_date( $numaric_month ) {
-    return erp_format_date( date( 'Y-M-d', mktime( 0,0,0,$numaric_month ) ) );
+function erp_financial_start_date() {
+    return date( 'Y-m-d H:i:s', mktime( 0, 0, 0,  erp_get_option( 'gen_financial_month' ), 1 ) );
+}
+
+/**
+ * Get Company financial end date
+ *
+ * @since  0.1 
+ *
+ * @return string date
+ */
+function erp_financial_end_date() {
+    $start_date = erp_financial_start_date();
+    return  date( 'Y-m-t H:i:s', strtotime( '+11 month', strtotime( $start_date ) ) );
+}
+
+/**
+ * Erp Logging functions
+ *
+ * @since 0.1 
+ *        
+ * @return instance
+ */
+function erp_log() {
+    return \WeDevs\ERP\Log::instance();
 }
 

@@ -15,6 +15,7 @@
             $( '.erp-hr-leave-policy').on( 'click', 'a.submitdelete', self, this.policy.remove );
             $( '.erp-hr-leave-request-new').on( 'change', '.erp-date-field', self, this.leave.requestDates );
             $( '.erp-employee-single' ).on('submit', 'form#erp-hr-empl-leave-history', this.leave.showHistory );
+            $( '.entitlement-list-table').on( 'click', 'a.submitdelete', self, this.entitlement.remove );
 
             //Holiday
             $( '.erp-hr-holiday-wrap').on( 'click', 'a#erp-hr-new-holiday', self, this.holiday.create );
@@ -285,6 +286,33 @@
                     });
                 }
             },
+        },
+
+        entitlement: {
+            remove: function(e) {
+                e.preventDefault();
+
+                var self = $(this);
+
+                if ( confirm( wpErpHr.delConfirmEntitlement ) ) {
+                    wp.ajax.send( 'erp-hr-leave-entitlement-delete', {
+                        data: {
+                            '_wpnonce': wpErpHr.nonce,
+                            id: self.data( 'id' ),
+                            user_id: self.data( 'user_id' ),
+                            policy_id: self.data( 'policy_id' ),
+                        },
+                        success: function() {
+                            self.closest('tr').fadeOut( 'fast', function() {
+                                $(this).remove();
+                            });
+                        },
+                        error: function(response) {
+                            alert( response );
+                        }
+                    });
+                }
+            }
         },
 
         leave: {
