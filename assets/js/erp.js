@@ -77,7 +77,9 @@ window.wperp = window.wperp || {};
                 yearRange: '-100:+0',
             });
 
-            $( '.select2' ).select2();
+            $( '.select2' ).select2({
+                theme: "classic"
+            });
         },
 
         /**

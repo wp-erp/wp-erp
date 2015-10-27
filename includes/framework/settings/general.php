@@ -5,7 +5,6 @@
  */
 class ERP_Settings_General extends ERP_Settings_Page {
 
-
     function __construct() {
         $this->id = 'general';
         $this->label = 'General';
@@ -23,14 +22,14 @@ class ERP_Settings_General extends ERP_Settings_Page {
         $fields = array(
 
             array( 'title' => __( 'General Options', 'erp' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
-            
+
             array(
                 'title'   => __( 'Company Start Date', 'wp-erp' ),
                 'id'      => 'gen_com_start',
                 'type'    => 'text',
-                'desc'      => __( 'The date the company officially started.', 'wp-erp' ),
+                'desc'    => __( 'The date the company officially started.', 'wp-erp' ),
                 'class'   => 'erp-date-field',
-                'tooltip'   =>  true,
+                'tooltip' =>  true,
             ),
 
             array(
@@ -38,18 +37,18 @@ class ERP_Settings_General extends ERP_Settings_Page {
                 'id'      => 'gen_financial_month',
                 'type'    => 'select',
                 'options' => erp_months_dropdown(),
-                'desc'      => __( 'Financial and tax calculation starts from this month of every year.', 'wp-erp' ),
-                'tooltip'   =>  true,
+                'desc'    => __( 'Financial and tax calculation starts from this month of every year.', 'wp-erp' ),
+                'tooltip' =>  true,
             ),
 
             array(
-                'title'   => __( 'Enable Debug mood', 'wp-erp' ),
+                'title'   => __( 'Enable Debug Mode', 'wp-erp' ),
                 'id'      => 'erp_debug_mode',
                 'type'    => 'select',
                 'options' => [ 1 => __('On', 'wp-erp'), 0 => __( 'Off', 'wp-erp') ],
-                'desc'      => __( 'Switching testing or producting mood', 'wp-erp' ),
-                'tooltip'   =>  true,
-                'default'   =>  0,
+                'desc'    => __( 'Switching testing or producting mode', 'wp-erp' ),
+                'tooltip' =>  true,
+                'default' =>  0,
             ),
 
             array( 'type' => 'sectionend', 'id' => 'script_styling_options' ),
@@ -58,6 +57,7 @@ class ERP_Settings_General extends ERP_Settings_Page {
 
         return apply_filters( 'erp_settings_general', $fields );
     }
+
 
     /**
      * Get sections fields
@@ -72,13 +72,13 @@ class ERP_Settings_General extends ERP_Settings_Page {
 
             array(
                 'title' => __( 'Site Name', 'erp' ),
-                'id'    => 'blogname_SDFG',
+                'id'    => 'blogname_jads',
                 'desc'  => __( 'The name of your site. If you don\'t use a logo, this name will be displayed instead.', 'erp' ),
                 'type'  => 'text',
             ),
             array(
                 'title' => __( 'Site Description', 'erp' ),
-                'id'    => 'blogdescription_fdfgdf',
+                'id'    => 'blogdescription_dfghdfg',
                 'desc'  => __( 'This will help peoples and search engines to find your site.', 'erp' ),
                 'type'  => 'text',
             ),
@@ -127,6 +127,7 @@ class ERP_Settings_General extends ERP_Settings_Page {
         
         return apply_filters( 'erp_get_sections_' . $this->id, $sections );
     }
+
 }
 
 return new ERP_Settings_General();
