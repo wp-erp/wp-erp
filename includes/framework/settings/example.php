@@ -61,13 +61,13 @@ class ERP_Settings_Example extends ERP_Settings_Page {
 
             array(
                 'title' => __( 'Site Name', 'erp' ),
-                'id'    => 'blogname',
+                'id'    => 'blogname_test',
                 'desc'  => __( 'The name of your site. If you don\'t use a logo, this name will be displayed instead.', 'erp' ),
                 'type'  => 'text',
             ),
             array(
                 'title' => __( 'Site Description', 'erp' ),
-                'id'    => 'blogdescription',
+                'id'    => 'blogdescription_test',
                 'desc'  => __( 'This will help peoples and search engines to find your site.', 'erp' ),
                 'type'  => 'text',
             ),

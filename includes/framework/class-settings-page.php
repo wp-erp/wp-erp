@@ -45,12 +45,19 @@ class ERP_Settings_Page {
         return array();
     }
 
-    public function save() {
+
+    public function save( $section = false ) {
         global $current_class;
 
         if ( isset( $_POST['_wpnonce']) && wp_verify_nonce( $_POST['_wpnonce'], 'erp-settings-nonce' ) ) {
-            $options = $this->get_settings();
-
+            
+            if ( isset( $this->sections ) && is_array( $this->sections ) && count( $this->sections ) ) {
+                $options = $this->get_section_fields($section);
+            } else {
+                $options = $this->get_settings();
+            }
+            
+            
             // Options to update will be stored here
             $update_options = array();
 

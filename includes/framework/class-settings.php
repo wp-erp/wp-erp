@@ -26,11 +26,10 @@ class ERP_Admin_Settings {
            // $settings[] = include __DIR__ . '/settings/sharing.php';
            // $settings[] = include __DIR__ . '/settings/content.php';
             //$settings[] = include __DIR__ . '/settings/api-keys.php';
-            //$settings[] = include __DIR__ . '/settings/example.php';
+            $settings[] = include __DIR__ . '/settings/example.php';
 
             self::$settings = apply_filters( 'erp_settings_pages', $settings );
         }
-
         return self::$settings;
     }
 
@@ -114,7 +113,7 @@ class ERP_Admin_Settings {
 
         self::section_output();
 
-        $current_class->save();
+        $current_class->save( $current_section );
         $current_class->output( $current_section );
 
     }

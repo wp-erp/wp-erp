@@ -9,7 +9,7 @@ class ERP_Settings_General extends ERP_Settings_Page {
     function __construct() {
         $this->id = 'general';
         $this->label = 'General';
-        $this->single_option = true;
+        //$this->single_option = true;
         //$this->sections = $this->get_sections();
     }
 
@@ -72,13 +72,13 @@ class ERP_Settings_General extends ERP_Settings_Page {
 
             array(
                 'title' => __( 'Site Name', 'erp' ),
-                'id'    => 'blogname',
+                'id'    => 'blogname_SDFG',
                 'desc'  => __( 'The name of your site. If you don\'t use a logo, this name will be displayed instead.', 'erp' ),
                 'type'  => 'text',
             ),
             array(
                 'title' => __( 'Site Description', 'erp' ),
-                'id'    => 'blogdescription',
+                'id'    => 'blogdescription_fdfgdf',
                 'desc'  => __( 'This will help peoples and search engines to find your site.', 'erp' ),
                 'type'  => 'text',
             ),
