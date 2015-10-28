@@ -81,8 +81,6 @@ class Customer_Relationship {
      * @return void
      */
     private function init_filters() {
-    
+
     }
 }
-
-Customer_Relationship::init();
