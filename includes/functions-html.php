@@ -120,6 +120,7 @@ function erp_html_form_input( $args = array() ) {
         case 'text':
         case 'email':
         case 'number':
+        case 'hidden':
         case 'url':
             echo '<input type="' . $field['type'] . '" value="' . esc_attr( $field['value'] ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
             break;
