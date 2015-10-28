@@ -9,7 +9,7 @@ class ERP_Settings_Example extends ERP_Settings_Page {
     function __construct() {
         $this->id = 'example';
         $this->label = __( 'Example', 'erp' );
-        $this->single_option = true;
+        //$this->single_option = true;
         $this->sections = $this->get_sections();
     }
 
@@ -81,13 +81,13 @@ class ERP_Settings_Example extends ERP_Settings_Page {
             array( 'title' => __( 'Mishu', 'erp' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
 
             array(
-                'title' => __( 'Site Name', 'erp' ),
+                'title' => __( 'mishu Site Name', 'erp' ),
                 'id'    => 'blogname',
                 'desc'  => __( 'The name of your site. If you don\'t use a logo, this name will be displayed instead.', 'erp' ),
                 'type'  => 'text',
             ),
             array(
-                'title' => __( 'Site Description', 'erp' ),
+                'title' => __( 'mishu Site Description', 'erp' ),
                 'id'    => 'blogdescription',
                 'desc'  => __( 'This will help peoples and search engines to find your site.', 'erp' ),
                 'type'  => 'text',
@@ -107,7 +107,6 @@ class ERP_Settings_Example extends ERP_Settings_Page {
      * @return array
      */
     public function get_sections() {
-
         $sections = array(
             'checkout' => __( 'Checkout Options', 'erp' ),
             'mishu' => __( 'Mishu', 'erp' )

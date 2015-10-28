@@ -143,7 +143,11 @@ class ERP_Admin_Settings {
         $tab_sections = $sections[$current_tab];
 
         // don't print sub-sections if only one section available
-        if ( count( $tab_sections ) < 2 ) {
+        if ( count( $tab_sections ) < 1 ) {
+            return;
+        }
+
+        if ( ! array_key_exists( $current_section, $tab_sections ) ) {
             return;
         }
 

@@ -1237,3 +1237,43 @@ function erp_hr_apply_entitlement_yearly() {
         erp_hr_leave_insert_entitlement( $policy );
     }
 }
+
+function erp_hr_get_calendar_leave_events( $get ) {
+   
+    if ( ! $get ) {
+        return erp_hr_get_leave_requests( array( 'number' => '-1' ) );
+    }
+
+    global $wpdb;
+    $employee_tb = $wpdb->prefix . 'erp_hr_employees';
+    $users_tb = $wpdb->users;
+    $request_tb  = $wpdb->prefix . 'erp_hr_leave_requests';
+
+    $employee      = new \WeDevs\ERP\HRM\Models\Employee();
+    $leave_request = new \WeDevs\ERP\HRM\Models\Leave_request();
+
+    $department  = isset( $get['department'] ) && ! empty( $get['department'] ) ? intval( $get['department'] ) : false;
+    $designation = isset( $get['designation'] ) && ! empty( $get['designation'] ) ? intval( $get['designation'] ) : false;
+
+    if ( $department && $designation ) {
+        $leave_requests = erp_array_to_object( $leave_request->leftJoin( $employee_tb, $request_tb . '.user_id', '=', $employee_tb . '.user_id' )
+                ->leftJoin( $users_tb, $request_tb . '.user_id', '=', $users_tb . '.ID' )
+                ->select( $users_tb . '.display_name', $request_tb . '.*' )
+                ->where( $employee_tb . '.designation', '=', $designation )
+                ->where( $employee_tb . '.department', '=', $department )
+                ->get()
+                ->toArray() );
+    } else if ( $designation ) {
+        $leave_requests = $leave_request->leftJoin( $employee_tb, $request_tb . '.user_id', '=', $employee_tb . '.user_id' )
+                ->where( $employee_tb . '.designation', '=', $designation )
+                ->get()
+                ->toArray();   
+    } else if ( $department ) {
+        $leave_requests = $leave_request->leftJoin( $employee_tb, $request_tb . '.user_id', '=', $employee_tb . '.user_id' )
+                ->where( $employee_tb . '.department', '=', $department )
+                ->get()
+                ->toArray();   
+    }
+
+    return $leave_requests;
+}

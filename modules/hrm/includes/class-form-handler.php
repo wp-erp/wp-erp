@@ -25,12 +25,24 @@ class Form_Handler {
 
         add_action( 'admin_init', array( $this, 'leave_request_status_change' ) );
         add_action( 'admin_init', array( $this, 'handle_employee_status_update' ) );
+        add_action( 'admin_init', array( $this, 'handle_leave_calendar_filter' ) );
         add_action( 'load-leave_page_erp-holiday-assign', array( $this, 'holiday_action') );
         add_action( 'load-hr-management_page_erp-hr-employee', array( $this, 'employee_bulk_action') );
         add_action( 'load-hr-management_page_erp-hr-designation', array( $this, 'designation_bulk_action') );
         add_action( 'load-hr-management_page_erp-hr-depts', array( $this, 'department_bulk_action') );
         add_action( 'load-leave_page_erp-leave-policies', array( $this, 'leave_policies') );
         add_action( 'load-leave_page_erp-leave-assign', array( $this, 'entitlement_bulk_action') );
+    }
+
+    function handle_leave_calendar_filter() {
+        if ( ! isset( $_POST['erp_leave_calendar_filter'] ) ) {
+            return;
+        }
+        $designation = isset( $_POST['designation'] ) ? $_POST['designation'] : '';
+        $department  = isset( $_POST['department'] ) ? $_POST['department'] : '';
+        $url = admin_url("admin.php?page=erp-leave-calendar&designation=$designation&department=$department");
+        wp_redirect( $url );
+        exit();
     }
 
     /**
