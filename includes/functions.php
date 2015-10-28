@@ -472,7 +472,7 @@ function erp_get_site_logo() {
  *
  * @param string $title
  *
- * @since  0.1 
+ * @since  0.1
  *
  * @return array
  */
@@ -484,29 +484,29 @@ function erp_months_dropdown( $title = false ) {
         $months['-1'] = $title;
     }
 
-    for ( $m = 1; $m <= 12; $m++ ) {                   
-        $months[$m] = date( 'M', mktime( 0,0,0,$m ) ); 
+    for ( $m = 1; $m <= 12; $m++ ) {
+        $months[$m] = date( 'M', mktime( 0, 0, 0, $m ) );
     }
 
     return $months;
- 
+
 }
 
 /**
  * Get Company financial start date
  *
- * @since  0.1 
+ * @since  0.1
  *
  * @return string date
  */
 function erp_financial_start_date() {
-    return date( 'Y-m-d H:i:s', mktime( 0, 0, 0,  erp_get_option( 'gen_financial_month' ), 1 ) );
+    return date( 'Y-m-d H:i:s', mktime( 0, 0, 0,  erp_get_option( 'gen_financial_month', 'erp_settings_general' ), 1 ) );
 }
 
 /**
  * Get Company financial end date
  *
- * @since  0.1 
+ * @since  0.1
  *
  * @return string date
  */
@@ -518,8 +518,8 @@ function erp_financial_end_date() {
 /**
  * Erp Logging functions
  *
- * @since 0.1 
- *        
+ * @since 0.1
+ *
  * @return instance
  */
 function erp_log() {
