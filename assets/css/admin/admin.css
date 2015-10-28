@@ -1064,6 +1064,9 @@ form.erp-form .erp-form-field > label {
 form.erp-form .erp-form-field .description {
   margin-left: 5px;
 }
+form.erp-form .erp-form-field.invalid {
+  background-color: rgba(255, 0, 0, 0.08);
+}
 form.erp-form .block .erp-form-field > label {
   float: none;
   display: block;
