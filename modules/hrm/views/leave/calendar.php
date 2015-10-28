@@ -1,10 +1,34 @@
+<?php
+$leave_requests = erp_hr_get_leave_requests( array( 'number' => -1 ) );
+$events = [];
 
-<div class="wrap">
+foreach ( $leave_requests as $key => $leave_request ) {
+    $events[] = array(
+        'id'        => $leave_request->id,
+        'title'     => $leave_request->display_name,
+        'start'     => $leave_request->start_date,
+        'end'       => $leave_request->end_date,
+        'url'       => erp_hr_url_single_employee( $leave_request->user_id ),
+        'color'     => '#32b1c8',
+        'img'       => get_avatar( $leave_request->user_id, 80 )
+        //'className' => ($milestone->completed == 1) ? 'milestone competed' : 'milestone'
+    );
+}
+?>
+
+<style>
+    .fc-time {
+        display:none;
+    }
+</style>
+<div class="wrap erp-hr-calendar-wrap">
     <div id="erp-hr-calendar"></div>
 </div>
 
-<script>
 
+
+<script>
+console.log(<?php echo json_encode($events); ?>);
     jQuery(document).ready(function($) {
         
         $('#erp-hr-calendar').fullCalendar({
@@ -13,67 +37,16 @@
                 center: 'title',
                 right: 'month,agendaWeek,agendaDay'
             },
-            defaultDate: '2015-02-12',
             editable: false,
             eventLimit: true, // allow "more" link when too many events
-            events: [
-                {
-                    title: 'All Day Event',
-                    start: '2015-02-01'
-                },
-                {
-                    title: 'Long Event',
-                    start: '2015-02-07',
-                    end: '2015-02-10'
-                },
-                {
-                    id: 999,
-                    title: 'Repeating Event',
-                    start: '2015-02-09T16:00:00'
-                },
-                {
-                    id: 999,
-                    title: 'Repeating Event',
-                    start: '2015-02-16T16:00:00'
-                },
-                {
-                    title: 'Conference',
-                    start: '2015-02-11',
-                    end: '2015-02-13'
-                },
-                {
-                    title: 'Meeting',
-                    start: '2015-02-12T10:30:00',
-                    end: '2015-02-12T12:30:00'
-                },
-                {
-                    title: 'Lunch',
-                    start: '2015-02-12T12:00:00'
-                },
-                {
-                    title: 'Meeting',
-                    start: '2015-02-12T14:30:00'
-                },
-                {
-                    title: 'Happy Hour',
-                    start: '2015-02-12T17:30:00'
-                },
-                {
-                    title: 'Dinner',
-                    start: '2015-02-12T20:00:00'
-                },
-                {
-                    title: 'Birthday Party',
-                    start: '2015-02-13T07:00:00'
-                },
-                {
-                    title: 'Click for Google',
-                    url: 'http://google.com/',
-                    start: '2015-02-28'
+            events: <?php echo json_encode($events); ?>,
+            eventRender: function(event, element, calEvent) {
+
+                if( event.img != 'undefined' ) {
+                    element.find('.fc-content').find('.fc-title').before( $("<span class=\"fc-event-icons\">"+event.img+"</span>") );
                 }
-            ]
+            },
         });
-        
     });
 
 </script>
