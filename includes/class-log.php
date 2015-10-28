@@ -50,6 +50,7 @@ class Log {
 	 * @return object [collection of log]
 	 */
 	public function get( $args = array() ) {
+		global $wpdb;
 
 	    $defaults = array(
 	        'number'     => 20,
@@ -60,8 +61,9 @@ class Log {
 	    $args  = wp_parse_args( $args, $defaults );
 	    $where = $results = [];
 
-	    $audit_log = new \WeDevs\ERP\Admin\Models\Audit_Log();
-	    
+	    $audits = new \WeDevs\ERP\Admin\Models\Audit_Log();
+	    $audit_log = $audits->leftjoin( $wpdb->users, 'created_by', '=', $wpdb->users . '.ID' )->select( $wpdb->users.'.display_name', $wpdb->prefix . 'erp_audit_log.*' );
+
 	    if ( isset( $args['component'] ) && ! empty( $args['component'] ) ) {
 	        $audit_log = $audit_log->where( 'component', $args['component'] );
 	    }
@@ -133,6 +135,38 @@ class Log {
 	    do_action( 'erp_after_insert_audit_log', $inserted, $fields );
 	    
 	    return $inserted->id;
+	}
+
+	public function count( $args = array() ) {
+		
+	    $audit_log = new \WeDevs\ERP\Admin\Models\Audit_Log();
+	    
+	    if ( isset( $args['component'] ) && ! empty( $args['component'] ) ) {
+	        $audit_log = $audit_log->where( 'component', $args['component'] );
+	    }
+
+	    if ( isset( $args['sub_component'] ) && ! empty( $args['sub_component'] ) ) {
+	        $audit_log = $audit_log->where( 'sub_component', $args['sub_component'] );
+	    }
+
+	    if ( isset( $args['old_value'] ) && ! empty( $args['old_value'] ) ) {
+	        $audit_log = $audit_log->where( 'old_value', $args['old_value'] );
+	    }
+
+	    if ( isset( $args['new_value'] ) && ! empty( $args['new_value'] ) ) {
+	        $audit_log = $audit_log->where( 'new_value', $args['new_value'] );
+	    }
+		
+		if ( isset( $args['changetype'] ) && ! empty( $args['changetype'] ) ) {
+	        $audit_log = $audit_log->where( 'changetype', $args['changetype'] );
+	    }
+
+		if ( isset( $args['created_by'] ) && ! empty( $args['created_by'] ) ) {
+	        $audit_log = $audit_log->where( 'created_by', (int)$args['created_by'] );
+	    }
+
+	    return $audit_log->count();
+
 	}
 
 }

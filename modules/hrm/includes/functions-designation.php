@@ -21,7 +21,7 @@ function erp_hr_create_designation( $args = array() ) {
 
     // validation
     if ( empty( $fields['title'] ) ) {
-        return new WP_Error( 'no-name', __( 'No department name provided.', 'wp-erp' ) );
+        return new WP_Error( 'no-name', __( 'No designation name provided.', 'wp-erp' ) );
     }
 
     // unset the department id
@@ -40,9 +40,11 @@ function erp_hr_create_designation( $args = array() ) {
 
     } else {
 
+        do_action( 'erp_hr_desig_before_updated', $desig_id, $fields );
+        
         $designation->find( $desig_id )->update( $fields );
 
-        do_action( 'erp_hr_desig_updated', $desig_id, $fields );
+        do_action( 'erp_hr_desig_after_updated', $desig_id, $fields );
 
         return $desig_id;
 
@@ -101,8 +103,6 @@ function erp_hr_get_designations( $args = array() ) {
  */
 function erp_hr_delete_designation( $designation_id ) {
 
-    do_action( 'erp_hr_desig_delete', $designation_id );
-
     if ( is_array( $designation_id ) ) {
         $exist_employee = [];
         $not_exist_employee = [];
@@ -113,6 +113,7 @@ function erp_hr_delete_designation( $designation_id ) {
             if ( $desig->num_of_employees() ) {
                 $exist_employee[] = $designation;
             } else {
+                do_action( 'erp_hr_desig_delete', $desig );
                 $not_exist_employee[] = $designation; 
             }
         }
@@ -128,6 +129,8 @@ function erp_hr_delete_designation( $designation_id ) {
         if ( $designation->num_of_employees() ) {
             return new WP_Error( 'not-empty', __( 'You can not delete this designation because it contains employees.', 'wp-erp' ) );
         }
+        
+        do_action( 'erp_hr_desig_delete', $designation );
         
         return \WeDevs\ERP\HRM\Models\Designation::find( $designation_id )->delete();
     }

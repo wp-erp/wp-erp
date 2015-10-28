@@ -103,6 +103,7 @@ class Human_Resource {
         new Settings();
         new Admin\Admin_Menu();
         new Admin\User_Profile();
+        new Hr_Log();
     }
 
     /**

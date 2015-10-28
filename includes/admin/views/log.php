@@ -1,61 +1,174 @@
-<div class="wrap">
-    <h2><?php _e( 'Audit Log', 'wp-erp' ); ?></h2>
-
-    <div class="tablenav top">
-        <div class="alignleft actions bulkactions">
-            <label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label>
-            <select name="action" id="bulk-action-selector-top">
-                <option value="-1" selected="selected">- All Users -</option>
-                <option value="1">Tareq Hasan</option>
-                <option value="2">Nizam Uddin</option>
-            </select>
-            <input type="submit" name="" id="doaction" class="button action" value="Filter">
-        </div>
-    </div>
-
 <?php
-$history = array(
-    array( 'Dec 11, 1:27pm', 'Tareq Hasan', 'Added <a href="#">Payment</a>', 'Nizam Uddin', '$200'),
-    array( 'Dec 11, 1:27pm', 'Tareq Hasan', 'Logged in', '', ''),
-    array( 'Dec 11, 1:27pm', 'Tareq Hasan', 'Uploaded company logo', '', ''),
-    array( 'Dec 11, 1:27pm', 'Tareq Hasan', 'Added Vendor: <a href="#">Mr Parvez Akhter</a>', '', ''),
-);
+namespace WeDevs\ERP\Admin;
+
+/**
+ * List table class
+ */
+class Auditlog_List_Table extends \WP_List_Table {
+
+    function __construct() {
+        global $status, $page;
+
+        parent::__construct( array(
+            'singular' => 'audit_log',
+            'plural'   => 'audit_logs',
+            'ajax'     => false
+        ) );
+
+        $this->table_css();
+    }
+
+    /**
+     * Table column width css
+     *
+     * @return void
+     */
+    function table_css() {
+        echo '<style type="text/css">';
+        echo '.audit-log-list-table .column-name { width: 10%; }';
+        echo '.audit-log-list-table .column-sections { width: 12%; }';
+        echo '.audit-log-list-table .column-message { width: 45%; }';
+        echo '</style>';
+    }
+
+    function get_table_classes() {
+        return array( 'widefat', 'fixed', 'striped', 'audit-log-list-table', $this->_args['plural'] );
+    }
+
+    /**
+     * Message to show if no logs found
+     *
+     * @return void
+     */
+    function no_items() {
+        _e( 'No logs found.', 'wp-erp' );
+    }
+
+    /**
+     * Default column values if no callback found
+     *
+     * @param  object  $item
+     * @param  string  $column_name
+     *
+     * @return string
+     */
+    function column_default( $audit_log, $column_name ) {
+
+        switch ( $column_name ) {
+            case 'name':
+                return strtoupper( $audit_log->component );
+
+            case 'sections':
+                return ucfirst( $audit_log->sub_component );
+                
+            case 'message':
+                if ( $audit_log->changetype == 'edit' ) {
+                    if ( !empty( $audit_log->old_value ) && !empty( $audit_log->new_value ) ) {
+                        return sprintf( '%s <a href="#" class="erp-audit-log-view-changes erp-tips" data-id="%d" title="%s"> View Changes</a>', $audit_log->message, $audit_log->id, __( 'View what elements are changes', 'wp-erp' ) );
+                    } else {
+                        return $audit_log->message;
+                    }
+                }
+                return $audit_log->message;
+                
+            case 'created_by':
+                return $audit_log->display_name;
+                
+            case 'created_at':
+                return erp_format_date( $audit_log->created_at );
+
+            default:
+                return isset( $audit_log->$column_name ) ? $audit_log->$column_name : '';
+        }
+    }
+
+    /**
+     * Get the column names
+     *
+     * @return array
+     */
+    function get_columns() {
+        $columns = array(
+            'cb'         => '',
+            'name'       => __( 'Module', 'wp-erp' ),
+            'sections'   => __( 'Sections', 'wp-erp' ),
+            'message'    => __( 'Message', 'wp-erp' ),
+            'created_by' => __( 'Created By', 'wp-erp' ),
+            'created_at' => __( 'Created At', 'wp-erp' ),
+        );
+
+        return apply_filters( 'erp_hr_audit_table_cols', $columns );
+    }
+
+
+    /**
+     * Render the checkbox column
+     *
+     * @param  object  $item
+     *
+     * @return string
+     */
+    function column_cb( $item ) {
+        return false;
+    }
+
+    /**
+     * Prepare the class items
+     *
+     * @return void
+     */
+    function prepare_items() {
+
+        $columns               = $this->get_columns();
+        $hidden                = array( );
+        $sortable              = $this->get_sortable_columns();
+        $this->_column_headers = array( $columns, $hidden, $sortable );
+
+        $per_page              = 20;
+        $current_page          = $this->get_pagenum();
+        $offset                = ( $current_page -1 ) * $per_page;
+        $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '2';
+        $args                  = [];
+        
+        $total_items           = erp_log()->count( $args );
+        
+        // only ncessary because we have sample data
+        $args = array(
+            'offset' => $offset,
+            'number' => $per_page,
+        );
+
+        $this->items  = erp_log()->get( $args );
+
+        $this->set_pagination_args( array(
+            'total_items' => $total_items,
+            'per_page'    => $per_page
+        ) );
+    }
+
+}
 ?>
 
-    <table class="wp-list-table widefat fixed audit-log-table">
-        <thead>
-            <tr>
-                <th class="col-date"><?php _e( 'Date', 'accounting' ); ?></th>
-                <th class="col"><?php _e( 'User', 'accounting' ); ?></th>
-                <th class="col"><?php _e( 'Event', 'accounting' ); ?></th>
-                <th class="col"><?php _e( 'Name', 'accounting' ); ?></th>
-                <th class="col-amount"><?php _e( 'Amount', 'accounting' ); ?></th>
-                <th class="col-action"><?php _e( 'Action', 'accounting' ); ?></th>
-            </tr>
-        </thead>
+<div class="wrap erp erp-hr-audit-log">
 
-        <tfoot>
-            <tr>
-                <th class="col-date"><?php _e( 'Date', 'accounting' ); ?></th>
-                <th class="col"><?php _e( 'User', 'accounting' ); ?></th>
-                <th class="col"><?php _e( 'Event', 'accounting' ); ?></th>
-                <th class="col"><?php _e( 'Name', 'accounting' ); ?></th>
-                <th class="col-amount"><?php _e( 'Amount', 'accounting' ); ?></th>
-                <th class="col-action"><?php _e( 'Action', 'accounting' ); ?></th>
-            </tr>
-        </tfoot>
+    <h2><?php _e( 'Audit Log', 'wp-erp' ); ?></h2>
 
-        <tbody>
-            <?php foreach( $history as $num => $row ) { ?>
-                <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
-                    <td class="col-date"><?php echo $row[0]; ?></td>
-                    <td><?php echo $row[1]; ?></td>
-                    <td><?php echo $row[2]; ?></td>
-                    <td><?php echo $row[3]; ?></td>
-                    <td class="col-amount"><?php echo $row[4]; ?></td>
-                    <td class="col-action"><a href="#">View</a></td>
-                </tr>
-            <?php } ?>
-        </tbody>
-    </table>
+    <div id="erp-audit-log-table-wrap">
+
+        <div class="list-table-inner">
+
+            <form method="get">
+                <input type="hidden" name="page" value="erp-audit-log">
+                <?php
+                $audit_log = new \WeDevs\ERP\Admin\Auditlog_List_Table();
+                $audit_log->prepare_items();
+                $audit_log->views();
+
+                $audit_log->display();
+                ?>
+            </form>
+
+        </div><!-- .list-table-inner -->
+    </div><!-- .list-table-wrap -->
+
 </div>

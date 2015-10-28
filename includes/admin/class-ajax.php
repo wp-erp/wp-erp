@@ -20,6 +20,7 @@ class Ajax {
     public function __construct() {
         $this->action( 'wp_ajax_erp-company-location', 'location_create');
         $this->action( 'wp_ajax_erp-delete-comp-location', 'location_remove');
+        $this->action( 'wp_ajax_erp_audit_log_view', 'view_edit_log_changes');
     }
 
     /**
@@ -75,6 +76,62 @@ class Ajax {
         }
 
         $this->send_success();
+    }
+
+    public function view_edit_log_changes() {
+        
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+        
+        $log_id = intval( $_POST['id'] );
+        
+        if ( ! $log_id ) {
+            $this->send_error();
+        }
+
+        $log = \WeDevs\ERP\Admin\Models\Audit_Log::find( $log_id );
+        $old_value = maybe_unserialize( base64_decode( $log->old_value ) );
+        $new_value = maybe_unserialize( base64_decode( $log->new_value ) );
+        ob_start();
+        ?>
+        <div class="wrap">
+            <table class="wp-list-table widefat fixed audit-log-change-table">
+                <thead>
+                    <tr>
+                        <th class="col-date"><?php _e( 'Field/Items', 'wp-erp' ); ?></th>
+                        <th class="col"><?php _e( 'Old Value', 'wp-erp' ); ?></th>
+                        <th class="col"><?php _e( 'New Value', 'wp-erp' ); ?></th>
+                    </tr>
+                </thead>
+
+                <tfoot>
+                    <tr>
+                        <th class="col-items"><?php _e( 'Field/Items', 'wp-erp' ); ?></th>
+                        <th class="col"><?php _e( 'Old Value', 'wp-erp' ); ?></th>
+                        <th class="col"><?php _e( 'New Value', 'wp-erp' ); ?></th>
+                    </tr>
+                </tfoot>
+
+                <tbody>
+                    <?php $i=1; ?>
+                    <?php foreach( $old_value as $key => $value ) { ?>
+                        <tr class="<?php echo $i % 2 == 0 ? 'alternate' : 'odd'; ?>">
+                            <td class="col-date"><?php echo ucfirst( str_replace('_', ' ', $key ) ); ?></td>
+                            <td><?php echo stripslashes( $value ); ?></td>
+                            <td><?php echo stripslashes( $new_value[$key] ); ?></td>
+                        </tr>
+                    <?php $i++; } ?>
+                </tbody>
+            </table>
+        </div>
+        <?php
+        $content = ob_get_clean();
+        
+        $data = [
+            'title' => __( 'Log changes', 'wp-erp' ),
+            'content' => $content
+        ];
+
+        $this->send_success( $data );
     }
 }
 
