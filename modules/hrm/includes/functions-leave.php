@@ -669,7 +669,7 @@ function erp_hr_get_leave_requests( $args = array() ) {
 
     $cache_key = 'erp_hr_leave_requests_' . md5( serialize( $args ) );
     $requests  = wp_cache_get( $cache_key, 'wp-erp' );
-    $limit     = $args['number'] == '-1' ? '' : 'LIMIT %d,%d';
+    $limit     = $args['number'] == '-1' ? '' : sprintf( 'LIMIT %d, %d', absint( $args['offset'] ), absint( $args['number'] ) );
 
     $sql = "SELECT req.id, req.user_id, u.display_name, req.policy_id, pol.name as policy_name, req.status, req.reason, req.comments, req.created_on, req.days, req.start_date, req.end_date
         FROM {$wpdb->prefix}erp_hr_leave_requests AS req
