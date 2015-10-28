@@ -2,7 +2,7 @@
     <h2><?php _e( 'HR Management', '$domain' ); ?></h2>
 
     <div class="erp-single-container">
-
+    
         <div class="erp-area-left">
 
             <?php

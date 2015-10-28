@@ -59,6 +59,8 @@ window.wperp = window.wperp || {};
             // on popup, country change event
             $( 'body' ).on('change', 'select.erp-country-select', this.populateState );
             $( 'body' ).on( 'erp-hr-after-new-location', this.afterNewLocation );
+            
+            $( '.erp-hr-audit-log' ).on( 'click', 'a.erp-audit-log-view-changes', this.viewLogChanges );
 
             this.initFields();
         },
@@ -78,6 +80,32 @@ window.wperp = window.wperp || {};
             });
 
             $( '.select2' ).select2();
+        },
+
+        viewLogChanges: function(e) {
+            e.preventDefault();
+            var self = $(this);
+
+            wp.ajax.send( 'erp_audit_log_view', {
+                data: {
+                    id : self.data( 'id' ),
+                    _wpnonce: wpErpHr.nonce
+                },
+                success: function(res) {
+                    // console.log( res );
+                    $.erpPopup({
+                        title: res.title,
+                        button: '',
+                        id: 'erp-audit-log-popup',
+                        content: res.content,
+                        extraClass: 'midium',
+                    }); 
+                },
+                error: function(error) {
+                    alert( error );
+                }
+            });
+
         },
 
         /**
