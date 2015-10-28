@@ -471,6 +471,9 @@ span.required {
 .clearfix:after {
   clear: both;
 }
+table.erp-table.full-width {
+  width: 100%;
+}
 .erp .erp-single-container {
   margin-top: 10px;
 }
@@ -636,7 +639,7 @@ ul.erp-list.blur label {
 ul.erp-list.blocked li {
   margin-bottom: 8px;
 }
-ul.erp-list.blocked label {
+ul.erp-list.blocked > li > label {
   display: block;
   padding-bottom: 5px;
 }
@@ -1002,6 +1005,35 @@ form.erp-form ul.erp-form-fields {
   list-style: none;
   margin-left: 0;
 }
+form.erp-form ol.erp-form-fields.two-col:before,
+form.erp-form ul.erp-form-fields.two-col:before,
+form.erp-form ol.erp-form-fields.two-col:after,
+form.erp-form ul.erp-form-fields.two-col:after {
+  content: " ";
+  display: table;
+}
+form.erp-form ol.erp-form-fields.two-col:after,
+form.erp-form ul.erp-form-fields.two-col:after {
+  clear: both;
+}
+form.erp-form ol.erp-form-fields.two-col:before,
+form.erp-form ul.erp-form-fields.two-col:before,
+form.erp-form ol.erp-form-fields.two-col:after,
+form.erp-form ul.erp-form-fields.two-col:after {
+  content: " ";
+  display: table;
+}
+form.erp-form ol.erp-form-fields.two-col:after,
+form.erp-form ul.erp-form-fields.two-col:after {
+  clear: both;
+}
+form.erp-form ol.erp-form-fields.two-col li,
+form.erp-form ul.erp-form-fields.two-col li {
+  line-height: 1.5em;
+  float: left;
+  display: inline;
+  width: 50%;
+}
 form.erp-form .erp-form-field {
   padding: 10px 0;
 }
@@ -1031,6 +1063,14 @@ form.erp-form .erp-form-field > label {
 }
 form.erp-form .erp-form-field .description {
   margin-left: 5px;
+}
+form.erp-form .erp-form-field.invalid {
+  background-color: rgba(255, 0, 0, 0.08);
+}
+form.erp-form .block .erp-form-field > label {
+  float: none;
+  display: block;
+  margin-bottom: 10px;
 }
 ul.edit-address li {
   display: block;

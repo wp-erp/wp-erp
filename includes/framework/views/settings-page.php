@@ -11,7 +11,7 @@
 	    ?>
 
 	    <p class="submit">
-			<input name="save" class="button-primary" type="submit" value="<?php _e( 'Save changes', 'erp' ); ?>" />
+			<input name="save" class="button-primary" type="submit" value="<?php _e( 'Save changes', 'wp-erp' ); ?>" />
 	    	<input type="hidden" name="subtab" id="last_tab" />
 
 	    	<?php wp_nonce_field( 'erp-settings-nonce' ); ?>

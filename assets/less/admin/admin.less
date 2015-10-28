@@ -38,6 +38,12 @@ span.required {
     .clearfix();
 }
 
+table.erp-table {
+    &.full-width {
+        width: 100%;
+    }
+}
+
 .erp {
 
     .erp-single-container {
@@ -203,7 +209,7 @@ ul.erp-list {
             margin-bottom: 8px;
         }
 
-        label {
+        > li > label {
             display: block;
             padding-bottom: 5px;
         }
@@ -601,6 +607,17 @@ form.erp-form {
     ul.erp-form-fields {
         list-style: none;
         margin-left: 0;
+
+        &.two-col {
+            .clearfix();
+
+            li {
+                line-height:1.5em;
+                float:left;
+                display:inline;
+                width: 50%;
+            }
+        }
     }
 
     .erp-form-field {
@@ -618,6 +635,20 @@ form.erp-form {
 
         .description {
             margin-left: 5px;
+        }
+
+        &.invalid {
+            background-color: rgba(255, 0, 0, 0.08);
+        }
+    }
+
+    .block {
+        .erp-form-field {
+            > label {
+                float: none;
+                display: block;
+                margin-bottom: 10px;
+            }
         }
     }
 }

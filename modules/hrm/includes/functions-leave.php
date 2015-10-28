@@ -606,7 +606,7 @@ function erp_hr_leave_insert_request( $args = array() ) {
  *
  * @return array
  */
-function erp_hr_leave_get_requests( $args = array() ) {
+function erp_hr_get_leave_requests( $args = array() ) {
     global $wpdb;
 
     $defaults = array(
@@ -669,6 +669,7 @@ function erp_hr_leave_get_requests( $args = array() ) {
 
     $cache_key = 'erp_hr_leave_requests_' . md5( serialize( $args ) );
     $requests  = wp_cache_get( $cache_key, 'wp-erp' );
+    $limit     = $args['number'] == '-1' ? '' : 'LIMIT %d,%d';
 
     $sql = "SELECT req.id, req.user_id, u.display_name, req.policy_id, pol.name as policy_name, req.status, req.reason, req.comments, req.created_on, req.days, req.start_date, req.end_date
         FROM {$wpdb->prefix}erp_hr_leave_requests AS req
@@ -676,9 +677,8 @@ function erp_hr_leave_get_requests( $args = array() ) {
         LEFT JOIN $wpdb->users AS u ON req.user_id = u.ID
         $where
         ORDER BY {$args['orderby']} {$args['order']}
-        LIMIT %d,%d;";
-    // echo $sql;
-
+        $limit";
+   
     if ( $requests === false ) {
         $requests = $wpdb->get_results( $wpdb->prepare( $sql, absint( $args['offset'] ), absint( $args['number'] ) ) );
         wp_cache_set( $cache_key, $requests, 'wp-erp', HOUR_IN_SECONDS );
@@ -989,11 +989,9 @@ function erp_hr_apply_new_employee_policy( $employee = false, $policies = false 
     } else {
         $policies    = array( $policies );
     }
-    
-                                                                                                                                               
+                                                                                                                                            
     $selected_policy = [];
     
-
     foreach ( $policies as $key => $policy ) {
 
         $effective_date = date( 'Y-m-d', strtotime( $policy['effective_date'] ) );
@@ -1238,8 +1236,4 @@ function erp_hr_apply_entitlement_yearly() {
 
         erp_hr_leave_insert_entitlement( $policy );
     }
-
 }
-
-
-

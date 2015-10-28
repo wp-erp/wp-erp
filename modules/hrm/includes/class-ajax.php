@@ -1176,7 +1176,7 @@ class Ajax_Handler {
             $args['policy_id'] = $policy;
         }
 
-        $requests = erp_hr_leave_get_requests( $args );
+        $requests = erp_hr_get_leave_requests( $args );
 
         ob_start();
         include WPERP_HRM_VIEWS . '/employee/tab-leave-history.php';
