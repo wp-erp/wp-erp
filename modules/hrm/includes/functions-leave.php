@@ -217,9 +217,10 @@ function erp_hr_leave_insert_holiday( $args = array() ) {
         }
 
     } else {
-        // do update method here
+        do_action( 'erp_hr_before_update_holiday', $holiday_id, $args );
+
         if ( $holiday->find( $holiday_id )->update( $args ) ) {
-            do_action( 'erp_hr_update_holiday', $holiday_id, $args );
+            do_action( 'erp_hr_after_update_holiday', $holiday_id, $args );
             return $holiday_id;
         }
     }

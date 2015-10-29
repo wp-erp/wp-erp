@@ -42,11 +42,20 @@ class Hr_Log {
     	//Holiday
     	$this->action( 'erp_hr_new_holiday', 'create_holiday', 10, 2 );
     	$this->action( 'erp_hr_leave_holiday_delete', 'delete_holiday', 10 );
-
-
+    	$this->action( 'erp_hr_before_update_holiday', 'update_holiday', 10, 2 );
     }
 
-    public function get_array_diff( $new_data, $old_data ) {
+    /**
+     * Get different array from two array
+     *
+     * @since 0.1
+     *
+     * @param  array $new_data
+     * @param  array $old_data
+     *
+     * @return array
+     */
+    public function get_array_diff( $new_data, $old_data, $is_seriazie = false ) {
 
     	$old_value = $new_value = [];
     	$changes_key = array_keys( array_diff_assoc( $new_data, $old_data ) );
@@ -56,10 +65,17 @@ class Hr_Log {
     		$new_value[$change_field_key] = $new_data[$change_field_key];
     	}
 
-    	return [
-			'new_val' => ( $new_value ), //? base64_encode( maybe_serialize( $new_value ) ) : '',
-			'old_val' => ( $old_value ) //? base64_encode( maybe_serialize( $old_value ) ) : ''
-		];
+    	if ( ! $is_seriazie ) {
+	    	return [
+				'new_val' => $new_value ? base64_encode( maybe_serialize( $new_value ) ) : '',
+				'old_val' => $old_value ? base64_encode( maybe_serialize( $old_value ) ) : ''
+			];
+    	} else {
+    		return [
+				'new_val' => $new_value,
+				'old_val' => $old_value
+			];
+    	}
     }
 
     /**
@@ -311,6 +327,61 @@ class Hr_Log {
 			'created_by'    => get_current_user_id(),
 			'changetype'    => 'delete',
     	]);
+    }
+
+    /**
+     * Add log when edit holiday
+     *
+     * @since 0.1
+     *
+     * @param  integer $holiday_id
+     * @param  array $fields
+     *
+     * @return void
+     */
+    public function update_holiday( $holiday_id, $fields ) {
+    	if ( ! $holiday_id ) {
+    		return;
+    	}
+
+    	$old_holiday = \WeDevs\ERP\HRM\Models\Leave_Holiday::find( $holiday_id )->toArray();
+    	unset( $old_holiday['created_at'], $old_holiday['updated_at'] );
+
+    	$old_holiday['start'] = erp_format_date( $old_holiday['start'], 'Y-m-d' );
+    	$old_holiday['end'] = erp_format_date( $old_holiday['end'], 'Y-m-d' );
+
+
+    	$changes = $this->get_array_diff( $fields, $old_holiday, true );
+
+    	if ( empty( $changes['old_val'] ) && empty( $changes['new_val'] ) ) {
+    		$message = __( 'No Changes', 'wp-erp' );
+    	} else {
+    		$message = sprintf( '%s holiday has been edited', $old_holiday['title'] );
+    	}
+
+    	array_walk ( $changes, function ( &$key ) {
+
+    		if ( isset( $key['start'] ) ) {
+				$key['start_date'] = erp_format_date( $key['start'] );
+				unset( $key['start'] );
+    		}
+
+    		if ( isset( $key['end'] ) ) {
+				$key['end_date'] = erp_format_date( $key['end'] );
+				unset( $key['end'] );
+    		}
+
+		} );
+
+    	erp_log()->add([
+			'sub_component' => 'leave',
+			'message'       => $message,
+			'created_by'    => get_current_user_id(),
+			'changetype'    => 'edit',
+			'old_value'		=> base64_encode( maybe_serialize( $changes['old_val'] ) ),
+			'new_value'		=> base64_encode( maybe_serialize( $changes['new_val'] ) )
+    	]);
+
     }
 
 }

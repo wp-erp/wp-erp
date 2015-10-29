@@ -46,7 +46,7 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-hr-emp-update-terminate-reason', 'employee_terminate' );
         $this->action( 'wp_ajax_erp-hr-emp-activate', 'employee_termination_reactive' );
 
-        // Dashaboard 
+        // Dashaboard
         $this->action ( 'wp_ajax_erp_hr_announcement_mark_read', 'mark_read_announcement' );
         $this->action ( 'wp_ajax_erp_hr_announcement_view', 'view_announcement' );
 
@@ -80,7 +80,7 @@ class Ajax_Handler {
 
         //leave entitlement
         $this->action( 'wp_ajax_erp-hr-leave-entitlement-delete', 'remove_entitlement' );
-        
+
         // script reload
         $this->action( 'wp_ajax_erp_hr_script_reload', 'employee_template_refresh' );
         $this->action( 'wp_ajax_erp_hr_new_dept_tmp_reload', 'new_dept_tmp_reload' );
@@ -314,7 +314,7 @@ class Ajax_Handler {
 
         $posted               = array_map( 'strip_tags_deep', $_POST );
         $employee_id          = erp_hr_employee_create( $posted );
-      
+
         if ( is_wp_error( $employee_id ) ) {
             $this->send_error( $employee_id->get_error_message() );
         }
@@ -616,8 +616,8 @@ class Ajax_Handler {
     /**
      * Mark Read Announcement
      *
-     * @since 0.1 
-     * 
+     * @since 0.1
+     *
      * @return json|boolean
      */
     public function mark_read_announcement() {
@@ -632,8 +632,8 @@ class Ajax_Handler {
     /**
      * View single announcment
      *
-     * @since 0.1 
-     * 
+     * @since 0.1
+     *
      * @return json [post array]
      */
     public function view_announcement() {
@@ -652,7 +652,7 @@ class Ajax_Handler {
             'title' => get_the_title(),
             'content' => get_the_content()
         ];
-        
+
         wp_reset_postdata();
 
         $this->send_success( $post_data );
@@ -1005,7 +1005,7 @@ class Ajax_Handler {
         $after_x_day    = isset( $_POST['no_of_days'] ) ? intval( $_POST['no_of_days'] ) : '';
         $effective_date = isset( $_POST['effective_date'] ) ? $_POST['effective_date'] : '';
         $location       = isset( $_POST['location'] ) ? $_POST['location'] : '';
-        $instant_apply  = ( isset( $_POST['apply'] ) ) && ( $_POST['apply'] == 'on' ) ? true : false; 
+        $instant_apply  = ( isset( $_POST['apply'] ) ) && ( $_POST['apply'] == 'on' ) ? true : false;
 
 
         $policy_id = erp_hr_leave_insert_policy( array(
@@ -1050,17 +1050,19 @@ class Ajax_Handler {
 
         $holidays = erp_hr_get_holidays( array( 'number' => '-1' ) );
 
-        if ( $holidays ) {
-            foreach ( $holidays as $holiday ) {
-                $prev_start = date( 'Y-m-d', strtotime( $holiday->start ) );
-                $prev_end   = date( 'Y-m-d', strtotime( $holiday->end ) );
+        if ( !$holiday_id ) {
+            if ( $holidays ) {
+                foreach ( $holidays as $holiday ) {
+                    $prev_start = date( 'Y-m-d', strtotime( $holiday->start ) );
+                    $prev_end   = date( 'Y-m-d', strtotime( $holiday->end ) );
 
-                if ( erp_check_date_range_in_range_exist( $prev_start, $prev_end, $start_date, $end_date ) ) {
-                    $error = new \WP_Error( 'msg', __( 'Holiday exist in your selected date', 'wp-erp' ) );
-                }
+                    if ( erp_check_date_range_in_range_exist( $prev_start, $prev_end, $start_date, $end_date ) ) {
+                        $error = new \WP_Error( 'msg', __( 'Holiday exist in your selected date', 'wp-erp' ) );
+                    }
 
-                if ( erp_check_date_range_in_range_exist( $start_date, $end_date, $prev_start, $prev_end ) ) {
-                    $error = new \WP_Error( 'msg', __( 'Holiday exist in your selected date', 'wp-erp' ) );
+                    if ( erp_check_date_range_in_range_exist( $start_date, $end_date, $prev_start, $prev_end ) ) {
+                        $error = new \WP_Error( 'msg', __( 'Holiday exist in your selected date', 'wp-erp' ) );
+                    }
                 }
             }
         }
