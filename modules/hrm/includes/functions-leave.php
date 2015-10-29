@@ -128,9 +128,9 @@ function erp_hr_leave_insert_policy( $args = array() ) {
     $defaults = array(
         'id'         => null,
         'name'       => '',
-        'unit'       => 'day',
         'value'      => 0,
         'color'      => '',
+        'description'    => '',
     );
 
     $args = wp_parse_args( $args, $defaults );
@@ -156,7 +156,6 @@ function erp_hr_leave_insert_policy( $args = array() ) {
         $leave_policy = $leave_policies->create( $args );
 
         if ( $leave_policy ) {
-
             do_action( 'erp_hr_leave_policy_new', $wpdb->insert_id, $args );
             return $leave_policy->id;
         }
@@ -164,7 +163,6 @@ function erp_hr_leave_insert_policy( $args = array() ) {
     } else {
         // do update method here
         if ( $leave_policies->find( $policy_id )->update( $args ) ) {
-
             do_action( 'erp_hr_leave_policy_updated', $policy_id, $args );
             return $policy_id;
         }
@@ -182,7 +180,7 @@ function erp_hr_leave_insert_holiday( $args = array() ) {
     $defaults = array(
         'id'          => null,
         'title'       => '',
-        'start'       => current_filter('mysql'),
+        'start'       => current_time('mysql'),
         'end'         => '',
         'description' => '',
     );
@@ -214,7 +212,6 @@ function erp_hr_leave_insert_holiday( $args = array() ) {
         $leave_policy = $holiday->create( $args );
 
         if ( $leave_policy ) {
-
             do_action( 'erp_hr_new_holiday', $wpdb->insert_id, $args );
             return $leave_policy->id;
         }
@@ -222,7 +219,6 @@ function erp_hr_leave_insert_holiday( $args = array() ) {
     } else {
         // do update method here
         if ( $holiday->find( $holiday_id )->update( $args ) ) {
-
             do_action( 'erp_hr_update_holiday', $holiday_id, $args );
             return $holiday_id;
         }

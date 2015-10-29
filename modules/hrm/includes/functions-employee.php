@@ -257,8 +257,6 @@ function erp_hr_get_employees( $args = array() ) {
         wp_cache_set( $cache_key, $results, 'wp-erp', HOUR_IN_SECONDS );
     }
 
-    // var_dump( $results );
-    // 
     if ( $results ) {
         foreach ($results as $key => $row) {
 
@@ -607,9 +605,9 @@ function erp_hr_get_marital_statuses( $select_text = null ) {
             'single'  => __( 'Single', 'wp-erp' ),
             'married' => __( 'Married', 'wp-erp' ),
             'widowed' => __( 'Widowed', 'wp-erp' )
-        ); 
+        );
     }
-    
+
     return apply_filters( 'erp_hr_marital_statuses',  $statuses );
 }
 
@@ -791,9 +789,9 @@ function erp_hr_url_single_employee( $employee_id ) {
  * Get Employee Announcement List
  *
  * @since 0.1
- * 
- * @param  integer $user_id 
- * 
+ *
+ * @param  integer $user_id
+ *
  * @return array
  */
 function erp_hr_employee_dashboard_announcement( $user_id ) {
