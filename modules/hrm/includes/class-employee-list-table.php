@@ -41,7 +41,7 @@ class Employee_List_Table extends \WP_List_Table {
 
             <label class="screen-reader-text" for="new_role"><?php _e( 'Filter by Employment Type', 'wp-erp' ) ?></label>
             <select name="filter_employment_type" id="filter_employment_type">
-                <option value=""><?php _e( '- Select Employment Type -', 'wp-erp' ) ?></option>
+                <option value="-1"><?php _e( '- Select Employment Type -', 'wp-erp' ) ?></option>
                 <?php
                     $types = erp_hr_get_employee_types();
 

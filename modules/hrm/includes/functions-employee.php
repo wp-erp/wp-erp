@@ -213,20 +213,19 @@ function erp_hr_get_employees( $args = array() ) {
     $employee = new \WeDevs\ERP\HRM\Models\Employee();
     $employee_result = $employee->leftjoin( $wpdb->users, 'user_id', '=', $wpdb->users . '.ID' )->select( array( 'user_id', 'display_name' ) );
 
-
-    if ( isset( $args['designation'] ) && ! empty( $args['designation'] ) ) {
+    if ( isset( $args['designation'] ) && $args['designation'] != '-1' ) {
         $employee_result = $employee_result->where( 'designation', $args['designation'] );
     }
 
-    if ( isset( $args['department'] ) && ! empty( $args['department'] ) ) {
+    if ( isset( $args['department'] ) && $args['department'] != '-1' ) {
         $employee_result = $employee_result->where( 'department', $args['department'] );
     }
 
-    if ( isset( $args['location'] ) && ! empty( $args['location'] ) ) {
+    if ( isset( $args['location'] ) && $args['location'] != '-1' ) {
         $employee_result = $employee_result->where( 'location', $args['location'] );
     }
 
-    if ( isset( $args['type'] ) && ! empty( $args['type'] ) ) {
+    if ( isset( $args['type'] ) && $args['type'] != '-1' ) {
         $employee_result = $employee_result->where( 'type', $args['type'] );
     }
 
@@ -258,6 +257,8 @@ function erp_hr_get_employees( $args = array() ) {
         wp_cache_set( $cache_key, $results, 'wp-erp', HOUR_IN_SECONDS );
     }
 
+    // var_dump( $results );
+    // 
     if ( $results ) {
         foreach ($results as $key => $row) {
 
