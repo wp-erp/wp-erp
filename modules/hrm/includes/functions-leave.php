@@ -128,9 +128,9 @@ function erp_hr_leave_insert_policy( $args = array() ) {
     $defaults = array(
         'id'         => null,
         'name'       => '',
-        'unit'       => 'day',
         'value'      => 0,
         'color'      => '',
+        'description'    => '',
     );
 
     $args = wp_parse_args( $args, $defaults );
@@ -156,7 +156,6 @@ function erp_hr_leave_insert_policy( $args = array() ) {
         $leave_policy = $leave_policies->create( $args );
 
         if ( $leave_policy ) {
-
             do_action( 'erp_hr_leave_policy_new', $wpdb->insert_id, $args );
             return $leave_policy->id;
         }
@@ -164,7 +163,6 @@ function erp_hr_leave_insert_policy( $args = array() ) {
     } else {
         // do update method here
         if ( $leave_policies->find( $policy_id )->update( $args ) ) {
-
             do_action( 'erp_hr_leave_policy_updated', $policy_id, $args );
             return $policy_id;
         }
@@ -214,7 +212,6 @@ function erp_hr_leave_insert_holiday( $args = array() ) {
         $leave_policy = $holiday->create( $args );
 
         if ( $leave_policy ) {
-
             do_action( 'erp_hr_new_holiday', $wpdb->insert_id, $args );
             return $leave_policy->id;
         }
@@ -222,7 +219,6 @@ function erp_hr_leave_insert_holiday( $args = array() ) {
     } else {
         // do update method here
         if ( $holiday->find( $holiday_id )->update( $args ) ) {
-
             do_action( 'erp_hr_update_holiday', $holiday_id, $args );
             return $holiday_id;
         }
@@ -669,7 +665,7 @@ function erp_hr_get_leave_requests( $args = array() ) {
 
     $cache_key = 'erp_hr_leave_requests_' . md5( serialize( $args ) );
     $requests  = wp_cache_get( $cache_key, 'wp-erp' );
-    $limit     = $args['number'] == '-1' ? '' : 'LIMIT %d,%d';
+    $limit     = $args['number'] == '-1' ? '' : sprintf( 'LIMIT %d, %d', absint( $args['offset'] ), absint( $args['number'] ) );
 
     $sql = "SELECT req.id, req.user_id, u.display_name, req.policy_id, pol.name as policy_name, req.status, req.reason, req.comments, req.created_on, req.days, req.start_date, req.end_date
         FROM {$wpdb->prefix}erp_hr_leave_requests AS req
@@ -685,6 +681,7 @@ function erp_hr_get_leave_requests( $args = array() ) {
         } else {
             $requests = $wpdb->get_results( $wpdb->prepare( $sql, absint( $args['offset'] ), absint( $args['number'] ) ) );
         }
+        $requests = $wpdb->get_results( $sql );
         wp_cache_set( $cache_key, $requests, 'wp-erp', HOUR_IN_SECONDS );
     }
 
@@ -1193,7 +1190,7 @@ function erp_hr_get_next_month_leave_list() {
 function erp_hr_leave_period() {
 
     $next_sart_date = date( 'Y-m-01 H:i:s', strtotime( '+1 year', strtotime( erp_financial_start_date() ) ) );
-    $next_end_date = date( 'Y-m-t H:i:s', strtotime( '+1 year', strtotime( erp_financial_end_date() ) ) );
+    $next_end_date  = date( 'Y-m-t H:i:s', strtotime( '+1 year', strtotime( erp_financial_end_date() ) ) );
 
     $date = [
         erp_financial_start_date() => erp_format_date( erp_financial_start_date() ) . ' - ' . erp_format_date( erp_financial_end_date() ),
@@ -1242,9 +1239,16 @@ function erp_hr_apply_entitlement_yearly() {
     }
 }
 
+/**
+ * Get calendar leave events
+ *
+ * @param   array/boolean $get
+ *
+ * @since 0.1
+ *
+ * @return array
+ */
 function erp_hr_get_calendar_leave_events( $get ) {
-
-
 
     global $wpdb;
 
@@ -1291,6 +1295,7 @@ function erp_hr_get_calendar_leave_events( $get ) {
                 ->select( $users_tb . '.display_name', $request_tb . '.*', $policy_tb . '.color' )
                 ->where( $employee_tb . '.department', '=', $department )
                 ->get()
+
                 ->toArray() );
     }
 

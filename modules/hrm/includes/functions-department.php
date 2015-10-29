@@ -40,9 +40,11 @@ function erp_hr_create_department( $args = array() ) {
 
     } else {
 
+        do_action( 'erp_hr_dept_before_updated', $dept_id, $fields );
+
         $department->find( $dept_id )->update( $fields );
 
-        do_action( 'erp_hr_dept_updated', $dept_id, $fields );
+        do_action( 'erp_hr_dept_after_updated', $dept_id, $fields );
 
         return $dept_id;
     }
@@ -139,14 +141,14 @@ function erp_hr_delete_department( $department_id ) {
     }
 
     do_action( 'erp_hr_dept_delete', $department_id );
-    $parent_id = \WeDevs\ERP\HRM\Models\Department::where( 'id', '=', $department_id )->pluck('parent'); 
-    
+    $parent_id = \WeDevs\ERP\HRM\Models\Department::where( 'id', '=', $department_id )->pluck('parent');
+
     if ( $parent_id ) {
         \WeDevs\ERP\HRM\Models\Department::where( 'parent', '=', $department_id )->update( ['parent' => $parent_id ] );
     } else {
         \WeDevs\ERP\HRM\Models\Department::where( 'parent', '=', $department_id )->update( ['parent' => 0 ] );
     }
-    
+
     $resp = \WeDevs\ERP\HRM\Models\Department::find( $department_id )->delete();
 
     return $resp;

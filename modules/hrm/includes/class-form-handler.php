@@ -48,11 +48,11 @@ class Form_Handler {
     /**
      * Check is current page actions
      *
-     * @since 0.1 
-     * 
-     * @param  integer $page_id     
-     * @param  integer $bulk_action 
-     * 
+     * @since 0.1
+     *
+     * @param  integer $page_id
+     * @param  integer $bulk_action
+     *
      * @return boolean
      */
     public function verify_current_page_screen( $page_id, $bulk_action ) {
@@ -75,8 +75,8 @@ class Form_Handler {
     /**
      * Handle leave policies bulk action
      *
-     * @since 0.1 
-     * 
+     * @since 0.1
+     *
      * @return void [redirection]
      */
     public function leave_policies() {
@@ -129,8 +129,8 @@ class Form_Handler {
     /**
      * Handle Employee Bulk actions
      *
-     * @since 0.1 
-     * 
+     * @since 0.1
+     *
      * @return void [redirection]
      */
     public function employee_bulk_action() {
@@ -188,8 +188,8 @@ class Form_Handler {
     /**
      * Handle designation bulk action
      *
-     * @since 0.1 
-     * 
+     * @since 0.1
+     *
      * @return void [redirection]
      */
     public function designation_bulk_action() {
@@ -213,9 +213,9 @@ class Form_Handler {
                     }
 
                     if ( ! empty ( $not_deleted_item ) ) {
-                        $redirect = add_query_arg( array( 'desig_delete' => implode( ',', $not_deleted_item ) ), $redirect );   
+                        $redirect = add_query_arg( array( 'desig_delete' => implode( ',', $not_deleted_item ) ), $redirect );
                     }
-                    
+
                     wp_redirect( $redirect );
                     exit();
             }
@@ -225,8 +225,8 @@ class Form_Handler {
     /**
      * Department handle bulk action
      *
-     * @since 0.1 
-     * 
+     * @since 0.1
+     *
      * @return void [redirection]
      */
     public function department_bulk_action() {
@@ -254,9 +254,9 @@ class Form_Handler {
                     }
 
                     if ( in_array ( false, $resp ) ) {
-                        $redirect = add_query_arg( array( 'department_delete' => 'item_deleted' ), $redirect );   
+                        $redirect = add_query_arg( array( 'department_delete' => 'item_deleted' ), $redirect );
                     }
-                    
+
                     wp_redirect( $redirect );
                     exit();
             }
@@ -282,14 +282,29 @@ class Form_Handler {
 
     }
 
+    /**
+     * Holiday Remove
+     *
+     * @since 0.1
+     *
+     * @param  [type] $get [description]
+     *
+     * @return [type]      [description]
+     */
     function remove_holiday( $get ) {
-        if ( $get['action'] != 'trash' ) {
-            return false;
+
+        if ( isset( $get['action'] ) && $get['action'] == 'trash' ) {
+            if ( isset( $get['holiday_id'] ) ) {
+                erp_hr_delete_holidays( $get['holiday_id'] );
+                return true;
+            }
         }
 
-        if ( isset( $get['holiday_id'] ) ) {
-            erp_hr_delete_holidays( $get['holiday_id'] );
-            return true;
+        if ( isset( $get['action2'] ) && $get['action2'] == 'trash' ) {
+            if ( isset( $get['holiday_id'] ) ) {
+                erp_hr_delete_holidays( $get['holiday_id'] );
+                return true;
+            }
         }
 
         return false;
@@ -426,8 +441,8 @@ class Form_Handler {
     /**
      * Leave Request Status change
      *
-     * @since 0,1 
-     *        
+     * @since 0,1
+     *
      * @return void
      */
     public function leave_request_status_change() {
@@ -488,12 +503,12 @@ class Form_Handler {
     /**
      * Employee Status Update
      *
-     * @since 0.1 
-     *            
+     * @since 0.1
+     *
      * @return void
      */
     public function handle_employee_status_update() {
-    
+
         if ( ! isset( $_POST['employee_update_status'] ) ) {
             return;
         }
