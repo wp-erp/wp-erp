@@ -1,9 +1,7 @@
 <?php
 $filter_active = ( isset( $_GET['department'] ) && $_GET['department'] != '-1' ) || ( isset( $_GET['designation'] ) && $_GET['designation'] != '-1' ) ? $_GET : false;
 
-
-    $leave_requests = erp_hr_get_calendar_leave_events( $filter_active );
-
+$leave_requests = erp_hr_get_calendar_leave_events( $filter_active );
 $events = [];
 
 foreach ( $leave_requests as $key => $leave_request ) {
@@ -13,7 +11,7 @@ foreach ( $leave_requests as $key => $leave_request ) {
         'start'     => $leave_request->start_date,
         'end'       => $leave_request->end_date,
         'url'       => erp_hr_url_single_employee( $leave_request->user_id ),
-        'color'     => '#32b1c8',
+        'color'     => $leave_request->color,
         'img'       => get_avatar( $leave_request->user_id, 16 )
     );
 }
@@ -26,7 +24,7 @@ foreach ( $leave_requests as $key => $leave_request ) {
     .erp-leave-avatar img {
         border-radius: 50%;
         margin: 3px 7px 0 0;
-    
+
     }
     .fc-title {
         position: relative;
@@ -36,7 +34,7 @@ foreach ( $leave_requests as $key => $leave_request ) {
 <div class="wrap erp-hr-calendar-wrap">
     <form method="post" action="">
 
-         <?php 
+         <?php
             erp_html_form_input( array(
                 'name'        => 'department',
                 'value'       =>  isset( $_GET['department'] ) ? $_GET['department'] : '',
@@ -65,7 +63,7 @@ foreach ( $leave_requests as $key => $leave_request ) {
 <script>
 console.log(<?php echo json_encode($events); ?>);
     jQuery(document).ready(function($) {
-        
+
         $('#erp-hr-calendar').fullCalendar({
             header: {
                 left: 'prev,next today',
