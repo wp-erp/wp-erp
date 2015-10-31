@@ -127,24 +127,43 @@ class Hr_Log {
     		return;
     	}
 
-   //  	$old_desig = \WeDevs\ERP\HRM\Models\Department::find( $dept_id )->toArray();
-   //  	unset( $old_desig['created_at'], $old_desig['updated_at'] );
+  //   	$old_department = \WeDevs\ERP\HRM\Models\Department::find( $dept_id )->toArray();
+  //   	unset( $old_holiday['created_at'], $old_holiday['updated_at'] );
 
-   //  	$changes = $this->get_array_diff( $fields, $old_desig );
+  //   	$old_holiday['start'] = erp_format_date( $old_holiday['start'], 'Y-m-d' );
+  //   	$old_holiday['end'] = erp_format_date( $old_holiday['end'], 'Y-m-d' );
 
-   //  	if ( empty( $changes['old_val'] ) && empty( $changes['new_val'] ) ) {
-   //  		$message = __( 'No Changes', 'wp-erp' );
-   //  	} else {
-   //  		$message = sprintf( '%s designation has been edited', $old_desig['title'] );
-   //  	}
-   //  	erp_log()->add([
-			// 'sub_component' => 'designation',
-			// 'message'       => $message,
-			// 'created_by'    => get_current_user_id(),
-			// 'changetype'    => 'edit',
-			// 'old_value'		=> $changes['old_val'],
-			// 'new_value'		=> $changes['new_val']
-   //  	]);
+
+  //   	$changes = $this->get_array_diff( $fields, $old_holiday, true );
+
+  //   	if ( empty( $changes['old_val'] ) && empty( $changes['new_val'] ) ) {
+  //   		$message = __( 'No Changes', 'wp-erp' );
+  //   	} else {
+  //   		$message = sprintf( '%s holiday has been edited', $old_holiday['title'] );
+  //   	}
+
+  //   	array_walk ( $changes, function ( &$key ) {
+
+  //   		if ( isset( $key['start'] ) ) {
+		// 		$key['start_date'] = erp_format_date( $key['start'] );
+		// 		unset( $key['start'] );
+  //   		}
+
+  //   		if ( isset( $key['end'] ) ) {
+		// 		$key['end_date'] = erp_format_date( $key['end'] );
+		// 		unset( $key['end'] );
+  //   		}
+
+		// } );
+
+  //   	erp_log()->add([
+		// 	'sub_component' => 'leave',
+		// 	'message'       => $message,
+		// 	'created_by'    => get_current_user_id(),
+		// 	'changetype'    => 'edit',
+		// 	'old_value'		=> base64_encode( maybe_serialize( $changes['old_val'] ) ),
+		// 	'new_value'		=> base64_encode( maybe_serialize( $changes['new_val'] ) )
+  //   	]);
 
     }
 
