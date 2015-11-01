@@ -199,7 +199,7 @@ class Leave_Requests_List_Table extends WP_List_Table {
         $args = array(
             'offset' => $offset,
             'number' => $per_page,
-            'status' => $this->page_status
+            'status' => $this->page_status,
         );
 
         $this->counts = erp_hr_leave_get_requests_count();

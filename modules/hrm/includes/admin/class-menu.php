@@ -26,6 +26,11 @@ class Admin_Menu {
 
         add_submenu_page( 'erp-hr', __( 'Overview', 'wp-erp' ), __( 'Overview', 'wp-erp' ), 'erp_list_employee', 'erp-hr', array( $this, 'dashboard_page' ) );
         add_submenu_page( 'erp-hr', __( 'Employees', 'wp-erp' ), __( 'Employees', 'wp-erp' ), 'erp_list_employee', 'erp-hr-employee', array( $this, 'employee_page' ) );
+
+        if ( current_user_can( 'employee' ) ) {
+            add_submenu_page( 'erp-hr', __( 'My Profile', 'wp-erp' ), __( 'My Profile', 'wp-erp' ), 'erp_list_employee', 'erp-hr-my-profile', array( $this, 'employee_my_profile_page' ) );
+        }
+
         add_submenu_page( 'erp-hr', __( 'Departments', 'wp-erp' ), __( 'Departments', 'wp-erp' ), 'erp_manage_department', 'erp-hr-depts', array( $this, 'department_page' ) );
         add_submenu_page( 'erp-hr', __( 'Designations', 'wp-erp' ), __( 'Designations', 'wp-erp' ), 'erp_manage_designation', 'erp-hr-designation', array( $this, 'designation_page' ) );
         add_submenu_page( 'erp-hr', __( 'Announcement', 'wp-erp' ), __( 'Announcement', 'wp-erp' ), 'erp_manage_announcement', 'edit.php?post_type=erp_hr_announcement' );
@@ -89,6 +94,39 @@ class Admin_Menu {
         }
 
         $template = apply_filters( 'erp_hr_employee_templates', $template, $action, $id );
+
+        if ( file_exists( $template ) ) {
+            include $template;
+        }
+    }
+
+    /**
+     * Employee my profile page template
+     *
+     * @since 0.1
+     *
+     * @return void
+     */
+    public function employee_my_profile_page() {
+        $action = isset( $_GET['action'] ) ? $_GET['action'] : 'view';
+        $id     = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : intval( get_current_user_id() );
+
+        switch ($action) {
+            case 'view':
+                $employee = new Employee( $id );
+                if ( ! $employee->id ) {
+                    wp_die( __( 'Employee not found!', 'wp-erp' ) );
+                }
+
+                $template = WPERP_HRM_VIEWS . '/employee/single.php';
+                break;
+
+            default:
+                $template = WPERP_HRM_VIEWS . '/employee/single.php';
+                break;
+        }
+
+        $template = apply_filters( 'erp_hr_employee_my_profile_templates', $template, $action, $id );
 
         if ( file_exists( $template ) ) {
             include $template;

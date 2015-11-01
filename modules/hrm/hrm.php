@@ -194,6 +194,7 @@ class Human_Resource {
                 break;
 
             case 'hr-management_page_erp-hr-employee':
+            case 'hr-management_page_erp-hr-my-profile':
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-employee.php', 'erp-new-employee' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/row-employee.php', 'erp-employee-row' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/employment-status.php', 'erp-employment-status' );
