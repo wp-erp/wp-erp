@@ -4,10 +4,11 @@
 
      if ( current_user_can( 'erp_create_employee' ) ) {
             ?>
-    <a href="#" id="erp-employee-new" class="add-new-h2 erp-hide-print"><?php _e( 'Add New', 'wp-erp' ); ?></a></h2>
+    <a href="#" id="erp-employee-new" class="add-new-h2 erp-hide-print"><?php _e( 'Add New', 'wp-erp' ); ?></a>
             <?php
     }
     ?>
+    </h2>
     <div class="erp-single-container" id="erp-single-container-wrap">
         <div class="erp-area-left full-width">
             <div id="erp-area-left-inner">
@@ -149,6 +150,5 @@
 
             </div><!-- #erp-area-left-inner -->
         </div><!-- .leads-left -->
-
     </div><!-- .erp-leads-wrap -->
 </div>

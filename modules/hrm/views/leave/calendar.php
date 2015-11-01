@@ -70,8 +70,7 @@ foreach ( $leave_requests as $key => $leave_request ) {
 
 
 <script>
-console.log(<?php echo json_encode($events); ?>);
-    jQuery(document).ready(function($) {
+    ;jQuery(document).ready(function($) {
 
         $('#erp-hr-calendar').fullCalendar({
             header: {
