@@ -1,6 +1,6 @@
 <div class="wrap erp erp-hr-employees erp-employee-single">
 
-    <h2 class="erp-hide-print"><?php _e( 'Employee', 'wp-erp' ); 
+    <h2 class="erp-hide-print"><?php _e( 'Employee', 'wp-erp' );
 
      if ( current_user_can( 'erp_create_employee' ) ) {
             ?>
@@ -15,7 +15,7 @@
                 <script type="text/javascript">
                     window.wpErpCurrentEmployee = <?php echo json_encode( $employee->to_array() ); ?>
                 </script>
-            
+
                 <div class="erp-profile-top">
                     <div class="erp-avatar">
                         <?php echo $employee->get_avatar( 150 ); ?>
@@ -68,11 +68,11 @@
                                     <span class="edit"><a class="button button-primary" data-id="<?php echo $employee->id; ?>" data-single="true" href="#"><?php _e( 'Edit', 'wp-erp' ); ?></a></span>
                                     <?php
                                     }
-                                    
+
                                     if ( $employee->get_status() == 'Terminated' && current_user_can( 'erp_create_employee' ) ): ?>
                                         <a class="button" href="#" id="erp-employee-activate" data-id="<?php echo $employee->id; ?>"><?php _e( 'Active', 'wp-erp' ); ?></a>
-                                    <?php 
-                                else: 
+                                    <?php
+                                else:
                                     if ( current_user_can( 'erp_create_employee' ) ) {
                                     ?>
                                         <a class="button" href="#" id="erp-employee-terminate" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-terminate" data-title="<?php _e( 'Terminate Employee', 'wp-erp' ); ?>"><?php _e( 'Terminate', 'wp-erp' ); ?></a>
@@ -124,7 +124,10 @@
                     unset( $tabs['performance'] );
                     unset( $tabs['notes'] );
                 }
-    
+
+                if ( ! current_user_can( 'erp_edit_employee', $employee->id ) ) {
+                    unset( $tabs['leave'] );
+                }
                 ?>
 
                 <h2 class="nav-tab-wrapper erp-hide-print" style="margin-bottom: 15px;">

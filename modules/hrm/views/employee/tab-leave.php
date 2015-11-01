@@ -29,7 +29,7 @@ if ( $policies ) {
                 $name      = esc_html( $policy->name );
                 $current   = 0;
                 $scheduled = 0;
-                $available = 0; 
+                $available = 0;
 
 
                 if ( array_key_exists( $policy->id, $balance ) ) {
@@ -83,7 +83,8 @@ $requests   = erp_hr_get_leave_requests( array(
     'year'    => $cur_year,
     'user_id' => $employee->id,
     'status'  => 1,
-    'orderby' => 'req.start_date'
+    'orderby' => 'req.start_date',
+    'number'  => -1
 ) );
 ?>
 

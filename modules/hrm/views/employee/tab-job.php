@@ -1,7 +1,7 @@
 <div class="job-tab-wrap">
 
     <?php $history = $employee->get_history(); ?>
-    
+
     <?php
     if ( current_user_can( 'erp_manage_jobinfo' ) ) {
         ?>
@@ -56,7 +56,9 @@
                         </td>
                         <td><?php echo ( ! empty( $row->comment ) ) ? wp_kses_post( $row->comment ) : '--'; ?></td>
                         <td class="action">
-                            <a href="#" class="remove" data-id="<?php echo $row->id; ?>"><span class="dashicons dashicons-trash"></span></a>
+                            <?php if ( current_user_can( 'erp_edit_employee', $employee->id ) ) : ?>
+                                <a href="#" class="remove" data-id="<?php echo $row->id; ?>"><span class="dashicons dashicons-trash"></span></a>
+                            <?php endif; ?>
                         </td>
                     </tr>
                     <?php
@@ -107,7 +109,9 @@
                         <td><?php echo ( ! empty( $row->data ) ) ? $row->data : '--'; ?></td>
                         <td><?php echo ( ! empty( $row->comment ) ) ? wp_kses_post( $row->comment ) : '--'; ?></td>
                         <td class="action">
-                            <a href="#" class="remove" data-id="<?php echo $row->id; ?>"><span class="dashicons dashicons-trash"></span></a>
+                            <?php if ( current_user_can( 'erp_edit_employee', $employee->id ) ) : ?>
+                                <a href="#" class="remove" data-id="<?php echo $row->id; ?>"><span class="dashicons dashicons-trash"></span></a>
+                            <?php endif; ?>
                         </td>
                     </tr>
                     <?php
@@ -165,7 +169,9 @@
                             } ?>
                         </td>
                         <td class="action">
-                            <a href="#" class="remove" data-id="<?php echo $row->id; ?>"><span class="dashicons dashicons-trash"></span></a>
+                            <?php if ( current_user_can( 'erp_edit_employee', $employee->id ) ) : ?>
+                                <a href="#" class="remove" data-id="<?php echo $row->id; ?>"><span class="dashicons dashicons-trash"></span></a>
+                            <?php endif; ?>
                         </td>
                     </tr>
                     <?php
