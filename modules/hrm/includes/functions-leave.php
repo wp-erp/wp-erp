@@ -682,7 +682,6 @@ function erp_hr_get_leave_requests( $args = array() ) {
         } else {
             $requests = $wpdb->get_results( $wpdb->prepare( $sql, absint( $args['offset'] ), absint( $args['number'] ) ) );
         }
-        $requests = $wpdb->get_results( $sql );
         wp_cache_set( $cache_key, $requests, 'wp-erp', HOUR_IN_SECONDS );
     }
 
@@ -917,8 +916,8 @@ function erp_hr_leave_get_balance( $user_id ) {
     $sql     = $wpdb->prepare( $query, $user_id );
     $results = $wpdb->get_results( $sql );
 
-    $temp         = array();
-    $balance      = array();
+    $temp         = [];
+    $balance      = [];
     $current_time = current_time( 'timestamp' );
 
     if ( $results ) {

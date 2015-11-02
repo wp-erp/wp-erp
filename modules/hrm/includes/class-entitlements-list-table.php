@@ -87,15 +87,15 @@ class Entitlement_List_Table extends \WP_List_Table {
 
             case 'scheduled':
                 if ( $available < 0 ) {
-                    return sprintf( '<span class="red">%d %s</span>', number_format_i18n( $available ), __( 'days', 'wp-erp' ) );
-                } elseif ( $available > 0 ) {
-                    return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $available ), __( 'days', 'wp-erp' ) );
+                    return sprintf( '<span class="red">%d %s</span>', number_format_i18n( $scheduled ), __( 'days', 'wp-erp' ) );
+                } elseif ( $scheduled > 0 ) {
+                    return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $scheduled ), __( 'days', 'wp-erp' ) );
                 } else {
                     return '-';
                 }
 
             case 'available':
-                return $scheduled ? sprintf( __( '%d days', 'wp-erp' ), number_format_i18n( $scheduled ) ) : '-';
+                return $available ? sprintf( __( '%d days', 'wp-erp' ), number_format_i18n( $available ) ) : '-';
 
             default:
                 return isset( $entitlement->$column_name ) ? $entitlement->$column_name : '';
@@ -143,7 +143,7 @@ class Entitlement_List_Table extends \WP_List_Table {
 
     /**
      * Trigger current action
-     * 
+     *
      * @return string
      */
     public function current_action() {
