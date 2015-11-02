@@ -1,5 +1,6 @@
 <div class="wrap erp erp-hr-leave-request-new">
     <div class="postbox">
+    
         <h3 class="hndle"><?php _e( 'New Leave Request', 'wp-erp');?></h3>
 
         <div class="inside">
