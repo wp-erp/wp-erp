@@ -1,10 +1,7 @@
 <div class="wrap erp erp-hr-leave-request-new">
     <div class="postbox">
-    
-        <h3 class="hndle"><?php _e( 'New Leave Request', 'wp-erp');?></h3>
-
+        <h3 class="hndle"><?php _e( 'New Leave Request', 'wp-erp' ); ?></h2>
         <div class="inside">
-
             <?php if ( isset( $_GET['msg'] ) ) {
 
                 if ( $_GET['msg'] == 'submitted' ) {
@@ -81,8 +78,8 @@
                 <?php wp_nonce_field( 'erp-leave-req-new' ); ?>
                 <?php submit_button( __( 'Submit Request', 'wp-erp' ), 'primary', 'submit', true, array( 'disabled' => 'disabled' )  ); ?>
             </form>
-        </div>
-    </div>
+        </div><!-- .inside-->
+    </div><!-- .postbox-->
 </div><!-- .wrap -->
 
 <?php erp_get_js_template( WPERP_HRM_JS_TMPL . '/leave-days.php', 'erp-leave-days' ); ?>
