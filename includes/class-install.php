@@ -21,7 +21,11 @@ class WeDevs_ERP_Installer {
     private $min_php = '5.4.0';
 
     /**
-     * Bind the events
+     * Binding all events
+     *
+     * @since 0.1
+     *
+     * @return void
      */
     function __construct() {
         register_activation_hook( WPERP_FILE, array( $this, 'activate' ) );
@@ -35,8 +39,11 @@ class WeDevs_ERP_Installer {
 
     /**
      * Placeholder for activation function
-     *
      * Nothing being called here yet.
+     *
+     * @since 0.1
+     *
+     * @return 0.1
      */
     public function activate() {
 
@@ -52,10 +59,13 @@ class WeDevs_ERP_Installer {
             wp_die( $error, 'Plugin Activation Error', array( 'response' => 200, 'back_link' => true ) );
         }
 
-        $this->create_tables();
-        $this->create_roles();
-
         update_option( 'wp_erp_version', erp_get_version() );
+
+        $this->create_tables();
+        $this->set_default_modules();
+        $this->create_roles();
+        $this->set_role();
+
 
         wp_schedule_event( time(), 'daily', 'erp_hr_policy_schedule' );
     }
@@ -83,18 +93,46 @@ class WeDevs_ERP_Installer {
         wp_clear_scheduled_hook( 'erp_hr_policy_schedule' );
     }
 
+    /**
+     * Welcome screen menu page cb
+     *
+     * @since 0.1
+     *
+     * @return void
+     */
     public function welcome_screen_menu() {
         add_dashboard_page( __( 'Welcome to WP ERP', 'wp-erp' ), 'WP ERP', 'read', 'wp-erp-welcome', array( $this, 'welcome_screen_content' ) );
     }
 
+    /**
+     * Welcome screen menu remove
+     *
+     * @since 0.1
+     *
+     * @return void
+     */
     public function welcome_screen_menu_remove() {
         remove_submenu_page( 'index.php', 'wp-erp-welcome' );
     }
 
+    /**
+     * Render welcome screen content
+     *
+     * @since 0.1
+     *
+     * @return void
+     */
     public function welcome_screen_content() {
         include WPERP_VIEWS . '/welcome-screen.php';
     }
 
+    /**
+     * Create necessary table for ERP & HRM
+     *
+     * @since 0.1
+     *
+     * @return  void
+     */
     public function create_tables() {
         global $wpdb;
 
@@ -369,8 +407,29 @@ class WeDevs_ERP_Installer {
 
     }
 
+    public function set_default_modules() {
+
+        if ( get_option( 'wp_erp_version' ) ) {
+            return ;
+        }
+
+        $default = [
+            'hrm' => [
+                'title'       => __( 'HR Management', 'wp-erp' ),
+                'slug'        => 'erp-hrm',
+                'description' => __( 'Human Resource Mnanagement', 'wp-erp' ),
+                'callback'    => '\WeDevs\ERP\HRM\Human_Resource',
+                'modules'     => apply_filters( 'erp_hr_modules', [ ] )
+            ]
+        ];
+
+        update_option( 'erp_modules', $defaults );
+    }
+
     /**
      * Create user roles and capabilities
+     *
+     * @since 0.1
      *
      * @return void
      */
@@ -382,6 +441,18 @@ class WeDevs_ERP_Installer {
                 add_role( $key, $role['name'], $role['capabilities'] );
             }
         }
+    }
+
+    /**
+     * Set erp_hr_manager role for admin user
+     *
+     * @since 0.1
+     *
+     * @return void
+     */
+    public function set_role() {
+        $user = wp_get_current_user();
+        $user->add_role('erp_hr_manager');
     }
 }
 

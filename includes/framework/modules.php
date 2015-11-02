@@ -130,10 +130,10 @@ class Modules {
      */
     public function is_module_active( $module_key ) {
         $modules = $this->get_active_modules();
-        
+
         if ( array_key_exists( $module_key, $modules ) ) {
             return true;
-        } 
+        }
 
         return false;
     }
@@ -146,7 +146,7 @@ class Modules {
      * @return array
      */
     public function get_active_modules() {
-        return get_option( 'erp_modules', array() );
+        return get_option( 'erp_modules', $this->modules['hrm'] );
     }
 
     /**
@@ -186,7 +186,7 @@ class Modules {
             case 'inactive':
                 return $this->get_inactive_modules();
                 break;
-            
+
             default:
                 return $this->get_modules();
                 break;

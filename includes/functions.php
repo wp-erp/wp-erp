@@ -441,7 +441,7 @@ function erp_get_option( $option_name, $section = false, $default = '' ) {
 
     if ( $section ) {
         $option = get_option( $section );
-       
+
         if ( isset( $option[$option_name] ) ) {
             return $option[$option_name];
         } else {
@@ -500,7 +500,7 @@ function erp_months_dropdown( $title = false ) {
  * @return string date
  */
 function erp_financial_start_date() {
-    return date( 'Y-m-d H:i:s', mktime( 0, 0, 0,  erp_get_option( 'gen_financial_month', 'erp_settings_general' ), 1 ) );
+    return date( 'Y-m-d H:i:s', mktime( 0, 0, 0,  erp_get_option( 'gen_financial_month', 'erp_settings_general', 1 ), 1 ) );
 }
 
 /**
