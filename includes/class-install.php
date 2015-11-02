@@ -59,13 +59,13 @@ class WeDevs_ERP_Installer {
             wp_die( $error, 'Plugin Activation Error', array( 'response' => 200, 'back_link' => true ) );
         }
 
-        update_option( 'wp_erp_version', erp_get_version() );
 
         $this->create_tables();
         $this->set_default_modules();
         $this->create_roles();
         $this->set_role();
 
+        update_option( 'wp_erp_version', erp_get_version() );
 
         wp_schedule_event( time(), 'daily', 'erp_hr_policy_schedule' );
     }
@@ -407,6 +407,13 @@ class WeDevs_ERP_Installer {
 
     }
 
+    /**
+     * Set default module for initial erp setup
+     *
+     * @since 0.1
+     *
+     * @return 0.1
+     */
     public function set_default_modules() {
 
         if ( get_option( 'wp_erp_version' ) ) {
@@ -423,7 +430,7 @@ class WeDevs_ERP_Installer {
             ]
         ];
 
-        update_option( 'erp_modules', $defaults );
+        update_option( 'erp_modules', $default );
     }
 
     /**

@@ -146,7 +146,7 @@ class Modules {
      * @return array
      */
     public function get_active_modules() {
-        return get_option( 'erp_modules', $this->modules['hrm'] );
+        return get_option( 'erp_modules', [] );
     }
 
     /**
