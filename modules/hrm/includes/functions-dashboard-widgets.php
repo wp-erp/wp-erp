@@ -8,6 +8,7 @@ function erp_hr_dashboard_widget_birthday_callback() {
 }
 
 function erp_hr_dashboard_widget_announcement_callback() {
+    erp_admin_dash_metabox( __( '<i class="fa fa-calendar-o"></i> My Leave Calendar', 'wp-erp' ), 'erp_hr_dashboard_widget_leave_calendar' );
     erp_admin_dash_metabox( __( '<i class="fa fa-microphone"></i> Latest Announcement', 'wp-erp' ), 'erp_hr_dashboard_widget_latest_announcement' );
 }
 
@@ -71,13 +72,13 @@ function erp_hr_dashboard_widget_birthday() {
 /**
  * Latest Announcement Widget
  *
- * @since 0.1 
- * 
- * @return void 
+ * @since 0.1
+ *
+ * @return void
  */
 function erp_hr_dashboard_widget_latest_announcement() {
     $announcements = erp_hr_employee_dashboard_announcement( get_current_user_id() );
-    
+
     if ( $announcements ) {
     ?>
       <ul class="erp-list erp-dashboard-announcement">
@@ -91,10 +92,10 @@ function erp_hr_dashboard_widget_latest_announcement() {
                 <div class="announcement-row-actions">
                     <a href="#" class="mark-read erp-tips" title="<?php _e( 'Mark as Read', 'wp-erp' ); ?>" data-row_id="<?php echo $announcement->id; ?>"><i class="fa fa-circle-o-notch"></i></a>
                     <a href="#" class="view-full erp-tips" title="<?php _e( 'View full announcement', 'wp-erp' ); ?>" data-row_id="<?php echo $announcement->post_id; ?>"><i class="fa fa-book"></i></a>
-                </div>           
-            </li>        
-        <?php endforeach ?>    
-    </ul>  
+                </div>
+            </li>
+        <?php endforeach ?>
+    </ul>
     <?php
     } else {
         _e( 'No announcement found', 'wp-erp' );
@@ -104,9 +105,9 @@ function erp_hr_dashboard_widget_latest_announcement() {
 /**
  * Erp dashboard who is out widget
  *
- * @since 0.1 
- * 
- * @return void 
+ * @since 0.1
+ *
+ * @return void
  */
 function erp_hr_dashboard_widget_whoisout() {
     $leave_requests           = erp_hr_get_current_month_leave_list();
@@ -142,6 +143,95 @@ function erp_hr_dashboard_widget_whoisout() {
         <?php _e( 'No one is vacation on next month', 'wp-erp' ); ?>
     <?php endif ?>
 
+    <?php
+}
+
+/**
+ * ERP dashboard leave calendar widget
+ *
+ * @since 0.1
+ *
+ * @return void
+ */
+function erp_hr_dashboard_widget_leave_calendar() {
+
+    $leave_requests = erp_hr_get_calendar_leave_events( false, get_current_user_id() );
+    $holidays       = erp_array_to_object( \WeDevs\ERP\HRM\Models\Leave_Holiday::all()->toArray() );
+    $events         = [];
+    $holiday_events = [];
+    $event_data     = [];
+
+    foreach ( $leave_requests as $key => $leave_request ) {
+        $events[] = array(
+            'id'        => $leave_request->id,
+            'title'     => $leave_request->display_name,
+            'start'     => $leave_request->start_date,
+            'end'       => $leave_request->end_date,
+            'url'       => erp_hr_url_single_employee( $leave_request->user_id ),
+            'color'     => $leave_request->color,
+            'img'       => get_avatar( $leave_request->user_id, 16 )
+        );
+    }
+
+    foreach ( $holidays as $key => $holiday ) {
+        $holiday_events[] = [
+            'id'        => $holiday->id,
+            'title'     => $holiday->title,
+            'start'     => $holiday->start,
+            'end'       => $holiday->end,
+            'color'     => '#FF5354',
+            'img'       => '',
+            'holiday'   => true
+        ];
+    }
+
+    $event_data = array_merge( $events, $holiday_events );
+
+    ?>
+    <style>
+        .fc-time {
+            display:none;
+        }
+        .erp-leave-avatar img {
+            border-radius: 50%;
+            margin: 3px 7px 0 0;
+
+        }
+        .erp-calendar-filter {
+            margin: 15px 0px;
+        }
+        .fc-title {
+            position: relative;
+            top: -4px;
+        }
+    </style>
+
+    <div id="erp-hr-calendar"></div>
+
+    <script>
+    ;jQuery(document).ready(function($) {
+
+        $('#erp-hr-calendar').fullCalendar({
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+            editable: false,
+            eventLimit: true, // allow "more" link when too many events
+            events: <?php echo json_encode( $event_data ); ?>,
+            eventRender: function(event, element, calEvent) {
+                if ( event.holiday ) {
+                    element.find('.fc-content').find('.fc-title').css({ 'top':'0px', 'left' : '3px', 'fontSize' : '13px', 'padding':'2px' });
+                };
+                if( event.img != 'undefined' ) {
+                    element.find('.fc-content').find('.fc-title').before( $("<span class=\"fc-event-icons erp-leave-avatar\">"+event.img+"</span>") );
+                }
+            },
+        });
+    });
+
+</script>
     <?php
 }
 

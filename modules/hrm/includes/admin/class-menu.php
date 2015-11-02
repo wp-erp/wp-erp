@@ -24,7 +24,7 @@ class Admin_Menu {
         /** HR Management **/
         add_menu_page( __( 'Human Resource', 'wp-erp' ), __( 'HR Management', 'wp-erp' ), 'erp_list_employee', 'erp-hr', array( $this, 'dashboard_page' ), 'dashicons-groups', null );
 
-        add_submenu_page( 'erp-hr', __( 'Overview', 'wp-erp' ), __( 'Overview', 'wp-erp' ), 'erp_list_employee', 'erp-hr', array( $this, 'dashboard_page' ) );
+        $overview = add_submenu_page( 'erp-hr', __( 'Overview', 'wp-erp' ), __( 'Overview', 'wp-erp' ), 'erp_list_employee', 'erp-hr', array( $this, 'dashboard_page' ) );
         add_submenu_page( 'erp-hr', __( 'Employees', 'wp-erp' ), __( 'Employees', 'wp-erp' ), 'erp_list_employee', 'erp-hr-employee', array( $this, 'employee_page' ) );
 
         if ( current_user_can( 'employee' ) ) {
@@ -46,6 +46,7 @@ class Admin_Menu {
         $calendar = add_submenu_page( 'erp-leave', __( 'Calendar', 'wp-erp' ), __( 'Calendar', 'wp-erp' ), 'erp_leave_manage', 'erp-leave-calendar', array( $this, 'leave_calendar_page' ) );
         // add_submenu_page( 'erp-leave', __( 'Leave Calendar', 'wp-erp' ), __( 'Leave Calendar', 'wp-erp' ), 'manage_options', 'erp-leave-calendar', array( $this, 'empty_page' ) );
 
+        add_action( 'admin_print_styles-' . $overview, array( $this, 'hr_calendar_script' ) );
         add_action( 'admin_print_styles-' . $calendar, array( $this, 'hr_calendar_script' ) );
     }
 

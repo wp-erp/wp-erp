@@ -40,7 +40,6 @@ foreach ( $leave_requests as $key => $leave_request ) {
 
     <div class="tablenav top erp-calendar-filter">
         <form method="post" action="">
-
              <?php
                 erp_html_form_input( array(
                     'name'        => 'department',
@@ -67,11 +66,8 @@ foreach ( $leave_requests as $key => $leave_request ) {
     <div id="erp-hr-calendar"></div>
 </div>
 
-
-
 <script>
     ;jQuery(document).ready(function($) {
-
         $('#erp-hr-calendar').fullCalendar({
             header: {
                 left: 'prev,next today',
@@ -80,9 +76,8 @@ foreach ( $leave_requests as $key => $leave_request ) {
             },
             editable: false,
             eventLimit: true, // allow "more" link when too many events
-            events: <?php echo json_encode($events); ?>,
-            eventRender: function(event, element, calEvent) {
-
+            events: <?php echo json_encode( $events ); ?>,
+            eventRender: function( event, element, calEvent ) {
                 if( event.img != 'undefined' ) {
                     element.find('.fc-content').find('.fc-title').before( $("<span class=\"fc-event-icons erp-leave-avatar\">"+event.img+"</span>") );
                 }

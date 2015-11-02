@@ -1248,7 +1248,7 @@ function erp_hr_apply_entitlement_yearly() {
  *
  * @return array
  */
-function erp_hr_get_calendar_leave_events( $get ) {
+function erp_hr_get_calendar_leave_events( $get = false, $user_id = false ) {
 
     global $wpdb;
 
@@ -1264,11 +1264,15 @@ function erp_hr_get_calendar_leave_events( $get ) {
     $designation   = isset( $get['designation'] ) && ! empty( $get['designation'] ) && $get['designation'] != '-1' ? intval( $get['designation'] ) : false;
 
     if ( ! $get ) {
-        return  erp_array_to_object( $leave_request->leftJoin( $users_tb, $request_tb . '.user_id', '=', $users_tb . '.ID' )
+        $request = $leave_request->leftJoin( $users_tb, $request_tb . '.user_id', '=', $users_tb . '.ID' )
                 ->leftJoin( $policy_tb, $request_tb . '.policy_id', '=', $policy_tb . '.id' )
-                ->select( $users_tb . '.display_name', $request_tb . '.*', $policy_tb . '.color' )
-                ->get()
-                ->toArray() );
+                ->select( $users_tb . '.display_name', $request_tb . '.*', $policy_tb . '.color' );
+
+        if ( $user_id ) {
+            $request = $request->where( $request_tb . '.user_id', $user_id );
+        }
+
+        return  erp_array_to_object( $request->get()->toArray() );
     }
 
     if ( $department && $designation ) {
@@ -1295,7 +1299,6 @@ function erp_hr_get_calendar_leave_events( $get ) {
                 ->select( $users_tb . '.display_name', $request_tb . '.*', $policy_tb . '.color' )
                 ->where( $employee_tb . '.department', '=', $department )
                 ->get()
-
                 ->toArray() );
     }
 
