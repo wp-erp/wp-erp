@@ -104,7 +104,7 @@
             markAnnouncementRead: function(e) {
                 e.preventDefault();
                 var self = $(this);
-                
+
                 if ( ! self.closest( 'li' ).hasClass('unread') ) {
                     return;
                 }
@@ -139,7 +139,7 @@
                             id: 'erp-hr-announcement',
                             content: '<p>'+ res.content +'</p>',
                             extraClass: 'midium',
-                        }); 
+                        });
                     },
                     error: function(error) {
                         alert( error );
@@ -250,6 +250,7 @@
                                 $('#dept-title', modal).val( response.name );
                                 $('#dept-desc', modal).val( response.data.description );
                                 $('#dept-parent', modal).val( response.data.parent );
+                                $('#dept-lead', modal).val( response.data.lead );
                                 $('#dept-id', modal).val( response.id );
                                 $('#dept-action', modal).val( 'erp-hr-update-dept' );
 

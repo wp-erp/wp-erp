@@ -15,7 +15,6 @@ class Department extends \WeDevs\ERP\Item {
      * @return object  wpdb object
      */
     protected function get_by_id( $department_id ) {
-
         return \WeDevs\ERP\HRM\Models\Department::find( $department_id );
     }
 
@@ -34,9 +33,9 @@ class Department extends \WeDevs\ERP\Item {
      * @return string
      */
     public function get_lead() {
-        
+
         $employee = new Employee( intval( $this->lead ) );
-       
+
         if ( ! $employee->id ) {
             return false;
         }
@@ -60,7 +59,7 @@ class Department extends \WeDevs\ERP\Item {
             $parent_id = $this->get_parent_id( $parent_id );
             $depth++;
         }
-     
+
         return $depth;
     }
 

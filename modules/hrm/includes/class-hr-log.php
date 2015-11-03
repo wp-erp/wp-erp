@@ -121,49 +121,63 @@ class Hr_Log {
         ]);
     }
 
+    /**
+     * Add log when udpate department
+     *
+     * @since 0.1
+     *
+     * @param  integer $dept_id
+     * @param  array $fields
+     *
+     * @return void
+     */
     public function update_department( $dept_id, $fields ) {
 
         if ( ! $dept_id ) {
             return;
         }
 
-        // $old_department = \WeDevs\ERP\HRM\Models\Department::find( $dept_id )->toArray();
-        // unset( $old_holiday['created_at'], $old_holiday['updated_at'] );
+        $old_department = \WeDevs\ERP\HRM\Models\Department::find( $dept_id )->toArray();
+        unset( $old_department['created_at'], $old_department['updated_at'] );
 
-        // $old_holiday['start'] = erp_format_date( $old_holiday['start'], 'Y-m-d' );
-        // $old_holiday['end'] = erp_format_date( $old_holiday['end'], 'Y-m-d' );
+        $changes = $this->get_array_diff( $fields, $old_department, true );
 
+        if ( empty( $changes['old_val'] ) && empty( $changes['new_val'] ) ) {
+            $message = __( 'No Changes', 'wp-erp' );
+        } else {
+            $message = sprintf( '%s department has been edited', $old_department['title'] );
+        }
 
-        // $changes = $this->get_array_diff( $fields, $old_holiday, true );
+        array_walk ( $changes, function ( &$key ) {
+            if ( isset( $key['lead'] ) ) {
+                if( $key['lead'] ) {
+                    $employee = new \WeDevs\ERP\HRM\Employee( intval( $key['lead'] ) );
+                    $key['department_lead'] = $employee->get_full_name();
+                } else {
+                    $key['department_lead'] = 'No deparment leader';
+                }
+                unset( $key['lead'] );
+            }
 
-        // if ( empty( $changes['old_val'] ) && empty( $changes['new_val'] ) ) {
-        //  $message = __( 'No Changes', 'wp-erp' );
-        // } else {
-        //  $message = sprintf( '%s holiday has been edited', $old_holiday['title'] );
-        // }
+            if ( isset( $key['parent'] ) ) {
+                if( $key['parent'] ) {
+                    $department = new \WeDevs\ERP\HRM\Department( intval( $key['parent'] ) );
+                    $key['parent_department'] = $department->title;
+                } else {
+                    $key['parent_department'] = 'No Parent Department';
+                }
+                unset( $key['parent'] );
+            }
+        } );
 
-        // array_walk ( $changes, function ( &$key ) {
-
-        //  if ( isset( $key['start'] ) ) {
-        //      $key['start_date'] = erp_format_date( $key['start'] );
-        //      unset( $key['start'] );
-        //  }
-
-        //  if ( isset( $key['end'] ) ) {
-        //      $key['end_date'] = erp_format_date( $key['end'] );
-        //      unset( $key['end'] );
-        //  }
-
-        // } );
-
-        // erp_log()->add([
-        //  'sub_component' => 'leave',
-        //  'message'       => $message,
-        //  'created_by'    => get_current_user_id(),
-        //  'changetype'    => 'edit',
-        //  'old_value'     => base64_encode( maybe_serialize( $changes['old_val'] ) ),
-        //  'new_value'     => base64_encode( maybe_serialize( $changes['new_val'] ) )
-        // ]);
+        erp_log()->add([
+            'sub_component' => 'department',
+            'message'       => $message,
+            'created_by'    => get_current_user_id(),
+            'changetype'    => 'edit',
+            'old_value'     => base64_encode( maybe_serialize( $changes['old_val'] ) ),
+            'new_value'     => base64_encode( maybe_serialize( $changes['new_val'] ) )
+        ]);
 
     }
 
