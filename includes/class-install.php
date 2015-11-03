@@ -382,7 +382,31 @@ class WeDevs_ERP_Installer {
                `post_id` bigint(11) NOT NULL,
                `status` varchar(30) NOT NULL,
               PRIMARY KEY (id)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",
+            ) $collate;",
+
+            "CREATE TABLE `{$wpdb->prefix}erp_peoples` (
+              `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+              `first_name` varchar(50) DEFAULT NULL,
+              `last_name` varchar(50) DEFAULT NULL,
+              `company` varchar(50) DEFAULT NULL,
+              `email` varchar(50) DEFAULT NULL,
+              `phone` varchar(50) DEFAULT NULL,
+              `mobile` varchar(50) DEFAULT NULL,
+              `other` varchar(50) DEFAULT NULL,
+              `website` varchar(50) DEFAULT NULL,
+              `fax` varchar(50) DEFAULT NULL,
+              `notes` text,
+              `street_1` varchar(200) DEFAULT NULL,
+              `city` varchar(80) DEFAULT NULL,
+              `state` varchar(50) DEFAULT NULL,
+              `postal_code` varchar(15) DEFAULT NULL,
+              `country` varchar(20) DEFAULT NULL,
+              `currency` varchar(5) DEFAULT NULL,
+              `type` varchar(10) NOT NULL DEFAULT 'customer',
+              `created` datetime DEFAULT NULL,
+              PRIMARY KEY (`id`),
+              KEY `type` (`type`)
+            ) $collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_audit_log` (
               `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -396,7 +420,7 @@ class WeDevs_ERP_Installer {
               `created_at` datetime DEFAULT NULL,
               `updated_at` datetime DEFAULT NULL,
               PRIMARY KEY (`id`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
+            ) $collate;",
 
         ];
 
