@@ -25,7 +25,7 @@ class Hr_Log {
      */
     public function __construct() {
 
-        // Department @TODO Update Department
+        // Department
         $this->action( 'erp_hr_dept_new', 'create_department', 10, 2 );
         $this->action( 'erp_hr_dept_delete', 'delete_department', 10 );
         $this->action( 'erp_hr_dept_before_updated', 'update_department', 10, 2 );
@@ -38,6 +38,7 @@ class Hr_Log {
         //Leave Policy @TODO Update Policy
         $this->action( 'erp_hr_leave_policy_new', 'create_policy', 10, 2 );
         $this->action( 'erp_hr_leave_policy_delete', 'delete_policy', 10 );
+        $this->action( 'erp_hr_leave_before_policy_updated', 'update_policy', 10, 2 );
 
         //Holiday
         $this->action( 'erp_hr_new_holiday', 'create_holiday', 10, 2 );
@@ -145,38 +146,38 @@ class Hr_Log {
         if ( empty( $changes['old_val'] ) && empty( $changes['new_val'] ) ) {
             $message = __( 'No Changes', 'wp-erp' );
         } else {
+            array_walk ( $changes, function ( &$key ) {
+                if ( isset( $key['lead'] ) ) {
+                    if( $key['lead'] ) {
+                        $employee = new \WeDevs\ERP\HRM\Employee( intval( $key['lead'] ) );
+                        $key['department_lead'] = $employee->get_full_name();
+                    } else {
+                        $key['department_lead'] = 'No deparment leader';
+                    }
+                    unset( $key['lead'] );
+                }
+
+                if ( isset( $key['parent'] ) ) {
+                    if( $key['parent'] ) {
+                        $department = new \WeDevs\ERP\HRM\Department( intval( $key['parent'] ) );
+                        $key['parent_department'] = $department->title;
+                    } else {
+                        $key['parent_department'] = 'No Parent Department';
+                    }
+                    unset( $key['parent'] );
+                }
+            } );
+
             $message = sprintf( '%s department has been edited', $old_department['title'] );
         }
-
-        array_walk ( $changes, function ( &$key ) {
-            if ( isset( $key['lead'] ) ) {
-                if( $key['lead'] ) {
-                    $employee = new \WeDevs\ERP\HRM\Employee( intval( $key['lead'] ) );
-                    $key['department_lead'] = $employee->get_full_name();
-                } else {
-                    $key['department_lead'] = 'No deparment leader';
-                }
-                unset( $key['lead'] );
-            }
-
-            if ( isset( $key['parent'] ) ) {
-                if( $key['parent'] ) {
-                    $department = new \WeDevs\ERP\HRM\Department( intval( $key['parent'] ) );
-                    $key['parent_department'] = $department->title;
-                } else {
-                    $key['parent_department'] = 'No Parent Department';
-                }
-                unset( $key['parent'] );
-            }
-        } );
 
         erp_log()->add([
             'sub_component' => 'department',
             'message'       => $message,
             'created_by'    => get_current_user_id(),
             'changetype'    => 'edit',
-            'old_value'     => base64_encode( maybe_serialize( $changes['old_val'] ) ),
-            'new_value'     => base64_encode( maybe_serialize( $changes['new_val'] ) )
+            'old_value'     => $changes['old_val'] ? base64_encode( maybe_serialize( $changes['old_val'] ) ) : '',
+            'new_value'     => $changes['new_val'] ? base64_encode( maybe_serialize( $changes['new_val'] ) ) : ''
         ]);
 
     }
@@ -310,6 +311,20 @@ class Hr_Log {
     }
 
     /**
+     * Add log when udpate policy
+     *
+     * @since 0.1
+     *
+     * @param  integer $policy_id
+     * @param  array $fields
+     *
+     * @return void
+     */
+    public function update_policy( $policy_id, $fields ) {
+
+    }
+
+    /**
      * Create hoiliday log
      *
      * @since 0.1
@@ -373,6 +388,7 @@ class Hr_Log {
      * @return void
      */
     public function update_holiday( $holiday_id, $fields ) {
+
         if ( ! $holiday_id ) {
             return;
         }
@@ -381,39 +397,38 @@ class Hr_Log {
         unset( $old_holiday['created_at'], $old_holiday['updated_at'] );
 
         $old_holiday['start'] = erp_format_date( $old_holiday['start'], 'Y-m-d' );
-        $old_holiday['end'] = erp_format_date( $old_holiday['end'], 'Y-m-d' );
+        $old_holiday['end']   = erp_format_date( $old_holiday['end'], 'Y-m-d' );
 
+        $fields['start'] = erp_format_date( $fields['start'], 'Y-m-d' );
+        $fields['end']   = erp_format_date( $fields['end'], 'Y-m-d' );
 
         $changes = $this->get_array_diff( $fields, $old_holiday, true );
 
         if ( empty( $changes['old_val'] ) && empty( $changes['new_val'] ) ) {
             $message = __( 'No Changes', 'wp-erp' );
         } else {
+            array_walk ( $changes, function ( &$key ) {
+                if ( isset( $key['start'] ) ) {
+                    $key['start_date'] = erp_format_date( $key['start'] );
+                    unset( $key['start'] );
+                }
+
+                if ( isset( $key['end'] ) ) {
+                    $key['end_date'] = erp_format_date( $key['end'] );
+                    unset( $key['end'] );
+                }
+            } );
             $message = sprintf( '%s holiday has been edited', $old_holiday['title'] );
         }
-
-        array_walk ( $changes, function ( &$key ) {
-
-            if ( isset( $key['start'] ) ) {
-                $key['start_date'] = erp_format_date( $key['start'] );
-                unset( $key['start'] );
-            }
-
-            if ( isset( $key['end'] ) ) {
-                $key['end_date'] = erp_format_date( $key['end'] );
-                unset( $key['end'] );
-            }
-
-        } );
 
         erp_log()->add([
             'sub_component' => 'leave',
             'message'       => $message,
             'created_by'    => get_current_user_id(),
             'changetype'    => 'edit',
-            'old_value'     => base64_encode( maybe_serialize( $changes['old_val'] ) ),
-            'new_value'     => base64_encode( maybe_serialize( $changes['new_val'] ) )
-        ]);
+            'old_value'     => $changes['old_val'] ? base64_encode( maybe_serialize( $changes['old_val'] ) ) : '',
+            'new_value'     => $changes['new_val'] ? base64_encode( maybe_serialize( $changes['new_val'] ) ) : ''
+         ]);
 
     }
 

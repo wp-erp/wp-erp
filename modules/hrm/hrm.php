@@ -144,6 +144,7 @@ class Human_Resource {
                 'policy_create'      => __( 'Create Policy', 'wp-erp' ),
                 'holiday'            => __( 'Holiday', 'wp-erp' ),
                 'holiday_create'     => __( 'Create Holiday', 'wp-erp' ),
+                'holiday_update'     => __( 'Update Holiday', 'wp-erp' ),
                 'terminate'          => __( 'Terminate', 'wp-erp' ),
             ),
             'emp_upload_photo'   => __( 'Upload Employee Photo', 'wp-erp' ),

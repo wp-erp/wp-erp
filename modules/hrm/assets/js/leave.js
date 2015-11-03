@@ -57,7 +57,7 @@
         holiday: {
             checkRange: function() {
                 var self = $('input[name="range"]');
-                
+
                 if ( self.is(':checked') ) {
                     $('input[name="end_date"]').closest('.row').show();
                 } else {
@@ -67,7 +67,7 @@
 
             create: function(e) {
                 e.preventDefault();
-             
+
                 $.erpPopup({
                     title: wpErpHr.popup.holiday,
                     button: wpErpHr.popup.holiday_create,
@@ -89,7 +89,7 @@
                 var self = $(this);
                 $.erpPopup({
                     title: wpErpHr.popup.holiday,
-                    button: wpErpHr.popup.holiday_create,
+                    button: wpErpHr.popup.holiday_update,
                     id: 'erp-hr-holiday-create-popup',
                     content: wperp.template('erp-hr-holiday-js-tmp')({ data: null }).trim(),
                     extraClass: 'smaller',
@@ -107,17 +107,18 @@
                             success: function(response) {
                                 $( '.loader', modal).remove();
                                 var holiday = response.holiday[0];
-                             
-                                $('#erp-hr-holiday-title', modal).val( holiday.title );
-                                $('#erp-hr-holiday-start', modal).val( holiday.start );
-                                $('#erp-hr-holiday-end', modal).val( holiday.end );
-                                $('#erp-hr-holiday-id', modal).val( holiday.id );
-                                $('#erp-hr-holiday-description', modal).val( holiday.description );
-                                $('#erp-hr-holiday-action', modal).val( 'erp_hr_holiday_create' );
 
-                                // disable current one
-                                //$('#dept-parent option[value="' + self.data('id') + '"]', modal).attr( 'disabled', 'disabled' );
-                                
+                                $( '#erp-hr-holiday-title', modal ).val( holiday.title );
+                                $( '#erp-hr-holiday-start', modal ).val( holiday.start );
+                                $( '#erp-hr-holiday-end', modal ).val( holiday.end );
+                                $( '#erp-hr-holiday-id', modal ).val( holiday.id );
+                                $( '#erp-hr-holiday-description', modal ).val( holiday.description );
+                                $( '#erp-hr-holiday-action', modal ).val( 'erp_hr_holiday_create' );
+
+                                if ( holiday.start != holiday.end ) {
+                                    $( '#erp-hr-holiday-range' ).attr( 'checked', 'checked' );
+                                    $( '#erp-hr-holiday-range' ).trigger( 'change' );
+                                };
                             }
                         });
                     },
@@ -175,13 +176,13 @@
 
         policy: {
             periodField: function() {
-               
+
                 $('.erp-hr-leave-period').on( 'change', function() {
                     var self = $(this).val();
                     if ( self == 2 ) {
                         $('.showifschedule').slideDown();
                     } else {
-                        $('.showifschedule').slideUp(); 
+                        $('.showifschedule').slideUp();
                     };
                 });
             },
@@ -243,13 +244,13 @@
 
                             if ( selected !== '' ) {
                                 self.find( 'select' ).val( selected );
-                            }                            
+                            }
                         });
 
                         $( 'div.row[data-checked]', modal ).each(function( key, val ) {
                             var self = $(this),
                                 checked = self.data('checked');
-                                
+
                             if ( checked !== '' ) {
                                 self.find( 'input[value="'+checked+'"]' ).attr( 'checked', 'checked' );
                             }

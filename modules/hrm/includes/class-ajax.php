@@ -1050,21 +1050,23 @@ class Ajax_Handler {
 
         $holidays = erp_hr_get_holidays( array( 'number' => '-1' ) );
 
-        if ( !$holiday_id ) {
-            if ( $holidays ) {
-                foreach ( $holidays as $holiday ) {
-                    $prev_start = date( 'Y-m-d', strtotime( $holiday->start ) );
-                    $prev_end   = date( 'Y-m-d', strtotime( $holiday->end ) );
+        if ( $holidays ) {
+            foreach ( $holidays as $holiday ) {
+                $prev_start = date( 'Y-m-d', strtotime( $holiday->start ) );
+                $prev_end   = date( 'Y-m-d', strtotime( $holiday->end ) );
 
-                    if ( erp_check_date_range_in_range_exist( $prev_start, $prev_end, $start_date, $end_date ) ) {
-                        $error = new \WP_Error( 'msg', __( 'Holiday exist in your selected date', 'wp-erp' ) );
-                    }
+                if ( erp_check_date_range_in_range_exist( $prev_start, $prev_end, $start_date, $end_date ) && ( $holiday->id != $holiday_id ) ) {
+                    $error = new \WP_Error( 'msg', __( 'Holiday exist in your selected date', 'wp-erp' ) );
+                }
 
-                    if ( erp_check_date_range_in_range_exist( $start_date, $end_date, $prev_start, $prev_end ) ) {
-                        $error = new \WP_Error( 'msg', __( 'Holiday exist in your selected date', 'wp-erp' ) );
-                    }
+                if ( erp_check_date_range_in_range_exist( $start_date, $end_date, $prev_start, $prev_end ) && ( $holiday->id != $holiday_id ) ) {
+                    $error = new \WP_Error( 'msg', __( 'Holiday exist in your selected date', 'wp-erp' ) );
                 }
             }
+        }
+
+        if ( $range_status == 'off' ) {
+            $end_date = $start_date;
         }
 
         if ( is_wp_error( $error ) ) {

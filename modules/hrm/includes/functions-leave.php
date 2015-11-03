@@ -161,9 +161,10 @@ function erp_hr_leave_insert_policy( $args = array() ) {
         }
 
     } else {
-        // do update method here
+        do_action( 'erp_hr_leave_before_policy_updated', $policy_id, $args );
+
         if ( $leave_policies->find( $policy_id )->update( $args ) ) {
-            do_action( 'erp_hr_leave_policy_updated', $policy_id, $args );
+            do_action( 'erp_hr_leave_after_policy_updated', $policy_id, $args );
             return $policy_id;
         }
     }
