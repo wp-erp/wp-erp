@@ -177,6 +177,7 @@ final class WeDevs_ERP {
         require_once WPERP_INCLUDES . '/actions-filters.php';
         require_once WPERP_INCLUDES . '/functions-html.php';
         require_once WPERP_INCLUDES . '/functions-company.php';
+        require_once WPERP_INCLUDES . '/functions-people.php';
 
         if ( is_admin() ) {
             require_once WPERP_INCLUDES . '/admin/functions.php';
@@ -258,6 +259,8 @@ final class WeDevs_ERP {
 
         // Localize our plugin
         add_action( 'init', array( $this, 'localization_setup' ) );
+        add_action( 'init', array( $this, 'setup_database' ) );
+
         add_action( 'admin_enqueue_scripts', array( $this, 'init_script_register' ) );
     }
 
@@ -271,6 +274,17 @@ final class WeDevs_ERP {
     }
 
     /**
+     * Setup database related tasks
+     *
+     * @return void
+     */
+    public function setup_database() {
+        global $wpdb;
+
+        $wpdb->erp_peoplemeta = $wpdb->prefix . 'erp_peoplemeta';
+    }
+
+    /**
      * Load the current ERP module
      *
      * We don't load every module at once, just load
@@ -279,7 +293,7 @@ final class WeDevs_ERP {
      * @return void
      */
     public function load_module() {
-        $modules       = $this->modules->get_modules();
+        $modules = $this->modules->get_modules();
 
         if ( $modules ) {
             foreach ($modules as $key => $module) {

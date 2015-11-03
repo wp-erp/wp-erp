@@ -408,6 +408,14 @@ class WeDevs_ERP_Installer {
               KEY `type` (`type`)
             ) $collate;",
 
+            "CREATE TABLE `{$wpdb->prefix}erp_peoplemeta` (
+              `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+              `erp_people_id` bigint(20) DEFAULT NULL,
+              `meta_key` varchar(255) DEFAULT NULL,
+              `meta_value` longtext,
+              PRIMARY KEY (`id`)
+            ) $collate;",
+
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_audit_log` (
               `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
               `component` varchar(50) NOT NULL DEFAULT '',
