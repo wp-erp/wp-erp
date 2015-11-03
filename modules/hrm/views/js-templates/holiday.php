@@ -26,6 +26,7 @@
             'label'    => __( 'Range', 'wp-erp' ),
             'name'     => 'range',
             'value'    => '{{ data.range }}',
+            'id'       => 'erp-hr-holiday-range',
             'help'     => __( 'Enable', 'wp-erp' ),
             'type'     => 'checkbox',
             'class'    => 'erp-hr-holiday-date-range',
