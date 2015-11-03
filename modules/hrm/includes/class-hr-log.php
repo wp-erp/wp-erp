@@ -38,6 +38,7 @@ class Hr_Log {
         //Leave Policy @TODO Update Policy
         $this->action( 'erp_hr_leave_policy_new', 'create_policy', 10, 2 );
         $this->action( 'erp_hr_leave_policy_delete', 'delete_policy', 10 );
+        $this->action( 'erp_hr_leave_before_policy_updated', 'update_policy', 10, 2 );
 
         //Holiday
         $this->action( 'erp_hr_new_holiday', 'create_holiday', 10, 2 );
@@ -307,6 +308,20 @@ class Hr_Log {
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
         ]);
+    }
+
+    /**
+     * Add log when udpate policy
+     *
+     * @since 0.1
+     *
+     * @param  integer $policy_id
+     * @param  array $fields
+     *
+     * @return void
+     */
+    public function update_policy( $policy_id, $fields ) {
+
     }
 
     /**
