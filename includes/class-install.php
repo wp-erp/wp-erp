@@ -386,26 +386,39 @@ class WeDevs_ERP_Installer {
 
             "CREATE TABLE `{$wpdb->prefix}erp_peoples` (
               `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-              `first_name` varchar(50) DEFAULT NULL,
-              `last_name` varchar(50) DEFAULT NULL,
-              `company` varchar(50) DEFAULT NULL,
-              `email` varchar(50) DEFAULT NULL,
-              `phone` varchar(50) DEFAULT NULL,
-              `mobile` varchar(50) DEFAULT NULL,
+              `user_id` bigint(20) unsigned DEFAULT '0',
+              `first_name` varchar(60) DEFAULT NULL,
+              `last_name` varchar(60) DEFAULT NULL,
+              `company` varchar(60) DEFAULT NULL,
+              `email` varchar(100) DEFAULT NULL,
+              `phone` varchar(20) DEFAULT NULL,
+              `mobile` varchar(20) DEFAULT NULL,
               `other` varchar(50) DEFAULT NULL,
-              `website` varchar(50) DEFAULT NULL,
-              `fax` varchar(50) DEFAULT NULL,
+              `website` varchar(100) DEFAULT NULL,
+              `fax` varchar(20) DEFAULT NULL,
               `notes` text,
-              `street_1` varchar(200) DEFAULT NULL,
+              `street_1` varchar(255) DEFAULT NULL,
+              `street_2` varchar(255) DEFAULT NULL,
               `city` varchar(80) DEFAULT NULL,
               `state` varchar(50) DEFAULT NULL,
-              `postal_code` varchar(15) DEFAULT NULL,
+              `postal_code` varchar(10) DEFAULT NULL,
               `country` varchar(20) DEFAULT NULL,
               `currency` varchar(5) DEFAULT NULL,
               `type` varchar(10) NOT NULL DEFAULT 'customer',
               `created` datetime DEFAULT NULL,
               PRIMARY KEY (`id`),
-              KEY `type` (`type`)
+              KEY `type` (`type`),
+              KEY `user_id` (`user_id`)
+            ) $collate;",
+
+            "CREATE TABLE `{$wpdb->prefix}erp_peoplemeta` (
+              `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+              `erp_people_id` bigint(20) DEFAULT NULL,
+              `meta_key` varchar(255) DEFAULT NULL,
+              `meta_value` longtext,
+              PRIMARY KEY (`id`),
+              KEY `erp_people_id` (`erp_people_id`),
+              KEY `meta_key` (`meta_key`)
             ) $collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_audit_log` (
