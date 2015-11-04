@@ -295,16 +295,18 @@ final class WeDevs_ERP {
     public function load_module() {
         $modules = $this->modules->get_modules();
 
-        if ( $modules ) {
-            foreach ($modules as $key => $module) {
+        if ( ! $modules ) {
+            return;
+        }
+        
+        foreach ($modules as $key => $module) {
 
-                if ( ! $this->modules->is_module_active( $key ) ) {
-                    continue;
-                }
+            if ( ! $this->modules->is_module_active( $key ) ) {
+                continue;
+            }
 
-                if ( isset( $module['callback'] ) && class_exists( $module['callback'] ) ) {
-                    new $module['callback']( $this );
-                }
+            if ( isset( $module['callback'] ) && class_exists( $module['callback'] ) ) {
+                new $module['callback']( $this );
             }
         }
     }
