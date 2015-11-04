@@ -1,4 +1,101 @@
 <?php
+/**
+ * This is a file for peoples API
+ *
+ * Across the WP-ERP ecosystem, we will need various type of users who are not
+ * actually WordPress users. In CRM, Accounting and many other parts, we will
+ * need customers, clients, companies, vendors and many such type of users. This
+ * is basically a unified way of letting every other components to use the same
+ * functionality.
+ *
+ * Also we are taking advantange of WordPress metadata API to handle various
+ * unknown types of data using the meta_key/meta_value system.
+ */
+
+/**
+ * Get all peoples
+ *
+ * @since 1.0
+ *
+ * @param $args array
+ *
+ * @return array
+ */
+function erp_get_peoples( $args = [] ) {
+    global $wpdb;
+
+    $defaults = [
+        'type'    => 'customer',
+        'number'  => 20,
+        'offset'  => 0,
+        'orderby' => 'id',
+        'order'   => 'ASC',
+    ];
+
+    $args      = wp_parse_args( $args, $defaults );
+    $cache_key = 'people-' . $args['type'] . '-' . md5( serialize( $args ) );
+    $items     = wp_cache_get( $cache_key, 'wp-erp' );
+
+    if ( false === $items ) {
+        $limit = ( $args['number'] == '-1' ) ? '' : sprintf( ' LIMIT %d, %d', $args['offset'], $args['number'] );
+        $items = $wpdb->get_results( 'SELECT * FROM ' . $wpdb->prefix . 'erp_peoples
+                    WHERE type = "' . $args['type'] . '"
+                    ORDER BY ' . $args['orderby'] .' ' . $args['order'] .
+                    $limit );
+
+        wp_cache_set( $cache_key, $items, 'wp-erp' );
+    }
+
+    return $items;
+}
+
+/**
+ * Get users as array
+ *
+ * @since 1.0
+ *
+ * @param  array   $args
+ *
+ * @return array
+ */
+function erp_get_peoples_array( $args = [] ) {
+    $users   = [];
+    $peoples = erp_get_peoples( $args );
+
+    foreach ($peoples as $user) {
+        $users[ $user->id ] = $user->first_name . ' ' . $user->last_name;
+    }
+
+    return $users;
+}
+
+/**
+ * Fetch all customer from database
+ *
+ * @since 1.0
+ *
+ * @return array
+ */
+function erp_get_peoples_count( $type = 'customer' ) {
+    global $wpdb;
+
+    return (int) $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM ' . $wpdb->prefix . 'erp_peoples WHERE type = %s', $type ) );
+}
+
+/**
+ * Fetch a single customer from database
+ *
+ * @since 1.0
+ *
+ * @param int   $id
+ *
+ * @return array
+ */
+function erp_ac_get_customer( $id = 0 ) {
+    global $wpdb;
+
+    return $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . $wpdb->prefix . 'erp_peoples WHERE id = %d', $id ) );
+}
 
 /**
  * Add meta data field to a people.
