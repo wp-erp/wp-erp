@@ -526,3 +526,11 @@ function erp_log() {
     return \WeDevs\ERP\Log::instance();
 }
 
+/**
+ * Get people types from various components
+ *
+ * @return array
+ */
+function erp_get_people_types() {
+    return apply_filters( 'erp_people_types', [] );
+}

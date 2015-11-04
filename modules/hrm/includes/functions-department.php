@@ -120,10 +120,8 @@ function erp_hr_get_departments( $args = [] ) {
  * @return array  the department
  */
 function erp_hr_count_departments() {
-
     return \WeDevs\ERP\HRM\Models\Department::count();
 }
-
 
 /**
  * Delete a department
@@ -196,22 +194,4 @@ function erp_hr_get_departments_dropdown( $selected = '' ) {
     }
 
     return $dropdown;
-}
-
-
-function erp_elm_compare( $a, $b ) {
-
-    if ( $a->parent == 0 ) return -1;
-    if ( $b->parent == 0 ) return 1;
-
-    if ( $a->id == $b->parent ) return -1;
-    if ( $b->id == $a->parent ) return 1;
-
-    return 0;
-}
-
-
-function erp_short_heararchycal_elem( $elem ) {
-    usort( $elem, 'erp_elm_compare');
-    return $elem;
 }

@@ -56,7 +56,6 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-hr-emp-update-performance-goals', 'employee_update_performance' );
         $this->action( 'wp_ajax_erp-hr-emp-delete-performance', 'employee_delete_performance' );
 
-
         // work experience
         $this->action( 'wp_ajax_erp-hr-create-work-exp', 'employee_work_experience_create' );
         $this->action( 'wp_ajax_erp-hr-emp-delete-exp', 'employee_work_experience_delete' );

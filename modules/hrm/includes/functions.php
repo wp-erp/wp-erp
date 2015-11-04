@@ -33,7 +33,7 @@ function erp_hr_get_work_days_between_dates( $start_date, $end_date ) {
     $dates         = array( 'days' => array(), 'total' => 0 );
     $work_days     = erp_hr_get_work_days();
     $holiday_exist = erp_hr_leave_get_holiday_between_date_range( $start_date, $end_date );
-    
+
     foreach ($between_dates as $date) {
         $key       = strtolower( date( 'D', strtotime( $date ) ) );
         $is_holidy = ( $work_days[$key] === 0 ) ? true : false;
@@ -77,4 +77,31 @@ function erp_parent_sort( array $objects, array &$result=array(), $parent=0, $de
         }
     }
     return $result;
+}
+
+/**
+ * HR related people types
+ *
+ * @since 1.0
+ *
+ * @param  array $types
+ *
+ * @return array
+ */
+function erp_hr_people_types( $types ) {
+
+    $types['hr'] = [
+        'employee' => [
+            'label'    => __( 'Employee', 'wp-erp' ),
+            'sections' => [
+                'top'      => __( 'Top Area', 'wp-erp' ),
+                'basic'    => __( 'Basic Information', 'wp-erp' ),
+                'work'     => __( 'Work Information', 'wp-erp' ),
+                'personal' => __( 'Personal Information', 'wp-erp' ),
+                'bottom'   => __( 'Bottom Area', 'wp-erp' ),
+            ]
+        ]
+    ];
+
+    return apply_filters( 'erp_hr_people_types', $types );
 }
