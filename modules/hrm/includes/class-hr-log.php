@@ -550,14 +550,30 @@ class Hr_Log {
      * @return void
      */
     public function announcment_log( $new_status, $old_status, $post ) {
-
-        if ( 'erp_hr_announcement' == $post->post_type ) {
-            # code...
+        if ( 'erp_hr_announcement' != $post->post_type ) {
+            return;
         }
 
         if ( 'publish' !== $new_status ) {
             return;
         }
+
+        $overview = add_query_arg( array( 'page' => 'erp-hr' ), admin_url('admin.php') );
+
+        if ( 'publish' === $old_status ) {
+            $message     = sprintf( "<strong>%s</strong> announcement has been edited", $post->post_title );
+            $change_type = 'edit';
+        } else {
+            $message     = sprintf( "<strong>%s</strong> announcement has been created", $post->post_title );
+            $change_type = 'add';
+        }
+
+        erp_log()->add([
+            'sub_component' => 'announcement',
+            'message'       => $message,
+            'created_by'    => get_current_user_id(),
+            'changetype'    => $change_type,
+        ]);
 
     }
 
