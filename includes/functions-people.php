@@ -38,18 +38,18 @@ function erp_get_peoples( $args = [] ) {
 
     if ( false === $items ) {
         $people = new WeDevs\ERP\Framework\Models\People();
-        
+
         if ( $args['number'] != '-1' ) {
             $people = $people->skip( $args['offset'] )->take( $args['number'] );
         }
-        
+
         $items = $people->type( $args['type'] )
                 ->orderBy( $args['orderby'], $args['order'] )
                 ->get()
                 ->toArray();
-        
+
         $items = erp_array_to_object( $items );
-        
+
         wp_cache_set( $cache_key, $items, 'wp-erp' );
     }
 
@@ -117,7 +117,7 @@ function erp_get_people( $id = 0 ) {
         if ( $peep->id ) {
             $people = (object) $peep->toArray();
 
-            wp_cache_set( $cache_key, $peep, 'wp-erp' );
+            wp_cache_set( $cache_key, $people, 'wp-erp' );
         }
     }
 
