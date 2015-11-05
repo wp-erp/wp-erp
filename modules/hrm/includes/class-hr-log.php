@@ -92,7 +92,7 @@ class Hr_Log {
     public function create_department( $dept_id, $fields ) {
         erp_log()->add([
             'sub_component' => 'department',
-            'message'       => sprintf( '%s department has been created', $fields['title'] ),
+            'message'       => sprintf( '<strong>%s</strong> department has been created', $fields['title'] ),
             'created_by'    => get_current_user_id()
         ]);
     }
@@ -116,7 +116,7 @@ class Hr_Log {
 
         erp_log()->add([
             'sub_component' => 'department',
-            'message'       => sprintf( '%s department has been deleted', $department->title ),
+            'message'       => sprintf( '<strong>%s</strong> department has been deleted', $department->title ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
         ]);
@@ -144,7 +144,7 @@ class Hr_Log {
         $changes = $this->get_array_diff( $fields, $old_department, true );
 
         if ( empty( $changes['old_val'] ) && empty( $changes['new_val'] ) ) {
-            $message = __( 'No Changes', 'wp-erp' );
+            $message = false;
         } else {
             array_walk ( $changes, function ( &$key ) {
                 if ( isset( $key['lead'] ) ) {
@@ -168,17 +168,19 @@ class Hr_Log {
                 }
             } );
 
-            $message = sprintf( '%s department has been edited', $old_department['title'] );
+            $message = sprintf( '<strong>%s</strong> department has been edited', $old_department['title'] );
         }
 
-        erp_log()->add([
-            'sub_component' => 'department',
-            'message'       => $message,
-            'created_by'    => get_current_user_id(),
-            'changetype'    => 'edit',
-            'old_value'     => $changes['old_val'] ? base64_encode( maybe_serialize( $changes['old_val'] ) ) : '',
-            'new_value'     => $changes['new_val'] ? base64_encode( maybe_serialize( $changes['new_val'] ) ) : ''
-        ]);
+        if ( $message ) {
+            erp_log()->add([
+                'sub_component' => 'department',
+                'message'       => $message,
+                'created_by'    => get_current_user_id(),
+                'changetype'    => 'edit',
+                'old_value'     => $changes['old_val'] ? base64_encode( maybe_serialize( $changes['old_val'] ) ) : '',
+                'new_value'     => $changes['new_val'] ? base64_encode( maybe_serialize( $changes['new_val'] ) ) : ''
+            ]);
+        }
 
     }
 
@@ -195,7 +197,7 @@ class Hr_Log {
     public function create_designation( $desig_id, $fields ) {
         erp_log()->add([
             'sub_component' => 'designation',
-            'message'       => sprintf( '%s designation has been created', $fields['title'] ),
+            'message'       => sprintf( '<strong>%s</strong> designation has been created', $fields['title'] ),
             'created_by'    => get_current_user_id()
         ]);
     }
@@ -216,7 +218,7 @@ class Hr_Log {
 
         erp_log()->add([
             'sub_component' => 'designation',
-            'message'       => sprintf( '%s designation has been deleted', $desig->title ),
+            'message'       => sprintf( '<strong>%s</strong> designation has been deleted', $desig->title ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
         ]);
@@ -243,18 +245,21 @@ class Hr_Log {
         $changes = $this->get_array_diff( $fields, $old_desig );
 
         if ( empty( $changes['old_val'] ) && empty( $changes['new_val'] ) ) {
-            $message = __( 'No Changes', 'wp-erp' );
+            $message = false;
         } else {
-            $message = sprintf( '%s designation has been edited', $old_desig['title'] );
+            $message = sprintf( '<strong>%s</strong> designation has been edited', $old_desig['title'] );
         }
-        erp_log()->add([
-            'sub_component' => 'designation',
-            'message'       => $message,
-            'created_by'    => get_current_user_id(),
-            'changetype'    => 'edit',
-            'old_value'     => $changes['old_val'],
-            'new_value'     => $changes['new_val']
-        ]);
+
+        if ( $message ) {
+            erp_log()->add([
+                'sub_component' => 'designation',
+                'message'       => $message,
+                'created_by'    => get_current_user_id(),
+                'changetype'    => 'edit',
+                'old_value'     => $changes['old_val'],
+                'new_value'     => $changes['new_val']
+            ]);
+        }
     }
 
     /**
@@ -275,7 +280,7 @@ class Hr_Log {
 
         erp_log()->add([
             'sub_component' => 'leave',
-            'message'       => sprintf( '%s policy has been created', $fields['name'] ),
+            'message'       => sprintf( '<strong>%s</strong> policy has been created', $fields['name'] ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'add',
         ]);
@@ -304,7 +309,7 @@ class Hr_Log {
 
         erp_log()->add([
             'sub_component' => 'leave',
-            'message'       => sprintf( '%s policy has been deleted', $policy->name ),
+            'message'       => sprintf( '<strong>%s</strong> policy has been deleted', $policy->name ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
         ]);
@@ -321,6 +326,103 @@ class Hr_Log {
      * @return void
      */
     public function update_policy( $policy_id, $fields ) {
+
+        if ( ! $policy_id ) {
+            return;
+        }
+
+        $old_policy = \WeDevs\ERP\HRM\Models\Leave_Policies::find( $policy_id )->toArray();
+        unset( $old_policy['created_at'], $old_policy['updated_at'], $fields['instant_apply'] ) ;
+
+        $old_policy['effective_date'] = erp_format_date( $old_policy['effective_date'], 'Y-m-d' );
+        $fields['effective_date']     = erp_format_date( $fields['effective_date'], 'Y-m-d' );
+
+        if ( isset( $fields['activate'] ) && $fields['activate'] == 1 ) {
+            unset( $fields['execute_day'], $old_policy['execute_day'] );
+        }
+
+        $changes = $this->get_array_diff( $fields, $old_policy, true );
+
+        if ( empty( $changes['old_val'] ) && empty( $changes['new_val'] ) ) {
+            $message = false;
+        } else {
+            array_walk ( $changes, function ( &$key ) {
+
+                if ( isset( $key['color'] ) ) {
+                    $key['calender_color'] = sprintf( '<div style="width:60px; height:20px; background-color:%s"></div>', $key['color'] );
+                    unset( $key['color'] );
+                }
+
+                if ( isset( $key['department'] ) ) {
+                    if ( $key['department'] == '-1' ) {
+                        $key['department'] = __( 'All Department', 'wp-erp' );
+                    } else {
+                        $department = new \WeDevs\ERP\HRM\Department( intval( $key['department'] ) );
+                        $key['department'] = $department->title;
+                    }
+                }
+
+                if ( isset( $key['designation'] ) ) {
+                    if ( $key['designation'] == '-1' ) {
+                        $key['designation'] = __( 'All Designation', 'wp-erp' );
+                    } else {
+                        $designation = new \WeDevs\ERP\HRM\Designation( intval( $key['designation'] ) );
+                        $key['designation'] = $designation->title;
+                    }
+                }
+
+                if ( isset( $key['location'] ) ) {
+                    if ( $key['location'] == '-1' ) {
+                        $key['location'] = __( 'All Location', 'wp-erp' );
+                    } else {
+                        $location = erp_company_get_location_dropdown_raw();
+                        $key['location'] = $location[$key['location']];
+                    }
+                }
+
+                if ( isset( $key['gender'] ) ) {
+                    $gender = erp_hr_get_genders( __( 'All', 'wp-erp' ) );
+                    $key['gender'] = $gender[$key['gender']];
+                }
+
+                if ( isset( $key['marital'] ) ) {
+                    $marital = erp_hr_get_marital_statuses( __( 'All', 'wp-erp' ) );
+                    $key['marital'] = $marital[$key['marital']];
+                }
+
+                if ( isset( $key['activate'] ) ) {
+                    $activate = array( '1' => __( 'Immediately', 'wp-erp'), '2' => __('After X Days', 'wp-erp'), '3' => __( 'Manually', 'wp-erp') );
+
+                    if ( $key['activate'] == 2 ) {
+                        $key['activation']   = str_replace( 'X', $key['execute_day'], $activate[$key['activate']] );
+                    } else {
+                        $key['activation'] = $activate[$key['activate']];
+                    }
+
+                    unset( $key['activate'] );
+                    unset( $key['execute_day'] );
+                }
+
+                if ( isset( $key['effective_date'] ) ) {
+                    $key['policy_effective_date'] = erp_format_date( $key['effective_date'] );
+                    unset( $key['effective_date'] );
+                }
+
+            } );
+
+            $message = sprintf( '<strong>%s</strong> policy has been edited', $old_policy['name'] );
+        }
+
+        if ( $message ) {
+            erp_log()->add([
+                'sub_component' => 'leave',
+                'message'       => $message,
+                'created_by'    => get_current_user_id(),
+                'changetype'    => 'edit',
+                'old_value'     => $changes['old_val'] ? base64_encode( maybe_serialize( $changes['old_val'] ) ) : '',
+                'new_value'     => $changes['new_val'] ? base64_encode( maybe_serialize( $changes['new_val'] ) ) : ''
+            ]);
+        }
 
     }
 
@@ -342,7 +444,7 @@ class Hr_Log {
 
         erp_log()->add([
             'sub_component' => 'leave',
-            'message'       => sprintf( 'A new holiday named %s has been created', $fields['title'] ),
+            'message'       => sprintf( 'A new holiday named <strong>%s</strong> has been created', $fields['title'] ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'add',
         ]);
@@ -371,7 +473,7 @@ class Hr_Log {
 
         erp_log()->add([
             'sub_component' => 'leave',
-            'message'       => sprintf( '%s holiday has been deleted', $holiday->title ),
+            'message'       => sprintf( '<strong>%s</strong> holiday has been deleted', $holiday->title ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
         ]);
@@ -405,7 +507,7 @@ class Hr_Log {
         $changes = $this->get_array_diff( $fields, $old_holiday, true );
 
         if ( empty( $changes['old_val'] ) && empty( $changes['new_val'] ) ) {
-            $message = __( 'No Changes', 'wp-erp' );
+            $message = false;
         } else {
             array_walk ( $changes, function ( &$key ) {
                 if ( isset( $key['start'] ) ) {
@@ -418,18 +520,19 @@ class Hr_Log {
                     unset( $key['end'] );
                 }
             } );
-            $message = sprintf( '%s holiday has been edited', $old_holiday['title'] );
+            $message = sprintf( '<strong>%s</strong> holiday has been edited', $old_holiday['title'] );
         }
 
-        erp_log()->add([
-            'sub_component' => 'leave',
-            'message'       => $message,
-            'created_by'    => get_current_user_id(),
-            'changetype'    => 'edit',
-            'old_value'     => $changes['old_val'] ? base64_encode( maybe_serialize( $changes['old_val'] ) ) : '',
-            'new_value'     => $changes['new_val'] ? base64_encode( maybe_serialize( $changes['new_val'] ) ) : ''
-         ]);
-
+        if ( $message ) {
+            erp_log()->add([
+                'sub_component' => 'leave',
+                'message'       => $message,
+                'created_by'    => get_current_user_id(),
+                'changetype'    => 'edit',
+                'old_value'     => $changes['old_val'] ? base64_encode( maybe_serialize( $changes['old_val'] ) ) : '',
+                'new_value'     => $changes['new_val'] ? base64_encode( maybe_serialize( $changes['new_val'] ) ) : ''
+            ]);
+        }
     }
 
 }

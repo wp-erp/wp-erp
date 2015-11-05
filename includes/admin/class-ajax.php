@@ -57,7 +57,7 @@ class Ajax {
         if ( is_wp_error( $location_id ) ) {
             $this->send_error( $location_id->get_error_message() );
         }
-        
+
         $this->send_success( array( 'id' => $location_id, 'title' => $location_name ) );
     }
 
@@ -79,11 +79,11 @@ class Ajax {
     }
 
     public function view_edit_log_changes() {
-        
+
         $this->verify_nonce( 'wp-erp-hr-nonce' );
-        
+
         $log_id = intval( $_POST['id'] );
-        
+
         if ( ! $log_id ) {
             $this->send_error();
         }
@@ -116,8 +116,8 @@ class Ajax {
                     <?php foreach( $old_value as $key => $value ) { ?>
                         <tr class="<?php echo $i % 2 == 0 ? 'alternate' : 'odd'; ?>">
                             <td class="col-date"><?php echo ucfirst( str_replace('_', ' ', $key ) ); ?></td>
-                            <td><?php echo stripslashes( $value ); ?></td>
-                            <td><?php echo stripslashes( $new_value[$key] ); ?></td>
+                            <td><?php echo ( $value ) ? stripslashes( $value ) : '--'; ?></td>
+                            <td><?php echo ( $new_value[$key] ) ? stripslashes( $new_value[$key] ) : '--'; ?></td>
                         </tr>
                     <?php $i++; } ?>
                 </tbody>
@@ -125,7 +125,7 @@ class Ajax {
         </div>
         <?php
         $content = ob_get_clean();
-        
+
         $data = [
             'title' => __( 'Log changes', 'wp-erp' ),
             'content' => $content
