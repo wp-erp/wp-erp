@@ -44,6 +44,9 @@ class Hr_Log {
         $this->action( 'erp_hr_new_holiday', 'create_holiday', 10, 2 );
         $this->action( 'erp_hr_leave_holiday_delete', 'delete_holiday', 10 );
         $this->action( 'erp_hr_before_update_holiday', 'update_holiday', 10, 2 );
+
+        // Announcement
+        $this->action( 'transition_post_status', 'announcment_log', 10, 3 );
     }
 
     /**
@@ -533,6 +536,29 @@ class Hr_Log {
                 'new_value'     => $changes['new_val'] ? base64_encode( maybe_serialize( $changes['new_val'] ) ) : ''
             ]);
         }
+    }
+
+    /**
+     * Add log when announcement create or edit
+     *
+     * @since 0.1
+     *
+     * @param  string $new_status
+     * @param  string $old_status
+     * @param  object $post
+     *
+     * @return void
+     */
+    public function announcment_log( $new_status, $old_status, $post ) {
+
+        if ( 'erp_hr_announcement' == $post->post_type ) {
+            # code...
+        }
+
+        if ( 'publish' !== $new_status ) {
+            return;
+        }
+
     }
 
 }
