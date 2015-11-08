@@ -1006,7 +1006,6 @@ class Ajax_Handler {
         $location       = isset( $_POST['location'] ) ? $_POST['location'] : '';
         $instant_apply  = ( isset( $_POST['apply'] ) ) && ( $_POST['apply'] == 'on' ) ? true : false;
 
-
         $policy_id = erp_hr_leave_insert_policy( array(
             'id'             => $policy_id,
             'name'           => $name,
