@@ -33,15 +33,22 @@ function erp_get_peoples( $args = [] ) {
     ];
 
     $args      = wp_parse_args( $args, $defaults );
-    $cache_key = 'people-' . $args['type'] . '-' . md5( serialize( $args ) );
+    $cache_key = 'erp-people-' . $args['type'] . '-' . md5( serialize( $args ) );
     $items     = wp_cache_get( $cache_key, 'wp-erp' );
 
     if ( false === $items ) {
-        $limit = ( $args['number'] == '-1' ) ? '' : sprintf( ' LIMIT %d, %d', $args['offset'], $args['number'] );
-        $items = $wpdb->get_results( 'SELECT * FROM ' . $wpdb->prefix . 'erp_peoples
-                    WHERE type = "' . $args['type'] . '"
-                    ORDER BY ' . $args['orderby'] .' ' . $args['order'] .
-                    $limit );
+        $people = new WeDevs\ERP\Framework\Models\People();
+
+        if ( $args['number'] != '-1' ) {
+            $people = $people->skip( $args['offset'] )->take( $args['number'] );
+        }
+
+        $items = $people->type( $args['type'] )
+                ->orderBy( $args['orderby'], $args['order'] )
+                ->get()
+                ->toArray();
+
+        $items = erp_array_to_object( $items );
 
         wp_cache_set( $cache_key, $items, 'wp-erp' );
     }
@@ -70,20 +77,29 @@ function erp_get_peoples_array( $args = [] ) {
 }
 
 /**
- * Fetch all customer from database
+ * Fetch people count from database
  *
  * @since 1.0
  *
- * @return array
+ * @param string $type
+ *
+ * @return int
  */
 function erp_get_peoples_count( $type = 'customer' ) {
-    global $wpdb;
+    $cache_key = 'erp-people-count-' . $type;
+    $count     = wp_cache_get( $cache_key, 'wp-erp' );
 
-    return (int) $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM ' . $wpdb->prefix . 'erp_peoples WHERE type = %s', $type ) );
+    if ( false === $count ) {
+        $count = WeDevs\ERP\Framework\Models\People::type( $type )->count();
+
+        wp_cache_set( $cache_key, $count, 'wp-erp' );
+    }
+
+    return intval( $count );
 }
 
 /**
- * Fetch a single customer from database
+ * Fetch a single people from database
  *
  * @since 1.0
  *
@@ -91,10 +107,22 @@ function erp_get_peoples_count( $type = 'customer' ) {
  *
  * @return array
  */
-function erp_ac_get_customer( $id = 0 ) {
-    global $wpdb;
+function erp_get_people( $id = 0 ) {
+    $cache_key = 'erp-people-single-' . $id;
+    $people    = wp_cache_get( $cache_key, 'wp-erp' );
 
-    return $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . $wpdb->prefix . 'erp_peoples WHERE id = %d', $id ) );
+    if ( false === $people ) {
+        $peep = WeDevs\ERP\Framework\Models\People::find( $id );
+
+        if ( $peep->id ) {
+            $people = (object) $peep->toArray();
+
+            wp_cache_set( $cache_key, $people, 'wp-erp' );
+        }
+    }
+
+
+    return $people;
 }
 
 /**
