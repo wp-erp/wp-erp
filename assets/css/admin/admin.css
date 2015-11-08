@@ -582,6 +582,9 @@ table.erp-table.full-width {
 .erp table.form-table td {
   padding: 6px 10px;
 }
+.erp .erp-hr-new-leave-request-wrap {
+  margin: 20px 0px;
+}
 ul.erp-list {
   width: 100%;
 }

@@ -145,6 +145,8 @@ class Human_Resource {
                 'holiday'            => __( 'Holiday', 'wp-erp' ),
                 'holiday_create'     => __( 'Create Holiday', 'wp-erp' ),
                 'holiday_update'     => __( 'Update Holiday', 'wp-erp' ),
+                'new_leave_req'      => __( 'Leave Request', 'wp-erp' ),
+                'take_leave'         => __( 'Send Leve Request', 'wp-erp' ),
                 'terminate'          => __( 'Terminate', 'wp-erp' ),
             ),
             'emp_upload_photo'   => __( 'Upload Employee Photo', 'wp-erp' ),
@@ -184,6 +186,11 @@ class Human_Resource {
         // var_dump( $current_screen ); die();
 
         switch ($current_screen->base) {
+            case 'toplevel_page_erp-hr':
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-leave-request.php', 'erp-new-leave-req' );
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/leave-days.php', 'erp-leave-days' );
+                break;
+
             case 'hr-management_page_erp-hr-depts':
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-dept.php', 'erp-new-dept' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/row-dept.php', 'erp-dept-row' );

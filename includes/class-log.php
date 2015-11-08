@@ -5,12 +5,12 @@ namespace WeDevs\ERP;
 /**
 * ERP Log reporting class API
 *
-* @since 0.1 
+* @since 0.1
 *
 * @package wp-erp
 */
 class Log {
-	
+
 	/**
      * Initializes the Log class
      *
@@ -30,9 +30,9 @@ class Log {
     /**
      * Add a new log
      *
-     * @since 0.1 
-     * 
-     * @param array $data 
+     * @since 0.1
+     *
+     * @param array $data
      *
      * @return inserted_id
      */
@@ -43,10 +43,10 @@ class Log {
 	/**
 	 * Get logs base on criteria
 	 *
-	 * @since 0.1 
-	 * 
+	 * @since 0.1
+	 *
 	 * @param  array $data
-	 * 
+	 *
 	 * @return object [collection of log]
 	 */
 	public function get( $args = array() ) {
@@ -79,7 +79,7 @@ class Log {
 	    if ( isset( $args['new_value'] ) && ! empty( $args['new_value'] ) ) {
 	        $audit_log = $audit_log->where( 'new_value', $args['new_value'] );
 	    }
-		
+
 		if ( isset( $args['changetype'] ) && ! empty( $args['changetype'] ) ) {
 	        $audit_log = $audit_log->where( 'changetype', $args['changetype'] );
 	    }
@@ -108,14 +108,14 @@ class Log {
 	/**
 	 * Insert a new log record
 	 *
-	 * @since 0.1 
-	 * 
+	 * @since 0.1
+	 *
 	 * @param  array $args
-	 * 
+	 *
 	 * @return integer [inserted id]
 	 */
 	public function insert_log( $args ) {
-		
+
 		$defaults = array(
 			'component'     => 'HRM',
 			'sub_component' => '',
@@ -126,21 +126,22 @@ class Log {
 			'created_by'    => ''
 	    );
 
+
 	    $fields = wp_parse_args( $args, $defaults );
-	    
+
 	    do_action( 'erp_after_before_audit_log', $fields );
 
 	    $inserted = \WeDevs\ERP\Admin\Models\Audit_Log::create( $fields );
 
 	    do_action( 'erp_after_insert_audit_log', $inserted, $fields );
-	    
+
 	    return $inserted->id;
 	}
 
 	public function count( $args = array() ) {
-		
+
 	    $audit_log = new \WeDevs\ERP\Admin\Models\Audit_Log();
-	    
+
 	    if ( isset( $args['component'] ) && ! empty( $args['component'] ) ) {
 	        $audit_log = $audit_log->where( 'component', $args['component'] );
 	    }
@@ -156,7 +157,7 @@ class Log {
 	    if ( isset( $args['new_value'] ) && ! empty( $args['new_value'] ) ) {
 	        $audit_log = $audit_log->where( 'new_value', $args['new_value'] );
 	    }
-		
+
 		if ( isset( $args['changetype'] ) && ! empty( $args['changetype'] ) ) {
 	        $audit_log = $audit_log->where( 'changetype', $args['changetype'] );
 	    }
