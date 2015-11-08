@@ -140,10 +140,11 @@ class WeDevs_ERP_Installer {
 
         if ( $wpdb->has_cap( 'collation' ) ) {
             if ( ! empty($wpdb->charset ) ) {
-                    $collate .= "DEFAULT CHARACTER SET $wpdb->charset";
+                $collate .= "DEFAULT CHARACTER SET $wpdb->charset";
             }
+
             if ( ! empty($wpdb->collate ) ) {
-                    $collate .= " COLLATE $wpdb->collate";
+                $collate .= " COLLATE $wpdb->collate";
             }
         }
 
