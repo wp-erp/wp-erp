@@ -8,8 +8,8 @@ function erp_hr_dashboard_widget_birthday_callback() {
 }
 
 function erp_hr_dashboard_widget_announcement_callback() {
-    erp_admin_dash_metabox( __( '<i class="fa fa-calendar-o"></i> My Leave Calendar', 'wp-erp' ), 'erp_hr_dashboard_widget_leave_calendar' );
     erp_admin_dash_metabox( __( '<i class="fa fa-microphone"></i> Latest Announcement', 'wp-erp' ), 'erp_hr_dashboard_widget_latest_announcement' );
+    erp_admin_dash_metabox( __( '<i class="fa fa-calendar-o"></i> My Leave Calendar', 'wp-erp' ), 'erp_hr_dashboard_widget_leave_calendar' );
 }
 
 
@@ -205,6 +205,10 @@ function erp_hr_dashboard_widget_leave_calendar() {
             top: -4px;
         }
     </style>
+
+    <div class="erp-hr-new-leave-request-wrap">
+        <a href="#" class="button button-primary" id="erp-hr-new-leave-req"><?php _e( 'Take a Leave', 'wp-erp' ); ?></a>
+    </div>
 
     <div id="erp-hr-calendar"></div>
 

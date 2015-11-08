@@ -138,6 +138,6 @@
     <# } #>
 
     <?php wp_nonce_field( 'erp-leave-policy' ); ?>
-    <input type="hidden" name="action" value="erp-hr-leave-policy-create">
+    <input type="hidden" name="action" value="erp-leave-req-new">
     <input type="hidden" name="policy-id" value="{{ data.id }}">
 </div>

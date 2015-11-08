@@ -16,7 +16,8 @@
             // Dasboard Overview
             $( 'ul.erp-dashboard-announcement' ).on( 'click', 'a.mark-read', this.dashboard.markAnnouncementRead );
             $( 'ul.erp-dashboard-announcement' ).on( 'click', 'a.view-full', this.dashboard.viewAnnouncement );
-
+            $( '.hrm-dashboard' ).on( 'click', '.erp-hr-new-leave-request-wrap a#erp-hr-new-leave-req', this.dashboard.takeLeave );
+            $( 'body').on( 'change', '.erp-date-field', this.dashboard.requestDates );
             // Department
             $( 'body' ).on( 'click', 'a#erp-new-dept', this.department.create );
             $( '.erp-hr-depts' ).on( 'click', 'a.submitdelete', this.department.remove );
@@ -145,7 +146,68 @@
                         alert( error );
                     }
                 });
+            },
+
+            takeLeave: function(e) {
+                e.preventDefault();
+
+                $.erpPopup({
+                    title: wpErpHr.popup.new_leave_req,
+                    button: wpErpHr.popup.take_leave,
+                    id: 'erp-hr-new-leave-req-popup',
+                    content: wp.template( 'erp-new-leave-req' )().trim(),
+                    extraClass: 'smaller',
+                    onReady: function() {
+                        WeDevs_ERP_HR.initDateField();
+                    },
+                    onSubmit: function(modal) {
+                        wp.ajax.send( {
+                            data: this.serialize(),
+                            success: function(res) {
+                                modal.closeModal();
+                            },
+                            error: function(error) {
+                                alert( error );
+                            }
+                        });
+                    }
+                });
+            },
+
+            requestDates: function() {
+                var from = $('#leave_from').val(),
+                    to = $('#leave_to').val(),
+                    submit = $(this).closest('form').find('button[type=submit]'),
+                    user_id = parseInt( $( '#employee_id').val() ),
+                    type = $('#leave_policy').val();
+
+                    submit.attr( 'disabled', 'disabled' );
+
+                if ( from !== '' && to !== '' ) {
+
+                    wp.ajax.send( 'erp-hr-leave-request-req-date', {
+                        data: {
+                            '_wpnonce': wpErpHr.nonce,
+                            from: from,
+                            to: to,
+                            employee_id: user_id,
+                            type : type
+                        },
+                        success: function(resp) {
+                            var html = wp.template('erp-leave-days')(resp);
+
+                            $('div.show-days').html( html );
+                            submit.removeAttr('disabled');
+                        },
+                        error: function(response) {
+                            $('div.show-days').empty();
+                            submit.attr( 'disabled', 'disable' );
+                            alert( response );
+                        }
+                    });
+                }
             }
+
         },
 
         department: {
