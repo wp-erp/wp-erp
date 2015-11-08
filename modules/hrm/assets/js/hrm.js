@@ -17,7 +17,7 @@
             $( 'ul.erp-dashboard-announcement' ).on( 'click', 'a.mark-read', this.dashboard.markAnnouncementRead );
             $( 'ul.erp-dashboard-announcement' ).on( 'click', 'a.view-full', this.dashboard.viewAnnouncement );
             $( '.hrm-dashboard' ).on( 'click', '.erp-hr-new-leave-request-wrap a#erp-hr-new-leave-req', this.dashboard.takeLeave );
-            $( 'body').on( 'change', '.erp-date-field', this.dashboard.requestDates );
+            $( '.hrm-dashboard').on( 'change', '.erp-date-field', this.dashboard.requestDates );
             // Department
             $( 'body' ).on( 'click', 'a#erp-new-dept', this.department.create );
             $( '.erp-hr-depts' ).on( 'click', 'a.submitdelete', this.department.remove );
