@@ -126,6 +126,70 @@ function erp_get_people( $id = 0 ) {
 }
 
 /**
+ * Insert a new people
+ *
+ * @param array $args
+ *
+ * @return mixed integer on success, false otherwise
+ */
+function erp_insert_people( $args = array() ) {
+
+    $defaults = array(
+        'id'          => null,
+        'first_name'  => '',
+        'last_name'   => '',
+        'email'       => '',
+        'company'     => '',
+        'phone'       => '',
+        'mobile'      => '',
+        'other'       => '',
+        'website'     => '',
+        'fax'         => '',
+        'notes'       => '',
+        'street_1'    => '',
+        'city'        => '',
+        'state'       => '',
+        'postal_code' => '',
+        'country'     => '',
+        'currency'    => '',
+        'type'        => '',
+    );
+
+    $args = wp_parse_args( $args, $defaults );
+
+    // some basic validation
+    if ( empty( $args['first_name'] ) ) {
+        return new WP_Error( 'no-first_name', __( 'No First Name provided.', 'erp-accounting' ) );
+    }
+    if ( empty( $args['last_name'] ) ) {
+        return new WP_Error( 'no-last_name', __( 'No Last Name provided.', 'erp-accounting' ) );
+    }
+
+    // remove row id to determine if new or update
+    $row_id = (int) $args['id'];
+    unset( $args['id'] );
+
+    if ( ! $row_id ) {
+
+        $args['created'] = current_time( 'mysql' );
+
+        // insert a new
+        $people = WeDevs\ERP\Framework\Models\People::create( $args );
+        if ( $people->id ) {
+            return $people->id;
+        }
+
+    } else {
+
+        // do update method here
+        WeDevs\ERP\Framework\Models\People::find( $row_id )->update( $args );
+        return $row_id;
+    }
+
+    return false;
+}
+
+/**
  * Add meta data field to a people.
  *
  * @since 1.0
