@@ -255,6 +255,8 @@ if ( ! function_exists( 'trim_deep' ) ) {
  * @return void
  */
 function erp_print_key_value( $label, $value, $sep = ' : ' ) {
+    $value = empty( $value ) ? '&mdash;' : $value;
+
     printf( '<label>%s</label> <span class="sep">%s</span> <span class="value">%s</span>', $label, $sep, $value );
 }
 
