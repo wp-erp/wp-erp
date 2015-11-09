@@ -1119,23 +1119,29 @@ class Ajax_Handler {
      * @return void
      */
     public function leave_request_dates() {
+        
         $this->verify_nonce( 'wp-erp-hr-nonce' );
 
-        $id         = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : get_current_user_id();
-        $start_date = isset( $_POST['from'] ) ? sanitize_text_field( $_POST['from'] ) : date_i18n( 'Y-m-d' );
-        $end_date   = isset( $_POST['to'] ) ? sanitize_text_field( $_POST['to'] ) : date_i18n( 'Y-m-d' );
-        $type       = isset( $_POST['type'] ) && $_POST['type'] ? $_POST['type'] : false;
+        $id = isset( $_POST['employee_id'] ) && $_POST['employee_id'] ? intval( $_POST['employee_id'] ) : false;
 
-        $days = erp_hr_get_work_days_between_dates( $start_date, $end_date );
-
-
-        if ( is_wp_error( $days ) ) {
-            $this->send_error( $days->get_error_message() );
+        if ( ! $id ) {
+           $this->send_error( 'Please select employee', 'wp-erp' ); 
         }
 
-        // just a bit more readable date format
-        foreach ($days['days'] as &$date) {
-            $date['date'] = erp_format_date( $date['date'], 'D, M d' );
+        $policy_id = isset( $_POST['type'] ) && $_POST['type'] ? $_POST['type'] : false;
+
+        if ( ! $policy_id ) {
+            $this->send_error( 'Please select leave type', 'wp-erp' ); 
+        }
+        
+        $start_date           = isset( $_POST['from'] ) ? sanitize_text_field( $_POST['from'] ) : date_i18n( 'Y-m-d' );
+        $end_date             = isset( $_POST['to'] ) ? sanitize_text_field( $_POST['to'] ) : date_i18n( 'Y-m-d' );
+        $valid_date_range     = erp_hrm_is_valid_leave_date_range_within_financial_date_range( $start_date, $end_date );
+        $financial_start_date = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+        $financial_end_date   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+        
+        if ( ! $valid_date_range ) {
+            $this->send_error( sprintf( 'Date range must be within %s to %s', erp_format_date( $financial_start_date ), erp_format_date( $financial_end_date ) ) );
         }
 
         $leave_record_exisst = erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $id );
@@ -1143,11 +1149,23 @@ class Ajax_Handler {
         if ( $leave_record_exisst ) {
             $this->send_error(__( 'Leave recored found withing this range!', 'wp-erp' ) );
         }
-
-        $is_policy_valid = erp_hrm_is_valid_policy( $start_date, $end_date, $type, $id );
+        
+        $is_policy_valid = erp_hrm_is_valid_leave_duration( $start_date, $end_date, $policy_id, $id );
 
         if ( ! $is_policy_valid ) {
             $this->send_error(__( 'Your leave duration exceeded entitlement!', 'wp-erp' ) );
+        }
+
+        $days = erp_hr_get_work_days_between_dates( $start_date, $end_date );
+
+        if ( is_wp_error( $days ) ) {
+            $this->send_error( $days->get_error_message() );
+        }
+
+        // just a bit more readable date format
+        foreach ( $days['days'] as &$date ) {
+
+            $date['date'] = erp_format_date( $date['date'], 'D, M d' );
         }
 
         $days['total'] = sprintf( '%d %s', $days['total'], _n( 'day', 'days', $days['total'], 'wp-erp' ) );
