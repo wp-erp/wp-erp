@@ -17,6 +17,7 @@ class Form_Handler {
      * Hook 'em all
      */
     public function __construct() {
+
         add_action( 'erp_action_hr-leave-assign-policy', array( $this, 'leave_entitlement' ) );
         add_action( 'erp_action_hr-leave-req-new', array( $this, 'leave_request' ) );
 
@@ -410,6 +411,7 @@ class Form_Handler {
      * @return void
      */
     public function leave_request() {
+        
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-leave-req-new' ) ) {
             die( __( 'Something went wrong!', 'wp-erp' ) );
         }

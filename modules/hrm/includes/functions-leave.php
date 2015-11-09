@@ -3,6 +3,8 @@
 /**
  * Get holiday between two date
  *
+ * @since  0.1 
+ *
  * @param  date  $start_date
  * @param  date  $end_date
  *
@@ -46,14 +48,25 @@ function erp_hr_leave_get_holiday_between_date_range( $start_date, $end_date ) {
     return $extract;
 }
 
+/**
+ * Checking is user take leave within date rang in before
+ *
+ * @since  0.1 
+ * 
+ * @param  string $start_date 
+ * @param  string $end_date   
+ * @param  int $user_id  
+ *   
+ * @return boolean             
+ */
 function erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $user_id  ) {
+    
     $start_date = date( 'Y-m-d', strtotime( $start_date ) );
     $end_date   = date( 'Y-m-d', strtotime( $end_date ) );
 
     $holiday = new \WeDevs\ERP\HRM\Models\Leave_request();
 
     $holiday->where( 'user_id', '=', $user_id );
-
 
     $holiday = $holiday->where( function( $condition ) use( $start_date, $user_id ) {
         $condition->where( 'start_date', '<=', $start_date );
@@ -66,7 +79,6 @@ function erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $u
         $condition->where( 'end_date', '>=', $end_date );
         $condition->where( 'user_id', '=', $user_id );
     } );
-
 
     $holiday = $holiday->orWhere( function( $condition ) use( $start_date, $end_date, $user_id ) {
         $condition->where( 'start_date', '>=', $start_date );
@@ -95,22 +107,71 @@ function erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $u
     return $extract;
 }
 
-function erp_hrm_is_valid_policy( $start_date, $end_date, $type, $user_id ) {
-    if ( !$user_id || !$type ) {
+/**
+ * Check leave duration exist or not the plicy days
+ *
+ * @since  0.1 
+ * 
+ * @param  string $start_date 
+ * @param  string $end_date   
+ * @param  int $policy_id  
+ * @param  int $user_id 
+ *    
+ * @return boolean            
+ */
+function erp_hrm_is_valid_leave_duration( $start_date, $end_date, $policy_id, $user_id ) {
+    
+    if ( ! $user_id || ! $policy_id ) {
         return true;
     }
 
     $user_request = new \WeDevs\ERP\HRM\Models\Leave_request();
-    $policy      = new \WeDevs\ERP\HRM\Models\Leave_Policies();
+    $policy       = new \WeDevs\ERP\HRM\Models\Leave_Policies();
 
-    $user_request->where( array( 'user_id' => $user_id, 'policy' => $type ) );
+    $user_request = $user_request->where( function( $condition ) use( $start_date, $end_date, $user_id, $policy_id ) {
+        $start_date = date( 'Y-m-d', strtotime( $start_date ) );
+        $end_date   = date( 'Y-m-d', strtotime( $end_date ) );
 
-    $user_enti_count = $user_request->sum('days');
+        $condition->where( 'start_date', '<=', $start_date );
+        $condition->where( 'end_date', '>=', $end_date );
+        $condition->where( 'user_id', '=', $user_id );
+        $condition->where( 'policy_id', '=', $policy_id );
+    } );
 
-    $policy_count    = $policy->where( 'id', '=', $type )->pluck('value');
-    $apply_days      = count( erp_extract_dates( $start_date, $end_date ) ) + $user_enti_count;
+    $user_enti_count = $user_request->sum( 'days' );
+    $policy_count    = $policy->where( 'id', '=', $policy_id )->pluck('value');
+    $working_day     = erp_hr_get_work_days_without_off_day( $start_date, $end_date );//erp_hr_get_work_days_between_dates( $start_date, $end_date );erp_hr_get_work_days_without_holiday
+    $apply_days      = $working_day['total'] + $user_enti_count;
 
-    if ( $apply_days >=  $policy_count ) {
+    if ( $apply_days >  $policy_count ) {
+        return false;
+    }
+
+    return true;
+}
+
+/**
+ * Leave request time checking the apply date duration with the financial date duration 
+ *
+ * @since  0.1
+ * 
+ * @param  string $start_date 
+ * @param  string $end_date
+ *    
+ * @return boolean             
+ */
+function erp_hrm_is_valid_leave_date_range_within_financial_date_range( $start_date, $end_date ) {
+
+    $financial_start_date = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+    $financial_end_date   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+    $apply_start_date     = date( 'Y-m-d', strtotime( $start_date ) );
+    $apply_end_date       = date( 'Y-m-d', strtotime( $end_date ) );
+
+    if ( $financial_start_date > $apply_start_date ||  $apply_start_date > $financial_end_date ) {
+        return false;
+    }
+
+    if ( $financial_start_date > $apply_end_date ||  $apply_end_date > $financial_end_date ) {
         return false;
     }
 
