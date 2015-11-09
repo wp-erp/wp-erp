@@ -14,6 +14,8 @@
             $( '.erp-hr-leave-policy').on( 'click', 'a.link, span.edit a', self, this.policy.edit );
             $( '.erp-hr-leave-policy').on( 'click', 'a.submitdelete', self, this.policy.remove );
             $( '.erp-hr-leave-request-new').on( 'change', '.erp-date-field', self, this.leave.requestDates );
+            $( '.erp-hr-leave-request-new').on( 'change', '#employee_id, #leave_policy', self, this.leave.resetDateRange );
+
             $( '.erp-employee-single' ).on('submit', 'form#erp-hr-empl-leave-history', this.leave.showHistory );
             $( '.entitlement-list-table').on( 'click', 'a.submitdelete', self, this.entitlement.remove );
 
@@ -348,6 +350,12 @@
                         }
                     });
                 }
+            },
+
+            resetDateRange: function() {
+                $('#leave_from').val('');
+                $('#leave_to').val('');
+                $('li.show-days').html('');
             },
 
             showHistory: function(e) {
