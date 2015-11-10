@@ -323,6 +323,54 @@ table.leaves td.column-status .status-3 {
 .erp-hr-leave-request-new .show-days table.list-days tr:nth-child(2n+1) {
   background-color: #fff;
 }
+.erp-hr-leave-request-new.erp-hr-leave-reqs-wrap .row {
+  width: 400px;
+  margin: 10px 0px;
+}
+.erp-hr-leave-request-new.erp-hr-leave-reqs-wrap .row:before,
+.erp-hr-leave-request-new.erp-hr-leave-reqs-wrap .row:after {
+  content: " ";
+  display: table;
+}
+.erp-hr-leave-request-new.erp-hr-leave-reqs-wrap .row:after {
+  clear: both;
+}
+.erp-hr-leave-request-new.erp-hr-leave-reqs-wrap .row:before,
+.erp-hr-leave-request-new.erp-hr-leave-reqs-wrap .row:after {
+  content: " ";
+  display: table;
+}
+.erp-hr-leave-request-new.erp-hr-leave-reqs-wrap .row:after {
+  clear: both;
+}
+.erp-hr-leave-request-new.erp-hr-leave-reqs-wrap .row label {
+  display: block;
+  margin-bottom: 5px;
+}
+.erp-hr-leave-request-new.erp-hr-leave-reqs-wrap .row.two-col:before,
+.erp-hr-leave-request-new.erp-hr-leave-reqs-wrap .row.two-col:after {
+  content: " ";
+  display: table;
+}
+.erp-hr-leave-request-new.erp-hr-leave-reqs-wrap .row.two-col:after {
+  clear: both;
+}
+.erp-hr-leave-request-new.erp-hr-leave-reqs-wrap .row.two-col:before,
+.erp-hr-leave-request-new.erp-hr-leave-reqs-wrap .row.two-col:after {
+  content: " ";
+  display: table;
+}
+.erp-hr-leave-request-new.erp-hr-leave-reqs-wrap .row.two-col:after {
+  clear: both;
+}
+.erp-hr-leave-request-new.erp-hr-leave-reqs-wrap .row.two-col .cols {
+  float: left;
+  width: 48%;
+  margin-right: 2%;
+}
+.erp-hr-leave-request-new.erp-hr-leave-reqs-wrap .row.two-col .cols.last {
+  margin-right: 0;
+}
 /**
  * Employee notes tab
  */

@@ -1,4 +1,4 @@
-<div class="wrap erp erp-hr-leave-request-new">
+<div class="wrap erp erp-hr-leave-request-new erp-hr-leave-reqs-wrap">
     <div class="postbox">
         <h3 class="hndle"><?php _e( 'New Leave Request', 'wp-erp' ); ?></h2>
         <div class="inside">
@@ -14,40 +14,41 @@
 
             <form action="" method="post">
 
-                <ul class="erp-list blur blocked" style="width: 400px;">
-
                     <?php if ( current_user_can( 'manage_options' ) ) { ?>
-                        <li>
+                        <div class="row">
                             <?php erp_html_form_input( array(
                                 'label'    => __( 'Employee', 'wp-erp' ),
                                 'name'     => 'employee_id',
+                                'id'       => 'erp-hr-leave-req-employee-id',
                                 'value'    => '',
                                 'required' => true,
                                 'type'     => 'select',
                                 'options'  => erp_hr_get_employees_dropdown_raw()
                             ) ); ?>
-                        </li>
+                        </div>
                     <?php } ?>
 
-                    <li>
+                    <div class="row">
                         <?php erp_html_form_input( array(
                             'label'    => __( 'Leave Type', 'wp-erp' ),
                             'name'     => 'leave_policy',
+                            'id'       => 'erp-hr-leave-req-leave-policy',
                             'value'    => '',
                             'required' => true,
                             'type'     => 'select',
                             'options'  => array( '' => __( '- Select -', 'wp-erp' ) ) + erp_hr_leave_get_policies_dropdown_raw()
                         ) ); ?>
-                    </li>
+                    </div>
 
-                    <li class="two-col">
+                    <div class="row two-col">
                         <div class="cols">
                             <?php erp_html_form_input( array(
                                 'label'    => __( 'From', 'wp-erp' ),
                                 'name'     => 'leave_from',
+                                'id'       => 'erp-hr-leave-req-from-date',
                                 'value'    => '',
                                 'required' => true,
-                                'class'    => 'erp-date-field',
+                                'class'    => 'erp-leave-date-field',
                             ) ); ?>
                         </div>
 
@@ -55,23 +56,24 @@
                             <?php erp_html_form_input( array(
                                 'label'    => __( 'To', 'wp-erp' ),
                                 'name'     => 'leave_to',
+                                'id'       => 'erp-hr-leave-req-to-date',
                                 'value'    => '',
                                 'required' => true,
-                                'class'    => 'erp-date-field',
+                                'class'    => 'erp-leave-date-field',
                             ) ); ?>
                         </div>
-                    </li>
+                    </div>
 
-                    <li class="show-days"></li>
+                    <div class="row erp-hr-leave-req-show-days show-days"></div>
 
-                    <li>
+                    <div class="row">
                         <?php erp_html_form_input( array(
                             'label'       => __( 'Reason', 'wp-erp' ),
                             'name'        => 'leave_reason',
                             'type'        => 'textarea',
                             'custom_attr' => array( 'cols' => 30, 'rows' => 3 )
                         ) ); ?>
-                    </li>
+                    </div>
                 </ul>
 
                 <input type="hidden" name="erp-action" value="hr-leave-req-new">

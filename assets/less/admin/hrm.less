@@ -309,6 +309,34 @@ table.leaves {
             }
         }
     }
+
+    &.erp-hr-leave-reqs-wrap {
+
+        .row {
+            width: 400px;
+            margin: 10px 0px;
+            .clearfix();
+
+            label {
+                display:block;
+                margin-bottom: 5px;
+            }
+
+            &.two-col {
+                .clearfix();
+
+                .cols {
+                    float: left;
+                    width: 48%;
+                    margin-right: 2%;
+
+                    &.last {
+                        margin-right: 0;
+                    }
+                }
+            }
+        }
+    }
 }
 
 /**
@@ -411,7 +439,7 @@ table.leaves {
 }
 
 @media print {
-    
+
     .erp-hide-print {
         display: none !important;
     }

@@ -10,26 +10,26 @@
         initialize: function() {
             var self = this;
 
-            $( '.erp-hr-leave-policy').on( 'click', 'a#erp-leave-policy-new', self, this.policy.create );
-            $( '.erp-hr-leave-policy').on( 'click', 'a.link, span.edit a', self, this.policy.edit );
-            $( '.erp-hr-leave-policy').on( 'click', 'a.submitdelete', self, this.policy.remove );
-            $( '.erp-hr-leave-request-new').on( 'change', '.erp-date-field', self, this.leave.requestDates );
-            $( '.erp-hr-leave-request-new').on( 'change', '#employee_id, #leave_policy', self, this.leave.resetDateRange );
-
+            $( '.erp-hr-leave-policy' ).on( 'click', 'a#erp-leave-policy-new', self, this.policy.create );
+            $( '.erp-hr-leave-policy' ).on( 'click', 'a.link, span.edit a', self, this.policy.edit );
+            $( '.erp-hr-leave-policy' ).on( 'click', 'a.submitdelete', self, this.policy.remove );
+            $( 'body' ).on( 'change', '#erp-hr-leave-req-from-date, #erp-hr-leave-req-to-date', self, this.leave.requestDates );
+            $( 'body' ).on( 'change', '#erp-hr-leave-req-employee-id, #erp-hr-leave-req-leave-policy', self, this.leave.resetDateRange );
+            $( '.hrm-dashboard' ).on( 'click', '.erp-hr-new-leave-request-wrap a#erp-hr-new-leave-req', this.leave.takeLeave );
             $( '.erp-employee-single' ).on('submit', 'form#erp-hr-empl-leave-history', this.leave.showHistory );
-            $( '.entitlement-list-table').on( 'click', 'a.submitdelete', self, this.entitlement.remove );
+            $( '.entitlement-list-table' ).on( 'click', 'a.submitdelete', self, this.entitlement.remove );
 
             //Holiday
-            $( '.erp-hr-holiday-wrap').on( 'click', 'a#erp-hr-new-holiday', self, this.holiday.create );
-            $( '.erp-hr-holiday-wrap').on( 'click', '.erp-hr-holiday-edit', self, this.holiday.edit );
-            $( '.erp-hr-holiday-wrap').on( 'click', '.erp-hr-holiday-delete', self, this.holiday.remove );
-            $( 'body').on( 'change', '.erp-hr-holiday-date-range', self, this.holiday.checkRange );
+            $( '.erp-hr-holiday-wrap' ).on( 'click', 'a#erp-hr-new-holiday', self, this.holiday.create );
+            $( '.erp-hr-holiday-wrap' ).on( 'click', '.erp-hr-holiday-edit', self, this.holiday.edit );
+            $( '.erp-hr-holiday-wrap' ).on( 'click', '.erp-hr-holiday-delete', self, this.holiday.remove );
+            $( 'body' ).on( 'change', '.erp-hr-holiday-date-range', self, this.holiday.checkRange );
 
             this.initDateField();
         },
 
         initDateField: function() {
-            $( '.erp-leave-date-field').datepicker({
+            $( '.erp-leave-date-field' ).datepicker({
                 dateFormat: 'yy-mm-dd',
                 changeMonth: true,
                 changeYear: true
@@ -41,10 +41,10 @@
                 changeMonth: true,
                 numberOfMonths: 1,
                 onClose: function( selectedDate ) {
-
                     $( ".erp-leave-date-picker-to" ).datepicker( "option", "minDate", selectedDate );
                 }
             });
+
             $( ".erp-leave-date-picker-to" ).datepicker({
                 dateFormat: 'yy-mm-dd',
                 changeMonth: true,
@@ -320,12 +320,39 @@
         },
 
         leave: {
+
+            takeLeave: function(e) {
+                e.preventDefault();
+
+                $.erpPopup({
+                    title: wpErpHr.popup.new_leave_req,
+                    button: wpErpHr.popup.take_leave,
+                    id: 'erp-hr-new-leave-req-popup',
+                    content: wp.template( 'erp-new-leave-req' )().trim(),
+                    extraClass: 'smaller',
+                    onReady: function() {
+                        Leave.initDateField();
+                    },
+                    onSubmit: function(modal) {
+                        wp.ajax.send( {
+                            data: this.serialize(),
+                            success: function(res) {
+                                modal.closeModal();
+                            },
+                            error: function(error) {
+                                alert( error );
+                            }
+                        });
+                    }
+                });
+            },
+
             requestDates: function() {
-                var from = $('#leave_from').val(),
-                    to = $('#leave_to').val(),
+                var from = $('#erp-hr-leave-req-from-date').val(),
+                    to = $('#erp-hr-leave-req-to-date').val(),
                     submit = $(this).closest('form').find('input[type=submit]'),
-                    user_id = parseInt( $( '#employee_id').val() ),
-                    type = $('#leave_policy').val();
+                    user_id = parseInt( $( '#erp-hr-leave-req-employee-id').val() ),
+                    type = $('#erp-hr-leave-req-leave-policy').val();
 
                 if ( from !== '' && to !== '' ) {
 
@@ -340,11 +367,11 @@
                         success: function(resp) {
                             var html = wp.template('erp-leave-days')(resp);
 
-                            $('li.show-days').html( html );
+                            $('div.erp-hr-leave-req-show-days').html( html );
                             submit.removeAttr('disabled');
                         },
                         error: function(response) {
-                            $('li.show-days').empty();
+                            $('div.erp-hr-leave-req-show-days').empty();
                             submit.attr( 'disabled', 'disable' );
                             alert( response );
                         }
@@ -353,9 +380,9 @@
             },
 
             resetDateRange: function() {
-                $('#leave_from').val('');
-                $('#leave_to').val('');
-                $('li.show-days').html('');
+                $('#erp-hr-leave-req-from-date').val('');
+                $('#erp-hr-leave-req-to-date').val('');
+                $('div.erp-hr-leave-req-show-days').html('');
             },
 
             showHistory: function(e) {

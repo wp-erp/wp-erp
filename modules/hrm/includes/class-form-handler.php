@@ -35,7 +35,14 @@ class Form_Handler {
         add_action( 'load-leave_page_erp-leave-assign', array( $this, 'entitlement_bulk_action') );
     }
 
-    function handle_leave_calendar_filter() {
+    /**
+     * Hnadle leave calendar filter
+     *
+     * @since 0.1
+     *
+     * @return void
+     */
+    public function handle_leave_calendar_filter() {
         if ( ! isset( $_POST['erp_leave_calendar_filter'] ) ) {
             return;
         }
@@ -96,6 +103,13 @@ class Form_Handler {
         return true;
     }
 
+    /**
+     * Handle entitlement bulk actions
+     *
+     * @since 0.1
+     *
+     * @return void
+     */
     public function entitlement_bulk_action() {
         if ( ! $this->verify_current_page_screen( 'erp-leave-assign', 'bulk-entitlements' ) ) {
             return;
@@ -267,9 +281,11 @@ class Form_Handler {
     /**
      * Remove all holiday
      *
+     * @since 0.1
+     *
      * @return void
      */
-    function holiday_action() {
+    public function holiday_action() {
 
         if ( ! $this->verify_current_page_screen( 'erp-holiday-assign', 'bulk-holiday' ) ) {
             return;
@@ -284,15 +300,15 @@ class Form_Handler {
     }
 
     /**
-     * Holiday Remove
+     * Handle hoiday remove functionality
      *
      * @since 0.1
      *
-     * @param  [type] $get [description]
+     * @param array $get
      *
-     * @return [type]      [description]
+     * @return boolean
      */
-    function remove_holiday( $get ) {
+    public function remove_holiday( $get ) {
 
         if ( isset( $get['action'] ) && $get['action'] == 'trash' ) {
             if ( isset( $get['holiday_id'] ) ) {
@@ -314,9 +330,12 @@ class Form_Handler {
     /**
      * Add entitlement with leave policies to employees
      *
+     * @since 0.1
+     *
      * @return void
      */
     public function leave_entitlement() {
+
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-hr-leave-assign' ) ) {
             die( __( 'Something went wrong!', 'wp-erp' ) );
         }
@@ -408,10 +427,12 @@ class Form_Handler {
     /**
      * Submit a new leave request
      *
+     * @since 0.1
+     *
      * @return void
      */
     public function leave_request() {
-        
+
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-leave-req-new' ) ) {
             die( __( 'Something went wrong!', 'wp-erp' ) );
         }
@@ -526,6 +547,8 @@ class Form_Handler {
 
     /**
      * Employee Permission Management
+     *
+     * @since 0.1
      *
      * @return void
      */
