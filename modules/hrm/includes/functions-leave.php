@@ -3,7 +3,7 @@
 /**
  * Get holiday between two date
  *
- * @since  0.1 
+ * @since  0.1
  *
  * @param  date  $start_date
  * @param  date  $end_date
@@ -51,16 +51,16 @@ function erp_hr_leave_get_holiday_between_date_range( $start_date, $end_date ) {
 /**
  * Checking is user take leave within date rang in before
  *
- * @since  0.1 
- * 
- * @param  string $start_date 
- * @param  string $end_date   
- * @param  int $user_id  
- *   
- * @return boolean             
+ * @since  0.1
+ *
+ * @param  string $start_date
+ * @param  string $end_date
+ * @param  int $user_id
+ *
+ * @return boolean
  */
 function erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $user_id  ) {
-    
+
     $start_date = date( 'Y-m-d', strtotime( $start_date ) );
     $end_date   = date( 'Y-m-d', strtotime( $end_date ) );
 
@@ -110,17 +110,17 @@ function erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $u
 /**
  * Check leave duration exist or not the plicy days
  *
- * @since  0.1 
- * 
- * @param  string $start_date 
- * @param  string $end_date   
- * @param  int $policy_id  
- * @param  int $user_id 
- *    
- * @return boolean            
+ * @since  0.1
+ *
+ * @param  string $start_date
+ * @param  string $end_date
+ * @param  int $policy_id
+ * @param  int $user_id
+ *
+ * @return boolean
  */
 function erp_hrm_is_valid_leave_duration( $start_date, $end_date, $policy_id, $user_id ) {
-    
+
     if ( ! $user_id || ! $policy_id ) {
         return true;
     }
@@ -151,14 +151,14 @@ function erp_hrm_is_valid_leave_duration( $start_date, $end_date, $policy_id, $u
 }
 
 /**
- * Leave request time checking the apply date duration with the financial date duration 
+ * Leave request time checking the apply date duration with the financial date duration
  *
  * @since  0.1
- * 
- * @param  string $start_date 
+ *
+ * @param  string $start_date
  * @param  string $end_date
- *    
- * @return boolean             
+ *
+ * @return boolean
  */
 function erp_hrm_is_valid_leave_date_range_within_financial_date_range( $start_date, $end_date ) {
 
@@ -181,7 +181,11 @@ function erp_hrm_is_valid_leave_date_range_within_financial_date_range( $start_d
 /**
  * Insert a new leave policy
  *
+ * @since 0.1
+ *
  * @param array $args
+ *
+ * @return integer [$policy_id]
  */
 function erp_hr_leave_insert_policy( $args = array() ) {
     global $wpdb;
@@ -234,10 +238,13 @@ function erp_hr_leave_insert_policy( $args = array() ) {
 /**
  * Insert a leave holiday
  *
+ * @since 0.1
+ *
  * @param array $args
+ *
+ * @return integer [$holiday_id]
  */
 function erp_hr_leave_insert_holiday( $args = array() ) {
-    global $wpdb;
 
     $defaults = array(
         'id'          => null,
@@ -274,7 +281,7 @@ function erp_hr_leave_insert_holiday( $args = array() ) {
         $leave_policy = $holiday->create( $args );
 
         if ( $leave_policy ) {
-            do_action( 'erp_hr_new_holiday', $wpdb->insert_id, $args );
+            do_action( 'erp_hr_new_holiday', $leave_policy->insert_id, $args );
             return $leave_policy->id;
         }
 
@@ -289,7 +296,11 @@ function erp_hr_leave_insert_holiday( $args = array() ) {
 }
 
 /**
- * Fetch leave policies by company
+ * Get all leave policies with different condition
+ *
+ * @since 0.1
+ *
+ * @param array $args
  *
  * @return array
  */
@@ -311,13 +322,13 @@ function erp_hr_leave_get_policies( $args = array() ) {
     if ( false === $policies ) {
 
         $policies = erp_array_to_object(
-                        \WeDevs\ERP\HRM\Models\Leave_Policies::select( array( 'id', 'name', 'value', 'color', 'department', 'designation', 'gender', 'marital', 'activate', 'execute_day', 'effective_date', 'location', 'description' ) )
-                        ->skip( $args['offset'] )
-                        ->take( $args['number'] )
-                        ->orderBy( $args['orderby'], $args['order'] )
-                        ->get()
-                        ->toArray()
-                    );
+            \WeDevs\ERP\HRM\Models\Leave_Policies::select( array( 'id', 'name', 'value', 'color', 'department', 'designation', 'gender', 'marital', 'activate', 'execute_day', 'effective_date', 'location', 'description' ) )
+            ->skip( $args['offset'] )
+            ->take( $args['number'] )
+            ->orderBy( $args['orderby'], $args['order'] )
+            ->get()
+            ->toArray()
+        );
 
         wp_cache_set( $cache_key, $policies, 'wp-erp' );
     }
@@ -326,7 +337,11 @@ function erp_hr_leave_get_policies( $args = array() ) {
 }
 
 /**
- * Fetch a leave policy
+ * Fetch a leave policy by policy id
+ *
+ * @since 0.1
+ *
+ * @param integer $policy_id
  *
  * @return \stdClass
  */
@@ -343,6 +358,8 @@ function erp_hr_leave_get_policy( $policy_id ) {
 /**
  * Count total leave policies
  *
+ * @since 0.1
+ *
  * @return integer
  */
 function erp_hr_count_leave_policies() {
@@ -350,11 +367,16 @@ function erp_hr_count_leave_policies() {
 }
 
 /**
- * Fetch holidays by company
+ * Fetch all holidays by company
+ *
+ * @since 0.1
+ *
+ * @param array $args
  *
  * @return array
  */
 function erp_hr_get_holidays( $args = [] ) {
+
     $defaults = array(
         'number' => 20,
         'offset' => 0,
@@ -471,6 +493,8 @@ function erp_hr_delete_holidays( $holidays_id ) {
 /**
  * Get policies as formatted for dropdown
  *
+ * @since 0.1
+ *
  * @return array
  */
 function erp_hr_leave_get_policies_dropdown_raw() {
@@ -509,6 +533,8 @@ function erp_hr_leave_policy_delete( $policy_id ) {
 
 /**
  * Insert a new policy entitlement for an employee
+ *
+ * @since 0.1
  *
  * @param  array   $args
  *
@@ -861,6 +887,8 @@ function erp_hr_leave_has_employee_entitlement( $employee_id, $policy_id, $year 
 /**
  * Get all the leave entitlements of a calendar year
  *
+ * @since 0.1
+ *
  * @param  integer  $year
  *
  * @return array
@@ -1118,6 +1146,8 @@ function erp_hr_apply_leave_policy( $user_id, $leave_policy ) {
 /**
  * Assign for schedule leave policy
  *
+ * @since 0.1
+ *
  * @return void
  */
 function erp_hr_apply_policy_schedule() {
@@ -1304,7 +1334,7 @@ function erp_hr_apply_entitlement_yearly() {
 /**
  * Get calendar leave events
  *
- * @param   array/boolean $get
+ * @param   array|boolean $get
  *
  * @since 0.1
  *
@@ -1339,29 +1369,32 @@ function erp_hr_get_calendar_leave_events( $get = false, $user_id = false ) {
 
     if ( $department && $designation ) {
         $leave_requests = erp_array_to_object( $leave_request->leftJoin( $employee_tb, $request_tb . '.user_id', '=', $employee_tb . '.user_id' )
-                ->leftJoin( $users_tb, $request_tb . '.user_id', '=', $users_tb . '.ID' )
-                ->leftJoin( $policy_tb, $request_tb . '.policy_id', '=', $policy_tb . '.id' )
-                ->select( $users_tb . '.display_name', $request_tb . '.*', $policy_tb . '.color' )
-                ->where( $employee_tb . '.designation', '=', $designation )
-                ->where( $employee_tb . '.department', '=', $department )
-                ->get()
-                ->toArray() );
+            ->leftJoin( $users_tb, $request_tb . '.user_id', '=', $users_tb . '.ID' )
+            ->leftJoin( $policy_tb, $request_tb . '.policy_id', '=', $policy_tb . '.id' )
+            ->select( $users_tb . '.display_name', $request_tb . '.*', $policy_tb . '.color' )
+            ->where( $employee_tb . '.designation', '=', $designation )
+            ->where( $employee_tb . '.department', '=', $department )
+            ->get()
+            ->toArray()
+        );
     } else if ( $designation ) {
         $leave_requests = erp_array_to_object( $leave_request->leftJoin( $employee_tb, $request_tb . '.user_id', '=', $employee_tb . '.user_id' )
-                ->leftJoin( $users_tb, $request_tb . '.user_id', '=', $users_tb . '.ID' )
-                ->leftJoin( $policy_tb, $request_tb . '.policy_id', '=', $policy_tb . '.id' )
-                ->select( $users_tb . '.display_name', $request_tb . '.*', $policy_tb . '.color' )
-                ->where( $employee_tb . '.designation', '=', $designation )
-                ->get()
-                ->toArray() );
+            ->leftJoin( $users_tb, $request_tb . '.user_id', '=', $users_tb . '.ID' )
+            ->leftJoin( $policy_tb, $request_tb . '.policy_id', '=', $policy_tb . '.id' )
+            ->select( $users_tb . '.display_name', $request_tb . '.*', $policy_tb . '.color' )
+            ->where( $employee_tb . '.designation', '=', $designation )
+            ->get()
+            ->toArray()
+        );
     } else if ( $department ) {
         $leave_requests = erp_array_to_object( $leave_request->leftJoin( $employee_tb, $request_tb . '.user_id', '=', $employee_tb . '.user_id' )
-                ->leftJoin( $users_tb, $request_tb . '.user_id', '=', $users_tb . '.ID' )
-                ->leftJoin( $policy_tb, $request_tb . '.policy_id', '=', $policy_tb . '.id' )
-                ->select( $users_tb . '.display_name', $request_tb . '.*', $policy_tb . '.color' )
-                ->where( $employee_tb . '.department', '=', $department )
-                ->get()
-                ->toArray() );
+            ->leftJoin( $users_tb, $request_tb . '.user_id', '=', $users_tb . '.ID' )
+            ->leftJoin( $policy_tb, $request_tb . '.policy_id', '=', $policy_tb . '.id' )
+            ->select( $users_tb . '.display_name', $request_tb . '.*', $policy_tb . '.color' )
+            ->where( $employee_tb . '.department', '=', $department )
+            ->get()
+            ->toArray()
+        );
     }
 
     return $leave_requests;

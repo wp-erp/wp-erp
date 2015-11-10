@@ -20,18 +20,25 @@ class Ajax_Handler {
     /**
      * Bind all the ajax event for HRM
      *
+     * @since 0.1
+     *
+     * @return void
      */
     public function __construct() {
+
+        // Department
         $this->action( 'wp_ajax_erp-hr-new-dept', 'department_create' );
         $this->action( 'wp_ajax_erp-hr-del-dept', 'department_delete' );
         $this->action( 'wp_ajax_erp-hr-get-dept', 'department_get' );
         $this->action( 'wp_ajax_erp-hr-update-dept', 'department_create' );
 
+        // Designation
         $this->action( 'wp_ajax_erp-hr-new-desig', 'designation_create' );
         $this->action( 'wp_ajax_erp-hr-get-desig', 'designation_get' );
         $this->action( 'wp_ajax_erp-hr-update-desig', 'designation_create' );
         $this->action( 'wp_ajax_erp-hr-del-desig', 'designation_delete' );
 
+        // Employee
         $this->action( 'wp_ajax_erp-hr-employee-new', 'employee_create' );
         $this->action( 'wp_ajax_erp-hr-emp-get', 'employee_get' );
         $this->action( 'wp_ajax_erp-hr-emp-delete', 'employee_remove' );
@@ -89,7 +96,9 @@ class Ajax_Handler {
     /**
      * Remove Holiday
      *
-     * @return void
+     * @since 0.1
+     *
+     * @return json
      */
     function dept_remove() {
         $this->verify_nonce( 'wp-erp-hr-nonce' );
@@ -100,7 +109,9 @@ class Ajax_Handler {
     /**
      * Get Holiday
      *
-     * @return void
+     * @since 0.1
+     *
+     * @return json
      */
     function get_holiday() {
         $this->verify_nonce( 'wp-erp-hr-nonce' );
@@ -108,6 +119,13 @@ class Ajax_Handler {
         $this->send_success( array( 'holiday' => $holiday ) );
     }
 
+    /**
+     * Remove entitlement
+     *
+     * @since 0.1
+     *
+     * @return json
+     */
     public function remove_entitlement() {
         $this->verify_nonce( 'wp-erp-hr-nonce' );
         $id        = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
@@ -125,9 +143,11 @@ class Ajax_Handler {
     /**
      * Get employee template
      *
+     * @since 0.1
+     *
      * @return void
      */
-    function employee_template_refresh() {
+    public function employee_template_refresh() {
         ob_start();
         include WPERP_HRM_JS_TMPL . '/new-employee.php';
         $this->send_success( array( 'content' => ob_get_clean() ) );
@@ -136,9 +156,11 @@ class Ajax_Handler {
     /**
      * Get department template
      *
+     * @since 0.1
+     *
      * @return void
      */
-    function new_dept_tmp_reload() {
+    public function new_dept_tmp_reload() {
         ob_start();
         include WPERP_HRM_JS_TMPL . '/new-dept.php';
         $this->send_success( array( 'content' => ob_get_clean() ) );
@@ -146,6 +168,8 @@ class Ajax_Handler {
 
     /**
      * Get a department
+     *
+     * @since 0.1
      *
      * @return void
      */
@@ -164,6 +188,8 @@ class Ajax_Handler {
 
     /**
      * Create a new department
+     *
+     * @since 0.1
      *
      * @return void
      */
@@ -1119,27 +1145,27 @@ class Ajax_Handler {
      * @return void
      */
     public function leave_request_dates() {
-        
+
         $this->verify_nonce( 'wp-erp-hr-nonce' );
 
         $id = isset( $_POST['employee_id'] ) && $_POST['employee_id'] ? intval( $_POST['employee_id'] ) : false;
 
         if ( ! $id ) {
-           $this->send_error( 'Please select employee', 'wp-erp' ); 
+           $this->send_error( 'Please select employee', 'wp-erp' );
         }
 
         $policy_id = isset( $_POST['type'] ) && $_POST['type'] ? $_POST['type'] : false;
 
         if ( ! $policy_id ) {
-            $this->send_error( 'Please select leave type', 'wp-erp' ); 
+            $this->send_error( 'Please select leave type', 'wp-erp' );
         }
-        
+
         $start_date           = isset( $_POST['from'] ) ? sanitize_text_field( $_POST['from'] ) : date_i18n( 'Y-m-d' );
         $end_date             = isset( $_POST['to'] ) ? sanitize_text_field( $_POST['to'] ) : date_i18n( 'Y-m-d' );
         $valid_date_range     = erp_hrm_is_valid_leave_date_range_within_financial_date_range( $start_date, $end_date );
         $financial_start_date = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
         $financial_end_date   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
-        
+
         if ( ! $valid_date_range ) {
             $this->send_error( sprintf( 'Date range must be within %s to %s', erp_format_date( $financial_start_date ), erp_format_date( $financial_end_date ) ) );
         }
@@ -1149,7 +1175,7 @@ class Ajax_Handler {
         if ( $leave_record_exisst ) {
             $this->send_error(__( 'Leave recored found withing this range!', 'wp-erp' ) );
         }
-        
+
         $is_policy_valid = erp_hrm_is_valid_leave_duration( $start_date, $end_date, $policy_id, $id );
 
         if ( ! $is_policy_valid ) {
