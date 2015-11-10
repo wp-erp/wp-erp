@@ -479,6 +479,8 @@ table.erp-table.full-width {
 ----------------------------------------*/
 .erp-grid-container {
   width: 100%;
+}
+.erp-grid-container * {
   box-sizing: border-box;
 }
 .erp-grid-container .row:before,
@@ -1207,6 +1209,9 @@ ul.edit-address li.city-wrap span {
 }
 .align-right {
   text-align: right !important;
+}
+.align-left {
+  text-align: left !important;
 }
 .input-group {
   display: table;
