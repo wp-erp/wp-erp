@@ -474,9 +474,9 @@ span.required {
 table.erp-table.full-width {
   width: 100%;
 }
-/**
- * A simple grid framework
- */
+/*----------------------------------------
+  A simple 6 column grid framework
+----------------------------------------*/
 .erp-grid-container {
   width: 100%;
   box-sizing: border-box;
