@@ -28,17 +28,7 @@
                         </div>
                     <?php } ?>
 
-                    <div class="row">
-                        <?php erp_html_form_input( array(
-                            'label'    => __( 'Leave Type', 'wp-erp' ),
-                            'name'     => 'leave_policy',
-                            'id'       => 'erp-hr-leave-req-leave-policy',
-                            'value'    => '',
-                            'required' => true,
-                            'type'     => 'select',
-                            'options'  => array( '' => __( '- Select -', 'wp-erp' ) ) + erp_hr_leave_get_policies_dropdown_raw()
-                        ) ); ?>
-                    </div>
+                    <div class="row erp-hide erp-hr-leave-type-wrapper"></div>
 
                     <div class="row two-col">
                         <div class="cols">

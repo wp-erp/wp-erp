@@ -14,7 +14,8 @@
             $( '.erp-hr-leave-policy' ).on( 'click', 'a.link, span.edit a', self, this.policy.edit );
             $( '.erp-hr-leave-policy' ).on( 'click', 'a.submitdelete', self, this.policy.remove );
             $( 'body' ).on( 'change', '#erp-hr-leave-req-from-date, #erp-hr-leave-req-to-date', self, this.leave.requestDates );
-            $( 'body' ).on( 'change', '#erp-hr-leave-req-employee-id, #erp-hr-leave-req-leave-policy', self, this.leave.resetDateRange );
+            $( 'body' ).on( 'change', '#erp-hr-leave-req-employee-id', self, this.leave.setPolicy );
+            $( 'body' ).on( 'change', '#erp-hr-leave-req-leave-policy', self, this.leave.setAvailableDays );
             $( '.hrm-dashboard' ).on( 'click', '.erp-hr-new-leave-request-wrap a#erp-hr-new-leave-req', this.leave.takeLeave );
             $( '.erp-employee-single' ).on('submit', 'form#erp-hr-empl-leave-history', this.leave.showHistory );
             $( '.entitlement-list-table' ).on( 'click', 'a.submitdelete', self, this.entitlement.remove );
@@ -320,7 +321,6 @@
         },
 
         leave: {
-
             takeLeave: function(e) {
                 e.preventDefault();
 
@@ -337,6 +337,7 @@
                         wp.ajax.send( {
                             data: this.serialize(),
                             success: function(res) {
+                                alert( res );
                                 modal.closeModal();
                             },
                             error: function(error) {
@@ -377,6 +378,51 @@
                         }
                     });
                 }
+            },
+
+            setPolicy: function() {
+                Leave.leave.resetDateRange();
+                var self = $(this),
+                    leavetypewrap = $('div.erp-hr-leave-reqs-wrap').find('.erp-hr-leave-type-wrapper')
+
+                leavetypewrap.html('');
+
+                if ( self.val() == 0 ) {
+                    return;
+                };
+
+                wp.ajax.send( 'erp-hr-leave-employee-assign-policies', {
+                    data: {
+                        '_wpnonce'  : wpErpHr.nonce,
+                        employee_id : self.val()
+                    },
+                    success: function(resp) {
+                        leavetypewrap.html( resp ).hide().fadeIn();
+                    },
+                    error: function(resp) {
+                        alert( resp );
+                    }
+                } );
+            },
+
+            setAvailableDays: function() {
+                Leave.leave.resetDateRange();
+                var self = $(this);
+
+                wp.ajax.send( 'erp-hr-leave-policies-availablity', {
+                    data: {
+                        '_wpnonce'  : wpErpHr.nonce,
+                        employee_id : $('#erp-hr-leave-req-employee-id').val(),
+                        policy_id   : self.val()
+                    },
+                    success: function(resp) {
+                        self.closest('div.row').find('span.description').remove();
+                        $(resp).insertAfter(self);
+                    },
+                    error: function(resp) {
+                        alert( resp );
+                    }
+                } );
             },
 
             resetDateRange: function() {

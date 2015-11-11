@@ -46,6 +46,6 @@
     </div>
 
     <input type="hidden" name="employee_id" id="erp-hr-leave-req-employee-id" value="<?php echo get_current_user_id(); ?>">
-    <input type="hidden" name="erp-action" value="hr-leave-req-new">
+    <input type="hidden" name="action" value="erp-hr-leave-req-new">
     <?php wp_nonce_field( 'erp-leave-req-new' ); ?>
 </div>

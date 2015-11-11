@@ -79,6 +79,9 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-hr-leave-policy-create', 'leave_policy_create' );
         $this->action( 'wp_ajax_erp-hr-leave-policy-delete', 'leave_policy_delete' );
         $this->action( 'wp_ajax_erp-hr-leave-request-req-date', 'leave_request_dates' );
+        $this->action( 'wp_ajax_erp-hr-leave-employee-assign-policies', 'leave_assign_employee_policy' );
+        $this->action( 'wp_ajax_erp-hr-leave-policies-availablity', 'leave_available_days' );
+        $this->action( 'wp_ajax_erp-hr-leave-req-new', 'leave_request' );
 
         //leave holiday
         $this->action( 'wp_ajax_erp_hr_holiday_create', 'holiday_create' );
@@ -1012,6 +1015,8 @@ class Ajax_Handler {
     /**
      * Create or update a leave policy
      *
+     * @since 0.1
+     *
      * @return void
      */
     public function leave_policy_create() {
@@ -1058,6 +1063,8 @@ class Ajax_Handler {
 
     /**
      * Create or update a holiday
+     *
+     * @since 0.1
      *
      * @return void
      */
@@ -1115,6 +1122,8 @@ class Ajax_Handler {
     /**
      * Delete a leave policy
      *
+     * @since 0.1
+     *
      * @return void
      */
     public function leave_policy_delete() {
@@ -1142,6 +1151,8 @@ class Ajax_Handler {
      * Returns the date list between the start and end date of the
      * two dates
      *
+     * @since 0.1
+     *
      * @return void
      */
     public function leave_request_dates() {
@@ -1165,6 +1176,10 @@ class Ajax_Handler {
         $valid_date_range     = erp_hrm_is_valid_leave_date_range_within_financial_date_range( $start_date, $end_date );
         $financial_start_date = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
         $financial_end_date   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+
+        if ( $start_date >  $end_date ) {
+            $this->send_error( 'Invalid date range', 'wp-erp' );
+        }
 
         if ( ! $valid_date_range ) {
             $this->send_error( sprintf( 'Date range must be within %s to %s', erp_format_date( $financial_start_date ), erp_format_date( $financial_end_date ) ) );
@@ -1200,7 +1215,122 @@ class Ajax_Handler {
     }
 
     /**
+     * Fetch assigning policy dropdown html
+     * according to employee id
+     *
+     * @since 0.1
+     *
+     * @return html|json
+     */
+    public function leave_assign_employee_policy() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+        $employee_id = isset( $_POST['employee_id'] ) && $_POST['employee_id'] ? intval( $_POST['employee_id'] ) : false;
+
+        if ( ! $employee_id ) {
+           $this->send_error( 'Please select employee', 'wp-erp' );
+        }
+
+        $policies = erp_hr_get_assign_policy_from_entitlement( $employee_id );
+
+        if ( $policies ) {
+            ob_start();
+            erp_html_form_input( array(
+                'label'    => __( 'Leave Type', 'wp-erp' ),
+                'name'     => 'leave_policy',
+                'id'       => 'erp-hr-leave-req-leave-policy',
+                'value'    => '',
+                'required' => true,
+                'type'     => 'select',
+                'options'  => array( '' => __( '- Select -', 'wp-erp' ) ) + $policies
+            ) );
+            $content = ob_get_clean();
+
+            return $this->send_success( $content );
+        }
+
+        return $this->send_error( 'No policy found. Can not apply any leave', 'wp-erp' );
+    }
+
+    /**
+     * Get available day for users leave policy
+     *
+     * @since 0.1
+     *
+     * @return json
+     */
+    public function leave_available_days() {
+
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+        $employee_id = isset( $_POST['employee_id'] ) && $_POST['employee_id'] ? intval( $_POST['employee_id'] ) : false;
+        $policy_id   = isset( $_POST['policy_id'] ) && $_POST['policy_id'] ? intval( $_POST['policy_id'] ) : false;
+        $available   = 0;
+
+        if ( ! $employee_id ) {
+           $this->send_error( 'Please select an employee', 'wp-erp' );
+        }
+
+        if ( ! $policy_id ) {
+           $this->send_error( 'Please select a policy', 'wp-erp' );
+        }
+
+        $balance = erp_hr_leave_get_balance( $employee_id );
+
+        if ( array_key_exists( $policy_id, $balance ) ) {
+            $available = $balance[ $policy_id ]['entitlement'] - $balance[ $policy_id ]['total'];
+        }
+        if ( $available < 0 ) {
+            $content = sprintf( '<span class="description red">%d %s</span>', number_format_i18n( $available ), __( 'days are available', 'wp-erp' ) );
+        } elseif ( $available > 0 ) {
+            $content = sprintf( '<span class="description green">%d %s</span>', number_format_i18n( $available ), __( 'days are available', 'wp-erp' ) );
+        } else {
+            $leave_policy_day = \WeDevs\ERP\HRM\Models\Leave_Policies::select( 'value' )->where( 'id', $policy_id )->pluck('value');
+            $content = sprintf( '<span class="description">%d %s</span>', number_format_i18n( $leave_policy_day ), __( 'days are available', 'wp-erp' ) );
+        }
+
+        $this->send_success( $content );
+    }
+
+    /**
+     * Insert leave request for users
+     *
+     * Save leave request data from employee dashboard
+     * overview area
+     *
+     * @since 0.1
+     *
+     * @return json
+     */
+    public function leave_request() {
+
+        if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-leave-req-new' ) ) {
+            $this->send_error( 'Something went wrong!', 'wp-erp' );
+        }
+
+        $employee_id  = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+        $leave_policy = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : 0;
+        $start_date   = isset( $_POST['leave_from'] ) ? sanitize_text_field( $_POST['leave_from'] ) : date_i18n( 'Y-m-d' );
+        $end_date     = isset( $_POST['leave_to'] ) ? sanitize_text_field( $_POST['leave_to'] ) : date_i18n( 'Y-m-d' );
+        $leave_reason = isset( $_POST['leave_reason'] ) ? strip_tags( $_POST['leave_reason'] ) : '';
+
+        $insert = erp_hr_leave_insert_request( array(
+            'user_id'      => $employee_id,
+            'leave_policy' => $leave_policy,
+            'start_date'   => $start_date,
+            'end_date'     => $end_date,
+            'reason'       => $leave_reason
+        ) );
+
+        if ( ! is_wp_error( $insert ) ) {
+            $this->send_success( 'Successfully leave request send', 'wp-erp' );
+        } else {
+            $this->send_error( 'Something wrong, Please try later', 'wp-erp' );
+        }
+    }
+
+    /**
      * Get employee leave history
+     *
+     * @since 0.1
      *
      * @return void
      */
