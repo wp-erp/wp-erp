@@ -522,11 +522,13 @@ span.required {
 table.erp-table.full-width {
   width: 100%;
 }
-/**
- * A simple grid framework
- */
+/*----------------------------------------
+  A simple 6 column grid framework
+----------------------------------------*/
 .erp-grid-container {
   width: 100%;
+}
+.erp-grid-container * {
   box-sizing: border-box;
 }
 .erp-grid-container .row:before,
@@ -1255,6 +1257,9 @@ ul.edit-address li.city-wrap span {
 }
 .align-right {
   text-align: right !important;
+}
+.align-left {
+  text-align: left !important;
 }
 .input-group {
   display: table;
