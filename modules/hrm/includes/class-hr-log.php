@@ -35,10 +35,14 @@ class Hr_Log {
         $this->action( 'erp_hr_desig_delete', 'delete_designation', 10 );
         $this->action( 'erp_hr_desig_before_updated', 'update_designation', 10, 2 );
 
-        //Leave Policy @TODO Update Policy
+        //Leave Policy
         $this->action( 'erp_hr_leave_policy_new', 'create_policy', 10, 2 );
         $this->action( 'erp_hr_leave_policy_delete', 'delete_policy', 10 );
         $this->action( 'erp_hr_leave_before_policy_updated', 'update_policy', 10, 2 );
+
+        //Leave Request
+        $this->action( 'erp_hr_leave_new', 'create_leave_request', 10, 3 );
+
 
         //Holiday
         $this->action( 'erp_hr_new_holiday', 'create_holiday', 10, 2 );
@@ -426,7 +430,40 @@ class Hr_Log {
                 'new_value'     => $changes['new_val'] ? base64_encode( maybe_serialize( $changes['new_val'] ) ) : ''
             ]);
         }
+    }
 
+    /**
+     * Add log when someone take leave
+     *
+     * @since 0.1
+     *
+     * @param  integer $request_id
+     * @param  array $request
+     * @param  array $leaves
+     *
+     * @return void
+     */
+    public function create_leave_request( $request_id, $request, $leaves ) {
+
+        if ( ! $request_id ) {
+            return;
+        }
+
+        $employee = new \WeDevs\ERP\HRM\Employee( intval( $request['user_id'] ) );
+
+        $message = sprintf( '<strong>%s</strong> take leave from <strong>%s</strong> to <strong>%s</strong> about <strong>%d</strong> days',
+            $employee->get_full_name(),
+            erp_format_date( $request['start_date'] ),
+            erp_format_date( $request['end_date'] ),
+            $request['days']
+        );
+
+        erp_log()->add([
+            'sub_component' => 'leave',
+            'message'       => $message,
+            'created_by'    => get_current_user_id(),
+            'changetype'    => 'add',
+        ]);
     }
 
     /**

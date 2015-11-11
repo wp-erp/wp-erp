@@ -709,7 +709,7 @@ function erp_hr_leave_insert_request( $args = array() ) {
         if ( $wpdb->insert( $wpdb->prefix . 'erp_hr_leave_requests', $request ) ) {
             $request_id = $wpdb->insert_id;
 
-            foreach ($leaves as $leave) {
+            foreach ( $leaves as $leave ) {
                 $leave['request_id'] = $request_id;
 
                 $wpdb->insert( $wpdb->prefix . 'erp_hr_leaves', $leave );
