@@ -47,47 +47,39 @@ $inactive_color     = $tab == 'inactive' ? 'erp-nav-tab-active' : '';
 
 		<tbody id="the-list">
 
-			
 		<?php
 			foreach ( $modules as $slug => $module ) {
 				$checked = array_key_exists( $slug, $all_active_modules ) ? $slug : '';
 				?>
-				<tr class="xprofile active">
+				<tr class="active">
 					<th scope="row">
-						<input type="checkbox" name="modules[]" value="<?php echo $slug; ?>" <?php checked( $slug, $checked ); ?>>
+						<input type="checkbox" name="modules[]" id="erp_module_<?php echo $slug; ?>" value="<?php echo $slug; ?>" <?php checked( $slug, $checked ); ?>>
 					</th>
 					<td class="plugin-title" style="width: 190px;">
-					
-						<label for="bp_components[xprofile]">
+						<label for="erp_module_<?php echo $slug; ?>">
 							<strong><?php echo isset( $module['title'] ) ? $module['title'] : ''; ?></strong>
 						</label>
-				</td>
-
-				<td class="column-description desc">
-					<div class="plugin-description">
-						<p><?php echo isset( $module['description'] ) ? $module['description'] : ''; ?></p>
-					</div>
-
-				</td>
-			</tr>
-
+					</td>
+					<td class="column-description desc">
+						<div class="plugin-description">
+							<p><?php echo isset( $module['description'] ) ? $module['description'] : ''; ?></p>
+						</div>
+					</td>
+				</tr>
 				<?php
 			}
 
 			if ( ! $modules  ) {
 				?>
-			<tr class="xprofile active">
-
-				<td colspan="3" class="column-description desc">
-					<?php _e( 'No modules found!', 'wp-erp' ); ?>
-				</td>
-			</tr>
+				<tr class="active">
+					<td colspan="3" class="column-description desc">
+						<?php _e( 'No modules found!', 'wp-erp' ); ?>
+					</td>
+				</tr>
 				<?php
 			}
-		?>	
-		
-		
-			
+		?>
+
 		</tbody>
 	</table>
 	<p class="submit clear">
