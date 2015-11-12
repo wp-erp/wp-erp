@@ -590,7 +590,11 @@ function erp_hr_leave_insert_entitlement( $args = array() ) {
         return $entitlement['id'];
     }
 
-    return $wpdb->insert( $wpdb->prefix . 'erp_hr_leave_entitlements', $fields );
+    $wpdb->insert( $wpdb->prefix . 'erp_hr_leave_entitlements', $fields );
+
+    do_action( 'erp_hr_leave_insert_new_entitlement', $wpdb->insert_id, $fields );
+
+    return $wpdb->insert_id;
 }
 
 /**

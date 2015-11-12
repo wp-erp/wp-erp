@@ -43,6 +43,8 @@ class Hr_Log {
         //Leave Request
         $this->action( 'erp_hr_leave_new', 'create_leave_request', 10, 3 );
 
+        //Entitlement
+        $this->action( 'erp_hr_leave_insert_new_entitlement', 'create_entitlement', 10, 2 );
 
         //Holiday
         $this->action( 'erp_hr_new_holiday', 'create_holiday', 10, 2 );
@@ -457,6 +459,33 @@ class Hr_Log {
             erp_format_date( $request['end_date'] ),
             $request['days']
         );
+
+        erp_log()->add([
+            'sub_component' => 'leave',
+            'message'       => $message,
+            'created_by'    => get_current_user_id(),
+            'changetype'    => 'add',
+        ]);
+    }
+
+    /**
+     * Add log when entitlement created
+     *
+     * @since 0.1
+     *
+     * @param  integer $entitlement_id
+     * @param  array $fields
+     *
+     * @return void
+     */
+    public function create_entitlement( $entitlement_id, $fields ) {
+
+        if ( ! $entitlement_id ) {
+            return;
+        }
+
+        $employee = new \WeDevs\ERP\HRM\Employee( intval( $fields['user_id'] ) );
+        $message  = sprintf( '%s <strong>%s</strong>', __( 'A new entitlement has been created for'), $employee->get_full_name() );
 
         erp_log()->add([
             'sub_component' => 'leave',
