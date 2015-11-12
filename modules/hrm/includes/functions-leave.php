@@ -590,7 +590,53 @@ function erp_hr_leave_insert_entitlement( $args = array() ) {
         return $entitlement['id'];
     }
 
-    return $wpdb->insert( $wpdb->prefix . 'erp_hr_leave_entitlements', $fields );
+    $wpdb->insert( $wpdb->prefix . 'erp_hr_leave_entitlements', $fields );
+
+    do_action( 'erp_hr_leave_insert_new_entitlement', $wpdb->insert_id, $fields );
+
+    return $wpdb->insert_id;
+}
+
+/**
+ * Get assign policies according to employee entitlement
+ *
+ * @since 0.1
+ *
+ * @param  integer $employee_id
+ *
+ * @return boolean|array
+ */
+function erp_hr_get_assign_policy_from_entitlement( $employee_id ) {
+
+    global $wpdb;
+
+    $data      = [];
+    $dropdown  = [];
+    $policy    = new \WeDevs\ERP\HRM\Models\Leave_Policies();
+    $en        = new \WeDevs\ERP\HRM\Models\Leave_Entitlement();
+    $policy_tb = $wpdb->prefix . 'erp_hr_leave_policies';
+    $en_tb     = $wpdb->prefix . 'erp_hr_leave_entitlements';
+
+    $financial_start_date = erp_financial_start_date();
+    $financial_end_date   = erp_financial_end_date();
+
+    $policies = \WeDevs\ERP\HRM\Models\Leave_Policies::select( $policy_tb .'.name', $policy_tb.'.id' )
+           ->leftjoin( $en_tb, $en_tb.'.policy_id', '=', $policy_tb.'.id' )
+           ->where( $en_tb.'.user_id', $employee_id )
+           ->where( 'from_date', '>=', $financial_start_date )
+           ->where( 'to_date', '<=', $financial_end_date )
+           ->distinct()
+           ->get()
+           ->toArray();
+
+    if ( !empty( $policies ) ) {
+        foreach ( $policies as $policy ) {
+            $dropdown[ $policy['id'] ] = stripslashes( $policy['name'] );
+        }
+        return $dropdown;
+    }
+
+    return false;
 }
 
 /**
@@ -667,7 +713,7 @@ function erp_hr_leave_insert_request( $args = array() ) {
         if ( $wpdb->insert( $wpdb->prefix . 'erp_hr_leave_requests', $request ) ) {
             $request_id = $wpdb->insert_id;
 
-            foreach ($leaves as $leave) {
+            foreach ( $leaves as $leave ) {
                 $leave['request_id'] = $request_id;
 
                 $wpdb->insert( $wpdb->prefix . 'erp_hr_leaves', $leave );
@@ -911,9 +957,8 @@ function erp_hr_leave_get_entitlements( $args = array() ) {
     $where = 'WHERE 1 = 1';
 
     if ( ! empty( $args['year'] ) ) {
-        $from_date = erp_financial_start_date();
-        $to_date   = erp_financial_end_date();
-
+        $from_date = date( $args['year'].'-m-d H:i:s',  strtotime( erp_financial_start_date() ) );
+        $to_date   = date( $args['year'].'-m-d H:i:s',  strtotime( erp_financial_end_date() ) );
         $where .= " AND en.from_date >= date('$from_date') AND en.to_date <= date('$to_date')";
     }
 
@@ -998,10 +1043,13 @@ function erp_hr_delete_entitlement( $id, $user_id, $policy_id ) {
 function erp_hr_leave_get_balance( $user_id ) {
     global $wpdb;
 
+    $financial_start_date = erp_financial_start_date();
+    $financial_end_date   = erp_financial_end_date();
+
     $query = "SELECT req.id, req.days, req.policy_id, req.start_date, en.days as entitlement
         FROM {$wpdb->prefix}erp_hr_leave_requests AS req
         LEFT JOIN {$wpdb->prefix}erp_hr_leave_entitlements AS en ON ( ( en.policy_id = req.policy_id ) AND (en.user_id = req.user_id ) )
-        WHERE req.status = 1 and req.user_id = %d";
+        WHERE req.status = 1 and req.user_id = %d and ( en.`from_date`<= '$financial_start_date' AND en.`to_date` >= '$financial_end_date' )";
 
     $sql     = $wpdb->prepare( $query, $user_id );
     $results = $wpdb->get_results( $sql );

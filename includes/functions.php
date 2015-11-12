@@ -518,6 +518,28 @@ function erp_financial_end_date() {
 }
 
 /**
+ * Get all modules inserted in log table
+ *
+ * @since 0.1
+ *
+ * @return array
+ */
+function erp_get_audit_log_modules() {
+    return \WeDevs\ERP\Admin\Models\Audit_Log::select( 'component' )->distinct()->get()->toArray();
+}
+
+/**
+ * Get all modules inserted in log table
+ *
+ * @since 0.1
+ *
+ * @return array
+ */
+function erp_get_audit_log_sub_component() {
+    return \WeDevs\ERP\Admin\Models\Audit_Log::select( 'sub_component' )->distinct()->get()->toArray();
+}
+
+/**
  * Erp Logging functions
  *
  * @since 0.1

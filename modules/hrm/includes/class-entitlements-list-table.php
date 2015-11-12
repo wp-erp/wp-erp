@@ -86,16 +86,16 @@ class Entitlement_List_Table extends \WP_List_Table {
                 return number_format_i18n( $entitlement->days );
 
             case 'scheduled':
+                return $scheduled ? sprintf( __( '%d days', 'wp-erp' ), number_format_i18n( $scheduled ) ) : '-';
+
+            case 'available':
                 if ( $available < 0 ) {
-                    return sprintf( '<span class="red">%d %s</span>', number_format_i18n( $scheduled ), __( 'days', 'wp-erp' ) );
-                } elseif ( $scheduled > 0 ) {
-                    return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $scheduled ), __( 'days', 'wp-erp' ) );
+                    return sprintf( '<span class="red">%d %s</span>', number_format_i18n( $available ), __( 'days', 'wp-erp' ) );
+                } elseif ( $available > 0 ) {
+                    return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $available ), __( 'days', 'wp-erp' ) );
                 } else {
                     return '-';
                 }
-
-            case 'available':
-                return $available ? sprintf( __( '%d days', 'wp-erp' ), number_format_i18n( $available ) ) : '-';
 
             default:
                 return isset( $entitlement->$column_name ) ? $entitlement->$column_name : '';

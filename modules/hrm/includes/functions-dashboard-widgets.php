@@ -155,7 +155,8 @@ function erp_hr_dashboard_widget_whoisout() {
  */
 function erp_hr_dashboard_widget_leave_calendar() {
 
-    $leave_requests = erp_hr_get_calendar_leave_events( false, get_current_user_id() );
+    $user_id        = get_current_user_id();
+    $leave_requests = erp_hr_get_calendar_leave_events( false, $user_id );
     $holidays       = erp_array_to_object( \WeDevs\ERP\HRM\Models\Leave_Holiday::all()->toArray() );
     $events         = [];
     $holiday_events = [];
@@ -206,9 +207,11 @@ function erp_hr_dashboard_widget_leave_calendar() {
         }
     </style>
 
-    <div class="erp-hr-new-leave-request-wrap">
-        <a href="#" class="button button-primary" id="erp-hr-new-leave-req"><?php _e( 'Take a Leave', 'wp-erp' ); ?></a>
-    </div>
+    <?php if ( erp_hr_get_assign_policy_from_entitlement( $user_id ) ): ?>
+        <div class="erp-hr-new-leave-request-wrap">
+            <a href="#" class="button button-primary" id="erp-hr-new-leave-req"><?php _e( 'Take a Leave', 'wp-erp' ); ?></a>
+        </div>
+    <?php endif ?>
 
     <div id="erp-hr-calendar"></div>
 

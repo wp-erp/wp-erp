@@ -18,9 +18,17 @@ class Form_Handler {
     public function __construct() {
         $this->action( 'erp_action_create_new_company', 'create_new_company' );
         $this->action( 'admin_init', 'save_settings' );
+        add_action( 'load-erp-settings_page_erp-audit-log', array( $this, 'audit_log_bulk_action' ) );
     }
 
-    function save_settings() {
+    /**
+     * Save all settings
+     *
+     * @since 0.1
+     *
+     * @return void
+     */
+    public function save_settings() {
         if ( ! isset( $_POST['erp_module_status'] ) ) {
             return;
         }
@@ -28,7 +36,7 @@ class Form_Handler {
         if ( ! wp_verify_nonce( $_POST['erp_settings'], 'erp_nonce' ) ) {
             return;
         }
-        
+
         $inactive    =  ( isset( $_GET['tab'] ) && $_GET['tab'] == 'inactive' ) ? true : false;
         $modules     = isset( $_POST['modules'] ) ? $_POST['modules'] : array();
         $all_modules = wperp()->modules->get_modules();
@@ -49,6 +57,16 @@ class Form_Handler {
         exit();
     }
 
+    /**
+     * Check is valid input or not
+     *
+     * @since 0.1
+     *
+     * @param  array  $array
+     * @param  string  $key
+     *
+     * @return boolean
+     */
     public function is_valid_input( $array, $key ) {
         if ( ! isset( $array[$key]) || empty( $array[$key] ) || $array[$key] == '-1' ) {
             return false;
@@ -115,6 +133,33 @@ class Form_Handler {
         $redirect_to = admin_url( 'admin.php?page=erp-company&action=edit&msg=updated' );
         wp_redirect( $redirect_to );
         exit;
+    }
+
+    /**
+     * Handle audit log bulk action
+     *
+     * @since 0.1
+     *
+     * @return void
+     */
+    public function audit_log_bulk_action() {
+
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! isset( $_GET['page'] ) ) {
+            return;
+        }
+
+        if ( $_GET['page'] != 'erp-audit-log' ) {
+            return;
+        }
+
+        if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-audit_logs' ) ) {
+            return;
+        }
+
+        $redirect = remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'filter_audit_log' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
+        wp_redirect( $redirect );
+        exit();
+
     }
 }
 

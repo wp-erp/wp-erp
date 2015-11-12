@@ -159,7 +159,7 @@ class Form_Handler {
 
         if ( $action ) {
 
-            $redirect = remove_query_arg( array('_wp_http_referer', '_wpnonce', 'filter_employee' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
+            $redirect = remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'filter_employee' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
 
             switch ( $action ) {
 

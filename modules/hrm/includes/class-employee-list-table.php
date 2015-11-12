@@ -18,6 +18,16 @@ class Employee_List_Table extends \WP_List_Table {
         ) );
     }
 
+    /**
+     * Render extra filtering option in
+     * top of the table
+     *
+     * @since 0.1
+     *
+     * @param  string $which
+     *
+     * @return void
+     */
     function extra_tablenav( $which ) {
         if ( $which != 'top' ) {
             return;
@@ -55,7 +65,6 @@ class Employee_List_Table extends \WP_List_Table {
             submit_button( __( 'Filter' ), 'button', 'filter_employee', false );
         echo '</div>';
     }
-
 
     /**
      * Message to show if no employee found
@@ -156,7 +165,7 @@ class Employee_List_Table extends \WP_List_Table {
         $delete_text = ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) ? __( 'Permanent Delete', 'wp-erp' ) : __( 'Delete', 'wp-erp' );
 
         if ( current_user_can( 'erp_edit_employee', $employee->id ) ) {
-            $actions['edit']   =  sprintf( '<a href="%s" data-id="%d"  title="%s">%s</a>', $delete_url, $employee->id, __( 'Edit this item', 'wp-erp' ), __( 'Edit', 'wp-erp' ) ); 
+            $actions['edit']   =  sprintf( '<a href="%s" data-id="%d"  title="%s">%s</a>', $delete_url, $employee->id, __( 'Edit this item', 'wp-erp' ), __( 'Edit', 'wp-erp' ) );
         }
 
         if ( current_user_can( 'erp_delete_employee' ) ) {
