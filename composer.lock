@@ -4,7 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "74fad864b020b83b194b8974d1a798df",
+    "hash": "33dbbbc3704c67fd8e870776305e7f84",
+    "content-hash": "4bc7e6b5ce15628fea54fbb14df34bb1",
     "packages": [
         {
             "name": "danielstjules/stringy",
@@ -327,6 +328,46 @@
             "time": "2015-07-20 16:31:36"
         },
         {
+            "name": "johngrogg/ics-parser",
+            "version": "v1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/johngrogg/ics-parser.git",
+                "reference": "4d4fbd147e4dac78f8b34b66d3380edefb9f2c4b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/johngrogg/ics-parser/zipball/4d4fbd147e4dac78f8b34b66d3380edefb9f2c4b",
+                "reference": "4d4fbd147e4dac78f8b34b66d3380edefb9f2c4b",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "class.iCalReader.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Martin Thoma",
+                    "email": "info@martin-thoma.de",
+                    "role": "Original Developer"
+                },
+                {
+                    "name": "John Grogg",
+                    "email": "john.grogg@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Ics file parser",
+            "keywords": [
+                "ical",
+                "ics"
+            ],
+            "time": "2015-04-21 22:49:49"
+        },
+        {
             "name": "nesbot/carbon",
             "version": "1.20.0",
             "source": {
@@ -444,7 +485,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tareq1988/wp-eloquent/zipball/6b138dc6ef303a5df2d6abd35b085d7313282380",
+                "url": "https://api.github.com/repos/tareq1988/wp-eloquent/zipball/49349e0048f44997ae5f6fd3209ccf0e765b5855",
                 "reference": "6b138dc6ef303a5df2d6abd35b085d7313282380",
                 "shasum": ""
             },
