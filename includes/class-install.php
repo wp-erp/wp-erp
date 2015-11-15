@@ -385,7 +385,7 @@ class WeDevs_ERP_Installer {
               PRIMARY KEY (id)
             ) $collate;",
 
-            "CREATE TABLE `{$wpdb->prefix}erp_peoples` (
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_peoples` (
               `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
               `user_id` bigint(20) unsigned DEFAULT '0',
               `first_name` varchar(60) DEFAULT NULL,
@@ -412,7 +412,7 @@ class WeDevs_ERP_Installer {
               KEY `user_id` (`user_id`)
             ) $collate;",
 
-            "CREATE TABLE `{$wpdb->prefix}erp_peoplemeta` (
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_peoplemeta` (
               `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
               `erp_people_id` bigint(20) DEFAULT NULL,
               `meta_key` varchar(255) DEFAULT NULL,
