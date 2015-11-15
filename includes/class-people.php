@@ -35,7 +35,7 @@ class People extends Item {
      * @return boolean
      */
     function is_wp_user() {
-        return intval( $this->user_id ) === 1;
+        return intval( $this->user_id ) !== 0;
     }
 
     /**
