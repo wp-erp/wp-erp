@@ -121,7 +121,6 @@ function erp_get_people( $id = 0 ) {
         }
     }
 
-
     return $people;
 }
 
@@ -147,6 +146,7 @@ function erp_insert_people( $args = array() ) {
         'fax'         => '',
         'notes'       => '',
         'street_1'    => '',
+        'street_2'    => '',
         'city'        => '',
         'state'       => '',
         'postal_code' => '',

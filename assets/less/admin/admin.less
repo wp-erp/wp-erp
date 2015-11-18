@@ -10,6 +10,132 @@
     }
 }
 
+.erp_form_generic() {
+
+    ol, li {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .photo-container {
+        display: inline-block;
+        width: 70%;
+        position: relative;
+
+        img {
+            max-width: 80px;
+            height: auto;
+        }
+
+        .erp-remove-photo {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: rgba(0, 0,0, 0.5);
+            width: 80px;
+            height: 80px;
+            color: red;
+            text-align: center;
+            text-decoration: none;
+            font-size: 50px;
+            padding-top: 30px;
+            display: none;
+        }
+
+        &:hover {
+            .erp-remove-photo {
+                display: inline-block;
+            }
+        }
+    }
+
+    ol.form-fields {
+        .clearfix();
+
+        > li {
+            float: left;
+            width: 100%;
+            padding-bottom: 5px;
+
+            label {
+                width: 15%;
+                display: inline-block;
+                vertical-align: top;
+            }
+
+            select {
+                max-width: 55%;
+            }
+        }
+
+        &.two-col {
+            li {
+                width: 50%;
+
+                label {
+                    width: 30%;
+                }
+
+                &:nth-child(2n+1) {
+                    clear: both;
+                }
+            }
+        }
+
+        li.name-container {
+            width: 100%;
+            float: none;
+
+            > label {
+                float: left;
+                width: 15%;
+                margin-top: 22px;
+            }
+
+            ol {
+                float: left;
+                width: 85%;
+
+                label {
+                    display: block;
+                    color: #aaa;
+                    width: 100%;
+                }
+
+                li.middle-name {
+                    width: 185px;
+
+                    input {
+                        width: 98%;
+                    }
+                }
+            }
+        }
+    }
+
+    fieldset {
+        margin-bottom: 20px;
+        border-top: 1px solid #eee;
+
+        &.no-border {
+            border-top: none;
+        }
+
+        legend {
+            font-weight: bold;
+            padding-right: 20px;
+            margin-bottom: 10px;
+        }
+    }
+
+    ol.fields-inline {
+        li {
+            display: inline-block;
+        }
+    }
+}
+
 @import "crm.less";
 @import "hrm.less";
 

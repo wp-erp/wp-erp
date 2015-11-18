@@ -19,7 +19,8 @@
     "autoload" : {
         "psr-4" : {
             "WeDevs\\ERP\\": "includes/",
-            "WeDevs\\ERP\\HRM\\": "modules/hrm/includes"
+            "WeDevs\\ERP\\HRM\\": "modules/hrm/includes",
+            "WeDevs\\ERP\\CRM\\": "modules/crm/includes"
         },
         "classmap": [
             "modules/hrm/hrm.php",

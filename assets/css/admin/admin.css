@@ -59,6 +59,115 @@
 .erp-leads-single .erp-user-info h3 span.company {
   font-weight: normal;
 }
+.erp-customer-form ol,
+.erp-customer-form li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.erp-customer-form .photo-container {
+  display: inline-block;
+  width: 70%;
+  position: relative;
+}
+.erp-customer-form .photo-container img {
+  max-width: 80px;
+  height: auto;
+}
+.erp-customer-form .photo-container .erp-remove-photo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.5);
+  width: 80px;
+  height: 80px;
+  color: red;
+  text-align: center;
+  text-decoration: none;
+  font-size: 50px;
+  padding-top: 30px;
+  display: none;
+}
+.erp-customer-form .photo-container:hover .erp-remove-photo {
+  display: inline-block;
+}
+.erp-customer-form ol.form-fields:before,
+.erp-customer-form ol.form-fields:after {
+  content: " ";
+  display: table;
+}
+.erp-customer-form ol.form-fields:after {
+  clear: both;
+}
+.erp-customer-form ol.form-fields:before,
+.erp-customer-form ol.form-fields:after {
+  content: " ";
+  display: table;
+}
+.erp-customer-form ol.form-fields:after {
+  clear: both;
+}
+.erp-customer-form ol.form-fields > li {
+  float: left;
+  width: 100%;
+  padding-bottom: 5px;
+}
+.erp-customer-form ol.form-fields > li label {
+  width: 15%;
+  display: inline-block;
+  vertical-align: top;
+}
+.erp-customer-form ol.form-fields > li select {
+  max-width: 55%;
+}
+.erp-customer-form ol.form-fields.two-col li {
+  width: 50%;
+}
+.erp-customer-form ol.form-fields.two-col li label {
+  width: 30%;
+}
+.erp-customer-form ol.form-fields.two-col li:nth-child(2n+1) {
+  clear: both;
+}
+.erp-customer-form ol.form-fields li.name-container {
+  width: 100%;
+  float: none;
+}
+.erp-customer-form ol.form-fields li.name-container > label {
+  float: left;
+  width: 15%;
+  margin-top: 22px;
+}
+.erp-customer-form ol.form-fields li.name-container ol {
+  float: left;
+  width: 85%;
+}
+.erp-customer-form ol.form-fields li.name-container ol label {
+  display: block;
+  color: #aaa;
+  width: 100%;
+}
+.erp-customer-form ol.form-fields li.name-container ol li.middle-name {
+  width: 185px;
+}
+.erp-customer-form ol.form-fields li.name-container ol li.middle-name input {
+  width: 98%;
+}
+.erp-customer-form fieldset {
+  margin-bottom: 20px;
+  border-top: 1px solid #eee;
+}
+.erp-customer-form fieldset.no-border {
+  border-top: none;
+}
+.erp-customer-form fieldset legend {
+  font-weight: bold;
+  padding-right: 20px;
+  margin-bottom: 10px;
+}
+.erp-customer-form ol.fields-inline li {
+  display: inline-block;
+}
 span.red {
   color: #CF0202;
 }

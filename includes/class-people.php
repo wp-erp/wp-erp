@@ -7,7 +7,7 @@ namespace WeDevs\ERP;
 class People extends Item {
 
     /**
-     * [populate description]
+     * Generate people data
      *
      * @param  object  the item wpdb object
      *

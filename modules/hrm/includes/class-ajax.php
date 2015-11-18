@@ -341,6 +341,7 @@ class Ajax_Handler {
         unset( $_POST['action'] );
 
         $posted               = array_map( 'strip_tags_deep', $_POST );
+        $posted['type']       = 'customer';
         $employee_id          = erp_hr_employee_create( $posted );
 
         if ( is_wp_error( $employee_id ) ) {
