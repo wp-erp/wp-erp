@@ -9,6 +9,8 @@ class Admin_Menu {
     /**
      * Kick-in the class
      *
+     * @since 1.0
+     *
      * @return void
      */
     public function __construct() {
@@ -18,6 +20,8 @@ class Admin_Menu {
     /**
      * Add menu items
      *
+     * @since 1.0
+     *
      * @return void
      */
     public function admin_menu() {
@@ -25,7 +29,7 @@ class Admin_Menu {
         add_menu_page( __( 'CRM', 'wp-erp' ), __( 'CRM', 'wp-erp' ), 'manage_options', 'erp-sales', array( $this, 'dashboard_page' ), 'dashicons-chart-bar', null );
 
         add_submenu_page( 'erp-sales', __( 'Overview', 'wp-erp' ), __( 'Overview', 'wp-erp' ), 'manage_options', 'erp-sales', array( $this, 'dashboard_page' ) );
-        add_submenu_page( 'erp-sales', __( 'Contacts', 'wp-erp' ), __( 'Contacts', 'wp-erp' ), 'manage_options', 'erp-sales-customers', array( $this, 'customers_page' ) );
+        add_submenu_page( 'erp-sales', __( 'Customer', 'wp-erp' ), __( 'Customer', 'wp-erp' ), 'manage_options', 'erp-sales-customers', array( $this, 'customers_page' ) );
         // add_submenu_page( 'erp-sales', __( 'Leads', 'wp-erp' ), __( 'Leads', 'wp-erp' ), 'manage_options', 'erp-sales-leads', array( $this, 'leads_page' ) );
         // add_submenu_page( 'erp-sales', __( 'Oppurtunity', 'wp-erp' ), __( 'Oppurtunity', 'wp-erp' ), 'manage_options', 'erp-sales-oppurtunity', array( $this, 'dashboard_page' ) );
         // add_submenu_page( 'erp-sales', __( 'Customer Category', 'wp-erp' ), __( 'Customer Category', 'wp-erp' ), 'manage_options', 'erp-sales-category', array( $this, 'dashboard_page' ) );
@@ -44,6 +48,8 @@ class Admin_Menu {
     /**
      * Handles the dashboard page
      *
+     * @since 1.0
+     *
      * @return void
      */
     public function dashboard_page() {
@@ -53,22 +59,52 @@ class Admin_Menu {
     /**
      * Handles the dashboard page
      *
+     * @since 1.0
+     *
      * @return void
      */
     public function customers_page() {
-        include WPERP_CRM_VIEWS . '/customers.php';
+        $action = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
+        $id     = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
+
+        switch ( $action ) {
+
+            case 'view':
+                $customer = new Customer( $id );
+
+                if ( ! $customer->id ) {
+                    wp_die( __( 'Csutomer not found!', 'wp-erp' ) );
+                }
+
+                $template = WPERP_CRM_VIEWS . '/customer/single.php';
+                break;
+
+            default:
+                $template = WPERP_CRM_VIEWS . '/customers.php';
+                break;
+        }
+
+        $template = apply_filters( 'erp_customer_template', $template, $action, $id );
+
+        if ( file_exists( $template ) ) {
+            include $template;
+        }
     }
 
     /**
      * Handles the dashboard page
      *
+     * @since 1.0
+     *
      * @return void
      */
     public function leads_page() {
+
         $action = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
         $id     = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
 
         switch ($action) {
+
             case 'view':
                 $template = WPERP_CRM_VIEWS . '/leads/single.php';
                 break;
@@ -87,6 +123,8 @@ class Admin_Menu {
 
     /**
      * Handles the dashboard page
+     *
+     * @since 1.0
      *
      * @return void
      */

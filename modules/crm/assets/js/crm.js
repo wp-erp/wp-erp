@@ -25,7 +25,7 @@
              *
              * @return {void}
              */
-            reload: function() {
+            pageReload: function() {
                 $( '.erp-crm-customer' ).load( window.location.href + ' .erp-crm-customer' );
             },
 
@@ -103,7 +103,7 @@
                         wp.ajax.send( {
                             data: this.serialize(),
                             success: function(res) {
-
+                                WeDevs_ERP_CRM.customer.pageReload();
                                 modal.closeModal();
                             },
                             error: function(error) {

@@ -2,11 +2,11 @@
 namespace WeDevs\ERP\CRM;
 
 /**
- * Contact List table class
+ * Customer List table class
  *
  * @package weDevs|wperp
  */
-class Contact_List_Table extends \WP_List_Table {
+class Customer_List_Table extends \WP_List_Table {
 
     private $counts = array();
 
@@ -14,8 +14,8 @@ class Contact_List_Table extends \WP_List_Table {
         global $status, $page;
 
         parent::__construct( array(
-            'singular' => 'contact',
-            'plural'   => 'contacts',
+            'singular' => 'customer',
+            'plural'   => 'customers',
             'ajax'     => false
         ) );
     }
@@ -59,7 +59,7 @@ class Contact_List_Table extends \WP_List_Table {
      * @return void
      */
     function no_items() {
-        _e( 'No contact found.', 'wp-erp' );
+        _e( 'No customer found.', 'wp-erp' );
     }
 
     /**
@@ -70,23 +70,23 @@ class Contact_List_Table extends \WP_List_Table {
      *
      * @return string
      */
-    function column_default( $contact, $column_name ) {
+    function column_default( $customer, $column_name ) {
 
         switch ( $column_name ) {
             case 'email':
-                return 'contact@gmail.com';
+                return $customer->email;
 
             case 'phone_number':
-                return '+8801920241162';
+                return $customer->phone;
 
             case 'life_statges':
                 return 'Lead';
 
             case 'created_at':
-                return date( 'Y-m-d' );
+                return erp_format_date( $customer->created );
 
             default:
-                return isset( $contact->$column_name ) ? $contact->$column_name : '';
+                return isset( $customer->$column_name ) ? $customer->$column_name : '';
         }
     }
 
@@ -96,8 +96,8 @@ class Contact_List_Table extends \WP_List_Table {
         //     return 'filter_employee';
         // }
 
-        if ( isset( $_REQUEST['contact_search'] ) ) {
-            return 'contact_search';
+        if ( isset( $_REQUEST['customer_search'] ) ) {
+            return 'customer_search';
         }
 
         return parent::current_action();
@@ -125,28 +125,38 @@ class Contact_List_Table extends \WP_List_Table {
     function get_columns() {
         $columns = array(
             'cb'           => '<input type="checkbox" />',
-            'name'         => __( 'Contact Name', 'wp-erp' ),
+            'name'         => __( 'Customer Name', 'wp-erp' ),
             'email'        => __( 'Email', 'wp-erp' ),
             'phone_number' => __( 'Phone', 'wp-erp' ),
             'life_statges' => __( 'Type', 'wp-erp' ),
             'created_at'   => __( 'Created at', 'wp-erp' ),
         );
 
-        return apply_filters( 'erp_hr_contact_table_cols', $columns );
+        return apply_filters( 'erp_hr_customer_table_cols', $columns );
     }
 
     /**
-     * Render the employee name column
+     * Render the customer name column
      *
      * @param  object  $item
      *
      * @return string
      */
-    function column_name( $contact ) {
+    function column_name( $customer ) {
+        $customer = new \WeDevs\ERP\CRM\Customer( intval( $customer->id ) );
+
         $actions           = array();
         $delete_url        = '';
+        $view_url          = '';
+        $data_hard         = ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) ? 1 : 0;
+        $delete_text       = ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) ? __( 'Permanent Delete', 'wp-erp' ) : __( 'Delete', 'wp-erp' );
+        $customer_name     = $customer->first_name .' '. $customer->last_name;
 
-        return sprintf( '<a href="%3$s"><strong>%1$s</strong></a> %2$s', 'Sabbir Ahmed', $this->row_actions( $actions ), admin_url( 'admin.php' ) );
+        $actions['edit']   = sprintf( '<a href="%s" data-id="%d"  title="%s">%s</a>', $delete_url, $customer->id, __( 'Edit this customer', 'wp-erp' ), __( 'Edit', 'wp-erp' ) );
+        $actions['view']   = sprintf( '<a href="%s" title="%s">%s</a>', $view_url, __( 'View this customer', 'wp-erp' ), __( 'View', 'wp-erp' ) );
+        $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" data-hard=%d title="%s">%s</a>', $delete_url, $customer->id, $data_hard, __( 'Delete this item', 'wp-erp' ), $delete_text );
+
+        return sprintf( '%4$s <a href="%3$s"><strong>%1$s</strong></a> %2$s', $customer->get_full_name(), $this->row_actions( $actions ), $customer->get_details_url(), $customer->get_avatar() );
     }
 
     /**
@@ -179,7 +189,7 @@ class Contact_List_Table extends \WP_List_Table {
      */
     function column_cb( $item ) {
         return sprintf(
-            '<input type="checkbox" name="contact_id[]" value="%s" />', $item->id
+            '<input type="checkbox" name="customer_id[]" value="%s" />', $item->id
         );
     }
 
@@ -190,13 +200,21 @@ class Contact_List_Table extends \WP_List_Table {
      */
     public function get_views() {
         $status_links   = array();
-        $base_link      = admin_url( 'admin.php?page=erp-hr-employee' );
+        $base_link      = admin_url( 'admin.php?page=erp-sales-customers' );
 
-        $status_links[ 'trash' ] = sprintf( '<a href="%s" class="status-trash">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'trash' ), $base_link ), __( 'Trash', 'wp-erp' ), erp_hr_count_trashed_employees() );
+        $status_links[ 'trash' ] = sprintf( '<a href="%s" class="status-trash">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'trash' ), $base_link ), __( 'Trash', 'wp-erp' ), 10 );
 
         return $status_links;
     }
 
+    /**
+     * Search form for lsit table
+     *
+     * @param  string $text
+     * @param  string $input_id
+     *
+     * @return void
+     */
     public function search_box( $text, $input_id ) {
         if ( empty( $_REQUEST['s'] ) && !$this->has_items() )
             return;

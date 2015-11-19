@@ -168,6 +168,20 @@
 .erp-customer-form ol.fields-inline li {
   display: inline-block;
 }
+.erp-crm-customer table.wp-list-table .column-name img {
+  float: left;
+  margin-right: 10px;
+  margin-top: 1px;
+}
+.erp-crm-customer table.wp-list-table .column-balance {
+  width: 8%;
+}
+.erp-crm-customer table.wp-list-table .column-status {
+  width: 8%;
+}
+.erp-crm-customer table.wp-list-table .column-comments {
+  width: 25%;
+}
 span.red {
   color: #CF0202;
 }

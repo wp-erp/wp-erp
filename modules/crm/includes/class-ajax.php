@@ -43,6 +43,7 @@ class Ajax_Handler {
         unset( $_POST['action'] );
 
         $posted               = array_map( 'strip_tags_deep', $_POST );
+        $posted['type']       = 'customer';
         $customer_id          = erp_insert_people( $posted );
 
         if ( is_wp_error( $customer_id ) ) {
