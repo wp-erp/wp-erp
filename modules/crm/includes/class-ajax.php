@@ -25,6 +25,7 @@ class Ajax_Handler {
 
         // Customer
         $this->action( 'wp_ajax_erp-crm-customer-new', 'create_customer' );
+        $this->action( 'wp_ajax_erp-crm-customer-get', 'customer_get' );
     }
 
     /**
@@ -52,10 +53,35 @@ class Ajax_Handler {
 
         $customer = new Customer( intval( $customer_id ) );
 
-        $customer->add_meta( 'photo_id', $posted['photo_id'] );
+        if ( $posted['photo_id'] ) {
+            $customer->update_meta( 'photo_id', $posted['photo_id'] );
+        }
+
         $data     = $customer->to_array();
 
         $this->send_success( $data );
+
+    }
+
+    /**
+     * Get customer details
+     *
+     * @since 1.0
+     *
+     * @return array
+     */
+    public function customer_get() {
+
+        $this->verify_nonce( 'wp-erp-crm-nonce' );
+
+        $customer_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+        $customer    = new Customer( $customer_id );
+
+        if ( ! $customer_id || ! $customer ) {
+            $this->send_error( __( 'Customer does not exists.', 'wp-erp' ) );
+        }
+
+        $this->send_success( $customer->to_array() );
 
     }
 

@@ -49,14 +49,14 @@ class WeDevs_ERP_Installer {
 
         // bail out if the php version is lower than
         if ( version_compare( PHP_VERSION, $this->min_php, '<' ) ) {
-            deactivate_plugins( basename( WPERP_FILE ) );
+                deactivate_plugins( basename( WPERP_FILE ) );
 
-            $error = '<h1>An Error Occured</h1>';
-            $error .= '<h2>Your installed PHP Version is: ' . PHP_VERSION . '</h2>';
-            $error .= '<p>The <strong>WP ERP</strong> plugin requires PHP version <strong>' . $this->min_php . '</strong> or greater';
-            $error .= '<p>The version of your PHP is <a href="http://php.net/supported-versions.php" target="_blank"><strong>unsupported and old</strong></a>. ';
-            $error .= 'You should update your PHP software or contact your host regarding this matter.</p>';
-            wp_die( $error, 'Plugin Activation Error', array( 'response' => 200, 'back_link' => true ) );
+                $error = '<h1>An Error Occured</h1>';
+                $error .= '<h2>Your installed PHP Version is: ' . PHP_VERSION . '</h2>';
+                $error .= '<p>The <strong>WP ERP</strong> plugin requires PHP version <strong>' . $this->min_php . '</strong> or greater';
+                $error .= '<p>The version of your PHP is <a href="http://php.net/supported-versions.php" target="_blank"><strong>unsupported and old</strong></a>. ';
+                $error .= 'You should update your PHP software or contact your host regarding this matter.</p>';
+                wp_die( $error, 'Plugin Activation Error', array( 'response' => 200, 'back_link' => true ) );
         }
 
 
@@ -79,8 +79,8 @@ class WeDevs_ERP_Installer {
      */
     public function welcome_redirect( $plugin ) {
         if ( $plugin == 'wp-erp/wp-erp.php' ) {
-            wp_safe_redirect( admin_url( 'index.php?page=wp-erp-welcome' ) );
-            die();
+                wp_safe_redirect( admin_url( 'index.php?page=wp-erp-welcome' ) );
+                die();
         }
     }
 
@@ -139,13 +139,13 @@ class WeDevs_ERP_Installer {
         $collate = '';
 
         if ( $wpdb->has_cap( 'collation' ) ) {
-            if ( ! empty($wpdb->charset ) ) {
-                $collate .= "DEFAULT CHARACTER SET $wpdb->charset";
-            }
+                if ( ! empty($wpdb->charset ) ) {
+                        $collate .= "DEFAULT CHARACTER SET $wpdb->charset";
+                }
 
-            if ( ! empty($wpdb->collate ) ) {
-                $collate .= " COLLATE $wpdb->collate";
-            }
+                if ( ! empty($wpdb->collate ) ) {
+                        $collate .= " COLLATE $wpdb->collate";
+                }
         }
 
         $table_schema = [
@@ -378,69 +378,69 @@ class WeDevs_ERP_Installer {
             ) $collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_announcement` (
-               `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-               `user_id` bigint(20) unsigned NOT NULL,
-               `post_id` bigint(11) NOT NULL,
-               `status` varchar(30) NOT NULL,
-              PRIMARY KEY (id)
+                `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+                `user_id` bigint(20) unsigned NOT NULL,
+                `post_id` bigint(11) NOT NULL,
+                `status` varchar(30) NOT NULL,
+                PRIMARY KEY (id)
             ) $collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_peoples` (
-              `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-              `user_id` bigint(20) unsigned DEFAULT '0',
-              `first_name` varchar(60) DEFAULT NULL,
-              `last_name` varchar(60) DEFAULT NULL,
-              `company` varchar(60) DEFAULT NULL,
-              `email` varchar(100) DEFAULT NULL,
-              `phone` varchar(20) DEFAULT NULL,
-              `mobile` varchar(20) DEFAULT NULL,
-              `other` varchar(50) DEFAULT NULL,
-              `website` varchar(100) DEFAULT NULL,
-              `fax` varchar(20) DEFAULT NULL,
-              `notes` text,
-              `street_1` varchar(255) DEFAULT NULL,
-              `street_2` varchar(255) DEFAULT NULL,
-              `city` varchar(80) DEFAULT NULL,
-              `state` varchar(50) DEFAULT NULL,
-              `postal_code` varchar(10) DEFAULT NULL,
-              `country` varchar(20) DEFAULT NULL,
-              `currency` varchar(5) DEFAULT NULL,
-              `type` varchar(10) NOT NULL DEFAULT 'customer',
-              `created` datetime DEFAULT NULL,
-              PRIMARY KEY (`id`),
-              KEY `type` (`type`),
-              KEY `user_id` (`user_id`)
+                `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+                `user_id` bigint(20) unsigned DEFAULT '0',
+                `first_name` varchar(60) DEFAULT NULL,
+                `last_name` varchar(60) DEFAULT NULL,
+                `company` varchar(60) DEFAULT NULL,
+                `email` varchar(100) DEFAULT NULL,
+                `phone` varchar(20) DEFAULT NULL,
+                `mobile` varchar(20) DEFAULT NULL,
+                `other` varchar(50) DEFAULT NULL,
+                `website` varchar(100) DEFAULT NULL,
+                `fax` varchar(20) DEFAULT NULL,
+                `notes` text,
+                `street_1` varchar(255) DEFAULT NULL,
+                `street_2` varchar(255) DEFAULT NULL,
+                `city` varchar(80) DEFAULT NULL,
+                `state` varchar(50) DEFAULT NULL,
+                `postal_code` varchar(10) DEFAULT NULL,
+                `country` varchar(20) DEFAULT NULL,
+                `currency` varchar(5) DEFAULT NULL,
+                `type` varchar(10) NOT NULL DEFAULT 'customer',
+                `created` datetime DEFAULT NULL,
+                PRIMARY KEY (`id`),
+                KEY `type` (`type`),
+                KEY `user_id` (`user_id`)
             ) $collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_peoplemeta` (
-              `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-              `erp_people_id` bigint(20) DEFAULT NULL,
-              `meta_key` varchar(255) DEFAULT NULL,
-              `meta_value` longtext,
-              PRIMARY KEY (`id`),
-              KEY `erp_people_id` (`erp_people_id`),
-              KEY `meta_key` (`meta_key`)
+                `meta_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+                `erp_people_id` bigint(20) DEFAULT NULL,
+                `meta_key` varchar(255) DEFAULT NULL,
+                `meta_value` longtext,
+                PRIMARY KEY (`id`),
+                KEY `erp_people_id` (`erp_people_id`),
+                KEY `meta_key` (`meta_key`)
             ) $collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_audit_log` (
-              `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-              `component` varchar(50) NOT NULL DEFAULT '',
-              `sub_component` varchar(50) NOT NULL DEFAULT '',
-              `old_value` longtext,
-              `new_value` longtext,
-              `message` longtext,
-              `changetype` varchar(10) DEFAULT NULL,
-              `created_by` bigint(20) unsigned DEFAULT NULL,
-              `created_at` datetime DEFAULT NULL,
-              `updated_at` datetime DEFAULT NULL,
-              PRIMARY KEY (`id`)
+                `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+                `component` varchar(50) NOT NULL DEFAULT '',
+                `sub_component` varchar(50) NOT NULL DEFAULT '',
+                `old_value` longtext,
+                `new_value` longtext,
+                `message` longtext,
+                `changetype` varchar(10) DEFAULT NULL,
+                `created_by` bigint(20) unsigned DEFAULT NULL,
+                `created_at` datetime DEFAULT NULL,
+                `updated_at` datetime DEFAULT NULL,
+                PRIMARY KEY (`id`)
             ) $collate;",
 
         ];
 
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
         foreach ( $table_schema as $table ) {
-            dbDelta( $table );
+                dbDelta( $table );
         }
 
     }

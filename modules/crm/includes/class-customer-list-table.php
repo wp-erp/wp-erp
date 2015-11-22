@@ -147,7 +147,7 @@ class Customer_List_Table extends \WP_List_Table {
 
         $actions           = array();
         $delete_url        = '';
-        $view_url          = '';
+        $view_url          = $customer->get_details_url();
         $data_hard         = ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) ? 1 : 0;
         $delete_text       = ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) ? __( 'Permanent Delete', 'wp-erp' ) : __( 'Delete', 'wp-erp' );
         $customer_name     = $customer->first_name .' '. $customer->last_name;

@@ -56,6 +56,13 @@ class Customer extends \WeDevs\ERP\People {
             foreach ( $this->data as $key => $value ) {
                 $fields[$key] = $value;
             }
+
+            $avatar_id                 = (int) $this->get_meta( 'photo_id', true );
+            $fields['avatar']['id']    = $avatar_id;
+
+            if ( $avatar_id ) {
+                $fields['avatar']['url'] = wp_get_attachment_url( $avatar_id );
+            }
         }
 
         return apply_filters( 'erp_crm_get_customer_fields', $fields, $this->data, $this->id );
@@ -91,7 +98,7 @@ class Customer extends \WeDevs\ERP\People {
             }
         }
 
-        return get_avatar( $this->id, $size );
+        return get_avatar( $this->email, $size );
     }
 
 

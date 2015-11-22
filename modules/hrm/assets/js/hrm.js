@@ -610,7 +610,6 @@
              * @param  {event}
              */
             edit: function(e) {
-                console.log('asdkjsdf');
                 e.preventDefault();
 
                 var self = $(this);

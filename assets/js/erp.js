@@ -59,7 +59,7 @@ window.wperp = window.wperp || {};
             // on popup, country change event
             $( 'body' ).on('change', 'select.erp-country-select', this.populateState );
             $( 'body' ).on( 'erp-hr-after-new-location', this.afterNewLocation );
-            
+
             $( '.erp-hr-audit-log' ).on( 'click', 'a.erp-audit-log-view-changes', this.viewLogChanges );
 
             this.initFields();
@@ -101,7 +101,7 @@ window.wperp = window.wperp || {};
                         id: 'erp-audit-log-popup',
                         content: res.content,
                         extraClass: 'midium',
-                    }); 
+                    });
                 },
                 error: function(error) {
                     alert( error );
@@ -253,15 +253,6 @@ window.wperp = window.wperp || {};
                     });
 
                     $( 'select.erp-country-select').change();
-
-                    $( 'li[data-selected]', this ).each(function() {
-                        var self = $(this),
-                            selected = self.data('selected');
-
-                        if ( selected !== '' ) {
-                            self.find( 'select' ).val( selected );
-                        }
-                    });
                 },
                 onSubmit: function(modal) {
                     wp.ajax.send( {

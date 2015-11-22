@@ -124,19 +124,22 @@
                 ) ); ?>
             </li>
 
-            <li>
-                <?php erp_html_form_input( array(
-                    'label' => __( 'Country', 'wp-erp' ),
-                    'name'  => 'country',
-                    'value' => '{{ data.country }}'
-                ) ); ?>
+            <li data-selected="{{ data.country }}">
+                <label for="erp-popup-country"><?php _e( 'Country', 'wp-erp' ); ?></label>
+                <select name="country" id="erp-popup-country" class="erp-country-select select2" data-parent="ol">
+                    <?php $country = \WeDevs\ERP\Countries::instance(); ?>
+                    <?php echo $country->country_dropdown(); ?>
+                </select>
             </li>
 
-            <li>
+            <li data-selected="{{ data.state }}">
                 <?php erp_html_form_input( array(
-                    'label' => __( 'State', 'wp-erp' ),
-                    'name'  => 'state',
-                    'value' => '{{ data.state }}'
+                    'label'   => __( 'Province / State', 'wp-erp' ),
+                    'name'    => 'state',
+                    'id'      => 'erp-state',
+                    'type'    => 'select',
+                    'class'   => 'erp-state-select',
+                    'options' => array( '' => __( '- Select -', 'wp-erp' ) )
                 ) ); ?>
             </li>
 
@@ -181,7 +184,7 @@
 
     <?php do_action( 'erp-crm-customer-form-bottom' ); ?>
 
-    <input type="hidden" name="customer_id" id="erp-customer-id" value="{{ data.id }}">
+    <input type="hidden" name="id" id="erp-customer-id" value="{{ data.id }}">
     <input type="hidden" name="action" id="erp-customer-action" value="erp-crm-customer-new">
     <?php wp_nonce_field( 'wp-erp-crm-customer-nonce' ); ?>
 

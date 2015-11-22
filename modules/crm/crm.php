@@ -73,6 +73,7 @@ class Customer_Relationship {
      * @return void
      */
     private function includes() {
+        require_once WPERP_CRM_PATH . '/includes/function-customer.php';
         require_once WPERP_CRM_PATH . '/admin/class-menu.php';
     }
 
@@ -115,20 +116,25 @@ class Customer_Relationship {
             'nonce'                 => wp_create_nonce( 'wp-erp-crm-nonce' ),
             'popup'                 => array(
                 'customer_title'         => __( 'Add New Customer', 'wp-erp' ),
-                'customer_submit'        => __( 'Add New', 'wp-erp' ),
+                'customer_update_title'  => __( 'Edit Customer', 'wp-erp' ),
             ),
+            'add_submit'            => __( 'Add New', 'wp-erp' ),
+            'update_submit'         => __( 'Update', 'wp-erp' ),
             'customer_upload_photo' => __( 'Upload Photo', 'wp-erp' ),
             'customer_set_photo'    => __( 'Set Photo', 'wp-erp' ),
             'confirm'               => __( 'Are you sure?', 'wp-erp' ),
             'delConfirmContact'     => __( 'Are you sure to delete this customer?', 'wp-erp' ),
         ) );
 
-        // if its an employee page
+        // if its an customer page
         if ( 'crm_page_erp-sales-customers' == $hook ) {
             wp_enqueue_script( 'post' );
 
-            $customer                          = new Customer();
+            $customer = new Customer();
+            $country  = \WeDevs\ERP\Countries::instance();
+
             $localize_script['customer_empty'] = $customer->to_array();
+            $localize_script['wpErpCountries'] = $country->load_country_states();
         }
 
 

@@ -78,9 +78,9 @@ class People extends Item {
      */
     function get_meta( $meta_key, $single = true ) {
         if ( $this->is_wp_user() ) {
-            \get_user_meta( $this->user_id, $meta_key, $single );
+            return \get_user_meta( $this->user_id, $meta_key, $single );
         } else {
-            \erp_people_get_meta( $this->id, $meta_key, $single );
+            return \erp_people_get_meta( $this->id, $meta_key, $single );
         }
     }
 
