@@ -27,6 +27,7 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-crm-customer-new', 'create_customer' );
         $this->action( 'wp_ajax_erp-crm-customer-get', 'customer_get' );
         $this->action( 'wp_ajax_erp-crm-customer-delete', 'customer_remove' );
+        $this->action( 'wp_ajax_erp-crm-customer-restore', 'customer_restore' );
     }
 
     /**
@@ -100,8 +101,6 @@ class Ajax_Handler {
 
         $this->verify_nonce( 'wp-erp-crm-nonce' );
 
-        global $wpdb;
-
         $customer_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
         $hard        = isset( $_REQUEST['hard'] ) ? intval( $_REQUEST['hard'] ) : 0;
 
@@ -112,7 +111,31 @@ class Ajax_Handler {
         erp_crm_customer_delete( $customer_id, $hard );
 
         // @TODO: check permission
-        $this->send_success( __( 'Employee has been removed successfully', 'wp-erp' ) );
+        $this->send_success( __( 'Customer has been removed successfully', 'wp-erp' ) );
+    }
+
+    /**
+     * Restore customer from trash
+     *
+     * @since 1.0
+     *
+     * @return json
+     */
+    public function customer_restore() {
+
+        $this->verify_nonce( 'wp-erp-crm-nonce' );
+
+        $customer_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+
+        if ( ! $customer_id ) {
+            $this->send_error( __( 'No Customer found', 'wp-erp' ) );
+        }
+
+        erp_crm_customer_restore( $customer_id );
+
+        // @TODO: check permission
+        $this->send_success( __( 'Customer has been removed successfully', 'wp-erp' ) );
+
     }
 
 }

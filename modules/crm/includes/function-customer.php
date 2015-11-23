@@ -90,6 +90,32 @@ function erp_crm_customer_delete( $customer_ids, $hard = false ) {
 }
 
 /**
+ * Customer Restore from trash
+ *
+ * @since 1.0
+ *
+ * @param  array|int $customer_ids
+ *
+ * @return void
+ */
+function erp_crm_customer_restore( $customer_ids ) {
+    if ( empty( $customer_ids ) ) {
+        return;
+    }
+
+    if ( is_array( $customer_ids ) ) {
+        foreach ( $customer_ids as $key => $user_id ) {
+            WeDevs\ERP\Framework\Models\People::withTrashed()->find( $user_id )->restore();
+        }
+    }
+
+    if ( is_int( $customer_ids ) ) {
+        WeDevs\ERP\Framework\Models\People::withTrashed()->find( $customer_ids )->restore();
+    }
+}
+
+
+/**
  * Get customer life statges status count
  *
  * @since 1.0

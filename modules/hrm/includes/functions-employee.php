@@ -385,11 +385,9 @@ function erp_employee_restore( $employee_ids ) {
     }
 
     if ( is_array( $employee_ids ) ) {
-
         foreach ( $employee_ids as $key => $user_id ) {
             \WeDevs\ERP\HRM\Models\Employee::withTrashed()->where( 'user_id', $user_id )->restore();
         }
-
     }
 
     if ( is_int( $employee_ids ) ) {

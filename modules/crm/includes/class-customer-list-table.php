@@ -158,6 +158,10 @@ class Customer_List_Table extends \WP_List_Table {
         $actions['view']   = sprintf( '<a href="%s" title="%s">%s</a>', $view_url, __( 'View this customer', 'wp-erp' ), __( 'View', 'wp-erp' ) );
         $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" data-hard=%d title="%s">%s</a>', $delete_url, $customer->id, $data_hard, __( 'Delete this item', 'wp-erp' ), $delete_text );
 
+        if ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) {
+            $actions['restore'] = sprintf( '<a href="%s" class="restoreCustomer" data-id="%d" title="%s">%s</a>', $delete_url, $customer->id, __( 'Restore this item', 'wp-erp' ), __( 'Restore', 'wp-erp' ) );
+        }
+
         return sprintf( '%4$s <a href="%3$s"><strong>%1$s</strong></a> %2$s', $customer->get_full_name(), $this->row_actions( $actions ), $customer->get_details_url(), $customer->get_avatar() );
     }
 

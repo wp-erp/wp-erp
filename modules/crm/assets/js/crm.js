@@ -13,6 +13,7 @@
             $( '.erp-crm-customer' ).on( 'click', 'a#erp-contact-new', this.customer.create );
             $( '.erp-crm-customer' ).on( 'click', 'span.edit a', this.customer.edit );
             $( '.erp-crm-customer' ).on( 'click', 'a.submitdelete', this.customer.remove );
+            $( '.erp-crm-customer' ).on( 'click', 'a.restoreCustomer', this.customer.restore );
 
             // photos
             $( 'body' ).on( 'click', 'a#erp-set-customer-photo', this.customer.setPhoto );
@@ -260,7 +261,28 @@
                         }
                     });
                 }
+            },
 
+            restore: function(e) {
+                var self = $(this);
+
+                if ( confirm( wpErpCrm.confirm ) ) {
+                    wp.ajax.send( 'erp-crm-customer-restore', {
+                        data: {
+                            '_wpnonce': wpErpCrm.nonce,
+                            id: self.data( 'id' ),
+                        },
+                        success: function() {
+                            self.closest('tr').fadeOut( 'fast', function() {
+                                $(this).remove();
+                                WeDevs_ERP_CRM.customer.pageReload();
+                            });
+                        },
+                        error: function(response) {
+                            alert( response );
+                        }
+                    });
+                }
             }
 
         }
