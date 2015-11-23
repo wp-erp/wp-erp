@@ -41,9 +41,50 @@ class Form_Handler {
             return;
         }
 
-        $redirect = remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'customer_search' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
-        wp_redirect( $redirect );
-        exit();
+        $customer_table = new \WeDevs\ERP\CRM\Customer_List_Table();
+        $action         = $customer_table->current_action();
+
+        if ( $action ) {
+
+            $redirect = remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'customer_search' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
+
+            switch ( $action ) {
+
+                case 'delete' :
+
+                    if ( isset( $_GET['customer_id'] ) && !empty( $_GET['customer_id'] ) ) {
+                        erp_crm_customer_delete( $_GET['customer_id'], false );
+                    }
+
+                    wp_redirect( $redirect );
+                    exit();
+
+                case 'permanent_delete' :
+                    if ( isset( $_GET['customer_id'] ) && !empty( $_GET['customer_id'] ) ) {
+                        erp_employee_delete( $_GET['customer_id'], true );
+                    }
+
+                    wp_redirect( $redirect );
+                    exit();
+
+                case 'restore' :
+                    if ( isset( $_GET['customer_id'] ) && !empty( $_GET['customer_id'] ) ) {
+                        erp_crm_customer_restore( $_GET['customer_id'] );
+                    }
+
+                    wp_redirect( $redirect );
+                    exit();
+
+                // case 'filter_employee':
+                //     wp_redirect( $redirect );
+                //     exit();
+
+                default:
+                    wp_redirect( $redirect );
+                    exit();
+
+            }
+        }
     }
 
 }

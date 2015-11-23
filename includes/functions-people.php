@@ -32,6 +32,8 @@ function erp_get_peoples( $args = [] ) {
         'order'      => 'ASC',
         'trashed'    => false,
         'meta_query' => [],
+        'count'      => false
+
     ];
 
     $args      = wp_parse_args( $args, $defaults );
@@ -79,6 +81,10 @@ function erp_get_peoples( $args = [] ) {
                 ->toArray();
 
         $items = erp_array_to_object( $items );
+
+        if ( $args['count'] ) {
+            $items = $people->type( $args['type'] )->count();
+        }
 
         wp_cache_set( $cache_key, $items, 'wp-erp' );
     }

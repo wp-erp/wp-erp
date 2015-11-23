@@ -258,6 +258,8 @@ class Customer_List_Table extends \WP_List_Table {
     /**
      * Prepare the class items
      *
+     * @since 1.0
+     *
      * @return void
      */
     function prepare_items() {
@@ -277,14 +279,22 @@ class Customer_List_Table extends \WP_List_Table {
             'number' => $per_page,
         );
 
+        // Filter for serach
         if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
             $args['s'] = $_REQUEST['s'];
         }
 
+        // Filter for order by
         if ( isset( $_REQUEST['orderby'] ) && ! empty( $_REQUEST['orderby'] ) ) {
             $args['orderby'] = $_REQUEST['orderby'];
         }
 
+        // Filter for order
+        if ( isset( $_REQUEST['order'] ) && !empty( $_REQUEST['order'] ) ) {
+            $args['order'] = $_REQUEST['order'];
+        }
+
+        // Filter for cusotmer life stage
         if ( isset( $_REQUEST['status'] ) && ! empty( $_REQUEST['status'] ) ) {
             if ( $_REQUEST['status'] != 'all' ) {
                 if ( $_REQUEST['status'] == 'trash' ) {
@@ -298,15 +308,14 @@ class Customer_List_Table extends \WP_List_Table {
             }
         }
 
-        if ( isset( $_REQUEST['order'] ) && !empty( $_REQUEST['order'] ) ) {
-            $args['order'] = $_REQUEST['order'];
-        }
-
         $this->counts = erp_crm_customer_get_status_count();
         $this->items  = erp_get_peoples( $args );
 
+        $args['count'] = true;
+        $total_items = erp_get_peoples( $args );
+
         $this->set_pagination_args( array(
-            'total_items' => erp_get_peoples_count(),
+            'total_items' => $total_items,
             'per_page'    => $per_page
         ) );
     }

@@ -12,12 +12,12 @@
             <form method="get">
                 <input type="hidden" name="page" value="erp-sales-customers">
                 <?php
-                $employee_table = new \WeDevs\ERP\CRM\Customer_List_Table();
-                $employee_table->prepare_items();
-                $employee_table->search_box( __( 'Search Customer', 'wp-erp' ), 'erp-customer-search' );
-                $employee_table->views();
+                $customer_table = new \WeDevs\ERP\CRM\Customer_List_Table();
+                $customer_table->prepare_items();
+                $customer_table->search_box( __( 'Search Customer', 'wp-erp' ), 'erp-customer-search' );
+                $customer_table->views();
 
-                $employee_table->display();
+                $customer_table->display();
                 ?>
             </form>
 
