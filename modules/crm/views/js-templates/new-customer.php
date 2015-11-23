@@ -76,6 +76,17 @@
 
         <ol class="form-fields two-col">
 
+            <li data-selected="{{ data.life_stage }}">
+                <?php erp_html_form_input( array(
+                    'label' => __( 'Life Stage', 'wp-erp' ),
+                    'name'  => 'life_stage',
+                    'required' => true,
+                    'type'  => 'select',
+                    'class' => 'select2',
+                    'options' => erp_crm_get_life_statges_dropdown_raw( __( '--Select Stage--', 'wp-erp' ) )
+                ) ); ?>
+            </li>
+
             <li>
                 <?php erp_html_form_input( array(
                     'label' => __( 'Mobile', 'wp-erp' ),

@@ -37,6 +37,7 @@ class Customer extends \WeDevs\ERP\People {
                 'id'  => 0,
                 'url' => ''
             ),
+            'life_stage'  => '',
             'email'       => '',
             'phone'       => '',
             'mobile'      => '',
@@ -63,6 +64,8 @@ class Customer extends \WeDevs\ERP\People {
             if ( $avatar_id ) {
                 $fields['avatar']['url'] = wp_get_attachment_url( $avatar_id );
             }
+
+            $fields['life_stage'] = $this->get_meta( 'life_stage', true );
         }
 
         return apply_filters( 'erp_crm_get_customer_fields', $fields, $this->data, $this->id );

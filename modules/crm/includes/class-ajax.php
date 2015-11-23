@@ -26,6 +26,7 @@ class Ajax_Handler {
         // Customer
         $this->action( 'wp_ajax_erp-crm-customer-new', 'create_customer' );
         $this->action( 'wp_ajax_erp-crm-customer-get', 'customer_get' );
+        $this->action( 'wp_ajax_erp-crm-customer-delete', 'customer_remove' );
     }
 
     /**
@@ -57,7 +58,11 @@ class Ajax_Handler {
             $customer->update_meta( 'photo_id', $posted['photo_id'] );
         }
 
-        $data     = $customer->to_array();
+        if ( $posted['life_stage'] ) {
+            $customer->update_meta( 'life_stage', $posted['life_stage'] );
+        }
+
+        $data = $customer->to_array();
 
         $this->send_success( $data );
 
@@ -82,7 +87,32 @@ class Ajax_Handler {
         }
 
         $this->send_success( $customer->to_array() );
+    }
 
+    /**
+     * Delete customer data with meta
+     *
+     * @since 1.0
+     *
+     * @return json
+     */
+    public function customer_remove() {
+
+        $this->verify_nonce( 'wp-erp-crm-nonce' );
+
+        global $wpdb;
+
+        $customer_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+        $hard        = isset( $_REQUEST['hard'] ) ? intval( $_REQUEST['hard'] ) : 0;
+
+        if ( ! $customer_id ) {
+            $this->send_error( __( 'No Customer found', 'wp-erp' ) );
+        }
+
+        erp_crm_customer_delete( $customer_id, $hard );
+
+        // @TODO: check permission
+        $this->send_success( __( 'Employee has been removed successfully', 'wp-erp' ) );
     }
 
 }

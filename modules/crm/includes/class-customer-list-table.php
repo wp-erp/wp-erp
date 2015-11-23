@@ -72,6 +72,9 @@ class Customer_List_Table extends \WP_List_Table {
      */
     function column_default( $customer, $column_name ) {
 
+        $life_stages = erp_crm_get_life_statges_dropdown_raw();
+        $life_stage  = erp_people_get_meta( $customer->id, 'life_stage', true );
+
         switch ( $column_name ) {
             case 'email':
                 return $customer->email;
@@ -79,8 +82,8 @@ class Customer_List_Table extends \WP_List_Table {
             case 'phone_number':
                 return $customer->phone;
 
-            case 'life_statges':
-                return 'Lead';
+            case 'life_stages':
+                return isset( $life_stages[$life_stage] ) ? $life_stages[$life_stage] : '-';
 
             case 'created_at':
                 return erp_format_date( $customer->created );
@@ -128,7 +131,7 @@ class Customer_List_Table extends \WP_List_Table {
             'name'         => __( 'Customer Name', 'wp-erp' ),
             'email'        => __( 'Email', 'wp-erp' ),
             'phone_number' => __( 'Phone', 'wp-erp' ),
-            'life_statges' => __( 'Type', 'wp-erp' ),
+            'life_stages'  => __( 'Type', 'wp-erp' ),
             'created_at'   => __( 'Created at', 'wp-erp' ),
         );
 
@@ -194,7 +197,9 @@ class Customer_List_Table extends \WP_List_Table {
     }
 
     /**
-     * Set the views
+     * Set the filter listing views
+     *
+     * @since 1.0
      *
      * @return array
      */
@@ -202,7 +207,12 @@ class Customer_List_Table extends \WP_List_Table {
         $status_links   = array();
         $base_link      = admin_url( 'admin.php?page=erp-sales-customers' );
 
-        $status_links[ 'trash' ] = sprintf( '<a href="%s" class="status-trash">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'trash' ), $base_link ), __( 'Trash', 'wp-erp' ), 10 );
+        foreach ($this->counts as $key => $value) {
+            $class = ( $key == $this->page_status ) ? 'current' : 'status-' . $key;
+            $status_links[ $key ] = sprintf( '<a href="%s" class="%s">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => $key ), $base_link ), $class, $value['label'], $value['count'] );
+        }
+
+        $status_links[ 'trash' ] = sprintf( '<a href="%s" class="status-trash">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'trash' ), $base_link ), __( 'Trash', 'wp-erp' ), erp_hr_count_trashed_customers() );
 
         return $status_links;
     }
@@ -289,8 +299,7 @@ class Customer_List_Table extends \WP_List_Table {
             $args['order'] = $_REQUEST['order'];
         }
 
-
-        // $this->counts = erp_get_peoples_count();
+        $this->counts = erp_crm_customer_get_status_count();
         $this->items  = erp_get_peoples( $args );
 
         $this->set_pagination_args( array(

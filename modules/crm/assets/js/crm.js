@@ -12,6 +12,7 @@
             // Customer
             $( '.erp-crm-customer' ).on( 'click', 'a#erp-contact-new', this.customer.create );
             $( '.erp-crm-customer' ).on( 'click', 'span.edit a', this.customer.edit );
+            $( '.erp-crm-customer' ).on( 'click', 'a.submitdelete', this.customer.remove );
 
             // photos
             $( 'body' ).on( 'click', 'a#erp-set-customer-photo', this.customer.setPhoto );
@@ -140,17 +141,6 @@
                     extraClass: 'midium',
                     onReady: function() {
                         $( '.select2' ).select2();
-
-                        // $( 'li[data-selected]', this ).each(function() {
-                        //     var self = $(this),
-                        //         selected = self.data('selected');
-
-                        //     if ( selected !== '' ) {
-                        //         self.find( 'select' ).val( selected );
-                        //     }
-                        // });
-
-                        // $( 'select.erp-country-select').change();
                     },
                     onSubmit: function(modal) {
                         modal.disableButton();
@@ -201,7 +191,6 @@
                                 var html = wp.template('erp-crm-new-contact')( response );
                                 $( '.content', modal ).html( html );
                                 $( '.loader', modal).remove();
-                                $( '.select2' ).select2();
 
                                 $( 'li[data-selected]', modal ).each(function() {
                                     var self = $(this),
@@ -212,6 +201,7 @@
                                     }
                                 });
 
+                                $( '.select2' ).select2();
                                 $( 'select.erp-country-select').change();
 
                                 $( 'li[data-selected]', modal ).each(function() {
@@ -242,6 +232,35 @@
                         });
                     }
                 });
+            },
+
+            /**
+             * Remove customer data with meta
+             *
+             * @return {[void]}
+             */
+            remove: function(e) {
+                var self = $(this);
+
+                if ( confirm( wpErpCrm.delConfirmCustomer ) ) {
+                    wp.ajax.send( 'erp-crm-customer-delete', {
+                        data: {
+                            '_wpnonce': wpErpCrm.nonce,
+                            id: self.data( 'id' ),
+                            hard: self.data( 'hard' )
+                        },
+                        success: function() {
+                            self.closest('tr').fadeOut( 'fast', function() {
+                                $(this).remove();
+                                WeDevs_ERP_CRM.customer.pageReload();
+                            });
+                        },
+                        error: function(response) {
+                            alert( response );
+                        }
+                    });
+                }
+
             }
 
         }

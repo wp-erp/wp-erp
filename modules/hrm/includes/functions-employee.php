@@ -314,7 +314,9 @@ function erp_hr_count_employees() {
 
 
 /**
- * Get leave requests count
+ * Get Employee status count
+ *
+ * @since 0.1
  *
  * @return array
  */

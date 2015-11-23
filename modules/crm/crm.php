@@ -123,7 +123,7 @@ class Customer_Relationship {
             'customer_upload_photo' => __( 'Upload Photo', 'wp-erp' ),
             'customer_set_photo'    => __( 'Set Photo', 'wp-erp' ),
             'confirm'               => __( 'Are you sure?', 'wp-erp' ),
-            'delConfirmContact'     => __( 'Are you sure to delete this customer?', 'wp-erp' ),
+            'delConfirmCustomer'     => __( 'Are you sure to delete this customer?', 'wp-erp' ),
         ) );
 
         // if its an customer page
