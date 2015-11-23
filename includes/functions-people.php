@@ -25,11 +25,13 @@ function erp_get_peoples( $args = [] ) {
     global $wpdb;
 
     $defaults = [
-        'type'    => 'customer',
-        'number'  => 20,
-        'offset'  => 0,
-        'orderby' => 'id',
-        'order'   => 'ASC',
+        'type'       => 'customer',
+        'number'     => 20,
+        'offset'     => 0,
+        'orderby'    => 'id',
+        'order'      => 'ASC',
+        'trashed'    => false,
+        'meta_query' => [],
     ];
 
     $args      = wp_parse_args( $args, $defaults );
@@ -39,10 +41,38 @@ function erp_get_peoples( $args = [] ) {
     if ( false === $items ) {
         $people = new WeDevs\ERP\Framework\Models\People();
 
+        // Check if want all data without any pagination
         if ( $args['number'] != '-1' ) {
             $people = $people->skip( $args['offset'] )->take( $args['number'] );
         }
 
+        // Check if meta query apply
+        if ( ! empty( $args['meta_query'] ) ) {
+
+            $people_tb = $wpdb->prefix . 'erp_peoples';
+            $peoplemeta_tb = $wpdb->prefix . 'erp_peoplemeta';
+
+            $meta_key = isset( $args['meta_query']['meta_key'] ) ? $args['meta_query']['meta_key'] : '';
+            $meta_value = isset( $args['meta_query']['meta_value'] ) ? $args['meta_query']['meta_value'] : '';
+            $compare = isset( $args['meta_query']['compare'] ) ? $args['meta_query']['compare'] : '=';
+
+            $people = $people->leftjoin( $peoplemeta_tb, $people_tb . '.id', '=', $peoplemeta_tb . '.erp_people_id' )->select( array( $people_tb . '.*', $peoplemeta_tb . '.meta_key', $peoplemeta_tb . '.meta_value' ) )
+                        ->where( $peoplemeta_tb . '.meta_key', $meta_key )
+                        ->where( $peoplemeta_tb . '.meta_value', $compare, $meta_value );
+        }
+
+        // Check if render only soft deleted row
+        if ( $args['trashed'] ) {
+            $people = $people->onlyTrashed();
+        }
+
+        // Check is the row want to search
+        if ( isset( $args['s'] ) && ! empty( $args['s'] ) ) {
+            $arg_s = $args['s'];
+            $people = $people->where( 'first_name', 'LIKE', "%$arg_s%" )->orWhere( 'last_name', 'LIKE', "%$arg_s%" );
+        }
+
+        // Render all collection of data according to above filter (Main query)
         $items = $people->type( $args['type'] )
                 ->orderBy( $args['orderby'], $args['order'] )
                 ->get()
@@ -112,7 +142,7 @@ function erp_get_people( $id = 0 ) {
     $people    = wp_cache_get( $cache_key, 'wp-erp' );
 
     if ( false === $people ) {
-        $peep = WeDevs\ERP\Framework\Models\People::find( $id );
+        $peep = WeDevs\ERP\Framework\Models\People::withTrashed()->find( $id );
 
         if ( $peep->id ) {
             $people = (object) $peep->toArray();

@@ -49,20 +49,6 @@ function erp_crm_get_life_statges_dropdown( $selected = '' ) {
 }
 
 /**
- * Get customer according to filter
- *
- * @since 1.0
- *
- * @param  array $args
- *
- * @return object
- */
-function erp_crm_get_customer( $args ) {
-    // fetch conditionaly customer data
-    // according to user filter :)
-}
-
-/**
  * Delete Customer data
  *
  * @since 1.0
@@ -84,7 +70,7 @@ function erp_crm_customer_delete( $customer_ids, $hard = false ) {
         foreach ( $customer_ids as $key => $user_id ) {
 
             if ( $hard ) {
-                WeDevs\ERP\Framework\Models\People::find( $user_id )->withTrashed()->forceDelete();
+                WeDevs\ERP\Framework\Models\People::withTrashed()->find( $user_id )->forceDelete();
                 WeDevs\ERP\Framework\Models\Peoplemeta::where( 'erp_people_id', $user_id )->delete();
             } else {
                 WeDevs\ERP\Framework\Models\People::find( $user_id )->delete();
@@ -95,7 +81,7 @@ function erp_crm_customer_delete( $customer_ids, $hard = false ) {
     if ( is_int( $customer_ids ) ) {
 
         if ( $hard ) {
-            WeDevs\ERP\Framework\Models\People::find( $customer_ids )->withTrashed()->forceDelete();
+            WeDevs\ERP\Framework\Models\People::withTrashed()->find( $customer_ids )->forceDelete();
             WeDevs\ERP\Framework\Models\Peoplemeta::where( 'erp_people_id', $customer_ids )->delete();
         } else {
             WeDevs\ERP\Framework\Models\People::find( $customer_ids )->delete();
@@ -159,11 +145,7 @@ function erp_crm_customer_get_status_count() {
  *
  * @return integer [no of trash customer]
  */
-function erp_hr_count_trashed_customers() {
+function erp_crm_count_trashed_customers() {
     $customer = new \WeDevs\ERP\Framework\Models\People();
     return $customer->onlyTrashed()->count();
 }
-
-
-
-

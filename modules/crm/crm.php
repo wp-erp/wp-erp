@@ -83,7 +83,10 @@ class Customer_Relationship {
      * @return void
      */
     private function init_classes() {
-        new Ajax_Handler();
+        if ( is_admin() ) {
+            new Ajax_Handler();
+            new Form_Handler();
+        }
     }
 
     /**

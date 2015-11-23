@@ -228,6 +228,16 @@ class Employee_List_Table extends \WP_List_Table {
         return $status_links;
     }
 
+    /**
+     * Search form for employee table
+     *
+     * @since 0.1
+     *
+     * @param  string $text
+     * @param  string $input_id
+     *
+     * @return void
+     */
     public function search_box( $text, $input_id ) {
         if ( empty( $_REQUEST['s'] ) && !$this->has_items() )
             return;

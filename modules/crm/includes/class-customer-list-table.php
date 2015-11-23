@@ -85,7 +85,7 @@ class Customer_List_Table extends \WP_List_Table {
             case 'life_stages':
                 return isset( $life_stages[$life_stage] ) ? $life_stages[$life_stage] : '-';
 
-            case 'created_at':
+            case 'created':
                 return erp_format_date( $customer->created );
 
             default:
@@ -113,8 +113,7 @@ class Customer_List_Table extends \WP_List_Table {
      */
     function get_sortable_columns() {
         $sortable_columns = array(
-            'name' => array( 'name', false ),
-            'created_at' => array( 'created_at', false ),
+            'created' => array( 'created', false ),
         );
 
         return $sortable_columns;
@@ -132,7 +131,7 @@ class Customer_List_Table extends \WP_List_Table {
             'email'        => __( 'Email', 'wp-erp' ),
             'phone_number' => __( 'Phone', 'wp-erp' ),
             'life_stages'  => __( 'Type', 'wp-erp' ),
-            'created_at'   => __( 'Created at', 'wp-erp' ),
+            'created'      => __( 'Created at', 'wp-erp' ),
         );
 
         return apply_filters( 'erp_hr_customer_table_cols', $columns );
@@ -212,7 +211,7 @@ class Customer_List_Table extends \WP_List_Table {
             $status_links[ $key ] = sprintf( '<a href="%s" class="%s">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => $key ), $base_link ), $class, $value['label'], $value['count'] );
         }
 
-        $status_links[ 'trash' ] = sprintf( '<a href="%s" class="status-trash">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'trash' ), $base_link ), __( 'Trash', 'wp-erp' ), erp_hr_count_trashed_customers() );
+        $status_links[ 'trash' ] = sprintf( '<a href="%s" class="status-trash">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'trash' ), $base_link ), __( 'Trash', 'wp-erp' ), erp_crm_count_trashed_customers() );
 
         return $status_links;
     }
@@ -243,18 +242,11 @@ class Customer_List_Table extends \WP_List_Table {
             echo '<input type="hidden" name="status" value="' . esc_attr( $_REQUEST['status'] ) . '" />';
         }
 
-        if ( ! empty( $_REQUEST['post_mime_type'] ) ) {
-            echo '<input type="hidden" name="post_mime_type" value="' . esc_attr( $_REQUEST['post_mime_type'] ) . '" />';
-        }
-
-        if ( ! empty( $_REQUEST['detached'] ) ) {
-            echo '<input type="hidden" name="detached" value="' . esc_attr( $_REQUEST['detached'] ) . '" />';
-        }
         ?>
         <p class="search-box">
             <label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
             <input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>" />
-            <?php submit_button( $text, 'button', 'employee_search', false, array( 'id' => 'search-submit' ) ); ?>
+            <?php submit_button( $text, 'button', 'customer_search', false, array( 'id' => 'search-submit' ) ); ?>
         </p>
         <?php
     }
@@ -281,17 +273,24 @@ class Customer_List_Table extends \WP_List_Table {
             'number' => $per_page,
         );
 
-        if ( isset( $_REQUEST['s'] ) && !empty( $_REQUEST['s'] ) ) {
+        if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
             $args['s'] = $_REQUEST['s'];
         }
 
-        if ( isset( $_REQUEST['orderby'] ) && !empty( $_REQUEST['orderby'] ) ) {
+        if ( isset( $_REQUEST['orderby'] ) && ! empty( $_REQUEST['orderby'] ) ) {
             $args['orderby'] = $_REQUEST['orderby'];
         }
 
-        if ( isset( $_REQUEST['status'] ) && !empty( $_REQUEST['status'] ) ) {
+        if ( isset( $_REQUEST['status'] ) && ! empty( $_REQUEST['status'] ) ) {
             if ( $_REQUEST['status'] != 'all' ) {
-                $args['status'] = $_REQUEST['status'];
+                if ( $_REQUEST['status'] == 'trash' ) {
+                    $args['trashed'] = true;
+                } else {
+                    $args['meta_query'] = [
+                        'meta_key'   => 'life_stage',
+                        'meta_value' => $_REQUEST['status']
+                    ];
+                }
             }
         }
 
