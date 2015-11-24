@@ -83,7 +83,7 @@
                     'required' => true,
                     'type'  => 'select',
                     'class' => 'select2',
-                    'options' => erp_crm_get_life_statges_dropdown_raw( __( '--Select Stage--', 'wp-erp' ) )
+                    'options' => erp_crm_get_life_statges_dropdown_raw( [ '' => __( '--Select Stage--', 'wp-erp' ) ] )
                 ) ); ?>
             </li>
 

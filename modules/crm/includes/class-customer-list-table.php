@@ -9,6 +9,7 @@ namespace WeDevs\ERP\CRM;
 class Customer_List_Table extends \WP_List_Table {
 
     private $counts = array();
+    private $page_status = '';
 
     function __construct() {
         global $status, $page;
@@ -130,7 +131,7 @@ class Customer_List_Table extends \WP_List_Table {
             'name'         => __( 'Customer Name', 'wp-erp' ),
             'email'        => __( 'Email', 'wp-erp' ),
             'phone_number' => __( 'Phone', 'wp-erp' ),
-            'life_stages'  => __( 'Type', 'wp-erp' ),
+            'life_stages'  => __( 'Life Stage', 'wp-erp' ),
             'created'      => __( 'Created at', 'wp-erp' ),
         );
 
@@ -210,7 +211,7 @@ class Customer_List_Table extends \WP_List_Table {
         $status_links   = array();
         $base_link      = admin_url( 'admin.php?page=erp-sales-customers' );
 
-        foreach ($this->counts as $key => $value) {
+        foreach ( $this->counts as $key => $value ) {
             $class = ( $key == $this->page_status ) ? 'current' : 'status-' . $key;
             $status_links[ $key ] = sprintf( '<a href="%s" class="%s">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => $key ), $base_link ), $class, $value['label'], $value['count'] );
         }
@@ -271,7 +272,7 @@ class Customer_List_Table extends \WP_List_Table {
         $per_page              = 20;
         $current_page          = $this->get_pagenum();
         $offset                = ( $current_page -1 ) * $per_page;
-        $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '2';
+        $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : 'all';
 
         // only ncessary because we have sample data
         $args = array(
@@ -300,10 +301,7 @@ class Customer_List_Table extends \WP_List_Table {
                 if ( $_REQUEST['status'] == 'trash' ) {
                     $args['trashed'] = true;
                 } else {
-                    $args['meta_query'] = [
-                        'meta_key'   => 'life_stage',
-                        'meta_value' => $_REQUEST['status']
-                    ];
+                    $args['type'] = $_REQUEST['status'];
                 }
             }
         }

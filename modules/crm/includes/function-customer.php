@@ -8,9 +8,11 @@
  *
  * @since 1.0
  *
+ * @param array $label
+ *
  * @return array
  */
-function erp_crm_get_life_statges_dropdown_raw( $label = '' ) {
+function erp_crm_get_life_statges_dropdown_raw( $label = [] ) {
 
     $life_statges = [
         'lead'        => __( 'Lead', 'wp-erp' ),
@@ -19,10 +21,32 @@ function erp_crm_get_life_statges_dropdown_raw( $label = '' ) {
     ];
 
     if ( $label ) {
-        $life_statges = [ '' => $label ] + $life_statges;
+        $life_statges = $label + $life_statges;
     }
 
     return apply_filters( 'erp_crm_life_statges', $life_statges );
+}
+
+/**
+ * Get customer type
+ *
+ * @since 1.0
+ *
+ * @param  array  $label
+ * @return array
+ */
+function erp_crm_get_customer_type( $label = [] ) {
+
+    $type = [
+        'customer' => __( 'Customer', 'wp-erp' ),
+        'company'  => __( 'Company', 'wp-erp' ),
+    ];
+
+    if ( $label ) {
+        $type = $label + $type;
+    }
+
+    return apply_filters( 'erp_crm_customer_type', $type );
 }
 
 /**
@@ -125,7 +149,7 @@ function erp_crm_customer_restore( $customer_ids ) {
 function erp_crm_customer_get_status_count() {
     global $wpdb;
 
-    $statuses = array( 'all' => __( 'All', 'wp-erp' ) ) + erp_crm_get_life_statges_dropdown_raw();
+    $statuses = erp_crm_get_customer_type( [ 'all' => __( 'All', 'wp-erp' ) ] ) ;
     $counts   = array();
 
     foreach ( $statuses as $status => $label ) {
@@ -140,15 +164,11 @@ function erp_crm_customer_get_status_count() {
         $people        = new \WeDevs\ERP\Framework\Models\People();
         $db            = new \WeDevs\ORM\Eloquent\Database();
 
-        $peoplemeta_tb = $wpdb->prefix . 'erp_peoplemeta';
-        $people_tb     = $wpdb->prefix . 'erp_peoples';
+        $results = $people->select( array( $db->raw('type as status, COUNT(id) as num') ) )
+                    ->where( 'type', '!=', '' )
+                    ->groupBy('type')
+                    ->get()->toArray();
 
-        $results = $people->leftjoin( $peoplemeta_tb, $people_tb.'.id', '=', $peoplemeta_tb.'.erp_people_id' )
-                    ->select( $db->raw( $peoplemeta_tb.'.meta_value as status, COUNT('.$people_tb.'.id) as num') )
-                    ->where( $peoplemeta_tb.'.meta_key', 'life_stage' )
-                    ->groupBy( $peoplemeta_tb.'.meta_value' )
-                    ->get()
-                    ->toArray();
 
         wp_cache_set( $cache_key, $results, 'wp-erp' );
     }

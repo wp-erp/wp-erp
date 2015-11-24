@@ -31,7 +31,12 @@ class People extends Model {
      *
      * @return object
      */
-    public function scopeType( $query, $type = 'customer' ) {
+    public function scopeType( $query, $type ) {
+
+        if ( $type == 'all' ) {
+            return $query->where( 'type', '!=', '' );
+        }
+
         return $query->where( 'type', '=', $type );
     }
 }

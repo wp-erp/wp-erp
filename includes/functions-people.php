@@ -25,7 +25,7 @@ function erp_get_peoples( $args = [] ) {
     global $wpdb;
 
     $defaults = [
-        'type'       => 'customer',
+        'type'       => 'all',
         'number'     => 20,
         'offset'     => 0,
         'orderby'    => 'id',
