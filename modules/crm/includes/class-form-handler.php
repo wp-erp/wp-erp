@@ -75,9 +75,10 @@ class Form_Handler {
                     wp_redirect( $redirect );
                     exit();
 
-                // case 'filter_employee':
-                //     wp_redirect( $redirect );
-                //     exit();
+                case 'filter_life_stage':
+                    $redirect = remove_query_arg( [ 'filter_customer' ], $redirect );
+                    wp_redirect( $redirect );
+                    exit();
 
                 default:
                     wp_redirect( $redirect );

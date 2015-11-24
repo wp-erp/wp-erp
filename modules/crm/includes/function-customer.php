@@ -58,9 +58,9 @@ function erp_crm_get_customer_type( $label = [] ) {
  *
  * @return html
  */
-function erp_crm_get_life_statges_dropdown( $selected = '' ) {
+function erp_crm_get_life_statges_dropdown( $label = [], $selected = '' ) {
 
-    $life_statges = erp_crm_get_life_statges_dropdown_raw();
+    $life_statges = erp_crm_get_life_statges_dropdown_raw( $label );
     $dropdown     = '';
 
     if ( $life_statges ) {

@@ -25,7 +25,7 @@ class Customer_List_Table extends \WP_List_Table {
      * Render extra filtering option in
      * top of the table
      *
-     * @since 0.1
+     * @since 1.0
      *
      * @param  string $which
      *
@@ -35,27 +35,22 @@ class Customer_List_Table extends \WP_List_Table {
         if ( $which != 'top' ) {
             return;
         }
-
-        // $selected_desingnation = ( isset( $_GET['filter_designation'] ) ) ? $_GET['filter_designation'] : 0;
-        // $selected_department   = ( isset( $_GET['filter_department'] ) ) ? $_GET['filter_department'] : 0;
-        // $selected_type   = ( isset( $_GET['filter_employment_type'] ) ) ? $_GET['filter_employment_type'] : '';
+        $selected_life_stage = ( isset( $_GET['filter_life_stage'] ) ) ? $_GET['filter_life_stage'] : '';
         ?>
         <div class="alignleft actions">
-
-            <label class="screen-reader-text" for="filter_contact"><?php _e( 'Filter by Contact', 'wp-erp' ) ?></label>
-            <select name="filter_contact" id="filter_contact">
-                <option value="">Test</option>
-                 <option value="">Test3</option>
-                 <option value="">Test4</option>
+            <label class="screen-reader-text" for="filter_life_stage"><?php _e( 'Filter by Life Stage', 'wp-erp' ) ?></label>
+            <select name="filter_life_stage" id="filter_life_stage">
+                <?php echo erp_crm_get_life_statges_dropdown( [ '' => __('--Select--', 'wp-erp' ) ], $selected_life_stage ); ?>
             </select>
-
             <?php
-            submit_button( __( 'Filter' ), 'button', 'filter_employee', false );
+            submit_button( __( 'Filter' ), 'button', 'filter_customer', false );
         echo '</div>';
     }
 
     /**
      * Message to show if no contacts found
+     *
+     * @since 1.0
      *
      * @return void
      */
@@ -65,6 +60,8 @@ class Customer_List_Table extends \WP_List_Table {
 
     /**
      * Default column values if no callback found
+     *
+     * @since 1.0
      *
      * @param  object  $item
      * @param  string  $column_name
@@ -94,11 +91,18 @@ class Customer_List_Table extends \WP_List_Table {
         }
     }
 
+    /**
+     * Render current trggier bulk action
+     *
+     * @since 1.0
+     *
+     * @return string [type of filter]
+     */
     public function current_action() {
 
-        // if ( isset( $_REQUEST['filter_employee'] ) ) {
-        //     return 'filter_employee';
-        // }
+        if ( isset( $_REQUEST['filter_life_stage'] ) ) {
+            return 'filter_life_stage';
+        }
 
         if ( isset( $_REQUEST['customer_search'] ) ) {
             return 'customer_search';
@@ -109,6 +113,8 @@ class Customer_List_Table extends \WP_List_Table {
 
     /**
      * Get sortable columns
+     *
+     * @since 1.0
      *
      * @return array
      */
@@ -122,6 +128,8 @@ class Customer_List_Table extends \WP_List_Table {
 
     /**
      * Get the column names
+     *
+     * @since 1.0
      *
      * @return array
      */
@@ -140,6 +148,8 @@ class Customer_List_Table extends \WP_List_Table {
 
     /**
      * Render the customer name column
+     *
+     * @since 1.0
      *
      * @param  object  $item
      *
@@ -169,11 +179,13 @@ class Customer_List_Table extends \WP_List_Table {
     /**
      * Set the bulk actions
      *
+     * @since 1.0
+     *
      * @return array
      */
     function get_bulk_actions() {
         $actions = array(
-            'email'  => __( 'Send Email', 'wp-erp' ),
+            // 'email'  => __( 'Send Email', 'wp-erp' ),
             'delete'  => __( 'Move to Trash', 'wp-erp' ),
         );
 
@@ -189,6 +201,8 @@ class Customer_List_Table extends \WP_List_Table {
 
     /**
      * Render the checkbox column
+     *
+     * @since 1.0
      *
      * @param  object  $item
      *
@@ -224,14 +238,17 @@ class Customer_List_Table extends \WP_List_Table {
     /**
      * Search form for lsit table
      *
+     * @since 1.0
+     *
      * @param  string $text
      * @param  string $input_id
      *
      * @return void
      */
     public function search_box( $text, $input_id ) {
-        if ( empty( $_REQUEST['s'] ) && !$this->has_items() )
+        if ( empty( $_REQUEST['s'] ) && !$this->has_items() ) {
             return;
+        }
 
         $input_id = $input_id . '-search-input';
 
@@ -306,12 +323,25 @@ class Customer_List_Table extends \WP_List_Table {
             }
         }
 
+        // Filter by life stages
+        if ( isset( $_REQUEST['filter_life_stage'] ) && $_REQUEST['filter_life_stage'] ) {
+            $args['meta_query'] = [
+                'meta_key' => 'life_stage',
+                'meta_value' => $_REQUEST['filter_life_stage']
+            ]; ;
+        }
+
+        // Total counting for customer type filter
         $this->counts = erp_crm_customer_get_status_count();
+
+        // Prepare all item after all filters
         $this->items  = erp_get_peoples( $args );
 
+        // Render total customer according to above filter
         $args['count'] = true;
         $total_items = erp_get_peoples( $args );
 
+        // Set pagination according to filter
         $this->set_pagination_args( array(
             'total_items' => $total_items,
             'per_page'    => $per_page
