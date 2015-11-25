@@ -59,6 +59,9 @@
 .erp-leads-single .erp-user-info h3 span.company {
   font-weight: normal;
 }
+.erp-customer-form fieldset.genaral-info li {
+  margin-top: 7px;
+}
 .erp-customer-form ol,
 .erp-customer-form li {
   list-style: none;

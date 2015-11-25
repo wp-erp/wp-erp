@@ -71,7 +71,9 @@ function erp_get_peoples( $args = [] ) {
         // Check is the row want to search
         if ( isset( $args['s'] ) && ! empty( $args['s'] ) ) {
             $arg_s = $args['s'];
-            $people = $people->where( 'first_name', 'LIKE', "%$arg_s%" )->orWhere( 'last_name', 'LIKE', "%$arg_s%" );
+            $people = $people->where( 'first_name', 'LIKE', "%$arg_s%" )
+                    ->orWhere( 'last_name', 'LIKE', "%$arg_s%" )
+                    ->orWhere( 'company', 'LIKE', "%$arg_s%" );
         }
 
         // Render all collection of data according to above filter (Main query)
@@ -82,6 +84,7 @@ function erp_get_peoples( $args = [] ) {
 
         $items = erp_array_to_object( $items );
 
+        // Check if args count true, then return total count customer according to above filter
         if ( $args['count'] ) {
             $items = $people->type( $args['type'] )->count();
         }
@@ -193,12 +196,24 @@ function erp_insert_people( $args = array() ) {
 
     $args = wp_parse_args( $args, $defaults );
 
-    // some basic validation
-    if ( empty( $args['first_name'] ) ) {
-        return new WP_Error( 'no-first_name', __( 'No First Name provided.', 'erp-accounting' ) );
+    // Check if customer first name and last name provide or not
+    if ( $args['type'] == 'customer' ) {
+
+        // some basic validation
+        if ( empty( $args['first_name'] ) ) {
+            return new WP_Error( 'no-first_name', __( 'No First Name provided.', 'wp-erp' ) );
+        }
+        if ( empty( $args['last_name'] ) ) {
+            return new WP_Error( 'no-last_name', __( 'No Last Name provided.', 'wp-erp' ) );
+        }
+
     }
-    if ( empty( $args['last_name'] ) ) {
-        return new WP_Error( 'no-last_name', __( 'No Last Name provided.', 'erp-accounting' ) );
+
+    // Check if company name provide or not
+    if ( $args['type'] == 'company' ) {
+        if ( empty( $args['company'] ) ) {
+            return new WP_Error( 'no-company', __( 'No Company Name provided.', 'wp-erp' ) );
+        }
     }
 
     // remove row id to determine if new or update
@@ -211,6 +226,9 @@ function erp_insert_people( $args = array() ) {
 
         // insert a new
         $people = WeDevs\ERP\Framework\Models\People::create( $args );
+
+        do_action( 'erp_create_new_people', $people->id, $args );
+
         if ( $people->id ) {
             return $people->id;
         }
@@ -219,6 +237,9 @@ function erp_insert_people( $args = array() ) {
 
         // do update method here
         WeDevs\ERP\Framework\Models\People::find( $row_id )->update( $args );
+
+        do_action( 'erp_update_people', $row_id, $args );
+
         return $row_id;
     }
 

@@ -10,7 +10,7 @@
         initialize: function() {
 
             // Customer
-            $( '.erp-crm-customer' ).on( 'click', 'a#erp-contact-new', this.customer.create );
+            $( '.erp-crm-customer' ).on( 'click', 'a.erp-contact-new', this.customer.create );
             $( '.erp-crm-customer' ).on( 'click', 'span.edit a', this.customer.edit );
             $( '.erp-crm-customer' ).on( 'click', 'a.submitdelete', this.customer.remove );
             $( '.erp-crm-customer' ).on( 'click', 'a.restoreCustomer', this.customer.restore );
@@ -18,6 +18,7 @@
             // photos
             $( 'body' ).on( 'click', 'a#erp-set-customer-photo', this.customer.setPhoto );
             $( 'body' ).on( 'click', 'a.erp-remove-photo', this.customer.removePhoto );
+            $( 'body' ).on( 'change', '.erp-customer-form select#erp-customer-type', this.customer.triggerName );
 
             $( 'body' ).on('change', 'select.erp-country-select', this.populateState );
 
@@ -60,6 +61,28 @@
 
 
         customer: {
+
+            /**
+             * Set name field according to customer type
+             *
+             * @return {[void]}
+             */
+            triggerName: function() {
+                var self = $(this),
+                    fieldset = self.closest('fieldset');
+
+                if ( self.val() == 'company' ) {
+                    fieldset.find('li.name-container input').attr( 'disabled', 'disabled' );
+                    fieldset.find('li.customer-company-name input').removeAttr( 'disabled' );
+                    fieldset.find('li.name-container').addClass('erp-hide');
+                    fieldset.find('li.customer-company-name').removeClass('erp-hide');
+                } else {
+                    fieldset.find('li.customer-company-name input').attr( 'disabled', 'disabled' );
+                    fieldset.find('li.name-container input').removeAttr( 'disabled' );
+                    fieldset.find('li.name-container').removeClass('erp-hide');
+                    fieldset.find('li.customer-company-name').addClass('erp-hide');
+                };
+            },
 
             /**
              * Reload the department area
@@ -134,6 +157,8 @@
 
                 var self = $(this);
 
+                wpErpCrm.customer_empty.type = self.data('type');
+
                 $.erpPopup({
                     title: wpErpCrm.popup.customer_title,
                     button: wpErpCrm.add_submit,
@@ -142,6 +167,7 @@
                     extraClass: 'midium',
                     onReady: function() {
                         $( '.select2' ).select2();
+                        $( 'body' ).find('select#erp-customer-type').trigger('change');
                     },
                     onSubmit: function(modal) {
                         modal.disableButton();
@@ -202,6 +228,7 @@
                                     }
                                 });
 
+                                $('select#erp-customer-type').trigger('change');
                                 $( '.select2' ).select2();
                                 $( 'select.erp-country-select').change();
 
@@ -238,9 +265,13 @@
             /**
              * Remove customer data with meta
              *
+             * @param {object} e
+             *
              * @return {[void]}
              */
             remove: function(e) {
+                e.preventDefault();
+
                 var self = $(this);
 
                 if ( confirm( wpErpCrm.delConfirmCustomer ) ) {
@@ -263,7 +294,16 @@
                 }
             },
 
+            /**
+             * Restore customer from trash
+             *
+             * @param  {[object]} e
+             *
+             * @return {[void]}
+             */
             restore: function(e) {
+                e.preventDefault();
+
                 var self = $(this);
 
                 if ( confirm( wpErpCrm.confirm ) ) {
@@ -284,7 +324,6 @@
                     });
                 }
             }
-
         }
 
     }

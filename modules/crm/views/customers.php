@@ -4,7 +4,10 @@
     $data = new \WeDevs\ERP\CRM\Customer();
 
     ?>
-    <h2><?php _e( 'Customer', 'wp-erp' ); ?> <a href="#" id="erp-contact-new" class="add-new-h2">Add New</a></h2>
+    <h2><?php _e( 'Customer', 'wp-erp' ); ?>
+        <a href="#" id="erp-customer-new" class="erp-contact-new add-new-h2" data-type="customer">Add New Customer</a>
+        <a href="#" id="erp-company-new" class="erp-contact-new add-new-h2" data-type="company">Add New Company</a>
+    </h2>
 
     <div class="list-table-wrap">
         <div class="list-table-inner">

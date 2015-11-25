@@ -100,7 +100,7 @@ class Customer_List_Table extends \WP_List_Table {
      */
     public function current_action() {
 
-        if ( isset( $_REQUEST['filter_life_stage'] ) ) {
+        if ( isset( $_REQUEST['filter_customer'] ) ) {
             return 'filter_life_stage';
         }
 
@@ -185,8 +185,7 @@ class Customer_List_Table extends \WP_List_Table {
      */
     function get_bulk_actions() {
         $actions = array(
-            // 'email'  => __( 'Send Email', 'wp-erp' ),
-            'delete'  => __( 'Move to Trash', 'wp-erp' ),
+            'delete'  => __( 'Move to Trash', 'wp-erp' )
         );
 
         if ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) {

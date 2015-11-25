@@ -2,7 +2,7 @@
 
     <?php do_action( 'erp-crm-customer-form-top' ); ?>
 
-    <fieldset class="no-border">
+    <fieldset class="no-border genaral-info">
         <ol class="form-fields">
             <li>
                 <?php erp_html_form_label( __( 'Customer Photo', 'wp-erp' ), 'full-name' ); ?>
@@ -19,32 +19,47 @@
                 </div>
             </li>
 
-            <li class="full-width name-container clearfix">
-                <?php erp_html_form_label( __( 'Full Name', 'wp-erp' ), 'full-name', true ); ?>
+             <# if ( data.type == 'customer' ) { #>
+                <li class="full-width name-container clearfix">
+                    <?php erp_html_form_label( __( 'Full Name', 'wp-erp' ), 'full-name', true ); ?>
 
-                <ol class="fields-inline">
-                    <li>
-                        <?php erp_html_form_input( array(
-                            'label'       => __( 'First Name', 'wp-erp' ),
-                            'name'        => 'first_name',
-                            'id'          => 'first_name',
-                            'value'       => '{{ data.first_name }}',
-                            'required'    => true,
-                            'custom_attr' => array( 'maxlength' => 30 )
-                        ) ); ?>
-                    </li>
-                    <li>
-                        <?php erp_html_form_input( array(
-                            'label'       => __( 'Last Name', 'wp-erp' ),
-                            'name'        => 'last_name',
-                            'id'          => 'last_name',
-                            'value'       => '{{ data.last_name }}',
-                            'required'    => true,
-                            'custom_attr' => array( 'maxlength' => 30 )
-                        ) ); ?>
-                    </li>
-                </ol>
-            </li>
+                    <ol class="fields-inline">
+
+                        <li>
+                            <?php erp_html_form_input( array(
+                                'label'       => __( 'First Name', 'wp-erp' ),
+                                'name'        => 'first_name',
+                                'id'          => 'first_name',
+                                'value'       => '{{ data.first_name }}',
+                                'required'    => true,
+                                'custom_attr' => array( 'maxlength' => 30 )
+                            ) ); ?>
+                        </li>
+                        <li>
+                            <?php erp_html_form_input( array(
+                                'label'       => __( 'Last Name', 'wp-erp' ),
+                                'name'        => 'last_name',
+                                'id'          => 'last_name',
+                                'value'       => '{{ data.last_name }}',
+                                'required'    => true,
+                                'custom_attr' => array( 'maxlength' => 30 )
+                            ) ); ?>
+                        </li>
+                    </ol>
+                </li>
+            <# } else if ( data.type == 'company' ) { #>
+                <li class="full-width customer-company-name clearfix">
+                    <?php erp_html_form_input( array(
+                        'label'       => __( 'Company Name', 'wp-erp' ),
+                        'name'        => 'company',
+                        'id'          => 'company',
+                        'value'       => '{{ data.company }}',
+                        'required'    => true,
+                        'custom_attr' => array( 'maxlength' => 30 )
+                    ) ); ?>
+                </li>
+            <# } #>
+
         </ol>
 
         <ol class="form-fields two-col">
@@ -196,6 +211,7 @@
     <?php do_action( 'erp-crm-customer-form-bottom' ); ?>
 
     <input type="hidden" name="id" id="erp-customer-id" value="{{ data.id }}">
+    <input type="hidden" name="type" id="erp-customer-type" value="{{ data.type }}">
     <input type="hidden" name="action" id="erp-customer-action" value="erp-crm-customer-new">
     <?php wp_nonce_field( 'wp-erp-crm-customer-nonce' ); ?>
 

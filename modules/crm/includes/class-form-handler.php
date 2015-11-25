@@ -46,7 +46,7 @@ class Form_Handler {
 
         if ( $action ) {
 
-            $redirect = remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'customer_search' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
+            $redirect = remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'customer_search', 'filter_life_stage' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
 
             switch ( $action ) {
 
@@ -61,7 +61,7 @@ class Form_Handler {
 
                 case 'permanent_delete' :
                     if ( isset( $_GET['customer_id'] ) && !empty( $_GET['customer_id'] ) ) {
-                        erp_employee_delete( $_GET['customer_id'], true );
+                        erp_crm_customer_delete( $_GET['customer_id'], true );
                     }
 
                     wp_redirect( $redirect );

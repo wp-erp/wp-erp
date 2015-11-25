@@ -49,6 +49,7 @@ class Customer extends \WeDevs\ERP\People {
             'country'     => '',
             'state'       => '',
             'postal_code' => '',
+            'type'        => '',
             'notes'       => '',
             'other'       => '',
         );
