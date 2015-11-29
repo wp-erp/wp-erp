@@ -263,7 +263,7 @@ function erp_print_key_value( $label, $value, $sep = ' : ' ) {
 /**
  * Get a clickable phone or email address link
  *
- * @param  string  type. e.g: email|phone
+ * @param  string  type. e.g: email|phone|url
  * @param  string  the value
  *
  * @return string  the link
@@ -271,6 +271,8 @@ function erp_print_key_value( $label, $value, $sep = ' : ' ) {
 function erp_get_clickable( $type = 'email', $value = '' ) {
     if ( 'email' == $type ) {
         return sprintf( '<a href="mailto:%1$s">%1$s</a>', $value );
+    } elseif ( 'url' == $type ) {
+        return sprintf( '<a href="%1$s">%1$s</a>', $value );
     } elseif ( 'phone' == $type ) {
         return sprintf( '<a href="tel:%1$s">%1$s</a>', $value );
     }
@@ -558,3 +560,44 @@ function erp_log() {
 function erp_get_people_types() {
     return apply_filters( 'erp_people_types', [] );
 }
+
+/**
+ * Get Country name by country code
+ *
+ * @since 1.0
+ *
+ * @param  string $code
+ *
+ * @return string
+ */
+function erp_get_country_name( $country ) {
+
+    $load_cuntries_states = \WeDevs\ERP\Countries::instance();
+    $countries = $load_cuntries_states->countries;
+
+    // Handle full country name
+    $full_country = ( isset( $countries[ $country ] ) ) ? $countries[ $country ] : $country;
+
+    return $full_country;
+}
+
+/**
+ * Get State name by country and state code
+ *
+ * @since 1.0
+ *
+ * @param  string $country
+ * @param  string $state
+ *
+ * @return string
+ */
+function erp_get_state_name( $country, $state ) {
+    $load_cuntries_states = \WeDevs\ERP\Countries::instance();
+    $states = $load_cuntries_states->states;
+
+    // Handle full state name
+    $full_state   = ( $country && $state && isset( $states[ $country ][ $state ] ) ) ? $states[ $country ][ $state ] : $state;
+
+    return $full_state;
+}
+

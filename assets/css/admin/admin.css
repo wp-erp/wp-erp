@@ -185,6 +185,20 @@
 .erp-crm-customer table.wp-list-table .column-comments {
   width: 25%;
 }
+.erp-single-customer .erp-single-customer-content .customer-image-wraper {
+  background: #FFF;
+  margin-bottom: 20px;
+}
+.erp-single-customer .erp-single-customer-content .customer-image-wraper .details {
+  padding-left: 20px;
+}
+.erp-single-customer .erp-single-customer-content .customer-image-wraper .details h3 {
+  margin-top: 5px;
+  margin-bottom: 15px;
+}
+.erp-single-customer .erp-single-customer-content .customer-image-wraper .details p {
+  margin: 7px 0px;
+}
 span.red {
   color: #CF0202;
 }

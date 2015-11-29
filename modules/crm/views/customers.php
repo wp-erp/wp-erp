@@ -5,8 +5,8 @@
 
     ?>
     <h2><?php _e( 'Customer', 'wp-erp' ); ?>
-        <a href="#" id="erp-customer-new" class="erp-contact-new add-new-h2" data-type="customer">Add New Customer</a>
-        <a href="#" id="erp-company-new" class="erp-contact-new add-new-h2" data-type="company">Add New Company</a>
+        <a href="#" id="erp-customer-new" class="erp-contact-new add-new-h2" data-type="customer"><?php _e( 'Add New Customer', 'wp-erp' ); ?></a>
+        <a href="#" id="erp-company-new" class="erp-contact-new add-new-h2" data-type="company"><?php _e( 'Add New Company', 'wp-erp' ); ?></a>
     </h2>
 
     <div class="list-table-wrap">

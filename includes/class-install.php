@@ -407,6 +407,7 @@ class WeDevs_ERP_Installer {
                 `currency` varchar(5) DEFAULT NULL,
                 `type` varchar(10) NOT NULL DEFAULT 'customer',
                 `created` datetime DEFAULT NULL,
+                `deleted_at` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`),
                 KEY `type` (`type`),
                 KEY `user_id` (`user_id`)
