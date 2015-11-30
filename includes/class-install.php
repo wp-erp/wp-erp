@@ -139,13 +139,13 @@ class WeDevs_ERP_Installer {
         $collate = '';
 
         if ( $wpdb->has_cap( 'collation' ) ) {
-                if ( ! empty($wpdb->charset ) ) {
-                        $collate .= "DEFAULT CHARACTER SET $wpdb->charset";
-                }
+            if ( ! empty($wpdb->charset ) ) {
+                $collate .= "DEFAULT CHARACTER SET $wpdb->charset";
+            }
 
-                if ( ! empty($wpdb->collate ) ) {
-                        $collate .= " COLLATE $wpdb->collate";
-                }
+            if ( ! empty($wpdb->collate ) ) {
+                $collate .= " COLLATE $wpdb->collate";
+            }
         }
 
         $table_schema = [
@@ -437,6 +437,12 @@ class WeDevs_ERP_Installer {
                 PRIMARY KEY (`id`)
             ) $collate;",
 
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_customer_company` (
+                `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+                `customer_id` bigint(20) NOT NULL DEFAULT '',
+                `company_id` bigint(50) NOT NULL DEFAULT '',
+                PRIMARY KEY (`id`)
+            ) $collate;"
         ];
 
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );

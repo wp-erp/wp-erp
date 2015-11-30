@@ -10,10 +10,13 @@
         initialize: function() {
 
             // Customer
-            $( '.erp-crm-customer' ).on( 'click', 'a.erp-contact-new', this.customer.create );
+            $( 'body' ).on( 'click', 'a.erp-contact-new', this.customer.create );
             $( '.erp-crm-customer' ).on( 'click', 'span.edit a', this.customer.edit );
             $( '.erp-crm-customer' ).on( 'click', 'a.submitdelete', this.customer.remove );
             $( '.erp-crm-customer' ).on( 'click', 'a.restoreCustomer', this.customer.restore );
+
+            // Customer single view
+            $( '.erp-single-customer' ).on( 'click', 'a#erp-customer-add-company', this.customerSingle.addCompany );
 
             // photos
             $( 'body' ).on( 'click', 'a#erp-set-customer-photo', this.customer.setPhoto );
@@ -324,6 +327,97 @@
                     });
                 }
             }
+        },
+
+        /**
+         * Customer single page functionality
+         *
+         * @type {Object}
+         *
+         * @return {mixed}
+         */
+        customerSingle: {
+
+            addCompany: function(e) {
+                e.preventDefault();
+
+                var self = $(this),
+                    customer_id = self.data('id');
+
+                $.erpPopup({
+                    title: wpErpCrm.popup.customer_title,
+                    button: wpErpCrm.add_submit,
+                    id: 'erp-crm-single-contact-company',
+                    content: wperp.template('erp-crm-new-assign-company')( customer_id ).trim(),
+                    extraClass: 'smaller',
+                    onReady: function() {
+                        WeDevs_ERP_CRM.customerSingle.select2Action('erp-crm-select2');
+                        WeDevs_ERP_CRM.customerSingle.select2AddMoreContent();
+                    },
+
+                    onSubmit: function(modal) {
+                        modal.disableButton();
+
+                        wp.ajax.send( {
+                            data: this.serialize(),
+                            success: function(res) {
+                                WeDevs_ERP_CRM.customer.pageReload();
+                                modal.enableButton();
+                                modal.closeModal();
+                            },
+                            error: function(error) {
+                                modal.enableButton();
+                                alert( error );
+                            }
+                        });
+                    }
+                }); //popup
+            },
+
+            /**
+             * select2 with add more button content
+             *
+             * @return  {void}
+             */
+            select2AddMoreContent: function() {
+                var selects = $('.erp-hrm-select2-add-more');
+                $.each( selects, function( key, element ) {
+                   WeDevs_ERP_CRM.customerSingle.select2AddMoreActive(element);
+                });
+            },
+
+            /**
+             * select2 with add more button active
+             *
+             * @return  {void}
+             */
+            select2AddMoreActive: function(element) {
+                var id = $(element).data('id');
+
+                $(element).select2({
+                    width: 'element',
+                    "language": {
+                        noResults: function(){
+                           return '<a href="#" class="button button-primary '+id+'" id="'+id+'">Add New</a>';
+                        }
+                    },
+                    escapeMarkup: function (markup) {
+                        return markup;
+                    }
+
+                });
+            },
+
+            /**
+             * select2 action
+             *
+             * @return  {void}
+             */
+            select2Action: function(element) {
+                $('.'+element).select2({
+                    width: 'element',
+                });
+            },
         }
 
     }

@@ -108,8 +108,8 @@ function erp_get_peoples_array( $args = [] ) {
     $users   = [];
     $peoples = erp_get_peoples( $args );
 
-    foreach ($peoples as $user) {
-        $users[ $user->id ] = $user->first_name . ' ' . $user->last_name;
+    foreach ( $peoples as $user ) {
+        $users[ $user->id ] = ( 'company' == $user->type ) ? $user->company : $user->first_name . ' ' . $user->last_name;
     }
 
     return $users;

@@ -55,8 +55,8 @@
                 <div class="postbox customr-basic-info">
                     <div class="handlediv" title="<?php _e( 'Click to toggle', 'wp-erp' ); ?>"><br></div>
                     <h3 class="hndle"><span><?php echo sprintf( '%s\'s %s', $customer->first_name, __( 'Company', 'wp-erp' ) ); ?></span></h3>
-                    <div class="inside">
-
+                    <div class="inside company-profile-content">
+                        <a href="#" data-id="<?php echo $customer->id; ?>" title="<?php _e( 'Add a company', 'wp-erp' ); ?>" class="button button-primary" id="erp-customer-add-company"><?php _e( '<i class="fa fa-plus"></i> Add a Company', 'wp-erp' ); ?></a>
                     </div>
                 </div><!-- .postbox -->
 

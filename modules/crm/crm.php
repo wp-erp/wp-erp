@@ -152,6 +152,11 @@ class Customer_Relationship {
         switch ( $current_screen->base ) {
             case 'crm_page_erp-sales-customers':
                 erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-customer.php', 'erp-crm-new-contact' );
+
+                if ( isset( $_GET['action'] ) && $_GET['action'] == 'view' ) {
+                    erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-assign-company.php', 'erp-crm-new-assign-company' );
+                }
+
                 break;
 
             default:
