@@ -195,3 +195,37 @@ function erp_crm_count_trashed_customers() {
     $customer = new \WeDevs\ERP\Framework\Models\People();
     return $customer->onlyTrashed()->count();
 }
+
+/**
+ * Get social fields
+ *
+ * @since 1.0
+ *
+ * @return array
+ */
+function erp_crm_get_social_field() {
+
+    $social_field = [
+        'facebook' => [
+            'title' => __( 'Facebook', 'wp-erp' ),
+            'icon' => '<i class="fa fa-facebook-square"></i>',
+        ],
+
+        'twitter' => [
+            'title' => __( 'Twitter', 'wp-erp' ),
+            'icon' => '<i class="fa fa-twitter-square"></i>',
+        ],
+
+        'googleplus' => [
+            'title' => __( 'Google+', 'wp-erp' ),
+            'icon' => '<i class="fa fa-google-plus-square"></i>',
+        ],
+
+        'linkedin' => [
+            'title' => __( 'Linkedin', 'wp-erp' ),
+            'icon' => '<i class="fa fa-linkedin-square"></i>',
+        ]
+    ];
+
+    return apply_filters( 'erp_crm_social_field', $social_field );
+}

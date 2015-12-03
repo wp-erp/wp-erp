@@ -52,7 +52,7 @@
                     </div>
                 </div><!-- .postbox -->
 
-                <div class="postbox customr-basic-info">
+                <div class="postbox customr-company-info">
                     <div class="handlediv" title="<?php _e( 'Click to toggle', 'wp-erp' ); ?>"><br></div>
                     <h3 class="hndle"><span><?php echo sprintf( '%s\'s %s', $customer->first_name, __( 'Company', 'wp-erp' ) ); ?></span></h3>
                     <div class="inside company-profile-content">
@@ -60,11 +60,31 @@
                     </div>
                 </div><!-- .postbox -->
 
-                <div class="postbox customr-basic-info">
+                <div class="postbox customr-social-info">
                     <div class="handlediv" title="<?php _e( 'Click to toggle', 'wp-erp' ); ?>"><br></div>
                     <h3 class="hndle"><span><?php _e( 'Social Info', 'wp-erp' ); ?></span></h3>
                     <div class="inside">
-
+                        <?php
+                            $social_info = $customer->get_meta( 'crm_social_profile' );
+                            $default_social_field = erp_crm_get_social_field();
+                        ?>
+                        <?php if ( $social_info ): ?>
+                            <ul class="erp-list separated">
+                            <?php foreach ( $social_info as $social_key => $social_value ) : ?>
+                                <?php
+                                    $icons = $default_social_field[$social_key]['icon'];
+                                    $label = $default_social_field[$social_key]['title'];
+                                    $value = $social_value;
+                                ?>
+                                <?php if ( $value ): ?>
+                                    <li><?php erp_print_key_value( sprintf( '%s %s', $icons, $label ), erp_get_clickable( 'url', $value ) ); ?></li>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                            </ul>
+                            <a href="#" data-id="<?php echo $customer->id; ?>" data-social_profile='<?php echo json_encode( $social_info ); ?>' title="<?php _e( 'Update Social Profile', 'wp-erp' ); ?>" class="button button-primary" id="customer-social-field"><?php _e( '<i class="fa fa-plus"></i> Update Social Profile', 'wp-erp' ); ?></a>
+                        <?php else: ?>
+                            <a href="#" data-id="<?php echo $customer->id; ?>" data-social_profile="" title="<?php _e( 'Add Social Profile', 'wp-erp' ); ?>" class="button button-primary" id="customer-social-field"><?php _e( '<i class="fa fa-plus"></i> Add Social Profile', 'wp-erp' ); ?></a>
+                        <?php endif ?>
                     </div>
                 </div><!-- .postbox -->
 

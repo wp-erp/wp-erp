@@ -911,7 +911,7 @@ ul.erp-list.two-col li {
   width: 50%;
 }
 ul.erp-list.separated label {
-  min-width: 110px;
+  min-width: 28%;
   display: inline-block;
   vertical-align: top;
 }

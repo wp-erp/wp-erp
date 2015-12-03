@@ -17,6 +17,7 @@
 
             // Customer single view
             $( '.erp-single-customer' ).on( 'click', 'a#erp-customer-add-company', this.customerSingle.addCompany );
+            $( '.erp-single-customer' ).on( 'click', 'a#customer-social-field', this.customerSingle.addSocialProfle );
 
             // photos
             $( 'body' ).on( 'click', 'a#erp-set-customer-photo', this.customer.setPhoto );
@@ -354,6 +355,41 @@
                         WeDevs_ERP_CRM.customerSingle.select2Action('erp-crm-select2');
                         WeDevs_ERP_CRM.customerSingle.select2AddMoreContent();
                     },
+
+                    onSubmit: function(modal) {
+                        modal.disableButton();
+
+                        wp.ajax.send( {
+                            data: this.serialize(),
+                            success: function(res) {
+                                WeDevs_ERP_CRM.customer.pageReload();
+                                modal.enableButton();
+                                modal.closeModal();
+                            },
+                            error: function(error) {
+                                modal.enableButton();
+                                alert( error );
+                            }
+                        });
+                    }
+                }); //popup
+            },
+
+            addSocialProfle: function(e) {
+                e.preventDefault();
+
+                var self = $(this),
+                    data = {
+                        customer_id : self.data( 'id' ),
+                        social_field : self.data( 'social_profile' )
+                    };
+
+                $.erpPopup({
+                    title: wpErpCrm.popup.customer_social_title,
+                    button: wpErpCrm.save_submit,
+                    id: 'erp-crm-single-customer-social',
+                    content: wperp.template('erp-crm-customer-social')( data ).trim(),
+                    extraClass: 'smaller',
 
                     onSubmit: function(modal) {
                         modal.disableButton();

@@ -28,6 +28,9 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-crm-customer-get', 'customer_get' );
         $this->action( 'wp_ajax_erp-crm-customer-delete', 'customer_remove' );
         $this->action( 'wp_ajax_erp-crm-customer-restore', 'customer_restore' );
+
+        // Single customer view
+        $this->action( 'wp_ajax_erp-crm-customer-social', 'customer_social_profile' );
     }
 
     /**
@@ -134,7 +137,34 @@ class Ajax_Handler {
 
         // @TODO: check permission
         $this->send_success( __( 'Customer has been removed successfully', 'wp-erp' ) );
+    }
 
+    /**
+     * Set customer social profile info
+     *
+     * @since 1.0
+     *
+     * @return void
+     */
+    public function customer_social_profile() {
+        $this->verify_nonce( 'wp-erp-crm-customer-social-nonce' );
+
+        // @TODO: check permission
+        unset( $_POST['_wp_http_referer'] );
+        unset( $_POST['_wpnonce'] );
+        unset( $_POST['action'] );
+
+        if ( ! $_POST['customer_id'] ) {
+            $this->send_error( __( 'No customer found', 'wp-erp' ) );
+        }
+
+        $customer_id = (int) $_POST['customer_id'];
+        unset( $_POST['customer_id'] );
+
+        $customer = new \WeDevs\ERP\CRM\Customer( $customer_id );
+        $customer->update_meta( 'crm_social_profile', $_POST );
+
+        $this->send_success( __( 'Succesfully added social profiles', 'wp-erp' ) );
     }
 
 }

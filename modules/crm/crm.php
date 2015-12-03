@@ -120,13 +120,15 @@ class Customer_Relationship {
             'popup'                 => array(
                 'customer_title'         => __( 'Add New Customer', 'wp-erp' ),
                 'customer_update_title'  => __( 'Edit Customer', 'wp-erp' ),
+                'customer_social_title'  => __( 'Customer Social Profile', 'wp-erp' ),
             ),
             'add_submit'            => __( 'Add New', 'wp-erp' ),
             'update_submit'         => __( 'Update', 'wp-erp' ),
+            'save_submit'           => __( 'Save', 'wp-erp' ),
             'customer_upload_photo' => __( 'Upload Photo', 'wp-erp' ),
             'customer_set_photo'    => __( 'Set Photo', 'wp-erp' ),
             'confirm'               => __( 'Are you sure?', 'wp-erp' ),
-            'delConfirmCustomer'     => __( 'Are you sure to delete this customer?', 'wp-erp' ),
+            'delConfirmCustomer'    => __( 'Are you sure to delete this customer?', 'wp-erp' ),
         ) );
 
         // if its an customer page
@@ -155,6 +157,7 @@ class Customer_Relationship {
 
                 if ( isset( $_GET['action'] ) && $_GET['action'] == 'view' ) {
                     erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-assign-company.php', 'erp-crm-new-assign-company' );
+                    erp_get_js_template( WPERP_CRM_JS_TMPL . '/customer-social.php', 'erp-crm-customer-social' );
                 }
 
                 break;
