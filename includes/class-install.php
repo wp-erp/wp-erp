@@ -437,7 +437,7 @@ class WeDevs_ERP_Installer {
                 PRIMARY KEY (`id`)
             ) $collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_customer_company` (
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_customer_companies` (
                 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
                 `customer_id` bigint(20) NOT NULL DEFAULT '',
                 `company_id` bigint(50) NOT NULL DEFAULT '',
