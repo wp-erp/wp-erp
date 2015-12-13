@@ -26,15 +26,15 @@ function erp_hr_get_work_days() {
 /**
  * Get working day without off day
  *
- * @since  0.1 
- * 
- * @param  string $start_date 
- * @param  string $end_date   
- * 
- * @return array             
+ * @since  0.1
+ *
+ * @param  string $start_date
+ * @param  string $end_date
+ *
+ * @return array
  */
 function erp_hr_get_work_days_without_off_day( $start_date, $end_date ) {
-    
+
     $between_dates = erp_extract_dates( $start_date, $end_date );
 
     if ( is_wp_error( $between_dates ) ) {
@@ -46,7 +46,7 @@ function erp_hr_get_work_days_without_off_day( $start_date, $end_date ) {
     $holiday_exist = erp_hr_leave_get_holiday_between_date_range( $start_date, $end_date );
 
     foreach ( $between_dates as $date ) {
-        
+
         $key       = strtolower( date( 'D', strtotime( $date ) ) );
         $is_holidy = ( $work_days[$key] === 0 ) ? true : false;
 
@@ -55,12 +55,12 @@ function erp_hr_get_work_days_without_off_day( $start_date, $end_date ) {
         }
 
         if ( ! $is_holidy ) {
-            
+
             $dates['days'][] = array(
                 'date'  => $date,
                 'count' => (int) ! $is_holidy
             );
-            
+
             $dates['total'] += 1;
         }
     }
@@ -71,46 +71,46 @@ function erp_hr_get_work_days_without_off_day( $start_date, $end_date ) {
 /**
  * Get working day with off day
  *
- * @since  0.1 
- * 
- * @param  string $start_date 
+ * @since  0.1
+ *
+ * @param  string $start_date
  * @param  string $end_date
- *    
- * @return array             
+ *
+ * @return array
  */
 function erp_hr_get_work_days_between_dates( $start_date, $end_date ) {
-    
+
     $between_dates = erp_extract_dates( $start_date, $end_date );
-    
+
     if ( is_wp_error( $between_dates ) ) {
         return $between_dates;
     }
-    
+
     $dates         = array( 'days' => array(), 'total' => 0 );
     $work_days     = erp_hr_get_work_days();
     $holiday_exist = erp_hr_leave_get_holiday_between_date_range( $start_date, $end_date );
-    
+
     foreach ( $between_dates as $date ) {
-        
+
         $key       = strtolower( date( 'D', strtotime( $date ) ) );
         $is_holidy = ( $work_days[$key] === 0 ) ? true : false;
-        
+
         if ( ! $is_holidy ) {
             $is_holidy = in_array( $date, $holiday_exist ) ? true : false;
         }
-        
+
         $dates['days'][] = array(
             'date'  => $date,
             'count' => (int) ! $is_holidy
         );
-        
+
         if ( ! $is_holidy ) {
             $dates['total'] += 1;
         }
     }
 
     return $dates;
-} 
+}
 
 
 
@@ -147,7 +147,7 @@ function erp_parent_sort( array $objects, array &$result=array(), $parent=0, $de
  */
 function erp_hr_people_types( $types ) {
 
-    $types['hr'] = [
+    $types['hrm'] = [
         'employee' => [
             'label'    => __( 'Employee', 'wp-erp' ),
             'sections' => [
