@@ -159,7 +159,7 @@
                 var selectdrop = $('.erp-hr-dept-drop-down');
                 wperp.scriptReload( 'erp_hr_script_reload', 'tmpl-erp-new-employee' );
                 selectdrop.append('<option selected="selected" value="'+res.id+'">'+res.title+'</option>');
-                selectdrop.select2("val", res.id);
+                selectdrop.select2().select2("val", res.id);
             },
 
             /**

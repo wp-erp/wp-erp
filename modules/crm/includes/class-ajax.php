@@ -29,6 +29,14 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-crm-customer-delete', 'customer_remove' );
         $this->action( 'wp_ajax_erp-crm-customer-restore', 'customer_restore' );
 
+        $this->action( 'wp_ajax_erp-crm-customer-add-company', 'customer_add_company' );
+        $this->action( 'wp_ajax_erp-crm-customer-edit-company', 'customer_edit_company' );
+        $this->action( 'wp_ajax_erp-crm-customer-update-company', 'customer_update_company' );
+        $this->action( 'wp_ajax_erp-crm-customer-remove-company', 'customer_remove_company' );
+
+        // script reload
+        $this->action( 'wp_ajax_erp-crm-customer-company-reload', 'customer_company_template_refresh' );
+
         // Single customer view
         $this->action( 'wp_ajax_erp-crm-customer-social', 'customer_social_profile' );
     }
@@ -137,6 +145,90 @@ class Ajax_Handler {
 
         // @TODO: check permission
         $this->send_success( __( 'Customer has been removed successfully', 'wp-erp' ) );
+    }
+
+    /**
+     * Adds compnay to custmer individual profile
+     *
+     * @since 1.0
+     *
+     * @return
+     */
+    public function customer_add_company() {
+
+        $this->verify_nonce( 'wp-erp-crm-assign-customer-company-nonce' );
+
+        $customer_id = isset( $_REQUEST['customer_id'] ) ? intval( $_REQUEST['customer_id'] ) : 0;
+        $company_id = isset( $_REQUEST['erp_assign_company_id'] ) ? intval( $_REQUEST['erp_assign_company_id'] ) : 0;
+
+
+        if ( ! $customer_id ) {
+
+            $this->send_error( __( 'No Customer found', 'wp-erp' ) );
+        }
+
+        erp_crm_customer_add_company( $customer_id, $company_id );
+
+        $this->send_success( __( 'Company has been added successfully', 'wp-erp' ) );
+
+    }
+
+    /**
+     * Get data for Company edit field for customer
+     */
+    public function customer_edit_company() {
+
+        $query_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+
+        $result = erp_crm_customer_company_by_id( $query_id );
+
+        $this->send_success( $result );
+    }
+
+    /**
+     * Save Company edit field for customer
+     */
+    public function customer_update_company() {
+
+        $this->verify_nonce( 'wp-erp-crm-customer-update-company-nonce' );
+
+        $row_id = isset( $_REQUEST['row_id'] ) ? intval( $_REQUEST['row_id'] ) : 0;
+        $company_id = isset( $_REQUEST['company_id'] ) ? intval( $_REQUEST['company_id'] ) : 0;
+
+        $result = erp_crm_customer_update_company( $row_id, $company_id );
+
+        $this->send_success( __( 'Company has been updated successfully', 'wp-erp' ) );
+
+    }
+
+    /**
+     * Remove Company from Customer Single Profile
+     */
+    public function customer_remove_company() {
+
+        $this->verify_nonce( 'wp-erp-crm-nonce' );
+
+        $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+
+        if( $id ) {
+            erp_crm_customer_remove_company( $id );
+        }
+
+        $this->send_success('hello');
+
+    }
+
+    /**
+     * Customer add company template refresh
+     *
+     * @since  1.0
+     *
+     * @return void
+     */
+    public function customer_company_template_refresh() {
+        ob_start();
+        include WPERP_CRM_JS_TMPL . '/new-assign-company.php';
+        $this->send_success( array( 'cont' => ob_get_clean() ) );
     }
 
     /**

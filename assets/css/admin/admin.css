@@ -185,6 +185,12 @@
 .erp-crm-customer table.wp-list-table .column-comments {
   width: 25%;
 }
+.erp-single-customer {
+  /**
+     * Erp Single customer
+     * feeds styles
+     */
+}
 .erp-single-customer .erp-single-customer-content .customer-image-wraper {
   background: #FFF;
   margin-bottom: 20px;
@@ -198,6 +204,214 @@
 }
 .erp-single-customer .erp-single-customer-content .customer-image-wraper .details p {
   margin: 7px 0px;
+}
+.erp-single-customer .erp-single-customer-content .customer-company-info .company-profile-content .postbox .action {
+  position: absolute;
+  top: 12px;
+  right: 40px;
+}
+.erp-single-customer .erp-single-customer-content .customer-company-info .company-profile-content .postbox .action .fa {
+  font-size: 13px;
+  color: #222;
+  margin-left: 3px;
+}
+.erp-single-customer .erp-customer-feeds .activity-form {
+  background: #fff;
+}
+.erp-single-customer .erp-customer-feeds .activity-form ul.nav-item {
+  background: #32373C;
+  border: 1px solid #3a4042;
+  box-shadow: 1px -1px 4px 0 rgba(0, 0, 0, 0.15), inset 1px 1px 1px 0 rgba(255, 255, 255, 0.15);
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+.erp-single-customer .erp-customer-feeds .activity-form ul.nav-item li {
+  display: inline-block;
+  position: relative;
+  list-style: none;
+  margin: 0px;
+}
+.erp-single-customer .erp-customer-feeds .activity-form ul.nav-item li.active {
+  background: #191E23;
+  position: relative;
+  color: white;
+  text-shadow: 0 1px 2px #212425;
+  border-color: black;
+}
+.erp-single-customer .erp-customer-feeds .activity-form ul.nav-item li .fa {
+  font-size: 11px;
+  margin-right: 3px;
+}
+.erp-single-customer .erp-customer-feeds .activity-form ul.nav-item li a {
+  display: inline-block;
+  color: #fafafa;
+  font-weight: 700;
+  opacity: 1;
+  height: 100%;
+  border-right: 1px solid #484f51;
+  margin: 0;
+  text-decoration: none;
+  text-align: center;
+  padding: 12px;
+}
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content {
+  padding: 10px;
+}
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content .submit-action {
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #email p {
+  margin: 0px;
+  border-bottom: 1px solid #eee;
+  padding: 8px 0px;
+  font-weight: bold;
+}
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #email p label {
+  min-width: 12%;
+  display: inline-block;
+  vertical-align: middle;
+}
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #email p span.sep {
+  width: 15px;
+  display: inline-block;
+}
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #email p.email-subject input {
+  border: none;
+  box-shadow: none;
+  transition: none;
+}
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #email p.email-subject input:focus {
+  outline: none;
+}
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #email p.email-subject input::-webkit-input-placeholder {
+  font-style: italic;
+  font-weight: normal;
+}
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #email p.email-subject input:-moz-placeholder {
+  font-style: italic;
+  font-weight: normal;
+}
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #email p.email-subject input::-moz-placeholder {
+  font-style: italic;
+  font-weight: normal;
+}
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #email p.email-subject input:-ms-input-placeholder {
+  font-style: italic;
+  font-weight: normal;
+}
+.erp-single-customer .erp-customer-feeds .activity-content {
+  margin: 30px 0px;
+  /*
+             * Component: Timeline
+             * -------------------
+             */
+}
+.erp-single-customer .erp-customer-feeds .activity-content .timeline {
+  position: relative;
+  margin: 0 0 30px 0;
+  padding: 0;
+  list-style: none;
+}
+.erp-single-customer .erp-customer-feeds .activity-content .timeline:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: #DEDEDE;
+  left: 31px;
+  margin: 0;
+  border-radius: 2px;
+}
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li {
+  position: relative;
+  margin-right: 10px;
+  margin-bottom: 15px;
+}
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li:before,
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li:after {
+  content: " ";
+  display: table;
+}
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li:after {
+  content: " ";
+  clear: both;
+}
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li.time-label:before {
+  width: 80%;
+  position: relative;
+  top: 15px;
+  z-index: 1;
+  left: 19%;
+  clear: both;
+  border: 1px dotted #ddd;
+}
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item {
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+  margin-top: 0;
+  background: #fff;
+  color: #444;
+  margin-left: 60px;
+  padding: 0;
+  position: relative;
+}
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .time {
+  color: #999;
+  float: right;
+  padding: 10px;
+  font-size: 12px;
+}
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-header {
+  margin: 0;
+  color: #555;
+  border-bottom: 1px solid #f4f4f4;
+  padding: 10px;
+  font-size: 12px;
+  line-height: 1.1;
+}
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-header > a {
+  font-weight: 600;
+  text-decoration: none;
+}
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-body,
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-footer {
+  padding: 10px;
+}
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .fa,
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .glyphicon,
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .ion {
+  width: 30px;
+  height: 30px;
+  font-size: 15px;
+  line-height: 30px;
+  position: absolute;
+  color: #fafafa;
+  background: #dfdfdf;
+  border-radius: 50%;
+  text-align: center;
+  left: 18px;
+  top: 0;
+}
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > .time-label > span {
+  font-weight: bold;
+  padding: 6px 8px;
+  display: inline-block;
+  background-color: #fff;
+  border-radius: 2px;
+  border-left: 3px solid #DEDEDE;
+}
+.erp-single-customer .erp-customer-feeds .activity-content .timeline-inverse > li > .timeline-item {
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.erp-single-customer .erp-customer-feeds .activity-content .timeline-inverse > li > .timeline-item > .timeline-header {
+  border-bottom-color: #ddd;
 }
 span.red {
   color: #CF0202;

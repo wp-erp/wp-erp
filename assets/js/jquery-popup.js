@@ -49,13 +49,12 @@
          */
         bindEvents: function() {
             // close the modal window
-            
-            $('.erp-modal form.erp-modal-form').on('submit', $.proxy(this.formSubmit, this) );
+            $('form.erp-modal-form', '#'+this.settings.id).on('submit', $.proxy(this.formSubmit, this) );
             $('.erp-modal-backdrop, .erp-modal .close').on('click', $.proxy(this.closeModal, this) );
-            
+
             $('body').on( 'keydown', '#'+this.id, $.proxy(this.onEscapeKey, this) );
             $('#'+this.id).focus();
-            
+
         },
 
         /**
@@ -85,7 +84,7 @@
             if ( $('#'+this.id).length ) {
                 return;
             }
-          
+
             var $modal = $( '#erp-modal' ).find( '.erp-modal' ),
                 $clone_modal = $modal.clone();
 
@@ -93,7 +92,7 @@
             if ( this.settings.extraClass !== '' ) {
                 $clone_modal.addClass( this.settings.extraClass );
             }
-          
+
             $clone_modal.attr( 'id', this.id );
             $clone_modal.attr( 'tabindex', -1 );
             $clone_modal.addClass( 'erp-count-class' );
@@ -106,12 +105,12 @@
             }
 
             $clone_modal.find( '.content').empty().html(this.element);
-           
+
             $clone_modal.show();
 
             $('body').append( $clone_modal );
 
-            
+
             var zindexContent = 600*$('body').find('.erp-count-class').length,
                 zindexback = zindexContent-1;
 
@@ -127,7 +126,7 @@
 
             // call the onReady callback
             this.settings.onReady.call( $clone_modal, this );
-            
+
         },
 
         /**
@@ -170,8 +169,8 @@
             if ( typeof e !== 'undefined' ) {
                 e.preventDefault();
             }
-     
-            $('#'+this.id).remove(); 
+
+            $('#'+this.id).remove();
             $('.'+this.id).remove();
             return;
             var modal = $('.erp-modal' );

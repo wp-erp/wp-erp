@@ -241,6 +241,15 @@ final class WeDevs_ERP {
         //jQuery full calendar style
         wp_register_style( 'erp-admin-calendar', WPERP_ASSETS . '/css/fullcalendar' . $suffix . '.css' );
 
+        // Register Vuejs script
+        wp_register_script( 'erp-vuejs', WPERP_ASSETS . '/js/vue'. $suffix .'.js', array( 'jquery' ), false, true );
+
+        // Register Basecamp text editor styles
+        wp_register_style( 'erp-trix-editor', WPERP_ASSETS . '/css/trix.css' );
+
+        // Register Bascamp text editor js
+        wp_register_script( 'erp-trix-editor', WPERP_ASSETS . '/js/trix.js', array( 'jquery' ), false, false );
+
         // Enqueue scripts in globally wp-erp
         wp_enqueue_script( 'erp-select2' );
         wp_enqueue_style( 'erp-select2' );
@@ -298,7 +307,7 @@ final class WeDevs_ERP {
         if ( ! $modules ) {
             return;
         }
-        
+
         foreach ($modules as $key => $module) {
 
             if ( ! $this->modules->is_module_active( $key ) ) {

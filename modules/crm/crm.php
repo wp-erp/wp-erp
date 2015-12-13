@@ -131,8 +131,13 @@ class Customer_Relationship {
             'delConfirmCustomer'    => __( 'Are you sure to delete this customer?', 'wp-erp' ),
         ) );
 
-        // if its an customer page
+        // if it's an customer page
         if ( 'crm_page_erp-sales-customers' == $hook ) {
+
+            wp_enqueue_script( 'erp-vuejs' );
+            wp_enqueue_script( 'erp-trix-editor' );
+            wp_enqueue_style( 'erp-trix-editor' );
+            wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", array( 'wp-erp-script', 'erp-vuejs' ), date( 'Ymd' ), true );
             wp_enqueue_script( 'post' );
 
             $customer = new Customer();
@@ -141,7 +146,6 @@ class Customer_Relationship {
             $localize_script['customer_empty'] = $customer->to_array();
             $localize_script['wpErpCountries'] = $country->load_country_states();
         }
-
 
         wp_localize_script( 'wp-erp-crm', 'wpErpCrm', $localize_script );
     }
@@ -157,6 +161,7 @@ class Customer_Relationship {
 
                 if ( isset( $_GET['action'] ) && $_GET['action'] == 'view' ) {
                     erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-assign-company.php', 'erp-crm-new-assign-company' );
+                    erp_get_js_template( WPERP_CRM_JS_TMPL . '/customer-edit-company.php', 'erp-crm-customer-edit-company');
                     erp_get_js_template( WPERP_CRM_JS_TMPL . '/customer-social.php', 'erp-crm-customer-social' );
                 }
 

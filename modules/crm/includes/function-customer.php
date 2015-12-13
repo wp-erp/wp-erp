@@ -197,6 +197,83 @@ function erp_crm_count_trashed_customers() {
 }
 
 /**
+ *  Add Company to a Custom
+ *
+ * @since  1.0
+ *
+ * @return
+ */
+function erp_crm_customer_add_company( $customer_id, $company_id ) {
+
+    global $wpdb;
+
+    $wpdb->insert( $wpdb->prefix . 'erp_crm_customer_companies', array(
+            'customer_id' => $customer_id,
+            'company_id'  => $company_id
+        ));
+}
+
+/**
+ * Get all the companies for a single costomer
+ *
+ * @since 1.0
+ *
+ * @return array
+ */
+function erp_crm_customer_get_company( $customer_id ) {
+
+    global $wpdb;
+
+    $sql = "SELECT  peop.*, com.id, com.company_id
+            FROM " . $wpdb->prefix . "erp_crm_customer_companies AS com
+            LEFT JOIN " . $wpdb->prefix . "erp_peoples AS peop ON peop.id = com.company_id
+            WHERE com.customer_id = ". $customer_id;
+
+    return $wpdb->get_results( $sql );
+}
+
+/**
+ * Updates company info for a customer
+ *
+ * @since 1.0
+ *
+ * @return void
+ */
+function erp_crm_customer_update_company( $row_id, $company_id ) {
+    global $wpdb;
+
+    $wpdb->update( $wpdb->prefix . "erp_crm_customer_companies", ['company_id' => $company_id], ['id' => $row_id] );
+}
+
+/**
+ * Remove company from Customer
+ *
+ * @since 1.0
+ *
+ * @return mixed
+ */
+function erp_crm_customer_remove_company( $id ) {
+    global $wpdb;
+
+    $wpdb->delete( $wpdb->prefix . 'erp_crm_customer_companies', ['id' => $id] );
+
+}
+
+/**
+ * Get Customer Company by ID
+ *
+ * @since 1.0
+ *
+ * @return array
+ */
+function erp_crm_customer_company_by_id( $query_id ) {
+    global $wpdb;
+
+    $sql = "SELECT * FROM {$wpdb->prefix}erp_crm_customer_companies WHERE id = $query_id";
+    return $wpdb->get_row( $sql, ARRAY_A );
+}
+
+/**
  * Get social fields
  *
  * @since 1.0

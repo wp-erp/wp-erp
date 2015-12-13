@@ -8,7 +8,6 @@
     var WeDevs_ERP_CRM = {
 
         initialize: function() {
-
             // Customer
             $( 'body' ).on( 'click', 'a.erp-contact-new', this.customer.create );
             $( '.erp-crm-customer' ).on( 'click', 'span.edit a', this.customer.edit );
@@ -16,7 +15,11 @@
             $( '.erp-crm-customer' ).on( 'click', 'a.restoreCustomer', this.customer.restore );
 
             // Customer single view
-            $( '.erp-single-customer' ).on( 'click', 'a#erp-customer-add-company', this.customerSingle.addCompany );
+            $( '.erp-single-customer' ).on( 'click', '#erp-customer-add-company', this.customerSingle.addCompany );
+            $( '.erp-single-customer' ).on( 'click', 'a.erp-customer-edit-company', this.customerSingle.editCompany );
+            $( '.erp-single-customer' ).on( 'click', 'a.erp-customer-delete-company', this.customerSingle.removeCompany );
+
+            // Social Profile fields
             $( '.erp-single-customer' ).on( 'click', 'a#customer-social-field', this.customerSingle.addSocialProfle );
 
             // photos
@@ -26,6 +29,8 @@
 
             $( 'body' ).on('change', 'select.erp-country-select', this.populateState );
 
+            // Trigger
+            $( 'body' ).on( 'erp-crm-after-customer-new-company', this.customer.afterNew );
         },
 
         /**
@@ -65,6 +70,18 @@
 
 
         customer: {
+
+            /**
+             * After create new customer
+             *
+             * @return false
+             */
+            afterNew: function( e, res ) {
+                var selectdrop = $('.erp-crm-customer-company-dropdown');
+                wperp.scriptReload( 'erp-crm-customer-company-reload', 'tmpl-erp-crm-new-assign-company' );
+                selectdrop.append('<option selected="selected" value="'+res.id+'">'+res.company+'</option>');
+                selectdrop.select2("val", res.id);
+            },
 
             /**
              * Set name field according to customer type
@@ -159,7 +176,8 @@
             create: function(e) {
                 e.preventDefault();
 
-                var self = $(this);
+                var self = $(this),
+                is_single = self.data( 'single' );
 
                 wpErpCrm.customer_empty.type = self.data('type');
 
@@ -170,7 +188,7 @@
                     content: wperp.template('erp-crm-new-contact')(  wpErpCrm.customer_empty  ).trim(),
                     extraClass: 'midium',
                     onReady: function() {
-                        $( '.select2' ).select2();
+                        WeDevs_ERP_CRM.customer.select2Action('erp-crm-select2');
                         $( 'body' ).find('select#erp-customer-type').trigger('change');
                     },
                     onSubmit: function(modal) {
@@ -179,7 +197,14 @@
                         wp.ajax.send( {
                             data: this.serialize(),
                             success: function(res) {
-                                WeDevs_ERP_CRM.customer.pageReload();
+
+                                if ( is_single == '1' ) {
+                                    $('body').trigger( 'erp-crm-after-customer-new-company', [res]);
+                                } else {
+                                    WeDevs_ERP_CRM.customer.pageReload();
+                                    //WeDevs_ERP_CRM.customer.tempReload();
+                                }
+
                                 modal.enableButton();
                                 modal.closeModal();
                             },
@@ -190,6 +215,17 @@
                         });
                     }
                 }); //popup
+            },
+
+            /**
+             * select2 action
+             *
+             * @return  {void}
+             */
+            select2Action: function(element) {
+                $('.'+element).select2({
+                    width: 'element',
+                });
             },
 
             /**
@@ -339,6 +375,10 @@
          */
         customerSingle: {
 
+            pageReload: function(e) {
+                $( '.erp-single-customer' ).load( window.location.href + ' .erp-single-customer' );
+            },
+
             addCompany: function(e) {
                 e.preventDefault();
 
@@ -352,7 +392,6 @@
                     content: wperp.template('erp-crm-new-assign-company')( customer_id ).trim(),
                     extraClass: 'smaller',
                     onReady: function() {
-                        WeDevs_ERP_CRM.customerSingle.select2Action('erp-crm-select2');
                         WeDevs_ERP_CRM.customerSingle.select2AddMoreContent();
                     },
 
@@ -362,7 +401,7 @@
                         wp.ajax.send( {
                             data: this.serialize(),
                             success: function(res) {
-                                WeDevs_ERP_CRM.customer.pageReload();
+                                $( '.company-profile-content' ).load( window.location.href + ' .company-list' );
                                 modal.enableButton();
                                 modal.closeModal();
                             },
@@ -374,6 +413,94 @@
                     }
                 }); //popup
             },
+
+            /**
+             * Customer Single Edit Company
+             */
+            editCompany: function(e) {
+                e.preventDefault();
+
+                var self = $( this ),
+                query_id = self.data( 'id' );
+
+                $.erpPopup({
+                    title: wpErpCrm.popup.customer_update_title,
+                    button: wpErpCrm.update_submit,
+                    id: 'erp-crm-single-edit-company',
+                    extraClass: 'smaller',
+                    onReady: function() {
+                        var modal = this;
+
+                        $( 'header', modal).after( $('<div class="loader"></div>').show() );
+
+                        wp.ajax.send( 'erp-crm-customer-edit-company', {
+                            data: {
+                                id: query_id,
+                                _wpnonce: wpErpCrm.nonce
+                            },
+                            success: function( res ) {
+                                console.log(res);
+                                var html = wp.template( 'erp-crm-customer-edit-company' )( res );
+                                $( '.content', modal ).html( html );
+                                $( '.loader', modal ).remove();
+
+                                $( '.row[data-selected]', modal ).each(function() {
+                                    var self = $(this),
+                                        selected = self.data('selected');
+
+                                    if ( selected !== '' ) {
+                                        self.find( 'select' ).val( selected );
+                                    }
+                                });
+                            }
+                        });
+                    },
+
+                    onSubmit: function(modal) {
+                        modal.disableButton();
+
+                        wp.ajax.send( {
+                            data: this.serialize(),
+                            success: function(res) {
+                                WeDevs_ERP_CRM.customer.pageReload();
+                                modal.enableButton();
+                                modal.closeModal();
+                                console.log( res );
+                            },
+                            error: function(error) {
+                                modal.enableButton();
+                                alert( error );
+                                console.log( error );
+                            }
+                        });
+                    }
+
+                });
+
+            },
+
+            /**
+             *  Remove company from customer single profile
+             */
+            removeCompany: function(e) {
+                e.preventDefault();
+
+                var self = $(this);
+
+                if ( confirm( wpErpCrm.confirm ) ) {
+                    wp.ajax.send( self.data('action'), {
+                        data: {
+                            id: self.data('id'),
+                            _wpnonce: wpErpCrm.nonce
+                        },
+                        success: function( res ) {
+                            self.closest('div.postbox').fadeOut();
+                        }
+                    });
+                }
+            },
+
+
 
             addSocialProfle: function(e) {
                 e.preventDefault();
@@ -416,7 +543,7 @@
              * @return  {void}
              */
             select2AddMoreContent: function() {
-                var selects = $('.erp-hrm-select2-add-more');
+                var selects = $('.erp-crm-select2-add-more');
                 $.each( selects, function( key, element ) {
                    WeDevs_ERP_CRM.customerSingle.select2AddMoreActive(element);
                 });
@@ -428,13 +555,15 @@
              * @return  {void}
              */
             select2AddMoreActive: function(element) {
-                var id = $(element).data('id');
+                var id      = $(element).data('id'),
+                type        = $(element).data('type'),
+                single      = $(element).data('single');
 
                 $(element).select2({
                     width: 'element',
                     "language": {
                         noResults: function(){
-                           return '<a href="#" class="button button-primary '+id+'" id="'+id+'">Add New</a>';
+                           return '<a href="#" class="button button-primary '+id+'" data-type="'+type+'" data-single="'+single+'">Add New</a>';
                         }
                     },
                     escapeMarkup: function (markup) {

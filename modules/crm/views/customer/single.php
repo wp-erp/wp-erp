@@ -31,7 +31,7 @@
                     </div>
                 </div>
 
-                <div class="postbox customr-basic-info">
+                <div class="postbox customer-basic-info">
                     <div class="handlediv" title="<?php _e( 'Click to toggle', 'wp-erp' ); ?>"><br></div>
                     <h3 class="hndle"><span><?php _e( 'Basic Info', 'wp-erp' ); ?></span></h3>
                     <div class="inside">
@@ -52,15 +52,44 @@
                     </div>
                 </div><!-- .postbox -->
 
-                <div class="postbox customr-company-info">
+                <div class="postbox customer-company-info">
                     <div class="handlediv" title="<?php _e( 'Click to toggle', 'wp-erp' ); ?>"><br></div>
                     <h3 class="hndle"><span><?php echo sprintf( '%s\'s %s', $customer->first_name, __( 'Company', 'wp-erp' ) ); ?></span></h3>
                     <div class="inside company-profile-content">
-                        <a href="#" data-id="<?php echo $customer->id; ?>" title="<?php _e( 'Add a company', 'wp-erp' ); ?>" class="button button-primary" id="erp-customer-add-company"><?php _e( '<i class="fa fa-plus"></i> Add a Company', 'wp-erp' ); ?></a>
+                        <div class="company-list">
+                            <?php $companies = erp_crm_customer_get_company( $customer->id ); ?>
+                            <?php foreach ( $companies as $company ) : ?>
+
+                                <div class="postbox closed">
+                                    <div class="handlediv" title="<?php _e( 'Click to toggle', 'wp-erp' ); ?>"><br></div>
+                                    <h3 class="hndle">
+                                        <span><?php echo $company->company; ?></span>
+                                    </h3>
+                                    <div class="action">
+                                        <a href="#" class="erp-customer-edit-company" data-id="<?php echo $company->id; ?>" data-action="erp-crm-customer-edit-company"><i class="fa fa-pencil-square-o"></i></a>
+                                        <a href="#" class="erp-customer-delete-company" data-id="<?php echo $company->id; ?>" data-action="erp-crm-customer-remove-company"><i class="fa fa-trash-o"></i></a>
+                                    </div>
+                                    <div class="inside company-profile-content">
+                                        <ul class="erp-list separated">
+                                            <li><?php erp_print_key_value( __( 'Phone', 'wp-erp' ), $company->phone ); ?></li>
+                                            <li><?php erp_print_key_value( __( 'Fax', 'wp-erp' ), $company->fax ); ?></li>
+                                            <li><?php erp_print_key_value( __( 'Website', 'wp-erp' ), erp_get_clickable( 'url', $company->website ) ); ?></li>
+                                            <li><?php erp_print_key_value( __( 'Street 1', 'wp-erp' ), $company->street_1 ); ?></li>
+                                            <li><?php erp_print_key_value( __( 'Street 2', 'wp-erp' ), $company->street_2 ); ?></li>
+                                            <li><?php erp_print_key_value( __( 'City', 'wp-erp' ), $company->city ); ?></li>
+                                            <li><?php erp_print_key_value( __( 'State', 'wp-erp' ), erp_get_state_name( $company->country, $company->state ) ); ?></li>
+                                            <li><?php erp_print_key_value( __( 'Country', 'wp-erp' ), erp_get_country_name( $company->country ) ); ?></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                            <?php endforeach; ?>
+                            <a href="#" data-id="<?php echo $customer->id; ?>" title="<?php _e( 'Add a company', 'wp-erp' ); ?>" class="button button-primary" id="erp-customer-add-company"><?php _e( '<i class="fa fa-plus"></i> Add a Company', 'wp-erp' ); ?></a>
+                        </div>
                     </div>
                 </div><!-- .postbox -->
 
-                <div class="postbox customr-social-info">
+                <div class="postbox customer-social-info">
                     <div class="handlediv" title="<?php _e( 'Click to toggle', 'wp-erp' ); ?>"><br></div>
                     <h3 class="hndle"><span><?php _e( 'Social Info', 'wp-erp' ); ?></span></h3>
                     <div class="inside">
@@ -91,7 +120,7 @@
             </div>
 
             <div class="col-4 column-right">
-
+                <?php include WPERP_CRM_VIEWS . '/customer/feeds.php'; ?>
             </div>
 
         </div>
