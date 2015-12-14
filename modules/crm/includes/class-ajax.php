@@ -159,11 +159,13 @@ class Ajax_Handler {
         $this->verify_nonce( 'wp-erp-crm-assign-customer-company-nonce' );
 
         $customer_id = isset( $_REQUEST['customer_id'] ) ? intval( $_REQUEST['customer_id'] ) : 0;
-        $company_id = isset( $_REQUEST['erp_assign_company_id'] ) ? intval( $_REQUEST['erp_assign_company_id'] ) : 0;
+        $company_id  = isset( $_REQUEST['erp_assign_company_id'] ) ? intval( $_REQUEST['erp_assign_company_id'] ) : 0;
 
+        if ( erp_crm_check_customer_exist_company( $customer_id, $company_id ) ) {
+            $this->send_error( __( 'Company already assigned. Choose another company', 'wp-erp' ) );
+        }
 
         if ( ! $customer_id ) {
-
             $this->send_error( __( 'No Customer found', 'wp-erp' ) );
         }
 

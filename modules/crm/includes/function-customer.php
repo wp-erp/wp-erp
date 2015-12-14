@@ -306,3 +306,20 @@ function erp_crm_get_social_field() {
 
     return apply_filters( 'erp_crm_social_field', $social_field );
 }
+
+/**
+ * Check if customer assign already exist
+ *
+ * @since 1.0
+ *
+ * @param  integer $customer_id
+ * @param  integer $company_id
+ *
+ * @return null|array
+ */
+function erp_crm_check_customer_exist_company( $customer_id, $company_id ) {
+    global $wpdb;
+
+    $sql = "SELECT `id` FROM {$wpdb->prefix}erp_crm_customer_companies WHERE `customer_id` = '$customer_id' AND `company_id` = '$company_id'";
+    return $wpdb->get_row( $sql, ARRAY_A );
+}
