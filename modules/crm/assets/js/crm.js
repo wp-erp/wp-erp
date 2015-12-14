@@ -31,6 +31,28 @@
 
             // Trigger
             $( 'body' ).on( 'erp-crm-after-customer-new-company', this.customer.afterNew );
+
+            $('body').on( 'click', 'div.erp-handlediv,h3.erp-hndle', this.handlePostboxToggle );
+
+        },
+
+        /**
+         * Handle postbox toggle effect
+         *
+         * @param  {object} e
+         *
+         * @return {void}
+         */
+        handlePostboxToggle: function(e) {
+            e.preventDefault();
+            var self = $(this),
+                postboxDiv = self.closest('.postbox');
+
+            if ( postboxDiv.hasClass('closed') ) {
+                postboxDiv.removeClass('closed');
+            } else {
+                postboxDiv.addClass('closed');
+            }
         },
 
         /**
@@ -439,7 +461,6 @@
                                 _wpnonce: wpErpCrm.nonce
                             },
                             success: function( res ) {
-                                console.log(res);
                                 var html = wp.template( 'erp-crm-customer-edit-company' )( res );
                                 $( '.content', modal ).html( html );
                                 $( '.loader', modal ).remove();
@@ -465,12 +486,10 @@
                                 WeDevs_ERP_CRM.customer.pageReload();
                                 modal.enableButton();
                                 modal.closeModal();
-                                console.log( res );
                             },
                             error: function(error) {
                                 modal.enableButton();
                                 alert( error );
-                                console.log( error );
                             }
                         });
                     }

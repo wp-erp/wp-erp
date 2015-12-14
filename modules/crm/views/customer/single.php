@@ -32,8 +32,8 @@
                 </div>
 
                 <div class="postbox customer-basic-info">
-                    <div class="handlediv" title="<?php _e( 'Click to toggle', 'wp-erp' ); ?>"><br></div>
-                    <h3 class="hndle"><span><?php _e( 'Basic Info', 'wp-erp' ); ?></span></h3>
+                    <div class="erp-handlediv" title="<?php _e( 'Click to toggle', 'wp-erp' ); ?>"><br></div>
+                    <h3 class="erp-hndle"><span><?php _e( 'Basic Info', 'wp-erp' ); ?></span></h3>
                     <div class="inside">
                         <ul class="erp-list separated">
                             <li><?php erp_print_key_value( __( 'First Name', 'wp-erp' ), $customer->first_name ); ?></li>
@@ -53,16 +53,16 @@
                 </div><!-- .postbox -->
 
                 <div class="postbox customer-company-info">
-                    <div class="handlediv" title="<?php _e( 'Click to toggle', 'wp-erp' ); ?>"><br></div>
-                    <h3 class="hndle"><span><?php echo sprintf( '%s\'s %s', $customer->first_name, __( 'Company', 'wp-erp' ) ); ?></span></h3>
+                    <div class="erp-handlediv" title="<?php _e( 'Click to toggle', 'wp-erp' ); ?>"><br></div>
+                    <h3 class="erp-hndle"><span><?php echo sprintf( '%s\'s %s', $customer->first_name, __( 'Company', 'wp-erp' ) ); ?></span></h3>
                     <div class="inside company-profile-content">
                         <div class="company-list">
                             <?php $companies = erp_crm_customer_get_company( $customer->id ); ?>
                             <?php foreach ( $companies as $company ) : ?>
 
                                 <div class="postbox closed">
-                                    <div class="handlediv" title="<?php _e( 'Click to toggle', 'wp-erp' ); ?>"><br></div>
-                                    <h3 class="hndle">
+                                    <div class="erp-handlediv" title="<?php _e( 'Click to toggle', 'wp-erp' ); ?>"><br></div>
+                                    <h3 class="erp-hndle">
                                         <span><?php echo $company->company; ?></span>
                                     </h3>
                                     <div class="action">
@@ -90,8 +90,8 @@
                 </div><!-- .postbox -->
 
                 <div class="postbox customer-social-info">
-                    <div class="handlediv" title="<?php _e( 'Click to toggle', 'wp-erp' ); ?>"><br></div>
-                    <h3 class="hndle"><span><?php _e( 'Social Info', 'wp-erp' ); ?></span></h3>
+                    <div class="erp-handlediv" title="<?php _e( 'Click to toggle', 'wp-erp' ); ?>"><br></div>
+                    <h3 class="erp-hndle"><span><?php _e( 'Social Info', 'wp-erp' ); ?></span></h3>
                     <div class="inside">
                         <?php
                             $social_info = $customer->get_meta( 'crm_social_profile' );

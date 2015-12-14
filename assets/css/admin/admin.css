@@ -191,6 +191,36 @@
      * feeds styles
      */
 }
+.erp-single-customer .erp-single-customer-content .postbox .erp-handlediv {
+  float: right;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+}
+.erp-single-customer .erp-single-customer-content .postbox .erp-handlediv:before {
+  content: '\f142';
+  right: 12px;
+  font: 400 20px/1 dashicons;
+  speak: none;
+  display: inline-block;
+  padding: 8px 10px;
+  top: 0;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-decoration: none!important;
+}
+.erp-single-customer .erp-single-customer-content .postbox .erp-hndle {
+  font-size: 14px;
+  padding: 8px 12px;
+  margin: 0;
+  line-height: 1.4;
+  cursor: move;
+  border-bottom: 1px solid #eee;
+}
+.erp-single-customer .erp-single-customer-content .postbox.closed .erp-hndle {
+  border-bottom: none;
+}
 .erp-single-customer .erp-single-customer-content .customer-image-wraper {
   background: #FFF;
   margin-bottom: 20px;
