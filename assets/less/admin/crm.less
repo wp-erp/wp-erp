@@ -133,7 +133,7 @@
                 padding: 8px 12px;
                 margin: 0;
                 line-height: 1.4;
-                cursor: move;
+                cursor: pointer;
                 border-bottom: 1px solid #eee;
             }
 
@@ -177,6 +177,23 @@
                             font-size: 13px;
                             color: #222;
                             margin-left: 3px;
+                        }
+                    }
+
+                    .erp-hndle {
+                        .customer-name {
+                            position: relative;
+                            top:-5px;
+                            left:5px;
+
+                            a {
+                                text-decoration: none;
+                                color: #222;
+
+                                &:hover {
+                                    text-decoration: underline;
+                                }
+                            }
                         }
                     }
                 }

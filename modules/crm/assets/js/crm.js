@@ -25,14 +25,13 @@
             // photos
             $( 'body' ).on( 'click', 'a#erp-set-customer-photo', this.customer.setPhoto );
             $( 'body' ).on( 'click', 'a.erp-remove-photo', this.customer.removePhoto );
-            $( 'body' ).on( 'change', '.erp-customer-form select#erp-customer-type', this.customer.triggerName );
 
             $( 'body' ).on('change', 'select.erp-country-select', this.populateState );
 
             // Trigger
             $( 'body' ).on( 'erp-crm-after-customer-new-company', this.customer.afterNew );
 
-            $('body').on( 'click', 'div.erp-handlediv,h3.erp-hndle', this.handlePostboxToggle );
+            $('body').on( 'click', 'div.erp-handlediv', this.handlePostboxToggle );
 
         },
 
@@ -103,28 +102,6 @@
                 wperp.scriptReload( 'erp-crm-customer-company-reload', 'tmpl-erp-crm-new-assign-company' );
                 selectdrop.append('<option selected="selected" value="'+res.id+'">'+res.company+'</option>');
                 selectdrop.select2("val", res.id);
-            },
-
-            /**
-             * Set name field according to customer type
-             *
-             * @return {[void]}
-             */
-            triggerName: function() {
-                var self = $(this),
-                    fieldset = self.closest('fieldset');
-
-                if ( self.val() == 'company' ) {
-                    fieldset.find('li.name-container input').attr( 'disabled', 'disabled' );
-                    fieldset.find('li.customer-company-name input').removeAttr( 'disabled' );
-                    fieldset.find('li.name-container').addClass('erp-hide');
-                    fieldset.find('li.customer-company-name').removeClass('erp-hide');
-                } else {
-                    fieldset.find('li.customer-company-name input').attr( 'disabled', 'disabled' );
-                    fieldset.find('li.name-container input').removeAttr( 'disabled' );
-                    fieldset.find('li.name-container').removeClass('erp-hide');
-                    fieldset.find('li.customer-company-name').addClass('erp-hide');
-                };
             },
 
             /**
@@ -204,7 +181,7 @@
                 wpErpCrm.customer_empty.type = self.data('type');
 
                 $.erpPopup({
-                    title: wpErpCrm.popup.customer_title,
+                    title: self.attr('title'),
                     button: wpErpCrm.add_submit,
                     id: 'erp-crm-new-contact',
                     content: wperp.template('erp-crm-new-contact')(  wpErpCrm.customer_empty  ).trim(),
@@ -263,7 +240,7 @@
                 var self = $(this);
 
                 $.erpPopup({
-                    title: wpErpCrm.popup.customer_update_title,
+                    title: self.attr('title'),
                     button: wpErpCrm.update_submit,
                     id: 'erp-customer-edit',
                     onReady: function() {
@@ -405,13 +382,16 @@
                 e.preventDefault();
 
                 var self = $(this),
-                    customer_id = self.data('id');
+                    data = {
+                        id : self.data('id'),
+                        type : self.data('type'),
+                    };
 
                 $.erpPopup({
-                    title: wpErpCrm.popup.customer_title,
-                    button: wpErpCrm.add_submit,
+                    title: self.attr('title'),
+                    button: wpErpCrm.save_submit,
                     id: 'erp-crm-single-contact-company',
-                    content: wperp.template('erp-crm-new-assign-company')( customer_id ).trim(),
+                    content: wperp.template('erp-crm-new-assign-company')( data ).trim(),
                     extraClass: 'smaller',
                     onReady: function() {
                         WeDevs_ERP_CRM.customerSingle.select2AddMoreContent();

@@ -158,18 +158,30 @@ class Ajax_Handler {
 
         $this->verify_nonce( 'wp-erp-crm-assign-customer-company-nonce' );
 
-        $customer_id = isset( $_REQUEST['customer_id'] ) ? intval( $_REQUEST['customer_id'] ) : 0;
+        $type        = isset( $_REQUEST['assign_type'] ) ? $_REQUEST['assign_type'] : '';
+        $id          = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
         $company_id  = isset( $_REQUEST['erp_assign_company_id'] ) ? intval( $_REQUEST['erp_assign_company_id'] ) : 0;
+        $customer_id = isset( $_REQUEST['erp_assign_customer_id'] ) ? intval( $_REQUEST['erp_assign_customer_id'] ) : 0;
 
-        if ( erp_crm_check_customer_exist_company( $customer_id, $company_id ) ) {
+        if ( $company_id && erp_crm_check_customer_exist_company( $id, $company_id ) ) {
             $this->send_error( __( 'Company already assigned. Choose another company', 'wp-erp' ) );
         }
 
-        if ( ! $customer_id ) {
+        if ( $customer_id && erp_crm_check_customer_exist_company( $customer_id, $id ) ) {
+            $this->send_error( __( 'Customer already assigned. Choose another customer', 'wp-erp' ) );
+        }
+
+        if ( ! $id ) {
             $this->send_error( __( 'No Customer found', 'wp-erp' ) );
         }
 
-        erp_crm_customer_add_company( $customer_id, $company_id );
+        if ( $type == 'assign_customer' ) {
+            erp_crm_customer_add_company( $customer_id, $id );
+        }
+
+        if ( $type == 'assign_company' ) {
+            erp_crm_customer_add_company( $id, $company_id );
+        }
 
         $this->send_success( __( 'Company has been added successfully', 'wp-erp' ) );
 

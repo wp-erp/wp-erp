@@ -157,16 +157,17 @@ class Customer_List_Table extends \WP_List_Table {
      */
     function column_name( $customer ) {
         $customer = new \WeDevs\ERP\CRM\Customer( intval( $customer->id ) );
-
         $actions           = array();
         $delete_url        = '';
         $view_url          = $customer->get_details_url();
         $data_hard         = ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) ? 1 : 0;
         $delete_text       = ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) ? __( 'Permanent Delete', 'wp-erp' ) : __( 'Delete', 'wp-erp' );
         $customer_name     = $customer->first_name .' '. $customer->last_name;
+        $edit_title        = ( $customer->type == 'company' ) ? __( 'Edit this Company', 'wp-erp' ) : __( 'Edit this customer', 'wp-erp' );
+        $view_title        = ( $customer->type == 'company' ) ? __( 'View this Company', 'wp-erp' ) : __( 'View this customer', 'wp-erp' );
 
-        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $customer->id, __( 'Edit this customer', 'wp-erp' ), __( 'Edit', 'wp-erp' ) );
-        $actions['view']   = sprintf( '<a href="%s" title="%s">%s</a>', $view_url, __( 'View this customer', 'wp-erp' ), __( 'View', 'wp-erp' ) );
+        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $customer->id, $edit_title, __( 'Edit', 'wp-erp' ) );
+        $actions['view']   = sprintf( '<a href="%s" title="%s">%s</a>', $view_url, $view_title, __( 'View', 'wp-erp' ) );
         $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" data-hard=%d title="%s">%s</a>', $delete_url, $customer->id, $data_hard, __( 'Delete this item', 'wp-erp' ), $delete_text );
 
         if ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) {

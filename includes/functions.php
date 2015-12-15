@@ -600,4 +600,3 @@ function erp_get_state_name( $country, $state ) {
 
     return $full_state;
 }
-

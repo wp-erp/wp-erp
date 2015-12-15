@@ -5,8 +5,11 @@
     <fieldset class="no-border genaral-info">
         <ol class="form-fields">
             <li>
-                <?php erp_html_form_label( __( 'Customer Photo', 'wp-erp' ), 'full-name' ); ?>
-
+                <# if ( data.type == 'company' ) { #>
+                    <?php erp_html_form_label( __( 'Company Photo', 'wp-erp' ), 'company' ); ?>
+                <# } else { #>
+                    <?php erp_html_form_label( __( 'Customer Photo', 'wp-erp' ), 'full-name' ); ?>
+                <# } #>
                 <div class="photo-container">
                     <input type="hidden" name="photo_id" id="customer-photo-id" value="{{ data.avatar.id }}">
 

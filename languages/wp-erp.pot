@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP ERP 0.1-alpha\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/support\n"
-"POT-Creation-Date: 2015-11-25 06:43:06+00:00\n"
+"POT-Creation-Date: 2015-12-15 07:29:05+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4630,7 +4630,7 @@ msgstr ""
 msgid "Create"
 msgstr ""
 
-#: includes/admin/class-admin.php:62 modules/crm/crm.php:125
+#: includes/admin/class-admin.php:62 modules/crm/crm.php:126
 #: modules/hrm/hrm.php:144 modules/hrm/views/employee/tab-job.php:23
 msgid "Update"
 msgstr ""
@@ -4715,6 +4715,9 @@ msgstr ""
 
 #: includes/admin/class-form-handler.php:95 includes/admin/views/address.php:57
 #: includes/admin/views/company-editor.php:78
+#: modules/crm/views/customer/single.php:48
+#: modules/crm/views/customer/single.php:83
+#: modules/crm/views/customer/single.php:124
 #: modules/crm/views/js-templates/new-customer.php:154
 msgid "Country"
 msgstr ""
@@ -4744,7 +4747,8 @@ msgid "ERP Settings"
 msgstr ""
 
 #: includes/admin/class-menu.php:124 includes/admin/views/company-editor.php:2
-#: modules/crm/includes/function-customer.php:42 modules/crm/views/leads.php:35
+#: modules/crm/includes/function-customer.php:65
+#: modules/crm/views/customer/single.php:59 modules/crm/views/leads.php:35
 #: modules/crm/views/leads.php:47
 msgid "Company"
 msgstr ""
@@ -4789,6 +4793,9 @@ msgstr ""
 
 #: includes/admin/views/address.php:30
 #: includes/admin/views/company-editor.php:50
+#: modules/crm/views/customer/single.php:46
+#: modules/crm/views/customer/single.php:81
+#: modules/crm/views/customer/single.php:122
 #: modules/crm/views/js-templates/new-customer.php:147
 msgid "City"
 msgstr ""
@@ -4853,12 +4860,18 @@ msgstr ""
 
 #: includes/admin/views/company-editor.php:98
 #: modules/crm/includes/class-customer-list-table.php:141
-#: modules/crm/views/leads.php:36 modules/crm/views/leads.php:48
+#: modules/crm/views/customer/single.php:41
+#: modules/crm/views/customer/single.php:76
+#: modules/crm/views/customer/single.php:117 modules/crm/views/leads.php:36
+#: modules/crm/views/leads.php:48
 #: modules/hrm/views/js-templates/new-employee.php:232
 msgid "Phone"
 msgstr ""
 
 #: includes/admin/views/company-editor.php:109
+#: modules/crm/views/customer/single.php:42
+#: modules/crm/views/customer/single.php:77
+#: modules/crm/views/customer/single.php:118
 msgid "Fax"
 msgstr ""
 
@@ -4870,6 +4883,9 @@ msgid "Mobile"
 msgstr ""
 
 #: includes/admin/views/company-editor.php:131
+#: modules/crm/views/customer/single.php:43
+#: modules/crm/views/customer/single.php:78
+#: modules/crm/views/customer/single.php:119
 #: modules/crm/views/js-templates/new-customer.php:115
 #: modules/hrm/views/js-templates/new-employee.php:307
 msgid "Website"
@@ -4941,7 +4957,7 @@ msgid "Inactive (%s)"
 msgstr ""
 
 #: includes/admin/views/module.php:35 includes/admin/views/module.php:43
-#: modules/hrm/includes/class-designation-list-table.php:63
+#: modules/hrm/includes/class-designation-list-table.php:64
 #: modules/hrm/views/employee/tab-general.php:24
 #: modules/hrm/views/leave/holiday.php:110
 msgid "Title"
@@ -5095,13 +5111,13 @@ msgstr ""
 msgid "-- select --"
 msgstr ""
 
-#: includes/class-install.php:463 includes/framework/modules.php:38
+#: includes/class-install.php:470 includes/framework/modules.php:38
 #: modules/hrm/includes/admin/class-menu.php:25
 #: modules/hrm/views/dashboard.php:2
 msgid "HR Management"
 msgstr ""
 
-#: includes/class-install.php:465 includes/framework/modules.php:40
+#: includes/class-install.php:472 includes/framework/modules.php:40
 msgid "Human Resource Mnanagement"
 msgstr ""
 
@@ -5662,27 +5678,27 @@ msgstr ""
 msgid "Egyptian Pound"
 msgstr ""
 
-#: includes/functions.php:312
+#: includes/functions.php:314
 msgid "Invalid date provided"
 msgstr ""
 
-#: includes/functions.php:420
+#: includes/functions.php:422
 msgid "Very Bad"
 msgstr ""
 
-#: includes/functions.php:421
+#: includes/functions.php:423
 msgid "Poor"
 msgstr ""
 
-#: includes/functions.php:422
+#: includes/functions.php:424
 msgid "Average"
 msgstr ""
 
-#: includes/functions.php:423
+#: includes/functions.php:425
 msgid "Good"
 msgstr ""
 
-#: includes/functions.php:424
+#: includes/functions.php:426
 msgid "Excellent"
 msgstr ""
 
@@ -5696,8 +5712,8 @@ msgid "Overview"
 msgstr ""
 
 #: modules/crm/admin/class-menu.php:32
-#: modules/crm/includes/function-customer.php:20
-#: modules/crm/includes/function-customer.php:41
+#: modules/crm/includes/function-customer.php:43
+#: modules/crm/includes/function-customer.php:64
 #: modules/crm/views/customers.php:7
 msgid "Customer"
 msgstr ""
@@ -5730,7 +5746,11 @@ msgstr ""
 msgid "Edit Customer"
 msgstr ""
 
-#: modules/crm/crm.php:124 modules/hrm/views/departments.php:3
+#: modules/crm/crm.php:123
+msgid "Customer Social Profile"
+msgstr ""
+
+#: modules/crm/crm.php:125 modules/hrm/views/departments.php:3
 #: modules/hrm/views/designation.php:3 modules/hrm/views/employee/single.php:7
 #: modules/hrm/views/employee.php:9 modules/hrm/views/leave/holiday.php:260
 #: modules/hrm/views/leave/leave-entitlements.php:12
@@ -5738,34 +5758,63 @@ msgstr ""
 msgid "Add New"
 msgstr ""
 
-#: modules/crm/crm.php:126
+#: modules/crm/crm.php:127
+msgid "Save"
+msgstr ""
+
+#: modules/crm/crm.php:128
 msgid "Upload Photo"
 msgstr ""
 
-#: modules/crm/crm.php:127 modules/hrm/hrm.php:155
+#: modules/crm/crm.php:129 modules/hrm/hrm.php:155
 msgid "Set Photo"
 msgstr ""
 
-#: modules/crm/crm.php:128 modules/hrm/hrm.php:156
+#: modules/crm/crm.php:130 modules/hrm/hrm.php:156
 msgid "Are you sure?"
 msgstr ""
 
-#: modules/crm/crm.php:129
+#: modules/crm/crm.php:131
 msgid "Are you sure to delete this customer?"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:86
+#: modules/crm/includes/class-ajax.php:97
 msgid "Customer does not exists."
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:107
-#: modules/crm/includes/class-ajax.php:130
+#: modules/crm/includes/class-ajax.php:118
+#: modules/crm/includes/class-ajax.php:141
+#: modules/crm/includes/class-ajax.php:175
 msgid "No Customer found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:113
-#: modules/crm/includes/class-ajax.php:136
+#: modules/crm/includes/class-ajax.php:124
+#: modules/crm/includes/class-ajax.php:147
 msgid "Customer has been removed successfully"
+msgstr ""
+
+#: modules/crm/includes/class-ajax.php:167
+msgid "Company already assigned. Choose another company"
+msgstr ""
+
+#: modules/crm/includes/class-ajax.php:171
+msgid "Customer already assigned. Choose another customer"
+msgstr ""
+
+#: modules/crm/includes/class-ajax.php:186
+msgid "Company has been added successfully"
+msgstr ""
+
+#: modules/crm/includes/class-ajax.php:214
+msgid "Company has been updated successfully"
+msgstr ""
+
+#: modules/crm/includes/class-ajax.php:264
+msgid "No customer found"
+msgstr ""
+
+#: modules/crm/includes/class-ajax.php:273
+msgid "Succesfully added social profiles"
 msgstr ""
 
 #: modules/crm/includes/class-customer-list-table.php:41
@@ -5781,10 +5830,12 @@ msgid "No customer found."
 msgstr ""
 
 #: modules/crm/includes/class-customer-list-table.php:139
+#: modules/crm/views/js-templates/new-assign-company.php:22
 msgid "Customer Name"
 msgstr ""
 
 #: modules/crm/includes/class-customer-list-table.php:140
+#: modules/crm/views/customer/feeds.php:11
 #: modules/crm/views/js-templates/new-customer.php:68
 #: modules/crm/views/leads.php:37 modules/crm/views/leads.php:49
 #: modules/hrm/views/employee/tab-general.php:11
@@ -5810,8 +5861,8 @@ msgstr ""
 
 #: modules/crm/includes/class-customer-list-table.php:165
 #: modules/hrm/includes/class-department-list-table.php:212
-#: modules/hrm/includes/class-designation-list-table.php:83
-#: modules/hrm/includes/class-designation-list-table.php:108
+#: modules/hrm/includes/class-designation-list-table.php:84
+#: modules/hrm/includes/class-designation-list-table.php:109
 #: modules/hrm/includes/class-employee-list-table.php:165
 #: modules/hrm/includes/class-entitlements-list-table.php:138
 #: modules/hrm/includes/class-entitlements-list-table.php:178
@@ -5827,13 +5878,14 @@ msgid "Delete"
 msgstr ""
 
 #: modules/crm/includes/class-customer-list-table.php:168
+#: modules/crm/views/customer/single.php:6
 msgid "Edit this customer"
 msgstr ""
 
 #: modules/crm/includes/class-customer-list-table.php:168
 #: modules/hrm/includes/class-announcement.php:65
 #: modules/hrm/includes/class-department-list-table.php:211
-#: modules/hrm/includes/class-designation-list-table.php:82
+#: modules/hrm/includes/class-designation-list-table.php:83
 #: modules/hrm/includes/class-employee-list-table.php:168
 #: modules/hrm/includes/class-walker-department.php:44
 #: modules/hrm/views/employee/single.php:69
@@ -5855,7 +5907,7 @@ msgstr ""
 
 #: modules/crm/includes/class-customer-list-table.php:170
 #: modules/hrm/includes/class-department-list-table.php:212
-#: modules/hrm/includes/class-designation-list-table.php:83
+#: modules/hrm/includes/class-designation-list-table.php:84
 #: modules/hrm/includes/class-employee-list-table.php:172
 #: modules/hrm/includes/class-entitlements-list-table.php:138
 #: modules/hrm/views/js-templates/row-dept.php:11
@@ -5888,15 +5940,15 @@ msgstr ""
 msgid "Trash"
 msgstr ""
 
-#: modules/crm/includes/function-customer.php:18
+#: modules/crm/includes/function-customer.php:41
 msgid "Lead"
 msgstr ""
 
-#: modules/crm/includes/function-customer.php:19
+#: modules/crm/includes/function-customer.php:42
 msgid "Opportunity"
 msgstr ""
 
-#: modules/crm/includes/function-customer.php:152
+#: modules/crm/includes/function-customer.php:175
 #: modules/hrm/includes/class-hr-log.php:393
 #: modules/hrm/includes/class-hr-log.php:398
 #: modules/hrm/includes/functions-employee.php:326
@@ -5906,12 +5958,179 @@ msgstr ""
 msgid "All"
 msgstr ""
 
+#: modules/crm/includes/function-customer.php:327
+msgid "Facebook"
+msgstr ""
+
+#: modules/crm/includes/function-customer.php:332
+msgid "Twitter"
+msgstr ""
+
+#: modules/crm/includes/function-customer.php:337
+msgid "Google+"
+msgstr ""
+
+#: modules/crm/includes/function-customer.php:342
+msgid "Linkedin"
+msgstr ""
+
+#: modules/crm/views/customer/feeds.php:6
+msgid "New Note"
+msgstr ""
+
+#: modules/crm/views/customer/feeds.php:16
+msgid "Log Activity"
+msgstr ""
+
+#: modules/crm/views/customer/feeds.php:21
+msgid "Call"
+msgstr ""
+
+#: modules/crm/views/customer/feeds.php:26
+msgid "Schedule"
+msgstr ""
+
+#: modules/crm/views/customer/feeds.php:36
+msgid "Type your note ....."
+msgstr ""
+
+#: modules/crm/views/customer/feeds.php:39
+msgid "Save Note"
+msgstr ""
+
+#: modules/crm/views/customer/feeds.php:40
+#: modules/crm/views/customer/feeds.php:74
+msgid "Discard"
+msgstr ""
+
+#: modules/crm/views/customer/feeds.php:65
+msgid "Subject..."
+msgstr ""
+
+#: modules/crm/views/customer/feeds.php:70
+msgid "Type your email body ....."
+msgstr ""
+
+#: modules/crm/views/customer/feeds.php:73
+#: modules/hrm/includes/class-employee-list-table.php:185
+msgid "Send Email"
+msgstr ""
+
+#: modules/crm/views/customer/feeds.php:83
+msgid "Log a Call"
+msgstr ""
+
+#: modules/crm/views/customer/feeds.php:84
+msgid "Log a Meeting"
+msgstr ""
+
+#: modules/crm/views/customer/feeds.php:85
+msgid "Log an Email"
+msgstr ""
+
+#: modules/crm/views/customer/feeds.php:86
+msgid "Log an SMS"
+msgstr ""
+
 #: modules/crm/views/customer/single.php:3
 msgid "Customer #"
 msgstr ""
 
 #: modules/crm/views/customer/single.php:4
 msgid "Back to Customer list"
+msgstr ""
+
+#: modules/crm/views/customer/single.php:35
+#: modules/crm/views/customer/single.php:58
+#: modules/crm/views/customer/single.php:66
+#: modules/crm/views/customer/single.php:99
+#: modules/crm/views/customer/single.php:107
+#: modules/crm/views/customer/single.php:138
+#: modules/hrm/views/employee/tab-general.php:4
+#: modules/hrm/views/employee/tab-general.php:19
+#: modules/hrm/views/employee/tab-general.php:43
+#: modules/hrm/views/employee/tab-general.php:65
+#: modules/hrm/views/employee/tab-general.php:119
+#: modules/hrm/views/employee/tab-general.php:175
+#: modules/hrm/views/employee/tab-general.php:228
+msgid "Click to toggle"
+msgstr ""
+
+#: modules/crm/views/customer/single.php:36
+#: modules/hrm/views/employee/tab-general.php:5
+msgid "Basic Info"
+msgstr ""
+
+#: modules/crm/views/customer/single.php:39
+#: modules/crm/views/js-templates/new-customer.php:30
+#: modules/hrm/views/employee/tab-general.php:8
+#: modules/hrm/views/js-templates/new-employee.php:28
+msgid "First Name"
+msgstr ""
+
+#: modules/crm/views/customer/single.php:40
+#: modules/crm/views/js-templates/new-customer.php:40
+#: modules/hrm/views/employee/tab-general.php:9
+#: modules/hrm/views/js-templates/new-employee.php:47
+msgid "Last Name"
+msgstr ""
+
+#: modules/crm/views/customer/single.php:44
+#: modules/crm/views/customer/single.php:79
+#: modules/crm/views/customer/single.php:120
+msgid "Street 1"
+msgstr ""
+
+#: modules/crm/views/customer/single.php:45
+#: modules/crm/views/customer/single.php:80
+#: modules/crm/views/customer/single.php:121
+msgid "Street 2"
+msgstr ""
+
+#: modules/crm/views/customer/single.php:47
+#: modules/crm/views/customer/single.php:82
+#: modules/crm/views/customer/single.php:123
+msgid "State"
+msgstr ""
+
+#: modules/crm/views/customer/single.php:89
+msgid "Add a company"
+msgstr ""
+
+#: modules/crm/views/customer/single.php:89
+msgid "<i class=\"fa fa-plus\"></i> Add a Company"
+msgstr ""
+
+#: modules/crm/views/customer/single.php:100
+msgid "Customers"
+msgstr ""
+
+#: modules/crm/views/customer/single.php:130
+msgid "Assign a Customer"
+msgstr ""
+
+#: modules/crm/views/customer/single.php:130
+msgid "<i class=\"fa fa-plus\"></i> Assign a Customer"
+msgstr ""
+
+#: modules/crm/views/customer/single.php:139
+msgid "Social Info"
+msgstr ""
+
+#: modules/crm/views/customer/single.php:158
+msgid "Update Social Profile"
+msgstr ""
+
+#: modules/crm/views/customer/single.php:158
+msgid "<i class=\"fa fa-plus\"></i> Update Social Profile"
+msgstr ""
+
+#: modules/crm/views/customer/single.php:160
+msgid "Add Social Profile"
+msgstr ""
+
+#: modules/crm/views/customer/single.php:160
+msgid "<i class=\"fa fa-plus\"></i> Add Social Profile"
 msgstr ""
 
 #: modules/crm/views/customers.php:9
@@ -5926,6 +6145,21 @@ msgstr ""
 msgid "CRM Dashbaord"
 msgstr ""
 
+#: modules/crm/views/js-templates/customer-edit-company.php:5
+#: modules/crm/views/js-templates/new-assign-company.php:7
+#: modules/crm/views/js-templates/new-customer.php:53
+#: modules/hrm/includes/class-ajax.php:836
+msgid "Company Name"
+msgstr ""
+
+#: modules/crm/views/js-templates/new-assign-company.php:14
+msgid "--Select a Company--"
+msgstr ""
+
+#: modules/crm/views/js-templates/new-assign-company.php:29
+msgid "--Select a Customer--"
+msgstr ""
+
 #: modules/crm/views/js-templates/new-customer.php:8
 msgid "Customer Photo"
 msgstr ""
@@ -5937,23 +6171,6 @@ msgstr ""
 #: modules/crm/views/js-templates/new-customer.php:24
 #: modules/hrm/views/js-templates/new-employee.php:23
 msgid "Full Name"
-msgstr ""
-
-#: modules/crm/views/js-templates/new-customer.php:30
-#: modules/hrm/views/employee/tab-general.php:8
-#: modules/hrm/views/js-templates/new-employee.php:28
-msgid "First Name"
-msgstr ""
-
-#: modules/crm/views/js-templates/new-customer.php:40
-#: modules/hrm/views/employee/tab-general.php:9
-#: modules/hrm/views/js-templates/new-employee.php:47
-msgid "Last Name"
-msgstr ""
-
-#: modules/crm/views/js-templates/new-customer.php:53
-#: modules/hrm/includes/class-ajax.php:836
-msgid "Company Name"
 msgstr ""
 
 #: modules/crm/views/js-templates/new-customer.php:78
@@ -6479,7 +6696,7 @@ msgid "Select %s"
 msgstr ""
 
 #: modules/hrm/includes/class-department-list-table.php:211
-#: modules/hrm/includes/class-designation-list-table.php:82
+#: modules/hrm/includes/class-designation-list-table.php:83
 #: modules/hrm/includes/class-employee-list-table.php:168
 #: modules/hrm/views/leave/holiday.php:131
 #: modules/hrm/views/leave/leave-policies.php:102
@@ -6503,11 +6720,11 @@ msgid "Department Lead"
 msgstr ""
 
 #: modules/hrm/includes/class-department-list-table.php:269
-#: modules/hrm/includes/class-designation-list-table.php:64
+#: modules/hrm/includes/class-designation-list-table.php:65
 msgid "No. of Employees"
 msgstr ""
 
-#: modules/hrm/includes/class-designation-list-table.php:29
+#: modules/hrm/includes/class-designation-list-table.php:30
 msgid "No designation found."
 msgstr ""
 
@@ -6551,10 +6768,6 @@ msgstr ""
 #: modules/hrm/includes/class-employee-list-table.php:148
 #: modules/hrm/views/leave/requests.php:97
 msgid "Status"
-msgstr ""
-
-#: modules/hrm/includes/class-employee-list-table.php:185
-msgid "Send Email"
 msgstr ""
 
 #: modules/hrm/includes/class-entitlements-list-table.php:31
@@ -7042,20 +7255,6 @@ msgstr ""
 
 #: modules/hrm/views/employee/single.php:118
 msgid "Permission"
-msgstr ""
-
-#: modules/hrm/views/employee/tab-general.php:4
-#: modules/hrm/views/employee/tab-general.php:19
-#: modules/hrm/views/employee/tab-general.php:43
-#: modules/hrm/views/employee/tab-general.php:65
-#: modules/hrm/views/employee/tab-general.php:119
-#: modules/hrm/views/employee/tab-general.php:175
-#: modules/hrm/views/employee/tab-general.php:228
-msgid "Click to toggle"
-msgstr ""
-
-#: modules/hrm/views/employee/tab-general.php:5
-msgid "Basic Info"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:10

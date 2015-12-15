@@ -215,7 +215,7 @@
   padding: 8px 12px;
   margin: 0;
   line-height: 1.4;
-  cursor: move;
+  cursor: pointer;
   border-bottom: 1px solid #eee;
 }
 .erp-single-customer .erp-single-customer-content .postbox.closed .erp-hndle {
@@ -244,6 +244,18 @@
   font-size: 13px;
   color: #222;
   margin-left: 3px;
+}
+.erp-single-customer .erp-single-customer-content .customer-company-info .company-profile-content .postbox .erp-hndle .customer-name {
+  position: relative;
+  top: -5px;
+  left: 5px;
+}
+.erp-single-customer .erp-single-customer-content .customer-company-info .company-profile-content .postbox .erp-hndle .customer-name a {
+  text-decoration: none;
+  color: #222;
+}
+.erp-single-customer .erp-single-customer-content .customer-company-info .company-profile-content .postbox .erp-hndle .customer-name a:hover {
+  text-decoration: underline;
 }
 .erp-single-customer .erp-customer-feeds .activity-form {
   background: #fff;

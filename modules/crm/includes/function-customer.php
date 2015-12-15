@@ -4,6 +4,29 @@
  */
 
 /**
+ * Get an avatar avatar
+ *
+ * @param  integer  avatar size in pixels
+ *
+ * @return string  image with HTML tag
+ */
+function erp_get_avatar( $id, $size = 32 ) {
+
+    if ( $id ) {
+
+        $user_photo_id = erp_people_get_meta( $id, 'photo_id', true );
+
+        if ( ! empty( $user_photo_id ) ) {
+            $image = wp_get_attachment_thumb_url( $user_photo_id );
+            return sprintf( '<img src="%1$s" alt="" class="avatar avatar-%2$s photo" height="auto" width="%2$s" />', $image, $size );
+        }
+    }
+
+    return get_avatar( $id, $size );
+}
+
+
+/**
  * Get CRM life statges
  *
  * @since 1.0
@@ -233,6 +256,31 @@ function erp_crm_customer_get_company( $customer_id ) {
 }
 
 /**
+ * Get all the companies for a single costomer
+ *
+ * @since 1.0
+ *
+ * @return array
+ */
+function erp_crm_company_get_customers( $company_id ) {
+
+    global $wpdb;
+
+    $sql = "SELECT  peop.*, com.id as com_cus_id, com.customer_id
+            FROM " . $wpdb->prefix . "erp_crm_customer_companies AS com
+            LEFT JOIN " . $wpdb->prefix . "erp_peoples AS peop ON peop.id = com.customer_id
+            WHERE com.company_id = ". $company_id;
+
+    return $wpdb->get_results( $sql );
+}
+
+
+function erp_crm_get_customer_details_url( $id ) {
+    return admin_url( 'admin.php?page=erp-sales-customers&action=view&id=' . $id );
+}
+
+
+/**
  * Updates company info for a customer
  *
  * @since 1.0
@@ -241,7 +289,6 @@ function erp_crm_customer_get_company( $customer_id ) {
  */
 function erp_crm_customer_update_company( $row_id, $company_id ) {
     global $wpdb;
-
     $wpdb->update( $wpdb->prefix . "erp_crm_customer_companies", ['company_id' => $company_id], ['id' => $row_id] );
 }
 
@@ -254,9 +301,7 @@ function erp_crm_customer_update_company( $row_id, $company_id ) {
  */
 function erp_crm_customer_remove_company( $id ) {
     global $wpdb;
-
     $wpdb->delete( $wpdb->prefix . 'erp_crm_customer_companies', ['id' => $id] );
-
 }
 
 /**
