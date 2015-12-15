@@ -273,6 +273,7 @@
   position: relative;
   list-style: none;
   margin: 0px;
+  border-right: 1px solid #484f51;
 }
 .erp-single-customer .erp-customer-feeds .activity-form ul.nav-item li.active {
   background: #191E23;
@@ -291,7 +292,6 @@
   font-weight: 700;
   opacity: 1;
   height: 100%;
-  border-right: 1px solid #484f51;
   margin: 0;
   text-decoration: none;
   text-align: center;
@@ -342,6 +342,11 @@
 .erp-single-customer .erp-customer-feeds .activity-form .nav-content #email p.email-subject input:-ms-input-placeholder {
   font-style: italic;
   font-weight: normal;
+}
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #log-activity p {
+  margin: 0px;
+  border-bottom: 1px solid #eee;
+  padding: 8px 0px;
 }
 .erp-single-customer .erp-customer-feeds .activity-content {
   margin: 30px 0px;
@@ -1656,6 +1661,12 @@ ul.edit-address li.city-wrap span {
 }
 .align-left {
   text-align: left !important;
+}
+.erp-left {
+  float: left;
+}
+.erp-right {
+  float: right;
 }
 .input-group {
   display: table;

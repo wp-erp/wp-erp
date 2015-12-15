@@ -22,7 +22,6 @@ new Vue({
     el: '#erp-customer-feeds',
     data: {
         tabShow: 'new_note',
-        dt: '2015-12-09'
     },
 
     methods: {
@@ -30,9 +29,43 @@ new Vue({
             this.tabShow = id;
         },
 
-        getCurrentDate: function() {
+        getTodayDate: function() {
             var today = new Date();
-            return today.toISOString().substring(0, 10);
+            var dd = today.getDate();
+            var mm = today.getMonth()+1; //January is 0!
+            var yyyy = today.getFullYear();
+
+            if(dd<10) {
+                dd='0'+dd
+            }
+
+            if(mm<10) {
+                mm='0'+mm
+            }
+
+            today = yyyy+'-'+mm+'-'+dd;
+            return today;
+        }
+    },
+
+    computed: {
+        dt : function() {
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth()+1; //January is 0!
+            var yyyy = today.getFullYear();
+
+            if(dd<10) {
+                dd='0'+dd
+            }
+
+            if(mm<10) {
+                mm='0'+mm
+            }
+
+            today = yyyy+'-'+mm+'-'+dd;
+            return today;
         }
     }
+
 });

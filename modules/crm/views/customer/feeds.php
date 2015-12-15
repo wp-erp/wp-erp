@@ -76,7 +76,7 @@
                 </form>
             </div>
 
-            <div id="log_activity" v-if="tabShow == 'log_activity'">
+            <div id="log-activity" v-if="tabShow == 'log_activity'">
                 <form action="" method="post">
                     <p>
                         <select name="log_type" id="log-type" class="erp-left">
@@ -86,17 +86,31 @@
                             <option value="log_sms"><?php _e( 'Log an SMS', 'wp-erp' ) ?></option>
                         </select>
 
+                        <input class="erp-right" type="time" placeholder="yy-mm-dd">
                         <input class="erp-right" type="text" v-datepicker="dt" placeholder="yy-mm-dd">
+                        <span class="clearfix"></span>
                     </p>
+
+
+                    <input id="x" type="hidden" name="log_activity">
+                    <trix-editor input="x" placeholder="<?php _e( 'Add your log .....', 'wp-erp' ); ?>"></trix-editor>
+
+                    <div class="submit-action">
+                        <input type="submit" class="button button-primary" name="add_log_activity" value="<?php _e( 'Add Log', 'wp-erp' ); ?>">
+                        <input type="reset" class="button button-default" value="<?php _e( 'Discard', 'wp-erp' ); ?>">
+                    </div>
+
                 </form>
             </div>
 
             <div id="call" v-if="tabShow == 'call'">
-                Lorem call
+                <div class="text-center">
+                    <input type="submit" class="button button-primary" value="<?php _e( 'Connect to Call Service', 'wp-erp' ); ?>">
+                </div>
             </div>
 
             <div id="schedule" v-if="tabShow == 'schedule'">
-                Lorem schedule
+                Schedule service....
             </div>
 
         </div>
