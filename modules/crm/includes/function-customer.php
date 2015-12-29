@@ -10,9 +10,13 @@
  *
  * @return string  image with HTML tag
  */
-function erp_get_avatar( $id, $size = 32 ) {
+function erp_crm_get_avatar( $id, $size = 32, $user = false ) {
 
     if ( $id ) {
+
+        if ( $user ) {
+            return get_avatar( $id, $size );
+        }
 
         $user_photo_id = erp_people_get_meta( $id, 'photo_id', true );
 
@@ -352,6 +356,37 @@ function erp_crm_get_social_field() {
     return apply_filters( 'erp_crm_social_field', $social_field );
 }
 
+function erp_crm_get_customer_feeds_nav() {
+    return apply_filters( 'erp_crm_customer_feeds_nav', [
+
+        'new_note' => [
+            'title' => __( 'New Note', 'wp-erp' ),
+            'icon'  => '<i class="fa fa-file-text-o"></i>'
+        ],
+
+        'email' => [
+            'title' => __( 'Email', 'wp-erp' ),
+            'icon'  => '<i class="fa fa-envelope-o"></i>'
+        ],
+
+        'log_activity' => [
+            'title' => __( 'Log Activity', 'wp-erp' ),
+            'icon'  => '<i class="fa fa-list"></i>'
+        ],
+
+        'call' => [
+            'title' => __( 'Call', 'wp-erp' ),
+            'icon'  => '<i class="fa fa-phone"></i>'
+        ],
+
+        'schedule' => [
+            'title' => __( 'Schedule', 'wp-erp' ),
+            'icon'  => '<i class="fa fa-calendar-check-o"></i>'
+        ]
+
+    ] );
+}
+
 /**
  * Check if customer assign already exist
  *
@@ -367,4 +402,53 @@ function erp_crm_check_customer_exist_company( $customer_id, $company_id ) {
 
     $sql = "SELECT `id` FROM {$wpdb->prefix}erp_crm_customer_companies WHERE `customer_id` = '$customer_id' AND `company_id` = '$company_id'";
     return $wpdb->get_row( $sql, ARRAY_A );
+}
+
+function erp_crm_get_customer_activity( $customer_id = null ) {
+    $feeds = [];
+    $db = new \WeDevs\ORM\Eloquent\Database();
+
+    $results = \WeDevs\ERP\CRM\Models\Activity::select( [ '*', $db->raw('MONTHNAME(`created_at`) as feed_month, YEAR( `created_at` ) as feed_year' ) ] )
+               ->where( 'user_id', $customer_id )
+               ->with( [ 'contact',
+                        'created_by' => function( $query ) {
+                            $query->select( 'ID', 'user_nicename', 'user_email', 'user_url', 'display_name' );
+                        }
+                    ] )
+               ->orderBy( 'created_at', 'DESC' )
+               ->get()
+               ->toArray();
+
+    foreach ( $results as $key => $value ) {
+        $value['created_by']['avatar'] = get_avatar_url( $value['created_by']['ID'] );
+        $value['created_date'] = date( 'Y-m-d', strtotime( $value['created_at'] ) );
+        $value['created_timeline_date'] = date( 'Y-m', strtotime( $value['created_at'] ) );
+        $feeds[] = $value;
+    }
+
+    // $key = date('F') . '-' . date('Y');
+
+    // if ( ! array_key_exists( $key, $feeds ) ) {
+    //     $feeds = array_merge( [ $key => [] ], $feeds );
+    // }
+
+    return $feeds;
+}
+
+function erp_crm_save_customer_feed_data( $data ) {
+    $create_activity = WeDevs\ERP\CRM\Models\Activity::create( $data );
+    $activity        = WeDevs\ERP\CRM\Models\Activity::
+                        with( [ 'contact',
+                                'created_by' => function( $query ) {
+                                    $query->select( 'ID', 'user_nicename', 'user_email', 'user_url', 'display_name' );
+                                }
+                            ] )
+                        ->find( $create_activity->id )
+                        ->toArray();
+
+    $activity['created_by']['avatar'] = get_avatar_url( $activity['created_by']['ID'] );
+    $activity['created_date'] = date( 'Y-m-d', strtotime( $activity['created_at'] ) );
+    $activity['created_timeline_date'] = date( 'Y-m', strtotime( $activity['created_at'] ) );
+
+    return $activity;
 }

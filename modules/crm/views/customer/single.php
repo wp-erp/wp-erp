@@ -106,7 +106,7 @@
                                     <div class="postbox closed">
                                         <div class="erp-handlediv" title="<?php _e( 'Click to toggle', 'wp-erp' ); ?>"><br></div>
                                         <h3 class="erp-hndle">
-                                            <span class="customer-avatar"><?php echo erp_get_avatar( $assing_customer->id, 20 ) ?></span>
+                                            <span class="customer-avatar"><?php echo erp_crm_get_avatar( $assing_customer->id, 20 ) ?></span>
                                             <span class="customer-name">
                                                 <a href="<?php echo erp_crm_get_customer_details_url( $assing_customer->id ) ?>" target="_blank">
                                                     <?php echo $assing_customer->first_name . ' ' . $assing_customer->last_name; ?>

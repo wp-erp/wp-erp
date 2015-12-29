@@ -137,11 +137,20 @@ class Customer_Relationship {
             wp_enqueue_script( 'erp-vuejs' );
             wp_enqueue_script( 'erp-trix-editor' );
             wp_enqueue_style( 'erp-trix-editor' );
-            wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", array( 'wp-erp-script', 'erp-vuejs' ), date( 'Ymd' ), true );
+            wp_enqueue_script( 'underscore' );
+            wp_enqueue_style( 'wp-erp-nprogress', WPERP_CRM_ASSETS . '/css/nprogress.css' );
+            wp_enqueue_script( 'wp-erp-nprogress', WPERP_CRM_ASSETS . "/js/nprogress$suffix.js", array( 'jquery' ), date( 'Ymd' ), true );
+            wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", array( 'wp-erp-nprogress', 'wp-erp-script', 'erp-vuejs', 'underscore' ), date( 'Ymd' ), true );
             wp_enqueue_script( 'post' );
 
             $customer = new Customer();
             $country  = \WeDevs\ERP\Countries::instance();
+
+            wp_localize_script( 'wp-erp-crm-vue-customer', 'wpCRMvue', [
+                'ajaxurl' => admin_url( 'admin-ajax.php' ),
+                'nonce' => wp_create_nonce( 'wp-erp-crm-customer-feed' ),
+                'current_user_id' => get_current_user_id()
+            ] );
 
             $localize_script['customer_empty'] = $customer->to_array();
             $localize_script['wpErpCountries'] = $country->load_country_states();

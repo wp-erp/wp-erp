@@ -34,6 +34,10 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-crm-customer-update-company', 'customer_update_company' );
         $this->action( 'wp_ajax_erp-crm-customer-remove-company', 'customer_remove_company' );
 
+        // Customer Feeds
+        add_action( 'wp_ajax_erp_crm_get_customer_activity', array( $this, 'fetch_all_activity' ) );
+        add_action( 'wp_ajax_erp_customer_feeds_save_notes', array( $this, 'save_activity_feeds' ) );
+
         // script reload
         $this->action( 'wp_ajax_erp-crm-customer-company-reload', 'customer_company_template_refresh' );
 
@@ -271,6 +275,100 @@ class Ajax_Handler {
         $customer->update_meta( 'crm_social_profile', $_POST );
 
         $this->send_success( __( 'Succesfully added social profiles', 'wp-erp' ) );
+    }
+
+    public function fetch_all_activity() {
+        $feeds = erp_crm_get_customer_activity( $_POST['customer_id'] );
+        $this->send_success( $feeds );
+    }
+
+    public function save_activity_feeds() {
+        $this->verify_nonce( 'wp-erp-crm-customer-feed' );
+
+        $save_data = $result = [];
+        $postdata  = $_POST;
+
+        if ( ! $postdata['user_id'] ) {
+            $this->send_error( __( 'Customer not found', 'wp-erp' ) );
+        }
+
+        if ( isset( $postdata['message'] ) && empty( $postdata['message'] ) ) {
+            $this->send_error( __( 'Content must be required', 'wp-erp' ) );
+        }
+
+        switch ( $postdata['type'] ) {
+            case 'new_note':
+
+                $save_data = [
+                    'user_id'    => $postdata['user_id'],
+                    'created_by' => $postdata['created_by'],
+                    'message'    => $postdata['message'],
+                    'type'       => $postdata['type']
+                ];
+
+                $data = erp_crm_save_customer_feed_data( $save_data );
+
+                do_action( 'erp_crm_save_customer_new_note_feed', $save_data, $postdata );
+
+                if ( ! $data ) {
+                    $this->send_error( __( 'Somthing is wrong, Please try later', 'wp-erp' ) );
+                }
+
+                $this->send_success( $data );
+
+                break;
+
+            case 'email':
+
+                $save_data = [
+                    'user_id'       => $postdata['user_id'],
+                    'created_by'    => $postdata['created_by'],
+                    'message'       => $postdata['message'],
+                    'type'          => $postdata['type'],
+                    'email_subject' => $postdata['email_subject']
+                ];
+
+                $data = erp_crm_save_customer_feed_data( $save_data );
+
+                do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
+
+                if ( ! $data ) {
+                    $this->send_error( __( 'Somthing is wrong, Please try later', 'wp-erp' ) );
+                }
+
+                $this->send_success( $data );
+
+                break;
+
+            case 'log_activity':
+
+                $save_data = [
+                    'user_id'    => $postdata['user_id'],
+                    'created_by' => $postdata['created_by'],
+                    'message'    => $postdata['message'],
+                    'type'       => $postdata['type'],
+                    'log_type'   => $postdata['log_type'],
+                    'log_date'   => $postdata['log_date'],
+                    'log_time'   => $postdata['log_time'],
+                ];
+
+                $data = erp_crm_save_customer_feed_data( $save_data );
+
+                do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
+
+                if ( ! $data ) {
+                    $this->send_error( __( 'Somthing is wrong, Please try later', 'wp-erp' ) );
+                }
+
+                $this->send_success( $data );
+
+                break;
+
+            default:
+                do_action( 'erp_crm_save_customer_feed_data', $postdata );
+                break;
+        }
+
     }
 
 }
