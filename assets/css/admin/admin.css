@@ -447,6 +447,9 @@
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-footer {
   padding: 10px;
 }
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-footer a {
+  text-decoration: none;
+}
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .fa,
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .glyphicon,
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .ion {

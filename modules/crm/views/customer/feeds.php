@@ -147,9 +147,9 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                         <div class="timeline-body">
                             {{{ feed.message }}}
                         </div>
-                        <div class="timeline-footer">
-                            <a class="btn btn-primary btn-xs">Edit</a> |
-                            <a class="btn btn-danger btn-xs">Delete</a>
+                        <div class="timeline-footer" v-if="feed.type != 'email'">
+                            <a href="#">Edit</a> |
+                            <a href="#" @click.prevent="deleteFeed( feed )">Delete</a>
                         </div>
                     </div>
                 </li>

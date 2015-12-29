@@ -37,6 +37,7 @@ class Ajax_Handler {
         // Customer Feeds
         add_action( 'wp_ajax_erp_crm_get_customer_activity', array( $this, 'fetch_all_activity' ) );
         add_action( 'wp_ajax_erp_customer_feeds_save_notes', array( $this, 'save_activity_feeds' ) );
+        add_action( 'wp_ajax_erp_crm_delete_customer_activity', array( $this, 'delete_customer_activity_feeds' ) );
 
         // script reload
         $this->action( 'wp_ajax_erp-crm-customer-company-reload', 'customer_company_template_refresh' );
@@ -277,15 +278,29 @@ class Ajax_Handler {
         $this->send_success( __( 'Succesfully added social profiles', 'wp-erp' ) );
     }
 
+    /**
+     * Fetch all feed activities
+     *
+     * @since 1.0
+     *
+     * @return json
+     */
     public function fetch_all_activity() {
         $feeds = erp_crm_get_customer_activity( $_POST['customer_id'] );
         $this->send_success( $feeds );
     }
 
+    /**
+     * Create a new activity feeds
+     *
+     * @since 1.0
+     *
+     * @return json success|error
+     */
     public function save_activity_feeds() {
         $this->verify_nonce( 'wp-erp-crm-customer-feed' );
 
-        $save_data = $result = [];
+        $save_data = [];
         $postdata  = $_POST;
 
         if ( ! $postdata['user_id'] ) {
@@ -368,7 +383,25 @@ class Ajax_Handler {
                 do_action( 'erp_crm_save_customer_feed_data', $postdata );
                 break;
         }
+    }
 
+    /**
+     * Delete Activity feeds
+     *
+     * @since 1.0
+     *
+     * @return json
+     */
+    public function delete_customer_activity_feeds() {
+        $this->verify_nonce( 'wp-erp-crm-customer-feed' );
+
+        if ( ! $_POST['feed_id'] ) {
+            $this->send_error( __( 'Feeds Not found', 'wp-erp' ) );
+        }
+
+        erp_crm_customer_delete_activity_feed( $_POST['feed_id'] );
+
+        $this->send_success( __( 'Feed Deleted successfully', 'wp-erp' ) );
     }
 
 }

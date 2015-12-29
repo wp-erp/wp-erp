@@ -404,6 +404,15 @@ function erp_crm_check_customer_exist_company( $customer_id, $company_id ) {
     return $wpdb->get_row( $sql, ARRAY_A );
 }
 
+/**
+ * Get all customer feeds
+ *
+ * @since 1.0
+ *
+ * @param  integer $customer_id
+ *
+ * @return array
+ */
 function erp_crm_get_customer_activity( $customer_id = null ) {
     $feeds = [];
     $db = new \WeDevs\ORM\Eloquent\Database();
@@ -426,15 +435,18 @@ function erp_crm_get_customer_activity( $customer_id = null ) {
         $feeds[] = $value;
     }
 
-    // $key = date('F') . '-' . date('Y');
-
-    // if ( ! array_key_exists( $key, $feeds ) ) {
-    //     $feeds = array_merge( [ $key => [] ], $feeds );
-    // }
-
     return $feeds;
 }
 
+/**
+ * Save customer activity feeds
+ *
+ * @since 1.0
+ *
+ * @param  array $data
+ *
+ * @return array
+ */
 function erp_crm_save_customer_feed_data( $data ) {
     $create_activity = WeDevs\ERP\CRM\Models\Activity::create( $data );
     $activity        = WeDevs\ERP\CRM\Models\Activity::
@@ -451,4 +463,17 @@ function erp_crm_save_customer_feed_data( $data ) {
     $activity['created_timeline_date'] = date( 'Y-m', strtotime( $activity['created_at'] ) );
 
     return $activity;
+}
+
+/**
+ * Delete customer activity feeds
+ *
+ * @since 1.0
+ *
+ * @param  integer $feed_id
+ *
+ * @return collection
+ */
+function erp_crm_customer_delete_activity_feed( $feed_id ) {
+    return WeDevs\ERP\CRM\Models\Activity::find( $feed_id )->delete( $feed_id );
 }

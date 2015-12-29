@@ -149,7 +149,8 @@ class Customer_Relationship {
             wp_localize_script( 'wp-erp-crm-vue-customer', 'wpCRMvue', [
                 'ajaxurl' => admin_url( 'admin-ajax.php' ),
                 'nonce' => wp_create_nonce( 'wp-erp-crm-customer-feed' ),
-                'current_user_id' => get_current_user_id()
+                'current_user_id' => get_current_user_id(),
+                'confirm'  => __( 'Are you sure?', 'wp-erp' ),
             ] );
 
             $localize_script['customer_empty'] = $customer->to_array();

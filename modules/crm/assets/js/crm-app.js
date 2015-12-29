@@ -114,6 +114,25 @@ var vm = new Vue({
 
     methods: {
 
+        deleteFeed: function( feed ) {
+            var data = {
+                action : 'erp_crm_delete_customer_activity',
+                feed_id : feed.id,
+                _wpnonce : wpCRMvue.nonce
+            };
+
+            if ( confirm( wpCRMvue.confirm ) ) {
+                jQuery.post( wpCRMvue.ajaxurl, data, function( resp ) {
+                    if ( resp.success ) {
+                        vm.feeds.$remove( feed )
+                    } else {
+                        alert( resp.data );
+                    };
+                });
+            };
+
+        },
+
         /**
          * Add customer feeds
          *
