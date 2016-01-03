@@ -6,12 +6,13 @@ namespace WeDevs\ERP\CRM;
  *
  * @package weDevs|wperp
  */
-class Customer_List_Table extends \WP_List_Table {
+class Contact_List_Table extends \WP_List_Table {
 
     private $counts = array();
     private $page_status = '';
+    private $contact_type;
 
-    function __construct() {
+    function __construct( $type = null ) {
         global $status, $page;
 
         parent::__construct( array(
@@ -19,32 +20,10 @@ class Customer_List_Table extends \WP_List_Table {
             'plural'   => 'customers',
             'ajax'     => false
         ) );
-    }
 
-    /**
-     * Render extra filtering option in
-     * top of the table
-     *
-     * @since 1.0
-     *
-     * @param  string $which
-     *
-     * @return void
-     */
-    function extra_tablenav( $which ) {
-        if ( $which != 'top' ) {
-            return;
+        if ( $type ) {
+            $this->contact_type = $type;
         }
-        $selected_life_stage = ( isset( $_GET['filter_life_stage'] ) ) ? $_GET['filter_life_stage'] : '';
-        ?>
-        <div class="alignleft actions">
-            <label class="screen-reader-text" for="filter_life_stage"><?php _e( 'Filter by Life Stage', 'wp-erp' ) ?></label>
-            <select name="filter_life_stage" id="filter_life_stage">
-                <?php echo erp_crm_get_life_statges_dropdown( [ '' => __('--Select--', 'wp-erp' ) ], $selected_life_stage ); ?>
-            </select>
-            <?php
-            submit_button( __( 'Filter' ), 'button', 'filter_customer', false );
-        echo '</div>';
     }
 
     /**
@@ -55,7 +34,7 @@ class Customer_List_Table extends \WP_List_Table {
      * @return void
      */
     function no_items() {
-        _e( 'No customer found.', 'wp-erp' );
+        echo sprintf( __( 'No %s found.', 'wp-erp' ), $this->contact_type );
     }
 
     /**
@@ -136,7 +115,7 @@ class Customer_List_Table extends \WP_List_Table {
     function get_columns() {
         $columns = array(
             'cb'           => '<input type="checkbox" />',
-            'name'         => __( 'Customer Name', 'wp-erp' ),
+            'name'         => sprintf( '%s %s', ucfirst( $this->contact_type ), __( 'Name', 'wp-erp' ) ),
             'email'        => __( 'Email', 'wp-erp' ),
             'phone_number' => __( 'Phone', 'wp-erp' ),
             'life_stages'  => __( 'Life Stage', 'wp-erp' ),
@@ -156,7 +135,7 @@ class Customer_List_Table extends \WP_List_Table {
      * @return string
      */
     function column_name( $customer ) {
-        $customer = new \WeDevs\ERP\CRM\Customer( intval( $customer->id ) );
+        $customer          = new \WeDevs\ERP\CRM\Contact( intval( $customer->id ), $this->contact_type );
         $actions           = array();
         $delete_url        = '';
         $view_url          = $customer->get_details_url();
@@ -282,9 +261,9 @@ class Customer_List_Table extends \WP_List_Table {
      */
     function prepare_items() {
         $columns               = $this->get_columns();
-        $hidden                = array();
+        $hidden                = [];
         $sortable              = $this->get_sortable_columns();
-        $this->_column_headers = array( $columns, $hidden, $sortable );
+        $this->_column_headers = [ $columns, $hidden, $sortable ];
 
         $per_page              = 20;
         $current_page          = $this->get_pagenum();
@@ -292,10 +271,11 @@ class Customer_List_Table extends \WP_List_Table {
         $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : 'all';
 
         // only ncessary because we have sample data
-        $args = array(
+        $args = [
+            'type'   => $this->contact_type,
             'offset' => $offset,
             'number' => $per_page,
-        );
+        ];
 
         // Filter for serach
         if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
@@ -318,23 +298,18 @@ class Customer_List_Table extends \WP_List_Table {
                 if ( $_REQUEST['status'] == 'trash' ) {
                     $args['trashed'] = true;
                 } else {
-                    $args['type'] = $_REQUEST['status'];
+                    $args['meta_query'] = [
+                        'meta_key' => 'life_stage',
+                        'meta_value' => $_REQUEST['status']
+                    ];
                 }
             }
         }
 
-        // Filter by life stages
-        if ( isset( $_REQUEST['filter_life_stage'] ) && $_REQUEST['filter_life_stage'] ) {
-            $args['meta_query'] = [
-                'meta_key' => 'life_stage',
-                'meta_value' => $_REQUEST['filter_life_stage']
-            ]; ;
-        }
-
         // Total counting for customer type filter
-        $this->counts = erp_crm_customer_get_status_count();
+        $this->counts = erp_crm_customer_get_status_count( $this->contact_type );
 
-        // Prepare all item after all filters
+        // Prepare all item after all filtering
         $this->items  = erp_get_peoples( $args );
 
         // Render total customer according to above filter
@@ -342,10 +317,10 @@ class Customer_List_Table extends \WP_List_Table {
         $total_items = erp_get_peoples( $args );
 
         // Set pagination according to filter
-        $this->set_pagination_args( array(
+        $this->set_pagination_args( [
             'total_items' => $total_items,
             'per_page'    => $per_page
-        ) );
+        ] );
     }
 
 }

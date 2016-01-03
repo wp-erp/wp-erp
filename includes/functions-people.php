@@ -124,7 +124,7 @@ function erp_get_peoples_array( $args = [] ) {
  *
  * @return int
  */
-function erp_get_peoples_count( $type = 'customer' ) {
+function erp_get_peoples_count( $type = 'contact' ) {
     $cache_key = 'erp-people-count-' . $type;
     $count     = wp_cache_get( $cache_key, 'wp-erp' );
 
@@ -196,8 +196,8 @@ function erp_insert_people( $args = array() ) {
 
     $args = wp_parse_args( $args, $defaults );
 
-    // Check if customer first name and last name provide or not
-    if ( $args['type'] == 'customer' ) {
+    // Check if contact first name and last name provide or not
+    if ( $args['type'] == 'contact' ) {
 
         // some basic validation
         if ( empty( $args['first_name'] ) ) {

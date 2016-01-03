@@ -8,7 +8,7 @@
                 <# if ( data.type == 'company' ) { #>
                     <?php erp_html_form_label( __( 'Company Photo', 'wp-erp' ), 'company' ); ?>
                 <# } else { #>
-                    <?php erp_html_form_label( __( 'Customer Photo', 'wp-erp' ), 'full-name' ); ?>
+                    <?php erp_html_form_label( __( 'Contact Photo', 'wp-erp' ), 'full-name' ); ?>
                 <# } #>
                 <div class="photo-container">
                     <input type="hidden" name="photo_id" id="customer-photo-id" value="{{ data.avatar.id }}">
@@ -22,7 +22,7 @@
                 </div>
             </li>
 
-             <# if ( data.type == 'customer' ) { #>
+             <# if ( data.type == 'contact' ) { #>
                 <li class="full-width name-container clearfix">
                     <?php erp_html_form_label( __( 'Full Name', 'wp-erp' ), 'full-name', true ); ?>
 

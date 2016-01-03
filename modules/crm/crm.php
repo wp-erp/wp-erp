@@ -132,7 +132,7 @@ class Customer_Relationship {
         ) );
 
         // if it's an customer page
-        if ( 'crm_page_erp-sales-customers' == $hook ) {
+        if ( 'crm_page_erp-sales-customers' == $hook || 'crm_page_erp-sales-companies' == $hook  ) {
 
             wp_enqueue_script( 'erp-vuejs' );
             wp_enqueue_script( 'erp-trix-editor' );
@@ -143,7 +143,7 @@ class Customer_Relationship {
             wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", array( 'wp-erp-nprogress', 'wp-erp-script', 'erp-vuejs', 'underscore' ), date( 'Ymd' ), true );
             wp_enqueue_script( 'post' );
 
-            $customer = new Customer();
+            $customer = new Contact();
             $country  = \WeDevs\ERP\Countries::instance();
 
             wp_localize_script( 'wp-erp-crm-vue-customer', 'wpCRMvue', [
@@ -166,7 +166,10 @@ class Customer_Relationship {
         // var_dump( $current_screen ); die();
 
         switch ( $current_screen->base ) {
+
             case 'crm_page_erp-sales-customers':
+            case 'crm_page_erp-sales-companies':
+
                 erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-customer.php', 'erp-crm-new-contact' );
 
                 if ( isset( $_GET['action'] ) && $_GET['action'] == 'view' ) {

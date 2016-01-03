@@ -41,7 +41,7 @@ class Form_Handler {
             return;
         }
 
-        $customer_table = new \WeDevs\ERP\CRM\Customer_List_Table();
+        $customer_table = new \WeDevs\ERP\CRM\Contact_List_Table();
         $action         = $customer_table->current_action();
 
         if ( $action ) {

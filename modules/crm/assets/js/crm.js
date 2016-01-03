@@ -100,7 +100,11 @@
             afterNew: function( e, res ) {
                 var selectdrop = $('.erp-crm-customer-company-dropdown');
                 wperp.scriptReload( 'erp-crm-customer-company-reload', 'tmpl-erp-crm-new-assign-company' );
-                selectdrop.append('<option selected="selected" value="'+res.id+'">'+res.company+'</option>');
+                if ( res.type == 'company' ) {
+                    selectdrop.append('<option selected="selected" value="'+res.id+'">'+res.company+'</option>');
+                } else {
+                    selectdrop.append('<option selected="selected" value="'+res.id+'">' + res.first_name + ' ' + res.last_name + '</option>');
+                };
                 selectdrop.select2("val", res.id);
             },
 
@@ -175,8 +179,8 @@
             create: function(e) {
                 e.preventDefault();
 
-                var self = $(this),
-                is_single = self.data( 'single' );
+                var self    = $(this),
+                is_single   = self.data( 'single' );
 
                 wpErpCrm.customer_empty.type = self.data('type');
 
@@ -195,13 +199,12 @@
 
                         wp.ajax.send( {
                             data: this.serialize(),
-                            success: function(res) {
+                            success: function( res ) {
 
                                 if ( is_single == '1' ) {
                                     $('body').trigger( 'erp-crm-after-customer-new-company', [res]);
                                 } else {
                                     WeDevs_ERP_CRM.customer.pageReload();
-                                    //WeDevs_ERP_CRM.customer.tempReload();
                                 }
 
                                 modal.enableButton();
@@ -237,7 +240,8 @@
             edit: function(e) {
                 e.preventDefault();
 
-                var self = $(this);
+                var self = $(this),
+                single_view = self.data( 'single_view' );
 
                 $.erpPopup({
                     title: self.attr('title'),
@@ -288,7 +292,11 @@
                         wp.ajax.send( {
                             data: this.serialize(),
                             success: function(response) {
-                                WeDevs_ERP_CRM.customer.pageReload();
+                                if ( single_view == '1' ) {
+                                    $( '.erp-single-customer-row' ).load( window.location.href + ' .left-content' );
+                                } else {
+                                    WeDevs_ERP_CRM.customer.pageReload();
+                                }
                                 modal.enableButton();
                                 modal.closeModal();
                             },
@@ -523,7 +531,7 @@
                         wp.ajax.send( {
                             data: this.serialize(),
                             success: function(res) {
-                                WeDevs_ERP_CRM.customer.pageReload();
+                                $( '.contact-social-content' ).load( window.location.href + ' .contact-list' );
                                 modal.enableButton();
                                 modal.closeModal();
                             },

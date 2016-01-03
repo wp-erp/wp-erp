@@ -41,15 +41,15 @@ Vue.filter('formatFeedHeader', function ( feed ) {
 
     switch( feed.type ) {
         case 'new_note':
-            header = '<span class="timeline-feed-avatar"><img src="'+ feed.created_by.avatar + '"></span><span class="timeline-feed-header-text">' + createdName + ' cerated a note for ' + feed.contact.first_name + ' ' + feed.contact.last_name + '</span>';
+            header = '<span class="timeline-feed-avatar"><img src="'+ feed.created_by.avatar + '"></span><span class="timeline-feed-header-text"><strong>' + createdName + '</strong> cerated a note for <strong>' + feed.contact.first_name + ' ' + feed.contact.last_name + '</strong></span>';
             break;
 
         case 'email':
-            header = '<span class="timeline-feed-avatar"><img src="'+ feed.created_by.avatar + '"></span><span class="timeline-feed-header-text">' + createdName + ' sent a email to ' + feed.contact.first_name + ' ' + feed.contact.last_name + '</span>';
+            header = '<span class="timeline-feed-avatar"><img src="'+ feed.created_by.avatar + '"></span><span class="timeline-feed-header-text"><strong>' + createdName + '</strong> sent a email to <strong>' + feed.contact.first_name + ' ' + feed.contact.last_name + '</strong></span>';
             break;
 
         case 'log_activity':
-            header = '<span class="timeline-feed-avatar"><img src="'+ feed.created_by.avatar + '"></span><span class="timeline-feed-header-text">' + createdName + ' created a log for ' + feed.contact.first_name + ' ' + feed.contact.last_name + '</span>';
+            header = '<span class="timeline-feed-avatar"><img src="'+ feed.created_by.avatar + '"></span><span class="timeline-feed-header-text"><strong>' + createdName + '</strong> created a log for <strong>' + feed.contact.first_name + ' ' + feed.contact.last_name + '</strong></span>';
             break;
     }
 

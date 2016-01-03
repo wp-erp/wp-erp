@@ -22,8 +22,6 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                     <trix-editor id="text-editor" input="activity_message" placeholder="<?php _e( 'Type your note .....', 'wp-erp' ); ?>"></trix-editor>
                     <input id="activity_message" v-model="feedData.message" type="hidden" name="activity_message">
 
-                    <!-- <textarea name="activity_message"  id="message" cols="90" rows="4"></textarea> -->
-
                     <div class="submit-action">
                         <input type="hidden" name="user_id" v-model="feedData.user_id" value="<?php echo $customer->id; ?>" >
                         <input type="hidden" name="created_by" v-model="feedData.created_by" value="<?php echo get_current_user_id(); ?>" >
@@ -114,22 +112,14 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
     <!-- <pre>@{{ $data.feeds }}</pre> -->
 
     <div class="activity-content">
-        <?php //var_dump( erp_crm_get_customer_activity(1) ); ?>
 
-        <ul class="timeline">
+        <ul class="timeline" v-if = "feeds.length">
             <template v-for="( month, feed_obj ) in feeds | formatFeeds">
-                <!-- timeline time label -->
+
                 <li class="time-label">
                     <span class="bg-red">{{ month | formatDate 'MM, Y' }}</span>
                 </li>
 
-              <!--   <li class="no-activity-message" v-if = "!feed_obj.length">
-                    <span class="bg-red"><?php _e( 'No activity founds', 'wp-erp' ); ?></span>
-                </li> -->
-
-                <!-- /.timeline-label -->
-
-                <!-- timeline item -->
                 <li v-for="feed in feed_obj">
 
                     <i v-if="feed.type == 'email'" class="fa fa-envelope-o"></i>
@@ -145,16 +135,20 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                         </h3>
 
                         <div class="timeline-body">
-                            {{{ feed.message }}}
+                            {{{ feed.message | formatFeedContent }}}
                         </div>
-                        <div class="timeline-footer" v-if="feed.type != 'email'">
-                            <a href="#">Edit</a> |
-                            <a href="#" @click.prevent="deleteFeed( feed )">Delete</a>
+                        <div class="timeline-footer">
+                            <a href="#" v-if="feed.type != 'email'"><?php _e( 'Edit', 'wp-erp' ); ?> |</a>
+                            <a href="#" @click.prevent="deleteFeed( feed )"><?php _e( 'Delete', 'wp-erp' ); ?></a>
                         </div>
                     </div>
                 </li>
-                <!-- END timeline item -->
+
             </template>
         </ul>
+
+        <div class="no-activity-found" v-else>
+            <?php _e( 'No Activity found for this Company', 'wp-erp' ); ?>
+        </div>
     </div>
 </div>

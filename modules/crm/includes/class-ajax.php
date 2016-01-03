@@ -68,7 +68,7 @@ class Ajax_Handler {
             $this->send_error( $customer_id->get_error_message() );
         }
 
-        $customer = new Customer( intval( $customer_id ) );
+        $customer = new Contact( intval( $customer_id ) );
 
         if ( $posted['photo_id'] ) {
             $customer->update_meta( 'photo_id', $posted['photo_id'] );
@@ -96,10 +96,10 @@ class Ajax_Handler {
         $this->verify_nonce( 'wp-erp-crm-nonce' );
 
         $customer_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
-        $customer    = new Customer( $customer_id );
+        $customer    = new Contact( $customer_id );
 
         if ( ! $customer_id || ! $customer ) {
-            $this->send_error( __( 'Customer does not exists.', 'wp-erp' ) );
+            $this->send_error( __( 'Cotact does not exists.', 'wp-erp' ) );
         }
 
         $this->send_success( $customer->to_array() );
@@ -211,7 +211,7 @@ class Ajax_Handler {
 
         $this->verify_nonce( 'wp-erp-crm-customer-update-company-nonce' );
 
-        $row_id = isset( $_REQUEST['row_id'] ) ? intval( $_REQUEST['row_id'] ) : 0;
+        $row_id     = isset( $_REQUEST['row_id'] ) ? intval( $_REQUEST['row_id'] ) : 0;
         $company_id = isset( $_REQUEST['company_id'] ) ? intval( $_REQUEST['company_id'] ) : 0;
 
         $result = erp_crm_customer_update_company( $row_id, $company_id );
@@ -272,7 +272,7 @@ class Ajax_Handler {
         $customer_id = (int) $_POST['customer_id'];
         unset( $_POST['customer_id'] );
 
-        $customer = new \WeDevs\ERP\CRM\Customer( $customer_id );
+        $customer = new \WeDevs\ERP\CRM\Contact( $customer_id );
         $customer->update_meta( 'crm_social_profile', $_POST );
 
         $this->send_success( __( 'Succesfully added social profiles', 'wp-erp' ) );

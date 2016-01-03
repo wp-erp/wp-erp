@@ -19,14 +19,14 @@
 
         <div class="row">
             <?php erp_html_form_input( array(
-                'label'       => __( 'Customer Name', 'wp-erp' ),
+                'label'       => __( 'Contact Name', 'wp-erp' ),
                 'name'        => 'erp_assign_customer_id',
                 'type'        => 'select',
                 'id'          => 'erp-select-customer-company',
                 'class'       => 'erp-crm-select2-add-more erp-crm-customer-company-dropdown',
-                'custom_attr' => ['data-id' => 'erp-contact-new', 'data-type' => 'customer', 'data-single' => 1 ],
+                'custom_attr' => ['data-id' => 'erp-contact-new', 'data-type' => 'contact', 'data-single' => 1 ],
                 'required'    => true,
-                'options'     => [ '' => __( '--Select a Customer--', 'wp-erp' ) ] + erp_get_peoples_array( [ 'type' => 'customer', 'number' => -1 ] )
+                'options'     => [ '' => __( '--Select a Contact--', 'wp-erp' ) ] + erp_get_peoples_array( [ 'type' => 'contact', 'number' => -1 ] )
             ) ); ?>
         </div>
 

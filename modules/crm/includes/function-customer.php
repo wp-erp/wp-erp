@@ -42,9 +42,9 @@ function erp_crm_get_avatar( $id, $size = 32, $user = false ) {
 function erp_crm_get_life_statges_dropdown_raw( $label = [] ) {
 
     $life_statges = [
+        'customer'    => __( 'Customer', 'wp-erp' ),
         'lead'        => __( 'Lead', 'wp-erp' ),
-        'opportunity' => __( 'Opportunity', 'wp-erp' ),
-        'customer'    => __( 'Customer', 'wp-erp' )
+        'opportunity' => __( 'Opportunity', 'wp-erp' )
     ];
 
     if ( $label ) {
@@ -173,10 +173,10 @@ function erp_crm_customer_restore( $customer_ids ) {
  *
  * @return array
  */
-function erp_crm_customer_get_status_count() {
+function erp_crm_customer_get_status_count( $type = null ) {
     global $wpdb;
 
-    $statuses = erp_crm_get_customer_type( [ 'all' => __( 'All', 'wp-erp' ) ] ) ;
+    $statuses = erp_crm_get_life_statges_dropdown_raw( [ 'all' => __( 'All', 'wp-erp' ) ] ) ;
     $counts   = array();
 
     foreach ( $statuses as $status => $label ) {
@@ -188,12 +188,16 @@ function erp_crm_customer_get_status_count() {
 
     if ( false === $results ) {
 
-        $people        = new \WeDevs\ERP\Framework\Models\People();
-        $db            = new \WeDevs\ORM\Eloquent\Database();
+        $people           = new \WeDevs\ERP\Framework\Models\People();
+        $db               = new \WeDevs\ORM\Eloquent\Database();
+        $people_table     = $wpdb->prefix . 'erp_peoples';
+        $peoplemeta_table = $wpdb->prefix . 'erp_peoplemeta';
 
-        $results = $people->select( array( $db->raw('type as status, COUNT(id) as num') ) )
-                    ->where( 'type', '!=', '' )
-                    ->groupBy('type')
+        $results = $people->select( array( $db->raw( $peoplemeta_table . '.meta_value as `status`, COUNT( ' . $people_table . '.id ) as `num`') ) )
+                    ->leftjoin( $peoplemeta_table, $peoplemeta_table . '.erp_people_id', '=', $people_table . '.id')
+                    ->where( $peoplemeta_table . '.meta_key', '=', 'life_stage' )
+                    ->where( $people_table . '.type', '=', $type )
+                    ->groupBy( $peoplemeta_table. '.meta_value')
                     ->get()->toArray();
 
 

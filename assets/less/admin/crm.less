@@ -322,6 +322,16 @@
 
         .activity-content {
 
+            .no-activity-found {
+                width: 100%;
+                font-weight: bold;
+                padding: 20px 12px;
+                display: inline-block;
+                background-color: #fff;
+                border-radius: 2px;
+                border-left: 3px solid #DEDEDE;
+            }
+
             margin: 30px 0px;
 
             /*
@@ -344,16 +354,6 @@
                 left: 31px;
                 margin: 0;
                 border-radius: 2px;
-            }
-
-            .timeline > li.no-activity-message {
-                width: 100%;
-                font-weight: bold;
-                padding: 6px 8px;
-                display: inline-block;
-                background-color: #fff;
-                border-radius: 2px;
-                border-left: 3px solid #DEDEDE;
             }
 
             .timeline > li {
@@ -411,6 +411,11 @@
                 position: relative;
                 top: -5px;
             }
+
+            .timeline > li > .timeline-item > .timeline-header > span.timeline-feed-header-text strong {
+                color: #0073aa;
+            }
+
             .timeline > li > .timeline-item > .timeline-header > .timeline-feed-avatar img{
                 width: 17px;
                 height: 100%;
