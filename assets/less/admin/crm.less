@@ -359,7 +359,7 @@
             .timeline > li {
                 position: relative;
                 margin-right: 10px;
-                margin-bottom: 15px;
+                margin-bottom: 20px;
             }
             .timeline > li:before,
             .timeline > li:after {
@@ -428,6 +428,25 @@
             .timeline > li > .timeline-item > .timeline-body,
             .timeline > li > .timeline-item > .timeline-footer {
                 padding: 10px;
+            }
+
+            .timeline > li > .timeline-item > .timeline-footer {
+                box-shadow: -1px 1px 4px 0 #e6e6e6;
+                transition: all 0.2s ease;
+                background: #fafafa;
+                border: 1px solid #e9eced;
+                z-index: 1;
+            }
+
+            .timeline > li > .timeline-item > .timeline-body .timeline-email-subject {
+                padding: 0px 0px 10px;
+                border-bottom: 1px solid #eee;
+                margin-bottom: 10px;
+                font-style: italic;
+            }
+
+            .timeline > li > .timeline-item > .timeline-body .timeline-email-body {
+
             }
 
             .timeline > li > .timeline-item > .timeline-footer a {

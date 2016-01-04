@@ -18,18 +18,28 @@ Vue.filter('formatDate', function ( date, format ) {
         day   = date.getDate(),
         year  = date.getFullYear(),
         monthArray = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ],
-        monthName = monthArray[date.getMonth()];
+        monthShortArray = [ "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec" ],
+        monthName = monthArray[date.getMonth()],
+        monthShortName = monthShortArray[date.getMonth()];
 
     var pattern = {
-       Y: year,
-       mm: (month+1),
-       MM: monthName,
-       dd: day,
+        Y: year,
+        m: (month+1),
+        F: monthName,
+        M: monthShortName,
+        d: day,
+        j: day
     };
 
-    dateStr = format.replace(/Y|mm|dd|MM/gi, function(matched){
-      return pattern[matched];
-    });
+    if ( format ) {
+        dateStr = format.replace(/Y|m|d|j|M|F/gi, function( matched ){
+            return pattern[matched];
+        });
+    } else {
+        dateStr = wpCRMvue.date_format.replace(/Y|m|d|j|M|F/gi, function( matched ){
+            return pattern[matched];
+        });
+    }
 
     return dateStr;
 });
@@ -38,23 +48,38 @@ Vue.filter('formatDate', function ( date, format ) {
 Vue.filter('formatFeedHeader', function ( feed ) {
     var header;
     var createdName = ( feed.created_by.ID == wpCRMvue.current_user_id ) ? 'You' : feed.created_by.display_name;
+    var createdFor = ( feed.contact.type == 'company' ) ? feed.contact.company : feed.contact.first_name + ' ' + feed.contact.last_name;
 
     switch( feed.type ) {
         case 'new_note':
-            header = '<span class="timeline-feed-avatar"><img src="'+ feed.created_by.avatar + '"></span><span class="timeline-feed-header-text"><strong>' + createdName + '</strong> cerated a note for <strong>' + feed.contact.first_name + ' ' + feed.contact.last_name + '</strong></span>';
+            header = '<span class="timeline-feed-avatar"><img src="'+ feed.created_by.avatar + '"></span><span class="timeline-feed-header-text"><strong>' + createdName + '</strong> cerated a note for <strong>' + createdFor + '</strong></span>';
             break;
 
         case 'email':
-            header = '<span class="timeline-feed-avatar"><img src="'+ feed.created_by.avatar + '"></span><span class="timeline-feed-header-text"><strong>' + createdName + '</strong> sent a email to <strong>' + feed.contact.first_name + ' ' + feed.contact.last_name + '</strong></span>';
+            header = '<span class="timeline-feed-avatar"><img src="'+ feed.created_by.avatar + '"></span><span class="timeline-feed-header-text"><strong>' + createdName + '</strong> sent a email to <strong>' + createdFor + '</strong></span>';
             break;
 
         case 'log_activity':
-            header = '<span class="timeline-feed-avatar"><img src="'+ feed.created_by.avatar + '"></span><span class="timeline-feed-header-text"><strong>' + createdName + '</strong> created a log for <strong>' + feed.contact.first_name + ' ' + feed.contact.last_name + '</strong></span>';
+            var logType = ( feed.log_type == 'sms' || feed.log_type == 'email' ) ? 'an ' + feed.log_type : 'a ' + feed.log_type;
+            header = '<span class="timeline-feed-avatar"><img src="'+ feed.created_by.avatar + '"></span><span class="timeline-feed-header-text"><strong>' + createdName + '</strong> logged ' + logType + ' on ' +  this.$options.filters.formatDate( feed.log_date, 'F, j' ) + ' @ ' +  this.$options.filters.formatAMPM(  feed.log_date + ' ' + feed.log_time ) + ' for <strong>' + createdFor + '</strong></span>';
+            // header = '<span class="timeline-feed-avatar"><img src="'+ feed.created_by.avatar + '"></span><span class="timeline-feed-header-text"><strong>' + createdName + '</strong> created a log for <strong>' + createdFor + '</strong></span>';
             break;
     }
 
     return header;
 });
+
+// Vue filter for formatting Feeds message body as a group by object
+Vue.filter( 'formatFeedContent', function ( message, feed ) {
+
+    if ( feed.type == 'email') {
+        message = '<div class="timeline-email-subject">Subject : ' + feed.email_subject + '</div>' +
+                  '<div class="timeline-email-body">' + feed.message + '</div>';
+    };
+
+    return message;
+});
+
 
 // Vue filter for formatting Feeds as a group by object
 Vue.filter('formatFeeds', function ( feeds ) {
@@ -106,13 +131,59 @@ var vm = new Vue({
         feedData : { 'message' : '' },
         isValid: false,
         customer_id : null,
+        dt: '',
+        showFooter: false
     },
 
     compiled: function() {
         this.fetchFeeds()
+        this.dt = this.currentDate()
     },
 
     methods: {
+
+        toggleFooter: function( e ) {
+            jQuery( e.target ).closest('li').find('.timeline-footer').toggle();
+        },
+
+        editFeed: function( feed ) {
+            console.log( feed );
+
+            jQuery.erpPopup({
+                title: 'Edit Feed',
+                button: 'Save',
+                id: 'erp-customer-feed-edit',
+                cotent: '<pre>'+feed+'</pre>',
+                onReady: function() {
+                    var modal = this;
+
+                    //$( 'header', modal).after( $('<div class="loader"></div>').show() );
+
+                },
+                onSubmit: function(modal) {
+                    modal.disableButton();
+                }
+            });
+        },
+
+        currentDate : function() {
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth()+1;
+            var yyyy = today.getFullYear();
+
+            if( dd < 10 ) {
+                dd='0'+dd
+            }
+
+            if( mm < 10 ) {
+                mm='0'+mm
+            }
+
+            today = yyyy+'-'+mm+'-'+dd;
+            return today;
+        },
+
 
         deleteFeed: function( feed ) {
             var data = {
@@ -209,23 +280,6 @@ var vm = new Vue({
          *
          * @return {[string]} [date string]
          */
-        dt : function() {
-            var today = new Date();
-            var dd = today.getDate();
-            var mm = today.getMonth()+1;
-            var yyyy = today.getFullYear();
-
-            if( dd < 10 ) {
-                dd='0'+dd
-            }
-
-            if( mm < 10 ) {
-                mm='0'+mm
-            }
-
-            today = yyyy+'-'+mm+'-'+dd;
-            return today;
-        },
 
         /**
          * Apply feed form validation

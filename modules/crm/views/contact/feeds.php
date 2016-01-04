@@ -112,24 +112,15 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
 
 
     <!-- <pre>@{{ $data.feeds }}</pre> -->
-
     <div class="activity-content">
-        <?php //var_dump( erp_crm_get_customer_activity(1) ); ?>
 
         <ul class="timeline" v-if = "feeds.length">
             <template v-for="( month, feed_obj ) in feeds | formatFeeds">
-                <!-- timeline time label -->
+
                 <li class="time-label">
-                    <span class="bg-red">{{ month | formatDate 'MM, Y' }}</span>
+                    <span class="bg-red">{{ month | formatDate 'F, Y' }}</span>
                 </li>
 
-              <!--   <li class="no-activity-message" v-if = "!feed_obj.length">
-                    <span class="bg-red"><?php _e( 'No activity founds', 'wp-erp' ); ?></span>
-                </li> -->
-
-                <!-- /.timeline-label -->
-
-                <!-- timeline item -->
                 <li v-for="feed in feed_obj">
 
                     <i v-if="feed.type == 'email'" class="fa fa-envelope-o"></i>
@@ -137,27 +128,28 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                     <i v-if="feed.type == 'log_activity'" class="fa fa-list"></i>
 
                     <div class="timeline-item">
-                        <span class="time"><i class="fa fa-clock-o"></i> {{ feed.created_at | formatAMPM }}</span>
-                        <span class="time"><i class="fa fa-calendar"></i> {{ feed.created_date | formatDate 'MM, dd' }}</span>
+                        <span class="time"><i class="fa fa-calendar"></i> {{ feed.created_date | formatDate 'F,j' }} @ {{ feed.created_at | formatAMPM }}</span>
 
-                        <h3 class="timeline-header">
+                        <h3 class="timeline-header" @click.prevent="showFooter = !showFooter">
                             {{{ feed | formatFeedHeader }}}
                         </h3>
 
                         <div class="timeline-body">
-                            {{{ feed.message | formatFeedContent }}}
+                            {{{ feed.message | formatFeedContent feed }}}
                         </div>
-                        <div class="timeline-footer">
+                        <div class="timeline-footer" v-show="showFooter">
                             <a href="#" v-if="feed.type != 'email'"><?php _e( 'Edit', 'wp-erp' ); ?> |</a>
-                            <a href="#" @click.prevent="deleteFeed( feed )"><?php _e( 'Delete', 'wp-erp' ) ?></a>
+                            <a href="#" @click.prevent="deleteFeed( feed )"><?php _e( 'Delete', 'wp-erp' ); ?></a>
                         </div>
                     </div>
                 </li>
-                <!-- END timeline item -->
+
             </template>
         </ul>
+
         <div class="no-activity-found" v-else>
-            <?php _e( 'No Activity found for this contact', 'wp-erp' ); ?>
+            <?php _e( 'No Activity found for this Company', 'wp-erp' ); ?>
         </div>
     </div>
+
 </div>

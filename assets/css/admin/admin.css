@@ -384,7 +384,7 @@
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > li {
   position: relative;
   margin-right: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > li:before,
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > li:after {
@@ -449,6 +449,19 @@
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-body,
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-footer {
   padding: 10px;
+}
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-footer {
+  box-shadow: -1px 1px 4px 0 #e6e6e6;
+  transition: all 0.2s ease;
+  background: #fafafa;
+  border: 1px solid #e9eced;
+  z-index: 1;
+}
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-body .timeline-email-subject {
+  padding: 0px 0px 10px;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 10px;
+  font-style: italic;
 }
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-footer a {
   text-decoration: none;

@@ -47,6 +47,7 @@
                                 <li><?php erp_print_key_value( __( 'City', 'wp-erp' ), $customer->city ); ?></li>
                                 <li><?php erp_print_key_value( __( 'State', 'wp-erp' ), erp_get_state_name( $customer->country, $customer->state ) ); ?></li>
                                 <li><?php erp_print_key_value( __( 'Country', 'wp-erp' ), erp_get_country_name( $customer->country ) ); ?></li>
+                                <li><?php erp_print_key_value( __( 'Postal Code', 'wp-erp' ), $customer->postal_code ); ?></li>
 
                                 <?php do_action( 'erp-hr-employee-single-basic', $customer ); ?>
                             </ul>
@@ -84,6 +85,7 @@
                                                 <li><?php erp_print_key_value( __( 'City', 'wp-erp' ), $assing_customer->city ); ?></li>
                                                 <li><?php erp_print_key_value( __( 'State', 'wp-erp' ), erp_get_state_name( $assing_customer->country, $assing_customer->state ) ); ?></li>
                                                 <li><?php erp_print_key_value( __( 'Country', 'wp-erp' ), erp_get_country_name( $assing_customer->country ) ); ?></li>
+                                                <li><?php erp_print_key_value( __( 'Postal Code', 'wp-erp' ), $assing_customer->postal_code ); ?></li>
                                             </ul>
                                         </div>
                                     </div>

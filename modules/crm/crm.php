@@ -151,6 +151,7 @@ class Customer_Relationship {
                 'nonce' => wp_create_nonce( 'wp-erp-crm-customer-feed' ),
                 'current_user_id' => get_current_user_id(),
                 'confirm'  => __( 'Are you sure?', 'wp-erp' ),
+                'date_format'  => get_option( 'date_format' )
             ] );
 
             $localize_script['customer_empty'] = $customer->to_array();
