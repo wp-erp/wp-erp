@@ -115,6 +115,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
     <div class="activity-content">
 
         <ul class="timeline" v-if = "feeds.length">
+
             <template v-for="( month, feed_obj ) in feeds | formatFeeds">
 
                 <li class="time-label">
@@ -123,28 +124,29 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
 
                 <li v-for="feed in feed_obj">
 
-                    <i v-if="feed.type == 'email'" class="fa fa-envelope-o"></i>
-                    <i v-if="feed.type == 'new_note'" class="fa fa-file-text-o"></i>
-                    <i v-if="feed.type == 'log_activity'" class="fa fa-list"></i>
+                    <i v-if="feed.type == 'email'" class="fa fa-envelope-o" @click.prevent="toggleFooter"></i>
+                    <i v-if="feed.type == 'new_note'" class="fa fa-file-text-o" @click.prevent="toggleFooter"></i>
+                    <i v-if="feed.type == 'log_activity'" class="fa fa-list" @click.prevent="toggleFooter"></i>
 
                     <div class="timeline-item">
                         <span class="time"><i class="fa fa-calendar"></i> {{ feed.created_date | formatDate 'F,j' }} @ {{ feed.created_at | formatAMPM }}</span>
 
-                        <h3 class="timeline-header" @click.prevent="showFooter = !showFooter">
+                        <h3 class="timeline-header" @click.prevent="toggleFooter">
                             {{{ feed | formatFeedHeader }}}
                         </h3>
 
-                        <div class="timeline-body">
+                        <div class="timeline-body" @click.prevent="toggleFooter">
                             {{{ feed.message | formatFeedContent feed }}}
                         </div>
                         <div class="timeline-footer" v-show="showFooter">
-                            <a href="#" v-if="feed.type != 'email'"><?php _e( 'Edit', 'wp-erp' ); ?> |</a>
+                            <a href="#" v-if="feed.type != 'email'" @click.prevent="editFeed( feed )"><?php _e( 'Edit', 'wp-erp' ); ?> |</a>
                             <a href="#" @click.prevent="deleteFeed( feed )"><?php _e( 'Delete', 'wp-erp' ); ?></a>
                         </div>
                     </div>
                 </li>
 
             </template>
+
         </ul>
 
         <div class="no-activity-found" v-else>

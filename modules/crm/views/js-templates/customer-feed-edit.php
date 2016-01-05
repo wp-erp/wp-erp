@@ -22,6 +22,7 @@
 
         <input id="activity_message_edit" type="hidden" name="message" value="{{ data.message }}">
         <trix-editor input="activity_message_edit" placeholder="<?php _e( 'Add your log .....', 'wp-erp' ); ?>"></trix-editor>
+
     <# } #>
 
     <div class="submit-action">

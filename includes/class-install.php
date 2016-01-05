@@ -418,9 +418,9 @@ class WeDevs_ERP_Installer {
                 `erp_people_id` bigint(20) DEFAULT NULL,
                 `meta_key` varchar(255) DEFAULT NULL,
                 `meta_value` longtext,
-                PRIMARY KEY (`id`),
+                PRIMARY KEY (`meta_id`),
                 KEY `erp_people_id` (`erp_people_id`),
-                KEY `meta_key` (`meta_key`)
+                KEY `meta_key` (`meta_key`(191))
             ) $collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_audit_log` (
@@ -439,8 +439,23 @@ class WeDevs_ERP_Installer {
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_customer_companies` (
                 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-                `customer_id` bigint(20) NOT NULL DEFAULT '',
-                `company_id` bigint(50) NOT NULL DEFAULT '',
+                `customer_id` bigint(20) DEFAULT NULL,
+                `company_id` bigint(50) DEFAULT NULL,
+                PRIMARY KEY (`id`)
+            ) $collate;",
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_customer_activities` (
+                `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+                `user_id` int(11) DEFAULT NULL,
+                `type` varchar(255) DEFAULT NULL,
+                `message` longtext,
+                `email_subject` text,
+                `log_type` varchar(255) DEFAULT NULL,
+                `log_time` varchar(255) DEFAULT NULL,
+                `log_date` varchar(255) DEFAULT NULL,
+                `created_by` int(11) DEFAULT NULL,
+                `created_at` datetime DEFAULT NULL,
+                `updated_at` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`)
             ) $collate;"
         ];
