@@ -72,10 +72,10 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                     <p>
                         <select name="log_type" v-model="feedData.log_type" id="log-type" class="erp-left">
                             <option value=""><?php _e( '-- Select type --', 'wp-erp' ) ?></option>
-                            <option value="log_call"><?php _e( 'Log a Call', 'wp-erp' ) ?></option>
-                            <option value="log_metting"><?php _e( 'Log a Meeting', 'wp-erp' ) ?></option>
-                            <option value="log_email"><?php _e( 'Log an Email', 'wp-erp' ) ?></option>
-                            <option value="log_sms"><?php _e( 'Log an SMS', 'wp-erp' ) ?></option>
+                            <option value="call"><?php _e( 'Log a Call', 'wp-erp' ) ?></option>
+                            <option value="metting"><?php _e( 'Log a Meeting', 'wp-erp' ) ?></option>
+                            <option value="email"><?php _e( 'Log an Email', 'wp-erp' ) ?></option>
+                            <option value="sms"><?php _e( 'Log an SMS', 'wp-erp' ) ?></option>
                         </select>
 
                         <input class="erp-right" v-model="feedData.log_time" type="time" placeholder="yy-mm-dd">
