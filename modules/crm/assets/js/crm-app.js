@@ -147,21 +147,46 @@ var vm = new Vue({
         },
 
         editFeed: function( feed ) {
-            console.log( feed );
 
             jQuery.erpPopup({
                 title: 'Edit Feed',
                 button: 'Save',
                 id: 'erp-customer-feed-edit',
-                cotent: '<pre>'+feed+'</pre>',
-                onReady: function() {
+                content: wperp.template('erp-crm-customer-edit-feed')( feed ).trim(),
+                onReady: function () {
                     var modal = this;
 
-                    //$( 'header', modal).after( $('<div class="loader"></div>').show() );
+                    jQuery('.erp-date-field').datepicker({
+                        dateFormat: 'yy-mm-dd',
+                        changeMonth: true,
+                        changeYear: true,
+                        yearRange: '-100:+0',
+                    });
 
+                    jQuery( 'select[data-selected]', modal ).each(function() {
+                        var self = jQuery(this),
+                            selected = self.data('selected');
+                        if ( selected !== '' ) {
+                            self.val( selected );
+                        }
+                    });
                 },
                 onSubmit: function(modal) {
-                    modal.disableButton();
+                    wp.ajax.send( {
+                        data: this.serialize(),
+                        success: function(res) {
+                            vm.feeds = _.map( vm.feeds, function( feed ){
+                                if ( feed.id == res.id ) {
+                                   return res;
+                                }
+                               return feed;
+                            });
+                            modal.closeModal();
+                        },
+                        error: function(error) {
+                            alert( error );
+                        }
+                    });
                 }
             });
         },

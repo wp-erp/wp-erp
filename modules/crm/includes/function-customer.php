@@ -452,14 +452,22 @@ function erp_crm_get_customer_activity( $customer_id = null ) {
  * @return array
  */
 function erp_crm_save_customer_feed_data( $data ) {
-    $create_activity = WeDevs\ERP\CRM\Models\Activity::create( $data );
+
+    if ( isset( $data['id'] ) && !empty( $data['id'] ) ) {
+        $saved_activity = WeDevs\ERP\CRM\Models\Activity::find( $data['id'] )->update( $data );
+        $saved_activity_id = $data['id'];
+    } else {
+        $saved_activity = WeDevs\ERP\CRM\Models\Activity::create( $data );
+        $saved_activity_id = $saved_activity->id;
+    }
+
     $activity        = WeDevs\ERP\CRM\Models\Activity::
                         with( [ 'contact',
                                 'created_by' => function( $query ) {
                                     $query->select( 'ID', 'user_nicename', 'user_email', 'user_url', 'display_name' );
                                 }
                             ] )
-                        ->find( $create_activity->id )
+                        ->find( $saved_activity_id )
                         ->toArray();
 
     $activity['created_by']['avatar'] = get_avatar_url( $activity['created_by']['ID'] );

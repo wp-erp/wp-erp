@@ -498,6 +498,13 @@
 .erp-single-customer .erp-customer-feeds .activity-content .timeline-inverse > li > .timeline-item > .timeline-header {
   border-bottom-color: #ddd;
 }
+.erp-crm-customer-feed-edit-wrapper p {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 20px;
+}
+.erp-crm-customer-feed-edit-wrapper p input {
+  margin-left: 15px;
+}
 span.red {
   color: #CF0202;
 }
