@@ -207,7 +207,7 @@ class WeDevs_ERP_Installer {
                 `status` varchar(10) NOT NULL DEFAULT '',
                 `deleted_at` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`),
-                KEY `employee_id` (`user_id`)
+                KEY `user_id` (`user_id`)
             ) $collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_employee_history` (
@@ -220,7 +220,7 @@ class WeDevs_ERP_Installer {
                 `data` longtext,
                 `date` datetime NOT NULL,
                 PRIMARY KEY (`id`),
-                KEY `employee_id` (`user_id`),
+                KEY `user_id` (`user_id`),
                 KEY `module` (`module`)
             ) $collate;",
 
@@ -277,7 +277,7 @@ class WeDevs_ERP_Installer {
                 `created_by` bigint(20) unsigned DEFAULT NULL,
                 `created_on` datetime NOT NULL,
                 PRIMARY KEY (`id`),
-                KEY `employee_id` (`user_id`)
+                KEY `user_id` (`user_id`)
             ) $collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_leaves` (
@@ -309,7 +309,7 @@ class WeDevs_ERP_Installer {
                 `updated_on` datetime DEFAULT NULL,
                 `last_date` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`),
-                KEY `employee_id` (`user_id`),
+                KEY `user_id` (`user_id`),
                 KEY `policy_id` (`policy_id`)
             ) $collate;",
 

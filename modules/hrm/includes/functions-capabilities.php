@@ -223,3 +223,30 @@ function erp_hr_get_user_role( $user_id = 0 ) {
 
     return apply_filters( 'erp_hr_get_user_role', $role, $user_id, $user );
 }
+
+/**
+ * Create a new employee when a user role is changed to employee
+ *
+ * @param  int  $user_id
+ * @param  string  $role
+ *
+ * @return void
+ */
+function erp_hr_existing_role_to_employee( $user_id, $role ) {
+    if ( 'employee' != $role ) {
+        return;
+    }
+
+    // check if a employee of that ID exists, otherwise create one
+    $employee = new \WeDevs\ERP\HRM\Models\Employee();
+    $exists = $employee->where( 'user_id', '=', $user_id )->get()->first();
+
+    if ( null === $exists ) {
+        $employee->create([
+            'user_id'     => $user_id,
+            'designation' => 0,
+            'department'  => 0,
+            'status'      => 'active'
+        ]);
+    }
+}
