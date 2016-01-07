@@ -250,3 +250,19 @@ function erp_hr_existing_role_to_employee( $user_id, $role ) {
         ]);
     }
 }
+
+/**
+ * When a new administrator is created, make him HR Manager by default
+ *
+ * @param  int  $user_id
+ *
+ * @return void
+ */
+function erp_hr_new_admin_as_manager( $user_id ) {
+    $user = get_user_by( 'id', $user_id );
+    $role = reset( $user->roles );
+
+    if ( 'administrator' == $role ) {
+        $user->add_role( erp_hr_get_manager_role() );
+    }
+}

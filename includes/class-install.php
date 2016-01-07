@@ -521,7 +521,7 @@ class WeDevs_ERP_Installer {
 
         if ( $admins ) {
             foreach ($admins as $user) {
-                $user->add_role( 'erp_hr_manager' );
+                $user->add_role( erp_hr_get_manager_role() );
             }
         }
     }
