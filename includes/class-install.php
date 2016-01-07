@@ -517,8 +517,13 @@ class WeDevs_ERP_Installer {
      * @return void
      */
     public function set_role() {
-        $user = wp_get_current_user();
-        $user->add_role('erp_hr_manager');
+        $admins = get_users( array( 'role' => 'administrator' ) );
+
+        if ( $admins ) {
+            foreach ($admins as $user) {
+                $user->add_role( 'erp_hr_manager' );
+            }
+        }
     }
 }
 

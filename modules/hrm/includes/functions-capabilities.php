@@ -30,15 +30,6 @@ function erp_hr_get_employee_role() {
 }
 
 /**
- * The Reporting Manager role for HR employees
- *
- * @return string
- */
-function erp_hr_get_reporting_manager_role() {
-    return apply_filters( 'erp_hr_get_reporting_manager_role', 'erp_eporting_manager' );
-}
-
-/**
  * Get dynamic roles for HR
  *
  * @return array
@@ -55,11 +46,6 @@ function erp_hr_get_roles() {
             'name'         => __( 'Employee', 'wp-erp' ),
             'public'       => true,
             'capabilities' => erp_hr_get_caps_for_role( erp_hr_get_employee_role() )
-        ],
-        erp_hr_get_reporting_manager_role() => [
-            'name'         => __( 'Reporting Manager', 'wp-erp' ),
-            'public'       => true,
-            'capabilities' => erp_hr_get_caps_for_role( erp_hr_get_reporting_manager_role() )
         ]
     ];
 
@@ -120,20 +106,6 @@ function erp_hr_get_caps_for_role( $role = '' ) {
                 'erp_edit_employee'        => true,
                 'erp_view_jobinfo'         => true,
                 'erp_leave_create_request' => true,
-            ];
-
-            break;
-        
-        case erp_hr_get_reporting_manager_role():
-
-            $caps = [
-                'read'                     => true,
-                'erp_list_employee'        => true,
-                'erp_view_employee'        => true,
-                'erp_edit_employee'        => true,
-                'erp_view_jobinfo'         => true,
-                'erp_leave_create_request' => true,
-                'erp_create_review'        => true,
             ];
 
             break;
