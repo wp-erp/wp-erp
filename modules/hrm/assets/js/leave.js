@@ -26,6 +26,10 @@
             $( '.erp-hr-holiday-wrap' ).on( 'click', '.erp-hr-holiday-delete', self, this.holiday.remove );
             $( 'body' ).on( 'change', '.erp-hr-holiday-date-range', self, this.holiday.checkRange );
 
+            // ICal calendar import
+            $( '.erp-hr-holiday-wrap' ).on( 'click', '#erp-hr-import-ical', self, this.importICalInit );
+            $( '.erp-hr-holiday-wrap' ).on( 'change', '#erp-ical-input', self, this.uploadICal );
+
             this.initDateField();
         },
 
@@ -443,6 +447,41 @@
                     }
                 } );
             }
+        },
+
+        importICalInit: function ( e ) {
+            e.preventDefault();
+            $( 'body #erp-ical-input' ).trigger( 'click' );
+        },
+
+        uploadICal: function ( e ) {
+            e.preventDefault();
+
+            var icsFile = e.target.files[0],
+                data = new FormData(),
+                form = $(this).parents('form');
+
+            data.append( 'ics', icsFile );
+            data.append( 'action', 'erp-hr-import-ical' );
+            data.append( '_wpnonce', wpErpHr.nonce );
+
+            wp.ajax.send( {
+                data: data,
+                cache: false,
+                processData: false,
+                contentType: false,
+                success: function() {
+                    $( '.list-table-wrap' ).load( window.location.href + ' .list-wrap-inner', function() {
+                        Leave.initDateField();
+                    } );
+
+                    form[0].reset();
+                },
+                error: function(error) {
+                    form[0].reset();
+                    alert( error );
+                }
+            });
         }
     };
 
