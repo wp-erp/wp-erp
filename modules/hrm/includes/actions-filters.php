@@ -2,10 +2,12 @@
 
 // Actions *****************************************************************/
 
-add_action( 'user_register', 'erp_hr_employee_on_initialize' );
+add_action( 'user_register', 'erp_hr_new_admin_as_manager' );
 add_action( 'delete_user', 'erp_hr_employee_on_delete' );
+add_action( 'set_user_role', 'erp_hr_existing_role_to_employee', 10, 2 );
 
-//After create employee apply leave policy
+
+// After create employee apply leave policy
 add_action( 'erp_hr_employee_new', 'erp_hr_apply_new_employee_policy', 10, 1 );
 add_action( 'erp_hr_policy_schedule', 'erp_hr_apply_policy_schedule' );
 

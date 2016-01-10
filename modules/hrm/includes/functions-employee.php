@@ -1,29 +1,6 @@
 <?php
 
 /**
- * Insert new ERP employee row on new employee user role creation
- *
- * @param  int  user id
- *
- * @return void
- */
-function erp_hr_employee_on_initialize( $user_id ) {
-    global $wpdb;
-
-    $user = get_user_by( 'id', $user_id );
-    $role = reset( $user->roles );
-
-    if ( 'employee' == $role ) {
-        $wpdb->insert( $wpdb->prefix . 'erp_hr_employees', array(
-            'user_id'     => $user_id,
-            'designation' => 0,
-            'department'  => 0,
-            'status'      => 'active'
-        ) );
-    }
-}
-
-/**
  * Delete an employee if removed from WordPress usre table
  *
  * @param  int  the user id
@@ -144,20 +121,21 @@ function erp_hr_employee_create( $args = array() ) {
     // inserting the user for the first time
     if ( ! $update ) {
 
-        $work = $data['work'];
+        $hiring_date = ! empty( $data['work']['hiring_date'] ) ? $data['work']['hiring_date'] : current_time( 'mysql' );
+        $work        = $data['work'];
 
         if ( ! empty( $work['type'] ) ) {
-            $employee->update_employment_status( $work['type'] );
+            $employee->update_employment_status( $work['type'], $hiring_date );
         }
 
         // update compensation
         if ( ! empty( $work['pay_rate'] ) ) {
             $pay_type = ( ! empty( $work['pay_type'] ) ) ? $work['pay_type'] : 'monthly';
-            $employee->update_compensation( $work['pay_rate'], $pay_type );
+            $employee->update_compensation( $work['pay_rate'], $pay_type, '', $hiring_date );
         }
 
         // update job info
-        $employee->update_job_info( $work['department'], $work['designation'], $work['reporting_to'], $work['location'] );
+        $employee->update_job_info( $work['department'], $work['designation'], $work['reporting_to'], $work['location'], $hiring_date );
     }
 
 

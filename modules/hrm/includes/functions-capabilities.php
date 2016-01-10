@@ -30,15 +30,6 @@ function erp_hr_get_employee_role() {
 }
 
 /**
- * The Reporting Manager role for HR employees
- *
- * @return string
- */
-function erp_hr_get_reporting_manager_role() {
-    return apply_filters( 'erp_hr_get_reporting_manager_role', 'erp_eporting_manager' );
-}
-
-/**
  * Get dynamic roles for HR
  *
  * @return array
@@ -55,11 +46,6 @@ function erp_hr_get_roles() {
             'name'         => __( 'Employee', 'wp-erp' ),
             'public'       => true,
             'capabilities' => erp_hr_get_caps_for_role( erp_hr_get_employee_role() )
-        ],
-        erp_hr_get_reporting_manager_role() => [
-            'name'         => __( 'Reporting Manager', 'wp-erp' ),
-            'public'       => true,
-            'capabilities' => erp_hr_get_caps_for_role( erp_hr_get_reporting_manager_role() )
         ]
     ];
 
@@ -120,20 +106,6 @@ function erp_hr_get_caps_for_role( $role = '' ) {
                 'erp_edit_employee'        => true,
                 'erp_view_jobinfo'         => true,
                 'erp_leave_create_request' => true,
-            ];
-
-            break;
-        
-        case erp_hr_get_reporting_manager_role():
-
-            $caps = [
-                'read'                     => true,
-                'erp_list_employee'        => true,
-                'erp_view_employee'        => true,
-                'erp_edit_employee'        => true,
-                'erp_view_jobinfo'         => true,
-                'erp_leave_create_request' => true,
-                'erp_create_review'        => true,
             ];
 
             break;
@@ -250,4 +222,47 @@ function erp_hr_get_user_role( $user_id = 0 ) {
     }
 
     return apply_filters( 'erp_hr_get_user_role', $role, $user_id, $user );
+}
+
+/**
+ * Create a new employee when a user role is changed to employee
+ *
+ * @param  int  $user_id
+ * @param  string  $role
+ *
+ * @return void
+ */
+function erp_hr_existing_role_to_employee( $user_id, $role ) {
+    if ( 'employee' != $role ) {
+        return;
+    }
+
+    // check if a employee of that ID exists, otherwise create one
+    $employee = new \WeDevs\ERP\HRM\Models\Employee();
+    $exists = $employee->where( 'user_id', '=', $user_id )->get()->first();
+
+    if ( null === $exists ) {
+        $employee->create([
+            'user_id'     => $user_id,
+            'designation' => 0,
+            'department'  => 0,
+            'status'      => 'active'
+        ]);
+    }
+}
+
+/**
+ * When a new administrator is created, make him HR Manager by default
+ *
+ * @param  int  $user_id
+ *
+ * @return void
+ */
+function erp_hr_new_admin_as_manager( $user_id ) {
+    $user = get_user_by( 'id', $user_id );
+    $role = reset( $user->roles );
+
+    if ( 'administrator' == $role ) {
+        $user->add_role( erp_hr_get_manager_role() );
+    }
 }
