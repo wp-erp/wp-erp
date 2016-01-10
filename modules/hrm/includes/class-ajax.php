@@ -354,6 +354,10 @@ class Ajax_Handler {
         $data['work']['type']   = $employee->get_type();
         $data['url']            = $employee->get_details_url();
 
+        if ( isset( $posted['user_notification'] ) && $posted['user_notification'] == 'on' ) {
+            wp_send_new_user_notifications( $employee_id );
+        }
+
         $this->send_success( $data );
     }
 
