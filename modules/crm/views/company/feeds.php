@@ -76,7 +76,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                             <option value="sms"><?php _e( 'Log an SMS', 'wp-erp' ) ?></option>
                         </select>
 
-                        <input class="erp-right" v-model="feedData.log_time" type="time" placeholder="yy-mm-dd">
+                        <input class="erp-right" v-model="tp" type="text" v-timepicker="tp" placeholder="12.00pm" size="10">
                         <input class="erp-right" v-model="dt" type="text" v-datepicker="dt" placeholder="yy-mm-dd">
                         <span class="clearfix"></span>
                     </p>

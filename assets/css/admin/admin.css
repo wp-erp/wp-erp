@@ -304,42 +304,52 @@
   padding-top: 10px;
   border-top: 1px solid #eee;
 }
-.erp-single-customer .erp-customer-feeds .activity-form .nav-content #email p {
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #email p,
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #schedule p {
   margin: 0px;
   border-bottom: 1px solid #eee;
   padding: 8px 0px;
   font-weight: bold;
 }
-.erp-single-customer .erp-customer-feeds .activity-form .nav-content #email p label {
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #email p label,
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #schedule p label {
   min-width: 12%;
   display: inline-block;
   vertical-align: middle;
 }
-.erp-single-customer .erp-customer-feeds .activity-form .nav-content #email p span.sep {
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #email p span.sep,
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #schedule p span.sep {
   width: 15px;
   display: inline-block;
 }
-.erp-single-customer .erp-customer-feeds .activity-form .nav-content #email p.email-subject input {
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #email p input[type='text'],
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #schedule p input[type='text'] {
   border: none;
   box-shadow: none;
   transition: none;
+  width: 80%;
 }
-.erp-single-customer .erp-customer-feeds .activity-form .nav-content #email p.email-subject input:focus {
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #email p input[type='text']:focus,
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #schedule p input[type='text']:focus {
   outline: none;
 }
-.erp-single-customer .erp-customer-feeds .activity-form .nav-content #email p.email-subject input::-webkit-input-placeholder {
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #email p input[type='text']::-webkit-input-placeholder,
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #schedule p input[type='text']::-webkit-input-placeholder {
   font-style: italic;
   font-weight: normal;
 }
-.erp-single-customer .erp-customer-feeds .activity-form .nav-content #email p.email-subject input:-moz-placeholder {
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #email p input[type='text']:-moz-placeholder,
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #schedule p input[type='text']:-moz-placeholder {
   font-style: italic;
   font-weight: normal;
 }
-.erp-single-customer .erp-customer-feeds .activity-form .nav-content #email p.email-subject input::-moz-placeholder {
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #email p input[type='text']::-moz-placeholder,
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #schedule p input[type='text']::-moz-placeholder {
   font-style: italic;
   font-weight: normal;
 }
-.erp-single-customer .erp-customer-feeds .activity-form .nav-content #email p.email-subject input:-ms-input-placeholder {
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #email p input[type='text']:-ms-input-placeholder,
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #schedule p input[type='text']:-ms-input-placeholder {
   font-style: italic;
   font-weight: normal;
 }
@@ -347,6 +357,71 @@
   margin: 0px;
   border-bottom: 1px solid #eee;
   padding: 8px 0px;
+}
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #schedule .submit-action {
+  border-top: none;
+}
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #schedule p {
+  font-weight: normal;
+}
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #schedule p span.select2-selection--multiple {
+  border: none;
+  height: 32px;
+}
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #schedule p span.select2-selection--multiple input {
+  width: 100% !important;
+}
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #schedule .schedule-datetime {
+  border-bottom: 1px solid #eee;
+}
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #schedule .schedule-datetime p {
+  border-bottom: none;
+  width: 40%;
+  padding-left: 5px;
+}
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #schedule .schedule-datetime p.schedule-end {
+  border-left: 1px solid #eee;
+  padding-left: 20px;
+}
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #schedule .schedule-datetime p.schedule-all-day {
+  width: 16%;
+  padding: 12px 20px;
+  border-left: 1px solid #eee;
+}
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #schedule .schedule-datetime input.start-time,
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #schedule .schedule-datetime input.start-date {
+  width: 33%;
+}
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #schedule .schedule-notification {
+  border-bottom: 1px solid #eee;
+}
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #schedule .schedule-notification p {
+  border: none;
+  width: 40%;
+  padding-left: 5px;
+}
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #schedule .schedule-notification p label {
+  width: 27%;
+}
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #schedule .schedule-notification p.schedule-notification-via {
+  width: 50%;
+  border-right: 1px solid #eee;
+}
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #schedule .schedule-notification p.schedule-notification-before {
+  padding-left: 20px;
+  width: 50%;
+}
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #schedule .schedule-notification p.schedule-notification-before select {
+  margin-top: -2px;
+}
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #schedule .schedule-notification p.schedule-type {
+  width: 50%;
+  border-right: 1px solid #eee;
+  padding-left: 5px;
+}
+.erp-single-customer .erp-customer-feeds .activity-form .nav-content #schedule .schedule-notification p.schedule-notification-allow {
+  width: 50%;
+  padding: 13px 20px;
 }
 .erp-single-customer .erp-customer-feeds .activity-content {
   margin: 30px 0px;

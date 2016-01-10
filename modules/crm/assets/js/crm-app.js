@@ -61,7 +61,7 @@ Vue.filter('formatFeedHeader', function ( feed ) {
 
         case 'log_activity':
             var logType = ( feed.log_type == 'sms' || feed.log_type == 'email' ) ? 'an ' + feed.log_type : 'a ' + feed.log_type;
-            header = '<span class="timeline-feed-avatar"><img src="'+ feed.created_by.avatar + '"></span><span class="timeline-feed-header-text"><strong>' + createdName + '</strong> logged ' + logType + ' on ' +  this.$options.filters.formatDate( feed.log_date, 'F, j' ) + ' @ ' +  this.$options.filters.formatAMPM(  feed.log_date + ' ' + feed.log_time ) + ' for <strong>' + createdFor + '</strong></span>';
+            header = '<span class="timeline-feed-avatar"><img src="'+ feed.created_by.avatar + '"></span><span class="timeline-feed-header-text"><strong>' + createdName + '</strong> logged ' + logType + ' on ' +  this.$options.filters.formatDate( feed.log_date, 'F, j' ) + ' @ ' + feed.log_time + ' for <strong>' + createdFor + '</strong></span>';
             // header = '<span class="timeline-feed-avatar"><img src="'+ feed.created_by.avatar + '"></span><span class="timeline-feed-header-text"><strong>' + createdName + '</strong> created a log for <strong>' + createdFor + '</strong></span>';
             break;
     }
@@ -111,6 +111,42 @@ Vue.directive( 'datepicker', {
     }
 });
 
+// Vue directive for Date picker
+Vue.directive( 'timepicker', {
+    bind: function () {
+        var vm = this.vm;
+        var key = this.expression;
+
+        jQuery(this.el).timepicker({
+            'scrollDefault': 'now',
+            'step': 15
+        });
+    },
+
+    update: function (val) {
+        jQuery(this.el).timepicker('setTime', val);
+    }
+});
+
+
+Vue.directive('selecttwo', {
+    bind: function () {
+        var vm = this.vm;
+        var key = this.expression;
+
+        var select = jQuery(this.el);
+
+        var options = [];
+
+        select.on('change', function () {
+            vm.$set( key, select.val() );
+        });
+
+        select.select2({
+            width : 'resolve',
+        });
+    }
+});
 
 /**
  * Main Vue instance
@@ -125,19 +161,22 @@ var vm = new Vue({
     el: '#erp-customer-feeds',
 
     data: {
-        tabShow: 'new_note',
+        tabShow: 'schedule',//'new_note',
         feeds: {},
         validation: {},
         feedData : { 'message' : '' },
         isValid: false,
         customer_id : null,
         dt: '',
-        showFooter: false
+        tp: '',
+        showFooter: false,
+        inviteContact: ''
     },
 
     compiled: function() {
         this.fetchFeeds()
         this.dt = this.currentDate()
+        this.tp = this.currentTime()
     },
 
     methods: {
@@ -161,6 +200,11 @@ var vm = new Vue({
                         changeMonth: true,
                         changeYear: true,
                         yearRange: '-100:+0',
+                    });
+
+                    jQuery( '.erp-time-field' ).timepicker({
+                        'scrollDefault': 'now',
+                        'step': 15
                     });
 
                     jQuery( 'select[data-selected]', modal ).each(function() {
@@ -189,6 +233,18 @@ var vm = new Vue({
                     });
                 }
             });
+        },
+
+        currentTime: function() {
+            date = new Date();
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            var ampm = hours >= 12 ? 'pm' : 'am';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // the hour '0' should be '12'
+            minutes = minutes < 10 ? '0'+minutes : minutes;
+            var strTime = hours + ':' + minutes + ' ' + ampm;
+            return strTime;
         },
 
         currentDate : function() {
@@ -226,7 +282,6 @@ var vm = new Vue({
                     };
                 });
             };
-
         },
 
         /**
@@ -241,12 +296,14 @@ var vm = new Vue({
 
             if ( this.feedData.type == 'log_activity' ) {
                 this.feedData.log_date = this.dt;
+                this.feedData.log_time = this.tp;
             };
 
             jQuery.post( wpCRMvue.ajaxurl, this.feedData, function( resp ) {
                 vm.feeds.splice( 0, 0, resp.data );
                 document.getElementById("erp-crm-activity-feed-form").reset();
                 vm.feedData.dt = this.dt;
+                vm.feedData.tp = this.tp;
                 vm.progreassDone();
             });
         },
@@ -331,7 +388,23 @@ var vm = new Vue({
                     message : !!this.feedData.message,
                     log_type : !!this.feedData.log_type,
                     log_date : !!this.dt,
-                    log_time : !!this.feedData.log_time,
+                    log_time : !!this.tp,
+                }
+            }
+
+
+            if ( this.feedData.type == 'schedule' ) {
+                return {
+                    message : !!this.feedData.message,
+                    scheduleTitle : !!this.feedData.scheduleTitle,
+                    startDate : !!this.dtStart,
+                    startTime : ( ! this.feedData.allday ) ? !!this.tpStart : true,
+                    endDate : !!this.dtEnd,
+                    endTime : ( ! this.feedData.allday ) ? !!this.tpEnd : true,
+                    scheduleType : !!this.feedData.scheduleType,
+                    notificationVia: ( this.feedData.allowNotification ) ? !!this.feedData.notificationVia : true,
+                    notificationTimeInterval: ( this.feedData.allowNotification ) ? !!this.feedData.notificationTimeInterval : true,
+                    notificationTime: ( this.feedData.allowNotification ) ? !!this.feedData.notificationTime : true,
                 }
             }
 

@@ -261,7 +261,8 @@
                     border-top:1px solid #eee;
                 }
 
-                #email {
+                #email,
+                #schedule {
                     p {
                         margin: 0px;
                         border-bottom: 1px solid #eee;
@@ -279,32 +280,31 @@
                             display: inline-block;
                         }
 
-                        &.email-subject {
-                            input {
-                                border:none;
-                                box-shadow: none;
-                                transition:none;
+                        input[type='text'] {
+                            border:none;
+                            box-shadow: none;
+                            transition:none;
+                            width: 80%;
 
-                                &:focus {
-                                    outline:none;
-                                }
+                            &:focus {
+                                outline:none;
+                            }
 
-                                &::-webkit-input-placeholder {
-                                   font-style: italic;
-                                   font-weight: normal;
-                                }
-                                &:-moz-placeholder {
-                                   font-style: italic;
-                                   font-weight: normal;
-                                }
-                                &::-moz-placeholder {
-                                   font-style: italic;
-                                   font-weight: normal;
-                                }
-                                &:-ms-input-placeholder {
-                                   font-style: italic;
-                                   font-weight: normal;
-                                }
+                            &::-webkit-input-placeholder {
+                               font-style: italic;
+                               font-weight: normal;
+                            }
+                            &:-moz-placeholder {
+                               font-style: italic;
+                               font-weight: normal;
+                            }
+                            &::-moz-placeholder {
+                               font-style: italic;
+                               font-weight: normal;
+                            }
+                            &:-ms-input-placeholder {
+                               font-style: italic;
+                               font-weight: normal;
                             }
                         }
                     }
@@ -315,6 +315,89 @@
                         margin: 0px;
                         border-bottom: 1px solid #eee;
                         padding: 8px 0px;
+                    }
+                }
+
+                #schedule {
+                    .submit-action {
+                        border-top:none;
+                    }
+
+                    p {
+                        font-weight: normal;
+
+                        span.select2-selection--multiple {
+                            border:none;
+                            height: 32px;
+
+                            input {
+                                width: 100% !important;
+                            }
+                        }
+                    }
+
+                    .schedule-datetime {
+                        border-bottom: 1px solid #eee;
+
+                        p {
+                            border-bottom: none;
+                            width: 40%;
+                            padding-left: 5px;
+
+                            &.schedule-end {
+                                border-left: 1px solid #eee;
+                                padding-left: 20px;
+                            }
+
+                            &.schedule-all-day {
+                                width: 16%;
+                                padding: 12px 20px;
+                                border-left: 1px solid #eee;
+                            }
+                        }
+
+                        input.start-time,
+                        input.start-date {
+                            width: 33%;
+                        }
+                    }
+
+                    .schedule-notification {
+                        border-bottom: 1px solid #eee;
+                        p {
+                            border: none;
+                            width: 40%;
+                            padding-left: 5px;
+
+                            label {
+                                width: 27%;
+                            }
+
+                            &.schedule-notification-via {
+                                width: 50%;
+                                border-right: 1px solid #eee;
+                            }
+
+                            &.schedule-notification-before {
+                                padding-left: 20px;
+                                width: 50%;
+
+                                select {
+                                    margin-top: -2px;
+                                }
+                            }
+
+                            &.schedule-type {
+                                width:50%;
+                                border-right: 1px solid #eee;
+                                padding-left: 5px;
+                            }
+
+                            &.schedule-notification-allow {
+                                width: 50%;
+                                padding: 13px 20px;
+                            }
+                        }
                     }
                 }
             }
