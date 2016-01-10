@@ -257,7 +257,11 @@ class Leave_Holiday_List_Table extends WP_List_Table {
 ?>
 
 <div class="wrap erp-hr-holiday-wrap">
-    <h2><?php _e( 'Holiday', 'wp-erp' ); ?> <a href="#" id="erp-hr-new-holiday" class="add-new-h2"><?php _e( 'Add New', 'wp-erp' ); ?></a><a href="#import-ical" id="erp-hr-import-ical" class="add-new-h2"><?php _e( 'Import ICal', 'wp-erp' ); ?></a></h2>
+    <h2>
+        <?php _e( 'Holiday', 'wp-erp' ); ?>
+        <a href="#" id="erp-hr-new-holiday" class="add-new-h2"><?php _e( 'Add New', 'wp-erp' ); ?></a>
+        <a href="#import-ical" id="erp-hr-import-ical" class="add-new-h2"><?php _e( 'Import iCal', 'wp-erp' ); ?></a>
+    </h2>
 
     <div class="list-table-wrap">
         <div class="list-wrap-inner">
