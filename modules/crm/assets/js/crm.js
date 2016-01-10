@@ -36,6 +36,18 @@
         },
 
         /**
+         * Timepicker initialize
+         *
+         * @return {[void]}
+         */
+        initTimePicker: function() {
+            $( '.erp-time-field' ).timepicker({
+                'scrollDefault': 'now',
+                'step': 15
+            });
+        },
+
+        /**
          * Handle postbox toggle effect
          *
          * @param  {object} e

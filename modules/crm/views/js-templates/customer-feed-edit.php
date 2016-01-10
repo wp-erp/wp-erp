@@ -15,7 +15,8 @@
                 <option value="sms"><?php _e( 'Log an SMS', 'wp-erp' ) ?></option>
             </select>
 
-            <input class="erp-right" type="time" name="log_time" value="{{ data.log_time }}">
+            <!-- <input class="erp-right" type="time" name="log_time" value="{{ data.log_time }}"> -->
+            <input class="erp-right erp-time-field" type="text" placeholder="12.00pm" value="{{ data.log_time }}" size="10" name="log_time">
             <input class="erp-right erp-date-field" name="log_date" type="text" value="{{ data.log_date }}" placeholder="yy-mm-dd">
             <span class="clearfix"></span>
         </p>

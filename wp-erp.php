@@ -241,6 +241,13 @@ final class WeDevs_ERP {
         //jQuery full calendar style
         wp_register_style( 'erp-admin-calendar', WPERP_ASSETS . '/css/fullcalendar' . $suffix . '.css' );
 
+        //jQuery timepicker script
+        wp_register_script( 'erp-admin-timepicker', WPERP_ASSETS . '/js/jquery.timepicker.min.js', array( 'jquery', 'erp-admin-calendar-moment' ), false, true );
+
+        //jQuery timepicker style
+        wp_register_style( 'erp-admin-timepicker', WPERP_ASSETS . '/css/jquery.timepicker.css' );
+
+
         // Register Vuejs script
         wp_register_script( 'erp-vuejs', WPERP_ASSETS . '/js/vue'. $suffix .'.js', array( 'jquery' ), false, true );
 
