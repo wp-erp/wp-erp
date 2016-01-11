@@ -450,9 +450,10 @@ class WeDevs_ERP_Installer {
                 `message` longtext,
                 `email_subject` text,
                 `log_type` varchar(255) DEFAULT NULL,
-                `log_time` varchar(255) DEFAULT NULL,
-                `log_date` varchar(255) DEFAULT NULL,
+                `start_date` datetime DEFAULT NULL,
+                `end_date` datetime DEFAULT NULL,
                 `created_by` int(11) DEFAULT NULL,
+                `extra` longtext,
                 `created_at` datetime DEFAULT NULL,
                 `updated_at` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`)
