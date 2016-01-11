@@ -505,12 +505,14 @@
   line-height: 1.1;
 }
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-header > span.timeline-feed-header-text {
-  display: inline-block;
-  position: relative;
-  top: -5px;
+  display: block;
 }
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-header > span.timeline-feed-header-text strong {
   color: #0073aa;
+}
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-header > .timeline-feed-avatar {
+  display: block;
+  float: left;
 }
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-header > .timeline-feed-avatar img {
   width: 17px;

@@ -100,6 +100,29 @@ function erp_crm_get_life_statges_dropdown( $label = [], $selected = '' ) {
 }
 
 /**
+ * Get Contact dropdown with WP Users
+ *
+ * @since 1.0
+ *
+ * @return string  the dropdown
+ */
+function erp_crm_get_contact_dropdown( $selected = '' ) {
+
+    $dropdown     = '';
+
+    // if ( $contacts ) {
+    //     foreach ( $contacts as $key => $contact ) {
+    //         $
+
+    //         $dropdown .= sprintf( "<option value='%s'%s>%s</option>\n", $key, selected( $selected, $key, false ), $contact->first );
+    //     }
+    // }
+
+    return $dropdown;
+}
+
+
+/**
  * Delete Customer data
  *
  * @since 1.0
@@ -433,8 +456,9 @@ function erp_crm_get_customer_activity( $customer_id = null ) {
                ->toArray();
 
     foreach ( $results as $key => $value ) {
-        $value['created_by']['avatar'] = get_avatar_url( $value['created_by']['ID'] );
-        $value['created_date'] = date( 'Y-m-d', strtotime( $value['created_at'] ) );
+        $value['extra']                 = json_decode( base64_decode( $value['extra'] ) );
+        $value['created_by']['avatar']  = get_avatar_url( $value['created_by']['ID'] );
+        $value['created_date']          = date( 'Y-m-d', strtotime( $value['created_at'] ) );
         $value['created_timeline_date'] = date( 'Y-m', strtotime( $value['created_at'] ) );
         $feeds[] = $value;
     }
@@ -470,6 +494,7 @@ function erp_crm_save_customer_feed_data( $data ) {
                 ->find( $saved_activity_id )
                 ->toArray();
 
+    $activity['extra'] = json_decode( base64_decode( $activity['extra'] ) );
     $activity['created_by']['avatar'] = get_avatar_url( $activity['created_by']['ID'] );
     $activity['created_date'] = date( 'Y-m-d', strtotime( $activity['created_at'] ) );
     $activity['created_timeline_date'] = date( 'Y-m', strtotime( $activity['created_at'] ) );

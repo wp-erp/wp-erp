@@ -33,7 +33,6 @@ function erp_get_peoples( $args = [] ) {
         'trashed'    => false,
         'meta_query' => [],
         'count'      => false
-
     ];
 
     $args      = wp_parse_args( $args, $defaults );

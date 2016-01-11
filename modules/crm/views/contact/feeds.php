@@ -71,13 +71,13 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                         <select name="log_type" v-model="feedData.log_type" id="log-type" class="erp-left">
                             <option value=""><?php _e( '-- Select type --', 'wp-erp' ) ?></option>
                             <option value="call"><?php _e( 'Log a Call', 'wp-erp' ) ?></option>
-                            <option value="mee  ting"><?php _e( 'Log a Meeting', 'wp-erp' ) ?></option>
+                            <option value="meeting"><?php _e( 'Log a Meeting', 'wp-erp' ) ?></option>
                             <option value="email"><?php _e( 'Log an Email', 'wp-erp' ) ?></option>
                             <option value="sms"><?php _e( 'Log an SMS', 'wp-erp' ) ?></option>
                         </select>
 
                         <input class="erp-right" v-model="tp" type="text" v-timepicker="tp" placeholder="12.00pm" size="10">
-                        <input class="erp-right" v-model="dt" type="text" v-datepicker="dt" placeholder="yy-mm-dd">
+                        <input class="erp-right" v-model="dt" type="text" v-datepicker="dt" datedisable="upcomming" placeholder="yy-mm-dd">
                         <span class="clearfix"></span>
                     </p>
 
@@ -103,7 +103,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                 <div id="schedule" v-if="tabShow == 'schedule'">
 
                     <p class="schedule-title">
-                        <input type="text" name="schedule-title" v-model="feedData.scheduleTitle" placeholder="<?php _e( 'Enter Schedule Title', 'wp-erp' ); ?>">
+                        <input type="text" name="schedule-title" v-model="feedData.schedule_title" placeholder="<?php _e( 'Enter Schedule Title', 'wp-erp' ); ?>">
                     </p>
 
                     <div class="schedule-datetime">
@@ -111,8 +111,8 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                             <label><?php _e( 'Start', 'wp-erp' ); ?></label>
                             <span class="sep">:</span>
                             <span class="value">
-                                <input class="start-date" v-model="dtStart" type="text" v-datepicker="dtStart" placeholder="yy-mm-dd"><span v-show="!feedData.allday">@</span>
-                                <input class="start-time" v-model="tpStart" type="text" v-timepicker="tpStart" placeholder="12.00pm" size="10" v-show="!feedData.allday">
+                                <input class="start-date" v-model="dtStart" type="text" v-datepicker="dtStart" datedisable="previous" placeholder="yy-mm-dd"><span v-show="!feedData.all_day">@</span>
+                                <input class="start-time" v-model="tpStart" type="text" v-timepicker="tpStart" placeholder="12.00pm" size="10" v-show="!feedData.all_day">
                             </span>
                         </p>
 
@@ -120,13 +120,13 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                             <label><?php _e( 'End', 'wp-erp' ); ?></label>
                             <span class="sep">:</span>
                             <span class="value">
-                                <input class="start-date" v-model="dtEnd" type="text" v-datepicker="dtEnd" placeholder="yy-mm-dd"><span v-show="!feedData.allday">@</span>
-                                <input class="start-time" v-model="tpEnd" type="text" v-timepicker="tpEnd" placeholder="12.00pm" size="10" v-show="!feedData.allday">
+                                <input class="start-date" v-model="dtEnd" type="text" v-datepicker="dtEnd" datedisable="previous" placeholder="yy-mm-dd"><span v-show="!feedData.all_day">@</span>
+                                <input class="start-time" v-model="tpEnd" type="text" v-timepicker="tpEnd" placeholder="12.00pm" size="10" v-show="!feedData.all_day">
                             </span>
                         </p>
 
                         <p class="erp-left schedule-all-day">
-                            <input type="checkbox" name="all_day" value="yes" v-model="feedData.allday"> <?php _e( 'All Day', 'wp-erp' ); ?>
+                            <input type="checkbox" name="all_day" value="yes" v-model="feedData.all_day"> <?php _e( 'All Day', 'wp-erp' ); ?>
                         </p>
                         <div class="clearfix"></div>
                     </div>
@@ -136,7 +136,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                     </p>
                     <div class="clearfix"></div>
                     <p>
-                        <select name="invite_contact" id="select2" v-model="feedData.inviteContact" v-selecttwo="inviteContact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="Invite a contact">
+                        <select name="invite_contact" id="erp-crm-activity-invite-contact" v-model="invite_contact" v-selecttwo="inviteContact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="Invite a contact">
                             <option value="1">Sabbir Ahmed</option>
                             <option value="2">Tareq Hasan</option>
                             <option value="3">Nizam Uddin</option>
@@ -149,8 +149,8 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                             <label><?php _e( 'Schedule Type', 'wp-erp' ) ?></label>
                             <span class="sep">:</span>
                             <span class="value">
-                                <select name="schedule_type" id="schedule_type" v-model="feedData.scheduleType">
-                                    <option value="">--Select--</option>
+                                <select name="schedule_type" id="schedule_type" v-model="feedData.schedule_type">
+                                    <option value="" selected>--Select--</option>
                                     <option value="meeting">Meeting</option>
                                     <option value="call">Call</option>
                                 </select>
@@ -158,18 +158,18 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                         </p>
 
                         <p class="erp-left schedule-notification-allow">
-                            <input type="checkbox" name="allow_notification" value="yes" v-model="feedData.allowNotification"> <?php _e( 'Allow notification', 'wp-erp' ); ?>
+                            <input type="checkbox" name="allow_notification" value="yes" v-model="feedData.allow_notification"> <?php _e( 'Allow notification', 'wp-erp' ); ?>
                         </p>
                         <div class="clearfix"></div>
                     </div>
 
-                    <div class="schedule-notification" v-show="feedData.allowNotification">
+                    <div class="schedule-notification" v-show="feedData.allow_notification">
                         <p class="erp-left schedule-notification-via">
-                            <label>Notify Via</label>
+                            <label><?php _e( 'Notify Via', 'wp-erp' ); ?></label>
                             <span class="sep">:</span>
                             <span class="value">
-                                <select name="notification_via" id="notification_via" v-model="feedData.notificationVia">
-                                    <option value="">--Select--</option>
+                                <select name="notification_via" id="notification_via" v-model="feedData.notification_via">
+                                    <option value="" selected>--Select--</option>
                                     <option value="email">Email</option>
                                     <option value="sms">SMS</option>
                                 </select>
@@ -177,12 +177,12 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                         </p>
 
                         <p class="erp-left schedule-notification-before">
-                            <label>Notify before</label>
+                            <label><?php _e( 'Notify before', 'wp-erp' ); ?></label>
                             <span class="sep">:</span>
                             <span class="value">
-                                <input type="number" name="notification_time_intervaln" v-model="feedData.notificationTimeInterval" placeholder="10" min="0" step="1" style="width:60px;">
-                                <select name="notification_time" id="notification_time" v-model="feedData.notificationTime">
-                                    <option value="">-Select-</option>
+                                <input type="text" name="notification_time_interval" v-model="feedData.notification_time_interval" placeholder="10" style="width:60px;">
+                                <select name="notification_time" id="notification_time" v-model="feedData.notification_time">
+                                    <option value="" selected>-Select-</option>
                                     <option value="minute">minute</option>
                                     <option value="hour">hour</option>
                                     <option value="day">day</option>
@@ -193,6 +193,8 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                     </div>
 
                     <div class="submit-action">
+                        <input type="hidden"  v-model="feedData.created_by" name="created_by" value="<?php echo $current_user->ID; ?>">
+                        <input type="hidden" name="user_id" v-model="feedData.user_id" value="<?php echo $customer->id; ?>" >
                         <input type="hidden" name="action" v-model="feedData.action" value="erp_customer_feeds_save_notes">
                         <input type="hidden" name="type" v-model="feedData.type" value="schedule">
                         <input type="submit" :disabled = "!isValid" class="button button-primary" name="create_schedule" value="<?php _e( 'Create Schedule', 'wp-erp' ); ?>">
@@ -203,8 +205,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
         </div>
     </div>
 
-
-    <!-- <pre>@{{ $data.feeds }}</pre> -->
+    <!-- <pre>@{{ $data.feeds[0].extra.schedule_title | json }}</pre> -->
     <div class="activity-content">
 
         <ul class="timeline" v-if = "feeds.length">

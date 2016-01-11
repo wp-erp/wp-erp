@@ -347,6 +347,8 @@ class Ajax_Handler {
 
                 $data = erp_crm_save_customer_feed_data( $save_data );
 
+                //@TODO: wp_mail() need to send mail
+
                 do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
 
                 if ( ! $data ) {
@@ -365,13 +367,50 @@ class Ajax_Handler {
                     'message'    => $postdata['message'],
                     'type'       => $postdata['type'],
                     'log_type'   => $postdata['log_type'],
-                    'log_date'   => $postdata['log_date'],
-                    'log_time'   => $postdata['log_time'],
+                    'start_date' => date( 'Y-m-d H:i:s', strtotime( $postdata['log_date'].$postdata['log_time'] ) )
                 ];
 
                 $data = erp_crm_save_customer_feed_data( $save_data );
 
                 do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
+
+                if ( ! $data ) {
+                    $this->send_error( __( 'Somthing is wrong, Please try later', 'wp-erp' ) );
+                }
+
+                $this->send_success( $data );
+
+                break;
+
+            case 'schedule':
+
+                $start_time = ( isset( $postdata['start_time'] ) ) ? $postdata['start_time'] : '00:00:00';
+                $end_time   = ( isset( $postdata['end_time'] ) ) ? $postdata['end_time'] : '00:00:00';
+
+                $extra_data = [
+                    'schedule_title'             => ( isset( $postdata['schedule_title'] ) && !empty( $postdata['schedule_title'] ) ) ? $postdata['schedule_title'] : '',
+                    'all_day'                    => isset( $postdata['all_day'] ) ? $postdata['all_day'] : false,
+                    'allow_notification'         => isset( $postdata['allow_notification'] ) ? $postdata['allow_notification'] : false,
+                    'notification_via'           => isset( $postdata['notification_via'] ) ? $postdata['notification_via'] : '',
+                    'notification_time'          => isset( $postdata['notification_time'] ) ? $postdata['notification_time'] : '',
+                    'notification_time_interval' => isset( $postdata['notification_time_interval'] ) ? $postdata['notification_time_interval'] : '',
+                    'invite_contact'             => isset( $postdata['invite_contact'] ) ? $postdata['invite_contact'] : []
+                ];
+
+                $save_data = [
+                    'user_id'    => $postdata['user_id'],
+                    'created_by' => $postdata['created_by'],
+                    'message'    => $postdata['message'],
+                    'type'       => 'log_activity',
+                    'log_type'   => ( isset( $postdata['schedule_type'] ) && !empty( $postdata['schedule_type'] ) ) ?  $postdata['schedule_type'] : '',
+                    'start_date' => date( 'Y-m-d H:i:s', strtotime( $postdata['start_date'].$start_time ) ),
+                    'end_date'   => date( 'Y-m-d H:i:s', strtotime( $postdata['end_date'].$end_time ) ),
+                    'extra'      => base64_encode( json_encode( $extra_data ) )
+                ];
+
+                $data = erp_crm_save_customer_feed_data( $save_data );
+
+                do_action( 'erp_crm_save_customer_schedule_feed', $save_data, $postdata );
 
                 if ( ! $data ) {
                     $this->send_error( __( 'Somthing is wrong, Please try later', 'wp-erp' ) );
