@@ -334,6 +334,24 @@
         </ol>
     </fieldset>
 
+
+    <# if ( ! data.id ) { #>
+
+        <fieldset>
+            <ol class="form-fields">
+                <li>
+                    <?php erp_html_form_input( array(
+                        'label'       => __( 'Notification', 'wp-erp' ),
+                        'name'        => 'user_notification',
+                        'help'        => __( 'Send the employee an email about their account.', 'wp-erp' ),
+                        'type'        => 'checkbox',
+                    ) ); ?>
+                </li>
+            </ol>
+        </fieldset>
+
+    <# } #>
+
     <?php do_action( 'erp-hr-employee-form-bottom' ); ?>
 
     <input type="hidden" name="user_id" id="erp-employee-id" value="{{ data.id }}">

@@ -257,6 +257,15 @@ final class WeDevs_ERP {
         // Register Bascamp text editor js
         wp_register_script( 'erp-trix-editor', WPERP_ASSETS . '/js/trix.js', array( 'jquery' ), false, false );
 
+        // flot charts
+        wp_register_script( 'erp-flotchart', WPERP_ASSETS . '/js/jquery.flot.min.js', array( 'jquery' ), false, false );
+        wp_register_script( 'erp-flotchart-time', WPERP_ASSETS . '/js/jquery.flot.time.min.js', array( 'jquery' ), false, false );
+        wp_register_script( 'erp-flotchart-orerbars', WPERP_ASSETS . '/js/jquery.flot.orderBars.js', array( 'jquery' ), false, false );
+        wp_register_script( 'erp-flotchart-pie', WPERP_ASSETS . '/js/jquery.flot.pie.min.js', array( 'jquery' ), false, false );
+        wp_register_script( 'erp-flotchart-axislables', WPERP_ASSETS . '/js/jquery.flot.axislabels.js', array( 'jquery' ), false, false );
+        wp_register_script( 'erp-flotchart-tooltip', WPERP_ASSETS . '/js/jquery.flot.tooltip.min.js', array( 'jquery' ), false, false );
+        wp_register_script( 'erp-flotchart-resize', WPERP_ASSETS . '/js/jquery.flot.resize.min.js', array( 'jquery' ), false, false );
+
         // Enqueue scripts in globally wp-erp
         wp_enqueue_script( 'erp-select2' );
         wp_enqueue_style( 'erp-select2' );

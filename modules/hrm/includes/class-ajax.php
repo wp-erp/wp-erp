@@ -86,6 +86,7 @@ class Ajax_Handler {
         //leave holiday
         $this->action( 'wp_ajax_erp_hr_holiday_create', 'holiday_create' );
         $this->action( 'wp_ajax_erp-hr-get-holiday', 'get_holiday' );
+        $this->action( 'wp_ajax_erp-hr-import-ical', 'import_ical' );
 
         //leave entitlement
         $this->action( 'wp_ajax_erp-hr-leave-entitlement-delete', 'remove_entitlement' );
@@ -120,6 +121,68 @@ class Ajax_Handler {
         $this->verify_nonce( 'wp-erp-hr-nonce' );
         $holiday = erp_hr_get_holidays( array( 'id' => intval( $_POST['id'] ) ) );
         $this->send_success( array( 'holiday' => $holiday ) );
+    }
+
+    /**
+     * Import ICal files
+     *
+     * @since 0.1
+     *
+     * @return json
+     */
+    function import_ical() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        if ( empty( $_FILES['ics']['tmp_name'] ) ) {
+            $this->send_error( __( 'File upload error!', 'wp-erp' ) );
+        }
+
+        /*
+         * An iCal may contain events from previous and future years.
+         * We'll import only events from current year
+         */
+        $first_day_of_year = strtotime( date( 'Y-01-01 00:00:00' ) );
+        $last_day_of_year = strtotime( date( 'Y-12-31 23:59:59' ) );
+
+
+        /*
+         * We'll ignore duplicate entries with the same title and
+         * start date in the foreach loop when inserting an entry
+         */
+        $holiday_model = new \WeDevs\ERP\HRM\Models\Leave_Holiday();
+
+        // create the ical parser object
+        $ical = new \ICal( $_FILES['ics']['tmp_name'] );
+        $events = $ical->events();
+
+        foreach ($events as $event) {
+            $start = strtotime( $event['DTSTART'] );
+            $end = strtotime( $event['DTEND'] );
+
+            if ( ( $start >= $first_day_of_year ) && ( $end <= $last_day_of_year ) ) {
+                $title = sanitize_text_field( $event['SUMMARY'] );
+                $start = date( 'Y-m-d H:i:s', $start );
+                $end = date( 'Y-m-d H:i:s', $end );
+                $description = ( ! empty( $event['DESCRIPTION'] ) ) ? $event['DESCRIPTION'] : $event['SUMMARY'];
+
+                // check for duplicate entries
+                $holiday = $holiday_model->where( 'title', '=', $title )
+                                         ->where( 'start', '=', $start );
+
+                // insert only unique one
+                if ( ! $holiday->count() ) {
+                    erp_hr_leave_insert_holiday( array(
+                        'id'          => 0,
+                        'title'       => $title,
+                        'start'       => $start,
+                        'end'         => $end,
+                        'description' => sanitize_text_field( $description ),
+                    ) );
+                }
+            }
+        }
+
+        $this->send_success();
     }
 
     /**
@@ -353,6 +416,10 @@ class Ajax_Handler {
         $data['work']['joined'] = $employee->get_joined_date();
         $data['work']['type']   = $employee->get_type();
         $data['url']            = $employee->get_details_url();
+
+        if ( isset( $posted['user_notification'] ) && $posted['user_notification'] == 'on' ) {
+            wp_send_new_user_notifications( $employee_id );
+        }
 
         $this->send_success( $data );
     }

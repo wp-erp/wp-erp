@@ -70,7 +70,7 @@
 }
 .erp-customer-form .photo-container {
   display: inline-block;
-  width: 70%;
+  width: 128px;
   position: relative;
 }
 .erp-customer-form .photo-container img {
@@ -115,7 +115,7 @@
   width: 100%;
   padding-bottom: 5px;
 }
-.erp-customer-form ol.form-fields > li label {
+.erp-customer-form ol.form-fields > li > label {
   width: 15%;
   display: inline-block;
   vertical-align: top;
@@ -158,6 +158,7 @@
 }
 .erp-customer-form fieldset {
   margin-bottom: 20px;
+  padding-top: 15px;
   border-top: 1px solid #eee;
 }
 .erp-customer-form fieldset.no-border {
@@ -654,7 +655,7 @@ span.green {
 }
 .erp-employee-form .photo-container {
   display: inline-block;
-  width: 70%;
+  width: 128px;
   position: relative;
 }
 .erp-employee-form .photo-container img {
@@ -699,7 +700,7 @@ span.green {
   width: 100%;
   padding-bottom: 5px;
 }
-.erp-employee-form ol.form-fields > li label {
+.erp-employee-form ol.form-fields > li > label {
   width: 15%;
   display: inline-block;
   vertical-align: top;
@@ -742,6 +743,7 @@ span.green {
 }
 .erp-employee-form fieldset {
   margin-bottom: 20px;
+  padding-top: 15px;
   border-top: 1px solid #eee;
 }
 .erp-employee-form fieldset.no-border {
