@@ -100,29 +100,6 @@ function erp_crm_get_life_statges_dropdown( $label = [], $selected = '' ) {
 }
 
 /**
- * Get Contact dropdown with WP Users
- *
- * @since 1.0
- *
- * @return string  the dropdown
- */
-function erp_crm_get_contact_dropdown( $selected = '' ) {
-
-    $dropdown     = '';
-
-    // if ( $contacts ) {
-    //     foreach ( $contacts as $key => $contact ) {
-    //         $
-
-    //         $dropdown .= sprintf( "<option value='%s'%s>%s</option>\n", $key, selected( $selected, $key, false ), $contact->first );
-    //     }
-    // }
-
-    return $dropdown;
-}
-
-
-/**
  * Delete Customer data
  *
  * @since 1.0

@@ -155,7 +155,7 @@ Vue.directive( 'timepicker', {
     }
 });
 
-
+// Select2 Direcetive
 Vue.directive('selecttwo', {
     bind: function () {
         var vm = this.vm;
@@ -209,6 +209,13 @@ var vm = new Vue({
             jQuery( e.target ).closest('li').find('.timeline-footer').toggle();
         },
 
+        /**
+         * Eidt customer activity feed
+         *
+         * @param  {[object]} feed
+         *
+         * @return {[object]}
+         */
         editFeed: function( feed ) {
 
             jQuery.erpPopup({
@@ -259,6 +266,11 @@ var vm = new Vue({
             });
         },
 
+        /**
+         * Set TimePicker current time
+         *
+         * @return {[string]} [time string]
+         */
         currentTime: function() {
             date = new Date();
             var hours = date.getHours();
@@ -271,6 +283,11 @@ var vm = new Vue({
             return strTime;
         },
 
+        /**
+         * Set Datepicker current date
+         *
+         * @return {[string]} [date string]
+         */
         currentDate : function() {
             var today = new Date();
             var dd = today.getDate();
@@ -289,7 +306,13 @@ var vm = new Vue({
             return today;
         },
 
-
+        /**
+         * Delete Activity feed
+         *
+         * @param  {[object]} feed
+         *
+         * @return {[void | alert]}
+         */
         deleteFeed: function( feed ) {
             var data = {
                 action : 'erp_crm_delete_customer_activity',
@@ -414,12 +437,6 @@ var vm = new Vue({
     },
 
     computed: {
-
-        /**
-         * Set Datepicker current date
-         *
-         * @return {[string]} [date string]
-         */
 
         /**
          * Apply feed form validation

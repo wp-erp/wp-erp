@@ -150,9 +150,9 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                             <span class="sep">:</span>
                             <span class="value">
                                 <select name="schedule_type" id="schedule_type" v-model="feedData.schedule_type">
-                                    <option value="" selected>--Select--</option>
-                                    <option value="meeting">Meeting</option>
-                                    <option value="call">Call</option>
+                                    <option value="" selected><?php _e( '--Select--', 'wp-erp' ) ?></option>
+                                    <option value="meeting"><?php _e( 'Meeting', 'wp-erp' ); ?></option>
+                                    <option value="call"><?php _e( 'Call', 'wp-erp' ); ?></option>
                                 </select>
                             </span>
                         </p>
@@ -169,9 +169,9 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                             <span class="sep">:</span>
                             <span class="value">
                                 <select name="notification_via" id="notification_via" v-model="feedData.notification_via">
-                                    <option value="" selected>--Select--</option>
-                                    <option value="email">Email</option>
-                                    <option value="sms">SMS</option>
+                                    <option value="" selected><?php _e( '--Select--', 'wp-erp' ); ?></option>
+                                    <option value="email"><?php _e( 'Email', 'wp-erp' ); ?></option>
+                                    <option value="sms"><?php _e( 'SMS', 'wp-erp' ); ?></option>
                                 </select>
                             </span>
                         </p>
@@ -182,10 +182,10 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                             <span class="value">
                                 <input type="text" name="notification_time_interval" v-model="feedData.notification_time_interval" placeholder="10" style="width:60px;">
                                 <select name="notification_time" id="notification_time" v-model="feedData.notification_time">
-                                    <option value="" selected>-Select-</option>
-                                    <option value="minute">minute</option>
-                                    <option value="hour">hour</option>
-                                    <option value="day">day</option>
+                                    <option value="" selected><?php _e( '-Select-', 'wp-erp' ); ?></option>
+                                    <option value="minute"><?php _e( 'minute', 'wp-erp' ); ?></option>
+                                    <option value="hour"><?php _e( 'hour', 'wp-erp' ); ?></option>
+                                    <option value="day"><?php _e( 'day', 'wp-erp' ); ?></option>
                                 </select>
                             </span>
                         </p>
