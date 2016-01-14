@@ -24,7 +24,8 @@ module.exports = function(grunt) {
                 files: {
                     '<%= dirs.css %>/formbuilder.css': ['<%= dirs.css %>/formbuilder.less'],
                     '<%= dirs.css %>/style.css': '<%= dirs.less %>/style.less',
-                    '<%= dirs.css %>/admin/admin.css': '<%= dirs.less %>/admin/admin.less'
+                    '<%= dirs.css %>/admin/admin.css': '<%= dirs.less %>/admin/admin.less',
+                    '<%= dirs.css %>/admin/setup.css': '<%= dirs.less %>/admin/setup.less'
                 }
             }
         },

@@ -489,7 +489,7 @@ function erp_months_dropdown( $title = false ) {
     }
 
     for ( $m = 1; $m <= 12; $m++ ) {
-        $months[$m] = date( 'M', mktime( 0, 0, 0, $m ) );
+        $months[$m] = date( 'F', mktime( 0, 0, 0, $m ) );
     }
 
     return $months;
