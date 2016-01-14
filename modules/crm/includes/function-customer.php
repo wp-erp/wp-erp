@@ -29,6 +29,21 @@ function erp_crm_get_avatar( $id, $size = 32, $user = false ) {
     return get_avatar( $id, $size );
 }
 
+function erp_crm_get_emplyees( $selected = '' ) {
+    $employees = erp_hr_get_employees_dropdown_raw( get_current_user_id() );
+    $dropdown     = '';
+    unset( $employees[0] );
+
+    if ( $employees ) {
+        foreach ( $employees as $key => $title ) {
+            $dropdown .= sprintf( "<option value='%s'%s>%s</option>\n", $key, selected( $selected, $key, false ), $title );
+        }
+    }
+
+    return $dropdown;
+}
+
+
 
 /**
  * Get CRM life statges
@@ -433,7 +448,20 @@ function erp_crm_get_customer_activity( $customer_id = null ) {
                ->toArray();
 
     foreach ( $results as $key => $value ) {
-        $value['extra']                 = json_decode( base64_decode( $value['extra'] ) );
+        $value['extra'] = json_decode( base64_decode( $value['extra'] ), true );
+
+        if ( isset( $value['extra']['invite_contact'] ) && count( $value['extra']['invite_contact'] ) > 0 ) {
+            foreach ( $value['extra']['invite_contact'] as $user_id ) {
+                $value['extra']['invited_user'][] = [
+                    'id' => $user_id,
+                    'name' => get_the_author_meta( 'display_name', $user_id )
+                ];
+            }
+        } else {
+            $value['extra']['invited_user'] = [];
+        }
+
+        unset( $value['extra']['invite_contact'] );
         $value['created_by']['avatar']  = get_avatar_url( $value['created_by']['ID'] );
         $value['created_date']          = date( 'Y-m-d', strtotime( $value['created_at'] ) );
         $value['created_timeline_date'] = date( 'Y-m', strtotime( $value['created_at'] ) );
@@ -471,7 +499,19 @@ function erp_crm_save_customer_feed_data( $data ) {
                 ->find( $saved_activity_id )
                 ->toArray();
 
-    $activity['extra'] = json_decode( base64_decode( $activity['extra'] ) );
+    $activity['extra'] = json_decode( base64_decode( $activity['extra'] ), true );
+
+    if ( isset( $value['extra']['invite_contact'] ) && count( $value['extra']['invite_contact'] ) > 0 ) {
+        foreach ( $value['extra']['invite_contact'] as $user_id ) {
+            $value['extra']['invited_user'][] = [
+                'id' => $user_id,
+                'name' => get_the_author_meta( 'display_name', $user_id )
+            ];
+        }
+
+        unset( $value['extra']['invite_contact'] );
+    }
+
     $activity['created_by']['avatar'] = get_avatar_url( $activity['created_by']['ID'] );
     $activity['created_date'] = date( 'Y-m-d', strtotime( $activity['created_at'] ) );
     $activity['created_timeline_date'] = date( 'Y-m', strtotime( $activity['created_at'] ) );

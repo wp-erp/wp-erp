@@ -33,10 +33,14 @@ class People extends Model {
      */
     public function scopeType( $query, $type ) {
 
-        if ( $type == 'all' ) {
-            return $query->where( 'type', '!=', '' );
+        if ( is_array( $type ) ) {
+            return $query->whereIn( 'type', $type );
+        } else {
+            if ( $type == 'all' ) {
+                return $query->where( 'type', '!=', '' );
+            }
+            return $query->where( 'type', '=', $type );
         }
 
-        return $query->where( 'type', '=', $type );
     }
 }

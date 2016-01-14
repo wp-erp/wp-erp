@@ -535,6 +535,10 @@
   border: 1px solid #e9eced;
   z-index: 1;
 }
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-body {
+  color: #969696;
+  line-height: 24px;
+}
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-body .timeline-email-subject {
   padding: 0px 0px 10px;
   border-bottom: 1px solid #eee;

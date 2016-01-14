@@ -1,3 +1,7 @@
+// jQuery(document).on('ready', function() {
+//     console.log( jQuery( '.erptips' ).length );
+// });
+
 // Vue Filter for Formatting Time
 Vue.filter('formatAMPM', function (date) {
     date = new Date( date );
@@ -44,37 +48,34 @@ Vue.filter('formatDate', function ( date, format ) {
     return dateStr;
 });
 
-// Vue filter for formatting Feed Header content
-Vue.filter('formatFeedHeader', function ( feed ) {
-    var header;
-    var createdName = ( feed.created_by.ID == wpCRMvue.current_user_id ) ? 'You' : feed.created_by.display_name;
-    var createdFor = ( feed.contact.type == 'company' ) ? feed.contact.company : feed.contact.first_name + ' ' + feed.contact.last_name;
-
-    switch( feed.type ) {
-        case 'new_note':
-            header = '<span class="timeline-feed-avatar"><img src="'+ feed.created_by.avatar + '"></span><span class="timeline-feed-header-text"><strong>' + createdName + '</strong> cerated a note for <strong>' + createdFor + '</strong></span>';
-            break;
-
-        case 'email':
-            header = '<span class="timeline-feed-avatar"><img src="'+ feed.created_by.avatar + '"></span><span class="timeline-feed-header-text"><strong>' + createdName + '</strong> sent a email to <strong>' + createdFor + '</strong></span>';
-            break;
-
-        case 'log_activity':
-            var logType = ( feed.log_type == 'sms' || feed.log_type == 'email' ) ? 'an ' + feed.log_type : 'a ' + feed.log_type;
-            header = '<span class="timeline-feed-avatar"><img src="'+ feed.created_by.avatar + '"></span><span class="timeline-feed-header-text"><strong>' + createdName + '</strong> logged ' + logType + ' on ' +  this.$options.filters.formatDate( feed.start_date, 'F, j' ) + ' @ ' + this.$options.filters.formatAMPM( feed.start_date ) + ' for <strong>' + createdFor + '</strong></span>';
-            // header = '<span class="timeline-feed-avatar"><img src="'+ feed.created_by.avatar + '"></span><span class="timeline-feed-header-text"><strong>' + createdName + '</strong> created a log for <strong>' + createdFor + '</strong></span>';
-            break;
-    }
-
-    return header;
-});
-
 // Vue filter for formatting Feeds message body as a group by object
 Vue.filter( 'formatFeedContent', function ( message, feed ) {
 
-    if ( feed.type == 'email') {
+    if ( feed.type == 'email' ) {
         message = '<div class="timeline-email-subject">Subject : ' + feed.email_subject + '</div>' +
                   '<div class="timeline-email-body">' + feed.message + '</div>';
+    };
+
+    if ( feed.type == 'log_activity' && this.isSchedule( feed.start_date ) ) {
+        var filters = this.$options.filters,
+            startDate = filters.formatDate( feed.start_date, 'j F' ),
+            startTime = filters.formatAMPM( feed.start_date ),
+            endDate = filters.formatDate( feed.end_date, 'j F' ),
+            endTime = filters.formatAMPM( feed.end_date );
+
+
+        if ( feed.extra.all_day == 'true' ) {
+            var datetime = startDate + ' to ' + endDate;
+        } else {
+            if ( filters.formatDate( feed.start_date, 'Y-m-d' ) == filters.formatDate( feed.end_date, 'Y-m-d' ) ) {
+                var datetime = startDate + ' at ' + startTime + ' to ' + endTime;
+            } else {
+                var datetime = startDate + ' at ' + startTime + ' to ' + endDate + ' at ' + endTime;
+            }
+        }
+
+        message = '<div class="timeline-email-subject"><i class="fa fa-bookmark"></i> &nbsp;' + feed.extra.schedule_title + '  &nbsp;|&nbsp;  <i class="fa fa-calendar-check-o"></i> &nbsp;' + datetime + '</div>' +
+            '<div class="timeline-email-body">' + feed.message + '</div>';
     };
 
     return message;
@@ -89,6 +90,12 @@ Vue.filter('formatFeeds', function ( feeds ) {
 
     return feedsData;
 });
+
+// Vue filter for formatting Feeds as a group by object
+Vue.filter('formatDateTime', function ( date ) {
+    return this.$options.filters.formatDate( date, 'F, j' ) + ' at ' + this.$options.filters.formatAMPM( date )
+});
+
 
 // Vue directive for Date picker
 Vue.directive( 'datepicker', {
@@ -155,6 +162,19 @@ Vue.directive( 'timepicker', {
     }
 });
 
+// Vue directive for Date picker
+Vue.directive( 'tiptip', {
+    bind: function () {
+        jQuery(this.el).tipTip( {
+            defaultPosition: "top",
+            fadeIn: 100,
+            fadeOut: 100,
+            content: this.el.__vue__.title
+        } );
+    }
+});
+
+
 // Select2 Direcetive
 Vue.directive('selecttwo', {
     bind: function () {
@@ -172,6 +192,93 @@ Vue.directive('selecttwo', {
         });
     }
 });
+
+
+var ToolTip = Vue.extend({
+    props: ['title', 'content' ],
+    template: '<span class="time erp-tips" v-tiptip title="{{ title }}">{{{ content }}}</span>',
+});
+
+
+var TimeLineHeader = Vue.extend({
+    props: [ 'feed' ],
+
+    template: '<span class="timeline-feed-avatar">'
+                    + '<img v-bind:src="createdUserImg">'
+                +'</span>'
+                +'<span class="timeline-feed-header-text">'
+                    +'<strong>{{createdUserName}} </strong>'
+                    +'<span v-if="isNote">created a note for <strong>{{ createdForUser }}</strong></span>'
+                    +'<span v-if="isEmail">sent an email to <strong>{{ createdForUser }}</strong></span>'
+                    +'<span v-if="isLog">'
+                        +'logged {{ logType }} on {{ logDateTime | formatDateTime }} for <strong>{{ createdForUser }}</strong>'
+                    +'</span>'
+                    +'<span v-if="isSchedule">'
+                        +'have scheduled {{ logType }} with '
+                        +'<strong>{{ createdForUser }}</strong>'
+                            +' <span v-if="countUser">and</span> <strong v-if="countUser == 1">{{ feed.extra.invited_user[0].name }}</strong>'
+                        +'<strong v-else><tooltip :content="countUser" :title="invitedUser"></tooltip></strong>'
+                    +'</span>'
+                +'</span>',
+
+    components: {
+        'tooltip' : ToolTip
+    },
+
+    computed: {
+
+        countUser: function () {
+            var count = this.feed.extra.invited_user.length;
+
+            if ( count ) {
+                return ( count <= 1 ) ? count : count + ' others';
+            };
+        },
+
+        invitedUser: function() {
+            return this.feed.extra.invited_user.map( function( elm ) { return elm.name } ).join("<br>");
+        },
+
+        isNote: function() {
+            return ( this.feed.type == 'new_note' );
+        },
+
+        isEmail: function() {
+            return ( this.feed.type == 'email' );
+        },
+
+        isLog: function() {
+            return ( this.feed.type == 'log_activity' ) && !( new Date() < new Date( this.feed.start_date ) );
+        },
+
+        isSchedule: function() {
+            return ( this.feed.type == 'log_activity' ) && ( new Date() < new Date( this.feed.start_date ) );
+        },
+
+        createdUserImg: function() {
+            return this.feed.created_by.avatar;
+        },
+
+        createdUserName: function() {
+            return ( this.feed.created_by.ID == wpCRMvue.current_user_id ) ? 'You' : this.feed.created_by.display_name;
+        },
+
+        createdForUser: function() {
+            return ( this.feed.contact.type == 'company' ) ? this.feed.contact.company : this.feed.contact.first_name + ' ' + this.feed.contact.last_name;
+        },
+
+        logType: function() {
+            return ( this.feed.log_type == 'sms' || this.feed.log_type == 'email' ) ? 'an ' + this.feed.log_type : 'a ' + this.feed.log_type;
+        },
+
+        logDateTime: function() {
+            return this.feed.start_date;
+        }
+    }
+});
+
+Vue.component( 'tooltip', ToolTip );
+Vue.component( 'timeline-header', TimeLineHeader );
 
 /**
  * Main Vue instance
@@ -195,6 +302,7 @@ var vm = new Vue({
         dt: '',
         tp: '',
         showFooter: false,
+        // isSchedule: true
     },
 
     compiled: function() {
@@ -434,6 +542,18 @@ var vm = new Vue({
         progreassDone: function( id ) {
             NProgress.done();
         },
+
+        /**
+         * Check is Schedule
+         *
+         * @param  {[string]} date
+         *
+         * @return {Boolean}
+         */
+        isSchedule: function( date ) {
+            return new Date() < new Date( date );
+        }
+
     },
 
     computed: {
@@ -498,10 +618,12 @@ var vm = new Vue({
                 return validation[key]
             });
         }
-    }
+    },
 });
 
 // Bind trix-editor value with v-model message
 document.addEventListener('trix-change', function (e) {
     vm.feedData.message = e.path[0].innerHTML;
 });
+
+

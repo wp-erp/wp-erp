@@ -33,6 +33,13 @@
 
             $('body').on( 'click', 'div.erp-handlediv', this.handlePostboxToggle );
 
+            $('.erp-crm-tips').tipTip( {
+                defaultPosition: "top",
+                fadeIn: 100,
+                fadeOut: 100,
+                // content: content
+            } );
+
         },
 
         /**
