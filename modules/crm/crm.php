@@ -73,6 +73,7 @@ class Customer_Relationship {
      * @return void
      */
     private function includes() {
+        require_once WPERP_HRM_PATH . '/includes/actions-filters.php';
         require_once WPERP_CRM_PATH . '/includes/function-customer.php';
         require_once WPERP_CRM_PATH . '/admin/class-menu.php';
     }
@@ -136,13 +137,15 @@ class Customer_Relationship {
 
             wp_enqueue_style( 'erp-admin-timepicker' );
             wp_enqueue_script( 'erp-admin-timepicker' );
+            wp_enqueue_style( 'erp-tiptip' );
+            wp_enqueue_script( 'erp-tiptip' );
             wp_enqueue_script( 'erp-vuejs' );
             wp_enqueue_script( 'erp-trix-editor' );
             wp_enqueue_style( 'erp-trix-editor' );
             wp_enqueue_script( 'underscore' );
             wp_enqueue_style( 'wp-erp-nprogress', WPERP_CRM_ASSETS . '/css/nprogress.css' );
             wp_enqueue_script( 'wp-erp-nprogress', WPERP_CRM_ASSETS . "/js/nprogress$suffix.js", array( 'jquery' ), date( 'Ymd' ), true );
-            wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", array( 'wp-erp-nprogress', 'wp-erp-script', 'erp-vuejs', 'underscore', 'erp-select2' ), date( 'Ymd' ), true );
+            wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", array( 'wp-erp-nprogress', 'wp-erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
             wp_enqueue_script( 'post' );
 
             $customer = new Contact();

@@ -137,9 +137,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                     <div class="clearfix"></div>
                     <p>
                         <select name="invite_contact" id="erp-crm-activity-invite-contact" v-model="invite_contact" v-selecttwo="inviteContact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="Invite a contact">
-                            <option value="1">Sabbir Ahmed</option>
-                            <option value="2">Tareq Hasan</option>
-                            <option value="3">Nizam Uddin</option>
+                            <?php echo erp_crm_get_emplyees(); ?>
                         </select>
                     </p>
 
@@ -205,7 +203,6 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
         </div>
     </div>
 
-    <!-- <pre>@{{ $data.feeds[0].extra.schedule_title | json }}</pre> -->
     <div class="activity-content">
 
         <ul class="timeline" v-if = "feeds.length">
@@ -221,12 +218,15 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                     <i v-if="feed.type == 'email'" class="fa fa-envelope-o" @click.prevent="toggleFooter"></i>
                     <i v-if="feed.type == 'new_note'" class="fa fa-file-text-o" @click.prevent="toggleFooter"></i>
                     <i v-if="feed.type == 'log_activity'" class="fa fa-list" @click.prevent="toggleFooter"></i>
+                    <i v-if=" ( feed.type == 'log_activity' && isSchedule( feed.start_date )  )" class="fa fa-calendar-check-o" @click.prevent="toggleFooter"></i>
 
                     <div class="timeline-item">
-                        <span class="time"><i class="fa fa-calendar"></i> {{ feed.created_date | formatDate 'F,j' }} @ {{ feed.created_at | formatAMPM }}</span>
+
+                        <!-- <span class="time erp-tips" title="Hello" v-tiptip="{ date: feed.created_at , type: 'datetime' }"></span> -->
+                        <tooltip content="<i class='fa fa-clock-o'></i>" :title="feed.created_at | formatDateTime"></tooltip>
 
                         <h3 class="timeline-header" @click.prevent="toggleFooter">
-                            {{{ feed | formatFeedHeader }}}
+                            <timeline-header :feed="feed"></timeline-header>
                         </h3>
 
                         <div class="timeline-body" @click.prevent="toggleFooter">

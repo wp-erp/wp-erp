@@ -32,7 +32,9 @@ function erp_get_peoples( $args = [] ) {
         'order'      => 'ASC',
         'trashed'    => false,
         'meta_query' => [],
-        'count'      => false
+        'count'      => false,
+        'include'    => [],
+        'exclude'    => []
     ];
 
     $args      = wp_parse_args( $args, $defaults );
