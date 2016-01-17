@@ -397,6 +397,14 @@ class Ajax_Handler {
                     'invite_contact'             => isset( $postdata['invite_contact'] ) ? $postdata['invite_contact'] : []
                 ];
 
+                if ( $extra_data['allow_notification'] ) {
+                    $notify_date = new \DateTime( $postdata['start_date'].$start_time );
+                    $notify_date->modify('-' . $extra_data['notification_time_interval'] . ' '. $extra_data['notification_time'] );
+                    $extra_data['notification_datetime'] = $notify_date->format( 'Y-m-d H:i:s' );
+                } else {
+                    $extra_data['notification_datetime'] = '';
+                }
+
                 $save_data = [
                     'user_id'    => $postdata['user_id'],
                     'created_by' => $postdata['created_by'],

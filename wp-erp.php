@@ -247,7 +247,6 @@ final class WeDevs_ERP {
         //jQuery timepicker style
         wp_register_style( 'erp-admin-timepicker', WPERP_ASSETS . '/css/jquery.timepicker.css' );
 
-
         // Register Vuejs script
         wp_register_script( 'erp-vuejs', WPERP_ASSETS . '/js/vue'. $suffix .'.js', array( 'jquery' ), false, true );
 

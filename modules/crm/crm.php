@@ -73,7 +73,7 @@ class Customer_Relationship {
      * @return void
      */
     private function includes() {
-        require_once WPERP_HRM_PATH . '/includes/actions-filters.php';
+        require_once WPERP_CRM_PATH . '/includes/actions-filters.php';
         require_once WPERP_CRM_PATH . '/includes/function-customer.php';
         require_once WPERP_CRM_PATH . '/admin/class-menu.php';
     }

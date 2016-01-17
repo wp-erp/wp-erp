@@ -229,10 +229,7 @@ var TimeLineHeader = Vue.extend({
 
         countUser: function () {
             var count = this.feed.extra.invited_user.length;
-
-            if ( count ) {
-                return ( count <= 1 ) ? count : count + ' others';
-            };
+            return ( count <= 1 ) ? count : count + ' others';
         },
 
         invitedUser: function() {

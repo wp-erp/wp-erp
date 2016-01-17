@@ -600,3 +600,22 @@ function erp_get_state_name( $country, $state ) {
 
     return $full_state;
 }
+
+/**
+ * Cron Intervel
+ *
+ * @since 1.0
+ *
+ * @param  array $schedules
+ *
+ * @return array
+ */
+function erp_cron_intervals( $schedules ) {
+
+    $schedules['per_minute'] = array(
+        'interval'  => 60, // Number of seconds, 60s in 1 minutes
+        'display'   => 'Every Minutes'
+    );
+
+    return (array)$schedules;
+}

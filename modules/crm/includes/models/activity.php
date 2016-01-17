@@ -22,4 +22,8 @@ class Activity extends Model {
     public function contact() {
         return $this->belongsTo( '\WeDevs\ERP\Framework\Models\People', 'user_id' );
     }
+
+    public static function scopeSchedules( $query ) {
+        return $query->where( 'start_date', '>', current_time( 'mysql' ) )->where( 'created_by', '=', get_current_user_id() );
+    }
 }

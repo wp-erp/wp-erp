@@ -9,3 +9,4 @@ add_action( 'admin_init', 'erp_process_actions' );
 
 add_filter( 'map_meta_cap', 'erp_map_meta_caps', 10, 4 );
 add_filter( 'editable_roles', 'erp_hr_filter_editable_roles' );
+add_filter( 'cron_schedules', 'erp_cron_intervals', 10, 1 );

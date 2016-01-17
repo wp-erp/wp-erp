@@ -501,15 +501,15 @@ function erp_crm_save_customer_feed_data( $data ) {
 
     $activity['extra'] = json_decode( base64_decode( $activity['extra'] ), true );
 
-    if ( isset( $value['extra']['invite_contact'] ) && count( $value['extra']['invite_contact'] ) > 0 ) {
-        foreach ( $value['extra']['invite_contact'] as $user_id ) {
-            $value['extra']['invited_user'][] = [
+    if ( isset( $activity['extra']['invite_contact'] ) && count( $activity['extra']['invite_contact'] ) > 0 ) {
+        foreach ( $activity['extra']['invite_contact'] as $user_id ) {
+            $activity['extra']['invited_user'][] = [
                 'id' => $user_id,
                 'name' => get_the_author_meta( 'display_name', $user_id )
             ];
         }
-
-        unset( $value['extra']['invite_contact'] );
+    } else {
+        $activity['extra']['invited_user'] = [];
     }
 
     $activity['created_by']['avatar'] = get_avatar_url( $activity['created_by']['ID'] );
@@ -530,4 +530,54 @@ function erp_crm_save_customer_feed_data( $data ) {
  */
 function erp_crm_customer_delete_activity_feed( $feed_id ) {
     return WeDevs\ERP\CRM\Models\Activity::find( $feed_id )->delete( $feed_id );
+}
+
+function erp_crm_customer_schedule_notification() {
+    $schedules = \WeDevs\ERP\CRM\Models\Activity::schedules()->get()->toArray();
+
+    foreach ( $schedules as $key => $activity ) {
+        $extra = json_decode( base64_decode( $activity['extra'] ), true );
+
+        if ( $extra['allow_notification'] == 'true' ) {
+            if ( current_time('mysql') == $extra['notification_datetime'] ) {
+                erp_crm_send_schedule_notification( $activity, $extra );
+            }
+        }
+    }
+}
+
+function erp_crm_send_schedule_notification( $activity, $extra = false ) {
+
+    if ( ! is_user_logged_in() ) {
+        return;
+    }
+
+    switch ( $extra['notification_via'] ) {
+        case 'email':
+            $users = [];
+
+            foreach( $extra['invite_contact'] as $contact ) {
+                $users[] = get_the_author_meta( 'user_email', $contact );
+            }
+
+            $created_user = get_the_author_meta('user_email', $activity['created_by'] );
+
+            array_push( $users, $created_user );
+
+            foreach ( $users as $key => $user ) {
+                // @TODO: Add customer body template for seding email to user
+                $body = 'You have a schedule after ' . $extra['notification_time_interval'] . $extra['notification_time'] . ' at ' . $activity['start_date'];
+                wp_mail( $user, 'ERP Schedule', $body );
+            }
+
+            break;
+
+        case 'sms':
+            // @TODO: Add SMS notification for schedule meeting
+            break;
+
+        default:
+            do_action( 'erp_crm_send_schedule_notification', $activity );
+            break;
+    }
 }

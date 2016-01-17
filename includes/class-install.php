@@ -67,6 +67,7 @@ class WeDevs_ERP_Installer {
         update_option( 'wp_erp_version', erp_get_version() );
 
         wp_schedule_event( time(), 'daily', 'erp_hr_policy_schedule' );
+        wp_schedule_event( time(), 'per_minute', 'erp_crm_notification_schedule' );
     }
 
     /**
@@ -90,6 +91,7 @@ class WeDevs_ERP_Installer {
      */
     public function deactivate() {
         wp_clear_scheduled_hook( 'erp_hr_policy_schedule' );
+        wp_clear_scheduled_hook( 'erp_crm_notification_schedule' );
     }
 
     /**
