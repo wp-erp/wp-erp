@@ -29,16 +29,31 @@ class ERP_Settings_General extends ERP_Settings_Page {
                 'type'    => 'text',
                 'desc'    => __( 'The date the company officially started.', 'wp-erp' ),
                 'class'   => 'erp-date-field',
-                'tooltip' =>  true,
+                'tooltip' => true,
             ),
 
             array(
-                'title'   => __( 'First Month of Financial Year', 'wp-erp' ),
+                'title'   => __( 'Financial Year Starts', 'wp-erp' ),
                 'id'      => 'gen_financial_month',
                 'type'    => 'select',
                 'options' => erp_months_dropdown(),
                 'desc'    => __( 'Financial and tax calculation starts from this month of every year.', 'wp-erp' ),
-                'tooltip' =>  true,
+                'tooltip' => false,
+            ),
+
+            array(
+                'title'   => __( 'Date Format', 'wp-erp' ),
+                'id'      => 'date_format',
+                'desc'    => __( 'Format of date to show accross the system.', 'wp-erp' ),
+                'tooltip' => true,
+                'type'    => 'select',
+                'options' => [
+                    'm-d-Y' => 'mm-dd-yyyy',
+                    'd-m-Y' => 'dd-mm-yyyy',
+                    'm/d/Y' => 'mm/dd/yyyy',
+                    'd/m/Y' => 'dd/mm/yyyy',
+                    'Y-m-d' => 'yyyy-mm-dd',
+                ]
             ),
 
             array(
@@ -65,7 +80,7 @@ class ERP_Settings_General extends ERP_Settings_Page {
      * @return array
      */
     public function get_section_fields( $section = '' ) {
-        
+
         $fields['checkout'] = array(
 
             array( 'title' => __( 'General Options', 'erp' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
@@ -107,10 +122,10 @@ class ERP_Settings_General extends ERP_Settings_Page {
             array( 'type' => 'sectionend', 'id' => 'script_styling_options' ),
 
         ); // End general settings
-       
+
         $section = $section === false ? $fields['checkout'] : $fields[$section];
         return apply_filters( 'erp_settings_general_section', $section );
-    } 
+    }
 
     /**
      * Get sections
@@ -124,7 +139,7 @@ class ERP_Settings_General extends ERP_Settings_Page {
             'mishu' => __( 'Mishu', 'erp' )
         );
 
-        
+
         return apply_filters( 'erp_get_sections_' . $this->id, $sections );
     }
 

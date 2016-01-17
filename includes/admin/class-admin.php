@@ -20,9 +20,26 @@ class Admin_Page {
      * @return void
      */
     public function init_actions() {
-        $this->action( 'admin_footer', 'erp_modal_markup' );
 
+        $this->action( 'init', 'includes' );
+        $this->action( 'admin_init', 'admin_redirects' );
         $this->action( 'admin_enqueue_scripts', 'admin_scripts' );
+        $this->action( 'admin_footer', 'erp_modal_markup' );
+    }
+
+    /**
+     * Include required files
+     *
+     * @return void
+     */
+    public function includes() {
+        // Setup/welcome
+        if ( ! empty( $_GET['page'] ) ) {
+
+            if ( 'erp-setup' == $_GET['page'] ) {
+                include_once dirname( __FILE__ ) . '/class-setup-wizard.php';
+            }
+        }
     }
 
     /**
@@ -75,6 +92,34 @@ class Admin_Page {
         wp_enqueue_style( 'jquery-chosen', WPERP_ASSETS . "/vendor/chosen/chosen$suffix.css" );
 
         wp_enqueue_style( 'wp-erp-styles', WPERP_ASSETS . '/css/admin/admin.css', false, date( 'Ymd' ) );
+    }
+
+    /**
+     * Handle redirects to setup/welcome page after install and updates.
+     *
+     * @return void
+     */
+    public function admin_redirects() {
+        if ( ! get_transient( '_erp_activation_redirect' ) ) {
+            return;
+        }
+
+        delete_transient( '_erp_activation_redirect' );
+
+        if ( ( ! empty( $_GET['page'] ) && in_array( $_GET['page'], array( 'erp-setup', 'erp-welcome' ) ) ) || is_network_admin() || isset( $_GET['activate-multi'] ) || ! current_user_can( 'manage_options' ) ) {
+            return;
+        }
+
+        // If it's the first time
+        if ( get_option( 'erp_setup_wizard_ran' ) != '1' ) {
+            wp_safe_redirect( admin_url( 'index.php?page=erp-setup' ) );
+            exit;
+
+            // Otherwise, the welcome page
+        } else {
+            wp_safe_redirect( admin_url( 'index.php?page=erp-welcome' ) );
+            exit;
+        }
     }
 
     /**

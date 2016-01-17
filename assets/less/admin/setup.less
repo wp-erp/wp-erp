@@ -1,0 +1,252 @@
+body {
+    margin: 60px auto 24px;
+    box-shadow: none;
+    background: #f1f1f1;
+    padding: 0;
+}
+
+.erp-logo {
+    text-align: center;
+
+    a {
+        text-decoration: none;
+    }
+}
+
+.erp-setup-content {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.13);
+    padding: 24px 24px 0;
+    background: #fff;
+    overflow: hidden;
+    zoom: 1;
+
+    h1, h2, h3, table {
+        margin: 0 0 24px;
+        border: 0;
+        padding: 0;
+        color: #666;
+        clear: none;
+    }
+    p {
+        margin: 0 0 24px;
+        font-size: 1em;
+        line-height: 1.75em;
+        color: #666;
+    }
+
+    ul.unstyled {
+        list-style: none;
+        margin: 0 0 20px 0;
+
+        li {
+            padding-bottom: 10px;
+        }
+
+        li.add-new {
+            padding-top: 15px;
+        }
+    }
+
+    table {
+        font-size: 1em;
+        line-height: 1.75em;
+        color: #666;
+    }
+
+    a {
+        color: #a16696;
+        &:hover, &:focus {
+            color: #111;
+        }
+    }
+
+    .form-table {
+        th {
+            width: 35%;
+            vertical-align: top;
+            font-weight: normal;
+        }
+
+        td {
+            vertical-align: top;
+
+            select, input {
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            select {
+                border: 1px solid #ccc;
+                padding: 5px 10px;
+                vertical-align: middle;
+                line-height: 28px;
+                height: 28px;
+                font-size: 14px;
+            }
+
+            input[size] {
+                width: auto;
+            }
+
+            .description {
+                line-height: 1.5em;
+                display: block;
+                margin-top: .25em;
+                color: #999;
+                font-style: italic;
+            }
+
+            .input-checkbox, .input-radio {
+                width: auto;
+                box-sizing: inherit;
+                padding: inherit;
+                margin: 0 .5em 0 0;
+                box-shadow: none;
+            }
+        }
+        .section_title {
+            td {
+                padding: 0;
+                h2, p {
+                    margin: 12px 0 0;
+                }
+            }
+        }
+        th, td {
+            padding: 12px 0;
+            margin: 0;
+            border: 0;
+            &:first-child {
+                padding-right: 1em;
+            }
+        }
+    }
+
+    .final-step {
+        text-align: center;
+
+        h1 {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            float: left;
+            width: 50%;
+            text-align: right;
+            margin-right: 20px;
+        }
+
+        a {
+            float: left;
+        }
+    }
+
+    .two-col {
+        overflow: hidden;
+        margin: 0 0 24px;
+
+        &::after {
+            content: '';
+            clear: both;
+        }
+
+        .col-first,
+        .col-last {
+            width: 50%;
+            box-sizing: border-box;
+            float: left;
+        }
+    }
+
+    .erp-setup-next-steps {
+        overflow: hidden;
+        margin: 0 0 24px;
+
+        h2 {
+            margin-bottom: 12px;
+        }
+    }
+
+    .erp-setup-actions {
+        overflow: hidden;
+
+        .button {
+            float: right;
+            font-size: 1.25em;
+            padding: .5em 1em;
+            line-height: 1em;
+            margin-right: .5em;
+            height: auto;
+        }
+
+        .button-primary {
+            float: right;
+        }
+    }
+}
+
+.erp-setup-steps {
+    padding: 0 0 24px;
+    margin: 0;
+    list-style: none outside;
+    overflow: hidden;
+    color: #ccc;
+    width:100%;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+
+    li {
+        width: 20%;
+        float: left;
+        padding: 0 0 0.8em;
+        margin: 0;
+        text-align: center;
+        position: relative;
+        border-bottom: 4px solid #ccc;
+        line-height: 1.4em;
+    }
+
+    li:before {
+        content: "";
+        border: 4px solid #ccc;
+        border-radius: 100%;
+        width: 4px;
+        height: 4px;
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        margin-left: -6px;
+        margin-bottom: -8px;
+        background: #fff;
+    }
+
+    li.active {
+        border-color: #008ec2;
+        color: #008ec2;
+
+        &:before {
+            border-color: #008ec2;
+        }
+    }
+
+    li.done {
+        border-color: #008ec2;
+        color: #008ec2;
+
+        &:before {
+            border-color: #008ec2;
+            background: #008ec2;
+        }
+    }
+}
+
+.erp-return-to-dashboard {
+    font-size: 0.85em;
+    color: #b5b5b5;
+    margin: 1.18em 0;
+    display: block;
+    text-align: center;
+}

@@ -94,6 +94,8 @@ function erp_hr_get_caps_for_role( $role = '' ) {
                 // leave and holidays
                 'erp_leave_create_request' => true,
                 'erp_leave_manage'         => true,
+
+                'erp_manage_hr_settings'   => true
             ];
             break;
 

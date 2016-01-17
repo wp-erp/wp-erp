@@ -287,7 +287,7 @@ function erp_get_clickable( $type = 'email', $value = '' ) {
  */
 function erp_format_date( $date, $format = false ) {
     if ( ! $format ) {
-        $format = get_option( 'date_format' );
+        $format = erp_get_option( 'date_format', 'erp_settings_general', 'd-m-Y' );
     }
 
     $date_str = strtotime( $date );
@@ -489,7 +489,7 @@ function erp_months_dropdown( $title = false ) {
     }
 
     for ( $m = 1; $m <= 12; $m++ ) {
-        $months[$m] = date( 'M', mktime( 0, 0, 0, $m ) );
+        $months[$m] = date( 'F', mktime( 0, 0, 0, $m ) );
     }
 
     return $months;

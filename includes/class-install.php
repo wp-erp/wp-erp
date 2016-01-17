@@ -33,8 +33,6 @@ class WeDevs_ERP_Installer {
 
         $this->action( 'admin_menu', 'welcome_screen_menu' );
         $this->action( 'admin_head', 'welcome_screen_menu_remove' );
-
-        // $this->action( 'activated_plugin', 'welcome_redirect' );
     }
 
     /**
@@ -63,25 +61,29 @@ class WeDevs_ERP_Installer {
         $this->set_default_modules();
         $this->create_roles();
         $this->set_role();
+        $this->create_cron_jobs();
 
-        update_option( 'wp_erp_version', erp_get_version() );
+        $current_erp_version = get_option( 'wp_erp_version', null );
+        $current_db_version  = get_option( 'wp_erp_db_version', null );
 
-        wp_schedule_event( time(), 'daily', 'erp_hr_policy_schedule' );
-        wp_schedule_event( time(), 'per_minute', 'erp_crm_notification_schedule' );
+        if ( is_null( $current_erp_version ) && is_null( $current_db_version ) && apply_filters( 'erp_enable_setup_wizard', true ) ) {
+            set_transient( '_erp_activation_redirect', 1, 30 );
+        }
+
+        // update to latest version
+        $latest_version = erp_get_version();
+        update_option( 'wp_erp_version', $latest_version );
+        update_option( 'wp_erp_db_version', $latest_version );
     }
 
     /**
-     * Redirect to plugin welcome screen after activation
-     *
-     * @param  string  $plugin
+     * Create cron jobs
      *
      * @return void
      */
-    public function welcome_redirect( $plugin ) {
-        if ( $plugin == 'wp-erp/wp-erp.php' ) {
-            wp_safe_redirect( admin_url( 'index.php?page=wp-erp-welcome' ) );
-            die();
-        }
+    public function create_cron_jobs() {
+        wp_schedule_event( time(), 'daily', 'erp_hr_policy_schedule' );
+        wp_schedule_event( time(), 'per_minute', 'erp_crm_notification_schedule' );
     }
 
     /**
@@ -102,7 +104,7 @@ class WeDevs_ERP_Installer {
      * @return void
      */
     public function welcome_screen_menu() {
-        add_dashboard_page( __( 'Welcome to WP ERP', 'wp-erp' ), 'WP ERP', 'read', 'wp-erp-welcome', array( $this, 'welcome_screen_content' ) );
+        add_dashboard_page( __( 'Welcome to WP ERP', 'wp-erp' ), 'WP ERP', 'manage_options', 'erp-welcome', array( $this, 'welcome_screen_content' ) );
     }
 
     /**
@@ -113,7 +115,7 @@ class WeDevs_ERP_Installer {
      * @return void
      */
     public function welcome_screen_menu_remove() {
-        remove_submenu_page( 'index.php', 'wp-erp-welcome' );
+        remove_submenu_page( 'index.php', 'erp-welcome' );
     }
 
     /**
