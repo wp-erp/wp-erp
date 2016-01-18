@@ -40,6 +40,7 @@ class Ajax_Handler {
         add_action( 'wp_ajax_erp_crm_delete_customer_activity', array( $this, 'delete_customer_activity_feeds' ) );
 
         add_action( 'wp_ajax_erp_customer_feeds_edit_notes', array( $this, 'edit_customer_activity_feeds' ) );
+        add_action( 'wp_ajax_erp_customer_feeds_edit_schedules', array( $this, 'edit_customer_activity_schedule_feeds' ) );
 
         // script reload
         $this->action( 'wp_ajax_erp-crm-customer-company-reload', 'customer_company_template_refresh' );
@@ -384,37 +385,7 @@ class Ajax_Handler {
 
             case 'schedule':
 
-                $start_time = ( isset( $postdata['start_time'] ) ) ? $postdata['start_time'] : '00:00:00';
-                $end_time   = ( isset( $postdata['end_time'] ) ) ? $postdata['end_time'] : '00:00:00';
-
-                $extra_data = [
-                    'schedule_title'             => ( isset( $postdata['schedule_title'] ) && !empty( $postdata['schedule_title'] ) ) ? $postdata['schedule_title'] : '',
-                    'all_day'                    => isset( $postdata['all_day'] ) ? $postdata['all_day'] : false,
-                    'allow_notification'         => isset( $postdata['allow_notification'] ) ? $postdata['allow_notification'] : false,
-                    'notification_via'           => isset( $postdata['notification_via'] ) ? $postdata['notification_via'] : '',
-                    'notification_time'          => isset( $postdata['notification_time'] ) ? $postdata['notification_time'] : '',
-                    'notification_time_interval' => isset( $postdata['notification_time_interval'] ) ? $postdata['notification_time_interval'] : '',
-                    'invite_contact'             => isset( $postdata['invite_contact'] ) ? $postdata['invite_contact'] : []
-                ];
-
-                if ( $extra_data['allow_notification'] ) {
-                    $notify_date = new \DateTime( $postdata['start_date'].$start_time );
-                    $notify_date->modify('-' . $extra_data['notification_time_interval'] . ' '. $extra_data['notification_time'] );
-                    $extra_data['notification_datetime'] = $notify_date->format( 'Y-m-d H:i:s' );
-                } else {
-                    $extra_data['notification_datetime'] = '';
-                }
-
-                $save_data = [
-                    'user_id'    => $postdata['user_id'],
-                    'created_by' => $postdata['created_by'],
-                    'message'    => $postdata['message'],
-                    'type'       => 'log_activity',
-                    'log_type'   => ( isset( $postdata['schedule_type'] ) && !empty( $postdata['schedule_type'] ) ) ?  $postdata['schedule_type'] : '',
-                    'start_date' => date( 'Y-m-d H:i:s', strtotime( $postdata['start_date'].$start_time ) ),
-                    'end_date'   => date( 'Y-m-d H:i:s', strtotime( $postdata['end_date'].$end_time ) ),
-                    'extra'      => base64_encode( json_encode( $extra_data ) )
-                ];
+                $save_data = erp_crm_customer_prepare_schedule_postdata( $postdata );
 
                 $data = erp_crm_save_customer_feed_data( $save_data );
 
@@ -473,6 +444,26 @@ class Ajax_Handler {
         }
 
         $this->send_success( $data );
+    }
+
+    public function edit_customer_activity_schedule_feeds() {
+
+        $this->verify_nonce( 'wp-erp-crm-edit-customer-feed-nonce' );
+
+        unset( $_POST['action'], $_POST['_wpnonce'], $_POST['_wp_http_referer'] );
+
+        $save_data = erp_crm_customer_prepare_schedule_postdata( $_POST );
+
+        $save_data['id'] = $_POST['id'];
+
+        $data = erp_crm_save_customer_feed_data( $save_data );
+
+        if ( ! $data ) {
+            $this->send_error( __( 'Somthing is wrong, Please try later', 'wp-erp' ) );
+        }
+
+        $this->send_success( $data );
+
     }
 
 }

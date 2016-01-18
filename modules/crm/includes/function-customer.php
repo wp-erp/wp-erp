@@ -423,6 +423,52 @@ function erp_crm_check_customer_exist_company( $customer_id, $company_id ) {
     return $wpdb->get_row( $sql, ARRAY_A );
 }
 
+function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
+
+    if ( !is_user_logged_in() ) {
+        return;
+    }
+
+    if ( ! $postdata ) {
+        return;
+    }
+
+    $extra_data = [
+        'schedule_title'             => ( isset( $postdata['schedule_title'] ) && !empty( $postdata['schedule_title'] ) ) ? $postdata['schedule_title'] : '',
+        'all_day'                    => isset( $postdata['all_day'] ) ? (string)$postdata['all_day'] : 'false',
+        'allow_notification'         => isset( $postdata['allow_notification'] ) ? (string)$postdata['allow_notification'] : 'false',
+        'invite_contact'             => isset( $postdata['invite_contact'] ) ? $postdata['invite_contact'] : []
+    ];
+
+    $extra_data['notification_via']           = ( isset( $postdata['notification_via'] ) && $extra_data['allow_notification'] == 'true' ) ? $postdata['notification_via'] : '';
+    $extra_data['notification_time']          = ( isset( $postdata['notification_time'] ) && $extra_data['allow_notification'] == 'true' ) ? $postdata['notification_time'] : '';
+    $extra_data['notification_time_interval'] = ( isset( $postdata['notification_time_interval'] ) && $extra_data['allow_notification'] == 'true' ) ? $postdata['notification_time_interval'] : '';
+
+    $start_time = ( isset( $postdata['start_time'] ) && $extra_data['all_day'] == 'false' ) ? $postdata['start_time'] : '00:00:00';
+    $end_time   = ( isset( $postdata['end_time'] ) && $extra_data['all_day'] == 'false' ) ? $postdata['end_time'] : '00:00:00';
+
+    if ( $extra_data['allow_notification'] == 'true' ) {
+        $notify_date = new \DateTime( $postdata['start_date'].$start_time );
+        $notify_date->modify('-' . $extra_data['notification_time_interval'] . ' '. $extra_data['notification_time'] );
+        $extra_data['notification_datetime'] = $notify_date->format( 'Y-m-d H:i:s' );
+    } else {
+        $extra_data['notification_datetime'] = '';
+    }
+
+    $save_data = [
+        'user_id'    => $postdata['user_id'],
+        'created_by' => $postdata['created_by'],
+        'message'    => $postdata['message'],
+        'type'       => 'log_activity',
+        'log_type'   => ( isset( $postdata['schedule_type'] ) && !empty( $postdata['schedule_type'] ) ) ?  $postdata['schedule_type'] : '',
+        'start_date' => date( 'Y-m-d H:i:s', strtotime( $postdata['start_date'].$start_time ) ),
+        'end_date'   => date( 'Y-m-d H:i:s', strtotime( $postdata['end_date'].$end_time ) ),
+        'extra'      => base64_encode( json_encode( $extra_data ) )
+    ];
+
+    return $save_data;
+}
+
 /**
  * Get all customer feeds
  *

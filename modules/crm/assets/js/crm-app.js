@@ -18,8 +18,8 @@ Vue.filter('formatAMPM', function (date) {
 // Vue Filter for formatting date
 Vue.filter('formatDate', function ( date, format ) {
     date = new Date( date );
-    var month = date.getMonth(),
-        day   = date.getDate(),
+    var month = ("0" + (date.getMonth() + 1)).slice(-2),
+        day   = ("0" + date.getDate()).slice(-2),
         year  = date.getFullYear(),
         monthArray = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ],
         monthShortArray = [ "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec" ],
@@ -28,7 +28,7 @@ Vue.filter('formatDate', function ( date, format ) {
 
     var pattern = {
         Y: year,
-        m: (month+1),
+        m: month,
         F: monthName,
         M: monthShortName,
         d: day,
@@ -217,7 +217,7 @@ var TimeLineHeader = Vue.extend({
                         +'have scheduled {{ logType }} with '
                         +'<strong>{{ createdForUser }}</strong>'
                             +' <span v-if="countUser">and</span> <strong v-if="countUser == 1">{{ feed.extra.invited_user[0].name }}</strong>'
-                        +'<strong v-else><tooltip :content="countUser" :title="invitedUser"></tooltip></strong>'
+                        +'<strong v-if="countUser > 1"><tooltip :content="countUser" :title="invitedUser"></tooltip></strong>'
                     +'</span>'
                 +'</span>',
 
@@ -331,6 +331,10 @@ var vm = new Vue({
                 onReady: function () {
                     var modal = this;
 
+                    jQuery('.select2').select2({
+                        width : 'resolve',
+                    });
+
                     jQuery('.erp-date-field').datepicker({
                         dateFormat: 'yy-mm-dd',
                         changeMonth: true,
@@ -350,6 +354,29 @@ var vm = new Vue({
                             self.val( selected );
                         }
                     });
+
+                    jQuery( 'select[data-selected].select2').each( function() {
+                        var self = jQuery(this),
+                            selected = self.data('selected');
+                        if ( selected !== '' ) {
+                            if ( String(selected).indexOf(',') == '-1' ) {
+                                self.select2().select2( 'val', selected );
+                            } else {
+                                self.select2().select2( 'val', selected.split(',') );
+                            }
+                        }
+                    });
+
+                    jQuery( 'input[type=checkbox][data-checked]', modal ).each(function() {
+                        var self = jQuery(this),
+                            checked = self.data('checked');
+                        if ( checked !== '' ) {
+                            self.prop( 'checked', checked );
+                        }
+                    });
+
+                    jQuery( 'input[type=checkbox][data-checked]', modal ).trigger('change');
+
                 },
                 onSubmit: function(modal) {
                     wp.ajax.send( {
@@ -364,6 +391,7 @@ var vm = new Vue({
                             modal.closeModal();
                         },
                         error: function(error) {
+                            vm.progreassDone();
                             alert( error );
                         }
                     });
@@ -443,7 +471,7 @@ var vm = new Vue({
          */
         addCustomerFeed: function() {
 
-            vm.progreassStart('erp-crm-feed-nav-content');
+            vm.progreassStart('#erp-crm-feed-nav-content');
             this.feedData._wpnonce = wpCRMvue.nonce;
 
             if ( this.feedData.type == 'log_activity' ) {
@@ -527,7 +555,7 @@ var vm = new Vue({
          * @param  {[string]} id
          */
         progreassStart: function( id ) {
-            NProgress.configure({ parent: '#'+id });
+            NProgress.configure({ parent: id });
             NProgress.start();
         },
 

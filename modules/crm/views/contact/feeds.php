@@ -222,7 +222,6 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
 
                     <div class="timeline-item">
 
-                        <!-- <span class="time erp-tips" title="Hello" v-tiptip="{ date: feed.created_at , type: 'datetime' }"></span> -->
                         <tooltip content="<i class='fa fa-clock-o'></i>" :title="feed.created_at | formatDateTime"></tooltip>
 
                         <h3 class="timeline-header" @click.prevent="toggleFooter">

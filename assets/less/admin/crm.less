@@ -589,6 +589,129 @@
             margin-left: 15px;
         }
     }
+
+    .feed-schedule-wrapper {
+        p {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+
+            input {
+                margin-left: 15px;
+            }
+        }
+
+        input[type='text'] {
+            border:none;
+            box-shadow: none;
+            transition:none;
+            width: 80%;
+
+            &:focus {
+                outline:none;
+            }
+
+            &::-webkit-input-placeholder {
+               font-style: italic;
+               font-weight: normal;
+            }
+            &:-moz-placeholder {
+               font-style: italic;
+               font-weight: normal;
+            }
+            &::-moz-placeholder {
+               font-style: italic;
+               font-weight: normal;
+            }
+            &:-ms-input-placeholder {
+               font-style: italic;
+               font-weight: normal;
+            }
+        }
+
+        span.select2-selection--multiple {
+            border:none;
+            height: 32px;
+
+            input {
+                width: 100% !important;
+            }
+        }
+
+        .select2-container--default.select2-container--focus .select2-selection--multiple {
+            border:none;
+        }
+
+        .schedule-datetime {
+            border-bottom: 1px solid #eee;
+
+            p {
+                border-bottom: none;
+                width: 37%;
+                padding-left: 5px;
+
+                &.schedule-end {
+                    _border-left: 1px solid #eee;
+                    padding-left: 20px;
+                }
+
+                &.schedule-all-day {
+                    width: 20%;
+                    padding: 3px 20px;
+                    _border-left: 1px solid #eee;
+                }
+            }
+
+            input.start-time,
+            input.start-date {
+                width: 33%;
+            }
+        }
+
+        .schedule-notification {
+            border-bottom: 1px solid #eee;
+
+            &:last-child {
+                border-bottom: none;
+            }
+
+            p {
+                border: none;
+                width: 40%;
+                padding-left: 5px;
+
+                label {
+                    width: 27%;
+                }
+
+                &.schedule-notification-via {
+                    width: 50%;
+                    _border-right: 1px solid #eee;
+                    padding-top: 15px;
+                }
+
+                &.schedule-notification-before {
+                    padding-left: 20px;
+                    padding-top: 15px;
+                    width: 50%;
+
+                    select {
+                        margin-top: -2px;
+                    }
+                }
+
+                &.schedule-type {
+                    width:50%;
+                    _border-right: 1px solid #eee;
+                    padding-left: 5px;
+                }
+
+                &.schedule-notification-allow {
+                    width: 50%;
+                    padding: 6px 20px;
+                }
+            }
+        }
+    }
 }
 
 
