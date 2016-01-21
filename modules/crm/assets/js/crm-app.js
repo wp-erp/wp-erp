@@ -1,6 +1,6 @@
-// jQuery(document).on('ready', function() {
-//     console.log( jQuery( '.erptips' ).length );
-// });
+/**************************************************************
+ *****************    Vue Filters     *************************
+ **************************************************************/
 
 // Vue Filter for Formatting Time
 Vue.filter('formatAMPM', function (date) {
@@ -81,7 +81,6 @@ Vue.filter( 'formatFeedContent', function ( message, feed ) {
     return message;
 });
 
-
 // Vue filter for formatting Feeds as a group by object
 Vue.filter('formatFeeds', function ( feeds ) {
     var feedsData = _.groupBy( feeds, function( data ) {
@@ -96,15 +95,22 @@ Vue.filter('formatDateTime', function ( date ) {
     return this.$options.filters.formatDate( date, 'F, j' ) + ' at ' + this.$options.filters.formatAMPM( date )
 });
 
+/******************** End vue filters ***********************/
+
+
+
+/*****************************************************************
+ *******************     Vue Directive     ***********************
+ ****************************************************************/
 
 // Vue directive for Date picker
 Vue.directive( 'datepicker', {
     params: ['datedisable'],
-
+    twoWay: true,
     bind: function () {
         var vm = this.vm;
         var key = this.expression;
-
+        console.log( this );
         if ( this.params.datedisable == 'previous' ) {
             jQuery(this.el).datepicker({
                 minDate: 0,
@@ -134,11 +140,11 @@ Vue.directive( 'datepicker', {
                 changeYear: true,
                 yearRange: '-100:+0',
                 onSelect: function (date) {
+                    this.$set(key, date);
                     vm.$set(key, date);
                 }
             });
         };
-
     },
     update: function (val) {
         jQuery(this.el).datepicker('setDate', val);
@@ -174,7 +180,6 @@ Vue.directive( 'tiptip', {
     }
 });
 
-
 // Select2 Direcetive
 Vue.directive('selecttwo', {
     bind: function () {
@@ -193,12 +198,17 @@ Vue.directive('selecttwo', {
     }
 });
 
+/************************ End Vue Directive **********************/
+
+
+/******************************************************************
+*******************      Component       **************************
+*******************************************************************/
 
 var ToolTip = Vue.extend({
     props: ['title', 'content' ],
     template: '<span class="time erp-tips" v-tiptip title="{{ title }}">{{{ content }}}</span>',
 });
-
 
 var TimeLineHeader = Vue.extend({
     props: [ 'feed' ],
@@ -216,8 +226,8 @@ var TimeLineHeader = Vue.extend({
                     +'<span v-if="isSchedule">'
                         +'have scheduled {{ logType }} with '
                         +'<strong>{{ createdForUser }}</strong>'
-                            +' <span v-if="countUser">and</span> <strong v-if="countUser == 1">{{ feed.extra.invited_user[0].name }}</strong>'
-                        +'<strong v-if="countUser > 1"><tooltip :content="countUser" :title="invitedUser"></tooltip></strong>'
+                            +' <span v-if="countUser == 1">and <strong>{{ feed.extra.invited_user[0].name }}</strong></span>'
+                        +'<span v-if="( countUser != 0 ) && countUser != 1"> and <strong><tooltip :content="countUser" :title="invitedUser"></tooltip></strong></span>'
                     +'</span>'
                 +'</span>',
 
@@ -278,6 +288,264 @@ Vue.component( 'tooltip', ToolTip );
 Vue.component( 'timeline-header', TimeLineHeader );
 
 /**
+ * New Note Component
+ *
+ * @param {object} feedData
+ * @param {boolean} isValid
+ *
+ * @return {void}
+ */
+Vue.component( 'new-note', {
+    template: '#new-note-template',
+
+    data: function() {
+        return {
+            // validation: {},
+            feedData: {
+                message: ''
+            },
+            isValid: false
+        }
+    },
+
+    methods: {
+        notify: function () {
+            this.$dispatch('bindFeedData', this.feedData);
+        }
+    },
+
+    computed: {
+
+        validation: function() {
+            return {
+                message : !!this.feedData.message
+            }
+        },
+
+        isValid: function() {
+            var validation = this.validation
+
+            if ( jQuery.isEmptyObject( validation ) ) return;
+
+            return Object.keys( validation ).every(function(key){
+                return validation[key]
+            });
+        }
+    },
+
+    watch: {
+        feedData: {
+            deep: true,
+            immediate: true,
+            handler: function () {
+                this.notify();
+            }
+        }
+    }
+});
+
+/**
+ * Log Activity Note Component
+ *
+ * @param {object} feedData
+ * @param {boolean} isValid
+ *
+ * @return {void}
+ */
+Vue.component( 'log-activity', {
+    template: '#log-activity-template',
+
+    data: function() {
+        return {
+            // validation: {},
+            feedData: {
+                message: '',
+                log_type: '',
+                dt: '',
+                tp: ''
+            },
+
+            isValid: false
+        }
+    },
+
+    methods: {
+        notify: function () {
+            this.$dispatch('bindFeedData', this.feedData );
+        },
+    },
+
+    computed: {
+
+        validation: function() {
+            return {
+                message : !!this.feedData.message,
+                log_type : !!this.feedData.log_type,
+                log_date : !!this.feedData.dt,
+                log_time : !!this.feedData.tp
+            }
+        },
+
+        isValid: function() {
+            var validation = this.validation
+
+            if ( jQuery.isEmptyObject( validation ) ) return;
+
+            return Object.keys( validation ).every(function(key){
+                return validation[key]
+            });
+        }
+    },
+
+    watch: {
+        feedData: {
+            deep: true,
+            immediate: true,
+            handler: function () {
+                this.notify();
+            }
+        }
+    }
+});
+
+/**
+ * Email Note Component
+ *
+ * @param  {[object]} feedData
+ * @param  {Boolean} isValid
+ *
+ * @return {[void]}
+ */
+Vue.component( 'email-note', {
+    template: '#email-note-template',
+
+    data: function() {
+        return {
+            feedData: {
+                message: ''
+            },
+            isValid: false
+        }
+    },
+
+    methods: {
+        notify: function () {
+            this.$dispatch('bindFeedData', this.feedData );
+        }
+    },
+
+    computed: {
+
+        validation: function() {
+            return {
+                message : !!this.feedData.message,
+                email_subject : !!this.feedData.email_subject,
+            }
+        },
+
+        isValid: function() {
+            var validation = this.validation
+
+            if ( jQuery.isEmptyObject( validation ) ) return;
+
+            return Object.keys( validation ).every(function(key){
+                return validation[key]
+            });
+        }
+    },
+
+    watch: {
+        feedData: {
+            deep: true,
+            immediate: true,
+            handler: function () {
+                this.notify();
+            }
+        }
+    }
+});
+
+/**
+ * Schedule Note Component
+ *
+ * @param  {object} feedData
+ * @param  {Boolean} isValid: false
+ *
+ * @return {[void]}
+ */
+Vue.component( 'schedule-note', {
+    template: '#schedule-note-template',
+
+    data: function() {
+        return {
+            feedData: {
+                message             : '',
+                allow_notification  : false,
+                all_day             : false,
+                dtStart             : '',
+                tpStart             : '',
+                dtEnd               : '',
+                tpEnd               : '',
+                inviteContact       : []
+            },
+
+            isValid: false
+        }
+    },
+
+    methods: {
+        notify: function () {
+            this.$dispatch('bindFeedData', this.feedData );
+        }
+    },
+
+    computed: {
+
+        validation: function() {
+            return {
+                message                     : !!this.feedData.message,
+                schedule_title              : !!this.feedData.schedule_title,
+                startDate                   : !!this.feedData.dtStart,
+                startTime                   : ( ! this.feedData.all_day ) ? !!this.feedData.tpStart : true,
+                endDate                     : !!this.feedData.dtEnd,
+                endTime                     : ( ! this.feedData.all_day ) ? !!this.feedData.tpEnd : true,
+                schedule_type               : !!this.feedData.schedule_type,
+                notification_via            : ( this.feedData.allow_notification ) ? !!this.feedData.notification_via : true,
+                notification_time_interval  : ( this.feedData.allow_notification ) ? !!this.feedData.notification_time_interval : true,
+                notification_time           : ( this.feedData.allow_notification ) ? !!this.feedData.notification_time : true,
+            }
+        },
+
+        isValid: function() {
+            var validation = this.validation
+
+            if ( jQuery.isEmptyObject( validation ) ) return;
+
+            return Object.keys( validation ).every(function(key){
+                return validation[key]
+            });
+        }
+    },
+
+    watch: {
+        feedData: {
+            deep: true,
+            immediate: true,
+            handler: function () {
+                this.notify();
+            }
+        }
+    }
+});
+
+/********************* End Component *****************************/
+
+
+/****************************************************************
+***************       Main Vue Instance       *******************
+****************************************************************/
+
+/**
  * Main Vue instance
  *
  * @param {object} [el, data, method, computed, compiled]
@@ -293,19 +561,20 @@ var vm = new Vue({
         tabShow: 'new_note',
         feeds: {},
         validation: {},
-        feedData : { 'message' : '', 'all_day': false, 'allow_notification' : false },
+        feedData : {},
         isValid: false,
         customer_id : null,
-        dt: '',
-        tp: '',
         showFooter: false,
-        // isSchedule: true
+    },
+
+    events: {
+        'bindFeedData': function (feedData) {
+            this.feedData = feedData;
+        }
     },
 
     compiled: function() {
-        this.fetchFeeds()
-        this.dt = this.currentDate()
-        this.tp = this.currentTime()
+        this.fetchFeeds();
     },
 
     methods: {
@@ -475,16 +744,16 @@ var vm = new Vue({
             this.feedData._wpnonce = wpCRMvue.nonce;
 
             if ( this.feedData.type == 'log_activity' ) {
-                this.feedData.log_date = this.dt;
-                this.feedData.log_time = this.tp;
+                this.feedData.log_date = this.feedData.dt;
+                this.feedData.log_time = this.feedData.tp;
             };
 
             if ( this.feedData.type == 'schedule' ) {
-                this.feedData.start_date     = this.dtStart;
-                this.feedData.start_time     = this.tpStart;
-                this.feedData.end_date       = this.dtEnd;
-                this.feedData.end_time       = this.tpEnd;
-                this.feedData.invite_contact = this.inviteContact;
+                this.feedData.start_date     = this.feedData.dtStart;
+                this.feedData.start_time     = this.feedData.tpStart;
+                this.feedData.end_date       = this.feedData.dtEnd;
+                this.feedData.end_time       = this.feedData.tpEnd;
+                this.feedData.invite_contact = this.feedData.inviteContact;
             };
 
             jQuery.post( wpCRMvue.ajaxurl, this.feedData, function( resp ) {
@@ -494,8 +763,8 @@ var vm = new Vue({
 
                 if ( vm.feedData.type == 'log_activity' ) {
                     vm.feedData.log_type = '';
-                    vm.dt = '';
-                    vm.tp = '';
+                    vm.feedData.dt = '';
+                    vm.feedData.tp = '';
                 };
 
                 if ( vm.feedData.type == 'email' ) {
@@ -505,17 +774,22 @@ var vm = new Vue({
 
                 if ( vm.feedData.type == 'schedule' ) {
                     jQuery('#erp-crm-activity-invite-contact').select2().select2( "val", "" );
-                    vm.feedData.all_day = false;
-                    vm.feedData.allow_notification = false;
-                    vm.feedData.schedule_title = '';
-                    vm.feedData.schedule_type = '';
-                    vm.feedData.notification_via = '';
-                    vm.feedData.notification_time = '';
+                    vm.feedData.all_day                    = false;
+                    vm.feedData.allow_notification         = false;
+                    vm.feedData.schedule_title             = '';
+                    vm.feedData.schedule_type              = '';
+                    vm.feedData.notification_via           = '';
+                    vm.feedData.notification_time          = '';
                     vm.feedData.notification_time_interval = '';
-                    vm.feedData.start_date     = '';
-                    vm.feedData.start_time     = '';
-                    vm.feedData.end_date       = '';
-                    vm.feedData.end_time       = '';
+                    vm.feedData.start_date                 = '';
+                    vm.feedData.start_time                 = '';
+                    vm.feedData.end_date                   = '';
+                    vm.feedData.end_time                   = '';
+                    vm.feedData.dtStart                    = '';
+                    vm.feedData.tpStart                    = '';
+                    vm.feedData.dtEnd                      = '';
+                    vm.feedData.tpEnd                      = '';
+                    vm.feedData.inviteContact              = [];
                 };
 
                 vm.progreassDone();
@@ -580,71 +854,9 @@ var vm = new Vue({
         }
 
     },
-
-    computed: {
-
-        /**
-         * Apply feed form validation
-         *
-         * @return {[void]}
-         */
-        validation: function() {
-
-            if ( this.feedData.type == 'new_note' ) {
-                return {
-                    message : !!this.feedData.message
-                }
-            }
-
-            if ( this.feedData.type == 'email' ) {
-                return {
-                    message : !!this.feedData.message,
-                    email_subject : !!this.feedData.email_subject,
-                }
-            }
-
-            if ( this.feedData.type == 'log_activity' ) {
-                return {
-                    message : !!this.feedData.message,
-                    log_type : !!this.feedData.log_type,
-                    log_date : !!this.dt,
-                    log_time : !!this.tp,
-                }
-            }
-
-
-            if ( this.feedData.type == 'schedule' ) {
-                return {
-                    message : !!this.feedData.message,
-                    schedule_title : !!this.feedData.schedule_title,
-                    startDate : !!this.dtStart,
-                    startTime : ( ! this.feedData.all_day ) ? !!this.tpStart : true,
-                    endDate : !!this.dtEnd,
-                    endTime : ( ! this.feedData.all_day ) ? !!this.tpEnd : true,
-                    schedule_type : !!this.feedData.schedule_type,
-                    notification_via: ( this.feedData.allow_notification ) ? !!this.feedData.notification_via : true,
-                    notification_time_interval: ( this.feedData.allow_notification ) ? !!this.feedData.notification_time_interval : true,
-                    notification_time: ( this.feedData.allow_notification ) ? !!this.feedData.notification_time : true,
-                }
-            }
-        },
-
-        /**
-         * Check whole form is valid or not for form submission
-         *
-         * @return {Boolean}
-         */
-        isValid: function() {
-            var validation = this.validation
-
-            if ( jQuery.isEmptyObject( validation ) ) return;
-
-            return Object.keys( validation ).every(function(key){
-                return validation[key]
-            });
-        }
-    },
 });
+
+/******************** End Main Vue instance **********************/
 
 // Bind trix-editor value with v-model message
 document.addEventListener('trix-change', function (e) {

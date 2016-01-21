@@ -393,11 +393,6 @@ function erp_crm_get_customer_feeds_nav() {
             'icon'  => '<i class="fa fa-list"></i>'
         ],
 
-        'call' => [
-            'title' => __( 'Call', 'wp-erp' ),
-            'icon'  => '<i class="fa fa-phone"></i>'
-        ],
-
         'schedule' => [
             'title' => __( 'Schedule', 'wp-erp' ),
             'icon'  => '<i class="fa fa-calendar-check-o"></i>'
