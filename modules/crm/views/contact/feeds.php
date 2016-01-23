@@ -45,41 +45,9 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                     <i v-if="feed.type == 'email'" class="fa fa-envelope-o" @click.prevent="toggleFooter"></i>
                     <i v-if="feed.type == 'new_note'" class="fa fa-file-text-o" @click.prevent="toggleFooter"></i>
                     <i v-if="feed.type == 'log_activity'" class="fa fa-list" @click.prevent="toggleFooter"></i>
-                    <i v-if=" ( feed.type == 'log_activity' && isSchedule( feed.start_date )  )" class="fa fa-calendar-check-o" @click.prevent="toggleFooter"></i>
+                    <i v-if="( feed.type == 'log_activity' && isSchedule( feed.start_date )  )" class="fa fa-calendar-check-o" @click.prevent="toggleFooter"></i>
 
-                    <div class="timeline-item">
-
-                        <tooltip content="<i class='fa fa-clock-o'></i>" :title="feed.created_at | formatDateTime"></tooltip>
-
-                        <h3 class="timeline-header" @click.prevent="toggleFooter">
-                            <timeline-header :feed="feed"></timeline-header>
-                        </h3>
-
-                        <div class="timeline-body" @click.prevent="toggleFooter">
-                            {{{ feed.message | formatFeedContent feed }}}
-                        </div>
-                        <div class="timeline-footer" v-show="showFooter">
-                            <a href="#" v-if="feed.type != 'email'" @click.prevent="editFeed( feed )"><?php _e( 'Edit', 'wp-erp' ); ?> |</a>
-                            <a href="#" @click.prevent="deleteFeed( feed )"><?php _e( 'Delete', 'wp-erp' ); ?></a>
-                        </div>
-
-                    </div>
-
-                    <!-- <div class="timeline-item" v-if="isEditable">
-
-                        <h3 class="timeline-header" @click.prevent="toggleFooter">
-                            Edit This Feed
-                        </h3>
-
-                        <div class="timeline-body" @click.prevent="toggleFooter">
-                            This is a editable content
-                        </div>
-                        <div class="timeline-footer">
-                            <a href="#" v-if="feed.type != 'email'" @click.prevent="editFeed( feed )"><?php _e( 'Edit', 'wp-erp' ); ?> |</a>
-                            <a href="#" @click.prevent="deleteFeed( feed )"><?php _e( 'Delete', 'wp-erp' ); ?></a>
-                        </div>
-
-                    </div> -->
+                    <timeline-item :feed="feed"></timeline-item>
 
                 </li>
 
@@ -91,9 +59,6 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
             <?php _e( 'No Activity found for this Company', 'wp-erp' ); ?>
         </div>
     </div>
-
-    <pre>{{ $data.isValid | json }}</pre>
-    <pre>{{ $data.feedData | json }}</pre>
 </div>
 
 <script type="text/x-template" id="new-note-template">
@@ -111,7 +76,6 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
         </div>
     </div>
 </script>
-
 <script type="text/x-template" id="log-activity-template">
     <div id="log-activity">
         <p>
@@ -278,3 +242,47 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
         </div>
     </div>
 </script>
+
+<script type="text/x-template" id="timeline-item-template">
+
+    <div class="timeline-item" v-if="!isEditable">
+
+        <tooltip content="<i class='fa fa-clock-o'></i>" :title="feed.created_at | formatDateTime"></tooltip>
+
+        <h3 class="timeline-header" @click.prevent="toggleFooter">
+            <timeline-header :feed="feed"></timeline-header>
+        </h3>
+
+        <div class="timeline-body" @click.prevent="toggleFooter">
+            {{{ feed.message | formatFeedContent feed }}}
+        </div>
+        <div class="timeline-footer" v-show="showFooter">
+            <a href="#" v-if="feed.type != 'email'" @click.prevent="editFeed( feed )"><?php _e( 'Edit', 'wp-erp' ); ?> |</a>
+            <a href="#" @click.prevent="deleteFeed( feed )"><?php _e( 'Delete', 'wp-erp' ); ?></a>
+        </div>
+
+    </div>
+
+    <div class="timeline-item editform" v-if="isEditable">
+
+        <span class="time erp-tips" @click.prevent="cancelUpdate" title="January, 21 at 6:44 am"><i class="fa fa-times"></i></span>
+
+        <h3 class="timeline-header" @click.prevent="toggleFooter">
+            <?php _e( 'Edit this feed', 'wp-erp' ); ?>
+        </h3>
+
+        <div class="timeline-body">
+            <form action="" method="post" @submit.prevent = "updateCustomerFeed()" id="erp-crm-activity-edit-feed-form">
+
+                <new-note v-if="feed.type == 'new_note'"></new-note>
+
+                <log-activity v-if="( feed.type == 'log_activity' && !isSchedule( feed.start_date ) )"></log-activity>
+
+                <schedule-note v-if="( feed.type == 'log_activity' && isSchedule( feed.start_date ) )"></schedule-note>
+
+            </form>
+        </div>
+    </div>
+
+</script>
+

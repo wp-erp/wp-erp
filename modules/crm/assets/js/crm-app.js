@@ -56,8 +56,8 @@ Vue.filter( 'formatFeedContent', function ( message, feed ) {
                   '<div class="timeline-email-body">' + feed.message + '</div>';
     };
 
-    if ( feed.type == 'log_activity' && this.isSchedule( feed.start_date ) ) {
-        var filters = this.$options.filters,
+    if ( feed.type == 'log_activity' && vm.isSchedule( feed.start_date ) ) {
+        var filters = vm.$options.filters,
             startDate = filters.formatDate( feed.start_date, 'j F' ),
             startTime = filters.formatAMPM( feed.start_date ),
             endDate = filters.formatDate( feed.end_date, 'j F' ),
@@ -538,6 +538,64 @@ Vue.component( 'schedule-note', {
     }
 });
 
+Vue.component( 'timeline-item', {
+    props: ['feed'],
+    template : '#timeline-item-template',
+
+    data: function() {
+        return {
+            showFooter : false,
+            isEditable: false
+        }
+    },
+
+    methods: {
+
+        toggleFooter: function() {
+            this.showFooter = !this.showFooter;
+        },
+
+        /**
+         * Delete Activity feed
+         *
+         * @param  {[object]} feed
+         *
+         * @return {[void | alert]}
+         */
+        deleteFeed: function( feed ) {
+            var data = {
+                action : 'erp_crm_delete_customer_activity',
+                feed_id : feed.id,
+                _wpnonce : wpCRMvue.nonce
+            };
+
+            if ( confirm( wpCRMvue.confirm ) ) {
+                jQuery.post( wpCRMvue.ajaxurl, data, function( resp ) {
+                    if ( resp.success ) {
+                        vm.feeds.$remove( feed )
+                    } else {
+                        alert( resp.data );
+                    };
+                });
+            };
+        },
+
+        editFeed: function( feed ) {
+            this.isEditable = true;
+        },
+
+        cancelUpdate: function() {
+            this.isEditable = false;
+        },
+
+        isSchedule: function( date ) {
+            return new Date() < new Date( date );
+        }
+
+    }
+
+});
+
 /********************* End Component *****************************/
 
 
@@ -706,31 +764,6 @@ var vm = new Vue({
 
             today = yyyy+'-'+mm+'-'+dd;
             return today;
-        },
-
-        /**
-         * Delete Activity feed
-         *
-         * @param  {[object]} feed
-         *
-         * @return {[void | alert]}
-         */
-        deleteFeed: function( feed ) {
-            var data = {
-                action : 'erp_crm_delete_customer_activity',
-                feed_id : feed.id,
-                _wpnonce : wpCRMvue.nonce
-            };
-
-            if ( confirm( wpCRMvue.confirm ) ) {
-                jQuery.post( wpCRMvue.ajaxurl, data, function( resp ) {
-                    if ( resp.success ) {
-                        vm.feeds.$remove( feed )
-                    } else {
-                        alert( resp.data );
-                    };
-                });
-            };
         },
 
         /**
