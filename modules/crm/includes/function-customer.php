@@ -418,6 +418,15 @@ function erp_crm_check_customer_exist_company( $customer_id, $company_id ) {
     return $wpdb->get_row( $sql, ARRAY_A );
 }
 
+/**
+ * Prepare Schedule data for save
+ *
+ * @since 1.0
+ *
+ * @param  array $postdata
+ *
+ * @return array
+ */
 function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
 
     if ( !is_user_logged_in() ) {
@@ -451,6 +460,7 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
     }
 
     $save_data = [
+        'id'         => ( isset( $postdata['id'] ) && ! empty( $postdata['id'] ) ) ? $postdata['id'] : '',
         'user_id'    => $postdata['user_id'],
         'created_by' => $postdata['created_by'],
         'message'    => $postdata['message'],
@@ -473,20 +483,22 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
  *
  * @return array
  */
-function erp_crm_get_customer_activity( $customer_id = null ) {
+function erp_crm_get_customer_activity( $postdata ) {
     $feeds = [];
     $db = new \WeDevs\ORM\Eloquent\Database();
 
-    $results = \WeDevs\ERP\CRM\Models\Activity::select( [ '*', $db->raw('MONTHNAME(`created_at`) as feed_month, YEAR( `created_at` ) as feed_year' ) ] )
-               ->where( 'user_id', $customer_id )
-               ->with( [ 'contact',
+    $results =  \WeDevs\ERP\CRM\Models\Activity::select( [ '*', $db->raw('MONTHNAME(`created_at`) as feed_month, YEAR( `created_at` ) as feed_year' ) ] )
+                ->where( 'user_id', $postdata['customer_id'] )
+                ->with( [ 'contact',
                         'created_by' => function( $query ) {
                             $query->select( 'ID', 'user_nicename', 'user_email', 'user_url', 'display_name' );
                         }
                     ] )
-               ->orderBy( 'created_at', 'DESC' )
-               ->get()
-               ->toArray();
+                ->orderBy( 'created_at', 'DESC' )
+                ->skip( $postdata['offset'] )
+                ->take( $postdata['limit'] )
+                ->get()
+                ->toArray();
 
     foreach ( $results as $key => $value ) {
         $value['extra'] = json_decode( base64_decode( $value['extra'] ), true );

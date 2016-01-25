@@ -110,7 +110,7 @@ Vue.directive( 'datepicker', {
     bind: function () {
         var vm = this.vm;
         var key = this.expression;
-        console.log( this );
+
         if ( this.params.datedisable == 'previous' ) {
             jQuery(this.el).datepicker({
                 minDate: 0,
@@ -195,7 +195,7 @@ Vue.directive('selecttwo', {
         select.select2({
             width : 'resolve',
         });
-    }
+    },
 });
 
 /************************ End Vue Directive **********************/
@@ -287,6 +287,85 @@ var TimeLineHeader = Vue.extend({
 Vue.component( 'tooltip', ToolTip );
 Vue.component( 'timeline-header', TimeLineHeader );
 
+
+Vue.component( 'timeline-item', {
+    props: ['feed'],
+    template : '#timeline-item-template',
+
+    data: function() {
+        return {
+            feedData: { message: '' },
+            showFooter : false,
+            editfeedData: {},
+            isEditable: false
+        }
+    },
+
+    methods: {
+
+        toggleFooter: function() {
+            this.showFooter = !this.showFooter;
+        },
+
+        /**
+         * Delete Activity feed
+         *
+         * @param  {[object]} feed
+         *
+         * @return {[void | alert]}
+         */
+        deleteFeed: function( feed ) {
+            var data = {
+                action : 'erp_crm_delete_customer_activity',
+                feed_id : feed.id,
+                _wpnonce : wpCRMvue.nonce
+            };
+
+            if ( confirm( wpCRMvue.confirm ) ) {
+                jQuery.post( wpCRMvue.ajaxurl, data, function( resp ) {
+                    if ( resp.success ) {
+                        vm.feeds.$remove( feed )
+                    } else {
+                        alert( resp.data );
+                    };
+                });
+            };
+        },
+
+        editFeed: function( feed ) {
+            this.editfeedData = feed;
+            this.isEditable = true;
+        },
+
+        cancelUpdate: function() {
+            this.isEditable = false;
+            this.editfeedData = {};
+        },
+
+        isSchedule: function( date ) {
+            return new Date() < new Date( date );
+        },
+
+        updateCustomerFeed: function( feed_id ) {
+            vm.addCustomerFeed( this, feed_id );
+        },
+
+        notify: function() {
+            this.$broadcast('bindEditFeedData', this.feed );
+        }
+    },
+
+    watch: {
+        editfeedData: {
+            deep: true,
+            immediate: true,
+            handler: function () {
+                this.notify();
+            }
+        }
+    }
+});
+
 /**
  * New Note Component
  *
@@ -296,6 +375,8 @@ Vue.component( 'timeline-header', TimeLineHeader );
  * @return {void}
  */
 Vue.component( 'new-note', {
+    props: ['feed'],
+
     template: '#new-note-template',
 
     data: function() {
@@ -341,6 +422,16 @@ Vue.component( 'new-note', {
                 this.notify();
             }
         }
+    },
+
+    activate: function (done) {
+
+        var self = this;
+        jQuery(this.$el).find('trix-editor').get(0).addEventListener('trix-change', function (e) {
+            self.feedData.message = e.path[0].innerHTML;
+        });
+
+        done();
     }
 });
 
@@ -353,6 +444,8 @@ Vue.component( 'new-note', {
  * @return {void}
  */
 Vue.component( 'log-activity', {
+    props: ['feed'],
+
     template: '#log-activity-template',
 
     data: function() {
@@ -373,6 +466,14 @@ Vue.component( 'log-activity', {
         notify: function () {
             this.$dispatch('bindFeedData', this.feedData );
         },
+    },
+
+    events: {
+        'bindEditFeedData': function (feed ) {
+            this.feedData.log_type = feed.log_type;
+            this.feedData.dt = vm.$options.filters.formatDate( feed.start_date, 'Y-m-d' );
+            this.feedData.tp = vm.$options.filters.formatAMPM( feed.start_date );
+        }
     },
 
     computed: {
@@ -405,7 +506,18 @@ Vue.component( 'log-activity', {
                 this.notify();
             }
         }
+    },
+
+    activate: function (done) {
+
+        var self = this;
+        jQuery(this.$el).find('trix-editor').get(0).addEventListener('trix-change', function (e) {
+            self.feedData.message = e.path[0].innerHTML;
+        });
+
+        done();
     }
+
 });
 
 /**
@@ -462,7 +574,18 @@ Vue.component( 'email-note', {
                 this.notify();
             }
         }
+    },
+
+    activate: function (done) {
+
+        var self = this;
+        jQuery(this.$el).find('trix-editor').get(0).addEventListener('trix-change', function (e) {
+            self.feedData.message = e.path[0].innerHTML;
+        });
+
+        done();
     }
+
 });
 
 /**
@@ -474,28 +597,61 @@ Vue.component( 'email-note', {
  * @return {[void]}
  */
 Vue.component( 'schedule-note', {
+    props: ['feed'],
     template: '#schedule-note-template',
 
     data: function() {
         return {
             feedData: {
-                message             : '',
-                allow_notification  : false,
-                all_day             : false,
-                dtStart             : '',
-                tpStart             : '',
-                dtEnd               : '',
-                tpEnd               : '',
-                inviteContact       : []
+                message                     : '',
+                schedule_title              : '',
+                schedule_type               : '',
+                notification_via            : '',
+                notification_time           : '',
+                notification_time_interval  : '',
+                allow_notification          : false,
+                all_day                     : false,
+                dtStart                     : '',
+                tpStart                     : '',
+                dtEnd                       : '',
+                tpEnd                       : '',
+                inviteContact               : ''
             },
 
             isValid: false
         }
     },
 
+    events: {
+        'bindEditFeedData': function (feed ) {
+            var invitedUser = feed.extra.invited_user.map( function( elm ) { return elm.id } ).join(',');
+            this.feedData.all_day                    = feed.extra.all_day == 'ture' ? true : false;
+            this.feedData.allow_notification         = feed.extra.allow_notification == 'ture' ? true : false;
+            this.feedData.schedule_title             = feed.extra.schedule_title;
+            this.feedData.schedule_type              = feed.log_type;
+            this.feedData.notification_via           = feed.extra.notification_via;
+            this.feedData.notification_time          = feed.extra.notification_time;
+            this.feedData.notification_time_interval = feed.extra.notification_time_interval;
+            this.feedData.dtStart                    = vm.$options.filters.formatDate( feed.start_date, 'Y-m-d' );
+            this.feedData.tpStart                    = vm.$options.filters.formatAMPM( feed.start_date );
+            this.feedData.dtEnd                      = vm.$options.filters.formatDate( feed.end_date, 'Y-m-d' );
+            this.feedData.tpEnd                      = vm.$options.filters.formatAMPM( feed.end_date );
+            this.feedData.inviteContact              = invitedUser;
+
+            var self = jQuery( this.$el ).find( 'select.select2' );
+
+            if ( String(invitedUser).indexOf(',') == '-1' ) {
+                self.select2().select2( 'val', invitedUser );
+            } else {
+                self.select2().select2( 'val', invitedUser.split(',') );
+            }
+
+        }
+    },
+
     methods: {
         notify: function () {
-            this.$dispatch('bindFeedData', this.feedData );
+            this.$dispatch( 'bindFeedData', this.feedData );
         }
     },
 
@@ -535,63 +691,16 @@ Vue.component( 'schedule-note', {
                 this.notify();
             }
         }
-    }
-});
-
-Vue.component( 'timeline-item', {
-    props: ['feed'],
-    template : '#timeline-item-template',
-
-    data: function() {
-        return {
-            showFooter : false,
-            isEditable: false
-        }
     },
 
-    methods: {
+    activate: function (done) {
 
-        toggleFooter: function() {
-            this.showFooter = !this.showFooter;
-        },
+        var self = this;
+        jQuery(this.$el).find('trix-editor').get(0).addEventListener('trix-change', function (e) {
+            self.feedData.message = e.path[0].innerHTML;
+        });
 
-        /**
-         * Delete Activity feed
-         *
-         * @param  {[object]} feed
-         *
-         * @return {[void | alert]}
-         */
-        deleteFeed: function( feed ) {
-            var data = {
-                action : 'erp_crm_delete_customer_activity',
-                feed_id : feed.id,
-                _wpnonce : wpCRMvue.nonce
-            };
-
-            if ( confirm( wpCRMvue.confirm ) ) {
-                jQuery.post( wpCRMvue.ajaxurl, data, function( resp ) {
-                    if ( resp.success ) {
-                        vm.feeds.$remove( feed )
-                    } else {
-                        alert( resp.data );
-                    };
-                });
-            };
-        },
-
-        editFeed: function( feed ) {
-            this.isEditable = true;
-        },
-
-        cancelUpdate: function() {
-            this.isEditable = false;
-        },
-
-        isSchedule: function( date ) {
-            return new Date() < new Date( date );
-        }
-
+        done();
     }
 
 });
@@ -617,12 +726,15 @@ var vm = new Vue({
 
     data: {
         tabShow: 'new_note',
-        feeds: {},
+        feeds: [],
         validation: {},
         feedData : {},
         isValid: false,
         customer_id : null,
         showFooter: false,
+        offset: 0,
+        limit : 2,
+        loading: false
     },
 
     events: {
@@ -637,93 +749,30 @@ var vm = new Vue({
 
     methods: {
 
-        toggleFooter: function( e ) {
-            jQuery( e.target ).closest('li').find('.timeline-footer').toggle();
+        loadMoreContent: function() {
+            vm.progreassStart('.feed-load-more');
+            this.loading = true;
+            this.offset = this.offset + this.limit;
+
+            var data = {
+                action : 'erp_crm_get_customer_activity',
+                customer_id : this.customer_id,
+                limit: this.limit,
+                offset: this.offset,
+            };
+
+            jQuery.post( wpCRMvue.ajaxurl, data, function( resp ) {
+                vm.loading = false;
+                vm.progreassDone(true);
+                setTimeout( function() {
+                    vm.feeds = vm.feeds.concat( resp.data );
+                }, 500 )
+                // vm.feeds.push( resp.data );
+            });
         },
 
-        /**
-         * Eidt customer activity feed
-         *
-         * @param  {[object]} feed
-         *
-         * @return {[object]}
-         */
-        editFeed: function( feed ) {
-
-            jQuery.erpPopup({
-                title: 'Edit Feed',
-                button: 'Save',
-                id: 'erp-customer-feed-edit',
-                content: wperp.template('erp-crm-customer-edit-feed')( feed ).trim(),
-                onReady: function () {
-                    var modal = this;
-
-                    jQuery('.select2').select2({
-                        width : 'resolve',
-                    });
-
-                    jQuery('.erp-date-field').datepicker({
-                        dateFormat: 'yy-mm-dd',
-                        changeMonth: true,
-                        changeYear: true,
-                        yearRange: '-100:+0',
-                    });
-
-                    jQuery( '.erp-time-field' ).timepicker({
-                        'scrollDefault': 'now',
-                        'step': 15
-                    });
-
-                    jQuery( 'select[data-selected]', modal ).each(function() {
-                        var self = jQuery(this),
-                            selected = self.data('selected');
-                        if ( selected !== '' ) {
-                            self.val( selected );
-                        }
-                    });
-
-                    jQuery( 'select[data-selected].select2').each( function() {
-                        var self = jQuery(this),
-                            selected = self.data('selected');
-                        if ( selected !== '' ) {
-                            if ( String(selected).indexOf(',') == '-1' ) {
-                                self.select2().select2( 'val', selected );
-                            } else {
-                                self.select2().select2( 'val', selected.split(',') );
-                            }
-                        }
-                    });
-
-                    jQuery( 'input[type=checkbox][data-checked]', modal ).each(function() {
-                        var self = jQuery(this),
-                            checked = self.data('checked');
-                        if ( checked !== '' ) {
-                            self.prop( 'checked', checked );
-                        }
-                    });
-
-                    jQuery( 'input[type=checkbox][data-checked]', modal ).trigger('change');
-
-                },
-                onSubmit: function(modal) {
-                    wp.ajax.send( {
-                        data: this.serialize(),
-                        success: function(res) {
-                            vm.feeds = _.map( vm.feeds, function( feed ){
-                                if ( feed.id == res.id ) {
-                                   return res;
-                                }
-                               return feed;
-                            });
-                            modal.closeModal();
-                        },
-                        error: function(error) {
-                            vm.progreassDone();
-                            alert( error );
-                        }
-                    });
-                }
-            });
+        toggleFooter: function( e ) {
+            jQuery( e.target ).closest('li').find('.timeline-footer').toggle();
         },
 
         /**
@@ -771,9 +820,15 @@ var vm = new Vue({
          *
          * @return {void}
          */
-        addCustomerFeed: function() {
+        addCustomerFeed: function( comp, feed_id ) {
 
-            vm.progreassStart('#erp-crm-feed-nav-content');
+            if ( feed_id ) {
+                this.feedData.id = feed_id;
+                vm.progreassStart( '#timeline-item-'+feed_id );
+            } else {
+                vm.progreassStart('#erp-crm-feed-nav-content');
+            }
+
             this.feedData._wpnonce = wpCRMvue.nonce;
 
             if ( this.feedData.type == 'log_activity' ) {
@@ -790,42 +845,54 @@ var vm = new Vue({
             };
 
             jQuery.post( wpCRMvue.ajaxurl, this.feedData, function( resp ) {
-                vm.feeds.splice( 0, 0, resp.data );
 
-                document.getElementById("erp-crm-activity-feed-form").reset();
+                if ( feed_id ) {
+                    vm.feeds = _.map( vm.feeds, function( feed ){
+                        if ( feed.id == resp.data.id ) {
+                           return resp.data;
+                        }
+                       return feed;
+                    });
 
-                if ( vm.feedData.type == 'log_activity' ) {
-                    vm.feedData.log_type = '';
-                    vm.feedData.dt = '';
-                    vm.feedData.tp = '';
-                };
+                    vm.progreassDone(true);
+                    comp.isEditable = false;
 
-                if ( vm.feedData.type == 'email' ) {
-                    vm.feedData.email_subject = '';
-                };
+                } else {
+                    vm.feeds.splice( 0, 0, resp.data );
+                    document.getElementById("erp-crm-activity-feed-form").reset();
 
+                    if ( vm.feedData.type == 'log_activity' ) {
+                        vm.feedData.log_type = '';
+                        vm.feedData.dt = '';
+                        vm.feedData.tp = '';
+                    };
 
-                if ( vm.feedData.type == 'schedule' ) {
-                    jQuery('#erp-crm-activity-invite-contact').select2().select2( "val", "" );
-                    vm.feedData.all_day                    = false;
-                    vm.feedData.allow_notification         = false;
-                    vm.feedData.schedule_title             = '';
-                    vm.feedData.schedule_type              = '';
-                    vm.feedData.notification_via           = '';
-                    vm.feedData.notification_time          = '';
-                    vm.feedData.notification_time_interval = '';
-                    vm.feedData.start_date                 = '';
-                    vm.feedData.start_time                 = '';
-                    vm.feedData.end_date                   = '';
-                    vm.feedData.end_time                   = '';
-                    vm.feedData.dtStart                    = '';
-                    vm.feedData.tpStart                    = '';
-                    vm.feedData.dtEnd                      = '';
-                    vm.feedData.tpEnd                      = '';
-                    vm.feedData.inviteContact              = [];
-                };
+                    if ( vm.feedData.type == 'email' ) {
+                        vm.feedData.email_subject = '';
+                    };
 
-                vm.progreassDone();
+                    if ( vm.feedData.type == 'schedule' ) {
+                        jQuery('#erp-crm-activity-invite-contact').select2().select2( "val", "" );
+                        vm.feedData.all_day                    = false;
+                        vm.feedData.allow_notification         = false;
+                        vm.feedData.schedule_title             = '';
+                        vm.feedData.schedule_type              = '';
+                        vm.feedData.notification_via           = '';
+                        vm.feedData.notification_time          = '';
+                        vm.feedData.notification_time_interval = '';
+                        vm.feedData.start_date                 = '';
+                        vm.feedData.start_time                 = '';
+                        vm.feedData.end_date                   = '';
+                        vm.feedData.end_time                   = '';
+                        vm.feedData.dtStart                    = '';
+                        vm.feedData.tpStart                    = '';
+                        vm.feedData.dtEnd                      = '';
+                        vm.feedData.tpEnd                      = '';
+                        vm.feedData.inviteContact              = [];
+                    };
+
+                    vm.progreassDone();
+                }
             });
         },
 
@@ -846,7 +913,9 @@ var vm = new Vue({
         fetchFeeds: function() {
             var data = {
                 action : 'erp_crm_get_customer_activity',
-                customer_id : this.customer_id
+                customer_id : this.customer_id,
+                limit: this.limit,
+                offset: this.offset,
             };
 
             jQuery.post( wpCRMvue.ajaxurl, data, function( resp ) {
@@ -871,8 +940,12 @@ var vm = new Vue({
          *
          * @param  {[string]} id
          */
-        progreassDone: function( id ) {
-            NProgress.done();
+        progreassDone: function( force ) {
+            if ( force ) {
+                NProgress.done( force );
+            } else {
+                NProgress.done();
+            }
         },
 
         /**
@@ -892,8 +965,8 @@ var vm = new Vue({
 /******************** End Main Vue instance **********************/
 
 // Bind trix-editor value with v-model message
-document.addEventListener('trix-change', function (e) {
-    vm.feedData.message = e.path[0].innerHTML;
-});
+// document.addEventListener('trix-change', function (e) {
+//     vm.feedData.message = e.path[0].innerHTML;
+// });
 
 

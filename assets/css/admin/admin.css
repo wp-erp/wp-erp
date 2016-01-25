@@ -431,6 +431,22 @@
              * -------------------
              */
 }
+.erp-single-customer .erp-customer-feeds .activity-content .feed-load-more {
+  position: relative;
+  padding: 20px 0px;
+  border-top: 2px solid #fafafa;
+}
+.erp-single-customer .erp-customer-feeds .activity-content .feed-load-more button {
+  border: none;
+  box-shadow: none;
+  position: absolute;
+  top: -1px;
+  right: 10px;
+  padding: 0px 30px;
+  height: 40px;
+  color: #969696;
+  border-radius: 0px;
+}
 .erp-single-customer .erp-customer-feeds .activity-content .no-activity-found {
   width: 100%;
   font-weight: bold;
@@ -544,7 +560,11 @@
 }
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-body #schedule .schedule-datetime input.start-time,
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-body #schedule .schedule-datetime input.start-date {
-  width: 36%;
+  margin-left: -2px;
+  width: 37%;
+}
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-body #schedule .schedule-datetime p.schedule-end {
+  padding-left: 10px !important;
 }
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-body #schedule p.schedule-all-day {
   padding: 12px 13px;

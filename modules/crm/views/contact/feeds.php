@@ -18,7 +18,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
         <div class="nav-content" id="erp-crm-feed-nav-content">
             <form action="" method="post" @submit.prevent = "addCustomerFeed()" id="erp-crm-activity-feed-form">
 
-                <new-note v-if="tabShow == 'new_note'"></new-note>
+                <new-note v-if="tabShow == 'new_note'" :feed="" keep-alive></new-note>
 
                 <email-note v-if="tabShow == 'email'"></email-note>
 
@@ -55,7 +55,15 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
 
         </ul>
 
-        <div class="no-activity-found" v-else>
+        <div class="feed-load-more" v-if="feeds.length">
+            <button @click="loadMoreContent( feeds )" class="button">
+                <i class="fa fa-cog fa-spin" v-if="loading"></i>
+                &nbsp;<span v-if="!loading"><?php _e( 'Load More', 'wp-erp' ); ?></span>
+                &nbsp;<span v-else><?php _e( 'Loading..', 'wp-erp' ); ?></span>
+            </button>
+        </div>
+
+        <div class="no-activity-found" v-if="!feeds.length">
             <?php _e( 'No Activity found for this Company', 'wp-erp' ); ?>
         </div>
     </div>
@@ -63,15 +71,20 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
 
 <script type="text/x-template" id="new-note-template">
     <div id="new_note">
-        <trix-editor id="text-editor" input="activity_message" placeholder="<?php _e( 'Type your note .....', 'wp-erp' ); ?>"></trix-editor>
-        <input id="activity_message" v-model="feedData.message" type="hidden" name="activity_message">
+
+        <trix-editor v-if="!feed" id="note-text-editor" input="note_activity_message" placeholder="<?php _e( 'Type your note .....', 'wp-erp' ); ?>"></trix-editor>
+        <input v-if="!feed" id="note_activity_message" v-model="feedData.message" type="hidden" name="note_activity_message" value="">
+
+        <trix-editor v-if="feed" id="note-text-editor" input="note_activity_message_{{ feed.id }}" placeholder="<?php _e( 'Type your note .....', 'wp-erp' ); ?>"></trix-editor>
+        <input v-if="feed" id="note_activity_message_{{ feed.id }}" v-model="feedData.message" type="hidden" name="note_activity_message_{{ feed.id }}" value="{{ feed.message }}">
 
         <div class="submit-action">
             <input type="hidden" name="user_id" v-model="feedData.user_id" value="<?php echo $customer->id; ?>" >
             <input type="hidden" name="created_by" v-model="feedData.created_by" value="<?php echo get_current_user_id(); ?>" >
             <input type="hidden" name="action" v-model="feedData.action" value="erp_customer_feeds_save_notes">
             <input type="hidden" name="type" v-model="feedData.type" value="new_note">
-            <input type="submit" :disabled = "!isValid" class="button button-primary" name="save_notes" value="<?php _e( 'Save Note', 'wp-erp' ); ?>">
+            <input type="submit" v-if="!feed" :disabled = "!isValid" class="button button-primary" name="save_notes" value="<?php _e( 'Save Note', 'wp-erp' ); ?>">
+            <input type="submit" v-if="feed" :disabled = "!isValid" class="button button-primary" name="edit_notes" value="<?php _e( 'Update Note', 'wp-erp' ); ?>">
             <input type="reset" class="button button-default" value="<?php _e( 'Discard', 'wp-erp' ); ?>">
         </div>
     </div>
@@ -87,20 +100,24 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                 <option value="sms"><?php _e( 'Log an SMS', 'wp-erp' ) ?></option>
             </select>
 
-            <input class="erp-right" v-model="feedData.tp" type="text" v-timepicker="feedData.tp" placeholder="12.00pm" size="10">
-            <input class="erp-right" v-model="feedData.dt" type="text" v-datepicker="feedData.dt" datedisable="upcomming" placeholder="yy-mm-dd">
+            <input class="erp-right" v-model="feedData.tp" value="{{{ feed.start_date | formatDate 'Y-m-d' }}}" type="text" v-timepicker="feedData.tp" placeholder="12.00pm" size="10">
+            <input class="erp-right" v-model="feedData.dt" type="text" value="{{ feed.start_date | formatAMPM }}" v-datepicker="feedData.dt" datedisable="upcomming" placeholder="yy-mm-dd">
             <span class="clearfix"></span>
         </p>
 
-        <input id="activity_message" v-model="feedData.message" type="hidden" name="log_activity">
-        <trix-editor input="activity_message" placeholder="<?php _e( 'Add your log .....', 'wp-erp' ); ?>"></trix-editor>
+        <trix-editor v-if="!feed" id="log-text-editor" input="log_activity_message" placeholder="<?php _e( 'Type your Log .....', 'wp-erp' ); ?>"></trix-editor>
+        <input v-if="!feed" id="log_activity_message" v-model="feedData.message" type="hidden" name="log_activity_message" value="">
+
+        <trix-editor v-if="feed" id="log-text-editor" input="log_activity_message_{{ feed.id }}" placeholder="<?php _e( 'Type your Log .....', 'wp-erp' ); ?>"></trix-editor>
+        <input v-if="feed" id="log_activity_message_{{ feed.id }}" v-model="feedData.message" type="hidden" name="log_activity_message_{{ feed.id }}" value="{{ feed.message }}">
 
         <div class="submit-action">
             <input type="hidden" name="user_id" v-model="feedData.user_id" value="<?php echo $customer->id; ?>" >
             <input type="hidden" name="created_by" v-model="feedData.created_by" value="<?php echo get_current_user_id(); ?>">
             <input type="hidden" name="action" v-model="feedData.action" value="erp_customer_feeds_save_notes">
             <input type="hidden" name="type" v-model="feedData.type" value="log_activity">
-            <input type="submit" :disabled = "!isValid" class="button button-primary" name="add_log_activity" value="<?php _e( 'Add Log', 'wp-erp' ); ?>">
+            <input type="submit" v-if="!feed" :disabled = "!isValid" class="button button-primary" name="add_log_activity" value="<?php _e( 'Add Log', 'wp-erp' ); ?>">
+            <input type="submit" v-if="feed" :disabled = "!isValid" class="button button-primary" name="edit_log_activity" value="<?php _e( 'Update Log', 'wp-erp' ); ?>">
             <input type="reset" class="button button-default" value="<?php _e( 'Discard', 'wp-erp' ); ?>">
         </div>
     </div>
@@ -130,8 +147,8 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
             </span>
         </p>
 
-        <input id="activity_message" type="hidden" v-model="feedData.message" name="email_body">
-        <trix-editor input="activity_message" placeholder="<?php _e( 'Type your email body .....', 'wp-erp' ); ?>"></trix-editor>
+        <input id="email_activity_message" type="hidden" v-model="feedData.message" name="email_activity_message">
+        <trix-editor input="email_activity_message" placeholder="<?php _e( 'Type your email body .....', 'wp-erp' ); ?>"></trix-editor>
 
         <div class="submit-action">
             <input type="hidden" name="action" v-model="feedData.action" value="erp_customer_feeds_save_notes">
@@ -168,14 +185,20 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
             </p>
 
             <p class="erp-left schedule-all-day">
-                <input type="checkbox" name="all_day" value="yes" v-model="feedData.all_day"> <?php _e( 'All Day', 'wp-erp' ); ?>
+                <input type="checkbox" name="all_day" v-model="feedData.all_day"> <?php _e( 'All Day', 'wp-erp' ); ?>
             </p>
             <div class="clearfix"></div>
         </div>
-        <p>
-            <input id="activity_message" v-model="feedData.message" type="hidden" name="log_activity">
-            <trix-editor input="activity_message" placeholder="<?php _e( 'Enter your schedule description .....', 'wp-erp' ); ?>"></trix-editor>
+        <p v-if="!feed">
+            <trix-editor input="schedule_activity_message" placeholder="<?php _e( 'Enter your schedule description .....', 'wp-erp' ); ?>"></trix-editor>
+            <input id="schedule_activity_message" v-model="feedData.message" type="hidden" name="schedule_activity_message" value="">
         </p>
+
+        <p v-if="feed">
+            <trix-editor input="schedule_activity_message_{{ feed.id }}" placeholder="<?php _e( 'Enter your schedule description .....', 'wp-erp' ); ?>"></trix-editor>
+            <input id="schedule_activity_message_{{ feed.id }}" v-model="feedData.message" type="hidden" name="schedule_activity_message_{{ feed.id }}" value="{{{ feed.message }}}">
+        </p>
+
         <div class="clearfix"></div>
         <p>
             <select name="invite_contact" id="erp-crm-activity-invite-contact" v-model="feedData.invite_contact" v-selecttwo="feedData.inviteContact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="Invite a contact">
@@ -190,7 +213,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                 <span class="sep">:</span>
                 <span class="value">
                     <select name="schedule_type" id="schedule_type" v-model="feedData.schedule_type">
-                        <option value="" selected><?php _e( '--Select--', 'wp-erp' ) ?></option>
+                        <option value=""><?php _e( '--Select--', 'wp-erp' ) ?></option>
                         <option value="meeting"><?php _e( 'Meeting', 'wp-erp' ); ?></option>
                         <option value="call"><?php _e( 'Call', 'wp-erp' ); ?></option>
                     </select>
@@ -198,7 +221,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
             </p>
 
             <p class="erp-left schedule-notification-allow">
-                <input type="checkbox" name="allow_notification" value="yes" v-model="feedData.allow_notification"> <?php _e( 'Allow notification', 'wp-erp' ); ?>
+                <input type="checkbox" name="allow_notification" v-model="feedData.allow_notification"> <?php _e( 'Allow notification', 'wp-erp' ); ?>
             </p>
             <div class="clearfix"></div>
         </div>
@@ -209,7 +232,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                 <span class="sep">:</span>
                 <span class="value">
                     <select name="notification_via" id="notification_via" v-model="feedData.notification_via">
-                        <option value="" selected><?php _e( '--Select--', 'wp-erp' ); ?></option>
+                        <option value=""><?php _e( '--Select--', 'wp-erp' ); ?></option>
                         <option value="email"><?php _e( 'Email', 'wp-erp' ); ?></option>
                         <option value="sms"><?php _e( 'SMS', 'wp-erp' ); ?></option>
                     </select>
@@ -222,7 +245,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                 <span class="value">
                     <input type="text" name="notification_time_interval" v-model="feedData.notification_time_interval" placeholder="10" style="width:60px;">
                     <select name="notification_time" id="notification_time" v-model="feedData.notification_time">
-                        <option value="" selected><?php _e( '-Select-', 'wp-erp' ); ?></option>
+                        <option value=""><?php _e( '-Select-', 'wp-erp' ); ?></option>
                         <option value="minute"><?php _e( 'minute', 'wp-erp' ); ?></option>
                         <option value="hour"><?php _e( 'hour', 'wp-erp' ); ?></option>
                         <option value="day"><?php _e( 'day', 'wp-erp' ); ?></option>
@@ -237,15 +260,15 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
             <input type="hidden" name="user_id" v-model="feedData.user_id" value="<?php echo $customer->id; ?>" >
             <input type="hidden" name="action" v-model="feedData.action" value="erp_customer_feeds_save_notes">
             <input type="hidden" name="type" v-model="feedData.type" value="schedule">
-            <input type="submit" :disabled = "!isValid" class="button button-primary" name="create_schedule" value="<?php _e( 'Create Schedule', 'wp-erp' ); ?>">
+            <input type="submit" v-if="!feed" :disabled = "!isValid" class="button button-primary" name="create_schedule" value="<?php _e( 'Create Schedule', 'wp-erp' ); ?>">
+            <input type="submit" v-if="feed" :disabled = "!isValid" class="button button-primary" name="edit_schedule" value="<?php _e( 'Update Schedule', 'wp-erp' ); ?>">
             <input type="reset" class="button button-default" value="<?php _e( 'Discard', 'wp-erp' ); ?>">
         </div>
     </div>
 </script>
-
 <script type="text/x-template" id="timeline-item-template">
 
-    <div class="timeline-item" v-if="!isEditable">
+    <div class="timeline-item" id="timeline-item-{{ feed.id }}" v-if="!isEditable">
 
         <tooltip content="<i class='fa fa-clock-o'></i>" :title="feed.created_at | formatDateTime"></tooltip>
 
@@ -263,26 +286,26 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
 
     </div>
 
-    <div class="timeline-item editform" v-if="isEditable">
+    <div class="timeline-item" id="timeline-item-{{ feed.id }}" v-if="isEditable">
 
-        <span class="time erp-tips" @click.prevent="cancelUpdate" title="January, 21 at 6:44 am"><i class="fa fa-times"></i></span>
+        <span class="time erp-tips" @click.prevent="cancelUpdate"><i class="fa fa-times"></i></span>
 
         <h3 class="timeline-header" @click.prevent="toggleFooter">
             <?php _e( 'Edit this feed', 'wp-erp' ); ?>
         </h3>
 
         <div class="timeline-body">
-            <form action="" method="post" @submit.prevent = "updateCustomerFeed()" id="erp-crm-activity-edit-feed-form">
+            <form action="" method="post" @submit.prevent = "updateCustomerFeed( feed.id )" id="erp-crm-activity-edit-feed-form">
 
-                <new-note v-if="feed.type == 'new_note'"></new-note>
+                <new-note v-if="feed.type == 'new_note'" :feed="feed"></new-note>
 
-                <log-activity v-if="( feed.type == 'log_activity' && !isSchedule( feed.start_date ) )"></log-activity>
+                <log-activity :feed="feed" v-if="( feed.type == 'log_activity' && !isSchedule( feed.start_date ) )"></log-activity>
 
-                <schedule-note v-if="( feed.type == 'log_activity' && isSchedule( feed.start_date ) )"></schedule-note>
+                <schedule-note :feed="feed" v-if="( feed.type == 'log_activity' && isSchedule( feed.start_date ) )"></schedule-note>
 
+                <!--<input type="hidden" name="feedData.id" value="{{ feed.id }}"> -->
             </form>
         </div>
     </div>
-
 </script>
 

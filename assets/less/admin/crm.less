@@ -406,6 +406,24 @@
 
         .activity-content {
 
+            .feed-load-more {
+                position:relative;
+                padding: 20px 0px;
+                border-top: 2px solid #fafafa;
+
+                button {
+                    border: none;
+                    box-shadow: none;
+                    position: absolute;
+                    top: -1px;
+                    right: 10px;
+                    padding: 0px 30px;
+                    height: 40px;
+                    color: #969696;
+                    border-radius: 0px;
+                }
+            }
+
             .no-activity-found {
                 width: 100%;
                 font-weight: bold;
@@ -537,8 +555,16 @@
                     .schedule-datetime {
                         input.start-time,
                         input.start-date {
-                            width: 36%;
+                            margin-left: -2px;
+                            width: 37%;
                         }
+
+                        p {
+                            &.schedule-end {
+                                padding-left: 10px !important;
+                            }
+                        }
+
                     }
 
                     p {

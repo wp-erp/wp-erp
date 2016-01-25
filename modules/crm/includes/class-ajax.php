@@ -289,7 +289,7 @@ class Ajax_Handler {
      * @return json
      */
     public function fetch_all_activity() {
-        $feeds = erp_crm_get_customer_activity( $_POST['customer_id'] );
+        $feeds = erp_crm_get_customer_activity( $_POST );
         $this->send_success( $feeds );
     }
 
@@ -318,6 +318,7 @@ class Ajax_Handler {
             case 'new_note':
 
                 $save_data = [
+                    'id'         => ( isset( $postdata['id'] ) && ! empty( $postdata['id'] ) ) ? $postdata['id'] : '',
                     'user_id'    => $postdata['user_id'],
                     'created_by' => $postdata['created_by'],
                     'message'    => $postdata['message'],
@@ -363,6 +364,7 @@ class Ajax_Handler {
             case 'log_activity':
 
                 $save_data = [
+                    'id'         => ( isset( $postdata['id'] ) && ! empty( $postdata['id'] ) ) ? $postdata['id'] : '',
                     'user_id'    => $postdata['user_id'],
                     'created_by' => $postdata['created_by'],
                     'message'    => $postdata['message'],
