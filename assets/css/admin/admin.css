@@ -520,6 +520,7 @@
   padding: 10px;
   font-size: 12px;
   line-height: 1.1;
+  cursor: pointer;
 }
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-header > span.timeline-feed-header-text {
   display: block;
@@ -595,6 +596,7 @@
   text-align: center;
   left: 18px;
   top: 0;
+  cursor: pointer;
 }
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > .time-label > span {
   font-weight: bold;
