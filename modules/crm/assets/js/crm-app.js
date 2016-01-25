@@ -428,7 +428,8 @@ Vue.component( 'new-note', {
 
         var self = this;
         jQuery(this.$el).find('trix-editor').get(0).addEventListener('trix-change', function (e) {
-            self.feedData.message = e.path[0].innerHTML;
+            // console.log(e)
+            self.feedData.message = e.target.innerHTML;
         });
 
         done();
