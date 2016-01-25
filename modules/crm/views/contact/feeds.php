@@ -55,7 +55,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
 
         </ul>
 
-        <div class="feed-load-more" v-if="feeds.length < limit">
+        <div class="feed-load-more" v-if="feeds.length">
             <button @click="loadMoreContent( feeds )" class="button">
                 <i class="fa fa-cog fa-spin" v-if="loading"></i>
                 &nbsp;<span v-if="!loading"><?php _e( 'Load More', 'wp-erp' ); ?></span>
@@ -85,7 +85,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
             <input type="hidden" name="type" v-model="feedData.type" value="new_note">
             <input type="submit" v-if="!feed" :disabled = "!isValid" class="button button-primary" name="save_notes" value="<?php _e( 'Save Note', 'wp-erp' ); ?>">
             <input type="submit" v-if="feed" :disabled = "!isValid" class="button button-primary" name="edit_notes" value="<?php _e( 'Update Note', 'wp-erp' ); ?>">
-            <input type="reset" class="button button-default" value="<?php _e( 'Discard', 'wp-erp' ); ?>">
+            <input type="reset" v-if="!feed" class="button button-default" value="<?php _e( 'Discard', 'wp-erp' ); ?>">
         </div>
     </div>
 </script>
@@ -118,7 +118,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
             <input type="hidden" name="type" v-model="feedData.type" value="log_activity">
             <input type="submit" v-if="!feed" :disabled = "!isValid" class="button button-primary" name="add_log_activity" value="<?php _e( 'Add Log', 'wp-erp' ); ?>">
             <input type="submit" v-if="feed" :disabled = "!isValid" class="button button-primary" name="edit_log_activity" value="<?php _e( 'Update Log', 'wp-erp' ); ?>">
-            <input type="reset" class="button button-default" value="<?php _e( 'Discard', 'wp-erp' ); ?>">
+            <input type="reset" v-if="!feed" class="button button-default" value="<?php _e( 'Discard', 'wp-erp' ); ?>">
         </div>
     </div>
 </script>
@@ -262,7 +262,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
             <input type="hidden" name="type" v-model="feedData.type" value="schedule">
             <input type="submit" v-if="!feed" :disabled = "!isValid" class="button button-primary" name="create_schedule" value="<?php _e( 'Create Schedule', 'wp-erp' ); ?>">
             <input type="submit" v-if="feed" :disabled = "!isValid" class="button button-primary" name="edit_schedule" value="<?php _e( 'Update Schedule', 'wp-erp' ); ?>">
-            <input type="reset" class="button button-default" value="<?php _e( 'Discard', 'wp-erp' ); ?>">
+            <input type="reset" v-if="!feed" class="button button-default" value="<?php _e( 'Discard', 'wp-erp' ); ?>">
         </div>
     </div>
 </script>
@@ -288,7 +288,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
 
     <div class="timeline-item" id="timeline-item-{{ feed.id }}" v-if="isEditable">
 
-        <span class="time erp-tips" @click.prevent="cancelUpdate"><i class="fa fa-times"></i></span>
+        <span class="time cancel-timeline-feed-edit" @click.prevent="cancelUpdate"><i class="fa fa-times"></i></span>
 
         <h3 class="timeline-header" @click.prevent="toggleFooter">
             <?php _e( 'Edit this feed', 'wp-erp' ); ?>

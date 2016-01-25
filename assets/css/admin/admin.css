@@ -507,6 +507,9 @@
   padding: 0;
   position: relative;
 }
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item .cancel-timeline-feed-edit {
+  cursor: pointer;
+}
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .time {
   color: #999;
   float: right;

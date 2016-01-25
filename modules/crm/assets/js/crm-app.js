@@ -762,9 +762,9 @@ var vm = new Vue({
             };
 
             jQuery.post( wpCRMvue.ajaxurl, data, function( resp ) {
-                vm.loading = false;
                 vm.progreassDone(true);
                 setTimeout( function() {
+                    vm.loading = false;
                     vm.feeds = vm.feeds.concat( resp.data );
                 }, 500 )
                 // vm.feeds.push( resp.data );
@@ -847,15 +847,18 @@ var vm = new Vue({
             jQuery.post( wpCRMvue.ajaxurl, this.feedData, function( resp ) {
 
                 if ( feed_id ) {
-                    vm.feeds = _.map( vm.feeds, function( feed ){
-                        if ( feed.id == resp.data.id ) {
-                           return resp.data;
-                        }
-                       return feed;
-                    });
-
                     vm.progreassDone(true);
-                    comp.isEditable = false;
+
+                    setTimeout( function() {
+                        vm.feeds = _.map( vm.feeds, function( feed ){
+                            if ( feed.id == resp.data.id ) {
+                               return resp.data;
+                            }
+                           return feed;
+                        });
+
+                        comp.isEditable = false;
+                    }, 500 )
 
                 } else {
                     vm.feeds.splice( 0, 0, resp.data );
