@@ -65,7 +65,11 @@ Vue.filter( 'formatFeedContent', function ( message, feed ) {
 
 
         if ( feed.extra.all_day == 'true' ) {
-            var datetime = startDate + ' to ' + endDate;
+            if ( filters.formatDate( feed.start_date, 'Y-m-d' ) == filters.formatDate( feed.end_date, 'Y-m-d' ) ) {
+                var datetime = startDate;
+            } else {
+                var datetime = startDate + ' to ' + endDate;
+            }
         } else {
             if ( filters.formatDate( feed.start_date, 'Y-m-d' ) == filters.formatDate( feed.end_date, 'Y-m-d' ) ) {
                 var datetime = startDate + ' at ' + startTime + ' to ' + endTime;
@@ -290,7 +294,7 @@ Vue.component( 'timeline-header', TimeLineHeader );
 
 Vue.component( 'timeline-item', {
     props: ['feed'],
-    template : '#timeline-item-template',
+    template : '#erp-crm-timeline-item-template',
 
     data: function() {
         return {
@@ -377,7 +381,7 @@ Vue.component( 'timeline-item', {
 Vue.component( 'new-note', {
     props: ['feed'],
 
-    template: '#new-note-template',
+    template: '#erp-crm-new-note-template',
 
     data: function() {
         return {
@@ -392,6 +396,11 @@ Vue.component( 'new-note', {
     methods: {
         notify: function () {
             this.$dispatch('bindFeedData', this.feedData);
+        },
+
+        cancelUpdateFeed: function() {
+            this.$parent.$data.isEditable = false;
+            this.$parent.$data.editfeedData = {};
         }
     },
 
@@ -428,7 +437,6 @@ Vue.component( 'new-note', {
 
         var self = this;
         jQuery(this.$el).find('trix-editor').get(0).addEventListener('trix-change', function (e) {
-            // console.log(e)
             self.feedData.message = e.target.innerHTML;
         });
 
@@ -447,7 +455,7 @@ Vue.component( 'new-note', {
 Vue.component( 'log-activity', {
     props: ['feed'],
 
-    template: '#log-activity-template',
+    template: '#erp-crm-log-activity-template',
 
     data: function() {
         return {
@@ -467,6 +475,11 @@ Vue.component( 'log-activity', {
         notify: function () {
             this.$dispatch('bindFeedData', this.feedData );
         },
+
+        cancelUpdateFeed: function() {
+            this.$parent.$data.isEditable = false;
+            this.$parent.$data.editfeedData = {};
+        }
     },
 
     events: {
@@ -530,7 +543,7 @@ Vue.component( 'log-activity', {
  * @return {[void]}
  */
 Vue.component( 'email-note', {
-    template: '#email-note-template',
+    template: '#erp-crm-email-note-template',
 
     data: function() {
         return {
@@ -599,7 +612,7 @@ Vue.component( 'email-note', {
  */
 Vue.component( 'schedule-note', {
     props: ['feed'],
-    template: '#schedule-note-template',
+    template: '#erp-crm-schedule-note-template',
 
     data: function() {
         return {
@@ -626,8 +639,8 @@ Vue.component( 'schedule-note', {
     events: {
         'bindEditFeedData': function (feed ) {
             var invitedUser = feed.extra.invited_user.map( function( elm ) { return elm.id } ).join(',');
-            this.feedData.all_day                    = feed.extra.all_day == 'ture' ? true : false;
-            this.feedData.allow_notification         = feed.extra.allow_notification == 'ture' ? true : false;
+            this.feedData.all_day                    = feed.extra.all_day == 'true' ? true : false;
+            this.feedData.allow_notification         = feed.extra.allow_notification == 'true' ? true : false;
             this.feedData.schedule_title             = feed.extra.schedule_title;
             this.feedData.schedule_type              = feed.log_type;
             this.feedData.notification_via           = feed.extra.notification_via;
@@ -653,6 +666,11 @@ Vue.component( 'schedule-note', {
     methods: {
         notify: function () {
             this.$dispatch( 'bindFeedData', this.feedData );
+        },
+
+        cancelUpdateFeed: function() {
+            this.$parent.$data.isEditable = false;
+            this.$parent.$data.editfeedData = {};
         }
     },
 

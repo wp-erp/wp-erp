@@ -201,6 +201,23 @@ function erp_get_js_template( $file_path, $id ) {
     }
 }
 
+/**
+ * Embed a Vue Component template page with its ID
+ *
+ * @param  string  the file path of the file
+ * @param  string  the script id
+ *
+ * @return void
+ */
+function erp_get_vue_component_template( $file_path, $id ) {
+    if ( file_exists( $file_path ) ) {
+        echo '<script type="text/x-template" id="'. $id . '">' . "\n";
+        include_once $file_path;
+        echo "\n" . '</script>' . "\n";
+    }
+}
+
+
 if ( ! function_exists( 'strip_tags_deep' ) ) {
 
     /**
