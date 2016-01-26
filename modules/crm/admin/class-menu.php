@@ -29,8 +29,11 @@ class Admin_Menu {
         add_menu_page( __( 'CRM', 'wp-erp' ), __( 'CRM', 'wp-erp' ), 'manage_options', 'erp-sales', array( $this, 'dashboard_page' ), 'dashicons-chart-bar', null );
 
         add_submenu_page( 'erp-sales', __( 'Overview', 'wp-erp' ), __( 'Overview', 'wp-erp' ), 'manage_options', 'erp-sales', array( $this, 'dashboard_page' ) );
-        add_submenu_page( 'erp-sales', __( 'Contact', 'wp-erp' ), __( 'Contact', 'wp-erp' ), 'manage_options', 'erp-sales-customers', array( $this, 'contact_page' ) );
-        add_submenu_page( 'erp-sales', __( 'Company', 'wp-erp' ), __( 'Company', 'wp-erp' ), 'manage_options', 'erp-sales-companies', array( $this, 'company_page' ) );
+        add_submenu_page( 'erp-sales', __( 'Contacts', 'wp-erp' ), __( 'Contacts', 'wp-erp' ), 'manage_options', 'erp-sales-customers', array( $this, 'contact_page' ) );
+        add_submenu_page( 'erp-sales', __( 'Companies', 'wp-erp' ), __( 'Companies', 'wp-erp' ), 'manage_options', 'erp-sales-companies', array( $this, 'company_page' ) );
+        add_submenu_page( 'erp-sales', __( 'Schedules', 'wp-erp' ), __( 'Schedules', 'wp-erp' ), 'manage_options', 'erp-sales-schedules', array( $this, 'schedules_page' ) );
+        add_submenu_page( 'erp-sales', __( 'Contact Groups', 'wp-erp' ), __( 'Contact Groups', 'wp-erp' ), 'manage_options', 'erp-sales-contact-groups', array( $this, 'contact_group_page' ) );
+        add_submenu_page( 'erp-sales', __( 'Campaigns', 'wp-erp' ), __( 'Campaigns', 'wp-erp' ), 'manage_options', 'erp-sales-campaigns', array( $this, 'campaigns_page' ) );
         // add_submenu_page( 'erp-sales', __( 'Oppurtunity', 'wp-erp' ), __( 'Oppurtunity', 'wp-erp' ), 'manage_options', 'erp-sales-oppurtunity', array( $this, 'dashboard_page' ) );
         // add_submenu_page( 'erp-sales', __( 'Customer Category', 'wp-erp' ), __( 'Customer Category', 'wp-erp' ), 'manage_options', 'erp-sales-category', array( $this, 'dashboard_page' ) );
         // add_submenu_page( 'erp-sales', __( 'Newsletter', 'wp-erp' ), __( 'Newsletter', 'wp-erp' ), 'manage_options', 'erp-sales-newsletter', array( $this, 'dashboard_page' ) );
@@ -165,6 +168,18 @@ class Admin_Menu {
      */
     public function oppurtunity_page() {
         include WPERP_CRM_VIEWS . '/dashboard.php';
+    }
+
+    public function schedules_page() {
+        echo "Schedule Page. This page will display all scheduled calls and meetings";
+    }
+
+    public function contact_group_page() {
+        echo 'This is the contact group page, aka Subscription List';
+    }
+
+    public function campaigns_page() {
+        echo "Newsletter Campaigns";
     }
 }
 
