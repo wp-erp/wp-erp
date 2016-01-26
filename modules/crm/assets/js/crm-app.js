@@ -778,7 +778,7 @@ var vm = new Vue({
         customer_id : null,
         showFooter: false,
         offset: 0,
-        limit : 2,
+        limit : 10,
         loading: false
     },
 
