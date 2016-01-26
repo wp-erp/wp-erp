@@ -56,6 +56,13 @@ Vue.filter( 'formatFeedContent', function ( message, feed ) {
                   '<div class="timeline-email-body">' + feed.message + '</div>';
     };
 
+    if ( feed.type == 'log_activity' && ! vm.isSchedule( feed.start_date ) ) {
+        if ( feed.log_type == 'email' ) {
+            message = '<div class="timeline-email-subject">Subject : ' + feed.email_subject + '</div>' +
+                  '<div class="timeline-email-body">' + feed.message + '</div>';
+        }
+    }
+
     if ( feed.type == 'log_activity' && vm.isSchedule( feed.start_date ) ) {
         var filters = vm.$options.filters,
             startDate = filters.formatDate( feed.start_date, 'j F' ),
