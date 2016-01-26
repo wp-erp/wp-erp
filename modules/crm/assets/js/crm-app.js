@@ -226,6 +226,8 @@ var TimeLineHeader = Vue.extend({
                     +'<span v-if="isEmail">sent an email to <strong>{{ createdForUser }}</strong></span>'
                     +'<span v-if="isLog">'
                         +'logged {{ logType }} on {{ logDateTime | formatDateTime }} for <strong>{{ createdForUser }}</strong>'
+                        +' <span v-if="countUser == 1">and <strong>{{ feed.extra.invited_user[0].name }}</strong></span>'
+                        +'<span v-if="( countUser != 0 ) && countUser != 1"> and <strong><tooltip :content="countUser" :title="invitedUser"></tooltip></strong></span>'
                     +'</span>'
                     +'<span v-if="isSchedule">'
                         +'have scheduled {{ logType }} with '
@@ -463,6 +465,8 @@ Vue.component( 'log-activity', {
             feedData: {
                 message: '',
                 log_type: '',
+                email_subject: '',
+                inviteContact: '',
                 dt: '',
                 tp: ''
             },
@@ -484,9 +488,23 @@ Vue.component( 'log-activity', {
 
     events: {
         'bindEditFeedData': function (feed ) {
-            this.feedData.log_type = feed.log_type;
-            this.feedData.dt = vm.$options.filters.formatDate( feed.start_date, 'Y-m-d' );
-            this.feedData.tp = vm.$options.filters.formatAMPM( feed.start_date );
+            this.feedData.log_type      = feed.log_type;
+            this.feedData.email_subject = ( feed.log_type == 'email' ) ? feed.email_subject : '';
+            this.feedData.dt            = vm.$options.filters.formatDate( feed.start_date, 'Y-m-d' );
+            this.feedData.tp            = vm.$options.filters.formatAMPM( feed.start_date );
+
+            if ( feed.log_type == 'meeting' && ! _.isEmpty( feed.extra.invited_user ) ) {
+                var invitedUser             = feed.extra.invited_user.map( function( elm ) { return elm.id } ).join(',');
+                this.feedData.inviteContact = invitedUser;
+                var self = jQuery( this.$el ).find( 'select.select2' );
+
+                if ( String(invitedUser).indexOf(',') == '-1' ) {
+                    self.select2().select2( 'val', invitedUser );
+                } else {
+                    self.select2().select2( 'val', invitedUser.split(',') );
+                }
+            };
+
         }
     },
 
@@ -497,7 +515,8 @@ Vue.component( 'log-activity', {
                 message : !!this.feedData.message,
                 log_type : !!this.feedData.log_type,
                 log_date : !!this.feedData.dt,
-                log_time : !!this.feedData.tp
+                log_time : !!this.feedData.tp,
+                email_subject : ( this.feedData.log_type == 'email' ) ? !!this.feedData.email_subject : true
             }
         },
 
@@ -853,6 +872,7 @@ var vm = new Vue({
             if ( this.feedData.type == 'log_activity' ) {
                 this.feedData.log_date = this.feedData.dt;
                 this.feedData.log_time = this.feedData.tp;
+                this.feedData.invite_contact = this.feedData.inviteContact;
             };
 
             if ( this.feedData.type == 'schedule' ) {
@@ -884,9 +904,12 @@ var vm = new Vue({
                     document.getElementById("erp-crm-activity-feed-form").reset();
 
                     if ( vm.feedData.type == 'log_activity' ) {
-                        vm.feedData.log_type = '';
-                        vm.feedData.dt = '';
-                        vm.feedData.tp = '';
+                        vm.feedData.log_type      = '';
+                        vm.feedData.email_subject = '';
+                        vm.feedData.dt            = '';
+                        vm.feedData.tp            = '';
+                        vm.feedData.inviteContact = [];
+
                     };
 
                     if ( vm.feedData.type == 'email' ) {

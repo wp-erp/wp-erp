@@ -441,7 +441,7 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
         'schedule_title'             => ( isset( $postdata['schedule_title'] ) && !empty( $postdata['schedule_title'] ) ) ? $postdata['schedule_title'] : '',
         'all_day'                    => isset( $postdata['all_day'] ) ? (string)$postdata['all_day'] : 'false',
         'allow_notification'         => isset( $postdata['allow_notification'] ) ? (string)$postdata['allow_notification'] : 'false',
-        'invite_contact'             => isset( $postdata['invite_contact'] ) ? $postdata['invite_contact'] : []
+        'invite_contact' => ( isset( $postdata['invite_contact'] ) && ! empty( $postdata['invite_contact'] ) ) ? $postdata['invite_contact'] : []
     ];
 
     $extra_data['notification_via']           = ( isset( $postdata['notification_via'] ) && $extra_data['allow_notification'] == 'true' ) ? $postdata['notification_via'] : '';

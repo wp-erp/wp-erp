@@ -16,10 +16,24 @@ $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
         <span class="clearfix"></span>
     </p>
 
-    <trix-editor v-if="!feed" id="log-text-editor" input="log_activity_message" placeholder="<?php _e( 'Type your Log .....', 'wp-erp' ); ?>"></trix-editor>
+    <p v-if="feedData.log_type == 'email'">
+        <label>Subject</label>
+        <span class="sep">:</span>
+        <span class="value">
+            <input type="text" class="email_subject" name="email_subject" v-model="feedData.email_subject" placeholder="<?php _e( 'Subject log...', 'wp-erp' ); ?>">
+        </span>
+    </p>
+
+    <p v-if="feedData.log_type == 'meeting'">
+        <select name="selected_contact" id="erp-crm-activity-invite-contact" v-model="feedData.invite_contact" v-selecttwo="feedData.inviteContact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="Select contacts...">
+            <?php echo erp_crm_get_emplyees(); ?>
+        </select>
+    </p>
+
+    <trix-editor v-if="!feed" id="log-text-editor" input="log_activity_message" placeholder="<?php _e( 'Type your description .....', 'wp-erp' ); ?>"></trix-editor>
     <input v-if="!feed" id="log_activity_message" v-model="feedData.message" type="hidden" name="log_activity_message" value="">
 
-    <trix-editor v-if="feed" id="log-text-editor" input="log_activity_message_{{ feed.id }}" placeholder="<?php _e( 'Type your Log .....', 'wp-erp' ); ?>"></trix-editor>
+    <trix-editor v-if="feed" id="log-text-editor" input="log_activity_message_{{ feed.id }}" placeholder="<?php _e( 'Type your description .....', 'wp-erp' ); ?>"></trix-editor>
     <input v-if="feed" id="log_activity_message_{{ feed.id }}" v-model="feedData.message" type="hidden" name="log_activity_message_{{ feed.id }}" value="{{ feed.message }}">
 
     <div class="submit-action">

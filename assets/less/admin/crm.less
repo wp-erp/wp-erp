@@ -266,6 +266,59 @@
                 margin: 0px;
                 border-bottom: 1px solid #eee;
                 padding: 8px 0px;
+
+                &:first-child {
+                    padding-bottom: 16px;
+                }
+
+                span.select2-selection--multiple {
+                    border:none;
+                    height: 32px;
+
+                    input {
+                        width: 100% !important;
+                    }
+                }
+
+                label {
+                    min-width: 12%;
+                    display: inline-block;
+                    vertical-align: middle;
+                    margin-left: 5px;
+                }
+
+                span.sep {
+                    width: 15px;
+                    display: inline-block;
+                }
+
+                input.email_subject {
+                    border:none;
+                    box-shadow: none;
+                    transition:none;
+                    width: 80%;
+
+                    &:focus {
+                        outline:none;
+                    }
+
+                    &::-webkit-input-placeholder {
+                       font-style: italic;
+                       font-weight: normal;
+                    }
+                    &:-moz-placeholder {
+                       font-style: italic;
+                       font-weight: normal;
+                    }
+                    &::-moz-placeholder {
+                       font-style: italic;
+                       font-weight: normal;
+                    }
+                    &:-ms-input-placeholder {
+                       font-style: italic;
+                       font-weight: normal;
+                    }
+                }
             }
         }
 

@@ -363,19 +363,26 @@ class Ajax_Handler {
 
             case 'log_activity':
 
+
+                $extra_data = [
+                    'invite_contact' => ( isset( $postdata['invite_contact'] ) && ! empty( $postdata['invite_contact'] ) ) ? $postdata['invite_contact'] : []
+                ];
+
                 $save_data = [
-                    'id'         => ( isset( $postdata['id'] ) && ! empty( $postdata['id'] ) ) ? $postdata['id'] : '',
-                    'user_id'    => $postdata['user_id'],
-                    'created_by' => $postdata['created_by'],
-                    'message'    => $postdata['message'],
-                    'type'       => $postdata['type'],
-                    'log_type'   => $postdata['log_type'],
-                    'start_date' => date( 'Y-m-d H:i:s', strtotime( $postdata['log_date'].$postdata['log_time'] ) )
+                    'id'            => ( isset( $postdata['id'] ) && ! empty( $postdata['id'] ) ) ? $postdata['id'] : '',
+                    'user_id'       => $postdata['user_id'],
+                    'created_by'    => $postdata['created_by'],
+                    'message'       => $postdata['message'],
+                    'type'          => $postdata['type'],
+                    'log_type'      => $postdata['log_type'],
+                    'email_subject' => ( isset( $postdata['email_subject'] ) && ! empty( $postdata['email_subject'] ) ) ? $postdata['email_subject'] : '',
+                    'start_date'    => date( 'Y-m-d H:i:s', strtotime( $postdata['log_date'].$postdata['log_time'] ) ),
+                    'extra'         => base64_encode( json_encode( $extra_data ) )
                 ];
 
                 $data = erp_crm_save_customer_feed_data( $save_data );
 
-                do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
+                do_action( 'erp_crm_save_customer_log_activity_feed', $save_data, $postdata );
 
                 if ( ! $data ) {
                     $this->send_error( __( 'Somthing is wrong, Please try later', 'wp-erp' ) );
