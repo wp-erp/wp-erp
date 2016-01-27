@@ -27,6 +27,14 @@
                                     <i class="fa fa-phone"></i>&nbsp;
                                     <?php echo $customer->mobile; ?>
                                 </p>
+
+                                <ul class="erp-list list-inline social-profile">
+                                    <li><a href="#"><i class="fa fa-facebook-square"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-twitter-square"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-google-plus-square"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-linkedin-square"></i></a></li>
+                                </ul>
+
                             </div>
                         </div>
                     </div>

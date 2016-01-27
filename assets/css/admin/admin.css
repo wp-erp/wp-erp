@@ -236,6 +236,13 @@
 .erp-single-customer .erp-single-customer-content .customer-image-wraper .details p {
   margin: 7px 0px;
 }
+.erp-single-customer .erp-single-customer-content .customer-image-wraper .details ul.social-profile li {
+  margin-right: 5px;
+}
+.erp-single-customer .erp-single-customer-content .customer-image-wraper .details ul.social-profile li a {
+  color: #505050;
+  font-size: 21px;
+}
 .erp-single-customer .erp-single-customer-content .customer-company-info .company-profile-content .postbox .action {
   position: absolute;
   top: 12px;
