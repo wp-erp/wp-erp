@@ -25,16 +25,24 @@
                                     <i class="fa fa-envelope"></i>&nbsp;
                                     <?php echo erp_get_clickable( 'email', $customer->email ); ?>
                                 </p>
-                                <p>
-                                    <i class="fa fa-phone"></i>&nbsp;
-                                    <?php echo $customer->mobile; ?>
-                                </p>
+
+                                <?php if ( $customer->mobile ): ?>
+                                    <p>
+                                        <i class="fa fa-phone"></i>&nbsp;
+                                        <?php echo $customer->mobile; ?>
+                                    </p>
+                                <?php endif ?>
 
                                 <ul class="erp-list list-inline social-profile">
-                                    <li><a href="#"><i class="fa fa-facebook-square"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-twitter-square"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-google-plus-square"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-linkedin-square"></i></a></li>
+                                    <?php $social_field = erp_crm_get_social_field(); ?>
+
+                                    <?php foreach ( $social_field as $social_key => $social_value ) : ?>
+                                        <?php $social_field_data = $customer->get_meta( $social_key, true ); ?>
+
+                                        <?php if ( ! empty( $social_field_data ) ): ?>
+                                            <li><a href="<?php echo $social_field_data; ?>"><?php echo $social_value['icon']; ?></a></li>
+                                        <?php endif ?>
+                                    <?php endforeach ?>
                                 </ul>
 
                             </div>
@@ -100,36 +108,6 @@
 
                                 <?php endforeach; ?>
                                 <a href="#" data-id="<?php echo $customer->id; ?>" data-type="assign_customer" title="<?php _e( 'Assign a Contact', 'wp-erp' ); ?>" class="button button-primary" id="erp-customer-add-company"><i class="fa fa-plus"></i>&nbsp;<?php _e( 'Assign a Contact', 'wp-erp' ); ?></a>
-                            </div>
-                        </div>
-                    </div><!-- .postbox -->
-
-                    <div class="postbox customer-social-info">
-                        <div class="erp-handlediv" title="<?php _e( 'Click to toggle', 'wp-erp' ); ?>"><br></div>
-                        <h3 class="erp-hndle"><span><?php _e( 'Social Info', 'wp-erp' ); ?></span></h3>
-                        <div class="inside contact-social-content">
-                            <div class="contact-list">
-                                <?php
-                                    $social_info          = $customer->get_meta( 'crm_social_profile' );
-                                    $default_social_field = erp_crm_get_social_field();
-                                ?>
-                                <?php if ( $social_info ): ?>
-                                    <ul class="erp-list separated">
-                                    <?php foreach ( $social_info as $social_key => $social_value ) : ?>
-                                        <?php
-                                            $icons = $default_social_field[$social_key]['icon'];
-                                            $label = $default_social_field[$social_key]['title'];
-                                            $value = $social_value;
-                                        ?>
-                                        <?php if ( $value ): ?>
-                                            <li><?php erp_print_key_value( sprintf( '%s %s', $icons, $label ), erp_get_clickable( 'url', $value ) ); ?></li>
-                                        <?php endif ?>
-                                    <?php endforeach ?>
-                                    </ul>
-                                    <a href="#" data-id="<?php echo $customer->id; ?>" data-social_profile='<?php echo json_encode( $social_info ); ?>' title="<?php _e( 'Update Social Profile', 'wp-erp' ); ?>" class="button button-primary" id="customer-social-field"><?php _e( '<i class="fa fa-plus"></i> Update Social Profile', 'wp-erp' ); ?></a>
-                                <?php else: ?>
-                                    <a href="#" data-id="<?php echo $customer->id; ?>" data-social_profile="" title="<?php _e( 'Add Social Profile', 'wp-erp' ); ?>" class="button button-primary" id="customer-social-field"><?php _e( '<i class="fa fa-plus"></i> Add Social Profile', 'wp-erp' ); ?></a>
-                                <?php endif ?>
                             </div>
                         </div>
                     </div><!-- .postbox -->

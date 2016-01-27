@@ -54,7 +54,14 @@ class Contact extends \WeDevs\ERP\People {
             'type'        => '',
             'notes'       => '',
             'other'       => '',
+            'social'      => []
         );
+
+        $social_field = erp_crm_get_social_field();
+
+        foreach ( $social_field as $social_key => $social_value ) {
+            $fields['social'][$social_key] = '';
+        }
 
         if ( $this->id ) {
             foreach ( $this->data as $key => $value ) {
@@ -66,6 +73,10 @@ class Contact extends \WeDevs\ERP\People {
 
             if ( $avatar_id ) {
                 $fields['avatar']['url'] = wp_get_attachment_url( $avatar_id );
+            }
+
+            foreach ( $fields['social'] as $key => $value ) {
+                $fields['social'][$key] = $this->get_meta( $key, true );
             }
 
             $fields['life_stage'] = $this->get_meta( 'life_stage', true );

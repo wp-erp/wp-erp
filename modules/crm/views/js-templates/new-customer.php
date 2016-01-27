@@ -211,6 +211,49 @@
         </ol>
     </fieldset>
 
+    <fieldset>
+        <legend><?php _e( 'Social Info', 'wp-erp' ) ?></legend>
+
+        <ol class="form-fields two-col">
+
+            <li>
+                <?php erp_html_form_input( array(
+                    'label'   => __( 'Facebook', 'wp-erp' ),
+                    'name'    => 'social[facebook]',
+                    'value'   => '{{ data.social.facebook }}'
+                ) ); ?>
+            </li>
+
+            <li>
+                <?php erp_html_form_input( array(
+                    'label'   => __( 'Twitter', 'wp-erp' ),
+                    'name'    => 'social[twitter]',
+                    'value'   => '{{ data.social.twitter }}'
+                ) ); ?>
+            </li>
+
+            <li>
+                <?php erp_html_form_input( array(
+                    'label'   => __( 'Google Plus', 'wp-erp' ),
+                    'name'    => 'social[googleplus]',
+                    'value'   => '{{ data.social.googleplus }}'
+                ) ); ?>
+            </li>
+
+            <li>
+                <?php erp_html_form_input( array(
+                    'label'   => __( 'Linkedin', 'wp-erp' ),
+                    'name'    => 'social[linkedin]',
+                    'value'   => '{{ data.social.linkedin }}'
+                ) ); ?>
+            </li>
+
+            <?php do_action( 'erp-crm-customer-form-social-profile' ); ?>
+
+        </ol>
+    </fieldset>
+
+
     <?php do_action( 'erp-crm-customer-form-bottom' ); ?>
 
     <input type="hidden" name="id" id="erp-customer-id" value="{{ data.id }}">

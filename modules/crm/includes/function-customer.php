@@ -362,7 +362,7 @@ function erp_crm_get_social_field() {
         ],
 
         'googleplus' => [
-            'title' => __( 'Google+', 'wp-erp' ),
+            'title' => __( 'Google Plus', 'wp-erp' ),
             'icon' => '<i class="fa fa-google-plus-square"></i>',
         ],
 

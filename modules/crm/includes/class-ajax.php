@@ -65,6 +65,7 @@ class Ajax_Handler {
         unset( $_POST['action'] );
 
         $posted               = array_map( 'strip_tags_deep', $_POST );
+
         $customer_id          = erp_insert_people( $posted );
 
         if ( is_wp_error( $customer_id ) ) {
@@ -79,6 +80,13 @@ class Ajax_Handler {
 
         if ( $posted['life_stage'] ) {
             $customer->update_meta( 'life_stage', $posted['life_stage'] );
+        }
+
+
+        if ( isset( $posted['social'] ) ) {
+            foreach ( $posted['social'] as $field => $value ) {
+                $customer->update_meta( $field, $value );
+            }
         }
 
         $data = $customer->to_array();
