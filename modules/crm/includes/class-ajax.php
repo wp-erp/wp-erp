@@ -34,6 +34,10 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-crm-customer-update-company', 'customer_update_company' );
         $this->action( 'wp_ajax_erp-crm-customer-remove-company', 'customer_remove_company' );
 
+        // Contact Group
+        $this->action( 'wp_ajax_erp-crm-contact-group', 'contact_group_create' );
+
+
         // Customer Feeds
         add_action( 'wp_ajax_erp_crm_get_customer_activity', array( $this, 'fetch_all_activity' ) );
         add_action( 'wp_ajax_erp_customer_feeds_save_notes', array( $this, 'save_activity_feeds' ) );
@@ -246,6 +250,30 @@ class Ajax_Handler {
 
         $this->send_success('hello');
 
+    }
+
+    /**
+     * Create Contact Group
+     *
+     * @since 1.0
+     *
+     * @return json
+     */
+    public function contact_group_create() {
+        $this->verify_nonce( 'wp-erp-crm-contact-group' );
+
+        if ( isset( $_POST['group_name'] ) && !empty( $_POST['group_name'] ) ) {
+            $this->send_error( __('Contact Group Name must be required', 'wp-erp' ) );
+        }
+
+        $data = [
+            'name'        => $_POST['group_name'],
+            'description' => $_POST['group_description'],
+        ];
+
+        erp_crm_add_contact_group( $data );
+
+        $this->send_success( __( 'Contact group save successfully', 'wp-erp' ) );
     }
 
     /**

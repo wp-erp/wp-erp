@@ -375,6 +375,13 @@ function erp_crm_get_social_field() {
     return apply_filters( 'erp_crm_social_field', $social_field );
 }
 
+/**
+ * Customer Activity navigation menu
+ *
+ * @since 1.0
+ *
+ * @return array
+ */
 function erp_crm_get_customer_feeds_nav() {
     return apply_filters( 'erp_crm_customer_feeds_nav', [
 
@@ -585,6 +592,13 @@ function erp_crm_customer_delete_activity_feed( $feed_id ) {
     return WeDevs\ERP\CRM\Models\Activity::find( $feed_id )->delete( $feed_id );
 }
 
+/**
+ * Set schedule notification for customer
+ *
+ * @since 1.0
+ *
+ * @return void
+ */
 function erp_crm_customer_schedule_notification() {
     $schedules = \WeDevs\ERP\CRM\Models\Activity::schedules()->get()->toArray();
 
@@ -599,6 +613,16 @@ function erp_crm_customer_schedule_notification() {
     }
 }
 
+/**
+ * Sending Customer schedule notification
+ *
+ * @since 1.0
+ *
+ * @param  object  $activity
+ * @param  boolean $extra
+ *
+ * @return void
+ */
 function erp_crm_send_schedule_notification( $activity, $extra = false ) {
 
     if ( ! is_user_logged_in() ) {
@@ -634,3 +658,10 @@ function erp_crm_send_schedule_notification( $activity, $extra = false ) {
             break;
     }
 }
+
+
+function erp_crm_add_contact_group( $data ) {
+
+}
+
+

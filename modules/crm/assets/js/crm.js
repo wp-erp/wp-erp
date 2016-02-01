@@ -19,6 +19,9 @@
             $( '.erp-single-customer' ).on( 'click', 'a.erp-customer-edit-company', this.customerSingle.editCompany );
             $( '.erp-single-customer' ).on( 'click', 'a.erp-customer-delete-company', this.customerSingle.removeCompany );
 
+            // Contact Group
+            $( '.erp-crm-contact-group' ).on( 'click', 'a.erp-new-contact-group', this.contactGroup.create );
+
             // photos
             $( 'body' ).on( 'click', 'a#erp-set-customer-photo', this.customer.setPhoto );
             $( 'body' ).on( 'click', 'a.erp-remove-photo', this.customer.removePhoto );
@@ -594,8 +597,40 @@
                     width: 'element',
                 });
             },
-        }
+        },
 
+        contactGroup : {
+            create: function(e) {
+                e.preventDefault();
+
+                var self    = $(this);
+
+                $.erpPopup({
+                    title: self.attr('title'),
+                    button: wpErpCrm.add_submit,
+                    id: 'erp-crm-new-contact-group',
+                    content: wperp.template('erp-crm-new-contact-group')({ data:{} }).trim(),
+                    extraClass: 'smaller',
+
+                    onSubmit: function(modal) {
+                        modal.disableButton();
+
+                        wp.ajax.send( {
+                            data: this.serialize(),
+                            success: function( res ) {
+                                WeDevs_ERP_CRM.customer.pageReload();
+                                modal.enableButton();
+                                modal.closeModal();
+                            },
+                            error: function(error) {
+                                modal.enableButton();
+                                alert( error );
+                            }
+                        });
+                    }
+                }); //popup
+            }
+        }
     }
 
     $(function() {

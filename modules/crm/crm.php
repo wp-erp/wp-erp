@@ -193,6 +193,10 @@ class Customer_Relationship {
 
                 break;
 
+            case 'crm_page_erp-sales-contact-groups':
+                erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-contact-group.php', 'erp-crm-new-contact-group' );
+                break;
+
             default:
                 # code...
                 break;

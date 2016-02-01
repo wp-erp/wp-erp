@@ -175,7 +175,27 @@ class Admin_Menu {
     }
 
     public function contact_group_page() {
-        echo 'This is the contact group page, aka Subscription List';
+
+        $action = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
+        $id     = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
+
+        switch ($action) {
+
+            case 'view':
+                $template = WPERP_CRM_VIEWS . '/leads/single.php';
+                break;
+
+            default:
+                $template = WPERP_CRM_VIEWS . '/contact-groups.php';
+                break;
+        }
+
+        $template = apply_filters( 'erp_leads_template', $template, $action, $id );
+
+        if ( file_exists( $template ) ) {
+            include $template;
+        }
+
     }
 
     public function campaigns_page() {
