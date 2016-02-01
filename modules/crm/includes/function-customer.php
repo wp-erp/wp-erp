@@ -659,9 +659,16 @@ function erp_crm_send_schedule_notification( $activity, $extra = false ) {
     }
 }
 
-
+/**
+ * Create Contact group
+ *
+ * @param  array $data
+ *
+ * @return array
+ */
 function erp_crm_add_contact_group( $data ) {
-
+    $result = WeDevs\ERP\CRM\Models\ContactGroup::create( $data );
+    return $result;
 }
 
 

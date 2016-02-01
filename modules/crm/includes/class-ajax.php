@@ -262,13 +262,13 @@ class Ajax_Handler {
     public function contact_group_create() {
         $this->verify_nonce( 'wp-erp-crm-contact-group' );
 
-        if ( isset( $_POST['group_name'] ) && !empty( $_POST['group_name'] ) ) {
+        if ( empty( $_POST['group_name'] ) ) {
             $this->send_error( __('Contact Group Name must be required', 'wp-erp' ) );
         }
 
         $data = [
             'name'        => $_POST['group_name'],
-            'description' => $_POST['group_description'],
+            'description' => $_POST['group_description']
         ];
 
         erp_crm_add_contact_group( $data );
