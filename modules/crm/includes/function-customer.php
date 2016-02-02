@@ -730,8 +730,30 @@ function erp_crm_get_contact_groups( $args = [] ) {
     return $items;
 }
 
+/**
+ * Get contact group by its primary key[id]
+ *
+ * @since 1.0
+ *
+ * @param  integer $id
+ *
+ * @return array
+ */
 function erp_crm_get_contact_group_by_id( $id ) {
     return WeDevs\ERP\CRM\Models\ContactGroup::find( $id )->toArray();
+}
+
+/**
+ * Delete contact group
+ *
+ * @since 1.0
+ *
+ * @param  integer $id
+ *
+ * @return void
+ */
+function erp_crm_contact_group_delete( $id ) {
+    WeDevs\ERP\CRM\Models\ContactGroup::find( $id )->delete();
 }
 
 

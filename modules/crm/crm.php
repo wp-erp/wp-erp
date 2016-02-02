@@ -130,6 +130,7 @@ class Customer_Relationship {
             'customer_set_photo'    => __( 'Set Photo', 'wp-erp' ),
             'confirm'               => __( 'Are you sure?', 'wp-erp' ),
             'delConfirmCustomer'    => __( 'Are you sure to delete this customer?', 'wp-erp' ),
+            'delConfirm'            => __( 'Are you sure to delete this?', 'wp-erp' ),
         ) );
 
         // if it's an customer page

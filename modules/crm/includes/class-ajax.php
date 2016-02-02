@@ -37,6 +37,7 @@ class Ajax_Handler {
         // Contact Group
         $this->action( 'wp_ajax_erp-crm-contact-group', 'contact_group_create' );
         $this->action( 'wp_ajax_erp-crm-edit-contact-group', 'contact_group_edit' );
+        $this->action( 'wp_ajax_erp-crm-contact-group-delete', 'contact_group_delete' );
 
 
         // Customer Feeds
@@ -294,6 +295,28 @@ class Ajax_Handler {
         $result = erp_crm_get_contact_group_by_id( $query_id );
 
         $this->send_success( $result );
+    }
+
+    /**
+     * Contact group delete
+     *
+     * @since 1.0
+     *
+     * @return json
+     */
+    public function contact_group_delete() {
+
+        $this->verify_nonce( 'wp-erp-crm-nonce' );
+
+        $query_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+
+        if ( ! $query_id ) {
+            $this->send_error( __( 'Somthing wrong, Please try later', 'wp-erp' ) );
+        }
+
+        erp_crm_contact_group_delete( $query_id );
+
+        $this->send_success( __( 'Contact group delete successfully', 'wp-erp' ) );
     }
 
     /**
