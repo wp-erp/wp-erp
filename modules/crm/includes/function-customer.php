@@ -671,4 +671,59 @@ function erp_crm_add_contact_group( $data ) {
     return $result;
 }
 
+/**
+ * Get all contact group
+ *
+ * @since 1.0
+ *
+ * @return object
+ */
+function erp_crm_get_contact_groups( $args = [] ) {
+    global $wpdb;
+
+    $defaults = [
+        'number'     => 20,
+        'offset'     => 0,
+        'orderby'    => 'id',
+        'order'      => 'DESC',
+        'count'      => false,
+    ];
+
+    $args      = wp_parse_args( $args, $defaults );
+    $cache_key = 'erp-people-contact-group-' . md5( serialize( $args ) );
+    $items     = wp_cache_get( $cache_key, 'wp-erp' );
+
+    if ( false === $items ) {
+        $contact_group = new WeDevs\ERP\CRM\Models\ContactGroup();
+
+        // Check if want all data without any pagination
+        if ( $args['number'] != '-1' ) {
+            $contact_group = $contact_group->skip( $args['offset'] )->take( $args['number'] );
+        }
+
+        // Check is the row want to search
+        if ( isset( $args['s'] ) && ! empty( $args['s'] ) ) {
+            $arg_s = $args['s'];
+            $contact_group = $contact_group->where( 'name', 'LIKE', "%$arg_s%" )
+                    ->orWhere( 'description', 'LIKE', "%$arg_s%" );
+        }
+
+        // Render all collection of data according to above filter (Main query)
+        $items = $contact_group->orderBy( $args['orderby'], $args['order'] )
+                ->get()
+                ->toArray();
+
+        $items = erp_array_to_object( $items );
+
+        // Check if args count true, then return total count customer according to above filter
+        if ( $args['count'] ) {
+            $items = WeDevs\ERP\CRM\Models\ContactGroup::count();
+        }
+
+        wp_cache_set( $cache_key, $items, 'wp-erp' );
+    }
+
+    return $items;
+}
+
 

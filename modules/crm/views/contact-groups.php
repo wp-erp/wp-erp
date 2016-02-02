@@ -10,12 +10,12 @@
             <form method="get">
                 <input type="hidden" name="page" value="erp-sales-contact-groups">
                 <?php
-                // $customer_table = new \WeDevs\ERP\CRM\Subscriber_List_Table();
-                // $customer_table->prepare_items();
-                // $customer_table->search_box( __( 'Search Subscribers', 'wp-erp' ), 'erp-subscriber-search' );
-                // $customer_table->views();
+                $customer_table = new \WeDevs\ERP\CRM\Contact_Group_List_Table();
+                $customer_table->prepare_items();
+                $customer_table->search_box( __( 'Search Contact Group', 'wp-erp' ), 'erp-crm-contact-group-search' );
+                $customer_table->views();
 
-                // $customer_table->display();
+                $customer_table->display();
                 ?>
             </form>
 

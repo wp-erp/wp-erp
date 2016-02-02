@@ -600,6 +600,11 @@
         },
 
         contactGroup : {
+
+            pageReload: function() {
+                $( '.erp-crm-contact-group' ).load( window.location.href + ' .erp-crm-contact-group' );
+            },
+
             create: function(e) {
                 e.preventDefault();
 
@@ -618,7 +623,7 @@
                         wp.ajax.send( {
                             data: this.serialize(),
                             success: function( res ) {
-                                WeDevs_ERP_CRM.customer.pageReload();
+                                WeDevs_ERP_CRM.contactGroup.pageReload();
                                 modal.enableButton();
                                 modal.closeModal();
                             },
