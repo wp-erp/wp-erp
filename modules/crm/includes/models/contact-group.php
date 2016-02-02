@@ -15,4 +15,8 @@ class ContactGroup extends Model {
 
     public $timestamps = true;
 
+    public function contact_subscriber() {
+        return $this->hasMany( 'WeDevs\ERP\CRM\Models\ContactSubscriber', 'group_id' );
+    }
+
 }

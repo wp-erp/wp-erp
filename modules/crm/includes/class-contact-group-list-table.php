@@ -46,6 +46,12 @@ class Contact_Group_List_Table extends \WP_List_Table {
         switch ( $column_name ) {
             case 'name':
 
+            case 'subscribed':
+                return $contact_group->subscriber;
+
+            case 'unsubscribed':
+                return $contact_group->unsubscriber;
+
             case 'created_at':
                 return erp_format_date( $contact_group->created_at );
 
@@ -63,6 +69,8 @@ class Contact_Group_List_Table extends \WP_List_Table {
         $columns = array(
             'cb'           => '<input type="checkbox" />',
             'name'         => __( 'Name', 'wp-erp' ),
+            'subscribed'   => __( 'Subscribed', 'wp-erp' ),
+            'unsubscribed' => __( 'Unsubscribed', 'wp-erp' ),
             'created_at'   => __( 'Created At', 'wp-erp' )
         );
 

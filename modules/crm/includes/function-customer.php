@@ -698,7 +698,10 @@ function erp_crm_get_contact_groups( $args = [] ) {
     $items     = wp_cache_get( $cache_key, 'wp-erp' );
 
     if ( false === $items ) {
-        $contact_group = new WeDevs\ERP\CRM\Models\ContactGroup();
+        $results               = [];
+        $contact_group         = new WeDevs\ERP\CRM\Models\ContactGroup();
+
+        $contact_group = $contact_group->with( 'contact_subscriber' );
 
         // Check if want all data without any pagination
         if ( $args['number'] != '-1' ) {
@@ -713,9 +716,17 @@ function erp_crm_get_contact_groups( $args = [] ) {
         }
 
         // Render all collection of data according to above filter (Main query)
-        $items = $contact_group->orderBy( $args['orderby'], $args['order'] )
+        $results = $contact_group->orderBy( $args['orderby'], $args['order'] )
                 ->get()
                 ->toArray();
+
+        foreach( $results as $key => $group ) {
+            $subscriber = array_count_values( wp_list_pluck( $group['contact_subscriber'], 'status' ) );
+            unset( $group['contact_subscriber'] );
+            $items[$key] = $group;
+            $items[$key]['subscriber'] = isset( $subscriber['subscribe'] ) ? $subscriber['subscribe'] : 0;
+            $items[$key]['unsubscriber'] = isset( $subscriber['unsubscribe'] ) ? $subscriber['unsubscribe'] : 0;
+        }
 
         $items = erp_array_to_object( $items );
 
