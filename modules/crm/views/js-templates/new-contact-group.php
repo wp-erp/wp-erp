@@ -7,7 +7,7 @@
             'type'        => 'text',
             'id'          => 'erp-crm-contact-group-name',
             'required'    => true,
-            'value'       => '{{ data.group_name }}'
+            'value'       => '{{ data.name }}'
         ) ); ?>
     </div>
 
@@ -17,7 +17,7 @@
             'name'        => 'group_description',
             'type'        => 'textarea',
             'id'          => 'erp-crm-contact-group-description',
-            'value'       => '{{ data.group_name }}',
+            'value'       => '{{ data.description }}',
             'placeholder' => __( 'Optional', 'wp-erp' )
         ) ); ?>
     </div>

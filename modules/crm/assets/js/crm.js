@@ -21,6 +21,7 @@
 
             // Contact Group
             $( '.erp-crm-contact-group' ).on( 'click', 'a.erp-new-contact-group', this.contactGroup.create );
+            $( '.erp-crm-contact-group' ).on( 'click', 'span.edit a', this.contactGroup.edit );
 
             // photos
             $( 'body' ).on( 'click', 'a#erp-set-customer-photo', this.customer.setPhoto );
@@ -634,6 +635,55 @@
                         });
                     }
                 }); //popup
+            },
+
+            edit: function(e) {
+                e.preventDefault();
+
+                var self = $( this ),
+                query_id = self.data( 'id' );
+
+                $.erpPopup({
+                    title: self.attr('title'),
+                    button: wpErpCrm.update_submit,
+                    id: 'erp-crm-edit-contact-group',
+                    extraClass: 'smaller',
+                    onReady: function() {
+                        var modal = this;
+
+                        $( 'header', modal).after( $('<div class="loader"></div>').show() );
+
+                        wp.ajax.send( 'erp-crm-edit-contact-group', {
+                            data: {
+                                id: query_id,
+                                _wpnonce: wpErpCrm.nonce
+                            },
+                            success: function( res ) {
+                                var html = wp.template( 'erp-crm-new-contact-group' )( res );
+                                $( '.content', modal ).html( html );
+                                $( '.loader', modal ).remove();
+                            }
+                        });
+                    },
+
+                    onSubmit: function(modal) {
+                        modal.disableButton();
+
+                        wp.ajax.send( {
+                            data: this.serialize(),
+                            success: function(res) {
+                                WeDevs_ERP_CRM.contactGroup.pageReload();
+                                modal.enableButton();
+                                modal.closeModal();
+                            },
+                            error: function(error) {
+                                modal.enableButton();
+                                alert( error );
+                            }
+                        });
+                    }
+
+                });
             }
         }
     }

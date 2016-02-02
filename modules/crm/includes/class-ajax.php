@@ -36,6 +36,7 @@ class Ajax_Handler {
 
         // Contact Group
         $this->action( 'wp_ajax_erp-crm-contact-group', 'contact_group_create' );
+        $this->action( 'wp_ajax_erp-crm-edit-contact-group', 'contact_group_edit' );
 
 
         // Customer Feeds
@@ -267,13 +268,32 @@ class Ajax_Handler {
         }
 
         $data = [
+            'id'          => ( isset( $_POST['id'] ) && !empty( $_POST['id'] ) ) ? $_POST['id'] : '',
             'name'        => $_POST['group_name'],
             'description' => $_POST['group_description']
         ];
 
-        erp_crm_add_contact_group( $data );
+        erp_crm_save_contact_group( $data );
 
         $this->send_success( __( 'Contact group save successfully', 'wp-erp' ) );
+    }
+
+    /**
+     * Edit Contact Group
+     *
+     * @since 1.0
+     *
+     * @return json
+     */
+    public function contact_group_edit() {
+
+        $this->verify_nonce( 'wp-erp-crm-nonce' );
+
+        $query_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+
+        $result = erp_crm_get_contact_group_by_id( $query_id );
+
+        $this->send_success( $result );
     }
 
     /**

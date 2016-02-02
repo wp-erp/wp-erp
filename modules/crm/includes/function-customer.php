@@ -666,8 +666,12 @@ function erp_crm_send_schedule_notification( $activity, $extra = false ) {
  *
  * @return array
  */
-function erp_crm_add_contact_group( $data ) {
-    $result = WeDevs\ERP\CRM\Models\ContactGroup::create( $data );
+function erp_crm_save_contact_group( $data ) {
+    if ( $data['id'] ) {
+        $result = WeDevs\ERP\CRM\Models\ContactGroup::find( $data['id'] )->update( $data );
+    } else {
+        $result = WeDevs\ERP\CRM\Models\ContactGroup::create( $data );
+    }
     return $result;
 }
 
@@ -724,6 +728,10 @@ function erp_crm_get_contact_groups( $args = [] ) {
     }
 
     return $items;
+}
+
+function erp_crm_get_contact_group_by_id( $id ) {
+    return WeDevs\ERP\CRM\Models\ContactGroup::find( $id )->toArray();
 }
 
 
