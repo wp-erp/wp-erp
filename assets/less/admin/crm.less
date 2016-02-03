@@ -76,7 +76,8 @@
     .erp_form_generic();
 }
 
-.erp-crm-customer {
+.erp-crm-customer,
+.erp-crm-subscriber-contact {
 
     table.wp-list-table {
 
@@ -99,6 +100,18 @@
         .column-comments {
             width: 25%;
         }
+    }
+}
+
+.erp-crm-subscriber-contact {
+
+    .subscribe-group,
+    .unsubscribe-group {
+        cursor:pointer !important;
+    }
+
+    .unsubscribe-group {
+        color: #A9A9A9;
     }
 }
 

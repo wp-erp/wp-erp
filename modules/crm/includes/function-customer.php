@@ -29,6 +29,15 @@ function erp_crm_get_avatar( $id, $size = 32, $user = false ) {
     return get_avatar( $id, $size );
 }
 
+/**
+ * Get Employee for CRM
+ *
+ * @since 1.0
+ *
+ * @param  string $selected
+ *
+ * @return html
+ */
 function erp_crm_get_emplyees( $selected = '' ) {
     $employees = erp_hr_get_employees_dropdown_raw( get_current_user_id() );
     $dropdown     = '';
@@ -43,8 +52,31 @@ function erp_crm_get_emplyees( $selected = '' ) {
     return $dropdown;
 }
 
+/**
+ * Get contact details url according to contact type
+ *
+ * @since 1.0
+ *
+ * @param integer $id
+ * @param string $type
+ *
+ * @return string url
+ */
+function erp_crm_get_details_url( $id, $type ) {
 
+    if ( $id ) {
 
+        if ( $type == 'contact' ) {
+            return admin_url( 'admin.php?page=erp-sales-customers&action=view&id=' . $id );
+        }
+
+        if ( $type == 'company' ) {
+            return admin_url( 'admin.php?page=erp-sales-companies&action=view&id=' . $id );
+        }
+    }
+
+    return admin_url( 'admin.php' );
+}
 /**
  * Get CRM life statges
  *
@@ -683,7 +715,6 @@ function erp_crm_save_contact_group( $data ) {
  * @return object
  */
 function erp_crm_get_contact_groups( $args = [] ) {
-    global $wpdb;
 
     $defaults = [
         'number'     => 20,
@@ -694,7 +725,7 @@ function erp_crm_get_contact_groups( $args = [] ) {
     ];
 
     $args      = wp_parse_args( $args, $defaults );
-    $cache_key = 'erp-people-contact-group-' . md5( serialize( $args ) );
+    $cache_key = 'erp-crm-contact-group-' . md5( serialize( $args ) );
     $items     = wp_cache_get( $cache_key, 'wp-erp' );
 
     if ( false === $items ) {
@@ -765,6 +796,66 @@ function erp_crm_get_contact_group_by_id( $id ) {
  */
 function erp_crm_contact_group_delete( $id ) {
     WeDevs\ERP\CRM\Models\ContactGroup::find( $id )->delete();
+}
+
+function erp_crm_get_subscriber_contact( $args = [] ) {
+    global $wpdb;
+
+    $defaults = [
+        'number'     => 20,
+        'offset'     => 0,
+        'orderby'    => 'id',
+        'order'      => 'DESC',
+        'count'      => false,
+    ];
+
+    $args      = wp_parse_args( $args, $defaults );
+    $cache_key = 'erp-crm-subscriber-contact-' . md5( serialize( $args ) );
+    $items     = wp_cache_get( $cache_key, 'wp-erp' );
+
+    if ( false === $items ) {
+        $converted_data       = [];
+        $contact_subscribe_tb = $wpdb->prefix . 'erp_crm_contact_subscriber';
+        $contact_group_tb     = $wpdb->prefix . 'erp_crm_contact_group';
+
+        $contact_subscribers = WeDevs\ERP\CRM\Models\ContactSubscriber::leftjoin( $contact_group_tb, $contact_group_tb . '.id', '=', $contact_subscribe_tb . '.group_id' );
+
+        // Check if want all data without any pagination
+        if ( $args['number'] != '-1' ) {
+            $contact_subscribers = $contact_subscribers->skip( $args['offset'] )->take( $args['number'] );
+        }
+
+        // Check is the row want to search
+        if ( isset( $args['s'] ) && ! empty( $args['s'] ) ) {
+            $arg_s = $args['s'];
+            $contact_subscribers = $contact_subscribers->where( 'name', 'LIKE', "%$arg_s%" )
+                    ->orWhere( 'description', 'LIKE', "%$arg_s%" );
+        }
+
+        // Render all collection of data according to above filter (Main query)
+        $results = $contact_subscribers
+                ->get()
+                ->groupBy('user_id')
+                ->toArray();
+
+        foreach( $results as $user_id=>$value ) {
+            $converted_data[] = [
+                'user_id' => $user_id,
+                'data' => $value
+            ];
+        }
+
+        $items = erp_array_to_object( $converted_data );
+
+        // Check if args count true, then return total count customer according to above filter
+        if ( $args['count'] ) {
+            $items = WeDevs\ERP\CRM\Models\ContactSubscriber::leftjoin( $contact_group_tb, $contact_group_tb . '.id', '=', $contact_subscribe_tb . '.group_id' )->groupBy('user_id')->count();
+        }
+
+        wp_cache_set( $cache_key, $items, 'wp-erp' );
+    }
+
+    return $items;
 }
 
 

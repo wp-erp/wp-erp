@@ -172,19 +172,30 @@
 .erp-customer-form ol.fields-inline li {
   display: inline-block;
 }
-.erp-crm-customer table.wp-list-table .column-name img {
+.erp-crm-customer table.wp-list-table .column-name img,
+.erp-crm-subscriber-contact table.wp-list-table .column-name img {
   float: left;
   margin-right: 10px;
   margin-top: 1px;
 }
-.erp-crm-customer table.wp-list-table .column-balance {
+.erp-crm-customer table.wp-list-table .column-balance,
+.erp-crm-subscriber-contact table.wp-list-table .column-balance {
   width: 8%;
 }
-.erp-crm-customer table.wp-list-table .column-status {
+.erp-crm-customer table.wp-list-table .column-status,
+.erp-crm-subscriber-contact table.wp-list-table .column-status {
   width: 8%;
 }
-.erp-crm-customer table.wp-list-table .column-comments {
+.erp-crm-customer table.wp-list-table .column-comments,
+.erp-crm-subscriber-contact table.wp-list-table .column-comments {
   width: 25%;
+}
+.erp-crm-subscriber-contact .subscribe-group,
+.erp-crm-subscriber-contact .unsubscribe-group {
+  cursor: pointer !important;
+}
+.erp-crm-subscriber-contact .unsubscribe-group {
+  color: #A9A9A9;
 }
 .erp-single-customer {
   /**

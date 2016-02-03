@@ -92,6 +92,7 @@ class Contact extends \WeDevs\ERP\People {
      */
     public function get_details_url() {
         if ( $this->id ) {
+
             if ( $this->contact_type == 'contact' ) {
                 return admin_url( 'admin.php?page=erp-sales-customers&action=view&id=' . $this->id );
             }

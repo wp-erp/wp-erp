@@ -113,6 +113,7 @@ class Customer_Relationship {
         $suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
         wp_enqueue_media();
+        wp_enqueue_style( 'erp-tiptip' );
         wp_enqueue_script( 'erp-tiptip' );
         wp_enqueue_script( 'wp-erp-crm', WPERP_CRM_ASSETS . "/js/crm$suffix.js", array( 'wp-erp-script', 'erp-admin-timepicker' ), date( 'Ymd' ), true );
 
@@ -138,8 +139,6 @@ class Customer_Relationship {
 
             wp_enqueue_style( 'erp-admin-timepicker' );
             wp_enqueue_script( 'erp-admin-timepicker' );
-            wp_enqueue_style( 'erp-tiptip' );
-            wp_enqueue_script( 'erp-tiptip' );
             wp_enqueue_script( 'erp-vuejs' );
             wp_enqueue_script( 'erp-trix-editor' );
             wp_enqueue_style( 'erp-trix-editor' );

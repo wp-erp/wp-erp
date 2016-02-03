@@ -35,38 +35,11 @@
 
             $('body').on( 'click', 'div.erp-handlediv', this.handlePostboxToggle );
 
-            $('body').on( 'change', 'input[type=checkbox][name="all_day"]', this.triggerCustomerScheduleAllDay );
-            $('body').on( 'change', 'input[type=checkbox][name="allow_notification"]', this.triggerCustomerScheduleAllowNotification );
-
             $('.erp-crm-tips').tipTip( {
                 defaultPosition: "top",
                 fadeIn: 100,
                 fadeOut: 100,
-                // content: content
             } );
-
-        },
-
-        triggerCustomerScheduleAllDay: function() {
-            var self = $(this);
-
-            if ( self.is(':checked') ) {
-                self.closest('div.schedule-datetime').find('.erp-time-field').hide();
-                self.closest('div.schedule-datetime').find('.datetime-sep').hide();
-            } else {
-                self.closest('div.schedule-datetime').find('.erp-time-field').show();
-                self.closest('div.schedule-datetime').find('.datetime-sep').show();
-            };
-        },
-
-        triggerCustomerScheduleAllowNotification: function() {
-            var self = $(this);
-
-            if ( self.is(':checked') ) {
-                self.closest('.erp-crm-customer-feed-edit-wrapper').find('#schedule-notification-wrap').show();
-            } else {
-                self.closest('.erp-crm-customer-feed-edit-wrapper').find('#schedule-notification-wrap').hide();
-            };
         },
 
         /**
