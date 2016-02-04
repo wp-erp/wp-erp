@@ -24,6 +24,9 @@
             $( '.erp-crm-contact-group' ).on( 'click', 'span.edit a', this.contactGroup.edit );
             $( '.erp-crm-contact-group' ).on( 'click', 'a.submitdelete', this.contactGroup.remove );
 
+            // Subscriber contact
+            $( '.erp-crm-subscriber-contact' ).on( 'click', 'a.erp-new-subscriber-contact', this.subscriberContact.create );
+
             // photos
             $( 'body' ).on( 'click', 'a#erp-set-customer-photo', this.customer.setPhoto );
             $( 'body' ).on( 'click', 'a.erp-remove-photo', this.customer.removePhoto );
@@ -582,7 +585,6 @@
 
             create: function(e) {
                 e.preventDefault();
-
                 var self    = $(this);
 
                 $.erpPopup({
@@ -683,6 +685,75 @@
                     });
                 }
 
+            }
+        },
+
+        subscriberContact: {
+            pageReload: function() {
+                $( '.erp-crm-subscriber-contact' ).load( window.location.href + ' .erp-crm-subscriber-contact' );
+            },
+
+            create: function(e) {
+                e.preventDefault();
+                var self    = $(this);
+
+                $.erpPopup({
+                    title: self.attr('title'),
+                    button: wpErpCrm.add_submit,
+                    id: 'erp-crm-assign-subscriber-contact',
+                    extraClass: 'smaller',
+                    onReady: function( modal ) {
+
+                        var modal = this;
+
+                        $( 'header', modal).after( $('<div class="loader"></div>').show() );
+
+                        wp.ajax.send( 'erp-crm-exclued-already-assigned-contact', {
+                            data: {
+                                _wpnonce: wpErpCrm.nonce
+                            },
+                            success: function( res ) {
+                                console.log( res );
+                                var html = wp.template( 'erp-crm-assign-subscriber-contact' )( { data: {} });
+                                $( '.content', modal ).html( html );
+
+                                _.each( $('.select2').find('option'), function( el, i) {
+                                    var optionVal = $(el).val();
+                                    if ( _.contains( res, optionVal )  ) {
+                                        $(el).attr('disabled', 'disabled' );
+                                    };
+                                } );
+
+                                $('.select2').select2();
+
+                                $( '.loader', modal ).remove();
+                            }
+                        });
+
+
+                    },
+
+                    onSubmit: function(modal) {
+
+                        if ( $("input:checkbox:checked").length > 0) {
+                            modal.disableButton();
+                            wp.ajax.send( {
+                                data: this.serialize(),
+                                success: function( res ) {
+                                    WeDevs_ERP_CRM.subscriberContact.pageReload();
+                                    modal.enableButton();
+                                    modal.closeModal();
+                                },
+                                error: function(error) {
+                                    modal.enableButton();
+                                    alert( error );
+                                }
+                            });
+                        } else {
+                            alert( wpErpCrm.checkedConfirm );
+                        }
+                    }
+                }); //popup
             }
         }
     }

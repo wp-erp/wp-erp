@@ -732,6 +732,7 @@ table.audit-log-table {
                 line-height: 1.5em;
                 display: inline-block;
                 vertical-align: top;
+                float: left;
 
                 &.block {
                     display: block;
@@ -740,6 +741,15 @@ table.audit-log-table {
 
             select {
                 max-width: 62%;
+            }
+
+            span.checkbox {
+                float: left;
+                width: 63%;
+
+                label {
+                    margin-bottom: 10px;
+                }
             }
 
             span.description {

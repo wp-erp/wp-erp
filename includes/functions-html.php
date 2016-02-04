@@ -149,6 +149,20 @@ function erp_html_form_input( $args = array() ) {
             echo '</span>';
             break;
 
+        case 'multicheckbox':
+            //echo '<input type="hidden" value="off" name="' . $field['name'] . '" />';
+            echo '<span class="checkbox">';
+            unset( $custom_attributes['id'] );
+
+            foreach ( $field['options'] as $key => $value ) {
+                echo '<label for="' . esc_attr( $field_attributes['id'] ) . '-' . $key .'">';
+                echo '<input type="checkbox" '.checked( $value, 'on', false ).' id="' . esc_attr( $field_attributes['id'] ) . '-' . $key . '" value="'.$key.'" ' . implode( ' ', $custom_attributes ) . ' />';
+                echo wp_kses_post( $value );
+                echo '</label>';
+            }
+            echo '</span>';
+            break;
+
         case 'radio':
             if ( $field['options'] ) {
                 foreach ( $field['options'] as $key => $value) {

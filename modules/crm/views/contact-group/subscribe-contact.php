@@ -1,7 +1,7 @@
 <div class="wrap erp-crm-subscriber-contact" id="wp-erp">
 
     <h2><?php _e( 'Subscribed Contacts', 'wp-erp' ); ?>
-        <a href="#" id="erp-new-subscriber-contact" class="erp-new-subscriber-contact add-new-h2" title="<?php _e( 'Add New Contact', 'wp-erp' ); ?>"><?php _e( 'Add New Contact', 'wp-erp' ); ?></a>
+        <a href="#" id="erp-new-subscriber-contact" class="erp-new-subscriber-contact add-new-h2" title="<?php _e( 'Assign a Contact', 'wp-erp' ); ?>"><?php _e( 'Assign a Contact', 'wp-erp' ); ?></a>
     </h2>
 
     <div class="list-table-wrap">

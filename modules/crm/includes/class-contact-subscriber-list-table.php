@@ -108,21 +108,6 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
     }
 
     /**
-     * Get sortable columns
-     *
-     * @since 1.0
-     *
-     * @return array
-     */
-    function get_sortable_columns() {
-        $sortable_columns = array(
-            'created' => array( 'created', false ),
-        );
-
-        return $sortable_columns;
-    }
-
-    /**
      * Get the column names
      *
      * @since 1.0
@@ -157,7 +142,6 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
         $edit_url        = '';
 
         $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $subscriber_contact->user_id, __( 'Edit this item', 'wp-erp' ), __( 'Edit', 'wp-erp' ) );
-        $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, 2, __( 'Delete this item', 'wp-erp' ), __( 'Delete', 'wp-erp') );
 
         return sprintf( '%4$s <a href="%3$s"><strong>%1$s</strong></a> %2$s', $contact->get_full_name(), $this->row_actions( $actions ), erp_crm_get_details_url( $contact->id, $contact->type ) , $contact->get_avatar() );
     }

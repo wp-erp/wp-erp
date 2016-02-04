@@ -1831,12 +1831,20 @@ table.audit-log-table th.col-date {
   line-height: 1.5em;
   display: inline-block;
   vertical-align: top;
+  float: left;
 }
 .erp-modal .content .row label.block {
   display: block;
 }
 .erp-modal .content .row select {
   max-width: 62%;
+}
+.erp-modal .content .row span.checkbox {
+  float: left;
+  width: 63%;
+}
+.erp-modal .content .row span.checkbox label {
+  margin-bottom: 10px;
 }
 .erp-modal .content .row span.description {
   display: block;

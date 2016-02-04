@@ -132,6 +132,7 @@ class Customer_Relationship {
             'confirm'               => __( 'Are you sure?', 'wp-erp' ),
             'delConfirmCustomer'    => __( 'Are you sure to delete this customer?', 'wp-erp' ),
             'delConfirm'            => __( 'Are you sure to delete this?', 'wp-erp' ),
+            'checkedConfirm'        => __( 'Alteast one item must be checked', 'wp-erp' ),
         ) );
 
         // if it's an customer page
@@ -195,6 +196,7 @@ class Customer_Relationship {
 
             case 'crm_page_erp-sales-contact-groups':
                 erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-contact-group.php', 'erp-crm-new-contact-group' );
+                erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-subscriber-contact.php', 'erp-crm-assign-subscriber-contact' );
                 break;
 
             default:

@@ -38,7 +38,7 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-crm-contact-group', 'contact_group_create' );
         $this->action( 'wp_ajax_erp-crm-edit-contact-group', 'contact_group_edit' );
         $this->action( 'wp_ajax_erp-crm-contact-group-delete', 'contact_group_delete' );
-
+        $this->action( 'wp_ajax_erp-crm-exclued-already-assigned-contact', 'check_assing_contact' );
 
         // Customer Feeds
         add_action( 'wp_ajax_erp_crm_get_customer_activity', array( $this, 'fetch_all_activity' ) );
@@ -317,6 +317,14 @@ class Ajax_Handler {
         erp_crm_contact_group_delete( $query_id );
 
         $this->send_success( __( 'Contact group delete successfully', 'wp-erp' ) );
+    }
+
+    function check_assing_contact() {
+        $this->verify_nonce( 'wp-erp-crm-nonce' );
+
+        $result = erp_crm_get_assign_subscriber_contact();
+
+        $this->send_success( $result );
     }
 
     /**

@@ -37,9 +37,10 @@ function erp_get_peoples( $args = [] ) {
         'exclude'    => []
     ];
 
-    $args      = wp_parse_args( $args, $defaults );
-    $cache_key = 'erp-people-' . $args['type'] . '-' . md5( serialize( $args ) );
-    $items     = wp_cache_get( $cache_key, 'wp-erp' );
+    $args        = wp_parse_args( $args, $defaults );
+    $people_type = is_array( $args['type'] ) ? implode( '-', $args['type'] ) : $args['type'];
+    $cache_key   = 'erp-people-' . $people_type . '-' . md5( serialize( $args ) );
+    $items       = wp_cache_get( $cache_key, 'wp-erp' );
 
     if ( false === $items ) {
         $people = new WeDevs\ERP\Framework\Models\People();

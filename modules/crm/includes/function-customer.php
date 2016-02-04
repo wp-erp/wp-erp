@@ -147,6 +147,31 @@ function erp_crm_get_life_statges_dropdown( $label = [], $selected = '' ) {
 }
 
 /**
+ * Get contact dropdown list as array
+ *
+ * @since 1.0
+ *
+ * @param  array  $label
+ *
+ * @return array | list of all contact with copmany
+ */
+function erp_crm_get_contact_dropdown( $label = [] ) {
+    $contacts = erp_get_peoples( [ 'number' => '-1', 'type' => [ 'contact', 'company' ] ] );
+    $list = [];
+
+    foreach ( $contacts as $key => $contact ) {
+        $name = ( $contact->type == 'company' ) ? $contact->company : $contact->first_name . ' ' . $contact->last_name;
+        $list[$contact->id] = $name . ' ( ' . ucfirst( $contact->type ) . ' ) ';
+    }
+
+    if ( $label ) {
+        $list = $label + $list;
+    }
+
+    return $list;
+}
+
+/**
  * Delete Customer data
  *
  * @since 1.0
@@ -856,6 +881,33 @@ function erp_crm_get_subscriber_contact( $args = [] ) {
     }
 
     return $items;
+}
+
+function erp_crm_get_contact_group_dropdown( $label = [] ) {
+    $groups = erp_crm_get_contact_groups( [ 'number' => '-1' ] );
+    $list   = [];
+
+    foreach ( $groups as $key => $group ) {
+        $list[$group->id] = $group->name;
+    }
+
+    if ( $label ) {
+        $list = $label + $list;
+    }
+
+    return $list;
+}
+
+/**
+ * Get already subscirbed contact
+ *
+ * @since 1.0
+ *
+ * @return array
+ */
+function erp_crm_get_assign_subscriber_contact() {
+    $data = \WeDevs\ERP\CRM\Models\ContactSubscriber::select('user_id')->distinct()->get()->toArray();
+    return wp_list_pluck( $data, 'user_id' );
 }
 
 
