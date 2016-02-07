@@ -141,7 +141,8 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
         $delete_url        = '';
         $edit_url        = '';
 
-        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $subscriber_contact->user_id, __( 'Edit this item', 'wp-erp' ), __( 'Edit', 'wp-erp' ) );
+        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $edit_url, $subscriber_contact->user_id, __( 'Edit this item', 'wp-erp' ), __( 'Edit', 'wp-erp' ) );
+        $actions['delete']   = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $subscriber_contact->user_id, __( 'Delete this item', 'wp-erp' ), __( 'Delete', 'wp-erp' ) );
 
         return sprintf( '%4$s <a href="%3$s"><strong>%1$s</strong></a> %2$s', $contact->get_full_name(), $this->row_actions( $actions ), erp_crm_get_details_url( $contact->id, $contact->type ) , $contact->get_avatar() );
     }

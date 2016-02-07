@@ -910,4 +910,52 @@ function erp_crm_get_assign_subscriber_contact() {
     return wp_list_pluck( $data, 'user_id' );
 }
 
+/**
+ * Delete Contact alreays subscribed
+ *
+ * @since 1.0
+ *
+ * @param  integer $user_id
+ *
+ * @return boolean
+ */
+function erp_crm_contact_subscriber_delete( $user_id ) {
+    return \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )->delete();
+}
+
+function erp_crm_edit_contact_subscriber( $contact_group, $user_id ) {
+
+        $inserted_employee_id = $this->get_assign_employee( $post_id );
+
+        if ( !empty( $inserted_employee_id ) ) {
+            foreach ( $inserted_employee_id as $key => $value) {
+                $db[] = $value['user_id'];
+            }
+        } else {
+            $db = array();
+        }
+
+        $employees         = $announcement_employee;
+        $existing_employee = $new_employee = $del_employee = array();
+
+        foreach( $employees as $employee ) {
+            if ( in_array( $employee, $db ) ) {
+                $existing_employee[] = $employee;
+            } else {
+                $new_employee[] = $employee;
+            }
+        }
+
+        $del_employee = array_diff( $db, $existing_employee );
+
+        if ( $del_employee ) {
+            $this->delete_assign_employee( $del_employee, $post_id );
+        }
+
+        if ( $new_employee ) {
+            $this->insert_assign_employee( $new_employee, $post_id );
+        }
+
+}
+
 
