@@ -42,7 +42,9 @@ class Ajax_Handler {
 
         // Contact Subscriber
         $this->action( 'wp_ajax_erp-crm-contact-subscriber', 'assign_contact_as_subscriber' );
+        $this->action( 'wp_ajax_erp-crm-edit-contact-subscriber', 'edit_assign_contact' );
         $this->action( 'wp_ajax_erp-crm-contact-subscriber-delete', 'assign_contact_delete' );
+        $this->action( 'wp_ajax_erp-crm-contact-subscriber-edit', 'edit_assign_contact_submission' );
 
         // Customer Feeds
         add_action( 'wp_ajax_erp_crm_get_customer_activity', array( $this, 'fetch_all_activity' ) );
@@ -338,6 +340,20 @@ class Ajax_Handler {
         $this->send_success( $result );
     }
 
+    public function edit_assign_contact() {
+        $this->verify_nonce( 'wp-erp-crm-nonce' );
+
+        $user_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+
+        if ( ! $user_id ) {
+            $this->send_error( __( 'Contact not found. Try again', 'wp-erp' ) );
+        }
+
+        $result = erp_crm_get_editable_assign_contact( $user_id );
+
+        $this->send_success( $result );
+    }
+
     /**
      * Assing Contact as a subscriber
      *
@@ -361,10 +377,10 @@ class Ajax_Handler {
                     'unsubscribe_at' => current_time('mysql')
                 ];
 
-                $result = \WeDevs\ERP\CRM\Models\ContactSubscriber::create( $data );
-                $data = [];
+                erp_crm_create_new_contact_subscriber( $data );
             }
         }
+
 
         return $this->send_success( __( 'Succesfully subscriber for this user') );
     }
@@ -388,6 +404,28 @@ class Ajax_Handler {
         erp_crm_contact_subscriber_delete( $user_id );
 
         $this->send_success( __( 'Contact group delete successfully', 'wp-erp' ) );
+    }
+
+    /**
+     * Assing contact after edit form submission
+     *
+     * @since 1.0
+     *
+     * @return json
+     */
+    public function edit_assign_contact_submission() {
+        $this->verify_nonce( 'wp-erp-crm-contact-subscriber' );
+
+        $user_id = isset( $_REQUEST['user_id'] ) ? intval( $_REQUEST['user_id'] ) : 0;
+        $group_id = isset( $_POST['group_id'] ) ? $_POST['group_id'] : [];
+
+        if ( ! $user_id ) {
+            $this->send_error( __( 'No subscriber user found', 'wp-erp' ) );
+        }
+
+        erp_crm_edit_contact_subscriber( $group_id, $user_id );
+
+        $this->send_success( __( 'Contact group edit successfully', 'wp-erp' ) );
     }
 
     /**

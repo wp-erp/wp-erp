@@ -911,6 +911,33 @@ function erp_crm_get_assign_subscriber_contact() {
 }
 
 /**
+ * Create Contact subscriber
+ *
+ * @since 1.0
+ *
+ * @param  array $data
+ *
+ * @return return collection|obejct
+ */
+function erp_crm_create_new_contact_subscriber( $data ) {
+    return \WeDevs\ERP\CRM\Models\ContactSubscriber::create( $data );
+}
+
+/**
+ * Get already user assigned group id
+ *
+ * @since 1.0
+ *
+ * @param  integer $user_id
+ *
+ * @return array
+ */
+function erp_crm_get_editable_assign_contact( $user_id ) {
+    $data = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )->where( 'status', 'subscribe' )->distinct()->get()->toArray();
+    return wp_list_pluck( $data, 'group_id' );
+}
+
+/**
  * Delete Contact alreays subscribed
  *
  * @since 1.0
@@ -923,39 +950,58 @@ function erp_crm_contact_subscriber_delete( $user_id ) {
     return \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )->delete();
 }
 
-function erp_crm_edit_contact_subscriber( $contact_group, $user_id ) {
+/**
+ * Edit contact subscriber
+ *
+ * Delete if uncheck and if new then
+ * create new one.
+ *
+ * @since 1.0
+ *
+ * @param  array $groups
+ * @param  integer $user_id
+ *
+ * @return void
+ */
+function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
+    $data = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )->distinct()->get()->toArray();
 
-        $inserted_employee_id = $this->get_assign_employee( $post_id );
+    $db             = wp_list_pluck( $data, 'group_id' );
+    $existing_group = $new_group = $del_group = [];
 
-        if ( !empty( $inserted_employee_id ) ) {
-            foreach ( $inserted_employee_id as $key => $value) {
-                $db[] = $value['user_id'];
-            }
-        } else {
-            $db = array();
-        }
-
-        $employees         = $announcement_employee;
-        $existing_employee = $new_employee = $del_employee = array();
-
-        foreach( $employees as $employee ) {
-            if ( in_array( $employee, $db ) ) {
-                $existing_employee[] = $employee;
+    if ( !empty( $groups ) ) {
+        foreach( $groups as $group ) {
+            if ( in_array( $group, $db ) ) {
+                $existing_group[] = $group;
             } else {
-                $new_employee[] = $employee;
+                $new_group[] = $group;
             }
         }
+    }
 
-        $del_employee = array_diff( $db, $existing_employee );
+    $del_group = array_diff( $db, $existing_group );
 
-        if ( $del_employee ) {
-            $this->delete_assign_employee( $del_employee, $post_id );
+    if ( !empty( $new_group ) ) {
+
+        foreach ( $new_group as $new_group_key => $new_group_id ) {
+            $data = [
+                'user_id'  => $user_id,
+                'group_id' => $new_group_id,
+                'status'   => 'subscribe', // @TODO: Set a settings for that
+                'subscribe_at' => current_time('mysql'),
+                'unsubscribe_at' => current_time('mysql')
+            ];
+
+            erp_crm_create_new_contact_subscriber( $data );
         }
 
-        if ( $new_employee ) {
-            $this->insert_assign_employee( $new_employee, $post_id );
-        }
+    }
 
+    if ( ! empty( $del_group ) ) {
+        foreach ( $del_group as $del_group_key => $del_group_id ) {
+            \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )->where( 'group_id', $del_group_id )->delete();
+        }
+    }
 }
 
 

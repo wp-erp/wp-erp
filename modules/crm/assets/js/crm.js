@@ -715,7 +715,6 @@
                                 _wpnonce: wpErpCrm.nonce
                             },
                             success: function( res ) {
-                                console.log( res );
                                 var html = wp.template( 'erp-crm-assign-subscriber-contact' )( { data: {} });
                                 $( '.content', modal ).html( html );
 
@@ -735,7 +734,7 @@
 
                     },
 
-                    onSubmit: function(modal) {
+                    onSubmit: function( modal ) {
 
                         if ( $("input:checkbox:checked").length > 0) {
                             modal.disableButton();
@@ -767,21 +766,29 @@
                 $.erpPopup({
                     title: self.attr('title'),
                     button: wpErpCrm.update_submit,
-                    id: 'erp-crm-edit-contact-group',
+                    id: 'erp-crm-edit-contact-subscriber',
                     extraClass: 'smaller',
                     onReady: function() {
                         var modal = this;
 
                         $( 'header', modal).after( $('<div class="loader"></div>').show() );
 
-                        wp.ajax.send( 'erp-crm-edit-contact-group', {
+                        wp.ajax.send( 'erp-crm-edit-contact-subscriber', {
                             data: {
                                 id: query_id,
                                 _wpnonce: wpErpCrm.nonce
                             },
                             success: function( res ) {
-                                var html = wp.template( 'erp-crm-new-contact-group' )( res );
+                                var html = wp.template( 'erp-crm-assign-subscriber-contact' )( { group_id : res, user_id: query_id } );
                                 $( '.content', modal ).html( html );
+
+                                _.each( $( 'input[type=checkbox].erp-crm-contact-group-class' ), function( el, i) {
+                                    var optionsVal = jQuery(el).val();
+                                    if( _.contains( res, optionsVal ) ) {
+                                       jQuery(el).prop('checked', true );
+                                    }
+                                });
+
                                 $( '.loader', modal ).remove();
                             }
                         });
@@ -793,7 +800,7 @@
                         wp.ajax.send( {
                             data: this.serialize(),
                             success: function(res) {
-                                WeDevs_ERP_CRM.contactGroup.pageReload();
+                                WeDevs_ERP_CRM.subscriberContact.pageReload();
                                 modal.enableButton();
                                 modal.closeModal();
                             },
