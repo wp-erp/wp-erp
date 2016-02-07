@@ -39,6 +39,7 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-crm-edit-contact-group', 'contact_group_edit' );
         $this->action( 'wp_ajax_erp-crm-contact-group-delete', 'contact_group_delete' );
         $this->action( 'wp_ajax_erp-crm-exclued-already-assigned-contact', 'check_assing_contact' );
+        $this->action( 'wp_ajax_erp-crm-contact-subscriber', 'assign_contact_as_subscriber' );
 
         // Customer Feeds
         add_action( 'wp_ajax_erp_crm_get_customer_activity', array( $this, 'fetch_all_activity' ) );
@@ -319,12 +320,50 @@ class Ajax_Handler {
         $this->send_success( __( 'Contact group delete successfully', 'wp-erp' ) );
     }
 
+    /**
+     * Get alreay assigned contact into subscriber
+     *
+     * @since 1.0
+     *
+     * @return json
+     */
     function check_assing_contact() {
         $this->verify_nonce( 'wp-erp-crm-nonce' );
 
         $result = erp_crm_get_assign_subscriber_contact();
 
         $this->send_success( $result );
+    }
+
+    /**
+     * Assing Contact as a subscriber
+     *
+     * @since 1.0
+     *
+     * @return json
+     */
+    function assign_contact_as_subscriber() {
+
+        $this->verify_nonce( 'wp-erp-crm-contact-subscriber' );
+
+        $data = [];
+
+        if ( isset ( $_POST['group_id'] ) && isset( $_POST['user_id'] ) ) {
+            foreach ( $_POST['group_id'] as $key => $group_id ) {
+                $data = [
+                    'user_id'  => $_POST['user_id'],
+                    'group_id' => $group_id,
+                    'status'   => 'subscribe', // @TODO: Set a settings for that
+                    'subscribe_at' => current_time('mysql'),
+                    'unsubscribe_at' => current_time('mysql')
+                ];
+
+                $result = \WeDevs\ERP\CRM\Models\ContactSubscriber::create( $data );
+                $data = [];
+            }
+        }
+
+        return $this->send_success( __( 'Succesfully subscriber for this user') );
     }
 
     /**

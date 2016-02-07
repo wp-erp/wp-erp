@@ -38,6 +38,7 @@
 
             $('body').on( 'click', 'div.erp-handlediv', this.handlePostboxToggle );
 
+            // Erp ToolTips using tiptip
             $('.erp-crm-tips').tipTip( {
                 defaultPosition: "top",
                 fadeIn: 100,

@@ -24,12 +24,6 @@
         ) ); ?>
     </div>
 
-<!--     <div class="row">
-        <label for="erp-crm-contact-group-id">Assign Group</label>
-
-        <input type="checkbox" name="">
-    </div> -->
-
     <?php wp_nonce_field( 'wp-erp-crm-contact-subscriber' ); ?>
 
     <input type="hidden" name="action" value="erp-crm-contact-subscriber">
