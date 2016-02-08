@@ -29,6 +29,15 @@ function erp_crm_get_avatar( $id, $size = 32, $user = false ) {
     return get_avatar( $id, $size );
 }
 
+/**
+ * Get Employee for CRM
+ *
+ * @since 1.0
+ *
+ * @param  string $selected
+ *
+ * @return html
+ */
 function erp_crm_get_emplyees( $selected = '' ) {
     $employees = erp_hr_get_employees_dropdown_raw( get_current_user_id() );
     $dropdown     = '';
@@ -43,8 +52,31 @@ function erp_crm_get_emplyees( $selected = '' ) {
     return $dropdown;
 }
 
+/**
+ * Get contact details url according to contact type
+ *
+ * @since 1.0
+ *
+ * @param integer $id
+ * @param string $type
+ *
+ * @return string url
+ */
+function erp_crm_get_details_url( $id, $type ) {
 
+    if ( $id ) {
 
+        if ( $type == 'contact' ) {
+            return admin_url( 'admin.php?page=erp-sales-customers&action=view&id=' . $id );
+        }
+
+        if ( $type == 'company' ) {
+            return admin_url( 'admin.php?page=erp-sales-companies&action=view&id=' . $id );
+        }
+    }
+
+    return admin_url( 'admin.php' );
+}
 /**
  * Get CRM life statges
  *
@@ -112,6 +144,31 @@ function erp_crm_get_life_statges_dropdown( $label = [], $selected = '' ) {
     }
 
     return $dropdown;
+}
+
+/**
+ * Get contact dropdown list as array
+ *
+ * @since 1.0
+ *
+ * @param  array  $label
+ *
+ * @return array | list of all contact with copmany
+ */
+function erp_crm_get_contact_dropdown( $label = [] ) {
+    $contacts = erp_get_peoples( [ 'number' => '-1', 'type' => [ 'contact', 'company' ] ] );
+    $list = [];
+
+    foreach ( $contacts as $key => $contact ) {
+        $name = ( $contact->type == 'company' ) ? $contact->company : $contact->first_name . ' ' . $contact->last_name;
+        $list[$contact->id] = $name . ' ( ' . ucfirst( $contact->type ) . ' ) ';
+    }
+
+    if ( $label ) {
+        $list = $label + $list;
+    }
+
+    return $list;
 }
 
 /**
@@ -683,7 +740,6 @@ function erp_crm_save_contact_group( $data ) {
  * @return object
  */
 function erp_crm_get_contact_groups( $args = [] ) {
-    global $wpdb;
 
     $defaults = [
         'number'     => 20,
@@ -694,11 +750,14 @@ function erp_crm_get_contact_groups( $args = [] ) {
     ];
 
     $args      = wp_parse_args( $args, $defaults );
-    $cache_key = 'erp-people-contact-group-' . md5( serialize( $args ) );
+    $cache_key = 'erp-crm-contact-group-' . md5( serialize( $args ) );
     $items     = wp_cache_get( $cache_key, 'wp-erp' );
 
     if ( false === $items ) {
-        $contact_group = new WeDevs\ERP\CRM\Models\ContactGroup();
+        $results               = [];
+        $contact_group         = new WeDevs\ERP\CRM\Models\ContactGroup();
+
+        $contact_group = $contact_group->with( 'contact_subscriber' );
 
         // Check if want all data without any pagination
         if ( $args['number'] != '-1' ) {
@@ -713,9 +772,17 @@ function erp_crm_get_contact_groups( $args = [] ) {
         }
 
         // Render all collection of data according to above filter (Main query)
-        $items = $contact_group->orderBy( $args['orderby'], $args['order'] )
+        $results = $contact_group->orderBy( $args['orderby'], $args['order'] )
                 ->get()
                 ->toArray();
+
+        foreach( $results as $key => $group ) {
+            $subscriber = array_count_values( wp_list_pluck( $group['contact_subscriber'], 'status' ) );
+            unset( $group['contact_subscriber'] );
+            $items[$key] = $group;
+            $items[$key]['subscriber'] = isset( $subscriber['subscribe'] ) ? $subscriber['subscribe'] : 0;
+            $items[$key]['unsubscriber'] = isset( $subscriber['unsubscribe'] ) ? $subscriber['unsubscribe'] : 0;
+        }
 
         $items = erp_array_to_object( $items );
 
@@ -754,6 +821,187 @@ function erp_crm_get_contact_group_by_id( $id ) {
  */
 function erp_crm_contact_group_delete( $id ) {
     WeDevs\ERP\CRM\Models\ContactGroup::find( $id )->delete();
+}
+
+function erp_crm_get_subscriber_contact( $args = [] ) {
+    global $wpdb;
+
+    $defaults = [
+        'number'     => 20,
+        'offset'     => 0,
+        'orderby'    => 'id',
+        'order'      => 'DESC',
+        'count'      => false,
+    ];
+
+    $args      = wp_parse_args( $args, $defaults );
+    $cache_key = 'erp-crm-subscriber-contact-' . md5( serialize( $args ) );
+    $items     = wp_cache_get( $cache_key, 'wp-erp' );
+
+    if ( false === $items ) {
+        $converted_data       = [];
+        $contact_subscribe_tb = $wpdb->prefix . 'erp_crm_contact_subscriber';
+        $contact_group_tb     = $wpdb->prefix . 'erp_crm_contact_group';
+
+        $contact_subscribers = WeDevs\ERP\CRM\Models\ContactSubscriber::leftjoin( $contact_group_tb, $contact_group_tb . '.id', '=', $contact_subscribe_tb . '.group_id' );
+
+        // Check if want all data without any pagination
+        if ( $args['number'] != '-1' ) {
+            $contact_subscribers = $contact_subscribers->skip( $args['offset'] )->take( $args['number'] );
+        }
+
+        // Check is the row want to search
+        if ( isset( $args['s'] ) && ! empty( $args['s'] ) ) {
+            $arg_s = $args['s'];
+            $contact_subscribers = $contact_subscribers->where( 'name', 'LIKE', "%$arg_s%" )
+                    ->orWhere( 'description', 'LIKE', "%$arg_s%" );
+        }
+
+        // Render all collection of data according to above filter (Main query)
+        $results = $contact_subscribers
+                ->get()
+                ->groupBy('user_id')
+                ->toArray();
+
+        foreach( $results as $user_id=>$value ) {
+            $converted_data[] = [
+                'user_id' => $user_id,
+                'data' => $value
+            ];
+        }
+
+        $items = erp_array_to_object( $converted_data );
+
+        // Check if args count true, then return total count customer according to above filter
+        if ( $args['count'] ) {
+            $items = WeDevs\ERP\CRM\Models\ContactSubscriber::leftjoin( $contact_group_tb, $contact_group_tb . '.id', '=', $contact_subscribe_tb . '.group_id' )->groupBy('user_id')->count();
+        }
+
+        wp_cache_set( $cache_key, $items, 'wp-erp' );
+    }
+
+    return $items;
+}
+
+function erp_crm_get_contact_group_dropdown( $label = [] ) {
+    $groups = erp_crm_get_contact_groups( [ 'number' => '-1' ] );
+    $list   = [];
+
+    foreach ( $groups as $key => $group ) {
+        $list[$group->id] = $group->name;
+    }
+
+    if ( $label ) {
+        $list = $label + $list;
+    }
+
+    return $list;
+}
+
+/**
+ * Get already subscirbed contact
+ *
+ * @since 1.0
+ *
+ * @return array
+ */
+function erp_crm_get_assign_subscriber_contact() {
+    $data = \WeDevs\ERP\CRM\Models\ContactSubscriber::select('user_id')->distinct()->get()->toArray();
+    return wp_list_pluck( $data, 'user_id' );
+}
+
+/**
+ * Create Contact subscriber
+ *
+ * @since 1.0
+ *
+ * @param  array $data
+ *
+ * @return return collection|obejct
+ */
+function erp_crm_create_new_contact_subscriber( $data ) {
+    return \WeDevs\ERP\CRM\Models\ContactSubscriber::create( $data );
+}
+
+/**
+ * Get already user assigned group id
+ *
+ * @since 1.0
+ *
+ * @param  integer $user_id
+ *
+ * @return array
+ */
+function erp_crm_get_editable_assign_contact( $user_id ) {
+    $data = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )->where( 'status', 'subscribe' )->distinct()->get()->toArray();
+    return wp_list_pluck( $data, 'group_id' );
+}
+
+/**
+ * Delete Contact alreays subscribed
+ *
+ * @since 1.0
+ *
+ * @param  integer $user_id
+ *
+ * @return boolean
+ */
+function erp_crm_contact_subscriber_delete( $user_id ) {
+    return \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )->delete();
+}
+
+/**
+ * Edit contact subscriber
+ *
+ * Delete if uncheck and if new then
+ * create new one.
+ *
+ * @since 1.0
+ *
+ * @param  array $groups
+ * @param  integer $user_id
+ *
+ * @return void
+ */
+function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
+    $data = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )->distinct()->get()->toArray();
+
+    $db             = wp_list_pluck( $data, 'group_id' );
+    $existing_group = $new_group = $del_group = [];
+
+    if ( !empty( $groups ) ) {
+        foreach( $groups as $group ) {
+            if ( in_array( $group, $db ) ) {
+                $existing_group[] = $group;
+            } else {
+                $new_group[] = $group;
+            }
+        }
+    }
+
+    $del_group = array_diff( $db, $existing_group );
+
+    if ( !empty( $new_group ) ) {
+
+        foreach ( $new_group as $new_group_key => $new_group_id ) {
+            $data = [
+                'user_id'  => $user_id,
+                'group_id' => $new_group_id,
+                'status'   => 'subscribe', // @TODO: Set a settings for that
+                'subscribe_at' => current_time('mysql'),
+                'unsubscribe_at' => current_time('mysql')
+            ];
+
+            erp_crm_create_new_contact_subscriber( $data );
+        }
+
+    }
+
+    if ( ! empty( $del_group ) ) {
+        foreach ( $del_group as $del_group_key => $del_group_id ) {
+            \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )->where( 'group_id', $del_group_id )->delete();
+        }
+    }
 }
 
 

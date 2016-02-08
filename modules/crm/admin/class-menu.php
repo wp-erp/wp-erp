@@ -185,6 +185,10 @@ class Admin_Menu {
                 $template = WPERP_CRM_VIEWS . '/leads/single.php';
                 break;
 
+            case 'view-subscriber':
+                $template = WPERP_CRM_VIEWS . '/contact-group/subscribe-contact.php';
+                break;
+
             default:
                 $template = WPERP_CRM_VIEWS . '/contact-groups.php';
                 break;

@@ -2,23 +2,28 @@
 namespace WeDevs\ERP\CRM;
 
 /**
- * Subscriber List table class
+ * Customer List table class
  *
  * @package weDevs|wperp
  */
-class Subscriber_List_Table extends \WP_List_Table {
+class Contact_List_Table extends \WP_List_Table {
 
     private $counts = array();
     private $page_status = '';
+    private $contact_type;
 
     function __construct( $type = null ) {
         global $status, $page;
 
         parent::__construct( array(
-            'singular' => 'subscriber',
-            'plural'   => 'subscribers',
+            'singular' => 'customer',
+            'plural'   => 'customers',
             'ajax'     => false
         ) );
+
+        if ( $type ) {
+            $this->contact_type = $type;
+        }
     }
 
     /**
@@ -29,7 +34,7 @@ class Subscriber_List_Table extends \WP_List_Table {
      * @return void
      */
     function no_items() {
-        _e( 'No Subscriber found', 'wp-erp' );
+        echo sprintf( __( 'No %s found.', 'wp-erp' ), $this->contact_type );
     }
 
     /**
@@ -267,6 +272,7 @@ class Subscriber_List_Table extends \WP_List_Table {
 
         // only ncessary because we have sample data
         $args = [
+            'type'   => $this->contact_type,
             'offset' => $offset,
             'number' => $per_page,
         ];
@@ -289,18 +295,25 @@ class Subscriber_List_Table extends \WP_List_Table {
         // Filter for cusotmer life stage
         if ( isset( $_REQUEST['status'] ) && ! empty( $_REQUEST['status'] ) ) {
             if ( $_REQUEST['status'] != 'all' ) {
-
+                if ( $_REQUEST['status'] == 'trash' ) {
+                    $args['trashed'] = true;
+                } else {
+                    $args['meta_query'] = [
+                        'meta_key' => 'life_stage',
+                        'meta_value' => $_REQUEST['status']
+                    ];
+                }
             }
         }
 
         // Total counting for customer type filter
-        // $this->counts = erp_crm_customer_get_status_count( $this->contact_type );
+        $this->counts = erp_crm_customer_get_status_count( $this->contact_type );
 
         // Prepare all item after all filtering
-        $this->items  = erp_crm_get_contact_groups( $args );
+        $this->items  = erp_get_peoples( $args );
 
         // Render total customer according to above filter
-        // $args['count'] = true;
+        $args['count'] = true;
         $total_items = erp_get_peoples( $args );
 
         // Set pagination according to filter

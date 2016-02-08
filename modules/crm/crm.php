@@ -113,6 +113,7 @@ class Customer_Relationship {
         $suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
         wp_enqueue_media();
+        wp_enqueue_style( 'erp-tiptip' );
         wp_enqueue_script( 'erp-tiptip' );
         wp_enqueue_script( 'wp-erp-crm', WPERP_CRM_ASSETS . "/js/crm$suffix.js", array( 'wp-erp-script', 'erp-admin-timepicker' ), date( 'Ymd' ), true );
 
@@ -131,6 +132,7 @@ class Customer_Relationship {
             'confirm'               => __( 'Are you sure?', 'wp-erp' ),
             'delConfirmCustomer'    => __( 'Are you sure to delete this customer?', 'wp-erp' ),
             'delConfirm'            => __( 'Are you sure to delete this?', 'wp-erp' ),
+            'checkedConfirm'        => __( 'Alteast one item must be checked', 'wp-erp' ),
         ) );
 
         // if it's an customer page
@@ -138,8 +140,6 @@ class Customer_Relationship {
 
             wp_enqueue_style( 'erp-admin-timepicker' );
             wp_enqueue_script( 'erp-admin-timepicker' );
-            wp_enqueue_style( 'erp-tiptip' );
-            wp_enqueue_script( 'erp-tiptip' );
             wp_enqueue_script( 'erp-vuejs' );
             wp_enqueue_script( 'erp-trix-editor' );
             wp_enqueue_style( 'erp-trix-editor' );
@@ -196,6 +196,7 @@ class Customer_Relationship {
 
             case 'crm_page_erp-sales-contact-groups':
                 erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-contact-group.php', 'erp-crm-new-contact-group' );
+                erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-subscriber-contact.php', 'erp-crm-assign-subscriber-contact' );
                 break;
 
             default:

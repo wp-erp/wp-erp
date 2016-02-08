@@ -38,7 +38,13 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-crm-contact-group', 'contact_group_create' );
         $this->action( 'wp_ajax_erp-crm-edit-contact-group', 'contact_group_edit' );
         $this->action( 'wp_ajax_erp-crm-contact-group-delete', 'contact_group_delete' );
+        $this->action( 'wp_ajax_erp-crm-exclued-already-assigned-contact', 'check_assing_contact' );
 
+        // Contact Subscriber
+        $this->action( 'wp_ajax_erp-crm-contact-subscriber', 'assign_contact_as_subscriber' );
+        $this->action( 'wp_ajax_erp-crm-edit-contact-subscriber', 'edit_assign_contact' );
+        $this->action( 'wp_ajax_erp-crm-contact-subscriber-delete', 'assign_contact_delete' );
+        $this->action( 'wp_ajax_erp-crm-contact-subscriber-edit', 'edit_assign_contact_submission' );
 
         // Customer Feeds
         add_action( 'wp_ajax_erp_crm_get_customer_activity', array( $this, 'fetch_all_activity' ) );
@@ -320,6 +326,109 @@ class Ajax_Handler {
     }
 
     /**
+     * Get alreay assigned contact into subscriber
+     *
+     * @since 1.0
+     *
+     * @return json
+     */
+    public function check_assing_contact() {
+        $this->verify_nonce( 'wp-erp-crm-nonce' );
+
+        $result = erp_crm_get_assign_subscriber_contact();
+
+        $this->send_success( $result );
+    }
+
+    public function edit_assign_contact() {
+        $this->verify_nonce( 'wp-erp-crm-nonce' );
+
+        $user_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+
+        if ( ! $user_id ) {
+            $this->send_error( __( 'Contact not found. Try again', 'wp-erp' ) );
+        }
+
+        $result = erp_crm_get_editable_assign_contact( $user_id );
+
+        $this->send_success( $result );
+    }
+
+    /**
+     * Assing Contact as a subscriber
+     *
+     * @since 1.0
+     *
+     * @return json
+     */
+    public function assign_contact_as_subscriber() {
+
+        $this->verify_nonce( 'wp-erp-crm-contact-subscriber' );
+
+        $data = [];
+
+        if ( isset ( $_POST['group_id'] ) && isset( $_POST['user_id'] ) ) {
+            foreach ( $_POST['group_id'] as $key => $group_id ) {
+                $data = [
+                    'user_id'  => $_POST['user_id'],
+                    'group_id' => $group_id,
+                    'status'   => 'subscribe', // @TODO: Set a settings for that
+                    'subscribe_at' => current_time('mysql'),
+                    'unsubscribe_at' => current_time('mysql')
+                ];
+
+                erp_crm_create_new_contact_subscriber( $data );
+            }
+        }
+
+
+        return $this->send_success( __( 'Succesfully subscriber for this user') );
+    }
+
+    /**
+     * Contact Subscriber delete
+     *
+     * @since 1.0
+     *
+     * @return json
+     */
+    public function assign_contact_delete() {
+        $this->verify_nonce( 'wp-erp-crm-nonce' );
+
+        $user_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+
+        if ( ! $user_id ) {
+            $this->send_error( __( 'No subscriber user found', 'wp-erp' ) );
+        }
+
+        erp_crm_contact_subscriber_delete( $user_id );
+
+        $this->send_success( __( 'Contact group delete successfully', 'wp-erp' ) );
+    }
+
+    /**
+     * Assing contact after edit form submission
+     *
+     * @since 1.0
+     *
+     * @return json
+     */
+    public function edit_assign_contact_submission() {
+        $this->verify_nonce( 'wp-erp-crm-contact-subscriber' );
+
+        $user_id = isset( $_REQUEST['user_id'] ) ? intval( $_REQUEST['user_id'] ) : 0;
+        $group_id = isset( $_POST['group_id'] ) ? $_POST['group_id'] : [];
+
+        if ( ! $user_id ) {
+            $this->send_error( __( 'No subscriber user found', 'wp-erp' ) );
+        }
+
+        erp_crm_edit_contact_subscriber( $group_id, $user_id );
+
+        $this->send_success( __( 'Contact group edit successfully', 'wp-erp' ) );
+    }
+
+    /**
      * Customer add company template refresh
      *
      * @since  1.0
@@ -534,6 +643,13 @@ class Ajax_Handler {
         $this->send_success( $data );
     }
 
+    /**
+     * Edit Activity schedule feeds
+     *
+     * @since 1.0
+     *
+     * @return json
+     */
     public function edit_customer_activity_schedule_feeds() {
 
         $this->verify_nonce( 'wp-erp-crm-edit-customer-feed-nonce' );

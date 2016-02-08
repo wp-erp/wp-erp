@@ -46,6 +46,12 @@ class Contact_Group_List_Table extends \WP_List_Table {
         switch ( $column_name ) {
             case 'name':
 
+            case 'subscribed':
+                return $contact_group->subscriber;
+
+            case 'unsubscribed':
+                return $contact_group->unsubscriber;
+
             case 'created_at':
                 return erp_format_date( $contact_group->created_at );
 
@@ -63,6 +69,8 @@ class Contact_Group_List_Table extends \WP_List_Table {
         $columns = array(
             'cb'           => '<input type="checkbox" />',
             'name'         => __( 'Name', 'wp-erp' ),
+            'subscribed'   => __( 'Subscribed', 'wp-erp' ),
+            'unsubscribed' => __( 'Unsubscribed', 'wp-erp' ),
             'created_at'   => __( 'Created At', 'wp-erp' )
         );
 
@@ -78,13 +86,14 @@ class Contact_Group_List_Table extends \WP_List_Table {
      */
     function column_name( $contact_group ) {
 
-        $actions           = array();
-        $delete_url        = '';
+        $actions             = array();
+        $delete_url          = '';
+        $view_subscriber_url = add_query_arg( [ 'page'=>'erp-sales-contact-groups', 'action' => 'view-subscriber', 'id' => $contact_group->id ], admin_url( 'admin.php' ) );
+        $actions['edit']     = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $contact_group->id, __( 'Edit this Contact Group', 'wp-erp' ), __( 'Edit', 'wp-erp' ) );
+        $actions['view-subscriber']     = sprintf( '<a href="%s" title="%s">%s</a>', $view_subscriber_url, __( 'View Subscriber in this group', 'wp-erp' ), __( 'View Subscriber', 'wp-erp' ) );
+        $actions['delete']   = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $contact_group->id, __( 'Delete this Contact Group', 'wp-erp' ), __( 'Delete', 'wp-erp' ) );
 
-        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $contact_group->id, __( 'Edit this Contact Group', 'wp-erp' ), __( 'Edit', 'wp-erp' ) );
-        $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $contact_group->id, __( 'Delete this Contact Group', 'wp-erp' ), __( 'Delete', 'wp-erp' ) );
-
-        return sprintf( '<a href="%3$s"><strong>%1$s</strong></a> %2$s', $contact_group->name, $this->row_actions( $actions ), '#' );
+        return sprintf( '<a href="%3$s"><strong>%1$s</strong></a> %2$s', $contact_group->name, $this->row_actions( $actions ), $view_subscriber_url );
     }
 
     /**
