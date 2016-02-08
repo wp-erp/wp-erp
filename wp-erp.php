@@ -256,6 +256,9 @@ final class WeDevs_ERP {
         // Register Bascamp text editor js
         wp_register_script( 'erp-trix-editor', WPERP_ASSETS . '/js/trix.js', array( 'jquery' ), false, false );
 
+        // Register upload js
+        wp_register_script( 'erp-file-upload', WPERP_ASSETS . '/js/upload.js', array( 'jquery', 'plupload-handlers' ), false, false );
+
         // flot charts
         wp_register_script( 'erp-flotchart', WPERP_ASSETS . '/js/jquery.flot.min.js', array( 'jquery' ), false, false );
         wp_register_script( 'erp-flotchart-time', WPERP_ASSETS . '/js/jquery.flot.time.min.js', array( 'jquery' ), false, false );

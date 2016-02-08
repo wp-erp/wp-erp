@@ -157,6 +157,32 @@ function erp_html_form_input( $args = array() ) {
             }
             break;
 
+        case 'file':
+        $id = $field['id'];
+        $pick_files = $id . '-upload-pickfiles';
+        $drop = $id . '-drop-files';
+        $action = $field['action'];
+            ?>
+            <div id="<?php echo $id; ?>">
+                <div class="erp-ac-upload-filelist"></div>
+                <div id="<?php echo $drop; ?>">
+                To attach, <a id="<?php echo $pick_files; ?>" href="#">select files</a> from your computer.
+                </div>
+            </div>
+            
+            <script type="text/javascript">
+                jQuery(function($) {
+                    var pick_files = '<?php echo $pick_files; ?>',
+                        id         = '<?php echo $id; ?>',
+                        drop_jone  = '<?php echo $drop; ?>',
+                        action     = '<?php echo $action; ?>';
+
+                    new WPUF_Uploader( action, pick_files, id, drop_jone, 10, 'file_upload', 'jpg,jpeg,gif,png,bmp', 1024);
+                });
+            </script>
+            <?php
+            break;
+
         default:
             # code...
             break;
