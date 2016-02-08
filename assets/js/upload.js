@@ -29,7 +29,8 @@
            // multipart: true,
             multipart_params: {
                 action: action, 
-                file_id: $( '#' + browse_button ).data('file_id')
+                file_id: $( '#' + browse_button ).data('file_id'),
+                _wpnonce: wpErp.nonce
             },
             //multiple_queues: false,
            // multi_selection: false,
@@ -143,15 +144,15 @@
         },
 
         uploaded: function (up, file, response) {
-            console.log('mishu6');
-            // var res = $.parseJSON(response.response);
-
+            
+            var res = $.parseJSON(response.response);
+            
             $('#' + file.id + " b").html("100%");
             $('#' + file.id).remove();
 
             if(response.response !== 'error') {
-                var $container = $('#' + this.container).find('.wpuf-attachment-list');
-                $container.append(response.response);
+                var $container = $('#' + this.container).find('.erp-attachment-list');
+                $container.append(res.data);
             } else {
                 alert(res.error);
 

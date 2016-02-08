@@ -184,17 +184,20 @@ function erp_html_form_input( $args = array() ) {
             break;
 
         case 'file':
+        //need to enqueue   wp_enqueue_script( 'plupload-handlers' ); wp_enqueue_script( 'erp-file-upload' );
         $id = $field['id'];
         $pick_files = $id . '-upload-pickfiles';
         $drop = $id . '-drop-files';
-        $action = $field['action'];
+        $action = isset( $field['action'] ) ? $field['action'] : 'erp_file_upload';
             ?>
             <div id="<?php echo $id; ?>">
                 <div class="erp-ac-upload-filelist"></div>
                 <div id="<?php echo $drop; ?>">
                 To attach, <a id="<?php echo $pick_files; ?>" href="#">select files</a> from your computer.
                 </div>
+                <ul class="erp-attachment-list"></ul>
             </div>
+
             
             <script type="text/javascript">
                 jQuery(function($) {
