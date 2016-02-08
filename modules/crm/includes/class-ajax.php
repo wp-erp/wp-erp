@@ -351,7 +351,17 @@ class Ajax_Handler {
 
         $result = erp_crm_get_editable_assign_contact( $user_id );
 
-        $this->send_success( $result );
+        foreach ( $result as $key => $value ) {
+            $data[ $value['group_id'] ] = [
+                'status'         => $value['status'],
+                'subscribe_at'   => erp_format_date( $value['subscribe_at'] ),
+                'unsubscribe_at' => erp_format_date( $value['unsubscribe_at'] ),
+                'subscribe_message' => sprintf( ' ( %s %s )', __( 'Subscribed on'), erp_format_date( $value['subscribe_at'] ) ),
+                'unsubscribe_message' => sprintf( ' ( %s %s )', __( 'Unsubscribed on'), erp_format_date( $value['unsubscribe_at'] ) )
+            ];
+        }
+
+        $this->send_success( ['groups' => wp_list_pluck( $result, 'group_id' ), 'results' => $data ] );
     }
 
     /**

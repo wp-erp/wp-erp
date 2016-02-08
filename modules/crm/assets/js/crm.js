@@ -779,14 +779,21 @@
                                 _wpnonce: wpErpCrm.nonce
                             },
                             success: function( res ) {
-                                var html = wp.template( 'erp-crm-assign-subscriber-contact' )( { group_id : res, user_id: query_id } );
+                                var html = wp.template( 'erp-crm-assign-subscriber-contact' )( { group_id : res.groups, user_id: query_id } );
                                 $( '.content', modal ).html( html );
 
+
+
                                 _.each( $( 'input[type=checkbox].erp-crm-contact-group-class' ), function( el, i) {
-                                    var optionsVal = jQuery(el).val();
-                                    if( _.contains( res, optionsVal ) ) {
-                                       jQuery(el).prop('checked', true );
+                                    var optionsVal = $(el).val();
+                                    if( _.contains( res.groups, optionsVal ) && res.results[optionsVal].status == 'subscribe' ) {
+                                        $(el).prop('checked', true );
                                     }
+                                    if ( _.contains( res.groups, optionsVal ) && res.results[optionsVal].status == 'unsubscribe' ) {
+                                        $(el).closest('label').find('span.checkbox-value')
+                                            .append('<span class="unsubscribe-group">' + res.results[optionsVal].unsubscribe_message + '</span>');
+                                    };
+
                                 });
 
                                 $( '.loader', modal ).remove();

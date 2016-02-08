@@ -850,6 +850,10 @@ function erp_crm_get_subscriber_contact( $args = [] ) {
             $contact_subscribers = $contact_subscribers->skip( $args['offset'] )->take( $args['number'] );
         }
 
+        if ( isset( $args['group_id'] ) && ! empty( $args['group_id'] ) ) {
+            $contact_subscribers = $contact_subscribers->where( $contact_group_tb . '.id', '=', $args['group_id'] );
+        }
+
         // Check is the row want to search
         if ( isset( $args['s'] ) && ! empty( $args['s'] ) ) {
             $arg_s = $args['s'];
@@ -886,9 +890,11 @@ function erp_crm_get_subscriber_contact( $args = [] ) {
 function erp_crm_get_contact_group_dropdown( $label = [] ) {
     $groups = erp_crm_get_contact_groups( [ 'number' => '-1' ] );
     $list   = [];
+    $unsubscribe_text = '';
 
     foreach ( $groups as $key => $group ) {
-        $list[$group->id] = $group->name;
+        $list[$group->id] = '<span class="group-name">' . $group->name . '</span>';
+        // $list[$group->id] = $group->name;
     }
 
     if ( $label ) {
@@ -933,8 +939,8 @@ function erp_crm_create_new_contact_subscriber( $data ) {
  * @return array
  */
 function erp_crm_get_editable_assign_contact( $user_id ) {
-    $data = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )->where( 'status', 'subscribe' )->distinct()->get()->toArray();
-    return wp_list_pluck( $data, 'group_id' );
+    $data = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )->distinct()->get()->toArray();
+    return $data;
 }
 
 /**
@@ -947,7 +953,11 @@ function erp_crm_get_editable_assign_contact( $user_id ) {
  * @return boolean
  */
 function erp_crm_contact_subscriber_delete( $user_id ) {
-    return \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )->delete();
+    if ( is_array( $user_id )) {
+        return \WeDevs\ERP\CRM\Models\ContactSubscriber::whereIn( 'user_id', $user_id )->delete();
+    } else {
+        return \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )->delete();
+    }
 }
 
 /**
@@ -966,13 +976,18 @@ function erp_crm_contact_subscriber_delete( $user_id ) {
 function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
     $data = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )->distinct()->get()->toArray();
 
-    $db             = wp_list_pluck( $data, 'group_id' );
-    $existing_group = $new_group = $del_group = [];
+    $db                         = wp_list_pluck( $data, 'group_id' );
+    $existing_group_with_status =  wp_list_pluck( $data, 'status', 'group_id' );
+    $existing_group             = $new_group = $del_group = $unsubscribe_group = [];
 
     if ( !empty( $groups ) ) {
         foreach( $groups as $group ) {
             if ( in_array( $group, $db ) ) {
                 $existing_group[] = $group;
+
+                if ( $existing_group_with_status[$group] == 'unsubscribe' ) {
+                    $unsubscribe_group[] = $group;
+                }
             } else {
                 $new_group[] = $group;
             }
@@ -980,6 +995,12 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
     }
 
     $del_group = array_diff( $db, $existing_group );
+
+    if ( ! empty( $unsubscribe_group ) ) {
+        foreach ( $unsubscribe_group as $unsubscribe_group_key => $unsubscribe_group_id ) {
+            \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )->where( 'group_id', $unsubscribe_group_id )->update( [ 'status' => 'subscribe' ] );
+        }
+    }
 
     if ( !empty( $new_group ) ) {
 
@@ -999,7 +1020,7 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
 
     if ( ! empty( $del_group ) ) {
         foreach ( $del_group as $del_group_key => $del_group_id ) {
-            \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )->where( 'group_id', $del_group_id )->delete();
+            \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )->where( 'group_id', $del_group_id )->where( 'status', 'subscribe' )->delete();
         }
     }
 }
