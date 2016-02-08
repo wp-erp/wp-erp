@@ -4,3 +4,4 @@ config.codekit
 /vendor/
 node_modules
 build
+.DS_Store

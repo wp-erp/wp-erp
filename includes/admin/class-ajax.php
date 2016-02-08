@@ -21,6 +21,14 @@ class Ajax {
         $this->action( 'wp_ajax_erp-company-location', 'location_create');
         $this->action( 'wp_ajax_erp-delete-comp-location', 'location_remove');
         $this->action( 'wp_ajax_erp_audit_log_view', 'view_edit_log_changes');
+        $this->action( 'wp_ajax_erp_file_upload', 'erp_file_upload' );
+    }
+
+    function erp_file_upload() {
+        $this->verify_nonce( 'erp-nonce' );
+        $upload = new \WeDevs\ERP\Upload();
+        $file = $upload->upload_file(true);
+        $this->send_success( $file ); 
     }
 
     /**
