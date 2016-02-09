@@ -21,13 +21,40 @@ class Ajax {
         $this->action( 'wp_ajax_erp-company-location', 'location_create');
         $this->action( 'wp_ajax_erp-delete-comp-location', 'location_remove');
         $this->action( 'wp_ajax_erp_audit_log_view', 'view_edit_log_changes');
-        $this->action( 'wp_ajax_erp_file_upload', 'erp_file_upload' );
+        $this->action( 'wp_ajax_erp_file_upload', 'file_uploader' );
+        $this->action( 'wp_ajax_erp_file_del', 'file_delete' );
     }
 
-    function erp_file_upload() {
+    function file_delete() {
         $this->verify_nonce( 'erp-nonce' );
-        $upload = new \WeDevs\ERP\Upload();
-        $file = $upload->upload_file(true);
+        
+        $attach_id = isset( $_POST['attach_id'] ) ? $_POST['attach_id'] : 0;
+        $upload    = new \WeDevs\ERP\Uploader();
+        
+        if ( is_array( $attach_id) ) {
+            foreach ( $attach_id as $id ) {
+                $delete = $upload->delete_file( $id );
+            }
+        } else {
+            $delete = $upload->delete_file( intval( $attach_id ) );
+        }
+        
+        if ( $delete ) {
+            $this->send_success();
+        } else {
+            $this->send_error();
+        }     
+    }
+
+    /**
+     * Upload a new file
+     *
+     * @return void
+     */
+    function file_uploader() {
+        $this->verify_nonce( 'erp-nonce' );
+        $upload = new \WeDevs\ERP\Uploader();
+        $file   = $upload->upload_file();
         $this->send_success( $file ); 
     }
 
