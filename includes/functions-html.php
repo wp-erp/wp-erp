@@ -184,18 +184,26 @@ function erp_html_form_input( $args = array() ) {
             break;
 
         case 'file':
-        //need to enqueue   wp_enqueue_script( 'plupload-handlers' ); wp_enqueue_script( 'erp-file-upload' );
-        $id = $field['id'];
-        $pick_files = $id . '-upload-pickfiles';
-        $drop = $id . '-drop-files';
-        $action = isset( $field['action'] ) ? $field['action'] : 'erp_file_upload';
+            //need to enqueue   wp_enqueue_script( 'plupload-handlers' ); wp_enqueue_script( 'erp-file-upload' );
+            $id         = $field['id'];
+            $pick_files = $id . '-upload-pickfiles';
+            $drop       = $id . '-drop-files';
+            $action     = isset( $field['action'] ) ? $field['action'] : 'erp_file_upload';
+            $call_back  = isset( $field['callback'] ) ? json_encode( $field['callback'] ) : json_encode([]);
+            $values     = is_array( $field['value'] ) ? $field['value'] : [];
             ?>
+            
             <div id="<?php echo $id; ?>">
                 <div class="erp-ac-upload-filelist"></div>
-                <div id="<?php echo $drop; ?>">
-                To attach, <a id="<?php echo $pick_files; ?>" href="#">select files</a> from your computer.
-                </div>
-                <ul class="erp-attachment-list"></ul>
+                <div id="<?php echo $drop; ?>"><?php _e( 'To attach,', 'wp-erp' ); ?> <a id="<?php echo $pick_files; ?>" href="#"><?php _e( 'select files', 'wp-erp' ); ?></a><?php _e( 'from your computer.', 'wp-erp' ); ?></div>
+                <ul class="erp-attachment-list">
+                    <?php
+                        $uploader = new \WeDevs\ERP\Uploader();
+                        foreach ( $values as $key => $attach_id ) {
+                            echo $uploader->attach_html( $attach_id );
+                        }
+                    ?>
+                </ul>
             </div>
 
             
@@ -204,9 +212,11 @@ function erp_html_form_input( $args = array() ) {
                     var pick_files = '<?php echo $pick_files; ?>',
                         id         = '<?php echo $id; ?>',
                         drop_jone  = '<?php echo $drop; ?>',
-                        action     = '<?php echo $action; ?>';
-
-                    new WPUF_Uploader( action, pick_files, id, drop_jone, 10, 'file_upload', 'jpg,jpeg,gif,png,bmp', 1024);
+                        action     = '<?php echo $action; ?>',
+                        callback   = <?php echo $call_back; ?>;
+                        
+                    new ERP_Uploader( action, pick_files, id, drop_jone, 'file_upload', 'jpg,jpeg,gif,png,bmp,zip', 1024, callback );
+                     
                 });
             </script>
             <?php

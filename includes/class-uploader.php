@@ -4,8 +4,8 @@ namespace WeDevs\ERP;
 /**
  * People Class
  */
-class Upload {
-	function upload_file( $image_only = false ) {
+class Uploader {
+	function upload_file() {
 
         // check if guest post enabled for guests
         if ( ! is_user_logged_in() ) {
@@ -27,30 +27,11 @@ class Upload {
         if ( $attach['success'] ) {
 
             $response = array( 'success' => true );
-
-            if ($image_only) {
-                // $image_size = erp_get_option( 'insert_photo_size', 'erp_general', 'thumbnail' );
-                // $image_type = wpuf_get_option( 'insert_photo_type', 'wpuf_general', 'link' );
-
-                // if ( $image_type == 'link' ) {
-                //     $response['html'] = wp_get_attachment_link( $attach['attach_id'], $image_size );
-                // } else {
-                    //$response['html'] = wp_get_attachment_image( $attach['attach_id'], $image_size );
-                    $response['html'] = $this->attach_html( $attach['attach_id'] );
-               // }
-
-            } else {
-                $response['html'] = $this->attach_html( $attach['attach_id'] );
-            }
-
-            return $response['html'];
+            return $this->attach_html( $attach['attach_id'] );
         } else {
             return 'error';
         }
 
-
-        // $response = array('success' => false, 'message' => $attach['error']);
-        // echo json_encode( $response );
         exit;
     }
 
@@ -105,32 +86,21 @@ class Upload {
 
         $html = '<li class="erp-image-wrap thumbnail">';
         $html .= sprintf( '<div class="attachment-name"><img src="%s" alt="%s" /></div>', $image, esc_attr( $attachment->post_title ) );
-
-        // if ( wpuf_get_option( 'image_caption', 'wpuf_general', 'off' ) == 'on' ) {
-        //     $html .= '<div class="wpuf-file-input-wrap">';
-        //     $html .= sprintf( '<input type="text" name="wpuf_files_data[%d][title]" value="%s" placeholder="%s">', $attach_id, esc_attr( $attachment->post_title ), __( 'Title', 'wpuf' ) );
-        //     $html .= sprintf( '<textarea name="wpuf_files_data[%d][caption]" placeholder="%s">%s</textarea>', $attach_id, __( 'Caption', 'wpuf' ), esc_textarea( $attachment->post_excerpt ) );
-        //     $html .= sprintf( '<textarea name="wpuf_files_data[%d][desc]" placeholder="%s">%s</textarea>', $attach_id, __( 'Description', 'wpuf' ), esc_textarea( $attachment->post_content ) );
-        //     $html .= '</div>';
-        // }
-
-        $html .= sprintf( '<input type="hidden" name="erp_files[%s][]" value="%d">', $type, $attach_id );
+        $html .= sprintf( '<input type="hidden" name="erp_files[]" value="%d">', $attach_id );
         $html .= sprintf( '<div class="caption"><a href="#" class="btn btn-danger btn-small attachment-delete" data-attach_id="%d">%s</a></div>', $attach_id, __( 'Delete', 'wp-erp' ) );
         $html .= '</li>';
 
         return $html;
     }
 
-    function delete_file() {
-        check_ajax_referer( 'erp_nonce', 'nonce' );
-
-        $attach_id = isset( $_POST['attach_id'] ) ? intval( $_POST['attach_id'] ) : 0;
+    function delete_file( $attach_id ) {
+        
         $attachment = get_post( $attach_id );
 
         //post author or editor role
         if ( get_current_user_id() == $attachment->post_author || current_user_can( 'delete_private_pages' ) ) {
             wp_delete_attachment( $attach_id, true );
-            echo 'success';
+            return true;        
         }
 
         exit;

@@ -7,12 +7,9 @@
      * @param int {max} maximum number of file uplaods
      * @param string {type}
      */
-    window.WPUF_Uploader = function (action, browse_button, container, drop, max, type, allowed_type, max_file_size) {
-        console.log('mishu1', browse_button, container, drop); 
+    window.ERP_Uploader = function( action, browse_button, container, drop, type, allowed_type, max_file_size, callback ) {
         this.container = container;
         this.browse_button = browse_button;
-        this.max = max || 1;
-        this.count = $('#' + container).find('.wpuf-attachment-list > li').length; //count how many items are there
 
         //if no element found on the page, bail out
         if( !$('#'+browse_button).length ) {
@@ -32,9 +29,9 @@
                 file_id: $( '#' + browse_button ).data('file_id'),
                 _wpnonce: wpErp.nonce
             },
-            //multiple_queues: false,
-           // multi_selection: false,
-           // urlstream_upload: true,
+            multiple_queues: false,
+            //multi_selection: false,
+            urlstream_upload: true,
            // file_data_name: 'wpuf_file',
             max_file_size: max_file_size + 'kb',
             url: wpErp.plupload.url + '&type=' + type,
@@ -65,35 +62,40 @@
         this.uploader.bind('UploadProgress', $.proxy(this, 'progress'));
         this.uploader.bind('Error', $.proxy(this, 'error'));
         this.uploader.bind('FileUploaded', $.proxy(this, 'uploaded'));
-
+        
         this.uploader.init();
+        this.callback = callback;
 
         $('#' + container).on('click', 'a.attachment-delete', $.proxy(this.removeAttachment, this));
     };
 
-    WPUF_Uploader.prototype = {
+               
+    ERP_Uploader.prototype = {
 
         init: function (up, params) {
-            console.log('mishu2');
-            this.showHide();
+            //this.showHide();
         },
 
-        showHide: function () {
-            console.log('mishu3');
-            if ( this.count >= this.max) {
-                $('#' + this.container).find('.file-selector').hide();
+        executeFunctionByName: function (functionName, context, args ) {
+            if ( typeof functionName == 'undefined' ) {
+                return false;
+            }
+            var args       = [].slice.call(arguments).splice(2);
+            var namespaces = functionName.split(".");
+            var func       = namespaces.pop();
 
-                return;
-            };
-
-            $('#' + this.container).find('.file-selector').show();
+            for(var i = 0; i < namespaces.length; i++) {
+                context = context[namespaces[i]];
+            }
+            if ( typeof context[func] === "function" ) {
+                return context[func].apply(context, args);
+            } else {
+                return false;
+            }
         },
 
         added: function (up, files) {
             var $container = $('#' + this.container).find('.erp-attachment-upload-filelist');
-
-            this.count += 1;
-            this.showHide();
 
             $.each(files, function(i, file) {
                 $container.append(
@@ -138,31 +140,34 @@
 
             alert(msg);
 
-            this.count -= 1;
-            this.showHide();
             this.uploader.refresh();
         },
 
-        uploaded: function (up, file, response) {
-            
-            var res = $.parseJSON(response.response);
-            
+        uploaded: function ( up, file, response ) {
+            var res = $.parseJSON(response.response),
+                data  = {
+                    up : up,
+                    file: file,
+                    response: response
+                };
+                
+            var callback = this.executeFunctionByName( this.callback.after_uploaded, window, data );
+            if ( callback !== false ) {
+                return;
+            } 
+                
             $('#' + file.id + " b").html("100%");
             $('#' + file.id).remove();
 
-            if(response.response !== 'error') {
+            if( res.success ) {
                 var $container = $('#' + this.container).find('.erp-attachment-list');
                 $container.append(res.data);
             } else {
                 alert(res.error);
-
-                this.count -= 1;
-                this.showHide();
             }
         },
 
         removeAttachment: function(e) {
-            console.log('mishu7');
             e.preventDefault();
 
             var self = this,
@@ -170,16 +175,14 @@
 
             if ( confirm(wpErp.confirmMsg) ) {
                 var data = {
-                    'attach_id' : el.data('attach_id'),
-                    'nonce' : wpErp.nonce,
-                    'action' : 'wpuf_file_del'
+                    attach_id : el.data('attach_id'),
+                    _wpnonce: wpErp.nonce,
+                    action : 'erp_file_del'
                 };
 
                 jQuery.post(wpErp.ajaxurl, data, function() {
                     el.parent().parent().remove();
 
-                    self.count -= 1;
-                    self.showHide();
                     self.uploader.refresh();
                 });
             }
