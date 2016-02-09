@@ -123,6 +123,7 @@ class Customer_Relationship {
                 'customer_title'         => __( 'Add New Customer', 'wp-erp' ),
                 'customer_update_title'  => __( 'Edit Customer', 'wp-erp' ),
                 'customer_social_title'  => __( 'Customer Social Profile', 'wp-erp' ),
+                'customer_assing_group'  => __( 'Add to Contact groups', 'wp-erp' ),
             ),
             'add_submit'            => __( 'Add New', 'wp-erp' ),
             'update_submit'         => __( 'Update', 'wp-erp' ),
@@ -178,6 +179,7 @@ class Customer_Relationship {
             case 'crm_page_erp-sales-companies':
 
                 erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-customer.php', 'erp-crm-new-contact' );
+                erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-bulk-contact-group.php', 'erp-crm-new-bulk-contact-group' );
 
                 if ( isset( $_GET['action'] ) && $_GET['action'] == 'view' ) {
                     erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-assign-company.php', 'erp-crm-new-assign-company' );

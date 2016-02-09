@@ -13,6 +13,8 @@
             $( '.erp-crm-customer' ).on( 'click', 'span.edit a', this.customer.edit );
             $( '.erp-crm-customer' ).on( 'click', 'a.submitdelete', this.customer.remove );
             $( '.erp-crm-customer' ).on( 'click', 'a.restoreCustomer', this.customer.restore );
+            $( '.erp-crm-customer' ).on( 'click', 'input[type=submit]#doaction', this.customer.bulkAction );
+            $( '.erp-crm-customer' ).on( 'click', 'input[type=submit]#doaction2', this.customer.bulkAction );
 
             // Customer single view
             $( '.erp-single-customer' ).on( 'click', '#erp-customer-add-company', this.customerSingle.addCompany );
@@ -33,11 +35,13 @@
             $( 'body' ).on( 'click', 'a#erp-set-customer-photo', this.customer.setPhoto );
             $( 'body' ).on( 'click', 'a.erp-remove-photo', this.customer.removePhoto );
 
+            // Populate state according to country
             $( 'body' ).on('change', 'select.erp-country-select', this.populateState );
 
             // Trigger
             $( 'body' ).on( 'erp-crm-after-customer-new-company', this.customer.afterNew );
 
+            // handle postbox toggle
             $('body').on( 'click', 'div.erp-handlediv', this.handlePostboxToggle );
 
             // Erp ToolTips using tiptip
@@ -395,6 +399,58 @@
                         }
                     });
                 }
+            },
+
+            bulkAction: function(e, pos) {
+                var selectVal = '';
+
+                if ( e.target.id == 'doaction' ) {
+                    var selectVal = $( '.erp-crm-customer select#bulk-action-selector-top' ).val();
+                };
+
+                if ( e.target.id == 'doaction2' ) {
+                    var selectVal = $( '.erp-crm-customer select#bulk-action-selector-bottom' ).val();
+                };
+
+                if ( selectVal == 'assing_group' ) {
+                    e.preventDefault();
+                    var checkbox = [];
+
+                    if ( $("input.erp-crm-customer-id-checkbox:checkbox:checked").length > 0 ) {
+                        $("input.erp-crm-customer-id-checkbox:checkbox:checked").each( function() {
+                            var value = $(this).val();
+                            checkbox.push(value);
+                        });
+
+                        $.erpPopup({
+                            title: wpErpCrm.popup.customer_assing_group,
+                            button: wpErpCrm.add_submit,
+                            id: 'erp-crm-customer-bulk-assign-group',
+                            content: wperp.template('erp-crm-new-bulk-contact-group')({ user_id:checkbox }).trim(),
+                            extraClass: 'smaller',
+
+                            onSubmit: function(modal) {
+                                modal.disableButton();
+
+                                wp.ajax.send( {
+                                    data: this.serialize(),
+                                    success: function( res ) {
+                                        WeDevs_ERP_CRM.customer.pageReload();
+                                        modal.enableButton();
+                                        modal.closeModal();
+                                    },
+                                    error: function(error) {
+                                        modal.enableButton();
+                                        alert( error );
+                                    }
+                                });
+                            }
+                        }); //popup
+
+                    } else {
+                        alert( wpErpCrm.checkedConfirm );
+                    }
+                };
             }
         },
 

@@ -1012,7 +1012,6 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
                 'subscribe_at' => current_time('mysql'),
                 'unsubscribe_at' => current_time('mysql')
             ];
-
             erp_crm_create_new_contact_subscriber( $data );
         }
 
