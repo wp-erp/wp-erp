@@ -191,11 +191,17 @@
   width: 25%;
 }
 .erp-crm-subscriber-contact .subscribe-group,
-.erp-crm-subscriber-contact .unsubscribe-group {
+.erp-crm-contact-subscriber-wrap .subscribe-group,
+.erp-crm-subscriber-contact .unsubscribe-group,
+.erp-crm-contact-subscriber-wrap .unsubscribe-group {
   cursor: pointer !important;
 }
-.erp-crm-subscriber-contact .unsubscribe-group {
+.erp-crm-subscriber-contact .unsubscribe-group,
+.erp-crm-contact-subscriber-wrap .unsubscribe-group {
   color: #A9A9A9;
+}
+#erp-crm-edit-contact-subscriber label[for="erp-crm-contact-group-id"] {
+  min-width: 105px;
 }
 .erp-single-customer {
   /**

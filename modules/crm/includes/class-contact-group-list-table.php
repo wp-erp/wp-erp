@@ -88,7 +88,7 @@ class Contact_Group_List_Table extends \WP_List_Table {
 
         $actions             = array();
         $delete_url          = '';
-        $view_subscriber_url = add_query_arg( [ 'page'=>'erp-sales-contact-groups', 'action' => 'view-subscriber', 'id' => $contact_group->id ], admin_url( 'admin.php' ) );
+        $view_subscriber_url = add_query_arg( [ 'page'=>'erp-sales-contact-groups', 'groupaction' => 'view-subscriber', 'filter_contact_group' => $contact_group->id ], admin_url( 'admin.php' ) );
         $actions['edit']     = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $contact_group->id, __( 'Edit this Contact Group', 'wp-erp' ), __( 'Edit', 'wp-erp' ) );
         $actions['view-subscriber']     = sprintf( '<a href="%s" title="%s">%s</a>', $view_subscriber_url, __( 'View Subscriber in this group', 'wp-erp' ), __( 'View Subscriber', 'wp-erp' ) );
         $actions['delete']   = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $contact_group->id, __( 'Delete this Contact Group', 'wp-erp' ), __( 'Delete', 'wp-erp' ) );
@@ -156,11 +156,6 @@ class Contact_Group_List_Table extends \WP_List_Table {
             'offset' => $offset,
             'number' => $per_page,
         ];
-
-        // Filter for serach
-        if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
-            $args['s'] = $_REQUEST['s'];
-        }
 
         // Filter for order by
         if ( isset( $_REQUEST['orderby'] ) && ! empty( $_REQUEST['orderby'] ) ) {

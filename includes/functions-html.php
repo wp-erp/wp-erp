@@ -169,7 +169,7 @@ function erp_html_form_input( $args = array() ) {
                 }
 
                 echo '<input type="checkbox" '. $checked .' id="' . esc_attr( $field_attributes['id'] ) . '-' . $key . '" value="'.$key.'" ' . implode( ' ', $custom_attributes ) . ' />';
-                echo wp_kses_post( $value );
+                echo '<span class="checkbox-value">' . wp_kses_post( $value ) . '</span>';
                 echo '</label>';
             }
             echo '</span>';

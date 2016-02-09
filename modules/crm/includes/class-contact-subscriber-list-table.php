@@ -14,10 +14,42 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
         global $status, $page;
 
         parent::__construct( array(
-            'singular' => 'contactSubscriber',
-            'plural'   => 'contactSubscribers',
+            'singular' => 'contactsubscriber',
+            'plural'   => 'contactsubscribers',
             'ajax'     => false
         ) );
+    }
+
+    /**
+     * Render extra filtering option in
+     * top of the table
+     *
+     * @since 1.0
+     *
+     * @param  string $which
+     *
+     * @return void
+     */
+    function extra_tablenav( $which ) {
+        if ( $which != 'top' ) {
+            return;
+        }
+
+        $groups         = erp_crm_get_contact_group_dropdown( [ '' => __( 'All Groups', 'wp-erp' ) ] );
+        $selected_group = ( isset( $_GET['filter_contact_group'] ) ) ? $_GET['filter_contact_group'] : 0;
+        ?>
+        <div class="alignleft actions">
+
+            <label class="screen-reader-text" for="new_role"><?php _e( 'Filter by Group', 'wp-erp' ) ?></label>
+            <select name="filter_contact_group" id="filter_contact_group">
+                <?php foreach ( $groups as $key => $group ) : ?>
+                    <option value="<?php echo $key; ?>" <?php selected( $selected_group, $key ); ?>><?php echo $group; ?></option>
+                <?php endforeach ?>
+            </select>
+
+            <?php
+            submit_button( __( 'Filter' ), 'button', 'filter_group', false );
+        echo '</div>';
     }
 
     /**
@@ -92,16 +124,16 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
     }
 
     /**
-     * Render current trggier bulk action
+     * Trigger currenct bulk action
      *
      * @since 1.0
      *
-     * @return string [type of filter]
+     * @return string
      */
     public function current_action() {
 
-        if ( isset( $_REQUEST['customer_search'] ) ) {
-            return 'customer_search';
+        if ( isset( $_REQUEST['filter_group'] ) ) {
+            return 'filter_group';
         }
 
         return parent::current_action();
@@ -156,7 +188,7 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
      */
     function get_bulk_actions() {
         $actions = array(
-            'delete'  => __( 'Move to Trash', 'wp-erp' )
+            'delete'  => __( 'Delete', 'wp-erp' )
         );
 
         return $actions;
@@ -215,6 +247,11 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
         // Filter for order
         if ( isset( $_REQUEST['order'] ) && !empty( $_REQUEST['order'] ) ) {
             $args['order'] = $_REQUEST['order'];
+        }
+
+        // Filter for groups
+        if ( isset( $_REQUEST['filter_contact_group'] ) && !empty( $_REQUEST['filter_contact_group'] ) ) {
+            $args['group_id'] = $_REQUEST['filter_contact_group'];
         }
 
         // Prepare all item after all filtering

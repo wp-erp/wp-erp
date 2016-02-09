@@ -176,7 +176,7 @@ class Admin_Menu {
 
     public function contact_group_page() {
 
-        $action = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
+        $action = isset( $_GET['groupaction'] ) ? $_GET['groupaction'] : 'list';
         $id     = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
 
         switch ($action) {

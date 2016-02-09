@@ -16,7 +16,7 @@
 
     <# } #>
 
-    <div class="row" data-checked = "{{ data.group_id }}">
+    <div class="row" id="erp-crm-contact-subscriber-group-checkbox" data-checked = "{{ data.group_id }}">
         <?php erp_html_form_input( array(
             'label'       => __( 'Assign Group', 'wp-erp' ),
             'name'        => 'group_id[]',

@@ -9,10 +9,11 @@
 
             <form method="get">
                 <input type="hidden" name="page" value="erp-sales-contact-groups">
+                <input type="hidden" name="groupaction" value="view-subscriber">
                 <?php
                 $customer_table = new \WeDevs\ERP\CRM\Contact_Subscriber_List_Table();
                 $customer_table->prepare_items();
-                $customer_table->search_box( __( 'Search Contact Group', 'wp-erp' ), 'erp-crm-contact-group-search' );
+                // $customer_table->search_box( __( 'Search Contact Group', 'wp-erp' ), 'erp-crm-contact-group-search' );
                 $customer_table->views();
 
                 $customer_table->display();
