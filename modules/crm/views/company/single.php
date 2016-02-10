@@ -112,7 +112,7 @@
                         </div>
                     </div><!-- .postbox -->
 
-                                        <div class="postbox customer-mail-subscriber-info">
+                    <div class="postbox customer-mail-subscriber-info">
                         <div class="erp-handlediv" title="<?php _e( 'Click to toggle', 'wp-erp' ); ?>"><br></div>
                         <h3 class="erp-hndle"><span><?php _e( 'Mail Subscriber Group', 'wp-erp' ); ?></span></h3>
                         <div class="inside contact-group-content">
@@ -134,13 +134,11 @@
                                     <?php endforeach; ?>
                                 <?php endif ?>
 
-                                <a href="#" id="erp-contact-update-assign-group" data-id="<?php echo $customer->id; ?>" title="<?php _e( 'Assign Contact Groups', 'wp-erp' ); ?>"><i class="fa fa-plus"></i> <?php _e( 'Add any mail Groups', 'wp-erp' ); ?></a>
+                                <a href="#" id="erp-contact-update-assign-group" data-id="<?php echo $customer->id; ?>" title="<?php _e( 'Assign Contact Groups', 'wp-erp' ); ?>"><i class="fa fa-plus"></i> <?php _e( 'Add any mail groups', 'wp-erp' ); ?></a>
                             </div>
                         </div>
                     </div><!-- .postbox -->
-
                 </div>
-
             </div>
 
             <div class="col-4 column-right">

@@ -875,6 +875,7 @@
                                 } else {
                                     WeDevs_ERP_CRM.subscriberContact.pageReload();
                                 }
+
                                 modal.enableButton();
                                 modal.closeModal();
                             },
