@@ -77,9 +77,9 @@ class Admin_Page {
             'update_location' => __( 'Update Location', 'wp-erp' ),
             'create'          => __( 'Create', 'wp-erp' ),
             'update'          => __( 'Update', 'wp-erp' ),
-            'confirmMsg' => __( 'Are you sure?', 'wpuf' ),
-            'ajaxurl'    => admin_url( 'admin-ajax.php' ),
-            'plupload' => array(
+            'confirmMsg'      => __( 'Are you sure?', 'wpuf' ),
+            'ajaxurl'         => admin_url( 'admin-ajax.php' ),
+            'plupload'        => array(
                 'url'              => admin_url( 'admin-ajax.php' ) . '?nonce=' . wp_create_nonce( 'erp_featured_img' ),
                 'flash_swf_url'    => includes_url( 'js/plupload/plupload.flash.swf' ),
                 'filters'          => array(array('title' => __( 'Allowed Files' ), 'extensions' => '*')),

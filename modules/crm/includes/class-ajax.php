@@ -28,6 +28,7 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-crm-customer-get', 'customer_get' );
         $this->action( 'wp_ajax_erp-crm-customer-delete', 'customer_remove' );
         $this->action( 'wp_ajax_erp-crm-customer-restore', 'customer_restore' );
+        $this->action( 'wp_ajax_erp-crm-bulk-contact-subscriber', 'bulk_assign_group' );
 
         $this->action( 'wp_ajax_erp-crm-customer-add-company', 'customer_add_company' );
         $this->action( 'wp_ajax_erp-crm-customer-edit-company', 'customer_edit_company' );
@@ -173,6 +174,46 @@ class Ajax_Handler {
 
         // @TODO: check permission
         $this->send_success( __( 'Customer has been removed successfully', 'wp-erp' ) );
+    }
+
+    /**
+     * Contact bulk assign in contact group
+     *
+     * @since 1.0
+     *
+     * @return json
+     */
+    public function bulk_assign_group() {
+        $this->verify_nonce( 'wp-erp-crm-bulk-contact-subscriber' );
+
+        $contact_subscriber = [];
+        $user_ids           = ( isset( $_POST['user_id'] ) && ! empty( $_POST['user_id'] ) ) ? explode(',', $_POST['user_id'] ) : [];
+        $group_ids          = ( isset( $_POST['group_id'] ) && ! empty( $_POST['group_id'] ) ) ? $_POST['group_id'] : [];
+
+        if ( empty( $user_ids ) ) {
+            $this->send_error( __( 'Contact must be required', 'wp-erp' ) );
+        }
+
+        if ( empty( $group_ids ) ) {
+            $this->send_error( __( 'Atleast one group must be selected', 'wp-erp' ) );
+        }
+
+        foreach ( $user_ids as $user_key => $user_id ) {
+            foreach ( $group_ids as $group_key => $group_id ) {
+                $contact_subscriber = [
+                    'user_id' => $user_id,
+                    'group_id' => $group_id,
+                    'status' => 'subscribe',
+                    'subscribe_at' => current_time( 'mysql' ),
+                    'unsubscribe_at' => current_time( 'mysql' )
+                ];
+
+                erp_crm_create_new_contact_subscriber( $contact_subscriber );
+            }
+        }
+
+        $this->send_success( __( 'Selected contact are successfully subscribed', 'wp-erp' ) );
+
     }
 
     /**
@@ -340,9 +381,17 @@ class Ajax_Handler {
         $this->send_success( $result );
     }
 
+    /**
+     * Edit assignable contact
+     *
+     * @since 1.0
+     *
+     * @return json
+     */
     public function edit_assign_contact() {
         $this->verify_nonce( 'wp-erp-crm-nonce' );
 
+        $data    = [];
         $user_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
 
         if ( ! $user_id ) {
@@ -387,8 +436,9 @@ class Ajax_Handler {
                     'unsubscribe_at' => current_time('mysql')
                 ];
 
-                erp_crm_create_new_contact_subscriber( $data );
             }
+
+            erp_crm_create_new_contact_subscriber( $data );
         }
 
 

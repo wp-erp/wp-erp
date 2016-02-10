@@ -165,7 +165,8 @@ class Contact_List_Table extends \WP_List_Table {
      */
     function get_bulk_actions() {
         $actions = array(
-            'delete'  => __( 'Move to Trash', 'wp-erp' )
+            'delete'  => __( 'Move to Trash', 'wp-erp' ),
+            'assing_group' => __( 'Add to Contact group', 'wp-erp' )
         );
 
         if ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) {
@@ -189,7 +190,7 @@ class Contact_List_Table extends \WP_List_Table {
      */
     function column_cb( $item ) {
         return sprintf(
-            '<input type="checkbox" name="customer_id[]" value="%s" />', $item->id
+            '<input type="checkbox" class="erp-crm-customer-id-checkbox" name="customer_id[]" value="%s" />', $item->id
         );
     }
 

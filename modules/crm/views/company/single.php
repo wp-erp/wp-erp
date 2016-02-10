@@ -112,8 +112,33 @@
                         </div>
                     </div><!-- .postbox -->
 
-                </div>
+                    <div class="postbox customer-mail-subscriber-info">
+                        <div class="erp-handlediv" title="<?php _e( 'Click to toggle', 'wp-erp' ); ?>"><br></div>
+                        <h3 class="erp-hndle"><span><?php _e( 'Mail Subscriber Group', 'wp-erp' ); ?></span></h3>
+                        <div class="inside contact-group-content">
+                            <div class="contact-group-list">
+                                <?php $subscribe_groups = erp_crm_get_user_assignable_groups( $customer->id ); ?>
+                                <?php if ( $subscribe_groups ): ?>
+                                    <?php foreach ( $subscribe_groups as $key => $groups ): ?>
+                                        <p>
+                                            <?php
+                                                echo $groups['groups']['name'];
+                                                $info_messg = ( $groups['status'] == 'subscribe' )
+                                                                ? sprintf( '%s %s', __( 'Subscribed on'), erp_format_date( $groups['subscribe_at'] ) )
+                                                                : sprintf( '%s %s', __( 'Unsubscribed on'), erp_format_date( $groups['unsubscribe_at'] ) );
+                                            ?>
+                                            <span class="erp-crm-tips" title="<?php echo $info_messg; ?>">
+                                                <i class="fa fa-info-circle"></i>
+                                            </span>
+                                        </p>
+                                    <?php endforeach; ?>
+                                <?php endif ?>
 
+                                <a href="#" id="erp-contact-update-assign-group" data-id="<?php echo $customer->id; ?>" title="<?php _e( 'Assign Contact Groups', 'wp-erp' ); ?>"><i class="fa fa-plus"></i> <?php _e( 'Add any mail groups', 'wp-erp' ); ?></a>
+                            </div>
+                        </div>
+                    </div><!-- .postbox -->
+                </div>
             </div>
 
             <div class="col-4 column-right">

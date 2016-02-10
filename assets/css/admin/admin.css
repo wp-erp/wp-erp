@@ -203,7 +203,8 @@
 .erp-crm-contact-subscriber-wrap .unsubscribe-group {
   color: #A9A9A9;
 }
-#erp-crm-edit-contact-subscriber label[for="erp-crm-contact-group-id"] {
+#erp-crm-edit-contact-subscriber label[for="erp-crm-contact-group-id"],
+#erp-crm-customer-bulk-assign-group label[for="erp-crm-contact-group-id"] {
   min-width: 105px;
 }
 .erp-single-customer {
@@ -287,6 +288,25 @@
 }
 .erp-single-customer .erp-single-customer-content .customer-company-info .company-profile-content .postbox .erp-hndle .customer-name a:hover {
   text-decoration: underline;
+}
+.erp-single-customer .erp-single-customer-content .customer-mail-subscriber-info .contact-group-content p {
+  border: 1px solid #e5e5e5;
+  padding: 8px 11px;
+  position: relative;
+}
+.erp-single-customer .erp-single-customer-content .customer-mail-subscriber-info .contact-group-content p span {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  color: #222;
+}
+.erp-single-customer .erp-single-customer-content .customer-mail-subscriber-info .contact-group-content a#erp-contact-update-assign-group {
+  text-decoration: none;
+}
+.erp-single-customer .erp-single-customer-content .customer-mail-subscriber-info .contact-group-content a#erp-contact-update-assign-group i.fa {
+  font-size: 11px;
 }
 .erp-single-customer .erp-customer-feeds .submit-action {
   padding-top: 10px;
