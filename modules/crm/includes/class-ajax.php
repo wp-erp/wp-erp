@@ -391,6 +391,7 @@ class Ajax_Handler {
     public function edit_assign_contact() {
         $this->verify_nonce( 'wp-erp-crm-nonce' );
 
+        $data    = [];
         $user_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
 
         if ( ! $user_id ) {

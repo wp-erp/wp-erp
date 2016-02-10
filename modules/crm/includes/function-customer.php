@@ -944,6 +944,20 @@ function erp_crm_get_editable_assign_contact( $user_id ) {
 }
 
 /**
+ * Get already user assigned group id
+ *
+ * @since 1.0
+ *
+ * @param  integer $user_id
+ *
+ * @return array
+ */
+function erp_crm_get_user_assignable_groups( $user_id ) {
+    $data = \WeDevs\ERP\CRM\Models\ContactSubscriber::with('groups')->where( 'user_id', $user_id )->distinct()->get()->toArray();
+    return $data;
+}
+
+/**
  * Delete Contact alreays subscribed
  *
  * @since 1.0
@@ -1023,5 +1037,6 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
         }
     }
 }
+
 
 

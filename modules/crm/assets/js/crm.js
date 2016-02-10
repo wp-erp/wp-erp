@@ -20,6 +20,7 @@
             $( '.erp-single-customer' ).on( 'click', '#erp-customer-add-company', this.customerSingle.addCompany );
             $( '.erp-single-customer' ).on( 'click', 'a.erp-customer-edit-company', this.customerSingle.editCompany );
             $( '.erp-single-customer' ).on( 'click', 'a.erp-customer-delete-company', this.customerSingle.removeCompany );
+            $( '.erp-single-customer' ).on( 'click', 'a#erp-contact-update-assign-group', this.subscriberContact.edit );
 
             // Contact Group
             $( '.erp-crm-contact-group' ).on( 'click', 'a.erp-new-contact-group', this.contactGroup.create );
@@ -45,6 +46,10 @@
             $('body').on( 'click', 'div.erp-handlediv', this.handlePostboxToggle );
 
             // Erp ToolTips using tiptip
+            this.initTipTips();
+        },
+
+        initTipTips: function() {
             $('.erp-crm-tips').tipTip( {
                 defaultPosition: "top",
                 fadeIn: 100,
@@ -863,7 +868,13 @@
                         wp.ajax.send( {
                             data: this.serialize(),
                             success: function(res) {
-                                WeDevs_ERP_CRM.subscriberContact.pageReload();
+                                if ( e.target.id == 'erp-contact-update-assign-group' ) {
+                                    $( '.contact-group-content' ).load( window.location.href + ' .contact-group-list', function() {
+                                        WeDevs_ERP_CRM.initTipTips();
+                                    } );
+                                } else {
+                                    WeDevs_ERP_CRM.subscriberContact.pageReload();
+                                }
                                 modal.enableButton();
                                 modal.closeModal();
                             },
