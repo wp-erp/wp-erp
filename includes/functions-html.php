@@ -193,17 +193,24 @@ function erp_html_form_input( $args = array() ) {
             $values     = is_array( $field['value'] ) ? $field['value'] : [];
             ?>
             
-            <div id="<?php echo $id; ?>">
-                <div class="erp-ac-upload-filelist"></div>
-                <div id="<?php echo $drop; ?>"><?php _e( 'To attach,', 'wp-erp' ); ?> <a id="<?php echo $pick_files; ?>" href="#"><?php _e( 'select files', 'wp-erp' ); ?></a><?php _e( 'from your computer.', 'wp-erp' ); ?></div>
-                <ul class="erp-attachment-list">
-                    <?php
-                        $uploader = new \WeDevs\ERP\Uploader();
-                        foreach ( $values as $key => $attach_id ) {
-                            echo $uploader->attach_html( $attach_id );
-                        }
-                    ?>
-                </ul>
+            <div id="<?php echo $id; ?>" class="erp-attachment-area">
+
+                <div id="<?php echo $drop; ?>" class="erp-drop-jon">
+                    <div class="erp-attachment-upload-filelist" data-type="file">
+                        <ul class="erp-attachment-list">
+                            <?php
+                                $uploader = new \WeDevs\ERP\Uploader();
+                                foreach ( $values as $key => $attach_id ) {
+                                    echo $uploader->attach_html( $attach_id );
+                                }
+                            ?>
+
+                        </ul>
+                        <div class="erp-clear"></div>
+
+                        <div class="erp-attc-link-text"><?php _e( 'To attach, ', 'wp-erp' ); ?> <a id="<?php echo $pick_files; ?>" href="#"><?php _e( 'select files', 'wp-erp' ); ?></a><?php _e( ' from your computer.', 'wp-erp' ); ?></div>
+                    </div>
+                </div>
             </div>
 
             

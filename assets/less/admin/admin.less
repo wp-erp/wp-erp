@@ -9,7 +9,9 @@
         clear: both;
     }
 }
-
+.erp-clear {
+    clear: both;
+}
 .erp_form_generic() {
 
     ol, li {
@@ -849,6 +851,92 @@ form.erp-form {
                 display: block;
                 margin-bottom: 10px;
             }
+        }
+    }
+
+    .erp-attachment-area {
+        overflow: auto;
+        padding: 2px 2px;
+        
+        width: 32%;
+
+  
+        .erp-drop-jon {
+            border: 1px dashed #b4b9be;
+            .erp-pre-load-image-wrap {
+                background: red;
+                height: 100px;
+                width: 100px;
+            }
+            .bar {
+                background-color: #83b4d8;
+                border-radius: 3px;
+                box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+                height: 5px;
+                width: 0;
+                z-index: 9;
+            }
+            .erp-attc-link-text {
+                text-align: center;
+                padding: 12px 0;
+            }
+            .erp-image-wrap {
+                float: left;
+                position: relative;
+                padding-left: 17px;
+                padding-top: 10px;
+                .erp-img-progress {
+                    border: 1px solid #ddd;
+                    padding: 5px;
+                    border-radius: 5px;
+                    background: #fff;
+                    width: 80px;
+                    height: 80px;
+                }
+
+                .attachment-name {
+
+                    img {
+                        border: 1px solid #ddd;
+                        padding: 5px;
+                        border-radius: 5px;
+                        background: #fff;
+                        max-width: 150px;
+                    }
+                }  
+                .caption {
+                    background: #000;
+                    border: medium none;
+                    border-radius: 0;
+                    color: red;
+                    display: none;
+                    height: 80px;
+                    left: 23px;
+                    line-height: 150%;
+                    opacity: 0.5;
+                    padding-top: 0;
+                    position: absolute;
+                    text-align: center;
+                    text-decoration: none;
+                    top: 16px;
+                    width: 80px;                
+                }
+
+                &:hover .caption {
+                    display: inline-block;
+                }
+
+                .erp-del-attc-button {
+                    color: red;
+                    display: block;
+                    font-size: 28px;
+                    font-weight: bold;
+                    padding-top: 30px;
+                    text-decoration: none;
+                } 
+                  
+            }
+            
         }
     }
 }

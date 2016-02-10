@@ -29,9 +29,9 @@
                 file_id: $( '#' + browse_button ).data('file_id'),
                 _wpnonce: wpErp.nonce
             },
-            multiple_queues: false,
+            //multiple_queues: false,
             //multi_selection: false,
-            urlstream_upload: true,
+            //urlstream_upload: true,
            // file_data_name: 'wpuf_file',
             max_file_size: max_file_size + 'kb',
             url: wpErp.plupload.url + '&type=' + type,
@@ -95,13 +95,29 @@
         },
 
         added: function (up, files) {
+             
             var $container = $('#' + this.container).find('.erp-attachment-upload-filelist');
-
+            var $container_wrap = $('#' + this.container).find('.erp-attachment-list');
+                
             $.each(files, function(i, file) {
-                $container.append(
-                    '<div class="upload-item" id="' + file.id + '"><div class="progress progress-striped active"><div class="bar"></div></div><div class="filename original">' +
-                    file.name + ' (' + plupload.formatSize(file.size) + ') <b></b>' +
-                    '</div></div>');
+                
+                $container_wrap.append('<li class="erp-image-wrap thumbnail '+file.id+'">'+
+                    '<div class="attachment-name erp-img-progress">'+
+                        '<div class="upload-item" id="' + file.id + '">'+
+                            '<div class="progress progress-striped active">'+
+                                '<div class="bar"></div>'+
+                            '</div>'+
+                            // '<div class="filename original">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></div>'+
+                        '</div>'+
+                    '</div>'+
+                '</li>');
+                // $container.append(
+                //     '<div class="upload-item" id="' + file.id + '">'+
+                //         '<div class="progress progress-striped active">'+
+                //             '<div class="bar"></div>'+
+                //         '</div>'+
+                //          '<div class="filename original">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></div>'+
+                //     '</div>');
             });
 
             up.refresh(); // Reposition Flash/Silverlight
@@ -113,11 +129,9 @@
         },
 
         progress: function (up, file) {
-            var item = $('#' + file.id);
-
+            var item = $('#' + file.id);    
             $('.bar', item).css({ width: file.percent + '%' });
-            $('.percent', item).html( file.percent + '%' );
-            
+            $('.percent', item).html( file.percent + '%' );  
         },
 
         error: function (up, error) {
@@ -144,6 +158,7 @@
         },
 
         uploaded: function ( up, file, response ) {
+            console.log(file.id);
             var res = $.parseJSON(response.response),
                 data  = {
                     up : up,
@@ -160,8 +175,10 @@
             $('#' + file.id).remove();
 
             if( res.success ) {
-                var $container = $('#' + this.container).find('.erp-attachment-list');
-                $container.append(res.data);
+                $('.'+file.id).replaceWith(res.data);
+                //$('.erp-pre-load-image-wrap').remove();
+               // var $container = $('#' + this.container).find('.erp-attachment-list');
+                //$container.append(res.data);
             } else {
                 alert(res.error);
             }
