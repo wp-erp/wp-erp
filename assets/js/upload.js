@@ -193,6 +193,7 @@
             if ( confirm(wpErp.confirmMsg) ) {
                 var data = {
                     attach_id : el.data('attach_id'),
+                    custom_attr: el.closest('.erp-image-wrap').find('.erp-file-mime').data(),
                     _wpnonce: wpErp.nonce,
                     action : 'erp_file_del'
                 };

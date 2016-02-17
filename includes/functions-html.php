@@ -201,7 +201,7 @@ function erp_html_form_input( $args = array() ) {
                             <?php
                                 $uploader = new \WeDevs\ERP\Uploader();
                                 foreach ( $values as $key => $attach_id ) {
-                                    echo $uploader->attach_html( $attach_id );
+                                    echo $uploader->attach_html( $attach_id, $custom_attributes );
                                 }
                             ?>
 

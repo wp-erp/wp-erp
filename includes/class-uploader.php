@@ -69,7 +69,7 @@ class Uploader {
         return array('success' => false, 'error' => $uploaded_file['error']);
     }
 
-    public static function attach_html( $attach_id, $type = NULL ) {
+    public static function attach_html( $attach_id, $custom_attr = [] ) {
 
         $attachment = get_post( $attach_id );
 
@@ -85,7 +85,7 @@ class Uploader {
         }
 
         $html = '<li class="erp-image-wrap thumbnail">';
-        $html .= sprintf( '<div class="attachment-name"><img height="80" width="80" src="%s" alt="%s" /></div>', $image, esc_attr( $attachment->post_title ) );
+        $html .= sprintf( '<div class="attachment-name"><img class="erp-file-mime" '.implode( ' data-', $custom_attr ).' height="80" width="80" src="%s" alt="%s" /></div>', $image, esc_attr( $attachment->post_title ) );
         $html .= sprintf( '<input type="hidden" name="files[]" value="%d">', $attach_id );
         $html .= sprintf( '<div class="caption"><a href="#" class="erp-del-attc-button btn-danger btn-small attachment-delete" data-attach_id="%d">X</a></div>', $attach_id );
         $html .= '</li>';
