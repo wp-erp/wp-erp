@@ -1,6 +1,6 @@
-<div class="wrap erp-crm-customer" id="wp-erp">
+<div class="wrap erp-crm-campaign" id="wp-erp">
 
-    <h2><?php _e( 'Contact', 'wp-erp' ); ?>
+    <h2><?php _e( 'Campaigns', 'wp-erp' ); ?>
         <a href="#" id="erp-customer-new" class="erp-contact-new add-new-h2" data-type="contact" title="<?php _e( 'Add New Contact', 'wp-erp' ); ?>"><?php _e( 'Add New Contact', 'wp-erp' ); ?></a>
     </h2>
 
@@ -8,9 +8,9 @@
         <div class="list-table-inner">
 
             <form method="get">
-                <input type="hidden" name="page" value="erp-sales-customers">
+                <input type="hidden" name="page" value="erp-sales-campaigns">
                 <?php
-                $customer_table = new \WeDevs\ERP\CRM\Contact_List_Table( 'contact' );
+                $customer_table = new \WeDevs\ERP\CRM\Campaign_List_Table( 'contact' );
                 $customer_table->prepare_items();
                 $customer_table->search_box( __( 'Search Contact', 'wp-erp' ), 'erp-customer-search' );
                 $customer_table->views();

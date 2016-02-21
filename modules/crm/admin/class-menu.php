@@ -170,20 +170,30 @@ class Admin_Menu {
         include WPERP_CRM_VIEWS . '/dashboard.php';
     }
 
+    /**
+     * Schedule Page
+     *
+     * @since 1.0
+     *
+     * @return void
+     */
     public function schedules_page() {
         echo "Schedule Page. This page will display all scheduled calls and meetings";
     }
 
+    /**
+     * Contact Group Page
+     *
+     * @since 1.0
+     *
+     * @return void
+     */
     public function contact_group_page() {
 
         $action = isset( $_GET['groupaction'] ) ? $_GET['groupaction'] : 'list';
         $id     = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
 
         switch ($action) {
-
-            case 'view':
-                $template = WPERP_CRM_VIEWS . '/leads/single.php';
-                break;
 
             case 'view-subscriber':
                 $template = WPERP_CRM_VIEWS . '/contact-group/subscribe-contact.php';
@@ -194,7 +204,7 @@ class Admin_Menu {
                 break;
         }
 
-        $template = apply_filters( 'erp_leads_template', $template, $action, $id );
+        $template = apply_filters( 'erp_contact_group_template', $template, $action, $id );
 
         if ( file_exists( $template ) ) {
             include $template;
@@ -202,8 +212,33 @@ class Admin_Menu {
 
     }
 
+    /**
+     * Campaigns Page
+     *
+     * @since 1.0
+     *
+     * @return void
+     */
     public function campaigns_page() {
-        echo "Newsletter Campaigns";
+        $action = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
+        $id     = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
+
+        switch ($action) {
+
+            case 'view-subscriber':
+                $template = WPERP_CRM_VIEWS . '/contact-group/subscribe-contact.php';
+                break;
+
+            default:
+                $template = WPERP_CRM_VIEWS . '/campaigns.php';
+                break;
+        }
+
+        $template = apply_filters( 'erp_campaign_template', $template, $action, $id );
+
+        if ( file_exists( $template ) ) {
+            include $template;
+        }
     }
 }
 
