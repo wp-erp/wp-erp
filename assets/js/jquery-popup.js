@@ -104,7 +104,7 @@
                 $clone_modal.find('.button-primary').text( this.settings.button );
             }
 
-            $clone_modal.find( '.content').empty().html(this.element);
+            $clone_modal.find( '.content').empty().html(this.settings.content);
 
             $clone_modal.show();
 

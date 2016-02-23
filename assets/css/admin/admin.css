@@ -1988,80 +1988,6 @@ form.erp-form .block .erp-form-field > label {
   display: block;
   margin-bottom: 10px;
 }
-form.erp-form .erp-attachment-area {
-  overflow: auto;
-  padding: 2px 2px;
-  width: 32%;
-}
-form.erp-form .erp-attachment-area .erp-drop-jon {
-  border: 1px dashed #b4b9be;
-}
-form.erp-form .erp-attachment-area .erp-drop-jon .erp-pre-load-image-wrap {
-  background: red;
-  height: 100px;
-  width: 100px;
-}
-form.erp-form .erp-attachment-area .erp-drop-jon .bar {
-  background-color: #83b4d8;
-  border-radius: 3px;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
-  height: 5px;
-  width: 0;
-  z-index: 9;
-}
-form.erp-form .erp-attachment-area .erp-drop-jon .erp-attc-link-text {
-  text-align: center;
-  padding: 12px 0;
-}
-form.erp-form .erp-attachment-area .erp-drop-jon .erp-image-wrap {
-  float: left;
-  position: relative;
-  padding-left: 17px;
-  padding-top: 10px;
-}
-form.erp-form .erp-attachment-area .erp-drop-jon .erp-image-wrap .erp-img-progress {
-  border: 1px solid #ddd;
-  padding: 5px;
-  border-radius: 5px;
-  background: #fff;
-  width: 80px;
-  height: 80px;
-}
-form.erp-form .erp-attachment-area .erp-drop-jon .erp-image-wrap .attachment-name img {
-  border: 1px solid #ddd;
-  padding: 5px;
-  border-radius: 5px;
-  background: #fff;
-  max-width: 150px;
-}
-form.erp-form .erp-attachment-area .erp-drop-jon .erp-image-wrap .caption {
-  background: #000;
-  border: medium none;
-  border-radius: 0;
-  color: red;
-  display: none;
-  height: 80px;
-  left: 23px;
-  line-height: 150%;
-  opacity: 0.5;
-  padding-top: 0;
-  position: absolute;
-  text-align: center;
-  text-decoration: none;
-  top: 16px;
-  width: 80px;
-}
-form.erp-form .erp-attachment-area .erp-drop-jon .erp-image-wrap:hover .caption {
-  display: inline-block;
-}
-form.erp-form .erp-attachment-area .erp-drop-jon .erp-image-wrap .erp-del-attc-button {
-  color: red;
-  display: block;
-  font-size: 28px;
-  font-weight: bold;
-  padding-top: 30px;
-  text-decoration: none;
-}
 ul.edit-address li {
   display: block;
   clear: both;
@@ -2154,4 +2080,78 @@ ul.edit-address li.city-wrap span {
 }
 .erp-settings .erp-nav-tab-active {
   color: #000;
+}
+.erp-attachment-area {
+  overflow: auto;
+  padding: 2px 2px;
+  width: 32%;
+}
+.erp-attachment-area .erp-drop-jon {
+  border: 1px dashed #b4b9be;
+}
+.erp-attachment-area .erp-drop-jon .erp-pre-load-image-wrap {
+  background: red;
+  height: 100px;
+  width: 100px;
+}
+.erp-attachment-area .erp-drop-jon .bar {
+  background-color: #83b4d8;
+  border-radius: 3px;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+  height: 5px;
+  width: 0;
+  z-index: 9;
+}
+.erp-attachment-area .erp-drop-jon .erp-attc-link-text {
+  text-align: center;
+  padding: 12px 0;
+}
+.erp-attachment-area .erp-drop-jon .erp-image-wrap {
+  float: left;
+  position: relative;
+  padding-left: 17px;
+  padding-top: 10px;
+}
+.erp-attachment-area .erp-drop-jon .erp-image-wrap .erp-img-progress {
+  border: 1px solid #ddd;
+  padding: 5px;
+  border-radius: 5px;
+  background: #fff;
+  width: 80px;
+  height: 80px;
+}
+.erp-attachment-area .erp-drop-jon .erp-image-wrap .attachment-name img {
+  border: 1px solid #ddd;
+  padding: 5px;
+  border-radius: 5px;
+  background: #fff;
+  max-width: 150px;
+}
+.erp-attachment-area .erp-drop-jon .erp-image-wrap .caption {
+  background: #000;
+  border: medium none;
+  border-radius: 0;
+  color: red;
+  display: none;
+  height: 80px;
+  left: 23px;
+  line-height: 150%;
+  opacity: 0.5;
+  padding-top: 0;
+  position: absolute;
+  text-align: center;
+  text-decoration: none;
+  top: 16px;
+  width: 80px;
+}
+.erp-attachment-area .erp-drop-jon .erp-image-wrap:hover .caption {
+  display: inline-block;
+}
+.erp-attachment-area .erp-drop-jon .erp-image-wrap .erp-del-attc-button {
+  color: red;
+  display: block;
+  font-size: 28px;
+  font-weight: bold;
+  padding-top: 30px;
+  text-decoration: none;
 }
