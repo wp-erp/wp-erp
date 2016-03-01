@@ -69,7 +69,7 @@ class Uploader {
         return array('success' => false, 'error' => $uploaded_file['error']);
     }
 
-    public static function attach_html( $attach_id, $type = NULL ) {
+    public static function attach_html( $attach_id, $custom_attr = [] ) {
 
         $attachment = get_post( $attach_id );
 
@@ -78,16 +78,16 @@ class Uploader {
         }
 
         if (wp_attachment_is_image( $attach_id)) {
-            $image = wp_get_attachment_image_src( $attach_id, 'thumbnail' );
+            $image = wp_get_attachment_image_src( $attach_id, array( '80', '80' ) );
             $image = $image[0];
         } else {
             $image = wp_mime_type_icon( $attach_id );
         }
 
         $html = '<li class="erp-image-wrap thumbnail">';
-        $html .= sprintf( '<div class="attachment-name"><img src="%s" alt="%s" /></div>', $image, esc_attr( $attachment->post_title ) );
-        $html .= sprintf( '<input type="hidden" name="erp_files[]" value="%d">', $attach_id );
-        $html .= sprintf( '<div class="caption"><a href="#" class="btn btn-danger btn-small attachment-delete" data-attach_id="%d">%s</a></div>', $attach_id, __( 'Delete', 'wp-erp' ) );
+        $html .= sprintf( '<div class="attachment-name"><img class="erp-file-mime" '.implode( ' data-', $custom_attr ).' height="80" width="80" src="%s" alt="%s" /></div>', $image, esc_attr( $attachment->post_title ) );
+        $html .= sprintf( '<input type="hidden" name="files[]" value="%d">', $attach_id );
+        $html .= sprintf( '<div class="caption"><a href="#" class="erp-del-attc-button btn-danger btn-small attachment-delete" data-attach_id="%d">X</a></div>', $attach_id );
         $html .= '</li>';
 
         return $html;

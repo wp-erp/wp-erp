@@ -823,6 +823,15 @@ function erp_crm_contact_group_delete( $id ) {
     WeDevs\ERP\CRM\Models\ContactGroup::find( $id )->delete();
 }
 
+/**
+ * Get susbcriber contact
+ *
+ * @since 1.0
+ *
+ * @param  array  $args
+ *
+ * @return array|object
+ */
 function erp_crm_get_subscriber_contact( $args = [] ) {
     global $wpdb;
 
@@ -887,6 +896,15 @@ function erp_crm_get_subscriber_contact( $args = [] ) {
     return $items;
 }
 
+/**
+ * Get contact gorup dropdown
+ *
+ * @since 1.0
+ *
+ * @param  array  $label
+ *
+ * @return array
+ */
 function erp_crm_get_contact_group_dropdown( $label = [] ) {
     $groups = erp_crm_get_contact_groups( [ 'number' => '-1' ] );
     $list   = [];
@@ -1038,5 +1056,140 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
     }
 }
 
+/**
+ * Get all campaign
+ *
+ * @since 1.0
+ *
+ * @return array
+ */
+function erp_crm_get_campaigns( $args = [] ) {
 
+    global $wpdb;
 
+    $defaults = [
+        'number'     => 20,
+        'offset'     => 0,
+        'orderby'    => 'created_at',
+        'order'      => 'DESC',
+        'count'      => false,
+        'withgroup'  => true
+    ];
+
+    $args      = wp_parse_args( $args, $defaults );
+    $cache_key = 'erp-crm-campaign-' . md5( serialize( $args ) );
+    $items     = wp_cache_get( $cache_key, 'wp-erp' );
+
+    if ( false === $items ) {
+        $campaigns = new \WeDevs\ERP\CRM\Models\Campaign();
+
+        if ( $args['withgroup'] ) {
+            $campaigns = $campaigns->with( 'groups' );
+        }
+
+        // Check if want all data without any pagination
+        if ( $args['number'] != '-1' ) {
+            $campaigns = $campaigns->skip( $args['offset'] )->take( $args['number'] );
+        }
+
+        // Check is the row want to search
+        if ( isset( $args['s'] ) && ! empty( $args['s'] ) ) {
+            $arg_s = $args['s'];
+            $campaigns = $campaigns->where( 'title', 'LIKE', "%$arg_s%" )
+                    ->orWhere( 'description', 'LIKE', "%$arg_s%" );
+        }
+
+        // Render all collection of data according to above filter (Main query)
+        $results = $campaigns
+                ->get()
+                ->toArray();
+
+        $items = erp_array_to_object( $results );
+
+        // Check if args count true, then return total count customer according to above filter
+        if ( $args['count'] ) {
+            $items = WeDevs\ERP\CRM\Models\Campaign::count();
+        }
+
+        wp_cache_set( $cache_key, $items, 'wp-erp' );
+    }
+
+    return $items;
+}
+
+function erp_crm_get_serach_key() {
+    return [
+        'first_name' => [
+            'title'       => __( 'First Name', 'wp-erp' ),
+            'type' => 'text',
+            'condition'   => [
+                ''   => __( 'is', 'wp-erp' ),
+                '!'  => __( 'is not', 'wp-erp' ),
+                '~'  => __( 'contains', 'wp-erp' ),
+                '!~' => __( 'not contains', 'wp-erp' ),
+                '^'  => __( 'begins with', 'wp-erp' ),
+                '$'  => __( 'ends with', 'wp-erp' ),
+            ]
+        ],
+
+        'last_name' => [
+            'title'       => __( 'Last Name', 'wp-erp' ),
+            'type' => 'text',
+            'condition'   => [
+                ''   => __( 'is', 'wp-erp' ),
+                '!'  => __( 'is not', 'wp-erp' ),
+                '~'  => __( 'contains', 'wp-erp' ),
+                '!~' => __( 'not contains', 'wp-erp' ),
+                '^'  => __( 'begins with', 'wp-erp' ),
+                '$'  => __( 'ends with', 'wp-erp' ),
+            ]
+        ],
+    ];
+}
+
+/**
+ * Build queries value according to regex
+ *
+ * @since 1.0
+ *
+ * @param  string $value
+ *
+ * @return array
+ */
+function erp_crm_get_save_search_regx( $values ) {
+    $result = [];
+
+    if ( is_array( $values ) ) {
+        foreach ( $values as  $value) {
+            if ( preg_match( '/^!(?!~)/', $value ) ) {
+                $result[preg_replace( '/^!(?!~)/', '', $value )] = '!=' ;
+            } elseif ( preg_match( '/^~/', $value ) ) {
+                $result['%' . preg_replace( '/^~/', '', $value ) . '%'] ='LIKE';
+            } elseif ( preg_match( '/^!~/', $value ) ) {
+                $result['%' . preg_replace( '/^!~/', '', $value ) . '%'] = 'NOT LIKE';
+            } elseif ( preg_match( '/^\^/', $value ) ) {
+                $result[preg_replace( '/^\^/', '', $value ) . '%'] = 'LIKE';
+            } elseif ( preg_match( '/^\$/', $value ) ) {
+                $result['%' . preg_replace( '/^\$/', '', $value )] = 'LIKE';
+            } else {
+                $result[$value] = '=';
+            }
+        }
+    } else {
+        if ( preg_match( '/^!(?!~)/', $values ) ) {
+            $result[preg_replace( '/^!(?!~)/', '', $values )] = '!=' ;
+        } elseif ( preg_match( '/^~/', $values ) ) {
+            $result['%' . preg_replace( '/^~/', '', $values ) . '%'] ='LIKE';
+        } elseif ( preg_match( '/^!~/', $values ) ) {
+            $result['%' . preg_replace( '/^!~/', '', $values ) . '%'] = 'NOT LIKE';
+        } elseif ( preg_match( '/^\^/', $values ) ) {
+            $result[preg_replace( '/^\^/', '', $values ) . '%'] = 'LIKE';
+        } elseif ( preg_match( '/^\$/', $values ) ) {
+            $result['%' . preg_replace( '/^\$/', '', $values )] = 'LIKE';
+        } else {
+            $result[$values] = '=';
+        }
+    }
+
+    return apply_filters( 'erp_crm_get_save_search_regx', $result, $values );
+}

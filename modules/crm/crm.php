@@ -134,6 +134,7 @@ class Customer_Relationship {
             'delConfirmCustomer'    => __( 'Are you sure to delete this customer?', 'wp-erp' ),
             'delConfirm'            => __( 'Are you sure to delete this?', 'wp-erp' ),
             'checkedConfirm'        => __( 'Alteast one item must be checked', 'wp-erp' ),
+            'contact_filter'        => erp_crm_get_serach_key(),
         ) );
 
         // if it's an customer page
@@ -148,17 +149,23 @@ class Customer_Relationship {
             wp_enqueue_style( 'wp-erp-nprogress', WPERP_CRM_ASSETS . '/css/nprogress.css' );
             wp_enqueue_script( 'wp-erp-nprogress', WPERP_CRM_ASSETS . "/js/nprogress$suffix.js", array( 'jquery' ), date( 'Ymd' ), true );
             wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", array( 'wp-erp-nprogress', 'wp-erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
+            wp_enqueue_script( 'wp-erp-crm-vue-save-search', WPERP_CRM_ASSETS . "/js/save-search$suffix.js", array( 'wp-erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
             wp_enqueue_script( 'post' );
 
             $customer = new Contact();
             $country  = \WeDevs\ERP\Countries::instance();
 
             wp_localize_script( 'wp-erp-crm-vue-customer', 'wpCRMvue', [
-                'ajaxurl' => admin_url( 'admin-ajax.php' ),
-                'nonce' => wp_create_nonce( 'wp-erp-crm-customer-feed' ),
+                'ajaxurl'         => admin_url( 'admin-ajax.php' ),
+                'nonce'           => wp_create_nonce( 'wp-erp-crm-customer-feed' ),
                 'current_user_id' => get_current_user_id(),
-                'confirm'  => __( 'Are you sure?', 'wp-erp' ),
-                'date_format'  => get_option( 'date_format' )
+                'confirm'         => __( 'Are you sure?', 'wp-erp' ),
+                'date_format'     => get_option( 'date_format' )
+            ] );
+
+            wp_localize_script( 'wp-erp-crm-vue-save-search', 'wpCRMSaveSearch', [
+                'ajaxurl'         => admin_url( 'admin-ajax.php' ),
+                'searchFields'    => erp_crm_get_serach_key()
             ] );
 
             $localize_script['customer_empty'] = $customer->to_array();
@@ -180,6 +187,8 @@ class Customer_Relationship {
 
                 erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-customer.php', 'erp-crm-new-contact' );
                 erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-bulk-contact-group.php', 'erp-crm-new-bulk-contact-group' );
+                // erp_get_js_template( WPERP_CRM_JS_TMPL . '/save-search-fields.php', 'erp-crm-save-search-item' );
+                erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/save-search-fields.php', 'erp-crm-save-search-item' );
 
                 if ( isset( $_GET['action'] ) && $_GET['action'] == 'view' ) {
                     erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-assign-company.php', 'erp-crm-new-assign-company' );

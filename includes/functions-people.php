@@ -78,6 +78,13 @@ function erp_get_peoples( $args = [] ) {
                     ->orWhere( 'company', 'LIKE', "%$arg_s%" );
         }
 
+        if ( isset( $_GET ) ) {
+            $allowed = erp_crm_get_serach_key();
+            // var_dump( $_GET, array_keys( $allowed ) );
+            $serach_array = array_intersect_key( $_GET, array_flip( array_keys( $allowed ) + ['or'] ) );
+            //var_dump( $serach_array );
+        }
+
         // Render all collection of data according to above filter (Main query)
         $items = $people->type( $args['type'] )
                 ->orderBy( $args['orderby'], $args['order'] )

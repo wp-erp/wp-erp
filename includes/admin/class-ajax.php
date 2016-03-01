@@ -29,13 +29,16 @@ class Ajax {
         $this->verify_nonce( 'erp-nonce' );
         
         $attach_id = isset( $_POST['attach_id'] ) ? $_POST['attach_id'] : 0;
+        $custom_attr = isset( $_POST['custom_attr'] ) ? $_POST['custom_attr'] : [];
         $upload    = new \WeDevs\ERP\Uploader();
         
         if ( is_array( $attach_id) ) {
             foreach ( $attach_id as $id ) {
+                do_action( 'erp_before_delete_file', $id, $custom_attr );
                 $delete = $upload->delete_file( $id );
             }
         } else {
+            do_action( 'erp_before_delete_file', $attach_id, $custom_attr );
             $delete = $upload->delete_file( intval( $attach_id ) );
         }
         

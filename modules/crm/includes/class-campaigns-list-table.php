@@ -41,22 +41,20 @@ class Campaign_List_Table extends \WP_List_Table {
      *
      * @return string
      */
-    function column_default( $contact_group, $column_name ) {
+    function column_default( $campaign, $column_name ) {
 
         switch ( $column_name ) {
             case 'name':
 
-            case 'subscribed':
-                return $contact_group->subscriber;
-
-            case 'unsubscribed':
-                return $contact_group->unsubscriber;
+            case 'assigned_group':
+                $groups = wp_list_pluck( $campaign->groups, 'name', 'id' );
+                return implode(', ', $groups );
 
             case 'created_at':
-                return erp_format_date( $contact_group->created_at );
+                return erp_format_date( $campaign->created_at );
 
             default:
-                return isset( $contact_group->$column_name ) ? $contact_group->$column_name : '';
+                return isset( $campaign->$column_name ) ? $campaign->$column_name : '';
         }
     }
 
@@ -67,33 +65,31 @@ class Campaign_List_Table extends \WP_List_Table {
      */
     function get_columns() {
         $columns = array(
-            'cb'           => '<input type="checkbox" />',
-            'name'         => __( 'Name', 'wp-erp' ),
-            'subscribed'   => __( 'Subscribed', 'wp-erp' ),
-            'unsubscribed' => __( 'Unsubscribed', 'wp-erp' ),
-            'created_at'   => __( 'Created At', 'wp-erp' )
+            'cb'             => '<input type="checkbox" />',
+            'name'           => __( 'Title', 'wp-erp' ),
+            'assigned_group' => __( 'Lists', 'wp-erp' ),
+            'created_at'     => __( 'Created At', 'wp-erp' )
         );
 
-        return apply_filters( 'erp_crm_contact_group_table_cols', $columns );
+        return apply_filters( 'erp_crm_campaign_table_cols', $columns );
     }
 
     /**
-     * Render the designation name column
+     * Render the campaign name column
      *
      * @param  object  $item
      *
      * @return string
      */
-    function column_name( $contact_group ) {
+    function column_name( $campaign ) {
 
         $actions             = array();
         $delete_url          = '';
-        $view_subscriber_url = add_query_arg( [ 'page'=>'erp-sales-contact-groups', 'groupaction' => 'view-subscriber', 'filter_contact_group' => $contact_group->id ], admin_url( 'admin.php' ) );
-        $actions['edit']     = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $contact_group->id, __( 'Edit this Contact Group', 'wp-erp' ), __( 'Edit', 'wp-erp' ) );
-        $actions['view-subscriber']     = sprintf( '<a href="%s" title="%s">%s</a>', $view_subscriber_url, __( 'View Subscriber in this group', 'wp-erp' ), __( 'View Subscriber', 'wp-erp' ) );
-        $actions['delete']   = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $contact_group->id, __( 'Delete this Contact Group', 'wp-erp' ), __( 'Delete', 'wp-erp' ) );
 
-        return sprintf( '<a href="%3$s"><strong>%1$s</strong></a> %2$s', $contact_group->name, $this->row_actions( $actions ), $view_subscriber_url );
+        $actions['edit']     = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $campaign->id, __( 'Edit this Contact Group', 'wp-erp' ), __( 'Edit', 'wp-erp' ) );
+        $actions['delete']   = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $campaign->id, __( 'Delete this Contact Group', 'wp-erp' ), __( 'Delete', 'wp-erp' ) );
+
+        return sprintf( '<a href="%3$s"><strong>%1$s</strong></a> %2$s', $campaign->title, $this->row_actions( $actions ), '#' );
     }
 
     /**
@@ -103,7 +99,7 @@ class Campaign_List_Table extends \WP_List_Table {
      */
     function get_sortable_columns() {
         $sortable_columns = array(
-            'name'       => array( 'name', true ),
+            'name'       => array( 'title', true ),
             'created_at' => array( 'created_at', true ),
         );
 
@@ -117,7 +113,7 @@ class Campaign_List_Table extends \WP_List_Table {
      */
     function get_bulk_actions() {
         $actions = array(
-            'contact_group_delete'  => __( 'Delete', 'wp-erp' ),
+            'campaign_delete'  => __( 'Delete', 'wp-erp' ),
         );
         return $actions;
     }
@@ -131,7 +127,7 @@ class Campaign_List_Table extends \WP_List_Table {
      */
     function column_cb( $item ) {
         return sprintf(
-            '<input type="checkbox" name="contact_group[]" value="%s" />', $item->id
+            '<input type="checkbox" name="campaign_id[]" value="%s" />', $item->id
         );
     }
 
@@ -168,11 +164,11 @@ class Campaign_List_Table extends \WP_List_Table {
         }
 
         // Prepare all item after all filtering
-        $this->items  = erp_crm_get_contact_groups( $args );
+        $this->items  = erp_crm_get_campaigns( $args );
 
         // Render total customer according to above filter
         $args['count'] = true;
-        $total_items = erp_crm_get_contact_groups( $args );
+        $total_items = erp_crm_get_campaigns( $args );
 
         // Set pagination according to filter
         $this->set_pagination_args( [

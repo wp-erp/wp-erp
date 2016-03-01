@@ -20,6 +20,27 @@ class Form_Handler {
     public function __construct() {
         add_action( 'load-crm_page_erp-sales-customers', array( $this, 'customer_bulk_action') );
         add_action( 'load-crm_page_erp-sales-contact-groups', array( $this, 'contact_subscriber_bulk_action') );
+        add_action( 'admin_init', array( $this, 'handle_save_search_submit' ), 10 );
+        add_action( 'admin_head', array( $this, 'handle_canonical_url' ), 10 );
+    }
+
+    public function handle_canonical_url() {
+        if ( isset( $_GET['page'] ) && ( $_GET['page'] == 'erp-sales-customers' || $_GET['page'] == 'erp-sales-companies' ) ) {
+            ?>
+                <script>
+                    window.history.replaceState = false;
+                </script>
+            <?php
+        }
+    }
+
+    public function handle_save_search_submit() {
+
+        if ( isset( $_POST['save_search_submit'] ) && wp_verify_nonce( $_POST['wp-erp-crm-save-search-nonce'], 'wp-erp-crm-save-search-nonce-action' ) ) {
+
+            wp_redirect( $_POST['_wp_http_referer'] . '&first_name[]=sabbir&first_name[]=!mishu&last_name=ahmed' );
+            exit();
+        }
     }
 
     /**

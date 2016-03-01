@@ -45,9 +45,104 @@
             // handle postbox toggle
             $('body').on( 'click', 'div.erp-handlediv', this.handlePostboxToggle );
 
+            // Handle Save search functionlity
+            // $('.erp-save-search-wrapper').on( 'change', 'select.and-action-add', this.saveSearch.addSearchFields )
+            // Handle Save search functionlity
+            // $('.erp-save-search-wrap').on( 'change', 'select.add_filter_1', this.saveSearch.addSearchKey );
+            // $('.erp-save-search-wrap').on( 'change', '.erp-crm-add-or-filter', this.saveSearch.addSearchKeySection );
+
             // Erp ToolTips using tiptip
             this.initTipTips();
         },
+
+        saveSearch: {
+
+            addSearchFields: function(e) {
+                e.preventDefault();
+
+                var self = $(this),
+                    val     = self.val(),
+                    optionVal = self.find('option:selected').data('options_val'),
+                    html      = wp.template('erp-crm-save-search-item')({ field:optionVal, fieldKey: val }),
+                    table     = self.closest('.erp-save-search-item').f
+                    tbodyNumber = table.find('tbody').first().data('number');
+
+                var className = '.' + tbodyNumber + '_' + val
+
+                console.log( className );
+
+                if ( table.find('tbody').hasClass( tbodyNumber + '_' + val ) ) {
+
+                } else {
+                    console.log( 'no man ..');
+
+                    table.append(html);
+                }
+
+
+
+                // console.log( table.find('tbody').length );
+
+                self.closest()
+            }
+
+        },
+
+        // saveSearch: {
+        //     addSearchKey: function(e) {
+        //         e.preventDefault();
+
+        //         var self = $(this),
+        //             append_wrap = $('.erp-save-search-wrap').find('.erp-crm-filter-tbl'),
+        //             opt_val = self.val();
+
+        //         switch ( wpErpCrm.contact_filter[opt_val].search_type ) {
+        //             case 'text':
+        //                 WeDevs_ERP_CRM.saveSearch.textField( opt_val, wpErpCrm.contact_filter[opt_val], self, append_wrap );
+        //                 break;
+        //             case 'default':
+        //                 break;
+        //         }
+        //     },
+
+        //     addSearchKeySection: function(e) {
+        //         e.preventDefault();
+        //         var tbody = $('.erp-crm-customer').find('.erp-crm-tbody-wrap').children('tbody').last(),
+        //         count = tbody.data('count')+1;
+
+        //         var self = $(this),
+        //             opt_val = self.val();
+
+        //         switch ( wpErpCrm.contact_filter[opt_val].search_type ) {
+        //             case 'text':
+        //                 WeDevs_ERP_CRM.saveSearch.orTextField( opt_val, wpErpCrm.contact_filter[opt_val], self );
+        //                 break;
+        //             case 'default':
+        //                 break;
+        //         }
+
+        //     },
+
+        //     textField: function( opt_val, content, $this ) {
+        //         if ( $this.closest('table').find('.erp-crm-'+opt_val).length ) {
+        //             return;
+        //         }
+        //         var append_wrap = $this.closest('tbody'),
+        //             count_tb = $('.erp-crm-tbody-wrap').children('tbody').last().data('count');
+        //         var first_name_field = wp.template('erp-crm-save-search-item')( { content : content, id: opt_val, or: false, count: count_tb } );
+        //         append_wrap.before(first_name_field);
+        //         $('.erp-crm-add-or-filter').prop( "disabled", false );
+        //     },
+
+        //     orTextField: function( opt_val, content, $this ) {
+        //         var append_wrap = $('.erp-crm-tbody-wrap'),
+        //             count_tb = append_wrap.children('tbody').last().data('count')+1;
+
+        //         var first_name_field = wp.template('erp-crm-save-search-item')( { content : content, id: opt_val, or: true, count: count_tb } );
+        //         append_wrap.append(first_name_field);
+        //         $this.closest('td').remove();
+        //     },
+        // },
 
         initTipTips: function() {
             $('.erp-crm-tips').tipTip( {
