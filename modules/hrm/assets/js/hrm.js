@@ -620,7 +620,7 @@
                     id: 'erp-employee-edit',
                     onReady: function() {
                         var modal = this;
-
+                        
                         $( 'header', modal).after( $('<div class="loader"></div>').show() );
 
                         wp.ajax.send( 'erp-hr-emp-get', {

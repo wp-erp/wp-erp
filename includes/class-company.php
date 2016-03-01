@@ -132,12 +132,12 @@ class Company {
         $country = Countries::instance();
 
         return $country->get_formatted_address( array(
-            'address_1' => $this->address['address_1'],
-            'address_2' => $this->address['address_2'],
-            'city'      => $this->address['city'],
-            'state'     => $this->address['state'],
-            'postcode'  => $this->address['zip'],
-            'country'   => $this->address['country']
+            'address_1' => isset( $this->address['address_1'] ) ? $this->address['address_1'] : '',
+            'address_2' => isset( $this->address['address_2'] ) ? $this->address['address_2'] : '',
+            'city'      => isset( $this->address['city'] ) ? $this->address['city'] : '',
+            'state'     => isset( $this->address['state'] ) ? $this->address['state'] : '',
+            'postcode'  => isset( $this->address['zip'] ) ? $this->address['zip'] : '',
+            'country'   => isset( $this->address['country'] ) ? $this->address['country'] : ''
         ) );
     }
 
