@@ -1122,6 +1122,8 @@ function erp_crm_get_serach_key() {
         'first_name' => [
             'title'       => __( 'First Name', 'wp-erp' ),
             'type' => 'text',
+            'text' => '',
+            'condval' => '',
             'condition'   => [
                 ''   => __( 'is', 'wp-erp' ),
                 '!'  => __( 'is not', 'wp-erp' ),
@@ -1135,6 +1137,8 @@ function erp_crm_get_serach_key() {
         'last_name' => [
             'title'       => __( 'Last Name', 'wp-erp' ),
             'type' => 'text',
+            'text' => '',
+            'condval' => '',
             'condition'   => [
                 ''   => __( 'is', 'wp-erp' ),
                 '!'  => __( 'is not', 'wp-erp' ),

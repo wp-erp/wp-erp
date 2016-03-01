@@ -38,7 +38,35 @@ class Form_Handler {
 
         if ( isset( $_POST['save_search_submit'] ) && wp_verify_nonce( $_POST['wp-erp-crm-save-search-nonce'], 'wp-erp-crm-save-search-nonce-action' ) ) {
 
-            wp_redirect( $_POST['_wp_http_referer'] . '&first_name[]=sabbir&first_name[]=!mishu&last_name=ahmed' );
+            $save_search = ( isset( $_POST['save_search'] ) && !empty( $_POST['save_search'] ) ) ? $_POST['save_search'] : '';
+
+            if ( !$save_search ) {
+                return;
+            }
+
+            $search_string = '';
+            $search_string_arr = [];
+
+            foreach(  $save_search as $search_data ) {
+
+                $search_pair = [];
+
+                foreach( $search_data as $search_key=>$search_field ) {
+
+                    $values = array_map( function( $value ) use( $search_field ) {
+                        $condition = isset( $search_field['condition'] ) ? $search_field['condition'] : '';
+                        return $condition.$value;
+                    },  $search_field['value'] );
+
+                    $search_pair[$search_key] = $values;
+                }
+
+                $search_string[] = http_build_query( $search_pair );
+            }
+
+            $search_string = implode( '&or&', $search_string );
+
+            wp_redirect( $_POST['_wp_http_referer'] .'&'. $search_string );
             exit();
         }
     }

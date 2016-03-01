@@ -7,18 +7,18 @@
 
 <div class="search-fields" v-if="searchFields">
     <table>
-        <tbody class="" data-number="0" v-for="( searchKey, searchVal ) in searchFields" track-by="$index">
+        <tbody class="" v-for="( searchKey, searchVal ) in searchFields" track-by="$index">
             <tr v-for="( searchFieldKey, searchField ) in searchVal" track-by="$index">
                 <td><a href="#" v-on:click.prevent="removeSearchField( searchVal, searchField )" class="remove-field button">&times;</a></td>
                 <td v-if="searchFieldKey == 0">{{ searchField.title }}</td>
                 <td v-if="searchFieldKey == 0">
-                    <select name="" id="" v-bind:value="searchField.condval" v-model="searchField.condval">
+                    <select name="save_search[{{index}}][{{searchKey}}][condition]" id="" v-bind:value="searchField.condval" v-model="searchField.condval">
                         <option v-for="( conditionKey, condition ) in searchField.condition" value="{{conditionKey}}">{{ condition }}</option>
                     </select>
                 </td>
                 <td colspan="2" align="right" v-if="searchFieldKey != 0">Or</td>
                 <td>
-                    <input type="text" v-if="searchField.type == 'text'" name="" v-bind:value="searchField.text" v-model="searchField.text">
+                    <input type="text" v-if="searchField.type == 'text'" name="save_search[{{index}}][{{searchKey}}][value][]" v-bind:value="searchField.text" v-model="searchField.text">
                 </td>
             </tr>
         </tbody>
