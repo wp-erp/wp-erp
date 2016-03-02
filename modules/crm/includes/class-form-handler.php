@@ -37,35 +37,7 @@ class Form_Handler {
     public function handle_save_search_submit() {
 
         if ( isset( $_POST['save_search_submit'] ) && wp_verify_nonce( $_POST['wp-erp-crm-save-search-nonce'], 'wp-erp-crm-save-search-nonce-action' ) ) {
-
-            $save_search = ( isset( $_POST['save_search'] ) && !empty( $_POST['save_search'] ) ) ? $_POST['save_search'] : '';
-
-            if ( !$save_search ) {
-                return;
-            }
-
-            $search_string = '';
-            $search_string_arr = [];
-
-            foreach(  $save_search as $search_data ) {
-
-                $search_pair = [];
-
-                foreach( $search_data as $search_key=>$search_field ) {
-
-                    $values = array_map( function( $value ) use( $search_field ) {
-                        $condition = isset( $search_field['condition'] ) ? $search_field['condition'] : '';
-                        return $condition.$value;
-                    },  $search_field['value'] );
-
-                    $search_pair[$search_key] = $values;
-                }
-
-                $search_string[] = http_build_query( $search_pair );
-            }
-
-            $search_string = implode( '&or&', $search_string );
-
+            $search_string = erp_crm_get_save_search_query_string( $_POST );
             wp_redirect( $_POST['erp_crm_http_referer'] .'&'. $search_string );
             exit();
         }

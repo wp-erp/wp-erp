@@ -44,7 +44,7 @@
     <h3 class="hndle"><span><?php _e( 'Personal Details', 'wp-erp' ); ?></span></h3>
     <div class="inside">
         <ul class="erp-list two-col separated">
-            <li><?php erp_print_key_value( __( 'Mobile', 'wp-erp' ), erp_get_clickable( 'phone', $employee->get_phone( 'personal' ) ) ); ?></li>
+            <li><?php erp_print_key_value( __( 'Mobile', 'wp-erp' ), erp_get_clickable( 'phone', $employee->get_phone( 'mobile' ) ) ); ?></li>
             <li><?php erp_print_key_value( __( 'Address', 'wp-erp' ), $employee->address ); ?></li>
             <li><?php erp_print_key_value( __( 'Other Email', 'wp-erp' ), erp_get_clickable( 'email', $employee->other_email ) ); ?></li>
             <li><?php erp_print_key_value( __( 'Date of Birth', 'wp-erp' ), $employee->get_birthday() ); ?></li>

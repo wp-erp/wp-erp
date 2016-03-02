@@ -23,7 +23,8 @@ Vue.component( 'save-search', {
             andSelection: '',
             orSelection: '',
             searchData: [],
-            isdisabled:false
+            isdisabled:false,
+            wpErpState: []
         }
     },
 
@@ -69,6 +70,10 @@ Vue.component( 'save-search', {
 
             var obj = jQuery.extend({}, wpCRMSaveSearch.searchFields[this.andSelection]);
 
+            if ( wpCRMSaveSearch.searchFields[this.andSelection].hasOwnProperty('options') ) {
+                obj.options = wpCRMSaveSearch.searchFields[this.andSelection].options;
+            }
+
             vm.searchItem[index][this.andSelection].push( obj );
 
             this.andSelection = '';
@@ -113,11 +118,11 @@ Vue.component( 'save-search', {
             }
 
         }
-    },
+    }
 });
 
 var vm = new Vue({
-    el: '#erp-save-search-wrapper',
+    el: '#erp-crm-save-search',
 
     data: {
         searchItem: [],
@@ -136,6 +141,14 @@ var vm = new Vue({
     },
 
     methods: {
+
+        saveSearch: function(){
+            var self = this,
+                form = jQuery('#erp-crm-save-search-form');
+
+            console.log( form.serialize() );
+
+        },
 
         renderSearchFields: function() {
             var self = this;

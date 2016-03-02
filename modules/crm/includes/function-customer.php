@@ -1148,6 +1148,102 @@ function erp_crm_get_serach_key() {
                 '$'  => __( 'ends with', 'wp-erp' ),
             ]
         ],
+
+        'email' => [
+            'title'       => __( 'Email', 'wp-erp' ),
+            'type' => 'text',
+            'text' => '',
+            'condval' => '',
+            'condition'   => [
+                '~'  => __( 'contains', 'wp-erp' ),
+                '!~' => __( 'not contains', 'wp-erp' ),
+                '^'  => __( 'begins with', 'wp-erp' ),
+                '$'  => __( 'ends with', 'wp-erp' ),
+            ]
+        ],
+
+        'phone' => [
+            'title'     => __( 'Phone', 'wp-erp' ),
+            'type'      => 'text',
+            'text'      => '',
+            'condval'   => '',
+            'condition' => [
+                ''   => __( 'has', 'wp-erp' ),
+                '~'  => __( 'contains', 'wp-erp' ),
+                '!~' => __( 'not contains', 'wp-erp' ),
+                '^'  => __( 'begins with', 'wp-erp' ),
+                '$'  => __( 'ends with', 'wp-erp' ),
+            ]
+        ],
+
+        'mobile' => [
+            'title'     => __( 'Mobile', 'wp-erp' ),
+            'type'      => 'text',
+            'text'      => '',
+            'condval'   => '',
+            'condition' => [
+                ''   => __( 'has', 'wp-erp' ),
+                '~'  => __( 'contains', 'wp-erp' ),
+                '!~' => __( 'not contains', 'wp-erp' ),
+                '^'  => __( 'begins with', 'wp-erp' ),
+                '$'  => __( 'ends with', 'wp-erp' ),
+            ]
+        ],
+
+        'website' => [
+            'title'     => __( 'Website', 'wp-erp' ),
+            'type'      => 'text',
+            'text'      => '',
+            'condval'   => '',
+            'condition' => [
+                ''   => __( 'has', 'wp-erp' ),
+                '~'  => __( 'contains', 'wp-erp' ),
+                '!~' => __( 'not contains', 'wp-erp' ),
+                '^'  => __( 'begins with', 'wp-erp' ),
+                '$'  => __( 'ends with', 'wp-erp' ),
+            ]
+        ],
+
+        'city' => [
+            'title'     => __( 'City', 'wp-erp' ),
+            'type'      => 'text',
+            'text'      => '',
+            'condval'   => '',
+            'condition' => [
+                ''   => __( 'from', 'wp-erp' ),
+                '!'  => __( 'not from', 'wp-erp' ),
+                '~'  => __( 'contains', 'wp-erp' ),
+                '!~' => __( 'not contains', 'wp-erp' )
+            ]
+        ],
+
+        'country' => [
+            'title'     => __( 'Country/State', 'wp-erp' ),
+            'type'      => 'dropdown',
+            'text'      => '',
+            'condval'   => '',
+            'condition' => [
+                ''   => __( 'from', 'wp-erp' ),
+                '!'  => __( 'not from', 'wp-erp' ),
+                '~'  => __( 'contains', 'wp-erp' ),
+                '!~' => __( 'not contains', 'wp-erp' )
+            ],
+            'options' => \WeDevs\ERP\Countries::instance()->get_countries()
+        ],
+
+        'state' => [
+            'title'     => __( 'Country/State', 'wp-erp' ),
+            'type'      => 'dropdown',
+            'text'      => '',
+            'condval'   => '',
+            'display'   => 'none',
+            'condition' => [
+                ''   => __( 'from', 'wp-erp' ),
+                '!'  => __( 'not from', 'wp-erp' ),
+                '~'  => __( 'contains', 'wp-erp' ),
+                '!~' => __( 'not contains', 'wp-erp' )
+            ]
+        ],
     ];
 }
 
@@ -1272,4 +1368,32 @@ function erp_crm_save_search_query_filter( $people ) {
     }
 
     return $people;
+}
+
+function erp_crm_get_save_search_query_string( $postdata ){
+
+    $save_search       = ( isset( $postdata['save_search'] ) && !empty( $postdata['save_search'] ) ) ? $postdata['save_search'] : '';
+    $search_string     = '';
+    $search_string_arr = [];
+
+    if ( !$save_search ) {
+        return $search_string;
+    }
+
+    foreach(  $save_search as $search_data ) {
+        $search_pair = [];
+        foreach( $search_data as $search_key=>$search_field ) {
+            $values = array_map( function( $value ) use( $search_field ) {
+                $condition = isset( $search_field['condition'] ) ? $search_field['condition'] : '';
+                return $condition.$value;
+            },  $search_field['value'] );
+
+            $search_pair[$search_key] = $values;
+        }
+        $search_string[] = http_build_query( $search_pair );
+    }
+
+    $search_string = implode( '&or&', $search_string );
+
+    return $search_string;
 }
