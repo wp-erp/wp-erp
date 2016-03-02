@@ -66,7 +66,7 @@ class Form_Handler {
 
             $search_string = implode( '&or&', $search_string );
 
-            wp_redirect( $_POST['_wp_http_referer'] .'&'. $search_string );
+            wp_redirect( $_POST['erp_crm_http_referer'] .'&'. $search_string );
             exit();
         }
     }

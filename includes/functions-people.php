@@ -85,6 +85,8 @@ function erp_get_peoples( $args = [] ) {
             //var_dump( $serach_array );
         }
 
+        $people = apply_filters( 'erp_people_query_object', $people );
+
         // Render all collection of data according to above filter (Main query)
         $items = $people->type( $args['type'] )
                 ->orderBy( $args['orderby'], $args['order'] )

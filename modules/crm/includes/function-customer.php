@@ -1197,3 +1197,79 @@ function erp_crm_get_save_search_regx( $values ) {
 
     return apply_filters( 'erp_crm_get_save_search_regx', $result, $values );
 }
+
+function erp_crm_save_search_query_filter( $people ) {
+
+    global $wpdb;
+
+    // var_dump( $people );
+
+    $query_string = $_SERVER['QUERY_STRING'];
+
+    $or_query   = explode( '&or&', $query_string );
+    $allowed    = erp_crm_get_serach_key();
+    $query_data = [];
+    $i          = 0;
+
+    if ( $or_query ) {
+        foreach( $or_query as $or_q ) {
+            parse_str( $or_q, $output );
+            $serach_array = array_intersect_key( $output, array_flip( array_keys( $allowed ) ) );
+            $query_data[] = $serach_array;
+        }
+    }
+
+    foreach( $query_data as $query_param ) {
+        if ( $i == 0 ) {
+            $people = $people->where( function( $query ) use( $query_param ) {
+                foreach( $query_param as $key => $value ) {
+                    if( is_array( $value ) ) {
+                        $filter_value = erp_crm_get_save_search_regx( $value );
+                        $j = 0;
+                        $query->where( function( $query1 ) use( $filter_value, $j, $key ) {
+                            foreach( $filter_value as $q_val => $q_key ) {
+                                if ( $j == 0 ) {
+                                    $query1->where( $key, $q_key, $q_val );
+                                } else {
+                                    $query1->orWhere( $key, $q_key, $q_val );
+                                }
+                                $j++;
+                            }
+                        });
+                    } else {
+                        $filter_value = erp_crm_get_save_search_regx( $value );
+                        $query->where( $key, $filter_value[key( $filter_value )], key( $filter_value ) );
+                    }
+                }
+                return $query;
+            } );
+        } else {
+            $people = $people->orWhere( function( $query ) use( $query_param ) {
+            $filter_value = [];
+                foreach( $query_param as $key => $value ) {
+                    if( is_array( $value ) ) {
+                        $filter_value = erp_crm_get_save_search_regx( $value );
+                        $j = 0;
+                        $query->where( function( $query1 ) use( $filter_value, $j, $key ) {
+                            foreach( $filter_value as $q_val => $q_key ) {
+                                if ( $j == 0 ) {
+                                    $query1->where( $key, $q_key, $q_val );
+                                } else {
+                                    $query1->orWhere( $key, $q_key, $q_val );
+                                }
+                                $j++;
+                            }
+                        });
+                    } else {
+                        $filter_value = erp_crm_get_save_search_regx( $value );
+                        $query->where( $key, $filter_value[key( $filter_value )], key( $filter_value ) );
+                    }
+                }
+                return $query;
+            } );
+        }
+        $i++;
+    }
+
+    return $people;
+}
