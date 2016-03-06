@@ -1217,32 +1217,16 @@ function erp_crm_get_serach_key() {
             ]
         ],
 
-        'country' => [
+        'country_state' => [
             'title'     => __( 'Country/State', 'wp-erp' ),
             'type'      => 'dropdown',
             'text'      => '',
             'condval'   => '',
             'condition' => [
                 ''   => __( 'from', 'wp-erp' ),
-                '!'  => __( 'not from', 'wp-erp' ),
-                '~'  => __( 'contains', 'wp-erp' ),
-                '!~' => __( 'not contains', 'wp-erp' )
+                '!'  => __( 'not from', 'wp-erp' )
             ],
-            'options' => \WeDevs\ERP\Countries::instance()->get_countries()
-        ],
-
-        'state' => [
-            'title'     => __( 'Country/State', 'wp-erp' ),
-            'type'      => 'dropdown',
-            'text'      => '',
-            'condval'   => '',
-            'display'   => 'none',
-            'condition' => [
-                ''   => __( 'from', 'wp-erp' ),
-                '!'  => __( 'not from', 'wp-erp' ),
-                '~'  => __( 'contains', 'wp-erp' ),
-                '!~' => __( 'not contains', 'wp-erp' )
-            ]
+            'options' => \WeDevs\ERP\Countries::instance()->country_dropdown_options(),
         ],
     ];
 }
@@ -1322,16 +1306,61 @@ function erp_crm_save_search_query_filter( $people ) {
                     if( is_array( $value ) ) {
                         $filter_value = erp_crm_get_save_search_regx( $value );
                         $j = 0;
-                        $query->where( function( $query1 ) use( $filter_value, $j, $key ) {
-                            foreach( $filter_value as $q_val => $q_key ) {
-                                if ( $j == 0 ) {
-                                    $query1->where( $key, $q_key, $q_val );
-                                } else {
-                                    $query1->orWhere( $key, $q_key, $q_val );
+                        if ( $key == 'country_state' ) {
+
+                            $query->where( function( $query1 ) use( $filter_value, $j, $key ) {
+
+                                foreach( $filter_value as $q_val => $q_key ) {
+                                    if ( $j == 0 ) {
+                                        $key_value = explode(':', $q_val); // seperate BAN:DHA to an array [ 0=>BAN, 1=>DHA]
+                                        $keys = explode('_', $key); // seperate country_state to an array [ 0=>country, 1=>state]
+                                        if ( count( $key_value ) > 1 ) {
+
+                                            $query1->where( function($query2) use( $key_value, $keys, $q_key ){
+
+                                                // Foreach those [ 0=>BAN, 1=>DHA ] value as nes_key = 0,1 and $nes_val = BAN,DHA
+                                                foreach ( $key_value as $nes_key => $nes_val) {
+                                                    $query2->where( $keys[$nes_key], $q_key, $nes_val );
+                                                }
+                                            });
+                                            # code...
+                                        } else {
+                                            $query1->where( $keys[key( $key_value ) ], $q_key, $key_value[0] );
+                                        }
+
+                                    } else {
+                                        $key_value = explode(':', $q_val); // seperate BAN:DHA to an array [ 0=>BAN, 1=>DHA]
+                                        $keys = explode('_', $key); // seperate country_state to an array [ 0=>country, 1=>state]
+
+                                        if ( count( $key_value ) > 1 ) {
+
+                                            $query1->orWhere( function($query2) use( $key_value, $keys, $q_key ){
+
+                                                // Foreach those [ 0=>BAN, 1=>DHA ] value as nes_key = 0,1 and $nes_val = BAN,DHA
+                                                foreach ( $key_value as $nes_key => $nes_val) {
+                                                    $query2->where( $keys[$nes_key], $q_key, $nes_val );
+                                                }
+                                            });
+                                            # code...
+                                        } else {
+                                            $query1->orWhere( $keys[key( $key_value ) ], $q_key, $key_value[0] );
+                                        }
+                                    }
+                                    $j++;
                                 }
-                                $j++;
-                            }
-                        });
+                            });
+                        } else {
+                            $query->where( function( $query1 ) use( $filter_value, $j, $key ) {
+                                foreach( $filter_value as $q_val => $q_key ) {
+                                    if ( $j == 0 ) {
+                                        $query1->where( $key, $q_key, $q_val );
+                                    } else {
+                                        $query1->orWhere( $key, $q_key, $q_val );
+                                    }
+                                    $j++;
+                                }
+                            });
+                        }
                     } else {
                         $filter_value = erp_crm_get_save_search_regx( $value );
                         $query->where( $key, $filter_value[key( $filter_value )], key( $filter_value ) );
@@ -1346,16 +1375,59 @@ function erp_crm_save_search_query_filter( $people ) {
                     if( is_array( $value ) ) {
                         $filter_value = erp_crm_get_save_search_regx( $value );
                         $j = 0;
-                        $query->where( function( $query1 ) use( $filter_value, $j, $key ) {
-                            foreach( $filter_value as $q_val => $q_key ) {
-                                if ( $j == 0 ) {
-                                    $query1->where( $key, $q_key, $q_val );
-                                } else {
-                                    $query1->orWhere( $key, $q_key, $q_val );
+                        if ( $key == 'country_state' ) {
+                            $query->where( function( $query1 ) use( $filter_value, $j, $key ) {
+                                foreach( $filter_value as $q_val => $q_key ) {
+                                    if ( $j == 0 ) {
+                                        $key_value = explode(':', $q_val); // seperate BAN:DHA to an array [ 0=>BAN, 1=>DHA]
+                                        $keys = explode('_', $key); // seperate country_state to an array [ 0=>country, 1=>state]
+                                        if ( count( $key_value ) > 1 ) {
+
+                                            $query1->where( function($query2) use( $key_value, $keys, $q_key ){
+
+                                                // Foreach those [ 0=>BAN, 1=>DHA ] value as nes_key = 0,1 and $nes_val = BAN,DHA
+                                                foreach ( $key_value as $nes_key => $nes_val) {
+                                                    $query2->where( $keys[$nes_key], $q_key, $nes_val );
+                                                }
+                                            });
+                                            # code...
+                                        } else {
+                                            $query1->where( $keys[key( $key_value ) ], $q_key, $key_value[0] );
+                                        }
+
+                                    } else {
+                                        $key_value = explode(':', $q_val); // seperate BAN:DHA to an array [ 0=>BAN, 1=>DHA]
+                                        $keys = explode('_', $key); // seperate country_state to an array [ 0=>country, 1=>state]
+
+                                        if ( count( $key_value ) > 1 ) {
+
+                                            $query1->orWhere( function($query2) use( $key_value, $keys, $q_key ){
+
+                                                // Foreach those [ 0=>BAN, 1=>DHA ] value as nes_key = 0,1 and $nes_val = BAN,DHA
+                                                foreach ( $key_value as $nes_key => $nes_val) {
+                                                    $query2->where( $keys[$nes_key], $q_key, $nes_val );
+                                                }
+                                            });
+                                            # code...
+                                        } else {
+                                            $query1->orWhere( $keys[key( $key_value ) ], $q_key, $key_value[0] );
+                                        }
+                                    }
+                                    $j++;
                                 }
-                                $j++;
-                            }
-                        });
+                            });
+                        } else {
+                            $query->where( function( $query1 ) use( $filter_value, $j, $key ) {
+                                foreach( $filter_value as $q_val => $q_key ) {
+                                    if ( $j == 0 ) {
+                                        $query1->where( $key, $q_key, $q_val );
+                                    } else {
+                                        $query1->orWhere( $key, $q_key, $q_val );
+                                    }
+                                    $j++;
+                                }
+                            });
+                        }
                     } else {
                         $filter_value = erp_crm_get_save_search_regx( $value );
                         $query->where( $key, $filter_value[key( $filter_value )], key( $filter_value ) );

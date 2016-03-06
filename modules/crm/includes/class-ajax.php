@@ -60,6 +60,9 @@ class Ajax_Handler {
 
         // Single customer view
         $this->action( 'wp_ajax_erp-crm-customer-social', 'customer_social_profile' );
+
+        // Save Search actions
+        $this->action( 'wp_ajax_erp_crm_create_new_save_search', 'create_save_search' );
     }
 
     /**

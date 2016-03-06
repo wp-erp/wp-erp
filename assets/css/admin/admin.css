@@ -198,23 +198,26 @@
   border: 1px solid #e3e3e3;
   margin: 15px 0px;
 }
-.erp-save-search-wrapper {
+#erp-crm-save-search .erp-save-search-wrapper {
   border: 1px solid #e3e3e3;
   padding: 15px;
   margin: 20px 0px;
 }
-.erp-save-search-wrapper .erp-save-search-item .or-divider {
+#erp-crm-save-search .erp-save-search-wrapper .erp-save-search-item .or-divider {
   position: relative;
   text-align: center;
   margin: 20px 0px;
 }
-.erp-save-search-wrapper .erp-save-search-item .or-divider span {
+#erp-crm-save-search .erp-save-search-wrapper .erp-save-search-item .or-divider span {
   position: absolute;
   top: -9px;
   left: 45%;
   font-size: 14px;
   background: #F1F1F1;
   width: 50px;
+}
+#erp-crm-save-search .erp-save-serach-action .saved-search-lists {
+  display: inline-block;
 }
 .erp-crm-subscriber-contact .subscribe-group,
 .erp-crm-contact-subscriber-wrap .subscribe-group,

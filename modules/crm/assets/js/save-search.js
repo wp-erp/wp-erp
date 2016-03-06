@@ -3,7 +3,6 @@
  *
  * @return {void}
  */
-
 Vue.component( 'save-search', {
     props: {
         searchFields: {
@@ -23,8 +22,17 @@ Vue.component( 'save-search', {
             andSelection: '',
             orSelection: '',
             searchData: [],
-            isdisabled:false,
-            wpErpState: []
+            isdisabled:false
+        }
+    },
+
+    watch: {
+        searchFields: {
+            deep: true,
+            immediate: true,
+            handler: function () {
+                jQuery('.selecttwo').trigger('change');
+            }
         }
     },
 
@@ -64,8 +72,8 @@ Vue.component( 'save-search', {
                 return;
             }
 
-            if ( !vm.searchItem[index].hasOwnProperty(this.andSelection) ) {
-                vm.$set('searchItem[' + index +']["' + this.andSelection + '"]', []);
+            if ( !saveSearch.searchItem[index].hasOwnProperty(this.andSelection) ) {
+                saveSearch.$set('searchItem[' + index +']["' + this.andSelection + '"]', []);
             }
 
             var obj = jQuery.extend({}, wpCRMSaveSearch.searchFields[this.andSelection]);
@@ -74,7 +82,7 @@ Vue.component( 'save-search', {
                 obj.options = wpCRMSaveSearch.searchFields[this.andSelection].options;
             }
 
-            vm.searchItem[index][this.andSelection].push( obj );
+            saveSearch.searchItem[index][this.andSelection].push( obj );
 
             this.andSelection = '';
         },
@@ -90,7 +98,7 @@ Vue.component( 'save-search', {
 
             object[ this.orSelection ] = [obj]
 
-            vm.searchItem.push( object );
+            saveSearch.searchItem.push( object );
 
             this.orSelection = '';
         },
@@ -111,22 +119,23 @@ Vue.component( 'save-search', {
             });
 
             if (isEmpty) {
-                if ( vm.searchItem.length == 1 )  {
+                if ( saveSearch.searchItem.length == 1 )  {
                     return;
                 }
-                vm.searchItem.$remove(this.searchFields);
+                saveSearch.searchItem.$remove(this.searchFields);
             }
 
         }
     }
 });
 
-var vm = new Vue({
+var saveSearch = new Vue({
     el: '#erp-crm-save-search',
 
     data: {
         searchItem: [],
         totalSearchItem: 0,
+        isNewSave:false
     },
 
 
@@ -140,14 +149,42 @@ var vm = new Vue({
         }
     },
 
+    watch: {
+        searchItem: {
+            deep: true,
+            immediate: true,
+            handler: function () {
+                jQuery('.selecttwo').trigger('change');
+            }
+        }
+    },
+
     methods: {
 
-        saveSearch: function(){
+        createNewSearch: function() {
             var self = this,
-                form = jQuery('#erp-crm-save-search-form');
+                form = jQuery('#erp-crm-save-search-form'),
+                data = {
+                    action : 'erp_crm_create_new_save_search',
+                    form_data : form.serialize(),
+                    _wpnonce : wpCRMSaveSearch.nonce
+                }
 
-            console.log( form.serialize() );
+            jQuery.post( wpCRMSaveSearch.ajaxurl, data, function( resp ) {
+                if ( resp.success ) {
+                    console.log( resp );
+                } else {
+                    alert( resp.data );
+                };
+            });
+        },
 
+        saveSearch: function(){
+            this.isNewSave = !this.isNewSave;
+        },
+
+        cancelSaveSearch: function() {
+            this.isNewSave = false;
         },
 
         renderSearchFields: function() {
@@ -172,15 +209,21 @@ var vm = new Vue({
 
                 _.each( result, function( value, index ) {
                     var fieldArr = [];
+
                     if ( _.isObject( value ) ) {
                         _.each( value, function( val, i ) {
                             var obj = {};
+
                             var seachVal  = self.parseCondition(val);
                             obj.title     = wpCRMSaveSearch.searchFields[index].title;
                             obj.type      = wpCRMSaveSearch.searchFields[index].type;
                             obj.text      = seachVal.val;
                             obj.condval   = seachVal.condition;
                             obj.condition = wpCRMSaveSearch.searchFields[index].condition;
+
+                            if ( obj.type == 'dropdown' ) {
+                                obj.options = wpCRMSaveSearch.searchFields[index].options;
+                            }
 
                             fieldArr.push(obj);
                             mainObj[index] = fieldArr;
@@ -195,6 +238,10 @@ var vm = new Vue({
                         obj.condval   = seachVal.condition;
                         obj.condition = wpCRMSaveSearch.searchFields[index].condition;
 
+                        if ( obj.type == 'dropdown' ) {
+                            obj.options = wpCRMSaveSearch.searchFields[index].options;
+                        }
+
                         fieldArr.push(obj);
                         mainObj[index] = fieldArr;
                     }
@@ -208,7 +255,7 @@ var vm = new Vue({
 
         parseCondition: function( value ) {
             var obj = {};
-            var res = value.split(/([a-zA-Z0-9\s\-\_\+\.]+)/);
+            var res = value.split(/([a-zA-Z0-9\s\-\_\+\.\:]+)/);
             if ( res[0] == '' ) {
                 obj.condition = '';
                 obj.val = res[1];

@@ -194,18 +194,31 @@ Vue.directive( 'tiptip', {
 // Select2 Direcetive
 Vue.directive('selecttwo', {
     bind: function () {
+        var self = this
         var vm = this.vm;
         var key = this.expression;
 
         var select = jQuery(this.el);
 
-        select.on('change', function () {
-            vm.$set( key, select.val() );
-        });
+        select.on('change', function () {
+            var search_key = jQuery(this).attr('data-searchkey');
+            var search_key_index = jQuery(this).attr('data-searchkeyindex');
+
+            if ( search_key && search_key_index ) {
+                key = key.replace('search_key', search_key);
+                key = key.replace('search_field_key', search_key_index);
+            }
+
+            console.log( key );
+
+            vm.$set( key, select.val() );
+        });
 
         select.select2({
             width : 'resolve',
+            theme: "classic"
         });
+
     },
 });
 

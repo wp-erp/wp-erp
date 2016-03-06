@@ -158,6 +158,43 @@ class Countries {
     }
 
     /**
+     * Outputs the list of countries and states for use in dropdown boxes.
+     * @param string $selected_country (default: '')
+     * @param string $selected_state (default: '')
+     * @param bool $escape (default: false)
+     * @param bool   $escape (default: false)
+     */
+    public function country_dropdown_options( $selected_country = '', $selected_state = '', $escape = false ) {
+        $html = '';
+
+        if ( $this->countries ) foreach ( $this->countries as $key => $value ) :
+            if ( $states = $this->get_states( $key ) ) :
+                $html .= '<optgroup label="' . esc_attr( $value ) . '">';
+                    $html .= '<option value="' . esc_attr( $key ) .'">' . $value . ' &mdash; '. __( 'Any State', 'wp-erp' ). '</option>';
+                    foreach ( $states as $state_key => $state_value ) :
+                        $html .= '<option value="' . esc_attr( $key ) . ':' . $state_key . '"';
+
+                        if ( $selected_country == $key && $selected_state == $state_key ) {
+                            $html .= ' selected="selected"';
+                        }
+
+                        $html .= '>' . $value . ' &mdash; ' . ( $escape ? esc_js( $state_value ) : $state_value ) . '</option>';
+                    endforeach;
+                $html .= '</optgroup>';
+            else :
+                $html .= '<option';
+                if ( $selected_country == $key && $selected_state == '*' ) {
+                    $html .= ' selected="selected"';
+                }
+                $html .= ' value="' . esc_attr( $key ) . '">' . ( $escape ? esc_js( $value ) : $value ) . '</option>';
+            endif;
+        endforeach;
+
+        return $html;
+    }
+
+
+    /**
      * Get country address formats
      *
      * @return array
