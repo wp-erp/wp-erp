@@ -146,7 +146,7 @@ class Employee {
 
         if ( $this->id ) {
             $fields['id']          = $this->id;
-            $fields['employee_id'] = $this->user->employee_id;
+            $fields['employee_id'] = $this->employee_id;
             $fields['user_email']  = $this->user->user_email;
 
             $fields['name'] = array(

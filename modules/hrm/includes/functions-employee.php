@@ -142,7 +142,8 @@ function erp_hr_employee_create( $args = array() ) {
     $employee_table_data = array(
         'hiring_source' => $data['work']['hiring_source'],
         'hiring_date'   => $data['work']['hiring_date'],
-        'date_of_birth' => $data['work']['date_of_birth']
+        'date_of_birth' => $data['work']['date_of_birth'],
+        'employee_id'   => $data['personal']['employee_id']
     );
 
     if ( ! $update ) {
@@ -153,6 +154,11 @@ function erp_hr_employee_create( $args = array() ) {
     $wpdb->update( $wpdb->prefix . 'erp_hr_employees', $employee_table_data, array( 'user_id' => $user_id ) );
 
     foreach ( $data['personal'] as $key => $value ) {
+
+        if ( 'employee_id' == $key ) {
+            continue;
+        }
+
         update_user_meta( $user_id, $key, $value );
     }
 
