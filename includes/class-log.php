@@ -115,7 +115,10 @@ class Log {
 	 * @return integer [inserted id]
 	 */
 	public function insert_log( $args ) {
-
+		global $wpdb;
+		
+		$table = $wpdb->prefix . 'erp_audit_log';
+		
 		$defaults = array(
 			'component'     => 'HRM',
 			'sub_component' => '',
@@ -126,16 +129,19 @@ class Log {
 			'created_by'    => ''
 	    );
 
+	    $formated = ['%s', '%s', '%s', '%s', '%s', '%s', '%s'];
 
 	    $fields = wp_parse_args( $args, $defaults );
 
 	    do_action( 'erp_after_before_audit_log', $fields );
+	    
+	    $id = $wpdb->insert( $table, $fields, $formated );
 
-	    $inserted = \WeDevs\ERP\Admin\Models\Audit_Log::create( $fields );
+	    //$inserted = \WeDevs\ERP\Admin\Models\Audit_Log::create( $fields );
 
-	    do_action( 'erp_after_insert_audit_log', $inserted, $fields );
+	    do_action( 'erp_after_insert_audit_log', $id, $fields );
 
-	    return $inserted->id;
+	    return $id;
 	}
 
 	public function count( $args = array() ) {
