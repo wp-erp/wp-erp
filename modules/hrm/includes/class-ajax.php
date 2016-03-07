@@ -680,7 +680,7 @@ class Ajax_Handler {
 
         $employee = new \WeDevs\ERP\HRM\Models\Employee();
 
-        $employee->where( 'user_id', $employee_id )->update( ['status'=>'terminated'] );
+        $employee->where( 'user_id', $employee_id )->update( ['status'=>'terminated', 'termination_date' => $terminate_date] );
         update_user_meta( $employee_id, '_erp_hr_termination', $fields );
         $this->send_success();
 
