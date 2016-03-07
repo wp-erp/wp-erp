@@ -129,7 +129,7 @@ class Log {
 			'created_by'    => ''
 	    );
 
-	    $formated = ['%s', '%s', '%s', '%s', '%s', '%s', '%s'];
+	    $formated = ['%s', '%s', '%s', '%s', '%s', '%s', '%d'];
 
 	    $fields = wp_parse_args( $args, $defaults );
 

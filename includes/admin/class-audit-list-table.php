@@ -113,7 +113,7 @@ class Auditlog_List_Table extends \WP_List_Table {
 
         switch ( $column_name ) {
             case 'name':
-                return strtoupper( $audit_log->component );
+                return ucfirst( $audit_log->component );
 
             case 'sections':
                 return ucfirst( $audit_log->sub_component );
