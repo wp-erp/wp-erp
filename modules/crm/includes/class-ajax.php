@@ -63,6 +63,7 @@ class Ajax_Handler {
 
         // Save Search actions
         $this->action( 'wp_ajax_erp_crm_create_new_save_search', 'create_save_search' );
+        $this->action( 'wp_ajax_erp_crm_get_save_search_item', 'get_save_search' );
     }
 
     /**
@@ -731,6 +732,60 @@ class Ajax_Handler {
 
         $this->send_success( $data );
 
+    }
+
+    /**
+     * Create Save Search
+     *
+     * @since 1.0
+     *
+     * @return json
+     */
+    public function create_save_search() {
+        $this->verify_nonce( 'wp-erp-crm-save-search' );
+
+        parse_str( $_POST['form_data'] );
+
+        if ( ! $save_search ) {
+            $this->send_error( __( 'Search item not found', 'wp-erp' ) );
+        }
+
+        if ( ! $erp_save_search_name ) {
+            $this->send_error( __( 'Search Key name not found', 'wp-erp' ) );
+        }
+
+        $postdata = [
+            'save_search' => ( isset( $save_search ) && !empty( $save_search ) ) ? $save_search : []
+        ];
+
+        $query_string = erp_crm_get_save_search_query_string( $postdata );
+
+        if ( ! $query_string ) {
+            $this->send_error( __( 'Query not found', 'wp-erp' ) );
+        }
+
+        $data = [
+            'user_id'     => get_current_user_id(),
+            'global'      => $erp_save_serach_make_global,
+            'search_name' => $erp_save_search_name,
+            'search_val'  => $query_string,
+        ];
+
+        $result = erp_insert_save_search( $data );
+
+        if ( ! $result ) {
+            $this->send_error( __( 'Search does not save', 'wp-erp' ) );
+        }
+
+        $this->send_success( $result );
+    }
+
+    public function get_save_search() {
+        $this->verify_nonce( 'wp-erp-crm-save-search' );
+
+        $result = erp_get_save_search_item( get_current_user_id() );
+
+        $this->send_success( $result );
     }
 
 }

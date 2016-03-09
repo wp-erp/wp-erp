@@ -111,11 +111,27 @@
     }
 }
 
-#erp-crm-save-search {
+.erp-advance-search-filter {
+
+    &.border-top-only {
+        border:none;
+        border-top: 1px solid #e3e3e3;
+    }
+
+    position: relative;
+    border: 1px solid #e3e3e3;
+    margin-bottom: 55px;
+    margin-top: 10px;
+
+    input[type=button].erp-advance-search-button{
+        position: absolute;
+        bottom:-28px;
+        right:0px;
+    }
 
     .erp-save-search-wrapper{
 
-        border:1px solid #e3e3e3;
+        _border:1px solid #e3e3e3;
         padding:15px;
         margin: 20px 0px;
 
@@ -136,12 +152,19 @@
                 }
             }
         }
-
     }
 
     .erp-save-serach-action {
         .saved-search-lists {
             display:inline-block;
+        }
+
+        #erp_save_search_name{
+            margin-right: 15px;
+        }
+
+        label[for=erp_save_serach_make_global] {
+            margin-right: 15px;
         }
     }
 }
@@ -942,4 +965,8 @@
             }
         }
     }
+}
+
+[v-cloak] {
+  display: none;
 }

@@ -198,17 +198,32 @@
   border: 1px solid #e3e3e3;
   margin: 15px 0px;
 }
-#erp-crm-save-search .erp-save-search-wrapper {
+.erp-advance-search-filter {
+  position: relative;
   border: 1px solid #e3e3e3;
+  margin-bottom: 55px;
+  margin-top: 10px;
+}
+.erp-advance-search-filter.border-top-only {
+  border: none;
+  border-top: 1px solid #e3e3e3;
+}
+.erp-advance-search-filter input[type=button].erp-advance-search-button {
+  position: absolute;
+  bottom: -28px;
+  right: 0px;
+}
+.erp-advance-search-filter .erp-save-search-wrapper {
+  _border: 1px solid #e3e3e3;
   padding: 15px;
   margin: 20px 0px;
 }
-#erp-crm-save-search .erp-save-search-wrapper .erp-save-search-item .or-divider {
+.erp-advance-search-filter .erp-save-search-wrapper .erp-save-search-item .or-divider {
   position: relative;
   text-align: center;
   margin: 20px 0px;
 }
-#erp-crm-save-search .erp-save-search-wrapper .erp-save-search-item .or-divider span {
+.erp-advance-search-filter .erp-save-search-wrapper .erp-save-search-item .or-divider span {
   position: absolute;
   top: -9px;
   left: 45%;
@@ -216,8 +231,14 @@
   background: #F1F1F1;
   width: 50px;
 }
-#erp-crm-save-search .erp-save-serach-action .saved-search-lists {
+.erp-advance-search-filter .erp-save-serach-action .saved-search-lists {
   display: inline-block;
+}
+.erp-advance-search-filter .erp-save-serach-action #erp_save_search_name {
+  margin-right: 15px;
+}
+.erp-advance-search-filter .erp-save-serach-action label[for=erp_save_serach_make_global] {
+  margin-right: 15px;
 }
 .erp-crm-subscriber-contact .subscribe-group,
 .erp-crm-contact-subscriber-wrap .subscribe-group,
@@ -845,6 +866,9 @@
 .erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-notification p.schedule-notification-allow {
   width: 50%;
   padding: 6px 20px;
+}
+[v-cloak] {
+  display: none;
 }
 span.red {
   color: #CF0202;

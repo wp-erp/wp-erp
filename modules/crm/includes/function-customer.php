@@ -1444,9 +1444,10 @@ function erp_crm_save_search_query_filter( $people ) {
 
 function erp_crm_get_save_search_query_string( $postdata ){
 
-    $save_search       = ( isset( $postdata['save_search'] ) && !empty( $postdata['save_search'] ) ) ? $postdata['save_search'] : '';
-    $search_string     = '';
-    $search_string_arr = [];
+    $save_search          = ( isset( $postdata['save_search'] ) && !empty( $postdata['save_search'] ) ) ? $postdata['save_search'] : '';
+    // $selected_save_search = ( isset( $postdata['erp_save_search_select_options'] ) && !empty( $postdata['erp_save_search_select_options'] ) ) ? $postdata['erp_save_search_select_options'] : '';
+    $search_string        = '';
+    $search_string_arr    = [];
 
     if ( !$save_search ) {
         return $search_string;
@@ -1468,4 +1469,34 @@ function erp_crm_get_save_search_query_string( $postdata ){
     $search_string = implode( '&or&', $search_string );
 
     return $search_string;
+}
+
+function erp_insert_save_search( $data ) {
+    return WeDevs\ERP\CRM\Models\SaveSearch::create( $data );
+}
+
+function erp_get_save_search_item( $user_id ) {
+    $results = [];
+    $search_keys = WeDevs\ERP\CRM\Models\SaveSearch::where( 'user_id', '=',  $user_id )
+                ->orWhere('global', '=', 1 )
+                ->get()
+                ->groupBy('global')
+                ->toArray();
+
+    foreach ( $search_keys as $key => $search_values ) {
+        if ( $key == 0 ) {
+            $results[$key]['name'] = __( 'Own Search', 'wp-erp' );
+        } else {
+            $results[$key]['name'] = __( 'Global Search', 'wp-erp' );
+        }
+
+        foreach ( $search_values as $index => $value ) {
+            $results[$key]['options'][] = [
+                'id' => $value['id'],
+                'text' => $value['search_name'],
+            ];
+        }
+    }
+
+    return $results;
 }

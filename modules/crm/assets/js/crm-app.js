@@ -208,15 +208,14 @@ Vue.directive('selecttwo', {
                 key = key.replace('search_key', search_key);
                 key = key.replace('search_field_key', search_key_index);
             }
-
-            console.log( key );
-
             vm.$set( key, select.val() );
         });
 
         select.select2({
             width : 'resolve',
-            theme: "classic"
+            theme: "classic",
+            placeholder: jQuery(this.el).attr('data-placeholder'),
+            allowClear: true
         });
 
     },

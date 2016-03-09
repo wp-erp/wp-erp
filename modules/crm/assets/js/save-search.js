@@ -135,12 +135,19 @@ var saveSearch = new Vue({
     data: {
         searchItem: [],
         totalSearchItem: 0,
-        isNewSave:false
+        isNewSave:false,
+        saveSearchOptions: {},
+        saveSearchData: '',
+        showAdvanceFilter:false,
+        classObject: {
+            'border-top-only': true
+        }
     },
 
 
     created: function() {
         this.renderSearchFields();
+        this.renderSaveSearchOptions();
     },
 
     computed: {
@@ -156,12 +163,49 @@ var saveSearch = new Vue({
             handler: function () {
                 jQuery('.selecttwo').trigger('change');
             }
+        },
+
+        saveSearchOptions: {
+            deep: true,
+            immediate: true,
+            handler: function () {
+                jQuery('.selecttwo').trigger('change');
+            }
         }
     },
 
     methods: {
 
-        createNewSearch: function() {
+        toggleAdvanceSearchFilter: function() {
+            this.showAdvanceFilter = !this.showAdvanceFilter;
+
+            if ( this.showAdvanceFilter ) {
+                this.classObject = {
+                    'border-top-only': false
+                }
+            } else {
+                this.classObject = {
+                    'border-top-only': true
+                }
+            }
+        },
+
+        renderSaveSearchOptions: function() {
+            var self = this,
+                data = {
+                    action : 'erp_crm_get_save_search_item',
+                    _wpnonce : wpCRMSaveSearch.nonce
+                };
+
+            jQuery.get( wpCRMSaveSearch.ajaxurl, data, function( resp ) {
+                if ( resp.success ) {
+                    self.saveSearchOptions = resp.data;
+                }
+            });
+
+        },
+
+        createNewSearch: function(e) {
             var self = this,
                 form = jQuery('#erp-crm-save-search-form'),
                 data = {
@@ -172,7 +216,39 @@ var saveSearch = new Vue({
 
             jQuery.post( wpCRMSaveSearch.ajaxurl, data, function( resp ) {
                 if ( resp.success ) {
-                    console.log( resp );
+                    var obj = {};
+
+                    if ( resp.data.global == '0' ) {
+
+                        obj.id=resp.data.id.toString();
+                        obj.text=resp.data.search_name;
+                        obj.selected='selected';
+
+                        self.saveSearchOptions[0].options.push( obj );
+                    } else {
+
+                        obj.id=resp.data.id.toString();
+                        obj.text=resp.data.search_name;
+                        obj.selected='selected';
+
+                        self.saveSearchOptions[1].options.push( obj )
+                    }
+
+                    self.isNewSave = false;
+                    self.saveSearchData = obj.id;
+
+                    // console.log( typeof obj.id.toString() );
+                    // jQuery('#erp-save-search-select-options')
+                    //     .select2('destroy')
+
+                    // self.$set('saveSearchData', obj.id);
+                    // jQuery('#erp-save-search-select-options').
+                    // jQuery('#erp-save-search-select-options').select2({
+                    //     theme: 'classic',
+                    // }).select2("val", '"'+obj.id+'"' );
+
+                    // jQuery('.select2').trigger('change');
+
                 } else {
                     alert( resp.data );
                 };

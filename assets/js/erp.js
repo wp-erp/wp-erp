@@ -80,7 +80,8 @@ window.wperp = window.wperp || {};
             });
 
             $( '.select2' ).select2({
-                theme: "classic"
+                theme: "classic",
+                placeholder: 'This is thing'
             });
         },
 

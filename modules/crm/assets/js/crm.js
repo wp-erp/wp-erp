@@ -148,7 +148,9 @@
              * @return {void}
              */
             pageReload: function() {
-                $( '.erp-crm-list-table-wrap' ).load( window.location.href + ' .list-table-inner' );
+                console.log( 'AIse ');
+                $( '.erp-crm-customer' ).load( window.location.href + ' .erp-crm-customer' );
+                // $( '.erp-crm-list-table-wrap' ).load( window.location.href + ' .list-table-inner' );
             },
 
             /**
