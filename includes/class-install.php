@@ -28,6 +28,8 @@ class WeDevs_ERP_Installer {
      * @return void
      */
     function __construct() {
+        $this->set_default_modules();
+
         register_activation_hook( WPERP_FILE, array( $this, 'activate' ) );
         register_deactivation_hook( WPERP_FILE, array( $this, 'deactivate' ) );
 
@@ -58,7 +60,6 @@ class WeDevs_ERP_Installer {
         }
 
         $this->create_tables();
-        $this->set_default_modules();
         $this->create_roles();
         $this->set_role();
         $this->create_cron_jobs();
