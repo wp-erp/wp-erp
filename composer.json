@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "illuminate/database": "~5.0",
+        "illuminate/database": "5.0.*",
         "tareq1988/wp-eloquent": "dev-master",
         "johngrogg/ics-parser": "^1.0"
     },
