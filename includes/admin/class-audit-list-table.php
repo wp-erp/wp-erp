@@ -113,7 +113,7 @@ class Auditlog_List_Table extends \WP_List_Table {
 
         switch ( $column_name ) {
             case 'name':
-                return strtoupper( $audit_log->component );
+                return ucfirst( $audit_log->component );
 
             case 'sections':
                 return ucfirst( $audit_log->sub_component );
@@ -121,13 +121,13 @@ class Auditlog_List_Table extends \WP_List_Table {
             case 'message':
                 if ( $audit_log->changetype == 'edit' ) {
                     if ( !empty( $audit_log->old_value ) && !empty( $audit_log->new_value ) ) {
-                        return sprintf( '%s. <a href="#" class="erp-audit-log-view-changes erp-tips" data-id="%d" title="%s">(view changes)</a>', $audit_log->message, $audit_log->id, __( 'View what elements are changes', 'wp-erp' ) );
+                        return sprintf( '%s. <a href="#" class="erp-audit-log-view-changes erp-tips" data-id="%d" title="%s">(view changes)</a>', htmlspecialchars_decode( $audit_log->message ), $audit_log->id, __( 'View what elements are changes', 'wp-erp' ) );
                     } else {
-                        return $audit_log->message;
+                        return htmlspecialchars_decode( $audit_log->message );
                     }
                 }
 
-                return $audit_log->message;
+                return htmlspecialchars_decode( $audit_log->message );
 
             case 'created_by':
                 return $audit_log->display_name;
