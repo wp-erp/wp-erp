@@ -53,16 +53,16 @@ class Contact_List_Table extends \WP_List_Table {
         }
 
         $save_searches          = erp_get_save_search_item( get_current_user_id() );
-        $selected_save_search = ( isset( $_GET['filter_save_search'] ) ) ? $_GET['filter_save_search'] : '';
+        $selected_save_search = ( isset( $_GET['erp_save_search'] ) ) ? $_GET['erp_save_search'] : '';
         ?>
 
         <div class="alignleft actions">
 
             <label class="screen-reader-text" for="filter_by_save_searches"><?php _e( 'Filter By Save Searches', 'wp-erp' ) ?></label>
-            <select style="width:250px;" name="filter_by_save_searches" class="selecttwo select2" id="filter_by_save_searches" data-placeholder="<?php _e( 'Select From a save searches', 'wp-erp' ); ?>">
+            <select style="width:250px;" name="filter_by_save_searches" class="selecttwo select2" id="erp_customer_filter_by_save_searches" data-placeholder="<?php _e( 'Select From a save searches', 'wp-erp' ); ?>">
                 <?php foreach ( $save_searches as $key => $searches ) : ?>
                     <option value=""></option>
-                    <optgroup label="<?php echo $searches['name']; ?>">
+                    <optgroup label="<?php echo $searches['name']; ?>" id="<?php echo strtolower( str_replace(' ', '-', $searches['name'] ) ); ?>">
 
                         <?php foreach ( $searches['options'] as $option_key => $option_value ) : ?>
                             <option value="<?php echo $option_value['id']; ?>" <?php selected( $selected_save_search, $option_value['id']); ?>><?php echo $option_value['text']; ?></option>
@@ -74,7 +74,11 @@ class Contact_List_Table extends \WP_List_Table {
             </select>
 
             <?php
-            submit_button( __( 'Filter' ), 'button-secondary', 'filter_employee', false );
+            submit_button( __( 'Filter' ), 'secondary', 'filter_contact', false, [ 'id' => 'erp-advance-filter-contact-btn'] );
+
+            if ( $selected_save_search ) {
+                echo '<a href="#" class="button erp-show-save-search-field" id="erp-show-save-search-field">Show Fields</a>';
+            }
         echo '</div>';
     }
 
@@ -121,8 +125,8 @@ class Contact_List_Table extends \WP_List_Table {
      */
     public function current_action() {
 
-        if ( isset( $_REQUEST['filter_customer'] ) ) {
-            return 'filter_life_stage';
+        if ( isset( $_REQUEST['filter_by_save_searches'] ) ) {
+            return 'filter_by_save_searches';
         }
 
         if ( isset( $_REQUEST['customer_search'] ) ) {

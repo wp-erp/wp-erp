@@ -38,7 +38,7 @@ class Form_Handler {
 
         if ( isset( $_POST['save_search_submit'] ) && wp_verify_nonce( $_POST['wp-erp-crm-save-search-nonce'], 'wp-erp-crm-save-search-nonce-action' ) ) {
             $search_string = erp_crm_get_save_search_query_string( $_POST );
-            wp_redirect( $_POST['erp_crm_http_referer'] .'&'. $search_string );
+            wp_redirect( $_POST['erp_crm_http_referer'] .'&erp_save_search=0&'. $search_string );
             exit();
         }
     }
@@ -68,7 +68,7 @@ class Form_Handler {
 
         if ( $action ) {
 
-            $redirect = remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'customer_search', 'filter_life_stage' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
+            $redirect = remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'customer_search', 'filter_by_save_searches' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
 
             switch ( $action ) {
 
@@ -97,8 +97,13 @@ class Form_Handler {
                     wp_redirect( $redirect );
                     exit();
 
-                case 'filter_life_stage':
-                    $redirect = remove_query_arg( [ 'filter_customer' ], $redirect );
+                case 'filter_by_save_searches':
+                    if ( isset( $_GET['filter_by_save_searches'] ) && !empty( $_GET['filter_by_save_searches'] ) ) {
+                        $string   = erp_crm_get_search_by_already_saved( $_GET['filter_by_save_searches'] );
+                        $redirect = add_query_arg( [ 'erp_save_search' => $_GET['filter_by_save_searches'] ], $redirect );
+                        $redirect = $redirect. '&'. $string;
+                    }
+
                     wp_redirect( $redirect );
                     exit();
 

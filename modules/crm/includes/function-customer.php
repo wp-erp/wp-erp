@@ -1500,3 +1500,22 @@ function erp_get_save_search_item( $user_id ) {
 
     return $results;
 }
+
+/**
+ * Get save Search query string for db;
+ *
+ * @since 1.0
+ *
+ * @param  integer $save_search_id
+ *
+ * @return string
+ */
+function erp_crm_get_search_by_already_saved( $save_search_id ) {
+    if ( ! $save_search_id ) {
+        return '';
+    }
+
+    $data = WeDevs\ERP\CRM\Models\SaveSearch::find( $save_search_id );
+
+    return $data->search_val;
+}

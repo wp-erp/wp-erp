@@ -1,11 +1,14 @@
-<?php $search_keys = erp_crm_get_serach_key(); ?>
+<?php
+$search_keys = erp_crm_get_serach_key();
+$if_advance_search = ( isset( $_GET['erp_save_search' ] ) && $_GET['erp_save_search' ] == 0 ) ? true : false;
+?>
 <div class="wrap erp-crm-customer" id="wp-erp">
 
     <h2><?php _e( 'Contact', 'wp-erp' ); ?>
         <a href="#" id="erp-customer-new" class="erp-contact-new add-new-h2" data-type="contact" title="<?php _e( 'Add New Contact', 'wp-erp' ); ?>"><?php _e( 'Add New Contact', 'wp-erp' ); ?></a>
     </h2>
 
-    <div class="erp-advance-search-filter erp-hide" id="erp-crm-save-search" v-cloak>
+    <div class="erp-advance-search-filter <?php echo !$if_advance_search ? 'erp-hide' : ''; ?>" id="erp-crm-save-search" v-cloak>
         <div class="erp-filter-search-wrapper">
 
             <form action="" method="post" id="erp-crm-save-search-form">

@@ -197,6 +197,16 @@
 .erp-crm-subscriber-contact .erp-crm-list-table-wrap a.erp-advance-search-button span {
   margin: 3px 3px 0px 0px;
 }
+.erp-crm-customer .erp-crm-list-table-wrap #erp-advance-filter-contact-btn,
+.erp-crm-subscriber-contact .erp-crm-list-table-wrap #erp-advance-filter-contact-btn,
+.erp-crm-customer .erp-crm-list-table-wrap a#erp-show-save-search-field,
+.erp-crm-subscriber-contact .erp-crm-list-table-wrap a#erp-show-save-search-field {
+  margin-top: -1px;
+}
+.erp-crm-customer .erp-crm-list-table-wrap a#erp-show-save-search-field,
+.erp-crm-subscriber-contact .erp-crm-list-table-wrap a#erp-show-save-search-field {
+  margin-left: 3px;
+}
 .erp-crm-customer .erp-save-search-wrap {
   padding: 15px;
   border: 1px solid #e3e3e3;

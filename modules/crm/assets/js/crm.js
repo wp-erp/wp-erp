@@ -45,9 +45,9 @@
             // handle postbox toggle
             $('body').on( 'click', 'div.erp-handlediv', this.handlePostboxToggle );
 
-            $( '.erp-crm-customer' ).on( 'click', 'a.erp-advance-search-button', this.showAdvanceFilter );
+            $( '.erp-crm-customer' ).on( 'click', 'a#erp-advance-search-button, a#erp-show-save-search-field', this.showAdvanceFilter );
 
-
+            this.checkVisibaleAdvanceSearch();
             // Erp ToolTips using tiptip
             this.initTipTips();
         },
@@ -126,21 +126,27 @@
             }
         },
 
+        checkVisibaleAdvanceSearch: function() {
+            if ($('#wp-erp').find( '.erp-advance-search-filter' ).is(':visible')) {
+                $('#erp-advance-search-button').html( '<span class="dashicons dashicons-no"></span>Hide Search');
+            } else {
+                $('#erp-advance-search-button').html( '<span class="dashicons dashicons-admin-generic"></span>Advance Search');
+            }
+        },
+
         showAdvanceFilter: function(e) {
             e.preventDefault();
 
             var self = $(this);
-
             self.closest('#wp-erp').find('.erp-advance-search-filter').slideToggle(300, function() {
-                if ($(this).is(':visible')) {
-                    self.html( '<span class="dashicons dashicons-no"></span>Hide Search');
-                    // Other stuff to do on slideUp
-                } else {
-                    // $t.slideDown();
-                    console.log( 'slide down')
-                    self.html( '<span class="dashicons dashicons-admin-generic"></span>Advance Search');
 
-                    // Other stuff to down on slideDown
+                var hide = ( self.attr('id') == 'erp-advance-search-button' ) ? '<span class="dashicons dashicons-no"></span>Hide Search' : 'Hide Fields';
+                var show = ( self.attr('id') == 'erp-advance-search-button' ) ? '<span class="dashicons dashicons-admin-generic"></span>Advance Search' : 'Show Fields';
+
+                if ($(this).is(':visible')) {
+                    self.html( hide );
+                } else {
+                    self.html( show );
                 }
             });
         },

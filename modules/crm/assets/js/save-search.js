@@ -157,7 +157,6 @@ var saveSearch = new Vue({
         isNewSave:false,
         saveSearchOptions: {},
         saveSearchData: '',
-        showAdvanceFilter:false,
         classObject: {
             'border-top-only': true
         },
@@ -185,14 +184,6 @@ var saveSearch = new Vue({
             immediate: true,
             handler: function () {
                 jQuery('.selecttwo').trigger('change');
-            }
-        },
-
-        showAdvanceFilter: function( newVal, oldVal ) {
-            if ( newVal ) {
-                this.searchFilterButtonText = 'Hide Search';
-            } else {
-                this.searchFilterButtonText = 'Advance Search';
             }
         }
     },
@@ -239,26 +230,41 @@ var saveSearch = new Vue({
 
             jQuery.post( wpCRMSaveSearch.ajaxurl, data, function( resp ) {
                 if ( resp.success ) {
-                    var obj = {};
 
-                    if ( resp.data.global == '0' ) {
-
-                        obj.id=resp.data.id.toString();
-                        obj.text=resp.data.search_name;
-                        obj.selected='selected';
-
-                        self.saveSearchOptions[0].options.push( obj );
+                    if ( resp.data.global == '0'  ) {
+                        jQuery('#erp_customer_filter_by_save_searches')
+                            .find( 'optgroup#own-search' )
+                            .append('<option value="'+resp.data.id+'">'+resp.data.search_name+'</option>');
                     } else {
-
-                        obj.id=resp.data.id.toString();
-                        obj.text=resp.data.search_name;
-                        obj.selected='selected';
-
-                        self.saveSearchOptions[1].options.push( obj )
+                        jQuery('#erp_customer_filter_by_save_searches')
+                            .find( 'optgroup#global-search' )
+                            .append('<option value="'+resp.data.id+'">'+resp.data.search_name+'</option>');
                     }
 
+                    jQuery('#erp_customer_filter_by_save_searches').select2().select2('val', resp.data.id);
+                    jQuery('#erp_customer_filter_by_save_searches').trigger('change');
+
                     self.isNewSave = false;
-                    self.saveSearchData = obj.id;
+
+                    // var obj = {};
+
+                    // if ( resp.data.global == '0' ) {
+
+                    //     obj.id=resp.data.id.toString();
+                    //     obj.text=resp.data.search_name;
+                    //     obj.selected='selected';
+
+                    //     self.saveSearchOptions[0].options.push( obj );
+                    // } else {
+
+                    //     obj.id=resp.data.id.toString();
+                    //     obj.text=resp.data.search_name;
+                    //     obj.selected='selected';
+
+                    //     self.saveSearchOptions[1].options.push( obj )
+                    // }
+
+                    // self.saveSearchData = obj.id;
 
                 } else {
                     alert( resp.data );
