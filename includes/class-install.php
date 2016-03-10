@@ -470,7 +470,7 @@ class WeDevs_ERP_Installer {
                 `created_at` datetime DEFAULT NULL,
                 `updated_at` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`)
-            ) $collate;"
+            ) $collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_save_search` (
               `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
