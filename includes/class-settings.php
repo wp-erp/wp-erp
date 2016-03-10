@@ -5,7 +5,7 @@ namespace WeDevs\ERP;
  * Administration Settings menu
  */
 class Settings {
-	
+
 	/**
      * Kick-in the class
      */
@@ -26,7 +26,6 @@ class Settings {
 	function settings_scripts() {
 
         wp_enqueue_style( 'wp-color-picker' );
-        wp_enqueue_style( 'erp-admin-settings' );
 
         wp_enqueue_media();
         wp_enqueue_script( 'erp-tiptip' );
