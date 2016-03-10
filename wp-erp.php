@@ -229,9 +229,6 @@ final class WeDevs_ERP {
         //Settings script
         wp_register_script( 'erp-admin-settings', WPERP_ASSETS . '/js/settings' . $suffix . '.js', array( 'jquery' ), false, true );
 
-        //Settings style
-        wp_register_style( 'erp-admin-settings', WPERP_ASSETS . '/css/admin/settings' . $suffix . '.css' );
-
         //jQuery full calendar moment script
         wp_register_script( 'erp-admin-calendar-moment', WPERP_ASSETS . '/js/moment.min.js', false, false, true );
 
