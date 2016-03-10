@@ -88,15 +88,12 @@ function erp_hr_employee_create( $args = array() ) {
     }
 
     // attempt to create the user
-    $password = wp_generate_password( 12 );
     $userdata = array(
         'user_login'   => $data['user_email'],
-        'user_pass'    => $password,
         'user_email'   => $data['user_email'],
         'first_name'   => $data['personal']['first_name'],
         'last_name'    => $data['personal']['last_name'],
         'display_name' => $data['personal']['first_name'] . ' ' . $data['personal']['middle_name'] . ' ' . $data['personal']['last_name'],
-        'role'         => 'employee'
     );
 
     // if user id exists, do an update
@@ -106,6 +103,11 @@ function erp_hr_employee_create( $args = array() ) {
     if ( $user_id ) {
         $update = true;
         $userdata['ID'] = $user_id;
+
+    } else {
+        // when creating a new user, assign role and passwords
+        $userdata['user_pass'] = wp_generate_password( 12 );
+        $userdata['role'] = 'employee';
     }
 
     $userdata = apply_filters( 'erp_hr_employee_args', $userdata );
