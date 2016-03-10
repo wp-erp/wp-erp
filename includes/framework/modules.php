@@ -37,14 +37,14 @@ class Modules {
             'hrm' => [
                 'title'       => __( 'HR Management', 'wp-erp' ),
                 'slug'        => 'erp-hrm',
-                'description' => __( 'Human Resource Mnanagement', 'wp-erp' ),
+                'description' => __( 'Human Resource Management', 'wp-erp' ),
                 'callback'    => '\WeDevs\ERP\HRM\Human_Resource',
                 'modules'     => apply_filters( 'erp_hr_modules', [ ] )
             ],
             'crm' => [
                 'title'       => __( 'CR Management', 'wp-erp' ),
                 'slug'        => 'erp-crm',
-                'description' => __( 'Client Resource Mnanagement', 'wp-erp' ),
+                'description' => __( 'Client Resource Management', 'wp-erp' ),
                 'callback'    => '\WeDevs\ERP\CRM\Customer_Relationship',
                 'modules'     => apply_filters( 'erp_crm_modules', [ ] )
             ]
