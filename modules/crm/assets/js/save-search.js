@@ -22,7 +22,10 @@ Vue.component( 'save-search', {
             andSelection: '',
             orSelection: '',
             searchData: [],
-            isdisabled:false
+            isdisabled:false,
+            marginClass: {
+                'marginbottomonly' : true
+            }
         }
     },
 
@@ -32,8 +35,23 @@ Vue.component( 'save-search', {
             immediate: true,
             handler: function () {
                 jQuery('.selecttwo').trigger('change');
+
+                if ( this.isdisabled ) {
+                    this.marginClass.marginbottomonly = false;
+                } else {
+                    this.marginClass.marginbottomonly = true;
+                }
             }
+        },
+
+        andSelection: function( newVal, oldVal ){
+            this.andAdd( this.index );
+        },
+
+        orSelection: function( newVal, oldVal ){
+            this.orAdd( this.index );
         }
+
     },
 
     computed: {
@@ -85,6 +103,7 @@ Vue.component( 'save-search', {
             saveSearch.searchItem[index][this.andSelection].push( obj );
 
             this.andSelection = '';
+
         },
 
         orAdd: function(){
@@ -141,7 +160,8 @@ var saveSearch = new Vue({
         showAdvanceFilter:false,
         classObject: {
             'border-top-only': true
-        }
+        },
+        searchFilterButtonText: 'Advance Search'
     },
 
 
@@ -150,18 +170,13 @@ var saveSearch = new Vue({
         this.renderSaveSearchOptions();
     },
 
-    computed: {
-        totalSearchItem: function() {
-            return this.searchItem.length;
-        }
-    },
-
     watch: {
         searchItem: {
             deep: true,
             immediate: true,
             handler: function () {
                 jQuery('.selecttwo').trigger('change');
+                this.totalSearchItem = this.searchItem.length;
             }
         },
 
@@ -170,6 +185,14 @@ var saveSearch = new Vue({
             immediate: true,
             handler: function () {
                 jQuery('.selecttwo').trigger('change');
+            }
+        },
+
+        showAdvanceFilter: function( newVal, oldVal ) {
+            if ( newVal ) {
+                this.searchFilterButtonText = 'Hide Search';
+            } else {
+                this.searchFilterButtonText = 'Advance Search';
             }
         }
     },
@@ -236,18 +259,6 @@ var saveSearch = new Vue({
 
                     self.isNewSave = false;
                     self.saveSearchData = obj.id;
-
-                    // console.log( typeof obj.id.toString() );
-                    // jQuery('#erp-save-search-select-options')
-                    //     .select2('destroy')
-
-                    // self.$set('saveSearchData', obj.id);
-                    // jQuery('#erp-save-search-select-options').
-                    // jQuery('#erp-save-search-select-options').select2({
-                    //     theme: 'classic',
-                    // }).select2("val", '"'+obj.id+'"' );
-
-                    // jQuery('.select2').trigger('change');
 
                 } else {
                     alert( resp.data );

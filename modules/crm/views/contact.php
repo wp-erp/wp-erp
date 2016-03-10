@@ -6,7 +6,7 @@
     </h2>
 
     <div class="erp-advance-search-filter" id="erp-crm-save-search" v-cloak v-bind:class="classObject">
-        <div v-if="showAdvanceFilter" transition="filter-search-expand">
+        <div v-if="showAdvanceFilter" class="erp-filter-search-wrapper"> <!-- transition="filter-search-expand" -->
 
             <form action="" method="post" id="erp-crm-save-search-form">
                 <input type="hidden" name="page" value="erp-sales-customers">
@@ -21,32 +21,28 @@
                     <input type="hidden" name="erp_crm_http_referer" value="<?php echo add_query_arg( ['page'=>'erp-sales-customers'], admin_url( 'admin.php' ) ); ?>">
                     <?php wp_nonce_field( 'wp-erp-crm-save-search-nonce-action', 'wp-erp-crm-save-search-nonce' ); ?>
 
-                    <!-- <div class="saved-search-lists" v-show="!isNewSave">
-                        <select name="erp_save_search_select_options" id="erp-save-search-select-options" class="selecttwo select2" v-selecttwo="saveSearchData" style="width:250px;" v-bind:value="saveSearchData" v-model="saveSearchData" data-placeholder="<?php _e( 'Select a search', 'wp-erp' ); ?>">
-                            <optgroup v-for="( key, item ) in saveSearchOptions" label="{{item.name}}">
-                                <option v-for="option in item.options" value="{{ option.id }}">{{{ option.text }}}</option>
-                            </optgroup>
-                        </select>
-                    </div> -->
-                    <!-- <pre>{{ saveSearchOptions | json }}</pre> -->
                     <input type="submit" class="button" name="save_search_submit" value="<?php _e( 'Search', 'wp-erp' ); ?>" v-if="!isNewSave">
 
-                    <input type="text" id="erp_save_search_name" name="erp_save_search_name" v-if="isNewSave">
-                    <input type="hidden" v-if="isNewSave" name="erp_save_serach_make_global" value="0">
-                    <label v-if="isNewSave" for="erp_save_serach_make_global">
-                        <input type="checkbox" id="erp_save_serach_make_global" name="erp_save_serach_make_global" value="1">
-                        <?php _e( 'Make as global for all', 'wp-erp' ); ?>
-                    </label>
-                    <input v-on:click.prevent="createNewSearch" type="submit" class="button button-primary" name="save_search_action" value="<?php _e( 'Save', 'wp-erp' ); ?>" v-if="isNewSave">
-                    <input v-on:click.prevent="cancelSaveSearch" type="submit" class="button button-primary" name="save_search_save_cancel" value="<?php _e( 'Cancel', 'wp-erp' ); ?>" v-if="isNewSave">
-                    <input v-on:click.prevent="saveSearch" type="submit" class="button button-primary" name="save_search_action" value="<?php _e( 'Save as new', 'wp-erp' ); ?>" v-if="!isNewSave">
+                    <div class="save-new-search-wrap " v-if="isNewSave">
+                        <input type="text" id="erp_save_search_name" name="erp_save_search_name" placeholder="<?php _e( 'Search name..', 'wp-erp' ); ?>">
+                        <input type="hidden" name="erp_save_serach_make_global" value="0">
+                        <label for="erp_save_serach_make_global">
+                            <input type="checkbox" id="erp_save_serach_make_global" name="erp_save_serach_make_global" value="1">
+                            <?php _e( 'Make as global for all', 'wp-erp' ); ?>
+                        </label>
+                    </div>
+                    <input v-on:click.prevent="createNewSearch" type="submit" class="button" name="save_search_action" value="<?php _e( 'Save', 'wp-erp' ); ?>" v-if="isNewSave">
+                    <input v-on:click.prevent="cancelSaveSearch" type="submit" class="button" name="save_search_save_cancel" value="<?php _e( 'Cancel', 'wp-erp' ); ?>" v-if="isNewSave">
+                    <input v-on:click.prevent="saveSearch" type="submit" class="button" name="save_search_action" value="<?php _e( 'Save as new', 'wp-erp' ); ?>" v-if="!isNewSave">
                 </div>
+
+                <div class="clearfix"></div>
 
             </form>
 
         </div>
 
-        <input type="button" @click.prevent="toggleAdvanceSearchFilter" name="erp-advance-serach-filter" value="<?php _e( 'Advance Search', 'wp-erp' ); ?>" class="erp-advance-search-button button button-primary">
+        <input type="button" @click.prevent="toggleAdvanceSearchFilter" name="erp-advance-serach-filter" value="{{ searchFilterButtonText }}" class="erp-advance-search-button button">
     </div>
 
     <div class="list-table-wrap erp-crm-list-table-wrap">

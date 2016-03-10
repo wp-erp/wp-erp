@@ -74,7 +74,7 @@ class Contact_List_Table extends \WP_List_Table {
             </select>
 
             <?php
-            submit_button( __( 'Filter' ), 'button', 'filter_employee', false );
+            submit_button( __( 'Filter' ), 'button-secondary', 'filter_employee', false );
         echo '</div>';
     }
 
@@ -291,7 +291,9 @@ class Contact_List_Table extends \WP_List_Table {
             <label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
             <input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>" />
             <?php submit_button( $text, 'button', 'customer_search', false, array( 'id' => 'search-submit' ) ); ?>
-            <?php //submit_button( __( 'Advance Search', 'wp-erp' ) , 'button', 'advance_customer_search', false, array( 'id' => 'advance-search-submit' ) ); ?>
+
+            <a href="#" class="button button-primary"><span class="dashicons dashicons-admin-generic"></span>Advance Search</a>
+            <!-- <input type="submit" class="button button-primary" name="advance_customer_search" value="<?php _e( 'Advance Search', 'wp-erp' ); ?>"> -->
         </p>
         <?php
     }

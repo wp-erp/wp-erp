@@ -471,6 +471,15 @@ class WeDevs_ERP_Installer {
                 `updated_at` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`)
             ) $collate;"
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_save_search` (
+              `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+              `user_id` int(11) DEFAULT NULL,
+              `global` tinyint(4) DEFAULT '0',
+              `search_name` text,
+              `search_val` text,
+              PRIMARY KEY (`id`)
+            ) $collate;"
         ];
 
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );

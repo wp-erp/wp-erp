@@ -213,7 +213,6 @@ Vue.directive('selecttwo', {
 
         select.select2({
             width : 'resolve',
-            theme: "classic",
             placeholder: jQuery(this.el).attr('data-placeholder'),
             allowClear: true
         });
