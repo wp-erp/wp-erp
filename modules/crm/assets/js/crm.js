@@ -45,6 +45,9 @@
             // handle postbox toggle
             $('body').on( 'click', 'div.erp-handlediv', this.handlePostboxToggle );
 
+            $( '.erp-crm-customer' ).on( 'click', 'a.erp-advance-search-button', this.showAdvanceFilter );
+
+
             // Erp ToolTips using tiptip
             this.initTipTips();
         },
@@ -123,6 +126,24 @@
             }
         },
 
+        showAdvanceFilter: function(e) {
+            e.preventDefault();
+
+            var self = $(this);
+
+            self.closest('#wp-erp').find('.erp-advance-search-filter').slideToggle(300, function() {
+                if ($(this).is(':visible')) {
+                    self.html( '<span class="dashicons dashicons-no"></span>Hide Search');
+                    // Other stuff to do on slideUp
+                } else {
+                    // $t.slideDown();
+                    console.log( 'slide down')
+                    self.html( '<span class="dashicons dashicons-admin-generic"></span>Advance Search');
+
+                    // Other stuff to down on slideDown
+                }
+            });
+        },
 
         customer: {
 

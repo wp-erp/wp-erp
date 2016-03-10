@@ -101,6 +101,14 @@
             width: 25%;
         }
     }
+
+    .erp-crm-list-table-wrap {
+        a.erp-advance-search-button {
+            span {
+                margin: 3px 3px 0px 0px;
+            }
+        }
+    }
 }
 
 .erp-crm-customer {
@@ -112,55 +120,37 @@
 }
 
 .erp-advance-search-filter {
+
     position: relative;
-    margin-bottom: 65px;
+    margin-bottom: 25px;
     margin-top: 10px;
+    border: 1px solid #e5e5e5;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+    box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+    background-color: #fff;
 
-    input.erp-advance-search-button {
-        border: none;
-        box-shadow: none;
-        padding: 0px 25px;
-        height: 40px;
-        color: #969696;
-        background-color: #fff;
-        border-radius: 0px;
+    &:before {
+        content: ' ';
+        width: 0;
+        height: 0;
+        border-left: 15px solid transparent;
+        border-right: 14px solid transparent;
+        border-top: 19px solid #FFF;
+        position: absolute;
+        right: 20px;
+        bottom: -19px;
+    }
 
+    input[type=text], select, input[type=checkbox] {
         &:focus {
             outline:none;
             box-shadow: none;
-            color: #969696;
         }
     }
 
-    &.border-top-only {
-        border:none;
-        border-top: 1px solid #e3e3e3;
-    }
-
-    /* always present */
-    .filter-search-expand-transition {
-        transition: all .3s ease;
-        background-color: #fafafa;
-        overflow: hidden;
-    }
-
-    /* .expand-enter defines the starting state for entering */
-    /* .expand-leave defines the ending state for leaving */
-    .filter-search-expand-enter, .filter-search-expand-leave {
-        opacity: 0;
-    }
-
-
-    input[type=button].erp-advance-search-button{
-        position: absolute;
-        bottom: 0px;
-        right:0px;
-    }
 
     .erp-save-search-wrapper{
-
         padding:20px;
-        background-color: #fff;
 
         .erp-save-search-item {
 
@@ -209,7 +199,7 @@
                 margin: 20px 0px;
 
                 hr {
-                    color: #afafaf;
+                    border-top: 1px solid #eee;
                 }
 
                 span {
@@ -217,7 +207,7 @@
                     top: -9px;
                     left: 45%;
                     font-size: 14px;
-                    background: #fafafa;
+                    background: #fff;
                     width: 50px;
                     color: #afafaf;
                 }
@@ -227,23 +217,9 @@
     }
 
     .erp-save-serach-action {
-        // background-color: #fafafa;
-
-        input[type=submit] {
-            border: none;
-            box-shadow: none;
-            padding: 0px 25px;
-            height: 40px;
-            color: #969696;
-            background-color: #fff;
-            border-radius: 0px;
-
-            &:focus {
-                outline:none;
-                box-shadow: none;
-                color: #969696;
-            }
-        }
+        margin-top: 10px;
+        padding: 12px 20px 12px;
+        border-top: 1px solid #eee;
 
         .saved-search-lists {
             display:inline-block;
@@ -255,6 +231,7 @@
             box-shadow: none;
             transition:none;
             padding: 5px 0px 5px 9px;
+            background: #eee;
 
             &:focus {
                 outline:none;
@@ -283,16 +260,13 @@
             margin-right: 15px;
         }
 
-        .save-new-search-wrap  {
-            overflow: hidden;
+        input[type=submit] {
+            margin-right: 5px;
+        }
+
+        .save-new-search-wrap {
             float: left;
-            background-color: #fafafa;
-            padding: 2px;
-            height: 0 1px 0 #cccccc;
-            height: 36px;
-            padding-left: 20px;
-            _box-shadow: 0 1px 0 #cccccc;
-            margin-right: 3px;
+            margin-right:10px;
         }
     }
 }
