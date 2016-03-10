@@ -305,11 +305,25 @@ function erp_get_clickable( $type = 'email', $value = '' ) {
 function erp_format_date( $date, $format = false ) {
     if ( ! $format ) {
         $format = erp_get_option( 'date_format', 'erp_settings_general', 'd-m-Y' );
+    } else {
+        $format = "Y-m-d";
     }
 
-    $date_str = strtotime( $date );
+    $time = strtotime( $date );
 
-    return date_i18n( $format, strtotime( $date ) );
+    if ( $time >= 0 ) {
+        $date_str = date_i18n( $format, $time );
+    } else {
+        $zero = number_format_i18n( 0, 0 );
+
+        $date_str = str_replace(
+            [ 'Y', 'm', 'd' ],
+            [ sprintf( '%04d', $zero ), sprintf( '%02d', $zero ), sprintf( '%02d', $zero ) ],
+            $format
+        );
+    }
+
+    return $date_str;
 }
 
 /**
