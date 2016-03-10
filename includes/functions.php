@@ -307,9 +307,9 @@ function erp_format_date( $date, $format = false ) {
         $format = erp_get_option( 'date_format', 'erp_settings_general', 'd-m-Y' );
     }
 
-    $date_str = strtotime( $date );
+    $time = strtotime( $date );
 
-    return date_i18n( $format, strtotime( $date ) );
+    return ( $time >= 0 ) ? date_i18n( $format, $time ) : "—";
 }
 
 /**
