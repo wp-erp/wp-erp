@@ -2,15 +2,15 @@
 /**
  * Plugin Name: WP ERP
  * Description: ERP solution for WordPress
- * Plugin URI: http://wedevs.com/plugin/erp/
- * Author: Tareq Hasan
+ * Plugin URI: http://wperp.com
+ * Author: weDevs
  * Author URI: http://wedevs.com
  * Version: 0.1-alpha
  * License: GPL2
  * Text Domain: wp-erp
  * Domain Path: languages
  *
- * Copyright (c) 2014 Tareq Hasan (email: info@wedevs.com). All rights reserved.
+ * Copyright (c) 2016 weDevs (email: info@wedevs.com). All rights reserved.
  *
  * Released under the GPL license
  * http://www.opensource.org/licenses/gpl-license.php

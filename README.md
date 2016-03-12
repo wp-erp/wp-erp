@@ -15,7 +15,7 @@ An open-source ERP (Enterprise Resource Planning) solution for WordPress
 ## Available Add-ons
 
 * Custom Field Builider
-* Recruitment
+* Employee Recruitment
 * Document Manager
 * Attendance Management
 
@@ -32,8 +32,8 @@ An open-source ERP (Enterprise Resource Planning) solution for WordPress
 
 ## Who's behind?
 
-Project Lead: [Tareq Hasan](https://tareq.co)
+* Project Lead: [Tareq Hasan](https://tareq.co)
+* Core Developers: [Sabbir Ahmed](https://github.com/sabbir1991), [Asaquzzaman Mishu](https://github.com/asaquzzaman)
+* Contributors: [List of Contributors](https://github.com/wp-erp/wp-erp/graphs/contributors)
 
-Core Developers: [Sabbir Ahmed](https://github.com/sabbir1991), [Asaquzzaman Mishu](https://github.com/asaquzzaman)
-
-Contributors: [List of Contributors](https://github.com/wp-erp/wp-erp/graphs/contributors)
+An open-source project by [weDevs](https://wedevs.com/?utm_source=github&utm_medium=credit&utm_term=opensource&utm_content=wperp&utm_campaign=product)
