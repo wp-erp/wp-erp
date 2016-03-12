@@ -1472,15 +1472,35 @@ function erp_crm_get_save_search_query_string( $postdata ){
 }
 
 function erp_insert_save_search( $data ) {
-    return WeDevs\ERP\CRM\Models\SaveSearch::create( $data );
+    if ( $data['id'] ) {
+        $updated_item = WeDevs\ERP\CRM\Models\SaveSearch::find( $data['id'] );
+        $updated_item->update( $data );
+        return $updated_item;
+    } else {
+        return WeDevs\ERP\CRM\Models\SaveSearch::create( $data );
+    }
 }
 
-function erp_get_save_search_item( $user_id ) {
+function erp_get_save_search_item( $args = [] ) {
+
+    $defaults = [
+        'id'      => 0,
+        'user_id' => get_current_user_id(),
+        'global' => 1,
+        'groupby' => 'global'
+    ];
+
+    $args  = wp_parse_args( $args, $defaults );
+
+    if ( $args['id'] ) {
+        return WeDevs\ERP\CRM\Models\SaveSearch::find( $args['id'] )->toArray();
+    }
+
     $results = [];
-    $search_keys = WeDevs\ERP\CRM\Models\SaveSearch::where( 'user_id', '=',  $user_id )
-                ->orWhere('global', '=', 1 )
+    $search_keys = WeDevs\ERP\CRM\Models\SaveSearch::where( 'user_id', '=',  $args['user_id'] )
+                ->orWhere('global', '=', $args['global']  )
                 ->get()
-                ->groupBy('global')
+                ->groupBy( $args['groupby'] )
                 ->toArray();
 
     foreach ( $search_keys as $key => $search_values ) {
@@ -1499,6 +1519,10 @@ function erp_get_save_search_item( $user_id ) {
     }
 
     return $results;
+}
+
+function erp_delete_save_search_item( $id ) {
+    return WeDevs\ERP\CRM\Models\SaveSearch::find( $id )->delete();
 }
 
 /**
