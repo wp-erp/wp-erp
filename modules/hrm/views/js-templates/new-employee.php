@@ -343,7 +343,16 @@
                     <?php erp_html_form_input( array(
                         'label'       => __( 'Notification', 'wp-erp' ),
                         'name'        => 'user_notification',
-                        'help'        => __( 'Send the employee an email about their account.', 'wp-erp' ),
+                        'help'        => __( 'Send the employee an welcome email.', 'wp-erp' ),
+                        'type'        => 'checkbox',
+                    ) ); ?>
+                </li>
+
+                <li class="show-if-notification" style="display:none">
+                    <?php erp_html_form_input( array(
+                        'label'       => '&nbsp;',
+                        'name'        => 'login_info',
+                        'help'        => __( 'Send the login details as well. If <code>{login_info}</code> present.', 'wp-erp' ),
                         'type'        => 'checkbox',
                     ) ); ?>
                 </li>
@@ -359,7 +368,3 @@
     <?php wp_nonce_field( 'wp-erp-hr-employee-nonce' ); ?>
     <?php do_action( 'erp_hr_employee_form' ); ?>
 </div>
-
-
-
-

@@ -534,6 +534,14 @@
                         WeDevs_ERP_HR.initDateField();
                         WeDevs_ERP_HR.employee.select2Action('erp-hrm-select2');
                         WeDevs_ERP_HR.employee.select2AddMoreContent();
+
+                        $( '#user_notification').on('click', function() {
+                            if ( $(this).is(':checked') ) {
+                                $('.show-if-notification').show();
+                            } else {
+                                $('.show-if-notification').hide();
+                            }
+                        });
                     },
 
                     /**
@@ -620,7 +628,7 @@
                     id: 'erp-employee-edit',
                     onReady: function() {
                         var modal = this;
-                        
+
                         $( 'header', modal).after( $('<div class="loader"></div>').show() );
 
                         wp.ajax.send( 'erp-hr-emp-get', {

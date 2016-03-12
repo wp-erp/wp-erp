@@ -417,8 +417,14 @@ class Ajax_Handler {
         $data['work']['type']   = $employee->get_type();
         $data['url']            = $employee->get_details_url();
 
+        // user notification email
         if ( isset( $posted['user_notification'] ) && $posted['user_notification'] == 'on' ) {
-            wp_send_new_user_notifications( $employee_id );
+            $emailer    = wperp()->emailer->get_email( 'New_Employee_Welcome' );
+            $send_login = isset( $posted['login_info'] ) ? true : false;
+
+            if ( is_a( $emailer, '\WeDevs\ERP\Email') ) {
+                $emailer->trigger( $employee_id, $send_login );
+            }
         }
 
         $this->send_success( $data );
@@ -455,7 +461,6 @@ class Ajax_Handler {
         global $wpdb;
 
         $employee_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
-        $hard        = isset( $_REQUEST['hard'] ) ? intval( $_REQUEST['hard'] ) : 0;
         $user        = get_user_by( 'id', $employee_id );
 
         if ( ! $user ) {
@@ -465,6 +470,7 @@ class Ajax_Handler {
         $role = reset( $user->roles );
 
         if ( 'employee' == $role ) {
+            $hard = apply_filters( 'erp_employee_delete_hard', true );
             erp_employee_delete( $employee_id, $hard );
         }
 
@@ -1380,7 +1386,7 @@ class Ajax_Handler {
         $end_date     = isset( $_POST['leave_to'] ) ? sanitize_text_field( $_POST['leave_to'] ) : date_i18n( 'Y-m-d' );
         $leave_reason = isset( $_POST['leave_reason'] ) ? strip_tags( $_POST['leave_reason'] ) : '';
 
-        $insert = erp_hr_leave_insert_request( array(
+        $request_id = erp_hr_leave_insert_request( array(
             'user_id'      => $employee_id,
             'leave_policy' => $leave_policy,
             'start_date'   => $start_date,
@@ -1388,10 +1394,18 @@ class Ajax_Handler {
             'reason'       => $leave_reason
         ) );
 
-        if ( ! is_wp_error( $insert ) ) {
-            $this->send_success( 'Successfully leave request send', 'wp-erp' );
+        if ( ! is_wp_error( $request_id ) ) {
+
+            // notification email
+            $emailer = wperp()->emailer->get_email( 'New_Leave_Request' );
+
+            if ( is_a( $emailer, '\WeDevs\ERP\Email') ) {
+                $emailer->trigger( $request_id );
+            }
+
+            $this->send_success( 'Leave request has been submitted successfully!', 'wp-erp' );
         } else {
-            $this->send_error( 'Something wrong, Please try later', 'wp-erp' );
+            $this->send_error( 'Something went wrong, please try again.', 'wp-erp' );
         }
     }
 
