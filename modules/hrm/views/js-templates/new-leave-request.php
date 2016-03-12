@@ -41,7 +41,7 @@
             'label'       => __( 'Reason', 'wp-erp' ),
             'name'        => 'leave_reason',
             'type'        => 'textarea',
-            'custom_attr' => array( 'cols' => 30, 'rows' => 3 )
+            'custom_attr' => array( 'cols' => 25, 'rows' => 3 )
         ) ); ?>
     </div>
 

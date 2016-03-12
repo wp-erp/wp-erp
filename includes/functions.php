@@ -309,7 +309,7 @@ function erp_format_date( $date, $format = false ) {
 
     $time = strtotime( $date );
 
-    return ( $time >= 0 ) ? date_i18n( $format, $time ) : "—";
+    return date_i18n( $format, $time );
 }
 
 /**
@@ -570,6 +570,26 @@ function erp_log() {
 }
 
 /**
+ * A file based logging function for debugging
+ *
+ * @since 0.1
+ *
+ * @param  string  $message
+ * @param  string  $type
+ *
+ * @return void
+ */
+function erp_file_log( $message, $type = '' ) {
+    if ( ! empty( $type ) ) {
+        $message = sprintf( "[%s][%s] %s\n", date( 'd.m.Y h:i:s' ), $type, $message );
+    } else {
+        $message = sprintf( "[%s] %s\n", date( 'd.m.Y h:i:s' ), $message );
+    }
+
+    error_log( $message, 3, dirname( WPERP_FILE ) . '/debug.log' );
+}
+
+/**
  * Get people types from various components
  *
  * @return array
@@ -636,3 +656,16 @@ function erp_cron_intervals( $schedules ) {
 
     return (array)$schedules;
 }
+
+add_action( 'init', function() {
+
+    if ( isset( $_GET['erp_email_preview'] ) ) {
+        $employee_id = 37;
+        $empl_welcome = new \WeDevs\ERP\HRM\Emails\New_Employee_Welcome();
+        $empl_welcome->trigger( $employee_id );
+        exit;
+    }
+
+}, 99 );
+
+
