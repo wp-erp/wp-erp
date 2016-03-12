@@ -29,7 +29,11 @@ if ( ! defined( 'ABSPATH' ) ) {
                                         <tr>
                                             <td colspan="2" valign="middle" id="credit">
                                                 <?php
-                                                $footer_text = get_option( 'erp_email_footer_text' );
+                                                $settings = get_option( 'erp_settings_erp-email', [] );
+                                                if ( isset( $settings['footer_text'] ) && !empty( $settings['footer_text'] ) ) {
+                                                    $footer_text = $settings['footer_text'];
+                                                }
+
                                                 $footer_text = empty( $footer_text ) ? sprintf( '&copy; %s', get_bloginfo( 'name', 'display' ) ) : $footer_text;
                                                 echo wpautop( wp_kses_post( wptexturize( apply_filters( 'erp_email_footer_text', $footer_text ) ) ) );
 

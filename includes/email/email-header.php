@@ -21,8 +21,9 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <td align="center" valign="top">
                         <div id="template_header_image">
                             <?php
-                                if ( $img = get_option( 'erp_email_header_image' ) ) {
-                                    echo '<p style="margin-top:0;"><img src="' . esc_url( $img ) . '" alt="' . get_bloginfo( 'name', 'display' ) . '" /></p>';
+                                $settings = get_option( 'erp_settings_erp-email', [] );
+                                if ( isset( $settings['header_image'] ) && !empty( $settings['header_image'] ) ) {
+                                    echo '<p style="margin-top:0;"><img src="' . esc_url( $settings['header_image'] ) . '" alt="' . get_bloginfo( 'name', 'display' ) . '" /></p>';
                                 }
                             ?>
                         </div>
