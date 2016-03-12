@@ -197,6 +197,7 @@ final class WeDevs_ERP {
         }
 
         $this->container['modules'] = new \WeDevs\ERP\Framework\Modules();
+        $this->container['emailer'] = \WeDevs\ERP\Emailer::init();
     }
 
     /**
@@ -286,6 +287,9 @@ final class WeDevs_ERP {
         add_action( 'init', array( $this, 'setup_database' ) );
 
         add_action( 'admin_enqueue_scripts', array( $this, 'init_script_register' ) );
+
+        // initialize emailer class
+        add_action( 'erp_loaded', array( $this->container['emailer'], 'init_emails' ) );
     }
 
     /**

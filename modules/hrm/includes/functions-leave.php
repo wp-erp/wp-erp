@@ -698,7 +698,7 @@ function erp_hr_leave_insert_request( $args = array() ) {
 
     if ( $leaves ) {
 
-        $request = array(
+        $request = apply_filters( 'erp_hr_leave_new_args', [
             'user_id'    => $user_id,
             'policy_id'  => $leave_policy,
             'days'       => count( $leaves ),
@@ -708,7 +708,7 @@ function erp_hr_leave_insert_request( $args = array() ) {
             'status'     => 2, // default is pending
             'created_by' => get_current_user_id(),
             'created_on' => current_time( 'mysql' ),
-        );
+        ] );
 
         if ( $wpdb->insert( $wpdb->prefix . 'erp_hr_leave_requests', $request ) ) {
             $request_id = $wpdb->insert_id;
@@ -726,6 +726,27 @@ function erp_hr_leave_insert_request( $args = array() ) {
     }
 
     return false;
+}
+
+/**
+ * Fetch a single request
+ *
+ * @param  int  $request_id
+ *
+ * @return object
+ */
+function erp_hr_get_leave_request( $request_id ) {
+    global $wpdb;
+
+    $sql = "SELECT req.id, req.user_id, u.display_name, req.policy_id, pol.name as policy_name, req.status, req.reason, req.comments, req.created_on, req.days, req.start_date, req.end_date
+        FROM {$wpdb->prefix}erp_hr_leave_requests AS req
+        LEFT JOIN {$wpdb->prefix}erp_hr_leave_policies AS pol ON pol.id = req.policy_id
+        LEFT JOIN $wpdb->users AS u ON req.user_id = u.ID
+        WHERE req.id = %d";
+
+    $row = $wpdb->get_row( $wpdb->prepare( $sql, $request_id ) );
+
+    return $row;
 }
 
 /**

@@ -2,7 +2,7 @@
 
 	<form method="post" id="mainform" action="" enctype="multipart/form-data">
 
-	    <?php ERP_Admin_Settings::output(); ?>
+	    <?php WeDevs\ERP\Framework\ERP_Admin_Settings::output(); ?>
 
 	    <?php
 	    global $current_class;

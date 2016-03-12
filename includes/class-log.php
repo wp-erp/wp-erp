@@ -1,14 +1,13 @@
 <?php
 namespace WeDevs\ERP;
 
-
 /**
-* ERP Log reporting class API
-*
-* @since 0.1
-*
-* @package wp-erp
-*/
+ * ERP Log reporting class API
+ *
+ * @since 0.1
+ *
+ * @package wp-erp
+ */
 class Log {
 
 	/**
@@ -116,9 +115,9 @@ class Log {
 	 */
 	public function insert_log( $args ) {
 		global $wpdb;
-		
+
 		$table = $wpdb->prefix . 'erp_audit_log';
-		
+
 		$defaults = array(
 			'component'     => 'HRM',
 			'sub_component' => '',
@@ -134,7 +133,7 @@ class Log {
 	    $fields = wp_parse_args( $args, $defaults );
 
 	    do_action( 'erp_after_before_audit_log', $fields );
-	    
+
 	    $id = $wpdb->insert( $table, $fields, $formated );
 
 	    //$inserted = \WeDevs\ERP\Admin\Models\Audit_Log::create( $fields );
