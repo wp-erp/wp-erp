@@ -23,8 +23,17 @@ An open-source ERP (Enterprise Resource Planning) solution for WordPress
  - PHP 5.4.0
  - WordPress 3.6+
 
-## Author
+## Installation
+
+* Clone the repository inside `/wp-content/plugins/`
+* CD into folder `cd wp-erp` and run `composer install`
+* Lastly run `composer dump-autoload -o`
+
+
+## Who's behind?
 
 Project Lead: [Tareq Hasan](https://tareq.co)
+
 Core Developers: [Sabbir Ahmed](https://github.com/sabbir1991), [Asaquzzaman Mishu](https://github.com/asaquzzaman)
+
 Contributors: [List of Contributors](https://github.com/wp-erp/wp-erp/graphs/contributors)
