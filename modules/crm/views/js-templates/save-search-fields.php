@@ -1,5 +1,3 @@
-<?php $search_keys = erp_crm_get_serach_key(); ?>
-
 <div class="or-divider" v-if="index != 0">
     <hr>
     <span><?php _e( 'Or', 'wp-erp' ); ?></span>
@@ -35,28 +33,14 @@
         <label for="or-action-add" v-if="!isdisabled"><?php _e( 'And', 'wp-erp' ); ?></label>
         <select name="and-action-add" v-selecttwo="andSelection" class="select2 selecttwo and-action-add" style="width: 180px;" id="and-action-add" v-model="andSelection" v-on:change="andAdd(index)" data-placeholder="<?php _e( 'Select a field', 'wp-erp' ); ?>">
             <option value=""><?php _e( '--Select--', 'wp-erp' ); ?></option>
-            <?php foreach ( $search_keys as $key => $search_key ) : ?>
-                <?php
-                    if ( isset( $search_key['display'] ) && $search_key['display'] == 'none' ) {
-                        continue;
-                    }
-                ?>
-                <option value="<?php echo $key ?>"><?php echo $search_key['title']; ?></option>
-            <?php endforeach ?>
+            <option v-for="( key, searchOption ) in searchOptions" value="{{key}}">{{ searchOption.title }}</option>
         </select>
     </div>
     <div class="or-action erp-right" v-if="!isdisabled && (totalSearchItem-1) == index ">
         <label for="or-action-add"><?php _e( 'Or', 'wp-erp' ); ?></label>
         <select name="or-action-add" v-selecttwo="orSelection" class="select2 selecttwo or-action-add" style="width: 180px;" id="or-action-add" v-model="orSelection" v-on:change="orAdd(index)"  data-placeholder="<?php _e( 'Select a field', 'wp-erp' ); ?>">
             <option value=""><?php _e( '--Select--', 'wp-erp' ); ?></option>
-            <?php foreach ( $search_keys as $key => $search_key ) : ?>
-                <?php
-                    if ( isset( $search_key['display'] ) && $search_key['display'] == 'none' ) {
-                        continue;
-                    }
-                ?>
-                <option value="<?php echo $key ?>"><?php echo $search_key['title']; ?></option>
-            <?php endforeach ?>
+            <option v-for="( key, searchOption ) in searchOptions" value="{{key}}">{{ searchOption.title }}</option>
         </select>
     </div>
     <div class="clearfix"></div>

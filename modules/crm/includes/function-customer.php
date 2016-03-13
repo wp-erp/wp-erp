@@ -1117,37 +1117,17 @@ function erp_crm_get_campaigns( $args = [] ) {
     return $items;
 }
 
-function erp_crm_get_serach_key() {
-    return [
-        'first_name' => [
-            'title'       => __( 'First Name', 'wp-erp' ),
-            'type' => 'text',
-            'text' => '',
-            'condval' => '',
-            'condition'   => [
-                ''   => __( 'is', 'wp-erp' ),
-                '!'  => __( 'is not', 'wp-erp' ),
-                '~'  => __( 'contains', 'wp-erp' ),
-                '!~' => __( 'not contains', 'wp-erp' ),
-                '^'  => __( 'begins with', 'wp-erp' ),
-                '$'  => __( 'ends with', 'wp-erp' ),
-            ]
-        ],
-
-        'last_name' => [
-            'title'       => __( 'Last Name', 'wp-erp' ),
-            'type' => 'text',
-            'text' => '',
-            'condval' => '',
-            'condition'   => [
-                ''   => __( 'is', 'wp-erp' ),
-                '!'  => __( 'is not', 'wp-erp' ),
-                '~'  => __( 'contains', 'wp-erp' ),
-                '!~' => __( 'not contains', 'wp-erp' ),
-                '^'  => __( 'begins with', 'wp-erp' ),
-                '$'  => __( 'ends with', 'wp-erp' ),
-            ]
-        ],
+/**
+ * Get Global Search Fields
+ *
+ * @since 1.0
+ *
+ * @param  string $type
+ *
+ * @return array
+ */
+function erp_crm_get_serach_key( $type = '' ) {
+    $fields = [
 
         'email' => [
             'title'       => __( 'Email', 'wp-erp' ),
@@ -1228,8 +1208,87 @@ function erp_crm_get_serach_key() {
             ],
             'options' => \WeDevs\ERP\Countries::instance()->country_dropdown_options(),
         ],
+
     ];
+
+    if ( $type == 'crm_page_erp-sales-customers' ) {
+        $fields = erp_crm_get_customer_serach_key() + $fields;
+    }
+
+    if ( $type == 'crm_page_erp-sales-companies' ) {
+        $fields = erp_crm_get_company_serach_key() + $fields;
+    }
+
+    return apply_filters( 'erp_crm_global_serach_fields', $fields );
 }
+
+/**
+ * Get extra search fields for customer
+ *
+ * @since 1.0
+ *
+ * @return array
+ */
+function erp_crm_get_customer_serach_key() {
+    return apply_filters( 'erp_crm_customer_search_fields', [
+        'first_name' => [
+            'title'       => __( 'First Name', 'wp-erp' ),
+            'type' => 'text',
+            'text' => '',
+            'condval' => '',
+            'condition'   => [
+                ''   => __( 'is', 'wp-erp' ),
+                '!'  => __( 'is not', 'wp-erp' ),
+                '~'  => __( 'contains', 'wp-erp' ),
+                '!~' => __( 'not contains', 'wp-erp' ),
+                '^'  => __( 'begins with', 'wp-erp' ),
+                '$'  => __( 'ends with', 'wp-erp' ),
+            ]
+        ],
+
+        'last_name' => [
+            'title'       => __( 'Last Name', 'wp-erp' ),
+            'type' => 'text',
+            'text' => '',
+            'condval' => '',
+            'condition'   => [
+                ''   => __( 'is', 'wp-erp' ),
+                '!'  => __( 'is not', 'wp-erp' ),
+                '~'  => __( 'contains', 'wp-erp' ),
+                '!~' => __( 'not contains', 'wp-erp' ),
+                '^'  => __( 'begins with', 'wp-erp' ),
+                '$'  => __( 'ends with', 'wp-erp' ),
+            ]
+        ],
+    ] );
+}
+
+/**
+ * Get extra serach fields for company
+ *
+ * @since 1.0
+ *
+ * @return array
+ */
+function erp_crm_get_company_serach_key() {
+    return apply_filters( 'erp_crm_company_search_fields', [
+        'company' => [
+            'title'       => __( 'Company Name', 'wp-erp' ),
+            'type' => 'text',
+            'text' => '',
+            'condval' => '',
+            'condition'   => [
+                ''   => __( 'is', 'wp-erp' ),
+                '!'  => __( 'is not', 'wp-erp' ),
+                '~'  => __( 'contains', 'wp-erp' ),
+                '!~' => __( 'not contains', 'wp-erp' ),
+                '^'  => __( 'begins with', 'wp-erp' ),
+                '$'  => __( 'ends with', 'wp-erp' ),
+            ]
+        ]
+    ] );
+}
+
 
 /**
  * Build queries value according to regex
@@ -1278,16 +1337,24 @@ function erp_crm_get_save_search_regx( $values ) {
     return apply_filters( 'erp_crm_get_save_search_regx', $result, $values );
 }
 
+/**
+ * Save Search query filter
+ *
+ * @since 1.0
+ *
+ * @param  collection $people [object]
+ *
+ * @return collection
+ */
 function erp_crm_save_search_query_filter( $people ) {
 
-    global $wpdb;
-
-    // var_dump( $people );
+    global $wpdb, $current_screen;
 
     $query_string = $_SERVER['QUERY_STRING'];
 
     $or_query   = explode( '&or&', $query_string );
-    $allowed    = erp_crm_get_serach_key();
+    $page_id    = ( isset( $current_screen->base ) ) ? $current_screen->base : '';
+    $allowed    = erp_crm_get_serach_key( $page_id );
     $query_data = [];
     $i          = 0;
 
@@ -1442,10 +1509,18 @@ function erp_crm_save_search_query_filter( $people ) {
     return $people;
 }
 
+/**
+ * Get save serach query string
+ *
+ * @since 1.0
+ *
+ * @param  array $postdata
+ *
+ * @return string
+ */
 function erp_crm_get_save_search_query_string( $postdata ){
 
     $save_search          = ( isset( $postdata['save_search'] ) && !empty( $postdata['save_search'] ) ) ? $postdata['save_search'] : '';
-    // $selected_save_search = ( isset( $postdata['erp_save_search_select_options'] ) && !empty( $postdata['erp_save_search_select_options'] ) ) ? $postdata['erp_save_search_select_options'] : '';
     $search_string        = '';
     $search_string_arr    = [];
 
@@ -1471,16 +1546,54 @@ function erp_crm_get_save_search_query_string( $postdata ){
     return $search_string;
 }
 
+/**
+ * Insert save search
+ *
+ * @since 1.0
+ *
+ * @param  array $data
+ *
+ * @return array
+ */
 function erp_insert_save_search( $data ) {
-    return WeDevs\ERP\CRM\Models\SaveSearch::create( $data );
+    if ( $data['id'] ) {
+        $updated_item = WeDevs\ERP\CRM\Models\SaveSearch::find( $data['id'] );
+        $updated_item->update( $data );
+        return $updated_item;
+    } else {
+        return WeDevs\ERP\CRM\Models\SaveSearch::create( $data );
+    }
 }
 
-function erp_get_save_search_item( $user_id ) {
+/**
+ * Get save search Item
+ *
+ * @since 1.0
+ *
+ * @param  array  $args
+ *
+ * @return array
+ */
+function erp_get_save_search_item( $args = [] ) {
+
+    $defaults = [
+        'id'      => 0,
+        'user_id' => get_current_user_id(),
+        'global' => 1,
+        'groupby' => 'global'
+    ];
+
+    $args  = wp_parse_args( $args, $defaults );
+
+    if ( $args['id'] ) {
+        return WeDevs\ERP\CRM\Models\SaveSearch::find( $args['id'] )->toArray();
+    }
+
     $results = [];
-    $search_keys = WeDevs\ERP\CRM\Models\SaveSearch::where( 'user_id', '=',  $user_id )
-                ->orWhere('global', '=', 1 )
+    $search_keys = WeDevs\ERP\CRM\Models\SaveSearch::where( 'user_id', '=',  $args['user_id'] )
+                ->orWhere('global', '=', $args['global']  )
                 ->get()
-                ->groupBy('global')
+                ->groupBy( $args['groupby'] )
                 ->toArray();
 
     foreach ( $search_keys as $key => $search_values ) {
@@ -1499,6 +1612,19 @@ function erp_get_save_search_item( $user_id ) {
     }
 
     return $results;
+}
+
+/**
+ * Delete Save search
+ *
+ * @since 1.0
+ *
+ * @param  integer $id
+ *
+ * @return boolean
+ */
+function erp_delete_save_search_item( $id ) {
+    return WeDevs\ERP\CRM\Models\SaveSearch::find( $id )->delete();
 }
 
 /**

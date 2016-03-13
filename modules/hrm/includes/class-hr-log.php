@@ -25,6 +25,35 @@ class Hr_Log {
      */
     public function __construct() {
 
+        // Employee
+        $this->action( 'erp_hr_employee_new', 'create_employee', 10, 2 );
+        $this->action( 'erp_hr_delete_employee', 'delete_employee', 10 );
+        $this->action( 'erp_hr_employee_update', 'update_employee', 10, 2 );
+
+        // Employee experience
+        $this->action( 'erp_hr_employee_experience_new', 'create_experience' );
+        $this->action( 'erp_hr_employee_experience_delete', 'delete_experience' );
+
+        // Employee education
+        $this->action( 'erp_hr_employee_education_create', 'create_education' );
+        $this->action( 'erp_hr_employee_education_delete', 'delete_education' );
+
+        // Employee dependents
+        $this->action( 'erp_hr_employee_dependents_create', 'create_dependents' );
+        $this->action( 'erp_hr_employee_dependents_delete', 'delete_dependents' );
+
+        // Employee employment status
+        $this->action( 'erp_hr_employee_employment_status_create', 'create_employment_status' );
+        $this->action( 'erp_hr_employee_employment_status_delete', 'delete_employment_status' );
+
+        // Employee compensation
+        $this->action( 'erp_hr_employee_compensation_create', 'create_compensation' );
+        $this->action( 'erp_hr_employee_compensation_delete', 'delete_compensation' );
+
+        // Employee job info
+        $this->action( 'erp_hr_employee_job_info_create', 'create_job_info' );
+        $this->action( 'erp_hr_employee_job_info_delete', 'delete_job_info' );
+
         // Department
         $this->action( 'erp_hr_dept_new', 'create_department', 10, 2 );
         $this->action( 'erp_hr_dept_delete', 'delete_department', 10 );
@@ -86,6 +115,382 @@ class Hr_Log {
                 'old_val' => $old_value
             ];
         }
+    }
+
+    /**
+     * Add log when new employee created
+     *
+     * @since 0.1
+     *
+     * @param  integer $emp_id
+     * @param  array $fields
+     *
+     * @return void
+     */
+    public function create_employee( $emp_id, $fields ) {
+        erp_log()->add([
+            'sub_component' => 'employee',
+            'message'       => sprintf( '<strong>%s</strong> employee has been created', $fields['personal']['first_name'] ),
+            'created_by'    => get_current_user_id()
+        ]);
+    }
+
+    /**
+     * Add log when employee deleted
+     *
+     * @since 0.1
+     *
+     * @param  integer $emp_id
+     *
+     * @return void
+     */
+    public function delete_employee( $emp_id ) {
+
+        if ( ! $emp_id ) {
+            return;
+        }
+
+        $employee = new \WeDevs\ERP\HRM\Employee( intval( $emp_id ) );
+
+        erp_log()->add([
+            'sub_component' => 'employee',
+            'message'       => sprintf( '<strong>%s</strong> employee has been deleted', $employee->get_full_name() ),
+            'created_by'    => get_current_user_id(),
+            'changetype'    => 'delete',
+        ]);
+    }
+
+    /**
+     * Add log when employee updated
+     *
+     * @since 0.1
+     *
+     * @param  integer $emp_id
+     * @param  array $fields
+     *
+     * @return void
+     */
+    public function update_employee( $emp_id, $fields ) {
+        if ( ! $emp_id ) {
+            return;
+        }
+
+        //$old_employee_data = \WeDevs\ERP\HRM\Models\Employee::find( $emp_id )->toArray();
+        //$employee = new \WeDevs\ERP\HRM\Employee( intval( $emp_id ) );
+        //unset( $old_employee_data['created_at'], $old_employee_data['updated_at'] );
+
+        //$changes = $this->get_array_diff( $fields, $old_employee_data );
+
+        //if ( empty( $changes['old_val'] ) && empty( $changes['new_val'] ) ) {
+        //$message = false;
+        //} else {
+        $message = sprintf( '<strong>%s</strong> employee has been edited', $fields['personal']['first_name'] );
+        //}
+
+        if ( $message ) {
+            erp_log()->add([
+                'sub_component' => 'employee',
+                'message'       => $message,
+                'created_by'    => get_current_user_id(),
+                'changetype'    => 'edit',
+                'old_value'     => '',//$changes['old_val'],
+                'new_value'     => ''//$changes['new_val']
+            ]);
+        }
+    }
+
+    /**
+     * Add log when new employee experience created
+     *
+     * @since 0.1
+     *
+     * @param  array $fields
+     *
+     * @return void
+     */
+    public function create_experience( $fields ) {
+
+        $employee = new \WeDevs\ERP\HRM\Employee( intval( $fields['employee_id'] ) );
+
+        erp_log()->add([
+            'sub_component' => 'employee',
+            'message'       => sprintf( '<strong>%s</strong> employee experience has been created', $employee->get_full_name() ),
+            'created_by'    => get_current_user_id()
+        ]);
+    }
+
+    /**
+     * Add log when employee experience deleted
+     *
+     * @since 0.1
+     *
+     * @param  integer $exp_id
+     *
+     * @return void
+     */
+    public function delete_experience( $exp_id ) {
+
+        if ( ! $exp_id ) {
+            return;
+        }
+
+        $exp = \WeDevs\ERP\HRM\Models\Work_Experience::find( $exp_id )->toArray();
+
+        $employee = new \WeDevs\ERP\HRM\Employee( intval( $exp['employee_id'] ) );
+
+        erp_log()->add([
+            'sub_component' => 'employee',
+            'message'       => sprintf( '<strong>%s</strong> employee experience has been deleted', $employee->get_full_name() ),
+            'created_by'    => get_current_user_id(),
+            'changetype'    => 'delete',
+        ]);
+    }
+
+    /**
+     * Add log when new employee education created
+     *
+     * @since 0.1
+     *
+     * @param  array $fields
+     *
+     * @return void
+     */
+    public function create_education( $fields ) {
+
+        $employee = new \WeDevs\ERP\HRM\Employee( intval( $fields['employee_id'] ) );
+
+        erp_log()->add([
+            'sub_component' => 'employee',
+            'message'       => sprintf( '<strong>%s</strong> employee education has been created', $employee->get_full_name() ),
+            'created_by'    => get_current_user_id()
+        ]);
+    }
+
+    /**
+     * Add log when employee education deleted
+     *
+     * @since 0.1
+     *
+     * @param  integer $edu_id
+     *
+     * @return void
+     */
+    public function delete_education( $edu_id ) {
+
+        if ( ! $edu_id ) {
+            return;
+        }
+
+        $exp = \WeDevs\ERP\HRM\Models\Education::find( $edu_id )->toArray();
+
+        $employee = new \WeDevs\ERP\HRM\Employee( intval( $exp['employee_id'] ) );
+
+        erp_log()->add([
+            'sub_component' => 'employee',
+            'message'       => sprintf( '<strong>%s</strong> employee education has been deleted', $employee->get_full_name() ),
+            'created_by'    => get_current_user_id(),
+            'changetype'    => 'delete',
+        ]);
+    }
+
+    /**
+     * Add log when new employee dependents created
+     *
+     * @since 0.1
+     *
+     * @param  array $fields
+     *
+     * @return void
+     */
+    public function create_dependents( $fields ) {
+
+        $employee = new \WeDevs\ERP\HRM\Employee( intval( $fields['employee_id'] ) );
+
+        erp_log()->add([
+            'sub_component' => 'employee',
+            'message'       => sprintf( '<strong>%s</strong> employee dependents has been created', $employee->get_full_name() ),
+            'created_by'    => get_current_user_id()
+        ]);
+    }
+
+    /**
+     * Add log when employee dependents deleted
+     *
+     * @since 0.1
+     *
+     * @param  integer $dep_id
+     *
+     * @return void
+     */
+    public function delete_dependents( $dep_id ) {
+
+        if ( ! $dep_id ) {
+            return;
+        }
+
+        $dep = \WeDevs\ERP\HRM\Models\Dependents::find( $dep_id )->toArray();
+
+        $employee = new \WeDevs\ERP\HRM\Employee( intval( $dep['employee_id'] ) );
+
+        erp_log()->add([
+            'sub_component' => 'employee',
+            'message'       => sprintf( '<strong>%s</strong> employee dependents has been deleted', $employee->get_full_name() ),
+            'created_by'    => get_current_user_id(),
+            'changetype'    => 'delete',
+        ]);
+    }
+
+    /**
+     * Add log when new employee employment status created
+     *
+     * @since 0.1
+     *
+     * @param  array $fields
+     *
+     * @return void
+     */
+    public function create_employment_status( $eid ) {
+
+        $employee = new \WeDevs\ERP\HRM\Employee( intval( $eid ) );
+
+        erp_log()->add([
+            'sub_component' => 'employee',
+            'message'       => sprintf( '<strong>%s</strong> employee employment status has been created', $employee->get_full_name() ),
+            'created_by'    => get_current_user_id()
+        ]);
+    }
+
+    /**
+     * Add log when employee employment status deleted
+     *
+     * @since 0.1
+     *
+     * @param  integer $history_id
+     *
+     * @return void
+     */
+    public function delete_employment_status( $history_id ) {
+
+        if ( ! $history_id ) {
+            return;
+        }
+
+        global $wpdb;
+        $query = "SELECT user_id
+                    FROM {$wpdb->prefix}erp_hr_employee_history
+                    WHERE id=".$history_id;
+        $user_id = $wpdb->get_var($query);
+
+        $employee = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
+
+        erp_log()->add([
+            'sub_component' => 'employee',
+            'message'       => sprintf( '<strong>%s</strong> employee employment status has been deleted', $employee->get_full_name() ),
+            'created_by'    => get_current_user_id(),
+            'changetype'    => 'delete',
+        ]);
+    }
+
+    /**
+     * Add log when new employee compensation status created
+     *
+     * @since 0.1
+     *
+     * @param  array $emp_id
+     *
+     * @return void
+     */
+    public function create_compensation( $emp_id ) {
+
+        $employee = new \WeDevs\ERP\HRM\Employee( intval( $emp_id ) );
+
+        erp_log()->add([
+            'sub_component' => 'employee',
+            'message'       => sprintf( '<strong>%s</strong> employee compensation has been created', $employee->get_full_name() ),
+            'created_by'    => get_current_user_id()
+        ]);
+    }
+
+    /**
+     * Add log when employee compensation deleted
+     *
+     * @since 0.1
+     *
+     * @param  integer $history_id
+     *
+     * @return void
+     */
+    public function delete_compensation( $history_id ) {
+
+        if ( ! $history_id ) {
+            return;
+        }
+
+        global $wpdb;
+        $query = "SELECT user_id
+                    FROM {$wpdb->prefix}erp_hr_employee_history
+                    WHERE id=".$history_id;
+        $user_id = $wpdb->get_var($query);
+
+        $employee = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
+
+        erp_log()->add([
+            'sub_component' => 'employee',
+            'message'       => sprintf( '<strong>%s</strong> employee compensation has been deleted', $employee->get_full_name() ),
+            'created_by'    => get_current_user_id(),
+            'changetype'    => 'delete',
+        ]);
+    }
+
+    /**
+     * Add log when new employee job info created
+     *
+     * @since 0.1
+     *
+     * @param  array $emp_id
+     *
+     * @return void
+     */
+    public function create_job_info( $emp_id ) {
+
+        $employee = new \WeDevs\ERP\HRM\Employee( intval( $emp_id ) );
+
+        erp_log()->add([
+            'sub_component' => 'employee',
+            'message'       => sprintf( '<strong>%s</strong> employee job info has been created', $employee->get_full_name() ),
+            'created_by'    => get_current_user_id()
+        ]);
+    }
+
+    /**
+     * Add log when employee job info deleted
+     *
+     * @since 0.1
+     *
+     * @param  integer $history_id
+     *
+     * @return void
+     */
+    public function delete_job_info( $history_id ) {
+
+        if ( ! $history_id ) {
+            return;
+        }
+
+        global $wpdb;
+        $query = "SELECT user_id
+                    FROM {$wpdb->prefix}erp_hr_employee_history
+                    WHERE id=".$history_id;
+        $user_id = $wpdb->get_var($query);
+
+        $employee = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
+
+        erp_log()->add([
+            'sub_component' => 'employee',
+            'message'       => sprintf( '<strong>%s</strong> employee job info has been deleted', $employee->get_full_name() ),
+            'created_by'    => get_current_user_id(),
+            'changetype'    => 'delete',
+        ]);
     }
 
     /**

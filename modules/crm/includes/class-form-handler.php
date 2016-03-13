@@ -19,6 +19,7 @@ class Form_Handler {
      */
     public function __construct() {
         add_action( 'load-crm_page_erp-sales-customers', array( $this, 'customer_bulk_action') );
+        add_action( 'load-crm_page_erp-sales-companies', array( $this, 'companies_bulk_action') );
         add_action( 'load-crm_page_erp-sales-contact-groups', array( $this, 'contact_subscriber_bulk_action') );
         add_action( 'admin_init', array( $this, 'handle_save_search_submit' ), 10 );
         add_action( 'admin_head', array( $this, 'handle_canonical_url' ), 10 );
@@ -37,8 +38,32 @@ class Form_Handler {
     public function handle_save_search_submit() {
 
         if ( isset( $_POST['save_search_submit'] ) && wp_verify_nonce( $_POST['wp-erp-crm-save-search-nonce'], 'wp-erp-crm-save-search-nonce-action' ) ) {
+            $query_args = [];
+            $request_uri = $_POST['erp_crm_http_referer'];
             $search_string = erp_crm_get_save_search_query_string( $_POST );
-            wp_redirect( $_POST['erp_crm_http_referer'] .'&erp_save_search=0&'. $search_string );
+
+
+            if ( ! empty( $_REQUEST['orderby'] ) ) {
+                $query_args['orderby'] = esc_attr( $_REQUEST['orderby'] );
+            }
+
+            if ( ! empty( $_REQUEST['order'] ) ) {
+                $query_args['order'] = esc_attr( $_REQUEST['order'] );
+            }
+
+            if ( ! empty( $_REQUEST['status'] ) ) {
+                $query_args['status'] = esc_attr( $_REQUEST['status'] );
+            }
+
+            if ( ! empty( $_REQUEST['s'] ) ) {
+                $query_args['s'] = esc_attr( $_REQUEST['s'] );
+            }
+
+            if ( $query_args ) {
+                $request_uri = add_query_arg( $query_args, $request_uri );
+            }
+
+            wp_redirect( $request_uri .'&erp_save_search=0&'. $search_string );
             exit();
         }
     }
@@ -55,7 +80,7 @@ class Form_Handler {
             return;
         }
 
-        if ( $_GET['page'] != 'erp-sales-customers' ) {
+        if ( $_GET['page'] != 'erp-sales-customers'  ) {
             return;
         }
 
@@ -63,7 +88,72 @@ class Form_Handler {
             return;
         }
 
-        $customer_table = new \WeDevs\ERP\CRM\Contact_List_Table();
+        $customer_table = new \WeDevs\ERP\CRM\Contact_List_Table('contact');
+        $action         = $customer_table->current_action();
+
+        if ( $action ) {
+
+            $redirect = remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'customer_search', 'filter_by_save_searches' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
+
+            switch ( $action ) {
+
+                case 'delete' :
+
+                    if ( isset( $_GET['customer_id'] ) && !empty( $_GET['customer_id'] ) ) {
+                        erp_crm_customer_delete( $_GET['customer_id'], false );
+                    }
+
+                    wp_redirect( $redirect );
+                    exit();
+
+                case 'permanent_delete' :
+                    if ( isset( $_GET['customer_id'] ) && !empty( $_GET['customer_id'] ) ) {
+                        erp_crm_customer_delete( $_GET['customer_id'], true );
+                    }
+
+                    wp_redirect( $redirect );
+                    exit();
+
+                case 'restore' :
+                    if ( isset( $_GET['customer_id'] ) && !empty( $_GET['customer_id'] ) ) {
+                        erp_crm_customer_restore( $_GET['customer_id'] );
+                    }
+
+                    wp_redirect( $redirect );
+                    exit();
+
+                case 'filter_by_save_searches':
+                    if ( isset( $_GET['filter_by_save_searches'] ) && !empty( $_GET['filter_by_save_searches'] ) ) {
+                        $string   = erp_crm_get_search_by_already_saved( $_GET['filter_by_save_searches'] );
+                        $redirect = add_query_arg( [ 'erp_save_search' => $_GET['filter_by_save_searches'] ], $redirect );
+                        $redirect = $redirect. '&'. $string;
+                    }
+
+                    wp_redirect( $redirect );
+                    exit();
+
+                default:
+                    wp_redirect( $redirect );
+                    exit();
+
+            }
+        }
+    }
+
+    public function companies_bulk_action() {
+        if ( ! isset( $_REQUEST['_wpnonce'] ) || ! isset( $_GET['page'] ) ) {
+            return;
+        }
+
+        if ( $_GET['page'] != 'erp-sales-companies'  ) {
+            return;
+        }
+
+        if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-customers' ) ) {
+            return;
+        }
+
+        $customer_table = new \WeDevs\ERP\CRM\Contact_List_Table( 'company' );
         $action         = $customer_table->current_action();
 
         if ( $action ) {

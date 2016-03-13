@@ -133,8 +133,7 @@ class Customer_Relationship {
             'confirm'               => __( 'Are you sure?', 'wp-erp' ),
             'delConfirmCustomer'    => __( 'Are you sure to delete this customer?', 'wp-erp' ),
             'delConfirm'            => __( 'Are you sure to delete this?', 'wp-erp' ),
-            'checkedConfirm'        => __( 'Alteast one item must be checked', 'wp-erp' ),
-            'contact_filter'        => erp_crm_get_serach_key(),
+            'checkedConfirm'        => __( 'Alteast one item must be checked', 'wp-erp' )
         ) );
 
         // if it's an customer page
@@ -166,7 +165,7 @@ class Customer_Relationship {
             wp_localize_script( 'wp-erp-crm-vue-save-search', 'wpCRMSaveSearch', [
                 'ajaxurl'         => admin_url( 'admin-ajax.php' ),
                 'nonce'           => wp_create_nonce( 'wp-erp-crm-save-search' ),
-                'searchFields'    => erp_crm_get_serach_key()
+                'searchFields'    => erp_crm_get_serach_key( $hook )
             ] );
 
             $localize_script['customer_empty'] = $customer->to_array();

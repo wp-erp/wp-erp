@@ -473,6 +473,33 @@ class WeDevs_ERP_Installer {
                 PRIMARY KEY (`id`)
             ) $collate;",
 
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_contact_subscriber` (
+              `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+              `user_id` int(11) DEFAULT NULL,
+              `group_id` int(11) DEFAULT NULL,
+              `status` varchar(25) DEFAULT NULL,
+              `subscribe_at` datetime DEFAULT NULL,
+              `unsubscribe_at` datetime DEFAULT NULL,
+              PRIMARY KEY (`id`),
+              UNIQUE KEY `user_group` (`user_id`,`group_id`)
+            ) $collate;",
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_campaigns` (
+              `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+              `title` text,
+              `description` longtext,
+              `created_at` datetime DEFAULT NULL,
+              `updated_at` datetime DEFAULT NULL,
+              PRIMARY KEY (`id`)
+            ) $collate;",
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_campaign_group` (
+              `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+              `campaign_id` int(11) DEFAULT NULL,
+              `group_id` int(11) DEFAULT NULL,
+              PRIMARY KEY (`id`)
+            ) $collate;",
+
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_save_search` (
               `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
               `user_id` int(11) DEFAULT NULL,

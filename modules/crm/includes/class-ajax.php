@@ -63,7 +63,8 @@ class Ajax_Handler {
 
         // Save Search actions
         $this->action( 'wp_ajax_erp_crm_create_new_save_search', 'create_save_search' );
-        $this->action( 'wp_ajax_erp_crm_get_save_search_item', 'get_save_search' );
+        $this->action( 'wp_ajax_erp_crm_get_save_search_data', 'get_save_search' );
+        $this->action( 'wp_ajax_erp_crm_delete_save_search_data', 'delete_save_search' );
     }
 
     /**
@@ -765,6 +766,7 @@ class Ajax_Handler {
         }
 
         $data = [
+            'id'          => isset( $erp_update_save_search_id ) ? $erp_update_save_search_id : 0,
             'user_id'     => get_current_user_id(),
             'global'      => $erp_save_serach_make_global,
             'search_name' => $erp_save_search_name,
@@ -780,10 +782,44 @@ class Ajax_Handler {
         $this->send_success( $result );
     }
 
+    /**
+     * Get Save Search
+     *
+     * @since 1.0
+     *
+     * @return json object
+     */
     public function get_save_search() {
         $this->verify_nonce( 'wp-erp-crm-save-search' );
 
-        $result = erp_get_save_search_item( get_current_user_id() );
+        $id = ( isset( $_POST['search_id'] ) && ! empty( $_POST['search_id'] ) ) ? $_POST['search_id'] : 0;
+
+        if ( ! $id ) {
+            $this->send_error( __( 'Search name not found', 'wp-erp' ) );
+        }
+
+        $result = erp_get_save_search_item( [ 'id' => $id ] );
+
+        $this->send_success( $result );
+    }
+
+    /**
+     * Delete Save Search
+     *
+     * @since 1.0
+     *
+     * @return json boolean
+     */
+    public function delete_save_search() {
+        $this->verify_nonce( 'wp-erp-crm-save-search' );
+
+        $id = ( isset( $_POST['search_id'] ) && ! empty( $_POST['search_id'] ) ) ? $_POST['search_id'] : 0;
+
+        if ( ! $id ) {
+            $this->send_error( __( 'Search name not found', 'wp-erp' ) );
+        }
+
+        $result = erp_delete_save_search_item( $id );
 
         $this->send_success( $result );
     }
