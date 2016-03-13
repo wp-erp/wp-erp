@@ -394,29 +394,38 @@ function erp_employee_delete( $employee_ids, $hard = false ) {
         return;
     }
 
-    do_action( 'erp_hr_delete_employee', $employee_ids );
+    $employees = [];
 
     if ( is_array( $employee_ids ) ) {
         foreach ( $employee_ids as $key => $user_id ) {
-
-            if ( $hard ) {
-                \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $user_id )->withTrashed()->forceDelete();
-                wp_delete_user( $user_id );
-            } else {
-                \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $user_id )->delete();
-            }
+            $employees[] = $user_id;
         }
+    } else if ( is_int( $employee_ids ) ) {
+        $employees[] = $employee_ids;
     }
 
-    if ( is_int( $employee_ids ) ) {
+    // still do we have any ids to delete?
+    if ( ! $employees ) {
+        return;
+    }
 
+    // seems like we got some
+    foreach ($employees as $employee_id) {
         if ( $hard ) {
-            \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $employee_ids )->withTrashed()->forceDelete();
-            wp_delete_user( $employee_ids );
+            \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $employee_id )->withTrashed()->forceDelete();
+            wp_delete_user( $employee_id );
+
+            // find leave entitlements and leave requests and delete them as well
+            \WeDevs\ERP\HRM\Models\Leave_request::where( 'user_id', '=', $employee_id )->delete();
+            \WeDevs\ERP\HRM\Models\Leave_Entitlement::where( 'user_id', '=', $employee_id )->delete();
+
         } else {
-            \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $employee_ids )->delete();
+            \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $employee_id )->delete();
         }
+
+        do_action( 'erp_hr_delete_employee', $employee_id, $hard );
     }
+
 }
 
 /**
