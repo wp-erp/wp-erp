@@ -500,6 +500,7 @@ class Ajax_Handler {
         $employee = new Employee( $employee_id );
 
         if ( $employee->id ) {
+            do_action( 'erp_hr_employee_employment_status_create', $employee->id );
             $employee->update_employment_status( $status, $date, $comment );
             $this->send_success();
         }
@@ -541,6 +542,7 @@ class Ajax_Handler {
         $employee = new Employee( $employee_id );
 
         if ( $employee->id ) {
+            do_action( 'erp_hr_employee_compensation_create', $employee->id );
             $employee->update_compensation( $pay_rate, $pay_type, $reason, $date, $comment );
             $this->send_success();
         }
@@ -557,6 +559,16 @@ class Ajax_Handler {
         $this->verify_nonce( 'wp-erp-hr-nonce' );
 
         $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+        global $wpdb;
+        $query = "SELECT module FROM {$wpdb->prefix}erp_hr_employee_history WHERE id=" . $id;
+        $get_module = $wpdb->get_var($query);
+        if ( $get_module == 'employment' ) {
+            do_action( 'erp_hr_employee_employment_status_delete', $id );
+        } elseif ( $get_module == 'compensation' ) {
+            do_action( 'erp_hr_employee_compensation_delete', $id );
+        } elseif ( $get_module == 'job' ) {
+            do_action( 'erp_hr_employee_job_info_delete', $id );
+        }
         erp_hr_employee_remove_history( $id );
 
         $this->send_success();
@@ -580,6 +592,7 @@ class Ajax_Handler {
         $employee = new Employee( $employee_id );
 
         if ( $employee->id ) {
+            do_action( 'erp_hr_employee_job_info_create', $employee->id );
             $employee->update_job_info( $department, $designation, $reporting_to, $location, $date );
             $this->send_success();
         }
@@ -928,6 +941,7 @@ class Ajax_Handler {
         ];
 
         if ( ! $exp_id ) {
+            do_action( 'erp_hr_employee_experience_new', $fields );
             Work_Experience::create( $fields );
         } else {
             Work_Experience::find( $exp_id )->update( $fields );
@@ -948,6 +962,7 @@ class Ajax_Handler {
         $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
 
         if ( $id ) {
+            do_action( 'erp_hr_employee_experience_delete', $id );
             Work_Experience::find( $id )->delete();
         }
 
@@ -998,6 +1013,7 @@ class Ajax_Handler {
         ];
 
         if ( ! $edu_id ) {
+            do_action( 'erp_hr_employee_education_create', $fields );
             Education::create( $fields );
         } else {
             Education::find( $edu_id )->update( $fields );
@@ -1018,6 +1034,7 @@ class Ajax_Handler {
         $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
 
         if ( $id ) {
+            do_action( 'erp_hr_employee_education_delete', $id );
             Education::find( $id )->delete();
         }
 
@@ -1060,6 +1077,7 @@ class Ajax_Handler {
         ];
 
         if ( ! $dep_id ) {
+            do_action( 'erp_hr_employee_dependents_create', $fields );
             Dependents::create( $fields );
         } else {
             Dependents::find( $dep_id )->update( $fields );
@@ -1080,6 +1098,7 @@ class Ajax_Handler {
         $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
 
         if ( $id ) {
+            do_action( 'erp_hr_employee_dependents_delete', $id );
             Dependents::find( $id )->delete();
         }
 
