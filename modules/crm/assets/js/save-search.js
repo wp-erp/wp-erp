@@ -12,7 +12,7 @@ Vue.component( 'save-search', {
             }
         },
         index: '',
-        totalSearchItem:'',
+        totalSearchItem:''
     },
 
     template: '#erp-crm-save-search-item',
@@ -25,7 +25,8 @@ Vue.component( 'save-search', {
             isdisabled:false,
             marginClass: {
                 'marginbottomonly' : true
-            }
+            },
+            searchOptions: wpCRMSaveSearch.searchFields
         }
     },
 

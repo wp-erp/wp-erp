@@ -1,5 +1,4 @@
 <?php
-$search_keys = erp_crm_get_serach_key();
 $advance_search_id =  isset( $_GET['erp_save_search' ] ) ? $_GET['erp_save_search' ] : 0;
 $if_advance_search = ( isset( $_GET['erp_save_search' ] ) && $_GET['erp_save_search' ] == 0 ) ? true : false;
 ?>
@@ -51,7 +50,6 @@ $if_advance_search = ( isset( $_GET['erp_save_search' ] ) && $_GET['erp_save_sea
                     <input v-on:click.prevent="updateSaveSearch" type="submit" class="button" data-save_search_id="<?php echo $advance_search_id; ?>" name="update_save_search_action" value="<?php _e( 'Update this search', 'wp-erp' ); ?>" v-if="isSaveSearchFilter">
 
                     <input v-on:click.prevent="deleteSaveSearch" type="submit" class="button erp-right" data-save_search_id="<?php echo $advance_search_id; ?>" name="delete_save_search_action" value="<?php _e( 'Delete this Search', 'wp-erp' ); ?>" v-if="isSaveSearchFilter">
-
                     <a v-show="!isSaveSearchFilter" href="<?php echo add_query_arg( [ 'page' => 'erp-sales-customers' ], admin_url( 'admin.php' ) ); ?>" class="button erp-right"><?php _e( 'Reset Filter', 'wp-erp' ); ?></a>
                 </div>
 
@@ -80,7 +78,3 @@ $if_advance_search = ( isset( $_GET['erp_save_search' ] ) && $_GET['erp_save_sea
         </div><!-- .list-table-inner -->
     </div><!-- .list-table-wrap -->
 </div>
-<?php
-    //echo '<pre>'; var_dump( $_SERVER["QUERY_STRING"] ); echo '</pre>';
-
-?>

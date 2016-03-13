@@ -175,9 +175,9 @@
              * @return {void}
              */
             pageReload: function() {
-                console.log( 'AIse ');
-                $( '.erp-crm-customer' ).load( window.location.href + ' .erp-crm-customer' );
-                // $( '.erp-crm-list-table-wrap' ).load( window.location.href + ' .list-table-inner' );
+                $( '.erp-crm-customer' ).load( window.location.href + ' .erp-crm-customer', function() {
+                    $( '.select2' ).select2();
+                } );
             },
 
             /**
