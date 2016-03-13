@@ -11,6 +11,7 @@ class Contact_List_Table extends \WP_List_Table {
     private $counts = array();
     private $page_status = '';
     private $contact_type;
+    private $page_type;
 
     function __construct( $type = null ) {
         global $status, $page;
@@ -23,6 +24,14 @@ class Contact_List_Table extends \WP_List_Table {
 
         if ( $type ) {
             $this->contact_type = $type;
+        }
+
+        if ( $this->contact_type == 'contact' ) {
+            $this->page_type = 'erp-sales-customers';
+        }
+
+        if ( $this->contact_type == 'company' ) {
+            $this->page_type = 'erp-sales-companies';
         }
     }
 
@@ -52,7 +61,7 @@ class Contact_List_Table extends \WP_List_Table {
             return;
         }
 
-        $save_searches          = erp_get_save_search_item();
+        $save_searches        = erp_get_save_search_item();
         $selected_save_search = ( isset( $_GET['erp_save_search'] ) ) ? $_GET['erp_save_search'] : '';
         ?>
 
@@ -77,7 +86,7 @@ class Contact_List_Table extends \WP_List_Table {
             submit_button( __( 'Filter' ), 'secondary', 'filter_contact', false, [ 'id' => 'erp-advance-filter-contact-btn'] );
 
             if ( $selected_save_search ) {
-                $base_link = add_query_arg( [ 'page' => 'erp-sales-customers' ], admin_url( 'admin.php' ) );
+                $base_link = add_query_arg( [ 'page' => $this->page_type ], admin_url( 'admin.php' ) );
                 echo '<a href="' . $base_link . '" class="button erp-reset-save-search-field" id="erp-reset-save-search-field">Reset</a>';
                 echo '<a href="#" class="button erp-show-save-search-field" id="erp-show-save-search-field">Show Fields</a>';
             }

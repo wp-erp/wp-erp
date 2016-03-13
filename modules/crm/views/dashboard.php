@@ -1,38 +1,45 @@
-<div class="wrap crm-dashboard">
-    <h2><?php _e( 'CRM Dashbaord', '$domain' ); ?></h2>
+<div class="wrap erp crm-dashboard">
+    <h2><?php _e( 'CRM Dashboard', 'wp-erp' ); ?></h2>
 
-    <div class="badge-container">
-        <div class="badge-wrap badge-green">
-            <div class="badge-inner">
-                <h3>26</h3>
-                <p>Current Leads</p>
-            </div>
+    <div class="erp-single-container">
 
-            <div class="badge-footer">
-                <a href="#">View Leads</a>
-            </div>
-        </div><!-- .badge-wrap -->
+        <div class="erp-area-left">
 
-        <div class="badge-wrap badge-red">
-            <div class="badge-inner">
-                <h3>50</h3>
-                <p>Overdue Invoices</p>
-            </div>
+                <div class="erp-grid-container badge-container">
+                    <div class="row">
+                        <div class="col-3 badge-wrap badge-green">
+                            <div class="badge-inner">
+                                <h3><?php echo number_format_i18n( 10, 0 ); ?></h3>
+                                <p><?php _e( 'Employees', 'wp-erp' ); ?></p>
+                            </div>
 
-            <div class="badge-footer">
-                <a href="#">View invoices</a>
-            </div>
-        </div><!-- .badge-wrap -->
+                            <div class="badge-footer wp-ui-highlight">
+                                <a href="<?php echo admin_url( 'admin.php?page=erp-hr-employee' ); ?>"><?php _e( 'View Employees', 'wp-erp' ); ?></a>
+                            </div>
+                        </div><!-- .badge-wrap -->
 
-        <div class="badge-wrap badge-aqua">
-            <div class="badge-inner">
-                <h3>66</h3>
-                <p>Incomplete Jobs</p>
-            </div>
+                        <div class="col-3 badge-wrap badge-green">
+                            <div class="badge-inner">
+                                <h3><?php echo number_format_i18n( 10, 0 ); ?></h3>
+                                <p><?php _e( 'Department', 'wp-erp' ); ?></p>
+                            </div>
 
-            <div class="badge-footer">
-                <a href="#">View jobs</a>
-            </div>
-        </div><!-- .badge-wrap -->
-    </div><!-- .badge-container -->
+                            <div class="badge-footer wp-ui-highlight">
+                                <a href="<?php echo admin_url( 'admin.php?page=erp-hr-employee' ); ?>"><?php _e( 'View Employees', 'wp-erp' ); ?></a>
+                            </div>
+                        </div><!-- .badge-wrap -->
+                    </div>
+                </div><!-- .badge-container -->
+
+            <?php do_action( 'erp_crm_dashboard_widgets_left' ); ?>
+
+        </div><!-- .erp-area-left -->
+
+        <div class="erp-area-right">
+
+            <?php do_action( 'erp_crm_dashboard_widgets_right' ); ?>
+
+        </div>
+
+    </div>
 </div>

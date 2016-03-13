@@ -782,6 +782,13 @@ class Ajax_Handler {
         $this->send_success( $result );
     }
 
+    /**
+     * Get Save Search
+     *
+     * @since 1.0
+     *
+     * @return json object
+     */
     public function get_save_search() {
         $this->verify_nonce( 'wp-erp-crm-save-search' );
 
@@ -796,6 +803,13 @@ class Ajax_Handler {
         $this->send_success( $result );
     }
 
+    /**
+     * Delete Save Search
+     *
+     * @since 1.0
+     *
+     * @return json boolean
+     */
     public function delete_save_search() {
         $this->verify_nonce( 'wp-erp-crm-save-search' );
 
