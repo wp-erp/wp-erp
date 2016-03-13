@@ -2,65 +2,70 @@
 namespace WeDevs\ERP\HRM\Emails;
 
 use WeDevs\ERP\Email;
+use WeDevs\ERP\Framework\Traits\Hooker;
 
 /**
  * Employee welcome
  */
 class Rejected_Leave_Request extends Email {
 
+    use Hooker;
+
     function __construct() {
-        $this->email_type     = 'html';
-        $this->id             = 'approved-leave-request';
+        $this->id             = 'rejected-leave-request';
         $this->title          = __( 'Rejected Leave Request', 'wp-erp' );
         $this->description    = __( 'Rejected leave request notification to employee.', 'wp-erp' );
 
-        $this->template_html  = WPERP_HRM_VIEWS . '/emails/employee-welcome.php';
-        $this->template_plain = WPERP_HRM_VIEWS . '/emails/plain/employee-welcome.php';
+        $this->subject        = __( 'Your leave request has been rejected', 'wp-erp');
+        $this->heading        = __( 'Leave Request Rejected', 'wp-erp');
 
-        $this->subject        = __( 'Welcome {employee_name} to {company_name}', 'wp-erp');
-        $this->heading        = __( 'Welcome Onboard!', 'wp-erp');
+        $this->find = [
+            'full-name'    => '{employee_name}',
+            'leave_type'   => '{leave_type}',
+            'date_from'    => '{date_from}',
+            'date_to'      => '{date_to}',
+            'no_days'      => '{no_days}',
+            'reason'       => '{reject_reason}',
+        ];
+
+        $this->action( 'erp_admin_field_' . $this->id . '_help_texts', 'replace_keys' );
+
+        parent::__construct();
     }
 
     function get_args() {
         return [
             'email_heading' => $this->heading,
-            'email_subject' => $this->subject,
-            'employee'      => new \WeDevs\ERP\HRM\Employee( $this->employee_id )
+            'email_body'    => wpautop( $this->get_option( 'body' ) ),
         ];
     }
 
-    public function trigger( $employee_id = null ) {
-        $this->employee_id = $employee_id;
+    public function trigger( $request_id = null ) {
+        $request = erp_hr_get_leave_request( $request_id );
 
-        // echo $this->get_content();
-        echo $this->style_inline( $this->get_content() );
-    }
+        if ( ! $request ) {
+            return;
+        }
 
-    /**
-     * get_content_html function.
-     *
-     * @access public
-     * @return string
-     */
-    function get_content_html() {
-        extract( $this->get_args() );
+        $employee          = new \WeDevs\ERP\HRM\Employee( intval( $request->user_id ) );
 
-        ob_start();
-        include $this->template_html;
-        return ob_get_clean();
-    }
+        $this->recipient   = $employee->user_email;
+        $this->heading     = $this->get_option( 'heading', $this->heading );
+        $this->subject     = $this->get_option( 'subject', $this->subject );
 
-    /**
-     * get_content_plain function.
-     *
-     * @access public
-     * @return string
-     */
-    function get_content_plain() {
-        extract( $this->get_args() );
+        $this->replace = [
+            'full-name'    => $request->display_name,
+            'leave_type'   => $request->policy_name,
+            'date_from'    => erp_format_date( $request->start_date ),
+            'date_to'      => erp_format_date( $request->end_date ),
+            'no_days'      => $request->days,
+            'reason'       => $request->comments,
+        ];
 
-        ob_start();
-        include $this->template_plain;
-        return ob_get_clean();
+        if ( ! $this->get_recipient() ) {
+            return;
+        }
+
+        $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
     }
 }
