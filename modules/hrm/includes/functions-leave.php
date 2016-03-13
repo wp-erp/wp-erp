@@ -71,24 +71,28 @@ function erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $u
     $holiday = $holiday->where( function( $condition ) use( $start_date, $user_id ) {
         $condition->where( 'start_date', '<=', $start_date );
         $condition->where( 'end_date', '>=', $start_date );
+        $condition->whereIn( 'status', [1, 2] );
         $condition->where( 'user_id', '=', $user_id );
     } );
 
     $holiday = $holiday->orWhere( function( $condition ) use( $end_date, $user_id ) {
         $condition->where( 'start_date', '<=', $end_date );
         $condition->where( 'end_date', '>=', $end_date );
+        $condition->whereIn( 'status', [1, 2] );
         $condition->where( 'user_id', '=', $user_id );
     } );
 
     $holiday = $holiday->orWhere( function( $condition ) use( $start_date, $end_date, $user_id ) {
         $condition->where( 'start_date', '>=', $start_date );
         $condition->where( 'start_date', '<=', $end_date );
+        $condition->whereIn( 'status', [1, 2] );
         $condition->where( 'user_id', '=', $user_id );
     } );
 
     $holiday = $holiday->orWhere( function( $condition ) use( $start_date, $end_date, $user_id ) {
         $condition->where( 'end_date', '>=', $start_date );
         $condition->where( 'end_date', '<=', $end_date );
+        $condition->whereIn( 'status', [1, 2] );
         $condition->where( 'user_id', '=', $user_id );
     } );
 
@@ -143,7 +147,7 @@ function erp_hrm_is_valid_leave_duration( $start_date, $end_date, $policy_id, $u
     $working_day     = erp_hr_get_work_days_without_off_day( $start_date, $end_date );//erp_hr_get_work_days_between_dates( $start_date, $end_date );erp_hr_get_work_days_without_holiday
     $apply_days      = $working_day['total'] + $user_enti_count;
 
-    if ( $apply_days >  $policy_count ) {
+    if ( $apply_days >  $policy_count[0] ) {
         return false;
     }
 
