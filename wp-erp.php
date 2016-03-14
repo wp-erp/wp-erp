@@ -251,6 +251,9 @@ final class WeDevs_ERP {
         // Register Basecamp text editor styles
         wp_register_style( 'erp-trix-editor', WPERP_ASSETS . '/css/trix.css' );
 
+        // Register Flot Valuelabel css
+        wp_register_style( 'erp-flotchart-valuelabel-css', WPERP_ASSETS . '/css/plot.css' );
+
         // Register Bascamp text editor js
         wp_register_script( 'erp-trix-editor', WPERP_ASSETS . '/js/trix.js', array( 'jquery' ), false, false );
 
@@ -265,6 +268,7 @@ final class WeDevs_ERP {
         wp_register_script( 'erp-flotchart-axislables', WPERP_ASSETS . '/js/jquery.flot.axislabels.js', array( 'jquery' ), false, false );
         wp_register_script( 'erp-flotchart-tooltip', WPERP_ASSETS . '/js/jquery.flot.tooltip.min.js', array( 'jquery' ), false, false );
         wp_register_script( 'erp-flotchart-resize', WPERP_ASSETS . '/js/jquery.flot.resize.min.js', array( 'jquery' ), false, false );
+        wp_register_script( 'erp-flotchart-valuelabel', WPERP_ASSETS . '/js/jquery.flot.valuelabels.js', array( 'jquery' ), false, false );
 
         // Enqueue scripts in globally wp-erp
         wp_enqueue_script( 'erp-select2' );

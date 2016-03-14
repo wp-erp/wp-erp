@@ -35,6 +35,7 @@ class Admin_Menu {
         add_submenu_page( 'erp-hr', __( 'Designations', 'wp-erp' ), __( 'Designations', 'wp-erp' ), 'erp_manage_designation', 'erp-hr-designation', array( $this, 'designation_page' ) );
         add_submenu_page( 'erp-hr', __( 'Announcement', 'wp-erp' ), __( 'Announcement', 'wp-erp' ), 'erp_manage_announcement', 'edit.php?post_type=erp_hr_announcement' );
         add_submenu_page( 'erp-hr', __( 'Settings', 'wp-erp' ), __( 'Settings', 'wp-erp' ), 'manage_options', 'erp-hr-settings', array( $this, 'settings_page' ) );
+        add_submenu_page( 'erp-hr', __( 'Reporting', 'wp-erp' ), __( 'Reporting', 'wp-erp' ), 'manage_options', 'erp-hr-reporting', array( $this, 'reporting_page' ) );
 
         /** Leave Management **/
         add_menu_page( __( 'Leave Management', 'wp-erp' ), __( 'Leave', 'wp-erp' ), 'erp_leave_manage', 'erp-leave', array( $this, 'empty_page' ), 'dashicons-arrow-right-alt', null );
@@ -176,6 +177,49 @@ class Admin_Menu {
      */
     public function settings_page() {
         include WPERP_HRM_VIEWS . '/settings.php';
+    }
+
+    /**
+     * Renders ERP HR Reporting Page
+     *
+     * @return void
+     */
+    public function reporting_page() {
+        
+        $action = isset( $_GET['type'] ) ? $_GET['type'] : 'main';
+        
+        switch ( $action ) {
+            case 'age-profile':
+                $template = WPERP_HRM_VIEWS . '/reporting/age-profile.php';
+                break;
+
+            case 'gender-profile':
+                $template = WPERP_HRM_VIEWS . '/reporting/gender-profile.php';
+                break;
+
+            case 'headcount':
+                $template = WPERP_HRM_VIEWS . '/reporting/headcount.php';
+                break;
+
+            case 'salary-history':
+                $template = WPERP_HRM_VIEWS . '/reporting/salary-history.php';
+                break;
+
+            case 'years-of-service':
+                $template = WPERP_HRM_VIEWS . '/reporting/years-of-service.php';
+                break;
+
+            default:
+                $template = WPERP_HRM_VIEWS . '/reporting.php';
+                break;
+        }
+
+        $template = apply_filters( 'erp_hr_reporting_pages', $template, $action );
+
+        if ( file_exists( $template ) ) {
+            
+            include $template;
+        }
     }
 
     /**
