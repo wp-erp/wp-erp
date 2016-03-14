@@ -135,29 +135,29 @@
 
             <li data-selected="{{ data.work.type }}">
                 <?php
-                erp_html_form_input( array(
-                    'label'    => __( 'Employee Type', 'wp-erp' ),
-                    'name'     => 'work[type]',
-                    'value'    => '{{ data.work.type }}',
-                    'class'    => 'erp-hrm-select2',
-                    'type'     => 'select',
-                    'required' => true,
-                    'options'  => array( '' => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_employee_types()
-                ) );
+                    erp_html_form_input( array(
+                        'label'    => __( 'Employee Type', 'wp-erp' ),
+                        'name'     => 'work[type]',
+                        'value'    => '{{ data.work.type }}',
+                        'class'    => 'erp-hrm-select2',
+                        'type'     => 'select',
+                        'required' => true,
+                        'options'  => array( '' => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_employee_types()
+                    ) );
                 ?>
             </li>
 
             <li data-selected="{{ data.work.status }}">
                 <?php
-                erp_html_form_input( array(
-                    'label'    => __( 'Employee Status', 'wp-erp' ),
-                    'name'     => 'work[status]',
-                    'value'    => '{{ data.work.status }}',
-                    'class'    => 'erp-hrm-select2',
-                    'type'     => 'select',
-                    'required' => true,
-                    'options'  => array( '' => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_employee_statuses()
-                ) );
+                    erp_html_form_input( array(
+                        'label'    => __( 'Employee Status', 'wp-erp' ),
+                        'name'     => 'work[status]',
+                        'value'    => '{{ data.work.status }}',
+                        'class'    => 'erp-hrm-select2',
+                        'type'     => 'select',
+                        'required' => true,
+                        'options'  => array( '' => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_employee_statuses()
+                    ) );
                 ?>
             </li>
 
@@ -175,13 +175,16 @@
             </li>
 
             <li>
-                <?php erp_html_form_input( array(
-                    'label'   => __( 'Date of Hire', 'wp-erp' ),
-                    'name'    => 'work[hiring_date]',
-                    'value'   => '{{ data.work.hiring_date }}',
-                    'type'    => 'text',
-                    'class'   => 'erp-date-field'
-                ) ); ?>
+                <?php
+                    erp_html_form_input( array(
+                        'label'    => __( 'Date of Hire', 'wp-erp' ),
+                        'name'     => 'work[hiring_date]',
+                        'value'    => '{{ data.work.hiring_date }}',
+                        'required' => true,
+                        'type'     => 'text',
+                        'class'    => 'erp-date-field'
+                    ) );
+                ?>
             </li>
 
             <# if ( ! data.id ) { #>
