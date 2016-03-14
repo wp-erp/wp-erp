@@ -347,12 +347,12 @@ class Form_Handler {
         $page_url        = admin_url( 'admin.php?page=erp-leave-assign&tab=assignment' );
 
         $is_single       = ! isset( $_POST['assignment_to'] );
-        $leave_policy    = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : 0;
-        $leave_period    = isset( $_POST['leave_period'] ) ? $_POST['leave_period'] : 0;
-        $single_employee = isset( $_POST['single_employee'] ) ? intval( $_POST['single_employee'] ) : 0;
-        $location        = isset( $_POST['location'] ) ? intval( $_POST['location'] ) : 0;
-        $department      = isset( $_POST['department'] ) ? intval( $_POST['department'] ) : 0;
-        $comment         = isset( $_POST['comment'] ) ? wp_kses_post( $_POST['comment'] ) : 0;
+        $leave_policy    = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : '-1';
+        $leave_period    = isset( $_POST['leave_period'] ) ? $_POST['leave_period'] : '-1';
+        $single_employee = isset( $_POST['single_employee'] ) ? intval( $_POST['single_employee'] ) : '-1';
+        $location        = isset( $_POST['location'] ) ? intval( $_POST['location'] ) : '-1';
+        $department      = isset( $_POST['department'] ) ? intval( $_POST['department'] ) : '-1';
+        $comment         = isset( $_POST['comment'] ) ? wp_kses_post( $_POST['comment'] ) : '-1';
 
         if ( ! $leave_policy ) {
             $errors[] = 'invalid-policy';
@@ -402,7 +402,7 @@ class Form_Handler {
 
             foreach ($employees as $employee) {
                 $data = array(
-                    'user_id'   => $employee->user_id,
+                    'user_id'   => $employee->user->ID,
                     'policy_id' => $leave_policy,
                     'days'      => $policy->value,
                     'from_date' => $from_date,
