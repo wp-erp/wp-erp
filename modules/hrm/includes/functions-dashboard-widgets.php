@@ -225,7 +225,7 @@ function erp_hr_dashboard_widget_leave_calendar() {
                 right: 'month,agendaWeek,agendaDay'
             },
             editable: false,
-            eventLimit: true, // allow "more" link when too many events
+            eventLimit: true,
             events: <?php echo json_encode( $event_data ); ?>,
             eventRender: function(event, element, calEvent) {
                 if ( event.holiday ) {
