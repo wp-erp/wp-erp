@@ -22,10 +22,10 @@
                 foreach ( $left_column as $key => $report ) {
             ?>
                 <div class="postbox">
-                    <h2 class="hndle"><span><?php echo $report['title'] ?></span></h2>
+                    <h2 class="hndle"><span><?php echo esc_html( $report['title'] ); ?></span></h2>
                     <div class="inside">
-                        <p><?php echo $report['description']; ?></p>
-                        <p><a class="button button-primary" href="admin.php?page=erp-hr-reporting&type=<?php echo $key; ?>">View Report</a></p>
+                        <p><?php echo esc_html( $report['description'] ); ?></p>
+                        <p><a class="button button-primary" href="admin.php?page=erp-hr-reporting&type=<?php echo esc_attr( $key ); ?>"><?php _e( 'View Report', 'wp-erp' ); ?></a></p>
                     </div>
                 </div><!-- .postbox -->
             <?php
@@ -42,10 +42,10 @@
                 foreach ( $right_column as $key => $report ) {
             ?>
                 <div class="postbox">
-                    <h2 class="hndle"><span><?php echo $report['title'] ?></span></h2>
+                    <h2 class="hndle"><span><?php echo esc_html( $report['title'] ); ?></span></h2>
                     <div class="inside">
-                        <p><?php echo $report['description']; ?></p>
-                        <p><a class="button button-primary" href="admin.php?page=erp-hr-reporting&type=<?php echo $key; ?>">View Report</a></p>
+                        <p><?php echo esc_html( $report['description'] ); ?></p>
+                        <p><a class="button button-primary" href="admin.php?page=erp-hr-reporting&type=<?php echo $key; ?>"><?php _e( 'View Report', 'wp-erp' ); ?></a></p>
                     </div>
                 </div><!-- .postbox -->
             <?php
