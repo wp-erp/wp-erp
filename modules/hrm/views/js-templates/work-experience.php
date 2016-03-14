@@ -27,7 +27,7 @@
             'value'       => '{{ data.from }}',
             'required'    => true,
             'class'       => 'erp-date-field',
-            'placeholder' => '2012-01-20'
+            'placeholder' => __( '2012-01-20', 'wp-erp' )
         ) ); ?>
     </div>
 
@@ -38,7 +38,7 @@
             'value'       => '{{ data.to }}',
             'required'    => true,
             'class'       => 'erp-date-field',
-            'placeholder' => '2014-09-12'
+            'placeholder' => __( '2014-09-12', 'wp-erp' )
         ) ); ?>
     </div>
 

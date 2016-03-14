@@ -175,8 +175,8 @@ class Announcement {
     function add_type_columns( $columns ) {
         unset( $columns['date'] );
 
-        $columns['assign_type'] = __( 'Sent To' );
-        $columns['date']        = __( 'Date' );
+        $columns['assign_type'] = __( 'Sent To', 'wp-erp' );
+        $columns['date']        = __( 'Date', 'wp-erp' );
 
         return $columns;
     }
