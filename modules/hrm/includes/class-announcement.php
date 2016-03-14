@@ -19,12 +19,12 @@ class Announcement {
     private $post_type = 'erp_hr_announcement';
     private $assign_type = array();
 
-	/**
-	 *  Load autometically all actions
-	 */
-	function __construct() {
+    /**
+     *  Load autometically all actions
+     */
+    function __construct() {
         $this->assign_type = array(
-            ''                => __( '-- Select --', 'wp-erp' ),
+            ''                  => __( '-- Select --', 'wp-erp' ),
             'all_employee'      => __( 'All Employees', 'wp-erp' ),
             'selected_employee' => __( 'Selected Employee', 'wp-erp' )
         );
@@ -35,7 +35,58 @@ class Announcement {
 
         $this->filter( 'manage_edit-erp_hr_announcement_columns', 'add_type_columns' );
         $this->filter( 'manage_erp_hr_announcement_posts_custom_column', 'assign_type_edit_columns', 10, 2 );
-	}
+
+        // $this->filter( 'parent_file', 'fix_parent_file', 999 );
+        // $this->filter( 'submenu_file', 'submenu_file', 999 );
+
+        $this->action( 'admin_menu', 'remove_menu_item', 19 );
+    }
+
+    /**
+     * Remove the menu item inserted by WordPress
+     *
+     * Had to do this because when `show_in_menu` is set to false, HR Managers
+     * can't create new announcement due to weird permission issue.
+     *
+     * @return void
+     */
+    function remove_menu_item() {
+        remove_menu_page( 'edit.php?post_type=erp_hr_announcement' );
+    }
+
+    /**
+     * Fix parent file
+     *
+     * @param  string  $parent_file
+     *
+     * @return string
+     */
+    function fix_parent_file( $parent_file ) {
+        global $current_screen;
+
+        if ( $current_screen->post_type == $this->post_type ) {
+            $parent_file = 'erp-hr';
+        }
+
+        return $parent_file;
+    }
+
+    /**
+     * Set submenu file
+     *
+     * @param  string  $submenu_file
+     *
+     * @return string
+     */
+    function submenu_file( $submenu_file ) {
+        global $current_screen;
+
+        if ( $current_screen->post_type == $this->post_type ) {
+            $submenu_file = 'edit.php?post_type=erp_hr_announcement';
+        }
+
+        return $submenu_file;
+    }
 
     /**
      * Register Announcement post type
@@ -45,17 +96,29 @@ class Announcement {
      * @return void
      */
     function post_types() {
+        $capability = 'erp_hr_manager';
+
         register_post_type( $this->post_type, array(
             'label'           => __( 'Announcement', 'wp-erp' ),
             'description'     => '',
             'public'          => false,
             'show_ui'         => true,
-            'show_in_menu'    => false,
+            'show_in_menu'    => true,
             'capability_type' => 'post',
             'hierarchical'    => false,
             'rewrite'         => array( 'slug' => '' ),
             'query_var'       => false,
             'supports'        => array( 'title', 'editor' ),
+            'capabilities'    => array(
+                'edit_post'          => $capability,
+                'read_post'          => $capability,
+                'delete_posts'       => $capability,
+                'edit_posts'         => $capability,
+                'edit_others_posts'  => $capability,
+                'publish_posts'      => $capability,
+                'read_private_posts' => $capability,
+                'create_posts'       => $capability,
+            ),
             'labels'          => array(
                 'name'               => __( 'Announcement', 'wp-erp' ),
                 'singular_name'      => __( 'Announcement', 'wp-erp' ),
@@ -127,7 +190,7 @@ class Announcement {
                                 }
                                 ?>
                                     <option <?php echo in_array( $user->user_id, $announcement_employee ) ? 'selected="selected"' : ''; ?> value='<?php echo $user->user_id  ?>'><?php echo $user->display_name; ?></option>
-                                <?php 
+                                <?php
                             }
                             ?>
                         </select>
@@ -249,7 +312,7 @@ class Announcement {
         if ( $announcement_assign_type == 'selected_employee' ) {
 
             $this->process_employee_announcement_data( $announcement_assign_employee, $post_id );
-        
+
         } elseif ( $announcement_assign_type == 'all_employee' ) {
 
             $employees = erp_hr_get_employees( array( 'no_object' => true ) );
@@ -318,12 +381,12 @@ class Announcement {
      * @return array
      */
     function get_assign_employee( $post_id ) {
-        
+
         $results = \WeDevs\ERP\HRM\Models\Announcement::select( ['user_id'] )
                         ->where( ['post_id' => $post_id ] )
                         ->get()
                         ->toArray();
-        
+
         if ( $results ) {
             return $results;
         } else {
@@ -394,3 +457,4 @@ class Announcement {
         }
     }
 }
+
