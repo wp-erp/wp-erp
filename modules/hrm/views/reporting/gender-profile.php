@@ -50,18 +50,18 @@
 		<table class="widefat striped">
 			<thead>
 				<tr>
-					<th>Gender</th>
-					<th>Count</th>
-					<th>Percentage	</th>
+					<th><?php _e( 'Gender', 'wp-erp' ); ?></th>
+					<th><?php _e( 'Count', 'wp-erp' ); ?></th>
+					<th><?php _e( 'Percentage', 'wp-erp' ); ?></th>
 				</tr>
 			</thead>
 			<tbody>
 			<?php
 				foreach ( $gender_ratio as $gender ) {
 					echo '<tr>';
-					echo '<td>' . $gender->gender . '</td>';
-					echo '<td>' . $gender->count . '</td>';
-					echo '<td>' . $gender->percentage . '</td>';
+					echo '<td>' . esc_attr( $gender->gender ) . '</td>';
+					echo '<td>' . esc_attr( $gender->count ) . '</td>';
+					echo '<td>' . esc_attr( $gender->percentage ) . '</td>';
 					echo '</tr>';
 				}
 			?>
@@ -91,10 +91,10 @@
 				foreach ( $gender_data as $single_data ) {
 
 					echo '<tr>';
-					echo '<td>' . $single_data['dept_name'] . '</td>';
-					echo '<td>' . $single_data['male'] . '</td>';
-					echo '<td>' . $single_data['female'] . '</td>';
-					echo '<td>' . $single_data['other'] . '</td>';
+					echo '<td>' . esc_attr( $single_data['dept_name'] ) . '</td>';
+					echo '<td>' . esc_attr( $single_data['male'] ) . '</td>';
+					echo '<td>' . esc_attr( $single_data['female'] ) . '</td>';
+					echo '<td>' . esc_attr( $single_data['other'] ) . '</td>';
 					echo '</tr>';
 				}
 			?>
@@ -109,9 +109,9 @@
 		(function($){
 
 		   	var data_gender_all = [
-		        {label: 'Male', color:'#9dd12b', data: [[1,<?php echo $gender_all['male']; ?>]]},
-		        {label: 'Female', color:'#d4474a', data: [[2,<?php echo $gender_all['female']; ?>]]},
-		        {label: 'Unspecified', color:'#fc9255', data: [[3,<?php echo $gender_all['other']; ?>]]},
+		        {label: 'Male', color:'#9dd12b', data: [[1,<?php echo esc_attr( $gender_all['male'] ); ?>]]},
+		        {label: 'Female', color:'#d4474a', data: [[2,<?php echo esc_attr( $gender_all['female'] ); ?>]]},
+		        {label: 'Unspecified', color:'#fc9255', data: [[3,<?php echo esc_attr( $gender_all['other'] ); ?>]]},
 		    ];
 
 			$.plot($("#emp-gender-ratio"), data_gender_all, {
@@ -209,7 +209,7 @@
 	                        showTooltip(item.pageX,
 	                        item.pageY,
 	                        color,
-	                        "<strong>" + item.series.yaxis.ticks[item.dataIndex].label + "</strong><br>Category : <strong>" + item.series.label + "</strong><br>Employee : <strong>" + y + "</strong>");
+	                        "<strong>" + item.series.yaxis.ticks[item.dataIndex].label + "</strong><br><?php _e( 'Category :', 'wp-erp' ); ?><strong>" + item.series.label + "</strong><br><?php _e( 'Employee :', 'wp-erp' ); ?><strong>" + y + "</strong>");
 	                    }
 	                } else {
 	                    $("#tooltip").remove();
