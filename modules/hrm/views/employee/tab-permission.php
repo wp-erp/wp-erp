@@ -7,7 +7,7 @@
         $is_manager = user_can( $employee->id, erp_hr_get_manager_role() ) ? 'on' : 'off';
 
         erp_html_form_input( array(
-            'label' => __( 'Manager', 'wp-erp' ),
+            'label' => __( 'HR Manager', 'wp-erp' ),
             'name'  => 'enable_manager',
             'type'  => 'checkbox',
             'tag'   => 'div',
@@ -15,6 +15,8 @@
             'help'  => __( 'This Employee is Manager', 'wp-erp'  )
         ) );
         ?>
+
+        <?php do_action( 'erp_hr_permission_management', $employee ); ?>
 
         <input type="hidden" name="employee_id" value="<?php echo $employee->id; ?>">
         <input type="hidden" name="erp-action" id="erp-employee-action" value="erp-hr-employee-permission">

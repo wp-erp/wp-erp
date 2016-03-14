@@ -69,6 +69,7 @@ class Human_Resource {
         require_once WPERP_HRM_PATH . '/includes/functions-leave.php';
         require_once WPERP_HRM_PATH . '/includes/functions-capabilities.php';
         require_once WPERP_HRM_PATH . '/includes/functions-dashboard-widgets.php';
+        require_once WPERP_HRM_PATH . '/includes/functions-reporting.php';
         require_once WPERP_HRM_PATH . '/includes/actions-filters.php';
     }
 
@@ -176,6 +177,17 @@ class Human_Resource {
         wp_enqueue_style( 'erp-select2' );
         wp_enqueue_style( 'erp-tiptip' );
         wp_enqueue_style( 'erp-style' );
+
+        if ( 'hr-management_page_erp-hr-reporting' == $hook ) {
+
+            wp_enqueue_script( 'erp-flotchart' );
+            wp_enqueue_script( 'erp-flotchart-time' );
+            wp_enqueue_script( 'erp-flotchart-pie' );
+            wp_enqueue_script( 'erp-flotchart-orerbars' );
+            wp_enqueue_script( 'erp-flotchart-axislables' );
+            wp_enqueue_script( 'erp-flotchart-valuelabel' );
+            wp_enqueue_style( 'erp-flotchart-valuelabel-css' );
+        }
     }
 
     /**
