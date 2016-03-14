@@ -515,6 +515,25 @@ class Form_Handler {
         if ( null !== $status ) {
             erp_hr_leave_request_update_status( $request_id, $status );
 
+            // notification email
+            if ( 1 === $status ) {
+
+                $approved_email = wperp()->emailer->get_email( 'Approved_Leave_Request' );
+
+                if ( is_a( $approved_email, '\WeDevs\ERP\Email') ) {
+                    $approved_email->trigger( $request_id );
+                }
+
+            } else if ( 3 === $status ) {
+
+                $rejected_email = wperp()->emailer->get_email( 'Rejected_Leave_Request' );
+
+                if ( is_a( $rejected_email, '\WeDevs\ERP\Email') ) {
+                    $rejected_email->trigger( $request_id );
+                }
+            }
+
+            // redirect the user back
             $redirect_to = remove_query_arg( array('status'), admin_url( 'admin.php?page=erp-leave' ) );
             $redirect_to = add_query_arg( array( 'status' => $status ), $redirect_to );
 

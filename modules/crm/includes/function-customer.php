@@ -1208,6 +1208,7 @@ function erp_crm_get_serach_key( $type = '' ) {
             ],
             'options' => \WeDevs\ERP\Countries::instance()->country_dropdown_options(),
         ],
+
     ];
 
     if ( $type == 'crm_page_erp-sales-customers' ) {
@@ -1347,12 +1348,13 @@ function erp_crm_get_save_search_regx( $values ) {
  */
 function erp_crm_save_search_query_filter( $people ) {
 
-    global $wpdb;
+    global $wpdb, $current_screen;
 
     $query_string = $_SERVER['QUERY_STRING'];
 
     $or_query   = explode( '&or&', $query_string );
-    $allowed    = erp_crm_get_serach_key();
+    $page_id    = ( isset( $current_screen->base ) ) ? $current_screen->base : '';
+    $allowed    = erp_crm_get_serach_key( $page_id );
     $query_data = [];
     $i          = 0;
 

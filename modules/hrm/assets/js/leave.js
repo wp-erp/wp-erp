@@ -338,14 +338,18 @@
                         Leave.initDateField();
                     },
                     onSubmit: function(modal) {
+                        $( 'button[type=submit]', '.erp-modal' ).attr( 'disabled', 'disabled' );
+
                         wp.ajax.send( {
                             data: this.serialize(),
                             success: function(res) {
+                                modal.enableButton();
                                 alert( res );
                                 modal.closeModal();
                             },
                             error: function(error) {
                                 alert( error );
+                                modal.enableButton();
                             }
                         });
                     }
