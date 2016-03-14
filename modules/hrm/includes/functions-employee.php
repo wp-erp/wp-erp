@@ -123,7 +123,7 @@ function erp_hr_employee_create( $args = array() ) {
     // inserting the user for the first time
     $hiring_date = ! empty( $data['work']['hiring_date'] ) ? $data['work']['hiring_date'] : current_time( 'mysql' );
     if ( ! $update ) {
-        
+
         $work        = $data['work'];
 
         if ( ! empty( $work['type'] ) ) {
