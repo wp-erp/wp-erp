@@ -18,8 +18,8 @@ class Emailer {
 
         $emails['New_Employee_Welcome']   = new Emails\New_Employee_Welcome();
         $emails['New_Leave_Request']      = new Emails\New_Leave_Request();
-        // $emails['Approved_Leave_Request'] = new Emails\Approved_Leave_Request();
-        // $emails['Rejected_Leave_Request'] = new Emails\Rejected_Leave_Request();
+        $emails['Approved_Leave_Request'] = new Emails\Approved_Leave_Request();
+        $emails['Rejected_Leave_Request'] = new Emails\Rejected_Leave_Request();
 
         return apply_filters( 'erp_hr_email_classes', $emails );
     }
