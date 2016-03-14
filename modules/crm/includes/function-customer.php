@@ -502,10 +502,10 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
     }
 
     $extra_data = [
-        'schedule_title'             => ( isset( $postdata['schedule_title'] ) && !empty( $postdata['schedule_title'] ) ) ? $postdata['schedule_title'] : '',
-        'all_day'                    => isset( $postdata['all_day'] ) ? (string)$postdata['all_day'] : 'false',
-        'allow_notification'         => isset( $postdata['allow_notification'] ) ? (string)$postdata['allow_notification'] : 'false',
-        'invite_contact' => ( isset( $postdata['invite_contact'] ) && ! empty( $postdata['invite_contact'] ) ) ? $postdata['invite_contact'] : []
+        'schedule_title'     => ( isset( $postdata['schedule_title'] ) && !empty( $postdata['schedule_title'] ) ) ? $postdata['schedule_title'] : '',
+        'all_day'            => isset( $postdata['all_day'] ) ? (string)$postdata['all_day'] : 'false',
+        'allow_notification' => isset( $postdata['allow_notification'] ) ? (string)$postdata['allow_notification'] : 'false',
+        'invite_contact'     => ( isset( $postdata['invite_contact'] ) && ! empty( $postdata['invite_contact'] ) ) ? $postdata['invite_contact'] : []
     ];
 
     $extra_data['notification_via']           = ( isset( $postdata['notification_via'] ) && $extra_data['allow_notification'] == 'true' ) ? $postdata['notification_via'] : '';
@@ -1645,3 +1645,31 @@ function erp_crm_get_search_by_already_saved( $save_search_id ) {
 
     return $data->search_val;
 }
+
+/**
+ * Get todays schedules activities
+ *
+ * @since 1.0
+ *
+ * @return array
+ */
+function erp_crm_get_todays_schedules_activity( $user_id = '' ) {
+    $results  = [];
+    $db       = new \WeDevs\ORM\Eloquent\Database();
+    $activity = new WeDevs\ERP\CRM\Models\Activity();
+
+    $res = \WeDevs\ERP\CRM\Models\Activity::with( 'contact' )->where( 'type', '=', 'log_activity' )
+            ->where( 'created_by', $user_id )
+            ->where( $db->raw("DATE_FORMAT( `start_date`, '%m %d' )" ), \Carbon\Carbon::today()->format('m d') )
+            ->get()
+            ->toArray();
+
+    foreach( $res as $key=>$result ) {
+        $results[$key] = $result;
+        $results[$key]['extra'] = json_decode( base64_decode( $result['extra'] ), true );
+    }
+
+    return $results;
+}
+
+
