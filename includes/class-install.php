@@ -526,7 +526,7 @@ class WeDevs_ERP_Installer {
      */
     public function set_default_modules() {
 
-        if ( get_option( 'wp_erp_version' ) ) {
+        if ( get_option( 'erp_modules' ) ) {
             return ;
         }
 
@@ -537,6 +537,14 @@ class WeDevs_ERP_Installer {
                 'description' => __( 'Human Resource Mnanagement', 'wp-erp' ),
                 'callback'    => '\WeDevs\ERP\HRM\Human_Resource',
                 'modules'     => apply_filters( 'erp_hr_modules', [ ] )
+            ],
+
+            'crm' => [
+                'title'       => __( 'CR Management', 'wp-erp' ),
+                'slug'        => 'erp-crm',
+                'description' => __( 'Client Resource Management', 'wp-erp' ),
+                'callback'    => '\WeDevs\ERP\CRM\Customer_Relationship',
+                'modules'     => apply_filters( 'erp_crm_modules', [ ] )
             ]
         ];
 

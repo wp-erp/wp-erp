@@ -64,7 +64,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
         </div>
 
         <div class="no-activity-found" v-if="!feeds.length">
-            <?php _e( 'No Activity found for this Company', 'wp-erp' ); ?>
+            <?php _e( 'No Activity found for this Contact', 'wp-erp' ); ?>
         </div>
     </div>
 </div>
