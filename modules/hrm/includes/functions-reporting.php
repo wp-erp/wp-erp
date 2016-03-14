@@ -7,30 +7,25 @@
 function erp_hr_get_reports() {
 
 	$reports = [
-		[
+		'age-profile' => [
 			'title' => __( 'Age Profile', 'wp-erp' ),
-			'description' => __( 'Shows age breakdown data in your company in different departments.', 'wp-erp' ),
-			'slug' => 'age-profile'
+			'description' => __( 'Shows age breakdown data in your company in different departments.', 'wp-erp' )
 		],
-		[
+		'gender-profile' => [
 			'title' => __( 'Gender Profile', 'wp-erp' ),
-			'description' => __( 'Shows differentiation data by age in your company.', 'wp-erp' ),
-			'slug' => 'gender-profile'
+			'description' => __( 'Shows differentiation data by age in your company.', 'wp-erp' )
 		],
-		[
+		'headcount' => [
 			'title' => __( 'Head Count', 'wp-erp' ),
-			'description' => __( 'Displays actual number of individuals in your company in different departments.', 'wp-erp' ),
-			'slug' => 'headcount'
+			'description' => __( 'Displays actual number of individuals in your company in different departments.', 'wp-erp' )
 		],
-		[
+		'salary-history' => [
 			'title' => __( 'Salary History', 'wp-erp' ),
 			'description' => __( 'Shows Salary History of the employees of your company.', 'wp-erp' ),
-			'slug' => 'salary-history'
 		],
-		[
+		'years-of-service' => [
 			'title' => __( 'Years of Service', 'wp-erp' ),
-			'description' => __( 'Shows longevity and experience report of the employees of your company.', 'wp-erp' ),
-			'slug' => 'years-of-service'
+			'description' => __( 'Shows longevity and experience report of the employees of your company.', 'wp-erp' )
 		]
 	];
 

@@ -5,7 +5,7 @@
 
         <div id="dashboard-widgets" class="metabox-holder">
 
-        <?php 
+        <?php
             $reports  = erp_hr_get_reports();
             $sections = count( $reports );
 
@@ -19,13 +19,13 @@
             <div class="meta-box-sortables">
 
             <?php
-                foreach ( $left_column as $report ) {
+                foreach ( $left_column as $key => $report ) {
             ?>
                 <div class="postbox">
                     <h2 class="hndle"><span><?php echo $report['title'] ?></span></h2>
                     <div class="inside">
                         <p><?php echo $report['description']; ?></p>
-                        <p><a class="button button-primary" href="admin.php?page=erp-hr-reporting&type=<?php echo $report['slug']; ?>">View Report</a></p>
+                        <p><a class="button button-primary" href="admin.php?page=erp-hr-reporting&type=<?php echo $key; ?>">View Report</a></p>
                     </div>
                 </div><!-- .postbox -->
             <?php
@@ -39,13 +39,13 @@
             <div class="meta-box-sortables">
 
             <?php
-                foreach ( $right_column as $report ) {
+                foreach ( $right_column as $key => $report ) {
             ?>
                 <div class="postbox">
                     <h2 class="hndle"><span><?php echo $report['title'] ?></span></h2>
                     <div class="inside">
                         <p><?php echo $report['description']; ?></p>
-                        <p><a class="button button-primary" href="admin.php?page=erp-hr-reporting&type=<?php echo $report['slug']; ?>">View Report</a></p>
+                        <p><a class="button button-primary" href="admin.php?page=erp-hr-reporting&type=<?php echo $key; ?>">View Report</a></p>
                     </div>
                 </div><!-- .postbox -->
             <?php
