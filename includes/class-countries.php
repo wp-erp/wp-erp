@@ -46,7 +46,7 @@ class Countries {
      * Get all countries
      * @return array
      */
-    public function get_countries() {
+    public function get_countries( $default = '' ) {
         if ( empty( $this->countries ) ) {
             $this->countries = apply_filters( 'erp_countries', include( WPERP_PATH . '/i18n/countries.php' ) );
 
@@ -54,7 +54,9 @@ class Countries {
                 asort( $this->countries );
             }
         }
-
+        if ( '-1' == $default ) {
+            $this->countries = array( '-1' => '===select one===' ) + $this->countries; 
+        }
         return $this->countries;
     }
 

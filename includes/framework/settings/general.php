@@ -9,7 +9,7 @@ class ERP_Settings_General extends ERP_Settings_Page {
 
     function __construct() {
         $this->id    = 'general';
-        $this->label = 'General';
+        $this->label = __( 'General', 'wp-erp' );
     }
 
     /**
@@ -21,7 +21,7 @@ class ERP_Settings_General extends ERP_Settings_Page {
 
         $fields = array(
 
-            array( 'title' => __( 'General Options', 'erp' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
+            array( 'title' => __( 'General Options', 'wp-erp' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
 
             array(
                 'title'   => __( 'Company Start Date', 'wp-erp' ),
