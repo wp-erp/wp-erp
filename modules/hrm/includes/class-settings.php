@@ -46,10 +46,10 @@ class Settings {
                 'title'    => __( 'Work Days', 'wp-erp' ),
                 'callback' => array( $this, 'tab_work_days' )
             ),
-            'termination' => array(
-                'title'    => __( 'Termination Reasons', 'wp-erp' ),
-                'callback' => ''
-            ),
+//            'termination' => array(
+//                'title'    => __( 'Termination Reasons', 'wp-erp' ),
+//                'callback' => ''
+//            ),
         ) );
 
         return $tabs;
