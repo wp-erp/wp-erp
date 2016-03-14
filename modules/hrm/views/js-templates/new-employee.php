@@ -260,7 +260,7 @@
                     'value'   => '{{ data.personal.nationality }}',
                     'class'   => 'erp-hrm-select2',
                     'type'    => 'select',
-                    'options' => \WeDevs\ERP\Countries::instance()->get_countries()
+                    'options' => \WeDevs\ERP\Countries::instance()->get_countries( '-1' )
                 ) ); ?>
             </li>
 
