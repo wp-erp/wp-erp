@@ -599,6 +599,8 @@ class Form_Handler {
 
             $user->remove_role( $hr_manager_role );
         }
+
+        do_action( 'erp_hr_after_employee_permission_set', $_POST, $user );
     }
 }
 
