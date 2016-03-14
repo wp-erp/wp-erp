@@ -255,7 +255,7 @@ function erp_crm_customer_get_status_count( $type = null ) {
         $counts[ $status ] = array( 'count' => 0, 'label' => $label );
     }
 
-    $cache_key = 'erp-crm-customer-status-counts';
+    $cache_key = 'erp-crm-customer-status-counts-'. $type;
     $results = wp_cache_get( $cache_key, 'wp-erp' );
 
     if ( false === $results ) {

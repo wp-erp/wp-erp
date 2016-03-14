@@ -32,7 +32,15 @@
             'value'    => '{{ data.city }}',
         ) ); ?>
     </li>
-
+    
+    <li class="row" data-selected="{{ data.country }}">
+        <label for="erp-popup-country"><?php _e( 'Country', 'wp-erp' ); ?> <span class="required">*</span></label>
+        <select name="country" id="erp-popup-country" class="erp-country-select select2" data-parent="ul">
+            <?php $country = \WeDevs\ERP\Countries::instance(); ?>
+            <?php echo $country->country_dropdown(); ?>
+        </select>
+    </li>
+    
     <li class="row" data-selected="{{ data.state }}">
         <?php erp_html_form_input( array(
             'label'   => __( 'Province / State', 'wp-erp' ),
@@ -51,14 +59,6 @@
             'type'    => 'number',
             'value'   => '{{ data.zip }}',
         ) ); ?>
-    </li>
-
-    <li class="row" data-selected="{{ data.country }}">
-        <label for="erp-popup-country"><?php _e( 'Country', 'wp-erp' ); ?> <span class="required">*</span></label>
-        <select name="country" id="erp-popup-country" class="erp-country-select select2" data-parent="ul">
-            <?php $country = \WeDevs\ERP\Countries::instance(); ?>
-            <?php echo $country->country_dropdown(); ?>
-        </select>
     </li>
 
     <input type="hidden" name="location_id" value="{{ data.id }}">

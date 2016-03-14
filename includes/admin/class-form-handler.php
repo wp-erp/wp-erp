@@ -124,7 +124,6 @@ class Form_Handler {
             'fax'       => $posted['fax'],
             'mobile'    => $posted['mobile'],
             'website'   => $posted['website'],
-            'currency'  => $posted['currency'],
         ];
 
         $company = new Company();
