@@ -105,6 +105,14 @@
   text-decoration: none;
   display: block;
 }
+.crm-dashboard ul.erp-crm-dashbaord-todays-schedules {
+  padding: 0px;
+  margin: 0px;
+}
+.crm-dashboard ul.erp-crm-dashbaord-todays-schedules p {
+  padding: 0px;
+  margin: 0px;
+}
 .erp-leads-single .erp-user-info h3 {
   margin: 15px 0;
 }
