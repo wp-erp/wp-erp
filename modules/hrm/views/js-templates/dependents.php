@@ -26,7 +26,7 @@
             'name'        => 'dob',
             'value'       => '{{ data.dob }}',
             'class'       => 'erp-date-field',
-            'placeholder' => '1970-01-20'
+            'placeholder' => __( '1970-01-20', 'wp-erp' )
         ) ); ?>
     </div>
 
