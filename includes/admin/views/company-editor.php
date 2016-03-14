@@ -56,7 +56,16 @@
                                     )); ?>
                                 </td>
                             </tr>
-
+                            
+                             <tr>
+                                <td><label for="erp-country"><?php _e( 'Country', 'wp-erp' ); ?></label> <span class="required">*</span></td>
+                                <td>
+                                    <select name="address[country]" id="erp-country" data-parent="table" class="erp-country-select select2" required="required">
+                                        <?php echo $country->country_dropdown( $company->address['country'] ); ?>
+                                    </select>
+                                </td>
+                            </tr>
+                            
                             <tr>
                                 <td><label for="state"><?php _e( 'Province / State', 'wp-erp' ); ?></label></td>
                                 <td>
@@ -70,15 +79,6 @@
                                             <option value="-1"><?php _e( '- Select -', 'wp-erp' ); ?></option>
                                         <?php } ?>
 
-                                    </select>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td><label for="erp-country"><?php _e( 'Country', 'wp-erp' ); ?></label> <span class="required">*</span></td>
-                                <td>
-                                    <select name="address[country]" id="erp-country" data-parent="table" class="erp-country-select select2" required="required">
-                                        <?php echo $country->country_dropdown( $company->address['country'] ); ?>
                                     </select>
                                 </td>
                             </tr>
