@@ -138,15 +138,6 @@
                                     )); ?>
                                 </td>
                             </tr>
-
-                            <tr>
-                                <td><label for="currency"><?php _e( 'Main Currency', 'wp-erp' ); ?></label></td>
-                                <td>
-                                    <select name="currency" id="currency">
-                                        <?php echo erp_get_currencies_dropdown( $company->currency ); ?> ?>
-                                    </select>
-                                </td>
-                            </tr>
                         </table>
                     </div><!-- .inside -->
                 </div><!-- .postbox -->
