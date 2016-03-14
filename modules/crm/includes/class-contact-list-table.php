@@ -38,6 +38,48 @@ class Contact_List_Table extends \WP_List_Table {
     }
 
     /**
+     * Render extra filtering option in
+     * top of the table
+     *
+     * @since 1.0
+     *
+     * @param  string $which
+     *
+     * @return void
+     */
+    function extra_tablenav( $which ) {
+        if ( $which != 'top' ) {
+            return;
+        }
+
+        $save_searches          = erp_get_save_search_item( get_current_user_id() );
+        $selected_save_search = ( isset( $_GET['filter_save_search'] ) ) ? $_GET['filter_save_search'] : '';
+        ?>
+
+        <div class="alignleft actions">
+
+            <label class="screen-reader-text" for="filter_by_save_searches"><?php _e( 'Filter By Save Searches', 'wp-erp' ) ?></label>
+            <select style="width:250px;" name="filter_by_save_searches" class="selecttwo select2" id="filter_by_save_searches" data-placeholder="<?php _e( 'Select From a save searches', 'wp-erp' ); ?>">
+                <?php foreach ( $save_searches as $key => $searches ) : ?>
+                    <option value=""></option>
+                    <optgroup label="<?php echo $searches['name']; ?>">
+
+                        <?php foreach ( $searches['options'] as $option_key => $option_value ) : ?>
+                            <option value="<?php echo $option_value['id']; ?>" <?php selected( $selected_save_search, $option_value['id']); ?>><?php echo $option_value['text']; ?></option>
+                        <?php endforeach ?>
+
+                    </optgroup>
+
+                <?php endforeach ?>
+            </select>
+
+            <?php
+            submit_button( __( 'Filter' ), 'button', 'filter_employee', false );
+        echo '</div>';
+    }
+
+
+    /**
      * Default column values if no callback found
      *
      * @since 1.0
@@ -249,6 +291,7 @@ class Contact_List_Table extends \WP_List_Table {
             <label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
             <input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>" />
             <?php submit_button( $text, 'button', 'customer_search', false, array( 'id' => 'search-submit' ) ); ?>
+            <?php //submit_button( __( 'Advance Search', 'wp-erp' ) , 'button', 'advance_customer_search', false, array( 'id' => 'advance-search-submit' ) ); ?>
         </p>
         <?php
     }

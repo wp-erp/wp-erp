@@ -3,7 +3,6 @@
  *
  * @return {void}
  */
-
 Vue.component( 'save-search', {
     props: {
         searchFields: {
@@ -23,8 +22,17 @@ Vue.component( 'save-search', {
             andSelection: '',
             orSelection: '',
             searchData: [],
-            isdisabled:false,
-            wpErpState: []
+            isdisabled:false
+        }
+    },
+
+    watch: {
+        searchFields: {
+            deep: true,
+            immediate: true,
+            handler: function () {
+                jQuery('.selecttwo').trigger('change');
+            }
         }
     },
 
@@ -64,8 +72,8 @@ Vue.component( 'save-search', {
                 return;
             }
 
-            if ( !vm.searchItem[index].hasOwnProperty(this.andSelection) ) {
-                vm.$set('searchItem[' + index +']["' + this.andSelection + '"]', []);
+            if ( !saveSearch.searchItem[index].hasOwnProperty(this.andSelection) ) {
+                saveSearch.$set('searchItem[' + index +']["' + this.andSelection + '"]', []);
             }
 
             var obj = jQuery.extend({}, wpCRMSaveSearch.searchFields[this.andSelection]);
@@ -74,7 +82,7 @@ Vue.component( 'save-search', {
                 obj.options = wpCRMSaveSearch.searchFields[this.andSelection].options;
             }
 
-            vm.searchItem[index][this.andSelection].push( obj );
+            saveSearch.searchItem[index][this.andSelection].push( obj );
 
             this.andSelection = '';
         },
@@ -90,7 +98,7 @@ Vue.component( 'save-search', {
 
             object[ this.orSelection ] = [obj]
 
-            vm.searchItem.push( object );
+            saveSearch.searchItem.push( object );
 
             this.orSelection = '';
         },
@@ -111,27 +119,35 @@ Vue.component( 'save-search', {
             });
 
             if (isEmpty) {
-                if ( vm.searchItem.length == 1 )  {
+                if ( saveSearch.searchItem.length == 1 )  {
                     return;
                 }
-                vm.searchItem.$remove(this.searchFields);
+                saveSearch.searchItem.$remove(this.searchFields);
             }
 
         }
     }
 });
 
-var vm = new Vue({
+var saveSearch = new Vue({
     el: '#erp-crm-save-search',
 
     data: {
         searchItem: [],
         totalSearchItem: 0,
+        isNewSave:false,
+        saveSearchOptions: {},
+        saveSearchData: '',
+        showAdvanceFilter:false,
+        classObject: {
+            'border-top-only': true
+        }
     },
 
 
     created: function() {
         this.renderSearchFields();
+        this.renderSaveSearchOptions();
     },
 
     computed: {
@@ -140,14 +156,111 @@ var vm = new Vue({
         }
     },
 
+    watch: {
+        searchItem: {
+            deep: true,
+            immediate: true,
+            handler: function () {
+                jQuery('.selecttwo').trigger('change');
+            }
+        },
+
+        saveSearchOptions: {
+            deep: true,
+            immediate: true,
+            handler: function () {
+                jQuery('.selecttwo').trigger('change');
+            }
+        }
+    },
+
     methods: {
 
-        saveSearch: function(){
+        toggleAdvanceSearchFilter: function() {
+            this.showAdvanceFilter = !this.showAdvanceFilter;
+
+            if ( this.showAdvanceFilter ) {
+                this.classObject = {
+                    'border-top-only': false
+                }
+            } else {
+                this.classObject = {
+                    'border-top-only': true
+                }
+            }
+        },
+
+        renderSaveSearchOptions: function() {
             var self = this,
-                form = jQuery('#erp-crm-save-search-form');
+                data = {
+                    action : 'erp_crm_get_save_search_item',
+                    _wpnonce : wpCRMSaveSearch.nonce
+                };
 
-            console.log( form.serialize() );
+            jQuery.get( wpCRMSaveSearch.ajaxurl, data, function( resp ) {
+                if ( resp.success ) {
+                    self.saveSearchOptions = resp.data;
+                }
+            });
 
+        },
+
+        createNewSearch: function(e) {
+            var self = this,
+                form = jQuery('#erp-crm-save-search-form'),
+                data = {
+                    action : 'erp_crm_create_new_save_search',
+                    form_data : form.serialize(),
+                    _wpnonce : wpCRMSaveSearch.nonce
+                }
+
+            jQuery.post( wpCRMSaveSearch.ajaxurl, data, function( resp ) {
+                if ( resp.success ) {
+                    var obj = {};
+
+                    if ( resp.data.global == '0' ) {
+
+                        obj.id=resp.data.id.toString();
+                        obj.text=resp.data.search_name;
+                        obj.selected='selected';
+
+                        self.saveSearchOptions[0].options.push( obj );
+                    } else {
+
+                        obj.id=resp.data.id.toString();
+                        obj.text=resp.data.search_name;
+                        obj.selected='selected';
+
+                        self.saveSearchOptions[1].options.push( obj )
+                    }
+
+                    self.isNewSave = false;
+                    self.saveSearchData = obj.id;
+
+                    // console.log( typeof obj.id.toString() );
+                    // jQuery('#erp-save-search-select-options')
+                    //     .select2('destroy')
+
+                    // self.$set('saveSearchData', obj.id);
+                    // jQuery('#erp-save-search-select-options').
+                    // jQuery('#erp-save-search-select-options').select2({
+                    //     theme: 'classic',
+                    // }).select2("val", '"'+obj.id+'"' );
+
+                    // jQuery('.select2').trigger('change');
+
+                } else {
+                    alert( resp.data );
+                };
+            });
+        },
+
+        saveSearch: function(){
+            this.isNewSave = !this.isNewSave;
+        },
+
+        cancelSaveSearch: function() {
+            this.isNewSave = false;
         },
 
         renderSearchFields: function() {
@@ -172,15 +285,21 @@ var vm = new Vue({
 
                 _.each( result, function( value, index ) {
                     var fieldArr = [];
+
                     if ( _.isObject( value ) ) {
                         _.each( value, function( val, i ) {
                             var obj = {};
+
                             var seachVal  = self.parseCondition(val);
                             obj.title     = wpCRMSaveSearch.searchFields[index].title;
                             obj.type      = wpCRMSaveSearch.searchFields[index].type;
                             obj.text      = seachVal.val;
                             obj.condval   = seachVal.condition;
                             obj.condition = wpCRMSaveSearch.searchFields[index].condition;
+
+                            if ( obj.type == 'dropdown' ) {
+                                obj.options = wpCRMSaveSearch.searchFields[index].options;
+                            }
 
                             fieldArr.push(obj);
                             mainObj[index] = fieldArr;
@@ -195,6 +314,10 @@ var vm = new Vue({
                         obj.condval   = seachVal.condition;
                         obj.condition = wpCRMSaveSearch.searchFields[index].condition;
 
+                        if ( obj.type == 'dropdown' ) {
+                            obj.options = wpCRMSaveSearch.searchFields[index].options;
+                        }
+
                         fieldArr.push(obj);
                         mainObj[index] = fieldArr;
                     }
@@ -208,7 +331,7 @@ var vm = new Vue({
 
         parseCondition: function( value ) {
             var obj = {};
-            var res = value.split(/([a-zA-Z0-9\s\-\_\+\.]+)/);
+            var res = value.split(/([a-zA-Z0-9\s\-\_\+\.\:]+)/);
             if ( res[0] == '' ) {
                 obj.condition = '';
                 obj.val = res[1];

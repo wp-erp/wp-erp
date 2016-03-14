@@ -165,6 +165,7 @@ class Customer_Relationship {
 
             wp_localize_script( 'wp-erp-crm-vue-save-search', 'wpCRMSaveSearch', [
                 'ajaxurl'         => admin_url( 'admin-ajax.php' ),
+                'nonce'           => wp_create_nonce( 'wp-erp-crm-save-search' ),
                 'searchFields'    => erp_crm_get_serach_key()
             ] );
 

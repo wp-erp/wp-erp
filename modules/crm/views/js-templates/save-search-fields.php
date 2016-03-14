@@ -17,19 +17,12 @@
                     </select>
                 </td>
                 <td colspan="2" align="right" v-if="searchFieldKey != 0">Or</td>
-
-                <td v-if="(searchKey == 'country') && searchField.text">
-                    <select name="save_search[{{index}}]['state'][value][]" v-bind:value="searchField.text" v-model=".searchField.text">
-                        <option value=""><?php _e( 'Any State', 'wp-erp' ); ?></option>
-                        <option v-for="( optionKey, option ) in wpErpState" value="{{optionKey}}">{{{ option }}}</option>
-                    </select>
-                </td>
-
                 <td>
                     <input type="text" v-if="searchField.type == 'text'" name="save_search[{{index}}][{{searchKey}}][value][]" v-bind:value="searchField.text" v-model="searchField.text">
-                    <select :options="searchField.options" v-on:change="po" v-if="searchField.type == 'dropdown'" name="save_search[{{index}}][{{searchKey}}][value][]" v-bind:value="searchField.text" v-model="searchField.text">
-                        <option value=""><?php _e( 'Any Country', 'wp-erp' ); ?></option>
-                        <option v-for="( optionKey, option ) in searchField.options" value="{{optionKey}}">{{{ option }}}</option>
+
+                    <select class="selecttwo select2" v-selecttwo="searchFields.search_key[search_field_key].text" data-searchkey="{{{ searchKey }}}" data-searchkeyindex="{{searchFieldKey}}" style="width:300px;" v-if="searchField.type == 'dropdown'" name="save_search[{{index}}][{{searchKey}}][value][]" v-bind:value="searchField.text" v-model="searchField.text">
+                        <option value=""><?php _e( '--Select--', 'wp-erp' ); ?></option>
+                        {{{ searchField.options }}}
                     </select>
                 </td>
             </tr>
