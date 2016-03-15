@@ -1,5 +1,5 @@
 <?php
-namespace WeDevs\ERP\HRM\Admin;
+namespace WeDevs\ERP\CRM;
 
 /**
  * Loads HR users admin area
@@ -39,7 +39,7 @@ class User_Profile {
     function update_user( $user_id, $post ) {
 
         // HR role we want the user to have
-        $new_role = isset( $_POST['hr_manager'] ) ? sanitize_text_field( $_POST['hr_manager'] ) : false;
+        $new_role = isset( $post['crm_manager'] ) ? sanitize_text_field( $post['crm_manager'] ) : false;
 
         // Bail if current user cannot promote the passing user
         if ( ! current_user_can( 'promote_user', $user_id ) ) {
@@ -52,8 +52,9 @@ class User_Profile {
         if ( $new_role ) {
             $user->add_role( $new_role );
         } else {
-            $user->remove_role( erp_hr_get_manager_role() );
+            $user->remove_role( erp_crm_get_manager_role() );
         }
+        
     }
 
     function role( $profileuser ) { 
@@ -61,11 +62,11 @@ class User_Profile {
             return;
         }
         
-        $checked = in_array( erp_hr_get_manager_role(), $profileuser->roles ) ? 'checked' : '';
+        $checked = in_array( erp_crm_get_manager_role(), $profileuser->roles ) ? 'checked' : '';
         ?>
-        <label for="erp-hr-manager">
-            <input type="checkbox" id="erp-hr-manager" <?php echo $checked; ?> name="hr_manager" value="<?php echo erp_hr_get_manager_role(); ?>">
-            <span class="description"><?php _e( 'HR Manager', 'WP-ERP' ); ?></span>
+        <label for="erp-crm-manager">
+            <input type="checkbox" id="erp-crm-manager" <?php echo $checked; ?> name="crm_manager" value="<?php echo erp_crm_get_manager_role(); ?>">
+            <span class="description"><?php _e( 'CRM Manager', 'WP-ERP' ); ?></span>
         </label>
         <?php
     }

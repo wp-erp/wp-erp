@@ -48,7 +48,7 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
             </select>
 
             <?php
-            submit_button( __( 'Filter' ), 'button', 'filter_group', false );
+            submit_button( __( 'Filter', 'wp-erp' ), 'button', 'filter_group', false );
         echo '</div>';
     }
 
