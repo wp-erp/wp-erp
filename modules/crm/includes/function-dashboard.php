@@ -26,33 +26,30 @@ function erp_hr_dashboard_widget_todays_schedules() {
         <?php foreach ( $todays_schedules as $key => $schedule ) : ?>
             <li>
                 <?php
+                    $users_text   = '';
+                    $invite_users = isset( $schedule['extra']['invite_contact'] ) ? $schedule['extra']['invite_contact'] : [];
+                    $contact_user = $schedule['contact']['first_name'] . ' ' . $schedule['contact']['last_name'];
+
+                    array_walk( $invite_users, function( &$val ) {
+                        $val = get_the_author_meta( 'display_name', $val );
+                    });
+
+                    if ( count( $invite_users) == 1 ) {
+                        $users_text = sprintf( '%s <span>%s</span>', __( 'and', 'wp-erp' ), reset( $invite_users ) );
+                    } else if ( count( $invite_users) > 1 ) {
+                        $users_text = sprintf( '%s <span class="erp-tips" title="%s">%d %s</span>', __( 'and', 'wp-erp' ), implode( '<br>', $invite_users ), count( $invite_users ), __( 'Others') );
+                    }
+
                     if ( $schedule['log_type'] == 'meeting' ) {
-                        $users_text   = '';
-                        $invite_users = isset( $schedule['extra']['invite_contact'] ) ? $schedule['extra']['invite_contact'] : [];
-                        $contact_user = $schedule['contact']['first_name'] . ' ' . $schedule['contact']['last_name'];
+                        echo sprintf( '%s <a href="%s">%s</a> %s %s %s', __( '<i class="fa fa-calendar"></i> Meeting with', 'wp-erp' ), erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['type'] ), $contact_user, $users_text, __( 'at', 'wp-erp' ), date( 'g:ia', strtotime( $schedule['start_date'] ) ) );
+                    }
 
-                        array_walk( $invite_users, function( &$val ) {
-                            $val = get_the_author_meta( 'display_name', $val );
-                        });
-
-                        // var_dump( $invite_users);
+                    if ( $schedule['log_type'] == 'call' ) {
+                        echo sprintf( '%s <a href="%s">%s</a> %s %s %s', __( '<i class="fa fa-phone"></i> Call to', 'wp-erp' ), erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['type'] ), $contact_user, $users_text, __( 'at', 'wp-erp' ), date( 'g:ia', strtotime( $schedule['start_date'] ) ) );
                     }
                 ?>
-
-                <?php if ( $schedule['log_type'] == 'call' ): ?>
-                    <p>Call to USER and 13 others at 12:00 PM </p>
-                <?php endif ?>
             </li>
         <?php endforeach ?>
-        <!-- <li>
-            <p>Call to USER at 12:00 PM <a href="#">Details</a></p>
-        </li>
-        <li>
-            <p>Meeting with USER at 12:00 PM <a href="#">Details</a></p>
-        </li>
-        <li>
-            <p>Call to USER and 13 others at 12:00 PM <a href="#">Details</a></p>
-        </li> -->
     </ul>
     <?php
 }
@@ -65,5 +62,36 @@ function erp_hr_dashboard_widget_todays_schedules() {
  * @return void [html]
  */
 function erp_hr_dashboard_widget_upcoming_schedules() {
+    $upcoming_schedules = erp_crm_get_next_seven_day_schedules_activities( get_current_user_id() );
+    ?>
+    <ul class="erp-list list-two-side list-sep erp-crm-dashbaord-upcoming-schedules">
+        <?php foreach ( $upcoming_schedules as $key => $schedule ) : ?>
+            <li>
+                <?php
+                    $users_text   = '';
+                    $invite_users = isset( $schedule['extra']['invite_contact'] ) ? $schedule['extra']['invite_contact'] : [];
+                    $contact_user = $schedule['contact']['first_name'] . ' ' . $schedule['contact']['last_name'];
 
+                    array_walk( $invite_users, function( &$val ) {
+                        $val = get_the_author_meta( 'display_name', $val );
+                    });
+
+                    if ( count( $invite_users) == 1 ) {
+                        $users_text = sprintf( '%s <span>%s</span>', __( 'and', 'wp-erp' ), reset( $invite_users ) );
+                    } else if ( count( $invite_users) > 1 ) {
+                        $users_text = sprintf( '%s <span class="erp-tips" title="%s">%d %s</span>', __( 'and', 'wp-erp' ), implode( '<br>', $invite_users ), count( $invite_users ), __( 'Others') );
+                    }
+
+                    if ( $schedule['log_type'] == 'meeting' ) {
+                        echo sprintf( '%s <a href="%s">%s</a> %s %s %s %s %s', __( '<i class="fa fa-calendar"></i> Meeting with', 'wp-erp' ), erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['type'] ), $contact_user, $users_text, __( 'on', 'wp-erp' ), erp_format_date( strtotime( $schedule['start_date'] ) ), __( 'at', 'wp-erp' ), date( 'g:ia', strtotime( $schedule['start_date'] ) ) );
+                    }
+
+                    if ( $schedule['log_type'] == 'call' ) {
+                        echo sprintf( '%s <a href="%s">%s</a> %s %s %s %s %s', __( '<i class="fa fa-phone"></i> Call to', 'wp-erp' ), erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['type'] ), $contact_user, $users_text, __( 'on', 'wp-erp' ), erp_format_date( strtotime( $schedule['start_date'] ) ), __( 'at', 'wp-erp' ), date( 'g:ia', strtotime( $schedule['start_date'] ) ) );
+                    }
+                ?>
+            </li>
+        <?php endforeach ?>
+    </ul>
+    <?php
 }

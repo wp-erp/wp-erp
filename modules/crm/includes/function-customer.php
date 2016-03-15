@@ -1660,7 +1660,8 @@ function erp_crm_get_todays_schedules_activity( $user_id = '' ) {
 
     $res = \WeDevs\ERP\CRM\Models\Activity::with( 'contact' )->where( 'type', '=', 'log_activity' )
             ->where( 'created_by', $user_id )
-            ->where( $db->raw("DATE_FORMAT( `start_date`, '%m %d' )" ), \Carbon\Carbon::today()->format('m d') )
+            ->where( $db->raw("DATE_FORMAT( `start_date`, '%Y %m %d' )" ), \Carbon\Carbon::today()->format('Y m d') )
+            ->take(7)
             ->get()
             ->toArray();
 
@@ -1671,5 +1672,35 @@ function erp_crm_get_todays_schedules_activity( $user_id = '' ) {
 
     return $results;
 }
+
+/**
+ * Get todays schedules activities
+ *
+ * @since 1.0
+ *
+ * @return array
+ */
+function erp_crm_get_next_seven_day_schedules_activities( $user_id = '' ) {
+    global $wpdb;
+    $results  = [];
+    $db       = new \WeDevs\ORM\Eloquent\Database();
+    $activity = new WeDevs\ERP\CRM\Models\Activity();
+
+    $res = \WeDevs\ERP\CRM\Models\Activity::with( 'contact' )->where( 'type', '=', 'log_activity' )
+            ->where( 'created_by', $user_id )
+            ->where( $db->raw("DATE_FORMAT( `start_date`, '%Y %m %d' )" ), '>=', \Carbon\Carbon::tomorrow()->format('Y m d') )
+            ->where( $db->raw("DATE_FORMAT( `start_date`, '%Y %m %d' )" ), '<=',\Carbon\Carbon::tomorrow()->addDays(7)->format('Y m d') )
+            ->take(7)
+            ->get()
+            ->toArray();
+
+    foreach( $res as $key=>$result ) {
+        $results[$key] = $result;
+        $results[$key]['extra'] = json_decode( base64_decode( $result['extra'] ), true );
+    }
+
+    return $results;
+}
+
 
 
