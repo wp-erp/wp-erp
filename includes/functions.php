@@ -676,25 +676,21 @@ add_action( 'init', function() {
  * @return void
  */
 function erp_activation_notice() {
-    // delete_option( 'wp_erp_activation_dismiss' );
     $apikey     = get_option( 'wp_erp_apikey' );
     $dismiss    = get_option( 'wp_erp_activation_dismiss' );
 
-    if( ! $apikey && ! $dismiss ) {
+    if ( ! $apikey && ! $dismiss ) {
     ?>
-    <div class="error" id="erp-activation-container">
-        <table class="erp-grid-container">
-            <tr>
-                <td class="col-4">
-                    <p><?php _e( "You're awesome for installing <strong>WP ERP!</strong> Get API Key to get access to wperp cloud features!", "wp-erp" ) ?></p>
-                </td>
-                <td class="col-2">
-                    <input type="email" name="email" placeholder="email@example.com" />
-                    <button class="button-primary" id="get-api-key">Get API Key</button>
-                    <a id="dismiss" href="#">Dismiss</a>
-                </td>
-            </tr>
-        </table>
+    <div class="notice erp-activation-cloud-prompt" id="erp-activation-container">
+        <div class="activation-prompt-text">
+            <?php _e( "You're awesome for installing <strong>WP ERP!</strong> Get API Key to get access to wperp <em>cloud</em> features!", "wp-erp" ) ?>
+        </div>
+
+        <div class="activation-form-container">
+            <input type="email" name="email" placeholder="email@example.com" value="<?php echo esc_attr( get_option( 'admin_email' ) ); ?>" />
+            <button class="button-primary" id="get-api-key"><?php _e( 'Get API Key', 'wp-erp' ); ?></button>
+            <a id="dismiss" href="#"><?php _e( 'Dismiss', 'wp-erp' ); ?></a>
+        </div>
     </div>
     <?php
     }
@@ -711,19 +707,19 @@ function erp_activation_notice_javascript() { ?>
     <script type="text/javascript" >
     jQuery( document ).ready( function($) {
 
-        $container = jQuery( "#erp-activation-container" );
-        jQuery( "#erp-activation-container button#get-api-key" ).click( function(e) {
+        $container = $( "#erp-activation-container" );
+        $( "#erp-activation-container button#get-api-key" ).click( function(e) {
             e.preventDefault();
 
             var data = {
                 'action': 'erp_activation_notice',
-                'email': jQuery(e.target).parent().find( "input[name=email]" ).val(),
+                'email': $(e.target).parent().find( "input[name=email]" ).val(),
                 '_wpnonce': '<?php echo wp_create_nonce( "wp-erp-activation-nonce" ); ?>'
             };
 
-            jQuery.post( ajaxurl, data, function(response) {
+            $.post( ajaxurl, data, function(response) {
                 if( response.success ) {
-                    jQuery( "[id=erp-activation-container]" ).hide();
+                    $( "[id=erp-activation-container]" ).hide();
                     document.location.reload();
                 } else {
                     if( response.data.error ) {
@@ -735,7 +731,7 @@ function erp_activation_notice_javascript() { ?>
             });
         });
 
-        jQuery( "#erp-activation-container a#dismiss" ).click( function(e) {
+        $( "#erp-activation-container a#dismiss" ).click( function(e) {
             e.preventDefault();
 
             var data = {
@@ -744,7 +740,7 @@ function erp_activation_notice_javascript() { ?>
                 '_wpnonce': '<?php echo wp_create_nonce( "wp-erp-activation-nonce" ); ?>'
             };
 
-            jQuery.post( ajaxurl, data, function(response) {
+            $.post( ajaxurl, data, function(response) {
                 if( response.success ) {
                     $container.hide();
                 } else {
@@ -753,7 +749,7 @@ function erp_activation_notice_javascript() { ?>
             });
         });
 
-        jQuery( "a#wp-erp-disconnect-api" ).click( function(e) {
+        $( "a#wp-erp-disconnect-api" ).click( function(e) {
             e.preventDefault();
 
             var data = {
@@ -762,7 +758,7 @@ function erp_activation_notice_javascript() { ?>
                 '_wpnonce': '<?php echo wp_create_nonce( "wp-erp-activation-nonce" ); ?>'
             };
 
-            jQuery.post( ajaxurl, data, function(response) {
+            $.post( ajaxurl, data, function(response) {
                 if( response.success ) {
                     document.location.reload();
                 } else {
@@ -781,6 +777,8 @@ function erp_activation_notice_javascript() { ?>
  */
 function erp_api_mode_change() {
     header('Access-Control-Allow-Origin: *');
+
+    $status = isset( $_POST['status'] ) && in_array( $_POST['status'], ['yes', 'no'] ) ? $_POST['status'] : 'yes';
 
     update_option( 'wp_erp_api_active', $_POST['status'] );
 }

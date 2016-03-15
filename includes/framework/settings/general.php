@@ -106,9 +106,16 @@ class ERP_Settings_General extends ERP_Settings_Page {
         ?>
         <tr valign="top" id="erp-activation-container">
             <th scope="row" class="titledesc" colspan="2">
-                <p><?php _e( "You're awesome for installing <strong>WP ERP!</strong> Get API Key to get access to wperp cloud features!", "wp-erp" ) ?></p>
-                <input type="email" name="email" placeholder="email@example.com" />
-                <button class="button-primary" id="get-api-key">Get API Key</button>
+                <div class="erp-activation-cloud-prompt">
+                    <div class="activation-prompt-text">
+                        <?php _e( "You're awesome for installing <strong>WP ERP!</strong> Get API Key to get access to wperp <em>cloud</em> features!", "wp-erp" ) ?>
+                    </div>
+
+                    <div class="activation-form-container">
+                        <input type="email" name="email" placeholder="email@example.com" value="<?php echo esc_attr( get_option( 'admin_email' ) ); ?>" />
+                        <button class="button-primary" id="get-api-key"><?php _e( 'Get API Key', 'wp-erp' ); ?></button>
+                    </div>
+                </div>
             </th>
         </tr>
         <?php

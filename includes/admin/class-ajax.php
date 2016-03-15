@@ -193,14 +193,14 @@ class Ajax {
 
             $response = wp_remote_get( 'http://api.wperp.com/apikey?email=' . $email . '&site_url=' . $site_url  );
 
-            if( is_array( $response ) ) {
+            if ( is_array( $response ) ) {
                 $body = json_decode( wp_remote_retrieve_body( $response ), true );
 
-                if( isset( $body['apikey'] ) ) {
+                if ( isset( $body['apikey'] ) ) {
                     update_option( 'wp_erp_apikey', $body['apikey'] );
                     update_option( 'wp_erp_api_active', $body['status'] );
 
-                    if( isset( $body['email_count'] ) ) {
+                    if ( isset( $body['email_count'] ) ) {
                         update_option( 'wp_erp_api_email_count', $body['email_count'] );
                     }
 
