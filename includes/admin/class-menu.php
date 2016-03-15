@@ -15,14 +15,11 @@ class Admin_Menu {
      * Kick-in the class
      */
     public function __construct() {
-        $this->action( 'init', 'do_mode_switch', 99 );
         $this->action( 'admin_menu', 'admin_menu', 99 );
         $this->action( 'admin_menu', 'hide_admin_menus', 100 );
         $this->action( 'wp_before_admin_bar_render', 'hide_admin_bar_links', 100 );
 
         $this->action( 'init', 'tools_page_handler' );
-
-        $this->action( 'admin_bar_menu', 'admin_bar_mode_switch', 9999 );
     }
 
     /**
@@ -32,84 +29,6 @@ class Admin_Menu {
      */
     public function get_menu_position() {
         return apply_filters( 'payroll_menu_position', 9999 );
-    }
-
-
-    /**
-     * Mode/Context switch for ERP
-     *
-     * @param WP_Admin_Bar $wp_admin_bar The admin bar object
-     */
-    public function admin_bar_mode_switch( $wp_admin_bar ) {
-        // bail if current user doesnt have cap
-        if ( ! current_user_can( 'manage_options' ) ) {
-            return;
-        }
-
-        $modules      = wperp()->modules->get_modules();
-        $current_mode = wperp()->modules->get_current_module();
-
-        // ERP Mode
-        $title        = __( 'Switch ERP Mode', 'wp-erp' );
-        $icon         = '<span class="ab-icon dashicons-randomize"></span>';
-        $text         = sprintf( '%s: %s', __( 'ERP Mode', 'wp-erp' ), $current_mode['title'] );
-
-        $wp_admin_bar->add_menu( array(
-            'id'        => 'erp-mode-switch',
-            'title'     => $icon . $text,
-            'href'      => '#',
-            'position'  => 0,
-            'meta'      => array(
-                'title' => $title
-            )
-        ) );
-
-        foreach ($modules as $key => $module) {
-            if ( ! wperp()->modules->is_module_active( $key ) ) {
-                continue;
-            }
-            
-            $wp_admin_bar->add_menu( array(
-                'id'     => 'erp-mode-' . $key,
-                'parent' => 'erp-mode-switch',
-                'title'  => $module['title'],
-                'href'   => wp_nonce_url( add_query_arg( 'erp-mode', $key ), 'erp_mode_nonce', 'erp_mode_nonce' )
-            ) );
-        }
-    }
-
-    /**
-     * Do the admin mode switch
-     *
-     * @return void
-     */
-    public function do_mode_switch() {
-        global $current_user;
-
-        // bail if current user doesnt have cap
-        if ( ! current_user_can( 'manage_options' ) ) {
-            return;
-        }
-
-        // check for our nonce
-        if ( ! isset( $_GET['erp_mode_nonce'] ) || ! wp_verify_nonce( $_GET['erp_mode_nonce'], 'erp_mode_nonce' ) ) {
-            return;
-        }
-
-        $modules = wperp()->modules->get_modules();
-
-        // now check for our query string
-        if ( ! isset( $_REQUEST['erp-mode'] ) || ! array_key_exists( $_REQUEST['erp-mode'], $modules ) ) {
-            return;
-        }
-
-        $new_mode = $_REQUEST['erp-mode'];
-
-        update_user_meta( $current_user->ID, '_erp_mode', $new_mode );
-
-        $redirect_to = apply_filters( 'erp_switch_redirect_to', admin_url( 'index.php' ), $new_mode );
-        wp_redirect( $redirect_to );
-        exit;
     }
 
     /**
@@ -127,7 +46,7 @@ class Admin_Menu {
         add_submenu_page( 'erp-company', __( 'Settings', 'wp-erp' ), __( 'Settings', 'wp-erp' ), 'manage_options', 'erp-settings', array( $this, 'settings_page' ) );
         add_submenu_page( 'erp-company', __( 'Modules', 'wp-erp' ), __( 'Modules', 'wp-erp' ), 'manage_options', 'erp-modules', array( $this, 'module' ) );
         add_submenu_page( 'erp-company', __( 'Add-Ons', 'wp-erp' ), __( 'Add-Ons', 'wp-erp' ), 'manage_options', 'erp-addons', array( $this, 'addon_page' ) );
-      
+
     }
 
     /**
@@ -140,7 +59,7 @@ class Admin_Menu {
     }
 
     /**
-     * Erp module 
+     * Erp module
      *
      * @return void
      */
@@ -208,15 +127,12 @@ class Admin_Menu {
 
         // admin menu form
         if ( isset( $_POST['erp_admin_menu'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'erp-remove-menu-nonce' ) ) {
-            if ( isset( $_POST['menu'] ) ) {
-                $menu = array_map( 'strip_tags', $_POST['menu'] );
-                update_option( '_erp_admin_menu', $menu );
-            }
 
-            if ( isset( $_POST['admin_menu'] ) ) {
-                $bar_menu = array_map( 'strip_tags', $_POST['admin_menu'] );
-                update_option( '_erp_adminbar_menu', $bar_menu );
-            }
+            $menu     = isset( $_POST['menu'] ) ? array_map( 'strip_tags', $_POST['menu'] ) : [];
+            $bar_menu = isset( $_POST['admin_menu'] ) ? array_map( 'strip_tags', $_POST['admin_menu'] ) : [];
+
+            update_option( '_erp_admin_menu', $menu );
+            update_option( '_erp_adminbar_menu', $bar_menu );
         }
     }
 
