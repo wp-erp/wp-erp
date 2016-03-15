@@ -179,7 +179,6 @@ class Human_Resource {
         wp_enqueue_style( 'erp-style' );
 
         if ( 'hr-management_page_erp-hr-reporting' == $hook ) {
-
             wp_enqueue_script( 'erp-flotchart' );
             wp_enqueue_script( 'erp-flotchart-time' );
             wp_enqueue_script( 'erp-flotchart-pie' );

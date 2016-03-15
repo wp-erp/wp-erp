@@ -147,7 +147,7 @@ function erp_hrm_is_valid_leave_duration( $start_date, $end_date, $policy_id, $u
     $working_day     = erp_hr_get_work_days_without_off_day( $start_date, $end_date );//erp_hr_get_work_days_between_dates( $start_date, $end_date );erp_hr_get_work_days_without_holiday
     $apply_days      = $working_day['total'] + $user_enti_count;
 
-    if ( $apply_days >  $policy_count[0] ) {
+    if ( $apply_days >  $policy_count ) {
         return false;
     }
 
