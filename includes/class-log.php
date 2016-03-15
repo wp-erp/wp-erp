@@ -54,7 +54,9 @@ class Log {
 	    $defaults = array(
 	        'number'     => 20,
 	        'offset'     => 0,
-	        'no_object'  => false
+	        'no_object'  => false,
+            'orderby'    => 'created_at',
+            'order'      => 'DESC'
 	    );
 
 	    $args  = wp_parse_args( $args, $defaults );
@@ -94,6 +96,7 @@ class Log {
 	    if ( false === $results ) {
 	        $results = $audit_log->skip( $args['offset'] )
 	                    ->take( $args['number'] )
+                        ->orderBy( $args['orderby'], $args['order'] )
 	                    ->get()
 	                    ->toArray();
 

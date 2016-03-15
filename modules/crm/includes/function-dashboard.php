@@ -11,7 +11,7 @@
 function erp_crm_dashboard_right_widgets_area() {
     erp_admin_dash_metabox( __( '<i class="fa fa-calendar-check-o"></i> Todays Schedules', 'wp-erp' ), 'erp_hr_dashboard_widget_todays_schedules' );
     erp_admin_dash_metabox( __( '<i class="fa fa-calendar-check-o"></i> Upcoming Schedules', 'wp-erp' ), 'erp_hr_dashboard_widget_upcoming_schedules' );
-    erp_admin_dash_metabox( __( '<i class="fa fa-calendar-check-o"></i> Latest Contact', 'wp-erp' ), 'erp_hr_dashboard_widget_latest_contact' );
+    erp_admin_dash_metabox( __( '<i class="fa fa-users"></i> Recently Added', 'wp-erp' ), 'erp_hr_dashboard_widget_latest_contact' );
 }
 
 /**
@@ -187,8 +187,58 @@ function erp_hr_dashboard_widget_my_schedules() {
 
 
 function erp_hr_dashboard_widget_latest_contact() {
-    // $contacts = erp_get_peoples( [ 'type' => 'contact', 'orderby'    => 'id',
-    //     'order'      => 'ASC' ] );
+    $contacts  = erp_get_peoples( [ 'type' => 'contact', 'orderby' => 'created', 'order' => 'DESC', 'number' => 5 ] );
+    $companies = erp_get_peoples( [ 'type' => 'company', 'orderby' => 'created', 'order' => 'DESC', 'number' => 5 ] );
+    ?>
+
+    <h4><?php _e( 'Contact Lists', 'wp-erp' ); ?></h4>
+
+    <?php if ( $contacts ) { ?>
+
+        <ul class="erp-list erp-latest-contact-list">
+            <?php foreach ( $contacts as $contact ) : ?>
+                <li>
+                    <div class="avatar">
+                        <?php echo erp_crm_get_avatar( $contact->id, '28' ); ?>
+                    </div>
+                    <div class="details">
+                        <p class="contact-name"><a href="<?php echo erp_crm_get_details_url( $contact->id, 'contact' ); ?>"><?php echo $contact->first_name . ' ' . $contact->last_name; ?></a></p>
+                        <p class="contact-stage"><?php echo erp_people_get_meta( $contact->id, 'life_stage', true ); ?></p>
+                    </div>
+                    <span class="contact-created-time erp-tips" title="<?php echo sprintf( '%s %s', __( 'Created on', 'wp-erp' ), erp_format_date( $contact->created ) )  ?>"><i class="fa fa-clock-o"></i></span>
+                </li>
+            <?php endforeach ?>
+        </ul>
+
+    <?php } else { ?>
+        <?php _e( 'No contacts found', 'wp-erp' ); ?>
+    <?php } ?>
+
+    <hr>
+
+    <h4><?php _e( 'Company Lists', 'wp-erp' ); ?></h4>
+
+    <?php if ( $companies ) { ?>
+        <ul class="erp-list erp-latest-contact-list">
+            <?php foreach ( $companies as $company ) : ?>
+                <li>
+                    <div class="avatar">
+                        <?php echo erp_crm_get_avatar( $company->id, '28' ); ?>
+                    </div>
+
+                    <div class="details">
+                        <p class="contact-name"><a href="<?php echo erp_crm_get_details_url( $company->id, 'company' ); ?>"><?php echo $company->company; ?></a></p>
+                        <p class="contact-stage"><?php echo erp_people_get_meta( $company->id, 'life_stage', true ); ?></p>
+                    </div>
+                    <span class="contact-created-time erp-tips" title="<?php echo sprintf( '%s %s', __( 'Created on', 'wp-erp' ), erp_format_date( $company->created ) )  ?>"><i class="fa fa-clock-o"></i></span>
+                </li>
+            <?php endforeach ?>
+        </ul>
+    <?php
+    } else {
+        _e( 'No companies found', 'wp-erp' );
+    }
+
 }
 
 

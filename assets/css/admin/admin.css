@@ -138,6 +138,63 @@
   padding: 0px;
   margin: 0px;
 }
+.crm-dashboard ul.erp-latest-contact-list li {
+  position: relative;
+  padding: 4px 0px;
+  border-bottom: 1px solid #e3e3e3;
+}
+.crm-dashboard ul.erp-latest-contact-list li:before,
+.crm-dashboard ul.erp-latest-contact-list li:after {
+  content: " ";
+  display: table;
+}
+.crm-dashboard ul.erp-latest-contact-list li:after {
+  clear: both;
+}
+.crm-dashboard ul.erp-latest-contact-list li:before,
+.crm-dashboard ul.erp-latest-contact-list li:after {
+  content: " ";
+  display: table;
+}
+.crm-dashboard ul.erp-latest-contact-list li:after {
+  clear: both;
+}
+.crm-dashboard ul.erp-latest-contact-list li span.contact-created-time {
+  position: absolute;
+  top: 22%;
+  right: 3px;
+  cursor: pointer;
+}
+.crm-dashboard ul.erp-latest-contact-list li:first-child {
+  padding-top: 0px;
+}
+.crm-dashboard ul.erp-latest-contact-list li:last-child {
+  border-bottom: none;
+  padding-bottom: 0px;
+}
+.crm-dashboard ul.erp-latest-contact-list li .avatar {
+  width: 29px;
+  float: left;
+  margin-right: 10px;
+}
+.crm-dashboard ul.erp-latest-contact-list li .details {
+  float: left;
+}
+.crm-dashboard ul.erp-latest-contact-list li .details p.contact-name {
+  margin-top: -3px;
+  margin-bottom: -2px;
+  padding: 0px;
+}
+.crm-dashboard ul.erp-latest-contact-list li .details p.contact-name a {
+  text-decoration: none;
+}
+.crm-dashboard ul.erp-latest-contact-list li .details p.contact-stage {
+  padding: 0px;
+  margin-top: 0px;
+  margin-bottom: 3px;
+  color: #afafaf;
+  font-style: italic;
+}
 .erp-leads-single .erp-user-info h3 {
   margin: 15px 0;
 }
