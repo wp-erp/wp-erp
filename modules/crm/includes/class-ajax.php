@@ -302,7 +302,7 @@ class Ajax_Handler {
             erp_crm_customer_remove_company( $id );
         }
 
-        $this->send_success('hello');
+        $this->send_success( __('hello', 'wp-erp' ) );
 
     }
 
@@ -410,8 +410,8 @@ class Ajax_Handler {
                 'status'         => $value['status'],
                 'subscribe_at'   => erp_format_date( $value['subscribe_at'] ),
                 'unsubscribe_at' => erp_format_date( $value['unsubscribe_at'] ),
-                'subscribe_message' => sprintf( ' ( %s %s )', __( 'Subscribed on'), erp_format_date( $value['subscribe_at'] ) ),
-                'unsubscribe_message' => sprintf( ' ( %s %s )', __( 'Unsubscribed on'), erp_format_date( $value['unsubscribe_at'] ) )
+                'subscribe_message' => sprintf( ' ( %s %s )', __( 'Subscribed on', 'wp-erp' ), erp_format_date( $value['subscribe_at'] ) ),
+                'unsubscribe_message' => sprintf( ' ( %s %s )', __( 'Unsubscribed on', 'wp-erp' ), erp_format_date( $value['unsubscribe_at'] ) )
             ];
         }
 
@@ -447,7 +447,7 @@ class Ajax_Handler {
         }
 
 
-        return $this->send_success( __( 'Succesfully subscriber for this user') );
+        return $this->send_success( __( 'Succesfully subscriber for this user', 'wp-erp' ) );
     }
 
     /**

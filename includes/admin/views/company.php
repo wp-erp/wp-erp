@@ -14,7 +14,7 @@
                 </div><!-- .logo-area -->
 
                 <div class="content-area">
-                    <h2><?php echo $company->name; ?> <a href="<?php echo $company->get_edit_url(); ?>">Edit</a></h2>
+                    <h2><?php echo $company->name; ?> <a href="<?php echo $company->get_edit_url(); ?>"><?php _e( 'Edit', 'wp-erp' ); ?></a></h2>
 
                     <address class="address">
                         <?php echo $company->get_formatted_address(); ?>
