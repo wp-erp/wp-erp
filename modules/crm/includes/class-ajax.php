@@ -546,7 +546,7 @@ class Ajax_Handler {
      * @return json
      */
     public function fetch_all_activity() {
-        $feeds = erp_crm_get_customer_activity( $_POST );
+        $feeds = erp_crm_get_feed_activity( $_POST );
         $this->send_success( $feeds );
     }
 

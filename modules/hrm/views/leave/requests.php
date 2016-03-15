@@ -62,6 +62,9 @@ class Leave_Requests_List_Table extends WP_List_Table {
             case 'status':
                 return '<span class="status-' . $item->status . '">' . erp_hr_leave_request_get_statuses( $item->status ) . '</span>';
 
+            case 'balance':
+                $policy = erp_hr_leave_get_policy( $item->policy_id ); 
+                return intval( $policy->value ) - intval( $item->days );
             default:
                 return isset( $item->$column_name ) ? $item->$column_name : '';
         }

@@ -27,27 +27,26 @@ function erp_hr_dashboard_widget_birthday() {
     $todays_birthday  = erp_hr_get_todays_birthday();
     $upcoming_birtday = erp_hr_get_next_seven_days_birthday();
     ?>
-    <h4><?php _e( 'Today\'s Birthday', 'wp-erp' ); ?></h4>
-
     <?php if ( $todays_birthday ) { ?>
+
+        <h4><?php _e( 'Today\'s Birthday', 'wp-erp' ); ?></h4>
+
         <ul class="erp-list list-inline">
             <?php
             foreach ( $todays_birthday as $key => $user ) {
                 $employee = new \WeDevs\ERP\HRM\Employee( intval( $user->user_id ) );
                 ?>
-                    <li><a href="<?php echo $employee->get_details_url(); ?>" class="erp-tips" title="<?php echo $employee->get_full_name(); ?>"><?php echo $employee->get_avatar( 32 ); ?></a></li>
+                li><a href="<?php echo $employee->get_details_url(); ?>" class="erp-tips" title="<?php echo $employee->get_full_name(); ?>"><?php echo $employee->get_avatar( 32 ); ?></a></li>
             <?php } ?>
         </ul>
 
         <?php
-    } else {
-        _e( 'No one has birthday today!', 'wp-erp' );
     }
     ?>
 
-    <h4><?php _e( 'Upcoming Birthday', 'wp-erp' ); ?></h4>
-
     <?php if ( $upcoming_birtday ) { ?>
+
+        <h4><?php _e( 'Upcoming Birthdays', 'wp-erp' ); ?></h4>
 
         <ul class="erp-list list-two-side list-sep">
 
@@ -64,7 +63,9 @@ function erp_hr_dashboard_widget_birthday() {
 
         </ul>
         <?php
-    } else {
+    }
+
+    if ( ! $todays_birthday && ! $upcoming_birtday ) {
         _e( 'No one has birthdays this week!', 'wp-erp' );
     }
 }
@@ -80,7 +81,7 @@ function erp_hr_dashboard_widget_latest_announcement() {
     $announcements = erp_hr_employee_dashboard_announcement( get_current_user_id() );
 
     if ( $announcements ) {
-    ?>
+        ?>
       <ul class="erp-list erp-dashboard-announcement">
         <?php foreach ( $announcements as $key => $announcement ): ?>
             <li <?php echo ( $announcement->status == 'unread' ) ? 'class="unread"' : ''; ?>>
@@ -113,35 +114,41 @@ function erp_hr_dashboard_widget_whoisout() {
     $leave_requests           = erp_hr_get_current_month_leave_list();
     $leave_requests_nextmonth = erp_hr_get_next_month_leave_list();
     ?>
-    <h4><?php _e( 'This Month', 'wp-erp' ); ?></h4>
-    <?php if ( $leave_requests ): ?>
+    <?php if ( $leave_requests ) { ?>
+
+        <h4><?php _e( 'This Month', 'wp-erp' ); ?></h4>
+
         <ul class="erp-list list-two-side list-sep">
             <?php foreach ( $leave_requests as $key => $leave ): ?>
                 <?php $employee = new \WeDevs\ERP\HRM\Employee( intval( $leave->user_id ) ); ?>
                 <li>
                     <a href="<?php echo $employee->get_details_url(); ?>"><?php echo $employee->get_full_name(); ?></a>
-                    <span><i class="fa fa-calendar"></i> <?php echo erp_format_date( $leave->start_date, 'M d,y' ) . ' - '. erp_format_date( $leave->end_date, 'M d,y' ); ?></span>
+                    <span><i class="fa fa-calendar"></i> <?php echo erp_format_date( $leave->start_date, 'M d' ) . ' - '. erp_format_date( $leave->end_date, 'M d' ); ?></span>
                 </li>
             <?php endforeach ?>
         </ul>
-    <?php else: ?>
-        <?php _e( 'No one is in vacation', 'wp-erp' ); ?>
-    <?php endif ?>
-    <hr>
-    <h4><?php _e( 'Next Month', 'wp-erp' ); ?></h4>
-    <?php if ( $leave_requests_nextmonth ): ?>
+    <?php } ?>
+
+    <?php if ( $leave_requests_nextmonth ) { ?>
+        <h4><?php _e( 'Next Month', 'wp-erp' ); ?></h4>
+
         <ul class="erp-list list-two-side list-sep">
             <?php foreach ( $leave_requests_nextmonth as $key => $leave ): ?>
                 <?php $employee = new \WeDevs\ERP\HRM\Employee( intval( $leave->user_id ) ); ?>
                 <li>
                     <a href="<?php echo $employee->get_details_url(); ?>"><?php echo $employee->get_full_name(); ?></a>
-                    <span><i class="fa fa-calendar"></i> <?php echo erp_format_date( $leave->start_date, 'M d,y' ) . ' - '. erp_format_date( $leave->end_date, 'M d,y' ); ?></span>
+                    <span><i class="fa fa-calendar"></i> <?php echo erp_format_date( $leave->start_date, 'M d' ) . ' - '. erp_format_date( $leave->end_date, 'M d' ); ?></span>
                 </li>
             <?php endforeach ?>
         </ul>
-    <?php else: ?>
-        <?php _e( 'No one is vacation on next month', 'wp-erp' ); ?>
-    <?php endif ?>
+
+    <?php } ?>
+
+    <?php if ( ! $leave_requests && ! $leave_requests_nextmonth ) { ?>
+
+        <?php _e( 'No one is on vacation on this or next month', 'wp-erp' ); ?>
+
+    <?php } ?>
 
     <?php
 }
@@ -238,11 +245,6 @@ function erp_hr_dashboard_widget_leave_calendar() {
         });
     });
 
-</script>
+    </script>
     <?php
 }
-
-
-
-
-
