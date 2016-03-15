@@ -128,9 +128,9 @@ class ERP_Email_Settings extends ERP_Settings_Page {
                             <?php
                                 $columns = apply_filters( 'erp_email_setting_columns', array(
                                     // 'status'   => '',
-                                    'name'        => __( 'Email', 'erp' ),
-                                    // 'module'   => __( 'Module', 'erp' ),
-                                    'description' => __( 'Description', 'erp' ),
+                                    'name'        => __( 'Email', 'wp-erp' ),
+                                    // 'module'   => __( 'Module', 'wp-erp' ),
+                                    'description' => __( 'Description', 'wp-erp' ),
                                     'actions'     => ''
                                 ) );
 

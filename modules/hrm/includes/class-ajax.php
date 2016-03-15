@@ -1255,13 +1255,13 @@ class Ajax_Handler {
         $id = isset( $_POST['employee_id'] ) && $_POST['employee_id'] ? intval( $_POST['employee_id'] ) : false;
 
         if ( ! $id ) {
-           $this->send_error( 'Please select employee', 'wp-erp' );
+           $this->send_error( __( 'Please select employee', 'wp-erp' ) );
         }
 
         $policy_id = isset( $_POST['type'] ) && $_POST['type'] ? $_POST['type'] : false;
 
         if ( ! $policy_id ) {
-            $this->send_error( 'Please select leave type', 'wp-erp' );
+            $this->send_error( __( 'Please select leave type', 'wp-erp' ) );
         }
 
         $start_date           = isset( $_POST['from'] ) ? sanitize_text_field( $_POST['from'] ) : date_i18n( 'Y-m-d' );
@@ -1271,23 +1271,23 @@ class Ajax_Handler {
         $financial_end_date   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
 
         if ( $start_date >  $end_date ) {
-            $this->send_error( 'Invalid date range', 'wp-erp' );
+            $this->send_error( __( 'Invalid date range', 'wp-erp' ) );
         }
 
         if ( ! $valid_date_range ) {
-            $this->send_error( sprintf( 'Date range must be within %s to %s', erp_format_date( $financial_start_date ), erp_format_date( $financial_end_date ) ) );
+            $this->send_error( sprintf( __( 'Date range must be within %s to %s', 'wp-erp' ), erp_format_date( $financial_start_date ), erp_format_date( $financial_end_date ) ) );
         }
 
         $leave_record_exisst = erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $id );
 
         if ( $leave_record_exisst ) {
-            $this->send_error(__( 'Leave recored found withing this range!', 'wp-erp' ) );
+            $this->send_error( __( 'Leave recored found withing this range!', 'wp-erp' ) );
         }
 
         $is_policy_valid = erp_hrm_is_valid_leave_duration( $start_date, $end_date, $policy_id, $id );
 
         if ( ! $is_policy_valid ) {
-            $this->send_error(__( 'Your leave duration exceeded entitlement!', 'wp-erp' ) );
+            $this->send_error( __( 'Your leave duration exceeded entitlement!', 'wp-erp' ) );
         }
 
         $days = erp_hr_get_work_days_between_dates( $start_date, $end_date );
@@ -1320,7 +1320,7 @@ class Ajax_Handler {
         $employee_id = isset( $_POST['employee_id'] ) && $_POST['employee_id'] ? intval( $_POST['employee_id'] ) : false;
 
         if ( ! $employee_id ) {
-           $this->send_error( 'Please select employee', 'wp-erp' );
+           $this->send_error( __( 'Please select employee', 'wp-erp' ) );
         }
 
         $policies = erp_hr_get_assign_policy_from_entitlement( $employee_id );
@@ -1341,7 +1341,7 @@ class Ajax_Handler {
             return $this->send_success( $content );
         }
 
-        return $this->send_error( 'No policy found. Can not apply any leave', 'wp-erp' );
+        return $this->send_error( __( 'No policy found. Can not apply any leave', 'wp-erp' ) );
     }
 
     /**
@@ -1354,16 +1354,17 @@ class Ajax_Handler {
     public function leave_available_days() {
 
         $this->verify_nonce( 'wp-erp-hr-nonce' );
+
         $employee_id = isset( $_POST['employee_id'] ) && $_POST['employee_id'] ? intval( $_POST['employee_id'] ) : false;
         $policy_id   = isset( $_POST['policy_id'] ) && $_POST['policy_id'] ? intval( $_POST['policy_id'] ) : false;
         $available   = 0;
 
         if ( ! $employee_id ) {
-           $this->send_error( 'Please select an employee', 'wp-erp' );
+           $this->send_error( __( 'Please select an employee', 'wp-erp' ) );
         }
 
         if ( ! $policy_id ) {
-           $this->send_error( 'Please select a policy', 'wp-erp' );
+           $this->send_error( __( 'Please select a policy', 'wp-erp' ) );
         }
 
         $balance = erp_hr_leave_get_balance( $employee_id );
@@ -1371,13 +1372,14 @@ class Ajax_Handler {
         if ( array_key_exists( $policy_id, $balance ) ) {
             $available = $balance[ $policy_id ]['entitlement'] - $balance[ $policy_id ]['total'];
         }
+
         if ( $available < 0 ) {
             $content = sprintf( '<span class="description red">%d %s</span>', number_format_i18n( $available ), __( 'days are available', 'wp-erp' ) );
         } elseif ( $available > 0 ) {
             $content = sprintf( '<span class="description green">%d %s</span>', number_format_i18n( $available ), __( 'days are available', 'wp-erp' ) );
         } else {
             $leave_policy_day = \WeDevs\ERP\HRM\Models\Leave_Policies::select( 'value' )->where( 'id', $policy_id )->pluck('value');
-            $content = sprintf( '<span class="description">%d %s</span>', number_format_i18n( $leave_policy_day[0] ), __( 'days are available', 'wp-erp' ) );
+            $content = sprintf( '<span class="description">%d %s</span>', number_format_i18n( $leave_policy_day ), __( 'days are available', 'wp-erp' ) );
         }
 
         $this->send_success( $content );
@@ -1396,7 +1398,7 @@ class Ajax_Handler {
     public function leave_request() {
 
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-leave-req-new' ) ) {
-            $this->send_error( 'Something went wrong!', 'wp-erp' );
+            $this->send_error( __( 'Something went wrong!', 'wp-erp' ) );
         }
 
         $employee_id  = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
@@ -1422,9 +1424,9 @@ class Ajax_Handler {
                 $emailer->trigger( $request_id );
             }
 
-            $this->send_success( 'Leave request has been submitted successfully!', 'wp-erp' );
+            $this->send_success( __( 'Leave request has been submitted successfully!', 'wp-erp' ) );
         } else {
-            $this->send_error( 'Something went wrong, please try again.', 'wp-erp' );
+            $this->send_error( __( 'Something went wrong, please try again.', 'wp-erp' ) );
         }
     }
 

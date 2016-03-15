@@ -9,7 +9,7 @@
             'class'       => 'erp-crm-select2-add-more erp-crm-customer-company-dropdown',
             'custom_attr' => array( 'data-id' => 'erp-contact-new', 'data-type' => 'company' ),
             'required'    => true,
-            'options'     => [ '' => '--Select a Company--' ] + erp_get_peoples_array( [ 'type' => 'company', 'number' => -1 ] )
+            'options'     => [ '' => __( '--Select a Company--', 'wp-erp' ) ] + erp_get_peoples_array( [ 'type' => 'company', 'number' => -1 ] )
         ) ); ?>
     </div>
 
