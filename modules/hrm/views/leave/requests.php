@@ -51,6 +51,17 @@ class Leave_Requests_List_Table extends WP_List_Table {
      * @return string
      */
     function column_default( $item, $column_name ) {
+        
+        $balance   = erp_hr_leave_get_balance( $item->user_id );
+        $policy = erp_hr_leave_get_policy( $item->policy_id );
+
+        if ( isset( $balance[ $item->policy_id ] ) ) {
+            $scheduled = $balance[ $item->policy_id ]['scheduled'];
+            $available = $balance[ $item->policy_id ]['entitlement'] - $balance[ $item->policy_id ]['total'];
+        } else {
+            $scheduled = '';
+            $available = '';
+        }
 
         switch ( $column_name ) {
             case 'date':
@@ -62,9 +73,15 @@ class Leave_Requests_List_Table extends WP_List_Table {
             case 'status':
                 return '<span class="status-' . $item->status . '">' . erp_hr_leave_request_get_statuses( $item->status ) . '</span>';
 
-            case 'balance':
-                $policy = erp_hr_leave_get_policy( $item->policy_id ); 
-                return intval( $policy->value ) - intval( $item->days );
+            case 'available':
+                if ( $available < 0 ) {
+                    return sprintf( '<span class="red">%d %s</span>', number_format_i18n( $available ), __( 'days', 'wp-erp' ) );
+                } elseif ( $available > 0 ) {
+                    return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $available ), __( 'days', 'wp-erp' ) );
+                } else {
+                    return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $policy->value ), __( 'days', 'wp-erp' ) );
+                }
+
             default:
                 return isset( $item->$column_name ) ? $item->$column_name : '';
         }
@@ -91,14 +108,15 @@ class Leave_Requests_List_Table extends WP_List_Table {
      */
     function get_columns() {
         $columns = array(
-            'cb'       => '<input type="checkbox" />',
-            'name'     => __( 'Employee Name', 'wp-erp' ),
-            'date'     => __( 'Date', 'wp-erp' ),
-            'policy'   => __( 'Leave Policy', 'wp-erp' ),
-            'days'     => __( 'Days', 'wp-erp' ),
-            'balance'  => __( 'Balance', 'wp-erp' ),
-            'status'   => __( 'Status', 'wp-erp' ),
-            'reason'   => __( 'Reason', 'wp-erp' )
+            'cb'        => '<input type="checkbox" />',
+            'name'      => __( 'Employee Name', 'wp-erp' ),
+            'policy'    => __( 'Leave Policy', 'wp-erp' ),
+            'from_date' => __( 'From', 'wp-erp' ),
+            'to_date'   => __( 'To', 'wp-erp' ),
+            'days'      => __( 'Days', 'wp-erp' ),
+            'available' => __( 'Available', 'wp-erp' ),
+            'status'    => __( 'Status', 'wp-erp' ),
+            'reason'    => __( 'Reason', 'wp-erp' )
         );
         return $columns;
     }
