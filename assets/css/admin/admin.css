@@ -105,11 +105,36 @@
   text-decoration: none;
   display: block;
 }
-.crm-dashboard ul.erp-crm-dashbaord-todays-schedules {
+.crm-dashboard ul.erp-crm-dashbaord-todays-schedules,
+.crm-dashboard ul.erp-crm-dashbaord-upcoming-schedules {
   padding: 0px;
   margin: 0px;
 }
-.crm-dashboard ul.erp-crm-dashbaord-todays-schedules p {
+.crm-dashboard ul.erp-crm-dashbaord-todays-schedules li,
+.crm-dashboard ul.erp-crm-dashbaord-upcoming-schedules li {
+  line-height: 22px;
+}
+.crm-dashboard ul.erp-crm-dashbaord-todays-schedules li a,
+.crm-dashboard ul.erp-crm-dashbaord-upcoming-schedules li a {
+  text-decoration: none;
+}
+.crm-dashboard ul.erp-crm-dashbaord-todays-schedules li a:hover,
+.crm-dashboard ul.erp-crm-dashbaord-upcoming-schedules li a:hover {
+  text-decoration: underline;
+}
+.crm-dashboard ul.erp-crm-dashbaord-todays-schedules li a.erp-crm-dashbaord-show-details-schedule,
+.crm-dashboard ul.erp-crm-dashbaord-upcoming-schedules li a.erp-crm-dashbaord-show-details-schedule {
+  display: block;
+}
+.crm-dashboard ul.erp-crm-dashbaord-todays-schedules li span,
+.crm-dashboard ul.erp-crm-dashbaord-upcoming-schedules li span {
+  display: inline-block;
+  color: #0073aa;
+  cursor: pointer;
+  float: none !important;
+}
+.crm-dashboard ul.erp-crm-dashbaord-todays-schedules p,
+.crm-dashboard ul.erp-crm-dashbaord-upcoming-schedules p {
   padding: 0px;
   margin: 0px;
 }

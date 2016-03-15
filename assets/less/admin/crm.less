@@ -90,9 +90,34 @@
         }
     }
 
-    ul.erp-crm-dashbaord-todays-schedules {
+    ul.erp-crm-dashbaord-todays-schedules,
+    ul.erp-crm-dashbaord-upcoming-schedules {
         padding:0px;
         margin:0px;
+
+        li {
+
+            line-height: 22px;
+
+            a {
+                text-decoration: none;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+
+                &.erp-crm-dashbaord-show-details-schedule {
+                    display: block;
+                }
+            }
+
+            span {
+                display: inline-block;
+                color: #0073aa;
+                cursor: pointer;
+                float:none !important;
+            }
+        }
 
         p {
             padding:0px;

@@ -63,14 +63,14 @@
 			<?php
 				foreach ( $emp_data as $emp ) {
 					echo '<tr>';
-					echo '<td>' . $emp->department . '</td>';
-					echo '<td>' . $emp->_under18 . '</td>';
-					echo '<td>' . $emp->_18_to_25 . '</td>';
-					echo '<td>' . $emp->_26_to_35 . '</td>';
-					echo '<td>' . $emp->_36_to_45 . '</td>';
-					echo '<td>' . $emp->_46_to_55 . '</td>';
-					echo '<td>' . $emp->_56_to_65 . '</td>';
-					echo '<td>' . $emp->_65plus . '</td>';
+					echo '<td>' . esc_attr( $emp->department ) . '</td>';
+					echo '<td>' . esc_attr( $emp->_under18 ) . '</td>';
+					echo '<td>' . esc_attr( $emp->_18_to_25 ) . '</td>';
+					echo '<td>' . esc_attr( $emp->_26_to_35 ) . '</td>';
+					echo '<td>' . esc_attr( $emp->_36_to_45 ) . '</td>';
+					echo '<td>' . esc_attr( $emp->_46_to_55 ) . '</td>';
+					echo '<td>' . esc_attr( $emp->_56_to_65 ) . '</td>';
+					echo '<td>' . esc_attr( $emp->_65plus ) . '</td>';
 					echo '</tr>';
 				}
 			?>
@@ -82,16 +82,16 @@
 		(function($){
 
 			var ageBreakdown =  [
-			    [0, <?php echo $emp_all_data['_under_18']; ?>],
-			    [1, <?php echo $emp_all_data['_18_to_25']; ?>],
-			    [2, <?php echo $emp_all_data['_26_to_35']; ?>],
-			    [3, <?php echo $emp_all_data['_36_to_45']; ?>],
-			    [4, <?php echo $emp_all_data['_46_to_55']; ?>],
-			    [5, <?php echo $emp_all_data['_56_to_65']; ?>],
-			    [6, <?php echo $emp_all_data['_65plus']; ?>]
+			    [0, <?php echo esc_attr( $emp_all_data['_under_18'] ); ?>],
+			    [1, <?php echo esc_attr( $emp_all_data['_18_to_25'] ); ?>],
+			    [2, <?php echo esc_attr( $emp_all_data['_26_to_35'] ); ?>],
+			    [3, <?php echo esc_attr( $emp_all_data['_36_to_45'] ); ?>],
+			    [4, <?php echo esc_attr( $emp_all_data['_46_to_55'] ); ?>],
+			    [5, <?php echo esc_attr( $emp_all_data['_56_to_65'] ); ?>],
+			    [6, <?php echo esc_attr( $emp_all_data['_65plus'] ); ?>]
 			] ;
 
-			var dataset = [{ label: "Employee by age", data: ageBreakdown }];
+			var dataset = [{ label: "<?php _e( 'Employee by age', 'wp-erp' ); ?>", data: ageBreakdown }];
 
 			$(document).ready(function () {
 			  	$.plot($("#emp-age-breakdown-chart"), dataset, {
@@ -172,7 +172,7 @@
 	                        showTooltip(item.pageX,
 	                        item.pageY,
 	                        color,
-	                        "Age :<strong>" + item.series.xaxis.ticks[x].label + "  yr</strong><br>Employee : <strong>" + y + "</strong>");
+	                        "<?php _e(' Age :', 'wp-erp' ); ?><strong>" + item.series.xaxis.ticks[x].label + "  yr</strong><br><?php _e( 'Employee :', 'wp-erp' ); ?> <strong>" + y + "</strong>");
 	                    }
 	                } else {
 	                    $("#tooltip").remove();
@@ -282,7 +282,7 @@
 	                        showTooltip(item.pageX,
 	                        item.pageY,
 	                        color,
-	                        "<strong>" + item.series.yaxis.ticks[item.dataIndex].label + "</strong><br>Age : <strong>" + item.series.label + " yr </strong><br>Employee : <strong>" + y + "</strong>");
+	                        "<strong>" + item.series.yaxis.ticks[item.dataIndex].label + "</strong><br><?php _e( 'Age : ', 'wp-erp' ); ?><strong>" + item.series.label + " yr </strong><br><?php _e( 'Employee :', 'wp-erp' ); ?> <strong>" + y + "</strong>");
 	                    }
 	                } else {
 	                    $("#tooltip").remove();
