@@ -195,7 +195,7 @@ final class WeDevs_ERP {
         if ( ! $this->is_supported_php() ) {
             return;
         }
-
+        new \WeDevs\ERP\Admin\User_Profile();
         $this->container['modules'] = new \WeDevs\ERP\Framework\Modules();
         $this->container['emailer'] = \WeDevs\ERP\Emailer::init();
     }
