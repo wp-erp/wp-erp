@@ -668,4 +668,119 @@ add_action( 'init', function() {
 
 }, 99 );
 
+/**
+ * Display erp activation notice.
+ *
+ * @since 1.0
+ *
+ * @return void
+ */
+function erp_activation_notice() {
+    // delete_option( 'wp_erp_activation_dismiss' );
+    $apikey     = get_option( 'wp_erp_apikey' );
+    $dismiss    = get_option( 'wp_erp_activation_dismiss' );
 
+    if( ! $apikey && ! $dismiss ) {
+    ?>
+    <div class="error" id="erp-activation-container">
+        <table class="erp-grid-container">
+            <tr>
+                <td class="col-4">
+                    <p><?php _e( "You're awesome for installing <strong>WP ERP!</strong> Get API Key to get access to wperp cloud features!", "wp-erp" ) ?></p>
+                </td>
+                <td class="col-2">
+                    <input type="email" name="email" placeholder="email@example.com" />
+                    <button class="button-primary" id="get-api-key">Get API Key</button>
+                    <a id="dismiss" href="#">Dismiss</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <?php
+    }
+}
+
+/**
+ * Erp activation's JavaScript enqueue.
+ *
+ * @since  1.0
+ *
+ * @return void
+ */
+function erp_activation_notice_javascript() { ?>
+    <script type="text/javascript" >
+    jQuery( document ).ready( function($) {
+
+        $container = jQuery( "#erp-activation-container" );
+        jQuery( "#erp-activation-container button#get-api-key" ).click( function(e) {
+            e.preventDefault();
+
+            var data = {
+                'action': 'erp_activation_notice',
+                'email': jQuery(e.target).parent().find( "input[name=email]" ).val(),
+                '_wpnonce': '<?php echo wp_create_nonce( "wp-erp-activation-nonce" ); ?>'
+            };
+
+            jQuery.post( ajaxurl, data, function(response) {
+                if( response.success ) {
+                    jQuery( "[id=erp-activation-container]" ).hide();
+                    document.location.reload();
+                } else {
+                    if( response.data.error ) {
+                        alert( response.data.error );
+                    } else {
+                        alert( response.data );
+                    }
+                }
+            });
+        });
+
+        jQuery( "#erp-activation-container a#dismiss" ).click( function(e) {
+            e.preventDefault();
+
+            var data = {
+                'action': 'erp_activation_notice',
+                'dismiss': true,
+                '_wpnonce': '<?php echo wp_create_nonce( "wp-erp-activation-nonce" ); ?>'
+            };
+
+            jQuery.post( ajaxurl, data, function(response) {
+                if( response.success ) {
+                    $container.hide();
+                } else {
+                    console.log( response.data );
+                }
+            });
+        });
+
+        jQuery( "a#wp-erp-disconnect-api" ).click( function(e) {
+            e.preventDefault();
+
+            var data = {
+                'action': 'erp_activation_notice',
+                'disconnect': true,
+                '_wpnonce': '<?php echo wp_create_nonce( "wp-erp-activation-nonce" ); ?>'
+            };
+
+            jQuery.post( ajaxurl, data, function(response) {
+                if( response.success ) {
+                    document.location.reload();
+                } else {
+                    console.log( response.data );
+                }
+            });
+        });
+    });
+    </script> <?php
+}
+
+/**
+ * Activate or deactivate erp api cloud features by server.
+ *
+ * @return void
+ */
+function erp_api_mode_change() {
+    header('Access-Control-Allow-Origin: *');
+
+    update_option( 'wp_erp_api_active', $_POST['status'] );
+}
