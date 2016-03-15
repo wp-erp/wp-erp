@@ -559,10 +559,18 @@ class WeDevs_ERP_Installer {
      * @return void
      */
     public function create_roles() {
-        $roles = erp_hr_get_roles();
+        $roles_hr = erp_hr_get_roles();
 
-        if ( $roles ) {
-            foreach ($roles as $key => $role) {
+        if ( $roles_hr ) {
+            foreach ($roles_hr as $key => $role) {
+                add_role( $key, $role['name'], $role['capabilities'] );
+            }
+        }
+
+        $roles_crm = erp_crm_get_roles();
+
+        if ( $roles_crm ) {
+            foreach ($roles_crm as $key => $role) {
                 add_role( $key, $role['name'], $role['capabilities'] );
             }
         }
@@ -581,6 +589,7 @@ class WeDevs_ERP_Installer {
         if ( $admins ) {
             foreach ($admins as $user) {
                 $user->add_role( erp_hr_get_manager_role() );
+                $user->add_role( erp_crm_get_manager_role() );
             }
         }
     }

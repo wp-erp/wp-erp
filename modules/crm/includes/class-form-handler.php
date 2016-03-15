@@ -23,6 +23,13 @@ class Form_Handler {
         add_action( 'load-crm_page_erp-sales-contact-groups', array( $this, 'contact_subscriber_bulk_action') );
         add_action( 'admin_init', array( $this, 'handle_save_search_submit' ), 10 );
         add_action( 'admin_head', array( $this, 'handle_canonical_url' ), 10 );
+        add_action( 'erp_hr_after_employee_permission_set', array( $this, 'employee_permission_set'), 10, 2 );
+    }
+
+    function employee_permission_set( $post, $user ) {
+        $user_profile = new \WeDevs\ERP\CRM\User_Profile();
+        $post['crm_manager'] = isset( $post['crm_manager'] ) && $post['crm_manager'] == 'on' ? erp_crm_get_manager_role() : false;
+        $user_profile->update_user( $user->ID, $post );
     }
 
     public function handle_canonical_url() {
