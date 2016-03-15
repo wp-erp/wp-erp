@@ -1,14 +1,14 @@
 <?php
 /**
  * Plugin Name: WP ERP
- * Description: ERP solution for WordPress
+ * Description: ERP solution for WordPress. Built-in modules include HR and CRM.
  * Plugin URI: http://wperp.com
  * Author: weDevs
- * Author URI: http://wedevs.com
- * Version: 0.1-alpha
+ * Author URI: https://wedevs.com
+ * Version: 1.0-beta1
  * License: GPL2
  * Text Domain: wp-erp
- * Domain Path: languages
+ * Domain Path: /i18n/languages/
  *
  * Copyright (c) 2016 weDevs (email: info@wedevs.com). All rights reserved.
  *
@@ -54,7 +54,7 @@ final class WeDevs_ERP {
      *
      * @var string
      */
-    public $version = '0.1';
+    public $version = '1.0-beta1';
 
     /**
      * Holds various class instances
@@ -195,84 +195,12 @@ final class WeDevs_ERP {
         if ( ! $this->is_supported_php() ) {
             return;
         }
+
         new \WeDevs\ERP\Admin\User_Profile();
+        new \WeDevs\ERP\Scripts();
+
         $this->container['modules'] = new \WeDevs\ERP\Framework\Modules();
         $this->container['emailer'] = \WeDevs\ERP\Emailer::init();
-    }
-
-    /**
-     * Initialize erp script register
-     *
-     * @return void
-     */
-    function init_script_register() {
-
-        $suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-
-        // Register select2 scripts
-        wp_register_script( 'erp-select2', WPERP_ASSETS . '/js/select2.full.min.js', false, false, true );
-
-        // Register Fontawesome font icons
-        wp_register_style( 'erp-fontawesome', WPERP_ASSETS . '/css/font-awesome.min.css' );
-
-        // Register select2 style
-        wp_register_style( 'erp-select2', WPERP_ASSETS . '/css/select2.min.css' );
-
-        // Register TipTip jquery plugin
-        wp_register_script( 'erp-tiptip', WPERP_ASSETS . '/js/jquery.tipTip.min.js', array( 'jquery' ), false, true );
-
-        // Register select2 style
-        wp_register_style( 'erp-tiptip', WPERP_ASSETS . '/css/tipTip.css' );
-
-        // Register main style
-        wp_register_style( 'erp-style', WPERP_ASSETS . '/css/style.css' );
-
-        //Settings script
-        wp_register_script( 'erp-admin-settings', WPERP_ASSETS . '/js/settings' . $suffix . '.js', array( 'jquery' ), false, true );
-
-        //jQuery full calendar moment script
-        wp_register_script( 'erp-admin-calendar-moment', WPERP_ASSETS . '/js/moment.min.js', false, false, true );
-
-        //jQuery full calendar script
-        wp_register_script( 'erp-admin-calendar', WPERP_ASSETS . '/js/fullcalendar' . $suffix . '.js', array( 'jquery', 'erp-admin-calendar-moment' ), false, true );
-
-        //jQuery full calendar style
-        wp_register_style( 'erp-admin-calendar', WPERP_ASSETS . '/css/fullcalendar' . $suffix . '.css' );
-
-        //jQuery timepicker script
-        wp_register_script( 'erp-admin-timepicker', WPERP_ASSETS . '/js/jquery.timepicker.min.js', array( 'jquery', 'erp-admin-calendar-moment' ), false, true );
-
-        //jQuery timepicker style
-        wp_register_style( 'erp-admin-timepicker', WPERP_ASSETS . '/css/jquery.timepicker.css' );
-
-        // Register Vuejs script
-        wp_register_script( 'erp-vuejs', WPERP_ASSETS . '/js/vue'. $suffix .'.js', array( 'jquery' ), false, true );
-
-        // Register Basecamp text editor styles
-        wp_register_style( 'erp-trix-editor', WPERP_ASSETS . '/css/trix.css' );
-
-        // Register Flot Valuelabel css
-        wp_register_style( 'erp-flotchart-valuelabel-css', WPERP_ASSETS . '/css/plot.css' );
-
-        // Register Bascamp text editor js
-        wp_register_script( 'erp-trix-editor', WPERP_ASSETS . '/js/trix.js', array( 'jquery' ), false, false );
-
-        // Register upload js
-        wp_register_script( 'erp-file-upload', WPERP_ASSETS . '/js/upload.js', array( 'jquery', 'plupload-handlers' ), false, false );
-
-        // flot charts
-        wp_register_script( 'erp-flotchart', WPERP_ASSETS . '/js/jquery.flot.min.js', array( 'jquery' ), false, false );
-        wp_register_script( 'erp-flotchart-time', WPERP_ASSETS . '/js/jquery.flot.time.min.js', array( 'jquery' ), false, false );
-        wp_register_script( 'erp-flotchart-orerbars', WPERP_ASSETS . '/js/jquery.flot.orderBars.js', array( 'jquery' ), false, false );
-        wp_register_script( 'erp-flotchart-pie', WPERP_ASSETS . '/js/jquery.flot.pie.min.js', array( 'jquery' ), false, false );
-        wp_register_script( 'erp-flotchart-axislables', WPERP_ASSETS . '/js/jquery.flot.axislabels.js', array( 'jquery' ), false, false );
-        wp_register_script( 'erp-flotchart-tooltip', WPERP_ASSETS . '/js/jquery.flot.tooltip.min.js', array( 'jquery' ), false, false );
-        wp_register_script( 'erp-flotchart-resize', WPERP_ASSETS . '/js/jquery.flot.resize.min.js', array( 'jquery' ), false, false );
-        wp_register_script( 'erp-flotchart-valuelabel', WPERP_ASSETS . '/js/jquery.flot.valuelabels.js', array( 'jquery' ), false, false );
-
-        // Enqueue scripts in globally wp-erp
-        wp_enqueue_script( 'erp-select2' );
-        wp_enqueue_style( 'erp-select2' );
     }
 
     /**
@@ -290,8 +218,6 @@ final class WeDevs_ERP {
         add_action( 'init', array( $this, 'localization_setup' ) );
         add_action( 'init', array( $this, 'setup_database' ) );
 
-        add_action( 'admin_enqueue_scripts', array( $this, 'init_script_register' ) );
-
         // initialize emailer class
         add_action( 'erp_loaded', array( $this->container['emailer'], 'init_emails' ) );
     }
@@ -302,7 +228,7 @@ final class WeDevs_ERP {
      * @uses load_plugin_textdomain()
      */
     public function localization_setup() {
-        load_plugin_textdomain( 'wp-erp', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+        load_plugin_textdomain( 'wp-erp', false, dirname( plugin_basename( __FILE__ ) ) . '/i18n/languages/' );
     }
 
     /**
