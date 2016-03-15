@@ -1,5 +1,5 @@
 <div class="wrap">
-    <h2>Reports</h2>
+    <h1><?php _e( 'Reports', 'wp-erp' ); ?></h1>
 
     <div id="dashboard-widgets-wrap">
 
