@@ -18,8 +18,6 @@ class WeDevs_ERP_Installer {
 
     use \WeDevs\ERP\Framework\Traits\Hooker;
 
-    private $min_php = '5.4.0';
-
     /**
      * Binding all events
      *
@@ -46,18 +44,6 @@ class WeDevs_ERP_Installer {
      * @return 0.1
      */
     public function activate() {
-
-        // bail out if the php version is lower than
-        if ( version_compare( PHP_VERSION, $this->min_php, '<' ) ) {
-            deactivate_plugins( basename( WPERP_FILE ) );
-
-            $error = __( '<h1>An Error Occured</h1>', 'wp-erp' );
-            $error .= __( '<h2>Your installed PHP Version is: ', 'wp-erp' ) . PHP_VERSION . '</h2>';
-            $error .= __( '<p>The <strong>WP ERP</strong> plugin requires PHP version <strong>', 'wp-erp' ) . $this->min_php . __( '</strong> or greater', 'wp-erp' );
-            $error .= __( '<p>The version of your PHP is ', 'wp-erp' ) . '<a href="http://php.net/supported-versions.php" target="_blank"><strong>' . __( 'unsupported and old', 'wp-erp' ) . '</strong></a>.';
-            $error .= __( 'You should update your PHP software or contact your host regarding this matter.</p>', 'wp-erp' );
-            wp_die( $error, __( 'Plugin Activation Error', 'wp-erp' ), array( 'response' => 200, 'back_link' => true ) );
-        }
 
         $this->create_tables();
         $this->create_roles();
