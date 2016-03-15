@@ -41,7 +41,7 @@ class Department_Walker extends \Walker {
                 <strong><a href="#"><?php echo $padding . $department->name; ?></a></strong>
 
                 <div class="row-actions">
-                    <span class="edit"><a href="#" data-id="<?php echo $department->id; ?>" title="Edit this item"><?php _e( 'Edit', 'wp-erp' ); ?></a> | </span>
+                    <span class="edit"><a href="#" data-id="<?php echo $department->id; ?>" title="<?php _e( 'Edit this item', 'wp-erp' ); ?>"><?php _e( 'Edit', 'wp-erp' ); ?></a> | </span>
                     <span class="trash"><a class="submitdelete" data-id="<?php echo $department->id; ?>" title="Delete this item" href="#"><?php _e( 'Delete', 'wp-erp' ); ?></a></span>
                 </div>
             </td>

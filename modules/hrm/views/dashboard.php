@@ -1,5 +1,5 @@
 <div class="wrap erp hrm-dashboard">
-    <h2><?php _e( 'HR Management', '$domain' ); ?></h2>
+    <h2><?php _e( 'HR Management', 'wp-erp' ); ?></h2>
 
     <div class="erp-single-container">
 

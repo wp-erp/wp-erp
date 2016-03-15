@@ -226,7 +226,7 @@ class Setup_Wizard {
                     <th scope="row"><label for="gen_com_start"><?php _e( 'Company Start Date', 'wp-erp' ); ?></label></th>
                     <td>
                         <?php erp_html_form_input([
-                            'name'          => 'gen_com_start',
+                            'name'        => 'gen_com_start',
                             'type'        => 'text',
                             'value'       => $company_started,
                             'help'        => __( 'The date the company officially started.', 'wp-erp' ),
@@ -297,7 +297,7 @@ class Setup_Wizard {
 
     public function setup_step_departments() {
         ?>
-        <h1><?php _e( 'Departments Setup', 'woocommerce' ); ?></h1>
+        <h1><?php _e( 'Departments Setup', 'wp-erp' ); ?></h1>
         <form method="post" class="form-table">
 
             <div class="two-col">
@@ -364,7 +364,7 @@ class Setup_Wizard {
 
     public function setup_step_designation() {
         ?>
-        <h1><?php _e( 'Designation Setup', 'woocommerce' ); ?></h1>
+        <h1><?php _e( 'Designation Setup', 'wp-erp' ); ?></h1>
         <form method="post" class="form-table">
 
             <div class="two-col">
@@ -429,7 +429,7 @@ class Setup_Wizard {
             'sun' => __( 'Sunday', 'wp-erp' )
         );
         ?>
-        <h1><?php _e( 'Workdays Setup', 'woocommerce' ); ?></h1>
+        <h1><?php _e( 'Workdays Setup', 'wp-erp' ); ?></h1>
         <form method="post">
 
             <table class="form-table">
@@ -481,7 +481,7 @@ class Setup_Wizard {
                 <div class="erp-setup-next-steps-first">
                     <h2><?php _e( 'Next Steps &rarr;', 'wp-erp' ); ?></h2>
 
-                    <a class="button button-primary button-large" href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr-employee' ) ); ?>"><?php _e( 'Add your employees!', 'woocommerce' ); ?></a>
+                    <a class="button button-primary button-large" href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr-employee' ) ); ?>"><?php _e( 'Add your employees!', 'wp-erp' ); ?></a>
                 </div>
             </div>
         </div>
