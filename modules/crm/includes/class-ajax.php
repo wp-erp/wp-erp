@@ -65,6 +65,10 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp_crm_create_new_save_search', 'create_save_search' );
         $this->action( 'wp_ajax_erp_crm_get_save_search_data', 'get_save_search' );
         $this->action( 'wp_ajax_erp_crm_delete_save_search_data', 'delete_save_search' );
+
+        // CRM Dashboard
+        $this->action( 'wp_ajax_erp-crm-get-single-schedule-details', 'get_single_schedule_details' );
+
     }
 
     /**
@@ -820,6 +824,27 @@ class Ajax_Handler {
         }
 
         $result = erp_delete_save_search_item( $id );
+
+        $this->send_success( $result );
+    }
+
+    /**
+     * Get single schedule details
+     *
+     * @since 1.0
+     *
+     * @return json [array]
+     */
+    public function get_single_schedule_details() {
+        $this->verify_nonce( 'wp-erp-crm-nonce' );
+
+        $query_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+
+        $result = erp_crm_customer_get_single_activity_feed( $query_id );
+
+        if ( ! $result ) {
+            $this->send_error( __( 'Schedule data no found', 'wp-erp' ) );
+        }
 
         $this->send_success( $result );
     }
