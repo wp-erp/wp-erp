@@ -116,7 +116,7 @@ class Customer_Relationship {
         wp_enqueue_media();
         wp_enqueue_style( 'erp-tiptip' );
         wp_enqueue_script( 'erp-tiptip' );
-        wp_enqueue_script( 'wp-erp-crm', WPERP_CRM_ASSETS . "/js/crm$suffix.js", array( 'wp-erp-script', 'erp-admin-timepicker' ), date( 'Ymd' ), true );
+        wp_enqueue_script( 'erp-crm', WPERP_CRM_ASSETS . "/js/crm$suffix.js", array( 'erp-script', 'erp-timepicker' ), date( 'Ymd' ), true );
 
         $localize_script = apply_filters( 'erp_crm_localize_script', array(
             'nonce'                 => wp_create_nonce( 'wp-erp-crm-nonce' ),
@@ -140,16 +140,16 @@ class Customer_Relationship {
         // if it's an customer page
         if ( 'crm_page_erp-sales-customers' == $hook || 'crm_page_erp-sales-companies' == $hook  ) {
 
-            wp_enqueue_style( 'erp-admin-timepicker' );
-            wp_enqueue_script( 'erp-admin-timepicker' );
+            wp_enqueue_style( 'erp-timepicker' );
+            wp_enqueue_script( 'erp-timepicker' );
             wp_enqueue_script( 'erp-vuejs' );
             wp_enqueue_script( 'erp-trix-editor' );
             wp_enqueue_style( 'erp-trix-editor' );
             wp_enqueue_script( 'underscore' );
             wp_enqueue_style( 'wp-erp-nprogress', WPERP_CRM_ASSETS . '/css/nprogress.css' );
             wp_enqueue_script( 'wp-erp-nprogress', WPERP_CRM_ASSETS . "/js/nprogress$suffix.js", array( 'jquery' ), date( 'Ymd' ), true );
-            wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", array( 'wp-erp-nprogress', 'wp-erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
-            wp_enqueue_script( 'wp-erp-crm-vue-save-search', WPERP_CRM_ASSETS . "/js/save-search$suffix.js", array( 'wp-erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
+            wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", array( 'wp-erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
+            wp_enqueue_script( 'wp-erp-crm-vue-save-search', WPERP_CRM_ASSETS . "/js/save-search$suffix.js", array( 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
             wp_enqueue_script( 'post' );
 
             $customer = new Contact();
@@ -173,7 +173,7 @@ class Customer_Relationship {
             $localize_script['wpErpCountries'] = $country->load_country_states();
         }
 
-        wp_localize_script( 'wp-erp-crm', 'wpErpCrm', $localize_script );
+        wp_localize_script( 'erp-crm', 'wpErpCrm', $localize_script );
     }
 
     public function load_js_template() {
