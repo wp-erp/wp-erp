@@ -57,9 +57,9 @@ class Admin_Menu {
      * @return void
      */
     function hr_calendar_script() {
-        wp_enqueue_script( 'erp-admin-calendar-moment' );
-        wp_enqueue_script( 'erp-admin-calendar' );
-        wp_enqueue_style( 'erp-admin-calendar' );
+        wp_enqueue_script( 'erp-momentjs' );
+        wp_enqueue_script( 'erp-fullcalendar' );
+        wp_enqueue_style( 'erp-fullcalendar' );
     }
 
     /**
@@ -185,9 +185,9 @@ class Admin_Menu {
      * @return void
      */
     public function reporting_page() {
-        
+
         $action = isset( $_GET['type'] ) ? $_GET['type'] : 'main';
-        
+
         switch ( $action ) {
             case 'age-profile':
                 $template = WPERP_HRM_VIEWS . '/reporting/age-profile.php';
@@ -217,7 +217,7 @@ class Admin_Menu {
         $template = apply_filters( 'erp_hr_reporting_pages', $template, $action );
 
         if ( file_exists( $template ) ) {
-            
+
             include $template;
         }
     }

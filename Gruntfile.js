@@ -1,5 +1,6 @@
 'use strict';
 module.exports = function(grunt) {
+    var pkg = grunt.file.readJSON('package.json');
 
     grunt.initConfig({
         // setting folder templates
@@ -13,33 +14,47 @@ module.exports = function(grunt) {
         // Compile all .less files.
         less: {
 
-            // one to one
-            front: {
-                files: {
-                    '<%= dirs.css %>/frontend-forms.css': '<%= dirs.css %>/frontend-forms.less',
-                }
-            },
-
             admin: {
                 files: {
-                    '<%= dirs.css %>/formbuilder.css': ['<%= dirs.css %>/formbuilder.less'],
-                    '<%= dirs.css %>/style.css': '<%= dirs.less %>/style.less',
                     '<%= dirs.css %>/admin/admin.css': '<%= dirs.less %>/admin/admin.less',
                     '<%= dirs.css %>/admin/setup.css': '<%= dirs.less %>/admin/setup.less'
                 }
             }
         },
 
+        uglify: {
+            minify: {
+                expand: true,
+                cwd: '<%= dirs.js %>',
+                src: [
+                    ['erp.js', 'jquery-popup.js', 'settings.js', 'upload.js', 'vue.js']
+                ],
+                dest: '<%= dirs.js %>/',
+                ext: '.min.js'
+            }
+        },
+
+        jshint: {
+            options: {
+                jshintrc: '.jshintrc'
+            },
+            all: [
+                'Gruntfile.js',
+                '<%= dirs.js %>/*.js',
+                '!<%= dirs.js %>/*.min.js',
+            ]
+        },
+
         // Generate POT files.
         makepot: {
             target: {
                 options: {
-                    exclude: ['build/.*'],
-                    domainPath: '/languages/', // Where to save the POT file.
+                    exclude: ['build/.*', 'node_modules/*', 'assets/*'],
+                    domainPath: '/i18n/languages/', // Where to save the POT file.
                     potFilename: 'wp-erp.pot', // Name of the POT file.
                     type: 'wp-plugin', // Type of project (wp-plugin or wp-theme).
                     potHeaders: {
-                        'report-msgid-bugs-to': 'https://wedevs.com/support',
+                        'report-msgid-bugs-to': 'http://wperp.com/support/',
                         'language-team': 'LANGUAGE <EMAIL@ADDRESS>'
                     }
                 }
@@ -49,7 +64,7 @@ module.exports = function(grunt) {
         watch: {
             less: {
                 files: ['<%= dirs.less %>/*.less', '<%= dirs.less %>/admin/*.less', ],
-                tasks: ['less:front', 'less:admin'],
+                tasks: ['less:admin'],
                 options: {
                     livereload: true
                 }
@@ -100,7 +115,7 @@ module.exports = function(grunt) {
             main: {
                 options: {
                     mode: 'zip',
-                    archive: './build/wp-erp.zip'
+                    archive: './build/wp-erp-v' + pkg.version + '.zip'
                 },
                 expand: true,
                 cwd: 'build/',
@@ -123,7 +138,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks( 'grunt-contrib-compress' );
     grunt.loadNpmTasks( 'grunt-text-replace' );
 
-    grunt.registerTask( 'default', [
+    grunt.registerTask('default', ['less', 'watch']);
+
+    grunt.registerTask( 'release', [
         'makepot',
     ]);
 

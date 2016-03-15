@@ -55,9 +55,8 @@ class Admin_Menu {
      * @return void
      */
     public function crm_calendar_script() {
-        wp_enqueue_script( 'erp-admin-calendar-moment' );
-        wp_enqueue_script( 'erp-admin-calendar' );
-        wp_enqueue_style( 'erp-admin-calendar' );
+        wp_enqueue_script( 'erp-fullcalendar' );
+        wp_enqueue_style( 'erp-fullcalendar' );
     }
 
     /**
