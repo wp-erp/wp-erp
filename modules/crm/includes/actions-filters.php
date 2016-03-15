@@ -3,6 +3,7 @@
 // Actions *****************************************************************/
 add_action( 'user_register', 'erp_crm_new_admin_as_manager' );
 add_action( 'admin_init', 'erp_crm_customer_schedule_notification' );
+add_action( 'wp_ajax_nopriv_erp_crm_save_email_activity', 'erp_crm_save_email_activity' );
 add_action( 'erp_crm_dashboard_widgets_right', 'erp_crm_dashboard_right_widgets_area' );
 add_action( 'erp_crm_dashboard_widgets_left', 'erp_crm_dashboard_left_widgets_area' );
 
