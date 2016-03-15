@@ -94,7 +94,7 @@ function erp_crm_get_caps_for_role( $role = '' ) {
 function erp_crm_is_current_user_manager() {
     $current_user_role = erp_crm_get_user_role( get_current_user_id() ); 
     
-    if ( erp_crm_get_manager_role() !=  $current_user_hr_role ) {
+    if ( erp_crm_get_manager_role() !=  $current_user_role ) {
         return false;
     }
 
