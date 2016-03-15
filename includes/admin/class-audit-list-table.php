@@ -121,7 +121,7 @@ class Auditlog_List_Table extends \WP_List_Table {
             case 'message':
                 if ( $audit_log->changetype == 'edit' ) {
                     if ( !empty( $audit_log->old_value ) && !empty( $audit_log->new_value ) ) {
-                        return sprintf( '%s. <a href="#" class="erp-audit-log-view-changes erp-tips" data-id="%d" title="%s"> ' __( '(view changes)', 'wp-erp' ) . '</a>', htmlspecialchars_decode( $audit_log->message ), $audit_log->id, __( 'View what elements are changes', 'wp-erp' ) );
+                        return sprintf( __( '%s. <a href="#" class="erp-audit-log-view-changes erp-tips" data-id="%d" title="%s"> (view changes)</a>', 'wp-erp' ), htmlspecialchars_decode( $audit_log->message ), $audit_log->id, __( 'View what elements are changes', 'wp-erp' ) );
                     } else {
                         return htmlspecialchars_decode( $audit_log->message );
                     }
