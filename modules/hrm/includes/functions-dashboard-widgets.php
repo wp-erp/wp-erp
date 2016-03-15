@@ -238,7 +238,7 @@ function erp_hr_dashboard_widget_leave_calendar() {
         });
     });
 
-</script>
+    </script>
     <?php
 }
 

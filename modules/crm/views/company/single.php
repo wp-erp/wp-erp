@@ -124,8 +124,8 @@
                                             <?php
                                                 echo $groups['groups']['name'];
                                                 $info_messg = ( $groups['status'] == 'subscribe' )
-                                                                ? sprintf( '%s %s', __( 'Subscribed on'), erp_format_date( $groups['subscribe_at'] ) )
-                                                                : sprintf( '%s %s', __( 'Unsubscribed on'), erp_format_date( $groups['unsubscribe_at'] ) );
+                                                                ? sprintf( '%s %s', __( 'Subscribed on', 'wp-erp' ), erp_format_date( $groups['subscribe_at'] ) )
+                                                                : sprintf( '%s %s', __( 'Unsubscribed on', 'wp-erp' ), erp_format_date( $groups['unsubscribe_at'] ) );
                                             ?>
                                             <span class="erp-crm-tips" title="<?php echo $info_messg; ?>">
                                                 <i class="fa fa-info-circle"></i>

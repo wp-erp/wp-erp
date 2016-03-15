@@ -547,22 +547,36 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
  *
  * @return array
  */
-function erp_crm_get_customer_activity( $postdata ) {
+function erp_crm_get_feed_activity( $postdata ) {
     $feeds = [];
     $db = new \WeDevs\ORM\Eloquent\Database();
 
     $results =  \WeDevs\ERP\CRM\Models\Activity::select( [ '*', $db->raw('MONTHNAME(`created_at`) as feed_month, YEAR( `created_at` ) as feed_year' ) ] )
-                ->where( 'user_id', $postdata['customer_id'] )
                 ->with( [ 'contact',
                         'created_by' => function( $query ) {
                             $query->select( 'ID', 'user_nicename', 'user_email', 'user_url', 'display_name' );
                         }
-                    ] )
-                ->orderBy( 'created_at', 'DESC' )
-                ->skip( $postdata['offset'] )
-                ->take( $postdata['limit'] )
-                ->get()
-                ->toArray();
+                    ] );
+
+    if ( isset( $postdata['customer_id'] ) && ! empty( $postdata['customer_id'] ) ) {
+        $results = $results->where( 'user_id', $postdata['customer_id'] );
+    }
+
+    if ( isset( $postdata['created_by'] ) && !empty( $postdata['created_by'] ) ) {
+        $results = $results->where( 'created_by', $postdata['created_by'] );
+    }
+
+    if ( isset( $postdata['type'] ) && !empty( $postdata['type'] ) ) {
+        $results = $results->where( 'type', $postdata['type'] );
+    }
+
+    $results = $results->orderBy( 'created_at', 'DESC' );
+
+    if ( isset( $postdata['number'] ) && $postdata['number'] != -1 ) {
+        $results = $results->skip( $postdata['offset'] )->take( $postdata['limit'] );
+    }
+
+    $results = $results->get()->toArray();
 
     foreach ( $results as $key => $value ) {
         $value['extra'] = json_decode( base64_decode( $value['extra'] ), true );

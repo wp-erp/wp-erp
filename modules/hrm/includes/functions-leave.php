@@ -147,7 +147,7 @@ function erp_hrm_is_valid_leave_duration( $start_date, $end_date, $policy_id, $u
     $working_day     = erp_hr_get_work_days_without_off_day( $start_date, $end_date );//erp_hr_get_work_days_between_dates( $start_date, $end_date );erp_hr_get_work_days_without_holiday
     $apply_days      = $working_day['total'] + $user_enti_count;
 
-    if ( $apply_days >  $policy_count[0] ) {
+    if ( $apply_days >  $policy_count ) {
         return false;
     }
 
@@ -206,11 +206,11 @@ function erp_hr_leave_insert_policy( $args = array() ) {
 
     // some validation
     if ( empty( $args['name'] ) ) {
-        return new WP_Error( 'no-name', __( 'No name provided.', 'wp-error' ) );
+        return new WP_Error( 'no-name', __( 'No name provided.', 'wp-erp' ) );
     }
 
     if ( ! intval( $args['value'] ) ) {
-        return new WP_Error( 'no-value', __( 'No duration provided.', 'wp-error' ) );
+        return new WP_Error( 'no-value', __( 'No duration provided.', 'wp-erp' ) );
     }
 
     $args['name'] = sanitize_text_field( $args['name'] );
@@ -262,15 +262,15 @@ function erp_hr_leave_insert_holiday( $args = array() ) {
 
     // some validation
     if ( empty( $args['title'] ) ) {
-        return new WP_Error( 'no-name', __( 'No title provided.', 'wp-error' ) );
+        return new WP_Error( 'no-name', __( 'No title provided.', 'wp-erp' ) );
     }
 
     if ( empty( $args['start'] ) ) {
-        return new WP_Error( 'no-value', __( 'No start date provided.', 'wp-error' ) );
+        return new WP_Error( 'no-value', __( 'No start date provided.', 'wp-erp' ) );
     }
 
     if ( empty( $args['end'] ) ) {
-        return new WP_Error( 'no-value', __( 'No end date provided.', 'wp-error' ) );
+        return new WP_Error( 'no-value', __( 'No end date provided.', 'wp-erp' ) );
     }
 
     $args['title'] = sanitize_text_field( $args['title'] );
@@ -668,11 +668,11 @@ function erp_hr_leave_insert_request( $args = array() ) {
     extract( $args );
 
     if ( ! intval( $user_id ) ) {
-        return new WP_Error( 'no-employee', __( 'No employee ID provided.', 'wp-error' ) );
+        return new WP_Error( 'no-employee', __( 'No employee ID provided.', 'wp-erp' ) );
     }
 
     if ( ! intval( $leave_policy ) ) {
-        return new WP_Error( 'no-policy', __( 'No leave policy provided.', 'wp-error' ) );
+        return new WP_Error( 'no-policy', __( 'No leave policy provided.', 'wp-erp' ) );
     }
 
     $period = erp_hr_get_work_days_between_dates( $start_date, $end_date );

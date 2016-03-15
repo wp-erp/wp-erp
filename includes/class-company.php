@@ -36,10 +36,10 @@ class Company {
             'logo'    => 0,
             'name'    => __( 'Untitled Company', 'wp-erp' ),
             'address' => [
-                'address_1' => 'Street Address 1',
-                'address_2' => 'Address Line 2',
-                'city'      => 'City',
-                'state'     => 'State',
+                'address_1' => __( 'Street Address 1', 'wp-erp' ),
+                'address_2' => __( 'Address Line 2', 'wp-erp' ),
+                'city'      => __( 'City', 'wp-erp' ),
+                'state'     => __( 'State', 'wp-erp' ),
                 'postcode'  => '12345',
                 'country'   => 'US'
             ],
