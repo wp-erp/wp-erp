@@ -212,6 +212,10 @@ class Customer_Relationship {
                 erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-subscriber-contact.php', 'erp-crm-assign-subscriber-contact' );
                 break;
 
+            case 'toplevel_page_erp-sales':
+                erp_get_js_template( WPERP_CRM_JS_TMPL . '/single-schedule-details.php', 'erp-crm-single-schedule-details' );
+                break;
+
             default:
                 # code...
                 break;

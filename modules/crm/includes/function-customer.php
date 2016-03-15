@@ -637,6 +637,33 @@ function erp_crm_save_customer_feed_data( $data ) {
 }
 
 /**
+ * Get customer single activity feeds
+ *
+ * @since 1.0
+ *
+ * @param  integer $feed_id
+ *
+ * @return collection
+ */
+function erp_crm_customer_get_single_activity_feed( $feed_id ) {
+
+    if ( ! $feed_id ) {
+        return;
+    }
+
+    $results = [];
+    $data = WeDevs\ERP\CRM\Models\Activity::find( $feed_id )->toArray();
+
+    if ( !$data ) {
+        return;
+    }
+
+    $data['extra'] = json_decode( base64_decode( $data['extra'] ), true );
+
+    return $data;
+}
+
+/**
  * Delete customer activity feeds
  *
  * @since 1.0

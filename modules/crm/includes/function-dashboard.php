@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Register metabox for crm dashbaord
+ * Register metabox widget in right side
+ * for crm dashbaord
  *
  * @since 1.0
  *
@@ -10,6 +11,18 @@
 function erp_crm_dashboard_right_widgets_area() {
     erp_admin_dash_metabox( __( '<i class="fa fa-calendar-check-o"></i> Todays Schedules', 'wp-erp' ), 'erp_hr_dashboard_widget_todays_schedules' );
     erp_admin_dash_metabox( __( '<i class="fa fa-calendar-check-o"></i> Upcoming Schedules', 'wp-erp' ), 'erp_hr_dashboard_widget_upcoming_schedules' );
+}
+
+/**
+ * Register metabox widget in left side
+ * for crm dashboard
+ *
+ * @since 1.0
+ *
+ * @return void
+ */
+function erp_crm_dashboard_left_widgets_area() {
+    erp_admin_dash_metabox( __( '<i class="fa fa-calendar"></i> My schedules', 'wp-erp' ), 'erp_hr_dashboard_widget_my_schedules' );
 }
 
 /**
@@ -41,11 +54,11 @@ function erp_hr_dashboard_widget_todays_schedules() {
                     }
 
                     if ( $schedule['log_type'] == 'meeting' ) {
-                        echo sprintf( '%s <a href="%s">%s</a> %s %s %s', __( '<i class="fa fa-calendar"></i> Meeting with', 'wp-erp' ), erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['type'] ), $contact_user, $users_text, __( 'at', 'wp-erp' ), date( 'g:ia', strtotime( $schedule['start_date'] ) ) );
+                        echo sprintf( '%s <a href="%s">%s</a> %s %s %s', __( '<i class="fa fa-calendar"></i> Meeting with', 'wp-erp' ), erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['type'] ), $contact_user, $users_text, __( 'at', 'wp-erp' ), date( 'g:ia', strtotime( $schedule['start_date'] ) ) ) . " <a href='#' data-schedule_id=' " . $schedule['id'] . " ' data-title='" . $schedule['extra']['schedule_title'] . "' class='erp-crm-dashbaord-show-details-schedule'>" . __( 'Details &rarr;', 'wp-erp' ) . "</a>";
                     }
 
                     if ( $schedule['log_type'] == 'call' ) {
-                        echo sprintf( '%s <a href="%s">%s</a> %s %s %s', __( '<i class="fa fa-phone"></i> Call to', 'wp-erp' ), erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['type'] ), $contact_user, $users_text, __( 'at', 'wp-erp' ), date( 'g:ia', strtotime( $schedule['start_date'] ) ) );
+                        echo sprintf( '%s <a href="%s">%s</a> %s %s %s', __( '<i class="fa fa-phone"></i> Call to', 'wp-erp' ), erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['type'] ), $contact_user, $users_text, __( 'at', 'wp-erp' ), date( 'g:ia', strtotime( $schedule['start_date'] ) ) ) . " <a href='#' data-schedule_id=' " . $schedule['id'] . " ' data-title='" . $schedule['extra']['schedule_title'] . "' class='erp-crm-dashbaord-show-details-schedule'>" . __( 'Details &rarr;', 'wp-erp' ) . "</a>";
                     }
                 ?>
             </li>
@@ -83,15 +96,26 @@ function erp_hr_dashboard_widget_upcoming_schedules() {
                     }
 
                     if ( $schedule['log_type'] == 'meeting' ) {
-                        echo sprintf( '%s <a href="%s">%s</a> %s %s %s %s %s', __( '<i class="fa fa-calendar"></i> Meeting with', 'wp-erp' ), erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['type'] ), $contact_user, $users_text, __( 'on', 'wp-erp' ), erp_format_date( strtotime( $schedule['start_date'] ) ), __( 'at', 'wp-erp' ), date( 'g:ia', strtotime( $schedule['start_date'] ) ) );
+                        echo sprintf( '%s <a href="%s">%s</a> %s %s %s %s %s', __( '<i class="fa fa-calendar"></i> Meeting with', 'wp-erp' ), erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['type'] ), $contact_user, $users_text, __( 'on', 'wp-erp' ), erp_format_date( strtotime( $schedule['start_date'] ) ), __( 'at', 'wp-erp' ), date( 'g:ia', strtotime( $schedule['start_date'] ) ) ) . " <a href='#' data-schedule_id=' " . $schedule['id'] . " ' data-title='" . $schedule['extra']['schedule_title'] . "' class='erp-crm-dashbaord-show-details-schedule'>" . __( 'Details &rarr;', 'wp-erp' ) . "</a>";
                     }
 
                     if ( $schedule['log_type'] == 'call' ) {
-                        echo sprintf( '%s <a href="%s">%s</a> %s %s %s %s %s', __( '<i class="fa fa-phone"></i> Call to', 'wp-erp' ), erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['type'] ), $contact_user, $users_text, __( 'on', 'wp-erp' ), erp_format_date( strtotime( $schedule['start_date'] ) ), __( 'at', 'wp-erp' ), date( 'g:ia', strtotime( $schedule['start_date'] ) ) );
+                        echo sprintf( '%s <a href="%s">%s</a> %s %s %s %s %s', __( '<i class="fa fa-phone"></i> Call to', 'wp-erp' ), erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['type'] ), $contact_user, $users_text, __( 'on', 'wp-erp' ), erp_format_date( strtotime( $schedule['start_date'] ) ), __( 'at', 'wp-erp' ), date( 'g:ia', strtotime( $schedule['start_date'] ) ) ) . " <a href='#' data-schedule_id=' " . $schedule['id'] . " ' data-title='" . $schedule['extra']['schedule_title'] . "' class='erp-crm-dashbaord-show-details-schedule'>" . __( 'Details &rarr;', 'wp-erp' ) . "</a>";
                     }
                 ?>
             </li>
         <?php endforeach ?>
     </ul>
     <?php
+}
+
+/**
+ * Show all schedules in calendar
+ *
+ * @since 1.0
+ *
+ * @return void
+ */
+function erp_hr_dashboard_widget_my_schedules() {
+    echo 'Hi calender';
 }
