@@ -26,7 +26,17 @@ class ERP_Settings_Page {
      * @return string
      */
     public function get_option_id() {
-        return 'erp_settings_' . $this->id;
+        $option_id = 'erp_settings_' . $this->id;
+
+        if ( $sections = $this->get_sections() ) {
+
+            if ( isset( $_REQUEST['section'] ) && array_key_exists( $_REQUEST['section'], $sections ) ) {
+                $current_section = $_REQUEST['section'];
+                $option_id = 'erp_settings_' . $this->id . '_' . $current_section;
+            }
+        }
+
+        return $option_id;
     }
 
     /**
@@ -53,12 +63,14 @@ class ERP_Settings_Page {
 
         if ( isset( $_POST['_wpnonce']) && wp_verify_nonce( $_POST['_wpnonce'], 'erp-settings-nonce' ) ) {
 
+            $from_sections = false;
+
             if ( isset( $this->sections ) && is_array( $this->sections ) && count( $this->sections ) ) {
-                $options = $this->get_section_fields($section);
+                $options       = $this->get_section_fields($section);
+                $from_sections = true;
             } else {
                 $options = $this->get_settings();
             }
-
 
             // Options to update will be stored here
             $update_options = array();
@@ -719,7 +731,6 @@ class ERP_Settings_Page {
             $options = get_option( $this->get_option_id(), array() );
             $option_value = isset( $options[$option_name] ) ? $options[$option_name] : $default;
         }
-
 
         if ( is_array( $option_value ) ) {
             $option_value = array_map( 'stripslashes', $option_value );

@@ -2430,3 +2430,39 @@ ul.edit-address li.city-wrap span {
   padding-top: 30px;
   text-decoration: none;
 }
+.erp-activation-cloud-prompt {
+  width: 100%;
+  margin: 0 !important;
+  padding: 0;
+  border: 1px solid #e5e5e5;
+  background-color: #fff;
+  font-weight: normal;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  display: -ms-flex;
+  display: -webkit-flex;
+  display: flex;
+}
+.erp-activation-cloud-prompt * {
+  box-sizing: border-box;
+}
+.erp-activation-cloud-prompt .activation-prompt-text {
+  width: 60%;
+  background-color: #f8f8f8;
+  padding: 16px 20px;
+  border-right: 1px solid #e5e5e5;
+}
+.erp-activation-cloud-prompt input[type="email"] {
+  width: 200px;
+  min-height: 32px;
+}
+.erp-activation-cloud-prompt .button-primary {
+  margin-right: 10px;
+}
+.erp-activation-cloud-prompt .activation-form-container {
+  width: 40%;
+  padding-top: 9px;
+  padding-right: 20px;
+  margin-left: 30px;
+  text-align: right;
+}
