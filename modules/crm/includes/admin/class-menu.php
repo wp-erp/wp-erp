@@ -30,25 +30,34 @@ class Admin_Menu {
 
         add_menu_page( __( 'CRM', 'wp-erp' ), __( 'CRM', 'wp-erp' ), $capabilities, 'erp-sales', array( $this, 'dashboard_page' ), 'dashicons-chart-bar', null );
 
-        add_submenu_page( 'erp-sales', __( 'Overview', 'wp-erp' ), __( 'Overview', 'wp-erp' ), $capabilities, 'erp-sales', array( $this, 'dashboard_page' ) );
+        $overview = add_submenu_page( 'erp-sales', __( 'Overview', 'wp-erp' ), __( 'Overview', 'wp-erp' ), $capabilities, 'erp-sales', array( $this, 'dashboard_page' ) );
         add_submenu_page( 'erp-sales', __( 'Contacts', 'wp-erp' ), __( 'Contacts', 'wp-erp' ), $capabilities, 'erp-sales-customers', array( $this, 'contact_page' ) );
         add_submenu_page( 'erp-sales', __( 'Companies', 'wp-erp' ), __( 'Companies', 'wp-erp' ), $capabilities, 'erp-sales-companies', array( $this, 'company_page' ) );
         add_submenu_page( 'erp-sales', __( 'Activities', 'wp-erp' ), __( 'Activities', 'wp-erp' ), $capabilities, 'erp-sales-activities', array( $this, 'activity_page' ) );
         add_submenu_page( 'erp-sales', __( 'Schedules', 'wp-erp' ), __( 'Schedules', 'wp-erp' ), $capabilities, 'erp-sales-schedules', array( $this, 'schedules_page' ) );
         add_submenu_page( 'erp-sales', __( 'Contact Groups', 'wp-erp' ), __( 'Contact Groups', 'wp-erp' ), $capabilities, 'erp-sales-contact-groups', array( $this, 'contact_group_page' ) );
+
         // add_submenu_page( 'erp-sales', __( 'Campaigns', 'wp-erp' ), __( 'Campaigns', 'wp-erp' ), $capabilities, 'erp-sales-campaigns', array( $this, 'campaigns_page' ) );
         // add_submenu_page( 'erp-sales', __( 'Oppurtunity', 'wp-erp' ), __( 'Oppurtunity', 'wp-erp' ), $capabilities, 'erp-sales-oppurtunity', array( $this, 'dashboard_page' ) );
         // add_submenu_page( 'erp-sales', __( 'Customer Category', 'wp-erp' ), __( 'Customer Category', 'wp-erp' ), $capabilities, 'erp-sales-category', array( $this, 'dashboard_page' ) );
         // add_submenu_page( 'erp-sales', __( 'Newsletter', 'wp-erp' ), __( 'Newsletter', 'wp-erp' ), $capabilities, 'erp-sales-newsletter', array( $this, 'dashboard_page' ) );
         // add_submenu_page( 'erp-sales', __( 'Sales Team', 'wp-erp' ), __( 'Sales Team', 'wp-erp' ), $capabilities, 'erp-sales-team', array( $this, 'dashboard_page' ) );
 
-        /** Phone Calls and SMS */
-        //add_menu_page( __( 'Calls & SMS', 'wp-erp' ), __( 'Calls & SMS', 'wp-erp' ), $capabilities, 'erp-calls', array( $this, 'dashboard_page' ), 'dashicons-microphone', null );
+        add_action( 'admin_print_styles-' . $overview, array( $this, 'crm_calendar_script' ) );
 
-        // add_submenu_page( 'erp-calls', __( 'Overview', 'wp-erp' ), __( 'Overview', 'wp-erp' ), $capabilities, 'erp-calls', array( $this, 'dashboard_page' ) );
-        // add_submenu_page( 'erp-calls', __( 'Logged Calls', 'wp-erp' ), __( 'Logged Calls', 'wp-erp' ), $capabilities, 'erp-calls-logged', array( $this, 'dashboard_page' ) );
-        // add_submenu_page( 'erp-calls', __( 'Scheduled Calls', 'wp-erp' ), __( 'Scheduled Calls', 'wp-erp' ), $capabilities, 'erp-calls-schedule', array( $this, 'dashboard_page' ) );
-        // add_submenu_page( 'erp-calls', __( 'SMS', 'wp-erp' ), __( 'SMS', 'wp-erp' ), $capabilities, 'erp-calls-sms', array( $this, 'dashboard_page' ) );
+    }
+
+    /**
+     * Add calendar script in Overview
+     *
+     * @since 1.0
+     *
+     * @return void
+     */
+    public function crm_calendar_script() {
+        wp_enqueue_script( 'erp-admin-calendar-moment' );
+        wp_enqueue_script( 'erp-admin-calendar' );
+        wp_enqueue_style( 'erp-admin-calendar' );
     }
 
     /**
