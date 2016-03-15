@@ -41,7 +41,7 @@
                     <?php if ( class_exists( $addon->class ) ) { ?>
                         <a class="button button-disabled" href="<?php echo $addon->url; ?>" target="_blank">Installed</a>
                     <?php } else { ?>
-                        <a class="button" href="<?php echo $addon->url; ?>" target="_blank">View Details</a>
+                        <a class="button" href="<?php echo $addon->url; ?>" target="_blank"><?php _e( 'View Details', 'wp-erp' ); ?></a>
                     <?php } ?>
                 </div>
             </div>
@@ -49,7 +49,7 @@
             <?php
         }
     } else {
-        echo '<div class="error"><p>Error fetching add-ons</p></div>';
+        _e( '<div class="error"><p>Error fetching add-ons</p></div>', 'wp-erp' );
     }
     ?>
 
