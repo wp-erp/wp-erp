@@ -11,6 +11,7 @@
 function erp_crm_dashboard_right_widgets_area() {
     erp_admin_dash_metabox( __( '<i class="fa fa-calendar-check-o"></i> Todays Schedules', 'wp-erp' ), 'erp_hr_dashboard_widget_todays_schedules' );
     erp_admin_dash_metabox( __( '<i class="fa fa-calendar-check-o"></i> Upcoming Schedules', 'wp-erp' ), 'erp_hr_dashboard_widget_upcoming_schedules' );
+    erp_admin_dash_metabox( __( '<i class="fa fa-calendar-check-o"></i> Latest Contact', 'wp-erp' ), 'erp_hr_dashboard_widget_latest_contact' );
 }
 
 /**
@@ -67,7 +68,7 @@ function erp_hr_dashboard_widget_todays_schedules() {
         <?php endforeach ?>
     </ul>
      <?php else : ?>
-        <?php _e( 'No schedule found', 'wp-erp' ); ?>
+        <?php _e( 'No schedules found', 'wp-erp' ); ?>
     <?php endif;
 }
 
@@ -113,7 +114,7 @@ function erp_hr_dashboard_widget_upcoming_schedules() {
             <?php endforeach ?>
         </ul>
     <?php else : ?>
-        <?php _e( 'No schedule found', 'wp-erp' ); ?>
+        <?php _e( 'No schedules found', 'wp-erp' ); ?>
     <?php endif;
 }
 
@@ -184,6 +185,11 @@ function erp_hr_dashboard_widget_my_schedules() {
     <?php
 }
 
+
+function erp_hr_dashboard_widget_latest_contact() {
+    // $contacts = erp_get_peoples( [ 'type' => 'contact', 'orderby'    => 'id',
+    //     'order'      => 'ASC' ] );
+}
 
 
 
