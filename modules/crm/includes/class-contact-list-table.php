@@ -83,12 +83,12 @@ class Contact_List_Table extends \WP_List_Table {
             </select>
 
             <?php
-            submit_button( __( 'Filter' ), 'secondary', 'filter_contact', false, [ 'id' => 'erp-advance-filter-contact-btn'] );
+            submit_button( __( 'Filter', 'wp-erp' ), 'secondary', 'filter_contact', false, [ 'id' => 'erp-advance-filter-contact-btn'] );
 
             if ( $selected_save_search ) {
                 $base_link = add_query_arg( [ 'page' => $this->page_type ], admin_url( 'admin.php' ) );
-                echo '<a href="' . $base_link . '" class="button erp-reset-save-search-field" id="erp-reset-save-search-field">Reset</a>';
-                echo '<a href="#" class="button erp-show-save-search-field" id="erp-show-save-search-field">Show Fields</a>';
+                echo '<a href="' . $base_link . '" class="button erp-reset-save-search-field" id="erp-reset-save-search-field">' . __( 'Reset', 'wp-erp' ) . '</a>';
+                echo '<a href="#" class="button erp-show-save-search-field" id="erp-show-save-search-field">' . __( 'Show Fields', 'wp-erp' ) . '</a>';
             }
 
         echo '</div>';

@@ -76,7 +76,7 @@ class Customer_Relationship {
         require_once WPERP_CRM_PATH . '/includes/actions-filters.php';
         require_once WPERP_CRM_PATH . '/includes/function-customer.php';
         require_once WPERP_CRM_PATH . '/includes/function-dashboard.php';
-        require_once WPERP_CRM_PATH . '/admin/class-menu.php';
+        require_once WPERP_CRM_PATH . '/includes/function-capabilities.php';
     }
 
     /**
@@ -88,6 +88,8 @@ class Customer_Relationship {
         if ( is_admin() ) {
             new Ajax_Handler();
             new Form_Handler();
+            new \WeDevs\ERP\CRM\Admin_Menu();
+            new \WeDevs\ERP\CRM\User_Profile();
         }
     }
 

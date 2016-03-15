@@ -55,7 +55,7 @@ class Countries {
             }
         }
         if ( '-1' == $default ) {
-            $this->countries = array( '-1' => '===select one===' ) + $this->countries; 
+            $this->countries = array( '-1' => __( '===select one===', 'wp-erp' ) ) + $this->countries; 
         }
         return $this->countries;
     }

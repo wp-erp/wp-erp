@@ -130,7 +130,7 @@ class Hr_Log {
     public function create_employee( $emp_id, $fields ) {
         erp_log()->add([
             'sub_component' => 'employee',
-            'message'       => sprintf( '<strong>%s</strong> employee has been created', $fields['personal']['first_name'] ),
+            'message'       => sprintf( __( '<strong>%s</strong> employee has been created', 'wp-erp' ), $fields['personal']['first_name'] ),
             'created_by'    => get_current_user_id()
         ]);
     }
@@ -154,7 +154,7 @@ class Hr_Log {
 
         erp_log()->add([
             'sub_component' => 'employee',
-            'message'       => sprintf( '<strong>%s</strong> employee has been deleted', $employee->get_full_name() ),
+            'message'       => sprintf( __( '<strong>%s</strong> employee has been deleted', 'wp-erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
         ]);
@@ -184,7 +184,7 @@ class Hr_Log {
         //if ( empty( $changes['old_val'] ) && empty( $changes['new_val'] ) ) {
         //$message = false;
         //} else {
-        $message = sprintf( '<strong>%s</strong> employee has been edited', $fields['personal']['first_name'] );
+        $message = sprintf( __( '<strong>%s</strong> employee has been edited', 'wp-erp' ), $fields['personal']['first_name'] );
         //}
 
         if ( $message ) {
@@ -214,7 +214,7 @@ class Hr_Log {
 
         erp_log()->add([
             'sub_component' => 'employee',
-            'message'       => sprintf( '<strong>%s</strong> employee experience has been created', $employee->get_full_name() ),
+            'message'       => sprintf( __( '<strong>%s</strong> employee experience has been created', 'wp-erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id()
         ]);
     }
@@ -240,7 +240,7 @@ class Hr_Log {
 
         erp_log()->add([
             'sub_component' => 'employee',
-            'message'       => sprintf( '<strong>%s</strong> employee experience has been deleted', $employee->get_full_name() ),
+            'message'       => sprintf( __( '<strong>%s</strong> employee experience has been deleted', 'wp-erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
         ]);
@@ -261,7 +261,7 @@ class Hr_Log {
 
         erp_log()->add([
             'sub_component' => 'employee',
-            'message'       => sprintf( '<strong>%s</strong> employee education has been created', $employee->get_full_name() ),
+            'message'       => sprintf( __( '<strong>%s</strong> employee education has been created', 'wp-erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id()
         ]);
     }
@@ -287,7 +287,7 @@ class Hr_Log {
 
         erp_log()->add([
             'sub_component' => 'employee',
-            'message'       => sprintf( '<strong>%s</strong> employee education has been deleted', $employee->get_full_name() ),
+            'message'       => sprintf( __( '<strong>%s</strong> employee education has been deleted', 'wp-erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
         ]);
@@ -308,7 +308,7 @@ class Hr_Log {
 
         erp_log()->add([
             'sub_component' => 'employee',
-            'message'       => sprintf( '<strong>%s</strong> employee dependents has been created', $employee->get_full_name() ),
+            'message'       => sprintf( __( '<strong>%s</strong> employee dependents has been created', 'wp-erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id()
         ]);
     }
@@ -334,7 +334,7 @@ class Hr_Log {
 
         erp_log()->add([
             'sub_component' => 'employee',
-            'message'       => sprintf( '<strong>%s</strong> employee dependents has been deleted', $employee->get_full_name() ),
+            'message'       => sprintf( __( '<strong>%s</strong> employee dependents has been deleted', 'wp-erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
         ]);
@@ -355,7 +355,7 @@ class Hr_Log {
 
         erp_log()->add([
             'sub_component' => 'employee',
-            'message'       => sprintf( '<strong>%s</strong> employee employment status has been created', $employee->get_full_name() ),
+            'message'       => sprintf( __( '<strong>%s</strong> employee employment status has been created', 'wp-erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id()
         ]);
     }
@@ -385,7 +385,7 @@ class Hr_Log {
 
         erp_log()->add([
             'sub_component' => 'employee',
-            'message'       => sprintf( '<strong>%s</strong> employee employment status has been deleted', $employee->get_full_name() ),
+            'message'       => sprintf( __( '<strong>%s</strong> employee employment status has been deleted', 'wp-erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
         ]);
@@ -406,7 +406,7 @@ class Hr_Log {
 
         erp_log()->add([
             'sub_component' => 'employee',
-            'message'       => sprintf( '<strong>%s</strong> employee compensation has been created', $employee->get_full_name() ),
+            'message'       => sprintf( __( '<strong>%s</strong> employee compensation has been created', 'wp-erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id()
         ]);
     }
@@ -436,7 +436,7 @@ class Hr_Log {
 
         erp_log()->add([
             'sub_component' => 'employee',
-            'message'       => sprintf( '<strong>%s</strong> employee compensation has been deleted', $employee->get_full_name() ),
+            'message'       => sprintf( __( '<strong>%s</strong> employee compensation has been deleted', 'wp-erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
         ]);
@@ -457,7 +457,7 @@ class Hr_Log {
 
         erp_log()->add([
             'sub_component' => 'employee',
-            'message'       => sprintf( '<strong>%s</strong> employee job info has been created', $employee->get_full_name() ),
+            'message'       => sprintf( __( '<strong>%s</strong> employee job info has been created', 'wp-erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id()
         ]);
     }
@@ -487,7 +487,7 @@ class Hr_Log {
 
         erp_log()->add([
             'sub_component' => 'employee',
-            'message'       => sprintf( '<strong>%s</strong> employee job info has been deleted', $employee->get_full_name() ),
+            'message'       => sprintf( __( '<strong>%s</strong> employee job info has been deleted', 'wp-erp' ), $employee->get_full_name() ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
         ]);
@@ -506,7 +506,7 @@ class Hr_Log {
     public function create_department( $dept_id, $fields ) {
         erp_log()->add([
             'sub_component' => 'department',
-            'message'       => sprintf( '<strong>%s</strong> department has been created', $fields['title'] ),
+            'message'       => sprintf( __( '<strong>%s</strong> department has been created', 'wp-erp' ), $fields['title'] ),
             'created_by'    => get_current_user_id()
         ]);
     }
@@ -530,7 +530,7 @@ class Hr_Log {
 
         erp_log()->add([
             'sub_component' => 'department',
-            'message'       => sprintf( '<strong>%s</strong> department has been deleted', $department->title ),
+            'message'       => sprintf( __( '<strong>%s</strong> department has been deleted', 'wp-erp' ), $department->title ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
         ]);
@@ -566,7 +566,7 @@ class Hr_Log {
                         $employee = new \WeDevs\ERP\HRM\Employee( intval( $key['lead'] ) );
                         $key['department_lead'] = $employee->get_full_name();
                     } else {
-                        $key['department_lead'] = 'No deparment leader';
+                        $key['department_lead'] = __( 'No deparment leader', 'wp-erp' );
                     }
                     unset( $key['lead'] );
                 }
@@ -576,13 +576,13 @@ class Hr_Log {
                         $department = new \WeDevs\ERP\HRM\Department( intval( $key['parent'] ) );
                         $key['parent_department'] = $department->title;
                     } else {
-                        $key['parent_department'] = 'No Parent Department';
+                        $key['parent_department'] = __( 'No Parent Department', 'wp-erp' );
                     }
                     unset( $key['parent'] );
                 }
             } );
 
-            $message = sprintf( '<strong>%s</strong> department has been edited', $old_department['title'] );
+            $message = sprintf( __( '<strong>%s</strong> department has been edited', 'wp-erp' ), $old_department['title'] );
         }
 
         if ( $message ) {
@@ -611,7 +611,7 @@ class Hr_Log {
     public function create_designation( $desig_id, $fields ) {
         erp_log()->add([
             'sub_component' => 'designation',
-            'message'       => sprintf( '<strong>%s</strong> designation has been created', $fields['title'] ),
+            'message'       => sprintf( __( '<strong>%s</strong> designation has been created', 'wp-erp' ), $fields['title'] ),
             'created_by'    => get_current_user_id()
         ]);
     }
@@ -632,7 +632,7 @@ class Hr_Log {
 
         erp_log()->add([
             'sub_component' => 'designation',
-            'message'       => sprintf( '<strong>%s</strong> designation has been deleted', $desig->title ),
+            'message'       => sprintf( __( '<strong>%s</strong> designation has been deleted', 'wp-erp' ), $desig->title ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
         ]);
@@ -661,7 +661,7 @@ class Hr_Log {
         if ( empty( $changes['old_val'] ) && empty( $changes['new_val'] ) ) {
             $message = false;
         } else {
-            $message = sprintf( '<strong>%s</strong> designation has been edited', $old_desig['title'] );
+            $message = sprintf( __( '<strong>%s</strong> designation has been edited', 'wp-erp' ), $old_desig['title'] );
         }
 
         if ( $message ) {
@@ -694,7 +694,7 @@ class Hr_Log {
 
         erp_log()->add([
             'sub_component' => 'leave',
-            'message'       => sprintf( '<strong>%s</strong> policy has been created', $fields['name'] ),
+            'message'       => sprintf( __( '<strong>%s</strong> policy has been created', 'wp-erp' ), $fields['name'] ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'add',
         ]);
@@ -723,7 +723,7 @@ class Hr_Log {
 
         erp_log()->add([
             'sub_component' => 'leave',
-            'message'       => sprintf( '<strong>%s</strong> policy has been deleted', $policy->name ),
+            'message'       => sprintf( __( '<strong>%s</strong> policy has been deleted', 'wp-erp' ), $policy->name ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
         ]);
@@ -824,7 +824,7 @@ class Hr_Log {
 
             } );
 
-            $message = sprintf( '<strong>%s</strong> policy has been edited', $old_policy['name'] );
+            $message = sprintf( __( '<strong>%s</strong> policy has been edited', 'wp-erp' ), $old_policy['name'] );
         }
 
         if ( $message ) {
@@ -858,7 +858,7 @@ class Hr_Log {
 
         $employee = new \WeDevs\ERP\HRM\Employee( intval( $request['user_id'] ) );
 
-        $message = sprintf( '<strong>%s</strong> take leave from <strong>%s</strong> to <strong>%s</strong> about <strong>%d</strong> days',
+        $message = sprintf( __( '<strong>%s</strong> take leave from <strong>%s</strong> to <strong>%s</strong> about <strong>%d</strong> days', 'wp-erp' ),
             $employee->get_full_name(),
             erp_format_date( $request['start_date'] ),
             erp_format_date( $request['end_date'] ),
@@ -890,7 +890,7 @@ class Hr_Log {
         }
 
         $employee = new \WeDevs\ERP\HRM\Employee( intval( $fields['user_id'] ) );
-        $message  = sprintf( '%s <strong>%s</strong>', __( 'A new entitlement has been created for'), $employee->get_full_name() );
+        $message  = sprintf( '%s <strong>%s</strong>', __( 'A new entitlement has been created for', 'wp-erp' ), $employee->get_full_name() );
 
         erp_log()->add([
             'sub_component' => 'leave',
@@ -918,7 +918,7 @@ class Hr_Log {
 
         erp_log()->add([
             'sub_component' => 'leave',
-            'message'       => sprintf( 'A new holiday named <strong>%s</strong> has been created', $fields['title'] ),
+            'message'       => sprintf( __( 'A new holiday named <strong>%s</strong> has been created', 'wp-erp' ), $fields['title'] ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'add',
         ]);
@@ -947,7 +947,7 @@ class Hr_Log {
 
         erp_log()->add([
             'sub_component' => 'leave',
-            'message'       => sprintf( '<strong>%s</strong> holiday has been deleted', $holiday->title ),
+            'message'       => sprintf( __( '<strong>%s</strong> holiday has been deleted', 'wp-erp' ), $holiday->title ),
             'created_by'    => get_current_user_id(),
             'changetype'    => 'delete',
         ]);
@@ -994,7 +994,7 @@ class Hr_Log {
                     unset( $key['end'] );
                 }
             } );
-            $message = sprintf( '<strong>%s</strong> holiday has been edited', $old_holiday['title'] );
+            $message = sprintf( __( '<strong>%s</strong> holiday has been edited', 'wp-erp' ), $old_holiday['title'] );
         }
 
         if ( $message ) {
@@ -1032,10 +1032,10 @@ class Hr_Log {
         $overview = add_query_arg( array( 'page' => 'erp-hr' ), admin_url('admin.php') );
 
         if ( 'publish' === $old_status ) {
-            $message     = sprintf( "<strong>%s</strong> announcement has been edited", $post->post_title );
+            $message     = sprintf( __( "<strong>%s</strong> announcement has been edited", 'wp-erp' ), $post->post_title );
             $change_type = 'edit';
         } else {
-            $message     = sprintf( "<strong>%s</strong> announcement has been created", $post->post_title );
+            $message     = sprintf( __( "<strong>%s</strong> announcement has been created", 'wp-erp' ), $post->post_title );
             $change_type = 'add';
         }
 
