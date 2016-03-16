@@ -1777,7 +1777,7 @@ function erp_crm_save_email_activity() {
             'message'       => $postdata['message'],
             'type'          => $postdata['type'],
             'email_subject' => $postdata['email_subject'],
-            'extra'         => serialize( [ 'replied' => 1 ] ),
+            'extra'         => base64_encode( json_encode( [ 'replied' => 1 ] ) ),
         ];
 
         $data = erp_crm_save_customer_feed_data( $save_data );

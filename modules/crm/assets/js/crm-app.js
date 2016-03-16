@@ -2,53 +2,6 @@
  *****************    Vue Filters     *************************
  **************************************************************/
 
-
-// Vue Filter for Formatting Time
-Vue.filter('filterFeeds', function ( feedData, filterFeeds ) {
-
-    var feedsData = _.filter( feedData, function( data ) {
-        if ( filterFeeds.filterActivityType ) {
-
-            if ( filterFeeds.filterActivityType == 'log_activity' ) {
-                return ( data.type == filterFeeds.filterActivityType ) && !vm.isSchedule( data.start_date );
-            }
-
-            if ( filterFeeds.filterActivityType == 'schedule' ) {
-                return ( data.type == 'log_activity' ) && vm.isSchedule( data.start_date );
-            }
-
-            return ( data.type == filterFeeds.filterActivityType );
-        }
-
-        return data;
-
-    });
-
-    var feedsData = _.filter( feedsData, function( data ) {
-        if ( filterFeeds.filterCreatedBy ) {
-            return ( data.created_by.ID == filterFeeds.filterCreatedBy );
-        }
-        return data;
-    });
-
-    var feedsData = _.filter( feedsData, function( data ) {
-        if ( filterFeeds.filterCreatedFor ) {
-            return ( data.user_id == filterFeeds.filterCreatedFor );
-        }
-        return data;
-    });
-
-     var feedsData = _.filter( feedsData, function( data ) {
-        if ( filterFeeds.filterCreatedOn ) {
-            return ( data.created_date == filterFeeds.filterCreatedOn );
-        }
-        return data;
-    });
-
-    return ( feedsData ) ? feedsData : [];
-});
-
-
 // Vue Filter for Formatting Time
 Vue.filter('formatAMPM', function (date) {
     date = new Date( date );
@@ -297,9 +250,11 @@ var TimeLineHeader = Vue.extend({
                     + '<img v-bind:src="createdUserImg">'
                 +'</span>'
                 +'<span class="timeline-feed-header-text">'
-                    +'<strong>{{createdUserName}} </strong>'
+                    +'<strong v-if="!isRepliedEmail">{{createdUserName}} </strong>'
+                    +'<strong v-if="isRepliedEmail">{{createdForUser}} </strong>'
                     +'<span v-if="isNote">created a note for <strong>{{ createdForUser }}</strong></span>'
                     +'<span v-if="isEmail">sent an email to <strong>{{ createdForUser }}</strong></span>'
+                    +'<span v-if="isRepliedEmail">replied to <strong>{{ createdUserName }}r</strong> email</span>'
                     +'<span v-if="isLog">'
                         +'logged {{ logType }} on {{ logDateTime | formatDateTime }} for <strong>{{ createdForUser }}</strong>'
                         +' <span v-if="countUser == 1">and <strong>{{ feed.extra.invited_user[0].name }}</strong></span>'
@@ -347,7 +302,11 @@ var TimeLineHeader = Vue.extend({
         },
 
         isEmail: function() {
-            return ( this.feed.type == 'email' );
+            return ( this.feed.type == 'email' ) && this.feed.extra.replied != 1;
+        },
+
+        isRepliedEmail: function() {
+            return ( this.feed.type == 'email' ) && this.feed.extra.replied == 1;
         },
 
         isLog: function() {
