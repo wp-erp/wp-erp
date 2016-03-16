@@ -836,7 +836,10 @@
                     success: function() {
                         $.get( window.location.href, function(data) {
                             $('ul.notes-list').prepend( $(data).find( 'ul.notes-list li' ).first() );
-                            $('ul.notes-list li').last().remove();
+                            if( $('ul.notes-list li').length > 10 ){
+                                $('ul.notes-list li').last().remove();
+                            }
+                            WeDevs_ERP_HR.employee.showLoadMoreBtn() ;
                             form.find('textarea').val('');
                             submit.removeAttr( 'disabled' );
                         });
@@ -847,7 +850,14 @@
                     }
                 });
             },
-
+            showLoadMoreBtn: function(){
+                console.log($('ul.notes-list li').length);
+                if( $('ul.notes-list li').length >= 10 ){
+                    $('.wperp-load-more-btn').show();
+                }else {
+                    $('.wperp-load-more-btn').hide();
+                }
+            },
             loadNotes: function(e) {
                 e.preventDefault();
 
@@ -899,6 +909,7 @@
                         success: function( resp ) {
                             self.closest('li').fadeOut( 400, function() {
                                 $(this).remove();
+                                WeDevs_ERP_HR.employee.showLoadMoreBtn() ;
                             });
                         },
                         error: function( error ) {
