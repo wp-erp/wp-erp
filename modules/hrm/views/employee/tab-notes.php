@@ -41,7 +41,7 @@
                         <?php echo wpautop( $note->comment ); ?>
                     </div>
 
-                    <div class="row-actions">
+                    <div class="row-actis">
                         <span class="delete"><a href="#" class="delete_note" data-note_id="<?php echo $note->id; ?>"><?php _e( 'Delete Permanently', 'wp-erp' ); ?></a></span>
                     </div>
                 </div>
@@ -49,9 +49,12 @@
             <?php } ?>
         </ul>
 
-        <?php if ( $no_of_notes < $total_notes ): ?>
-            <?php submit_button( 'Load More', false, 'erp-load-notes', true, array( 'id' => 'erp-load-notes', 'data-total_no' => $no_of_notes, 'data-offset_no' => $no_of_notes, 'data-user_id' => $employee->id ) ); ?>
-        <?php endif ?>
+
 
     <?php } ?>
+     <?php  $display_class =  ( $no_of_notes < $total_notes ) ? 'show':'hide' ; ?>
+    <div class="wperp-load-more-btn <?php echo $display_class?>">
+            <?php submit_button( 'Load More', false, 'erp-load-notes', true, array( 'id' => 'erp-load-notes', 'data-total_no' => $total_notes, 'data-offset_no' => $no_of_notes, 'data-user_id' => $employee->id ) ); ?>
+    </div>
+
 </div>

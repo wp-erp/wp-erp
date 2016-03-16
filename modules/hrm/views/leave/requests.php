@@ -51,7 +51,7 @@ class Leave_Requests_List_Table extends WP_List_Table {
      * @return string
      */
     function column_default( $item, $column_name ) {
-        
+
         $balance   = erp_hr_leave_get_balance( $item->user_id );
         $policy = erp_hr_leave_get_policy( $item->policy_id );
 
