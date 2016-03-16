@@ -287,7 +287,7 @@ Vue.directive('selecttwo', {
 
 var ToolTip = Vue.extend({
     props: ['title', 'content' ],
-    template: '<span class="time erp-tips" v-tiptip title="{{ title }}">{{{ content }}}</span>',
+    template: '<span class="time erp-tips" v-tiptip data-title="{{ title }}">{{{ content }}}</span>',
 });
 
 var TimeLineHeader = Vue.extend({
@@ -308,7 +308,7 @@ var TimeLineHeader = Vue.extend({
                     +'<span v-if="isSchedule">'
                         +'have scheduled {{ logType }} with '
                         +'<strong>{{ createdForUser }}</strong>'
-                            +' <span v-if="countUser == 1">and <strong>{{ feed.extra.invited_user[0].name }}</strong></span>'
+                            +' <span v-if="countUser == 1">and <strong>{{ invitedSingleUser }}</strong></span>'
                         +'<span v-if="( countUser != 0 ) && countUser != 1"> and <strong><tooltip :content="countUser" :title="invitedUser"></tooltip></strong></span>'
                     +'</span>'
                 +'</span>',
@@ -322,6 +322,14 @@ var TimeLineHeader = Vue.extend({
         countUser: function () {
             var count = this.feed.extra.invited_user.length;
             return ( count <= 1 ) ? count : count + ' others';
+        },
+
+        invitedSingleUser: function() {
+            if ( this.feed.extra.invited_user[0].id == wpCRMvue.current_user_id ) {
+                return 'You';
+            } else {
+                return this.feed.extra.invited_user[0].name;
+            }
         },
 
         invitedUser: function() {
