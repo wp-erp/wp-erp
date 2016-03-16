@@ -47,7 +47,9 @@ class ERP_Admin_Settings {
             return $query_arg;
         }
 
-        if ( empty( $settings[0]->get_id() ) ) {
+        $default = $settings[0]->get_id();
+
+        if ( empty( $default ) ) {
             return $query_arg;
         }
 
