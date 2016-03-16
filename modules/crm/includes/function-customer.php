@@ -579,7 +579,7 @@ function erp_crm_get_feed_activity( $postdata ) {
     }
 
     if ( isset( $postdata['created_at'] ) && !empty( $postdata['created_at'] ) ) {
-        $results = $results->where( $db->raw( "DATE_FORMAT( `created_at`, '%Y %m %d' )" ), date( 'Y-m-d', strtotime( $postdata['created_at'] ) ) );
+        $results = $results->where( $db->raw( "DATE_FORMAT( `created_at`, '%Y-%m-%d' )" ), $postdata['created_at'] );
     }
 
     $results = $results->orderBy( 'created_at', 'DESC' );
@@ -610,8 +610,6 @@ function erp_crm_get_feed_activity( $postdata ) {
         $value['created_timeline_date'] = date( 'Y-m', strtotime( $value['created_at'] ) );
         $feeds[] = $value;
     }
-
-    // var_dump( $wpdb->last_query ); die();
 
     return $feeds;
 }

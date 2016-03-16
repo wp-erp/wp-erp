@@ -75,7 +75,6 @@ $contacts = erp_crm_get_contact_dropdown();
                 </button>
             </div>
 
-
             <div class="no-activity-found" v-if="!feeds.length">
                 <?php _e( 'No Activity found for this Contact', 'wp-erp' ); ?>
             </div>

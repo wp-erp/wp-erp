@@ -473,7 +473,6 @@ Vue.component( 'new-note', {
 
     data: function() {
         return {
-            // validation: {},
             feedData: {
                 message: ''
             },
@@ -547,7 +546,6 @@ Vue.component( 'log-activity', {
 
     data: function() {
         return {
-            // validation: {},
             feedData: {
                 message: '',
                 log_type: '',
@@ -1090,6 +1088,7 @@ var vm = new Vue({
          * @return {[object]}
          */
         fetchFeeds: function( filter ) {
+
             var data = {
                 action : 'erp_crm_get_customer_activity',
                 customer_id : this.customer_id,
@@ -1105,8 +1104,10 @@ var vm = new Vue({
                 data.created_by = filter.created_by;
                 data.created_at = filter.created_at;
                 data.type = filter.type;
+                data.offset = 0;
+                this.offset = 0;
+                this.loadingFinish = false;
             }
-            console.log (data);
 
             jQuery.post( wpCRMvue.ajaxurl, data, function( resp ) {
                 vm.feeds = resp.data;
@@ -1156,10 +1157,3 @@ var vm = new Vue({
 });
 
 /******************** End Main Vue instance **********************/
-
-// Bind trix-editor value with v-model message
-// document.addEventListener('trix-change', function (e) {
-//     vm.feedData.message = e.path[0].innerHTML;
-// });
-
-
