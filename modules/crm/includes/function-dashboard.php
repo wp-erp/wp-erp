@@ -12,6 +12,12 @@ function erp_crm_dashboard_right_widgets_area() {
     erp_admin_dash_metabox( __( '<i class="fa fa-calendar-check-o"></i> Todays Schedules', 'wp-erp' ), 'erp_crm_dashboard_widget_todays_schedules' );
     erp_admin_dash_metabox( __( '<i class="fa fa-calendar-check-o"></i> Upcoming Schedules', 'wp-erp' ), 'erp_crm_dashboard_widget_upcoming_schedules' );
     erp_admin_dash_metabox( __( '<i class="fa fa-users"></i> Recently Added', 'wp-erp' ), 'erp_crm_dashboard_widget_latest_contact' );
+
+    // Display the cloud inbound emails widget only if the site is connected with cloud.
+    $wp_erp_api_key = get_option( 'wp_erp_apikey', null );
+    if ( $wp_erp_api_key ) {
+        erp_admin_dash_metabox( __( '<i class="fa fa-envelope"></i> Total Inbound Emails', 'wp-erp' ), 'erp_crm_dashboard_widget_cloud_inbound_emails' );
+    }
 }
 
 /**
@@ -244,4 +250,17 @@ function erp_crm_dashboard_widget_latest_contact() {
     } else {
         _e( 'No companies found', 'wp-erp' );
     }
+}
+
+/**
+ * CRM Dashboard Cloud Inbound Emails widget.
+ *
+ * @since 1.0
+ *
+ * @return void [html]
+ */
+function erp_crm_dashboard_widget_cloud_inbound_emails() {
+    $total_emails_count = get_option( 'wp_erp_cloud_email_count', 0 );
+
+    echo '<h1 style="text-align: center;">' . $total_emails_count . '</h1>';
 }

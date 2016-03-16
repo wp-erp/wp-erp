@@ -55,7 +55,7 @@ class Log {
 	        'number'     => 20,
 	        'offset'     => 0,
 	        'no_object'  => false,
-            'orderby'    => 'created_at',
+            'orderby'    => 'id',
             'order'      => 'DESC'
 	    );
 

@@ -201,7 +201,7 @@ class Ajax {
                     update_option( 'wp_erp_api_active', $body['status'] );
 
                     if ( isset( $body['email_count'] ) ) {
-                        update_option( 'wp_erp_api_email_count', $body['email_count'] );
+                        update_option( 'wp_erp_cloud_email_count', $body['email_count'] );
                     }
 
                     $this->send_success();

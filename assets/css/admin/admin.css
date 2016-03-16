@@ -649,53 +649,65 @@
   font-style: italic;
   font-weight: normal;
 }
-.erp-single-customer .erp-customer-feeds #log-activity p {
+.erp-single-customer .erp-customer-feeds #log-activity p,
+.erp-single-customer .erp-customer-feeds #tasks p {
   margin: 0px;
   border-bottom: 1px solid #eee;
   padding: 8px 0px;
 }
-.erp-single-customer .erp-customer-feeds #log-activity p:first-child {
+.erp-single-customer .erp-customer-feeds #log-activity p:first-child,
+.erp-single-customer .erp-customer-feeds #tasks p:first-child {
   padding-bottom: 16px;
 }
-.erp-single-customer .erp-customer-feeds #log-activity p span.select2-selection--multiple {
+.erp-single-customer .erp-customer-feeds #log-activity p span.select2-selection--multiple,
+.erp-single-customer .erp-customer-feeds #tasks p span.select2-selection--multiple {
   border: none;
   height: 32px;
 }
-.erp-single-customer .erp-customer-feeds #log-activity p span.select2-selection--multiple input {
+.erp-single-customer .erp-customer-feeds #log-activity p span.select2-selection--multiple input,
+.erp-single-customer .erp-customer-feeds #tasks p span.select2-selection--multiple input {
   width: 100% !important;
 }
-.erp-single-customer .erp-customer-feeds #log-activity p label {
+.erp-single-customer .erp-customer-feeds #log-activity p label,
+.erp-single-customer .erp-customer-feeds #tasks p label {
   min-width: 12%;
   display: inline-block;
   vertical-align: middle;
   margin-left: 5px;
 }
-.erp-single-customer .erp-customer-feeds #log-activity p span.sep {
+.erp-single-customer .erp-customer-feeds #log-activity p span.sep,
+.erp-single-customer .erp-customer-feeds #tasks p span.sep {
   width: 15px;
   display: inline-block;
 }
-.erp-single-customer .erp-customer-feeds #log-activity p input.email_subject {
+.erp-single-customer .erp-customer-feeds #log-activity p input.email_subject,
+.erp-single-customer .erp-customer-feeds #tasks p input.email_subject {
   border: none;
   box-shadow: none;
   transition: none;
   width: 80%;
 }
-.erp-single-customer .erp-customer-feeds #log-activity p input.email_subject:focus {
+.erp-single-customer .erp-customer-feeds #log-activity p input.email_subject:focus,
+.erp-single-customer .erp-customer-feeds #tasks p input.email_subject:focus {
   outline: none;
 }
-.erp-single-customer .erp-customer-feeds #log-activity p input.email_subject::-webkit-input-placeholder {
+.erp-single-customer .erp-customer-feeds #log-activity p input.email_subject::-webkit-input-placeholder,
+.erp-single-customer .erp-customer-feeds #tasks p input.email_subject::-webkit-input-placeholder {
   font-style: italic;
   font-weight: normal;
 }
-.erp-single-customer .erp-customer-feeds #log-activity p input.email_subject:-moz-placeholder {
+.erp-single-customer .erp-customer-feeds #log-activity p input.email_subject:-moz-placeholder,
+.erp-single-customer .erp-customer-feeds #tasks p input.email_subject:-moz-placeholder {
   font-style: italic;
   font-weight: normal;
 }
-.erp-single-customer .erp-customer-feeds #log-activity p input.email_subject::-moz-placeholder {
+.erp-single-customer .erp-customer-feeds #log-activity p input.email_subject::-moz-placeholder,
+.erp-single-customer .erp-customer-feeds #tasks p input.email_subject::-moz-placeholder {
   font-style: italic;
   font-weight: normal;
 }
-.erp-single-customer .erp-customer-feeds #log-activity p input.email_subject:-ms-input-placeholder {
+.erp-single-customer .erp-customer-feeds #log-activity p input.email_subject:-ms-input-placeholder,
+.erp-single-customer .erp-customer-feeds #tasks p input.email_subject:-ms-input-placeholder {
   font-style: italic;
   font-weight: normal;
 }
@@ -763,6 +775,48 @@
 .erp-single-customer .erp-customer-feeds #schedule .schedule-notification p.schedule-notification-allow {
   width: 50%;
   padding: 13px 20px;
+}
+.erp-single-customer .erp-customer-feeds #tasks .assign-task-datetime {
+  border-bottom: 1px solid #e3e3e3;
+}
+.erp-single-customer .erp-customer-feeds #tasks p {
+  padding-bottom: 10px !important;
+}
+.erp-single-customer .erp-customer-feeds #tasks p.assign-task-time {
+  border-bottom: none;
+  width: 45%;
+  margin-left: 10px;
+}
+.erp-single-customer .erp-customer-feeds #tasks p.assign-task-date {
+  width: 45%;
+  border-bottom: none;
+  border-right: 1px solid #e3e3e3;
+  margin-left: 5px;
+}
+.erp-single-customer .erp-customer-feeds #tasks p input[type=text] {
+  border: none;
+  box-shadow: none;
+  transition: none;
+  width: 45%;
+}
+.erp-single-customer .erp-customer-feeds #tasks p input[type=text]:focus {
+  outline: none;
+}
+.erp-single-customer .erp-customer-feeds #tasks p input[type=text]::-webkit-input-placeholder {
+  font-style: italic;
+  font-weight: normal;
+}
+.erp-single-customer .erp-customer-feeds #tasks p input[type=text]:-moz-placeholder {
+  font-style: italic;
+  font-weight: normal;
+}
+.erp-single-customer .erp-customer-feeds #tasks p input[type=text]::-moz-placeholder {
+  font-style: italic;
+  font-weight: normal;
+}
+.erp-single-customer .erp-customer-feeds #tasks p input[type=text]:-ms-input-placeholder {
+  font-style: italic;
+  font-weight: normal;
 }
 .erp-single-customer .erp-customer-feeds .activity-form {
   background: #fff;
@@ -1588,6 +1642,19 @@ table.leaves td.column-status .status-3 {
 }
 .note-tab-wrap .hide {
   display: none;
+}
+.wperp-hrm-report .report-month {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+}
+.wperp-hrm-report table th {
+  padding-left: 15px;
+  text-align: right;
+  width: 20px;
+  padding-right: 5px;
+  font-weight: bold;
+  font-size: 120% ;
 }
 @media print {
   .erp-hide-print {
@@ -2545,4 +2612,18 @@ ul.edit-address li.city-wrap span {
   padding-right: 20px;
   margin-left: 30px;
   text-align: right;
+}
+/*****/
+/**
+* Media Query for responsive
+*
+**/
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (max-width: 640px) {
+  .erp-modal {
+    top: 10%;
+    bottom: 1%;
+    right: 1%;
+    left: 1%;
+  }
 }

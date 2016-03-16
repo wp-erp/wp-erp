@@ -510,8 +510,6 @@
                     }
                 }
             }
-
-
         }
 
         .customer-company-info {
@@ -588,6 +586,26 @@
      */
     .erp-customer-feeds {
 
+        .activity-filter {
+            margin-top: 20px;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+            -moz-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+            box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+
+            .filters {
+                padding: 15px 25px;
+                border-right: 1px solid #e3e3e3;
+                float:left;
+
+                &:last-child {
+                    border-right: none;
+                }
+            }
+
+        }
+
         .submit-action {
             padding-top:10px;
             border-top:1px solid #eee;
@@ -642,7 +660,7 @@
             }
         }
 
-        #log-activity {
+        #log-activity, #tasks {
              p {
                 margin: 0px;
                 border-bottom: 1px solid #eee;
@@ -786,6 +804,56 @@
             }
         }
 
+        #tasks {
+            .assign-task-datetime {
+                border-bottom: 1px solid #e3e3e3;
+            }
+
+            p {
+                padding-bottom: 10px !important;
+
+                &.assign-task-time {
+                    border-bottom: none;
+                    width: 45%;
+                    margin-left: 10px;
+                }
+
+                &.assign-task-date {
+                    width: 45%;
+                    border-bottom: none;
+                    border-right: 1px solid #e3e3e3;
+                    margin-left: 5px;
+                }
+
+                input[type=text] {
+                    border:none;
+                    box-shadow: none;
+                    transition:none;
+                    width: 45%;
+
+                    &:focus {
+                        outline:none;
+                    }
+
+                    &::-webkit-input-placeholder {
+                       font-style: italic;
+                       font-weight: normal;
+                    }
+                    &:-moz-placeholder {
+                       font-style: italic;
+                       font-weight: normal;
+                    }
+                    &::-moz-placeholder {
+                       font-style: italic;
+                       font-weight: normal;
+                    }
+                    &:-ms-input-placeholder {
+                       font-style: italic;
+                       font-weight: normal;
+                    }
+                }
+            }
+        }
 
         .activity-form {
             background:#fff;
