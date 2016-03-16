@@ -193,6 +193,17 @@ class Admin_Menu {
     }
 
     /**
+     * Activity Page
+     *
+     * @since 1.0
+     *
+     * @return void
+     */
+    public function activity_page() {
+        include WPERP_CRM_VIEWS . '/activities.php';
+    }
+
+    /**
      * Contact Group Page
      *
      * @since 1.0

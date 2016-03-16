@@ -64,11 +64,14 @@ class Leave_Requests_List_Table extends WP_List_Table {
         }
 
         switch ( $column_name ) {
-            case 'date':
-                return erp_format_date( $item->created_on );
 
             case 'policy':
                 return stripslashes( $item->policy_name );
+
+            case 'from_date':
+                return erp_format_date( $item->start_date );
+            case 'to_date':
+                return erp_format_date( $item->end_date );
 
             case 'status':
                 return '<span class="status-' . $item->status . '">' . erp_hr_leave_request_get_statuses( $item->status ) . '</span>';
@@ -111,8 +114,8 @@ class Leave_Requests_List_Table extends WP_List_Table {
             'cb'        => '<input type="checkbox" />',
             'name'      => __( 'Employee Name', 'wp-erp' ),
             'policy'    => __( 'Leave Policy', 'wp-erp' ),
-            'from_date' => __( 'From', 'wp-erp' ),
-            'to_date'   => __( 'To', 'wp-erp' ),
+            'from_date' => __( 'From Date', 'wp-erp' ),
+            'to_date'   => __( 'To Date', 'wp-erp' ),
             'days'      => __( 'Days', 'wp-erp' ),
             'available' => __( 'Available', 'wp-erp' ),
             'status'    => __( 'Status', 'wp-erp' ),

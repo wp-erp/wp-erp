@@ -47,7 +47,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                     <i v-if="feed.type == 'log_activity'" class="fa fa-list" @click.prevent="toggleFooter"></i>
                     <i v-if="( feed.type == 'log_activity' && isSchedule( feed.start_date )  )" class="fa fa-calendar-check-o" @click.prevent="toggleFooter"></i>
 
-                    <timeline-item :feed="feed"></timeline-item>
+                    <timeline-item :feed="feed" disbale-footer="false"></timeline-item>
 
                 </li>
 

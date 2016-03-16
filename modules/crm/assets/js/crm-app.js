@@ -267,7 +267,13 @@ var TimeLineHeader = Vue.extend({
         },
 
         invitedUser: function() {
-            return this.feed.extra.invited_user.map( function( elm ) { return elm.name } ).join("<br>");
+            return this.feed.extra.invited_user.map( function( elm ) {
+                if ( elm.id == wpCRMvue.current_user_id ) {
+                    return 'You';
+                } else {
+                    return elm.name;
+                }
+            } ).join("<br>");
         },
 
         isNote: function() {
@@ -313,7 +319,7 @@ Vue.component( 'timeline-header', TimeLineHeader );
 
 
 Vue.component( 'timeline-item', {
-    props: ['feed'],
+    props: ['feed', 'disbaleFooter'],
     template : '#erp-crm-timeline-item-template',
 
     data: function() {
@@ -328,7 +334,11 @@ Vue.component( 'timeline-item', {
     methods: {
 
         toggleFooter: function() {
-            this.showFooter = !this.showFooter;
+            if ( this.disbaleFooter == 'true' ) {
+                this.showFooter = false;
+            } else {
+                this.showFooter = !this.showFooter;
+            }
         },
 
         /**
