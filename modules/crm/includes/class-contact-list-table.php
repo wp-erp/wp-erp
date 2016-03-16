@@ -67,8 +67,8 @@ class Contact_List_Table extends \WP_List_Table {
 
         <div class="alignleft actions">
 
-            <label class="screen-reader-text" for="filter_by_save_searches"><?php _e( 'Filter By Save Searches', 'wp-erp' ) ?></label>
-            <select style="width:250px;" name="filter_by_save_searches" class="selecttwo select2" id="erp_customer_filter_by_save_searches" data-placeholder="<?php _e( 'Select From a save searches', 'wp-erp' ); ?>">
+            <label class="screen-reader-text" for="filter_by_save_searches"><?php _e( 'Filter By Saved Searches', 'wp-erp' ) ?></label>
+            <select style="width:250px;" name="filter_by_save_searches" class="selecttwo select2" id="erp_customer_filter_by_save_searches" data-placeholder="<?php _e( 'Select from saved searches', 'wp-erp' ); ?>">
                 <?php foreach ( $save_searches as $key => $searches ) : ?>
                     <option value=""></option>
                     <optgroup label="<?php echo $searches['name']; ?>" id="<?php echo strtolower( str_replace(' ', '-', $searches['name'] ) ); ?>">

@@ -1,5 +1,5 @@
-<div class="wrap">
-	<h2><?php _e( 'Years of Service', 'wp-erp' ); ?></h2>
+<div class="wrap wperp-hrm-report">
+	<h1><?php _e( 'Years of Service', 'wp-erp' ); ?></h1>
 
 	<?php
 		global $wpdb;
@@ -17,6 +17,7 @@
 
 				$hire_data[$month][$day][] = [
 					'emp_name'    => $employee->display_name,
+                                        'emp_id'      => $employee->id,
 					'hiring_date' => $employee->hiring_date
 				];
 			}
@@ -33,32 +34,36 @@
 				foreach ( $hire_data as $month => $data_month ) {
 
 					$dateObj = DateTime::createFromFormat( '!m', $month );
-					echo '<h3>' . esc_attr( $dateObj->format( 'F' ) ) . '</h3>';
-					echo '<hr>';
+					echo '<h3 class="report-month">' . esc_attr( $dateObj->format( 'F' ) ) . '</h3>';
+					echo '<table class="">';
 
 					ksort( $data_month );
 
 					foreach ( $data_month as $date => $data_date ) {
-						echo '<strong>' . esc_attr( $date ) . '</strong>&nbsp;';
+                                                echo "<tr>";
+                                                $dayobj = DateTime::createFromFormat( '!d', $date );
+						echo '<th>' . esc_attr( $dayobj->format( 'jS' ) ) . '</th>';
 
 						$count = count( $data_date );
 						$i     = 0;
 
 						foreach ( $data_date as $single_data ) {
-
+                                                        echo "<td>";
 							$age = date( 'Y', time() ) - date( 'Y', strtotime( $single_data['hiring_date'] ) );
 
 							if ( $age > 0 ) {
-								echo esc_attr( $single_data['emp_name'] ) . ' ('. esc_attr( $age ) .')';
+								echo "<span class='emp_person'>".esc_attr( $single_data['emp_name'] ) . ' ('. $age .' '. esc_attr( _n('Year', 'Years', $age ) ) .' ) </span>' ;
 							}
 
 							if ( ++$i != $count ) {
-								echo ', ';
+								 echo ', ';
 							}
+                                                        echo "</td>";
 						}
 
-						echo '<br>';
+						echo '</tr>';
 					}
+                                    echo "</table>";
 				}
 			?>
 			</div>

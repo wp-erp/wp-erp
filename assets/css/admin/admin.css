@@ -1643,6 +1643,19 @@ table.leaves td.column-status .status-3 {
 .note-tab-wrap .hide {
   display: none;
 }
+.wperp-hrm-report .report-month {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+}
+.wperp-hrm-report table th {
+  padding-left: 15px;
+  text-align: right;
+  width: 20px;
+  padding-right: 5px;
+  font-weight: bold;
+  font-size: 120% ;
+}
 @media print {
   .erp-hide-print {
     display: none !important;
@@ -2599,4 +2612,18 @@ ul.edit-address li.city-wrap span {
   padding-right: 20px;
   margin-left: 30px;
   text-align: right;
+}
+/*****/
+/**
+* Media Query for responsive
+*
+**/
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (max-width: 640px) {
+  .erp-modal {
+    top: 10%;
+    bottom: 1%;
+    right: 1%;
+    left: 1%;
+  }
 }
