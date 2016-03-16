@@ -1774,6 +1774,8 @@ table.erp-table.full-width {
   background: url('../../images/inactive.png') no-repeat;
   background-position: 50%;
   position: absolute;
+  bottom: 0px;
+  left: 0px;
   background-size: 105px 31px;
   height: 31px;
   width: 100%;

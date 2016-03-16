@@ -835,7 +835,12 @@
                     data: form.serializeObject(),
                     success: function() {
                         $.get( window.location.href, function(data) {
-                            $('ul.notes-list').prepend( $(data).find( 'ul.notes-list li' ).first() );
+                            if(!$('ul.notes-list li').length<0){
+                                $('ul.notes-list').prepend( $(data).find( 'ul.notes-list' ).after() );
+                            }else {
+                                $('ul.notes-list').prepend( $(data).find( 'ul.notes-list li' ).first() );
+                            }
+
                             if( $('ul.notes-list li').length > 10 ){
                                 $('ul.notes-list li').last().remove();
                             }
