@@ -3,17 +3,20 @@ $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
 ?>
 <div id="tasks">
 
-    <div class="assing-task-wrap">
+    <div class="assign-task-wrap">
+        <p class="assign-task-title">
+            <input type="text" v-model="feedData.task_title" placeholder="<?php _e( 'Enter your task title here..') ?>">
+        </p>
         <p class="assign-taskes-users">
-            <select name="selected_contact" id="erp-crm-activity-invite-contact" v-model="feedData.invite_contact" v-selecttwo="feedData.inviteContact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="Select Users...">
+            <select name="selected_contact" v-model="feedData.invite_contact" v-selecttwo="feedData.inviteContact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="Select Users...">
                 <?php echo erp_crm_get_employess_with_own( get_current_user_id() ); ?>
             </select>
         </p>
-        <div class="assing-task-datetime">
-            <p class="erp-left assing-task-date">
+        <div class="assign-task-datetime">
+            <p class="erp-left assign-task-date">
                 <input v-model="feedData.dt" type="text" v-datepicker="feedData.dt" datedisable="previous" placeholder="yy-mm-dd">
             </p>
-            <p class="erp-left assing-task-time">
+            <p class="erp-left assign-task-time">
                 <input v-model="feedData.tp"  type="text" v-timepicker="feedData.tp" placeholder="12.00pm" size="10">
             </p>
             <div class="clearfix"></div>

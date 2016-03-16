@@ -89,6 +89,16 @@ Vue.filter( 'formatFeedContent', function ( message, feed ) {
             '<div class="timeline-email-body">' + feed.message + '</div>';
     };
 
+    if (  feed.type == 'tasks' ) {
+        var filters = vm.$options.filters,
+            startDate = filters.formatDate( feed.start_date, 'j F' ),
+            startTime = filters.formatAMPM( feed.start_date ),
+            datetime = startDate + ' at ' + startTime;
+
+        message = '<div class="timeline-email-subject"><i class="fa fa-bookmark"></i> &nbsp;' + feed.extra.task_title + '  &nbsp;|&nbsp;  <i class="fa fa-check-square-o"></i> &nbsp;Task Date : ' + datetime + '</div>' +
+            '<div class="timeline-email-body">' + feed.message + '</div>';
+    }
+
     return message;
 });
 
@@ -258,6 +268,10 @@ var TimeLineHeader = Vue.extend({
                             +' <span v-if="countUser == 1">and <strong>{{ invitedSingleUser }}</strong></span>'
                         +'<span v-if="( countUser != 0 ) && countUser != 1"> and <strong><tooltip :content="countUser" :title="invitedUser"></tooltip></strong></span>'
                     +'</span>'
+                    +'<span v-if="isTasks">created a task for </strong>'
+                        +' <span v-if="countUser == 1"><strong>{{ feed.extra.invited_user[0].name }}</strong></span>'
+                        +'<span v-if="( countUser != 0 ) && countUser != 1"><strong><tooltip :content="countUser" :title="invitedUser"></tooltip></strong></span>'
+                    +'</span>'
                 +'</span>',
 
     components: {
@@ -268,7 +282,11 @@ var TimeLineHeader = Vue.extend({
 
         countUser: function () {
             var count = this.feed.extra.invited_user.length;
-            return ( count <= 1 ) ? count : count + ' others';
+            if ( this.feed.type == 'tasks' ) {
+                return ( count <= 1 ) ? count : count + ' peoples';
+            } else {
+                return ( count <= 1 ) ? count : count + ' others';
+            }
         },
 
         invitedSingleUser: function() {
@@ -291,6 +309,10 @@ var TimeLineHeader = Vue.extend({
 
         isNote: function() {
             return ( this.feed.type == 'new_note' );
+        },
+
+        isTasks: function() {
+            return ( this.feed.type == 'tasks' );
         },
 
         isEmail: function() {
@@ -604,14 +626,19 @@ Vue.component( 'tasks-note', {
     data: function() {
         return {
             feedData: {
+                task_title: '',
                 message: '',
-                inviteContact: '',
+                inviteContact: [],
                 dt: '',
                 tp: ''
             },
 
             isValid: false
         }
+    },
+
+    compiled: function() {
+        this.feedData.inviteContact = this.feedData.invite_contact;
     },
 
     methods: {
@@ -627,6 +654,8 @@ Vue.component( 'tasks-note', {
 
     events: {
         'bindEditFeedData': function (feed ) {
+
+            this.feedData.task_title    = feed.extra.task_title;
             this.feedData.dt            = vm.$options.filters.formatDate( feed.start_date, 'Y-m-d' );
             this.feedData.tp            = vm.$options.filters.formatAMPM( feed.start_date );
             var invitedUser             = feed.extra.invited_user.map( function( elm ) { return elm.id } ).join(',');
@@ -646,9 +675,11 @@ Vue.component( 'tasks-note', {
 
         validation: function() {
             return {
+                task_title: !! this.feedData.task_title,
                 message : !!this.feedData.message,
                 log_date : !!this.feedData.dt,
                 log_time : !!this.feedData.tp,
+                inviteContact: this.feedData.inviteContact.length > 0 ? true : false
             }
         },
 
@@ -668,6 +699,9 @@ Vue.component( 'tasks-note', {
             deep: true,
             immediate: true,
             handler: function () {
+                if ( this.feedData.inviteContact == null ) {
+                    this.feedData.inviteContact = [];
+                }
                 this.notify();
             }
         }
@@ -895,7 +929,7 @@ var vm = new Vue({
     el: '#erp-customer-feeds',
 
     data: {
-        tabShow: 'new_note',
+        tabShow: 'tasks',
         feeds: [],
         validation: {},
         feedData : {},
@@ -1040,9 +1074,17 @@ var vm = new Vue({
 
             this.feedData._wpnonce = wpCRMvue.nonce;
 
+
             if ( this.feedData.type == 'log_activity' ) {
                 this.feedData.log_date = this.feedData.dt;
                 this.feedData.log_time = this.feedData.tp;
+                this.feedData.invite_contact = this.feedData.inviteContact;
+            };
+
+            if ( this.feedData.type == 'tasks' ) {
+                this.feedData.task_title = this.feedData.task_title;
+                this.feedData.task_date = this.feedData.dt;
+                this.feedData.task_time = this.feedData.tp;
                 this.feedData.invite_contact = this.feedData.inviteContact;
             };
 
@@ -1089,7 +1131,15 @@ var vm = new Vue({
                         vm.feedData.dt            = '';
                         vm.feedData.tp            = '';
                         vm.feedData.inviteContact = [];
+                        jQuery('.select2').select2().select2( "val", "" );
+                    };
 
+                    if ( vm.feedData.type == 'tasks' ) {
+                        vm.feedData.task_title      = '';
+                        vm.feedData.dt            = '';
+                        vm.feedData.tp            = '';
+                        vm.feedData.inviteContact = [];
+                        jQuery('.select2').select2().select2( "val", "" );
                     };
 
                     if ( vm.feedData.type == 'email' ) {

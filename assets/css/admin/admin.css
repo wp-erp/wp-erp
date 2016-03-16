@@ -776,18 +776,18 @@
   width: 50%;
   padding: 13px 20px;
 }
-.erp-single-customer .erp-customer-feeds #tasks .assing-task-datetime {
+.erp-single-customer .erp-customer-feeds #tasks .assign-task-datetime {
   border-bottom: 1px solid #e3e3e3;
 }
 .erp-single-customer .erp-customer-feeds #tasks p {
   padding-bottom: 10px !important;
 }
-.erp-single-customer .erp-customer-feeds #tasks p.assing-task-time {
+.erp-single-customer .erp-customer-feeds #tasks p.assign-task-time {
   border-bottom: none;
   width: 45%;
   margin-left: 10px;
 }
-.erp-single-customer .erp-customer-feeds #tasks p.assing-task-date {
+.erp-single-customer .erp-customer-feeds #tasks p.assign-task-date {
   width: 45%;
   border-bottom: none;
   border-right: 1px solid #e3e3e3;

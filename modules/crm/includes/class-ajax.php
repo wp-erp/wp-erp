@@ -683,6 +683,36 @@ class Ajax_Handler {
 
                 break;
 
+            case 'tasks':
+
+                $extra_data = [
+                    'task_title'     => ( isset( $postdata['task_title'] ) && ! empty( $postdata['task_title'] ) ) ? $postdata['task_title'] : '',
+                    'invite_contact' => ( isset( $postdata['invite_contact'] ) && ! empty( $postdata['invite_contact'] ) ) ? $postdata['invite_contact'] : []
+                ];
+
+                $save_data = [
+                    'id'            => ( isset( $postdata['id'] ) && ! empty( $postdata['id'] ) ) ? $postdata['id'] : '',
+                    'user_id'       => $postdata['user_id'],
+                    'created_by'    => $postdata['created_by'],
+                    'message'       => $postdata['message'],
+                    'type'          => $postdata['type'],
+                    'email_subject' => ( isset( $postdata['email_subject'] ) && ! empty( $postdata['email_subject'] ) ) ? $postdata['email_subject'] : '',
+                    'start_date'    => date( 'Y-m-d H:i:s', strtotime( $postdata['task_date'].$postdata['task_time'] ) ),
+                    'extra'         => base64_encode( json_encode( $extra_data ) )
+                ];
+
+                $data = erp_crm_save_customer_feed_data( $save_data );
+
+                do_action( 'erp_crm_save_customer_tasks_activity_feed', $save_data, $postdata );
+
+                if ( ! $data ) {
+                    $this->send_error( __( 'Somthing is wrong, Please try later', 'wp-erp' ) );
+                }
+
+                $this->send_success( $data );
+
+                break;
+
             default:
                 do_action( 'erp_crm_save_customer_feed_data', $postdata );
                 break;
