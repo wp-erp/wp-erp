@@ -105,7 +105,7 @@ $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
         <input type="hidden" name="type" v-model="feedData.type" value="schedule">
         <input type="submit" v-if="!feed" :disabled = "!isValid" class="button button-primary" name="create_schedule" value="<?php _e( 'Create Schedule', 'wp-erp' ); ?>">
         <input type="submit" v-if="feed" :disabled = "!isValid" class="button button-primary" name="edit_schedule" value="<?php _e( 'Update Schedule', 'wp-erp' ); ?>">
-        <input type="reset" v-if="!feed" class="button button-default" value="<?php _e( 'Discard', 'wp-erp' ); ?>">
+        <input type="reset" v-if="!feed" class="button button-default" @click="feedData.allow_notification = false" value="<?php _e( 'Discard', 'wp-erp' ); ?>">
         <button class="button" v-if="feed" @click.prevent="cancelUpdateFeed"><?php _e( 'Cancel', 'wp-erp' ); ?></button>
     </div>
 </div>
