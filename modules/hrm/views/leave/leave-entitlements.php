@@ -3,7 +3,7 @@ $cur_year   = date( 'Y' );
 $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : '';
 ?>
 <div class="wrap erp-hr-employees" id="wp-erp">
-    
+
     <h2>
         <?php _e( 'Leave Entitlements', 'wp-erp' ); ?>
         <?php if ( 'assignment' == $active_tab ): ?>
@@ -11,7 +11,7 @@ $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : '';
         <?php else: ?>
             <a href="<?php echo add_query_arg( array( 'tab' => 'assignment' ), admin_url( 'admin.php?page=erp-leave-assign' ) ); ?>" id="erp-new-leave-request" class="add-new-h2"><?php _e( 'Add New', 'wp-erp' ); ?></a>
         <?php endif ?>
-    </h2>    
+    </h2>
 
     <?php if ( 'assignment' == $active_tab ) { ?>
 
@@ -64,7 +64,7 @@ $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : '';
                 'tag'      => 'li',
                 'required' => true,
                 'class'    => 'chosen-select',
-                'options'  => erp_hr_leave_period(), 
+                'options'  => erp_hr_leave_period(),
             ) );
 
             erp_html_form_input( array(
@@ -73,6 +73,7 @@ $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : '';
                 'type'     => 'select',
                 'class'    => 'chosen-select show-if-single',
                 'tag'      => 'li',
+                'required' => true,
                 'options'  => erp_hr_get_employees_dropdown_raw()
             ) );
 
@@ -136,7 +137,7 @@ $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : '';
                 <form method="get">
                     <input type="hidden" name="page" value="erp-leave-assign">
                     <input type="hidden" name="tab" value="entitlements">
-                    <?php                    
+                    <?php
                     $entitlement = new \WeDevs\ERP\HRM\Entitlement_List_Table();
                     $entitlement->prepare_items();
                     $entitlement->views();
