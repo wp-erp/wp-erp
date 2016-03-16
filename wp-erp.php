@@ -40,8 +40,6 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-include dirname( __FILE__ ) . '/vendor/autoload.php';
-
 /**
  * WeDevs_ERP class
  *
@@ -55,6 +53,13 @@ final class WeDevs_ERP {
      * @var string
      */
     public $version = '1.0-beta1';
+
+    /**
+     * Minimum PHP version required
+     *
+     * @var string
+     */
+    private $min_php = '5.4.0';
 
     /**
      * Holds various class instances
@@ -86,6 +91,13 @@ final class WeDevs_ERP {
      * within our plugin.
      */
     public function __construct() {
+
+        // dry check on older PHP versions, if found deactivate itself with an error
+        register_activation_hook( __FILE__, array( $this, 'auto_deactivate' ) );
+
+        if ( ! $this->is_supported_php() ) {
+            return;
+        }
 
         // Define constants
         $this->define_constants();
@@ -138,11 +150,31 @@ final class WeDevs_ERP {
      * @return bool
      */
     public function is_supported_php() {
-        if ( version_compare( PHP_VERSION, '5.4.0', '<=' ) ) {
+        if ( version_compare( PHP_VERSION, $this->min_php, '<=' ) ) {
             return false;
         }
 
         return true;
+    }
+
+    /**
+     * Bail out if the php version is lower than
+     *
+     * @return void
+     */
+    function auto_deactivate() {
+        if ( $this->is_supported_php() ) {
+            return;
+        }
+
+        deactivate_plugins( basename( __FILE__ ) );
+
+        $error = __( '<h1>An Error Occured</h1>', 'wp-erp' );
+        $error .= __( '<h2>Your installed PHP Version is: ', 'wp-erp' ) . PHP_VERSION . '</h2>';
+        $error .= __( '<p>The <strong>WP ERP</strong> plugin requires PHP version <strong>', 'wp-erp' ) . $this->min_php . __( '</strong> or greater', 'wp-erp' );
+        $error .= __( '<p>The version of your PHP is ', 'wp-erp' ) . '<a href="http://php.net/supported-versions.php" target="_blank"><strong>' . __( 'unsupported and old', 'wp-erp' ) . '</strong></a>.';
+        $error .= __( 'You should update your PHP software or contact your host regarding this matter.</p>', 'wp-erp' );
+        wp_die( $error, __( 'Plugin Activation Error', 'wp-erp' ), array( 'response' => 200, 'back_link' => true ) );
     }
 
     /**
@@ -167,12 +199,9 @@ final class WeDevs_ERP {
      * @return void
      */
     private function includes() {
+        include dirname( __FILE__ ) . '/vendor/autoload.php';
+
         require_once WPERP_INCLUDES . '/class-install.php';
-
-        if ( ! $this->is_supported_php() ) {
-            return;
-        }
-
         require_once WPERP_INCLUDES . '/functions.php';
         require_once WPERP_INCLUDES . '/actions-filters.php';
         require_once WPERP_INCLUDES . '/functions-html.php';
@@ -192,9 +221,6 @@ final class WeDevs_ERP {
      * @return void
      */
     private function instantiate() {
-        if ( ! $this->is_supported_php() ) {
-            return;
-        }
 
         new \WeDevs\ERP\Admin\User_Profile();
         new \WeDevs\ERP\Scripts();
@@ -209,10 +235,6 @@ final class WeDevs_ERP {
      * @return void
      */
     private function init_actions() {
-
-        if ( ! $this->is_supported_php() ) {
-            return;
-        }
 
         // Localize our plugin
         add_action( 'init', array( $this, 'localization_setup' ) );

@@ -858,7 +858,7 @@ class Hr_Log {
 
         $employee = new \WeDevs\ERP\HRM\Employee( intval( $request['user_id'] ) );
 
-        $message = sprintf( __( '<strong>%s</strong> take leave from <strong>%s</strong> to <strong>%s</strong> about <strong>%d</strong> days', 'wp-erp' ),
+        $message = sprintf( __( '<strong>%s</strong> take leave from <strong>%s</strong> to <strong>%s</strong> for <strong>%d</strong> days', 'wp-erp' ),
             $employee->get_full_name(),
             erp_format_date( $request['start_date'] ),
             erp_format_date( $request['end_date'] ),

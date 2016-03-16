@@ -89,7 +89,7 @@ class Human_Resource {
      * @return void
      */
     private function init_filters() {
-
+        add_filter( 'erp_settings_pages', array( $this, 'add_settings_page' ) );
     }
 
     /**
@@ -101,11 +101,22 @@ class Human_Resource {
         new Ajax_Handler();
         new Form_Handler();
         new Announcement();
-        new Settings();
         new Admin\Admin_Menu();
         new Admin\User_Profile();
         new Hr_Log();
         new Emailer();
+    }
+
+    /**
+     * Register HR settings page
+     *
+     * @param array
+     */
+    public function add_settings_page( $settings = [] ) {
+
+        $settings[] = include __DIR__ . '/includes/class-settings.php';
+
+        return $settings;
     }
 
     /**

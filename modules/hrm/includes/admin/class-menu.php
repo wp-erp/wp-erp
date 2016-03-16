@@ -34,7 +34,6 @@ class Admin_Menu {
         add_submenu_page( 'erp-hr', __( 'Departments', 'wp-erp' ), __( 'Departments', 'wp-erp' ), 'erp_manage_department', 'erp-hr-depts', array( $this, 'department_page' ) );
         add_submenu_page( 'erp-hr', __( 'Designations', 'wp-erp' ), __( 'Designations', 'wp-erp' ), 'erp_manage_designation', 'erp-hr-designation', array( $this, 'designation_page' ) );
         add_submenu_page( 'erp-hr', __( 'Announcement', 'wp-erp' ), __( 'Announcement', 'wp-erp' ), 'erp_manage_announcement', 'edit.php?post_type=erp_hr_announcement' );
-        add_submenu_page( 'erp-hr', __( 'Settings', 'wp-erp' ), __( 'Settings', 'wp-erp' ), 'manage_options', 'erp-hr-settings', array( $this, 'settings_page' ) );
         add_submenu_page( 'erp-hr', __( 'Reporting', 'wp-erp' ), __( 'Reporting', 'wp-erp' ), 'manage_options', 'erp-hr-reporting', array( $this, 'reporting_page' ) );
 
         /** Leave Management **/
@@ -168,15 +167,6 @@ class Admin_Menu {
      */
     public function designation_page() {
         include WPERP_HRM_VIEWS . '/designation.php';
-    }
-
-    /**
-     * Render the settings page
-     *
-     * @return void
-     */
-    public function settings_page() {
-        include WPERP_HRM_VIEWS . '/settings.php';
     }
 
     /**

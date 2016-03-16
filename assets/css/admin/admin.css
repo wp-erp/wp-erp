@@ -138,6 +138,63 @@
   padding: 0px;
   margin: 0px;
 }
+.crm-dashboard ul.erp-latest-contact-list li {
+  position: relative;
+  padding: 4px 0px;
+  border-bottom: 1px solid #e3e3e3;
+}
+.crm-dashboard ul.erp-latest-contact-list li:before,
+.crm-dashboard ul.erp-latest-contact-list li:after {
+  content: " ";
+  display: table;
+}
+.crm-dashboard ul.erp-latest-contact-list li:after {
+  clear: both;
+}
+.crm-dashboard ul.erp-latest-contact-list li:before,
+.crm-dashboard ul.erp-latest-contact-list li:after {
+  content: " ";
+  display: table;
+}
+.crm-dashboard ul.erp-latest-contact-list li:after {
+  clear: both;
+}
+.crm-dashboard ul.erp-latest-contact-list li span.contact-created-time {
+  position: absolute;
+  top: 22%;
+  right: 3px;
+  cursor: pointer;
+}
+.crm-dashboard ul.erp-latest-contact-list li:first-child {
+  padding-top: 0px;
+}
+.crm-dashboard ul.erp-latest-contact-list li:last-child {
+  border-bottom: none;
+  padding-bottom: 0px;
+}
+.crm-dashboard ul.erp-latest-contact-list li .avatar {
+  width: 29px;
+  float: left;
+  margin-right: 10px;
+}
+.crm-dashboard ul.erp-latest-contact-list li .details {
+  float: left;
+}
+.crm-dashboard ul.erp-latest-contact-list li .details p.contact-name {
+  margin-top: -3px;
+  margin-bottom: -2px;
+  padding: 0px;
+}
+.crm-dashboard ul.erp-latest-contact-list li .details p.contact-name a {
+  text-decoration: none;
+}
+.crm-dashboard ul.erp-latest-contact-list li .details p.contact-stage {
+  padding: 0px;
+  margin-top: 0px;
+  margin-bottom: 3px;
+  color: #afafaf;
+  font-style: italic;
+}
 .erp-leads-single .erp-user-info h3 {
   margin: 15px 0;
 }
@@ -2372,4 +2429,40 @@ ul.edit-address li.city-wrap span {
   font-weight: bold;
   padding-top: 30px;
   text-decoration: none;
+}
+.erp-activation-cloud-prompt {
+  width: 100%;
+  margin: 0 !important;
+  padding: 0;
+  border: 1px solid #e5e5e5;
+  background-color: #fff;
+  font-weight: normal;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  display: -ms-flex;
+  display: -webkit-flex;
+  display: flex;
+}
+.erp-activation-cloud-prompt * {
+  box-sizing: border-box;
+}
+.erp-activation-cloud-prompt .activation-prompt-text {
+  width: 60%;
+  background-color: #f8f8f8;
+  padding: 16px 20px;
+  border-right: 1px solid #e5e5e5;
+}
+.erp-activation-cloud-prompt input[type="email"] {
+  width: 200px;
+  min-height: 32px;
+}
+.erp-activation-cloud-prompt .button-primary {
+  margin-right: 10px;
+}
+.erp-activation-cloud-prompt .activation-form-container {
+  width: 40%;
+  padding-top: 9px;
+  padding-right: 20px;
+  margin-left: 30px;
+  text-align: right;
 }
