@@ -1208,3 +1208,72 @@
 [v-cloak] {
   display: none;
 }
+
+.cfi-table {
+    border-collapse: collapse;
+}
+
+.cfi-table th,
+.cfi-table td {
+    padding: 10px 20px;
+    text-align: center;
+}
+
+.cfi-table td {
+    border-bottom: 1px solid #E1E1E1;
+}
+
+@media (min-width: 1200px) {
+    .cfi-table {
+        width: 50%;
+    }
+
+    .cfi-table .cfi-table-wide-column {
+        width: 35%;
+    }
+
+    .cfi-table .cfi-table-narrow-column {
+        width: 30%;
+    }
+}
+
+@media (min-width: 783px) and (max-width: 1199px) {
+    .cfi-table {
+        width: 55%;
+    }
+}
+
+@media (min-width: 783px) {
+    .button.button-default .dashicons {
+        line-height: 26px;
+    }
+}
+
+.button.button-default .dashicons {
+    color: #82878c;
+}
+
+.button.button-default[disabled] .dashicons {
+    color: #C7C7C7 !important;
+    border-color: #ddd !important;
+    background: #f7f7f7 !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    text-shadow: 0 1px 0 #fff !important;
+    cursor: default;
+    -webkit-transform: none !important;
+    -ms-transform: none !important;
+    transform: none !important;
+}
+
+.cfi-table td.cfi-contact-options .button {
+    margin: 0 3px 6px;
+}
+
+.cfi-table-container > td {
+    padding-bottom: 0;
+}
+
+.cfi-table-submit > td {
+    padding-left: 0;
+}

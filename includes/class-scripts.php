@@ -78,6 +78,9 @@ class Scripts {
         wp_register_script( 'erp-script', $js . '/erp' . $this->suffix . '.js', array( 'jquery', 'backbone', 'underscore', 'wp-util', 'jquery-ui-datepicker' ), $this->version, true );
         wp_register_script( 'erp-file-upload', $js . '/upload' . $this->suffix . '.js', array( 'jquery', 'plupload-handlers' ), $this->version, true );
         wp_register_script( 'erp-admin-settings', $js . '/settings' . $this->suffix . '.js', array( 'jquery' ), $this->version, true );
+
+        // sweet alert
+        wp_register_script( 'erp-sweetalert', WPERP_ASSETS . '/js/sweetalert.min.js', array(), false, true );
     }
 
     /**
@@ -102,6 +105,9 @@ class Scripts {
         wp_register_style( 'erp-chosen', WPERP_ASSETS . '/vendor/chosen/chosen' . $this->suffix . '.css' );
 
         wp_register_style( 'erp-styles', WPERP_ASSETS . '/css/admin/admin.css', false, $this->version );
+
+        // sweet alert
+        wp_register_style( 'erp-sweetalert', WPERP_ASSETS . '/css/sweetalert.css', array(), false );
     }
 
     /**
