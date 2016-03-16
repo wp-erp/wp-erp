@@ -128,7 +128,7 @@
 						<div class="inside">
 							<span class="dashicons dashicons-groups"></span>
 							<span></span><br>
-							<h4>Total Employees : <?php echo $total_emp_count; ?></h4>
+							<h4><?php _e( 'Total Employees', 'wp-erp' ); ?> : <?php echo esc_attr( $total_emp_count ); ?></h4>
 						</div>
 						<!-- .inside -->
 
