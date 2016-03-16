@@ -49,9 +49,9 @@ function get_employee_breakdown_by_age( $employees ) {
 
 	foreach ( $employees as $employee ) {
 
-		// if ( '-0001-11-30 00:00:00' == $employee->date_of_birth ) {
-		// 	continue;
-		// }
+		if ( !is_valid_date( $employee->date_of_birth ) ) {
+			continue;
+		}
 
 		$dob      = new DateTime( $employee->date_of_birth );
 		$now      = new DateTime();
@@ -62,33 +62,39 @@ function get_employee_breakdown_by_age( $employees ) {
 
 		 	$_under18++;
 		 	continue;
+		 }
 
-		 } else if ( $age >= 18 && $age <= 25 ) {
+		 if ( $age >= 18 && $age <= 25 ) {
 
 		 	$_18_to_25++;
 		 	continue;
+		 }
 
-		 } else if ( $age >= 26 && $age <= 35 ) {
+		 if ( $age >= 26 && $age <= 35 ) {
 
 		 	$_26_to_35++;
 		 	continue;
+		 }
 
-		 } else if ( $age >= 36 && $age <= 45 ) {
+		 if ( $age >= 36 && $age <= 45 ) {
 
 		 	$_36_to_45++;
 		 	continue;
+		 }
 
-		 } else if ( $age >= 46 && $age <= 55 ) {
+		 if ( $age >= 46 && $age <= 55 ) {
 
 		 	$_46_to_55++;
 		 	continue;
+		 }
 
-		 } else if ( $age >= 56 && $age <= 65 ) {
+		 if ( $age >= 56 && $age <= 65 ) {
 
 		 	$_56_to_65++;
 		 	continue;
+		 }
 
-		 } else if ( $age > 65 ) {
+		 if ( $age > 65 ) {
 
 		 	$_65plus++;
 		 }
@@ -335,4 +341,3 @@ function is_valid_date( $str ) {
         return false;
     }
 }
-
