@@ -548,6 +548,7 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
  * @return array
  */
 function erp_crm_get_feed_activity( $postdata ) {
+    global $wpdb;
     $feeds = [];
     $db = new \WeDevs\ORM\Eloquent\Database();
 
@@ -567,12 +568,23 @@ function erp_crm_get_feed_activity( $postdata ) {
     }
 
     if ( isset( $postdata['type'] ) && !empty( $postdata['type'] ) ) {
-        $results = $results->where( 'type', $postdata['type'] );
+
+        if ( $postdata['type'] == 'schedule' ) {
+            $results = $results->where( 'type', 'log_activity' )->where( 'start_date', '>', current_time('mysql') );
+        } else if ( $postdata['type'] == 'log_activity' ) {
+            $results = $results->where( 'type', 'log_activity' )->where( 'start_date', '<', current_time('mysql') );
+        } else {
+            $results = $results->where( 'type', $postdata['type'] );
+        }
+    }
+
+    if ( isset( $postdata['created_at'] ) && !empty( $postdata['created_at'] ) ) {
+        $results = $results->where( $db->raw( "DATE_FORMAT( `created_at`, '%Y %m %d' )" ), date( 'Y-m-d', strtotime( $postdata['created_at'] ) ) );
     }
 
     $results = $results->orderBy( 'created_at', 'DESC' );
 
-    if ( isset( $postdata['number'] ) && $postdata['number'] != -1 ) {
+    if ( isset( $postdata['limit'] ) && $postdata['limit'] != -1 ) {
         $results = $results->skip( $postdata['offset'] )->take( $postdata['limit'] );
     }
 
@@ -598,6 +610,8 @@ function erp_crm_get_feed_activity( $postdata ) {
         $value['created_timeline_date'] = date( 'Y-m', strtotime( $value['created_at'] ) );
         $feeds[] = $value;
     }
+
+    // var_dump( $wpdb->last_query ); die();
 
     return $feeds;
 }

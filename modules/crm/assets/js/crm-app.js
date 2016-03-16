@@ -4,15 +4,48 @@
 
 
 // Vue Filter for Formatting Time
-Vue.filter('filterFeedType', function ( feedData, type ) {
+Vue.filter('filterFeeds', function ( feedData, filterFeeds ) {
+
     var feedsData = _.filter( feedData, function( data ) {
-        if ( type ) {
-            return ( data.type == type );
+        if ( filterFeeds.filterActivityType ) {
+
+            if ( filterFeeds.filterActivityType == 'log_activity' ) {
+                return ( data.type == filterFeeds.filterActivityType ) && !vm.isSchedule( data.start_date );
+            }
+
+            if ( filterFeeds.filterActivityType == 'schedule' ) {
+                return ( data.type == 'log_activity' ) && vm.isSchedule( data.start_date );
+            }
+
+            return ( data.type == filterFeeds.filterActivityType );
+        }
+
+        return data;
+
+    });
+
+    var feedsData = _.filter( feedsData, function( data ) {
+        if ( filterFeeds.filterCreatedBy ) {
+            return ( data.created_by.ID == filterFeeds.filterCreatedBy );
         }
         return data;
     });
 
-    return feedsData;
+    var feedsData = _.filter( feedsData, function( data ) {
+        if ( filterFeeds.filterCreatedFor ) {
+            return ( data.user_id == filterFeeds.filterCreatedFor );
+        }
+        return data;
+    });
+
+     var feedsData = _.filter( feedsData, function( data ) {
+        if ( filterFeeds.filterCreatedOn ) {
+            return ( data.created_date == filterFeeds.filterCreatedOn );
+        }
+        return data;
+    });
+
+    return ( feedsData ) ? feedsData : [];
 });
 
 
@@ -143,8 +176,12 @@ Vue.directive( 'datepicker', {
                 changeMonth: true,
                 changeYear: true,
                 yearRange: '-100:+0',
-                onSelect: function (date) {
-                    vm.$set(key, date);
+                onClose: function (date) {
+                    if ( date.match(/^(0?[1-9]|[12][0-9]|3[01])[\/\-\.](0?[1-9]|1[012])[\/\-\.]\d{4}$/) )
+                        vm.$set(key, date);
+                    else {
+                        vm.$set(key, "");
+                    }
                 }
             });
         } else if ( this.params.datedisable == 'upcomming' ) {
@@ -154,8 +191,12 @@ Vue.directive( 'datepicker', {
                 changeMonth: true,
                 changeYear: true,
                 yearRange: '-100:+0',
-                onSelect: function (date) {
-                    vm.$set(key, date);
+                onClose: function (date) {
+                    if ( date.match(/^(0?[1-9]|[12][0-9]|3[01])[\/\-\.](0?[1-9]|1[012])[\/\-\.]\d{4}$/) )
+                        vm.$set(key, date);
+                    else {
+                        vm.$set(key, "");
+                    }
                 }
             });
         } else {
@@ -164,8 +205,12 @@ Vue.directive( 'datepicker', {
                 changeMonth: true,
                 changeYear: true,
                 yearRange: '-100:+0',
-                onSelect: function (date) {
-                    vm.$set(key, date);
+                onClose: function (date) {
+                    if ( date.match(/^(0?[1-9]|[12][0-9]|3[01])[\/\-\.](0?[1-9]|1[012])[\/\-\.]\d{4}$/) )
+                        vm.$set(key, date);
+                    else {
+                        vm.$set(key, "");
+                    }
                 }
             });
         };
@@ -812,12 +857,15 @@ var vm = new Vue({
         customer_id : null,
         showFooter: false,
         offset: 0,
-        limit : 10,
+        limit : 2,
         loading: false,
-        filterActivityType: '',
-        filterCreatedBy: '',
-        filterCreatedFor: '',
-        filterCreatedOn: ''
+        loadingFinish: false,
+        filterFeeds: {
+            type: '',
+            created_by: '',
+            customer_id: '',
+            created_at: ''
+        }
     },
 
     events: {
@@ -830,9 +878,18 @@ var vm = new Vue({
         this.fetchFeeds();
     },
 
+    watch: {
+        filterFeeds: {
+            deep: true,
+            handler: function ( newVal ) {
+                this.fetchFeeds( newVal );
+            }
+        }
+    },
+
     methods: {
 
-        loadMoreContent: function() {
+        loadMoreContent: function( feeds ) {
             vm.progreassStart('.feed-load-more');
             this.loading = true;
             this.offset = this.offset + this.limit;
@@ -844,14 +901,37 @@ var vm = new Vue({
                 offset: this.offset,
             };
 
-            jQuery.post( wpCRMvue.ajaxurl, data, function( resp ) {
-                vm.progreassDone(true);
-                setTimeout( function() {
-                    vm.loading = false;
-                    vm.feeds = vm.feeds.concat( resp.data );
-                }, 500 )
-                // vm.feeds.push( resp.data );
-            });
+            if ( this.filterFeeds.customer_id ) {
+                data.customer_id = this.filterFeeds.customer_id;
+            }
+
+            if ( this.filterFeeds.created_by ) {
+                data.created_by = this.filterFeeds.created_by;
+            }
+
+            if ( this.filterFeeds.created_at ) {
+                data.created_at = this.filterFeeds.created_at;
+            }
+
+            if ( this.filterFeeds.type ) {
+                data.type = this.filterFeeds.type;
+            }
+
+            if ( ! vm.loadingFinish ) {
+                jQuery.post( wpCRMvue.ajaxurl, data, function( resp ) {
+                    vm.progreassDone(true);
+
+                    if ( resp.data.length ) {
+                        setTimeout( function() {
+                            vm.loading = false;
+                            vm.feeds = vm.feeds.concat( resp.data );
+                        }, 500 );
+                    } else {
+                        vm.loading = false;
+                        vm.loadingFinish = true;
+                    }
+                });
+            }
         },
 
         toggleFooter: function( e ) {
@@ -941,11 +1021,20 @@ var vm = new Vue({
                            return feed;
                         });
 
+                        if ( vm.feeds.length > vm.limit ) {
+                            vm.feeds.$remove( vm.feeds[vm.feeds.length-1] );
+                        }
+
                         comp.isEditable = false;
                     }, 500 )
 
                 } else {
                     vm.feeds.splice( 0, 0, resp.data );
+
+                    if ( vm.feeds.length > vm.limit ) {
+                        vm.feeds.$remove( vm.feeds[vm.feeds.length-1] );
+                    }
+
                     document.getElementById("erp-crm-activity-feed-form").reset();
 
                     if ( vm.feedData.type == 'log_activity' ) {
@@ -1000,7 +1089,7 @@ var vm = new Vue({
          *
          * @return {[object]}
          */
-        fetchFeeds: function() {
+        fetchFeeds: function( filter ) {
             var data = {
                 action : 'erp_crm_get_customer_activity',
                 customer_id : this.customer_id,
@@ -1008,8 +1097,22 @@ var vm = new Vue({
                 offset: this.offset,
             };
 
+
+            if ( filter ) {
+                vm.progreassStart('#erp-crm-activities-filter');
+
+                data.customer_id = filter.customer_id;
+                data.created_by = filter.created_by;
+                data.created_at = filter.created_at;
+                data.type = filter.type;
+            }
+            console.log (data);
+
             jQuery.post( wpCRMvue.ajaxurl, data, function( resp ) {
                 vm.feeds = resp.data;
+                if ( filter ) {
+                    vm.progreassDone();
+                }
             });
 
 
