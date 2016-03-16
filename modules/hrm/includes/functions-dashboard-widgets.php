@@ -168,16 +168,22 @@ function erp_hr_dashboard_widget_leave_calendar() {
     $events         = [];
     $holiday_events = [];
     $event_data     = [];
-
+    
     foreach ( $leave_requests as $key => $leave_request ) {
+        //if status pending
+        $policy = erp_hr_leave_get_policy( $leave_request->policy_id );
+        $event_label = $policy->name;
+        if ( 2 == $leave_request->status ) {
+            $policy = erp_hr_leave_get_policy( $leave_request->policy_id );
+            $event_label .= sprintf( ' ( %s ) ', __( 'Pending', 'wp-erp' ) );
+        }
         $events[] = array(
             'id'        => $leave_request->id,
-            'title'     => $leave_request->display_name,
+            'title'     => $event_label,
             'start'     => $leave_request->start_date,
-            'end'       => $leave_request->end_date,
+            'end'       => erp_fullcalendar_end_date( $leave_request->end_date ),
             'url'       => erp_hr_url_single_employee( $leave_request->user_id ),
             'color'     => $leave_request->color,
-            'img'       => get_avatar( $leave_request->user_id, 16 )
         );
     }
 
@@ -186,7 +192,7 @@ function erp_hr_dashboard_widget_leave_calendar() {
             'id'        => $holiday->id,
             'title'     => $holiday->title,
             'start'     => $holiday->start,
-            'end'       => $holiday->end,
+            'end'       => erp_fullcalendar_end_date( $holiday->end ),
             'color'     => '#FF5354',
             'img'       => '',
             'holiday'   => true
@@ -210,7 +216,6 @@ function erp_hr_dashboard_widget_leave_calendar() {
         }
         .fc-title {
             position: relative;
-            top: -4px;
         }
     </style>
 
@@ -238,9 +243,6 @@ function erp_hr_dashboard_widget_leave_calendar() {
                 if ( event.holiday ) {
                     element.find('.fc-content').find('.fc-title').css({ 'top':'0px', 'left' : '3px', 'fontSize' : '13px', 'padding':'2px' });
                 };
-                if( event.img != 'undefined' ) {
-                    element.find('.fc-content').find('.fc-title').before( $("<span class=\"fc-event-icons erp-leave-avatar\">"+event.img+"</span>") );
-                }
             },
         });
     });
