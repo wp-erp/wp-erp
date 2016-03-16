@@ -1583,6 +1583,12 @@ table.leaves td.column-status .status-3 {
 .note-tab-wrap ul.notes-list li:first-child {
   border-top: none;
 }
+.note-tab-wrap .show {
+  display: block;
+}
+.note-tab-wrap .hide {
+  display: none;
+}
 @media print {
   .erp-hide-print {
     display: none !important;
@@ -1784,6 +1790,8 @@ table.erp-table.full-width {
   background: url('../../images/inactive.png') no-repeat;
   background-position: 50%;
   position: absolute;
+  bottom: 0px;
+  left: 0px;
   background-size: 105px 31px;
   height: 31px;
   width: 100%;

@@ -306,7 +306,9 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
                 array_unshift( $required_options, 'full_name' );
             }
 
-            if ( !empty( array_diff( $required_options, $_POST['map'] ) ) ) {
+            $diff = array_diff( $required_options, $_POST['map'] );
+
+            if ( !empty( $diff ) ) {
                 $required_options = array_map( function ( $option ) {
                     return ucwords( str_replace( '_' , ' ', $option ) );
                 }, $required_options );

@@ -78,7 +78,20 @@ function erp_hr_dashboard_widget_birthday() {
  * @return void
  */
 function erp_hr_dashboard_widget_latest_announcement() {
-    $announcements = erp_hr_employee_dashboard_announcement( get_current_user_id() );
+    
+    //if user is admin then show latest 5 announcements
+    if ( current_user_can( 'manage_options' ) ) {
+        $query = new WP_Query( array(
+            'post_type'      => 'erp_hr_announcement',
+            'posts_per_page' => '5',
+            'order'          => 'DESC'
+        ) );
+        $announcements = $query->get_posts();
+        $hidden = 'hidden';
+    } else {
+        $announcements = erp_hr_employee_dashboard_announcement( get_current_user_id() );
+        $hidden = '';
+    }
 
     if ( $announcements ) {
         ?>
@@ -91,8 +104,8 @@ function erp_hr_dashboard_widget_latest_announcement() {
                 </h4>
                 <p><?php echo wp_trim_words( $announcement->post_content, 40 ); ?></p>
                 <div class="announcement-row-actions">
-                    <a href="#" class="mark-read erp-tips" title="<?php _e( 'Mark as Read', 'wp-erp' ); ?>" data-row_id="<?php echo $announcement->id; ?>"><i class="fa fa-circle-o-notch"></i></a>
-                    <a href="#" class="view-full erp-tips" title="<?php _e( 'View full announcement', 'wp-erp' ); ?>" data-row_id="<?php echo $announcement->post_id; ?>"><i class="fa fa-book"></i></a>
+                    <a href="#" class="mark-read erp-tips <?php echo $hidden ?>" title="<?php _e( 'Mark as Read', 'wp-erp' ); ?>" data-row_id="<?php echo $announcement->id; ?>"><i class="fa fa-circle-o-notch"></i></a>
+                    <a href="#" class="view-full erp-tips" title="<?php _e( 'View full announcement', 'wp-erp' ); ?>" data-row_id="<?php echo $announcement->ID; ?>"><i class="fa fa-book"></i></a>
                 </div>
             </li>
         <?php endforeach ?>
@@ -163,7 +176,7 @@ function erp_hr_dashboard_widget_whoisout() {
 function erp_hr_dashboard_widget_leave_calendar() {
 
     $user_id        = get_current_user_id();
-    $leave_requests = erp_hr_get_calendar_leave_events( false, $user_id );
+    $leave_requests = erp_hr_get_calendar_leave_events( false, $user_id, false );
     $holidays       = erp_array_to_object( \WeDevs\ERP\HRM\Models\Leave_Holiday::all()->toArray() );
     $events         = [];
     $holiday_events = [];
