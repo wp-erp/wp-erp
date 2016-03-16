@@ -87,7 +87,6 @@ class ERP_Settings_General extends ERP_Settings_Page {
     public function erp_api_key() {
         $wp_erp_api_key         = get_option( 'wp_erp_apikey', null );
         $wp_erp_api_active      = get_option( 'wp_erp_api_active', 'no' );
-        $wp_erp_api_email_count = get_option( 'wp_erp_api_email_count', 0 );
 
         if( $wp_erp_api_key ) {
         ?>

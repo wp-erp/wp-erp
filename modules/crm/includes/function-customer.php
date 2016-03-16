@@ -1771,7 +1771,7 @@ function erp_crm_save_email_activity() {
         $data = erp_crm_save_customer_feed_data( $save_data );
 
         // Update email counter
-        update_option( 'wp_erp_api_email_count', get_option( 'wp_erp_api_email_count', 0 ) + 1 );
+        update_option( 'wp_erp_cloud_email_count', get_option( 'wp_erp_cloud_email_count', 0 ) + 1 );
 
         do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
     }
