@@ -58,39 +58,33 @@ function get_employee_breakdown_by_age( $employees ) {
 
 		 	$_under18++;
 		 	continue;
-		 }
 
-		 if ( $age >= 18 && $age <= 25 ) {
+		 } else if ( $age >= 18 && $age <= 25 ) {
 
 		 	$_18_to_25++;
 		 	continue;
-		 }
 
-		 if ( $age >= 26 && $age <= 35 ) {
+		 } else if ( $age >= 26 && $age <= 35 ) {
 
 		 	$_26_to_35++;
 		 	continue;
-		 }
 
-		 if ( $age >= 36 && $age <= 45 ) {
+		 } else if ( $age >= 36 && $age <= 45 ) {
 
 		 	$_36_to_45++;
 		 	continue;
-		 }
 
-		 if ( $age >= 46 && $age <= 55 ) {
+		 } else if ( $age >= 46 && $age <= 55 ) {
 
 		 	$_46_to_55++;
 		 	continue;
-		 }
 
-		 if ( $age >= 56 && $age <= 65 ) {
+		 } else if ( $age >= 56 && $age <= 65 ) {
 
 		 	$_56_to_65++;
 		 	continue;
-		 }
 
-		 if ( $age > 65 ) {
+		 } else if ( $age > 65 ) {
 
 		 	$_65plus++;
 		 }
