@@ -88,7 +88,7 @@
                                 <td>
                                     <?php erp_html_form_input(array(
                                         'name'  => 'address[zip]',
-                                        'value' => $company->address['zip'],
+                                        'value' => ( isset( $company->address['zip'] ) ? $company->address['zip'] : '' ),
                                         'class' => 'regular-text'
                                     )); ?>
                                 </td>

@@ -77,6 +77,7 @@ class Customer_Relationship {
         require_once WPERP_CRM_PATH . '/includes/function-customer.php';
         require_once WPERP_CRM_PATH . '/includes/function-dashboard.php';
         require_once WPERP_CRM_PATH . '/includes/function-capabilities.php';
+        require_once WPERP_CRM_PATH . '/includes/class-contact-forms-integration.php';
     }
 
     /**
@@ -138,6 +139,22 @@ class Customer_Relationship {
             'delConfirm'            => __( 'Are you sure to delete this?', 'wp-erp' ),
             'checkedConfirm'        => __( 'Alteast one item must be checked', 'wp-erp' )
         ) );
+
+        if ( 'crm_page_erp-sales-activities' == $hook ) {
+            wp_enqueue_script( 'underscore' );
+            wp_enqueue_script( 'erp-vuejs' );
+            wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", array( 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
+            wp_enqueue_script( 'post' );
+
+            wp_localize_script( 'wp-erp-crm-vue-customer', 'wpCRMvue', [
+                'ajaxurl'         => admin_url( 'admin-ajax.php' ),
+                'nonce'           => wp_create_nonce( 'wp-erp-crm-customer-feed' ),
+                'current_user_id' => get_current_user_id(),
+                'confirm'         => __( 'Are you sure?', 'wp-erp' ),
+                'date_format'     => get_option( 'date_format' )
+            ] );
+
+        }
 
         // if it's an customer page
         if ( 'crm_page_erp-sales-customers' == $hook || 'crm_page_erp-sales-companies' == $hook  ) {
@@ -204,7 +221,6 @@ class Customer_Relationship {
                     erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/customer-email-note.php', 'erp-crm-email-note-template' );
                     erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/customer-schedule-note.php', 'erp-crm-schedule-note-template' );
                     erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/customer-timeline-item.php', 'erp-crm-timeline-item-template' );
-
                 }
 
                 break;
@@ -216,6 +232,10 @@ class Customer_Relationship {
 
             case 'toplevel_page_erp-sales':
                 erp_get_js_template( WPERP_CRM_JS_TMPL . '/single-schedule-details.php', 'erp-crm-single-schedule-details' );
+                break;
+
+            case 'crm_page_erp-sales-activities':
+                erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/customer-timeline-item.php', 'erp-crm-timeline-item-template' );
                 break;
 
             default:

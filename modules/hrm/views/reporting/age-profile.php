@@ -46,7 +46,7 @@
 		</div>
 	</div>
 
-		<table class="widefat">
+		<table class="widefat striped">
 			<thead>
 				<tr>
 					<th><?php _e( 'Department', 'wp-erp' ); ?></th>

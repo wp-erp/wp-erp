@@ -9,9 +9,9 @@
  * @return void
  */
 function erp_crm_dashboard_right_widgets_area() {
-    erp_admin_dash_metabox( __( '<i class="fa fa-calendar-check-o"></i> Todays Schedules', 'wp-erp' ), 'erp_hr_dashboard_widget_todays_schedules' );
-    erp_admin_dash_metabox( __( '<i class="fa fa-calendar-check-o"></i> Upcoming Schedules', 'wp-erp' ), 'erp_hr_dashboard_widget_upcoming_schedules' );
-    erp_admin_dash_metabox( __( '<i class="fa fa-users"></i> Recently Added', 'wp-erp' ), 'erp_hr_dashboard_widget_latest_contact' );
+    erp_admin_dash_metabox( __( '<i class="fa fa-calendar-check-o"></i> Todays Schedules', 'wp-erp' ), 'erp_crm_dashboard_widget_todays_schedules' );
+    erp_admin_dash_metabox( __( '<i class="fa fa-calendar-check-o"></i> Upcoming Schedules', 'wp-erp' ), 'erp_crm_dashboard_widget_upcoming_schedules' );
+    erp_admin_dash_metabox( __( '<i class="fa fa-users"></i> Recently Added', 'wp-erp' ), 'erp_crm_dashboard_widget_latest_contact' );
 }
 
 /**
@@ -33,7 +33,7 @@ function erp_crm_dashboard_left_widgets_area() {
  *
  * @return void [html]
  */
-function erp_hr_dashboard_widget_todays_schedules() {
+function erp_crm_dashboard_widget_todays_schedules() {
     $todays_schedules = erp_crm_get_todays_schedules_activity( get_current_user_id() );
     ?>
     <?php if ( $todays_schedules ): ?>
@@ -79,7 +79,7 @@ function erp_hr_dashboard_widget_todays_schedules() {
  *
  * @return void [html]
  */
-function erp_hr_dashboard_widget_upcoming_schedules() {
+function erp_crm_dashboard_widget_upcoming_schedules() {
     $upcoming_schedules = erp_crm_get_next_seven_day_schedules_activities( get_current_user_id() );
     ?>
 
@@ -185,8 +185,14 @@ function erp_hr_dashboard_widget_my_schedules() {
     <?php
 }
 
-
-function erp_hr_dashboard_widget_latest_contact() {
+/**
+ * Latest contact widget in crm dashboard
+ *
+ * @since 1.0
+ *
+ * @return html|void
+ */
+function erp_crm_dashboard_widget_latest_contact() {
     $contacts  = erp_get_peoples( [ 'type' => 'contact', 'orderby' => 'created', 'order' => 'DESC', 'number' => 5 ] );
     $companies = erp_get_peoples( [ 'type' => 'company', 'orderby' => 'created', 'order' => 'DESC', 'number' => 5 ] );
     ?>
@@ -238,26 +244,4 @@ function erp_hr_dashboard_widget_latest_contact() {
     } else {
         _e( 'No companies found', 'wp-erp' );
     }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

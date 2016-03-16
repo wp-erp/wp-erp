@@ -1,5 +1,4 @@
 <div class="timeline-item" id="timeline-item-{{ feed.id }}" v-if="!isEditable">
-
     <tooltip content="<i class='fa fa-clock-o'></i>" :title="feed.created_at | formatDateTime"></tooltip>
 
     <h3 class="timeline-header" @click.prevent="toggleFooter">
@@ -9,7 +8,7 @@
     <div class="timeline-body" @click.prevent="toggleFooter">
         {{{ feed.message | formatFeedContent feed }}}
     </div>
-    <div class="timeline-footer" v-show="showFooter" v-if="feed.type != 'email'">
+    <div class="timeline-footer" v-if="showFooter" v-if="(feed.type != 'email')">
         <a href="#" @click.prevent="editFeed( feed )"><?php _e( 'Edit', 'wp-erp' ); ?> |</a>
         <a href="#" @click.prevent="deleteFeed( feed )"><?php _e( 'Delete', 'wp-erp' ); ?></a>
     </div>

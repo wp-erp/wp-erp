@@ -33,7 +33,7 @@
 				foreach ( $hire_data as $month => $data_month ) {
 
 					$dateObj = DateTime::createFromFormat( '!m', $month );
-					echo '<h3>' . $dateObj->format( 'F' ) . '</h3>';
+					echo '<h3>' . esc_attr( $dateObj->format( 'F' ) ) . '</h3>';
 					echo '<hr>';
 
 					ksort( $data_month );
@@ -45,10 +45,13 @@
 						$i     = 0;
 
 						foreach ( $data_date as $single_data ) {
-							
-							$age = date( 'Y', time() ) - date( 'Y', strtotime( esc_attr( $single_data['hiring_date'] ) ) );
-							echo $single_data['emp_name'] . ' ('. $age .')';
-							
+
+							$age = date( 'Y', time() ) - date( 'Y', strtotime( $single_data['hiring_date'] ) );
+
+							if ( $age > 0 ) {
+								echo esc_attr( $single_data['emp_name'] ) . ' ('. esc_attr( $age ) .')';
+							}
+
 							if ( ++$i != $count ) {
 								echo ', ';
 							}
@@ -62,5 +65,5 @@
 		</div>
 	</div>
 
-	
+
 </div>
