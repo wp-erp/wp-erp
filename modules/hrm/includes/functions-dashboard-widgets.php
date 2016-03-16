@@ -176,7 +176,7 @@ function erp_hr_dashboard_widget_whoisout() {
 function erp_hr_dashboard_widget_leave_calendar() {
 
     $user_id        = get_current_user_id();
-    $leave_requests = erp_hr_get_calendar_leave_events( false, $user_id );
+    $leave_requests = erp_hr_get_calendar_leave_events( false, $user_id, false );
     $holidays       = erp_array_to_object( \WeDevs\ERP\HRM\Models\Leave_Holiday::all()->toArray() );
     $events         = [];
     $holiday_events = [];
