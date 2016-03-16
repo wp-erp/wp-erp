@@ -26,9 +26,7 @@ module.exports = function(grunt) {
             minify: {
                 expand: true,
                 cwd: '<%= dirs.js %>',
-                src: [
-                    ['erp.js', 'jquery-popup.js', 'settings.js', 'upload.js', 'vue.js']
-                ],
+                src: '**/*.js',
                 dest: '<%= dirs.js %>/',
                 ext: '.min.js'
             }
