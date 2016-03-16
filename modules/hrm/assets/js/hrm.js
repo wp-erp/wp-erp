@@ -834,8 +834,8 @@
                 wp.ajax.send({
                     data: form.serializeObject(),
                     success: function() {
-                        $.get( window.location.href, function(data) {
-                            if(!$('ul.notes-list li').length<0){
+                        $.get( window.location.href, function( data ) {
+                            if( $('ul.notes-list li').length<0 ){
                                 $('ul.notes-list').prepend( $(data).find( 'ul.notes-list' ).after() );
                             }else {
                                 $('ul.notes-list').prepend( $(data).find( 'ul.notes-list li' ).first() );
@@ -856,7 +856,6 @@
                 });
             },
             showLoadMoreBtn: function(){
-                console.log($('ul.notes-list li').length);
                 if( $('ul.notes-list li').length >= 10 ){
                     $('.wperp-load-more-btn').show();
                 }else {
