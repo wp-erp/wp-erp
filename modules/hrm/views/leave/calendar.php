@@ -1,7 +1,7 @@
 <?php
 $filter_active = ( isset( $_GET['department'] ) && $_GET['department'] != '-1' ) || ( isset( $_GET['designation'] ) && $_GET['designation'] != '-1' ) ? $_GET : false;
 
-$leave_requests = erp_hr_get_calendar_leave_events( $filter_active );
+$leave_requests = erp_hr_get_calendar_leave_events( $filter_active, false, true );
 $events = [];
 
 foreach ( $leave_requests as $key => $leave_request ) {
