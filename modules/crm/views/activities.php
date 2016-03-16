@@ -1,15 +1,53 @@
 
+<?php
+$contacts = erp_crm_get_contact_dropdown();
+?>
 <div class="wrap erp erp-crm-customer erp-single-customer" id="wp-erp">
 
     <h2><?php _e( 'Activities', 'wp-erp' ); ?></h2>
 
     <div class="erp-customer-feeds" id="erp-customer-feeds" v-cloak>
 
+        <div class="activity-filter">
+
+            <div class="filters">
+                <select style="width:180px;" v-selecttwo="filterActivityType" class="select2" v-model="filterActivityType" id="activity-type">
+                    <option value=""><?php _e( 'All Types', 'wp-erp' ) ?></option>
+                    <option value="new_note"><?php _e( 'Notes', 'wp-erp' ) ?></option>
+                    <option value="email"><?php _e( 'Email', 'wp-erp' ) ?></option>
+                    <option value="log_activity"><?php _e( 'Log Activity', 'wp-erp' ) ?></option>
+                    <option value="schedule"><?php _e( 'Schedules', 'wp-erp' ) ?></option>
+                </select>
+            </div>
+
+            <div class="filters">
+                <select style="width:180px;" v-selecttwo="filterCreatedBy" class="select2" v-model="filterCreatedBy" id="activity-created-by">
+                    <option value=""><?php _e( 'Created By All', 'wp-erp' ) ?></option>
+                    <?php echo erp_crm_get_emplyees(); ?>
+                </select>
+            </div>
+
+            <div class="filters">
+                <select style="width:180px;" v-selecttwo="filterCreatedFor" class="select2" v-model="filterCreatedFor" id="activity-created-for">
+                    <option value=""><?php _e( 'Created for all', 'wp-erp' ) ?></option>
+                    <?php foreach ( $contacts as $contact_id => $contact_name ) : ?>
+                        <option value="<?php echo $contact_id; ?>"><?php echo $contact_name; ?></option>
+                    <?php endforeach ?>
+                </select>
+            </div>
+
+            <div class="filters">
+                <input type="text" v-datepicker v-model="filterCreatedOn" placeholder="<?php _e( 'Created Date..', 'wp-erp' ); ?>">
+            </div>
+
+            <div class="clearfix"></div>
+        </div>
+
         <div class="activity-content">
 
             <ul class="timeline" v-if = "feeds.length">
 
-                <template v-for="( month, feed_obj ) in feeds | formatFeeds">
+                <template v-for="( month, feed_obj ) in feeds | filterFeedType filterActivityType | formatFeeds">
 
                     <li class="time-label">
                         <span class="bg-red">{{ month | formatDate 'F, Y' }}</span>

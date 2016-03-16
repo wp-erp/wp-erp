@@ -580,6 +580,22 @@
 .erp-single-customer .erp-single-customer-content .customer-mail-subscriber-info .contact-group-content a#erp-contact-update-assign-group i.fa {
   font-size: 11px;
 }
+.erp-single-customer .erp-customer-feeds .activity-filter {
+  margin-top: 20px;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+.erp-single-customer .erp-customer-feeds .activity-filter .filters {
+  padding: 15px 25px;
+  border-right: 1px solid #e3e3e3;
+  float: left;
+}
+.erp-single-customer .erp-customer-feeds .activity-filter .filters:last-child {
+  border-right: none;
+}
 .erp-single-customer .erp-customer-feeds .submit-action {
   padding-top: 10px;
   border-top: 1px solid #eee;

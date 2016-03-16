@@ -2,6 +2,20 @@
  *****************    Vue Filters     *************************
  **************************************************************/
 
+
+// Vue Filter for Formatting Time
+Vue.filter('filterFeedType', function ( feedData, type ) {
+    var feedsData = _.filter( feedData, function( data ) {
+        if ( type ) {
+            return ( data.type == type );
+        }
+        return data;
+    });
+
+    return feedsData;
+});
+
+
 // Vue Filter for Formatting Time
 Vue.filter('formatAMPM', function (date) {
     date = new Date( date );
@@ -151,7 +165,6 @@ Vue.directive( 'datepicker', {
                 changeYear: true,
                 yearRange: '-100:+0',
                 onSelect: function (date) {
-                    this.$set(key, date);
                     vm.$set(key, date);
                 }
             });
@@ -800,7 +813,11 @@ var vm = new Vue({
         showFooter: false,
         offset: 0,
         limit : 10,
-        loading: false
+        loading: false,
+        filterActivityType: '',
+        filterCreatedBy: '',
+        filterCreatedFor: '',
+        filterCreatedOn: ''
     },
 
     events: {
