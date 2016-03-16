@@ -217,7 +217,7 @@ class Contact_Forms_Integration {
                 erp_people_update_meta( $people_id, 'life_stage', 'lead' );
 
                 $plugin_list = $this->get_plugin_list();
-                erp_people_update_meta( $people_id, 'source', $plugin_list[ $plugin ]['title'] . ' - Form ID: ' . $form_id );
+                erp_people_update_meta( $people_id, 'source', 'contact_form' );
             }
         }
     }
