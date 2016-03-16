@@ -8,6 +8,62 @@
     "content-hash": "4bc7e6b5ce15628fea54fbb14df34bb1",
     "packages": [
         {
+            "name": "danielstjules/stringy",
+            "version": "1.10.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/danielstjules/Stringy.git",
+                "reference": "4749c205db47ee5b32e8d1adf6d9aff8db6caf3b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/danielstjules/Stringy/zipball/4749c205db47ee5b32e8d1adf6d9aff8db6caf3b",
+                "reference": "4749c205db47ee5b32e8d1adf6d9aff8db6caf3b",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Stringy\\": "src/"
+                },
+                "files": [
+                    "src/Create.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel St. Jules",
+                    "email": "danielst.jules@gmail.com",
+                    "homepage": "http://www.danielstjules.com"
+                }
+            ],
+            "description": "A string manipulation library with multibyte support",
+            "homepage": "https://github.com/danielstjules/Stringy",
+            "keywords": [
+                "UTF",
+                "helpers",
+                "manipulation",
+                "methods",
+                "multibyte",
+                "string",
+                "utf-8",
+                "utility",
+                "utils"
+            ],
+            "time": "2015-07-23 00:54:12"
+        },
+        {
             "name": "doctrine/inflector",
             "version": "v1.1.0",
             "source": {
@@ -76,26 +132,26 @@
         },
         {
             "name": "illuminate/container",
-            "version": "v5.2.21",
+            "version": "v5.0.33",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/container.git",
-                "reference": "ba7a8b3c24535ab102ebe9738a0003846c372b95"
+                "reference": "aa85c752eb7c6ccc2c6ffc5bfffb3ba8dd9719d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/container/zipball/ba7a8b3c24535ab102ebe9738a0003846c372b95",
-                "reference": "ba7a8b3c24535ab102ebe9738a0003846c372b95",
+                "url": "https://api.github.com/repos/illuminate/container/zipball/aa85c752eb7c6ccc2c6ffc5bfffb3ba8dd9719d6",
+                "reference": "aa85c752eb7c6ccc2c6ffc5bfffb3ba8dd9719d6",
                 "shasum": ""
             },
             "require": {
-                "illuminate/contracts": "5.2.*",
-                "php": ">=5.5.9"
+                "illuminate/contracts": "5.0.*",
+                "php": ">=5.4.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.2-dev"
+                    "dev-master": "5.0-dev"
                 }
             },
             "autoload": {
@@ -115,29 +171,29 @@
             ],
             "description": "The Illuminate Container package.",
             "homepage": "http://laravel.com",
-            "time": "2016-02-22 06:42:06"
+            "time": "2015-05-29 20:16:27"
         },
         {
             "name": "illuminate/contracts",
-            "version": "v5.2.21",
+            "version": "v5.0.33",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
-                "reference": "eea3cf7ce90651e067a914d16383b019da45fcb5"
+                "reference": "b8b11d78724a6f8a62be3b1dfa20fa372f861398"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/contracts/zipball/eea3cf7ce90651e067a914d16383b019da45fcb5",
-                "reference": "eea3cf7ce90651e067a914d16383b019da45fcb5",
+                "url": "https://api.github.com/repos/illuminate/contracts/zipball/b8b11d78724a6f8a62be3b1dfa20fa372f861398",
+                "reference": "b8b11d78724a6f8a62be3b1dfa20fa372f861398",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.9"
+                "php": ">=5.4.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.2-dev"
+                    "dev-master": "5.0-dev"
                 }
             },
             "autoload": {
@@ -157,41 +213,39 @@
             ],
             "description": "The Illuminate Contracts package.",
             "homepage": "http://laravel.com",
-            "time": "2016-02-22 09:18:57"
+            "time": "2015-05-15 07:22:28"
         },
         {
             "name": "illuminate/database",
-            "version": "v5.2.21",
+            "version": "v5.0.33",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/database.git",
-                "reference": "8b0068c326652332fd364399f4d8cce894953172"
+                "reference": "6d79bb678a91123a15418863af901d2145b50349"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/database/zipball/8b0068c326652332fd364399f4d8cce894953172",
-                "reference": "8b0068c326652332fd364399f4d8cce894953172",
+                "url": "https://api.github.com/repos/illuminate/database/zipball/6d79bb678a91123a15418863af901d2145b50349",
+                "reference": "6d79bb678a91123a15418863af901d2145b50349",
                 "shasum": ""
             },
             "require": {
-                "illuminate/container": "5.2.*",
-                "illuminate/contracts": "5.2.*",
-                "illuminate/support": "5.2.*",
-                "nesbot/carbon": "~1.20",
-                "php": ">=5.5.9"
+                "illuminate/container": "5.0.*",
+                "illuminate/contracts": "5.0.*",
+                "illuminate/support": "5.0.*",
+                "nesbot/carbon": "~1.0",
+                "php": ">=5.4.0"
             },
             "suggest": {
                 "doctrine/dbal": "Required to rename columns and drop SQLite columns (~2.4).",
-                "fzaninotto/faker": "Required to use the eloquent factory builder (~1.4).",
-                "illuminate/console": "Required to use the database commands (5.2.*).",
-                "illuminate/events": "Required to use the observers with Eloquent (5.2.*).",
-                "illuminate/filesystem": "Required to use the migrations (5.2.*).",
-                "illuminate/pagination": "Required to paginate the result set (5.2.*)."
+                "illuminate/console": "Required to use the database commands (5.0.*).",
+                "illuminate/events": "Required to use the observers with Eloquent (5.0.*).",
+                "illuminate/filesystem": "Required to use the migrations (5.0.*)."
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.2-dev"
+                    "dev-master": "5.0-dev"
                 }
             },
             "autoload": {
@@ -217,40 +271,37 @@
                 "orm",
                 "sql"
             ],
-            "time": "2016-02-24 15:02:47"
+            "time": "2015-06-02 13:39:10"
         },
         {
             "name": "illuminate/support",
-            "version": "v5.2.21",
+            "version": "v5.0.33",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "6749fab3f3d38d8b15427536a8e7bbdc57497c9e"
+                "reference": "32a12f97029b624fc0f9454e7ca69eaafef49c5d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/6749fab3f3d38d8b15427536a8e7bbdc57497c9e",
-                "reference": "6749fab3f3d38d8b15427536a8e7bbdc57497c9e",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/32a12f97029b624fc0f9454e7ca69eaafef49c5d",
+                "reference": "32a12f97029b624fc0f9454e7ca69eaafef49c5d",
                 "shasum": ""
             },
             "require": {
+                "danielstjules/stringy": "~1.8",
                 "doctrine/inflector": "~1.0",
                 "ext-mbstring": "*",
-                "illuminate/contracts": "5.2.*",
-                "php": ">=5.5.9"
+                "illuminate/contracts": "5.0.*",
+                "php": ">=5.4.0"
             },
             "suggest": {
-                "illuminate/filesystem": "Required to use the composer class (5.2.*).",
-                "jeremeamia/superclosure": "Required to be able to serialize closures (~2.2).",
-                "paragonie/random_compat": "Provides a compatible interface like PHP7's random_bytes() in PHP 5 projects (~1.1).",
-                "symfony/polyfill-php56": "Required to use the hash_equals function on PHP 5.5 (~1.0).",
-                "symfony/process": "Required to use the composer class (2.8.*|3.0.*).",
-                "symfony/var-dumper": "Improves the dd function (2.8.*|3.0.*)."
+                "jeremeamia/superclosure": "Required to be able to serialize closures (~2.0).",
+                "symfony/var-dumper": "Required to use the dd function (2.6.*)."
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.2-dev"
+                    "dev-master": "5.0-dev"
                 }
             },
             "autoload": {
@@ -273,7 +324,7 @@
             ],
             "description": "The Illuminate Support package.",
             "homepage": "http://laravel.com",
-            "time": "2016-02-22 20:29:02"
+            "time": "2015-06-04 12:15:51"
         },
         {
             "name": "johngrogg/ics-parser",
@@ -491,16 +542,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tareq1988/wp-eloquent.git",
-                "reference": "4cd32118b8c202c4ddc8011f4f49f133fbac68cf"
+                "reference": "b62300335920c09ebb3cebff77a523e12dc8c250"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tareq1988/wp-eloquent/zipball/4cd32118b8c202c4ddc8011f4f49f133fbac68cf",
-                "reference": "4cd32118b8c202c4ddc8011f4f49f133fbac68cf",
+                "url": "https://api.github.com/repos/tareq1988/wp-eloquent/zipball/b62300335920c09ebb3cebff77a523e12dc8c250",
+                "reference": "b62300335920c09ebb3cebff77a523e12dc8c250",
                 "shasum": ""
             },
             "require": {
-                "illuminate/database": "~5.0"
+                "illuminate/database": "5.0.*"
             },
             "type": "library",
             "autoload": {
@@ -527,7 +578,7 @@
                 "sql",
                 "wordpress"
             ],
-            "time": "2016-02-27 18:48:28"
+            "time": "2016-03-15 23:47:54"
         }
     ],
     "packages-dev": [],

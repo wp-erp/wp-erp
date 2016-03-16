@@ -460,7 +460,7 @@ class Setup_Wizard {
     public function setup_step_workdays_save() {
         check_admin_referer( 'erp-setup' );
 
-        $option_key = 'erp_hr_work_days';
+        $option_key = 'erp_settings_erp-hr_workdays';
         $days       = array_map( 'absint', $_POST['day'] );
 
         if ( count( $days ) == 7 ) {

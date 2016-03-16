@@ -124,6 +124,59 @@
             margin:0px;
         }
     }
+
+    ul.erp-latest-contact-list {
+        li {
+            position: relative;
+            padding: 4px 0px;
+            border-bottom: 1px solid #e3e3e3;
+            .clearfix();
+
+            span.contact-created-time {
+                position: absolute;
+                top: 22%;
+                right: 3px;
+                cursor: pointer;
+            }
+
+            &:first-child {
+                padding-top: 0px;
+            }
+
+            &:last-child {
+                border-bottom: none;
+                padding-bottom: 0px;
+            }
+
+            .avatar {
+                width: 29px;
+                float: left;
+                margin-right: 10px;
+            }
+
+            .details {
+                float: left;
+
+                p.contact-name {
+                    margin-top: -3px;
+                    margin-bottom: -2px;
+                    padding: 0px;
+
+                    a {
+                        text-decoration: none;
+                    }
+                }
+
+                p.contact-stage {
+                    padding: 0px;
+                    margin-top: 0px;
+                    margin-bottom: 3px;
+                    color: #afafaf;
+                    font-style: italic;
+                }
+            }
+        }
+    }
 }
 
 .erp-leads-single {

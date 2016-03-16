@@ -606,7 +606,26 @@ class Ajax_Handler {
 
                 $data = erp_crm_save_customer_feed_data( $save_data );
 
-                //@TODO: wp_mail() need to send mail
+                $wp_erp_api_key     = get_option( 'wp_erp_apikey' );
+                $wp_erp_api_active  = get_option( 'wp_erp_api_active' );
+
+                $contact_id = intval( $postdata['user_id'] );
+
+                $contact = new \WeDevs\ERP\CRM\Contact( $contact_id );
+
+                global $user_email;
+
+                $headers = [];
+                $headers[] = 'Content-Type: text/html; charset=UTF-8';
+                $headers[] = 'From: ' . $user_email . "\r\n";
+
+                if( $wp_erp_api_key && $wp_erp_api_active ) {
+                    $reply_to = $wp_erp_api_key . "-" . $postdata['created_by'] . "-" . $contact_id . "@incloud.wperp.com";
+                    $headers[] = 'Reply-To: ' . $reply_to . "\r\n";
+                }
+
+                // Send email a contact
+                wp_mail( $contact->email, $postdata['email_subject'], $postdata['message'], $headers );
 
                 do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
 

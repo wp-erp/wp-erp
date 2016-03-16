@@ -18,7 +18,7 @@ function erp_hr_get_work_days() {
         'sun' => 0
     );
 
-    $option_key = 'erp_hr_work_days';
+    $option_key = 'erp_settings_erp-hr_workdays';
 
     return get_option( $option_key, $default );
 }
