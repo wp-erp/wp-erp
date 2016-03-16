@@ -703,7 +703,7 @@ function erp_crm_customer_schedule_notification() {
     foreach ( $schedules as $key => $activity ) {
         $extra = json_decode( base64_decode( $activity['extra'] ), true );
 
-        if ( $extra['allow_notification'] == 'true' ) {
+        if ( isset ( $extra['allow_notification'] ) && $extra['allow_notification'] == 'true' ) {
             if ( current_time('mysql') == $extra['notification_datetime'] ) {
                 erp_crm_send_schedule_notification( $activity, $extra );
             }

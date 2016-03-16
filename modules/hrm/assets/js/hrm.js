@@ -834,9 +834,17 @@
                 wp.ajax.send({
                     data: form.serializeObject(),
                     success: function() {
-                        $.get( window.location.href, function(data) {
-                            $('ul.notes-list').prepend( $(data).find( 'ul.notes-list li' ).first() );
-                            $('ul.notes-list li').last().remove();
+                        $.get( window.location.href, function( data ) {
+                            if( $('ul.notes-list li').length < 0 ){
+                                $('ul.notes-list').prepend( $(data).find( 'ul.notes-list' ).after() );
+                            }else {
+                                $('ul.notes-list').prepend( $(data).find( 'ul.notes-list li' ).first() );
+                            }
+
+                            if( $('ul.notes-list li').length > 10 ){
+                                $('ul.notes-list li').last().remove();
+                            }
+                            WeDevs_ERP_HR.employee.showLoadMoreBtn() ;
                             form.find('textarea').val('');
                             submit.removeAttr( 'disabled' );
                         });
@@ -847,7 +855,13 @@
                     }
                 });
             },
-
+            showLoadMoreBtn: function(){
+                if( $('ul.notes-list li').length >= 10 ){
+                    $('.wperp-load-more-btn').show();
+                }else {
+                    $('.wperp-load-more-btn').hide();
+                }
+            },
             loadNotes: function(e) {
                 e.preventDefault();
 
@@ -899,6 +913,7 @@
                         success: function( resp ) {
                             self.closest('li').fadeOut( 400, function() {
                                 $(this).remove();
+                                WeDevs_ERP_HR.employee.showLoadMoreBtn() ;
                             });
                         },
                         error: function( error ) {

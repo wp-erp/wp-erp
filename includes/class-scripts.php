@@ -63,6 +63,9 @@ class Scripts {
         wp_register_script( 'erp-trix-editor', $vendor . '/trix/trix.js', array( 'jquery' ), $this->version, true );
         wp_register_script( 'erp-chosen', $vendor . '/chosen/chosen.jquery' . $this->suffix . '.js', array( 'jquery' ), $this->version, true );
 
+        // sweet alert
+        wp_register_script( 'erp-sweetalert', $vendor . '/sweetalert/sweetalert.min.js', array( 'jquery' ), $this->version, true );
+
         // flot chart
         wp_register_script( 'erp-flotchart', $vendor . '/flot/jquery.flot.min.js', array( 'jquery' ), $this->version, true );
         wp_register_script( 'erp-flotchart-time', $vendor . '/flot/jquery.flot.time.min.js', array( 'jquery' ), $this->version, true );
@@ -78,9 +81,6 @@ class Scripts {
         wp_register_script( 'erp-script', $js . '/erp' . $this->suffix . '.js', array( 'jquery', 'backbone', 'underscore', 'wp-util', 'jquery-ui-datepicker' ), $this->version, true );
         wp_register_script( 'erp-file-upload', $js . '/upload' . $this->suffix . '.js', array( 'jquery', 'plupload-handlers' ), $this->version, true );
         wp_register_script( 'erp-admin-settings', $js . '/settings' . $this->suffix . '.js', array( 'jquery' ), $this->version, true );
-
-        // sweet alert
-        wp_register_script( 'erp-sweetalert', WPERP_ASSETS . '/js/sweetalert.min.js', array(), false, true );
     }
 
     /**
@@ -104,10 +104,10 @@ class Scripts {
         wp_register_style( 'jquery-ui', WPERP_ASSETS . '/vendor/jquery-ui/jquery-ui-1.9.1.custom.css' );
         wp_register_style( 'erp-chosen', WPERP_ASSETS . '/vendor/chosen/chosen' . $this->suffix . '.css' );
 
-        wp_register_style( 'erp-styles', WPERP_ASSETS . '/css/admin/admin.css', false, $this->version );
+        wp_register_style( 'erp-styles', WPERP_ASSETS . '/css/admin.css', false, $this->version );
 
         // sweet alert
-        wp_register_style( 'erp-sweetalert', WPERP_ASSETS . '/css/sweetalert.css', array(), false );
+        wp_register_style( 'erp-sweetalert', $vendor . '/sweetalert/sweetalert.css', false, $this->version );
     }
 
     /**

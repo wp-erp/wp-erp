@@ -1407,13 +1407,15 @@ function erp_hr_apply_entitlement_yearly() {
 /**
  * Get calendar leave events
  *
- * @param   array|boolean $get
+ * @param   array|boolean $get filter args
+ * @param   int|boolean $user_id Get leaves for given user only
+ * @param   boolean $approved_only Get leaves which are approved
  *
  * @since 0.1
  *
  * @return array
  */
-function erp_hr_get_calendar_leave_events( $get = false, $user_id = false ) {
+function erp_hr_get_calendar_leave_events( $get = false, $user_id = false, $approved_only = false ) {
 
     global $wpdb;
 
@@ -1436,38 +1438,53 @@ function erp_hr_get_calendar_leave_events( $get = false, $user_id = false ) {
         if ( $user_id ) {
             $request = $request->where( $request_tb . '.user_id', $user_id );
         }
+        
+        if ( $approved_only ) {
+            $request = $request->where( $request_tb . '.status', 1 );
+        }
 
         return  erp_array_to_object( $request->get()->toArray() );
     }
 
     if ( $department && $designation ) {
-        $leave_requests = erp_array_to_object( $leave_request->leftJoin( $employee_tb, $request_tb . '.user_id', '=', $employee_tb . '.user_id' )
+        $leave_requests = $leave_request->leftJoin( $employee_tb, $request_tb . '.user_id', '=', $employee_tb . '.user_id' )
             ->leftJoin( $users_tb, $request_tb . '.user_id', '=', $users_tb . '.ID' )
             ->leftJoin( $policy_tb, $request_tb . '.policy_id', '=', $policy_tb . '.id' )
             ->select( $users_tb . '.display_name', $request_tb . '.*', $policy_tb . '.color' )
             ->where( $employee_tb . '.designation', '=', $designation )
-            ->where( $employee_tb . '.department', '=', $department )
-            ->get()
-            ->toArray()
-        );
+            ->where( $employee_tb . '.department', '=', $department );
+        
+        if ( $approved_only ) {
+            $leave_requests = $leave_requests->where( $request_tb . '.status', 1 );
+        }
+        
+        $leave_requests = erp_array_to_object( $leave_requests->get()->toArray() );
+        
     } else if ( $designation ) {
-        $leave_requests = erp_array_to_object( $leave_request->leftJoin( $employee_tb, $request_tb . '.user_id', '=', $employee_tb . '.user_id' )
+        $leave_requests = $leave_request->leftJoin( $employee_tb, $request_tb . '.user_id', '=', $employee_tb . '.user_id' )
             ->leftJoin( $users_tb, $request_tb . '.user_id', '=', $users_tb . '.ID' )
             ->leftJoin( $policy_tb, $request_tb . '.policy_id', '=', $policy_tb . '.id' )
             ->select( $users_tb . '.display_name', $request_tb . '.*', $policy_tb . '.color' )
-            ->where( $employee_tb . '.designation', '=', $designation )
-            ->get()
-            ->toArray()
-        );
+            ->where( $employee_tb . '.designation', '=', $designation );
+                
+        if ( $approved_only ) {
+            $leave_requests = $leave_requests->where( $request_tb . '.status', 1 );
+        }
+        
+        $leave_requests = erp_array_to_object( $leave_requests->get()->toArray() );
+        
     } else if ( $department ) {
-        $leave_requests = erp_array_to_object( $leave_request->leftJoin( $employee_tb, $request_tb . '.user_id', '=', $employee_tb . '.user_id' )
+        $leave_requests = $leave_request->leftJoin( $employee_tb, $request_tb . '.user_id', '=', $employee_tb . '.user_id' )
             ->leftJoin( $users_tb, $request_tb . '.user_id', '=', $users_tb . '.ID' )
             ->leftJoin( $policy_tb, $request_tb . '.policy_id', '=', $policy_tb . '.id' )
             ->select( $users_tb . '.display_name', $request_tb . '.*', $policy_tb . '.color' )
-            ->where( $employee_tb . '.department', '=', $department )
-            ->get()
-            ->toArray()
-        );
+            ->where( $employee_tb . '.department', '=', $department );
+        
+        if ( $approved_only ) {
+            $leave_requests = $leave_requests->where( $request_tb . '.status', 1 );
+        }
+        
+        $leave_requests = erp_array_to_object( $leave_requests->get()->toArray() );
     }
 
     return $leave_requests;
