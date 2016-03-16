@@ -14,7 +14,7 @@ $date_format = get_option( 'date_format' );
 				<th><?php _e( 'Date', 'wp-erp' ); ?></th>
 				<th><?php _e( 'Pay Rate', 'wp-erp' ); ?></th>
 				<th><?php _e( 'Pay type', 'wp-erp' ); ?></th>
-				<th><?php _e( 'Employee #', 'wp-erp' ); ?></th>
+				<th><?php _e( 'Employee ID', 'wp-erp' ); ?></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -23,7 +23,7 @@ $date_format = get_option( 'date_format' );
 
 					$employee      = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
 					$compensations = $employee->get_history( 'compensation' );
-					
+
 					if ( $compensations ) {
 
 						$line = 0;
