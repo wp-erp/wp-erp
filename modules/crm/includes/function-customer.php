@@ -1751,22 +1751,28 @@ function erp_crm_get_next_seven_day_schedules_activities( $user_id = '' ) {
 function erp_crm_save_email_activity() {
     header('Access-Control-Allow-Origin: *');
 
-    $postdata = $_POST;
-    unset($postdata['action']);
+    $postdata   = $_POST;
+    $api_key    = get_option( 'wp_erp_apikey' );
 
-    $save_data = [
-        'user_id'       => $postdata['user_id'],
-        'created_by'    => $postdata['created_by'],
-        'message'       => $postdata['message'],
-        'type'          => $postdata['type'],
-        'email_subject' => $postdata['email_subject']
-    ];
+    $is_verified = erp_cloud_verify_request( $postdata, $api_key  );
 
-    $data = erp_crm_save_customer_feed_data( $save_data );
+    if ( $is_verified ) {
+        unset($postdata['action']);
 
-    // Update email counter
-    update_option( 'wp_erp_api_email_count', get_option( 'wp_erp_api_email_count', 0 ) + 1 );
-    //@TODO: wp_mail() need to send mail
+        $save_data = [
+            'user_id'       => $postdata['user_id'],
+            'created_by'    => $postdata['created_by'],
+            'message'       => $postdata['message'],
+            'type'          => $postdata['type'],
+            'email_subject' => $postdata['email_subject'],
+            'extra'         => serialize( [ 'replied' => 1 ] ),
+        ];
 
-    do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
+        $data = erp_crm_save_customer_feed_data( $save_data );
+
+        // Update email counter
+        update_option( 'wp_erp_api_email_count', get_option( 'wp_erp_api_email_count', 0 ) + 1 );
+
+        do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
+    }
 }

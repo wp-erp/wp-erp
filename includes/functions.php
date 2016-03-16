@@ -743,8 +743,6 @@ function erp_activation_notice_javascript() { ?>
             $.post( ajaxurl, data, function(response) {
                 if( response.success ) {
                     $container.hide();
-                } else {
-                    console.log( response.data );
                 }
             });
         });
@@ -761,8 +759,6 @@ function erp_activation_notice_javascript() { ?>
             $.post( ajaxurl, data, function(response) {
                 if( response.success ) {
                     document.location.reload();
-                } else {
-                    console.log( response.data );
                 }
             });
         });
@@ -778,20 +774,47 @@ function erp_activation_notice_javascript() { ?>
 function erp_api_mode_change() {
     header('Access-Control-Allow-Origin: *');
 
-    $status = isset( $_POST['status'] ) && in_array( $_POST['status'], ['yes', 'no'] ) ? $_POST['status'] : 'yes';
+    $postdata      = $_POST;
+    $api_key       = get_option( 'wp_erp_apikey' );
 
-    update_option( 'wp_erp_api_active', $_POST['status'] );
+    $is_verified   = erp_cloud_verify_request( $postdata, $api_key  );
+
+    if ( $is_verified ) {
+        $status = isset( $_POST['status'] ) && in_array( $_POST['status'], ['yes', 'no'] ) ? $_POST['status'] : 'yes';
+
+        update_option( 'wp_erp_api_active', $_POST['status'] );
+    }
 }
 
-/** 
+/**
+ * Verify given http request.
+ *
+ * @param  array  $vars
+ * @param  string $api_key
+ *
+ * @return boolean
+ */
+function erp_cloud_verify_request( $vars, $api_key ) {
+    if ( ! isset( $vars['verify_key'] ) ) {
+        return false;
+    }
+
+    $verify_key = $vars['verify_key'];
+
+    unset( $vars['verify_key'] );
+
+    return ( hash_hmac( 'sha256', serialize( $vars ), $api_key ) === $verify_key );
+}
+
+/**
  * forward given end_date by 1 day to make fullcalendar range compatible
- * 
+ *
  * @param string $end_date saved $end_date from db
- * 
+ *
  * @since 0.1
- * 
+ *
  * @return string end_date
  */
-function erp_fullcalendar_end_date( $end_date ){
+function erp_fullcalendar_end_date( $end_date ) {
     return date( 'Y-m-d H:i:s', strtotime( $end_date . '+1 day' ) );
 }
