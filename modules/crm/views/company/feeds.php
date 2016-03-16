@@ -30,9 +30,6 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
         </div>
     </div>
 
-
-    <!-- <pre>@{{ $data.feeds }}</pre> -->
-
     <div class="activity-content">
 
         <ul class="timeline" v-if = "feeds.length">
@@ -58,7 +55,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
             </template>
         </ul>
 
-        <div class="feed-load-more" v-if="feeds.length >= limit">
+        <div class="feed-load-more" v-show="( feeds.length >= limit ) && !loadingFinish">
             <button @click="loadMoreContent( feeds )" class="button">
                 <i class="fa fa-cog fa-spin" v-if="loading"></i>
                 &nbsp;<span v-if="!loading"><?php _e( 'Load More', 'wp-erp' ); ?></span>

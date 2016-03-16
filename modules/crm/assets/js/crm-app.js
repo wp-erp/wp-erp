@@ -130,11 +130,7 @@ Vue.directive( 'datepicker', {
                 changeYear: true,
                 yearRange: '-100:+0',
                 onClose: function (date) {
-                    if ( date.match(/^(0?[1-9]|[12][0-9]|3[01])[\/\-\.](0?[1-9]|1[012])[\/\-\.]\d{4}$/) )
-                        vm.$set(key, date);
-                    else {
-                        vm.$set(key, "");
-                    }
+                    vm.$set(key, date);
                 }
             });
         } else if ( this.params.datedisable == 'upcomming' ) {
@@ -145,11 +141,7 @@ Vue.directive( 'datepicker', {
                 changeYear: true,
                 yearRange: '-100:+0',
                 onClose: function (date) {
-                    if ( date.match(/^(0?[1-9]|[12][0-9]|3[01])[\/\-\.](0?[1-9]|1[012])[\/\-\.]\d{4}$/) )
-                        vm.$set(key, date);
-                    else {
-                        vm.$set(key, "");
-                    }
+                    vm.$set(key, date);
                 }
             });
         } else {
@@ -568,6 +560,95 @@ Vue.component( 'log-activity', {
                 log_date : !!this.feedData.dt,
                 log_time : !!this.feedData.tp,
                 email_subject : ( this.feedData.log_type == 'email' ) ? !!this.feedData.email_subject : true
+            }
+        },
+
+        isValid: function() {
+            var validation = this.validation
+
+            if ( jQuery.isEmptyObject( validation ) ) return;
+
+            return Object.keys( validation ).every(function(key){
+                return validation[key]
+            });
+        }
+    },
+
+    watch: {
+        feedData: {
+            deep: true,
+            immediate: true,
+            handler: function () {
+                this.notify();
+            }
+        }
+    },
+
+    activate: function (done) {
+
+        var self = this;
+        jQuery(this.$el).find('trix-editor').get(0).addEventListener('trix-change', function (e) {
+            self.feedData.message = e.path[0].innerHTML;
+        });
+
+        done();
+    }
+
+});
+
+Vue.component( 'tasks-note', {
+    props: ['feed'],
+
+    template: '#erp-crm-tasks-note-template',
+
+    data: function() {
+        return {
+            feedData: {
+                message: '',
+                inviteContact: '',
+                dt: '',
+                tp: ''
+            },
+
+            isValid: false
+        }
+    },
+
+    methods: {
+        notify: function () {
+            this.$dispatch('bindFeedData', this.feedData );
+        },
+
+        cancelUpdateFeed: function() {
+            this.$parent.$data.isEditable = false;
+            this.$parent.$data.editfeedData = {};
+        }
+    },
+
+    events: {
+        'bindEditFeedData': function (feed ) {
+            this.feedData.dt            = vm.$options.filters.formatDate( feed.start_date, 'Y-m-d' );
+            this.feedData.tp            = vm.$options.filters.formatAMPM( feed.start_date );
+            var invitedUser             = feed.extra.invited_user.map( function( elm ) { return elm.id } ).join(',');
+            this.feedData.inviteContact = invitedUser;
+            var self = jQuery( this.$el ).find( 'select.select2' );
+
+            if ( String(invitedUser).indexOf(',') == '-1' ) {
+                self.select2().select2( 'val', invitedUser );
+            } else {
+                self.select2().select2( 'val', invitedUser.split(',') );
+            }
+
+        }
+    },
+
+    computed: {
+
+        validation: function() {
+            return {
+                message : !!this.feedData.message,
+                log_date : !!this.feedData.dt,
+                log_time : !!this.feedData.tp,
             }
         },
 

@@ -660,7 +660,7 @@
             }
         }
 
-        #log-activity {
+        #log-activity, #tasks {
              p {
                 margin: 0px;
                 border-bottom: 1px solid #eee;
@@ -804,6 +804,56 @@
             }
         }
 
+        #tasks {
+            .assing-task-datetime {
+                border-bottom: 1px solid #e3e3e3;
+            }
+
+            p {
+                padding-bottom: 10px !important;
+
+                &.assing-task-time {
+                    border-bottom: none;
+                    width: 45%;
+                    margin-left: 10px;
+                }
+
+                &.assing-task-date {
+                    width: 45%;
+                    border-bottom: none;
+                    border-right: 1px solid #e3e3e3;
+                    margin-left: 5px;
+                }
+
+                input[type=text] {
+                    border:none;
+                    box-shadow: none;
+                    transition:none;
+                    width: 45%;
+
+                    &:focus {
+                        outline:none;
+                    }
+
+                    &::-webkit-input-placeholder {
+                       font-style: italic;
+                       font-weight: normal;
+                    }
+                    &:-moz-placeholder {
+                       font-style: italic;
+                       font-weight: normal;
+                    }
+                    &::-moz-placeholder {
+                       font-style: italic;
+                       font-weight: normal;
+                    }
+                    &:-ms-input-placeholder {
+                       font-style: italic;
+                       font-weight: normal;
+                    }
+                }
+            }
+        }
 
         .activity-form {
             background:#fff;

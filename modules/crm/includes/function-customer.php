@@ -52,6 +52,23 @@ function erp_crm_get_emplyees( $selected = '' ) {
     return $dropdown;
 }
 
+function erp_crm_get_employess_with_own( $selected = '' ) {
+    $employees = erp_hr_get_employees_dropdown_raw();
+    $dropdown     = '';
+    unset( $employees[0] );
+
+    if ( $employees ) {
+        foreach ( $employees as $key => $title ) {
+            if ( $key == get_current_user_id() ) {
+                $title = sprintf( '%s ( %s )', __( 'Me', 'wp-erp' ), $title );
+            }
+            $dropdown .= sprintf( "<option value='%s'%s>%s</option>\n", $key, selected( $selected, $key, false ), $title );
+        }
+    }
+
+    return $dropdown;
+}
+
 /**
  * Get contact details url according to contact type
  *
@@ -460,6 +477,11 @@ function erp_crm_get_customer_feeds_nav() {
         'schedule' => [
             'title' => __( 'Schedule', 'wp-erp' ),
             'icon'  => '<i class="fa fa-calendar-check-o"></i>'
+        ],
+
+        'tasks' => [
+            'title' => __( 'Tasks', 'wp-erp' ),
+            'icon'  => '<i class="fa fa-check-square-o"></i>'
         ]
 
     ] );
