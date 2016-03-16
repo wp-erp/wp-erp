@@ -792,6 +792,28 @@ function erp_crm_send_schedule_notification( $activity, $extra = false ) {
 }
 
 /**
+ * Assign task to user
+ *
+ * When task is created from activity
+ * feeds, user needs to see their task. This function
+ * data map with task activity and assign users
+ *
+ * @since 1.0
+ *
+ * @param  array $data
+ *
+ * @return void
+ */
+function erp_crm_assign_task_to_users( $data ) {
+    if ( isset( $data['extra']['invite_contact'] ) && count( $data['extra']['invite_contact'] ) > 0 ) {
+        foreach ( $data['extra']['invite_contact'] as $key => $users ) {
+            $res = \WeDevs\ERP\CRM\Models\ActivityUser::create( [ 'activity_id' => $data['id'], 'user_id' => $users ] );
+            do_action( 'erp_crm_after_assign_task_to_user', $data );
+        }
+    }
+}
+
+/**
  * Create Contact group
  *
  * @param  array $data

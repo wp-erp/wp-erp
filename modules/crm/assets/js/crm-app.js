@@ -638,7 +638,7 @@ Vue.component( 'tasks-note', {
     },
 
     compiled: function() {
-        this.feedData.inviteContact = this.feedData.invite_contact;
+        this.feedData.inviteContact = this.feedData.invite_contact ? this.feedData.invite_contact : [] ;
     },
 
     methods: {

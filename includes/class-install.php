@@ -453,7 +453,7 @@ class WeDevs_ERP_Installer {
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_activities_task` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
                 `activity_id` int(11) DEFAULT NULL,
-                `assign_id` int(11) DEFAULT NULL,
+                `user_id` int(11) DEFAULT NULL,
                 PRIMARY KEY (`id`)
             ) $collate;",
 
