@@ -49,6 +49,10 @@ function get_employee_breakdown_by_age( $employees ) {
 
 	foreach ( $employees as $employee ) {
 
+		// if ( '-0001-11-30 00:00:00' == $employee->date_of_birth ) {
+		// 	continue;
+		// }
+
 		$dob      = new DateTime( $employee->date_of_birth );
 		$now      = new DateTime();
 		$interval = $now->diff( $dob );
@@ -58,33 +62,39 @@ function get_employee_breakdown_by_age( $employees ) {
 
 		 	$_under18++;
 		 	continue;
+		 }
 
-		 } else if ( $age >= 18 && $age <= 25 ) {
+		 if ( $age >= 18 && $age <= 25 ) {
 
 		 	$_18_to_25++;
 		 	continue;
+		 }
 
-		 } else if ( $age >= 26 && $age <= 35 ) {
+		 if ( $age >= 26 && $age <= 35 ) {
 
 		 	$_26_to_35++;
 		 	continue;
+		 }
 
-		 } else if ( $age >= 36 && $age <= 45 ) {
+		 if ( $age >= 36 && $age <= 45 ) {
 
 		 	$_36_to_45++;
 		 	continue;
+		 }
 
-		 } else if ( $age >= 46 && $age <= 55 ) {
+		 if ( $age >= 46 && $age <= 55 ) {
 
 		 	$_46_to_55++;
 		 	continue;
+		 }
 
-		 } else if ( $age >= 56 && $age <= 65 ) {
+		 if ( $age >= 56 && $age <= 65 ) {
 
 		 	$_56_to_65++;
 		 	continue;
+		 }
 
-		 } else if ( $age > 65 ) {
+		 if ( $age > 65 ) {
 
 		 	$_65plus++;
 		 }
@@ -181,14 +191,14 @@ function erp_hr_get_age_breakdown_data() {
 	}
 
 	$age_breakdown_data[] = [
-		'department' => '<strong>Total</strong>',
-		'_under18'   => '<strong>' . $tot_under18 . '</strong>',
-		'_18_to_25'  => '<strong>' . $tot_18_to_25 . '</strong>',
-		'_26_to_35'  => '<strong>' . $tot_26_to_35 . '</strong>',
-		'_36_to_45'  => '<strong>' . $tot_36_to_45 . '</strong>',
-		'_46_to_55'  => '<strong>' . $tot_46_to_55 . '</strong>',
-		'_56_to_65'  => '<strong>' . $tot_56_to_65 . '</strong>',
-		'_65plus'    => '<strong>' . $tot_65plus . '</strong>'
+		'department' => 'Total',
+		'_under18'   => $tot_under18,
+		'_18_to_25'  => $tot_18_to_25,
+		'_26_to_35'  => $tot_26_to_35,
+		'_36_to_45'  => $tot_36_to_45,
+		'_46_to_55'  => $tot_46_to_55,
+		'_56_to_65'  => $tot_56_to_65,
+		'_65plus'    => $tot_65plus
 	];
 
 	$age_breakdown_data = erp_array_to_object( $age_breakdown_data );
@@ -301,5 +311,34 @@ function erp_hr_get_headcount( $date = '', $query_type = '' ) {
 	}
 
 	return $count;
+}
+
+/**
+ * Check if a string is valid date
+ *
+ * @since 0.1
+ *
+ * @return bool
+ */
+function is_valid_date( $str ) {
+
+    try {
+
+        $dt = new DateTime( trim( $str ) );
+
+    } catch( Exception $e ) {
+
+        return false;
+    }
+
+    $month = $dt->format( 'm' );
+    $day = $dt->format( 'd' );
+    $year = $dt->format( 'Y' );
+
+    if( checkdate( $month, $day, $year) ) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
