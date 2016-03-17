@@ -20,7 +20,6 @@ class Human_Resource {
      * @param \WeDevs_ERP $plugin
      */
     public function __construct( \WeDevs_ERP $plugin ) {
-
         $this->plugin = $plugin;
 
         // Define constants
