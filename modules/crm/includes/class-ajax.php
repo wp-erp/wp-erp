@@ -585,7 +585,7 @@ class Ajax_Handler {
                     'id'         => ( isset( $postdata['id'] ) && ! empty( $postdata['id'] ) ) ? $postdata['id'] : '',
                     'user_id'    => $postdata['user_id'],
                     'created_by' => $postdata['created_by'],
-                    'message'    => $postdata['message'],
+                    'message'    => htmlspecialchars (htmlentities($postdata['message'])),
                     'type'       => $postdata['type']
                 ];
 
