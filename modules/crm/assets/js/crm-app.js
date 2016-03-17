@@ -89,6 +89,16 @@ Vue.filter( 'formatFeedContent', function ( message, feed ) {
             '<div class="timeline-email-body">' + feed.message + '</div>';
     };
 
+    if (  feed.type == 'tasks' ) {
+        var filters = vm.$options.filters,
+            startDate = filters.formatDate( feed.start_date, 'j F' ),
+            startTime = filters.formatAMPM( feed.start_date ),
+            datetime = startDate + ' at ' + startTime;
+
+        message = '<div class="timeline-email-subject"><i class="fa fa-bookmark"></i> &nbsp;' + feed.extra.task_title + '  &nbsp;|&nbsp;  <i class="fa fa-check-square-o"></i> &nbsp;Task Date : ' + datetime + '</div>' +
+            '<div class="timeline-email-body">' + feed.message + '</div>';
+    }
+
     return message;
 });
 
@@ -129,7 +139,7 @@ Vue.directive( 'datepicker', {
                 changeMonth: true,
                 changeYear: true,
                 yearRange: '-100:+0',
-                onSelect: function (date) {
+                onClose: function (date) {
                     vm.$set(key, date);
                 }
             });
@@ -140,7 +150,7 @@ Vue.directive( 'datepicker', {
                 changeMonth: true,
                 changeYear: true,
                 yearRange: '-100:+0',
-                onSelect: function (date) {
+                onClose: function (date) {
                     vm.$set(key, date);
                 }
             });
@@ -150,9 +160,12 @@ Vue.directive( 'datepicker', {
                 changeMonth: true,
                 changeYear: true,
                 yearRange: '-100:+0',
-                onSelect: function (date) {
-                    this.$set(key, date);
-                    vm.$set(key, date);
+                onClose: function (date) {
+                    if ( date.match(/^(0?[1-9]|[12][0-9]|3[01])[\/\-\.](0?[1-9]|1[012])[\/\-\.]\d{4}$/) )
+                        vm.$set(key, date);
+                    else {
+                        vm.$set(key, "");
+                    }
                 }
             });
         };
@@ -229,7 +242,7 @@ Vue.directive('selecttwo', {
 
 var ToolTip = Vue.extend({
     props: ['title', 'content' ],
-    template: '<span class="time erp-tips" v-tiptip title="{{ title }}">{{{ content }}}</span>',
+    template: '<span class="time erp-tips" v-tiptip data-title="{{ title }}">{{{ content }}}</span>',
 });
 
 var TimeLineHeader = Vue.extend({
@@ -239,9 +252,11 @@ var TimeLineHeader = Vue.extend({
                     + '<img v-bind:src="createdUserImg">'
                 +'</span>'
                 +'<span class="timeline-feed-header-text">'
-                    +'<strong>{{createdUserName}} </strong>'
+                    +'<strong v-if="!isRepliedEmail">{{createdUserName}} </strong>'
+                    +'<strong v-if="isRepliedEmail">{{createdForUser}} </strong>'
                     +'<span v-if="isNote">created a note for <strong>{{ createdForUser }}</strong></span>'
                     +'<span v-if="isEmail">sent an email to <strong>{{ createdForUser }}</strong></span>'
+                    +'<span v-if="isRepliedEmail">replied to <strong>{{ createdUserName }}r</strong> email</span>'
                     +'<span v-if="isLog">'
                         +'logged {{ logType }} on {{ logDateTime | formatDateTime }} for <strong>{{ createdForUser }}</strong>'
                         +' <span v-if="countUser == 1">and <strong>{{ feed.extra.invited_user[0].name }}</strong></span>'
@@ -250,8 +265,12 @@ var TimeLineHeader = Vue.extend({
                     +'<span v-if="isSchedule">'
                         +'have scheduled {{ logType }} with '
                         +'<strong>{{ createdForUser }}</strong>'
-                            +' <span v-if="countUser == 1">and <strong>{{ feed.extra.invited_user[0].name }}</strong></span>'
+                            +' <span v-if="countUser == 1">and <strong>{{ invitedSingleUser }}</strong></span>'
                         +'<span v-if="( countUser != 0 ) && countUser != 1"> and <strong><tooltip :content="countUser" :title="invitedUser"></tooltip></strong></span>'
+                    +'</span>'
+                    +'<span v-if="isTasks">created a task for </strong>'
+                        +' <span v-if="countUser == 1"><strong>{{ feed.extra.invited_user[0].name }}</strong></span>'
+                        +'<span v-if="( countUser != 0 ) && countUser != 1"><strong><tooltip :content="countUser" :title="invitedUser"></tooltip></strong></span>'
                     +'</span>'
                 +'</span>',
 
@@ -263,7 +282,19 @@ var TimeLineHeader = Vue.extend({
 
         countUser: function () {
             var count = this.feed.extra.invited_user.length;
-            return ( count <= 1 ) ? count : count + ' others';
+            if ( this.feed.type == 'tasks' ) {
+                return ( count <= 1 ) ? count : count + ' peoples';
+            } else {
+                return ( count <= 1 ) ? count : count + ' others';
+            }
+        },
+
+        invitedSingleUser: function() {
+            if ( this.feed.extra.invited_user[0].id == wpCRMvue.current_user_id ) {
+                return 'You';
+            } else {
+                return this.feed.extra.invited_user[0].name;
+            }
         },
 
         invitedUser: function() {
@@ -280,8 +311,16 @@ var TimeLineHeader = Vue.extend({
             return ( this.feed.type == 'new_note' );
         },
 
+        isTasks: function() {
+            return ( this.feed.type == 'tasks' );
+        },
+
         isEmail: function() {
-            return ( this.feed.type == 'email' );
+            return ( this.feed.type == 'email' ) && this.feed.extra.replied != 1;
+        },
+
+        isRepliedEmail: function() {
+            return ( this.feed.type == 'email' ) && this.feed.extra.replied == 1;
         },
 
         isLog: function() {
@@ -415,7 +454,6 @@ Vue.component( 'new-note', {
 
     data: function() {
         return {
-            // validation: {},
             feedData: {
                 message: ''
             },
@@ -489,7 +527,6 @@ Vue.component( 'log-activity', {
 
     data: function() {
         return {
-            // validation: {},
             feedData: {
                 message: '',
                 log_type: '',
@@ -564,6 +601,107 @@ Vue.component( 'log-activity', {
             deep: true,
             immediate: true,
             handler: function () {
+                this.notify();
+            }
+        }
+    },
+
+    activate: function (done) {
+
+        var self = this;
+        jQuery(this.$el).find('trix-editor').get(0).addEventListener('trix-change', function (e) {
+            self.feedData.message = e.path[0].innerHTML;
+        });
+
+        done();
+    }
+
+});
+
+Vue.component( 'tasks-note', {
+    props: ['feed'],
+
+    template: '#erp-crm-tasks-note-template',
+
+    data: function() {
+        return {
+            feedData: {
+                task_title: '',
+                message: '',
+                inviteContact: [],
+                dt: '',
+                tp: ''
+            },
+
+            isValid: false
+        }
+    },
+
+    compiled: function() {
+        this.feedData.inviteContact = this.feedData.invite_contact ? this.feedData.invite_contact : [] ;
+    },
+
+    methods: {
+        notify: function () {
+            this.$dispatch('bindFeedData', this.feedData );
+        },
+
+        cancelUpdateFeed: function() {
+            this.$parent.$data.isEditable = false;
+            this.$parent.$data.editfeedData = {};
+        }
+    },
+
+    events: {
+        'bindEditFeedData': function (feed ) {
+
+            this.feedData.task_title    = feed.extra.task_title;
+            this.feedData.dt            = vm.$options.filters.formatDate( feed.start_date, 'Y-m-d' );
+            this.feedData.tp            = vm.$options.filters.formatAMPM( feed.start_date );
+            var invitedUser             = feed.extra.invited_user.map( function( elm ) { return elm.id } ).join(',');
+            this.feedData.inviteContact = invitedUser;
+            var self = jQuery( this.$el ).find( 'select.select2' );
+
+            if ( String(invitedUser).indexOf(',') == '-1' ) {
+                self.select2().select2( 'val', invitedUser );
+            } else {
+                self.select2().select2( 'val', invitedUser.split(',') );
+            }
+
+        }
+    },
+
+    computed: {
+
+        validation: function() {
+            return {
+                task_title: !! this.feedData.task_title,
+                message : !!this.feedData.message,
+                log_date : !!this.feedData.dt,
+                log_time : !!this.feedData.tp,
+                inviteContact: this.feedData.inviteContact.length > 0 ? true : false
+            }
+        },
+
+        isValid: function() {
+            var validation = this.validation
+
+            if ( jQuery.isEmptyObject( validation ) ) return;
+
+            return Object.keys( validation ).every(function(key){
+                return validation[key]
+            });
+        }
+    },
+
+    watch: {
+        feedData: {
+            deep: true,
+            immediate: true,
+            handler: function () {
+                if ( this.feedData.inviteContact == null ) {
+                    this.feedData.inviteContact = [];
+                }
                 this.notify();
             }
         }
@@ -800,7 +938,14 @@ var vm = new Vue({
         showFooter: false,
         offset: 0,
         limit : 10,
-        loading: false
+        loading: false,
+        loadingFinish: false,
+        filterFeeds: {
+            type: '',
+            created_by: '',
+            customer_id: '',
+            created_at: ''
+        }
     },
 
     events: {
@@ -813,9 +958,18 @@ var vm = new Vue({
         this.fetchFeeds();
     },
 
+    watch: {
+        filterFeeds: {
+            deep: true,
+            handler: function ( newVal ) {
+                this.fetchFeeds( newVal );
+            }
+        }
+    },
+
     methods: {
 
-        loadMoreContent: function() {
+        loadMoreContent: function( feeds ) {
             vm.progreassStart('.feed-load-more');
             this.loading = true;
             this.offset = this.offset + this.limit;
@@ -827,14 +981,37 @@ var vm = new Vue({
                 offset: this.offset,
             };
 
-            jQuery.post( wpCRMvue.ajaxurl, data, function( resp ) {
-                vm.progreassDone(true);
-                setTimeout( function() {
-                    vm.loading = false;
-                    vm.feeds = vm.feeds.concat( resp.data );
-                }, 500 )
-                // vm.feeds.push( resp.data );
-            });
+            if ( this.filterFeeds.customer_id ) {
+                data.customer_id = this.filterFeeds.customer_id;
+            }
+
+            if ( this.filterFeeds.created_by ) {
+                data.created_by = this.filterFeeds.created_by;
+            }
+
+            if ( this.filterFeeds.created_at ) {
+                data.created_at = this.filterFeeds.created_at;
+            }
+
+            if ( this.filterFeeds.type ) {
+                data.type = this.filterFeeds.type;
+            }
+
+            if ( ! vm.loadingFinish ) {
+                jQuery.post( wpCRMvue.ajaxurl, data, function( resp ) {
+                    vm.progreassDone(true);
+
+                    if ( resp.data.length ) {
+                        setTimeout( function() {
+                            vm.loading = false;
+                            vm.feeds = vm.feeds.concat( resp.data );
+                        }, 500 );
+                    } else {
+                        vm.loading = false;
+                        vm.loadingFinish = true;
+                    }
+                });
+            }
         },
 
         toggleFooter: function( e ) {
@@ -897,9 +1074,17 @@ var vm = new Vue({
 
             this.feedData._wpnonce = wpCRMvue.nonce;
 
+
             if ( this.feedData.type == 'log_activity' ) {
                 this.feedData.log_date = this.feedData.dt;
                 this.feedData.log_time = this.feedData.tp;
+                this.feedData.invite_contact = this.feedData.inviteContact;
+            };
+
+            if ( this.feedData.type == 'tasks' ) {
+                this.feedData.task_title = this.feedData.task_title;
+                this.feedData.task_date = this.feedData.dt;
+                this.feedData.task_time = this.feedData.tp;
                 this.feedData.invite_contact = this.feedData.inviteContact;
             };
 
@@ -924,11 +1109,20 @@ var vm = new Vue({
                            return feed;
                         });
 
+                        if ( vm.feeds.length > vm.limit ) {
+                            vm.feeds.$remove( vm.feeds[vm.feeds.length-1] );
+                        }
+
                         comp.isEditable = false;
                     }, 500 )
 
                 } else {
                     vm.feeds.splice( 0, 0, resp.data );
+
+                    if ( vm.feeds.length > vm.limit ) {
+                        vm.feeds.$remove( vm.feeds[vm.feeds.length-1] );
+                    }
+
                     document.getElementById("erp-crm-activity-feed-form").reset();
 
                     if ( vm.feedData.type == 'log_activity' ) {
@@ -937,7 +1131,15 @@ var vm = new Vue({
                         vm.feedData.dt            = '';
                         vm.feedData.tp            = '';
                         vm.feedData.inviteContact = [];
+                        jQuery('.select2').select2().select2( "val", "" );
+                    };
 
+                    if ( vm.feedData.type == 'tasks' ) {
+                        vm.feedData.task_title      = '';
+                        vm.feedData.dt            = '';
+                        vm.feedData.tp            = '';
+                        vm.feedData.inviteContact = [];
+                        jQuery('.select2').select2().select2( "val", "" );
                     };
 
                     if ( vm.feedData.type == 'email' ) {
@@ -983,7 +1185,8 @@ var vm = new Vue({
          *
          * @return {[object]}
          */
-        fetchFeeds: function() {
+        fetchFeeds: function( filter ) {
+
             var data = {
                 action : 'erp_crm_get_customer_activity',
                 customer_id : this.customer_id,
@@ -991,8 +1194,24 @@ var vm = new Vue({
                 offset: this.offset,
             };
 
+
+            if ( filter ) {
+                vm.progreassStart('#erp-crm-activities-filter');
+
+                data.customer_id = filter.customer_id;
+                data.created_by = filter.created_by;
+                data.created_at = filter.created_at;
+                data.type = filter.type;
+                data.offset = 0;
+                this.offset = 0;
+                this.loadingFinish = false;
+            }
+
             jQuery.post( wpCRMvue.ajaxurl, data, function( resp ) {
                 vm.feeds = resp.data;
+                if ( filter ) {
+                    vm.progreassDone();
+                }
             });
 
 
@@ -1036,10 +1255,3 @@ var vm = new Vue({
 });
 
 /******************** End Main Vue instance **********************/
-
-// Bind trix-editor value with v-model message
-// document.addEventListener('trix-change', function (e) {
-//     vm.feedData.message = e.path[0].innerHTML;
-// });
-
-

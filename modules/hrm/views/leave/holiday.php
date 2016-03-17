@@ -42,9 +42,9 @@ class Leave_Holiday_List_Table extends WP_List_Table {
         if ( $which != 'top' ) return;
 
         $get_holidays = erp_hr_get_holidays();
-        $from = isset( $_GET['from'] ) ? $_GET['from'] : '';
-        $to = isset( $_GET['to'] ) ? $_GET['to'] : '';
-    ?>
+        $from         = isset( $_GET['from'] ) ? $_GET['from'] : '';
+        $to           = isset( $_GET['to'] ) ? $_GET['to'] : '';
+        ?>
 
 
         <label class="screen-reader-text" for="new_role"><?php _e( 'From', 'wp-erp' ) ?></label>
@@ -52,11 +52,8 @@ class Leave_Holiday_List_Table extends WP_List_Table {
 
         <label class="screen-reader-text" for="new_role"><?php _e( 'To', 'wp-erp' ) ?></label>
         <input type="text" placeholder="<?php _e( 'To date', 'wp-erp' ); ?>" name="to" value="<?php echo $to; ?>" class="erp-leave-date-picker-to">
-    <?php
-            submit_button( __( 'Filter' ), 'button', 'filter', false );
-
-
-
+        <?php
+        submit_button( __( 'Filter' ), 'button', 'filter', false );
     }
 
     /**
@@ -108,8 +105,8 @@ class Leave_Holiday_List_Table extends WP_List_Table {
         $columns = array(
             'cb'          => '<input type="checkbox" />',
             'name'        => __( 'Title', 'wp-erp' ),
-            'start'       => __( 'Start Days', 'wp-erp' ),
-            'end'         => __( 'End Days', 'wp-erp' ),
+            'start'       => __( 'Start Date', 'wp-erp' ),
+            'end'         => __( 'End Date', 'wp-erp' ),
             'duration'    => __( 'Duration', 'wp-erp' ),
             'description' => __( 'Description', 'wp-erp' )
         );

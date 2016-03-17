@@ -20,7 +20,7 @@
     <span class="time cancel-timeline-feed-edit" @click.prevent="cancelUpdate"><i class="fa fa-times"></i></span>
 
     <h3 class="timeline-header" @click.prevent="toggleFooter">
-        <?php _e( 'Edit this feed', 'wp-erp' ); ?>
+        <i class="fa fa-pencil-square-o"></i> <?php _e( 'Edit this feed', 'wp-erp' ); ?>
     </h3>
 
     <div class="timeline-body">
@@ -31,6 +31,8 @@
             <log-activity :feed="feed" v-if="( feed.type == 'log_activity' && !isSchedule( feed.start_date ) )"></log-activity>
 
             <schedule-note :feed="feed" v-if="( feed.type == 'log_activity' && isSchedule( feed.start_date ) )"></schedule-note>
+
+            <tasks-note :feed="feed" v-if="feed.type == 'tasks'"></tasks-note>
 
         </form>
     </div>

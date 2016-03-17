@@ -52,6 +52,23 @@ function erp_crm_get_emplyees( $selected = '' ) {
     return $dropdown;
 }
 
+function erp_crm_get_employess_with_own( $selected = '' ) {
+    $employees = erp_hr_get_employees_dropdown_raw();
+    $dropdown     = '';
+    unset( $employees[0] );
+
+    if ( $employees ) {
+        foreach ( $employees as $key => $title ) {
+            if ( $key == get_current_user_id() ) {
+                $title = sprintf( '%s ( %s )', __( 'Me', 'wp-erp' ), $title );
+            }
+            $dropdown .= sprintf( "<option value='%s'%s>%s</option>\n", $key, selected( $selected, $key, false ), $title );
+        }
+    }
+
+    return $dropdown;
+}
+
 /**
  * Get contact details url according to contact type
  *
@@ -460,6 +477,11 @@ function erp_crm_get_customer_feeds_nav() {
         'schedule' => [
             'title' => __( 'Schedule', 'wp-erp' ),
             'icon'  => '<i class="fa fa-calendar-check-o"></i>'
+        ],
+
+        'tasks' => [
+            'title' => __( 'Tasks', 'wp-erp' ),
+            'icon'  => '<i class="fa fa-check-square-o"></i>'
         ]
 
     ] );
@@ -548,6 +570,7 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
  * @return array
  */
 function erp_crm_get_feed_activity( $postdata ) {
+    global $wpdb;
     $feeds = [];
     $db = new \WeDevs\ORM\Eloquent\Database();
 
@@ -567,12 +590,23 @@ function erp_crm_get_feed_activity( $postdata ) {
     }
 
     if ( isset( $postdata['type'] ) && !empty( $postdata['type'] ) ) {
-        $results = $results->where( 'type', $postdata['type'] );
+
+        if ( $postdata['type'] == 'schedule' ) {
+            $results = $results->where( 'type', 'log_activity' )->where( 'start_date', '>', current_time('mysql') );
+        } else if ( $postdata['type'] == 'log_activity' ) {
+            $results = $results->where( 'type', 'log_activity' )->where( 'start_date', '<', current_time('mysql') );
+        } else {
+            $results = $results->where( 'type', $postdata['type'] );
+        }
+    }
+
+    if ( isset( $postdata['created_at'] ) && !empty( $postdata['created_at'] ) ) {
+        $results = $results->where( $db->raw( "DATE_FORMAT( `created_at`, '%Y-%m-%d' )" ), $postdata['created_at'] );
     }
 
     $results = $results->orderBy( 'created_at', 'DESC' );
 
-    if ( isset( $postdata['number'] ) && $postdata['number'] != -1 ) {
+    if ( isset( $postdata['limit'] ) && $postdata['limit'] != -1 ) {
         $results = $results->skip( $postdata['offset'] )->take( $postdata['limit'] );
     }
 
@@ -687,7 +721,13 @@ function erp_crm_customer_get_single_activity_feed( $feed_id ) {
  * @return collection
  */
 function erp_crm_customer_delete_activity_feed( $feed_id ) {
-    return WeDevs\ERP\CRM\Models\Activity::find( $feed_id )->delete( $feed_id );
+    $activity = WeDevs\ERP\CRM\Models\Activity::find( $feed_id );
+
+    if ( $activity->type == 'tasks' ) {
+        WeDevs\ERP\CRM\Models\ActivityUser::where( 'activity_id', $activity->id )->delete();
+    }
+
+    return $activity->delete( $feed_id );
 }
 
 /**
@@ -755,6 +795,34 @@ function erp_crm_send_schedule_notification( $activity, $extra = false ) {
             do_action( 'erp_crm_send_schedule_notification', $activity );
             break;
     }
+}
+
+/**
+ * Assign task to user
+ *
+ * When task is created from activity
+ * feeds, user needs to see their task. This function
+ * data map with task activity and assign users
+ *
+ * @since 1.0
+ *
+ * @param  array $data
+ *
+ * @return void
+ */
+function erp_crm_assign_task_to_users( $data, $save_data ) {
+
+    if ( $save_data['id'] ) {
+        \WeDevs\ERP\CRM\Models\ActivityUser::where( 'activity_id', $save_data['id'] )->delete();
+    }
+
+    if ( isset( $data['extra']['invite_contact'] ) && count( $data['extra']['invite_contact'] ) > 0 ) {
+        foreach ( $data['extra']['invite_contact'] as $key => $users ) {
+            $res = \WeDevs\ERP\CRM\Models\ActivityUser::create( [ 'activity_id' => $data['id'], 'user_id' => $users ] );
+            do_action( 'erp_crm_after_assign_task_to_user', $data, $save_data );
+        }
+    }
+
 }
 
 /**
@@ -1751,22 +1819,28 @@ function erp_crm_get_next_seven_day_schedules_activities( $user_id = '' ) {
 function erp_crm_save_email_activity() {
     header('Access-Control-Allow-Origin: *');
 
-    $postdata = $_POST;
-    unset($postdata['action']);
+    $postdata   = $_POST;
+    $api_key    = get_option( 'wp_erp_apikey' );
 
-    $save_data = [
-        'user_id'       => $postdata['user_id'],
-        'created_by'    => $postdata['created_by'],
-        'message'       => $postdata['message'],
-        'type'          => $postdata['type'],
-        'email_subject' => $postdata['email_subject']
-    ];
+    $is_verified = erp_cloud_verify_request( $postdata, $api_key  );
 
-    $data = erp_crm_save_customer_feed_data( $save_data );
+    if ( $is_verified ) {
+        unset($postdata['action']);
 
-    // Update email counter
-    update_option( 'wp_erp_api_email_count', get_option( 'wp_erp_api_email_count', 0 ) + 1 );
-    //@TODO: wp_mail() need to send mail
+        $save_data = [
+            'user_id'       => $postdata['user_id'],
+            'created_by'    => $postdata['created_by'],
+            'message'       => $postdata['message'],
+            'type'          => $postdata['type'],
+            'email_subject' => $postdata['email_subject'],
+            'extra'         => base64_encode( json_encode( [ 'replied' => 1 ] ) ),
+        ];
 
-    do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
+        $data = erp_crm_save_customer_feed_data( $save_data );
+
+        // Update email counter
+        update_option( 'wp_erp_cloud_email_count', get_option( 'wp_erp_cloud_email_count', 0 ) + 1 );
+
+        do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
+    }
 }

@@ -67,8 +67,8 @@ class Contact_List_Table extends \WP_List_Table {
 
         <div class="alignleft actions">
 
-            <label class="screen-reader-text" for="filter_by_save_searches"><?php _e( 'Filter By Save Searches', 'wp-erp' ) ?></label>
-            <select style="width:250px;" name="filter_by_save_searches" class="selecttwo select2" id="erp_customer_filter_by_save_searches" data-placeholder="<?php _e( 'Select From a save searches', 'wp-erp' ); ?>">
+            <label class="screen-reader-text" for="filter_by_save_searches"><?php _e( 'Filter By Saved Searches', 'wp-erp' ) ?></label>
+            <select style="width:250px;" name="filter_by_save_searches" class="selecttwo select2" id="erp_customer_filter_by_save_searches" data-placeholder="<?php _e( 'Select from saved searches', 'wp-erp' ); ?>">
                 <?php foreach ( $save_searches as $key => $searches ) : ?>
                     <option value=""></option>
                     <optgroup label="<?php echo $searches['name']; ?>" id="<?php echo strtolower( str_replace(' ', '-', $searches['name'] ) ); ?>">
@@ -342,14 +342,13 @@ class Contact_List_Table extends \WP_List_Table {
             $args['s'] = $_REQUEST['s'];
         }
 
-        // Filter for order by
-        if ( isset( $_REQUEST['orderby'] ) && ! empty( $_REQUEST['orderby'] ) ) {
-            $args['orderby'] = $_REQUEST['orderby'];
-        }
-
-        // Filter for order
-        if ( isset( $_REQUEST['order'] ) && !empty( $_REQUEST['order'] ) ) {
-            $args['order'] = $_REQUEST['order'];
+        // Filter for order & order by
+        if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {
+            $args['orderby']  = $_REQUEST['orderby'];
+            $args['order']    = $_REQUEST['order'] ;
+        } else {
+            $args['orderby']  = 'created';
+            $args['order']    = 'desc';
         }
 
         // Filter for cusotmer life stage

@@ -606,20 +606,20 @@ class Ajax_Handler {
 
                 $data = erp_crm_save_customer_feed_data( $save_data );
 
-                $wp_erp_api_key     = get_option( 'wp_erp_apikey' );
-                $wp_erp_api_active  = get_option( 'wp_erp_api_active' );
+                $wp_erp_api_key     = get_option( 'wp_erp_apikey', null );
+                $wp_erp_api_active  = get_option( 'wp_erp_api_active', 'no' );
 
                 $contact_id = intval( $postdata['user_id'] );
 
                 $contact = new \WeDevs\ERP\CRM\Contact( $contact_id );
 
-                global $user_email;
+                global $display_name, $user_email;
 
                 $headers = [];
                 $headers[] = 'Content-Type: text/html; charset=UTF-8';
-                $headers[] = 'From: ' . $user_email . "\r\n";
+                $headers[] = 'From: ' . $display_name . ' <' . $user_email . '>' . "\r\n";
 
-                if( $wp_erp_api_key && $wp_erp_api_active ) {
+                if( $wp_erp_api_key && $wp_erp_api_active && 'yes' == $wp_erp_api_active ) {
                     $reply_to = $wp_erp_api_key . "-" . $postdata['created_by'] . "-" . $contact_id . "@incloud.wperp.com";
                     $headers[] = 'Reply-To: ' . $reply_to . "\r\n";
                 }
@@ -638,7 +638,6 @@ class Ajax_Handler {
                 break;
 
             case 'log_activity':
-
 
                 $extra_data = [
                     'invite_contact' => ( isset( $postdata['invite_contact'] ) && ! empty( $postdata['invite_contact'] ) ) ? $postdata['invite_contact'] : []
@@ -679,6 +678,39 @@ class Ajax_Handler {
                 if ( ! $data ) {
                     $this->send_error( __( 'Somthing is wrong, Please try later', 'wp-erp' ) );
                 }
+
+                $this->send_success( $data );
+
+                break;
+
+            case 'tasks':
+
+                $extra_data = [
+                    'task_title'     => ( isset( $postdata['task_title'] ) && ! empty( $postdata['task_title'] ) ) ? $postdata['task_title'] : '',
+                    'invite_contact' => ( isset( $postdata['invite_contact'] ) && ! empty( $postdata['invite_contact'] ) ) ? $postdata['invite_contact'] : []
+                ];
+
+                $save_data = [
+                    'id'            => ( isset( $postdata['id'] ) && ! empty( $postdata['id'] ) ) ? $postdata['id'] : '',
+                    'user_id'       => $postdata['user_id'],
+                    'created_by'    => $postdata['created_by'],
+                    'message'       => $postdata['message'],
+                    'type'          => $postdata['type'],
+                    'email_subject' => ( isset( $postdata['email_subject'] ) && ! empty( $postdata['email_subject'] ) ) ? $postdata['email_subject'] : '',
+                    'start_date'    => date( 'Y-m-d H:i:s', strtotime( $postdata['task_date'].$postdata['task_time'] ) ),
+                    'extra'         => base64_encode( json_encode( $extra_data ) )
+                ];
+
+                $data = erp_crm_save_customer_feed_data( $save_data );
+
+                if ( ! $data ) {
+                    $this->send_error( __( 'Somthing is wrong, Please try later', 'wp-erp' ) );
+                }
+
+                //@TODO: Need to send confirmation mail for assigned users
+                do_action( 'erp_crm_save_customer_tasks_activity_feed', $save_data, $postdata );
+
+                erp_crm_assign_task_to_users( $data, $save_data );
 
                 $this->send_success( $data );
 
