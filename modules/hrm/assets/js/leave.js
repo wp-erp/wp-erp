@@ -454,6 +454,11 @@
                 } );
             },
 
+            pageReload: function() {
+                $( '.erp-hr-leave-requests' ).load( window.location.href + ' .erp-hr-leave-requests-inner' );
+            },
+
+
             reject: function(e) {
                 e.preventDefault();
 
@@ -468,15 +473,13 @@
                     id: 'erp-hr-leave-reject-popup',
                     content: wperp.template('erp-hr-leave-reject-js-tmp')(data).trim(),
                     extraClass: 'smaller',
-                    onReady: function() {
-
-                    },
                     onSubmit: function(modal) {
                         wp.ajax.send( {
                             data: this.serialize()+'&_wpnonce='+wpErpHr.nonce,
                             success: function(res) {
+                                Leave.leave.pageReload();
                                 modal.closeModal();
-                                location.reload();
+                                //location.reload();
                             },
                             error: function(error) {
                                 alert( error );

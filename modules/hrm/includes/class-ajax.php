@@ -104,8 +104,19 @@ class Ajax_Handler {
         $this->verify_nonce( 'wp-erp-hr-nonce' );
         
         $request_id = isset( $_POST['leave_request_id'] ) ? intval( $_POST['leave_request_id'] ) : 0;
-        $status     = isset( $_POST['reason'] ) ? $_POST['reason'] : '';
-        erp_hr_leave_request_update_status( $request_id, $status );
+        $comments   = isset( $_POST['reason'] ) ? $_POST['reason'] : '';
+        erp_hr_leave_request_update_status( $request_id, 3 );
+            
+        global $wpdb;
+
+        $update = $wpdb->update( $wpdb->prefix . 'erp_hr_leave_requests',
+            array( 'comments' => $comments ),
+            array( 'id' => $request_id )
+        );
+
+        if ( $update ) {
+            $this->send_success();
+        }
     }
 
     /**

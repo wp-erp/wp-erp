@@ -163,7 +163,7 @@ class Human_Resource {
                 'new_leave_req'      => __( 'Leave Request', 'wp-erp' ),
                 'take_leave'         => __( 'Send Leve Request', 'wp-erp' ),
                 'terminate'          => __( 'Terminate', 'wp-erp' ),
-                'leave_reject'       => __( 'Rejected Reason', 'wp-erp' )
+                'leave_reject'       => __( 'Reject Reason', 'wp-erp' )
             ),
             'emp_upload_photo'   => __( 'Upload Employee Photo', 'wp-erp' ),
             'emp_set_photo'      => __( 'Set Photo', 'wp-erp' ),
