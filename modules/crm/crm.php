@@ -91,6 +91,7 @@ class Customer_Relationship {
             new Form_Handler();
             new \WeDevs\ERP\CRM\Admin_Menu();
             new \WeDevs\ERP\CRM\User_Profile();
+            new Emailer();
         }
     }
 
