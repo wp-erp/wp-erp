@@ -87,6 +87,11 @@ class Leave_Requests_List_Table extends WP_List_Table {
                     return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $policy->value ), __( 'days', 'wp-erp' ) );
                 }
 
+            case 'reason':
+                return $item->reason;
+
+            case 'comment' :
+                return $item->comments;             
             default:
                 return isset( $item->$column_name ) ? $item->$column_name : '';
         }
@@ -121,8 +126,12 @@ class Leave_Requests_List_Table extends WP_List_Table {
             'days'      => __( 'Days', 'wp-erp' ),
             'available' => __( 'Available', 'wp-erp' ),
             'status'    => __( 'Status', 'wp-erp' ),
-            'reason'    => __( 'Reason', 'wp-erp' )
+            'reason'    => __( 'Leave Reason', 'wp-erp' ),
+            
         );
+        if ( isset( $_GET['status'] ) && $_GET['status'] == 3 ) {
+            $columns['comment'] =  __( 'Reject Reason', 'wp-erp' );
+        }
         return $columns;
     }
 
@@ -148,7 +157,7 @@ class Leave_Requests_List_Table extends WP_List_Table {
 
         if ( $item->status == '2' ) {
 
-            $actions['reject']   = sprintf( '<a href="%s">%s</a>', $reject_url, __( 'Reject', 'wp-erp' ) );
+            $actions['reject']   = sprintf( '<a class="erp-hr-leave-reject-btn" data-id="%s" href="%s">%s</a>', $item->id, $reject_url, __( 'Reject', 'wp-erp' ) );
             $actions['approved'] = sprintf( '<a href="%s">%s</a>', $approve_url, __( 'Approve', 'wp-erp' ) );
 
         } elseif ( $item->status == '1' ) {
@@ -243,23 +252,25 @@ class Leave_Requests_List_Table extends WP_List_Table {
 ?>
 
 <div class="wrap erp-hr-leave-requests">
+    <div class="erp-hr-leave-requests-inner">
 
-    <h2><?php _e( 'Leave Requests', 'wp-erp' ); ?> <a href="<?php echo add_query_arg( array( 'view' => 'new' ) ); ?>" class="add-new-h2"><?php _e( 'New Request', 'wp-erp' ); ?></a></h2>
+        <h2><?php _e( 'Leave Requests', 'wp-erp' ); ?> <a href="<?php echo add_query_arg( array( 'view' => 'new' ) ); ?>" class="add-new-h2"><?php _e( 'New Request', 'wp-erp' ); ?></a></h2>
 
-    <div class="list-table-wrap">
-        <div class="list-table-inner">
+        <div class="list-table-wrap">
+            <div class="list-table-inner">
 
-            <form method="post">
-                <input type="hidden" name="page" value="erp-leave">
-                <?php
-                $requests_table = new Leave_Requests_List_Table();
-                $requests_table->prepare_items();
-                $requests_table->views();
+                <form method="post">
+                    <input type="hidden" name="page" value="erp-leave">
+                    <?php
+                    $requests_table = new Leave_Requests_List_Table();
+                    $requests_table->prepare_items();
+                    $requests_table->views();
 
-                $requests_table->display();
-                ?>
-            </form>
+                    $requests_table->display();
+                    ?>
+                </form>
 
-        </div><!-- .list-table-inner -->
-    </div><!-- .list-table-wrap -->
+            </div><!-- .list-table-inner -->
+        </div><!-- .list-table-wrap -->
+    </div><!-- .erp-hr-leave-requests-inner -->
 </div><!-- .wrap -->
