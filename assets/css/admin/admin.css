@@ -1640,11 +1640,11 @@ table.leaves td.column-status .status-3 {
   color: #999;
   margin-left: 10px;
 }
-.note-tab-wrap ul.notes-list .note-wrap .row-actions {
+.note-tab-wrap ul.notes-list .note-wrap .row-action {
   font-size: 12px;
   margin-top: 5px;
 }
-.note-tab-wrap ul.notes-list .note-wrap .row-actions a {
+.note-tab-wrap ul.notes-list .note-wrap .row-action a {
   text-decoration: none;
 }
 .note-tab-wrap ul.notes-list .note-wrap p {
@@ -2652,6 +2652,9 @@ ul.edit-address li.city-wrap span {
 }
 .erp-activation-cloud-prompt .button-primary {
   margin-right: 10px;
+}
+.erp-activation-cloud-prompt .erp-button-xs {
+  font-size: small;
 }
 .erp-activation-cloud-prompt .activation-form-container {
   width: 40%;
