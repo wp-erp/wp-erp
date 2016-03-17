@@ -91,10 +91,21 @@ class Ajax_Handler {
         //leave entitlement
         $this->action( 'wp_ajax_erp-hr-leave-entitlement-delete', 'remove_entitlement' );
 
+        //leave rejected
+        $this->action( 'wp_ajax_erp_hr_leave_reject', 'leave_reject' );
+
         // script reload
         $this->action( 'wp_ajax_erp_hr_script_reload', 'employee_template_refresh' );
         $this->action( 'wp_ajax_erp_hr_new_dept_tmp_reload', 'new_dept_tmp_reload' );
         $this->action( 'wp_ajax_erp-hr-holiday-delete', 'dept_remove' );
+    }
+
+    function leave_reject() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+        
+        $request_id = isset( $_POST['leave_request_id'] ) ? intval( $_POST['leave_request_id'] ) : 0;
+        $status     = isset( $_POST['reason'] ) ? $_POST['reason'] : '';
+        erp_hr_leave_request_update_status( $request_id, $status );
     }
 
     /**
