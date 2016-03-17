@@ -54,6 +54,7 @@
                             <ul class="erp-list separated">
                                 <li><?php erp_print_key_value( __( 'First Name', 'wp-erp' ), $customer->first_name ); ?></li>
                                 <li><?php erp_print_key_value( __( 'Last Name', 'wp-erp' ), $customer->last_name ); ?></li>
+                                <li><?php erp_print_key_value( __( 'Date of Birth', 'wp-erp' ), $customer->get_birthday() ); ?></li>
                                 <li><?php erp_print_key_value( __( 'Phone', 'wp-erp' ), $customer->phone ); ?></li>
                                 <li><?php erp_print_key_value( __( 'Fax', 'wp-erp' ), $customer->fax ); ?></li>
                                 <li><?php erp_print_key_value( __( 'Website', 'wp-erp' ), erp_get_clickable( 'url', $customer->website ) ); ?></li>
@@ -63,6 +64,7 @@
                                 <li><?php erp_print_key_value( __( 'State', 'wp-erp' ), erp_get_state_name( $customer->country, $customer->state ) ); ?></li>
                                 <li><?php erp_print_key_value( __( 'Country', 'wp-erp' ), erp_get_country_name( $customer->country ) ); ?></li>
                                 <li><?php erp_print_key_value( __( 'Postal Code', 'wp-erp' ), $customer->postal_code ); ?></li>
+                                <li><?php erp_print_key_value( __( 'Source', 'wp-erp' ), $customer->get_source() ); ?></li>
 
                                 <?php do_action( 'erp-hr-employee-single-basic', $customer ); ?>
                             </ul>
