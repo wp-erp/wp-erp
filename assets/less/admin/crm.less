@@ -1139,17 +1139,84 @@
     }
 }
 
-.erp-crm-customer-feed-edit-wrapper {
+.erp-crm-new-schedule-wrapper {
     p {
         border-bottom: 1px solid #eee;
-        padding-bottom: 20px;
+        padding-bottom: 11px !important;
+        margin-bottom: 0px !important;
 
         input {
             margin-left: 15px;
         }
+
+        input[disabled=disabled] {
+            color: #222;
+        }
+    }
+
+    span.select2-selection--multiple,
+    span.select2-selection--single {
+        border:none;
+        height: 32px;
+
+        input {
+            width: 100% !important;
+        }
+    }
+
+    .select2-container--default.select2-container--focus .select2-selection--multiple,
+    .select2-container--default.select2-container--focus .select2-selection--single {
+        border:none;
+    }
+
+    .feed-log-activity {
+        input[type='text'][name='email_subject'] {
+            border:none;
+            box-shadow: none;
+            transition:none;
+            width: 80%;
+
+            &:focus {
+                outline:none;
+            }
+
+            &::-webkit-input-placeholder {
+               font-style: italic;
+               font-weight: normal;
+            }
+            &:-moz-placeholder {
+               font-style: italic;
+               font-weight: normal;
+            }
+            &::-moz-placeholder {
+               font-style: italic;
+               font-weight: normal;
+            }
+            &:-ms-input-placeholder {
+               font-style: italic;
+               font-weight: normal;
+            }
+        }
     }
 
     .feed-schedule-wrapper {
+
+        .schedule-title-assign-user {
+            border-bottom: 1px solid #eee;
+            p {
+                border-bottom: none;
+
+                &.schedule-title {
+                    width: 67%;
+                }
+
+                &.schedule-assign-user {
+                    width: 30%;
+                }
+
+            }
+        }
+
         p {
             border-bottom: 1px solid #eee;
             padding-bottom: 20px;
@@ -1185,19 +1252,6 @@
                font-style: italic;
                font-weight: normal;
             }
-        }
-
-        span.select2-selection--multiple {
-            border:none;
-            height: 32px;
-
-            input {
-                width: 100% !important;
-            }
-        }
-
-        .select2-container--default.select2-container--focus .select2-selection--multiple {
-            border:none;
         }
 
         .schedule-datetime {
@@ -1271,6 +1325,10 @@
             }
         }
     }
+}
+
+.erp-crm-schedule-wrapper {
+    margin-top: 20px;
 }
 
 [v-cloak] {
