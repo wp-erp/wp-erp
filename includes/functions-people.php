@@ -160,6 +160,10 @@ function erp_get_people( $id = 0 ) {
         if ( $peep->id ) {
             $people = (object) $peep->toArray();
 
+            // include meta fields
+            $people->date_of_birth = erp_people_get_meta( $id, 'date_of_birth', true );
+            $people->source = erp_people_get_meta( $id, 'source', true );
+
             wp_cache_set( $cache_key, $people, 'wp-erp' );
         }
     }
@@ -325,4 +329,36 @@ function erp_people_update_meta( $people_id, $meta_key, $meta_value, $prev_value
  */
 function erp_people_delete_meta( $people_id, $meta_key, $meta_value = '' ) {
     return delete_metadata( 'erp_people', $people_id, $meta_key, $meta_value);
+}
+
+/**
+ * Get the contact sources
+ *
+ * @return array
+ */
+function erp_crm_contact_sources() {
+    $sources = array(
+        'advert' => 'Advertisement',
+        'chat' => 'Chat',
+        'contact_form' => 'Contact Form',
+        'employee_referral' => 'Employee Referral',
+        'external_referral' => 'External Referral',
+        'marketing_campaign' => 'Marketing campaign',
+        'newsletter' => 'Newsletter',
+        'online_store' => 'OnlineStore',
+        'optin_form' => 'Optin Forms',
+        'partner' => 'Partner',
+        'phone' => 'Phone Call',
+        'public_relations' => 'Public Relations',
+        'sales_mail_alias' => 'Sales Mail Alias',
+        'search_engine' => 'Search Engine',
+        'seminar_internal' => 'Seminar-Internal',
+        'seminar_partner' => 'Seminar Partner',
+        'social_media' => 'Social Media',
+        'trade_show' => 'Trade Show',
+        'web_download' => 'Web Download',
+        'web_research' => 'Web Research',
+    );
+
+    return apply_filters( 'erp_crm_contact_sources', $sources );
 }

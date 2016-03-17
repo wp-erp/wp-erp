@@ -104,6 +104,13 @@ class Ajax_Handler {
             $customer->update_meta( 'life_stage', $posted['life_stage'] );
         }
 
+        if ( !empty( $posted['date_of_birth'] ) ) {
+            $customer->update_meta( 'date_of_birth', $posted['date_of_birth'] );
+        }
+
+        if ( $posted['source'] ) {
+            $customer->update_meta( 'source', $posted['source'] );
+        }
 
         if ( isset( $posted['social'] ) ) {
             foreach ( $posted['social'] as $field => $value ) {
