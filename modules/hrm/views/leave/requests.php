@@ -142,9 +142,9 @@ class Leave_Requests_List_Table extends WP_List_Table {
         $reject_url  = wp_nonce_url( sprintf( $tpl, 'reject', $item->id ), $nonce );
         $approve_url = wp_nonce_url( sprintf( $tpl, 'approve', $item->id ), $nonce );
         $pending_url = wp_nonce_url( sprintf( $tpl, 'pending', $item->id ), $nonce );
-
-        $actions['delete'] = sprintf( '<a href="%s">%s</a>', $delete_url, __( 'Delete', 'wp-erp' ) );
-
+        if ( erp_get_option( 'erp_debug_mode', false, 0 ) ) {
+            $actions['delete'] = sprintf( '<a href="%s">%s</a>', $delete_url, __( 'Delete', 'wp-erp' ) );
+        }
         if ( $item->status == '2' ) {
 
             $actions['reject']   = sprintf( '<a href="%s">%s</a>', $reject_url, __( 'Reject', 'wp-erp' ) );
