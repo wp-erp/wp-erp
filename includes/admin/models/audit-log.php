@@ -10,5 +10,6 @@ use WeDevs\ERP\Framework\Model;
  */
 class Audit_Log extends Model {
     protected $table = 'erp_audit_log';
-    protected $fillable = [ 'component', 'sub_component', 'old_value', 'new_value', 'message', 'changetype', 'created_by' ];
+    protected $fillable = [ 'component', 'sub_component', 'old_value', 'new_value', 'message', 'changetype', 'created_by', 'created_at' ];
+    public $timestamps = false;
 }

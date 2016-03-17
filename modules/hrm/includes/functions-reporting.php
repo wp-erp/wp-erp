@@ -341,3 +341,4 @@ function is_valid_date( $str ) {
         return false;
     }
 }
+

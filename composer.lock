@@ -542,12 +542,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tareq1988/wp-eloquent.git",
-                "reference": "b62300335920c09ebb3cebff77a523e12dc8c250"
+                "reference": "4f520ff271f031dc5c231832639951c14788c082"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tareq1988/wp-eloquent/zipball/b62300335920c09ebb3cebff77a523e12dc8c250",
-                "reference": "b62300335920c09ebb3cebff77a523e12dc8c250",
+                "url": "https://api.github.com/repos/tareq1988/wp-eloquent/zipball/4f520ff271f031dc5c231832639951c14788c082",
+                "reference": "4f520ff271f031dc5c231832639951c14788c082",
                 "shasum": ""
             },
             "require": {
@@ -578,7 +578,7 @@
                 "sql",
                 "wordpress"
             ],
-            "time": "2016-03-15 23:47:54"
+            "time": "2016-03-17 12:18:55"
         }
     ],
     "packages-dev": [],

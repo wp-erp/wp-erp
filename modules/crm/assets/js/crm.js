@@ -61,6 +61,15 @@
             } );
         },
 
+        initDateField: function() {
+            $( '.erp-crm-date-field').datepicker({
+                dateFormat: 'yy-mm-dd',
+                changeMonth: true,
+                changeYear: true,
+                yearRange: '-100:+0',
+            });
+        },
+
         /**
          * Timepicker initialize
          *
@@ -106,7 +115,7 @@
             var self = $(this),
                 country = self.val(),
                 parent = self.closest( self.data('parent') ),
-                empty = '<option val="">-------------</option>';
+                empty = '<option value="">- Select -</option>';
 
             if ( wpErpCrm.wpErpCountries[ country ] ) {
                 var options = '',
@@ -351,6 +360,7 @@
                     content: wperp.template('erp-crm-new-contact')(  wpErpCrm.customer_empty  ).trim(),
                     extraClass: 'midium',
                     onReady: function() {
+                        WeDevs_ERP_CRM.initDateField();
                         WeDevs_ERP_CRM.customer.select2Action('erp-crm-select2');
                         $( 'body' ).find('select#erp-customer-type').trigger('change');
                     },
@@ -443,6 +453,8 @@
                                         self.find( 'select' ).val( selected );
                                     }
                                 });
+
+                                WeDevs_ERP_CRM.initDateField();
                             }
                         });
                     },

@@ -114,29 +114,30 @@
 		        {label: 'Unspecified', color:'#fc9255', data: [[3,<?php echo esc_attr( $gender_all['other'] ); ?>]]},
 		    ];
 
-			$.plot($("#emp-gender-ratio"), data_gender_all, {
-
-				series: {
-			        pie: {
-			            show: true,
-			            combine: {
-			                color: '#999',
-			                threshold: 0.1
-			            }
-			        }
-			    },
-			    legend: {
-			        show: false
-			    },
-			});
-
-			var data = [
-		        {label: 'Male', color:'#648d9e', data: <?php echo json_encode( $male ); ?>},
-		        {label: 'Female', color:'#D797AF', data: <?php echo json_encode( $female ); ?>},
-		        {label: 'Unspecified', color:'#AAC6D4', data: <?php echo json_encode( $unspecified ); ?>},
-		    ];
-
 		    $(document).ready( function(){
+
+		    	$.plot($("#emp-gender-ratio"), data_gender_all, {
+
+					series: {
+				        pie: {
+				            show: true,
+				            combine: {
+				                color: '#999',
+				                threshold: 0.1
+				            }
+				        }
+				    },
+				    legend: {
+				        show: false
+				    },
+				});
+
+				var data = [
+			        {label: 'Male', color:'#648d9e', data: <?php echo json_encode( $male ); ?>},
+			        {label: 'Female', color:'#D797AF', data: <?php echo json_encode( $female ); ?>},
+			        {label: 'Unspecified', color:'#AAC6D4', data: <?php echo json_encode( $unspecified ); ?>},
+			    ];
+
 				$.plot($("#emp-gender-ratio-by-department"), data, {
 
 					xaxis: {
