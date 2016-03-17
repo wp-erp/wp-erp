@@ -40,6 +40,50 @@ window.wperp = window.wperp || {};
         });
     };
 
+    /**
+     * Set Time Format from date
+     *
+     * @return {void}
+     */
+    wperp.timeFormat = function( date ) {
+        date = new Date( date );
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var ampm = hours >= 12 ? 'pm' : 'am';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0'+minutes : minutes;
+        var strTime = hours + ':' + minutes + ' ' + ampm;
+        return strTime;
+    };
+
+    wperp.dateFormat = function ( date, format ) {
+        date = new Date( date );
+        var month = ("0" + (date.getMonth() + 1)).slice(-2),
+            day   = ("0" + date.getDate()).slice(-2),
+            year  = date.getFullYear(),
+            monthArray = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ],
+            monthShortArray = [ "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec" ],
+            monthName = monthArray[date.getMonth()],
+            monthShortName = monthShortArray[date.getMonth()];
+
+        var pattern = {
+            Y: year,
+            m: month,
+            F: monthName,
+            M: monthShortName,
+            d: day,
+            j: day
+        };
+
+        var dateStr = format.replace(/Y|m|d|j|M|F/gi, function( matched ){
+            return pattern[matched];
+        });
+
+        return dateStr;
+    };
+
+
     var WeDevs_ERP = {
 
         /**

@@ -140,6 +140,14 @@ class Customer_Relationship {
             'checkedConfirm'        => __( 'Alteast one item must be checked', 'wp-erp' )
         ) );
 
+        if ( 'crm_page_erp-sales-schedules' == $hook ) {
+            wp_enqueue_style( 'erp-timepicker' );
+            wp_enqueue_script( 'erp-timepicker' );
+            wp_enqueue_script( 'underscore' );
+            wp_enqueue_script( 'erp-trix-editor' );
+            wp_enqueue_style( 'erp-trix-editor' );
+        }
+
         if ( 'crm_page_erp-sales-activities' == $hook ) {
             wp_enqueue_script( 'underscore' );
             wp_enqueue_script( 'erp-vuejs' );
@@ -209,7 +217,6 @@ class Customer_Relationship {
 
                 erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-customer.php', 'erp-crm-new-contact' );
                 erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-bulk-contact-group.php', 'erp-crm-new-bulk-contact-group' );
-                // erp_get_js_template( WPERP_CRM_JS_TMPL . '/save-search-fields.php', 'erp-crm-save-search-item' );
                 erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/save-search-fields.php', 'erp-crm-save-search-item' );
 
                 if ( isset( $_GET['action'] ) && $_GET['action'] == 'view' ) {
@@ -239,6 +246,11 @@ class Customer_Relationship {
 
             case 'crm_page_erp-sales-activities':
                 erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/customer-timeline-item.php', 'erp-crm-timeline-item-template' );
+                break;
+
+            case 'crm_page_erp-sales-schedules':
+                erp_get_js_template( WPERP_CRM_JS_TMPL . '/single-schedule-details.php', 'erp-crm-single-schedule-details' );
+                erp_get_js_template( WPERP_CRM_JS_TMPL . '/customer-add-schedules.php', 'erp-crm-customer-schedules');
                 break;
 
             default:

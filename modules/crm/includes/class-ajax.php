@@ -52,8 +52,8 @@ class Ajax_Handler {
         add_action( 'wp_ajax_erp_customer_feeds_save_notes', array( $this, 'save_activity_feeds' ) );
         add_action( 'wp_ajax_erp_crm_delete_customer_activity', array( $this, 'delete_customer_activity_feeds' ) );
 
-        add_action( 'wp_ajax_erp_customer_feeds_edit_notes', array( $this, 'edit_customer_activity_feeds' ) );
-        add_action( 'wp_ajax_erp_customer_feeds_edit_schedules', array( $this, 'edit_customer_activity_schedule_feeds' ) );
+        // Schedule page
+        add_action( 'wp_ajax_erp_crm_add_schedules_action', array( $this, 'save_activity_feeds' ) );
 
         // script reload
         $this->action( 'wp_ajax_erp-crm-customer-company-reload', 'customer_company_template_refresh' );
@@ -570,7 +570,7 @@ class Ajax_Handler {
         $save_data = [];
         $postdata  = $_POST;
 
-        if ( ! $postdata['user_id'] ) {
+        if ( ! isset( $postdata['user_id'] ) && empty( $postdata['user_id'] ) ) {
             $this->send_error( __( 'Customer not found', 'wp-erp' ) );
         }
 
@@ -748,52 +748,8 @@ class Ajax_Handler {
         $this->send_success( __( 'Feed Deleted successfully', 'wp-erp' ) );
     }
 
-    /**
-     * Edit customer feed data
-     *
-     * @since 1.0
-     *
-     * @return json
-     */
-    public function edit_customer_activity_feeds() {
-
-        $this->verify_nonce( 'wp-erp-crm-edit-customer-feed-nonce' );
-
-        unset( $_POST['action'], $_POST['_wpnonce'], $_POST['_wp_http_referer'] );
-
-        $data = erp_crm_save_customer_feed_data( $_POST );
-
-        if ( ! $data ) {
-            $this->send_error( __( 'Somthing is wrong, Please try later', 'wp-erp' ) );
-        }
-
-        $this->send_success( $data );
-    }
-
-    /**
-     * Edit Activity schedule feeds
-     *
-     * @since 1.0
-     *
-     * @return json
-     */
-    public function edit_customer_activity_schedule_feeds() {
-
-        $this->verify_nonce( 'wp-erp-crm-edit-customer-feed-nonce' );
-
-        unset( $_POST['action'], $_POST['_wpnonce'], $_POST['_wp_http_referer'] );
-
-        $save_data = erp_crm_customer_prepare_schedule_postdata( $_POST );
-
-        $save_data['id'] = $_POST['id'];
-
-        $data = erp_crm_save_customer_feed_data( $save_data );
-
-        if ( ! $data ) {
-            $this->send_error( __( 'Somthing is wrong, Please try later', 'wp-erp' ) );
-        }
-
-        $this->send_success( $data );
+    public function add_schedules_from_calendar() {
+        $this->verify_nonce( 'wp-erp-crm-add-schedules' );
 
     }
 
