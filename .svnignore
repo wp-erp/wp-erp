@@ -1,0 +1,14 @@
+.codekit-cache
+.idea
+node_modules
+.editorconfig
+.gitignore
+composer.json
+composer.lock
+config.codekit
+CONTRIBUTING.md
+debug.log
+Gruntfile.js
+package.json
+README.md
+plugin-deploy.sh

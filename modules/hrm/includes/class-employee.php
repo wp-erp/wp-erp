@@ -404,7 +404,7 @@ class Employee {
      * @return string
      */
     public function get_birthday() {
-        if ( $this->date_of_birth ) {
+        if ( $this->date_of_birth != '0000-00-00') {
             return erp_format_date( $this->date_of_birth );
         }
     }
