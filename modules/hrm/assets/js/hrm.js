@@ -140,6 +140,7 @@
                             content: '<p>'+ res.content +'</p>',
                             extraClass: 'midium',
                         });
+                        self.closest( 'li' ).removeClass( 'unread' );
                     },
                     error: function(error) {
                         alert( error );
