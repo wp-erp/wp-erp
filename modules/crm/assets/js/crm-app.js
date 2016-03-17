@@ -269,7 +269,7 @@ var TimeLineHeader = Vue.extend({
                         +'<span v-if="( countUser != 0 ) && countUser != 1"> and <strong><tooltip :content="countUser" :title="invitedUser"></tooltip></strong></span>'
                     +'</span>'
                     +'<span v-if="isTasks">created a task for </strong>'
-                        +' <span v-if="countUser == 1"><strong>{{ feed.extra.invited_user[0].name }}</strong></span>'
+                        +' <span v-if="countUser == 1"><strong>{{ invitedSingleUser }}</strong></span>'
                         +'<span v-if="( countUser != 0 ) && countUser != 1"><strong><tooltip :content="countUser" :title="invitedUser"></tooltip></strong></span>'
                     +'</span>'
                 +'</span>',
@@ -291,6 +291,9 @@ var TimeLineHeader = Vue.extend({
 
         invitedSingleUser: function() {
             if ( this.feed.extra.invited_user[0].id == wpCRMvue.current_user_id ) {
+                if ( this.feed.type == 'tasks' ) {
+                    return 'Yourself';
+                }
                 return 'You';
             } else {
                 return this.feed.extra.invited_user[0].name;
@@ -298,8 +301,12 @@ var TimeLineHeader = Vue.extend({
         },
 
         invitedUser: function() {
+            var self = this;
             return this.feed.extra.invited_user.map( function( elm ) {
                 if ( elm.id == wpCRMvue.current_user_id ) {
+                    if ( self.feed.type == 'tasks' ) {
+                        return 'Yourself';
+                    }
                     return 'You';
                 } else {
                     return elm.name;

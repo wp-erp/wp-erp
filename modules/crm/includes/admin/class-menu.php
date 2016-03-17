@@ -34,7 +34,7 @@ class Admin_Menu {
         add_submenu_page( 'erp-sales', __( 'Contacts', 'wp-erp' ), __( 'Contacts', 'wp-erp' ), $capabilities, 'erp-sales-customers', array( $this, 'contact_page' ) );
         add_submenu_page( 'erp-sales', __( 'Companies', 'wp-erp' ), __( 'Companies', 'wp-erp' ), $capabilities, 'erp-sales-companies', array( $this, 'company_page' ) );
         add_submenu_page( 'erp-sales', __( 'Activities', 'wp-erp' ), __( 'Activities', 'wp-erp' ), $capabilities, 'erp-sales-activities', array( $this, 'activity_page' ) );
-        add_submenu_page( 'erp-sales', __( 'Schedules', 'wp-erp' ), __( 'Schedules', 'wp-erp' ), $capabilities, 'erp-sales-schedules', array( $this, 'schedules_page' ) );
+        $schedule = add_submenu_page( 'erp-sales', __( 'Schedules', 'wp-erp' ), __( 'Schedules', 'wp-erp' ), $capabilities, 'erp-sales-schedules', array( $this, 'schedules_page' ) );
         add_submenu_page( 'erp-sales', __( 'Contact Groups', 'wp-erp' ), __( 'Contact Groups', 'wp-erp' ), $capabilities, 'erp-sales-contact-groups', array( $this, 'contact_group_page' ) );
 
         // add_submenu_page( 'erp-sales', __( 'Campaigns', 'wp-erp' ), __( 'Campaigns', 'wp-erp' ), $capabilities, 'erp-sales-campaigns', array( $this, 'campaigns_page' ) );
@@ -44,6 +44,7 @@ class Admin_Menu {
         // add_submenu_page( 'erp-sales', __( 'Sales Team', 'wp-erp' ), __( 'Sales Team', 'wp-erp' ), $capabilities, 'erp-sales-team', array( $this, 'dashboard_page' ) );
 
         add_action( 'admin_print_styles-' . $overview, array( $this, 'crm_calendar_script' ) );
+        add_action( 'admin_print_styles-' . $schedule, array( $this, 'crm_calendar_script' ) );
 
     }
 
@@ -189,7 +190,7 @@ class Admin_Menu {
      * @return void
      */
     public function schedules_page() {
-        echo "Schedule Page. This page will display all scheduled calls and meetings";
+        include WPERP_CRM_VIEWS . '/schedules.php';
     }
 
     /**
