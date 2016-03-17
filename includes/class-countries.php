@@ -55,7 +55,7 @@ class Countries {
             }
         }
         if ( '-1' == $default ) {
-            $this->countries = array( '-1' => __( '===select one===', 'wp-erp' ) ) + $this->countries; 
+            $this->countries = array( '-1' => __( '- Select -', 'wp-erp' ) ) + $this->countries; 
         }
         return $this->countries;
     }
@@ -147,7 +147,7 @@ class Countries {
      * @return string  the country dropdown
      */
     public function country_dropdown( $selected = '' ) {
-        $dropdown  = sprintf( '<option value="-1">%s</option>', __( '-- select --', 'wp-erp' ) );
+        $dropdown  = sprintf( '<option value="-1">%s</option>', __( '- Select -', 'wp-erp' ) );
         $countries = $this->get_countries();
         $selected  = empty( $selected ) ? $this->get_base_country() : $selected;
 
