@@ -79,7 +79,7 @@ class Auditlog_List_Table extends \WP_List_Table {
             <select name="filter_duration" id="filter_duration">
                 <option value="-1"><?php _e( '- Select Duration -', 'wp-erp' ) ?></option>
                 <?php
-                $types = $this->erp_att_get_filters();
+                $types = $this->erp_log_get_filters();
 
                 foreach ( $types as $key => $title ) {
                     echo sprintf( "<option value='%s'%s>%s</option>\n", $key, selected( $selected_duration, $key, false ), $title );
@@ -99,7 +99,7 @@ class Auditlog_List_Table extends \WP_List_Table {
      *
      * @return array
      */
-    function erp_att_get_filters() {
+    function erp_log_get_filters() {
 
         $filters = array(
             'today'        => __( 'Today',        'wp-erp' ),
