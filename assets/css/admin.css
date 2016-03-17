@@ -649,53 +649,65 @@
   font-style: italic;
   font-weight: normal;
 }
-.erp-single-customer .erp-customer-feeds #log-activity p {
+.erp-single-customer .erp-customer-feeds #log-activity p,
+.erp-single-customer .erp-customer-feeds #tasks p {
   margin: 0px;
   border-bottom: 1px solid #eee;
   padding: 8px 0px;
 }
-.erp-single-customer .erp-customer-feeds #log-activity p:first-child {
+.erp-single-customer .erp-customer-feeds #log-activity p:first-child,
+.erp-single-customer .erp-customer-feeds #tasks p:first-child {
   padding-bottom: 16px;
 }
-.erp-single-customer .erp-customer-feeds #log-activity p span.select2-selection--multiple {
+.erp-single-customer .erp-customer-feeds #log-activity p span.select2-selection--multiple,
+.erp-single-customer .erp-customer-feeds #tasks p span.select2-selection--multiple {
   border: none;
   height: 32px;
 }
-.erp-single-customer .erp-customer-feeds #log-activity p span.select2-selection--multiple input {
+.erp-single-customer .erp-customer-feeds #log-activity p span.select2-selection--multiple input,
+.erp-single-customer .erp-customer-feeds #tasks p span.select2-selection--multiple input {
   width: 100% !important;
 }
-.erp-single-customer .erp-customer-feeds #log-activity p label {
+.erp-single-customer .erp-customer-feeds #log-activity p label,
+.erp-single-customer .erp-customer-feeds #tasks p label {
   min-width: 12%;
   display: inline-block;
   vertical-align: middle;
   margin-left: 5px;
 }
-.erp-single-customer .erp-customer-feeds #log-activity p span.sep {
+.erp-single-customer .erp-customer-feeds #log-activity p span.sep,
+.erp-single-customer .erp-customer-feeds #tasks p span.sep {
   width: 15px;
   display: inline-block;
 }
-.erp-single-customer .erp-customer-feeds #log-activity p input.email_subject {
+.erp-single-customer .erp-customer-feeds #log-activity p input.email_subject,
+.erp-single-customer .erp-customer-feeds #tasks p input.email_subject {
   border: none;
   box-shadow: none;
   transition: none;
   width: 80%;
 }
-.erp-single-customer .erp-customer-feeds #log-activity p input.email_subject:focus {
+.erp-single-customer .erp-customer-feeds #log-activity p input.email_subject:focus,
+.erp-single-customer .erp-customer-feeds #tasks p input.email_subject:focus {
   outline: none;
 }
-.erp-single-customer .erp-customer-feeds #log-activity p input.email_subject::-webkit-input-placeholder {
+.erp-single-customer .erp-customer-feeds #log-activity p input.email_subject::-webkit-input-placeholder,
+.erp-single-customer .erp-customer-feeds #tasks p input.email_subject::-webkit-input-placeholder {
   font-style: italic;
   font-weight: normal;
 }
-.erp-single-customer .erp-customer-feeds #log-activity p input.email_subject:-moz-placeholder {
+.erp-single-customer .erp-customer-feeds #log-activity p input.email_subject:-moz-placeholder,
+.erp-single-customer .erp-customer-feeds #tasks p input.email_subject:-moz-placeholder {
   font-style: italic;
   font-weight: normal;
 }
-.erp-single-customer .erp-customer-feeds #log-activity p input.email_subject::-moz-placeholder {
+.erp-single-customer .erp-customer-feeds #log-activity p input.email_subject::-moz-placeholder,
+.erp-single-customer .erp-customer-feeds #tasks p input.email_subject::-moz-placeholder {
   font-style: italic;
   font-weight: normal;
 }
-.erp-single-customer .erp-customer-feeds #log-activity p input.email_subject:-ms-input-placeholder {
+.erp-single-customer .erp-customer-feeds #log-activity p input.email_subject:-ms-input-placeholder,
+.erp-single-customer .erp-customer-feeds #tasks p input.email_subject:-ms-input-placeholder {
   font-style: italic;
   font-weight: normal;
 }
@@ -763,6 +775,48 @@
 .erp-single-customer .erp-customer-feeds #schedule .schedule-notification p.schedule-notification-allow {
   width: 50%;
   padding: 13px 20px;
+}
+.erp-single-customer .erp-customer-feeds #tasks .assign-task-datetime {
+  border-bottom: 1px solid #e3e3e3;
+}
+.erp-single-customer .erp-customer-feeds #tasks p {
+  padding-bottom: 10px !important;
+}
+.erp-single-customer .erp-customer-feeds #tasks p.assign-task-time {
+  border-bottom: none;
+  width: 45%;
+  margin-left: 10px;
+}
+.erp-single-customer .erp-customer-feeds #tasks p.assign-task-date {
+  width: 45%;
+  border-bottom: none;
+  border-right: 1px solid #e3e3e3;
+  margin-left: 5px;
+}
+.erp-single-customer .erp-customer-feeds #tasks p input[type=text] {
+  border: none;
+  box-shadow: none;
+  transition: none;
+  width: 45%;
+}
+.erp-single-customer .erp-customer-feeds #tasks p input[type=text]:focus {
+  outline: none;
+}
+.erp-single-customer .erp-customer-feeds #tasks p input[type=text]::-webkit-input-placeholder {
+  font-style: italic;
+  font-weight: normal;
+}
+.erp-single-customer .erp-customer-feeds #tasks p input[type=text]:-moz-placeholder {
+  font-style: italic;
+  font-weight: normal;
+}
+.erp-single-customer .erp-customer-feeds #tasks p input[type=text]::-moz-placeholder {
+  font-style: italic;
+  font-weight: normal;
+}
+.erp-single-customer .erp-customer-feeds #tasks p input[type=text]:-ms-input-placeholder {
+  font-style: italic;
+  font-weight: normal;
 }
 .erp-single-customer .erp-customer-feeds .activity-form {
   background: #fff;
@@ -1002,111 +1056,158 @@
 .erp-single-customer .erp-customer-feeds .activity-content .timeline-inverse > li > .timeline-item > .timeline-header {
   border-bottom-color: #ddd;
 }
-.erp-crm-customer-feed-edit-wrapper p {
+.erp-crm-new-schedule-wrapper p {
   border-bottom: 1px solid #eee;
-  padding-bottom: 20px;
+  padding-bottom: 11px !important;
+  margin-bottom: 0px !important;
 }
-.erp-crm-customer-feed-edit-wrapper p input {
+.erp-crm-new-schedule-wrapper p input {
   margin-left: 15px;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper p {
-  border-bottom: 1px solid #eee;
-  padding-bottom: 20px;
+.erp-crm-new-schedule-wrapper p input[disabled=disabled] {
+  color: #222;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper p input {
-  margin-left: 15px;
+.erp-crm-new-schedule-wrapper span.select2-selection--multiple,
+.erp-crm-new-schedule-wrapper span.select2-selection--single {
+  border: none;
+  height: 32px;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper input[type='text'] {
+.erp-crm-new-schedule-wrapper span.select2-selection--multiple input,
+.erp-crm-new-schedule-wrapper span.select2-selection--single input {
+  width: 100% !important;
+}
+.erp-crm-new-schedule-wrapper .select2-container--default.select2-container--focus .select2-selection--multiple,
+.erp-crm-new-schedule-wrapper .select2-container--default.select2-container--focus .select2-selection--single {
+  border: none;
+}
+.erp-crm-new-schedule-wrapper .feed-log-activity input[type='text'][name='email_subject'] {
   border: none;
   box-shadow: none;
   transition: none;
   width: 80%;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper input[type='text']:focus {
+.erp-crm-new-schedule-wrapper .feed-log-activity input[type='text'][name='email_subject']:focus {
   outline: none;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper input[type='text']::-webkit-input-placeholder {
+.erp-crm-new-schedule-wrapper .feed-log-activity input[type='text'][name='email_subject']::-webkit-input-placeholder {
   font-style: italic;
   font-weight: normal;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper input[type='text']:-moz-placeholder {
+.erp-crm-new-schedule-wrapper .feed-log-activity input[type='text'][name='email_subject']:-moz-placeholder {
   font-style: italic;
   font-weight: normal;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper input[type='text']::-moz-placeholder {
+.erp-crm-new-schedule-wrapper .feed-log-activity input[type='text'][name='email_subject']::-moz-placeholder {
   font-style: italic;
   font-weight: normal;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper input[type='text']:-ms-input-placeholder {
+.erp-crm-new-schedule-wrapper .feed-log-activity input[type='text'][name='email_subject']:-ms-input-placeholder {
   font-style: italic;
   font-weight: normal;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper span.select2-selection--multiple {
-  border: none;
-  height: 32px;
-}
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper span.select2-selection--multiple input {
-  width: 100% !important;
-}
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .select2-container--default.select2-container--focus .select2-selection--multiple {
-  border: none;
-}
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-datetime {
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-title-assign-user {
   border-bottom: 1px solid #eee;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-datetime p {
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-title-assign-user p {
+  border-bottom: none;
+}
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-title-assign-user p.schedule-title {
+  width: 67%;
+}
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-title-assign-user p.schedule-assign-user {
+  width: 30%;
+}
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper p {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 20px;
+}
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper p input {
+  margin-left: 15px;
+}
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper input[type='text'] {
+  border: none;
+  box-shadow: none;
+  transition: none;
+  width: 80%;
+}
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper input[type='text']:focus {
+  outline: none;
+}
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper input[type='text']::-webkit-input-placeholder {
+  font-style: italic;
+  font-weight: normal;
+}
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper input[type='text']:-moz-placeholder {
+  font-style: italic;
+  font-weight: normal;
+}
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper input[type='text']::-moz-placeholder {
+  font-style: italic;
+  font-weight: normal;
+}
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper input[type='text']:-ms-input-placeholder {
+  font-style: italic;
+  font-weight: normal;
+}
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-datetime {
+  border-bottom: 1px solid #eee;
+}
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-datetime p {
   border-bottom: none;
   width: 37%;
   padding-left: 5px;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-datetime p.schedule-end {
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-datetime p.schedule-end {
   _border-left: 1px solid #eee;
   padding-left: 20px;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-datetime p.schedule-all-day {
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-datetime p.schedule-all-day {
   width: 20%;
   padding: 3px 20px;
   _border-left: 1px solid #eee;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-datetime input.start-time,
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-datetime input.start-date {
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-datetime input.start-time,
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-datetime input.start-date {
   width: 33%;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-notification {
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-notification {
   border-bottom: 1px solid #eee;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-notification:last-child {
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-notification:last-child {
   border-bottom: none;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-notification p {
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-notification p {
   border: none;
   width: 40%;
   padding-left: 5px;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-notification p label {
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-notification p label {
   width: 27%;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-notification p.schedule-notification-via {
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-notification p.schedule-notification-via {
   width: 50%;
   _border-right: 1px solid #eee;
   padding-top: 15px;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-notification p.schedule-notification-before {
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-notification p.schedule-notification-before {
   padding-left: 20px;
   padding-top: 15px;
   width: 50%;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-notification p.schedule-notification-before select {
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-notification p.schedule-notification-before select {
   margin-top: -2px;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-notification p.schedule-type {
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-notification p.schedule-type {
   width: 50%;
   _border-right: 1px solid #eee;
   padding-left: 5px;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-notification p.schedule-notification-allow {
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-notification p.schedule-notification-allow {
   width: 50%;
   padding: 6px 20px;
+}
+.erp-crm-schedule-wrapper {
+  margin-top: 20px;
 }
 [v-cloak] {
   display: none;
@@ -1539,11 +1640,11 @@ table.leaves td.column-status .status-3 {
   color: #999;
   margin-left: 10px;
 }
-.note-tab-wrap ul.notes-list .note-wrap .row-actions {
+.note-tab-wrap ul.notes-list .note-wrap .row-action {
   font-size: 12px;
   margin-top: 5px;
 }
-.note-tab-wrap ul.notes-list .note-wrap .row-actions a {
+.note-tab-wrap ul.notes-list .note-wrap .row-action a {
   text-decoration: none;
 }
 .note-tab-wrap ul.notes-list .note-wrap p {
@@ -1588,6 +1689,19 @@ table.leaves td.column-status .status-3 {
 }
 .note-tab-wrap .hide {
   display: none;
+}
+.wperp-hrm-report .report-month {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+}
+.wperp-hrm-report table th {
+  padding-left: 15px;
+  text-align: right;
+  width: 20px;
+  padding-right: 5px;
+  font-weight: bold;
+  font-size: 120% ;
 }
 @media print {
   .erp-hide-print {
@@ -1937,18 +2051,11 @@ ul.erp-dashboard-announcement li {
   padding: 5px;
   position: relative;
 }
-ul.erp-dashboard-announcement li:first-child {
-  margin-bottom: 1px solid #eee;
-}
-ul.erp-dashboard-announcement li div {
-  margin: 0px 0px 5px;
-  font-size: 13px;
-}
 ul.erp-dashboard-announcement li div.announcement-title a {
   font-size: 15px;
   text-decoration: none;
 }
-ul.erp-dashboard-announcement li div span.announcement-date {
+ul.erp-dashboard-announcement li div.announcement-title span.announcement-date {
   font-size: 12px;
   font-weight: normal;
   margin-right: 50px;
@@ -1966,6 +2073,9 @@ ul.erp-dashboard-announcement li .announcement-row-actions a {
   margin-left: 3px;
   font-size: 10px;
   color: #222;
+}
+ul.erp-dashboard-announcement li:first-child {
+  border-bottom: 1px solid #eee;
 }
 ul.erp-dashboard-announcement li.unread {
   background: #fafafa;
@@ -2546,10 +2656,100 @@ ul.edit-address li.city-wrap span {
 .erp-activation-cloud-prompt .button-primary {
   margin-right: 10px;
 }
+.erp-activation-cloud-prompt .erp-button-xs {
+  font-size: small;
+}
 .erp-activation-cloud-prompt .activation-form-container {
   width: 40%;
   padding-top: 9px;
   padding-right: 20px;
   margin-left: 30px;
   text-align: right;
+}
+/*****/
+/**
+* Media Query for responsive
+*
+**/
+/* Tab and small screen (portrait and landscape ) ----------- */
+@media only screen and (max-width: 960px) {
+  .erp-modal,
+  .erp-modal.smaller {
+    top: 8%;
+    bottom: 1%;
+    right: 2%;
+    left: 4%;
+  }
+  .content-container {
+    padding: 1.25em !important;
+  }
+}
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (max-width: 640px) {
+  .erp-modal,
+  .erp-modal.smaller {
+    top: 8%;
+    bottom: 1%;
+    right: 2%;
+    left: 2%;
+  }
+  .content-container {
+    padding: 1em !important;
+  }
+  .content-container .content {
+    margin: 0 0;
+  }
+  .content-container .content li label {
+    display: block !important;
+    width: 100% !important;
+  }
+  .content-container .content li select {
+    width: 100%;
+  }
+  .content-container .content li .select2-container {
+    width: 95% !important;
+  }
+  .content-container .content .name-container ol {
+    width: 100% !important;
+  }
+  .content-container .content .name-container ol li {
+    width: 100%;
+  }
+  .content-container .content .name-container li.middle-name {
+    width: 100% !important;
+  }
+  .content-container .content .name-container input {
+    width: 95% !important;
+  }
+  .content-container .content .name-container label:first-child {
+    display: none;
+  }
+  .content-container .content .two-col li {
+    width: 100% !important ;
+  }
+  .content-container .content .two-col label {
+    display: block;
+    width: 100% !important;
+  }
+  .content-container .content input[type="text"],
+  .content-container .content input[type="password"],
+  .content-container .content input[type="color"],
+  .content-container .content input[type="date"],
+  .content-container .content input[type="datetime"],
+  .content-container .content input[type="datetime-local"],
+  .content-container .content input[type="email"],
+  .content-container .content input[type="month"],
+  .content-container .content input[type="number"],
+  .content-container .content input[type="password"],
+  .content-container .content input[type="search"],
+  .content-container .content input[type="radio"],
+  .content-container .content input[type="tel"],
+  .content-container .content input[type="text"],
+  .content-container .content input[type="time"],
+  .content-container .content input[type="url"],
+  .content-container .content input[type="week"],
+  .content-container .content select,
+  .content-container .content textarea {
+    width: 95%;
+  }
 }
