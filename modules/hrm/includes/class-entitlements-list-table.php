@@ -93,6 +93,8 @@ class Entitlement_List_Table extends \WP_List_Table {
                     return sprintf( '<span class="red">%d %s</span>', number_format_i18n( $available ), __( 'days', 'wp-erp' ) );
                 } elseif ( $available > 0 ) {
                     return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $available ), __( 'days', 'wp-erp' ) );
+                } elseif ( $available === 0 ) {
+                    return sprintf( '<span class="green">%d %s</span>', 0, __( 'days', 'wp-erp' ) );
                 } else {
                     return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $entitlement->days ), __( 'days', 'wp-erp' ) );
                 }

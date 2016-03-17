@@ -81,6 +81,8 @@ class Leave_Requests_List_Table extends WP_List_Table {
                     return sprintf( '<span class="red">%d %s</span>', number_format_i18n( $available ), __( 'days', 'wp-erp' ) );
                 } elseif ( $available > 0 ) {
                     return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $available ), __( 'days', 'wp-erp' ) );
+                } else if(  $available === 0 ){
+                    return sprintf( '<span class="gray">%d %s</span>', 0, __( 'days', 'wp-erp' ) );
                 } else {
                     return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $policy->value ), __( 'days', 'wp-erp' ) );
                 }
