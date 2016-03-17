@@ -818,12 +818,24 @@ function erp_crm_assign_task_to_users( $data, $save_data ) {
         \WeDevs\ERP\CRM\Models\ActivityUser::where( 'activity_id', $save_data['id'] )->delete();
     }
 
+    $user_ids = [];
+
     if ( isset( $data['extra']['invite_contact'] ) && count( $data['extra']['invite_contact'] ) > 0 ) {
-        foreach ( $data['extra']['invite_contact'] as $key => $users ) {
-            $res = \WeDevs\ERP\CRM\Models\ActivityUser::create( [ 'activity_id' => $data['id'], 'user_id' => $users ] );
+        foreach ( $data['extra']['invite_contact'] as $key => $user ) {
+            $res = \WeDevs\ERP\CRM\Models\ActivityUser::create( [ 'activity_id' => $data['id'], 'user_id' => $user ] );
+
+            $user_ids[] = $user;
+
             do_action( 'erp_crm_after_assign_task_to_user', $data, $save_data );
         }
+
+        $assigned_task = wperp()->emailer->get_email( 'New_Task_Assigned' );
+
+        if ( is_a( $assigned_task, '\WeDevs\ERP\Email') ) {
+            $assigned_task->trigger( ['activity_id' => $data['id'], 'user_ids' => $user_ids] );
+        }
     }
+
 }
 
 /**
