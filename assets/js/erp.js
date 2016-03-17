@@ -105,6 +105,7 @@ window.wperp = window.wperp || {};
             $( 'body' ).on( 'erp-hr-after-new-location', this.afterNewLocation );
 
             $( '.erp-hr-audit-log' ).on( 'click', 'a.erp-audit-log-view-changes', this.viewLogChanges );
+            $( 'body').on( 'change', '#filter_duration', this.customFilter );
 
             this.initFields();
         },
@@ -220,7 +221,7 @@ window.wperp = window.wperp || {};
             var self = $(this),
                 country = self.val(),
                 parent = self.closest( self.data('parent') ),
-                empty = '<option val="-1">-------------</option>';
+                empty = '<option value="-1">- Select -</option>';
 
             if ( wpErpCountries[ country ] ) {
                 var options = '',
@@ -238,6 +239,19 @@ window.wperp = window.wperp || {};
 
             } else {
                 parent.find('select.erp-state-select').html( empty );
+            }
+        },
+
+        /**
+         * date filter on audit log
+         */
+        customFilter: function () {
+            if ( 'custom' != this.value ) {
+                $( '#custom-input' ).remove();
+            } else {
+                var element = '<span id="custom-input"><span>From </span><input name="start" class="erp-date-field" type="text">&nbsp;<span>To </span><input name="end" class="erp-date-field" type="text"></span>&nbsp;';
+                $( '#filter_duration' ).after( element );
+                WeDevs_ERP.initFields();
             }
         },
 

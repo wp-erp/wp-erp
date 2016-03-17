@@ -116,6 +116,7 @@
                     },
                     success: function(res) {
                         self.closest( 'li' ).removeClass( 'unread' );
+                        self.addClass( 'erp-hide' );
                     },
                     error: function(error) {
                         alert( error );
@@ -140,6 +141,8 @@
                             content: '<p>'+ res.content +'</p>',
                             extraClass: 'midium',
                         });
+                        self.closest( 'li' ).removeClass( 'unread' );
+                        self.siblings( '.mark-read' ).addClass( 'erp-hide' );
                     },
                     error: function(error) {
                         alert( error );

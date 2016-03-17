@@ -44,14 +44,18 @@ class WeDevs_ERP_Installer {
      * @return 0.1
      */
     public function activate() {
-
-        $this->create_tables();
-        $this->create_roles();
-        $this->set_role();
-        $this->create_cron_jobs();
-
         $current_erp_version = get_option( 'wp_erp_version', null );
         $current_db_version  = get_option( 'wp_erp_db_version', null );
+
+        $this->create_tables();
+
+        if ( is_null( $current_erp_version ) ) {
+            $this->create_roles();
+            $this->set_role();
+        }
+
+        $this->create_cron_jobs();
+
 
         if ( is_null( $current_erp_version ) && is_null( $current_db_version ) && apply_filters( 'erp_enable_setup_wizard', true ) ) {
             set_transient( '_erp_activation_redirect', 1, 30 );
@@ -519,7 +523,7 @@ class WeDevs_ERP_Installer {
      */
     public function set_default_modules() {
 
-        if ( get_option( 'erp_modules' ) ) {
+        if ( get_option( 'wp_erp_version' ) ) {
             return ;
         }
 
