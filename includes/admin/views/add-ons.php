@@ -20,11 +20,12 @@
 
     if ( count( $add_ons ) ) {
         foreach ($add_ons as $addon) {
+            $addon_url = $addon->url . '?utm_source=wp-admin&utm_medium=link&utm_campaign=addons-page';
             ?>
 
             <div class="erp-addon">
                 <div class="erp-addon-thumb">
-                    <a href="<?php echo $addon->url; ?>" target="_blank">
+                    <a href="<?php echo $addon_url; ?>" target="_blank">
                         <img src="<?php echo $addon->thumb; ?>" alt="<?php echo esc_attr( $addon->title ); ?>" />
                     </a>
                 </div>
@@ -39,9 +40,9 @@
 
                 <div class="erp-links">
                     <?php if ( class_exists( $addon->class ) ) { ?>
-                        <a class="button button-disabled" href="<?php echo $addon->url; ?>?utm_source=wp-admin&utm_medium=link&utm_campaign=addons-page" target="_blank"><?php _e( 'Installed', 'wp-erp' ); ?></a>
+                        <a class="button button-disabled" href="<?php echo $addon_url; ?>" target="_blank"><?php _e( 'Installed', 'wp-erp' ); ?></a>
                     <?php } else { ?>
-                        <a class="button-primary" href="<?php echo $addon->url; ?>?utm_source=wp-admin&utm_medium=link&utm_campaign=addons-page" target="_blank"><?php _e( 'View Details', 'wp-erp' ); ?></a>
+                        <a class="button-primary" href="<?php echo $addon_url; ?>" target="_blank"><?php _e( 'View Details', 'wp-erp' ); ?></a>
                     <?php } ?>
                 </div>
             </div>
