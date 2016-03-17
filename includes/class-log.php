@@ -128,7 +128,8 @@ class Log {
 			'new_value'     => '',
 			'message'       => '',
 			'changetype'    => 'add',
-			'created_by'    => ''
+			'created_by'    => '',
+			'created_at'    => current_time('mysql')
 	    );
 
 	    $formated = ['%s', '%s', '%s', '%s', '%s', '%s', '%d'];
