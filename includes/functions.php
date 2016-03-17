@@ -613,8 +613,12 @@ function erp_get_country_name( $country ) {
     $countries = $load_cuntries_states->countries;
 
     // Handle full country name
-    $full_country = ( isset( $countries[ $country ] ) ) ? $countries[ $country ] : $country;
-
+    if ( '-1' != $country ) {
+        $full_country = ( isset( $countries[ $country ] ) ) ? $countries[ $country ] : $country;
+    } else {
+        $full_country = '';
+    }
+    
     return $full_country;
 }
 

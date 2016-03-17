@@ -176,7 +176,7 @@ window.wperp = window.wperp || {};
             var self = $(this),
                 country = self.val(),
                 parent = self.closest( self.data('parent') ),
-                empty = '<option val="-1">-------------</option>';
+                empty = '<option value="-1">- Select -</option>';
 
             if ( wpErpCountries[ country ] ) {
                 var options = '',
