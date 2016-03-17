@@ -131,7 +131,7 @@
                                     <?php endforeach; ?>
                                 <?php endif ?>
 
-                                <a href="#" id="erp-contact-update-assign-group" data-id="<?php echo $customer->id; ?>" title="<?php _e( 'Assign Contact Groups', 'wp-erp' ); ?>"><i class="fa fa-plus"></i> <?php _e( 'Add any mail groups', 'wp-erp' ); ?></a>
+                                <a href="#" id="erp-contact-update-assign-group" data-id="<?php echo $customer->id; ?>" title="<?php _e( 'Assign Contact Groups', 'wp-erp' ); ?>"><i class="fa fa-plus"></i> <?php _e( 'Add any contact groups', 'wp-erp' ); ?></a>
                             </div>
                         </div>
                     </div><!-- .postbox -->
