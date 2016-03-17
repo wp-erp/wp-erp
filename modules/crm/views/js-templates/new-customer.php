@@ -105,6 +105,17 @@
                 ) ); ?>
             </li>
 
+            <# if ( data.type == 'contact' ) { #>
+            <li>
+                <?php erp_html_form_input( array(
+                    'label' => __( 'Date of Birth', 'wp-erp' ),
+                    'name'  => 'date_of_birth',
+                    'value' => '{{ data.date_of_birth }}',
+                    'class' => 'erp-crm-date-field'
+                ) ); ?>
+            </li>
+            <# } #>
+
             <li>
                 <?php erp_html_form_input( array(
                     'label' => __( 'Mobile', 'wp-erp' ),
@@ -112,6 +123,7 @@
                     'value' => '{{ data.mobile }}'
                 ) ); ?>
             </li>
+
 
             <li>
                 <?php erp_html_form_input( array(
@@ -203,6 +215,17 @@
                     'label'   => __( 'Others', 'wp-erp' ),
                     'name'    => 'other',
                     'value'   => '{{ data.other }}'
+                ) ); ?>
+            </li>
+
+            <li data-selected="{{ data.source }}">
+                <?php erp_html_form_input( array(
+                    'label'   => __( 'Contact Source', 'wp-erp' ),
+                    'name'    => 'source',
+                    'id'      => 'erp-source',
+                    'type'    => 'select',
+                    'class'   => 'erp-source-select',
+                    'options' => erp_crm_contact_sources()
                 ) ); ?>
             </li>
 
