@@ -2548,12 +2548,85 @@ ul.edit-address li.city-wrap span {
 * Media Query for responsive
 *
 **/
+/* Tab and small screen (portrait and landscape ) ----------- */
+@media only screen and (max-width: 960px) {
+  .erp-modal,
+  .erp-modal.smaller {
+    top: 8%;
+    bottom: 1%;
+    right: 2%;
+    left: 4%;
+  }
+  .content-container {
+    padding: 1.25em !important;
+  }
+}
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (max-width: 640px) {
-  .erp-modal {
-    top: 10%;
+  .erp-modal,
+  .erp-modal.smaller {
+    top: 8%;
     bottom: 1%;
-    right: 1%;
-    left: 1%;
+    right: 2%;
+    left: 2%;
+  }
+  .content-container {
+    padding: 1em !important;
+  }
+  .content-container .content {
+    margin: 0 0;
+  }
+  .content-container .content li label {
+    display: block !important;
+    width: 100% !important;
+  }
+  .content-container .content li select {
+    width: 100%;
+  }
+  .content-container .content li .select2-container {
+    width: 95% !important;
+  }
+  .content-container .content .name-container ol {
+    width: 100% !important;
+  }
+  .content-container .content .name-container ol li {
+    width: 100%;
+  }
+  .content-container .content .name-container li.middle-name {
+    width: 100% !important;
+  }
+  .content-container .content .name-container input {
+    width: 95% !important;
+  }
+  .content-container .content .name-container label:first-child {
+    display: none;
+  }
+  .content-container .content .two-col li {
+    width: 100% !important ;
+  }
+  .content-container .content .two-col label {
+    display: block;
+    width: 100% !important;
+  }
+  .content-container .content input[type="text"],
+  .content-container .content input[type="password"],
+  .content-container .content input[type="color"],
+  .content-container .content input[type="date"],
+  .content-container .content input[type="datetime"],
+  .content-container .content input[type="datetime-local"],
+  .content-container .content input[type="email"],
+  .content-container .content input[type="month"],
+  .content-container .content input[type="number"],
+  .content-container .content input[type="password"],
+  .content-container .content input[type="search"],
+  .content-container .content input[type="radio"],
+  .content-container .content input[type="tel"],
+  .content-container .content input[type="text"],
+  .content-container .content input[type="time"],
+  .content-container .content input[type="url"],
+  .content-container .content input[type="week"],
+  .content-container .content select,
+  .content-container .content textarea {
+    width: 95%;
   }
 }
