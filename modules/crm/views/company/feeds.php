@@ -26,6 +26,8 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
 
                 <schedule-note v-if="tabShow == 'schedule'"></schedule-note>
 
+                <tasks-note v-if="tabShow == 'tasks'"></tasks-note>
+
             </form>
         </div>
     </div>

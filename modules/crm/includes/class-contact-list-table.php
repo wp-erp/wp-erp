@@ -83,7 +83,7 @@ class Contact_List_Table extends \WP_List_Table {
             </select>
 
             <?php
-            submit_button( __( 'Filter', 'wp-erp' ), 'secondary', 'filter_contact', false, [ 'id' => 'erp-advance-filter-contact-btn'] );
+            submit_button( __( 'Filter', 'wp-erp' ), 'secondary', 'filter_advance_search_contact', false, [ 'id' => 'erp-advance-filter-contact-btn'] );
 
             if ( $selected_save_search ) {
                 $base_link = add_query_arg( [ 'page' => $this->page_type ], admin_url( 'admin.php' ) );
@@ -137,7 +137,7 @@ class Contact_List_Table extends \WP_List_Table {
      */
     public function current_action() {
 
-        if ( isset( $_REQUEST['filter_by_save_searches'] ) ) {
+        if ( isset( $_REQUEST['filter_advance_search_contact'] ) ) {
             return 'filter_by_save_searches';
         }
 

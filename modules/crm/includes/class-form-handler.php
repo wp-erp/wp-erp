@@ -45,6 +45,7 @@ class Form_Handler {
     public function handle_save_search_submit() {
 
         if ( isset( $_POST['save_search_submit'] ) && wp_verify_nonce( $_POST['wp-erp-crm-save-search-nonce'], 'wp-erp-crm-save-search-nonce-action' ) ) {
+
             $query_args = [];
             $request_uri = $_POST['erp_crm_http_referer'];
             $search_string = erp_crm_get_save_search_query_string( $_POST );
