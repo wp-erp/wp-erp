@@ -1294,7 +1294,7 @@ function erp_hr_apply_policy_schedule() {
  *
  * @return void
  */
-function erp_hr_apply_policy_existance_employee( $policy_id, $args ) {
+function erp_hr_apply_policy_existing_employee( $policy_id, $args ) {
 
     if ( $args['instant_apply'] !== true ) {
         return;
