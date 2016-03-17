@@ -1257,13 +1257,13 @@ class Ajax_Handler {
         $id = isset( $_POST['employee_id'] ) && $_POST['employee_id'] ? intval( $_POST['employee_id'] ) : false;
 
         if ( ! $id ) {
-           $this->send_error( __( 'Please select employee', 'wp-erp' ) );
+           $this->send_error( __( 'Please select an employee', 'wp-erp' ) );
         }
 
         $policy_id = isset( $_POST['type'] ) && $_POST['type'] ? $_POST['type'] : false;
 
         if ( ! $policy_id ) {
-            $this->send_error( __( 'Please select leave type', 'wp-erp' ) );
+            $this->send_error( __( 'Please select a policy', 'wp-erp' ) );
         }
 
         $start_date           = isset( $_POST['from'] ) ? sanitize_text_field( $_POST['from'] ) : date_i18n( 'Y-m-d' );
@@ -1283,7 +1283,7 @@ class Ajax_Handler {
         $leave_record_exisst = erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $id );
 
         if ( $leave_record_exisst ) {
-            $this->send_error( __( 'Leave recored found withing this range!', 'wp-erp' ) );
+            $this->send_error( __( 'Existing Leave Record found within selected range!', 'wp-erp' ) );
         }
 
         $is_policy_valid = erp_hrm_is_valid_leave_duration( $start_date, $end_date, $policy_id, $id );
@@ -1322,7 +1322,7 @@ class Ajax_Handler {
         $employee_id = isset( $_POST['employee_id'] ) && $_POST['employee_id'] ? intval( $_POST['employee_id'] ) : false;
 
         if ( ! $employee_id ) {
-           $this->send_error( __( 'Please select employee', 'wp-erp' ) );
+           $this->send_error( __( 'Please select an employee', 'wp-erp' ) );
         }
 
         $policies = erp_hr_get_assign_policy_from_entitlement( $employee_id );
@@ -1343,7 +1343,7 @@ class Ajax_Handler {
             return $this->send_success( $content );
         }
 
-        return $this->send_error( __( 'No policy found. Can not apply any leave', 'wp-erp' ) );
+        return $this->send_error( __( 'Selected user is not entitled to any leave policy. Set leave entitlement to apply for leave', 'wp-erp' ) );
     }
 
     /**
