@@ -28,7 +28,7 @@ class Settings extends ERP_Settings_Page {
             'workdays' => __( 'Workdays', 'wp-erp' ),
         );
 
-        return $sections;
+        return apply_filters( 'erp_settings_hr_sections', $sections );
     }
 
     /**
@@ -76,7 +76,7 @@ class Settings extends ERP_Settings_Page {
             'id'    => 'script_styling_options'
         ];
 
-        $fields = apply_filters( 'erp_settings_hr_sections', $fields, $section );
+        $fields = apply_filters( 'erp_settings_hr_section_fields', $fields, $section );
 
         $section = $section === false ? $fields['workdays'] : $fields[$section];
 
