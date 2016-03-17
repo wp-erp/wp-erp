@@ -17,6 +17,7 @@ $contacts = erp_crm_get_contact_dropdown();
                     <option value="email"><?php _e( 'Email', 'wp-erp' ) ?></option>
                     <option value="log_activity"><?php _e( 'Log Activity', 'wp-erp' ) ?></option>
                     <option value="schedule"><?php _e( 'Schedules', 'wp-erp' ) ?></option>
+                    <option value="tasks"><?php _e( 'Tasks', 'wp-erp' ) ?></option>
                 </select>
             </div>
 

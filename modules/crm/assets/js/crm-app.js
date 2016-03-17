@@ -638,7 +638,7 @@ Vue.component( 'tasks-note', {
     },
 
     compiled: function() {
-        this.feedData.inviteContact = this.feedData.invite_contact;
+        this.feedData.inviteContact = this.feedData.invite_contact ? this.feedData.invite_contact : [] ;
     },
 
     methods: {
@@ -929,7 +929,7 @@ var vm = new Vue({
     el: '#erp-customer-feeds',
 
     data: {
-        tabShow: 'tasks',
+        tabShow: 'new_note',
         feeds: [],
         validation: {},
         feedData : {},

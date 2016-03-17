@@ -450,6 +450,13 @@ class WeDevs_ERP_Installer {
                 PRIMARY KEY (`id`)
             ) $collate;",
 
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_activities_task` (
+                `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+                `activity_id` int(11) DEFAULT NULL,
+                `user_id` int(11) DEFAULT NULL,
+                PRIMARY KEY (`id`)
+            ) $collate;",
+
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_contact_group` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
                 `name` varchar(255) DEFAULT NULL,

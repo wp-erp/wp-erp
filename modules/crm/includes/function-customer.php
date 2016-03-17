@@ -721,7 +721,13 @@ function erp_crm_customer_get_single_activity_feed( $feed_id ) {
  * @return collection
  */
 function erp_crm_customer_delete_activity_feed( $feed_id ) {
-    return WeDevs\ERP\CRM\Models\Activity::find( $feed_id )->delete( $feed_id );
+    $activity = WeDevs\ERP\CRM\Models\Activity::find( $feed_id );
+
+    if ( $activity->type == 'tasks' ) {
+        WeDevs\ERP\CRM\Models\ActivityUser::where( 'activity_id', $activity->id )->delete();
+    }
+
+    return $activity->delete( $feed_id );
 }
 
 /**
@@ -789,6 +795,34 @@ function erp_crm_send_schedule_notification( $activity, $extra = false ) {
             do_action( 'erp_crm_send_schedule_notification', $activity );
             break;
     }
+}
+
+/**
+ * Assign task to user
+ *
+ * When task is created from activity
+ * feeds, user needs to see their task. This function
+ * data map with task activity and assign users
+ *
+ * @since 1.0
+ *
+ * @param  array $data
+ *
+ * @return void
+ */
+function erp_crm_assign_task_to_users( $data, $save_data ) {
+
+    if ( $save_data['id'] ) {
+        \WeDevs\ERP\CRM\Models\ActivityUser::where( 'activity_id', $save_data['id'] )->delete();
+    }
+
+    if ( isset( $data['extra']['invite_contact'] ) && count( $data['extra']['invite_contact'] ) > 0 ) {
+        foreach ( $data['extra']['invite_contact'] as $key => $users ) {
+            $res = \WeDevs\ERP\CRM\Models\ActivityUser::create( [ 'activity_id' => $data['id'], 'user_id' => $users ] );
+            do_action( 'erp_crm_after_assign_task_to_user', $data, $save_data );
+        }
+    }
+
 }
 
 /**

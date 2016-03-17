@@ -703,11 +703,14 @@ class Ajax_Handler {
 
                 $data = erp_crm_save_customer_feed_data( $save_data );
 
-                do_action( 'erp_crm_save_customer_tasks_activity_feed', $save_data, $postdata );
-
                 if ( ! $data ) {
                     $this->send_error( __( 'Somthing is wrong, Please try later', 'wp-erp' ) );
                 }
+
+                //@TODO: Need to send confirmation mail for assigned users
+                do_action( 'erp_crm_save_customer_tasks_activity_feed', $save_data, $postdata );
+
+                erp_crm_assign_task_to_users( $data, $save_data );
 
                 $this->send_success( $data );
 
