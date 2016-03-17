@@ -14,7 +14,7 @@
 
             <form action="" method="post">
 
-                    <?php if ( current_user_can( 'manage_options' ) ) { ?>
+                    <?php if ( current_user_can( 'erp_leave_create_request' ) ) { ?>
                         <div class="row">
                             <?php erp_html_form_input( array(
                                 'label'    => __( 'Employee', 'wp-erp' ),

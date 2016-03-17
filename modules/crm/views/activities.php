@@ -2,10 +2,10 @@
 <?php
 $contacts = erp_crm_get_contact_dropdown();
 ?>
-<div class="wrap erp erp-crm-customer erp-single-customer" id="wp-erp">
+<div class="wrap erp erp-crm-activities erp-single-customer" id="wp-erp">
 
     <h2><?php _e( 'Activities', 'wp-erp' ); ?></h2>
-
+    <hr>
     <div class="erp-customer-feeds" id="erp-customer-feeds" v-cloak>
 
         <div class="activity-filter" id="erp-crm-activities-filter">
@@ -15,7 +15,7 @@ $contacts = erp_crm_get_contact_dropdown();
                     <option value=""><?php _e( 'All Types', 'wp-erp' ) ?></option>
                     <option value="new_note"><?php _e( 'Notes', 'wp-erp' ) ?></option>
                     <option value="email"><?php _e( 'Email', 'wp-erp' ) ?></option>
-                    <option value="log_activity"><?php _e( 'Log Activity', 'wp-erp' ) ?></option>
+                    <option value="logs"><?php _e( 'Log Activity', 'wp-erp' ) ?></option>
                     <option value="schedule"><?php _e( 'Schedules', 'wp-erp' ) ?></option>
                     <option value="tasks"><?php _e( 'Tasks', 'wp-erp' ) ?></option>
                 </select>

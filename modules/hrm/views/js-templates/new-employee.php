@@ -78,152 +78,152 @@
             <?php do_action( 'erp-hr-employee-form-basic' ); ?>
         </ol>
     </fieldset>
+    <?php if( current_user_can( 'erp_edit_employee' ) ): ?>
+        <fieldset>
+            <legend><?php _e( 'Work', 'wp-erp' ) ?></legend>
 
-    <fieldset>
-        <legend><?php _e( 'Work', 'wp-erp' ) ?></legend>
-
-        <ol class="form-fields two-col">
-
-        <# if ( ! data.id ) { #>
-            <li class="erp-hr-js-department" data-selected="{{ data.work.department }}">
-                <?php erp_html_form_input( array(
-                    'label'       => __( 'Department', 'wp-erp' ),
-                    'name'        => 'work[department]',
-                    'value'       => '',
-                    'class'       => 'erp-hrm-select2-add-more erp-hr-dept-drop-down',
-                    'custom_attr' => array( 'data-id' => 'erp-new-dept' ),
-                    'type'        => 'select',
-                    'options'     => erp_hr_get_departments_dropdown_raw()
-                ) ); ?>
-            </li>
-
-            <li data-selected="{{ data.work.designation }}">
-                <?php erp_html_form_input( array(
-                    'label'   => __( 'Job Title', 'wp-erp' ),
-                    'name'    => 'work[designation]',
-                    'value'   => '{{ data.work.designation }}',
-                    'class'   => 'erp-hrm-select2-add-more erp-hr-desi-drop-down',
-                    'custom_attr' => array( 'data-id' => 'erp-new-designation' ),
-                    'type'    => 'select',
-                    'options' => erp_hr_get_designation_dropdown_raw()
-                ) ); ?>
-            </li>
-
-            <li data-selected="{{ data.work.location }}">
-                <?php erp_html_form_input( array(
-                    'label'   => __( 'Location', 'wp-erp' ),
-                    'name'    => 'work[location]',
-                    'value'   => '{{ data.work.location }}',
-                    'custom_attr' => array( 'data-id' => 'erp-company-new-location' ),
-                    'class'   => 'erp-hrm-select2-add-more erp-hr-location-drop-down',
-                    'type'    => 'select',
-                    'options' => erp_company_get_location_dropdown_raw()
-                ) ); ?>
-            </li>
-
-            <li data-selected="{{ data.work.reporting_to }}">
-                <?php erp_html_form_input( array(
-                    'label'   => __( 'Reporting To', 'wp-erp' ),
-                    'name'    => 'work[reporting_to]',
-                    'value'   => '{{ data.work.reporting_to }}',
-                    'class'   => 'erp-hrm-select2',
-                    'type'    => 'select',
-                    'id'      => 'work_reporting_to',
-                    'options' => erp_hr_get_employees_dropdown_raw()
-                ) ); ?>
-            </li>
-
-            <li data-selected="{{ data.work.type }}">
-                <?php
-                    erp_html_form_input( array(
-                        'label'    => __( 'Employee Type', 'wp-erp' ),
-                        'name'     => 'work[type]',
-                        'value'    => '{{ data.work.type }}',
-                        'class'    => 'erp-hrm-select2',
-                        'type'     => 'select',
-                        'required' => true,
-                        'options'  => array( '' => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_employee_types()
-                    ) );
-                ?>
-            </li>
-
-            <li data-selected="{{ data.work.status }}">
-                <?php
-                    erp_html_form_input( array(
-                        'label'    => __( 'Employee Status', 'wp-erp' ),
-                        'name'     => 'work[status]',
-                        'value'    => '{{ data.work.status }}',
-                        'class'    => 'erp-hrm-select2',
-                        'type'     => 'select',
-                        'required' => true,
-                        'options'  => array( '' => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_employee_statuses()
-                    ) );
-                ?>
-            </li>
-
-        <# } #>
-
-            <li data-selected="{{ data.work.hiring_source }}">
-                <?php erp_html_form_input( array(
-                    'label'   => __( 'Source of Hire', 'wp-erp' ),
-                    'name'    => 'work[hiring_source]',
-                    'value'   => '{{ data.work.hiring_source }}',
-                    'class'   => 'erp-hrm-select2',
-                    'type'    => 'select',
-                    'options' => array( '-1' => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_employee_sources()
-                ) ); ?>
-            </li>
-
-            <li>
-                <?php
-                    erp_html_form_input( array(
-                        'label'    => __( 'Date of Hire', 'wp-erp' ),
-                        'name'     => 'work[hiring_date]',
-                        'value'    => '{{ data.work.hiring_date }}',
-                        'required' => true,
-                        'type'     => 'text',
-                        'class'    => 'erp-date-field'
-                    ) );
-                ?>
-            </li>
+            <ol class="form-fields two-col">
 
             <# if ( ! data.id ) { #>
-
-                <li>
+                <li class="erp-hr-js-department" data-selected="{{ data.work.department }}">
                     <?php erp_html_form_input( array(
-                        'label'   => __( 'Pay Rate', 'wp-erp' ),
-                        'name'    => 'work[pay_rate]',
-                        'value'   => '{{ data.work.pay_rate }}',
-                        'type'    => 'text'
+                        'label'       => __( 'Department', 'wp-erp' ),
+                        'name'        => 'work[department]',
+                        'value'       => '',
+                        'class'       => 'erp-hrm-select2-add-more erp-hr-dept-drop-down',
+                        'custom_attr' => array( 'data-id' => 'erp-new-dept' ),
+                        'type'        => 'select',
+                        'options'     => erp_hr_get_departments_dropdown_raw()
                     ) ); ?>
                 </li>
 
-                <li data-selected="{{ data.work.pay_type }}">
+                <li data-selected="{{ data.work.designation }}">
                     <?php erp_html_form_input( array(
-                        'label'   => __( 'Pay Type', 'wp-erp' ),
-                        'name'    => 'work[pay_type]',
-                        'value'   => '{{ data.work.pay_type }}',
+                        'label'   => __( 'Job Title', 'wp-erp' ),
+                        'name'    => 'work[designation]',
+                        'value'   => '{{ data.work.designation }}',
+                        'class'   => 'erp-hrm-select2-add-more erp-hr-desi-drop-down',
+                        'custom_attr' => array( 'data-id' => 'erp-new-designation' ),
+                        'type'    => 'select',
+                        'options' => erp_hr_get_designation_dropdown_raw()
+                    ) ); ?>
+                </li>
+
+                <li data-selected="{{ data.work.location }}">
+                    <?php erp_html_form_input( array(
+                        'label'   => __( 'Location', 'wp-erp' ),
+                        'name'    => 'work[location]',
+                        'value'   => '{{ data.work.location }}',
+                        'custom_attr' => array( 'data-id' => 'erp-company-new-location' ),
+                        'class'   => 'erp-hrm-select2-add-more erp-hr-location-drop-down',
+                        'type'    => 'select',
+                        'options' => erp_company_get_location_dropdown_raw()
+                    ) ); ?>
+                </li>
+
+                <li data-selected="{{ data.work.reporting_to }}">
+                    <?php erp_html_form_input( array(
+                        'label'   => __( 'Reporting To', 'wp-erp' ),
+                        'name'    => 'work[reporting_to]',
+                        'value'   => '{{ data.work.reporting_to }}',
                         'class'   => 'erp-hrm-select2',
                         'type'    => 'select',
-                        'options' => array( '-1' => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_pay_type()
+                        'id'      => 'work_reporting_to',
+                        'options' => erp_hr_get_employees_dropdown_raw()
                     ) ); ?>
+                </li>
+
+                <li data-selected="{{ data.work.type }}">
+                    <?php
+                        erp_html_form_input( array(
+                            'label'    => __( 'Employee Type', 'wp-erp' ),
+                            'name'     => 'work[type]',
+                            'value'    => '{{ data.work.type }}',
+                            'class'    => 'erp-hrm-select2',
+                            'type'     => 'select',
+                            'required' => true,
+                            'options'  => array( '' => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_employee_types()
+                        ) );
+                    ?>
+                </li>
+
+                <li data-selected="{{ data.work.status }}">
+                    <?php
+                        erp_html_form_input( array(
+                            'label'    => __( 'Employee Status', 'wp-erp' ),
+                            'name'     => 'work[status]',
+                            'value'    => '{{ data.work.status }}',
+                            'class'    => 'erp-hrm-select2',
+                            'type'     => 'select',
+                            'required' => true,
+                            'options'  => array( '' => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_employee_statuses()
+                        ) );
+                    ?>
                 </li>
 
             <# } #>
 
-            <li>
-                <?php erp_html_form_input( array(
-                    'label'   => __( 'Work Phone', 'wp-erp' ),
-                    'name'    => 'personal[work_phone]',
-                    'value'   => '{{ data.personal.work_phone }}'
-                ) ); ?>
-            </li>
+                <li data-selected="{{ data.work.hiring_source }}">
+                    <?php erp_html_form_input( array(
+                        'label'   => __( 'Source of Hire', 'wp-erp' ),
+                        'name'    => 'work[hiring_source]',
+                        'value'   => '{{ data.work.hiring_source }}',
+                        'class'   => 'erp-hrm-select2',
+                        'type'    => 'select',
+                        'options' => array( '-1' => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_employee_sources()
+                    ) ); ?>
+                </li>
 
-            <?php do_action( 'erp-hr-employee-form-work' ); ?>
+                <li>
+                    <?php
+                        erp_html_form_input( array(
+                            'label'    => __( 'Date of Hire', 'wp-erp' ),
+                            'name'     => 'work[hiring_date]',
+                            'value'    => '{{ data.work.hiring_date }}',
+                            'required' => true,
+                            'type'     => 'text',
+                            'class'    => 'erp-date-field'
+                        ) );
+                    ?>
+                </li>
 
-        </ol>
-    </fieldset>
+                <# if ( ! data.id ) { #>
 
+                    <li>
+                        <?php erp_html_form_input( array(
+                            'label'   => __( 'Pay Rate', 'wp-erp' ),
+                            'name'    => 'work[pay_rate]',
+                            'value'   => '{{ data.work.pay_rate }}',
+                            'type'    => 'text'
+                        ) ); ?>
+                    </li>
+
+                    <li data-selected="{{ data.work.pay_type }}">
+                        <?php erp_html_form_input( array(
+                            'label'   => __( 'Pay Type', 'wp-erp' ),
+                            'name'    => 'work[pay_type]',
+                            'value'   => '{{ data.work.pay_type }}',
+                            'class'   => 'erp-hrm-select2',
+                            'type'    => 'select',
+                            'options' => array( '-1' => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_pay_type()
+                        ) ); ?>
+                    </li>
+
+                <# } #>
+
+                <li>
+                    <?php erp_html_form_input( array(
+                        'label'   => __( 'Work Phone', 'wp-erp' ),
+                        'name'    => 'personal[work_phone]',
+                        'value'   => '{{ data.personal.work_phone }}'
+                    ) ); ?>
+                </li>
+
+                <?php do_action( 'erp-hr-employee-form-work' ); ?>
+
+            </ol>
+        </fieldset>
+    <?php endif; ?>
     <fieldset>
         <legend><?php _e( 'Personal Details', 'wp-erp' ) ?></legend>
 
