@@ -89,6 +89,13 @@ class Log {
 	        $audit_log = $audit_log->where( 'created_by', (int)$args['created_by'] );
 	    }
 
+		// get item with date
+		if ( isset( $args['start'] ) && isset( $args['end'] ) && ! empty( $args['start'] ) && ! empty( $args['end'] ) ) {
+			$audit_log = $audit_log->where( 'created_at', '>=', $args['start'].' 00:00:00'  )
+				->where( 'created_at', '<=', $args['end'].' 23:59:59' );
+		}
+
+
 	    $cache_key = 'erp-get-audit-log' . md5( serialize( $args ) );
 	    $results   = wp_cache_get( $cache_key, 'wp-erp' );
 	    $users     = array();
