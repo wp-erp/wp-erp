@@ -432,11 +432,13 @@ ul.erp-list {
 
 ul.erp-dashboard-announcement {
     li {
-        padding:10px;
+        padding:5px;
         position:relative;
-        h4 {
-            margin: 0px 0px 5px;
-            font-size: 14px;
+        div.announcement-title {
+            a {
+                font-size: 15px;
+                text-decoration: none;
+            }
 
             span.announcement-date {
                 font-size: 12px;
@@ -458,6 +460,10 @@ ul.erp-dashboard-announcement {
                 font-size: 10px;
                 color: #222;
             }
+        }
+
+        &:first-child {
+            border-bottom: 1px solid #eee;
         }
 
         &.unread {
