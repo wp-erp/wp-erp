@@ -680,6 +680,10 @@ add_action( 'init', function() {
  * @return void
  */
 function erp_activation_notice() {
+    
+    if ( !current_user_can( 'manage_options' ) ) {
+        return;
+    }
     $apikey     = get_option( 'wp_erp_apikey' );
     $dismiss    = get_option( 'wp_erp_activation_dismiss' );
 

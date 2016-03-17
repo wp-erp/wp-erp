@@ -928,7 +928,11 @@ function erp_crm_get_contact_group_by_id( $id ) {
  * @return void
  */
 function erp_crm_contact_group_delete( $id ) {
-    WeDevs\ERP\CRM\Models\ContactGroup::find( $id )->delete();
+    if ( is_array( $id ) ) {
+        WeDevs\ERP\CRM\Models\ContactGroup::destroy( $id );
+    } else {
+        WeDevs\ERP\CRM\Models\ContactGroup::find( $id )->delete();
+    }
 }
 
 /**
@@ -1093,7 +1097,7 @@ function erp_crm_get_user_assignable_groups( $user_id ) {
  * @return boolean
  */
 function erp_crm_contact_subscriber_delete( $user_id ) {
-    if ( is_array( $user_id )) {
+    if ( is_array( $user_id ) ) {
         return \WeDevs\ERP\CRM\Models\ContactSubscriber::whereIn( 'user_id', $user_id )->delete();
     } else {
         return \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )->delete();
