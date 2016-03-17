@@ -4,7 +4,7 @@ namespace WeDevs\ERP\CRM;
 use WeDevs\ERP\Framework\Traits\Hooker;
 
 /**
- * The HRM Class
+ * The CRM Class
  *
  * This is loaded in `init` action hook
  */
