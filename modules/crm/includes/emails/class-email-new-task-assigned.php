@@ -1,0 +1,72 @@
+<?php
+namespace WeDevs\ERP\CRM\Emails;
+
+use WeDevs\ERP\Email;
+use WeDevs\ERP\Framework\Traits\Hooker;
+
+/**
+ * New Task Assigned
+ */
+class New_Task_Assigned extends Email {
+
+    use Hooker;
+
+    function __construct() {
+        $this->id          = 'new-task-assigned';
+        $this->title       = __( 'New Task Assigned', 'wp-erp' );
+        $this->description = __( 'New task assigned notification to employee.', 'wp-erp' );
+
+        $this->subject     = __( 'New task has been assigned to you', 'wp-erp');
+        $this->heading     = __( 'New Task Assigned', 'wp-erp');
+
+        $this->find = [
+            'task_title' => '{task_title}',
+            'due_date'   => '{due_date}',
+            'created_by' => '{created_by}',
+        ];
+
+        $this->action( 'erp_admin_field_' . $this->id . '_help_texts', 'replace_keys' );
+
+        parent::__construct();
+    }
+
+    function get_args() {
+        return [
+            'email_heading' => $this->heading,
+            'email_body'    => wpautop( $this->get_option( 'body' ) ),
+        ];
+    }
+
+    public function trigger( $data ) {
+        global $current_user;
+
+        $activity  = \WeDevs\ERP\CRM\Models\Activity::where( [
+            'id'   => intval( $data['activity_id'] ),
+            'type' => 'tasks',
+        ] )->first();
+
+        if ( ! $activity ) {
+            return;
+        }
+
+        $employee        = new \WeDevs\ERP\HRM\Employee( intval( $data['user_id'] ) );
+        $extra           = json_decode( base64_decode( $activity->extra ) );
+        $this->recipient = $employee->user_email;
+
+        $this->heading   = $this->get_option( 'heading', $this->heading );
+        $this->subject   = $this->get_option( 'subject', $this->subject );
+
+        $this->replace = [
+            'task_title' => $extra->task_title,
+            'due_date'   => erp_format_date( $activity->start_date ),
+            'created_by' => $current_user->display_name,
+        ];
+
+        if ( ! $this->get_recipient() ) {
+            return;
+        }
+
+        $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
+    }
+
+}
