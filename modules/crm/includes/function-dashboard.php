@@ -133,36 +133,14 @@ function erp_crm_dashboard_widget_upcoming_schedules() {
  */
 function erp_hr_dashboard_widget_my_schedules() {
     $user_id        = get_current_user_id();
-    $schedules_data = [];
     $args           = [
         'created_by' => $user_id,
         'number'     => -1,
         'type'       => 'log_activity'
     ];
 
-    $schedules = erp_crm_get_feed_activity( $args );
-
-    foreach ( $schedules as $key => $schedule ) {
-        $start_date = $schedule['start_date'];
-        $end_date = ( $schedule['end_date'] ) ? date( 'Y-m-d h:i:s', strtotime( $schedule['end_date'] . '+1 day') ) : date( 'Y-m-d 00:00:00', strtotime( $schedule['start_date'] . '+1 day') );        // $end_date = $schedule['end_date'];
-
-        if ( date( 'Y-m-d', strtotime( $start_date ) ) == date( 'Y-m-d', strtotime( $end_date ) ) ) {
-            $time = date( 'g:ia', strtotime( $start_date ) );
-        } else {
-            $time = date( 'g:ia', strtotime( $start_date ) ) . ' to ' . date( 'g:ia', strtotime( $end_date ) );
-        }
-
-        $title = $time . ' ' .ucfirst( $schedule['log_type'] );
-        $color = $schedule['start_date'] < current_time( 'mysql' ) ? "#f05050" : '#03c756';
-
-        $schedules_data[] = [
-            'id' => $schedule['id'],
-            'title' => $title,
-            'color' => $color,
-            'start' => $start_date,
-            'end'  => $end_date
-        ];
-    }
+    $schedules      = erp_crm_get_feed_activity( $args );
+    $schedules_data = erp_crm_prepare_calendar_schedule_data( $schedules );
 
     ?>
     <style>

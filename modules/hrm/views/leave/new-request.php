@@ -1,6 +1,6 @@
 <div class="wrap erp erp-hr-leave-request-new erp-hr-leave-reqs-wrap">
     <div class="postbox">
-        <h3 class="hndle"><?php _e( 'New Leave Request', 'wp-erp' ); ?></h2>
+        <h3 class="hndle"><?php _e( 'New Leave Request', 'wp-erp' ); ?></h3>
         <div class="inside">
             <?php if ( isset( $_GET['msg'] ) ) {
 
@@ -14,7 +14,7 @@
 
             <form action="" method="post">
 
-                    <?php if ( current_user_can( 'manage_options' ) ) { ?>
+                    <?php if ( current_user_can( 'erp_leave_create_request' ) ) { ?>
                         <div class="row">
                             <?php erp_html_form_input( array(
                                 'label'    => __( 'Employee', 'wp-erp' ),

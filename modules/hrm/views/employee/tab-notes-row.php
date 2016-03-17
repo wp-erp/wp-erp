@@ -14,10 +14,11 @@
                 <div class="note-body">
                     <?php echo wpautop( $note->comment ); ?>
                 </div>
-
-                 <div class="row-actions">
-                    <span class="delete"><a href="#" class="delete_note" data-note_id="<?php echo $note->id; ?>"><?php _e( 'Delete Permanently', 'wp-erp' ); ?></a></span>
+                 <?php if( current_user_can( 'manage_options' ) OR (wp_get_current_user()->ID == $note->comment_by ) ) { ?>
+                 <div class="row-action">
+                    <span class="delete"><a href="#" class="delete_note " data-note_id="<?php echo $note->id; ?>"><?php _e( 'Delete', 'wp-erp' ); ?></a></span>
                 </div>
+                 <?php } ?>
             </div>
         </li>
     <?php } ?>

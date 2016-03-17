@@ -388,7 +388,7 @@ class Form_Handler {
 
             $user              = get_user_by( 'id', $single_employee );
             $emp               = new \stdClass();
-            $emp->user_id      = $user->ID;
+            $emp->id      = $user->ID;
             $emp->display_name = $user->display_name;
 
             $employees[] = $emp;
@@ -405,7 +405,7 @@ class Form_Handler {
 
             foreach ($employees as $employee) {
                 $data = array(
-                    'user_id'   => $employee->user->ID,
+                    'user_id'   => $employee->id,
                     'policy_id' => $leave_policy,
                     'days'      => $policy->value,
                     'from_date' => $from_date,

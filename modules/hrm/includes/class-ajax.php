@@ -91,10 +91,32 @@ class Ajax_Handler {
         //leave entitlement
         $this->action( 'wp_ajax_erp-hr-leave-entitlement-delete', 'remove_entitlement' );
 
+        //leave rejected
+        $this->action( 'wp_ajax_erp_hr_leave_reject', 'leave_reject' );
+
         // script reload
         $this->action( 'wp_ajax_erp_hr_script_reload', 'employee_template_refresh' );
         $this->action( 'wp_ajax_erp_hr_new_dept_tmp_reload', 'new_dept_tmp_reload' );
         $this->action( 'wp_ajax_erp-hr-holiday-delete', 'dept_remove' );
+    }
+
+    function leave_reject() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+        
+        $request_id = isset( $_POST['leave_request_id'] ) ? intval( $_POST['leave_request_id'] ) : 0;
+        $comments   = isset( $_POST['reason'] ) ? $_POST['reason'] : '';
+        erp_hr_leave_request_update_status( $request_id, 3 );
+            
+        global $wpdb;
+
+        $update = $wpdb->update( $wpdb->prefix . 'erp_hr_leave_requests',
+            array( 'comments' => $comments ),
+            array( 'id' => $request_id )
+        );
+
+        if ( $update ) {
+            $this->send_success();
+        }
     }
 
     /**
@@ -760,6 +782,8 @@ class Ajax_Handler {
             $this->send_error();
         }
 
+        \WeDevs\ERP\HRM\Models\Announcement::find( $post_id )->update( ['status' => 'read' ] );
+
         $post = get_post( $post_id );
         setup_postdata( $post );
 
@@ -1255,13 +1279,13 @@ class Ajax_Handler {
         $id = isset( $_POST['employee_id'] ) && $_POST['employee_id'] ? intval( $_POST['employee_id'] ) : false;
 
         if ( ! $id ) {
-           $this->send_error( __( 'Please select employee', 'wp-erp' ) );
+           $this->send_error( __( 'Please select an employee', 'wp-erp' ) );
         }
 
         $policy_id = isset( $_POST['type'] ) && $_POST['type'] ? $_POST['type'] : false;
 
         if ( ! $policy_id ) {
-            $this->send_error( __( 'Please select leave type', 'wp-erp' ) );
+            $this->send_error( __( 'Please select a policy', 'wp-erp' ) );
         }
 
         $start_date           = isset( $_POST['from'] ) ? sanitize_text_field( $_POST['from'] ) : date_i18n( 'Y-m-d' );
@@ -1281,7 +1305,7 @@ class Ajax_Handler {
         $leave_record_exisst = erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $id );
 
         if ( $leave_record_exisst ) {
-            $this->send_error( __( 'Leave recored found withing this range!', 'wp-erp' ) );
+            $this->send_error( __( 'Existing Leave Record found within selected range!', 'wp-erp' ) );
         }
 
         $is_policy_valid = erp_hrm_is_valid_leave_duration( $start_date, $end_date, $policy_id, $id );
@@ -1320,7 +1344,7 @@ class Ajax_Handler {
         $employee_id = isset( $_POST['employee_id'] ) && $_POST['employee_id'] ? intval( $_POST['employee_id'] ) : false;
 
         if ( ! $employee_id ) {
-           $this->send_error( __( 'Please select employee', 'wp-erp' ) );
+           $this->send_error( __( 'Please select an employee', 'wp-erp' ) );
         }
 
         $policies = erp_hr_get_assign_policy_from_entitlement( $employee_id );
@@ -1341,7 +1365,7 @@ class Ajax_Handler {
             return $this->send_success( $content );
         }
 
-        return $this->send_error( __( 'No policy found. Can not apply any leave', 'wp-erp' ) );
+        return $this->send_error( __( 'Selected user is not entitled to any leave policy. Set leave entitlement to apply for leave', 'wp-erp' ) );
     }
 
     /**
@@ -1377,8 +1401,6 @@ class Ajax_Handler {
             $content = sprintf( '<span class="description red">%d %s</span>', number_format_i18n( $available ), __( 'days are available', 'wp-erp' ) );
         } elseif ( $available > 0 ) {
             $content = sprintf( '<span class="description green">%d %s</span>', number_format_i18n( $available ), __( 'days are available', 'wp-erp' ) );
-        } elseif ( $available === 0 ) {
-            $content = sprintf( '<span class="description green">%d %s</span>', 0, __( 'days are available', 'wp-erp' ) );
         } else {
             $leave_policy_day = \WeDevs\ERP\HRM\Models\Leave_Policies::select( 'value' )->where( 'id', $policy_id )->pluck('value');
             $content = sprintf( '<span class="description">%d %s</span>', number_format_i18n( $leave_policy_day ), __( 'days are available', 'wp-erp' ) );

@@ -39,7 +39,7 @@ class Admin_Menu {
         /** Leave Management **/
         add_menu_page( __( 'Leave Management', 'wp-erp' ), __( 'Leave', 'wp-erp' ), 'erp_leave_manage', 'erp-leave', array( $this, 'empty_page' ), 'dashicons-arrow-right-alt', null );
 
-        add_submenu_page( 'erp-leave', __( 'Requests', 'wp-erp' ), __( 'Requests', 'wp-erp' ), 'erp_leave_manage', 'erp-leave', array( $this, 'leave_requests' ) );
+        $leave_request = add_submenu_page( 'erp-leave', __( 'Requests', 'wp-erp' ), __( 'Requests', 'wp-erp' ), 'erp_leave_manage', 'erp-leave', array( $this, 'leave_requests' ) );
         add_submenu_page( 'erp-leave', __( 'Leave Entitlements', 'wp-erp' ), __( 'Leave Entitlements', 'wp-erp' ), 'erp_leave_manage', 'erp-leave-assign', array( $this, 'leave_entitilements' ) );
         add_submenu_page( 'erp-leave', __( 'Holidays', 'wp-erp' ), __( 'Holidays', 'wp-erp' ), 'erp_leave_manage', 'erp-holiday-assign', array( $this, 'holiday_page' ) );
         add_submenu_page( 'erp-leave', __( 'Policies', 'wp-erp' ), __( 'Policies', 'wp-erp' ), 'erp_leave_manage', 'erp-leave-policies', array( $this, 'leave_policy_page' ) );

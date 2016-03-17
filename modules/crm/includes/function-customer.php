@@ -593,7 +593,7 @@ function erp_crm_get_feed_activity( $postdata ) {
 
         if ( $postdata['type'] == 'schedule' ) {
             $results = $results->where( 'type', 'log_activity' )->where( 'start_date', '>', current_time('mysql') );
-        } else if ( $postdata['type'] == 'log_activity' ) {
+        } else if ( $postdata['type'] == 'logs' ) {
             $results = $results->where( 'type', 'log_activity' )->where( 'start_date', '<', current_time('mysql') );
         } else {
             $results = $results->where( 'type', $postdata['type'] );
@@ -626,6 +626,7 @@ function erp_crm_get_feed_activity( $postdata ) {
             $value['extra']['invited_user'] = [];
         }
 
+        $value['message'] = stripslashes( $value['message'] );
         unset( $value['extra']['invite_contact'] );
         $value['created_by']['avatar']  = get_avatar_url( $value['created_by']['ID'] );
         $value['created_date']          = date( 'Y-m-d', strtotime( $value['created_at'] ) );
@@ -677,6 +678,7 @@ function erp_crm_save_customer_feed_data( $data ) {
         $activity['extra']['invited_user'] = [];
     }
 
+    $activity['message'] = stripslashes( $activity['message'] );
     $activity['created_by']['avatar'] = get_avatar_url( $activity['created_by']['ID'] );
     $activity['created_date'] = date( 'Y-m-d', strtotime( $activity['created_at'] ) );
     $activity['created_timeline_date'] = date( 'Y-m', strtotime( $activity['created_at'] ) );
@@ -830,7 +832,6 @@ function erp_crm_assign_task_to_users( $data, $save_data ) {
         }
     }
 
-
 }
 
 /**
@@ -937,7 +938,11 @@ function erp_crm_get_contact_group_by_id( $id ) {
  * @return void
  */
 function erp_crm_contact_group_delete( $id ) {
-    WeDevs\ERP\CRM\Models\ContactGroup::find( $id )->delete();
+    if ( is_array( $id ) ) {
+        WeDevs\ERP\CRM\Models\ContactGroup::destroy( $id );
+    } else {
+        WeDevs\ERP\CRM\Models\ContactGroup::find( $id )->delete();
+    }
 }
 
 /**
@@ -1102,7 +1107,7 @@ function erp_crm_get_user_assignable_groups( $user_id ) {
  * @return boolean
  */
 function erp_crm_contact_subscriber_delete( $user_id ) {
-    if ( is_array( $user_id )) {
+    if ( is_array( $user_id ) ) {
         return \WeDevs\ERP\CRM\Models\ContactSubscriber::whereIn( 'user_id', $user_id )->delete();
     } else {
         return \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )->delete();
@@ -1851,4 +1856,76 @@ function erp_crm_save_email_activity() {
 
         do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
     }
+}
+
+/**
+ * Prepare schedule data for calendar
+ *
+ * @since 1.0
+ *
+ * @param  array $schedule
+ *
+ * @return array
+ */
+function erp_crm_prepare_calendar_schedule_data( $schedules ) {
+    $schedules_data = [];
+
+    if ( $schedules ) {
+        foreach ( $schedules as $key => $schedule ) {
+            $start_date = date( 'Y-m-d', strtotime( $schedule['start_date'] ) );
+            $end_date = ( $schedule['end_date'] ) ? date( 'Y-m-d', strtotime( $schedule['end_date'] . '+1 day' ) ) : date( 'Y-m-d', strtotime( $schedule['start_date'] . '+1 day' ) );        // $end_date = $schedule['end_date'];
+
+            if ( date( 'Y-m-d', strtotime( $start_date ) ) == date( 'Y-m-d', strtotime( $end_date ) ) ) {
+
+                if ( $schedule['start_date'] < current_time( 'mysql' ) ) {
+                    $time = date( 'g:i a', strtotime( $schedule['start_date'] ) );
+                } else {
+                    if ( date( 'g:i a', strtotime( $schedule['start_date'] ) ) == date( 'g:i a', strtotime( $schedule['end_date'] ) ) ) {
+                        $time = date( 'g:i a', strtotime( $schedule['start_date'] ) );
+                    } else {
+                        $time = date( 'g:i a', strtotime( $schedule['start_date'] ) ) . ' to ' . date( 'g:i a', strtotime( $schedule['end_date'] ) );
+                    }
+                }
+
+            } else {
+                $time = date( 'g:i a', strtotime( $schedule['start_date'] ) ) . ' to ' . date( 'g:i a', strtotime( $schedule['end_date'] ) );
+            }
+
+            $title = $time . ' ' .ucfirst( $schedule['log_type'] );
+            $color = $schedule['start_date'] < current_time( 'mysql' ) ? '#f05050' : '#03c756';
+
+            $schedules_data[] = [
+                'schedule' => $schedule,
+                'title'    => $title,
+                'color'    => $color,
+                'start'    => $start_date,
+                'end'      => $end_date
+            ];
+        }
+    }
+
+    return $schedules_data;
+}
+
+/**
+ * Get schedule data in schedule page
+ *
+ * @since 1.0
+ *
+ * @return array
+ */
+function erp_crm_get_schedule_data( $tab = '' ) {
+    $args           = [
+        'number'     => -1,
+        'type'       => 'log_activity'
+    ];
+
+    if ( $tab == 'own' ) {
+        $args['created_by'] = get_current_user_id();
+    }
+
+    $schedules      = erp_crm_get_feed_activity( $args );
+    $schedules_data = erp_crm_prepare_calendar_schedule_data( $schedules );
+
+    return $schedules_data;
 }

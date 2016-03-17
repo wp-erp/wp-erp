@@ -20,7 +20,6 @@ class Human_Resource {
      * @param \WeDevs_ERP $plugin
      */
     public function __construct( \WeDevs_ERP $plugin ) {
-
         $this->plugin = $plugin;
 
         // Define constants
@@ -163,14 +162,17 @@ class Human_Resource {
                 'new_leave_req'      => __( 'Leave Request', 'wp-erp' ),
                 'take_leave'         => __( 'Send Leve Request', 'wp-erp' ),
                 'terminate'          => __( 'Terminate', 'wp-erp' ),
+                'leave_reject'       => __( 'Reject Reason', 'wp-erp' )
             ),
-            'emp_upload_photo'   => __( 'Upload Employee Photo', 'wp-erp' ),
-            'emp_set_photo'      => __( 'Set Photo', 'wp-erp' ),
-            'confirm'            => __( 'Are you sure?', 'wp-erp' ),
-            'delConfirmDept'     => __( 'Are you sure to delete this department?', 'wp-erp' ),
-            'delConfirmEmployee' => __( 'Are you sure to delete this employee?', 'wp-erp' ),
+            'emp_upload_photo'       => __( 'Upload Employee Photo', 'wp-erp' ),
+            'emp_set_photo'          => __( 'Set Photo', 'wp-erp' ),
+            'confirm'                => __( 'Are you sure?', 'wp-erp' ),
+            'delConfirmDept'         => __( 'Are you sure to delete this department?', 'wp-erp' ),
+            'delConfirmPolicy'       => __( 'Are you sure to delete this policy?', 'wp-erp' ),
+            'delConfirmHoliday'      => __( 'Are you sure to delete this Holiday?', 'wp-erp' ),
+            'delConfirmEmployee'     => __( 'Are you sure to delete this employee?', 'wp-erp' ),
             'delConfirmEmployeeNote' => __( 'Are you sure to delete this employee note?', 'wp-erp' ),
-            'delConfirmEntitlement' => __( 'Are you sure to delete this Entitlement? If yes, then all leave request under this entitlement also permanently deleted', 'wp-erp' ),
+            'delConfirmEntitlement'  => __( 'Are you sure to delete this Entitlement? If yes, then all leave request under this entitlement also permanently deleted', 'wp-erp' ),
         ) );
 
         // if its an employee page
@@ -207,8 +209,6 @@ class Human_Resource {
      */
     public function admin_js_templates() {
         global $current_screen;
-
-        // var_dump( $current_screen ); die();
 
         switch ($current_screen->base) {
             case 'toplevel_page_erp-hr':
@@ -252,6 +252,9 @@ class Human_Resource {
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/holiday.php', 'erp-hr-holiday-js-tmp' );
                 break;
 
+            case 'toplevel_page_erp-leave':
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/leave-reject.php', 'erp-hr-leave-reject-js-tmp' );
+                break;
             default:
                 # code...
                 break;
@@ -259,3 +262,4 @@ class Human_Resource {
 
     }
 }
+

@@ -44,14 +44,19 @@ class WeDevs_ERP_Installer {
      * @return 0.1
      */
     public function activate() {
-
-        $this->create_tables();
-        $this->create_roles();
-        $this->set_role();
-        $this->create_cron_jobs();
-
         $current_erp_version = get_option( 'wp_erp_version', null );
         $current_db_version  = get_option( 'wp_erp_db_version', null );
+
+        $this->create_tables();
+
+        if ( is_null( $current_erp_version ) ) {
+            $this->create_roles();
+            $this->set_role();
+        }
+
+        $this->create_cron_jobs();
+        $this->setup_default_emails();
+
 
         if ( is_null( $current_erp_version ) && is_null( $current_db_version ) && apply_filters( 'erp_enable_setup_wizard', true ) ) {
             set_transient( '_erp_activation_redirect', 1, 30 );
@@ -61,6 +66,94 @@ class WeDevs_ERP_Installer {
         $latest_version = erp_get_version();
         update_option( 'wp_erp_version', $latest_version );
         update_option( 'wp_erp_db_version', $latest_version );
+    }
+
+    /**
+     * Set default mail subject, heading and body
+     *
+     * @since 0.1
+     *
+     * @return void
+     */
+    function setup_default_emails() {
+
+        //Employee welcome
+        $welcome = [
+            'subject' => 'Welcome {full_name} to {company_name}',
+            'heading' => 'Welcome Onboard {first_name}!',
+            'body'    => 'Dear {full_name},
+
+Welcome aboard as a <strong>{job_title}</strong> in our <strong>{dept_title}</strong> team at <strong>{company_name}</strong>! I am pleased to have you working with us. You were selected for employment due to the attributes that you displayed that appear to match the qualities I look for in an employee.
+
+I’m looking forward to seeing you grow and develop into an outstanding employee that exhibits a high level of care, concern, and compassion for others. I hope that you will find your work to be rewarding, challenging, and meaningful.
+
+Your <strong>{type}</strong> employment will start from <strong>{joined_date}</strong> and you will be reporting to <strong>{reporting_to}</strong>.
+
+Please take your time and review our yearly goals so that you can know what is expected and make a positive contribution. Again, I look forward to seeing you grow as a professional while enhancing the lives of the clients entrusted in your care.
+
+Sincerely,
+Manager Name
+CEO, Company Name
+
+{login_info}'
+        ];
+
+        update_option( 'erp_email_settings_employee-welcome', $welcome );
+
+        //New Leave Request
+        $new_leave_request = [
+            'subject' => 'New leave request received from {employee_name}',
+            'heading' => 'New Leave Request',
+            'body'    => 'Hello,
+
+A new leave request has been received from {employee_url}.
+
+<strong>Leave type:</strong> {leave_type}
+<strong>Date:</strong> {date_from} to {date_to}
+<strong>Days:</strong> {no_days}
+<strong>Reason:</strong> {reason}
+
+Please approve/reject this leave application by going following:
+
+{requests_url}
+
+Thanks.' 
+        ];
+
+        update_option( 'erp_email_settings_new-leave-request', $new_leave_request );
+
+        //Approved Leave Request
+        $approved_request = [
+            'subject' => 'Your leave request has been approved',
+            'heading' => 'Leave Request Approved',
+            'body'    => 'Hello {employee_name},
+
+Your <strong>{leave_type}</strong> type leave request for <strong>{no_days} days</strong> from {date_from} to {date_to} has been approved.
+
+Regards
+Manager Name
+Company' 
+        ];
+
+        update_option( 'erp_email_settings_approved-leave-request', $approved_request );
+
+        //Rejected Leave Request
+        $reject_request = [
+            'subject' => 'Your leave request has been rejected',
+            'heading' => 'Leave Request Rejected',
+            'body'    => 'Hello {employee_name},
+
+Your <strong>{leave_type}</strong> type leave request for <strong>{no_days} days</strong> from {date_from} to {date_to} has been rejected.
+
+The reason of rejection is: {reject_reason}
+
+Regards
+Manager Name
+Company' 
+        ];
+
+        update_option( 'erp_email_settings_rejected-leave-request', $reject_request );
+
     }
 
     /**
@@ -519,7 +612,7 @@ class WeDevs_ERP_Installer {
      */
     public function set_default_modules() {
 
-        if ( get_option( 'erp_modules' ) ) {
+        if ( get_option( 'wp_erp_version' ) ) {
             return ;
         }
 
