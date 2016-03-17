@@ -626,6 +626,7 @@ function erp_crm_get_feed_activity( $postdata ) {
             $value['extra']['invited_user'] = [];
         }
 
+        $value['message'] = stripslashes( $value['message'] );
         unset( $value['extra']['invite_contact'] );
         $value['created_by']['avatar']  = get_avatar_url( $value['created_by']['ID'] );
         $value['created_date']          = date( 'Y-m-d', strtotime( $value['created_at'] ) );
@@ -677,6 +678,7 @@ function erp_crm_save_customer_feed_data( $data ) {
         $activity['extra']['invited_user'] = [];
     }
 
+    $activity['message'] = stripslashes( $activity['message'] );
     $activity['created_by']['avatar'] = get_avatar_url( $activity['created_by']['ID'] );
     $activity['created_date'] = date( 'Y-m-d', strtotime( $activity['created_at'] ) );
     $activity['created_timeline_date'] = date( 'Y-m', strtotime( $activity['created_at'] ) );

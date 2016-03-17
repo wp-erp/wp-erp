@@ -5,7 +5,7 @@
         <timeline-header :feed="feed"></timeline-header>
     </h3>
 
-    <div class="timeline-body" @click.prevent="toggleFooter">
+    <div class="timeline-body" @click="toggleFooter">
         {{{ feed.message | formatFeedContent feed }}}
     </div>
     <div class="timeline-footer" v-if="showFooter" v-if="(feed.type != 'email')">
