@@ -929,7 +929,7 @@ var vm = new Vue({
     el: '#erp-customer-feeds',
 
     data: {
-        tabShow: 'tasks',
+        tabShow: 'new_note',
         feeds: [],
         validation: {},
         feedData : {},

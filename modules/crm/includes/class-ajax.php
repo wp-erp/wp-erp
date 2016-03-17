@@ -710,7 +710,7 @@ class Ajax_Handler {
                 //@TODO: Need to send confirmation mail for assigned users
                 do_action( 'erp_crm_save_customer_tasks_activity_feed', $save_data, $postdata );
 
-                erp_crm_assign_task_to_users( $data );
+                erp_crm_assign_task_to_users( $data, $save_data );
 
                 $this->send_success( $data );
 
