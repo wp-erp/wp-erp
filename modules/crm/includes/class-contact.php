@@ -30,31 +30,33 @@ class Contact extends \WeDevs\ERP\People {
      */
     public function to_array() {
         $fields = array(
-            'id'         => 0,
-            'user_id'    => '',
-            'first_name' => '',
-            'last_name'  => '',
-            'company'    => '',
-            'avatar'     => array(
+            'id'            => 0,
+            'user_id'       => '',
+            'first_name'    => '',
+            'last_name'     => '',
+            'company'       => '',
+            'avatar'        => array(
                 'id'  => 0,
                 'url' => ''
             ),
-            'life_stage'  => '',
-            'email'       => '',
-            'phone'       => '',
-            'mobile'      => '',
-            'website'     => '',
-            'fax'         => '',
-            'street_1'    => '',
-            'street_2'    => '',
-            'city'        => '',
-            'country'     => '',
-            'state'       => '',
-            'postal_code' => '',
-            'type'        => '',
-            'notes'       => '',
-            'other'       => '',
-            'social'      => []
+            'life_stage'    => '',
+            'email'         => '',
+            'date_of_birth' => '',
+            'phone'         => '',
+            'mobile'        => '',
+            'website'       => '',
+            'fax'           => '',
+            'street_1'      => '',
+            'street_2'      => '',
+            'city'          => '',
+            'country'       => '',
+            'state'         => '',
+            'postal_code'   => '',
+            'type'          => '',
+            'notes'         => '',
+            'other'         => '',
+            'social'        => [],
+            'source'        => ''
         );
 
         $social_field = erp_crm_get_social_field();
@@ -80,6 +82,8 @@ class Contact extends \WeDevs\ERP\People {
             }
 
             $fields['life_stage'] = $this->get_meta( 'life_stage', true );
+            $fields['date_of_birth'] = $this->get_meta( 'date_of_birth', true );
+            $fields['source'] = $this->get_meta( 'source', true );
         }
 
         return apply_filters( 'erp_crm_get_ '. $this->contact_type . '_fields', $fields, $this->data, $this->id );
@@ -123,6 +127,33 @@ class Contact extends \WeDevs\ERP\People {
         }
 
         return get_avatar( $this->email, $size );
+    }
+
+    /**
+     * Get birth date
+     *
+     * @return string
+     */
+    public function get_birthday() {
+        if ( $this->date_of_birth ) {
+            return erp_format_date( $this->date_of_birth );
+        }
+    }
+
+    /**
+     * Get the contact source
+     *
+     * @return string
+     */
+    public function get_source() {
+        $sources = erp_crm_contact_sources();
+        $source = '';
+
+        if ( array_key_exists( $this->source , $sources ) ) {
+            $source = $sources[ $this->source ];
+        }
+
+        return $source;
     }
 
 }

@@ -54,6 +54,9 @@ class Auditlog_List_Table extends \WP_List_Table {
         $sections         = erp_get_audit_log_sub_component();
         $selected_module  = ( isset( $_GET['filter_module'] ) ) ? $_GET['filter_module'] : '';
         $selected_section = ( isset( $_GET['filter_section'] ) ) ? $_GET['filter_section'] : '';
+
+        $selected_duration = ( isset( $_GET['filter_duration'] ) ) ? $_GET['filter_duration'] : '';
+
         ?>
         <div class="alignleft actions">
 
@@ -72,10 +75,45 @@ class Auditlog_List_Table extends \WP_List_Table {
                     <option value="<?php echo $section['sub_component'] ?>" <?php selected( $section['sub_component'], $selected_section ); ?>><?php echo $section['sub_component']; ?></option>
                 <?php endforeach ?>
             </select>
+            <label class="screen-reader-text" for="new_role"><?php _e( 'Filter by Duration', 'wp-erp' ) ?></label>
+            <select name="filter_duration" id="filter_duration">
+                <option value="-1"><?php _e( '- Select Duration -', 'wp-erp' ) ?></option>
+                <?php
+                $types = $this->erp_att_get_filters();
+
+                foreach ( $types as $key => $title ) {
+                    echo sprintf( "<option value='%s'%s>%s</option>\n", $key, selected( $selected_duration, $key, false ), $title );
+                }
+                ?>
+            </select>
 
             <?php
             submit_button( __( 'Filter', 'wp-erp' ), 'button', 'filter_audit_log', false );
         echo '</div>';
+    }
+
+    /**
+     * Get Lists of months for attendance filter
+     *
+     * @since 1.0
+     *
+     * @return array
+     */
+    function erp_att_get_filters() {
+
+        $filters = array(
+            'today'        => __( 'Today',        'wp-erp' ),
+            'yesterday'    => __( 'Yesterday',    'wp-erp' ),
+            'this_month'   => __( 'This Month',   'wp-erp' ),
+            'last_month'   => __( 'Last Month',   'wp-erp' ),
+            'this_quarter' => __( 'This Quarter', 'wp-erp' ),
+            'last_quarter' => __( 'Last Quarter',  'wp-erp' ),
+            'this_year'    => __( 'This Year',    'wp-erp' ),
+            'last_year'    => __( 'Last Year',    'wp-erp' ),
+            'custom'    => __( 'Custom',    'wp-erp' )
+        );
+
+        return $filters;
     }
 
     /**
@@ -203,6 +241,25 @@ class Auditlog_List_Table extends \WP_List_Table {
             $args['sub_component'] = $_REQUEST['filter_section'];
         }
 
+        if ( isset( $_REQUEST['filter_duration'] ) && !empty( $_REQUEST['filter_duration'] ) ) {
+            $args['filter_duration'] = $_REQUEST['filter_duration'];
+
+
+            if ( '-1' != $args['filter_duration'] ) {
+
+                if ( $args['filter_duration'] == 'custom' ) {
+                    $args['start'] = isset( $_REQUEST['start'] ) ? $_REQUEST['start'] : '';
+                    $args['end']   = isset( $_REQUEST['end'] ) ? $_REQUEST['end'] : '';
+                } else {
+                    $duration      = $this->erp_log_get_start_end_date( $args['filter_duration'] );
+                    //var_dump($duration);
+                    $args['start'] = $duration['start'];
+                    $args['end']   = $duration['end'];
+                }
+            }
+
+        }
+
         $this->items  = erp_log()->get( $args );
         $total_items  = erp_log()->count( $args );
 
@@ -210,6 +267,128 @@ class Auditlog_List_Table extends \WP_List_Table {
             'total_items' => $total_items,
             'per_page'    => $per_page
         ) );
+    }
+
+
+    /**
+     * set timespan in wich the data should be fetched
+     */
+    function erp_log_get_start_end_date( $time = '' ) {
+
+        $duration = [];
+
+        if ( $time ) {
+
+            switch ( $time ) {
+
+                case 'today':
+
+                    $start_date = current_time( "Y-m-d" );
+                    $end_date   = $start_date;
+                    break;
+
+                case 'yesterday':
+
+                    $today      = strtotime( current_time( "Y-m-d" ) );
+                    $start_date = date( "Y-m-d", strtotime( "-1 days", $today ) );
+                    $end_date   = $start_date;
+                    break;
+
+                case 'last_7_days':
+
+                    $end_date   = current_time( "Y-m-d" );
+                    $start_date = date( "Y-m-d", strtotime( "-6 days", strtotime( $end_date ) ) );
+                    break;
+
+                case 'this_month':
+
+                    $start_date = date( "Y-m-d", strtotime( "first day of this month" ) );
+                    $end_date   = date( "Y-m-d", strtotime( "last day of this month" ) );
+                    break;
+
+                case 'last_month':
+
+                    $start_date = date( "Y-m-d", strtotime( "first day of previous month" ) );
+                    $end_date   = date( "Y-m-d", strtotime( "last day of previous month" ) );
+                    break;
+
+                case 'this_quarter':
+
+                    $current_month = date( 'm' );
+                    $current_year  = date( 'Y' );
+
+                    if ( $current_month >= 1 && $current_month <= 3 ){
+
+                        $start_date = date( 'Y-m-d', strtotime( '1-January-'.$current_year ) );
+                        $end_date   = date( 'Y-m-d', strtotime( '31-March-'.$current_year ) );
+
+                    } else  if ( $current_month >= 4 && $current_month <= 6 ){
+
+                        $start_date = date( 'Y-m-d', strtotime( '1-April-'.$current_year ) );
+                        $end_date   = date( 'Y-m-d', strtotime( '30-June-'.$current_year ) );
+
+                    } else  if ( $current_month >= 7 && $current_month <= 9){
+
+                        $start_date = date( 'Y-m-d', strtotime( '1-July-'.$current_year ) );
+                        $end_date   = date( 'Y-m-d', strtotime( '30-September-'.$current_year ) );
+
+                    } else  if ( $current_month >= 10 && $current_month <= 12 ){
+
+                        $start_date = date( 'Y-m-d', strtotime( '1-October-'.$current_year ) );
+                        $end_date   = date( 'Y-m-d', strtotime( '31-December-'.$current_year ) );
+                    }
+                    break;
+
+                case 'last_quarter':
+
+                    $current_month = date( 'm' );
+                    $current_year  = date( 'Y' );
+
+                    if ( $current_month >= 1 && $current_month <= 3 ) {
+
+                        $start_date = date( 'Y-m-d', strtotime( '1-October-'.( $current_year-1 ) ) );
+                        $end_date   = date( 'Y-m-d', strtotime( '31-December-'.( $current_year-1 ) ) );
+
+                    } else if( $current_month >=4 && $current_month <= 6){
+
+                        $start_date = date( 'Y-m-d', strtotime( '1-January-'.$current_year ) );
+                        $end_date   = date( 'Y-m-d', strtotime( '31-March-'.$current_year ) );
+
+                    } else if( $current_month >= 7 && $current_month <= 9){
+
+                        $start_date = date( 'Y-m-d', strtotime( '1-April-'.$current_year ) );
+                        $end_date   = date( 'Y-m-d', strtotime( '30-June-'.$current_year ) );
+
+                    } else if( $current_month >= 10 && $current_month <= 12 ){
+
+                        $start_date = date( 'Y-m-d', strtotime( '1-July-'.$current_year ) );
+                        $end_date   = date( 'Y-m-d', strtotime( '30-September-'.$current_year ) );
+                    }
+                    break;
+
+                case 'last_year':
+
+                    $start_date = date( "Y-01-01", strtotime( "-1 year" ) );
+                    $end_date   = date( "Y-12-31", strtotime( "-1 year" ) );
+                    break;
+
+                case 'this_year':
+
+                    $start_date = date( "Y-01-01" );
+                    $end_date   = date( "Y-12-31" );
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        $duration   = [
+            'start' => $start_date,
+            'end'   => $end_date
+        ];
+
+        return $duration;
     }
 
 }

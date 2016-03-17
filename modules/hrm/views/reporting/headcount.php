@@ -189,45 +189,47 @@
 	;
 	(function($){
 
-	  $.plot($("#emp-headcount"), <?php esc_attr_e( json_encode( $chart_data ) ); ?>, {
-	    xaxis: {
-	      mode: 'time',
-	      tickLength: 0,
-	      tickSize: [1, 'month'],
-	      min: <?php echo $js_year_before; ?>,
-	      max: <?php echo $js_this_month; ?>,
-	      axisLabel: "Headcount by Month",
-    	axisLabelUseCanvas: true,
-    	axisLabelFontSizePixels: 14,
-    	axisLabelFontFamily: 'Verdana, Arial',
-    	axisLabelPadding: 10
-	    },
-	    yaxis: {
-	      show: false
-	    },
-	    series: {
-	      bars: {
-	      	show: true,
-	        fill: 1,
-	        color: '#8BA958',
-	        barWidth: 20*24*60*60*1000
-	      },
-	      valueLabels: {
-            show: true,
-            font: "9pt 'Trebuchet MS'",
-            align: 'center'
-          }
-	    },
-	    bars: {
-	      	align: 'center',
-	      	fillColor: '#32CD32',
-	      	lineWidth: 0
-	    },
-	    grid: {
-	      	hoverable: true,
-	      	clickable: true,
-	      	borderWidth: 0
-	    }
+	  $(document).ready(function() {
+	  	$.plot($("#emp-headcount"), <?php esc_attr_e( json_encode( $chart_data ) ); ?>, {
+		    xaxis: {
+		      mode: 'time',
+		      tickLength: 0,
+		      tickSize: [1, 'month'],
+		      min: <?php echo $js_year_before; ?>,
+		      max: <?php echo $js_this_month; ?>,
+		      axisLabel: "Headcount by Month",
+	    	axisLabelUseCanvas: true,
+	    	axisLabelFontSizePixels: 14,
+	    	axisLabelFontFamily: 'Verdana, Arial',
+	    	axisLabelPadding: 10
+		    },
+		    yaxis: {
+		      show: false
+		    },
+		    series: {
+		      bars: {
+		      	show: true,
+		        fill: 1,
+		        color: '#8BA958',
+		        barWidth: 20*24*60*60*1000
+		      },
+		      valueLabels: {
+	            show: true,
+	            font: "9pt 'Trebuchet MS'",
+	            align: 'center'
+	          }
+		    },
+		    bars: {
+		      	align: 'center',
+		      	fillColor: '#32CD32',
+		      	lineWidth: 0
+		    },
+		    grid: {
+		      	hoverable: true,
+		      	clickable: true,
+		      	borderWidth: 0
+		    }
+		  });
 	  });
 
 	})(jQuery);
