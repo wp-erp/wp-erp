@@ -94,7 +94,7 @@ class Entitlement_List_Table extends \WP_List_Table {
                 } elseif ( $available > 0 ) {
                     return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $available ), __( 'days', 'wp-erp' ) );
                 } elseif ( $available === 0 ) {
-                    return sprintf( '<span class="green">%d %s</span>', 0, __( 'days', 'wp-erp' ) );
+                    return sprintf( '<span class="gray">%d %s</span>', 0, __( 'days', 'wp-erp' ) );
                 } else {
                     return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $entitlement->days ), __( 'days', 'wp-erp' ) );
                 }
@@ -136,7 +136,7 @@ class Entitlement_List_Table extends \WP_List_Table {
         $actions           = array();
         $delete_url        = '';
 
-        if ( erp_get_option( 'erp_debug_mode', false, 0 ) ) {
+        if ( erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ) ) {
             $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" data-user_id="%d" data-policy_id="%d" title="%s">%s</a>', $delete_url, $entitlement->id, $entitlement->user_id, $entitlement->policy_id, __( 'Delete this item', 'wp-erp' ), __( 'Delete', 'wp-erp' ) );
         }
 

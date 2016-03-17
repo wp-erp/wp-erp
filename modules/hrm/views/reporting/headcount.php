@@ -55,7 +55,7 @@
 		}
 
 	?>
-	<div class="postbox">
+	<div class="hr-headcount">
 		<form method="get">
 			<input type="hidden" name="page" value="erp-hr-reporting">
 			<input type="hidden" name="type" value="headcount">
