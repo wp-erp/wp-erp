@@ -16,6 +16,7 @@
             // Dasboard Overview
             $( 'ul.erp-dashboard-announcement' ).on( 'click', 'a.mark-read', this.dashboard.markAnnouncementRead );
             $( 'ul.erp-dashboard-announcement' ).on( 'click', 'a.view-full', this.dashboard.viewAnnouncement );
+            $( 'ul.erp-dashboard-announcement' ).on( 'click', '.announcement-title a', this.dashboard.viewAnnouncementTitle );
 
             // Department
             $( 'body' ).on( 'click', 'a#erp-new-dept', this.department.create );
@@ -117,6 +118,31 @@
                     success: function(res) {
                         self.closest( 'li' ).removeClass( 'unread' );
                         self.addClass( 'erp-hide' );
+                    },
+                    error: function(error) {
+                        alert( error );
+                    }
+                });
+            },
+
+            viewAnnouncementTitle: function(e) {
+                e.preventDefault();
+                var self = $(this).closest( 'li' ).find( 'a.view-full' );
+                wp.ajax.send( 'erp_hr_announcement_view', {
+                    data: {
+                        id : self.data( 'row_id' ),
+                        _wpnonce: wpErpHr.nonce
+                    },
+                    success: function(res) {
+                        $.erpPopup({
+                            title: res.title,
+                            button: '',
+                            id: 'erp-hr-announcement',
+                            content: '<p>'+ res.content +'</p>',
+                            extraClass: 'midium',
+                        });
+                        self.closest( 'li' ).removeClass( 'unread' );
+                        self.siblings( '.mark-read' ).addClass( 'erp-hide' );
                     },
                     error: function(error) {
                         alert( error );

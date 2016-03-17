@@ -1934,14 +1934,21 @@ ul.erp-list li.two-col .cols.last {
   margin-right: 0;
 }
 ul.erp-dashboard-announcement li {
-  padding: 10px;
+  padding: 5px;
   position: relative;
 }
-ul.erp-dashboard-announcement li h4 {
-  margin: 0px 0px 5px;
-  font-size: 14px;
+ul.erp-dashboard-announcement li:first-child {
+  margin-bottom: 1px solid #eee;
 }
-ul.erp-dashboard-announcement li h4 span.announcement-date {
+ul.erp-dashboard-announcement li div {
+  margin: 0px 0px 5px;
+  font-size: 13px;
+}
+ul.erp-dashboard-announcement li div.announcement-title a {
+  font-size: 15px;
+  text-decoration: none;
+}
+ul.erp-dashboard-announcement li div span.announcement-date {
   font-size: 12px;
   font-weight: normal;
   margin-right: 50px;
