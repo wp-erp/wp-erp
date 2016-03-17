@@ -165,13 +165,15 @@ class Human_Resource {
                 'terminate'          => __( 'Terminate', 'wp-erp' ),
                 'leave_reject'       => __( 'Reject Reason', 'wp-erp' )
             ),
-            'emp_upload_photo'   => __( 'Upload Employee Photo', 'wp-erp' ),
-            'emp_set_photo'      => __( 'Set Photo', 'wp-erp' ),
-            'confirm'            => __( 'Are you sure?', 'wp-erp' ),
-            'delConfirmDept'     => __( 'Are you sure to delete this department?', 'wp-erp' ),
-            'delConfirmEmployee' => __( 'Are you sure to delete this employee?', 'wp-erp' ),
+            'emp_upload_photo'       => __( 'Upload Employee Photo', 'wp-erp' ),
+            'emp_set_photo'          => __( 'Set Photo', 'wp-erp' ),
+            'confirm'                => __( 'Are you sure?', 'wp-erp' ),
+            'delConfirmDept'         => __( 'Are you sure to delete this department?', 'wp-erp' ),
+            'delConfirmPolicy'       => __( 'Are you sure to delete this policy?', 'wp-erp' ),
+            'delConfirmHoliday'      => __( 'Are you sure to delete this Holiday?', 'wp-erp' ),
+            'delConfirmEmployee'     => __( 'Are you sure to delete this employee?', 'wp-erp' ),
             'delConfirmEmployeeNote' => __( 'Are you sure to delete this employee note?', 'wp-erp' ),
-            'delConfirmEntitlement' => __( 'Are you sure to delete this Entitlement? If yes, then all leave request under this entitlement also permanently deleted', 'wp-erp' ),
+            'delConfirmEntitlement'  => __( 'Are you sure to delete this Entitlement? If yes, then all leave request under this entitlement also permanently deleted', 'wp-erp' ),
         ) );
 
         // if its an employee page

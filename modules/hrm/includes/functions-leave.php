@@ -523,6 +523,13 @@ function erp_hr_leave_get_policies_dropdown_raw() {
  */
 function erp_hr_leave_policy_delete( $policy_id ) {
 
+    $existing_req = \WeDevs\ERP\HRM\Models\Leave_request::where( 'policy_id', $policy_id )->count();
+    
+    //if any existing req found under given policy then Do not delete
+    if ( $existing_req ) {
+        return;
+    }
+    
     if ( is_array( $policy_id ) ) {
         foreach ( $policy_id as $key => $id ) {
             do_action( 'erp_hr_leave_policy_delete', $id );

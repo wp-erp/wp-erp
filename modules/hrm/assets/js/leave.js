@@ -147,7 +147,7 @@
 
                 var self = $(this);
 
-                if ( confirm( wpErpHr.delConfirmEmployee ) ) {
+                if ( confirm( wpErpHr.delConfirmHoliday ) ) {
                     wp.ajax.send( 'erp-hr-holiday-delete', {
                         data: {
                             '_wpnonce': wpErpHr.nonce,
@@ -280,7 +280,7 @@
 
                 var self = $(this);
 
-                if ( confirm( wpErpHr.delConfirmEmployee ) ) {
+                if ( confirm( wpErpHr.delConfirmPolicy ) ) {
                     wp.ajax.send( 'erp-hr-leave-policy-delete', {
                         data: {
                             '_wpnonce': wpErpHr.nonce,
