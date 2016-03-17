@@ -1056,111 +1056,158 @@
 .erp-single-customer .erp-customer-feeds .activity-content .timeline-inverse > li > .timeline-item > .timeline-header {
   border-bottom-color: #ddd;
 }
-.erp-crm-customer-feed-edit-wrapper p {
+.erp-crm-new-schedule-wrapper p {
   border-bottom: 1px solid #eee;
-  padding-bottom: 20px;
+  padding-bottom: 11px !important;
+  margin-bottom: 0px !important;
 }
-.erp-crm-customer-feed-edit-wrapper p input {
+.erp-crm-new-schedule-wrapper p input {
   margin-left: 15px;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper p {
-  border-bottom: 1px solid #eee;
-  padding-bottom: 20px;
+.erp-crm-new-schedule-wrapper p input[disabled=disabled] {
+  color: #222;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper p input {
-  margin-left: 15px;
+.erp-crm-new-schedule-wrapper span.select2-selection--multiple,
+.erp-crm-new-schedule-wrapper span.select2-selection--single {
+  border: none;
+  height: 32px;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper input[type='text'] {
+.erp-crm-new-schedule-wrapper span.select2-selection--multiple input,
+.erp-crm-new-schedule-wrapper span.select2-selection--single input {
+  width: 100% !important;
+}
+.erp-crm-new-schedule-wrapper .select2-container--default.select2-container--focus .select2-selection--multiple,
+.erp-crm-new-schedule-wrapper .select2-container--default.select2-container--focus .select2-selection--single {
+  border: none;
+}
+.erp-crm-new-schedule-wrapper .feed-log-activity input[type='text'][name='email_subject'] {
   border: none;
   box-shadow: none;
   transition: none;
   width: 80%;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper input[type='text']:focus {
+.erp-crm-new-schedule-wrapper .feed-log-activity input[type='text'][name='email_subject']:focus {
   outline: none;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper input[type='text']::-webkit-input-placeholder {
+.erp-crm-new-schedule-wrapper .feed-log-activity input[type='text'][name='email_subject']::-webkit-input-placeholder {
   font-style: italic;
   font-weight: normal;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper input[type='text']:-moz-placeholder {
+.erp-crm-new-schedule-wrapper .feed-log-activity input[type='text'][name='email_subject']:-moz-placeholder {
   font-style: italic;
   font-weight: normal;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper input[type='text']::-moz-placeholder {
+.erp-crm-new-schedule-wrapper .feed-log-activity input[type='text'][name='email_subject']::-moz-placeholder {
   font-style: italic;
   font-weight: normal;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper input[type='text']:-ms-input-placeholder {
+.erp-crm-new-schedule-wrapper .feed-log-activity input[type='text'][name='email_subject']:-ms-input-placeholder {
   font-style: italic;
   font-weight: normal;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper span.select2-selection--multiple {
-  border: none;
-  height: 32px;
-}
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper span.select2-selection--multiple input {
-  width: 100% !important;
-}
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .select2-container--default.select2-container--focus .select2-selection--multiple {
-  border: none;
-}
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-datetime {
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-title-assign-user {
   border-bottom: 1px solid #eee;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-datetime p {
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-title-assign-user p {
+  border-bottom: none;
+}
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-title-assign-user p.schedule-title {
+  width: 67%;
+}
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-title-assign-user p.schedule-assign-user {
+  width: 30%;
+}
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper p {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 20px;
+}
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper p input {
+  margin-left: 15px;
+}
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper input[type='text'] {
+  border: none;
+  box-shadow: none;
+  transition: none;
+  width: 80%;
+}
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper input[type='text']:focus {
+  outline: none;
+}
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper input[type='text']::-webkit-input-placeholder {
+  font-style: italic;
+  font-weight: normal;
+}
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper input[type='text']:-moz-placeholder {
+  font-style: italic;
+  font-weight: normal;
+}
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper input[type='text']::-moz-placeholder {
+  font-style: italic;
+  font-weight: normal;
+}
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper input[type='text']:-ms-input-placeholder {
+  font-style: italic;
+  font-weight: normal;
+}
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-datetime {
+  border-bottom: 1px solid #eee;
+}
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-datetime p {
   border-bottom: none;
   width: 37%;
   padding-left: 5px;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-datetime p.schedule-end {
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-datetime p.schedule-end {
   _border-left: 1px solid #eee;
   padding-left: 20px;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-datetime p.schedule-all-day {
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-datetime p.schedule-all-day {
   width: 20%;
   padding: 3px 20px;
   _border-left: 1px solid #eee;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-datetime input.start-time,
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-datetime input.start-date {
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-datetime input.start-time,
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-datetime input.start-date {
   width: 33%;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-notification {
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-notification {
   border-bottom: 1px solid #eee;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-notification:last-child {
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-notification:last-child {
   border-bottom: none;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-notification p {
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-notification p {
   border: none;
   width: 40%;
   padding-left: 5px;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-notification p label {
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-notification p label {
   width: 27%;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-notification p.schedule-notification-via {
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-notification p.schedule-notification-via {
   width: 50%;
   _border-right: 1px solid #eee;
   padding-top: 15px;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-notification p.schedule-notification-before {
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-notification p.schedule-notification-before {
   padding-left: 20px;
   padding-top: 15px;
   width: 50%;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-notification p.schedule-notification-before select {
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-notification p.schedule-notification-before select {
   margin-top: -2px;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-notification p.schedule-type {
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-notification p.schedule-type {
   width: 50%;
   _border-right: 1px solid #eee;
   padding-left: 5px;
 }
-.erp-crm-customer-feed-edit-wrapper .feed-schedule-wrapper .schedule-notification p.schedule-notification-allow {
+.erp-crm-new-schedule-wrapper .feed-schedule-wrapper .schedule-notification p.schedule-notification-allow {
   width: 50%;
   padding: 6px 20px;
+}
+.erp-crm-schedule-wrapper {
+  margin-top: 20px;
 }
 [v-cloak] {
   display: none;
@@ -1593,11 +1640,11 @@ table.leaves td.column-status .status-3 {
   color: #999;
   margin-left: 10px;
 }
-.note-tab-wrap ul.notes-list .note-wrap .row-actions {
+.note-tab-wrap ul.notes-list .note-wrap .row-action {
   font-size: 12px;
   margin-top: 5px;
 }
-.note-tab-wrap ul.notes-list .note-wrap .row-actions a {
+.note-tab-wrap ul.notes-list .note-wrap .row-action a {
   text-decoration: none;
 }
 .note-tab-wrap ul.notes-list .note-wrap p {
@@ -2605,6 +2652,9 @@ ul.edit-address li.city-wrap span {
 }
 .erp-activation-cloud-prompt .button-primary {
   margin-right: 10px;
+}
+.erp-activation-cloud-prompt .erp-button-xs {
+  font-size: small;
 }
 .erp-activation-cloud-prompt .activation-form-container {
   width: 40%;

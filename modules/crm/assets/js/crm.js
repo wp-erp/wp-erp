@@ -47,7 +47,13 @@
 
             $( '.erp-crm-customer' ).on( 'click', 'a#erp-advance-search-button, a#erp-show-save-search-field', this.showAdvanceFilter );
 
+            // CRM Dashboard
             $( '.crm-dashboard' ).on( 'click', 'a.erp-crm-dashbaord-show-details-schedule', this.dashboard.showScheduleDetails );
+
+            $('body').on( 'change', 'input[type=checkbox][name="all_day"]', this.triggerCustomerScheduleAllDay );
+            $('body').on( 'change', 'input[type=checkbox][name="allow_notification"]', this.triggerCustomerScheduleAllowNotification );
+            $('body').on( 'change', 'select#erp-crm-feed-log-type', this.triggerLogType );
+
             this.checkVisibaleAdvanceSearch();
             // Erp ToolTips using tiptip
             this.initTipTips();
@@ -161,42 +167,43 @@
             });
         },
 
-        timeFormat: function( date ) {
-            date = new Date( date );
-            var hours = date.getHours();
-            var minutes = date.getMinutes();
-            var ampm = hours >= 12 ? 'pm' : 'am';
-            hours = hours % 12;
-            hours = hours ? hours : 12; // the hour '0' should be '12'
-            minutes = minutes < 10 ? '0'+minutes : minutes;
-            var strTime = hours + ':' + minutes + ' ' + ampm;
-            return strTime;
+        triggerCustomerScheduleAllDay: function() {
+            var self = $(this);
+
+            if ( self.is(':checked') ) {
+                self.closest('div.schedule-datetime').find('.erp-time-field').attr( 'disabled', 'disabled' ).hide();
+                self.closest('div.schedule-datetime').find('.datetime-sep').hide();
+            } else {
+                self.closest('div.schedule-datetime').find('.erp-time-field').removeAttr( 'disabled' ).show();
+                self.closest('div.schedule-datetime').find('.datetime-sep').show();
+            };
         },
 
-        dateFormat: function ( date, format ) {
-            date = new Date( date );
-            var month = ("0" + (date.getMonth() + 1)).slice(-2),
-                day   = ("0" + date.getDate()).slice(-2),
-                year  = date.getFullYear(),
-                monthArray = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ],
-                monthShortArray = [ "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec" ],
-                monthName = monthArray[date.getMonth()],
-                monthShortName = monthShortArray[date.getMonth()];
+        triggerCustomerScheduleAllowNotification: function() {
+            var self = $(this);
 
-            var pattern = {
-                Y: year,
-                m: month,
-                F: monthName,
-                M: monthShortName,
-                d: day,
-                j: day
+            if ( self.is(':checked') ) {
+                // self.closest('.erp-crm-new-schedule-wrapper').find('#schedule-notification-wrap').find('input, select').removeAttr( 'disabled' );
+                self.closest('.erp-crm-new-schedule-wrapper').find('#schedule-notification-wrap').show();
+            } else {
+                // self.closest('.erp-crm-new-schedule-wrapper').find('#schedule-notification-wrap').find('input, select').attr( 'disabled', 'disabled' );
+                self.closest('.erp-crm-new-schedule-wrapper').find('#schedule-notification-wrap').hide();
             };
+        },
 
-            var dateStr = format.replace(/Y|m|d|j|M|F/gi, function( matched ){
-                return pattern[matched];
-            });
+        triggerLogType: function() {
+            var self = $(this);
 
-            return dateStr;
+            if ( self.val() == 'meeting' ) {
+                self.closest('.feed-log-activity').find('.log-email-subject').hide();
+                self.closest('.feed-log-activity').find('.log-selected-contact').show();
+            } else if ( self.val() == 'email' ) {
+                self.closest('.feed-log-activity').find('.log-email-subject').show();
+                self.closest('.feed-log-activity').find('.log-selected-contact').hide();
+            } else {
+                self.closest('.feed-log-activity').find('.log-email-subject').hide();
+                self.closest('.feed-log-activity').find('.log-selected-contact').hide();
+            }
         },
 
         dashboard: {
@@ -222,19 +229,19 @@
                             },
 
                             success: function( response ) {
-                                var startDate = WeDevs_ERP_CRM.dateFormat( response.start_date, 'j F' ),
-                                    startTime = WeDevs_ERP_CRM.timeFormat( response.start_date ),
-                                    endDate = WeDevs_ERP_CRM.dateFormat( response.end_date, 'j F' ),
-                                    endTime = WeDevs_ERP_CRM.timeFormat( response.end_date );
+                                var startDate = wperp.dateFormat( response.start_date, 'j F' ),
+                                    startTime = wperp.timeFormat( response.start_date ),
+                                    endDate = wperp.dateFormat( response.end_date, 'j F' ),
+                                    endTime = wperp.timeFormat( response.end_date );
 
                                 if ( response.extra.all_day == 'true' ) {
-                                    if ( WeDevs_ERP_CRM.dateFormat( response.start_date, 'Y-m-d' ) == WeDevs_ERP_CRM.dateFormat( response.end_date, 'Y-m-d' ) ) {
+                                    if ( wperp.dateFormat( response.start_date, 'Y-m-d' ) == wperp.dateFormat( response.end_date, 'Y-m-d' ) ) {
                                         var datetime = startDate;
                                     } else {
                                         var datetime = startDate + ' to ' + endDate;
                                     }
                                 } else {
-                                    if ( WeDevs_ERP_CRM.dateFormat( response.start_date, 'Y-m-d' ) == WeDevs_ERP_CRM.dateFormat( response.end_date, 'Y-m-d' ) ) {
+                                    if ( wperp.dateFormat( response.start_date, 'Y-m-d' ) == wperp.dateFormat( response.end_date, 'Y-m-d' ) ) {
                                         var datetime = startDate + ' at ' + startTime + ' to ' + endTime;
                                     } else {
                                         var datetime = startDate + ' at ' + startTime + ' to ' + endDate + ' at ' + endTime;
