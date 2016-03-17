@@ -40,7 +40,7 @@ class New_Task_Assigned extends Email {
     public function trigger( $data ) {
         global $current_user;
 
-        $activity  = \WeDevs\ERP\CRM\Models\Activity::where( [
+        $activity = \WeDevs\ERP\CRM\Models\Activity::where( [
             'id'   => intval( $data['activity_id'] ),
             'type' => 'tasks',
         ] )->first();
@@ -49,12 +49,10 @@ class New_Task_Assigned extends Email {
             return;
         }
 
-        $employee        = new \WeDevs\ERP\HRM\Employee( intval( $data['user_id'] ) );
-        $extra           = json_decode( base64_decode( $activity->extra ) );
-        $this->recipient = $employee->user_email;
+        $extra = json_decode( base64_decode( $activity->extra ) );
 
-        $this->heading   = $this->get_option( 'heading', $this->heading );
-        $this->subject   = $this->get_option( 'subject', $this->subject );
+        $this->heading = $this->get_option( 'heading', $this->heading );
+        $this->subject = $this->get_option( 'subject', $this->subject );
 
         $this->replace = [
             'task_title' => $extra->task_title,
@@ -62,11 +60,13 @@ class New_Task_Assigned extends Email {
             'created_by' => $current_user->display_name,
         ];
 
-        if ( ! $this->get_recipient() ) {
-            return;
-        }
+        foreach ($data['user_ids'] as $id) {
+            $employee = new \WeDevs\ERP\HRM\Employee( intval( $id ) );
 
-        $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
+            if ( $employee ) {
+                $this->send( $employee->user_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
+            }
+        }
     }
 
 }
