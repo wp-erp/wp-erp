@@ -5,9 +5,9 @@ $all_user_id = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employ
 $date_format = get_option( 'date_format' );
 ?>
 <div class="wrap">
-	<h2><?php _e( 'Salary History', 'wp-erp' ); ?></h2>
+	<h1><?php _e( 'Salary History', 'wp-erp' ); ?></h1>
 
-	<table class="widefat striped">
+	<table class="widefat striped" style="margin-top: 20px;">
 		<thead>
 			<tr>
 				<th><?php _e( 'Employee', 'wp-erp' ); ?></th>
@@ -19,6 +19,7 @@ $date_format = get_option( 'date_format' );
 		</thead>
 		<tbody>
 			<?php
+            if ( $all_user_id ) {
 				foreach ( $all_user_id as $user_id ) {
 
 					$employee      = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
@@ -43,6 +44,9 @@ $date_format = get_option( 'date_format' );
 						}
 					}
 				}
+            } else {
+                echo '<tr><td colspan="5">' . __( 'No employee found!', 'wp-erp' ) . '</td></tr>';
+            }
 			?>
 		</tbody>
 	</table>

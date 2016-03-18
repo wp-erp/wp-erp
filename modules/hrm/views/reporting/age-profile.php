@@ -29,7 +29,7 @@
 
 	?>
 	<div class="erp-single-container">
-		<div class="erp-area-left">
+		<div class="erp-area-left" id="poststuff">
 		<?php
 			echo erp_admin_dash_metabox( __( '<i class="fa fa-bar-chart"></i> Employee Age Breakdown Chart', 'wp-erp' ), function() {
 		?>

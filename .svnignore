@@ -12,3 +12,4 @@ Gruntfile.js
 package.json
 README.md
 plugin-deploy.sh
+vendor/danielstujules/stringy/tests

@@ -7,7 +7,7 @@ Stable tag: trunk
 License: GPLv2
 Donate Link: https://tareq.co/donate
 
-A complete human resource and customer relationship management plugin
+An Open Source ERP & CRM Solution for WordPress
 
 == Description ==
 WP ERP is the framework for weDevs's enterprise resource management system. This plugin includes -
