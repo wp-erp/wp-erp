@@ -1859,6 +1859,12 @@ function erp_crm_save_email_activity() {
         update_option( 'wp_erp_cloud_email_count', get_option( 'wp_erp_cloud_email_count', 0 ) + 1 );
 
         do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
+
+        status_header(200);
+        exit;
+    } else {
+        status_header(400);
+        exit;
     }
 }
 
@@ -1932,4 +1938,34 @@ function erp_crm_get_schedule_data( $tab = '' ) {
     $schedules_data = erp_crm_prepare_calendar_schedule_data( $schedules );
 
     return $schedules_data;
+}
+
+/**
+ * Get CRM email from address.
+ *
+ * @since 1.0
+ *
+ * @return string
+ */
+function erp_crm_get_email_from_address() {
+    $settings = get_option( 'erp_settings_erp-email', [] );
+
+    if ( array_key_exists( 'from_email', $settings ) ) {
+        return sanitize_email( $settings['from_email'] );
+    }
+
+    return get_option( 'admin_email' );
+}
+
+/**
+ * Get CRM email from name.
+ *
+ * @since 1.0
+ *
+ * @return string
+ */
+function erp_crm_get_email_from_name() {
+    global $current_user;
+
+    return $current_user->display_name;
 }

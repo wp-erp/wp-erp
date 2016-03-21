@@ -620,19 +620,25 @@ class Ajax_Handler {
 
                 $contact = new \WeDevs\ERP\CRM\Contact( $contact_id );
 
-                global $display_name, $user_email;
+                global $current_user;
 
-                $headers = [];
-                $headers[] = 'Content-Type: text/html; charset=UTF-8';
-                $headers[] = 'From: ' . $display_name . ' <' . $user_email . '>' . "\r\n";
+                $headers = "";
+                $headers .= "Content-Type: text/html; charset=UTF-8" . "\r\n";
 
                 if( $wp_erp_api_key && $wp_erp_api_active && 'yes' == $wp_erp_api_active ) {
                     $reply_to = $wp_erp_api_key . "-" . $postdata['created_by'] . "-" . $contact_id . "@incloud.wperp.com";
-                    $headers[] = 'Reply-To: ' . $reply_to . "\r\n";
+                    $headers .= "Reply-To: $reply_to" . "\r\n";
                 }
+
+                add_filter( 'wp_mail_from', 'erp_crm_get_email_from_address' );
+                add_filter( 'wp_mail_from_name', 'erp_crm_get_email_from_name' );
 
                 // Send email a contact
                 wp_mail( $contact->email, $postdata['email_subject'], $postdata['message'], $headers );
+
+                remove_filter( 'wp_mail_from', 'erp_crm_get_email_from_address' );
+                remove_filter( 'wp_mail_from_name', 'erp_crm_get_email_from_name' );
+                remove_filter( 'wp_mail_content_type', 'erp_crm_get_email_content_type' );
 
                 do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
 
