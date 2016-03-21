@@ -613,19 +613,18 @@ class Ajax_Handler {
 
                 $data = erp_crm_save_customer_feed_data( $save_data );
 
-                $wp_erp_api_key     = get_option( 'wp_erp_apikey', null );
-                $wp_erp_api_active  = get_option( 'wp_erp_api_active', 'no' );
-
                 $contact_id = intval( $postdata['user_id'] );
 
                 $contact = new \WeDevs\ERP\CRM\Contact( $contact_id );
 
-                global $current_user;
-
                 $headers = "";
                 $headers .= "Content-Type: text/html; charset=UTF-8" . "\r\n";
 
-                if( $wp_erp_api_key && $wp_erp_api_active && 'yes' == $wp_erp_api_active ) {
+                $is_cloud_active = erp_is_cloud_active();
+
+                if( $is_cloud_active ) {
+                    $wp_erp_api_key = get_option( 'wp_erp_apikey' );
+
                     $reply_to = $wp_erp_api_key . "-" . $postdata['created_by'] . "-" . $contact_id . "@incloud.wperp.com";
                     $headers .= "Reply-To: $reply_to" . "\r\n";
                 }
