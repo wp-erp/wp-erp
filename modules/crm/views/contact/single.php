@@ -68,6 +68,19 @@
 
                                 <?php do_action( 'erp-hr-employee-single-basic', $customer ); ?>
                             </ul>
+
+                            <div class="erp-crm-assign-contact">
+                                <h4><?php _e( 'Assign To', 'wp-erp' ); ?></h4>
+                                <form action="" method="post">
+                                    <select name="erp_select_assign_contact" id="erp-select-assign-contact">
+                                        <option value="1">Test1</option>
+                                        <option value="3">Test3</option>
+                                        <option value="4">Test4</option>
+                                    </select>
+                                    <input type="submit" class="button button-primary" name="erp_assign_contacts" value="<?php _e( 'Assign', 'wp-erp' ); ?>">
+                                    <input type="submit" class="button" value="<?php _e( 'Cancel', 'wp-erp' ); ?>">
+                                </form>
+                            </div>
                         </div>
                     </div><!-- .postbox -->
 
