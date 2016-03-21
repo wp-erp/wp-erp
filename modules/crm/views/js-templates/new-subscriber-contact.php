@@ -16,21 +16,22 @@
 
     <# } #>
 
-    <# if( data.length ) { #>
-    <div class="row" id="erp-crm-contact-subscriber-group-checkbox" data-checked = "{{ data.group_id }}">
-        <?php erp_html_form_input( array(
-            'label'       => __( 'Assign Group', 'wp-erp' ),
-            'name'        => 'group_id[]',
-            'type'        => 'multicheckbox',
-            'id'          => 'erp-crm-contact-group-id',
-            'class'       => 'erp-crm-contact-group-class',
-            'options'     => erp_crm_get_contact_group_dropdown()
-        ) ); ?>
-    </div>
-    <# } else { #>
-        <p><?php echo sprintf( '%s <a href="%s">%s</a>', __( 'No group founds. Please add group first', 'wp-erp' ), add_query_arg( [ 'page' => 'erp-sales-contact-groups' ], admin_url( 'admin.php' ) ), __( 'Add New Group', 'wp-erp' ) ); ?></p>
+    <?php $contact_groups = erp_crm_get_contact_group_dropdown(); ?>
 
-    <# } #>
+    <?php if( count( $contact_groups ) > 0 ) : ?>
+        <div class="row" id="erp-crm-contact-subscriber-group-checkbox" data-checked = "{{ data.group_id }}">
+            <?php erp_html_form_input( array(
+                'label'       => __( 'Assign Group', 'wp-erp' ),
+                'name'        => 'group_id[]',
+                'type'        => 'multicheckbox',
+                'id'          => 'erp-crm-contact-group-id',
+                'class'       => 'erp-crm-contact-group-class',
+                'options'     => $contact_groups
+            ) ); ?>
+        </div>
+    <?php else : ?>
+        <p><?php echo sprintf( '%s <a href="%s">%s</a>', __( 'No group founds. Please add group first', 'wp-erp' ), add_query_arg( [ 'page' => 'erp-sales-contact-groups' ], admin_url( 'admin.php' ) ), __( 'Add New Group', 'wp-erp' ) ); ?></p>
+    <?php endif; ?>
 
     <?php wp_nonce_field( 'wp-erp-crm-contact-subscriber' ); ?>
 
