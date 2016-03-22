@@ -1212,16 +1212,47 @@
 [v-cloak] {
   display: none;
 }
-.cfi-table {
+table.widefat.cfi-table {
   border-collapse: collapse;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.cfi-table tr {
+  border-left: 1px solid #E1E1E1;
+  border-right: 1px solid #E1E1E1;
+}
+.cfi-table tr.cfi-option-row {
+  background-color: #fff;
 }
 .cfi-table th,
 .cfi-table td {
   padding: 10px 20px;
   text-align: center;
 }
+.cfi-table th {
+  background-color: #fff;
+  border-top: 1px solid #E1E1E1;
+  border-bottom: 1px solid #E1E1E1;
+}
 .cfi-table td {
   border-bottom: 1px solid #E1E1E1;
+}
+.cfi-table td.cfi-contact-options .button {
+  margin: 0 3px 6px;
+}
+.cfi-table tfoot tr {
+  border: 0;
+}
+.cfi-table tfoot td {
+  padding: 10px 0;
+  text-align: left;
+  background: #F1F1F1;
+  border: 0;
+}
+.cfi-table tfoot tr:last-of-type td {
+  border-bottom: 1px solid #E1E1E1;
+  padding-bottom: 25px;
 }
 @media (min-width: 1200px) {
   .cfi-table {
@@ -1259,14 +1290,11 @@
   -ms-transform: none !important;
   transform: none !important;
 }
-.cfi-table td.cfi-contact-options .button {
-  margin: 0 3px 6px;
-}
 .cfi-table-container > td {
   padding-bottom: 0;
 }
-.cfi-table-submit > td {
-  padding-left: 0;
+.cfi-contact-group {
+  margin-left: 10px;
 }
 span.red {
   color: #CF0202;
