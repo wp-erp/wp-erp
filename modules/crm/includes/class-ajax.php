@@ -632,8 +632,19 @@ class Ajax_Handler {
                 add_filter( 'wp_mail_from', 'erp_crm_get_email_from_address' );
                 add_filter( 'wp_mail_from_name', 'erp_crm_get_email_from_name' );
 
+                $activity_id = $data['id'];
+                $query = [
+                    'action' => 'erp_crm_track_email_read',
+                    'cid'    => $contact_id,
+                    'aid'    => $activity_id,
+                ];
+                $email_url = add_query_arg( $query, admin_url('admin-ajax.php') );
+                $img_url   = '<img src="' . $email_url . '" width="1" height="1" border="0" />';
+
+                $email_body = $postdata['message'] . $img_url;
+
                 // Send email a contact
-                wp_mail( $contact->email, $postdata['email_subject'], $postdata['message'], $headers );
+                wp_mail( $contact->email, $postdata['email_subject'], $email_body, $headers );
 
                 remove_filter( 'wp_mail_from', 'erp_crm_get_email_from_address' );
                 remove_filter( 'wp_mail_from_name', 'erp_crm_get_email_from_name' );

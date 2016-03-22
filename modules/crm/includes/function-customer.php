@@ -1969,3 +1969,26 @@ function erp_crm_get_email_from_name() {
 
     return $current_user->display_name;
 }
+
+/**
+ * Track email read.
+ *
+ * @since 1.0
+ *
+ * @return void
+ */
+function erp_crm_track_email_read() {
+    if ( isset( $_GET['aid'] ) ) {
+        $activity = \WeDevs\ERP\CRM\Models\Activity::find( $_GET['aid'] );
+
+        $extra = json_decode( base64_decode( $activity->extra ) );
+
+        if ( ! isset( $extra['read'] ) ) {
+            $extra['read'] = 1;
+            $data = [
+                'extra' => base64_encode( json_encode( $extra ) )
+            ];
+            $activity->update( $data );
+        }
+    }
+}
