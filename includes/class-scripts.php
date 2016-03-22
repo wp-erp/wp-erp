@@ -105,7 +105,7 @@ class Scripts {
         wp_register_style( 'jquery-ui', WPERP_ASSETS . '/vendor/jquery-ui/jquery-ui-1.9.1.custom.css' );
         wp_register_style( 'erp-chosen', WPERP_ASSETS . '/vendor/chosen/chosen' . $this->suffix . '.css' );
 
-        wp_register_style( 'erp-styles', WPERP_ASSETS . '/css/admin/admin.css', false, $this->version );
+        wp_register_style( 'erp-styles', WPERP_ASSETS . '/css/admin.css', false, $this->version );
 
         // sweet alert
         wp_register_style( 'erp-sweetalert', $vendor . '/sweetalert/sweetalert.css', false, $this->version );

@@ -127,7 +127,7 @@ class Human_Resource {
      */
     public function admin_scripts( $hook ) {
         // var_dump( $hook );
-        $suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+        $suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '';
 
         wp_enqueue_media();
         wp_enqueue_script( 'erp-tiptip' );

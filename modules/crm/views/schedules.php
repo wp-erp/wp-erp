@@ -1,11 +1,11 @@
 <?php
-    $tab = ( isset( $_GET['tab'] ) && !empty( $_GET['tab'] ) ) ? $_GET['tab']: 'own';
-    $schedules_data = erp_crm_get_schedule_data( $tab );
+$tab            = ( isset( $_GET['tab'] ) && !empty( $_GET['tab'] ) ) ? $_GET['tab']: 'own';
+$schedules_data = erp_crm_get_schedule_data( $tab );
 ?>
 <div class="wrap erp erp-crm-schedules" id="wp-erp">
 
-    <h2><?php _e( 'Schedules', 'wp-erp' ); ?></h2>
-    <hr>
+    <h1><?php _e( 'Schedules', 'wp-erp' ); ?></h1>
+
     <h2 class="nav-tab-wrapper erp-nav-tab-wrapper">
         <a class="nav-tab <?php echo $tab == 'own' ? 'nav-tab-active': ''; ?>" href="<?php echo add_query_arg( [ 'page'=>'erp-sales-schedules', 'tab' => 'own' ], admin_url( 'admin.php' ) ); ?>"><?php _e( 'My Schedules', 'wp-erp' ); ?></a>
         <a class="nav-tab <?php echo $tab == 'all' ? 'nav-tab-active': ''; ?>" href="<?php echo add_query_arg( [ 'page'=>'erp-sales-schedules', 'tab' => 'all' ], admin_url( 'admin.php' ) ); ?>"><?php _e( 'All Schedules', 'wp-erp' ); ?></a>

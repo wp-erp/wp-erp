@@ -37,16 +37,15 @@
 		}
 	?>
 
-	<div>
+	<div class="erp-area-left" id="poststuff">
 
-	<?php
-		echo erp_admin_dash_metabox( __( '<i class="fa fa-bar-chart"></i> Employee Gender Count', 'wp-erp' ), function() {
-	?>
-		<div id="emp-gender-ratio" style="width:50%;height:400px;"></div>
-	<?php
-		} );
-	?>
-	<div>
+    	<?php echo erp_admin_dash_metabox( __( '<i class="fa fa-bar-chart"></i> Employee Gender Count', 'wp-erp' ), function() {
+            ?>
+    		<div id="emp-gender-ratio" style="width:50%;height:400px;"></div>
+            <?php
+    		} );
+    	?>
+
 		<table class="widefat striped">
 			<thead>
 				<tr>
@@ -67,42 +66,42 @@
 			?>
 			</tbody>
 		</table>
-	</div>
 
-	<?php
+        <br>
+
+        <?php
 		echo erp_admin_dash_metabox( __( '<i class="fa fa-bar-chart"></i> Employee Gender Ratio By Department', 'wp-erp' ), function() {
-	?>
-		<div id="emp-gender-ratio-by-department" style="width:800px;height:400px;"></div>
-	<?php
-		} );
-	?>
+	       ?>
+            <div id="emp-gender-ratio-by-department" style="width:800px;height:400px;"></div>
+	       <?php
+		  } );
+        ?>
 
-	<table class="widefat striped">
-		<thead>
-			<tr>
-				<th><?php _e( 'Department', 'wp-erp' ); ?></th>
-				<th><?php _e( 'Male', 'wp-erp' ); ?></th>
-				<th><?php _e( 'Female', 'wp-erp' ); ?></th>
-				<th><?php _e( 'Unspecified', 'wp-erp' ); ?></th>
-			</tr>
-		</thead>
-		<tbody>
-			<?php
-				foreach ( $gender_data as $single_data ) {
+    	<table class="widefat striped">
+    		<thead>
+    			<tr>
+    				<th><?php _e( 'Department', 'wp-erp' ); ?></th>
+    				<th><?php _e( 'Male', 'wp-erp' ); ?></th>
+    				<th><?php _e( 'Female', 'wp-erp' ); ?></th>
+    				<th><?php _e( 'Unspecified', 'wp-erp' ); ?></th>
+    			</tr>
+    		</thead>
+    		<tbody>
+    			<?php
+    				foreach ( $gender_data as $single_data ) {
 
-					echo '<tr>';
-					echo '<td>' . esc_attr( $single_data['dept_name'] ) . '</td>';
-					echo '<td>' . esc_attr( $single_data['male'] ) . '</td>';
-					echo '<td>' . esc_attr( $single_data['female'] ) . '</td>';
-					echo '<td>' . esc_attr( $single_data['other'] ) . '</td>';
-					echo '</tr>';
-				}
-			?>
-		</tbody>
-	</table>
-	</div>
+    					echo '<tr>';
+    					echo '<td>' . esc_attr( $single_data['dept_name'] ) . '</td>';
+    					echo '<td>' . esc_attr( $single_data['male'] ) . '</td>';
+    					echo '<td>' . esc_attr( $single_data['female'] ) . '</td>';
+    					echo '<td>' . esc_attr( $single_data['other'] ) . '</td>';
+    					echo '</tr>';
+    				}
+    			?>
+    		</tbody>
+    	</table>
 
-
+    </div>
 
 	<script>
 		;

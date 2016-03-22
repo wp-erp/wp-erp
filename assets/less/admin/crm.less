@@ -1335,31 +1335,76 @@
   display: none;
 }
 
-.cfi-table {
+table.widefat.cfi-table {
     border-collapse: collapse;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
 }
 
-.cfi-table th,
-.cfi-table td {
-    padding: 10px 20px;
-    text-align: center;
+.cfi-table {
+    tr {
+        border-left: 1px solid #E1E1E1;
+        border-right: 1px solid #E1E1E1;
+
+        &.cfi-option-row {
+            background-color: #fff;
+        }
+
+    }
+
+    th,
+    td {
+        padding: 10px 20px;
+        text-align: center;
+    }
+
+    th {
+        background-color: #fff;
+        border-top: 1px solid #E1E1E1;
+        border-bottom: 1px solid #E1E1E1;
+    }
+
+     td {
+        border-bottom: 1px solid #E1E1E1;
+    }
+
+    td.cfi-contact-options .button {
+        margin: 0 3px 6px;
+    }
+
+    tfoot {
+        tr {
+            border: 0;
+        }
+
+        td {
+            padding: 10px 0;
+            text-align: left;
+            background: #F1F1F1;
+            border: 0;
+        }
+
+        tr:last-of-type td {
+            border-bottom: 1px solid #E1E1E1;
+            padding-bottom: 25px;
+        }
+    }
 }
 
-.cfi-table td {
-    border-bottom: 1px solid #E1E1E1;
-}
+
 
 @media (min-width: 1200px) {
     .cfi-table {
         width: 50%;
-    }
 
-    .cfi-table .cfi-table-wide-column {
-        width: 35%;
-    }
+        .cfi-table-wide-column {
+            width: 35%;
+        }
 
-    .cfi-table .cfi-table-narrow-column {
-        width: 30%;
+        .cfi-table-narrow-column {
+            width: 30%;
+        }
     }
 }
 
@@ -1375,31 +1420,29 @@
     }
 }
 
-.button.button-default .dashicons {
-    color: #82878c;
-}
+.button.button-default {
+    .dashicons {
+        color: #82878c;
+    }
 
-.button.button-default[disabled] .dashicons {
-    color: #C7C7C7 !important;
-    border-color: #ddd !important;
-    background: #f7f7f7 !important;
-    -webkit-box-shadow: none !important;
-    box-shadow: none !important;
-    text-shadow: 0 1px 0 #fff !important;
-    cursor: default;
-    -webkit-transform: none !important;
-    -ms-transform: none !important;
-    transform: none !important;
-}
-
-.cfi-table td.cfi-contact-options .button {
-    margin: 0 3px 6px;
+    &[disabled] .dashicons {
+        color: #C7C7C7 !important;
+        border-color: #ddd !important;
+        background: #f7f7f7 !important;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+        text-shadow: 0 1px 0 #fff !important;
+        cursor: default;
+        -webkit-transform: none !important;
+        -ms-transform: none !important;
+        transform: none !important;
+    }
 }
 
 .cfi-table-container > td {
     padding-bottom: 0;
 }
 
-.cfi-table-submit > td {
-    padding-left: 0;
+.cfi-contact-group {
+    margin-left: 10px;
 }

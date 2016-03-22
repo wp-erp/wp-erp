@@ -618,7 +618,7 @@ function erp_get_country_name( $country ) {
     } else {
         $full_country = '';
     }
-    
+
     return $full_country;
 }
 
@@ -680,12 +680,12 @@ add_action( 'init', function() {
  * @return void
  */
 function erp_activation_notice() {
-    
+
     if ( !current_user_can( 'manage_options' ) ) {
         return;
     }
-    $apikey     = get_option( 'wp_erp_apikey' );
-    $dismiss    = get_option( 'wp_erp_activation_dismiss' );
+    $apikey  = get_option( 'wp_erp_apikey' );
+    $dismiss = get_option( 'wp_erp_activation_dismiss' );
 
     if ( ! $apikey && ! $dismiss ) {
     ?>
@@ -782,16 +782,32 @@ function erp_activation_notice_javascript() { ?>
 function erp_api_mode_change() {
     header('Access-Control-Allow-Origin: *');
 
-    $postdata      = $_POST;
-    $api_key       = get_option( 'wp_erp_apikey' );
+    $postdata    = $_POST;
+    $api_key     = get_option( 'wp_erp_apikey' );
 
-    $is_verified   = erp_cloud_verify_request( $postdata, $api_key  );
+    $is_verified = erp_cloud_verify_request( $postdata, $api_key  );
 
     if ( $is_verified ) {
         $status = isset( $_POST['status'] ) && in_array( $_POST['status'], ['yes', 'no'] ) ? $_POST['status'] : 'yes';
 
         update_option( 'wp_erp_api_active', $_POST['status'] );
     }
+}
+
+/**
+ * Determine if the erp cloud feature is active or not.
+ *
+ * @return boolean
+ */
+function erp_is_cloud_active() {
+    $wp_erp_api_key    = get_option( 'wp_erp_apikey', null );
+    $wp_erp_api_active = get_option( 'wp_erp_api_active', 'no' );
+
+    if ( $wp_erp_api_key && 'yes' == $wp_erp_api_active ) {
+        return true;
+    }
+
+    return false;
 }
 
 /**
@@ -825,4 +841,34 @@ function erp_cloud_verify_request( $vars, $api_key ) {
  */
 function erp_fullcalendar_end_date( $end_date ) {
     return date( 'Y-m-d H:i:s', strtotime( $end_date . '+1 day' ) );
+}
+
+/**
+ * Contact_Forms_Integration class instance using erp_crm_loaded hook
+ *
+ * @since  1.0
+ *
+ * @return void
+ */
+function erp_crm_contact_forms() {
+    new \WeDevs\ERP\CRM\ContactForms\CF7();
+    new \WeDevs\ERP\CRM\ContactForms\Ninja_Forms();
+    \WeDevs\ERP\CRM\ContactForms\Contact_Forms_Integration::init();
+}
+
+/**
+ * Add a new ERP settings tab with erp_settings_pages hook
+ *
+ * @since  1.0
+ *
+ * @param array $settings ERP settings tabs
+ *
+ * @return array
+ */
+function erp_settings_pages_contact_forms( $settings ) {
+    if ( erp_crm_is_current_user_manager() ) {
+        $settings[] = \WeDevs\ERP\CRM\ContactForms\ERP_Settings_Contact_Forms::init();
+    }
+
+    return $settings;
 }

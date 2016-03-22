@@ -14,8 +14,8 @@ function erp_crm_dashboard_right_widgets_area() {
     erp_admin_dash_metabox( __( '<i class="fa fa-users"></i> Recently Added', 'wp-erp' ), 'erp_crm_dashboard_widget_latest_contact' );
 
     // Display the cloud inbound emails widget only if the site is connected with cloud.
-    $wp_erp_api_key = get_option( 'wp_erp_apikey', null );
-    if ( $wp_erp_api_key ) {
+    $is_cloud_active = erp_is_cloud_active();
+    if ( $is_cloud_active ) {
         erp_admin_dash_metabox( __( '<i class="fa fa-envelope"></i> Total Inbound Emails', 'wp-erp' ), 'erp_crm_dashboard_widget_cloud_inbound_emails' );
     }
 }

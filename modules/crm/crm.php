@@ -77,7 +77,7 @@ class Customer_Relationship {
         require_once WPERP_CRM_PATH . '/includes/function-customer.php';
         require_once WPERP_CRM_PATH . '/includes/function-dashboard.php';
         require_once WPERP_CRM_PATH . '/includes/function-capabilities.php';
-        require_once WPERP_CRM_PATH . '/includes/class-contact-forms-integration.php';
+        require_once WPERP_CRM_PATH . '/includes/contact-forms/class-contact-forms-integration.php';
     }
 
     /**
@@ -91,6 +91,7 @@ class Customer_Relationship {
             new Form_Handler();
             new \WeDevs\ERP\CRM\Admin_Menu();
             new \WeDevs\ERP\CRM\User_Profile();
+            new Emailer();
         }
     }
 
@@ -114,7 +115,7 @@ class Customer_Relationship {
     }
 
     public function admin_scripts( $hook ) {
-        $suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+        $suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '';
 
         wp_enqueue_media();
         wp_enqueue_style( 'erp-tiptip' );

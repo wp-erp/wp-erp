@@ -26,7 +26,7 @@
 		ksort( $hire_data );
 	?>
 
-	<div class="postbox">
+	<div class="postbox" style="margin-top: 20px;">
 
 		<div class="inside">
 			<div class="main">

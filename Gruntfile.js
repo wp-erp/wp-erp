@@ -16,8 +16,8 @@ module.exports = function(grunt) {
 
             admin: {
                 files: {
-                    '<%= dirs.css %>/admin/admin.css': '<%= dirs.less %>/admin/admin.less',
-                    '<%= dirs.css %>/admin/setup.css': '<%= dirs.less %>/admin/setup.less'
+                    '<%= dirs.css %>/admin.css': '<%= dirs.less %>/admin/admin.less',
+                    '<%= dirs.css %>/setup.css': '<%= dirs.less %>/admin/setup.less'
                 }
             }
         },
@@ -136,7 +136,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks( 'grunt-contrib-compress' );
     grunt.loadNpmTasks( 'grunt-text-replace' );
 
-    grunt.registerTask('default', ['less', 'watch']);
+    grunt.registerTask('default', ['less']);
 
     grunt.registerTask( 'release', [
         'makepot',
