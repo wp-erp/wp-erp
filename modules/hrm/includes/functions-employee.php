@@ -93,6 +93,7 @@ function erp_hr_employee_create( $args = array() ) {
         'user_email'   => $data['user_email'],
         'first_name'   => $data['personal']['first_name'],
         'last_name'    => $data['personal']['last_name'],
+        'user_url'     => $data['personal']['user_url'],
         'display_name' => $data['personal']['first_name'] . ' ' . $data['personal']['middle_name'] . ' ' . $data['personal']['last_name'],
     );
 
@@ -157,7 +158,7 @@ function erp_hr_employee_create( $args = array() ) {
 
     foreach ( $data['personal'] as $key => $value ) {
 
-        if ( 'employee_id' == $key ) {
+        if ( in_array( $key, [ 'employee_id', 'user_url' ] ) ) {
             continue;
         }
 
@@ -411,6 +412,9 @@ function erp_employee_delete( $employee_ids, $hard = false ) {
 
     // seems like we got some
     foreach ($employees as $employee_id) {
+
+        do_action( 'erp_hr_delete_employee', $employee_id, $hard );
+
         if ( $hard ) {
             \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $employee_id )->withTrashed()->forceDelete();
             wp_delete_user( $employee_id );
@@ -423,7 +427,7 @@ function erp_employee_delete( $employee_ids, $hard = false ) {
             \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $employee_id )->delete();
         }
 
-        do_action( 'erp_hr_delete_employee', $employee_id, $hard );
+        do_action( 'erp_hr_after_delete_employee', $employee_id, $hard );
     }
 
 }
