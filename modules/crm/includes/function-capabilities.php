@@ -34,8 +34,14 @@ function erp_crm_new_admin_as_manager( $user_id ) {
  */
 function erp_crm_get_user_role( $user_id = 0 ) {
 
-    // Validate user id
-    $user = get_userdata( $user_id );
+    // if user_id is not set or 0, then the user is current user
+    if ( ! $user_id ) {
+        global $current_user;
+        $user = $current_user;
+    } else {
+        $user = get_userdata( $user_id );
+    }
+
     $role = false;
 
     // User has roles so look for a HR one
@@ -92,8 +98,8 @@ function erp_crm_get_caps_for_role( $role = '' ) {
 }
 
 function erp_crm_is_current_user_manager() {
-    $current_user_role = erp_crm_get_user_role( get_current_user_id() ); 
-    
+    $current_user_role = erp_crm_get_user_role( get_current_user_id() );
+
     if ( erp_crm_get_manager_role() !=  $current_user_role ) {
         return false;
     }
