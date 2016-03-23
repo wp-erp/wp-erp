@@ -77,7 +77,7 @@ class Customer_Relationship {
         require_once WPERP_CRM_PATH . '/includes/function-customer.php';
         require_once WPERP_CRM_PATH . '/includes/function-dashboard.php';
         require_once WPERP_CRM_PATH . '/includes/function-capabilities.php';
-        require_once WPERP_CRM_PATH . '/includes/class-contact-forms-integration.php';
+        require_once WPERP_CRM_PATH . '/includes/contact-forms/class-contact-forms-integration.php';
     }
 
     /**

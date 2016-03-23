@@ -1859,6 +1859,12 @@ function erp_crm_save_email_activity() {
         update_option( 'wp_erp_cloud_email_count', get_option( 'wp_erp_cloud_email_count', 0 ) + 1 );
 
         do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
+
+        status_header(200);
+        exit;
+    } else {
+        status_header(400);
+        exit;
     }
 }
 
@@ -1932,4 +1938,87 @@ function erp_crm_get_schedule_data( $tab = '' ) {
     $schedules_data = erp_crm_prepare_calendar_schedule_data( $schedules );
 
     return $schedules_data;
+}
+
+/**
+ * Get CRM email from address.
+ *
+ * @since 1.0
+ *
+ * @return string
+ */
+function erp_crm_get_email_from_address() {
+    $settings = get_option( 'erp_settings_erp-email', [] );
+
+    if ( array_key_exists( 'from_email', $settings ) ) {
+        return sanitize_email( $settings['from_email'] );
+    }
+
+    return get_option( 'admin_email' );
+}
+
+/**
+ * Get CRM email from name.
+ *
+ * @since 1.0
+ *
+ * @return string
+ */
+function erp_crm_get_email_from_name() {
+    global $current_user;
+
+    return $current_user->display_name;
+}
+
+/**
+ * Track email read.
+ *
+ * @since 1.0
+ *
+ * @return void
+ */
+function erp_crm_track_email_read() {
+    if ( isset( $_GET['aid'] ) ) {
+        $activity = \WeDevs\ERP\CRM\Models\Activity::find( $_GET['aid'] );
+
+        $extra = json_decode( base64_decode( $activity->extra ) );
+
+        if ( ! isset( $extra['read'] ) ) {
+            $extra['read'] = 1;
+            $data = [
+                'extra' => base64_encode( json_encode( $extra ) )
+            ];
+            $activity->update( $data );
+        }
+    }
+}
+
+/**
+ * Contact_Forms_Integration class instance using erp_crm_loaded hook
+ *
+ * @since  1.0
+ *
+ * @return void
+ */
+function erp_crm_contact_forms() {
+    new \WeDevs\ERP\CRM\ContactForms\CF7();
+    new \WeDevs\ERP\CRM\ContactForms\Ninja_Forms();
+    \WeDevs\ERP\CRM\ContactForms\Contact_Forms_Integration::init();
+}
+
+/**
+ * Add a new ERP settings tab with erp_settings_pages hook
+ *
+ * @since  1.0
+ *
+ * @param array $settings ERP settings tabs
+ *
+ * @return array
+ */
+function erp_settings_pages_contact_forms( $settings ) {
+    if ( erp_crm_is_current_user_manager() ) {
+        $settings[] = \WeDevs\ERP\CRM\ContactForms\ERP_Settings_Contact_Forms::init();
+    }
+
+    return $settings;
 }

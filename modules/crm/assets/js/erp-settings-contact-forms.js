@@ -1,21 +1,19 @@
 ;(function($) {
     'use strict';
 
-    if ($('.cfi-table').length) {
+    // remove default submit button
+    if ($('.cfi-hide-submit').length) {
         $('p.submit').remove();
     }
 
-    if (crmContactFormsSettings.scriptDebug) {
-        Vue.config.debug = true;
-    }
+    Vue.config.debug = crmContactFormsSettings.scriptDebug;
 
     // when get_option returns null, localized var for mappedData prints "" instead of {}
     if ( '[object Object]' !== Object.prototype.toString.call(crmContactFormsSettings.mappedData) ) {
         crmContactFormsSettings.mappedData = {};
     }
 
-    var vueInstances = {};
-
+    // vue instances for every mapping table
     $('.cfi-table').each(function () {
         var table = $(this),
             id = table.attr('id'),
@@ -26,17 +24,31 @@
             crmContactFormsSettings.mappedData[plugin] = {};
         }
 
-        vueInstances[plugin + '_' + formId] = new Vue({
+        new Vue({
             el: '#' + id,
             data: {
                 plugin: plugin,
                 formId: formId,
                 formData: crmContactFormsSettings.forms[plugin][formId],
+                totalFields: 0,
                 crmOptions: crmContactFormsSettings.crmOptions,
+                labelContactGroups: crmContactFormsSettings.labelContactGroups,
+                labelSelectGroup: crmContactFormsSettings.labelSelectGroup,
+                contactGroups: crmContactFormsSettings.contactGroups,
                 activeDropDown: null
             },
 
+            computed: {
+                totalFields: function () {
+                    return Object.keys(this.formData.fields).length;
+                }
+            },
+
             methods: {
+
+                lastOfTypeClass: function (index) {
+                    return index === (this.totalFields - 1) ? 'cfi-mapping-row-last' : '';
+                },
 
                 getCRMOptionTitle: function (field) {
                     var option = this.formData.map[field],
@@ -85,91 +97,68 @@
                     this.activeDropDown = (field === this.activeDropDown) ? null: field;
                 },
 
+                save_mapping: function (e) {
+                    e.preventDefault();
+                    this.makeAjaxRequest('erp_settings_save_contact_form');
+                },
+
+                reset_mapping: function (e) {
+                    e.preventDefault();
+                    this.makeAjaxRequest('erp_settings_reset_contact_form');
+                },
+
+                makeAjaxRequest: function (action) {
+                    var self = this;
+
+                    $.ajax({
+                        url: ajaxurl,
+                        method: 'post',
+                        dataType: 'json',
+                        data: {
+                            action: action,
+                            _wpnonce: crmContactFormsSettings.nonce,
+                            plugin: this.plugin,
+                            formId: this.formId,
+                            map: self.formData.map,
+                            contactGroup: self.formData.contactGroup
+                        }
+
+                    }).done(function (response) {
+
+                        if ('erp_settings_reset_contact_form' === action && response.success) {
+                            self.$set('formData.map', response.map);
+                            self.$set('formData.contactGroup', response.contactGroup);
+                        }
+
+                        var type = response.success ? 'success' : 'error';
+
+                        if (response.msg) {
+                            swal({
+                                title: '',
+                                text: response.msg,
+                                type: type,
+                                confirmButtonText: crmContactFormsSettings.labelOK,
+                                confirmButtonColor: '#008ec2'
+                            });
+                        }
+
+                    });
+                }
+
             },
 
             watch: {
                 'formData.map': {
                     deep: true,
                     handler: function (newVal) {
-                        crmContactFormsSettings.mappedData[plugin][formId] = newVal;
+                        this.formData.map = newVal;
                     }
+                },
+
+                'formData.contactGroup': function (newVal) {
+                    this.formData.contactGroup = newVal;
                 }
             }
         });
     });
-
-    // Save Settings
-    $('.cfi-settings-submit').on('click', function (e) {
-        e.preventDefault();
-
-        var button = $(this),
-            plugin = button.data('plugin'),
-            formId = button.data('form-id');
-
-        $.ajax({
-            url: ajaxurl,
-            method: 'post',
-            dataType: 'json',
-            data: {
-                action: 'erp_settings_contact_forms',
-                _wpnonce: crmContactFormsSettings.nonce,
-                plugin: plugin,
-                formId: formId,
-                map: crmContactFormsSettings.mappedData[plugin][formId]
-            }
-
-        }).done(function (response) {
-            var type = response.success ? 'success' : 'error';
-
-            if (response.msg) {
-                swal({
-                    title: '',
-                    text: response.msg,
-                    type: type,
-                    confirmButtonText: crmContactFormsSettings.labelOK,
-                    confirmButtonColor: '#008ec2'
-                });
-            }
-        });
-    });
-
-    $('.cfi-settings-reset').on('click', function (e) {
-        e.preventDefault();
-
-        var button = $(this),
-            plugin = button.data('plugin'),
-            formId = button.data('form-id');
-
-        $.ajax({
-            url: ajaxurl,
-            method: 'post',
-            dataType: 'json',
-            data: {
-                action: 'erp_settings_contact_forms_reset',
-                _wpnonce: crmContactFormsSettings.nonce,
-                plugin: plugin,
-                formId: formId,
-            }
-
-        }).done(function (response) {
-
-            if (response.success) {
-                vueInstances[plugin + '_' + formId].$set('formData.map', response.map);
-            }
-
-            var type = response.success ? 'success' : 'error';
-
-            if (response.msg) {
-                swal({
-                    title: '',
-                    text: response.msg,
-                    type: type,
-                    confirmButtonText: crmContactFormsSettings.labelOK,
-                    confirmButtonColor: '#008ec2'
-                });
-            }
-
-        });
-    });
-
 })(jQuery);

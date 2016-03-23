@@ -698,26 +698,42 @@ class Ajax_Handler {
 
                 $data = erp_crm_save_customer_feed_data( $save_data );
 
-                $wp_erp_api_key     = get_option( 'wp_erp_apikey', null );
-                $wp_erp_api_active  = get_option( 'wp_erp_api_active', 'no' );
-
                 $contact_id = intval( $postdata['user_id'] );
 
                 $contact = new \WeDevs\ERP\CRM\Contact( $contact_id );
 
-                global $display_name, $user_email;
+                $headers = "";
+                $headers .= "Content-Type: text/html; charset=UTF-8" . "\r\n";
 
-                $headers = [];
-                $headers[] = 'Content-Type: text/html; charset=UTF-8';
-                $headers[] = 'From: ' . $display_name . ' <' . $user_email . '>' . "\r\n";
+                $is_cloud_active = erp_is_cloud_active();
 
-                if( $wp_erp_api_key && $wp_erp_api_active && 'yes' == $wp_erp_api_active ) {
+                if( $is_cloud_active ) {
+                    $wp_erp_api_key = get_option( 'wp_erp_apikey' );
+
                     $reply_to = $wp_erp_api_key . "-" . $postdata['created_by'] . "-" . $contact_id . "@incloud.wperp.com";
-                    $headers[] = 'Reply-To: ' . $reply_to . "\r\n";
+                    $headers .= "Reply-To: $reply_to" . "\r\n";
                 }
 
+                add_filter( 'wp_mail_from', 'erp_crm_get_email_from_address' );
+                add_filter( 'wp_mail_from_name', 'erp_crm_get_email_from_name' );
+
+                $activity_id = $data['id'];
+                $query = [
+                    'action' => 'erp_crm_track_email_read',
+                    'cid'    => $contact_id,
+                    'aid'    => $activity_id,
+                ];
+                $email_url = add_query_arg( $query, admin_url('admin-ajax.php') );
+                $img_url   = '<img src="' . $email_url . '" width="1" height="1" border="0" />';
+
+                $email_body = $postdata['message'] . $img_url;
+
                 // Send email a contact
-                wp_mail( $contact->email, $postdata['email_subject'], $postdata['message'], $headers );
+                wp_mail( $contact->email, $postdata['email_subject'], $email_body, $headers );
+
+                remove_filter( 'wp_mail_from', 'erp_crm_get_email_from_address' );
+                remove_filter( 'wp_mail_from_name', 'erp_crm_get_email_from_name' );
+                remove_filter( 'wp_mail_content_type', 'erp_crm_get_email_content_type' );
 
                 do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
 
