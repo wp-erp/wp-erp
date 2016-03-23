@@ -6,7 +6,6 @@ use WeDevs\ERP\Framework\ERP_Settings_Page;
  * Integration class
  */
 class ERP_Integration_Settings extends ERP_Settings_Page {
-
     /**
      * Class constructor
      */
@@ -18,12 +17,11 @@ class ERP_Integration_Settings extends ERP_Settings_Page {
     }
 
     /**
-     * Get settings array
+     * Get settings array.
      *
      * @return array
      */
     public function get_settings() {
-
         $fields = [
 
             [
@@ -41,6 +39,11 @@ class ERP_Integration_Settings extends ERP_Settings_Page {
         return apply_filters( 'erp_integration_settings', $fields );
     }
 
+    /**
+     * Display integrations settings.
+     *
+     * @return void
+     */
     function integrations() {
         $integrations = wperp()->integration->get_integrations();
         ?>
@@ -144,6 +147,10 @@ class ERP_Integration_Settings extends ERP_Settings_Page {
 
     /**
      * Output the settings.
+     *
+     * @param  boolean $section (optional)
+     *
+     * @return void
      */
     public function output( $section = false ) {
         $current_section = isset( $_GET['section'] ) ? sanitize_key( $_GET['section'] ) : false;
@@ -163,6 +170,13 @@ class ERP_Integration_Settings extends ERP_Settings_Page {
         }
     }
 
+    /**
+     * Save the settings.
+     *
+     * @param  boolean $section (optional)
+     *
+     * @return void
+     */
     function save( $section = false ) {
         if ( isset( $_POST['_wpnonce']) && wp_verify_nonce( $_POST['_wpnonce'], 'erp-settings-nonce' ) ) {
             $current_section = isset( $_GET['section'] ) ? sanitize_key( $_GET['section'] ) : false;

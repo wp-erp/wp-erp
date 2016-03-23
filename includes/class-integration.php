@@ -7,7 +7,9 @@ use \WeDevs\ERP\Framework\ERP_Settings_Page;
  * Integration Class
  */
 class Integration extends ERP_Settings_Page {
-
+    /**
+     * Integration instances.
+     */
     public $integrations;
 
     /**
@@ -33,11 +35,19 @@ class Integration extends ERP_Settings_Page {
         return $instance;
     }
 
+    /**
+     * Class constructor.
+     */
     public function __construct() {
         // Let 3rd parties unhook the above via this hook
         do_action( 'erp_integration', $this );
     }
 
+    /**
+     * Initialize integrations.
+     *
+     * @return array
+     */
     function init_integrations() {
         $this->integrations = apply_filters( 'erp_integration_classes', $this->integrations );
     }
@@ -56,7 +66,7 @@ class Integration extends ERP_Settings_Page {
      *
      * @param  string  $class_name
      *
-     * @return \Email|false
+     * @return \Integration|false
      */
     public function get_integration( $class_name ) {
         if ( $this->integrations && array_key_exists( $class_name, $this->integrations ) ) {
@@ -74,6 +84,11 @@ class Integration extends ERP_Settings_Page {
         return apply_filters( 'erp_settings_integration_form_fields_' . $this->id, $this->form_fields );
     }
 
+    /**
+     * Generate settings html.
+     *
+     * @return void
+     */
     function generate_settings_html() {
         $settings = $this->get_form_fields();
         $this->output_fields( $settings );
@@ -97,6 +112,11 @@ class Integration extends ERP_Settings_Page {
         return $default;
     }
 
+    /**
+     * Get the admin options of this integration.
+     *
+     * @return void
+     */
     public function admin_options() {
         ?>
         <h3><?php echo esc_html( $this->get_title() ); ?></h3>
