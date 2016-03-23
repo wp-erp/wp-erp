@@ -62,7 +62,14 @@ class Contact_List_Table extends \WP_List_Table {
         }
 
         $save_searches        = erp_get_save_search_item();
+        $crm_user_id          = ( isset( $_GET['filter_assign_contact'] ) ) ? $_GET['filter_assign_contact'] : '';
         $selected_save_search = ( isset( $_GET['erp_save_search'] ) ) ? $_GET['erp_save_search'] : '';
+
+        if ( !empty( $crm_user_id ) ) {
+            $user        = get_user_by( 'id', $crm_user_id );
+            $user_string = esc_html( $user->display_name ) . ' (#' . absint( $user->ID ) . ' &ndash; ' . esc_html( $user->user_email ) . ')';
+        }
+
         ?>
 
         <div class="alignleft actions">
@@ -80,6 +87,13 @@ class Contact_List_Table extends \WP_List_Table {
                     </optgroup>
 
                 <?php endforeach ?>
+            </select>
+
+            <select name="filter_assign_contact" id="erp-select-user-for-assign-contact" style="width: 250px; margin-bottom: 20px;" data-placeholder="<?php _e( 'Search a crm agent', 'wp-erp' ) ?>">
+                <option value=""><?php _e( 'Select a agent', 'wp-erp' ); ?></option>
+                <?php if ( $crm_user_id ): ?>
+                    <option value="<?php echo $crm_user_id ?>" selected><?php echo $user_string; ?></option>
+                <?php endif ?>
             </select>
 
             <?php
@@ -107,8 +121,9 @@ class Contact_List_Table extends \WP_List_Table {
      */
     function column_default( $customer, $column_name ) {
 
-        $life_stages = erp_crm_get_life_statges_dropdown_raw();
-        $life_stage  = erp_people_get_meta( $customer->id, 'life_stage', true );
+        $life_stages       = erp_crm_get_life_statges_dropdown_raw();
+        $life_stage        = erp_people_get_meta( $customer->id, 'life_stage', true );
+        $assign_contact_id = erp_people_get_meta( $customer->id, '_assign_crm_agent', true );
 
         switch ( $column_name ) {
             case 'email':
@@ -119,6 +134,10 @@ class Contact_List_Table extends \WP_List_Table {
 
             case 'life_stages':
                 return isset( $life_stages[$life_stage] ) ? $life_stages[$life_stage] : '-';
+
+            case 'crm_owner':
+                $base_link   = add_query_arg( ['filter_assign_contact' => $assign_contact_id ], admin_url( 'admin.php?page=' . $this->page_type ) );
+                return !empty( $assign_contact_id ) ? '<a href="' . $base_link . '">' . get_the_author_meta( 'display_name', $assign_contact_id ) . '</a>' : '-';
 
             case 'created':
                 return erp_format_date( $customer->created );
@@ -172,12 +191,13 @@ class Contact_List_Table extends \WP_List_Table {
      */
     function get_columns() {
         $columns = array(
-            'cb'           => '<input type="checkbox" />',
-            'name'         => sprintf( '%s %s', ucfirst( $this->contact_type ), __( 'Name', 'wp-erp' ) ),
-            'email'        => __( 'Email', 'wp-erp' ),
-            'phone_number' => __( 'Phone', 'wp-erp' ),
-            'life_stages'  => __( 'Life Stage', 'wp-erp' ),
-            'created'      => __( 'Created at', 'wp-erp' ),
+            'cb'              => '<input type="checkbox" />',
+            'name'            => sprintf( '%s %s', ucfirst( $this->contact_type ), __( 'Name', 'wp-erp' ) ),
+            'email'           => __( 'Email', 'wp-erp' ),
+            'phone_number'    => __( 'Phone', 'wp-erp' ),
+            'life_stages'     => __( 'Life Stage', 'wp-erp' ),
+            'crm_owner' => __( 'Owner', 'wp-erp' ),
+            'created'         => __( 'Created at', 'wp-erp' ),
         );
 
         return apply_filters( 'erp_hr_customer_table_cols', $columns );
@@ -260,12 +280,13 @@ class Contact_List_Table extends \WP_List_Table {
      * @return array
      */
     public function get_views() {
-        $status_links = array();
-        $base_link    = remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'customer_search', 'filter_by_save_searches' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
+        $status_links  = array();
+        $base_link     = remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'customer_search', 'filter_by_save_searches' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
+        $all_base_link = admin_url( 'admin.php?page=' . $this->page_type );
 
         foreach ( $this->counts as $key => $value ) {
             $class = ( $key == $this->page_status ) ? 'current' : 'status-' . $key;
-            $status_links[ $key ] = sprintf( '<a href="%s" class="%s">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => $key ), $base_link ), $class, $value['label'], $value['count'] );
+            $status_links[ $key ] = sprintf( '<a href="%s" class="%s">%s <span class="count">(%s)</span></a>', ( $key == 'all' ) ? add_query_arg( array( 'status' => $key ), $all_base_link ) : add_query_arg( array( 'status' => $key ), $base_link ), $class, $value['label'], $value['count'] );
         }
 
         $status_links[ 'trash' ] = sprintf( '<a href="%s" class="status-trash">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'trash' ), $base_link ), __( 'Trash', 'wp-erp' ), erp_crm_count_trashed_customers() );
@@ -363,6 +384,13 @@ class Contact_List_Table extends \WP_List_Table {
                     ];
                 }
             }
+        }
+
+        if ( isset( $_REQUEST['filter_assign_contact'] ) && ! empty( $_REQUEST['filter_assign_contact'] ) ) {
+            $args['meta_query'] = [
+                'meta_key' => '_assign_crm_agent',
+                'meta_value' => $_REQUEST['filter_assign_contact']
+            ];
         }
 
         // Total counting for customer type filter

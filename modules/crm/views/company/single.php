@@ -68,6 +68,55 @@
 
                                 <?php do_action( 'erp-hr-employee-single-basic', $customer ); ?>
                             </ul>
+
+                            <div class="erp-crm-assign-contact">
+                                <div class="inner-wrap">
+                                    <h4><?php _e( 'Contact Owner', 'wp-erp' ); ?></h4>
+                                    <div class="user-wrap">
+                                        <?php
+                                            $crm_user_id = erp_people_get_meta( $customer->id, '_assign_crm_agent', true );
+                                            if ( !empty( $crm_user_id ) ) {
+                                                $user        = get_user_by( 'id', $crm_user_id );
+                                                $user_string = esc_html( $user->display_name ) . ' (#' . absint( $user->ID ) . ' &ndash; ' . esc_html( $user->user_email ) . ')';
+                                            }
+                                        ?>
+                                        <?php if ( $crm_user_id ): ?>
+                                            <?php echo erp_crm_get_avatar( $crm_user_id, 32 ); ?>
+                                            <div class="user-details">
+                                                <a href="#"><?php echo get_the_author_meta( 'display_name', $crm_user_id ); ?></a>
+                                                <span><?php echo  get_the_author_meta( 'user_email', $crm_user_id ); ?></span>
+                                            </div>
+                                        <?php else: ?>
+                                            <div class="user-details">
+                                                <p><?php _e( 'Nobody', 'wp-erp' ) ?></p>
+                                            </div>
+                                        <?php endif ?>
+
+                                        <div class="clearfix"></div>
+
+                                        <span id="erp-crm-edit-assign-contact-to-agent"><i class="fa fa-pencil-square-o"></i></span>
+                                    </div>
+
+                                    <div class="assign-form erp-hide">
+                                        <form action="" method="post">
+
+                                            <div class="crm-aget-search-select-wrap">
+                                                <select name="erp_select_assign_contact" id="erp-select-user-for-assign-contact" style="width: 300px; margin-bottom: 20px;" data-placeholder="<?php _e( 'Search a crm agent', 'wp-erp' ) ?>" data-val="<?php echo $crm_user_id; ?>" data-selected="<?php echo $user_string; ?>">
+                                                    <option value=""><?php _e( 'Select a agent', 'wp-erp' ); ?></option>
+                                                    <?php if ( $crm_user_id ): ?>
+                                                        <option value="<?php echo $crm_user_id ?>" selected><?php echo $user_string; ?></option>
+                                                    <?php endif ?>
+                                                </select>
+                                            </div>
+
+                                            <input type="hidden" name="assign_contact_id" value="<?php echo $customer->id; ?>">
+                                            <input type="submit" class="button button-primary save-edit-assign-contact" name="erp_assign_contacts" value="<?php _e( 'Assign', 'wp-erp' ); ?>">
+                                            <input type="submit" class="button cancel-edit-assign-contact" value="<?php _e( 'Cancel', 'wp-erp' ); ?>">
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div><!-- .postbox -->
 
