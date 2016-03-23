@@ -20,14 +20,15 @@ class ERP_Admin_Settings {
     public static function get_settings() {
 
         if ( !self::$settings ) {
-
             $settings = array();
 
             $settings[] = include __DIR__ . '/settings/general.php';
             $settings[] = include __DIR__ . '/settings/email.php';
+            $settings[] = include __DIR__ . '/settings/integration.php';
 
             self::$settings = apply_filters( 'erp_settings_pages', $settings );
         }
+
         return self::$settings;
     }
 
