@@ -70,16 +70,37 @@
                             </ul>
 
                             <div class="erp-crm-assign-contact">
-                                <h4><?php _e( 'Assign To', 'wp-erp' ); ?></h4>
-                                <form action="" method="post">
-                                    <select name="erp_select_assign_contact" id="erp-select-assign-contact">
-                                        <option value="1">Test1</option>
-                                        <option value="3">Test3</option>
-                                        <option value="4">Test4</option>
-                                    </select>
-                                    <input type="submit" class="button button-primary" name="erp_assign_contacts" value="<?php _e( 'Assign', 'wp-erp' ); ?>">
-                                    <input type="submit" class="button" value="<?php _e( 'Cancel', 'wp-erp' ); ?>">
-                                </form>
+                                <div class="inner-wrap">
+                                    <h4><?php _e( 'Assign To', 'wp-erp' ); ?></h4>
+                                    <div class="user-wrap">
+                                        <?php
+                                        $crm_user_id = erp_people_get_meta( $customer->id, '_assign_crm_agent', true );
+                                        ?>
+                                        <?php echo erp_crm_get_avatar( $crm_user_id, 32 ); ?>
+                                        <div class="user-details">
+                                            <a href="#"><?php echo get_the_author_meta( 'display_name', $crm_user_id ); ?></a>
+                                            <span><?php echo  get_the_author_meta( 'user_email', $crm_user_id ); ?></span>
+                                        </div>
+                                        <div class="clearfix"></div>
+
+                                        <span id="erp-crm-edit-assign-contact-to-agent"><i class="fa fa-pencil-square-o"></i></span>
+                                    </div>
+
+                                    <div class="assign-form erp-hide">
+                                        <form action="" method="post">
+
+                                            <div class="crm-aget-search-select-wrap">
+                                                <select name="erp_select_assign_contact" id="erp-select-user-for-assign-contact" style="width: 300px; margin-bottom: 20px;" data-placeholder="<?php _e( 'Search a crm agent', 'wp-erp' ) ?>">
+                                                    <option value=""><?php _e( 'Select a agent', 'wp-erp' ); ?></option>
+                                                </select>
+                                            </div>
+
+                                            <input type="hidden" name="assign_contact_id" value="<?php echo $customer->id; ?>">
+                                            <input type="submit" class="button button-primary save-edit-assign-contact" name="erp_assign_contacts" value="<?php _e( 'Assign', 'wp-erp' ); ?>">
+                                            <input type="submit" class="button cancel-edit-assign-contact" value="<?php _e( 'Cancel', 'wp-erp' ); ?>">
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div><!-- .postbox -->
