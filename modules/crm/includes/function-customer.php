@@ -2022,3 +2022,31 @@ function erp_settings_pages_contact_forms( $settings ) {
 
     return $settings;
 }
+
+/**
+ * CRM related people types
+ *
+ * @since 1.0
+ *
+ * @param  array $types
+ *
+ * @return array
+ */
+function erp_crm_people_types( $types ) {
+
+    $types['crm'] = [
+        'customer' => [
+            'label'    => __( 'Contact', 'wp-erp' ),
+            'sections' => [
+                'top'      => __( 'Top Area', 'wp-erp' ),
+                'basic'    => __( 'Basic Information', 'wp-erp' ),
+                'work'     => __( 'Others Information', 'wp-erp' ),
+                'personal' => __( 'Additional Information', 'wp-erp' ),
+                'social'   => __( 'Social Profile', 'wp-erp' ),
+                'bottom'   => __( 'Bottom Area', 'wp-erp' ),
+            ]
+        ]
+    ];
+
+    return apply_filters( 'erp_hr_people_types', $types );
+}
