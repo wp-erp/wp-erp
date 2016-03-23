@@ -1,34 +1,38 @@
 <?php
-use \WeDevs\ERP\Framework\ERP_Settings_Page;
+namespace WeDevs\ERP\CRM\ContactForms;
+
+use WeDevs\ERP\Framework\ERP_Settings_Page;
 
 /**
  * ERP Settings Contact Form class
  */
 class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
 
-    use WeDevs\ERP\Framework\Traits\Ajax;
+    use ContactForms;
 
     public $id = '';
     public $label = '';
-    public $sections = array();
+    public $sections = [];
 
-    protected $contact_form_integration = null;
-    protected $crm_options = array();
-    protected $active_plugin_list = array();
-    protected $forms = array();
+    protected $crm_options = [];
+    protected $active_plugin_list = [];
+    protected $forms = [];
 
+    /**
+     * Class constructor
+     */
     function __construct() {
-        $this->contact_form_integration = \WeDevs\ERP\CRM\Contact_Forms_Integration::init();
-        $this->crm_options = $this->contact_form_integration->get_crm_contact_options();
-        $this->active_plugin_list = $this->contact_form_integration->get_active_plugin_list();
+        $this->crm_options = $this->get_crm_contact_options();
+        $this->active_plugin_list = $this->get_active_plugin_list();
 
-        $this->hook_functions();
+        // option field type
+        $this->action( 'erp_admin_field_match_form_fields', 'output_match_form_fields' );
 
-        wp_enqueue_style( 'erp-sweetalert' );
-        wp_enqueue_script( 'erp-sweetalert' );
-        wp_enqueue_script( 'erp-vuejs' );
-        wp_enqueue_script( 'erp-settings-contact-forms', WPERP_CRM_ASSETS . '/js/erp-settings-contact-forms.js', array( 'erp-vuejs', 'jquery', 'erp-sweetalert' ), WPERP_VERSION, true );
-        wp_localize_script( 'erp-settings-contact-forms', 'crmContactFormsSettings', $this->set_localized_object() );
+        foreach ( $this->active_plugin_list as $slug => $plugin ) {
+            $this->forms[ $slug ] = apply_filters( "crm_get_{$slug}_forms", [] );
+        }
+
+        $this->admin_scripts();
 
         $this->id = 'contact_forms';
         $this->label = __( 'Contact Forms', 'wp-erp' );
@@ -51,63 +55,61 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
         return $instance;
     }
 
-    /**
-     * The localized JS object
-     *
-     * @return array
-     */
-    public function set_localized_object() {
-        foreach ( $this->active_plugin_list as $slug => $plugin ) {
-            $this->forms[ $slug ] = apply_filters( "crm_get_{$slug}_forms", array() );
-        }
-
-        return array(
-            'nonce'         => wp_create_nonce( 'erp_settings_contact_forms' ),
-            'plugins'       => array_keys( $this->active_plugin_list ),
-            'forms'         => $this->forms,
-            'mappedData'    => get_option( 'wperp_crm_contact_forms', '' ),
-            'crmOptions'    => $this->crm_options,
-            'notMapped'     => __( 'Not Set', 'wp-erp' ),
-            'scriptDebug'   => defined( 'SCRIPT_DEBUG' ) ? SCRIPT_DEBUG : false,
-            'labelOK'       => __( 'OK', 'wp-erp' ),
-        );
-    }
 
     /**
-     * Hook various functions
+     * Include required CSS and JS
      *
      * @return void
      */
-    public function hook_functions() {
-        // form functions
-        add_filter( 'crm_get_contact_form_7_forms', array( $this, 'crm_get_contact_form_7_forms' ) );
-        add_filter( 'crm_get_ninja_forms_forms', array( $this, 'crm_get_ninja_forms_forms' ) );
+    public function admin_scripts() {
+        $crm_contact_forms_settings = [
+            'nonce'                 => wp_create_nonce( 'erp_settings_contact_forms' ),
+            'plugins'               => array_keys( $this->active_plugin_list ),
+            'forms'                 => $this->forms,
+            'mappedData'            => get_option( 'wperp_crm_contact_forms', '' ),
+            'crmOptions'            => $this->crm_options,
+            'notMapped'             => __( 'Not Set', 'wp-erp' ),
+            'scriptDebug'           => defined( 'SCRIPT_DEBUG' ) ? SCRIPT_DEBUG : false,
+            'labelOK'               => __( 'OK', 'wp-erp' ),
+            'labelContactGroups'    => __( 'Contact Group', 'wp-erp' ),
+            'labelSelectGroup'     => __( 'Select Contact Group', 'wp-erp' ),
+            'contactGroups'         => $this->get_contact_groups()
+        ];
 
-        // option field type
-        add_action( 'erp_admin_field_match_form_fields', array( $this, 'output_match_form_fields' ) );
+        wp_enqueue_style( 'erp-sweetalert' );
+        wp_enqueue_script( 'erp-sweetalert' );
+        wp_enqueue_script( 'erp-vuejs' );
+        wp_enqueue_script( 'erp-settings-contact-forms', WPERP_CRM_ASSETS . '/js/erp-settings-contact-forms.js', [ 'erp-vuejs', 'jquery', 'erp-sweetalert' ], WPERP_VERSION, true );
+        wp_localize_script( 'erp-settings-contact-forms', 'crmContactFormsSettings', $crm_contact_forms_settings );
     }
 
     /**
      * Get settings array
      *
+     * This description will display when no supported plugin is active
+     *
      * @return array
      */
     public function get_settings() {
 
-        $fields = array(
+        $fields = [
 
-            array(
+            [
                 'title' => __( 'Contact Forms Integration', 'wp-erp' ),
                 'type' => 'title',
-                'desc' => '',
+                'desc' => sprintf(
+                            '%s' . __( 'No supported contact form plugin is currently active. WP ERP has built-in support for <strong>Contact Form 7</strong> and <strong>Ninja Forms</strong>.', 'wp-erp' ) . '%s',
+                            '<section class="notice notice-warning cfi-hide-submit"><p>',
+                            '</p></section>'
+                        ),
                 'id' => 'contact_form_options'
-            ),
+            ],
 
-            array( 'type' => 'sectionend', 'id' => 'contact_form_options' ),
+            [ 'type' => 'sectionend', 'id' => 'contact_form_options' ],
 
-        ); // End general settings
+        ];
 
-        return apply_filters( 'erp_settings_example', $fields );
+        return $fields;
     }
 
     /**
@@ -116,7 +118,7 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
      * @return array
      */
     public function get_sections() {
-        $sections = array();
+        $sections = [];
 
         if ( !empty( $this->active_plugin_list ) ) {
             foreach ( $this->active_plugin_list as $slug => $plugin ) {
@@ -135,7 +137,7 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
      * @return array
      */
     public function get_section_fields( $section = '' ) {
-        $fields = array();
+        $fields = [];
 
         foreach ( $this->active_plugin_list as $slug => $plugin ) {
             $forms = $this->forms[ $slug ];
@@ -144,37 +146,37 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
                 /* If no form created with respective plugin this notice will show.
                    Also if there is no function hook to the "crm_get_{$slug}_forms",
                    filter we'll see this notice */
-                $fields[ $slug ] = array(
-                    array(
+                $fields[ $slug ] = [
+                    [
                         'title' => $plugin['title'],
                         'type' => 'title',
                         'desc' => sprintf(
-                                    __( '%sYou don\'t have any form created with %s!%s', 'wp-erp' ),
-                                    '<section class="notice notice-warning"><p>',
+                                    '%s' . __( "You don't have any form created with %s!", 'wp-erp' ) . '%s',
+                                    '<section class="notice notice-warning cfi-hide-submit"><p>',
                                     $plugin['title'],
                                     '</p></section>'
                                 ),
                         'id' => 'section_' . $slug
-                    ),
+                    ],
 
-                    array( 'type' => 'sectionend', 'id' => 'script_styling_options' ),
-                );
+                    [ 'type' => 'sectionend', 'id' => 'script_styling_options' ],
+                ];
             } else {
                 foreach ( $forms as $form_id => $form ) {
-                    $fields[ $slug ][] = array(
+                    $fields[ $slug ][] = [
                         'title' => $form['title'],
                         'type' => 'title',
                         'desc' => '',
                         'id' => 'section_' . $form['name']
-                    );
+                    ];
 
-                    $fields[ $slug ][] = array(
+                    $fields[ $slug ][] = [
                         'plugin'        => $slug,
                         'form_id'       => $form_id,
                         'type'          => 'match_form_fields',
-                    );
+                    ];
 
-                    $fields[ $slug ][] = array( 'type' => 'sectionend', 'id' => 'section_' . $form['name'] );
+                    $fields[ $slug ][] = [ 'type' => 'sectionend', 'id' => 'section_' . $form['name'] ];
                 }
             }
         }
@@ -193,7 +195,7 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
      */
     public function output_match_form_fields( $value ) {
     ?>
-        <tr class="cfi-table-container">
+        <tr class="cfi-table-container cfi-hide-submit">
             <td style="padding-left: 0; padding-top: 0;">
                 <table
                     class="wp-list-table widefat fixed striped cfi-table"
@@ -202,15 +204,15 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
                     data-form-id="<?php echo $value['form_id']; ?>"
                     v-cloak
                 >
-                    <thead>
+                    <tbody>
                         <tr>
                             <th class="cfi-table-wide-column"><?php _e( 'Form Field', 'wp-erp' ); ?></th>
                             <th class="cfi-table-wide-column"><?php _e( 'CRM Contact Option' ); ?></th>
                             <th class="cfi-table-narrow-column">&nbsp;</th>
                         </tr>
-                    </thead>
+                    </tbody>
 
-                    <tbody v-for="(field, title) in formData.fields">
+                    <tbody class="cfi-mapping-row {{ lastOfTypeClass($index) }}" v-for="(field, title) in formData.fields">
                         <tr>
                             <td>{{ title }}</td>
                             <td>{{ getCRMOptionTitle(field) }}</td>
@@ -228,7 +230,7 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
                                 </button>
                             </td>
                         </tr>
-                        <tr v-show="field === activeDropDown">
+                        <tr class="cfi-option-row" v-show="field === activeDropDown">
                             <td colspan="3" class="cfi-contact-options">
                                 <button
                                     type="button"
@@ -252,25 +254,36 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
                             </td>
                         </tr>
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3">
+                                <label>
+                                    {{ labelContactGroups }}
+                                    <select class="cfi-contact-group" v-model="formData.contactGroup">
+                                        <option value="0">{{ labelSelectGroup }}</option>
+                                        <option v-for="(groupId, groupName) in contactGroups" value="{{ groupId }}">{{ groupName }}</option>
+                                    </select>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <button
+                                    type="button"
+                                    class="button"
+                                    v-on:click="reset_mapping"
+                                ><?php echo __( 'Reset', 'wp-erp' ); ?></button>
+                                <button
+                                    type="button"
+                                    class="button button-primary"
+                                    v-on:click="save_mapping"
+                                ><?php echo __( 'Save Changes', 'wp-erp' ); ?></button>
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             </td>
             <td></td>
-        </tr>
-        <tr class="cfi-table-submit">
-            <td>
-                <button
-                    type="reset"
-                    class="button cfi-settings-reset"
-                    data-plugin="<?php echo $value['plugin']; ?>"
-                    data-form-id="<?php echo $value['form_id']; ?>"
-                ><?php echo __( 'Reset', 'wp-erp' ); ?></button>
-                <button
-                    type="submit"
-                    class="button button-primary cfi-settings-submit"
-                    data-plugin="<?php echo $value['plugin']; ?>"
-                    data-form-id="<?php echo $value['form_id']; ?>"
-                ><?php echo __( 'Save Changes', 'wp-erp' ); ?></button>
-            </td>
         </tr>
     <?php
     }
@@ -281,10 +294,10 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
      * @return void prints json object
      */
     public function save_erp_settings() {
-        $response = array(
+        $response = [
             'success' => false,
             'msg' => null
-        );
+        ];
 
         $this->verify_nonce( 'erp_settings_contact_forms' );
 
@@ -293,7 +306,7 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
 
         } if ( !empty( $_POST['plugin'] ) && !empty( $_POST['formId'] ) && !empty( $_POST['map'] ) ) {
 
-            $required_options = $this->contact_form_integration->get_required_crm_contact_options();
+            $required_options = $this->get_required_crm_contact_options();
 
             // if map contains full_name, then remove first and last names from required options
             if ( in_array( 'full_name' , $_POST['map'] ) ) {
@@ -321,14 +334,17 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
             } else {
                 $settings = get_option( 'wperp_crm_contact_forms' );
 
-                $settings[ $_POST['plugin'] ][ $_POST['formId'] ] = $_POST['map'];
+                $settings[ $_POST['plugin'] ][ $_POST['formId'] ] = [
+                    'map' => $_POST['map'],
+                    'contact_group' => $_POST['contactGroup']
+                ];
 
                 update_option( 'wperp_crm_contact_forms', $settings );
 
-                $response = array(
+                $response = [
                     'success' => true,
                     'msg' => __( 'Settings saved successfully', 'wp-erp' )
-                );
+                ];
             }
 
 
@@ -345,10 +361,10 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
      * @return void prints json object
      */
     public function reset_erp_settings() {
-        $response = array(
+        $response = [
             'success' => false,
             'msg' => null
-        );
+        ];
 
         $this->verify_nonce( 'erp_settings_contact_forms' );
 
@@ -359,7 +375,7 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
             $settings = get_option( 'wperp_crm_contact_forms' );
 
             if ( !empty( $settings[ $_POST['plugin'] ][ $_POST['formId'] ] ) ) {
-                $map = $settings[ $_POST['plugin'] ][ $_POST['formId'] ];
+                $map = $settings[ $_POST['plugin'] ][ $_POST['formId'] ]['map'];
 
                 unset( $settings[ $_POST['plugin'] ][ $_POST['formId'] ] );
 
@@ -370,141 +386,19 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
                     return null;
                 }, $map);
 
-                $response = array(
+                $response = [
                     'success' => true,
                     'msg' => __( 'Settings reset successfully', 'wp-erp' ),
-                    'map' => $map
-                );
+                    'map' => $map,
+                    'contactGroup' => 0
+                ];
+
+            } else {
+                $response['msg'] = __( 'Nothing to reset', 'wp-erp' );
             }
         }
 
         wp_send_json( $response );
-    }
-
-    /**
-     * Get all Contact Form 7 forms and their fields
-     *
-     * @return array
-     */
-    public function crm_get_contact_form_7_forms() {
-        $forms = array();
-
-        $args = array(
-            'post_type' => 'wpcf7_contact_form',
-            'posts_per_page' => -1,
-        );
-
-        $cf7_query = new WP_Query( $args );
-
-        if ( !$cf7_query->have_posts() ) {
-            return $forms;
-
-        } else {
-            while ( $cf7_query->have_posts() ) {
-                $cf7_query->the_post();
-                global $post;
-
-
-                $cf7 = WPCF7_ContactForm::get_instance( $post->ID );
-
-                $saved_settings = get_option( 'wperp_crm_contact_forms', '' );
-
-                $forms[ $post->ID ] = array(
-                    'name' => $post->post_name,
-                    'title' => $post->post_title,
-                    'fields' => array()
-                );
-
-                foreach ( $cf7->collect_mail_tags() as $tag ) {
-                    $forms[ $post->ID ]['fields'][ $tag ] = '[' . $tag . ']';
-
-                    if ( !empty( $saved_settings['contact_form_7'][ $post->ID ][ $tag ] ) ) {
-                        $crm_option = $saved_settings['contact_form_7'][ $post->ID ][ $tag ];
-                    } else {
-                        $crm_option = '';
-                    }
-
-                    $forms[ $post->ID ]['map'][ $tag ] = !empty( $crm_option ) ? $crm_option : '';
-                }
-            }
-        }
-
-        return $forms;
-    }
-
-    /**
-     * Get all Ninja Forms forms and their fields
-     *
-     * @return array
-     */
-    public function crm_get_ninja_forms_forms() {
-        $forms = array();
-        $saved_settings = get_option( 'wperp_crm_contact_forms', '' );
-
-        $nf = Ninja_forms();
-
-        if ( !nf_is_freemius_on() ) {
-            /* Support for non-freemius version */
-            $form_ids = $nf->forms()->get_all();
-
-            if ( !empty( $form_ids ) ) {
-                foreach ( $form_ids as $form_id ) {
-                    $form = $nf->form( $form_id );
-
-                    $forms[ $form_id ] = array(
-                        'name' => $form_id,
-                        'title' => $form->settings['form_title'],
-                        'fields' => array()
-                    );
-
-                    foreach ( $form->fields as $i => $field ) {
-                        $forms[ $form_id ]['fields'][ $field['id'] ] = $field['data']['label'];
-
-                        if ( !empty( $saved_settings['ninja_forms'][ $form_id ][ $field['id'] ] ) ) {
-                            $crm_option = $saved_settings['ninja_forms'][ $form_id ][ $field['id'] ];
-                        } else {
-                            $crm_option = '';
-                        }
-
-                        $forms[ $form_id ]['map'][ $field['id'] ] = !empty( $crm_option ) ? $crm_option : '';
-                    }
-                }
-            }
-
-        } else {
-            /* Support for freemius version */
-            $nf_forms = $nf->form()->get_forms();
-
-            foreach ( $nf_forms as $i => $nform ) {
-                $form_id = $nform->get_id();
-                $form_settings = $nform->get_settings();
-                $fields = $nf->form( $form_id )->get_fields();
-
-                $forms[ $form_id ] = array(
-                    'name' => $form_id,
-                    'title' => $form_settings['title'],
-                    'fields' => array()
-                );
-
-                foreach ( $fields as $i => $field ) {
-                    $field_id = $field->get_id();
-                    $field_settings = $field->get_settings();
-
-                    $forms[ $form_id ]['fields'][ $field_id ] = $field_settings['label'];
-
-                    if ( !empty( $saved_settings['ninja_forms'][ $form_id ][ $field_id ] ) ) {
-                        $crm_option = $saved_settings['ninja_forms'][ $form_id ][ $field_id ];
-                    } else {
-                        $crm_option = '';
-                    }
-
-                    $forms[ $form_id ]['map'][ $field_id ] = !empty( $crm_option ) ? $crm_option : '';
-
-                }
-            }
-        }
-
-        return $forms;
     }
 
 }

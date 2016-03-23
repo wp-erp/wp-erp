@@ -77,7 +77,7 @@ class Customer_Relationship {
         require_once WPERP_CRM_PATH . '/includes/function-customer.php';
         require_once WPERP_CRM_PATH . '/includes/function-dashboard.php';
         require_once WPERP_CRM_PATH . '/includes/function-capabilities.php';
-        require_once WPERP_CRM_PATH . '/includes/class-contact-forms-integration.php';
+        require_once WPERP_CRM_PATH . '/includes/contact-forms/class-contact-forms-integration.php';
     }
 
     /**
@@ -123,6 +123,7 @@ class Customer_Relationship {
         wp_enqueue_script( 'erp-crm', WPERP_CRM_ASSETS . "/js/crm$suffix.js", array( 'erp-script', 'erp-timepicker' ), date( 'Ymd' ), true );
 
         $localize_script = apply_filters( 'erp_crm_localize_script', array(
+            'ajaxurl'               => admin_url( 'admin-ajax.php' ),
             'nonce'                 => wp_create_nonce( 'wp-erp-crm-nonce' ),
             'popup'                 => array(
                 'customer_title'         => __( 'Add New Customer', 'wp-erp' ),

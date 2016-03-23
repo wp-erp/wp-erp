@@ -1138,7 +1138,10 @@ var vm = new Vue({
                         vm.feedData.dt            = '';
                         vm.feedData.tp            = '';
                         vm.feedData.inviteContact = [];
-                        jQuery('.select2').select2().select2( "val", "" );
+
+                        if ( jQuery('.select2').length ) {
+                            jQuery('.select2').select2().select2( "val", "" );
+                        }
                     };
 
                     if ( vm.feedData.type == 'tasks' ) {

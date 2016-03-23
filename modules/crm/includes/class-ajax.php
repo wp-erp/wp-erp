@@ -34,6 +34,8 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-crm-customer-edit-company', 'customer_edit_company' );
         $this->action( 'wp_ajax_erp-crm-customer-update-company', 'customer_update_company' );
         $this->action( 'wp_ajax_erp-crm-customer-remove-company', 'customer_remove_company' );
+        $this->action( 'wp_ajax_erp-search-crm-user', 'search_crm_user' );
+        $this->action( 'wp_ajax_erp-crm-save-assign-contact', 'save_assign_contact' );
 
         // Contact Group
         $this->action( 'wp_ajax_erp-crm-contact-group', 'contact_group_create' );
@@ -316,6 +318,89 @@ class Ajax_Handler {
         $this->send_success( __('hello', 'wp-erp' ) );
 
     }
+
+    public function search_crm_user() {
+        $this->verify_nonce( 'wp-erp-crm-nonce' );
+
+        $term = isset( $_REQUEST['q'] ) ? stripslashes( $_REQUEST['q'] ) : '';
+
+        if ( empty( $term ) ) {
+            die();
+        }
+
+        $found_crm_user = [];
+
+        add_action( 'pre_user_query', [ $this, 'filter_search_crm_user_name' ] );
+
+        $crm_user_query = new \WP_User_Query( apply_filters( 'erp_crm_search_crm_user_query', array(
+            'fields'         => 'all',
+            'role'           => 'erp_crm_manager', // @TODO: Change the role for CRM Agent
+            'orderby'        => 'display_name',
+            'search'         => '*' . $term . '*',
+            'search_columns' => array( 'ID', 'user_login', 'user_email', 'user_nicename' )
+        ) ) );
+
+        remove_action( 'pre_user_query', [ $this, 'filter_search_crm_user_name' ] );
+
+        $crm_users = $crm_user_query->get_results();
+
+        if ( ! empty( $crm_users ) ) {
+            foreach ( $crm_users as $user ) {
+                $found_crm_user[ $user->ID ] = $user->display_name . ' (' . sanitize_email( $user->user_email ) . ')';
+            }
+        }
+
+        $this->send_success( $found_crm_user );
+    }
+
+    /**
+     * When searching using the WP_User_Query, search names (user meta) too.
+     *
+     * @since 1.0
+     *
+     * @param  object $query
+     *
+     * @return object
+     */
+    public function filter_search_crm_user_name( $query ) {
+        global $wpdb;
+
+        $term = stripslashes( $_REQUEST['q'] );
+        if ( method_exists( $wpdb, 'esc_like' ) ) {
+            $term = $wpdb->esc_like( $term );
+        } else {
+            $term = like_escape( $term );
+        }
+
+        $query->query_from  .= " INNER JOIN {$wpdb->usermeta} AS user_name ON {$wpdb->users}.ID = user_name.user_id AND ( user_name.meta_key = 'first_name' OR user_name.meta_key = 'last_name' ) ";
+        $query->query_where .= $wpdb->prepare( " OR user_name.meta_value LIKE %s ", '%' . $term . '%' );
+    }
+
+    /**
+     * Save assign contact to crm manager
+     *
+     * @since 1.0
+     *
+     * @return json [object]
+     */
+    public function save_assign_contact() {
+        $this->verify_nonce( 'wp-erp-crm-nonce' );
+
+        parse_str( $_POST['formData'], $output );
+
+        if ( isset( $output['erp_select_assign_contact'] ) && empty( $output['erp_select_assign_contact'] ) ) {
+            $this->send_error( __( 'Please select a user', 'wp-erp' ) );
+        }
+
+        if ( empty( $output['assign_contact_id'] ) ) {
+            $this->send_error( __( 'No contact found', 'wp-erp' ) );
+        }
+
+        erp_people_update_meta( $output['assign_contact_id'], '_assign_crm_agent', $output['erp_select_assign_contact'] );
+
+        $this->send_success( __( 'Assing to agent successfully', 'wp-erp' ) );
+    }
+
 
     /**
      * Create Contact Group
@@ -613,26 +698,40 @@ class Ajax_Handler {
 
                 $data = erp_crm_save_customer_feed_data( $save_data );
 
-                $wp_erp_api_key     = get_option( 'wp_erp_apikey', null );
-                $wp_erp_api_active  = get_option( 'wp_erp_api_active', 'no' );
-
                 $contact_id = intval( $postdata['user_id'] );
 
                 $contact = new \WeDevs\ERP\CRM\Contact( $contact_id );
 
-                global $display_name, $user_email;
+                $headers = "";
+                $headers .= "Content-Type: text/html; charset=UTF-8" . "\r\n";
 
-                $headers = [];
-                $headers[] = 'Content-Type: text/html; charset=UTF-8';
-                $headers[] = 'From: ' . $display_name . ' <' . $user_email . '>' . "\r\n";
+                $is_cloud_active = erp_is_cloud_active();
 
-                if( $wp_erp_api_key && $wp_erp_api_active && 'yes' == $wp_erp_api_active ) {
+                if( $is_cloud_active ) {
+                    $wp_erp_api_key = get_option( 'wp_erp_apikey' );
+
                     $reply_to = $wp_erp_api_key . "-" . $postdata['created_by'] . "-" . $contact_id . "@incloud.wperp.com";
-                    $headers[] = 'Reply-To: ' . $reply_to . "\r\n";
+                    $headers .= "Reply-To: $reply_to" . "\r\n";
                 }
 
+                add_filter( 'wp_mail_from', 'erp_crm_get_email_from_address' );
+                add_filter( 'wp_mail_from_name', 'erp_crm_get_email_from_name' );
+
+                $query = [
+                    'action' => 'erp_crm_track_email_read',
+                    'aid'    => $data['id'],
+                ];
+                $email_url  = add_query_arg( $query, admin_url('admin-ajax.php') );
+                $img_url    = '<img src="' . $email_url . '" width="1" height="1" border="0" />';
+
+                $email_body = $postdata['message'] . $img_url;
+
                 // Send email a contact
-                wp_mail( $contact->email, $postdata['email_subject'], $postdata['message'], $headers );
+                wp_mail( $contact->email, $postdata['email_subject'], $email_body, $headers );
+
+                remove_filter( 'wp_mail_from', 'erp_crm_get_email_from_address' );
+                remove_filter( 'wp_mail_from_name', 'erp_crm_get_email_from_name' );
+                remove_filter( 'wp_mail_content_type', 'erp_crm_get_email_content_type' );
 
                 do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
 

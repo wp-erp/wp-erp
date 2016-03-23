@@ -3,10 +3,9 @@
 use WeDevs\ERP\Framework\ERP_Settings_Page;
 
 /**
- * General class
+ * Email settings class
  */
 class ERP_Email_Settings extends ERP_Settings_Page {
-
 
     function __construct() {
         $this->id    = 'erp-email';
@@ -222,7 +221,6 @@ class ERP_Email_Settings extends ERP_Settings_Page {
                         $settings       = $email->get_form_fields();
                         $update_options = array();
 
-                        // var_dump( $settings );
                         if ( $settings) {
                             foreach ($settings as $field) {
                                 if ( ! isset( $field['id'] ) || ! isset( $_POST[ $field['id'] ] ) ) {

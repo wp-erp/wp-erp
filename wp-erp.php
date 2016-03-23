@@ -227,6 +227,7 @@ final class WeDevs_ERP {
 
         $this->container['modules'] = new \WeDevs\ERP\Framework\Modules();
         $this->container['emailer'] = \WeDevs\ERP\Emailer::init();
+        $this->container['integration'] = \WeDevs\ERP\Integration::init();
     }
 
     /**
@@ -242,6 +243,9 @@ final class WeDevs_ERP {
 
         // initialize emailer class
         add_action( 'erp_loaded', array( $this->container['emailer'], 'init_emails' ) );
+
+        // initialize integration class
+        add_action( 'erp_loaded', array( $this->container['integration'], 'init_integrations' ) );
     }
 
     /**

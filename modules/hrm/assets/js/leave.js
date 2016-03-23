@@ -222,7 +222,7 @@
                     extraClass: 'smaller',
                     onReady: function() {
                         Leave.initDateField();
-                        $('.erp-color-picker').wpColorPicker();
+                        $('.erp-color-picker').wpColorPicker().wpColorPicker( 'color', '#fafafa' );
                         Leave.policy.periodField();
                     },
                     onSubmit: function(modal) {
@@ -464,7 +464,7 @@
 
                 var self = $(this),
                 data = {
-                    id : self.data('id') 
+                    id : self.data('id')
                 }
 
                 $.erpPopup({

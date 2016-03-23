@@ -85,8 +85,8 @@ class ERP_Settings_General extends ERP_Settings_Page {
      * @return void
      */
     public function erp_api_key() {
-        $wp_erp_api_key         = get_option( 'wp_erp_apikey', null );
-        $wp_erp_api_active      = get_option( 'wp_erp_api_active', 'no' );
+        $wp_erp_api_key  = get_option( 'wp_erp_apikey', null );
+        $is_cloud_active = erp_is_cloud_active();
 
         if( $wp_erp_api_key ) {
         ?>
@@ -95,7 +95,7 @@ class ERP_Settings_General extends ERP_Settings_Page {
                 <span class="dashicons dashicons-admin-network"></span><?php echo __( 'API Key', 'wp-erp' ) ?>
             </th>
             <td class="forminp forminp-text">
-                <p><?php echo $wp_erp_api_key ?> <span class="dashicons dashicons-<?php echo ( $wp_erp_api_active == 'yes' ) ? 'yes green' : 'no red' ?>"></p>
+                <p><?php echo $wp_erp_api_key ?> <span class="dashicons dashicons-<?php echo ( $is_cloud_active ) ? 'yes green' : 'no red' ?>"></p>
                 <br />
                 <a id="wp-erp-disconnect-api" class="button-secondary">Disconnect</a>
             </td>

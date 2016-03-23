@@ -618,7 +618,7 @@ function erp_get_country_name( $country ) {
     } else {
         $full_country = '';
     }
-    
+
     return $full_country;
 }
 
@@ -680,12 +680,12 @@ add_action( 'init', function() {
  * @return void
  */
 function erp_activation_notice() {
-    
+
     if ( !current_user_can( 'manage_options' ) ) {
         return;
     }
-    $apikey     = get_option( 'wp_erp_apikey' );
-    $dismiss    = get_option( 'wp_erp_activation_dismiss' );
+    $apikey  = get_option( 'wp_erp_apikey' );
+    $dismiss = get_option( 'wp_erp_activation_dismiss' );
 
     if ( ! $apikey && ! $dismiss ) {
     ?>
@@ -782,16 +782,32 @@ function erp_activation_notice_javascript() { ?>
 function erp_api_mode_change() {
     header('Access-Control-Allow-Origin: *');
 
-    $postdata      = $_POST;
-    $api_key       = get_option( 'wp_erp_apikey' );
+    $postdata    = $_POST;
+    $api_key     = get_option( 'wp_erp_apikey' );
 
-    $is_verified   = erp_cloud_verify_request( $postdata, $api_key  );
+    $is_verified = erp_cloud_verify_request( $postdata, $api_key  );
 
     if ( $is_verified ) {
         $status = isset( $_POST['status'] ) && in_array( $_POST['status'], ['yes', 'no'] ) ? $_POST['status'] : 'yes';
 
         update_option( 'wp_erp_api_active', $_POST['status'] );
     }
+}
+
+/**
+ * Determine if the erp cloud feature is active or not.
+ *
+ * @return boolean
+ */
+function erp_is_cloud_active() {
+    $wp_erp_api_key    = get_option( 'wp_erp_apikey', null );
+    $wp_erp_api_active = get_option( 'wp_erp_api_active', 'no' );
+
+    if ( $wp_erp_api_key && 'yes' == $wp_erp_api_active ) {
+        return true;
+    }
+
+    return false;
 }
 
 /**
