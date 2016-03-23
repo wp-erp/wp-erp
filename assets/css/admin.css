@@ -539,6 +539,46 @@
   color: #505050;
   font-size: 21px;
 }
+.erp-single-customer .erp-single-customer-content .customer-basic-info .erp-crm-assign-contact {
+  margin-top: 0px;
+  padding: 5px 0px 5px;
+}
+.erp-single-customer .erp-single-customer-content .customer-basic-info .erp-crm-assign-contact h4:after {
+  content: ' ';
+  position: relative;
+  top: -10px;
+  left: 23%;
+  display: block;
+  width: 76%;
+  border: 1px solid #eee;
+}
+.erp-single-customer .erp-single-customer-content .customer-basic-info .erp-crm-assign-contact .user-wrap {
+  position: relative;
+}
+.erp-single-customer .erp-single-customer-content .customer-basic-info .erp-crm-assign-contact .user-wrap img {
+  float: left;
+  margin-right: 10px;
+}
+.erp-single-customer .erp-single-customer-content .customer-basic-info .erp-crm-assign-contact .user-wrap span#erp-crm-edit-assign-contact-to-agent {
+  position: absolute;
+  top: 1%;
+  right: 2%;
+  cursor: pointer;
+}
+.erp-single-customer .erp-single-customer-content .customer-basic-info .erp-crm-assign-contact .assign-form .crm-aget-search-select-wrap {
+  margin-bottom: 15px;
+}
+.erp-single-customer .erp-single-customer-content .customer-basic-info .erp-crm-assign-contact .user-details {
+  float: left;
+  margin-top: -2px;
+}
+.erp-single-customer .erp-single-customer-content .customer-basic-info .erp-crm-assign-contact .user-details a {
+  text-decoration: none;
+  display: block;
+}
+.erp-single-customer .erp-single-customer-content .customer-basic-info .erp-crm-assign-contact .user-details span {
+  font-style: italic;
+}
 .erp-single-customer .erp-single-customer-content .customer-company-info .company-profile-content .postbox .action {
   position: absolute;
   top: 12px;
