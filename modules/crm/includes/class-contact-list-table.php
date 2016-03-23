@@ -135,8 +135,9 @@ class Contact_List_Table extends \WP_List_Table {
             case 'life_stages':
                 return isset( $life_stages[$life_stage] ) ? $life_stages[$life_stage] : '-';
 
-            case 'assign_crm_user':
-                return !empty( $assign_contact_id ) ? get_the_author_meta( 'display_name', $assign_contact_id ) : '-';
+            case 'crm_owner':
+                $base_link   = add_query_arg( ['filter_assign_contact' => $assign_contact_id ], admin_url( 'admin.php?page=' . $this->page_type ) );
+                return !empty( $assign_contact_id ) ? '<a href="' . $base_link . '">' . get_the_author_meta( 'display_name', $assign_contact_id ) . '</a>' : '-';
 
             case 'created':
                 return erp_format_date( $customer->created );
@@ -195,7 +196,7 @@ class Contact_List_Table extends \WP_List_Table {
             'email'           => __( 'Email', 'wp-erp' ),
             'phone_number'    => __( 'Phone', 'wp-erp' ),
             'life_stages'     => __( 'Life Stage', 'wp-erp' ),
-            'assign_crm_user' => __( 'Assign To', 'wp-erp' ),
+            'crm_owner' => __( 'Owner', 'wp-erp' ),
             'created'         => __( 'Created at', 'wp-erp' ),
         );
 

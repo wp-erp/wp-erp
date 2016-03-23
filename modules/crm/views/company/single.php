@@ -71,7 +71,7 @@
 
                             <div class="erp-crm-assign-contact">
                                 <div class="inner-wrap">
-                                    <h4><?php _e( 'Assign To', 'wp-erp' ); ?></h4>
+                                    <h4><?php _e( 'Contact Owner', 'wp-erp' ); ?></h4>
                                     <div class="user-wrap">
                                         <?php
                                             $crm_user_id = erp_people_get_meta( $customer->id, '_assign_crm_agent', true );
