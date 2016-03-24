@@ -27,7 +27,7 @@
 
 			$month        = date( "Y-m", strtotime( $this_month ." -$i months" ) );
 			$js_month     = strtotime( $month. '-01' ) * 1000;
-			$count        = erp_hr_get_headcount( $month, 'month' );
+			$count        = erp_hr_get_headcount( $month, $query_dept, 'month' );
 			$chart_data[] = [$js_month, $count];
 		}
 
