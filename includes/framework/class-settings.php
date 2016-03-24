@@ -24,7 +24,12 @@ class ERP_Admin_Settings {
 
             $settings[] = include __DIR__ . '/settings/general.php';
             $settings[] = include __DIR__ . '/settings/email.php';
-            $settings[] = include __DIR__ . '/settings/integration.php';
+
+            // Display integrations tab only if any integration exist.
+            $integrations = wperp()->integration->get_integrations();
+            if ( ! empty( $integrations ) ) {
+                $settings[] = include __DIR__ . '/settings/integration.php';
+            }
 
             self::$settings = apply_filters( 'erp_settings_pages', $settings );
         }
@@ -41,8 +46,8 @@ class ERP_Admin_Settings {
      */
     public static function get_current_tab_and_section() {
 
-        $settings        = self::get_settings();
-        $query_arg       = array( 'tab' => false, 'subtab' => false );
+        $settings  = self::get_settings();
+        $query_arg = array( 'tab' => false, 'subtab' => false );
 
         if ( ! isset( $settings[0] ) ) {
             return $query_arg;
@@ -54,7 +59,7 @@ class ERP_Admin_Settings {
             return $query_arg;
         }
 
-        $current_tab = $query_arg['tab']     = isset( $_GET['tab'] ) ? sanitize_title( $_GET['tab'] ) : $settings[0]->get_id();
+        $current_tab = $query_arg['tab'] = isset( $_GET['tab'] ) ? sanitize_title( $_GET['tab'] ) : $settings[0]->get_id();
 
         foreach ( $settings as $obj ) {
             $sections[$obj->get_id()] = isset( $obj->sections ) ? $obj->sections : array();

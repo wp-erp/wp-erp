@@ -40,5 +40,8 @@
                 </form>
             </div><!-- .inside -->
         </div><!-- .postbox -->
+
+        <?php do_action( 'erp_tools_page' ); ?>
+
     </div><!-- .metabox-holder -->
 </div>
