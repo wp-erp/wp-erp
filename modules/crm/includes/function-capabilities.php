@@ -156,7 +156,7 @@ function erp_crm_is_current_user_manager() {
  *
  * @return boolean
  */
-function erp_crm_is_current_user_manager() {
+function erp_crm_is_current_user_crm_agent() {
     $current_user_role = erp_crm_get_user_role( get_current_user_id() );
 
     if ( erp_crm_get_agent_role() !=  $current_user_role ) {
