@@ -127,16 +127,16 @@ class Contact_List_Table extends \WP_List_Table {
 
         switch ( $column_name ) {
             case 'email':
-                return $customer->email;
+                return erp_get_clickable( 'email', $customer->email );
 
             case 'phone_number':
-                return $customer->phone;
+                return erp_get_clickable( 'phone', $customer->phone );
 
             case 'life_stages':
                 return isset( $life_stages[$life_stage] ) ? $life_stages[$life_stage] : '-';
 
             case 'crm_owner':
-                $base_link   = add_query_arg( ['filter_assign_contact' => $assign_contact_id ], admin_url( 'admin.php?page=' . $this->page_type ) );
+                $base_link   = add_query_arg( [ 'filter_assign_contact' => $assign_contact_id ], admin_url( 'admin.php?page=' . $this->page_type ) );
                 return !empty( $assign_contact_id ) ? '<a href="' . $base_link . '">' . get_the_author_meta( 'display_name', $assign_contact_id ) . '</a>' : '-';
 
             case 'created':
