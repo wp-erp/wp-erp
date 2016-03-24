@@ -192,7 +192,7 @@
                 ) ); ?>
             </li>
 
-            <?php do_action( 'erp-hr-employee-form-work' ); ?>
+            <?php do_action( 'erp-crm-customer-form-work' ); ?>
 
         </ol>
     </fieldset>
