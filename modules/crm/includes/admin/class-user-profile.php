@@ -2,17 +2,19 @@
 namespace WeDevs\ERP\CRM;
 
 /**
- * Loads HR users admin area
+ * Loads CRM users admin area
  *
- * @package WP-ERP\HR
+ * @since 1.0
+ *
+ * @package WP-ERP\CRM
  * @subpackage Administration
  */
 class User_Profile {
 
     /**
-     * The HR users admin loader
+     * The CRM users admin loader
      *
-     * @package WP-ERP\HR
+     * @package WP-ERP\CRM
      * @subpackage Administration
      */
     public function __construct() {
@@ -21,6 +23,8 @@ class User_Profile {
 
     /**
      * Setup the admin hooks, actions and filters
+     *
+     * @since 1.0
      *
      * @return void
      */
@@ -31,44 +35,71 @@ class User_Profile {
             return;
         }
 
-        // User profile edit/display actions
         add_action( 'erp_user_profile_role', array( $this, 'role' ) );
         add_action( 'erp_update_user', array( $this, 'update_user' ), 10, 2 );
     }
 
+    /**
+     * Update user role from user profile
+     *
+     * @since 1.0
+     *
+     * @param  integer $user_id
+     * @param  object $post
+     *
+     * @return void
+     */
     function update_user( $user_id, $post ) {
 
-        // HR role we want the user to have
-        $new_role = isset( $post['crm_manager'] ) ? sanitize_text_field( $post['crm_manager'] ) : false;
+        $new_crm_manager_role = isset( $post['crm_manager'] ) ? sanitize_text_field( $post['crm_manager'] ) : false;
+        $new_crm_agent_role   = isset( $post['crm_agent'] ) ? sanitize_text_field( $post['crm_agent'] ) : false;
 
         // Bail if current user cannot promote the passing user
         if ( ! current_user_can( 'promote_user', $user_id ) ) {
             return;
         }
 
-        // Set the new HR role
         $user = get_user_by( 'id', $user_id );
 
-        if ( $new_role ) {
-            $user->add_role( $new_role );
+        if ( $new_crm_manager_role ) {
+            $user->add_role( $new_crm_manager_role );
         } else {
             $user->remove_role( erp_crm_get_manager_role() );
         }
-        
+
+        if ( $new_crm_agent_role ) {
+            $user->add_role( $new_crm_agent_role );
+        } else {
+            $user->remove_role( erp_crm_get_agent_role() );
+        }
     }
 
-    function role( $profileuser ) { 
+    /**
+     * Show roles fields
+     *
+     * @since 1.0
+     *
+     * @param  object $profileuser
+     *
+     * @return html|void
+     */
+    function role( $profileuser ) {
         if ( ! current_user_can( 'manage_options' ) ) {
             return;
         }
-        
-        $checked = in_array( erp_crm_get_manager_role(), $profileuser->roles ) ? 'checked' : '';
+
+        $is_manager = in_array( erp_crm_get_manager_role(), $profileuser->roles ) ? 'checked' : '';
+        $is_agent   = in_array( erp_crm_get_agent_role(), $profileuser->roles ) ? 'checked' : '';
         ?>
         <label for="erp-crm-manager">
-            <input type="checkbox" id="erp-crm-manager" <?php echo $checked; ?> name="crm_manager" value="<?php echo erp_crm_get_manager_role(); ?>">
+            <input type="checkbox" id="erp-crm-manager" <?php echo $is_manager; ?> name="crm_manager" value="<?php echo erp_crm_get_manager_role(); ?>">
             <span class="description"><?php _e( 'CRM Manager', 'WP-ERP' ); ?></span>
+        </label>
+
+        <label for="erp-crm-agent">
+            <input type="checkbox" id="erp-crm-agent" <?php echo $is_agent; ?> name="crm_agent" value="<?php echo erp_crm_get_agent_role(); ?>">
+            <span class="description"><?php _e( 'CRM Agent', 'WP-ERP' ); ?></span>
         </label>
         <?php
     }
-
 }

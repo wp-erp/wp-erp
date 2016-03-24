@@ -117,7 +117,7 @@ Please approve/reject this leave application by going following:
 
 {requests_url}
 
-Thanks.' 
+Thanks.'
         ];
 
         update_option( 'erp_email_settings_new-leave-request', $new_leave_request );
@@ -132,7 +132,7 @@ Your <strong>{leave_type}</strong> type leave request for <strong>{no_days} days
 
 Regards
 Manager Name
-Company' 
+Company'
         ];
 
         update_option( 'erp_email_settings_approved-leave-request', $approved_request );
@@ -149,7 +149,7 @@ The reason of rejection is: {reject_reason}
 
 Regards
 Manager Name
-Company' 
+Company'
         ];
 
         update_option( 'erp_email_settings_rejected-leave-request', $reject_request );
