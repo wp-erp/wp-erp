@@ -88,9 +88,8 @@ class Ajax_Handler {
         unset( $_POST['_wpnonce'] );
         unset( $_POST['action'] );
 
-        $posted               = array_map( 'strip_tags_deep', $_POST );
-
-        $customer_id          = erp_insert_people( $posted );
+        $posted      = array_map( 'strip_tags_deep', $_POST );
+        $customer_id = erp_insert_people( $posted );
 
         if ( is_wp_error( $customer_id ) ) {
             $this->send_error( $customer_id->get_error_message() );
@@ -119,6 +118,8 @@ class Ajax_Handler {
                 $customer->update_meta( $field, $value );
             }
         }
+
+        do_action( 'erp_crm_save_contact_data', $customer, $customer_id, $posted );
 
         $data = $customer->to_array();
 
