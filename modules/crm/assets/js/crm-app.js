@@ -380,11 +380,23 @@ Vue.component( 'timeline-item', {
     methods: {
 
         toggleFooter: function() {
-            if ( this.disbaleFooter == 'true' ) {
-                this.showFooter = false;
-            } else {
-                this.showFooter = !this.showFooter;
+
+            if ( wpCRMvue.isAdmin || wpCRMvue.isCrmManager || this.checkOwnFeeds() ) {
+                if ( this.disbaleFooter == 'true' ) {
+                    this.showFooter = false;
+                } else {
+                    this.showFooter = !this.showFooter;
+                }
             }
+        },
+
+        /**
+         * Check is user agent and its own feeds or not
+         *
+         * @return {boolean}
+         */
+        checkOwnFeeds: function() {
+            return ( wpCRMvue.isAgent ) && this.feed.created_by.ID == wpCRMvue.current_user_id;
         },
 
         /**
@@ -624,6 +636,15 @@ Vue.component( 'log-activity', {
     }
 
 });
+
+/**
+ * Task Note Component
+ *
+ * @param {object} feedData
+ * @param {boolean} isValid
+ *
+ * @return {void}
+ */
 
 Vue.component( 'tasks-note', {
     props: ['feed'],

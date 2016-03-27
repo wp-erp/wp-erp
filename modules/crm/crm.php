@@ -190,6 +190,9 @@ class Customer_Relationship {
                 'ajaxurl'         => admin_url( 'admin-ajax.php' ),
                 'nonce'           => wp_create_nonce( 'wp-erp-crm-customer-feed' ),
                 'current_user_id' => get_current_user_id(),
+                'isAdmin'         => current_user_can( 'manage_options' ),
+                'isCrmManager'    => current_user_can( 'erp_crm_manager' ),
+                'isAgent'         => current_user_can( 'erp_crm_agent' ),
                 'confirm'         => __( 'Are you sure?', 'wp-erp' ),
                 'date_format'     => get_option( 'date_format' )
             ] );
