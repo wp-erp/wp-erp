@@ -50,10 +50,10 @@ class WeDevs_ERP_Installer {
         $this->create_tables();
 
         if ( is_null( $current_erp_version ) ) {
-            $this->create_roles();
             $this->set_role();
         }
 
+            $this->create_roles(); // @TODO: Needs to change later :)
         $this->create_cron_jobs();
         $this->setup_default_emails();
 

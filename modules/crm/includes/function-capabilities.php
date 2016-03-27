@@ -121,11 +121,23 @@ function erp_crm_get_caps_for_role( $role = '' ) {
     switch ( $role ) {
 
         case erp_crm_get_manager_role():
-            $caps = [ 'read' => true ];
+            $caps = [
+                'read'                   => true,
+                'erp_crm_list_contact'   => true,
+                'erp_crm_add_contact'    => true,
+                'erp_crm_edit_contact'   => true,
+                'erp_crm_delete_contact' => true,
+            ];
             break;
 
         case erp_crm_get_agent_role():
-            $caps = [ 'read' => true ];
+            $caps = [
+                'read'                   => true,
+                'erp_crm_list_contact'   => true,
+                'erp_crm_add_contact'    => true,
+                'erp_crm_edit_contact'   => true,
+                'erp_crm_delete_contact' => true,
+            ];
             break;
     }
 
@@ -202,4 +214,78 @@ function erp_crm_permission_management_field( $employee ) {
         'help'  => __( 'This Employee is CRM agent', 'wp-erp'  )
     ) );
 }
+
+/**
+ * Dynamically Map CRM capabilities
+ *
+ * @since 1.0
+ *
+ * @param  array   $caps
+ * @param  string  $cap
+ * @param  integer $user_id
+ * @param  array   $args
+ *
+ * @return array
+ */
+function erp_crm_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
+    switch ( $cap ) {
+
+        case 'erp_crm_edit_contact':
+        case 'erp_crm_delete_contact':
+            $contact_id = isset( $args[0] ) ? $args[0] : false;
+            $data_hard = isset( $args[1] ) ? $args[1] : false;
+
+            $crm_manager_role = erp_crm_get_manager_role();
+            $crm_agent_role   = erp_crm_get_agent_role();
+
+            if ( user_can( $user_id, $crm_agent_role ) ) {
+
+                $assign_id = erp_people_get_meta( $contact_id, '_assign_crm_agent', true );
+
+                if ( $assign_id != $user_id ) {
+                    $caps = ['do_not_allow'];
+                } else {
+                    if ( $data_hard ) {
+                        $caps = ['do_not_allow'];
+                    }
+                }
+            }
+
+        break;
+
+        // case 'erp_view_employee':
+        // case 'erp_edit_employee':
+        //     $employee_id = isset( $args[0] ) ? $args[0] : false;
+
+        //     if ( $user_id == $employee_id ) {
+        //         $caps = [ $cap ];
+        //     } else {
+        //         $hr_manager_role = erp_hr_get_manager_role();
+        //         // HR manager can read any employee
+        //         if ( user_can( $user_id, $hr_manager_role ) ) {
+        //             $caps = array( $hr_manager_role );
+        //         } else {
+        //             $caps = ['do_not_allow'];
+        //         }
+        //     }
+
+        //     break;
+
+        // case 'erp_create_review':
+        //     $employee_id = isset( $args[0] ) ? $args[0] : false;
+        //     $employee    = new \WeDevs\ERP\HRM\Employee( $employee_id );
+
+        //     if ( $employee->get_reporting_to() && $employee->get_reporting_to()->ID == $user_id ) {
+        //         $caps = [ 'employee' ];
+        //     } else {
+        //         $caps = [ $cap ];
+        //     }
+
+        //     break;
+    }
+
+    return apply_filters( 'erp_crm_map_meta_caps', $caps, $cap, $user_id, $args );
+
+}
+
 

@@ -31,8 +31,8 @@ class Admin_Menu {
         add_menu_page( __( 'CRM', 'wp-erp' ), __( 'CRM', 'wp-erp' ), $capabilities, 'erp-sales', array( $this, 'dashboard_page' ), 'dashicons-chart-bar', null );
 
         $overview = add_submenu_page( 'erp-sales', __( 'Overview', 'wp-erp' ), __( 'Overview', 'wp-erp' ), $capabilities, 'erp-sales', array( $this, 'dashboard_page' ) );
-        add_submenu_page( 'erp-sales', __( 'Contacts', 'wp-erp' ), __( 'Contacts', 'wp-erp' ), $capabilities, 'erp-sales-customers', array( $this, 'contact_page' ) );
-        add_submenu_page( 'erp-sales', __( 'Companies', 'wp-erp' ), __( 'Companies', 'wp-erp' ), $capabilities, 'erp-sales-companies', array( $this, 'company_page' ) );
+        add_submenu_page( 'erp-sales', __( 'Contacts', 'wp-erp' ), __( 'Contacts', 'wp-erp' ), 'erp_crm_list_contact', 'erp-sales-customers', array( $this, 'contact_page' ) );
+        add_submenu_page( 'erp-sales', __( 'Companies', 'wp-erp' ), __( 'Companies', 'wp-erp' ), 'erp_crm_list_contact', 'erp-sales-companies', array( $this, 'company_page' ) );
         add_submenu_page( 'erp-sales', __( 'Activities', 'wp-erp' ), __( 'Activities', 'wp-erp' ), $capabilities, 'erp-sales-activities', array( $this, 'activity_page' ) );
         $schedule = add_submenu_page( 'erp-sales', __( 'Schedules', 'wp-erp' ), __( 'Schedules', 'wp-erp' ), $capabilities, 'erp-sales-schedules', array( $this, 'schedules_page' ) );
         add_submenu_page( 'erp-sales', __( 'Contact Groups', 'wp-erp' ), __( 'Contact Groups', 'wp-erp' ), $capabilities, 'erp-sales-contact-groups', array( $this, 'contact_group_page' ) );

@@ -223,9 +223,16 @@ class Contact_List_Table extends \WP_List_Table {
         $edit_title        = ( $customer->type == 'company' ) ? __( 'Edit this Company', 'wp-erp' ) : __( 'Edit this customer', 'wp-erp' );
         $view_title        = ( $customer->type == 'company' ) ? __( 'View this Company', 'wp-erp' ) : __( 'View this customer', 'wp-erp' );
 
-        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $customer->id, $edit_title, __( 'Edit', 'wp-erp' ) );
+        if ( current_user_can( 'erp_crm_edit_contact', $customer->id ) ) {
+            $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $customer->id, $edit_title, __( 'Edit', 'wp-erp' ) );
+        }
+
+
         $actions['view']   = sprintf( '<a href="%s" title="%s">%s</a>', $view_url, $view_title, __( 'View', 'wp-erp' ) );
-        $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" data-hard=%d title="%s">%s</a>', $delete_url, $customer->id, $data_hard, __( 'Delete this item', 'wp-erp' ), $delete_text );
+
+        if ( current_user_can( 'erp_crm_delete_contact', $customer->id, $data_hard ) ) {
+            $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" data-hard=%d title="%s">%s</a>', $delete_url, $customer->id, $data_hard, __( 'Delete this item', 'wp-erp' ), $delete_text );
+        }
 
         if ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) {
             $actions['restore'] = sprintf( '<a href="%s" class="restoreCustomer" data-id="%d" title="%s">%s</a>', $delete_url, $customer->id, __( 'Restore this item', 'wp-erp' ), __( 'Restore', 'wp-erp' ) );
