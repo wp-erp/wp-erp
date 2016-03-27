@@ -1,7 +1,10 @@
 <div class="wrap erp-crm-contact-group" id="wp-erp">
 
     <h2><?php _e( 'Contact Groups', 'wp-erp' ); ?>
-        <a href="#" id="erp-new-contact-group" class="erp-new-contact-group add-new-h2" title="<?php _e( 'Add New Contact Group ', 'wp-erp' ); ?>"><?php _e( 'Add New Contact Group', 'wp-erp' ); ?></a>
+        <?php if ( current_user_can( 'erp_crm_create_groups' ) ): ?>
+            <a href="#" id="erp-new-contact-group" class="erp-new-contact-group add-new-h2" title="<?php _e( 'Add New Contact Group ', 'wp-erp' ); ?>"><?php _e( 'Add New Contact Group', 'wp-erp' ); ?></a>
+        <?php endif ?>
+
         <a href="<?php echo add_query_arg( [ 'page'=>'erp-sales-contact-groups', 'groupaction' => 'view-subscriber' ], admin_url('admin.php') ); ?>" class="add-new-h2" title="<?php _e( 'View all subscriber contact', 'wp-erp' ); ?>"><?php _e( 'View all subscriber', 'wp-erp' ); ?></a>
     </h2>
 

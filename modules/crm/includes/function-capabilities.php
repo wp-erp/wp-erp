@@ -131,7 +131,11 @@ function erp_crm_get_caps_for_role( $role = '' ) {
                 'erp_crm_manage_dashboard' => true,
                 'erp_crm_manage_schedules' => true,
                 'erp_crm_manage_groups'    => true,
+                'erp_crm_create_groups'    => true,
+                'erp_crm_edit_groups'      => true,
+                'erp_crm_delete_groups'    => true,
             ];
+
             break;
 
         case erp_crm_get_agent_role():
