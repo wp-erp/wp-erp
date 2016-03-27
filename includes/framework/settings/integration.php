@@ -205,6 +205,8 @@ class ERP_Integration_Settings extends ERP_Settings_Page {
                             }
                         }
 
+                        do_action( 'erp_update_option_integration' );
+
                         update_option( $integration->get_option_id(), $update_options );
 
                         break;

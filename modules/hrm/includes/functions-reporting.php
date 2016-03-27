@@ -261,12 +261,12 @@ function erp_hr_get_gender_ratio_data() {
  *
  * @return number
  */
-function erp_hr_get_headcount( $date = '', $query_type = '' ) {
+function erp_hr_get_headcount( $date = '', $dept = '', $query_type = '' ) {
 
 	global $wpdb;
 
 	$count         = 0;
-	$all_user_data = $wpdb->get_results( "SELECT user_id, hiring_date, termination_date FROM {$wpdb->prefix}erp_hr_employees ", ARRAY_A );
+	$all_user_data = $wpdb->get_results( "SELECT user_id, department, hiring_date, termination_date FROM {$wpdb->prefix}erp_hr_employees ", ARRAY_A );
 
 	if ( 'date' == $query_type ) {
 
@@ -288,6 +288,10 @@ function erp_hr_get_headcount( $date = '', $query_type = '' ) {
 		foreach ($all_user_data as $user_data ) {
 
 			if ( '0000-00-00' == $user_data['hiring_date'] ) {
+				continue;
+			}
+
+			if ( $dept && $dept != $user_data['department'] ) {
 				continue;
 			}
 
