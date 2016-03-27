@@ -183,7 +183,14 @@ class Customer_Relationship {
             wp_enqueue_script( 'wp-erp-crm-vue-save-search', WPERP_CRM_ASSETS . "/js/save-search$suffix.js", array( 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
             wp_enqueue_script( 'post' );
 
-            $customer = new Contact();
+            if ( 'crm_page_erp-sales-customers' == $hook ) {
+                $customer = new Contact( null, 'contact' );
+            }
+
+            if ( 'crm_page_erp-sales-companies' == $hook ) {
+                $customer = new Contact( null, 'company' );
+            }
+
             $country  = \WeDevs\ERP\Countries::instance();
 
             wp_localize_script( 'wp-erp-crm-vue-customer', 'wpCRMvue', [
