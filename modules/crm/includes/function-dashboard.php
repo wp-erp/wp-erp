@@ -29,7 +29,7 @@ function erp_crm_dashboard_right_widgets_area() {
  * @return void
  */
 function erp_crm_dashboard_left_widgets_area() {
-    erp_admin_dash_metabox( __( '<i class="fa fa-calendar"></i> My schedules', 'wp-erp' ), 'erp_hr_dashboard_widget_my_schedules' );
+    erp_admin_dash_metabox( __( '<i class="fa fa-calendar"></i> My schedules', 'wp-erp' ), 'erp_crm_dashboard_widget_my_schedules' );
 }
 
 /**
@@ -131,7 +131,7 @@ function erp_crm_dashboard_widget_upcoming_schedules() {
  *
  * @return void
  */
-function erp_hr_dashboard_widget_my_schedules() {
+function erp_crm_dashboard_widget_my_schedules() {
     $user_id        = get_current_user_id();
     $args           = [
         'created_by' => $user_id,
