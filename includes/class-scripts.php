@@ -76,6 +76,7 @@ class Scripts {
         wp_register_script( 'erp-flotchart-resize', $vendor . '/flot/jquery.flot.resize.min.js', array( 'jquery' ), $this->version, true );
         wp_register_script( 'erp-flotchart-valuelabel', $vendor . '/flot/jquery.flot.valuelabels.js', array( 'jquery' ), $this->version, true );
         wp_register_script( 'erp-flotchart-navigate', $vendor . '/flot/jquery.flot.navigate.js', array( 'jquery' ), $this->version, true );
+        wp_register_script( 'erp-flotchart-selection', $vendor . '/flot/jquery.flot.selection.js', array( 'jquery' ), $this->version, true );
 
         // core js files
         wp_register_script( 'erp-popup', $js . '/jquery-popup' . $this->suffix . '.js', array( 'jquery' ), $this->version, true );
