@@ -69,7 +69,7 @@
                                 <li><?php erp_print_key_value( __( 'Postal Code', 'wp-erp' ), $customer->postal_code ); ?></li>
                                 <li><?php erp_print_key_value( __( 'Source', 'wp-erp' ), $customer->get_source() ); ?></li>
 
-                                <?php do_action( 'erp-hr-employee-single-basic', $customer ); ?>
+                                <?php do_action( 'erp_crm_single_contact_basic_info', $customer ); ?>
                             </ul>
 
                             <div class="erp-crm-assign-contact">

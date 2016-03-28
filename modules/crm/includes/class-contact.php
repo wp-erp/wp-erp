@@ -81,9 +81,9 @@ class Contact extends \WeDevs\ERP\People {
                 $fields['social'][$key] = $this->get_meta( $key, true );
             }
 
-            $fields['life_stage'] = $this->get_meta( 'life_stage', true );
+            $fields['life_stage']    = $this->get_meta( 'life_stage', true );
             $fields['date_of_birth'] = $this->get_meta( 'date_of_birth', true );
-            $fields['source'] = $this->get_meta( 'source', true );
+            $fields['source']        = $this->get_meta( 'source', true );
         }
 
         return apply_filters( 'erp_crm_get_ '. $this->contact_type . '_fields', $fields, $this->data, $this->id );

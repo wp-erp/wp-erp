@@ -121,7 +121,7 @@ class Contact_List_Table extends \WP_List_Table {
      */
     function column_default( $customer, $column_name ) {
 
-        $life_stages       = erp_crm_get_life_statges_dropdown_raw();
+        $life_stages       = erp_crm_get_life_stages_dropdown_raw();
         $life_stage        = erp_people_get_meta( $customer->id, 'life_stage', true );
         $assign_contact_id = erp_people_get_meta( $customer->id, '_assign_crm_agent', true );
 
