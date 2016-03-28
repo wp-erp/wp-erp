@@ -309,7 +309,7 @@ function erp_format_date( $date, $format = false ) {
 
     $time = strtotime( $date );
 
-    return date_i18n( $format, $time );
+    return $time <= 0 ? '--' : date_i18n( $format, $time );
 }
 
 /**
