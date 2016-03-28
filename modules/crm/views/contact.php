@@ -5,7 +5,9 @@ $if_advance_search = ( isset( $_GET['erp_save_search' ] ) && $_GET['erp_save_sea
 <div class="wrap erp-crm-customer" id="wp-erp">
 
     <h2><?php _e( 'Contact', 'wp-erp' ); ?>
-        <a href="#" id="erp-customer-new" class="erp-contact-new add-new-h2" data-type="contact" title="<?php _e( 'Add New Contact', 'wp-erp' ); ?>"><?php _e( 'Add New Contact', 'wp-erp' ); ?></a>
+        <?php if ( current_user_can( 'erp_crm_add_contact' ) ): ?>
+            <a href="#" id="erp-customer-new" class="erp-contact-new add-new-h2" data-type="contact" title="<?php _e( 'Add New Contact', 'wp-erp' ); ?>"><?php _e( 'Add New Contact', 'wp-erp' ); ?></a>
+        <?php endif ?>
     </h2>
 
     <div class="erp-advance-search-filter <?php echo !$if_advance_search ? 'erp-hide' : ''; ?>" id="erp-crm-save-search" v-cloak>

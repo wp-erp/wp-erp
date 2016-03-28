@@ -8,6 +8,7 @@
     <div class="timeline-body" @click="toggleFooter">
         {{{ feed.message | formatFeedContent feed }}}
     </div>
+
     <div class="timeline-footer" v-if="showFooter" v-if="(feed.type != 'email')">
         <a href="#" @click.prevent="editFeed( feed )"><?php _e( 'Edit', 'wp-erp' ); ?> |</a>
         <a href="#" @click.prevent="deleteFeed( feed )"><?php _e( 'Delete', 'wp-erp' ); ?></a>

@@ -101,7 +101,7 @@
                     'required' => true,
                     'type'  => 'select',
                     'class' => 'select2',
-                    'options' => erp_crm_get_life_statges_dropdown_raw( [ '' => __( '--Select Stage--', 'wp-erp' ) ] )
+                    'options' => erp_crm_get_life_stages_dropdown_raw( [ '' => __( '--Select Stage--', 'wp-erp' ) ] )
                 ) ); ?>
             </li>
 
@@ -192,7 +192,7 @@
                 ) ); ?>
             </li>
 
-            <?php do_action( 'erp-hr-employee-form-work' ); ?>
+            <?php do_action( 'erp-crm-customer-form-work' ); ?>
 
         </ol>
     </fieldset>

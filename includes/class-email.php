@@ -336,7 +336,7 @@ class Email extends ERP_Settings_Page {
      * @return array of options
      */
     public function get_form_fields() {
-        return apply_filters( 'erp_settings_api_form_fields_' . $this->id, $this->form_fields );
+        return apply_filters( 'erp_settings_email_form_fields_' . $this->id, $this->form_fields );
     }
 
     /**

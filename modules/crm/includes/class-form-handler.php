@@ -101,7 +101,7 @@ class Form_Handler {
 
         if ( $action ) {
 
-            $redirect = remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'customer_search', 'filter_by_save_searches' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
+            $redirect = remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'customer_search', 'filter_by_save_searches', 'filter_by_crm_assign_agent' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
 
             switch ( $action ) {
 

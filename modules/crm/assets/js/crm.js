@@ -20,6 +20,9 @@
             $( '.erp-single-customer' ).on( 'click', '#erp-customer-add-company', this.customerSingle.addCompany );
             $( '.erp-single-customer' ).on( 'click', 'a.erp-customer-edit-company', this.customerSingle.editCompany );
             $( '.erp-single-customer' ).on( 'click', 'a.erp-customer-delete-company', this.customerSingle.removeCompany );
+            $( '.erp-single-customer' ).on( 'click', 'span#erp-crm-edit-assign-contact-to-agent', this.customerSingle.assignContact );
+            $( '.erp-single-customer' ).on( 'click', 'input.save-edit-assign-contact', this.customerSingle.saveAssignContact );
+            $( '.erp-single-customer' ).on( 'click', 'input.cancel-edit-assign-contact', this.customerSingle.cancelAssignContact );
             $( '.erp-single-customer' ).on( 'click', 'a#erp-contact-update-assign-group', this.subscriberContact.edit );
 
             // Contact Group
@@ -57,6 +60,49 @@
             this.checkVisibaleAdvanceSearch();
             // Erp ToolTips using tiptip
             this.initTipTips();
+            this.searchUserForAssignContact();
+        },
+
+        searchUserForAssignContact: function() {
+            $( '#erp-select-user-for-assign-contact' ).select2({
+                placeholder: $( this ).data( 'placeholder' ),
+                minimumInputLength: 3,
+                ajax: {
+                    url: wpErpCrm.ajaxurl,
+                    dataType: 'json',
+                    delay: 250,
+                    escapeMarkup: function( m ) {
+                        return m;
+                    },
+                    data: function (params) {
+                      return {
+                        q: params.term, // search term
+                        _wpnonce: wpErpCrm.nonce,
+                        action: 'erp-search-crm-user'
+                      };
+                    },
+                    processResults: function ( data, params ) {
+                        var terms = [];
+
+                        if ( data) {
+                            $.each( data.data, function( id, text ) {
+                                terms.push({
+                                    id: id,
+                                    text: text
+                                });
+                            });
+                        }
+
+                        if ( terms.length ) {
+                            return { results: terms };
+                        } else {
+                            return { results: '' };
+                        }
+                    },
+                    cache: true,
+                },
+            });
+
         },
 
         initTipTips: function() {
@@ -736,6 +782,46 @@
                         }
                     });
                 }
+            },
+
+            assignContact: function(e) {
+                e.preventDefault();
+                var mainWrap = $(this).closest('.erp-crm-assign-contact');
+
+                mainWrap.find('.user-wrap').hide();
+                mainWrap.find('.assign-form').fadeIn();
+            },
+
+            saveAssignContact: function(e) {
+                e.preventDefault();
+
+                var self = $(this),
+                    data = {
+                        action : 'erp-crm-save-assign-contact',
+                        _wpnonce: wpErpCrm.nonce,
+                        formData: self.closest('form').serialize()
+                    };
+
+                wp.ajax.send( {
+                    data: data,
+                    success: function( res ) {
+                        $('.erp-crm-assign-contact').load( window.location.href + ' .inner-wrap', function() {
+                            WeDevs_ERP_CRM.searchUserForAssignContact();
+                        } );
+
+                    },
+                    error: function(error) {
+                        alert( error );
+                    }
+                });
+            },
+
+            cancelAssignContact: function(e) {
+                e.preventDefault();
+                var mainWrap = $(this).closest('.erp-crm-assign-contact');
+
+                mainWrap.find('.assign-form').hide();
+                mainWrap.find('.user-wrap').fadeIn();
             },
 
             /**

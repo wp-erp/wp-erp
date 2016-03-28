@@ -126,6 +126,8 @@
     }
 
     ul.erp-latest-contact-list {
+        padding-bottom: 7px;
+
         li {
             position: relative;
             padding: 4px 0px;
@@ -134,7 +136,7 @@
 
             span.contact-created-time {
                 position: absolute;
-                top: 22%;
+                top: 0%;
                 right: 3px;
                 cursor: pointer;
             }
@@ -507,6 +509,58 @@
                             color: #505050;
                             font-size: 21px;
                         }
+                    }
+                }
+            }
+        }
+
+        .customer-basic-info {
+            .erp-crm-assign-contact {
+                margin-top: 0px;
+                padding: 5px 0px 5px;
+
+                h4:after {
+                    content: ' ';
+                    position: relative;
+                    top: -9px;
+                    left: 34%;
+                    display: block;
+                    width: 65%;
+                    border: 1px solid #eee;
+                }
+
+                .user-wrap {
+                    position: relative;
+
+                    img {
+                        float: left;
+                        margin-right: 10px;
+                    }
+
+                    span#erp-crm-edit-assign-contact-to-agent {
+                        position: absolute;
+                        top: 1%;
+                        right: 2%;
+                        cursor: pointer;
+                    }
+                }
+
+                .assign-form {
+                    .crm-aget-search-select-wrap {
+                        margin-bottom: 15px;
+                    }
+                }
+
+                .user-details {
+                    float: left;
+                    margin-top: -2px;
+
+                    a {
+                        text-decoration: none;
+                        display: block;
+                    }
+                    span {
+                        font-style: italic;
                     }
                 }
             }

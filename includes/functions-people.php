@@ -46,7 +46,7 @@ function erp_get_peoples( $args = [] ) {
         $people = new WeDevs\ERP\Framework\Models\People();
 
         // Check if want all data without any pagination
-        if ( $args['number'] != '-1' ) {
+        if ( ( $args['number'] != '-1' ) && ! $args['count'] ) {
             $people = $people->skip( $args['offset'] )->take( $args['number'] );
         }
 

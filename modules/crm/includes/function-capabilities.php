@@ -1,7 +1,9 @@
 <?php
 
 /**
- * The manager role for HR employees
+ * The manager role for CRM user
+ *
+ * @since 1.0
  *
  * @return string
  */
@@ -10,7 +12,21 @@ function erp_crm_get_manager_role() {
 }
 
 /**
- * When a new administrator is created, make him CRM Manager by default
+ * The Crm Agent role for CRM user
+ *
+ * @since 1.0
+ *
+ * @return string
+ */
+function erp_crm_get_agent_role() {
+    return apply_filters( 'erp_crm_get_agent_role', 'erp_crm_agent' );
+}
+
+/**
+ * When a new administrator is created,
+ * make him CRM Manager by default
+ *
+ * @since 1.0
  *
  * @param  int  $user_id
  *
@@ -26,7 +42,9 @@ function erp_crm_new_admin_as_manager( $user_id ) {
 }
 
 /**
- * Return a user's HR role
+ * Return a user's CRM roles
+ *
+ * @since 1.0
  *
  * @param int $user_id
  *
@@ -34,8 +52,14 @@ function erp_crm_new_admin_as_manager( $user_id ) {
  */
 function erp_crm_get_user_role( $user_id = 0 ) {
 
-    // Validate user id
-    $user = get_userdata( $user_id );
+    // if user_id is not set or 0, then the user is current user
+    if ( ! $user_id ) {
+        global $current_user;
+        $user = $current_user;
+    } else {
+        $user = get_userdata( $user_id );
+    }
+
     $role = false;
 
     // User has roles so look for a HR one
@@ -47,9 +71,6 @@ function erp_crm_get_user_role( $user_id = 0 ) {
             array_keys( erp_crm_get_roles() )
         );
 
-        // If there's a role in the array, use the first one. This isn't very
-        // smart, but since roles aren't exactly hierarchical, and HR
-        // does not yet have a UI for multiple user roles, it's fine for now.
         if ( !empty( $roles ) ) {
             $role = array_shift( $roles );
         }
@@ -59,7 +80,9 @@ function erp_crm_get_user_role( $user_id = 0 ) {
 }
 
 /**
- * Get dynamic roles for HR
+ * Get dynamic roles for CRM
+ *
+ * @since 1.0
  *
  * @return array
  */
@@ -69,12 +92,28 @@ function erp_crm_get_roles() {
             'name'         => __( 'CRM Manager', 'wp-erp' ),
             'public'       => false,
             'capabilities' => erp_crm_get_caps_for_role( erp_crm_get_manager_role() )
-        ]
+        ],
+
+        erp_crm_get_agent_role() => [
+            'name'         => __( 'CRM Agent', 'wp-erp' ),
+            'public'       => false,
+            'capabilities' => erp_crm_get_caps_for_role( erp_crm_get_agent_role() )
+        ],
+
     ];
 
     return apply_filters( 'erp_crm_get_roles', $roles );
 }
 
+/**
+ * Get caps for individual Roles
+ *
+ * @since 1.0
+ *
+ * @param  string $role
+ *
+ * @return array
+ */
 function erp_crm_get_caps_for_role( $role = '' ) {
 	$caps = [];
 
@@ -82,18 +121,51 @@ function erp_crm_get_caps_for_role( $role = '' ) {
     switch ( $role ) {
 
         case erp_crm_get_manager_role():
+            $caps = [
+                'read'                     => true,
+                'erp_crm_list_contact'     => true,
+                'erp_crm_add_contact'      => true,
+                'erp_crm_edit_contact'     => true,
+                'erp_crm_delete_contact'   => true,
+                'erp_crm_manage_activites' => true,
+                'erp_crm_manage_dashboard' => true,
+                'erp_crm_manage_schedules' => true,
+                'erp_crm_manage_groups'    => true,
+                'erp_crm_create_groups'    => true,
+                'erp_crm_edit_groups'      => true,
+                'erp_crm_delete_groups'    => true,
+            ];
 
-            $caps = [ 'read' => true ];
+            break;
 
+        case erp_crm_get_agent_role():
+            $caps = [
+                'read'                     => true,
+                'erp_crm_list_contact'     => true,
+                'erp_crm_add_contact'      => true,
+                'erp_crm_edit_contact'     => true,
+                'erp_crm_delete_contact'   => true,
+                'erp_crm_manage_activites' => true,
+                'erp_crm_manage_dashboard' => true,
+                'erp_crm_manage_schedules' => true,
+                'erp_crm_manage_groups'    => true,
+            ];
             break;
     }
 
     return apply_filters( 'erp_crm_get_caps_for_role', $caps, $role );
 }
 
+/**
+ * Check is current user is manager
+ *
+ * @since 1.0
+ *
+ * @return boolean
+ */
 function erp_crm_is_current_user_manager() {
-    $current_user_role = erp_crm_get_user_role( get_current_user_id() ); 
-    
+    $current_user_role = erp_crm_get_user_role( get_current_user_id() );
+
     if ( erp_crm_get_manager_role() !=  $current_user_role ) {
         return false;
     }
@@ -101,6 +173,32 @@ function erp_crm_is_current_user_manager() {
     return true;
 }
 
+/**
+ * Check is current user is CRM Agent
+ *
+ * @since 1.0
+ *
+ * @return boolean
+ */
+function erp_crm_is_current_user_crm_agent() {
+    $current_user_role = erp_crm_get_user_role( get_current_user_id() );
+
+    if ( erp_crm_get_agent_role() !=  $current_user_role ) {
+        return false;
+    }
+
+    return true;
+}
+
+/**
+ * Check crm permission for users
+ *
+ * @since 1.0
+ *
+ * @param  object $employee
+ *
+ * @return void
+ */
 function erp_crm_permission_management_field( $employee ) {
 
     if ( ! erp_crm_is_current_user_manager() ) {
@@ -108,6 +206,7 @@ function erp_crm_permission_management_field( $employee ) {
     }
 
     $is_manager = user_can( $employee->id, erp_crm_get_manager_role() ) ? 'on' : 'off';
+    $is_agent   = user_can( $employee->id, erp_crm_get_agent_role() ) ? 'on' : 'off';
 
     erp_html_form_input( array(
         'label' => __( 'CRM Manager', 'wp-erp' ),
@@ -117,5 +216,58 @@ function erp_crm_permission_management_field( $employee ) {
         'value' => $is_manager,
         'help'  => __( 'This Employee is Manager', 'wp-erp'  )
     ) );
+
+    erp_html_form_input( array(
+        'label' => __( 'CRM Agent', 'wp-erp' ),
+        'name'  => 'crm_agent',
+        'type'  => 'checkbox',
+        'tag'   => 'div',
+        'value' => $is_agent,
+        'help'  => __( 'This Employee is CRM agent', 'wp-erp'  )
+    ) );
 }
+
+/**
+ * Dynamically Map CRM capabilities
+ *
+ * @since 1.0
+ *
+ * @param  array   $caps
+ * @param  string  $cap
+ * @param  integer $user_id
+ * @param  array   $args
+ *
+ * @return array
+ */
+function erp_crm_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
+    switch ( $cap ) {
+
+        case 'erp_crm_edit_contact':
+        case 'erp_crm_delete_contact':
+            $contact_id = isset( $args[0] ) ? $args[0] : false;
+            $data_hard = isset( $args[1] ) ? $args[1] : false;
+
+            $crm_manager_role = erp_crm_get_manager_role();
+            $crm_agent_role   = erp_crm_get_agent_role();
+
+            if ( user_can( $user_id, $crm_agent_role ) ) {
+
+                $assign_id = erp_people_get_meta( $contact_id, '_assign_crm_agent', true );
+
+                if ( $assign_id != $user_id ) {
+                    $caps = ['do_not_allow'];
+                } else {
+                    if ( $data_hard ) {
+                        $caps = ['do_not_allow'];
+                    }
+                }
+            }
+
+        break;
+    }
+
+    return apply_filters( 'erp_crm_map_meta_caps', $caps, $cap, $user_id, $args );
+
+}
+
 

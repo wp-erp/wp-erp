@@ -123,6 +123,7 @@ class Customer_Relationship {
         wp_enqueue_script( 'erp-crm', WPERP_CRM_ASSETS . "/js/crm$suffix.js", array( 'erp-script', 'erp-timepicker' ), date( 'Ymd' ), true );
 
         $localize_script = apply_filters( 'erp_crm_localize_script', array(
+            'ajaxurl'               => admin_url( 'admin-ajax.php' ),
             'nonce'                 => wp_create_nonce( 'wp-erp-crm-nonce' ),
             'popup'                 => array(
                 'customer_title'         => __( 'Add New Customer', 'wp-erp' ),
@@ -182,13 +183,23 @@ class Customer_Relationship {
             wp_enqueue_script( 'wp-erp-crm-vue-save-search', WPERP_CRM_ASSETS . "/js/save-search$suffix.js", array( 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
             wp_enqueue_script( 'post' );
 
-            $customer = new Contact();
+            if ( 'crm_page_erp-sales-customers' == $hook ) {
+                $customer = new Contact( null, 'contact' );
+            }
+
+            if ( 'crm_page_erp-sales-companies' == $hook ) {
+                $customer = new Contact( null, 'company' );
+            }
+
             $country  = \WeDevs\ERP\Countries::instance();
 
             wp_localize_script( 'wp-erp-crm-vue-customer', 'wpCRMvue', [
                 'ajaxurl'         => admin_url( 'admin-ajax.php' ),
                 'nonce'           => wp_create_nonce( 'wp-erp-crm-customer-feed' ),
                 'current_user_id' => get_current_user_id(),
+                'isAdmin'         => current_user_can( 'manage_options' ),
+                'isCrmManager'    => current_user_can( 'erp_crm_manager' ),
+                'isAgent'         => current_user_can( 'erp_crm_agent' ),
                 'confirm'         => __( 'Are you sure?', 'wp-erp' ),
                 'date_format'     => get_option( 'date_format' )
             ] );
