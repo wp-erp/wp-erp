@@ -891,7 +891,7 @@ class Ajax_Handler {
             'search_val'  => $query_string,
         ];
 
-        $result = erp_insert_save_search( $data );
+        $result = erp_crm_insert_save_search( $data );
 
         if ( ! $result ) {
             $this->send_error( __( 'Search does not save', 'wp-erp' ) );
@@ -916,7 +916,7 @@ class Ajax_Handler {
             $this->send_error( __( 'Search name not found', 'wp-erp' ) );
         }
 
-        $result = erp_get_save_search_item( [ 'id' => $id ] );
+        $result = erp_crm_get_save_search_item( [ 'id' => $id ] );
 
         $this->send_success( $result );
     }
@@ -937,7 +937,7 @@ class Ajax_Handler {
             $this->send_error( __( 'Search name not found', 'wp-erp' ) );
         }
 
-        $result = erp_delete_save_search_item( $id );
+        $result = erp_crm_delete_save_search_item( $id );
 
         $this->send_success( $result );
     }

@@ -1496,7 +1496,7 @@ function erp_crm_get_save_search_regx( $values ) {
  */
 function erp_crm_save_search_query_filter( $people ) {
 
-    global $wpdb, $current_screen;
+    global $current_screen;
 
     $query_string = $_SERVER['QUERY_STRING'];
 
@@ -1504,7 +1504,6 @@ function erp_crm_save_search_query_filter( $people ) {
     $page_id    = ( isset( $current_screen->base ) ) ? $current_screen->base : '';
     $allowed    = erp_crm_get_serach_key( $page_id );
     $query_data = [];
-    $i          = 0;
 
     if ( $or_query ) {
         foreach( $or_query as $or_q ) {
@@ -1513,6 +1512,26 @@ function erp_crm_save_search_query_filter( $people ) {
             $query_data[] = $serach_array;
         }
     }
+
+    if ( !empty( $query_data ) ) {
+        $people = erp_crm_save_search_query_builder( $people, $query_data );
+    }
+
+    return $people;
+}
+
+/**
+ * Save Search query builder
+ *
+ * @since 1.0
+ *
+ * @param object $people
+ * @param array $query_data
+ *
+ * @return object
+ */
+function erp_crm_save_search_query_builder( $people, $query_data ) {
+    $i = 0;
 
     foreach( $query_data as $query_param ) {
         if ( $i == 0 ) {
@@ -1703,7 +1722,7 @@ function erp_crm_get_save_search_query_string( $postdata ){
  *
  * @return array
  */
-function erp_insert_save_search( $data ) {
+function erp_crm_insert_save_search( $data ) {
     if ( $data['id'] ) {
         $updated_item = WeDevs\ERP\CRM\Models\SaveSearch::find( $data['id'] );
         $updated_item->update( $data );
@@ -1722,7 +1741,7 @@ function erp_insert_save_search( $data ) {
  *
  * @return array
  */
-function erp_get_save_search_item( $args = [] ) {
+function erp_crm_get_save_search_item( $args = [] ) {
 
     $defaults = [
         'id'      => 0,
@@ -1771,7 +1790,7 @@ function erp_get_save_search_item( $args = [] ) {
  *
  * @return boolean
  */
-function erp_delete_save_search_item( $id ) {
+function erp_crm_delete_save_search_item( $id ) {
     return WeDevs\ERP\CRM\Models\SaveSearch::find( $id )->delete();
 }
 
@@ -1852,6 +1871,8 @@ function erp_crm_get_next_seven_day_schedules_activities( $user_id = '' ) {
 
 /**
  * Fetch & Save email activity from api server.
+ *
+ * @since 1.0
  *
  * @return void
  */
@@ -2043,32 +2064,4 @@ function erp_settings_pages_contact_forms( $settings ) {
     }
 
     return $settings;
-}
-
-/**
- * CRM related people types
- *
- * @since 1.0
- *
- * @param  array $types
- *
- * @return array
- */
-function erp_crm_people_types( $types ) {
-
-    $types['crm'] = [
-        'customer' => [
-            'label'    => __( 'Contact', 'wp-erp' ),
-            'sections' => [
-                'top'      => __( 'Top Area', 'wp-erp' ),
-                'basic'    => __( 'Basic Information', 'wp-erp' ),
-                'work'     => __( 'Others Information', 'wp-erp' ),
-                'personal' => __( 'Additional Information', 'wp-erp' ),
-                'social'   => __( 'Social Profile', 'wp-erp' ),
-                'bottom'   => __( 'Bottom Area', 'wp-erp' ),
-            ]
-        ]
-    ];
-
-    return apply_filters( 'erp_hr_people_types', $types );
 }

@@ -61,7 +61,7 @@ class Contact_List_Table extends \WP_List_Table {
             return;
         }
 
-        $save_searches        = erp_get_save_search_item();
+        $save_searches        = erp_crm_get_save_search_item();
         $crm_user_id          = ( isset( $_GET['filter_assign_contact'] ) ) ? $_GET['filter_assign_contact'] : '';
         $selected_save_search = ( isset( $_GET['erp_save_search'] ) ) ? $_GET['erp_save_search'] : '';
 
