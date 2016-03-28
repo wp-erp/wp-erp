@@ -1474,7 +1474,7 @@ function erp_crm_get_save_search_regx( $values ) {
  */
 function erp_crm_save_search_query_filter( $people ) {
 
-    global $wpdb, $current_screen;
+    global $current_screen;
 
     $query_string = $_SERVER['QUERY_STRING'];
 
@@ -1482,7 +1482,6 @@ function erp_crm_save_search_query_filter( $people ) {
     $page_id    = ( isset( $current_screen->base ) ) ? $current_screen->base : '';
     $allowed    = erp_crm_get_serach_key( $page_id );
     $query_data = [];
-    $i          = 0;
 
     if ( $or_query ) {
         foreach( $or_query as $or_q ) {
@@ -1491,6 +1490,21 @@ function erp_crm_save_search_query_filter( $people ) {
             $query_data[] = $serach_array;
         }
     }
+
+    if ( !empty( $query_data ) ) {
+        $people = erp_crm_save_search_query_builder( $people, $query_data );
+    }
+
+    return $people;
+}
+
+/**
+ * Save Search query builder
+ *
+ * @return object
+ */
+function erp_crm_save_search_query_builder( $people, $query_data ) {
+    $i = 0;
 
     foreach( $query_data as $query_param ) {
         if ( $i == 0 ) {
