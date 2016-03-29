@@ -2424,6 +2424,7 @@ table.audit-log-table th.col-date {
 }
 .erp-modal .content .row span.checkbox label {
   margin-bottom: 10px;
+  min-width: 100%;
 }
 .erp-modal .content .row span.description {
   display: block;
