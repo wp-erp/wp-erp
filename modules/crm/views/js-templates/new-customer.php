@@ -198,9 +198,39 @@
     </fieldset>
 
     <fieldset>
+        <legend><?php _e( 'Contact Group', 'wp-erp' ) ?></legend>
+
+        <ol class="form-fields two-col">
+            <li class="row" id="erp-crm-contact-subscriber-group-checkbox" data-checked = "{{ data.group_id }}">
+                <?php erp_html_form_input( array(
+                    'label'       => __( 'Assign Group', 'wp-erp' ),
+                    'name'        => 'group_id[]',
+                    'type'        => 'multicheckbox',
+                    'id'          => 'erp-crm-contact-group-id',
+                    'class'       => 'erp-crm-contact-group-class',
+                    'options'     => erp_crm_get_contact_group_dropdown()
+                ) ); ?>
+            </li>
+
+            <li data-checked = "{{ data.assign_to }}">
+                <?php erp_html_form_input( array(
+                    'label'       => __( 'Contact Owner', 'wp-erp' ),
+                    'name'        => 'assign_to[]',
+                    'type'        => 'select',
+                    'id'          => 'erp-crm-contact-owner-id',
+                    'class'       => 'erp-crm-contact-owner-class',
+                    'options'     => ()
+                ) ); ?>
+            </li>
+
+        </ol>
+
+    </fieldset>
+
+    <fieldset>
         <legend><?php _e( 'Additional Info', 'wp-erp' ) ?></legend>
 
-        <ol class="form-fields">
+        <ol class="form-fields two-col">
             <li>
                 <?php erp_html_form_input( array(
                     'label'   => __( 'Notes', 'wp-erp' ),

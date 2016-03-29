@@ -488,6 +488,10 @@
      * feeds styles
      */
 }
+.erp-single-customer .erp-single-customer-content .row {
+  margin-left: -12px;
+  margin-right: -12px;
+}
 .erp-single-customer .erp-single-customer-content .postbox .erp-handlediv {
   float: right;
   width: 36px;
@@ -521,6 +525,9 @@
 .erp-single-customer .erp-single-customer-content .customer-image-wraper {
   background: #FFF;
   margin-bottom: 20px;
+}
+.erp-single-customer .erp-single-customer-content .customer-image-wraper .avatar img {
+  margin-left: 12px;
 }
 .erp-single-customer .erp-single-customer-content .customer-image-wraper .details {
   padding-left: 20px;
@@ -2417,6 +2424,7 @@ table.audit-log-table th.col-date {
 }
 .erp-modal .content .row span.checkbox label {
   margin-bottom: 10px;
+  min-width: 100%;
 }
 .erp-modal .content .row span.description {
   display: block;

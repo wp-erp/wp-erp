@@ -56,7 +56,8 @@ class Contact extends \WeDevs\ERP\People {
             'notes'         => '',
             'other'         => '',
             'social'        => [],
-            'source'        => ''
+            'source'        => '',
+            'contact_owner' => ''
         );
 
         $social_field = erp_crm_get_social_field();
