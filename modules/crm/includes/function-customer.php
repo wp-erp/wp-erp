@@ -1092,8 +1092,24 @@ function erp_crm_get_assign_subscriber_contact() {
  *
  * @return return collection|obejct
  */
-function erp_crm_create_new_contact_subscriber( $data ) {
-    return \WeDevs\ERP\CRM\Models\ContactSubscriber::create( $data );
+function erp_crm_create_new_contact_subscriber( $args = [] ) {
+    $defaults = array(
+        'status'   => 'subscribe', // @TODO: Set a settings for that
+        'subscribe_at' => current_time('mysql'),
+        'unsubscribe_at' => null
+    );
+
+    $args = wp_parse_args( $args, $defaults );
+
+    if ( empty( $args['group_id'] ) ) {
+        return new WP_Error( 'no-group', __( 'No group selected', 'wp-erp' ) );
+    }
+
+    if ( empty( $args['user_id'] ) ) {
+        return new WP_Error( 'user-id', __( 'No contact founds', 'wp-erp' ) );
+    }
+
+    return \WeDevs\ERP\CRM\Models\ContactSubscriber::create( $args );
 }
 
 /**
@@ -1189,9 +1205,6 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
             $data = [
                 'user_id'  => $user_id,
                 'group_id' => $new_group_id,
-                'status'   => 'subscribe', // @TODO: Set a settings for that
-                'subscribe_at' => current_time('mysql'),
-                'unsubscribe_at' => current_time('mysql')
             ];
             erp_crm_create_new_contact_subscriber( $data );
         }
@@ -2066,22 +2079,74 @@ function erp_settings_pages_contact_forms( $settings ) {
     return $settings;
 }
 
+/**
+ * Get CRM users with different params
+ *
+ * @since 1.0
+ *
+ * @param  array $args
+ *
+ * @return array
+ */
+function erp_crm_get_crm_user( $args = [] ) {
 
-function erp_crm_get_crm_users() {
+    global $wp_version;
 
     $crm_users = [];
+    $defaults = [
+        's'          => false,
+        'number'     => -1,
+        'orderby'    => 'display_name',
+        'order'      => 'ASC',
+        'fields'     => 'all', // If needs to selected fileds then set those fields as an array
+        'meta_query' => [],
+        'include'    => [],
+        'exclude'    => []
+    ];
 
-    add_action( 'pre_user_query', 'erp_crm_filter_search_crm_user_name' );
+    $args  = wp_parse_args( $args, $defaults );
 
-    $crm_user_query = new \WP_User_Query( apply_filters( 'erp_crm_search_crm_user_query', array(
-        'fields'         => 'all',
-        'role'           => 'erp_crm_manager', // @TODO: Change the role for CRM Agent
-        'orderby'        => 'display_name',
-        'search'         => '*' . $term . '*',
-        'search_columns' => array( 'ID', 'user_login', 'user_email', 'user_nicename' )
-    ) ) );
+    $user_query_args = [
+        'fields'   => $args['fields'],
+        'role__in' => [ 'erp_crm_manager', 'erp_crm_agent' ],
+        'orderby'  => $args['orderby'],
+        'order'    => $args['order'],
+    ];
 
-    remove_action( 'pre_user_query', 'erp_crm_filter_search_crm_user_name' );
+    if ( $args['number'] != -1 ) {
+        $user_query_args['number'] = $args['number'];
+    }
+
+    if ( !empty( $args['meta_query'] ) ) {
+        $user_query_args['meta_query'] = $args['meta_query'];
+    }
+
+    if ( !empty( $args['include'] ) ) {
+        $user_query_args['include'] = $args['include'];
+    }
+
+    if ( !empty( $args['exclude'] ) ) {
+        $user_query_args['exclude'] = $args['exclude'];
+    }
+
+    if ( $args['s'] ) {
+        $user_query_args['search'] = '*' . $args['s'] . '*';
+        $user_query_args['meta_query'] = [
+            'relation' => 'OR',
+            [
+                'key'     => 'first_name',
+                'value'   => $args['s'],
+                'compare' => 'LIKE'
+            ],
+            [
+                'key'     => 'last_name',
+                'value'   => $args['s'],
+                'compare' => 'LIKE'
+            ]
+        ];
+    }
+
+    $crm_user_query = new \WP_User_Query( apply_filters( 'erp_crm_get_crm_user_query', $user_query_args, $args ) );
 
     $crm_users = $crm_user_query->get_results();
 
@@ -2089,25 +2154,27 @@ function erp_crm_get_crm_users() {
 }
 
 /**
- * When searching using the WP_User_Query, search names (user meta) too.
+ * Get crm user for dropdown
  *
  * @since 1.0
  *
- * @param  object $query
+ * @param  array  $label
  *
- * @return object
+ * @return array
  */
-function erp_crm_filter_search_crm_user_name( $query ) {
-        global $wpdb;
+function erp_crm_get_crm_user_dropdown( $label = [] ) {
+    $users = erp_crm_get_crm_user();
+    $list = [];
 
-        $term = stripslashes( $_REQUEST['q'] );
-        if ( method_exists( $wpdb, 'esc_like' ) ) {
-            $term = $wpdb->esc_like( $term );
-        } else {
-            $term = like_escape( $term );
-        }
-
-        $query->query_from  .= " INNER JOIN {$wpdb->usermeta} AS user_name ON {$wpdb->users}.ID = user_name.user_id AND ( user_name.meta_key = 'first_name' OR user_name.meta_key = 'last_name' ) ";
-        $query->query_where .= $wpdb->prepare( " OR user_name.meta_value LIKE %s ", '%' . $term . '%' );
+    foreach ( $users as $key => $user ) {
+        $list[$user->id] = esc_html( $user->display_name ) . '(' . esc_html( $user->user_email ) . ')';
     }
+
+    if ( $label ) {
+        $list = $label + $list;
+    }
+
+    return $list;
+}
+
 
