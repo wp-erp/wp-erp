@@ -77,6 +77,15 @@ class Integration extends ERP_Settings_Page {
     }
 
     /**
+     * Get saved option id
+     *
+     * @return string
+     */
+    public function get_option_id() {
+        return 'erp_integration_settings_' . $this->id;
+    }
+
+    /**
      * Get the form fields after they are initialized.
      * @return array of options
      */
