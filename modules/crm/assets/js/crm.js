@@ -334,8 +334,9 @@
              * @return {void}
              */
             pageReload: function() {
-                $( '.erp-crm-customer' ).load( window.location.href + ' .erp-crm-customer', function() {
+                $( '.list-table-wrap' ).load( window.location.href + ' .list-table-inner', function() {
                     $( '.select2' ).select2();
+                    WeDevs_ERP_CRM.searchUserForAssignContact();
                 } );
             },
 

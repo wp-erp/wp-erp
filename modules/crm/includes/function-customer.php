@@ -2089,7 +2089,6 @@ function erp_settings_pages_contact_forms( $settings ) {
  * @return array
  */
 function erp_crm_get_crm_user( $args = [] ) {
-
     global $wp_version;
 
     $crm_users = [];
