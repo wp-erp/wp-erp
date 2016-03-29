@@ -380,11 +380,23 @@ Vue.component( 'timeline-item', {
     methods: {
 
         toggleFooter: function() {
-            if ( this.disbaleFooter == 'true' ) {
-                this.showFooter = false;
-            } else {
-                this.showFooter = !this.showFooter;
+
+            if ( wpCRMvue.isAdmin || wpCRMvue.isCrmManager || this.checkOwnFeeds() ) {
+                if ( this.disbaleFooter == 'true' ) {
+                    this.showFooter = false;
+                } else {
+                    this.showFooter = !this.showFooter;
+                }
             }
+        },
+
+        /**
+         * Check is user agent and its own feeds or not
+         *
+         * @return {boolean}
+         */
+        checkOwnFeeds: function() {
+            return ( wpCRMvue.isAgent ) && this.feed.created_by.ID == wpCRMvue.current_user_id;
         },
 
         /**
@@ -401,10 +413,15 @@ Vue.component( 'timeline-item', {
                 _wpnonce : wpCRMvue.nonce
             };
 
+
             if ( confirm( wpCRMvue.confirm ) ) {
+                vm.progressStart('#timeline-item-'+feed.id );
                 jQuery.post( wpCRMvue.ajaxurl, data, function( resp ) {
                     if ( resp.success ) {
-                        vm.feeds.$remove( feed )
+                        vm.progreassDone(true);
+                        setTimeout( function() {
+                            vm.feeds.$remove( feed );
+                        }, 500);
                     } else {
                         alert( resp.data );
                     };
@@ -624,6 +641,15 @@ Vue.component( 'log-activity', {
     }
 
 });
+
+/**
+ * Task Note Component
+ *
+ * @param {object} feedData
+ * @param {boolean} isValid
+ *
+ * @return {void}
+ */
 
 Vue.component( 'tasks-note', {
     props: ['feed'],
@@ -977,7 +1003,7 @@ var vm = new Vue({
     methods: {
 
         loadMoreContent: function( feeds ) {
-            vm.progreassStart('.feed-load-more');
+            vm.progressStart('.feed-load-more');
             this.loading = true;
             this.offset = this.offset + this.limit;
 
@@ -1074,9 +1100,9 @@ var vm = new Vue({
 
             if ( feed_id ) {
                 this.feedData.id = feed_id;
-                vm.progreassStart( '#timeline-item-'+feed_id );
+                vm.progressStart( '#timeline-item-'+feed_id );
             } else {
-                vm.progreassStart('#erp-crm-feed-nav-content');
+                vm.progressStart('#erp-crm-feed-nav-content');
             }
 
             this.feedData._wpnonce = wpCRMvue.nonce;
@@ -1206,7 +1232,7 @@ var vm = new Vue({
 
 
             if ( filter ) {
-                vm.progreassStart('#erp-crm-activities-filter');
+                vm.progressStart('#erp-crm-activities-filter');
 
                 data.customer_id = filter.customer_id;
                 data.created_by = filter.created_by;
@@ -1232,7 +1258,7 @@ var vm = new Vue({
          *
          * @param  {[string]} id
          */
-        progreassStart: function( id ) {
+        progressStart: function( id ) {
             NProgress.configure({ parent: id });
             NProgress.start();
         },

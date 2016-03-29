@@ -23,4 +23,3 @@ function erp_admin_dash_metabox( $title = '', $callback = null, $class = '' ) {
     </div> <!-- .postbox -->
     <?php
 }
-

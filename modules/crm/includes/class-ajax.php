@@ -88,9 +88,8 @@ class Ajax_Handler {
         unset( $_POST['_wpnonce'] );
         unset( $_POST['action'] );
 
-        $posted               = array_map( 'strip_tags_deep', $_POST );
-
-        $customer_id          = erp_insert_people( $posted );
+        $posted      = array_map( 'strip_tags_deep', $_POST );
+        $customer_id = erp_insert_people( $posted );
 
         if ( is_wp_error( $customer_id ) ) {
             $this->send_error( $customer_id->get_error_message() );
@@ -114,11 +113,22 @@ class Ajax_Handler {
             $customer->update_meta( 'source', $posted['source'] );
         }
 
+        if ( $posted['assign_to'] ) {
+            $customer->update_meta( '_assign_crm_agent', $posted['assign_to'] );
+        }
+
+        $group_ids = ( isset( $posted['group_id'] ) && !empty( $posted['group_id'] ) ) ? $posted['group_id'] : [];
+        // if ( ! empty( $posted['group_id'] ) ) {
+            erp_crm_edit_contact_subscriber( $group_ids, $customer_id );
+        // }
+
         if ( isset( $posted['social'] ) ) {
             foreach ( $posted['social'] as $field => $value ) {
                 $customer->update_meta( $field, $value );
             }
         }
+
+        do_action( 'erp_crm_save_contact_data', $customer, $customer_id, $posted );
 
         $data = $customer->to_array();
 
@@ -220,10 +230,7 @@ class Ajax_Handler {
             foreach ( $group_ids as $group_key => $group_id ) {
                 $contact_subscriber = [
                     'user_id' => $user_id,
-                    'group_id' => $group_id,
-                    'status' => 'subscribe',
-                    'subscribe_at' => current_time( 'mysql' ),
-                    'unsubscribe_at' => current_time( 'mysql' )
+                    'group_id' => $group_id
                 ];
 
                 erp_crm_create_new_contact_subscriber( $contact_subscriber );
@@ -330,19 +337,7 @@ class Ajax_Handler {
 
         $found_crm_user = [];
 
-        add_action( 'pre_user_query', [ $this, 'filter_search_crm_user_name' ] );
-
-        $crm_user_query = new \WP_User_Query( apply_filters( 'erp_crm_search_crm_user_query', array(
-            'fields'         => 'all',
-            'role'           => 'erp_crm_manager', // @TODO: Change the role for CRM Agent
-            'orderby'        => 'display_name',
-            'search'         => '*' . $term . '*',
-            'search_columns' => array( 'ID', 'user_login', 'user_email', 'user_nicename' )
-        ) ) );
-
-        remove_action( 'pre_user_query', [ $this, 'filter_search_crm_user_name' ] );
-
-        $crm_users = $crm_user_query->get_results();
+        $crm_users = erp_crm_get_crm_user( [ 's' => $term ] );
 
         if ( ! empty( $crm_users ) ) {
             foreach ( $crm_users as $user ) {
@@ -351,29 +346,6 @@ class Ajax_Handler {
         }
 
         $this->send_success( $found_crm_user );
-    }
-
-    /**
-     * When searching using the WP_User_Query, search names (user meta) too.
-     *
-     * @since 1.0
-     *
-     * @param  object $query
-     *
-     * @return object
-     */
-    public function filter_search_crm_user_name( $query ) {
-        global $wpdb;
-
-        $term = stripslashes( $_REQUEST['q'] );
-        if ( method_exists( $wpdb, 'esc_like' ) ) {
-            $term = $wpdb->esc_like( $term );
-        } else {
-            $term = like_escape( $term );
-        }
-
-        $query->query_from  .= " INNER JOIN {$wpdb->usermeta} AS user_name ON {$wpdb->users}.ID = user_name.user_id AND ( user_name.meta_key = 'first_name' OR user_name.meta_key = 'last_name' ) ";
-        $query->query_where .= $wpdb->prepare( " OR user_name.meta_value LIKE %s ", '%' . $term . '%' );
     }
 
     /**
@@ -532,13 +504,8 @@ class Ajax_Handler {
                 $data = [
                     'user_id'  => $_POST['user_id'],
                     'group_id' => $group_id,
-                    'status'   => 'subscribe', // @TODO: Set a settings for that
-                    'subscribe_at' => current_time('mysql'),
-                    'unsubscribe_at' => current_time('mysql')
                 ];
-
             }
-
             erp_crm_create_new_contact_subscriber( $data );
         }
 
@@ -890,7 +857,7 @@ class Ajax_Handler {
             'search_val'  => $query_string,
         ];
 
-        $result = erp_insert_save_search( $data );
+        $result = erp_crm_insert_save_search( $data );
 
         if ( ! $result ) {
             $this->send_error( __( 'Search does not save', 'wp-erp' ) );
@@ -915,7 +882,7 @@ class Ajax_Handler {
             $this->send_error( __( 'Search name not found', 'wp-erp' ) );
         }
 
-        $result = erp_get_save_search_item( [ 'id' => $id ] );
+        $result = erp_crm_get_save_search_item( [ 'id' => $id ] );
 
         $this->send_success( $result );
     }
@@ -936,7 +903,7 @@ class Ajax_Handler {
             $this->send_error( __( 'Search name not found', 'wp-erp' ) );
         }
 
-        $result = erp_delete_save_search_item( $id );
+        $result = erp_crm_delete_save_search_item( $id );
 
         $this->send_success( $result );
     }

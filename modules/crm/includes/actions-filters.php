@@ -13,7 +13,6 @@ add_action( 'erp_hr_permission_management', 'erp_crm_permission_management_field
 
 // Filters *****************************************************************/
 add_filter( 'erp_people_query_object', 'erp_crm_save_search_query_filter' );
-add_filter( 'erp_people_types', 'erp_crm_people_types' );
 add_filter( 'erp_map_meta_caps', 'erp_crm_map_meta_caps', 10, 4 );
 
 

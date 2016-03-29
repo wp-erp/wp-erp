@@ -61,7 +61,7 @@ class Contact_List_Table extends \WP_List_Table {
             return;
         }
 
-        $save_searches        = erp_get_save_search_item();
+        $save_searches        = erp_crm_get_save_search_item();
         $crm_user_id          = ( isset( $_GET['filter_assign_contact'] ) ) ? $_GET['filter_assign_contact'] : '';
         $selected_save_search = ( isset( $_GET['erp_save_search'] ) ) ? $_GET['erp_save_search'] : '';
 
@@ -121,7 +121,7 @@ class Contact_List_Table extends \WP_List_Table {
      */
     function column_default( $customer, $column_name ) {
 
-        $life_stages       = erp_crm_get_life_statges_dropdown_raw();
+        $life_stages       = erp_crm_get_life_stages_dropdown_raw();
         $life_stage        = erp_people_get_meta( $customer->id, 'life_stage', true );
         $assign_contact_id = erp_people_get_meta( $customer->id, '_assign_crm_agent', true );
 

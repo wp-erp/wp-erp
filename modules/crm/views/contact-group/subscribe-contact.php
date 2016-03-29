@@ -2,6 +2,7 @@
 
     <h2><?php _e( 'Subscribed Contacts', 'wp-erp' ); ?>
         <a href="#" id="erp-new-subscriber-contact" class="erp-new-subscriber-contact add-new-h2" title="<?php _e( 'Assign a Contact', 'wp-erp' ); ?>"><?php _e( 'Assign a Contact', 'wp-erp' ); ?></a>
+        <a href="<?php echo add_query_arg( [ 'page' => 'erp-sales-contact-groups' ], admin_url( 'admin.php' ) ) ?>" class="add-new-h2" title="<?php _e( 'Back to Contact Group', 'wp-erp' ); ?>"><?php _e( 'Back to Contact Group', 'wp-erp' ); ?></a>
     </h2>
 
     <div class="list-table-wrap">

@@ -45,7 +45,7 @@ $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
     <div class="clearfix"></div>
     <p>
         <select name="invite_contact" id="erp-crm-activity-invite-contact" v-model="feedData.invite_contact" v-selecttwo="feedData.inviteContact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="Invite a contact">
-            <?php echo erp_crm_get_emplyees(); ?>
+            <?php echo erp_crm_get_employees(); ?>
         </select>
     </p>
 

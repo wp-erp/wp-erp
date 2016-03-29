@@ -2,9 +2,12 @@
 
     <h2><?php _e( 'Contact #', 'wp-erp' ); echo $customer->id; ?>
         <a href="<?php echo add_query_arg( ['page' => 'erp-sales-customers'], admin_url( 'admin.php' ) ); ?>" id="erp-contact-list" class="add-new-h2"><?php _e( 'Back to Contact list', 'wp-erp' ); ?></a>
-        <span class="edit">
-            <a href="#" data-id="<?php echo $customer->id; ?>" data-single_view="1" title="<?php _e( 'Edit this Contact', 'wp-erp' ); ?>" class="add-new-h2"><?php _e( 'Edit this Contact', 'wp-erp' ); ?></a>
-        </span>
+
+        <?php if ( current_user_can( 'erp_crm_edit_contact', $customer->id ) ): ?>
+            <span class="edit">
+                <a href="#" data-id="<?php echo $customer->id; ?>" data-single_view="1" title="<?php _e( 'Edit this Contact', 'wp-erp' ); ?>" class="add-new-h2"><?php _e( 'Edit this Contact', 'wp-erp' ); ?></a>
+            </span>
+        <?php endif ?>
     </h2>
 
     <div class="erp-grid-container erp-single-customer-content">
@@ -66,7 +69,7 @@
                                 <li><?php erp_print_key_value( __( 'Postal Code', 'wp-erp' ), $customer->postal_code ); ?></li>
                                 <li><?php erp_print_key_value( __( 'Source', 'wp-erp' ), $customer->get_source() ); ?></li>
 
-                                <?php do_action( 'erp-hr-employee-single-basic', $customer ); ?>
+                                <?php do_action( 'erp_crm_single_contact_basic_info', $customer ); ?>
                             </ul>
 
                             <div class="erp-crm-assign-contact">
@@ -77,7 +80,7 @@
                                             $crm_user_id = erp_people_get_meta( $customer->id, '_assign_crm_agent', true );
                                             if ( !empty( $crm_user_id ) ) {
                                                 $user        = get_user_by( 'id', $crm_user_id );
-                                                $user_string = esc_html( $user->display_name ) . ' (#' . absint( $user->ID ) . ' &ndash; ' . esc_html( $user->user_email ) . ')';
+                                                $user_string = esc_html( $user->display_name ) . '(' . esc_html( $user->user_email ) . ')';
                                             }
                                         ?>
                                         <?php if ( $crm_user_id ): ?>
@@ -94,7 +97,9 @@
 
                                         <div class="clearfix"></div>
 
-                                        <span id="erp-crm-edit-assign-contact-to-agent"><i class="fa fa-pencil-square-o"></i></span>
+                                        <?php if ( current_user_can( 'erp_crm_edit_contact' ) ): ?>
+                                            <span id="erp-crm-edit-assign-contact-to-agent"><i class="fa fa-pencil-square-o"></i></span>
+                                        <?php endif ?>
                                     </div>
 
                                     <div class="assign-form erp-hide">
@@ -179,7 +184,7 @@
                                     <?php endforeach; ?>
                                 <?php endif ?>
 
-                                <a href="#" id="erp-contact-update-assign-group" data-id="<?php echo $customer->id; ?>" title="<?php _e( 'Assign Contact Groups', 'wp-erp' ); ?>"><i class="fa fa-plus"></i> <?php _e( 'Add any contact groups', 'wp-erp' ); ?></a>
+                                <a href="#" id="erp-contact-update-assign-group" data-id="<?php echo $customer->id; ?>" title="<?php _e( 'Assign Contact Groups', 'wp-erp' ); ?>"><i class="fa fa-plus"></i> <?php _e( 'Assign any Contact Groups', 'wp-erp' ); ?></a>
                             </div>
                         </div>
                     </div><!-- .postbox -->

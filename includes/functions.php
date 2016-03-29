@@ -90,6 +90,22 @@ function erp_get_currencies() {
 }
 
 /**
+ * Get full list of currency ISO with symbol label.
+ *
+ * @return array
+ */
+function erp_get_currency_list_with_symobl() {
+    $currencies      = erp_get_currencies();
+    $currency_symbol = []; 
+
+    foreach ( $currencies as $iso => $currency ) {
+        $currency_symbol[$iso] = sprintf( '%1$s (%2$s)', $currency, erp_get_currency_symbol( $iso ) );
+    }
+
+    return $currency_symbol;
+}
+
+/**
  * [erp_get_currencies_dropdown description]
  *
  * @param  string  [description]
@@ -121,7 +137,7 @@ function erp_get_currency_symbol( $currency = '' ) {
             $currency_symbol = 'د.إ';
             break;
         case 'BDT':
-            $currency_symbol = '&#2547;&nbsp;';
+            $currency_symbol = '&#2547;';
             break;
         case 'BRL' :
             $currency_symbol = '&#82;&#36;';

@@ -507,6 +507,14 @@
                                     }
                                 });
 
+                                _.each( $( 'input[type=checkbox].erp-crm-contact-group-class' ), function( el, i) {
+                                    var optionsVal = $(el).val();
+                                    if( _.contains( response.group_id, optionsVal ) ) {
+                                        $(el).prop('checked', true );
+                                    }
+                                });
+
+
                                 WeDevs_ERP_CRM.initDateField();
                             }
                         });

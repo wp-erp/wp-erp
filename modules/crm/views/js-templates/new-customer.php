@@ -101,7 +101,7 @@
                     'required' => true,
                     'type'  => 'select',
                     'class' => 'select2',
-                    'options' => erp_crm_get_life_statges_dropdown_raw( [ '' => __( '--Select Stage--', 'wp-erp' ) ] )
+                    'options' => erp_crm_get_life_stages_dropdown_raw( [ '' => __( '--Select Stage--', 'wp-erp' ) ] )
                 ) ); ?>
             </li>
 
@@ -198,9 +198,40 @@
     </fieldset>
 
     <fieldset>
+        <legend><?php _e( 'Contact Group', 'wp-erp' ) ?></legend>
+
+        <ol class="form-fields two-col">
+            <li class="row" id="erp-crm-contact-subscriber-group-checkbox" data-checked = "{{ data.group_id }}">
+                <?php erp_html_form_input( array(
+                    'label'       => __( 'Assign Group', 'wp-erp' ),
+                    'name'        => 'group_id[]',
+                    'type'        => 'multicheckbox',
+                    'id'          => 'erp-crm-contact-group-id',
+                    'class'       => 'erp-crm-contact-group-class',
+                    'options'     => erp_crm_get_contact_group_dropdown()
+                ) ); ?>
+            </li>
+
+            <li data-selected = "{{ data.assign_to }}">
+                <?php erp_html_form_input( array(
+                    'label'       => __( 'Contact Owner', 'wp-erp' ),
+                    'name'        => 'assign_to',
+                    'required'    => true,
+                    'type'        => 'select',
+                    'id'          => 'erp-crm-contact-owner-id',
+                    'class'       => 'select2 erp-crm-contact-owner-class',
+                    'options'     => erp_crm_get_crm_user_dropdown( [ '' => '--Select--' ] )
+                ) ); ?>
+            </li>
+
+        </ol>
+
+    </fieldset>
+
+    <fieldset>
         <legend><?php _e( 'Additional Info', 'wp-erp' ) ?></legend>
 
-        <ol class="form-fields">
+        <ol class="form-fields two-col">
             <li>
                 <?php erp_html_form_input( array(
                     'label'   => __( 'Notes', 'wp-erp' ),

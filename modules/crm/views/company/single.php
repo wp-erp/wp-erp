@@ -2,9 +2,12 @@
 
     <h2><?php _e( 'Company #', 'wp-erp' ); echo $customer->id; ?>
         <a href="<?php echo add_query_arg( ['page' => 'erp-sales-companies'], admin_url( 'admin.php' ) ); ?>" id="erp-contact-list" class="add-new-h2"><?php _e( 'Back to Company list', 'wp-erp' ); ?></a>
-        <span class="edit">
-            <a href="#" data-id="<?php echo $customer->id; ?>" data-single_view="1" title="<?php _e( 'Edit this Company', 'wp-erp' ); ?>" class="add-new-h2"><?php _e( 'Edit this Company', 'wp-erp' ); ?></a>
-        </span>
+
+        <?php if ( current_user_can( 'erp_crm_edit_contact', $customer->id ) ): ?>
+            <span class="edit">
+                <a href="#" data-id="<?php echo $customer->id; ?>" data-single_view="1" title="<?php _e( 'Edit this Company', 'wp-erp' ); ?>" class="add-new-h2"><?php _e( 'Edit this Company', 'wp-erp' ); ?></a>
+            </span>
+        <?php endif ?>
     </h2>
 
     <div class="erp-grid-container erp-single-customer-content">
@@ -94,7 +97,9 @@
 
                                         <div class="clearfix"></div>
 
-                                        <span id="erp-crm-edit-assign-contact-to-agent"><i class="fa fa-pencil-square-o"></i></span>
+                                        <?php if ( current_user_can( 'erp_crm_edit_contact' ) ): ?>
+                                            <span id="erp-crm-edit-assign-contact-to-agent"><i class="fa fa-pencil-square-o"></i></span>
+                                        <?php endif ?>
                                     </div>
 
                                     <div class="assign-form erp-hide">
@@ -116,7 +121,6 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div><!-- .postbox -->
 
@@ -184,7 +188,7 @@
                                     <?php endforeach; ?>
                                 <?php endif ?>
 
-                                <a href="#" id="erp-contact-update-assign-group" data-id="<?php echo $customer->id; ?>" title="<?php _e( 'Assign Contact Groups', 'wp-erp' ); ?>"><i class="fa fa-plus"></i> <?php _e( 'Add any contact groups', 'wp-erp' ); ?></a>
+                                <a href="#" id="erp-contact-update-assign-group" data-id="<?php echo $customer->id; ?>" title="<?php _e( 'Assign Contact Groups', 'wp-erp' ); ?>"><i class="fa fa-plus"></i> <?php _e( 'Assign any Contact Groups', 'wp-erp' ); ?></a>
                             </div>
                         </div>
                     </div><!-- .postbox -->

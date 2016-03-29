@@ -56,7 +56,9 @@ class Contact extends \WeDevs\ERP\People {
             'notes'         => '',
             'other'         => '',
             'social'        => [],
-            'source'        => ''
+            'source'        => '',
+            'assign_to'     => '',
+            'group_id'      => [],
         );
 
         $social_field = erp_crm_get_social_field();
@@ -81,9 +83,14 @@ class Contact extends \WeDevs\ERP\People {
                 $fields['social'][$key] = $this->get_meta( $key, true );
             }
 
-            $fields['life_stage'] = $this->get_meta( 'life_stage', true );
-            $fields['date_of_birth'] = $this->get_meta( 'date_of_birth', true );
-            $fields['source'] = $this->get_meta( 'source', true );
+            $contact_groups           = erp_crm_get_editable_assign_contact( $this->id );
+            $fields['contact_groups'] = $contact_groups;
+            $fields['group_id']       = wp_list_pluck( $contact_groups, 'group_id' );
+
+            $fields['life_stage']     = $this->get_meta( 'life_stage', true );
+            $fields['date_of_birth']  = $this->get_meta( 'date_of_birth', true );
+            $fields['source']         = $this->get_meta( 'source', true );
+            $fields['assign_to']      = $this->get_meta( '_assign_crm_agent', true );
         }
 
         return apply_filters( 'erp_crm_get_ '. $this->contact_type . '_fields', $fields, $this->data, $this->id );

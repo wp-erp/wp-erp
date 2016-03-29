@@ -53,7 +53,7 @@ class WeDevs_ERP_Installer {
             $this->set_role();
         }
 
-            $this->create_roles(); // @TODO: Needs to change later :)
+        $this->create_roles(); // @TODO: Needs to change later :)
         $this->create_cron_jobs();
         $this->setup_default_emails();
 
@@ -174,6 +174,9 @@ Company'
     public function deactivate() {
         wp_clear_scheduled_hook( 'erp_hr_policy_schedule' );
         wp_clear_scheduled_hook( 'erp_crm_notification_schedule' );
+
+        remove_role('erp_crm_manager');
+        remove_role('erp_crm_agent');
     }
 
     /**
