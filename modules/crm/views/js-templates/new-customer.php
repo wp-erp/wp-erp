@@ -212,14 +212,15 @@
                 ) ); ?>
             </li>
 
-            <li data-checked = "{{ data.assign_to }}">
+            <li data-selected = "{{ data.assign_to }}">
                 <?php erp_html_form_input( array(
                     'label'       => __( 'Contact Owner', 'wp-erp' ),
-                    'name'        => 'assign_to[]',
+                    'name'        => 'assign_to',
+                    'required'    => true,
                     'type'        => 'select',
                     'id'          => 'erp-crm-contact-owner-id',
-                    'class'       => 'erp-crm-contact-owner-class',
-                    'options'     => ()
+                    'class'       => 'select2 erp-crm-contact-owner-class',
+                    'options'     => erp_crm_get_crm_user_dropdown( [ '' => '--Select--' ] )
                 ) ); ?>
             </li>
 

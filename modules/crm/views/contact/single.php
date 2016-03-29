@@ -80,7 +80,7 @@
                                             $crm_user_id = erp_people_get_meta( $customer->id, '_assign_crm_agent', true );
                                             if ( !empty( $crm_user_id ) ) {
                                                 $user        = get_user_by( 'id', $crm_user_id );
-                                                $user_string = esc_html( $user->display_name ) . ' (#' . absint( $user->ID ) . ' &ndash; ' . esc_html( $user->user_email ) . ')';
+                                                $user_string = esc_html( $user->display_name ) . '(' . esc_html( $user->user_email ) . ')';
                                             }
                                         ?>
                                         <?php if ( $crm_user_id ): ?>

@@ -113,6 +113,15 @@ class Ajax_Handler {
             $customer->update_meta( 'source', $posted['source'] );
         }
 
+        if ( $posted['assign_to'] ) {
+            $customer->update_meta( '_assign_crm_agent', $posted['assign_to'] );
+        }
+
+        $group_ids = ( isset( $posted['group_id'] ) && !empty( $posted['group_id'] ) ) ? $posted['group_id'] : [];
+        // if ( ! empty( $posted['group_id'] ) ) {
+            erp_crm_edit_contact_subscriber( $group_ids, $customer_id );
+        // }
+
         if ( isset( $posted['social'] ) ) {
             foreach ( $posted['social'] as $field => $value ) {
                 $customer->update_meta( $field, $value );
@@ -221,10 +230,7 @@ class Ajax_Handler {
             foreach ( $group_ids as $group_key => $group_id ) {
                 $contact_subscriber = [
                     'user_id' => $user_id,
-                    'group_id' => $group_id,
-                    'status' => 'subscribe',
-                    'subscribe_at' => current_time( 'mysql' ),
-                    'unsubscribe_at' => current_time( 'mysql' )
+                    'group_id' => $group_id
                 ];
 
                 erp_crm_create_new_contact_subscriber( $contact_subscriber );
@@ -331,7 +337,7 @@ class Ajax_Handler {
 
         $found_crm_user = [];
 
-        $crm_users = erp_crm_get_crm_users();
+        $crm_users = erp_crm_get_crm_user( [ 's' => $term ] );
 
         if ( ! empty( $crm_users ) ) {
             foreach ( $crm_users as $user ) {
@@ -498,13 +504,8 @@ class Ajax_Handler {
                 $data = [
                     'user_id'  => $_POST['user_id'],
                     'group_id' => $group_id,
-                    'status'   => 'subscribe', // @TODO: Set a settings for that
-                    'subscribe_at' => current_time('mysql'),
-                    'unsubscribe_at' => current_time('mysql')
                 ];
-
             }
-
             erp_crm_create_new_contact_subscriber( $data );
         }
 
