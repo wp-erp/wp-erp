@@ -8,12 +8,12 @@
 global $states;
 
 $states['AU'] = array(
-	'ACT' => __( 'Australian Capital Territory', 'wp-erp' ),
-	'NSW' => __( 'New South Wales', 'wp-erp' ),
-	'NT'  => __( 'Northern Territory', 'wp-erp' ),
-	'QLD' => __( 'Queensland', 'wp-erp' ),
-	'SA'  => __( 'South Australia', 'wp-erp' ),
-	'TAS' => __( 'Tasmania', 'wp-erp' ),
-	'VIC' => __( 'Victoria', 'wp-erp' ),
-	'WA'  => __( 'Western Australia', 'wp-erp' )
+	'ACT' => __( 'Australian Capital Territory', 'erp' ),
+	'NSW' => __( 'New South Wales', 'erp' ),
+	'NT'  => __( 'Northern Territory', 'erp' ),
+	'QLD' => __( 'Queensland', 'erp' ),
+	'SA'  => __( 'South Australia', 'erp' ),
+	'TAS' => __( 'Tasmania', 'erp' ),
+	'VIC' => __( 'Victoria', 'erp' ),
+	'WA'  => __( 'Western Australia', 'erp' )
 );

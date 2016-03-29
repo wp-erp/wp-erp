@@ -192,7 +192,7 @@ function erp_html_form_input( $args = array() ) {
             $call_back  = isset( $field['callback'] ) ? json_encode( $field['callback'] ) : json_encode([]);
             $values     = is_array( $field['value'] ) ? $field['value'] : [];
             ?>
-            
+
             <div id="<?php echo $id; ?>" class="erp-attachment-area">
 
                 <div id="<?php echo $drop; ?>" class="erp-drop-jon">
@@ -208,12 +208,12 @@ function erp_html_form_input( $args = array() ) {
                         </ul>
                         <div class="erp-clear"></div>
 
-                        <div class="erp-attc-link-text"><?php _e( 'To attach, ', 'wp-erp' ); ?> <a id="<?php echo $pick_files; ?>" href="#"><?php _e( 'select files', 'wp-erp' ); ?></a><?php _e( ' from your computer.', 'wp-erp' ); ?></div>
+                        <div class="erp-attc-link-text"><?php _e( 'To attach, ', 'erp' ); ?> <a id="<?php echo $pick_files; ?>" href="#"><?php _e( 'select files', 'erp' ); ?></a><?php _e( ' from your computer.', 'erp' ); ?></div>
                     </div>
                 </div>
             </div>
 
-            
+
             <script type="text/javascript">
                 jQuery(function($) {
                     var pick_files = '<?php echo $pick_files; ?>',
@@ -221,9 +221,9 @@ function erp_html_form_input( $args = array() ) {
                         drop_jone  = '<?php echo $drop; ?>',
                         action     = '<?php echo $action; ?>',
                         callback   = <?php echo $call_back; ?>;
-                        
+
                     new ERP_Uploader( action, pick_files, id, drop_jone, 'file_upload', 'jpg,jpeg,gif,png,bmp,zip', 1024, callback );
-                     
+
                 });
             </script>
             <?php

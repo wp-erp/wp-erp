@@ -39,19 +39,19 @@ class Employee_List_Table extends \WP_List_Table {
         ?>
         <div class="alignleft actions">
 
-            <label class="screen-reader-text" for="new_role"><?php _e( 'Filter by Designation', 'wp-erp' ) ?></label>
+            <label class="screen-reader-text" for="new_role"><?php _e( 'Filter by Designation', 'erp' ) ?></label>
             <select name="filter_designation" id="filter_designation">
                 <?php echo erp_hr_get_designation_dropdown( $selected_desingnation ); ?>
             </select>
 
-            <label class="screen-reader-text" for="new_role"><?php _e( 'Filter by Designation', 'wp-erp' ) ?></label>
+            <label class="screen-reader-text" for="new_role"><?php _e( 'Filter by Designation', 'erp' ) ?></label>
             <select name="filter_department" id="filter_department">
                 <?php echo erp_hr_get_departments_dropdown( $selected_department ); ?>
             </select>
 
-            <label class="screen-reader-text" for="new_role"><?php _e( 'Filter by Employment Type', 'wp-erp' ) ?></label>
+            <label class="screen-reader-text" for="new_role"><?php _e( 'Filter by Employment Type', 'erp' ) ?></label>
             <select name="filter_employment_type" id="filter_employment_type">
-                <option value="-1"><?php _e( '- Select Employment Type -', 'wp-erp' ) ?></option>
+                <option value="-1"><?php _e( '- Select Employment Type -', 'erp' ) ?></option>
                 <?php
                     $types = erp_hr_get_employee_types();
 
@@ -72,7 +72,7 @@ class Employee_List_Table extends \WP_List_Table {
      * @return void
      */
     function no_items() {
-        _e( 'No employee found.', 'wp-erp' );
+        _e( 'No employee found.', 'erp' );
     }
 
     /**
@@ -140,12 +140,12 @@ class Employee_List_Table extends \WP_List_Table {
     function get_columns() {
         $columns = array(
             'cb'           => '<input type="checkbox" />',
-            'name'         => __( 'Employee Name', 'wp-erp' ),
-            'designation'  => __( 'Designation', 'wp-erp' ),
-            'department'   => __( 'Department', 'wp-erp' ),
-            'type'         => __( 'Employment Type', 'wp-erp' ),
-            'date_of_hire' => __( 'Joined', 'wp-erp' ),
-            'status'       => __( 'Status', 'wp-erp' ),
+            'name'         => __( 'Employee Name', 'erp' ),
+            'designation'  => __( 'Designation', 'erp' ),
+            'department'   => __( 'Department', 'erp' ),
+            'type'         => __( 'Employment Type', 'erp' ),
+            'date_of_hire' => __( 'Joined', 'erp' ),
+            'status'       => __( 'Status', 'erp' ),
         );
 
         return apply_filters( 'erp_hr_employee_table_cols', $columns );
@@ -162,14 +162,14 @@ class Employee_List_Table extends \WP_List_Table {
         $actions           = array();
         $delete_url        = '';
         $data_hard = ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) ? 1 : 0;
-        $delete_text = ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) ? __( 'Permanent Delete', 'wp-erp' ) : __( 'Delete', 'wp-erp' );
+        $delete_text = ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) ? __( 'Permanent Delete', 'erp' ) : __( 'Delete', 'erp' );
 
         if ( current_user_can( 'erp_edit_employee', $employee->id ) ) {
-            $actions['edit']   =  sprintf( '<a href="%s" data-id="%d"  title="%s">%s</a>', $delete_url, $employee->id, __( 'Edit this item', 'wp-erp' ), __( 'Edit', 'wp-erp' ) );
+            $actions['edit']   =  sprintf( '<a href="%s" data-id="%d"  title="%s">%s</a>', $delete_url, $employee->id, __( 'Edit this item', 'erp' ), __( 'Edit', 'erp' ) );
         }
 
         if ( current_user_can( 'erp_delete_employee' ) ) {
-            $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" data-hard=%d title="%s">%s</a>', $delete_url, $employee->id, $data_hard, __( 'Delete this item', 'wp-erp' ), $delete_text );
+            $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" data-hard=%d title="%s">%s</a>', $delete_url, $employee->id, $data_hard, __( 'Delete this item', 'erp' ), $delete_text );
         }
 
         return sprintf( '%4$s <a href="%3$s"><strong>%1$s</strong></a> %2$s', $employee->get_full_name(), $this->row_actions( $actions ), erp_hr_url_single_employee( $employee->id ), $employee->get_avatar() );
@@ -182,15 +182,15 @@ class Employee_List_Table extends \WP_List_Table {
      */
     function get_bulk_actions() {
         $actions = array(
-            'email'  => __( 'Send Email', 'wp-erp' ),
-            'delete'  => __( 'Move to Trash', 'wp-erp' ),
+            'email'  => __( 'Send Email', 'erp' ),
+            'delete'  => __( 'Move to Trash', 'erp' ),
         );
 
         if ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) {
             unset( $actions['delete'] );
 
-            $actions['permanent_delete'] = __( 'Permanent Delete', 'wp-erp' );
-            $actions['restore'] = __( 'Restore', 'wp-erp' );
+            $actions['permanent_delete'] = __( 'Permanent Delete', 'erp' );
+            $actions['restore'] = __( 'Restore', 'erp' );
         }
 
         return $actions;
@@ -223,7 +223,7 @@ class Employee_List_Table extends \WP_List_Table {
             $status_links[ $key ] = sprintf( '<a href="%s" class="%s">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => $key ), $base_link ), $class, $value['label'], $value['count'] );
         }
 
-        $status_links[ 'trash' ] = sprintf( '<a href="%s" class="status-trash">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'trash' ), $base_link ), __( 'Trash', 'wp-erp' ), erp_hr_count_trashed_employees() );
+        $status_links[ 'trash' ] = sprintf( '<a href="%s" class="status-trash">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'trash' ), $base_link ), __( 'Trash', 'erp' ), erp_hr_count_trashed_employees() );
 
         return $status_links;
     }

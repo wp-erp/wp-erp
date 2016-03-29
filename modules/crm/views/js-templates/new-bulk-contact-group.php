@@ -2,7 +2,7 @@
 
     <div class="row" id="erp-crm-contact-subscriber-group-checkbox">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Assign Group', 'wp-erp' ),
+            'label'       => __( 'Assign Group', 'erp' ),
             'name'        => 'group_id[]',
             'type'        => 'multicheckbox',
             'id'          => 'erp-crm-contact-group-id',

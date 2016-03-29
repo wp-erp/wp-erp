@@ -2,7 +2,7 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Name', 'wp-erp' ),
+            'label'       => __( 'Name', 'erp' ),
             'name'        => 'group_name',
             'type'        => 'text',
             'id'          => 'erp-crm-contact-group-name',
@@ -13,12 +13,12 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Description', 'wp-erp' ),
+            'label'       => __( 'Description', 'erp' ),
             'name'        => 'group_description',
             'type'        => 'textarea',
             'id'          => 'erp-crm-contact-group-description',
             'value'       => '{{ data.description }}',
-            'placeholder' => __( 'Optional', 'wp-erp' )
+            'placeholder' => __( 'Optional', 'erp' )
         ) ); ?>
     </div>
 

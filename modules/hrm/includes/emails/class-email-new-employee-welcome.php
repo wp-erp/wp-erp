@@ -13,11 +13,11 @@ class New_Employee_Welcome extends Email {
 
     function __construct() {
         $this->id             = 'employee-welcome';
-        $this->title          = __( 'Employee welcome', 'wp-erp' );
-        $this->description    = __( 'Welcome email to new employees.', 'wp-erp' );
+        $this->title          = __( 'Employee welcome', 'erp' );
+        $this->description    = __( 'Welcome email to new employees.', 'erp' );
 
-        $this->subject        = __( 'Welcome {employee_name} to {company_name}', 'wp-erp');
-        $this->heading        = __( 'Welcome Onboard!', 'wp-erp');
+        $this->subject        = __( 'Welcome {employee_name} to {company_name}', 'erp');
+        $this->heading        = __( 'Welcome Onboard!', 'erp');
 
         $this->find = [
             'full-name'       => '{full_name}',
@@ -88,11 +88,11 @@ class New_Employee_Welcome extends Email {
             $hashed = time() . ':' . $wp_hasher->HashPassword( $key );
             $wpdb->update( $wpdb->users, array( 'user_activation_key' => $hashed ), array( 'user_login' => $employee->user_login ) );
 
-            $password = '<a class="button sm" href="' . network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($employee->user_login), 'login') . '">' . __( 'Set Your Password', 'wp-erp' ) . '</a>';
+            $password = '<a class="button sm" href="' . network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($employee->user_login), 'login') . '">' . __( 'Set Your Password', 'erp' ) . '</a>';
 
-            $login_info = '<h3>' . __( 'Login Details:', 'wp-erp' ) . '</h3>';
-            $login_info .= sprintf( __( 'Username: <em>%s</em>', 'wp-erp' ), $employee->user_login) . '<br>';
-            $login_info .= sprintf( __( 'Password: %s', 'wp-erp' ), $password ) . '<br>';
+            $login_info = '<h3>' . __( 'Login Details:', 'erp' ) . '</h3>';
+            $login_info .= sprintf( __( 'Username: <em>%s</em>', 'erp' ), $employee->user_login) . '<br>';
+            $login_info .= sprintf( __( 'Password: %s', 'erp' ), $password ) . '<br>';
 
             $this->replace['login-info'] = $login_info;
         }

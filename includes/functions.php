@@ -41,51 +41,51 @@ function erp_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = ar
  */
 function erp_get_currencies() {
     return array_unique( apply_filters( 'erp_currencies', array(
-        'AED' => __( 'United Arab Emirates Dirham', 'wp-erp' ),
-        'AUD' => __( 'Australian Dollars', 'wp-erp' ),
-        'BDT' => __( 'Bangladeshi Taka', 'wp-erp' ),
-        'BRL' => __( 'Brazilian Real', 'wp-erp' ),
-        'BGN' => __( 'Bulgarian Lev', 'wp-erp' ),
-        'CAD' => __( 'Canadian Dollars', 'wp-erp' ),
-        'CLP' => __( 'Chilean Peso', 'wp-erp' ),
-        'CNY' => __( 'Chinese Yuan', 'wp-erp' ),
-        'COP' => __( 'Colombian Peso', 'wp-erp' ),
-        'CZK' => __( 'Czech Koruna', 'wp-erp' ),
-        'DKK' => __( 'Danish Krone', 'wp-erp' ),
-        'DOP' => __( 'Dominican Peso', 'wp-erp' ),
-        'EUR' => __( 'Euros', 'wp-erp' ),
-        'HKD' => __( 'Hong Kong Dollar', 'wp-erp' ),
-        'HRK' => __( 'Croatia kuna', 'wp-erp' ),
-        'HUF' => __( 'Hungarian Forint', 'wp-erp' ),
-        'ISK' => __( 'Icelandic krona', 'wp-erp' ),
-        'IDR' => __( 'Indonesia Rupiah', 'wp-erp' ),
-        'INR' => __( 'Indian Rupee', 'wp-erp' ),
-        'NPR' => __( 'Nepali Rupee', 'wp-erp' ),
-        'ILS' => __( 'Israeli Shekel', 'wp-erp' ),
-        'JPY' => __( 'Japanese Yen', 'wp-erp' ),
-        'KIP' => __( 'Lao Kip', 'wp-erp' ),
-        'KRW' => __( 'South Korean Won', 'wp-erp' ),
-        'MYR' => __( 'Malaysian Ringgits', 'wp-erp' ),
-        'MXN' => __( 'Mexican Peso', 'wp-erp' ),
-        'NGN' => __( 'Nigerian Naira', 'wp-erp' ),
-        'NOK' => __( 'Norwegian Krone', 'wp-erp' ),
-        'NZD' => __( 'New Zealand Dollar', 'wp-erp' ),
-        'PYG' => __( 'Paraguayan Guaraní', 'wp-erp' ),
-        'PHP' => __( 'Philippine Pesos', 'wp-erp' ),
-        'PLN' => __( 'Polish Zloty', 'wp-erp' ),
-        'GBP' => __( 'Pounds Sterling', 'wp-erp' ),
-        'RON' => __( 'Romanian Leu', 'wp-erp' ),
-        'RUB' => __( 'Russian Ruble', 'wp-erp' ),
-        'SGD' => __( 'Singapore Dollar', 'wp-erp' ),
-        'ZAR' => __( 'South African rand', 'wp-erp' ),
-        'SEK' => __( 'Swedish Krona', 'wp-erp' ),
-        'CHF' => __( 'Swiss Franc', 'wp-erp' ),
-        'TWD' => __( 'Taiwan New Dollars', 'wp-erp' ),
-        'THB' => __( 'Thai Baht', 'wp-erp' ),
-        'TRY' => __( 'Turkish Lira', 'wp-erp' ),
-        'USD' => __( 'US Dollars', 'wp-erp' ),
-        'VND' => __( 'Vietnamese Dong', 'wp-erp' ),
-        'EGP' => __( 'Egyptian Pound', 'wp-erp' ),
+        'AED' => __( 'United Arab Emirates Dirham', 'erp' ),
+        'AUD' => __( 'Australian Dollars', 'erp' ),
+        'BDT' => __( 'Bangladeshi Taka', 'erp' ),
+        'BRL' => __( 'Brazilian Real', 'erp' ),
+        'BGN' => __( 'Bulgarian Lev', 'erp' ),
+        'CAD' => __( 'Canadian Dollars', 'erp' ),
+        'CLP' => __( 'Chilean Peso', 'erp' ),
+        'CNY' => __( 'Chinese Yuan', 'erp' ),
+        'COP' => __( 'Colombian Peso', 'erp' ),
+        'CZK' => __( 'Czech Koruna', 'erp' ),
+        'DKK' => __( 'Danish Krone', 'erp' ),
+        'DOP' => __( 'Dominican Peso', 'erp' ),
+        'EUR' => __( 'Euros', 'erp' ),
+        'HKD' => __( 'Hong Kong Dollar', 'erp' ),
+        'HRK' => __( 'Croatia kuna', 'erp' ),
+        'HUF' => __( 'Hungarian Forint', 'erp' ),
+        'ISK' => __( 'Icelandic krona', 'erp' ),
+        'IDR' => __( 'Indonesia Rupiah', 'erp' ),
+        'INR' => __( 'Indian Rupee', 'erp' ),
+        'NPR' => __( 'Nepali Rupee', 'erp' ),
+        'ILS' => __( 'Israeli Shekel', 'erp' ),
+        'JPY' => __( 'Japanese Yen', 'erp' ),
+        'KIP' => __( 'Lao Kip', 'erp' ),
+        'KRW' => __( 'South Korean Won', 'erp' ),
+        'MYR' => __( 'Malaysian Ringgits', 'erp' ),
+        'MXN' => __( 'Mexican Peso', 'erp' ),
+        'NGN' => __( 'Nigerian Naira', 'erp' ),
+        'NOK' => __( 'Norwegian Krone', 'erp' ),
+        'NZD' => __( 'New Zealand Dollar', 'erp' ),
+        'PYG' => __( 'Paraguayan Guaraní', 'erp' ),
+        'PHP' => __( 'Philippine Pesos', 'erp' ),
+        'PLN' => __( 'Polish Zloty', 'erp' ),
+        'GBP' => __( 'Pounds Sterling', 'erp' ),
+        'RON' => __( 'Romanian Leu', 'erp' ),
+        'RUB' => __( 'Russian Ruble', 'erp' ),
+        'SGD' => __( 'Singapore Dollar', 'erp' ),
+        'ZAR' => __( 'South African rand', 'erp' ),
+        'SEK' => __( 'Swedish Krona', 'erp' ),
+        'CHF' => __( 'Swiss Franc', 'erp' ),
+        'TWD' => __( 'Taiwan New Dollars', 'erp' ),
+        'THB' => __( 'Thai Baht', 'erp' ),
+        'TRY' => __( 'Turkish Lira', 'erp' ),
+        'USD' => __( 'US Dollars', 'erp' ),
+        'VND' => __( 'Vietnamese Dong', 'erp' ),
+        'EGP' => __( 'Egyptian Pound', 'erp' ),
     ) ) );
 }
 
@@ -96,7 +96,7 @@ function erp_get_currencies() {
  */
 function erp_get_currency_list_with_symbol() {
     $currencies      = erp_get_currencies();
-    $currency_symbol = []; 
+    $currency_symbol = [];
 
     foreach ( $currencies as $iso => $currency ) {
         $currency_symbol[$iso] = sprintf( '%1$s (%2$s)', $currency, erp_get_currency_symbol( $iso ) );
@@ -344,7 +344,7 @@ function erp_extract_dates( $start_date, $end_date ) {
 
     // we got a negative date
     if ( $diff->invert || ! $diff->days ) {
-        return new WP_Error( 'invalid-date', __( 'Invalid date provided', 'wp-erp' ) );
+        return new WP_Error( 'invalid-date', __( 'Invalid date provided', 'erp' ) );
     }
 
     $interval = DateInterval::createFromDateString( '1 day' );
@@ -452,11 +452,11 @@ function erp_date_duration( $start_date, $end_date ) {
 function erp_performance_rating( $selected = '' ) {
 
     $rating = apply_filters( 'erp_performance_rating', array(
-        '1' => __( 'Very Bad', 'wp-erp' ),
-        '2' => __( 'Poor', 'wp-erp' ),
-        '3' => __( 'Average', 'wp-erp' ),
-        '4' => __( 'Good', 'wp-erp' ),
-        '5' => __( 'Excellent', 'wp-erp' )
+        '1' => __( 'Very Bad', 'erp' ),
+        '2' => __( 'Poor', 'erp' ),
+        '3' => __( 'Average', 'erp' ),
+        '4' => __( 'Good', 'erp' ),
+        '5' => __( 'Excellent', 'erp' )
     ) );
 
     if ( $selected ) {
@@ -712,8 +712,8 @@ function erp_activation_notice() {
 
         <div class="activation-form-container">
             <input type="email" name="email" placeholder="email@example.com" value="<?php echo esc_attr( get_option( 'admin_email' ) ); ?>" />
-            <button class="button-primary" id="get-api-key"><?php _e( 'Get API Key', 'wp-erp' ); ?></button>
-            <a id="dismiss" href="#"><?php _e( 'Dismiss', 'wp-erp' ); ?></a>
+            <button class="button-primary" id="get-api-key"><?php _e( 'Get API Key', 'erp' ); ?></button>
+            <a id="dismiss" href="#"><?php _e( 'Dismiss', 'erp' ); ?></a>
         </div>
     </div>
     <?php

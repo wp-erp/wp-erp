@@ -1,8 +1,8 @@
 <div class="wrap erp-crm-subscriber-contact" id="wp-erp">
 
-    <h2><?php _e( 'Subscribed Contacts', 'wp-erp' ); ?>
-        <a href="#" id="erp-new-subscriber-contact" class="erp-new-subscriber-contact add-new-h2" title="<?php _e( 'Assign a Contact', 'wp-erp' ); ?>"><?php _e( 'Assign a Contact', 'wp-erp' ); ?></a>
-        <a href="<?php echo add_query_arg( [ 'page' => 'erp-sales-contact-groups' ], admin_url( 'admin.php' ) ) ?>" class="add-new-h2" title="<?php _e( 'Back to Contact Group', 'wp-erp' ); ?>"><?php _e( 'Back to Contact Group', 'wp-erp' ); ?></a>
+    <h2><?php _e( 'Subscribed Contacts', 'erp' ); ?>
+        <a href="#" id="erp-new-subscriber-contact" class="erp-new-subscriber-contact add-new-h2" title="<?php _e( 'Assign a Contact', 'erp' ); ?>"><?php _e( 'Assign a Contact', 'erp' ); ?></a>
+        <a href="<?php echo add_query_arg( [ 'page' => 'erp-sales-contact-groups' ], admin_url( 'admin.php' ) ) ?>" class="add-new-h2" title="<?php _e( 'Back to Contact Group', 'erp' ); ?>"><?php _e( 'Back to Contact Group', 'erp' ); ?></a>
     </h2>
 
     <div class="list-table-wrap">
@@ -14,7 +14,7 @@
                 <?php
                 $customer_table = new \WeDevs\ERP\CRM\Contact_Subscriber_List_Table();
                 $customer_table->prepare_items();
-                // $customer_table->search_box( __( 'Search Contact Group', 'wp-erp' ), 'erp-crm-contact-group-search' );
+                // $customer_table->search_box( __( 'Search Contact Group', 'erp' ), 'erp-crm-contact-group-search' );
                 $customer_table->views();
 
                 $customer_table->display();

@@ -60,24 +60,24 @@ class Auditlog_List_Table extends \WP_List_Table {
         ?>
         <div class="alignleft actions">
 
-            <label class="screen-reader-text" for="filter_module"><?php _e( 'Filter by Module', 'wp-erp' ) ?></label>
+            <label class="screen-reader-text" for="filter_module"><?php _e( 'Filter by Module', 'erp' ) ?></label>
             <select name="filter_module" id="filter_module">
-                <option value=""><?php _e( '-- Select module --', 'wp-erp' ); ?></option>
+                <option value=""><?php _e( '-- Select module --', 'erp' ); ?></option>
                 <?php foreach ( $modules as $key => $module ): ?>
                     <option value="<?php echo $module['component'] ?>" <?php selected( $selected_module, $module['component'] ); ?>><?php echo $module['component']; ?></option>
                 <?php endforeach ?>
             </select>
 
-            <label class="screen-reader-text" for="filter_section"><?php _e( 'Filter by Section', 'wp-erp' ) ?></label>
+            <label class="screen-reader-text" for="filter_section"><?php _e( 'Filter by Section', 'erp' ) ?></label>
             <select name="filter_section" id="filter_section">
-                <option value=""><?php _e( '-- Select Section --', 'wp-erp' ); ?></option>
+                <option value=""><?php _e( '-- Select Section --', 'erp' ); ?></option>
                 <?php foreach ( $sections as $key => $section ): ?>
                     <option value="<?php echo $section['sub_component'] ?>" <?php selected( $section['sub_component'], $selected_section ); ?>><?php echo $section['sub_component']; ?></option>
                 <?php endforeach ?>
             </select>
-            <label class="screen-reader-text" for="new_role"><?php _e( 'Filter by Duration', 'wp-erp' ) ?></label>
+            <label class="screen-reader-text" for="new_role"><?php _e( 'Filter by Duration', 'erp' ) ?></label>
             <select name="filter_duration" id="filter_duration">
-                <option value="-1"><?php _e( '- Select Duration -', 'wp-erp' ) ?></option>
+                <option value="-1"><?php _e( '- Select Duration -', 'erp' ) ?></option>
                 <?php
                 $types = $this->erp_log_get_filters();
 
@@ -88,7 +88,7 @@ class Auditlog_List_Table extends \WP_List_Table {
             </select>
 
             <?php
-            submit_button( __( 'Filter', 'wp-erp' ), 'button', 'filter_audit_log', false );
+            submit_button( __( 'Filter', 'erp' ), 'button', 'filter_audit_log', false );
         echo '</div>';
     }
 
@@ -102,15 +102,15 @@ class Auditlog_List_Table extends \WP_List_Table {
     function erp_log_get_filters() {
 
         $filters = array(
-            'today'        => __( 'Today',        'wp-erp' ),
-            'yesterday'    => __( 'Yesterday',    'wp-erp' ),
-            'this_month'   => __( 'This Month',   'wp-erp' ),
-            'last_month'   => __( 'Last Month',   'wp-erp' ),
-            'this_quarter' => __( 'This Quarter', 'wp-erp' ),
-            'last_quarter' => __( 'Last Quarter',  'wp-erp' ),
-            'this_year'    => __( 'This Year',    'wp-erp' ),
-            'last_year'    => __( 'Last Year',    'wp-erp' ),
-            'custom'    => __( 'Custom',    'wp-erp' )
+            'today'        => __( 'Today',        'erp' ),
+            'yesterday'    => __( 'Yesterday',    'erp' ),
+            'this_month'   => __( 'This Month',   'erp' ),
+            'last_month'   => __( 'Last Month',   'erp' ),
+            'this_quarter' => __( 'This Quarter', 'erp' ),
+            'last_quarter' => __( 'Last Quarter',  'erp' ),
+            'this_year'    => __( 'This Year',    'erp' ),
+            'last_year'    => __( 'Last Year',    'erp' ),
+            'custom'    => __( 'Custom',    'erp' )
         );
 
         return $filters;
@@ -136,7 +136,7 @@ class Auditlog_List_Table extends \WP_List_Table {
      * @return void
      */
     function no_items() {
-        _e( 'No logs found.', 'wp-erp' );
+        _e( 'No logs found.', 'erp' );
     }
 
     /**
@@ -159,7 +159,7 @@ class Auditlog_List_Table extends \WP_List_Table {
             case 'message':
                 if ( $audit_log->changetype == 'edit' ) {
                     if ( !empty( $audit_log->old_value ) && !empty( $audit_log->new_value ) ) {
-                        return sprintf( __( '%s. <a href="#" class="erp-audit-log-view-changes erp-tips" data-id="%d" title="%s"> (view changes)</a>', 'wp-erp' ), htmlspecialchars_decode( $audit_log->message ), $audit_log->id, __( 'View what elements are changes', 'wp-erp' ) );
+                        return sprintf( __( '%s. <a href="#" class="erp-audit-log-view-changes erp-tips" data-id="%d" title="%s"> (view changes)</a>', 'erp' ), htmlspecialchars_decode( $audit_log->message ), $audit_log->id, __( 'View what elements are changes', 'erp' ) );
                     } else {
                         return htmlspecialchars_decode( $audit_log->message );
                     }
@@ -186,11 +186,11 @@ class Auditlog_List_Table extends \WP_List_Table {
     function get_columns() {
         $columns = array(
             'cb'         => '',
-            'name'       => __( 'Module', 'wp-erp' ),
-            'sections'   => __( 'Sections', 'wp-erp' ),
-            'message'    => __( 'Message', 'wp-erp' ),
-            'created_by' => __( 'Created By', 'wp-erp' ),
-            'created_at' => __( 'Created At', 'wp-erp' ),
+            'name'       => __( 'Module', 'erp' ),
+            'sections'   => __( 'Sections', 'erp' ),
+            'message'    => __( 'Message', 'erp' ),
+            'created_by' => __( 'Created By', 'erp' ),
+            'created_at' => __( 'Created At', 'erp' ),
         );
 
         return apply_filters( 'erp_hr_audit_table_cols', $columns );

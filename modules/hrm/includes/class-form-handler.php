@@ -340,7 +340,7 @@ class Form_Handler {
     public function leave_entitlement() {
 
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-hr-leave-assign' ) ) {
-            die( __( 'Something went wrong!', 'wp-erp' ) );
+            die( __( 'Something went wrong!', 'erp' ) );
         }
 
         $affected        = 0;
@@ -437,7 +437,7 @@ class Form_Handler {
     public function leave_request() {
 
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-leave-req-new' ) ) {
-            die( __( 'Something went wrong!', 'wp-erp' ) );
+            die( __( 'Something went wrong!', 'erp' ) );
         }
 
         $employee_id  = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
@@ -582,7 +582,7 @@ class Form_Handler {
         $hr_manager_role = erp_hr_get_manager_role();
 
         if ( ! current_user_can( $hr_manager_role ) ) {
-            wp_die( __( 'Permission Denied!', 'wp-erp' ) );
+            wp_die( __( 'Permission Denied!', 'erp' ) );
         }
 
         $employee_id    = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;

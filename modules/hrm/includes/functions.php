@@ -149,13 +149,13 @@ function erp_hr_people_types( $types ) {
 
     $types['hrm'] = [
         'employee' => [
-            'label'    => __( 'Employee', 'wp-erp' ),
+            'label'    => __( 'Employee', 'erp' ),
             'sections' => [
-                'top'      => __( 'Top Area', 'wp-erp' ),
-                'basic'    => __( 'Basic Information', 'wp-erp' ),
-                'work'     => __( 'Work Information', 'wp-erp' ),
-                'personal' => __( 'Personal Information', 'wp-erp' ),
-                'bottom'   => __( 'Bottom Area', 'wp-erp' ),
+                'top'      => __( 'Top Area', 'erp' ),
+                'basic'    => __( 'Basic Information', 'erp' ),
+                'work'     => __( 'Work Information', 'erp' ),
+                'personal' => __( 'Personal Information', 'erp' ),
+                'bottom'   => __( 'Bottom Area', 'erp' ),
             ]
         ]
     ];

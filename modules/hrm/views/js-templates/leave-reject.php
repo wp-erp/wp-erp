@@ -2,7 +2,7 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'    => __( 'Reason', 'wp-erp' ),
+            'label'    => __( 'Reason', 'erp' ),
             'name'     => 'reason',
             'id'       => 'erp-hr-leave-reject-reason',
             'value'    => '',

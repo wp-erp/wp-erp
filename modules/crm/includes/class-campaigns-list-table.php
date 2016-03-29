@@ -30,7 +30,7 @@ class Campaign_List_Table extends \WP_List_Table {
      * @return void
      */
     function no_items() {
-        _e( 'No campaign found.', 'wp-erp' );
+        _e( 'No campaign found.', 'erp' );
     }
 
     /**
@@ -66,9 +66,9 @@ class Campaign_List_Table extends \WP_List_Table {
     function get_columns() {
         $columns = array(
             'cb'             => '<input type="checkbox" />',
-            'name'           => __( 'Title', 'wp-erp' ),
-            'assigned_group' => __( 'Lists', 'wp-erp' ),
-            'created_at'     => __( 'Created At', 'wp-erp' )
+            'name'           => __( 'Title', 'erp' ),
+            'assigned_group' => __( 'Lists', 'erp' ),
+            'created_at'     => __( 'Created At', 'erp' )
         );
 
         return apply_filters( 'erp_crm_campaign_table_cols', $columns );
@@ -86,8 +86,8 @@ class Campaign_List_Table extends \WP_List_Table {
         $actions             = array();
         $delete_url          = '';
 
-        $actions['edit']     = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $campaign->id, __( 'Edit this Contact Group', 'wp-erp' ), __( 'Edit', 'wp-erp' ) );
-        $actions['delete']   = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $campaign->id, __( 'Delete this Contact Group', 'wp-erp' ), __( 'Delete', 'wp-erp' ) );
+        $actions['edit']     = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $campaign->id, __( 'Edit this Contact Group', 'erp' ), __( 'Edit', 'erp' ) );
+        $actions['delete']   = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $campaign->id, __( 'Delete this Contact Group', 'erp' ), __( 'Delete', 'erp' ) );
 
         return sprintf( '<a href="%3$s"><strong>%1$s</strong></a> %2$s', $campaign->title, $this->row_actions( $actions ), '#' );
     }
@@ -113,7 +113,7 @@ class Campaign_List_Table extends \WP_List_Table {
      */
     function get_bulk_actions() {
         $actions = array(
-            'campaign_delete'  => __( 'Delete', 'wp-erp' ),
+            'campaign_delete'  => __( 'Delete', 'erp' ),
         );
         return $actions;
     }

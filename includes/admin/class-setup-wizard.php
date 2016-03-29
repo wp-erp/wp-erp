@@ -52,32 +52,32 @@ class Setup_Wizard {
 
         $this->steps = array(
             'introduction' => array(
-                'name'    =>  __( 'Introduction', 'wp-erp' ),
+                'name'    =>  __( 'Introduction', 'erp' ),
                 'view'    => array( $this, 'setup_step_introduction' ),
                 'handler' => ''
             ),
             'basic' => array(
-                'name'    =>  __( 'Basic Settings', 'wp-erp' ),
+                'name'    =>  __( 'Basic Settings', 'erp' ),
                 'view'    => array( $this, 'setup_step_basic' ),
                 'handler' => array( $this, 'setup_step_basic_save' )
             ),
             'department' => array(
-                'name'    =>  __( 'Departments', 'wp-erp' ),
+                'name'    =>  __( 'Departments', 'erp' ),
                 'view'    => array( $this, 'setup_step_departments' ),
                 'handler' => array( $this, 'setup_step_departments_save' )
             ),
             'designation' => array(
-                'name'    =>  __( 'Designations', 'wp-erp' ),
+                'name'    =>  __( 'Designations', 'erp' ),
                 'view'    => array( $this, 'setup_step_designation' ),
                 'handler' => array( $this, 'setup_step_designation_save' ),
             ),
             'workdays' => array(
-                'name'    =>  __( 'Work Days', 'wp-erp' ),
+                'name'    =>  __( 'Work Days', 'erp' ),
                 'view'    => array( $this, 'setup_step_workdays' ),
                 'handler' => array( $this, 'setup_step_workdays_save' ),
             ),
             'next_steps' => array(
-                'name'    =>  __( 'Ready!', 'wp-erp' ),
+                'name'    =>  __( 'Ready!', 'erp' ),
                 'view'    => array( $this, 'setup_step_ready' ),
                 'handler' => ''
             )
@@ -119,7 +119,7 @@ class Setup_Wizard {
         <head>
             <meta name="viewport" content="width=device-width" />
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-            <title><?php _e( 'WP ERP &rsaquo; Setup Wizard', 'wp-erp' ); ?></title>
+            <title><?php _e( 'WP ERP &rsaquo; Setup Wizard', 'erp' ); ?></title>
             <?php wp_print_scripts( 'erp-setup' ); ?>
             <?php do_action( 'admin_print_styles' ); ?>
             <?php do_action( 'admin_head' ); ?>
@@ -135,7 +135,7 @@ class Setup_Wizard {
     public function setup_wizard_footer() {
         ?>
             <?php if ( 'next_steps' === $this->step ) : ?>
-                <a class="erp-return-to-dashboard" href="<?php echo esc_url( admin_url() ); ?>"><?php _e( 'Return to the WordPress Dashboard', 'wp-erp' ); ?></a>
+                <a class="erp-return-to-dashboard" href="<?php echo esc_url( admin_url() ); ?>"><?php _e( 'Return to the WordPress Dashboard', 'erp' ); ?></a>
             <?php endif; ?>
             </body>
         </html>
@@ -175,8 +175,8 @@ class Setup_Wizard {
     public function next_step_buttons() {
         ?>
         <p class="erp-setup-actions step">
-            <input type="submit" class="button-primary button button-large button-next" value="<?php esc_attr_e( 'Continue', 'wp-erp' ); ?>" name="save_step" />
-            <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button button-large button-next"><?php _e( 'Skip this step', 'wp-erp' ); ?></a>
+            <input type="submit" class="button-primary button button-large button-next" value="<?php esc_attr_e( 'Continue', 'erp' ); ?>" name="save_step" />
+            <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button button-large button-next"><?php _e( 'Skip this step', 'erp' ); ?></a>
             <?php wp_nonce_field( 'erp-setup' ); ?>
         </p>
         <?php
@@ -187,12 +187,12 @@ class Setup_Wizard {
      */
     public function setup_step_introduction() {
         ?>
-        <h1><?php _e( 'Welcome to WP ERP!', 'wp-erp' ); ?></h1>
-        <p><?php _e( 'Thank you for choosing WP-ERP. An easier way to manage your company! This quick setup wizard will help you configure the basic settings. <strong>It’s completely optional and shouldn’t take longer than three minutes.</strong>', 'wp-erp' ); ?></p>
-        <p><?php _e( 'No time right now? If you don’t want to go through the wizard, you can skip and return to the WordPress dashboard. Come back anytime if you change your mind!', 'wp-erp' ); ?></p>
+        <h1><?php _e( 'Welcome to WP ERP!', 'erp' ); ?></h1>
+        <p><?php _e( 'Thank you for choosing WP-ERP. An easier way to manage your company! This quick setup wizard will help you configure the basic settings. <strong>It’s completely optional and shouldn’t take longer than three minutes.</strong>', 'erp' ); ?></p>
+        <p><?php _e( 'No time right now? If you don’t want to go through the wizard, you can skip and return to the WordPress dashboard. Come back anytime if you change your mind!', 'erp' ); ?></p>
         <p class="erp-setup-actions step">
-            <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button-primary button button-large button-next"><?php _e( 'Let\'s Go!', 'wp-erp' ); ?></a>
-            <a href="<?php echo esc_url( wp_get_referer() ? wp_get_referer() : admin_url( 'plugins.php' ) ); ?>" class="button button-large"><?php _e( 'Not right now', 'wp-erp' ); ?></a>
+            <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button-primary button button-large button-next"><?php _e( 'Let\'s Go!', 'erp' ); ?></a>
+            <a href="<?php echo esc_url( wp_get_referer() ? wp_get_referer() : admin_url( 'plugins.php' ) ); ?>" class="button button-large"><?php _e( 'Not right now', 'erp' ); ?></a>
         </p>
         <?php
     }
@@ -204,13 +204,13 @@ class Setup_Wizard {
         $financial_month = isset( $general['gen_financial_month'] ) ? $general['gen_financial_month'] : '1';
         $company_started = isset( $general['gen_com_start'] ) ? $general['gen_com_start'] : '';
         ?>
-        <h1><?php _e( 'Basic Settings', 'wp-erp' ); ?></h1>
+        <h1><?php _e( 'Basic Settings', 'erp' ); ?></h1>
 
         <form method="post">
 
             <table class="form-table">
                 <tr>
-                    <th scope="row"><label for="gen_financial_month"><?php _e( 'Financial Year Starts', 'wp-erp' ); ?></label></th>
+                    <th scope="row"><label for="gen_financial_month"><?php _e( 'Financial Year Starts', 'erp' ); ?></label></th>
                     <td>
                         <?php erp_html_form_input([
                             'name'    => 'gen_financial_month',
@@ -218,37 +218,37 @@ class Setup_Wizard {
                             'type'    => 'select',
                             'value'   => $financial_month,
                             'options' => erp_months_dropdown(),
-                            'help'    => __( 'Financial and tax calculation starts from this month of every year.', 'wp-erp' ),
+                            'help'    => __( 'Financial and tax calculation starts from this month of every year.', 'erp' ),
                         ]); ?>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="gen_com_start"><?php _e( 'Company Start Date', 'wp-erp' ); ?></label></th>
+                    <th scope="row"><label for="gen_com_start"><?php _e( 'Company Start Date', 'erp' ); ?></label></th>
                     <td>
                         <?php erp_html_form_input([
                             'name'        => 'gen_com_start',
                             'type'        => 'text',
                             'value'       => $company_started,
-                            'help'        => __( 'The date the company officially started.', 'wp-erp' ),
+                            'help'        => __( 'The date the company officially started.', 'erp' ),
                             'class'       => 'erp-date-field',
                             'placeholder' => 'YYYY-MM-DD'
                         ]); ?>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="base_currency"><?php _e( 'Currency', 'wp-erp' ); ?></label></th>
+                    <th scope="row"><label for="base_currency"><?php _e( 'Currency', 'erp' ); ?></label></th>
                     <td>
                         <?php erp_html_form_input([
                             'name'    => 'base_currency',
                             'type'    => 'select',
                             'value'   => 'USD',
                             'options' => erp_get_currencies(),
-                            'desc'    => __( 'Format of date to show accross the system.', 'wp-erp' ),
+                            'desc'    => __( 'Format of date to show accross the system.', 'erp' ),
                         ]); ?>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="date_format"><?php _e( 'Date Format', 'wp-erp' ); ?></label></th>
+                    <th scope="row"><label for="date_format"><?php _e( 'Date Format', 'erp' ); ?></label></th>
                     <td>
                         <?php erp_html_form_input([
                             'name'    => 'date_format',
@@ -261,7 +261,7 @@ class Setup_Wizard {
                                 'd/m/Y' => 'dd/mm/yyyy',
                                 'Y-m-d' => 'yyyy-mm-dd',
                             ],
-                            'help' => __( 'Format of date to show accross the system.', 'wp-erp' ),
+                            'help' => __( 'Format of date to show accross the system.', 'erp' ),
                         ]); ?>
                     </td>
                 </tr>
@@ -297,24 +297,24 @@ class Setup_Wizard {
 
     public function setup_step_departments() {
         ?>
-        <h1><?php _e( 'Departments Setup', 'wp-erp' ); ?></h1>
+        <h1><?php _e( 'Departments Setup', 'erp' ); ?></h1>
         <form method="post" class="form-table">
 
             <div class="two-col">
                 <div class="col-first">
-                    <p><?php _e( 'Create some departments for your company. e.g. HR, Engineering, Marketing, Support, etc. ', 'wp-erp' ); ?></p>
-                    <p><?php _e( 'Leave empty for not to create any departments.', 'wp-erp' ); ?></p>
+                    <p><?php _e( 'Create some departments for your company. e.g. HR, Engineering, Marketing, Support, etc. ', 'erp' ); ?></p>
+                    <p><?php _e( 'Leave empty for not to create any departments.', 'erp' ); ?></p>
                 </div>
 
                 <div class="col-last">
                     <ul class="unstyled">
                         <li>
-                            <input type="text" name="departments[]" class="regular-text" placeholder="<?php esc_attr_e( 'Department name', 'wp-erp' ); ?>">
+                            <input type="text" name="departments[]" class="regular-text" placeholder="<?php esc_attr_e( 'Department name', 'erp' ); ?>">
                         </li>
                         <li>
-                            <input type="text" name="departments[]" class="regular-text" placeholder="<?php esc_attr_e( 'Department name', 'wp-erp' ); ?>">
+                            <input type="text" name="departments[]" class="regular-text" placeholder="<?php esc_attr_e( 'Department name', 'erp' ); ?>">
                         </li>
-                        <li class="add-new"><a href="#" class="button"><?php _e( 'Add New', 'wp-erp' ); ?></a></li>
+                        <li class="add-new"><a href="#" class="button"><?php _e( 'Add New', 'erp' ); ?></a></li>
                     </ul>
                 </div>
             </div>
@@ -364,24 +364,24 @@ class Setup_Wizard {
 
     public function setup_step_designation() {
         ?>
-        <h1><?php _e( 'Designation Setup', 'wp-erp' ); ?></h1>
+        <h1><?php _e( 'Designation Setup', 'erp' ); ?></h1>
         <form method="post" class="form-table">
 
             <div class="two-col">
                 <div class="col-first">
-                    <p><?php _e( 'Create some designations for your company. e.g. Manager, Senior Developer, Marketing Manager, Support Executive, etc. ', 'wp-erp' ); ?></p>
-                    <p><?php _e( 'Leave empty for not to create any designations.', 'wp-erp' ); ?></p>
+                    <p><?php _e( 'Create some designations for your company. e.g. Manager, Senior Developer, Marketing Manager, Support Executive, etc. ', 'erp' ); ?></p>
+                    <p><?php _e( 'Leave empty for not to create any designations.', 'erp' ); ?></p>
                 </div>
 
                 <div class="col-last">
                     <ul class="unstyled">
                         <li>
-                            <input type="text" name="designations[]" class="regular-text" placeholder="<?php esc_attr_e( 'Designation name', 'wp-erp' ); ?>">
+                            <input type="text" name="designations[]" class="regular-text" placeholder="<?php esc_attr_e( 'Designation name', 'erp' ); ?>">
                         </li>
                         <li>
-                            <input type="text" name="designations[]" class="regular-text" placeholder="<?php esc_attr_e( 'Designation name', 'wp-erp' ); ?>">
+                            <input type="text" name="designations[]" class="regular-text" placeholder="<?php esc_attr_e( 'Designation name', 'erp' ); ?>">
                         </li>
-                        <li class="add-new"><a href="#" class="button"><?php _e( 'Add New', 'wp-erp' ); ?></a></li>
+                        <li class="add-new"><a href="#" class="button"><?php _e( 'Add New', 'erp' ); ?></a></li>
                     </ul>
                 </div>
             </div>
@@ -415,21 +415,21 @@ class Setup_Wizard {
     public function setup_step_workdays() {
         $working_days = erp_company_get_working_days();
         $options = array(
-            '8' => __( 'Full Day', 'wp-erp' ),
-            '4' => __( 'Half Day', 'wp-erp' ),
-            '0' => __( 'Non-working Day', 'wp-erp' )
+            '8' => __( 'Full Day', 'erp' ),
+            '4' => __( 'Half Day', 'erp' ),
+            '0' => __( 'Non-working Day', 'erp' )
         );
         $days = array(
-            'mon' => __( 'Monday', 'wp-erp' ),
-            'tue' => __( 'Tuesday', 'wp-erp' ),
-            'wed' => __( 'Wednesday', 'wp-erp' ),
-            'thu' => __( 'Thursday', 'wp-erp' ),
-            'fri' => __( 'Friday', 'wp-erp' ),
-            'sat' => __( 'Saturday', 'wp-erp' ),
-            'sun' => __( 'Sunday', 'wp-erp' )
+            'mon' => __( 'Monday', 'erp' ),
+            'tue' => __( 'Tuesday', 'erp' ),
+            'wed' => __( 'Wednesday', 'erp' ),
+            'thu' => __( 'Thursday', 'erp' ),
+            'fri' => __( 'Friday', 'erp' ),
+            'sat' => __( 'Saturday', 'erp' ),
+            'sun' => __( 'Sunday', 'erp' )
         );
         ?>
-        <h1><?php _e( 'Workdays Setup', 'wp-erp' ); ?></h1>
+        <h1><?php _e( 'Workdays Setup', 'erp' ); ?></h1>
         <form method="post">
 
             <table class="form-table">
@@ -475,13 +475,13 @@ class Setup_Wizard {
         ?>
 
         <div class="final-step">
-            <h1><?php _e( 'Your Site is Ready!', 'wp-erp' ); ?></h1>
+            <h1><?php _e( 'Your Site is Ready!', 'erp' ); ?></h1>
 
             <div class="erp-setup-next-steps">
                 <div class="erp-setup-next-steps-first">
-                    <h2><?php _e( 'Next Steps &rarr;', 'wp-erp' ); ?></h2>
+                    <h2><?php _e( 'Next Steps &rarr;', 'erp' ); ?></h2>
 
-                    <a class="button button-primary button-large" href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr-employee' ) ); ?>"><?php _e( 'Add your employees!', 'wp-erp' ); ?></a>
+                    <a class="button button-primary button-large" href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr-employee' ) ); ?>"><?php _e( 'Add your employees!', 'erp' ); ?></a>
                 </div>
             </div>
         </div>

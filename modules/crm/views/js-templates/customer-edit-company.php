@@ -2,14 +2,14 @@
 
     <div class="row" data-selected="{{data.company_id}}">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Company Name', 'wp-erp' ),
+            'label'       => __( 'Company Name', 'erp' ),
             'name'        => 'company_id',
             'type'        => 'select',
             'id'          => 'erp-select-customer-company',
             'class'       => 'erp-crm-select2-add-more erp-crm-customer-company-dropdown',
             'custom_attr' => array( 'data-id' => 'erp-contact-new', 'data-type' => 'company' ),
             'required'    => true,
-            'options'     => [ '' => __( '--Select a Company--', 'wp-erp' ) ] + erp_get_peoples_array( [ 'type' => 'company', 'number' => -1 ] )
+            'options'     => [ '' => __( '--Select a Company--', 'erp' ) ] + erp_get_peoples_array( [ 'type' => 'company', 'number' => -1 ] )
         ) ); ?>
     </div>
 

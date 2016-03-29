@@ -8,20 +8,20 @@
 global $states;
 
 $states['NZ'] = array(
-	'NL' => __( 'Northland', 'wp-erp' ),
-	'AK' => __( 'Auckland', 'wp-erp' ),
-	'WA' => __( 'Waikato', 'wp-erp' ),
-	'BP' => __( 'Bay of Plenty', 'wp-erp' ),
-	'TK' => __( 'Taranaki', 'wp-erp' ),
-	'HB' => __( 'Hawke&rsquo;s Bay', 'wp-erp' ),
-	'MW' => __( 'Manawatu-Wanganui', 'wp-erp' ),
-	'WE' => __( 'Wellington', 'wp-erp' ),
-	'NS' => __( 'Nelson', 'wp-erp' ),
-	'MB' => __( 'Marlborough', 'wp-erp' ),
-	'TM' => __( 'Tasman', 'wp-erp' ),
-	'WC' => __( 'West Coast', 'wp-erp' ),
-	'CT' => __( 'Canterbury', 'wp-erp' ),
-	'OT' => __( 'Otago', 'wp-erp' ),
-	'SL' => __( 'Southland', 'wp-erp')
+	'NL' => __( 'Northland', 'erp' ),
+	'AK' => __( 'Auckland', 'erp' ),
+	'WA' => __( 'Waikato', 'erp' ),
+	'BP' => __( 'Bay of Plenty', 'erp' ),
+	'TK' => __( 'Taranaki', 'erp' ),
+	'HB' => __( 'Hawke&rsquo;s Bay', 'erp' ),
+	'MW' => __( 'Manawatu-Wanganui', 'erp' ),
+	'WE' => __( 'Wellington', 'erp' ),
+	'NS' => __( 'Nelson', 'erp' ),
+	'MB' => __( 'Marlborough', 'erp' ),
+	'TM' => __( 'Tasman', 'erp' ),
+	'WC' => __( 'West Coast', 'erp' ),
+	'CT' => __( 'Canterbury', 'erp' ),
+	'OT' => __( 'Otago', 'erp' ),
+	'SL' => __( 'Southland', 'erp')
 );
 

@@ -22,29 +22,29 @@ class Admin_Menu {
     public function admin_menu() {
 
         /** HR Management **/
-        add_menu_page( __( 'Human Resource', 'wp-erp' ), __( 'HR Management', 'wp-erp' ), 'erp_list_employee', 'erp-hr', array( $this, 'dashboard_page' ), 'dashicons-groups', null );
+        add_menu_page( __( 'Human Resource', 'erp' ), __( 'HR Management', 'erp' ), 'erp_list_employee', 'erp-hr', array( $this, 'dashboard_page' ), 'dashicons-groups', null );
 
-        $overview = add_submenu_page( 'erp-hr', __( 'Overview', 'wp-erp' ), __( 'Overview', 'wp-erp' ), 'erp_list_employee', 'erp-hr', array( $this, 'dashboard_page' ) );
-        add_submenu_page( 'erp-hr', __( 'Employees', 'wp-erp' ), __( 'Employees', 'wp-erp' ), 'erp_list_employee', 'erp-hr-employee', array( $this, 'employee_page' ) );
+        $overview = add_submenu_page( 'erp-hr', __( 'Overview', 'erp' ), __( 'Overview', 'erp' ), 'erp_list_employee', 'erp-hr', array( $this, 'dashboard_page' ) );
+        add_submenu_page( 'erp-hr', __( 'Employees', 'erp' ), __( 'Employees', 'erp' ), 'erp_list_employee', 'erp-hr-employee', array( $this, 'employee_page' ) );
 
         if ( current_user_can( 'employee' ) ) {
-            add_submenu_page( 'erp-hr', __( 'My Profile', 'wp-erp' ), __( 'My Profile', 'wp-erp' ), 'erp_list_employee', 'erp-hr-my-profile', array( $this, 'employee_my_profile_page' ) );
+            add_submenu_page( 'erp-hr', __( 'My Profile', 'erp' ), __( 'My Profile', 'erp' ), 'erp_list_employee', 'erp-hr-my-profile', array( $this, 'employee_my_profile_page' ) );
         }
 
-        add_submenu_page( 'erp-hr', __( 'Departments', 'wp-erp' ), __( 'Departments', 'wp-erp' ), 'erp_manage_department', 'erp-hr-depts', array( $this, 'department_page' ) );
-        add_submenu_page( 'erp-hr', __( 'Designations', 'wp-erp' ), __( 'Designations', 'wp-erp' ), 'erp_manage_designation', 'erp-hr-designation', array( $this, 'designation_page' ) );
-        add_submenu_page( 'erp-hr', __( 'Announcement', 'wp-erp' ), __( 'Announcement', 'wp-erp' ), 'erp_manage_announcement', 'edit.php?post_type=erp_hr_announcement' );
-        add_submenu_page( 'erp-hr', __( 'Reporting', 'wp-erp' ), __( 'Reporting', 'wp-erp' ), 'manage_options', 'erp-hr-reporting', array( $this, 'reporting_page' ) );
+        add_submenu_page( 'erp-hr', __( 'Departments', 'erp' ), __( 'Departments', 'erp' ), 'erp_manage_department', 'erp-hr-depts', array( $this, 'department_page' ) );
+        add_submenu_page( 'erp-hr', __( 'Designations', 'erp' ), __( 'Designations', 'erp' ), 'erp_manage_designation', 'erp-hr-designation', array( $this, 'designation_page' ) );
+        add_submenu_page( 'erp-hr', __( 'Announcement', 'erp' ), __( 'Announcement', 'erp' ), 'erp_manage_announcement', 'edit.php?post_type=erp_hr_announcement' );
+        add_submenu_page( 'erp-hr', __( 'Reporting', 'erp' ), __( 'Reporting', 'erp' ), 'manage_options', 'erp-hr-reporting', array( $this, 'reporting_page' ) );
 
         /** Leave Management **/
-        add_menu_page( __( 'Leave Management', 'wp-erp' ), __( 'Leave', 'wp-erp' ), 'erp_leave_manage', 'erp-leave', array( $this, 'empty_page' ), 'dashicons-arrow-right-alt', null );
+        add_menu_page( __( 'Leave Management', 'erp' ), __( 'Leave', 'erp' ), 'erp_leave_manage', 'erp-leave', array( $this, 'empty_page' ), 'dashicons-arrow-right-alt', null );
 
-        $leave_request = add_submenu_page( 'erp-leave', __( 'Requests', 'wp-erp' ), __( 'Requests', 'wp-erp' ), 'erp_leave_manage', 'erp-leave', array( $this, 'leave_requests' ) );
-        add_submenu_page( 'erp-leave', __( 'Leave Entitlements', 'wp-erp' ), __( 'Leave Entitlements', 'wp-erp' ), 'erp_leave_manage', 'erp-leave-assign', array( $this, 'leave_entitilements' ) );
-        add_submenu_page( 'erp-leave', __( 'Holidays', 'wp-erp' ), __( 'Holidays', 'wp-erp' ), 'erp_leave_manage', 'erp-holiday-assign', array( $this, 'holiday_page' ) );
-        add_submenu_page( 'erp-leave', __( 'Policies', 'wp-erp' ), __( 'Policies', 'wp-erp' ), 'erp_leave_manage', 'erp-leave-policies', array( $this, 'leave_policy_page' ) );
-        $calendar = add_submenu_page( 'erp-leave', __( 'Calendar', 'wp-erp' ), __( 'Calendar', 'wp-erp' ), 'erp_leave_manage', 'erp-leave-calendar', array( $this, 'leave_calendar_page' ) );
-        // add_submenu_page( 'erp-leave', __( 'Leave Calendar', 'wp-erp' ), __( 'Leave Calendar', 'wp-erp' ), 'manage_options', 'erp-leave-calendar', array( $this, 'empty_page' ) );
+        $leave_request = add_submenu_page( 'erp-leave', __( 'Requests', 'erp' ), __( 'Requests', 'erp' ), 'erp_leave_manage', 'erp-leave', array( $this, 'leave_requests' ) );
+        add_submenu_page( 'erp-leave', __( 'Leave Entitlements', 'erp' ), __( 'Leave Entitlements', 'erp' ), 'erp_leave_manage', 'erp-leave-assign', array( $this, 'leave_entitilements' ) );
+        add_submenu_page( 'erp-leave', __( 'Holidays', 'erp' ), __( 'Holidays', 'erp' ), 'erp_leave_manage', 'erp-holiday-assign', array( $this, 'holiday_page' ) );
+        add_submenu_page( 'erp-leave', __( 'Policies', 'erp' ), __( 'Policies', 'erp' ), 'erp_leave_manage', 'erp-leave-policies', array( $this, 'leave_policy_page' ) );
+        $calendar = add_submenu_page( 'erp-leave', __( 'Calendar', 'erp' ), __( 'Calendar', 'erp' ), 'erp_leave_manage', 'erp-leave-calendar', array( $this, 'leave_calendar_page' ) );
+        // add_submenu_page( 'erp-leave', __( 'Leave Calendar', 'erp' ), __( 'Leave Calendar', 'erp' ), 'manage_options', 'erp-leave-calendar', array( $this, 'empty_page' ) );
 
         add_action( 'admin_print_styles-' . $overview, array( $this, 'hr_calendar_script' ) );
         add_action( 'admin_print_styles-' . $calendar, array( $this, 'hr_calendar_script' ) );
@@ -83,7 +83,7 @@ class Admin_Menu {
             case 'view':
                 $employee = new Employee( $id );
                 if ( ! $employee->id ) {
-                    wp_die( __( 'Employee not found!', 'wp-erp' ) );
+                    wp_die( __( 'Employee not found!', 'erp' ) );
                 }
 
                 $template = WPERP_HRM_VIEWS . '/employee/single.php';
@@ -116,7 +116,7 @@ class Admin_Menu {
             case 'view':
                 $employee = new Employee( $id );
                 if ( ! $employee->id ) {
-                    wp_die( __( 'Employee not found!', 'wp-erp' ) );
+                    wp_die( __( 'Employee not found!', 'erp' ) );
                 }
 
                 $template = WPERP_HRM_VIEWS . '/employee/single.php';

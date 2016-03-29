@@ -2,27 +2,27 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'    => __( 'Name', 'wp-erp' ),
+            'label'    => __( 'Name', 'erp' ),
             'name'     => 'name',
             'value'    => '{{ data.name }}',
             'required' => true,
-            'placeholder' => __( 'Name of the person', 'wp-erp' )
+            'placeholder' => __( 'Name of the person', 'erp' )
         ) ); ?>
     </div>
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Relationship', 'wp-erp' ),
+            'label'       => __( 'Relationship', 'erp' ),
             'name'        => 'relation',
             'value'       => '{{ data.relation }}',
             'required'    => true,
-            'placeholder' => __( 'Father', 'wp-erp' )
+            'placeholder' => __( 'Father', 'erp' )
         ) ); ?>
     </div>
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Date of Birth', 'wp-erp' ),
+            'label'       => __( 'Date of Birth', 'erp' ),
             'name'        => 'dob',
             'value'       => '{{ data.dob }}',
             'class'       => 'erp-date-field',

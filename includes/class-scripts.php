@@ -128,12 +128,12 @@ class Scripts {
         wp_localize_script( 'erp-script', 'wpErp', array(
             'nonce'           => wp_create_nonce( 'erp-nonce' ),
             'ajaxurl'         => admin_url( 'admin-ajax.php' ),
-            'set_logo'        => __( 'Set company logo', 'wp-erp' ),
-            'upload_logo'     => __( 'Upload company logo', 'wp-erp' ),
-            'remove_logo'     => __( 'Remove company logo', 'wp-erp' ),
-            'update_location' => __( 'Update Location', 'wp-erp' ),
-            'create'          => __( 'Create', 'wp-erp' ),
-            'update'          => __( 'Update', 'wp-erp' ),
+            'set_logo'        => __( 'Set company logo', 'erp' ),
+            'upload_logo'     => __( 'Upload company logo', 'erp' ),
+            'remove_logo'     => __( 'Remove company logo', 'erp' ),
+            'update_location' => __( 'Update Location', 'erp' ),
+            'create'          => __( 'Create', 'erp' ),
+            'update'          => __( 'Update', 'erp' ),
             'confirmMsg'      => __( 'Are you sure?', 'wpuf' ),
             'ajaxurl'         => admin_url( 'admin-ajax.php' ),
             'plupload'        => array(

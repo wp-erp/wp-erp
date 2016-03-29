@@ -1,12 +1,12 @@
 <div class="wrap erp-hr-employees" id="wp-erp">
 
     <h2>
-        <?php 
-        _e( 'Employee', 'wp-erp' ); 
+        <?php
+        _e( 'Employee', 'erp' );
 
         if ( current_user_can( 'erp_create_employee' ) ) {
             ?>
-                <a href="#" id="erp-employee-new" class="add-new-h2"><?php _e( 'Add New', 'wp-erp' ); ?></a>
+                <a href="#" id="erp-employee-new" class="add-new-h2"><?php _e( 'Add New', 'erp' ); ?></a>
             <?php
         }
         ?>
@@ -20,7 +20,7 @@
                 <?php
                 $employee_table = new \WeDevs\ERP\HRM\Employee_List_Table();
                 $employee_table->prepare_items();
-                $employee_table->search_box( __( 'Search Employee', 'wp-erp' ), 'erp-employee-search' );
+                $employee_table->search_box( __( 'Search Employee', 'erp' ), 'erp-employee-search' );
                 $employee_table->views();
 
                 $employee_table->display();

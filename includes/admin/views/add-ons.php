@@ -1,5 +1,5 @@
 <div class="wrap">
-    <h1><?php _e( 'Add-ons', 'wp-erp' ); ?> <a href="http://wperp.com/downloads/" target="_blank" class="page-title-action"><?php _e( 'View all Add-ons', 'wp-erp' ); ?></a></h1>
+    <h1><?php _e( 'Add-ons', 'erp' ); ?> <a href="http://wperp.com/downloads/" target="_blank" class="page-title-action"><?php _e( 'View all Add-ons', 'erp' ); ?></a></h1>
 
     <?php
     $add_ons = get_transient( 'wperp_addons' );
@@ -40,9 +40,9 @@
 
                 <div class="erp-links">
                     <?php if ( class_exists( $addon->class ) ) { ?>
-                        <a class="button button-disabled" href="<?php echo $addon_url; ?>" target="_blank"><?php _e( 'Installed', 'wp-erp' ); ?></a>
+                        <a class="button button-disabled" href="<?php echo $addon_url; ?>" target="_blank"><?php _e( 'Installed', 'erp' ); ?></a>
                     <?php } else { ?>
-                        <a class="button-primary" href="<?php echo $addon_url; ?>" target="_blank"><?php _e( 'View Details', 'wp-erp' ); ?></a>
+                        <a class="button-primary" href="<?php echo $addon_url; ?>" target="_blank"><?php _e( 'View Details', 'erp' ); ?></a>
                     <?php } ?>
                 </div>
             </div>
@@ -50,7 +50,7 @@
             <?php
         }
     } else {
-        _e( '<div class="error"><p>Error fetching add-ons</p></div>', 'wp-erp' );
+        _e( '<div class="error"><p>Error fetching add-ons</p></div>', 'erp' );
     }
     ?>
 </div>

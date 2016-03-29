@@ -97,7 +97,7 @@ class Log {
 
 
 	    $cache_key = 'erp-get-audit-log' . md5( serialize( $args ) );
-	    $results   = wp_cache_get( $cache_key, 'wp-erp' );
+	    $results   = wp_cache_get( $cache_key, 'erp' );
 	    $users     = array();
 
 	    if ( false === $results ) {
@@ -108,7 +108,7 @@ class Log {
 	                    ->toArray();
 
 	        $results = erp_array_to_object( $results );
-	        wp_cache_set( $cache_key, $results, 'wp-erp', HOUR_IN_SECONDS );
+	        wp_cache_set( $cache_key, $results, 'erp', HOUR_IN_SECONDS );
 	    }
 
 	    return $results;

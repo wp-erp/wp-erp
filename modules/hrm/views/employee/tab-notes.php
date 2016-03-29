@@ -1,11 +1,11 @@
 <div class="note-tab-wrap">
-    <h3><?php _e( 'Notes', 'wp-erp' ) ?></h3>
+    <h3><?php _e( 'Notes', 'erp' ) ?></h3>
 
     <form action="" class="note-form" method="post">
         <?php erp_html_form_input( array(
             'name'        => 'note',
             'required'    => true,
-            'placeholder' => __( 'Add a note...', 'wp-erp' ),
+            'placeholder' => __( 'Add a note...', 'erp' ),
             'type'        => 'textarea',
             'custom_attr' => array( 'rows' => 3, 'cols' => 30 )
         ) ); ?>
@@ -14,7 +14,7 @@
         <input type="hidden" name="action" id="erp-employee-action" value="erp-hr-employee-new-note">
 
         <?php wp_nonce_field( 'wp-erp-hr-employee-nonce' ); ?>
-        <?php submit_button( __( 'Add Note', 'wp-erp' ), 'primary' ); ?>
+        <?php submit_button( __( 'Add Note', 'erp' ), 'primary' ); ?>
     </form>
 
     <?php
@@ -34,7 +34,7 @@
                 <div class="note-wrap">
                     <div class="by">
                         <a href="#" class="author"><?php echo $note->user->display_name; ?></a>
-                        <span class="date"><?php echo erp_format_date( $note->created_at, __( 'M j, Y \a\t g:i a', 'wp-erp' ) ); ?></span>
+                        <span class="date"><?php echo erp_format_date( $note->created_at, __( 'M j, Y \a\t g:i a', 'erp' ) ); ?></span>
                     </div>
 
                     <div class="note-body">
@@ -42,7 +42,7 @@
                     </div>
                     <?php if( current_user_can( 'manage_options' ) OR (wp_get_current_user()->ID == $note->comment_by ) ) { ?>
                         <div class="row-action">
-                            <span class="delete"><a href="#" class="delete_note" data-note_id="<?php echo $note->id; ?>"><?php _e( 'Delete', 'wp-erp' ); ?></a></span>
+                            <span class="delete"><a href="#" class="delete_note" data-note_id="<?php echo $note->id; ?>"><?php _e( 'Delete', 'erp' ); ?></a></span>
                         </div>
                     <?php } ?>
                 </div>

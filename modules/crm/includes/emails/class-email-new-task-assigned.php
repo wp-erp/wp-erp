@@ -13,11 +13,11 @@ class New_Task_Assigned extends Email {
 
     function __construct() {
         $this->id          = 'new-task-assigned';
-        $this->title       = __( 'New Task Assigned', 'wp-erp' );
-        $this->description = __( 'New task assigned notification to employee.', 'wp-erp' );
+        $this->title       = __( 'New Task Assigned', 'erp' );
+        $this->description = __( 'New task assigned notification to employee.', 'erp' );
 
-        $this->subject     = __( 'New task has been assigned to you', 'wp-erp');
-        $this->heading     = __( 'New Task Assigned', 'wp-erp');
+        $this->subject     = __( 'New task has been assigned to you', 'erp');
+        $this->heading     = __( 'New Task Assigned', 'erp');
 
         $this->find = [
             'task_title' => '{task_title}',

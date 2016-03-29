@@ -1,13 +1,13 @@
 <div class="wrap erp erp-hr-leave-request-new erp-hr-leave-reqs-wrap">
     <div class="postbox">
-        <h3 class="hndle"><?php _e( 'New Leave Request', 'wp-erp' ); ?></h3>
+        <h3 class="hndle"><?php _e( 'New Leave Request', 'erp' ); ?></h3>
         <div class="inside">
             <?php if ( isset( $_GET['msg'] ) ) {
 
                 if ( $_GET['msg'] == 'submitted' ) {
-                    erp_html_show_notice( __( 'Leave request has been submitted successfully.', 'wp-erp' ) );
+                    erp_html_show_notice( __( 'Leave request has been submitted successfully.', 'erp' ) );
                 } elseif ( $_GET['msg'] == 'error' ) {
-                    erp_html_show_notice( __( 'Something went wrong.', 'wp-erp' ), 'error' );
+                    erp_html_show_notice( __( 'Something went wrong.', 'erp' ), 'error' );
                 }
 
             } ?>
@@ -17,7 +17,7 @@
                     <?php if ( current_user_can( 'erp_leave_create_request' ) ) { ?>
                         <div class="row">
                             <?php erp_html_form_input( array(
-                                'label'    => __( 'Employee', 'wp-erp' ),
+                                'label'    => __( 'Employee', 'erp' ),
                                 'name'     => 'employee_id',
                                 'id'       => 'erp-hr-leave-req-employee-id',
                                 'value'    => '',
@@ -33,7 +33,7 @@
                     <div class="row two-col">
                         <div class="cols">
                             <?php erp_html_form_input( array(
-                                'label'    => __( 'From', 'wp-erp' ),
+                                'label'    => __( 'From', 'erp' ),
                                 'name'     => 'leave_from',
                                 'id'       => 'erp-hr-leave-req-from-date',
                                 'value'    => '',
@@ -44,7 +44,7 @@
 
                         <div class="cols last">
                             <?php erp_html_form_input( array(
-                                'label'    => __( 'To', 'wp-erp' ),
+                                'label'    => __( 'To', 'erp' ),
                                 'name'     => 'leave_to',
                                 'id'       => 'erp-hr-leave-req-to-date',
                                 'value'    => '',
@@ -58,7 +58,7 @@
 
                     <div class="row">
                         <?php erp_html_form_input( array(
-                            'label'       => __( 'Reason', 'wp-erp' ),
+                            'label'       => __( 'Reason', 'erp' ),
                             'name'        => 'leave_reason',
                             'type'        => 'textarea',
                             'custom_attr' => array( 'cols' => 30, 'rows' => 3 )
@@ -68,7 +68,7 @@
 
                 <input type="hidden" name="erp-action" value="hr-leave-req-new">
                 <?php wp_nonce_field( 'erp-leave-req-new' ); ?>
-                <?php submit_button( __( 'Submit Request', 'wp-erp' ), 'primary', 'submit', true, array( 'disabled' => 'disabled' )  ); ?>
+                <?php submit_button( __( 'Submit Request', 'erp' ), 'primary', 'submit', true, array( 'disabled' => 'disabled' )  ); ?>
             </form>
         </div><!-- .inside-->
     </div><!-- .postbox-->

@@ -13,11 +13,11 @@ class New_Leave_Request extends Email {
 
     function __construct() {
         $this->id             = 'new-leave-request';
-        $this->title          = __( 'New Leave Request', 'wp-erp' );
-        $this->description    = __( 'New leave request notification to HR Manager.', 'wp-erp' );
+        $this->title          = __( 'New Leave Request', 'erp' );
+        $this->description    = __( 'New leave request notification to HR Manager.', 'erp' );
 
-        $this->subject        = __( 'New leave request received', 'wp-erp');
-        $this->heading        = __( 'New Leave Request', 'wp-erp');
+        $this->subject        = __( 'New leave request received', 'erp');
+        $this->heading        = __( 'New Leave Request', 'erp');
 
         $this->find = [
             'full-name'    => '{employee_name}',
@@ -60,7 +60,7 @@ class New_Leave_Request extends Email {
             'date_to'      => erp_format_date( $request->end_date ),
             'no_days'      => $request->days,
             'reason'       => $request->reason,
-            'requests_url' => sprintf( '<a class="button green" href="%s">%s</a>', admin_url( 'admin.php?page=erp-leave' ), __( 'View Request', 'wp-erp' ) ),
+            'requests_url' => sprintf( '<a class="button green" href="%s">%s</a>', admin_url( 'admin.php?page=erp-leave' ), __( 'View Request', 'erp' ) ),
         ];
 
         $managers = get_users( [ 'role' => erp_hr_get_manager_role() ] );
@@ -109,28 +109,28 @@ class New_Leave_Request extends Email {
     public function init_form_fields() {
         $this->form_fields = [
             [
-                'title'       => __( 'Subject', 'wp-erp' ),
+                'title'       => __( 'Subject', 'erp' ),
                 'id'          => 'subject',
                 'type'        => 'text',
-                'description' => sprintf( __( 'This controls the email subject line. Leave blank to use the default subject: <code>%s</code>.', 'wp-erp' ), $this->subject ),
+                'description' => sprintf( __( 'This controls the email subject line. Leave blank to use the default subject: <code>%s</code>.', 'erp' ), $this->subject ),
                 'placeholder' => '',
                 'default'     => $this->subject,
                 'desc_tip'    => true
             ],
             [
-                'title'       => __( 'Email Heading', 'wp-erp' ),
+                'title'       => __( 'Email Heading', 'erp' ),
                 'id'          => 'heading',
                 'type'        => 'text',
-                'description' => sprintf( __( 'This controls the main heading contained within the email notification. Leave blank to use the default heading: <code>%s</code>.', 'wp-erp' ), $this->heading ),
+                'description' => sprintf( __( 'This controls the main heading contained within the email notification. Leave blank to use the default heading: <code>%s</code>.', 'erp' ), $this->heading ),
                 'placeholder' => '',
                 'default'     => $this->heading,
                 'desc_tip'    => true
             ],
             [
-                'title'             => __( 'Email Body', 'wp-erp' ),
+                'title'             => __( 'Email Body', 'erp' ),
                 'type'              => 'wysiwyg',
                 'id'                => 'body',
-                'description'       => sprintf( __( 'This controls the main heading contained within the email notification. Leave blank to use the default heading: <code>%s</code>.', 'wp-erp' ), $this->heading ),
+                'description'       => sprintf( __( 'This controls the main heading contained within the email notification. Leave blank to use the default heading: <code>%s</code>.', 'erp' ), $this->heading ),
                 'placeholder'       => '',
                 'default'           => '',
                 'desc_tip'          => true,
@@ -153,9 +153,9 @@ class New_Leave_Request extends Email {
     function replace_keys() {
         ?>
         <tr valign="top" class="single_select_page">
-            <th scope="row" class="titledesc"><?php _e( 'Template Tags', 'wp-erp' ); ?></th>
+            <th scope="row" class="titledesc"><?php _e( 'Template Tags', 'erp' ); ?></th>
             <td class="forminp">
-                <em><?php _e( 'You may use these template tags inside subject, heading, body and those will be replaced by original values', 'wp-erp' ); ?></em>:
+                <em><?php _e( 'You may use these template tags inside subject, heading, body and those will be replaced by original values', 'erp' ); ?></em>:
                 <?php echo '<code>' . implode( '</code>, <code>', $this->find ) . '</code>'; ?>
             </td>
         </tr>
