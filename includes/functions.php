@@ -94,7 +94,7 @@ function erp_get_currencies() {
  *
  * @return array
  */
-function erp_get_currency_list_with_symobl() {
+function erp_get_currency_list_with_symbol() {
     $currencies      = erp_get_currencies();
     $currency_symbol = []; 
 

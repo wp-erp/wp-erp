@@ -1,6 +1,6 @@
 === WP ERP ===
 Contributors: tareq1988, wedevs, sabbir1991, asaquzzaman
-Tags: HR, HRM, CRM, Human Resource Management, Customer Relations, Employee, leave, job, management, lead, oppurtunity, contacts, company, schedule, task, holiday
+Tags: small business, SME, contact, contacts, CRM, Customer Relationship Management, employee, leave management, hr, hrm, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.2
 Tested up to: 4.4.2
 Stable tag: trunk
