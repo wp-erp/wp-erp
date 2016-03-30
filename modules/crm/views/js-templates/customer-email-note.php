@@ -22,17 +22,17 @@ $customer = new \WeDevs\ERP\CRM\Contact( $customer_id );
         <label>Subject</label>
         <span class="sep">:</span>
         <span class="value">
-            <input type="text" name="email_subject" v-model="feedData.email_subject" placeholder="<?php _e( 'Subject...', 'wp-erp' ); ?>">
+            <input type="text" name="email_subject" v-model="feedData.email_subject" placeholder="<?php _e( 'Subject...', 'erp' ); ?>">
         </span>
     </p>
 
     <input id="email_activity_message" type="hidden" v-model="feedData.message" name="email_activity_message">
-    <trix-editor input="email_activity_message" placeholder="<?php _e( 'Type your email body .....', 'wp-erp' ); ?>"></trix-editor>
+    <trix-editor input="email_activity_message" placeholder="<?php _e( 'Type your email body .....', 'erp' ); ?>"></trix-editor>
 
     <div class="submit-action">
         <input type="hidden" name="action" v-model="feedData.action" value="erp_customer_feeds_save_notes">
         <input type="hidden" name="type" v-model="feedData.type" value="email">
-        <input type="submit" :disabled = "!isValid" class="button button-primary" name="send_email" value="<?php _e( 'Send Email', 'wp-erp' ); ?>">
-        <input type="reset" class="button button-default" value="<?php _e( 'Discard', 'wp-erp' ); ?>">
+        <input type="submit" :disabled = "!isValid" class="button button-primary" name="send_email" value="<?php _e( 'Send Email', 'erp' ); ?>">
+        <input type="reset" class="button button-default" value="<?php _e( 'Discard', 'erp' ); ?>">
     </div>
 </div>

@@ -28,7 +28,7 @@ class Entitlement_List_Table extends \WP_List_Table {
         $date = \WeDevs\ERP\HRM\Models\Leave_Entitlement::select( 'to_date' )->distinct()->get()->toArray();
         ?>
         <div class="alignleft actions">
-            <label class="screen-reader-text" for="filter_by_year"><?php _e( 'Filter by Year', 'wp-erp' ) ?></label>
+            <label class="screen-reader-text" for="filter_by_year"><?php _e( 'Filter by Year', 'erp' ) ?></label>
             <select name="filter_by_year" id="filter_by_year">
                 <?php foreach ( $date as $year ): ?>
                     <?php $year_val = date( 'Y', strtotime( $year['to_date'] ) ); ?>
@@ -47,7 +47,7 @@ class Entitlement_List_Table extends \WP_List_Table {
      * @return void
      */
     function no_items() {
-        _e( 'No entitlement found.', 'wp-erp' );
+        _e( 'No entitlement found.', 'erp' );
     }
 
     /**
@@ -86,17 +86,17 @@ class Entitlement_List_Table extends \WP_List_Table {
                 return number_format_i18n( $entitlement->days );
 
             case 'scheduled':
-                return $scheduled ? sprintf( __( '%d days', 'wp-erp' ), number_format_i18n( $scheduled ) ) : '-';
+                return $scheduled ? sprintf( __( '%d days', 'erp' ), number_format_i18n( $scheduled ) ) : '-';
 
             case 'available':
                 if ( $available < 0 ) {
-                    return sprintf( '<span class="red">%d %s</span>', number_format_i18n( $available ), __( 'days', 'wp-erp' ) );
+                    return sprintf( '<span class="red">%d %s</span>', number_format_i18n( $available ), __( 'days', 'erp' ) );
                 } elseif ( $available > 0 ) {
-                    return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $available ), __( 'days', 'wp-erp' ) );
+                    return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $available ), __( 'days', 'erp' ) );
                 } elseif ( $available === 0 ) {
-                    return sprintf( '<span class="gray">%d %s</span>', 0, __( 'days', 'wp-erp' ) );
+                    return sprintf( '<span class="gray">%d %s</span>', 0, __( 'days', 'erp' ) );
                 } else {
-                    return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $entitlement->days ), __( 'days', 'wp-erp' ) );
+                    return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $entitlement->days ), __( 'days', 'erp' ) );
                 }
 
             default:
@@ -112,13 +112,13 @@ class Entitlement_List_Table extends \WP_List_Table {
     function get_columns() {
         $columns = array(
             'cb'           => '<input type="checkbox" />',
-            'name'         => __( 'Employee Name', 'wp-erp' ),
-            'leave_policy' => __( 'Leave Policy', 'wp-erp' ),
-            'valid_from'   => __( 'Valid From', 'wp-erp' ),
-            'valid_to'     => __( 'Valid To', 'wp-erp' ),
-            'days'         => __( 'Days', 'wp-erp' ),
-            'scheduled'    => __( 'Scheduled', 'wp-erp' ),
-            'available'    => __( 'available', 'wp-erp' )
+            'name'         => __( 'Employee Name', 'erp' ),
+            'leave_policy' => __( 'Leave Policy', 'erp' ),
+            'valid_from'   => __( 'Valid From', 'erp' ),
+            'valid_to'     => __( 'Valid To', 'erp' ),
+            'days'         => __( 'Days', 'erp' ),
+            'scheduled'    => __( 'Scheduled', 'erp' ),
+            'available'    => __( 'available', 'erp' )
         );
 
         return apply_filters( 'erp_hr_entitlement_table_cols', $columns );
@@ -137,7 +137,7 @@ class Entitlement_List_Table extends \WP_List_Table {
         $delete_url        = '';
 
         if ( erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ) ) {
-            $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" data-user_id="%d" data-policy_id="%d" title="%s">%s</a>', $delete_url, $entitlement->id, $entitlement->user_id, $entitlement->policy_id, __( 'Delete this item', 'wp-erp' ), __( 'Delete', 'wp-erp' ) );
+            $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" data-user_id="%d" data-policy_id="%d" title="%s">%s</a>', $delete_url, $entitlement->id, $entitlement->user_id, $entitlement->policy_id, __( 'Delete this item', 'erp' ), __( 'Delete', 'erp' ) );
         }
 
         return sprintf( '<a href="%3$s"><strong>%1$s</strong></a> %2$s', esc_html( $entitlement->employee_name ), $this->row_actions( $actions ), erp_hr_url_single_employee( $entitlement->user_id ) );
@@ -177,7 +177,7 @@ class Entitlement_List_Table extends \WP_List_Table {
      */
     function get_bulk_actions() {
         $actions = array(
-            'entitlement_delete'  => __( 'Delete', 'wp-erp' ),
+            'entitlement_delete'  => __( 'Delete', 'erp' ),
         );
         return $actions;
     }

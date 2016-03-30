@@ -9,7 +9,7 @@ class ERP_Settings_General extends ERP_Settings_Page {
 
     function __construct() {
         $this->id    = 'general';
-        $this->label = __( 'General', 'wp-erp' );
+        $this->label = __( 'General', 'erp' );
 
         add_action( 'erp_admin_field_erp_api_key', array( $this, 'erp_api_key' ) );
     }
@@ -23,30 +23,30 @@ class ERP_Settings_General extends ERP_Settings_Page {
 
         $fields = array(
 
-            array( 'title' => __( 'General Options', 'wp-erp' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
+            array( 'title' => __( 'General Options', 'erp' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
 
             array(
-                'title'   => __( 'Company Start Date', 'wp-erp' ),
+                'title'   => __( 'Company Start Date', 'erp' ),
                 'id'      => 'gen_com_start',
                 'type'    => 'text',
-                'desc'    => __( 'The date the company officially started.', 'wp-erp' ),
+                'desc'    => __( 'The date the company officially started.', 'erp' ),
                 'class'   => 'erp-date-field',
                 'tooltip' => true,
             ),
 
             array(
-                'title'   => __( 'Financial Year Starts', 'wp-erp' ),
+                'title'   => __( 'Financial Year Starts', 'erp' ),
                 'id'      => 'gen_financial_month',
                 'type'    => 'select',
                 'options' => erp_months_dropdown(),
-                'desc'    => __( 'Financial and tax calculation starts from this month of every year.', 'wp-erp' ),
+                'desc'    => __( 'Financial and tax calculation starts from this month of every year.', 'erp' ),
                 'tooltip' => false,
             ),
 
             array(
-                'title'   => __( 'Date Format', 'wp-erp' ),
+                'title'   => __( 'Date Format', 'erp' ),
                 'id'      => 'date_format',
-                'desc'    => __( 'Format of date to show accross the system.', 'wp-erp' ),
+                'desc'    => __( 'Format of date to show accross the system.', 'erp' ),
                 'tooltip' => true,
                 'type'    => 'select',
                 'options' => [
@@ -59,11 +59,11 @@ class ERP_Settings_General extends ERP_Settings_Page {
             ),
 
             array(
-                'title'   => __( 'Enable Debug Mode', 'wp-erp' ),
+                'title'   => __( 'Enable Debug Mode', 'erp' ),
                 'id'      => 'erp_debug_mode',
                 'type'    => 'select',
-                'options' => [ 1 => __('On', 'wp-erp'), 0 => __( 'Off', 'wp-erp') ],
-                'desc'    => __( 'Switching testing or producting mode', 'wp-erp' ),
+                'options' => [ 1 => __('On', 'erp'), 0 => __( 'Off', 'erp') ],
+                'desc'    => __( 'Switching testing or producting mode', 'erp' ),
                 'tooltip' =>  true,
                 'default' =>  0,
             ),
@@ -92,7 +92,7 @@ class ERP_Settings_General extends ERP_Settings_Page {
         ?>
         <tr valign="top">
             <th scope="row" class="titledesc">
-                <span class="dashicons dashicons-admin-network"></span><?php echo __( 'API Key', 'wp-erp' ) ?>
+                <span class="dashicons dashicons-admin-network"></span><?php echo __( 'API Key', 'erp' ) ?>
             </th>
             <td class="forminp forminp-text">
                 <p><?php echo $wp_erp_api_key ?> <span class="dashicons dashicons-<?php echo ( $is_cloud_active ) ? 'yes green' : 'no red' ?>"></p>
@@ -112,7 +112,7 @@ class ERP_Settings_General extends ERP_Settings_Page {
 
                     <div class="activation-form-container">
                         <input type="email" name="email" placeholder="email@example.com" value="<?php echo esc_attr( get_option( 'admin_email' ) ); ?>" />
-                        <button class="button-primary" id="get-api-key"><?php _e( 'Get API Key', 'wp-erp' ); ?></button>
+                        <button class="button-primary" id="get-api-key"><?php _e( 'Get API Key', 'erp' ); ?></button>
                     </div>
                 </div>
             </th>

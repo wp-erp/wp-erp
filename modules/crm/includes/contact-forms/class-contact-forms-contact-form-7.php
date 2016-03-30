@@ -22,7 +22,7 @@ class CF7 {
      */
     public function add_to_plugin_list( $plugins ) {
         $plugins['contact_form_7'] = [
-            'title' => __( 'Contact Form 7', 'wp-erp' ),
+            'title' => __( 'Contact Form 7', 'erp' ),
             'is_active' => class_exists( 'WPCF7_ContactForm' )
         ];
 

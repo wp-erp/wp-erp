@@ -36,7 +36,7 @@ foreach ( $leave_requests as $key => $leave_request ) {
 </style>
 <div class="wrap erp-hr-calendar-wrap">
 
-    <h1><?php _e( 'Calendar', 'wp-erp' ); ?></h1>
+    <h1><?php _e( 'Calendar', 'erp' ); ?></h1>
 
     <div class="tablenav top erp-calendar-filter">
         <form method="post" action="">
@@ -59,7 +59,7 @@ foreach ( $leave_requests as $key => $leave_request ) {
                     'options'     => erp_hr_get_designation_dropdown_raw()
                 ) );
             ?>
-            <input type="submit" class="button" name="erp_leave_calendar_filter" value="<?php _e( 'Filter', 'wp-erp' ); ?>">
+            <input type="submit" class="button" name="erp_leave_calendar_filter" value="<?php _e( 'Filter', 'erp' ); ?>">
         </form>
     </div>
 

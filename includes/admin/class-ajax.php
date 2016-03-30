@@ -136,17 +136,17 @@ class Ajax {
             <table class="wp-list-table widefat fixed audit-log-change-table">
                 <thead>
                     <tr>
-                        <th class="col-date"><?php _e( 'Field/Items', 'wp-erp' ); ?></th>
-                        <th class="col"><?php _e( 'Old Value', 'wp-erp' ); ?></th>
-                        <th class="col"><?php _e( 'New Value', 'wp-erp' ); ?></th>
+                        <th class="col-date"><?php _e( 'Field/Items', 'erp' ); ?></th>
+                        <th class="col"><?php _e( 'Old Value', 'erp' ); ?></th>
+                        <th class="col"><?php _e( 'New Value', 'erp' ); ?></th>
                     </tr>
                 </thead>
 
                 <tfoot>
                     <tr>
-                        <th class="col-items"><?php _e( 'Field/Items', 'wp-erp' ); ?></th>
-                        <th class="col"><?php _e( 'Old Value', 'wp-erp' ); ?></th>
-                        <th class="col"><?php _e( 'New Value', 'wp-erp' ); ?></th>
+                        <th class="col-items"><?php _e( 'Field/Items', 'erp' ); ?></th>
+                        <th class="col"><?php _e( 'Old Value', 'erp' ); ?></th>
+                        <th class="col"><?php _e( 'New Value', 'erp' ); ?></th>
                     </tr>
                 </tfoot>
 
@@ -166,7 +166,7 @@ class Ajax {
         $content = ob_get_clean();
 
         $data = [
-            'title' => __( 'Log changes', 'wp-erp' ),
+            'title' => __( 'Log changes', 'erp' ),
             'content' => $content
         ];
 

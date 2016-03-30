@@ -4,11 +4,11 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
 ?>
 <div class="wrap erp erp-crm-schedules" id="wp-erp">
 
-    <h1><?php _e( 'Schedules', 'wp-erp' ); ?></h1>
+    <h1><?php _e( 'Schedules', 'erp' ); ?></h1>
 
     <h2 class="nav-tab-wrapper erp-nav-tab-wrapper">
-        <a class="nav-tab <?php echo $tab == 'own' ? 'nav-tab-active': ''; ?>" href="<?php echo add_query_arg( [ 'page'=>'erp-sales-schedules', 'tab' => 'own' ], admin_url( 'admin.php' ) ); ?>"><?php _e( 'My Schedules', 'wp-erp' ); ?></a>
-        <a class="nav-tab <?php echo $tab == 'all' ? 'nav-tab-active': ''; ?>" href="<?php echo add_query_arg( [ 'page'=>'erp-sales-schedules', 'tab' => 'all' ], admin_url( 'admin.php' ) ); ?>"><?php _e( 'All Schedules', 'wp-erp' ); ?></a>
+        <a class="nav-tab <?php echo $tab == 'own' ? 'nav-tab-active': ''; ?>" href="<?php echo add_query_arg( [ 'page'=>'erp-sales-schedules', 'tab' => 'own' ], admin_url( 'admin.php' ) ); ?>"><?php _e( 'My Schedules', 'erp' ); ?></a>
+        <a class="nav-tab <?php echo $tab == 'all' ? 'nav-tab-active': ''; ?>" href="<?php echo add_query_arg( [ 'page'=>'erp-sales-schedules', 'tab' => 'all' ], admin_url( 'admin.php' ) ); ?>"><?php _e( 'All Schedules', 'erp' ); ?></a>
     </h2>
 
 
@@ -40,7 +40,7 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
             eventClick: function(calEvent, jsEvent, view) {
                 var scheduleId = calEvent.schedule.id;
                 $.erpPopup({
-                    title: ( calEvent.schedule.extra.schedule_title ) ? calEvent.schedule.extra.schedule_title : '<?php _e( 'Log Details', 'wp-erp' ) ?>',
+                    title: ( calEvent.schedule.extra.schedule_title ) ? calEvent.schedule.extra.schedule_title : '<?php _e( 'Log Details', 'erp' ) ?>',
                     button: '',
                     id: 'erp-customer-edit',
                     onReady: function() {
@@ -91,8 +91,8 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
             dayClick: function(date, jsEvent, view) {
 
                 $.erpPopup({
-                    title: ( new Date( date) < new Date() ) ? '<?php _e( 'Add new Log', 'wp-erp' ) ?>' : '<?php _e( 'Add new Schedule', 'wp-erp' ); ?>',
-                    button: ( new Date( date) < new Date() ) ? '<?php _e( 'Create Log', 'wp-erp' ) ?>' : '<?php _e( 'Create Schedule', 'wp-erp' ); ?>',
+                    title: ( new Date( date) < new Date() ) ? '<?php _e( 'Add new Log', 'erp' ) ?>' : '<?php _e( 'Add new Schedule', 'erp' ); ?>',
+                    button: ( new Date( date) < new Date() ) ? '<?php _e( 'Create Log', 'erp' ) ?>' : '<?php _e( 'Create Schedule', 'erp' ); ?>',
                     id: 'erp-crm-customer-schedules',
                     content: wperp.template('erp-crm-customer-schedules')( { current_date: date.format() } ).trim(),
                     extraClass: 'larger',

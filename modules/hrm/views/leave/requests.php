@@ -39,7 +39,7 @@ class Leave_Requests_List_Table extends WP_List_Table {
      * @return void
      */
     function no_items() {
-        _e( 'No requests found.', 'wp-erp' );
+        _e( 'No requests found.', 'erp' );
     }
 
     /**
@@ -78,20 +78,20 @@ class Leave_Requests_List_Table extends WP_List_Table {
 
             case 'available':
                 if ( $available < 0 ) {
-                    return sprintf( '<span class="red">%d %s</span>', number_format_i18n( $available ), __( 'days', 'wp-erp' ) );
+                    return sprintf( '<span class="red">%d %s</span>', number_format_i18n( $available ), __( 'days', 'erp' ) );
                 } elseif ( $available > 0 ) {
-                    return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $available ), __( 'days', 'wp-erp' ) );
+                    return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $available ), __( 'days', 'erp' ) );
                 } else if(  $available === 0 ){
-                    return sprintf( '<span class="gray">%d %s</span>', 0, __( 'days', 'wp-erp' ) );
+                    return sprintf( '<span class="gray">%d %s</span>', 0, __( 'days', 'erp' ) );
                 } else {
-                    return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $policy->value ), __( 'days', 'wp-erp' ) );
+                    return sprintf( '<span class="green">%d %s</span>', number_format_i18n( $policy->value ), __( 'days', 'erp' ) );
                 }
 
             case 'reason':
                 return $item->reason;
 
             case 'comment' :
-                return $item->comments;             
+                return $item->comments;
             default:
                 return isset( $item->$column_name ) ? $item->$column_name : '';
         }
@@ -119,18 +119,18 @@ class Leave_Requests_List_Table extends WP_List_Table {
     function get_columns() {
         $columns = array(
             'cb'        => '<input type="checkbox" />',
-            'name'      => __( 'Employee Name', 'wp-erp' ),
-            'policy'    => __( 'Leave Policy', 'wp-erp' ),
-            'from_date' => __( 'From Date', 'wp-erp' ),
-            'to_date'   => __( 'To Date', 'wp-erp' ),
-            'days'      => __( 'Days', 'wp-erp' ),
-            'available' => __( 'Available', 'wp-erp' ),
-            'status'    => __( 'Status', 'wp-erp' ),
-            'reason'    => __( 'Leave Reason', 'wp-erp' ),
-            
+            'name'      => __( 'Employee Name', 'erp' ),
+            'policy'    => __( 'Leave Policy', 'erp' ),
+            'from_date' => __( 'From Date', 'erp' ),
+            'to_date'   => __( 'To Date', 'erp' ),
+            'days'      => __( 'Days', 'erp' ),
+            'available' => __( 'Available', 'erp' ),
+            'status'    => __( 'Status', 'erp' ),
+            'reason'    => __( 'Leave Reason', 'erp' ),
+
         );
         if ( isset( $_GET['status'] ) && $_GET['status'] == 3 ) {
-            $columns['comment'] =  __( 'Reject Reason', 'wp-erp' );
+            $columns['comment'] =  __( 'Reject Reason', 'erp' );
         }
         return $columns;
     }
@@ -152,20 +152,20 @@ class Leave_Requests_List_Table extends WP_List_Table {
         $approve_url = wp_nonce_url( sprintf( $tpl, 'approve', $item->id ), $nonce );
         $pending_url = wp_nonce_url( sprintf( $tpl, 'pending', $item->id ), $nonce );
         if ( erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ) ) {
-        $actions['delete'] = sprintf( '<a href="%s">%s</a>', $delete_url, __( 'Delete', 'wp-erp' ) );
+        $actions['delete'] = sprintf( '<a href="%s">%s</a>', $delete_url, __( 'Delete', 'erp' ) );
         }
 
         if ( $item->status == '2' ) {
 
-            $actions['reject']   = sprintf( '<a class="erp-hr-leave-reject-btn" data-id="%s" href="%s">%s</a>', $item->id, $reject_url, __( 'Reject', 'wp-erp' ) );
-            $actions['approved'] = sprintf( '<a href="%s">%s</a>', $approve_url, __( 'Approve', 'wp-erp' ) );
+            $actions['reject']   = sprintf( '<a class="erp-hr-leave-reject-btn" data-id="%s" href="%s">%s</a>', $item->id, $reject_url, __( 'Reject', 'erp' ) );
+            $actions['approved'] = sprintf( '<a href="%s">%s</a>', $approve_url, __( 'Approve', 'erp' ) );
 
         } elseif ( $item->status == '1' ) {
 
-            $actions['pending'] = sprintf( '<a href="%s">%s</a>', $pending_url, __( 'Mark Pending', 'wp-erp' ) );
+            $actions['pending'] = sprintf( '<a href="%s">%s</a>', $pending_url, __( 'Mark Pending', 'erp' ) );
 
         } elseif ( $item->status == '3') {
-            $actions['approved'] = sprintf( '<a href="%s">%s</a>', $approve_url, __( 'Approve', 'wp-erp' ) );
+            $actions['approved'] = sprintf( '<a href="%s">%s</a>', $approve_url, __( 'Approve', 'erp' ) );
         }
 
         return sprintf( '<a href="%3$s"><strong>%1$s</strong></a> %2$s', $item->display_name, $this->row_actions( $actions ), erp_hr_url_single_employee( $item->user_id ) );
@@ -178,9 +178,9 @@ class Leave_Requests_List_Table extends WP_List_Table {
      */
     function get_bulk_actions() {
         $actions = array(
-            'delete'  => __( 'Delete', 'wp-erp' ),
-            'approve' => __( 'Approve', 'wp-erp' ),
-            'cancel'  => __( 'Reject', 'wp-erp' )
+            'delete'  => __( 'Delete', 'erp' ),
+            'approve' => __( 'Approve', 'erp' ),
+            'cancel'  => __( 'Reject', 'erp' )
         );
         return $actions;
     }
@@ -254,7 +254,7 @@ class Leave_Requests_List_Table extends WP_List_Table {
 <div class="wrap erp-hr-leave-requests">
     <div class="erp-hr-leave-requests-inner">
 
-        <h2><?php _e( 'Leave Requests', 'wp-erp' ); ?> <a href="<?php echo add_query_arg( array( 'view' => 'new' ) ); ?>" class="add-new-h2"><?php _e( 'New Request', 'wp-erp' ); ?></a></h2>
+        <h2><?php _e( 'Leave Requests', 'erp' ); ?> <a href="<?php echo add_query_arg( array( 'view' => 'new' ) ); ?>" class="add-new-h2"><?php _e( 'New Request', 'erp' ); ?></a></h2>
 
         <div class="list-table-wrap">
             <div class="list-table-inner">

@@ -40,7 +40,7 @@ function erp_get_peoples( $args = [] ) {
     $args        = wp_parse_args( $args, $defaults );
     $people_type = is_array( $args['type'] ) ? implode( '-', $args['type'] ) : $args['type'];
     $cache_key   = 'erp-people-' . $people_type . '-' . md5( serialize( $args ) );
-    $items       = wp_cache_get( $cache_key, 'wp-erp' );
+    $items       = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $items ) {
         $people = new WeDevs\ERP\Framework\Models\People();
@@ -93,7 +93,7 @@ function erp_get_peoples( $args = [] ) {
             $items = $people->type( $args['type'] )->count();
         }
 
-        wp_cache_set( $cache_key, $items, 'wp-erp' );
+        wp_cache_set( $cache_key, $items, 'erp' );
     }
 
     return $items;
@@ -130,12 +130,12 @@ function erp_get_peoples_array( $args = [] ) {
  */
 function erp_get_peoples_count( $type = 'contact' ) {
     $cache_key = 'erp-people-count-' . $type;
-    $count     = wp_cache_get( $cache_key, 'wp-erp' );
+    $count     = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $count ) {
         $count = WeDevs\ERP\Framework\Models\People::type( $type )->count();
 
-        wp_cache_set( $cache_key, $count, 'wp-erp' );
+        wp_cache_set( $cache_key, $count, 'erp' );
     }
 
     return intval( $count );
@@ -152,7 +152,7 @@ function erp_get_peoples_count( $type = 'contact' ) {
  */
 function erp_get_people( $id = 0 ) {
     $cache_key = 'erp-people-single-' . $id;
-    $people    = wp_cache_get( $cache_key, 'wp-erp' );
+    $people    = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $people ) {
         $peep = WeDevs\ERP\Framework\Models\People::withTrashed()->find( $id );
@@ -164,7 +164,7 @@ function erp_get_people( $id = 0 ) {
             $people->date_of_birth = erp_people_get_meta( $id, 'date_of_birth', true );
             $people->source = erp_people_get_meta( $id, 'source', true );
 
-            wp_cache_set( $cache_key, $people, 'wp-erp' );
+            wp_cache_set( $cache_key, $people, 'erp' );
         }
     }
 
@@ -209,10 +209,10 @@ function erp_insert_people( $args = array() ) {
 
         // some basic validation
         if ( empty( $args['first_name'] ) ) {
-            return new WP_Error( 'no-first_name', __( 'No First Name provided.', 'wp-erp' ) );
+            return new WP_Error( 'no-first_name', __( 'No First Name provided.', 'erp' ) );
         }
         if ( empty( $args['last_name'] ) ) {
-            return new WP_Error( 'no-last_name', __( 'No Last Name provided.', 'wp-erp' ) );
+            return new WP_Error( 'no-last_name', __( 'No Last Name provided.', 'erp' ) );
         }
 
     }
@@ -220,7 +220,7 @@ function erp_insert_people( $args = array() ) {
     // Check if company name provide or not
     if ( $args['type'] == 'company' ) {
         if ( empty( $args['company'] ) ) {
-            return new WP_Error( 'no-company', __( 'No Company Name provided.', 'wp-erp' ) );
+            return new WP_Error( 'no-company', __( 'No Company Name provided.', 'erp' ) );
         }
     }
 

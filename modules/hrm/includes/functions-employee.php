@@ -76,15 +76,15 @@ function erp_hr_employee_create( $args = array() ) {
 
     // some basic validation
     if ( empty( $data['personal']['first_name'] ) ) {
-        return new WP_Error( 'empty-first-name', __( 'Please provide the first name.', 'wp-erp' ) );
+        return new WP_Error( 'empty-first-name', __( 'Please provide the first name.', 'erp' ) );
     }
 
     if ( empty( $data['personal']['last_name'] ) ) {
-        return new WP_Error( 'empty-last-name', __( 'Please provide the last name.', 'wp-erp' ) );
+        return new WP_Error( 'empty-last-name', __( 'Please provide the last name.', 'erp' ) );
     }
 
     if ( ! is_email( $data['user_email'] ) ) {
-        return new WP_Error( 'invalid-email', __( 'Please provide a valid email address.', 'wp-erp' ) );
+        return new WP_Error( 'invalid-email', __( 'Please provide a valid email address.', 'erp' ) );
     }
 
     // attempt to create the user
@@ -230,7 +230,7 @@ function erp_hr_get_employees( $args = array() ) {
     }
 
     $cache_key = 'erp-get-employees-' . md5( serialize( $args ) );
-    $results   = wp_cache_get( $cache_key, 'wp-erp' );
+    $results   = wp_cache_get( $cache_key, 'erp' );
     $users     = array();
 
     if ( false === $results ) {
@@ -241,7 +241,7 @@ function erp_hr_get_employees( $args = array() ) {
                     ->toArray();
 
         $results = erp_array_to_object( $results );
-        wp_cache_set( $cache_key, $results, 'wp-erp', HOUR_IN_SECONDS );
+        wp_cache_set( $cache_key, $results, 'erp', HOUR_IN_SECONDS );
     }
 
     if ( $results ) {
@@ -310,7 +310,7 @@ function erp_hr_count_employees() {
 function erp_hr_employee_get_status_count() {
     global $wpdb;
 
-    $statuses = array( 'all' => __( 'All', 'wp-erp' ) ) + erp_hr_get_employee_statuses();
+    $statuses = array( 'all' => __( 'All', 'erp' ) ) + erp_hr_get_employee_statuses();
     $counts   = array();
 
     foreach ( $statuses as $status => $label ) {
@@ -318,7 +318,7 @@ function erp_hr_employee_get_status_count() {
     }
 
     $cache_key = 'erp-hr-employee-status-counts';
-    $results = wp_cache_get( $cache_key, 'wp-erp' );
+    $results = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $results ) {
 
@@ -330,7 +330,7 @@ function erp_hr_employee_get_status_count() {
                             ->groupBy('status')
                             ->get()->toArray();
 
-        wp_cache_set( $cache_key, $results, 'wp-erp' );
+        wp_cache_set( $cache_key, $results, 'erp' );
     }
 
     foreach ( $results as $row ) {
@@ -476,7 +476,7 @@ function erp_hr_get_next_seven_days_birthday() {
  */
 function erp_hr_get_employees_dropdown_raw( $exclude = null ) {
     $employees = erp_hr_get_employees( array( 'no_object' => true ) );
-    $dropdown  = array( 0 => __( '- Select Employee -', 'wp-erp' ) );
+    $dropdown  = array( 0 => __( '- Select Employee -', 'erp' ) );
 
     if ( $employees ) {
         foreach ($employees as $key => $employee) {
@@ -519,10 +519,10 @@ function erp_hr_get_employees_dropdown( $selected = '' ) {
  */
 function erp_hr_get_employee_statuses() {
     $statuses = array(
-        'active'     => __( 'Active', 'wp-erp' ),
-        'terminated' => __( 'Terminated', 'wp-erp' ),
-        'deceased'   => __( 'Deceased', 'wp-erp' ),
-        'resigned'   => __( 'Resigned', 'wp-erp' )
+        'active'     => __( 'Active', 'erp' ),
+        'terminated' => __( 'Terminated', 'erp' ),
+        'deceased'   => __( 'Deceased', 'erp' ),
+        'resigned'   => __( 'Resigned', 'erp' )
     );
 
     return apply_filters( 'erp_hr_employee_statuses', $statuses );
@@ -535,10 +535,10 @@ function erp_hr_get_employee_statuses() {
  */
 function erp_hr_get_employee_statuses_icons( $selected = NULL ) {
     $statuses = apply_filters( 'erp_hr_employee_statuses_icons', array(
-        'active'     => sprintf( '<span class="erp-tips dashicons dashicons-yes" title="%s"></span>', __( 'Active', 'wp-erp' ) ),
-        'terminated' => sprintf( '<span class="erp-tips dashicons dashicons-dismiss" title="%s"></span>', __( 'Terminated', 'wp-erp' ) ),
-        'deceased'   => sprintf( '<span class="erp-tips dashicons dashicons-marker" title="%s"></span>', __( 'Deceased', 'wp-erp' ) ),
-        'resigned'   => sprintf( '<span class="erp-tips dashicons dashicons-warning" title="%s"></span>', __( 'Resigned', 'wp-erp' ) )
+        'active'     => sprintf( '<span class="erp-tips dashicons dashicons-yes" title="%s"></span>', __( 'Active', 'erp' ) ),
+        'terminated' => sprintf( '<span class="erp-tips dashicons dashicons-dismiss" title="%s"></span>', __( 'Terminated', 'erp' ) ),
+        'deceased'   => sprintf( '<span class="erp-tips dashicons dashicons-marker" title="%s"></span>', __( 'Deceased', 'erp' ) ),
+        'resigned'   => sprintf( '<span class="erp-tips dashicons dashicons-warning" title="%s"></span>', __( 'Resigned', 'erp' ) )
     ) );
 
     if ( $selected && array_key_exists( $selected, $statuses ) ) {
@@ -556,11 +556,11 @@ function erp_hr_get_employee_statuses_icons( $selected = NULL ) {
  */
 function erp_hr_get_employee_types() {
     $types = array(
-        'permanent' => __( 'Full Time', 'wp-erp' ),
-        'parttime'  => __( 'Part Time', 'wp-erp' ),
-        'contract'  => __( 'On Contract', 'wp-erp' ),
-        'temporary' => __( 'Temporary', 'wp-erp' ),
-        'trainee'   => __( 'Trainee', 'wp-erp' )
+        'permanent' => __( 'Full Time', 'erp' ),
+        'parttime'  => __( 'Part Time', 'erp' ),
+        'contract'  => __( 'On Contract', 'erp' ),
+        'temporary' => __( 'Temporary', 'erp' ),
+        'trainee'   => __( 'Trainee', 'erp' )
     );
 
     return apply_filters( 'erp_hr_employee_types', $types );
@@ -573,13 +573,13 @@ function erp_hr_get_employee_types() {
  */
 function erp_hr_get_employee_sources() {
     $sources = array(
-        'direct'        => __( 'Direct', 'wp-erp' ),
-        'referral'      => __( 'Referral', 'wp-erp' ),
-        'web'           => __( 'Web', 'wp-erp' ),
-        'newspaper'     => __( 'Newspaper', 'wp-erp' ),
-        'advertisement' => __( 'Advertisement', 'wp-erp' ),
-        'social'        => __( 'Social Network', 'wp-erp' ),
-        'other'         => __( 'Other', 'wp-erp' ),
+        'direct'        => __( 'Direct', 'erp' ),
+        'referral'      => __( 'Referral', 'erp' ),
+        'web'           => __( 'Web', 'erp' ),
+        'newspaper'     => __( 'Newspaper', 'erp' ),
+        'advertisement' => __( 'Advertisement', 'erp' ),
+        'social'        => __( 'Social Network', 'erp' ),
+        'other'         => __( 'Other', 'erp' ),
     );
 
     return apply_filters( 'erp_hr_employee_sources', $sources );
@@ -595,15 +595,15 @@ function erp_hr_get_marital_statuses( $select_text = null ) {
     if ( $select_text ) {
         $statuses = array(
             '-1'      => $select_text,
-            'single'  => __( 'Single', 'wp-erp' ),
-            'married' => __( 'Married', 'wp-erp' ),
-            'widowed' => __( 'Widowed', 'wp-erp' )
+            'single'  => __( 'Single', 'erp' ),
+            'married' => __( 'Married', 'erp' ),
+            'widowed' => __( 'Widowed', 'erp' )
         );
     } else {
         $statuses = array(
-            'single'  => __( 'Single', 'wp-erp' ),
-            'married' => __( 'Married', 'wp-erp' ),
-            'widowed' => __( 'Widowed', 'wp-erp' )
+            'single'  => __( 'Single', 'erp' ),
+            'married' => __( 'Married', 'erp' ),
+            'widowed' => __( 'Widowed', 'erp' )
         );
     }
 
@@ -617,9 +617,9 @@ function erp_hr_get_marital_statuses( $select_text = null ) {
  */
 function erp_hr_get_terminate_type( $selected = NULL ) {
     $type = apply_filters( 'erp_hr_terminate_type', array(
-        'voluntary'   => __( 'Voluntary', 'wp-erp' ),
-        'involuntary' => __( 'Involuntary', 'wp-erp' ),
-        'death'       => __( 'Death', 'wp-erp' )
+        'voluntary'   => __( 'Voluntary', 'erp' ),
+        'involuntary' => __( 'Involuntary', 'erp' ),
+        'death'       => __( 'Death', 'erp' )
     ) );
 
     if ( $selected ) {
@@ -636,9 +636,9 @@ function erp_hr_get_terminate_type( $selected = NULL ) {
  */
 function erp_hr_get_terminate_reason( $selected = NULL ) {
     $reason = apply_filters( 'erp_hr_terminate_reason', array(
-        'attendance'        => __( 'Attendance', 'wp-erp' ),
-        'other_employement' => __( 'Other Employment', 'wp-erp' ),
-        'relocation'        => __( 'Relocation', 'wp-erp' )
+        'attendance'        => __( 'Attendance', 'erp' ),
+        'other_employement' => __( 'Other Employment', 'erp' ),
+        'relocation'        => __( 'Relocation', 'erp' )
     ) );
 
     if ( $selected ) {
@@ -655,9 +655,9 @@ function erp_hr_get_terminate_reason( $selected = NULL ) {
  */
 function erp_hr_get_terminate_rehire_options( $selected = NULL ) {
     $reason = apply_filters( 'erp_hr_terminate_rehire_option', array(
-        'yes'         => __( 'Yes', 'wp-erp' ),
-        'no'          => __( 'No', 'wp-erp' ),
-        'upon_review' => __( 'Upon Review', 'wp-erp' )
+        'yes'         => __( 'Yes', 'erp' ),
+        'no'          => __( 'No', 'erp' ),
+        'upon_review' => __( 'Upon Review', 'erp' )
     ) );
 
     if ( $selected ) {
@@ -677,15 +677,15 @@ function erp_hr_get_genders( $select_text = null ) {
     if ( $select_text ) {
         $genders = array(
             '-1'     => $select_text,
-            'male'   => __( 'Male', 'wp-erp' ),
-            'female' => __( 'Female', 'wp-erp' ),
-            'other'  => __( 'Other', 'wp-erp' )
+            'male'   => __( 'Male', 'erp' ),
+            'female' => __( 'Female', 'erp' ),
+            'other'  => __( 'Other', 'erp' )
         );
     } else {
         $genders = array(
-            'male'   => __( 'Male', 'wp-erp' ),
-            'female' => __( 'Female', 'wp-erp' ),
-            'other'  => __( 'Other', 'wp-erp' )
+            'male'   => __( 'Male', 'erp' ),
+            'female' => __( 'Female', 'erp' ),
+            'other'  => __( 'Other', 'erp' )
         );
     }
 
@@ -699,12 +699,12 @@ function erp_hr_get_genders( $select_text = null ) {
  */
 function erp_hr_get_pay_type() {
     $genders = array(
-        'hourly'   => __( 'Hourly', 'wp-erp' ),
-        'daily'    => __( 'Daily', 'wp-erp' ),
-        'weekly'   => __( 'Weekly', 'wp-erp' ),
-        'monthly'  => __( 'Monthly', 'wp-erp' ),
-        'yearly'   => __( 'Yearly', 'wp-erp' ),
-        'contract' => __( 'Contract', 'wp-erp' ),
+        'hourly'   => __( 'Hourly', 'erp' ),
+        'daily'    => __( 'Daily', 'erp' ),
+        'weekly'   => __( 'Weekly', 'erp' ),
+        'monthly'  => __( 'Monthly', 'erp' ),
+        'yearly'   => __( 'Yearly', 'erp' ),
+        'contract' => __( 'Contract', 'erp' ),
     );
 
     return apply_filters( 'erp_hr_pay_type', $genders );
@@ -717,8 +717,8 @@ function erp_hr_get_pay_type() {
  */
 function erp_hr_get_pay_change_reasons() {
     $genders = array(
-        'promotion'   => __( 'Promotion', 'wp-erp' ),
-        'performance' => __( 'Performance', 'wp-erp' )
+        'promotion'   => __( 'Promotion', 'erp' ),
+        'performance' => __( 'Performance', 'erp' )
     );
 
     return apply_filters( 'erp_hr_pay_change_reasons', $genders );

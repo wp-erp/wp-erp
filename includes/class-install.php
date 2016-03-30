@@ -187,7 +187,7 @@ Company'
      * @return void
      */
     public function welcome_screen_menu() {
-        add_dashboard_page( __( 'Welcome to WP ERP', 'wp-erp' ), 'WP ERP', 'manage_options', 'erp-welcome', array( $this, 'welcome_screen_content' ) );
+        add_dashboard_page( __( 'Welcome to WP ERP', 'erp' ), 'WP ERP', 'manage_options', 'erp-welcome', array( $this, 'welcome_screen_content' ) );
     }
 
     /**
@@ -621,17 +621,17 @@ Company'
 
         $default = [
             'hrm' => [
-                'title'       => __( 'HR Management', 'wp-erp' ),
+                'title'       => __( 'HR Management', 'erp' ),
                 'slug'        => 'erp-hrm',
-                'description' => __( 'Human Resource Mnanagement', 'wp-erp' ),
+                'description' => __( 'Human Resource Mnanagement', 'erp' ),
                 'callback'    => '\WeDevs\ERP\HRM\Human_Resource',
                 'modules'     => apply_filters( 'erp_hr_modules', [ ] )
             ],
 
             'crm' => [
-                'title'       => __( 'CR Management', 'wp-erp' ),
+                'title'       => __( 'CR Management', 'erp' ),
                 'slug'        => 'erp-crm',
-                'description' => __( 'Client Resource Management', 'wp-erp' ),
+                'description' => __( 'Client Resource Management', 'erp' ),
                 'callback'    => '\WeDevs\ERP\CRM\Customer_Relationship',
                 'modules'     => apply_filters( 'erp_crm_modules', [ ] )
             ]

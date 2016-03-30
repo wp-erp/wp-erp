@@ -9,7 +9,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
 
     function __construct() {
         $this->id    = 'erp-email';
-        $this->label = __( 'Emails', 'wp-erp' );
+        $this->label = __( 'Emails', 'erp' );
 
         add_action( 'erp_admin_field_notification_emails', [ $this, 'notification_emails' ] );
     }
@@ -24,53 +24,53 @@ class ERP_Email_Settings extends ERP_Settings_Page {
         $fields = [
 
             [
-                'title' => __( 'Email Sender Options', 'wp-erp' ),
+                'title' => __( 'Email Sender Options', 'erp' ),
                 'type'  => 'title',
-                'desc'  => __( 'Email notification settings for WP ERP. Customize the look and feel of outgoing emails.', 'wp-erp' )
+                'desc'  => __( 'Email notification settings for WP ERP. Customize the look and feel of outgoing emails.', 'erp' )
             ],
 
             [
-                'title'   => __( '"From" Name', 'wp-erp' ),
+                'title'   => __( '"From" Name', 'erp' ),
                 'id'      => 'from_name',
                 'type'    => 'text',
                 'default' => get_bloginfo( 'name' ),
                 'tooltip' => true,
-                'desc' => __( 'The senders name appears on the outgoing emails', 'wp-erp' )
+                'desc' => __( 'The senders name appears on the outgoing emails', 'erp' )
             ],
             [
-                'title'   => __( '"From" Address', 'wp-erp' ),
+                'title'   => __( '"From" Address', 'erp' ),
                 'id'      => 'from_email',
                 'type'    => 'text',
                 'default' => get_option( 'admin_email' ),
                 'tooltip' => true,
-                'desc'    => __( 'The senders email appears on the outgoing emails', 'wp-erp' )
+                'desc'    => __( 'The senders email appears on the outgoing emails', 'erp' )
             ],
 
             [
-                'title'             => __( 'Header Image', 'wp-erp' ),
+                'title'             => __( 'Header Image', 'erp' ),
                 'id'                => 'header_image',
                 'type'              => 'text',
-                'desc'              => __( 'Upload a logo/banner and provide the URL here.', 'wp-erp' ),
+                'desc'              => __( 'Upload a logo/banner and provide the URL here.', 'erp' ),
                 'tooltip'           => true,
                 'custom_attributes' => [
                     'placeholder' => 'http://example.com/path/to/logo.png'
                 ]
             ],
             [
-                'title'   => __( 'Footer Text', 'wp-erp' ),
+                'title'   => __( 'Footer Text', 'erp' ),
                 'id'      => 'footer_text',
                 'type'    => 'textarea',
                 'css'     => 'min-width:300px;',
                 'tooltip' => true,
                 'default' => sprintf( '%s  - Powered by WP ERP', get_bloginfo( 'name' ) ),
-                'desc'    => __( 'The text apears on each emails footer area.', 'wp-erp' )
+                'desc'    => __( 'The text apears on each emails footer area.', 'erp' )
             ],
 
             [ 'type' => 'sectionend', 'id' => 'script_styling_options' ],
 
             [
-                'title' => __( 'Notification Emails', 'wp-erp' ),
-                'desc'  => __( 'Email notifications sent from WP ERP are listed below. Click on an email to configure it.', 'wp-erp' ),
+                'title' => __( 'Notification Emails', 'erp' ),
+                'desc'  => __( 'Email notifications sent from WP ERP are listed below. Click on an email to configure it.', 'erp' ),
                 'type'  => 'title',
                 'id'    => 'email_notification_settings'
             ],
@@ -127,9 +127,9 @@ class ERP_Email_Settings extends ERP_Settings_Page {
                             <?php
                                 $columns = apply_filters( 'erp_email_setting_columns', array(
                                     // 'status'   => '',
-                                    'name'        => __( 'Email', 'wp-erp' ),
-                                    // 'module'   => __( 'Module', 'wp-erp' ),
-                                    'description' => __( 'Description', 'wp-erp' ),
+                                    'name'        => __( 'Email', 'erp' ),
+                                    // 'module'   => __( 'Module', 'erp' ),
+                                    'description' => __( 'Description', 'erp' ),
                                     'actions'     => ''
                                 ) );
 
@@ -168,7 +168,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
 
                                     case 'actions' :
                                         echo '<td class="erp-email-settings-table-' . esc_attr( $key ) . '">
-                                            <a class="button alignright" href="' . admin_url( 'admin.php?page=erp-settings&tab=erp-email&section=' . strtolower( $email_key ) ) . '">' . __( 'Configure', 'wp-erp' ) . '</a>
+                                            <a class="button alignright" href="' . admin_url( 'admin.php?page=erp-settings&tab=erp-email&section=' . strtolower( $email_key ) ) . '">' . __( 'Configure', 'erp' ) . '</a>
                                         </td>';
                                         break;
 

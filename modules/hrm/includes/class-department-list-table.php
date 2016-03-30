@@ -22,7 +22,7 @@ class Department_List_Table extends \WP_List_Table {
      * @return void
      */
     function no_items() {
-        _e( 'No department found.', 'wp-erp' );
+        _e( 'No department found.', 'erp' );
     }
 
     /**
@@ -208,8 +208,8 @@ class Department_List_Table extends \WP_List_Table {
                         $actions           = array();
                         $delete_url        = '';
                         $link_to_employee  = add_query_arg( array( 'page'=>'erp-hr-employee', 'filter_department' => $department->id ), admin_url( 'admin.php' ) );
-                        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $department->id, __( 'Edit this item', 'wp-erp' ), __( 'Edit', 'wp-erp' ) );
-                        $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $department->id, __( 'Delete this item', 'wp-erp' ), __( 'Delete', 'wp-erp' ) );
+                        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $department->id, __( 'Edit this item', 'erp' ), __( 'Edit', 'erp' ) );
+                        $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $department->id, __( 'Delete this item', 'erp' ), __( 'Delete', 'erp' ) );
 
                         printf( '<a href="%4$s"><strong>%1$s %2$s</strong></a> %3$s', $pad, $department->title, $this->row_actions( $actions ), $link_to_employee );
                     echo '</td>';
@@ -264,9 +264,9 @@ class Department_List_Table extends \WP_List_Table {
     function get_columns() {
         $columns = array(
             'cb'           => '<input type="checkbox" />',
-            'name'         => __( 'Department', 'wp-erp' ),
-            'lead'  => __( 'Department Lead', 'wp-erp' ),
-            'number_employee'   => __( 'No. of Employees', 'wp-erp' )
+            'name'         => __( 'Department', 'erp' ),
+            'lead'  => __( 'Department Lead', 'erp' ),
+            'number_employee'   => __( 'No. of Employees', 'erp' )
         );
 
         return apply_filters( 'erp_hr_department_table_cols', $columns );
@@ -280,7 +280,7 @@ class Department_List_Table extends \WP_List_Table {
      */
     function get_bulk_actions() {
         $actions = array(
-            'delete_department'  => __( 'Move to Trash', 'wp-erp' ),
+            'delete_department'  => __( 'Move to Trash', 'erp' ),
         );
         return $actions;
     }

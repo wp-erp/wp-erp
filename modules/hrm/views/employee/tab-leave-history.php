@@ -19,7 +19,7 @@ if ( $requests ) {
 <?php } else { ?>
     <tr class="alternate">
         <td colspan="4">
-            <?php _e( 'No history found!', 'wp-erp' ); ?>
+            <?php _e( 'No history found!', 'erp' ); ?>
         </td>
     </tr>
 <?php } ?>

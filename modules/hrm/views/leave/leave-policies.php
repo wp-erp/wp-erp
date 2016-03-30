@@ -44,7 +44,7 @@ class Leave_Policies_List_Table extends WP_List_Table {
      * @return void
      */
     function no_items() {
-        _e( 'No policies found.', 'wp-erp' );
+        _e( 'No policies found.', 'erp' );
     }
 
     /**
@@ -79,10 +79,10 @@ class Leave_Policies_List_Table extends WP_List_Table {
     function get_columns() {
         $columns = array(
             'cb'             => '<input type="checkbox" />',
-            'name'           => __( 'Policy Name', 'wp-erp' ),
-            'leave_day'      => __( 'Leave Days', 'wp-erp' ),
-            'leave_day'      => __( 'Leave Days', 'wp-erp' ),
-            'calendar_color' => __( 'Calendar Color', 'wp-erp' )
+            'name'           => __( 'Policy Name', 'erp' ),
+            'leave_day'      => __( 'Leave Days', 'erp' ),
+            'leave_day'      => __( 'Leave Days', 'erp' ),
+            'calendar_color' => __( 'Calendar Color', 'erp' )
         );
 
         return apply_filters( 'erp_hr_leave_policy_table_cols', $columns );
@@ -99,8 +99,8 @@ class Leave_Policies_List_Table extends WP_List_Table {
 
         $actions           = array();
         $delete_url        = '';
-        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $leave_policy->id, __( 'Edit this item', 'wp-erp' ), __( 'Edit', 'wp-erp' ) );
-        $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $leave_policy->id, __( 'Delete this item', 'wp-erp' ), __( 'Delete', 'wp-erp' ) );
+        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $leave_policy->id, __( 'Edit this item', 'erp' ), __( 'Edit', 'erp' ) );
+        $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $leave_policy->id, __( 'Delete this item', 'erp' ), __( 'Delete', 'erp' ) );
 
         return sprintf( '<a href="#" class="link" data-id="%3$s"><strong>%1$s</strong></a> %2$s', esc_html( $leave_policy->name ), $this->row_actions( $actions ), $leave_policy->id );
     }
@@ -140,7 +140,7 @@ class Leave_Policies_List_Table extends WP_List_Table {
      */
     function get_bulk_actions() {
         $actions = array(
-            'trash'  => __( 'Move to Trash', 'wp-erp' ),
+            'trash'  => __( 'Move to Trash', 'erp' ),
         );
         return $actions;
     }
@@ -216,7 +216,7 @@ class Leave_Policies_List_Table extends WP_List_Table {
 ?>
 
 <div class="wrap erp-hr-leave-policy">
-    <h2><?php _e( 'Leave Policies', 'wp-erp' ); ?> <a href="#" id="erp-leave-policy-new" class="add-new-h2"><?php _e( 'Add New', 'wp-erp' ); ?></a></h2>
+    <h2><?php _e( 'Leave Policies', 'erp' ); ?> <a href="#" id="erp-leave-policy-new" class="add-new-h2"><?php _e( 'Add New', 'erp' ); ?></a></h2>
 
     <div class="list-table-wrap">
         <div class="list-wrap-inner">

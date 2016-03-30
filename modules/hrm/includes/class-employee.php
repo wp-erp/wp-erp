@@ -188,7 +188,7 @@ class Employee {
 
         if ( $this->id ) {
             $cache_key = 'erp-empl-' . $this->id;
-            $row       = wp_cache_get( $cache_key, 'wp-erp', $force );
+            $row       = wp_cache_get( $cache_key, 'erp', $force );
 
             if ( false === $row ) {
                 $query = "SELECT e.*, d.title as designation_title, dpt.title as department_title, loc.name as location_name
@@ -198,7 +198,7 @@ class Employee {
                     LEFT JOIN {$wpdb->prefix}erp_company_locations AS loc ON loc.id = e.location
                     WHERE user_id = %d";
                 $row   = $wpdb->get_row( $wpdb->prepare( $query, $this->id ) );
-                wp_cache_set( $cache_key, $row, 'wp-erp' );
+                wp_cache_set( $cache_key, $row, 'erp' );
             }
 
             return $row;

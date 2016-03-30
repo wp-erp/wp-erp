@@ -2,37 +2,37 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'    => __( 'School Name', 'wp-erp' ),
+            'label'    => __( 'School Name', 'erp' ),
             'name'     => 'school',
             'value'    => '{{ data.school }}',
             'required' => true,
-            'placeholder' => __( 'ABC School', 'wp-erp' )
+            'placeholder' => __( 'ABC School', 'erp' )
         ) ); ?>
     </div>
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Degree', 'wp-erp' ),
+            'label'       => __( 'Degree', 'erp' ),
             'name'        => 'degree',
             'value'       => '{{ data.degree }}',
             'required'    => true,
-            'placeholder' => __( 'Bachelor in Science', 'wp-erp' )
+            'placeholder' => __( 'Bachelor in Science', 'erp' )
         ) ); ?>
     </div>
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Field of Study', 'wp-erp' ),
+            'label'       => __( 'Field of Study', 'erp' ),
             'name'        => 'field',
             'value'       => '{{ data.field }}',
             'required'    => true,
-            'placeholder' => __( 'Physics', 'wp-erp' )
+            'placeholder' => __( 'Physics', 'erp' )
         ) ); ?>
     </div>
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Year of Completion', 'wp-erp' ),
+            'label'       => __( 'Year of Completion', 'erp' ),
             'name'        => 'finished',
             'type'        => 'number',
             'value'       => '{{ data.finished }}',
@@ -47,17 +47,17 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Notes', 'wp-erp' ),
+            'label'       => __( 'Notes', 'erp' ),
             'name'        => 'notes',
             'type'        => 'textarea',
             'value'       => '{{ data.notes }}',
-            'placeholder' => __( 'Additional notes', 'wp-erp' )
+            'placeholder' => __( 'Additional notes', 'erp' )
         ) ); ?>
     </div>
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Interests', 'wp-erp' ),
+            'label'       => __( 'Interests', 'erp' ),
             'name'        => 'interest',
             'type'        => 'textarea',
             'value'       => '{{ data.interest }}'
