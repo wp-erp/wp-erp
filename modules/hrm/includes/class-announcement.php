@@ -197,7 +197,7 @@ class Announcement {
                     </td>
                 </tr>
 
-                <?php do_action( 'hr-announcement-table-last', $post ); ?>
+                <?php do_action( 'hr_announcement_table_last', $post ); ?>
 
             </table>
             <?php wp_nonce_field( 'hr_announcement_meta_action', 'hr_announcement_meta_action_nonce' ); ?>
@@ -312,7 +312,7 @@ class Announcement {
         update_post_meta( $post_id, '_announcement_type', $announcement_assign_type );
         update_post_meta( $post_id, '_announcement_selected_user', $announcement_assign_employee );
 
-        do_action( 'hr-annoucement-save', $post_id );
+        do_action( 'hr_annoucement_save', $post_id );
 
         if ( $announcement_assign_type == 'selected_employee' ) {
 
