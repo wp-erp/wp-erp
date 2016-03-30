@@ -117,7 +117,8 @@ function erp_crm_get_life_stages_dropdown_raw( $label = [] ) {
     $life_stages = [
         'customer'    => __( 'Customer', 'wp-erp' ),
         'lead'        => __( 'Lead', 'wp-erp' ),
-        'opportunity' => __( 'Opportunity', 'wp-erp' )
+        'opportunity' => __( 'Opportunity', 'wp-erp' ),
+        'subscriber'  => __( 'Subscriber', 'wp-erp' ),
     ];
 
     if ( $label ) {
