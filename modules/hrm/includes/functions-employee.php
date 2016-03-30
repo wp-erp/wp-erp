@@ -804,6 +804,10 @@ function erp_hr_employee_dashboard_announcement( $user_id ) {
             ->toArray() );
 }
 
+function erp_hr_get_employee_status( $user_id ) {
+    return  \WeDevs\ERP\HRM\Models\Employee::select('status')->where( 'user_id', '=', $user_id )->pluck('status');
+}
+
 /**
  * [erp_hr_employee_single_tab_general description]
  *
