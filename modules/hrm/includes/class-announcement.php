@@ -196,6 +196,9 @@ class Announcement {
                         </select>
                     </td>
                 </tr>
+
+                <?php do_action( 'hr-announcement-table-last', $post ); ?>
+
             </table>
             <?php wp_nonce_field( 'hr_announcement_meta_action', 'hr_announcement_meta_action_nonce' ); ?>
 
@@ -309,6 +312,8 @@ class Announcement {
         update_post_meta( $post_id, '_announcement_type', $announcement_assign_type );
         update_post_meta( $post_id, '_announcement_selected_user', $announcement_assign_employee );
 
+        do_action( 'hr-annoucement-save', $post_id );
+
         if ( $announcement_assign_type == 'selected_employee' ) {
 
             $this->process_employee_announcement_data( $announcement_assign_employee, $post_id );
@@ -420,6 +425,9 @@ class Announcement {
 
         $sql = "INSERT INTO {$table_name} (`user_id`, `post_id`, `status` ) VALUES $values";
         $wpdb->query( $sql );
+
+        do_action( 'hr_announcement_insert_assignment', $employee_array, $post_id );
+
     }
 
     /**
