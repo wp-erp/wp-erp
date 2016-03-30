@@ -56,16 +56,16 @@ class User_Profile {
         }
     }
 
-    function role( $profileuser ) { 
+    function role( $profileuser ) {
         if ( ! current_user_can( 'manage_options' ) ) {
             return;
         }
-        
+
         $checked = in_array( erp_hr_get_manager_role(), $profileuser->roles ) ? 'checked' : '';
         ?>
         <label for="erp-hr-manager">
             <input type="checkbox" id="erp-hr-manager" <?php echo $checked; ?> name="hr_manager" value="<?php echo erp_hr_get_manager_role(); ?>">
-            <span class="description"><?php _e( 'HR Manager', 'WP-ERP' ); ?></span>
+            <span class="description"><?php _e( 'HR Manager', 'erp' ); ?></span>
         </label>
         <?php
     }

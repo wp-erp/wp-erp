@@ -23,10 +23,10 @@ $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
         </div>
     </div>
 
-    <trix-editor v-if="!feed" id="tasks-text-editor" input="tasks_activity_message" placeholder="<?php _e( 'Type your description .....', 'wp-erp' ); ?>"></trix-editor>
+    <trix-editor v-if="!feed" id="tasks-text-editor" input="tasks_activity_message" placeholder="<?php _e( 'Type your description .....', 'erp' ); ?>"></trix-editor>
     <input v-if="!feed" id="tasks_activity_message" v-model="feedData.message" type="hidden" name="tasks_activity_message" value="">
 
-    <trix-editor v-if="feed" id="tasks-text-editor" input="tasks_activity_message_{{ feed.id }}" placeholder="<?php _e( 'Type your description .....', 'wp-erp' ); ?>"></trix-editor>
+    <trix-editor v-if="feed" id="tasks-text-editor" input="tasks_activity_message_{{ feed.id }}" placeholder="<?php _e( 'Type your description .....', 'erp' ); ?>"></trix-editor>
     <input v-if="feed" id="tasks_activity_message_{{ feed.id }}" v-model="feedData.message" type="hidden" name="tasks_activity_message_{{ feed.id }}" value="{{ feed.message }}">
 
     <div class="submit-action">
@@ -34,9 +34,9 @@ $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
         <input type="hidden" name="created_by" v-model="feedData.created_by" value="<?php echo get_current_user_id(); ?>">
         <input type="hidden" name="action" v-model="feedData.action" value="erp_customer_feeds_save_notes">
         <input type="hidden" name="type" v-model="feedData.type" value="tasks">
-        <input type="submit" v-if="!feed" :disabled = "!isValid" class="button button-primary" name="add_tasks_activity" value="<?php _e( 'Create Task', 'wp-erp' ); ?>">
-        <input type="submit" v-if="feed" :disabled = "!isValid" class="button button-primary" name="edit_tasks_activity" value="<?php _e( 'Update Task', 'wp-erp' ); ?>">
-        <input type="reset" v-if="!feed" class="button button-default" value="<?php _e( 'Discard', 'wp-erp' ); ?>">
-        <button class="button" v-if="feed" @click.prevent="cancelUpdateFeed"><?php _e( 'Cancel', 'wp-erp' ); ?></button>
+        <input type="submit" v-if="!feed" :disabled = "!isValid" class="button button-primary" name="add_tasks_activity" value="<?php _e( 'Create Task', 'erp' ); ?>">
+        <input type="submit" v-if="feed" :disabled = "!isValid" class="button button-primary" name="edit_tasks_activity" value="<?php _e( 'Update Task', 'erp' ); ?>">
+        <input type="reset" v-if="!feed" class="button button-default" value="<?php _e( 'Discard', 'erp' ); ?>">
+        <button class="button" v-if="feed" @click.prevent="cancelUpdateFeed"><?php _e( 'Cancel', 'erp' ); ?></button>
     </div>
 </div>

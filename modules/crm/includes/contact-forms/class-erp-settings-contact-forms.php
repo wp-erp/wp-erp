@@ -35,7 +35,7 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
         $this->admin_scripts();
 
         $this->id = 'contact_forms';
-        $this->label = __( 'Contact Forms', 'wp-erp' );
+        $this->label = __( 'Contact Forms', 'erp' );
         $this->sections = $this->get_sections();
     }
 
@@ -68,11 +68,11 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
             'forms'                 => $this->forms,
             'mappedData'            => get_option( 'wperp_crm_contact_forms', '' ),
             'crmOptions'            => $this->crm_options,
-            'notMapped'             => __( 'Not Set', 'wp-erp' ),
+            'notMapped'             => __( 'Not Set', 'erp' ),
             'scriptDebug'           => defined( 'SCRIPT_DEBUG' ) ? SCRIPT_DEBUG : false,
-            'labelOK'               => __( 'OK', 'wp-erp' ),
-            'labelContactGroups'    => __( 'Contact Group', 'wp-erp' ),
-            'labelSelectGroup'     => __( 'Select Contact Group', 'wp-erp' ),
+            'labelOK'               => __( 'OK', 'erp' ),
+            'labelContactGroups'    => __( 'Contact Group', 'erp' ),
+            'labelSelectGroup'     => __( 'Select Contact Group', 'erp' ),
             'contactGroups'         => $this->get_contact_groups()
         ];
 
@@ -95,10 +95,10 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
         $fields = [
 
             [
-                'title' => __( 'Contact Forms Integration', 'wp-erp' ),
+                'title' => __( 'Contact Forms Integration', 'erp' ),
                 'type' => 'title',
                 'desc' => sprintf(
-                            '%s' . __( 'No supported contact form plugin is currently active. WP ERP has built-in support for <strong>Contact Form 7</strong> and <strong>Ninja Forms</strong>.', 'wp-erp' ) . '%s',
+                            '%s' . __( 'No supported contact form plugin is currently active. WP ERP has built-in support for <strong>Contact Form 7</strong> and <strong>Ninja Forms</strong>.', 'erp' ) . '%s',
                             '<section class="notice notice-warning cfi-hide-submit"><p>',
                             '</p></section>'
                         ),
@@ -151,7 +151,7 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
                         'title' => $plugin['title'],
                         'type' => 'title',
                         'desc' => sprintf(
-                                    '%s' . __( "You don't have any form created with %s!", 'wp-erp' ) . '%s',
+                                    '%s' . __( "You don't have any form created with %s!", 'erp' ) . '%s',
                                     '<section class="notice notice-warning cfi-hide-submit"><p>',
                                     $plugin['title'],
                                     '</p></section>'
@@ -206,7 +206,7 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
                 >
                     <tbody>
                         <tr>
-                            <th class="cfi-table-wide-column"><?php _e( 'Form Field', 'wp-erp' ); ?></th>
+                            <th class="cfi-table-wide-column"><?php _e( 'Form Field', 'erp' ); ?></th>
                             <th class="cfi-table-wide-column"><?php _e( 'CRM Contact Option' ); ?></th>
                             <th class="cfi-table-narrow-column">&nbsp;</th>
                         </tr>
@@ -272,12 +272,12 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
                                     type="button"
                                     class="button"
                                     v-on:click="reset_mapping"
-                                ><?php echo __( 'Reset', 'wp-erp' ); ?></button>
+                                ><?php echo __( 'Reset', 'erp' ); ?></button>
                                 <button
                                     type="button"
                                     class="button button-primary"
                                     v-on:click="save_mapping"
-                                ><?php echo __( 'Save Changes', 'wp-erp' ); ?></button>
+                                ><?php echo __( 'Save Changes', 'erp' ); ?></button>
                             </td>
                         </tr>
                     </tfoot>
@@ -302,7 +302,7 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
         $this->verify_nonce( 'erp_settings_contact_forms' );
 
         if ( !erp_crm_is_current_user_manager() ) {
-            $response['msg'] = __( 'Unauthorized operation', 'wp-erp' );
+            $response['msg'] = __( 'Unauthorized operation', 'erp' );
 
         } if ( !empty( $_POST['plugin'] ) && !empty( $_POST['formId'] ) && !empty( $_POST['map'] ) ) {
 
@@ -327,7 +327,7 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
                 }, $required_options );
 
                 $response['msg'] = sprintf(
-                    __( '%s fields are required', 'wp-erp' ),
+                    __( '%s fields are required', 'erp' ),
                     implode( ', ' , $required_options )
                 );
 
@@ -343,13 +343,13 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
 
                 $response = [
                     'success' => true,
-                    'msg' => __( 'Settings saved successfully', 'wp-erp' )
+                    'msg' => __( 'Settings saved successfully', 'erp' )
                 ];
             }
 
 
         } else if ( empty( $_POST['forms'] ) ) {
-            $response['msg'] = __( 'No settings data found', 'wp-erp' );
+            $response['msg'] = __( 'No settings data found', 'erp' );
         }
 
         wp_send_json( $response );
@@ -369,7 +369,7 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
         $this->verify_nonce( 'erp_settings_contact_forms' );
 
         if ( !erp_crm_is_current_user_manager() ) {
-            $response['msg'] = __( 'Unauthorized operation', 'wp-erp' );
+            $response['msg'] = __( 'Unauthorized operation', 'erp' );
 
         } else if ( !empty( $_POST['plugin'] ) && !empty( $_POST['formId'] ) ) {
             $settings = get_option( 'wperp_crm_contact_forms' );
@@ -388,13 +388,13 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
 
                 $response = [
                     'success' => true,
-                    'msg' => __( 'Settings reset successfully', 'wp-erp' ),
+                    'msg' => __( 'Settings reset successfully', 'erp' ),
                     'map' => $map,
                     'contactGroup' => 0
                 ];
 
             } else {
-                $response['msg'] = __( 'Nothing to reset', 'wp-erp' );
+                $response['msg'] = __( 'Nothing to reset', 'erp' );
             }
         }
 

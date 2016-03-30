@@ -55,7 +55,7 @@ class Countries {
             }
         }
         if ( '-1' == $default ) {
-            $this->countries = array( '-1' => __( '- Select -', 'wp-erp' ) ) + $this->countries; 
+            $this->countries = array( '-1' => __( '- Select -', 'erp' ) ) + $this->countries;
         }
         return $this->countries;
     }
@@ -147,7 +147,7 @@ class Countries {
      * @return string  the country dropdown
      */
     public function country_dropdown( $selected = '' ) {
-        $dropdown  = sprintf( '<option value="-1">%s</option>', __( '- Select -', 'wp-erp' ) );
+        $dropdown  = sprintf( '<option value="-1">%s</option>', __( '- Select -', 'erp' ) );
         $countries = $this->get_countries();
         $selected  = empty( $selected ) ? $this->get_base_country() : $selected;
 
@@ -172,7 +172,7 @@ class Countries {
         if ( $this->countries ) foreach ( $this->countries as $key => $value ) :
             if ( $states = $this->get_states( $key ) ) :
                 $html .= '<optgroup label="' . esc_attr( $value ) . '">';
-                    $html .= '<option value="' . esc_attr( $key ) .'">' . $value . ' &mdash; '. __( 'Any State', 'wp-erp' ). '</option>';
+                    $html .= '<option value="' . esc_attr( $key ) .'">' . $value . ' &mdash; '. __( 'Any State', 'erp' ). '</option>';
                     foreach ( $states as $state_key => $state_value ) :
                         $html .= '<option value="' . esc_attr( $key ) . ':' . $state_key . '"';
 

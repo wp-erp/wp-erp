@@ -4,7 +4,7 @@ $contacts = erp_crm_get_contact_dropdown();
 ?>
 <div class="wrap erp erp-crm-activities erp-single-customer" id="wp-erp">
 
-    <h2><?php _e( 'Activities', 'wp-erp' ); ?></h2>
+    <h2><?php _e( 'Activities', 'erp' ); ?></h2>
     <hr>
     <div class="erp-customer-feeds" id="erp-customer-feeds" v-cloak>
 
@@ -12,25 +12,25 @@ $contacts = erp_crm_get_contact_dropdown();
 
             <div class="filters">
                 <select style="width:180px;" v-selecttwo="filterFeeds.type" class="select2" v-model="filterFeeds.type" id="activity-type">
-                    <option value=""><?php _e( 'All Types', 'wp-erp' ) ?></option>
-                    <option value="new_note"><?php _e( 'Notes', 'wp-erp' ) ?></option>
-                    <option value="email"><?php _e( 'Email', 'wp-erp' ) ?></option>
-                    <option value="logs"><?php _e( 'Log Activity', 'wp-erp' ) ?></option>
-                    <option value="schedule"><?php _e( 'Schedules', 'wp-erp' ) ?></option>
-                    <option value="tasks"><?php _e( 'Tasks', 'wp-erp' ) ?></option>
+                    <option value=""><?php _e( 'All Types', 'erp' ) ?></option>
+                    <option value="new_note"><?php _e( 'Notes', 'erp' ) ?></option>
+                    <option value="email"><?php _e( 'Email', 'erp' ) ?></option>
+                    <option value="logs"><?php _e( 'Log Activity', 'erp' ) ?></option>
+                    <option value="schedule"><?php _e( 'Schedules', 'erp' ) ?></option>
+                    <option value="tasks"><?php _e( 'Tasks', 'erp' ) ?></option>
                 </select>
             </div>
 
             <div class="filters">
                 <select style="width:180px;" v-selecttwo="filterFeeds.created_by" class="select2" v-model="filterFeeds.created_by" id="activity-created-by">
-                    <option value=""><?php _e( 'Created By All', 'wp-erp' ) ?></option>
+                    <option value=""><?php _e( 'Created By All', 'erp' ) ?></option>
                     <?php echo erp_crm_get_employees(); ?>
                 </select>
             </div>
 
             <div class="filters">
                 <select style="width:180px;" v-selecttwo="filterFeeds.customer_id" class="select2" v-model="filterFeeds.customer_id" id="activity-created-for">
-                    <option value=""><?php _e( 'Created for all', 'wp-erp' ) ?></option>
+                    <option value=""><?php _e( 'Created for all', 'erp' ) ?></option>
                     <?php foreach ( $contacts as $contact_id => $contact_name ) : ?>
                         <option value="<?php echo $contact_id; ?>"><?php echo $contact_name; ?></option>
                     <?php endforeach ?>
@@ -38,7 +38,7 @@ $contacts = erp_crm_get_contact_dropdown();
             </div>
 
             <div class="filters">
-                <input type="text" v-datepicker v-model="filterFeeds.created_at" placeholder="<?php _e( 'Created Date..', 'wp-erp' ); ?>">
+                <input type="text" v-datepicker v-model="filterFeeds.created_at" placeholder="<?php _e( 'Created Date..', 'erp' ); ?>">
             </div>
 
             <div class="clearfix"></div>
@@ -71,13 +71,13 @@ $contacts = erp_crm_get_contact_dropdown();
             <div class="feed-load-more" v-show="( feeds.length >= limit ) && !loadingFinish">
                 <button @click="loadMoreContent( feeds )" class="button">
                     <i class="fa fa-cog fa-spin" v-if="loading"></i>
-                    &nbsp;<span v-if="!loading"><?php _e( 'Load More', 'wp-erp' ); ?></span>
-                    &nbsp;<span v-else><?php _e( 'Loading..', 'wp-erp' ); ?></span>
+                    &nbsp;<span v-if="!loading"><?php _e( 'Load More', 'erp' ); ?></span>
+                    &nbsp;<span v-else><?php _e( 'Loading..', 'erp' ); ?></span>
                 </button>
             </div>
 
             <div class="no-activity-found" v-if="!feeds.length">
-                <?php _e( 'No Activity found for this Contact', 'wp-erp' ); ?>
+                <?php _e( 'No Activity found for this Contact', 'erp' ); ?>
             </div>
 
         </div>

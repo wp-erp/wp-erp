@@ -38,14 +38,14 @@ class Admin_Menu {
      */
     public function admin_menu() {
 
-        add_menu_page( __( 'ERP', 'wp-erp' ), __( 'ERP Settings', 'wp-erp' ), 'manage_options', 'erp-company', array( $this, 'company_page' ), 'dashicons-admin-settings', $this->get_menu_position() );
+        add_menu_page( __( 'ERP', 'erp' ), __( 'ERP Settings', 'erp' ), 'manage_options', 'erp-company', array( $this, 'company_page' ), 'dashicons-admin-settings', $this->get_menu_position() );
 
-        add_submenu_page( 'erp-company', __( 'Company', 'wp-erp' ), __( 'Company', 'wp-erp' ), 'manage_options', 'erp-company', array( $this, 'company_page' ) );
-        add_submenu_page( 'erp-company', __( 'Tools', 'wp-erp' ), __( 'Tools', 'wp-erp' ), 'manage_options', 'erp-tools', array( $this, 'tools_page' ) );
-        add_submenu_page( 'erp-company', __( 'Audit Log', 'wp-erp' ), __( 'Audit Log', 'wp-erp' ), 'manage_options', 'erp-audit-log', array( $this, 'log_page' ) );
-        add_submenu_page( 'erp-company', __( 'Settings', 'wp-erp' ), __( 'Settings', 'wp-erp' ), 'manage_options', 'erp-settings', array( $this, 'settings_page' ) );
-        add_submenu_page( 'erp-company', __( 'Modules', 'wp-erp' ), __( 'Modules', 'wp-erp' ), 'manage_options', 'erp-modules', array( $this, 'module' ) );
-        add_submenu_page( 'erp-company', __( 'Add-Ons', 'wp-erp' ), __( 'Add-Ons', 'wp-erp' ), 'manage_options', 'erp-addons', array( $this, 'addon_page' ) );
+        add_submenu_page( 'erp-company', __( 'Company', 'erp' ), __( 'Company', 'erp' ), 'manage_options', 'erp-company', array( $this, 'company_page' ) );
+        add_submenu_page( 'erp-company', __( 'Tools', 'erp' ), __( 'Tools', 'erp' ), 'manage_options', 'erp-tools', array( $this, 'tools_page' ) );
+        add_submenu_page( 'erp-company', __( 'Audit Log', 'erp' ), __( 'Audit Log', 'erp' ), 'manage_options', 'erp-audit-log', array( $this, 'log_page' ) );
+        add_submenu_page( 'erp-company', __( 'Settings', 'erp' ), __( 'Settings', 'erp' ), 'manage_options', 'erp-settings', array( $this, 'settings_page' ) );
+        add_submenu_page( 'erp-company', __( 'Modules', 'erp' ), __( 'Modules', 'erp' ), 'manage_options', 'erp-modules', array( $this, 'module' ) );
+        add_submenu_page( 'erp-company', __( 'Add-Ons', 'erp' ), __( 'Add-Ons', 'erp' ), 'manage_options', 'erp-addons', array( $this, 'addon_page' ) );
 
     }
 

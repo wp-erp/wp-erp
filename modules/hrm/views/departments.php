@@ -1,14 +1,14 @@
 <div class="wrap erp-hr-depts">
 
-    <h2><?php _e( 'Departments', 'wp-erp' ); ?> <a href="#" id="erp-new-dept" class="add-new-h2" data-single="1"><?php _e( 'Add New', 'wp-erp' ); ?></a></h2>
+    <h2><?php _e( 'Departments', 'erp' ); ?> <a href="#" id="erp-new-dept" class="add-new-h2" data-single="1"><?php _e( 'Add New', 'erp' ); ?></a></h2>
 
     <?php if ( isset( $_GET['department_delete'] ) ): ?>
         <div id="message" class="error notice is-dismissible below-h2">
-            <p><?php _e( 'Some department doesn\'t delete because some employees work under those department', 'wp-erp' ) ?></p>
+            <p><?php _e( 'Some department doesn\'t delete because some employees work under those department', 'erp' ) ?></p>
             <button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
         </div>
     <?php endif ?>
-    
+
     <div id="erp-dept-table-wrap">
 
         <div class="list-table-inner">

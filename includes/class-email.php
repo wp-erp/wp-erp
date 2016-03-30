@@ -473,28 +473,28 @@ class Email extends ERP_Settings_Page {
     public function init_form_fields() {
         $this->form_fields = [
             [
-                'title'       => __( 'Subject', 'wp-erp' ),
+                'title'       => __( 'Subject', 'erp' ),
                 'id'          => 'subject',
                 'type'        => 'text',
-                'description' => sprintf( __( 'This controls the email subject line. Leave blank to use the default subject: <code>%s</code>.', 'wp-erp' ), $this->subject ),
+                'description' => sprintf( __( 'This controls the email subject line. Leave blank to use the default subject: <code>%s</code>.', 'erp' ), $this->subject ),
                 'placeholder' => '',
                 'default'     => $this->subject,
                 'desc_tip'    => true
             ],
             [
-                'title'       => __( 'Email Heading', 'wp-erp' ),
+                'title'       => __( 'Email Heading', 'erp' ),
                 'id'          => 'heading',
                 'type'        => 'text',
-                'description' => sprintf( __( 'This controls the main heading contained within the email notification. Leave blank to use the default heading: <code>%s</code>.', 'wp-erp' ), $this->heading ),
+                'description' => sprintf( __( 'This controls the main heading contained within the email notification. Leave blank to use the default heading: <code>%s</code>.', 'erp' ), $this->heading ),
                 'placeholder' => '',
                 'default'     => $this->heading,
                 'desc_tip'    => true
             ],
             [
-                'title'             => __( 'Email Body', 'wp-erp' ),
+                'title'             => __( 'Email Body', 'erp' ),
                 'type'              => 'wysiwyg',
                 'id'                => 'body',
-                'description'       => sprintf( __( 'This controls the main heading contained within the email notification. Leave blank to use the default heading: <code>%s</code>.', 'wp-erp' ), $this->heading ),
+                'description'       => sprintf( __( 'This controls the main heading contained within the email notification. Leave blank to use the default heading: <code>%s</code>.', 'erp' ), $this->heading ),
                 'placeholder'       => '',
                 'default'           => '',
                 'desc_tip'          => true,
@@ -517,9 +517,9 @@ class Email extends ERP_Settings_Page {
     function replace_keys() {
         ?>
         <tr valign="top" class="single_select_page">
-            <th scope="row" class="titledesc"><?php _e( 'Template Tags', 'wp-erp' ); ?></th>
+            <th scope="row" class="titledesc"><?php _e( 'Template Tags', 'erp' ); ?></th>
             <td class="forminp">
-                <em><?php _e( 'You may use these template tags inside subject, heading, body and those will be replaced by original values', 'wp-erp' ); ?></em>:
+                <em><?php _e( 'You may use these template tags inside subject, heading, body and those will be replaced by original values', 'erp' ); ?></em>:
                 <?php echo '<code>' . implode( '</code>, <code>', $this->find ) . '</code>'; ?>
             </td>
         </tr>

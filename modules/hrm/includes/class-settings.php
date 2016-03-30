@@ -13,7 +13,7 @@ class Settings extends ERP_Settings_Page {
      */
     public function __construct() {
         $this->id            = 'erp-hr';
-        $this->label         = __( 'HR', 'wp-erp' );
+        $this->label         = __( 'HR', 'erp' );
 
         $this->sections      = $this->get_sections();
     }
@@ -25,7 +25,7 @@ class Settings extends ERP_Settings_Page {
      */
     public function get_sections() {
         $sections = array(
-            'workdays' => __( 'Workdays', 'wp-erp' ),
+            'workdays' => __( 'Workdays', 'erp' ),
         );
 
         return apply_filters( 'erp_settings_hr_sections', $sections );
@@ -38,25 +38,25 @@ class Settings extends ERP_Settings_Page {
      */
     public function get_section_fields( $section = '' ) {
         $options = array(
-            '8' => __( 'Full Day', 'wp-erp' ),
-            '4' => __( 'Half Day', 'wp-erp' ),
-            '0' => __( 'Non-working Day', 'wp-erp' )
+            '8' => __( 'Full Day', 'erp' ),
+            '4' => __( 'Half Day', 'erp' ),
+            '0' => __( 'Non-working Day', 'erp' )
         );
 
         $week_days = array(
-            'mon' => __( 'Monday', 'wp-erp' ),
-            'tue' => __( 'Tuesday', 'wp-erp' ),
-            'wed' => __( 'Wednesday', 'wp-erp' ),
-            'thu' => __( 'Thursday', 'wp-erp' ),
-            'fri' => __( 'Friday', 'wp-erp' ),
-            'sat' => __( 'Saturday', 'wp-erp' ),
-            'sun' => __( 'Sunday', 'wp-erp' )
+            'mon' => __( 'Monday', 'erp' ),
+            'tue' => __( 'Tuesday', 'erp' ),
+            'wed' => __( 'Wednesday', 'erp' ),
+            'thu' => __( 'Thursday', 'erp' ),
+            'fri' => __( 'Friday', 'erp' ),
+            'sat' => __( 'Saturday', 'erp' ),
+            'sun' => __( 'Sunday', 'erp' )
         );
 
         $fields = [];
 
         $fields['workdays'][] = [
-            'title' => __( 'Work Days', 'wp-erp' ),
+            'title' => __( 'Work Days', 'erp' ),
             'type'  => 'title',
             'desc'  => __( 'Week day settings for this company.', 'domain' ),
             'id'    => 'general_options'

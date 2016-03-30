@@ -126,20 +126,20 @@ class Customer_Relationship {
             'ajaxurl'               => admin_url( 'admin-ajax.php' ),
             'nonce'                 => wp_create_nonce( 'wp-erp-crm-nonce' ),
             'popup'                 => array(
-                'customer_title'         => __( 'Add New Customer', 'wp-erp' ),
-                'customer_update_title'  => __( 'Edit Customer', 'wp-erp' ),
-                'customer_social_title'  => __( 'Customer Social Profile', 'wp-erp' ),
-                'customer_assing_group'  => __( 'Add to Contact groups', 'wp-erp' ),
+                'customer_title'         => __( 'Add New Customer', 'erp' ),
+                'customer_update_title'  => __( 'Edit Customer', 'erp' ),
+                'customer_social_title'  => __( 'Customer Social Profile', 'erp' ),
+                'customer_assing_group'  => __( 'Add to Contact groups', 'erp' ),
             ),
-            'add_submit'            => __( 'Add New', 'wp-erp' ),
-            'update_submit'         => __( 'Update', 'wp-erp' ),
-            'save_submit'           => __( 'Save', 'wp-erp' ),
-            'customer_upload_photo' => __( 'Upload Photo', 'wp-erp' ),
-            'customer_set_photo'    => __( 'Set Photo', 'wp-erp' ),
-            'confirm'               => __( 'Are you sure?', 'wp-erp' ),
-            'delConfirmCustomer'    => __( 'Are you sure to delete this customer?', 'wp-erp' ),
-            'delConfirm'            => __( 'Are you sure to delete this?', 'wp-erp' ),
-            'checkedConfirm'        => __( 'Alteast one item must be checked', 'wp-erp' )
+            'add_submit'            => __( 'Add New', 'erp' ),
+            'update_submit'         => __( 'Update', 'erp' ),
+            'save_submit'           => __( 'Save', 'erp' ),
+            'customer_upload_photo' => __( 'Upload Photo', 'erp' ),
+            'customer_set_photo'    => __( 'Set Photo', 'erp' ),
+            'confirm'               => __( 'Are you sure?', 'erp' ),
+            'delConfirmCustomer'    => __( 'Are you sure to delete this customer?', 'erp' ),
+            'delConfirm'            => __( 'Are you sure to delete this?', 'erp' ),
+            'checkedConfirm'        => __( 'Alteast one item must be checked', 'erp' )
         ) );
 
         if ( 'crm_page_erp-sales-schedules' == $hook ) {
@@ -162,7 +162,7 @@ class Customer_Relationship {
                 'ajaxurl'         => admin_url( 'admin-ajax.php' ),
                 'nonce'           => wp_create_nonce( 'wp-erp-crm-customer-feed' ),
                 'current_user_id' => get_current_user_id(),
-                'confirm'         => __( 'Are you sure?', 'wp-erp' ),
+                'confirm'         => __( 'Are you sure?', 'erp' ),
                 'date_format'     => get_option( 'date_format' )
             ] );
 
@@ -200,7 +200,7 @@ class Customer_Relationship {
                 'isAdmin'         => current_user_can( 'manage_options' ),
                 'isCrmManager'    => current_user_can( 'erp_crm_manager' ),
                 'isAgent'         => current_user_can( 'erp_crm_agent' ),
-                'confirm'         => __( 'Are you sure?', 'wp-erp' ),
+                'confirm'         => __( 'Are you sure?', 'erp' ),
                 'date_format'     => get_option( 'date_format' )
             ] );
 

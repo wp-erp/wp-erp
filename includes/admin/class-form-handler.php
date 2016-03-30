@@ -82,7 +82,7 @@ class Form_Handler {
      */
     public function create_new_company() {
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-new-company' ) ) {
-            wp_die( __( 'Cheating?', 'wp-erp' ) );
+            wp_die( __( 'Cheating?', 'erp' ) );
         }
 
         $posted   = array_map( 'strip_tags_deep', $_POST );
@@ -90,18 +90,18 @@ class Form_Handler {
 
         $errors   = [];
         $required = [
-            'name'    => __( 'Company name', 'wp-erp' ),
+            'name'    => __( 'Company name', 'erp' ),
             'address' => [
-                'country' => __( 'Country', 'wp-erp' )
+                'country' => __( 'Country', 'erp' )
             ]
         ];
 
         if ( ! $this->is_valid_input( $posted, 'name' ) ) {
-            $errors[] = __( 'Company name is required', 'wp-erp' );
+            $errors[] = __( 'Company name is required', 'erp' );
         }
 
         if ( ! $this->is_valid_input( $posted['address'], 'country' ) ) {
-            $errors[] = __( 'Country is required', 'wp-erp' );
+            $errors[] = __( 'Country is required', 'erp' );
         }
 
         if ( $errors ) {

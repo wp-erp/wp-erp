@@ -8,20 +8,20 @@
 global $states;
 
 $states['MY'] = array(
-	'JHR' => __( 'Johor', 'wp-erp' ),
-	'KDH' => __( 'Kedah', 'wp-erp' ),
-	'KTN' => __( 'Kelantan', 'wp-erp' ),
-	'MLK' => __( 'Melaka', 'wp-erp' ),
-	'NSN' => __( 'Negeri Sembilan', 'wp-erp' ),
-	'PHG' => __( 'Pahang', 'wp-erp' ),
-	'PRK' => __( 'Perak', 'wp-erp' ),
-	'PLS' => __( 'Perlis', 'wp-erp' ),
-	'PNG' => __( 'Pulau Pinang', 'wp-erp' ),
-	'SBH' => __( 'Sabah', 'wp-erp' ),
-	'SWK' => __( 'Sarawak', 'wp-erp' ),
-	'SGR' => __( 'Selangor', 'wp-erp' ),
-	'TRG' => __( 'Terengganu', 'wp-erp' ),
-	'KUL' => __( 'W.P. Kuala Lumpur', 'wp-erp' ),
-	'LBN' => __( 'W.P. Labuan', 'wp-erp' ),
-	'PJY' => __( 'W.P. Putrajaya', 'wp-erp' )
+	'JHR' => __( 'Johor', 'erp' ),
+	'KDH' => __( 'Kedah', 'erp' ),
+	'KTN' => __( 'Kelantan', 'erp' ),
+	'MLK' => __( 'Melaka', 'erp' ),
+	'NSN' => __( 'Negeri Sembilan', 'erp' ),
+	'PHG' => __( 'Pahang', 'erp' ),
+	'PRK' => __( 'Perak', 'erp' ),
+	'PLS' => __( 'Perlis', 'erp' ),
+	'PNG' => __( 'Pulau Pinang', 'erp' ),
+	'SBH' => __( 'Sabah', 'erp' ),
+	'SWK' => __( 'Sarawak', 'erp' ),
+	'SGR' => __( 'Selangor', 'erp' ),
+	'TRG' => __( 'Terengganu', 'erp' ),
+	'KUL' => __( 'W.P. Kuala Lumpur', 'erp' ),
+	'LBN' => __( 'W.P. Labuan', 'erp' ),
+	'PJY' => __( 'W.P. Putrajaya', 'erp' )
 );

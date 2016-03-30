@@ -8,13 +8,13 @@
 global $states;
 
 $states['ZA'] = array(
-	'EC'  => __( 'Eastern Cape', 'wp-erp' ),
-	'FS'  => __( 'Free State', 'wp-erp' ),
-	'GP'  => __( 'Gauteng', 'wp-erp' ),
-	'KZN' => __( 'KwaZulu-Natal', 'wp-erp' ),
-	'LP'  => __( 'Limpopo', 'wp-erp' ),
-	'MP'  => __( 'Mpumalanga', 'wp-erp' ),
-	'NC'  => __( 'Northern Cape', 'wp-erp' ),
-	'NW'  => __( 'North West', 'wp-erp' ),
-	'WC'  => __( 'Western Cape', 'wp-erp' )
+	'EC'  => __( 'Eastern Cape', 'erp' ),
+	'FS'  => __( 'Free State', 'erp' ),
+	'GP'  => __( 'Gauteng', 'erp' ),
+	'KZN' => __( 'KwaZulu-Natal', 'erp' ),
+	'LP'  => __( 'Limpopo', 'erp' ),
+	'MP'  => __( 'Mpumalanga', 'erp' ),
+	'NC'  => __( 'Northern Cape', 'erp' ),
+	'NW'  => __( 'North West', 'erp' ),
+	'WC'  => __( 'Western Cape', 'erp' )
 );

@@ -3,13 +3,13 @@
 /** Callbacks *****************************/
 
 function erp_hr_dashboard_widget_birthday_callback() {
-    erp_admin_dash_metabox( __( '<i class="fa fa-birthday-cake"></i> Birthday Buddies', 'wp-erp' ), 'erp_hr_dashboard_widget_birthday' );
-    erp_admin_dash_metabox( __( '<i class="fa fa-paper-plane"></i> Who is out', 'wp-erp' ), 'erp_hr_dashboard_widget_whoisout' );
+    erp_admin_dash_metabox( __( '<i class="fa fa-birthday-cake"></i> Birthday Buddies', 'erp' ), 'erp_hr_dashboard_widget_birthday' );
+    erp_admin_dash_metabox( __( '<i class="fa fa-paper-plane"></i> Who is out', 'erp' ), 'erp_hr_dashboard_widget_whoisout' );
 }
 
 function erp_hr_dashboard_widget_announcement_callback() {
-    erp_admin_dash_metabox( __( '<i class="fa fa-microphone"></i> Latest Announcement', 'wp-erp' ), 'erp_hr_dashboard_widget_latest_announcement' );
-    erp_admin_dash_metabox( __( '<i class="fa fa-calendar-o"></i> My Leave Calendar', 'wp-erp' ), 'erp_hr_dashboard_widget_leave_calendar' );
+    erp_admin_dash_metabox( __( '<i class="fa fa-microphone"></i> Latest Announcement', 'erp' ), 'erp_hr_dashboard_widget_latest_announcement' );
+    erp_admin_dash_metabox( __( '<i class="fa fa-calendar-o"></i> My Leave Calendar', 'erp' ), 'erp_hr_dashboard_widget_leave_calendar' );
 }
 
 
@@ -29,7 +29,7 @@ function erp_hr_dashboard_widget_birthday() {
     ?>
     <?php if ( $todays_birthday ) { ?>
 
-        <h4><?php _e( 'Today\'s Birthday', 'wp-erp' ); ?></h4>
+        <h4><?php _e( 'Today\'s Birthday', 'erp' ); ?></h4>
 
         <ul class="erp-list list-inline">
             <?php
@@ -46,7 +46,7 @@ function erp_hr_dashboard_widget_birthday() {
 
     <?php if ( $upcoming_birtday ) { ?>
 
-        <h4><?php _e( 'Upcoming Birthdays', 'wp-erp' ); ?></h4>
+        <h4><?php _e( 'Upcoming Birthdays', 'erp' ); ?></h4>
 
         <ul class="erp-list list-two-side list-sep">
 
@@ -66,7 +66,7 @@ function erp_hr_dashboard_widget_birthday() {
     }
 
     if ( ! $todays_birthday && ! $upcoming_birtday ) {
-        _e( 'No one has birthdays this week!', 'wp-erp' );
+        _e( 'No one has birthdays this week!', 'erp' );
     }
 }
 
@@ -78,7 +78,7 @@ function erp_hr_dashboard_widget_birthday() {
  * @return void
  */
 function erp_hr_dashboard_widget_latest_announcement() {
-    
+
     //if user is admin then show latest 5 announcements
     if ( current_user_can( 'manage_options' ) ) {
         $query = new WP_Query( array(
@@ -104,8 +104,8 @@ function erp_hr_dashboard_widget_latest_announcement() {
                 </div >
                 <?php echo ( 0 == $i ) ? '<p>' . wp_trim_words( $announcement->post_content, 50 ) . '</p>' : ''; ?>
                 <div class="announcement-row-actions">
-                    <a href="#" class="mark-read erp-tips <?php echo ( $announcement->status == 'read' ) ? 'erp-hide' : ''; ?>" title="<?php _e( 'Mark as Read', 'wp-erp' ); ?>" data-row_id="<?php echo $announcement->id; ?>"><i class="fa fa-circle-o-notch"></i></a>
-                    <a href="#" class="view-full erp-tips" title="<?php _e( 'View full announcement', 'wp-erp' ); ?>" data-row_id="<?php echo $announcement->ID; ?>"><i class="fa fa-book"></i></a>
+                    <a href="#" class="mark-read erp-tips <?php echo ( $announcement->status == 'read' ) ? 'erp-hide' : ''; ?>" title="<?php _e( 'Mark as Read', 'erp' ); ?>" data-row_id="<?php echo $announcement->id; ?>"><i class="fa fa-circle-o-notch"></i></a>
+                    <a href="#" class="view-full erp-tips" title="<?php _e( 'View full announcement', 'erp' ); ?>" data-row_id="<?php echo $announcement->ID; ?>"><i class="fa fa-book"></i></a>
                 </div>
             </li>
         <?php $i++;
@@ -113,7 +113,7 @@ function erp_hr_dashboard_widget_latest_announcement() {
     </ul>
     <?php
     } else {
-        _e( 'No announcement found', 'wp-erp' );
+        _e( 'No announcement found', 'erp' );
     }
 }
 
@@ -130,7 +130,7 @@ function erp_hr_dashboard_widget_whoisout() {
     ?>
     <?php if ( $leave_requests ) { ?>
 
-        <h4><?php _e( 'This Month', 'wp-erp' ); ?></h4>
+        <h4><?php _e( 'This Month', 'erp' ); ?></h4>
 
         <ul class="erp-list list-two-side list-sep">
             <?php foreach ( $leave_requests as $key => $leave ): ?>
@@ -144,7 +144,7 @@ function erp_hr_dashboard_widget_whoisout() {
     <?php } ?>
 
     <?php if ( $leave_requests_nextmonth ) { ?>
-        <h4><?php _e( 'Next Month', 'wp-erp' ); ?></h4>
+        <h4><?php _e( 'Next Month', 'erp' ); ?></h4>
 
         <ul class="erp-list list-two-side list-sep">
             <?php foreach ( $leave_requests_nextmonth as $key => $leave ): ?>
@@ -160,7 +160,7 @@ function erp_hr_dashboard_widget_whoisout() {
 
     <?php if ( ! $leave_requests && ! $leave_requests_nextmonth ) { ?>
 
-        <?php _e( 'No one is on vacation on this or next month', 'wp-erp' ); ?>
+        <?php _e( 'No one is on vacation on this or next month', 'erp' ); ?>
 
     <?php } ?>
 
@@ -182,14 +182,14 @@ function erp_hr_dashboard_widget_leave_calendar() {
     $events         = [];
     $holiday_events = [];
     $event_data     = [];
-    
+
     foreach ( $leave_requests as $key => $leave_request ) {
         //if status pending
         $policy = erp_hr_leave_get_policy( $leave_request->policy_id );
         $event_label = $policy->name;
         if ( 2 == $leave_request->status ) {
             $policy = erp_hr_leave_get_policy( $leave_request->policy_id );
-            $event_label .= sprintf( ' ( %s ) ', __( 'Pending', 'wp-erp' ) );
+            $event_label .= sprintf( ' ( %s ) ', __( 'Pending', 'erp' ) );
         }
         $events[] = array(
             'id'        => $leave_request->id,
@@ -235,7 +235,7 @@ function erp_hr_dashboard_widget_leave_calendar() {
 
     <?php if ( erp_hr_get_assign_policy_from_entitlement( $user_id ) ): ?>
         <div class="erp-hr-new-leave-request-wrap">
-            <a href="#" class="button button-primary" id="erp-hr-new-leave-req"><?php _e( 'Take a Leave', 'wp-erp' ); ?></a>
+            <a href="#" class="button button-primary" id="erp-hr-new-leave-req"><?php _e( 'Take a Leave', 'erp' ); ?></a>
         </div>
     <?php endif ?>
 

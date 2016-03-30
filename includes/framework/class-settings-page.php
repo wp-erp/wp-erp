@@ -394,11 +394,11 @@ class ERP_Settings_Page {
                                 <input type="hidden" class="erp-file-field" name="<?php echo esc_attr( $value['id'] ); ?>" value="<?php echo esc_attr( $option_value ); ?>">
                                 <img class="erp-option-image" src="<?php echo esc_url( $image_url ); ?>">
 
-                                <a class="erp-remove-image" title="<?php _e( 'Delete this image?', 'wp-erp' ); ?>">&times;</a>
+                                <a class="erp-remove-image" title="<?php _e( 'Delete this image?', 'erp' ); ?>">&times;</a>
                             </div>
 
                             <div class="button-area<?php echo $option_value ? ' erp-hide' : ''; ?>">
-                                <a href="#" class="erp-image-upload button"><?php _e( 'Upload Image', 'wp-erp' ); ?></a>
+                                <a href="#" class="erp-image-upload button"><?php _e( 'Upload Image', 'erp' ); ?></a>
                                 <?php echo $description; ?>
                             </div>
 
@@ -651,7 +651,7 @@ class ERP_Settings_Page {
 
                             <input name="<?php echo esc_attr( $value['id'] ); ?>[width]" id="<?php echo esc_attr( $value['id'] ); ?>-width" type="text" size="3" value="<?php echo $width; ?>" /> &times; <input name="<?php echo esc_attr( $value['id'] ); ?>[height]" id="<?php echo esc_attr( $value['id'] ); ?>-height" type="text" size="3" value="<?php echo $height; ?>" />px
 
-                            <label><input name="<?php echo esc_attr( $value['id'] ); ?>[crop]" id="<?php echo esc_attr( $value['id'] ); ?>-crop" type="checkbox" <?php echo $crop; ?> /> <?php _e( 'Hard Crop?', 'wp-erp' ); ?></label>
+                            <label><input name="<?php echo esc_attr( $value['id'] ); ?>[crop]" id="<?php echo esc_attr( $value['id'] ); ?>-crop" type="checkbox" <?php echo $crop; ?> /> <?php _e( 'Hard Crop?', 'erp' ); ?></label>
 
                             </td>
                     </tr><?php
@@ -678,7 +678,7 @@ class ERP_Settings_Page {
                     ?><tr valign="top" class="single_select_page">
                         <th scope="row" class="titledesc"><?php echo esc_html( $value['title'] ) ?> <?php echo $tip; ?></th>
                         <td class="forminp">
-                            <?php echo str_replace(' id=', " data-placeholder='" . __( 'Select a page&hellip;', 'wp-erp' ) .  "' style='" . $value['css'] . "' class='" . $value['class'] . "' id=", wp_dropdown_pages( $args ) ); ?> <?php echo $description; ?>
+                            <?php echo str_replace(' id=', " data-placeholder='" . __( 'Select a page&hellip;', 'erp' ) .  "' style='" . $value['css'] . "' class='" . $value['class'] . "' id=", wp_dropdown_pages( $args ) ); ?> <?php echo $description; ?>
                         </td>
                     </tr><?php
                 break;

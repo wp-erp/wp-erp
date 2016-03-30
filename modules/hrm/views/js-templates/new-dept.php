@@ -1,6 +1,6 @@
 <div class="dept-form-wrap">
     <div class="row">
-        <?php erp_html_form_label( __( 'Department Title', 'wp-erp' ), 'dept-title', true ); ?>
+        <?php erp_html_form_label( __( 'Department Title', 'erp' ), 'dept-title', true ); ?>
 
         <span class="field">
             <input type="text" id="dept-title" name="title" value="" required="required">
@@ -8,15 +8,15 @@
     </div>
 
     <div class="row">
-        <?php erp_html_form_label( __( 'Description', 'wp-erp' ), 'dept-desc' ); ?>
+        <?php erp_html_form_label( __( 'Description', 'erp' ), 'dept-desc' ); ?>
 
         <span class="field">
-            <textarea name="dept-desc" id="dept-desc" rows="2" cols="20" placeholder="<?php _e( 'Optional', 'wp-erp' ); ?>"></textarea>
+            <textarea name="dept-desc" id="dept-desc" rows="2" cols="20" placeholder="<?php _e( 'Optional', 'erp' ); ?>"></textarea>
         </span>
     </div>
 
     <div class="row">
-        <?php erp_html_form_label( __( 'Department Lead', 'wp-erp' ), 'dept-lead' ); ?>
+        <?php erp_html_form_label( __( 'Department Lead', 'erp' ), 'dept-lead' ); ?>
 
         <span class="field">
             <select name="lead" id="dept-lead">
@@ -26,7 +26,7 @@
     </div>
 
     <div class="row">
-        <?php erp_html_form_label( __( 'Parent Department', 'wp-erp' ), 'parent-dept' ); ?>
+        <?php erp_html_form_label( __( 'Parent Department', 'erp' ), 'parent-dept' ); ?>
 
         <span class="field">
             <select name="parent" id="dept-parent">

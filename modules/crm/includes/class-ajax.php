@@ -151,7 +151,7 @@ class Ajax_Handler {
         $customer    = new Contact( $customer_id );
 
         if ( ! $customer_id || ! $customer ) {
-            $this->send_error( __( 'Cotact does not exists.', 'wp-erp' ) );
+            $this->send_error( __( 'Cotact does not exists.', 'erp' ) );
         }
 
         $this->send_success( $customer->to_array() );
@@ -172,13 +172,13 @@ class Ajax_Handler {
         $hard        = isset( $_REQUEST['hard'] ) ? intval( $_REQUEST['hard'] ) : 0;
 
         if ( ! $customer_id ) {
-            $this->send_error( __( 'No Customer found', 'wp-erp' ) );
+            $this->send_error( __( 'No Customer found', 'erp' ) );
         }
 
         erp_crm_customer_delete( $customer_id, $hard );
 
         // @TODO: check permission
-        $this->send_success( __( 'Customer has been removed successfully', 'wp-erp' ) );
+        $this->send_success( __( 'Customer has been removed successfully', 'erp' ) );
     }
 
     /**
@@ -195,13 +195,13 @@ class Ajax_Handler {
         $customer_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
 
         if ( ! $customer_id ) {
-            $this->send_error( __( 'No Customer found', 'wp-erp' ) );
+            $this->send_error( __( 'No Customer found', 'erp' ) );
         }
 
         erp_crm_customer_restore( $customer_id );
 
         // @TODO: check permission
-        $this->send_success( __( 'Customer has been removed successfully', 'wp-erp' ) );
+        $this->send_success( __( 'Customer has been removed successfully', 'erp' ) );
     }
 
     /**
@@ -219,11 +219,11 @@ class Ajax_Handler {
         $group_ids          = ( isset( $_POST['group_id'] ) && ! empty( $_POST['group_id'] ) ) ? $_POST['group_id'] : [];
 
         if ( empty( $user_ids ) ) {
-            $this->send_error( __( 'Contact must be required', 'wp-erp' ) );
+            $this->send_error( __( 'Contact must be required', 'erp' ) );
         }
 
         if ( empty( $group_ids ) ) {
-            $this->send_error( __( 'Atleast one group must be selected', 'wp-erp' ) );
+            $this->send_error( __( 'Atleast one group must be selected', 'erp' ) );
         }
 
         foreach ( $user_ids as $user_key => $user_id ) {
@@ -237,7 +237,7 @@ class Ajax_Handler {
             }
         }
 
-        $this->send_success( __( 'Selected contact are successfully subscribed', 'wp-erp' ) );
+        $this->send_success( __( 'Selected contact are successfully subscribed', 'erp' ) );
 
     }
 
@@ -258,15 +258,15 @@ class Ajax_Handler {
         $customer_id = isset( $_REQUEST['erp_assign_customer_id'] ) ? intval( $_REQUEST['erp_assign_customer_id'] ) : 0;
 
         if ( $company_id && erp_crm_check_customer_exist_company( $id, $company_id ) ) {
-            $this->send_error( __( 'Company already assigned. Choose another company', 'wp-erp' ) );
+            $this->send_error( __( 'Company already assigned. Choose another company', 'erp' ) );
         }
 
         if ( $customer_id && erp_crm_check_customer_exist_company( $customer_id, $id ) ) {
-            $this->send_error( __( 'Customer already assigned. Choose another customer', 'wp-erp' ) );
+            $this->send_error( __( 'Customer already assigned. Choose another customer', 'erp' ) );
         }
 
         if ( ! $id ) {
-            $this->send_error( __( 'No Customer found', 'wp-erp' ) );
+            $this->send_error( __( 'No Customer found', 'erp' ) );
         }
 
         if ( $type == 'assign_customer' ) {
@@ -277,7 +277,7 @@ class Ajax_Handler {
             erp_crm_customer_add_company( $id, $company_id );
         }
 
-        $this->send_success( __( 'Company has been added successfully', 'wp-erp' ) );
+        $this->send_success( __( 'Company has been added successfully', 'erp' ) );
 
     }
 
@@ -305,7 +305,7 @@ class Ajax_Handler {
 
         $result = erp_crm_customer_update_company( $row_id, $company_id );
 
-        $this->send_success( __( 'Company has been updated successfully', 'wp-erp' ) );
+        $this->send_success( __( 'Company has been updated successfully', 'erp' ) );
 
     }
 
@@ -322,7 +322,7 @@ class Ajax_Handler {
             erp_crm_customer_remove_company( $id );
         }
 
-        $this->send_success( __('hello', 'wp-erp' ) );
+        $this->send_success( __('hello', 'erp' ) );
 
     }
 
@@ -361,16 +361,16 @@ class Ajax_Handler {
         parse_str( $_POST['formData'], $output );
 
         if ( isset( $output['erp_select_assign_contact'] ) && empty( $output['erp_select_assign_contact'] ) ) {
-            $this->send_error( __( 'Please select a user', 'wp-erp' ) );
+            $this->send_error( __( 'Please select a user', 'erp' ) );
         }
 
         if ( empty( $output['assign_contact_id'] ) ) {
-            $this->send_error( __( 'No contact found', 'wp-erp' ) );
+            $this->send_error( __( 'No contact found', 'erp' ) );
         }
 
         erp_people_update_meta( $output['assign_contact_id'], '_assign_crm_agent', $output['erp_select_assign_contact'] );
 
-        $this->send_success( __( 'Assing to agent successfully', 'wp-erp' ) );
+        $this->send_success( __( 'Assing to agent successfully', 'erp' ) );
     }
 
 
@@ -385,7 +385,7 @@ class Ajax_Handler {
         $this->verify_nonce( 'wp-erp-crm-contact-group' );
 
         if ( empty( $_POST['group_name'] ) ) {
-            $this->send_error( __('Contact Group Name must be required', 'wp-erp' ) );
+            $this->send_error( __('Contact Group Name must be required', 'erp' ) );
         }
 
         $data = [
@@ -396,7 +396,7 @@ class Ajax_Handler {
 
         erp_crm_save_contact_group( $data );
 
-        $this->send_success( __( 'Contact group save successfully', 'wp-erp' ) );
+        $this->send_success( __( 'Contact group save successfully', 'erp' ) );
     }
 
     /**
@@ -431,12 +431,12 @@ class Ajax_Handler {
         $query_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
 
         if ( ! $query_id ) {
-            $this->send_error( __( 'Somthing wrong, Please try later', 'wp-erp' ) );
+            $this->send_error( __( 'Somthing wrong, Please try later', 'erp' ) );
         }
 
         erp_crm_contact_group_delete( $query_id );
 
-        $this->send_success( __( 'Contact group delete successfully', 'wp-erp' ) );
+        $this->send_success( __( 'Contact group delete successfully', 'erp' ) );
     }
 
     /**
@@ -468,7 +468,7 @@ class Ajax_Handler {
         $user_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
 
         if ( ! $user_id ) {
-            $this->send_error( __( 'Contact not found. Try again', 'wp-erp' ) );
+            $this->send_error( __( 'Contact not found. Try again', 'erp' ) );
         }
 
         $result = erp_crm_get_editable_assign_contact( $user_id );
@@ -478,8 +478,8 @@ class Ajax_Handler {
                 'status'         => $value['status'],
                 'subscribe_at'   => erp_format_date( $value['subscribe_at'] ),
                 'unsubscribe_at' => erp_format_date( $value['unsubscribe_at'] ),
-                'subscribe_message' => sprintf( ' ( %s %s )', __( 'Subscribed on', 'wp-erp' ), erp_format_date( $value['subscribe_at'] ) ),
-                'unsubscribe_message' => sprintf( ' ( %s %s )', __( 'Unsubscribed on', 'wp-erp' ), erp_format_date( $value['unsubscribe_at'] ) )
+                'subscribe_message' => sprintf( ' ( %s %s )', __( 'Subscribed on', 'erp' ), erp_format_date( $value['subscribe_at'] ) ),
+                'unsubscribe_message' => sprintf( ' ( %s %s )', __( 'Unsubscribed on', 'erp' ), erp_format_date( $value['unsubscribe_at'] ) )
             ];
         }
 
@@ -510,7 +510,7 @@ class Ajax_Handler {
         }
 
 
-        return $this->send_success( __( 'Succesfully subscriber for this user', 'wp-erp' ) );
+        return $this->send_success( __( 'Succesfully subscriber for this user', 'erp' ) );
     }
 
     /**
@@ -526,12 +526,12 @@ class Ajax_Handler {
         $user_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
 
         if ( ! $user_id ) {
-            $this->send_error( __( 'No subscriber user found', 'wp-erp' ) );
+            $this->send_error( __( 'No subscriber user found', 'erp' ) );
         }
 
         erp_crm_contact_subscriber_delete( $user_id );
 
-        $this->send_success( __( 'Contact group delete successfully', 'wp-erp' ) );
+        $this->send_success( __( 'Contact group delete successfully', 'erp' ) );
     }
 
     /**
@@ -548,12 +548,12 @@ class Ajax_Handler {
         $group_id = isset( $_POST['group_id'] ) ? $_POST['group_id'] : [];
 
         if ( ! $user_id ) {
-            $this->send_error( __( 'No subscriber user found', 'wp-erp' ) );
+            $this->send_error( __( 'No subscriber user found', 'erp' ) );
         }
 
         erp_crm_edit_contact_subscriber( $group_id, $user_id );
 
-        $this->send_success( __( 'Contact group edit successfully', 'wp-erp' ) );
+        $this->send_success( __( 'Contact group edit successfully', 'erp' ) );
     }
 
     /**
@@ -585,7 +585,7 @@ class Ajax_Handler {
         unset( $_POST['action'] );
 
         if ( ! $_POST['customer_id'] ) {
-            $this->send_error( __( 'No customer found', 'wp-erp' ) );
+            $this->send_error( __( 'No customer found', 'erp' ) );
         }
 
         $customer_id = (int) $_POST['customer_id'];
@@ -594,7 +594,7 @@ class Ajax_Handler {
         $customer = new \WeDevs\ERP\CRM\Contact( $customer_id );
         $customer->update_meta( 'crm_social_profile', $_POST );
 
-        $this->send_success( __( 'Succesfully added social profiles', 'wp-erp' ) );
+        $this->send_success( __( 'Succesfully added social profiles', 'erp' ) );
     }
 
     /**
@@ -623,11 +623,11 @@ class Ajax_Handler {
         $postdata  = $_POST;
 
         if ( ! isset( $postdata['user_id'] ) && empty( $postdata['user_id'] ) ) {
-            $this->send_error( __( 'Customer not found', 'wp-erp' ) );
+            $this->send_error( __( 'Customer not found', 'erp' ) );
         }
 
         if ( isset( $postdata['message'] ) && empty( $postdata['message'] ) ) {
-            $this->send_error( __( 'Content must be required', 'wp-erp' ) );
+            $this->send_error( __( 'Content must be required', 'erp' ) );
         }
 
         switch ( $postdata['type'] ) {
@@ -646,7 +646,7 @@ class Ajax_Handler {
                 do_action( 'erp_crm_save_customer_new_note_feed', $save_data, $postdata );
 
                 if ( ! $data ) {
-                    $this->send_error( __( 'Somthing is wrong, Please try later', 'wp-erp' ) );
+                    $this->send_error( __( 'Somthing is wrong, Please try later', 'erp' ) );
                 }
 
                 $this->send_success( $data );
@@ -703,7 +703,7 @@ class Ajax_Handler {
                 do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
 
                 if ( ! $data ) {
-                    $this->send_error( __( 'Somthing is wrong, Please try later', 'wp-erp' ) );
+                    $this->send_error( __( 'Somthing is wrong, Please try later', 'erp' ) );
                 }
 
                 $this->send_success( $data );
@@ -733,7 +733,7 @@ class Ajax_Handler {
                 do_action( 'erp_crm_save_customer_log_activity_feed', $save_data, $postdata );
 
                 if ( ! $data ) {
-                    $this->send_error( __( 'Somthing is wrong, Please try later', 'wp-erp' ) );
+                    $this->send_error( __( 'Somthing is wrong, Please try later', 'erp' ) );
                 }
 
                 $this->send_success( $data );
@@ -749,7 +749,7 @@ class Ajax_Handler {
                 do_action( 'erp_crm_save_customer_schedule_feed', $save_data, $postdata );
 
                 if ( ! $data ) {
-                    $this->send_error( __( 'Somthing is wrong, Please try later', 'wp-erp' ) );
+                    $this->send_error( __( 'Somthing is wrong, Please try later', 'erp' ) );
                 }
 
                 $this->send_success( $data );
@@ -777,7 +777,7 @@ class Ajax_Handler {
                 $data = erp_crm_save_customer_feed_data( $save_data );
 
                 if ( ! $data ) {
-                    $this->send_error( __( 'Somthing is wrong, Please try later', 'wp-erp' ) );
+                    $this->send_error( __( 'Somthing is wrong, Please try later', 'erp' ) );
                 }
 
                 //@TODO: Need to send confirmation mail for assigned users
@@ -806,12 +806,12 @@ class Ajax_Handler {
         $this->verify_nonce( 'wp-erp-crm-customer-feed' );
 
         if ( ! $_POST['feed_id'] ) {
-            $this->send_error( __( 'Feeds Not found', 'wp-erp' ) );
+            $this->send_error( __( 'Feeds Not found', 'erp' ) );
         }
 
         erp_crm_customer_delete_activity_feed( $_POST['feed_id'] );
 
-        $this->send_success( __( 'Feed Deleted successfully', 'wp-erp' ) );
+        $this->send_success( __( 'Feed Deleted successfully', 'erp' ) );
     }
 
     public function add_schedules_from_calendar() {
@@ -832,11 +832,11 @@ class Ajax_Handler {
         parse_str( $_POST['form_data'] );
 
         if ( ! $save_search ) {
-            $this->send_error( __( 'Search item not found', 'wp-erp' ) );
+            $this->send_error( __( 'Search item not found', 'erp' ) );
         }
 
         if ( ! $erp_save_search_name ) {
-            $this->send_error( __( 'Search Key name not found', 'wp-erp' ) );
+            $this->send_error( __( 'Search Key name not found', 'erp' ) );
         }
 
         $postdata = [
@@ -846,7 +846,7 @@ class Ajax_Handler {
         $query_string = erp_crm_get_save_search_query_string( $postdata );
 
         if ( ! $query_string ) {
-            $this->send_error( __( 'Query not found', 'wp-erp' ) );
+            $this->send_error( __( 'Query not found', 'erp' ) );
         }
 
         $data = [
@@ -860,7 +860,7 @@ class Ajax_Handler {
         $result = erp_crm_insert_save_search( $data );
 
         if ( ! $result ) {
-            $this->send_error( __( 'Search does not save', 'wp-erp' ) );
+            $this->send_error( __( 'Search does not save', 'erp' ) );
         }
 
         $this->send_success( $result );
@@ -879,7 +879,7 @@ class Ajax_Handler {
         $id = ( isset( $_POST['search_id'] ) && ! empty( $_POST['search_id'] ) ) ? $_POST['search_id'] : 0;
 
         if ( ! $id ) {
-            $this->send_error( __( 'Search name not found', 'wp-erp' ) );
+            $this->send_error( __( 'Search name not found', 'erp' ) );
         }
 
         $result = erp_crm_get_save_search_item( [ 'id' => $id ] );
@@ -900,7 +900,7 @@ class Ajax_Handler {
         $id = ( isset( $_POST['search_id'] ) && ! empty( $_POST['search_id'] ) ) ? $_POST['search_id'] : 0;
 
         if ( ! $id ) {
-            $this->send_error( __( 'Search name not found', 'wp-erp' ) );
+            $this->send_error( __( 'Search name not found', 'erp' ) );
         }
 
         $result = erp_crm_delete_save_search_item( $id );
@@ -923,7 +923,7 @@ class Ajax_Handler {
         $result = erp_crm_customer_get_single_activity_feed( $query_id );
 
         if ( ! $result ) {
-            $this->send_error( __( 'Schedule data no found', 'wp-erp' ) );
+            $this->send_error( __( 'Schedule data no found', 'erp' ) );
         }
 
         $this->send_success( $result );

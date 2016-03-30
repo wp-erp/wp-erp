@@ -13,11 +13,11 @@ class Approved_Leave_Request extends Email {
 
     function __construct() {
         $this->id             = 'approved-leave-request';
-        $this->title          = __( 'Approved Leave Request', 'wp-erp' );
-        $this->description    = __( 'Approved leave request notification to employee.', 'wp-erp' );
+        $this->title          = __( 'Approved Leave Request', 'erp' );
+        $this->description    = __( 'Approved leave request notification to employee.', 'erp' );
 
-        $this->subject        = __( 'Your leave request has been approved', 'wp-erp');
-        $this->heading        = __( 'Leave Request Approved', 'wp-erp');
+        $this->subject        = __( 'Your leave request has been approved', 'erp');
+        $this->heading        = __( 'Leave Request Approved', 'erp');
 
         $this->find = [
             'full-name'    => '{employee_name}',

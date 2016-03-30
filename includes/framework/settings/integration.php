@@ -11,7 +11,7 @@ class ERP_Integration_Settings extends ERP_Settings_Page {
      */
     function __construct() {
         $this->id    = 'erp-integration';
-        $this->label = __( 'Integrations', 'wp-erp' );
+        $this->label = __( 'Integrations', 'erp' );
 
         add_action( 'erp_admin_field_integrations', [ $this, 'integrations' ] );
     }
@@ -25,8 +25,8 @@ class ERP_Integration_Settings extends ERP_Settings_Page {
         $fields = [
 
             [
-                'title' => __( 'Integrations', 'wp-erp' ),
-                'desc'  => __( 'Click on button to configure.', 'wp-erp' ),
+                'title' => __( 'Integrations', 'erp' ),
+                'desc'  => __( 'Click on button to configure.', 'erp' ),
                 'type'  => 'title',
                 'id'    => 'integration_settings'
             ],
@@ -87,8 +87,8 @@ class ERP_Integration_Settings extends ERP_Settings_Page {
                         <tr>
                             <?php
                                 $columns = apply_filters( 'erp_integration_setting_columns', array(
-                                    'name'        => __( 'Integration', 'wp-erp' ),
-                                    'description' => __( 'Description', 'wp-erp' ),
+                                    'name'        => __( 'Integration', 'erp' ),
+                                    'description' => __( 'Description', 'erp' ),
                                     'actions'     => ''
                                 ) );
 
@@ -127,7 +127,7 @@ class ERP_Integration_Settings extends ERP_Settings_Page {
 
                                     case 'actions' :
                                         echo '<td class="erp-integration-settings-table-' . esc_attr( $key ) . '">
-                                            <a class="button alignright" href="' . admin_url( 'admin.php?page=erp-settings&tab=erp-integration&section=' . strtolower( $integration_key ) ) . '">' . __( 'Configure', 'wp-erp' ) . '</a>
+                                            <a class="button alignright" href="' . admin_url( 'admin.php?page=erp-settings&tab=erp-integration&section=' . strtolower( $integration_key ) ) . '">' . __( 'Configure', 'erp' ) . '</a>
                                         </td>';
                                         break;
 

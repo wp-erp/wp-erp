@@ -10,8 +10,8 @@
     </div>
 
     <div class="timeline-footer" v-if="showFooter" v-if="(feed.type != 'email')">
-        <a href="#" @click.prevent="editFeed( feed )"><?php _e( 'Edit', 'wp-erp' ); ?> |</a>
-        <a href="#" @click.prevent="deleteFeed( feed )"><?php _e( 'Delete', 'wp-erp' ); ?></a>
+        <a href="#" @click.prevent="editFeed( feed )"><?php _e( 'Edit', 'erp' ); ?> |</a>
+        <a href="#" @click.prevent="deleteFeed( feed )"><?php _e( 'Delete', 'erp' ); ?></a>
     </div>
 
 </div>
@@ -21,7 +21,7 @@
     <span class="time cancel-timeline-feed-edit" @click.prevent="cancelUpdate"><i class="fa fa-times"></i></span>
 
     <h3 class="timeline-header" @click.prevent="toggleFooter">
-        <i class="fa fa-pencil-square-o"></i> <?php _e( 'Edit this feed', 'wp-erp' ); ?>
+        <i class="fa fa-pencil-square-o"></i> <?php _e( 'Edit this feed', 'erp' ); ?>
     </h3>
 
     <div class="timeline-body">

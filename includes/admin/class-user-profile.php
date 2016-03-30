@@ -54,12 +54,12 @@ class User_Profile {
 
         ?>
 
-        <h3><?php esc_html_e( 'WP-ERP Role', 'wp-erp' ); ?></h3>
+        <h3><?php esc_html_e( 'WP-ERP Role', 'erp' ); ?></h3>
 
         <table class="form-table">
             <tbody>
                 <tr>
-                    <th><label for="erp-hr-role"><?php esc_html_e( 'Role', 'wp-erp' ); ?></label></th>
+                    <th><label for="erp-hr-role"><?php esc_html_e( 'Role', 'erp' ); ?></label></th>
                     <td>
                         <?php do_action( 'erp_user_profile_role', $profileuser ); ?>
 

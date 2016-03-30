@@ -1,5 +1,5 @@
 <div class="wrap erp erp-company-single">
-    <h2><?php _e( 'Company Details', 'wp-erp' ); ?></h2>
+    <h2><?php _e( 'Company Details', 'erp' ); ?></h2>
 
     <div class="metabox-holder company-accounts">
         <?php
@@ -14,7 +14,7 @@
                 </div><!-- .logo-area -->
 
                 <div class="content-area">
-                    <h2><?php echo $company->name; ?> <a href="<?php echo $company->get_edit_url(); ?>"><?php _e( 'Edit', 'wp-erp' ); ?></a></h2>
+                    <h2><?php echo $company->name; ?> <a href="<?php echo $company->get_edit_url(); ?>"><?php _e( 'Edit', 'erp' ); ?></a></h2>
 
                     <address class="address">
                         <?php echo $company->get_formatted_address(); ?>
@@ -25,9 +25,9 @@
 
         <div class="company-location-wrap">
             <h2>
-                <?php _e( 'Locations', 'wp-erp' ); ?>
+                <?php _e( 'Locations', 'erp' ); ?>
 
-                <a href="#" id="erp-company-new-location" class="add-new-h2 erp-add-new-location" data-title="<?php _e( 'New Location', 'wp-erp' ); ?>" data-id="<?php echo $company->id; ?>"><?php _e( 'Create New Location', 'wp-erp' ); ?></a>
+                <a href="#" id="erp-company-new-location" class="add-new-h2 erp-add-new-location" data-title="<?php _e( 'New Location', 'erp' ); ?>" data-id="<?php echo $company->id; ?>"><?php _e( 'Create New Location', 'erp' ); ?></a>
             </h2>
 
             <div id="company-locations">
@@ -66,7 +66,7 @@
                         <?php
                     }
                 } else {
-                    _e( 'No extra locations found!', 'wp-erp' );
+                    _e( 'No extra locations found!', 'erp' );
                 }
                 ?>
                 </div><!-- #company-locations-inside -->

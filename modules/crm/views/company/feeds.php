@@ -60,13 +60,13 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
         <div class="feed-load-more" v-show="( feeds.length >= limit ) && !loadingFinish">
             <button @click="loadMoreContent( feeds )" class="button">
                 <i class="fa fa-cog fa-spin" v-if="loading"></i>
-                &nbsp;<span v-if="!loading"><?php _e( 'Load More', 'wp-erp' ); ?></span>
-                &nbsp;<span v-else><?php _e( 'Loading..', 'wp-erp' ); ?></span>
+                &nbsp;<span v-if="!loading"><?php _e( 'Load More', 'erp' ); ?></span>
+                &nbsp;<span v-else><?php _e( 'Loading..', 'erp' ); ?></span>
             </button>
         </div>
 
         <div class="no-activity-found" v-if="!feeds.length">
-            <?php _e( 'No Activity found for this Company', 'wp-erp' ); ?>
+            <?php _e( 'No Activity found for this Company', 'erp' ); ?>
         </div>
     </div>
 </div>

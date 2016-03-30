@@ -3,7 +3,7 @@
 <div class="info-form-wrap">
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'    => __( 'Date', 'wp-erp' ),
+            'label'    => __( 'Date', 'erp' ),
             'name'     => 'date',
             'value'    => date( 'Y-m-d', current_time( 'timestamp' ) ),
             'required' => true,
@@ -13,17 +13,17 @@
 
     <div class="row" data-selected="{{ data.work.location }}">
         <?php erp_html_form_input( array(
-            'label'    => __( 'Location', 'wp-erp' ),
+            'label'    => __( 'Location', 'erp' ),
             'name'     => 'location',
             'value'    => '',
             'type'    => 'select',
-            'options'  => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_company_get_location_dropdown_raw()
+            'options'  => array( 0 => __( '- Select -', 'erp' ) ) + erp_company_get_location_dropdown_raw()
         ) ); ?>
     </div>
 
     <div class="row" data-selected="{{ data.work.department }}">
         <?php erp_html_form_input( array(
-            'label'   => __( 'Department', 'wp-erp' ),
+            'label'   => __( 'Department', 'erp' ),
             'name'    => 'department',
             'value'   => '',
             'type'    => 'select',
@@ -33,7 +33,7 @@
 
     <div class="row" data-selected="{{ data.work.designation }}">
         <?php erp_html_form_input( array(
-            'label'   => __( 'Job Title', 'wp-erp' ),
+            'label'   => __( 'Job Title', 'erp' ),
             'name'    => 'designation',
             'value'   => '',
             'type'    => 'select',
@@ -43,7 +43,7 @@
 
     <div class="row" data-selected="{{ data.work.reporting_to }}">
         <?php erp_html_form_input( array(
-            'label'   => __( 'Reporting To', 'wp-erp' ),
+            'label'   => __( 'Reporting To', 'erp' ),
             'name'    => 'reporting_to',
             'value'   => '',
             'type'    => 'select',

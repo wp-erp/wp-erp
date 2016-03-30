@@ -9,14 +9,14 @@
  * @return void
  */
 function erp_crm_dashboard_right_widgets_area() {
-    erp_admin_dash_metabox( __( '<i class="fa fa-calendar-check-o"></i> Todays Schedules', 'wp-erp' ), 'erp_crm_dashboard_widget_todays_schedules' );
-    erp_admin_dash_metabox( __( '<i class="fa fa-calendar-check-o"></i> Upcoming Schedules', 'wp-erp' ), 'erp_crm_dashboard_widget_upcoming_schedules' );
-    erp_admin_dash_metabox( __( '<i class="fa fa-users"></i> Recently Added', 'wp-erp' ), 'erp_crm_dashboard_widget_latest_contact' );
+    erp_admin_dash_metabox( __( '<i class="fa fa-calendar-check-o"></i> Todays Schedules', 'erp' ), 'erp_crm_dashboard_widget_todays_schedules' );
+    erp_admin_dash_metabox( __( '<i class="fa fa-calendar-check-o"></i> Upcoming Schedules', 'erp' ), 'erp_crm_dashboard_widget_upcoming_schedules' );
+    erp_admin_dash_metabox( __( '<i class="fa fa-users"></i> Recently Added', 'erp' ), 'erp_crm_dashboard_widget_latest_contact' );
 
     // Display the cloud inbound emails widget only if the site is connected with cloud.
     $is_cloud_active = erp_is_cloud_active();
     if ( $is_cloud_active ) {
-        erp_admin_dash_metabox( __( '<i class="fa fa-envelope"></i> Total Inbound Emails', 'wp-erp' ), 'erp_crm_dashboard_widget_cloud_inbound_emails' );
+        erp_admin_dash_metabox( __( '<i class="fa fa-envelope"></i> Total Inbound Emails', 'erp' ), 'erp_crm_dashboard_widget_cloud_inbound_emails' );
     }
 }
 
@@ -29,7 +29,7 @@ function erp_crm_dashboard_right_widgets_area() {
  * @return void
  */
 function erp_crm_dashboard_left_widgets_area() {
-    erp_admin_dash_metabox( __( '<i class="fa fa-calendar"></i> My schedules', 'wp-erp' ), 'erp_crm_dashboard_widget_my_schedules' );
+    erp_admin_dash_metabox( __( '<i class="fa fa-calendar"></i> My schedules', 'erp' ), 'erp_crm_dashboard_widget_my_schedules' );
 }
 
 /**
@@ -57,24 +57,24 @@ function erp_crm_dashboard_widget_todays_schedules() {
                     });
 
                     if ( count( $invite_users) == 1 ) {
-                        $users_text = sprintf( '%s <span>%s</span>', __( 'and', 'wp-erp' ), reset( $invite_users ) );
+                        $users_text = sprintf( '%s <span>%s</span>', __( 'and', 'erp' ), reset( $invite_users ) );
                     } else if ( count( $invite_users) > 1 ) {
-                        $users_text = sprintf( '%s <span class="erp-tips" title="%s">%d %s</span>', __( 'and', 'wp-erp' ), implode( '<br>', $invite_users ), count( $invite_users ), __( 'Others') );
+                        $users_text = sprintf( '%s <span class="erp-tips" title="%s">%d %s</span>', __( 'and', 'erp' ), implode( '<br>', $invite_users ), count( $invite_users ), __( 'Others') );
                     }
 
                     if ( $schedule['log_type'] == 'meeting' ) {
-                        echo sprintf( '%s <a href="%s">%s</a> %s %s %s', __( '<i class="fa fa-calendar"></i> Meeting with', 'wp-erp' ), erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['type'] ), $contact_user, $users_text, __( 'at', 'wp-erp' ), date( 'g:ia', strtotime( $schedule['start_date'] ) ) ) . " <a href='#' data-schedule_id=' " . $schedule['id'] . " ' data-title='" . $schedule['extra']['schedule_title'] . "' class='erp-crm-dashbaord-show-details-schedule'>" . __( 'Details &rarr;', 'wp-erp' ) . "</a>";
+                        echo sprintf( '%s <a href="%s">%s</a> %s %s %s', __( '<i class="fa fa-calendar"></i> Meeting with', 'erp' ), erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['type'] ), $contact_user, $users_text, __( 'at', 'erp' ), date( 'g:ia', strtotime( $schedule['start_date'] ) ) ) . " <a href='#' data-schedule_id=' " . $schedule['id'] . " ' data-title='" . $schedule['extra']['schedule_title'] . "' class='erp-crm-dashbaord-show-details-schedule'>" . __( 'Details &rarr;', 'erp' ) . "</a>";
                     }
 
                     if ( $schedule['log_type'] == 'call' ) {
-                        echo sprintf( '%s <a href="%s">%s</a> %s %s %s', __( '<i class="fa fa-phone"></i> Call to', 'wp-erp' ), erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['type'] ), $contact_user, $users_text, __( 'at', 'wp-erp' ), date( 'g:ia', strtotime( $schedule['start_date'] ) ) ) . " <a href='#' data-schedule_id=' " . $schedule['id'] . " ' data-title='" . $schedule['extra']['schedule_title'] . "' class='erp-crm-dashbaord-show-details-schedule'>" . __( 'Details &rarr;', 'wp-erp' ) . "</a>";
+                        echo sprintf( '%s <a href="%s">%s</a> %s %s %s', __( '<i class="fa fa-phone"></i> Call to', 'erp' ), erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['type'] ), $contact_user, $users_text, __( 'at', 'erp' ), date( 'g:ia', strtotime( $schedule['start_date'] ) ) ) . " <a href='#' data-schedule_id=' " . $schedule['id'] . " ' data-title='" . $schedule['extra']['schedule_title'] . "' class='erp-crm-dashbaord-show-details-schedule'>" . __( 'Details &rarr;', 'erp' ) . "</a>";
                     }
                 ?>
             </li>
         <?php endforeach ?>
     </ul>
      <?php else : ?>
-        <?php _e( 'No schedules found', 'wp-erp' ); ?>
+        <?php _e( 'No schedules found', 'erp' ); ?>
     <?php endif;
 }
 
@@ -103,24 +103,24 @@ function erp_crm_dashboard_widget_upcoming_schedules() {
                         });
 
                         if ( count( $invite_users) == 1 ) {
-                            $users_text = sprintf( '%s <span>%s</span>', __( 'and', 'wp-erp' ), reset( $invite_users ) );
+                            $users_text = sprintf( '%s <span>%s</span>', __( 'and', 'erp' ), reset( $invite_users ) );
                         } else if ( count( $invite_users) > 1 ) {
-                            $users_text = sprintf( '%s <span class="erp-tips" title="%s">%d %s</span>', __( 'and', 'wp-erp' ), implode( '<br>', $invite_users ), count( $invite_users ), __( 'Others') );
+                            $users_text = sprintf( '%s <span class="erp-tips" title="%s">%d %s</span>', __( 'and', 'erp' ), implode( '<br>', $invite_users ), count( $invite_users ), __( 'Others') );
                         }
 
                         if ( $schedule['log_type'] == 'meeting' ) {
-                            echo sprintf( '%s <a href="%s">%s</a> %s %s %s %s %s', __( '<i class="fa fa-calendar"></i> Meeting with', 'wp-erp' ), erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['type'] ), $contact_user, $users_text, __( 'on', 'wp-erp' ), erp_format_date( $schedule['start_date'] ), __( 'at', 'wp-erp' ), date( 'g:ia', strtotime( $schedule['start_date'] ) ) ) . " <a href='#' data-schedule_id=' " . $schedule['id'] . " ' data-title='" . $schedule['extra']['schedule_title'] . "' class='erp-crm-dashbaord-show-details-schedule'>" . __( 'Details &rarr;', 'wp-erp' ) . "</a>";
+                            echo sprintf( '%s <a href="%s">%s</a> %s %s %s %s %s', __( '<i class="fa fa-calendar"></i> Meeting with', 'erp' ), erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['type'] ), $contact_user, $users_text, __( 'on', 'erp' ), erp_format_date( $schedule['start_date'] ), __( 'at', 'erp' ), date( 'g:ia', strtotime( $schedule['start_date'] ) ) ) . " <a href='#' data-schedule_id=' " . $schedule['id'] . " ' data-title='" . $schedule['extra']['schedule_title'] . "' class='erp-crm-dashbaord-show-details-schedule'>" . __( 'Details &rarr;', 'erp' ) . "</a>";
                         }
 
                         if ( $schedule['log_type'] == 'call' ) {
-                            echo sprintf( '%s <a href="%s">%s</a> %s %s %s %s %s', __( '<i class="fa fa-phone"></i> Call to', 'wp-erp' ), erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['type'] ), $contact_user, $users_text, __( 'on', 'wp-erp' ), erp_format_date( $schedule['start_date'] ), __( 'at', 'wp-erp' ), date( 'g:ia', strtotime( $schedule['start_date'] ) ) ) . " <a href='#' data-schedule_id=' " . $schedule['id'] . " ' data-title='" . $schedule['extra']['schedule_title'] . "' class='erp-crm-dashbaord-show-details-schedule'>" . __( 'Details &rarr;', 'wp-erp' ) . "</a>";
+                            echo sprintf( '%s <a href="%s">%s</a> %s %s %s %s %s', __( '<i class="fa fa-phone"></i> Call to', 'erp' ), erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['type'] ), $contact_user, $users_text, __( 'on', 'erp' ), erp_format_date( $schedule['start_date'] ), __( 'at', 'erp' ), date( 'g:ia', strtotime( $schedule['start_date'] ) ) ) . " <a href='#' data-schedule_id=' " . $schedule['id'] . " ' data-title='" . $schedule['extra']['schedule_title'] . "' class='erp-crm-dashbaord-show-details-schedule'>" . __( 'Details &rarr;', 'erp' ) . "</a>";
                         }
                     ?>
                 </li>
             <?php endforeach ?>
         </ul>
     <?php else : ?>
-        <?php _e( 'No schedules found', 'wp-erp' ); ?>
+        <?php _e( 'No schedules found', 'erp' ); ?>
     <?php endif;
 }
 
@@ -181,7 +181,7 @@ function erp_crm_dashboard_widget_latest_contact() {
     $companies = erp_get_peoples( [ 'type' => 'company', 'orderby' => 'created', 'order' => 'DESC', 'number' => 5 ] );
     ?>
 
-    <h4><?php _e( 'Contact Lists', 'wp-erp' ); ?></h4>
+    <h4><?php _e( 'Contact Lists', 'erp' ); ?></h4>
 
     <?php if ( $contacts ) { ?>
 
@@ -195,18 +195,18 @@ function erp_crm_dashboard_widget_latest_contact() {
                         <p class="contact-name"><a href="<?php echo erp_crm_get_details_url( $contact->id, 'contact' ); ?>"><?php echo $contact->first_name . ' ' . $contact->last_name; ?></a></p>
                         <p class="contact-stage"><?php echo erp_people_get_meta( $contact->id, 'life_stage', true ); ?></p>
                     </div>
-                    <span class="contact-created-time erp-tips" title="<?php echo sprintf( '%s %s', __( 'Created on', 'wp-erp' ), erp_format_date( $contact->created ) )  ?>"><i class="fa fa-clock-o"></i></span>
+                    <span class="contact-created-time erp-tips" title="<?php echo sprintf( '%s %s', __( 'Created on', 'erp' ), erp_format_date( $contact->created ) )  ?>"><i class="fa fa-clock-o"></i></span>
                 </li>
             <?php endforeach ?>
         </ul>
 
     <?php } else { ?>
-        <?php _e( 'No contacts found', 'wp-erp' ); ?>
+        <?php _e( 'No contacts found', 'erp' ); ?>
     <?php } ?>
 
     <hr>
 
-    <h4><?php _e( 'Company Lists', 'wp-erp' ); ?></h4>
+    <h4><?php _e( 'Company Lists', 'erp' ); ?></h4>
 
     <?php if ( $companies ) { ?>
         <ul class="erp-list erp-latest-contact-list">
@@ -220,13 +220,13 @@ function erp_crm_dashboard_widget_latest_contact() {
                         <p class="contact-name"><a href="<?php echo erp_crm_get_details_url( $company->id, 'company' ); ?>"><?php echo $company->company; ?></a></p>
                         <p class="contact-stage"><?php echo erp_people_get_meta( $company->id, 'life_stage', true ); ?></p>
                     </div>
-                    <span class="contact-created-time erp-tips" title="<?php echo sprintf( '%s %s', __( 'Created on', 'wp-erp' ), erp_format_date( $company->created ) )  ?>"><i class="fa fa-clock-o"></i></span>
+                    <span class="contact-created-time erp-tips" title="<?php echo sprintf( '%s %s', __( 'Created on', 'erp' ), erp_format_date( $company->created ) )  ?>"><i class="fa fa-clock-o"></i></span>
                 </li>
             <?php endforeach ?>
         </ul>
     <?php
     } else {
-        _e( 'No companies found', 'wp-erp' );
+        _e( 'No companies found', 'erp' );
     }
 }
 

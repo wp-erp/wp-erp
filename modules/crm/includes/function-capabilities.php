@@ -89,13 +89,13 @@ function erp_crm_get_user_role( $user_id = 0 ) {
 function erp_crm_get_roles() {
     $roles = [
         erp_crm_get_manager_role() => [
-            'name'         => __( 'CRM Manager', 'wp-erp' ),
+            'name'         => __( 'CRM Manager', 'erp' ),
             'public'       => false,
             'capabilities' => erp_crm_get_caps_for_role( erp_crm_get_manager_role() )
         ],
 
         erp_crm_get_agent_role() => [
-            'name'         => __( 'CRM Agent', 'wp-erp' ),
+            'name'         => __( 'CRM Agent', 'erp' ),
             'public'       => false,
             'capabilities' => erp_crm_get_caps_for_role( erp_crm_get_agent_role() )
         ],
@@ -209,21 +209,21 @@ function erp_crm_permission_management_field( $employee ) {
     $is_agent   = user_can( $employee->id, erp_crm_get_agent_role() ) ? 'on' : 'off';
 
     erp_html_form_input( array(
-        'label' => __( 'CRM Manager', 'wp-erp' ),
+        'label' => __( 'CRM Manager', 'erp' ),
         'name'  => 'crm_manager',
         'type'  => 'checkbox',
         'tag'   => 'div',
         'value' => $is_manager,
-        'help'  => __( 'This Employee is Manager', 'wp-erp'  )
+        'help'  => __( 'This Employee is Manager', 'erp'  )
     ) );
 
     erp_html_form_input( array(
-        'label' => __( 'CRM Agent', 'wp-erp' ),
+        'label' => __( 'CRM Agent', 'erp' ),
         'name'  => 'crm_agent',
         'type'  => 'checkbox',
         'tag'   => 'div',
         'value' => $is_agent,
-        'help'  => __( 'This Employee is CRM agent', 'wp-erp'  )
+        'help'  => __( 'This Employee is CRM agent', 'erp'  )
     ) );
 }
 

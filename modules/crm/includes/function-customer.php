@@ -69,7 +69,7 @@ function erp_crm_get_employees_with_own( $selected = '' ) {
     if ( $employees ) {
         foreach ( $employees as $key => $title ) {
             if ( $key == get_current_user_id() ) {
-                $title = sprintf( '%s ( %s )', __( 'Me', 'wp-erp' ), $title );
+                $title = sprintf( '%s ( %s )', __( 'Me', 'erp' ), $title );
             }
             $dropdown .= sprintf( "<option value='%s'%s>%s</option>\n", $key, selected( $selected, $key, false ), $title );
         }
@@ -117,7 +117,8 @@ function erp_crm_get_life_stages_dropdown_raw( $label = [] ) {
     $life_stages = [
         'customer'    => __( 'Customer', 'wp-erp' ),
         'lead'        => __( 'Lead', 'wp-erp' ),
-        'opportunity' => __( 'Opportunity', 'wp-erp' )
+        'opportunity' => __( 'Opportunity', 'wp-erp' ),
+        'subscriber'  => __( 'Subscriber', 'wp-erp' )
     ];
 
     if ( $label ) {
@@ -138,8 +139,8 @@ function erp_crm_get_life_stages_dropdown_raw( $label = [] ) {
 function erp_crm_get_customer_type( $label = [] ) {
 
     $type = [
-        'customer' => __( 'Customer', 'wp-erp' ),
-        'company'  => __( 'Company', 'wp-erp' ),
+        'customer' => __( 'Customer', 'erp' ),
+        'company'  => __( 'Company', 'erp' ),
     ];
 
     if ( $label ) {
@@ -280,7 +281,7 @@ function erp_crm_customer_restore( $customer_ids ) {
 function erp_crm_customer_get_status_count( $type = null ) {
     global $wpdb;
 
-    $statuses = erp_crm_get_life_stages_dropdown_raw( [ 'all' => __( 'All', 'wp-erp' ) ] ) ;
+    $statuses = erp_crm_get_life_stages_dropdown_raw( [ 'all' => __( 'All', 'erp' ) ] ) ;
     $counts   = array();
 
     foreach ( $statuses as $status => $label ) {
@@ -288,7 +289,7 @@ function erp_crm_customer_get_status_count( $type = null ) {
     }
 
     $cache_key = 'erp-crm-customer-status-counts-'. $type;
-    $results = wp_cache_get( $cache_key, 'wp-erp' );
+    $results = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $results ) {
 
@@ -305,7 +306,7 @@ function erp_crm_customer_get_status_count( $type = null ) {
                     ->get()
                     ->toArray();
 
-        wp_cache_set( $cache_key, $results, 'wp-erp' );
+        wp_cache_set( $cache_key, $results, 'erp' );
     }
 
     foreach ( $results as $row ) {
@@ -448,22 +449,22 @@ function erp_crm_get_social_field() {
 
     $social_field = [
         'facebook' => [
-            'title' => __( 'Facebook', 'wp-erp' ),
+            'title' => __( 'Facebook', 'erp' ),
             'icon' => '<i class="fa fa-facebook-square"></i>',
         ],
 
         'twitter' => [
-            'title' => __( 'Twitter', 'wp-erp' ),
+            'title' => __( 'Twitter', 'erp' ),
             'icon' => '<i class="fa fa-twitter-square"></i>',
         ],
 
         'googleplus' => [
-            'title' => __( 'Google Plus', 'wp-erp' ),
+            'title' => __( 'Google Plus', 'erp' ),
             'icon' => '<i class="fa fa-google-plus-square"></i>',
         ],
 
         'linkedin' => [
-            'title' => __( 'Linkedin', 'wp-erp' ),
+            'title' => __( 'Linkedin', 'erp' ),
             'icon' => '<i class="fa fa-linkedin-square"></i>',
         ]
     ];
@@ -482,27 +483,27 @@ function erp_crm_get_customer_feeds_nav() {
     return apply_filters( 'erp_crm_customer_feeds_nav', [
 
         'new_note' => [
-            'title' => __( 'New Note', 'wp-erp' ),
+            'title' => __( 'New Note', 'erp' ),
             'icon'  => '<i class="fa fa-file-text-o"></i>'
         ],
 
         'email' => [
-            'title' => __( 'Email', 'wp-erp' ),
+            'title' => __( 'Email', 'erp' ),
             'icon'  => '<i class="fa fa-envelope-o"></i>'
         ],
 
         'log_activity' => [
-            'title' => __( 'Log Activity', 'wp-erp' ),
+            'title' => __( 'Log Activity', 'erp' ),
             'icon'  => '<i class="fa fa-list"></i>'
         ],
 
         'schedule' => [
-            'title' => __( 'Schedule', 'wp-erp' ),
+            'title' => __( 'Schedule', 'erp' ),
             'icon'  => '<i class="fa fa-calendar-check-o"></i>'
         ],
 
         'tasks' => [
-            'title' => __( 'Tasks', 'wp-erp' ),
+            'title' => __( 'Tasks', 'erp' ),
             'icon'  => '<i class="fa fa-check-square-o"></i>'
         ]
 
@@ -896,7 +897,7 @@ function erp_crm_get_contact_groups( $args = [] ) {
 
     $args      = wp_parse_args( $args, $defaults );
     $cache_key = 'erp-crm-contact-group-' . md5( serialize( $args ) );
-    $items     = wp_cache_get( $cache_key, 'wp-erp' );
+    $items     = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $items ) {
         $results               = [];
@@ -936,7 +937,7 @@ function erp_crm_get_contact_groups( $args = [] ) {
             $items = WeDevs\ERP\CRM\Models\ContactGroup::count();
         }
 
-        wp_cache_set( $cache_key, $items, 'wp-erp' );
+        wp_cache_set( $cache_key, $items, 'erp' );
     }
 
     return $items;
@@ -994,7 +995,7 @@ function erp_crm_get_subscriber_contact( $args = [] ) {
 
     $args      = wp_parse_args( $args, $defaults );
     $cache_key = 'erp-crm-subscriber-contact-' . md5( serialize( $args ) );
-    $items     = wp_cache_get( $cache_key, 'wp-erp' );
+    $items     = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $items ) {
         $converted_data       = [];
@@ -1039,7 +1040,7 @@ function erp_crm_get_subscriber_contact( $args = [] ) {
             $items = WeDevs\ERP\CRM\Models\ContactSubscriber::leftjoin( $contact_group_tb, $contact_group_tb . '.id', '=', $contact_subscribe_tb . '.group_id' )->groupBy('user_id')->count();
         }
 
-        wp_cache_set( $cache_key, $items, 'wp-erp' );
+        wp_cache_set( $cache_key, $items, 'erp' );
     }
 
     return $items;
@@ -1102,11 +1103,11 @@ function erp_crm_create_new_contact_subscriber( $args = [] ) {
     $args = wp_parse_args( $args, $defaults );
 
     if ( empty( $args['group_id'] ) ) {
-        return new WP_Error( 'no-group', __( 'No group selected', 'wp-erp' ) );
+        return new WP_Error( 'no-group', __( 'No group selected', 'erp' ) );
     }
 
     if ( empty( $args['user_id'] ) ) {
-        return new WP_Error( 'user-id', __( 'No contact founds', 'wp-erp' ) );
+        return new WP_Error( 'user-id', __( 'No contact founds', 'erp' ) );
     }
 
     return \WeDevs\ERP\CRM\Models\ContactSubscriber::create( $args );
@@ -1240,7 +1241,7 @@ function erp_crm_get_campaigns( $args = [] ) {
 
     $args      = wp_parse_args( $args, $defaults );
     $cache_key = 'erp-crm-campaign-' . md5( serialize( $args ) );
-    $items     = wp_cache_get( $cache_key, 'wp-erp' );
+    $items     = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $items ) {
         $campaigns = new \WeDevs\ERP\CRM\Models\Campaign();
@@ -1273,7 +1274,7 @@ function erp_crm_get_campaigns( $args = [] ) {
             $items = WeDevs\ERP\CRM\Models\Campaign::count();
         }
 
-        wp_cache_set( $cache_key, $items, 'wp-erp' );
+        wp_cache_set( $cache_key, $items, 'erp' );
     }
 
     return $items;
@@ -1292,81 +1293,81 @@ function erp_crm_get_serach_key( $type = '' ) {
     $fields = [
 
         'email' => [
-            'title'       => __( 'Email', 'wp-erp' ),
+            'title'       => __( 'Email', 'erp' ),
             'type' => 'text',
             'text' => '',
             'condval' => '',
             'condition'   => [
-                '~'  => __( 'contains', 'wp-erp' ),
-                '!~' => __( 'not contains', 'wp-erp' ),
-                '^'  => __( 'begins with', 'wp-erp' ),
-                '$'  => __( 'ends with', 'wp-erp' ),
+                '~'  => __( 'contains', 'erp' ),
+                '!~' => __( 'not contains', 'erp' ),
+                '^'  => __( 'begins with', 'erp' ),
+                '$'  => __( 'ends with', 'erp' ),
             ]
         ],
 
         'phone' => [
-            'title'     => __( 'Phone', 'wp-erp' ),
+            'title'     => __( 'Phone', 'erp' ),
             'type'      => 'text',
             'text'      => '',
             'condval'   => '',
             'condition' => [
-                ''   => __( 'has', 'wp-erp' ),
-                '~'  => __( 'contains', 'wp-erp' ),
-                '!~' => __( 'not contains', 'wp-erp' ),
-                '^'  => __( 'begins with', 'wp-erp' ),
-                '$'  => __( 'ends with', 'wp-erp' ),
+                ''   => __( 'has', 'erp' ),
+                '~'  => __( 'contains', 'erp' ),
+                '!~' => __( 'not contains', 'erp' ),
+                '^'  => __( 'begins with', 'erp' ),
+                '$'  => __( 'ends with', 'erp' ),
             ]
         ],
 
         'mobile' => [
-            'title'     => __( 'Mobile', 'wp-erp' ),
+            'title'     => __( 'Mobile', 'erp' ),
             'type'      => 'text',
             'text'      => '',
             'condval'   => '',
             'condition' => [
-                ''   => __( 'has', 'wp-erp' ),
-                '~'  => __( 'contains', 'wp-erp' ),
-                '!~' => __( 'not contains', 'wp-erp' ),
-                '^'  => __( 'begins with', 'wp-erp' ),
-                '$'  => __( 'ends with', 'wp-erp' ),
+                ''   => __( 'has', 'erp' ),
+                '~'  => __( 'contains', 'erp' ),
+                '!~' => __( 'not contains', 'erp' ),
+                '^'  => __( 'begins with', 'erp' ),
+                '$'  => __( 'ends with', 'erp' ),
             ]
         ],
 
         'website' => [
-            'title'     => __( 'Website', 'wp-erp' ),
+            'title'     => __( 'Website', 'erp' ),
             'type'      => 'text',
             'text'      => '',
             'condval'   => '',
             'condition' => [
-                ''   => __( 'has', 'wp-erp' ),
-                '~'  => __( 'contains', 'wp-erp' ),
-                '!~' => __( 'not contains', 'wp-erp' ),
-                '^'  => __( 'begins with', 'wp-erp' ),
-                '$'  => __( 'ends with', 'wp-erp' ),
+                ''   => __( 'has', 'erp' ),
+                '~'  => __( 'contains', 'erp' ),
+                '!~' => __( 'not contains', 'erp' ),
+                '^'  => __( 'begins with', 'erp' ),
+                '$'  => __( 'ends with', 'erp' ),
             ]
         ],
 
         'city' => [
-            'title'     => __( 'City', 'wp-erp' ),
+            'title'     => __( 'City', 'erp' ),
             'type'      => 'text',
             'text'      => '',
             'condval'   => '',
             'condition' => [
-                ''   => __( 'from', 'wp-erp' ),
-                '!'  => __( 'not from', 'wp-erp' ),
-                '~'  => __( 'contains', 'wp-erp' ),
-                '!~' => __( 'not contains', 'wp-erp' )
+                ''   => __( 'from', 'erp' ),
+                '!'  => __( 'not from', 'erp' ),
+                '~'  => __( 'contains', 'erp' ),
+                '!~' => __( 'not contains', 'erp' )
             ]
         ],
 
         'country_state' => [
-            'title'     => __( 'Country/State', 'wp-erp' ),
+            'title'     => __( 'Country/State', 'erp' ),
             'type'      => 'dropdown',
             'text'      => '',
             'condval'   => '',
             'condition' => [
-                ''   => __( 'from', 'wp-erp' ),
-                '!'  => __( 'not from', 'wp-erp' )
+                ''   => __( 'from', 'erp' ),
+                '!'  => __( 'not from', 'erp' )
             ],
             'options' => \WeDevs\ERP\Countries::instance()->country_dropdown_options(),
         ],
@@ -1394,32 +1395,32 @@ function erp_crm_get_serach_key( $type = '' ) {
 function erp_crm_get_customer_serach_key() {
     return apply_filters( 'erp_crm_customer_search_fields', [
         'first_name' => [
-            'title'       => __( 'First Name', 'wp-erp' ),
+            'title'       => __( 'First Name', 'erp' ),
             'type' => 'text',
             'text' => '',
             'condval' => '',
             'condition'   => [
-                ''   => __( 'is', 'wp-erp' ),
-                '!'  => __( 'is not', 'wp-erp' ),
-                '~'  => __( 'contains', 'wp-erp' ),
-                '!~' => __( 'not contains', 'wp-erp' ),
-                '^'  => __( 'begins with', 'wp-erp' ),
-                '$'  => __( 'ends with', 'wp-erp' ),
+                ''   => __( 'is', 'erp' ),
+                '!'  => __( 'is not', 'erp' ),
+                '~'  => __( 'contains', 'erp' ),
+                '!~' => __( 'not contains', 'erp' ),
+                '^'  => __( 'begins with', 'erp' ),
+                '$'  => __( 'ends with', 'erp' ),
             ]
         ],
 
         'last_name' => [
-            'title'       => __( 'Last Name', 'wp-erp' ),
+            'title'       => __( 'Last Name', 'erp' ),
             'type' => 'text',
             'text' => '',
             'condval' => '',
             'condition'   => [
-                ''   => __( 'is', 'wp-erp' ),
-                '!'  => __( 'is not', 'wp-erp' ),
-                '~'  => __( 'contains', 'wp-erp' ),
-                '!~' => __( 'not contains', 'wp-erp' ),
-                '^'  => __( 'begins with', 'wp-erp' ),
-                '$'  => __( 'ends with', 'wp-erp' ),
+                ''   => __( 'is', 'erp' ),
+                '!'  => __( 'is not', 'erp' ),
+                '~'  => __( 'contains', 'erp' ),
+                '!~' => __( 'not contains', 'erp' ),
+                '^'  => __( 'begins with', 'erp' ),
+                '$'  => __( 'ends with', 'erp' ),
             ]
         ],
     ] );
@@ -1435,17 +1436,17 @@ function erp_crm_get_customer_serach_key() {
 function erp_crm_get_company_serach_key() {
     return apply_filters( 'erp_crm_company_search_fields', [
         'company' => [
-            'title'       => __( 'Company Name', 'wp-erp' ),
+            'title'       => __( 'Company Name', 'erp' ),
             'type' => 'text',
             'text' => '',
             'condval' => '',
             'condition'   => [
-                ''   => __( 'is', 'wp-erp' ),
-                '!'  => __( 'is not', 'wp-erp' ),
-                '~'  => __( 'contains', 'wp-erp' ),
-                '!~' => __( 'not contains', 'wp-erp' ),
-                '^'  => __( 'begins with', 'wp-erp' ),
-                '$'  => __( 'ends with', 'wp-erp' ),
+                ''   => __( 'is', 'erp' ),
+                '!'  => __( 'is not', 'erp' ),
+                '~'  => __( 'contains', 'erp' ),
+                '!~' => __( 'not contains', 'erp' ),
+                '^'  => __( 'begins with', 'erp' ),
+                '$'  => __( 'ends with', 'erp' ),
             ]
         ]
     ] );
@@ -1778,9 +1779,9 @@ function erp_crm_get_save_search_item( $args = [] ) {
 
     foreach ( $search_keys as $key => $search_values ) {
         if ( $key == 0 ) {
-            $results[$key]['name'] = __( 'Own Search', 'wp-erp' );
+            $results[$key]['name'] = __( 'Own Search', 'erp' );
         } else {
-            $results[$key]['name'] = __( 'Global Search', 'wp-erp' );
+            $results[$key]['name'] = __( 'Global Search', 'erp' );
         }
 
         foreach ( $search_values as $index => $value ) {
@@ -2089,7 +2090,6 @@ function erp_settings_pages_contact_forms( $settings ) {
  * @return array
  */
 function erp_crm_get_crm_user( $args = [] ) {
-
     global $wp_version;
 
     $crm_users = [];

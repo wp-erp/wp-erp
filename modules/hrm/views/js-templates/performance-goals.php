@@ -3,7 +3,7 @@
 <div class="performance-form-wrap">
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'    => __( 'Set Date', 'wp-erp' ),
+            'label'    => __( 'Set Date', 'erp' ),
             'name'     => 'performance_date',
             'value'    => date( 'Y-m-d', current_time( 'timestamp' ) ),
             'required' => true,
@@ -13,7 +13,7 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'    => __( 'Completion Date', 'wp-erp' ),
+            'label'    => __( 'Completion Date', 'erp' ),
             'name'     => 'completion_date',
             'value'    => date( 'Y-m-d', current_time( 'timestamp' ) ),
             'required' => true,
@@ -24,7 +24,7 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'   => __( 'Goal Description', 'wp-erp' ),
+            'label'   => __( 'Goal Description', 'erp' ),
             'name'    => 'goal_description',
             'value'   => '',
             'type'    => 'textarea',
@@ -34,7 +34,7 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'   => __( 'Employee Assessment', 'wp-erp' ),
+            'label'   => __( 'Employee Assessment', 'erp' ),
             'name'    => 'employee_assessment',
             'value'   => '',
             'type'    => 'textarea',
@@ -44,7 +44,7 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'   => __( 'Supervisor', 'wp-erp' ),
+            'label'   => __( 'Supervisor', 'erp' ),
             'name'    => 'supervisor',
             'value'   => '',
             'class'   => 'erp-hrm-select2',
@@ -56,7 +56,7 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'   => __( 'Supervisor Assessment', 'wp-erp' ),
+            'label'   => __( 'Supervisor Assessment', 'erp' ),
             'name'    => 'supervisor_assessment',
             'value'   => '',
             'type'    => 'textarea',
