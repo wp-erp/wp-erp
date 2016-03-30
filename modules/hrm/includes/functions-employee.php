@@ -808,6 +808,10 @@ function erp_hr_get_employee_status( $user_id ) {
     return  \WeDevs\ERP\HRM\Models\Employee::select('status')->where( 'user_id', '=', $user_id )->pluck('status');
 }
 
+function erp_hr_get_employee_department( $user_id ) {
+    return  \WeDevs\ERP\HRM\Models\Employee::select('department')->where( 'user_id', '=', $user_id )->pluck('department');
+}
+
 /**
  * [erp_hr_employee_single_tab_general description]
  *
