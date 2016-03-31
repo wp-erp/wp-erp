@@ -1896,33 +1896,40 @@ function erp_crm_save_email_activity() {
     $postdata   = $_POST;
     $api_key    = get_option( 'wp_erp_apikey' );
 
-    $is_verified = erp_cloud_verify_request( $postdata, $api_key  );
+    unset($postdata['action']);
 
-    if ( $is_verified ) {
-        unset($postdata['action']);
+    $save_data = [
+        'user_id'       => $postdata['user_id'],
+        'created_by'    => $postdata['created_by'],
+        'message'       => $postdata['message'],
+        'type'          => $postdata['type'],
+        'email_subject' => $postdata['email_subject'],
+        'extra'         => base64_encode( json_encode( [ 'replied' => 1 ] ) ),
+    ];
 
-        $save_data = [
-            'user_id'       => $postdata['user_id'],
-            'created_by'    => $postdata['created_by'],
-            'message'       => $postdata['message'],
-            'type'          => $postdata['type'],
-            'email_subject' => $postdata['email_subject'],
-            'extra'         => base64_encode( json_encode( [ 'replied' => 1 ] ) ),
-        ];
+    $data = erp_crm_save_customer_feed_data( $save_data );
 
-        $data = erp_crm_save_customer_feed_data( $save_data );
+    $contact_id = (int) $postdata['user_id'];
+    $user_id = erp_people_get_meta( $contact_id, '_assign_crm_agent', true );
+    $user = get_userdata( $user_id );
+    $created_by = get_userdata( intval( $postdata['created_by'] ) );
 
-        // Update email counter
-        update_option( 'wp_erp_cloud_email_count', get_option( 'wp_erp_cloud_email_count', 0 ) + 1 );
+    // Send an email to contact owner
+    if ( isset( $user->user_email ) ) {
+        $to_email = $user->user_email;
+        $from_name = $created_by->display_name;
+        $from_email = $created_by->user_email;
+        $headers  = "From: $from_name <$from_email>\r\n";
+        $headers .= 'Content-type: text/html;' . "\r\n";
 
-        do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
-
-        status_header(200);
-        exit;
-    } else {
-        status_header(400);
-        exit;
+        mail( $to_email, $postdata['email_subject'], $postdata['message'], $headers );
     }
+
+    // Update email counter
+    update_option( 'wp_erp_cloud_email_count', get_option( 'wp_erp_cloud_email_count', 0 ) + 1 );
+
+    status_header(200);
+    exit;
 }
 
 /**
