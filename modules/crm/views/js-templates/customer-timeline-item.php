@@ -6,10 +6,10 @@
     </h3>
 
     <div class="timeline-body" @click="toggleFooter">
-        {{{ feed.message | formatFeedContent feed }}}
+        <timeline-body :feed="feed"></timeline-body>
     </div>
 
-    <div class="timeline-footer" v-if="showFooter" v-if="(feed.type != 'email')">
+    <div class="timeline-footer" v-if="(feed.type != 'email') && showFooter">
         <a href="#" @click.prevent="editFeed( feed )"><?php _e( 'Edit', 'erp' ); ?> |</a>
         <a href="#" @click.prevent="deleteFeed( feed )"><?php _e( 'Delete', 'erp' ); ?></a>
     </div>
@@ -34,6 +34,8 @@
             <schedule-note :feed="feed" v-if="( feed.type == 'log_activity' && isSchedule( feed.start_date ) )"></schedule-note>
 
             <tasks-note :feed="feed" v-if="feed.type == 'tasks'"></tasks-note>
+
+            <?php do_action( 'erp_crm_edit_customer_feeds_nav_content' ); ?>
 
         </form>
     </div>

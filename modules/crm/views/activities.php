@@ -1,6 +1,7 @@
 
 <?php
 $contacts = erp_crm_get_contact_dropdown();
+$feeds_tab = erp_crm_get_customer_feeds_nav();
 ?>
 <div class="wrap erp erp-crm-activities erp-single-customer" id="wp-erp">
 
@@ -13,11 +14,9 @@ $contacts = erp_crm_get_contact_dropdown();
             <div class="filters">
                 <select style="width:180px;" v-selecttwo="filterFeeds.type" class="select2" v-model="filterFeeds.type" id="activity-type">
                     <option value=""><?php _e( 'All Types', 'erp' ) ?></option>
-                    <option value="new_note"><?php _e( 'Notes', 'erp' ) ?></option>
-                    <option value="email"><?php _e( 'Email', 'erp' ) ?></option>
-                    <option value="logs"><?php _e( 'Log Activity', 'erp' ) ?></option>
-                    <option value="schedule"><?php _e( 'Schedules', 'erp' ) ?></option>
-                    <option value="tasks"><?php _e( 'Tasks', 'erp' ) ?></option>
+                    <?php foreach ( $feeds_tab as $key => $value ) : ?>
+                        <option value="<?php echo $key; ?>"><?php echo $value['title']; ?></option>
+                    <?php endforeach ?>
                 </select>
             </div>
 
@@ -56,10 +55,13 @@ $contacts = erp_crm_get_contact_dropdown();
 
                     <li v-for="feed in feed_obj">
 
-                        <i v-if="feed.type == 'email'" class="fa fa-envelope-o" @click.prevent="toggleFooter"></i>
-                        <i v-if="feed.type == 'new_note'" class="fa fa-file-text-o" @click.prevent="toggleFooter"></i>
-                        <i v-if="feed.type == 'log_activity'" class="fa fa-list" @click.prevent="toggleFooter"></i>
-                        <i v-if="( feed.type == 'log_activity' && isSchedule( feed.start_date )  )" class="fa fa-calendar-check-o" @click.prevent="toggleFooter"></i>
+                        <i v-if="feed.type == 'email'" class="fa fa-envelope-o"></i>
+                        <i v-if="feed.type == 'new_note'" class="fa fa-file-text-o"></i>
+                        <i v-if="feed.type == 'log_activity'" class="fa fa-list"></i>
+                        <i v-if="( feed.type == 'log_activity' && isSchedule( feed.start_date )  )" class="fa fa-calendar-check-o"></i>
+                        <i v-if="feed.type == 'tasks'" class="fa fa-check-square-o"></i>
+
+                        <?php do_action( 'erp_crm_customer_feed_icon' ); ?>
 
                         <timeline-item :feed="feed" disbale-footer="true"></timeline-item>
 

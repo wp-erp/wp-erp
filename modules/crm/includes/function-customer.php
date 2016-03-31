@@ -2174,7 +2174,7 @@ function erp_crm_get_crm_user_dropdown( $label = [] ) {
     $list = [];
 
     foreach ( $users as $key => $user ) {
-        $list[$user->id] = esc_html( $user->display_name ) . '(' . esc_html( $user->user_email ) . ')';
+        $list[$user->ID] = esc_html( $user->display_name ) . '(' . esc_html( $user->user_email ) . ')';
     }
 
     if ( $label ) {

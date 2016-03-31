@@ -133,7 +133,7 @@
 
     <h3><?php _e( 'Job Information', 'erp' ) ?></h3>
     <?php if ( current_user_can( 'erp_manage_jobinfo' ) ) { ?>
-        <a href="#" id="erp-empl-jobinfo" class="action button" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-jobinfo" data-title="<?php _e( 'Update Compensation', 'erp' ); ?>"><?php _e( 'Update Job Information', 'erp' ); ?></a>
+        <a href="#" id="erp-empl-jobinfo" class="action button" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-jobinfo" data-title="<?php _e( 'Update Job Information', 'erp' ); ?>"><?php _e( 'Update Job Information', 'erp' ); ?></a>
     <?php } ?>
     <table class="widefat">
         <thead>
