@@ -2,106 +2,6 @@
  *****************    Vue Filters     *************************
  **************************************************************/
 
-// Vue Filter for Formatting Time
-Vue.filter('formatAMPM', function (date) {
-    date = new Date( date );
-    var hours = date.getHours();
-    var minutes = date.getMinutes();
-    var ampm = hours >= 12 ? 'pm' : 'am';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? '0'+minutes : minutes;
-    var strTime = hours + ':' + minutes + ' ' + ampm;
-    return strTime;
-});
-
-// Vue Filter for formatting date
-Vue.filter('formatDate', function ( date, format ) {
-    date = new Date( date );
-    var month = ("0" + (date.getMonth() + 1)).slice(-2),
-        day   = ("0" + date.getDate()).slice(-2),
-        year  = date.getFullYear(),
-        monthArray = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ],
-        monthShortArray = [ "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec" ],
-        monthName = monthArray[date.getMonth()],
-        monthShortName = monthShortArray[date.getMonth()];
-
-    var pattern = {
-        Y: year,
-        m: month,
-        F: monthName,
-        M: monthShortName,
-        d: day,
-        j: day
-    };
-
-    if ( format ) {
-        dateStr = format.replace(/Y|m|d|j|M|F/gi, function( matched ){
-            return pattern[matched];
-        });
-    } else {
-        dateStr = wpCRMvue.date_format.replace(/Y|m|d|j|M|F/gi, function( matched ){
-            return pattern[matched];
-        });
-    }
-
-    return dateStr;
-});
-
-// Vue filter for formatting Feeds message body as a group by object
-Vue.filter( 'formatFeedContent', function ( message, feed ) {
-
-    if ( feed.type == 'email' ) {
-        message = '<div class="timeline-email-subject">Subject : ' + feed.email_subject + '</div>' +
-                  '<div class="timeline-email-body">' + feed.message + '</div>';
-    };
-
-    if ( feed.type == 'log_activity' && ! vm.isSchedule( feed.start_date ) ) {
-        if ( feed.log_type == 'email' ) {
-            message = '<div class="timeline-email-subject">Subject : ' + feed.email_subject + '</div>' +
-                  '<div class="timeline-email-body">' + feed.message + '</div>';
-        }
-    }
-
-    if ( feed.type == 'log_activity' && vm.isSchedule( feed.start_date ) ) {
-        var filters = vm.$options.filters,
-            startDate = filters.formatDate( feed.start_date, 'j F' ),
-            startTime = filters.formatAMPM( feed.start_date ),
-            endDate = filters.formatDate( feed.end_date, 'j F' ),
-            endTime = filters.formatAMPM( feed.end_date );
-
-
-        if ( feed.extra.all_day == 'true' ) {
-            if ( filters.formatDate( feed.start_date, 'Y-m-d' ) == filters.formatDate( feed.end_date, 'Y-m-d' ) ) {
-                var datetime = startDate;
-            } else {
-                var datetime = startDate + ' to ' + endDate;
-            }
-        } else {
-            if ( filters.formatDate( feed.start_date, 'Y-m-d' ) == filters.formatDate( feed.end_date, 'Y-m-d' ) ) {
-                var datetime = startDate + ' at ' + startTime + ' to ' + endTime;
-            } else {
-                var datetime = startDate + ' at ' + startTime + ' to ' + endDate + ' at ' + endTime;
-            }
-        }
-
-        message = '<div class="timeline-email-subject"><i class="fa fa-bookmark"></i> &nbsp;' + feed.extra.schedule_title + '  &nbsp;|&nbsp;  <i class="fa fa-calendar-check-o"></i> &nbsp;' + datetime + '</div>' +
-            '<div class="timeline-email-body">' + feed.message + '</div>';
-    };
-
-    if (  feed.type == 'tasks' ) {
-        var filters = vm.$options.filters,
-            startDate = filters.formatDate( feed.start_date, 'j F' ),
-            startTime = filters.formatAMPM( feed.start_date ),
-            datetime = startDate + ' at ' + startTime;
-
-        message = '<div class="timeline-email-subject"><i class="fa fa-bookmark"></i> &nbsp;' + feed.extra.task_title + '  &nbsp;|&nbsp;  <i class="fa fa-check-square-o"></i> &nbsp;Task Date : ' + datetime + '</div>' +
-            '<div class="timeline-email-body">' + feed.message + '</div>';
-    }
-
-    return message;
-});
-
 // Vue filter for formatting Feeds as a group by object
 Vue.filter('formatFeeds', function ( feeds ) {
     var feedsData = _.groupBy( feeds, function( data ) {
@@ -113,10 +13,8 @@ Vue.filter('formatFeeds', function ( feeds ) {
 
 // Vue filter for formatting Feeds as a group by object
 Vue.filter('formatDateTime', function ( date ) {
-    return this.$options.filters.formatDate( date, 'F, j' ) + ' at ' + this.$options.filters.formatAMPM( date )
+    return wperp.dateFormat( date, 'F, j' ) + ' at ' + wperp.timeFormat( date )
 });
-
-/******************** End vue filters ***********************/
 
 
 
@@ -206,8 +104,9 @@ Vue.directive( 'tiptip', {
 
 // Select2 Direcetive
 Vue.directive('selecttwo', {
+
     bind: function () {
-        var self = this
+        var self = this;
         var vm = this.vm;
         var key = this.expression;
 
@@ -229,7 +128,6 @@ Vue.directive('selecttwo', {
             placeholder: jQuery(this.el).attr('data-placeholder'),
             allowClear: true
         });
-
     },
 });
 
@@ -239,132 +137,7 @@ Vue.directive('selecttwo', {
 /******************************************************************
 *******************      Component       **************************
 *******************************************************************/
-
-var ToolTip = Vue.extend({
-    props: ['title', 'content' ],
-    template: '<span class="time erp-tips" v-tiptip data-title="{{ title }}">{{{ content }}}</span>',
-});
-
-var TimeLineHeader = Vue.extend({
-    props: [ 'feed' ],
-
-    template: '<span class="timeline-feed-avatar">'
-                    + '<img v-bind:src="createdUserImg">'
-                +'</span>'
-                +'<span class="timeline-feed-header-text">'
-                    +'<strong v-if="!isRepliedEmail">{{createdUserName}} </strong>'
-                    +'<strong v-if="isRepliedEmail">{{createdForUser}} </strong>'
-                    +'<span v-if="isNote">created a note for <strong>{{ createdForUser }}</strong></span>'
-                    +'<span v-if="isEmail">sent an email to <strong>{{ createdForUser }}</strong></span>'
-                    +'<span v-if="isRepliedEmail">replied to <strong>{{ createdUserName }}r</strong> email</span>'
-                    +'<span v-if="isLog">'
-                        +'logged {{ logType }} on {{ logDateTime | formatDateTime }} for <strong>{{ createdForUser }}</strong>'
-                        +' <span v-if="countUser == 1">and <strong>{{ feed.extra.invited_user[0].name }}</strong></span>'
-                        +'<span v-if="( countUser != 0 ) && countUser != 1"> and <strong><tooltip :content="countUser" :title="invitedUser"></tooltip></strong></span>'
-                    +'</span>'
-                    +'<span v-if="isSchedule">'
-                        +'have scheduled {{ logType }} with '
-                        +'<strong>{{ createdForUser }}</strong>'
-                            +' <span v-if="countUser == 1">and <strong>{{ invitedSingleUser }}</strong></span>'
-                        +'<span v-if="( countUser != 0 ) && countUser != 1"> and <strong><tooltip :content="countUser" :title="invitedUser"></tooltip></strong></span>'
-                    +'</span>'
-                    +'<span v-if="isTasks">created a task for </strong>'
-                        +' <span v-if="countUser == 1"><strong>{{ invitedSingleUser }}</strong></span>'
-                        +'<span v-if="( countUser != 0 ) && countUser != 1"><strong><tooltip :content="countUser" :title="invitedUser"></tooltip></strong></span>'
-                    +'</span>'
-                +'</span>',
-
-    components: {
-        'tooltip' : ToolTip
-    },
-
-    computed: {
-
-        countUser: function () {
-            var count = this.feed.extra.invited_user.length;
-            if ( this.feed.type == 'tasks' ) {
-                return ( count <= 1 ) ? count : count + ' peoples';
-            } else {
-                return ( count <= 1 ) ? count : count + ' others';
-            }
-        },
-
-        invitedSingleUser: function() {
-            if ( this.feed.extra.invited_user[0].id == wpCRMvue.current_user_id ) {
-                if ( this.feed.type == 'tasks' ) {
-                    return 'Yourself';
-                }
-                return 'You';
-            } else {
-                return this.feed.extra.invited_user[0].name;
-            }
-        },
-
-        invitedUser: function() {
-            var self = this;
-            return this.feed.extra.invited_user.map( function( elm ) {
-                if ( elm.id == wpCRMvue.current_user_id ) {
-                    if ( self.feed.type == 'tasks' ) {
-                        return 'Yourself';
-                    }
-                    return 'You';
-                } else {
-                    return elm.name;
-                }
-            } ).join("<br>");
-        },
-
-        isNote: function() {
-            return ( this.feed.type == 'new_note' );
-        },
-
-        isTasks: function() {
-            return ( this.feed.type == 'tasks' );
-        },
-
-        isEmail: function() {
-            return ( this.feed.type == 'email' ) && this.feed.extra.replied != 1;
-        },
-
-        isRepliedEmail: function() {
-            return ( this.feed.type == 'email' ) && this.feed.extra.replied == 1;
-        },
-
-        isLog: function() {
-            return ( this.feed.type == 'log_activity' ) && !( new Date() < new Date( this.feed.start_date ) );
-        },
-
-        isSchedule: function() {
-            return ( this.feed.type == 'log_activity' ) && ( new Date() < new Date( this.feed.start_date ) );
-        },
-
-        createdUserImg: function() {
-            return this.feed.created_by.avatar;
-        },
-
-        createdUserName: function() {
-            return ( this.feed.created_by.ID == wpCRMvue.current_user_id ) ? 'You' : this.feed.created_by.display_name;
-        },
-
-        createdForUser: function() {
-            return ( this.feed.contact.type == 'company' ) ? this.feed.contact.company : this.feed.contact.first_name + ' ' + this.feed.contact.last_name;
-        },
-
-        logType: function() {
-            return ( this.feed.log_type == 'sms' || this.feed.log_type == 'email' ) ? 'an ' + this.feed.log_type : 'a ' + this.feed.log_type;
-        },
-
-        logDateTime: function() {
-            return this.feed.start_date;
-        }
-    }
-});
-
-Vue.component( 'tooltip', ToolTip );
-Vue.component( 'timeline-header', TimeLineHeader );
-
-
-Vue.component( 'timeline-item', {
+var TimeLineItem = {
     props: ['feed', 'disbaleFooter'],
     template : '#erp-crm-timeline-item-template',
 
@@ -461,7 +234,13 @@ Vue.component( 'timeline-item', {
             }
         }
     }
-});
+};
+
+
+Vue.component( 'tooltip', window.wpErpVue.ToolTip );
+Vue.component( 'timeline-header', window.wpErpVue.TimeLineHeader );
+Vue.component( 'timeline-body', window.wpErpVue.TimeLineBody );
+Vue.component( 'timeline-item', TimeLineItem );
 
 /**
  * New Note Component
@@ -579,8 +358,8 @@ Vue.component( 'log-activity', {
         'bindEditFeedData': function (feed ) {
             this.feedData.log_type      = feed.log_type;
             this.feedData.email_subject = ( feed.log_type == 'email' ) ? feed.email_subject : '';
-            this.feedData.dt            = vm.$options.filters.formatDate( feed.start_date, 'Y-m-d' );
-            this.feedData.tp            = vm.$options.filters.formatAMPM( feed.start_date );
+            this.feedData.dt            = wperp.dateFormat( feed.start_date, 'Y-m-d' );
+            this.feedData.tp            = wperp.timeFormat( feed.start_date );
 
             if ( feed.log_type == 'meeting' && ! _.isEmpty( feed.extra.invited_user ) ) {
                 var invitedUser             = feed.extra.invited_user.map( function( elm ) { return elm.id } ).join(',');
@@ -689,16 +468,17 @@ Vue.component( 'tasks-note', {
         'bindEditFeedData': function (feed ) {
 
             this.feedData.task_title    = feed.extra.task_title;
-            this.feedData.dt            = vm.$options.filters.formatDate( feed.start_date, 'Y-m-d' );
-            this.feedData.tp            = vm.$options.filters.formatAMPM( feed.start_date );
+            this.feedData.dt            = wperp.dateFormat( feed.start_date, 'Y-m-d' );
+            this.feedData.tp            = wperp.timeFormat( feed.start_date );
             var invitedUser             = feed.extra.invited_user.map( function( elm ) { return elm.id } ).join(',');
             this.feedData.inviteContact = invitedUser;
             var self = jQuery( this.$el ).find( 'select.select2' );
 
             if ( String(invitedUser).indexOf(',') == '-1' ) {
-                self.select2().select2( 'val', invitedUser );
+                self.val( invitedUser ).trigger('change');
             } else {
-                self.select2().select2( 'val', invitedUser.split(',') );
+                self.val( invitedUser.split(',') ).trigger('change');
+                // jQuery('#erp-crm-task-assign-contact').select2().select2( "val", invitedUser.split(',') );
             }
 
         }
@@ -712,7 +492,7 @@ Vue.component( 'tasks-note', {
                 message : !!this.feedData.message,
                 log_date : !!this.feedData.dt,
                 log_time : !!this.feedData.tp,
-                inviteContact: this.feedData.inviteContact.length > 0 ? true : false
+                inviteContact : ( this.feedData.inviteContact ) && this.feedData.inviteContact.length > 0 ? true : false
             }
         },
 
@@ -864,10 +644,10 @@ Vue.component( 'schedule-note', {
             this.feedData.notification_via           = feed.extra.notification_via;
             this.feedData.notification_time          = feed.extra.notification_time;
             this.feedData.notification_time_interval = feed.extra.notification_time_interval;
-            this.feedData.dtStart                    = vm.$options.filters.formatDate( feed.start_date, 'Y-m-d' );
-            this.feedData.tpStart                    = vm.$options.filters.formatAMPM( feed.start_date );
-            this.feedData.dtEnd                      = vm.$options.filters.formatDate( feed.end_date, 'Y-m-d' );
-            this.feedData.tpEnd                      = vm.$options.filters.formatAMPM( feed.end_date );
+            this.feedData.dtStart                    = wperp.dateFormat( feed.start_date, 'Y-m-d' );
+            this.feedData.tpStart                    = wperp.timeFormat( feed.start_date );
+            this.feedData.dtEnd                      = wperp.dateFormat( feed.end_date, 'Y-m-d' );
+            this.feedData.tpEnd                      = wperp.timeFormat( feed.end_date );
             this.feedData.inviteContact              = invitedUser;
 
             var self = jQuery( this.$el ).find( 'select.select2' );

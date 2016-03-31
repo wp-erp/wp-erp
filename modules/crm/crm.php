@@ -142,6 +142,19 @@ class Customer_Relationship {
             'checkedConfirm'        => __( 'Alteast one item must be checked', 'erp' )
         ) );
 
+        $contact_actvity_localize = apply_filters( 'erp_crm_contact_localize_var', [
+            'ajaxurl'              => admin_url( 'admin-ajax.php' ),
+            'nonce'                => wp_create_nonce( 'wp-erp-crm-customer-feed' ),
+            'current_user_id'      => get_current_user_id(),
+            'isAdmin'              => current_user_can( 'manage_options' ),
+            'isCrmManager'         => current_user_can( 'erp_crm_manager' ),
+            'isAgent'              => current_user_can( 'erp_crm_agent' ),
+            'confirm'              => __( 'Are you sure?', 'erp' ),
+            'date_format'          => get_option( 'date_format' ),
+            'timeline_feed_header' => apply_filters( 'erp_crm_contact_timeline_feeds_header', '' ),
+            'timeline_feed_body' => apply_filters( 'erp_crm_contact_timeline_feeds_body', '' )
+        ] );
+
         if ( 'crm_page_erp-sales-schedules' == $hook ) {
             wp_enqueue_style( 'erp-timepicker' );
             wp_enqueue_script( 'erp-timepicker' );
@@ -155,16 +168,14 @@ class Customer_Relationship {
             wp_enqueue_script( 'erp-vuejs' );
             wp_enqueue_style( 'wp-erp-nprogress', WPERP_CRM_ASSETS . '/css/nprogress.css' );
             wp_enqueue_script( 'wp-erp-nprogress', WPERP_CRM_ASSETS . "/js/nprogress$suffix.js", array( 'jquery' ), date( 'Ymd' ), true );
-            wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", array( 'wp-erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
+            wp_enqueue_script( 'wp-erp-crm-vue-component', WPERP_CRM_ASSETS . "/js/crm-components.js", array( 'wp-erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
+
+            do_action( 'erp_crm_load_contact_vue_sripts' );
+
+            wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", array( 'wp-erp-crm-vue-component', 'wp-erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
             wp_enqueue_script( 'post' );
 
-            wp_localize_script( 'wp-erp-crm-vue-customer', 'wpCRMvue', [
-                'ajaxurl'         => admin_url( 'admin-ajax.php' ),
-                'nonce'           => wp_create_nonce( 'wp-erp-crm-customer-feed' ),
-                'current_user_id' => get_current_user_id(),
-                'confirm'         => __( 'Are you sure?', 'erp' ),
-                'date_format'     => get_option( 'date_format' )
-            ] );
+            wp_localize_script( 'wp-erp-crm-vue-component', 'wpCRMvue', $contact_actvity_localize );
 
         }
 
@@ -179,6 +190,10 @@ class Customer_Relationship {
             wp_enqueue_script( 'underscore' );
             wp_enqueue_style( 'wp-erp-nprogress', WPERP_CRM_ASSETS . '/css/nprogress.css' );
             wp_enqueue_script( 'wp-erp-nprogress', WPERP_CRM_ASSETS . "/js/nprogress$suffix.js", array( 'jquery' ), date( 'Ymd' ), true );
+            wp_enqueue_script( 'wp-erp-crm-vue-component', WPERP_CRM_ASSETS . "/js/crm-components.js", array( 'wp-erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
+
+            do_action( 'erp_crm_load_contact_vue_sripts' );
+
             wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", array( 'wp-erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
             wp_enqueue_script( 'wp-erp-crm-vue-save-search', WPERP_CRM_ASSETS . "/js/save-search$suffix.js", array( 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
             wp_enqueue_script( 'post' );
@@ -193,16 +208,7 @@ class Customer_Relationship {
 
             $country  = \WeDevs\ERP\Countries::instance();
 
-            wp_localize_script( 'wp-erp-crm-vue-customer', 'wpCRMvue', [
-                'ajaxurl'         => admin_url( 'admin-ajax.php' ),
-                'nonce'           => wp_create_nonce( 'wp-erp-crm-customer-feed' ),
-                'current_user_id' => get_current_user_id(),
-                'isAdmin'         => current_user_can( 'manage_options' ),
-                'isCrmManager'    => current_user_can( 'erp_crm_manager' ),
-                'isAgent'         => current_user_can( 'erp_crm_agent' ),
-                'confirm'         => __( 'Are you sure?', 'erp' ),
-                'date_format'     => get_option( 'date_format' )
-            ] );
+            wp_localize_script( 'wp-erp-crm-vue-component', 'wpCRMvue', $contact_actvity_localize );
 
             wp_localize_script( 'wp-erp-crm-vue-save-search', 'wpCRMSaveSearch', [
                 'ajaxurl'         => admin_url( 'admin-ajax.php' ),
@@ -243,6 +249,8 @@ class Customer_Relationship {
                     erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/customer-schedule-note.php', 'erp-crm-schedule-note-template' );
                     erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/customer-tasks-note.php', 'erp-crm-tasks-note-template' );
                     erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/customer-timeline-item.php', 'erp-crm-timeline-item-template' );
+
+                    do_action( 'erp_crm_load_vue_js_template' );
                 }
 
                 break;
