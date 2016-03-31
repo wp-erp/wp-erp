@@ -200,4 +200,7 @@ function erp_hr_get_department_status( $department_id ) {
     return  \WeDevs\ERP\HRM\Models\Department::select('status')->find($department_id)->pluck('status');
 }
 
+function erp_hr_get_department_title( $department_id ) {
+    return  \WeDevs\ERP\HRM\Models\Department::select('title')->find($department_id)->pluck('title');
+}
 
