@@ -93,7 +93,7 @@ class Contact extends \WeDevs\ERP\People {
             $fields['assign_to']      = $this->get_meta( '_assign_crm_agent', true );
         }
 
-        return apply_filters( 'erp_crm_get_ '. $this->contact_type . '_fields', $fields, $this->data, $this->id );
+        return apply_filters( 'erp_crm_get_contacts_fields', $fields, $this->data, $this->id, $this->contact_type );
     }
 
     /**
