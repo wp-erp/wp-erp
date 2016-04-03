@@ -270,7 +270,6 @@ function erp_crm_customer_restore( $customer_ids ) {
     }
 }
 
-
 /**
  * Get customer life statges status count
  *
@@ -2192,5 +2191,3 @@ function erp_crm_activity_schedule_notification_type() {
         'email' => __( 'Email', 'erp' )
     ] );
 }
-
-

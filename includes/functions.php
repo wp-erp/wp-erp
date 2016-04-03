@@ -53,7 +53,7 @@ function erp_get_currencies() {
         'CZK' => __( 'Czech Koruna', 'erp' ),
         'DKK' => __( 'Danish Krone', 'erp' ),
         'DOP' => __( 'Dominican Peso', 'erp' ),
-        'DZD' => __( 'Algerian Dinar', 'erp' ),        
+        'DZD' => __( 'Algerian Dinar', 'erp' ),
         'EUR' => __( 'Euros', 'erp' ),
         'HKD' => __( 'Hong Kong Dollar', 'erp' ),
         'HRK' => __( 'Croatia kuna', 'erp' ),
@@ -195,7 +195,7 @@ function erp_get_currency_symbol( $currency = '' ) {
         case 'HRK' : $currency_symbol = 'Kn'; break;
         case 'EGP' : $currency_symbol = 'EGP'; break;
         case 'DOP' : $currency_symbol = 'RD&#36;'; break;
-        case 'DZD' : $currency_symbol = 'DA;'; break;        
+        case 'DZD' : $currency_symbol = 'DA;'; break;
         case 'KIP' : $currency_symbol = '&#8365;'; break;
         default    : $currency_symbol = ''; break;
     }
@@ -859,4 +859,118 @@ function erp_cloud_verify_request( $vars, $api_key ) {
  */
 function erp_fullcalendar_end_date( $end_date ) {
     return date( 'Y-m-d H:i:s', strtotime( $end_date . '+1 day' ) );
+}
+
+/**
+ * Display the user bulk actions.
+ *
+ * @return void
+ */
+function erp_user_bulk_actions() {
+    ?>
+    <script type="text/javascript">
+      jQuery( document ).ready( function($) {
+        $('<option>').val('crm_contact').text('<?php _e('Make CRM Contact', 'erp')?>').appendTo("select[name='action']");
+        $('<option>').val('crm_contact').text('<?php _e('Make CRM Contact', 'erp')?>').appendTo("select[name='action2']");
+      });
+    </script>
+    <?php
+}
+
+/**
+ * Handle the user bulk actions.
+ *
+ * @return void
+ */
+function erp_handle_user_bulk_actions() {
+    $wp_list_table = _get_list_table( 'WP_Users_List_Table' );
+
+    $action = $wp_list_table->current_action();
+
+
+    switch( $action ) {
+        case 'crm_contact':
+            include ABSPATH . 'wp-admin/admin-header.php';
+            include WPERP_VIEWS . '/create-contact-from-user.php';
+        break;
+
+        case 'process_crm_contact':
+            if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'erp_create_contact_from_user' ) ) {
+                exit();
+            }
+
+            $user_ids = $_REQUEST['users'];
+            $created = 0;
+
+            $life_stage    = $_POST['life_stage'];
+            $contact_owner = $_POST['contact_owner'];
+
+            $users = get_users( ['include' => $user_ids] );
+
+            foreach ( $users as $user ) {
+                $data['type']       = 'contact';
+                $data['first_name'] = ( $user->first_name != '' ) ? $user->first_name : $user->display_name;
+                $data['last_name']  = ( $user->last_name != '' ) ? $user->last_name : ' ';
+                $data['email']      = $user->user_email;
+
+                $contact_id = erp_insert_people( $data );
+
+                erp_people_update_meta( $contact_id, '_assign_crm_agent', $contact_owner );
+                erp_people_update_meta( $contact_id, 'life_stage', $life_stage );
+
+                $created++;
+            }
+            // build the redirect url
+            $sendback = add_query_arg( ['created' => $created, 'ids' => join( ',', $user_ids )], $sendback );
+
+        break;
+
+        default:
+        return;
+    }
+
+    wp_redirect( $sendback );
+
+    exit();
+}
+
+/**
+ * Display the user bulk actions notice.
+ *
+ * @return void
+ */
+function erp_user_bulk_actions_notices() {
+    global $pagenow;
+
+    if ( $pagenow == 'users.php' && isset( $_REQUEST['created'] ) && (int) $_REQUEST['created'] ) {
+        $message = sprintf( __( '%s contacts created.', 'erp' ), number_format_i18n( $_REQUEST['created'] ) );
+        echo "<div class='updated'><p>{$message}</p></div>";
+    }
+}
+
+/**
+ * Create contact from created user.
+ *
+ * @param  int $user_id
+ *
+ * @return void
+ */
+function erp_create_contact_from_created_user( $user_id ) {
+    $user = get_user_by( 'ID', $user_id );
+
+    $data = [];
+
+    $data['type']       = 'contact';
+    $data['first_name'] = ( $user->first_name != '' ) ? $user->first_name : $user->display_name;
+    $data['last_name']  = ( $user->last_name != '' ) ? $user->last_name : ' ';
+    $data['email']      = $user->user_email;
+
+    $contact_id    = erp_insert_people( $data );
+    $contact_owner = get_current_user_id();
+    $life_stage    = 'opportunity'; // @Todo settings
+
+    erp_people_update_meta( $contact_id, '_assign_crm_agent', $contact_owner );
+    erp_people_update_meta( $contact_id, 'life_stage', $life_stage );
+
+    return;
 }
