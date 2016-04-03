@@ -813,12 +813,8 @@ function erp_crm_send_schedule_notification( $activity, $extra = false ) {
 
             break;
 
-        case 'sms':
-            // @TODO: Add SMS notification for schedule meeting
-            break;
-
         default:
-            do_action( 'erp_crm_send_schedule_notification', $activity );
+            do_action( 'erp_crm_send_schedule_notification', $activity, $extra );
             break;
     }
 }
@@ -2182,6 +2178,19 @@ function erp_crm_get_crm_user_dropdown( $label = [] ) {
     }
 
     return $list;
+}
+
+/**
+ * Get schedule notification type
+ *
+ * @since 1.0
+ *
+ * @return array
+ */
+function erp_crm_activity_schedule_notification_type() {
+    return apply_filters( 'erp_crm_activity_schedule_notification_type', [
+        'email' => __( 'Email', 'erp' )
+    ] );
 }
 
 
