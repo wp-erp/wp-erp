@@ -2183,5 +2183,3 @@ function erp_crm_get_crm_user_dropdown( $label = [] ) {
 
     return $list;
 }
-
-
