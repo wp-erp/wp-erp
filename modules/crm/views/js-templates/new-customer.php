@@ -1,6 +1,10 @@
 <div class="erp-customer-form">
 
-    <?php do_action( 'erp-crm-customer-form-top' ); ?>
+    <# if ( 'company' == data.type ) { #>
+        <?php do_action( 'erp_crm_company_form_top' ); ?>
+    <# } else { #>
+        <?php do_action( 'erp_crm_contact_form_top' ); ?>
+    <# } #>
 
     <fieldset class="no-border genaral-info">
         <ol class="form-fields">
@@ -84,8 +88,12 @@
                 ) ); ?>
             </li>
 
+            <# if ( 'company' == data.type ) { #>
+                <?php do_action( 'erp_crm_company_form_basic' ); ?>
+            <# } else { #>
+                <?php do_action( 'erp_crm_contact_form_basic' ); ?>
+            <# } #>
 
-            <?php do_action( 'erp-crm-customer-form-basic' ); ?>
         </ol>
     </fieldset>
 
@@ -192,7 +200,11 @@
                 ) ); ?>
             </li>
 
-            <?php do_action( 'erp-crm-customer-form-work' ); ?>
+            <# if ( 'company' == data.type ) { #>
+                <?php do_action( 'erp_crm_company_form_other' ); ?>
+            <# } else { #>
+                <?php do_action( 'erp_crm_contact_form_other' ); ?>
+            <# } #>
 
         </ol>
     </fieldset>
@@ -223,6 +235,12 @@
                     'options'     => erp_crm_get_crm_user_dropdown( [ '' => '--Select--' ] )
                 ) ); ?>
             </li>
+
+            <# if ( 'company' == data.type ) { #>
+                <?php do_action( 'erp_crm_company_form_contact_group' ); ?>
+            <# } else { #>
+                <?php do_action( 'erp_crm_contact_form_contact_group' ); ?>
+            <# } #>
 
         </ol>
 
@@ -260,7 +278,11 @@
                 ) ); ?>
             </li>
 
-            <?php do_action( 'erp-crm-customer-form-personal' ); ?>
+            <# if ( 'company' == data.type ) { #>
+                <?php do_action( 'erp_crm_company_form_additional' ); ?>
+            <# } else { #>
+                <?php do_action( 'erp_crm_contact_form_additional' ); ?>
+            <# } #>
 
         </ol>
     </fieldset>
@@ -302,18 +324,29 @@
                 ) ); ?>
             </li>
 
-            <?php do_action( 'erp-crm-customer-form-social-profile' ); ?>
+            <# if ( 'company' == data.type ) { #>
+                <?php do_action( 'erp_crm_company_form_social' ); ?>
+            <# } else { #>
+                <?php do_action( 'erp_crm_contact_form_social' ); ?>
+            <# } #>
 
         </ol>
     </fieldset>
 
-
-    <?php do_action( 'erp-crm-customer-form-bottom' ); ?>
+    <# if ( 'company' == data.type ) { #>
+        <?php do_action( 'erp_crm_company_form_bottom' ); ?>
+    <# } else { #>
+        <?php do_action( 'erp_crm_contact_form_bottom' ); ?>
+    <# } #>
 
     <input type="hidden" name="id" id="erp-customer-id" value="{{ data.id }}">
     <input type="hidden" name="type" id="erp-customer-type" value="{{ data.type }}">
     <input type="hidden" name="action" id="erp-customer-action" value="erp-crm-customer-new">
     <?php wp_nonce_field( 'wp-erp-crm-customer-nonce' ); ?>
 
-    <?php do_action( 'erp_crm_customer_form' ); ?>
+    <# if ( 'company' == data.type ) { #>
+        <?php do_action( 'erp_crm_company_form' ); ?>
+    <# } else { #>
+        <?php do_action( 'erp_crm_contact_form' ); ?>
+    <# } #>
 </div>
