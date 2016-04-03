@@ -865,3 +865,10 @@ function erp_hr_employee_single_tab_performance( $employee ) {
 function erp_hr_employee_single_tab_permission( $employee ) {
     include WPERP_HRM_VIEWS . '/employee/tab-permission.php';
 }
+
+function erp_hr_get_acitve_employee_by_department_id( $department_id ) {
+    return  \WeDevs\ERP\HRM\Models\Employee::select('user_id')
+            ->where( 'department', '=', $department_id )
+            ->where( 'status', '=', 'active' )
+            ->get()->toArray();
+}
