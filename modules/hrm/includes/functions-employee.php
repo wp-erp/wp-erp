@@ -865,3 +865,4 @@ function erp_hr_employee_single_tab_performance( $employee ) {
 function erp_hr_employee_single_tab_permission( $employee ) {
     include WPERP_HRM_VIEWS . '/employee/tab-permission.php';
 }
+
