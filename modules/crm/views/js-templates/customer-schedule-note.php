@@ -1,5 +1,6 @@
 <?php
 $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
+$notification_types = erp_crm_activity_schedule_notification_type();
 ?>
 
 <div id="schedule">
@@ -76,8 +77,9 @@ $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
             <span class="value">
                 <select name="notification_via" id="notification_via" v-model="feedData.notification_via">
                     <option value=""><?php _e( '--Select--', 'erp' ); ?></option>
-                    <option value="email"><?php _e( 'Email', 'erp' ); ?></option>
-                    <option value="sms"><?php _e( 'SMS', 'erp' ); ?></option>
+                    <?php foreach ( $notification_types as $key => $value ) : ?>
+                        <option value="<?php echo $key ?>"><?php echo $value; ?></option>
+                    <?php endforeach; ?>
                 </select>
             </span>
         </p>
