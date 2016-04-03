@@ -870,8 +870,8 @@ function erp_user_bulk_actions() {
     ?>
     <script type="text/javascript">
       jQuery( document ).ready( function($) {
-        $('<option>').val('crm_contact').text('<?php _e('Make CRM Contact', 'erp')?>').appendTo("select[name='action']");
-        $('<option>').val('crm_contact').text('<?php _e('Make CRM Contact', 'erp')?>').appendTo("select[name='action2']");
+        $('<option>').val('crm_contact').text('<?php _e('Import into CRM', 'erp')?>').appendTo("select[name='action']");
+        $('<option>').val('crm_contact').text('<?php _e('Import into CRM', 'erp')?>').appendTo("select[name='action2']");
       });
     </script>
     <?php
