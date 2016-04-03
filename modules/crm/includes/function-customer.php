@@ -2236,7 +2236,11 @@ function erp_handle_user_bulk_actions() {
             $life_stage    = $_POST['life_stage'];
             $contact_owner = $_POST['contact_owner'];
 
-            $users = get_users( ['include' => $user_ids] );
+            $users = [];
+
+            if ( $user_ids ) {
+                $users = get_users( ['include' => $user_ids] );
+            }
 
             foreach ( $users as $user ) {
                 $data['type']       = 'contact';
