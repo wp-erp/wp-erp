@@ -53,7 +53,7 @@ function erp_get_currencies() {
         'CZK' => __( 'Czech Koruna', 'erp' ),
         'DKK' => __( 'Danish Krone', 'erp' ),
         'DOP' => __( 'Dominican Peso', 'erp' ),
-        'DZD' => __( 'Algerian Dinar', 'erp' ),        
+        'DZD' => __( 'Algerian Dinar', 'erp' ),
         'EUR' => __( 'Euros', 'erp' ),
         'HKD' => __( 'Hong Kong Dollar', 'erp' ),
         'HRK' => __( 'Croatia kuna', 'erp' ),
@@ -195,7 +195,7 @@ function erp_get_currency_symbol( $currency = '' ) {
         case 'HRK' : $currency_symbol = 'Kn'; break;
         case 'EGP' : $currency_symbol = 'EGP'; break;
         case 'DOP' : $currency_symbol = 'RD&#36;'; break;
-        case 'DZD' : $currency_symbol = 'DA;'; break;        
+        case 'DZD' : $currency_symbol = 'DA;'; break;
         case 'KIP' : $currency_symbol = '&#8365;'; break;
         default    : $currency_symbol = ''; break;
     }

@@ -2,6 +2,10 @@
  *****************    Vue Filters     *************************
  **************************************************************/
 
+Vue.filter('formatDate', function (date, format ) {
+    return wperp.dateFormat( date, format );
+})
+
 // Vue filter for formatting Feeds as a group by object
 Vue.filter('formatFeeds', function ( feeds ) {
     var feedsData = _.groupBy( feeds, function( data ) {
