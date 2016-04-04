@@ -28,6 +28,8 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
 
                 <tasks-note v-if="tabShow == 'tasks'"></tasks-note>
 
+                <?php do_action( 'erp_crm_feeds_nav_content' ); ?>
+
             </form>
         </div>
     </div>
