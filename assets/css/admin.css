@@ -1304,6 +1304,17 @@ table.widefat.cfi-table {
   border-bottom: 1px solid #E1E1E1;
   padding-bottom: 25px;
 }
+.erp-crm-save-replies-wrap label[for=template-body] {
+  margin-top: 12px;
+}
+.erp-crm-save-replies-wrap .template-body-wrapper {
+  float: left;
+  width: 80%;
+}
+.erp-crm-save-replies-wrap .template-body-wrapper #trix-toolbar-1 {
+  border-bottom: 1px solid #eee;
+  margin-bottom: 5px;
+}
 @media (min-width: 1200px) {
   .cfi-table {
     width: 50%;

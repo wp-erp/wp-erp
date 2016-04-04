@@ -2083,6 +2083,14 @@ function erp_settings_pages_contact_forms( $settings ) {
     return $settings;
 }
 
+function erp_crm_settings_pages( $settings ) {
+    if ( erp_crm_is_current_user_manager() ) {
+        $settings[] = new \WeDevs\ERP\CRM\CRM_Settings();
+    }
+
+    return $settings;
+}
+
 /**
  * Get CRM users with different params
  *
@@ -2191,6 +2199,96 @@ function erp_crm_activity_schedule_notification_type() {
     return apply_filters( 'erp_crm_activity_schedule_notification_type', [
         'email' => __( 'Email', 'erp' )
     ] );
+}
+
+/**
+ * Insert and update save replies
+ *
+ * @since 1.0
+ *
+ * @param  array  $data
+ *
+ * @return boolean
+ */
+function erp_crm_insert_save_replies( $args = [] ) {
+    if ( ! $args ) {
+        return new WP_Error( 'no-data', __( 'No data found', 'erp' ) );
+    }
+
+    $defaults = [
+        'id'       => 0,
+        'name'     => '',
+        'subject'  => '',
+        'template' => '',
+    ];
+
+    $args = wp_parse_args( $args, $defaults );
+
+
+    if ( empty( $args['name'] ) ) {
+        return new WP_Error( 'no-name', __( 'Please enter an template name', 'erp' ) );
+    }
+
+    if ( empty( $args['template'] ) ) {
+        return new WP_Error( 'no-template', __( 'Template body must be required', 'erp' ) );
+    }
+
+    if ( $args['id'] ) {
+        $res = WeDevs\ERP\CRM\Models\Save_Replies::find( $args['id'] )->update( $args );
+    } else {
+        $res = WeDevs\ERP\CRM\Models\Save_Replies::create( $args );
+    }
+
+    return $res;
+}
+
+/**
+ * Get all email save replies
+ *
+ * @since 1.0
+ *
+ * @param  array  $args
+ *
+ * @return object
+ */
+function erp_crm_get_save_replies( $args = [] ) {
+    $defaults = [
+        'number'     => -1,
+        'offset'     => 0,
+        'orderby'    => 'id',
+        'order'      => 'DESC',
+        'count'      => false,
+    ];
+
+    $args      = wp_parse_args( $args, $defaults );
+    $cache_key = 'erp-crm-save-replies-' . md5( serialize( $args ) );
+    $items     = wp_cache_get( $cache_key, 'erp' );
+
+    if ( false === $items ) {
+        $results               = [];
+        $save_replies         = new WeDevs\ERP\CRM\Models\Save_Replies();
+
+        // Check if want all data without any pagination
+        if ( $args['number'] != '-1' && ! $args['count'] ) {
+            $save_replies = $save_replies->skip( $args['offset'] )->take( $args['number'] );
+        }
+
+        // Render all collection of data according to above filter (Main query)
+        $results = $save_replies->orderBy( $args['orderby'], $args['order'] )
+                ->get()
+                ->toArray();
+
+        $items = erp_array_to_object( $results );
+
+        // Check if args count true, then return total count customer according to above filter
+        if ( $args['count'] ) {
+            $items = WeDevs\ERP\CRM\Models\Save_Replies::count();
+        }
+
+        wp_cache_set( $cache_key, $items, 'erp' );
+    }
+
+    return $items;
 }
 
 

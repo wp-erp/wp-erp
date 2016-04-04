@@ -71,6 +71,10 @@ class Ajax_Handler {
         // CRM Dashboard
         $this->action( 'wp_ajax_erp-crm-get-single-schedule-details', 'get_single_schedule_details' );
 
+        // Save Replies in Settings page
+        $this->action( 'wp_ajax_erp-crm-save-replies', 'save_template_save_replies' );
+        $this->action( 'wp_ajax_erp-crm-delete-save-replies', 'delete_save_replies' );
+
     }
 
     /**
@@ -929,4 +933,28 @@ class Ajax_Handler {
         $this->send_success( $result );
     }
 
+    /**
+     * Save Templates ajax
+     *
+     * @since 1.0
+     *
+     * @return json
+     */
+    public function save_template_save_replies() {
+        $this->verify_nonce( 'wp-erp-crm-save-replies' );
+
+        $data = [
+            'name'     => isset( $_POST['name'] ) ? $_POST['name'] : '',
+            'subject'  => isset( $_POST['subject'] ) ? $_POST['subject'] : '',
+            'template' => isset( $_POST['template'] ) ? $_POST['template'] : ''
+        ];
+
+        $results = erp_crm_insert_save_replies( $data );
+
+        if ( is_wp_error( $results ) ) {
+            $this->send_error( $results->get_error_message() );
+        }
+
+        $this->send_success( $results );
+    }
 }

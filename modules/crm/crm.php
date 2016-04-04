@@ -220,6 +220,11 @@ class Customer_Relationship {
             $localize_script['wpErpCountries'] = $country->load_country_states();
         }
 
+        if ( 'erp-settings_page_erp-settings' == $hook && isset( $_GET['tab'] ) && $_GET['tab'] == 'erp-crm' ) {
+            wp_enqueue_script( 'erp-trix-editor' );
+            wp_enqueue_style( 'erp-trix-editor' );
+        }
+
         wp_localize_script( 'erp-crm', 'wpErpCrm', $localize_script );
     }
 
@@ -271,6 +276,12 @@ class Customer_Relationship {
             case 'crm_page_erp-sales-schedules':
                 erp_get_js_template( WPERP_CRM_JS_TMPL . '/single-schedule-details.php', 'erp-crm-single-schedule-details' );
                 erp_get_js_template( WPERP_CRM_JS_TMPL . '/customer-add-schedules.php', 'erp-crm-customer-schedules');
+                break;
+
+            case 'erp-settings_page_erp-settings':
+                if ( isset( $_GET['tab'] ) && $_GET['tab'] == 'erp-crm' ) {
+                    erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-save-replies.php', 'erp-crm-new-save-replies' );
+                }
                 break;
 
             default:
