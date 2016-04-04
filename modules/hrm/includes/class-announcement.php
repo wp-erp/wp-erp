@@ -242,6 +242,7 @@ class Announcement {
         unset( $columns['date'] );
 
         $columns['assign_type'] = __( 'Sent To', 'erp' );
+        $columns['send_type']   = __( 'Type', 'erp' );
         $columns['date']        = __( 'Date', 'erp' );
 
         return $columns;
@@ -268,6 +269,12 @@ class Announcement {
             } else {
                 _e( 'No employee assigned!', 'erp' );
             }
+        }
+
+        if ( 'send_type' == $column ) {
+            echo '<i class="fa fa-envelope-o fa-lg"></i>';
+
+            do_action( 'hr_announcement_send_type', $column, $post_id );
         }
     }
 
