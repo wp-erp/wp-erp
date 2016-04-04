@@ -957,4 +957,31 @@ class Ajax_Handler {
 
         $this->send_success( $results );
     }
+
+    /**
+     * Delete Save replies
+     *
+     * @since 1.0
+     *
+     * @return json
+     */
+    public function delete_save_replies() {
+
+        $this->verify_nonce( 'wp-erp-crm-nonce' );
+
+        $query_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+
+        if ( ! $query_id ) {
+            $this->send_error( __( 'Somthing wrong, Please try later', 'erp' ) );
+        }
+
+        $resp = erp_crm_save_replies_delete( $query_id );
+
+        if ( is_wp_error( $resp ) ) {
+            $this->send_error( $resp->get_error_message() );
+        }
+
+        $this->send_success( __( 'Save reply item delete successfully', 'erp' ) );
+    }
+
 }

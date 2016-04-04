@@ -59,6 +59,7 @@
 
             // Save Replies in settings page
             $('body').on('click', 'a#erp-crm-add-save-replies', this.SaveReplies.create );
+            $('body').on('click', 'a.erp-crm-delete-save-replies', this.SaveReplies.remove );
 
             this.checkVisibaleAdvanceSearch();
             // Erp ToolTips using tiptip
@@ -1252,13 +1253,13 @@
                 if ( confirm( wpErpCrm.delConfirm ) ) {
                     wp.ajax.send( 'erp-crm-delete-save-replies', {
                         data: {
-                            '_wpnonce': wpErpCrm.nonce,
-                            id: self.data( 'id' )
+                            _wpnonce : wpErpCrm.nonce,
+                            id       : self.data( 'id' )
                         },
                         success: function() {
                             self.closest('tr').fadeOut( 'fast', function() {
                                 $(this).remove();
-                                WeDevs_ERP_CRM.contactGroup.pageReload();
+                                // WeDevs_ERP_CRM.SaveReplies.pageReload();
                             });
                         },
                         error: function(response) {

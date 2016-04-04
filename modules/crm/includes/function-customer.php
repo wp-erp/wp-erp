@@ -2291,4 +2291,22 @@ function erp_crm_get_save_replies( $args = [] ) {
     return $items;
 }
 
+/**
+ * Delete save replies
+ *
+ * @param  integer|array $id
+ *
+ * @return boolean
+ */
+function erp_crm_save_replies_delete( $id ) {
+    if ( empty( $id ) ) {
+        return new WP_Error( 'no-record', __( 'No record found', 'erp' ) );
+    }
+
+    if ( is_array( $id ) ) {
+        return WeDevs\ERP\CRM\Models\Save_Replies::destroy( $id );
+    } else {
+        return WeDevs\ERP\CRM\Models\Save_Replies::find( $id )->delete();
+    }
+}
 
