@@ -2253,6 +2253,7 @@ function erp_crm_insert_save_replies( $args = [] ) {
  */
 function erp_crm_get_save_replies( $args = [] ) {
     $defaults = [
+        'id'         => 0,
         'number'     => -1,
         'offset'     => 0,
         'orderby'    => 'id',
@@ -2289,6 +2290,27 @@ function erp_crm_get_save_replies( $args = [] ) {
     }
 
     return $items;
+}
+
+/**
+ * Get single save replies by id
+ *
+ * @since 1.0
+ *
+ * @param  integer $id
+ *
+ * @return array|object
+ */
+function erp_crm_get_save_replies_by_id( $id ) {
+    if ( empty( $id ) ) {
+        return new WP_Error( 'no-record', __( 'No record found', 'erp' ) );
+    }
+
+    if ( is_array( $id ) ) {
+        return WeDevs\ERP\CRM\Models\Save_Replies::whereIn( 'id', $id )->get()->toArray();
+    } else {
+        return WeDevs\ERP\CRM\Models\Save_Replies::find( $id );
+    }
 }
 
 /**

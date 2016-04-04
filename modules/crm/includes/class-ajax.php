@@ -73,6 +73,7 @@ class Ajax_Handler {
 
         // Save Replies in Settings page
         $this->action( 'wp_ajax_erp-crm-save-replies', 'save_template_save_replies' );
+        $this->action( 'wp_ajax_erp-crm-edit-save-replies', 'edit_save_replies' );
         $this->action( 'wp_ajax_erp-crm-delete-save-replies', 'delete_save_replies' );
 
     }
@@ -944,6 +945,7 @@ class Ajax_Handler {
         $this->verify_nonce( 'wp-erp-crm-save-replies' );
 
         $data = [
+            'id'       => isset( $_POST['id'] ) ? $_POST['id'] : 0,
             'name'     => isset( $_POST['name'] ) ? $_POST['name'] : '',
             'subject'  => isset( $_POST['subject'] ) ? $_POST['subject'] : '',
             'template' => isset( $_POST['template'] ) ? $_POST['template'] : ''
@@ -956,6 +958,31 @@ class Ajax_Handler {
         }
 
         $this->send_success( $results );
+    }
+
+    /**
+     * Edit save replies
+     *
+     * @since 1.0
+     *
+     * @return json
+     */
+    public function edit_save_replies() {
+        $this->verify_nonce( 'wp-erp-crm-nonce' );
+
+        $query_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+
+        if ( ! $query_id ) {
+            $this->send_error( __( 'Somthing wrong, Please try later', 'erp' ) );
+        }
+
+        $result = erp_crm_get_save_replies_by_id( $query_id );
+
+        if ( $result ) {
+            $this->send_success( $result );
+        }
+
+        $this->send_error( __( 'No results found', 'erp' ) );
     }
 
     /**

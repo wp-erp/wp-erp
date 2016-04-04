@@ -58,8 +58,9 @@
             $('body').on( 'change', 'select#erp-crm-feed-log-type', this.triggerLogType );
 
             // Save Replies in settings page
-            $('body').on('click', 'a#erp-crm-add-save-replies', this.SaveReplies.create );
-            $('body').on('click', 'a.erp-crm-delete-save-replies', this.SaveReplies.remove );
+            $('body').on('click', 'a#erp-crm-add-save-replies', this.saveReplies.create );
+            $('body').on('click', 'a.erp-crm-delete-save-replies', this.saveReplies.remove );
+            $('body').on('click', 'a.erp-crm-save-replies-edit', this.saveReplies.edit );
 
             this.checkVisibaleAdvanceSearch();
             // Erp ToolTips using tiptip
@@ -1158,7 +1159,7 @@
             }
         },
 
-        SaveReplies: {
+        saveReplies: {
 
             pageReload: function() {
                 $('td.erp-crm-templates-wrapper').load( window.location.href + ' table.erp-crm-templates-table' );
@@ -1182,7 +1183,7 @@
                         wp.ajax.send( {
                             data: this.serialize(),
                             success: function( res ) {
-                                WeDevs_ERP_CRM.SaveReplies.pageReload();
+                                WeDevs_ERP_CRM.saveReplies.pageReload();
                                 modal.enableButton();
                                 modal.closeModal();
                             },
@@ -1218,7 +1219,7 @@
                                 _wpnonce: wpErpCrm.nonce
                             },
                             success: function( res ) {
-                                var html = wp.template( 'erp-crm-new-contact-group' )( res );
+                                var html = wp.template( 'erp-crm-new-save-replies' )( res );
                                 $( '.content', modal ).html( html );
                                 $( '.loader', modal ).remove();
                             }
@@ -1231,7 +1232,7 @@
                         wp.ajax.send( {
                             data: this.serialize(),
                             success: function(res) {
-                                WeDevs_ERP_CRM.contactGroup.pageReload();
+                                WeDevs_ERP_CRM.saveReplies.pageReload();
                                 modal.enableButton();
                                 modal.closeModal();
                             },
@@ -1259,7 +1260,6 @@
                         success: function() {
                             self.closest('tr').fadeOut( 'fast', function() {
                                 $(this).remove();
-                                // WeDevs_ERP_CRM.SaveReplies.pageReload();
                             });
                         },
                         error: function(response) {

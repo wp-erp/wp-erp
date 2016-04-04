@@ -148,7 +148,7 @@ class CRM_Settings extends ERP_Settings_Page {
 
                                 case 'actions' :
                                     echo '<td class="erp-templates-settings-table-' . esc_attr( $key ) . '">
-                                        <a class="erp-crm-edit-save-replies erp-tips" title="'. __( 'Edit', 'erp' ) .'" href="#" data-id="' . $save_reply->id . '"><i class="fa fa-pencil-square-o"></i></a>
+                                        <a class="erp-crm-save-replies-edit erp-tips" title="'. __( 'Edit', 'erp' ) .'" href="#" data-id="' . $save_reply->id . '"><i class="fa fa-pencil-square-o"></i></a>
                                         <a class="erp-crm-delete-save-replies erp-tips" title="'. __( 'Delete', 'erp' ) .'" href="#" data-id="' . $save_reply->id . '"><i class="fa fa-trash-o"></i></a>
                                     </td>';
                                     break;
