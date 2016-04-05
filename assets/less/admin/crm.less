@@ -661,14 +661,19 @@
             padding-top:10px;
             border-top:1px solid #eee;
         }
-
+        #email {
+            p {
+                label {
+                    margin-left: 8px;
+                }
+            }
+        }
         #email,
         #schedule {
             p {
                 margin: 0px;
                 border-bottom: 1px solid #eee;
                 padding: 8px 0px;
-                font-weight: bold;
 
                 span.select2-selection--single {
                     border:none;
@@ -676,6 +681,10 @@
 
                     input {
                         width: 100% !important;
+                    }
+
+                    &:focus {
+                        outline:none;
                     }
                 }
 

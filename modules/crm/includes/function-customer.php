@@ -2244,67 +2244,67 @@ function erp_crm_insert_save_replies( $args = [] ) {
 
 function erp_crm_get_save_replies_shortcodes() {
     return apply_filters( 'erp_crm_get_save_replies_shortcodes', [
-        '%first_name%'  => [
+        '{first_name}'  => [
             'title'   => __( 'First Name', 'erp' ),
             'key'     => 'first_name',
             'is_meta' => false
         ],
-        '%last_name%' => [
+        '{last_name}' => [
             'title'   => __( 'Last Name', 'erp' ),
             'key'     => 'last_name',
             'is_meta' => false
         ],
-        '%company%' => [
+        '{company}' => [
             'title'   => __( 'Company Name', 'erp' ),
             'key'     => 'company',
             'is_meta' => false
         ],
-        '%email%' => [
+        '{email}' => [
             'title'   => __( 'Email', 'erp' ),
             'key'     => 'email',
             'is_meta' => false
         ],
-        '%phone%' => [
+        '{phone}' => [
             'title'   => __( 'Phone', 'erp' ),
             'key'     => 'phone',
             'is_meta' => false
         ],
-        '%mobile%' => [
+        '{mobile}' => [
             'title'   => __( 'Mobile', 'erp' ),
             'key'     => 'mobile',
             'is_meta' => false
         ],
-        '%website%' => [
+        '{website}' => [
             'title'   => __( 'Website', 'erp' ),
             'key'     => 'website',
             'is_meta' => false
         ],
-        '%fax%' => [
+        '{fax}' => [
             'title'   => __( 'Fax', 'erp' ),
             'key'     => 'fax',
             'is_meta' => false
         ],
-        '%street_1%' => [
+        '{street_1}' => [
             'title'   => __( 'Street 1', 'erp' ),
             'key'     => 'street_1',
             'is_meta' => false
         ],
-        '%street_2%' => [
+        '{street_2}' => [
             'title'   => __( 'Street 2', 'erp' ),
             'key'     => 'street_2',
             'is_meta' => false
         ],
-        '%country%' => [
+        '{country}' => [
             'title'   => __( 'Country', 'erp' ),
             'key'     => 'country',
             'is_meta' => false
         ],
-        '%state%' => [
+        '{state}' => [
             'title'   => __( 'State', 'erp' ),
             'key'     => 'state',
             'is_meta' => false
         ],
-        '%postal_code%' => [
+        '{postal_code}' => [
             'title'   => __( 'Postal Code', 'erp' ),
             'key'     => 'postal_code',
             'is_meta' => false
@@ -2401,6 +2401,16 @@ function erp_crm_save_replies_delete( $id ) {
     }
 }
 
+/**
+ * Render save replies with parsing body
+ *
+ * @since 1.0
+ *
+ * @param  integer $template_id
+ * @param  integer $contact_id
+ *
+ * @return array
+ */
 function erp_crm_render_save_replies( $template_id, $contact_id ) {
     if ( empty( $template_id ) ) {
         return new WP_Error( 'no-template', __( 'No template found', 'erp' ) );
@@ -2410,10 +2420,10 @@ function erp_crm_render_save_replies( $template_id, $contact_id ) {
         return new WP_Error( 'no-contact', __( 'No contact found', 'erp' ) );
     }
 
-    $contacts  = new \WeDevs\ERP\CRM\Contact( $contact_id );
-    $templates = erp_crm_get_save_replies_by_id( $template_id );
-
+    $contacts   = new \WeDevs\ERP\CRM\Contact( $contact_id );
+    $templates  = erp_crm_get_save_replies_by_id( $template_id );
     $shortcodes = erp_crm_get_save_replies_shortcodes();
+
     $data = [];
 
     foreach ( $shortcodes as $shortcode => $shortcode_val ) {
@@ -2432,7 +2442,6 @@ function erp_crm_render_save_replies( $template_id, $contact_id ) {
 
     $find    = array_keys( $shortcodes );
     $replace = apply_filters( 'erp_crm_filter_contact_data_via_shortcodes', $data, $contacts );
-
     $body    = str_replace( $find, $replace, $templates->template );
 
     return [
@@ -2441,8 +2450,10 @@ function erp_crm_render_save_replies( $template_id, $contact_id ) {
     ];
 }
 
-/*
+/**
  * Display the user bulk actions.
+ *
+ * @since 1.0
  *
  * @return void
  */
@@ -2459,6 +2470,8 @@ function erp_user_bulk_actions() {
 
 /**
  * Handle the user bulk actions.
+ *
+ * @since 1.0
  *
  * @return void
  */
@@ -2516,6 +2529,8 @@ function erp_handle_user_bulk_actions() {
 /**
  * Display the user bulk actions notice.
  *
+ * @since 1.0
+ *
  * @return void
  */
 function erp_user_bulk_actions_notices() {
@@ -2529,6 +2544,8 @@ function erp_user_bulk_actions_notices() {
 
 /**
  * Create contact from created user.
+ *
+ * @since 1.0
  *
  * @param  int $user_id
  *

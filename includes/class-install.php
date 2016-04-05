@@ -596,7 +596,16 @@ Company'
               `search_name` text,
               `search_val` text,
               PRIMARY KEY (`id`)
+            ) $collate;",
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_save_email_replies` (
+              `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+              `name` text,
+              `subject` text,
+              `template` longtext,
+              PRIMARY KEY (`id`)
             ) $collate;"
+
         ];
 
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );

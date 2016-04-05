@@ -128,36 +128,41 @@ class CRM_Settings extends ERP_Settings_Page {
 
                 <tbody>
                     <?php
-                    foreach ( $save_replies as $replies_key => $save_reply ) {
-                        echo '<tr>';
+                    if ( $save_replies ) {
+                        foreach ( $save_replies as $replies_key => $save_reply ) {
+                            echo '<tr>';
 
-                        foreach ( $columns as $key => $column ) {
-                            switch ( $key ) {
-                                case 'name' :
-                                    echo '<td class="erp-templates-settings-table-' . esc_attr( $key ) . '">
-                                        <a href="#">' . $save_reply->name . '</a>
-                                    </td>';
+                            foreach ( $columns as $key => $column ) {
+                                switch ( $key ) {
+                                    case 'name' :
+                                        echo '<td class="erp-templates-settings-table-' . esc_attr( $key ) . '">
+                                            <a href="#">' . $save_reply->name . '</a>
+                                        </td>';
+                                        break;
+
+                                    case 'subject':
+                                        $subject = ( isset( $save_reply->subject ) && ! empty( $save_reply->subject ) ) ? $save_reply->subject : '----';
+                                        echo '<td class="erp-templates-settings-table-' . esc_attr( $key ) . '">
+                                            <span class="help">' . $subject . '</span>
+                                        </td>';
+                                        break;
+
+                                    case 'actions' :
+                                        echo '<td class="erp-templates-settings-table-' . esc_attr( $key ) . '">
+                                            <a class="erp-crm-save-replies-edit erp-tips" title="'. __( 'Edit', 'erp' ) .'" href="#" data-id="' . $save_reply->id . '"><i class="fa fa-pencil-square-o"></i></a>
+                                            <a class="erp-crm-delete-save-replies erp-tips" title="'. __( 'Delete', 'erp' ) .'" href="#" data-id="' . $save_reply->id . '"><i class="fa fa-trash-o"></i></a>
+                                        </td>';
+                                        break;
+
+                                    default :
+                                        do_action( 'erp_templates_setting_column_' . $key, $email );
                                     break;
-
-                                case 'subject':
-                                    $subject = ( isset( $save_reply->subject ) && ! empty( $save_reply->subject ) ) ? $save_reply->subject : '----';
-                                    echo '<td class="erp-templates-settings-table-' . esc_attr( $key ) . '">
-                                        <span class="help">' . $subject . '</span>
-                                    </td>';
-                                    break;
-
-                                case 'actions' :
-                                    echo '<td class="erp-templates-settings-table-' . esc_attr( $key ) . '">
-                                        <a class="erp-crm-save-replies-edit erp-tips" title="'. __( 'Edit', 'erp' ) .'" href="#" data-id="' . $save_reply->id . '"><i class="fa fa-pencil-square-o"></i></a>
-                                        <a class="erp-crm-delete-save-replies erp-tips" title="'. __( 'Delete', 'erp' ) .'" href="#" data-id="' . $save_reply->id . '"><i class="fa fa-trash-o"></i></a>
-                                    </td>';
-                                    break;
-
-                                default :
-                                    do_action( 'erp_templates_setting_column_' . $key, $email );
-                                break;
+                                }
                             }
+                            echo '</tr>';
                         }
+                    } else {
+                        echo '<tr><td colspan="3">' . __( 'No templates found', 'erp' ) . '</td></tr>';
                     }
                     ?>
                 </tbody>

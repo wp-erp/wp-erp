@@ -650,12 +650,14 @@
   padding-top: 10px;
   border-top: 1px solid #eee;
 }
+.erp-single-customer .erp-customer-feeds #email p label {
+  margin-left: 8px;
+}
 .erp-single-customer .erp-customer-feeds #email p,
 .erp-single-customer .erp-customer-feeds #schedule p {
   margin: 0px;
   border-bottom: 1px solid #eee;
   padding: 8px 0px;
-  font-weight: bold;
 }
 .erp-single-customer .erp-customer-feeds #email p span.select2-selection--single,
 .erp-single-customer .erp-customer-feeds #schedule p span.select2-selection--single {
@@ -665,6 +667,10 @@
 .erp-single-customer .erp-customer-feeds #email p span.select2-selection--single input,
 .erp-single-customer .erp-customer-feeds #schedule p span.select2-selection--single input {
   width: 100% !important;
+}
+.erp-single-customer .erp-customer-feeds #email p span.select2-selection--single:focus,
+.erp-single-customer .erp-customer-feeds #schedule p span.select2-selection--single:focus {
+  outline: none;
 }
 .erp-single-customer .erp-customer-feeds #email p label,
 .erp-single-customer .erp-customer-feeds #schedule p label {
