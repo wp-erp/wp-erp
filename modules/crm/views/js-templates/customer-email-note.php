@@ -2,8 +2,18 @@
 global $current_user;
 $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
 $customer = new \WeDevs\ERP\CRM\Contact( $customer_id );
+$save_replies = erp_crm_get_save_replies();
 ?>
 <div id="email">
+    <p class="email-templates">
+        <select name="select_templates" id="erp-crm-activity-insert-templates" v-model="emailTemplates" v-selecttwo="emailTemplates" class="select2" v-on:change="insertSaveReplies()" style="width: 100%" data-placeholder="Select a templates...">
+            <option value=""><?php _e( 'Select a templates', 'erp' ); ?></option>
+            <?php foreach ( $save_replies as $key => $save_reply ) : ?>
+                <option value="<?php echo $save_reply->id ?>"><?php echo $save_reply->name ?></option>
+            <?php endforeach ?>
+        </select>
+    </p>
+
     <p class="email-from">
         <input type="hidden"  v-model="feedData.created_by" name="created_by" value="<?php echo $current_user->ID; ?>">
         <label>Form</label>
@@ -26,8 +36,10 @@ $customer = new \WeDevs\ERP\CRM\Contact( $customer_id );
         </span>
     </p>
 
-    <input id="email_activity_message" type="hidden" v-model="feedData.message" name="email_activity_message">
-    <trix-editor input="email_activity_message" placeholder="<?php _e( 'Type your email body .....', 'erp' ); ?>"></trix-editor>
+    <div v-if="testtime">
+        <trix-editor data-time="{{ testtime }}" input="email_activity_message" placeholder="<?php _e( 'Type your email body .....', 'erp' ); ?>"></trix-editor>
+        <input id="email_activity_message" type="hidden" v-model="feedData.message" name="email_activity_message">
+    </div>
 
     <div class="submit-action">
         <input type="hidden" name="action" v-model="feedData.action" value="erp_customer_feeds_save_notes">

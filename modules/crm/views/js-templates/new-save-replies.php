@@ -27,9 +27,10 @@
         <div class="template-body-wrapper">
             <select name="erp-crm-template-shortcodes" id="erp-crm-template-shortcodes">
                 <option value="">--Select--</option>
-                <option value="%first_name%">First Name</option>
-                <option value="%last_name%">Last Name</option>
-                <option value="%full_name%">Full Name</option>
+                <?php $shortcodes = erp_crm_get_save_replies_shortcodes(); ?>
+                <?php foreach ( $shortcodes as $key => $value ) : ?>
+                    <option value="<?php echo $key ?>"><?php echo $value['title']; ?></option>
+                <?php endforeach; ?>
             </select>
             <trix-editor id="template-body" input="template-content" required placeholder="<?php _e( 'Type your content .....', 'erp' ); ?>"></trix-editor>
             <input id="template-content" type="hidden" name="template" required value="{{ data.template }}">

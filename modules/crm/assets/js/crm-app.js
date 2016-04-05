@@ -550,15 +550,42 @@ Vue.component( 'email-note', {
     data: function() {
         return {
             feedData: {
-                message: ''
+                message: '',
+                email_subject: ''
             },
-            isValid: false
+            isValid: false,
+            emailTemplates: '',
         }
     },
 
     methods: {
         notify: function () {
             this.$dispatch('bindFeedData', this.feedData );
+        },
+
+        insertSaveReplies: function() {
+
+            var self = this;
+
+            if (! self.emailTemplates ) {
+                return;
+            }
+
+            var data = {
+                action      : 'erp-crm-load-save-replies-data',
+                template_id : this.emailTemplates,
+                contact_id  : this.feedData.user_id,
+                _wpnonce    : wpCRMvue.nonce
+            };
+
+            jQuery.post( wpCRMvue.ajaxurl, data, function( resp ) {
+                if ( resp.success ) {
+                    self.feedData.email_subject = resp.data.subject;
+                    var trix = jQuery(self.$el).find('trix-editor').get(0);
+                    trix.editor.element.innerHTML = ' '+resp.data.template+' ';
+                }
+            });
+
         }
     },
 
@@ -589,7 +616,12 @@ Vue.component( 'email-note', {
             handler: function () {
                 this.notify();
             }
-        }
+        },
+
+        emailTemplates: function( newVal, oldVal ){
+            this.insertSaveReplies();
+        },
+
     },
 
     activate: function (done) {
@@ -601,7 +633,6 @@ Vue.component( 'email-note', {
 
         done();
     }
-
 });
 
 /**

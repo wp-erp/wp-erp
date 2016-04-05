@@ -75,6 +75,7 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-crm-save-replies', 'save_template_save_replies' );
         $this->action( 'wp_ajax_erp-crm-edit-save-replies', 'edit_save_replies' );
         $this->action( 'wp_ajax_erp-crm-delete-save-replies', 'delete_save_replies' );
+        $this->action( 'wp_ajax_erp-crm-load-save-replies-data', 'load_save_replies' );
 
     }
 
@@ -1009,6 +1010,28 @@ class Ajax_Handler {
         }
 
         $this->send_success( __( 'Save reply item delete successfully', 'erp' ) );
+    }
+
+    /**
+     * Load save replies
+     *
+     * @since 1.0
+     *
+     * @return json|object
+     */
+    public function load_save_replies() {
+        $this->verify_nonce( 'wp-erp-crm-customer-feed' );
+
+        $template_id = isset( $_REQUEST['template_id'] ) ? intval( $_REQUEST['template_id'] ) : 0;
+        $contact_id = isset( $_REQUEST['contact_id'] ) ? intval( $_REQUEST['contact_id'] ) : 0;
+
+        $result = erp_crm_render_save_replies( $template_id, $contact_id );
+
+        if ( is_wp_error( $result ) ) {
+            $this->send_error( $result->get_error_message() );
+        }
+
+        $this->send_success( $result );
     }
 
 }

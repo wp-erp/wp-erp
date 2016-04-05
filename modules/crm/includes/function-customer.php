@@ -2242,6 +2242,76 @@ function erp_crm_insert_save_replies( $args = [] ) {
     return $res;
 }
 
+function erp_crm_get_save_replies_shortcodes() {
+    return apply_filters( 'erp_crm_get_save_replies_shortcodes', [
+        '%first_name%'  => [
+            'title'   => __( 'First Name', 'erp' ),
+            'key'     => 'first_name',
+            'is_meta' => false
+        ],
+        '%last_name%' => [
+            'title'   => __( 'Last Name', 'erp' ),
+            'key'     => 'last_name',
+            'is_meta' => false
+        ],
+        '%company%' => [
+            'title'   => __( 'Company Name', 'erp' ),
+            'key'     => 'company',
+            'is_meta' => false
+        ],
+        '%email%' => [
+            'title'   => __( 'Email', 'erp' ),
+            'key'     => 'email',
+            'is_meta' => false
+        ],
+        '%phone%' => [
+            'title'   => __( 'Phone', 'erp' ),
+            'key'     => 'phone',
+            'is_meta' => false
+        ],
+        '%mobile%' => [
+            'title'   => __( 'Mobile', 'erp' ),
+            'key'     => 'mobile',
+            'is_meta' => false
+        ],
+        '%website%' => [
+            'title'   => __( 'Website', 'erp' ),
+            'key'     => 'website',
+            'is_meta' => false
+        ],
+        '%fax%' => [
+            'title'   => __( 'Fax', 'erp' ),
+            'key'     => 'fax',
+            'is_meta' => false
+        ],
+        '%street_1%' => [
+            'title'   => __( 'Street 1', 'erp' ),
+            'key'     => 'street_1',
+            'is_meta' => false
+        ],
+        '%street_2%' => [
+            'title'   => __( 'Street 2', 'erp' ),
+            'key'     => 'street_2',
+            'is_meta' => false
+        ],
+        '%country%' => [
+            'title'   => __( 'Country', 'erp' ),
+            'key'     => 'country',
+            'is_meta' => false
+        ],
+        '%state%' => [
+            'title'   => __( 'State', 'erp' ),
+            'key'     => 'state',
+            'is_meta' => false
+        ],
+        '%postal_code%' => [
+            'title'   => __( 'Postal Code', 'erp' ),
+            'key'     => 'postal_code',
+            'is_meta' => false
+        ]
+    ] );
+}
+
 /**
  * Get all email save replies
  *
@@ -2253,7 +2323,6 @@ function erp_crm_insert_save_replies( $args = [] ) {
  */
 function erp_crm_get_save_replies( $args = [] ) {
     $defaults = [
-        'id'         => 0,
         'number'     => -1,
         'offset'     => 0,
         'orderby'    => 'id',
@@ -2330,6 +2399,46 @@ function erp_crm_save_replies_delete( $id ) {
     } else {
         return WeDevs\ERP\CRM\Models\Save_Replies::find( $id )->delete();
     }
+}
+
+function erp_crm_render_save_replies( $template_id, $contact_id ) {
+    if ( empty( $template_id ) ) {
+        return new WP_Error( 'no-template', __( 'No template found', 'erp' ) );
+    }
+
+    if ( empty( $contact_id ) ) {
+        return new WP_Error( 'no-contact', __( 'No contact found', 'erp' ) );
+    }
+
+    $contacts  = new \WeDevs\ERP\CRM\Contact( $contact_id );
+    $templates = erp_crm_get_save_replies_by_id( $template_id );
+
+    $shortcodes = erp_crm_get_save_replies_shortcodes();
+    $data = [];
+
+    foreach ( $shortcodes as $shortcode => $shortcode_val ) {
+        if ( $shortcode_val['is_meta'] ) {
+            $data[] = erp_people_get_meta( $contact_id, $shortcode_val['key'], true );
+        } else {
+            if ( $shortcode == '%country%' ) {
+                $data[] = erp_get_country_name( $contacts->$shortcode_val['key'] );
+            } elseif ( $shortcode == '%state%' ) {
+                $data[] = erp_get_state_name( $contacts->country, $contacts->$shortcode_val['key'] );
+            } else {
+                $data[] = $contacts->$shortcode_val['key'];
+            }
+        }
+    }
+
+    $find    = array_keys( $shortcodes );
+    $replace = apply_filters( 'erp_crm_filter_contact_data_via_shortcodes', $data, $contacts );
+
+    $body    = str_replace( $find, $replace, $templates->template );
+
+    return [
+        'subject' => $templates->subject,
+        'template' => $body
+    ];
 }
 
 /*
