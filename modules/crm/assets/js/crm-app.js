@@ -627,7 +627,8 @@ Vue.component( 'email-note', {
     activate: function (done) {
 
         var self = this;
-        jQuery(this.$el).find('trix-editor').get(0).addEventListener('trix-change', function (e) {
+
+        jQuery(self.$el).find('trix-editor').get(0).addEventListener('trix-change', function (e) {
             self.feedData.message = e.path[0].innerHTML;
         });
 

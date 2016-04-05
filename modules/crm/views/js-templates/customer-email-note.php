@@ -36,10 +36,8 @@ $save_replies = erp_crm_get_save_replies();
         </span>
     </p>
 
-    <div v-if="testtime">
-        <trix-editor data-time="{{ testtime }}" input="email_activity_message" placeholder="<?php _e( 'Type your email body .....', 'erp' ); ?>"></trix-editor>
-        <input id="email_activity_message" type="hidden" v-model="feedData.message" name="email_activity_message">
-    </div>
+    <trix-editor input="email_activity_message" placeholder="<?php _e( 'Type your email body .....', 'erp' ); ?>"></trix-editor>
+    <input id="email_activity_message" type="hidden" v-model="feedData.message" name="email_activity_message">
 
     <div class="submit-action">
         <input type="hidden" name="action" v-model="feedData.action" value="erp_customer_feeds_save_notes">
