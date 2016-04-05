@@ -1449,11 +1449,22 @@ table.widefat.cfi-table {
         margin-top: 12px;
     }
 
+    .row {
+        margin-bottom: 25px !important;
+    }
+
     .template-body-wrapper {
         float: left;
         width: 80%;
+        position: relative;
 
-        #trix-toolbar-1 {
+        select#erp-crm-template-shortcodes {
+            position: absolute;
+            top: -30px;
+            right:0px;
+        }
+
+        trix-toolbar {
             border-bottom: 1px solid #eee;
             margin-bottom: 5px;
         }

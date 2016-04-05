@@ -62,6 +62,8 @@
             $('body').on('click', 'a.erp-crm-delete-save-replies', this.saveReplies.remove );
             $('body').on('click', 'a.erp-crm-save-replies-edit', this.saveReplies.edit );
 
+            $('body').on('change', 'select#erp-crm-template-shortcodes', this.saveReplies.setShortcodes );
+
             this.checkVisibaleAdvanceSearch();
             // Erp ToolTips using tiptip
             this.initTipTips();
@@ -1267,6 +1269,14 @@
                         }
                     });
                 }
+            },
+
+            setShortcodes: function(e) {
+                e.preventDefault();
+                var self = $(this);
+                var element = document.querySelector("trix-editor");
+                element.editor.insertString( self.val() );
+                self.val('');
             }
 
         }

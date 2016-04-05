@@ -1307,11 +1307,20 @@ table.widefat.cfi-table {
 .erp-crm-save-replies-wrap label[for=template-body] {
   margin-top: 12px;
 }
+.erp-crm-save-replies-wrap .row {
+  margin-bottom: 25px !important;
+}
 .erp-crm-save-replies-wrap .template-body-wrapper {
   float: left;
   width: 80%;
+  position: relative;
 }
-.erp-crm-save-replies-wrap .template-body-wrapper #trix-toolbar-1 {
+.erp-crm-save-replies-wrap .template-body-wrapper select#erp-crm-template-shortcodes {
+  position: absolute;
+  top: -30px;
+  right: 0px;
+}
+.erp-crm-save-replies-wrap .template-body-wrapper trix-toolbar {
   border-bottom: 1px solid #eee;
   margin-bottom: 5px;
 }
