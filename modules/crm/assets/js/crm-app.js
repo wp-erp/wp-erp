@@ -151,7 +151,8 @@ var TimeLineItem = {
             showFooter : false,
             editfeedData: {},
             isEditable: false,
-            isReplied: false
+            isReplied: false,
+            emailViewedTime: false
         }
     },
 
@@ -234,6 +235,16 @@ var TimeLineItem = {
 
         notify: function() {
             this.$broadcast('bindEditFeedData', this.feed );
+        }
+    },
+
+    computed: {
+        emailViewedTime: function() {
+            if ( this.feed.extra.email_opened_at ) {
+                return 'Viewed on ' + vm.$options.filters.formatDateTime( this.feed.extra.email_opened_at )
+            } else {
+                return false;
+            }
         }
     },
 
