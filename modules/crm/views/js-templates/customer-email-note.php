@@ -14,21 +14,21 @@ $save_replies = erp_crm_get_save_replies();
         </select>
     </p>
 
-    <p class="email-from">
+    <p class="email-from" v-if="!feed">
         <input type="hidden"  v-model="feedData.created_by" name="created_by" value="<?php echo $current_user->ID; ?>">
         <label>Form</label>
         <span class="sep">:</span>
         <span class="value"><?php echo $current_user->display_name; ?></span>
     </p>
 
-    <p class="email-to">
+    <p class="email-to" v-if="!feed">
         <input type="hidden" name="user_id" v-model="feedData.user_id" value="<?php echo $customer->id; ?>">
         <label>To</label>
         <span class="sep">:</span>
         <span class="value"><?php echo $customer->get_full_name(); ?></span>
     </p>
 
-    <p class="email-subject">
+    <p class="email-subject" v-if="!feed">
         <label>Subject</label>
         <span class="sep">:</span>
         <span class="value">
@@ -40,9 +40,15 @@ $save_replies = erp_crm_get_save_replies();
     <input id="email_activity_message" type="hidden" v-model="feedData.message" name="email_activity_message">
 
     <div class="submit-action">
+        <div v-if="feed">
+            <input type="hidden" name="user_id" v-model="feedData.user_id" value="<?php echo $customer->id; ?>" >
+            <input type="hidden" name="created_by" v-model="feedData.created_by" value="<?php echo $current_user->ID; ?>" >
+        </div>
         <input type="hidden" name="action" v-model="feedData.action" value="erp_customer_feeds_save_notes">
         <input type="hidden" name="type" v-model="feedData.type" value="email">
-        <input type="submit" :disabled = "!isValid" class="button button-primary" name="send_email" value="<?php _e( 'Send Email', 'erp' ); ?>">
-        <input type="reset" class="button button-default" value="<?php _e( 'Discard', 'erp' ); ?>">
+        <input type="submit" v-if="!feed" :disabled = "!isValid" class="button button-primary" name="save_notes" value="<?php _e( 'Send Email', 'erp' ); ?>">
+        <input type="submit" v-if="feed" :disabled = "!isValid" class="button button-primary" name="edit_notes" value="<?php _e( 'Reply Email', 'erp' ); ?>">
+        <input type="reset" v-if="!feed" class="button button-default" value="<?php _e( 'Discard', 'erp' ); ?>">
+        <button class="button" v-if="feed" @click.prevent="cancelUpdateFeed"><?php _e( 'Cancel', 'erp' ); ?></button>
     </div>
 </div>

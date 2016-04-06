@@ -150,7 +150,8 @@ var TimeLineItem = {
             feedData: { message: '' },
             showFooter : false,
             editfeedData: {},
-            isEditable: false
+            isEditable: false,
+            isReplied: false
         }
     },
 
@@ -211,8 +212,15 @@ var TimeLineItem = {
             this.isEditable = true;
         },
 
+        replyEmailFeed: function( feed ) {
+            this.editfeedData = feed;
+            this.isReplied = true;
+            this.isEditable = false;
+        },
+
         cancelUpdate: function() {
             this.isEditable = false;
+            this.isReplied = false;
             this.editfeedData = {};
         },
 
@@ -222,6 +230,10 @@ var TimeLineItem = {
 
         updateCustomerFeed: function( feed_id ) {
             vm.addCustomerFeed( this, feed_id );
+        },
+
+        submitReplyEmailFeed: function() {
+            vm.addCustomerFeed( this, 0 );
         },
 
         notify: function() {
@@ -545,6 +557,8 @@ Vue.component( 'tasks-note', {
  * @return {[void]}
  */
 Vue.component( 'email-note', {
+    props: ['feed'],
+
     template: '#erp-crm-email-note-template',
 
     data: function() {
@@ -561,6 +575,12 @@ Vue.component( 'email-note', {
     methods: {
         notify: function () {
             this.$dispatch('bindFeedData', this.feedData );
+        },
+
+        cancelUpdateFeed: function() {
+            this.$parent.$data.isEditable   = false;
+            this.$parent.$data.isReplied    = false;
+            this.$parent.$data.editfeedData = {};
         },
 
         insertSaveReplies: function() {
@@ -580,7 +600,11 @@ Vue.component( 'email-note', {
 
             jQuery.post( wpCRMvue.ajaxurl, data, function( resp ) {
                 if ( resp.success ) {
-                    self.feedData.email_subject = resp.data.subject;
+
+                    if ( ! self.$parent.$data.isReplied ) {
+                        self.feedData.email_subject = resp.data.subject;
+                    }
+
                     var trix = jQuery(self.$el).find('trix-editor').get(0);
                     trix.editor.element.innerHTML = ' '+resp.data.template+' ';
                 }
@@ -608,6 +632,13 @@ Vue.component( 'email-note', {
             });
         }
     },
+
+    events: {
+        'bindEditFeedData': function (feed ) {
+            this.feedData.email_subject = feed.email_subject;
+        }
+    },
+
 
     watch: {
         feedData: {
@@ -703,7 +734,7 @@ Vue.component( 'schedule-note', {
         },
 
         cancelUpdateFeed: function() {
-            this.$parent.$data.isEditable = false;
+            this.$parent.$data.isEditable   = false;
             this.$parent.$data.editfeedData = {};
         }
     },
@@ -917,6 +948,8 @@ var vm = new Vue({
             if ( feed_id ) {
                 this.feedData.id = feed_id;
                 vm.progressStart( '#timeline-item-'+feed_id );
+            } else if ( comp.isReplied ) {
+                vm.progressStart( '#timeline-item-email-replied' );
             } else {
                 vm.progressStart('#erp-crm-feed-nav-content');
             }
@@ -1018,7 +1051,15 @@ var vm = new Vue({
                         vm.feedData.inviteContact              = [];
                     };
 
-                    vm.progreassDone();
+                    if ( comp.isReplied ) {
+                        vm.progreassDone();
+
+                        setTimeout( function() {
+                            comp.isReplied = false;
+                        }, 500);
+                    } else {
+                        vm.progreassDone();
+                    }
                 }
             });
         },

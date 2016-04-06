@@ -1,4 +1,4 @@
-<div class="timeline-item" id="timeline-item-{{ feed.id }}" v-if="!isEditable">
+<div class="timeline-item" id="timeline-item-{{ feed.id }}" v-if="!isEditable && !isReplied">
     <tooltip content="<i class='fa fa-clock-o'></i>" :title="feed.created_at | formatDateTime"></tooltip>
 
     <h3 class="timeline-header" @click.prevent="toggleFooter">
@@ -12,6 +12,10 @@
     <div class="timeline-footer" v-if="(feed.type != 'email') && showFooter">
         <a href="#" @click.prevent="editFeed( feed )"><?php _e( 'Edit', 'erp' ); ?> |</a>
         <a href="#" @click.prevent="deleteFeed( feed )"><?php _e( 'Delete', 'erp' ); ?></a>
+    </div>
+
+    <div class="timeline-footer" v-if="(feed.type == 'email') && (feed.extra.replied == 1 ) && showFooter">
+        <a href="#" @click.prevent="replyEmailFeed( feed )"><?php _e( 'Reply', 'erp' ); ?></a>
     </div>
 
 </div>
@@ -40,3 +44,22 @@
         </form>
     </div>
 </div>
+
+<div class="timeline-item" id="timeline-item-email-replied" v-if="isReplied">
+
+    <span class="time cancel-timeline-feed-email-reply" @click.prevent="cancelUpdate"><i class="fa fa-times"></i></span>
+
+    <h3 class="timeline-header" @click.prevent="toggleFooter">
+        <i class="fa fa-pencil-square-o"></i> <?php _e( 'Reply this email', 'erp' ); ?>
+    </h3>
+
+    <div class="timeline-body">
+        <form action="" method="post" @submit.prevent = "submitReplyEmailFeed()" id="erp-crm-activity-reply-email-form">
+            <email-note :feed="feed"></email-note>
+        </form>
+    </div>
+</div>
+
+<?php do_action( 'erp_crm_customer_after_timline_feed_item' ); ?>
+
+
