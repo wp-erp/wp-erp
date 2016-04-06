@@ -128,7 +128,7 @@ window.wpErpVue = window.wpErpVue || {};
     erp.TimeLineBody = {
         props: [ 'feed' ],
 
-        template: '<div class="timeline-email-subject" v-if="isEmail || ( isLog && islogTypeEmail )">Subject : {{feed.email_subject }}</div>'
+        template: '<div class="timeline-email-subject" v-if="isEmail || isRepliedEmail || ( isLog && islogTypeEmail )">Subject : {{feed.email_subject }}</div>'
                   + '<div class="timeline-email-subject" v-if="isSchedule"><i class="fa fa-bookmark"></i> &nbsp; {{ feed.extra.schedule_title }}  &nbsp;|&nbsp;  <i class="fa fa-calendar-check-o"></i> &nbsp;{{ datetime }}</div>'
                   + '<div class="timeline-email-subject" v-if="isTasks"><i class="fa fa-bookmark"></i> &nbsp; {{ feed.extra.task_title }} &nbsp;|&nbsp;  <i class="fa fa-check-square-o"></i> &nbsp;Task Date : {{ datetime }}</div>'
                   + '<div class="timeline-email-body" v-if="isAll">{{{ feed.message }}}</div>'
@@ -146,6 +146,10 @@ window.wpErpVue = window.wpErpVue || {};
 
             isEmail: function() {
                 return ( this.feed.type == 'email' ) && this.feed.extra.replied != 1;
+            },
+
+            isRepliedEmail: function() {
+                return ( this.feed.type == 'email' ) && this.feed.extra.replied == 1;
             },
 
             isLog: function() {
@@ -195,7 +199,7 @@ window.wpErpVue = window.wpErpVue || {};
             },
 
             isAll: function() {
-                return this.isNote || this.isTasks || this.isEmail || this.isLog || this.isSchedule;
+                return this.isNote || this.isTasks || this.isEmail || this.isRepliedEmail || this.isLog || this.isSchedule;
             }
         }
     };

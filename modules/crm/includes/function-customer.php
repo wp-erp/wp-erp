@@ -1905,17 +1905,17 @@ function erp_crm_save_email_activity() {
     $data = erp_crm_save_customer_feed_data( $save_data );
 
     $contact_id = (int) $postdata['user_id'];
-    $user_id = erp_people_get_meta( $contact_id, '_assign_crm_agent', true );
-    $user = get_userdata( $user_id );
+    $user_id    = erp_people_get_meta( $contact_id, '_assign_crm_agent', true );
+    $user       = get_userdata( $user_id );
     $created_by = get_userdata( intval( $postdata['created_by'] ) );
 
     // Send an email to contact owner
     if ( isset( $user->user_email ) ) {
-        $to_email = $user->user_email;
-        $from_name = $created_by->display_name;
+        $to_email   = $user->user_email;
+        $from_name  = $created_by->display_name;
         $from_email = $created_by->user_email;
-        $headers  = "From: $from_name <$from_email>\r\n";
-        $headers .= 'Content-type: text/html;' . "\r\n";
+        $headers    = "From: $from_name <$from_email>\r\n";
+        $headers    .= 'Content-type: text/html;' . "\r\n";
 
         mail( $to_email, $postdata['email_subject'], $postdata['message'], $headers );
     }
