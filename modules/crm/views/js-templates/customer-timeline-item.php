@@ -20,12 +20,16 @@
 
 </div>
 
-<div class="timeline-item" id="timeline-item-{{ feed.id }}" v-if="isEditable">
+<div class="timeline-item" id="timeline-item-{{ feed.id }}" v-if="isEditable || isReplied">
 
     <span class="time cancel-timeline-feed-edit" @click.prevent="cancelUpdate"><i class="fa fa-times"></i></span>
 
-    <h3 class="timeline-header" @click.prevent="toggleFooter">
+    <h3 class="timeline-header" @click.prevent="toggleFooter" v-if="!isReplied">
         <i class="fa fa-pencil-square-o"></i> <?php _e( 'Edit this feed', 'erp' ); ?>
+    </h3>
+
+    <h3 class="timeline-header" @click.prevent="toggleFooter" v-if="isReplied">
+        <i class="fa fa-reply"></i> <?php _e( 'Reply this email', 'erp' ); ?>
     </h3>
 
     <div class="timeline-body">
@@ -39,23 +43,10 @@
 
             <tasks-note :feed="feed" v-if="feed.type == 'tasks'"></tasks-note>
 
+            <email-note :feed="feed" v-if="isReplied"></email-note>
+
             <?php do_action( 'erp_crm_edit_customer_feeds_nav_content' ); ?>
 
-        </form>
-    </div>
-</div>
-
-<div class="timeline-item" id="timeline-item-email-replied" v-if="isReplied">
-
-    <span class="time cancel-timeline-feed-email-reply" @click.prevent="cancelUpdate"><i class="fa fa-times"></i></span>
-
-    <h3 class="timeline-header" @click.prevent="toggleFooter">
-        <i class="fa fa-pencil-square-o"></i> <?php _e( 'Reply this email', 'erp' ); ?>
-    </h3>
-
-    <div class="timeline-body">
-        <form action="" method="post" @submit.prevent = "submitReplyEmailFeed( feed.id )" id="erp-crm-activity-reply-email-form">
-            <email-note :feed="feed"></email-note>
         </form>
     </div>
 </div>

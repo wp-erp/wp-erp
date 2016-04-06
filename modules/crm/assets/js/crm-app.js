@@ -232,10 +232,6 @@ var TimeLineItem = {
             vm.addCustomerFeed( this, feed_id );
         },
 
-        submitReplyEmailFeed: function( feed_id ) {
-            vm.addCustomerFeed( this, feed_id );
-        },
-
         notify: function() {
             this.$broadcast('bindEditFeedData', this.feed );
         }
@@ -950,7 +946,7 @@ var vm = new Vue({
             if ( feed_id ) {
                 self.feedData.id = feed_id;
                 if ( comp.isReplied ) {
-                    vm.progressStart( '#timeline-item-email-replied' );
+                    vm.progressStart( '#timeline-item-'+feed_id );
                     self.feedData.id = 0;
                     comp.isReplied = true;
                 } else {
