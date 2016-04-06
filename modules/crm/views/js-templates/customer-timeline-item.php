@@ -54,7 +54,7 @@
     </h3>
 
     <div class="timeline-body">
-        <form action="" method="post" @submit.prevent = "submitReplyEmailFeed()" id="erp-crm-activity-reply-email-form">
+        <form action="" method="post" @submit.prevent = "submitReplyEmailFeed( feed.id )" id="erp-crm-activity-reply-email-form">
             <email-note :feed="feed"></email-note>
         </form>
     </div>

@@ -232,8 +232,8 @@ var TimeLineItem = {
             vm.addCustomerFeed( this, feed_id );
         },
 
-        submitReplyEmailFeed: function() {
-            vm.addCustomerFeed( this, 0 );
+        submitReplyEmailFeed: function( feed_id ) {
+            vm.addCustomerFeed( this, feed_id );
         },
 
         notify: function() {
@@ -945,42 +945,47 @@ var vm = new Vue({
          */
         addCustomerFeed: function( comp, feed_id ) {
 
+            var self = this;
+
             if ( feed_id ) {
-                this.feedData.id = feed_id;
-                vm.progressStart( '#timeline-item-'+feed_id );
-            } else if ( comp.isReplied ) {
-                vm.progressStart( '#timeline-item-email-replied' );
+                self.feedData.id = feed_id;
+                if ( comp.isReplied ) {
+                    vm.progressStart( '#timeline-item-email-replied' );
+                    self.feedData.id = 0;
+                    comp.isReplied = true;
+                } else {
+                    vm.progressStart( '#timeline-item-'+feed_id );
+                }
             } else {
                 vm.progressStart('#erp-crm-feed-nav-content');
             }
 
-            this.feedData._wpnonce = wpCRMvue.nonce;
+            self.feedData._wpnonce = wpCRMvue.nonce;
 
-
-            if ( this.feedData.type == 'log_activity' ) {
-                this.feedData.log_date = this.feedData.dt;
-                this.feedData.log_time = this.feedData.tp;
-                this.feedData.invite_contact = this.feedData.inviteContact;
+            if ( self.feedData.type == 'log_activity' ) {
+                self.feedData.log_date = self.feedData.dt;
+                self.feedData.log_time = self.feedData.tp;
+                self.feedData.invite_contact = self.feedData.inviteContact;
             };
 
-            if ( this.feedData.type == 'tasks' ) {
-                this.feedData.task_title = this.feedData.task_title;
-                this.feedData.task_date = this.feedData.dt;
-                this.feedData.task_time = this.feedData.tp;
-                this.feedData.invite_contact = this.feedData.inviteContact;
+            if ( self.feedData.type == 'tasks' ) {
+                self.feedData.task_title = self.feedData.task_title;
+                self.feedData.task_date = self.feedData.dt;
+                self.feedData.task_time = self.feedData.tp;
+                self.feedData.invite_contact = self.feedData.inviteContact;
             };
 
-            if ( this.feedData.type == 'schedule' ) {
-                this.feedData.start_date     = this.feedData.dtStart;
-                this.feedData.start_time     = this.feedData.tpStart;
-                this.feedData.end_date       = this.feedData.dtEnd;
-                this.feedData.end_time       = this.feedData.tpEnd;
-                this.feedData.invite_contact = this.feedData.inviteContact;
+            if ( self.feedData.type == 'schedule' ) {
+                self.feedData.start_date     = self.feedData.dtStart;
+                self.feedData.start_time     = self.feedData.tpStart;
+                self.feedData.end_date       = self.feedData.dtEnd;
+                self.feedData.end_time       = self.feedData.tpEnd;
+                self.feedData.invite_contact = self.feedData.inviteContact;
             };
 
-            jQuery.post( wpCRMvue.ajaxurl, this.feedData, function( resp ) {
+            jQuery.post( wpCRMvue.ajaxurl, self.feedData, function( resp ) {
 
-                if ( feed_id ) {
+                if ( self.feedData.id ) {
                     vm.progreassDone(true);
 
                     setTimeout( function() {
@@ -1051,9 +1056,8 @@ var vm = new Vue({
                         vm.feedData.inviteContact              = [];
                     };
 
-                    if ( comp.isReplied ) {
+                    if ( ! _.isUndefined( comp ) && comp.isReplied ) {
                         vm.progreassDone();
-
                         setTimeout( function() {
                             comp.isReplied = false;
                         }, 500);
