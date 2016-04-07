@@ -1330,6 +1330,7 @@ function erp_hr_get_current_month_leave_list() {
     $db = new \WeDevs\ORM\Eloquent\Database();
     return erp_array_to_object( \WeDevs\ERP\HRM\Models\Leave_request::select('user_id', 'start_date', 'end_date' )
             ->where( $db->raw("DATE_FORMAT( `start_date`, '%m %Y' )" ), \Carbon\Carbon::today()->format('m Y') )
+            ->where( $db->raw("DATE_FORMAT( `end_date`, '%d-%m-%Y' )" ), '>=', \Carbon\Carbon::today()->format('d-m-Y') )
             ->where('status', 1 )
             ->get()
             ->toArray() );
