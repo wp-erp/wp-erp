@@ -74,9 +74,9 @@ class Customer_Relationship {
      */
     private function includes() {
         require_once WPERP_CRM_PATH . '/includes/actions-filters.php';
-        require_once WPERP_CRM_PATH . '/includes/function-customer.php';
-        require_once WPERP_CRM_PATH . '/includes/function-dashboard.php';
-        require_once WPERP_CRM_PATH . '/includes/function-capabilities.php';
+        require_once WPERP_CRM_PATH . '/includes/functions-customer.php';
+        require_once WPERP_CRM_PATH . '/includes/functions-dashboard.php';
+        require_once WPERP_CRM_PATH . '/includes/functions-capabilities.php';
         require_once WPERP_CRM_PATH . '/includes/contact-forms/class-contact-forms-integration.php';
     }
 

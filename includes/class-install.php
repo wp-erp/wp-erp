@@ -47,6 +47,10 @@ class WeDevs_ERP_Installer {
         $current_erp_version = get_option( 'wp_erp_version', null );
         $current_db_version  = get_option( 'wp_erp_db_version', null );
 
+        // prevent fatal error when installing
+        include_once WPERP_MODULES . '/hrm/includes/functions-capabilities.php';
+        include_once WPERP_MODULES . '/crm/includes/functions-capabilities.php';
+
         $this->create_tables();
 
         if ( is_null( $current_erp_version ) ) {
