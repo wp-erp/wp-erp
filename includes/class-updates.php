@@ -37,7 +37,6 @@ class Updates {
     function __construct() {
         $this->action( 'admin_notices', 'show_update_notice' );
         $this->action( 'admin_init', 'do_updates' );
-
     }
 
     /**
