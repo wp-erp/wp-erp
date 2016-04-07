@@ -174,9 +174,7 @@ class Customer_Relationship {
 
             wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", array( 'wp-erp-crm-vue-component', 'wp-erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
             wp_enqueue_script( 'post' );
-
             wp_localize_script( 'wp-erp-crm-vue-component', 'wpCRMvue', $contact_actvity_localize );
-
         }
 
         // if it's an customer page
@@ -223,6 +221,15 @@ class Customer_Relationship {
         if ( 'erp-settings_page_erp-settings' == $hook && isset( $_GET['tab'] ) && $_GET['tab'] == 'erp-crm' ) {
             wp_enqueue_script( 'erp-trix-editor' );
             wp_enqueue_style( 'erp-trix-editor' );
+        }
+
+        if( 'toplevel_page_erp-sales' == $hook ) {
+            wp_enqueue_script( 'jquery' );
+            wp_enqueue_script( 'erp-flotchart' );
+            wp_enqueue_script( 'erp-flotchart-time' );
+            wp_enqueue_script( 'erp-flotchart-axislables' );
+            wp_enqueue_script( 'erp-flotchart-orerbars' );
+            wp_enqueue_script( 'erp-flotchart-tooltip' );
         }
 
         wp_localize_script( 'erp-crm', 'wpErpCrm', $localize_script );

@@ -52,7 +52,7 @@ final class WeDevs_ERP {
      *
      * @var string
      */
-    public $version = '1.0-beta1';
+    public $version = '1.0';
 
     /**
      * Minimum PHP version required
@@ -224,6 +224,7 @@ final class WeDevs_ERP {
 
         new \WeDevs\ERP\Admin\User_Profile();
         new \WeDevs\ERP\Scripts();
+        new \WeDevs\ERP\Updates();
 
         $this->container['modules'] = new \WeDevs\ERP\Framework\Modules();
         $this->container['emailer'] = \WeDevs\ERP\Emailer::init();
