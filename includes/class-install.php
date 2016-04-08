@@ -47,10 +47,6 @@ class WeDevs_ERP_Installer {
         $current_erp_version = get_option( 'wp_erp_version', null );
         $current_db_version  = get_option( 'wp_erp_db_version', null );
 
-        // prevent fatal error when installing
-        include_once WPERP_MODULES . '/hrm/includes/functions-capabilities.php';
-        include_once WPERP_MODULES . '/crm/includes/functions-capabilities.php';
-
         $this->create_tables();
 
         if ( is_null( $current_erp_version ) ) {
@@ -70,6 +66,16 @@ class WeDevs_ERP_Installer {
         $latest_version = erp_get_version();
         update_option( 'wp_erp_version', $latest_version );
         update_option( 'wp_erp_db_version', $latest_version );
+    }
+
+    /**
+     * Include required files to prevent fatal errors
+     *
+     * @return void
+     */
+    function includes() {
+        include_once WPERP_MODULES . '/hrm/includes/functions-capabilities.php';
+        include_once WPERP_MODULES . '/crm/includes/functions-capabilities.php';
     }
 
     /**
@@ -661,6 +667,8 @@ Company'
      * @return void
      */
     public function create_roles() {
+        $this->includes();
+
         $roles_hr = erp_hr_get_roles();
 
         if ( $roles_hr ) {
@@ -686,6 +694,8 @@ Company'
      * @return void
      */
     public function set_role() {
+        $this->includes();
+
         $admins = get_users( array( 'role' => 'administrator' ) );
 
         if ( $admins ) {
