@@ -33,6 +33,7 @@ class Form_Handler {
         add_action( 'load-hr-management_page_erp-hr-depts', array( $this, 'department_bulk_action' ) );
         add_action( 'load-leave_page_erp-leave-policies', array( $this, 'leave_policies' ) );
         add_action( 'load-leave_page_erp-leave-assign', array( $this, 'entitlement_bulk_action' ) );
+        add_action( 'load-toplevel_page_erp-leave', array( $this, 'leave_request_bulk_action' ) );
 
         // ERP HR Reporting
         add_action( 'load-hr-management_page_erp-hr-reporting', array( $this, 'reporting_headcount_bulk_action' ) );
@@ -142,6 +143,86 @@ class Form_Handler {
 
             }
         }
+    }
+
+    /**
+     * Leave request bulk actions
+     *
+     * @since 1.0
+     *
+     * @return void redirect
+     */
+    public function leave_request_bulk_action() {
+        if ( ! $this->verify_current_page_screen( 'erp-leave', 'bulk-leaves' ) ) {
+            return;
+        }
+
+        $leave_request_table = new \WeDevs\ERP\HRM\Leave_Requests_List_Table();
+        $action              = $leave_request_table->current_action();
+
+        if ( $action ) {
+
+            $redirect = remove_query_arg( array( '_wp_http_referer', '_wpnonce' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
+
+            switch ( $action ) {
+
+                case 'delete' :
+
+                    if ( isset( $_GET['request_id'] ) && !empty( $_GET['request_id'] ) ) {
+                        foreach ( $_GET['request_id'] as $key => $request_id ) {
+                            erp_hr_leave_request_update_status( $request_id, 3 );
+                        }
+                    }
+
+                    wp_redirect( $redirect );
+                    exit();
+
+                case 'approved' :
+                    if ( isset( $_GET['request_id'] ) && !empty( $_GET['request_id'] ) ) {
+                        foreach ( $_GET['request_id'] as $key => $request_id ) {
+                            erp_hr_leave_request_update_status( $request_id, 1 );
+
+                            $approved_email = wperp()->emailer->get_email( 'Approved_Leave_Request' );
+
+                            if ( is_a( $approved_email, '\WeDevs\ERP\Email') ) {
+                                $approved_email->trigger( $request_id );
+                            }
+
+                        }
+                    }
+
+                    wp_redirect( $redirect );
+                    exit();
+
+                case 'reject' :
+                    if ( isset( $_GET['request_id'] ) && !empty( $_GET['request_id'] ) ) {
+                        foreach ( $_GET['request_id'] as $key => $request_id ) {
+                            erp_hr_leave_request_update_status( $request_id, 3 );
+
+                            $rejected_email = wperp()->emailer->get_email( 'Rejected_Leave_Request' );
+
+                            if ( is_a( $rejected_email, '\WeDevs\ERP\Email') ) {
+                                $rejected_email->trigger( $request_id );
+                            }
+                        }
+                    }
+
+                    wp_redirect( $redirect );
+                    exit();
+
+                case 'pending':
+                    if ( isset( $_GET['request_id'] ) && !empty( $_GET['request_id'] ) ) {
+                        foreach ( $_GET['request_id'] as $key => $request_id ) {
+                            erp_hr_leave_request_update_status( $request_id, 2 );
+                        }
+                    }
+
+                    wp_redirect( $redirect );
+                    exit();
+
+            }
+        }
+
     }
 
     /**
@@ -467,7 +548,7 @@ class Form_Handler {
     /**
      * Leave Request Status change
      *
-     * @since 0,1
+     * @since 0.1
      *
      * @return void
      */
