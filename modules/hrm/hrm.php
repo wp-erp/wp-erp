@@ -163,7 +163,8 @@ class Human_Resource {
                 'take_leave'         => __( 'Send Leve Request', 'erp' ),
                 'terminate'          => __( 'Terminate', 'erp' ),
                 'leave_reject'       => __( 'Reject Reason', 'erp' ),
-                'already_terminate'  => __( 'Sorry, this employee already terminated', 'erp' )
+                'already_terminate'  => __( 'Sorry, this employee already terminated', 'erp' ),
+                'already_active'     => __( 'Sorry, this employee already active', 'erp' )
             ),
             'emp_upload_photo'       => __( 'Upload Employee Photo', 'erp' ),
             'emp_set_photo'          => __( 'Set Photo', 'erp' ),

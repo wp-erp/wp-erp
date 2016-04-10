@@ -735,6 +735,8 @@ class Ajax_Handler {
 
         \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $id )->update( ['status'=>'active'] );
 
+
+
         delete_user_meta( $id, '_erp_hr_termination' );
 
         $this->send_success();

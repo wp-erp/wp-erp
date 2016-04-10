@@ -40,7 +40,7 @@
 
             // Single Employee
             $( '.erp-employee-single' ).on( 'click', 'a#erp-employee-terminate', this.employee.terminateEmployee );
-            $( '.erp-employee-single' ).on( 'click', 'a#erp-employee-activate', this.employee.activateEmployee );
+            // $( '.erp-employee-single' ).on( 'click', 'a#erp-employee-activate', this.employee.activateEmployee ); // @TODO: Needs to modify it later. :p
             $( '.erp-employee-single' ).on( 'click', 'input#erp-hr-employee-status-update', this.employee.changeEmployeeStatus );
 
             // Performance
@@ -1098,7 +1098,6 @@
 
 
                 if ( 'terminated' == optionVal  ) {
-
                     if ( optionVal != selected ) {
                         $.erpPopup({
                             title: self.data('title'),
@@ -1130,6 +1129,38 @@
                     } else {
                         alert( wpErpHr.popup.already_terminate );
                     }
+                } else if ( 'active' == optionVal ) {
+                    if ( optionVal != selected ) {
+                        var self = $(this);
+                        $.erpPopup({
+                            title: wpErpHr.popup.employment_status,
+                            button: wpErpHr.popup.update_status,
+                            id: 'erp-hr-update-job-status',
+                            content: '',
+                            extraClass: 'smaller',
+                            onReady: function() {
+                                var html = wp.template('erp-employment-status')(window.wpErpCurrentEmployee);
+                                $( '.content', this ).html( html );
+                                WeDevs_ERP_HR.initDateField();
+                            },
+                            onSubmit: function(modal) {
+                                wp.ajax.send( {
+                                    data: this.serializeObject(),
+                                    success: function() {
+                                        modal.closeModal();
+                                        form.submit();
+                                    },
+                                    error: function(error) {
+                                        modal.enableButton();
+                                        alert( error );
+                                    }
+                                });
+                            }
+                        });
+                    } else {
+                        alert( wpErpHr.popup.already_active );
+                    }
+
                 } else {
                     form.submit();
                 }
