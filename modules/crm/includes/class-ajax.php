@@ -691,7 +691,7 @@ class Ajax_Handler {
                 add_filter( 'wp_mail_from_name', 'erp_crm_get_email_from_name' );
 
                 $query = [
-                    'action' => 'erp_crm_track_email_read',
+                    'action' => 'erp_crm_track_email_opened',
                     'aid'    => $data['id'],
                 ];
                 $email_url  = add_query_arg( $query, admin_url('admin-ajax.php') );
