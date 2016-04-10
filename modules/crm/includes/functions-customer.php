@@ -30,6 +30,65 @@ function erp_crm_get_avatar( $id, $size = 32, $user = false ) {
 }
 
 /**
+ * Get employees in CRM
+ *
+ * @since 1.0
+ *
+ * @param  array  $args
+ *
+ * @return object
+ */
+function erp_crm_get_employees( $args = [] ) {
+    global $wpdb;
+
+    $defaults = array(
+        'number'     => 20,
+        'offset'     => 0,
+        'orderby'    => 'hiring_date',
+        'order'      => 'DESC',
+        'no_object'  => false
+    );
+
+    $args  = wp_parse_args( $args, $defaults );
+    $where = array();
+
+    $employee = new \WeDevs\ERP\HRM\Models\Employee();
+    $employee_result = $employee->leftjoin( $wpdb->users, 'user_id', '=', $wpdb->users . '.ID' )->select( array( 'user_id', 'display_name' ) );
+
+    $cache_key = 'erp-crm-get-employees-' . md5( serialize( $args ) );
+    $results   = wp_cache_get( $cache_key, 'erp' );
+    $users     = array();
+
+    // Check if want all data without any pagination
+    if ( $args['number'] != '-1' ) {
+        $employee_result = $employee_result->skip( $args['offset'] )->take( $args['number'] );
+    }
+
+    if ( false === $results ) {
+        $results = $employee_result
+                ->orderBy( $args['orderby'], $args['order'] )
+                ->get()
+                ->toArray();
+
+        $results = erp_array_to_object( $results );
+        wp_cache_set( $cache_key, $results, 'erp', HOUR_IN_SECONDS );
+    }
+
+    if ( $results ) {
+        foreach ($results as $key => $row) {
+
+            if ( true === $args['no_object'] ) {
+                $users[] = $row;
+            } else {
+                $users[] = new \WeDevs\ERP\HRM\Employee( intval( $row->user_id ) );
+            }
+        }
+    }
+
+    return $users;
+}
+
+/**
  * Get Employee for CRM
  *
  * @since 1.0
@@ -38,14 +97,13 @@ function erp_crm_get_avatar( $id, $size = 32, $user = false ) {
  *
  * @return html
  */
-function erp_crm_get_employees( $selected = '' ) {
-    $employees = erp_hr_get_employees_dropdown_raw( get_current_user_id() ); // @TODO: Need to change
-    $dropdown     = '';
-    unset( $employees[0] );
+function erp_crm_get_employees_dropdown( $selected = '' ) {
+    $employees = erp_crm_get_employees( ['number' => -1, 'no_object' => true ] );
+    $dropdown  = '';
 
     if ( $employees ) {
-        foreach ( $employees as $key => $title ) {
-            $dropdown .= sprintf( "<option value='%s'%s>%s</option>\n", $key, selected( $selected, $key, false ), $title );
+        foreach ( $employees as $key => $employee ) {
+            $dropdown .= sprintf( "<option value='%s'%s>%s</option>\n", $employee->user_id, selected( $selected, $employee->user_id, false ), $employee->display_name );
         }
     }
 
@@ -62,16 +120,18 @@ function erp_crm_get_employees( $selected = '' ) {
  * @return string
  */
 function erp_crm_get_employees_with_own( $selected = '' ) {
-    $employees = erp_hr_get_employees_dropdown_raw();
-    $dropdown     = '';
-    unset( $employees[0] );
+    $employees = erp_crm_get_employees( ['number' => -1, 'no_object' => true ] );
+    $dropdown  = '';
 
     if ( $employees ) {
-        foreach ( $employees as $key => $title ) {
-            if ( $key == get_current_user_id() ) {
-                $title = sprintf( '%s ( %s )', __( 'Me', 'erp' ), $title );
+        foreach ( $employees as $key => $employee ) {
+            if ( $employee->user_id == get_current_user_id() ) {
+                $title = sprintf( '%s ( %s )', __( 'Me', 'erp' ), $employee->display_name );
+            } else {
+                $title = $employee->display_name;
             }
-            $dropdown .= sprintf( "<option value='%s'%s>%s</option>\n", $key, selected( $selected, $key, false ), $title );
+
+            $dropdown .= sprintf( "<option value='%s'%s>%s</option>\n", $employee->user_id, selected( $selected, $employee->user_id, false ), $title );
         }
     }
 

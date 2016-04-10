@@ -23,7 +23,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
             <div class="filters">
                 <select style="width:180px;" v-selecttwo="filterFeeds.created_by" class="select2" v-model="filterFeeds.created_by" id="activity-created-by">
                     <option value=""><?php _e( 'Created By All', 'erp' ) ?></option>
-                    <?php echo erp_crm_get_employees(); ?>
+                    <?php echo erp_crm_get_employees_dropdown(); ?>
                 </select>
             </div>
 
