@@ -69,6 +69,9 @@ function erp_hr_get_caps_for_role( $role = '' ) {
             $caps = [
                 'read'                     => true,
 
+                // Upload file
+                'upload_files'             => true,
+
                 // employee
                 'erp_list_employee'        => true,
                 'erp_create_employee'      => true,
@@ -103,6 +106,7 @@ function erp_hr_get_caps_for_role( $role = '' ) {
 
             $caps = [
                 'read'                     => true,
+                'upload_files'             => true,
                 'erp_list_employee'        => true,
                 'erp_view_employee'        => true,
                 'erp_edit_employee'        => true,
