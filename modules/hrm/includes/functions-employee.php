@@ -233,9 +233,14 @@ function erp_hr_get_employees( $args = array() ) {
     $results   = wp_cache_get( $cache_key, 'erp' );
     $users     = array();
 
+    // Check if want all data without any pagination
+    if ( $args['number'] != '-1' ) {
+        $employee_result = $employee_result->skip( $args['offset'] )->take( $args['number'] );
+    }
+
     if ( false === $results ) {
-        $results = $employee_result->skip( $args['offset'] )
-                    ->take( $args['number'] )
+
+        $results = $employee_result
                     ->orderBy( $args['orderby'], $args['order'] )
                     ->get()
                     ->toArray();
@@ -475,7 +480,7 @@ function erp_hr_get_next_seven_days_birthday() {
  * @return array  the key-value paired employees
  */
 function erp_hr_get_employees_dropdown_raw( $exclude = null ) {
-    $employees = erp_hr_get_employees( array( 'no_object' => true ) );
+    $employees = erp_hr_get_employees( [ 'number' => -1 , 'no_object' => true ] );
     $dropdown  = array( 0 => __( '- Select Employee -', 'erp' ) );
 
     if ( $employees ) {

@@ -79,7 +79,7 @@ function erp_hr_get_designations( $args = array() ) {
     if ( false === $designations ) {
 
         // Check if want all data without any pagination
-        if ( $args['number'] != '-1' && ! $args['count'] ) {
+        if ( $args['number'] != '-1' ) {
             $designation = $designation->skip( $args['offset'] )->take( $args['number'] );
         }
 

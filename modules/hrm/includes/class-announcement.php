@@ -118,6 +118,7 @@ class Announcement {
                 'publish_posts'      => $capability,
                 'read_private_posts' => $capability,
                 'create_posts'       => $capability,
+                'delete_post'        => $capability,
             ),
             'labels'          => array(
                 'name'               => __( 'Announcement', 'erp' ),
@@ -159,7 +160,7 @@ class Announcement {
     function meta_boxes_cb( $post_id ) {
         global $post;
 
-        $employees = erp_hr_get_employees( array( 'no_object' => true ) );
+        $employees = erp_hr_get_employees( [ 'number' => -1, 'no_object' => true ] );
 
         $announcement_type     = get_post_meta( $post->ID, '_announcement_type', true );
         $announcement_users    = get_post_meta( $post->ID, '_announcement_selected_user', true );

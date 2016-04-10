@@ -157,7 +157,7 @@ var saveSearch = new Vue({
         isNewSave:false,
         saveSearchOptions: {},
         saveSearchData: '',
-        searchFilterButtonText: 'Advance Search',
+        searchFilterButtonText: 'Advanced Search',
         isSaveSearchFilter: false,
         isUpdateSaveSearch: false,
         updateSearchData: {

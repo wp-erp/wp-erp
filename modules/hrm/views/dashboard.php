@@ -8,9 +8,9 @@
             <?php if ( current_user_can('erp_create_employee') ): ?>
 
                 <?php
-                $employees    = erp_hr_get_employees();
-                $departments  = erp_hr_get_departments();
-                $designations = erp_hr_get_designations();
+                $employees    = erp_hr_get_employees( [ 'number'=> -1 ] );
+                $departments  = erp_hr_get_departments( [ 'number' => -1 ] );
+                $designations = erp_hr_get_designations( [ 'number'=> -1 ] );
                 ?>
 
                 <div class="badge-container">
