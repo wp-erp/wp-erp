@@ -1914,10 +1914,10 @@ function erp_crm_save_email_activity() {
         $to_email   = $user->user_email;
         $from_name  = $created_by->display_name;
         $from_email = $created_by->user_email;
-        $headers    = "From: $from_name <$from_email>\r\n";
-        $headers    .= 'Content-type: text/html;' . "\r\n";
+        $headers    = "From: $from_email\n";
+        $headers   .= "Content-Type: text/html\n";
 
-        mail( $to_email, $postdata['email_subject'], $postdata['message'], $headers );
+        wp_mail( $to_email, $postdata['email_subject'], $postdata['message'], $headers );
     }
 
     // Update email counter
@@ -2030,23 +2030,23 @@ function erp_crm_get_email_from_name() {
 }
 
 /**
- * Track email read.
+ * Track email opened.
  *
  * @since 1.0
  *
  * @return void
  */
-function erp_crm_track_email_read() {
+function erp_crm_track_email_opened() {
     if ( isset( $_GET['aid'] ) ) {
         $activity = \WeDevs\ERP\CRM\Models\Activity::find( $_GET['aid'] );
+        $extra = json_decode( base64_decode( $activity->extra ), true );
 
-        $extra = json_decode( base64_decode( $activity->extra ) );
-
-        if ( ! isset( $extra['read'] ) ) {
-            $extra['read'] = 1;
+        if ( ! isset( $extra['email_opened_at'] ) ) {
+            $extra['email_opened_at'] = current_time( 'mysql' );
             $data = [
                 'extra' => base64_encode( json_encode( $extra ) )
             ];
+
             $activity->update( $data );
         }
     }
