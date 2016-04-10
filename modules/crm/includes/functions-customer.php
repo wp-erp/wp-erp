@@ -1948,10 +1948,74 @@ function erp_crm_get_next_seven_day_schedules_activities( $user_id = '' ) {
 function erp_crm_save_email_activity() {
     header('Access-Control-Allow-Origin: *');
 
-    $postdata   = $_POST;
-    $api_key    = get_option( 'wp_erp_apikey' );
+    $postdata = $_POST;
+    $api_key  = get_option( 'wp_erp_apikey' );
 
-    unset($postdata['action']);
+    unset( $postdata['action'] );
+
+    $save_data = [
+        'user_id'       => $postdata['user_id'],
+        'created_by'    => $postdata['created_by'],
+        'message'       => $postdata['message'],
+        'type'          => 'email',
+        'email_subject' => $postdata['email_subject'],
+        'extra'         => base64_encode( json_encode( [ 'replied' => 1 ] ) ),
+    ];
+
+    $data = erp_crm_save_customer_feed_data( $save_data );
+
+    $contact_id       = (int) $postdata['user_id'];
+    $sender_id        = (int) $postdata['created_by'];
+    $contact_owner_id = erp_people_get_meta( $contact_id, '_assign_crm_agent', true );
+    $contact_owner    = get_userdata( $contact_owner_id );
+    $created_by       = get_userdata( $sender_id );
+
+    // Send an email to contact owner
+    if ( isset( $contact_owner_id ) ) {
+        $to_email = $contact_owner->user_email;
+
+        $headers = "";
+        $headers .= "Content-Type: text/html; charset=UTF-8" . "\r\n";
+
+        $is_cloud_active = erp_is_cloud_active();
+
+        if ( $is_cloud_active ) {
+            $wp_erp_api_key = get_option( 'wp_erp_apikey' );
+
+            $reply_to = $wp_erp_api_key . "-" . $contact_owner_id . "-" . $contact_id . "-co" . "@incloud.wperp.com";
+            $headers .= "Reply-To: WP ERP <$reply_to>" . "\r\n";
+        }
+
+        add_filter( 'wp_mail_from', 'erp_crm_get_email_from_address' );
+        add_filter( 'wp_mail_from_name', 'erp_crm_get_email_from_name' );
+
+        wp_mail( $to_email, $postdata['email_subject'], $postdata['message'], $headers );
+
+        remove_filter( 'wp_mail_from', 'erp_crm_get_email_from_address' );
+        remove_filter( 'wp_mail_from_name', 'erp_crm_get_email_from_name' );
+    }
+
+    // Update email counter
+    update_option( 'wp_erp_cloud_email_count', get_option( 'wp_erp_cloud_email_count', 0 ) + 1 );
+
+    status_header(200);
+    exit;
+}
+
+/**
+ * Fetch & Save contact owner email activity from api server.
+ *
+ * @since 1.0
+ *
+ * @return void
+ */
+function erp_crm_save_contact_owner_email_activity() {
+    header('Access-Control-Allow-Origin: *');
+
+    $postdata = $_POST;
+    $api_key  = get_option( 'wp_erp_apikey' );
+
+    unset( $postdata['action'] );
 
     $save_data = [
         'user_id'       => $postdata['user_id'],
@@ -1964,21 +2028,30 @@ function erp_crm_save_email_activity() {
 
     $data = erp_crm_save_customer_feed_data( $save_data );
 
-    $contact_id = (int) $postdata['user_id'];
-    $user_id    = erp_people_get_meta( $contact_id, '_assign_crm_agent', true );
-    $user       = get_userdata( $user_id );
-    $created_by = get_userdata( intval( $postdata['created_by'] ) );
+    $contact_id = intval( $postdata['user_id'] );
 
-    // Send an email to contact owner
-    if ( isset( $user->user_email ) ) {
-        $to_email   = $user->user_email;
-        $from_name  = $created_by->display_name;
-        $from_email = $created_by->user_email;
-        $headers    = "From: $from_email\n";
-        $headers   .= "Content-Type: text/html\n";
+    $contact = new \WeDevs\ERP\CRM\Contact( $contact_id );
 
-        wp_mail( $to_email, $postdata['email_subject'], $postdata['message'], $headers );
+    $headers = "";
+    $headers .= "Content-Type: text/html; charset=UTF-8" . "\r\n";
+
+    $is_cloud_active = erp_is_cloud_active();
+
+    if ( $is_cloud_active ) {
+        $wp_erp_api_key = get_option( 'wp_erp_apikey' );
+
+        $reply_to = $wp_erp_api_key . "-" . $postdata['created_by'] . "-" . $contact_id . "@incloud.wperp.com";
+        $headers .= "Reply-To: WP ERP <$reply_to>" . "\r\n";
     }
+
+    add_filter( 'wp_mail_from', 'erp_crm_get_email_from_address' );
+    add_filter( 'wp_mail_from_name', 'erp_crm_get_email_from_name' );
+
+    // Send email a contact
+    wp_mail( $contact->email, $postdata['email_subject'], $postdata['message'], $headers );
+
+    remove_filter( 'wp_mail_from', 'erp_crm_get_email_from_address' );
+    remove_filter( 'wp_mail_from_name', 'erp_crm_get_email_from_name' );
 
     // Update email counter
     update_option( 'wp_erp_cloud_email_count', get_option( 'wp_erp_cloud_email_count', 0 ) + 1 );
