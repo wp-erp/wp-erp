@@ -13,3 +13,4 @@ add_action( 'wp_ajax_nopriv_erp_api_mode_change', 'erp_api_mode_change' );
 add_filter( 'map_meta_cap', 'erp_map_meta_caps', 10, 4 );
 add_filter( 'editable_roles', 'erp_hr_filter_editable_roles' );
 add_filter( 'cron_schedules', 'erp_cron_intervals', 10, 1 );
+add_filter( 'ajax_query_attachments_args', 'erp_show_users_own_attachments', 1, 1 );
