@@ -2014,7 +2014,7 @@ table.erp-table.full-width {
   position: relative;
 }
 .erp .erp-single-container .erp-area-left .erp-profile-top .erp-avatar .inactive {
-  background: url('../../images/inactive.png') no-repeat;
+  background: url('../images/inactive.png') no-repeat;
   background-position: 50%;
   position: absolute;
   bottom: 0px;

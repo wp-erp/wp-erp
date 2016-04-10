@@ -673,6 +673,57 @@ function erp_hr_get_terminate_rehire_options( $selected = NULL ) {
 }
 
 /**
+ * Employee terminated action
+ *
+ * @since 1.0
+ *
+ * @param  array $data
+ *
+ * @return void | WP_Error
+ */
+function erp_hr_employee_terminate( $data ) {
+
+    if ( ! $data['terminate_date'] ) {
+        return new WP_Error( 'no-date', 'Termination date is required' );
+    }
+
+    if ( ! $data['termination_type'] ) {
+        return new WP_Error( 'no-type', 'Termination type is required' );
+    }
+
+    if ( ! $data['termination_reason'] ) {
+        return new WP_Error( 'no-reason', 'Termination reason is required' );
+    }
+
+    if ( ! $data['eligible_for_rehire'] ) {
+        return new WP_Error( 'no-eligible-for-rehire', 'Eligible for rehire field is required' );
+    }
+
+    $result = \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $data['employee_id'] )->update( [ 'status'=>'terminated', 'termination_date' => $data['terminate_date'] ] );
+
+    $comments = sprintf( '%s: %s; %s: %s; %s: %s',
+                        __( 'Termination Type', 'erp' ),
+                        erp_hr_get_terminate_type( $data['termination_type'] ),
+                        __( 'Termination Reason', 'erp' ),
+                        erp_hr_get_terminate_reason( $data['termination_reason'] ),
+                        __( 'Eligible for Hire', 'erp' ),
+                        erp_hr_get_terminate_rehire_options( $data['eligible_for_rehire'] ) );
+
+    erp_hr_employee_add_history( [
+        'user_id'  => $data['employee_id'],
+        'module'   => 'employment',
+        'category' => '',
+        'type'     => 'terminate',
+        'comment'  => $comments,
+        'data'     => '',
+    ] );
+
+    update_user_meta( $data['employee_id'], '_erp_hr_termination', $data );
+
+    return $result;
+}
+
+/**
  * Get marital statuses
  *
  * @return array all the statuses

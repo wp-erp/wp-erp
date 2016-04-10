@@ -699,30 +699,20 @@ class Ajax_Handler {
         $termination_reason  = isset( $_POST['termination_reason'] ) ?  $_POST['termination_reason'] : '';
         $eligible_for_rehire = isset( $_POST['eligible_for_rehire'] ) ? $_POST['eligible_for_rehire'] : '';
 
-        $requires = [
-            'terminate_date'      => __( 'Termination Date', 'erp' ),
-            'termination_type'    => __( 'Termination Type', 'erp' ),
-            'termination_reason'  => __( 'Termination Reason', 'erp' ),
-            'eligible_for_rehire' => __( 'Eligible for Hire', 'erp' ),
-        ];
-
         $fields = [
+            'employee_id'         => $employee_id,
             'terminate_date'      => $terminate_date,
             'termination_type'    => $termination_type,
             'termination_reason'  => $termination_reason,
             'eligible_for_rehire' => $eligible_for_rehire
         ];
 
-        foreach ( $requires as $var_name => $label ) {
-            if ( ! $$var_name ) {
-                $this->send_error( sprintf( __( '%s is required', 'erp' ), $label ) );
-            }
+        $result = erp_hr_employee_terminate( $fields );
+
+        if ( is_wp_error( $result ) ) {
+            $this->send_error( $result->get_error_message() );
         }
 
-        $employee = new \WeDevs\ERP\HRM\Models\Employee();
-
-        $employee->where( 'user_id', $employee_id )->update( ['status'=>'terminated', 'termination_date' => $terminate_date] );
-        update_user_meta( $employee_id, '_erp_hr_termination', $fields );
         $this->send_success();
 
     }

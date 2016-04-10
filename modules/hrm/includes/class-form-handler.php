@@ -635,7 +635,7 @@ class Form_Handler {
      */
     public function handle_employee_status_update() {
 
-        if ( ! isset( $_POST['employee_update_status'] ) ) {
+        if ( ! isset( $_POST['employee_status'] ) ) {
             return;
         }
 
@@ -643,7 +643,12 @@ class Form_Handler {
             return;
         }
 
-        \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', '=', $_POST['user_id'] )->update( ['status' => $_POST['employee_status'] ] );
+        if ( $_POST['employee_status'] == 'terminated' ) {
+            \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', '=', $_POST['user_id'] )->update( [ 'status' => $_POST['employee_status'], 'termination_date' => current_time( 'mysql' ) ] );
+        } else {
+            \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', '=', $_POST['user_id'] )->update( ['status' => $_POST['employee_status'],  'termination_date' => '' ] );
+        }
+
         wp_redirect( $_POST['_wp_http_referer'] );
         exit();
     }
