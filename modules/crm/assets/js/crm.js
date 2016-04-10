@@ -199,7 +199,7 @@
             if ($('#wp-erp').find( '.erp-advance-search-filter' ).is(':visible')) {
                 $('#erp-advance-search-button').html( '<span class="dashicons dashicons-no"></span>Hide Search');
             } else {
-                $('#erp-advance-search-button').html( '<span class="dashicons dashicons-admin-generic"></span>Advance Search');
+                $('#erp-advance-search-button').html( '<span class="dashicons dashicons-admin-generic"></span>Advanced Search');
             }
         },
 
@@ -210,7 +210,7 @@
             self.closest('#wp-erp').find('.erp-advance-search-filter').slideToggle(300, function() {
 
                 var hide = ( self.attr('id') == 'erp-advance-search-button' ) ? '<span class="dashicons dashicons-no"></span>Hide Search' : 'Hide Fields';
-                var show = ( self.attr('id') == 'erp-advance-search-button' ) ? '<span class="dashicons dashicons-admin-generic"></span>Advance Search' : 'Show Fields';
+                var show = ( self.attr('id') == 'erp-advance-search-button' ) ? '<span class="dashicons dashicons-admin-generic"></span>Advanced Search' : 'Show Fields';
 
                 if ($(this).is(':visible')) {
                     self.html( hide );

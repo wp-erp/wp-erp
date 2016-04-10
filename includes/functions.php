@@ -860,3 +860,32 @@ function erp_cloud_verify_request( $vars, $api_key ) {
 function erp_fullcalendar_end_date( $end_date ) {
     return date( 'Y-m-d H:i:s', strtotime( $end_date . '+1 day' ) );
 }
+
+/**
+ * Show user own media attachment
+ *
+ * @since 1.0
+ *
+ * @param  string $query
+ *
+ * @return string
+ */
+function erp_show_users_own_attachments( $query ) {
+    if ( ! is_user_logged_in() ) {
+        return $query;
+    }
+
+    $id = get_current_user_id();
+
+    if ( ! current_user_can( 'manage_options' ) ) {
+        if ( current_user_can( 'erp_hr_manager' )
+            || current_user_can( 'employee' )
+            || current_user_can( 'erp_crm_manager' )
+            || current_user_can( 'erp_crm_agent' )
+        ) {
+            $query['author'] = $id;
+        }
+    }
+
+    return $query;
+}

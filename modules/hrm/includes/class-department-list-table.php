@@ -6,6 +6,8 @@ namespace WeDevs\ERP\HRM;
  */
 class Department_List_Table extends \WP_List_Table {
 
+    protected $per_page;
+
     function __construct() {
         global $status, $page;
 
@@ -34,11 +36,9 @@ class Department_List_Table extends \WP_List_Table {
      * @return void
      */
     public function display_rows( $departments = array(), $level = 0 ) {
-
-        global $per_page;
         $results = new \WeDevs\ERP\HRM\Models\Department();
         $departments = erp_array_to_object( $results->orderby('id', 'desc')->get()->toArray() );
-        $this->_display_rows_hierarchical( $departments, $this->get_pagenum(), $per_page );
+        $this->_display_rows_hierarchical( $departments, $this->get_pagenum(), $this->per_page );
     }
 
     /**
@@ -263,10 +263,10 @@ class Department_List_Table extends \WP_List_Table {
      */
     function get_columns() {
         $columns = array(
-            'cb'           => '<input type="checkbox" />',
-            'name'         => __( 'Department', 'erp' ),
-            'lead'  => __( 'Department Lead', 'erp' ),
-            'number_employee'   => __( 'No. of Employees', 'erp' )
+            'cb'              => '<input type="checkbox" />',
+            'name'            => __( 'Department', 'erp' ),
+            'lead'            => __( 'Department Lead', 'erp' ),
+            'number_employee' => __( 'No. of Employees', 'erp' )
         );
 
         return apply_filters( 'erp_hr_department_table_cols', $columns );
@@ -292,28 +292,27 @@ class Department_List_Table extends \WP_List_Table {
      */
     function prepare_items() {
 
-        global $per_page;
         $columns               = $this->get_columns();
         $hidden                = array( );
         $sortable              = $this->get_sortable_columns();
         $this->_column_headers = array( $columns, $hidden, $sortable );
 
-        $per_page              = 20;
+        $this->per_page        = 20;
         $current_page          = $this->get_pagenum();
-        $offset                = ( $current_page -1 ) * $per_page;
+        $offset                = ( $current_page -1 ) * $this->per_page;
         $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '2';
 
         // only ncessary because we have sample data
         $args = array(
             'offset' => $offset,
-            'number' => $per_page,
+            'number' => $this->per_page,
         );
 
         $this->items  = erp_hr_get_departments( $args );
 
         $this->set_pagination_args( array(
             'total_items' => erp_hr_count_departments(),
-            'per_page'    => $per_page
+            'per_page'    => $this->per_page
         ) );
     }
 

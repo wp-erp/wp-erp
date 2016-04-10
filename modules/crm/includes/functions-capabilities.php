@@ -123,6 +123,7 @@ function erp_crm_get_caps_for_role( $role = '' ) {
         case erp_crm_get_manager_role():
             $caps = [
                 'read'                     => true,
+                'upload_files'             => true,
                 'erp_crm_list_contact'     => true,
                 'erp_crm_add_contact'      => true,
                 'erp_crm_edit_contact'     => true,
@@ -141,6 +142,7 @@ function erp_crm_get_caps_for_role( $role = '' ) {
         case erp_crm_get_agent_role():
             $caps = [
                 'read'                     => true,
+                'upload_files'             => true,
                 'erp_crm_list_contact'     => true,
                 'erp_crm_add_contact'      => true,
                 'erp_crm_edit_contact'     => true,
