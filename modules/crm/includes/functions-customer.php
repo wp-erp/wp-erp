@@ -1000,7 +1000,7 @@ function erp_crm_get_subscriber_contact( $args = [] ) {
         $contact_subscribers = WeDevs\ERP\CRM\Models\ContactSubscriber::leftjoin( $contact_group_tb, $contact_group_tb . '.id', '=', $contact_subscribe_tb . '.group_id' );
 
         // Check if want all data without any pagination
-        if ( $args['number'] != '-1' ) {
+        if ( $args['number'] != '-1' && ! $args['count'] ) {
             $contact_subscribers = $contact_subscribers->skip( $args['offset'] )->take( $args['number'] );
         }
 
@@ -1246,7 +1246,7 @@ function erp_crm_get_campaigns( $args = [] ) {
         }
 
         // Check if want all data without any pagination
-        if ( $args['number'] != '-1' ) {
+        if ( $args['number'] != '-1' && ! $args['count'] ) {
             $campaigns = $campaigns->skip( $args['offset'] )->take( $args['number'] );
         }
 

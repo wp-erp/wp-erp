@@ -78,9 +78,12 @@ function erp_hr_get_designations( $args = array() ) {
 
     if ( false === $designations ) {
 
+        // Check if want all data without any pagination
+        if ( $args['number'] != '-1' && ! $args['count'] ) {
+            $designation = $designation->skip( $args['offset'] )->take( $args['number'] );
+        }
+
         $results = $designation
-                ->skip( $args['offset'] )
-                ->take( $args['number'] )
                 ->orderBy( $args['orderby'], $args['order'] )
                 ->get()
                 ->toArray();
@@ -147,7 +150,7 @@ function erp_hr_delete_designation( $designation_id ) {
  */
 function erp_hr_get_designation_dropdown_raw( $select_text = '' ) {
     $select_text = empty( $select_text ) ? __( '- Select Designation -', 'erp' ) : $select_text;
-    $designations = erp_hr_get_designations();
+    $designations = erp_hr_get_designations( ['number' => -1 ] );
     $dropdown     = array( '-1' => $select_text );
 
     if ( $designations ) {
