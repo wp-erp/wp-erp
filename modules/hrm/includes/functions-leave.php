@@ -1056,6 +1056,13 @@ function erp_hr_leave_count_entitlements( $args = array() ) {
  * @return void
  */
 function erp_hr_delete_entitlement( $id, $user_id, $policy_id ) {
+    $leave_recored = \WeDevs\ERP\HRM\Models\Leave_request::where( 'user_id', '=', $user_id )
+                ->where( 'policy_id', '=', $policy_id )->get()->toArray();
+    $leave_recored = wp_list_pluck( $leave_recored, 'status' );
+    if ( in_array( 1, $leave_recored ) ) {
+        return;
+    }
+    
     if ( \WeDevs\ERP\HRM\Models\Leave_Entitlement::find( $id )->delete() ) {
         return \WeDevs\ERP\HRM\Models\Leave_request::where( 'user_id', '=', $user_id )
                 ->where( 'policy_id', '=', $policy_id )
