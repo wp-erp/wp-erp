@@ -86,55 +86,20 @@ class ERP_Email_Settings extends ERP_Settings_Page {
     function notification_emails() {
         $email_templates = wperp()->emailer->get_emails();
         ?>
-        <style type="text/css">
-            td.erp-mail-wrapper {
-                padding: 0 15px 10px 0;;
-            }
-            table.erp-email-notification-table th {
-                padding: 9px 7px!important;
-                vertical-align: middle;
-            }
-
-            table.erp-email-notification-table th.erp-email-settings-table-status,
-            table.erp-email-notification-table td.erp-email-settings-table-status {
-                width: 1em;
-            }
-
-            table.erp-email-notification-table td {
-                padding: 7px;
-                line-height: 2em;
-                vertical-align: middle;
-            }
-
-            table.erp-email-notification-table th.erp-email-settings-table-name,
-            table.erp-email-notification-table td.erp-email-settings-table-name {
-                padding-left: 15px !important;
-            }
-
-            table.erp-email-notification-table td.erp-email-settings-table-name a {
-                font-weight: 700;
-            }
-
-            table.erp-email-notification-table tr:nth-child(odd) td {
-                background: #f9f9f9;
-            }
-        </style>
         <tr valign="top">
-            <td class="erp-mail-wrapper" colspan="2">
-                <table class="erp-email-notification-table widefat" cellspacing="0">
+            <td class="erp-settings-table-wrapper" colspan="2">
+                <table class="erp-settings-table widefat" cellspacing="0">
                     <thead>
                         <tr>
                             <?php
                                 $columns = apply_filters( 'erp_email_setting_columns', array(
-                                    // 'status'   => '',
                                     'name'        => __( 'Email', 'erp' ),
-                                    // 'module'   => __( 'Module', 'erp' ),
                                     'description' => __( 'Description', 'erp' ),
                                     'actions'     => ''
                                 ) );
 
                                 foreach ( $columns as $key => $column ) {
-                                    echo '<th class="erp-email-settings-table-' . esc_attr( $key ) . '">' . esc_html( $column ) . '</th>';
+                                    echo '<th class="erp-settings-table-' . esc_attr( $key ) . '">' . esc_html( $column ) . '</th>';
                                 }
                             ?>
                         </tr>
@@ -147,7 +112,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
                             foreach ( $columns as $key => $column ) {
                                 switch ( $key ) {
                                     case 'name' :
-                                        echo '<td class="erp-email-settings-table-' . esc_attr( $key ) . '">
+                                        echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
                                             <a href="' . admin_url( 'admin.php?page=erp-settings&tab=erp-email&section=' . strtolower( $email_key ) ) . '">' . $email->get_title() . '</a>
                                         </td>';
                                         break;
@@ -155,19 +120,19 @@ class ERP_Email_Settings extends ERP_Settings_Page {
                                     case 'status':
                                     case 'module':
                                     case 'recipient':
-                                        echo '<td class="erp-email-settings-table-' . esc_attr( $key ) . '">
+                                        echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
 
                                         </td>';
                                         break;
 
                                     case 'description':
-                                        echo '<td class="erp-email-settings-table-' . esc_attr( $key ) . '">
+                                        echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
                                             <span class="help">' . $email->get_description() . '</span>
                                         </td>';
                                         break;
 
                                     case 'actions' :
-                                        echo '<td class="erp-email-settings-table-' . esc_attr( $key ) . '">
+                                        echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
                                             <a class="button alignright" href="' . admin_url( 'admin.php?page=erp-settings&tab=erp-email&section=' . strtolower( $email_key ) ) . '">' . __( 'Configure', 'erp' ) . '</a>
                                         </td>';
                                         break;
