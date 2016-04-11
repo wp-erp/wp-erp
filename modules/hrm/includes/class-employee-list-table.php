@@ -181,10 +181,15 @@ class Employee_List_Table extends \WP_List_Table {
      * @return array
      */
     function get_bulk_actions() {
-        $actions = array(
-            'email'  => __( 'Send Email', 'erp' ),
+        $actions = [];
+
+        if ( ! current_user_can( 'erp_hr_manager' ) ) {
+            return $actions;
+        }
+
+        $actions = [
             'delete'  => __( 'Move to Trash', 'erp' ),
-        );
+        ];
 
         if ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) {
             unset( $actions['delete'] );
