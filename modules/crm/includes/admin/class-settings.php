@@ -12,10 +12,9 @@ class CRM_Settings extends ERP_Settings_Page {
      * [__construct description]
      */
     public function __construct() {
-        $this->id            = 'erp-crm';
-        $this->label         = __( 'CRM', 'erp' );
-
-        $this->sections      = $this->get_sections();
+        $this->id       = 'erp-crm';
+        $this->label    = __( 'CRM', 'erp' );
+        $this->sections = $this->get_sections();
 
         add_action( 'erp_admin_field_listing_save_templates', [ $this, 'listing_save_templates' ] );
     }
@@ -99,6 +98,8 @@ class CRM_Settings extends ERP_Settings_Page {
             'type'  => 'sectionend',
             'id'    => 'script_styling_options'
         ];
+
+        $fields['templates']['submit_button'] = false;
 
         $fields = apply_filters( 'erp_settings_crm_section_fields', $fields, $section );
 

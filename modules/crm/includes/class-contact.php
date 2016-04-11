@@ -136,6 +136,26 @@ class Contact extends \WeDevs\ERP\People {
         return get_avatar( $this->email, $size );
     }
 
+    public function get_first_name() {
+        if ( $this->id ) {
+            if ( $this->is_wp_user() ) {
+                return \get_user_by( 'id', $this->user_id )->first_name;
+            } else {
+                return $this->first_name;
+            }
+        }
+    }
+
+    public function get_last_name() {
+        if ( $this->id ) {
+            if ( $this->is_wp_user() ) {
+                return \get_user_by( 'id', $this->user_id )->last_name;
+            } else {
+                return $this->last_name;
+            }
+        }
+    }
+
     /**
      * Get birth date
      *
