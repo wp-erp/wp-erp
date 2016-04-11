@@ -680,31 +680,30 @@ class Ajax_Handler {
 
                 $is_cloud_active = erp_is_cloud_active();
 
-                if( $is_cloud_active ) {
+                if ( $is_cloud_active ) {
                     $wp_erp_api_key = get_option( 'wp_erp_apikey' );
 
                     $reply_to = $wp_erp_api_key . "-" . $postdata['created_by'] . "-" . $contact_id . "@incloud.wperp.com";
-                    $headers .= "Reply-To: $reply_to" . "\r\n";
+                    $headers .= "Reply-To: WP ERP <$reply_to>" . "\r\n";
                 }
-
-                add_filter( 'wp_mail_from', 'erp_crm_get_email_from_address' );
-                add_filter( 'wp_mail_from_name', 'erp_crm_get_email_from_name' );
 
                 $query = [
                     'action' => 'erp_crm_track_email_opened',
                     'aid'    => $data['id'],
                 ];
                 $email_url  = add_query_arg( $query, admin_url('admin-ajax.php') );
-                $img_url    = '<img src="' . $email_url . '" width="1" height="1" border="0" />';
+                $img_url    = '<img src="' . $email_url . '" width="1" height="1" style="display:none;" />';
 
                 $email_body = $postdata['message'] . $img_url;
+
+                add_filter( 'wp_mail_from', 'erp_crm_get_email_from_address' );
+                add_filter( 'wp_mail_from_name', 'erp_crm_get_email_from_name' );
 
                 // Send email a contact
                 wp_mail( $contact->email, $postdata['email_subject'], $email_body, $headers );
 
                 remove_filter( 'wp_mail_from', 'erp_crm_get_email_from_address' );
                 remove_filter( 'wp_mail_from_name', 'erp_crm_get_email_from_name' );
-                remove_filter( 'wp_mail_content_type', 'erp_crm_get_email_content_type' );
 
                 do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
 

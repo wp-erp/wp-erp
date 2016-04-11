@@ -53,7 +53,7 @@
 
             <p>
                 <select name="invite_contact[]" id="erp-crm-activity-invite-contact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="Invite a contact">
-                    <?php echo erp_crm_get_employees(); ?>
+                    <?php echo erp_crm_get_employees_dropdown(); ?>
                 </select>
             </p>
 
@@ -141,7 +141,7 @@
 
             <p class="log-selected-contact erp-hide">
                 <select name="selected_contact" id="erp-crm-activity-invite-contact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="Select contacts...">
-                    <?php echo erp_crm_get_employees(); ?>
+                    <?php echo erp_crm_get_employees_dropdown(); ?>
                 </select>
             </p>
 

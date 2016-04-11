@@ -68,18 +68,13 @@
                                     ?>
                                     <span class="edit"><a class="button button-primary" data-id="<?php echo $employee->id; ?>" data-single="true" href="#"><?php _e( 'Edit', 'erp' ); ?></a></span>
                                     <?php
-                                    }
+                                }
+                                ?>
 
-                                    if ( $employee->get_status() == 'Terminated' && current_user_can( 'erp_create_employee' ) ): ?>
-                                        <a class="button" href="#" id="erp-employee-activate" data-id="<?php echo $employee->id; ?>"><?php _e( 'Active', 'erp' ); ?></a>
-                                    <?php
-                                else:
-                                    if ( current_user_can( 'erp_create_employee' ) ) {
-                                    ?>
-                                        <a class="button" href="#" id="erp-employee-terminate" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-terminate" data-title="<?php _e( 'Terminate Employee', 'erp' ); ?>"><?php _e( 'Terminate', 'erp' ); ?></a>
-                                    <?php
-                                    }
-                                endif; ?>
+                                <?php if ( $employee->get_status() != 'Terminated' && current_user_can( 'erp_create_employee' ) ): ?>
+                                    <a class="button" href="#" id="erp-employee-terminate" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-terminate" data-title="<?php _e( 'Terminate Employee', 'erp' ); ?>"><?php _e( 'Terminate', 'erp' ); ?></a>
+                                <?php endif; ?>
+
                                 <?php if ( ( isset( $_GET['tab'] ) && $_GET['tab'] == 'general' ) || !isset( $_GET['tab'] )  ): ?>
                                     <a class="button" id="erp-employee-print" href="#"><?php _e( 'Print', 'erp' ); ?></a>
                                 <?php endif ?>

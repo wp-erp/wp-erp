@@ -14,13 +14,15 @@
                 'value'   => $employee->erp->status,
                 'class'   => 'select2',
                 'type'    => 'select',
+                'id'      => 'erp-hr-employee-status-option',
+                'custom_attr' => [ 'data-selected' => $employee->erp->status ],
                 'options' => array( 0 => __( '- Select -', 'erp' ) ) + erp_hr_get_employee_statuses()
             ) ); ?>
 
             <input type="hidden" name="user_id" id="erp-employee-id" value="<?php echo $employee->id; ?>">
             <input type="hidden" name="action" id="erp-employee-status-action" value="erp-hr-employee-status">
             <?php wp_nonce_field( 'wp-erp-hr-employee-update-nonce' ); ?>
-            <input type="submit" class="button" name="employee_update_status" value="<?php esc_attr_e( 'Update', 'erp' ); ?>">
+            <input type="submit" class="button" data-title="<?php _e( 'Terminate Employee', 'erp' ); ?>" id="erp-hr-employee-status-update" name="employee_update_status" value="<?php esc_attr_e( 'Update', 'erp' ); ?>">
         </form>
         <?php
     }
@@ -43,7 +45,7 @@
         <tbody>
             <?php
             if ( $history['employment'] ) {
-                $types = erp_hr_get_employee_types();
+                $types = erp_hr_get_employee_types() + ['terminate' => __( 'Terminate', 'erp' ) ];
 
                 foreach ($history['employment'] as $num => $row) {
                     ?>

@@ -162,6 +162,7 @@ class Scripts {
      * @return void
      */
     public function enqueue_styles() {
+        wp_enqueue_style( 'erp-fontawesome' );
         wp_enqueue_style( 'erp-select2' );
         wp_enqueue_style( 'jquery-ui' );
         wp_enqueue_style( 'erp-chosen' );

@@ -639,7 +639,6 @@ class Employee {
 
         $history = array( 'job' => array(), 'compensation' => array(), 'employment' => array() );
         $results = $wpdb->get_results( $wpdb->prepare( $sql , $this->id ) );
-        // var_dump( $results );
 
         if ( $results ) {
             foreach ($results as $key => $value) {
