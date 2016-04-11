@@ -76,10 +76,10 @@ class Leave_Requests_List_Table extends \WP_List_Table {
                 }
 
             case 'reason':
-                return $item->reason;
+                return stripslashes( $item->reason );
 
             case 'comment' :
-                return $item->comments;
+                return stripslashes( $item->comments );
             default:
                 return isset( $item->$column_name ) ? $item->$column_name : '';
         }
