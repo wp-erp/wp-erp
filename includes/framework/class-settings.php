@@ -119,7 +119,7 @@ class ERP_Admin_Settings {
 
         self::section_output();
 
-        $current_class->save( $current_section );
+        $current_class->save( $current_section ); 
         $current_class->output( $current_section );
 
     }
