@@ -27,7 +27,7 @@ $users       = erp_crm_get_crm_user();
 
                 <tr>
                     <th>
-                        <label for="life_stage"><?php _e( 'Life stage', 'erp' ); ?></label>
+                        <label for="life_stage"><?php _e( 'Life Stage', 'erp' ); ?></label>
                     </th>
                     <td>
                         <select name="life_stage" id="life_stage">

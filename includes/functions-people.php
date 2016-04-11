@@ -200,21 +200,22 @@ function erp_insert_people( $args = array() ) {
         'country'     => '',
         'currency'    => '',
         'type'        => '',
+        'user_id'     => null,
     );
 
     $args = wp_parse_args( $args, $defaults );
 
-    // Check if contact first name and last name provide or not
     if ( $args['type'] == 'contact' ) {
-
-        // some basic validation
-        if ( empty( $args['first_name'] ) ) {
-            return new WP_Error( 'no-first_name', __( 'No First Name provided.', 'erp' ) );
+        if ( empty( $args['user_id'] ) ) {
+            // some basic validation
+            // Check if contact first name and last name provide or not
+            if ( empty( $args['first_name'] ) ) {
+                return new WP_Error( 'no-first_name', __( 'No First Name provided.', 'erp' ) );
+            }
+            if ( empty( $args['last_name'] ) ) {
+                return new WP_Error( 'no-last_name', __( 'No Last Name provided.', 'erp' ) );
+            }
         }
-        if ( empty( $args['last_name'] ) ) {
-            return new WP_Error( 'no-last_name', __( 'No Last Name provided.', 'erp' ) );
-        }
-
     }
 
     // Check if company name provide or not

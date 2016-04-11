@@ -50,8 +50,11 @@ class People extends Item {
         } elseif ( $this->is_wp_user() ) {
             $user = \get_user_by( 'id', $this->user_id );
 
-            return $user->first_name . ' ' . $user->last_name;
+            if ( ! empty( $user->first_name ) ) {
+                return $user->first_name . ' ' . $user->last_name;
+            }
 
+            return $user->display_name;
         } else {
             return $this->first_name . ' ' . $this->last_name;
         }
