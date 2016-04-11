@@ -23,10 +23,9 @@ class ERP_Integration_Settings extends ERP_Settings_Page {
      */
     public function get_settings() {
         $fields = [
-
             [
                 'title' => __( 'Integrations', 'erp' ),
-                'desc'  => __( 'Click on button to configure.', 'erp' ),
+                'desc'  => __( 'Various integrations to WP ERP. Click <strong>Configure</strong> to manage the settings.', 'erp' ),
                 'type'  => 'title',
                 'id'    => 'integration_settings'
             ],
@@ -47,42 +46,9 @@ class ERP_Integration_Settings extends ERP_Settings_Page {
     function integrations() {
         $integrations = wperp()->integration->get_integrations();
         ?>
-        <style type="text/css">
-            td.erp-integration-wrapper {
-                padding: 0 15px 10px 0;;
-            }
-            table.erp-integration-table th {
-                padding: 9px 7px!important;
-                vertical-align: middle;
-            }
-
-            table.erp-integration-table th.erp-integration-settings-table-status,
-            table.erp-integration-table td.erp-integration-settings-table-status {
-                width: 1em;
-            }
-
-            table.erp-integration-table td {
-                padding: 7px;
-                line-height: 2em;
-                vertical-align: middle;
-            }
-
-            table.erp-integration-table th.erp-integration-settings-table-name,
-            table.erp-integration-table td.erp-integration-settings-table-name {
-                padding-left: 15px !important;
-            }
-
-            table.erp-integration-table td.erp-integration-settings-table-name a {
-                font-weight: 700;
-            }
-
-            table.erp-integration-table tr:nth-child(odd) td {
-                background: #f9f9f9;
-            }
-        </style>
         <tr valign="top">
-            <td class="erp-integration-wrapper" colspan="2">
-                <table class="erp-integration-table widefat" cellspacing="0">
+            <td class="erp-settings-table-wrapper" colspan="2">
+                <table class="erp-settings-table widefat" cellspacing="0">
                     <thead>
                         <tr>
                             <?php
@@ -93,7 +59,7 @@ class ERP_Integration_Settings extends ERP_Settings_Page {
                                 ) );
 
                                 foreach ( $columns as $key => $column ) {
-                                    echo '<th class="erp-integration-settings-table-' . esc_attr( $key ) . '">' . esc_html( $column ) . '</th>';
+                                    echo '<th class="erp-settings-table-' . esc_attr( $key ) . '">' . esc_html( $column ) . '</th>';
                                 }
                             ?>
                         </tr>
@@ -106,7 +72,7 @@ class ERP_Integration_Settings extends ERP_Settings_Page {
                             foreach ( $columns as $key => $column ) {
                                 switch ( $key ) {
                                     case 'name' :
-                                        echo '<td class="erp-integration-settings-table-' . esc_attr( $key ) . '">
+                                        echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
                                             <a href="' . admin_url( 'admin.php?page=erp-settings&tab=erp-integration&section=' . strtolower( $integration_key ) ) . '">' . $integration->get_title() . '</a>
                                         </td>';
                                         break;
@@ -114,19 +80,19 @@ class ERP_Integration_Settings extends ERP_Settings_Page {
                                     case 'status':
                                     case 'module':
                                     case 'recipient':
-                                        echo '<td class="erp-integration-settings-table-' . esc_attr( $key ) . '">
+                                        echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
 
                                         </td>';
                                         break;
 
                                     case 'description':
-                                        echo '<td class="erp-integration-settings-table-' . esc_attr( $key ) . '">
+                                        echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
                                             <span class="help">' . $integration->get_description() . '</span>
                                         </td>';
                                         break;
 
                                     case 'actions' :
-                                        echo '<td class="erp-integration-settings-table-' . esc_attr( $key ) . '">
+                                        echo '<td class="erp-settings-table-' . esc_attr( $key ) . '">
                                             <a class="button alignright" href="' . admin_url( 'admin.php?page=erp-settings&tab=erp-integration&section=' . strtolower( $integration_key ) ) . '">' . __( 'Configure', 'erp' ) . '</a>
                                         </td>';
                                         break;

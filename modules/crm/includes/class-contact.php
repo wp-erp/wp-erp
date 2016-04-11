@@ -11,6 +11,7 @@ namespace WeDevs\ERP\CRM;
 class Contact extends \WeDevs\ERP\People {
 
     protected $contact_type;
+
     /**
      * Load parent constructor
      *
@@ -122,7 +123,6 @@ class Contact extends \WeDevs\ERP\People {
      * @return string  image with HTML tag
      */
     public function get_avatar( $size = 32 ) {
-
         if ( $this->id ) {
 
             $user_photo_id = $this->get_meta( 'photo_id', true );
