@@ -331,5 +331,23 @@ class Contact extends \WeDevs\ERP\People {
         return $source;
     }
 
+    /**
+     * Get life stage
+     *
+     * @since 1.0
+     *
+     * @return string
+     */
+    public function get_life_stage() {
+        $life_stages       = erp_crm_get_life_stages_dropdown_raw();
+        $life_stage        = $this->get_meta( 'life_stage', true );
+
+        return isset( $life_stages[$life_stage] ) ? $life_stages[$life_stage] : '—';
+    }
+
+    public function get_contact_owner() {
+
+    }
+
 }
 
