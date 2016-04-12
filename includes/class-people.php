@@ -74,6 +74,22 @@ class People extends Item {
     }
 
     /**
+     * Get website address of a user
+     *
+     * @since 1.0
+     *
+     * @return string
+     */
+    function get_website() {
+        if ( $this->is_wp_user() ) {
+            $user = \get_user_by( 'id', $this->user_id );
+            return ( $user->user_url ) ? erp_get_clickable( 'url', $user->user_url ) : '—';
+        } else {
+            return ( $this->website ) ? erp_get_clickable( 'url', $this->website ) : '—';
+        }
+    }
+
+    /**
      * Get meta data of a user
      *
      * @param string $meta_key

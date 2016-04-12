@@ -634,7 +634,7 @@ function erp_get_country_name( $country ) {
     if ( '-1' != $country ) {
         $full_country = ( isset( $countries[ $country ] ) ) ? $countries[ $country ] : $country;
     } else {
-        $full_country = '';
+        $full_country = '—';
     }
 
     return $full_country;

@@ -136,6 +136,13 @@ class Contact extends \WeDevs\ERP\People {
         return get_avatar( $this->email, $size );
     }
 
+    /**
+     * Get first name
+     *
+     * @since 1.0
+     *
+     * @return string
+     */
     public function get_first_name() {
         if ( $this->id ) {
             if ( $this->is_wp_user() ) {
@@ -146,6 +153,13 @@ class Contact extends \WeDevs\ERP\People {
         }
     }
 
+    /**
+     * Get last name
+     *
+     * @since 1.0
+     *
+     * @return string
+     */
     public function get_last_name() {
         if ( $this->id ) {
             if ( $this->is_wp_user() ) {
@@ -157,7 +171,139 @@ class Contact extends \WeDevs\ERP\People {
     }
 
     /**
+     * Get phone number
+     *
+     * @since 1.0
+     *
+     * @return string
+     */
+    public function get_phone() {
+        if ( $this->id ) {
+            return ( $this->phone ) ? erp_get_clickable( 'phone', $this->phone ) : '—';
+        }
+    }
+
+    /**
+     * Get mobile number
+     *
+     * @since 1.0
+     *
+     * @return string
+     */
+    public function get_mobile() {
+        if ( $this->id ) {
+            return ( $this->mobile ) ? erp_get_clickable( 'phone', $this->mobile ) : '—';
+        }
+    }
+
+    /**
+     * Get fax number
+     *
+     * @since 1.0
+     *
+     * @return string
+     */
+    public function get_fax() {
+        if ( $this->id ) {
+            return ( $this->fax ) ? $this->fax : '—';
+        }
+    }
+
+    /**
+     * Get street 1 address
+     *
+     * @since 1.0
+     *
+     * @return string
+     */
+    public function get_street_1() {
+        if ( $this->id ) {
+            return ( $this->street_1 ) ? $this->street_1 : '—';
+        }
+    }
+
+    /**
+     * Get street 2 address
+     *
+     * @since 1.0
+     *
+     * @return string
+     */
+    public function get_street_2() {
+        if ( $this->id ) {
+            return ( $this->street_2 ) ? $this->street_2 : '—';
+        }
+    }
+
+    /**
+     * Get city name
+     *
+     * @since 1.0
+     *
+     * @return string
+     */
+    public function get_city() {
+        if ( $this->id ) {
+            return ( $this->city ) ? $this->city : '—';
+        }
+    }
+
+    /**
+     * Get country name
+     *
+     * @since 1.0
+     *
+     * @return string
+     */
+    public function get_country() {
+        if ( $this->id ) {
+            return erp_get_country_name( $this->country );
+        }
+    }
+
+    /**
+     * Get state name
+     *
+     * @since 1.0
+     *
+     * @return string
+     */
+    public function get_state() {
+        if ( $this->id ) {
+            return erp_get_state_name( $this->country, $this->state );
+        }
+    }
+
+    /**
+     * Get postal code/Zip Code
+     *
+     * @since 1.0
+     *
+     * @return string
+     */
+    public function get_postal_code() {
+        if ( $this->id ) {
+            return ( $this->postal_code ) ? $this->postal_code : '—';
+        }
+    }
+
+    /**
+     * Get notes
+     *
+     * @since 1.0
+     *
+     * @return string
+     */
+    public function get_notes() {
+        if ( $this->id ) {
+            return ( $this->notes ) ? $this->notes : '—';
+        }
+    }
+
+    /**
      * Get birth date
+     *
+     * @since 1.0
      *
      * @return string
      */
@@ -169,6 +315,8 @@ class Contact extends \WeDevs\ERP\People {
 
     /**
      * Get the contact source
+     *
+     * @since 1.0
      *
      * @return string
      */
