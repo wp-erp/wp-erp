@@ -713,9 +713,10 @@ function erp_hr_employee_terminate( $data ) {
         'user_id'  => $data['employee_id'],
         'module'   => 'employment',
         'category' => '',
-        'type'     => 'terminate',
+        'type'     => 'terminated',
         'comment'  => $comments,
         'data'     => '',
+        'date'     => $data['terminate_date']
     ] );
 
     update_user_meta( $data['employee_id'], '_erp_hr_termination', $data );
