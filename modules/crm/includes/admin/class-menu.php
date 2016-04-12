@@ -28,20 +28,15 @@ class Admin_Menu {
 
         $capabilities = erp_crm_get_manager_role();
 
-        add_menu_page( __( 'CRM', 'erp' ), __( 'CRM', 'erp' ), $capabilities, 'erp-sales', array( $this, 'dashboard_page' ), 'dashicons-chart-bar', null );
+        add_menu_page( __( 'CRM', 'erp' ), __( 'CRM', 'erp' ), $capabilities, 'erp-sales', [ $this, 'dashboard_page' ], 'dashicons-chart-bar', null );
 
-        $overview = add_submenu_page( 'erp-sales', __( 'Overview', 'erp' ), __( 'Overview', 'erp' ), 'erp_crm_manage_dashboard', 'erp-sales', array( $this, 'dashboard_page' ) );
-        add_submenu_page( 'erp-sales', __( 'Contacts', 'erp' ), __( 'Contacts', 'erp' ), 'erp_crm_list_contact', 'erp-sales-customers', array( $this, 'contact_page' ) );
-        add_submenu_page( 'erp-sales', __( 'Companies', 'erp' ), __( 'Companies', 'erp' ), 'erp_crm_list_contact', 'erp-sales-companies', array( $this, 'company_page' ) );
-        add_submenu_page( 'erp-sales', __( 'Activities', 'erp' ), __( 'Activities', 'erp' ), 'erp_crm_manage_activites', 'erp-sales-activities', array( $this, 'activity_page' ) );
-        $schedule = add_submenu_page( 'erp-sales', __( 'Schedules', 'erp' ), __( 'Schedules', 'erp' ), 'erp_crm_manage_schedules', 'erp-sales-schedules', array( $this, 'schedules_page' ) );
-        add_submenu_page( 'erp-sales', __( 'Contact Groups', 'erp' ), __( 'Contact Groups', 'erp' ), 'erp_crm_manage_groups', 'erp-sales-contact-groups', array( $this, 'contact_group_page' ) );
-
-        // add_submenu_page( 'erp-sales', __( 'Campaigns', 'erp' ), __( 'Campaigns', 'erp' ), $capabilities, 'erp-sales-campaigns', array( $this, 'campaigns_page' ) );
-        // add_submenu_page( 'erp-sales', __( 'Oppurtunity', 'erp' ), __( 'Oppurtunity', 'erp' ), $capabilities, 'erp-sales-oppurtunity', array( $this, 'dashboard_page' ) );
-        // add_submenu_page( 'erp-sales', __( 'Customer Category', 'erp' ), __( 'Customer Category', 'erp' ), $capabilities, 'erp-sales-category', array( $this, 'dashboard_page' ) );
-        // add_submenu_page( 'erp-sales', __( 'Newsletter', 'erp' ), __( 'Newsletter', 'erp' ), $capabilities, 'erp-sales-newsletter', array( $this, 'dashboard_page' ) );
-        // add_submenu_page( 'erp-sales', __( 'Sales Team', 'erp' ), __( 'Sales Team', 'erp' ), $capabilities, 'erp-sales-team', array( $this, 'dashboard_page' ) );
+        $overview = add_submenu_page( 'erp-sales', __( 'Overview', 'erp' ), __( 'Overview', 'erp' ), 'erp_crm_manage_dashboard', 'erp-sales', [ $this, 'dashboard_page' ] );
+        add_submenu_page( 'erp-sales', __( 'Contacts', 'erp' ), __( 'Contacts', 'erp' ), 'erp_crm_list_contact', 'erp-sales-customers', [ $this, 'contact_page' ] );
+        add_submenu_page( 'erp-sales', __( 'Companies', 'erp' ), __( 'Companies', 'erp' ), 'erp_crm_list_contact', 'erp-sales-companies', [ $this, 'company_page' ] );
+        add_submenu_page( 'erp-sales', __( 'Activities', 'erp' ), __( 'Activities', 'erp' ), 'erp_crm_manage_activites', 'erp-sales-activities', [ $this, 'activity_page' ] );
+        $schedule = add_submenu_page( 'erp-sales', __( 'Schedules', 'erp' ), __( 'Schedules', 'erp' ), 'erp_crm_manage_schedules', 'erp-sales-schedules', [ $this, 'schedules_page' ] );
+        $tasks = add_submenu_page( 'erp-sales', __( 'Tasks', 'erp' ), __( 'Tasks', 'erp' ), 'erp_hr_manager', 'erp-sales-tasks', [ $this, 'tasks_page' ] );
+        add_submenu_page( 'erp-sales', __( 'Contact Groups', 'erp' ), __( 'Contact Groups', 'erp' ), 'erp_crm_manage_groups', 'erp-sales-contact-groups', [ $this, 'contact_group_page' ] );
 
         add_action( 'admin_print_styles-' . $overview, array( $this, 'crm_calendar_script' ) );
         add_action( 'admin_print_styles-' . $schedule, array( $this, 'crm_calendar_script' ) );
@@ -191,6 +186,17 @@ class Admin_Menu {
      */
     public function schedules_page() {
         include WPERP_CRM_VIEWS . '/schedules.php';
+    }
+
+    /**
+     * Tasks page content
+     *
+     * @since 1.0
+     *
+     * @return void [load view]
+     */
+    public function tasks_page() {
+        include WPERP_CRM_VIEWS . '/tasks.php';
     }
 
     /**
