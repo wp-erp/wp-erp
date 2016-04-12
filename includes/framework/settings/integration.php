@@ -108,6 +108,8 @@ class ERP_Integration_Settings extends ERP_Settings_Page {
                 </table>
             </td>
         </tr>
+
+        <style>p.submit { display: none; }</style>
         <?php
     }
 

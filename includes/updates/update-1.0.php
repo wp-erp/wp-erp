@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Update CMR new roles and capabilities
+ * Update CRM new roles and capabilities
  *
  * @since 1.0
  *
@@ -53,3 +53,12 @@ function wperp_update_1_0_create_table() {
 
 wperp_update_1_0_set_role();
 wperp_update_1_0_create_table();
+
+// clear legacy crons
+wp_clear_scheduled_hook( 'erp_hr_policy_schedule' );
+wp_clear_scheduled_hook( 'erp_crm_notification_schedule' );
+
+// setup new crons
+wp_schedule_event( time(), 'per_minute', 'erp_per_minute_scheduled_events' );
+wp_schedule_event( time(), 'daily', 'erp_daily_scheduled_events' );
+wp_schedule_event( time(), 'weekly', 'erp_weekly_scheduled_events' );
