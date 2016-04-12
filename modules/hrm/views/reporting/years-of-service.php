@@ -4,7 +4,7 @@
     <?php
         global $wpdb;
 
-        $all_user_id = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees" );
+        $all_user_id = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active'" );
 
         foreach ( $all_user_id as $user_id ) {
 

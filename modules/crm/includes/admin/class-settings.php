@@ -12,10 +12,9 @@ class CRM_Settings extends ERP_Settings_Page {
      * [__construct description]
      */
     public function __construct() {
-        $this->id            = 'erp-crm';
-        $this->label         = __( 'CRM', 'erp' );
-
-        $this->sections      = $this->get_sections();
+        $this->id       = 'erp-crm';
+        $this->label    = __( 'CRM', 'erp' );
+        $this->sections = $this->get_sections();
 
         add_action( 'erp_admin_field_listing_save_templates', [ $this, 'listing_save_templates' ] );
     }
@@ -28,6 +27,7 @@ class CRM_Settings extends ERP_Settings_Page {
     public function get_sections() {
         $sections = array(
             'templates' => __( 'Templates', 'erp' ),
+            'contacts' => __( 'Contacts', 'erp' ),
         );
 
         return apply_filters( 'erp_settings_crm_sections', $sections );
@@ -55,6 +55,51 @@ class CRM_Settings extends ERP_Settings_Page {
             'type'  => 'sectionend',
             'id'    => 'script_styling_options'
         ];
+
+        $fields['contacts'][] = [
+            'title' => __( 'Import as Contact', 'erp' ),
+            'type'  => 'title',
+            'desc'  => __( 'When a new user is added make a CRM contact of it as well.', 'erp' ),
+            'id'    => 'general_options'
+        ];
+
+        $fields['contacts'][] = [
+            'title'   => __( 'Auto Sync', 'erp' ),
+            'id'      => 'user_auto_sync',
+            'type'    => 'select',
+            'options' => [ 1 => __('On', 'erp'), 0 => __( 'Off', 'erp') ],
+            'default' =>  0,
+        ];
+
+        $life_stages = erp_crm_get_life_stages_dropdown_raw();
+        $crm_users   = erp_crm_get_crm_user();
+
+        $users = ['' => __( '&mdash; Select Owner &mdash;', 'erp' )];
+
+        foreach ( $crm_users as $user ) {
+            $users[$user->ID] = $user->display_name;
+        }
+
+        $fields['contacts'][] = [
+            'title'   => __( 'Default Contact Owner', 'erp' ),
+            'id'      => 'contact_owner',
+            'type'    => 'select',
+            'options' => $users,
+        ];
+
+        $fields['contacts'][] = [
+            'title'   => __( 'Default Life Stage', 'erp' ),
+            'id'      => 'life_stage',
+            'type'    => 'select',
+            'options' => $life_stages,
+        ];
+
+        $fields['contacts'][] = [
+            'type'  => 'sectionend',
+            'id'    => 'script_styling_options'
+        ];
+
+        $fields['templates']['submit_button'] = false;
 
         $fields = apply_filters( 'erp_settings_crm_section_fields', $fields, $section );
 

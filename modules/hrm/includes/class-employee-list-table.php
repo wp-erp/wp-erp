@@ -7,9 +7,10 @@ namespace WeDevs\ERP\HRM;
 class Employee_List_Table extends \WP_List_Table {
 
     private $counts = array();
+    private $page_status = '';
 
     function __construct() {
-        global $status, $page;
+        global $status, $page, $page_status;
 
         parent::__construct( array(
             'singular' => 'employee',
@@ -181,10 +182,15 @@ class Employee_List_Table extends \WP_List_Table {
      * @return array
      */
     function get_bulk_actions() {
-        $actions = array(
-            'email'  => __( 'Send Email', 'erp' ),
+        $actions = [];
+
+        if ( ! current_user_can( 'erp_hr_manager' ) ) {
+            return $actions;
+        }
+
+        $actions = [
             'delete'  => __( 'Move to Trash', 'erp' ),
-        );
+        ];
 
         if ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) {
             unset( $actions['delete'] );
@@ -286,7 +292,7 @@ class Employee_List_Table extends \WP_List_Table {
         $per_page              = 20;
         $current_page          = $this->get_pagenum();
         $offset                = ( $current_page -1 ) * $per_page;
-        $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '2';
+        $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : 'active';
 
         // only ncessary because we have sample data
         $args = array(

@@ -15,7 +15,7 @@ $users       = erp_crm_get_crm_user();
                     </th>
                     <td>
                         <select name="contact_owner" id="contact_owner" class="">
-                            <option value=""><?php _e( '&mdash; Select Owner &mdash;', $domain ); ?></option>
+                            <option value=""><?php _e( '&mdash; Select Owner &mdash;', 'erp' ); ?></option>
                             <?php
                             foreach ( $users as $user ) {
                                 echo '<option value="' . $user->ID . '">' . $user->display_name . '</option>';
@@ -27,7 +27,7 @@ $users       = erp_crm_get_crm_user();
 
                 <tr>
                     <th>
-                        <label for="life_stage"><?php _e( 'Life stage', 'erp' ); ?></label>
+                        <label for="life_stage"><?php _e( 'Life Stage', 'erp' ); ?></label>
                     </th>
                     <td>
                         <select name="life_stage" id="life_stage">

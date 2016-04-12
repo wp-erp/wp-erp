@@ -11,6 +11,7 @@ namespace WeDevs\ERP\CRM;
 class Contact extends \WeDevs\ERP\People {
 
     protected $contact_type;
+
     /**
      * Load parent constructor
      *
@@ -122,7 +123,6 @@ class Contact extends \WeDevs\ERP\People {
      * @return string  image with HTML tag
      */
     public function get_avatar( $size = 32 ) {
-
         if ( $this->id ) {
 
             $user_photo_id = $this->get_meta( 'photo_id', true );
@@ -134,6 +134,26 @@ class Contact extends \WeDevs\ERP\People {
         }
 
         return get_avatar( $this->email, $size );
+    }
+
+    public function get_first_name() {
+        if ( $this->id ) {
+            if ( $this->is_wp_user() ) {
+                return \get_user_by( 'id', $this->user_id )->first_name;
+            } else {
+                return $this->first_name;
+            }
+        }
+    }
+
+    public function get_last_name() {
+        if ( $this->id ) {
+            if ( $this->is_wp_user() ) {
+                return \get_user_by( 'id', $this->user_id )->last_name;
+            } else {
+                return $this->last_name;
+            }
+        }
     }
 
     /**

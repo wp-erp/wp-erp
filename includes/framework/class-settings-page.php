@@ -10,6 +10,7 @@ class ERP_Settings_Page {
     protected $id            = '';
     protected $label         = '';
     protected $single_option = false;
+    protected $section_fields = [];
 
     /**
      * Get id
@@ -230,6 +231,10 @@ class ERP_Settings_Page {
         return array();
     }
 
+    public function get_section_field_items() {
+        return $this->section_fields;
+    }
+
     public function output( $section = false ) {
         $fields         = $this->get_settings();
         $sections       = $this->get_sections();
@@ -245,6 +250,7 @@ class ERP_Settings_Page {
         }
 
         if ( $fields ) {
+            $this->section_fields = $fields;
             $this->output_fields( $fields );
         }
     }
