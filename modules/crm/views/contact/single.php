@@ -27,10 +27,10 @@
                                     <?php echo erp_get_clickable( 'email', $customer->get_email() ); ?>
                                 </p>
 
-                                <?php if ( $customer->mobile ): ?>
+                                <?php if ( $customer->get_mobile() != '—' ): ?>
                                     <p>
                                         <i class="fa fa-phone"></i>&nbsp;
-                                        <?php echo $customer->mobile; ?>
+                                        <?php echo $customer->get_mobile(); ?>
                                     </p>
                                 <?php endif ?>
 
@@ -138,7 +138,12 @@
                                     <div class="postbox closed">
                                         <div class="erp-handlediv" title="<?php _e( 'Click to toggle', 'erp' ); ?>"><br></div>
                                         <h3 class="erp-hndle">
-                                            <span><?php echo $company->get_full_name(); ?></span>
+                                            <span class="customer-avatar"><?php echo $company->get_avatar( 20 ); ?></span>
+                                            <span class="customer-name">
+                                                <a href="<?php echo $company->get_details_url() ?>" target="_blank">
+                                                    <?php echo $company->get_full_name(); ?>
+                                                </a>
+                                            </span>
                                         </h3>
                                         <div class="action">
                                             <a href="#" class="erp-customer-delete-company" data-id="<?php echo $company_data->id; ?>" data-action="erp-crm-customer-remove-company"><i class="fa fa-trash-o"></i></a>

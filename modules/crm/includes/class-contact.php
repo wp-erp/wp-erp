@@ -21,7 +21,7 @@ class Contact extends \WeDevs\ERP\People {
      */
     public function __construct( $contact = null, $type = null ) {
         parent::__construct( $contact );
-        $this->contact_type = $type;
+        $this->contact_type = $type ? $type : $this->type ;
     }
 
     /**

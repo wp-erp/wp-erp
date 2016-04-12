@@ -437,8 +437,7 @@ function erp_crm_company_get_customers( $company_id ) {
 
     global $wpdb;
 
-    $sql = "SELECT  peop.*, com.id as com_cus_id, com.customer_id
-            FROM " . $wpdb->prefix . "erp_crm_customer_companies AS com
+    $sql = "SELECT  com.* FROM " . $wpdb->prefix . "erp_crm_customer_companies AS com
             LEFT JOIN " . $wpdb->prefix . "erp_peoples AS peop ON peop.id = com.customer_id
             WHERE com.company_id = ". $company_id;
 

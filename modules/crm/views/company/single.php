@@ -26,13 +26,13 @@
                                 <h3><?php echo $customer->get_full_name(); ?></h3>
                                 <p>
                                     <i class="fa fa-envelope"></i>&nbsp;
-                                    <?php echo erp_get_clickable( 'email', $customer->email ); ?>
+                                    <?php echo erp_get_clickable( 'email', $customer->get_email() ); ?>
                                 </p>
 
-                                <?php if ( $customer->mobile ): ?>
+                                <?php if ( $customer->get_mobile() != '—' ): ?>
                                     <p>
                                         <i class="fa fa-phone"></i>&nbsp;
-                                        <?php echo $customer->mobile; ?>
+                                        <?php echo $customer->get_mobile(); ?>
                                     </p>
                                 <?php endif ?>
 
@@ -57,16 +57,16 @@
                         <h3 class="erp-hndle"><span><?php _e( 'Basic Info', 'erp' ); ?></span></h3>
                         <div class="inside">
                             <ul class="erp-list separated">
-                                <li><?php erp_print_key_value( __( 'Name', 'erp' ), $customer->company ); ?></li>
-                                <li><?php erp_print_key_value( __( 'Phone', 'erp' ), $customer->phone ); ?></li>
-                                <li><?php erp_print_key_value( __( 'Fax', 'erp' ), $customer->fax ); ?></li>
-                                <li><?php erp_print_key_value( __( 'Website', 'erp' ), erp_get_clickable( 'url', $customer->website ) ); ?></li>
-                                <li><?php erp_print_key_value( __( 'Street 1', 'erp' ), $customer->street_1 ); ?></li>
-                                <li><?php erp_print_key_value( __( 'Street 2', 'erp' ), $customer->street_2 ); ?></li>
-                                <li><?php erp_print_key_value( __( 'City', 'erp' ), $customer->city ); ?></li>
-                                <li><?php erp_print_key_value( __( 'State', 'erp' ), erp_get_state_name( $customer->country, $customer->state ) ); ?></li>
-                                <li><?php erp_print_key_value( __( 'Country', 'erp' ), erp_get_country_name( $customer->country ) ); ?></li>
-                                <li><?php erp_print_key_value( __( 'Postal Code', 'erp' ), $customer->postal_code ); ?></li>
+                                <li><?php erp_print_key_value( __( 'Name', 'erp' ), $customer->get_full_name() ); ?></li>
+                                <li><?php erp_print_key_value( __( 'Phone', 'erp' ), $customer->get_phone() ); ?></li>
+                                <li><?php erp_print_key_value( __( 'Fax', 'erp' ), $customer->get_fax() ); ?></li>
+                                <li><?php erp_print_key_value( __( 'Website', 'erp' ), $customer->get_website() ); ?></li>
+                                <li><?php erp_print_key_value( __( 'Street 1', 'erp' ), $customer->get_street_1() ); ?></li>
+                                <li><?php erp_print_key_value( __( 'Street 2', 'erp' ), $customer->get_street_2() ); ?></li>
+                                <li><?php erp_print_key_value( __( 'City', 'erp' ), $customer->get_city() ); ?></li>
+                                <li><?php erp_print_key_value( __( 'State', 'erp' ), $customer->get_state() ); ?></li>
+                                <li><?php erp_print_key_value( __( 'Country', 'erp' ), $customer->get_country() ); ?></li>
+                                <li><?php erp_print_key_value( __( 'Postal Code', 'erp' ), $customer->get_postal_code() ); ?></li>
                                 <li><?php erp_print_key_value( __( 'Source', 'erp' ), $customer->get_source() ); ?></li>
 
                                 <?php do_action( 'erp_crm_single_company_basic_info', $customer ); ?>
@@ -131,31 +131,34 @@
                             <div class="company-list">
                                 <?php $assing_customers = erp_crm_company_get_customers( $customer->id ); ?>
 
-                                <?php foreach ( $assing_customers as $assing_customer ) : ?>
+                                <?php foreach ( $assing_customers as $assing_customer_data ) : ?>
+
+                                    <?php $assing_customer = new \WeDevs\ERP\CRM\Contact( intval( $assing_customer_data->customer_id ) ); ?>
+
                                     <div class="postbox closed">
                                         <div class="erp-handlediv" title="<?php _e( 'Click to toggle', 'erp' ); ?>"><br></div>
                                         <h3 class="erp-hndle">
-                                            <span class="customer-avatar"><?php echo erp_crm_get_avatar( $assing_customer->id, 20 ) ?></span>
+                                            <span class="customer-avatar"><?php echo $assing_customer->get_avatar( 20 ); ?></span>
                                             <span class="customer-name">
-                                                <a href="<?php echo erp_crm_get_customer_details_url( $assing_customer->id ) ?>" target="_blank">
-                                                    <?php echo $assing_customer->first_name . ' ' . $assing_customer->last_name; ?>
+                                                <a href="<?php echo $assing_customer->get_details_url() ?>" target="_blank">
+                                                    <?php echo $assing_customer->get_full_name(); ?>
                                                 </a>
                                             </span>
                                         </h3>
                                         <div class="action">
-                                            <a href="#" class="erp-customer-delete-company" data-id="<?php echo $assing_customer->com_cus_id; ?>" data-action="erp-crm-customer-remove-company"><i class="fa fa-trash-o"></i></a>
+                                            <a href="#" class="erp-customer-delete-company" data-id="<?php echo $assing_customer_data->id; ?>" data-action="erp-crm-customer-remove-company"><i class="fa fa-trash-o"></i></a>
                                         </div>
                                         <div class="inside company-profile-content">
                                             <ul class="erp-list separated">
-                                                <li><?php erp_print_key_value( __( 'Phone', 'erp' ), $assing_customer->phone ); ?></li>
-                                                <li><?php erp_print_key_value( __( 'Fax', 'erp' ), $assing_customer->fax ); ?></li>
-                                                <li><?php erp_print_key_value( __( 'Website', 'erp' ), erp_get_clickable( 'url', $assing_customer->website ) ); ?></li>
-                                                <li><?php erp_print_key_value( __( 'Street 1', 'erp' ), $assing_customer->street_1 ); ?></li>
-                                                <li><?php erp_print_key_value( __( 'Street 2', 'erp' ), $assing_customer->street_2 ); ?></li>
-                                                <li><?php erp_print_key_value( __( 'City', 'erp' ), $assing_customer->city ); ?></li>
-                                                <li><?php erp_print_key_value( __( 'State', 'erp' ), erp_get_state_name( $assing_customer->country, $assing_customer->state ) ); ?></li>
-                                                <li><?php erp_print_key_value( __( 'Country', 'erp' ), erp_get_country_name( $assing_customer->country ) ); ?></li>
-                                                <li><?php erp_print_key_value( __( 'Postal Code', 'erp' ), $assing_customer->postal_code ); ?></li>
+                                                <li><?php erp_print_key_value( __( 'Phone', 'erp' ), $assing_customer->get_phone() ); ?></li>
+                                                <li><?php erp_print_key_value( __( 'Fax', 'erp' ), $assing_customer->get_fax() ); ?></li>
+                                                <li><?php erp_print_key_value( __( 'Website', 'erp' ), $assing_customer->get_website() ); ?></li>
+                                                <li><?php erp_print_key_value( __( 'Street 1', 'erp' ), $assing_customer->get_street_1() ); ?></li>
+                                                <li><?php erp_print_key_value( __( 'Street 2', 'erp' ), $assing_customer->get_street_2() ); ?></li>
+                                                <li><?php erp_print_key_value( __( 'City', 'erp' ), $assing_customer->get_city() ); ?></li>
+                                                <li><?php erp_print_key_value( __( 'State', 'erp' ), $assing_customer->get_state() ); ?></li>
+                                                <li><?php erp_print_key_value( __( 'Country', 'erp' ), $assing_customer->get_country() ); ?></li>
+                                                <li><?php erp_print_key_value( __( 'Postal Code', 'erp' ), $assing_customer->get_postal_code() ); ?></li>
                                             </ul>
                                         </div>
                                     </div>
