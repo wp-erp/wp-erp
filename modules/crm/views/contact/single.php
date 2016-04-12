@@ -126,7 +126,7 @@
 
                     <div class="postbox customer-company-info">
                         <div class="erp-handlediv" title="<?php _e( 'Click to toggle', 'erp' ); ?>"><br></div>
-                        <h3 class="erp-hndle"><span><?php echo sprintf( '%s\'s %s', $customer->first_name, __( 'Company', 'erp' ) ); ?></span></h3>
+                        <h3 class="erp-hndle"><span><?php echo sprintf( '%s\'s %s', $customer->get_first_name(), __( 'Company', 'erp' ) ); ?></span></h3>
                         <div class="inside company-profile-content">
                             <div class="company-list">
                                 <?php $companies = erp_crm_customer_get_company( $customer->id ); ?>
