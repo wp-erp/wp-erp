@@ -12,7 +12,7 @@ class License {
 
     use Hooker;
 
-    private $api_url = 'http://localhost/wp3/';
+    private $api_url = 'https://wperp.com/';
 
     function __construct( $file, $addon_name, $version, $author, $api_url = null ) {
 
