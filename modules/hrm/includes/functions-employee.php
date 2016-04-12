@@ -220,8 +220,12 @@ function erp_hr_get_employees( $args = array() ) {
         if ( $args['status'] == 'trash' ) {
             $employee_result = $employee_result->onlyTrashed();
         } else {
-            $employee_result = $employee_result->where( 'status', $args['status'] );
+            if ( $args['status'] != 'all' ) {
+                $employee_result = $employee_result->where( 'status', $args['status'] );
+            }
         }
+    } else {
+        $employee_result = $employee_result->where( 'status', 'active' );
     }
 
     if ( isset( $args['s'] ) && ! empty( $args['s'] ) ) {

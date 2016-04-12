@@ -309,9 +309,7 @@ class Employee_List_Table extends \WP_List_Table {
         }
 
         if ( isset( $_REQUEST['status'] ) && !empty( $_REQUEST['status'] ) ) {
-            if ( $_REQUEST['status'] != 'all' ) {
-                $args['status'] = $_REQUEST['status'];
-            }
+            $args['status'] = $_REQUEST['status'];
         }
 
         if ( isset( $_REQUEST['order'] ) && !empty( $_REQUEST['order'] ) ) {
