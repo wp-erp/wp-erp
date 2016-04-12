@@ -172,8 +172,9 @@ Company'
      * @return void
      */
     public function create_cron_jobs() {
-        wp_schedule_event( time(), 'daily', 'erp_hr_policy_schedule' );
-        wp_schedule_event( time(), 'per_minute', 'erp_crm_notification_schedule' );
+        wp_schedule_event( time(), 'per_minute', 'erp_per_minute_scheduled_events' );
+        wp_schedule_event( time(), 'daily', 'erp_daily_scheduled_events' );
+        wp_schedule_event( time(), 'weekly', 'erp_weekly_scheduled_events' );
     }
 
     /**
@@ -182,8 +183,9 @@ Company'
      * Nothing being called here yet.
      */
     public function deactivate() {
-        wp_clear_scheduled_hook( 'erp_hr_policy_schedule' );
-        wp_clear_scheduled_hook( 'erp_crm_notification_schedule' );
+        wp_clear_scheduled_hook( 'erp_per_minute_scheduled_events' );
+        wp_clear_scheduled_hook( 'erp_daily_scheduled_events' );
+        wp_clear_scheduled_hook( 'erp_weekly_scheduled_events' );
 
         remove_role('erp_crm_manager');
         remove_role('erp_crm_agent');

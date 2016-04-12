@@ -226,8 +226,8 @@ final class WeDevs_ERP {
         new \WeDevs\ERP\Scripts();
         new \WeDevs\ERP\Updates();
 
-        $this->container['modules'] = new \WeDevs\ERP\Framework\Modules();
-        $this->container['emailer'] = \WeDevs\ERP\Emailer::init();
+        $this->container['modules']     = new \WeDevs\ERP\Framework\Modules();
+        $this->container['emailer']     = \WeDevs\ERP\Emailer::init();
         $this->container['integration'] = \WeDevs\ERP\Integration::init();
     }
 

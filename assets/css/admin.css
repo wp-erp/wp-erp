@@ -1864,6 +1864,10 @@ span.required {
 table.erp-table.full-width {
   width: 100%;
 }
+.erp-license-status.has-error,
+.erp-license-status.has-error p {
+  color: red;
+}
 /*----------------------------------------
   Table style in settings area
 ----------------------------------------*/
