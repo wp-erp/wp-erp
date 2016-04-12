@@ -289,7 +289,7 @@ class Employee_List_Table extends \WP_List_Table {
         $sortable              = $this->get_sortable_columns();
         $this->_column_headers = array( $columns, $hidden, $sortable );
 
-        $per_page              = 20;
+        $per_page              = 3;
         $current_page          = $this->get_pagenum();
         $offset                = ( $current_page -1 ) * $per_page;
         $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : 'active';
@@ -331,8 +331,11 @@ class Employee_List_Table extends \WP_List_Table {
         $this->counts = erp_hr_employee_get_status_count();
         $this->items  = erp_hr_get_employees( $args );
 
+        $args['count'] = true;
+        $total_items = erp_hr_get_employees( $args );
+
         $this->set_pagination_args( array(
-            'total_items' => erp_hr_count_employees(),
+            'total_items' => $total_items,
             'per_page'    => $per_page
         ) );
     }
