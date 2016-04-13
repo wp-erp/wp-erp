@@ -434,6 +434,8 @@ class Announcement {
         $sql = "INSERT INTO {$table_name} (`user_id`, `post_id`, `status` ) VALUES $values";
         $wpdb->query( $sql );
 
+        $this->send_email( $employee_array, $post_id );
+
         do_action( 'hr_announcement_insert_assignment', $employee_array, $post_id );
 
     }
@@ -471,6 +473,16 @@ class Announcement {
         if ( $values ) {
             $wpdb->query( $sql );
         }
+    }
+
+    /**
+     * Send Announcement Email
+     *
+     * @return void
+     */
+    public function send_email( $employee_ids, $post_id ) {
+        $announcement_email = new Emails\HR_Announcement_Email();
+        $announcement_email->trigger( $employee_ids, $post_id );
     }
 }
 

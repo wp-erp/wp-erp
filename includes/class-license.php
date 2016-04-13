@@ -16,6 +16,11 @@ class License {
 
     function __construct( $file, $addon_name, $version, $author, $api_url = null ) {
 
+        // bail out if it's a local server
+        if ( $this->is_local_server() ) {
+            return;
+        }
+
         $this->file       = $file;
         $this->item_name  = $addon_name;
         $this->version    = $version;
@@ -37,6 +42,15 @@ class License {
         if ( ! class_exists( 'EDD_SL_Plugin_Updater' ) )  {
             require_once __DIR__ . '/lib/EDD_SL_Plugin_Updater.php';
         }
+    }
+
+    /**
+     * Check if the current server is localhost
+     *
+     * @return boolean
+     */
+    private function is_local_server() {
+        return in_array( $_SERVER['REMOTE_ADDR'], array( '127.0.0.1', '::1' ) );
     }
 
     /**

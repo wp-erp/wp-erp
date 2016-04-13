@@ -35,7 +35,6 @@ class Admin_Menu {
         add_submenu_page( 'erp-sales', __( 'Companies', 'erp' ), __( 'Companies', 'erp' ), 'erp_crm_list_contact', 'erp-sales-companies', [ $this, 'company_page' ] );
         add_submenu_page( 'erp-sales', __( 'Activities', 'erp' ), __( 'Activities', 'erp' ), 'erp_crm_manage_activites', 'erp-sales-activities', [ $this, 'activity_page' ] );
         $schedule = add_submenu_page( 'erp-sales', __( 'Schedules', 'erp' ), __( 'Schedules', 'erp' ), 'erp_crm_manage_schedules', 'erp-sales-schedules', [ $this, 'schedules_page' ] );
-        $tasks = add_submenu_page( 'erp-sales', __( 'Tasks', 'erp' ), __( 'Tasks', 'erp' ), 'erp_hr_manager', 'erp-sales-tasks', [ $this, 'tasks_page' ] );
         add_submenu_page( 'erp-sales', __( 'Contact Groups', 'erp' ), __( 'Contact Groups', 'erp' ), 'erp_crm_manage_groups', 'erp-sales-contact-groups', [ $this, 'contact_group_page' ] );
 
         add_action( 'admin_print_styles-' . $overview, array( $this, 'crm_calendar_script' ) );
@@ -186,17 +185,6 @@ class Admin_Menu {
      */
     public function schedules_page() {
         include WPERP_CRM_VIEWS . '/schedules.php';
-    }
-
-    /**
-     * Tasks page content
-     *
-     * @since 1.0
-     *
-     * @return void [load view]
-     */
-    public function tasks_page() {
-        include WPERP_CRM_VIEWS . '/tasks.php';
     }
 
     /**
