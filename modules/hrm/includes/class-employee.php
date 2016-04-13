@@ -141,6 +141,12 @@ class Employee {
                 'hobbies'         => '',
                 'user_url'        => '',
                 'description'     => '',
+                'street_1'        => '',
+                'street_2'        => '',
+                'city'            => '',
+                'country'         => '',
+                'state'           => '',
+                'postal_code'     => '',
             )
         );
 
@@ -407,6 +413,60 @@ class Employee {
         if ( $this->date_of_birth != '0000-00-00') {
             return erp_format_date( $this->date_of_birth );
         }
+    }
+
+    /**
+     * Get Address 1
+     *
+     * @return string
+     */
+    public function get_street_1() {
+        return ( $this->street_1 ) ? $this->street_1 : '—';
+    }
+
+    /**
+     * Get Address 2
+     *
+     * @return string
+     */
+    public function get_street_2() {
+        return ( $this->street_2 ) ? $this->street_2 : '—';
+    }
+
+    /**
+     * Get City
+     *
+     * @return string
+     */
+    public function get_city() {
+        return ( $this->city ) ? $this->city : '—';
+    }
+
+    /**
+     * Get Country
+     *
+     * @return string
+     */
+    public function get_country() {
+        return erp_get_country_name( $this->country );
+    }
+
+    /**
+     * Get State
+     *
+     * @return string
+     */
+    public function get_state() {
+        return erp_get_state_name( $this->country, $this->state );
+    }
+
+    /**
+     * Get Postal Code
+     *
+     * @return string
+     */
+    public function get_postal_code() {
+        return ( $this->postal_code ) ? $this->postal_code : '—';
     }
 
     /**

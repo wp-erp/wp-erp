@@ -564,6 +564,7 @@
 
                     onReady: function() {
                         WeDevs_ERP_HR.initDateField();
+                        $('.select2').select2();
                         WeDevs_ERP_HR.employee.select2Action('erp-hrm-select2');
                         WeDevs_ERP_HR.employee.select2AddMoreContent();
 
@@ -680,7 +681,7 @@
                                         selected = self.data('selected');
 
                                     if ( selected !== '' ) {
-                                        self.find( 'select' ).val( selected );
+                                        self.find( 'select' ).val( selected ).trigger('change');
                                     }
                                 });
 

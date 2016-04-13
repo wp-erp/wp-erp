@@ -322,10 +322,52 @@
 
             <li>
                 <?php erp_html_form_input( array(
-                    'label'   => __( 'Address', 'erp' ),
-                    'name'    => 'personal[address]',
-                    'value'   => '{{ data.personal.address }}',
-                    'type'    => 'textarea'
+                    'label' => __( 'Address 1', 'erp' ),
+                    'name'  => 'personal[street_1]',
+                    'value' => '{{ data.personal.street_1 }}'
+                ) ); ?>
+            </li>
+
+            <li>
+                <?php erp_html_form_input( array(
+                    'label' => __( 'Address 2', 'erp' ),
+                    'name'  => 'personal[street_2]',
+                    'value' => '{{ data.personal.street_2 }}'
+                ) ); ?>
+            </li>
+
+            <li>
+                <?php erp_html_form_input( array(
+                    'label' => __( 'City', 'erp' ),
+                    'name'  => 'personal[city]',
+                    'value' => '{{ data.personal.city }}'
+                ) ); ?>
+            </li>
+
+            <li data-selected="{{ data.personal.country }}">
+                <label for="erp-popup-country"><?php _e( 'Country', 'erp' ); ?></label>
+                <select name="personal[country]" id="erp-popup-country" class="erp-country-select select2" data-parent="ol">
+                    <?php $country = \WeDevs\ERP\Countries::instance(); ?>
+                    <?php echo $country->country_dropdown(); ?>
+                </select>
+            </li>
+
+            <li data-selected="{{ data.personal.state }}">
+                <?php erp_html_form_input( array(
+                    'label'   => __( 'Province / State', 'erp' ),
+                    'name'    => 'personal[state]',
+                    'id'      => 'erp-state',
+                    'type'    => 'select',
+                    'class'   => 'erp-state-select',
+                    'options' => array( '' => __( '- Select -', 'erp' ) )
+                ) ); ?>
+            </li>
+
+            <li>
+                <?php erp_html_form_input( array(
+                    'label' => __( 'Post Code/Zip Code', 'erp' ),
+                    'name'  => 'personal[postal_code]',
+                    'value' => '{{ data.personal.postal_code }}'
                 ) ); ?>
             </li>
 

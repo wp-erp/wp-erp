@@ -45,8 +45,14 @@
         <h3 class="hndle"><span><?php _e( 'Personal Details', 'erp' ); ?></span></h3>
         <div class="inside">
             <ul class="erp-list two-col separated">
+                <li><?php erp_print_key_value( __( 'Address 1', 'erp' ), $employee->get_street_1() ); ?></li>
+                <li><?php erp_print_key_value( __( 'Address 2', 'erp' ), $employee->get_street_2() ); ?></li>
+                <li><?php erp_print_key_value( __( 'City', 'erp' ), $employee->get_city() ); ?></li>
+                <li><?php erp_print_key_value( __( 'Country', 'erp' ), $employee->get_country() ); ?></li>
+                <li><?php erp_print_key_value( __( 'State', 'erp' ), $employee->get_state() ); ?></li>
+                <li><?php erp_print_key_value( __( 'Postal Code', 'erp' ), $employee->get_postal_code() ); ?></li>
+
                 <li><?php erp_print_key_value( __( 'Mobile', 'erp' ), erp_get_clickable( 'phone', $employee->get_phone( 'mobile' ) ) ); ?></li>
-                <li><?php erp_print_key_value( __( 'Address', 'erp' ), $employee->address ); ?></li>
                 <li><?php erp_print_key_value( __( 'Other Email', 'erp' ), erp_get_clickable( 'email', $employee->other_email ) ); ?></li>
                 <li><?php erp_print_key_value( __( 'Date of Birth', 'erp' ), $employee->get_birthday() ); ?></li>
                 <li><?php erp_print_key_value( __( 'Gender', 'erp' ), $employee->get_gender() ); ?></li>

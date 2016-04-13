@@ -67,6 +67,12 @@ function erp_hr_employee_create( $args = array() ) {
             'hobbies'         => '',
             'user_url'        => '',
             'description'     => '',
+            'street_1'        => '',
+            'street_2'        => '',
+            'city'            => '',
+            'country'         => '',
+            'state'           => '',
+            'postal_code'     => '',
         )
     );
 

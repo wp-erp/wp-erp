@@ -154,6 +154,11 @@ class Scripts {
             $country = \WeDevs\ERP\Countries::instance();
             wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
         }
+
+        if ( 'hr-management_page_erp-hr-employee' == $screen->base ) {
+            $country = \WeDevs\ERP\Countries::instance();
+            wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
+        }
     }
 
     /**
