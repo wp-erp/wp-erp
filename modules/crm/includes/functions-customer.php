@@ -1090,7 +1090,8 @@ function erp_crm_get_subscriber_contact( $args = [] ) {
 
         // Check if args count true, then return total count customer according to above filter
         if ( $args['count'] ) {
-            $items = WeDevs\ERP\CRM\Models\ContactSubscriber::leftjoin( $contact_group_tb, $contact_group_tb . '.id', '=', $contact_subscribe_tb . '.group_id' )->count();
+            $items = WeDevs\ERP\CRM\Models\ContactSubscriber::leftjoin( $contact_group_tb, $contact_group_tb . '.id', '=', $contact_subscribe_tb . '.group_id' )
+            ->where( $contact_subscribe_tb . '.group_id', $args['group_id'] )->count();
         }
 
         wp_cache_set( $cache_key, $items, 'erp' );

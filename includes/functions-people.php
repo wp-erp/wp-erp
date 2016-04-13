@@ -111,12 +111,12 @@ function erp_get_peoples( $args = [] ) {
  */
 function erp_get_peoples_by( $field, $value ) {
     if ( is_array( $value ) ) {
-        $peoples = WeDevs\ERP\Framework\Models\People::whereIn( $field, $value )->get()->toArray();
+        $peoples = WeDevs\ERP\Framework\Models\People::whereIn( $field, $value )->get();
     } else {
-        $peoples = WeDevs\ERP\Framework\Models\People::where( $field, $value )->get()->toArray();
+        $peoples = WeDevs\ERP\Framework\Models\People::where( $field, $value )->get();
     }
 
-    return $peoples;
+    return erp_array_to_object( $peoples->toArray() );
 }
 
 /**
