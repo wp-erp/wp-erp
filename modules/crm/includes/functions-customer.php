@@ -2732,3 +2732,17 @@ function erp_create_contact_from_created_user( $user_id ) {
 
     return;
 }
+
+/**
+ * Check contact email already exist or not
+ *
+ * @since 1.0
+ *
+ * @param  string $email
+ * @param  string $type
+ *
+ * @return boolean
+ */
+function erp_crm_check_people_email_exist( $email, $type ) {
+    return \WeDevs\ERP\Framework\Models\People::where( 'email', $email )->where( 'type', $type )->count() > 0;
+}

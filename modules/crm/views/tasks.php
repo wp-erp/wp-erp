@@ -4,6 +4,12 @@
     <hr>
 
     <div class="erp-crm-tasks-wrapper">
-        <p>This is a simple task. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae incidunt aut rem vitae delectus veritatis, eum asperiores quod. Velit consectetur ex magni? Delectus accusamus, minus perspiciatis soluta commodi, maxime debitis!</p>
+
+        <ul class="erp-crm-tasks-menu">
+            <li><a href="<?php echo add_query_arg( [ 'page' => 'erp-sales-tasks', 'tab' => 'my-tasks' ], admin_url( 'admin.php' ) ); ?>"><?php _e( 'My Tasks', 'erp' ); ?></a></li>
+            <li><a href="<?php echo add_query_arg( [ 'page' => 'erp-sales-tasks', 'tab' => 'my-tasks' ], admin_url( 'admin.php' ) ); ?>"><?php _e( 'Unassigned Tasks', 'erp' ); ?></a></li>
+            <li><a href="<?php echo add_query_arg( [ 'page' => 'erp-sales-tasks', 'tab' => 'my-tasks' ], admin_url( 'admin.php' ) ); ?>"><?php _e( 'Completed Tasks', 'erp' ); ?></a></li>
+        </ul>
+
     </div>
 </div>

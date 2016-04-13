@@ -2,7 +2,7 @@
 global $current_user;
 $feeds_tab = erp_crm_get_customer_feeds_nav();
 ?>
-<div class="erp-customer-feeds" id="erp-customer-feeds">
+<div class="erp-customer-feeds" id="erp-customer-feeds" v-cloak>
     <input type="hidden" v-model="customer_id" value="<?php echo $customer->id; ?>" name="customer_id">
     <div class="activity-form">
         <ul class="erp-list list-inline nav-item">

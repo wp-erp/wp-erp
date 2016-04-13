@@ -1339,6 +1339,17 @@ table.widefat.cfi-table {
   border-bottom: 1px solid #eee;
   margin-bottom: 5px;
 }
+.erp-crm-tasks .erp-crm-tasks-wrapper ul.erp-crm-tasks-menu li {
+  display: inline-block;
+  float: left;
+  margin-right: 15px;
+}
+.erp-crm-tasks .erp-crm-tasks-wrapper ul.erp-crm-tasks-menu li a {
+  text-decoration: none;
+}
+.erp-crm-tasks .erp-crm-tasks-wrapper ul.erp-crm-tasks-menu li a:hover {
+  text-decoration: underline;
+}
 @media (min-width: 1200px) {
   .cfi-table {
     width: 50%;

@@ -95,6 +95,11 @@ class Ajax_Handler {
         unset( $_POST['action'] );
 
         $posted      = array_map( 'strip_tags_deep', $_POST );
+
+        if ( ! $posted['id'] && erp_crm_check_people_email_exist( $posted['email'], $posted['type'] ) ) {
+            $this->send_error( __( 'This email is already exists', 'erp' ) );
+        }
+
         $customer_id = erp_insert_people( $posted );
 
         if ( is_wp_error( $customer_id ) ) {
