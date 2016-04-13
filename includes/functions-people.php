@@ -100,6 +100,26 @@ function erp_get_peoples( $args = [] ) {
 }
 
 /**
+ * Get peoples by a given field
+ *
+ * @since 1.0
+ *
+ * @param  string $field
+ * @param  mixed  $value
+ *
+ * @return array
+ */
+function erp_get_peoples_by( $field, $value ) {
+    if ( is_array( $value ) ) {
+        $peoples = WeDevs\ERP\Framework\Models\People::whereIn( $field, $value )->get()->toArray();
+    } else {
+        $peoples = WeDevs\ERP\Framework\Models\People::where( $field, $value )->get()->toArray();
+    }
+
+    return $peoples;
+}
+
+/**
  * Get users as array
  *
  * @since 1.0

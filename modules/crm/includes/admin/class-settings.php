@@ -26,8 +26,8 @@ class CRM_Settings extends ERP_Settings_Page {
      */
     public function get_sections() {
         $sections = array(
+            'contacts'  => __( 'Contacts', 'erp' ),
             'templates' => __( 'Templates', 'erp' ),
-            'contacts' => __( 'Contacts', 'erp' ),
         );
 
         return apply_filters( 'erp_settings_crm_sections', $sections );
@@ -40,35 +40,33 @@ class CRM_Settings extends ERP_Settings_Page {
      */
     public function get_section_fields( $section = '' ) {
 
-        $fields['templates'][] = [
-            'title' => __( 'Saved Replies', 'erp' ),
-            'type'  => 'title',
-            'desc'  => __( '', 'erp' ),
-            'id'    => 'general_options'
-        ];
-
-        $fields['templates'][] = [
-            'type' => 'listing_save_templates',
-        ];
-
-        $fields['templates'][] = [
-            'type'  => 'sectionend',
-            'id'    => 'script_styling_options'
-        ];
-
         $fields['contacts'][] = [
-            'title' => __( 'Import as Contact', 'erp' ),
+            'title' => __( 'Contact Settings', 'erp' ),
             'type'  => 'title',
-            'desc'  => __( 'When a new user is added make a CRM contact of it as well.', 'erp' ),
+            'desc'  => __( 'Settings for CRM Contact.', 'erp' ),
             'id'    => 'general_options'
         ];
 
         $fields['contacts'][] = [
-            'title'   => __( 'Auto Sync', 'erp' ),
-            'id'      => 'user_auto_sync',
+            'title'   => __( 'Auto Import', 'erp' ),
+            'id'      => 'user_auto_import',
             'type'    => 'select',
+            'desc'    => __( 'Allow to auto import new user as crm contact.', 'erp' ),
             'options' => [ 1 => __('On', 'erp'), 0 => __( 'Off', 'erp') ],
             'default' =>  0,
+        ];
+
+        global $wp_roles;
+        $wp_roles = new \WP_Roles();
+        $roles    = $wp_roles->get_names();
+
+        $fields['contacts'][] = [
+            'title'   => __( 'User\'s Roles', 'erp' ),
+            'id'      => 'user_roles',
+            'type'    => 'multicheck',
+            'desc'    => __( 'Selected user roles are considered to auto import.', 'erp' ),
+            'options' => $roles,
+            'default' => ['subscriber'] // Default roles
         ];
 
         $life_stages = erp_crm_get_life_stages_dropdown_raw();
@@ -84,6 +82,7 @@ class CRM_Settings extends ERP_Settings_Page {
             'title'   => __( 'Default Contact Owner', 'erp' ),
             'id'      => 'contact_owner',
             'type'    => 'select',
+            'desc'    => __( 'Default contact owner for contact.', 'erp' ),
             'options' => $users,
         ];
 
@@ -91,19 +90,36 @@ class CRM_Settings extends ERP_Settings_Page {
             'title'   => __( 'Default Life Stage', 'erp' ),
             'id'      => 'life_stage',
             'type'    => 'select',
+            'desc'    => __( 'Default life stage for contact.', 'erp' ),
             'options' => $life_stages,
         ];
 
         $fields['contacts'][] = [
-            'type'  => 'sectionend',
-            'id'    => 'script_styling_options'
+            'type' => 'sectionend',
+            'id'   => 'script_styling_options'
+        ];
+
+        $fields['templates'][] = [
+            'title' => __( 'Saved Replies', 'erp' ),
+            'type'  => 'title',
+            'desc'  => __( '', 'erp' ),
+            'id'    => 'general_options'
+        ];
+
+        $fields['templates'][] = [
+            'type' => 'listing_save_templates',
+        ];
+
+        $fields['templates'][] = [
+            'type' => 'sectionend',
+            'id'   => 'script_styling_options'
         ];
 
         $fields['templates']['submit_button'] = false;
 
         $fields = apply_filters( 'erp_settings_crm_section_fields', $fields, $section );
 
-        $section = $section === false ? $fields['templates'] : $fields[$section];
+        $section = $section === false ? $fields['contacts'] : $fields[$section];
 
         return $section;
     }

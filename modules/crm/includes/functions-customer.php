@@ -2610,23 +2610,30 @@ function erp_handle_user_bulk_actions() {
     $wp_list_table = _get_list_table( 'WP_Users_List_Table' );
     $action        = $wp_list_table->current_action();
 
+    if( ! in_array( $action, ['crm_contact', 'process_crm_contact'] ) ) {
+        return;
+    }
+
     switch( $action ) {
         case 'crm_contact':
-            if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-users' ) ) {
-                return;
-            }
+            // security check
+            check_admin_referer( 'bulk-users' );
 
             if ( empty( $_REQUEST['users'] ) ) {
                 return;
             }
 
-            include ABSPATH . 'wp-admin/admin-header.php';
-            include WPERP_CRM_VIEWS . '/import-user-to-crm.php';
+            include( ABSPATH . 'wp-admin/admin-header.php' );
+            include( WPERP_CRM_VIEWS . '/import-user-to-crm.php' );
+            include( ABSPATH . 'wp-admin/admin-footer.php' );
+
+            exit;
+
         break;
 
         case 'process_crm_contact':
             if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'erp_create_contact_from_user' ) ) {
-                exit();
+                exit;
             }
 
             if ( empty( $_REQUEST['users'] ) ) {
@@ -2639,6 +2646,13 @@ function erp_handle_user_bulk_actions() {
             $life_stage    = $_POST['life_stage'];
             $contact_owner = $_POST['contact_owner'];
 
+            $contacts = erp_get_peoples_by( 'user_id', $user_ids );
+
+            if ( ! empty( $contacts ) ) {
+                $contact_ids = wp_list_pluck( $contacts, 'user_id' );
+                $user_ids    = array_diff( $user_ids, $contact_ids );
+            }
+
             foreach ( $user_ids as $user_id ) {
                 $data['type']    = 'contact';
                 $data['user_id'] = (int) $user_id;
@@ -2650,10 +2664,12 @@ function erp_handle_user_bulk_actions() {
 
                 $created++;
             }
+
             // build the redirect url
+            $sendback = admin_url( 'users.php' );
             $sendback = add_query_arg( ['created' => $created], $sendback );
             wp_redirect( $sendback );
-            exit();
+            exit;
 
         break;
 
@@ -2688,9 +2704,16 @@ function erp_user_bulk_actions_notices() {
  * @return void
  */
 function erp_create_contact_from_created_user( $user_id ) {
-    $user_auto_sync = (int) erp_get_option( 'user_auto_sync', 'erp_settings_erp-crm_contacts', 0 );
+    $user_auto_import = (int) erp_get_option( 'user_auto_import', 'erp_settings_erp-crm', 0 );
 
-    if ( ! $user_auto_sync ) {
+    if ( ! $user_auto_import ) {
+        return;
+    }
+
+    $default_roles = erp_get_option( 'user_roles', 'erp_settings_erp-crm', [] );
+    $user          = get_userdata( $user_id );
+
+    if ( empty ( array_intersect( $user->roles, $default_roles ) ) ) {
         return;
     }
 
@@ -2700,9 +2723,9 @@ function erp_create_contact_from_created_user( $user_id ) {
     $data['user_id'] = $user_id;
 
     $contact_id    = erp_insert_people( $data );
-    $contact_owner = erp_get_option( 'contact_owner', 'erp_settings_erp-crm_contacts', null );
+    $contact_owner = erp_get_option( 'contact_owner', 'erp_settings_erp-crm', null );
     $contact_owner = ( $contact_owner ) ? $contact_owner : get_current_user_id();
-    $life_stage    = erp_get_option( 'life_stage', 'erp_settings_erp-crm_contacts', 'opportunity' );
+    $life_stage    = erp_get_option( 'life_stage', 'erp_settings_erp-crm', 'opportunity' );
 
     erp_people_update_meta( $contact_id, '_assign_crm_agent', $contact_owner );
     erp_people_update_meta( $contact_id, 'life_stage', $life_stage );
