@@ -8,7 +8,7 @@
             <?php if ( current_user_can('erp_create_employee') ): ?>
 
                 <?php
-                $employees    = erp_hr_get_employees( [ 'number'=> -1 ] );
+                $employees    = erp_hr_get_employees( [ 'number'=> -1, 'status' => 'active' ] );
                 $departments  = erp_hr_get_departments( [ 'number' => -1 ] );
                 $designations = erp_hr_get_designations( [ 'number'=> -1 ] );
                 ?>

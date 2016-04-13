@@ -191,7 +191,8 @@ function erp_hr_get_employees( $args = array() ) {
         'offset'     => 0,
         'orderby'    => 'hiring_date',
         'order'      => 'DESC',
-        'no_object'  => false
+        'no_object'  => false,
+        'count'      => false
     );
 
     $args  = wp_parse_args( $args, $defaults );
@@ -220,8 +221,12 @@ function erp_hr_get_employees( $args = array() ) {
         if ( $args['status'] == 'trash' ) {
             $employee_result = $employee_result->onlyTrashed();
         } else {
-            $employee_result = $employee_result->where( 'status', $args['status'] );
+            if ( $args['status'] != 'all' ) {
+                $employee_result = $employee_result->where( 'status', $args['status'] );
+            }
         }
+    } else {
+        $employee_result = $employee_result->where( 'status', 'active' );
     }
 
     if ( isset( $args['s'] ) && ! empty( $args['s'] ) ) {
@@ -234,8 +239,13 @@ function erp_hr_get_employees( $args = array() ) {
     $users     = array();
 
     // Check if want all data without any pagination
-    if ( $args['number'] != '-1' ) {
+    if ( $args['number'] != '-1' && ! $args['count'] ) {
         $employee_result = $employee_result->skip( $args['offset'] )->take( $args['number'] );
+    }
+
+    // Check if args count true, then return total count customer according to above filter
+    if ( $args['count'] ) {
+        return $employee_result->count();
     }
 
     if ( false === $results ) {
@@ -713,9 +723,10 @@ function erp_hr_employee_terminate( $data ) {
         'user_id'  => $data['employee_id'],
         'module'   => 'employment',
         'category' => '',
-        'type'     => 'terminate',
+        'type'     => 'terminated',
         'comment'  => $comments,
         'data'     => '',
+        'date'     => $data['terminate_date']
     ] );
 
     update_user_meta( $data['employee_id'], '_erp_hr_termination', $data );

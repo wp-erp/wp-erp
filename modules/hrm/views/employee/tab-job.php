@@ -45,7 +45,7 @@
         <tbody>
             <?php
             if ( $history['employment'] ) {
-                $types = erp_hr_get_employee_types() + ['terminate' => __( 'Terminate', 'erp' ) ];
+                $types = erp_hr_get_employee_types() + ['terminated' => __( 'Terminated', 'erp' ) ];
 
                 foreach ($history['employment'] as $num => $row) {
                     ?>

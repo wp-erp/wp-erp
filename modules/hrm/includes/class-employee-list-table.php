@@ -309,9 +309,7 @@ class Employee_List_Table extends \WP_List_Table {
         }
 
         if ( isset( $_REQUEST['status'] ) && !empty( $_REQUEST['status'] ) ) {
-            if ( $_REQUEST['status'] != 'all' ) {
-                $args['status'] = $_REQUEST['status'];
-            }
+            $args['status'] = $_REQUEST['status'];
         }
 
         if ( isset( $_REQUEST['order'] ) && !empty( $_REQUEST['order'] ) ) {
@@ -333,8 +331,11 @@ class Employee_List_Table extends \WP_List_Table {
         $this->counts = erp_hr_employee_get_status_count();
         $this->items  = erp_hr_get_employees( $args );
 
+        $args['count'] = true;
+        $total_items = erp_hr_get_employees( $args );
+
         $this->set_pagination_args( array(
-            'total_items' => erp_hr_count_employees(),
+            'total_items' => $total_items,
             'per_page'    => $per_page
         ) );
     }
