@@ -2660,8 +2660,8 @@ function erp_handle_user_bulk_actions() {
 
                 $contact_id = erp_insert_people( $data );
 
-                erp_people_update_meta( $contact_id, '_assign_crm_agent', $contact_owner );
-                erp_people_update_meta( $contact_id, 'life_stage', $life_stage );
+                update_user_meta( $user_id, '_assign_crm_agent', $contact_owner );
+                update_user_meta( $user_id, 'life_stage', $life_stage );
 
                 $created++;
             }
@@ -2714,7 +2714,8 @@ function erp_create_contact_from_created_user( $user_id ) {
     $default_roles = erp_get_option( 'user_roles', 'erp_settings_erp-crm', [] );
     $user          = get_userdata( $user_id );
 
-    if ( empty ( array_intersect( $user->roles, $default_roles ) ) ) {
+    $mached_roles = array_intersect( $user->roles, $default_roles );
+    if ( empty ( $mached_roles ) ) {
         return;
     }
 
@@ -2728,8 +2729,8 @@ function erp_create_contact_from_created_user( $user_id ) {
     $contact_owner = ( $contact_owner ) ? $contact_owner : get_current_user_id();
     $life_stage    = erp_get_option( 'life_stage', 'erp_settings_erp-crm', 'opportunity' );
 
-    erp_people_update_meta( $contact_id, '_assign_crm_agent', $contact_owner );
-    erp_people_update_meta( $contact_id, 'life_stage', $life_stage );
+    update_user_meta( $user_id, '_assign_crm_agent', $contact_owner );
+    update_user_meta( $user_id, 'life_stage', $life_stage );
 
     return;
 }

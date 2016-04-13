@@ -120,9 +120,9 @@ class Contact_List_Table extends \WP_List_Table {
      * @return string
      */
     function column_default( $customer, $column_name ) {
-        $assign_contact_id = erp_people_get_meta( $customer->id, '_assign_crm_agent', true );
-
         $customer_data = new \WeDevs\ERP\CRM\Contact( intval( $customer->id ) );
+
+        $assign_contact_id = $customer_data->get_contact_owner();
 
         switch ( $column_name ) {
             case 'email':

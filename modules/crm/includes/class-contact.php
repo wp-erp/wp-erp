@@ -339,15 +339,23 @@ class Contact extends \WeDevs\ERP\People {
      * @return string
      */
     public function get_life_stage() {
-        $life_stages       = erp_crm_get_life_stages_dropdown_raw();
-        $life_stage        = erp_people_get_meta( $this->id, 'life_stage', true );
+        $life_stages = erp_crm_get_life_stages_dropdown_raw();
+        $life_stage  = $this->get_meta( 'life_stage', true );
 
         return isset( $life_stages[$life_stage] ) ? $life_stages[$life_stage] : '—';
     }
 
+    /**
+     * Get contact owner
+     *
+     * @since 1.0
+     *
+     * @return string
+     */
     public function get_contact_owner() {
+        $contact_owner = $this->get_meta( '_assign_crm_agent', true );
 
+        return $contact_owner;
     }
-
 }
 
