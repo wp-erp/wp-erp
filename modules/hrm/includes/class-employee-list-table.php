@@ -7,9 +7,10 @@ namespace WeDevs\ERP\HRM;
 class Employee_List_Table extends \WP_List_Table {
 
     private $counts = array();
+    private $page_status = '';
 
     function __construct() {
-        global $status, $page;
+        global $status, $page, $page_status;
 
         parent::__construct( array(
             'singular' => 'employee',
@@ -181,10 +182,15 @@ class Employee_List_Table extends \WP_List_Table {
      * @return array
      */
     function get_bulk_actions() {
-        $actions = array(
-            'email'  => __( 'Send Email', 'erp' ),
+        $actions = [];
+
+        if ( ! current_user_can( 'erp_hr_manager' ) ) {
+            return $actions;
+        }
+
+        $actions = [
             'delete'  => __( 'Move to Trash', 'erp' ),
-        );
+        ];
 
         if ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) {
             unset( $actions['delete'] );
@@ -286,7 +292,7 @@ class Employee_List_Table extends \WP_List_Table {
         $per_page              = 20;
         $current_page          = $this->get_pagenum();
         $offset                = ( $current_page -1 ) * $per_page;
-        $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '2';
+        $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : 'active';
 
         // only ncessary because we have sample data
         $args = array(
@@ -303,9 +309,7 @@ class Employee_List_Table extends \WP_List_Table {
         }
 
         if ( isset( $_REQUEST['status'] ) && !empty( $_REQUEST['status'] ) ) {
-            if ( $_REQUEST['status'] != 'all' ) {
-                $args['status'] = $_REQUEST['status'];
-            }
+            $args['status'] = $_REQUEST['status'];
         }
 
         if ( isset( $_REQUEST['order'] ) && !empty( $_REQUEST['order'] ) ) {
@@ -327,8 +331,11 @@ class Employee_List_Table extends \WP_List_Table {
         $this->counts = erp_hr_employee_get_status_count();
         $this->items  = erp_hr_get_employees( $args );
 
+        $args['count'] = true;
+        $total_items = erp_hr_get_employees( $args );
+
         $this->set_pagination_args( array(
-            'total_items' => erp_hr_count_employees(),
+            'total_items' => $total_items,
             'per_page'    => $per_page
         ) );
     }

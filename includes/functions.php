@@ -634,7 +634,7 @@ function erp_get_country_name( $country ) {
     if ( '-1' != $country ) {
         $full_country = ( isset( $countries[ $country ] ) ) ? $countries[ $country ] : $country;
     } else {
-        $full_country = '';
+        $full_country = '—';
     }
 
     return $full_country;
@@ -672,23 +672,17 @@ function erp_get_state_name( $country, $state ) {
 function erp_cron_intervals( $schedules ) {
 
     $schedules['per_minute'] = array(
-        'interval'  => 60, // Number of seconds, 60s in 1 minutes
-        'display'   => 'Every Minutes'
+        'interval'  => MINUTE_IN_SECONDS,
+        'display'   => __( 'Every Minute', 'erp' )
+    );
+
+    $schedules['weekly'] = array(
+        'interval'  => DAY_IN_SECONDS * 7,
+        'display'  => __( 'Once Weekly', 'erp' )
     );
 
     return (array)$schedules;
 }
-
-add_action( 'init', function() {
-
-    if ( isset( $_GET['erp_email_preview'] ) ) {
-        $employee_id = 37;
-        $empl_welcome = new \WeDevs\ERP\HRM\Emails\New_Employee_Welcome();
-        $empl_welcome->trigger( $employee_id );
-        exit;
-    }
-
-}, 99 );
 
 /**
  * Display erp activation notice.
@@ -888,4 +882,132 @@ function erp_show_users_own_attachments( $query ) {
     }
 
     return $query;
+}
+
+/**
+ * Get all registered addons for licensing
+ *
+ * @since 1.0
+ *
+ * @return array
+ */
+function erp_addon_licenses() {
+    $licenses = [];
+
+    return apply_filters( 'erp_settings_licenses', $licenses );
+}
+
+/**
+ * Show a readable message about the license status
+ *
+ * @since 1.0
+ *
+ * @param  array  $addon
+ *
+ * @return string
+ */
+function erp_get_license_status( $addon ) {
+    if ( ! is_object( $addon['status'] ) ) {
+        return false;
+    }
+
+    $messages     = [];
+    $html         = '';
+    $license      = $addon['status'];
+    $status_class = 'has-error';
+
+    if ( false === $license->success ) {
+
+        switch( $license->error ) {
+
+            case 'expired' :
+
+                $messages[] = sprintf(
+                    __( 'Your license key expired on %s. Please <a href="%s" target="_blank" title="Renew your license key">renew your license key</a>.', 'erp' ),
+                    date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
+                    'https://wperp.com/checkout/?edd_license_key=' . $addon['license'] . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
+                );
+                break;
+
+            case 'missing' :
+
+                $messages[] = sprintf(
+                    __( 'Invalid license. Please <a href="%s" target="_blank" title="Visit account page">visit your account page</a> and verify it.', 'erp' ),
+                    'https://wperp.com/my-account?utm_campaign=admin&utm_source=licenses&utm_medium=missing'
+                );
+                break;
+
+            case 'invalid' :
+            case 'site_inactive' :
+
+                $messages[] = sprintf(
+                    __( 'Your %s is not active for this URL. Please <a href="%s" target="_blank" title="Visit account page">visit your account page</a> to manage your license key URLs.', 'erp' ),
+                    $addon['name'],
+                    'https://wperp.com/my-account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
+                );
+                break;
+
+            case 'item_name_mismatch' :
+
+                $messages[] = sprintf( __( 'This is not a %s.', 'erp' ), $addon['name'] );
+                break;
+
+            case 'no_activations_left':
+                $messages[] = sprintf( __( 'Your license key has reached its activation limit. <a href="%s">View possible upgrades</a> now.', 'erp' ), 'https://wperp.com/my-account/' );
+                break;
+
+        }
+    } else {
+
+        switch( $license->license ) {
+            case 'expired' :
+
+                $messages[] = sprintf(
+                    __( 'Your license key expired on %s. Please <a href="%s" target="_blank" title="Renew your license key">renew your license key</a>.', 'erp' ),
+                    date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
+                    'https://wperp.com/checkout/?edd_license_key=' . $addon['license'] . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
+                );
+                break;
+
+            case 'valid':
+                $status_class = 'no-error';
+                $now          = current_time( 'timestamp' );
+                $expiration   = strtotime( $license->expires, current_time( 'timestamp' ) );
+
+                if ( 'lifetime' === $license->expires ) {
+
+                    $messages[] = __( 'License key never expires.', 'erp' );
+
+                } elseif( $expiration > $now && $expiration - $now < ( DAY_IN_SECONDS * 30 ) ) {
+
+                    $messages[] = sprintf(
+                        __( 'Your license key expires soon! It expires on %s. <a href="%s" target="_blank" title="Renew license">Renew your license key</a>.', 'erp' ),
+                        date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
+                        'https://wperp.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=renew'
+                    );
+
+                } else {
+
+                    $messages[] = sprintf(
+                        __( 'Your license key expires on %s.', 'erp' ),
+                        date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) )
+                    );
+
+                }
+                break;
+        }
+
+    }
+
+    if ( ! empty( $messages ) ) {
+        foreach( $messages as $message ) {
+
+            $html .= '<div class="erp-license-status ' . $status_class . '">';
+                $html .= '<p class="help">' . $message . '</p>';
+            $html .= '</div>';
+
+        }
+    }
+
+    return $html;
 }

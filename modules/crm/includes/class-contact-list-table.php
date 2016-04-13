@@ -120,24 +120,23 @@ class Contact_List_Table extends \WP_List_Table {
      * @return string
      */
     function column_default( $customer, $column_name ) {
-
-        $life_stages       = erp_crm_get_life_stages_dropdown_raw();
-        $life_stage        = erp_people_get_meta( $customer->id, 'life_stage', true );
         $assign_contact_id = erp_people_get_meta( $customer->id, '_assign_crm_agent', true );
+
+        $customer_data = new \WeDevs\ERP\CRM\Contact( intval( $customer->id ) );
 
         switch ( $column_name ) {
             case 'email':
-                return erp_get_clickable( 'email', $customer->email );
+                return erp_get_clickable( 'email', $customer_data->get_email() );
 
             case 'phone_number':
-                return erp_get_clickable( 'phone', $customer->phone );
+                return $customer_data->get_phone();
 
             case 'life_stages':
-                return isset( $life_stages[$life_stage] ) ? $life_stages[$life_stage] : '-';
+                return $customer_data->get_life_stage();
 
             case 'crm_owner':
                 $base_link   = add_query_arg( [ 'filter_assign_contact' => $assign_contact_id ], admin_url( 'admin.php?page=' . $this->page_type ) );
-                return !empty( $assign_contact_id ) ? '<a href="' . $base_link . '">' . get_the_author_meta( 'display_name', $assign_contact_id ) . '</a>' : '-';
+                return !empty( $assign_contact_id ) ? '<a href="' . $base_link . '">' . get_the_author_meta( 'display_name', $assign_contact_id ) . '</a>' : '—';
 
             case 'created':
                 return erp_format_date( $customer->created );
@@ -191,13 +190,13 @@ class Contact_List_Table extends \WP_List_Table {
      */
     function get_columns() {
         $columns = array(
-            'cb'              => '<input type="checkbox" />',
-            'name'            => sprintf( '%s %s', ucfirst( $this->contact_type ), __( 'Name', 'erp' ) ),
-            'email'           => __( 'Email', 'erp' ),
-            'phone_number'    => __( 'Phone', 'erp' ),
-            'life_stages'     => __( 'Life Stage', 'erp' ),
-            'crm_owner' => __( 'Owner', 'erp' ),
-            'created'         => __( 'Created at', 'erp' ),
+            'cb'           => '<input type="checkbox" />',
+            'name'         => sprintf( '%s %s', ucfirst( $this->contact_type ), __( 'Name', 'erp' ) ),
+            'email'        => __( 'Email', 'erp' ),
+            'phone_number' => __( 'Phone', 'erp' ),
+            'life_stages'  => __( 'Life Stage', 'erp' ),
+            'crm_owner'    => __( 'Owner', 'erp' ),
+            'created'      => __( 'Created at', 'erp' ),
         );
 
         return apply_filters( 'erp_hr_customer_table_cols', $columns );
@@ -379,7 +378,7 @@ class Contact_List_Table extends \WP_List_Table {
             $args['order']    = 'desc';
         }
 
-        // Filter for cusotmer life stage
+        // Filter for customer life stage
         if ( isset( $_REQUEST['status'] ) && ! empty( $_REQUEST['status'] ) ) {
             if ( $_REQUEST['status'] != 'all' ) {
                 if ( $_REQUEST['status'] == 'trash' ) {

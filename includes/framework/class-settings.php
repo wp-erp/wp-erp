@@ -25,13 +25,20 @@ class ERP_Admin_Settings {
             $settings[] = include __DIR__ . '/settings/general.php';
             $settings[] = include __DIR__ . '/settings/email.php';
 
+            $settings   = apply_filters( 'erp_settings_pages', $settings );
+
             // Display integrations tab only if any integration exist.
             $integrations = wperp()->integration->get_integrations();
             if ( ! empty( $integrations ) ) {
                 $settings[] = include __DIR__ . '/settings/integration.php';
             }
 
-            self::$settings = apply_filters( 'erp_settings_pages', $settings );
+            $licenses = erp_addon_licenses();
+            if ( $licenses ) {
+                $settings[] = include __DIR__ . '/settings/license.php';
+            }
+
+            self::$settings = $settings;
         }
 
         return self::$settings;
@@ -119,7 +126,7 @@ class ERP_Admin_Settings {
 
         self::section_output();
 
-        $current_class->save( $current_section );
+        $current_class->save( $current_section ); 
         $current_class->output( $current_section );
 
     }

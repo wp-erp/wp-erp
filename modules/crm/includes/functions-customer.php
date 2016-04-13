@@ -419,8 +419,7 @@ function erp_crm_customer_get_company( $customer_id ) {
 
     global $wpdb;
 
-    $sql = "SELECT  peop.*, com.id, com.company_id
-            FROM " . $wpdb->prefix . "erp_crm_customer_companies AS com
+    $sql = "SELECT com.* FROM " . $wpdb->prefix . "erp_crm_customer_companies AS com
             LEFT JOIN " . $wpdb->prefix . "erp_peoples AS peop ON peop.id = com.company_id
             WHERE com.customer_id = ". $customer_id;
 
@@ -438,8 +437,7 @@ function erp_crm_company_get_customers( $company_id ) {
 
     global $wpdb;
 
-    $sql = "SELECT  peop.*, com.id as com_cus_id, com.customer_id
-            FROM " . $wpdb->prefix . "erp_crm_customer_companies AS com
+    $sql = "SELECT  com.* FROM " . $wpdb->prefix . "erp_crm_customer_companies AS com
             LEFT JOIN " . $wpdb->prefix . "erp_peoples AS peop ON peop.id = com.customer_id
             WHERE com.company_id = ". $company_id;
 
@@ -2612,15 +2610,34 @@ function erp_handle_user_bulk_actions() {
     $wp_list_table = _get_list_table( 'WP_Users_List_Table' );
     $action        = $wp_list_table->current_action();
 
+    if( ! in_array( $action, ['crm_contact', 'process_crm_contact'] ) ) {
+        return;
+    }
+
     switch( $action ) {
         case 'crm_contact':
-            include ABSPATH . 'wp-admin/admin-header.php';
-            include WPERP_CRM_VIEWS . '/import-user-to-crm.php';
+            // security check
+            check_admin_referer( 'bulk-users' );
+
+            if ( empty( $_REQUEST['users'] ) ) {
+                return;
+            }
+
+            include( ABSPATH . 'wp-admin/admin-header.php' );
+            include( WPERP_CRM_VIEWS . '/import-user-to-crm.php' );
+            include( ABSPATH . 'wp-admin/admin-footer.php' );
+
+            exit;
+
         break;
 
         case 'process_crm_contact':
             if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'erp_create_contact_from_user' ) ) {
-                exit();
+                exit;
+            }
+
+            if ( empty( $_REQUEST['users'] ) ) {
+                return;
             }
 
             $created       = 0;
@@ -2629,15 +2646,16 @@ function erp_handle_user_bulk_actions() {
             $life_stage    = $_POST['life_stage'];
             $contact_owner = $_POST['contact_owner'];
 
-            if ( $user_ids ) {
-                $users = get_users( ['include' => $user_ids] );
+            $contacts = erp_get_peoples_by( 'user_id', $user_ids );
+
+            if ( ! empty( $contacts ) ) {
+                $contact_ids = wp_list_pluck( $contacts, 'user_id' );
+                $user_ids    = array_diff( $user_ids, $contact_ids );
             }
 
-            foreach ( $users as $user ) {
-                $data['type']       = 'contact';
-                $data['first_name'] = ( $user->first_name != '' ) ? $user->first_name : $user->display_name;
-                $data['last_name']  = ( $user->last_name != '' ) ? $user->last_name : ' ';
-                $data['email']      = $user->user_email;
+            foreach ( $user_ids as $user_id ) {
+                $data['type']    = 'contact';
+                $data['user_id'] = (int) $user_id;
 
                 $contact_id = erp_insert_people( $data );
 
@@ -2646,17 +2664,18 @@ function erp_handle_user_bulk_actions() {
 
                 $created++;
             }
+
             // build the redirect url
-            $sendback = add_query_arg( ['created' => $created, 'ids' => join( ',', $user_ids )], $sendback );
+            $sendback = admin_url( 'users.php' );
+            $sendback = add_query_arg( ['created' => $created], $sendback );
+            wp_redirect( $sendback );
+            exit;
 
         break;
 
         default:
         return;
     }
-
-    wp_redirect( $sendback );
-    exit();
 }
 
 /**
@@ -2685,17 +2704,28 @@ function erp_user_bulk_actions_notices() {
  * @return void
  */
 function erp_create_contact_from_created_user( $user_id ) {
-    $data = [];
-    $user = get_user_by( 'ID', $user_id );
+    $user_auto_import = (int) erp_get_option( 'user_auto_import', 'erp_settings_erp-crm', 0 );
 
-    $data['type']       = 'contact';
-    $data['first_name'] = ( $user->first_name != '' ) ? $user->first_name : $user->display_name;
-    $data['last_name']  = ( $user->last_name != '' ) ? $user->last_name : ' ';
-    $data['email']      = $user->user_email;
+    if ( ! $user_auto_import ) {
+        return;
+    }
+
+    $default_roles = erp_get_option( 'user_roles', 'erp_settings_erp-crm', [] );
+    $user          = get_userdata( $user_id );
+
+    if ( empty ( array_intersect( $user->roles, $default_roles ) ) ) {
+        return;
+    }
+
+    $data = [];
+
+    $data['type']    = 'contact';
+    $data['user_id'] = $user_id;
 
     $contact_id    = erp_insert_people( $data );
-    $contact_owner = get_current_user_id();
-    $life_stage    = 'opportunity'; // @TODO: settings
+    $contact_owner = erp_get_option( 'contact_owner', 'erp_settings_erp-crm', null );
+    $contact_owner = ( $contact_owner ) ? $contact_owner : get_current_user_id();
+    $life_stage    = erp_get_option( 'life_stage', 'erp_settings_erp-crm', 'opportunity' );
 
     erp_people_update_meta( $contact_id, '_assign_crm_agent', $contact_owner );
     erp_people_update_meta( $contact_id, 'life_stage', $life_stage );
