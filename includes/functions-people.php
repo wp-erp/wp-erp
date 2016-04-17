@@ -53,12 +53,12 @@ function erp_get_peoples( $args = [] ) {
         // Check if meta query apply
         if ( ! empty( $args['meta_query'] ) ) {
 
-            $people_tb = $wpdb->prefix . 'erp_peoples';
+            $people_tb     = $wpdb->prefix . 'erp_peoples';
             $peoplemeta_tb = $wpdb->prefix . 'erp_peoplemeta';
 
-            $meta_key = isset( $args['meta_query']['meta_key'] ) ? $args['meta_query']['meta_key'] : '';
-            $meta_value = isset( $args['meta_query']['meta_value'] ) ? $args['meta_query']['meta_value'] : '';
-            $compare = isset( $args['meta_query']['compare'] ) ? $args['meta_query']['compare'] : '=';
+            $meta_key      = isset( $args['meta_query']['meta_key'] ) ? $args['meta_query']['meta_key'] : '';
+            $meta_value    = isset( $args['meta_query']['meta_value'] ) ? $args['meta_query']['meta_value'] : '';
+            $compare       = isset( $args['meta_query']['compare'] ) ? $args['meta_query']['compare'] : '=';
 
             $people = $people->leftjoin( $peoplemeta_tb, $people_tb . '.id', '=', $peoplemeta_tb . '.erp_people_id' )->select( array( $people_tb . '.*', $peoplemeta_tb . '.meta_key', $peoplemeta_tb . '.meta_value' ) )
                         ->where( $peoplemeta_tb . '.meta_key', $meta_key )
@@ -220,12 +220,24 @@ function erp_insert_people( $args = array() ) {
         'country'     => '',
         'currency'    => '',
         'type'        => '',
-        'user_id'     => null,
+        'user_id'     => 0,
     );
 
-    $args = wp_parse_args( $args, $defaults );
+    $args        = wp_parse_args( $args, $defaults );
+    $people_type = $args['type'];
 
-    if ( $args['type'] == 'contact' ) {
+    unset( $args['type'] );
+
+    if ( '' == $people_type ) {
+        return new WP_Error( 'no-type', __( 'No user type provided.', 'erp' ) );
+    }
+
+    // check for duplicate user
+    if ( ! empty( $args['email'] ) && null !== \WeDevs\ERP\Framework\Models\People::whereEmail( $args['email'] )->first() ) {
+        return new WP_Error( 'email-exists', __( 'This email already exists.', 'erp' ) );
+    }
+
+    if ( $people_type == 'contact' ) {
         if ( empty( $args['user_id'] ) ) {
             // some basic validation
             // Check if contact first name and last name provide or not
@@ -239,7 +251,7 @@ function erp_insert_people( $args = array() ) {
     }
 
     // Check if company name provide or not
-    if ( $args['type'] == 'company' ) {
+    if ( $people_type == 'company' ) {
         if ( empty( $args['company'] ) ) {
             return new WP_Error( 'no-company', __( 'No Company Name provided.', 'erp' ) );
         }
@@ -253,8 +265,16 @@ function erp_insert_people( $args = array() ) {
 
         $args['created'] = current_time( 'mysql' );
 
+        // check if a valid people type exists in the database
+        $type_obj = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $people_type )->first();
+
+        if ( null === $type_obj ) {
+            return new WP_Error( 'no-type_found', __( 'The people type is invalid.', 'erp' ) );
+        }
+
         // insert a new
         $people = WeDevs\ERP\Framework\Models\People::create( $args );
+        $people->assignType( $type_obj );
 
         do_action( 'erp_create_new_people', $people->id, $args );
 
