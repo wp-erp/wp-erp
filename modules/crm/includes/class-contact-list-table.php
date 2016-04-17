@@ -33,6 +33,22 @@ class Contact_List_Table extends \WP_List_Table {
         if ( $this->contact_type == 'company' ) {
             $this->page_type = 'erp-sales-companies';
         }
+
+        $this->table_css();
+
+    }
+
+    /**
+     * Table column width css
+     *
+     * @return void
+     */
+    function table_css() {
+        echo '<style type="text/css">';
+        echo '.wp-list-table .column-name img { float: left; margin-right: 10px; margin-top: 1px; }';
+        echo '.wp-list-table .column-name { width: 22%; }';
+        echo '.wp-list-table .column-email { width: 22%; }';
+        echo '</style>';
     }
 
     /**
