@@ -360,7 +360,7 @@ function erp_crm_customer_get_status_count( $type = null ) {
         $results = $people->select( array( $db->raw( $peoplemeta_table . '.meta_value as `status`, COUNT( ' . $people_table . '.id ) as `num`') ) )
                     ->leftjoin( $peoplemeta_table, $peoplemeta_table . '.erp_people_id', '=', $people_table . '.id')
                     ->where( $peoplemeta_table . '.meta_key', '=', 'life_stage' )
-                    ->where( $people_table . '.type', '=', $type )
+                    ->type( $type )
                     ->groupBy( $peoplemeta_table. '.meta_value')
                     ->get()
                     ->toArray();

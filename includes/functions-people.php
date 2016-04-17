@@ -175,14 +175,15 @@ function erp_get_people( $id = 0 ) {
     $people    = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $people ) {
-        $peep = WeDevs\ERP\Framework\Models\People::withTrashed()->find( $id );
+        $peep = WeDevs\ERP\Framework\Models\People::withTrashed()->with('types')->find( $id );
 
         if ( $peep->id ) {
-            $people = (object) $peep->toArray();
+            $people                = (object) $peep->toArray();
+            $people->types         = wp_list_pluck( $peep->types->toArray(), 'name' );
 
             // include meta fields
             $people->date_of_birth = erp_people_get_meta( $id, 'date_of_birth', true );
-            $people->source = erp_people_get_meta( $id, 'source', true );
+            $people->source        = erp_people_get_meta( $id, 'source', true );
 
             wp_cache_set( $cache_key, $people, 'erp' );
         }
@@ -228,15 +229,6 @@ function erp_insert_people( $args = array() ) {
 
     unset( $args['type'] );
 
-    if ( '' == $people_type ) {
-        return new WP_Error( 'no-type', __( 'No user type provided.', 'erp' ) );
-    }
-
-    // check for duplicate user
-    if ( ! empty( $args['email'] ) && null !== \WeDevs\ERP\Framework\Models\People::whereEmail( $args['email'] )->first() ) {
-        return new WP_Error( 'email-exists', __( 'This email already exists.', 'erp' ) );
-    }
-
     if ( $people_type == 'contact' ) {
         if ( empty( $args['user_id'] ) ) {
             // some basic validation
@@ -263,7 +255,15 @@ function erp_insert_people( $args = array() ) {
 
     if ( ! $row_id ) {
 
-        $args['created'] = current_time( 'mysql' );
+        // if an empty type provided
+        if ( '' == $people_type ) {
+            return new WP_Error( 'no-type', __( 'No user type provided.', 'erp' ) );
+        }
+
+        // check for duplicate user
+        if ( ! empty( $args['email'] ) && null !== \WeDevs\ERP\Framework\Models\People::whereEmail( $args['email'] )->first() ) {
+            return new WP_Error( 'email-exists', __( 'This email already exists.', 'erp' ) );
+        }
 
         // check if a valid people type exists in the database
         $type_obj = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $people_type )->first();
@@ -271,6 +271,8 @@ function erp_insert_people( $args = array() ) {
         if ( null === $type_obj ) {
             return new WP_Error( 'no-type_found', __( 'The people type is invalid.', 'erp' ) );
         }
+
+        $args['created'] = current_time( 'mysql' );
 
         // insert a new
         $people = WeDevs\ERP\Framework\Models\People::create( $args );

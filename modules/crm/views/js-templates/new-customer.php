@@ -1,6 +1,6 @@
 <div class="erp-customer-form">
 
-    <# if ( 'company' == data.type ) { #>
+    <# if ( _.contains( data.types, 'company' ) ) { #>
         <?php do_action( 'erp_crm_company_form_top' ); ?>
     <# } else { #>
         <?php do_action( 'erp_crm_contact_form_top' ); ?>
@@ -9,7 +9,7 @@
     <fieldset class="no-border genaral-info">
         <ol class="form-fields">
             <li>
-                <# if ( data.type == 'company' ) { #>
+                <# if ( _.contains( data.types, 'company' ) ) { #>
                     <?php erp_html_form_label( __( 'Company Photo', 'erp' ), 'company' ); ?>
                 <# } else { #>
                     <?php erp_html_form_label( __( 'Contact Photo', 'erp' ), 'full-name' ); ?>
@@ -26,7 +26,7 @@
                 </div>
             </li>
 
-             <# if ( data.type == 'contact' ) { #>
+             <# if ( _.contains( data.types, 'contact' ) ) { #>
                 <li class="full-width name-container clearfix">
                     <?php erp_html_form_label( __( 'Full Name', 'erp' ), 'full-name', true ); ?>
 
@@ -88,7 +88,7 @@
                 ) ); ?>
             </li>
 
-            <# if ( 'company' == data.type ) { #>
+            <# if ( _.contains( data.types, 'company' ) ) { #>
                 <?php do_action( 'erp_crm_company_form_basic' ); ?>
             <# } else { #>
                 <?php do_action( 'erp_crm_contact_form_basic' ); ?>
@@ -113,7 +113,7 @@
                 ) ); ?>
             </li>
 
-            <# if ( data.type == 'contact' ) { #>
+            <# if ( _.contains( data.types, 'contact' ) ) { #>
             <li>
                 <?php erp_html_form_input( array(
                     'label' => __( 'Date of Birth', 'erp' ),
@@ -200,7 +200,7 @@
                 ) ); ?>
             </li>
 
-            <# if ( 'company' == data.type ) { #>
+            <# if ( _.contains( data.types, 'company' ) ) { #>
                 <?php do_action( 'erp_crm_company_form_other' ); ?>
             <# } else { #>
                 <?php do_action( 'erp_crm_contact_form_other' ); ?>
@@ -236,7 +236,7 @@
                 ) ); ?>
             </li>
 
-            <# if ( 'company' == data.type ) { #>
+            <# if ( _.contains( data.types, 'company' ) ) { #>
                 <?php do_action( 'erp_crm_company_form_contact_group' ); ?>
             <# } else { #>
                 <?php do_action( 'erp_crm_contact_form_contact_group' ); ?>
@@ -278,7 +278,7 @@
                 ) ); ?>
             </li>
 
-            <# if ( 'company' == data.type ) { #>
+            <# if ( _.contains( data.types, 'company' ) ) { #>
                 <?php do_action( 'erp_crm_company_form_additional' ); ?>
             <# } else { #>
                 <?php do_action( 'erp_crm_contact_form_additional' ); ?>
@@ -324,7 +324,7 @@
                 ) ); ?>
             </li>
 
-            <# if ( 'company' == data.type ) { #>
+            <# if ( _.contains( data.types, 'company' ) ) { #>
                 <?php do_action( 'erp_crm_company_form_social' ); ?>
             <# } else { #>
                 <?php do_action( 'erp_crm_contact_form_social' ); ?>
@@ -333,7 +333,7 @@
         </ol>
     </fieldset>
 
-    <# if ( 'company' == data.type ) { #>
+    <# if ( _.contains( data.types, 'company' ) ) { #>
         <?php do_action( 'erp_crm_company_form_bottom' ); ?>
     <# } else { #>
         <?php do_action( 'erp_crm_contact_form_bottom' ); ?>
@@ -344,7 +344,7 @@
     <input type="hidden" name="action" id="erp-customer-action" value="erp-crm-customer-new">
     <?php wp_nonce_field( 'wp-erp-crm-customer-nonce' ); ?>
 
-    <# if ( 'company' == data.type ) { #>
+    <# if ( _.contains( data.types, 'company' ) ) { #>
         <?php do_action( 'erp_crm_company_form' ); ?>
     <# } else { #>
         <?php do_action( 'erp_crm_contact_form' ); ?>
