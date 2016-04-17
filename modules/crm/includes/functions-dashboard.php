@@ -187,13 +187,14 @@ function erp_crm_dashboard_widget_latest_contact() {
 
         <ul class="erp-list erp-latest-contact-list">
             <?php foreach ( $contacts as $contact ) : ?>
+                <?php $contact_obj = new WeDevs\ERP\CRM\Contact( (int)$contact->id ); ?>
                 <li>
                     <div class="avatar">
-                        <?php echo erp_crm_get_avatar( $contact->id, '28' ); ?>
+                        <?php echo $contact_obj->get_avatar(28); ?>
                     </div>
                     <div class="details">
-                        <p class="contact-name"><a href="<?php echo erp_crm_get_details_url( $contact->id, 'contact' ); ?>"><?php echo $contact->first_name . ' ' . $contact->last_name; ?></a></p>
-                        <p class="contact-stage"><?php echo erp_people_get_meta( $contact->id, 'life_stage', true ); ?></p>
+                        <p class="contact-name"><a href="<?php echo $contact_obj->get_details_url(); ?>"><?php echo $contact_obj->get_full_name(); ?></a></p>
+                        <p class="contact-stage"><?php echo $contact_obj->get_meta( 'life_stage', true ); ?></p>
                     </div>
                     <span class="contact-created-time erp-tips" title="<?php echo sprintf( '%s %s', __( 'Created on', 'erp' ), erp_format_date( $contact->created ) )  ?>"><i class="fa fa-clock-o"></i></span>
                 </li>
@@ -211,14 +212,15 @@ function erp_crm_dashboard_widget_latest_contact() {
     <?php if ( $companies ) { ?>
         <ul class="erp-list erp-latest-contact-list">
             <?php foreach ( $companies as $company ) : ?>
+                <?php $company_obj = new WeDevs\ERP\CRM\Contact( intval( $company->id ) ) ?>
                 <li>
                     <div class="avatar">
-                        <?php echo erp_crm_get_avatar( $company->id, '28' ); ?>
+                        <?php echo $company_obj->get_avatar(28); ?>
                     </div>
 
                     <div class="details">
-                        <p class="contact-name"><a href="<?php echo erp_crm_get_details_url( $company->id, 'company' ); ?>"><?php echo $company->company; ?></a></p>
-                        <p class="contact-stage"><?php echo erp_people_get_meta( $company->id, 'life_stage', true ); ?></p>
+                        <p class="contact-name"><a href="<?php echo $company_obj->get_details_url(); ?>"><?php echo $company_obj->get_full_name(); ?></a></p>
+                        <p class="contact-stage"><?php echo $company_obj->get_meta( 'life_stage', true ); ?></p>
                     </div>
                     <span class="contact-created-time erp-tips" title="<?php echo sprintf( '%s %s', __( 'Created on', 'erp' ), erp_format_date( $company->created ) )  ?>"><i class="fa fa-clock-o"></i></span>
                 </li>
@@ -239,6 +241,5 @@ function erp_crm_dashboard_widget_latest_contact() {
  */
 function erp_crm_dashboard_widget_cloud_inbound_emails() {
     $total_emails_count = get_option( 'wp_erp_cloud_email_count', 0 );
-
     echo '<h1 style="text-align: center;">' . $total_emails_count . '</h1>';
 }
