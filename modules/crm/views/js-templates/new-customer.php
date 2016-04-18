@@ -54,7 +54,7 @@
                         </li>
                     </ol>
                 </li>
-            <# } else if ( data.type == 'company' ) { #>
+            <# } else if ( _.contains( data.types, 'company' ) ) { #>
                 <li class="full-width customer-company-name clearfix">
                     <?php erp_html_form_input( array(
                         'label'       => __( 'Company Name', 'erp' ),

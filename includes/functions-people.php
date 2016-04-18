@@ -171,19 +171,42 @@ function erp_get_peoples_count( $type = 'contact' ) {
  * @return array
  */
 function erp_get_people( $id = 0 ) {
-    $cache_key = 'erp-people-single-' . $id;
+    return erp_get_people_by( 'id', $id );
+}
+
+/**
+ * Retrieve people info by a given field
+ *
+ * @param  string  $field
+ * @param  mixed  $value
+ *
+ * @return object
+ */
+function erp_get_people_by( $field, $value ) {
+
+    if ( ! in_array( $field, [ 'id', 'email'] ) ) {
+        return new WP_Error( 'not-valid-field', __( 'No valid type provided', 'erp' ) );
+    }
+
+    $cache_key = 'erp-people-single-' . $value;
     $people    = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $people ) {
-        $peep = WeDevs\ERP\Framework\Models\People::withTrashed()->with('types')->find( $id );
+
+        if ( 'id' == $field ) {
+            $peep = WeDevs\ERP\Framework\Models\People::withTrashed()->with('types')->find( intval( $value ) );
+
+        } elseif ( 'email' == $field ) {
+            $peep = WeDevs\ERP\Framework\Models\People::withTrashed()->with('types')->whereEmail( $value )->first();
+        }
 
         if ( $peep->id ) {
             $people                = (object) $peep->toArray();
             $people->types         = wp_list_pluck( $peep->types->toArray(), 'name' );
 
             // include meta fields
-            $people->date_of_birth = erp_people_get_meta( $id, 'date_of_birth', true );
-            $people->source        = erp_people_get_meta( $id, 'source', true );
+            $people->date_of_birth = erp_people_get_meta( $peep->id, 'date_of_birth', true );
+            $people->source        = erp_people_get_meta( $peep->id, 'source', true );
 
             wp_cache_set( $cache_key, $people, 'erp' );
         }
