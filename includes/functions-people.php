@@ -293,18 +293,29 @@ function erp_insert_people( $args = array() ) {
 
     if ( ! $row_id ) {
 
+        $type_obj = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $people_type )->first();
+
+        // check if a valid people type exists in the database
+        if ( null === $type_obj ) {
+            return new WP_Error( 'no-type_found', __( 'The people type is invalid.', 'erp' ) );
+        }
+
         // if an empty type provided
         if ( '' == $people_type ) {
             return new WP_Error( 'no-type', __( 'No user type provided.', 'erp' ) );
         }
 
+        $user = \get_user_by( 'email', $args['email'] );
+
         //check for duplicate user
-        if ( $user = get_user_by( 'email', $args['email'] ) ) {
-            $people_obj = \WeDevs\ERP\Framework\Models\People::whereUserId( $user->ID )->first();
+        if ( $user ) {
+            $people_obj = \WeDevs\ERP\Framework\Models\People::where( 'user_id', $user->ID )->first();
 
             // Check if exist in wp user table but not people table
             if ( null == $people_obj ) {
-                return \WeDevs\ERP\Framework\Models\People::create( [ 'user_id' => $user->ID ] );
+                $new_people = \WeDevs\ERP\Framework\Models\People::create( [ 'user_id' => $user->ID, 'created' => current_time('mysql') ] );
+                $new_people->assignType( $type_obj );
+                return $new_people;
             } else {
                 return $people_obj->id;
             }
@@ -315,20 +326,13 @@ function erp_insert_people( $args = array() ) {
             if ( null !== $people_obj ) {
 
                 // Check if person found, then check is same type person or not
-                if ( $people_obj->hasType( $args['type'] ) ) {
-                    return new WP_Error( 'type-exist', sprintf( __( 'This %s already exists.', 'erp' ), $args['type'] ) );
+                if ( $people_obj->hasType( $people_type ) ) {
+                    return new WP_Error( 'type-exist', sprintf( __( 'This %s already exists.', 'erp' ), $people_type ) );
                 } else {
-                    $people_obj->assignType( $args['type'] );
+                    $people_obj->assignType( $people_type );
                     return $people_obj->id;
                 }
             }
-        }
-
-        // check if a valid people type exists in the database
-        $type_obj = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $people_type )->first();
-
-        if ( null === $type_obj ) {
-            return new WP_Error( 'no-type_found', __( 'The people type is invalid.', 'erp' ) );
         }
 
         $args['created'] = current_time( 'mysql' );
