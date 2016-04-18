@@ -7,6 +7,8 @@ add_action( 'admin_init', 'erp_process_actions' );
 add_action( 'admin_notices', 'erp_activation_notice' );
 add_action( 'admin_footer', 'erp_activation_notice_javascript' );
 add_action( 'wp_ajax_nopriv_erp_api_mode_change', 'erp_api_mode_change' );
+add_action( 'admin_footer', 'erp_import_export_javascript' );
+add_action( 'admin_init', 'erp_process_import_export' );
 
 /** Filters *******************************************************************/
 
