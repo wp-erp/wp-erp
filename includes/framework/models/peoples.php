@@ -90,7 +90,7 @@ class People extends Model {
      * @return boolean
      */
     public function hasType( $name ) {
-        foreach ($this->types as $type) {
+        foreach ( $this->types->toArray() as $type) {
             if ( $type->name == $name ) {
                 return true;
             }
