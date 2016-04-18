@@ -1,5 +1,6 @@
 <?php
 namespace WeDevs\ERP\Admin;
+
 use WeDevs\ERP\Admin\Models\Company_Locations;
 use WeDevs\ERP\Company;
 use WeDevs\ERP\Framework\Traits\Hooker;
@@ -24,6 +25,8 @@ class Ajax {
         $this->action( 'wp_ajax_erp_file_upload', 'file_uploader' );
         $this->action( 'wp_ajax_erp_file_del', 'file_delete' );
         $this->action( 'wp_ajax_erp_activation_notice', 'erp_activation_notice_callback' );
+
+        $this->action( 'wp_ajax_erp_people_exists', 'check_people' );
     }
 
     function file_delete() {
@@ -218,6 +221,29 @@ class Ajax {
 
             $this->send_success();
         }
+    }
+
+    /**
+     * Check if a people exists
+     *
+     * @return void
+     */
+    public function check_people() {
+        $email = isset( $_REQUEST['email'] ) ? sanitize_text_field( $_REQUEST['email'] ) : false;
+
+        if ( ! $email ) {
+            $this->send_error( __( 'No email address provided', 'erp' ) );
+        }
+
+        $people = erp_get_people_by( 'email', $email );
+
+        // we didn't found any user with this email address
+        if ( false === $people ) {
+            $this->send_success();
+        }
+
+        // seems like we found one
+        $this->send_error( $people );
     }
 }
 

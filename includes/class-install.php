@@ -21,7 +21,7 @@ class WeDevs_ERP_Installer {
     /**
      * Binding all events
      *
-     * @since 0.1
+     * @since 1.0
      *
      * @return void
      */
@@ -39,15 +39,16 @@ class WeDevs_ERP_Installer {
      * Placeholder for activation function
      * Nothing being called here yet.
      *
-     * @since 0.1
+     * @since 1.0
      *
-     * @return 0.1
+     * @return void
      */
     public function activate() {
         $current_erp_version = get_option( 'wp_erp_version', null );
         $current_db_version  = get_option( 'wp_erp_db_version', null );
 
         $this->create_tables();
+        $this->populate_data();
 
         if ( is_null( $current_erp_version ) ) {
             $this->set_role();
@@ -81,7 +82,7 @@ class WeDevs_ERP_Installer {
     /**
      * Set default mail subject, heading and body
      *
-     * @since 0.1
+     * @since 1.0
      *
      * @return void
      */
@@ -194,7 +195,7 @@ Company'
     /**
      * Welcome screen menu page cb
      *
-     * @since 0.1
+     * @since 1.0
      *
      * @return void
      */
@@ -205,7 +206,7 @@ Company'
     /**
      * Welcome screen menu remove
      *
-     * @since 0.1
+     * @since 1.0
      *
      * @return void
      */
@@ -216,7 +217,7 @@ Company'
     /**
      * Render welcome screen content
      *
-     * @since 0.1
+     * @since 1.0
      *
      * @return void
      */
@@ -227,7 +228,7 @@ Company'
     /**
      * Create necessary table for ERP & HRM
      *
-     * @since 0.1
+     * @since 1.0
      *
      * @return  void
      */
@@ -503,7 +504,6 @@ Company'
                 `postal_code` varchar(10) DEFAULT NULL,
                 `country` varchar(20) DEFAULT NULL,
                 `currency` varchar(5) DEFAULT NULL,
-                `type` varchar(10) NOT NULL DEFAULT 'customer',
                 `created` datetime DEFAULT NULL,
                 `deleted_at` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`),
@@ -519,6 +519,23 @@ Company'
                 PRIMARY KEY (`meta_id`),
                 KEY `erp_people_id` (`erp_people_id`),
                 KEY `meta_key` (`meta_key`(191))
+            ) $collate;",
+
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_people_types` (
+                `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+                `name` varchar(20) DEFAULT NULL,
+                PRIMARY KEY (`id`),
+                UNIQUE KEY `name` (`name`)
+            ) $collate;",
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_people_type_relations` (
+                `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+                `people_id` bigint(20) unsigned DEFAULT NULL,
+                `people_types_id` int(11) unsigned DEFAULT NULL,
+                PRIMARY KEY (`id`),
+                KEY `people_id` (`people_id`),
+                KEY `people_types_id` (`people_types_id`)
             ) $collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_audit_log` (
@@ -628,11 +645,28 @@ Company'
     }
 
     /**
+     * Populate tables with initial data
+     *
+     * @return void
+     */
+    public function populate_data() {
+        global $wpdb;
+
+        // check if people_types exists
+        if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_people_types` LIMIT 0, 1" ) ) {
+            $sql = "INSERT INTO `{$wpdb->prefix}erp_people_types` (`id`, `name`)
+                    VALUES (1,'contact'), (2,'company'), (3,'customer'), (4,'vendor');";
+
+            $wpdb->query( $sql );
+        }
+    }
+
+    /**
      * Set default module for initial erp setup
      *
-     * @since 0.1
+     * @since 1.0
      *
-     * @return 0.1
+     * @return void
      */
     public function set_default_modules() {
 
@@ -664,7 +698,7 @@ Company'
     /**
      * Create user roles and capabilities
      *
-     * @since 0.1
+     * @since 1.0
      *
      * @return void
      */
@@ -691,7 +725,7 @@ Company'
     /**
      * Set erp_hr_manager role for admin user
      *
-     * @since 0.1
+     * @since 1.0
      *
      * @return void
      */

@@ -360,7 +360,7 @@ function erp_crm_customer_get_status_count( $type = null ) {
         $results = $people->select( array( $db->raw( $peoplemeta_table . '.meta_value as `status`, COUNT( ' . $people_table . '.id ) as `num`') ) )
                     ->leftjoin( $peoplemeta_table, $peoplemeta_table . '.erp_people_id', '=', $people_table . '.id')
                     ->where( $peoplemeta_table . '.meta_key', '=', 'life_stage' )
-                    ->where( $people_table . '.type', '=', $type )
+                    ->type( $type )
                     ->groupBy( $peoplemeta_table. '.meta_value')
                     ->get()
                     ->toArray();
@@ -2733,18 +2733,4 @@ function erp_create_contact_from_created_user( $user_id ) {
     update_user_meta( $user_id, 'life_stage', $life_stage );
 
     return;
-}
-
-/**
- * Check contact email already exist or not
- *
- * @since 1.0
- *
- * @param  string $email
- * @param  string $type
- *
- * @return boolean
- */
-function erp_crm_check_people_email_exist( $email, $type ) {
-    return \WeDevs\ERP\Framework\Models\People::where( 'email', $email )->where( 'type', $type )->count() > 0;
 }

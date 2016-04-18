@@ -21,7 +21,7 @@ class Contact extends \WeDevs\ERP\People {
      */
     public function __construct( $contact = null, $type = null ) {
         parent::__construct( $contact );
-        $this->contact_type = $type ? $type : $this->type ;
+        $this->types = $type ? (array)$type : $this->types;
     }
 
     /**
@@ -53,7 +53,7 @@ class Contact extends \WeDevs\ERP\People {
             'country'       => '',
             'state'         => '',
             'postal_code'   => '',
-            'type'          => '',
+            'types'         => [],
             'notes'         => '',
             'other'         => '',
             'social'        => [],
@@ -67,6 +67,8 @@ class Contact extends \WeDevs\ERP\People {
         foreach ( $social_field as $social_key => $social_value ) {
             $fields['social'][$social_key] = '';
         }
+
+        $fields['types'] = $this->types;
 
         if ( $this->id ) {
             foreach ( $this->data as $key => $value ) {
@@ -105,11 +107,11 @@ class Contact extends \WeDevs\ERP\People {
     public function get_details_url() {
         if ( $this->id ) {
 
-            if ( $this->contact_type == 'contact' ) {
+            if ( in_array( 'contact', $this->types ) ) {
                 return admin_url( 'admin.php?page=erp-sales-customers&action=view&id=' . $this->id );
             }
 
-            if ( $this->contact_type == 'company' ) {
+            if ( in_array( 'company', $this->types ) ) {
                 return admin_url( 'admin.php?page=erp-sales-companies&action=view&id=' . $this->id );
             }
         }
