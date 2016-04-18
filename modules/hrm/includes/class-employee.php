@@ -399,7 +399,7 @@ class Employee {
      * @return string
      */
     public function get_joined_date() {
-        if ( $this->hiring_date ) {
+        if ( $this->hiring_date != '0000-00-00' ) {
             return erp_format_date( $this->hiring_date );
         }
     }

@@ -127,12 +127,18 @@ class Human_Resource {
      */
     public function admin_scripts( $hook ) {
         // var_dump( $hook );
+
         $suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '';
 
         wp_enqueue_media();
         wp_enqueue_script( 'erp-tiptip' );
-        wp_enqueue_script( 'wp-erp-hr', WPERP_HRM_ASSETS . "/js/hrm$suffix.js", array( 'erp-script' ), date( 'Ymd' ), true );
 
+        if ( 'hr-management_page_erp-hr-employee' == $hook ) {
+            wp_enqueue_style( 'erp-sweetalert' );
+            wp_enqueue_script( 'erp-sweetalert' );
+        }
+
+        wp_enqueue_script( 'wp-erp-hr', WPERP_HRM_ASSETS . "/js/hrm$suffix.js", array( 'erp-script' ), date( 'Ymd' ), true );
         wp_enqueue_script( 'wp-erp-hr-leave', WPERP_HRM_ASSETS . "/js/leave$suffix.js", array(
             'erp-script',
             'wp-color-picker'
@@ -175,6 +181,9 @@ class Human_Resource {
             'delConfirmEmployee'     => __( 'Are you sure to delete this employee?', 'erp' ),
             'delConfirmEmployeeNote' => __( 'Are you sure to delete this employee note?', 'erp' ),
             'delConfirmEntitlement'  => __( 'Are you sure to delete this Entitlement? If yes, then all leave request under this entitlement also permanently deleted', 'erp' ),
+            'user_exit'              => __( 'User exists', 'erp' ),
+            'user_exit_confirm'      => __( 'This user is already exist, Do you want to make this user as a employee', 'erp' ),
+            'employee_created'       => __( 'Employee successfully created', 'erp' ),
         ) );
 
         // if its an employee page

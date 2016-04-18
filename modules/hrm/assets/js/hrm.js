@@ -594,7 +594,7 @@
                             },
                             error: function(error) {
                                 modal.enableButton();
-                                alert( error );
+                                alert(error);
                             }
                         });
                     }
@@ -722,7 +722,7 @@
                 if ( confirm( wpErpHr.delConfirmEmployee ) ) {
                     wp.ajax.send( 'erp-hr-emp-delete', {
                         data: {
-                            '_wpnonce': wpErpHr.nonce,
+                            _wpnonce: wpErpHr.nonce,
                             id: self.data( 'id' ),
                             hard: self.data( 'hard' )
                         },
