@@ -335,6 +335,14 @@
 .erp-crm-subscriber-contact table.wp-list-table .column-comments {
   width: 25%;
 }
+.erp-crm-customer table.wp-list-table.customers .column-name,
+.erp-crm-subscriber-contact table.wp-list-table.customers .column-name {
+  width: 22%;
+}
+.erp-crm-customer table.wp-list-table.customers .column-email,
+.erp-crm-subscriber-contact table.wp-list-table.customers .column-email {
+  width: 22%;
+}
 .erp-crm-customer .erp-crm-list-table-wrap a.erp-advance-search-button span,
 .erp-crm-subscriber-contact .erp-crm-list-table-wrap a.erp-advance-search-button span {
   margin: 3px 3px 0px 0px;

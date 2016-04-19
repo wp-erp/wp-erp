@@ -110,6 +110,65 @@ function erp_get_peoples( $args = [] ) {
 }
 
 /**
+ * People data delete
+ *
+ * @since 1.0
+ *
+ * @param  array  $data
+ *
+ * @return void
+ */
+function erp_delete_people( $data = [] ) {
+
+    if ( empty( $data['id'] ) ) {
+        return new WP_Error( 'not-ids', __( 'No data found', 'erp' ) );
+    }
+
+    if ( empty( $data['type'] ) ) {
+        return new WP_Error( 'not-types', __( 'No type found', 'erp' ) );
+    }
+
+    $people_ids = [];
+
+    if ( is_array( $data['id'] ) ) {
+        foreach ( $data['id'] as $key => $id ) {
+            $people_ids[] = $id;
+        }
+    } else if ( is_int( $data['id'] ) ) {
+        $people_ids[] = $data['id'];
+    }
+
+    // still do we have any ids to delete?
+    if ( ! $people_ids ) {
+        return;
+    }
+
+    // seems like we got some
+    foreach ( $people_ids as $people_id ) {
+
+        do_action( 'erp_before_delete_people', $people_id, $data );
+
+        if ( $data['hard'] ) {
+            $people   = \WeDevs\ERP\Framework\Models\People::withTrashed()->find( $people_id );
+            $type_obj = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $data['type'] )->first();
+            $people->removeType( $type_obj );
+
+            $types  = wp_list_pluck( $people->types->toArray(), 'name' );
+
+            if ( empty( $types ) ) {
+                $people->withTrashed()->find( $people_id )->forceDelete();
+                \WeDevs\ERP\Framework\Models\Peoplemeta::where( 'erp_people_id', $people_id )->delete();
+            }
+
+        } else {
+            $people = \WeDevs\ERP\Framework\Models\People::find( $people_id )->delete();
+        }
+
+        do_action( 'erp_after_delete_people', $people_id, $data );
+    }
+}
+
+/**
  * Get peoples by a given field
  *
  * @since 1.0

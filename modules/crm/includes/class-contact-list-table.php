@@ -33,22 +33,6 @@ class Contact_List_Table extends \WP_List_Table {
         if ( $this->contact_type == 'company' ) {
             $this->page_type = 'erp-sales-companies';
         }
-
-        $this->table_css();
-
-    }
-
-    /**
-     * Table column width css
-     *
-     * @return void
-     */
-    function table_css() {
-        echo '<style type="text/css">';
-        echo '.wp-list-table .column-name img { float: left; margin-right: 10px; margin-top: 1px; }';
-        echo '.wp-list-table .column-name { width: 22%; }';
-        echo '.wp-list-table .column-email { width: 22%; }';
-        echo '</style>';
     }
 
     /**
@@ -246,7 +230,7 @@ class Contact_List_Table extends \WP_List_Table {
         $actions['view']   = sprintf( '<a href="%s" title="%s">%s</a>', $view_url, $view_title, __( 'View', 'erp' ) );
 
         if ( current_user_can( 'erp_crm_delete_contact', $customer->id, $data_hard ) ) {
-            $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" data-hard=%d title="%s">%s</a>', $delete_url, $customer->id, $data_hard, __( 'Delete this item', 'erp' ), $delete_text );
+            $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" data-type="%s" data-hard=%d title="%s">%s</a>', $delete_url, $customer->id, $this->contact_type, $data_hard, __( 'Delete this item', 'erp' ), $delete_text );
         }
 
         if ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) {

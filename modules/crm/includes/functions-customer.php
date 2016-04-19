@@ -259,53 +259,6 @@ function erp_crm_get_contact_dropdown( $label = [] ) {
 }
 
 /**
- * Delete Customer data
- *
- * @since 1.0
- *
- * @param  mixed  $customer_ids [array|integer]
- * @param  boolean $hard
- *
- * @return void
- */
-function erp_crm_customer_delete( $customer_ids, $hard = false ) {
-
-    if ( empty( $customer_ids ) ) {
-        return;
-    }
-
-    $customers = [];
-
-    if ( is_array( $customer_ids ) ) {
-        foreach ( $customer_ids as $key => $user_id ) {
-            $customers[] = $user_id;
-        }
-    } else if ( is_int( $customer_ids ) ) {
-        $customers[] = $customer_ids;
-    }
-
-    // still do we have any ids to delete?
-    if ( ! $customers ) {
-        return;
-    }
-
-    // seems like we got some
-    foreach ( $customers as $user_id ) {
-
-        do_action( 'erp_crm_delete_customer', $user_id, $hard );
-
-        if ( $hard ) {
-            WeDevs\ERP\Framework\Models\People::withTrashed()->find( $user_id )->forceDelete();
-            WeDevs\ERP\Framework\Models\Peoplemeta::where( 'erp_people_id', $user_id )->delete();
-        } else {
-            WeDevs\ERP\Framework\Models\People::find( $user_id )->delete();
-        }
-
-        do_action( 'erp_crm_after_delete_customer', $user_id, $hard );
-    }
-}
-
-/**
  * Customer Restore from trash
  *
  * @since 1.0

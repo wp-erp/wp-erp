@@ -567,16 +567,17 @@
                         data: {
                             '_wpnonce': wpErpCrm.nonce,
                             id: self.data( 'id' ),
-                            hard: self.data( 'hard' )
+                            hard: self.data( 'hard' ),
+                            type: self.data( 'type' )
                         },
-                        success: function() {
+                        success: function(response) {
                             self.closest('tr').fadeOut( 'fast', function() {
                                 $(this).remove();
                                 WeDevs_ERP_CRM.customer.pageReload();
                             });
                         },
                         error: function(response) {
-                            alert( response );
+                            console.log( response );
                         }
                     });
                 }
