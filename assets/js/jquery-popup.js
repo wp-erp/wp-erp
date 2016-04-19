@@ -173,20 +173,20 @@
             $('#'+this.id).remove();
             $('.'+this.id).remove();
             return;
-            var modal = $('.erp-modal' );
+            // var modal = $('.erp-modal' );
 
-            // empty and hide the modal
-            $( '.content', modal ).empty();
-            $( '.erp-modal-backdrop, .erp-modal').hide();
+            // // empty and hide the modal
+            // $( '.content', modal ).empty();
+            // $( '.erp-modal-backdrop, .erp-modal').hide();
 
-            // remove the event handler
-            $( 'form.erp-modal-form', modal ).off('submit', this.formSubmit);
+            // // remove the event handler
+            // $( 'form.erp-modal-form', modal ).off('submit', this.formSubmit);
 
-            if ( this.settings.extraClass !== '' ) {
-                modal.removeClass( this.settings.extraClass );
-            }
+            // if ( this.settings.extraClass !== '' ) {
+            //     modal.removeClass( this.settings.extraClass );
+            // }
 
-            this.enableButton();
+            // this.enableButton();
         }
     });
 

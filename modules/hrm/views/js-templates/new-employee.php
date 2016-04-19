@@ -70,6 +70,7 @@
                     'label'    => __( 'Email', 'erp' ),
                     'name'     => 'user_email',
                     'value'    => '{{ data.user_email }}',
+                    'id'       => 'erp-hr-user-email',
                     'required' => true,
                     'type'     => 'email'
                 ) ); ?>

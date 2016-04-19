@@ -181,9 +181,10 @@ class Human_Resource {
             'delConfirmEmployee'     => __( 'Are you sure to delete this employee?', 'erp' ),
             'delConfirmEmployeeNote' => __( 'Are you sure to delete this employee note?', 'erp' ),
             'delConfirmEntitlement'  => __( 'Are you sure to delete this Entitlement? If yes, then all leave request under this entitlement also permanently deleted', 'erp' ),
-            'user_exit'              => __( 'User exists', 'erp' ),
-            'user_exit_confirm'      => __( 'This user is already exist, Do you want to make this user as a employee', 'erp' ),
+            'make_employee_text'     => __( 'This user already exists, Do you want to make this user as a employee?', 'erp' ),
+            'employee_exit'          => __( 'This employee already exists', 'erp' ),
             'employee_created'       => __( 'Employee successfully created', 'erp' ),
+            'create_employee_text'   => __( 'Click to create employee', 'erp' )
         ) );
 
         // if its an employee page

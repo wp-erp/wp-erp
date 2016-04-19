@@ -37,6 +37,8 @@
             $( '.erp-hr-employees' ).on( 'click', 'a#erp-empl-jobinfo', this.employee.updateJobStatus );
             $( '.erp-hr-employees' ).on( 'click', 'td.action a.remove', this.employee.removeHistory );
             $( '.erp-hr-employees' ).on( 'click', 'a#erp-employee-print', this.employee.printData );
+            $( 'body' ).on( 'focusout', 'input#erp-hr-user-email', this.employee.checkUserEmail );
+            $( 'body' ).on( 'click', 'a#erp-hr-create-wp-user-to-employee', this.employee.makeUserEmployee );
 
             // Single Employee
             $( '.erp-employee-single' ).on( 'click', 'a#erp-employee-terminate', this.employee.terminateEmployee );
@@ -854,6 +856,127 @@
             printData: function(e) {
                 e.preventDefault();
                 window.print();
+            },
+
+            checkUserEmail: function() {
+                var self = $(this),
+                    val = self.val();
+
+                var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+                if ( val == '' || !re.test( val ) ) {
+                    return false;
+                }
+
+                wp.ajax.send( 'erp_hr_check_user_exist', {
+                    data: {
+                        email: val,
+                        _wpnonce: wpErpHr.nonce
+                    },
+                    success: function() {
+                        var form = self.closest('form');
+                        form.find('.modal-suggession').fadeOut( 300, function() {
+                            $(this).remove();
+                        });
+                        form.find('button[type=submit]' ).removeAttr( 'disabled' );
+                    },
+                    error: function( response ) {
+                        var form = self.closest('form');
+                        form.find('button[type=submit]' ).attr( 'disabled', 'disabled');
+
+                        if ( response.type == 'employee' ) {
+                            form.find('.modal-suggession').remove();
+                            form.find('header.modal-header').append('<div class="modal-suggession">' + wpErpHr.employee_exit + '</div>');
+                        }
+
+                        if ( response.type == 'wp_user' ) {
+                            form.find('.modal-suggession').remove();
+                            form.find('header.modal-header').append('<div class="modal-suggession">'+ wpErpHr.make_employee_text +' <a href="#" id="erp-hr-create-wp-user-to-employee" data-user_id="'+ response.data.ID +'">' + wpErpHr.create_employee_text + '</a></div>');
+                        }
+
+                        $('.modal-suggession').hide().slideDown( function() {
+                            form.find('.content-container').css({ 'marginTop': '15px' });
+                        });
+                    }
+                });
+            },
+
+            makeUserEmployee: function(e) {
+                e.preventDefault();
+                var self = $(this),
+                    user_id = self.data('user_id');
+
+                self.closest('.modal-suggession').append('<div class="erp-loader" style="top:9px; right:10px;"></div>');
+
+                wp.ajax.send( 'erp-hr-convert-wp-to-employee', {
+                    data: {
+                        user_id: user_id,
+                        _wpnonce: wpErpHr.nonce
+                    },
+                    success: function() {
+                        self.closest('.modal-suggession').find('.erp-loader').remove();
+                        self.closest('.erp-modal').remove();
+                        $('.erp-modal-backdrop').remove();
+                        WeDevs_ERP_HR.employee.reload();
+
+                        $.erpPopup({
+                            title: wpErpHr.popup.employee_update,
+                            button: wpErpHr.popup.employee_update,
+                            id: 'erp-employee-edit',
+                            onReady: function() {
+                                var modal = this;
+
+                                $( 'header', modal).after( $('<div class="loader"></div>').show() );
+
+                                wp.ajax.send( 'erp-hr-emp-get', {
+                                    data: {
+                                        id: user_id,
+                                        _wpnonce: wpErpHr.nonce
+                                    },
+                                    success: function(response) {
+                                        var html = wp.template('erp-new-employee')( response );
+                                        $( '.content', modal ).html( html );
+                                        $( '.loader', modal).remove();
+
+                                        WeDevs_ERP_HR.initDateField();
+
+                                        $( 'li[data-selected]', modal ).each(function() {
+                                            var self = $(this),
+                                                selected = self.data('selected');
+
+                                            if ( selected !== '' ) {
+                                                self.find( 'select' ).val( selected ).trigger('change');
+                                            }
+                                        });
+
+                                        // disable current one
+                                        $('#work_reporting_to option[value="' + response.id + '"]', modal).attr( 'disabled', 'disabled' );
+                                    }
+                                });
+                            },
+                            onSubmit: function(modal) {
+                                modal.disableButton();
+
+                                wp.ajax.send( {
+                                    data: this.serialize(),
+                                    success: function(response) {
+                                        WeDevs_ERP_HR.employee.reload();
+                                        modal.enableButton();
+                                        modal.closeModal();
+                                    },
+                                    error: function(error) {
+                                        modal.enableButton();
+                                        alert( error );
+                                    }
+                                });
+                            }
+                        });
+
+                    },
+                    error: function( response ) {
+                        alert(response);
+                    }
+                });
             },
 
             addNote: function(e) {

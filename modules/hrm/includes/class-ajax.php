@@ -53,6 +53,7 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-hr-emp-update-terminate-reason', 'employee_terminate' );
         $this->action( 'wp_ajax_erp-hr-emp-activate', 'employee_termination_reactive' );
         $this->action( 'wp_ajax_erp-hr-convert-wp-to-employee', 'employee_create_from_wp_user' );
+        $this->action( 'wp_ajax_erp_hr_check_user_exist', 'check_user' );
 
         // Dashaboard
         $this->action ( 'wp_ajax_erp_hr_announcement_mark_read', 'mark_read_announcement' );
@@ -431,7 +432,7 @@ class Ajax_Handler {
         $employee_id          = erp_hr_employee_create( $posted );
 
         if ( is_wp_error( $employee_id ) ) {
-            $this->send_error( [ 'message' => $employee_id->get_error_message(), 'code' => $employee_id->get_error_code(), 'posted' => $posted ] );
+            $this->send_error( $employee_id->get_error_message() );
         }
 
         $employee               = new Employee( $employee_id );
@@ -741,6 +742,36 @@ class Ajax_Handler {
     }
 
     /**
+     * Check for created an employee
+     *
+     * @since 1.0
+     *
+     * @return json
+     */
+    public function check_user() {
+        $email = isset( $_REQUEST['email'] ) ? sanitize_text_field( $_REQUEST['email'] ) : false;
+
+        if ( ! $email ) {
+            $this->send_error( __( 'No email address provided', 'erp' ) );
+        }
+
+        $user = get_user_by( 'email', $email );
+
+        // we didn't found any user with this email address
+        if ( false === $user ) {
+            $this->send_success();
+        }
+
+        if ( null != \WeDevs\ERP\HRM\Models\Employee::whereUserId( $user->ID )->first() ) {
+            $employee = new \WeDevs\ERP\HRM\Employee( intval( $user->ID ) );
+            $this->send_error( [ 'type' => 'employee', 'data' => $employee->to_array() ] );
+        }
+
+        // seems like we found one
+        $this->send_error( [ 'type' => 'wp_user', 'data' => $user ] );
+    }
+
+    /**
      * Create wp user to emplyee
      *
      * @since 1.0
@@ -750,18 +781,18 @@ class Ajax_Handler {
     public function employee_create_from_wp_user() {
         $this->verify_nonce( 'wp-erp-hr-nonce' );
 
-        $user_email = isset( $_POST['user_email'] ) ? $_POST['user_email'] : '';
+        $id = isset( $_POST['user_id'] ) ? $_POST['user_id'] : 0;
 
-        if ( ! $user_email ) {
-            $this->send_error( __( 'User email not found', 'erp' ) );
+        if ( ! $id ) {
+            $this->send_error( __( 'User not found', 'erp' ) );
         }
 
-        $user = get_user_by( 'email', $user_email );
+        $user = get_user_by( 'id', intval( $id ) );
 
         $user->add_role('employee');
 
         $employee = new \WeDevs\ERP\HRM\Models\Employee();
-        $exists = $employee->where( 'user_id', '=', $user->ID )->get()->first();
+        $exists = $employee->where( 'user_id', '=', $user->ID )->first();
 
         if ( null === $exists ) {
             $employee = $employee->create([
