@@ -1095,6 +1095,9 @@ function erp_import_export_javascript() {
             var employee_fields = <?php echo json_encode( $employee_fields ); ?>;
 
             fields = contact_company_fields;
+            if ( $( 'form#export_form #type' ).val() == 'employee' ) {
+                fields = employee_fields;
+            }
 
             var html = '';
             var br_tag = '';
@@ -1188,6 +1191,12 @@ function erp_import_export_javascript() {
                 };
             });
 
+            $( "#export_form #selecctall" ).change( function(e) {
+                e.preventDefault();
+
+                $( "#export_form #fields input[type=checkbox]" ).prop( 'checked', $(this).prop( "checked" ) );
+            });
+
         });
     </script>
     <?php
@@ -1199,7 +1208,18 @@ function erp_import_export_javascript() {
  * @return void
  */
 function erp_process_import_export() {
-    if ( isset( $_POST['erp_import_csv'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'erp-import-export-nonce' ) ) {
+    if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'erp-import-export-nonce' ) ) {
+        return;
+    }
+
+    $is_crm_activated = wperp()->modules->is_module_active( 'crm' );
+    $is_hrm_activated = wperp()->modules->is_module_active( 'hrm' );
+
+    $departments  = erp_hr_get_departments_dropdown_raw();
+    $designations = erp_hr_get_designation_dropdown_raw();
+
+
+    if ( isset( $_POST['erp_import_csv'] ) ) {
         $fields = $_POST['fields'];
         $type   = $_POST['type'];
 
@@ -1245,17 +1265,25 @@ function erp_process_import_export() {
         ];
 
         $handle = fopen( $_FILES['csv_file']['tmp_name'], 'r' );
-        $data = [];
         if ( $handle ) {
+            $data = [];
+
             $x = 0;
             while ( $line = fgetcsv( $handle ) ) {
                 if ( $x > 0 ) {
 
                     foreach ( $fields as $key => $value ) {
-                        if ( ! empty( $value ) ) {
+                        if ( is_numeric( intval( $value ) ) ) {
                             if ( $type == 'employee' ) {
                                 if ( in_array( $key, $employee_fields['work'] ) ) {
-                                    $data[$x]['work'][$key] = $line[$value];
+                                    if ( $key == 'designation' ) {
+                                        $data[$x]['work'][$key] = array_search( $line[$value], $designations );
+                                    } else if ( $key == 'department' ) {
+                                        $data[$x]['work'][$key] = array_search( $line[$value], $departments );
+                                    } else {
+                                        $data[$x]['work'][$key] = $line[$value];
+                                    }
+
                                 } else if ( in_array( $key, $employee_fields['personal'] ) ) {
                                     $data[$x]['personal'][$key] = $line[$value];
                                 } else {
@@ -1263,38 +1291,52 @@ function erp_process_import_export() {
                                 }
                             } else {
                                 $data[$x][$key] = $line[$value];
+                                $data[$x]['type'] = $type;
                             }
-
-                            $data[$x]['type'] = $type;
                         }
                     }
 
-                    if ( $type == 'employee' ) {
-                        unset($data[$x]['type']);
-                        erp_hr_employee_create( $data[$x] );
-                    } else {
-                        erp_insert_people( $data[$x] );
+                    if ( $type == 'employee' && $is_hrm_activated ) {
+                        $item_insert_id = erp_hr_employee_create( $data[$x] );
+
+                        if ( is_wp_error( $item_insert_id ) ) {
+                            continue;
+                        }
                     }
 
+                    if ( ( $type == 'contact' || $type == 'company' ) && $is_crm_activated ) {
+                        $item_insert_id = erp_insert_people( $data[$x] );
+
+                        if ( is_wp_error( $item_insert_id ) ) {
+                            continue;
+                        } else {
+                            erp_people_update_meta( $item_insert_id, '_assign_crm_agent', get_current_user_id() );
+                            erp_people_update_meta( $item_insert_id, 'life_stage', 'opportunity' );
+                        }
+                    }
                 }
 
                 $x++;
             }
         }
+
+        wp_redirect( admin_url( 'admin.php?page=erp-tools&tab=import' ) );
+        exit();
     }
 
-    if ( isset( $_POST['erp_export_csv'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'erp-import-export-nonce' ) ) {
-
+    if ( isset( $_POST['erp_export_csv'] ) ) {
         $type   = $_POST['type'];
         $fields = $_POST['fields'];
 
-        if ( $type == 'employee' ) {
+        if ( $type == 'employee' && $is_hrm_activated ) {
             $args = [
                 'number' => -1,
             ];
 
             $items = erp_hr_get_employees( $args );
-        } elseif( $type == 'contact' || $type == 'company' ) {
+        }
+
+        if( ($type == 'contact' || $type == 'company') && $is_crm_activated ) {
             $args = [
                 'type'   => $type,
                 'count'  => true,
@@ -1309,11 +1351,33 @@ function erp_process_import_export() {
             $items = erp_get_peoples( $args );
         }
 
+        //@todo do_action()
+
         $csv_items = [];
+
         $x = 0;
         foreach ( $items as $item ) {
+
             foreach ( $fields as $field ) {
-                $csv_items[$x][$field] = $item->{$field};
+                if ( $type == 'employee' ) {
+
+                    switch ( $field ) {
+                        case 'department':
+                            $csv_items[$x][$field] = $item->get_department_title();
+                            break;
+
+                        case 'designation':
+                            $csv_items[$x][$field] = $item->get_job_title();
+                            break;
+
+                        default:
+                            $csv_items[$x][$field] = $item->{$field};
+                            break;
+                    }
+
+                } else {
+                    $csv_items[$x][$field] = $item->{$field};
+                }
             }
 
             $x++;
@@ -1326,7 +1390,13 @@ function erp_process_import_export() {
 
         $output = fopen( 'php://output', 'w' );
 
-        fputcsv( $output, $fields );
+        $columns = array_map( function( $replace ) {
+            $replace = ucwords( str_replace( '_', ' ', $replace ) );
+
+            return $replace;
+        }, $fields );
+
+        fputcsv( $output, $columns );
 
         foreach( $csv_items as $row )
         {

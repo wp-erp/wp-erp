@@ -1,13 +1,34 @@
 <div class="wrap">
 
     <?php
-    $tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'general';
+        $tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'general';
+
+        $is_crm_activated = wperp()->modules->is_module_active( 'crm' );
+        $is_hrm_activated = wperp()->modules->is_module_active( 'hrm' );
+
+        $types = [];
+        if ( $is_crm_activated ) {
+            $types['contact'] = 'Contact';
+            $types['company'] = 'Company';
+        }
+
+        if ( $is_hrm_activated ) {
+            $types['employee'] = 'Employee';
+        }
+
+        $types = apply_filters( 'erp_import_export_item_types', $types );
     ?>
 
     <h2 class="nav-tab-wrapper erp-nav-tab-wrapper">
         <a class="nav-tab <?php echo ( $tab == 'general' ) ? 'nav-tab-active' : ''; ?>" href="admin.php?page=erp-tools">General</a>
-        <a class="nav-tab <?php echo ( $tab == 'import' ) ? 'nav-tab-active' : ''; ?>" href="admin.php?page=erp-tools&amp;tab=import">Import</a>
-        <a class="nav-tab <?php echo ( $tab == 'export' ) ? 'nav-tab-active' : ''; ?>" href="admin.php?page=erp-tools&amp;tab=export">Export</a>
+        <?php
+        if ( $is_crm_activated || $is_hrm_activated ) {
+        ?>
+            <a class="nav-tab <?php echo ( $tab == 'import' ) ? 'nav-tab-active' : ''; ?>" href="<?php echo admin_url( 'admin.php?page=erp-tools&tab=import' ); ?>">Import</a>
+            <a class="nav-tab <?php echo ( $tab == 'export' ) ? 'nav-tab-active' : ''; ?>" href="<?php echo admin_url( 'admin.php?page=erp-tools&tab=export' ); ?>">Export</a>
+        <?php
+        }
+        ?>
     </h2>
 
     <div class="metabox-holder">
@@ -29,9 +50,13 @@
                                         </th>
                                         <td>
                                             <select name="type" id="type">
-                                                <option value="contact">Contact</option>
-                                                <option value="company">Company</option>
-                                                <option value="employee">Employee</option>
+                                                <?php
+                                                    foreach ( $types as $key => $value ) {
+                                                ?>
+                                                        <option value="<?php echo $key; ?>"><?php _e( $value, 'erp' ); ?></option>
+                                                <?php
+                                                    }
+                                                ?>
                                             </select>
                                             <p class="description"><?php _e( 'Select item type to import.', 'erp' ); ?></p>
                                         </td>
@@ -75,9 +100,13 @@
                                         </th>
                                         <td>
                                             <select name="type" id="type">
-                                                <option value="contact">Contact</option>
-                                                <option value="company">Company</option>
-                                                <option value="employee">Employee</option>
+                                                <?php
+                                                    foreach ( $types as $key => $value ) {
+                                                ?>
+                                                        <option value="<?php echo $key; ?>"><?php _e( $value, 'erp' ); ?></option>
+                                                <?php
+                                                    }
+                                                ?>
                                             </select>
                                             <p class="description"><?php _e( 'Select item type to export.', 'erp' ); ?></p>
                                         </td>
@@ -87,6 +116,9 @@
                                             <label for="fields"><?php _e( 'Fields', 'erp' ); ?></label>
                                         </th>
                                         <td>
+                                            <input type="checkbox" id="selecctall"/> <strong><?php _e( 'Selecct All', 'erp' ); ?></strong>
+                                            <br />
+                                            <br />
                                             <div id="fields"></div>
                                             <br />
                                             <br />
