@@ -108,7 +108,13 @@ class Form_Handler {
                 case 'delete' :
 
                     if ( isset( $_GET['customer_id'] ) && !empty( $_GET['customer_id'] ) ) {
-                        erp_crm_customer_delete( $_GET['customer_id'], false );
+                        $data = [
+                            'id' => $_GET['customer_id'],
+                            'hard' => false,
+                            'type' => 'contact'
+                        ];
+
+                        erp_delete_people( $data );
                     }
 
                     wp_redirect( $redirect );
@@ -116,7 +122,13 @@ class Form_Handler {
 
                 case 'permanent_delete' :
                     if ( isset( $_GET['customer_id'] ) && !empty( $_GET['customer_id'] ) ) {
-                        erp_crm_customer_delete( $_GET['customer_id'], true );
+                        $data = [
+                            'id' => $_GET['customer_id'],
+                            'hard' => true,
+                            'type' => 'contact'
+                        ];
+
+                        erp_delete_people( $data );
                     }
 
                     wp_redirect( $redirect );
@@ -148,6 +160,13 @@ class Form_Handler {
         }
     }
 
+    /**
+     * Perform compnay bulk actions
+     *
+     * @since 1.0
+     *
+     * @return void
+     */
     public function companies_bulk_action() {
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! isset( $_GET['page'] ) ) {
             return;
@@ -173,7 +192,13 @@ class Form_Handler {
                 case 'delete' :
 
                     if ( isset( $_GET['customer_id'] ) && !empty( $_GET['customer_id'] ) ) {
-                        erp_crm_customer_delete( $_GET['customer_id'], false );
+                        $data = [
+                            'id' => $_GET['customer_id'],
+                            'hard' => false,
+                            'type' => 'company'
+                        ];
+
+                        erp_delete_people( $data );
                     }
 
                     wp_redirect( $redirect );
@@ -181,7 +206,13 @@ class Form_Handler {
 
                 case 'permanent_delete' :
                     if ( isset( $_GET['customer_id'] ) && !empty( $_GET['customer_id'] ) ) {
-                        erp_crm_customer_delete( $_GET['customer_id'], true );
+                        $data = [
+                            'id' => $_GET['customer_id'],
+                            'hard' => true,
+                            'type' => 'company'
+                        ];
+
+                        erp_delete_people( $data );
                     }
 
                     wp_redirect( $redirect );
