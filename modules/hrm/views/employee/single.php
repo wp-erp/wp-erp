@@ -75,7 +75,7 @@
                                     <a class="button" href="#" id="erp-employee-terminate" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-terminate" data-title="<?php _e( 'Terminate Employee', 'erp' ); ?>"><?php _e( 'Terminate', 'erp' ); ?></a>
                                 <?php endif; ?>
 
-                                <?php if ( ( isset( $_GET['tab'] ) && $_GET['tab'] == 'general' ) || !isset( $_GET['tab'] )  ): ?>
+                                <?php if ( ( isset( $_GET['tab'] ) && in_array( $_GET['tab'], apply_filters( 'erp_hr_employee_printable_tabs', ['general'] ) ) ) || !isset( $_GET['tab'] )  ): ?>
                                     <a class="button" id="erp-employee-print" href="#"><?php _e( 'Print', 'erp' ); ?></a>
                                 <?php endif ?>
                             </div>
