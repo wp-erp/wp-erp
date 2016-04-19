@@ -762,7 +762,7 @@ class Ajax_Handler {
             $this->send_success();
         }
 
-        if ( null != \WeDevs\ERP\HRM\Models\Employee::whereUserId( $user->ID )->first() ) {
+        if ( null != \WeDevs\ERP\HRM\Models\Employee::withTrashed()->whereUserId( $user->ID )->first() ) {
             $employee = new \WeDevs\ERP\HRM\Employee( intval( $user->ID ) );
             $this->send_error( [ 'type' => 'employee', 'data' => $employee->to_array() ] );
         }
