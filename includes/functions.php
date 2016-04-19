@@ -1011,3 +1011,328 @@ function erp_get_license_status( $addon ) {
 
     return $html;
 }
+
+/**
+ * ERP Import/Export JavaScript enqueue.
+ *
+ * @since  1.0
+ *
+ * @return void
+ */
+function erp_import_export_javascript() {
+    $contact_company_fields = [
+        'first_name',
+        'last_name',
+        'email',
+        'company',
+        'phone',
+        'mobile',
+        'other',
+        'website',
+        'fax',
+        'notes',
+        'street_1',
+        'street_2',
+        'city',
+        'state',
+        'postal_code',
+        'country',
+        'currency',
+        'type',
+    ];
+
+    $employee_fields = [
+        'first_name',
+        'middle_name',
+        'last_name',
+        'user_email',
+        'designation',
+        'department',
+        'location',
+        'hiring_source',
+        'hiring_date',
+        'date_of_birth',
+        'reporting_to',
+        'pay_rate',
+        'pay_type',
+        'type',
+        'status',
+        'other_email',
+        'phone',
+        'work_phone',
+        'mobile',
+        'address',
+        'gender',
+        'marital_status',
+        'nationality',
+        'driving_license',
+        'hobbies',
+        'user_url',
+        'description',
+        'street_1',
+        'street_2',
+        'city',
+        'country',
+        'state',
+        'postal_code'
+    ];
+    ?>
+    <script type="text/javascript">
+        function toTitleCase(string) {
+            // \u00C0-\u00ff for a happy Latin-1
+            return string.toLowerCase().replace(/_/g, ' ').replace(/\b([a-z\u00C0-\u00ff])/g, function (_, initial) {
+                return initial.toUpperCase();
+            }).replace(/(\s(?:de|a|o|e|da|do|em|ou|[\u00C0-\u00ff]))\b/ig, function (_, match) {
+                return match.toLowerCase();
+            });
+        }
+
+        jQuery(document).ready(function($) {
+            var fields = [];
+
+            var contact_company_fields = <?php echo json_encode( $contact_company_fields ); ?>;
+
+            var employee_fields = <?php echo json_encode( $employee_fields ); ?>;
+
+            fields = contact_company_fields;
+
+            var html = '';
+            var br_tag = '';
+            for ( var i = 0;  i < fields.length; i++ ) {
+                if( i > 0 && ( i % 9 ) == 0 ) {
+                    br_tag = '<br /><br />';
+                } else {
+                    br_tag = '';
+                }
+                html += '<label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + toTitleCase( fields[i] ) + '</label> &nbsp;&nbsp;&nbsp;' + br_tag;
+            }
+
+            if ( html ) {
+                jQuery( '#fields' ).html( html );
+            }
+
+            $( 'form#export_form #type' ).on( 'change', function( e ) {
+                e.preventDefault();
+
+                if ( $(this).val() == 'employee' ) {
+                    fields = employee_fields;
+                } else {
+                    fields = contact_company_fields;
+                }
+
+                html = '';
+                var br_tag = '';
+                for ( var i = 0;  i < fields.length; i++ ) {
+                    if( i > 0 && ( i % 9 ) == 0 ) {
+                        br_tag = '<br /><br />';
+                    } else {
+                        br_tag = '';
+                    }
+                    html += '<label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + toTitleCase( fields[i] ) + '</label> &nbsp;&nbsp;&nbsp;' + br_tag;
+                }
+
+                if ( html ) {
+                    $( 'form#export_form #fields' ).html( html );
+                }
+            });
+
+            $( '#csv_file' ).on( 'change', function( e ) {
+                $( '#fields_container' ).show();
+
+                var fields_html = '';
+
+                if ( $( 'form#import_form #type' ).val() == 'employee' ) {
+                    fields = employee_fields;
+                } else {
+                    fields = contact_company_fields;
+                }
+
+                for ( var i = 0;  i < fields.length; i++ ) {
+                    fields_html += `
+                        <tr>
+                            <th>
+                                <label for="fields[` + fields[i] + `]">` + toTitleCase( fields[i] ) + `</label>
+                            </th>
+                            <td>
+                                <select name="fields[` + fields[i] + `]" class="csv_fields">
+                                </select>
+                            </td>
+                        </tr>`;
+                }
+
+                $( '#fields_container' ).html( fields_html );
+
+                var file = this.files[0];
+
+                var reader = new FileReader();
+                reader.readAsText(file);
+
+                reader.onload = function(e) {
+                    var csv = reader.result;
+                    // Split the input into lines
+                    lines = csv.split('\n'),
+                    // Extract column names from the first line
+                    columnNamesLine = lines[0];
+                    columnNames = columnNamesLine.split(',');
+
+                    var html = '';
+
+                    html += '<option value=""><?php _e( '&mdash; Select Field &mdash;', 'erp' ); ?></option>';
+                    columnNames.forEach( function( item, index ) {
+                        html += '<option value="' + index + '">' + item + '</option>';
+                    } );
+
+                    if ( html ) {
+                        $( '.csv_fields' ).html( html );
+                    }
+                };
+            });
+
+        });
+    </script>
+    <?php
+}
+
+/**
+ * Process or handle import/export submit.
+ *
+ * @return void
+ */
+function erp_process_import_export() {
+    if ( isset( $_POST['erp_import_csv'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'erp-import-export-nonce' ) ) {
+        $fields = $_POST['fields'];
+        $type   = $_POST['type'];
+
+        $employee_fields = [
+            'work' => [
+                'designation',
+                'department',
+                'location',
+                'hiring_source',
+                'hiring_date',
+                'date_of_birth',
+                'reporting_to',
+                'pay_rate',
+                'pay_type',
+                'type',
+                'status',
+            ],
+            'personal' => [
+                'photo_id',
+                'user_id',
+                'first_name',
+                'middle_name',
+                'last_name',
+                'other_email',
+                'phone',
+                'work_phone',
+                'mobile',
+                'address',
+                'gender',
+                'marital_status',
+                'nationality',
+                'driving_license',
+                'hobbies',
+                'user_url',
+                'description',
+                'street_1',
+                'street_2',
+                'city',
+                'country',
+                'state',
+                'postal_code',
+            ]
+        ];
+
+        $handle = fopen( $_FILES['csv_file']['tmp_name'], 'r' );
+        $data = [];
+        if ( $handle ) {
+            $x = 0;
+            while ( $line = fgetcsv( $handle ) ) {
+                if ( $x > 0 ) {
+
+                    foreach ( $fields as $key => $value ) {
+                        if ( ! empty( $value ) ) {
+                            if ( $type == 'employee' ) {
+                                if ( in_array( $key, $employee_fields['work'] ) ) {
+                                    $data[$x]['work'][$key] = $line[$value];
+                                } else if ( in_array( $key, $employee_fields['personal'] ) ) {
+                                    $data[$x]['personal'][$key] = $line[$value];
+                                } else {
+                                    $data[$x][$key] = $line[$value];
+                                }
+                            } else {
+                                $data[$x][$key] = $line[$value];
+                            }
+
+                            $data[$x]['type'] = $type;
+                        }
+                    }
+
+                    if ( $type == 'employee' ) {
+                        unset($data[$x]['type']);
+                        erp_hr_employee_create( $data[$x] );
+                    } else {
+                        erp_insert_people( $data[$x] );
+                    }
+
+                }
+
+                $x++;
+            }
+        }
+    }
+
+    if ( isset( $_POST['erp_export_csv'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'erp-import-export-nonce' ) ) {
+
+        $type   = $_POST['type'];
+        $fields = $_POST['fields'];
+
+        if ( $type == 'employee' ) {
+            $args = [
+                'number' => -1,
+            ];
+
+            $items = erp_hr_get_employees( $args );
+        } elseif( $type == 'contact' || $type == 'company' ) {
+            $args = [
+                'type'   => $type,
+                'count'  => true,
+            ];
+            $total_items = erp_get_peoples( $args );
+
+            $args = [
+                'type'   => $type,
+                'offset' => 0,
+                'number' => -1,
+            ];
+            $items = erp_get_peoples( $args );
+        }
+
+        $csv_items = [];
+        $x = 0;
+        foreach ( $items as $item ) {
+            foreach ( $fields as $field ) {
+                $csv_items[$x][$field] = $item->{$field};
+            }
+
+            $x++;
+        }
+
+        $file_name = 'export_' . date( 'd_m_Y' ) . '.csv';
+
+        header( 'Content-Type: text/csv; charset=utf-8' );
+        header( 'Content-Disposition: attachment; filename=' . $file_name );
+
+        $output = fopen( 'php://output', 'w' );
+
+        fputcsv( $output, $fields );
+
+        foreach( $csv_items as $row )
+        {
+            fputcsv( $output, $row );
+        }
+
+        exit();
+    }
+}

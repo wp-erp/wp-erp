@@ -388,9 +388,9 @@ function erp_crm_customer_get_status_count( $type = null ) {
  *
  * @return integer [no of trash customer]
  */
-function erp_crm_count_trashed_customers() {
+function erp_crm_count_trashed_customers( $type = null ) {
     $customer = new \WeDevs\ERP\Framework\Models\People();
-    return $customer->onlyTrashed()->count();
+    return ( $type ) ? $customer->type( $type )->onlyTrashed()->count() : $customer->onlyTrashed()->count();
 }
 
 /**

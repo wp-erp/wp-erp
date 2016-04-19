@@ -311,7 +311,7 @@ class Contact_List_Table extends \WP_List_Table {
             $status_links[ $key ] = sprintf( '<a href="%s" class="%s">%s <span class="count">(%s)</span></a>', ( $key == 'all' ) ? add_query_arg( array( 'status' => $key ), $all_base_link ) : add_query_arg( array( 'status' => $key ), $base_link ), $class, $value['label'], $value['count'] );
         }
 
-        $status_links[ 'trash' ] = sprintf( '<a href="%s" class="status-trash">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'trash' ), $base_link ), __( 'Trash', 'erp' ), erp_crm_count_trashed_customers() );
+        $status_links[ 'trash' ] = sprintf( '<a href="%s" class="status-trash">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'trash' ), $base_link ), __( 'Trash', 'erp' ), erp_crm_count_trashed_customers( $this->contact_type ) );
 
         return $status_links;
     }
