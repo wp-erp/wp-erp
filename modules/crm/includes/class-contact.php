@@ -75,6 +75,11 @@ class Contact extends \WeDevs\ERP\People {
                 $fields[$key] = $value;
             }
 
+            $fields['first_name'] = $this->get_first_name();
+            $fields['last_name']  = $this->get_last_name();
+            $fields['email']      = $this->get_email();
+            $fields['website']    = $this->is_wp_user() ? \get_user_by( 'id', $this->user_id )->user_url : $this->website;
+
             $avatar_id              = (int) $this->get_meta( 'photo_id', true );
             $fields['avatar']['id'] = $avatar_id;
 

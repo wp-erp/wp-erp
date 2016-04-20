@@ -507,7 +507,6 @@ Company'
                 `created` datetime DEFAULT NULL,
                 `deleted_at` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`),
-                KEY `type` (`type`),
                 KEY `user_id` (`user_id`)
             ) $collate;",
 
