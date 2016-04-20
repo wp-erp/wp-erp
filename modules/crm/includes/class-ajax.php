@@ -29,6 +29,7 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-crm-customer-delete', 'customer_remove' );
         $this->action( 'wp_ajax_erp-crm-customer-restore', 'customer_restore' );
         $this->action( 'wp_ajax_erp-crm-bulk-contact-subscriber', 'bulk_assign_group' );
+        $this->action( 'wp_ajax_erp-crm-convert-user-to-contact', 'convert_user_to_customer' );
 
         $this->action( 'wp_ajax_erp-crm-customer-add-company', 'customer_add_company' );
         $this->action( 'wp_ajax_erp-crm-customer-edit-company', 'customer_edit_company' );
@@ -125,9 +126,8 @@ class Ajax_Handler {
         }
 
         $group_ids = ( isset( $posted['group_id'] ) && !empty( $posted['group_id'] ) ) ? $posted['group_id'] : [];
-        // if ( ! empty( $posted['group_id'] ) ) {
-            erp_crm_edit_contact_subscriber( $group_ids, $customer_id );
-        // }
+
+        erp_crm_edit_contact_subscriber( $group_ids, $customer_id );
 
         if ( isset( $posted['social'] ) ) {
             foreach ( $posted['social'] as $field => $value ) {
@@ -257,6 +257,34 @@ class Ajax_Handler {
 
         $this->send_success( __( 'Selected contact are successfully subscribed', 'erp' ) );
 
+    }
+
+    /**
+     * Convert user to contact or company
+     *
+     * @since 1.0
+     *
+     * @return json
+     */
+    public function convert_user_to_customer() {
+        $this->verify_nonce( 'wp-erp-crm-nonce' );
+
+        $id = isset( $_POST['user_id'] ) ? $_POST['user_id'] : 0;
+        $type = isset( $_POST['type'] ) ? $_POST['type'] : '';
+
+        if ( ! $id ) {
+            $this->send_error( __( 'User not found', 'erp' ) );
+        }
+
+        if ( empty( $type ) ) {
+            $this->send_error( __( 'Type not found', 'erp' ) );
+        }
+
+        $people_obj = \WeDevs\ERP\Framework\Models\People::find( $id );
+        $type_obj = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $type )->first();
+        $people_obj->assignType( $type_obj );
+
+        $this->send_success();
     }
 
     /**

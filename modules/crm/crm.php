@@ -139,7 +139,10 @@ class Customer_Relationship {
             'confirm'               => __( 'Are you sure?', 'erp' ),
             'delConfirmCustomer'    => __( 'Are you sure to delete this customer?', 'erp' ),
             'delConfirm'            => __( 'Are you sure to delete this?', 'erp' ),
-            'checkedConfirm'        => __( 'Alteast one item must be checked', 'erp' )
+            'checkedConfirm'        => __( 'Alteast one item must be checked', 'erp' ),
+            'contact_exit'          => __( 'Already exists as a contact or company', 'erp' ),
+            'make_contact_text'     => __( 'This user already exists! Want to make this user a', 'erp' ),
+            'create_contact_text'   => __( 'Create new', 'erp' ),
         ) );
 
         $contact_actvity_localize = apply_filters( 'erp_crm_contact_localize_var', [

@@ -167,7 +167,7 @@ class Employee {
             $fields['avatar']['image'] = $this->get_avatar();
 
             if ( $avatar_id ) {
-                $fields['avatar']['url'] = wp_get_attachment_url( $avatar_id );
+                $fields['avatar']['url'] = $this->get_avatar_url( $avatar_id );
             }
 
             foreach ($fields['work'] as $key => $value) {
@@ -215,6 +215,21 @@ class Employee {
 
     /**
      * Get an employee avatar
+     *
+     * @param  integer  avatar size in pixels
+     *
+     * @return string   image with HTML tag
+     */
+    public function get_avatar_url( $size = 32 ) {
+        if ( $this->id && ! empty( $this->user->photo_id ) ) {
+            return wp_get_attachment_url( $this->user->photo_id, [ 'size' => $size ] );
+        }
+
+        return get_avatar_url( $this->id, [ 'size' => $size ] );
+    }
+
+    /**
+     * Get an employee avatar url
      *
      * @param  integer  avatar size in pixels
      *

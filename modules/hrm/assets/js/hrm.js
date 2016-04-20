@@ -891,7 +891,7 @@
 
                         if ( response.type == 'wp_user' ) {
                             form.find('.modal-suggession').remove();
-                            form.find('header.modal-header').append('<div class="modal-suggession">'+ wpErpHr.make_employee_text +' <a href="#" id="erp-hr-create-wp-user-to-employee" data-user_id="'+ response.data.ID +'">' + wpErpHr.create_employee_text + '</a></div>');
+                            form.find('header.modal-header').append('<div class="modal-suggession">'+ wpErpHr.make_employee_text +' <a href="#" id="erp-hr-create-wp-user-to-employee" data-user_id="'+ response.data.ID +'">' + wpErpHr.create_employee_text + '</a></div>' );
                         }
 
                         $('.modal-suggession').hide().slideDown( function() {

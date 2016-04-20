@@ -75,6 +75,7 @@
                     'label'    => __( 'Email', 'erp' ),
                     'name'     => 'email',
                     'value'    => '{{ data.email }}',
+                    'id'       => 'erp-crm-new-contact-email',
                     'required' => true,
                     'type'     => 'email'
                 ) ); ?>
