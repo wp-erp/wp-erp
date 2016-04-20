@@ -235,7 +235,15 @@ class Ajax {
             $this->send_error( __( 'No email address provided', 'erp' ) );
         }
 
-        $people = erp_get_people_by( 'email', $email );
+        $user = \get_user_by( 'email', $email );
+
+        if ( false === $user ) {
+            $people = erp_get_people_by( 'email', $email );
+        } else {
+            $peep = \WeDevs\ERP\Framework\Models\People::withTrashed()->with('types')->whereUserId( $user->ID )->first();
+            $people        = (object) $peep->toArray();
+            $people->types = wp_list_pluck( $peep->types->toArray(), 'name' );
+        }
 
         // we didn't found any user with this email address
         if ( false === $people ) {
