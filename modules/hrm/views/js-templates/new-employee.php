@@ -10,7 +10,7 @@
                 <div class="photo-container">
                     <input type="hidden" name="personal[photo_id]" id="emp-photo-id" value="{{ data.avatar.id }}">
 
-                    <# if ( data.id ) { #>
+                    <# if ( data.avatar.id ) { #>
                         <img src="{{ data.avatar.url }}" alt="" />
                         <a href="#" class="erp-remove-photo">&times;</a>
                     <# } else { #>

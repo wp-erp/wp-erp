@@ -1,6 +1,6 @@
 <?php
 /**
- * Customer related necessary helper function
+ * CRM related necessary helper function
  */
 
 /**

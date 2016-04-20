@@ -225,17 +225,23 @@
                 ) ); ?>
             </li>
 
-            <li data-selected = "{{ data.assign_to }}">
-                <?php erp_html_form_input( array(
-                    'label'       => __( 'Contact Owner', 'erp' ),
-                    'name'        => 'assign_to',
-                    'required'    => true,
-                    'type'        => 'select',
-                    'id'          => 'erp-crm-contact-owner-id',
-                    'class'       => 'select2 erp-crm-contact-owner-class',
-                    'options'     => erp_crm_get_crm_user_dropdown( [ '' => '--Select--' ] )
-                ) ); ?>
-            </li>
+            <?php if ( current_user_can( 'erp_crm_manager' ) ): ?>
+                <li data-selected = "{{ data.assign_to }}">
+                    <?php erp_html_form_input( array(
+                        'label'       => __( 'Contact Owner', 'erp' ),
+                        'name'        => 'assign_to',
+                        'required'    => true,
+                        'type'        => 'select',
+                        'id'          => 'erp-crm-contact-owner-id',
+                        'class'       => 'select2 erp-crm-contact-owner-class',
+                        'options'     => erp_crm_get_crm_user_dropdown( [ '' => '--Select--' ] )
+                    ) ); ?>
+                </li>
+            <?php endif ?>
+
+            <?php if ( current_user_can( 'erp_crm_agent' ) ): ?>
+                <input type="hidden" name="assign_to" value="<?php echo get_current_user_id(); ?>">
+            <?php endif ?>
 
             <# if ( _.contains( data.types, 'company' ) ) { #>
                 <?php do_action( 'erp_crm_company_form_contact_group' ); ?>
