@@ -860,11 +860,16 @@
 
             checkUserEmail: function() {
                 var self = $(this),
-                    val = self.val();
+                    val = self.val(),
+                    id = self.closest('form').find('#erp-employee-id').val();
 
                 var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
                 if ( val == '' || !re.test( val ) ) {
+                    return false;
+                }
+
+                if ( id != '0' ) {
                     return false;
                 }
 
