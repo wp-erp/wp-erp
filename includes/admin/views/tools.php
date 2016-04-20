@@ -63,7 +63,7 @@
                                     </tr>
                                     <tr>
                                         <th>
-                                            <label for="type"><?php _e( 'CSV File', 'erp' ); ?></label>
+                                            <label for="type"><?php _e( 'CSV File', 'erp' ); ?> <span class="required">*</span></label>
                                         </th>
                                         <td>
                                             <input type="file" name="csv_file" id="csv_file" />
@@ -113,7 +113,7 @@
                                     </tr>
                                     <tr>
                                         <th>
-                                            <label for="fields"><?php _e( 'Fields', 'erp' ); ?></label>
+                                            <label for="fields"><?php _e( 'Fields', 'erp' ); ?> <span class="required">*</span></label>
                                         </th>
                                         <td>
                                             <input type="checkbox" id="selecctall"/> <strong><?php _e( 'Selecct All', 'erp' ); ?></strong>

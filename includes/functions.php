@@ -1078,7 +1078,7 @@ function erp_import_export_javascript() {
     ];
     ?>
     <script type="text/javascript">
-        function toTitleCase(string) {
+        function erp_title_case(string) {
             // \u00C0-\u00ff for a happy Latin-1
             return string.toLowerCase().replace(/_/g, ' ').replace(/\b([a-z\u00C0-\u00ff])/g, function (_, initial) {
                 return initial.toUpperCase();
@@ -1099,6 +1099,14 @@ function erp_import_export_javascript() {
                 fields = employee_fields;
             }
 
+            var required_fields = [
+                'first_name',
+                'last_name',
+                'email',
+                'user_email',
+                'company'
+            ]
+
             var html = '';
             var br_tag = '';
             for ( var i = 0;  i < fields.length; i++ ) {
@@ -1107,7 +1115,8 @@ function erp_import_export_javascript() {
                 } else {
                     br_tag = '';
                 }
-                html += '<label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + toTitleCase( fields[i] ) + '</label> &nbsp;&nbsp;&nbsp;' + br_tag;
+
+                html += '<label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + erp_title_case( fields[i] ) + '</label> &nbsp;&nbsp;&nbsp;' + br_tag;
             }
 
             if ( html ) {
@@ -1124,14 +1133,15 @@ function erp_import_export_javascript() {
                 }
 
                 html = '';
-                var br_tag = '';
+                br_tag = '';
                 for ( var i = 0;  i < fields.length; i++ ) {
                     if( i > 0 && ( i % 9 ) == 0 ) {
                         br_tag = '<br /><br />';
                     } else {
                         br_tag = '';
                     }
-                    html += '<label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + toTitleCase( fields[i] ) + '</label> &nbsp;&nbsp;&nbsp;' + br_tag;
+
+                    html += '<label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + erp_title_case( fields[i] ) + '</label> &nbsp;&nbsp;&nbsp;' + br_tag;
                 }
 
                 if ( html ) {
@@ -1139,7 +1149,9 @@ function erp_import_export_javascript() {
                 }
             });
 
-            $( '#csv_file' ).on( 'change', function( e ) {
+            $( 'form#import_form #csv_file' ).on( 'change', function( e ) {
+                e.preventDefault();
+
                 $( '#fields_container' ).show();
 
                 var fields_html = '';
@@ -1150,14 +1162,25 @@ function erp_import_export_javascript() {
                     fields = contact_company_fields;
                 }
 
+                var required = '';
+                var red_span = '';
                 for ( var i = 0;  i < fields.length; i++ ) {
+
+                    if ( required_fields.indexOf( fields[i] ) !== -1 ) {
+                        required = 'required';
+                        red_span = ' <span class="required">*</span>';
+                    } else {
+                        required = '';
+                        red_span = '';
+                    }
+
                     fields_html += `
                         <tr>
                             <th>
-                                <label for="fields[` + fields[i] + `]">` + toTitleCase( fields[i] ) + `</label>
+                                <label for="fields[` + fields[i] + `]">` + erp_title_case( fields[i] ) + red_span + `</label>
                             </th>
                             <td>
-                                <select name="fields[` + fields[i] + `]" class="csv_fields">
+                                <select name="fields[` + fields[i] + `]" class="csv_fields" ` + required + `>
                                 </select>
                             </td>
                         </tr>`;
@@ -1182,6 +1205,7 @@ function erp_import_export_javascript() {
 
                     html += '<option value=""><?php _e( '&mdash; Select Field &mdash;', 'erp' ); ?></option>';
                     columnNames.forEach( function( item, index ) {
+                        item = item.replace(/"/g, ""); ;
                         html += '<option value="' + index + '">' + item + '</option>';
                     } );
 
@@ -1189,6 +1213,7 @@ function erp_import_export_javascript() {
                         $( '.csv_fields' ).html( html );
                     }
                 };
+
             });
 
             $( "#export_form #selecctall" ).change( function(e) {
@@ -1273,7 +1298,7 @@ function erp_process_import_export() {
                 if ( $x > 0 ) {
 
                     foreach ( $fields as $key => $value ) {
-                        if ( is_numeric( intval( $value ) ) ) {
+                        if ( is_numeric( $value ) ) {
                             if ( $type == 'employee' ) {
                                 if ( in_array( $key, $employee_fields['work'] ) ) {
                                     if ( $key == 'designation' ) {
@@ -1297,6 +1322,12 @@ function erp_process_import_export() {
                     }
 
                     if ( $type == 'employee' && $is_hrm_activated ) {
+                        if ( ! isset( $data[$x]['work']['status'] ) ) {
+                            $data[$x]['work']['status'] = 'active';
+                        }
+
+                        $data[$x]['type'] = 'customer';
+
                         $item_insert_id = erp_hr_employee_create( $data[$x] );
 
                         if ( is_wp_error( $item_insert_id ) ) {
@@ -1310,8 +1341,11 @@ function erp_process_import_export() {
                         if ( is_wp_error( $item_insert_id ) ) {
                             continue;
                         } else {
-                            erp_people_update_meta( $item_insert_id, '_assign_crm_agent', get_current_user_id() );
-                            erp_people_update_meta( $item_insert_id, 'life_stage', 'opportunity' );
+                            $contact_owner = erp_get_option( 'contact_owner', 'erp_settings_erp-crm', null );
+                            $contact_owner = ( $contact_owner ) ? $contact_owner : get_current_user_id();
+                            $life_stage    = erp_get_option( 'life_stage', 'erp_settings_erp-crm', 'opportunity' );
+                            erp_people_update_meta( $item_insert_id, '_assign_crm_agent', $contact_owner );
+                            erp_people_update_meta( $item_insert_id, 'life_stage', $life_stage );
                         }
                     }
                 }
@@ -1376,7 +1410,9 @@ function erp_process_import_export() {
                     }
 
                 } else {
-                    $csv_items[$x][$field] = $item->{$field};
+                    if ( isset( $item->{$field} ) ) {
+                        $csv_items[$x][$field] = $item->{$field};
+                    }
                 }
             }
 
