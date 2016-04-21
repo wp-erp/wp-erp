@@ -21,7 +21,10 @@
                 $employee_table = new \WeDevs\ERP\HRM\Employee_List_Table();
                 $employee_table->prepare_items();
                 $employee_table->search_box( __( 'Search Employee', 'erp' ), 'erp-employee-search' );
-                $employee_table->views();
+
+                if ( current_user_can( erp_hr_get_manager_role() ) ) {
+                    $employee_table->views();
+                }
 
                 $employee_table->display();
                 ?>

@@ -308,7 +308,7 @@ class Employee_List_Table extends \WP_List_Table {
             $args['orderby'] = $_REQUEST['orderby'];
         }
 
-        if ( isset( $_REQUEST['status'] ) && !empty( $_REQUEST['status'] ) ) {
+        if ( isset( $_REQUEST['status'] ) && !empty( $_REQUEST['status'] ) && current_user_can( erp_hr_get_manager_role() ) ) {
             $args['status'] = $_REQUEST['status'];
         }
 
