@@ -32,8 +32,9 @@ class User_Profile {
         }
 
         // User profile edit/display actions
-        add_action( 'edit_user_profile', array( $this, 'role_display' ) );
-        add_action( 'profile_update', array( $this, 'profile_update_role' ) );
+        add_action( 'edit_user_profile', [ $this, 'role_display' ] );
+        add_action( 'show_user_profile', [ $this, 'role_display' ] );
+        add_action( 'profile_update', [ $this, 'profile_update_role' ] );
     }
 
     /**
@@ -46,7 +47,7 @@ class User_Profile {
     public static function role_display( $profileuser ) {
 
         // Bail if current user cannot edit users
-        if ( ! current_user_can( 'edit_user', $profileuser->ID ) ) {
+        if ( ! current_user_can( 'edit_user', $profileuser->ID ) || !current_user_can( 'manage_options') ) {
             return;
         }
 
@@ -62,7 +63,6 @@ class User_Profile {
                     <th><label for="erp-hr-role"><?php esc_html_e( 'Role', 'erp' ); ?></label></th>
                     <td>
                         <?php do_action( 'erp_user_profile_role', $profileuser ); ?>
-
                     </td>
                 </tr>
 
