@@ -1107,20 +1107,15 @@ function erp_import_export_javascript() {
                 'company'
             ]
 
-            var html = '';
-            var br_tag = '';
+            var html = '<ul class="erp-list list-inline">';
             for ( var i = 0;  i < fields.length; i++ ) {
-                if( i > 0 && ( i % 9 ) == 0 ) {
-                    br_tag = '<br /><br />';
-                } else {
-                    br_tag = '';
-                }
-
-                html += '<label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + erp_title_case( fields[i] ) + '</label> &nbsp;&nbsp;&nbsp;' + br_tag;
+                html += '<li><label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + erp_title_case( fields[i] ) + '</label></li>';
             }
 
+            html += '<ul>';
+
             if ( html ) {
-                jQuery( '#fields' ).html( html );
+                $( '#fields' ).html( html );
             }
 
             $( 'form#export_form #type' ).on( 'change', function( e ) {
@@ -1132,17 +1127,12 @@ function erp_import_export_javascript() {
                     fields = contact_company_fields;
                 }
 
-                html = '';
-                br_tag = '';
+                html = '<ul class="erp-list list-inline">';
                 for ( var i = 0;  i < fields.length; i++ ) {
-                    if( i > 0 && ( i % 9 ) == 0 ) {
-                        br_tag = '<br /><br />';
-                    } else {
-                        br_tag = '';
-                    }
-
-                    html += '<label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + erp_title_case( fields[i] ) + '</label> &nbsp;&nbsp;&nbsp;' + br_tag;
+                    html += '<li><label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + erp_title_case( fields[i] ) + '</label></li>';
                 }
+
+                html += '<ul>';
 
                 if ( html ) {
                     $( 'form#export_form #fields' ).html( html );
