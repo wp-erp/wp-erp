@@ -55,22 +55,27 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
                             },
 
                             success: function( response ) {
+                                console.log( response );
                                 var startDate = wperp.dateFormat( response.start_date, 'j F' ),
                                     startTime = wperp.timeFormat( response.start_date ),
                                     endDate = wperp.dateFormat( response.end_date, 'j F' ),
                                     endTime = wperp.timeFormat( response.end_date );
 
-                                if ( response.extra.all_day == 'true' ) {
-                                    if ( wperp.dateFormat( response.start_date, 'Y-m-d' ) == wperp.dateFormat( response.end_date, 'Y-m-d' ) ) {
-                                        var datetime = startDate;
-                                    } else {
-                                        var datetime = startDate + ' to ' + endDate;
-                                    }
+                                if ( ! response.end_date ) {
+                                    var datetime = startDate + ' at ' + startTime;
                                 } else {
-                                    if ( wperp.dateFormat( response.start_date, 'Y-m-d' ) == wperp.dateFormat( response.end_date, 'Y-m-d' ) ) {
-                                        var datetime = startDate + ' at ' + startTime + ' to ' + endTime;
+                                    if ( response.extra.all_day == 'true' ) {
+                                        if ( wperp.dateFormat( response.start_date, 'Y-m-d' ) == wperp.dateFormat( response.end_date, 'Y-m-d' ) ) {
+                                            var datetime = startDate;
+                                        } else {
+                                            var datetime = startDate + ' to ' + endDate;
+                                        }
                                     } else {
-                                        var datetime = startDate + ' at ' + startTime + ' to ' + endDate + ' at ' + endTime;
+                                        if ( wperp.dateFormat( response.start_date, 'Y-m-d' ) == wperp.dateFormat( response.end_date, 'Y-m-d' ) ) {
+                                            var datetime = startDate + ' at ' + startTime + ' to ' + endTime;
+                                        } else {
+                                            var datetime = startDate + ' at ' + startTime + ' to ' + endDate + ' at ' + endTime;
+                                        }
                                     }
                                 }
 
@@ -155,7 +160,7 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
                                 var color = new Date( res.start_date ) < new Date() ? '#f05050' : '#03c756';
 
                                 var myEvent = {
-                                    id : res.id,
+                                    schedule : res,
                                     title: title,
                                     start: start_date,
                                     end: end_date,

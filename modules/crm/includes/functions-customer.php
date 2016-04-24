@@ -247,8 +247,8 @@ function erp_crm_get_contact_dropdown( $label = [] ) {
     $list = [];
 
     foreach ( $contacts as $key => $contact ) {
-        $name = in_array( 'company', $contact->types ) ? $contact->company : $contact->first_name . ' ' . $contact->last_name;
-        $list[$contact->id] = $name . '( ' . $contact->email . ' ) ';
+        $contact_obj = new \WeDevs\ERP\CRM\Contact( intval( $contact->id ) );
+        $list[$contact_obj->id] = $contact_obj->get_full_name() . '( ' . $contact_obj->get_email() . ' ) ';
     }
 
     if ( $label ) {
@@ -610,9 +610,11 @@ function erp_crm_get_feed_activity( $postdata ) {
     $db = new \WeDevs\ORM\Eloquent\Database();
 
     $results =  \WeDevs\ERP\CRM\Models\Activity::select( [ '*', $db->raw('MONTHNAME(`created_at`) as feed_month, YEAR( `created_at` ) as feed_year' ) ] )
-                ->with( [ 'contact',
-                        'created_by' => function( $query ) {
-                            $query->select( 'ID', 'user_nicename', 'user_email', 'user_url', 'display_name' );
+                ->with( [ 'contact' => function( $query ) {
+                            $query->with('types');
+                        },
+                        'created_by' => function( $query1 ) {
+                            $query1->select( 'ID', 'user_nicename', 'user_email', 'user_url', 'display_name' );
                         }
                     ] );
 
@@ -660,6 +662,13 @@ function erp_crm_get_feed_activity( $postdata ) {
         } else {
             $value['extra']['invited_user'] = [];
         }
+
+        if ( $value['contact']['user_id'] ) {
+            $value['contact']['first_name'] = get_user_meta( $value['contact']['user_id'], 'first_name', true );
+            $value['contact']['last_name'] = get_user_meta( $value['contact']['user_id'], 'last_name', true );
+        }
+
+        $value['contact']['types'] = wp_list_pluck( $value['contact']['types'], 'name' );;
 
         unset( $value['extra']['invite_contact'] );
         $value['message']               = stripslashes( $value['message'] );
@@ -713,6 +722,7 @@ function erp_crm_save_customer_feed_data( $data ) {
         $activity['extra']['invited_user'] = [];
     }
 
+    $activity['contact']['types'] = wp_list_pluck( $activity['contact']['types'], 'name' );;
     $activity['message']               = stripslashes( $activity['message'] );
     $activity['created_by']['avatar']  = get_avatar_url( $activity['created_by']['ID'] );
     $activity['created_date']          = date( 'Y-m-d', strtotime( $activity['created_at'] ) );
@@ -737,13 +747,30 @@ function erp_crm_customer_get_single_activity_feed( $feed_id ) {
     }
 
     $results = [];
-    $data = WeDevs\ERP\CRM\Models\Activity::find( $feed_id )->toArray();
+    $data = WeDevs\ERP\CRM\Models\Activity::with( [ 'contact',
+                        'created_by' => function( $query ) {
+                            $query->select( 'ID', 'user_nicename', 'user_email', 'user_url', 'display_name' );
+                        }
+                    ] )
+                    ->find( $feed_id )->toArray();
 
     if ( !$data ) {
         return;
     }
 
     $data['extra'] = json_decode( base64_decode( $data['extra'] ), true );
+
+    if ( isset( $data['extra']['invite_contact'] ) && count( $data['extra']['invite_contact'] ) > 0 ) {
+        foreach ( $data['extra']['invite_contact'] as $user_id ) {
+            $data['extra']['invited_user'][] = [
+                'id'   => $user_id,
+                'name' => get_the_author_meta( 'display_name', $user_id )
+            ];
+        }
+    } else {
+        $data['extra']['invited_user'] = [];
+    }
+
     $data['message'] = stripslashes( $data['message'] );
 
     return $data;
@@ -2031,21 +2058,22 @@ function erp_crm_prepare_calendar_schedule_data( $schedules ) {
             $start_date = date( 'Y-m-d', strtotime( $schedule['start_date'] ) );
             $end_date = ( $schedule['end_date'] ) ? date( 'Y-m-d', strtotime( $schedule['end_date'] . '+1 day' ) ) : date( 'Y-m-d', strtotime( $schedule['start_date'] . '+1 day' ) );        // $end_date = $schedule['end_date'];
 
-            if ( date( 'Y-m-d', strtotime( $start_date ) ) == date( 'Y-m-d', strtotime( $end_date ) ) ) {
+            // if ( date( 'Y-m-d', strtotime( $start_date ) ) == date( 'Y-m-d', strtotime( $end_date ) ) ) {
 
-                if ( $schedule['start_date'] < current_time( 'mysql' ) ) {
+            if ( $schedule['start_date'] < current_time( 'mysql' ) ) {
+                $time = date( 'g:i a', strtotime( $schedule['start_date'] ) );
+            } else {
+                if ( date( 'g:i a', strtotime( $schedule['start_date'] ) ) == date( 'g:i a', strtotime( $schedule['end_date'] ) ) ) {
                     $time = date( 'g:i a', strtotime( $schedule['start_date'] ) );
                 } else {
-                    if ( date( 'g:i a', strtotime( $schedule['start_date'] ) ) == date( 'g:i a', strtotime( $schedule['end_date'] ) ) ) {
-                        $time = date( 'g:i a', strtotime( $schedule['start_date'] ) );
-                    } else {
-                        $time = date( 'g:i a', strtotime( $schedule['start_date'] ) ) . ' to ' . date( 'g:i a', strtotime( $schedule['end_date'] ) );
-                    }
+                    $time = date( 'g:i a', strtotime( $schedule['start_date'] ) ) . ' to ' . date( 'g:i a', strtotime( $schedule['end_date'] ) );
                 }
-
-            } else {
-                $time = date( 'g:i a', strtotime( $schedule['start_date'] ) ) . ' to ' . date( 'g:i a', strtotime( $schedule['end_date'] ) );
             }
+
+            // } else {
+
+            //     $time = date( 'g:i a', strtotime( $schedule['start_date'] ) ) . ' to ' . date( 'g:i a', strtotime( $schedule['end_date'] ) );
+            // }
 
             $title = $time . ' ' .ucfirst( $schedule['log_type'] );
             $color = $schedule['start_date'] < current_time( 'mysql' ) ? '#f05050' : '#03c756';
