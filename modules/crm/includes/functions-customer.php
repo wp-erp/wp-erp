@@ -668,7 +668,7 @@ function erp_crm_get_feed_activity( $postdata ) {
             $value['contact']['last_name'] = get_user_meta( $value['contact']['user_id'], 'last_name', true );
         }
 
-        $value['contact']['types'] = wp_list_pluck( $value['contact']['types'], 'name' );;
+        $value['contact']['types'] = wp_list_pluck( $value['contact']['types'], 'name' );
 
         unset( $value['extra']['invite_contact'] );
         $value['message']               = stripslashes( $value['message'] );
@@ -701,7 +701,9 @@ function erp_crm_save_customer_feed_data( $data ) {
     }
 
     $activity   = WeDevs\ERP\CRM\Models\Activity::
-                with( [ 'contact',
+                with( [ 'contact' => function( $query ) {
+                            $query->with('types');
+                        },
                         'created_by' => function( $query ) {
                             $query->select( 'ID', 'user_nicename', 'user_email', 'user_url', 'display_name' );
                         }
@@ -722,7 +724,14 @@ function erp_crm_save_customer_feed_data( $data ) {
         $activity['extra']['invited_user'] = [];
     }
 
-    $activity['contact']['types'] = wp_list_pluck( $activity['contact']['types'], 'name' );;
+    if ( $activity['contact']['user_id'] ) {
+        $activity['contact']['first_name'] = get_user_meta( $activity['contact']['user_id'], 'first_name', true );
+        $activity['contact']['last_name'] = get_user_meta( $activity['contact']['user_id'], 'last_name', true );
+    }
+
+    unset( $value['extra']['invite_contact'] );
+
+    $activity['contact']['types']      = wp_list_pluck( $activity['contact']['types'], 'name' );
     $activity['message']               = stripslashes( $activity['message'] );
     $activity['created_by']['avatar']  = get_avatar_url( $activity['created_by']['ID'] );
     $activity['created_date']          = date( 'Y-m-d', strtotime( $activity['created_at'] ) );
@@ -747,12 +756,15 @@ function erp_crm_customer_get_single_activity_feed( $feed_id ) {
     }
 
     $results = [];
-    $data = WeDevs\ERP\CRM\Models\Activity::with( [ 'contact',
-                        'created_by' => function( $query ) {
-                            $query->select( 'ID', 'user_nicename', 'user_email', 'user_url', 'display_name' );
-                        }
-                    ] )
-                    ->find( $feed_id )->toArray();
+    $data = WeDevs\ERP\CRM\Models\Activity::with( [
+                'contact' => function( $query ) {
+                    $query->with('types');
+                },
+                'created_by' => function( $query1 ) {
+                    $query1->select( 'ID', 'user_nicename', 'user_email', 'user_url', 'display_name' );
+                }
+            ] )
+            ->find( $feed_id )->toArray();
 
     if ( !$data ) {
         return;
@@ -771,6 +783,12 @@ function erp_crm_customer_get_single_activity_feed( $feed_id ) {
         $data['extra']['invited_user'] = [];
     }
 
+    if ( $data['contact']['user_id'] ) {
+        $data['contact']['first_name'] = get_user_meta( $data['contact']['user_id'], 'first_name', true );
+        $data['contact']['last_name'] = get_user_meta( $data['contact']['user_id'], 'last_name', true );
+    }
+
+    $data['contact']['types'] = wp_list_pluck( $data['contact']['types'], 'name' );
     $data['message'] = stripslashes( $data['message'] );
 
     return $data;

@@ -143,6 +143,7 @@ class Customer_Relationship {
             'contact_exit'          => __( 'Already exists as a contact or company', 'erp' ),
             'make_contact_text'     => __( 'This user already exists! Want to make this user a', 'erp' ),
             'create_contact_text'   => __( 'Create new', 'erp' ),
+            'current_user_id'       => get_current_user_id(),
         ) );
 
         $contact_actvity_localize = apply_filters( 'erp_crm_contact_localize_var', [
