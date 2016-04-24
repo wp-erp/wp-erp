@@ -152,11 +152,11 @@ function erp_crm_get_details_url( $id, $type ) {
 
     if ( $id ) {
 
-        if ( $type == 'contact' ) {
+        if ( in_array( 'contact', $type ) ) {
             return admin_url( 'admin.php?page=erp-sales-customers&action=view&id=' . $id );
         }
 
-        if ( $type == 'company' ) {
+        if ( in_array( 'company', $type ) ) {
             return admin_url( 'admin.php?page=erp-sales-companies&action=view&id=' . $id );
         }
     }
@@ -1893,7 +1893,7 @@ function erp_crm_get_todays_schedules_activity( $user_id = '' ) {
     $db       = new \WeDevs\ORM\Eloquent\Database();
     $activity = new WeDevs\ERP\CRM\Models\Activity();
 
-    $res = \WeDevs\ERP\CRM\Models\Activity::with( 'contact' )->where( 'type', '=', 'log_activity' )
+    $res = \WeDevs\ERP\CRM\Models\Activity::with( [ 'contact' => function( $query ) { $query->with('types' ); } ] )->where( 'type', '=', 'log_activity' )
             ->where( 'created_by', $user_id )
             ->where( $db->raw("DATE_FORMAT( `start_date`, '%Y %m %d' )" ), \Carbon\Carbon::today()->format('Y m d') )
             ->take(7)
@@ -1902,6 +1902,7 @@ function erp_crm_get_todays_schedules_activity( $user_id = '' ) {
 
     foreach( $res as $key=>$result ) {
         $results[$key] = $result;
+        $results[$key]['contact']['types'] = wp_list_pluck( $results[$key]['contact']['types'], 'name' );
         $results[$key]['extra'] = json_decode( base64_decode( $result['extra'] ), true );
     }
 
@@ -1921,7 +1922,7 @@ function erp_crm_get_next_seven_day_schedules_activities( $user_id = '' ) {
     $db       = new \WeDevs\ORM\Eloquent\Database();
     $activity = new WeDevs\ERP\CRM\Models\Activity();
 
-    $res = \WeDevs\ERP\CRM\Models\Activity::with( 'contact' )->where( 'type', '=', 'log_activity' )
+    $res = \WeDevs\ERP\CRM\Models\Activity::with( [ 'contact' => function( $query ) { $query->with('types' ); } ] )->where( 'type', '=', 'log_activity' )
             ->where( 'created_by', $user_id )
             ->where( $db->raw("DATE_FORMAT( `start_date`, '%Y %m %d' )" ), '>=', \Carbon\Carbon::tomorrow()->format('Y m d') )
             ->where( $db->raw("DATE_FORMAT( `start_date`, '%Y %m %d' )" ), '<=',\Carbon\Carbon::tomorrow()->addDays(7)->format('Y m d') )
@@ -1931,6 +1932,7 @@ function erp_crm_get_next_seven_day_schedules_activities( $user_id = '' ) {
 
     foreach( $res as $key=>$result ) {
         $results[$key] = $result;
+        $results[$key]['contact']['types'] = wp_list_pluck( $results[$key]['contact']['types'], 'name' );
         $results[$key]['extra'] = json_decode( base64_decode( $result['extra'] ), true );
     }
 
@@ -2076,8 +2078,6 @@ function erp_crm_prepare_calendar_schedule_data( $schedules ) {
             $start_date = date( 'Y-m-d', strtotime( $schedule['start_date'] ) );
             $end_date = ( $schedule['end_date'] ) ? date( 'Y-m-d', strtotime( $schedule['end_date'] . '+1 day' ) ) : date( 'Y-m-d', strtotime( $schedule['start_date'] . '+1 day' ) );        // $end_date = $schedule['end_date'];
 
-            // if ( date( 'Y-m-d', strtotime( $start_date ) ) == date( 'Y-m-d', strtotime( $end_date ) ) ) {
-
             if ( $schedule['start_date'] < current_time( 'mysql' ) ) {
                 $time = date( 'g:i a', strtotime( $schedule['start_date'] ) );
             } else {
@@ -2087,11 +2087,6 @@ function erp_crm_prepare_calendar_schedule_data( $schedules ) {
                     $time = date( 'g:i a', strtotime( $schedule['start_date'] ) ) . ' to ' . date( 'g:i a', strtotime( $schedule['end_date'] ) );
                 }
             }
-
-            // } else {
-
-            //     $time = date( 'g:i a', strtotime( $schedule['start_date'] ) ) . ' to ' . date( 'g:i a', strtotime( $schedule['end_date'] ) );
-            // }
 
             $title = $time . ' ' .ucfirst( $schedule['log_type'] );
             $color = $schedule['start_date'] < current_time( 'mysql' ) ? '#f05050' : '#03c756';

@@ -307,6 +307,12 @@
                                 var html = wp.template('erp-crm-single-schedule-details')( { date: datetime, schedule: response } );
                                 $( '.content', modal ).html( html );
                                 $( '.loader', modal).remove();
+
+                                $('.erp-tips').tipTip( {
+                                    defaultPosition: "top",
+                                    fadeIn: 100,
+                                    fadeOut: 100,
+                                } );
                             },
 
                             error: function( response ) {

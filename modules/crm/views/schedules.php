@@ -55,7 +55,6 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
                             },
 
                             success: function( response ) {
-                                console.log( response );
                                 var startDate = wperp.dateFormat( response.start_date, 'j F' ),
                                     startTime = wperp.timeFormat( response.start_date ),
                                     endDate = wperp.dateFormat( response.end_date, 'j F' ),
@@ -187,15 +186,6 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
                     }
 
                 }); //popup
-                // console.log('Clicked on: ' + date.format());
-
-                // console.log('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-
-                // console.log('Current view: ' + view.name);
-
-                // // change the day's background color just for fun
-                // $(this).css('background-color', 'red');
-
             },
 
         });
