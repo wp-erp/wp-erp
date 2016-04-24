@@ -133,8 +133,8 @@ If you are unable to use any of the methods due to internet connectivity and fil
 * New - New CRM agent role added
 * New - CSV import/export tool added
 * New - Added CRM email templating system
-* New - Save reply added in CMR contact activities
-* New - Added quick view schedules details form CRM dashboard
+* New - Save reply added in CRM contact activities
+* New - Added quick view schedules details from CRM dashboard
 * New - Assing contact to CRM agents
 * New - Add progressbar when activity delete for better UX
 * New - License management feature added
@@ -143,18 +143,20 @@ If you are unable to use any of the methods due to internet connectivity and fil
 * New - New life stage added in CRM contacts
 * New - Added contact group and contact owner field in new contact or company creation
 * New - Added inbounding reply emails in CRM activity
-* New - Bulk Import wp user to CRM contacts
-* New - Added directly replying from CMR email activities
+* New - Bulk importer wp user to CRM contacts
+* New - Added directly replying from CRM email activities feeds
 * New - Added address options in employee details, add and edit
-* New - Added more Hooks and filters
-* Fix - Refactor Contact Forms Integration
+* New - Added plugin updater functionalities
+* New - Added more hooks and filters
+* Fix - Refactor contact forms integration
 * Fix - Refactor CRM permissions
 * Fix - Contact pagination problem fixed
-* Fix - Refactor save search quiry builder
+* Fix - Refactor save search query builder
+* Fix - Logs and schedules add and displaying problem in schedule page
 * Fix - ERP date format problem
-* Fix - Manage usr role activation and deactivation
+* Fix - Manage user role during plugin activation and deactivation
 * Fix - Who is out widget in HR dashboard
-* Fix - Leave request bulk actions delete, change statuses
+* Fix - Leave request bulk actions
 * Fix - All ERP users show their own attachments
 * Fix - Added file uploading permission for Employee, HR Manager, CRM Manager and CRM Agents
 * Fix - Contact mail functionality imporvements
