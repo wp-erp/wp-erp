@@ -878,7 +878,7 @@ function erp_crm_assign_task_to_users( $data, $save_data ) {
  * @return array
  */
 function erp_crm_save_contact_group( $data ) {
-    if ( $data['id'] ) {
+    if ( ! empty ( $data['id'] ) ) {
         $result = WeDevs\ERP\CRM\Models\ContactGroup::find( $data['id'] )->update( $data );
     } else {
         $result = WeDevs\ERP\CRM\Models\ContactGroup::create( $data );
@@ -1045,8 +1045,11 @@ function erp_crm_get_subscriber_contact( $args = [] ) {
 
         // Check if args count true, then return total count customer according to above filter
         if ( $args['count'] ) {
-            $items = WeDevs\ERP\CRM\Models\ContactSubscriber::leftjoin( $contact_group_tb, $contact_group_tb . '.id', '=', $contact_subscribe_tb . '.group_id' )
-            ->where( $contact_subscribe_tb . '.group_id', $args['group_id'] )->count();
+            if ( ! empty( $args['group_id'] ) ) {
+                $items = WeDevs\ERP\CRM\Models\ContactSubscriber::leftjoin( $contact_group_tb, $contact_group_tb . '.id', '=', $contact_subscribe_tb . '.group_id' )->where( $contact_subscribe_tb . '.group_id', $args['group_id'] )->count();
+            } else {
+                $items = WeDevs\ERP\CRM\Models\ContactSubscriber::leftjoin( $contact_group_tb, $contact_group_tb . '.id', '=', $contact_subscribe_tb . '.group_id' )->count();
+            }
         }
 
         wp_cache_set( $cache_key, $items, 'erp' );
