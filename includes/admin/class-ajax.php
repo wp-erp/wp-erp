@@ -241,8 +241,13 @@ class Ajax {
             $people = erp_get_people_by( 'email', $email );
         } else {
             $peep = \WeDevs\ERP\Framework\Models\People::withTrashed()->with('types')->whereUserId( $user->ID )->first();
-            $people        = (object) $peep->toArray();
-            $people->types = wp_list_pluck( $peep->types->toArray(), 'name' );
+
+            if ( null === $peep ) {
+                $this->send_success();
+            } else {
+                $people        = (object) $peep->toArray();
+                $people->types = wp_list_pluck( $peep->types->toArray(), 'name' );
+            }
         }
 
         // we didn't found any user with this email address
