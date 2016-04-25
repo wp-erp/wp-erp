@@ -5,6 +5,8 @@
 ;(function($) {
     'use strict';
 
+    var isRequestDone = false;
+
     var WeDevs_ERP_CRM = {
 
         initialize: function() {
@@ -508,10 +510,17 @@
 
             makeUserAsContact: function(e) {
                 e.preventDefault();
+
                 var self = $(this),
                     type = self.data('type'),
                     user_id = self.data('user_id');
 
+
+                if ( isRequestDone ) {
+                    return;
+                }
+
+                isRequestDone = true;
                 self.closest('.modal-suggession').append('<div class="erp-loader" style="top:9px; right:10px;"></div>');
 
                 wp.ajax.send( 'erp-crm-convert-user-to-contact', {
@@ -521,6 +530,7 @@
                         _wpnonce: wpErpCrm.nonce
                     },
                     success: function() {
+                        isRequestDone = false;
                         self.closest('.modal-suggession').find('.erp-loader').remove();
                         self.closest('.erp-modal').remove();
                         $('.erp-modal-backdrop').remove();
@@ -599,6 +609,7 @@
 
                     },
                     error: function( response ) {
+                        isRequestDone = false;
                         alert(response);
                     }
                 });
