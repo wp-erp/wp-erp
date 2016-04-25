@@ -234,7 +234,7 @@ class Contact_List_Table extends \WP_List_Table {
         }
 
         if ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) {
-            $actions['restore'] = sprintf( '<a href="%s" class="restoreCustomer" data-id="%d" title="%s">%s</a>', $delete_url, $customer->id, __( 'Restore this item', 'erp' ), __( 'Restore', 'erp' ) );
+            $actions['restore'] = sprintf( '<a href="%s" class="restoreCustomer" data-id="%d" data-type="%s" title="%s">%s</a>', $delete_url, $customer->id, $this->contact_type, __( 'Restore this item', 'erp' ), __( 'Restore', 'erp' ) );
         }
 
         return sprintf( '%4$s <a href="%3$s"><strong>%1$s</strong></a> %2$s', $customer->get_full_name(), $this->row_actions( $actions ), $customer->get_details_url(), $customer->get_avatar() );

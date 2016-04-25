@@ -752,8 +752,9 @@
                 if ( confirm( wpErpCrm.confirm ) ) {
                     wp.ajax.send( 'erp-crm-customer-restore', {
                         data: {
-                            '_wpnonce': wpErpCrm.nonce,
+                            _wpnonce: wpErpCrm.nonce,
                             id: self.data( 'id' ),
+                            type: self.data( 'type' )
                         },
                         success: function() {
                             self.closest('tr').fadeOut( 'fast', function() {

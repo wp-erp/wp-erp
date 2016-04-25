@@ -2,11 +2,8 @@
 namespace WeDevs\ERP\Framework\Models;
 
 use WeDevs\ERP\Framework\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class People extends Model {
-
-    use SoftDeletes;
 
     protected $primaryKey = 'id';
     protected $table      = 'erp_peoples';
@@ -14,14 +11,6 @@ class People extends Model {
     protected $fillable   = [ 'user_id', 'first_name', 'last_name', 'company', 'email', 'phone', 'mobile',
             'other', 'website', 'fax', 'notes', 'street_1', 'street_2', 'city', 'state', 'postal_code', 'country',
             'currency', 'created' ];
-
-
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = [ 'deleted_at' ];
 
     /**
      * Fetch people with types
@@ -36,13 +25,41 @@ class People extends Model {
         if ( is_array( $type ) ) {
 
             return $query->whereHas( 'types', function( $qry ) use( $type ) {
-                $qry->whereIn( 'name', $type );
+                $qry->whereIn( 'name', $type )->whereNull('deleted_at');
             });
 
         } elseif ( $type !== 'all' ) {
 
             return $query->whereHas( 'types', function( $qry ) use( $type ) {
-                $qry->where( 'name', '=', $type );
+                $qry->where( 'name', '=', $type )->whereNull('deleted_at');
+            });
+        }
+
+        return $query;
+    }
+
+    /**
+     * Fetch only trashed people
+     *
+     * @since 1.0
+     *
+     * @param  collection $query
+     * @param  string|array $type
+     *
+     * @return collection
+     */
+    public function scopeTrashed( $query, $type ) {
+
+        if ( is_array( $type ) ) {
+
+            return $query->whereHas( 'types', function( $qry ) use( $type ) {
+                $qry->whereIn( 'name', $type )->whereNotNull('deleted_at');
+            });
+
+        } elseif ( is_string( $type ) ) {
+
+            return $query->whereHas( 'types', function( $qry ) use( $type ) {
+                $qry->where( 'name', '=', $type )->whereNotNull('deleted_at');
             });
         }
 
@@ -80,6 +97,28 @@ class People extends Model {
      */
     public function removeType( $type ) {
         return $this->types()->detach( $type );
+    }
+
+    /**
+     * Temporary trashed a people
+     *
+     * @param  mixed  $type
+     *
+     * @return mixed
+     */
+    public function softDeleteType( $type ) {
+        return $this->types()->updateExistingPivot( $type->id, ['deleted_at' => current_time('mysql') ] );
+    }
+
+    /**
+     * Restore for trash
+     *
+     * @param  mixed  $type
+     *
+     * @return mixed
+     */
+    public function restore( $type ) {
+        return $this->types()->updateExistingPivot( $type->id, [ 'deleted_at' => NULL ] );
     }
 
     /**

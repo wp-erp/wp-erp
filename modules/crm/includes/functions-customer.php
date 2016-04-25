@@ -259,33 +259,6 @@ function erp_crm_get_contact_dropdown( $label = [] ) {
 }
 
 /**
- * Customer Restore from trash
- *
- * @since 1.0
- *
- * @param  array|int $customer_ids
- *
- * @return void
- */
-function erp_crm_customer_restore( $customer_ids ) {
-    if ( empty( $customer_ids ) ) {
-        return;
-    }
-
-    if ( is_array( $customer_ids ) ) {
-        foreach ( $customer_ids as $key => $user_id ) {
-            WeDevs\ERP\Framework\Models\People::withTrashed()->find( $user_id )->restore();
-            do_action( 'erp_crm_restore_customer', $user_id );
-        }
-    }
-
-    if ( is_int( $customer_ids ) ) {
-        WeDevs\ERP\Framework\Models\People::withTrashed()->find( $customer_ids )->restore();
-        do_action( 'erp_crm_restore_customer', $customer_ids );
-    }
-}
-
-/**
  * Get customer life statges status count
  *
  * @since 1.0
@@ -342,8 +315,7 @@ function erp_crm_customer_get_status_count( $type = null ) {
  * @return integer [no of trash customer]
  */
 function erp_crm_count_trashed_customers( $type = null ) {
-    $customer = new \WeDevs\ERP\Framework\Models\People();
-    return ( $type ) ? $customer->type( $type )->onlyTrashed()->count() : $customer->onlyTrashed()->count();
+    return \WeDevs\ERP\Framework\Models\People::trashed( $type )->count();
 }
 
 /**

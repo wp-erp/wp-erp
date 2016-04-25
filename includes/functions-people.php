@@ -67,7 +67,9 @@ function erp_get_peoples( $args = [] ) {
 
         // Check if render only soft deleted row
         if ( $args['trashed'] ) {
-            $people = $people->onlyTrashed();
+            $people = $people->trashed( $args['type'] );
+        } else {
+            $people = $people->type( $args['type'] );
         }
 
         // Check is the row want to search
@@ -82,7 +84,6 @@ function erp_get_peoples( $args = [] ) {
 
         // Render all collection of data according to above filter (Main query)
         $items = $people->with('types')
-                ->type( $args['type'] )
                 ->orderBy( $args['orderby'], $args['order'] )
                 ->get()
                 ->toArray();
@@ -149,22 +150,71 @@ function erp_delete_people( $data = [] ) {
         do_action( 'erp_before_delete_people', $people_id, $data );
 
         if ( $data['hard'] ) {
-            $people   = \WeDevs\ERP\Framework\Models\People::withTrashed()->find( $people_id );
+            $people   = \WeDevs\ERP\Framework\Models\People::find( $people_id );
             $type_obj = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $data['type'] )->first();
             $people->removeType( $type_obj );
 
             $types  = wp_list_pluck( $people->types->toArray(), 'name' );
 
             if ( empty( $types ) ) {
-                $people->withTrashed()->find( $people_id )->forceDelete();
+                $people->delete();
                 \WeDevs\ERP\Framework\Models\Peoplemeta::where( 'erp_people_id', $people_id )->delete();
             }
 
         } else {
-            $people = \WeDevs\ERP\Framework\Models\People::find( $people_id )->delete();
+            $people   = \WeDevs\ERP\Framework\Models\People::with('types')->find( $people_id );
+            $type_obj = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $data['type'] )->first();
+            $people->softDeleteType( $type_obj );
         }
 
         do_action( 'erp_after_delete_people', $people_id, $data );
+    }
+}
+
+/**
+ * People Restore
+ *
+ * @since 1.0
+ *
+ * @param  array $data
+ *
+ * @return void
+ */
+function erp_restore_people( $data ) {
+
+    if ( empty( $data['id'] ) ) {
+        return new WP_Error( 'not-ids', __( 'No data found', 'erp' ) );
+    }
+
+    if ( empty( $data['type'] ) ) {
+        return new WP_Error( 'not-types', __( 'No type found', 'erp' ) );
+    }
+
+    $people_ids = [];
+
+    if ( is_array( $data['id'] ) ) {
+        foreach ( $data['id'] as $key => $id ) {
+            $people_ids[] = $id;
+        }
+    } else if ( is_int( $data['id'] ) ) {
+        $people_ids[] = $data['id'];
+    }
+
+    // still do we have any ids to delete?
+    if ( ! $people_ids ) {
+        return;
+    }
+
+    // seems like we got some
+    foreach ( $people_ids as $people_id ) {
+
+        do_action( 'erp_before_restoring_people', $people_id, $data );
+
+        $people   = \WeDevs\ERP\Framework\Models\People::with('types')->find( $people_id );
+        $type_obj = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $data['type'] )->first();
+        $people->restore( $type_obj );
+
+        do_action( 'erp_after_restoring_people', $people_id, $data );
     }
 }
 
@@ -263,10 +313,10 @@ function erp_get_people_by( $field, $value ) {
     if ( false === $people ) {
 
         if ( 'id' == $field ) {
-            $peep = WeDevs\ERP\Framework\Models\People::withTrashed()->with('types')->find( intval( $value ) );
+            $peep = WeDevs\ERP\Framework\Models\People::with('types')->find( intval( $value ) );
 
         } elseif ( 'email' == $field ) {
-            $peep = WeDevs\ERP\Framework\Models\People::withTrashed()->with('types')->whereEmail( $value )->first();
+            $peep = WeDevs\ERP\Framework\Models\People::with('types')->whereEmail( $value )->first();
         }
 
         if ( $peep->id ) {

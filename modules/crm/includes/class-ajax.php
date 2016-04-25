@@ -179,14 +179,6 @@ class Ajax_Handler {
         $hard        = isset( $_REQUEST['hard'] ) ? intval( $_REQUEST['hard'] ) : 0;
         $type        = isset( $_REQUEST['type'] ) ? $_REQUEST['type'] : '';
 
-        if ( ! $customer_id ) {
-            $this->send_error( __( 'No Customer found', 'erp' ) );
-        }
-
-        if ( empty( $type ) ) {
-            $this->send_error( __( 'Type not found', 'erp' ) );
-        }
-
         $data = [
             'id'   => $customer_id,
             'hard' => $hard,
@@ -211,12 +203,14 @@ class Ajax_Handler {
         $this->verify_nonce( 'wp-erp-crm-nonce' );
 
         $customer_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+        $type        = isset( $_REQUEST['type'] ) ? $_REQUEST['type'] : '';
 
-        if ( ! $customer_id ) {
-            $this->send_error( __( 'No Customer found', 'erp' ) );
-        }
+        $data = [
+            'id'   => $customer_id,
+            'type' => $type
+        ];
 
-        erp_crm_customer_restore( $customer_id );
+        erp_restore_people( $data );
 
         // @TODO: check permission
         $this->send_success( __( 'Customer has been removed successfully', 'erp' ) );
@@ -280,7 +274,7 @@ class Ajax_Handler {
             $this->send_error( __( 'Type not found', 'erp' ) );
         }
 
-        $people_obj = \WeDevs\ERP\Framework\Models\People::find( $id );
+        $people_obj = \WeDevs\ERP\Framework\Models\People::withTrashed()->find( $id );
         $type_obj = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $type )->first();
         $people_obj->assignType( $type_obj );
 

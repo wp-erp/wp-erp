@@ -136,7 +136,12 @@ class Form_Handler {
 
                 case 'restore' :
                     if ( isset( $_GET['customer_id'] ) && !empty( $_GET['customer_id'] ) ) {
-                        erp_crm_customer_restore( $_GET['customer_id'] );
+                        $data = [
+                            'id' => $_GET['customer_id'],
+                            'type' => 'contact'
+                        ];
+
+                        erp_restore_people( $data );
                     }
 
                     wp_redirect( $redirect );
@@ -220,7 +225,12 @@ class Form_Handler {
 
                 case 'restore' :
                     if ( isset( $_GET['customer_id'] ) && !empty( $_GET['customer_id'] ) ) {
-                        erp_crm_customer_restore( $_GET['customer_id'] );
+                        $data = [
+                            'id' => $_GET['customer_id'],
+                            'type' => 'company'
+                        ];
+
+                        erp_restore_people( $data );
                     }
 
                     wp_redirect( $redirect );
