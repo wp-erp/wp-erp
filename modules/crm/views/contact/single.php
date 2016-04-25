@@ -44,6 +44,8 @@
                                             <li><a href="<?php echo $social_field_data; ?>"><?php echo $social_value['icon']; ?></a></li>
                                         <?php endif ?>
                                     <?php endforeach ?>
+
+                                    <?php do_action( 'erp_crm_contact_social_fields', $customer ); ?>
                                 </ul>
 
                             </div>

@@ -179,14 +179,6 @@ class Ajax_Handler {
         $hard        = isset( $_REQUEST['hard'] ) ? intval( $_REQUEST['hard'] ) : 0;
         $type        = isset( $_REQUEST['type'] ) ? $_REQUEST['type'] : '';
 
-        if ( ! $customer_id ) {
-            $this->send_error( __( 'No Customer found', 'erp' ) );
-        }
-
-        if ( empty( $type ) ) {
-            $this->send_error( __( 'Type not found', 'erp' ) );
-        }
-
         $data = [
             'id'   => $customer_id,
             'hard' => $hard,
@@ -211,12 +203,14 @@ class Ajax_Handler {
         $this->verify_nonce( 'wp-erp-crm-nonce' );
 
         $customer_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+        $type        = isset( $_REQUEST['type'] ) ? $_REQUEST['type'] : '';
 
-        if ( ! $customer_id ) {
-            $this->send_error( __( 'No Customer found', 'erp' ) );
-        }
+        $data = [
+            'id'   => $customer_id,
+            'type' => $type
+        ];
 
-        erp_crm_customer_restore( $customer_id );
+        erp_restore_people( $data );
 
         // @TODO: check permission
         $this->send_success( __( 'Customer has been removed successfully', 'erp' ) );
@@ -247,7 +241,7 @@ class Ajax_Handler {
         foreach ( $user_ids as $user_key => $user_id ) {
             foreach ( $group_ids as $group_key => $group_id ) {
                 $contact_subscriber = [
-                    'user_id' => $user_id,
+                    'user_id'  => $user_id,
                     'group_id' => $group_id
                 ];
 
@@ -269,7 +263,7 @@ class Ajax_Handler {
     public function convert_user_to_customer() {
         $this->verify_nonce( 'wp-erp-crm-nonce' );
 
-        $id = isset( $_POST['user_id'] ) ? $_POST['user_id'] : 0;
+        $id   = isset( $_POST['user_id'] ) ? $_POST['user_id'] : 0;
         $type = isset( $_POST['type'] ) ? $_POST['type'] : '';
 
         if ( ! $id ) {
@@ -281,7 +275,7 @@ class Ajax_Handler {
         }
 
         $people_obj = \WeDevs\ERP\Framework\Models\People::find( $id );
-        $type_obj = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $type )->first();
+        $type_obj   = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $type )->first();
         $people_obj->assignType( $type_obj );
 
         $this->send_success();

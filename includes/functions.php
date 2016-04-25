@@ -1316,8 +1316,6 @@ function erp_process_import_export() {
                             $data[$x]['work']['status'] = 'active';
                         }
 
-                        $data[$x]['type'] = 'customer';
-
                         $item_insert_id = erp_hr_employee_create( $data[$x] );
 
                         if ( is_wp_error( $item_insert_id ) ) {
@@ -1431,4 +1429,31 @@ function erp_process_import_export() {
 
         exit();
     }
+}
+
+/**
+ * Merge user defined arguments into defaults array.
+ *
+ * This function is similiar to wordpress wp_parse_args().
+ * It's support multidimensional array.
+ *
+ * @param  array $args
+ * @param  array $defaults Optional.
+ *
+ * @return array
+ */
+function erp_parse_args_recursive( &$args, $defaults = [] ) {
+    $args     = (array) $args;
+    $defaults = (array) $defaults;
+    $r        = $defaults;
+
+    foreach ( $args as $k => &$v ) {
+        if ( is_array( $v ) && isset( $r[ $k ] ) ) {
+            $r[ $k ] = erp_parse_args_recursive( $v, $r[ $k ] );
+        } else {
+            $r[ $k ] = $v;
+        }
+    }
+
+    return $r;
 }

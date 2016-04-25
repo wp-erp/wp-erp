@@ -82,6 +82,7 @@ function wperp_update_1_0_create_people_types_table() {
                 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
                 `people_id` bigint(20) unsigned DEFAULT NULL,
                 `people_types_id` int(11) unsigned DEFAULT NULL,
+                `deleted_at` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`),
                 KEY `people_id` (`people_id`),
                 KEY `people_types_id` (`people_types_id`)
@@ -135,11 +136,11 @@ function wperp_update_1_0_populate_types_table() {
         'vendor'   => 4
     ];
 
-    $table_name     = 'INSERT INTO ' . $wpdb->prefix . 'erp_people_type_relations (people_id, people_types_id) VALUES';
+    $table_name     = 'INSERT INTO ' . $wpdb->prefix . 'erp_people_type_relations (people_id, people_types_id, deleted_at ) VALUES';
     $insert_queries = [];
 
     foreach ($peoples as $people) {
-        $insert_queries[] = sprintf( "(%d, '%s')", $people->id, $type_id_mapping[ $people->type ] );
+        $insert_queries[] = sprintf( "(%d, '%s', '%s')", $people->id, $type_id_mapping[ $people->type ], $people->deleted_at );
     }
 
     $insert_query = $table_name . ' ' . implode( ', ', $insert_queries );
@@ -155,7 +156,7 @@ function wperp_update_1_0_populate_types_table() {
 function wperp_update_1_0_drop_types_column() {
     global $wpdb;
 
-    $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_peoples DROP COLUMN `type`" );
+    $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_peoples DROP COLUMN `type`, `deleted_at`" );
 }
 
 wperp_update_1_0_set_role();
