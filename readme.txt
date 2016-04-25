@@ -73,7 +73,7 @@ This may have bugs and lack of many features. If you want to contribute on this 
 
 ###Manual Install From WordPress Dashboard
 
-If your server is not connected to the internet, then you can use this method-
+If your server is not connected to the Internet, then you can use this method-
 
 1. Download the plugin by clicking on the red button above. A ZIP file will be downloaded.
 2. Login to your site’s admin panel and navigate to Plugins -> Add New -> Upload.
@@ -85,7 +85,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
 
 1. Download the plugin by clicking on the red button above.A ZIP file will be downloaded.
 2. Unzip the file.
-3. Launch your favourite FTP client. Such as FileZilla, FireFTP, CyberDuck etc. If you are a more advanced user, then you can use SSH too.
+3. Launch your favorite FTP client. Such as FileZilla, FireFTP, CyberDuck etc. If you are a more advanced user, then you can use SSH too.
 4. Upload the folder to wp-content/plugins/
 5. Log in to your WordPress dashboard.
 6. Navigate to Plugins -> Installed
@@ -93,14 +93,14 @@ If you are unable to use any of the methods due to internet connectivity and fil
 
 == Screenshots ==
 
-1. Plugin onboarding
+1. Plugin on-boarding
 2. HR Dashboard
 3. Employee Listing
 4. Creating a new employee
 5. Employee details page.
 6. Employee profile job tab, keep track of every salary increment, status changes and department/location changes.
 7. See the leave history and balances.
-8. Analyze employee performance by rating in various matrics
+8. Analyze employee performance by rating in various metrics
 9. Manage permissions and who can do what.
 10. Departments management
 11. Designation management
@@ -123,48 +123,49 @@ If you are unable to use any of the methods due to internet connectivity and fil
   => No. We did not put any limit on anything. You can create as much entries as you want.
 
 == Changelog ==
+
+**v1.0 -> April 25, 2016**
+
+* [improved] Change people table structure.
+* [new] New CRM agent role added
+* [new] CSV import/export tool added
+* [new] Added CRM email templating system
+* [new] Save reply added in CRM contact activities
+* [new] Added quick view schedules details from CRM dashboard
+* [new] Assign contact to CRM agents
+* [new] Add progress-bar when activity delete for better UX
+* [new] License management feature added
+* [new] CRM activity email read tracker
+* [new] HR reporting headcount chart now shows department-wise
+* [new] New life stage added in CRM contacts
+* [new] Added contact group and contact owner field in new contact or company creation
+* [new] Added inbounding reply emails in CRM activity
+* [new] Bulk importer WP User to CRM contacts
+* [new] Added directly replying from CRM email activities feeds
+* [new] Added address options in employee details, add and edit
+* [new] Added plugin updater functionalities
+* [new] Added more hooks and filters
+* [fix] Re-factor contact forms integration
+* [fix] Re-factor CRM permissions
+* [fix] Contact pagination problem fixed
+* [fix] Re-factor save search query builder
+* [fix] Logs and schedules add and displaying problem in schedule page
+* [fix] ERP date format problem
+* [fix] Manage user role during plugin activation and deactivation
+* [fix] Who is out widget in HR dashboard
+* [fix] Leave request bulk actions
+* [fix] All ERP users show their own attachments
+* [fix] Added file uploading permission for Employee, HR Manager, CRM Manager and CRM Agents
+* [fix] Contact mail functionality improvements
+* [fix] Fix employee termination issues
+* [fix] Leave entitlement problem fixed
+* [fix] Employee list table now focus on "active" subnav by default
+* [fix] Employee and Contact record duplication remove with better UX
+* [update] - Trix editor js, Select2, Vuejs
+
 **v0.1 -> March 18, 2016**
 
 * Beta Release
-
-**v0.1 -> Final Release
-
-* Change people table stracture.
-* New - New CRM agent role added
-* New - CSV import/export tool added
-* New - Added CRM email templating system
-* New - Save reply added in CRM contact activities
-* New - Added quick view schedules details from CRM dashboard
-* New - Assing contact to CRM agents
-* New - Add progressbar when activity delete for better UX
-* New - License management feature added
-* New - CRM activity email read tracker
-* New - HR reporting headcount chart now shows departmentwise
-* New - New life stage added in CRM contacts
-* New - Added contact group and contact owner field in new contact or company creation
-* New - Added inbounding reply emails in CRM activity
-* New - Bulk importer wp user to CRM contacts
-* New - Added directly replying from CRM email activities feeds
-* New - Added address options in employee details, add and edit
-* New - Added plugin updater functionalities
-* New - Added more hooks and filters
-* Fix - Refactor contact forms integration
-* Fix - Refactor CRM permissions
-* Fix - Contact pagination problem fixed
-* Fix - Refactor save search query builder
-* Fix - Logs and schedules add and displaying problem in schedule page
-* Fix - ERP date format problem
-* Fix - Manage user role during plugin activation and deactivation
-* Fix - Who is out widget in HR dashboard
-* Fix - Leave request bulk actions
-* Fix - All ERP users show their own attachments
-* Fix - Added file uploading permission for Employee, HR Manager, CRM Manager and CRM Agents
-* Fix - Contact mail functionality imporvements
-* Fix - Fix employee termination issues
-* Fix - Leave entitlement problem fixed
-* Fix - Employee list table now focus on "active" subnav by default
-* Fix - Employee and Contact record duplication remove with better UX
-* Update - Trix editor js, Select2, Vuejs
 
 == Upgrade Notice ==
 
