@@ -505,7 +505,6 @@ Company'
                 `country` varchar(20) DEFAULT NULL,
                 `currency` varchar(5) DEFAULT NULL,
                 `created` datetime DEFAULT NULL,
-                `deleted_at` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`),
                 KEY `user_id` (`user_id`)
             ) $collate;",
@@ -532,6 +531,7 @@ Company'
                 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
                 `people_id` bigint(20) unsigned DEFAULT NULL,
                 `people_types_id` int(11) unsigned DEFAULT NULL,
+                `deleted_at` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`),
                 KEY `people_id` (`people_id`),
                 KEY `people_types_id` (`people_types_id`)
