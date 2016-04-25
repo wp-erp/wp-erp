@@ -1,6 +1,6 @@
 <div class="performance-tab-wrap">
 
-    <?php $performance = $employee->get_performance(); ?>
+    <?php $performance = $employee->get_performance( $employee->id ); ?>
 
     <?php $performance_rating = erp_performance_rating(); ?>
 
