@@ -31,7 +31,6 @@ function erp_hr_employee_on_delete( $user_id, $hard = 0 ) {
  * @return int  employee id
  */
 function erp_hr_employee_create( $args = array() ) {
-
     global $wpdb;
 
     $defaults = array(
@@ -52,6 +51,7 @@ function erp_hr_employee_create( $args = array() ) {
         'personal'        => array(
             'photo_id'        => 0,
             'user_id'         => 0,
+            'employee_id'     => '',
             'first_name'      => '',
             'middle_name'     => '',
             'last_name'       => '',
@@ -78,7 +78,7 @@ function erp_hr_employee_create( $args = array() ) {
 
     $posted = array_map( 'strip_tags_deep', $args );
     $posted = array_map( 'trim_deep', $posted );
-    $data   = wp_parse_args( $posted, $defaults );
+    $data   = erp_parse_args( $posted, $defaults );
 
     // some basic validation
     if ( empty( $data['personal']['first_name'] ) ) {
