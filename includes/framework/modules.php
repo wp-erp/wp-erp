@@ -35,16 +35,16 @@ class Modules {
     public function init_modules() {
         $this->modules = [
             'hrm' => [
-                'title'       => __( 'HR Management', 'wp-erp' ),
+                'title'       => __( 'HR Management', 'erp' ),
                 'slug'        => 'erp-hrm',
-                'description' => __( 'Human Resource Mnanagement', 'wp-erp' ),
+                'description' => __( 'Human Resource Management', 'erp' ),
                 'callback'    => '\WeDevs\ERP\HRM\Human_Resource',
                 'modules'     => apply_filters( 'erp_hr_modules', [ ] )
             ],
             'crm' => [
-                'title'       => __( 'CR Management', 'wp-erp' ),
+                'title'       => __( 'CR Management', 'erp' ),
                 'slug'        => 'erp-crm',
-                'description' => __( 'Client Resource Mnanagement', 'wp-erp' ),
+                'description' => __( 'Client Resource Management', 'erp' ),
                 'callback'    => '\WeDevs\ERP\CRM\Customer_Relationship',
                 'modules'     => apply_filters( 'erp_crm_modules', [ ] )
             ]

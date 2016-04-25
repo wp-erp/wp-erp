@@ -2,19 +2,19 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'    => __( 'Leave Type', 'wp-erp' ),
+            'label'    => __( 'Leave Type', 'erp' ),
             'name'     => 'leave_policy',
             'id'       => 'erp-hr-leave-req-leave-policy',
             'value'    => '',
             'required' => true,
             'type'     => 'select',
-            'options'  => array( '' => __( '- Select -', 'wp-erp' ) ) + erp_hr_leave_get_policies_dropdown_raw()
+            'options'  => array( '' => __( '- Select -', 'erp' ) ) + erp_hr_leave_get_policies_dropdown_raw()
         ) ); ?>
     </div>
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'    => __( 'From', 'wp-erp' ),
+            'label'    => __( 'From', 'erp' ),
             'name'     => 'leave_from',
             'id'       => 'erp-hr-leave-req-from-date',
             'value'    => '',
@@ -25,7 +25,7 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'    => __( 'To', 'wp-erp' ),
+            'label'    => __( 'To', 'erp' ),
             'name'     => 'leave_to',
             'id'       => 'erp-hr-leave-req-to-date',
             'value'    => '',
@@ -38,10 +38,10 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Reason', 'wp-erp' ),
+            'label'       => __( 'Reason', 'erp' ),
             'name'        => 'leave_reason',
             'type'        => 'textarea',
-            'custom_attr' => array( 'cols' => 30, 'rows' => 3 )
+            'custom_attr' => array( 'cols' => 25, 'rows' => 3 )
         ) ); ?>
     </div>
 

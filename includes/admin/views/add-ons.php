@@ -1,47 +1,48 @@
 <div class="wrap">
-    <h2><?php _e( 'Add-ons', 'wp-erp' ); ?></h2>
+    <h1><?php _e( 'Add-ons', 'erp' ); ?> <a href="http://wperp.com/downloads/" target="_blank" class="page-title-action"><?php _e( 'View all Add-ons', 'erp' ); ?></a></h1>
 
     <?php
-    $add_ons = get_transient( 'erp_addons' );
+    $add_ons = get_transient( 'wperp_addons' );
 
     if ( false === $add_ons ) {
-        $response = wp_remote_get( 'http://wedevs.com/api/wpuf/addons.php', array('timeout' => 15) );
-        $update = wp_remote_retrieve_body( $response );
+        $help_url  = 'https://api.bitbucket.org/2.0/snippets/wedevs/nrq8z/files/addons.json';
+        $response  = wp_remote_get( $help_url, array('timeout' => 15) );
+        $add_ons = wp_remote_retrieve_body( $response );
 
         if ( is_wp_error( $response ) || $response['response']['code'] != 200 ) {
-            return false;
+            $add_ons = '[]';
         }
 
-        set_transient( 'erp_addons', $update, 12 * HOUR_IN_SECONDS );
-        $add_ons = $update;
+        set_transient( 'wperp_addons', $add_ons, 12 * HOUR_IN_SECONDS );
     }
 
     $add_ons = json_decode( $add_ons );
 
     if ( count( $add_ons ) ) {
         foreach ($add_ons as $addon) {
+            $addon_url = $addon->url . '?utm_source=wp-admin&utm_medium=link&utm_campaign=addons-page';
             ?>
 
             <div class="erp-addon">
                 <div class="erp-addon-thumb">
-                    <a href="<?php echo $addon->url; ?>" target="_blank">
-                        <img src="<?php echo $addon->thumbnail; ?>" alt="<?php echo esc_attr( $addon->title ); ?>" />
+                    <a href="<?php echo $addon_url; ?>" target="_blank">
+                        <img src="<?php echo $addon->thumb; ?>" alt="<?php echo esc_attr( $addon->title ); ?>" />
                     </a>
                 </div>
 
                 <div class="erp-detail">
                     <h3 class="title">
-                        <a href="<?php echo $addon->url; ?>" target="_blank"><?php echo $addon->title; ?></a>
+                        <a href="<?php echo $addon->url; ?>" target="_blank"><?php echo esc_html( $addon->title ); ?></a>
                     </h3>
 
-                    <div class="text"><?php echo $addon->desc; ?></div>
+                    <div class="text"><?php echo wp_kses_post( $addon->desc ); ?></div>
                 </div>
 
                 <div class="erp-links">
                     <?php if ( class_exists( $addon->class ) ) { ?>
-                        <a class="button button-disabled" href="<?php echo $addon->url; ?>" target="_blank">Installed</a>
+                        <a class="button button-disabled" href="<?php echo $addon_url; ?>" target="_blank"><?php _e( 'Installed', 'erp' ); ?></a>
                     <?php } else { ?>
-                        <a class="button" href="<?php echo $addon->url; ?>" target="_blank">View Details</a>
+                        <a class="button-primary" href="<?php echo $addon_url; ?>" target="_blank"><?php _e( 'View Details', 'erp' ); ?></a>
                     <?php } ?>
                 </div>
             </div>
@@ -49,47 +50,48 @@
             <?php
         }
     } else {
-        echo '<div class="error"><p>Error fetching add-ons</p></div>';
+        _e( '<div class="error"><p>Error fetching add-ons</p></div>', 'erp' );
     }
     ?>
-
-    <style type="text/css">
-        .erp-addon {
-            width: 220px;
-            float: left;
-            margin: 10px;
-            border: 1px solid #E6E6E6;
-        }
-
-        .erp-addon-thumb img {
-            max-width: 220px;
-            max-height: 140px;
-        }
-
-        .erp-detail {
-            padding: 6px 10px 10px;
-            min-height: 110px;
-        }
-
-        .erp-detail h3.title {
-            margin: 5px 0 10px;
-            padding: 0;
-        }
-
-        .erp-detail h3.title a {
-            text-decoration: none;
-            color: #111;
-        }
-
-        .erp-links {
-            padding: 10px;
-            background: #F5F5F5;
-            border-top: 1px solid #E6E6E6;
-        }
-
-        a.button.disabled {
-            background: #eee;
-        }
-    </style>
-
 </div>
+
+<style type="text/css">
+    .erp-addon {
+        width: 240px;
+        float: left;
+        margin: 10px 25px 20px 0;
+        border: 1px solid #E6E6E6;
+        background-color: #fff;
+    }
+
+    .erp-addon-thumb img {
+        width: 100%;
+        height: auto;
+    }
+
+    .erp-detail {
+        padding: 6px 10px 10px;
+        min-height: 110px;
+    }
+
+    .erp-detail h3.title {
+        margin: 5px 0 10px;
+        padding: 0;
+    }
+
+    .erp-detail h3.title a {
+        text-decoration: none;
+        color: #111;
+    }
+
+    .erp-links {
+        padding: 10px;
+        background: #F5F5F5;
+        border-top: 1px solid #E6E6E6;
+        text-align: center;
+    }
+
+    a.button.disabled {
+        background: #eee;
+    }
+</style>

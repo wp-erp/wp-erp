@@ -29,7 +29,7 @@ function erp_get_peoples( $args = [] ) {
         'number'     => 20,
         'offset'     => 0,
         'orderby'    => 'id',
-        'order'      => 'ASC',
+        'order'      => 'DESC',
         'trashed'    => false,
         'meta_query' => [],
         'count'      => false,
@@ -40,25 +40,25 @@ function erp_get_peoples( $args = [] ) {
     $args        = wp_parse_args( $args, $defaults );
     $people_type = is_array( $args['type'] ) ? implode( '-', $args['type'] ) : $args['type'];
     $cache_key   = 'erp-people-' . $people_type . '-' . md5( serialize( $args ) );
-    $items       = wp_cache_get( $cache_key, 'wp-erp' );
+    $items       = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $items ) {
         $people = new WeDevs\ERP\Framework\Models\People();
 
         // Check if want all data without any pagination
-        if ( $args['number'] != '-1' ) {
+        if ( ( $args['number'] != '-1' ) && ! $args['count'] ) {
             $people = $people->skip( $args['offset'] )->take( $args['number'] );
         }
 
         // Check if meta query apply
         if ( ! empty( $args['meta_query'] ) ) {
 
-            $people_tb = $wpdb->prefix . 'erp_peoples';
+            $people_tb     = $wpdb->prefix . 'erp_peoples';
             $peoplemeta_tb = $wpdb->prefix . 'erp_peoplemeta';
 
-            $meta_key = isset( $args['meta_query']['meta_key'] ) ? $args['meta_query']['meta_key'] : '';
-            $meta_value = isset( $args['meta_query']['meta_value'] ) ? $args['meta_query']['meta_value'] : '';
-            $compare = isset( $args['meta_query']['compare'] ) ? $args['meta_query']['compare'] : '=';
+            $meta_key      = isset( $args['meta_query']['meta_key'] ) ? $args['meta_query']['meta_key'] : '';
+            $meta_value    = isset( $args['meta_query']['meta_value'] ) ? $args['meta_query']['meta_value'] : '';
+            $compare       = isset( $args['meta_query']['compare'] ) ? $args['meta_query']['compare'] : '=';
 
             $people = $people->leftjoin( $peoplemeta_tb, $people_tb . '.id', '=', $peoplemeta_tb . '.erp_people_id' )->select( array( $people_tb . '.*', $peoplemeta_tb . '.meta_key', $peoplemeta_tb . '.meta_value' ) )
                         ->where( $peoplemeta_tb . '.meta_key', $meta_key )
@@ -67,7 +67,9 @@ function erp_get_peoples( $args = [] ) {
 
         // Check if render only soft deleted row
         if ( $args['trashed'] ) {
-            $people = $people->onlyTrashed();
+            $people = $people->trashed( $args['type'] );
+        } else {
+            $people = $people->type( $args['type'] );
         }
 
         // Check is the row want to search
@@ -81,22 +83,159 @@ function erp_get_peoples( $args = [] ) {
         $people = apply_filters( 'erp_people_query_object', $people );
 
         // Render all collection of data according to above filter (Main query)
-        $items = $people->type( $args['type'] )
+        $items = $people->with('types')
                 ->orderBy( $args['orderby'], $args['order'] )
                 ->get()
                 ->toArray();
 
-        $items = erp_array_to_object( $items );
+        $results = [];
+
+        if ( $items ) {
+            foreach ( $items as $key => $item ) {
+                $item['types'] = wp_list_pluck( $item['types'], 'name' );
+                $results[$key] = $item;
+            }
+        }
+
+        $items = erp_array_to_object( $results );
 
         // Check if args count true, then return total count customer according to above filter
         if ( $args['count'] ) {
             $items = $people->type( $args['type'] )->count();
         }
 
-        wp_cache_set( $cache_key, $items, 'wp-erp' );
+        wp_cache_set( $cache_key, $items, 'erp' );
     }
 
     return $items;
+}
+
+/**
+ * People data delete
+ *
+ * @since 1.0
+ *
+ * @param  array  $data
+ *
+ * @return void
+ */
+function erp_delete_people( $data = [] ) {
+
+    if ( empty( $data['id'] ) ) {
+        return new WP_Error( 'not-ids', __( 'No data found', 'erp' ) );
+    }
+
+    if ( empty( $data['type'] ) ) {
+        return new WP_Error( 'not-types', __( 'No type found', 'erp' ) );
+    }
+
+    $people_ids = [];
+
+    if ( is_array( $data['id'] ) ) {
+        foreach ( $data['id'] as $key => $id ) {
+            $people_ids[] = $id;
+        }
+    } else if ( is_int( $data['id'] ) ) {
+        $people_ids[] = $data['id'];
+    }
+
+    // still do we have any ids to delete?
+    if ( ! $people_ids ) {
+        return;
+    }
+
+    // seems like we got some
+    foreach ( $people_ids as $people_id ) {
+
+        do_action( 'erp_before_delete_people', $people_id, $data );
+
+        if ( $data['hard'] ) {
+            $people   = \WeDevs\ERP\Framework\Models\People::find( $people_id );
+            $type_obj = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $data['type'] )->first();
+            $people->removeType( $type_obj );
+
+            $types  = wp_list_pluck( $people->types->toArray(), 'name' );
+
+            if ( empty( $types ) ) {
+                $people->delete();
+                \WeDevs\ERP\Framework\Models\Peoplemeta::where( 'erp_people_id', $people_id )->delete();
+            }
+
+        } else {
+            $people   = \WeDevs\ERP\Framework\Models\People::with('types')->find( $people_id );
+            $type_obj = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $data['type'] )->first();
+            $people->softDeleteType( $type_obj );
+        }
+
+        do_action( 'erp_after_delete_people', $people_id, $data );
+    }
+}
+
+/**
+ * People Restore
+ *
+ * @since 1.0
+ *
+ * @param  array $data
+ *
+ * @return void
+ */
+function erp_restore_people( $data ) {
+
+    if ( empty( $data['id'] ) ) {
+        return new WP_Error( 'not-ids', __( 'No data found', 'erp' ) );
+    }
+
+    if ( empty( $data['type'] ) ) {
+        return new WP_Error( 'not-types', __( 'No type found', 'erp' ) );
+    }
+
+    $people_ids = [];
+
+    if ( is_array( $data['id'] ) ) {
+        foreach ( $data['id'] as $key => $id ) {
+            $people_ids[] = $id;
+        }
+    } else if ( is_int( $data['id'] ) ) {
+        $people_ids[] = $data['id'];
+    }
+
+    // still do we have any ids to delete?
+    if ( ! $people_ids ) {
+        return;
+    }
+
+    // seems like we got some
+    foreach ( $people_ids as $people_id ) {
+
+        do_action( 'erp_before_restoring_people', $people_id, $data );
+
+        $people   = \WeDevs\ERP\Framework\Models\People::with('types')->find( $people_id );
+        $type_obj = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $data['type'] )->first();
+        $people->restore( $type_obj );
+
+        do_action( 'erp_after_restoring_people', $people_id, $data );
+    }
+}
+
+/**
+ * Get peoples by a given field
+ *
+ * @since 1.0
+ *
+ * @param  string $field
+ * @param  mixed  $value
+ *
+ * @return array
+ */
+function erp_get_peoples_by( $field, $value ) {
+    if ( is_array( $value ) ) {
+        $peoples = WeDevs\ERP\Framework\Models\People::whereIn( $field, $value )->get();
+    } else {
+        $peoples = WeDevs\ERP\Framework\Models\People::where( $field, $value )->get();
+    }
+
+    return erp_array_to_object( $peoples->toArray() );
 }
 
 /**
@@ -113,7 +252,7 @@ function erp_get_peoples_array( $args = [] ) {
     $peoples = erp_get_peoples( $args );
 
     foreach ( $peoples as $user ) {
-        $users[ $user->id ] = ( 'company' == $user->type ) ? $user->company : $user->first_name . ' ' . $user->last_name;
+        $users[ $user->id ] = ( in_array( 'company', $user->types ) ) ? $user->company : $user->first_name . ' ' . $user->last_name;
     }
 
     return $users;
@@ -130,12 +269,12 @@ function erp_get_peoples_array( $args = [] ) {
  */
 function erp_get_peoples_count( $type = 'contact' ) {
     $cache_key = 'erp-people-count-' . $type;
-    $count     = wp_cache_get( $cache_key, 'wp-erp' );
+    $count     = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $count ) {
         $count = WeDevs\ERP\Framework\Models\People::type( $type )->count();
 
-        wp_cache_set( $cache_key, $count, 'wp-erp' );
+        wp_cache_set( $cache_key, $count, 'erp' );
     }
 
     return intval( $count );
@@ -151,16 +290,44 @@ function erp_get_peoples_count( $type = 'contact' ) {
  * @return array
  */
 function erp_get_people( $id = 0 ) {
-    $cache_key = 'erp-people-single-' . $id;
-    $people    = wp_cache_get( $cache_key, 'wp-erp' );
+    return erp_get_people_by( 'id', $id );
+}
+
+/**
+ * Retrieve people info by a given field
+ *
+ * @param  string  $field
+ * @param  mixed  $value
+ *
+ * @return object
+ */
+function erp_get_people_by( $field, $value ) {
+
+    if ( ! in_array( $field, [ 'id', 'email'] ) ) {
+        return new WP_Error( 'not-valid-field', __( 'No valid type provided', 'erp' ) );
+    }
+
+    $cache_key = 'erp-people-single-' . $value;
+    $people    = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $people ) {
-        $peep = WeDevs\ERP\Framework\Models\People::withTrashed()->find( $id );
+
+        if ( 'id' == $field ) {
+            $peep = WeDevs\ERP\Framework\Models\People::with('types')->find( intval( $value ) );
+
+        } elseif ( 'email' == $field ) {
+            $peep = WeDevs\ERP\Framework\Models\People::with('types')->whereEmail( $value )->first();
+        }
 
         if ( $peep->id ) {
-            $people = (object) $peep->toArray();
+            $people                = (object) $peep->toArray();
+            $people->types         = wp_list_pluck( $peep->types->toArray(), 'name' );
 
-            wp_cache_set( $cache_key, $people, 'wp-erp' );
+            // include meta fields
+            $people->date_of_birth = erp_people_get_meta( $peep->id, 'date_of_birth', true );
+            $people->source        = erp_people_get_meta( $peep->id, 'source', true );
+
+            wp_cache_set( $cache_key, $people, 'erp' );
         }
     }
 
@@ -196,28 +363,37 @@ function erp_insert_people( $args = array() ) {
         'country'     => '',
         'currency'    => '',
         'type'        => '',
+        'user_id'     => 0,
     );
 
-    $args = wp_parse_args( $args, $defaults );
+    $args        = wp_parse_args( $args, $defaults );
+    $people_type = $args['type'];
 
-    // Check if contact first name and last name provide or not
-    if ( $args['type'] == 'contact' ) {
+    unset( $args['type'] );
 
-        // some basic validation
-        if ( empty( $args['first_name'] ) ) {
-            return new WP_Error( 'no-first_name', __( 'No First Name provided.', 'wp-erp' ) );
+    if ( 'contact' == $people_type ) {
+        if ( empty( $args['user_id'] ) ) {
+            // some basic validation
+            // Check if contact first name and last name provide or not
+            if ( empty( $args['first_name'] ) ) {
+                return new WP_Error( 'no-first_name', __( 'No First Name provided.', 'erp' ) );
+            }
+            if ( empty( $args['last_name'] ) ) {
+                return new WP_Error( 'no-last_name', __( 'No Last Name provided.', 'erp' ) );
+            }
         }
-        if ( empty( $args['last_name'] ) ) {
-            return new WP_Error( 'no-last_name', __( 'No Last Name provided.', 'wp-erp' ) );
-        }
-
     }
 
     // Check if company name provide or not
-    if ( $args['type'] == 'company' ) {
+    if ( 'company' == $people_type ) {
         if ( empty( $args['company'] ) ) {
-            return new WP_Error( 'no-company', __( 'No Company Name provided.', 'wp-erp' ) );
+            return new WP_Error( 'no-company', __( 'No Company Name provided.', 'erp' ) );
         }
+    }
+
+    // Check if not empty and valid email
+    if ( ! empty( $args['email'] ) && ! is_email( $args['email'] ) ) {
+        return new WP_Error( 'invalid-email', __( 'Please provide a valid email address', 'erp' ) );
     }
 
     // remove row id to determine if new or update
@@ -226,10 +402,53 @@ function erp_insert_people( $args = array() ) {
 
     if ( ! $row_id ) {
 
+        $type_obj = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $people_type )->first();
+
+        // check if a valid people type exists in the database
+        if ( null === $type_obj ) {
+            return new WP_Error( 'no-type_found', __( 'The people type is invalid.', 'erp' ) );
+        }
+
+        // if an empty type provided
+        if ( '' == $people_type ) {
+            return new WP_Error( 'no-type', __( 'No user type provided.', 'erp' ) );
+        }
+
+        $user = \get_user_by( 'email', $args['email'] );
+
+        //check for duplicate user
+        if ( $user ) {
+            $people_obj = \WeDevs\ERP\Framework\Models\People::where( 'user_id', $user->ID )->first();
+
+            // Check if exist in wp user table but not people table
+            if ( null == $people_obj ) {
+                $new_people = \WeDevs\ERP\Framework\Models\People::create( [ 'user_id' => $user->ID, 'created' => current_time('mysql') ] );
+                $new_people->assignType( $type_obj );
+                return $new_people;
+            } else {
+                return $people_obj->id;
+            }
+        } else {
+            $people_obj = \WeDevs\ERP\Framework\Models\People::whereEmail( $args['email'] )->first();
+
+            // Check already email exist in contact table
+            if ( null !== $people_obj ) {
+
+                // Check if person found, then check is same type person or not
+                if ( $people_obj->hasType( $people_type ) ) {
+                    return new WP_Error( 'type-exist', sprintf( __( 'This %s already exists.', 'erp' ), $people_type ) );
+                } else {
+                    $people_obj->assignType( $people_type );
+                    return $people_obj->id;
+                }
+            }
+        }
+
         $args['created'] = current_time( 'mysql' );
 
         // insert a new
         $people = WeDevs\ERP\Framework\Models\People::create( $args );
+        $people->assignType( $type_obj );
 
         do_action( 'erp_create_new_people', $people->id, $args );
 
@@ -325,4 +544,36 @@ function erp_people_update_meta( $people_id, $meta_key, $meta_value, $prev_value
  */
 function erp_people_delete_meta( $people_id, $meta_key, $meta_value = '' ) {
     return delete_metadata( 'erp_people', $people_id, $meta_key, $meta_value);
+}
+
+/**
+ * Get the contact sources
+ *
+ * @return array
+ */
+function erp_crm_contact_sources() {
+    $sources = array(
+        'advert'             => __( 'Advertisement', 'erp' ),
+        'chat'               => __( 'Chat', 'erp' ),
+        'contact_form'       => __( 'Contact Form', 'erp' ),
+        'employee_referral'  => __( 'Employee Referral', 'erp' ),
+        'external_referral'  => __( 'External Referral', 'erp' ),
+        'marketing_campaign' => __( 'Marketing campaign', 'erp' ),
+        'newsletter'         => __( 'Newsletter', 'erp' ),
+        'online_store'       => __( 'OnlineStore', 'erp' ),
+        'optin_form'         => __( 'Optin Forms', 'erp' ),
+        'partner'            => __( 'Partner', 'erp' ),
+        'phone'              => __( 'Phone Call', 'erp' ),
+        'public_relations'   => __( 'Public Relations', 'erp' ),
+        'sales_mail_alias'   => __( 'Sales Mail Alias', 'erp' ),
+        'search_engine'      => __( 'Search Engine', 'erp' ),
+        'seminar_internal'   => __( 'Seminar-Internal', 'erp' ),
+        'seminar_partner'    => __( 'Seminar Partner', 'erp' ),
+        'social_media'       => __( 'Social Media', 'erp' ),
+        'trade_show'         => __( 'Trade Show', 'erp' ),
+        'web_download'       => __( 'Web Download', 'erp' ),
+        'web_research'       => __( 'Web Research', 'erp' ),
+    );
+
+    return apply_filters( 'erp_crm_contact_sources', $sources );
 }

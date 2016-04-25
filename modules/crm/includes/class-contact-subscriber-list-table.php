@@ -35,12 +35,12 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
             return;
         }
 
-        $groups         = erp_crm_get_contact_group_dropdown( [ '' => __( 'All Groups', 'wp-erp' ) ] );
+        $groups         = erp_crm_get_contact_group_dropdown( [ '' => __( 'All Groups', 'erp' ) ] );
         $selected_group = ( isset( $_GET['filter_contact_group'] ) ) ? $_GET['filter_contact_group'] : 0;
         ?>
         <div class="alignleft actions">
 
-            <label class="screen-reader-text" for="new_role"><?php _e( 'Filter by Group', 'wp-erp' ) ?></label>
+            <label class="screen-reader-text" for="new_role"><?php _e( 'Filter by Group', 'erp' ) ?></label>
             <select name="filter_contact_group" id="filter_contact_group">
                 <?php foreach ( $groups as $key => $group ) : ?>
                     <option value="<?php echo $key; ?>" <?php selected( $selected_group, $key ); ?>><?php echo $group; ?></option>
@@ -48,7 +48,7 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
             </select>
 
             <?php
-            submit_button( __( 'Filter' ), 'button', 'filter_group', false );
+            submit_button( __( 'Filter', 'erp' ), 'button', 'filter_group', false );
         echo '</div>';
     }
 
@@ -60,7 +60,7 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
      * @return void
      */
     function no_items() {
-        _e( 'No Subscriber contact found', 'wp-erp' );
+        _e( 'No Subscriber contact found', 'erp' );
     }
 
     /**
@@ -111,8 +111,8 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
         foreach( $res as $key=>$data ) {
             $subscribe_date = sprintf( '%s %s',
                                 ( $status[$key] == 'subscribe' )
-                                    ? __( 'Subscribed on ', 'wp-erp' )
-                                    : __( 'Unsubscribed on ', 'wp-erp' ),
+                                    ? __( 'Subscribed on ', 'erp' )
+                                    : __( 'Unsubscribed on ', 'erp' ),
                                 ( $status[$key] == 'subscribe' )
                                     ? erp_format_date( $item[$key]['subscribe_at'] )
                                     : erp_format_date( $item[$key]['unsubscribe_at'] )
@@ -149,10 +149,10 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
     function get_columns() {
         $columns = array(
             'cb'             => '<input type="checkbox" />',
-            'name'           => __( 'Name', 'wp-erp' ),
-            'email'          => __( 'Email', 'wp-erp' ),
-            'type'           => __( 'Contact Type', 'wp-erp' ),
-            'group'          => __( 'Group', 'wp-erp' ),
+            'name'           => __( 'Name', 'erp' ),
+            'email'          => __( 'Email', 'erp' ),
+            'type'           => __( 'Contact Type', 'erp' ),
+            'group'          => __( 'Group', 'erp' ),
         );
 
         return apply_filters( 'erp_crm_contact_subscribe_table_cols', $columns );
@@ -173,10 +173,10 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
         $delete_url        = '';
         $edit_url        = '';
 
-        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $edit_url, $subscriber_contact->user_id, __( 'Edit this item', 'wp-erp' ), __( 'Edit', 'wp-erp' ) );
-        $actions['delete']   = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $subscriber_contact->user_id, __( 'Delete this item', 'wp-erp' ), __( 'Delete', 'wp-erp' ) );
+        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $edit_url, $subscriber_contact->user_id, __( 'Edit this item', 'erp' ), __( 'Edit', 'erp' ) );
+        $actions['delete']   = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $subscriber_contact->user_id, __( 'Delete this item', 'erp' ), __( 'Delete', 'erp' ) );
 
-        return sprintf( '%4$s <a href="%3$s"><strong>%1$s</strong></a> %2$s', $contact->get_full_name(), $this->row_actions( $actions ), erp_crm_get_details_url( $contact->id, $contact->type ) , $contact->get_avatar() );
+        return sprintf( '%4$s <a href="%3$s"><strong>%1$s</strong></a> %2$s', $contact->get_full_name(), $this->row_actions( $actions ), erp_crm_get_details_url( $contact->id, $contact->types ) , $contact->get_avatar() );
     }
 
     /**
@@ -188,7 +188,7 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
      */
     function get_bulk_actions() {
         $actions = array(
-            'delete'  => __( 'Delete', 'wp-erp' )
+            'delete'  => __( 'Delete', 'erp' )
         );
 
         return $actions;

@@ -1,16 +1,16 @@
 <?php
 /**
  * Plugin Name: WP ERP
- * Description: ERP solution for WordPress
- * Plugin URI: http://wedevs.com/plugin/erp/
- * Author: Tareq Hasan
- * Author URI: http://wedevs.com
- * Version: 0.1-alpha
+ * Description: An Open Source ERP Solution for WordPress. Built-in HR and CRM system for WordPress
+ * Plugin URI: https://wperp.com
+ * Author: weDevs
+ * Author URI: https://wedevs.com
+ * Version: 1.0
  * License: GPL2
- * Text Domain: wp-erp
- * Domain Path: languages
+ * Text Domain: erp
+ * Domain Path: /i18n/languages/
  *
- * Copyright (c) 2014 Tareq Hasan (email: info@wedevs.com). All rights reserved.
+ * Copyright (c) 2016 weDevs (email: info@wedevs.com). All rights reserved.
  *
  * Released under the GPL license
  * http://www.opensource.org/licenses/gpl-license.php
@@ -40,8 +40,6 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-include dirname( __FILE__ ) . '/vendor/autoload.php';
-
 /**
  * WeDevs_ERP class
  *
@@ -54,7 +52,14 @@ final class WeDevs_ERP {
      *
      * @var string
      */
-    public $version = '0.1';
+    public $version = '1.0';
+
+    /**
+     * Minimum PHP version required
+     *
+     * @var string
+     */
+    private $min_php = '5.4.0';
 
     /**
      * Holds various class instances
@@ -86,6 +91,13 @@ final class WeDevs_ERP {
      * within our plugin.
      */
     public function __construct() {
+
+        // dry check on older PHP versions, if found deactivate itself with an error
+        register_activation_hook( __FILE__, array( $this, 'auto_deactivate' ) );
+
+        if ( ! $this->is_supported_php() ) {
+            return;
+        }
 
         // Define constants
         $this->define_constants();
@@ -138,11 +150,31 @@ final class WeDevs_ERP {
      * @return bool
      */
     public function is_supported_php() {
-        if ( version_compare( PHP_VERSION, '5.4.0', '<=' ) ) {
+        if ( version_compare( PHP_VERSION, $this->min_php, '<=' ) ) {
             return false;
         }
 
         return true;
+    }
+
+    /**
+     * Bail out if the php version is lower than
+     *
+     * @return void
+     */
+    function auto_deactivate() {
+        if ( $this->is_supported_php() ) {
+            return;
+        }
+
+        deactivate_plugins( basename( __FILE__ ) );
+
+        $error = __( '<h1>An Error Occured</h1>', 'erp' );
+        $error .= __( '<h2>Your installed PHP Version is: ', 'erp' ) . PHP_VERSION . '</h2>';
+        $error .= __( '<p>The <strong>WP ERP</strong> plugin requires PHP version <strong>', 'erp' ) . $this->min_php . __( '</strong> or greater', 'erp' );
+        $error .= __( '<p>The version of your PHP is ', 'erp' ) . '<a href="http://php.net/supported-versions.php" target="_blank"><strong>' . __( 'unsupported and old', 'erp' ) . '</strong></a>.';
+        $error .= __( 'You should update your PHP software or contact your host regarding this matter.</p>', 'erp' );
+        wp_die( $error, __( 'Plugin Activation Error', 'erp' ), array( 'response' => 200, 'back_link' => true ) );
     }
 
     /**
@@ -167,12 +199,9 @@ final class WeDevs_ERP {
      * @return void
      */
     private function includes() {
+        include dirname( __FILE__ ) . '/vendor/autoload.php';
+
         require_once WPERP_INCLUDES . '/class-install.php';
-
-        if ( ! $this->is_supported_php() ) {
-            return;
-        }
-
         require_once WPERP_INCLUDES . '/functions.php';
         require_once WPERP_INCLUDES . '/actions-filters.php';
         require_once WPERP_INCLUDES . '/functions-html.php';
@@ -192,85 +221,14 @@ final class WeDevs_ERP {
      * @return void
      */
     private function instantiate() {
-        if ( ! $this->is_supported_php() ) {
-            return;
-        }
 
-        $this->container['modules'] = new \WeDevs\ERP\Framework\Modules();
-    }
+        new \WeDevs\ERP\Admin\User_Profile();
+        new \WeDevs\ERP\Scripts();
+        new \WeDevs\ERP\Updates();
 
-    /**
-     * Initialize erp script register
-     *
-     * @return void
-     */
-    function init_script_register() {
-
-        $suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-
-        // Register select2 scripts
-        wp_register_script( 'erp-select2', WPERP_ASSETS . '/js/select2.full.min.js', false, false, true );
-
-        // Register Fontawesome font icons
-        wp_register_style( 'erp-fontawesome', WPERP_ASSETS . '/css/font-awesome.min.css' );
-
-        // Register select2 style
-        wp_register_style( 'erp-select2', WPERP_ASSETS . '/css/select2.min.css' );
-
-        // Register TipTip jquery plugin
-        wp_register_script( 'erp-tiptip', WPERP_ASSETS . '/js/jquery.tipTip.min.js', array( 'jquery' ), false, true );
-
-        // Register select2 style
-        wp_register_style( 'erp-tiptip', WPERP_ASSETS . '/css/tipTip.css' );
-
-        // Register main style
-        wp_register_style( 'erp-style', WPERP_ASSETS . '/css/style.css' );
-
-        //Settings script
-        wp_register_script( 'erp-admin-settings', WPERP_ASSETS . '/js/settings' . $suffix . '.js', array( 'jquery' ), false, true );
-
-        //Settings style
-        wp_register_style( 'erp-admin-settings', WPERP_ASSETS . '/css/admin/settings' . $suffix . '.css' );
-
-        //jQuery full calendar moment script
-        wp_register_script( 'erp-admin-calendar-moment', WPERP_ASSETS . '/js/moment.min.js', false, false, true );
-
-        //jQuery full calendar script
-        wp_register_script( 'erp-admin-calendar', WPERP_ASSETS . '/js/fullcalendar' . $suffix . '.js', array( 'jquery', 'erp-admin-calendar-moment' ), false, true );
-
-        //jQuery full calendar style
-        wp_register_style( 'erp-admin-calendar', WPERP_ASSETS . '/css/fullcalendar' . $suffix . '.css' );
-
-        //jQuery timepicker script
-        wp_register_script( 'erp-admin-timepicker', WPERP_ASSETS . '/js/jquery.timepicker.min.js', array( 'jquery', 'erp-admin-calendar-moment' ), false, true );
-
-        //jQuery timepicker style
-        wp_register_style( 'erp-admin-timepicker', WPERP_ASSETS . '/css/jquery.timepicker.css' );
-
-        // Register Vuejs script
-        wp_register_script( 'erp-vuejs', WPERP_ASSETS . '/js/vue'. $suffix .'.js', array( 'jquery' ), false, true );
-
-        // Register Basecamp text editor styles
-        wp_register_style( 'erp-trix-editor', WPERP_ASSETS . '/css/trix.css' );
-
-        // Register Bascamp text editor js
-        wp_register_script( 'erp-trix-editor', WPERP_ASSETS . '/js/trix.js', array( 'jquery' ), false, false );
-
-        // Register upload js
-        wp_register_script( 'erp-file-upload', WPERP_ASSETS . '/js/upload.js', array( 'jquery', 'plupload-handlers' ), false, false );
-
-        // flot charts
-        wp_register_script( 'erp-flotchart', WPERP_ASSETS . '/js/jquery.flot.min.js', array( 'jquery' ), false, false );
-        wp_register_script( 'erp-flotchart-time', WPERP_ASSETS . '/js/jquery.flot.time.min.js', array( 'jquery' ), false, false );
-        wp_register_script( 'erp-flotchart-orerbars', WPERP_ASSETS . '/js/jquery.flot.orderBars.js', array( 'jquery' ), false, false );
-        wp_register_script( 'erp-flotchart-pie', WPERP_ASSETS . '/js/jquery.flot.pie.min.js', array( 'jquery' ), false, false );
-        wp_register_script( 'erp-flotchart-axislables', WPERP_ASSETS . '/js/jquery.flot.axislabels.js', array( 'jquery' ), false, false );
-        wp_register_script( 'erp-flotchart-tooltip', WPERP_ASSETS . '/js/jquery.flot.tooltip.min.js', array( 'jquery' ), false, false );
-        wp_register_script( 'erp-flotchart-resize', WPERP_ASSETS . '/js/jquery.flot.resize.min.js', array( 'jquery' ), false, false );
-
-        // Enqueue scripts in globally wp-erp
-        wp_enqueue_script( 'erp-select2' );
-        wp_enqueue_style( 'erp-select2' );
+        $this->container['modules']     = new \WeDevs\ERP\Framework\Modules();
+        $this->container['emailer']     = \WeDevs\ERP\Emailer::init();
+        $this->container['integration'] = \WeDevs\ERP\Integration::init();
     }
 
     /**
@@ -280,15 +238,15 @@ final class WeDevs_ERP {
      */
     private function init_actions() {
 
-        if ( ! $this->is_supported_php() ) {
-            return;
-        }
-
         // Localize our plugin
         add_action( 'init', array( $this, 'localization_setup' ) );
         add_action( 'init', array( $this, 'setup_database' ) );
 
-        add_action( 'admin_enqueue_scripts', array( $this, 'init_script_register' ) );
+        // initialize emailer class
+        add_action( 'erp_loaded', array( $this->container['emailer'], 'init_emails' ) );
+
+        // initialize integration class
+        add_action( 'erp_loaded', array( $this->container['integration'], 'init_integrations' ) );
     }
 
     /**
@@ -297,7 +255,7 @@ final class WeDevs_ERP {
      * @uses load_plugin_textdomain()
      */
     public function localization_setup() {
-        load_plugin_textdomain( 'wp-erp', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+        load_plugin_textdomain( 'erp', false, dirname( plugin_basename( __FILE__ ) ) . '/i18n/languages/' );
     }
 
     /**

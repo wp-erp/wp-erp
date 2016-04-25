@@ -18,7 +18,7 @@ function erp_hr_get_work_days() {
         'sun' => 0
     );
 
-    $option_key = 'erp_hr_work_days';
+    $option_key = 'erp_settings_erp-hr_workdays';
 
     return get_option( $option_key, $default );
 }
@@ -115,7 +115,9 @@ function erp_hr_get_work_days_between_dates( $start_date, $end_date ) {
 
 
 /**
- * sort parents before children
+ * Sort parents before children
+ *
+ * @since 1.0
  *
  * @param array   $objects input objects with attributes 'id' and 'parent'
  * @param array   $result  (optional, reference) internal
@@ -134,31 +136,4 @@ function erp_parent_sort( array $objects, array &$result=array(), $parent=0, $de
         }
     }
     return $result;
-}
-
-/**
- * HR related people types
- *
- * @since 1.0
- *
- * @param  array $types
- *
- * @return array
- */
-function erp_hr_people_types( $types ) {
-
-    $types['hrm'] = [
-        'employee' => [
-            'label'    => __( 'Employee', 'wp-erp' ),
-            'sections' => [
-                'top'      => __( 'Top Area', 'wp-erp' ),
-                'basic'    => __( 'Basic Information', 'wp-erp' ),
-                'work'     => __( 'Work Information', 'wp-erp' ),
-                'personal' => __( 'Personal Information', 'wp-erp' ),
-                'bottom'   => __( 'Bottom Area', 'wp-erp' ),
-            ]
-        ]
-    ];
-
-    return apply_filters( 'erp_hr_people_types', $types );
 }

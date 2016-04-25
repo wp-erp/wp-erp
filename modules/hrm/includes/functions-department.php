@@ -22,7 +22,7 @@ function erp_hr_create_department( $args = array() ) {
 
     // validation
     if ( empty( $fields['title'] ) ) {
-        return new WP_Error( 'no-name', __( 'No department name provided.', 'wp-erp' ) );
+        return new WP_Error( 'no-name', __( 'No department name provided.', 'erp' ) );
     }
 
     // unset the department id
@@ -72,7 +72,7 @@ function erp_hr_get_departments( $args = [] ) {
     $args  = wp_parse_args( $args, $defaults );
 
     $cache_key = 'erp-get-departments';
-    $results   = wp_cache_get( $cache_key, 'wp-erp' );
+    $results   = wp_cache_get( $cache_key, 'erp' );
 
     $department = new \WeDevs\ERP\HRM\Models\Department();
 
@@ -90,7 +90,7 @@ function erp_hr_get_departments( $args = [] ) {
                 ->toArray();
 
         $results = erp_array_to_object( $results );
-        wp_cache_set( $cache_key, $results, 'wp-erp' );
+        wp_cache_set( $cache_key, $results, 'erp' );
     }
 
     $results = erp_parent_sort( $results );
@@ -162,7 +162,7 @@ function erp_hr_delete_department( $department_id ) {
  */
 function erp_hr_get_departments_dropdown_raw( $select_label = null ) {
     $departments = erp_hr_get_departments();
-    $dropdown    = array( '-1' => __( '- Select Department -', 'wp-erp' ) );
+    $dropdown    = array( '-1' => __( '- Select Department -', 'erp' ) );
 
     if ( $select_label ) {
         $dropdown    = array( '-1' => $select_label );
@@ -195,3 +195,5 @@ function erp_hr_get_departments_dropdown( $selected = '' ) {
 
     return $dropdown;
 }
+
+

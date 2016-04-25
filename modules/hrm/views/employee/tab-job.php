@@ -5,45 +5,47 @@
     <?php
     if ( current_user_can( 'erp_manage_jobinfo' ) ) {
         ?>
-        <h3><?php _e( 'Employee Main Status', 'wp-erp' ); ?></h3>
+        <h3><?php _e( 'Employee Main Status', 'erp' ); ?></h3>
 
         <form action="" method="post">
             <?php erp_html_form_input( array(
-                'label'   => __( 'Employee Status : ', 'wp-erp' ),
+                'label'   => __( 'Employee Status : ', 'erp' ),
                 'name'    => 'employee_status',
                 'value'   => $employee->erp->status,
                 'class'   => 'select2',
                 'type'    => 'select',
-                'options' => array( 0 => __( '- Select -', 'wp-erp' ) ) + erp_hr_get_employee_statuses()
+                'id'      => 'erp-hr-employee-status-option',
+                'custom_attr' => [ 'data-selected' => $employee->erp->status ],
+                'options' => array( 0 => __( '- Select -', 'erp' ) ) + erp_hr_get_employee_statuses()
             ) ); ?>
 
             <input type="hidden" name="user_id" id="erp-employee-id" value="<?php echo $employee->id; ?>">
             <input type="hidden" name="action" id="erp-employee-status-action" value="erp-hr-employee-status">
             <?php wp_nonce_field( 'wp-erp-hr-employee-update-nonce' ); ?>
-            <input type="submit" class="button" name="employee_update_status" value="<?php esc_attr_e( 'Update', 'wp-erp' ); ?>">
+            <input type="submit" class="button" data-title="<?php _e( 'Terminate Employee', 'erp' ); ?>" id="erp-hr-employee-status-update" name="employee_update_status" value="<?php esc_attr_e( 'Update', 'erp' ); ?>">
         </form>
         <?php
     }
     ?>
 
 
-    <h3><?php _e( 'Employment Status', 'wp-erp' ) ?></h3>
+    <h3><?php _e( 'Employment Status', 'erp' ) ?></h3>
     <?php if ( current_user_can( 'erp_manage_jobinfo' ) ) { ?>
-        <a href="#" id="erp-empl-status" class="action button" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-status" data-title="<?php _e( 'Employment Status', 'wp-erp' ); ?>"><?php _e( 'Update Status', 'wp-erp' ); ?></a>
+        <a href="#" id="erp-empl-status" class="action button" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-status" data-title="<?php _e( 'Employment Status', 'erp' ); ?>"><?php _e( 'Update Status', 'erp' ); ?></a>
     <?php } ?>
     <table class="widefat">
         <thead>
             <tr>
-                <th><?php _e( 'Date', 'wp-erp' ) ?></th>
-                <th><?php _e( 'Employment Status', 'wp-erp' ) ?></th>
-                <th><?php _e( 'Comment', 'wp-erp' ) ?></th>
+                <th><?php _e( 'Date', 'erp' ) ?></th>
+                <th><?php _e( 'Employment Status', 'erp' ) ?></th>
+                <th><?php _e( 'Comment', 'erp' ) ?></th>
                 <th class="action">&nbsp;</th>
             </tr>
         </thead>
         <tbody>
             <?php
             if ( $history['employment'] ) {
-                $types = erp_hr_get_employee_types();
+                $types = erp_hr_get_employee_types() + ['terminated' => __( 'Terminated', 'erp' ) ];
 
                 foreach ($history['employment'] as $num => $row) {
                     ?>
@@ -66,7 +68,7 @@
             } else {
                 ?>
                 <tr class="alternate">
-                    <td colspan="4"><?php _e( 'No history found!', 'wp-erp' ); ?></td>
+                    <td colspan="4"><?php _e( 'No history found!', 'erp' ); ?></td>
                 </tr>
             <?php } ?>
 
@@ -77,19 +79,19 @@
 
     <?php if ( current_user_can( 'erp_edit_employee', $employee->id ) ) : ?>
 
-        <h3><?php _e( 'Compensation', 'wp-erp' ) ?></h3>
+        <h3><?php _e( 'Compensation', 'erp' ) ?></h3>
         <?php if ( current_user_can( 'erp_manage_jobinfo' ) ) { ?>
-            <a href="#" id="erp-empl-compensation" class="action button" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-compensation" data-title="<?php _e( 'Update Compensation', 'wp-erp' ); ?>"><?php _e( 'Update Compensation', 'wp-erp' ); ?></a>
+            <a href="#" id="erp-empl-compensation" class="action button" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-compensation" data-title="<?php _e( 'Update Compensation', 'erp' ); ?>"><?php _e( 'Update Compensation', 'erp' ); ?></a>
         <?php } ?>
 
         <table class="widefat">
             <thead>
                 <tr>
-                    <th><?php _e( 'Date', 'wp-erp' ) ?></th>
-                    <th><?php _e( 'Pay Rate', 'wp-erp' ) ?></th>
-                    <th><?php _e( 'Pay Type', 'wp-erp' ) ?></th>
-                    <th><?php _e( 'Change Reason', 'wp-erp' ) ?></th>
-                    <th><?php _e( 'Comment', 'wp-erp' ) ?></th>
+                    <th><?php _e( 'Date', 'erp' ) ?></th>
+                    <th><?php _e( 'Pay Rate', 'erp' ) ?></th>
+                    <th><?php _e( 'Pay Type', 'erp' ) ?></th>
+                    <th><?php _e( 'Change Reason', 'erp' ) ?></th>
+                    <th><?php _e( 'Comment', 'erp' ) ?></th>
                     <th class="action">&nbsp;</th>
                 </tr>
             </thead>
@@ -121,7 +123,7 @@
                 } else {
                     ?>
                     <tr class="alternate">
-                        <td colspan="6"><?php _e( 'No history found!', 'wp-erp' ); ?></td>
+                        <td colspan="6"><?php _e( 'No history found!', 'erp' ); ?></td>
                     </tr>
                 <?php } ?>
             </tbody>
@@ -131,18 +133,18 @@
 
     <?php endif; ?>
 
-    <h3><?php _e( 'Job Information', 'wp-erp' ) ?></h3>
+    <h3><?php _e( 'Job Information', 'erp' ) ?></h3>
     <?php if ( current_user_can( 'erp_manage_jobinfo' ) ) { ?>
-        <a href="#" id="erp-empl-jobinfo" class="action button" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-jobinfo" data-title="<?php _e( 'Update Compensation', 'wp-erp' ); ?>"><?php _e( 'Update Job Information', 'wp-erp' ); ?></a>
+        <a href="#" id="erp-empl-jobinfo" class="action button" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-jobinfo" data-title="<?php _e( 'Update Job Information', 'erp' ); ?>"><?php _e( 'Update Job Information', 'erp' ); ?></a>
     <?php } ?>
     <table class="widefat">
         <thead>
             <tr>
-                <th><?php _e( 'Date', 'wp-erp' ) ?></th>
-                <th><?php _e( 'Location', 'wp-erp' ) ?></th>
-                <th><?php _e( 'Department', 'wp-erp' ) ?></th>
-                <th><?php _e( 'Job Title', 'wp-erp' ) ?></th>
-                <th><?php _e( 'Reports To', 'wp-erp' ) ?></th>
+                <th><?php _e( 'Date', 'erp' ) ?></th>
+                <th><?php _e( 'Location', 'erp' ) ?></th>
+                <th><?php _e( 'Department', 'erp' ) ?></th>
+                <th><?php _e( 'Job Title', 'erp' ) ?></th>
+                <th><?php _e( 'Reports To', 'erp' ) ?></th>
                 <th class="action">&nbsp;</th>
             </tr>
         </thead>
@@ -184,7 +186,7 @@
             } else {
                 ?>
                 <tr class="alternate">
-                    <td colspan="6"><?php _e( 'No history found!', 'wp-erp' ); ?></td>
+                    <td colspan="6"><?php _e( 'No history found!', 'erp' ); ?></td>
                 </tr>
             <?php } ?>
         </tbody>

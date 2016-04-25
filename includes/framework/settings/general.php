@@ -1,15 +1,17 @@
 <?php
 
+use \WeDevs\ERP\Framework\ERP_Settings_Page;
+
 /**
  * General class
  */
 class ERP_Settings_General extends ERP_Settings_Page {
 
     function __construct() {
-        $this->id = 'general';
-        $this->label = 'General';
-        //$this->single_option = true;
-        //$this->sections = $this->get_sections();
+        $this->id    = 'general';
+        $this->label = __( 'General', 'erp' );
+
+        add_action( 'erp_admin_field_erp_api_key', array( $this, 'erp_api_key' ) );
     }
 
     /**
@@ -24,27 +26,27 @@ class ERP_Settings_General extends ERP_Settings_Page {
             array( 'title' => __( 'General Options', 'erp' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
 
             array(
-                'title'   => __( 'Company Start Date', 'wp-erp' ),
+                'title'   => __( 'Company Start Date', 'erp' ),
                 'id'      => 'gen_com_start',
                 'type'    => 'text',
-                'desc'    => __( 'The date the company officially started.', 'wp-erp' ),
+                'desc'    => __( 'The date the company officially started.', 'erp' ),
                 'class'   => 'erp-date-field',
                 'tooltip' => true,
             ),
 
             array(
-                'title'   => __( 'Financial Year Starts', 'wp-erp' ),
+                'title'   => __( 'Financial Year Starts', 'erp' ),
                 'id'      => 'gen_financial_month',
                 'type'    => 'select',
                 'options' => erp_months_dropdown(),
-                'desc'    => __( 'Financial and tax calculation starts from this month of every year.', 'wp-erp' ),
+                'desc'    => __( 'Financial and tax calculation starts from this month of every year.', 'erp' ),
                 'tooltip' => false,
             ),
 
             array(
-                'title'   => __( 'Date Format', 'wp-erp' ),
+                'title'   => __( 'Date Format', 'erp' ),
                 'id'      => 'date_format',
-                'desc'    => __( 'Format of date to show accross the system.', 'wp-erp' ),
+                'desc'    => __( 'Format of date to show accross the system.', 'erp' ),
                 'tooltip' => true,
                 'type'    => 'select',
                 'options' => [
@@ -57,13 +59,17 @@ class ERP_Settings_General extends ERP_Settings_Page {
             ),
 
             array(
-                'title'   => __( 'Enable Debug Mode', 'wp-erp' ),
+                'title'   => __( 'Enable Debug Mode', 'erp' ),
                 'id'      => 'erp_debug_mode',
                 'type'    => 'select',
-                'options' => [ 1 => __('On', 'wp-erp'), 0 => __( 'Off', 'wp-erp') ],
-                'desc'    => __( 'Switching testing or producting mode', 'wp-erp' ),
+                'options' => [ 1 => __('On', 'erp'), 0 => __( 'Off', 'erp') ],
+                'desc'    => __( 'Switching testing or producting mode', 'erp' ),
                 'tooltip' =>  true,
                 'default' =>  0,
+            ),
+
+            array(
+                'type'  => 'erp_api_key',
             ),
 
             array( 'type' => 'sectionend', 'id' => 'script_styling_options' ),
@@ -73,76 +79,47 @@ class ERP_Settings_General extends ERP_Settings_Page {
         return apply_filters( 'erp_settings_general', $fields );
     }
 
-
     /**
-     * Get sections fields
+     * Display API settings view.
      *
-     * @return array
+     * @return void
      */
-    public function get_section_fields( $section = '' ) {
+    public function erp_api_key() {
+        $wp_erp_api_key  = get_option( 'wp_erp_apikey', null );
+        $is_cloud_active = erp_is_cloud_active();
 
-        $fields['checkout'] = array(
+        if( $wp_erp_api_key ) {
+        ?>
+        <tr valign="top">
+            <th scope="row" class="titledesc">
+                <span class="dashicons dashicons-admin-network"></span><?php echo __( 'API Key', 'erp' ) ?>
+            </th>
+            <td class="forminp forminp-text">
+                <p><?php echo $wp_erp_api_key ?> <span class="dashicons dashicons-<?php echo ( $is_cloud_active ) ? 'yes green' : 'no red' ?>"></p>
+                <br />
+                <a id="wp-erp-disconnect-api" class="button-secondary">Disconnect</a>
+            </td>
+        </tr>
+        <?php
+        } else {
+        ?>
+        <tr valign="top" id="erp-activation-container">
+            <th scope="row" class="titledesc" colspan="2">
+                <div class="erp-activation-cloud-prompt">
+                    <div class="activation-prompt-text">
+                        <?php _e( "You're awesome for installing <strong>WP ERP!</strong> Get API Key to get access to wperp <em>cloud</em> features!", "wp-erp" ) ?>
+                    </div>
 
-            array( 'title' => __( 'General Options', 'erp' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
-
-            array(
-                'title' => __( 'Site Name', 'erp' ),
-                'id'    => 'blogname_jads',
-                'desc'  => __( 'The name of your site. If you don\'t use a logo, this name will be displayed instead.', 'erp' ),
-                'type'  => 'text',
-            ),
-            array(
-                'title' => __( 'Site Description', 'erp' ),
-                'id'    => 'blogdescription_dfghdfg',
-                'desc'  => __( 'This will help peoples and search engines to find your site.', 'erp' ),
-                'type'  => 'text',
-            ),
-
-            array( 'type' => 'sectionend', 'id' => 'script_styling_options' ),
-
-        ); // End general settings
-
-        $fields['mishu'] = array(
-
-            array( 'title' => __( 'Mishu', 'erp' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
-
-            array(
-                'title' => __( 'Site Name', 'erp' ),
-                'id'    => 'blogname',
-                'desc'  => __( 'The name of your site. If you don\'t use a logo, this name will be displayed instead.', 'erp' ),
-                'type'  => 'text',
-            ),
-            array(
-                'title' => __( 'Site Description', 'erp' ),
-                'id'    => 'blogdescription',
-                'desc'  => __( 'This will help peoples and search engines to find your site.', 'erp' ),
-                'type'  => 'text',
-            ),
-
-            array( 'type' => 'sectionend', 'id' => 'script_styling_options' ),
-
-        ); // End general settings
-
-        $section = $section === false ? $fields['checkout'] : $fields[$section];
-        return apply_filters( 'erp_settings_general_section', $section );
+                    <div class="activation-form-container">
+                        <input type="email" name="email" placeholder="email@example.com" value="<?php echo esc_attr( get_option( 'admin_email' ) ); ?>" />
+                        <button class="button-primary" id="get-api-key"><?php _e( 'Get API Key', 'erp' ); ?></button>
+                    </div>
+                </div>
+            </th>
+        </tr>
+        <?php
+        }
     }
-
-    /**
-     * Get sections
-     *
-     * @return array
-     */
-    public function get_sections() {
-
-        $sections = array(
-            'checkout' => __( 'Checkout Options', 'erp' ),
-            'mishu' => __( 'Mishu', 'erp' )
-        );
-
-
-        return apply_filters( 'erp_get_sections_' . $this->id, $sections );
-    }
-
 }
 
 return new ERP_Settings_General();

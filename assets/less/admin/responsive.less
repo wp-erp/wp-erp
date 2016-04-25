@@ -1,0 +1,93 @@
+
+/*****/
+/**
+* Media Query for responsive
+*
+**/
+
+/* Tab and small screen (portrait and landscape ) ----------- */
+@media only screen and (max-width : 960px) {
+    .erp-modal,
+    .erp-modal.smaller {
+        top: 8%;
+        bottom: 1%;
+        right: 2%;
+        left: 4%;
+
+    }
+    .content-container {
+        padding: 1.25em !important;
+    }
+}
+
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (max-width : 640px) {
+
+    .erp-modal,
+    .erp-modal.smaller
+    {
+        top: 8%;
+        bottom: 1%;
+        right: 2%;
+        left: 2%;
+
+    }
+
+    .content-container {
+
+        padding: 1em !important;
+        .content {
+            margin: 0 0;
+            li{
+                label{
+                    display: block !important;
+                    width: 100% !important;
+                }
+                select{
+                    width: 100%;
+                }
+                .select2-container{
+                    width: 95% !important;
+                }
+            }
+            .name-container {
+                ol{
+                    width: 100% !important;
+                    li{
+                        width: 100%;
+                    }
+                }
+                li.middle-name{
+                    width: 100% !important;
+                }
+                input {
+                    width: 95% !important;
+                }
+            }
+            .name-container label:first-child{
+                display: none;
+            }
+           // ol.form-fields.two-col li label
+
+            .two-col{
+                li{
+                    width: 100% !important ;
+
+                }
+                label{
+                    display: block;
+                    width: 100% !important;
+                }
+            }
+            // For Input a
+            input[type="text"], input[type="password"],
+            input[type="color"], input[type="date"], input[type="datetime"],
+            input[type="datetime-local"], input[type="email"], input[type="month"],
+            input[type="number"], input[type="password"], input[type="search"],
+            input[type="radio"], input[type="tel"], input[type="text"], input[type="time"],
+            input[type="url"], input[type="week"], select, textarea {
+                width: 95%;
+            }
+        }
+    }
+}

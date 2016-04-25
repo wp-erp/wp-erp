@@ -154,7 +154,7 @@
     position: absolute;
     width: 20px;
     height: 20px;
-    background: url('../../images/spinner-2x.gif') center center no-repeat;
+    background: url('../../assets/images/spinner-2x.gif') center center no-repeat;
     z-index: 99;
     background-size: 20px;
 }
@@ -173,6 +173,49 @@ table.erp-table {
     }
 }
 
+.erp-license-status.has-error,
+.erp-license-status.has-error p {
+    color: red;
+}
+
+/*----------------------------------------
+  Table style in settings area
+----------------------------------------*/
+
+td.erp-settings-table-wrapper {
+    padding: 0 15px 10px 0;;
+}
+
+table.erp-settings-table {
+    th {
+        padding: 9px 7px!important;
+        vertical-align: middle;
+    }
+
+    th.erp-settings-table-status,
+    td.erp-settings-table-status {
+        width: 1em;
+    }
+
+    td {
+        padding: 7px;
+        line-height: 2em;
+        vertical-align: middle;
+    }
+
+    th.erp-settings-table-name,
+    td.erp-settings-table-name {
+        padding-left: 15px !important;
+
+        a {
+            font-weight: 700;
+        }
+    }
+
+    tr:nth-child(odd) td {
+        background: #f9f9f9;
+    }
+}
 
 /*----------------------------------------
   A simple 6 column grid framework
@@ -260,9 +303,11 @@ table.erp-table {
                     position: relative;
 
                     .inactive {
-                        background: url('../../images/inactive.png') no-repeat;
+                        background: url('../images/inactive.png') no-repeat;
                         background-position: 50%;
                         position: absolute;
+                        bottom: 0px;
+                        left: 0px;
                         background-size: 105px 31px;
                         height: 31px;
                         width: 100%;
@@ -430,11 +475,13 @@ ul.erp-list {
 
 ul.erp-dashboard-announcement {
     li {
-        padding:10px;
+        padding:5px;
         position:relative;
-        h4 {
-            margin: 0px 0px 5px;
-            font-size: 14px;
+        div.announcement-title {
+            a {
+                font-size: 15px;
+                text-decoration: none;
+            }
 
             span.announcement-date {
                 font-size: 12px;
@@ -456,6 +503,10 @@ ul.erp-dashboard-announcement {
                 font-size: 10px;
                 color: #222;
             }
+        }
+
+        &:first-child {
+            border-bottom: 1px solid #eee;
         }
 
         &.unread {
@@ -658,7 +709,7 @@ table.audit-log-table {
         position: absolute;
         width: 100%;
         height: 100%;
-        background: #fff url('../../images/spinner-2x.gif') center center no-repeat;
+        background: #fff url('../../assets/images/spinner-2x.gif') center center no-repeat;
         z-index: 99;
         display: none;
         background-size: 20px;
@@ -708,6 +759,17 @@ table.audit-log-table {
             font-size: 20px;
             text-shadow: 0 1px 1px #fff;
         }
+
+        .modal-suggession {
+            position: absolute;
+            top:50px;
+            left:0px;
+            padding: 10px;
+            color: #8a6d3b;
+            background-color: #fcf8e3;
+            border:1px solid #faebcc;
+            width:100%;
+        }
     }
 
     .content-container {
@@ -751,6 +813,8 @@ table.audit-log-table {
 
                 label {
                     margin-bottom: 10px;
+                    min-width: 100%;
+
                 }
             }
 
@@ -960,7 +1024,7 @@ ul.edit-address {
 .erp-attachment-area {
     overflow: auto;
     padding: 2px 2px;
-    
+
     width: 32%;
 
 
@@ -1006,7 +1070,7 @@ ul.edit-address {
                     background: #fff;
                     max-width: 150px;
                 }
-            }  
+            }
             .caption {
                 background: #000;
                 border: medium none;
@@ -1022,7 +1086,7 @@ ul.edit-address {
                 text-align: center;
                 text-decoration: none;
                 top: 16px;
-                width: 80px;                
+                width: 80px;
             }
 
             &:hover .caption {
@@ -1036,11 +1100,55 @@ ul.edit-address {
                 font-weight: bold;
                 padding-top: 30px;
                 text-decoration: none;
-            } 
-              
+            }
+
         }
-        
+
     }
 }
 
-    
+.erp-activation-cloud-prompt {
+    width: 100%;
+    margin: 0 !important;
+    padding: 0;
+    border: 1px solid #e5e5e5;
+    background-color: #fff;
+    font-weight: normal;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    display: -ms-flex;
+    display: -webkit-flex;
+    display: flex;
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .activation-prompt-text {
+        width: 60%;
+        background-color: #f8f8f8;
+        padding: 16px 20px;
+        border-right: 1px solid #e5e5e5;
+    }
+
+    input[type="email"] {
+        width: 200px;
+        min-height: 32px;
+    }
+
+    .button-primary {
+        margin-right: 10px;
+    }
+    .erp-button-xs{
+        font-size: small;
+    }
+
+    .activation-form-container {
+        width: 40%;
+        padding-top: 9px;
+        padding-right: 20px;
+        margin-left: 30px;
+        text-align: right;
+    }
+}
+@import "responsive.less";

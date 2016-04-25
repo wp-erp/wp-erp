@@ -18,16 +18,16 @@ class WeDevs_ERP_Installer {
 
     use \WeDevs\ERP\Framework\Traits\Hooker;
 
-    private $min_php = '5.4.0';
-
     /**
      * Binding all events
      *
-     * @since 0.1
+     * @since 1.0
      *
      * @return void
      */
     function __construct() {
+        $this->set_default_modules();
+
         register_activation_hook( WPERP_FILE, array( $this, 'activate' ) );
         register_deactivation_hook( WPERP_FILE, array( $this, 'deactivate' ) );
 
@@ -39,32 +39,25 @@ class WeDevs_ERP_Installer {
      * Placeholder for activation function
      * Nothing being called here yet.
      *
-     * @since 0.1
+     * @since 1.0
      *
-     * @return 0.1
+     * @return void
      */
     public function activate() {
-
-        // bail out if the php version is lower than
-        if ( version_compare( PHP_VERSION, $this->min_php, '<' ) ) {
-            deactivate_plugins( basename( WPERP_FILE ) );
-
-            $error = '<h1>An Error Occured</h1>';
-            $error .= '<h2>Your installed PHP Version is: ' . PHP_VERSION . '</h2>';
-            $error .= '<p>The <strong>WP ERP</strong> plugin requires PHP version <strong>' . $this->min_php . '</strong> or greater';
-            $error .= '<p>The version of your PHP is <a href="http://php.net/supported-versions.php" target="_blank"><strong>unsupported and old</strong></a>. ';
-            $error .= 'You should update your PHP software or contact your host regarding this matter.</p>';
-            wp_die( $error, 'Plugin Activation Error', array( 'response' => 200, 'back_link' => true ) );
-        }
-
-        $this->create_tables();
-        $this->set_default_modules();
-        $this->create_roles();
-        $this->set_role();
-        $this->create_cron_jobs();
-
         $current_erp_version = get_option( 'wp_erp_version', null );
         $current_db_version  = get_option( 'wp_erp_db_version', null );
+
+        $this->create_tables();
+        $this->populate_data();
+
+        if ( is_null( $current_erp_version ) ) {
+            $this->set_role();
+        }
+
+        $this->create_roles(); // @TODO: Needs to change later :)
+        $this->create_cron_jobs();
+        $this->setup_default_emails();
+
 
         if ( is_null( $current_erp_version ) && is_null( $current_db_version ) && apply_filters( 'erp_enable_setup_wizard', true ) ) {
             set_transient( '_erp_activation_redirect', 1, 30 );
@@ -77,13 +70,112 @@ class WeDevs_ERP_Installer {
     }
 
     /**
+     * Include required files to prevent fatal errors
+     *
+     * @return void
+     */
+    function includes() {
+        include_once WPERP_MODULES . '/hrm/includes/functions-capabilities.php';
+        include_once WPERP_MODULES . '/crm/includes/functions-capabilities.php';
+    }
+
+    /**
+     * Set default mail subject, heading and body
+     *
+     * @since 1.0
+     *
+     * @return void
+     */
+    function setup_default_emails() {
+
+        //Employee welcome
+        $welcome = [
+            'subject' => 'Welcome {full_name} to {company_name}',
+            'heading' => 'Welcome Onboard {first_name}!',
+            'body'    => 'Dear {full_name},
+
+Welcome aboard as a <strong>{job_title}</strong> in our <strong>{dept_title}</strong> team at <strong>{company_name}</strong>! I am pleased to have you working with us. You were selected for employment due to the attributes that you displayed that appear to match the qualities I look for in an employee.
+
+I’m looking forward to seeing you grow and develop into an outstanding employee that exhibits a high level of care, concern, and compassion for others. I hope that you will find your work to be rewarding, challenging, and meaningful.
+
+Your <strong>{type}</strong> employment will start from <strong>{joined_date}</strong> and you will be reporting to <strong>{reporting_to}</strong>.
+
+Please take your time and review our yearly goals so that you can know what is expected and make a positive contribution. Again, I look forward to seeing you grow as a professional while enhancing the lives of the clients entrusted in your care.
+
+Sincerely,
+Manager Name
+CEO, Company Name
+
+{login_info}'
+        ];
+
+        update_option( 'erp_email_settings_employee-welcome', $welcome );
+
+        //New Leave Request
+        $new_leave_request = [
+            'subject' => 'New leave request received from {employee_name}',
+            'heading' => 'New Leave Request',
+            'body'    => 'Hello,
+
+A new leave request has been received from {employee_url}.
+
+<strong>Leave type:</strong> {leave_type}
+<strong>Date:</strong> {date_from} to {date_to}
+<strong>Days:</strong> {no_days}
+<strong>Reason:</strong> {reason}
+
+Please approve/reject this leave application by going following:
+
+{requests_url}
+
+Thanks.'
+        ];
+
+        update_option( 'erp_email_settings_new-leave-request', $new_leave_request );
+
+        //Approved Leave Request
+        $approved_request = [
+            'subject' => 'Your leave request has been approved',
+            'heading' => 'Leave Request Approved',
+            'body'    => 'Hello {employee_name},
+
+Your <strong>{leave_type}</strong> type leave request for <strong>{no_days} days</strong> from {date_from} to {date_to} has been approved.
+
+Regards
+Manager Name
+Company'
+        ];
+
+        update_option( 'erp_email_settings_approved-leave-request', $approved_request );
+
+        //Rejected Leave Request
+        $reject_request = [
+            'subject' => 'Your leave request has been rejected',
+            'heading' => 'Leave Request Rejected',
+            'body'    => 'Hello {employee_name},
+
+Your <strong>{leave_type}</strong> type leave request for <strong>{no_days} days</strong> from {date_from} to {date_to} has been rejected.
+
+The reason of rejection is: {reject_reason}
+
+Regards
+Manager Name
+Company'
+        ];
+
+        update_option( 'erp_email_settings_rejected-leave-request', $reject_request );
+
+    }
+
+    /**
      * Create cron jobs
      *
      * @return void
      */
     public function create_cron_jobs() {
-        wp_schedule_event( time(), 'daily', 'erp_hr_policy_schedule' );
-        wp_schedule_event( time(), 'per_minute', 'erp_crm_notification_schedule' );
+        wp_schedule_event( time(), 'per_minute', 'erp_per_minute_scheduled_events' );
+        wp_schedule_event( time(), 'daily', 'erp_daily_scheduled_events' );
+        wp_schedule_event( time(), 'weekly', 'erp_weekly_scheduled_events' );
     }
 
     /**
@@ -92,25 +184,29 @@ class WeDevs_ERP_Installer {
      * Nothing being called here yet.
      */
     public function deactivate() {
-        wp_clear_scheduled_hook( 'erp_hr_policy_schedule' );
-        wp_clear_scheduled_hook( 'erp_crm_notification_schedule' );
+        wp_clear_scheduled_hook( 'erp_per_minute_scheduled_events' );
+        wp_clear_scheduled_hook( 'erp_daily_scheduled_events' );
+        wp_clear_scheduled_hook( 'erp_weekly_scheduled_events' );
+
+        remove_role('erp_crm_manager');
+        remove_role('erp_crm_agent');
     }
 
     /**
      * Welcome screen menu page cb
      *
-     * @since 0.1
+     * @since 1.0
      *
      * @return void
      */
     public function welcome_screen_menu() {
-        add_dashboard_page( __( 'Welcome to WP ERP', 'wp-erp' ), 'WP ERP', 'manage_options', 'erp-welcome', array( $this, 'welcome_screen_content' ) );
+        add_dashboard_page( __( 'Welcome to WP ERP', 'erp' ), 'WP ERP', 'manage_options', 'erp-welcome', array( $this, 'welcome_screen_content' ) );
     }
 
     /**
      * Welcome screen menu remove
      *
-     * @since 0.1
+     * @since 1.0
      *
      * @return void
      */
@@ -121,7 +217,7 @@ class WeDevs_ERP_Installer {
     /**
      * Render welcome screen content
      *
-     * @since 0.1
+     * @since 1.0
      *
      * @return void
      */
@@ -132,7 +228,7 @@ class WeDevs_ERP_Installer {
     /**
      * Create necessary table for ERP & HRM
      *
-     * @since 0.1
+     * @since 1.0
      *
      * @return  void
      */
@@ -408,11 +504,8 @@ class WeDevs_ERP_Installer {
                 `postal_code` varchar(10) DEFAULT NULL,
                 `country` varchar(20) DEFAULT NULL,
                 `currency` varchar(5) DEFAULT NULL,
-                `type` varchar(10) NOT NULL DEFAULT 'customer',
                 `created` datetime DEFAULT NULL,
-                `deleted_at` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`),
-                KEY `type` (`type`),
                 KEY `user_id` (`user_id`)
             ) $collate;",
 
@@ -424,6 +517,24 @@ class WeDevs_ERP_Installer {
                 PRIMARY KEY (`meta_id`),
                 KEY `erp_people_id` (`erp_people_id`),
                 KEY `meta_key` (`meta_key`(191))
+            ) $collate;",
+
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_people_types` (
+                `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+                `name` varchar(20) DEFAULT NULL,
+                PRIMARY KEY (`id`),
+                UNIQUE KEY `name` (`name`)
+            ) $collate;",
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_people_type_relations` (
+                `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+                `people_id` bigint(20) unsigned DEFAULT NULL,
+                `people_types_id` int(11) unsigned DEFAULT NULL,
+                `deleted_at` datetime DEFAULT NULL,
+                PRIMARY KEY (`id`),
+                KEY `people_id` (`people_id`),
+                KEY `people_types_id` (`people_types_id`)
             ) $collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_audit_log` (
@@ -463,6 +574,13 @@ class WeDevs_ERP_Installer {
                 PRIMARY KEY (`id`)
             ) $collate;",
 
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_activities_task` (
+                `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+                `activity_id` int(11) DEFAULT NULL,
+                `user_id` int(11) DEFAULT NULL,
+                PRIMARY KEY (`id`)
+            ) $collate;",
+
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_contact_group` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
                 `name` varchar(255) DEFAULT NULL,
@@ -470,7 +588,52 @@ class WeDevs_ERP_Installer {
                 `created_at` datetime DEFAULT NULL,
                 `updated_at` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`)
+            ) $collate;",
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_contact_subscriber` (
+              `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+              `user_id` int(11) DEFAULT NULL,
+              `group_id` int(11) DEFAULT NULL,
+              `status` varchar(25) DEFAULT NULL,
+              `subscribe_at` datetime DEFAULT NULL,
+              `unsubscribe_at` datetime DEFAULT NULL,
+              PRIMARY KEY (`id`),
+              UNIQUE KEY `user_group` (`user_id`,`group_id`)
+            ) $collate;",
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_campaigns` (
+              `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+              `title` text,
+              `description` longtext,
+              `created_at` datetime DEFAULT NULL,
+              `updated_at` datetime DEFAULT NULL,
+              PRIMARY KEY (`id`)
+            ) $collate;",
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_campaign_group` (
+              `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+              `campaign_id` int(11) DEFAULT NULL,
+              `group_id` int(11) DEFAULT NULL,
+              PRIMARY KEY (`id`)
+            ) $collate;",
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_save_search` (
+              `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+              `user_id` int(11) DEFAULT NULL,
+              `global` tinyint(4) DEFAULT '0',
+              `search_name` text,
+              `search_val` text,
+              PRIMARY KEY (`id`)
+            ) $collate;",
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_save_email_replies` (
+              `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+              `name` text,
+              `subject` text,
+              `template` longtext,
+              PRIMARY KEY (`id`)
             ) $collate;"
+
         ];
 
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
@@ -481,11 +644,28 @@ class WeDevs_ERP_Installer {
     }
 
     /**
+     * Populate tables with initial data
+     *
+     * @return void
+     */
+    public function populate_data() {
+        global $wpdb;
+
+        // check if people_types exists
+        if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_people_types` LIMIT 0, 1" ) ) {
+            $sql = "INSERT INTO `{$wpdb->prefix}erp_people_types` (`id`, `name`)
+                    VALUES (1,'contact'), (2,'company'), (3,'customer'), (4,'vendor');";
+
+            $wpdb->query( $sql );
+        }
+    }
+
+    /**
      * Set default module for initial erp setup
      *
-     * @since 0.1
+     * @since 1.0
      *
-     * @return 0.1
+     * @return void
      */
     public function set_default_modules() {
 
@@ -495,11 +675,19 @@ class WeDevs_ERP_Installer {
 
         $default = [
             'hrm' => [
-                'title'       => __( 'HR Management', 'wp-erp' ),
+                'title'       => __( 'HR Management', 'erp' ),
                 'slug'        => 'erp-hrm',
-                'description' => __( 'Human Resource Mnanagement', 'wp-erp' ),
+                'description' => __( 'Human Resource Mnanagement', 'erp' ),
                 'callback'    => '\WeDevs\ERP\HRM\Human_Resource',
                 'modules'     => apply_filters( 'erp_hr_modules', [ ] )
+            ],
+
+            'crm' => [
+                'title'       => __( 'CR Management', 'erp' ),
+                'slug'        => 'erp-crm',
+                'description' => __( 'Client Resource Management', 'erp' ),
+                'callback'    => '\WeDevs\ERP\CRM\Customer_Relationship',
+                'modules'     => apply_filters( 'erp_crm_modules', [ ] )
             ]
         ];
 
@@ -509,15 +697,25 @@ class WeDevs_ERP_Installer {
     /**
      * Create user roles and capabilities
      *
-     * @since 0.1
+     * @since 1.0
      *
      * @return void
      */
     public function create_roles() {
-        $roles = erp_hr_get_roles();
+        $this->includes();
 
-        if ( $roles ) {
-            foreach ($roles as $key => $role) {
+        $roles_hr = erp_hr_get_roles();
+
+        if ( $roles_hr ) {
+            foreach ($roles_hr as $key => $role) {
+                add_role( $key, $role['name'], $role['capabilities'] );
+            }
+        }
+
+        $roles_crm = erp_crm_get_roles();
+
+        if ( $roles_crm ) {
+            foreach ($roles_crm as $key => $role) {
                 add_role( $key, $role['name'], $role['capabilities'] );
             }
         }
@@ -526,16 +724,19 @@ class WeDevs_ERP_Installer {
     /**
      * Set erp_hr_manager role for admin user
      *
-     * @since 0.1
+     * @since 1.0
      *
      * @return void
      */
     public function set_role() {
+        $this->includes();
+
         $admins = get_users( array( 'role' => 'administrator' ) );
 
         if ( $admins ) {
             foreach ($admins as $user) {
                 $user->add_role( erp_hr_get_manager_role() );
+                $user->add_role( erp_crm_get_manager_role() );
             }
         }
     }

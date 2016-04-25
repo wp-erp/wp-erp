@@ -1,7 +1,7 @@
 <?php
 $filter_active = ( isset( $_GET['department'] ) && $_GET['department'] != '-1' ) || ( isset( $_GET['designation'] ) && $_GET['designation'] != '-1' ) ? $_GET : false;
 
-$leave_requests = erp_hr_get_calendar_leave_events( $filter_active );
+$leave_requests = erp_hr_get_calendar_leave_events( $filter_active, false, true );
 $events = [];
 
 foreach ( $leave_requests as $key => $leave_request ) {
@@ -9,7 +9,7 @@ foreach ( $leave_requests as $key => $leave_request ) {
         'id'        => $leave_request->id,
         'title'     => $leave_request->display_name,
         'start'     => $leave_request->start_date,
-        'end'       => $leave_request->end_date,
+        'end'       => erp_fullcalendar_end_date( $leave_request->end_date ),
         'url'       => erp_hr_url_single_employee( $leave_request->user_id ),
         'color'     => $leave_request->color,
         'img'       => get_avatar( $leave_request->user_id, 16 )
@@ -36,7 +36,7 @@ foreach ( $leave_requests as $key => $leave_request ) {
 </style>
 <div class="wrap erp-hr-calendar-wrap">
 
-    <h1><?php _e( 'Calendar', 'wp-erp' ); ?></h1>
+    <h1><?php _e( 'Calendar', 'erp' ); ?></h1>
 
     <div class="tablenav top erp-calendar-filter">
         <form method="post" action="">
@@ -59,7 +59,7 @@ foreach ( $leave_requests as $key => $leave_request ) {
                     'options'     => erp_hr_get_designation_dropdown_raw()
                 ) );
             ?>
-            <input type="submit" class="button" name="erp_leave_calendar_filter" value="<?php _e( 'Filter', 'wp-erp' ); ?>">
+            <input type="submit" class="button" name="erp_leave_calendar_filter" value="<?php _e( 'Filter', 'erp' ); ?>">
         </form>
     </div>
 

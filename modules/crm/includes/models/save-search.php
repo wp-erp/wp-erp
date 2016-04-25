@@ -13,6 +13,6 @@ class SaveSearch extends Model {
 
     protected $fillable = [ 'user_id', 'global', 'search_name', 'search_val' ];
 
-    public $timestamps = true;
+    public $timestamps = false;
 
 }

@@ -1,13 +1,16 @@
 <?php
 
+namespace WeDevs\ERP\Framework;
+
 /**
  * Erp Settings page main class
  */
 class ERP_Settings_Page {
 
-    protected $id    = '';
-    protected $label = '';
+    protected $id            = '';
+    protected $label         = '';
     protected $single_option = false;
+    protected $section_fields = [];
 
     /**
      * Get id
@@ -24,7 +27,17 @@ class ERP_Settings_Page {
      * @return string
      */
     public function get_option_id() {
-        return 'erp_settings_' . $this->id;
+        $option_id = 'erp_settings_' . $this->id;
+
+        if ( $sections = $this->get_sections() ) {
+
+            if ( isset( $_REQUEST['section'] ) && array_key_exists( $_REQUEST['section'], $sections ) ) {
+                $current_section = $_REQUEST['section'];
+                $option_id = 'erp_settings_' . $this->id . '_' . $current_section;
+            }
+        }
+
+        return $option_id;
     }
 
     /**
@@ -50,14 +63,16 @@ class ERP_Settings_Page {
         global $current_class;
 
         if ( isset( $_POST['_wpnonce']) && wp_verify_nonce( $_POST['_wpnonce'], 'erp-settings-nonce' ) ) {
-            
+
+            $from_sections = false;
+
             if ( isset( $this->sections ) && is_array( $this->sections ) && count( $this->sections ) ) {
-                $options = $this->get_section_fields($section);
+                $options       = $this->get_section_fields($section);
+                $from_sections = true;
             } else {
                 $options = $this->get_settings();
             }
-            
-            
+
             // Options to update will be stored here
             $update_options = array();
 
@@ -67,83 +82,7 @@ class ERP_Settings_Page {
                 if ( ! isset( $value['id'] ) )
                     continue;
 
-                $type = isset( $value['type'] ) ? sanitize_title( $value['type'] ) : '';
-
-                // Get the option name
-                $option_value = null;
-
-                switch ( $type ) {
-
-                    // Standard types
-                    case "checkbox" :
-
-                        if ( isset( $_POST[ $value['id'] ] ) ) {
-                            $option_value = 'yes';
-                        } else {
-                            $option_value = 'no';
-                        }
-
-                        break;
-
-                    case "textarea" :
-
-                        if ( isset( $_POST[$value['id']] ) ) {
-                            $option_value = wp_kses_post( trim( stripslashes( $_POST[ $value['id'] ] ) ) );
-                        } else {
-                            $option_value = '';
-                        }
-
-                        break;
-
-                    case 'multicheck':
-
-                        if ( isset( $_POST[$value['id']] ) ) {
-                            $option_value = array_map( 'sanitize_text_field', array_map( 'stripslashes', (array) $_POST[ $value['id'] ] ) );
-                        } else {
-                            $option_value = array();
-                        }
-
-                        break;
-
-                    case "text" :
-                    case 'email':
-                    case 'number':
-                    case "select" :
-                    case "color" :
-                    case 'password' :
-                    case "single_select_page" :
-                    case "image" :
-                    case 'radio' :
-
-                       if ( isset( $_POST[$value['id']] ) ) {
-                            $option_value = sanitize_text_field( stripslashes( $_POST[ $value['id'] ] ) );
-                        } else {
-                            $option_value = '';
-                        }
-
-                        break;
-
-                    // Special types
-                    case "multiselect" :
-
-                        // Get countries array
-                        if ( isset( $_POST[ $value['id'] ] ) )
-                            $selected_countries = array_map( 'sanitize_text_field', array_map( 'stripslashes', (array) $_POST[ $value['id'] ] ) );
-                        else
-                            $selected_countries = array();
-
-                        $option_value = $selected_countries;
-
-                        break;
-
-                    // Custom handling
-                    default :
-
-                        do_action( 'erp_update_option_' . $type, $value );
-
-                        break;
-
-                }
+                $option_value = $this->parse_option_value( $value );
 
                 if ( ! is_null( $option_value ) ) {
                     // Check if option is an array
@@ -193,6 +132,87 @@ class ERP_Settings_Page {
         }
     }
 
+    function parse_option_value( $value ) {
+        $type         = isset( $value['type'] ) ? sanitize_title( $value['type'] ) : '';
+        $option_value = null;
+
+        switch ( $type ) {
+
+            // Standard types
+            case "checkbox" :
+
+                if ( isset( $_POST[ $value['id'] ] ) ) {
+                    $option_value = 'yes';
+                } else {
+                    $option_value = 'no';
+                }
+
+                break;
+
+            case "textarea" :
+            case "wysiwyg" :
+
+                if ( isset( $_POST[$value['id']] ) ) {
+                    $option_value = wp_kses_post( trim( stripslashes( $_POST[ $value['id'] ] ) ) );
+                } else {
+                    $option_value = '';
+                }
+
+                break;
+
+            case 'multicheck':
+
+                if ( isset( $_POST[$value['id']] ) ) {
+                    $option_value = array_map( 'sanitize_text_field', array_map( 'stripslashes', (array) $_POST[ $value['id'] ] ) );
+                } else {
+                    $option_value = array();
+                }
+
+                break;
+
+            case "text" :
+            case 'email':
+            case 'number':
+            case "select" :
+            case "color" :
+            case 'password' :
+            case "single_select_page" :
+            case "image" :
+            case 'radio' :
+
+               if ( isset( $_POST[$value['id']] ) ) {
+                    $option_value = sanitize_text_field( stripslashes( $_POST[ $value['id'] ] ) );
+                } else {
+                    $option_value = '';
+                }
+
+                break;
+
+            // Special types
+            case "multiselect" :
+
+                // Get countries array
+                if ( isset( $_POST[ $value['id'] ] ) )
+                    $selected_countries = array_map( 'sanitize_text_field', array_map( 'stripslashes', (array) $_POST[ $value['id'] ] ) );
+                else
+                    $selected_countries = array();
+
+                $option_value = $selected_countries;
+
+                break;
+
+            // Custom handling
+            default :
+
+                do_action( 'erp_update_option_' . $type, $value );
+
+                break;
+
+        }
+
+        return $option_value;
+    }
+
     /**
      * Get sections
      *
@@ -211,20 +231,31 @@ class ERP_Settings_Page {
         return array();
     }
 
+    public function get_section_field_items() {
+        return $this->section_fields;
+    }
+
     public function output( $section = false ) {
         $fields         = $this->get_settings();
         $sections       = $this->get_sections();
         $section_fields = $this->get_section_fields($section);
         $query_arg      = ERP_Admin_Settings::get_current_tab_and_section();
-       
+
         if ( count( $sections ) && $query_arg['subtab'] ) {
             if ( ! array_key_exists( $query_arg['subtab'], $sections ) ) {
                 return;
             }
-            
+
             $fields = $section_fields;
         }
 
+        if ( $fields ) {
+            $this->section_fields = $fields;
+            $this->output_fields( $fields );
+        }
+    }
+
+    function output_fields( $fields ) {
         $defaults = array(
             'id'                => '',
             'title'             => '',
@@ -236,411 +267,432 @@ class ERP_Settings_Page {
             'custom_attributes' => array()
         );
 
-        if ( $fields ) {
-            foreach ($fields as $field) {
-                
-                if ( ! isset( $field['type'] ) ) {
-                    continue;
+        foreach ($fields as $field) {
+
+            if ( ! isset( $field['type'] ) ) {
+                continue;
+            }
+
+            $value = wp_parse_args( $field, $defaults );
+
+            // Custom attribute handling
+            $custom_attributes = array();
+
+            if ( ! empty( $value['custom_attributes'] ) && is_array( $value['custom_attributes'] ) ) {
+                foreach ( $value['custom_attributes'] as $attribute => $attribute_value ) {
+                    $custom_attributes[] = esc_attr( $attribute ) . '="' . esc_attr( $attribute_value ) . '"';
                 }
+            }
 
-                $value = wp_parse_args( $field, $defaults );
+            // Description handling
+            if ( $value['tooltip'] === true ) {
+                $description = '';
+                $tip = $value['desc'];
+            } elseif ( ! empty( $value['tooltip'] ) ) {
+                $description = $value['desc'];
+                $tip = $value['tooltip'];
+            } elseif ( ! empty( $value['desc'] ) ) {
+                $description = $value['desc'];
+                $tip = '';
+            } else {
+                $description = $tip = '';
+            }
 
-                // Custom attribute handling
-                $custom_attributes = array();
+            if ( $description && in_array( $value['type'], array( 'textarea', 'radio' ) ) ) {
+                $description = '<p class="description">' . wp_kses_post( $description ) . '</p>';
+            } elseif ( $description && in_array( $value['type'], array( 'checkbox' ) ) ) {
+                $description =  wp_kses_post( $description );
+            } elseif ( $description ) {
+                $description = '<p class="description">' . wp_kses_post( $description ) . '</p>';
+            }
 
-                if ( ! empty( $value['custom_attributes'] ) && is_array( $value['custom_attributes'] ) ) {
-                    foreach ( $value['custom_attributes'] as $attribute => $attribute_value ) {
-                        $custom_attributes[] = esc_attr( $attribute ) . '="' . esc_attr( $attribute_value ) . '"';
+            if ( $tip && in_array( $value['type'], array( 'checkbox' ) ) ) {
+
+                $tip = '<p class="description">' . $tip . '</p>';
+
+            } elseif ( $tip ) {
+
+                $tip = '<img class="help_tip" data-tip="' . esc_attr( $tip ) . '" src="' . WPERP_ASSETS . '/images/help.png" height="16" width="16" />';
+
+            }
+
+            // Switch based on type
+            switch( $value['type'] ) {
+
+                // Section Titles
+                case 'title':
+                    if ( ! empty( $value['title'] ) ) {
+                        echo '<h3>' . esc_html( $value['title'] ) . '</h3>';
                     }
-                }
+                    if ( ! empty( $value['desc'] ) ) {
+                        echo wpautop( wptexturize( wp_kses_post( $value['desc'] ) ) );
+                    }
+                    echo '<table class="form-table">'. "\n\n";
+                    if ( ! empty( $value['id'] ) ) {
+                        do_action( 'erp_settings_' . sanitize_title( $value['id'] ) );
+                    }
+                break;
 
-                // Description handling
-                if ( $value['tooltip'] === true ) {
-                    $description = '';
-                    $tip = $value['desc'];
-                } elseif ( ! empty( $value['tooltip'] ) ) {
-                    $description = $value['desc'];
-                    $tip = $value['tooltip'];
-                } elseif ( ! empty( $value['desc'] ) ) {
-                    $description = $value['desc'];
-                    $tip = '';
-                } else {
-                    $description = $tip = '';
-                }
+                // Section Ends
+                case 'sectionend':
+                    if ( ! empty( $value['id'] ) ) {
+                        do_action( 'erp_settings_' . sanitize_title( $value['id'] ) . '_end' );
+                    }
+                    echo '</table>';
 
-                if ( $description && in_array( $value['type'], array( 'textarea', 'radio' ) ) ) {
-                    $description = '<p class="description">' . wp_kses_post( $description ) . '</p>';
-                } elseif ( $description && in_array( $value['type'], array( 'checkbox' ) ) ) {
-                    $description =  wp_kses_post( $description );
-                } elseif ( $description ) {
-                    $description = '<p class="description">' . wp_kses_post( $description ) . '</p>';
-                }
+                    if ( ! empty( $value['id'] ) ) {
+                        do_action( 'erp_settings_' . sanitize_title( $value['id'] ) . '_after' );
+                    }
+                break;
 
-                if ( $tip && in_array( $value['type'], array( 'checkbox' ) ) ) {
+                // Standard text inputs and subtypes like 'number'
+                case 'text':
+                case 'email':
+                case 'number':
+                case 'color' :
+                case 'password' :
 
-                    $tip = '<p class="description">' . $tip . '</p>';
+                    $type           = $value['type'];
+                    $class          = '';
+                    $option_value   = $this->get_option( $value['id'], $value['default'] );
 
-                } elseif ( $tip ) {
+                    if ( empty( $value['class'] ) ) {
+                        $value['class'] = 'regular-text';
+                    }
 
-                    $tip = '<img class="help_tip" data-tip="' . esc_attr( $tip ) . '" src="' . WPERP_ASSETS . '/images/help.png" height="16" width="16" />';
+                    if ( $value['type'] == 'color' ) {
+                        $type = 'text';
+                        $value['class'] .= 'colorpick';
+                    }
 
-                }
+                    ?><tr valign="top">
+                        <th scope="row" class="titledesc">
+                            <label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
+                            <?php echo $tip; ?>
+                        </th>
+                        <td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
+                            <input
+                                name="<?php echo esc_attr( $value['id'] ); ?>"
+                                id="<?php echo esc_attr( $value['id'] ); ?>"
+                                type="<?php echo esc_attr( $type ); ?>"
+                                style="<?php echo esc_attr( $value['css'] ); ?>"
+                                value="<?php echo esc_attr( $option_value ); ?>"
+                                class="<?php echo esc_attr( $value['class'] ); ?>"
+                                <?php echo implode( ' ', $custom_attributes ); ?>
+                                /> <?php echo $description; ?>
+                        </td>
+                    </tr><?php
+                break;
 
-                // Switch based on type
-                switch( $value['type'] ) {
+                case 'image' :
 
-                    // Section Titles
-                    case 'title':
-                        if ( ! empty( $value['title'] ) ) {
-                            echo '<h3>' . esc_html( $value['title'] ) . '</h3>';
-                        }
-                        if ( ! empty( $value['desc'] ) ) {
-                            echo wpautop( wptexturize( wp_kses_post( $value['desc'] ) ) );
-                        }
-                        echo '<table class="form-table">'. "\n\n";
-                        if ( ! empty( $value['id'] ) ) {
-                            do_action( 'erp_settings_' . sanitize_title( $value['id'] ) );
-                        }
-                    break;
+                    $option_value   = (int) $this->get_option( $value['id'], 0 );
+                    $image_url = $option_value ? wp_get_attachment_url( $option_value ) : '';
 
-                    // Section Ends
-                    case 'sectionend':
-                        if ( ! empty( $value['id'] ) ) {
-                            do_action( 'erp_settings_' . sanitize_title( $value['id'] ) . '_end' );
-                        }
-                        echo '</table>';
+                    ?><tr valign="top">
+                        <th scope="row" class="titledesc">
+                            <label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
+                            <?php echo $tip; ?>
+                        </th>
 
-                        if ( ! empty( $value['id'] ) ) {
-                            do_action( 'erp_settings_' . sanitize_title( $value['id'] ) . '_after' );
-                        }
-                    break;
+                        <td>
+                            <div class="image-wrap<?php echo $option_value ? '' : ' erp-hide'; ?>">
+                                <input type="hidden" class="erp-file-field" name="<?php echo esc_attr( $value['id'] ); ?>" value="<?php echo esc_attr( $option_value ); ?>">
+                                <img class="erp-option-image" src="<?php echo esc_url( $image_url ); ?>">
 
-                    // Standard text inputs and subtypes like 'number'
-                    case 'text':
-                    case 'email':
-                    case 'number':
-                    case 'color' :
-                    case 'password' :
+                                <a class="erp-remove-image" title="<?php _e( 'Delete this image?', 'erp' ); ?>">&times;</a>
+                            </div>
 
-                        $type           = $value['type'];
-                        $class          = '';
-                        $option_value   = $this->get_option( $value['id'], $value['default'] );
-
-                        if ( empty( $value['class'] ) ) {
-                            $value['class'] = 'regular-text';
-                        }
-
-                        if ( $value['type'] == 'color' ) {
-                            $type = 'text';
-                            $value['class'] .= 'colorpick';
-                        }
-
-                        ?><tr valign="top">
-                            <th scope="row" class="titledesc">
-                                <label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
-                                <?php echo $tip; ?>
-                            </th>
-                            <td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
-                                <input
-                                    name="<?php echo esc_attr( $value['id'] ); ?>"
-                                    id="<?php echo esc_attr( $value['id'] ); ?>"
-                                    type="<?php echo esc_attr( $type ); ?>"
-                                    style="<?php echo esc_attr( $value['css'] ); ?>"
-                                    value="<?php echo esc_attr( $option_value ); ?>"
-                                    class="<?php echo esc_attr( $value['class'] ); ?>"
-                                    <?php echo implode( ' ', $custom_attributes ); ?>
-                                    /> <?php echo $description; ?>
-                            </td>
-                        </tr><?php
-                    break;
-
-                    case 'image' :
-
-                        $option_value   = (int) $this->get_option( $value['id'], 0 );
-                        $image_url = $option_value ? wp_get_attachment_url( $option_value ) : '';
-
-                        ?><tr valign="top">
-                            <th scope="row" class="titledesc">
-                                <label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
-                                <?php echo $tip; ?>
-                            </th>
-
-                            <td>
-                                <div class="image-wrap<?php echo $option_value ? '' : ' erp-hide'; ?>">
-                                    <input type="hidden" class="erp-file-field" name="<?php echo esc_attr( $value['id'] ); ?>" value="<?php echo esc_attr( $option_value ); ?>">
-                                    <img class="erp-option-image" src="<?php echo esc_url( $image_url ); ?>">
-
-                                    <a class="erp-remove-image" title="<?php _e( 'Delete this image?', 'erp' ); ?>">&times;</a>
-                                </div>
-
-                                <div class="button-area<?php echo $option_value ? ' erp-hide' : ''; ?>">
-                                    <a href="#" class="erp-image-upload button"><?php _e( 'Upload Image', 'erp' ); ?></a>
-                                    <?php echo $description; ?>
-                                </div>
-
-                            </td>
-
-
-                        </tr><?php
-                    break;
-
-                    // Textarea
-                    case 'textarea':
-
-                        $option_value   = $this->get_option( $value['id'], $value['default'] );
-
-                        ?><tr valign="top">
-                            <th scope="row" class="titledesc">
-                                <label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
-                                <?php echo $tip; ?>
-                            </th>
-                            <td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
-
-                                <textarea
-                                    name="<?php echo esc_attr( $value['id'] ); ?>"
-                                    id="<?php echo esc_attr( $value['id'] ); ?>"
-                                    style="<?php echo esc_attr( $value['css'] ); ?>"
-                                    class="<?php echo esc_attr( $value['class'] ); ?>"
-                                    <?php echo implode( ' ', $custom_attributes ); ?>
-                                    ><?php echo esc_textarea( $option_value );  ?></textarea>
-
-                                    <?php echo $description; ?>
-                            </td>
-                        </tr><?php
-                    break;
-
-                    // Select boxes
-                    case 'select' :
-                    case 'multiselect' :
-
-                        $option_value   = $this->get_option( $value['id'], $value['default'] );
-
-                        ?><tr valign="top">
-                            <th scope="row" class="titledesc">
-                                <label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
-                                <?php echo $tip; ?>
-                            </th>
-                            <td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
-                                <select
-                                    name="<?php echo esc_attr( $value['id'] ); ?><?php if ( $value['type'] == 'multiselect' ) echo '[]'; ?>"
-                                    id="<?php echo esc_attr( $value['id'] ); ?>"
-                                    style="<?php echo esc_attr( $value['css'] ); ?>"
-                                    class="<?php echo esc_attr( $value['class'] ); ?>"
-                                    <?php echo implode( ' ', $custom_attributes ); ?>
-                                    <?php if ( $value['type'] == 'multiselect' ) echo 'multiple="multiple"'; ?>
-                                    >
-                                    <?php
-                                        foreach ( $value['options'] as $key => $val ) {
-                                            ?>
-                                            <option value="<?php echo esc_attr( $key ); ?>" <?php
-
-                                                if ( is_array( $option_value ) )
-                                                    selected( in_array( $key, $option_value ), true );
-                                                else
-                                                    selected( $option_value, $key );
-
-                                            ?>><?php echo $val ?></option>
-                                            <?php
-                                        }
-                                    ?>
-                               </select> <?php echo $description; ?>
-                            </td>
-                        </tr><?php
-                    break;
-
-                    // Radio inputs
-                    case 'radio' :
-
-                        $option_value   = $this->get_option( $value['id'], $value['default'] );
-
-                        ?><tr valign="top">
-                            <th scope="row" class="titledesc">
-                                <label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
-                                <?php echo $tip; ?>
-                            </th>
-                            <td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
-                                <fieldset>
-                                    <?php echo $description; ?>
-                                    <ul>
-                                    <?php
-                                        foreach ( $value['options'] as $key => $val ) {
-                                            ?>
-                                            <li>
-                                                <label><input
-                                                    name="<?php echo esc_attr( $value['id'] ); ?>"
-                                                    value="<?php echo $key; ?>"
-                                                    type="radio"
-                                                    style="<?php echo esc_attr( $value['css'] ); ?>"
-                                                    class="<?php echo esc_attr( $value['class'] ); ?>"
-                                                    <?php echo implode( ' ', $custom_attributes ); ?>
-                                                    <?php checked( $key, $option_value ); ?>
-                                                    /> <?php echo $val ?></label>
-                                            </li>
-                                            <?php
-                                        }
-                                    ?>
-                                    </ul>
-                                </fieldset>
-                            </td>
-                        </tr><?php
-                    break;
-
-
-                    // multi check
-                    case 'multicheck' :
-
-                        $default = is_array( $value['default'] ) ? $value['default'] : array();
-                        $option_value   = $this->get_option( $value['id'], $default );
-
-                        ?><tr valign="top">
-                            <th scope="row" class="titledesc">
-                                <label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
-                                <?php echo $tip; ?>
-                            </th>
-                            <td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
-                                <fieldset>
-                                    <ul>
-                                    <?php
-                                        foreach ( $value['options'] as $key => $val ) {
-                                            ?>
-                                            <li>
-                                                <label><input
-                                                    name="<?php echo esc_attr( $value['id'] ); ?>[<?php echo esc_attr( $key ); ?>]"
-                                                    value="<?php echo $key; ?>"
-                                                    type="checkbox"
-                                                    style="<?php echo esc_attr( $value['css'] ); ?>"
-                                                    class="<?php echo esc_attr( $value['class'] ); ?>"
-                                                    <?php echo implode( ' ', $custom_attributes ); ?>
-                                                    <?php checked( in_array( $key, $option_value ) ); ?>
-                                                    /> <?php echo $val ?></label>
-                                            </li>
-                                            <?php
-                                        }
-                                    ?>
-                                    </ul>
-                                </fieldset>
+                            <div class="button-area<?php echo $option_value ? ' erp-hide' : ''; ?>">
+                                <a href="#" class="erp-image-upload button"><?php _e( 'Upload Image', 'erp' ); ?></a>
                                 <?php echo $description; ?>
-                            </td>
-                        </tr><?php
-                    break;
+                            </div>
 
-                    // Checkbox input
-                    case 'checkbox' :
+                        </td>
 
-                        $option_value    = $this->get_option( $value['id'], $value['default'] );
-                        $visbility_class = array();
 
-                        if ( ! isset( $value['hide_if_checked'] ) ) {
-                            $value['hide_if_checked'] = false;
-                        }
-                        if ( ! isset( $value['show_if_checked'] ) ) {
-                            $value['show_if_checked'] = false;
-                        }
-                        if ( $value['hide_if_checked'] == 'yes' || $value['show_if_checked'] == 'yes' ) {
-                            $visbility_class[] = 'hidden_option';
-                        }
-                        if ( $value['hide_if_checked'] == 'option' ) {
-                            $visbility_class[] = 'hide_options_if_checked';
-                        }
-                        if ( $value['show_if_checked'] == 'option' ) {
-                            $visbility_class[] = 'show_options_if_checked';
-                        }
+                    </tr><?php
+                break;
 
-                        if ( ! isset( $value['checkboxgroup'] ) || 'start' == $value['checkboxgroup'] ) {
-                            ?>
-                                <tr valign="top" class="<?php echo esc_attr( implode( ' ', $visbility_class ) ); ?>">
-                                    <th scope="row" class="titledesc"><?php echo esc_html( $value['title'] ) ?></th>
-                                    <td class="forminp forminp-checkbox">
-                                        <fieldset>
-                            <?php
-                        } else {
-                            ?>
-                                <fieldset class="<?php echo esc_attr( implode( ' ', $visbility_class ) ); ?>">
-                            <?php
-                        }
+                // Textarea
+                case 'textarea':
 
-                        if ( ! empty( $value['title'] ) ) {
-                            ?>
-                                <legend class="screen-reader-text"><span><?php echo esc_html( $value['title'] ) ?></span></legend>
-                            <?php
-                        }
+                    $option_value   = $this->get_option( $value['id'], $value['default'] );
 
-                        ?>
-                            <label for="<?php echo $value['id'] ?>">
-                                <input
-                                    name="<?php echo esc_attr( $value['id'] ); ?>"
-                                    id="<?php echo esc_attr( $value['id'] ); ?>"
-                                    type="checkbox"
-                                    value="1"
-                                    <?php checked( $option_value, 'yes'); ?>
-                                    <?php echo implode( ' ', $custom_attributes ); ?>
-                                /> <?php echo $description ?>
-                            </label> <?php echo $tip; ?>
-                        <?php
+                    ?><tr valign="top">
+                        <th scope="row" class="titledesc">
+                            <label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
+                            <?php echo $tip; ?>
+                        </th>
+                        <td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
 
-                        if ( ! isset( $value['checkboxgroup'] ) || 'end' == $value['checkboxgroup'] ) {
+                            <textarea
+                                name="<?php echo esc_attr( $value['id'] ); ?>"
+                                id="<?php echo esc_attr( $value['id'] ); ?>"
+                                style="<?php echo esc_attr( $value['css'] ); ?>"
+                                class="<?php echo esc_attr( $value['class'] ); ?>"
+                                <?php echo implode( ' ', $custom_attributes ); ?>
+                                ><?php echo esc_textarea( $option_value );  ?></textarea>
+
+                                <?php echo $description; ?>
+                        </td>
+                    </tr><?php
+                break;
+
+                // Textarea
+                case 'wysiwyg':
+
+                    $option_value   = $this->get_option( $value['id'], $value['default'] );
+                    $editor_args = [
+                        'editor_class' => $value['css'],
+                        'textarea_rows' => 10
+                    ];
+
+                    ?><tr valign="top">
+                        <th scope="row" class="titledesc">
+                            <label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
+                            <?php echo $tip; ?>
+                        </th>
+                        <td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
+
+                            <?php wp_editor( $option_value, $value['id'], $editor_args ); ?>
+
+                            <?php echo $description; ?>
+                        </td>
+                    </tr><?php
+                break;
+
+                // Select boxes
+                case 'select' :
+                case 'multiselect' :
+
+                    $option_value   = $this->get_option( $value['id'], $value['default'] );
+
+                    ?><tr valign="top">
+                        <th scope="row" class="titledesc">
+                            <label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
+                            <?php echo $tip; ?>
+                        </th>
+                        <td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
+                            <select
+                                name="<?php echo esc_attr( $value['id'] ); ?><?php if ( $value['type'] == 'multiselect' ) echo '[]'; ?>"
+                                id="<?php echo esc_attr( $value['id'] ); ?>"
+                                style="<?php echo esc_attr( $value['css'] ); ?>"
+                                class="<?php echo esc_attr( $value['class'] ); ?>"
+                                <?php echo implode( ' ', $custom_attributes ); ?>
+                                <?php if ( $value['type'] == 'multiselect' ) echo 'multiple="multiple"'; ?>
+                                >
+                                <?php
+                                    foreach ( $value['options'] as $key => $val ) {
                                         ?>
-                                        </fieldset>
-                                    </td>
-                                </tr>
-                            <?php
-                        } else {
-                            ?>
-                                </fieldset>
-                            <?php
-                        }
-                    break;
+                                        <option value="<?php echo esc_attr( $key ); ?>" <?php
 
-                    // Image width settings
-                    case 'image_width' :
+                                            if ( is_array( $option_value ) )
+                                                selected( in_array( $key, $option_value ), true );
+                                            else
+                                                selected( $option_value, $key );
 
-                        $width  = $this->get_option( $value['id'] . '[width]', $value['default']['width'] );
-                        $height = $this->get_option( $value['id'] . '[height]', $value['default']['height'] );
-                        $crop   = checked( 1, $this->get_option( $value['id'] . '[crop]', $value['default']['crop'] ), false );
+                                        ?>><?php echo $val ?></option>
+                                        <?php
+                                    }
+                                ?>
+                           </select> <?php echo $description; ?>
+                        </td>
+                    </tr><?php
+                break;
 
-                        ?><tr valign="top">
-                            <th scope="row" class="titledesc"><?php echo esc_html( $value['title'] ) ?> <?php echo $tip; ?></th>
-                            <td class="forminp image_width_settings">
+                // Radio inputs
+                case 'radio' :
 
-                                <input name="<?php echo esc_attr( $value['id'] ); ?>[width]" id="<?php echo esc_attr( $value['id'] ); ?>-width" type="text" size="3" value="<?php echo $width; ?>" /> &times; <input name="<?php echo esc_attr( $value['id'] ); ?>[height]" id="<?php echo esc_attr( $value['id'] ); ?>-height" type="text" size="3" value="<?php echo $height; ?>" />px
+                    $option_value   = $this->get_option( $value['id'], $value['default'] );
 
-                                <label><input name="<?php echo esc_attr( $value['id'] ); ?>[crop]" id="<?php echo esc_attr( $value['id'] ); ?>-crop" type="checkbox" <?php echo $crop; ?> /> <?php _e( 'Hard Crop?', 'erp' ); ?></label>
+                    ?><tr valign="top">
+                        <th scope="row" class="titledesc">
+                            <label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
+                            <?php echo $tip; ?>
+                        </th>
+                        <td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
+                            <fieldset>
+                                <?php echo $description; ?>
+                                <ul>
+                                <?php
+                                    foreach ( $value['options'] as $key => $val ) {
+                                        ?>
+                                        <li>
+                                            <label><input
+                                                name="<?php echo esc_attr( $value['id'] ); ?>"
+                                                value="<?php echo $key; ?>"
+                                                type="radio"
+                                                style="<?php echo esc_attr( $value['css'] ); ?>"
+                                                class="<?php echo esc_attr( $value['class'] ); ?>"
+                                                <?php echo implode( ' ', $custom_attributes ); ?>
+                                                <?php checked( $key, $option_value ); ?>
+                                                /> <?php echo $val ?></label>
+                                        </li>
+                                        <?php
+                                    }
+                                ?>
+                                </ul>
+                            </fieldset>
+                        </td>
+                    </tr><?php
+                break;
 
+
+                // multi check
+                case 'multicheck' :
+
+                    $default = is_array( $value['default'] ) ? $value['default'] : array();
+                    $option_value   = $this->get_option( $value['id'], $default );
+
+                    ?><tr valign="top">
+                        <th scope="row" class="titledesc">
+                            <label for="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
+                            <?php echo $tip; ?>
+                        </th>
+                        <td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
+                            <fieldset>
+                                <ul>
+                                <?php
+                                    foreach ( $value['options'] as $key => $val ) {
+                                        ?>
+                                        <li>
+                                            <label><input
+                                                name="<?php echo esc_attr( $value['id'] ); ?>[<?php echo esc_attr( $key ); ?>]"
+                                                value="<?php echo $key; ?>"
+                                                type="checkbox"
+                                                style="<?php echo esc_attr( $value['css'] ); ?>"
+                                                class="<?php echo esc_attr( $value['class'] ); ?>"
+                                                <?php echo implode( ' ', $custom_attributes ); ?>
+                                                <?php checked( in_array( $key, $option_value ) ); ?>
+                                                /> <?php echo $val ?></label>
+                                        </li>
+                                        <?php
+                                    }
+                                ?>
+                                </ul>
+                            </fieldset>
+                            <?php echo $description; ?>
+                        </td>
+                    </tr><?php
+                break;
+
+                // Checkbox input
+                case 'checkbox' :
+
+                    $option_value    = $this->get_option( $value['id'], $value['default'] );
+                    $visbility_class = array();
+
+                    if ( ! isset( $value['hide_if_checked'] ) ) {
+                        $value['hide_if_checked'] = false;
+                    }
+                    if ( ! isset( $value['show_if_checked'] ) ) {
+                        $value['show_if_checked'] = false;
+                    }
+                    if ( $value['hide_if_checked'] == 'yes' || $value['show_if_checked'] == 'yes' ) {
+                        $visbility_class[] = 'hidden_option';
+                    }
+                    if ( $value['hide_if_checked'] == 'option' ) {
+                        $visbility_class[] = 'hide_options_if_checked';
+                    }
+                    if ( $value['show_if_checked'] == 'option' ) {
+                        $visbility_class[] = 'show_options_if_checked';
+                    }
+
+                    if ( ! isset( $value['checkboxgroup'] ) || 'start' == $value['checkboxgroup'] ) {
+                        ?>
+                            <tr valign="top" class="<?php echo esc_attr( implode( ' ', $visbility_class ) ); ?>">
+                                <th scope="row" class="titledesc"><?php echo esc_html( $value['title'] ) ?></th>
+                                <td class="forminp forminp-checkbox">
+                                    <fieldset>
+                        <?php
+                    } else {
+                        ?>
+                            <fieldset class="<?php echo esc_attr( implode( ' ', $visbility_class ) ); ?>">
+                        <?php
+                    }
+
+                    if ( ! empty( $value['title'] ) ) {
+                        ?>
+                            <legend class="screen-reader-text"><span><?php echo esc_html( $value['title'] ) ?></span></legend>
+                        <?php
+                    }
+
+                    ?>
+                        <label for="<?php echo $value['id'] ?>">
+                            <input
+                                name="<?php echo esc_attr( $value['id'] ); ?>"
+                                id="<?php echo esc_attr( $value['id'] ); ?>"
+                                type="checkbox"
+                                value="1"
+                                <?php checked( $option_value, 'yes'); ?>
+                                <?php echo implode( ' ', $custom_attributes ); ?>
+                            /> <?php echo $description ?>
+                        </label> <?php echo $tip; ?>
+                    <?php
+
+                    if ( ! isset( $value['checkboxgroup'] ) || 'end' == $value['checkboxgroup'] ) {
+                                    ?>
+                                    </fieldset>
                                 </td>
-                        </tr><?php
-                    break;
+                            </tr>
+                        <?php
+                    } else {
+                        ?>
+                            </fieldset>
+                        <?php
+                    }
+                break;
 
-                    // Single page selects
-                    case 'single_select_page' :
+                // Image width settings
+                case 'image_width' :
 
-                        $args = array(
-                            'name'             => $value['id'],
-                            'id'               => $value['id'],
-                            'sort_column'      => 'menu_order',
-                            'sort_order'       => 'ASC',
-                            'show_option_none' => ' ',
-                            'class'            => $value['class'],
-                            'echo'             => false,
-                            'selected'         => absint( $this->get_option( $value['id'] ) )
-                       );
+                    $width  = $this->get_option( $value['id'] . '[width]', $value['default']['width'] );
+                    $height = $this->get_option( $value['id'] . '[height]', $value['default']['height'] );
+                    $crop   = checked( 1, $this->get_option( $value['id'] . '[crop]', $value['default']['crop'] ), false );
 
-                        if ( isset( $value['args'] ) ) {
-                            $args = wp_parse_args( $value['args'], $args );
-                        }
+                    ?><tr valign="top">
+                        <th scope="row" class="titledesc"><?php echo esc_html( $value['title'] ) ?> <?php echo $tip; ?></th>
+                        <td class="forminp image_width_settings">
 
-                        ?><tr valign="top" class="single_select_page">
-                            <th scope="row" class="titledesc"><?php echo esc_html( $value['title'] ) ?> <?php echo $tip; ?></th>
-                            <td class="forminp">
-                                <?php echo str_replace(' id=', " data-placeholder='" . __( 'Select a page&hellip;', 'erp' ) .  "' style='" . $value['css'] . "' class='" . $value['class'] . "' id=", wp_dropdown_pages( $args ) ); ?> <?php echo $description; ?>
+                            <input name="<?php echo esc_attr( $value['id'] ); ?>[width]" id="<?php echo esc_attr( $value['id'] ); ?>-width" type="text" size="3" value="<?php echo $width; ?>" /> &times; <input name="<?php echo esc_attr( $value['id'] ); ?>[height]" id="<?php echo esc_attr( $value['id'] ); ?>-height" type="text" size="3" value="<?php echo $height; ?>" />px
+
+                            <label><input name="<?php echo esc_attr( $value['id'] ); ?>[crop]" id="<?php echo esc_attr( $value['id'] ); ?>-crop" type="checkbox" <?php echo $crop; ?> /> <?php _e( 'Hard Crop?', 'erp' ); ?></label>
+
                             </td>
-                        </tr><?php
-                    break;
+                    </tr><?php
+                break;
 
-                    // Default: run an action
-                    default:
-                        do_action( 'erp_admin_field_' . $value['type'], $value );
-                    break;
-                }
+                // Single page selects
+                case 'single_select_page' :
+
+                    $args = array(
+                        'name'             => $value['id'],
+                        'id'               => $value['id'],
+                        'sort_column'      => 'menu_order',
+                        'sort_order'       => 'ASC',
+                        'show_option_none' => ' ',
+                        'class'            => $value['class'],
+                        'echo'             => false,
+                        'selected'         => absint( $this->get_option( $value['id'] ) )
+                   );
+
+                    if ( isset( $value['args'] ) ) {
+                        $args = wp_parse_args( $value['args'], $args );
+                    }
+
+                    ?><tr valign="top" class="single_select_page">
+                        <th scope="row" class="titledesc"><?php echo esc_html( $value['title'] ) ?> <?php echo $tip; ?></th>
+                        <td class="forminp">
+                            <?php echo str_replace(' id=', " data-placeholder='" . __( 'Select a page&hellip;', 'erp' ) .  "' style='" . $value['css'] . "' class='" . $value['class'] . "' id=", wp_dropdown_pages( $args ) ); ?> <?php echo $description; ?>
+                        </td>
+                    </tr><?php
+                break;
+
+                // Default: run an action
+                default:
+                    do_action( 'erp_admin_field_' . $value['type'], $value );
+                break;
             }
         }
     }
@@ -662,7 +714,7 @@ class ERP_Settings_Page {
         $array_keys = array_keys( $sections );
 
         foreach ( $sections as $id => $label ) {
-            echo '<li><a href="' . admin_url( 'admin.php?page=wc-settings&tab=' . $this->id . '&section=' . sanitize_title( $id ) ) . '" class="' . ( $current_section == $id ? 'current' : '' ) . '">' . $label . '</a> ' . ( end( $array_keys ) == $id ? '' : '|' ) . ' </li>';
+            echo '<li><a href="' . admin_url( 'admin.php?page=erp-settings&tab=' . $this->id . '&section=' . sanitize_title( $id ) ) . '" class="' . ( $current_section == $id ? 'current' : '' ) . '">' . $label . '</a> ' . ( end( $array_keys ) == $id ? '' : '|' ) . ' </li>';
         }
 
         echo '</ul><br class="clear" />';
@@ -685,7 +737,6 @@ class ERP_Settings_Page {
             $options = get_option( $this->get_option_id(), array() );
             $option_value = isset( $options[$option_name] ) ? $options[$option_name] : $default;
         }
-
 
         if ( is_array( $option_value ) ) {
             $option_value = array_map( 'stripslashes', $option_value );

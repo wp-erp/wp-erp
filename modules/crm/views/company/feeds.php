@@ -2,7 +2,7 @@
 global $current_user;
 $feeds_tab = erp_crm_get_customer_feeds_nav();
 ?>
-<div class="erp-customer-feeds" id="erp-customer-feeds">
+<div class="erp-customer-feeds" id="erp-customer-feeds" v-cloak>
     <input type="hidden" v-model="customer_id" value="<?php echo $customer->id; ?>" name="customer_id">
     <div class="activity-form">
         <ul class="erp-list list-inline nav-item">
@@ -26,12 +26,13 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
 
                 <schedule-note v-if="tabShow == 'schedule'"></schedule-note>
 
+                <tasks-note v-if="tabShow == 'tasks'"></tasks-note>
+
+                <?php do_action( 'erp_crm_feeds_nav_content' ); ?>
+
             </form>
         </div>
     </div>
-
-
-    <!-- <pre>@{{ $data.feeds }}</pre> -->
 
     <div class="activity-content">
 
@@ -45,7 +46,8 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
 
                 <li v-for="feed in feed_obj">
 
-                    <i v-if="feed.type == 'email'" class="fa fa-envelope-o" @click.prevent="toggleFooter"></i>
+                    <i v-if="(feed.type == 'email') && ( feed.extra.replied != 1 )" class="fa fa-envelope-o"></i>
+                    <i v-if="(feed.type == 'email') && ( feed.extra.replied == 1 )" class="fa fa-reply"></i>
                     <i v-if="feed.type == 'new_note'" class="fa fa-file-text-o" @click.prevent="toggleFooter"></i>
                     <i v-if="feed.type == 'log_activity'" class="fa fa-list" @click.prevent="toggleFooter"></i>
                     <i v-if=" ( feed.type == 'log_activity' && isSchedule( feed.start_date )  )" class="fa fa-calendar-check-o" @click.prevent="toggleFooter"></i>
@@ -58,16 +60,16 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
             </template>
         </ul>
 
-        <div class="feed-load-more" v-if="feeds.length >= limit">
+        <div class="feed-load-more" v-show="( feeds.length >= limit ) && !loadingFinish">
             <button @click="loadMoreContent( feeds )" class="button">
                 <i class="fa fa-cog fa-spin" v-if="loading"></i>
-                &nbsp;<span v-if="!loading"><?php _e( 'Load More', 'wp-erp' ); ?></span>
-                &nbsp;<span v-else><?php _e( 'Loading..', 'wp-erp' ); ?></span>
+                &nbsp;<span v-if="!loading"><?php _e( 'Load More', 'erp' ); ?></span>
+                &nbsp;<span v-else><?php _e( 'Loading..', 'erp' ); ?></span>
             </button>
         </div>
 
         <div class="no-activity-found" v-if="!feeds.length">
-            <?php _e( 'No Activity found for this Company', 'wp-erp' ); ?>
+            <?php _e( 'No Activity found for this Company', 'erp' ); ?>
         </div>
     </div>
 </div>

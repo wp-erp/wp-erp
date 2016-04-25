@@ -30,6 +30,8 @@
             $( '.erp-hr-holiday-wrap' ).on( 'click', '#erp-hr-import-ical', self, this.importICalInit );
             $( '.erp-hr-holiday-wrap' ).on( 'change', '#erp-ical-input', self, this.uploadICal );
 
+            $( '.erp-hr-leave-requests' ).on( 'click', '.erp-hr-leave-reject-btn', self, this.leave.reject );
+
             this.initDateField();
         },
 
@@ -145,7 +147,7 @@
 
                 var self = $(this);
 
-                if ( confirm( wpErpHr.delConfirmEmployee ) ) {
+                if ( confirm( wpErpHr.delConfirmHoliday ) ) {
                     wp.ajax.send( 'erp-hr-holiday-delete', {
                         data: {
                             '_wpnonce': wpErpHr.nonce,
@@ -220,7 +222,7 @@
                     extraClass: 'smaller',
                     onReady: function() {
                         Leave.initDateField();
-                        $('.erp-color-picker').wpColorPicker();
+                        $('.erp-color-picker').wpColorPicker().wpColorPicker( 'color', '#fafafa' );
                         Leave.policy.periodField();
                     },
                     onSubmit: function(modal) {
@@ -278,7 +280,7 @@
 
                 var self = $(this);
 
-                if ( confirm( wpErpHr.delConfirmEmployee ) ) {
+                if ( confirm( wpErpHr.delConfirmPolicy ) ) {
                     wp.ajax.send( 'erp-hr-leave-policy-delete', {
                         data: {
                             '_wpnonce': wpErpHr.nonce,
@@ -338,14 +340,18 @@
                         Leave.initDateField();
                     },
                     onSubmit: function(modal) {
+                        $( 'button[type=submit]', '.erp-modal' ).attr( 'disabled', 'disabled' );
+
                         wp.ajax.send( {
                             data: this.serialize(),
                             success: function(res) {
+                                modal.enableButton();
                                 alert( res );
                                 modal.closeModal();
                             },
                             error: function(error) {
                                 alert( error );
+                                modal.enableButton();
                             }
                         });
                     }
@@ -446,6 +452,41 @@
                         $('table#erp-hr-empl-leave-history tbody').html(resp);
                     }
                 } );
+            },
+
+            pageReload: function() {
+                $( '.erp-hr-leave-requests' ).load( window.location.href + ' .erp-hr-leave-requests-inner' );
+            },
+
+
+            reject: function(e) {
+                e.preventDefault();
+
+                var self = $(this),
+                data = {
+                    id : self.data('id')
+                }
+
+                $.erpPopup({
+                    title: wpErpHr.popup.leave_reject,
+                    button: wpErpHr.popup.update_status,
+                    id: 'erp-hr-leave-reject-popup',
+                    content: wperp.template('erp-hr-leave-reject-js-tmp')(data).trim(),
+                    extraClass: 'smaller',
+                    onSubmit: function(modal) {
+                        wp.ajax.send( {
+                            data: this.serialize()+'&_wpnonce='+wpErpHr.nonce,
+                            success: function(res) {
+                                Leave.leave.pageReload();
+                                modal.closeModal();
+                                //location.reload();
+                            },
+                            error: function(error) {
+                                alert( error );
+                            }
+                        });
+                    }
+                }); //popup
             }
         },
 

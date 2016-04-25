@@ -20,7 +20,6 @@ class Human_Resource {
      * @param \WeDevs_ERP $plugin
      */
     public function __construct( \WeDevs_ERP $plugin ) {
-
         $this->plugin = $plugin;
 
         // Define constants
@@ -69,6 +68,7 @@ class Human_Resource {
         require_once WPERP_HRM_PATH . '/includes/functions-leave.php';
         require_once WPERP_HRM_PATH . '/includes/functions-capabilities.php';
         require_once WPERP_HRM_PATH . '/includes/functions-dashboard-widgets.php';
+        require_once WPERP_HRM_PATH . '/includes/functions-reporting.php';
         require_once WPERP_HRM_PATH . '/includes/actions-filters.php';
     }
 
@@ -88,7 +88,7 @@ class Human_Resource {
      * @return void
      */
     private function init_filters() {
-
+        add_filter( 'erp_settings_pages', array( $this, 'add_settings_page' ) );
     }
 
     /**
@@ -100,10 +100,22 @@ class Human_Resource {
         new Ajax_Handler();
         new Form_Handler();
         new Announcement();
-        new Settings();
         new Admin\Admin_Menu();
         new Admin\User_Profile();
         new Hr_Log();
+        new Emailer();
+    }
+
+    /**
+     * Register HR settings page
+     *
+     * @param array
+     */
+    public function add_settings_page( $settings = [] ) {
+
+        $settings[] = include __DIR__ . '/includes/class-settings.php';
+
+        return $settings;
     }
 
     /**
@@ -115,49 +127,64 @@ class Human_Resource {
      */
     public function admin_scripts( $hook ) {
         // var_dump( $hook );
-        $suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+
+        $suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '';
 
         wp_enqueue_media();
-        // wp_enqueue_script( 'erp-tiptip' );
-        wp_enqueue_script( 'wp-erp-hr', WPERP_HRM_ASSETS . "/js/hrm$suffix.js", array( 'wp-erp-script' ), date( 'Ymd' ), true );
+        wp_enqueue_script( 'erp-tiptip' );
 
+        if ( 'hr-management_page_erp-hr-employee' == $hook ) {
+            wp_enqueue_style( 'erp-sweetalert' );
+            wp_enqueue_script( 'erp-sweetalert' );
+        }
+
+        wp_enqueue_script( 'wp-erp-hr', WPERP_HRM_ASSETS . "/js/hrm$suffix.js", array( 'erp-script' ), date( 'Ymd' ), true );
         wp_enqueue_script( 'wp-erp-hr-leave', WPERP_HRM_ASSETS . "/js/leave$suffix.js", array(
-            'wp-erp-script',
+            'erp-script',
             'wp-color-picker'
         ), date( 'Ymd' ), true );
 
         $localize_script = apply_filters( 'erp_hr_localize_script', array(
             'nonce'              => wp_create_nonce( 'wp-erp-hr-nonce' ),
             'popup'              => array(
-                'dept_title'         => __( 'New Department', 'wp-erp' ),
-                'dept_submit'        => __( 'Create Department', 'wp-erp' ),
-                'location_title'     => __( 'New Location', 'wp-erp' ),
-                'location_submit'    => __( 'Create Location', 'wp-erp' ),
-                'dept_update'        => __( 'Update Department', 'wp-erp' ),
-                'desig_title'        => __( 'New Designation', 'wp-erp' ),
-                'desig_submit'       => __( 'Create Designation', 'wp-erp' ),
-                'desig_update'       => __( 'Update Designation', 'wp-erp' ),
-                'employee_title'     => __( 'New Employee', 'wp-erp' ),
-                'employee_create'    => __( 'Create Employee', 'wp-erp' ),
-                'employee_update'    => __( 'Update Employee', 'wp-erp' ),
-                'employment_status'  => __( 'Employment Status', 'wp-erp' ),
-                'update_status'      => __( 'Update', 'wp-erp' ),
-                'policy'             => __( 'Leave Policy', 'wp-erp' ),
-                'policy_create'      => __( 'Create Policy', 'wp-erp' ),
-                'holiday'            => __( 'Holiday', 'wp-erp' ),
-                'holiday_create'     => __( 'Create Holiday', 'wp-erp' ),
-                'holiday_update'     => __( 'Update Holiday', 'wp-erp' ),
-                'new_leave_req'      => __( 'Leave Request', 'wp-erp' ),
-                'take_leave'         => __( 'Send Leve Request', 'wp-erp' ),
-                'terminate'          => __( 'Terminate', 'wp-erp' ),
+                'dept_title'         => __( 'New Department', 'erp' ),
+                'dept_submit'        => __( 'Create Department', 'erp' ),
+                'location_title'     => __( 'New Location', 'erp' ),
+                'location_submit'    => __( 'Create Location', 'erp' ),
+                'dept_update'        => __( 'Update Department', 'erp' ),
+                'desig_title'        => __( 'New Designation', 'erp' ),
+                'desig_submit'       => __( 'Create Designation', 'erp' ),
+                'desig_update'       => __( 'Update Designation', 'erp' ),
+                'employee_title'     => __( 'New Employee', 'erp' ),
+                'employee_create'    => __( 'Create Employee', 'erp' ),
+                'employee_update'    => __( 'Update Employee', 'erp' ),
+                'employment_status'  => __( 'Employment Status', 'erp' ),
+                'update_status'      => __( 'Update', 'erp' ),
+                'policy'             => __( 'Leave Policy', 'erp' ),
+                'policy_create'      => __( 'Create Policy', 'erp' ),
+                'holiday'            => __( 'Holiday', 'erp' ),
+                'holiday_create'     => __( 'Create Holiday', 'erp' ),
+                'holiday_update'     => __( 'Update Holiday', 'erp' ),
+                'new_leave_req'      => __( 'Leave Request', 'erp' ),
+                'take_leave'         => __( 'Send Leve Request', 'erp' ),
+                'terminate'          => __( 'Terminate', 'erp' ),
+                'leave_reject'       => __( 'Reject Reason', 'erp' ),
+                'already_terminate'  => __( 'Sorry, this employee is already terminated', 'erp' ),
+                'already_active'     => __( 'Sorry, this employee is already active', 'erp' )
             ),
-            'emp_upload_photo'   => __( 'Upload Employee Photo', 'wp-erp' ),
-            'emp_set_photo'      => __( 'Set Photo', 'wp-erp' ),
-            'confirm'            => __( 'Are you sure?', 'wp-erp' ),
-            'delConfirmDept'     => __( 'Are you sure to delete this department?', 'wp-erp' ),
-            'delConfirmEmployee' => __( 'Are you sure to delete this employee?', 'wp-erp' ),
-            'delConfirmEmployeeNote' => __( 'Are you sure to delete this employee note?', 'wp-erp' ),
-            'delConfirmEntitlement' => __( 'Are you sure to delete this Entitlement? If yes, then all leave request under this entitlement also permanently deleted', 'wp-erp' ),
+            'emp_upload_photo'       => __( 'Upload Employee Photo', 'erp' ),
+            'emp_set_photo'          => __( 'Set Photo', 'erp' ),
+            'confirm'                => __( 'Are you sure?', 'erp' ),
+            'delConfirmDept'         => __( 'Are you sure to delete this department?', 'erp' ),
+            'delConfirmPolicy'       => __( 'Are you sure to delete this policy?', 'erp' ),
+            'delConfirmHoliday'      => __( 'Are you sure to delete this Holiday?', 'erp' ),
+            'delConfirmEmployee'     => __( 'Are you sure to delete this employee?', 'erp' ),
+            'delConfirmEmployeeNote' => __( 'Are you sure to delete this employee note?', 'erp' ),
+            'delConfirmEntitlement'  => __( 'Are you sure to delete this Entitlement? If yes, then all leave request under this entitlement also permanently deleted', 'erp' ),
+            'make_employee_text'     => __( 'This user already exists, Do you want to make this user as a employee?', 'erp' ),
+            'employee_exit'          => __( 'This employee already exists', 'erp' ),
+            'employee_created'       => __( 'Employee successfully created', 'erp' ),
+            'create_employee_text'   => __( 'Click to create employee', 'erp' )
         ) );
 
         // if its an employee page
@@ -171,10 +198,19 @@ class Human_Resource {
         wp_localize_script( 'wp-erp-hr', 'wpErpHr', $localize_script );
 
         wp_enqueue_style( 'wp-color-picker' );
-        wp_enqueue_style( 'erp-fontawesome' );
         wp_enqueue_style( 'erp-select2' );
         wp_enqueue_style( 'erp-tiptip' );
         wp_enqueue_style( 'erp-style' );
+
+        if ( 'hr-management_page_erp-hr-reporting' == $hook ) {
+            wp_enqueue_script( 'erp-flotchart' );
+            wp_enqueue_script( 'erp-flotchart-time' );
+            wp_enqueue_script( 'erp-flotchart-pie' );
+            wp_enqueue_script( 'erp-flotchart-orerbars' );
+            wp_enqueue_script( 'erp-flotchart-axislables' );
+            wp_enqueue_script( 'erp-flotchart-valuelabel' );
+            wp_enqueue_style( 'erp-flotchart-valuelabel-css' );
+        }
     }
 
     /**
@@ -185,7 +221,7 @@ class Human_Resource {
     public function admin_js_templates() {
         global $current_screen;
 
-        // var_dump( $current_screen ); die();
+        // var_dump( $current_screen->base );
 
         switch ($current_screen->base) {
             case 'toplevel_page_erp-hr':
@@ -229,6 +265,9 @@ class Human_Resource {
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/holiday.php', 'erp-hr-holiday-js-tmp' );
                 break;
 
+            case 'toplevel_page_erp-leave':
+                erp_get_js_template( WPERP_HRM_JS_TMPL . '/leave-reject.php', 'erp-hr-leave-reject-js-tmp' );
+                break;
             default:
                 # code...
                 break;
@@ -236,3 +275,4 @@ class Human_Resource {
 
     }
 }
+

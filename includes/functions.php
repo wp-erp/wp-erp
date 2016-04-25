@@ -41,52 +41,69 @@ function erp_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = ar
  */
 function erp_get_currencies() {
     return array_unique( apply_filters( 'erp_currencies', array(
-        'AED' => __( 'United Arab Emirates Dirham', 'wp-erp' ),
-        'AUD' => __( 'Australian Dollars', 'wp-erp' ),
-        'BDT' => __( 'Bangladeshi Taka', 'wp-erp' ),
-        'BRL' => __( 'Brazilian Real', 'wp-erp' ),
-        'BGN' => __( 'Bulgarian Lev', 'wp-erp' ),
-        'CAD' => __( 'Canadian Dollars', 'wp-erp' ),
-        'CLP' => __( 'Chilean Peso', 'wp-erp' ),
-        'CNY' => __( 'Chinese Yuan', 'wp-erp' ),
-        'COP' => __( 'Colombian Peso', 'wp-erp' ),
-        'CZK' => __( 'Czech Koruna', 'wp-erp' ),
-        'DKK' => __( 'Danish Krone', 'wp-erp' ),
-        'DOP' => __( 'Dominican Peso', 'wp-erp' ),
-        'EUR' => __( 'Euros', 'wp-erp' ),
-        'HKD' => __( 'Hong Kong Dollar', 'wp-erp' ),
-        'HRK' => __( 'Croatia kuna', 'wp-erp' ),
-        'HUF' => __( 'Hungarian Forint', 'wp-erp' ),
-        'ISK' => __( 'Icelandic krona', 'wp-erp' ),
-        'IDR' => __( 'Indonesia Rupiah', 'wp-erp' ),
-        'INR' => __( 'Indian Rupee', 'wp-erp' ),
-        'NPR' => __( 'Nepali Rupee', 'wp-erp' ),
-        'ILS' => __( 'Israeli Shekel', 'wp-erp' ),
-        'JPY' => __( 'Japanese Yen', 'wp-erp' ),
-        'KIP' => __( 'Lao Kip', 'wp-erp' ),
-        'KRW' => __( 'South Korean Won', 'wp-erp' ),
-        'MYR' => __( 'Malaysian Ringgits', 'wp-erp' ),
-        'MXN' => __( 'Mexican Peso', 'wp-erp' ),
-        'NGN' => __( 'Nigerian Naira', 'wp-erp' ),
-        'NOK' => __( 'Norwegian Krone', 'wp-erp' ),
-        'NZD' => __( 'New Zealand Dollar', 'wp-erp' ),
-        'PYG' => __( 'Paraguayan Guaraní', 'wp-erp' ),
-        'PHP' => __( 'Philippine Pesos', 'wp-erp' ),
-        'PLN' => __( 'Polish Zloty', 'wp-erp' ),
-        'GBP' => __( 'Pounds Sterling', 'wp-erp' ),
-        'RON' => __( 'Romanian Leu', 'wp-erp' ),
-        'RUB' => __( 'Russian Ruble', 'wp-erp' ),
-        'SGD' => __( 'Singapore Dollar', 'wp-erp' ),
-        'ZAR' => __( 'South African rand', 'wp-erp' ),
-        'SEK' => __( 'Swedish Krona', 'wp-erp' ),
-        'CHF' => __( 'Swiss Franc', 'wp-erp' ),
-        'TWD' => __( 'Taiwan New Dollars', 'wp-erp' ),
-        'THB' => __( 'Thai Baht', 'wp-erp' ),
-        'TRY' => __( 'Turkish Lira', 'wp-erp' ),
-        'USD' => __( 'US Dollars', 'wp-erp' ),
-        'VND' => __( 'Vietnamese Dong', 'wp-erp' ),
-        'EGP' => __( 'Egyptian Pound', 'wp-erp' ),
+        'AED' => __( 'United Arab Emirates Dirham', 'erp' ),
+        'AUD' => __( 'Australian Dollars', 'erp' ),
+        'BDT' => __( 'Bangladeshi Taka', 'erp' ),
+        'BRL' => __( 'Brazilian Real', 'erp' ),
+        'BGN' => __( 'Bulgarian Lev', 'erp' ),
+        'CAD' => __( 'Canadian Dollars', 'erp' ),
+        'CLP' => __( 'Chilean Peso', 'erp' ),
+        'CNY' => __( 'Chinese Yuan', 'erp' ),
+        'COP' => __( 'Colombian Peso', 'erp' ),
+        'CZK' => __( 'Czech Koruna', 'erp' ),
+        'DKK' => __( 'Danish Krone', 'erp' ),
+        'DOP' => __( 'Dominican Peso', 'erp' ),
+        'DZD' => __( 'Algerian Dinar', 'erp' ),
+        'EUR' => __( 'Euros', 'erp' ),
+        'HKD' => __( 'Hong Kong Dollar', 'erp' ),
+        'HRK' => __( 'Croatia kuna', 'erp' ),
+        'HUF' => __( 'Hungarian Forint', 'erp' ),
+        'ISK' => __( 'Icelandic krona', 'erp' ),
+        'IDR' => __( 'Indonesia Rupiah', 'erp' ),
+        'INR' => __( 'Indian Rupee', 'erp' ),
+        'NPR' => __( 'Nepali Rupee', 'erp' ),
+        'ILS' => __( 'Israeli Shekel', 'erp' ),
+        'JPY' => __( 'Japanese Yen', 'erp' ),
+        'KIP' => __( 'Lao Kip', 'erp' ),
+        'KRW' => __( 'South Korean Won', 'erp' ),
+        'MYR' => __( 'Malaysian Ringgits', 'erp' ),
+        'MXN' => __( 'Mexican Peso', 'erp' ),
+        'NGN' => __( 'Nigerian Naira', 'erp' ),
+        'NOK' => __( 'Norwegian Krone', 'erp' ),
+        'NZD' => __( 'New Zealand Dollar', 'erp' ),
+        'PYG' => __( 'Paraguayan Guaraní', 'erp' ),
+        'PHP' => __( 'Philippine Pesos', 'erp' ),
+        'PLN' => __( 'Polish Zloty', 'erp' ),
+        'GBP' => __( 'Pounds Sterling', 'erp' ),
+        'RON' => __( 'Romanian Leu', 'erp' ),
+        'RUB' => __( 'Russian Ruble', 'erp' ),
+        'SGD' => __( 'Singapore Dollar', 'erp' ),
+        'ZAR' => __( 'South African rand', 'erp' ),
+        'SEK' => __( 'Swedish Krona', 'erp' ),
+        'CHF' => __( 'Swiss Franc', 'erp' ),
+        'TWD' => __( 'Taiwan New Dollars', 'erp' ),
+        'THB' => __( 'Thai Baht', 'erp' ),
+        'TRY' => __( 'Turkish Lira', 'erp' ),
+        'USD' => __( 'US Dollars', 'erp' ),
+        'VND' => __( 'Vietnamese Dong', 'erp' ),
+        'EGP' => __( 'Egyptian Pound', 'erp' ),
     ) ) );
+}
+
+/**
+ * Get full list of currency ISO with symbol label.
+ *
+ * @return array
+ */
+function erp_get_currency_list_with_symbol() {
+    $currencies      = erp_get_currencies();
+    $currency_symbol = [];
+
+    foreach ( $currencies as $iso => $currency ) {
+        $currency_symbol[$iso] = sprintf( '%1$s (%2$s)', $currency, erp_get_currency_symbol( $iso ) );
+    }
+
+    return $currency_symbol;
 }
 
 /**
@@ -121,7 +138,7 @@ function erp_get_currency_symbol( $currency = '' ) {
             $currency_symbol = 'د.إ';
             break;
         case 'BDT':
-            $currency_symbol = '&#2547;&nbsp;';
+            $currency_symbol = '&#2547;';
             break;
         case 'BRL' :
             $currency_symbol = '&#82;&#36;';
@@ -178,6 +195,7 @@ function erp_get_currency_symbol( $currency = '' ) {
         case 'HRK' : $currency_symbol = 'Kn'; break;
         case 'EGP' : $currency_symbol = 'EGP'; break;
         case 'DOP' : $currency_symbol = 'RD&#36;'; break;
+        case 'DZD' : $currency_symbol = 'DA;'; break;
         case 'KIP' : $currency_symbol = '&#8365;'; break;
         default    : $currency_symbol = ''; break;
     }
@@ -307,9 +325,9 @@ function erp_format_date( $date, $format = false ) {
         $format = erp_get_option( 'date_format', 'erp_settings_general', 'd-m-Y' );
     }
 
-    $date_str = strtotime( $date );
+    $time = strtotime( $date );
 
-    return date_i18n( $format, strtotime( $date ) );
+    return date_i18n( $format, $time );
 }
 
 /**
@@ -328,7 +346,7 @@ function erp_extract_dates( $start_date, $end_date ) {
 
     // we got a negative date
     if ( $diff->invert || ! $diff->days ) {
-        return new WP_Error( 'invalid-date', __( 'Invalid date provided', 'wp-erp' ) );
+        return new WP_Error( 'invalid-date', __( 'Invalid date provided', 'erp' ) );
     }
 
     $interval = DateInterval::createFromDateString( '1 day' );
@@ -436,11 +454,11 @@ function erp_date_duration( $start_date, $end_date ) {
 function erp_performance_rating( $selected = '' ) {
 
     $rating = apply_filters( 'erp_performance_rating', array(
-        '1' => __( 'Very Bad', 'wp-erp' ),
-        '2' => __( 'Poor', 'wp-erp' ),
-        '3' => __( 'Average', 'wp-erp' ),
-        '4' => __( 'Good', 'wp-erp' ),
-        '5' => __( 'Excellent', 'wp-erp' )
+        '1' => __( 'Very Bad', 'erp' ),
+        '2' => __( 'Poor', 'erp' ),
+        '3' => __( 'Average', 'erp' ),
+        '4' => __( 'Good', 'erp' ),
+        '5' => __( 'Excellent', 'erp' )
     ) );
 
     if ( $selected ) {
@@ -570,6 +588,26 @@ function erp_log() {
 }
 
 /**
+ * A file based logging function for debugging
+ *
+ * @since 0.1
+ *
+ * @param  string  $message
+ * @param  string  $type
+ *
+ * @return void
+ */
+function erp_file_log( $message, $type = '' ) {
+    if ( ! empty( $type ) ) {
+        $message = sprintf( "[%s][%s] %s\n", date( 'd.m.Y h:i:s' ), $type, $message );
+    } else {
+        $message = sprintf( "[%s] %s\n", date( 'd.m.Y h:i:s' ), $message );
+    }
+
+    error_log( $message, 3, dirname( WPERP_FILE ) . '/debug.log' );
+}
+
+/**
  * Get people types from various components
  *
  * @return array
@@ -593,7 +631,11 @@ function erp_get_country_name( $country ) {
     $countries = $load_cuntries_states->countries;
 
     // Handle full country name
-    $full_country = ( isset( $countries[ $country ] ) ) ? $countries[ $country ] : $country;
+    if ( '-1' != $country ) {
+        $full_country = ( isset( $countries[ $country ] ) ) ? $countries[ $country ] : $country;
+    } else {
+        $full_country = '—';
+    }
 
     return $full_country;
 }
@@ -630,9 +672,788 @@ function erp_get_state_name( $country, $state ) {
 function erp_cron_intervals( $schedules ) {
 
     $schedules['per_minute'] = array(
-        'interval'  => 60, // Number of seconds, 60s in 1 minutes
-        'display'   => 'Every Minutes'
+        'interval'  => MINUTE_IN_SECONDS,
+        'display'   => __( 'Every Minute', 'erp' )
+    );
+
+    $schedules['weekly'] = array(
+        'interval'  => DAY_IN_SECONDS * 7,
+        'display'  => __( 'Once Weekly', 'erp' )
     );
 
     return (array)$schedules;
+}
+
+/**
+ * Display erp activation notice.
+ *
+ * @since 1.0
+ *
+ * @return void
+ */
+function erp_activation_notice() {
+
+    if ( !current_user_can( 'manage_options' ) ) {
+        return;
+    }
+    $apikey  = get_option( 'wp_erp_apikey' );
+    $dismiss = get_option( 'wp_erp_activation_dismiss' );
+
+    if ( ! $apikey && ! $dismiss ) {
+    ?>
+    <div class="notice erp-activation-cloud-prompt" id="erp-activation-container">
+        <div class="activation-prompt-text">
+            <?php _e( "You're awesome for installing <strong>WP ERP!</strong> Get API Key to get access to wperp <em>cloud</em> features!", "wp-erp" ) ?>
+        </div>
+
+        <div class="activation-form-container">
+            <input type="email" name="email" placeholder="email@example.com" value="<?php echo esc_attr( get_option( 'admin_email' ) ); ?>" />
+            <button class="button-primary" id="get-api-key"><?php _e( 'Get API Key', 'erp' ); ?></button>
+            <a id="dismiss" href="#"><?php _e( 'Dismiss', 'erp' ); ?></a>
+        </div>
+    </div>
+    <?php
+    }
+}
+
+/**
+ * Erp activation's JavaScript enqueue.
+ *
+ * @since  1.0
+ *
+ * @return void
+ */
+function erp_activation_notice_javascript() { ?>
+    <script type="text/javascript" >
+    jQuery( document ).ready( function($) {
+
+        $container = $( "#erp-activation-container" );
+        $( "#erp-activation-container button#get-api-key" ).click( function(e) {
+            e.preventDefault();
+
+            var data = {
+                'action': 'erp_activation_notice',
+                'email': $(e.target).parent().find( "input[name=email]" ).val(),
+                '_wpnonce': '<?php echo wp_create_nonce( "wp-erp-activation-nonce" ); ?>'
+            };
+
+            $.post( ajaxurl, data, function(response) {
+                if( response.success ) {
+                    $( "[id=erp-activation-container]" ).hide();
+                    document.location.reload();
+                } else {
+                    if( response.data.error ) {
+                        alert( response.data.error );
+                    } else {
+                        alert( response.data );
+                    }
+                }
+            });
+        });
+
+        $( "#erp-activation-container a#dismiss" ).click( function(e) {
+            e.preventDefault();
+
+            var data = {
+                'action': 'erp_activation_notice',
+                'dismiss': true,
+                '_wpnonce': '<?php echo wp_create_nonce( "wp-erp-activation-nonce" ); ?>'
+            };
+
+            $.post( ajaxurl, data, function(response) {
+                if( response.success ) {
+                    $container.hide();
+                }
+            });
+        });
+
+        $( "a#wp-erp-disconnect-api" ).click( function(e) {
+            e.preventDefault();
+
+            var data = {
+                'action': 'erp_activation_notice',
+                'disconnect': true,
+                '_wpnonce': '<?php echo wp_create_nonce( "wp-erp-activation-nonce" ); ?>'
+            };
+
+            $.post( ajaxurl, data, function(response) {
+                if( response.success ) {
+                    document.location.reload();
+                }
+            });
+        });
+    });
+    </script> <?php
+}
+
+/**
+ * Activate or deactivate erp api cloud features by server.
+ *
+ * @return void
+ */
+function erp_api_mode_change() {
+    header('Access-Control-Allow-Origin: *');
+
+    $postdata    = $_POST;
+    $api_key     = get_option( 'wp_erp_apikey' );
+
+    $is_verified = erp_cloud_verify_request( $postdata, $api_key  );
+
+    if ( $is_verified ) {
+        $status = isset( $_POST['status'] ) && in_array( $_POST['status'], ['yes', 'no'] ) ? $_POST['status'] : 'yes';
+
+        update_option( 'wp_erp_api_active', $_POST['status'] );
+    }
+}
+
+/**
+ * Determine if the erp cloud feature is active or not.
+ *
+ * @return boolean
+ */
+function erp_is_cloud_active() {
+    $wp_erp_api_key    = get_option( 'wp_erp_apikey', null );
+    $wp_erp_api_active = get_option( 'wp_erp_api_active', 'no' );
+
+    if ( $wp_erp_api_key && 'yes' == $wp_erp_api_active ) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Verify given http request.
+ *
+ * @param  array  $vars
+ * @param  string $api_key
+ *
+ * @return boolean
+ */
+function erp_cloud_verify_request( $vars, $api_key ) {
+    if ( ! isset( $vars['verify_key'] ) ) {
+        return false;
+    }
+
+    $verify_key = $vars['verify_key'];
+
+    unset( $vars['verify_key'] );
+
+    return ( hash_hmac( 'sha256', serialize( $vars ), $api_key ) === $verify_key );
+}
+
+/**
+ * forward given end_date by 1 day to make fullcalendar range compatible
+ *
+ * @param string $end_date saved $end_date from db
+ *
+ * @since 0.1
+ *
+ * @return string end_date
+ */
+function erp_fullcalendar_end_date( $end_date ) {
+    return date( 'Y-m-d H:i:s', strtotime( $end_date . '+1 day' ) );
+}
+
+/**
+ * Show user own media attachment
+ *
+ * @since 1.0
+ *
+ * @param  string $query
+ *
+ * @return string
+ */
+function erp_show_users_own_attachments( $query ) {
+    if ( ! is_user_logged_in() ) {
+        return $query;
+    }
+
+    $id = get_current_user_id();
+
+    if ( ! current_user_can( 'manage_options' ) ) {
+        if ( current_user_can( 'erp_hr_manager' )
+            || current_user_can( 'employee' )
+            || current_user_can( 'erp_crm_manager' )
+            || current_user_can( 'erp_crm_agent' )
+        ) {
+            $query['author'] = $id;
+        }
+    }
+
+    return $query;
+}
+
+/**
+ * Get all registered addons for licensing
+ *
+ * @since 1.0
+ *
+ * @return array
+ */
+function erp_addon_licenses() {
+    $licenses = [];
+
+    return apply_filters( 'erp_settings_licenses', $licenses );
+}
+
+/**
+ * Show a readable message about the license status
+ *
+ * @since 1.0
+ *
+ * @param  array  $addon
+ *
+ * @return string
+ */
+function erp_get_license_status( $addon ) {
+    if ( ! is_object( $addon['status'] ) ) {
+        return false;
+    }
+
+    $messages     = [];
+    $html         = '';
+    $license      = $addon['status'];
+    $status_class = 'has-error';
+
+    if ( false === $license->success ) {
+
+        switch( $license->error ) {
+
+            case 'expired' :
+
+                $messages[] = sprintf(
+                    __( 'Your license key expired on %s. Please <a href="%s" target="_blank" title="Renew your license key">renew your license key</a>.', 'erp' ),
+                    date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
+                    'https://wperp.com/checkout/?edd_license_key=' . $addon['license'] . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
+                );
+                break;
+
+            case 'missing' :
+
+                $messages[] = sprintf(
+                    __( 'Invalid license. Please <a href="%s" target="_blank" title="Visit account page">visit your account page</a> and verify it.', 'erp' ),
+                    'https://wperp.com/my-account?utm_campaign=admin&utm_source=licenses&utm_medium=missing'
+                );
+                break;
+
+            case 'invalid' :
+            case 'site_inactive' :
+
+                $messages[] = sprintf(
+                    __( 'Your %s is not active for this URL. Please <a href="%s" target="_blank" title="Visit account page">visit your account page</a> to manage your license key URLs.', 'erp' ),
+                    $addon['name'],
+                    'https://wperp.com/my-account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
+                );
+                break;
+
+            case 'item_name_mismatch' :
+
+                $messages[] = sprintf( __( 'This is not a %s.', 'erp' ), $addon['name'] );
+                break;
+
+            case 'no_activations_left':
+                $messages[] = sprintf( __( 'Your license key has reached its activation limit. <a href="%s">View possible upgrades</a> now.', 'erp' ), 'https://wperp.com/my-account/' );
+                break;
+
+        }
+    } else {
+
+        switch( $license->license ) {
+            case 'expired' :
+
+                $messages[] = sprintf(
+                    __( 'Your license key expired on %s. Please <a href="%s" target="_blank" title="Renew your license key">renew your license key</a>.', 'erp' ),
+                    date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
+                    'https://wperp.com/checkout/?edd_license_key=' . $addon['license'] . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
+                );
+                break;
+
+            case 'valid':
+                $status_class = 'no-error';
+                $now          = current_time( 'timestamp' );
+                $expiration   = strtotime( $license->expires, current_time( 'timestamp' ) );
+
+                if ( 'lifetime' === $license->expires ) {
+
+                    $messages[] = __( 'License key never expires.', 'erp' );
+
+                } elseif( $expiration > $now && $expiration - $now < ( DAY_IN_SECONDS * 30 ) ) {
+
+                    $messages[] = sprintf(
+                        __( 'Your license key expires soon! It expires on %s. <a href="%s" target="_blank" title="Renew license">Renew your license key</a>.', 'erp' ),
+                        date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
+                        'https://wperp.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=renew'
+                    );
+
+                } else {
+
+                    $messages[] = sprintf(
+                        __( 'Your license key expires on %s.', 'erp' ),
+                        date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) )
+                    );
+
+                }
+                break;
+        }
+
+    }
+
+    if ( ! empty( $messages ) ) {
+        foreach( $messages as $message ) {
+
+            $html .= '<div class="erp-license-status ' . $status_class . '">';
+                $html .= '<p class="help">' . $message . '</p>';
+            $html .= '</div>';
+
+        }
+    }
+
+    return $html;
+}
+
+/**
+ * ERP Import/Export JavaScript enqueue.
+ *
+ * @since  1.0
+ *
+ * @return void
+ */
+function erp_import_export_javascript() {
+    $contact_company_fields = [
+        'first_name',
+        'last_name',
+        'email',
+        'company',
+        'phone',
+        'mobile',
+        'other',
+        'website',
+        'fax',
+        'notes',
+        'street_1',
+        'street_2',
+        'city',
+        'state',
+        'postal_code',
+        'country',
+        'currency',
+        'type',
+    ];
+
+    $employee_fields = [
+        'first_name',
+        'middle_name',
+        'last_name',
+        'user_email',
+        'designation',
+        'department',
+        'location',
+        'hiring_source',
+        'hiring_date',
+        'date_of_birth',
+        'reporting_to',
+        'pay_rate',
+        'pay_type',
+        'type',
+        'status',
+        'other_email',
+        'phone',
+        'work_phone',
+        'mobile',
+        'address',
+        'gender',
+        'marital_status',
+        'nationality',
+        'driving_license',
+        'hobbies',
+        'user_url',
+        'description',
+        'street_1',
+        'street_2',
+        'city',
+        'country',
+        'state',
+        'postal_code'
+    ];
+    ?>
+    <script type="text/javascript">
+        function erp_title_case(string) {
+            // \u00C0-\u00ff for a happy Latin-1
+            return string.toLowerCase().replace(/_/g, ' ').replace(/\b([a-z\u00C0-\u00ff])/g, function (_, initial) {
+                return initial.toUpperCase();
+            }).replace(/(\s(?:de|a|o|e|da|do|em|ou|[\u00C0-\u00ff]))\b/ig, function (_, match) {
+                return match.toLowerCase();
+            });
+        }
+
+        jQuery(document).ready(function($) {
+            var fields = [];
+
+            var contact_company_fields = <?php echo json_encode( $contact_company_fields ); ?>;
+
+            var employee_fields = <?php echo json_encode( $employee_fields ); ?>;
+
+            fields = contact_company_fields;
+            if ( $( 'form#export_form #type' ).val() == 'employee' ) {
+                fields = employee_fields;
+            }
+
+            var required_fields = [
+                'first_name',
+                'last_name',
+                'email',
+                'user_email',
+                'company'
+            ]
+
+            var html = '<ul class="erp-list list-inline">';
+            for ( var i = 0;  i < fields.length; i++ ) {
+                html += '<li><label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + erp_title_case( fields[i] ) + '</label></li>';
+            }
+
+            html += '<ul>';
+
+            if ( html ) {
+                $( '#fields' ).html( html );
+            }
+
+            $( 'form#export_form #type' ).on( 'change', function( e ) {
+                e.preventDefault();
+
+                if ( $(this).val() == 'employee' ) {
+                    fields = employee_fields;
+                } else {
+                    fields = contact_company_fields;
+                }
+
+                html = '<ul class="erp-list list-inline">';
+                for ( var i = 0;  i < fields.length; i++ ) {
+                    html += '<li><label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + erp_title_case( fields[i] ) + '</label></li>';
+                }
+
+                html += '<ul>';
+
+                if ( html ) {
+                    $( 'form#export_form #fields' ).html( html );
+                }
+            });
+
+            $( 'form#import_form #csv_file' ).on( 'change', function( e ) {
+                e.preventDefault();
+
+                $( '#fields_container' ).show();
+
+                var fields_html = '';
+
+                if ( $( 'form#import_form #type' ).val() == 'employee' ) {
+                    fields = employee_fields;
+                } else {
+                    fields = contact_company_fields;
+                }
+
+                var required = '';
+                var red_span = '';
+                for ( var i = 0;  i < fields.length; i++ ) {
+
+                    if ( required_fields.indexOf( fields[i] ) !== -1 ) {
+                        required = 'required';
+                        red_span = ' <span class="required">*</span>';
+                    } else {
+                        required = '';
+                        red_span = '';
+                    }
+
+                    fields_html += `
+                        <tr>
+                            <th>
+                                <label for="fields[` + fields[i] + `]">` + erp_title_case( fields[i] ) + red_span + `</label>
+                            </th>
+                            <td>
+                                <select name="fields[` + fields[i] + `]" class="csv_fields" ` + required + `>
+                                </select>
+                            </td>
+                        </tr>`;
+                }
+
+                $( '#fields_container' ).html( fields_html );
+
+                var file = this.files[0];
+
+                var reader = new FileReader();
+                reader.readAsText(file);
+
+                reader.onload = function(e) {
+                    var csv = reader.result;
+                    // Split the input into lines
+                    lines = csv.split('\n'),
+                    // Extract column names from the first line
+                    columnNamesLine = lines[0];
+                    columnNames = columnNamesLine.split(',');
+
+                    var html = '';
+
+                    html += '<option value=""><?php _e( '&mdash; Select Field &mdash;', 'erp' ); ?></option>';
+                    columnNames.forEach( function( item, index ) {
+                        item = item.replace(/"/g, ""); ;
+                        html += '<option value="' + index + '">' + item + '</option>';
+                    } );
+
+                    if ( html ) {
+                        $( '.csv_fields' ).html( html );
+                    }
+                };
+
+            });
+
+            $( "#export_form #selecctall" ).change( function(e) {
+                e.preventDefault();
+
+                $( "#export_form #fields input[type=checkbox]" ).prop( 'checked', $(this).prop( "checked" ) );
+            });
+
+        });
+    </script>
+    <?php
+}
+
+/**
+ * Process or handle import/export submit.
+ *
+ * @return void
+ */
+function erp_process_import_export() {
+    if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'erp-import-export-nonce' ) ) {
+        return;
+    }
+
+    $is_crm_activated = wperp()->modules->is_module_active( 'crm' );
+    $is_hrm_activated = wperp()->modules->is_module_active( 'hrm' );
+
+    $departments  = erp_hr_get_departments_dropdown_raw();
+    $designations = erp_hr_get_designation_dropdown_raw();
+
+
+    if ( isset( $_POST['erp_import_csv'] ) ) {
+        $fields = $_POST['fields'];
+        $type   = $_POST['type'];
+
+        $employee_fields = [
+            'work' => [
+                'designation',
+                'department',
+                'location',
+                'hiring_source',
+                'hiring_date',
+                'date_of_birth',
+                'reporting_to',
+                'pay_rate',
+                'pay_type',
+                'type',
+                'status',
+            ],
+            'personal' => [
+                'photo_id',
+                'user_id',
+                'first_name',
+                'middle_name',
+                'last_name',
+                'other_email',
+                'phone',
+                'work_phone',
+                'mobile',
+                'address',
+                'gender',
+                'marital_status',
+                'nationality',
+                'driving_license',
+                'hobbies',
+                'user_url',
+                'description',
+                'street_1',
+                'street_2',
+                'city',
+                'country',
+                'state',
+                'postal_code',
+            ]
+        ];
+
+        $handle = fopen( $_FILES['csv_file']['tmp_name'], 'r' );
+        if ( $handle ) {
+            $data = [];
+
+            $x = 0;
+            while ( $line = fgetcsv( $handle ) ) {
+                if ( $x > 0 ) {
+
+                    foreach ( $fields as $key => $value ) {
+                        if ( is_numeric( $value ) ) {
+                            if ( $type == 'employee' ) {
+                                if ( in_array( $key, $employee_fields['work'] ) ) {
+                                    if ( $key == 'designation' ) {
+                                        $data[$x]['work'][$key] = array_search( $line[$value], $designations );
+                                    } else if ( $key == 'department' ) {
+                                        $data[$x]['work'][$key] = array_search( $line[$value], $departments );
+                                    } else {
+                                        $data[$x]['work'][$key] = $line[$value];
+                                    }
+
+                                } else if ( in_array( $key, $employee_fields['personal'] ) ) {
+                                    $data[$x]['personal'][$key] = $line[$value];
+                                } else {
+                                    $data[$x][$key] = $line[$value];
+                                }
+                            } else {
+                                $data[$x][$key] = $line[$value];
+                                $data[$x]['type'] = $type;
+                            }
+                        }
+                    }
+
+                    if ( $type == 'employee' && $is_hrm_activated ) {
+                        if ( ! isset( $data[$x]['work']['status'] ) ) {
+                            $data[$x]['work']['status'] = 'active';
+                        }
+
+                        $item_insert_id = erp_hr_employee_create( $data[$x] );
+
+                        if ( is_wp_error( $item_insert_id ) ) {
+                            continue;
+                        }
+                    }
+
+                    if ( ( $type == 'contact' || $type == 'company' ) && $is_crm_activated ) {
+                        $item_insert_id = erp_insert_people( $data[$x] );
+
+                        if ( is_wp_error( $item_insert_id ) ) {
+                            continue;
+                        } else {
+                            $contact_owner = erp_get_option( 'contact_owner', 'erp_settings_erp-crm', null );
+                            $contact_owner = ( $contact_owner ) ? $contact_owner : get_current_user_id();
+                            $life_stage    = erp_get_option( 'life_stage', 'erp_settings_erp-crm', 'opportunity' );
+                            erp_people_update_meta( $item_insert_id, '_assign_crm_agent', $contact_owner );
+                            erp_people_update_meta( $item_insert_id, 'life_stage', $life_stage );
+                        }
+                    }
+                }
+
+                $x++;
+            }
+        }
+
+        wp_redirect( admin_url( 'admin.php?page=erp-tools&tab=import' ) );
+        exit();
+    }
+
+    if ( isset( $_POST['erp_export_csv'] ) ) {
+        $type   = $_POST['type'];
+        $fields = $_POST['fields'];
+
+        if ( $type == 'employee' && $is_hrm_activated ) {
+            $args = [
+                'number' => -1,
+            ];
+
+            $items = erp_hr_get_employees( $args );
+        }
+
+        if( ($type == 'contact' || $type == 'company') && $is_crm_activated ) {
+            $args = [
+                'type'   => $type,
+                'count'  => true,
+            ];
+            $total_items = erp_get_peoples( $args );
+
+            $args = [
+                'type'   => $type,
+                'offset' => 0,
+                'number' => -1,
+            ];
+            $items = erp_get_peoples( $args );
+        }
+
+        //@todo do_action()
+
+        $csv_items = [];
+
+        $x = 0;
+        foreach ( $items as $item ) {
+
+            foreach ( $fields as $field ) {
+                if ( $type == 'employee' ) {
+
+                    switch ( $field ) {
+                        case 'department':
+                            $csv_items[$x][$field] = $item->get_department_title();
+                            break;
+
+                        case 'designation':
+                            $csv_items[$x][$field] = $item->get_job_title();
+                            break;
+
+                        default:
+                            $csv_items[$x][$field] = $item->{$field};
+                            break;
+                    }
+
+                } else {
+                    if ( isset( $item->{$field} ) ) {
+                        $csv_items[$x][$field] = $item->{$field};
+                    }
+                }
+            }
+
+            $x++;
+        }
+
+        $file_name = 'export_' . date( 'd_m_Y' ) . '.csv';
+
+        header( 'Content-Type: text/csv; charset=utf-8' );
+        header( 'Content-Disposition: attachment; filename=' . $file_name );
+
+        $output = fopen( 'php://output', 'w' );
+
+        $columns = array_map( function( $replace ) {
+            $replace = ucwords( str_replace( '_', ' ', $replace ) );
+
+            return $replace;
+        }, $fields );
+
+        fputcsv( $output, $columns );
+
+        foreach( $csv_items as $row )
+        {
+            fputcsv( $output, $row );
+        }
+
+        exit();
+    }
+}
+
+/**
+ * Merge user defined arguments into defaults array.
+ *
+ * This function is similiar to wordpress wp_parse_args().
+ * It's support multidimensional array.
+ *
+ * @param  array $args
+ * @param  array $defaults Optional.
+ *
+ * @return array
+ */
+function erp_parse_args_recursive( &$args, $defaults = [] ) {
+    $args     = (array) $args;
+    $defaults = (array) $defaults;
+    $r        = $defaults;
+
+    foreach ( $args as $k => &$v ) {
+        if ( is_array( $v ) && isset( $r[ $k ] ) ) {
+            $r[ $k ] = erp_parse_args_recursive( $v, $r[ $k ] );
+        } else {
+            $r[ $k ] = $v;
+        }
+    }
+
+    return $r;
 }

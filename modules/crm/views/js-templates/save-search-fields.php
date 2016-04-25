@@ -1,15 +1,12 @@
-<?php $search_keys = erp_crm_get_serach_key(); ?>
-
 <div class="or-divider" v-if="index != 0">
     <hr>
-    <span><?php _e( 'Or', 'wp-erp' ); ?></span>
+    <span><?php _e( 'Or', 'erp' ); ?></span>
 </div>
 
-<div class="search-fields" v-if="searchFields">
-    <table>
-        <tbody class="" v-for="( searchKey, searchVal ) in searchFields" track-by="$index">
+<div class="search-fields" v-if="searchFields" v-bind:class="marginClass">
+    <table class="search-fields-table">
+        <tbody class="search-fields-table-tbody" v-for="( searchKey, searchVal ) in searchFields" track-by="$index">
             <tr v-for="( searchFieldKey, searchField ) in searchVal" track-by="$index">
-                <td><a href="#" v-on:click.prevent="removeSearchField( searchVal, searchField )" class="remove-field button">&times;</a></td>
                 <td v-if="searchFieldKey == 0">{{ searchField.title }}</td>
                 <td v-if="searchFieldKey == 0">
                     <select name="save_search[{{index}}][{{searchKey}}][condition]" id="" v-bind:value="searchField.condval" v-model="searchField.condval">
@@ -20,44 +17,29 @@
                 <td>
                     <input type="text" v-if="searchField.type == 'text'" name="save_search[{{index}}][{{searchKey}}][value][]" v-bind:value="searchField.text" v-model="searchField.text">
 
-                    <select class="selecttwo select2" v-selecttwo="searchFields.search_key[search_field_key].text" data-searchkey="{{{ searchKey }}}" data-searchkeyindex="{{searchFieldKey}}" style="width:300px;" v-if="searchField.type == 'dropdown'" name="save_search[{{index}}][{{searchKey}}][value][]" v-bind:value="searchField.text" v-model="searchField.text">
-                        <option value=""><?php _e( '--Select--', 'wp-erp' ); ?></option>
+                    <select class="selecttwo select2" v-selecttwo="searchFields.search_key[search_field_key].text" data-searchkey="{{{ searchKey }}}" data-searchkeyindex="{{searchFieldKey}}" style="width:240px;" v-if="searchField.type == 'dropdown'" name="save_search[{{index}}][{{searchKey}}][value][]" v-bind:value="searchField.text" v-model="searchField.text" data-placeholder="<?php _e( '--Select--', 'erp' ); ?>">
                         {{{ searchField.options }}}
                     </select>
                 </td>
+                <td><a href="#" v-on:click.prevent="removeSearchField( searchVal, searchField )" class="remove-field"><span class="dashicons dashicons-dismiss"></span></a></td>
             </tr>
         </tbody>
     </table>
 </div>
 
-<div class="erp-save-search-action">
+<div class="erp-save-search-filter-actions">
     <div class="and-action erp-left">
-        <label for="or-action-add"><?php _e( 'And', 'wp-erp' ); ?></label>
-        <select name="and-action-add" class="and-action-add" id="and-action-add" v-model="andSelection" v-on:change="andAdd(index)">
-            <option value=""><?php _e( '--Select--', 'wp-erp' ); ?></option>
-            <?php foreach ( $search_keys as $key => $search_key ) : ?>
-                <?php
-                    if ( isset( $search_key['display'] ) && $search_key['display'] == 'none' ) {
-                        continue;
-                    }
-                ?>
-                <option value="<?php echo $key ?>"><?php echo $search_key['title']; ?></option>
-            <?php endforeach ?>
+        <label for="or-action-add" v-if="!isdisabled"><?php _e( 'And', 'erp' ); ?></label>
+        <select name="and-action-add" v-selecttwo="andSelection" class="select2 selecttwo and-action-add" style="width: 180px;" id="and-action-add" v-model="andSelection" v-on:change="andAdd(index)" data-placeholder="<?php _e( 'Select a field', 'erp' ); ?>">
+            <option value=""><?php _e( '--Select--', 'erp' ); ?></option>
+            <option v-for="( key, searchOption ) in searchOptions" value="{{key}}">{{ searchOption.title }}</option>
         </select>
     </div>
-
-    <div class="or-action erp-right" v-if="( totalSearchItem-1 ) == index">
-        <label for="or-action-add"><?php _e( 'Or', 'wp-erp' ); ?></label>
-        <select name="or-action-add" id="or-action-add" v-model="orSelection" v-on:change="orAdd(index)" :disabled="isdisabled">
-            <option value=""><?php _e( '--Select--', 'wp-erp' ); ?></option>
-            <?php foreach ( $search_keys as $key => $search_key ) : ?>
-                <?php
-                    if ( isset( $search_key['display'] ) && $search_key['display'] == 'none' ) {
-                        continue;
-                    }
-                ?>
-                <option value="<?php echo $key ?>"><?php echo $search_key['title']; ?></option>
-            <?php endforeach ?>
+    <div class="or-action erp-right" v-if="!isdisabled && (totalSearchItem-1) == index ">
+        <label for="or-action-add"><?php _e( 'Or', 'erp' ); ?></label>
+        <select name="or-action-add" v-selecttwo="orSelection" class="select2 selecttwo or-action-add" style="width: 180px;" id="or-action-add" v-model="orSelection" v-on:change="orAdd(index)"  data-placeholder="<?php _e( 'Select a field', 'erp' ); ?>">
+            <option value=""><?php _e( '--Select--', 'erp' ); ?></option>
+            <option v-for="( key, searchOption ) in searchOptions" value="{{key}}">{{ searchOption.title }}</option>
         </select>
     </div>
     <div class="clearfix"></div>

@@ -27,7 +27,7 @@ class Designation_List_Table extends \WP_List_Table {
      * @return void
      */
     function no_items() {
-        _e( 'No designation found.', 'wp-erp' );
+        _e( 'No designation found.', 'erp' );
     }
 
     /**
@@ -61,8 +61,8 @@ class Designation_List_Table extends \WP_List_Table {
     function get_columns() {
         $columns = array(
             'cb'           => '<input type="checkbox" />',
-            'name'         => __( 'Title', 'wp-erp' ),
-            'number_employee'   => __( 'No. of Employees', 'wp-erp' )
+            'name'         => __( 'Title', 'erp' ),
+            'number_employee'   => __( 'No. of Employees', 'erp' )
         );
 
         return apply_filters( 'erp_hr_designation_table_cols', $columns );
@@ -80,8 +80,8 @@ class Designation_List_Table extends \WP_List_Table {
         $actions           = array();
         $delete_url        = '';
         $link_to_employee  = add_query_arg( array( 'page'=>'erp-hr-employee', 'filter_designation' => $designation->id ), admin_url( 'admin.php' ) );
-        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $designation->id, __( 'Edit this item', 'wp-erp' ), __( 'Edit', 'wp-erp' ) );
-        $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $designation->id, __( 'Delete this item', 'wp-erp' ), __( 'Delete', 'wp-erp' ) );
+        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $designation->id, __( 'Edit this item', 'erp' ), __( 'Edit', 'erp' ) );
+        $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $designation->id, __( 'Delete this item', 'erp' ), __( 'Delete', 'erp' ) );
 
         return sprintf( '<a href="%3$s"><strong>%1$s</strong></a> %2$s', $designation->title, $this->row_actions( $actions ), $link_to_employee );
     }
@@ -106,7 +106,7 @@ class Designation_List_Table extends \WP_List_Table {
      */
     function get_bulk_actions() {
         $actions = array(
-            'designation_delete'  => __( 'Delete', 'wp-erp' ),
+            'designation_delete'  => __( 'Delete', 'erp' ),
         );
         return $actions;
     }

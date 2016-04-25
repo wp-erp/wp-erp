@@ -37,13 +37,13 @@ function erp_hr_get_employee_role() {
 function erp_hr_get_roles() {
     $roles = [
         erp_hr_get_manager_role() => [
-            'name'         => __( 'HR Manager', 'wp-erp' ),
+            'name'         => __( 'HR Manager', 'erp' ),
             'public'       => false,
             'capabilities' => erp_hr_get_caps_for_role( erp_hr_get_manager_role() )
         ],
 
         erp_hr_get_employee_role() => [
-            'name'         => __( 'Employee', 'wp-erp' ),
+            'name'         => __( 'Employee', 'erp' ),
             'public'       => true,
             'capabilities' => erp_hr_get_caps_for_role( erp_hr_get_employee_role() )
         ]
@@ -68,6 +68,9 @@ function erp_hr_get_caps_for_role( $role = '' ) {
         case erp_hr_get_manager_role():
             $caps = [
                 'read'                     => true,
+
+                // Upload file
+                'upload_files'             => true,
 
                 // employee
                 'erp_list_employee'        => true,
@@ -103,6 +106,7 @@ function erp_hr_get_caps_for_role( $role = '' ) {
 
             $caps = [
                 'read'                     => true,
+                'upload_files'             => true,
                 'erp_list_employee'        => true,
                 'erp_view_employee'        => true,
                 'erp_edit_employee'        => true,

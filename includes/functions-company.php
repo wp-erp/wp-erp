@@ -26,11 +26,11 @@ function erp_company_get_locations() {
     global $wpdb;
 
     $cache_key = 'erp_company-location';
-    $locations = wp_cache_get( $cache_key, 'wp-erp' );
+    $locations = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $locations ) {
         $locations = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}erp_company_locations" );
-        wp_cache_set( $cache_key, $locations, 'wp-erp' );
+        wp_cache_set( $cache_key, $locations, 'erp' );
     }
 
     return $locations;
@@ -46,10 +46,10 @@ function erp_company_get_locations() {
  */
 function erp_company_get_location_dropdown_raw( $select_label = null ) {
     $locations = erp_company_get_locations();
-    $dropdown  = array( '0' => __( 'Main Location', 'wp-erp' ) );
+    $dropdown  = array( '-1' => __( 'Main Location', 'erp' ) );
 
     if ( $select_label ) {
-        $dropdown    = array( '0' => $select_label );
+        $dropdown    = array( '-1' => $select_label );
     }
 
     foreach ($locations as $location) {

@@ -27,12 +27,16 @@ class Form_Handler {
         add_action( 'admin_init', array( $this, 'leave_request_status_change' ) );
         add_action( 'admin_init', array( $this, 'handle_employee_status_update' ) );
         add_action( 'admin_init', array( $this, 'handle_leave_calendar_filter' ) );
-        add_action( 'load-leave_page_erp-holiday-assign', array( $this, 'holiday_action') );
-        add_action( 'load-hr-management_page_erp-hr-employee', array( $this, 'employee_bulk_action') );
-        add_action( 'load-hr-management_page_erp-hr-designation', array( $this, 'designation_bulk_action') );
-        add_action( 'load-hr-management_page_erp-hr-depts', array( $this, 'department_bulk_action') );
-        add_action( 'load-leave_page_erp-leave-policies', array( $this, 'leave_policies') );
-        add_action( 'load-leave_page_erp-leave-assign', array( $this, 'entitlement_bulk_action') );
+        add_action( 'load-leave_page_erp-holiday-assign', array( $this, 'holiday_action' ) );
+        add_action( 'load-hr-management_page_erp-hr-employee', array( $this, 'employee_bulk_action' ) );
+        add_action( 'load-hr-management_page_erp-hr-designation', array( $this, 'designation_bulk_action' ) );
+        add_action( 'load-hr-management_page_erp-hr-depts', array( $this, 'department_bulk_action' ) );
+        add_action( 'load-leave_page_erp-leave-policies', array( $this, 'leave_policies' ) );
+        add_action( 'load-leave_page_erp-leave-assign', array( $this, 'entitlement_bulk_action' ) );
+        add_action( 'load-toplevel_page_erp-leave', array( $this, 'leave_request_bulk_action' ) );
+
+        // ERP HR Reporting
+        add_action( 'load-hr-management_page_erp-hr-reporting', array( $this, 'reporting_headcount_bulk_action' ) );
     }
 
     /**
@@ -139,6 +143,86 @@ class Form_Handler {
 
             }
         }
+    }
+
+    /**
+     * Leave request bulk actions
+     *
+     * @since 1.0
+     *
+     * @return void redirect
+     */
+    public function leave_request_bulk_action() {
+        if ( ! $this->verify_current_page_screen( 'erp-leave', 'bulk-leaves' ) ) {
+            return;
+        }
+
+        $leave_request_table = new \WeDevs\ERP\HRM\Leave_Requests_List_Table();
+        $action              = $leave_request_table->current_action();
+
+        if ( $action ) {
+
+            $redirect = remove_query_arg( array( '_wp_http_referer', '_wpnonce' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
+
+            switch ( $action ) {
+
+                case 'delete' :
+
+                    if ( isset( $_GET['request_id'] ) && !empty( $_GET['request_id'] ) ) {
+                        foreach ( $_GET['request_id'] as $key => $request_id ) {
+                            erp_hr_leave_request_update_status( $request_id, 3 );
+                        }
+                    }
+
+                    wp_redirect( $redirect );
+                    exit();
+
+                case 'approved' :
+                    if ( isset( $_GET['request_id'] ) && !empty( $_GET['request_id'] ) ) {
+                        foreach ( $_GET['request_id'] as $key => $request_id ) {
+                            erp_hr_leave_request_update_status( $request_id, 1 );
+
+                            $approved_email = wperp()->emailer->get_email( 'Approved_Leave_Request' );
+
+                            if ( is_a( $approved_email, '\WeDevs\ERP\Email') ) {
+                                $approved_email->trigger( $request_id );
+                            }
+
+                        }
+                    }
+
+                    wp_redirect( $redirect );
+                    exit();
+
+                case 'reject' :
+                    if ( isset( $_GET['request_id'] ) && !empty( $_GET['request_id'] ) ) {
+                        foreach ( $_GET['request_id'] as $key => $request_id ) {
+                            erp_hr_leave_request_update_status( $request_id, 3 );
+
+                            $rejected_email = wperp()->emailer->get_email( 'Rejected_Leave_Request' );
+
+                            if ( is_a( $rejected_email, '\WeDevs\ERP\Email') ) {
+                                $rejected_email->trigger( $request_id );
+                            }
+                        }
+                    }
+
+                    wp_redirect( $redirect );
+                    exit();
+
+                case 'pending':
+                    if ( isset( $_GET['request_id'] ) && !empty( $_GET['request_id'] ) ) {
+                        foreach ( $_GET['request_id'] as $key => $request_id ) {
+                            erp_hr_leave_request_update_status( $request_id, 2 );
+                        }
+                    }
+
+                    wp_redirect( $redirect );
+                    exit();
+
+            }
+        }
+
     }
 
     /**
@@ -337,7 +421,7 @@ class Form_Handler {
     public function leave_entitlement() {
 
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-hr-leave-assign' ) ) {
-            die( __( 'Something went wrong!', 'wp-erp' ) );
+            die( __( 'Something went wrong!', 'erp' ) );
         }
 
         $affected        = 0;
@@ -347,12 +431,12 @@ class Form_Handler {
         $page_url        = admin_url( 'admin.php?page=erp-leave-assign&tab=assignment' );
 
         $is_single       = ! isset( $_POST['assignment_to'] );
-        $leave_policy    = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : 0;
-        $leave_period    = isset( $_POST['leave_period'] ) ? $_POST['leave_period'] : 0;
-        $single_employee = isset( $_POST['single_employee'] ) ? intval( $_POST['single_employee'] ) : 0;
-        $location        = isset( $_POST['location'] ) ? intval( $_POST['location'] ) : 0;
-        $department      = isset( $_POST['department'] ) ? intval( $_POST['department'] ) : 0;
-        $comment         = isset( $_POST['comment'] ) ? wp_kses_post( $_POST['comment'] ) : 0;
+        $leave_policy    = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : '-1';
+        $leave_period    = isset( $_POST['leave_period'] ) ? $_POST['leave_period'] : '-1';
+        $single_employee = isset( $_POST['single_employee'] ) ? intval( $_POST['single_employee'] ) : '-1';
+        $location        = isset( $_POST['location'] ) ? intval( $_POST['location'] ) : '-1';
+        $department      = isset( $_POST['department'] ) ? intval( $_POST['department'] ) : '-1';
+        $comment         = isset( $_POST['comment'] ) ? wp_kses_post( $_POST['comment'] ) : '-1';
 
         if ( ! $leave_policy ) {
             $errors[] = 'invalid-policy';
@@ -385,7 +469,7 @@ class Form_Handler {
 
             $user              = get_user_by( 'id', $single_employee );
             $emp               = new \stdClass();
-            $emp->user_id      = $user->ID;
+            $emp->id      = $user->ID;
             $emp->display_name = $user->display_name;
 
             $employees[] = $emp;
@@ -402,7 +486,7 @@ class Form_Handler {
 
             foreach ($employees as $employee) {
                 $data = array(
-                    'user_id'   => $employee->user_id,
+                    'user_id'   => $employee->id,
                     'policy_id' => $leave_policy,
                     'days'      => $policy->value,
                     'from_date' => $from_date,
@@ -434,7 +518,7 @@ class Form_Handler {
     public function leave_request() {
 
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-leave-req-new' ) ) {
-            die( __( 'Something went wrong!', 'wp-erp' ) );
+            die( __( 'Something went wrong!', 'erp' ) );
         }
 
         $employee_id  = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
@@ -464,7 +548,7 @@ class Form_Handler {
     /**
      * Leave Request Status change
      *
-     * @since 0,1
+     * @since 0.1
      *
      * @return void
      */
@@ -515,6 +599,25 @@ class Form_Handler {
         if ( null !== $status ) {
             erp_hr_leave_request_update_status( $request_id, $status );
 
+            // notification email
+            if ( 1 === $status ) {
+
+                $approved_email = wperp()->emailer->get_email( 'Approved_Leave_Request' );
+
+                if ( is_a( $approved_email, '\WeDevs\ERP\Email') ) {
+                    $approved_email->trigger( $request_id );
+                }
+
+            } else if ( 3 === $status ) {
+
+                $rejected_email = wperp()->emailer->get_email( 'Rejected_Leave_Request' );
+
+                if ( is_a( $rejected_email, '\WeDevs\ERP\Email') ) {
+                    $rejected_email->trigger( $request_id );
+                }
+            }
+
+            // redirect the user back
             $redirect_to = remove_query_arg( array('status'), admin_url( 'admin.php?page=erp-leave' ) );
             $redirect_to = add_query_arg( array( 'status' => $status ), $redirect_to );
 
@@ -532,7 +635,7 @@ class Form_Handler {
      */
     public function handle_employee_status_update() {
 
-        if ( ! isset( $_POST['employee_update_status'] ) ) {
+        if ( ! isset( $_POST['employee_status'] ) ) {
             return;
         }
 
@@ -540,7 +643,12 @@ class Form_Handler {
             return;
         }
 
-        \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', '=', $_POST['user_id'] )->update( ['status' => $_POST['employee_status'] ] );
+        if ( $_POST['employee_status'] == 'terminated' ) {
+            \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', '=', $_POST['user_id'] )->update( [ 'status' => $_POST['employee_status'], 'termination_date' => current_time( 'mysql' ) ] );
+        } else {
+            \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', '=', $_POST['user_id'] )->update( ['status' => $_POST['employee_status'],  'termination_date' => '' ] );
+        }
+
         wp_redirect( $_POST['_wp_http_referer'] );
         exit();
     }
@@ -560,7 +668,7 @@ class Form_Handler {
         $hr_manager_role = erp_hr_get_manager_role();
 
         if ( ! current_user_can( $hr_manager_role ) ) {
-            wp_die( __( 'Permission Denied!', 'wp-erp' ) );
+            wp_die( __( 'Permission Denied!', 'erp' ) );
         }
 
         $employee_id    = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
@@ -580,6 +688,30 @@ class Form_Handler {
 
             $user->remove_role( $hr_manager_role );
         }
+
+        do_action( 'erp_hr_after_employee_permission_set', $_POST, $user );
+    }
+
+    /**
+     * Reporting Headcount Form Submit Handler
+     *
+     * @since 0.1
+     *
+     * @return void
+     */
+    public function reporting_headcount_bulk_action() {
+
+        if ( isset( $_REQUEST['filter_headcount'] ) ) {
+
+            if ( ! $this->verify_current_page_screen( 'erp-hr-reporting', 'epr-rep-headcount' ) ) {
+                return;
+            }
+
+            $redirect = remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'filter_headcount' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
+
+            wp_redirect( $redirect );
+        }
+
     }
 }
 

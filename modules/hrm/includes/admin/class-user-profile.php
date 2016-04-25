@@ -32,85 +32,14 @@ class User_Profile {
         }
 
         // User profile edit/display actions
-        add_action( 'edit_user_profile', array( $this, 'role_display' ) );
-        add_action( 'profile_update', array( $this, 'profile_update_role' ) );
+        add_action( 'erp_user_profile_role', array( $this, 'role' ) );
+        add_action( 'erp_update_user', array( $this, 'update_user' ), 10, 2 );
     }
 
-    /**
-     * Default interface for setting a HR role
-     *
-     * @param WP_User $profileuser User data
-     *
-     * @return bool Always false
-     */
-    public static function role_display( $profileuser ) {
-
-        // Bail if current user cannot edit users
-        if ( ! current_user_can( 'edit_user', $profileuser->ID ) ) {
-            return;
-        }
-
-        $hr_roles = erp_hr_get_roles();
-
-        ?>
-
-        <h3><?php esc_html_e( 'WP-ERP HR Role', 'wp-erp' ); ?></h3>
-
-        <table class="form-table">
-            <tbody>
-                <tr>
-                    <th><label for="erp-hr-role"><?php esc_html_e( 'HR Role', 'wp-erp' ); ?></label></th>
-                    <td>
-
-                        <?php $user_role = erp_hr_get_user_role( $profileuser->ID ); ?>
-
-                        <select name="erp-hr-role" id="erp-hr-role">
-
-                            <?php if ( ! empty( $user_role ) ) : ?>
-
-                                <option value=""><?php esc_html_e( '&mdash; No role for HR &mdash;', 'wp-erp' ); ?></option>
-
-                            <?php else : ?>
-
-                                <option value="" selected="selected"><?php esc_html_e( '&mdash; No role for HR &mdash;', 'wp-erp' ); ?></option>
-
-                            <?php endif; ?>
-
-                            <?php foreach ( $hr_roles as $role => $details ) : ?>
-                                <?php if ( $details['public'] == true ) continue; ?>
-
-                                <option <?php selected( $user_role, $role ); ?> value="<?php echo esc_attr( $role ); ?>"><?php echo translate_user_role( $details['name'] ); ?></option>
-
-                            <?php endforeach; ?>
-
-                        </select>
-                    </td>
-                </tr>
-
-            </tbody>
-        </table>
-
-        <?php
-    }
-
-    public static function profile_update_role( $user_id = 0 ) {
-
-        // Bail if no user ID was passed
-        if ( empty( $user_id ) )
-            return;
-
-        // Bail if no role
-        if ( ! isset( $_POST['erp-hr-role'] ) )
-            return;
+    function update_user( $user_id, $post ) {
 
         // HR role we want the user to have
-        $new_role = sanitize_text_field( $_POST['erp-hr-role'] );
-        $hr_role  = erp_hr_get_user_role( $user_id );
-
-        // Bail if no role change
-        if ( $new_role === $hr_role ) {
-            return;
-        }
+        $new_role = isset( $_POST['hr_manager'] ) ? sanitize_text_field( $_POST['hr_manager'] ) : false;
 
         // Bail if current user cannot promote the passing user
         if ( ! current_user_can( 'promote_user', $user_id ) ) {
@@ -120,14 +49,25 @@ class User_Profile {
         // Set the new HR role
         $user = get_user_by( 'id', $user_id );
 
-        // Remove the old role
-        if ( ! empty( $role ) ) {
-            $user->remove_role( $hr_role );
-        }
-
-        // Add the new role
-        if ( !empty( $new_role ) ) {
+        if ( $new_role ) {
             $user->add_role( $new_role );
+        } else {
+            $user->remove_role( erp_hr_get_manager_role() );
         }
     }
+
+    function role( $profileuser ) {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            return;
+        }
+
+        $checked = in_array( erp_hr_get_manager_role(), $profileuser->roles ) ? 'checked' : '';
+        ?>
+        <label for="erp-hr-manager">
+            <input type="checkbox" id="erp-hr-manager" <?php echo $checked; ?> name="hr_manager" value="<?php echo erp_hr_get_manager_role(); ?>">
+            <span class="description"><?php _e( 'HR Manager', 'erp' ); ?></span>
+        </label>
+        <?php
+    }
+
 }

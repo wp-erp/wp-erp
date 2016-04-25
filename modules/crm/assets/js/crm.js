@@ -5,6 +5,8 @@
 ;(function($) {
     'use strict';
 
+    var isRequestDone = false;
+
     var WeDevs_ERP_CRM = {
 
         initialize: function() {
@@ -20,6 +22,9 @@
             $( '.erp-single-customer' ).on( 'click', '#erp-customer-add-company', this.customerSingle.addCompany );
             $( '.erp-single-customer' ).on( 'click', 'a.erp-customer-edit-company', this.customerSingle.editCompany );
             $( '.erp-single-customer' ).on( 'click', 'a.erp-customer-delete-company', this.customerSingle.removeCompany );
+            $( '.erp-single-customer' ).on( 'click', 'span#erp-crm-edit-assign-contact-to-agent', this.customerSingle.assignContact );
+            $( '.erp-single-customer' ).on( 'click', 'input.save-edit-assign-contact', this.customerSingle.saveAssignContact );
+            $( '.erp-single-customer' ).on( 'click', 'input.cancel-edit-assign-contact', this.customerSingle.cancelAssignContact );
             $( '.erp-single-customer' ).on( 'click', 'a#erp-contact-update-assign-group', this.subscriberContact.edit );
 
             // Contact Group
@@ -45,8 +50,71 @@
             // handle postbox toggle
             $('body').on( 'click', 'div.erp-handlediv', this.handlePostboxToggle );
 
+            $( '.erp-crm-customer' ).on( 'click', 'a#erp-advance-search-button, a#erp-show-save-search-field', this.showAdvanceFilter );
+
+            // CRM Dashboard
+            $( '.crm-dashboard' ).on( 'click', 'a.erp-crm-dashbaord-show-details-schedule', this.dashboard.showScheduleDetails );
+
+            $('body').on( 'change', 'input[type=checkbox][name="all_day"]', this.triggerCustomerScheduleAllDay );
+            $('body').on( 'change', 'input[type=checkbox][name="allow_notification"]', this.triggerCustomerScheduleAllowNotification );
+            $('body').on( 'change', 'select#erp-crm-feed-log-type', this.triggerLogType );
+
+            // Save Replies in settings page
+            $('body').on('click', 'a#erp-crm-add-save-replies', this.saveReplies.create );
+            $('body').on('click', 'a.erp-crm-delete-save-replies', this.saveReplies.remove );
+            $('body').on('click', 'a.erp-crm-save-replies-edit', this.saveReplies.edit );
+
+            $('body').on('change', 'select#erp-crm-template-shortcodes', this.saveReplies.setShortcodes );
+
+            $('body').on( 'focusout', 'input#erp-crm-new-contact-email', this.customer.checkEmailForContact );
+            $('body').on( 'click', 'a#erp-crm-create-contact-other-type', this.customer.makeUserAsContact );
+
+            this.checkVisibaleAdvanceSearch();
             // Erp ToolTips using tiptip
             this.initTipTips();
+            this.searchUserForAssignContact();
+        },
+
+        searchUserForAssignContact: function() {
+            $( '#erp-select-user-for-assign-contact' ).select2({
+                placeholder: $( this ).data( 'placeholder' ),
+                minimumInputLength: 3,
+                ajax: {
+                    url: wpErpCrm.ajaxurl,
+                    dataType: 'json',
+                    delay: 250,
+                    escapeMarkup: function( m ) {
+                        return m;
+                    },
+                    data: function (params) {
+                      return {
+                        q: params.term, // search term
+                        _wpnonce: wpErpCrm.nonce,
+                        action: 'erp-search-crm-user'
+                      };
+                    },
+                    processResults: function ( data, params ) {
+                        var terms = [];
+
+                        if ( data) {
+                            $.each( data.data, function( id, text ) {
+                                terms.push({
+                                    id: id,
+                                    text: text
+                                });
+                            });
+                        }
+
+                        if ( terms.length ) {
+                            return { results: terms };
+                        } else {
+                            return { results: '' };
+                        }
+                    },
+                    cache: true,
+                },
+            });
+
         },
 
         initTipTips: function() {
@@ -55,6 +123,15 @@
                 fadeIn: 100,
                 fadeOut: 100,
             } );
+        },
+
+        initDateField: function() {
+            $( '.erp-crm-date-field').datepicker({
+                dateFormat: 'yy-mm-dd',
+                changeMonth: true,
+                changeYear: true,
+                yearRange: '-100:+0',
+            });
         },
 
         /**
@@ -102,7 +179,7 @@
             var self = $(this),
                 country = self.val(),
                 parent = self.closest( self.data('parent') ),
-                empty = '<option val="">-------------</option>';
+                empty = '<option value="">- Select -</option>';
 
             if ( wpErpCrm.wpErpCountries[ country ] ) {
                 var options = '',
@@ -123,6 +200,133 @@
             }
         },
 
+        checkVisibaleAdvanceSearch: function() {
+            if ($('#wp-erp').find( '.erp-advance-search-filter' ).is(':visible')) {
+                $('#erp-advance-search-button').html( '<span class="dashicons dashicons-no"></span>Hide Search');
+            } else {
+                $('#erp-advance-search-button').html( '<span class="dashicons dashicons-admin-generic"></span>Advanced Search');
+            }
+        },
+
+        showAdvanceFilter: function(e) {
+            e.preventDefault();
+
+            var self = $(this);
+            self.closest('#wp-erp').find('.erp-advance-search-filter').slideToggle(300, function() {
+
+                var hide = ( self.attr('id') == 'erp-advance-search-button' ) ? '<span class="dashicons dashicons-no"></span>Hide Search' : 'Hide Fields';
+                var show = ( self.attr('id') == 'erp-advance-search-button' ) ? '<span class="dashicons dashicons-admin-generic"></span>Advanced Search' : 'Show Fields';
+
+                if ($(this).is(':visible')) {
+                    self.html( hide );
+                } else {
+                    self.html( show );
+                }
+            });
+        },
+
+        triggerCustomerScheduleAllDay: function() {
+            var self = $(this);
+
+            if ( self.is(':checked') ) {
+                self.closest('div.schedule-datetime').find('.erp-time-field').attr( 'disabled', 'disabled' ).hide();
+                self.closest('div.schedule-datetime').find('.datetime-sep').hide();
+            } else {
+                self.closest('div.schedule-datetime').find('.erp-time-field').removeAttr( 'disabled' ).show();
+                self.closest('div.schedule-datetime').find('.datetime-sep').show();
+            };
+        },
+
+        triggerCustomerScheduleAllowNotification: function() {
+            var self = $(this);
+
+            if ( self.is(':checked') ) {
+                // self.closest('.erp-crm-new-schedule-wrapper').find('#schedule-notification-wrap').find('input, select').removeAttr( 'disabled' );
+                self.closest('.erp-crm-new-schedule-wrapper').find('#schedule-notification-wrap').show();
+            } else {
+                // self.closest('.erp-crm-new-schedule-wrapper').find('#schedule-notification-wrap').find('input, select').attr( 'disabled', 'disabled' );
+                self.closest('.erp-crm-new-schedule-wrapper').find('#schedule-notification-wrap').hide();
+            };
+        },
+
+        triggerLogType: function() {
+            var self = $(this);
+
+            if ( self.val() == 'meeting' ) {
+                self.closest('.feed-log-activity').find('.log-email-subject').hide();
+                self.closest('.feed-log-activity').find('.log-selected-contact').show();
+            } else if ( self.val() == 'email' ) {
+                self.closest('.feed-log-activity').find('.log-email-subject').show();
+                self.closest('.feed-log-activity').find('.log-selected-contact').hide();
+            } else {
+                self.closest('.feed-log-activity').find('.log-email-subject').hide();
+                self.closest('.feed-log-activity').find('.log-selected-contact').hide();
+            }
+        },
+
+        dashboard: {
+
+            showScheduleDetails: function(e) {
+                e.preventDefault();
+                var self = $(this),
+                    scheduleId = self.data('schedule_id');
+
+                $.erpPopup({
+                    title: self.attr('data-title'),
+                    button: '',
+                    id: 'erp-customer-edit',
+                    onReady: function() {
+                        var modal = this;
+
+                        $( 'header', modal).after( $('<div class="loader"></div>').show() );
+
+                        wp.ajax.send( 'erp-crm-get-single-schedule-details', {
+                            data: {
+                                id: scheduleId,
+                                _wpnonce: wpErpCrm.nonce
+                            },
+
+                            success: function( response ) {
+                                var startDate = wperp.dateFormat( response.start_date, 'j F' ),
+                                    startTime = wperp.timeFormat( response.start_date ),
+                                    endDate = wperp.dateFormat( response.end_date, 'j F' ),
+                                    endTime = wperp.timeFormat( response.end_date );
+
+                                if ( response.extra.all_day == 'true' ) {
+                                    if ( wperp.dateFormat( response.start_date, 'Y-m-d' ) == wperp.dateFormat( response.end_date, 'Y-m-d' ) ) {
+                                        var datetime = startDate;
+                                    } else {
+                                        var datetime = startDate + ' to ' + endDate;
+                                    }
+                                } else {
+                                    if ( wperp.dateFormat( response.start_date, 'Y-m-d' ) == wperp.dateFormat( response.end_date, 'Y-m-d' ) ) {
+                                        var datetime = startDate + ' at ' + startTime + ' to ' + endTime;
+                                    } else {
+                                        var datetime = startDate + ' at ' + startTime + ' to ' + endDate + ' at ' + endTime;
+                                    }
+                                }
+
+                                var html = wp.template('erp-crm-single-schedule-details')( { date: datetime, schedule: response } );
+                                $( '.content', modal ).html( html );
+                                $( '.loader', modal).remove();
+
+                                $('.erp-tips').tipTip( {
+                                    defaultPosition: "top",
+                                    fadeIn: 100,
+                                    fadeOut: 100,
+                                } );
+                            },
+
+                            error: function( response ) {
+                                alert(response);
+                            }
+
+                        });
+                    }
+                });
+
+            }
+        },
 
         customer: {
 
@@ -148,9 +352,10 @@
              * @return {void}
              */
             pageReload: function() {
-                console.log( 'AIse ');
-                $( '.erp-crm-customer' ).load( window.location.href + ' .erp-crm-customer' );
-                // $( '.erp-crm-list-table-wrap' ).load( window.location.href + ' .list-table-inner' );
+                $( '.list-table-wrap' ).load( window.location.href + ' .list-table-inner', function() {
+                    $( '.select2' ).select2();
+                    WeDevs_ERP_CRM.searchUserForAssignContact();
+                } );
             },
 
             /**
@@ -227,6 +432,7 @@
                     content: wperp.template('erp-crm-new-contact')(  wpErpCrm.customer_empty  ).trim(),
                     extraClass: 'midium',
                     onReady: function() {
+                        WeDevs_ERP_CRM.initDateField();
                         WeDevs_ERP_CRM.customer.select2Action('erp-crm-select2');
                         $( 'body' ).find('select#erp-customer-type').trigger('change');
                     },
@@ -253,6 +459,160 @@
                         });
                     }
                 }); //popup
+            },
+
+            checkEmailForContact: function() {
+                var self = $(this),
+                    form = self.closest('form'),
+                    val = self.val(),
+                    type = form.find('#erp-customer-type').val(),
+                    id   = form.find('#erp-customer-id').val();
+
+                var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+                if ( val == '' || !re.test( val ) ) {
+                    return false;
+                }
+
+                if ( id != '0' ) {
+                    return false;
+                }
+
+                wp.ajax.send( 'erp_people_exists', {
+                    data: {
+                        email: val,
+                        _wpnonce: wpErpCrm.nonce
+                    },
+                    success: function() {
+                        form.find('.modal-suggession').fadeOut( 300, function() {
+                            $(this).remove();
+                            form.find('.content-container').css({ 'marginTop': '0px' });
+                        });
+                        form.find('button[type=submit]' ).removeAttr( 'disabled' );
+                    },
+                    error: function( response ) {
+                        form.find('button[type=submit]' ).attr( 'disabled', 'disabled');
+
+                        if ( $.inArray( 'contact', response.types ) != -1 || $.inArray( 'company', response.types ) != -1 ) {
+                            form.find('.modal-suggession').remove();
+                            form.find('header.modal-header').append('<div class="modal-suggession">' + wpErpCrm.contact_exit + '</div>');
+                        } else {
+                            form.find('.modal-suggession').remove();
+                            form.find('header.modal-header').append('<div class="modal-suggession">' + wpErpCrm.make_contact_text + ' ' + type + ' ? <a href="#" id="erp-crm-create-contact-other-type" data-type="'+ type +'" data-user_id="'+ response.id +'">' + wpErpCrm.create_contact_text + ' ' + type + '</a></div>');
+                        }
+
+                        $('.modal-suggession').hide().slideDown( function() {
+                            form.find('.content-container').css({ 'marginTop': '15px' });
+                        });
+                    }
+                });
+            },
+
+            makeUserAsContact: function(e) {
+                e.preventDefault();
+
+                var self = $(this),
+                    type = self.data('type'),
+                    user_id = self.data('user_id');
+
+
+                if ( isRequestDone ) {
+                    return;
+                }
+
+                isRequestDone = true;
+                self.closest('.modal-suggession').append('<div class="erp-loader" style="top:9px; right:10px;"></div>');
+
+                wp.ajax.send( 'erp-crm-convert-user-to-contact', {
+                    data: {
+                        user_id: user_id,
+                        type: type,
+                        _wpnonce: wpErpCrm.nonce
+                    },
+                    success: function() {
+                        isRequestDone = false;
+                        self.closest('.modal-suggession').find('.erp-loader').remove();
+                        self.closest('.erp-modal').remove();
+                        $('.erp-modal-backdrop').remove();
+                        WeDevs_ERP_CRM.customer.pageReload();
+
+                        $.erpPopup({
+                            title: wpErpCrm.update_submit + ' ' + type,
+                            button: wpErpCrm.update_submit,
+                            id: 'erp-customer-edit',
+                            onReady: function() {
+                                var modal = this;
+
+                                $( 'header', modal).after( $('<div class="loader"></div>').show() );
+
+                                wp.ajax.send( 'erp-crm-customer-get', {
+                                    data: {
+                                        id: user_id,
+                                        _wpnonce: wpErpCrm.nonce
+                                    },
+                                    success: function( response ) {
+                                        var html = wp.template('erp-crm-new-contact')( response );
+                                        $( '.content', modal ).html( html );
+                                        $( '.loader', modal).remove();
+
+                                        $( 'li[data-selected]', modal ).each(function() {
+                                            var self = $(this),
+                                                selected = self.data('selected');
+
+                                            if ( selected !== '' ) {
+                                                self.find( 'select' ).val( selected );
+                                            }
+                                        });
+
+                                        $('select#erp-customer-type').trigger('change');
+                                        $( '.select2' ).select2();
+                                        $( 'select.erp-country-select').change();
+
+                                        $( 'li[data-selected]', modal ).each(function() {
+                                            var self = $(this),
+                                                selected = self.data('selected');
+
+                                            if ( selected !== '' ) {
+                                                self.find( 'select' ).val( selected );
+                                            }
+                                        });
+
+                                        _.each( $( 'input[type=checkbox].erp-crm-contact-group-class' ), function( el, i) {
+                                            var optionsVal = $(el).val();
+                                            if( _.contains( response.group_id, optionsVal ) ) {
+                                                $(el).prop('checked', true );
+                                            }
+                                        });
+
+
+                                        WeDevs_ERP_CRM.initDateField();
+                                    }
+                                });
+                            },
+                            onSubmit: function(modal) {
+                                modal.disableButton();
+
+                                wp.ajax.send( {
+                                    data: this.serialize(),
+                                    success: function(response) {
+                                        WeDevs_ERP_CRM.customer.pageReload();
+                                        modal.enableButton();
+                                        modal.closeModal();
+                                    },
+                                    error: function(error) {
+                                        modal.enableButton();
+                                        alert( error );
+                                    }
+                                });
+                            }
+                        });
+
+                    },
+                    error: function( response ) {
+                        isRequestDone = false;
+                        alert(response);
+                    }
+                });
             },
 
             /**
@@ -319,6 +679,16 @@
                                         self.find( 'select' ).val( selected );
                                     }
                                 });
+
+                                _.each( $( 'input[type=checkbox].erp-crm-contact-group-class' ), function( el, i) {
+                                    var optionsVal = $(el).val();
+                                    if( _.contains( response.group_id, optionsVal ) ) {
+                                        $(el).prop('checked', true );
+                                    }
+                                });
+
+
+                                WeDevs_ERP_CRM.initDateField();
                             }
                         });
                     },
@@ -362,16 +732,17 @@
                         data: {
                             '_wpnonce': wpErpCrm.nonce,
                             id: self.data( 'id' ),
-                            hard: self.data( 'hard' )
+                            hard: self.data( 'hard' ),
+                            type: self.data( 'type' )
                         },
-                        success: function() {
+                        success: function(response) {
                             self.closest('tr').fadeOut( 'fast', function() {
                                 $(this).remove();
                                 WeDevs_ERP_CRM.customer.pageReload();
                             });
                         },
                         error: function(response) {
-                            alert( response );
+                            console.log( response );
                         }
                     });
                 }
@@ -392,8 +763,9 @@
                 if ( confirm( wpErpCrm.confirm ) ) {
                     wp.ajax.send( 'erp-crm-customer-restore', {
                         data: {
-                            '_wpnonce': wpErpCrm.nonce,
+                            _wpnonce: wpErpCrm.nonce,
                             id: self.data( 'id' ),
+                            type: self.data( 'type' )
                         },
                         success: function() {
                             self.closest('tr').fadeOut( 'fast', function() {
@@ -593,6 +965,46 @@
                         }
                     });
                 }
+            },
+
+            assignContact: function(e) {
+                e.preventDefault();
+                var mainWrap = $(this).closest('.erp-crm-assign-contact');
+
+                mainWrap.find('.user-wrap').hide();
+                mainWrap.find('.assign-form').fadeIn();
+            },
+
+            saveAssignContact: function(e) {
+                e.preventDefault();
+
+                var self = $(this),
+                    data = {
+                        action : 'erp-crm-save-assign-contact',
+                        _wpnonce: wpErpCrm.nonce,
+                        formData: self.closest('form').serialize()
+                    };
+
+                wp.ajax.send( {
+                    data: data,
+                    success: function( res ) {
+                        $('.erp-crm-assign-contact').load( window.location.href + ' .inner-wrap', function() {
+                            WeDevs_ERP_CRM.searchUserForAssignContact();
+                        } );
+
+                    },
+                    error: function(error) {
+                        alert( error );
+                    }
+                });
+            },
+
+            cancelAssignContact: function(e) {
+                e.preventDefault();
+                var mainWrap = $(this).closest('.erp-crm-assign-contact');
+
+                mainWrap.find('.assign-form').hide();
+                mainWrap.find('.user-wrap').fadeIn();
             },
 
             /**
@@ -914,6 +1326,126 @@
                     });
                 }
             }
+        },
+
+        saveReplies: {
+
+            pageReload: function() {
+                $('td.erp-crm-templates-wrapper').load( window.location.href + ' table.erp-crm-templates-table' );
+            },
+
+            create: function(e) {
+                e.preventDefault();
+
+                var self    = $(this);
+
+                $.erpPopup({
+                    title: self.attr('title'),
+                    button: wpErpCrm.add_submit,
+                    id: 'erp-crm-new-save-replies',
+                    content: wperp.template('erp-crm-new-save-replies')({ data:{} }).trim(),
+                    extraClass: 'larger',
+
+                    onSubmit: function(modal) {
+                        modal.disableButton();
+
+                        wp.ajax.send( {
+                            data: this.serialize(),
+                            success: function( res ) {
+                                WeDevs_ERP_CRM.saveReplies.pageReload();
+                                modal.enableButton();
+                                modal.closeModal();
+                            },
+                            error: function(error) {
+                                modal.enableButton();
+                                alert( error );
+                            }
+                        });
+                    }
+                }); //popup
+
+            },
+
+            edit: function(e) {
+                e.preventDefault();
+
+                var self = $( this ),
+                query_id = self.data( 'id' );
+
+                $.erpPopup({
+                    title: self.attr('title'),
+                    button: wpErpCrm.update_submit,
+                    id: 'erp-crm-edit-save-replies',
+                    extraClass: 'larger',
+                    onReady: function() {
+                        var modal = this;
+
+                        $( 'header', modal).after( $('<div class="loader"></div>').show() );
+
+                        wp.ajax.send( 'erp-crm-edit-save-replies', {
+                            data: {
+                                id: query_id,
+                                _wpnonce: wpErpCrm.nonce
+                            },
+                            success: function( res ) {
+                                var html = wp.template( 'erp-crm-new-save-replies' )( res );
+                                $( '.content', modal ).html( html );
+                                $( '.loader', modal ).remove();
+                            }
+                        });
+                    },
+
+                    onSubmit: function(modal) {
+                        modal.disableButton();
+
+                        wp.ajax.send( {
+                            data: this.serialize(),
+                            success: function(res) {
+                                WeDevs_ERP_CRM.saveReplies.pageReload();
+                                modal.enableButton();
+                                modal.closeModal();
+                            },
+                            error: function(error) {
+                                modal.enableButton();
+                                alert( error );
+                            }
+                        });
+                    }
+
+                });
+            },
+
+            remove: function(e) {
+                e.preventDefault();
+
+                var self = $(this);
+
+                if ( confirm( wpErpCrm.delConfirm ) ) {
+                    wp.ajax.send( 'erp-crm-delete-save-replies', {
+                        data: {
+                            _wpnonce : wpErpCrm.nonce,
+                            id       : self.data( 'id' )
+                        },
+                        success: function() {
+                            self.closest('tr').fadeOut( 'fast', function() {
+                                $(this).remove();
+                            });
+                        },
+                        error: function(response) {
+                            alert( response );
+                        }
+                    });
+                }
+            },
+
+            setShortcodes: function(e) {
+                e.preventDefault();
+                var self = $(this);
+                var element = document.querySelector("trix-editor");
+                element.editor.insertString( self.val() );
+                self.val('');
+            }
+
         }
     }
 

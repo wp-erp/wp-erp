@@ -21,7 +21,7 @@ function erp_hr_create_designation( $args = array() ) {
 
     // validation
     if ( empty( $fields['title'] ) ) {
-        return new WP_Error( 'no-name', __( 'No designation name provided.', 'wp-erp' ) );
+        return new WP_Error( 'no-name', __( 'No designation name provided.', 'erp' ) );
     }
 
     // unset the department id
@@ -72,22 +72,25 @@ function erp_hr_get_designations( $args = array() ) {
     $args = wp_parse_args( $args, $defaults );
 
     $cache_key = 'erp-designations';
-    $designations = wp_cache_get( $cache_key, 'wp-erp' );
+    $designations = wp_cache_get( $cache_key, 'erp' );
 
     $designation = new \WeDevs\ERP\HRM\Models\Designation();
 
     if ( false === $designations ) {
 
+        // Check if want all data without any pagination
+        if ( $args['number'] != '-1' ) {
+            $designation = $designation->skip( $args['offset'] )->take( $args['number'] );
+        }
+
         $results = $designation
-                ->skip( $args['offset'] )
-                ->take( $args['number'] )
                 ->orderBy( $args['orderby'], $args['order'] )
                 ->get()
                 ->toArray();
 
         $designations = erp_array_to_object( $results );
 
-        wp_cache_set( $cache_key, $designations, 'wp-erp' );
+        wp_cache_set( $cache_key, $designations, 'erp' );
     }
 
 
@@ -127,7 +130,7 @@ function erp_hr_delete_designation( $designation_id ) {
     } else {
         $designation = new \WeDevs\ERP\HRM\Designation( $designation_id );
         if ( $designation->num_of_employees() ) {
-            return new WP_Error( 'not-empty', __( 'You can not delete this designation because it contains employees.', 'wp-erp' ) );
+            return new WP_Error( 'not-empty', __( 'You can not delete this designation because it contains employees.', 'erp' ) );
         }
 
         do_action( 'erp_hr_desig_delete', $designation );
@@ -146,8 +149,8 @@ function erp_hr_delete_designation( $designation_id ) {
  * @return array  the key-value paired designations
  */
 function erp_hr_get_designation_dropdown_raw( $select_text = '' ) {
-    $select_text = empty( $select_text ) ? __( '- Select Designation -', 'wp-erp' ) : $select_text;
-    $designations = erp_hr_get_designations();
+    $select_text = empty( $select_text ) ? __( '- Select Designation -', 'erp' ) : $select_text;
+    $designations = erp_hr_get_designations( ['number' => -1 ] );
     $dropdown     = array( '-1' => $select_text );
 
     if ( $designations ) {

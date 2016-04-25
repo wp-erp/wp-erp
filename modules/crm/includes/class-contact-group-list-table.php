@@ -30,7 +30,7 @@ class Contact_Group_List_Table extends \WP_List_Table {
      * @return void
      */
     function no_items() {
-        _e( 'No contact group found.', 'wp-erp' );
+        _e( 'No contact group found.', 'erp' );
     }
 
     /**
@@ -68,10 +68,10 @@ class Contact_Group_List_Table extends \WP_List_Table {
     function get_columns() {
         $columns = array(
             'cb'           => '<input type="checkbox" />',
-            'name'         => __( 'Name', 'wp-erp' ),
-            'subscribed'   => __( 'Subscribed', 'wp-erp' ),
-            'unsubscribed' => __( 'Unsubscribed', 'wp-erp' ),
-            'created_at'   => __( 'Created At', 'wp-erp' )
+            'name'         => __( 'Name', 'erp' ),
+            'subscribed'   => __( 'Subscribed', 'erp' ),
+            'unsubscribed' => __( 'Unsubscribed', 'erp' ),
+            'created_at'   => __( 'Created At', 'erp' )
         );
 
         return apply_filters( 'erp_crm_contact_group_table_cols', $columns );
@@ -89,9 +89,16 @@ class Contact_Group_List_Table extends \WP_List_Table {
         $actions             = array();
         $delete_url          = '';
         $view_subscriber_url = add_query_arg( [ 'page'=>'erp-sales-contact-groups', 'groupaction' => 'view-subscriber', 'filter_contact_group' => $contact_group->id ], admin_url( 'admin.php' ) );
-        $actions['edit']     = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $contact_group->id, __( 'Edit this Contact Group', 'wp-erp' ), __( 'Edit', 'wp-erp' ) );
-        $actions['view-subscriber']     = sprintf( '<a href="%s" title="%s">%s</a>', $view_subscriber_url, __( 'View Subscriber in this group', 'wp-erp' ), __( 'View Subscriber', 'wp-erp' ) );
-        $actions['delete']   = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $contact_group->id, __( 'Delete this Contact Group', 'wp-erp' ), __( 'Delete', 'wp-erp' ) );
+
+        if ( current_user_can( 'erp_crm_edit_groups' ) ) {
+            $actions['edit']     = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $contact_group->id, __( 'Edit this Contact Group', 'erp' ), __( 'Edit', 'erp' ) );
+        }
+
+        $actions['view-subscriber']     = sprintf( '<a href="%s" title="%s">%s</a>', $view_subscriber_url, __( 'View Subscriber in this group', 'erp' ), __( 'View Subscriber', 'erp' ) );
+
+        if ( current_user_can( 'erp_crm_edit_groups' ) ) {
+            $actions['delete']   = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $contact_group->id, __( 'Delete this Contact Group', 'erp' ), __( 'Delete', 'erp' ) );
+        }
 
         return sprintf( '<a href="%3$s"><strong>%1$s</strong></a> %2$s', $contact_group->name, $this->row_actions( $actions ), $view_subscriber_url );
     }
@@ -117,7 +124,7 @@ class Contact_Group_List_Table extends \WP_List_Table {
      */
     function get_bulk_actions() {
         $actions = array(
-            'contact_group_delete'  => __( 'Delete', 'wp-erp' ),
+            'contact_group_delete'  => __( 'Delete', 'erp' ),
         );
         return $actions;
     }

@@ -1,38 +1,21 @@
 <?php
 namespace WeDevs\ERP\HRM;
 
+use WeDevs\ERP\Framework\ERP_Settings_Page;
+
 /**
  * Settings class
  */
-class Settings {
+class Settings extends ERP_Settings_Page {
 
     /**
      * [__construct description]
      */
     public function __construct() {
-        $actions = array(
-            'settings-save-work-days' => 'save_work_days'
-        );
+        $this->id            = 'erp-hr';
+        $this->label         = __( 'HR', 'erp' );
 
-        foreach ($actions as $hook => $callback) {
-            add_action( 'erp_action_' . $hook, array( $this, $callback )  );
-        }
-    }
-
-    /**
-     * Initializes the WeDevs_ERP() class
-     *
-     * Checks for an existing WeDevs_ERP() instance
-     * and if it doesn't find one, creates it.
-     */
-    public static function init() {
-        static $instance = false;
-
-        if ( ! $instance ) {
-            $instance = new self();
-        }
-
-        return $instance;
+        $this->sections      = $this->get_sections();
     }
 
     /**
@@ -40,48 +23,65 @@ class Settings {
      *
      * @return array
      */
-    public function get_tabs() {
-        $tabs = apply_filters( 'erp_hr_settings_tabs', array(
-            'workdays' => array(
-                'title'    => __( 'Work Days', 'wp-erp' ),
-                'callback' => array( $this, 'tab_work_days' )
-            ),
-            'termination' => array(
-                'title'    => __( 'Termination Reasons', 'wp-erp' ),
-                'callback' => ''
-            ),
-        ) );
+    public function get_sections() {
+        $sections = array(
+            'workdays' => __( 'Workdays', 'erp' ),
+        );
 
-        return $tabs;
+        return apply_filters( 'erp_settings_hr_sections', $sections );
     }
 
     /**
-     * Render the workdays tab
+     * Get sections fields
      *
-     * @return void
+     * @return array
      */
-    public function tab_work_days() {
-        include WPERP_HRM_VIEWS . '/settings/tab-workdays.php';
-    }
+    public function get_section_fields( $section = '' ) {
+        $options = array(
+            '8' => __( 'Full Day', 'erp' ),
+            '4' => __( 'Half Day', 'erp' ),
+            '0' => __( 'Non-working Day', 'erp' )
+        );
 
-    /**
-     * Save work days from settings
-     *
-     * @return void
-     */
-    public function save_work_days() {
+        $week_days = array(
+            'mon' => __( 'Monday', 'erp' ),
+            'tue' => __( 'Tuesday', 'erp' ),
+            'wed' => __( 'Wednesday', 'erp' ),
+            'thu' => __( 'Thursday', 'erp' ),
+            'fri' => __( 'Friday', 'erp' ),
+            'sat' => __( 'Saturday', 'erp' ),
+            'sun' => __( 'Sunday', 'erp' )
+        );
 
-        if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-settings' ) ) {
-            die();
+        $fields = [];
+
+        $fields['workdays'][] = [
+            'title' => __( 'Work Days', 'erp' ),
+            'type'  => 'title',
+            'desc'  => __( 'Week day settings for this company.', 'domain' ),
+            'id'    => 'general_options'
+        ];
+
+        foreach ($week_days as $key => $day) {
+            $fields['workdays'][] = [
+                'title'   => $day,
+                'id'      => $key,
+                'type'    => 'select',
+                'options' => $options,
+            ];
         }
 
-        $option_key = 'erp_hr_work_days';
-        $days       = array_map( 'absint', $_POST['day'] );
+        $fields['workdays'][] = [
+            'type'  => 'sectionend',
+            'id'    => 'script_styling_options'
+        ];
 
-        if ( count( $days ) == 7 ) {
-            update_option( $option_key, $days );
-        }
+        $fields = apply_filters( 'erp_settings_hr_section_fields', $fields, $section );
+
+        $section = $section === false ? $fields['workdays'] : $fields[$section];
+
+        return $section;
     }
 }
 
-Settings::init();
+return new Settings();

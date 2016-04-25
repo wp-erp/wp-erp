@@ -2,7 +2,7 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'    => __( 'Holiday Name', 'wp-erp' ),
+            'label'    => __( 'Holiday Name', 'erp' ),
             'name'     => 'title',
             'id'       => 'erp-hr-holiday-title',
             'value'    => '{{ data.title }}',
@@ -12,7 +12,7 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'    => __( 'Start Date', 'wp-erp' ),
+            'label'    => __( 'Start Date', 'erp' ),
             'name'     => 'start_date',
             'value'    => '{{ data.start_date }}',
             'id'       => 'erp-hr-holiday-start',
@@ -23,11 +23,11 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'    => __( 'Range', 'wp-erp' ),
+            'label'    => __( 'Range', 'erp' ),
             'name'     => 'range',
             'value'    => '{{ data.range }}',
             'id'       => 'erp-hr-holiday-range',
-            'help'     => __( 'Enable', 'wp-erp' ),
+            'help'     => __( 'Enable', 'erp' ),
             'type'     => 'checkbox',
             'class'    => 'erp-hr-holiday-date-range',
         ) ); ?>
@@ -35,7 +35,7 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'    => __( 'End Date', 'wp-erp' ),
+            'label'    => __( 'End Date', 'erp' ),
             'name'     => 'end_date',
             'id'       => 'erp-hr-holiday-end',
             'value'    => '{{ data.end_date }}',
@@ -46,7 +46,7 @@
     <div class="row">
         <?php erp_html_form_input( array(
             'type'     => 'textarea',
-            'label'    => __( 'Description', 'wp-erp' ),
+            'label'    => __( 'Description', 'erp' ),
             'name'     => 'description',
             'id'       => 'erp-hr-holiday-description',
             'value'    => '{{ data.description }}',

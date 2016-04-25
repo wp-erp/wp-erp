@@ -2,53 +2,53 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'    => __( 'Previous Company', 'wp-erp' ),
+            'label'    => __( 'Previous Company', 'erp' ),
             'name'     => 'company_name',
             'value'    => '{{ data.company_name }}',
             'required' => true,
-            'placeholder' => __( 'ABC Corporation', 'wp-erp' )
+            'placeholder' => __( 'ABC Corporation', 'erp' )
         ) ); ?>
     </div>
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Job Title', 'wp-erp' ),
+            'label'       => __( 'Job Title', 'erp' ),
             'name'        => 'job_title',
             'value'       => '{{ data.job_title }}',
             'required'    => true,
-            'placeholder' => __( 'Project Manager', 'wp-erp' )
+            'placeholder' => __( 'Project Manager', 'erp' )
         ) ); ?>
     </div>
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'       => __( 'From', 'wp-erp' ),
+            'label'       => __( 'From', 'erp' ),
             'name'        => 'from',
             'value'       => '{{ data.from }}',
             'required'    => true,
             'class'       => 'erp-date-field',
-            'placeholder' => '2012-01-20'
+            'placeholder' => '1988-03-18'
         ) ); ?>
     </div>
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'       => __( 'To', 'wp-erp' ),
+            'label'       => __( 'To', 'erp' ),
             'name'        => 'to',
             'value'       => '{{ data.to }}',
             'required'    => true,
             'class'       => 'erp-date-field',
-            'placeholder' => '2014-09-12'
+            'placeholder' => '1988-03-18'
         ) ); ?>
     </div>
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Job Description', 'wp-erp' ),
+            'label'       => __( 'Job Description', 'erp' ),
             'name'        => 'description',
             'type'        => 'textarea',
             'value'       => '{{ data.description }}',
-            'placeholder' => __( 'Details about the job', 'wp-erp' )
+            'placeholder' => __( 'Details about the job', 'erp' )
         ) ); ?>
     </div>
 

@@ -6,3 +6,6 @@ node_modules
 build
 .DS_Store
 nbproject
+debug.log
+.netbeans.xml
+plugin-deploy.sh

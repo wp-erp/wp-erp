@@ -3,7 +3,7 @@
 <div class="performance-form-wrap">
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'    => __( 'Reference Date', 'wp-erp' ),
+            'label'    => __( 'Reference Date', 'erp' ),
             'name'     => 'performance_date',
             'value'    => date( 'Y-m-d', current_time( 'timestamp' ) ),
             'required' => true,
@@ -13,7 +13,7 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'   => __( 'Reviewer', 'wp-erp' ),
+            'label'   => __( 'Reviewer', 'erp' ),
             'name'    => 'reviewer',
             'value'   => '',
             'class'   => 'erp-hrm-select2',
@@ -25,7 +25,7 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'   => __( 'Comments', 'wp-erp' ),
+            'label'   => __( 'Comments', 'erp' ),
             'name'    => 'comments',
             'value'   => '',
             'type'    => 'textarea',

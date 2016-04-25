@@ -4,14 +4,14 @@
 
         <div class="row">
             <?php erp_html_form_input( array(
-                'label'       => __( 'Company Name', 'wp-erp' ),
+                'label'       => __( 'Company Name', 'erp' ),
                 'name'        => 'erp_assign_company_id',
                 'type'        => 'select',
                 'id'          => 'erp-select-customer-company',
                 'class'       => 'erp-crm-select2-add-more erp-crm-customer-company-dropdown',
                 'custom_attr' => ['data-id' => 'erp-contact-new', 'data-type' => 'company', 'data-single' => 1 ],
                 'required'    => true,
-                'options'     => [ '' => __( '--Select a Company--', 'wp-erp' ) ] + erp_get_peoples_array( [ 'type' => 'company', 'number' => -1 ] )
+                'options'     => [ '' => __( '--Select a Company--', 'erp' ) ] + erp_get_peoples_array( [ 'type' => 'company', 'number' => -1 ] )
             ) ); ?>
         </div>
 
@@ -19,14 +19,14 @@
 
         <div class="row">
             <?php erp_html_form_input( array(
-                'label'       => __( 'Contact Name', 'wp-erp' ),
+                'label'       => __( 'Contact Name', 'erp' ),
                 'name'        => 'erp_assign_customer_id',
                 'type'        => 'select',
                 'id'          => 'erp-select-customer-company',
                 'class'       => 'erp-crm-select2-add-more erp-crm-customer-company-dropdown',
                 'custom_attr' => ['data-id' => 'erp-contact-new', 'data-type' => 'contact', 'data-single' => 1 ],
                 'required'    => true,
-                'options'     => [ '' => __( '--Select a Contact--', 'wp-erp' ) ] + erp_get_peoples_array( [ 'type' => 'contact', 'number' => -1 ] )
+                'options'     => [ '' => __( '--Select a Contact--', 'erp' ) ] + erp_get_peoples_array( [ 'type' => 'contact', 'number' => -1 ] )
             ) ); ?>
         </div>
 

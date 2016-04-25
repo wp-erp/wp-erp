@@ -34,12 +34,12 @@ class Company {
     public function defaults() {
         $defaults = [
             'logo'    => 0,
-            'name'    => __( 'Untitled Company', 'wp-erp' ),
+            'name'    => __( 'Untitled Company', 'erp' ),
             'address' => [
-                'address_1' => 'Street Address 1',
-                'address_2' => 'Address Line 2',
-                'city'      => 'City',
-                'state'     => 'State',
+                'address_1' => __( 'Street Address 1', 'erp' ),
+                'address_2' => __( 'Address Line 2', 'erp' ),
+                'city'      => __( 'City', 'erp' ),
+                'state'     => __( 'State', 'erp' ),
                 'postcode'  => '12345',
                 'country'   => 'US'
             ],
@@ -194,15 +194,15 @@ class Company {
 
         // validation
         if ( empty( $fields['name'] ) ) {
-            return new \WP_Error( 'no-name', __( 'No location name provided.', 'wp-erp' ) );
+            return new \WP_Error( 'no-name', __( 'No location name provided.', 'erp' ) );
         }
 
         if ( empty( $fields['address_1'] ) ) {
-            return new \WP_Error( 'no-address_1', __( 'No address provided.', 'wp-erp' ) );
+            return new \WP_Error( 'no-address_1', __( 'No address provided.', 'erp' ) );
         }
 
         if ( empty( $fields['country'] ) ) {
-            return new \WP_Error( 'no-country', __( 'No country provided.', 'wp-erp' ) );
+            return new \WP_Error( 'no-country', __( 'No country provided.', 'erp' ) );
         }
 
         $location = new Company_Locations();
@@ -213,7 +213,7 @@ class Company {
             do_action( 'erp_company_location_new', $location->id, $fields );
 
             return $new_location->id;
-            
+
         } else {
             $location->find( $location_id )->update( $fields );
 

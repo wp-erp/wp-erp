@@ -1,14 +1,13 @@
 <?php
 namespace WeDevs\ERP;
 
-
 /**
-* ERP Log reporting class API
-*
-* @since 0.1
-*
-* @package wp-erp
-*/
+ * ERP Log reporting class API
+ *
+ * @since 0.1
+ *
+ * @package wp-erp
+ */
 class Log {
 
 	/**
@@ -55,7 +54,9 @@ class Log {
 	    $defaults = array(
 	        'number'     => 20,
 	        'offset'     => 0,
-	        'no_object'  => false
+	        'no_object'  => false,
+            'orderby'    => 'id',
+            'order'      => 'DESC'
 	    );
 
 	    $args  = wp_parse_args( $args, $defaults );
@@ -88,18 +89,26 @@ class Log {
 	        $audit_log = $audit_log->where( 'created_by', (int)$args['created_by'] );
 	    }
 
+		// get item with date
+		if ( isset( $args['start'] ) && isset( $args['end'] ) && ! empty( $args['start'] ) && ! empty( $args['end'] ) ) {
+			$audit_log = $audit_log->where( 'created_at', '>=', $args['start'].' 00:00:00'  )
+				->where( 'created_at', '<=', $args['end'].' 23:59:59' );
+		}
+
+
 	    $cache_key = 'erp-get-audit-log' . md5( serialize( $args ) );
-	    $results   = wp_cache_get( $cache_key, 'wp-erp' );
+	    $results   = wp_cache_get( $cache_key, 'erp' );
 	    $users     = array();
 
 	    if ( false === $results ) {
 	        $results = $audit_log->skip( $args['offset'] )
 	                    ->take( $args['number'] )
+                        ->orderBy( $args['orderby'], $args['order'] )
 	                    ->get()
 	                    ->toArray();
 
 	        $results = erp_array_to_object( $results );
-	        wp_cache_set( $cache_key, $results, 'wp-erp', HOUR_IN_SECONDS );
+	        wp_cache_set( $cache_key, $results, 'erp', HOUR_IN_SECONDS );
 	    }
 
 	    return $results;
@@ -116,9 +125,9 @@ class Log {
 	 */
 	public function insert_log( $args ) {
 		global $wpdb;
-		
+
 		$table = $wpdb->prefix . 'erp_audit_log';
-		
+
 		$defaults = array(
 			'component'     => 'HRM',
 			'sub_component' => '',
@@ -126,7 +135,8 @@ class Log {
 			'new_value'     => '',
 			'message'       => '',
 			'changetype'    => 'add',
-			'created_by'    => ''
+			'created_by'    => '',
+			'created_at'    => current_time('mysql')
 	    );
 
 	    $formated = ['%s', '%s', '%s', '%s', '%s', '%s', '%d'];
@@ -134,7 +144,7 @@ class Log {
 	    $fields = wp_parse_args( $args, $defaults );
 
 	    do_action( 'erp_after_before_audit_log', $fields );
-	    
+
 	    $id = $wpdb->insert( $table, $fields, $formated );
 
 	    //$inserted = \WeDevs\ERP\Admin\Models\Audit_Log::create( $fields );

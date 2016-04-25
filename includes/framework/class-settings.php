@@ -1,5 +1,7 @@
 <?php
 
+namespace WeDevs\ERP\Framework;
+
 /**
  * ERP Admin settings class
  */
@@ -18,18 +20,27 @@ class ERP_Admin_Settings {
     public static function get_settings() {
 
         if ( !self::$settings ) {
-
             $settings = array();
 
             $settings[] = include __DIR__ . '/settings/general.php';
-           // $settings[] = include __DIR__ . '/settings/design.php';
-           // $settings[] = include __DIR__ . '/settings/sharing.php';
-           // $settings[] = include __DIR__ . '/settings/content.php';
-            //$settings[] = include __DIR__ . '/settings/api-keys.php';
-            // $settings[] = include __DIR__ . '/settings/example.php';
+            $settings[] = include __DIR__ . '/settings/email.php';
 
-            self::$settings = apply_filters( 'erp_settings_pages', $settings );
+            $settings   = apply_filters( 'erp_settings_pages', $settings );
+
+            // Display integrations tab only if any integration exist.
+            $integrations = wperp()->integration->get_integrations();
+            if ( ! empty( $integrations ) ) {
+                $settings[] = include __DIR__ . '/settings/integration.php';
+            }
+
+            $licenses = erp_addon_licenses();
+            if ( $licenses ) {
+                $settings[] = include __DIR__ . '/settings/license.php';
+            }
+
+            self::$settings = $settings;
         }
+
         return self::$settings;
     }
 
@@ -42,18 +53,20 @@ class ERP_Admin_Settings {
      */
     public static function get_current_tab_and_section() {
 
-        $settings        = self::get_settings();
-        $query_arg       = array( 'tab' => false, 'subtab' => false );
+        $settings  = self::get_settings();
+        $query_arg = array( 'tab' => false, 'subtab' => false );
 
         if ( ! isset( $settings[0] ) ) {
             return $query_arg;
         }
 
-        if ( empty( $settings[0]->get_id() ) ) {
+        $default = $settings[0]->get_id();
+
+        if ( empty( $default ) ) {
             return $query_arg;
         }
 
-        $current_tab = $query_arg['tab']     = isset( $_GET['tab'] ) ? sanitize_title( $_GET['tab'] ) : $settings[0]->get_id();
+        $current_tab = $query_arg['tab'] = isset( $_GET['tab'] ) ? sanitize_title( $_GET['tab'] ) : $settings[0]->get_id();
 
         foreach ( $settings as $obj ) {
             $sections[$obj->get_id()] = isset( $obj->sections ) ? $obj->sections : array();
@@ -113,7 +126,7 @@ class ERP_Admin_Settings {
 
         self::section_output();
 
-        $current_class->save( $current_section );
+        $current_class->save( $current_section ); 
         $current_class->output( $current_section );
 
     }
@@ -157,7 +170,7 @@ class ERP_Admin_Settings {
             foreach ( $tab_sections as $slug => $label ) {
                 $url    = 'admin.php?page=erp-settings&tab='.$current_tab.'&section='.$slug;
                 $class  = ( $current_section == $slug ) ? ' erp-nav-tab-active' : '';
-                $link[] = '<a class="erp-nav-tab'.$class.'" href="'.$url.'">'.__( $label, 'wp-erp' ).'</a>';
+                $link[] = '<a class="erp-nav-tab'.$class.'" href="'.$url.'">' . $label . '</a>';
             }
 
             echo implode( ' | </li><li>', $link );

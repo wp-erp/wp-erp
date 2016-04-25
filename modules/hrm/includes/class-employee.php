@@ -141,6 +141,12 @@ class Employee {
                 'hobbies'         => '',
                 'user_url'        => '',
                 'description'     => '',
+                'street_1'        => '',
+                'street_2'        => '',
+                'city'            => '',
+                'country'         => '',
+                'state'           => '',
+                'postal_code'     => '',
             )
         );
 
@@ -161,7 +167,7 @@ class Employee {
             $fields['avatar']['image'] = $this->get_avatar();
 
             if ( $avatar_id ) {
-                $fields['avatar']['url'] = wp_get_attachment_url( $avatar_id );
+                $fields['avatar']['url'] = $this->get_avatar_url( $avatar_id );
             }
 
             foreach ($fields['work'] as $key => $value) {
@@ -188,7 +194,7 @@ class Employee {
 
         if ( $this->id ) {
             $cache_key = 'erp-empl-' . $this->id;
-            $row       = wp_cache_get( $cache_key, 'wp-erp', $force );
+            $row       = wp_cache_get( $cache_key, 'erp', $force );
 
             if ( false === $row ) {
                 $query = "SELECT e.*, d.title as designation_title, dpt.title as department_title, loc.name as location_name
@@ -198,7 +204,7 @@ class Employee {
                     LEFT JOIN {$wpdb->prefix}erp_company_locations AS loc ON loc.id = e.location
                     WHERE user_id = %d";
                 $row   = $wpdb->get_row( $wpdb->prepare( $query, $this->id ) );
-                wp_cache_set( $cache_key, $row, 'wp-erp' );
+                wp_cache_set( $cache_key, $row, 'erp' );
             }
 
             return $row;
@@ -209,6 +215,21 @@ class Employee {
 
     /**
      * Get an employee avatar
+     *
+     * @param  integer  avatar size in pixels
+     *
+     * @return string   image with HTML tag
+     */
+    public function get_avatar_url( $size = 32 ) {
+        if ( $this->id && ! empty( $this->user->photo_id ) ) {
+            return wp_get_attachment_url( $this->user->photo_id, [ 'size' => $size ] );
+        }
+
+        return get_avatar_url( $this->id, [ 'size' => $size ] );
+    }
+
+    /**
+     * Get an employee avatar url
      *
      * @param  integer  avatar size in pixels
      *
@@ -393,7 +414,7 @@ class Employee {
      * @return string
      */
     public function get_joined_date() {
-        if ( $this->hiring_date ) {
+        if ( $this->hiring_date != '0000-00-00' ) {
             return erp_format_date( $this->hiring_date );
         }
     }
@@ -404,9 +425,63 @@ class Employee {
      * @return string
      */
     public function get_birthday() {
-        if ( $this->date_of_birth ) {
+        if ( $this->date_of_birth != '0000-00-00') {
             return erp_format_date( $this->date_of_birth );
         }
+    }
+
+    /**
+     * Get Address 1
+     *
+     * @return string
+     */
+    public function get_street_1() {
+        return ( $this->street_1 ) ? $this->street_1 : '—';
+    }
+
+    /**
+     * Get Address 2
+     *
+     * @return string
+     */
+    public function get_street_2() {
+        return ( $this->street_2 ) ? $this->street_2 : '—';
+    }
+
+    /**
+     * Get City
+     *
+     * @return string
+     */
+    public function get_city() {
+        return ( $this->city ) ? $this->city : '—';
+    }
+
+    /**
+     * Get Country
+     *
+     * @return string
+     */
+    public function get_country() {
+        return erp_get_country_name( $this->country );
+    }
+
+    /**
+     * Get State
+     *
+     * @return string
+     */
+    public function get_state() {
+        return erp_get_state_name( $this->country, $this->state );
+    }
+
+    /**
+     * Get Postal Code
+     *
+     * @return string
+     */
+    public function get_postal_code() {
+        return ( $this->postal_code ) ? $this->postal_code : '—';
     }
 
     /**
@@ -639,7 +714,6 @@ class Employee {
 
         $history = array( 'job' => array(), 'compensation' => array(), 'employment' => array() );
         $results = $wpdb->get_results( $wpdb->prepare( $sql , $this->id ) );
-        // var_dump( $results );
 
         if ( $results ) {
             foreach ($results as $key => $value) {

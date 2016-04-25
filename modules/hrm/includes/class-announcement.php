@@ -19,14 +19,14 @@ class Announcement {
     private $post_type = 'erp_hr_announcement';
     private $assign_type = array();
 
-	/**
-	 *  Load autometically all actions
-	 */
-	function __construct() {
+    /**
+     *  Load autometically all actions
+     */
+    function __construct() {
         $this->assign_type = array(
-            ''                => __( '-- Select --', 'wp-erp' ),
-            'all_employee'      => __( 'All Employees', 'wp-erp' ),
-            'selected_employee' => __( 'Selected Employee', 'wp-erp' )
+            ''                  => __( '-- Select --', 'erp' ),
+            'all_employee'      => __( 'All Employees', 'erp' ),
+            'selected_employee' => __( 'Selected Employee', 'erp' )
         );
 
         $this->action( 'init', 'post_types' ) ;
@@ -35,7 +35,58 @@ class Announcement {
 
         $this->filter( 'manage_edit-erp_hr_announcement_columns', 'add_type_columns' );
         $this->filter( 'manage_erp_hr_announcement_posts_custom_column', 'assign_type_edit_columns', 10, 2 );
-	}
+
+        // $this->filter( 'parent_file', 'fix_parent_file', 999 );
+        // $this->filter( 'submenu_file', 'submenu_file', 999 );
+
+        $this->action( 'admin_menu', 'remove_menu_item', 19 );
+    }
+
+    /**
+     * Remove the menu item inserted by WordPress
+     *
+     * Had to do this because when `show_in_menu` is set to false, HR Managers
+     * can't create new announcement due to weird permission issue.
+     *
+     * @return void
+     */
+    function remove_menu_item() {
+        remove_menu_page( 'edit.php?post_type=erp_hr_announcement' );
+    }
+
+    /**
+     * Fix parent file
+     *
+     * @param  string  $parent_file
+     *
+     * @return string
+     */
+    function fix_parent_file( $parent_file ) {
+        global $current_screen;
+
+        if ( $current_screen->post_type == $this->post_type ) {
+            $parent_file = 'erp-hr';
+        }
+
+        return $parent_file;
+    }
+
+    /**
+     * Set submenu file
+     *
+     * @param  string  $submenu_file
+     *
+     * @return string
+     */
+    function submenu_file( $submenu_file ) {
+        global $current_screen;
+
+        if ( $current_screen->post_type == $this->post_type ) {
+            $submenu_file = 'edit.php?post_type=erp_hr_announcement';
+        }
+
+        return $submenu_file;
+    }
 
     /**
      * Register Announcement post type
@@ -45,32 +96,45 @@ class Announcement {
      * @return void
      */
     function post_types() {
+        $capability = 'erp_hr_manager';
+
         register_post_type( $this->post_type, array(
-            'label'           => __( 'Announcement', 'wp-erp' ),
+            'label'           => __( 'Announcement', 'erp' ),
             'description'     => '',
             'public'          => false,
             'show_ui'         => true,
-            'show_in_menu'    => false,
+            'show_in_menu'    => true,
             'capability_type' => 'post',
             'hierarchical'    => false,
             'rewrite'         => array( 'slug' => '' ),
             'query_var'       => false,
             'supports'        => array( 'title', 'editor' ),
+            'capabilities'    => array(
+                'edit_post'          => $capability,
+                'read_post'          => $capability,
+                'delete_posts'       => $capability,
+                'edit_posts'         => $capability,
+                'edit_others_posts'  => $capability,
+                'publish_posts'      => $capability,
+                'read_private_posts' => $capability,
+                'create_posts'       => $capability,
+                'delete_post'        => $capability,
+            ),
             'labels'          => array(
-                'name'               => __( 'Announcement', 'wp-erp' ),
-                'singular_name'      => __( 'Announcement', 'wp-erp' ),
-                'menu_name'          => __( 'HR Announcement', 'wp-erp' ),
-                'add_new'            => __( 'Add Announcement', 'wp-erp' ),
-                'add_new_item'       => __( 'Add New Announcement', 'wp-erp' ),
-                'edit'               => __( 'Edit', 'wp-erp' ),
-                'edit_item'          => __( 'Edit Announcement', 'wp-erp' ),
-                'new_item'           => __( 'New Announcement', 'wp-erp' ),
-                'view'               => __( 'View Announcement', 'wp-erp' ),
-                'view_item'          => __( 'View Announcement', 'wp-erp' ),
-                'search_items'       => __( 'Search Announcement', 'wp-erp' ),
-                'not_found'          => __( 'No Announcement Found', 'wp-erp' ),
-                'not_found_in_trash' => __( 'No Announcement found in trash', 'wp-erp' ),
-                'parent'             => __( 'Parent Announcement', 'wp-erp' )
+                'name'               => __( 'Announcement', 'erp' ),
+                'singular_name'      => __( 'Announcement', 'erp' ),
+                'menu_name'          => __( 'HR Announcement', 'erp' ),
+                'add_new'            => __( 'Add Announcement', 'erp' ),
+                'add_new_item'       => __( 'Add New Announcement', 'erp' ),
+                'edit'               => __( 'Edit', 'erp' ),
+                'edit_item'          => __( 'Edit Announcement', 'erp' ),
+                'new_item'           => __( 'New Announcement', 'erp' ),
+                'view'               => __( 'View Announcement', 'erp' ),
+                'view_item'          => __( 'View Announcement', 'erp' ),
+                'search_items'       => __( 'Search Announcement', 'erp' ),
+                'not_found'          => __( 'No Announcement Found', 'erp' ),
+                'not_found_in_trash' => __( 'No Announcement found in trash', 'erp' ),
+                'parent'             => __( 'Parent Announcement', 'erp' )
             ),
         ) );
     }
@@ -83,7 +147,7 @@ class Announcement {
      * @return void
      */
     function do_metaboxes() {
-        add_meta_box( 'erp-hr-announcement-meta-box', __('Announcement Settings', 'wp-erp'), array( $this, 'meta_boxes_cb' ), $this->post_type, 'advanced', 'high' );
+        add_meta_box( 'erp-hr-announcement-meta-box', __('Announcement Settings', 'erp'), array( $this, 'meta_boxes_cb' ), $this->post_type, 'advanced', 'high' );
     }
 
     /**
@@ -96,7 +160,7 @@ class Announcement {
     function meta_boxes_cb( $post_id ) {
         global $post;
 
-        $employees = erp_hr_get_employees( array( 'no_object' => true ) );
+        $employees = erp_hr_get_employees( [ 'number' => -1, 'no_object' => true ] );
 
         $announcement_type     = get_post_meta( $post->ID, '_announcement_type', true );
         $announcement_users    = get_post_meta( $post->ID, '_announcement_selected_user', true );
@@ -105,7 +169,7 @@ class Announcement {
         ?>
             <table class="form-table erp-hr-announcement-meta-wrap-table">
                 <tr>
-                    <th><?php _e( 'Send Announcement To', 'wp-erp' ); ?></th>
+                    <th><?php _e( 'Send Announcement To', 'erp' ); ?></th>
                     <td>
                         <select name="hr_announcement_assign_type" id="hr_announcement_assign_type" style="width:60%">
                             <?php foreach ( $this->assign_type as $key => $type ): ?>
@@ -116,9 +180,9 @@ class Announcement {
                 </tr>
 
                 <tr class="selected_employee_field">
-                    <th><?php _e( 'Select Employees', 'wp-erp' ); ?></th>
+                    <th><?php _e( 'Select Employees', 'erp' ); ?></th>
                     <td>
-                        <select name="hr_announcement_assign_employee[]" data-placeholder= '<?php echo __( 'Select Employees...', 'wp-erp' ); ?>' id="hr_announcement_assign_employee" class="select2" multiple="multiple">
+                        <select name="hr_announcement_assign_employee[]" data-placeholder= '<?php echo __( 'Select Employees...', 'erp' ); ?>' id="hr_announcement_assign_employee" class="select2" multiple="multiple">
                             <option></option>
                             <?php
                             foreach ( $employees as $user ) {
@@ -127,12 +191,15 @@ class Announcement {
                                 }
                                 ?>
                                     <option <?php echo in_array( $user->user_id, $announcement_employee ) ? 'selected="selected"' : ''; ?> value='<?php echo $user->user_id  ?>'><?php echo $user->display_name; ?></option>
-                                <?php 
+                                <?php
                             }
                             ?>
                         </select>
                     </td>
                 </tr>
+
+                <?php do_action( 'hr_announcement_table_last', $post ); ?>
+
             </table>
             <?php wp_nonce_field( 'hr_announcement_meta_action', 'hr_announcement_meta_action_nonce' ); ?>
 
@@ -175,8 +242,9 @@ class Announcement {
     function add_type_columns( $columns ) {
         unset( $columns['date'] );
 
-        $columns['assign_type'] = __( 'Sent To' );
-        $columns['date']        = __( 'Date' );
+        $columns['assign_type'] = __( 'Sent To', 'erp' );
+        $columns['send_type']   = __( 'Type', 'erp' );
+        $columns['date']        = __( 'Date', 'erp' );
 
         return $columns;
     }
@@ -200,8 +268,14 @@ class Announcement {
             if ( $assign_type ) {
                 echo $this->assign_type[$assign_type];
             } else {
-                _e( 'No employee assigned!', 'wp-erp' );
+                _e( 'No employee assigned!', 'erp' );
             }
+        }
+
+        if ( 'send_type' == $column ) {
+            echo '<i class="fa fa-envelope-o fa-lg"></i>';
+
+            do_action( 'hr_announcement_send_type', $column, $post_id );
         }
     }
 
@@ -246,10 +320,12 @@ class Announcement {
         update_post_meta( $post_id, '_announcement_type', $announcement_assign_type );
         update_post_meta( $post_id, '_announcement_selected_user', $announcement_assign_employee );
 
+        do_action( 'hr_annoucement_save', $post_id );
+
         if ( $announcement_assign_type == 'selected_employee' ) {
 
             $this->process_employee_announcement_data( $announcement_assign_employee, $post_id );
-        
+
         } elseif ( $announcement_assign_type == 'all_employee' ) {
 
             $employees = erp_hr_get_employees( array( 'no_object' => true ) );
@@ -318,12 +394,12 @@ class Announcement {
      * @return array
      */
     function get_assign_employee( $post_id ) {
-        
+
         $results = \WeDevs\ERP\HRM\Models\Announcement::select( ['user_id'] )
                         ->where( ['post_id' => $post_id ] )
                         ->get()
                         ->toArray();
-        
+
         if ( $results ) {
             return $results;
         } else {
@@ -357,6 +433,11 @@ class Announcement {
 
         $sql = "INSERT INTO {$table_name} (`user_id`, `post_id`, `status` ) VALUES $values";
         $wpdb->query( $sql );
+
+        $this->send_email( $employee_array, $post_id );
+
+        do_action( 'hr_announcement_insert_assignment', $employee_array, $post_id );
+
     }
 
     /**
@@ -393,4 +474,15 @@ class Announcement {
             $wpdb->query( $sql );
         }
     }
+
+    /**
+     * Send Announcement Email
+     *
+     * @return void
+     */
+    public function send_email( $employee_ids, $post_id ) {
+        $announcement_email = new Emails\HR_Announcement_Email();
+        $announcement_email->trigger( $employee_ids, $post_id );
+    }
 }
+
