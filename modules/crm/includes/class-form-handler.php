@@ -109,7 +109,7 @@ class Form_Handler {
 
                     if ( isset( $_GET['customer_id'] ) && !empty( $_GET['customer_id'] ) ) {
                         $data = [
-                            'id' => $_GET['customer_id'],
+                            'id'   => intval( $_GET['customer_id'] ),
                             'hard' => false,
                             'type' => 'contact'
                         ];
@@ -123,7 +123,7 @@ class Form_Handler {
                 case 'permanent_delete' :
                     if ( isset( $_GET['customer_id'] ) && !empty( $_GET['customer_id'] ) ) {
                         $data = [
-                            'id' => $_GET['customer_id'],
+                            'id'   => intval( $_GET['customer_id'] ),
                             'hard' => true,
                             'type' => 'contact'
                         ];
@@ -137,7 +137,7 @@ class Form_Handler {
                 case 'restore' :
                     if ( isset( $_GET['customer_id'] ) && !empty( $_GET['customer_id'] ) ) {
                         $data = [
-                            'id' => $_GET['customer_id'],
+                            'id'   => intval( $_GET['customer_id'] ),
                             'type' => 'contact'
                         ];
 

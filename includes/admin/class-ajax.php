@@ -240,7 +240,7 @@ class Ajax {
         if ( false === $user ) {
             $people = erp_get_people_by( 'email', $email );
         } else {
-            $peep = \WeDevs\ERP\Framework\Models\People::withTrashed()->with('types')->whereUserId( $user->ID )->first();
+            $peep = \WeDevs\ERP\Framework\Models\People::with('types')->whereUserId( $user->ID )->first();
 
             if ( null === $peep ) {
                 $this->send_success();
