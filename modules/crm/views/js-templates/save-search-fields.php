@@ -17,8 +17,7 @@
                 <td>
                     <input type="text" v-if="searchField.type == 'text'" name="save_search[{{index}}][{{searchKey}}][value][]" v-bind:value="searchField.text" v-model="searchField.text">
 
-                    <select class="selecttwo select2" v-selecttwo="searchFields.search_key[search_field_key].text" data-searchkey="{{{ searchKey }}}" data-searchkeyindex="{{searchFieldKey}}" style="width:240px;" v-if="searchField.type == 'dropdown'" name="save_search[{{index}}][{{searchKey}}][value][]" v-bind:value="searchField.text" v-model="searchField.text">
-                        <option value=""><?php _e( '--Select--', 'erp' ); ?></option>
+                    <select class="selecttwo select2" v-selecttwo="searchFields.search_key[search_field_key].text" data-searchkey="{{{ searchKey }}}" data-searchkeyindex="{{searchFieldKey}}" style="width:240px;" v-if="searchField.type == 'dropdown'" name="save_search[{{index}}][{{searchKey}}][value][]" v-bind:value="searchField.text" v-model="searchField.text" data-placeholder="<?php _e( '--Select--', 'erp' ); ?>">
                         {{{ searchField.options }}}
                     </select>
                 </td>

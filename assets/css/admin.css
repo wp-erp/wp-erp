@@ -1358,6 +1358,19 @@ table.widefat.cfi-table {
 .erp-crm-tasks .erp-crm-tasks-wrapper ul.erp-crm-tasks-menu li a:hover {
   text-decoration: underline;
 }
+#erp-crm-single-schedule-details-wrap p.title {
+  font-size: 16px;
+}
+#erp-crm-single-schedule-details-wrap .message {
+  margin-top: 15px;
+}
+#erp-crm-single-schedule-details-wrap span.header,
+#erp-crm-single-schedule-details-wrap span.email_subject {
+  font-size: 14px;
+  font-style: italic;
+  display: inline-block;
+  padding: 4px 0px;
+}
 @media (min-width: 1200px) {
   .cfi-table {
     width: 50%;

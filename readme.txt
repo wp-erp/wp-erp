@@ -127,6 +127,45 @@ If you are unable to use any of the methods due to internet connectivity and fil
 
 * Beta Release
 
+**v0.1 -> Final Release
+
+* Change people table stracture.
+* New - New CRM agent role added
+* New - CSV import/export tool added
+* New - Added CRM email templating system
+* New - Save reply added in CRM contact activities
+* New - Added quick view schedules details from CRM dashboard
+* New - Assing contact to CRM agents
+* New - Add progressbar when activity delete for better UX
+* New - License management feature added
+* New - CRM activity email read tracker
+* New - HR reporting headcount chart now shows departmentwise
+* New - New life stage added in CRM contacts
+* New - Added contact group and contact owner field in new contact or company creation
+* New - Added inbounding reply emails in CRM activity
+* New - Bulk importer wp user to CRM contacts
+* New - Added directly replying from CRM email activities feeds
+* New - Added address options in employee details, add and edit
+* New - Added plugin updater functionalities
+* New - Added more hooks and filters
+* Fix - Refactor contact forms integration
+* Fix - Refactor CRM permissions
+* Fix - Contact pagination problem fixed
+* Fix - Refactor save search query builder
+* Fix - Logs and schedules add and displaying problem in schedule page
+* Fix - ERP date format problem
+* Fix - Manage user role during plugin activation and deactivation
+* Fix - Who is out widget in HR dashboard
+* Fix - Leave request bulk actions
+* Fix - All ERP users show their own attachments
+* Fix - Added file uploading permission for Employee, HR Manager, CRM Manager and CRM Agents
+* Fix - Contact mail functionality imporvements
+* Fix - Fix employee termination issues
+* Fix - Leave entitlement problem fixed
+* Fix - Employee list table now focus on "active" subnav by default
+* Fix - Employee and Contact record duplication remove with better UX
+* Update - Trix editor js, Select2, Vuejs
+
 == Upgrade Notice ==
 
 Nothing here right now.

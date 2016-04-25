@@ -112,7 +112,7 @@ window.wpErpVue = window.wpErpVue || {};
             },
 
             createdForUser: function() {
-                return ( this.feed.contact.type == 'company' ) ? this.feed.contact.company : this.feed.contact.first_name + ' ' + this.feed.contact.last_name;
+                return _.contains( this.feed.contact.types, 'company' ) ? this.feed.contact.company : this.feed.contact.first_name + ' ' + this.feed.contact.last_name;
             },
 
             logType: function() {

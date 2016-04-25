@@ -60,23 +60,34 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
                                     endDate = wperp.dateFormat( response.end_date, 'j F' ),
                                     endTime = wperp.timeFormat( response.end_date );
 
-                                if ( response.extra.all_day == 'true' ) {
-                                    if ( wperp.dateFormat( response.start_date, 'Y-m-d' ) == wperp.dateFormat( response.end_date, 'Y-m-d' ) ) {
-                                        var datetime = startDate;
-                                    } else {
-                                        var datetime = startDate + ' to ' + endDate;
-                                    }
+                                if ( ! response.end_date ) {
+                                    var datetime = startDate + ' at ' + startTime;
                                 } else {
-                                    if ( wperp.dateFormat( response.start_date, 'Y-m-d' ) == wperp.dateFormat( response.end_date, 'Y-m-d' ) ) {
-                                        var datetime = startDate + ' at ' + startTime + ' to ' + endTime;
+                                    if ( response.extra.all_day == 'true' ) {
+                                        if ( wperp.dateFormat( response.start_date, 'Y-m-d' ) == wperp.dateFormat( response.end_date, 'Y-m-d' ) ) {
+                                            var datetime = startDate;
+                                        } else {
+                                            var datetime = startDate + ' to ' + endDate;
+                                        }
                                     } else {
-                                        var datetime = startDate + ' at ' + startTime + ' to ' + endDate + ' at ' + endTime;
+                                        if ( wperp.dateFormat( response.start_date, 'Y-m-d' ) == wperp.dateFormat( response.end_date, 'Y-m-d' ) ) {
+                                            var datetime = startDate + ' at ' + startTime + ' to ' + endTime;
+                                        } else {
+                                            var datetime = startDate + ' at ' + startTime + ' to ' + endDate + ' at ' + endTime;
+                                        }
                                     }
                                 }
 
                                 var html = wp.template('erp-crm-single-schedule-details')( { date: datetime, schedule: response } );
                                 $( '.content', modal ).html( html );
                                 $( '.loader', modal).remove();
+
+                                $('.erp-tips').tipTip( {
+                                    defaultPosition: "top",
+                                    fadeIn: 100,
+                                    fadeOut: 100,
+                                } );
+
                             },
 
                             error: function( response ) {
@@ -155,7 +166,7 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
                                 var color = new Date( res.start_date ) < new Date() ? '#f05050' : '#03c756';
 
                                 var myEvent = {
-                                    id : res.id,
+                                    schedule : res,
                                     title: title,
                                     start: start_date,
                                     end: end_date,
@@ -175,15 +186,6 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
                     }
 
                 }); //popup
-                // console.log('Clicked on: ' + date.format());
-
-                // console.log('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-
-                // console.log('Current view: ' + view.name);
-
-                // // change the day's background color just for fun
-                // $(this).css('background-color', 'red');
-
             },
 
         });

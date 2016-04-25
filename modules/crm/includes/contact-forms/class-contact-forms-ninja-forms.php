@@ -40,8 +40,8 @@ class Ninja_Forms {
 
         $nf = Ninja_forms();
 
-        if ( !nf_is_freemius_on() ) {
-            /* Support for non-freemius version */
+        if ( version_compare( get_option( 'ninja_forms_version', '0.0.0' ), '3', '<' ) ) {
+            /* Support for version < 3.0 */
             $form_ids = $nf->forms()->get_all();
 
             if ( !empty( $form_ids ) ) {
@@ -75,7 +75,7 @@ class Ninja_Forms {
             }
 
         } else {
-            /* Support for freemius version */
+            /* Support for version >= 3.0 */
             $nf_forms = $nf->form()->get_forms();
 
             foreach ( $nf_forms as $i => $nform ) {
@@ -124,14 +124,14 @@ class Ninja_Forms {
         $form_id = 0;
         $data = [];
 
-        if ( !nf_is_freemius_on() ) {
-            /* Support for non-freemius version */
+        if ( version_compare( get_option( 'ninja_forms_version', '0.0.0' ), '3', '<' ) ) {
+            /* Support for version < 3.0 */
             $sub = $nf->sub( $sub_id );
             $form_id = $sub->form_id;
             $data = $sub->field;
 
         } else {
-            /* Support for freemius version */
+            /* Support for version >= 3.0 */
             $sub = $nf->form()->get_sub( $sub_id );
 
             $formData = $_POST['formData'];

@@ -123,6 +123,7 @@
 
                 if ( ! current_user_can( 'erp_edit_employee', $employee->id ) ) {
                     unset( $tabs['leave'] );
+                    unset( $tabs['job'] );
                 }
                 ?>
 

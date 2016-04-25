@@ -109,7 +109,7 @@
     <# } else { #>
         <div class="feed-log-activity">
             <p>
-                <select name="user_id" class="select2" id="assing-contact" style="width: 100%" data-placeholder="Assign to a contact..">
+                <select required name="user_id" class="select2" id="assing-contact" style="width: 100%" data-placeholder="Assign to a contact..">
                     <option value=""><?php _e( '--Select--', 'erp' ) ?></option>
                     <?php foreach ( $contacts as $contact_id => $contact_name ) : ?>
                         <option value="<?php echo $contact_id; ?>"><?php echo $contact_name; ?></option>
@@ -132,7 +132,7 @@
             </p>
 
             <p class="log-email-subject erp-hide">
-                <label>Subject</label>
+                <label><?php _e( 'Subject', 'erp' ); ?></label>
                 <span class="sep">:</span>
                 <span class="value">
                     <input type="text" class="email_subject" name="email_subject" placeholder="<?php _e( 'Subject log...', 'erp' ); ?>">
@@ -140,7 +140,7 @@
             </p>
 
             <p class="log-selected-contact erp-hide">
-                <select name="selected_contact" id="erp-crm-activity-invite-contact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="Select contacts...">
+                <select name="invite_contact[]" id="erp-crm-activity-invite-contact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="Select contacts...">
                     <?php echo erp_crm_get_employees_dropdown(); ?>
                 </select>
             </p>
