@@ -2685,8 +2685,8 @@ function erp_create_contact_from_created_user( $user_id ) {
     $default_roles = erp_get_option( 'user_roles', 'erp_settings_erp-crm', [] );
     $user          = get_userdata( $user_id );
 
-    $mached_roles = array_intersect( $user->roles, $default_roles );
-    if ( empty ( $mached_roles ) ) {
+    $matched_roles = array_intersect( $user->roles, $default_roles );
+    if ( empty ( $matched_roles ) ) {
         return;
     }
 
