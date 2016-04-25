@@ -1442,14 +1442,14 @@ function erp_process_import_export() {
  *
  * @return array
  */
-function erp_parse_args( &$args, $defaults = [] ) {
+function erp_parse_args_recursive( &$args, $defaults = [] ) {
     $args     = (array) $args;
     $defaults = (array) $defaults;
     $r        = $defaults;
 
     foreach ( $args as $k => &$v ) {
         if ( is_array( $v ) && isset( $r[ $k ] ) ) {
-            $r[ $k ] = erp_parse_args( $v, $r[ $k ] );
+            $r[ $k ] = erp_parse_args_recursive( $v, $r[ $k ] );
         } else {
             $r[ $k ] = $v;
         }
