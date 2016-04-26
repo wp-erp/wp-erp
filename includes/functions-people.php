@@ -414,7 +414,11 @@ function erp_insert_people( $args = array() ) {
             return new WP_Error( 'no-type', __( 'No user type provided.', 'erp' ) );
         }
 
-        $user = \get_user_by( 'email', $args['email'] );
+        if ( $args['user_id'] ) {
+            $user = \get_user_by( 'id', $args['user_id'] );
+        } else {
+            $user = \get_user_by( 'email', $args['email'] );
+        }
 
         //check for duplicate user
         if ( $user ) {

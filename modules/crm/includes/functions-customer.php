@@ -2631,8 +2631,14 @@ function erp_handle_user_bulk_actions() {
 
                 $contact_id = erp_insert_people( $data );
 
-                update_user_meta( $user_id, '_assign_crm_agent', $contact_owner );
-                update_user_meta( $user_id, 'life_stage', $life_stage );
+                if ( is_wp_error( $contact_id ) ) {
+                    continue;
+                } else {
+                    update_user_meta( $user_id, '_assign_crm_agent', $contact_owner );
+                    update_user_meta( $user_id, 'life_stage', $life_stage );
+
+                    erp_people_update_meta( $contact_id, 'life_stage', $life_stage );
+                }
 
                 $created++;
             }
