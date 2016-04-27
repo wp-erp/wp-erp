@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.0\n"
+"Project-Id-Version: WP ERP 1.0.1\n"
 "Report-Msgid-Bugs-To: http://wperp.com/support/\n"
-"POT-Creation-Date: 2016-04-25 12:20:34+00:00\n"
+"POT-Creation-Date: 2016-04-27 12:56:28+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5848,88 +5848,88 @@ msgstr ""
 msgid "No user type provided."
 msgstr ""
 
-#: includes/functions-people.php:439
+#: includes/functions-people.php:443
 msgid "This %s already exists."
 msgstr ""
 
-#: includes/functions-people.php:556
+#: includes/functions-people.php:560
 #: modules/hrm/includes/functions-employee.php:601
 msgid "Advertisement"
 msgstr ""
 
-#: includes/functions-people.php:557
+#: includes/functions-people.php:561
 msgid "Chat"
 msgstr ""
 
-#: includes/functions-people.php:558
+#: includes/functions-people.php:562
 msgid "Contact Form"
 msgstr ""
 
-#: includes/functions-people.php:559
+#: includes/functions-people.php:563
 msgid "Employee Referral"
 msgstr ""
 
-#: includes/functions-people.php:560
+#: includes/functions-people.php:564
 msgid "External Referral"
 msgstr ""
 
-#: includes/functions-people.php:561
+#: includes/functions-people.php:565
 msgid "Marketing campaign"
 msgstr ""
 
-#: includes/functions-people.php:562
+#: includes/functions-people.php:566
 msgid "Newsletter"
 msgstr ""
 
-#: includes/functions-people.php:563
+#: includes/functions-people.php:567
 msgid "OnlineStore"
 msgstr ""
 
-#: includes/functions-people.php:564
+#: includes/functions-people.php:568
 msgid "Optin Forms"
 msgstr ""
 
-#: includes/functions-people.php:565
+#: includes/functions-people.php:569
 msgid "Partner"
 msgstr ""
 
-#: includes/functions-people.php:566
+#: includes/functions-people.php:570
 msgid "Phone Call"
 msgstr ""
 
-#: includes/functions-people.php:567
+#: includes/functions-people.php:571
 msgid "Public Relations"
 msgstr ""
 
-#: includes/functions-people.php:568
+#: includes/functions-people.php:572
 msgid "Sales Mail Alias"
 msgstr ""
 
-#: includes/functions-people.php:569
+#: includes/functions-people.php:573
 msgid "Search Engine"
 msgstr ""
 
-#: includes/functions-people.php:570
+#: includes/functions-people.php:574
 msgid "Seminar-Internal"
 msgstr ""
 
-#: includes/functions-people.php:571
+#: includes/functions-people.php:575
 msgid "Seminar Partner"
 msgstr ""
 
-#: includes/functions-people.php:572
+#: includes/functions-people.php:576
 msgid "Social Media"
 msgstr ""
 
-#: includes/functions-people.php:573
+#: includes/functions-people.php:577
 msgid "Trade Show"
 msgstr ""
 
-#: includes/functions-people.php:574
+#: includes/functions-people.php:578
 msgid "Web Download"
 msgstr ""
 
-#: includes/functions-people.php:575
+#: includes/functions-people.php:579
 msgid "Web Research"
 msgstr ""
 
@@ -7140,7 +7140,7 @@ msgstr ""
 msgid "Import into CRM"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2664
+#: modules/crm/includes/functions-customer.php:2669
 msgid "%s contacts created."
 msgstr ""
 
@@ -10103,7 +10103,7 @@ msgstr ""
 
 #. Description of the plugin/theme
 msgid ""
-"An Open Source ERP Solution for WordPress. Manage HR and CRM inside "
+"An Open Source ERP Solution for WordPress. Built-in HR and CRM system for "
 "WordPress"
 msgstr ""
 
