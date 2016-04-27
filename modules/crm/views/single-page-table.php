@@ -10,7 +10,7 @@
                 <p class="search-box">
                     <label class="screen-reader-text" for="erp-customer-search-search-input">Search Contact:</label>
                     <input type="search" id="erp-customer-search-search-input" name="s" value="">
-                    <input type="submit" name="customer_search" id="search-submit" class="button" value="Search Contact">            <a href="#" class="button button-primary erp-advance-search-button" id="erp-advance-search-button"><span class="dashicons dashicons-admin-generic"></span>Advanced Search</a>
+                    <input type="submit" name="customer_search" id="search-submit" class="button" value="Search Contact">
                 </p>
                 <ul class="subsubsub">
                     <li class="all"><a href="http://localhost/wperp/wp-admin/admin.php?page=erp-sales-customers&amp;status=all" class="current">All <span class="count">(1)</span></a> |</li>
