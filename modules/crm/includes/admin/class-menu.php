@@ -36,6 +36,7 @@ class Admin_Menu {
         add_submenu_page( 'erp-sales', __( 'Activities', 'erp' ), __( 'Activities', 'erp' ), 'erp_crm_manage_activites', 'erp-sales-activities', [ $this, 'activity_page' ] );
         $schedule = add_submenu_page( 'erp-sales', __( 'Schedules', 'erp' ), __( 'Schedules', 'erp' ), 'erp_crm_manage_schedules', 'erp-sales-schedules', [ $this, 'schedules_page' ] );
         add_submenu_page( 'erp-sales', __( 'Contact Groups', 'erp' ), __( 'Contact Groups', 'erp' ), 'erp_crm_manage_groups', 'erp-sales-contact-groups', [ $this, 'contact_group_page' ] );
+        add_submenu_page( 'erp-sales', __( 'Single Page', 'erp' ), __( 'Single Page', 'erp' ), 'erp_crm_manage_groups', 'erp-sales-contact-single-page', [ $this, 'single_page_app' ] );
 
         add_action( 'admin_print_styles-' . $overview, array( $this, 'crm_calendar_script' ) );
         add_action( 'admin_print_styles-' . $schedule, array( $this, 'crm_calendar_script' ) );
@@ -227,6 +228,10 @@ class Admin_Menu {
             include $template;
         }
 
+    }
+
+    public function single_page_app() {
+        include WPERP_CRM_VIEWS . '/single-page-table.php';
     }
 
     /**
