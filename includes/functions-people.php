@@ -428,7 +428,7 @@ function erp_insert_people( $args = array() ) {
             if ( null == $people_obj ) {
                 $new_people = \WeDevs\ERP\Framework\Models\People::create( [ 'user_id' => $user->ID, 'created' => current_time('mysql') ] );
                 $new_people->assignType( $type_obj );
-                return $new_people;
+                return $new_people->id;
             } else {
                 return $people_obj->id;
             }
