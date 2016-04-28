@@ -319,7 +319,7 @@ function erp_get_people_by( $field, $value ) {
             $peep = WeDevs\ERP\Framework\Models\People::with('types')->whereEmail( $value )->first();
         }
 
-        if ( $peep->id ) {
+        if ( NULL !== $peep ) {
             $people                = (object) $peep->toArray();
             $people->types         = wp_list_pluck( $peep->types->toArray(), 'name' );
 
