@@ -41,13 +41,14 @@ function erp_crm_get_avatar( $id, $size = 32, $user = false ) {
 function erp_crm_get_employees( $args = [] ) {
     global $wpdb;
 
-    $defaults = array(
+    $defaults = [
         'number'     => 20,
         'offset'     => 0,
         'orderby'    => 'hiring_date',
         'order'      => 'DESC',
-        'no_object'  => false
-    );
+        'no_object'  => false,
+        'status'     => 'active'
+    ];
 
     $args  = wp_parse_args( $args, $defaults );
     $where = array();
@@ -58,6 +59,8 @@ function erp_crm_get_employees( $args = [] ) {
     $cache_key = 'erp-crm-get-employees-' . md5( serialize( $args ) );
     $results   = wp_cache_get( $cache_key, 'erp' );
     $users     = array();
+
+    $employee_result = $employee_result->where( 'status', $args['status'] );
 
     // Check if want all data without any pagination
     if ( $args['number'] != '-1' ) {
@@ -98,7 +101,7 @@ function erp_crm_get_employees( $args = [] ) {
  * @return html
  */
 function erp_crm_get_employees_dropdown( $selected = '' ) {
-    $employees = erp_crm_get_employees( ['number' => -1, 'no_object' => true ] );
+    $employees = erp_crm_get_employees( [ 'status' => 'active', 'number' => -1, 'no_object' => true ] );
     $dropdown  = '';
 
     if ( $employees ) {
@@ -120,7 +123,7 @@ function erp_crm_get_employees_dropdown( $selected = '' ) {
  * @return string
  */
 function erp_crm_get_employees_with_own( $selected = '' ) {
-    $employees = erp_crm_get_employees( ['number' => -1, 'no_object' => true ] );
+    $employees = erp_crm_get_employees( [ 'status' => 'active', 'number' => -1, 'no_object' => true ] );
     $dropdown  = '';
 
     if ( $employees ) {
