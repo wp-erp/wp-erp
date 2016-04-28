@@ -719,6 +719,11 @@ class Ajax_Handler {
 
                     $reply_to = $wp_erp_api_key . "-" . $postdata['created_by'] . "-" . $contact_id . "@incloud.wperp.com";
                     $headers .= "Reply-To: WP ERP <$reply_to>" . "\r\n";
+                } else {
+                    $from_name = erp_crm_get_email_from_name();
+                    $reply_to  = erp_crm_get_email_from_address();
+
+                    $headers .= "Reply-To: {$from_name} <$reply_to>" . "\r\n";
                 }
 
                 $query = [
