@@ -206,7 +206,7 @@ class License {
             $new_key = sanitize_text_field( $_POST[ $this->get_license_option_key() ] );
 
             // delete license status if differs
-            if ( $old_key && $old_key != $new_key ) {
+            if ( $old_key != $new_key ) {
                 delete_option( $this->get_license_status_option_key() );
                 update_option( $this->get_license_option_key(), $new_key );
             }

@@ -1,8 +1,8 @@
 {
-    "name": "tareq1988/wp-erp",
+    "name": "wp-erp/wp-erp",
     "description": "An ERP Solution for WordPress",
     "keywords": ["wordpress", "plugin", "erp", "hrm", "crm"],
-    "homepage": "http://wperp.com",
+    "homepage": "https://wperp.com",
     "type": "wordpress-plugin",
     "license": "GPL-3.0",
     "authors": [

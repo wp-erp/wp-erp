@@ -375,7 +375,7 @@ class Contact_List_Table extends \WP_List_Table {
             $args['order']    = $_REQUEST['order'] ;
         } else {
             $args['orderby']  = 'created';
-            $args['order']    = 'desc';
+            $args['order']    = 'DESC';
         }
 
         // Filter for customer life stage

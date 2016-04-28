@@ -29,7 +29,7 @@ function erp_get_peoples( $args = [] ) {
         'number'     => 20,
         'offset'     => 0,
         'orderby'    => 'id',
-        'order'      => 'ASC',
+        'order'      => 'DESC',
         'trashed'    => false,
         'meta_query' => [],
         'count'      => false,
@@ -414,7 +414,11 @@ function erp_insert_people( $args = array() ) {
             return new WP_Error( 'no-type', __( 'No user type provided.', 'erp' ) );
         }
 
-        $user = \get_user_by( 'email', $args['email'] );
+        if ( $args['user_id'] ) {
+            $user = \get_user_by( 'id', $args['user_id'] );
+        } else {
+            $user = \get_user_by( 'email', $args['email'] );
+        }
 
         //check for duplicate user
         if ( $user ) {
@@ -424,7 +428,7 @@ function erp_insert_people( $args = array() ) {
             if ( null == $people_obj ) {
                 $new_people = \WeDevs\ERP\Framework\Models\People::create( [ 'user_id' => $user->ID, 'created' => current_time('mysql') ] );
                 $new_people->assignType( $type_obj );
-                return $new_people;
+                return $new_people->id;
             } else {
                 return $people_obj->id;
             }

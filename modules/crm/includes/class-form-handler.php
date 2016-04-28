@@ -29,6 +29,7 @@ class Form_Handler {
     function employee_permission_set( $post, $user ) {
         $user_profile = new \WeDevs\ERP\CRM\User_Profile();
         $post['crm_manager'] = isset( $post['crm_manager'] ) && $post['crm_manager'] == 'on' ? erp_crm_get_manager_role() : false;
+        $post['crm_agent']   = isset( $post['crm_agent'] ) && $post['crm_agent'] == 'on' ? erp_crm_get_agent_role() : false;
         $user_profile->update_user( $user->ID, $post );
     }
 

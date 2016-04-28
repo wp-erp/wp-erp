@@ -140,6 +140,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask( 'release', [
         'makepot',
+        'uglify',
     ]);
 
     grunt.registerTask( 'zip', [
