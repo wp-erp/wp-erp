@@ -1,0 +1,6 @@
+CONTRIBUTING.md
+Gruntfile.js
+composer.json
+composer.lock
+package.json
+plugin-deploy.sh

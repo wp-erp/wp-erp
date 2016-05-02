@@ -319,7 +319,7 @@ function erp_get_people_by( $field, $value ) {
             $peep = WeDevs\ERP\Framework\Models\People::with('types')->whereEmail( $value )->first();
         }
 
-        if ( $peep->id ) {
+        if ( NULL !== $peep ) {
             $people                = (object) $peep->toArray();
             $people->types         = wp_list_pluck( $peep->types->toArray(), 'name' );
 
@@ -415,9 +415,9 @@ function erp_insert_people( $args = array() ) {
         }
 
         if ( $args['user_id'] ) {
-            $user = \get_user_by( 'id', $args['user_id'] );
+             $user = \get_user_by( 'id', $args['user_id'] );
         } else {
-            $user = \get_user_by( 'email', $args['email'] );
+             $user = \get_user_by( 'email', $args['email'] );
         }
 
         //check for duplicate user

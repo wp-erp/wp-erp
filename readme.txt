@@ -124,44 +124,52 @@ If you are unable to use any of the methods due to internet connectivity and fil
 
 == Changelog ==
 
+**v1.0.1 -> April 27, 2016**
+
+ * [fix] Employee performance fetching was returning all entries
+ * [fix] WP_User importing into contact was not refering the right WP_User
+ * [fix] License key was not saving
+ * [fix] Imported contact counting issues
+ * [fix] Social field url issues in contact profile
+
 **v1.0 -> April 25, 2016**
 
-* [improved] Change people table structure.
-* [new] New CRM agent role added
-* [new] CSV import/export tool added
-* [new] Added CRM email templating system
-* [new] Save reply added in CRM contact activities
-* [new] Added quick view schedules details from CRM dashboard
-* [new] Assign contact to CRM agents
-* [new] Add progress-bar when activity delete for better UX
-* [new] License management feature added
-* [new] CRM activity email read tracker
-* [new] HR reporting headcount chart now shows department-wise
-* [new] New life stage added in CRM contacts
-* [new] Added contact group and contact owner field in new contact or company creation
-* [new] Added inbounding reply emails in CRM activity
-* [new] Bulk importer WP User to CRM contacts
-* [new] Added directly replying from CRM email activities feeds
-* [new] Added address options in employee details, add and edit
-* [new] Added plugin updater functionalities
-* [new] Added more hooks and filters
-* [fix] Re-factor contact forms integration
-* [fix] Re-factor CRM permissions
-* [fix] Contact pagination problem fixed
-* [fix] Re-factor save search query builder
-* [fix] Logs and schedules add and displaying problem in schedule page
-* [fix] ERP date format problem
-* [fix] Manage user role during plugin activation and deactivation
-* [fix] Who is out widget in HR dashboard
-* [fix] Leave request bulk actions
-* [fix] All ERP users show their own attachments
-* [fix] Added file uploading permission for Employee, HR Manager, CRM Manager and CRM Agents
-* [fix] Contact mail functionality improvements
-* [fix] Fix employee termination issues
-* [fix] Leave entitlement problem fixed
-* [fix] Employee list table now focus on "active" subnav by default
-* [fix] Employee and Contact record duplication remove with better UX
-* [update] - Trix editor js, Select2, Vuejs
+ * [improved] Change people table structure.
+ * [new] New CRM agent role added
+ * [new] CSV import/export tool added
+ * [new] Added CRM email templating system
+ * [new] Save reply added in CRM contact activities
+ * [new] Added quick view schedules details from CRM dashboard
+ * [new] Assign contact to CRM agents
+ * [new] Add progress-bar when activity delete for better UX
+ * [new] License management feature added
+ * [new] CRM activity email read tracker
+ * [new] HR reporting headcount chart now shows department-wise
+ * [new] New life stage added in CRM contacts
+ * [new] Added contact group and contact owner field in new contact or company creation
+ * [new] Added inbounding reply emails in CRM activity
+ * [new] Bulk importer WP User to CRM contacts
+ * [new] Added directly replying from CRM email activities feeds
+ * [new] Added address options in employee details, add and edit
+ * [new] Added plugin updater functionalities
+ * [new] Added more hooks and filters
+ * [fix] Re-factor contact forms integration
+ * [fix] Re-factor CRM permissions
+ * [fix] Contact pagination problem fixed
+ * [fix] Re-factor save search query builder
+ * [fix] Logs and schedules add and displaying problem in schedule page
+ * [fix] ERP date format problem
+ * [fix] Manage user role during plugin activation and deactivation
+ * [fix] Who is out widget in HR dashboard
+ * [fix] Leave request bulk actions
+ * [fix] All ERP users show their own attachments
+ * [fix] Added file uploading permission for Employee, HR Manager, CRM Manager and CRM Agents
+ * [fix] Contact mail functionality improvements
+ * [fix] Fix employee termination issues
+ * [fix] Leave entitlement problem fixed
+ * [fix] Employee list table now focus on "active" subnav by default
+ * [fix] Employee and Contact record duplication remove with better UX
+ * [update] - Trix editor js, Select2, Vuejs
 
 **v0.1 -> March 18, 2016**
 
