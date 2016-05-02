@@ -36,7 +36,7 @@ function erp_hr_dashboard_widget_birthday() {
             foreach ( $todays_birthday as $key => $user ) {
                 $employee = new \WeDevs\ERP\HRM\Employee( intval( $user->user_id ) );
                 ?>
-                li><a href="<?php echo $employee->get_details_url(); ?>" class="erp-tips" title="<?php echo $employee->get_full_name(); ?>"><?php echo $employee->get_avatar( 32 ); ?></a></li>
+                <li><a href="<?php echo $employee->get_details_url(); ?>" class="erp-tips" title="<?php echo $employee->get_full_name(); ?>"><?php echo $employee->get_avatar( 32 ); ?></a></li>
             <?php } ?>
         </ul>
 
