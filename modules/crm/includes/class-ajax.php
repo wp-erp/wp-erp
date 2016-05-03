@@ -30,6 +30,7 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-crm-customer-restore', 'customer_restore' );
         $this->action( 'wp_ajax_erp-crm-bulk-contact-subscriber', 'bulk_assign_group' );
         $this->action( 'wp_ajax_erp-crm-convert-user-to-contact', 'convert_user_to_customer' );
+        $this->action( 'wp_ajax_erp-crm-get-contacts', 'get_all_contact' );
 
         $this->action( 'wp_ajax_erp-crm-customer-add-company', 'customer_add_company' );
         $this->action( 'wp_ajax_erp-crm-customer-edit-company', 'customer_edit_company' );
@@ -78,6 +79,56 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-crm-delete-save-replies', 'delete_save_replies' );
         $this->action( 'wp_ajax_erp-crm-load-save-replies-data', 'load_save_replies' );
 
+    }
+
+    public function get_all_contact() {
+        $this->verify_nonce( 'wp-erp-vue-table' );
+
+        // only ncessary because we have sample data
+        $args = [
+            'type'   => $this->contact_type,
+            'offset' => $offset,
+            'number' => $per_page,
+        ];
+
+        // Filter for serach
+        if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
+            $args['s'] = $_REQUEST['s'];
+        }
+
+        // Filter for order & order by
+        if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {
+            $args['orderby']  = $_REQUEST['orderby'];
+            $args['order']    = $_REQUEST['order'] ;
+        } else {
+            $args['orderby']  = 'created';
+            $args['order']    = 'DESC';
+        }
+
+        // Filter for customer life stage
+        if ( isset( $_REQUEST['status'] ) && ! empty( $_REQUEST['status'] ) ) {
+            if ( $_REQUEST['status'] != 'all' ) {
+                if ( $_REQUEST['status'] == 'trash' ) {
+                    $args['trashed'] = true;
+                } else {
+                    $args['meta_query'] = [
+                        'meta_key' => 'life_stage',
+                        'meta_value' => $_REQUEST['status']
+                    ];
+                }
+            }
+        }
+
+        if ( isset( $_REQUEST['filter_assign_contact'] ) && ! empty( $_REQUEST['filter_assign_contact'] ) ) {
+            $args['meta_query'] = [
+                'meta_key' => '_assign_crm_agent',
+                'meta_value' => $_REQUEST['filter_assign_contact']
+            ];
+        }
+
+        $contacts  = erp_get_peoples( $args );
+
+        $this->send_success( $contacts );
     }
 
     /**

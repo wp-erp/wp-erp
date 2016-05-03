@@ -19,24 +19,26 @@
                     <li class="opportunity"><a href="/wperp/wp-admin/admin.php?page=erp-sales-customers&amp;status=opportunity" class="status-opportunity">Opportunity <span class="count">(0)</span></a> |</li>
                     <li class="subscriber"><a href="/wperp/wp-admin/admin.php?page=erp-sales-customers&amp;status=subscriber" class="status-subscriber">Subscriber <span class="count">(0)</span></a> |</li>
                     <li class="trash"><a href="/wperp/wp-admin/admin.php?page=erp-sales-customers&amp;status=trash" class="status-trash">Trash <span class="count">(0)</span></a></li>
-                </ul><input type="hidden" id="_wpnonce" name="_wpnonce" value="69260767e4"><input type="hidden" name="_wp_http_referer" value="/wperp/wp-admin/admin.php?page=erp-sales-customers"> <div class="tablenav top">
+                </ul><input type="hidden" id="_wpnonce" name="_wpnonce" value="69260767e4"><input type="hidden" name="_wp_http_referer" value="/wperp/wp-admin/admin.php?page=erp-sales-customers">
 
-                <div class="alignleft actions bulkactions">
-                    <label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label>
-                    <select name="action" id="bulk-action-selector-top">
-                        <option value="-1">Bulk Actions</option>
-                        <option value="delete">Move to Trash</option>
-                        <option value="assing_group">Add to Contact group</option>
-                    </select>
-                    <input type="submit" id="doaction" class="button action" value="Apply">
-                </div>
-                <div class="tablenav-pages one-page">
-                    <span class="displaying-num">1 item</span>
-                    <span class="pagination-links"><span class="tablenav-pages-navspan" aria-hidden="true">«</span>
-                    <span class="tablenav-pages-navspan" aria-hidden="true">‹</span>
-                    <span class="paging-input"><label for="current-page-selector" class="screen-reader-text">Current Page</label><input class="current-page" id="current-page-selector" type="text" name="paged" value="1" size="1" aria-describedby="table-paging"> of <span class="total-pages">1</span></span>
-                    <span class="tablenav-pages-navspan" aria-hidden="true">›</span>
-                    <span class="tablenav-pages-navspan" aria-hidden="true">»</span></span></div>
+                <div class="tablenav top">
+                    <div class="alignleft actions bulkactions">
+                        <label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label>
+                        <select name="action" id="bulk-action-selector-top">
+                            <option value="-1">Bulk Actions</option>
+                            <option value="delete">Move to Trash</option>
+                            <option value="assing_group">Add to Contact group</option>
+                        </select>
+                        <input type="submit" id="doaction" class="button action" value="Apply">
+                    </div>
+                    <div class="tablenav-pages one-page">
+                        <span class="displaying-num">1 item</span>
+                        <span class="pagination-links"><span class="tablenav-pages-navspan" aria-hidden="true">«</span>
+                        <span class="tablenav-pages-navspan" aria-hidden="true">‹</span>
+                        <span class="paging-input"><label for="current-page-selector" class="screen-reader-text">Current Page</label><input class="current-page" id="current-page-selector" type="text" name="paged" value="1" size="1" aria-describedby="table-paging"> of <span class="total-pages">1</span></span>
+                        <span class="tablenav-pages-navspan" aria-hidden="true">›</span>
+                        <span class="tablenav-pages-navspan" aria-hidden="true">»</span></span>
+                    </div>
                     <br class="clear">
                 </div>
 
@@ -148,4 +150,55 @@
             </form>
         </div><!-- .list-table-inner -->
     </div><!-- .list-table-wrap -->
+
+    <br>
+    <hr>
+    <br>
+
+    <vtable v-ref:vtable
+        wrapper-class="erp-crm-list-table-wrap"
+        table-class="customers"
+        row-checkbox-id="erp-crm-customer-id-checkbox"
+        row-checkbox-name="customer_id"
+        action="erp-crm-get-contacts"
+        :fields=fields
+    ></vtable>
+
 </div>
+
+<script>
+;(function($) {
+
+    var tableColumns = [
+        {
+            name: 'name',
+            title: 'Full Name'
+        },
+        {
+            name: 'email',
+            title: 'Email Address'
+
+        },
+        {
+            name: 'phone',
+            title: 'Phone'
+        },
+        {
+            name: 'life_stages',
+            title: 'Life stage'
+        },
+        {
+            name: 'created_at',
+            title: 'Created At',
+            sortField: 'created_at'
+        }
+    ]
+
+    new Vue({
+        el: '#wp-erp',
+        data : {
+            fields: tableColumns
+        }
+    });
+})(jQuery)
+</script>
