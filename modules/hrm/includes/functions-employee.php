@@ -155,6 +155,11 @@ function erp_hr_employee_create( $args = array() ) {
         'employee_id'   => $data['personal']['employee_id']
     );
 
+    // employees should not be able to change hiring date, unset when their profile
+    if ( $update && ! current_user_can( erp_hr_get_manager_role() ) ) {
+        unset( $employee_table_data['hiring_date'] );
+    }
+
     if ( ! $update ) {
         $employee_table_data['status'] = $data['work']['status'];
     }
