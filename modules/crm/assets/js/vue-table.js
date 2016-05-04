@@ -238,7 +238,7 @@ Vue.component('vtable', {
             console.log( this.action );
             var data = {
                 action: this.action,
-                nonce: wpVueTable.nonce
+                _wpnonce: wpVueTable.nonce
             };
 
             jQuery.post( wpVueTable.ajaxurl, data, function( resp ) {

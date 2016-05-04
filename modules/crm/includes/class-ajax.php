@@ -86,9 +86,9 @@ class Ajax_Handler {
 
         // only ncessary because we have sample data
         $args = [
-            'type'   => $this->contact_type,
-            'offset' => $offset,
-            'number' => $per_page,
+            'type'   => 'contact',
+            'offset' => 0,
+            'number' => 20,
         ];
 
         // Filter for serach
