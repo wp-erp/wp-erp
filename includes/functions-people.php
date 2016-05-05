@@ -34,7 +34,9 @@ function erp_get_peoples( $args = [] ) {
         'meta_query' => [],
         'count'      => false,
         'include'    => [],
-        'exclude'    => []
+        'exclude'    => [],
+        's'          => '',
+        'no_object'  => false
     ];
 
     $args        = wp_parse_args( $args, $defaults );
@@ -42,66 +44,89 @@ function erp_get_peoples( $args = [] ) {
     $cache_key   = 'erp-people-' . $people_type . '-' . md5( serialize( $args ) );
     $items       = wp_cache_get( $cache_key, 'erp' );
 
+    $pep_tb      = $wpdb->prefix . 'erp_peoples';
+    $pepmeta_tb  = $wpdb->prefix . 'erp_peoplemeta';
+    $types_tb    = $wpdb->prefix . 'erp_people_types';
+    $type_rel_tb = $wpdb->prefix . 'erp_people_type_relations';
+    $users_tb    = $wpdb->users;
+    $usermeta_tb = $wpdb->usermeta;
+
+    $pep_fileds  = [ 'first_name', 'last_name', 'company', 'phone', 'mobile',
+            'other', 'fax', 'notes', 'street_1', 'street_2', 'city', 'state', 'postal_code', 'country',
+            'currency', 'created' ];
+
     if ( false === $items ) {
-        $people = new WeDevs\ERP\Framework\Models\People();
+        extract( $args );
+
+        $sql         = [];
+        $type_sql    = ( $type != 'all' ) ? "and `name` = '" . $type ."'" : '';
+        $trashed_sql = $trashed ? "`deleted_at` is not null" : "`deleted_at` is null";
+
+        $sql['select'][] = "SELECT people.id, people.user_id, people.company,COALESCE( people.email, users.user_email ) AS email,
+                COALESCE( people.website, users.user_url ) AS website,";
+
+        $sql['join'][] = "LEFT JOIN $users_tb AS users ON people.user_id = users.ID";
+
+        foreach ( $pep_fileds as $key => $field ) {
+            $sql['select'][] = "COALESCE( people.$field, $field.meta_value ) AS $field,";
+            $sql['join'][]   = "LEFT JOIN $usermeta_tb AS $field ON people.user_id = $field.user_id AND $field.meta_key = '$field'";
+        }
+
+        $sql['select'][] = "GROUP_CONCAT( t.name SEPARATOR ',') AS types";
+        $sql['join'][]   = "LEFT JOIN $type_rel_tb AS r ON people.id = r.people_id LEFT JOIN $types_tb AS t ON r.people_types_id = t.id";
+        $sql_from_tb     = "FROM $pep_tb AS people";
+
+        $sql['where'][] = "where ( select count(*) from $types_tb
+                    inner join  $type_rel_tb
+                        on $types_tb.`id` = $type_rel_tb.`people_types_id`
+                        where $type_rel_tb.`people_id` = people.`id` $type_sql and $trashed_sql
+                  ) >= 1";
+
+        $sql_group_by = "GROUP BY `people`.`id`";
+        $sql_order_by = "ORDER BY $orderby $order";
 
         // Check if want all data without any pagination
-        if ( ( $args['number'] != '-1' ) && ! $args['count'] ) {
-            $people = $people->skip( $args['offset'] )->take( $args['number'] );
-        }
+        $sql_limit = ( $number != '-1' && !$count ) ? "LIMIT $number OFFSET $offset" : '';
 
-        // Check if meta query apply
-        if ( ! empty( $args['meta_query'] ) ) {
+        if ( $meta_query ) {
+            $sql['join'][] = "LEFT JOIN $pepmeta_tb as people_meta on people.id = people_meta.`erp_people_id`";
 
-            $people_tb     = $wpdb->prefix . 'erp_peoples';
-            $peoplemeta_tb = $wpdb->prefix . 'erp_peoplemeta';
+            $meta_key      = isset( $meta_query['meta_key'] ) ? $meta_query['meta_key'] : '';
+            $meta_value    = isset( $meta_query['meta_value'] ) ? $meta_query['meta_value'] : '';
+            $compare       = isset( $meta_query['compare'] ) ? $meta_query['compare'] : '=';
 
-            $meta_key      = isset( $args['meta_query']['meta_key'] ) ? $args['meta_query']['meta_key'] : '';
-            $meta_value    = isset( $args['meta_query']['meta_value'] ) ? $args['meta_query']['meta_value'] : '';
-            $compare       = isset( $args['meta_query']['compare'] ) ? $args['meta_query']['compare'] : '=';
-
-            $people = $people->leftjoin( $peoplemeta_tb, $people_tb . '.id', '=', $peoplemeta_tb . '.erp_people_id' )->select( array( $people_tb . '.*', $peoplemeta_tb . '.meta_key', $peoplemeta_tb . '.meta_value' ) )
-                        ->where( $peoplemeta_tb . '.meta_key', $meta_key )
-                        ->where( $peoplemeta_tb . '.meta_value', $compare, $meta_value );
-        }
-
-        // Check if render only soft deleted row
-        if ( $args['trashed'] ) {
-            $people = $people->trashed( $args['type'] );
-        } else {
-            $people = $people->type( $args['type'] );
+            $sql['where'][] = "AND people_meta.meta_key='$meta_key' and people_meta.meta_value='$meta_value'";
         }
 
         // Check is the row want to search
-        if ( isset( $args['s'] ) && ! empty( $args['s'] ) ) {
-            $arg_s = $args['s'];
-            $people = $people->where( 'first_name', 'LIKE', "%$arg_s%" )
-                    ->orWhere( 'last_name', 'LIKE', "%$arg_s%" )
-                    ->orWhere( 'company', 'LIKE', "%$arg_s%" );
+        if ( ! empty( $s ) ) {
+            $sql['where'][] = "AND ( first_name.meta_value LIKE '%$s%' OR people.first_name LIKE '%$s%')";
+            $sql['where'][] = "OR ( last_name.meta_value LIKE '%$s%' OR people.last_name LIKE '%$s%')";
+            $sql['where'][] = "OR ( people.company LIKE '%$s%')";
         }
-
-        $people = apply_filters( 'erp_people_query_object', $people );
-
-        // Render all collection of data according to above filter (Main query)
-        $items = $people->with('types')
-                ->orderBy( $args['orderby'], $args['order'] )
-                ->get()
-                ->toArray();
-
-        $results = [];
-
-        if ( $items ) {
-            foreach ( $items as $key => $item ) {
-                $item['types'] = wp_list_pluck( $item['types'], 'name' );
-                $results[$key] = $item;
-            }
-        }
-
-        $items = erp_array_to_object( $results );
 
         // Check if args count true, then return total count customer according to above filter
-        if ( $args['count'] ) {
-            $items = $people->type( $args['type'] )->count();
+        if ( $count ) {
+            unset( $sql['select'] );
+            $sql_group_by = '';
+            $sql['select'][] = 'SELECT COUNT( DISTINCT people.id ) as total_number';
+        }
+
+        $sql         = apply_filters( 'erp_people_pre_query', $sql, $args );
+        $final_query = implode( ' ', $sql['select'] ) . ' ' . $sql_from_tb . ' ' . implode( ' ', $sql['join'] ) . ' ' . implode( ' ', $sql['where'] ) . ' ' . $sql_group_by . ' ' . $sql_order_by . ' ' . $sql_limit;
+
+        if ( $count ) {
+            // Only filtered total count of people
+            $items = $wpdb->get_var( apply_filters( 'erp_people_total_count_query', $final_query, $args ) );
+        } else {
+            // Fetch results from people table
+            $results = $wpdb->get_results( apply_filters( 'erp_people_total_query', $final_query, $args ), ARRAY_A );
+
+            array_walk( $results, function( &$results ) {
+                $results['types'] = explode(',', $results['types'] );
+            });
+
+            $items = ( $no_object ) ? $results : erp_array_to_object( $results );
         }
 
         wp_cache_set( $cache_key, $items, 'erp' );

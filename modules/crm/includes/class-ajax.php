@@ -86,9 +86,10 @@ class Ajax_Handler {
 
         // only ncessary because we have sample data
         $args = [
-            'type'   => 'contact',
-            'offset' => 0,
-            'number' => 20,
+            'type'      => 'contact',
+            'offset'    => 0,
+            'number'    => 20,
+            'no_object' => true
         ];
 
         // Filter for serach
@@ -127,6 +128,30 @@ class Ajax_Handler {
         }
 
         $contacts  = erp_get_peoples( $args );
+
+        foreach ( $contacts as $key => $contact ) {
+            $contact_owner    = [];
+            $life_stages      = erp_crm_get_life_stages_dropdown_raw();
+            $life_stage       = erp_people_get_meta( $contact['id'], 'life_stage', true );
+            $contact_owner_id = ( $contact['user_id'] ) ? get_user_meta( $contact['user_id'], '_assign_crm_agent', true ) : erp_people_get_meta( $contact['id'], '_assign_crm_agent', true );
+
+            if ( $contact_owner_id ) {
+                $user = \get_user_by( 'id', $contact_owner_id );
+
+                $contact_owner = [
+                    'id' => $user->ID,
+                    'avatar' => get_avatar_url( $user->ID ),
+                    'first_name' => $user->first_name,
+                    'last_name' => $user->last_name,
+                    'display_name' => $user->display_name
+                ];
+            }
+            $contacts[$key]['avatar']        = erp_crm_get_avatar( $contact['id'] );
+            $contacts[$key]['avatar_url']    = erp_crm_get_avatar_url( $contact['id'] );
+            $contacts[$key]['life_stage']    = isset( $life_stages[$life_stage] ) ? $life_stages[$life_stage] : '';
+            $contacts[$key]['contact_owner'] = $contact_owner;
+            $contacts[$key]['created']       = erp_format_date( $contact['created'] );
+        }
 
         $this->send_success( $contacts );
     }

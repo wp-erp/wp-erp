@@ -385,13 +385,14 @@ class Contact_List_Table extends \WP_List_Table {
                     $args['trashed'] = true;
                 } else {
                     $args['meta_query'] = [
-                        'meta_key' => 'life_stage',
+                        'meta_key'   => 'life_stage',
                         'meta_value' => $_REQUEST['status']
                     ];
                 }
             }
         }
 
+        // Filter by assign contact ( contact owner )
         if ( isset( $_REQUEST['filter_assign_contact'] ) && ! empty( $_REQUEST['filter_assign_contact'] ) ) {
             $args['meta_query'] = [
                 'meta_key' => '_assign_crm_agent',
