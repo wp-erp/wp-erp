@@ -205,12 +205,14 @@
                     title: 'Edit',
                     attrTitle: 'Edit this contact',
                     class: 'edit',
-
+                    prevent: true,
+                    href: 'handle_edit_row_action'
                 },
                 {
                     title: 'View',
                     attrTitle: 'View this contact',
-                    class: 'view'
+                    class: 'view',
+                    href: 'render_href_action' // render args as item
                 },
                 {
                     title: 'Delete',
@@ -225,6 +227,14 @@
                 var link  = '<a href="' + item.details_url + '"><strong>' + item.first_name + ' '+ item.last_name + '</strong></a>';
                 return item.avatar + link;
             },
+
+            render_href_action: function( item ) {
+                return '<?php echo add_query_arg( [ 'page' => 'erp-sales-customers', 'action' => 'view' ], admin_url('admin.php') ) ?>&id=' + item.id;
+            },
+
+            handle_edit_row_action: function( item ) {
+                console.log( this.$refs.vtable.tableData );
+            }
         }
     });
 })(jQuery)

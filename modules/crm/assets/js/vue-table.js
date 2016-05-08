@@ -75,7 +75,9 @@ Vue.component('vtable', {
                                                     + '</template>'
                                                     + '<template v-else>'
                                                         + '<span class="{{ rowAction.class }}">'
-                                                            + '<a href="{{}}" title="{{ rowAction.attrTitle }}">{{ rowAction.title }}</a> <span v-if="rowActionIndex != ( itemRowActions.length - 1)"> | </span>'
+                                                            + '<a v-if="!hasPreventRowAction( rowAction )" href="{{{ rowActionLinkCallback( rowAction, item ) }}}" title="{{ rowAction.attrTitle }}">{{ rowAction.title }}</a>'
+                                                            + '<a v-else href="#" @click.prevent="rowActionLinkCallback( rowAction, item )" title="{{ rowAction.attrTitle }}">{{ rowAction.title }}</a>'
+                                                            + '<span v-if="rowActionIndex != ( itemRowActions.length - 1)"> | </span>'
                                                         + '</span>'
                                                     + '</template>'
                                                 + '</template>'
@@ -261,6 +263,27 @@ Vue.component('vtable', {
 
         },
 
+        hasPreventRowAction: function( rowAction ) {
+            return rowAction.prevent ? true : false;
+        },
+
+        callPreventRowAction: function( rowAction ) {
+            if ( ! this.hasCallback(field) ) {
+                return;
+            }
+
+            var args = field.callback.split('|')
+            var func = args.shift()
+
+            if (typeof this.$parent[func] == 'function') {
+                return (args.length > 0)
+                    ? this.$parent[func].apply(this.$parent, [this.getObjectValue(item, field.name)].concat(args), item )
+                    : this.$parent[func].call(this.$parent, this.getObjectValue(item, field.name), item)
+            }
+
+            return null
+        },
+
         hasRowAction: function( index ) {
             return this.itemRowActions.length > 0;
         },
@@ -290,7 +313,6 @@ Vue.component('vtable', {
             return null
         },
 
-
         callCallback: function( field, item ) {
             if ( ! this.hasCallback(field) ) {
                 return;
@@ -306,6 +328,23 @@ Vue.component('vtable', {
             }
 
             return null
+        },
+
+        rowActionLinkCallback: function( field, item ) {
+            if ( ! field.href ) {
+                return '#';
+            }
+
+            var args = field.href.split('|')
+            var func = args.shift()
+
+            if (typeof this.$parent[func] == 'function') {
+                return (args.length > 0)
+                    ? this.$parent[func].apply(this.$parent, item )
+                    : this.$parent[func].call(this.$parent, item)
+            }
+
+            return '#'
         },
 
         getObjectValue: function( object, path, defaultValue ) {
@@ -338,7 +377,6 @@ Vue.component('vtable', {
                 if ( resp.success ) {
                     self.tableData = resp.data
                 } else {
-                    // console.log(resp)
                     alert(resp);
                 }
             } )
