@@ -204,14 +204,18 @@
                 {
                     title: 'Edit',
                     attrTitle: 'Edit this contact',
+                    class: 'edit',
+
                 },
                 {
                     title: 'View',
                     attrTitle: 'View this contact',
+                    class: 'view'
                 },
                 {
                     title: 'Delete',
                     attrTitle: 'Delete this contact',
+                    class: 'delete'
                 }
             ]
         },
@@ -220,7 +224,7 @@
             full_name: function( value, item ) {
                 var link  = '<a href="' + item.details_url + '"><strong>' + item.first_name + ' '+ item.last_name + '</strong></a>';
                 return item.avatar + link;
-            }
+            },
         }
     });
 })(jQuery)

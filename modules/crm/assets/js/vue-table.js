@@ -69,16 +69,16 @@ Vue.component('vtable', {
                                         + '{{{ callCallback(field, item ) }}}'
                                         + '<template v-if="hasRowAction()">'
                                             + '<div class="row-actions">'
-
-                                                + '<span class="edit">'
-                                                    + '<a href="" data-id="45" title="Edit this customer">Edit</a> |'
-                                                + '</span>'
-                                                + '<span class="view">'
-                                                    + '<a href="http://localhost/wperp/wp-admin/admin.php?page=erp-sales-customers&amp;action=view&amp;id=45" title="View this customer">View</a> |'
-                                                + '</span>'
-                                                + '<span class="delete">'
-                                                    + '<a href="" class="submitdelete" data-id="45" data-type="contact" data-hard="0" title="Delete this item">Delete</a>'
-                                                + '</span>'
+                                                + '<template v-for="( rowActionIndex, rowAction ) in itemRowActions">'
+                                                    + '<template v-if="hasRowActionCallback( rowAction )">'
+                                                        + '{{{ callRowActionCallback( rowAction, item ) }}}'
+                                                    + '</template>'
+                                                    + '<template v-else>'
+                                                        + '<span class="{{ rowAction.class }}">'
+                                                            + '<a href="{{}}" title="{{ rowAction.attrTitle }}">{{ rowAction.title }}</a> <span v-if="rowActionIndex != ( itemRowActions.length - 1)"> | </span>'
+                                                        + '</span>'
+                                                    + '</template>'
+                                                + '</template>'
                                             + '</div>'
 
                                             + '<button type="button" class="toggle-row">'
@@ -269,9 +269,32 @@ Vue.component('vtable', {
             return item.callback ? true : false
         },
 
+        hasRowActionCallback: function( rowAction ) {
+            return rowAction.callback ? true : false;
+        },
+
+        callRowActionCallback: function( rowAction, item ) {
+            if ( ! this.hasRowActionCallback( rowAction ) ) {
+                return;
+            }
+
+            var args = rowAction.callback.split('|')
+            var func = args.shift()
+
+            if (typeof this.$parent[func] == 'function') {
+                return (args.length > 0)
+                    ? this.$parent[func].apply(this.$parent, [rowAction.title].concat(args), item )
+                    : this.$parent[func].call(this.$parent, [rowAction.title], item )
+            }
+
+            return null
+        },
+
+
         callCallback: function( field, item ) {
-            if ( ! this.hasCallback(field))
-                return
+            if ( ! this.hasCallback(field) ) {
+                return;
+            }
 
             var args = field.callback.split('|')
             var func = args.shift()
