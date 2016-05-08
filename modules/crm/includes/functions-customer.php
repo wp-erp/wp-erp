@@ -704,7 +704,7 @@ function erp_crm_save_customer_feed_data( $data ) {
         $activity['contact']['last_name'] = get_user_meta( $activity['contact']['user_id'], 'last_name', true );
     }
 
-    unset( $value['extra']['invite_contact'] );
+    unset( $activity['extra']['invite_contact'] );
 
     $activity['contact']['types']      = wp_list_pluck( $activity['contact']['types'], 'name' );
     $activity['message']               = stripslashes( $activity['message'] );
