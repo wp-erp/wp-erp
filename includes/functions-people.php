@@ -59,8 +59,13 @@ function erp_get_peoples( $args = [] ) {
         extract( $args );
 
         $sql         = [];
-        $type_sql    = ( $type != 'all' ) ? "and `name` = '" . $type ."'" : '';
         $trashed_sql = $trashed ? "`deleted_at` is not null" : "`deleted_at` is null";
+
+        if ( is_array( $type ) ) {
+            $type_sql = "and `name` IN ( '" . implode( "','", $type ) . "' )";
+        } else {
+            $type_sql    = ( $type != 'all' ) ? "and `name` = '" . $type ."'" : '';
+        }
 
         $sql['select'][] = "SELECT people.id, people.user_id, people.company,COALESCE( people.email, users.user_email ) AS email,
                 COALESCE( people.website, users.user_url ) AS website,";
