@@ -146,6 +146,7 @@ class Ajax_Handler {
                     'display_name' => $user->display_name
                 ];
             }
+            $contacts[$key]['details_url']   = erp_crm_get_details_url( $contact['id'], $contact['types'] );
             $contacts[$key]['avatar']        = erp_crm_get_avatar( $contact['id'] );
             $contacts[$key]['avatar_url']    = erp_crm_get_avatar_url( $contact['id'] );
             $contacts[$key]['life_stage']    = isset( $life_stages[$life_stage] ) ? $life_stages[$life_stage] : '';

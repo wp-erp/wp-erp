@@ -162,6 +162,7 @@
         row-checkbox-name="customer_id"
         action="erp-crm-get-contacts"
         :fields=fields
+        :item-row-actions=itemRowActions
     ></vtable>
 
 </div>
@@ -172,7 +173,8 @@
     var tableColumns = [
         {
             name: 'name',
-            title: 'Full Name'
+            title: 'Full Name',
+            callback: 'full_name'
         },
         {
             name: 'email',
@@ -184,11 +186,11 @@
             title: 'Phone'
         },
         {
-            name: 'life_stages',
+            name: 'life_stage',
             title: 'Life stage'
         },
         {
-            name: 'created_at',
+            name: 'created',
             title: 'Created At',
             sortField: 'created_at'
         }
@@ -197,7 +199,28 @@
     new Vue({
         el: '#wp-erp',
         data : {
-            fields: tableColumns
+            fields: tableColumns,
+            itemRowActions: [
+                {
+                    title: 'Edit',
+                    attrTitle: 'Edit this contact',
+                },
+                {
+                    title: 'View',
+                    attrTitle: 'View this contact',
+                },
+                {
+                    title: 'Delete',
+                    attrTitle: 'Delete this contact',
+                }
+            ]
+        },
+
+        methods: {
+            full_name: function( value, item ) {
+                var link  = '<a href="' + item.details_url + '"><strong>' + item.first_name + ' '+ item.last_name + '</strong></a>';
+                return item.avatar + link;
+            }
         }
     });
 })(jQuery)

@@ -59,38 +59,49 @@ Vue.component('vtable', {
                         +'</thead>'
 
                         +'<tbody id="the-list" data-wp-lists="list:{{ tableClass }}">'
-                            +'<tr>'
+                            +'<tr v-for="item in tableData">'
                                 +'<th scope="row" class="check-column">'
                                     +'<input type="checkbox" class="{{ rowCheckboxId }}" name="{{ rowCheckboxName }}[]" value="">'
                                 +'</th>'
-                                +'<td class="name column-name has-row-actions column-primary" data-colname="Contact Name">'
-                                    +'<img alt="" src="http://0.gravatar.com/avatar/?s=32&amp;d=mm&amp;r=g" srcset="http://0.gravatar.com/avatar/?s=64&amp;d=mm&amp;r=g 2x" class="avatar avatar-32 photo avatar-default" height="32" width="32">'
-                                    +'<a href="http://localhost/wperp/wp-admin/admin.php?page=erp-sales-customers&amp;action=view&amp;id=45"><strong>Nurul Amin</strong></a>'
-                                    +'<div class="row-actions">'
-                                        +'<span class="edit">'
-                                            +'<a href="" data-id="45" title="Edit this customer">Edit</a> |'
-                                        +'</span>'
-                                        +'<span class="view">'
-                                            +'<a href="http://localhost/wperp/wp-admin/admin.php?page=erp-sales-customers&amp;action=view&amp;id=45" title="View this customer">View</a> |'
-                                        +'</span>'
-                                        +'<span class="delete">'
-                                            +'<a href="" class="submitdelete" data-id="45" data-type="contact" data-hard="0" title="Delete this item">Delete</a>'
-                                        +'</span>'
-                                    +'</div>'
+                                + '<template v-for="( i, field ) in fields">'
+                                    + '<template v-if="(i==0 )">'
+                                        + '<td v-if="hasCallback(field)" class="has-row-actions column-primary {{ field.name }} column-{{ field.name }}" data-colname="{{ field.title }}">'
+                                        + '{{{ callCallback(field, item ) }}}'
+                                        + '<template v-if="hasRowAction()">'
+                                            + '<div class="row-actions">'
 
-                                    +'<button type="button" class="toggle-row">'
-                                        +'<span class="screen-reader-text">Show more details</span>'
-                                    +'</button>'
-                                    +'<button type="button" class="toggle-row">'
-                                        +'<span class="screen-reader-text">Show more details</span>'
-                                    +'</button>'
-                                +'</td>'
-                                +'<td class="email column-email" data-colname="Email">'
-                                    +'<a href="mailto:amin.ict@gmail.com">amin.ict@gmail.com</a>'
-                                +'</td>'
-                                +'<td class="phone_number column-phone_number" data-colname="Phone">—</td>'
-                                +'<td class="life_stages column-life_stages" data-colname="Life Stage">Customer</td>'
-                                +'<td class="created column-created" data-colname="Created at">26-04-2016</td>'
+                                                + '<span class="edit">'
+                                                    + '<a href="" data-id="45" title="Edit this customer">Edit</a> |'
+                                                + '</span>'
+                                                + '<span class="view">'
+                                                    + '<a href="http://localhost/wperp/wp-admin/admin.php?page=erp-sales-customers&amp;action=view&amp;id=45" title="View this customer">View</a> |'
+                                                + '</span>'
+                                                + '<span class="delete">'
+                                                    + '<a href="" class="submitdelete" data-id="45" data-type="contact" data-hard="0" title="Delete this item">Delete</a>'
+                                                + '</span>'
+                                            + '</div>'
+
+                                            + '<button type="button" class="toggle-row">'
+                                                + '<span class="screen-reader-text">Show more details</span>'
+                                            + '</button>'
+                                            + '<button type="button" class="toggle-row">'
+                                                + '<span class="screen-reader-text">Show more details</span>'
+                                            + '</button>'
+                                        + '</template>'
+                                        + '</td>'
+                                        + '<td v-else class="has-row-actions column-primary column-name {{ field.name }} column-{{ field.name }}" data-colname="{{ field.title }}">'
+                                            + '{{{ getObjectValue(item, field.name, "-") }}}'
+                                        + '</td>'
+                                    + '</template>'
+                                    + '<template v-else>'
+                                        + '<td v-if="hasCallback(field)" class="{{ field.name }} column-{{ field.name }}" data-colname="{{ field.title }}">'
+                                        + '{{{ callCallback(field, item ) }}}'
+                                        + '</td>'
+                                        + '<td v-else class="{{ field.name }} column-{{ field.name }}" data-colname="{{ field.title }}">'
+                                            + '{{{ getObjectValue(item, field.name, "-") }}}'
+                                        + '</td>'
+                                    + '</template>'
+                                + '</template>'
                             +'</tr>'
                         +'</tbody>'
 
@@ -148,30 +159,35 @@ Vue.component('vtable', {
                 return ''
             }
         },
+
         'tableWrapper': {
             type: String,
             default: function() {
                 return ''
             }
         },
+
         'tableClass': {
             type: String,
             default: function() {
                 return ''
             }
         },
+
         'rowCheckboxId': {
             type: String,
             default: function() {
                 return 'input-checkbox'
             }
         },
+
         'rowCheckboxName': {
             type: String,
             default: function() {
                 return 'checkbox'
             }
         },
+
         'perPage': {
             type: Number,
             coerce: function(val) {
@@ -181,14 +197,17 @@ Vue.component('vtable', {
                 return 5
             }
         },
+
         'fields': {
             type: Array,
             required: true
         },
+
         'action': {
             type: String,
             required: true
         },
+
         'perPage': {
             type: Number,
             coerce: function(val) {
@@ -198,6 +217,14 @@ Vue.component('vtable', {
                 return 5
             }
         },
+
+        itemRowActions: {
+            type: Array,
+            default: function() {
+                return [];
+            }
+        },
+
         'sortOrder': {
             type: Object,
             default: function() {
@@ -214,7 +241,7 @@ Vue.component('vtable', {
             eventPrefix: 'vtable:',
             tableData: null,
             tablePagination: null,
-            currentPage: 1
+            currentPage: 1,
         }
     },
 
@@ -231,22 +258,65 @@ Vue.component('vtable', {
         },
 
         orderBy: function( field ) {
-            console.log(field);
+
+        },
+
+        hasRowAction: function( index ) {
+            return this.itemRowActions.length > 0;
+        },
+
+        hasCallback: function( item ) {
+            return item.callback ? true : false
+        },
+
+        callCallback: function( field, item ) {
+            if ( ! this.hasCallback(field))
+                return
+
+            var args = field.callback.split('|')
+            var func = args.shift()
+
+            if (typeof this.$parent[func] == 'function') {
+                return (args.length > 0)
+                    ? this.$parent[func].apply(this.$parent, [this.getObjectValue(item, field.name)].concat(args), item )
+                    : this.$parent[func].call(this.$parent, this.getObjectValue(item, field.name), item)
+            }
+
+            return null
+        },
+
+        getObjectValue: function( object, path, defaultValue ) {
+            defaultValue = (typeof defaultValue == 'undefined') ? null : defaultValue
+            var obj = object
+
+            if (path.trim() != '') {
+                var keys = path.split('.')
+                keys.forEach(function(key) {
+                    if (typeof obj[key] != 'undefined' && obj[key] !== null) {
+                        obj = obj[key]
+                    } else {
+                        obj = defaultValue;
+                        return
+                    }
+                })
+            }
+            return obj
         },
 
         fetchData: function() {
-            console.log( this.action );
-            var data = {
-                action: this.action,
-                _wpnonce: wpVueTable.nonce
-            };
+
+            var self = this,
+                data = {
+                    action: this.action,
+                    _wpnonce: wpVueTable.nonce
+                };
 
             jQuery.post( wpVueTable.ajaxurl, data, function( resp ) {
                 if ( resp.success ) {
-                    console.log(resp);
+                    self.tableData = resp.data
                 } else {
-                    console.log(resp)
-                    // alert(resp)
+                    // console.log(resp)
+                    alert(resp);
                 }
             } )
         }
