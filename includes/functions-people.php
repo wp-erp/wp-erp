@@ -58,8 +58,13 @@ function erp_get_peoples( $args = [] ) {
         extract( $args );
 
         $sql         = [];
-        $type_sql    = ( $type != 'all' ) ? "and `name` = '" . $type ."'" : '';
         $trashed_sql = $trashed ? "`deleted_at` is not null" : "`deleted_at` is null";
+
+        if ( is_array( $type ) ) {
+            $type_sql = "and `name` IN ( '" . implode( "','", $type ) . "' )";
+        } else {
+            $type_sql    = ( $type != 'all' ) ? "and `name` = '" . $type ."'" : '';
+        }
 
         $sql['select'][] = "SELECT people.id, people.user_id, people.company,COALESCE( people.email, users.user_email ) AS email,
                 COALESCE( people.website, users.user_url ) AS website,";
@@ -113,6 +118,10 @@ function erp_get_peoples( $args = [] ) {
 
         $sql         = apply_filters( 'erp_people_pre_query', $sql, $args );
         $final_query = implode( ' ', $sql['select'] ) . ' ' . $sql_from_tb . ' ' . implode( ' ', $sql['join'] ) . ' ' . implode( ' ', $sql['where'] ) . ' ' . $sql_group_by . ' ' . $sql_order_by . ' ' . $sql_limit;
+
+        echo '<pre>';
+        print_r( $final_query );
+        echo '</pre><hr>';
 
         if ( $count ) {
             // Only filtered total count of people
