@@ -24,11 +24,18 @@ module.exports = function(grunt) {
 
         uglify: {
             minify: {
-                expand: true,
-                cwd: '<%= dirs.js %>',
-                src: '**/*.js',
-                dest: '<%= dirs.js %>/',
-                ext: '.min.js'
+                files: {
+                    '<%= dirs.js %>/erp.min.js': ['<%= dirs.js %>/erp.js'],
+                    '<%= dirs.js %>/jquery-popup.min.js': ['<%= dirs.js %>/jquery-popup.js'],
+                    '<%= dirs.js %>/settings.min.js': ['<%= dirs.js %>/settings.js'],
+                    '<%= dirs.js %>/upload.min.js': ['<%= dirs.js %>/upload.js'],
+                    '<%= dirs.js %>/erp-all.min.js': [
+                        '<%= dirs.js %>/erp.min.js',
+                        '<%= dirs.js %>/jquery-popup.min.js',
+                        '<%= dirs.js %>/settings.min.js',
+                        '<%= dirs.js %>/upload.min.js',
+                    ],
+                }
             }
         },
 
