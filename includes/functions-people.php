@@ -119,10 +119,6 @@ function erp_get_peoples( $args = [] ) {
         $sql         = apply_filters( 'erp_people_pre_query', $sql, $args );
         $final_query = implode( ' ', $sql['select'] ) . ' ' . $sql_from_tb . ' ' . implode( ' ', $sql['join'] ) . ' ' . implode( ' ', $sql['where'] ) . ' ' . $sql_group_by . ' ' . $sql_order_by . ' ' . $sql_limit;
 
-        echo '<pre>';
-        print_r( $final_query );
-        echo '</pre><hr>';
-
         if ( $count ) {
             // Only filtered total count of people
             $items = $wpdb->get_var( apply_filters( 'erp_people_total_count_query', $final_query, $args ) );
