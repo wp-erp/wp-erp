@@ -49,7 +49,7 @@ Vue.component('vtable', {
                                 +'<template v-for="field in fields">'
                                     +'<th v-if="!isSortable( field )" scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }} column-primary">{{ field.title }}</th>'
                                     +'<th v-else scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }} sortable {{ sortOrder.direction }}">'
-                                        +'<a href="#" v-click.prevent="orderBy( field )">'
+                                        +'<a href="#" @click.prevent="orderBy( field )">'
                                             +'<span>{{ field.title }}</span>'
                                             +'<span class="sorting-indicator"></span>'
                                         +'</a>'
@@ -76,7 +76,7 @@ Vue.component('vtable', {
                                                     + '<template v-else>'
                                                         + '<span class="{{ rowAction.class }}">'
                                                             + '<a v-if="!hasPreventRowAction( rowAction )" href="{{{ rowActionLinkCallback( rowAction, item ) }}}" title="{{ rowAction.attrTitle }}">{{ rowAction.title }}</a>'
-                                                            + '<a v-else href="#" @click.prevent="rowActionLinkCallback( rowAction, item )" title="{{ rowAction.attrTitle }}">{{ rowAction.title }}</a>'
+                                                            + '<a v-else href="#" @click.prevent="callAction( rowAction.action, item )" title="{{ rowAction.attrTitle }}">{{ rowAction.title }}</a>'
                                                             + '<span v-if="rowActionIndex != ( itemRowActions.length - 1)"> | </span>'
                                                         + '</span>'
                                                     + '</template>'
@@ -116,7 +116,7 @@ Vue.component('vtable', {
                                 +'<template v-for="field in fields">'
                                     +'<th v-if="!isSortable( field )" scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }} column-primary">{{ field.title }}</th>'
                                     +'<th v-else scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }} sortable {{ sortOrder.direction }}">'
-                                        +'<a href="#" v-click.prevent="orderBy( field )">'
+                                        +'<a href="#" @click.prevent="orderBy( field )">'
                                             +'<span>{{ field.title }}</span>'
                                             +'<span class="sorting-indicator"></span>'
                                         +'</a>'
@@ -127,7 +127,6 @@ Vue.component('vtable', {
                     +'</table>'
 
                     +'<div class="tablenav bottom">'
-
                         +'<div class="alignleft actions bulkactions">'
                             +'<label for="bulk-action-selector-bottom" class="screen-reader-text">Select bulk action</label>'
                             +'<select name="action2" id="bulk-action-selector-bottom">'
@@ -213,7 +212,7 @@ Vue.component('vtable', {
         'perPage': {
             type: Number,
             coerce: function(val) {
-                return parseInt(val);
+                return val ? parseInt(val) : 5;
             },
             default: function() {
                 return 5
@@ -231,7 +230,7 @@ Vue.component('vtable', {
             type: Object,
             default: function() {
                 return {
-                    field: '',
+                    field: 'id',
                     direction: 'desc'
                 }
             }
@@ -240,7 +239,6 @@ Vue.component('vtable', {
 
     data: function() {
         return {
-            eventPrefix: 'vtable:',
             tableData: null,
             tablePagination: null,
             currentPage: 1,
@@ -260,11 +258,23 @@ Vue.component('vtable', {
         },
 
         orderBy: function( field ) {
+            if ( ! this.isSortable(field)) {
+                return
+            }
 
+            if (this.sortOrder.field == field.sortField ) {
+                this.sortOrder.direction = this.sortOrder.direction == 'asc' ? 'desc' : 'asc'
+            } else {
+                this.sortOrder.direction = 'asc'
+            }
+
+            this.sortOrder.field = field.sortField ? field.sortField : field.name ;
+
+            this.fetchData();
         },
 
         hasPreventRowAction: function( rowAction ) {
-            return rowAction.prevent ? true : false;
+            return rowAction.action ? true : false;
         },
 
         callPreventRowAction: function( rowAction ) {
@@ -365,6 +375,10 @@ Vue.component('vtable', {
             return obj
         },
 
+        callAction: function( action, data ) {
+            this.$dispatch('vtable:action', action, data)
+        },
+
         fetchData: function() {
 
             var self = this,
@@ -373,13 +387,24 @@ Vue.component('vtable', {
                     _wpnonce: wpVueTable.nonce
                 };
 
-            jQuery.post( wpVueTable.ajaxurl, data, function( resp ) {
+            var params = [
+                'order=' + this.sortOrder.direction,
+                'orderby=' + this.sortOrder.field,
+                'number=' + this.perPage
+            ];
+
+            // console.log( params );
+
+            var url = params.join('&')
+            var postData = jQuery.param(data) + '&' + url;
+
+            jQuery.post( wpVueTable.ajaxurl, postData, function( resp ) {
                 if ( resp.success ) {
                     self.tableData = resp.data
                 } else {
                     alert(resp);
                 }
-            } )
+            } );
         }
     },
 

@@ -85,12 +85,19 @@ class Ajax_Handler {
         $this->verify_nonce( 'wp-erp-vue-table' );
 
         // only ncessary because we have sample data
-        $args = [
+        $defaults = [
             'type'      => 'contact',
             'offset'    => 0,
             'number'    => 20,
             'no_object' => true
         ];
+
+        $args  = wp_parse_args( $_POST, $defaults );
+
+        // Filter total number of items
+        if ( isset( $_REQUEST['number'] ) && ! empty( $_REQUEST['number'] ) ) {
+            $args['number'] = $_REQUEST['number'];
+        }
 
         // Filter for serach
         if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
