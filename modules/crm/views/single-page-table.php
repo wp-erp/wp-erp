@@ -35,7 +35,10 @@
                         <span class="displaying-num">1 item</span>
                         <span class="pagination-links"><span class="tablenav-pages-navspan" aria-hidden="true">«</span>
                         <span class="tablenav-pages-navspan" aria-hidden="true">‹</span>
-                        <span class="paging-input"><label for="current-page-selector" class="screen-reader-text">Current Page</label><input class="current-page" id="current-page-selector" type="text" name="paged" value="1" size="1" aria-describedby="table-paging"> of <span class="total-pages">1</span></span>
+                        <span class="paging-input">
+                            <label for="current-page-selector" class="screen-reader-text">Current Page</label>
+                            <input class="current-page" id="current-page-selector" type="text" name="paged" value="1" size="1" aria-describedby="table-paging"> of <span class="total-pages">1</span>
+                        </span>
                         <span class="tablenav-pages-navspan" aria-hidden="true">›</span>
                         <span class="tablenav-pages-navspan" aria-hidden="true">»</span></span>
                     </div>
@@ -135,7 +138,7 @@
                             <input type="submit" id="doaction2" class="button action" value="Apply">
                     </div>
 
-                    <div class="tablenav-pages one-page">
+                    <div class="tablenav-pages">
                         <span class="displaying-num">1 item</span>
                         <span class="pagination-links">
                             <span class="tablenav-pages-navspan" aria-hidden="true">«</span>
@@ -162,6 +165,7 @@
         row-checkbox-name="customer_id"
         action="erp-crm-get-contacts"
         :fields=fields
+        per-page="3"
         :item-row-actions=itemRowActions
     ></vtable>
 
@@ -236,7 +240,6 @@
 
         events: {
             'vtable:action': function(action, data) {
-                console.log(action, data );
             },
         }
     });

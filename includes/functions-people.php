@@ -64,7 +64,7 @@ function erp_get_peoples( $args = [] ) {
         if ( is_array( $type ) ) {
             $type_sql = "and `name` IN ( '" . implode( "','", $type ) . "' )";
         } else {
-            $type_sql    = ( $type != 'all' ) ? "and `name` = '" . $type ."'" : '';
+            $type_sql = ( $type != 'all' ) ? "and `name` = '" . $type ."'" : '';
         }
 
         $sql['select'][] = "SELECT people.id, people.user_id, people.company,COALESCE( people.email, users.user_email ) AS email,
@@ -114,11 +114,13 @@ function erp_get_peoples( $args = [] ) {
         if ( $count ) {
             unset( $sql['select'] );
             $sql_group_by = '';
+            $sql_order_by = '';
             $sql['select'][] = 'SELECT COUNT( DISTINCT people.id ) as total_number';
         }
 
         $sql         = apply_filters( 'erp_people_pre_query', $sql, $args );
         $final_query = implode( ' ', $sql['select'] ) . ' ' . $sql_from_tb . ' ' . implode( ' ', $sql['join'] ) . ' ' . implode( ' ', $sql['where'] ) . ' ' . $sql_group_by . ' ' . $sql_order_by . ' ' . $sql_limit;
+
 
         if ( $count ) {
             // Only filtered total count of people

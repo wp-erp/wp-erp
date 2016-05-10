@@ -84,19 +84,24 @@ class Ajax_Handler {
     public function get_all_contact() {
         $this->verify_nonce( 'wp-erp-vue-table' );
 
+        $contacts = [];
+
         // only ncessary because we have sample data
-        $defaults = [
+        $args = [
             'type'      => 'contact',
             'offset'    => 0,
             'number'    => 20,
             'no_object' => true
         ];
 
-        $args  = wp_parse_args( $_POST, $defaults );
-
-        // Filter total number of items
+        // Filter Limit value
         if ( isset( $_REQUEST['number'] ) && ! empty( $_REQUEST['number'] ) ) {
             $args['number'] = $_REQUEST['number'];
+        }
+
+        // Filter offset value
+        if ( isset( $_REQUEST['offset'] ) && ! empty( $_REQUEST['offset'] ) ) {
+            $args['offset'] = $_REQUEST['offset'];
         }
 
         // Filter for serach
@@ -134,9 +139,12 @@ class Ajax_Handler {
             ];
         }
 
-        $contacts  = erp_get_peoples( $args );
+        $contacts['data']  = erp_get_peoples( $args );
 
-        foreach ( $contacts as $key => $contact ) {
+        $args['count'] = true;
+        $total_items = erp_get_peoples( $args );
+
+        foreach ( $contacts['data'] as $key => $contact ) {
             $contact_owner    = [];
             $life_stages      = erp_crm_get_life_stages_dropdown_raw();
             $life_stage       = erp_people_get_meta( $contact['id'], 'life_stage', true );
@@ -153,13 +161,17 @@ class Ajax_Handler {
                     'display_name' => $user->display_name
                 ];
             }
-            $contacts[$key]['details_url']   = erp_crm_get_details_url( $contact['id'], $contact['types'] );
-            $contacts[$key]['avatar']        = erp_crm_get_avatar( $contact['id'] );
-            $contacts[$key]['avatar_url']    = erp_crm_get_avatar_url( $contact['id'] );
-            $contacts[$key]['life_stage']    = isset( $life_stages[$life_stage] ) ? $life_stages[$life_stage] : '';
-            $contacts[$key]['contact_owner'] = $contact_owner;
-            $contacts[$key]['created']       = erp_format_date( $contact['created'] );
+            $contacts['data'][$key]['details_url']   = erp_crm_get_details_url( $contact['id'], $contact['types'] );
+            $contacts['data'][$key]['avatar']        = erp_crm_get_avatar( $contact['id'] );
+            $contacts['data'][$key]['avatar_url']    = erp_crm_get_avatar_url( $contact['id'] );
+            $contacts['data'][$key]['life_stage']    = isset( $life_stages[$life_stage] ) ? $life_stages[$life_stage] : '';
+            $contacts['data'][$key]['contact_owner'] = $contact_owner;
+            $contacts['data'][$key]['created']       = erp_format_date( $contact['created'] );
         }
+
+
+
+        $contacts['total_items']   = $total_items;
 
         $this->send_success( $contacts );
     }

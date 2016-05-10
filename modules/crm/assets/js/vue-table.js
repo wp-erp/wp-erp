@@ -28,13 +28,24 @@ Vue.component('vtable', {
                             +'</select>'
                             +'<input type="submit" id="doaction" class="button action" value="Apply">'
                         +'</div>'
-                        +'<div class="tablenav-pages one-page">'
-                            +'<span class="displaying-num">1 item</span>'
-                            +'<span class="pagination-links"><span class="tablenav-pages-navspan" aria-hidden="true">«</span>'
-                            +'<span class="tablenav-pages-navspan" aria-hidden="true">‹</span>'
-                            +'<span class="paging-input"><label for="current-page-selector" class="screen-reader-text">Current Page</label><input class="current-page" id="current-page-selector" type="text" name="paged" value="1" size="1" aria-describedby="table-paging"> of <span class="total-pages">1</span></span>'
-                            +'<span class="tablenav-pages-navspan" aria-hidden="true">›</span>'
-                            +'<span class="tablenav-pages-navspan" aria-hidden="true">»</span></span>'
+
+                        +'<div class="tablenav-pages">'
+                            +'<span class="displaying-num">{{ totalItem }} item</span>'
+                            +'<span class="pagination-links">'
+                                +'<span v-if="isFirstPage()" class="tablenav-pages-navspan" aria-hidden="true">«</span>'
+                                +'<a v-else class="first-page" href="#" @click.prevent="goFirstPage()"><span class="screen-reader-text">First page</span><span aria-hidden="true">«</span></a>'
+
+                                +'<span v-if="currentPage == 1"class="tablenav-pages-navspan" aria-hidden="true">‹</span>'
+                                +'<a v-else class="prev-page" href="#" @click.prevent="goToPage(\'prev\')"><span class="screen-reader-text">Previous page</span><span aria-hidden="true">‹</span></a>'
+
+                                +'<span class="screen-reader-text">Current Page</span><input @keydown.enter.prevent="goToPage(pageNumberInput)" class="current-page" id="current-page-selector" v-model="pageNumberInput" type="text" value="1" size="1" aria-describedby="table-paging"> of <span class="total-pages">{{ totalPage }}</span></span>'
+
+                                +'<span v-if="currentPage == totalPage"class="tablenav-pages-navspan" aria-hidden="true">›</span>'
+                                +'<a v-else class="next-page" href="#" @click.prevent="goToPage(\'next\')"><span class="screen-reader-text">Next page</span><span aria-hidden="true">›</span></a>'
+
+                                +'<span v-if="isLastPage()" class="tablenav-pages-navspan" aria-hidden="true">»</span>'
+                                +'<a v-else class="last-page" href="#" @click.prevent="goLastPage()"><span class="screen-reader-text">Last page</span><span aria-hidden="true">»</span></a>'
+                            +'</span>'
                         +'</div>'
                         +'<br class="clear">'
                     +'</div>'
@@ -46,7 +57,7 @@ Vue.component('vtable', {
                                     +'<label class="screen-reader-text" for="cb-select-all-1">Select All</label>'
                                     +'<input id="cb-select-all-1" type="checkbox">'
                                 +'</td>'
-                                +'<template v-for="field in fields">'
+                                +'<template v-for="(i,field) in fields">'
                                     +'<th v-if="!isSortable( field )" scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }} column-primary">{{ field.title }}</th>'
                                     +'<th v-else scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }} sortable {{ sortOrder.direction }}">'
                                         +'<a href="#" @click.prevent="orderBy( field )">'
@@ -137,14 +148,22 @@ Vue.component('vtable', {
                             +'<input type="submit" id="doaction2" class="button action" value="Apply">'
                         +'</div>'
 
-                        +'<div class="tablenav-pages one-page">'
-                            +'<span class="displaying-num">1 item</span>'
+                        +'<div class="tablenav-pages">'
+                            +'<span class="displaying-num">{{ totalItem }} item</span>'
                             +'<span class="pagination-links">'
-                                +'<span class="tablenav-pages-navspan" aria-hidden="true">«</span>'
-                                +'<span class="tablenav-pages-navspan" aria-hidden="true">‹</span>'
-                                +'<span class="screen-reader-text">Current Page</span><span id="table-paging" class="paging-input">1 of <span class="total-pages">1</span></span>'
-                                +'<span class="tablenav-pages-navspan" aria-hidden="true">›</span>'
-                                +'<span class="tablenav-pages-navspan" aria-hidden="true">»</span>'
+                                +'<span v-if="isFirstPage()" class="tablenav-pages-navspan" aria-hidden="true">«</span>'
+                                +'<a v-else class="first-page" href="#" @click.prevent="goFirstPage()"><span class="screen-reader-text">First page</span><span aria-hidden="true">«</span></a>'
+
+                                +'<span v-if="currentPage == 1"class="tablenav-pages-navspan" aria-hidden="true">‹</span>'
+                                +'<a v-else class="prev-page" href="#" @click.prevent="goToPage(\'prev\')"><span class="screen-reader-text">Previous page</span><span aria-hidden="true">‹</span></a>'
+
+                                +'<span class="screen-reader-text">Current Page</span><span id="table-paging" class="paging-input">{{ currentPage }} of <span class="total-pages">{{ totalPage }}</span></span>'
+
+                                +'<span v-if="currentPage == totalPage"class="tablenav-pages-navspan" aria-hidden="true">›</span>'
+                                +'<a v-else class="next-page" href="#" @click.prevent="goToPage(\'next\')"><span class="screen-reader-text">Next page</span><span aria-hidden="true">›</span></a>'
+
+                                +'<span v-if="isLastPage()" class="tablenav-pages-navspan" aria-hidden="true">»</span>'
+                                +'<a v-else class="last-page" href="#" @click.prevent="goLastPage()"><span class="screen-reader-text">Last page</span><span aria-hidden="true">»</span></a>'
                             +'</span>'
                         +'</div>'
                         +'<br class="clear">'
@@ -189,16 +208,6 @@ Vue.component('vtable', {
             }
         },
 
-        'perPage': {
-            type: Number,
-            coerce: function(val) {
-                return parseInt(val);
-            },
-            default: function() {
-                return 5
-            }
-        },
-
         'fields': {
             type: Array,
             required: true
@@ -215,7 +224,7 @@ Vue.component('vtable', {
                 return val ? parseInt(val) : 5;
             },
             default: function() {
-                return 5
+                return 5;
             }
         },
 
@@ -240,8 +249,12 @@ Vue.component('vtable', {
     data: function() {
         return {
             tableData: null,
-            tablePagination: null,
+            totalItem: 0,
+            totalPage: 0,
+            lastPage: 0,
             currentPage: 1,
+            pageOffset:0,
+            pageNumberInput:0
         }
     },
 
@@ -249,9 +262,61 @@ Vue.component('vtable', {
         sortIcon: function() {
             return this.sortOrder.direction == 'asc' ? this.ascendingIcon : this.descendingIcon
         },
+
+        totalPage: function() {
+            return Math.ceil( this.totalItem/this.perPage);
+        },
+
+        lastPage: function() {
+            return this.totalPage;
+        },
+
+        pageOffset: function() {
+            return (this.currentPage-1)*this.perPage;
+        },
+
+        pageNumberInput: function() {
+            return this.currentPage;
+        }
     },
 
     methods: {
+
+        isFirstPage: function() {
+            return this.currentPage == 1;
+        },
+
+        isLastPage: function() {
+            return this.currentPage == this.totalPage;
+        },
+
+        goFirstPage: function() {
+            this.currentPage = 1;
+            this.fetchData();
+
+        },
+
+        goLastPage: function() {
+            this.currentPage = this.totalPage;
+            this.fetchData();
+        },
+
+        goToPage: function(direction) {
+
+            if ( direction == 'prev' ) {
+                this.currentPage--;
+            } else if ( direction == 'next' ) {
+                this.currentPage++;
+            } else {
+                if ( ! isNaN( number ) ) {
+                    this.currentPage = number;
+                }
+            }
+
+            this.fetchData();
+
+            return false;
+        },
 
         isSortable: function( field ) {
             return !(typeof field.sortField == 'undefined')
@@ -390,7 +455,8 @@ Vue.component('vtable', {
             var params = [
                 'order=' + this.sortOrder.direction,
                 'orderby=' + this.sortOrder.field,
-                'number=' + this.perPage
+                'number=' + this.perPage,
+                'offset=' + this.pageOffset
             ];
 
             // console.log( params );
@@ -400,7 +466,8 @@ Vue.component('vtable', {
 
             jQuery.post( wpVueTable.ajaxurl, postData, function( resp ) {
                 if ( resp.success ) {
-                    self.tableData = resp.data
+                    self.tableData = resp.data.data;
+                    self.totalItem = resp.data.total_items;
                 } else {
                     alert(resp);
                 }
@@ -410,6 +477,7 @@ Vue.component('vtable', {
 
     ready: function() {
         this.fetchData()
+        this.pageNumberInput = this.currentPage;
     }
 
 });
