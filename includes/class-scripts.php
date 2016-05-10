@@ -62,6 +62,7 @@ class Scripts {
         wp_register_script( 'erp-vuejs', $vendor . '/vue/vue' . $this->suffix . '.js', array( 'jquery' ), $this->version, true );
         wp_register_script( 'erp-trix-editor', $vendor . '/trix/trix.js', array( 'jquery' ), $this->version, true );
         wp_register_script( 'erp-chosen', $vendor . '/chosen/chosen.jquery' . $this->suffix . '.js', array( 'jquery' ), $this->version, true );
+        wp_register_script( 'erp-nprogress', $vendor . '/nprogress/nprogress' . $this->suffix . '.js', array( 'jquery' ), $this->version, true );
 
         // sweet alert
         wp_register_script( 'erp-sweetalert', $vendor . '/sweetalert/sweetalert.min.js', array( 'jquery' ), $this->version, true );
@@ -92,7 +93,7 @@ class Scripts {
      */
     public function register_styles() {
         $vendor = WPERP_ASSETS . '/vendor';
-        $js     = WPERP_ASSETS . '/js';
+        $css     = WPERP_ASSETS . '/css';
 
         wp_register_style( 'erp-fontawesome', $vendor . '/fontawesome/font-awesome.min.css', false, $this->version );
         wp_register_style( 'erp-select2', $vendor . '/select2/select2.min.css', false, $this->version );
@@ -101,15 +102,17 @@ class Scripts {
         wp_register_style( 'erp-timepicker', $vendor . '/timepicker/jquery.timepicker.css', false, $this->version );
         wp_register_style( 'erp-trix-editor', $vendor . '/trix/trix.css', false, $this->version );
         wp_register_style( 'erp-flotchart-valuelabel-css', $vendor . '/flot/plot.css', false, $this->version );
+        wp_register_style( 'erp-nprogress', $vendor . '/nprogress/nprogress.css', false, $this->version );
 
         // jquery UI
-        wp_register_style( 'jquery-ui', WPERP_ASSETS . '/vendor/jquery-ui/jquery-ui-1.9.1.custom.css' );
-        wp_register_style( 'erp-chosen', WPERP_ASSETS . '/vendor/chosen/chosen' . $this->suffix . '.css' );
-
-        wp_register_style( 'erp-styles', WPERP_ASSETS . '/css/admin.css', false, $this->version );
+        wp_register_style( 'jquery-ui', $vendor . '/jquery-ui/jquery-ui-1.9.1.custom.css' );
+        wp_register_style( 'erp-chosen', $vendor . '/chosen/chosen' . $this->suffix . '.css' );
 
         // sweet alert
         wp_register_style( 'erp-sweetalert', $vendor . '/sweetalert/sweetalert.css', false, $this->version );
+
+        // core css files
+        wp_register_style( 'erp-styles', $css . '/admin.css', false, $this->version );
     }
 
     /**
