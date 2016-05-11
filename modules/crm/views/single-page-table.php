@@ -165,7 +165,7 @@
         row-checkbox-name="customer_id"
         action="erp-crm-get-contacts"
         :fields=fields
-        per-page="3"
+        per-page="20"
         :item-row-actions=itemRowActions
     ></vtable>
 

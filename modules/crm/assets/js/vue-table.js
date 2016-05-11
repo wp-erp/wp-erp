@@ -29,7 +29,7 @@ Vue.component('vtable', {
                             +'<input type="submit" id="doaction" class="button action" value="Apply">'
                         +'</div>'
 
-                        +'<div class="tablenav-pages">'
+                        +'<div class="tablenav-pages" :class="{ \'one-page\': hidePagination }">'
                             +'<span class="displaying-num">{{ totalItem }} item</span>'
                             +'<span class="pagination-links">'
                                 +'<span v-if="isFirstPage()" class="tablenav-pages-navspan" aria-hidden="true">«</span>'
@@ -38,7 +38,7 @@ Vue.component('vtable', {
                                 +'<span v-if="currentPage == 1"class="tablenav-pages-navspan" aria-hidden="true">‹</span>'
                                 +'<a v-else class="prev-page" href="#" @click.prevent="goToPage(\'prev\')"><span class="screen-reader-text">Previous page</span><span aria-hidden="true">‹</span></a>'
 
-                                +'<span class="screen-reader-text">Current Page</span><input @keydown.enter.prevent="goToPage(pageNumberInput)" class="current-page" id="current-page-selector" v-model="pageNumberInput" type="text" value="1" size="1" aria-describedby="table-paging"> of <span class="total-pages">{{ totalPage }}</span></span>'
+                                +'<span class="screen-reader-text">Current Page</span><input @keydown.enter.prevent="goToPage(pageNumberInput)" class="current-page" id="current-page-selector" v-model="pageNumberInput" type="text" value="1" size="1" aria-describedby="table-paging"> of <span class="total-pages">{{ totalPage }}</span>'
 
                                 +'<span v-if="currentPage == totalPage"class="tablenav-pages-navspan" aria-hidden="true">›</span>'
                                 +'<a v-else class="next-page" href="#" @click.prevent="goToPage(\'next\')"><span class="screen-reader-text">Next page</span><span aria-hidden="true">›</span></a>'
@@ -148,7 +148,7 @@ Vue.component('vtable', {
                             +'<input type="submit" id="doaction2" class="button action" value="Apply">'
                         +'</div>'
 
-                        +'<div class="tablenav-pages">'
+                        +'<div class="tablenav-pages" :class="{ \'one-page\': hidePagination }">'
                             +'<span class="displaying-num">{{ totalItem }} item</span>'
                             +'<span class="pagination-links">'
                                 +'<span v-if="isFirstPage()" class="tablenav-pages-navspan" aria-hidden="true">«</span>'
@@ -254,7 +254,8 @@ Vue.component('vtable', {
             lastPage: 0,
             currentPage: 1,
             pageOffset:0,
-            pageNumberInput:0
+            pageNumberInput:0,
+            hidePagination : false
         }
     },
 
@@ -277,6 +278,10 @@ Vue.component('vtable', {
 
         pageNumberInput: function() {
             return this.currentPage;
+        },
+
+        hidePagination: function() {
+            return this.perPage >= this.totalItem;
         }
     },
 
