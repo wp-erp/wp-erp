@@ -3,11 +3,10 @@ Vue.component('vtable', {
         '<div class="list-table-wrap {{ wrapperClass }}">'
             +'<div class="list-table-inner {{ tableWrapper }}">'
                 +'<form method="get">'
-                    +'<input type="hidden" name="page" value="erp-sales-customers">'
-                    +'<p class="search-box">'
-                        +'<label class="screen-reader-text" for="erp-customer-search-search-input">Search Contact:</label>'
-                        +'<input type="search" id="erp-customer-search-search-input" name="s" value="">'
-                        +'<input type="submit" name="customer_search" id="search-submit" class="button" value="Search Contact">'
+                    +'<p class="search-box {{ search.wrapperClass }}">'
+                        +'<label class="screen-reader-text" for="{{ search.inputId }}">{{ search.screenReaderText }}</label>'
+                        +'<input type="search" v-model="searchQuery" id="{{ search.inputId }}" value="" name="s" placeholder="{{ search.placeholder }}">'
+                        +'<input type="submit" @click.prevent="searchAction( searchQuery )" id="{{ search.btnId }}" class="button" value="{{ search.btnText }}">'
                     +'</p>'
                     +'<ul class="subsubsub">'
                         +'<li class="all"><a href="http://localhost/wperp/wp-admin/admin.php?page=erp-sales-customers&amp;status=all" class="current">All <span class="count">(1)</span></a> |</li>'
@@ -235,7 +234,7 @@ Vue.component('vtable', {
             }
         },
 
-        'sortOrder': {
+        sortOrder: {
             type: Object,
             default: function() {
                 return {
@@ -244,6 +243,27 @@ Vue.component('vtable', {
                 }
             }
         },
+
+        additionalParams: {
+            type: Array,
+            default: function() {
+                return []
+            }
+        },
+
+        search: {
+            type: Object,
+            default: function() {
+                return {
+                    params: 's',
+                    wrapperClass: '',
+                    screenReaderText: 'Search Contact',
+                    inputId: 'search-input',
+                    btnText: 'Search Contact',
+                    btnId: 'search-submit'
+                }
+            }
+        }
     },
 
     data: function() {
@@ -255,7 +275,8 @@ Vue.component('vtable', {
             currentPage: 1,
             pageOffset:0,
             pageNumberInput:0,
-            hidePagination : false
+            hidePagination : false,
+            searchQuery: ''
         }
     },
 
@@ -449,6 +470,18 @@ Vue.component('vtable', {
             this.$dispatch('vtable:action', action, data)
         },
 
+        searchAction: function( query ) {
+            var query = query.trim();
+
+            this.additionalParams = [
+                this.search.params + '=' + query
+            ];
+
+            this.fetchData();
+
+            return false;
+        },
+
         fetchData: function() {
 
             var self = this,
@@ -469,6 +502,10 @@ Vue.component('vtable', {
             var url = params.join('&')
             var postData = jQuery.param(data) + '&' + url;
 
+             if (this.additionalParams.length > 0) {
+                postData += '&'+this.additionalParams.join('&')
+            }
+
             jQuery.post( wpVueTable.ajaxurl, postData, function( resp ) {
                 if ( resp.success ) {
                     self.tableData = resp.data.data;
@@ -477,6 +514,18 @@ Vue.component('vtable', {
                     alert(resp);
                 }
             } );
+        }
+    },
+
+    events: {
+
+        'vuetable:reload': function() {
+            this.fetchData()
+        },
+
+        'vuetable:refresh': function() {
+            this.currentPage = 1
+            this.fetchData()
         }
     },
 

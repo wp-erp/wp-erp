@@ -19,7 +19,9 @@
                     <li class="opportunity"><a href="/wperp/wp-admin/admin.php?page=erp-sales-customers&amp;status=opportunity" class="status-opportunity">Opportunity <span class="count">(0)</span></a> |</li>
                     <li class="subscriber"><a href="/wperp/wp-admin/admin.php?page=erp-sales-customers&amp;status=subscriber" class="status-subscriber">Subscriber <span class="count">(0)</span></a> |</li>
                     <li class="trash"><a href="/wperp/wp-admin/admin.php?page=erp-sales-customers&amp;status=trash" class="status-trash">Trash <span class="count">(0)</span></a></li>
-                </ul><input type="hidden" id="_wpnonce" name="_wpnonce" value="69260767e4"><input type="hidden" name="_wp_http_referer" value="/wperp/wp-admin/admin.php?page=erp-sales-customers">
+                </ul>
+                <input type="hidden" id="_wpnonce" name="_wpnonce" value="69260767e4">
+                <input type="hidden" name="_wp_http_referer" value="/wperp/wp-admin/admin.php?page=erp-sales-customers">
 
                 <div class="tablenav top">
                     <div class="alignleft actions bulkactions">
@@ -167,6 +169,8 @@
         :fields=fields
         per-page="20"
         :item-row-actions=itemRowActions
+        :additional-params=additionalParams
+        :search="search"
     ></vtable>
 
 </div>
@@ -224,7 +228,8 @@
                     class: 'delete',
                     action: 'delete'
                 }
-            ]
+            ],
+            additionalParams: [],
         },
 
         methods: {
