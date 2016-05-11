@@ -43,7 +43,7 @@ function erp_get_currencies() {
     return array_unique( apply_filters( 'erp_currencies', array(
         'AED' => __( 'United Arab Emirates Dirham', 'erp' ),
         'AUD' => __( 'Australian Dollars', 'erp' ),
-        'AZD' => __( 'Argentine peso'),
+        'AZD' => __( 'Argentine Peso'),
         'BDT' => __( 'Bangladeshi Taka', 'erp' ),
         'BRL' => __( 'Brazilian Real', 'erp' ),
         'BGN' => __( 'Bulgarian Lev', 'erp' ),
