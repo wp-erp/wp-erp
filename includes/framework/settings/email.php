@@ -110,6 +110,14 @@ class ERP_Email_Settings extends ERP_Settings_Page {
         ];
 
         $fields['smtp'][] = [
+            'title'   => __( 'Enable SMTP', 'erp' ),
+            'id'      => 'enable_smtp',
+            'type'    => 'radio',
+            'options' => [ 'yes' => 'Yes', 'no' => 'No' ],
+            'default' => 'no'
+        ];
+
+        $fields['smtp'][] = [
             'title'             => __( 'Mail Server', 'erp' ),
             'id'                => 'mail_server',
             'type'              => 'text',
@@ -117,23 +125,6 @@ class ERP_Email_Settings extends ERP_Settings_Page {
                 'placeholder'   => 'smtp.gmail.com'
             ],
             'desc'              => __( 'SMTP host address.', 'erp' ),
-        ];
-
-        $fields['smtp'][] = [
-            'title'             => __( 'Username', 'erp' ),
-            'id'                => 'username',
-            'type'              => 'text',
-            'custom_attributes' => [
-                'placeholder'   => 'email@example.com'
-            ],
-            'desc'              => __( 'Your email id.', 'erp' ),
-        ];
-
-        $fields['smtp'][] = [
-            'title' => __( 'Password', 'erp' ),
-            'id'    => 'password',
-            'type'  => 'password',
-            'desc'  => __( 'Your email password.', 'erp' )
         ];
 
         $fields['smtp'][] = [
@@ -152,6 +143,31 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             'type'    => 'select',
             'desc'    => __( 'Encryption type.', 'erp' ),
             'options' => [ '' => __( 'None', 'erp'), 'ssl' => __( 'SSL', 'erp' ), 'tls' => __( 'TLS', 'erp') ],
+        ];
+
+        $fields['smtp'][] = [
+            'title'   => __( 'Authentication', 'erp' ),
+            'id'      => 'authentication',
+            'type'    => 'radio',
+            'options' => [ 'yes' => 'Yes', 'no' => 'No' ],
+            'default' => 'no'
+        ];
+
+        $fields['smtp'][] = [
+            'title'             => __( 'Username', 'erp' ),
+            'id'                => 'username',
+            'type'              => 'text',
+            'custom_attributes' => [
+                'placeholder'   => 'email@example.com'
+            ],
+            'desc'              => __( 'Your email id.', 'erp' ),
+        ];
+
+        $fields['smtp'][] = [
+            'title' => __( 'Password', 'erp' ),
+            'id'    => 'password',
+            'type'  => 'password',
+            'desc'  => __( 'Your email password.', 'erp' )
         ];
 
         $fields['smtp'][] = [

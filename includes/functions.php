@@ -1459,3 +1459,61 @@ function erp_parse_args_recursive( &$args, $defaults = [] ) {
 
     return $r;
 }
+
+/**
+ * ERP Email sender
+ *
+ * @param string|array $to
+ * @param string       $subject
+ * @param string       $message
+ * @param string|array $headers
+ * @param string|array $attachments
+ *
+ * @return boolean
+ */
+function erp_mail( $to, $subject, $message, $headers = '', $attachments = [] ) {
+    add_action( 'phpmailer_init', 'erp_mail_smtp' );
+
+    $is_mail_sent = wp_mail( $to, $subject, $message, $headers = '', $attachments = [] );
+
+    remove_action( 'phpmailer_init', 'erp_mail_smtp' );
+
+    return $is_mail_sent;
+}
+
+/**
+ * ERP Email SMTP Options
+ *
+ * @param  obj $phpmailer
+ *
+ * @return void
+ */
+function erp_mail_smtp( $phpmailer ) {
+    $erp_email_settings = get_option( 'erp_settings_erp-email', [] );
+    $erp_email_smtp_settings = get_option( 'erp_settings_erp-email_smtp', [] );
+
+    if ( ! is_email( $erp_email_settings['from_email'] ) || empty( $erp_email_smtp_settings['mail_server'] ) ) {
+        return;
+    }
+
+    $phpmailer->From = $erp_email_settings['from_email'];
+    $phpmailer->FromName = $erp_email_settings['from_name'];
+
+    // $phpmailer->Sender = $phpmailer->From; //Return-Path
+    // $phpmailer->AddReplyTo($phpmailer->From,$phpmailer->FromName); //Reply-To
+
+    if ( $erp_email_smtp_settings['enable_smtp'] ) {
+        $phpmailer->Mailer = 'smtp'; //'smtp', 'mail', or 'sendmail'
+
+        $phpmailer->Host = $erp_email_smtp_settings['mail_server'];
+        $phpmailer->SMTPSecure = ( $erp_email_smtp_settings['encryption'] != '' ) ? $erp_email_smtp_settings['encryption'] : 'ssl';
+        $phpmailer->Port = $erp_email_smtp_settings['port'];
+
+        $phpmailer->SMTPAuth = ( $erp_email_smtp_settings['authentication'] == 'yes' ) ? true : false;
+
+        if ( $phpmailer->SMTPAuth ) {
+            $phpmailer->Username = $erp_email_smtp_settings['username'];
+            $phpmailer->Password = $erp_email_smtp_settings['password'];
+        }
+    }
+}
