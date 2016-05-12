@@ -328,6 +328,11 @@ function erp_crm_customer_get_status_count( $type = null ) {
         $counts['all']['count'] += (int) $row['num'];
     }
 
+    $counts['trash'] = [
+        'count' => erp_crm_count_trashed_customers( $type ),
+        'label' => __( 'Trash', 'erp' )
+    ];
+
     return $counts;
 }
 

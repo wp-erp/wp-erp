@@ -1,4 +1,4 @@
-
+<?php $statuses = erp_crm_customer_get_status_count( 'contact' ); ?>
 <div class="wrap erp-crm-customer" id="wp-erp">
 
     <h2>Contact<a href="#" id="erp-customer-new" class="erp-contact-new add-new-h2" data-type="contact" title="Add New Contact">Add New Contact</a></h2>
@@ -171,6 +171,7 @@
         :item-row-actions=itemRowActions
         :additional-params=additionalParams
         :search="search"
+        :top-nav-filter="topNavFilter"
     ></vtable>
 
 </div>
@@ -230,6 +231,10 @@
                 }
             ],
             additionalParams: [],
+            topNavFilter: {
+                data: <?php echo json_encode( $statuses ); ?>,
+                default: 'all'
+            }
         },
 
         methods: {
@@ -245,6 +250,16 @@
 
         events: {
             'vtable:action': function(action, data) {
+            },
+
+            'vtable:top-nav-action': function(action, label) {
+                this.additionalParams = [
+                    'status=' + action
+                ];
+
+                this.$nextTick(function() {
+                    this.$broadcast('vtable:refresh')
+                })
             },
         }
     });

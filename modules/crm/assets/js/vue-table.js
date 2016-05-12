@@ -5,17 +5,12 @@ Vue.component('vtable', {
                 +'<form method="get">'
                     +'<p class="search-box {{ search.wrapperClass }}">'
                         +'<label class="screen-reader-text" for="{{ search.inputId }}">{{ search.screenReaderText }}</label>'
-                        +'<input type="search" v-model="searchQuery" id="{{ search.inputId }}" value="" name="s" placeholder="{{ search.placeholder }}">'
+                        +'<input type="search" v-model="searchQuery" @click.search="searchAction( searchQuery )" id="{{ search.inputId }}" value="" name="s" placeholder="{{ search.placeholder }}">'
                         +'<input type="submit" @click.prevent="searchAction( searchQuery )" id="{{ search.btnId }}" class="button" value="{{ search.btnText }}">'
                     +'</p>'
-                    +'<ul class="subsubsub">'
-                        +'<li class="all"><a href="http://localhost/wperp/wp-admin/admin.php?page=erp-sales-customers&amp;status=all" class="current">All <span class="count">(1)</span></a> |</li>'
-                        +'<li class="customer"><a href="/wperp/wp-admin/admin.php?page=erp-sales-customers&amp;status=customer" class="status-customer">Customer <span class="count">(1)</span></a> |</li>'
-                        +'<li class="lead"><a href="/wperp/wp-admin/admin.php?page=erp-sales-customers&amp;status=lead" class="status-lead">Lead <span class="count">(0)</span></a> |</li>'
-                        +'<li class="opportunity"><a href="/wperp/wp-admin/admin.php?page=erp-sales-customers&amp;status=opportunity" class="status-opportunity">Opportunity <span class="count">(0)</span></a> |</li>'
-                        +'<li class="subscriber"><a href="/wperp/wp-admin/admin.php?page=erp-sales-customers&amp;status=subscriber" class="status-subscriber">Subscriber <span class="count">(0)</span></a> |</li>'
-                        +'<li class="trash"><a href="/wperp/wp-admin/admin.php?page=erp-sales-customers&amp;status=trash" class="status-trash">Trash <span class="count">(0)</span></a></li>'
-                    +'</ul><input type="hidden" id="_wpnonce" name="_wpnonce" value="69260767e4"><input type="hidden" name="_wp_http_referer" value="/wperp/wp-admin/admin.php?page=erp-sales-customers">'
+                    +'<ul v-if="!hasTopNavFilter()" class="subsubsub">'
+                        +'<li v-for="( key, filter ) in topNavFilter.data" class="{{key}}"><a href="#" @click.prevent="callTopNavFilterAction( key, filter )" :class="{ \'current\': iscurrentTopNavFilter( key ) }">{{ filter.label }} <span class="count">({{ filter.count }})</span></a> <span v-if="!ifTopNavFilterLastItem( key )"> | </span></li>'
+                    +'</ul>'
 
                     +'<div class="tablenav top">'
                         +'<div class="alignleft actions bulkactions">'
@@ -234,6 +229,13 @@ Vue.component('vtable', {
             }
         },
 
+        topNavFilter: {
+            type: Object,
+            default: function() {
+                return {};
+            }
+        },
+
         sortOrder: {
             type: Object,
             default: function() {
@@ -276,7 +278,9 @@ Vue.component('vtable', {
             pageOffset:0,
             pageNumberInput:0,
             hidePagination : false,
-            searchQuery: ''
+            searchQuery: '',
+            currentTopNavFilter: '',
+            activeTopNavFilter: ''
         }
     },
 
@@ -303,10 +307,27 @@ Vue.component('vtable', {
 
         hidePagination: function() {
             return this.perPage >= this.totalItem;
-        }
+        },
+
+        currentTopNavFilter: function() {
+            return ( this.activeTopNavFilter ) ? this.activeTopNavFilter : this.topNavFilter.default;
+        },
     },
 
     methods: {
+
+        ifTopNavFilterLastItem: function( currentKey ) {
+            var keys = Object.keys( this.topNavFilter.data )
+
+            if ( keys[keys.length-1] == currentKey ) {
+                return true;
+            }
+            return false;
+        },
+
+        iscurrentTopNavFilter: function( key ) {
+            return this.currentTopNavFilter == key;
+        },
 
         isFirstPage: function() {
             return this.currentPage == 1;
@@ -325,6 +346,10 @@ Vue.component('vtable', {
         goLastPage: function() {
             this.currentPage = this.totalPage;
             this.fetchData();
+        },
+
+        hasTopNavFilter: function() {
+            return this.topNavFilter.data.length > 0;
         },
 
         goToPage: function(direction) {
@@ -366,23 +391,6 @@ Vue.component('vtable', {
 
         hasPreventRowAction: function( rowAction ) {
             return rowAction.action ? true : false;
-        },
-
-        callPreventRowAction: function( rowAction ) {
-            if ( ! this.hasCallback(field) ) {
-                return;
-            }
-
-            var args = field.callback.split('|')
-            var func = args.shift()
-
-            if (typeof this.$parent[func] == 'function') {
-                return (args.length > 0)
-                    ? this.$parent[func].apply(this.$parent, [this.getObjectValue(item, field.name)].concat(args), item )
-                    : this.$parent[func].call(this.$parent, this.getObjectValue(item, field.name), item)
-            }
-
-            return null
         },
 
         hasRowAction: function( index ) {
@@ -470,16 +478,22 @@ Vue.component('vtable', {
             this.$dispatch('vtable:action', action, data)
         },
 
+        callTopNavFilterAction: function( action, label ) {
+            this.activeTopNavFilter = action;
+            this.$dispatch('vtable:top-nav-action', action, label );
+        },
+
         searchAction: function( query ) {
             var query = query.trim();
 
-            this.additionalParams = [
-                this.search.params + '=' + query
-            ];
+            if ( query !== '' ) {
+                this.additionalParams = [
+                    this.search.params + '=' + query
+                ];
+            }
 
             this.fetchData();
 
-            return false;
         },
 
         fetchData: function() {
@@ -519,11 +533,11 @@ Vue.component('vtable', {
 
     events: {
 
-        'vuetable:reload': function() {
+        'vtable:reload': function() {
             this.fetchData()
         },
 
-        'vuetable:refresh': function() {
+        'vtable:refresh': function() {
             this.currentPage = 1
             this.fetchData()
         }
