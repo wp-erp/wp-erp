@@ -1472,11 +1472,11 @@ function erp_parse_args_recursive( &$args, $defaults = [] ) {
  * @return boolean
  */
 function erp_mail( $to, $subject, $message, $headers = '', $attachments = [] ) {
-    add_action( 'phpmailer_init', 'erp_mail_smtp' );
+    add_action( 'phpmailer_init', 'erp_mail_smtp_callback' );
 
-    $is_mail_sent = wp_mail( $to, $subject, $message, $headers = '', $attachments = [] );
+    $is_mail_sent = wp_mail( $to, $subject, $message, $headers, $attachments );
 
-    remove_action( 'phpmailer_init', 'erp_mail_smtp' );
+    remove_action( 'phpmailer_init', 'erp_mail_smtp_callback' );
 
     return $is_mail_sent;
 }
@@ -1484,11 +1484,13 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [] ) {
 /**
  * ERP Email SMTP Options
  *
+ * This function will reconfigure email settings like smtp.
+ *
  * @param  obj $phpmailer
  *
  * @return void
  */
-function erp_mail_smtp( $phpmailer ) {
+function erp_mail_smtp_callback( $phpmailer ) {
     $erp_email_settings = get_option( 'erp_settings_erp-email', [] );
     $erp_email_smtp_settings = get_option( 'erp_settings_erp-email_smtp', [] );
 
