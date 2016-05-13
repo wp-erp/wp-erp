@@ -173,6 +173,8 @@ class Ajax_Handler {
 
         $contacts['total_items']   = $total_items;
 
+        // $contacts['total_items'] = 0;
+        // $contacts['data'] = [];
         $this->send_success( $contacts );
     }
 

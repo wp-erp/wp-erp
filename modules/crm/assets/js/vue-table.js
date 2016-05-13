@@ -1,11 +1,11 @@
 Vue.component('vtable', {
     template:
-        '<div class="list-table-wrap {{ wrapperClass }}">'
+        '<div class="vtable-wrap list-table-wrap {{ wrapperClass }}">'
             +'<div class="list-table-inner {{ tableWrapper }}">'
                 +'<form method="get">'
                     +'<p class="search-box {{ search.wrapperClass }}">'
                         +'<label class="screen-reader-text" for="{{ search.inputId }}">{{ search.screenReaderText }}</label>'
-                        +'<input type="search" v-model="searchQuery" @click.search="searchAction( searchQuery )" id="{{ search.inputId }}" value="" name="s" placeholder="{{ search.placeholder }}">'
+                        +'<input type="search" v-model="searchQuery" id="{{ search.inputId }}" value="" name="s" placeholder="{{ search.placeholder }}">'
                         +'<input type="submit" @click.prevent="searchAction( searchQuery )" id="{{ search.btnId }}" class="button" value="{{ search.btnText }}">'
                     +'</p>'
                     +'<ul v-if="!hasTopNavFilter()" class="subsubsub">'
@@ -13,14 +13,13 @@ Vue.component('vtable', {
                     +'</ul>'
 
                     +'<div class="tablenav top">'
-                        +'<div class="alignleft actions bulkactions">'
+                        +'<div class="alignleft actions bulkactions" v-if="hasBulkAction()">'
                             +'<label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label>'
-                            +'<select name="action" id="bulk-action-selector-top">'
+                            +'<select name="action" id="bulk-action-selector-top" v-model="bulkaction1">'
                                 +'<option value="-1">Bulk Actions</option>'
-                                +'<option value="delete">Move to Trash</option>'
-                                +'<option value="assing_group">Add to Contact group</option>'
+                                +'<option v-for="actions in bulkactions.defaultAction" value="{{ actions.id }}">{{ actions.text }}</option>'
                             +'</select>'
-                            +'<input type="submit" id="doaction" class="button action" value="Apply">'
+                            +'<input type="submit" id="doaction" @click.prevent="handleBulkAction(bulkaction1)" class="button action" value="Apply">'
                         +'</div>'
 
                         +'<div class="tablenav-pages" :class="{ \'one-page\': hidePagination }">'
@@ -43,103 +42,107 @@ Vue.component('vtable', {
                         +'</div>'
                         +'<br class="clear">'
                     +'</div>'
+                    +'<div class="vtbale-table-wrapper">'
+                        +'<table class="vtable wp-list-table widefat fixed striped {{ tableClass }}">'
+                            +'<thead>'
+                                +'<tr>'
+                                    +'<td id="cb" class="manage-column column-cb check-column">'
+                                        +'<label class="screen-reader-text" for="cb-select-all-1">Select All</label>'
+                                        +'<input id="cb-select-all-1" type="checkbox">'
+                                    +'</td>'
+                                    +'<template v-for="(i,field) in fields">'
+                                        +'<th v-if="!isSortable( field )" scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }} column-primary">{{ field.title }}</th>'
+                                        +'<th v-else scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }} sortable {{ sortOrder.direction }}">'
+                                            +'<a href="#" @click.prevent="orderBy( field )">'
+                                                +'<span>{{ field.title }}</span>'
+                                                +'<span class="sorting-indicator"></span>'
+                                            +'</a>'
+                                        +'</th>'
+                                    +'</template>'
+                                +'</tr>'
+                            +'</thead>'
 
-                    +'<table class="wp-list-table widefat fixed striped {{ tableClass }}">'
-                        +'<thead>'
-                            +'<tr>'
-                                +'<td id="cb" class="manage-column column-cb check-column">'
-                                    +'<label class="screen-reader-text" for="cb-select-all-1">Select All</label>'
-                                    +'<input id="cb-select-all-1" type="checkbox">'
-                                +'</td>'
-                                +'<template v-for="(i,field) in fields">'
-                                    +'<th v-if="!isSortable( field )" scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }} column-primary">{{ field.title }}</th>'
-                                    +'<th v-else scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }} sortable {{ sortOrder.direction }}">'
-                                        +'<a href="#" @click.prevent="orderBy( field )">'
-                                            +'<span>{{ field.title }}</span>'
-                                            +'<span class="sorting-indicator"></span>'
-                                        +'</a>'
+                            +'<tbody id="the-list" data-wp-lists="list:{{ tableClass }}" class="vtbale-tbody">'
+                                +'<tr v-if="( tableData.length > 0 )" v-for="item in tableData">'
+                                    +'<th scope="row" class="check-column">'
+                                        +'<input type="checkbox" v-model="checkboxItems" class="{{ rowCheckboxId }}" name="{{ rowCheckboxName }}[]" data-field="{{ rowCheckboxField }}" value="{{ item[rowCheckboxField] }}">'
                                     +'</th>'
-                                +'</template>'
-                            +'</tr>'
-                        +'</thead>'
-
-                        +'<tbody id="the-list" data-wp-lists="list:{{ tableClass }}">'
-                            +'<tr v-for="item in tableData">'
-                                +'<th scope="row" class="check-column">'
-                                    +'<input type="checkbox" class="{{ rowCheckboxId }}" name="{{ rowCheckboxName }}[]" value="">'
-                                +'</th>'
-                                + '<template v-for="( i, field ) in fields">'
-                                    + '<template v-if="(i==0 )">'
-                                        + '<td v-if="hasCallback(field)" class="has-row-actions column-primary {{ field.name }} column-{{ field.name }}" data-colname="{{ field.title }}">'
-                                        + '{{{ callCallback(field, item ) }}}'
-                                        + '<template v-if="hasRowAction()">'
-                                            + '<div class="row-actions">'
-                                                + '<template v-for="( rowActionIndex, rowAction ) in itemRowActions">'
-                                                    + '<template v-if="hasRowActionCallback( rowAction )">'
-                                                        + '{{{ callRowActionCallback( rowAction, item ) }}}'
+                                    + '<template v-for="( i, field ) in fields">'
+                                        + '<template v-if="(i==0 )">'
+                                            + '<td v-if="hasCallback(field)" class="has-row-actions column-primary {{ field.name }} column-{{ field.name }}" data-colname="{{ field.title }}">'
+                                            + '{{{ callCallback(field, item ) }}}'
+                                            + '<template v-if="hasRowAction()">'
+                                                + '<div class="row-actions">'
+                                                    + '<template v-for="( rowActionIndex, rowAction ) in itemRowActions">'
+                                                        + '<template v-if="hasRowActionCallback( rowAction )">'
+                                                            + '{{{ callRowActionCallback( rowAction, item ) }}}'
+                                                        + '</template>'
+                                                        + '<template v-else>'
+                                                            + '<span class="{{ rowAction.class }}">'
+                                                                + '<a v-if="!hasPreventRowAction( rowAction )" href="{{{ rowActionLinkCallback( rowAction, item ) }}}" title="{{ rowAction.attrTitle }}">{{ rowAction.title }}</a>'
+                                                                + '<a v-else href="#" @click.prevent="callAction( rowAction.action, item )" title="{{ rowAction.attrTitle }}">{{ rowAction.title }}</a>'
+                                                                + '<span v-if="rowActionIndex != ( itemRowActions.length - 1)"> | </span>'
+                                                            + '</span>'
+                                                        + '</template>'
                                                     + '</template>'
-                                                    + '<template v-else>'
-                                                        + '<span class="{{ rowAction.class }}">'
-                                                            + '<a v-if="!hasPreventRowAction( rowAction )" href="{{{ rowActionLinkCallback( rowAction, item ) }}}" title="{{ rowAction.attrTitle }}">{{ rowAction.title }}</a>'
-                                                            + '<a v-else href="#" @click.prevent="callAction( rowAction.action, item )" title="{{ rowAction.attrTitle }}">{{ rowAction.title }}</a>'
-                                                            + '<span v-if="rowActionIndex != ( itemRowActions.length - 1)"> | </span>'
-                                                        + '</span>'
-                                                    + '</template>'
-                                                + '</template>'
-                                            + '</div>'
+                                                + '</div>'
 
-                                            + '<button type="button" class="toggle-row">'
-                                                + '<span class="screen-reader-text">Show more details</span>'
-                                            + '</button>'
-                                            + '<button type="button" class="toggle-row">'
-                                                + '<span class="screen-reader-text">Show more details</span>'
-                                            + '</button>'
+                                                + '<button type="button" class="toggle-row">'
+                                                    + '<span class="screen-reader-text">Show more details</span>'
+                                                + '</button>'
+                                                + '<button type="button" class="toggle-row">'
+                                                    + '<span class="screen-reader-text">Show more details</span>'
+                                                + '</button>'
+                                            + '</template>'
+                                            + '</td>'
+                                            + '<td v-else class="has-row-actions column-primary column-name {{ field.name }} column-{{ field.name }}" data-colname="{{ field.title }}">'
+                                                + '{{{ getObjectValue(item, field.name, "-") }}}'
+                                            + '</td>'
                                         + '</template>'
-                                        + '</td>'
-                                        + '<td v-else class="has-row-actions column-primary column-name {{ field.name }} column-{{ field.name }}" data-colname="{{ field.title }}">'
-                                            + '{{{ getObjectValue(item, field.name, "-") }}}'
-                                        + '</td>'
+                                        + '<template v-else>'
+                                            + '<td v-if="hasCallback(field)" class="{{ field.name }} column-{{ field.name }}" data-colname="{{ field.title }}">'
+                                            + '{{{ callCallback(field, item ) }}}'
+                                            + '</td>'
+                                            + '<td v-else class="{{ field.name }} column-{{ field.name }}" data-colname="{{ field.title }}">'
+                                                + '{{{ getObjectValue(item, field.name, "-") }}}'
+                                            + '</td>'
+                                        + '</template>'
                                     + '</template>'
-                                    + '<template v-else>'
-                                        + '<td v-if="hasCallback(field)" class="{{ field.name }} column-{{ field.name }}" data-colname="{{ field.title }}">'
-                                        + '{{{ callCallback(field, item ) }}}'
-                                        + '</td>'
-                                        + '<td v-else class="{{ field.name }} column-{{ field.name }}" data-colname="{{ field.title }}">'
-                                            + '{{{ getObjectValue(item, field.name, "-") }}}'
-                                        + '</td>'
-                                    + '</template>'
-                                + '</template>'
-                            +'</tr>'
-                        +'</tbody>'
+                                +'</tr>'
+                                +'<tr v-if="( tableData.length < 1 ) || !isLoaded">'
+                                    +'<td colspan="{{ this.fields.length+1 }}"><span v-if="!isLoaded">Loading...</span><span v-else>No result found</span></td>'
+                                +'</tr>'
+                            +'</tbody>'
 
-                        +'<tfoot>'
-                            +'<tr>'
-                                +'<td class="manage-column column-cb check-column">'
-                                    +'<label class="screen-reader-text" for="cb-select-all-2">Select All</label>'
-                                    +'<input id="cb-select-all-2" type="checkbox">'
-                                +'</td>'
-                                +'<template v-for="field in fields">'
-                                    +'<th v-if="!isSortable( field )" scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }} column-primary">{{ field.title }}</th>'
-                                    +'<th v-else scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }} sortable {{ sortOrder.direction }}">'
-                                        +'<a href="#" @click.prevent="orderBy( field )">'
-                                            +'<span>{{ field.title }}</span>'
-                                            +'<span class="sorting-indicator"></span>'
-                                        +'</a>'
-                                    +'</th>'
-                                +'</template>'
-                            +'</tr>'
-                        +'</tfoot>'
-                    +'</table>'
-
+                            +'<tfoot>'
+                                +'<tr>'
+                                    +'<td class="manage-column column-cb check-column">'
+                                        +'<label class="screen-reader-text" for="cb-select-all-2">Select All</label>'
+                                        +'<input id="cb-select-all-2" type="checkbox">'
+                                    +'</td>'
+                                    +'<template v-for="field in fields">'
+                                        +'<th v-if="!isSortable( field )" scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }} column-primary">{{ field.title }}</th>'
+                                        +'<th v-else scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }} sortable {{ sortOrder.direction }}">'
+                                            +'<a href="#" @click.prevent="orderBy( field )">'
+                                                +'<span>{{ field.title }}</span>'
+                                                +'<span class="sorting-indicator"></span>'
+                                            +'</a>'
+                                        +'</th>'
+                                    +'</template>'
+                                +'</tr>'
+                            +'</tfoot>'
+                        +'</table>'
+                        +'<div class="vtable-loader-bg" v-if="ajaxloader"></div>'
+                        +'<div class="vtable-loader" v-if="ajaxloader"></div>'
+                    +'</div>'
                     +'<div class="tablenav bottom">'
-                        +'<div class="alignleft actions bulkactions">'
+                        +'<div class="alignleft actions bulkactions" v-if="hasBulkAction()">'
                             +'<label for="bulk-action-selector-bottom" class="screen-reader-text">Select bulk action</label>'
-                            +'<select name="action2" id="bulk-action-selector-bottom">'
+                            +'<select name="action2" id="bulk-action-selector-bottom" v-model="bulkaction2">'
                                 +'<option value="-1">Bulk Actions</option>'
-                                +'<option value="delete">Move to Trash</option>'
-                                +'<option value="assing_group">Add to Contact group</option>'
+                                +'<option v-for="actions in bulkactions.defaultAction" value="{{ actions.id }}">{{ actions.text }}</option>'
                             +'</select>'
-                            +'<input type="submit" id="doaction2" class="button action" value="Apply">'
+                            +'<input type="submit" id="doaction2" @click.prevent="handleBulkAction( bulkaction2 )" class="button action" value="Apply">'
                         +'</div>'
 
                         +'<div class="tablenav-pages" :class="{ \'one-page\': hidePagination }">'
@@ -195,6 +198,13 @@ Vue.component('vtable', {
             }
         },
 
+        'rowCheckboxField': {
+            type: String,
+            default: function() {
+                return 'id'
+            }
+        },
+
         'rowCheckboxName': {
             type: String,
             default: function() {
@@ -210,6 +220,13 @@ Vue.component('vtable', {
         'action': {
             type: String,
             required: true
+        },
+
+        bulkactions: {
+            type: Object,
+            default: function() {
+                return {}
+            }
         },
 
         'perPage': {
@@ -270,7 +287,7 @@ Vue.component('vtable', {
 
     data: function() {
         return {
-            tableData: null,
+            tableData: [],
             totalItem: 0,
             totalPage: 0,
             lastPage: 0,
@@ -280,7 +297,12 @@ Vue.component('vtable', {
             hidePagination : false,
             searchQuery: '',
             currentTopNavFilter: '',
-            activeTopNavFilter: ''
+            activeTopNavFilter: '',
+            checkboxItems: [],
+            bulkaction1: '-1',
+            bulkaction2: '-1',
+            ajaxloader: false,
+            isLoaded: false
         }
     },
 
@@ -312,9 +334,23 @@ Vue.component('vtable', {
         currentTopNavFilter: function() {
             return ( this.activeTopNavFilter ) ? this.activeTopNavFilter : this.topNavFilter.default;
         },
+
+        columnCount: function() {
+            return this.fields.length+1;
+        }
     },
 
     methods: {
+
+        handleBulkAction: function(action) {
+            this.$dispatch('vtable:default-bulk-action', action, this.checkboxItems );
+            this.checkboxItems = [];
+            this.bulkaction1 = this.bulkaction2 = '-1';
+        },
+
+        hasBulkAction: function() {
+            return Object.keys( this.bulkactions ).length > 0;
+        },
 
         ifTopNavFilterLastItem: function( currentKey ) {
             var keys = Object.keys( this.topNavFilter.data )
@@ -353,7 +389,6 @@ Vue.component('vtable', {
         },
 
         goToPage: function(direction) {
-
             if ( direction == 'prev' ) {
                 this.currentPage--;
             } else if ( direction == 'next' ) {
@@ -490,10 +525,9 @@ Vue.component('vtable', {
                 this.additionalParams = [
                     this.search.params + '=' + query
                 ];
+
+                this.fetchData();
             }
-
-            this.fetchData();
-
         },
 
         fetchData: function() {
@@ -511,19 +545,27 @@ Vue.component('vtable', {
                 'offset=' + this.pageOffset
             ];
 
+            this.ajaxloader = true;
+
             // console.log( params );
 
             var url = params.join('&')
             var postData = jQuery.param(data) + '&' + url;
 
-             if (this.additionalParams.length > 0) {
+            if (this.additionalParams.length > 0) {
                 postData += '&'+this.additionalParams.join('&')
             }
 
             jQuery.post( wpVueTable.ajaxurl, postData, function( resp ) {
                 if ( resp.success ) {
-                    self.tableData = resp.data.data;
-                    self.totalItem = resp.data.total_items;
+                    setTimeout(function(){
+                        self.ajaxloader = false;
+                        self.isLoaded = true;
+
+                        self.tableData = resp.data.data;
+                        self.totalItem = resp.data.total_items;
+
+                    }, 2000);
                 } else {
                     alert(resp);
                 }
