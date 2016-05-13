@@ -70,7 +70,7 @@
                                             }
                                             ?>
                                             <li>
-                                                <a href="<?php echo add_query_arg( [ 'page' => 'erp-sales-customers', 'status' => $company_key ], admin_url( 'admin.php' ) ); ?>">
+                                                <a href="<?php echo add_query_arg( [ 'page' => 'erp-sales-companies', 'status' => $company_key ], admin_url( 'admin.php' ) ); ?>">
                                                     <?php
                                                         if ( $company_key == 'customer' ) {
                                                             echo sprintf( _n( '%s Customer', '%s Customers', $company_value['count'], 'erp' ), number_format_i18n( $company_value['count'] ), 0 );
