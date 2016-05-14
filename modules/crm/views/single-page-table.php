@@ -93,7 +93,8 @@
             additionalParams: [],
             topNavFilter: {
                 data: <?php echo json_encode( $statuses ); ?>,
-                default: 'all'
+                default: 'all',
+                field: 'status'
             },
             bulkactions: bulkactions
         },
@@ -111,16 +112,6 @@
 
         events: {
             'vtable:action': function(action, data) {
-            },
-
-            'vtable:top-nav-action': function(action, label) {
-                this.additionalParams = [
-                    'status=' + action
-                ];
-
-                this.$nextTick(function() {
-                    this.$broadcast('vtable:refresh')
-                })
             },
 
             'vtable:default-bulk-action': function( action, ids ) {

@@ -105,9 +105,9 @@ function erp_get_peoples( $args = [] ) {
 
         // Check is the row want to search
         if ( ! empty( $s ) ) {
-            $sql['where'][] = "AND ( first_name.meta_value LIKE '%$s%' OR people.first_name LIKE '%$s%')";
+            $sql['where'][] = "AND ( ( first_name.meta_value LIKE '%$s%' OR people.first_name LIKE '%$s%')";
             $sql['where'][] = "OR ( last_name.meta_value LIKE '%$s%' OR people.last_name LIKE '%$s%')";
-            $sql['where'][] = "OR ( people.company LIKE '%$s%')";
+            $sql['where'][] = "OR ( people.company LIKE '%$s%') )";
         }
 
         // Check if args count true, then return total count customer according to above filter

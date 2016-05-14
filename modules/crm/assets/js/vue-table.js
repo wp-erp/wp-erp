@@ -222,7 +222,7 @@ Vue.component('vtable', {
             required: true
         },
 
-        bulkactions: {
+        'bulkactions': {
             type: Object,
             default: function() {
                 return {}
@@ -239,21 +239,21 @@ Vue.component('vtable', {
             }
         },
 
-        itemRowActions: {
+        'itemRowActions': {
             type: Array,
             default: function() {
                 return [];
             }
         },
 
-        topNavFilter: {
+        'topNavFilter': {
             type: Object,
             default: function() {
                 return {};
             }
         },
 
-        sortOrder: {
+        'sortOrder': {
             type: Object,
             default: function() {
                 return {
@@ -263,14 +263,14 @@ Vue.component('vtable', {
             }
         },
 
-        additionalParams: {
-            type: Array,
+        'additionalParams': {
+            type: Object,
             default: function() {
-                return []
+                return {}
             }
         },
 
-        search: {
+        'search': {
             type: Object,
             default: function() {
                 return {
@@ -515,16 +515,27 @@ Vue.component('vtable', {
 
         callTopNavFilterAction: function( action, label ) {
             this.activeTopNavFilter = action;
-            this.$dispatch('vtable:top-nav-action', action, label );
+
+            if ( typeof this.additionalParams === 'undefined' ) {
+                this.additionalParams = {};
+            }
+
+            // var obj = {};
+            // obj[this.topNavFilter.field] = action;
+            this.additionalParams['status'] = action;
+
+            this.fetchData();
         },
 
         searchAction: function( query ) {
             var query = query.trim();
 
             if ( query !== '' ) {
-                this.additionalParams = [
-                    this.search.params + '=' + query
-                ];
+                if ( typeof this.additionalParams === 'undefined' ) {
+                    this.additionalParams = {};
+                }
+
+                this.additionalParams[this.search.params] = query;
 
                 this.fetchData();
             }
@@ -552,8 +563,10 @@ Vue.component('vtable', {
             var url = params.join('&')
             var postData = jQuery.param(data) + '&' + url;
 
-            if (this.additionalParams.length > 0) {
-                postData += '&'+this.additionalParams.join('&')
+            if ( typeof this.additionalParams !== 'undefined' ) {
+                if ( Object.keys(this.additionalParams).length > 0  ) {
+                    postData += '&'+jQuery.param( this.additionalParams );
+                }
             }
 
             jQuery.post( wpVueTable.ajaxurl, postData, function( resp ) {
@@ -565,7 +578,7 @@ Vue.component('vtable', {
                         self.tableData = resp.data.data;
                         self.totalItem = resp.data.total_items;
 
-                    }, 2000);
+                    }, 1000);
                 } else {
                     alert(resp);
                 }
