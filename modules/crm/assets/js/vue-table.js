@@ -571,14 +571,11 @@ Vue.component('vtable', {
 
             jQuery.post( wpVueTable.ajaxurl, postData, function( resp ) {
                 if ( resp.success ) {
-                    setTimeout(function(){
-                        self.ajaxloader = false;
-                        self.isLoaded = true;
+                    self.ajaxloader = false;
+                    self.isLoaded = true;
 
-                        self.tableData = resp.data.data;
-                        self.totalItem = resp.data.total_items;
-
-                    }, 1000);
+                    self.tableData = resp.data.data;
+                    self.totalItem = resp.data.total_items;
                 } else {
                     alert(resp);
                 }
