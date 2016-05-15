@@ -1494,15 +1494,29 @@ function erp_mail_smtp_callback( $phpmailer ) {
     $erp_email_settings = get_option( 'erp_settings_erp-email', [] );
     $erp_email_smtp_settings = get_option( 'erp_settings_erp-email_smtp', [] );
 
-    if ( ! is_email( $erp_email_settings['from_email'] ) || empty( $erp_email_smtp_settings['mail_server'] ) ) {
-        return;
+    if ( ! isset( $erp_email_settings['from_email'] ) ) {
+        $from_name = get_option( 'admin_email' );
+    } else {
+        $from_name = $erp_email_settings['from_email'];
     }
 
-    $phpmailer->From = $erp_email_settings['from_email'];
-    $phpmailer->FromName = $erp_email_settings['from_name'];
+    if ( ! isset( $erp_email_settings['from_name'] ) ) {
+        global $current_user;
 
-    // $phpmailer->Sender = $phpmailer->From; //Return-Path
-    // $phpmailer->AddReplyTo($phpmailer->From,$phpmailer->FromName); //Reply-To
+        $from_email = $current_user->display_name;
+    } else {
+        $from_email = $erp_email_settings['from_name'];
+    }
+
+    $content_type = 'text/html';
+
+    $phpmailer->From = apply_filters( 'erp_mail_from', $from_email );
+    $phpmailer->FromName = apply_filters( 'erp_mail_from_name', $from_name );
+    $phpmailer->ContentType = apply_filters( 'erp_mail_content_type', $content_type );
+
+    $phpmailer->Sender = $phpmailer->From; //Return-Path
+
+    // $phpmailer->SMTPDebug = true;
 
     if ( $erp_email_smtp_settings['enable_smtp'] ) {
         $phpmailer->Mailer = 'smtp'; //'smtp', 'mail', or 'sendmail'

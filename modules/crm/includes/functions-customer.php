@@ -840,7 +840,7 @@ function erp_crm_send_schedule_notification( $activity, $extra = false ) {
             foreach ( $users as $key => $user ) {
                 // @TODO: Add customer body template for seding email to user
                 $body = 'You have a schedule after ' . $extra['notification_time_interval'] . $extra['notification_time'] . ' at ' . $activity['start_date'];
-                wp_mail( $user, 'ERP Schedule', $body );
+                erp_mail( $user, 'ERP Schedule', $body );
             }
 
             break;
@@ -1965,13 +1965,7 @@ function erp_crm_save_email_activity() {
             $headers .= "Reply-To: WP ERP <$reply_to>" . "\r\n";
         }
 
-        add_filter( 'wp_mail_from', 'erp_crm_get_email_from_address' );
-        add_filter( 'wp_mail_from_name', 'erp_crm_get_email_from_name' );
-
-        wp_mail( $to_email, $postdata['email_subject'], $postdata['message'], $headers );
-
-        remove_filter( 'wp_mail_from', 'erp_crm_get_email_from_address' );
-        remove_filter( 'wp_mail_from_name', 'erp_crm_get_email_from_name' );
+        erp_mail( $to_email, $postdata['email_subject'], $postdata['message'], $headers );
     }
 
     // Update email counter
@@ -2023,14 +2017,8 @@ function erp_crm_save_contact_owner_email_activity() {
         $headers .= "Reply-To: WP ERP <$reply_to>" . "\r\n";
     }
 
-    add_filter( 'wp_mail_from', 'erp_crm_get_email_from_address' );
-    add_filter( 'wp_mail_from_name', 'erp_crm_get_email_from_name' );
-
     // Send email a contact
-    wp_mail( $contact->email, $postdata['email_subject'], $postdata['message'], $headers );
-
-    remove_filter( 'wp_mail_from', 'erp_crm_get_email_from_address' );
-    remove_filter( 'wp_mail_from_name', 'erp_crm_get_email_from_name' );
+    erp_mail( $contact->email, $postdata['email_subject'], $postdata['message'], $headers );
 
     // Update email counter
     update_option( 'wp_erp_cloud_email_count', get_option( 'wp_erp_cloud_email_count', 0 ) + 1 );

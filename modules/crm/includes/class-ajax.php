@@ -735,14 +735,8 @@ class Ajax_Handler {
 
                 $email_body = $postdata['message'] . $img_url;
 
-                add_filter( 'wp_mail_from', 'erp_crm_get_email_from_address' );
-                add_filter( 'wp_mail_from_name', 'erp_crm_get_email_from_name' );
-
                 // Send email a contact
-                wp_mail( $contact->email, $postdata['email_subject'], $email_body, $headers );
-
-                remove_filter( 'wp_mail_from', 'erp_crm_get_email_from_address' );
-                remove_filter( 'wp_mail_from_name', 'erp_crm_get_email_from_name' );
+                erp_mail( $contact->email, $postdata['email_subject'], $email_body, $headers );
 
                 do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
 

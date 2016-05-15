@@ -369,16 +369,16 @@ class Email extends ERP_Settings_Page {
      */
     public function send( $to, $subject, $message, $headers, $attachments ) {
 
-        add_filter( 'wp_mail_from', array( $this, 'get_from_address' ) );
-        add_filter( 'wp_mail_from_name', array( $this, 'get_from_name' ) );
-        add_filter( 'wp_mail_content_type', array( $this, 'get_content_type' ) );
+        add_filter( 'erp_mail_from', array( $this, 'get_from_address' ) );
+        add_filter( 'erp_mail_from_name', array( $this, 'get_from_name' ) );
+        add_filter( 'erp_mail_content_type', array( $this, 'get_content_type' ) );
 
         $message = apply_filters( 'erp_mail_content', $this->style_inline( $message ) );
-        $return  = wp_mail( $to, $subject, $message, $headers, $attachments );
+        $return  = erp_mail( $to, $subject, $message, $headers, $attachments );
 
-        remove_filter( 'wp_mail_from', array( $this, 'get_from_address' ) );
-        remove_filter( 'wp_mail_from_name', array( $this, 'get_from_name' ) );
-        remove_filter( 'wp_mail_content_type', array( $this, 'get_content_type' ) );
+        remove_filter( 'erp_mail_from', array( $this, 'get_from_address' ) );
+        remove_filter( 'erp_mail_from_name', array( $this, 'get_from_name' ) );
+        remove_filter( 'erp_mail_content_type', array( $this, 'get_content_type' ) );
 
         return $return;
     }
