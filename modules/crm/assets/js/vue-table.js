@@ -5,7 +5,7 @@ Vue.component('vtable', {
                 +'<form method="get">'
                     +'<p class="search-box {{ search.wrapperClass }}">'
                         +'<label class="screen-reader-text" for="{{ search.inputId }}">{{ search.screenReaderText }}</label>'
-                        +'<input type="search" v-model="searchQuery" id="{{ search.inputId }}" value="" name="s" placeholder="{{ search.placeholder }}">'
+                        +'<input type="search" v-model="searchQuery" id="{{ search.inputId }}" value="" name="s" placeholder="{{ search.placeholder }}" @input="searchCloseAction( searchQuery )" >'
                         +'<input type="submit" @click.prevent="searchAction( searchQuery )" id="{{ search.btnId }}" class="button" value="{{ search.btnText }}">'
                     +'</p>'
                     +'<ul v-if="!hasTopNavFilter()" class="subsubsub">'
@@ -51,13 +51,24 @@ Vue.component('vtable', {
                                         +'<input id="cb-select-all-1" type="checkbox">'
                                     +'</td>'
                                     +'<template v-for="(i,field) in fields">'
-                                        +'<th v-if="!isSortable( field )" scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }} column-primary">{{ field.title }}</th>'
-                                        +'<th v-else scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }} sortable {{ sortOrder.direction }}">'
-                                            +'<a href="#" @click.prevent="orderBy( field )">'
-                                                +'<span>{{ field.title }}</span>'
-                                                +'<span class="sorting-indicator"></span>'
-                                            +'</a>'
-                                        +'</th>'
+                                        +'<template v-if="i==0">'
+                                            +'<th v-if="!isSortable( field )" scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }} column-primary">{{ field.title }}</th>'
+                                            +'<th v-else scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }} column-primary sortable {{ sortOrder.direction }}">'
+                                                +'<a href="#" @click.prevent="orderBy( field )">'
+                                                    +'<span>{{ field.title }}</span>'
+                                                    +'<span class="sorting-indicator"></span>'
+                                                +'</a>'
+                                            +'</th>'
+                                        +'</template>'
+                                        +'<template v-else>'
+                                            +'<th v-if="!isSortable( field )" scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }}">{{ field.title }}</th>'
+                                            +'<th v-else scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }} sortable {{ sortOrder.direction }}">'
+                                                +'<a href="#" @click.prevent="orderBy( field )">'
+                                                    +'<span>{{ field.title }}</span>'
+                                                    +'<span class="sorting-indicator"></span>'
+                                                +'</a>'
+                                            +'</th>'
+                                        +'</template>'
                                     +'</template>'
                                 +'</tr>'
                             +'</thead>'
@@ -120,14 +131,25 @@ Vue.component('vtable', {
                                         +'<label class="screen-reader-text" for="cb-select-all-2">Select All</label>'
                                         +'<input id="cb-select-all-2" type="checkbox">'
                                     +'</td>'
-                                    +'<template v-for="field in fields">'
-                                        +'<th v-if="!isSortable( field )" scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }} column-primary">{{ field.title }}</th>'
-                                        +'<th v-else scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }} sortable {{ sortOrder.direction }}">'
-                                            +'<a href="#" @click.prevent="orderBy( field )">'
-                                                +'<span>{{ field.title }}</span>'
-                                                +'<span class="sorting-indicator"></span>'
-                                            +'</a>'
-                                        +'</th>'
+                                    +'<template v-for="(i,field) in fields">'
+                                        +'<template v-if="i==0">'
+                                            +'<th v-if="!isSortable( field )" scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }} column-primary">{{ field.title }}</th>'
+                                            +'<th v-else scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }} column-primary sortable {{ sortOrder.direction }}">'
+                                                +'<a href="#" @click.prevent="orderBy( field )">'
+                                                    +'<span>{{ field.title }}</span>'
+                                                    +'<span class="sorting-indicator"></span>'
+                                                +'</a>'
+                                            +'</th>'
+                                        +'</template>'
+                                        +'<template v-else>'
+                                            +'<th v-if="!isSortable( field )" scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }}">{{ field.title }}</th>'
+                                            +'<th v-else scope="col" id="{{ field.name }}" class="manage-column column-{{ field.name }} sortable {{ sortOrder.direction }}">'
+                                                +'<a href="#" @click.prevent="orderBy( field )">'
+                                                    +'<span>{{ field.title }}</span>'
+                                                    +'<span class="sorting-indicator"></span>'
+                                                +'</a>'
+                                            +'</th>'
+                                        +'</template>'
                                     +'</template>'
                                 +'</tr>'
                             +'</tfoot>'
@@ -266,7 +288,7 @@ Vue.component('vtable', {
         'additionalParams': {
             type: Object,
             default: function() {
-                return {}
+                return {};
             }
         },
 
@@ -293,7 +315,7 @@ Vue.component('vtable', {
             lastPage: 0,
             currentPage: 1,
             pageOffset:0,
-            pageNumberInput:0,
+            pageNumberInput:1,
             hidePagination : false,
             searchQuery: '',
             currentTopNavFilter: '',
@@ -321,10 +343,6 @@ Vue.component('vtable', {
 
         pageOffset: function() {
             return (this.currentPage-1)*this.perPage;
-        },
-
-        pageNumberInput: function() {
-            return this.currentPage;
         },
 
         hidePagination: function() {
@@ -394,8 +412,9 @@ Vue.component('vtable', {
             } else if ( direction == 'next' ) {
                 this.currentPage++;
             } else {
-                if ( ! isNaN( number ) ) {
-                    this.currentPage = number;
+                if ( ! isNaN( direction ) ) {
+                    console.log( direction );
+                    this.currentPage = direction;
                 }
             }
 
@@ -536,13 +555,19 @@ Vue.component('vtable', {
                 }
 
                 this.additionalParams[this.search.params] = query;
+                this.fetchData();
+            }
+        },
 
+        searchCloseAction: function( query ) {
+            if ( query == '' ) {
+                this.additionalParams = {};
+                this.currentPage = 1
                 this.fetchData();
             }
         },
 
         fetchData: function() {
-
             var self = this,
                 data = {
                     action: this.action,
@@ -569,13 +594,17 @@ Vue.component('vtable', {
                 }
             }
 
+            console.log( postData );
+
             jQuery.post( wpVueTable.ajaxurl, postData, function( resp ) {
                 if ( resp.success ) {
                     self.ajaxloader = false;
                     self.isLoaded = true;
-
                     self.tableData = resp.data.data;
                     self.totalItem = resp.data.total_items;
+                    if ( resp.data.data.length > 0 ) {
+                        this.pageNumberInput = this.totalPage;
+                    }
                 } else {
                     alert(resp);
                 }

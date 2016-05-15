@@ -12,7 +12,6 @@
         per-page="20"
         :fields=fields
         :item-row-actions=itemRowActions
-        :additional-params=additionalParams
         :search="search"
         :top-nav-filter="topNavFilter"
         :bulkactions="bulkactions"
@@ -81,7 +80,7 @@
                     title: 'View',
                     attrTitle: 'View this contact',
                     class: 'view',
-                    action: 'view'
+                    action: 'view',
                 },
                 {
                     title: 'Delete',
@@ -90,7 +89,6 @@
                     action: 'delete'
                 }
             ],
-            additionalParams: [],
             topNavFilter: {
                 data: <?php echo json_encode( $statuses ); ?>,
                 default: 'all',
@@ -112,10 +110,12 @@
 
         events: {
             'vtable:action': function(action, data) {
+                // handle row action with data
             },
 
             'vtable:default-bulk-action': function( action, ids ) {
-
+                // Handle bulk action when action is something with ID's
+                console.log( action, ids );
                 this.$nextTick(function() {
                     this.$broadcast('vtable:refresh')
                 })
