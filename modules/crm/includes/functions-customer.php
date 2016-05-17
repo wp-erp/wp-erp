@@ -865,18 +865,17 @@ function erp_crm_send_schedule_notification( $activity, $extra = false ) {
  * @return void
  */
 function erp_crm_assign_task_to_users( $data, $save_data ) {
-
     if ( $save_data['id'] ) {
         \WeDevs\ERP\CRM\Models\ActivityUser::where( 'activity_id', $save_data['id'] )->delete();
     }
 
     $user_ids = [];
 
-    if ( isset( $data['extra']['invite_contact'] ) && count( $data['extra']['invite_contact'] ) > 0 ) {
-        foreach ( $data['extra']['invite_contact'] as $key => $user ) {
-            $res = \WeDevs\ERP\CRM\Models\ActivityUser::create( [ 'activity_id' => $data['id'], 'user_id' => $user ] );
+    if ( isset( $data['extra']['invited_user'] ) && count( $data['extra']['invited_user'] ) > 0 ) {
+        foreach ( $data['extra']['invited_user'] as $key => $user ) {
+            $res = \WeDevs\ERP\CRM\Models\ActivityUser::create( [ 'activity_id' => $data['id'], 'user_id' => $user['id'] ] );
 
-            $user_ids[] = $user;
+            $user_ids[] = $user['id'];
 
             do_action( 'erp_crm_after_assign_task_to_user', $data, $save_data );
         }
@@ -887,7 +886,6 @@ function erp_crm_assign_task_to_users( $data, $save_data ) {
             $assigned_task->trigger( ['activity_id' => $data['id'], 'user_ids' => $user_ids] );
         }
     }
-
 }
 
 /**
