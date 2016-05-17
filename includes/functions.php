@@ -1495,17 +1495,17 @@ function erp_mail_smtp_callback( $phpmailer ) {
     $erp_email_smtp_settings = get_option( 'erp_settings_erp-email_smtp', [] );
 
     if ( ! isset( $erp_email_settings['from_email'] ) ) {
-        $from_name = get_option( 'admin_email' );
+        $from_email = get_option( 'admin_email' );
     } else {
-        $from_name = $erp_email_settings['from_email'];
+        $from_email = $erp_email_settings['from_email'];
     }
 
     if ( ! isset( $erp_email_settings['from_name'] ) ) {
         global $current_user;
 
-        $from_email = $current_user->display_name;
+        $from_name = $current_user->display_name;
     } else {
-        $from_email = $erp_email_settings['from_name'];
+        $from_name = $erp_email_settings['from_name'];
     }
 
     $content_type = 'text/html';
@@ -1516,6 +1516,7 @@ function erp_mail_smtp_callback( $phpmailer ) {
 
     $phpmailer->Sender = $phpmailer->From; //Return-Path
 
+    $phpmailer->addCustomHeader( 'X-ERP-MailType', 'Inbound' );
     // $phpmailer->SMTPDebug = true;
 
     if ( $erp_email_smtp_settings['enable_smtp'] ) {
@@ -1532,4 +1533,83 @@ function erp_mail_smtp_callback( $phpmailer ) {
             $phpmailer->Password = $erp_email_smtp_settings['password'];
         }
     }
+}
+
+/**
+ * Email JavaScript enqueue.
+ *
+ * @return void
+ */
+function erp_email_settings_javascript() {
+    wp_enqueue_style( 'erp-sweetalert' );
+    wp_enqueue_script( 'erp-sweetalert' );
+    ?>
+    <script type="text/javascript">
+        jQuery( document ).ready( function($) {
+            $( "a#smtp-test-connection" ).click( function(e) {
+                e.preventDefault();
+
+                var data = {
+                    'action': 'erp_smtp_test_connection',
+                    'enable_smtp': $('input[name=enable_smtp]:checked').val(),
+                    'mail_server': $('input[name=mail_server]').val(),
+                    'port': $('input[name=port]').val(),
+                    'authentication': $('input[name=authentication]:checked').val(),
+                    'encryption': $('select[name=encryption]').val(),
+                    'username': $('input[name=username]').val(),
+                    'password': $('input[name=password]').val(),
+                    'to' : $('#smtp_test_email_address').val(),
+                    '_wpnonce': '<?php echo wp_create_nonce( "erp-smtp-test-connection-nonce" ); ?>'
+                };
+
+                $.post( ajaxurl, data, function(response) {
+                    var type = response.success ? 'success' : 'error';
+
+                    if (response.data) {
+                        swal({
+                            title: '',
+                            text: response.data,
+                            type: type,
+                            confirmButtonText: crmContactFormsSettings.labelOK,
+                            confirmButtonColor: '#008ec2'
+                        });
+                    }
+                });
+            });
+        });
+
+        jQuery( document ).ready( function($) {
+            $( "a#imap-test-connection" ).click( function(e) {
+                e.preventDefault();
+
+                var data = {
+                    'action': 'erp_imap_test_connection',
+                    'mail_server': $('input[name=mail_server]').val(),
+                    'username': $('input[name=username]').val(),
+                    'password': $('input[name=password]').val(),
+                    'protocol': $('select[name=protocol]').val(),
+                    'port': $('input[name=port]').val(),
+                    'encryption': $('select[name=encryption]').val(),
+                    'certificate': $('input[name=certificate]:checked').val(),
+                    '_wpnonce': '<?php echo wp_create_nonce( "erp-imap-test-connection-nonce" ); ?>'
+                };
+
+                $.post( ajaxurl, data, function(response) {
+                    var type = response.success ? 'success' : 'error';
+                    console.log(response);
+
+                    if ( response.data ) {
+                        swal({
+                            title: '',
+                            text: response.data,
+                            type: type,
+                            confirmButtonText: crmContactFormsSettings.labelOK,
+                            confirmButtonColor: '#008ec2'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+    <?php
 }

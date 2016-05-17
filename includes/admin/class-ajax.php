@@ -25,8 +25,9 @@ class Ajax {
         $this->action( 'wp_ajax_erp_file_upload', 'file_uploader' );
         $this->action( 'wp_ajax_erp_file_del', 'file_delete' );
         $this->action( 'wp_ajax_erp_activation_notice', 'erp_activation_notice_callback' );
-
         $this->action( 'wp_ajax_erp_people_exists', 'check_people' );
+        $this->action( 'wp_ajax_erp_smtp_test_connection', 'smtp_test_connection' );
+        $this->action( 'wp_ajax_erp_imap_test_connection', 'imap_test_connection' );
     }
 
     function file_delete() {
@@ -257,6 +258,120 @@ class Ajax {
 
         // seems like we found one
         $this->send_error( $people );
+    }
+
+    /**
+     * Test the SMTP connection.
+     *
+     * @return void
+     */
+    public function smtp_test_connection() {
+        $this->verify_nonce( 'erp-smtp-test-connection-nonce' );
+
+        if ( empty( $_REQUEST['mail_server'] ) ) {
+            $this->send_error( __( 'No host address provided', 'erp' ) );
+        }
+
+        if ( empty( $_REQUEST['port'] ) ) {
+            $this->send_error( __( 'No port address provided', 'erp' ) );
+        }
+
+        if ( empty( $_REQUEST['username'] ) ) {
+            $this->send_error( __( 'No email address provided', 'erp' ) );
+        }
+
+        if ( empty( $_REQUEST['password'] ) ) {
+            $this->send_error( __( 'No email password provided', 'erp' ) );
+        }
+
+        if ( empty( $_REQUEST['to'] ) ) {
+            $this->send_error( __( 'No testing email address provided', 'erp' ) );
+        }
+
+        $mail_server = $_REQUEST['mail_server'];
+        $port = isset( $_REQUEST['port'] ) ? $_REQUEST['port'] : 465;
+        $encryption = isset( $_REQUEST['encryption'] ) ? $_REQUEST['encryption'] : 'ssl';
+        $authentication = ( $_REQUEST['authentication'] == 'yes' ) ? true : false;
+        $username = $_REQUEST['username'];
+        $password = $_REQUEST['password'];
+
+        global $phpmailer;
+
+        if ( ! is_object( $phpmailer ) || ! is_a( $phpmailer, 'PHPMailer' ) ) {
+            require_once ABSPATH . WPINC . '/class-phpmailer.php';
+            require_once ABSPATH . WPINC . '/class-smtp.php';
+            $phpmailer = new \PHPMailer( true );
+        }
+
+        $to      = $_REQUEST['to'];
+        $subject = __( 'ERP SMTP Test Mail', 'erp' );
+        $message = __( 'This is a test email by WP ERP.', 'erp' );
+
+        $phpmailer->AddAddress( $to );
+        $phpmailer->Subject    = $subject;
+        $phpmailer->Body       = $message;
+        $phpmailer->FromName   = 'WP ERP';
+        $phpmailer->Mailer     = 'smtp';
+        $phpmailer->Host       = $mail_server;
+        $phpmailer->SMTPSecure = $encryption;
+        $phpmailer->Port       = $port;
+        $phpmailer->SMTPAuth   = $authentication;
+
+        if ( $phpmailer->SMTPAuth ) {
+            $phpmailer->Username = $username;
+            $phpmailer->Password = $password;
+        }
+
+        // $phpmailer->SMTPDebug = true;
+        try {
+            $result = $phpmailer->Send();
+
+            $this->send_success( __( 'Test email has been sent.', 'erp' ) );
+        } catch( \Exception $e ) {
+            $this->send_error( $e->getMessage() );
+        }
+    }
+
+    /**
+     * Test the Imap connection.
+     *
+     * @return void
+     */
+    public function imap_test_connection() {
+        $this->verify_nonce( 'erp-imap-test-connection-nonce' );
+
+        if ( empty( $_REQUEST['mail_server'] ) ) {
+            $this->send_error( __( 'No host address provided', 'erp' ) );
+        }
+
+        if ( empty( $_REQUEST['username'] ) ) {
+            $this->send_error( __( 'No email address provided', 'erp' ) );
+        }
+
+        if ( empty( $_REQUEST['password'] ) ) {
+            $this->send_error( __( 'No email password provided', 'erp' ) );
+        }
+
+        if ( empty( $_REQUEST['port'] ) ) {
+            $this->send_error( __( 'No port address provided', 'erp' ) );
+        }
+
+        $mail_server = $_REQUEST['mail_server'];
+        $username = $_REQUEST['username'];
+        $password = $_REQUEST['password'];
+        $protocol = $_REQUEST['protocol'];
+        $port = isset( $_REQUEST['port'] ) ? $_REQUEST['port'] : 993;
+        $encryption = isset( $_REQUEST['encryption'] ) ? $_REQUEST['encryption'] : 'ssl';
+        $certificate = ( $_REQUEST['certificate'] == 1 ) ? true : false;
+
+        try {
+            $imap = new \WeDevs\ERP\Imap( $mail_server, $port, $protocol, $username, $password, $encryption, $certificate );
+            $imap->is_connected();
+
+            $this->send_success( __( 'Your IMAP connection is established.', 'erp' ) );
+        } catch( \Exception $e ) {
+            $this->send_error( $e->getMessage() );
+        }
     }
 }
 

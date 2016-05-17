@@ -13,6 +13,9 @@ class ERP_Email_Settings extends ERP_Settings_Page {
         $this->sections = $this->get_sections();
 
         add_action( 'erp_admin_field_notification_emails', [ $this, 'notification_emails' ] );
+
+        add_action( 'erp_admin_field_smtp_test_connection', [ $this, 'smtp_test_connection' ] );
+        add_action( 'erp_admin_field_imap_test_connection', [ $this, 'imap_test_connection' ] );
     }
 
     /**
@@ -128,13 +131,10 @@ class ERP_Email_Settings extends ERP_Settings_Page {
         ];
 
         $fields['smtp'][] = [
-            'title'             => __( 'Port', 'erp' ),
-            'id'                => 'port',
-            'type'              => 'text',
-            'custom_attributes' => [
-                'placeholder'   => 465
-            ],
-            'desc'              => __( 'SMTP port.<br> SSL: 465<br> TLS: 587', 'erp' ),
+            'title' => __( 'Port', 'erp' ),
+            'id'    => 'port',
+            'type'  => 'text',
+            'desc'  => __( 'SSL: 465<br> TLS: 587', 'erp' ),
         ];
 
         $fields['smtp'][] = [
@@ -168,6 +168,10 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             'id'    => 'password',
             'type'  => 'password',
             'desc'  => __( 'Your email password.', 'erp' )
+        ];
+
+        $fields['smtp'][] = [
+            'type' => 'smtp_test_connection',
         ];
 
         $fields['smtp'][] = [
@@ -219,13 +223,10 @@ class ERP_Email_Settings extends ERP_Settings_Page {
         ];
 
         $fields['imap'][] = [
-            'title'             => __( 'Port', 'erp' ),
-            'id'                => 'port',
-            'type'              => 'text',
-            'desc'              => __( 'IMAP/POP3 port.<br> IMAP: 993<br> POP3: 995', 'erp' ),
-            'custom_attributes' => [
-                'placeholder'   => 993
-            ]
+            'title' => __( 'Port', 'erp' ),
+            'id'    => 'port',
+            'type'  => 'text',
+            'desc'  => __( 'IMAP: 993<br> POP3: 995', 'erp' ),
         ];
 
         $fields['imap'][] = [
@@ -242,6 +243,10 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             'id'      => 'certificate',
             'type'    => 'checkbox',
             'desc'    => __( 'Use encryption certificate.', 'erp' ),
+        ];
+
+        $fields['imap'][] = [
+            'type' => 'imap_test_connection',
         ];
 
         $fields['imap'][] = [
@@ -320,6 +325,44 @@ class ERP_Email_Settings extends ERP_Settings_Page {
                         ?>
                     </tbody>
                 </table>
+            </td>
+        </tr>
+        <?php
+    }
+
+    /**
+     * Display imap test connection button.
+     *
+     * @return void
+     */
+    public function smtp_test_connection() {
+        ?>
+        <tr valign="top">
+            <th scope="row" class="titledesc">
+                &nbsp;
+            </th>
+            <td class="forminp forminp-text">
+                <input type="email" id="smtp_test_email_address" class="regular-text" value="<?php echo get_option( 'admin_email' ); ?>" /><br>
+                <p class="description">An email address to test the connection.</p>
+                <a id="smtp-test-connection" class="button-primary">Test Connection</a>
+            </td>
+        </tr>
+        <?php
+    }
+
+    /**
+     * Display imap test connection button.
+     *
+     * @return void
+     */
+    public function imap_test_connection() {
+        ?>
+        <tr valign="top">
+            <th scope="row" class="titledesc">
+                &nbsp;
+            </th>
+            <td class="forminp forminp-text">
+                <a id="imap-test-connection" class="button-primary">Test Connection</a>
             </td>
         </tr>
         <?php
