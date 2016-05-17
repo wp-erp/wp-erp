@@ -196,7 +196,7 @@ function erp_hr_dashboard_widget_leave_calendar() {
             'title'     => $event_label,
             'start'     => $leave_request->start_date,
             'end'       => erp_fullcalendar_end_date( $leave_request->end_date ),
-            'url'       => erp_hr_url_single_employee( $leave_request->user_id ),
+            'url'       => erp_hr_url_single_employee( $leave_request->user_id, 'leave' ),
             'color'     => $leave_request->color,
         );
     }

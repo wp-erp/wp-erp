@@ -864,8 +864,12 @@ function erp_hr_employee_remove_history( $history_id ) {
  *
  * @return string  url of the employee details page
  */
-function erp_hr_url_single_employee( $employee_id ) {
-    $url = admin_url( 'admin.php?page=erp-hr-employee&action=view&id=' . $employee_id );
+function erp_hr_url_single_employee( $employee_id, $tab = null ) {
+    if ( $tab ) {
+        $tab = '&tab=' . $tab;
+    }
+
+    $url = admin_url( 'admin.php?page=erp-hr-employee&action=view&id=' . $employee_id . $tab );
 
     return apply_filters( 'erp_hr_url_single_employee', $url, $employee_id );
 }
