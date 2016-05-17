@@ -120,7 +120,7 @@
                     'label' => __( 'Date of Birth', 'erp' ),
                     'name'  => 'date_of_birth',
                     'value' => '{{ data.date_of_birth }}',
-                    'class' => 'erp-crm-date-field'
+                    'class' => 'erp-date-field erp-crm-date-field'
                 ) ); ?>
             </li>
             <# } #>
@@ -347,7 +347,13 @@
     <# } #>
 
     <input type="hidden" name="id" id="erp-customer-id" value="{{ data.id }}">
-    <input type="hidden" name="type" id="erp-customer-type" value="{{ data.type }}">
+
+    <# if ( _.contains( data.types, 'company' ) ) { #>
+        <input type="hidden" name="type" id="erp-customer-type" value="company">
+    <# } else if ( _.contains( data.types, 'contact' ) ) { #>
+        <input type="hidden" name="type" id="erp-customer-type" value="contact">
+    <# } #>
+
     <input type="hidden" name="action" id="erp-customer-action" value="erp-crm-customer-new">
     <?php wp_nonce_field( 'wp-erp-crm-customer-nonce' ); ?>
 

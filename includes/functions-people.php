@@ -81,7 +81,7 @@ function erp_get_peoples( $args = [] ) {
         $sql['join'][]   = "LEFT JOIN $type_rel_tb AS r ON people.id = r.people_id LEFT JOIN $types_tb AS t ON r.people_types_id = t.id";
         $sql_from_tb     = "FROM $pep_tb AS people";
 
-        $sql['where'][] = "where ( select count(*) from $types_tb
+        $sql['where'][] = "WHERE ( select count(*) from $types_tb
                     inner join  $type_rel_tb
                         on $types_tb.`id` = $type_rel_tb.`people_types_id`
                         where $type_rel_tb.`people_id` = people.`id` $type_sql and $trashed_sql
@@ -333,6 +333,7 @@ function erp_get_people( $id = 0 ) {
  * @return object
  */
 function erp_get_people_by( $field, $value ) {
+    global $wpdb;
 
     if ( ! in_array( $field, [ 'id', 'email'] ) ) {
         return new WP_Error( 'not-valid-field', __( 'No valid type provided', 'erp' ) );
@@ -343,23 +344,44 @@ function erp_get_people_by( $field, $value ) {
 
     if ( false === $people ) {
 
+        $pep_tb      = $wpdb->prefix . 'erp_peoples';
+        $pepmeta_tb  = $wpdb->prefix . 'erp_peoplemeta';
+        $types_tb    = $wpdb->prefix . 'erp_people_types';
+        $type_rel_tb = $wpdb->prefix . 'erp_people_type_relations';
+        $users_tb    = $wpdb->users;
+        $usermeta_tb = $wpdb->usermeta;
+
+        $pep_fileds  = [ 'first_name', 'last_name', 'company', 'phone', 'mobile',
+        'other', 'fax', 'notes', 'street_1', 'street_2', 'city', 'state', 'postal_code', 'country',
+        'currency', 'created' ];
+
+        $sql['select'][] = "SELECT people.id, people.user_id, people.company,COALESCE( people.email, users.user_email ) AS email,
+        COALESCE( people.website, users.user_url ) AS website,";
+
+        $sql['join'][] = "LEFT JOIN $users_tb AS users ON people.user_id = users.ID";
+
+        foreach ( $pep_fileds as $key => $pep_field ) {
+            $sql['select'][] = "COALESCE( people.$pep_field, $pep_field.meta_value ) AS $pep_field,";
+            $sql['join'][]   = "LEFT JOIN $usermeta_tb AS $pep_field ON people.user_id = $pep_field.user_id AND $pep_field.meta_key = '$pep_field'";
+        }
+
+        $sql['select'][] = "GROUP_CONCAT( t.name SEPARATOR ',') AS types";
+        $sql['join'][]   = "LEFT JOIN $type_rel_tb AS r ON people.id = r.people_id LEFT JOIN $types_tb AS t ON r.people_types_id = t.id";
+        $sql_from_tb     = "FROM $pep_tb AS people";
+        $sql['where'][]  = "WHERE 1=1";
+
         if ( 'id' == $field ) {
-            $peep = WeDevs\ERP\Framework\Models\People::with('types')->find( intval( $value ) );
-
-        } elseif ( 'email' == $field ) {
-            $peep = WeDevs\ERP\Framework\Models\People::with('types')->whereEmail( $value )->first();
+            $sql['where'][] = "AND people.id='$value'";
+        } else if ( 'email' == $field ) {
+            $sql['where'][] = "AND users.user_email='$value' OR people.email = '$value'";
         }
 
-        if ( NULL !== $peep ) {
-            $people                = (object) $peep->toArray();
-            $people->types         = wp_list_pluck( $peep->types->toArray(), 'name' );
+        $final_query = implode( ' ', $sql['select'] ) . ' ' . $sql_from_tb . ' ' . implode( ' ', $sql['join'] ) . ' ' . implode( ' ', $sql['where'] );
 
-            // include meta fields
-            $people->date_of_birth = erp_people_get_meta( $peep->id, 'date_of_birth', true );
-            $people->source        = erp_people_get_meta( $peep->id, 'source', true );
+        $people = $wpdb->get_row( apply_filters( 'erp_single_people_total_query', $final_query, $field, $value ) );
+        $people->types = explode( ',', $people->types );
 
-            wp_cache_set( $cache_key, $people, 'erp' );
-        }
+        wp_cache_set( $cache_key, $people, 'erp' );
     }
 
     return $people;

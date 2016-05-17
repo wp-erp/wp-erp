@@ -74,7 +74,7 @@ Vue.component('vtable', {
                             +'</thead>'
 
                             +'<tbody id="the-list" data-wp-lists="list:{{ tableClass }}" class="vtbale-tbody">'
-                                +'<tr v-if="( tableData.length > 0 )" v-for="item in tableData">'
+                                +'<tr v-if="( tableData.length > 0 )" v-for="item in tableData" transition="vtable-item">'
                                     +'<th scope="row" class="check-column">'
                                         +'<input type="checkbox" v-model="checkboxItems" class="{{ rowCheckboxId }}" name="{{ rowCheckboxName }}[]" data-field="{{ rowCheckboxField }}" value="{{ item[rowCheckboxField] }}">'
                                     +'</th>'

@@ -10,13 +10,13 @@
  *
  * @return string  image with HTML tag
  */
-function erp_crm_get_avatar( $id, $size = 32, $user = false ) {
+function erp_crm_get_avatar( $id, $user_id = 0, $size = 32, $user = false ) {
     if ( $id ) {
         if ( $user ) {
             return get_avatar( $id, $size );
         }
 
-        $user_photo_id = erp_people_get_meta( $id, 'photo_id', true );
+        $user_photo_id = ( $user_id ) ? get_user_meta( $user_id, 'photo_id', true ) : erp_people_get_meta( $id, 'photo_id', true );
 
         if ( ! empty( $user_photo_id ) ) {
             $image = wp_get_attachment_thumb_url( $user_photo_id );
@@ -34,13 +34,13 @@ function erp_crm_get_avatar( $id, $size = 32, $user = false ) {
  *
  * @return string  image with HTML tag
  */
-function erp_crm_get_avatar_url( $id, $size = 32, $user = false ) {
+function erp_crm_get_avatar_url( $id, $user_id = 0, $size = 32, $user = false ) {
     if ( $id ) {
         if ( $user ) {
             return get_avatar_url( $id, $size );
         }
 
-        $user_photo_id = erp_people_get_meta( $id, 'photo_id', true );
+        $user_photo_id = ( $user_id ) ? get_user_meta( $user_id, 'photo_id', true ) : erp_people_get_meta( $id, 'photo_id', true );
 
         if ( ! empty( $user_photo_id ) ) {
             return wp_get_attachment_thumb_url( $user_photo_id );

@@ -2973,3 +2973,21 @@ ul.edit-address li.city-wrap span {
     width: 95%;
   }
 }
+
+.vtable-item-transition {
+  transition: all .7s cubic-bezier(.55,0,.1,1);
+}
+.vtable-item-enter {
+  opacity: 0;
+  background: #fcf8e3;
+}
+.vtable-item-leave {
+  opacity: 0;
+  background: #fcf8e3;
+  position: absolute; /* important for removal move to work */
+}
+.vtable-item-move {
+  color: #f20000;
+  transition: transform .5s cubic-bezier(.55,0,.1,1); /* applied when moving */
+}
+
