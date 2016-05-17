@@ -1,7 +1,7 @@
 === WP ERP ===
 Contributors: tareq1988, wedevs, sabbir1991, asaquzzaman
 Tags: small business, SME, contact, contacts, CRM, Customer Relationship Management, employee, leave management, hr, hrm, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
-Requires at least: 4.2
+Requires at least: 4.4
 Tested up to: 4.5.2
 Stable tag: trunk
 License: GPLv2
@@ -22,9 +22,9 @@ Other available modules
 
 = Links =
 * [Github](https://github.com/wp-erp/wp-erp)
-* [Documentation](http://wperp.com/documentation/)
-* [Project Site](http://wperp.com/)
-* [Extensions](http://wperp.com/downloads/)
+* [Documentation](https://wperp.com/documentation/?utm_medium=referral&utm_source=wordpress.org&utm_campaign=WP+ERP+Readme&utm_content=Home+Page)
+* [Project Site](https://wperp.com/?utm_medium=referral&utm_source=wordpress.org&utm_campaign=WP+ERP+Readme&utm_content=Home+Page)
+* [Extensions](https://wperp.com/?utm_medium=referral&utm_source=wordpress.org&utm_campaign=WP+ERP+Readme&utm_content=Downloads)
 
 = Core Features =
 
