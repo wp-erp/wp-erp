@@ -225,7 +225,7 @@ function erp_crm_get_customer_type( $label = [] ) {
 function erp_crm_get_life_stages_dropdown( $label = [], $selected = '' ) {
 
     $life_stages = erp_crm_get_life_stages_dropdown_raw( $label );
-    $dropdown     = '';
+    $dropdown    = '';
 
     if ( $life_stages ) {
         foreach ( $life_stages as $key => $title ) {
@@ -1916,7 +1916,7 @@ function erp_crm_get_next_seven_day_schedules_activities( $user_id = '' ) {
 }
 
 /**
- * Fetch & Save email activity from api server.
+ * Fetch & Save email activity from inbound email server.
  *
  * @since 1.0
  *
@@ -1926,7 +1926,6 @@ function erp_crm_save_email_activity() {
     header('Access-Control-Allow-Origin: *');
 
     $postdata = $_POST;
-    $api_key  = get_option( 'wp_erp_apikey' );
 
     unset( $postdata['action'] );
 
@@ -1954,27 +1953,33 @@ function erp_crm_save_email_activity() {
         $headers = "";
         $headers .= "Content-Type: text/html; charset=UTF-8" . "\r\n";
 
-        $is_cloud_active = erp_is_cloud_active();
+        $erp_is_imap_active = erp_is_imap_active();
 
-        if ( $is_cloud_active ) {
-            $wp_erp_api_key = get_option( 'wp_erp_apikey' );
+        $custom_headers = [];
+        if ( $erp_is_imap_active ) {
+            $imap_options = get_option( 'erp_settings_erp-email_imap', [] );
 
-            $reply_to = $wp_erp_api_key . "-" . $contact_owner_id . "-" . $contact_id . "-co" . "@incloud.wperp.com";
+            $custom_headers = [
+                'X-ERP-SID' => $contact_owner_id,
+                'X-ERP-CID' => $contact_id,
+            ];
+
+            $reply_to = $imap_options['username'];
             $headers .= "Reply-To: WP ERP <$reply_to>" . "\r\n";
         }
 
-        erp_mail( $to_email, $postdata['email_subject'], $postdata['message'], $headers );
+        erp_mail( $to_email, $postdata['email_subject'], $postdata['message'], $headers, $custom_headers );
     }
 
     // Update email counter
-    update_option( 'wp_erp_cloud_email_count', get_option( 'wp_erp_cloud_email_count', 0 ) + 1 );
+    update_option( 'wp_erp_inbound_email_count', get_option( 'wp_erp_inbound_email_count', 0 ) + 1 );
 
     status_header(200);
     exit;
 }
 
 /**
- * Fetch & Save contact owner email activity from api server.
+ * Fetch & Save contact owner email activity from inbound email server.
  *
  * @since 1.0
  *
@@ -1984,7 +1989,6 @@ function erp_crm_save_contact_owner_email_activity() {
     header('Access-Control-Allow-Origin: *');
 
     $postdata = $_POST;
-    $api_key  = get_option( 'wp_erp_apikey' );
 
     unset( $postdata['action'] );
 
@@ -2006,20 +2010,27 @@ function erp_crm_save_contact_owner_email_activity() {
     $headers = "";
     $headers .= "Content-Type: text/html; charset=UTF-8" . "\r\n";
 
-    $is_cloud_active = erp_is_cloud_active();
+    $erp_is_imap_active = erp_is_imap_active();
 
-    if ( $is_cloud_active ) {
-        $wp_erp_api_key = get_option( 'wp_erp_apikey' );
+    $custom_headers = [];
 
-        $reply_to = $wp_erp_api_key . "-" . $postdata['created_by'] . "-" . $contact_id . "@incloud.wperp.com";
+    if ( $erp_is_imap_active ) {
+        $imap_options = get_option( 'erp_settings_erp-email_imap', [] );
+
+        $custom_headers = [
+            'X-ERP-SID' => $postdata['created_by'],
+            'X-ERP-CID' => $contact_id,
+        ];
+
+        $reply_to = $imap_options['username'];
         $headers .= "Reply-To: WP ERP <$reply_to>" . "\r\n";
     }
 
     // Send email a contact
-    erp_mail( $contact->email, $postdata['email_subject'], $postdata['message'], $headers );
+    erp_mail( $contact->email, $postdata['email_subject'], $postdata['message'], $headers, $custom_headers );
 
     // Update email counter
-    update_option( 'wp_erp_cloud_email_count', get_option( 'wp_erp_cloud_email_count', 0 ) + 1 );
+    update_option( 'wp_erp_inbound_email_count', get_option( 'wp_erp_inbound_email_count', 0 ) + 1 );
 
     status_header(200);
     exit;
@@ -2293,7 +2304,6 @@ function erp_crm_activity_schedule_notification_type() {
 }
 
 /**
-<<<<<<< HEAD
  * Insert and update save replies
  *
  * @since 1.0

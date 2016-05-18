@@ -712,12 +712,12 @@ class Ajax_Handler {
                 $headers = "";
                 $headers .= "Content-Type: text/html; charset=UTF-8" . "\r\n";
 
-                $is_cloud_active = erp_is_cloud_active();
+                $erp_is_imap_active = erp_is_imap_active();
 
-                if ( $is_cloud_active ) {
-                    $wp_erp_api_key = get_option( 'wp_erp_apikey' );
+                if ( $erp_is_imap_active ) {
+                    $imap_options = get_option( 'erp_settings_erp-email_imap', [] );
 
-                    $reply_to = $wp_erp_api_key . "-" . $postdata['created_by'] . "-" . $contact_id . "@incloud.wperp.com";
+                    $reply_to = $imap_options['username'];
                     $headers .= "Reply-To: WP ERP <$reply_to>" . "\r\n";
                 } else {
                     $from_name = erp_crm_get_email_from_name();
@@ -853,7 +853,6 @@ class Ajax_Handler {
 
     public function add_schedules_from_calendar() {
         $this->verify_nonce( 'wp-erp-crm-add-schedules' );
-
     }
 
     /**
