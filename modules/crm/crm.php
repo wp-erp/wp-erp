@@ -244,6 +244,7 @@ class Customer_Relationship {
             $customer = new Contact( null, 'contact' );
             $localize_script['customer_empty'] = $customer->to_array();
             $localize_script['statuses']       = erp_crm_customer_get_status_count( 'contact' );
+            $localize_script['life_stages']    = erp_crm_get_life_stages_dropdown_raw();
         }
 
         wp_localize_script( 'erp-vue-table', 'wpVueTable', [

@@ -226,7 +226,7 @@
             </li>
 
             <?php if ( current_user_can( 'erp_crm_manager' ) ): ?>
-                <li data-selected = "{{ data.assign_to }}">
+                <li data-selected = "{{ data.assign_to.id }}">
                     <?php erp_html_form_input( array(
                         'label'       => __( 'Contact Owner', 'erp' ),
                         'name'        => 'assign_to',

@@ -74,7 +74,7 @@ Vue.component('vtable', {
                             +'</thead>'
 
                             +'<tbody id="the-list" data-wp-lists="list:{{ tableClass }}" class="vtbale-tbody">'
-                                +'<tr v-if="( tableData.length > 0 )" v-for="item in tableData" transition="vtable-item">'
+                                +'<tr v-if="( tableData.length > 0 )" v-for="(itemIndex, item) in tableData" transition="vtable-item">'
                                     +'<th scope="row" class="check-column">'
                                         +'<input type="checkbox" v-model="checkboxItems" class="{{ rowCheckboxId }}" name="{{ rowCheckboxName }}[]" data-field="{{ rowCheckboxField }}" value="{{ item[rowCheckboxField] }}">'
                                     +'</th>'
@@ -90,8 +90,8 @@ Vue.component('vtable', {
                                                         + '</template>'
                                                         + '<template v-else>'
                                                             + '<span class="{{ rowAction.class }}">'
-                                                                + '<a v-if="!hasPreventRowAction( rowAction )" href="{{{ rowActionLinkCallback( rowAction, item ) }}}" title="{{ rowAction.attrTitle }}">{{ rowAction.title }}</a>'
-                                                                + '<a v-else href="#" @click.prevent="callAction( rowAction.action, item )" title="{{ rowAction.attrTitle }}">{{ rowAction.title }}</a>'
+                                                                + '<a v-if="!hasPreventRowAction( rowAction )" href="{{{ rowActionLinkCallback( rowAction, item, itemIndex ) }}}" title="{{ rowAction.attrTitle }}">{{ rowAction.title }}</a>'
+                                                                + '<a v-else href="#" @click.prevent="callAction( rowAction.action, item, itemIndex )" title="{{ rowAction.attrTitle }}">{{ rowAction.title }}</a>'
                                                                 + '<span v-if="rowActionIndex != ( itemRowActions.length - 1)"> | </span>'
                                                             + '</span>'
                                                         + '</template>'
@@ -528,8 +528,8 @@ Vue.component('vtable', {
             return obj
         },
 
-        callAction: function( action, data ) {
-            this.$dispatch('vtable:action', action, data)
+        callAction: function( action, data, index ) {
+            this.$dispatch( 'vtable:action', action, data, index );
         },
 
         callTopNavFilterAction: function( action, label ) {
