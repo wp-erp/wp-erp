@@ -1,0 +1,146 @@
+<?php
+namespace WeDevs\ERP\Accounting;
+
+use WeDevs\ERP\Framework\ERP_Settings_Page;
+
+/**
+ * General class
+ */
+class Settings extends ERP_Settings_Page {
+
+
+    function __construct() {
+        $this->id            = 'accounting';
+        $this->label         = __( 'Accounting', 'erp' );
+        $this->single_option = true;
+        $this->sections      = $this->get_sections();
+
+        add_action( 'erp_admin_field_ac_tax_list', [ $this, 'ac_tax_list' ] );
+    }
+
+   /**
+     * Get sections
+     *
+     * @return array
+     */
+    public function get_sections() {
+        $sections = array(
+            'currency_option' => __( 'Currency Options', 'accounting' ),
+            'erp_ac_tax'          => __( 'Sales Tax', 'accounting' )
+        );
+
+        return apply_filters( 'erp_get_sections_' . $this->id, $sections );
+    }
+
+    /**
+     * Get sections fields
+     *
+     * @return array
+     */
+    public function get_section_fields( $section = '' ) {
+
+        $fields['currency_option'] = array(
+
+            array( 'title' => __( '', 'accounting' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
+
+            array(
+                'title'   => __( 'Currency', 'accounting' ),
+                'id'      => 'erp_ac_currency',
+                'type'    => 'select',
+                'class'   => 'select2',
+                'options' => erp_get_currency_list_with_symbol(),
+                'default' => 'USD'
+            ),
+            array(
+                'title'   => __( 'Currency Position', 'erp' ),
+                'id'      => 'erp_ac_currency_position',
+                'type'    => 'select',
+                'class'   => 'select2',
+                'options' => array(
+                    'left'        => sprintf( '%1$s (%2$s99.99)', __( 'Left', 'accounting' ), erp_ac_get_currency_symbol() ),
+                    'right'       => sprintf( '%1$s (99.99%2$s)', __( 'Right', 'accounting' ), erp_ac_get_currency_symbol() ),
+                    'left_space'  => sprintf( '%1$s (%2$s 99.99)', __( 'Left with space', 'accounting' ), erp_ac_get_currency_symbol() ),
+                    'right_space' => sprintf( '%1$s (99.99 %2$s)', __( 'Right with space', 'accounting' ), erp_ac_get_currency_symbol() ),
+                ),
+            ),
+
+            array(
+                'title'   => __( 'Thousand Separator', 'erp' ),
+                'type'    => 'text',
+                'id'      => 'erp_ac_th_separator',
+                'default' => ','
+            ),
+
+
+            array(
+                'title'   => __( 'Decimal Separator', 'erp' ),
+                'id'      => 'erp_ac_de_separator',
+                'type'    => 'text',
+                'default' => '.'
+            ),
+
+            array(
+                'title'   => __( 'Number of Decimals', 'erp' ),
+                'type'    => 'text',
+                'id'      => 'erp_ac_nm_decimal',
+                'default' => 2
+            ),
+
+
+            array( 'type' => 'sectionend', 'id' => 'script_styling_options' ),
+
+        ); // End general settings
+
+        $fields['erp_ac_tax'] = array(
+            array(
+                'title' => __( 'Sales Taxes', 'erp' ),
+                'type'  => 'title',
+                'desc'  => __( '', 'erp' ),
+                'id'    => 'erp-ac-tax-options'
+            ),
+            array(
+                'type' => 'ac_tax_list'
+            ),
+            array( 'type' => 'sectionend', 'id' => 'script_styling_optionsjj' ),
+        );
+
+        $fields['erp_ac_tax']['submit_button'] = false;
+
+        $section = $section === false ? $fields['checkout'] : isset( $fields[$section] ) ? $fields[$section] : array();
+        
+        return apply_filters( 'erp_ac_settings_section_fields_' . $this->id , $section );
+    }
+
+    /**
+     * Get sections fields
+     *
+     * @return array
+     */
+    public function get_settings() {
+
+        $fields = array(
+
+            array( 'title' => __( 'Accounting Settings', 'accounting' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
+
+            array(
+                'title'   => __( 'Home Currency', 'accounting' ),
+                'id'      => 'base_currency',
+                'desc'    => __( 'The base currency of the system.', 'accounting' ),
+                'type'    => 'select',
+                'options' => erp_get_currencies()
+            ),
+
+            array( 'type' => 'sectionend', 'id' => 'script_styling_options' ),
+
+        ); // End general settings
+
+
+        return apply_filters( 'erp_ac_settings_general', $fields );
+    }
+
+    function ac_tax_list() {
+        require_once WPERP_ACCOUNTING_VIEWS . '/settings/tax.php';
+    }
+}
+
+return new Settings();
