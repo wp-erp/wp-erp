@@ -1,4 +1,93 @@
 ;( function($) {
+
+    Vue.component( 'contact-owner-bulk-action', {
+        template:
+            '<div class="alignleft actions bulkactions">'
+                +'<label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label>'
+                +'<select name="test" id="erp-select-user-for-assign-contact" v-model="filterAssignContact" style="width: 250px; margin-right:10px;">'
+                    +'<option value=""></option>'
+                +'</select>'
+                +'<input type="submit" id="doaction" @click.prevent="handleBulkAction(filterAssignContact)" class="button action" value="Apply">'
+                +'<input type="submit" id="doaction" @click.prevent="resetFilter()" class="button action" value="Reset">'
+            +'</div>',
+
+        data : function() {
+            return {
+                filterAssignContact: ''
+            }
+        },
+
+        methods: {
+            handleBulkAction: function( action ) {
+                this.$parent.additionalParams['filter_assign_contact'] = this.filterAssignContact;
+
+                this.$parent.$nextTick(function() {
+                    this.$parent.$broadcast('vtable:refresh')
+                });
+            },
+
+            resetFilter: function() {
+                this.filterAssignContact = '';
+                this.$parent.additionalParams['filter_assign_contact'] = '';
+
+                this.$parent.$nextTick(function() {
+                    this.$parent.$broadcast('vtable:refresh')
+                });
+
+                $( 'select#erp-select-user-for-assign-contact' ).select2('val', '');
+            }
+        },
+
+        ready: function() {
+            var self = this;
+
+            $( 'select#erp-select-user-for-assign-contact' ).select2({
+                allowClear: true,
+                placeholder: 'Select an Agent',
+                minimumInputLength: 3,
+                ajax: {
+                    url: wpErpCrm.ajaxurl,
+                    dataType: 'json',
+                    delay: 250,
+                    escapeMarkup: function( m ) {
+                        return m;
+                    },
+                    data: function (params) {
+                        return {
+                            q: params.term, // search term
+                            _wpnonce: wpErpCrm.nonce,
+                            action: 'erp-search-crm-user'
+                        };
+                    },
+                    processResults: function ( data, params ) {
+                        var terms = [];
+
+                        if ( data) {
+                            $.each( data.data, function( id, text ) {
+                                terms.push({
+                                    id: id,
+                                    text: text
+                                });
+                            });
+                        }
+
+                        if ( terms.length ) {
+                            return { results: terms };
+                        } else {
+                            return { results: '' };
+                        }
+                    },
+                    cache: true
+                }
+            });
+
+            $( 'select#erp-select-user-for-assign-contact' ).on('change', function() {
+                var val = $(this).val();
+                self.filterAssignContact = val;
+            });
+        }
+    });
+
     var tableColumns = [
         {
             name: 'name',
@@ -46,8 +135,13 @@
                 'id' : 'assing_group',
                 'text' : 'Assing Group'
             }
-        ]
+        ],
 
+        filterOwnerAction: [
+            {
+                'id' : '--Select contact owner--'
+            }
+        ]
     }
     var contact = new Vue({
         el: '#wp-erp',
@@ -109,7 +203,7 @@
                 return wpErpCrm.life_stages[value];
             },
 
-            contactOwner: function( value, item ) { //filter_assign_contact
+            contactOwner: function( value, item ) {
                 return ( Object.keys( item.assign_to ).length > 0 ) ? '<a href="#">' + item.assign_to.display_name + '</a>' : '—';
             },
 

@@ -22,6 +22,8 @@ Vue.component('vtable', {
                             +'<input type="submit" id="doaction" @click.prevent="handleBulkAction(bulkaction1)" class="button action" value="Apply">'
                         +'</div>'
 
+                        +'<contact-owner-bulk-action></contact-owner-bulk-action>'
+
                         +'<div class="tablenav-pages" :class="{ \'one-page\': hidePagination }">'
                             +'<span class="displaying-num">{{ totalItem }} item</span>'
                             +'<span class="pagination-links">'

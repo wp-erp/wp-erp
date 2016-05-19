@@ -124,7 +124,7 @@ window.wperp = window.wperp || {};
                 yearRange: '-100:+0',
             });
 
-            $( '.select2' ).select2({
+            $( '.erp-select2' ).select2({
                 placeholder: $(this).attr('data-placeholder')
             });
         },
