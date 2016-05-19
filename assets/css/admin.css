@@ -2977,17 +2977,20 @@ ul.edit-address li.city-wrap span {
     min-height: 100%;
     height:auto;
 }
-
 .vtable-item-transition {
-  transition: opacity .6s ease-in;
+  transition: height .6s ease-in, opacity .6s ease-in, min-height .6s ease-in, color .1s ease-in;
 }
 .vtable-item-enter {
   opacity: 0;
-  // background: #fcf8e3;
+  min-height: 0px;
+  height: 0px;
+  overflow:hidden;
 }
 .vtable-item-leave {
   opacity: 0;
-  // background: #fcf8e3;
+  min-height: 0px;
+  height: 0px;
+  overflow:hidden;
   position: absolute; /* important for removal move to work */
 }
 .vtable-item-move {

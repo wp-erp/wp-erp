@@ -28,6 +28,7 @@ $if_advance_search = ( isset( $_GET['erp_save_search' ] ) && $_GET['erp_save_sea
         :search="search"
         :top-nav-filter="topNavFilter"
         :bulkactions="bulkactions"
+        :additional-params = "additionalParams"
     ></vtable>
 
 </div>

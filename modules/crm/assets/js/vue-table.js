@@ -81,7 +81,7 @@ Vue.component('vtable', {
                                     + '<template v-for="( i, field ) in fields">'
                                         + '<template v-if="(i==0 )">'
                                             + '<td v-if="hasCallback(field)" class="has-row-actions column-primary {{ field.name }} column-{{ field.name }}" data-colname="{{ field.title }}">'
-                                            + '{{{ callCallback(field, item ) }}}'
+                                            + '<slot>{{{ callCallback(field, item ) }}}</slot>'
                                             + '<template v-if="hasRowAction()">'
                                                 + '<div class="row-actions">'
                                                     + '<template v-for="( rowActionIndex, rowAction ) in itemRowActions">'
@@ -89,7 +89,7 @@ Vue.component('vtable', {
                                                             + '{{{ callRowActionCallback( rowAction, item ) }}}'
                                                         + '</template>'
                                                         + '<template v-else>'
-                                                            + '<span class="{{ rowAction.class }}">'
+                                                            + '<span class="{{ rowAction.class }}" v-if="showRowAction( rowAction )">'
                                                                 + '<a v-if="!hasPreventRowAction( rowAction )" href="{{{ rowActionLinkCallback( rowAction, item, itemIndex ) }}}" title="{{ rowAction.attrTitle }}">{{ rowAction.title }}</a>'
                                                                 + '<a v-else href="#" @click.prevent="callAction( rowAction.action, item, itemIndex )" title="{{ rowAction.attrTitle }}">{{ rowAction.title }}</a>'
                                                                 + '<span v-if="rowActionIndex != ( itemRowActions.length - 1)"> | </span>'
@@ -112,7 +112,7 @@ Vue.component('vtable', {
                                         + '</template>'
                                         + '<template v-else>'
                                             + '<td v-if="hasCallback(field)" class="{{ field.name }} column-{{ field.name }}" data-colname="{{ field.title }}">'
-                                            + '{{{ callCallback(field, item ) }}}'
+                                            + '<slot>{{{ callCallback(field, item ) }}}</slot>'
                                             + '</td>'
                                             + '<td v-else class="{{ field.name }} column-{{ field.name }}" data-colname="{{ field.title }}">'
                                                 + '{{{ getObjectValue(item, field.name, "-") }}}'
@@ -468,12 +468,24 @@ Vue.component('vtable', {
             var func = args.shift()
 
             if (typeof this.$parent[func] == 'function') {
-                return (args.length > 0)
-                    ? this.$parent[func].apply(this.$parent, [rowAction.title].concat(args), item )
-                    : this.$parent[func].call(this.$parent, [rowAction.title], item )
+                return this.$parent[func].call(this.$parent, rowAction, item )
             }
 
-            return null
+            return null;
+        },
+
+        showRowAction: function( rowAction ) {
+            if ( ! rowAction.showIf ) {
+                return true;
+            }
+
+            var args = rowAction.showIf.split('|')
+            var func = args.shift()
+
+            if ( typeof this.$parent[func] == 'function') {
+                return this.$parent[func].call(this.$parent, rowAction )
+            }
+            return null;
         },
 
         callCallback: function( field, item ) {
@@ -563,6 +575,7 @@ Vue.component('vtable', {
             if ( query == '' ) {
                 this.additionalParams = {};
                 this.currentPage = 1
+                this.activeTopNavFilter = this.topNavFilter.default;
                 this.fetchData();
             }
         },

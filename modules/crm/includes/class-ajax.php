@@ -286,8 +286,9 @@ class Ajax_Handler {
         do_action( 'erp_crm_save_contact_data', $customer, $customer_id, $posted );
 
         $data = $customer->to_array();
+        $statuses = erp_crm_customer_get_status_count( $posted['type'] );
 
-        $this->send_success( $data );
+        $this->send_success( [ 'data' => $data, 'statuses' => $statuses ] );
     }
 
     /**
@@ -332,10 +333,15 @@ class Ajax_Handler {
             'type' => $type
         ];
 
-        erp_delete_people( $data );
+        $deleted = erp_delete_people( $data );
 
-        // @TODO: check permission
-        $this->send_success( __( 'Customer has been removed successfully', 'erp' ) );
+        if ( is_wp_error( $deleted ) ) {
+            $this->send_error( $deleted->get_error_message() );
+        }
+
+        $statuses = erp_crm_customer_get_status_count( $type );
+
+        $this->send_success( [ 'statuses' => $statuses ] );
     }
 
     /**
@@ -357,10 +363,15 @@ class Ajax_Handler {
             'type' => $type
         ];
 
-        erp_restore_people( $data );
+        $restored = erp_restore_people( $data );
 
-        // @TODO: check permission
-        $this->send_success( __( 'Customer has been removed successfully', 'erp' ) );
+        if ( is_wp_error( $restored ) ) {
+            $this->send_error( $restored->get_error_message() );
+        }
+
+        $statuses = erp_crm_customer_get_status_count( $type );
+
+        $this->send_success( [ 'statuses' => $statuses ] );
     }
 
     /**

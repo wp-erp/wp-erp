@@ -3,7 +3,7 @@
         {
             name: 'name',
             title: 'Full Name',
-            callback: 'full_name',
+            callback: 'fullName',
             sortField: 'id',
         },
         {
@@ -18,8 +18,15 @@
         {
             name: 'life_stage',
             title: 'Life stage',
-            callback: 'life_stage',
+            callback: 'lifeStage',
         },
+
+        {
+            name: 'contact_owner',
+            title: 'Owner',
+            callback: 'contactOwner',
+        },
+
         {
             name: 'created',
             title: 'Created At',
@@ -63,25 +70,65 @@
                     title: 'Delete',
                     attrTitle: 'Delete this contact',
                     class: 'delete',
-                    action: 'delete'
-                }
+                    action: 'delete',
+                    showIf: 'whenNotTrased'
+                },
+                {
+                    title: 'Permanent Delete',
+                    attrTitle: 'Permanent Delete this contact',
+                    class: 'delete',
+                    action: 'permanent_delete',
+                    showIf: 'OnlyTrased'
+                },
+                {
+                    title: 'Restore',
+                    attrTitle: 'Restore this contact',
+                    class: 'restore',
+                    action: 'restore',
+                    showIf: 'OnlyTrased'
+                },
+
             ],
             topNavFilter: {
                 data: wpErpCrm.statuses,
                 default: 'all',
                 field: 'status'
             },
-            bulkactions: bulkactions
+            bulkactions: bulkactions,
+            additionalParams: {},
+            testVar : 'This is a tes'
         },
 
         methods: {
-            full_name: function( value, item ) {
+            fullName: function( value, item ) {
                 var link  = '<a href="' + item.details_url + '"><strong>' + item.first_name + ' '+ item.last_name + '</strong></a>';
                 return item.avatar.img + link;
             },
 
-            life_stage: function( value, item ) {
+            lifeStage: function( value, item ) {
                 return wpErpCrm.life_stages[value];
+            },
+
+            contactOwner: function( value, item ) { //filter_assign_contact
+                return ( Object.keys( item.assign_to ).length > 0 ) ? '<a href="#">' + item.assign_to.display_name + '</a>' : '—';
+            },
+
+            sortContactOwner: function( contactOwnerID ) {
+                console.log( this.additionalParams );
+            },
+
+            OnlyTrased: function( rowAction ) {
+                if ( this.$refs.vtable.currentTopNavFilter == 'trash' ) {
+                    return true;
+                }
+                return false;
+            },
+
+            whenNotTrased: function( rowAction ) {
+                if ( this.$refs.vtable.currentTopNavFilter != 'trash' ) {
+                    return true;
+                }
+                return false;
             },
 
             initFields: function() {
@@ -116,16 +163,10 @@
                         wp.ajax.send( {
                             data: this.serialize(),
                             success: function( res ) {
-
-                                // if ( is_single == '1' ) {
-                                //     $('body').trigger( 'erp-crm-after-customer-new-company', [res]);
-                                // } else {
-                                //     WeDevs_ERP_CRM.customer.pageReload();
-                                // }
-
                                 modal.enableButton();
                                 modal.closeModal();
-                                self.$refs.vtable.tableData.unshift(res);
+                                self.$refs.vtable.tableData.unshift(res.data);
+                                self.$refs.vtable.topNavFilter.data = res.statuses;
                             },
                             error: function(error) {
                                 modal.enableButton();
@@ -185,7 +226,6 @@
                                     }
                                 });
 
-
                                 self.initFields();
                             }
                         });
@@ -196,16 +236,10 @@
                         wp.ajax.send( {
                             data: this.serialize(),
                             success: function(res) {
-                                console.log(res);
-                                // if ( single_view == '1' ) {
-                                //     $( '.erp-single-customer-row' ).load( window.location.href + ' .left-content' );
-                                // } else {
-                                //     WeDevs_ERP_CRM.customer.pageReload();
-                                // }
                                 modal.enableButton();
                                 modal.closeModal();
-                                self.$refs.vtable.tableData.$set( index, res );
-
+                                self.$refs.vtable.tableData.$set( index, res.data );
+                                self.$refs.vtable.topNavFilter.data = res.statuses;
                             },
                             error: function(error) {
                                 modal.enableButton();
@@ -214,7 +248,49 @@
                         });
                     }
                 });
+            },
 
+            deleteContact: function( data, type, hard ) {
+                var self = this;
+
+                if ( confirm( wpErpCrm.delConfirmCustomer ) ) {
+                    wp.ajax.send( 'erp-crm-customer-delete', {
+                        data: {
+                            _wpnonce: wpErpCrm.nonce,
+                            id: data.id,
+                            hard: ( hard == true ) ? 1 : 0,
+                            type: type
+                        },
+                        success: function(res) {
+                            self.$refs.vtable.tableData.$remove( data );
+                            self.$refs.vtable.topNavFilter.data = res.statuses;
+                        },
+                        error: function(res) {
+                            alert( res );
+                        }
+                    });
+                }
+            },
+
+            restoreContact: function( data, type ) {
+                var self = this;
+
+                if ( confirm( wpErpCrm.confirm ) ) {
+                    wp.ajax.send( 'erp-crm-customer-restore', {
+                        data: {
+                            _wpnonce: wpErpCrm.nonce,
+                            id: data.id,
+                            type: type
+                        },
+                        success: function(res) {
+                            self.$refs.vtable.tableData.$remove( data );
+                            self.$refs.vtable.topNavFilter.data = res.statuses;
+                        },
+                        error: function(res) {
+                            alert( res );
+                        }
+                    });
+                }
             }
         },
 
@@ -222,6 +298,18 @@
             'vtable:action': function( action, data, index ) {
                 if ( 'edit' == action ) {
                     this.editContact( data, index );
+                }
+
+                if ( 'delete' == action ) {
+                    this.deleteContact( data, 'contact', false );
+                }
+
+                if ( 'restore' == action ) {
+                    this.restoreContact( data, 'contact' );
+                }
+
+                if ( 'permanent_delete' == action ) {
+                    this.deleteContact( data, 'contact', true );
                 }
             },
 
