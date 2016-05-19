@@ -33,6 +33,7 @@ class Imap {
      *
      * @param  string  $host
      * @param  string  $port (993|995)
+     * @param  string  $protocol
      * @param  string  $username
      * @param  string  $password
      * @param  string  $encryption (ssl|tls|notls)
@@ -42,6 +43,8 @@ class Imap {
      */
     public function __construct( $host, $port, $protocol, $username, $password, $encryption = 'ssl', $cert = false ) {
         set_time_limit( 3000 );
+
+        $this->host = $host;
 
         $option = '';
 
@@ -64,10 +67,14 @@ class Imap {
         }
 
         if ( ! $this->is_extension_loaded() ) {
-            die( 'IMAP extension could not loaded!' );
+            throw new \Exception( 'Your server isn\'t connected with imap.' );
         }
 
-        $this->connection = imap_open( $this->mailbox, $username, $password ) or die( 'Cannot connect to Email: ' . imap_last_error() );
+        $this->connection = imap_open( $this->mailbox, $username, $password );
+
+        if ( ! $this->connection ) {
+            throw new \Exception( 'Cannot connect to Email: ' . imap_last_error() );
+        }
     }
 
     /**
@@ -77,12 +84,12 @@ class Imap {
      */
     public function is_extension_loaded() {
         if ( ! extension_loaded( 'imap' ) || ! function_exists( 'imap_open' ) ) {
-            $prefix = ( PHP_SHLIB_SUFFIX == 'dll' ) ? 'php_' : '';
-            $extension = $prefix . 'imap.' . PHP_SHLIB_SUFFIX;
+            // $prefix = ( PHP_SHLIB_SUFFIX == 'dll' ) ? 'php_' : '';
+            // $extension = $prefix . 'imap.' . PHP_SHLIB_SUFFIX;
 
-            if ( function_exists( 'dl' ) ) {
-                return dl( $extension );
-            }
+            // if ( function_exists( 'dl' ) ) {
+            //     return dl( $extension );
+            // }
 
             return false;
         }
@@ -91,14 +98,34 @@ class Imap {
     }
 
     /**
+     * Determine if the imap stream is connected
+     *
+     * @return boolean
+     */
+    public function is_connected() {
+        if ( imap_ping( $this->connection ) ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Open the inbox
      *
-     * @param  string $mail_type (optional)
+     * @param  string $mailbox (optional)
+     * @param  string $query (optional)
      *
      * @return array
      */
-    public function open( $mail_type = 'UNSEEN' ) {
-        $emails = imap_search( $this->connection, $mail_type );
+    public function open( $mailbox = 'inbox', $query = 'UNSEEN' ) {
+        if ( strtolower( $mailbox ) != 'inbox' ) {
+            $mailboxes = imap_list( $this->connection, $this->mailbox, $mailbox );
+
+            imap_reopen( $this->connection , $mailboxes[0] );
+        }
+
+        $emails = imap_search( $this->connection, $query );
 
         if ( $emails ) {
             rsort( $emails );
@@ -112,12 +139,13 @@ class Imap {
     /**
      * Get all emails with body & attachments
      *
-     * @param  string $mail_type (optional)
+     * @param  string $mailbox (optional)
+     * @param  string $query (optional)
      *
      * @return array
      */
-    public function get_emails( $mail_type = 'UNSEEN' ) {
-        $email_ids = $this->open( $mail_type );
+    public function get_emails( $mailbox = 'inbox', $query = 'UNSEEN' ) {
+        $email_ids = $this->open( $mailbox, $query );
 
         $emails = [];
 
@@ -126,7 +154,7 @@ class Imap {
                 'subject'     => $this->get_subject( $email_id ),
                 'body'        => $this->get_body( $email_id ),
                 'attachments' => $this->get_attachments( $email_id ),
-                'headers'     => $this->get_header( $email_id ),
+                'headers'     => $this->get_headers( $email_id ),
             ];
         }
 
@@ -147,16 +175,19 @@ class Imap {
     }
 
     /**
-     * Get email header
+     * Get email headers
      *
      * @param  int $email_id
      *
      * @return array
      */
-    public function get_header( $email_id ) {
-        $header = imap_header( $this->connection, $email_id );
+    public function get_headers( $email_id ) {
+        $header_string = imap_fetchheader( $this->connection, $email_id );
 
-        return $header;
+        preg_match_all( '/([^: ]+): (.+?(?:\r\n\s(?:.+?))*)\r\n/m', $header_string, $matches );
+        $headers = array_combine( $matches[1], $matches[2] );
+
+        return $headers;
     }
 
     /**
@@ -167,9 +198,9 @@ class Imap {
      * @return string
      */
     public function get_subject( $email_id ) {
-        $header = $this->get_header( $email_id );
+        $headers = $this->get_headers( $email_id );
 
-        return $header->subject;
+        return $headers['Subject'];
     }
 
     /**
@@ -211,7 +242,7 @@ class Imap {
                     $part_number = 1;
                 }
 
-                $text = imap_fetchbody( $this->connection, $email_id, $part_number );
+                $text = imap_fetchbody( $this->connection, $email_id, $part_number, FT_PEEK );
 
                 switch ( $structure->encoding ) {
                     case 3: return imap_base64( $text );
@@ -317,6 +348,21 @@ class Imap {
         }
 
         return $filtered_attachments;
+    }
+
+    /**
+     * Mark emails as seen
+     *
+     * @param  array $email_ids
+     *
+     * @return boolean
+     */
+    public function mark_seen_emails( $email_ids ) {
+        $comma_separated_ids = $email_ids;
+
+        $status = imap_setflag_full( $this->connection, $comma_separated_ids, "\\Seen \\Flagged" );
+
+        return $status;
     }
 
     /**

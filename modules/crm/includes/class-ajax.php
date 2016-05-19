@@ -870,12 +870,12 @@ class Ajax_Handler {
                 $headers = "";
                 $headers .= "Content-Type: text/html; charset=UTF-8" . "\r\n";
 
-                $is_cloud_active = erp_is_cloud_active();
+                $erp_is_imap_active = erp_is_imap_active();
 
-                if ( $is_cloud_active ) {
-                    $wp_erp_api_key = get_option( 'wp_erp_apikey' );
+                if ( $erp_is_imap_active ) {
+                    $imap_options = get_option( 'erp_settings_erp-email_imap', [] );
 
-                    $reply_to = $wp_erp_api_key . "-" . $postdata['created_by'] . "-" . $contact_id . "@incloud.wperp.com";
+                    $reply_to = $imap_options['username'];
                     $headers .= "Reply-To: WP ERP <$reply_to>" . "\r\n";
                 } else {
                     $from_name = erp_crm_get_email_from_name();
@@ -893,14 +893,8 @@ class Ajax_Handler {
 
                 $email_body = $postdata['message'] . $img_url;
 
-                add_filter( 'wp_mail_from', 'erp_crm_get_email_from_address' );
-                add_filter( 'wp_mail_from_name', 'erp_crm_get_email_from_name' );
-
                 // Send email a contact
-                wp_mail( $contact->email, $postdata['email_subject'], $email_body, $headers );
-
-                remove_filter( 'wp_mail_from', 'erp_crm_get_email_from_address' );
-                remove_filter( 'wp_mail_from_name', 'erp_crm_get_email_from_name' );
+                erp_mail( $contact->email, $postdata['email_subject'], $email_body, $headers );
 
                 do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
 
@@ -982,7 +976,6 @@ class Ajax_Handler {
                     $this->send_error( __( 'Somthing is wrong, Please try later', 'erp' ) );
                 }
 
-                //@TODO: Need to send confirmation mail for assigned users
                 do_action( 'erp_crm_save_customer_tasks_activity_feed', $save_data, $postdata );
 
                 erp_crm_assign_task_to_users( $data, $save_data );
@@ -1018,7 +1011,6 @@ class Ajax_Handler {
 
     public function add_schedules_from_calendar() {
         $this->verify_nonce( 'wp-erp-crm-add-schedules' );
-
     }
 
     /**

@@ -165,6 +165,21 @@ Company'
 
         update_option( 'erp_email_settings_rejected-leave-request', $reject_request );
 
+        // New Task Assigned
+        $new_task_assigned = [
+            'subject' => 'New task has been assigned to you',
+            'heading' => 'New Task Assigned',
+            'body'    => 'Hello {employee_name},
+
+A new task <strong>{task_title}</strong> has been assigned to you by {created_by}.
+Due Date: {due_date}
+
+Regards
+Manager Name
+Company'
+        ];
+
+        update_option( 'erp_email_settings_new-task-assigned', $new_task_assigned );
     }
 
     /**
