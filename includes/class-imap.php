@@ -151,6 +151,7 @@ class Imap {
 
         foreach ( $email_ids as $email_id ) {
             $emails[] = [
+                'id'          => $email_id,
                 'subject'     => $this->get_subject( $email_id ),
                 'body'        => $this->get_body( $email_id ),
                 'attachments' => $this->get_attachments( $email_id ),
@@ -358,9 +359,9 @@ class Imap {
      * @return boolean
      */
     public function mark_seen_emails( $email_ids ) {
-        $comma_separated_ids = $email_ids;
+        $comma_separated_ids = implode( ',', $email_ids );
 
-        $status = imap_setflag_full( $this->connection, $comma_separated_ids, "\\Seen \\Flagged" );
+        $status = imap_setflag_full( $this->connection, $comma_separated_ids, "\\Seen" );
 
         return $status;
     }
