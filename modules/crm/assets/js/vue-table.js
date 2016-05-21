@@ -582,8 +582,6 @@ Vue.component('vtable', {
                 this.additionalParams = {};
             }
 
-            // var obj = {};
-            // obj[this.topNavFilter.field] = action;
             this.additionalParams['status'] = action;
 
             this.fetchData();
