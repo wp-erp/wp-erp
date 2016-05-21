@@ -323,7 +323,7 @@ class Ajax_Handler {
 
         $this->verify_nonce( 'wp-erp-crm-nonce' );
 
-        $customer_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+        $customer_id = ( isset( $_REQUEST['id'] ) && is_array( $_REQUEST['id'] ) ) ? (array)$_REQUEST['id'] : intval( $_REQUEST['id'] );
         $hard        = isset( $_REQUEST['hard'] ) ? intval( $_REQUEST['hard'] ) : 0;
         $type        = isset( $_REQUEST['type'] ) ? $_REQUEST['type'] : '';
 
@@ -355,7 +355,7 @@ class Ajax_Handler {
 
         $this->verify_nonce( 'wp-erp-crm-nonce' );
 
-        $customer_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+        $customer_id = ( isset( $_REQUEST['id'] ) && is_array( $_REQUEST['id'] ) ) ? (array)$_REQUEST['id'] : intval( $_REQUEST['id'] );
         $type        = isset( $_REQUEST['type'] ) ? $_REQUEST['type'] : '';
 
         $data = [
@@ -539,7 +539,7 @@ class Ajax_Handler {
 
         if ( ! empty( $crm_users ) ) {
             foreach ( $crm_users as $user ) {
-                $found_crm_user[ $user->ID ] = $user->display_name . ' (' . sanitize_email( $user->user_email ) . ')';
+                $found_crm_user[ $user->ID ] = $user->display_name;
             }
         }
 

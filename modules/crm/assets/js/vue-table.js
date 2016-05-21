@@ -11,18 +11,28 @@ Vue.component('vtable', {
                     +'<ul v-if="!hasTopNavFilter()" class="subsubsub">'
                         +'<li v-for="( key, filter ) in topNavFilter.data" class="{{key}}"><a href="#" @click.prevent="callTopNavFilterAction( key, filter )" :class="{ \'current\': iscurrentTopNavFilter( key ) }">{{ filter.label }} <span class="count">({{ filter.count }})</span></a> <span v-if="!ifTopNavFilterLastItem( key )"> | </span></li>'
                     +'</ul>'
-
                     +'<div class="tablenav top">'
                         +'<div class="alignleft actions bulkactions" v-if="hasBulkAction()">'
                             +'<label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label>'
                             +'<select name="action" id="bulk-action-selector-top" v-model="bulkaction1">'
                                 +'<option value="-1">Bulk Actions</option>'
-                                +'<option v-for="actions in bulkactions.defaultAction" value="{{ actions.id }}">{{ actions.text }}</option>'
+                                +'<option v-for="actions in bulkactions.defaultAction" value="{{ actions.id }}" v-if="showRowAction( actions )">{{ actions.text }}</option>'
                             +'</select>'
                             +'<input type="submit" id="doaction" @click.prevent="handleBulkAction(bulkaction1)" class="button action" value="Apply">'
                         +'</div>'
 
-                        +'<contact-owner-bulk-action></contact-owner-bulk-action>'
+                        +'<template v-if="hasExtraBulkAction()">'
+                            +'<div class="alignleft actions bulkactions">'
+                                +'<label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label>'
+                                +'<template v-for="extraActions in extraBulkAction">'
+                                    +'<select v-if="( extraActions.type == \'select\')" name="{{ extraActions.name }}" id="{{ extraActions.id }}" class="v-select-field {{ extraActions.class }}" style="width:200px;">'
+                                        +'<option v-for="bulkOption in extraActions.options" value="{{ bulkOption.id }}">{{ bulkOption.text }}</option>'
+                                    +'</select>'
+                                    +'<input v-else type="{{ extraActions.type }}" name="{{ extraActions.name }}" id="{{ extraActions.id }}" class="{{ extraActions.class }}" v-model="extraBulkActionData[extraActions.name]">'
+                                +'</template>'
+                                +'<input type="submit" id="filter" @click.prevent="handleExtraBulkAction()" class="button action" value="Filter">'
+                            +'</div>'
+                        +'</template>'
 
                         +'<div class="tablenav-pages" :class="{ \'one-page\': hidePagination }">'
                             +'<span class="displaying-num">{{ totalItem }} item</span>'
@@ -253,6 +263,13 @@ Vue.component('vtable', {
             }
         },
 
+        'extraBulkAction': {
+            type: Object,
+            default: function() {
+                return {}
+            }
+        },
+
         'perPage': {
             type: Number,
             coerce: function(val) {
@@ -326,7 +343,9 @@ Vue.component('vtable', {
             bulkaction1: '-1',
             bulkaction2: '-1',
             ajaxloader: false,
-            isLoaded: false
+            isLoaded: false,
+            extraBulkActionData: '',
+            extraBulkActionSelectData:{}
         }
     },
 
@@ -362,10 +381,21 @@ Vue.component('vtable', {
 
     methods: {
 
+        hasExtraBulkAction: function() {
+            return Object.keys( this.extraBulkAction ).length > 0;
+        },
+
         handleBulkAction: function(action) {
             this.$dispatch('vtable:default-bulk-action', action, this.checkboxItems );
             this.checkboxItems = [];
             this.bulkaction1 = this.bulkaction2 = '-1';
+        },
+
+        handleExtraBulkAction: function() {
+            console.log( this.additionalParams );
+            var data = jQuery.extend( {}, this.extraBulkActionData, this.extraBulkActionSelectData );
+            this.additionalParams = jQuery.extend( true, this.additionalParams, data );
+            this.fetchData();
         },
 
         hasBulkAction: function() {
@@ -415,7 +445,6 @@ Vue.component('vtable', {
                 this.currentPage++;
             } else {
                 if ( ! isNaN( direction ) ) {
-                    console.log( direction );
                     this.currentPage = direction;
                 }
             }
@@ -609,8 +638,6 @@ Vue.component('vtable', {
                 }
             }
 
-            console.log( postData );
-
             jQuery.post( wpVueTable.ajaxurl, postData, function( resp ) {
                 if ( resp.success ) {
                     self.ajaxloader = false;
@@ -630,17 +657,23 @@ Vue.component('vtable', {
     events: {
 
         'vtable:reload': function() {
-            this.fetchData()
+            this.fetchData();
         },
 
         'vtable:refresh': function() {
-            this.currentPage = 1
-            this.fetchData()
+            this.currentPage = 1;
+            this.fetchData();
         }
     },
 
     ready: function() {
-        this.fetchData()
+        var self = this;
+
+        jQuery('select.v-select-field').on('change', function() {
+            self.extraBulkActionSelectData[jQuery(this).attr('name')] = jQuery(this).val();
+        });
+
+        this.fetchData();
         this.pageNumberInput = this.currentPage;
     }
 

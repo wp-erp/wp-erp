@@ -137,7 +137,7 @@ class Customer_Relationship {
             'customer_upload_photo' => __( 'Upload Photo', 'erp' ),
             'customer_set_photo'    => __( 'Set Photo', 'erp' ),
             'confirm'               => __( 'Are you sure?', 'erp' ),
-            'delConfirmCustomer'    => __( 'Are you sure to delete this customer?', 'erp' ),
+            'delConfirmCustomer'    => __( 'Are you sure want to delete?', 'erp' ),
             'delConfirm'            => __( 'Are you sure to delete this?', 'erp' ),
             'checkedConfirm'        => __( 'Alteast one item must be checked', 'erp' ),
             'contact_exit'          => __( 'Already exists as a contact or company', 'erp' ),
