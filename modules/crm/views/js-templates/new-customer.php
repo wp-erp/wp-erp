@@ -109,7 +109,7 @@
                     'name'  => 'life_stage',
                     'required' => true,
                     'type'  => 'select',
-                    'class' => 'select2',
+                    'class' => 'erp-select2',
                     'options' => erp_crm_get_life_stages_dropdown_raw( [ '' => __( '--Select Stage--', 'erp' ) ] )
                 ) ); ?>
             </li>
@@ -176,7 +176,7 @@
 
             <li data-selected="{{ data.country }}">
                 <label for="erp-popup-country"><?php _e( 'Country', 'erp' ); ?></label>
-                <select name="country" id="erp-popup-country" class="erp-country-select select2" data-parent="ol">
+                <select name="country" id="erp-popup-country" class="erp-country-select erp-select2" data-parent="ol">
                     <?php $country = \WeDevs\ERP\Countries::instance(); ?>
                     <?php echo $country->country_dropdown(); ?>
                 </select>
@@ -188,7 +188,7 @@
                     'name'    => 'state',
                     'id'      => 'erp-state',
                     'type'    => 'select',
-                    'class'   => 'erp-state-select',
+                    'class'   => 'erp-state-select erp-select2',
                     'options' => array( '' => __( '- Select -', 'erp' ) )
                 ) ); ?>
             </li>
@@ -233,7 +233,7 @@
                         'required'    => true,
                         'type'        => 'select',
                         'id'          => 'erp-crm-contact-owner-id',
-                        'class'       => 'select2 erp-crm-contact-owner-class',
+                        'class'       => 'erp-select2 erp-crm-contact-owner-class',
                         'options'     => erp_crm_get_crm_user_dropdown( [ '' => '--Select--' ] )
                     ) ); ?>
                 </li>

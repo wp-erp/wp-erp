@@ -88,11 +88,16 @@ class Ajax_Handler {
 
         // only ncessary because we have sample data
         $args = [
-            'type'      => 'contact',
+            'type'      => '',
             'offset'    => 0,
             'number'    => 20,
             'no_object' => true
         ];
+
+        // Set type. By defaul it sets to contact :p
+        if ( isset( $_REQUEST['type'] ) && ! empty( $_REQUEST['type'] ) ) {
+            $args['type'] = $_REQUEST['type'];
+        }
 
         // Filter Limit value
         if ( isset( $_REQUEST['number'] ) && ! empty( $_REQUEST['number'] ) ) {
@@ -168,12 +173,7 @@ class Ajax_Handler {
             $contacts['data'][$key]['created']       = erp_format_date( $contact['created'] );
         }
 
-
-
         $contacts['total_items']   = $total_items;
-
-        // $contacts['total_items'] = 0;
-        // $contacts['data'] = [];
         $this->send_success( $contacts );
     }
 

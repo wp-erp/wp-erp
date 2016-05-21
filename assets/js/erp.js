@@ -214,6 +214,7 @@ window.wperp = window.wperp || {};
          * @return {void}
          */
         populateState: function() {
+
             if ( typeof wpErpCountries === 'undefined' ) {
                 return false;
             }

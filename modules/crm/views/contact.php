@@ -11,11 +11,6 @@ $if_advance_search = ( isset( $_GET['erp_save_search' ] ) && $_GET['erp_save_sea
         <?php endif ?>
     </h2>
 
-    <?php
-    // $contact = new \WeDevs\ERP\CRM\Contact( 70 );
-    // var_dump( $contact->to_array() );
-    ?>
-
     <vtable v-ref:vtable
         wrapper-class="erp-crm-list-table-wrap"
         table-class="customers"

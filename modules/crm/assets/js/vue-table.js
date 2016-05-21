@@ -174,7 +174,7 @@ Vue.component('vtable', {
                             +'<label for="bulk-action-selector-bottom" class="screen-reader-text">Select bulk action</label>'
                             +'<select name="action2" id="bulk-action-selector-bottom" v-model="bulkaction2">'
                                 +'<option value="-1">Bulk Actions</option>'
-                                +'<option v-for="actions in bulkactions.defaultAction" value="{{ actions.id }}">{{ actions.text }}</option>'
+                                +'<option v-for="actions in bulkactions.defaultAction" value="{{ actions.id }}" v-if="showRowAction( actions )">{{ actions.text }}</option>'
                             +'</select>'
                             +'<input type="submit" id="doaction2" @click.prevent="handleBulkAction( bulkaction2 )" class="button action" value="Apply">'
                         +'</div>'

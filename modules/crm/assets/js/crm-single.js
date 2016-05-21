@@ -3,7 +3,7 @@
     var tableColumns = [
         {
             name: 'name',
-            title: 'Full Name',
+            title: ( wpErpCrm.contact_type == 'contact') ? 'Contact name' : 'Company name',
             callback: 'fullName',
             sortField: 'id',
         },
@@ -126,12 +126,18 @@
             },
             bulkactions: bulkactions,
             extraBulkAction: extraBulkAction,
-            additionalParams: {},
+            additionalParams: {
+                'type' : wpErpCrm.contact_type
+            },
         },
 
         methods: {
             fullName: function( value, item ) {
-                var link  = '<a href="' + item.details_url + '"><strong>' + item.first_name + ' '+ item.last_name + '</strong></a>';
+                if ( wpErpCrm.contact_type == 'contact' ) {
+                    var link  = '<a href="' + item.details_url + '"><strong>' + item.first_name + ' '+ item.last_name + '</strong></a>';
+                } else {
+                    var link  = '<a href="' + item.details_url + '"><strong>' + item.company + '</strong></a>';
+                }
                 return item.avatar.img + link;
             },
 
@@ -364,9 +370,7 @@
                                 success: function( res ) {
                                     modal.enableButton();
                                     modal.closeModal();
-                                    self.$nextTick(function() {
-                                        this.$broadcast('vtable:refresh')
-                                    });
+                                    self.$broadcast('vtable:refresh');
                                 },
                                 error: function(error) {
                                     modal.enableButton();
@@ -433,34 +437,34 @@
                 }
 
                 if ( 'delete' == action ) {
-                    this.deleteContact( data, 'contact', false, false );
+                    this.deleteContact( data, wpErpCrm.contact_type, false, false );
                 }
 
                 if ( 'restore' == action ) {
-                    this.restoreContact( data, 'contact',false );
+                    this.restoreContact( data, wpErpCrm.contact_type,false );
                 }
 
                 if ( 'permanent_delete' == action ) {
-                    this.deleteContact( data, 'contact', true, false );
+                    this.deleteContact( data, wpErpCrm.contact_type, true, false );
                 }
             },
 
             'vtable:default-bulk-action': function( action, ids ) {
                 // Handle bulk action when action is something with ID's
                 if ( 'delete' === action ) {
-                    this.deleteContact( ids, 'contact', false, true );
+                    this.deleteContact( ids, wpErpCrm.contact_type, false, true );
                 }
 
                 if ( 'permanent_delete' === action ) {
-                    this.deleteContact( ids, 'contact', true, true );
+                    this.deleteContact( ids, wpErpCrm.contact_type, true, true );
                 }
 
                 if ( 'restore' === action ) {
-                    this.restoreContact( ids, 'contact', true );
+                    this.restoreContact( ids, wpErpCrm.contact_type, true );
                 }
 
                 if ( 'assign_group' === action ) {
-                    this.assignContact( ids, 'contact' );
+                    this.assignContact( ids, wpErpCrm.contact_type );
                 }
             }
         }
