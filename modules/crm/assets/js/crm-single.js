@@ -129,6 +129,14 @@
             additionalParams: {
                 'type' : wpErpCrm.contact_type
             },
+            search: {
+                params: 's',
+                wrapperClass: '',
+                screenReaderText: ( wpErpCrm.contact_type == 'company' ) ? 'Search Compnay' : 'Search Contact',
+                inputId: 'search-input',
+                btnText: ( wpErpCrm.contact_type == 'company' ) ? 'Search Compnay' : 'Search Contact',
+                btnId: 'search-submit'
+            }
         },
 
         methods: {
