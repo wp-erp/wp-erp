@@ -79,7 +79,7 @@
                                                         } else if ( $company_key == 'opportunity' ) {
                                                             echo sprintf( _n( '%s Opportunity', '%s Opportunites', $company_value['count'], 'erp' ), number_format_i18n( $company_value['count'] ), 0 );
                                                         } elseif ( $company_key == 'subscriber' ) {
-                                                            echo sprintf( _n( '%s Subscriber', '%s Subscribers', $contact_value['count'], 'erp' ), number_format_i18n( $contact_value['count'] ), 0 );
+                                                            echo sprintf( _n( '%s Subscriber', '%s Subscribers', $company_value['count'], 'erp' ), number_format_i18n( $company_value['count'] ), 0 );
                                                         } else {
                                                             echo sprintf( _n( '%s Lead', '%s Leads', $company_value['count'], 'erp' ), number_format_i18n( $company_value['count'] ), 0 );
                                                         }
