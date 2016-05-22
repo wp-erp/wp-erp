@@ -92,6 +92,48 @@
                         <a href="#" class="move-line"><span class="dashicons dashicons-menu"></span></a>
                     </td>
                 </tr>
+
+                <tr>
+                    <td class="col-chart">
+                        <?php
+                        $account = erp_ac_get_chart_dropdown();
+                        echo erp_ac_render_account_dropdown_html( $account, ['name' => 'journal_account[]'] );
+
+                        ?>
+                    </td>
+                    <td class="col-desc">
+                        <?php
+                        erp_html_form_input( array(
+                            'name'  => 'line_desc[]',
+                            'type'  => 'text'
+                        ) );
+                        ?>
+                    </td>
+                    <td class="col-amount">
+                        <?php
+                        erp_html_form_input( array(
+                            'name'        => 'line_debit[]',
+                            'type'        => 'text',
+                            'class'       => 'line_debit',
+                            'placeholder' => erp_ac_get_price_for_field( '0.00', ['symbol'=>false] )
+                        ) );
+                        ?>
+                    </td>
+                    <td class="col-amount">
+                        <?php
+                        erp_html_form_input( array(
+                            'name'        => 'line_credit[]',
+                            'type'        => 'text',
+                            'class'       => 'line_credit',
+                            'placeholder' => erp_ac_get_price_for_field( '0.00', ['symbol'=>false] )
+                        ) );
+                        ?>
+                    </td>
+                    <td class="col-action">
+                        <a href="#" class="remove-line"><span class="dashicons dashicons-trash"></span></a>
+                        <a href="#" class="move-line"><span class="dashicons dashicons-menu"></span></a>
+                    </td>
+                </tr>
             </tbody>
             <tfoot>
                 <tr>

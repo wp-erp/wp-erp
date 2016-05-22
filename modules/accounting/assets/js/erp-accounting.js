@@ -9,15 +9,13 @@
             this.select2AddMoreContent();
             this.initFields();
 
-            // payment voucher
-            
-
             // journal entry
             $( 'table.erp-ac-transaction-table.journal-table' ).on( 'click', '.remove-line', this.journal.onChange );
             $( 'table.erp-ac-transaction-table.journal-table' ).on( 'change', 'input.line_debit, input.line_credit', this.journal.onChange );
 
-            // chart of accounts
+            // chart of accounts 
             $( 'form#erp-ac-accounts-form').on( 'change', 'input#code', this.accounts.checkCode );
+            $( '.chart-of-accounts').on( 'click', '.erp-ac-remove-account', this.accounts.remove );
 
             $('.erp-ac-form-wrap').on('change', '.erp-ac-payment-receive', this.paymentReceive );
 
@@ -34,8 +32,7 @@
             $('.invoice-preview-wrap').on( 'click', 'a.add-vendor-credit-payment', self, this.vendoerCreditPayment );
             
             $('.invoice-preview-wrap').on( 'click', 'a.erp-ac-print', this.print );
-            //$('body').on( 'click', 'a.erp-ac-print', this.dynamicPrint );
-
+            
             $('.erp-ac-customer-list-table-wrap, .erp-ac-vendor-list-table-wrap').on( 'click', 'a.erp-ac-submitdelete', this.customer.remove );
             $('.erp-ac-customer-list-table-wrap, .erp-ac-vendor-list-table-wrap' ).on( 'click', 'a.erp-ac-restoreCustomer', this.customer.restore );
             $('.erp-ac-receive-payment-table, .erp-ac-voucher-table-wrap' ).on( 'click', '.erp-ac-remove-line', this.removePartialLine );
@@ -43,7 +40,7 @@
             $('body, .erp-ac-form-wrap' ).on( 'keyup', '.erp-ac-reference-field', this.keyupReference );
             $('body' ).on( 'click', '.erp-ac-not-found-btn-in-drop', this.dropDownAddMore );
             $('.erp-ac-transaction-report').on('click', this.transactionReport );
-            //$('.erp-ac-receive-payment-table, .erp-ac-voucher-table-wrap' ).on( 'change', '.erp-ac-single-check', this.singleCheck );
+            
             this.initTipTip(); 
             $(document.body ).on( 'keyup change', '.line_price, .line_credit, .line_debit, .erp-ac-line-due', this.keyUpNumberFormating );
 
@@ -147,7 +144,6 @@
                 }, 
                 function(){   
                 
-                    this.confirmButtonText = 'sdfasdfasd';
                     wp.ajax.send('erp-ac-delete-tax', {
                         data: {
                             'tax_id': self.data('tax_id'),
@@ -1214,6 +1210,50 @@
          * @type {Object}
          */
         accounts: {
+            remove: function(e) {
+                e.preventDefault();
+
+                var self = $(this),
+                    id   = self.data('id');
+
+
+                swal({   
+                    title: ERP_AC.message.confirm,   
+                    type: "warning",   
+                    cancelButtonText: ERP_AC.message.cancel,
+                    //confirmButtonText: 'asdfasd',
+                    showCancelButton: true,   
+                    confirmButtonColor: "#DD6B55",   
+                    confirmButtonText: ERP_AC.message.delete,   
+                    closeOnConfirm: false, 
+                    showCancelButton: true,   closeOnConfirm: false,   showLoaderOnConfirm: true,
+                }, 
+                function(){  
+
+                    wp.ajax.send( 'erp-ac-remove-account', {
+                        data: {
+                            id: id,
+                            _wpnonce: ERP_AC.nonce,
+                        },
+                        success: function(res) {
+                            swal("", res.success, "success"); 
+                            self.closest('tr').remove();
+                        },
+                        error: function(res) {
+                            
+                            swal({
+                                title: ERP_AC.message.error,   
+                                text: res.error,   
+                                type: "error",   
+                                confirmButtonText: "OK",
+                                confirmButtonColor: "#DD6B55"
+                            });
+                        }
+                    }); 
+                });
+
+                
+            },
 
             checkCode: function() {
                 var self = $(this);

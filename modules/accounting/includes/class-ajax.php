@@ -34,6 +34,24 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp_people_convert', 'convert_user' );
         $this->action( 'wp_ajax_erp-ac-new-tax', 'new_tax' );
         $this->action( 'wp_ajax_erp-ac-delete-tax', 'delete_tax' );
+        $this->action( 'wp_ajax_erp-ac-remove-account', 'remove_account' );
+    }
+
+    function remove_account() {
+        $this->verify_nonce( 'erp-ac-nonce' );
+
+        $chart_id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : false;
+        $delete = '';
+
+        if ( $chart_id ) {
+            $delete = erp_ac_delete_chart( $chart_id );
+        }
+
+        if ( is_wp_error( $delete ) ) {
+            $this->send_error( array( 'error' => $delete->get_error_message() ) );
+        }
+
+        $this->send_success( array( 'success' => __( 'Account record has been deleted successfully', 'erp' ) ) );
     }
 
     function convert_user() {

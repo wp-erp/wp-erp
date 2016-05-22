@@ -35,7 +35,7 @@
                             } else {
                                 ?>
                                 <a href="<?php echo $edit_url . $chart->id; ?>"><?php _e( 'Edit', 'accounting' ); ?></a>
-                                <a href="#"><?php _e( 'Delete', 'accounting' ); ?></a>
+                                <a data-id="<?php echo intval( $chart->id ); ?>" class="erp-ac-remove-account" href="#"><?php _e( 'Delete', 'accounting' ); ?></a>
                             <?php } ?>
                         </td>
                     </tr>

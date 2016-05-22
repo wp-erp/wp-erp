@@ -476,5 +476,24 @@ function chart_grouping() {
     return $group;
 }
 
+function erp_ac_delete_chart( $chart_id ) {
+    $chart = erp_ac_bank_journal( $chart_id );
+
+    if ( $chart ) {
+        return new WP_Error( 'error', __('The account record can not be deleted as it contains one or more transactions.', 'erp') );
+    }
+
+    $delete = \WeDevs\ERP\Accounting\Model\Chart_Of_Accounts::find( $chart_id )->delete();
+
+    if ( $delete ) {
+        return true;
+    }
+
+    return new WP_Error( 'error', __('Unexpected error!', 'erp') );
+}
+
+
+
+
 
 
