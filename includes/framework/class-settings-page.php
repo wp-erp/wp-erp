@@ -179,6 +179,7 @@ class ERP_Settings_Page {
             case "single_select_page" :
             case "image" :
             case 'radio' :
+            case 'hidden' :
 
                if ( isset( $_POST[$value['id']] ) ) {
                     $option_value = sanitize_text_field( stripslashes( $_POST[ $value['id'] ] ) );
