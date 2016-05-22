@@ -841,7 +841,7 @@ class Ajax_Handler {
             $this->send_error();
         }
 
-        \WeDevs\ERP\HRM\Models\Announcement::find( $post_id )->update( ['status' => 'read' ] );
+        \WeDevs\ERP\HRM\Models\Announcement::where( 'post_id', $post_id )->update( ['status' => 'read' ] );
 
         $post = get_post( $post_id );
         setup_postdata( $post );

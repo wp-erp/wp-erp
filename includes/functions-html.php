@@ -139,6 +139,18 @@ function erp_html_form_input( $args = array() ) {
             echo '<textarea ' . implode( ' ', $custom_attributes ) . '>' . esc_textarea( $field['value'] ) . '</textarea>';
             break;
 
+        case 'wysiwyg':
+            $editor_args = [
+                'editor_class'  => $field['class'],
+                'textarea_rows' => isset( $field['custom_attr']['rows'] ) ? $field['custom_attr']['rows'] : 10,
+                'media_buttons' => isset( $field['custom_attr']['media'] ) ? $field['custom_attr']['media'] : false,
+                'teeny'         => isset( $field['custom_attr']['teeny'] ) ? $field['custom_attr']['teeny'] : true,
+
+            ];
+
+            wp_editor( $field['value'], $field['name'], $editor_args );
+            break;
+
         case 'checkbox':
             //echo '<input type="hidden" value="off" name="' . $field['name'] . '" />';
             echo '<span class="checkbox">';

@@ -225,7 +225,7 @@ function erp_crm_get_customer_type( $label = [] ) {
 function erp_crm_get_life_stages_dropdown( $label = [], $selected = '' ) {
 
     $life_stages = erp_crm_get_life_stages_dropdown_raw( $label );
-    $dropdown     = '';
+    $dropdown    = '';
 
     if ( $life_stages ) {
         foreach ( $life_stages as $key => $title ) {
@@ -1916,33 +1916,28 @@ function erp_crm_get_next_seven_day_schedules_activities( $user_id = '' ) {
 }
 
 /**
- * Fetch & Save email activity from api server.
+ * Save email activity & send to contact owner
  *
- * @since 1.0
+ * @param  array  $email
+ * @param  string $inbound_email_address
  *
  * @return void
  */
-function erp_crm_save_email_activity() {
-    header('Access-Control-Allow-Origin: *');
-
-    $postdata = $_POST;
-    $api_key  = get_option( 'wp_erp_apikey' );
-
-    unset( $postdata['action'] );
+function erp_crm_save_email_activity( $email, $inbound_email_address ) {
 
     $save_data = [
-        'user_id'       => $postdata['user_id'],
-        'created_by'    => $postdata['created_by'],
-        'message'       => $postdata['message'],
+        'user_id'       => $email['cid'],
+        'created_by'    => $email['sid'],
+        'message'       => $email['body'],
         'type'          => 'email',
-        'email_subject' => $postdata['email_subject'],
+        'email_subject' => $email['subject'],
         'extra'         => base64_encode( json_encode( [ 'replied' => 1 ] ) ),
     ];
 
     $data = erp_crm_save_customer_feed_data( $save_data );
 
-    $contact_id       = (int) $postdata['user_id'];
-    $sender_id        = (int) $postdata['created_by'];
+    $contact_id       = $save_data['user_id'];
+    $sender_id        = $save_data['created_by'];
     $contact_owner_id = erp_people_get_meta( $contact_id, '_assign_crm_agent', true );
     $contact_owner    = get_userdata( $contact_owner_id );
     $created_by       = get_userdata( $sender_id );
@@ -1954,75 +1949,69 @@ function erp_crm_save_email_activity() {
         $headers = "";
         $headers .= "Content-Type: text/html; charset=UTF-8" . "\r\n";
 
-        $is_cloud_active = erp_is_cloud_active();
+        $message_id = md5( uniqid( time() ) ) . '.' . $contact_id . '.' . $contact_owner_id . '.r2@' . $_SERVER['HTTP_HOST'];
 
-        if ( $is_cloud_active ) {
-            $wp_erp_api_key = get_option( 'wp_erp_apikey' );
+        $custom_headers = [
+            "Message-ID" => "<{$message_id}>",
+            "In-Reply-To" => "<{$message_id}>",
+            "References" => "<{$message_id}>",
+        ];
 
-            $reply_to = $wp_erp_api_key . "-" . $contact_owner_id . "-" . $contact_id . "-co" . "@incloud.wperp.com";
-            $headers .= "Reply-To: WP ERP <$reply_to>" . "\r\n";
-        }
+        $reply_to = $inbound_email_address;
+        $headers .= "Reply-To: WP ERP <$reply_to>" . "\r\n";
 
-        erp_mail( $to_email, $postdata['email_subject'], $postdata['message'], $headers );
+        erp_mail( $to_email, $email['subject'], $email['body'], $headers, $custom_headers );
     }
 
     // Update email counter
-    update_option( 'wp_erp_cloud_email_count', get_option( 'wp_erp_cloud_email_count', 0 ) + 1 );
-
-    status_header(200);
-    exit;
+    update_option( 'wp_erp_inbound_email_count', get_option( 'wp_erp_inbound_email_count', 0 ) + 1 );
 }
 
 /**
- * Fetch & Save contact owner email activity from api server.
+ * Save email activity by contact owner & send to contact
  *
- * @since 1.0
+ * @param  array  $email
+ * @param  string $inbound_email_address
  *
  * @return void
  */
-function erp_crm_save_contact_owner_email_activity() {
-    header('Access-Control-Allow-Origin: *');
-
-    $postdata = $_POST;
-    $api_key  = get_option( 'wp_erp_apikey' );
-
-    unset( $postdata['action'] );
-
+function erp_crm_save_contact_owner_email_activity( $email, $inbound_email_address ) {
     $save_data = [
-        'user_id'       => $postdata['user_id'],
-        'created_by'    => $postdata['created_by'],
-        'message'       => $postdata['message'],
-        'type'          => $postdata['type'],
-        'email_subject' => $postdata['email_subject'],
+        'user_id'       => $email['cid'],
+        'created_by'    => $email['sid'],
+        'message'       => $email['body'],
+        'type'          => 'email',
+        'email_subject' => $email['subject'],
         'extra'         => base64_encode( json_encode( [ 'replied' => 1 ] ) ),
     ];
 
     $data = erp_crm_save_customer_feed_data( $save_data );
 
-    $contact_id = intval( $postdata['user_id'] );
+    $contact_id = intval( $save_data['user_id'] );
 
     $contact = new \WeDevs\ERP\CRM\Contact( $contact_id );
 
     $headers = "";
     $headers .= "Content-Type: text/html; charset=UTF-8" . "\r\n";
 
-    $is_cloud_active = erp_is_cloud_active();
+    $erp_is_imap_active = erp_is_imap_active();
 
-    if ( $is_cloud_active ) {
-        $wp_erp_api_key = get_option( 'wp_erp_apikey' );
+    $message_id = md5( uniqid( time() ) ) . '.' . $save_data['user_id'] . '.' . $save_data['created_by'] . '.r1@' . $_SERVER['HTTP_HOST'];
 
-        $reply_to = $wp_erp_api_key . "-" . $postdata['created_by'] . "-" . $contact_id . "@incloud.wperp.com";
-        $headers .= "Reply-To: WP ERP <$reply_to>" . "\r\n";
-    }
+    $custom_headers = [
+        "Message-ID" => "<{$message_id}>",
+        "In-Reply-To" => "<{$message_id}>",
+        "References" => "<{$message_id}>",
+    ];
+
+    $reply_to = $inbound_email_address;
+    $headers .= "Reply-To: WP ERP <$reply_to>" . "\r\n";
 
     // Send email a contact
-    erp_mail( $contact->email, $postdata['email_subject'], $postdata['message'], $headers );
+    erp_mail( $contact->email, $email['subject'], $email['body'], $headers, $custom_headers );
 
     // Update email counter
-    update_option( 'wp_erp_cloud_email_count', get_option( 'wp_erp_cloud_email_count', 0 ) + 1 );
-
-    status_header(200);
-    exit;
+    update_option( 'wp_erp_inbound_email_count', get_option( 'wp_erp_inbound_email_count', 0 ) + 1 );
 }
 
 /**
@@ -2076,9 +2065,9 @@ function erp_crm_prepare_calendar_schedule_data( $schedules ) {
  * @return array
  */
 function erp_crm_get_schedule_data( $tab = '' ) {
-    $args           = [
-        'number'     => -1,
-        'type'       => 'log_activity'
+    $args = [
+        'number' => -1,
+        'type'   => 'log_activity'
     ];
 
     if ( $tab == 'own' ) {
@@ -2293,7 +2282,6 @@ function erp_crm_activity_schedule_notification_type() {
 }
 
 /**
-<<<<<<< HEAD
  * Insert and update save replies
  *
  * @since 1.0
@@ -2698,4 +2686,67 @@ function erp_create_contact_from_created_user( $user_id ) {
     update_user_meta( $user_id, 'life_stage', $life_stage );
 
     return;
+}
+
+/**
+ * Check new inbound emails
+ *
+ * @return void
+ */
+function erp_check_new_inbound_emails() {
+    $is_imap_active = erp_is_imap_active();
+
+    if ( ! $is_imap_active ) {
+        return;
+    }
+
+    $imap_options = get_option( 'erp_settings_erp-email_imap', [] );
+
+    $mail_server = $imap_options['mail_server'];
+    $username = $imap_options['username'];
+    $password = $imap_options['password'];
+    $protocol = $imap_options['protocol'];
+    $port = isset( $imap_options['port'] ) ? $imap_options['port'] : 993;
+    $encryption = isset( $imap_options['encryption'] ) ? $imap_options['encryption'] : 'ssl';
+    $certificate = ( $imap_options['certificate'] == 1 ) ? true : false;
+
+    try {
+        $imap = new \WeDevs\ERP\Imap( $mail_server, $port, $protocol, $username, $password, $encryption, $certificate );
+
+        $date = date( "d M Y", strtotime( "-1 days" ) );
+        $emails = $imap->get_emails( "Inbox", "UNSEEN SINCE \"$date\"" );
+
+        $email_regexp = '([a-z0-9]+[.][0-9]+[.][0-9]+[.][r][1|2])@' . $_SERVER['HTTP_HOST'];
+
+        $filtered_emails = [];
+        foreach ( $emails as $email ) {
+            if ( isset( $email['headers']['References'] ) && preg_match( '/<'.$email_regexp.'>/', $email['headers']['References'], $matches ) ) {
+
+                $filtered_emails[] = $email;
+
+                $message_id = $matches[1];
+                $message_id_parts = explode('.', $message_id);
+
+                $email['cid'] = $message_id_parts[1];
+                $email['sid'] = $message_id_parts[2];
+
+                // Save & sent the email
+                switch ( $message_id_parts[3] ) {
+                    case 'r1':
+                        erp_crm_save_email_activity( $email, $imap_options['username'] );
+                        break;
+                    case 'r2':
+                        erp_crm_save_contact_owner_email_activity( $email, $imap_options['username'] );
+                        break;
+                }
+            }
+        }
+
+        $email_ids = wp_list_pluck( $filtered_emails, 'id' );
+        // Mark the emails as seen
+        $imap->mark_seen_emails( $email_ids );
+
+    } catch( \Exception $e ) {
+        // $e->getMessage();
+    }
 }

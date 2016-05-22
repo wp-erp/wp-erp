@@ -24,7 +24,6 @@ class Ajax {
         $this->action( 'wp_ajax_erp_audit_log_view', 'view_edit_log_changes');
         $this->action( 'wp_ajax_erp_file_upload', 'file_uploader' );
         $this->action( 'wp_ajax_erp_file_del', 'file_delete' );
-        $this->action( 'wp_ajax_erp_activation_notice', 'erp_activation_notice_callback' );
         $this->action( 'wp_ajax_erp_people_exists', 'check_people' );
         $this->action( 'wp_ajax_erp_smtp_test_connection', 'smtp_test_connection' );
         $this->action( 'wp_ajax_erp_imap_test_connection', 'imap_test_connection' );
@@ -178,53 +177,6 @@ class Ajax {
     }
 
     /**
-     * Handle erp activation ajax request.
-     *
-     * @return void
-     */
-    public function erp_activation_notice_callback() {
-        $this->verify_nonce( 'wp-erp-activation-nonce' );
-
-        if ( isset( $_POST['dismiss'] ) ) {
-            update_option( 'wp_erp_activation_dismiss', true );
-
-            $this->send_success();
-        }
-
-        if ( isset( $_POST['email'] ) ) {
-            $email      = $_POST['email'];
-            $site_url   = site_url();
-
-            $response = wp_remote_get( 'http://api.wperp.com/apikey?email=' . $email . '&site_url=' . $site_url  );
-
-            if ( is_array( $response ) ) {
-                $body = json_decode( wp_remote_retrieve_body( $response ), true );
-
-                if ( isset( $body['apikey'] ) ) {
-                    update_option( 'wp_erp_apikey', $body['apikey'] );
-                    update_option( 'wp_erp_api_active', $body['status'] );
-
-                    if ( isset( $body['email_count'] ) ) {
-                        update_option( 'wp_erp_cloud_email_count', $body['email_count'] );
-                    }
-
-                    $this->send_success();
-                } else {
-                    $this->send_error( $body );
-                }
-            }
-        }
-
-        if ( isset( $_POST['disconnect'] ) ) {
-            delete_option( 'wp_erp_activation_dismiss' );
-            delete_option( 'wp_erp_apikey' );
-            delete_option( 'wp_erp_api_active' );
-
-            $this->send_success();
-        }
-    }
-
-    /**
      * Check if a people exists
      *
      * @return void
@@ -367,6 +319,11 @@ class Ajax {
         try {
             $imap = new \WeDevs\ERP\Imap( $mail_server, $port, $protocol, $username, $password, $encryption, $certificate );
             $imap->is_connected();
+
+            // Update imap connection status
+            $options = get_option( 'erp_settings_erp-email_imap', [] );
+            $options['imap_status'] = 1;
+            update_option( 'erp_settings_erp-email_imap', $options );
 
             $this->send_success( __( 'Your IMAP connection is established.', 'erp' ) );
         } catch( \Exception $e ) {
