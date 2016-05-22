@@ -5,8 +5,7 @@ Vue.component('vtable', {
                 +'<form method="get">'
                     +'<p class="search-box {{ search.wrapperClass }}">'
                         +'<label class="screen-reader-text" for="{{ search.inputId }}">{{ search.screenReaderText }}</label>'
-                        +'<input type="search" v-model="searchQuery" id="{{ search.inputId }}" value="" name="s" placeholder="{{ search.placeholder }}" @input="searchCloseAction( searchQuery )" >'
-                        +'<input type="submit" @click.prevent="searchAction( searchQuery )" id="{{ search.btnId }}" class="button" value="{{ search.btnText }}">'
+                        +'<input type="search" v-model="searchQuery" id="{{ search.inputId }}" value="" name="s" placeholder="{{ search.placeholder }}" @keyup.prevent="searchAction( searchQuery )" >'
                     +'</p>'
                     +'<ul v-if="!hasTopNavFilter()" class="subsubsub">'
                         +'<li v-for="( key, filter ) in topNavFilter.data" class="{{key}}"><a href="#" @click.prevent="callTopNavFilterAction( key, filter )" :class="{ \'current\': iscurrentTopNavFilter( key ) }">{{ filter.label }} <span class="count">({{ filter.count }})</span></a> <span v-if="!ifTopNavFilterLastItem( key )"> | </span></li>'
@@ -336,6 +335,9 @@ Vue.component('vtable', {
             pageOffset:0,
             pageNumberInput:1,
             hidePagination : false,
+            ajax: {
+                abort: function() {}
+            },
             searchQuery: '',
             currentTopNavFilter: '',
             activeTopNavFilter: '',
@@ -392,7 +394,6 @@ Vue.component('vtable', {
         },
 
         handleExtraBulkAction: function() {
-            console.log( this.additionalParams );
             var data = jQuery.extend( {}, this.extraBulkActionData, this.extraBulkActionSelectData );
             this.additionalParams = jQuery.extend( true, this.additionalParams, data );
             this.fetchData();
@@ -425,12 +426,13 @@ Vue.component('vtable', {
 
         goFirstPage: function() {
             this.currentPage = 1;
+            this.pageNumberInput = this.currentPage;
             this.fetchData();
-
         },
 
         goLastPage: function() {
             this.currentPage = this.totalPage;
+            this.pageNumberInput = this.currentPage;
             this.fetchData();
         },
 
@@ -448,6 +450,8 @@ Vue.component('vtable', {
                     this.currentPage = direction;
                 }
             }
+
+            this.pageNumberInput = this.currentPage;
 
             this.fetchData();
 
@@ -590,19 +594,18 @@ Vue.component('vtable', {
         searchAction: function( query ) {
             var query = query.trim();
 
-            if ( query !== '' ) {
                 if ( typeof this.additionalParams === 'undefined' ) {
                     this.additionalParams = {};
                 }
 
                 this.additionalParams[this.search.params] = query;
+                this.ajax.abort();
                 this.fetchData();
-            }
         },
 
         searchCloseAction: function( query ) {
             if ( query == '' ) {
-                this.additionalParams = {};
+                this.additionalParams['s'] = '';
                 this.currentPage = 1
                 this.activeTopNavFilter = this.topNavFilter.default;
                 this.fetchData();
@@ -636,7 +639,7 @@ Vue.component('vtable', {
                 }
             }
 
-            jQuery.post( wpVueTable.ajaxurl, postData, function( resp ) {
+            this.ajax = jQuery.post( wpVueTable.ajaxurl, postData, function( resp ) {
                 if ( resp.success ) {
                     self.ajaxloader = false;
                     self.isLoaded = true;

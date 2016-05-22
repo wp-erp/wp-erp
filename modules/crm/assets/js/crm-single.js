@@ -134,8 +134,8 @@
                 wrapperClass: '',
                 screenReaderText: ( wpErpCrm.contact_type == 'company' ) ? 'Search Compnay' : 'Search Contact',
                 inputId: 'search-input',
-                btnText: ( wpErpCrm.contact_type == 'company' ) ? 'Search Compnay' : 'Search Contact',
-                btnId: 'search-submit'
+                btnId: 'search-submit',
+                placeholder: ( wpErpCrm.contact_type == 'company' ) ? 'Search Compnay' : 'Search Contact',
             }
         },
 
@@ -391,11 +391,56 @@
                 } else {
                     alert( wpErpCrm.checkedConfirm );
                 }
+            },
+
+            setPhoto: function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                var frame;
+
+                if ( frame ) {
+                    frame.open();
+                    return;
+                }
+
+                frame = wp.media({
+                    title: wpErpCrm.customer_upload_photo,
+                    button: { text: wpErpCrm.customer_set_photo }
+                });
+
+                frame.on('select', function() {
+                    var selection = frame.state().get('selection');
+
+                    selection.map( function( attachment ) {
+                        attachment = attachment.toJSON();
+
+                        var html = '<img src="' + attachment.url + '" alt="" />';
+                            html += '<input type="hidden" id="customer-photo-id" name="photo_id" value="' + attachment.id + '" />';
+                            html += '<a href="#" class="erp-remove-photo">&times;</a>';
+
+                        $( '.photo-container', '.erp-customer-form' ).html( html );
+                    });
+                });
+
+                frame.open();
+            },
+
+            removePhoto: function(e) {
+                e.preventDefault();
+
+                var html = '<a href="#" id="erp-set-customer-photo" class="button button-small">' + wpErpCrm.customer_upload_photo + '</a>';
+                    html += '<input type="hidden" name="photo_id" id="custossmer-photo-id" value="0">';
+
+                $( '.photo-container', '.erp-customer-form' ).html( html );
             }
         },
 
         ready: function() {
             var self = this;
+
+            $( 'body' ).on( 'click', 'a#erp-set-customer-photo', this.setPhoto );
+            $( 'body' ).on( 'click', 'a.erp-remove-photo', this.removePhoto );
 
             $( 'select#erp-select-user-for-assign-contact' ).select2({
                 allowClear: true,

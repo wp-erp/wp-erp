@@ -21,7 +21,7 @@
                         <img src="{{ data.avatar.url }}" alt="" />
                         <a href="#" class="erp-remove-photo">&times;</a>
                     <# } else { #>
-                        <a href="#" id="erp-set-customer-photo" class="button button-small"><?php _e( 'Upload Customer Photo', 'erp' ); ?></a>
+                        <a href="#" id="erp-set-customer-photo" class="button button-small"><?php _e( 'Upload Photo', 'erp' ); ?></a>
                     <# } #>
                 </div>
             </li>
