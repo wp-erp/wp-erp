@@ -14,8 +14,8 @@ Vue.component('vtable', {
                         +'<div class="alignleft actions bulkactions" v-if="hasBulkAction()">'
                             +'<label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label>'
                             +'<select name="action" id="bulk-action-selector-top" v-model="bulkaction1">'
-                                +'<option value="-1">Bulk Actions</option>'
-                                +'<option v-for="actions in bulkactions.defaultAction" value="{{ actions.id }}" v-if="showRowAction( actions )">{{ actions.text }}</option>'
+                                +'<option value="-1">Bulk Actions</option>' // v-if="showRowAction( actions )"
+                                +'<option v-if="showRowAction( actions )" v-for="actions in bulkactions" value="{{ actions.id }}">{{ actions.text }}</option>'
                             +'</select>'
                             +'<input type="submit" id="doaction" @click.prevent="handleBulkAction(bulkaction1)" class="button action" value="Apply">'
                         +'</div>'
@@ -173,7 +173,7 @@ Vue.component('vtable', {
                             +'<label for="bulk-action-selector-bottom" class="screen-reader-text">Select bulk action</label>'
                             +'<select name="action2" id="bulk-action-selector-bottom" v-model="bulkaction2">'
                                 +'<option value="-1">Bulk Actions</option>'
-                                +'<option v-for="actions in bulkactions.defaultAction" value="{{ actions.id }}" v-if="showRowAction( actions )">{{ actions.text }}</option>'
+                                +'<option v-if="showRowAction( actions )" v-for="actions in bulkactions" value="{{ actions.id }}">{{ actions.text }}</option>'
                             +'</select>'
                             +'<input type="submit" id="doaction2" @click.prevent="handleBulkAction( bulkaction2 )" class="button action" value="Apply">'
                         +'</div>'
@@ -256,9 +256,9 @@ Vue.component('vtable', {
         },
 
         'bulkactions': {
-            type: Object,
+            type: Array,
             default: function() {
-                return {}
+                return []
             }
         },
 
@@ -400,7 +400,7 @@ Vue.component('vtable', {
         },
 
         hasBulkAction: function() {
-            return Object.keys( this.bulkactions ).length > 0;
+            return this.bulkactions.length > 0;
         },
 
         ifTopNavFilterLastItem: function( currentKey ) {
@@ -509,16 +509,24 @@ Vue.component('vtable', {
             return null;
         },
 
+        hasRowActionToggling: function( rowAction ) {
+            if ( ! typeof rowAction == 'undefined' ) {
+                return typeof rowAction.showIf == 'undefined' ? false : true;
+            } else {
+                return false;
+            }
+        },
+
         showRowAction: function( rowAction ) {
-            if ( ! rowAction.showIf ) {
+            if ( ! rowAction.hasOwnProperty('showIf') ) {
                 return true;
             }
 
             var args = rowAction.showIf.split('|')
             var func = args.shift()
 
-            if ( typeof this.$parent[func] == 'function') {
-                return this.$parent[func].call(this.$parent, rowAction )
+            if ( typeof this.$parent[func] == 'function' ) {
+                return this.$parent[func].call( this.$parent, rowAction )
             }
             return null;
         },

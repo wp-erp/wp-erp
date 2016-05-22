@@ -35,33 +35,31 @@
         }
     ];
 
-    var bulkactions = {
-        defaultAction: [
-            {
-                id : 'delete',
-                text : 'Delete',
-                showIf : 'whenNotTrased'
-            },
+    var bulkactions = [
+        {
+            id : 'delete',
+            text : 'Delete',
+            showIf : 'whenNotTrased'
+        },
 
-            {
-                id : 'permanent_delete',
-                text : 'Permanent Delete',
-                showIf : 'onlyTrased'
-            },
+        {
+            id : 'permanent_delete',
+            text : 'Permanent Delete',
+            showIf : 'onlyTrased'
+        },
 
-            {
-                id : 'restore',
-                text : 'Restore',
-                showIf : 'onlyTrased'
-            },
+        {
+            id : 'restore',
+            text : 'Restore',
+            showIf : 'onlyTrased'
+        },
 
-            {
-                id : 'assign_group',
-                text : 'Assign Group',
-                showIf : 'whenNotTrased'
-            }
-        ],
-    }
+        {
+            id : 'assign_group',
+            text : 'Assign Group',
+            showIf : 'whenNotTrased'
+        }
+    ];
 
     var extraBulkAction = {
         'filterContactOwner' : {
@@ -79,6 +77,7 @@
         }
     }
 
+    Vue.config.debug = 1;
     var contact = new Vue({
         el: '#wp-erp',
         data : {
@@ -117,7 +116,6 @@
                     action: 'restore',
                     showIf: 'onlyTrased'
                 },
-
             ],
             topNavFilter: {
                 data: wpErpCrm.statuses,
