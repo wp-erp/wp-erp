@@ -1344,11 +1344,13 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
 
         if ( ! empty( $custom_headers ) ) {
             foreach ( $custom_headers as $key => $value ) {
-                // $phpmailer->addCustomHeader( 'X-ERP-MailType', 'Inbound' );
                 $phpmailer->addCustomHeader( $key, $value );
             }
         }
-        // $phpmailer->SMTPDebug = true;
+
+        if ( isset( $erp_email_smtp_settings['debug'] ) && $erp_email_smtp_settings['debug'] == 'yes' ) {
+            $phpmailer->SMTPDebug = true;
+        }
 
         if ( $erp_email_smtp_settings['enable_smtp'] ) {
             $phpmailer->Mailer = 'smtp'; //'smtp', 'mail', or 'sendmail'
@@ -1388,6 +1390,7 @@ function erp_email_settings_javascript() {
         jQuery( document ).ready( function($) {
             $( "a#smtp-test-connection" ).click( function(e) {
                 e.preventDefault();
+                $( "a#smtp-test-connection" ).hide();
 
                 var data = {
                     'action': 'erp_smtp_test_connection',
@@ -1403,6 +1406,7 @@ function erp_email_settings_javascript() {
                 };
 
                 $.post( ajaxurl, data, function(response) {
+                    $( "a#smtp-test-connection" ).show();
                     var type = response.success ? 'success' : 'error';
 
                     if (response.data) {
@@ -1421,6 +1425,7 @@ function erp_email_settings_javascript() {
         jQuery( document ).ready( function($) {
             $( "a#imap-test-connection" ).click( function(e) {
                 e.preventDefault();
+                $( "a#imap-test-connection" ).hide();
 
                 var data = {
                     'action': 'erp_imap_test_connection',
@@ -1435,10 +1440,13 @@ function erp_email_settings_javascript() {
                 };
 
                 $.post( ajaxurl, data, function(response) {
+                    $( "a#imap-test-connection" ).show();
                     var type = response.success ? 'success' : 'error';
-                    console.log(response);
 
                     if ( response.data ) {
+                        var status = response.success ? 1 : 0;
+                        $('#imap_status').val(status);
+
                         swal({
                             title: '',
                             text: response.data,

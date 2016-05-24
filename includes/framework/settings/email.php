@@ -16,7 +16,6 @@ class ERP_Email_Settings extends ERP_Settings_Page {
         add_action( 'erp_admin_field_smtp_test_connection', [ $this, 'smtp_test_connection' ] );
         add_action( 'erp_admin_field_imap_test_connection', [ $this, 'imap_test_connection' ] );
         add_action( 'erp_admin_field_imap_status', [ $this, 'imap_status' ] );
-        add_action( 'erp_update_option_imap_status', [ $this, 'update_imap_status' ] );
     }
 
     /**
@@ -172,6 +171,14 @@ class ERP_Email_Settings extends ERP_Settings_Page {
         ];
 
         $fields['smtp'][] = [
+            'title'   => __( 'Debug', 'erp' ),
+            'id'      => 'debug',
+            'type'    => 'radio',
+            'options' => [ 'yes' => 'Yes', 'no' => 'No' ],
+            'default' => 'no'
+        ];
+
+        $fields['smtp'][] = [
             'type' => 'smtp_test_connection',
         ];
 
@@ -252,6 +259,12 @@ class ERP_Email_Settings extends ERP_Settings_Page {
 
         $fields['imap'][] = [
             'type' => 'imap_test_connection',
+        ];
+
+        $fields['imap'][] = [
+            'id'      => 'imap_status',
+            'type'    => 'hidden',
+            'default' => 0,
         ];
 
         $fields['imap'][] = [
@@ -348,8 +361,9 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             </th>
             <td class="forminp forminp-text">
                 <input type="email" id="smtp_test_email_address" class="regular-text" value="<?php echo get_option( 'admin_email' ); ?>" /><br>
-                <p class="description">An email address to test the connection.</p>
-                <a id="smtp-test-connection" class="button-primary">Test Connection</a>
+                <p class="description"><?php _e( 'An email address to test the connection.', 'erp' ); ?></p>
+                <a id="smtp-test-connection" class="button-secondary"><?php esc_attr_e( 'Send Email', 'erp' ); ?></a>
+                <p class="description"><?php _e( 'Click on the above button before saving the settings.', 'erp' ); ?></p>
             </td>
         </tr>
         <?php
@@ -367,7 +381,8 @@ class ERP_Email_Settings extends ERP_Settings_Page {
                 &nbsp;
             </th>
             <td class="forminp forminp-text">
-                <a id="imap-test-connection" class="button-primary">Test Connection</a>
+                <a id="imap-test-connection" class="button-secondary"><?php esc_attr_e( 'Test Connection', 'erp' ); ?></a>
+                <p class="description"><?php _e( 'Click on the above button before saving the settings.', 'erp' ); ?></p>
             </td>
         </tr>
         <?php
@@ -398,6 +413,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
     public function output( $section = false ) {
         if ( ! isset( $_GET['sub_section'] ) ) {
             parent::output( $section );
+
             return;
         }
 
@@ -423,6 +439,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
 
             if ( ! isset( $_GET['sub_section'] ) ) {
                 parent::save( $section );
+
                 return;
             }
 
@@ -451,8 +468,6 @@ class ERP_Email_Settings extends ERP_Settings_Page {
                                 }
                             }
                         }
-
-                        update_option( $email->get_option_id(), $update_options );
 
                         break;
                     }

@@ -1957,11 +1957,13 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
 
     $data = erp_crm_save_customer_feed_data( $save_data );
 
-    $contact_id       = $save_data['user_id'];
-    $sender_id        = $save_data['created_by'];
-    $contact_owner_id = erp_people_get_meta( $contact_id, '_assign_crm_agent', true );
+    $contact_id = (int) $save_data['user_id'];
+    $sender_id  = $save_data['created_by'];
+
+    $contact = new \WeDevs\ERP\CRM\Contact( $contact_id );
+
+    $contact_owner_id = $contact->get_contact_owner();
     $contact_owner    = get_userdata( $contact_owner_id );
-    $created_by       = get_userdata( $sender_id );
 
     // Send an email to contact owner
     if ( isset( $contact_owner_id ) ) {
@@ -1981,7 +1983,7 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
         $reply_to = $inbound_email_address;
         $headers .= "Reply-To: WP ERP <$reply_to>" . "\r\n";
 
-        erp_mail( $to_email, $email['subject'], $email['body'], $headers, $custom_headers );
+        erp_mail( $to_email, $email['subject'], $email['body'], $headers, [], $custom_headers );
     }
 
     // Update email counter
@@ -2029,7 +2031,7 @@ function erp_crm_save_contact_owner_email_activity( $email, $inbound_email_addre
     $headers .= "Reply-To: WP ERP <$reply_to>" . "\r\n";
 
     // Send email a contact
-    erp_mail( $contact->email, $email['subject'], $email['body'], $headers, $custom_headers );
+    erp_mail( $contact->email, $email['subject'], $email['body'], $headers, [], $custom_headers );
 
     // Update email counter
     update_option( 'wp_erp_inbound_email_count', get_option( 'wp_erp_inbound_email_count', 0 ) + 1 );

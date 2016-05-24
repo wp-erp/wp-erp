@@ -320,11 +320,6 @@ class Ajax {
             $imap = new \WeDevs\ERP\Imap( $mail_server, $port, $protocol, $username, $password, $encryption, $certificate );
             $imap->is_connected();
 
-            // Update imap connection status
-            $options = get_option( 'erp_settings_erp-email_imap', [] );
-            $options['imap_status'] = 1;
-            update_option( 'erp_settings_erp-email_imap', $options );
-
             $this->send_success( __( 'Your IMAP connection is established.', 'erp' ) );
         } catch( \Exception $e ) {
             $this->send_error( $e->getMessage() );
