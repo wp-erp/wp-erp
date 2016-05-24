@@ -384,7 +384,7 @@ class Accounting {
         new Admin_Menu();
         new Form_Handler();
         new User_Profile();
-        new Updates();
+        //new Updates();
 
         if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
             new Ajax_Handler();
