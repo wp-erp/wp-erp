@@ -187,57 +187,6 @@ class Ajax_Handler {
     public function create_customer() {
         $this->verify_nonce( 'wp-erp-crm-customer-nonce' );
 
-        // $data = [
-        //       'id' => 70,
-        //       'user_id' => 0,
-        //       'first_name' => 'Edit',
-        //       'last_name' => 'Amin',
-        //       'company' => '',
-        //       'avatar' => [
-        //           'id' => 0,
-        //           'url' => 'http://1.gravatar.com/avatar/?s=96&d=mm&r=g',
-        //           'img' => '<img alt="" src="http://1.gravatar.com/avatar/475cdbc0eb0ecc75df503b0824067c99?s=32&#038;d=mm&#038;r=g" srcset="http://1.gravatar.com/avatar/475cdbc0eb0ecc75df503b0824067c99?s=64&amp;d=mm&amp;r=g 2x" class="avatar avatar-32 photo" height="32" width="32" />',
-        //       ],
-        //       'life_stage' => 'customer',
-        //       'email' => 'edt@amin.wedevs',
-        //       'date_of_birth' => '2016-05-04',
-        //       'phone' => '340950234',
-        //       'mobile' => '',
-        //       'website' => '',
-        //       'fax' => '',
-        //       'street_1' => '',
-        //       'street_2' => '',
-        //       'city' => '',
-        //       'country' => 'BD',
-        //       'state' => '',
-        //       'postal_code' => '1200',
-        //       'types' => [ 'contact' ],
-        //       'notes' => '',
-        //       'other' => '',
-        //       'currency' => '',
-        //       'social' => [
-        //           'facebook' => '',
-        //           'twitter' => '',
-        //           'googleplus' => '',
-        //           'linkedin' => ''
-        //         ],
-        //       'source' => 'advert',
-        //       'assign_to' => [
-        //           'id' => 1,
-        //           'avatar' => 'http://2.gravatar.com/avatar/879f979b20cb32d63dd07e5d78914927?s=96&d=mm&r=g',
-        //           'first_name' => 'Admin',
-        //           'last_name' => 'Master',
-        //           'display_name' => 'Admin Master',
-        //           'email' => 'sabbir.081070@gmail.com',
-        //         ],
-        //       'group_id' => [],
-        //       'created' => '17-05-2016',
-        //       'contact_groups' => []
-        // ];
-
-        // $this->send_success( $data );
-
-
         // @TODO: check permission
         unset( $_POST['_wp_http_referer'] );
         unset( $_POST['_wpnonce'] );

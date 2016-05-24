@@ -347,6 +347,7 @@
     <# } #>
 
     <input type="hidden" name="id" id="erp-customer-id" value="{{ data.id }}">
+    <input type="hidden" name="user_id" id="erp-customer-user-id" value="{{ data.user_id }}">
 
     <# if ( _.contains( data.types, 'company' ) ) { #>
         <input type="hidden" name="type" id="erp-customer-type" value="company">
