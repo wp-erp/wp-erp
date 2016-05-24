@@ -258,13 +258,61 @@ function erp_restore_people( $data ) {
  * @return array
  */
 function erp_get_peoples_by( $field, $value ) {
+    global $wpdb;
+
+    $sql = "SELECT * FROM (
+    SELECT people.id as id, people.user_id,
+
+        CASE WHEN people.user_id then user.user_email ELSE people.email END as email,
+        CASE WHEN people.user_id then user.user_url ELSE people.website END as website,
+        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'first_name' then user_meta.meta_value ELSE people.first_name END) as first_name,
+        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'last_name' then user_meta.meta_value ELSE people.last_name END) as last_name,
+        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'company' then user_meta.meta_value ELSE people.company END) as company,
+        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'phone' then user_meta.meta_value ELSE people.phone END) as phone,
+        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'mobile' then user_meta.meta_value ELSE people.mobile END) as mobile,
+        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'other' then user_meta.meta_value ELSE people.other END) as other,
+        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'fax' then user_meta.meta_value ELSE people.fax END) as fax,
+        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'notes' then user_meta.meta_value ELSE people.notes END) as notes,
+        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'street_1' then user_meta.meta_value ELSE people.street_1 END) as street_1,
+        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'street_2' then user_meta.meta_value ELSE people.street_2 END) as street_2,
+        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'city' then user_meta.meta_value ELSE people.city END) as city,
+        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'state' then user_meta.meta_value ELSE people.state END) as state,
+        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'postal_code' then user_meta.meta_value ELSE people.postal_code END) as postal_code,
+        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'country' then user_meta.meta_value ELSE people.country END) as country,
+        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'currency' then user_meta.meta_value ELSE people.currency END) as currency,
+        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'created' then user_meta.meta_value ELSE people.created END) as created,
+
+        GROUP_CONCAT(DISTINCT p_types.name) as types
+
+    FROM {$wpdb->prefix}erp_peoples as people
+    LEFT JOIN {$wpdb->prefix}users AS user on user.ID = people.user_id
+    LEFT JOIN {$wpdb->prefix}usermeta AS user_meta on user_meta.user_id = people.user_id
+    LEFT JOIN {$wpdb->prefix}erp_people_type_relations as p_types_rel on p_types_rel.people_id = people.id
+    LEFT JOIN {$wpdb->prefix}erp_people_types as p_types on p_types.id = p_types_rel.people_types_id
+    ";
+
+
+    $sql .= " GROUP BY people.id ) as people";
+
     if ( is_array( $value ) ) {
-        $peoples = WeDevs\ERP\Framework\Models\People::whereIn( $field, $value )->get();
+        $separeted_values = "'" . implode( "','", $value ) . "'";
+
+        $sql .= " WHERE $field IN ( $separeted_values )";
     } else {
-        $peoples = WeDevs\ERP\Framework\Models\People::where( $field, $value )->get();
+        $sql .= " WHERE $field = '$value'";
     }
 
-    return erp_array_to_object( $peoples->toArray() );
+    $results = $wpdb->get_results( $sql );
+
+    $results = array_map( function( $item ) {
+        $item->types = explode( ',', $item->types );
+
+        return $item;
+    }, $results);
+
+    $items = erp_array_to_object( $results );
+
+    return $items;
 }
 
 /**
