@@ -1352,19 +1352,16 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
             $phpmailer->SMTPDebug = true;
         }
 
-        if ( $erp_email_smtp_settings['enable_smtp'] ) {
+        if ( isset( $erp_email_smtp_settings['enable_smtp'] ) && $erp_email_smtp_settings['enable_smtp'] ) {
             $phpmailer->Mailer = 'smtp'; //'smtp', 'mail', or 'sendmail'
 
             $phpmailer->Host = $erp_email_smtp_settings['mail_server'];
             $phpmailer->SMTPSecure = ( $erp_email_smtp_settings['encryption'] != '' ) ? $erp_email_smtp_settings['encryption'] : 'ssl';
             $phpmailer->Port = $erp_email_smtp_settings['port'];
 
-            $phpmailer->SMTPAuth = ( $erp_email_smtp_settings['authentication'] == 'yes' ) ? true : false;
-
-            if ( $phpmailer->SMTPAuth ) {
-                $phpmailer->Username = $erp_email_smtp_settings['username'];
-                $phpmailer->Password = $erp_email_smtp_settings['password'];
-            }
+            $phpmailer->SMTPAuth = true;
+            $phpmailer->Username = $erp_email_smtp_settings['username'];
+            $phpmailer->Password = $erp_email_smtp_settings['password'];
         }
     };
 
@@ -1390,14 +1387,14 @@ function erp_email_settings_javascript() {
         jQuery( document ).ready( function($) {
             $( "a#smtp-test-connection" ).click( function(e) {
                 e.preventDefault();
-                $( "a#smtp-test-connection" ).hide();
+                $( "a#smtp-test-connection" ).attr( 'disabled', 'disabled' );
+                $( "a#smtp-test-connection" ).parent().find( '.erp-loader' ).show();
 
                 var data = {
                     'action': 'erp_smtp_test_connection',
                     'enable_smtp': $('input[name=enable_smtp]:checked').val(),
                     'mail_server': $('input[name=mail_server]').val(),
                     'port': $('input[name=port]').val(),
-                    'authentication': $('input[name=authentication]:checked').val(),
                     'encryption': $('select[name=encryption]').val(),
                     'username': $('input[name=username]').val(),
                     'password': $('input[name=password]').val(),
@@ -1406,7 +1403,9 @@ function erp_email_settings_javascript() {
                 };
 
                 $.post( ajaxurl, data, function(response) {
-                    $( "a#smtp-test-connection" ).show();
+                    $( "a#smtp-test-connection" ).removeAttr( 'disabled' );
+                    $( "a#smtp-test-connection" ).parent().find( '.erp-loader' ).hide();
+
                     var type = response.success ? 'success' : 'error';
 
                     if (response.data) {
@@ -1425,7 +1424,8 @@ function erp_email_settings_javascript() {
         jQuery( document ).ready( function($) {
             $( "a#imap-test-connection" ).click( function(e) {
                 e.preventDefault();
-                $( "a#imap-test-connection" ).hide();
+                $( "a#imap-test-connection" ).attr( 'disabled', 'disabled' );
+                $( "a#imap-test-connection" ).parent().find( '.erp-loader' ).show();
 
                 var data = {
                     'action': 'erp_imap_test_connection',
@@ -1435,12 +1435,13 @@ function erp_email_settings_javascript() {
                     'protocol': $('select[name=protocol]').val(),
                     'port': $('input[name=port]').val(),
                     'encryption': $('select[name=encryption]').val(),
-                    'certificate': $('input[name=certificate]:checked').val(),
                     '_wpnonce': '<?php echo wp_create_nonce( "erp-imap-test-connection-nonce" ); ?>'
                 };
 
                 $.post( ajaxurl, data, function(response) {
-                    $( "a#imap-test-connection" ).show();
+                    $( "a#imap-test-connection" ).removeAttr( 'disabled' );
+                    $( "a#imap-test-connection" ).parent().find( '.erp-loader' ).hide();
+
                     var type = response.success ? 'success' : 'error';
 
                     if ( response.data ) {

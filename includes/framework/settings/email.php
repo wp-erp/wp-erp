@@ -146,14 +146,6 @@ class ERP_Email_Settings extends ERP_Settings_Page {
         ];
 
         $fields['smtp'][] = [
-            'title'   => __( 'Authentication', 'erp' ),
-            'id'      => 'authentication',
-            'type'    => 'radio',
-            'options' => [ 'yes' => 'Yes', 'no' => 'No' ],
-            'default' => 'no'
-        ];
-
-        $fields['smtp'][] = [
             'title'             => __( 'Username', 'erp' ),
             'id'                => 'username',
             'type'              => 'text',
@@ -248,13 +240,6 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             'options' => [ 'ssl' => __( 'SSL', 'erp' ), 'tls' => __( 'TLS', 'erp'), 'notls' => __( 'None', 'erp') ],
             'default' =>  'ssl',
             'desc'    => __( 'Encryption type.', 'erp' ),
-        ];
-
-        $fields['imap'][] = [
-            'title'   => __( 'Certificate', 'erp' ),
-            'id'      => 'certificate',
-            'type'    => 'checkbox',
-            'desc'    => __( 'Use encryption certificate.', 'erp' ),
         ];
 
         $fields['imap'][] = [
@@ -362,7 +347,8 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             <td class="forminp forminp-text">
                 <input type="email" id="smtp_test_email_address" class="regular-text" value="<?php echo get_option( 'admin_email' ); ?>" /><br>
                 <p class="description"><?php _e( 'An email address to test the connection.', 'erp' ); ?></p>
-                <a id="smtp-test-connection" class="button-secondary"><?php esc_attr_e( 'Send Email', 'erp' ); ?></a>
+                <a id="smtp-test-connection" class="button-secondary"><?php esc_attr_e( 'Send Test Email', 'erp' ); ?></a>
+                <span class="erp-loader" style="display: none;"></span>
                 <p class="description"><?php _e( 'Click on the above button before saving the settings.', 'erp' ); ?></p>
             </td>
         </tr>
@@ -382,6 +368,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             </th>
             <td class="forminp forminp-text">
                 <a id="imap-test-connection" class="button-secondary"><?php esc_attr_e( 'Test Connection', 'erp' ); ?></a>
+                <span class="erp-loader" style="display: none;"></span>
                 <p class="description"><?php _e( 'Click on the above button before saving the settings.', 'erp' ); ?></p>
             </td>
         </tr>

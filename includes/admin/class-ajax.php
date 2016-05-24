@@ -243,7 +243,6 @@ class Ajax {
         $mail_server = $_REQUEST['mail_server'];
         $port = isset( $_REQUEST['port'] ) ? $_REQUEST['port'] : 465;
         $encryption = isset( $_REQUEST['encryption'] ) ? $_REQUEST['encryption'] : 'ssl';
-        $authentication = ( $_REQUEST['authentication'] == 'yes' ) ? true : false;
         $username = $_REQUEST['username'];
         $password = $_REQUEST['password'];
 
@@ -267,14 +266,10 @@ class Ajax {
         $phpmailer->Host       = $mail_server;
         $phpmailer->SMTPSecure = $encryption;
         $phpmailer->Port       = $port;
-        $phpmailer->SMTPAuth   = $authentication;
+        $phpmailer->SMTPAuth   = true;
+        $phpmailer->Username   = $username;
+        $phpmailer->Password   = $password;
 
-        if ( $phpmailer->SMTPAuth ) {
-            $phpmailer->Username = $username;
-            $phpmailer->Password = $password;
-        }
-
-        // $phpmailer->SMTPDebug = true;
         try {
             $result = $phpmailer->Send();
 
@@ -314,10 +309,9 @@ class Ajax {
         $protocol = $_REQUEST['protocol'];
         $port = isset( $_REQUEST['port'] ) ? $_REQUEST['port'] : 993;
         $encryption = isset( $_REQUEST['encryption'] ) ? $_REQUEST['encryption'] : 'ssl';
-        $certificate = ( $_REQUEST['certificate'] == 1 ) ? true : false;
 
         try {
-            $imap = new \WeDevs\ERP\Imap( $mail_server, $port, $protocol, $username, $password, $encryption, $certificate );
+            $imap = new \WeDevs\ERP\Imap( $mail_server, $port, $protocol, $username, $password, $encryption );
             $imap->is_connected();
 
             $this->send_success( __( 'Your IMAP connection is established.', 'erp' ) );
