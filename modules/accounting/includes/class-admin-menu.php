@@ -19,11 +19,12 @@ class Admin_Menu {
      * @return void
      */
     public function admin_menu() {
-        $capabilities = erp_ac_get_manager_role();
-
+        $capabilities  = erp_ac_get_manager_role();
+        $dashboard_cap = current_user_can( 'erp_ac_view_dashboard' );
+        
         add_menu_page( __( 'Accounting', 'accounting' ), __( 'Accounting', 'accounting' ), $capabilities, 'erp-accounting', array( $this, 'dashboard_page' ), 'dashicons-chart-pie', null );
 
-        $dashboard = add_submenu_page( 'erp-accounting', __( 'Dashboard', 'accounting' ), __( 'Dashboard', 'accounting' ), $capabilities, 'erp-accounting', array( $this, 'dashboard_page' ) );
+        $dashboard = add_submenu_page( 'erp-accounting', __( 'Dashboard', 'accounting' ), __( 'Dashboard', 'accounting' ), $dashboard_cap, 'erp-accounting', array( $this, 'dashboard_page' ) );
         $customers = add_submenu_page( 'erp-accounting', __( 'Customers', 'accounting' ), __( 'Customers', 'accounting' ), $capabilities, 'erp-accounting-customers', array( $this, 'page_customers' ) );
         $vendor    = add_submenu_page( 'erp-accounting', __( 'Vendors', 'accounting' ), __( 'Vendors', 'accounting' ), $capabilities, 'erp-accounting-vendors', array( $this, 'page_vendors' ) );
         $sales     = add_submenu_page( 'erp-accounting', __( 'Sales', 'accounting' ), __( 'Sales', 'accounting' ), $capabilities, 'erp-accounting-sales', array( $this, 'page_sales' ) );

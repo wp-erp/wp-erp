@@ -77,6 +77,7 @@ class WeDevs_ERP_Installer {
     function includes() {
         include_once WPERP_MODULES . '/hrm/includes/functions-capabilities.php';
         include_once WPERP_MODULES . '/crm/includes/functions-capabilities.php';
+        include_once WPERP_MODULES . '/accounting/includes/function-capabilities.php';
     }
 
     /**

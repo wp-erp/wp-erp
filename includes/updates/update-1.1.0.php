@@ -26,4 +26,13 @@ function erp_ac_table_update() {
 	$wpdb->update( $account_table, array( 'ledger_id' => 62 ), array( 'id' => 2, 'ledger_id' => 60 ), array( '%d' ), array( '%d', '%d' ) );
 }
 
+function erp_ac_update_manager_capabilities() {
+
+    remove_role( 'erp_ac_manager' );
+
+    $installer = new \WeDevs_ERP_Installer();
+    $installer->create_roles();
+}
+
+erp_ac_update_manager_capabilities();
 erp_ac_table_update();
