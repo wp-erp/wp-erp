@@ -2978,7 +2978,10 @@ ul.edit-address li.city-wrap span {
     height:auto;
 }
 .vtable-item-transition {
-  transition: height .6s ease-in, opacity .6s ease-in, min-height .6s ease-in, color .1s ease-in;
+  -webkit-transition: height .6s ease-in, opacity .6s ease-in;
+  -moz-transition: height .6s ease-in, opacity .6s ease-in;
+  -o-transition: height .6s ease-in, opacity .6s ease-in;
+  transition: height .6s ease-in, opacity .6s ease-in;
 }
 .vtable-item-enter {
   opacity: 0;
@@ -2997,4 +3000,3 @@ ul.edit-address li.city-wrap span {
   color: #f20000;
   transition: transform .5s cubic-bezier(.55,0,.1,1); /* applied when moving */
 }
-

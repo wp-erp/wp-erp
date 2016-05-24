@@ -312,6 +312,9 @@
                                 self.$refs.vtable.ajaxloader = false;
                             } else {
                                 self.$refs.vtable.tableData.$remove( data );
+                                self.$nextTick(function() {
+                                    this.$broadcast('vtable:refresh')
+                                });
                             }
                             self.$refs.vtable.topNavFilter.data = res.statuses;
                         },
@@ -346,6 +349,9 @@
                                 self.$refs.vtable.ajaxloader = false;
                             } else {
                                 self.$refs.vtable.tableData.$remove( data );
+                                self.$nextTick(function() {
+                                    this.$broadcast('vtable:refresh')
+                                });
                             }
                             self.$refs.vtable.topNavFilter.data = res.statuses;
                         },
