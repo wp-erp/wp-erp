@@ -83,7 +83,7 @@ class Contact extends \WeDevs\ERP\People {
                 $fields['avatar']['url'] = wp_get_attachment_url( $avatar_id );
                 $fields['avatar']['img'] = $this->get_avatar();
             } else {
-                $fields['avatar']['url'] = erp_crm_get_avatar_url( $this->id , $this->user_id );
+                $fields['avatar']['url'] = erp_crm_get_avatar_url( $this->id, $this->email, $this->user_id );
                 $fields['avatar']['img'] = $this->get_avatar();
             }
 

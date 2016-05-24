@@ -10,11 +10,9 @@
  *
  * @return string  image with HTML tag
  */
-function erp_crm_get_avatar( $id, $user_id = 0, $size = 32, $user = false ) {
+function erp_crm_get_avatar( $id, $email = '', $user_id = 0, $size = 32 ) {
+
     if ( $id ) {
-        if ( $user ) {
-            return get_avatar( $id, $size );
-        }
 
         $user_photo_id = ( $user_id ) ? get_user_meta( $user_id, 'photo_id', true ) : erp_people_get_meta( $id, 'photo_id', true );
 
@@ -24,7 +22,7 @@ function erp_crm_get_avatar( $id, $user_id = 0, $size = 32, $user = false ) {
         }
     }
 
-    return get_avatar( $id, $size );
+    return ( $email ) ? get_avatar( $email, $size ) : get_avatar( $id, $size );
 }
 
 /**
@@ -34,12 +32,9 @@ function erp_crm_get_avatar( $id, $user_id = 0, $size = 32, $user = false ) {
  *
  * @return string  image with HTML tag
  */
-function erp_crm_get_avatar_url( $id, $user_id = 0, $size = 32, $user = false ) {
-    if ( $id ) {
-        if ( $user ) {
-            return get_avatar_url( $id, $size );
-        }
+function erp_crm_get_avatar_url( $id, $email='', $user_id = 0, $size = 32 ) {
 
+    if ( $id ) {
         $user_photo_id = ( $user_id ) ? get_user_meta( $user_id, 'photo_id', true ) : erp_people_get_meta( $id, 'photo_id', true );
 
         if ( ! empty( $user_photo_id ) ) {
@@ -47,7 +42,7 @@ function erp_crm_get_avatar_url( $id, $user_id = 0, $size = 32, $user = false ) 
         }
     }
 
-    return get_avatar_url( $id, $size );
+    return $email ? get_avatar_url( $email, $size ) : get_avatar_url( $id, $size );
 }
 
 /**

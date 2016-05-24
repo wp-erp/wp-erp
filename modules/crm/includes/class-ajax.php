@@ -166,8 +166,8 @@ class Ajax_Handler {
                 ];
             }
             $contacts['data'][$key]['details_url']   = erp_crm_get_details_url( $contact['id'], $contact['types'] );
-            $contacts['data'][$key]['avatar']['url'] = erp_crm_get_avatar_url( $contact['id'], $contact['user_id'] );
-            $contacts['data'][$key]['avatar']['img'] = erp_crm_get_avatar( $contact['id'], $contact['user_id'] );
+            $contacts['data'][$key]['avatar']['url'] = erp_crm_get_avatar_url( $contact['id'], $contact['email'], $contact['user_id'] );
+            $contacts['data'][$key]['avatar']['img'] = erp_crm_get_avatar( $contact['id'], $contact['email'], $contact['user_id'] );
             $contacts['data'][$key]['life_stage']    = erp_people_get_meta( $contact['id'], 'life_stage', true );
             $contacts['data'][$key]['assign_to']     = $contact_owner;
             $contacts['data'][$key]['created']       = erp_format_date( $contact['created'] );

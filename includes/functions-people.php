@@ -538,7 +538,7 @@ function erp_insert_people( $args = array() ) {
             }
 
         } else {
-            // Now WP user data so simple handle peoples and peoplemeta table
+            // Not a WP user, so simply handle those data into peoples and peoplemeta table
             // do update method here
             WeDevs\ERP\Framework\Models\People::find( $row_id )->update( $args );
         }
