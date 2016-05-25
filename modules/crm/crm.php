@@ -182,45 +182,45 @@ class Customer_Relationship {
         }
 
         // if it's an customer page
-        // if ( 'crm_page_erp-sales-customers' == $hook || 'crm_page_erp-sales-companies' == $hook  ) {
+        if ( 'crm_page_erp-sales-customers' == $hook || 'crm_page_erp-sales-companies' == $hook  ) {
 
-        //     wp_enqueue_style( 'erp-timepicker' );
-        //     wp_enqueue_script( 'erp-timepicker' );
-        //     wp_enqueue_script( 'erp-vuejs' );
-        //     wp_enqueue_script( 'erp-trix-editor' );
-        //     wp_enqueue_style( 'erp-trix-editor' );
-        //     wp_enqueue_script( 'underscore' );
-        //     wp_enqueue_style( 'erp-nprogress' );
-        //     wp_enqueue_script( 'erp-nprogress' );
-        //     wp_enqueue_script( 'wp-erp-crm-vue-component', WPERP_CRM_ASSETS . "/js/crm-components.js", array( 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
+            wp_enqueue_style( 'erp-timepicker' );
+            wp_enqueue_script( 'erp-timepicker' );
+            wp_enqueue_script( 'erp-vuejs' );
+            wp_enqueue_script( 'erp-trix-editor' );
+            wp_enqueue_style( 'erp-trix-editor' );
+            wp_enqueue_script( 'underscore' );
+            wp_enqueue_style( 'erp-nprogress' );
+            wp_enqueue_script( 'erp-nprogress' );
+            wp_enqueue_script( 'wp-erp-crm-vue-component', WPERP_CRM_ASSETS . "/js/crm-components.js", array( 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
 
-        //     do_action( 'erp_crm_load_contact_vue_sripts' );
+            do_action( 'erp_crm_load_contact_vue_sripts' );
 
-        //     wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", array( 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
-        //     wp_enqueue_script( 'wp-erp-crm-vue-save-search', WPERP_CRM_ASSETS . "/js/save-search$suffix.js", array( 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
-        //     wp_enqueue_script( 'post' );
+            wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", array( 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
+            wp_enqueue_script( 'wp-erp-crm-vue-save-search', WPERP_CRM_ASSETS . "/js/save-search$suffix.js", array( 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
+            wp_enqueue_script( 'post' );
 
-        //     if ( 'crm_page_erp-sales-customers' == $hook ) {
-        //         $customer = new Contact( null, 'contact' );
-        //     }
+            if ( 'crm_page_erp-sales-customers' == $hook ) {
+                $customer = new Contact( null, 'contact' );
+            }
 
-        //     if ( 'crm_page_erp-sales-companies' == $hook ) {
-        //         $customer = new Contact( null, 'company' );
-        //     }
+            if ( 'crm_page_erp-sales-companies' == $hook ) {
+                $customer = new Contact( null, 'company' );
+            }
 
-        //     $country  = \WeDevs\ERP\Countries::instance();
+            $country  = \WeDevs\ERP\Countries::instance();
 
-        //     wp_localize_script( 'wp-erp-crm-vue-component', 'wpCRMvue', $contact_actvity_localize );
+            wp_localize_script( 'wp-erp-crm-vue-component', 'wpCRMvue', $contact_actvity_localize );
 
-        //     wp_localize_script( 'wp-erp-crm-vue-save-search', 'wpCRMSaveSearch', [
-        //         'ajaxurl'         => admin_url( 'admin-ajax.php' ),
-        //         'nonce'           => wp_create_nonce( 'wp-erp-crm-save-search' ),
-        //         'searchFields'    => erp_crm_get_serach_key( $hook )
-        //     ] );
+            wp_localize_script( 'wp-erp-crm-vue-save-search', 'wpCRMSaveSearch', [
+                'ajaxurl'         => admin_url( 'admin-ajax.php' ),
+                'nonce'           => wp_create_nonce( 'wp-erp-crm-save-search' ),
+                'searchFields'    => erp_crm_get_serach_key( $hook )
+            ] );
 
-        //     $localize_script['customer_empty'] = $customer->to_array();
-        //     $localize_script['wpErpCountries'] = $country->load_country_states();
-        // }
+            $localize_script['customer_empty'] = $customer->to_array();
+            $localize_script['wpErpCountries'] = $country->load_country_states();
+        }
 
         if ( 'erp-settings_page_erp-settings' == $hook && isset( $_GET['tab'] ) && $_GET['tab'] == 'erp-crm' ) {
             wp_enqueue_script( 'erp-trix-editor' );
