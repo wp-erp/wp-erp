@@ -35,7 +35,8 @@ function erp_get_peoples( $args = [] ) {
         'count'      => false,
         'include'    => [],
         'exclude'    => [],
-        's'          => ''
+        's'          => '',
+        'no_object'  => false
     ];
 
     $args        = wp_parse_args( $args, $defaults );
@@ -63,7 +64,7 @@ function erp_get_peoples( $args = [] ) {
         if ( is_array( $type ) ) {
             $type_sql = "and `name` IN ( '" . implode( "','", $type ) . "' )";
         } else {
-            $type_sql    = ( $type != 'all' ) ? "and `name` = '" . $type ."'" : '';
+            $type_sql = ( $type != 'all' ) ? "and `name` = '" . $type ."'" : '';
         }
 
         $sql['select'][] = "SELECT people.id, people.user_id, people.company,COALESCE( people.email, users.user_email ) AS email,
@@ -80,7 +81,7 @@ function erp_get_peoples( $args = [] ) {
         $sql['join'][]   = "LEFT JOIN $type_rel_tb AS r ON people.id = r.people_id LEFT JOIN $types_tb AS t ON r.people_types_id = t.id";
         $sql_from_tb     = "FROM $pep_tb AS people";
 
-        $sql['where'][] = "where ( select count(*) from $types_tb
+        $sql['where'][] = "WHERE ( select count(*) from $types_tb
                     inner join  $type_rel_tb
                         on $types_tb.`id` = $type_rel_tb.`people_types_id`
                         where $type_rel_tb.`people_id` = people.`id` $type_sql and $trashed_sql
@@ -104,33 +105,34 @@ function erp_get_peoples( $args = [] ) {
 
         // Check is the row want to search
         if ( ! empty( $s ) ) {
-            $sql['where'][] = "AND ( first_name.meta_value LIKE '%$s%' OR people.first_name LIKE '%$s%')";
+            $sql['where'][] = "AND ( ( first_name.meta_value LIKE '%$s%' OR people.first_name LIKE '%$s%')";
             $sql['where'][] = "OR ( last_name.meta_value LIKE '%$s%' OR people.last_name LIKE '%$s%')";
-            $sql['where'][] = "OR ( people.company LIKE '%$s%')";
+            $sql['where'][] = "OR ( people.company LIKE '%$s%') )";
         }
 
         // Check if args count true, then return total count customer according to above filter
         if ( $count ) {
             unset( $sql['select'] );
             $sql_group_by = '';
+            $sql_order_by = '';
             $sql['select'][] = 'SELECT COUNT( DISTINCT people.id ) as total_number';
         }
 
-        $sql         = apply_filters( 'erp_people_pre_query', $sql, $args );
+        $sql         = apply_filters( 'erp_get_people_pre_query', $sql, $args );
         $final_query = implode( ' ', $sql['select'] ) . ' ' . $sql_from_tb . ' ' . implode( ' ', $sql['join'] ) . ' ' . implode( ' ', $sql['where'] ) . ' ' . $sql_group_by . ' ' . $sql_order_by . ' ' . $sql_limit;
 
         if ( $count ) {
             // Only filtered total count of people
-            $items = $wpdb->get_var( apply_filters( 'erp_people_total_count_query', $final_query, $args ) );
+            $items = $wpdb->get_var( apply_filters( 'erp_get_people_total_count_query', $final_query, $args ) );
         } else {
             // Fetch results from people table
-            $results = $wpdb->get_results( apply_filters( 'erp_people_total_query', $final_query, $args ), ARRAY_A );
+            $results = $wpdb->get_results( apply_filters( 'erp_get_people_total_query', $final_query, $args ), ARRAY_A );
 
             array_walk( $results, function( &$results ) {
                 $results['types'] = explode(',', $results['types'] );
             });
 
-            $items = erp_array_to_object( $results );
+            $items = ( $no_object ) ? $results : erp_array_to_object( $results );
         }
 
         wp_cache_set( $cache_key, $items, 'erp' );
@@ -373,39 +375,76 @@ function erp_get_people( $id = 0 ) {
 /**
  * Retrieve people info by a given field
  *
- * @param  string  $field
+ * @param  string $field
  * @param  mixed  $value
  *
  * @return object
  */
 function erp_get_people_by( $field, $value ) {
+    global $wpdb;
 
-    if ( ! in_array( $field, [ 'id', 'email'] ) ) {
-        return new WP_Error( 'not-valid-field', __( 'No valid type provided', 'erp' ) );
+    if ( empty( $field ) ) {
+        return new WP_Error( 'no-field', __( 'No field provided', 'erp' ) );
     }
 
-    $cache_key = 'erp-people-single-' . $value;
+    if ( empty( $value ) ) {
+        return new WP_Error( 'no-value', __( 'No value provided', 'erp' ) );
+    }
+
+    $cache_key = 'erp-people-by-' . md5( serialize( $value ) );
     $people    = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $people ) {
 
-        if ( 'id' == $field ) {
-            $peep = WeDevs\ERP\Framework\Models\People::with('types')->find( intval( $value ) );
+        $people_fileds = [ 'first_name', 'last_name', 'company', 'phone', 'mobile',
+            'other', 'fax', 'notes', 'street_1', 'street_2', 'city', 'state', 'postal_code', 'country',
+            'currency', 'created' ]; // meta only
 
-        } elseif ( 'email' == $field ) {
-            $peep = WeDevs\ERP\Framework\Models\People::with('types')->whereEmail( $value )->first();
+        $sql = "SELECT * FROM (
+        SELECT people.id as id, people.user_id,
+
+            CASE WHEN people.user_id then user.user_email ELSE people.email END as email,
+            CASE WHEN people.user_id then user.user_url ELSE people.website END as website,";
+
+
+        foreach ( $people_fileds as $field_name ) {
+            $sql .= "MAX(CASE WHEN people.user_id AND user_meta.meta_key = '$field_name' then user_meta.meta_value ELSE people.$field_name END) as $field_name,";
         }
 
-        if ( NULL !== $peep ) {
-            $people                = (object) $peep->toArray();
-            $people->types         = wp_list_pluck( $peep->types->toArray(), 'name' );
+        $sql .= "GROUP_CONCAT(DISTINCT p_types.name) as types
 
-            // include meta fields
-            $people->date_of_birth = erp_people_get_meta( $peep->id, 'date_of_birth', true );
-            $people->source        = erp_people_get_meta( $peep->id, 'source', true );
+        FROM {$wpdb->prefix}erp_peoples as people
+        LEFT JOIN {$wpdb->prefix}users AS user on user.ID = people.user_id
+        LEFT JOIN {$wpdb->prefix}usermeta AS user_meta on user_meta.user_id = people.user_id
+        LEFT JOIN {$wpdb->prefix}erp_people_type_relations as p_types_rel on p_types_rel.people_id = people.id
+        LEFT JOIN {$wpdb->prefix}erp_people_types as p_types on p_types.id = p_types_rel.people_types_id
+        ";
 
-            wp_cache_set( $cache_key, $people, 'erp' );
+        $sql .= " GROUP BY people.id ) as people";
+
+        if ( is_array( $value ) ) {
+            $separeted_values = "'" . implode( "','", $value ) . "'";
+
+            $sql .= " WHERE $field IN ( $separeted_values )";
+        } else {
+            $sql .= " WHERE $field = '$value'";
         }
+
+        $results = $wpdb->get_results( $sql );
+
+        $results = array_map( function( $item ) {
+            $item->types = explode( ',', $item->types );
+
+            return $item;
+        }, $results);
+
+        if ( is_array( $value ) ) {
+            $people = erp_array_to_object( $results );
+        } else {
+            $people = $results[0];
+        }
+
+        wp_cache_set( $cache_key, $people, 'erp' );
     }
 
     return $people;
@@ -444,6 +483,8 @@ function erp_insert_people( $args = array() ) {
     );
 
     $args        = wp_parse_args( $args, $defaults );
+    $args        = wp_array_slice_assoc( $args, array_keys( $defaults ) );
+
     $people_type = $args['type'];
 
     unset( $args['type'] );
@@ -539,8 +580,31 @@ function erp_insert_people( $args = array() ) {
 
     } else {
 
-        // do update method here
-        WeDevs\ERP\Framework\Models\People::find( $row_id )->update( $args );
+        // Check if WP user or not. If WP user, then handle those data into users and usermeta table
+        if ( $args['user_id'] ) {
+            $user_id = wp_update_user( [
+                'ID' => $args['user_id'],
+                'first_name' => $args['first_name'],
+                'last_name' => $args['last_name'],
+                'user_url' => $args['website'],
+                'user_email' => $args['email']
+            ] );
+
+            if ( is_wp_error( $user_id ) ) {
+                return new WP_Error( 'update-user', $user_id->get_error_message() );
+            } else {
+                unset( $args['id'], $args['user_id'], $args['first_name'], $args['last_name'], $args['email'], $args['website'], $args['type'], $args['company'] );
+
+                foreach ( $args as $key => $arg ) {
+                    update_user_meta( $user_id, $key, $arg );
+                }
+            }
+
+        } else {
+            // Not a WP user, so simply handle those data into peoples and peoplemeta table
+            // do update method here
+            WeDevs\ERP\Framework\Models\People::find( $row_id )->update( $args );
+        }
 
         do_action( 'erp_update_people', $row_id, $args );
 

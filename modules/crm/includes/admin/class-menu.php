@@ -229,6 +229,10 @@ class Admin_Menu {
 
     }
 
+    public function single_page_app() {
+        include WPERP_CRM_VIEWS . '/single-page-table.php';
+    }
+
     /**
      * Campaigns Page
      *

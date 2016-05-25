@@ -30,6 +30,7 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-crm-customer-restore', 'customer_restore' );
         $this->action( 'wp_ajax_erp-crm-bulk-contact-subscriber', 'bulk_assign_group' );
         $this->action( 'wp_ajax_erp-crm-convert-user-to-contact', 'convert_user_to_customer' );
+        $this->action( 'wp_ajax_erp-crm-get-contacts', 'get_all_contact' );
 
         $this->action( 'wp_ajax_erp-crm-customer-add-company', 'customer_add_company' );
         $this->action( 'wp_ajax_erp-crm-customer-edit-company', 'customer_edit_company' );
@@ -77,7 +78,109 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-crm-edit-save-replies', 'edit_save_replies' );
         $this->action( 'wp_ajax_erp-crm-delete-save-replies', 'delete_save_replies' );
         $this->action( 'wp_ajax_erp-crm-load-save-replies-data', 'load_save_replies' );
+    }
 
+    /**
+     * Get all contact
+     *
+     * @since 1.1.0
+     *
+     * @return json
+     */
+    public function get_all_contact() {
+        $this->verify_nonce( 'wp-erp-vue-table' );
+
+        $contacts = [];
+
+        // only ncessary because we have sample data
+        $args = [
+            'type'      => '',
+            'offset'    => 0,
+            'number'    => 20,
+            'no_object' => true
+        ];
+
+        // Set type. By defaul it sets to contact :p
+        if ( isset( $_REQUEST['type'] ) && ! empty( $_REQUEST['type'] ) ) {
+            $args['type'] = $_REQUEST['type'];
+        }
+
+        // Filter Limit value
+        if ( isset( $_REQUEST['number'] ) && ! empty( $_REQUEST['number'] ) ) {
+            $args['number'] = $_REQUEST['number'];
+        }
+
+        // Filter offset value
+        if ( isset( $_REQUEST['offset'] ) && ! empty( $_REQUEST['offset'] ) ) {
+            $args['offset'] = $_REQUEST['offset'];
+        }
+
+        // Filter for serach
+        if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
+            $args['s'] = $_REQUEST['s'];
+        }
+
+        // Filter for order & order by
+        if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {
+            $args['orderby']  = $_REQUEST['orderby'];
+            $args['order']    = $_REQUEST['order'] ;
+        } else {
+            $args['orderby']  = 'created';
+            $args['order']    = 'DESC';
+        }
+
+        // Filter for customer life stage
+        if ( isset( $_REQUEST['status'] ) && ! empty( $_REQUEST['status'] ) ) {
+            if ( $_REQUEST['status'] != 'all' ) {
+                if ( $_REQUEST['status'] == 'trash' ) {
+                    $args['trashed'] = true;
+                } else {
+                    $args['meta_query'] = [
+                        'meta_key' => 'life_stage',
+                        'meta_value' => $_REQUEST['status']
+                    ];
+                }
+            }
+        }
+
+        if ( isset( $_REQUEST['filter_assign_contact'] ) && ! empty( $_REQUEST['filter_assign_contact'] ) ) {
+            $args['meta_query'] = [
+                'meta_key' => '_assign_crm_agent',
+                'meta_value' => $_REQUEST['filter_assign_contact']
+            ];
+        }
+
+        $contacts['data']  = erp_get_peoples( $args );
+
+        $args['count'] = true;
+        $total_items = erp_get_peoples( $args );
+
+        foreach ( $contacts['data'] as $key => $contact ) {
+            $contact_owner    = [];
+            $contact_owner_id = ( $contact['user_id'] ) ? get_user_meta( $contact['user_id'], '_assign_crm_agent', true ) : erp_people_get_meta( $contact['id'], '_assign_crm_agent', true );
+
+            if ( $contact_owner_id ) {
+                $user = \get_user_by( 'id', $contact_owner_id );
+
+                $contact_owner = [
+                    'id'           => $user->ID,
+                    'avatar'       => get_avatar_url( $user->ID ),
+                    'first_name'   => $user->first_name,
+                    'last_name'    => $user->last_name,
+                    'display_name' => $user->display_name,
+                    'email'        => $user->user_email
+                ];
+            }
+            $contacts['data'][$key]['details_url']   = erp_crm_get_details_url( $contact['id'], $contact['types'] );
+            $contacts['data'][$key]['avatar']['url'] = erp_crm_get_avatar_url( $contact['id'], $contact['email'], $contact['user_id'] );
+            $contacts['data'][$key]['avatar']['img'] = erp_crm_get_avatar( $contact['id'], $contact['email'], $contact['user_id'] );
+            $contacts['data'][$key]['life_stage']    = erp_people_get_meta( $contact['id'], 'life_stage', true );
+            $contacts['data'][$key]['assign_to']     = $contact_owner;
+            $contacts['data'][$key]['created']       = erp_format_date( $contact['created'] );
+        }
+
+        $contacts['total_items']   = $total_items;
+        $this->send_success( $contacts );
     }
 
     /**
@@ -138,9 +241,9 @@ class Ajax_Handler {
         do_action( 'erp_crm_save_contact_data', $customer, $customer_id, $posted );
 
         $data = $customer->to_array();
+        $statuses = erp_crm_customer_get_status_count( $posted['type'] );
 
-        $this->send_success( $data );
-
+        $this->send_success( [ 'data' => $data, 'statuses' => $statuses ] );
     }
 
     /**
@@ -175,7 +278,7 @@ class Ajax_Handler {
 
         $this->verify_nonce( 'wp-erp-crm-nonce' );
 
-        $customer_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+        $customer_id = ( isset( $_REQUEST['id'] ) && is_array( $_REQUEST['id'] ) ) ? (array)$_REQUEST['id'] : intval( $_REQUEST['id'] );
         $hard        = isset( $_REQUEST['hard'] ) ? intval( $_REQUEST['hard'] ) : 0;
         $type        = isset( $_REQUEST['type'] ) ? $_REQUEST['type'] : '';
 
@@ -185,10 +288,15 @@ class Ajax_Handler {
             'type' => $type
         ];
 
-        erp_delete_people( $data );
+        $deleted = erp_delete_people( $data );
 
-        // @TODO: check permission
-        $this->send_success( __( 'Customer has been removed successfully', 'erp' ) );
+        if ( is_wp_error( $deleted ) ) {
+            $this->send_error( $deleted->get_error_message() );
+        }
+
+        $statuses = erp_crm_customer_get_status_count( $type );
+
+        $this->send_success( [ 'statuses' => $statuses ] );
     }
 
     /**
@@ -202,7 +310,7 @@ class Ajax_Handler {
 
         $this->verify_nonce( 'wp-erp-crm-nonce' );
 
-        $customer_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+        $customer_id = ( isset( $_REQUEST['id'] ) && is_array( $_REQUEST['id'] ) ) ? (array)$_REQUEST['id'] : intval( $_REQUEST['id'] );
         $type        = isset( $_REQUEST['type'] ) ? $_REQUEST['type'] : '';
 
         $data = [
@@ -210,10 +318,15 @@ class Ajax_Handler {
             'type' => $type
         ];
 
-        erp_restore_people( $data );
+        $restored = erp_restore_people( $data );
 
-        // @TODO: check permission
-        $this->send_success( __( 'Customer has been removed successfully', 'erp' ) );
+        if ( is_wp_error( $restored ) ) {
+            $this->send_error( $restored->get_error_message() );
+        }
+
+        $statuses = erp_crm_customer_get_status_count( $type );
+
+        $this->send_success( [ 'statuses' => $statuses ] );
     }
 
     /**
@@ -381,7 +494,7 @@ class Ajax_Handler {
 
         if ( ! empty( $crm_users ) ) {
             foreach ( $crm_users as $user ) {
-                $found_crm_user[ $user->ID ] = $user->display_name . ' (' . sanitize_email( $user->user_email ) . ')';
+                $found_crm_user[ $user->ID ] = $user->display_name;
             }
         }
 
