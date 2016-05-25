@@ -1173,9 +1173,9 @@ function erp_process_import_export() {
                         if ( is_wp_error( $item_insert_id ) ) {
                             continue;
                         } else {
-                            $contact_owner = erp_get_option( 'contact_owner', 'erp_settings_erp-crm', null );
+                            $contact_owner = erp_get_option( 'contact_owner', 'erp_settings_erp-crm_contacts', null );
                             $contact_owner = ( $contact_owner ) ? $contact_owner : get_current_user_id();
-                            $life_stage    = erp_get_option( 'life_stage', 'erp_settings_erp-crm', 'opportunity' );
+                            $life_stage    = erp_get_option( 'life_stage', 'erp_settings_erp-crm_contacts', 'opportunity' );
                             erp_people_update_meta( $item_insert_id, '_assign_crm_agent', $contact_owner );
                             erp_people_update_meta( $item_insert_id, 'life_stage', $life_stage );
                         }
@@ -1356,7 +1356,7 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
             $phpmailer->Mailer = 'smtp'; //'smtp', 'mail', or 'sendmail'
 
             $phpmailer->Host = $erp_email_smtp_settings['mail_server'];
-            $phpmailer->SMTPSecure = ( $erp_email_smtp_settings['encryption'] != '' ) ? $erp_email_smtp_settings['encryption'] : 'ssl';
+            $phpmailer->SMTPSecure = ( $erp_email_smtp_settings['authentication'] != '' ) ? $erp_email_smtp_settings['authentication'] : 'ssl';
             $phpmailer->Port = $erp_email_smtp_settings['port'];
 
             $phpmailer->SMTPAuth = true;
@@ -1367,7 +1367,12 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
 
     add_action( 'phpmailer_init', $callback );
 
+    ob_start();
     $is_mail_sent = wp_mail( $to, $subject, $message, $headers, $attachments );
+    $debug_log = ob_get_clean();
+    if ( ! $is_mail_sent ) {
+        error_log( $debug_log );
+    }
 
     remove_action( 'phpmailer_init', $callback );
 
@@ -1395,7 +1400,7 @@ function erp_email_settings_javascript() {
                     'enable_smtp': $('input[name=enable_smtp]:checked').val(),
                     'mail_server': $('input[name=mail_server]').val(),
                     'port': $('input[name=port]').val(),
-                    'encryption': $('select[name=encryption]').val(),
+                    'authentication': $('select[name=authentication]').val(),
                     'username': $('input[name=username]').val(),
                     'password': $('input[name=password]').val(),
                     'to' : $('#smtp_test_email_address').val(),
@@ -1434,7 +1439,7 @@ function erp_email_settings_javascript() {
                     'password': $('input[name=password]').val(),
                     'protocol': $('select[name=protocol]').val(),
                     'port': $('input[name=port]').val(),
-                    'encryption': $('select[name=encryption]').val(),
+                    'authentication': $('select[name=authentication]').val(),
                     '_wpnonce': '<?php echo wp_create_nonce( "erp-imap-test-connection-nonce" ); ?>'
                 };
 
@@ -1471,7 +1476,12 @@ function erp_email_settings_javascript() {
 function erp_is_imap_active() {
     $options = get_option( 'erp_settings_erp-email_imap', [] );
 
-    $imap_status = isset( $options['imap_status'] ) ? $options['imap_status'] : 0;
+    $imap_status = (boolean) isset( $options['imap_status'] ) ? $options['imap_status'] : 0;
+    $enable_imap = ( isset( $options['enable_imap'] ) && $options['enable_imap'] == 'yes' ) ? true : false;
 
-    return (boolean) $imap_status;
+    if ( $enable_imap && $imap_status ) {
+        return true;
+    }
+
+    return false;
 }
