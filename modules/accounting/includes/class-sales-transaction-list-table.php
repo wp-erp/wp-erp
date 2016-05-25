@@ -47,11 +47,5 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
         return erp_ac_get_sales_form_types();
     }
 
-    // public function column_form_type( $item ) {
-    //     $types = erp_ac_get_sales_form_types();
 
-    //     if ( array_key_exists( $item->form_type, $types ) ) {
-    //         return sprintf( '<a href="%1$s">%2$s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), $types[ $item->form_type ]['label'] );
-    //     }
-    // }
 }

@@ -32,41 +32,16 @@ class Admin_Menu {
         
         add_menu_page( __( 'Accounting', 'accounting' ), __( 'Accounting', 'accounting' ), $dashboard, 'erp-accounting', array( $this, 'dashboard_page' ), 'dashicons-chart-pie', null );
         
-        if ( $dashboard ) {
-            $dashboard = add_submenu_page( 'erp-accounting', __( 'Dashboard', 'accounting' ), __( 'Dashboard', 'accounting' ), $dashboard, 'erp-accounting', array( $this, 'dashboard_page' ) );
-        }
+        $dashboard      = add_submenu_page( 'erp-accounting', __( 'Dashboard', 'accounting' ), __( 'Dashboard', 'accounting' ), $dashboard, 'erp-accounting', array( $this, 'dashboard_page' ) );
+        $customer       = add_submenu_page( 'erp-accounting', __( 'Customers', 'accounting' ), __( 'Customers', 'accounting' ), $customer, 'erp-accounting-customers', array( $this, 'page_customers' ) );
+        $vendor         = add_submenu_page( 'erp-accounting', __( 'Vendors', 'accounting' ), __( 'Vendors', 'accounting' ), $vendor, 'erp-accounting-vendors', array( $this, 'page_vendors' ) );
+        $sale           = add_submenu_page( 'erp-accounting', __( 'Sales', 'accounting' ), __( 'Sales', 'accounting' ), $sale, 'erp-accounting-sales', array( $this, 'page_sales' ) );
+        $expense        = add_submenu_page( 'erp-accounting', __( 'Expenses', 'accounting' ), __( 'Expenses', 'accounting' ), $expense, 'erp-accounting-expense', array( $this, 'page_expenses' ) );
+        $account_charts = add_submenu_page( 'erp-accounting', __( 'Chart of Accounts', 'accounting' ), __( 'Chart of Accounts', 'accounting' ), $account_charts, 'erp-accounting-charts', array( $this, 'page_chart_of_accounting' ) );
+        $bank           = add_submenu_page( 'erp-accounting', __( 'Bank Accounts', 'accounting' ), __( 'Bank Accounts', 'accounting' ), $bank, 'erp-accounting-bank', array( $this, 'page_bank' ) );
+        $journal        = add_submenu_page( 'erp-accounting', __( 'Journal Entry', 'accounting' ), __( 'Journal Entry', 'accounting' ), $journal, 'erp-accounting-journal', array( $this, 'page_journal_entry' ) );
+        $reports        = add_submenu_page( 'erp-accounting', __( 'Reports', 'accounting' ), __( 'Reports', 'accounting' ), $reports, 'erp-accounting-reports', array( $this, 'page_reports' ) );
         
-        if ( $customer ) {
-            $customer = add_submenu_page( 'erp-accounting', __( 'Customers', 'accounting' ), __( 'Customers', 'accounting' ), $customer, 'erp-accounting-customers', array( $this, 'page_customers' ) );
-        }
-
-        if ( $vendor ) {
-            $vendor = add_submenu_page( 'erp-accounting', __( 'Vendors', 'accounting' ), __( 'Vendors', 'accounting' ), $vendor, 'erp-accounting-vendors', array( $this, 'page_vendors' ) );
-        }
-
-        if ( $sale ) {
-            $sale  = add_submenu_page( 'erp-accounting', __( 'Sales', 'accounting' ), __( 'Sales', 'accounting' ), $sale, 'erp-accounting-sales', array( $this, 'page_sales' ) );
-        }
-
-        if ( $expense ) {
-            $expense   = add_submenu_page( 'erp-accounting', __( 'Expenses', 'accounting' ), __( 'Expenses', 'accounting' ), $expense, 'erp-accounting-expense', array( $this, 'page_expenses' ) );
-        }
-
-        if ( $account_charts ) {
-            $account_charts = add_submenu_page( 'erp-accounting', __( 'Chart of Accounts', 'accounting' ), __( 'Chart of Accounts', 'accounting' ), $account_charts, 'erp-accounting-charts', array( $this, 'page_chart_of_accounting' ) );
-        }
-
-        if ( $bank ) {
-            $bank  = add_submenu_page( 'erp-accounting', __( 'Bank Accounts', 'accounting' ), __( 'Bank Accounts', 'accounting' ), $bank, 'erp-accounting-bank', array( $this, 'page_bank' ) );
-        }
-
-        if ( $journal ) {
-            $journal = add_submenu_page( 'erp-accounting', __( 'Journal Entry', 'accounting' ), __( 'Journal Entry', 'accounting' ), $journal, 'erp-accounting-journal', array( $this, 'page_journal_entry' ) );
-        }
-
-        if ( $reports ) {
-            $reports = add_submenu_page( 'erp-accounting', __( 'Reports', 'accounting' ), __( 'Reports', 'accounting' ), $reports, 'erp-accounting-reports', array( $this, 'page_reports' ) );
-        }
 
         add_action( 'admin_print_styles-' . $dashboard, array( $this, 'chart_script' ) );
         add_action( 'admin_print_styles-' . $customer, array( $this, 'chart_script' ) );
@@ -116,10 +91,10 @@ class Admin_Menu {
         switch ($action) {
             case 'new':
 
-                if ( $type == 'invoice' ) {
+                if ( $type == 'invoice' && erp_ac_create_sales_invoice() ) {
                     $template = dirname( __FILE__ ) . '/views/sales/invoice-new.php';
-                } elseif ( $type == 'payment' ) {
-                    $template = dirname( __FILE__ ) . '/views/sales/payment-new.php';
+                } else if ( $type == 'payment' && erp_ac_create_sales_payment() ) {
+                   $template = dirname( __FILE__ ) . '/views/sales/payment-new.php';
                 }
 
                 break;
@@ -306,21 +281,28 @@ class Admin_Menu {
      * @return void
      */
     public function page_customers() {
-        $action = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
-        $id     = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
+        $action   = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
+        $id       = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
+        $template = '';
 
         switch ($action) {
             case 'view':
-                $customer = new \WeDevs\ERP\People( $id );
-                $template = dirname( __FILE__ ) . '/views/customer/single.php';
+                if ( erp_ac_current_user_can_view_single_customer() ) {
+                    $customer = new \WeDevs\ERP\People( $id );
+                    $template = dirname( __FILE__ ) . '/views/customer/single.php';                    
+                }
                 break;
 
             case 'edit':
-                $template = dirname( __FILE__ ) . '/views/customer/edit.php';
+                if ( erp_ac_current_user_can_edit_customer() ) {
+                    $template = dirname( __FILE__ ) . '/views/customer/edit.php';
+                }
                 break;
 
             case 'new':
-                $template = dirname( __FILE__ ) . '/views/customer/new.php';
+                if ( erp_ac_create_customer() ) {
+                    $template = dirname( __FILE__ ) . '/views/customer/new.php';
+                }
                 break;
 
             default:
@@ -330,6 +312,8 @@ class Admin_Menu {
 
         if ( file_exists( $template ) ) {
             include $template;
+        } else {
+            echo '<h1>You do not have sufficient permissions to access this page.</h1>';
         }
     }
 

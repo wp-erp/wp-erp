@@ -99,16 +99,22 @@ class Customer_List_Table extends \WP_List_Table {
      * @return string
      */
     function column_customer( $item ) {
-
+        
         $data_hard         = ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) ? 1 : 0;
         $delete_text       = ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) ? __( 'Permanent Delete', 'accounting' ) : __( 'Delete', 'accounting' );
         $delete_text       = ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) ? __( 'Permanent Delete', 'accounting' ) : __( 'Delete', 'accounting' );
         $actions            = array();
-        $actions['edit']    = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=edit&id=' . $item->id ), $item->id, __( 'Edit this item', 'wp-erp-ac' ), __( 'Edit', 'wp-erp-ac' ) );
-        $actions['invoice'] = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=erp-accounting-sales&action=new&type=invoice&customer=true&id=' . $item->id ), $item->id, __( 'Create Invoice', 'wp-erp-ac' ), __( 'Create Invoice', 'wp-erp-ac' ) );
-        //$actions['expense'] = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=edit&id=' . $item->id ), $item->id, __( 'Create Expense', 'wp-erp-ac' ), __( 'Create Expense', 'wp-erp-ac' ) );
 
-        $actions['delete'] = sprintf( '<a href="%s" class="erp-ac-submitdelete" data-id="%d" data-hard=%d title="%s" data-type="%s">%s</a>', '#', $item->id, $data_hard, __( 'Delete this item', 'accounting' ), $this->type, $delete_text );
+        if ( erp_ac_current_user_can_edit_customer( $item->id ) ) {
+            $actions['edit']    = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=edit&id=' . $item->id ), $item->id, __( 'Edit this item', 'wp-erp-ac' ), __( 'Edit', 'wp-erp-ac' ) );
+        }
+        
+        $actions['invoice'] = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=erp-accounting-sales&action=new&type=invoice&customer=true&id=' . $item->id ), $item->id, __( 'Create Invoice', 'wp-erp-ac' ), __( 'Create Invoice', 'wp-erp-ac' ) );
+        
+        if ( erp_ac_current_user_can_delete_customer() ) { 
+            $actions['delete'] = sprintf( '<a href="%s" class="erp-ac-submitdelete" data-id="%d" data-hard=%d title="%s" data-type="%s">%s</a>', '#', $item->id, $data_hard, __( 'Delete this item', 'accounting' ), $this->type, $delete_text );
+        }
+
         if ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) {
             $actions['restore'] = sprintf( '<a href="#" class="erp-ac-restoreCustomer" data-id="%d" title="%s" data-type="%s">%s</a>', $item->id, __( 'Restore this item', 'accounting' ), $this->type, __( 'Restore', 'accounting' ) );
         }

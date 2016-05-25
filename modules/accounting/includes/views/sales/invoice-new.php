@@ -85,7 +85,13 @@ $tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                                 ],
                             ) );
                             ?>
-                            <div><a href="#" data-content="erp-ac-new-customer-content-pop" class="erp-ac-not-found-btn-in-drop erp-ac-more-customer"><?php _e( 'Create New', 'accounting' ); ?></a></div>
+                            <?php
+                            if ( erp_ac_create_customer() ) {
+                                ?>
+                                <div><a href="#" data-content="erp-ac-new-customer-content-pop" class="erp-ac-not-found-btn-in-drop erp-ac-more-customer"><?php _e( 'Create New', 'accounting' ); ?></a></div>
+                                <?php
+                            }
+                            ?> 
                         </div>
                     </li>
 
@@ -174,7 +180,15 @@ $tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
 
 
         <?php wp_nonce_field( 'erp-ac-trans-new' ); ?>
-        <input type="submit" name="submit_erp_ac_trans" id="submit_erp_ac_trans" class="button button-primary" value="Create Invoice">
+
+        <?php
+        if ( erp_ac_publish_sales_payment() ) {
+            ?>
+            <input type="submit" name="submit_erp_ac_trans" id="submit_erp_ac_trans" class="button button-primary" value="Create Invoice">
+            <?php
+        }
+        ?>
+        
         <input type="submit" name="submit_erp_ac_trans_draft" id="submit_erp_ac_trans_draft" class="button button-secondary" value="Save as Draft">
 
     </form>

@@ -98,7 +98,7 @@ function erp_ac_get_caps_for_role( $role = '' ) {
                 'erp_ac_view_dashboard'           => true,   
                 'erp_ac_view_customer'            => true,    
                 'erp_ac_view_other_customers'     => true, 
-                'erp_ac_create_customer  '        => true,
+                'erp_ac_create_customer'          => true,
                 'erp_ac_edit_customer'            => true,    
                 'erp_ac_edit_other_customers'     => true, 
                 'erp_ac_delete_customer'          => true,  
@@ -147,7 +147,7 @@ function erp_ac_get_caps_for_role( $role = '' ) {
                 'erp_ac_view_dashboard'           => true,   
                 'erp_ac_view_customer'            => true,    
                 'erp_ac_view_other_customers'     => true, 
-                'erp_ac_create_customer  '        => true,
+                'erp_ac_create_customer'          => true,
                 'erp_ac_edit_customer'            => true,    
                 'erp_ac_edit_other_customers'     => true, 
                 'erp_ac_delete_customer'          => true,  
@@ -220,4 +220,51 @@ function erp_ac_permission_management_field( $employee ) {
         'help'  => __( 'This Employee is Manager', 'accounting'  )
     ) );
 }
+
+function erp_ac_create_customer() {
+    return current_user_can( 'erp_ac_create_customer' );
+}
+
+function erp_ac_current_user_can_edit_customer( $people_id = false ) {
+    return current_user_can( 'erp_ac_edit_customer' );   
+}
+
+function erp_ac_current_user_can_view_single_customer() {
+    return current_user_can( 'erp_ac_view_single_customer' );   
+}
+
+function erp_ac_current_user_can_delete_customer() {
+    return current_user_can( 'erp_ac_delete_customer' );
+}
+
+//sale
+function erp_ac_view_other_sales() {
+    return current_user_can( 'erp_ac_view_other_sales' );
+}
+
+function erp_ac_view_sales_summary() {
+    return current_user_can( 'erp_ac_view_sales_summary' );
+}
+
+function erp_ac_create_sales_payment() {
+    return current_user_can( 'erp_ac_create_sales_payment' );
+}
+
+function erp_ac_create_sales_invoice() {
+    return current_user_can( 'erp_ac_create_sales_invoice' );
+}
+
+function erp_ac_publish_sales_payment() {
+    return current_user_can( 'erp_ac_publish_sales_payment' );
+}
+
+function erp_ac_publish_sales_invoice() {
+    return current_user_can( 'erp_ac_publish_sales_invoice' );
+}
+
+
+
+
+
+
 

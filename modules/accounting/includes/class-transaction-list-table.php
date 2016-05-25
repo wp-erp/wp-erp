@@ -326,6 +326,10 @@ class Transaction_List_Table extends \WP_List_Table {
             $args['ref'] = $_REQUEST['ref'];
         }
 
+        if ( 'sales' == $args['type'] && ! erp_ac_view_other_sales() ) {
+            $args['user_id'] = get_current_user_id();
+        }
+        
         $this->items = $this->get_transactions( $args );
 
         $this->set_pagination_args( array(

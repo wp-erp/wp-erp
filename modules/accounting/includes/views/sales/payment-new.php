@@ -86,7 +86,13 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
                                 ],
                             ) );
                             ?>
-                            <div><a href="#" data-content="erp-ac-new-customer-content-pop" class="erp-ac-not-found-btn-in-drop erp-ac-more-customer"><?php _e( 'Create New', 'accounting' ); ?></a></div>
+                            <?php
+                            if ( erp_ac_create_customer() ) {
+                                ?>
+                                <div><a href="#" data-content="erp-ac-new-customer-content-pop" class="erp-ac-not-found-btn-in-drop erp-ac-more-customer"><?php _e( 'Create New', 'accounting' ); ?></a></div>
+                                <?php
+                            }
+                            ?> 
                         </div>
                     </li>
 
@@ -163,7 +169,15 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
         ?>
 
         <?php wp_nonce_field( 'erp-ac-trans-new' ); ?>
-        <input type="submit" name="submit_erp_ac_trans" id="submit_erp_ac_trans" class="button button-primary" value="<?php _e( 'Receive Payment', 'accounting'); ?>">
+        
+        <?php
+        if ( erp_ac_publish_sales_payment() ) {
+            ?>
+            <input type="submit" name="submit_erp_ac_trans" id="submit_erp_ac_trans" class="button button-primary" value="<?php _e( 'Receive Payment', 'accounting'); ?>">
+            <?php
+        }
+        ?>
+        
         <input type="submit" name="submit_erp_ac_trans_draft" id="submit_erp_ac_trans_draft" class="button button-secondary" value="<?php _e( 'Save as Draft', 'accounting' ); ?>">
     </form>
     <div class="erp-ac-receive-payment-table-clone" style="display: none;">
