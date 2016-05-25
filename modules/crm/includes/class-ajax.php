@@ -78,9 +78,15 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-crm-edit-save-replies', 'edit_save_replies' );
         $this->action( 'wp_ajax_erp-crm-delete-save-replies', 'delete_save_replies' );
         $this->action( 'wp_ajax_erp-crm-load-save-replies-data', 'load_save_replies' );
-
     }
 
+    /**
+     * Get all contact
+     *
+     * @since 1.1.0
+     *
+     * @return json
+     */
     public function get_all_contact() {
         $this->verify_nonce( 'wp-erp-vue-table' );
 

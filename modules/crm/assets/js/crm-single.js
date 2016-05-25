@@ -597,6 +597,48 @@
                 });
             },
 
+            initSearchCrmAgent: function() {
+                $( 'select#erp-select-user-for-assign-contact' ).select2({
+                    allowClear: true,
+                    placeholder: 'Select an Agent',
+                    minimumInputLength: 3,
+                    ajax: {
+                        url: wpErpCrm.ajaxurl,
+                        dataType: 'json',
+                        delay: 250,
+                        escapeMarkup: function( m ) {
+                            return m;
+                        },
+                        data: function (params) {
+                            return {
+                                q: params.term, // search term
+                                _wpnonce: wpErpCrm.nonce,
+                                action: 'erp-search-crm-user'
+                            };
+                        },
+                        processResults: function ( data, params ) {
+                            var terms = [];
+
+                            if ( data) {
+                                $.each( data.data, function( id, text ) {
+                                    terms.push({
+                                        id: id,
+                                        text: text
+                                    });
+                                });
+                            }
+
+                            if ( terms.length ) {
+                                return { results: terms };
+                            } else {
+                                return { results: '' };
+                            }
+                        },
+                        cache: true
+                    }
+                });
+            }
+
         },
 
         ready: function() {
@@ -607,45 +649,7 @@
             $( 'body' ).on( 'focusout', 'input#erp-crm-new-contact-email', this.checkEmailForContact );
             $( 'body' ).on( 'click', 'a#erp-crm-create-contact-other-type', this.makeUserAsContact );
 
-            $( 'select#erp-select-user-for-assign-contact' ).select2({
-                allowClear: true,
-                placeholder: 'Select an Agent',
-                minimumInputLength: 3,
-                ajax: {
-                    url: wpErpCrm.ajaxurl,
-                    dataType: 'json',
-                    delay: 250,
-                    escapeMarkup: function( m ) {
-                        return m;
-                    },
-                    data: function (params) {
-                        return {
-                            q: params.term, // search term
-                            _wpnonce: wpErpCrm.nonce,
-                            action: 'erp-search-crm-user'
-                        };
-                    },
-                    processResults: function ( data, params ) {
-                        var terms = [];
-
-                        if ( data) {
-                            $.each( data.data, function( id, text ) {
-                                terms.push({
-                                    id: id,
-                                    text: text
-                                });
-                            });
-                        }
-
-                        if ( terms.length ) {
-                            return { results: terms };
-                        } else {
-                            return { results: '' };
-                        }
-                    },
-                    cache: true
-                }
-            });
+            this.initSearchCrmAgent();
         },
 
         events: {

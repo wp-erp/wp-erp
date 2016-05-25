@@ -118,15 +118,15 @@ function erp_get_peoples( $args = [] ) {
             $sql['select'][] = 'SELECT COUNT( DISTINCT people.id ) as total_number';
         }
 
-        $sql         = apply_filters( 'erp_people_pre_query', $sql, $args );
+        $sql         = apply_filters( 'erp_get_people_pre_query', $sql, $args );
         $final_query = implode( ' ', $sql['select'] ) . ' ' . $sql_from_tb . ' ' . implode( ' ', $sql['join'] ) . ' ' . implode( ' ', $sql['where'] ) . ' ' . $sql_group_by . ' ' . $sql_order_by . ' ' . $sql_limit;
 
         if ( $count ) {
             // Only filtered total count of people
-            $items = $wpdb->get_var( apply_filters( 'erp_people_total_count_query', $final_query, $args ) );
+            $items = $wpdb->get_var( apply_filters( 'erp_get_people_total_count_query', $final_query, $args ) );
         } else {
             // Fetch results from people table
-            $results = $wpdb->get_results( apply_filters( 'erp_people_total_query', $final_query, $args ), ARRAY_A );
+            $results = $wpdb->get_results( apply_filters( 'erp_get_people_total_query', $final_query, $args ), ARRAY_A );
 
             array_walk( $results, function( &$results ) {
                 $results['types'] = explode(',', $results['types'] );

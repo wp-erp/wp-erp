@@ -620,6 +620,134 @@ Vue.component('vtable', {
             }
         },
 
+        removeParam: function( key, sourceURL ) {
+            var rtn = sourceURL.split("?")[0],
+                param,
+                params_arr = [],
+                queryString = (sourceURL.indexOf("?") !== -1) ? sourceURL.split("?")[1] : "";
+
+            if (queryString !== "") {
+                params_arr = queryString.split("&");
+                for (var i = params_arr.length - 1; i >= 0; i -= 1) {
+                    param = params_arr[i].split("=")[0];
+                    if (param === key) {
+                        params_arr.splice(i, 1);
+                    }
+                }
+                rtn = rtn + params_arr.join("&");
+            }
+            return rtn;
+        },
+
+        getParamByName: function(name, url) {
+            if (!url) {
+                url = window.location.href;
+            }
+
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+
+            if ( !results ) {
+                return null;
+            }
+
+            if ( !results[2] ) {
+                return '';
+            }
+
+            return decodeURIComponent( results[2].replace(/\+/g, " ") );
+        },
+
+        parseStr: function( str, array) {
+            var strArr = String(str)
+                .replace(/^&/, '')
+                .replace(/^\?/, '')
+                .replace(/&$/, '')
+                .split('&'),
+                sal = strArr.length,
+                i, j, ct, p, lastObj, obj, lastIter, undef, chr, tmp, key, value,
+                postLeftBracketPos, keys, keysLen,
+                fixStr = function(str) {
+                    return decodeURIComponent(str.replace(/\+/g, '%20'));
+                };
+
+            if (!array) {
+                array = this.window;
+            }
+
+            for (i = 0; i < sal; i++) {
+                tmp = strArr[i].split('=');
+                key = fixStr(tmp[0]);
+                value = (tmp.length < 2) ? '' : fixStr(tmp[1]);
+
+                while (key.charAt(0) === ' ') {
+                    key = key.slice(1);
+                }
+                if (key.indexOf('\x00') > -1) {
+                    key = key.slice(0, key.indexOf('\x00'));
+                }
+                if (key && key.charAt(0) !== '[') {
+                    keys = [];
+                    postLeftBracketPos = 0;
+                    for (j = 0; j < key.length; j++) {
+                        if (key.charAt(j) === '[' && !postLeftBracketPos) {
+                            postLeftBracketPos = j + 1;
+                        } else if (key.charAt(j) === ']') {
+                            if (postLeftBracketPos) {
+                                if (!keys.length) {
+                                    keys.push(key.slice(0, postLeftBracketPos - 1));
+                                }
+                                keys.push(key.substr(postLeftBracketPos, j - postLeftBracketPos));
+                                postLeftBracketPos = 0;
+                                if (key.charAt(j + 1) !== '[') {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (!keys.length) {
+                        keys = [key];
+                    }
+                    for (j = 0; j < keys[0].length; j++) {
+                        chr = keys[0].charAt(j);
+                        if (chr === ' ' || chr === '.' || chr === '[') {
+                            keys[0] = keys[0].substr(0, j) + '_' + keys[0].substr(j + 1);
+                        }
+                        if (chr === '[') {
+                            break;
+                        }
+                    }
+
+                    obj = array;
+                    for (j = 0, keysLen = keys.length; j < keysLen; j++) {
+                        key = keys[j].replace(/^['"]/, '')
+                            .replace(/['"]$/, '');
+                        lastIter = j !== keys.length - 1;
+                        lastObj = obj;
+                        if ((key !== '' && key !== ' ') || j === 0) {
+                            if (obj[key] === undef) {
+                                obj[key] = {};
+                            }
+                            obj = obj[key];
+                        } else {
+                            // To insert new dimension
+                            ct = -1;
+                            for (p in obj) {
+                                if (obj.hasOwnProperty(p)) {
+                                    if (+p > ct && p.match(/^\d+$/g)) {
+                                        ct = +p;
+                                    }
+                                }
+                            }
+                            key = ct + 1;
+                        }
+                    }
+                    lastObj[key] = value;
+                }
+            }
+        },
+
         fetchData: function() {
             var self = this,
                 data = {
@@ -627,19 +755,13 @@ Vue.component('vtable', {
                     _wpnonce: wpVueTable.nonce
                 };
 
-            var params = [
-                'order=' + this.sortOrder.direction,
-                'orderby=' + this.sortOrder.field,
-                'number=' + this.perPage,
-                'offset=' + this.pageOffset
-            ];
-
             this.ajaxloader = true;
 
-            // console.log( params );
+            // var queryString = self.removeParam( 'page', window.location.search );
+            // self.parseStr( queryString, obj )
 
-            var url = params.join('&')
-            var postData = jQuery.param(data) + '&' + url;
+            // console.log( obj )
+            var postData = jQuery.param(data);
 
             if ( typeof this.additionalParams !== 'undefined' ) {
                 if ( Object.keys(this.additionalParams).length > 0  ) {
@@ -647,12 +769,25 @@ Vue.component('vtable', {
                 }
             }
 
+            if ( this.currentPage > 1 ) {
+                var resultedPostData = postData + '&paged=' + this.currentPage;
+            } else {
+                var resultedPostData = postData;
+            }
+
+            var pagination = [
+                'number=' + this.perPage,
+                'offset=' + ( this.currentPage - 1 ) * this.perPage
+            ];
+
+            var postData = postData + '&' + pagination.join('&');
+
             this.ajax = jQuery.post( wpVueTable.ajaxurl, postData, function( resp ) {
                 if ( resp.success ) {
                     self.ajaxloader = false;
-                    self.isLoaded = true;
-                    self.tableData = resp.data.data;
-                    self.totalItem = resp.data.total_items;
+                    self.isLoaded   = true;
+                    self.tableData  = resp.data.data;
+                    self.totalItem  = resp.data.total_items;
                     if ( resp.data.data.length > 0 ) {
                         this.pageNumberInput = this.totalPage;
                     }
