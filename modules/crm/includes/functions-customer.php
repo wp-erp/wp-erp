@@ -2111,7 +2111,7 @@ function erp_crm_get_schedule_data( $tab = '' ) {
  * @return string
  */
 function erp_crm_get_email_from_address() {
-    $settings = get_option( 'erp_settings_erp-email', [] );
+    $settings = get_option( 'erp_settings_erp-email_general', [] );
 
     if ( array_key_exists( 'from_email', $settings ) ) {
         return sanitize_email( $settings['from_email'] );

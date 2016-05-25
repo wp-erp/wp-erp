@@ -1317,7 +1317,7 @@ function erp_parse_args_recursive( &$args, $defaults = [] ) {
 function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $custom_headers = [] ) {
 
     $callback = function( $phpmailer ) use( $custom_headers ) {
-        $erp_email_settings = get_option( 'erp_settings_erp-email', [] );
+        $erp_email_settings = get_option( 'erp_settings_erp-email_general', [] );
         $erp_email_smtp_settings = get_option( 'erp_settings_erp-email_smtp', [] );
 
         if ( ! isset( $erp_email_settings['from_email'] ) ) {

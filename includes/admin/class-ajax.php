@@ -258,7 +258,7 @@ class Ajax {
         $subject = __( 'ERP SMTP Test Mail', 'erp' );
         $message = __( 'This is a test email by WP ERP.', 'erp' );
 
-        $erp_email_settings = get_option( 'erp_settings_erp-email', [] );
+        $erp_email_settings = get_option( 'erp_settings_erp-email_general', [] );
 
         if ( ! isset( $erp_email_settings['from_email'] ) ) {
             $from_email = get_option( 'admin_email' );
