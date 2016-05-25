@@ -2111,7 +2111,7 @@ function erp_crm_get_schedule_data( $tab = '' ) {
  * @return string
  */
 function erp_crm_get_email_from_address() {
-    $settings = get_option( 'erp_settings_erp-email', [] );
+    $settings = get_option( 'erp_settings_erp-email_general', [] );
 
     if ( array_key_exists( 'from_email', $settings ) ) {
         return sanitize_email( $settings['from_email'] );
@@ -2681,13 +2681,13 @@ function erp_user_bulk_actions_notices() {
  * @return void
  */
 function erp_create_contact_from_created_user( $user_id ) {
-    $user_auto_import = (int) erp_get_option( 'user_auto_import', 'erp_settings_erp-crm', 0 );
+    $user_auto_import = (int) erp_get_option( 'user_auto_import', 'erp_settings_erp-crm_contacts', 0 );
 
     if ( ! $user_auto_import ) {
         return;
     }
 
-    $default_roles = erp_get_option( 'user_roles', 'erp_settings_erp-crm', [] );
+    $default_roles = erp_get_option( 'user_roles', 'erp_settings_erp-crm_contacts', [] );
     $user          = get_userdata( $user_id );
 
     $matched_roles = array_intersect( $user->roles, $default_roles );
@@ -2701,9 +2701,9 @@ function erp_create_contact_from_created_user( $user_id ) {
     $data['user_id'] = $user_id;
 
     $contact_id    = erp_insert_people( $data );
-    $contact_owner = erp_get_option( 'contact_owner', 'erp_settings_erp-crm', null );
+    $contact_owner = erp_get_option( 'contact_owner', 'erp_settings_erp-crm_contacts', null );
     $contact_owner = ( $contact_owner ) ? $contact_owner : get_current_user_id();
-    $life_stage    = erp_get_option( 'life_stage', 'erp_settings_erp-crm', 'opportunity' );
+    $life_stage    = erp_get_option( 'life_stage', 'erp_settings_erp-crm_contacts', 'opportunity' );
 
     update_user_meta( $user_id, '_assign_crm_agent', $contact_owner );
     update_user_meta( $user_id, 'life_stage', $life_stage );
@@ -2716,7 +2716,7 @@ function erp_create_contact_from_created_user( $user_id ) {
  *
  * @return void
  */
-function erp_check_new_inbound_emails() {
+function erp_crm_check_new_inbound_emails() {
     $is_imap_active = erp_is_imap_active();
 
     if ( ! $is_imap_active ) {
@@ -2730,11 +2730,10 @@ function erp_check_new_inbound_emails() {
     $password = $imap_options['password'];
     $protocol = $imap_options['protocol'];
     $port = isset( $imap_options['port'] ) ? $imap_options['port'] : 993;
-    $encryption = isset( $imap_options['encryption'] ) ? $imap_options['encryption'] : 'ssl';
-    $certificate = ( $imap_options['certificate'] == 1 ) ? true : false;
+    $authentication = isset( $imap_options['authentication'] ) ? $imap_options['authentication'] : 'ssl';
 
     try {
-        $imap = new \WeDevs\ERP\Imap( $mail_server, $port, $protocol, $username, $password, $encryption, $certificate );
+        $imap = new \WeDevs\ERP\Imap( $mail_server, $port, $protocol, $username, $password, $authentication );
 
         $date = date( "d M Y", strtotime( "-1 days" ) );
         $emails = $imap->get_emails( "Inbox", "UNSEEN SINCE \"$date\"" );

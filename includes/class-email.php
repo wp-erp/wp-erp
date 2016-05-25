@@ -378,7 +378,7 @@ class Email extends ERP_Settings_Page {
      * @return string
      */
     public function get_setting( $option, $default = '' ) {
-        $settings = get_option( 'erp_settings_erp-email', [] );
+        $settings = get_option( 'erp_settings_erp-email_general', [] );
 
         if ( array_key_exists( $option, $settings ) ) {
             return $settings[ $option ];

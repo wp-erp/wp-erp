@@ -242,7 +242,7 @@ class Ajax {
 
         $mail_server = $_REQUEST['mail_server'];
         $port = isset( $_REQUEST['port'] ) ? $_REQUEST['port'] : 465;
-        $encryption = isset( $_REQUEST['encryption'] ) ? $_REQUEST['encryption'] : 'ssl';
+        $authentication = isset( $_REQUEST['authentication'] ) ? $_REQUEST['authentication'] : 'ssl';
         $username = $_REQUEST['username'];
         $password = $_REQUEST['password'];
 
@@ -258,17 +258,38 @@ class Ajax {
         $subject = __( 'ERP SMTP Test Mail', 'erp' );
         $message = __( 'This is a test email by WP ERP.', 'erp' );
 
+        $erp_email_settings = get_option( 'erp_settings_erp-email_general', [] );
+
+        if ( ! isset( $erp_email_settings['from_email'] ) ) {
+            $from_email = get_option( 'admin_email' );
+        } else {
+            $from_email = $erp_email_settings['from_email'];
+        }
+
+        if ( ! isset( $erp_email_settings['from_name'] ) ) {
+            global $current_user;
+
+            $from_name = $current_user->display_name;
+        } else {
+            $from_name = $erp_email_settings['from_name'];
+        }
+
+        $content_type = 'text/html';
+
         $phpmailer->AddAddress( $to );
+        $phpmailer->From       = $from_email;
+        $phpmailer->FromName   = $from_name;
+        $phpmailer->Sender     = $phpmailer->From;
         $phpmailer->Subject    = $subject;
         $phpmailer->Body       = $message;
-        $phpmailer->FromName   = 'WP ERP';
         $phpmailer->Mailer     = 'smtp';
         $phpmailer->Host       = $mail_server;
-        $phpmailer->SMTPSecure = $encryption;
+        $phpmailer->SMTPSecure = $authentication;
         $phpmailer->Port       = $port;
         $phpmailer->SMTPAuth   = true;
         $phpmailer->Username   = $username;
         $phpmailer->Password   = $password;
+        $phpmailer->isHTML(true);
 
         try {
             $result = $phpmailer->Send();
@@ -308,10 +329,10 @@ class Ajax {
         $password = $_REQUEST['password'];
         $protocol = $_REQUEST['protocol'];
         $port = isset( $_REQUEST['port'] ) ? $_REQUEST['port'] : 993;
-        $encryption = isset( $_REQUEST['encryption'] ) ? $_REQUEST['encryption'] : 'ssl';
+        $authentication = isset( $_REQUEST['authentication'] ) ? $_REQUEST['authentication'] : 'ssl';
 
         try {
-            $imap = new \WeDevs\ERP\Imap( $mail_server, $port, $protocol, $username, $password, $encryption );
+            $imap = new \WeDevs\ERP\Imap( $mail_server, $port, $protocol, $username, $password, $authentication );
             $imap->is_connected();
 
             $this->send_success( __( 'Your IMAP connection is established.', 'erp' ) );

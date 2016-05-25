@@ -16,6 +16,8 @@ class ERP_Email_Settings extends ERP_Settings_Page {
         add_action( 'erp_admin_field_smtp_test_connection', [ $this, 'smtp_test_connection' ] );
         add_action( 'erp_admin_field_imap_test_connection', [ $this, 'imap_test_connection' ] );
         add_action( 'erp_admin_field_imap_status', [ $this, 'imap_status' ] );
+
+        add_action( 'erp_update_option', [ $this, 'cron_schedule' ] );
     }
 
     /**
@@ -138,10 +140,10 @@ class ERP_Email_Settings extends ERP_Settings_Page {
         ];
 
         $fields['smtp'][] = [
-            'title'   => __( 'Encryption', 'erp' ),
-            'id'      => 'encryption',
+            'title'   => __( 'Authentication', 'erp' ),
+            'id'      => 'authentication',
             'type'    => 'select',
-            'desc'    => __( 'Encryption type.', 'erp' ),
+            'desc'    => __( 'Authentication type.', 'erp' ),
             'options' => [ '' => __( 'None', 'erp'), 'ssl' => __( 'SSL', 'erp' ), 'tls' => __( 'TLS', 'erp') ],
         ];
 
@@ -191,6 +193,28 @@ class ERP_Email_Settings extends ERP_Settings_Page {
         ];
 
         $fields['imap'][] = [
+            'title'   => __( 'Enable IMAP', 'erp' ),
+            'id'      => 'enable_imap',
+            'type'    => 'radio',
+            'options' => [ 'yes' => 'Yes', 'no' => 'No' ],
+            'default' => 'no'
+        ];
+
+        $fields['imap'][] = [
+            'title'   => __( 'Cron Schedule', 'erp' ),
+            'id'      => 'schedule',
+            'type'    => 'select',
+            'desc'    => __( 'Interval time to run cron.', 'erp' ),
+            'options' => [
+                'per_minute' => __( 'Every Minute', 'erp' ),
+                'hourly'     => __( 'Hourly', 'erp'),
+                'daily'      => __( 'Daily', 'erp'),
+                'weekly'     => __( 'Weekly', 'erp'),
+            ],
+            'default' =>  'hourly',
+        ];
+
+        $fields['imap'][] = [
             'title'             => __( 'Mail Server', 'erp' ),
             'id'                => 'mail_server',
             'type'              => 'text',
@@ -234,12 +258,12 @@ class ERP_Email_Settings extends ERP_Settings_Page {
         ];
 
         $fields['imap'][] = [
-            'title'   => __( 'Encryption', 'erp' ),
-            'id'      => 'encryption',
+            'title'   => __( 'Authentication', 'erp' ),
+            'id'      => 'authentication',
             'type'    => 'select',
             'options' => [ 'ssl' => __( 'SSL', 'erp' ), 'tls' => __( 'TLS', 'erp'), 'notls' => __( 'None', 'erp') ],
             'default' =>  'ssl',
-            'desc'    => __( 'Encryption type.', 'erp' ),
+            'desc'    => __( 'Authentication type.', 'erp' ),
         ];
 
         $fields['imap'][] = [
@@ -381,7 +405,8 @@ class ERP_Email_Settings extends ERP_Settings_Page {
      * @return void
      */
     public function imap_status() {
-        $imap_status = erp_is_imap_active();
+        $options     = get_option( 'erp_settings_erp-email_imap', [] );
+        $imap_status = (boolean) isset( $options['imap_status'] ) ? $options['imap_status'] : 0;
         ?>
         <tr valign="top">
             <th scope="row" class="titledesc">
@@ -392,6 +417,25 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             </td>
         </tr>
         <?php
+    }
+
+    /**
+     * Set cron schedule event to check new inbound emails
+     *
+     * @return void
+     */
+    public function cron_schedule( $value ) {
+        if ( ! isset( $_GET['section'] ) || ( $_GET['section'] != 'imap' ) ) {
+            return;
+        }
+
+        if ( ! isset( $value['id'] ) || ( $value['id'] != 'schedule' ) ) {
+            return;
+        }
+
+        $recurrence = isset( $_POST['schedule'] ) ? $_POST['schedule'] : 'hourly';
+        wp_clear_scheduled_hook( 'erp_crm_inbound_email_scheduled_events' );
+        wp_schedule_event( time(), $recurrence, 'erp_crm_inbound_email_scheduled_events' );
     }
 
     /**
@@ -432,6 +476,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
 
             $current_section = isset( $_GET['sub_section'] ) ? sanitize_key( $_GET['sub_section'] ) : false;
 
+
             // saving individual email settings
             if ( $current_section ) {
                 $email_templates = wperp()->emailer->get_emails();
@@ -455,6 +500,8 @@ class ERP_Email_Settings extends ERP_Settings_Page {
                                 }
                             }
                         }
+
+                        update_option( $email->get_option_id(), $update_options );
 
                         break;
                     }
