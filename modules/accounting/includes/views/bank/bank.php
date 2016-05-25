@@ -62,9 +62,24 @@
                 <span class="erp-ac-label-bank-balance"><?php _e( 'Balance: ' ); echo erp_ac_get_price( array_sum( $plot_date ) ); ?></span>
 
                 <span class="pull-right">
-                    <a class="add-new-h2" href="<?php echo admin_url('admin.php?page=erp-accounting-sales&action=new&type=payment&receive_payment=true&bank='.$bank['id']); ?>"><?php _e( 'Receive Money', 'accounting' ); ?></a>
-                    <a class="add-new-h2" href="<?php echo admin_url('admin.php?page=erp-accounting-expense&action=new&type=payment_voucher&spend_money=true&bank='.$bank['id']); ?>"><?php _e( 'Spend Money', 'accounting' ); ?></a>
-                    <a class="add-new-h2 erp-ac-transfer-money-btn" href="#"><?php _e( 'Transfer Money', 'accounting' ); ?></a>
+                    <?php
+                        if ( erp_ac_create_sales_payment() || erp_ac_publish_sales_payment() ) {
+                            ?>
+                            <a class="add-new-h2" href="<?php echo admin_url('admin.php?page=erp-accounting-sales&action=new&type=payment&receive_payment=true&bank='.$bank['id']); ?>"><?php _e( 'Receive Money', 'accounting' ); ?></a>
+                            <?php
+                        }
+                        if ( erp_ac_create_expenses_voucher() || erp_ac_publish_expenses_voucher() ) {
+                            ?>
+                            <a class="add-new-h2" href="<?php echo admin_url('admin.php?page=erp-accounting-expense&action=new&type=payment_voucher&spend_money=true&bank='.$bank['id']); ?>"><?php _e( 'Spend Money', 'accounting' ); ?></a>
+                            <?php
+                        }
+                    
+                    if ( erp_ac_create_bank_transfer() ) {
+                        ?>
+                        <a class="add-new-h2 erp-ac-transfer-money-btn" href="#"><?php _e( 'Transfer Money', 'accounting' ); ?></a>
+                        <?php
+                    }
+                    ?>
                 </span>
             </h3>
 

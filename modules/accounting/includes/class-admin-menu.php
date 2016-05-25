@@ -262,6 +262,7 @@ class Admin_Menu {
     public function page_journal_entry() {
         $action   = isset( $_GET['action'] ) ? $_GET['action'] : '';
         $id       = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
+        $template = '';
 
         switch ( $action ) {
             case 'view':
@@ -270,7 +271,9 @@ class Admin_Menu {
                 break;
 
             case 'new':
-                $template = dirname( __FILE__ ) . '/views/journal/new.php';
+                if ( erp_ac_create_journal() ) {
+                    $template = dirname( __FILE__ ) . '/views/journal/new.php';
+                }
                 break;
 
             default:
@@ -280,6 +283,8 @@ class Admin_Menu {
 
         if ( file_exists( $template ) ) {
             include $template;
+        } else {
+            echo '<h1>You do not have sufficient permissions to access this page.</h1>';
         }
     }
 

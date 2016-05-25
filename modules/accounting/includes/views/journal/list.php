@@ -1,7 +1,14 @@
 <div class="wrap">
-    <h2><?php _e( 'Journals', 'accounting' ); ?>
-        <a href="<?php echo admin_url( 'admin.php?page=erp-accounting-journal&action=new' ); ?>" class="add-new-h2"><?php _e( 'New Entry', 'accounting' ); ?></a>
-    </h2>
+    <?php
+    if ( erp_ac_create_journal() ) {
+        ?>
+        <h2><?php _e( 'Journals', 'accounting' ); ?>
+            <a href="<?php echo admin_url( 'admin.php?page=erp-accounting-journal&action=new' ); ?>" class="add-new-h2"><?php _e( 'New Entry', 'accounting' ); ?></a>
+        </h2>
+        <?php
+    }
+    ?>
+   
 
     <form method="post">
         <input type="hidden" name="page" value="ttest_list_table">

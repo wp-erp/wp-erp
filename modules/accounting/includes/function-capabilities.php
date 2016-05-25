@@ -303,6 +303,15 @@ function erp_ac_edit_account() {
 function erp_ac_delete_account() {
     return current_user_can( 'erp_ac_delete_account' );
 }
+
+//bank accounts
+function erp_ac_create_bank_transfer() {
+    return current_user_can( 'erp_ac_create_bank_transfer' );
+}
+
+function erp_ac_create_journal() {
+    return current_user_can( 'erp_ac_create_journal' );
+}
  
 
 
