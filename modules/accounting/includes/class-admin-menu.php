@@ -19,26 +19,60 @@ class Admin_Menu {
      * @return void
      */
     public function admin_menu() {
-        $capabilities  = erp_ac_get_manager_role();
-        $dashboard_cap = current_user_can( 'erp_ac_view_dashboard' );
         
-        add_menu_page( __( 'Accounting', 'accounting' ), __( 'Accounting', 'accounting' ), $capabilities, 'erp-accounting', array( $this, 'dashboard_page' ), 'dashicons-chart-pie', null );
+        $dashboard      = current_user_can( 'erp_ac_view_dashboard' );
+        $customer       = current_user_can( 'erp_ac_view_customer' );
+        $vendor         = current_user_can( 'erp_ac_view_vendor' );
+        $sale           = current_user_can( 'erp_ac_view_sale' );
+        $expense        = current_user_can( 'erp_ac_view_expense' );
+        $account_charts = current_user_can( 'erp_ac_view_account_lists' );
+        $bank           = current_user_can( 'erp_ac_view_bank_accounts' );
+        $journal        = current_user_can( 'erp_ac_view_journal' );
+        $reports        = current_user_can( 'erp_ac_view_reports' );
+        
+        add_menu_page( __( 'Accounting', 'accounting' ), __( 'Accounting', 'accounting' ), $dashboard, 'erp-accounting', array( $this, 'dashboard_page' ), 'dashicons-chart-pie', null );
+        
+        if ( $dashboard ) {
+            $dashboard = add_submenu_page( 'erp-accounting', __( 'Dashboard', 'accounting' ), __( 'Dashboard', 'accounting' ), $dashboard, 'erp-accounting', array( $this, 'dashboard_page' ) );
+        }
+        
+        if ( $customer ) {
+            $customer = add_submenu_page( 'erp-accounting', __( 'Customers', 'accounting' ), __( 'Customers', 'accounting' ), $customer, 'erp-accounting-customers', array( $this, 'page_customers' ) );
+        }
 
-        $dashboard = add_submenu_page( 'erp-accounting', __( 'Dashboard', 'accounting' ), __( 'Dashboard', 'accounting' ), $dashboard_cap, 'erp-accounting', array( $this, 'dashboard_page' ) );
-        $customers = add_submenu_page( 'erp-accounting', __( 'Customers', 'accounting' ), __( 'Customers', 'accounting' ), $capabilities, 'erp-accounting-customers', array( $this, 'page_customers' ) );
-        $vendor    = add_submenu_page( 'erp-accounting', __( 'Vendors', 'accounting' ), __( 'Vendors', 'accounting' ), $capabilities, 'erp-accounting-vendors', array( $this, 'page_vendors' ) );
-        $sales     = add_submenu_page( 'erp-accounting', __( 'Sales', 'accounting' ), __( 'Sales', 'accounting' ), $capabilities, 'erp-accounting-sales', array( $this, 'page_sales' ) );
-        $expense   = add_submenu_page( 'erp-accounting', __( 'Expenses', 'accounting' ), __( 'Expenses', 'accounting' ), $capabilities, 'erp-accounting-expense', array( $this, 'page_expenses' ) );
-        add_submenu_page( 'erp-accounting', __( 'Chart of Accounts', 'accounting' ), __( 'Chart of Accounts', 'accounting' ), $capabilities, 'erp-accounting-charts', array( $this, 'page_chart_of_accounting' ) );
-        $bank      = add_submenu_page( 'erp-accounting', __( 'Bank Accounts', 'accounting' ), __( 'Bank Accounts', 'accounting' ), $capabilities, 'erp-accounting-bank', array( $this, 'page_bank' ) );
-        add_submenu_page( 'erp-accounting', __( 'Journal Entry', 'accounting' ), __( 'Journal Entry', 'accounting' ), $capabilities, 'erp-accounting-journal', array( $this, 'page_journal_entry' ) );
-        add_submenu_page( 'erp-accounting', __( 'Reports', 'accounting' ), __( 'Reports', 'accounting' ), $capabilities, 'erp-accounting-reports', array( $this, 'page_reports' ) );
+        if ( $vendor ) {
+            $vendor = add_submenu_page( 'erp-accounting', __( 'Vendors', 'accounting' ), __( 'Vendors', 'accounting' ), $vendor, 'erp-accounting-vendors', array( $this, 'page_vendors' ) );
+        }
+
+        if ( $sale ) {
+            $sale  = add_submenu_page( 'erp-accounting', __( 'Sales', 'accounting' ), __( 'Sales', 'accounting' ), $sale, 'erp-accounting-sales', array( $this, 'page_sales' ) );
+        }
+
+        if ( $expense ) {
+            $expense   = add_submenu_page( 'erp-accounting', __( 'Expenses', 'accounting' ), __( 'Expenses', 'accounting' ), $expense, 'erp-accounting-expense', array( $this, 'page_expenses' ) );
+        }
+
+        if ( $account_charts ) {
+            $account_charts = add_submenu_page( 'erp-accounting', __( 'Chart of Accounts', 'accounting' ), __( 'Chart of Accounts', 'accounting' ), $account_charts, 'erp-accounting-charts', array( $this, 'page_chart_of_accounting' ) );
+        }
+
+        if ( $bank ) {
+            $bank  = add_submenu_page( 'erp-accounting', __( 'Bank Accounts', 'accounting' ), __( 'Bank Accounts', 'accounting' ), $bank, 'erp-accounting-bank', array( $this, 'page_bank' ) );
+        }
+
+        if ( $journal ) {
+            $journal = add_submenu_page( 'erp-accounting', __( 'Journal Entry', 'accounting' ), __( 'Journal Entry', 'accounting' ), $journal, 'erp-accounting-journal', array( $this, 'page_journal_entry' ) );
+        }
+
+        if ( $reports ) {
+            $reports = add_submenu_page( 'erp-accounting', __( 'Reports', 'accounting' ), __( 'Reports', 'accounting' ), $reports, 'erp-accounting-reports', array( $this, 'page_reports' ) );
+        }
 
         add_action( 'admin_print_styles-' . $dashboard, array( $this, 'chart_script' ) );
-        add_action( 'admin_print_styles-' . $customers, array( $this, 'chart_script' ) );
+        add_action( 'admin_print_styles-' . $customer, array( $this, 'chart_script' ) );
         add_action( 'admin_print_styles-' . $vendor, array( $this, 'chart_script' ) );
         add_action( 'admin_print_styles-' . $bank, array( $this, 'chart_script' ) );
-        add_action( 'admin_print_styles-' . $sales, array( $this, 'sales_chart_script' ) );
+        add_action( 'admin_print_styles-' . $sale, array( $this, 'sales_chart_script' ) );
         add_action( 'admin_print_styles-' . $expense, array( $this, 'expense_chart_script' ) );
     }
 
