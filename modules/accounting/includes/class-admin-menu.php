@@ -165,21 +165,27 @@ class Admin_Menu {
     public function page_chart_of_accounting() {
         $action = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
         $id     = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
+        $template = '';
 
         switch ($action) {
             case 'view':
+                if ( erp_ac_view_single_account() ) {
+                    $ledger = Model\Ledger::find( $id );
 
-                $ledger = Model\Ledger::find( $id );
-
-                $template = dirname( __FILE__ ) . '/views/accounts/single.php';
+                    $template = dirname( __FILE__ ) . '/views/accounts/single.php';
+                }
                 break;
 
             case 'edit':
-                $template = dirname( __FILE__ ) . '/views/accounts/edit.php';
+                if ( erp_ac_edit_account() ) {
+                    $template = dirname( __FILE__ ) . '/views/accounts/edit.php';
+                }
                 break;
 
             case 'new':
-                $template = dirname( __FILE__ ) . '/views/accounts/new.php';
+                if ( erp_ac_create_account() ) {
+                    $template = dirname( __FILE__ ) . '/views/accounts/new.php';
+                }
                 break;
 
             default:
@@ -189,6 +195,8 @@ class Admin_Menu {
 
         if ( file_exists( $template ) ) {
             include $template;
+        } else {
+            echo '<h1>You do not have sufficient permissions to access this page.</h1>';
         }
     }
 

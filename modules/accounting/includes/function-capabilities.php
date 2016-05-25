@@ -126,9 +126,9 @@ function erp_ac_get_caps_for_role( $role = '' ) {
                 'erp_ac_publish_expenses_credit'  => true,  
                 'erp_ac_view_account_lists'       => true,   
                 'erp_ac_view_single_account'      => true,  
-                'erp_ac_create_accounts'          => true,  
-                'erp_ac_edit_accounts'            => true,    
-                'erp_ac_delete_accounts'          => true,  
+                'erp_ac_create_account'          => true,  
+                'erp_ac_edit_account'            => true,    
+                'erp_ac_delete_account'          => true,  
                 'erp_ac_view_bank_accounts'       => true,   
                 'erp_ac_create_bank_transfer'     => true, 
                 'erp_ac_view_journal'             => true, 
@@ -175,9 +175,9 @@ function erp_ac_get_caps_for_role( $role = '' ) {
                 'erp_ac_publish_expenses_credit'  => true,  
                 'erp_ac_view_account_lists'       => true,   
                 'erp_ac_view_single_account'      => true,  
-                'erp_ac_create_accounts'          => true,  
-                'erp_ac_edit_accounts'            => true,    
-                'erp_ac_delete_accounts'          => true,  
+                'erp_ac_create_account'           => true,  
+                'erp_ac_edit_account'            => true,    
+                'erp_ac_delete_account'          => true,  
                 'erp_ac_view_bank_accounts'       => true,   
                 'erp_ac_create_bank_transfer'     => true, 
                 'erp_ac_view_journal'             => true, 
@@ -286,6 +286,46 @@ function erp_ac_publish_expenses_voucher() {
 function erp_ac_publish_expenses_credit() {
     return current_user_can( 'erp_ac_publish_expenses_credit' );
 }
+
+//accounts
+function erp_ac_view_single_account() {
+    return current_user_can( 'erp_ac_view_single_account' );
+}
+
+function erp_ac_create_account() {
+    return current_user_can( 'erp_ac_create_account' );
+}
+
+function erp_ac_edit_account() {
+    return current_user_can( 'erp_ac_edit_account' );
+}
+
+function erp_ac_delete_account() {
+    return current_user_can( 'erp_ac_delete_account' );
+}
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

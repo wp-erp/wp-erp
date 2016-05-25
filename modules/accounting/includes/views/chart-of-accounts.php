@@ -1,6 +1,12 @@
 <div class="wrap erp-accounting chart-of-accounts">
-
-    <h2><?php _e( 'Chart of Accounts', 'accounting' ); ?> <a href="<?php echo admin_url( 'admin.php?page=erp-accounting-charts&action=new' ); ?>" class="add-new-h2"><?php _e( 'Add New', 'accounting' ); ?></a></h2>
+    <?php
+    if ( erp_ac_create_account() ) {
+        ?>
+        <h2><?php _e( 'Chart of Accounts', 'accounting' ); ?> <a href="<?php echo admin_url( 'admin.php?page=erp-accounting-charts&action=new' ); ?>" class="add-new-h2"><?php _e( 'Add New', 'accounting' ); ?></a></h2>
+        <?php
+    }
+    ?>
+    
 
     <?php
     if ( isset( $_GET['msg'] ) ) {
