@@ -185,7 +185,15 @@ $tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
 
 
         <?php wp_nonce_field( 'erp-ac-trans-new' ); ?>
-        <input type="submit" name="submit_erp_ac_trans" id="submit_erp_ac_trans" class="button button-primary" value="Create Vendor Credit">
+        
+        <?php
+        if ( erp_ac_publish_expenses_credit() ) {
+            ?>
+            <input type="submit" name="submit_erp_ac_trans" id="submit_erp_ac_trans" class="button button-primary" value="Create Vendor Credit">
+            <?php
+        }
+        ?>
+        
         <input type="submit" name="submit_erp_ac_trans_draft" id="submit_erp_ac_trans_draft" class="button button-secondary" value="Save as Draft">
     </form>
 

@@ -262,6 +262,54 @@ function erp_ac_publish_sales_invoice() {
     return current_user_can( 'erp_ac_publish_sales_invoice' );
 }
 
+//expenses
+function erp_ac_view_other_expenses() {
+    return current_user_can( 'erp_ac_view_other_expensess' );
+}
+
+function erp_ac_view_expenses_summary() {
+    return current_user_can( 'erp_ac_view_expenses_summary' );
+}
+
+function erp_ac_create_expenses_voucher() {
+    return current_user_can( 'erp_ac_create_expenses_voucher' );
+}
+
+function erp_ac_create_expenses_credit() {
+    return current_user_can( 'erp_ac_create_expenses_credit' );
+}
+
+function erp_ac_publish_expenses_voucher() {
+    return current_user_can( 'erp_ac_publish_expenses_voucher' );
+}
+
+function erp_ac_publish_expenses_credit() {
+    return current_user_can( 'erp_ac_publish_expenses_credit' );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

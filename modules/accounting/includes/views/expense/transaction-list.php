@@ -1,18 +1,34 @@
 <div class="wrap erp-accounting">
-    <h2>
-        <?php _e( 'Expense Transactions', 'accounting' ); ?>
-
-        <?php
-        $form_types = erp_ac_get_expense_form_types();
-        if ( $form_types ) {
-            foreach ($form_types as $key => $form) {
-                printf( '<a class="add-new-h2" href="%s%s" title="%s">%s</a> ', admin_url( 'admin.php?page=erp-accounting-expense&action=new&type=' ), $key, esc_attr( $form['description'] ), $form['label'] );
-            }
-        }
+    <?php
+    if ( erp_ac_create_expenses_voucher() || erp_ac_create_expenses_credit() ) {
         ?>
-    </h2>
+        <h2>
+            <?php _e( 'Expense Transactions', 'accounting' ); ?>
 
-    <?php include_once dirname( dirname( __FILE__ ) ) . '/common/transaction-chart.php'; ?>
+            <?php
+            $form_types = erp_ac_get_expense_form_types();
+            if ( $form_types ) {
+                foreach ($form_types as $key => $form) {
+                    if ( 'payment_voucher' == $key && erp_ac_create_expenses_voucher() ) {
+                        printf( '<a class="add-new-h2" href="%s%s" title="%s">%s</a> ', admin_url( 'admin.php?page=erp-accounting-expense&action=new&type=' ), $key, esc_attr( $form['description'] ), $form['label'] );
+                    }
+                
+                    if ( 'vendor_credit' == $key && erp_ac_create_expenses_credit() ) { 
+                        printf( '<a class="add-new-h2" href="%s%s" title="%s">%s</a> ', admin_url( 'admin.php?page=erp-accounting-expense&action=new&type=' ), $key, esc_attr( $form['description'] ), $form['label'] );
+                    }
+
+                }
+            }
+            ?>
+        </h2>
+    <?php 
+    }
+
+    
+    if ( erp_ac_view_expenses_summary() ) {
+        include_once dirname( dirname( __FILE__ ) ) . '/common/transaction-chart.php';
+    }
+    ?>
 
     <form method="post">
         <input type="hidden" name="page" value="ttest_list_table">
