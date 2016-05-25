@@ -146,7 +146,6 @@ class Scripts {
                 'multipart'        => true,
                 'urlstream_upload' => true,
             )
-
         ) );
 
         // load country/state JSON on new company page

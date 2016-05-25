@@ -235,7 +235,6 @@ function erp_html_form_input( $args = array() ) {
                         callback   = <?php echo $call_back; ?>;
 
                     new ERP_Uploader( action, pick_files, id, drop_jone, 'file_upload', 'jpg,jpeg,gif,png,bmp,zip', 1024, callback );
-
                 });
             </script>
             <?php
