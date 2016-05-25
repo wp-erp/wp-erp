@@ -35,6 +35,7 @@ class Form_Handler {
 
     public function handle_canonical_url() {
         if ( isset( $_GET['page'] ) && ( $_GET['page'] == 'erp-sales-customers' || $_GET['page'] == 'erp-sales-companies' ) ) {
+            echo 'adfasdf';
             ?>
                 <script>
                     window.history.replaceState = false;

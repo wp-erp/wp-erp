@@ -14,7 +14,7 @@ Vue.component('vtable', {
                         +'<div class="alignleft actions bulkactions" v-if="hasBulkAction()">'
                             +'<label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label>'
                             +'<select name="action" id="bulk-action-selector-top" v-model="bulkaction1">'
-                                +'<option value="-1">Bulk Actions</option>' // v-if="showRowAction( actions )"
+                                +'<option value="-1">Bulk Actions</option>'
                                 +'<option v-if="showRowAction( actions )" v-for="actions in bulkactions" value="{{ actions.id }}">{{ actions.text }}</option>'
                             +'</select>'
                             +'<input type="submit" id="doaction" @click.prevent="handleBulkAction(bulkaction1)" class="button action" value="Apply">'
@@ -255,6 +255,13 @@ Vue.component('vtable', {
             required: true
         },
 
+        'page': {
+            type: String,
+            default: function() {
+                return ''
+            }
+        },
+
         'bulkactions': {
             type: Array,
             default: function() {
@@ -475,6 +482,9 @@ Vue.component('vtable', {
 
             this.sortOrder.field = field.sortField ? field.sortField : field.name ;
 
+            this.additionalParams['order'] = this.sortOrder.direction;
+            this.additionalParams['orderby'] = this.sortOrder.field;
+
             this.fetchData();
         },
 
@@ -594,7 +604,7 @@ Vue.component('vtable', {
                 this.additionalParams = {};
             }
 
-            this.additionalParams['status'] = action;
+            this.additionalParams[this.topNavFilter.field] = action;
 
             this.fetchData();
         },
@@ -602,18 +612,18 @@ Vue.component('vtable', {
         searchAction: function( query ) {
             var query = query.trim();
 
-                if ( typeof this.additionalParams === 'undefined' ) {
-                    this.additionalParams = {};
-                }
+            if ( typeof this.additionalParams === 'undefined' ) {
+                this.additionalParams = {};
+            }
 
-                this.additionalParams[this.search.params] = query;
-                this.ajax.abort();
-                this.fetchData();
+            this.additionalParams[this.search.params] = query;
+            this.ajax.abort();
+            this.fetchData();
         },
 
         searchCloseAction: function( query ) {
             if ( query == '' ) {
-                this.additionalParams['s'] = '';
+                this.additionalParams[this.search.params] = '';
                 this.currentPage = 1
                 this.activeTopNavFilter = this.topNavFilter.default;
                 this.fetchData();
@@ -630,7 +640,7 @@ Vue.component('vtable', {
                 params_arr = queryString.split("&");
                 for (var i = params_arr.length - 1; i >= 0; i -= 1) {
                     param = params_arr[i].split("=")[0];
-                    if (param === key) {
+                    if ( key.indexOf(param) > -1 ) {
                         params_arr.splice(i, 1);
                     }
                 }
@@ -750,6 +760,8 @@ Vue.component('vtable', {
 
         fetchData: function() {
             var self = this,
+                queryObj = {},
+                postData = '',
                 data = {
                     action: this.action,
                     _wpnonce: wpVueTable.nonce
@@ -757,30 +769,41 @@ Vue.component('vtable', {
 
             this.ajaxloader = true;
 
-            // var queryString = self.removeParam( 'page', window.location.search );
-            // self.parseStr( queryString, obj )
+            self.setQueryParmsIntoUrl();
 
-            // console.log( obj )
-            var postData = jQuery.param(data);
+            var queryString = self.removeParam( ['page', 'type', 'paged'], window.location.search );
 
-            if ( typeof this.additionalParams !== 'undefined' ) {
-                if ( Object.keys(this.additionalParams).length > 0  ) {
-                    postData += '&'+jQuery.param( this.additionalParams );
-                }
-            }
-
-            if ( this.currentPage > 1 ) {
-                var resultedPostData = postData + '&paged=' + this.currentPage;
+            if ( queryString ) {
+                self.parseStr( queryString, queryObj );
+                queryPostData = jQuery.extend( {}, queryObj, this.additionalParams );
+                postData   = jQuery.param( queryPostData );
+                self.activeTopNavFilter = queryPostData[this.topNavFilter.field];
+                self.searchQuery = queryPostData[this.search.params];
+                var postData = postData + '&' + jQuery.param(data);
             } else {
-                var resultedPostData = postData;
+
+                if ( typeof this.additionalParams !== 'undefined' ) {
+                    if ( Object.keys(this.additionalParams).length > 0  ) {
+                        postData += '&'+jQuery.param( this.additionalParams );
+                    }
+                }
+
+                var postData = jQuery.param(data) + '&' + postData  ;
             }
+
+            var paged = self.getParamByName( 'paged' ) ;
+            // var offset = ( paged ) ? ( paged - 1 ) * this.perPage : ( this.currentPage - 1 ) * this.perPage
+            self.currentPage = ( paged ) ? paged : 1;
+            var offset = ( self.currentPage - 1 ) * self.perPage;
 
             var pagination = [
                 'number=' + this.perPage,
-                'offset=' + ( this.currentPage - 1 ) * this.perPage
+                'offset=' + offset
             ];
 
             var postData = postData + '&' + pagination.join('&');
+
+            console.log( postData );
 
             this.ajax = jQuery.post( wpVueTable.ajaxurl, postData, function( resp ) {
                 if ( resp.success ) {
@@ -788,13 +811,56 @@ Vue.component('vtable', {
                     self.isLoaded   = true;
                     self.tableData  = resp.data.data;
                     self.totalItem  = resp.data.total_items;
-                    if ( resp.data.data.length > 0 ) {
-                        this.pageNumberInput = this.totalPage;
+                    if ( self.totalPage < self.pageNumberInput ) {
+                        self.pageNumberInput = self.totalPage;
+                        self.currentPage = self.totalPage;
                     }
+
                 } else {
                     alert(resp);
                 }
             } );
+        },
+
+        setQueryParmsIntoUrl: function() {
+            var self = this,
+                queryObj = {},
+                queryParams = '',
+                url= '';
+
+            var queryString = self.removeParam( ['page', 'type'], window.location.search );
+
+            if ( queryString ) {
+                self.parseStr( queryString, queryObj );
+                queryPostData = jQuery.extend( {}, queryObj, self.additionalParams );
+                queryParams   = jQuery.param( queryPostData );
+            } else {
+                if ( typeof self.additionalParams !== 'undefined' ) {
+                    if ( Object.keys( self.additionalParams ).length > 0  ) {
+                        queryParams = jQuery.param( self.additionalParams );
+                    }
+                }
+            }
+
+
+            queryParams = self.removeParam( ['type','paged'], '?' + queryParams )
+
+            console.log( self.currentPage );
+
+            if ( self.currentPage > 1 ) {
+                var paged = '&paged=' + self.currentPage;
+            } else {
+                var paged = '';
+            }
+
+            if ( queryParams ) {
+                var url = ( paged ) ? self.page + '&' + queryParams + paged : self.page + '&' + queryParams;
+            } else {
+                var url = ( paged ) ? self.page + paged : self.page;
+            }
+
+            console.log( url );
+            window.history.pushState( null, null, url );
         }
     },
 
@@ -815,6 +881,11 @@ Vue.component('vtable', {
 
         jQuery('select.v-select-field').on('change', function() {
             self.extraBulkActionSelectData[jQuery(this).attr('name')] = jQuery(this).val();
+        });
+
+        jQuery(window).bind("popstate", function() {
+            // link = location.pathname.replace(/^.*[\\/]/, ""); // get filename only
+            this.fetchData();
         });
 
         this.fetchData();
