@@ -34,6 +34,8 @@ class ERP_Settings_Page {
             if ( isset( $_REQUEST['section'] ) && array_key_exists( $_REQUEST['section'], $sections ) ) {
                 $current_section = $_REQUEST['section'];
                 $option_id = 'erp_settings_' . $this->id . '_' . $current_section;
+            } else {
+                $option_id = 'erp_settings_' . $this->id . '_' . strtolower( reset( $sections ) ); // section's first element
             }
         }
 
