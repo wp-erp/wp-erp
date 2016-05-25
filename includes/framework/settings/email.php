@@ -476,6 +476,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
 
             $current_section = isset( $_GET['sub_section'] ) ? sanitize_key( $_GET['sub_section'] ) : false;
 
+
             // saving individual email settings
             if ( $current_section ) {
                 $email_templates = wperp()->emailer->get_emails();
@@ -499,6 +500,8 @@ class ERP_Email_Settings extends ERP_Settings_Page {
                                 }
                             }
                         }
+
+                        update_option( $email->get_option_id(), $update_options );
 
                         break;
                     }
