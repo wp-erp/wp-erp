@@ -36,12 +36,12 @@ class Imap {
      * @param  string  $protocol
      * @param  string  $username
      * @param  string  $password
-     * @param  string  $encryption (ssl|tls|notls)
+     * @param  string  $authentication (ssl|tls|notls)
      * @param  boolean $cert
      *
      * @return void
      */
-    public function __construct( $host, $port, $protocol, $username, $password, $encryption = 'ssl', $cert = false ) {
+    public function __construct( $host, $port, $protocol, $username, $password, $authentication = 'ssl', $cert = false ) {
         set_time_limit( 3000 );
 
         $this->host = $host;
@@ -52,7 +52,7 @@ class Imap {
             $option .= '/' . $protocol;
         }
 
-        $option .= '/' . $encryption;
+        $option .= '/' . $authentication;
 
         if ( $cert ) {
             $option .= '/validate-cert';

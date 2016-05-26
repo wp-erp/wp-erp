@@ -21,7 +21,7 @@
                         <img src="{{ data.avatar.url }}" alt="" />
                         <a href="#" class="erp-remove-photo">&times;</a>
                     <# } else { #>
-                        <a href="#" id="erp-set-customer-photo" class="button button-small"><?php _e( 'Upload Customer Photo', 'erp' ); ?></a>
+                        <a href="#" id="erp-set-customer-photo" class="button button-small"><?php _e( 'Upload Photo', 'erp' ); ?></a>
                     <# } #>
                 </div>
             </li>
@@ -109,7 +109,7 @@
                     'name'  => 'life_stage',
                     'required' => true,
                     'type'  => 'select',
-                    'class' => 'select2',
+                    'class' => 'erp-select2',
                     'options' => erp_crm_get_life_stages_dropdown_raw( [ '' => __( '--Select Stage--', 'erp' ) ] )
                 ) ); ?>
             </li>
@@ -120,7 +120,7 @@
                     'label' => __( 'Date of Birth', 'erp' ),
                     'name'  => 'date_of_birth',
                     'value' => '{{ data.date_of_birth }}',
-                    'class' => 'erp-crm-date-field'
+                    'class' => 'erp-date-field erp-crm-date-field'
                 ) ); ?>
             </li>
             <# } #>
@@ -176,7 +176,7 @@
 
             <li data-selected="{{ data.country }}">
                 <label for="erp-popup-country"><?php _e( 'Country', 'erp' ); ?></label>
-                <select name="country" id="erp-popup-country" class="erp-country-select select2" data-parent="ol">
+                <select name="country" id="erp-popup-country" class="erp-country-select erp-select2" data-parent="ol">
                     <?php $country = \WeDevs\ERP\Countries::instance(); ?>
                     <?php echo $country->country_dropdown(); ?>
                 </select>
@@ -188,7 +188,7 @@
                     'name'    => 'state',
                     'id'      => 'erp-state',
                     'type'    => 'select',
-                    'class'   => 'erp-state-select',
+                    'class'   => 'erp-state-select erp-select2',
                     'options' => array( '' => __( '- Select -', 'erp' ) )
                 ) ); ?>
             </li>
@@ -226,14 +226,14 @@
             </li>
 
             <?php if ( current_user_can( 'erp_crm_manager' ) ): ?>
-                <li data-selected = "{{ data.assign_to }}">
+                <li data-selected = "{{ data.assign_to.id }}">
                     <?php erp_html_form_input( array(
                         'label'       => __( 'Contact Owner', 'erp' ),
                         'name'        => 'assign_to',
                         'required'    => true,
                         'type'        => 'select',
                         'id'          => 'erp-crm-contact-owner-id',
-                        'class'       => 'select2 erp-crm-contact-owner-class',
+                        'class'       => 'erp-select2 erp-crm-contact-owner-class',
                         'options'     => erp_crm_get_crm_user_dropdown( [ '' => '--Select--' ] )
                     ) ); ?>
                 </li>
@@ -347,7 +347,14 @@
     <# } #>
 
     <input type="hidden" name="id" id="erp-customer-id" value="{{ data.id }}">
-    <input type="hidden" name="type" id="erp-customer-type" value="{{ data.type }}">
+    <input type="hidden" name="user_id" id="erp-customer-user-id" value="{{ data.user_id }}">
+
+    <# if ( _.contains( data.types, 'company' ) ) { #>
+        <input type="hidden" name="type" id="erp-customer-type" value="company">
+    <# } else if ( _.contains( data.types, 'contact' ) ) { #>
+        <input type="hidden" name="type" id="erp-customer-type" value="contact">
+    <# } #>
+
     <input type="hidden" name="action" id="erp-customer-action" value="erp-crm-customer-new">
     <?php wp_nonce_field( 'wp-erp-crm-customer-nonce' ); ?>
 

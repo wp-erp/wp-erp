@@ -1173,9 +1173,9 @@ function erp_process_import_export() {
                         if ( is_wp_error( $item_insert_id ) ) {
                             continue;
                         } else {
-                            $contact_owner = erp_get_option( 'contact_owner', 'erp_settings_erp-crm', null );
+                            $contact_owner = erp_get_option( 'contact_owner', 'erp_settings_erp-crm_contacts', null );
                             $contact_owner = ( $contact_owner ) ? $contact_owner : get_current_user_id();
-                            $life_stage    = erp_get_option( 'life_stage', 'erp_settings_erp-crm', 'opportunity' );
+                            $life_stage    = erp_get_option( 'life_stage', 'erp_settings_erp-crm_contacts', 'opportunity' );
                             erp_people_update_meta( $item_insert_id, '_assign_crm_agent', $contact_owner );
                             erp_people_update_meta( $item_insert_id, 'life_stage', $life_stage );
                         }
@@ -1317,7 +1317,7 @@ function erp_parse_args_recursive( &$args, $defaults = [] ) {
 function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $custom_headers = [] ) {
 
     $callback = function( $phpmailer ) use( $custom_headers ) {
-        $erp_email_settings = get_option( 'erp_settings_erp-email', [] );
+        $erp_email_settings = get_option( 'erp_settings_erp-email_general', [] );
         $erp_email_smtp_settings = get_option( 'erp_settings_erp-email_smtp', [] );
 
         if ( ! isset( $erp_email_settings['from_email'] ) ) {
@@ -1344,31 +1344,35 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
 
         if ( ! empty( $custom_headers ) ) {
             foreach ( $custom_headers as $key => $value ) {
-                // $phpmailer->addCustomHeader( 'X-ERP-MailType', 'Inbound' );
                 $phpmailer->addCustomHeader( $key, $value );
             }
         }
-        // $phpmailer->SMTPDebug = true;
 
-        if ( $erp_email_smtp_settings['enable_smtp'] ) {
+        if ( isset( $erp_email_smtp_settings['debug'] ) && $erp_email_smtp_settings['debug'] == 'yes' ) {
+            $phpmailer->SMTPDebug = true;
+        }
+
+        if ( isset( $erp_email_smtp_settings['enable_smtp'] ) && $erp_email_smtp_settings['enable_smtp'] ) {
             $phpmailer->Mailer = 'smtp'; //'smtp', 'mail', or 'sendmail'
 
             $phpmailer->Host = $erp_email_smtp_settings['mail_server'];
-            $phpmailer->SMTPSecure = ( $erp_email_smtp_settings['encryption'] != '' ) ? $erp_email_smtp_settings['encryption'] : 'ssl';
+            $phpmailer->SMTPSecure = ( $erp_email_smtp_settings['authentication'] != '' ) ? $erp_email_smtp_settings['authentication'] : 'ssl';
             $phpmailer->Port = $erp_email_smtp_settings['port'];
 
-            $phpmailer->SMTPAuth = ( $erp_email_smtp_settings['authentication'] == 'yes' ) ? true : false;
-
-            if ( $phpmailer->SMTPAuth ) {
-                $phpmailer->Username = $erp_email_smtp_settings['username'];
-                $phpmailer->Password = $erp_email_smtp_settings['password'];
-            }
+            $phpmailer->SMTPAuth = true;
+            $phpmailer->Username = $erp_email_smtp_settings['username'];
+            $phpmailer->Password = $erp_email_smtp_settings['password'];
         }
     };
 
     add_action( 'phpmailer_init', $callback );
 
+    ob_start();
     $is_mail_sent = wp_mail( $to, $subject, $message, $headers, $attachments );
+    $debug_log = ob_get_clean();
+    if ( ! $is_mail_sent ) {
+        error_log( $debug_log );
+    }
 
     remove_action( 'phpmailer_init', $callback );
 
@@ -1388,14 +1392,15 @@ function erp_email_settings_javascript() {
         jQuery( document ).ready( function($) {
             $( "a#smtp-test-connection" ).click( function(e) {
                 e.preventDefault();
+                $( "a#smtp-test-connection" ).attr( 'disabled', 'disabled' );
+                $( "a#smtp-test-connection" ).parent().find( '.erp-loader' ).show();
 
                 var data = {
                     'action': 'erp_smtp_test_connection',
                     'enable_smtp': $('input[name=enable_smtp]:checked').val(),
                     'mail_server': $('input[name=mail_server]').val(),
                     'port': $('input[name=port]').val(),
-                    'authentication': $('input[name=authentication]:checked').val(),
-                    'encryption': $('select[name=encryption]').val(),
+                    'authentication': $('select[name=authentication]').val(),
                     'username': $('input[name=username]').val(),
                     'password': $('input[name=password]').val(),
                     'to' : $('#smtp_test_email_address').val(),
@@ -1403,6 +1408,9 @@ function erp_email_settings_javascript() {
                 };
 
                 $.post( ajaxurl, data, function(response) {
+                    $( "a#smtp-test-connection" ).removeAttr( 'disabled' );
+                    $( "a#smtp-test-connection" ).parent().find( '.erp-loader' ).hide();
+
                     var type = response.success ? 'success' : 'error';
 
                     if (response.data) {
@@ -1421,6 +1429,8 @@ function erp_email_settings_javascript() {
         jQuery( document ).ready( function($) {
             $( "a#imap-test-connection" ).click( function(e) {
                 e.preventDefault();
+                $( "a#imap-test-connection" ).attr( 'disabled', 'disabled' );
+                $( "a#imap-test-connection" ).parent().find( '.erp-loader' ).show();
 
                 var data = {
                     'action': 'erp_imap_test_connection',
@@ -1429,16 +1439,20 @@ function erp_email_settings_javascript() {
                     'password': $('input[name=password]').val(),
                     'protocol': $('select[name=protocol]').val(),
                     'port': $('input[name=port]').val(),
-                    'encryption': $('select[name=encryption]').val(),
-                    'certificate': $('input[name=certificate]:checked').val(),
+                    'authentication': $('select[name=authentication]').val(),
                     '_wpnonce': '<?php echo wp_create_nonce( "erp-imap-test-connection-nonce" ); ?>'
                 };
 
                 $.post( ajaxurl, data, function(response) {
+                    $( "a#imap-test-connection" ).removeAttr( 'disabled' );
+                    $( "a#imap-test-connection" ).parent().find( '.erp-loader' ).hide();
+
                     var type = response.success ? 'success' : 'error';
-                    console.log(response);
 
                     if ( response.data ) {
+                        var status = response.success ? 1 : 0;
+                        $('#imap_status').val(status);
+
                         swal({
                             title: '',
                             text: response.data,
@@ -1462,7 +1476,12 @@ function erp_email_settings_javascript() {
 function erp_is_imap_active() {
     $options = get_option( 'erp_settings_erp-email_imap', [] );
 
-    $imap_status = isset( $options['imap_status'] ) ? $options['imap_status'] : 0;
+    $imap_status = (boolean) isset( $options['imap_status'] ) ? $options['imap_status'] : 0;
+    $enable_imap = ( isset( $options['enable_imap'] ) && $options['enable_imap'] == 'yes' ) ? true : false;
 
-    return (boolean) $imap_status;
+    if ( $enable_imap && $imap_status ) {
+        return true;
+    }
+
+    return false;
 }

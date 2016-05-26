@@ -4,21 +4,17 @@
  */
 
 /**
- * Get an avatar avatar
+ * Get an avatar
  *
  * @param  integer  avatar size in pixels
  *
  * @return string  image with HTML tag
  */
-function erp_crm_get_avatar( $id, $size = 32, $user = false ) {
+function erp_crm_get_avatar( $id, $email = '', $user_id = 0, $size = 32 ) {
 
     if ( $id ) {
 
-        if ( $user ) {
-            return get_avatar( $id, $size );
-        }
-
-        $user_photo_id = erp_people_get_meta( $id, 'photo_id', true );
+        $user_photo_id = ( $user_id ) ? get_user_meta( $user_id, 'photo_id', true ) : erp_people_get_meta( $id, 'photo_id', true );
 
         if ( ! empty( $user_photo_id ) ) {
             $image = wp_get_attachment_thumb_url( $user_photo_id );
@@ -26,7 +22,27 @@ function erp_crm_get_avatar( $id, $size = 32, $user = false ) {
         }
     }
 
-    return get_avatar( $id, $size );
+    return ( $email ) ? get_avatar( $email, $size ) : get_avatar( $id, $size );
+}
+
+/**
+ * Get an avatar url for people
+ *
+ * @param  integer  avatar size in pixels
+ *
+ * @return string  image with HTML tag
+ */
+function erp_crm_get_avatar_url( $id, $email='', $user_id = 0, $size = 32 ) {
+
+    if ( $id ) {
+        $user_photo_id = ( $user_id ) ? get_user_meta( $user_id, 'photo_id', true ) : erp_people_get_meta( $id, 'photo_id', true );
+
+        if ( ! empty( $user_photo_id ) ) {
+            return wp_get_attachment_thumb_url( $user_photo_id );
+        }
+    }
+
+    return $email ? get_avatar_url( $email, $size ) : get_avatar_url( $id, $size );
 }
 
 /**
@@ -306,6 +322,11 @@ function erp_crm_customer_get_status_count( $type = null ) {
 
         $counts['all']['count'] += (int) $row['num'];
     }
+
+    $counts['trash'] = [
+        'count' => erp_crm_count_trashed_customers( $type ),
+        'label' => __( 'Trash', 'erp' )
+    ];
 
     return $counts;
 }
@@ -1936,11 +1957,13 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
 
     $data = erp_crm_save_customer_feed_data( $save_data );
 
-    $contact_id       = $save_data['user_id'];
-    $sender_id        = $save_data['created_by'];
-    $contact_owner_id = erp_people_get_meta( $contact_id, '_assign_crm_agent', true );
+    $contact_id = (int) $save_data['user_id'];
+    $sender_id  = $save_data['created_by'];
+
+    $contact = new \WeDevs\ERP\CRM\Contact( $contact_id );
+
+    $contact_owner_id = $contact->get_contact_owner();
     $contact_owner    = get_userdata( $contact_owner_id );
-    $created_by       = get_userdata( $sender_id );
 
     // Send an email to contact owner
     if ( isset( $contact_owner_id ) ) {
@@ -1960,7 +1983,7 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
         $reply_to = $inbound_email_address;
         $headers .= "Reply-To: WP ERP <$reply_to>" . "\r\n";
 
-        erp_mail( $to_email, $email['subject'], $email['body'], $headers, $custom_headers );
+        erp_mail( $to_email, $email['subject'], $email['body'], $headers, [], $custom_headers );
     }
 
     // Update email counter
@@ -2008,7 +2031,7 @@ function erp_crm_save_contact_owner_email_activity( $email, $inbound_email_addre
     $headers .= "Reply-To: WP ERP <$reply_to>" . "\r\n";
 
     // Send email a contact
-    erp_mail( $contact->email, $email['subject'], $email['body'], $headers, $custom_headers );
+    erp_mail( $contact->email, $email['subject'], $email['body'], $headers, [], $custom_headers );
 
     // Update email counter
     update_option( 'wp_erp_inbound_email_count', get_option( 'wp_erp_inbound_email_count', 0 ) + 1 );
@@ -2088,7 +2111,7 @@ function erp_crm_get_schedule_data( $tab = '' ) {
  * @return string
  */
 function erp_crm_get_email_from_address() {
-    $settings = get_option( 'erp_settings_erp-email', [] );
+    $settings = get_option( 'erp_settings_erp-email_general', [] );
 
     if ( array_key_exists( 'from_email', $settings ) ) {
         return sanitize_email( $settings['from_email'] );
@@ -2658,13 +2681,13 @@ function erp_user_bulk_actions_notices() {
  * @return void
  */
 function erp_create_contact_from_created_user( $user_id ) {
-    $user_auto_import = (int) erp_get_option( 'user_auto_import', 'erp_settings_erp-crm', 0 );
+    $user_auto_import = (int) erp_get_option( 'user_auto_import', 'erp_settings_erp-crm_contacts', 0 );
 
     if ( ! $user_auto_import ) {
         return;
     }
 
-    $default_roles = erp_get_option( 'user_roles', 'erp_settings_erp-crm', [] );
+    $default_roles = erp_get_option( 'user_roles', 'erp_settings_erp-crm_contacts', [] );
     $user          = get_userdata( $user_id );
 
     $matched_roles = array_intersect( $user->roles, $default_roles );
@@ -2678,9 +2701,9 @@ function erp_create_contact_from_created_user( $user_id ) {
     $data['user_id'] = $user_id;
 
     $contact_id    = erp_insert_people( $data );
-    $contact_owner = erp_get_option( 'contact_owner', 'erp_settings_erp-crm', null );
+    $contact_owner = erp_get_option( 'contact_owner', 'erp_settings_erp-crm_contacts', null );
     $contact_owner = ( $contact_owner ) ? $contact_owner : get_current_user_id();
-    $life_stage    = erp_get_option( 'life_stage', 'erp_settings_erp-crm', 'opportunity' );
+    $life_stage    = erp_get_option( 'life_stage', 'erp_settings_erp-crm_contacts', 'opportunity' );
 
     update_user_meta( $user_id, '_assign_crm_agent', $contact_owner );
     update_user_meta( $user_id, 'life_stage', $life_stage );
@@ -2693,7 +2716,7 @@ function erp_create_contact_from_created_user( $user_id ) {
  *
  * @return void
  */
-function erp_check_new_inbound_emails() {
+function erp_crm_check_new_inbound_emails() {
     $is_imap_active = erp_is_imap_active();
 
     if ( ! $is_imap_active ) {
@@ -2707,11 +2730,10 @@ function erp_check_new_inbound_emails() {
     $password = $imap_options['password'];
     $protocol = $imap_options['protocol'];
     $port = isset( $imap_options['port'] ) ? $imap_options['port'] : 993;
-    $encryption = isset( $imap_options['encryption'] ) ? $imap_options['encryption'] : 'ssl';
-    $certificate = ( $imap_options['certificate'] == 1 ) ? true : false;
+    $authentication = isset( $imap_options['authentication'] ) ? $imap_options['authentication'] : 'ssl';
 
     try {
-        $imap = new \WeDevs\ERP\Imap( $mail_server, $port, $protocol, $username, $password, $encryption, $certificate );
+        $imap = new \WeDevs\ERP\Imap( $mail_server, $port, $protocol, $username, $password, $authentication );
 
         $date = date( "d M Y", strtotime( "-1 days" ) );
         $emails = $imap->get_emails( "Inbox", "UNSEEN SINCE \"$date\"" );

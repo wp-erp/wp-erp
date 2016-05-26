@@ -34,6 +34,8 @@ class ERP_Settings_Page {
             if ( isset( $_REQUEST['section'] ) && array_key_exists( $_REQUEST['section'], $sections ) ) {
                 $current_section = $_REQUEST['section'];
                 $option_id = 'erp_settings_' . $this->id . '_' . $current_section;
+            } else {
+                $option_id = 'erp_settings_' . $this->id . '_' . strtolower( reset( $sections ) ); // section's first element
             }
         }
 
@@ -179,6 +181,7 @@ class ERP_Settings_Page {
             case "single_select_page" :
             case "image" :
             case 'radio' :
+            case 'hidden' :
 
                if ( isset( $_POST[$value['id']] ) ) {
                     $option_value = sanitize_text_field( stripslashes( $_POST[ $value['id'] ] ) );

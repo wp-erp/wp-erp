@@ -22,7 +22,7 @@ class Form_Handler {
         add_action( 'load-crm_page_erp-sales-companies', array( $this, 'companies_bulk_action') );
         add_action( 'load-crm_page_erp-sales-contact-groups', array( $this, 'contact_groups_bulk_action') );
         add_action( 'admin_init', array( $this, 'handle_save_search_submit' ), 10 );
-        add_action( 'admin_head', array( $this, 'handle_canonical_url' ), 10 );
+        // add_action( 'admin_head', array( $this, 'handle_canonical_url' ), 10 );
         add_action( 'erp_hr_after_employee_permission_set', array( $this, 'employee_permission_set'), 10, 2 );
     }
 
@@ -35,6 +35,7 @@ class Form_Handler {
 
     public function handle_canonical_url() {
         if ( isset( $_GET['page'] ) && ( $_GET['page'] == 'erp-sales-customers' || $_GET['page'] == 'erp-sales-companies' ) ) {
+            echo 'adfasdf';
             ?>
                 <script>
                     window.history.replaceState = false;
