@@ -779,6 +779,8 @@ Vue.component('vtable', {
                 postData   = jQuery.param( queryPostData );
                 self.activeTopNavFilter = queryPostData[this.topNavFilter.field];
                 self.searchQuery = queryPostData[this.search.params];
+                self.sortOrder.field = queryPostData['orderby'];
+                self.sortOrder.direction = queryPostData['order'];
                 var postData = postData + '&' + jQuery.param(data);
             } else {
 
@@ -803,7 +805,7 @@ Vue.component('vtable', {
 
             var postData = postData + '&' + pagination.join('&');
 
-            console.log( postData );
+            // console.log( postData );
 
             this.ajax = jQuery.post( wpVueTable.ajaxurl, postData, function( resp ) {
                 if ( resp.success ) {
@@ -845,7 +847,7 @@ Vue.component('vtable', {
 
             queryParams = self.removeParam( ['type','paged'], '?' + queryParams )
 
-            console.log( self.currentPage );
+            // console.log( self.currentPage );
 
             if ( self.currentPage > 1 ) {
                 var paged = '&paged=' + self.currentPage;
@@ -884,8 +886,7 @@ Vue.component('vtable', {
         });
 
         jQuery(window).bind("popstate", function() {
-            // link = location.pathname.replace(/^.*[\\/]/, ""); // get filename only
-            this.fetchData();
+            // this.fetchData();
         });
 
         this.fetchData();
