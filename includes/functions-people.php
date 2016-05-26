@@ -53,7 +53,7 @@ function erp_get_peoples( $args = [] ) {
 
     $pep_fileds  = [ 'first_name', 'last_name', 'company', 'phone', 'mobile',
             'other', 'fax', 'notes', 'street_1', 'street_2', 'city', 'state', 'postal_code', 'country',
-            'currency', 'created' ];
+            'currency' ];
 
     if ( false === $items ) {
         extract( $args );
@@ -67,7 +67,7 @@ function erp_get_peoples( $args = [] ) {
             $type_sql = ( $type != 'all' ) ? "and `name` = '" . $type ."'" : '';
         }
 
-        $sql['select'][] = "SELECT people.id, people.user_id, people.company,COALESCE( people.email, users.user_email ) AS email,
+        $sql['select'][] = "SELECT people.id, people.user_id, people.company, people.created_by, people.created, COALESCE( people.email, users.user_email ) AS email,
                 COALESCE( people.website, users.user_url ) AS website,";
 
         $sql['join'][] = "LEFT JOIN $users_tb AS users ON people.user_id = users.ID";
@@ -480,6 +480,7 @@ function erp_insert_people( $args = array() ) {
         'currency'    => '',
         'type'        => '',
         'user_id'     => 0,
+        'created_by'  => get_current_user_id(),
     );
 
     $args        = wp_parse_args( $args, $defaults );
@@ -544,7 +545,7 @@ function erp_insert_people( $args = array() ) {
 
             // Check if exist in wp user table but not people table
             if ( null == $people_obj ) {
-                $new_people = \WeDevs\ERP\Framework\Models\People::create( [ 'user_id' => $user->ID, 'created' => current_time('mysql') ] );
+                $new_people = \WeDevs\ERP\Framework\Models\People::create( [ 'user_id' => $user->ID, 'created_by' => get_current_user_id(), 'created' => current_time('mysql') ] );
                 $new_people->assignType( $type_obj );
                 return $new_people->id;
             } else {
