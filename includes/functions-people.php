@@ -401,7 +401,7 @@ function erp_get_people_by( $field, $value ) {
             'currency' ]; // meta only
 
         $sql = "SELECT * FROM (
-        SELECT people.id as id, people.user_id,
+        SELECT people.id as id, people.user_id, people.created_by,
 
             CASE WHEN people.user_id then user.user_email ELSE people.email END as email,
             CASE WHEN people.user_id then user.user_url ELSE people.website END as website,";

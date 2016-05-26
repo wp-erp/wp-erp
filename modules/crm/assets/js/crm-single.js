@@ -94,6 +94,8 @@
                     attrTitle: 'View this contact',
                     class: 'view',
                     action: 'view',
+                    callback: 'contact_view_link'
+
                 },
                 {
                     title: 'Delete',
@@ -150,6 +152,10 @@
 
             lifeStage: function( value, item ) {
                 return wpErpCrm.life_stages[value];
+            },
+
+            contact_view_link: function( action, item ) {
+                return '<span class="view"><a href="' + item.details_url + '" title="View this contact">View</a><span> | </span></span>';
             },
 
             contactOwner: function( value, item ) {
