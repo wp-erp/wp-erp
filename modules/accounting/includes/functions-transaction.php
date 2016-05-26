@@ -182,6 +182,57 @@ function erp_ac_get_transaction( $id = 0 ) {
     return $transaction;
 }
 
+function er_ac_insert_transaction_permiss( $args ) {
+    
+    if ( $args['type'] == 'sales' && $args['form_type'] == 'payment' && $args['status'] == 'draft' ) {
+        if ( ! erp_ac_create_sales_payment() ) {
+            return new WP_Error( 'error', __( 'You do not have sufficient permissions', 'erp' ) );
+        }
+    }
+
+    if ( $args['type'] == 'sales' && $args['form_type'] == 'payment' && $args['status'] == 'closed' ) {
+        if ( ! erp_ac_publish_sales_payment() ) {
+            return new WP_Error( 'error', __( 'You do not have sufficient permissions', 'erp' ) );
+        }
+    }
+
+    if ( $args['type'] == 'sales' && $args['form_type'] == 'invoice' && $args['status'] == 'awaiting_payment' ) {
+        if ( ! erp_ac_publish_sales_invoice() ) {
+            return new WP_Error( 'error', __( 'You do not have sufficient permissions', 'erp' ) );
+        }
+    }
+
+    if ( $args['type'] == 'sales' && $args['form_type'] == 'invoice' && $args['status'] == 'draft' ) {
+        if ( ! erp_ac_create_sales_invoice() ) {
+            return new WP_Error( 'error', __( 'You do not have sufficient permissions', 'erp' ) );
+        }
+    }
+
+    if ( $args['type'] == 'expense' && $args['form_type'] == 'payment_voucher' && $args['status'] == 'paid' ) {
+        if ( ! erp_ac_publish_expenses_voucher() ) {
+            return new WP_Error( 'error', __( 'You do not have sufficient permissions', 'erp' ) );
+        }
+    }
+
+    if ( $args['type'] == 'expense' && $args['form_type'] == 'payment_voucher' && $args['status'] == 'draft' ) {
+        if ( ! erp_ac_create_expenses_voucher() ) {
+            return new WP_Error( 'error', __( 'You do not have sufficient permissions', 'erp' ) );
+        }
+    }
+
+    if ( $args['type'] == 'expense' && $args['form_type'] == 'vendor_credit' && $args['status'] == 'awaiting_payment' ) {
+        if ( ! erp_ac_publish_expenses_credit() ) {
+            return new WP_Error( 'error', __( 'You do not have sufficient permissions', 'erp' ) );
+        }
+    }
+
+    if ( $args['type'] == 'expense' && $args['form_type'] == 'vendor_credit' && $args['status'] == 'draft' ) {
+        if ( ! erp_ac_create_expenses_credit() ) {
+            return new WP_Error( 'error', __( 'You do not have sufficient permissions', 'erp' ) );
+        }
+    }
+}
+
 /**
  * Insert a new transaction
  *
@@ -214,6 +265,12 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
     );
 
     $args       = wp_parse_args( $args, $defaults );
+
+    $permission = er_ac_insert_transaction_permiss( $args );
+
+    if ( is_wp_error( $permission ) ) {
+        return $permission;
+    }
 
     $table_name = $wpdb->prefix . 'erp_ac_transactions';
 
