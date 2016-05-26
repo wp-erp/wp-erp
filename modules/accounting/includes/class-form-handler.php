@@ -49,8 +49,7 @@ class Form_Handler {
                 'hard' => 0,
                 'type' => 'customer'
             ];
-            erp_delete_people( $data );
-            //erp_ac_customer_delete( $customer_id );
+            erp_ac_customer_delete( $data );
         }
 
         if ( isset( $_POST['action'] ) && $_POST['action'] == 'restore' ) {
@@ -60,7 +59,6 @@ class Form_Handler {
                 'type' => 'customer'
             ];
             erp_restore_people( $data );
-            //erp_ac_customer_restore( $customer_id );
         }
 
         if ( isset( $_POST['action'] ) && $_POST['action'] == 'delete' ) {
@@ -70,8 +68,8 @@ class Form_Handler {
                 'hard' => 1,
                 'type' => 'customer'
             ];
-            erp_delete_people( $data );
-            //erp_ac_customer_delete( $customers_id, true );
+            erp_ac_customer_delete( $data );
+            //erp_delete_people( $data );
         }
     }
 

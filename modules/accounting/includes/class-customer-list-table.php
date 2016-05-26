@@ -112,7 +112,7 @@ class Customer_List_Table extends \WP_List_Table {
         
         $actions['invoice'] = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=erp-accounting-sales&action=new&type=invoice&customer=true&id=' . $item->id ), $item->id, __( 'Create Invoice', 'wp-erp-ac' ), __( 'Create Invoice', 'wp-erp-ac' ) );
         
-        if ( erp_ac_current_user_can_delete_customer() ) { 
+        if ( erp_ac_current_user_can_delete_customer( $created_by ) ) { 
             $actions['delete'] = sprintf( '<a href="%s" class="erp-ac-submitdelete" data-id="%d" data-hard=%d title="%s" data-type="%s">%s</a>', '#', $item->id, $data_hard, __( 'Delete this item', 'accounting' ), $this->type, $delete_text );
         }
 
@@ -120,7 +120,11 @@ class Customer_List_Table extends \WP_List_Table {
             $actions['restore'] = sprintf( '<a href="#" class="erp-ac-restoreCustomer" data-id="%d" title="%s" data-type="%s">%s</a>', $item->id, __( 'Restore this item', 'accounting' ), $this->type, __( 'Restore', 'accounting' ) );
         }
 
-        return get_avatar( $item->email, 32 ) . sprintf( '<a href="%1$s"><strong>%2$s</strong></a> %3$s', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), $item->first_name . ' ' . $item->last_name, $this->row_actions( $actions ) );
+        if ( erp_ac_current_user_can_view_single_customer() ) {
+           return get_avatar( $item->email, 32 ) . sprintf( '<a href="%1$s"><strong>%2$s</strong></a> %3$s', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), $item->first_name . ' ' . $item->last_name, $this->row_actions( $actions ) ); 
+        }
+
+        return get_avatar( $item->email, 32 ) . sprintf( '<strong>%1$s</strong> %2$s', $item->first_name . ' ' . $item->last_name, $this->row_actions( $actions ) );
     }
 
     function column_balance( $item ) {
@@ -263,6 +267,12 @@ class Customer_List_Table extends \WP_List_Table {
             $args['order']   = $_REQUEST['order'] ;
         }
 
+        if ( $args['type'] == 'customer' ) {
+            if ( ! erp_ac_view_other_customers() ) {
+                $args['created_by'] = get_current_user_id();
+            }
+        }
+
         $this->items  = erp_get_peoples( $args );
 
         $users_id = wp_list_pluck( $this->items, 'id' );
@@ -272,7 +282,6 @@ class Customer_List_Table extends \WP_List_Table {
         ];
 
         $transactions = erp_ac_get_all_transaction( $trans_arg );
-        //$this->all_customers = $this->customer_get_status_count();
 
         foreach ( $transactions as $key => $transaction ) {
             $users[$transaction->user_id][] = $transaction;

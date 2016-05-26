@@ -308,7 +308,6 @@ class Admin_Menu {
 
             case 'edit':
                 $customer = new \WeDevs\ERP\People( $id );
-                var_dump( $customer ); die();
                 if ( erp_ac_current_user_can_edit_customer( $customer->created_by ) ) {
                     $template = dirname( __FILE__ ) . '/views/customer/edit.php';
                 }

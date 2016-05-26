@@ -228,9 +228,7 @@ class Ajax_Handler {
             'type' => $type,
         );
 
-        erp_delete_people( $data );
-
-        //erp_ac_customer_delete( $customer_id, $hard );
+        erp_ac_customer_delete( $data );
 
         // @TODO: check permission
         $this->send_success( __( 'Customer has been removed successfully', 'accounting' ) );

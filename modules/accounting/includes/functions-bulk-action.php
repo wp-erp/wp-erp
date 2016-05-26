@@ -9,35 +9,30 @@
  *
  * @return void
  */
-function erp_ac_customer_delete( $customer_ids, $hard = false ) {
+function erp_ac_customer_delete( $data ) {
 
-    if ( empty( $customer_ids ) ) {
+    if( is_array( $data['id'] ) ) {
+        $ids = $data['id'];
+    } else {
+        $ids = array( intval( $data['id'] ) );
+    }
+ 
+    foreach ( $ids as $key => $user_id ) {
+        $people = erp_get_people($user_id);
+        if ( ! erp_ac_current_user_can_delete_customer( $people->created_by ) ) { 
+           unset( $ids[ $key] );
+        }
+    }
+
+    if ( ! $ids ) {
         return;
     }
 
-    do_action( 'erp_ac_delete_customer', $customer_ids );
+    $data['id'] = $ids;
 
-    if ( is_array( $customer_ids ) ) {
-        foreach ( $customer_ids as $key => $user_id ) {
-
-            if ( $hard ) {
-                WeDevs\ERP\Framework\Models\People::withTrashed()->find( $user_id )->forceDelete();
-                WeDevs\ERP\Framework\Models\Peoplemeta::where( 'erp_people_id', $user_id )->delete();
-            } else {
-                WeDevs\ERP\Framework\Models\People::find( $user_id )->delete();
-            }
-        }
-    }
-
-    if ( is_int( $customer_ids ) ) {
-
-        if ( $hard ) {
-            WeDevs\ERP\Framework\Models\People::withTrashed()->find( $customer_ids )->forceDelete();
-            WeDevs\ERP\Framework\Models\Peoplemeta::where( 'erp_people_id', $customer_ids )->delete();
-        } else {
-            WeDevs\ERP\Framework\Models\People::find( $customer_ids )->delete();
-        }
-    }
+    do_action( 'erp_ac_delete_customer', $data );
+    erp_delete_people( $data );
+            
 }
 
 /**
@@ -135,17 +130,24 @@ function erp_ac_new_customer( $postdata ) {
 
     // New or edit?
     if ( ! $field_id ) {
-
-        $insert_id = erp_insert_people( $fields );
-        do_action( 'erp_ac_after_new_customer', $insert_id, $fields );
+        if ( erp_ac_create_customer() ) {
+            $insert_id = erp_insert_people( $fields );
+            do_action( 'erp_ac_after_new_customer', $insert_id, $fields );
+        } else {
+            $insert_id = false;
+        }
 
     } else {
-
-        $fields['id'] = $field_id;
-        $message      = 'update';
-        do_action( 'erp_ac_before_update_customer', $fields );
-        $insert_id    = erp_insert_people( $fields );
-
+        $customer = new \WeDevs\ERP\People( $field_id );
+        
+        if ( erp_ac_current_user_can_edit_customer( $customer->created_by ) ) {
+            $fields['id'] = $field_id;
+            $message      = 'update';
+            do_action( 'erp_ac_before_update_customer', $fields );
+            $insert_id    = erp_insert_people( $fields );
+        } else {
+            $insert_id    = false;
+        }
     }
 
     return $insert_id;

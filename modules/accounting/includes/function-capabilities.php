@@ -221,6 +221,8 @@ function erp_ac_permission_management_field( $employee ) {
     ) );
 }
 
+
+//Customer
 function erp_ac_create_customer() {
     return current_user_can( 'erp_ac_create_customer' );
 }
@@ -251,8 +253,87 @@ function erp_ac_current_user_can_view_single_customer() {
     return current_user_can( 'erp_ac_view_single_customer' );   
 }
 
-function erp_ac_current_user_can_delete_customer() {
-    return current_user_can( 'erp_ac_delete_customer' );
+function erp_ac_view_other_customers() {
+    return current_user_can( 'erp_ac_view_other_customers' ); 
+}
+
+function erp_ac_current_user_can_delete_customer( $created_by = false ) {
+    if( ! current_user_can( 'erp_ac_delete_customer' ) ) {
+        return false;
+    };   
+
+    if ( ! $created_by  ) {
+        return false;
+    }
+
+    $user_id = get_current_user_id();
+
+    if ( $created_by == $user_id ) {
+        return true;
+    }
+
+    if( current_user_can( 'erp_ac_delete_other_customers' ) ) {
+        return true;
+    };
+
+    return false;
+}
+
+//vendor
+function erp_ac_create_vendor() {
+    return current_user_can( 'erp_ac_create_vendor' );
+}
+
+function erp_ac_current_user_can_edit_vendor( $created_by = false ) {
+    if( ! current_user_can( 'erp_ac_edit_vendor' ) ) {
+        return false;
+    };   
+
+    if ( ! $created_by  ) {
+        return false;
+    }
+
+    $user_id = get_current_user_id();
+
+    if ( $created_by == $user_id ) {
+        return true;
+    }
+
+    if( current_user_can( 'erp_ac_edit_other_vendors' ) ) {
+        return true;
+    };
+
+    return false;
+}
+
+function erp_ac_current_user_can_view_single_vendor() {
+    return current_user_can( 'erp_ac_view_single_vendor' );   
+}
+
+function erp_ac_view_other_vendors() {
+    return current_user_can( 'erp_ac_view_other_vendors' ); 
+}
+
+function erp_ac_current_user_can_delete_vendor( $created_by = false ) {
+    if( ! current_user_can( 'erp_ac_delete_vendor' ) ) {
+        return false;
+    };   
+
+    if ( ! $created_by  ) {
+        return false;
+    }
+
+    $user_id = get_current_user_id();
+
+    if ( $created_by == $user_id ) {
+        return true;
+    }
+
+    if( current_user_can( 'erp_ac_delete_other_vendors' ) ) {
+        return true;
+    };
+
+    return false;
 }
 
 //sale
