@@ -67,7 +67,7 @@
             name: 'filter_assign_contact',
             type: 'select', // or text|email|number|url|datefield
             id: 'erp-select-user-for-assign-contact',
-            class: 'test-class',
+            class: 'erp-filter-contact-owner',
             placeholder: 'Select an agent',
             options: [
                 {
@@ -75,7 +75,30 @@
                     text: ''
                 }
             ]
+        },
+
+        'filterTestSelect' : {
+            name: 'filter_test_select',
+            type: 'select', // or text|email|number|url|datefield
+            id: 'erp-select-test',
+            class: 'test-class',
+            placeholder: 'Select Test',
+            options: [
+                {
+                    id : '',
+                    text: '--select--'
+                },
+                {
+                    id : '1',
+                    text: 'Test1'
+                },
+                {
+                    id : '2',
+                    text: 'Test2'
+                }
+            ]
         }
+
     }
 
     var contact = new Vue({
@@ -643,6 +666,15 @@
                         cache: true
                     }
                 });
+            },
+
+            setContactOwnerSearchValue: function() {
+                var value = this.$refs.vtable.getParamByName('filter_assign_contact');
+
+                if ( value ) {
+                    $('select#erp-select-user-for-assign-contact')
+                        .append('<option value="' + this.$refs.vtable.customData.filter_assign_contact.id + '" selected>' + this.$refs.vtable.customData.filter_assign_contact.display_name + '</option>').trigger('change')
+                }
             }
 
         },
@@ -656,6 +688,7 @@
             $( 'body' ).on( 'click', 'a#erp-crm-create-contact-other-type', this.makeUserAsContact );
 
             this.initSearchCrmAgent();
+            this.setContactOwnerSearchValue();
         },
 
         events: {

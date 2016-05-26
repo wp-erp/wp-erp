@@ -262,6 +262,13 @@ Vue.component('vtable', {
             }
         },
 
+        'customData': {
+            type: Object,
+            default: function() {
+                return {}
+            }
+        },
+
         'bulkactions': {
             type: Array,
             default: function() {
@@ -817,7 +824,6 @@ Vue.component('vtable', {
                         self.pageNumberInput = self.totalPage;
                         self.currentPage = self.totalPage;
                     }
-
                 } else {
                     alert(resp);
                 }
@@ -844,7 +850,6 @@ Vue.component('vtable', {
                 }
             }
 
-
             queryParams = self.removeParam( ['type','paged'], '?' + queryParams )
 
             // console.log( self.currentPage );
@@ -860,8 +865,6 @@ Vue.component('vtable', {
             } else {
                 var url = ( paged ) ? self.page + paged : self.page;
             }
-
-            console.log( url );
             window.history.pushState( null, null, url );
         }
     },
@@ -883,6 +886,15 @@ Vue.component('vtable', {
 
         jQuery('select.v-select-field').on('change', function() {
             self.extraBulkActionSelectData[jQuery(this).attr('name')] = jQuery(this).val();
+        });
+
+        // Set all extra bulk select value
+        jQuery('select.v-select-field').each( function() {
+            var val = self.getParamByName( jQuery(this).attr('name') );
+            if ( val ) {
+                jQuery(this).val( val );
+                jQuery(this).trigger('change');
+            }
         });
 
         jQuery(window).bind("popstate", function() {
