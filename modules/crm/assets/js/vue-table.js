@@ -5,7 +5,7 @@ Vue.component('vtable', {
                 +'<form method="get">'
                     +'<p class="search-box {{ search.wrapperClass }}">'
                         +'<label class="screen-reader-text" for="{{ search.inputId }}">{{ search.screenReaderText }}</label>'
-                        +'<input type="search" v-model="searchQuery" id="{{ search.inputId }}" value="" name="s" placeholder="{{ search.placeholder }}" @keyup.prevent="searchAction( searchQuery )" >'
+                        +'<input type="search" v-model="searchQuery" id="{{ search.inputId }}" value="" name="s" placeholder="{{ search.placeholder }}" @input.prevent="searchAction( searchQuery )" >'
                     +'</p>'
                     +'<ul v-if="!hasTopNavFilter()" class="subsubsub">'
                         +'<li v-for="( key, filter ) in topNavFilter.data" class="{{key}}"><a href="#" @click.prevent="callTopNavFilterAction( key, filter )" :class="{ \'current\': iscurrentTopNavFilter( key ) }">{{ filter.label }} <span class="count">({{ filter.count }})</span></a> <span v-if="!ifTopNavFilterLastItem( key )"> | </span></li>'
