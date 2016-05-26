@@ -398,10 +398,10 @@ function erp_get_people_by( $field, $value ) {
 
         $people_fileds = [ 'first_name', 'last_name', 'company', 'phone', 'mobile',
             'other', 'fax', 'notes', 'street_1', 'street_2', 'city', 'state', 'postal_code', 'country',
-            'currency', 'created' ]; // meta only
+            'currency' ]; // meta only
 
         $sql = "SELECT * FROM (
-        SELECT people.id as id, people.user_id,
+        SELECT people.id as id, people.user_id, people.created_by,
 
             CASE WHEN people.user_id then user.user_email ELSE people.email END as email,
             CASE WHEN people.user_id then user.user_url ELSE people.website END as website,";
@@ -432,16 +432,18 @@ function erp_get_people_by( $field, $value ) {
 
         $results = $wpdb->get_results( $sql );
 
+
         $results = array_map( function( $item ) {
             $item->types = explode( ',', $item->types );
 
             return $item;
         }, $results);
 
+
         if ( is_array( $value ) ) {
             $people = erp_array_to_object( $results );
         } else {
-            $people = $results[0];
+            $people = ( ! empty( $results ) ) ? $results[0] : false;
         }
 
         wp_cache_set( $cache_key, $people, 'erp' );
@@ -516,8 +518,12 @@ function erp_insert_people( $args = array() ) {
     }
 
     // remove row id to determine if new or update
-    $row_id = (int) $args['id'];
-    unset( $args['id'] );
+    if ( isset( $args['id'] ) ) {
+        $row_id = (int) $args['id'];
+        unset( $args['id'] );
+    } else {
+        $row_id = null;
+    }
 
     if ( ! $row_id ) {
 
