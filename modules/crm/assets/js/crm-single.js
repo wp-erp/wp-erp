@@ -670,7 +670,6 @@
 
             setContactOwnerSearchValue: function() {
                 var value = this.$refs.vtable.getParamByName('filter_assign_contact');
-
                 if ( value ) {
                     $('select#erp-select-user-for-assign-contact')
                         .append('<option value="' + this.$refs.vtable.customData.filter_assign_contact.id + '" selected>' + this.$refs.vtable.customData.filter_assign_contact.display_name + '</option>').trigger('change')

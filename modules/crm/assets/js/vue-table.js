@@ -265,7 +265,7 @@ Vue.component('vtable', {
         'customData': {
             type: Object,
             default: function() {
-                return {}
+                return {};
             }
         },
 
