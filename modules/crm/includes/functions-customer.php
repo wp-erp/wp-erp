@@ -2707,6 +2707,7 @@ function erp_create_contact_from_created_user( $user_id ) {
 
     update_user_meta( $user_id, '_assign_crm_agent', $contact_owner );
     update_user_meta( $user_id, 'life_stage', $life_stage );
+    erp_people_update_meta( $contact_id, 'life_stage', $life_stage );
 
     return;
 }
