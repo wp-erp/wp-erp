@@ -10,8 +10,6 @@ class ERP_Settings_General extends ERP_Settings_Page {
     function __construct() {
         $this->id    = 'general';
         $this->label = __( 'General', 'erp' );
-
-        add_action( 'erp_admin_field_erp_api_key', array( $this, 'erp_api_key' ) );
     }
 
     /**
@@ -68,57 +66,11 @@ class ERP_Settings_General extends ERP_Settings_Page {
                 'default' =>  0,
             ),
 
-            array(
-                'type'  => 'erp_api_key',
-            ),
-
             array( 'type' => 'sectionend', 'id' => 'script_styling_options' ),
 
         ); // End general settings
 
         return apply_filters( 'erp_settings_general', $fields );
-    }
-
-    /**
-     * Display API settings view.
-     *
-     * @return void
-     */
-    public function erp_api_key() {
-        $wp_erp_api_key  = get_option( 'wp_erp_apikey', null );
-        $is_cloud_active = erp_is_cloud_active();
-
-        if( $wp_erp_api_key ) {
-        ?>
-        <tr valign="top">
-            <th scope="row" class="titledesc">
-                <span class="dashicons dashicons-admin-network"></span><?php echo __( 'API Key', 'erp' ) ?>
-            </th>
-            <td class="forminp forminp-text">
-                <p><?php echo $wp_erp_api_key ?> <span class="dashicons dashicons-<?php echo ( $is_cloud_active ) ? 'yes green' : 'no red' ?>"></p>
-                <br />
-                <a id="wp-erp-disconnect-api" class="button-secondary">Disconnect</a>
-            </td>
-        </tr>
-        <?php
-        } else {
-        ?>
-        <tr valign="top" id="erp-activation-container">
-            <th scope="row" class="titledesc" colspan="2">
-                <div class="erp-activation-cloud-prompt">
-                    <div class="activation-prompt-text">
-                        <?php _e( "You're awesome for installing <strong>WP ERP!</strong> Get API Key to get access to wperp <em>cloud</em> features!", "wp-erp" ) ?>
-                    </div>
-
-                    <div class="activation-form-container">
-                        <input type="email" name="email" placeholder="email@example.com" value="<?php echo esc_attr( get_option( 'admin_email' ) ); ?>" />
-                        <button class="button-primary" id="get-api-key"><?php _e( 'Get API Key', 'erp' ); ?></button>
-                    </div>
-                </div>
-            </th>
-        </tr>
-        <?php
-        }
     }
 }
 

@@ -351,6 +351,7 @@ class ERP_Settings_Page {
                 case 'number':
                 case 'color' :
                 case 'password' :
+                case 'hidden' :
 
                     $type           = $value['type'];
                     $class          = '';

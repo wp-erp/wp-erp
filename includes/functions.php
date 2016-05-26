@@ -687,164 +687,6 @@ function erp_cron_intervals( $schedules ) {
 }
 
 /**
- * Display erp activation notice.
- *
- * @since 1.0
- *
- * @return void
- */
-function erp_activation_notice() {
-
-    if ( !current_user_can( 'manage_options' ) ) {
-        return;
-    }
-    $apikey  = get_option( 'wp_erp_apikey' );
-    $dismiss = get_option( 'wp_erp_activation_dismiss' );
-
-    if ( ! $apikey && ! $dismiss ) {
-    ?>
-    <div class="notice erp-activation-cloud-prompt" id="erp-activation-container">
-        <div class="activation-prompt-text">
-            <?php _e( "You're awesome for installing <strong>WP ERP!</strong> Get API Key to get access to wperp <em>cloud</em> features!", "wp-erp" ) ?>
-        </div>
-
-        <div class="activation-form-container">
-            <input type="email" name="email" placeholder="email@example.com" value="<?php echo esc_attr( get_option( 'admin_email' ) ); ?>" />
-            <button class="button-primary" id="get-api-key"><?php _e( 'Get API Key', 'erp' ); ?></button>
-            <a id="dismiss" href="#"><?php _e( 'Dismiss', 'erp' ); ?></a>
-        </div>
-    </div>
-    <?php
-    }
-}
-
-/**
- * Erp activation's JavaScript enqueue.
- *
- * @since  1.0
- *
- * @return void
- */
-function erp_activation_notice_javascript() { ?>
-    <script type="text/javascript" >
-    jQuery( document ).ready( function($) {
-
-        $container = $( "#erp-activation-container" );
-        $( "#erp-activation-container button#get-api-key" ).click( function(e) {
-            e.preventDefault();
-
-            var data = {
-                'action': 'erp_activation_notice',
-                'email': $(e.target).parent().find( "input[name=email]" ).val(),
-                '_wpnonce': '<?php echo wp_create_nonce( "wp-erp-activation-nonce" ); ?>'
-            };
-
-            $.post( ajaxurl, data, function(response) {
-                if( response.success ) {
-                    $( "[id=erp-activation-container]" ).hide();
-                    document.location.reload();
-                } else {
-                    if( response.data.error ) {
-                        alert( response.data.error );
-                    } else {
-                        alert( response.data );
-                    }
-                }
-            });
-        });
-
-        $( "#erp-activation-container a#dismiss" ).click( function(e) {
-            e.preventDefault();
-
-            var data = {
-                'action': 'erp_activation_notice',
-                'dismiss': true,
-                '_wpnonce': '<?php echo wp_create_nonce( "wp-erp-activation-nonce" ); ?>'
-            };
-
-            $.post( ajaxurl, data, function(response) {
-                if( response.success ) {
-                    $container.hide();
-                }
-            });
-        });
-
-        $( "a#wp-erp-disconnect-api" ).click( function(e) {
-            e.preventDefault();
-
-            var data = {
-                'action': 'erp_activation_notice',
-                'disconnect': true,
-                '_wpnonce': '<?php echo wp_create_nonce( "wp-erp-activation-nonce" ); ?>'
-            };
-
-            $.post( ajaxurl, data, function(response) {
-                if( response.success ) {
-                    document.location.reload();
-                }
-            });
-        });
-    });
-    </script> <?php
-}
-
-/**
- * Activate or deactivate erp api cloud features by server.
- *
- * @return void
- */
-function erp_api_mode_change() {
-    header('Access-Control-Allow-Origin: *');
-
-    $postdata    = $_POST;
-    $api_key     = get_option( 'wp_erp_apikey' );
-
-    $is_verified = erp_cloud_verify_request( $postdata, $api_key  );
-
-    if ( $is_verified ) {
-        $status = isset( $_POST['status'] ) && in_array( $_POST['status'], ['yes', 'no'] ) ? $_POST['status'] : 'yes';
-
-        update_option( 'wp_erp_api_active', $_POST['status'] );
-    }
-}
-
-/**
- * Determine if the erp cloud feature is active or not.
- *
- * @return boolean
- */
-function erp_is_cloud_active() {
-    $wp_erp_api_key    = get_option( 'wp_erp_apikey', null );
-    $wp_erp_api_active = get_option( 'wp_erp_api_active', 'no' );
-
-    if ( $wp_erp_api_key && 'yes' == $wp_erp_api_active ) {
-        return true;
-    }
-
-    return false;
-}
-
-/**
- * Verify given http request.
- *
- * @param  array  $vars
- * @param  string $api_key
- *
- * @return boolean
- */
-function erp_cloud_verify_request( $vars, $api_key ) {
-    if ( ! isset( $vars['verify_key'] ) ) {
-        return false;
-    }
-
-    $verify_key = $vars['verify_key'];
-
-    unset( $vars['verify_key'] );
-
-    return ( hash_hmac( 'sha256', serialize( $vars ), $api_key ) === $verify_key );
-}
-
-/**
  * forward given end_date by 1 day to make fullcalendar range compatible
  *
  * @param string $end_date saved $end_date from db
@@ -1467,72 +1309,70 @@ function erp_parse_args_recursive( &$args, $defaults = [] ) {
  * @param string       $subject
  * @param string       $message
  * @param string|array $headers
- * @param string|array $attachments
+ * @param array        $attachments
+ * @param array        $custom_headers
  *
  * @return boolean
  */
-function erp_mail( $to, $subject, $message, $headers = '', $attachments = [] ) {
-    add_action( 'phpmailer_init', 'erp_mail_smtp_callback' );
+function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $custom_headers = [] ) {
+
+    $callback = function( $phpmailer ) use( $custom_headers ) {
+        $erp_email_settings = get_option( 'erp_settings_erp-email', [] );
+        $erp_email_smtp_settings = get_option( 'erp_settings_erp-email_smtp', [] );
+
+        if ( ! isset( $erp_email_settings['from_email'] ) ) {
+            $from_email = get_option( 'admin_email' );
+        } else {
+            $from_email = $erp_email_settings['from_email'];
+        }
+
+        if ( ! isset( $erp_email_settings['from_name'] ) ) {
+            global $current_user;
+
+            $from_name = $current_user->display_name;
+        } else {
+            $from_name = $erp_email_settings['from_name'];
+        }
+
+        $content_type = 'text/html';
+
+        $phpmailer->From = apply_filters( 'erp_mail_from', $from_email );
+        $phpmailer->FromName = apply_filters( 'erp_mail_from_name', $from_name );
+        $phpmailer->ContentType = apply_filters( 'erp_mail_content_type', $content_type );
+
+        $phpmailer->Sender = $phpmailer->From; //Return-Path
+
+        if ( ! empty( $custom_headers ) ) {
+            foreach ( $custom_headers as $key => $value ) {
+                // $phpmailer->addCustomHeader( 'X-ERP-MailType', 'Inbound' );
+                $phpmailer->addCustomHeader( $key, $value );
+            }
+        }
+        // $phpmailer->SMTPDebug = true;
+
+        if ( $erp_email_smtp_settings['enable_smtp'] ) {
+            $phpmailer->Mailer = 'smtp'; //'smtp', 'mail', or 'sendmail'
+
+            $phpmailer->Host = $erp_email_smtp_settings['mail_server'];
+            $phpmailer->SMTPSecure = ( $erp_email_smtp_settings['encryption'] != '' ) ? $erp_email_smtp_settings['encryption'] : 'ssl';
+            $phpmailer->Port = $erp_email_smtp_settings['port'];
+
+            $phpmailer->SMTPAuth = ( $erp_email_smtp_settings['authentication'] == 'yes' ) ? true : false;
+
+            if ( $phpmailer->SMTPAuth ) {
+                $phpmailer->Username = $erp_email_smtp_settings['username'];
+                $phpmailer->Password = $erp_email_smtp_settings['password'];
+            }
+        }
+    };
+
+    add_action( 'phpmailer_init', $callback );
 
     $is_mail_sent = wp_mail( $to, $subject, $message, $headers, $attachments );
 
-    remove_action( 'phpmailer_init', 'erp_mail_smtp_callback' );
+    remove_action( 'phpmailer_init', $callback );
 
     return $is_mail_sent;
-}
-
-/**
- * ERP Email SMTP Options
- *
- * This function will reconfigure email settings like smtp.
- *
- * @param  obj $phpmailer
- *
- * @return void
- */
-function erp_mail_smtp_callback( $phpmailer ) {
-    $erp_email_settings = get_option( 'erp_settings_erp-email', [] );
-    $erp_email_smtp_settings = get_option( 'erp_settings_erp-email_smtp', [] );
-
-    if ( ! isset( $erp_email_settings['from_email'] ) ) {
-        $from_email = get_option( 'admin_email' );
-    } else {
-        $from_email = $erp_email_settings['from_email'];
-    }
-
-    if ( ! isset( $erp_email_settings['from_name'] ) ) {
-        global $current_user;
-
-        $from_name = $current_user->display_name;
-    } else {
-        $from_name = $erp_email_settings['from_name'];
-    }
-
-    $content_type = 'text/html';
-
-    $phpmailer->From = apply_filters( 'erp_mail_from', $from_email );
-    $phpmailer->FromName = apply_filters( 'erp_mail_from_name', $from_name );
-    $phpmailer->ContentType = apply_filters( 'erp_mail_content_type', $content_type );
-
-    $phpmailer->Sender = $phpmailer->From; //Return-Path
-
-    $phpmailer->addCustomHeader( 'X-ERP-MailType', 'Inbound' );
-    // $phpmailer->SMTPDebug = true;
-
-    if ( $erp_email_smtp_settings['enable_smtp'] ) {
-        $phpmailer->Mailer = 'smtp'; //'smtp', 'mail', or 'sendmail'
-
-        $phpmailer->Host = $erp_email_smtp_settings['mail_server'];
-        $phpmailer->SMTPSecure = ( $erp_email_smtp_settings['encryption'] != '' ) ? $erp_email_smtp_settings['encryption'] : 'ssl';
-        $phpmailer->Port = $erp_email_smtp_settings['port'];
-
-        $phpmailer->SMTPAuth = ( $erp_email_smtp_settings['authentication'] == 'yes' ) ? true : false;
-
-        if ( $phpmailer->SMTPAuth ) {
-            $phpmailer->Username = $erp_email_smtp_settings['username'];
-            $phpmailer->Password = $erp_email_smtp_settings['password'];
-        }
-    }
 }
 
 /**
@@ -1612,4 +1452,17 @@ function erp_email_settings_javascript() {
         });
     </script>
     <?php
+}
+
+/**
+ * Determine if the inbound/imap mail feature is active or not.
+ *
+ * @return boolean
+ */
+function erp_is_imap_active() {
+    $options = get_option( 'erp_settings_erp-email_imap', [] );
+
+    $imap_status = isset( $options['imap_status'] ) ? $options['imap_status'] : 0;
+
+    return (boolean) $imap_status;
 }

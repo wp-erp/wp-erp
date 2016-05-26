@@ -67,7 +67,7 @@ class Imap {
         }
 
         if ( ! $this->is_extension_loaded() ) {
-            return false;
+            throw new \Exception( 'Your server isn\'t connected with imap.' );
         }
 
         $this->connection = imap_open( $this->mailbox, $username, $password );
@@ -151,6 +151,7 @@ class Imap {
 
         foreach ( $email_ids as $email_id ) {
             $emails[] = [
+                'id'          => $email_id,
                 'subject'     => $this->get_subject( $email_id ),
                 'body'        => $this->get_body( $email_id ),
                 'attachments' => $this->get_attachments( $email_id ),
@@ -242,7 +243,7 @@ class Imap {
                     $part_number = 1;
                 }
 
-                $text = imap_fetchbody( $this->connection, $email_id, $part_number );
+                $text = imap_fetchbody( $this->connection, $email_id, $part_number, FT_PEEK );
 
                 switch ( $structure->encoding ) {
                     case 3: return imap_base64( $text );
@@ -348,6 +349,21 @@ class Imap {
         }
 
         return $filtered_attachments;
+    }
+
+    /**
+     * Mark emails as seen
+     *
+     * @param  array $email_ids
+     *
+     * @return boolean
+     */
+    public function mark_seen_emails( $email_ids ) {
+        $comma_separated_ids = implode( ',', $email_ids );
+
+        $status = imap_setflag_full( $this->connection, $comma_separated_ids, "\\Seen" );
+
+        return $status;
     }
 
     /**
