@@ -16,6 +16,7 @@ $if_advance_search = ( isset( $_GET['erp_save_search' ] ) && $_GET['erp_save_sea
         row-checkbox-id="erp-crm-company-id-checkbox"
         row-checkbox-name="company_id"
         action="erp-crm-get-contacts"
+        page = "<?php echo add_query_arg( [ 'page' => 'erp-sales-companies' ], admin_url( 'admin.php' ) ); ?>"
         per-page="20"
         :fields=fields
         :item-row-actions=itemRowActions
