@@ -855,7 +855,11 @@ Vue.component('vtable', {
             // console.log( self.currentPage );
 
             if ( self.currentPage > 1 ) {
-                var paged = '&paged=' + self.currentPage;
+                if ( self.currentPage > self.totalPage ) {
+                    var paged = '&paged=' + self.totalPage;
+                } else {
+                    var paged = '&paged=' + self.currentPage;
+                }
             } else {
                 var paged = '';
             }

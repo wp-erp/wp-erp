@@ -75,30 +75,7 @@
                     text: ''
                 }
             ]
-        },
-
-        'filterTestSelect' : {
-            name: 'filter_test_select',
-            type: 'select', // or text|email|number|url|datefield
-            id: 'erp-select-test',
-            class: 'test-class',
-            placeholder: 'Select Test',
-            options: [
-                {
-                    id : '',
-                    text: '--select--'
-                },
-                {
-                    id : '1',
-                    text: 'Test1'
-                },
-                {
-                    id : '2',
-                    text: 'Test2'
-                }
-            ]
         }
-
     }
 
     var contact = new Vue({
