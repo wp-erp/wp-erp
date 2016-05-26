@@ -35,6 +35,32 @@ function erp_ac_customer_delete( $data ) {
             
 }
 
+function erp_ac_vendor_delete( $data ) {
+
+    if( is_array( $data['id'] ) ) {
+        $ids = $data['id'];
+    } else {
+        $ids = array( intval( $data['id'] ) );
+    }
+ 
+    foreach ( $ids as $key => $user_id ) {
+        $people = erp_get_people($user_id);
+        if ( ! erp_ac_current_user_can_delete_vendor( $people->created_by ) ) { 
+           unset( $ids[ $key] );
+        }
+    }
+
+    if ( ! $ids ) {
+        return;
+    }
+
+    $data['id'] = $ids;
+
+    do_action( 'erp_ac_delete_vendor', $data );
+    erp_delete_people( $data );
+            
+}
+
 /**
  * Customer Restore from trash
  *
@@ -130,9 +156,16 @@ function erp_ac_new_customer( $postdata ) {
 
     // New or edit?
     if ( ! $field_id ) {
-        if ( erp_ac_create_customer() ) {
+        if ( $fields['type'] == 'customer' && erp_ac_create_customer() ) {
             $insert_id = erp_insert_people( $fields );
             do_action( 'erp_ac_after_new_customer', $insert_id, $fields );
+        } else {
+            $insert_id = false;
+        }
+
+        if ( $fields['type'] == 'vendor' && erp_ac_create_vendor() ) {
+            $insert_id = erp_insert_people( $fields );
+            do_action( 'erp_ac_after_new_vendor', $insert_id, $fields );
         } else {
             $insert_id = false;
         }
@@ -140,10 +173,19 @@ function erp_ac_new_customer( $postdata ) {
     } else {
         $customer = new \WeDevs\ERP\People( $field_id );
         
-        if ( erp_ac_current_user_can_edit_customer( $customer->created_by ) ) {
+        if ( $fields['type'] == 'customer' && erp_ac_current_user_can_edit_customer( $customer->created_by ) ) {
             $fields['id'] = $field_id;
             $message      = 'update';
             do_action( 'erp_ac_before_update_customer', $fields );
+            $insert_id    = erp_insert_people( $fields );
+        } else {
+            $insert_id    = false;
+        }
+
+        if ( $fields['type'] == 'vendor' && erp_ac_current_user_can_edit_vendor( $customer->created_by ) ) {
+            $fields['id'] = $field_id;
+            $message      = 'update';
+            do_action( 'erp_ac_before_update_vendor', $fields );
             $insert_id    = erp_insert_people( $fields );
         } else {
             $insert_id    = false;

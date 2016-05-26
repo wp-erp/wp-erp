@@ -339,19 +339,27 @@ class Admin_Menu {
     public function page_vendors() {
         $action = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
         $id     = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
+        $template = '';
 
         switch ($action) {
             case 'view':
-                $vendor = new \WeDevs\ERP\People( $id );
-                $template = dirname( __FILE__ ) . '/views/vendor/single.php';
+                if ( erp_ac_current_user_can_view_single_vendor() ) {
+                    $vendor = new \WeDevs\ERP\People( $id );
+                    $template = dirname( __FILE__ ) . '/views/vendor/single.php';                    
+                }
                 break;
 
             case 'edit':
-                $template = dirname( __FILE__ ) . '/views/vendor/edit.php';
+                $vendor = new \WeDevs\ERP\People( $id );
+                if ( erp_ac_current_user_can_edit_vendor( $vendor->created_by ) ) {
+                    $template = dirname( __FILE__ ) . '/views/vendor/edit.php';
+                }
                 break;
 
             case 'new':
-                $template = dirname( __FILE__ ) . '/views/vendor/new.php';
+                if ( erp_ac_create_vendor() ) {
+                    $template = dirname( __FILE__ ) . '/views/vendor/new.php';
+                }
                 break;
 
             default:

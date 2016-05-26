@@ -66,13 +66,29 @@ class Vendor_List_Table extends Customer_List_Table {
         $delete_text       = ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) ? __( 'Permanent Delete', 'accounting' ) : __( 'Delete', 'accounting' );
 
         $actions            = array();
-        $actions['edit']    = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=edit&id=' . $item->id ), $item->id, __( 'Edit this item', 'wp-erp-ac' ), __( 'Edit', 'wp-erp-ac' ) );
-        $actions['invoice'] = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->expense_slug . '&action=new&type=payment_voucher&vendor_id=' . $item->id ), $item->id, __( 'Create Voucher', 'wp-erp-ac' ), __( 'Payment Voucher', 'wp-erp-ac' ) );
-        $actions['expense'] = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->expense_slug . '&action=new&type=vendor_credit&vendor_id=' . $item->id ), $item->id, __( 'Create Credit', 'wp-erp-ac' ), __( 'Vendor Credit', 'wp-erp-ac' ) );
+        if ( erp_ac_current_user_can_edit_vendor( $item->created_by ) ) {
+            $actions['edit']    = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=edit&id=' . $item->id ), $item->id, __( 'Edit this item', 'wp-erp-ac' ), __( 'Edit', 'wp-erp-ac' ) );
+        }
 
-        $actions['delete'] = sprintf( '<a href="%s" class="erp-ac-submitdelete" data-id="%d" data-hard=%d title="%s" data-type="%s">%s</a>', '#', $item->id, $data_hard, __( 'Delete this item', 'accounting' ), $this->type, $delete_text );
+        if ( erp_ac_create_expenses_voucher() || erp_ac_publish_expenses_voucher() ) {
+
+            $actions['invoice'] = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->expense_slug . '&action=new&type=payment_voucher&vendor_id=' . $item->id ), $item->id, __( 'Create Voucher', 'wp-erp-ac' ), __( 'Payment Voucher', 'wp-erp-ac' ) );
+        }
+
+        if ( erp_ac_create_expenses_credit() || erp_ac_publish_expenses_credit() ) {
+            $actions['expense'] = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->expense_slug . '&action=new&type=vendor_credit&vendor_id=' . $item->id ), $item->id, __( 'Create Credit', 'wp-erp-ac' ), __( 'Vendor Credit', 'wp-erp-ac' ) );
+        }
+        
+        if ( erp_ac_current_user_can_delete_vendor( $item->created_by ) ) {
+            $actions['delete'] = sprintf( '<a href="%s" class="erp-ac-submitdelete" data-id="%d" data-hard=%d title="%s" data-type="%s">%s</a>', '#', $item->id, $data_hard, __( 'Delete this item', 'accounting' ), $this->type, $delete_text );
+        }
+
         if ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) {
             $actions['restore'] = sprintf( '<a href="#" class="erp-ac-restoreCustomer" data-id="%d" title="%s" data-type="%s">%s</a>', $item->id, __( 'Restore this item', 'accounting' ), $this->type, __( 'Restore', 'accounting' ) );
+        }
+
+        if ( ! erp_ac_current_user_can_view_single_vendor() ) {
+           return get_avatar( $item->email, 32 ) . sprintf( '<strong>%1$s</strong> %2$s', $item->first_name . ' ' . $item->last_name, $this->row_actions( $actions ) );
         }
 
         return get_avatar( $item->email, 32 ) . sprintf( '<a href="%1$s"><strong>%2$s</strong></a> %3$s', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), $item->first_name . ' ' . $item->last_name, $this->row_actions( $actions ) );

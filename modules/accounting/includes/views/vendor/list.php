@@ -1,5 +1,8 @@
 <div class="wrap erp-ac-vendor-list-table-wrap">
-    <h2><?php _e( 'Vendors', 'erp-accounting' ); ?> <a href="<?php echo admin_url( 'admin.php?page=erp-accounting-vendors&action=new' ); ?>" class="add-new-h2"><?php _e( 'Add New', 'erp-accounting' ); ?></a></h2>
+    <?php if ( erp_ac_create_vendor() ) { ?>
+        <h2><?php _e( 'Vendors', 'erp-accounting' ); ?> <a href="<?php echo admin_url( 'admin.php?page=erp-accounting-vendors&action=new' ); ?>" class="add-new-h2"><?php _e( 'Add New', 'erp-accounting' ); ?></a></h2>
+    <?php } ?>
+    
 
     <?php
     if ( isset( $_GET['msg'] ) ) {
