@@ -76,7 +76,7 @@ function erp_ac_get_roles() {
         ],
 
         erp_ac_get_agency_role() => [
-            'name'         => __( 'Accounting Manager', 'accounting' ),
+            'name'         => __( 'Accounting Agency', 'accounting' ),
             'public'       => false,
             'capabilities' => erp_ac_get_caps_for_role( erp_ac_get_agency_role() )
         ]
@@ -225,8 +225,26 @@ function erp_ac_create_customer() {
     return current_user_can( 'erp_ac_create_customer' );
 }
 
-function erp_ac_current_user_can_edit_customer( $people_id = false ) {
-    return current_user_can( 'erp_ac_edit_customer' );   
+function erp_ac_current_user_can_edit_customer( $created_by = false ) {
+    if( ! current_user_can( 'erp_ac_edit_customer' ) ) {
+        return false;
+    };   
+
+    if ( ! $created_by  ) {
+        return false;
+    }
+
+    $user_id = get_current_user_id();
+
+    if ( $created_by == $user_id ) {
+        return true;
+    }
+
+    if( current_user_can( 'erp_ac_edit_other_customers' ) ) {
+        return true;
+    };
+
+    return false;
 }
 
 function erp_ac_current_user_can_view_single_customer() {

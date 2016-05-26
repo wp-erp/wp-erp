@@ -103,9 +103,10 @@ class Customer_List_Table extends \WP_List_Table {
         $data_hard         = ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) ? 1 : 0;
         $delete_text       = ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) ? __( 'Permanent Delete', 'accounting' ) : __( 'Delete', 'accounting' );
         $delete_text       = ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) ? __( 'Permanent Delete', 'accounting' ) : __( 'Delete', 'accounting' );
-        $actions            = array();
+        $actions           = array();
+        $created_by        = isset( $item->created_by ) ? intval( $item->created_by ) : 0;
 
-        if ( erp_ac_current_user_can_edit_customer( $item->id ) ) {
+        if ( erp_ac_current_user_can_edit_customer( $created_by ) ) {
             $actions['edit']    = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=edit&id=' . $item->id ), $item->id, __( 'Edit this item', 'wp-erp-ac' ), __( 'Edit', 'wp-erp-ac' ) );
         }
         

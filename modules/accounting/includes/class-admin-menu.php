@@ -19,17 +19,17 @@ class Admin_Menu {
      * @return void
      */
     public function admin_menu() {
-        
-        $dashboard      = current_user_can( 'erp_ac_view_dashboard' );
-        $customer       = current_user_can( 'erp_ac_view_customer' );
-        $vendor         = current_user_can( 'erp_ac_view_vendor' );
-        $sale           = current_user_can( 'erp_ac_view_sale' );
-        $expense        = current_user_can( 'erp_ac_view_expense' );
-        $account_charts = current_user_can( 'erp_ac_view_account_lists' );
-        $bank           = current_user_can( 'erp_ac_view_bank_accounts' );
-        $journal        = current_user_can( 'erp_ac_view_journal' );
-        $reports        = current_user_can( 'erp_ac_view_reports' );
-        
+
+        $dashboard      = 'erp_ac_view_dashboard';
+        $customer       = 'erp_ac_view_customer';
+        $vendor         = 'erp_ac_view_vendor';
+        $sale           = 'erp_ac_view_sale';
+        $expense        = 'erp_ac_view_expense';
+        $account_charts = 'erp_ac_view_account_lists';
+        $bank           = 'erp_ac_view_bank_accounts';
+        $journal        = 'erp_ac_view_journal';
+        $reports        = 'erp_ac_view_reports';
+       
         add_menu_page( __( 'Accounting', 'accounting' ), __( 'Accounting', 'accounting' ), $dashboard, 'erp-accounting', array( $this, 'dashboard_page' ), 'dashicons-chart-pie', null );
         
         $dashboard      = add_submenu_page( 'erp-accounting', __( 'Dashboard', 'accounting' ), __( 'Dashboard', 'accounting' ), $dashboard, 'erp-accounting', array( $this, 'dashboard_page' ) );
@@ -307,7 +307,9 @@ class Admin_Menu {
                 break;
 
             case 'edit':
-                if ( erp_ac_current_user_can_edit_customer() ) {
+                $customer = new \WeDevs\ERP\People( $id );
+                var_dump( $customer ); die();
+                if ( erp_ac_current_user_can_edit_customer( $customer->created_by ) ) {
                     $template = dirname( __FILE__ ) . '/views/customer/edit.php';
                 }
                 break;
