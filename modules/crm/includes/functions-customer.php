@@ -362,19 +362,38 @@ function erp_crm_customer_add_company( $customer_id, $company_id ) {
 /**
  * Get all the companies for a single costomer
  *
- * @since 1.0
+ * @since 1.1.0
+ *
+ * @param $postdata array
  *
  * @return array
  */
-function erp_crm_customer_get_company( $customer_id ) {
-
+function erp_crm_customer_get_company( $postdata ) {
     global $wpdb;
+    $results = [];
+
+    if ( isset( $postdata['id'] ) && empty( $postdata['id'] ) ) {
+        return new WP_Error( 'no-ids', __( 'No contact found', 'erp' ) );
+    }
 
     $sql = "SELECT com.* FROM " . $wpdb->prefix . "erp_crm_customer_companies AS com
             LEFT JOIN " . $wpdb->prefix . "erp_peoples AS peop ON peop.id = com.company_id
-            WHERE com.customer_id = ". $customer_id;
+            WHERE com.customer_id = ". $postdata['id'];
 
-    return $wpdb->get_results( $sql );
+    $data = $wpdb->get_results( $sql, ARRAY_A );
+
+    if ( $data ) {
+        foreach ( $data as $key => $value ) {
+            $company = new \WeDevs\ERP\CRM\Contact( intval( $value['company_id'] ) );
+            $results[$key] = $value;
+            $results[$key]['contact_details'] = $company->to_array();
+            $country = $results[$key]['contact_details']['country'];
+            $results[$key]['contact_details']['country'] = erp_get_country_name( $country );
+            $results[$key]['contact_details']['state'] = erp_get_state_name( $country, $results[$key]['contact_details']['state'] );
+        }
+    }
+
+    return $results;
 }
 
 /**
@@ -384,15 +403,32 @@ function erp_crm_customer_get_company( $customer_id ) {
  *
  * @return array
  */
-function erp_crm_company_get_customers( $company_id ) {
-
+function erp_crm_company_get_customers( $postdata ) {
     global $wpdb;
+    $results = [];
+
+    if ( isset( $postdata['id'] ) && empty( $postdata['id'] ) ) {
+        return new WP_Error( 'no-ids', __( 'No comapany found', 'erp' ) );
+    }
 
     $sql = "SELECT  com.* FROM " . $wpdb->prefix . "erp_crm_customer_companies AS com
             LEFT JOIN " . $wpdb->prefix . "erp_peoples AS peop ON peop.id = com.customer_id
-            WHERE com.company_id = ". $company_id;
+            WHERE com.company_id = ". $postdata['id'];
 
-    return $wpdb->get_results( $sql );
+    $data = $wpdb->get_results( $sql, ARRAY_A );
+
+    if ( $data ) {
+        foreach ( $data as $key => $value ) {
+            $customer = new \WeDevs\ERP\CRM\Contact( intval( $value['customer_id'] ) );
+            $results[$key] = $value;
+            $results[$key]['contact_details'] = $customer->to_array();
+            $country = $results[$key]['contact_details']['country'];
+            $results[$key]['contact_details']['country'] = erp_get_country_name( $country );
+            $results[$key]['contact_details']['state'] = erp_get_state_name( $country, $results[$key]['contact_details']['state'] );
+        }
+    }
+
+    return $results;
 }
 
 /**

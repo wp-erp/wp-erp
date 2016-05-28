@@ -597,6 +597,9 @@
 .erp-single-customer .erp-single-customer-content .customer-basic-info .erp-crm-assign-contact .user-details span {
   font-style: italic;
 }
+.erp-single-customer .erp-single-customer-content .customer-company-info .company-profile-content .postbox {
+  margin-bottom: 15px;
+}
 .erp-single-customer .erp-single-customer-content .customer-company-info .company-profile-content .postbox .action {
   position: absolute;
   top: 12px;
@@ -606,6 +609,11 @@
   font-size: 13px;
   color: #222;
   margin-left: 3px;
+}
+.erp-single-customer .erp-single-customer-content .customer-company-info .company-profile-content .postbox .erp-hndle .customer-avatar img {
+  width: 20px;
+  height: 20px;
+  margin-right: 2px;
 }
 .erp-single-customer .erp-single-customer-content .customer-company-info .company-profile-content .postbox .erp-hndle .customer-name {
   position: relative;
@@ -2972,31 +2980,4 @@ ul.edit-address li.city-wrap span {
   .content-container .content textarea {
     width: 95%;
   }
-}
-.vtable-item {
-    min-height: 100%;
-    height:auto;
-}
-.vtable-item-transition {
-  -webkit-transition: height .6s ease-in, opacity .6s ease-in;
-  -moz-transition: height .6s ease-in, opacity .6s ease-in;
-  -o-transition: height .6s ease-in, opacity .6s ease-in;
-  transition: height .6s ease-in, opacity .6s ease-in;
-}
-.vtable-item-enter {
-  opacity: 0;
-  min-height: 0px;
-  height: 0px;
-  overflow:hidden;
-}
-.vtable-item-leave {
-  opacity: 0;
-  min-height: 0px;
-  height: 0px;
-  overflow:hidden;
-  position: absolute; /* important for removal move to work */
-}
-.vtable-item-move {
-  color: #f20000;
-  transition: transform .5s cubic-bezier(.55,0,.1,1); /* applied when moving */
 }

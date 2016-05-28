@@ -3,9 +3,9 @@
     <h2><?php _e( 'Contact #', 'erp' ); echo $customer->id; ?>
         <a href="<?php echo add_query_arg( ['page' => 'erp-sales-customers'], admin_url( 'admin.php' ) ); ?>" id="erp-contact-list" class="add-new-h2"><?php _e( 'Back to Contact list', 'erp' ); ?></a>
 
-        <?php if ( current_user_can( 'erp_crm_edit_contact', $customer->id ) ): ?>
+        <?php if ( current_user_can( 'erp_crm_edit_contact', $customer->id ) || current_user_can( erp_crm_get_manager_role() ) ): ?>
             <span class="edit">
-                <a href="#" data-id="<?php echo $customer->id; ?>" data-single_view="1" title="<?php _e( 'Edit this Contact', 'erp' ); ?>" class="add-new-h2"><?php _e( 'Edit this Contact', 'erp' ); ?></a>
+                <a href="#" @click.prevent="editContact( 'contact', '<?php echo $customer->id; ?>', '<?php _e( 'Edit this contact', 'erp' ); ?>' )" data-id="<?php echo $customer->id; ?>" data-single_view="1" title="<?php _e( 'Edit this Contact', 'erp' ); ?>" class="add-new-h2"><?php _e( 'Edit this Contact', 'erp' ); ?></a>
             </span>
         <?php endif ?>
     </h2>
@@ -100,7 +100,7 @@
                                         <div class="clearfix"></div>
 
                                         <?php if ( current_user_can( 'erp_crm_edit_contact' ) ): ?>
-                                            <span id="erp-crm-edit-assign-contact-to-agent"><i class="fa fa-pencil-square-o"></i></span>
+                                            <span @click.prevent="assignContact()" id="erp-crm-edit-assign-contact-to-agent"><i class="fa fa-pencil-square-o"></i></span>
                                         <?php endif ?>
                                     </div>
 
@@ -117,59 +117,21 @@
                                             </div>
 
                                             <input type="hidden" name="assign_contact_id" value="<?php echo $customer->id; ?>">
-                                            <input type="submit" class="button button-primary save-edit-assign-contact" name="erp_assign_contacts" value="<?php _e( 'Assign', 'erp' ); ?>">
-                                            <input type="submit" class="button cancel-edit-assign-contact" value="<?php _e( 'Cancel', 'erp' ); ?>">
+                                            <input type="submit" @click.prevent="saveAssignContact()" class="button button-primary save-edit-assign-contact" name="erp_assign_contacts" value="<?php _e( 'Assign', 'erp' ); ?>">
+                                            <input type="submit" @click.prevent="cancelAssignContact()" class="button cancel-edit-assign-contact" value="<?php _e( 'Cancel', 'erp' ); ?>">
                                         </form>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div><!-- .postbox -->
+                    <?php //echo sprintf( '%s\'s %s', $customer->get_first_name(), __( 'Company', 'erp' ) ); ?>
 
-                    <div class="postbox customer-company-info">
-                        <div class="erp-handlediv" title="<?php _e( 'Click to toggle', 'erp' ); ?>"><br></div>
-                        <h3 class="erp-hndle"><span><?php echo sprintf( '%s\'s %s', $customer->get_first_name(), __( 'Company', 'erp' ) ); ?></span></h3>
-                        <div class="inside company-profile-content">
-                            <div class="company-list">
-                                <?php $companies = erp_crm_customer_get_company( $customer->id ); ?>
-
-                                <?php foreach ( $companies as $company_data ) : ?>
-
-                                    <?php $company = new \WeDevs\ERP\CRM\Contact( intval( $company_data->company_id ) ); ?>
-
-                                    <div class="postbox closed">
-                                        <div class="erp-handlediv" title="<?php _e( 'Click to toggle', 'erp' ); ?>"><br></div>
-                                        <h3 class="erp-hndle">
-                                            <span class="customer-avatar"><?php echo $company->get_avatar( 20 ); ?></span>
-                                            <span class="customer-name">
-                                                <a href="<?php echo $company->get_details_url() ?>" target="_blank">
-                                                    <?php echo $company->get_full_name(); ?>
-                                                </a>
-                                            </span>
-                                        </h3>
-                                        <div class="action">
-                                            <a href="#" class="erp-customer-delete-company" data-id="<?php echo $company_data->id; ?>" data-action="erp-crm-customer-remove-company"><i class="fa fa-trash-o"></i></a>
-                                        </div>
-                                        <div class="inside company-profile-content">
-                                            <ul class="erp-list separated">
-                                                <li><?php erp_print_key_value( __( 'Phone', 'erp' ), $company->get_phone() ); ?></li>
-                                                <li><?php erp_print_key_value( __( 'Fax', 'erp' ), $company->get_fax() ); ?></li>
-                                                <li><?php erp_print_key_value( __( 'Website', 'erp' ), $company->get_website() ); ?></li>
-                                                <li><?php erp_print_key_value( __( 'Street 1', 'erp' ), $company->get_street_1() ); ?></li>
-                                                <li><?php erp_print_key_value( __( 'Street 2', 'erp' ), $company->get_street_2() ); ?></li>
-                                                <li><?php erp_print_key_value( __( 'City', 'erp' ), $company->get_city() ); ?></li>
-                                                <li><?php erp_print_key_value( __( 'State', 'erp' ), $company->get_state() ); ?></li>
-                                                <li><?php erp_print_key_value( __( 'Country', 'erp' ), $company->get_country() ); ?></li>
-                                                <li><?php erp_print_key_value( __( 'Postal Code', 'erp' ), $company->get_postal_code() ); ?></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                <?php endforeach; ?>
-                                <a href="#" data-id="<?php echo $customer->id; ?>" data-type="assign_company" title="<?php _e( 'Add a company', 'erp' ); ?>" class="button button-primary" id="erp-customer-add-company"><?php _e( '<i class="fa fa-plus"></i> Add a Company', 'erp' ); ?></a>
-                            </div>
-                        </div>
-                    </div><!-- .postbox -->
+                    <contact-company-relation
+                        :id="<?php echo $customer->id; ?>"
+                        type="contact_companies"
+                        title="<?php echo sprintf( '%s\'s %s', $customer->get_first_name(), __( 'Company', 'erp' ) ); ?>"
+                    ></contact-company-relation>
 
                     <div class="postbox customer-mail-subscriber-info">
                         <div class="erp-handlediv" title="<?php _e( 'Click to toggle', 'erp' ); ?>"><br></div>

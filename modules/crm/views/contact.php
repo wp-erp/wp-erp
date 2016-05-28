@@ -15,7 +15,7 @@ if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_co
     $custom_data = new stdClass();
 }
 ?>
-<div class="wrap erp-crm-customer" id="wp-erp">
+<div class="wrap erp-crm-customer erp-crm-customer-listing" id="wp-erp">
 
     <h2>
         <?php _e( 'Contact', 'erp' ); ?>
