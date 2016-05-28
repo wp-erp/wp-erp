@@ -401,6 +401,8 @@ function erp_crm_customer_get_company( $postdata ) {
  *
  * @since 1.0
  *
+ * @param [type] $[name] [<description>]
+ *
  * @return array
  */
 function erp_crm_company_get_customers( $postdata ) {

@@ -130,7 +130,8 @@
                     <contact-company-relation
                         :id="<?php echo $customer->id; ?>"
                         type="contact_companies"
-                        title="<?php echo sprintf( '%s\'s %s', $customer->get_first_name(), __( 'Company', 'erp' ) ); ?>"
+                        add-button-txt="<?php _e( 'Assing a company', 'erp' ) ?>"
+                        title="<?php echo sprintf( '%s\'s %s', $customer->get_first_name(), __( 'companies', 'erp' ) ); ?>"
                     ></contact-company-relation>
 
                     <div class="postbox customer-mail-subscriber-info">

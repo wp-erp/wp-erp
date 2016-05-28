@@ -715,7 +715,7 @@
 
     if ( $( '.erp-single-customer' ).length > 0 ) {
         Vue.component( 'contact-company-relation', {
-            props: [ 'id', 'title', 'type' ],
+            props: [ 'id', 'title', 'type', 'addButtonTxt' ],
 
             template:
                 '<div class="postbox customer-company-info">'
@@ -729,11 +729,11 @@
                                     + '<span class="customer-avatar">{{{ item.contact_details.avatar.img }}}</span>'
                                     + '<span class="customer-name">'
                                         + '<a href="{{ item.contact_details.details_url }}" target="_blank" v-if="isCompany( item.contact_details.types )">{{ item.contact_details.company }}</a>'
-                                        + '<a href="{{ item.contact_details.details_url }}" target="_blank" v-else>{{ item.contact_details.first_name }} &nbsp; {{ item.contact_details.last_name }}</a>'
+                                        + '<a href="{{ item.contact_details.details_url }}" target="_blank" v-else>{{ item.contact_details.first_name }}&nbsp;{{ item.contact_details.last_name }}</a>'
                                     + '</span>'
                                 + '</h3>'
                                 + '<div class="action">'
-                                    + '<a href="#" @click.prevent="removeCompany()" class="erp-customer-delete-company" data-id="{{ item.contact_details.id }}" data-action="erp-crm-customer-remove-company"><i class="fa fa-trash-o"></i></a>'
+                                    + '<a href="#" @click.prevent="removeCompany( item )" class="erp-customer-delete-company" data-id="{{ item.contact_details.id }}"><i class="fa fa-trash-o"></i></a>'
                                 + '</div>'
                                 + '<div class="inside company-profile-content">'
                                     + '<ul class="erp-list separated">'
@@ -750,14 +750,21 @@
                                     + '</ul>'
                                 + '</div>'
                             + '</div>'
-                            + '<a href="#" @click.prevent="addCompany()" data-id="" data-type="assign_company" title="Add a company" class="button button-primary" id="erp-customer-add-company"><i class="fa fa-plus"></i> Add a Company</a>'
+                            + '<a href="#" @click.prevent="addCompany()" data-id="" data-type="assign_company" title="{{ addButtonTxt }}" class="button button-primary" id="erp-customer-add-company"><i class="fa fa-plus"></i> {{ addButtonTxt }}</a>'
                         + '</div>'
                     + '</div>'
                 + '</div><!-- .postbox -->',
 
             data: function() {
                 return {
-                    items : []
+                    items : [],
+                    assignType : ''
+                }
+            },
+
+            computed: {
+                assignType: function() {
+                    return ( wpErpCrm.contact_type == 'contact' ) ? 'assign_company' : 'assign_customer';
                 }
             },
 
@@ -767,12 +774,52 @@
                     return $.inArray( 'company', type ) < 0 ? false : true
                 },
 
-                removeCompany: function() {
+                removeCompany: function( item ) {
+                    var self = this
 
+                    if ( confirm( wpErpCrm.confirm ) ) {
+                        wp.ajax.send( 'erp-crm-customer-remove-company', {
+                            data: {
+                                id: item.id,
+                                _wpnonce: wpErpCrm.nonce
+                            },
+                            success: function( res ) {
+                                self.items.$remove(item);
+                            }
+                        });
+                    }
                 },
 
                 addCompany: function() {
+                    var self = this,
+                        data = {
+                            id : this.id,
+                            type : this.assignType,
+                        };
 
+                    $.erpPopup({
+                        title: this.addButtonTxt,
+                        button: wpErpCrm.save_submit,
+                        id: 'erp-crm-single-contact-company',
+                        content: wperp.template('erp-crm-new-assign-company')( data ).trim(),
+                        extraClass: 'smaller',
+                        onSubmit: function(modal) {
+                            modal.disableButton();
+
+                            wp.ajax.send( {
+                                data: this.serialize(),
+                                success: function(res) {
+                                    self.fetchData();
+                                    modal.enableButton();
+                                    modal.closeModal();
+                                },
+                                error: function(error) {
+                                    modal.enableButton();
+                                    alert( error );
+                                }
+                            });
+                        }
+                    }); //popup
                 },
 
                 fetchData: function() {
@@ -796,7 +843,6 @@
 
             ready: function() {
                 this.fetchData();
-                console.log( this.items );
             }
         });
 
@@ -884,121 +930,6 @@
                             });
                         }
                     });
-                },
-
-                addCompany: function( type, id, title ) {
-                    var self = this,
-                        data = {
-                            id : id,
-                            type : type,
-                        };
-
-                    $.erpPopup({
-                        title: title,
-                        button: wpErpCrm.save_submit,
-                        id: 'erp-crm-single-contact-company',
-                        content: wperp.template('erp-crm-new-assign-company')( data ).trim(),
-                        extraClass: 'smaller',
-                        onReady: function() {
-                            // WeDevs_ERP_CRM.customerSingle.select2AddMoreContent();
-                        },
-                        onSubmit: function(modal) {
-                            modal.disableButton();
-
-                            wp.ajax.send( {
-                                data: this.serialize(),
-                                success: function(res) {
-                                    $( '.company-profile-content' ).load( window.location.href + ' .company-list' );
-                                    modal.enableButton();
-                                    modal.closeModal();
-                                },
-                                error: function(error) {
-                                    modal.enableButton();
-                                    alert( error );
-                                }
-                            });
-                        }
-                    }); //popup
-                },
-
-                /**
-                 * Customer Single Edit Company
-                 */
-                editCompany: function(e) {
-
-                    var self = $( this ),
-                    query_id = self.data( 'id' );
-
-                    $.erpPopup({
-                        title: wpErpCrm.popup.customer_update_title,
-                        button: wpErpCrm.update_submit,
-                        id: 'erp-crm-single-edit-company',
-                        extraClass: 'smaller',
-                        onReady: function() {
-                            var modal = this;
-
-                            $( 'header', modal).after( $('<div class="loader"></div>').show() );
-
-                            wp.ajax.send( 'erp-crm-customer-edit-company', {
-                                data: {
-                                    id: query_id,
-                                    _wpnonce: wpErpCrm.nonce
-                                },
-                                success: function( res ) {
-                                    var html = wp.template( 'erp-crm-customer-edit-company' )( res );
-                                    $( '.content', modal ).html( html );
-                                    $( '.loader', modal ).remove();
-
-                                    $( '.row[data-selected]', modal ).each(function() {
-                                        var self = $(this),
-                                            selected = self.data('selected');
-
-                                        if ( selected !== '' ) {
-                                            self.find( 'select' ).val( selected );
-                                        }
-                                    });
-                                }
-                            });
-                        },
-
-                        onSubmit: function(modal) {
-                            modal.disableButton();
-
-                            wp.ajax.send( {
-                                data: this.serialize(),
-                                success: function(res) {
-                                    WeDevs_ERP_CRM.customer.pageReload();
-                                    modal.enableButton();
-                                    modal.closeModal();
-                                },
-                                error: function(error) {
-                                    modal.enableButton();
-                                    alert( error );
-                                }
-                            });
-                        }
-
-                    });
-
-                },
-
-                /**
-                 *  Remove company from customer single profile
-                 */
-                removeCompany: function( action, id, e ) {
-                    var self = $(e.target);
-
-                    if ( confirm( wpErpCrm.confirm ) ) {
-                        wp.ajax.send( action, {
-                            data: {
-                                id: id,
-                                _wpnonce: wpErpCrm.nonce
-                            },
-                            success: function( res ) {
-                                self.closest('div.postbox').fadeOut();
-                            }
-                        });
-                    }
                 },
 
                 assignContact: function() {
