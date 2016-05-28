@@ -130,6 +130,8 @@ class ERP_Settings_Page {
                     update_option( $this->get_option_id(), $update_options );
                 }
 
+                do_action( 'erp_after_save_settings' );
+
             }
         }
     }

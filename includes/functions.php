@@ -1340,7 +1340,8 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
         $phpmailer->FromName = apply_filters( 'erp_mail_from_name', $from_name );
         $phpmailer->ContentType = apply_filters( 'erp_mail_content_type', $content_type );
 
-        $phpmailer->Sender = $phpmailer->From; //Return-Path
+        //Return-Path
+        $phpmailer->Sender = apply_filters( 'erp_mail_return_path', $phpmailer->From );
 
         if ( ! empty( $custom_headers ) ) {
             foreach ( $custom_headers as $key => $value ) {
