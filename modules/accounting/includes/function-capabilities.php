@@ -376,12 +376,12 @@ function erp_ac_create_expenses_voucher() {
     return current_user_can( 'erp_ac_create_expenses_voucher' );
 }
 
-function erp_ac_create_expenses_credit() {
-    return current_user_can( 'erp_ac_create_expenses_credit' );
-}
-
 function erp_ac_publish_expenses_voucher() {
     return current_user_can( 'erp_ac_publish_expenses_voucher' );
+}
+
+function erp_ac_create_expenses_credit() {
+    return current_user_can( 'erp_ac_create_expenses_credit' );
 }
 
 function erp_ac_publish_expenses_credit() {
@@ -415,7 +415,7 @@ function erp_ac_create_journal() {
 }
 
 function erp_ac_view_other_journals() {
-    return false; //current_user_can( 'erp_ac_view_other_journals' );
+    return current_user_can( 'erp_ac_view_other_journals' );
 }
 
 

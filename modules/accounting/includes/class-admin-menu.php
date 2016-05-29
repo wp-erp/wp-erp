@@ -91,9 +91,9 @@ class Admin_Menu {
         switch ($action) {
             case 'new':
 
-                if ( $type == 'invoice' && erp_ac_create_sales_invoice() ) {
+                if ( $type == 'invoice' && ( erp_ac_create_sales_invoice() || erp_ac_publish_sales_invoice() ) ) {
                     $template = dirname( __FILE__ ) . '/views/sales/invoice-new.php';
-                } else if ( $type == 'payment' && erp_ac_create_sales_payment() ) {
+                } else if ( $type == 'payment' && ( erp_ac_create_sales_payment() || erp_ac_publish_sales_payment() ) ) {
                    $template = dirname( __FILE__ ) . '/views/sales/payment-new.php';
                 }
 
@@ -117,6 +117,8 @@ class Admin_Menu {
 
         if ( file_exists( $template ) ) {
             include $template;
+        } else {
+            echo '<h1>You do not have sufficient permissions to access this page.</h1>';
         }
     }
 
@@ -129,11 +131,11 @@ class Admin_Menu {
         switch ($action) {
             case 'new':
 
-                if ( $type == 'payment_voucher' ) {
+                if ( $type == 'payment_voucher' && ( erp_ac_create_expenses_voucher() || erp_ac_publish_expenses_voucher() ) ) {
 
                     $template = dirname( __FILE__ ) . '/views/expense/payment-voucher.php';
 
-                } elseif ( $type == 'vendor_credit' ) {
+                } elseif ( $type == 'vendor_credit' && ( erp_ac_create_expenses_credit() || erp_ac_publish_expenses_credit() ) ) {
 
                     $template = dirname( __FILE__ ) . '/views/expense/vendor-credit.php';
 
@@ -159,6 +161,8 @@ class Admin_Menu {
 
         if ( file_exists( $template ) ) {
             include $template;
+        } else {
+            echo '<h1>You do not have sufficient permissions to access this page.</h1>';
         }
     }
 
