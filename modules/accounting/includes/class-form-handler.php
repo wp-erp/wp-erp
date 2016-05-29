@@ -417,6 +417,11 @@ class Form_Handler {
     }
 
     public function journal_entry() {
+        
+        if ( ! erp_ac_create_journal() ) {
+            return new WP_Error( 'error', __( 'You do not have sufficient permissions', 'erp' ) );
+        }
+        
         global $wpdb;
 
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-ac-journal-entry' ) ) {

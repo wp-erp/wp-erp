@@ -124,6 +124,7 @@ function erp_ac_insert_chart( $args = array() ) {
     );
 
     $args       = wp_parse_args( $args, $defaults );
+
     $table_name = $wpdb->prefix . 'erp_ac_ledger';
 
     // some basic validation
@@ -136,6 +137,9 @@ function erp_ac_insert_chart( $args = array() ) {
     unset( $args['id'] );
 
     if ( ! $row_id ) {
+        if ( ! erp_ac_create_account() ) {
+            return new WP_Error( 'error', __( 'You do not have sufficient permissions', 'erp' ) );
+        }
 
         $ledger = WeDevs\ERP\Accounting\Model\Ledger::create( $args );
 
@@ -144,6 +148,10 @@ function erp_ac_insert_chart( $args = array() ) {
         }
 
     } else {
+
+        if ( ! erp_ac_edit_account() ) {
+            return new WP_Error( 'error', __( 'You do not have sufficient permissions', 'erp' ) );
+        }
 
         // don't allow to change account type
         unset( $args['type_id'] );
@@ -477,6 +485,11 @@ function chart_grouping() {
 }
 
 function erp_ac_delete_chart( $chart_id ) {
+    
+    if ( ! erp_ac_delete_account() ) {
+        return new WP_Error( 'error', __( 'You do not have sufficient permissions', 'erp' ) );
+    }
+
     $chart = erp_ac_bank_journal( $chart_id );
 
     if ( $chart ) {

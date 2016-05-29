@@ -409,10 +409,16 @@ function erp_ac_delete_account() {
 function erp_ac_create_bank_transfer() {
     return current_user_can( 'erp_ac_create_bank_transfer' );
 }
-
+//journal
 function erp_ac_create_journal() {
     return current_user_can( 'erp_ac_create_journal' );
 }
+
+function erp_ac_view_other_journals() {
+    return current_user_can( 'erp_ac_view_other_journals' );
+}
+
+
  
 
 
