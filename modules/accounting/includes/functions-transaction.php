@@ -53,6 +53,14 @@ function erp_ac_get_all_transaction( $args = array() ) {
             $transaction = $transaction->where( 'user_id', '=', $args['user_id'] );
         }
 
+        if ( isset( $args['created_by'] ) &&  is_array( $args['created_by'] ) && array_key_exists( 'in', $args['created_by'] ) ) {
+            $transaction = $transaction->whereIn( 'created_by', $args['created_by']['in'] );
+        } else if ( isset( $args['created_by'] ) &&  is_array( $args['created_by'] ) && array_key_exists( 'not_in', $args['created_by'] ) ) {
+            $transaction = $transaction->whereNotIn( 'created_by', [$args['created_by']['not_in']] );
+        } else if ( isset( $args['created_by'] ) &&  ! is_array( $args['created_by'] ) ) {
+            $transaction = $transaction->where( 'created_by', '=', $args['created_by'] );
+        }
+
         if ( isset( $args['start_date'] ) && ! empty( $args['start_date'] ) ) {
             $transaction = $transaction->where( 'issue_date', '>=', $args['start_date'] );
         } else {

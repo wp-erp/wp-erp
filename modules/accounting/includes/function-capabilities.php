@@ -415,7 +415,7 @@ function erp_ac_create_journal() {
 }
 
 function erp_ac_view_other_journals() {
-    return current_user_can( 'erp_ac_view_other_journals' );
+    return false; //current_user_can( 'erp_ac_view_other_journals' );
 }
 
 
