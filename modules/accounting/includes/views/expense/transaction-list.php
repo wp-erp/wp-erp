@@ -9,11 +9,11 @@
             $form_types = erp_ac_get_expense_form_types();
             if ( $form_types ) {
                 foreach ($form_types as $key => $form) {
-                    if ( 'payment_voucher' == $key && erp_ac_create_expenses_voucher() ) {
+                    if ( 'payment_voucher' == $key && ( erp_ac_create_expenses_voucher() || erp_ac_publish_expenses_voucher() ) ) {
                         printf( '<a class="add-new-h2" href="%s%s" title="%s">%s</a> ', admin_url( 'admin.php?page=erp-accounting-expense&action=new&type=' ), $key, esc_attr( $form['description'] ), $form['label'] );
                     }
                 
-                    if ( 'vendor_credit' == $key && erp_ac_create_expenses_credit() ) { 
+                    if ( 'vendor_credit' == $key && ( erp_ac_create_expenses_credit() || erp_ac_publish_expenses_credit() ) ) { 
                         printf( '<a class="add-new-h2" href="%s%s" title="%s">%s</a> ', admin_url( 'admin.php?page=erp-accounting-expense&action=new&type=' ), $key, esc_attr( $form['description'] ), $form['label'] );
                     }
 
