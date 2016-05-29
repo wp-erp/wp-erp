@@ -351,12 +351,12 @@ function erp_ac_create_sales_payment() {
     return current_user_can( 'erp_ac_create_sales_payment' );
 }
 
-function erp_ac_create_sales_invoice() {
-    return current_user_can( 'erp_ac_create_sales_invoice' );
-}
-
 function erp_ac_publish_sales_payment() {
     return current_user_can( 'erp_ac_publish_sales_payment' );
+}
+
+function erp_ac_create_sales_invoice() {
+    return current_user_can( 'erp_ac_create_sales_invoice' );
 }
 
 function erp_ac_publish_sales_invoice() {
