@@ -459,11 +459,11 @@ class Ajax_Handler {
         }
 
         if ( $customer_id && erp_crm_check_customer_exist_company( $customer_id, $id ) ) {
-            $this->send_error( __( 'Customer already assigned. Choose another customer', 'erp' ) );
+            $this->send_error( __( 'Contact already assigned. Choose another contact', 'erp' ) );
         }
 
         if ( ! $id ) {
-            $this->send_error( __( 'No Customer found', 'erp' ) );
+            $this->send_error( __( 'No contact found', 'erp' ) );
         }
 
         if ( $type == 'assign_customer' ) {

@@ -1,4 +1,5 @@
 ;( function($) {
+    Vue.config.debug = 1;
 
     var mixin = {
         methods: {
@@ -13,6 +14,23 @@
                 $( '.erp-select2' ).select2({
                     placeholder: $(this).attr('data-placeholder')
                 });
+            },
+
+            printObjectValue: function( key, obj, defaultVal ) {
+                defaultVal = ( typeof defaultVal == 'undefined' ) ? '—' : defaultVal;
+                value = ( obj[key] != '' && obj[key] != '-1' ) ? obj[key] : defaultVal;
+                return value;
+            },
+
+            handlePostboxToggle: function() {
+                var self = $(event.target),
+                    postboxDiv = self.closest('.postbox');
+
+                if ( postboxDiv.hasClass('closed') ) {
+                    postboxDiv.removeClass('closed');
+                } else {
+                    postboxDiv.addClass('closed');
+                }
             },
 
             initSearchCrmAgent: function() {
@@ -60,7 +78,6 @@
     }
 
     if ( $( '.erp-crm-customer-listing' ).length > 0 ) {
-        Vue.config.debug = 1;
 
         var tableColumns = [
             {
@@ -300,7 +317,6 @@
                                     });
 
                                     $('select#erp-customer-type').trigger('change');
-                                    $( '.erp-select2' ).select2();
                                     $( 'select.erp-country-select').change();
 
                                     $( 'li[data-selected]', modal ).each(function() {
@@ -717,15 +733,17 @@
         Vue.component( 'contact-company-relation', {
             props: [ 'id', 'title', 'type', 'addButtonTxt' ],
 
+            mixins:[mixin],
+
             template:
                 '<div class="postbox customer-company-info">'
-                    + '<div class="erp-handlediv" title="Click to toggle"><br></div>'
-                    + '<h3 class="erp-hndle"><span>{{ title }}</span></h3>'
+                    + '<div class="erp-handlediv" @click.prevent="handlePostboxToggle()" title="Click to toggle"><br></div>'
+                    + '<h3 class="erp-hndle" @click.prevent="handlePostboxToggle()"><span>{{ title }}</span></h3>'
                     + '<div class="inside company-profile-content">'
                         + '<div class="company-list">'
                             + '<div v-for="item in items" class="postbox closed">'
-                                + '<div class="erp-handlediv" title="Click to toggle"><br></div>'
-                                + '<h3 class="erp-hndle">'
+                                + '<div class="erp-handlediv" @click.prevent="handlePostboxToggle()" title="Click to toggle"><br></div>'
+                                + '<h3 class="erp-hndle" @click="handlePostboxToggle()">'
                                     + '<span class="customer-avatar">{{{ item.contact_details.avatar.img }}}</span>'
                                     + '<span class="customer-name">'
                                         + '<a href="{{ item.contact_details.details_url }}" target="_blank" v-if="isCompany( item.contact_details.types )">{{ item.contact_details.company }}</a>'
@@ -737,16 +755,16 @@
                                 + '</div>'
                                 + '<div class="inside company-profile-content">'
                                     + '<ul class="erp-list separated">'
-                                        + '<li><label>Phone</label><span class="sep"> : </span><span class="value"><a href="tel:{{ item.contact_details.phone }}">{{ item.contact_details.phone }}</a></span></li>'
-                                        + '<li><label>Mobile</label><span class="sep"> : </span><span class="value"><a href="tel:{{ item.contact_details.mobile }}">{{ item.contact_details.mobile }}</a></span></li>'
-                                        + '<li><label>Fax</label><span class="sep"> : </span><span class="value">{{ item.contact_details.fax }}</span></li>'
-                                        + '<li><label>Website</label><span class="sep"> : </span><span class="value"><a href="{{ item.contact_details.website }}">{{ item.contact_details.website }}</a></span></li>'
-                                        + '<li><label>Street 1</label><span class="sep"> : </span><span class="value">{{ item.contact_details.street_1 }}</span></li>'
-                                        + '<li><label>Street 2</label><span class="sep"> : </span><span class="value">{{ item.contact_details.street_2 }}</span></li>'
-                                        + '<li><label>City</label><span class="sep"> : </span><span class="value">{{ item.contact_details.city }}</span></li>'
-                                        + '<li><label>State</label><span class="sep"> : </span><span class="value">{{ item.contact_details.state }}</span></li>'
-                                        + '<li><label>Country</label><span class="sep"> : </span><span class="value">{{ item.contact_details.country }}</span></li>'
-                                        + '<li><label>Postal Code</label><span class="sep"> : </span><span class="value">{{ item.contact_details.postal_code }}</span></li>'
+                                        + '<li><label>Phone</label><span class="sep"> : </span><span class="value" v-if="item.contact_details.phone"><a href="tel:{{ item.contact_details.phone }}">{{ printObjectValue( \'phone\', item.contact_details ) }}</a></span><span v-else>—</span></li>'
+                                        + '<li><label>Mobile</label><span class="sep"> : </span><span class="value" v-if="item.contact_details.mobile"><a href="tel:{{ item.contact_details.mobile }}">{{ printObjectValue( \'mobile\', item.contact_details ) }}</a></span><span v-else>—</span></li>'
+                                        + '<li><label>Fax</label><span class="sep"> : </span><span class="value">{{ printObjectValue( \'fax\', item.contact_details ) }}</span></li>'
+                                        + '<li><label>Website</label><span class="sep"> : </span><span class="value" v-if="item.contact_details.website"><a href="{{ item.contact_details.website }}">{{ printObjectValue( \'website\', item.contact_details ) }}</a></span><span v-else>—</span></li>'
+                                        + '<li><label>Street 1</label><span class="sep"> : </span><span class="value">{{ printObjectValue( \'street_1\', item.contact_details ) }}</span></li>'
+                                        + '<li><label>Street 2</label><span class="sep"> : </span><span class="value">{{ printObjectValue( \'street_2\', item.contact_details ) }}</span></li>'
+                                        + '<li><label>City</label><span class="sep"> : </span><span class="value">{{ printObjectValue( \'city\', item.contact_details ) }}</span></li>'
+                                        + '<li><label>State</label><span class="sep"> : </span><span class="value">{{ printObjectValue( \'state\', item.contact_details ) }}</span></li>'
+                                        + '<li><label>Country</label><span class="sep"> : </span><span class="value">{{ printObjectValue( \'country\', item.contact_details ) }}</span></li>'
+                                        + '<li><label>Postal Code</label><span class="sep"> : </span><span class="value">{{ printObjectValue( \'postal_code\', item.contact_details ) }}</span></li>'
                                     + '</ul>'
                                 + '</div>'
                             + '</div>'
@@ -809,6 +827,7 @@
                             wp.ajax.send( {
                                 data: this.serialize(),
                                 success: function(res) {
+                                    console.log( res );
                                     self.fetchData();
                                     modal.enableButton();
                                     modal.closeModal();
@@ -849,10 +868,12 @@
         Vue.component( 'contact-assign-group', {
             props: [ 'id', 'title', 'addButtonTxt' ],
 
+            mixins:[mixin],
+
             template:
                 '<div class="postbox customer-mail-subscriber-info">'
-                    + '<div class="erp-handlediv" title="Click to toggle"><br></div>'
-                    + '<h3 class="erp-hndle"><span>{{ title }}</span></h3>'
+                    + '<div class="erp-handlediv" @click.prevent="handlePostboxToggle()" title="Click to toggle"><br></div>'
+                    + '<h3 class="erp-hndle" @click.prevent="handlePostboxToggle()"><span>{{ title }}</span></h3>'
                     + '<div class="inside contact-group-content">'
                         + '<div v-if="items" class="contact-group-list">'
                             + '<p v-for="item in items">{{ item.groups.name }}'
@@ -1006,7 +1027,6 @@
                                     });
 
                                     $('select#erp-customer-type').trigger('change');
-                                    $( '.erp-select2' ).select2();
                                     $( 'select.erp-country-select').change();
 
                                     $( 'li[data-selected]', modal ).each(function() {
@@ -1086,22 +1106,7 @@
 
                     mainWrap.find('.assign-form').hide();
                     mainWrap.find('.user-wrap').fadeIn();
-                },
-
-                handlePostboxToggle: function() {
-                    var self = $(event.target),
-                        postboxDiv = self.closest('.postbox');
-
-                    if ( postboxDiv.hasClass('closed') ) {
-                        postboxDiv.removeClass('closed');
-                    } else {
-                        postboxDiv.addClass('closed');
-                    }
-                },
-            },
-
-            ready: function() {
-                $('body').on( 'click', 'div.erp-handlediv', this.handlePostboxToggle );
+                }
             }
         });
     }

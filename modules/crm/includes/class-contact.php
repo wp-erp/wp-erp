@@ -283,7 +283,7 @@ class Contact extends \WeDevs\ERP\People {
      */
     public function get_country() {
         if ( $this->id ) {
-            return erp_get_country_name( $this->country );
+            return ( $this->country != '-1' ) ? erp_get_country_name( $this->country ) : '—';
         }
     }
 
@@ -296,7 +296,7 @@ class Contact extends \WeDevs\ERP\People {
      */
     public function get_state() {
         if ( $this->id ) {
-            return erp_get_state_name( $this->country, $this->state );
+            return ( $this->state != '-1' ) ? erp_get_state_name( $this->country, $this->state ) : '—';
         }
     }
 
