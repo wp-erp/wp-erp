@@ -10,6 +10,14 @@ function erp_ac_table_update() {
 		$wpdb->query( "ALTER TABLE $table ADD `sub_total` DECIMAL(10,2) NOT NULL AFTER `conversion_rate`" );	
 	}
 
+	$ledger = $wpdb->prefix . 'erp_ac_ledger';
+
+	$cols = $wpdb->get_col( "DESC " . $ledger );
+
+	if ( ! in_array( 'created_by', $cols ) ) {
+		$wpdb->query( "ALTER TABLE $ledger ADD `created_by` bigint(20) NOT NULL AFTER `active`" );	
+	}
+
 	$item_table = $wpdb->prefix . 'erp_ac_transaction_items';
 	$item_cols  = $wpdb->get_col( "DESC " . $item_table );
 

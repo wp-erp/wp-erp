@@ -121,7 +121,8 @@ function erp_ac_insert_chart( $args = array() ) {
         'active'      => 1,
         'parent'      => 0,
         'system'      => 0,
-    );
+        'created_by'  => get_current_user_id()
+     );
 
     $args       = wp_parse_args( $args, $defaults );
 

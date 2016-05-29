@@ -8,9 +8,10 @@ function erp_ac_new_tax( $postdata ) {
 	global $wpdb;
 
     $args = array(
-        'name'       => isset( $postdata['tax_name'] ) ? $postdata['tax_name'] : '',
-        'tax_number' => isset( $postdata['tax_number'] ) ? $postdata['tax_number'] : '',
+        'name'        => isset( $postdata['tax_name'] ) ? $postdata['tax_name'] : '',
+        'tax_number'  => isset( $postdata['tax_number'] ) ? $postdata['tax_number'] : '',
         'is_compound' => isset( $postdata['compound'] ) ? $postdata['compound'] : '',
+        'created_by'  => isset( $postdata['created_by'] ) ? $postdata['created_by'] : get_current_user_id()
     );
 
     $tax = new WeDevs\ERP\Accounting\Model\Tax();

@@ -6,7 +6,7 @@ use WeDevs\ERP\Framework\Model;
 class Tax extends Model {
     protected $primaryKey = 'id';
     protected $table      = 'erp_ac_tax';
-    protected $fillable   = ['name', 'tax_number', 'is_compound'];
+    protected $fillable   = ['name', 'tax_number', 'is_compound', 'created_by'];
     public $timestamps = false;
 
     public function items() {

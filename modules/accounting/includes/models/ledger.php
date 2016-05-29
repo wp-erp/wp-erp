@@ -7,7 +7,7 @@ class Ledger extends Model {
     protected $primaryKey = 'id';
     protected $table      = 'erp_ac_ledger';
     public $timestamps    = false;
-    protected $fillable   = [ 'code', 'name', 'description', 'type_id', 'currency', 'tax', 'cash_account', 'reconcile', 'system', 'active'];
+    protected $fillable   = [ 'code', 'name', 'description', 'type_id', 'currency', 'tax', 'cash_account', 'reconcile', 'system', 'active', 'created_by'];
 
     public function scopeBank( $query ) {
         return $query->where( 'cash_account', '=', 1 );
