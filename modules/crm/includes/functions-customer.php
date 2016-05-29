@@ -1226,6 +1226,10 @@ function erp_crm_get_editable_assign_contact( $user_id ) {
  * @return array
  */
 function erp_crm_get_user_assignable_groups( $user_id ) {
+    if ( ! $user_id ) {
+        return new WP_Error( 'no-user-id', __( 'No contact found', 'erp' ) );
+    }
+
     $data = \WeDevs\ERP\CRM\Models\ContactSubscriber::with('groups')->where( 'user_id', $user_id )->distinct()->get()->toArray();
     return $data;
 }

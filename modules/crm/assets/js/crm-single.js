@@ -846,15 +846,131 @@
             }
         });
 
+        Vue.component( 'contact-assign-group', {
+            props: [ 'id', 'title', 'addButtonTxt' ],
+
+            template:
+                '<div class="postbox customer-mail-subscriber-info">'
+                    + '<div class="erp-handlediv" title="Click to toggle"><br></div>'
+                    + '<h3 class="erp-hndle"><span>{{ title }}</span></h3>'
+                    + '<div class="inside contact-group-content">'
+                        + '<div v-if="items" class="contact-group-list">'
+                            + '<p v-for="item in items">{{ item.groups.name }}'
+                                + '<tooltip :content="subscriberInfo( item )" :title="subscribeInfoToolTip(item)"></tooltip>'
+                            + '</p>'
+                            + '<a href="#" @click.prevent="assigContactGroup()" id="erp-contact-update-assign-group" data-id="" title="{{ addButtonTxt }}"><i class="fa fa-plus"></i> {{ addButtonTxt }}</a>'
+                        + '</div>'
+                    + '</div>'
+                + '</div><!-- .postbox -->',
+
+            data: function() {
+                return {
+                    items: []
+                }
+            },
+
+            methods: {
+
+                subscriberInfo: function( item ) {
+                    return '<i class="fa fa-info-circle"></i>';
+                },
+
+                subscribeInfoToolTip: function ( item ) {
+                    if ( 'subscribe' == item.status ) {
+                        return 'Subscribed at ' + wperp.dateFormat( item.subscribe_at, 'Y-m-d' );
+                    } else {
+                        return 'Unsubscribed at ' + wperp.dateFormat( item.unsubscribe_at, 'Y-m-d' );
+                    }
+
+                    return '';
+                },
+
+                assigContactGroup: function() {
+                    var self = this,
+                    query_id = self.id;
+
+                    $.erpPopup({
+                        title: self.title,
+                        button: wpErpCrm.update_submit,
+                        id: 'erp-crm-edit-contact-subscriber',
+                        extraClass: 'smaller',
+                        onReady: function() {
+                            var modal = this;
+
+                            $( 'header', modal).after( $('<div class="loader"></div>').show() );
+
+                            wp.ajax.send( 'erp-crm-edit-contact-subscriber', {
+                                data: {
+                                    id: query_id,
+                                    _wpnonce: wpErpCrm.nonce
+                                },
+                                success: function( res ) {
+                                    var html = wp.template( 'erp-crm-assign-subscriber-contact' )( { group_id : res.groups, user_id: query_id } );
+                                    $( '.content', modal ).html( html );
+                                    _.each( $( 'input[type=checkbox].erp-crm-contact-group-class' ), function( el, i) {
+                                        var optionsVal = $(el).val();
+                                        if( _.contains( res.groups, optionsVal ) && res.results[optionsVal].status == 'subscribe' ) {
+                                            $(el).prop('checked', true );
+                                        }
+                                        if ( _.contains( res.groups, optionsVal ) && res.results[optionsVal].status == 'unsubscribe' ) {
+                                            $(el).closest('label').find('span.checkbox-value')
+                                                .append('<span class="unsubscribe-group">' + res.results[optionsVal].unsubscribe_message + '</span>');
+                                        };
+                                    });
+
+                                    $( '.loader', modal ).remove();
+                                }
+                            });
+                        },
+
+                        onSubmit: function(modal) {
+                            modal.disableButton();
+
+                            wp.ajax.send( {
+                                data: this.serialize(),
+                                success: function(res) {
+                                    self.fetchData();
+                                    modal.enableButton();
+                                    modal.closeModal();
+                                },
+                                error: function(error) {
+                                    modal.enableButton();
+                                    alert( error );
+                                }
+                            });
+                        }
+
+                    });
+                },
+
+                fetchData: function() {
+                    var self = this,
+                        data = {
+                            id: this.id,
+                            action: 'erp-crm-get-assignable-group',
+                            _wpnonce: wpErpCrm.nonce
+                        };
+
+                    jQuery.post( wpErpCrm.ajaxurl, data, function( resp ) {
+                        if ( resp.success ) {
+                            self.items = resp.data;
+                        } else {
+                            alert(resp);
+                        }
+                    } );
+                }
+            },
+
+            ready: function() {
+                this.fetchData();
+            }
+        });
+
 
         var contactSingle = new Vue({
             el: '#wp-erp',
 
             mixins: [mixin],
-
-            data: {
-
-            },
 
             methods: {
 
@@ -982,18 +1098,10 @@
                         postboxDiv.addClass('closed');
                     }
                 },
-
             },
 
             ready: function() {
                 $('body').on( 'click', 'div.erp-handlediv', this.handlePostboxToggle );
-                // $( '.erp-single-customer' ).on( 'click', '#erp-customer-add-company', this.addCompany );
-                // $( '.erp-single-customer' ).on( 'click', 'a.erp-customer-edit-company', this.editCompany ); // @TODO: remaining....
-                // $( '.erp-single-customer' ).on( 'click', 'a.erp-customer-delete-company', this.removeCompany );
-                // $( '.erp-single-customer' ).on( 'click', 'span#erp-crm-edit-assign-contact-to-agent', this.assignContact );
-                // $( '.erp-single-customer' ).on( 'click', 'input.save-edit-assign-contact', this.saveAssignContact );
-                // $( '.erp-single-customer' ).on( 'click', 'input.cancel-edit-assign-contact', this.cancelAssignContact );
-                // $( '.erp-single-customer' ).on( 'click', 'a#erp-contact-update-assign-group', this.subscriberContact.edit );
             }
         });
     }

@@ -1256,9 +1256,6 @@
                             success: function( res ) {
                                 var html = wp.template( 'erp-crm-assign-subscriber-contact' )( { group_id : res.groups, user_id: query_id } );
                                 $( '.content', modal ).html( html );
-
-
-
                                 _.each( $( 'input[type=checkbox].erp-crm-contact-group-class' ), function( el, i) {
                                     var optionsVal = $(el).val();
                                     if( _.contains( res.groups, optionsVal ) && res.results[optionsVal].status == 'subscribe' ) {

@@ -82,7 +82,7 @@
                                             $crm_user_id = erp_people_get_meta( $customer->id, '_assign_crm_agent', true );
                                             if ( !empty( $crm_user_id ) ) {
                                                 $user        = get_user_by( 'id', $crm_user_id );
-                                                $user_string = esc_html( $user->display_name ) . ' (#' . absint( $user->ID ) . ' &ndash; ' . esc_html( $user->user_email ) . ')';
+                                                $user_string = esc_html( $user->display_name );
                                             }
                                         ?>
                                         <?php if ( $crm_user_id ): ?>
@@ -100,7 +100,7 @@
                                         <div class="clearfix"></div>
 
                                         <?php if ( current_user_can( 'erp_crm_edit_contact' ) ): ?>
-                                            <span id="erp-crm-edit-assign-contact-to-agent"><i class="fa fa-pencil-square-o"></i></span>
+                                            <span @click.prevent="assignContact()" id="erp-crm-edit-assign-contact-to-agent"><i class="fa fa-pencil-square-o"></i></span>
                                         <?php endif ?>
                                     </div>
 
@@ -117,8 +117,8 @@
                                             </div>
 
                                             <input type="hidden" name="assign_contact_id" value="<?php echo $customer->id; ?>">
-                                            <input type="submit" class="button button-primary save-edit-assign-contact" name="erp_assign_contacts" value="<?php _e( 'Assign', 'erp' ); ?>">
-                                            <input type="submit" class="button cancel-edit-assign-contact" value="<?php _e( 'Cancel', 'erp' ); ?>">
+                                            <input type="submit" @click.prevent="saveAssignContact()" class="button button-primary save-edit-assign-contact" name="erp_assign_contacts" value="<?php _e( 'Assign', 'erp' ); ?>">
+                                            <input type="submit" @click.prevent="cancelAssignContact()" class="button cancel-edit-assign-contact" value="<?php _e( 'Cancel', 'erp' ); ?>">
                                         </form>
                                     </div>
                                 </div>
@@ -133,32 +133,12 @@
                         title="<?php echo sprintf( '%s\'s %s', $customer->get_full_name(), __( 'contacts', 'erp' ) ); ?>"
                     ></contact-company-relation>
 
-                    <div class="postbox customer-mail-subscriber-info">
-                        <div class="erp-handlediv" title="<?php _e( 'Click to toggle', 'erp' ); ?>"><br></div>
-                        <h3 class="erp-hndle"><span><?php _e( 'Mail Subscriber Group', 'erp' ); ?></span></h3>
-                        <div class="inside contact-group-content">
-                            <div class="contact-group-list">
-                                <?php $subscribe_groups = erp_crm_get_user_assignable_groups( $customer->id ); ?>
-                                <?php if ( $subscribe_groups ): ?>
-                                    <?php foreach ( $subscribe_groups as $key => $groups ): ?>
-                                        <p>
-                                            <?php
-                                                echo $groups['groups']['name'];
-                                                $info_messg = ( $groups['status'] == 'subscribe' )
-                                                                ? sprintf( '%s %s', __( 'Subscribed on', 'erp' ), erp_format_date( $groups['subscribe_at'] ) )
-                                                                : sprintf( '%s %s', __( 'Unsubscribed on', 'erp' ), erp_format_date( $groups['unsubscribe_at'] ) );
-                                            ?>
-                                            <span class="erp-crm-tips" title="<?php echo $info_messg; ?>">
-                                                <i class="fa fa-info-circle"></i>
-                                            </span>
-                                        </p>
-                                    <?php endforeach; ?>
-                                <?php endif ?>
+                    <contact-assign-group
+                        :id="<?php echo $customer->id; ?>"
+                        add-button-txt="<?php _e( 'Assign Contact Groups', 'erp' ) ?>"
+                        title="<?php _e( 'Contact Group', 'erp' ); ?>"
+                    ></contact-assign-group>
 
-                                <a href="#" id="erp-contact-update-assign-group" data-id="<?php echo $customer->id; ?>" title="<?php _e( 'Assign Contact Groups', 'erp' ); ?>"><i class="fa fa-plus"></i> <?php _e( 'Assign any Contact Groups', 'erp' ); ?></a>
-                            </div>
-                        </div>
-                    </div><!-- .postbox -->
                 </div>
             </div>
 

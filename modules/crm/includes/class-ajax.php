@@ -32,6 +32,7 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-crm-convert-user-to-contact', 'convert_user_to_customer' );
         $this->action( 'wp_ajax_erp-crm-get-contacts', 'get_all_contact' );
         $this->action( 'wp_ajax_erp-crm-get-contact-companies', 'get_contact_companies' );
+        $this->action( 'wp_ajax_erp-crm-get-assignable-group', 'get_assignable_contact' );
 
         $this->action( 'wp_ajax_erp-crm-customer-add-company', 'customer_add_company' );
         $this->action( 'wp_ajax_erp-crm-customer-edit-company', 'customer_edit_company' );
@@ -186,6 +187,7 @@ class Ajax_Handler {
 
     public function get_contact_companies() {
         $this->verify_nonce( 'wp-erp-crm-nonce' );
+
         unset( $_POST['_wpnonce'], $_POST['_wp_http_referer'], $_POST['action'] );
 
         if ( isset( $_POST['type'] ) && empty( $_POST['type'] ) ) {
@@ -199,6 +201,24 @@ class Ajax_Handler {
         } else {
             $data = [];
         }
+
+        if ( is_wp_error( $data ) ) {
+            $this->send_error( $data->get_error_message() );
+        }
+
+        $this->send_success( $data );
+    }
+
+    public function get_assignable_contact() {
+        $this->verify_nonce( 'wp-erp-crm-nonce' );
+
+        unset( $_POST['_wpnonce'], $_POST['_wp_http_referer'], $_POST['action'] );
+
+        if ( ! isset( $_POST['id'] ) ) {
+            $this->send_error( __( 'No company or contact found', 'erp' ) );
+        }
+
+        $data = erp_crm_get_user_assignable_groups( $_POST['id'] );
 
         if ( is_wp_error( $data ) ) {
             $this->send_error( $data->get_error_message() );
