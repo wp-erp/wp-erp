@@ -699,7 +699,7 @@ function erp_cron_intervals( $schedules ) {
     );
 
     $schedules['thirty_min'] = array(
-        'interval'  => MINUTE_IN_SECONDS * 15,
+        'interval'  => MINUTE_IN_SECONDS * 30,
         'display'   => __( 'Every 30 Minutes', 'erp' )
     );
 
