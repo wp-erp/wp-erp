@@ -2774,7 +2774,12 @@ function erp_crm_check_new_inbound_emails() {
     try {
         $imap = new \WeDevs\ERP\Imap( $mail_server, $port, $protocol, $username, $password, $authentication );
 
-        $date = date( "d M Y", strtotime( "-1 days" ) );
+        if ( isset( $imap_options['schedule'] ) && $imap_options['schedule'] == 'weekly' ) {
+            $date = date( "d M Y", strtotime( "-7 days" ) );
+        } else {
+            $date = date( "d M Y", strtotime( "-1 days" ) );
+        }
+
         $emails = $imap->get_emails( "Inbox", "UNSEEN SINCE \"$date\"" );
 
         $email_regexp = '([a-z0-9]+[.][0-9]+[.][0-9]+[.][r][1|2])@' . $_SERVER['HTTP_HOST'];
