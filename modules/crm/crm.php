@@ -204,16 +204,17 @@ class Customer_Relationship {
                 wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", array( 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
             }
 
-            wp_enqueue_script( 'wp-erp-crm-vue-save-search', WPERP_CRM_ASSETS . "/js/save-search$suffix.js", array( 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
-            wp_enqueue_script( 'post' );
+            if ( !isset( $_GET['action'] ) ) {
+                wp_enqueue_script( 'wp-erp-crm-vue-save-search', WPERP_CRM_ASSETS . "/js/save-search$suffix.js", array( 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
+                wp_localize_script( 'wp-erp-crm-vue-save-search', 'wpCRMSaveSearch', [
+                    'ajaxurl'         => admin_url( 'admin-ajax.php' ),
+                    'nonce'           => wp_create_nonce( 'wp-erp-crm-save-search' ),
+                    'searchFields'    => erp_crm_get_serach_key( $hook )
+                ] );
+            }
 
             wp_localize_script( 'wp-erp-crm-vue-component', 'wpCRMvue', $contact_actvity_localize );
-
-            wp_localize_script( 'wp-erp-crm-vue-save-search', 'wpCRMSaveSearch', [
-                'ajaxurl'         => admin_url( 'admin-ajax.php' ),
-                'nonce'           => wp_create_nonce( 'wp-erp-crm-save-search' ),
-                'searchFields'    => erp_crm_get_serach_key( $hook )
-            ] );
+            wp_enqueue_script( 'post' );
         }
 
         if ( 'erp-settings_page_erp-settings' == $hook && isset( $_GET['tab'] ) && $_GET['tab'] == 'erp-crm' ) {
@@ -230,7 +231,7 @@ class Customer_Relationship {
             wp_enqueue_script( 'erp-flotchart-tooltip' );
         }
 
-        if ( 'crm_page_erp-sales-customers' == $hook ) {
+        if ( 'crm_page_erp-sales-customers' == $hook && !isset( $_GET['action'] ) ) {
             $customer = new Contact( null, 'contact' );
             $localize_script['customer_empty'] = $customer->to_array();
             $localize_script['statuses']       = erp_crm_customer_get_status_count( 'contact' );
@@ -240,7 +241,7 @@ class Customer_Relationship {
             wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
         }
 
-        if ( 'crm_page_erp-sales-companies' == $hook ) {
+        if ( 'crm_page_erp-sales-companies' == $hook && !isset( $_GET['action'] ) ) {
             $customer = new Contact( null, 'company' );
             $localize_script['customer_empty'] = $customer->to_array();
             $localize_script['statuses']       = erp_crm_customer_get_status_count( 'company' );
