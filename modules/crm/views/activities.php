@@ -12,7 +12,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
         <div class="activity-filter" id="erp-crm-activities-filter">
 
             <div class="filters">
-                <select style="width:180px;" v-selecttwo="filterFeeds.type" class="select2" v-model="filterFeeds.type" id="activity-type">
+                <select style="width:180px;" v-selecttwo="filterFeeds.type" class="select2" v-model="filterFeeds.type" id="activity-type" data-placeholder="<?php _e( 'Select a type', 'erp' ) ?>">
                     <option value=""><?php _e( 'All Types', 'erp' ) ?></option>
                     <?php foreach ( $feeds_tab as $key => $value ) : ?>
                         <option value="<?php echo $key; ?>"><?php echo $value['title']; ?></option>
@@ -21,15 +21,15 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
             </div>
 
             <div class="filters">
-                <select style="width:180px;" v-selecttwo="filterFeeds.created_by" class="select2" v-model="filterFeeds.created_by" id="activity-created-by">
-                    <option value=""><?php _e( 'Created By All', 'erp' ) ?></option>
+                <select style="width:180px;" v-selecttwo="filterFeeds.created_by" class="select2" v-model="filterFeeds.created_by" id="activity-created-by" data-placeholder="<?php _e( 'Created by..', 'erp' ) ?>">
+                    <option value="-1"><?php _e( 'All', 'erp' ) ?></option>
                     <?php echo erp_crm_get_employees_dropdown(); ?>
                 </select>
             </div>
 
             <div class="filters">
-                <select style="width:180px;" v-selecttwo="filterFeeds.customer_id" class="select2" v-model="filterFeeds.customer_id" id="activity-created-for">
-                    <option value=""><?php _e( 'Created for all', 'erp' ) ?></option>
+                <select style="width:180px;" v-selecttwo="filterFeeds.customer_id" class="select2" v-model="filterFeeds.customer_id" id="activity-created-for"  data-placeholder="<?php _e( 'Created for..', 'erp' ) ?>">
+                    <option value="-1"><?php _e( 'All', 'erp' ) ?></option>
                     <?php foreach ( $contacts as $contact_id => $contact_name ) : ?>
                         <option value="<?php echo $contact_id; ?>"><?php echo $contact_name; ?></option>
                     <?php endforeach ?>
@@ -37,7 +37,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
             </div>
 
             <div class="filters">
-                <input type="text" v-datepicker v-model="filterFeeds.created_at" placeholder="<?php _e( 'Created Date..', 'erp' ); ?>">
+                <input type="search" v-datepicker v-model="filterFeeds.created_at" placeholder="<?php _e( 'Created Date..', 'erp' ); ?>">
             </div>
 
             <div class="clearfix"></div>

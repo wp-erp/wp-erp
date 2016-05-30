@@ -678,6 +678,31 @@ function erp_cron_intervals( $schedules ) {
         'display'   => __( 'Every Minute', 'erp' )
     );
 
+    $schedules['two_min'] = array(
+        'interval'  => MINUTE_IN_SECONDS * 2,
+        'display'   => __( 'Every 2 Minutes', 'erp' )
+    );
+
+    $schedules['five_min'] = array(
+        'interval'  => MINUTE_IN_SECONDS * 5,
+        'display'   => __( 'Every 5 Minutes', 'erp' )
+    );
+
+    $schedules['ten_min'] = array(
+        'interval'  => MINUTE_IN_SECONDS * 10,
+        'display'   => __( 'Every 10 Minutes', 'erp' )
+    );
+
+    $schedules['fifteen_min'] = array(
+        'interval'  => MINUTE_IN_SECONDS * 15,
+        'display'   => __( 'Every 15 Minutes', 'erp' )
+    );
+
+    $schedules['thirty_min'] = array(
+        'interval'  => MINUTE_IN_SECONDS * 30,
+        'display'   => __( 'Every 30 Minutes', 'erp' )
+    );
+
     $schedules['weekly'] = array(
         'interval'  => DAY_IN_SECONDS * 7,
         'display'  => __( 'Once Weekly', 'erp' )
@@ -1340,7 +1365,8 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
         $phpmailer->FromName = apply_filters( 'erp_mail_from_name', $from_name );
         $phpmailer->ContentType = apply_filters( 'erp_mail_content_type', $content_type );
 
-        $phpmailer->Sender = $phpmailer->From; //Return-Path
+        //Return-Path
+        $phpmailer->Sender = apply_filters( 'erp_mail_return_path', $phpmailer->From );
 
         if ( ! empty( $custom_headers ) ) {
             foreach ( $custom_headers as $key => $value ) {

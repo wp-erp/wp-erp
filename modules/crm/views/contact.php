@@ -1,8 +1,21 @@
 <?php
 $advance_search_id =  isset( $_GET['erp_save_search' ] ) ? $_GET['erp_save_search' ] : 0;
 $if_advance_search = ( isset( $_GET['erp_save_search' ] ) && $_GET['erp_save_search' ] == 0 ) ? true : false;
+
+if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_contact' ] ) ) {
+    $id = intval( $_GET['filter_assign_contact'] );
+
+    $custom_data = [
+        'filter_assign_contact' => [
+            'id' => $id,
+            'display_name' => get_the_author_meta( 'display_name', $id )
+        ]
+    ];
+} else {
+    $custom_data = new stdClass();
+}
 ?>
-<div class="wrap erp-crm-customer" id="wp-erp">
+<div class="wrap erp-crm-customer erp-crm-customer-listing" id="wp-erp">
 
     <h2>
         <?php _e( 'Contact', 'erp' ); ?>
@@ -26,6 +39,7 @@ $if_advance_search = ( isset( $_GET['erp_save_search' ] ) && $_GET['erp_save_sea
         :bulkactions="bulkactions"
         :extra-bulk-action = "extraBulkAction"
         :additional-params = "additionalParams"
+        :custom-data = '<?php echo json_encode( $custom_data, JSON_UNESCAPED_UNICODE ); ?>'
     ></vtable>
 
 </div>

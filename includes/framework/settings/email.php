@@ -200,18 +200,20 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             'default' => 'no'
         ];
 
+        $schedules = wp_get_schedules();
+
+        $cron_schedules = [];
+        foreach( $schedules as $key => $value ) {
+            $cron_schedules[$key] = $value['display'];
+        }
+
         $fields['imap'][] = [
             'title'   => __( 'Cron Schedule', 'erp' ),
             'id'      => 'schedule',
             'type'    => 'select',
             'desc'    => __( 'Interval time to run cron.', 'erp' ),
-            'options' => [
-                'per_minute' => __( 'Every Minute', 'erp' ),
-                'hourly'     => __( 'Hourly', 'erp'),
-                'daily'      => __( 'Daily', 'erp'),
-                'weekly'     => __( 'Weekly', 'erp'),
-            ],
-            'default' =>  'hourly',
+            'options' => $cron_schedules,
+            'default' => 'hourly',
         ];
 
         $fields['imap'][] = [

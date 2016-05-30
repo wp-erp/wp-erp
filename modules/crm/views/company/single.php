@@ -82,7 +82,7 @@
                                             $crm_user_id = erp_people_get_meta( $customer->id, '_assign_crm_agent', true );
                                             if ( !empty( $crm_user_id ) ) {
                                                 $user        = get_user_by( 'id', $crm_user_id );
-                                                $user_string = esc_html( $user->display_name ) . ' (#' . absint( $user->ID ) . ' &ndash; ' . esc_html( $user->user_email ) . ')';
+                                                $user_string = esc_html( $user->display_name );
                                             }
                                         ?>
                                         <?php if ( $crm_user_id ): ?>
@@ -100,7 +100,7 @@
                                         <div class="clearfix"></div>
 
                                         <?php if ( current_user_can( 'erp_crm_edit_contact' ) ): ?>
-                                            <span id="erp-crm-edit-assign-contact-to-agent"><i class="fa fa-pencil-square-o"></i></span>
+                                            <span @click.prevent="assignContact()" id="erp-crm-edit-assign-contact-to-agent"><i class="fa fa-pencil-square-o"></i></span>
                                         <?php endif ?>
                                     </div>
 
@@ -117,8 +117,8 @@
                                             </div>
 
                                             <input type="hidden" name="assign_contact_id" value="<?php echo $customer->id; ?>">
-                                            <input type="submit" class="button button-primary save-edit-assign-contact" name="erp_assign_contacts" value="<?php _e( 'Assign', 'erp' ); ?>">
-                                            <input type="submit" class="button cancel-edit-assign-contact" value="<?php _e( 'Cancel', 'erp' ); ?>">
+                                            <input type="submit" @click.prevent="saveAssignContact()" class="button button-primary save-edit-assign-contact" name="erp_assign_contacts" value="<?php _e( 'Assign', 'erp' ); ?>">
+                                            <input type="submit" @click.prevent="cancelAssignContact()" class="button cancel-edit-assign-contact" value="<?php _e( 'Cancel', 'erp' ); ?>">
                                         </form>
                                     </div>
                                 </div>
@@ -126,77 +126,19 @@
                         </div>
                     </div><!-- .postbox -->
 
-                    <div class="postbox customer-company-info">
-                        <div class="erp-handlediv" title="<?php _e( 'Click to toggle', 'erp' ); ?>"><br></div>
-                        <h3 class="erp-hndle"><span><?php echo sprintf( '%s\'s %s', $customer->get_full_name(), __( 'Contacts', 'erp' ) ); ?></span></h3>
-                        <div class="inside company-profile-content">
-                            <div class="company-list">
-                                <?php $assing_customers = erp_crm_company_get_customers( $customer->id ); ?>
+                    <contact-company-relation
+                        :id="<?php echo $customer->id; ?>"
+                        type="company_contacts"
+                        add-button-txt="<?php _e( 'Assing a contact', 'erp' ) ?>"
+                        title="<?php echo sprintf( '%s\'s %s', $customer->get_full_name(), __( 'contacts', 'erp' ) ); ?>"
+                    ></contact-company-relation>
 
-                                <?php foreach ( $assing_customers as $assing_customer_data ) : ?>
+                    <contact-assign-group
+                        :id="<?php echo $customer->id; ?>"
+                        add-button-txt="<?php _e( 'Assign Contact Groups', 'erp' ) ?>"
+                        title="<?php _e( 'Contact Group', 'erp' ); ?>"
+                    ></contact-assign-group>
 
-                                    <?php $assing_customer = new \WeDevs\ERP\CRM\Contact( intval( $assing_customer_data->customer_id ) ); ?>
-
-                                    <div class="postbox closed">
-                                        <div class="erp-handlediv" title="<?php _e( 'Click to toggle', 'erp' ); ?>"><br></div>
-                                        <h3 class="erp-hndle">
-                                            <span class="customer-avatar"><?php echo $assing_customer->get_avatar( 20 ); ?></span>
-                                            <span class="customer-name">
-                                                <a href="<?php echo $assing_customer->get_details_url() ?>" target="_blank">
-                                                    <?php echo $assing_customer->get_full_name(); ?>
-                                                </a>
-                                            </span>
-                                        </h3>
-                                        <div class="action">
-                                            <a href="#" class="erp-customer-delete-company" data-id="<?php echo $assing_customer_data->id; ?>" data-action="erp-crm-customer-remove-company"><i class="fa fa-trash-o"></i></a>
-                                        </div>
-                                        <div class="inside company-profile-content">
-                                            <ul class="erp-list separated">
-                                                <li><?php erp_print_key_value( __( 'Phone', 'erp' ), $assing_customer->get_phone() ); ?></li>
-                                                <li><?php erp_print_key_value( __( 'Fax', 'erp' ), $assing_customer->get_fax() ); ?></li>
-                                                <li><?php erp_print_key_value( __( 'Website', 'erp' ), $assing_customer->get_website() ); ?></li>
-                                                <li><?php erp_print_key_value( __( 'Street 1', 'erp' ), $assing_customer->get_street_1() ); ?></li>
-                                                <li><?php erp_print_key_value( __( 'Street 2', 'erp' ), $assing_customer->get_street_2() ); ?></li>
-                                                <li><?php erp_print_key_value( __( 'City', 'erp' ), $assing_customer->get_city() ); ?></li>
-                                                <li><?php erp_print_key_value( __( 'State', 'erp' ), $assing_customer->get_state() ); ?></li>
-                                                <li><?php erp_print_key_value( __( 'Country', 'erp' ), $assing_customer->get_country() ); ?></li>
-                                                <li><?php erp_print_key_value( __( 'Postal Code', 'erp' ), $assing_customer->get_postal_code() ); ?></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                <?php endforeach; ?>
-                                <a href="#" data-id="<?php echo $customer->id; ?>" data-type="assign_customer" title="<?php _e( 'Assign a Contact', 'erp' ); ?>" class="button button-primary" id="erp-customer-add-company"><i class="fa fa-plus"></i>&nbsp;<?php _e( 'Assign a Contact', 'erp' ); ?></a>
-                            </div>
-                        </div>
-                    </div><!-- .postbox -->
-
-                    <div class="postbox customer-mail-subscriber-info">
-                        <div class="erp-handlediv" title="<?php _e( 'Click to toggle', 'erp' ); ?>"><br></div>
-                        <h3 class="erp-hndle"><span><?php _e( 'Mail Subscriber Group', 'erp' ); ?></span></h3>
-                        <div class="inside contact-group-content">
-                            <div class="contact-group-list">
-                                <?php $subscribe_groups = erp_crm_get_user_assignable_groups( $customer->id ); ?>
-                                <?php if ( $subscribe_groups ): ?>
-                                    <?php foreach ( $subscribe_groups as $key => $groups ): ?>
-                                        <p>
-                                            <?php
-                                                echo $groups['groups']['name'];
-                                                $info_messg = ( $groups['status'] == 'subscribe' )
-                                                                ? sprintf( '%s %s', __( 'Subscribed on', 'erp' ), erp_format_date( $groups['subscribe_at'] ) )
-                                                                : sprintf( '%s %s', __( 'Unsubscribed on', 'erp' ), erp_format_date( $groups['unsubscribe_at'] ) );
-                                            ?>
-                                            <span class="erp-crm-tips" title="<?php echo $info_messg; ?>">
-                                                <i class="fa fa-info-circle"></i>
-                                            </span>
-                                        </p>
-                                    <?php endforeach; ?>
-                                <?php endif ?>
-
-                                <a href="#" id="erp-contact-update-assign-group" data-id="<?php echo $customer->id; ?>" title="<?php _e( 'Assign Contact Groups', 'erp' ); ?>"><i class="fa fa-plus"></i> <?php _e( 'Assign any Contact Groups', 'erp' ); ?></a>
-                            </div>
-                        </div>
-                    </div><!-- .postbox -->
                 </div>
             </div>
 

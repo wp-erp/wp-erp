@@ -116,6 +116,8 @@ class Contact extends \WeDevs\ERP\People {
             $fields['source']         = $this->get_meta( 'source', true );
             $fields['assign_to']      = $contact_owner;
             $fields['created']        = erp_format_date( $this->created );
+            $fields['created_by']     = $this->created_by;
+            $fields['details_url']    = $this->get_details_url();
         }
 
         return apply_filters( 'erp_crm_get_contacts_fields', $fields, $this->data, $this->id, $this->types );
@@ -281,7 +283,7 @@ class Contact extends \WeDevs\ERP\People {
      */
     public function get_country() {
         if ( $this->id ) {
-            return erp_get_country_name( $this->country );
+            return ( $this->country != '-1' ) ? erp_get_country_name( $this->country ) : '—';
         }
     }
 
@@ -294,7 +296,7 @@ class Contact extends \WeDevs\ERP\People {
      */
     public function get_state() {
         if ( $this->id ) {
-            return erp_get_state_name( $this->country, $this->state );
+            return ( $this->state != '-1' ) ? erp_get_state_name( $this->country, $this->state ) : '—';
         }
     }
 

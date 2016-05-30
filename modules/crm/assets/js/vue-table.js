@@ -5,7 +5,7 @@ Vue.component('vtable', {
                 +'<form method="get">'
                     +'<p class="search-box {{ search.wrapperClass }}">'
                         +'<label class="screen-reader-text" for="{{ search.inputId }}">{{ search.screenReaderText }}</label>'
-                        +'<input type="search" v-model="searchQuery" id="{{ search.inputId }}" value="" name="s" placeholder="{{ search.placeholder }}" @keyup.prevent="searchAction( searchQuery )" >'
+                        +'<input type="search" v-model="searchQuery" id="{{ search.inputId }}" value="" name="s" placeholder="{{ search.placeholder }}" @input.prevent="searchAction( searchQuery )" >'
                     +'</p>'
                     +'<ul v-if="!hasTopNavFilter()" class="subsubsub">'
                         +'<li v-for="( key, filter ) in topNavFilter.data" class="{{key}}"><a href="#" @click.prevent="callTopNavFilterAction( key, filter )" :class="{ \'current\': iscurrentTopNavFilter( key ) }">{{ filter.label }} <span class="count">({{ filter.count }})</span></a> <span v-if="!ifTopNavFilterLastItem( key )"> | </span></li>'
@@ -259,6 +259,13 @@ Vue.component('vtable', {
             type: String,
             default: function() {
                 return ''
+            }
+        },
+
+        'customData': {
+            type: Object,
+            default: function() {
+                return {};
             }
         },
 
@@ -817,7 +824,6 @@ Vue.component('vtable', {
                         self.pageNumberInput = self.totalPage;
                         self.currentPage = self.totalPage;
                     }
-
                 } else {
                     alert(resp);
                 }
@@ -844,13 +850,16 @@ Vue.component('vtable', {
                 }
             }
 
-
             queryParams = self.removeParam( ['type','paged'], '?' + queryParams )
 
             // console.log( self.currentPage );
 
             if ( self.currentPage > 1 ) {
-                var paged = '&paged=' + self.currentPage;
+                if ( self.currentPage > self.totalPage ) {
+                    var paged = '&paged=' + self.totalPage;
+                } else {
+                    var paged = '&paged=' + self.currentPage;
+                }
             } else {
                 var paged = '';
             }
@@ -860,8 +869,6 @@ Vue.component('vtable', {
             } else {
                 var url = ( paged ) ? self.page + paged : self.page;
             }
-
-            console.log( url );
             window.history.pushState( null, null, url );
         }
     },
@@ -883,6 +890,15 @@ Vue.component('vtable', {
 
         jQuery('select.v-select-field').on('change', function() {
             self.extraBulkActionSelectData[jQuery(this).attr('name')] = jQuery(this).val();
+        });
+
+        // Set all extra bulk select value
+        jQuery('select.v-select-field').each( function() {
+            var val = self.getParamByName( jQuery(this).attr('name') );
+            if ( val ) {
+                jQuery(this).val( val );
+                jQuery(this).trigger('change');
+            }
         });
 
         jQuery(window).bind("popstate", function() {

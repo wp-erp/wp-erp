@@ -31,6 +31,8 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-crm-bulk-contact-subscriber', 'bulk_assign_group' );
         $this->action( 'wp_ajax_erp-crm-convert-user-to-contact', 'convert_user_to_customer' );
         $this->action( 'wp_ajax_erp-crm-get-contacts', 'get_all_contact' );
+        $this->action( 'wp_ajax_erp-crm-get-contact-companies', 'get_contact_companies' );
+        $this->action( 'wp_ajax_erp-crm-get-assignable-group', 'get_assignable_contact' );
 
         $this->action( 'wp_ajax_erp-crm-customer-add-company', 'customer_add_company' );
         $this->action( 'wp_ajax_erp-crm-customer-edit-company', 'customer_edit_company' );
@@ -181,6 +183,48 @@ class Ajax_Handler {
 
         $contacts['total_items']   = $total_items;
         $this->send_success( $contacts );
+    }
+
+    public function get_contact_companies() {
+        $this->verify_nonce( 'wp-erp-crm-nonce' );
+
+        unset( $_POST['_wpnonce'], $_POST['_wp_http_referer'], $_POST['action'] );
+
+        if ( isset( $_POST['type'] ) && empty( $_POST['type'] ) ) {
+            $this->send_error( __( 'Type must be required', 'erp' ) );
+        }
+
+        if ( 'contact_companies' == $_POST['type'] ) {
+            $data = erp_crm_customer_get_company( $_POST );
+        } else if ( 'company_contacts' == $_POST['type'] ) {
+            $data = erp_crm_company_get_customers( $_POST );
+        } else {
+            $data = [];
+        }
+
+        if ( is_wp_error( $data ) ) {
+            $this->send_error( $data->get_error_message() );
+        }
+
+        $this->send_success( $data );
+    }
+
+    public function get_assignable_contact() {
+        $this->verify_nonce( 'wp-erp-crm-nonce' );
+
+        unset( $_POST['_wpnonce'], $_POST['_wp_http_referer'], $_POST['action'] );
+
+        if ( ! isset( $_POST['id'] ) ) {
+            $this->send_error( __( 'No company or contact found', 'erp' ) );
+        }
+
+        $data = erp_crm_get_user_assignable_groups( $_POST['id'] );
+
+        if ( is_wp_error( $data ) ) {
+            $this->send_error( $data->get_error_message() );
+        }
+
+        $this->send_success( $data );
     }
 
     /**
@@ -415,11 +459,11 @@ class Ajax_Handler {
         }
 
         if ( $customer_id && erp_crm_check_customer_exist_company( $customer_id, $id ) ) {
-            $this->send_error( __( 'Customer already assigned. Choose another customer', 'erp' ) );
+            $this->send_error( __( 'Contact already assigned. Choose another contact', 'erp' ) );
         }
 
         if ( ! $id ) {
-            $this->send_error( __( 'No Customer found', 'erp' ) );
+            $this->send_error( __( 'No contact found', 'erp' ) );
         }
 
         if ( $type == 'assign_customer' ) {

@@ -1102,10 +1102,10 @@ var vm = new Vue({
             if ( filter ) {
                 vm.progressStart('#erp-crm-activities-filter');
 
-                data.customer_id = filter.customer_id;
-                data.created_by = filter.created_by;
+                data.customer_id = ( filter.customer_id != '-1' ) ? filter.customer_id : '';
+                data.created_by = ( filter.created_by != '-1' ) ? filter.created_by : '';
                 data.created_at = filter.created_at;
-                data.type = filter.type;
+                data.type = ( filter.type != '-1' ) ? filter.type : '';
                 data.offset = 0;
                 this.offset = 0;
                 this.loadingFinish = false;
