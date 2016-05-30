@@ -726,6 +726,82 @@ function erp_ac_get_transaction_for_sales() {
     return $sales_journal;
 }
 
+function erp_ac_get_expnese_transaction() {
+    $accounts_id     = [];
+    $financial_start = erp_financial_start_date();
+    $financial_end   = erp_financial_end_date();
+
+    $accounts = erp_ac_get_chart_dropdown([
+        'exclude'  => [2, 4, 5],
+
+    ] );
+    
+    foreach ( $accounts as $key => $account ) {
+        $options     = isset( $account['options'] ) ? $account['options'] : [];
+        $accounts_id = array_merge( $accounts_id, wp_list_pluck( $options, 'id' ) );
+    }
+
+    $cache_key     = 'erp-ac-get-expnese-transaction-' . md5( get_current_user_id() );
+    $expense_journal = wp_cache_get( $cache_key, 'erp' );
+
+    if ( false === $expense_journal ) {
+        $expense_journal = WeDevs\ERP\Accounting\Model\Transaction::with(['journals' => function($q) use($accounts_id) {
+            return $q->whereIn( 'ledger_id', $accounts_id );
+        }])
+        ->where( 'issue_date', '>=', $financial_start )
+        ->where( 'issue_date', '<=', $financial_end )
+        ->get()->toArray();
+
+        wp_cache_set( $cache_key, $expense_journal, 'erp' );
+    }
+
+    return $expense_journal;
+}
+
+function erp_ac_get_expnese_transaction_without_tax() {
+    $accounts_id     = [];
+    $financial_start = erp_financial_start_date();
+    $financial_end   = erp_financial_end_date();
+    $tax_reveivable      = erp_ac_get_tax_receivable_ledger();
+    $tax_payable         = erp_ac_get_tax_payable_ledger();
+    $tax                 = array_merge( $tax_reveivable, $tax_payable );
+    $tax_ledgers         = wp_list_pluck( $tax, 'id' );
+
+
+    $accounts = erp_ac_get_chart_dropdown([
+        'exclude'  => [2, 4, 5],
+
+    ] );
+    
+    foreach ( $accounts as $key => $account ) {
+        $options     = isset( $account['options'] ) ? $account['options'] : [];
+        $accounts_id = array_merge( $accounts_id, wp_list_pluck( $options, 'id' ) );
+    }
+
+    foreach ( $accounts_id as $key => $account_id ) {
+        
+        if ( in_array( $account_id, $tax_ledgers ) ) {
+            unset( $accounts_id[$key] );
+        }
+    }
+
+    $cache_key     = 'erp-ac-get-expnese-transaction-' . md5( get_current_user_id() );
+    $expense_journal = wp_cache_get( $cache_key, 'erp' );
+
+    //if ( false === $expense_journal ) {
+        $expense_journal = WeDevs\ERP\Accounting\Model\Transaction::with(['journals' => function($q) use($accounts_id) {
+            return $q->whereIn( 'ledger_id', $accounts_id );
+        }])
+        ->where( 'issue_date', '>=', $financial_start )
+        ->where( 'issue_date', '<=', $financial_end )
+        ->get()->toArray();
+
+        wp_cache_set( $cache_key, $expense_journal, 'erp' );
+    //}
+
+    return $expense_journal;
+}
+
 
 
 
