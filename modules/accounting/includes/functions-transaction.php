@@ -762,10 +762,10 @@ function erp_ac_get_expnese_transaction_without_tax() {
     $accounts_id     = [];
     $financial_start = erp_financial_start_date();
     $financial_end   = erp_financial_end_date();
-    $tax_reveivable      = erp_ac_get_tax_receivable_ledger();
-    $tax_payable         = erp_ac_get_tax_payable_ledger();
-    $tax                 = array_merge( $tax_reveivable, $tax_payable );
-    $tax_ledgers         = wp_list_pluck( $tax, 'id' );
+    $tax_reveivable  = erp_ac_get_tax_receivable_ledger();
+    $tax_payable     = erp_ac_get_tax_payable_ledger();
+    $tax             = array_merge( $tax_reveivable, $tax_payable );
+    $tax_ledgers     = wp_list_pluck( $tax, 'id' );
 
 
     $accounts = erp_ac_get_chart_dropdown([
@@ -800,6 +800,31 @@ function erp_ac_get_expnese_transaction_without_tax() {
     //}
 
     return $expense_journal;
+}
+
+function erp_ac_get_transaction_for_tax() {
+    $financial_start = erp_financial_start_date();
+    $financial_end   = erp_financial_end_date();
+    $tax_reveivable  = erp_ac_get_tax_receivable_ledger();
+    $tax_payable     = erp_ac_get_tax_payable_ledger();
+    $tax             = array_merge( $tax_reveivable, $tax_payable );
+    $tax_ledgers     = wp_list_pluck( $tax, 'id' );
+    
+    $cache_key     = 'erp-ac-get-transaction-for-tax-' . md5( get_current_user_id() );
+    $tax_journal = wp_cache_get( $cache_key, 'erp' );
+
+    if ( false === $tax_journal ) {
+        $tax_journal = \WeDevs\ERP\Accounting\Model\Transaction::with(['journals' => function($q) use( $tax_ledgers ) {
+            return $q->whereIn( 'ledger_id', $tax_ledgers );
+        }])
+        ->where( 'issue_date', '>=', $financial_start )
+        ->where( 'issue_date', '<=', $financial_end )
+        ->get()->toArray();
+
+        wp_cache_set( $cache_key, $tax_journal, 'erp' );
+    }
+
+    return $tax_journal;
 }
 
 

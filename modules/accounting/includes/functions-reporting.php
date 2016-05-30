@@ -230,8 +230,6 @@ function erp_ac_get_good_sold_total_amount() {
 }
 
 function erp_ac_get_expense_total() {
-    $expense_transaction = erp_ac_get_expnese_transaction();
-
     $expense_transaction = erp_ac_get_expnese_transaction_without_tax();
     $journals            = array_filter( wp_list_pluck( $expense_transaction, 'journals' ) );
     $expense_total       = 0;
@@ -241,6 +239,19 @@ function erp_ac_get_expense_total() {
     }
     
     return $expense_total;
+}
+
+function erp_ac_get_tax_total() {
+    $tax_transaction = erp_ac_get_transaction_for_tax();
+
+    $journals  = array_filter( wp_list_pluck( $tax_transaction, 'journals' ) );
+    $tax_total = 0;
+
+    foreach ( $journals as $key => $journal ) {
+        $tax_total = $tax_total + array_sum( wp_list_pluck( $journal, 'debit' ) );
+    }
+    
+    return $tax_total;
 }
 
 
