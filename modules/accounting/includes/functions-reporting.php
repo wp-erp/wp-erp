@@ -9,21 +9,21 @@ function erp_ac_get_reports() {
 
     $reports = [
         'trial-balance' => [
-            'title'       => __( 'Trial Balance', 'accounting' ),
-            'description' => __( 'Trial balance is the bookkeeping or accounting report that lists the balances in each of general ledger accounts', 'accounting' )
+            'title'       => __( 'Trial Balance', 'erp' ),
+            'description' => __( 'Trial balance is the bookkeeping or accounting report that lists the balances in each of general ledger accounts', 'erp' )
         ],
         'sales-tax' => [
-            'title'       => __( 'Sales Tax', 'accounting' ),
-            'description' => __( 'See the sales tax summary.', 'accounting' )
+            'title'       => __( 'Sales Tax', 'erp' ),
+            'description' => __( 'See the sales tax summary.', 'erp' )
+        ],
+        'income-statement' => [
+             'title'       => __( 'Income Statement', 'erp' ),
+             'description' => __( 'A summary of a management\'s performance as reflecte the profitability of an organization during the time interval.', 'erp' )
         ],
         'balance-sheet' => [
             'title'       => '',
             'description' => ''
         ],
-        // 'balance-sheet' => [
-        //     'title'       => __( 'Balance Sheet', 'accounting' ),
-        //     'description' => __( '', 'accounting' )
-        // ],
         // 'profit-loss' => [
         //     'title'       => __( 'Profit and Loss', 'accounting' ),
         //     'description' => __( '', 'accounting' )
@@ -204,6 +204,32 @@ function erp_ac_normarlize_tax_from_transaction( $args = [] ) {
     return array( 'individuals' => $individual_info, 'units' => $tax_unit_info );
 
 }
+
+function erp_ac_get_sales_total() {
+    $sales_transaction = erp_ac_get_transaction_for_sales();
+    $journals          = array_filter( wp_list_pluck( $sales_transaction, 'journals' ) );
+    $sales_total       = 0;
+
+    foreach ( $journals as $key => $journal ) {
+        $sales_total = $sales_total + array_sum( wp_list_pluck( $journal, 'credit' ) );
+    }
+    
+    return $sales_total;
+}
+
+function erp_ac_get_good_sold_total_amount() {
+    $sales_transaction = erp_ac_get_transaction_by_journal_id( 24 );
+    $journals          = array_filter( wp_list_pluck( $sales_transaction, 'journals' ) );
+    $sales_total       = 0;
+
+    foreach ( $journals as $key => $journal ) {
+        $sales_total = $sales_total + array_sum( wp_list_pluck( $journal, 'debit' ) );
+    }
+    
+    return $sales_total;
+}
+
+
 
 
 

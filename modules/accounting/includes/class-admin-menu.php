@@ -251,6 +251,10 @@ class Admin_Menu {
                 }
                 break;
 
+            case 'income-statement':
+                $template = dirname( __FILE__ ) . '/views/reports/income-statement/statement.php';
+                break;
+
             default:
                 $template = dirname( __FILE__ ) . '/views/reports.php';
                 break;

@@ -671,6 +671,61 @@ function erp_ac_toltip_per_transaction_ledgers( $transaction ) {
     return ob_get_clean();
 }
 
+function erp_ac_get_transaction_by_journal_id( $journal_id ) {
+
+    $financial_start = erp_financial_start_date();
+    $financial_end   = erp_financial_end_date();
+
+    $cache_key     = 'erp-ac-get-transaction-by-journal-id-' . md5( get_current_user_id() );
+    $sales_journal = wp_cache_get( $cache_key, 'erp' );
+
+    if ( false === $sales_journal ) {
+        $sales_journal = WeDevs\ERP\Accounting\Model\Transaction::with(['journals' => function($q) use( $journal_id ) {
+            return $q->where( 'ledger_id', '=', $journal_id );
+        }])
+        ->where( 'issue_date', '>=', $financial_start )
+        ->where( 'issue_date', '<=', $financial_end )
+        ->get()->toArray();
+
+        wp_cache_set( $cache_key, $sales_journal, 'erp' );
+    }
+
+    return $sales_journal;
+}
+
+function erp_ac_get_transaction_for_sales() {
+
+    $accounts_id     = [];
+    $financial_start = erp_financial_start_date();
+    $financial_end   = erp_financial_end_date();
+
+    $accounts = erp_ac_get_chart_dropdown([
+        'exclude'  => [1, 2, 3],
+
+    ] );
+    
+    foreach ( $accounts as $key => $account ) {
+        $options     = isset( $account['options'] ) ? $account['options'] : [];
+        $accounts_id = array_merge( $accounts_id, wp_list_pluck( $options, 'id' ) );
+    }
+
+    $cache_key     = 'erp-ac-get-transaction-by-sales-' . md5( get_current_user_id() );
+    $sales_journal = wp_cache_get( $cache_key, 'erp' );
+
+    if ( false === $sales_journal ) {
+        $sales_journal = WeDevs\ERP\Accounting\Model\Transaction::with(['journals' => function($q) use($accounts_id) {
+            return $q->whereIn( 'ledger_id', $accounts_id );
+        }])
+        ->where( 'issue_date', '>=', $financial_start )
+        ->where( 'issue_date', '<=', $financial_end )
+        ->get()->toArray();
+
+        wp_cache_set( $cache_key, $sales_journal, 'erp' );
+    }
+
+    return $sales_journal;
+}
+
 
 
 

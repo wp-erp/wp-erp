@@ -439,13 +439,9 @@ function erp_ac_bank_credit_total_amount( $bank_id ) {
     $db = new \WeDevs\ORM\Eloquent\Database();
     $dc = [];
 
-    $dc['debit'] =  \WeDevs\ERP\Accounting\Model\Journal::
-            select( array( $db->raw( 'SUM(debit) as debit_sum') ) )
-            ->where( 'ledger_id', $bank_id )->pluck('debit_sum');
+    $dc['debit'] =  \WeDevs\ERP\Accounting\Model\Journal::select( array( $db->raw( 'SUM(debit) as debit_sum') ) )->where( 'ledger_id', $bank_id )->pluck('debit_sum');
 
-    $dc['credit'] =  \WeDevs\ERP\Accounting\Model\Journal::
-        select( array( $db->raw( 'SUM(credit) as credit_sum') ) )
-        ->where( 'ledger_id', $bank_id )->pluck('credit_sum');
+    $dc['credit'] =  \WeDevs\ERP\Accounting\Model\Journal::select( array( $db->raw( 'SUM(credit) as credit_sum') ) )->where( 'ledger_id', $bank_id )->pluck('credit_sum');
 
     return $dc;
 }
