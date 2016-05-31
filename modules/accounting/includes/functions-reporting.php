@@ -233,7 +233,7 @@ function erp_ac_get_expense_total() {
     $expense_transaction = erp_ac_get_expnese_transaction_without_tax();
     $journals            = array_filter( wp_list_pluck( $expense_transaction, 'journals' ) );
     $expense_total       = 0;
-
+ 
     foreach ( $journals as $key => $journal ) {
         $expense_total = $expense_total + array_sum( wp_list_pluck( $journal, 'debit' ) );
     }

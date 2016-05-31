@@ -782,6 +782,8 @@ function erp_ac_get_expnese_transaction_without_tax() {
         
         if ( in_array( $account_id, $tax_ledgers ) ) {
             unset( $accounts_id[$key] );
+        } else if ( $account_id == 24 ) {
+            unset( $accounts_id[$key] );
         }
     }
 
@@ -790,7 +792,7 @@ function erp_ac_get_expnese_transaction_without_tax() {
 
     //if ( false === $expense_journal ) {
         $expense_journal = WeDevs\ERP\Accounting\Model\Transaction::with(['journals' => function($q) use($accounts_id) {
-            return $q->whereIn( 'ledger_id', $accounts_id );
+            return $q->whereIn( 'ledger_id', $accounts_id )->where( 'type', '=', 'line_item' );
         }])
         ->where( 'issue_date', '>=', $financial_start )
         ->where( 'issue_date', '<=', $financial_end )
