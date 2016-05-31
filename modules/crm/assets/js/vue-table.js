@@ -255,6 +255,11 @@ Vue.component('vtable', {
             required: true
         },
 
+        'wpnonce': {
+            type: String,
+            required: true
+        },
+
         'page': {
             type: String,
             default: function() {
@@ -771,7 +776,7 @@ Vue.component('vtable', {
                 postData = '',
                 data = {
                     action: this.action,
-                    _wpnonce: wpVueTable.nonce
+                    _wpnonce: this.wpnonce
                 };
 
             this.ajaxloader = true;
@@ -815,9 +820,10 @@ Vue.component('vtable', {
             // console.log( postData );
 
             this.ajax = jQuery.post( wpVueTable.ajaxurl, postData, function( resp ) {
+                self.ajaxloader = false;
+                self.isLoaded   = true;
+
                 if ( resp.success ) {
-                    self.ajaxloader = false;
-                    self.isLoaded   = true;
                     self.tableData  = resp.data.data;
                     self.totalItem  = resp.data.total_items;
                     if ( self.totalPage < self.pageNumberInput ) {
@@ -825,7 +831,8 @@ Vue.component('vtable', {
                         self.currentPage = self.totalPage;
                     }
                 } else {
-                    alert(resp);
+                    // display error
+                    alert(resp.data);
                 }
             } );
         },

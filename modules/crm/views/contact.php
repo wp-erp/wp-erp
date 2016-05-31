@@ -30,6 +30,7 @@ if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_co
         row-checkbox-id="erp-crm-customer-id-checkbox"
         row-checkbox-name="customer_id"
         action="erp-crm-get-contacts"
+        :wpnonce="wpnonce"
         page = "<?php echo add_query_arg( [ 'page' => 'erp-sales-customers' ], admin_url( 'admin.php' ) ); ?>"
         per-page="4"
         :fields=fields
