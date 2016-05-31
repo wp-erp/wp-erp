@@ -3,9 +3,9 @@
  * Plugin Name: WP ERP
  * Description: An Open Source ERP Solution for WordPress. Built-in HR and CRM system for WordPress
  * Plugin URI: https://wperp.com
- * Author: weDevs
+ * Author: weDevs 1.0.1
  * Author URI: https://wedevs.com
- * Version: 1.0.1
+ * Version: 1.1.0
  * License: GPL2
  * Text Domain: erp
  * Domain Path: /i18n/languages/
@@ -52,7 +52,7 @@ final class WeDevs_ERP {
      *
      * @var string
      */
-    public $version = '1.0.1';
+    public $version = '1.1.0';
 
     /**
      * Minimum PHP version required

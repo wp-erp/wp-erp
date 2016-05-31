@@ -21,11 +21,13 @@
         "psr-4" : {
             "WeDevs\\ERP\\": "includes/",
             "WeDevs\\ERP\\HRM\\": "modules/hrm/includes",
-            "WeDevs\\ERP\\CRM\\": "modules/crm/includes"
+            "WeDevs\\ERP\\CRM\\": "modules/crm/includes",
+            "WeDevs\\ERP\\Accounting\\": "modules/accounting/includes"
         },
         "classmap": [
             "modules/hrm/hrm.php",
-            "modules/crm/crm.php"
+            "modules/crm/crm.php",
+            "modules/accounting/accounting.php"
         ]
     }
 }
