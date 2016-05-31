@@ -153,7 +153,6 @@ class Modules {
      * @return array
      */
     public function get_active_modules() {
-        var_dump( get_option( 'erp_modules' ) );
         return get_option( 'erp_modules', [] );
     }
 
