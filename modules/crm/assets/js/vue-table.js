@@ -57,7 +57,7 @@ Vue.component('vtable', {
                         +'<table class="vtable wp-list-table widefat fixed striped {{ tableClass }}">'
                             +'<thead>'
                                 +'<tr>'
-                                    +'<td id="cb" class="manage-column column-cb check-column">'
+                                    +'<td v-if="\'hide\' !== hideCb" id="cb" class="manage-column column-cb check-column">'
                                         +'<label class="screen-reader-text" for="cb-select-all-1">Select All</label>'
                                         +'<input id="cb-select-all-1" type="checkbox">'
                                     +'</td>'
@@ -86,7 +86,7 @@ Vue.component('vtable', {
 
                             +'<tbody id="the-list" data-wp-lists="list:{{ tableClass }}" class="vtbale-tbody">'
                                 +'<tr v-if="( tableData.length > 0 )" v-for="(itemIndex, item) in tableData" transition="vtable-item">'
-                                    +'<th scope="row" class="check-column">'
+                                    +'<th v-if="\'hide\' !== hideCb" scope="row" class="check-column">'
                                         +'<input type="checkbox" v-model="checkboxItems" class="{{ rowCheckboxId }}" name="{{ rowCheckboxName }}[]" data-field="{{ rowCheckboxField }}" value="{{ item[rowCheckboxField] }}">'
                                     +'</th>'
                                     + '<template v-for="( i, field ) in fields">'
@@ -138,7 +138,7 @@ Vue.component('vtable', {
 
                             +'<tfoot>'
                                 +'<tr>'
-                                    +'<td class="manage-column column-cb check-column">'
+                                    +'<td v-if="\'hide\' !== hideCb" class="manage-column column-cb check-column">'
                                         +'<label class="screen-reader-text" for="cb-select-all-2">Select All</label>'
                                         +'<input id="cb-select-all-2" type="checkbox">'
                                     +'</td>'
@@ -340,6 +340,13 @@ Vue.component('vtable', {
                     btnText: 'Search Contact',
                     btnId: 'search-submit'
                 }
+            }
+        },
+
+        hideCb: {
+            type: String,
+            default: function () {
+                return '';
             }
         }
     },
