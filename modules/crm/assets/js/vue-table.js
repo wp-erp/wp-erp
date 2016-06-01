@@ -348,6 +348,13 @@ Vue.component('vtable', {
             default: function () {
                 return '';
             }
+        },
+
+        afterFetchData: {
+            type: String,
+            default: function () {
+                return '';
+            }
         }
     },
 
@@ -824,8 +831,6 @@ Vue.component('vtable', {
 
             var postData = postData + '&' + pagination.join('&');
 
-            // console.log( postData );
-
             this.ajax = jQuery.post( wpVueTable.ajaxurl, postData, function( resp ) {
                 self.ajaxloader = false;
                 self.isLoaded   = true;
@@ -837,6 +842,10 @@ Vue.component('vtable', {
                         self.pageNumberInput = self.totalPage;
                         self.currentPage = self.totalPage;
                     }
+
+                    // call method from $parent if exists
+                    self.callRowActionCallback( { callback: self.afterFetchData }, resp.data );
+
                 } else {
                     // display error
                     alert(resp.data);
