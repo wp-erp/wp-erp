@@ -34,7 +34,7 @@ Vue.component('vtable', {
                         +'</template>'
 
                         +'<div class="tablenav-pages" :class="{ \'one-page\': hidePagination }">'
-                            +'<span class="displaying-num">{{ totalItem }} item</span>'
+                            +'<span v-if="totalItem" class="displaying-num">{{ totalItem }} {{ totalItem | pluralize \'item\' }}</span>'
                             +'<span class="pagination-links">'
                                 +'<span v-if="isFirstPage()" class="tablenav-pages-navspan" aria-hidden="true">«</span>'
                                 +'<a v-else class="first-page" href="#" @click.prevent="goFirstPage()"><span class="screen-reader-text">First page</span><span aria-hidden="true">«</span></a>'
@@ -132,7 +132,7 @@ Vue.component('vtable', {
                                     + '</template>'
                                 +'</tr>'
                                 +'<tr v-if="( tableData.length < 1 ) || !isLoaded">'
-                                    +'<td colspan="{{ this.fields.length+1 }}"><span v-if="!isLoaded">Loading...</span><span v-else>No result found</span></td>'
+                                    +'<td :colspan="columnCount"><span v-if="!isLoaded">Loading...</span><span v-else>No result found</span></td>'
                                 +'</tr>'
                             +'</tbody>'
 
@@ -179,7 +179,7 @@ Vue.component('vtable', {
                         +'</div>'
 
                         +'<div class="tablenav-pages" :class="{ \'one-page\': hidePagination }">'
-                            +'<span class="displaying-num">{{ totalItem }} item</span>'
+                            +'<span v-if="totalItem" class="displaying-num">{{ totalItem }} {{ totalItem | pluralize \'item\' }}</span>'
                             +'<span class="pagination-links">'
                                 +'<span v-if="isFirstPage()" class="tablenav-pages-navspan" aria-hidden="true">«</span>'
                                 +'<a v-else class="first-page" href="#" @click.prevent="goFirstPage()"><span class="screen-reader-text">First page</span><span aria-hidden="true">«</span></a>'
@@ -410,7 +410,7 @@ Vue.component('vtable', {
         },
 
         columnCount: function() {
-            return this.fields.length+1;
+            return this.hideCb ? this.fields.length : ( this.fields.length + 1 );
         }
     },
 
@@ -837,7 +837,7 @@ Vue.component('vtable', {
 
                 if ( resp.success ) {
                     self.tableData  = resp.data.data;
-                    self.totalItem  = resp.data.total_items;
+                    self.totalItem  = parseInt(resp.data.total_items);
                     if ( self.totalPage < self.pageNumberInput ) {
                         self.pageNumberInput = self.totalPage;
                         self.currentPage = self.totalPage;
