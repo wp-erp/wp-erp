@@ -160,6 +160,7 @@
             el: '#wp-erp',
             mixins: [mixin],
             data : {
+                wpnonce: wpVueTable.nonce,
                 fields: tableColumns,
                 itemRowActions: [
                     {

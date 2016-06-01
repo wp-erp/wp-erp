@@ -57,7 +57,7 @@ Vue.component('vtable', {
                         +'<table class="vtable wp-list-table widefat fixed striped {{ tableClass }}">'
                             +'<thead>'
                                 +'<tr>'
-                                    +'<td id="cb" class="manage-column column-cb check-column">'
+                                    +'<td v-if="\'hide\' !== hideCb" id="cb" class="manage-column column-cb check-column">'
                                         +'<label class="screen-reader-text" for="cb-select-all-1">Select All</label>'
                                         +'<input id="cb-select-all-1" type="checkbox">'
                                     +'</td>'
@@ -86,7 +86,7 @@ Vue.component('vtable', {
 
                             +'<tbody id="the-list" data-wp-lists="list:{{ tableClass }}" class="vtbale-tbody">'
                                 +'<tr v-if="( tableData.length > 0 )" v-for="(itemIndex, item) in tableData" transition="vtable-item">'
-                                    +'<th scope="row" class="check-column">'
+                                    +'<th v-if="\'hide\' !== hideCb" scope="row" class="check-column">'
                                         +'<input type="checkbox" v-model="checkboxItems" class="{{ rowCheckboxId }}" name="{{ rowCheckboxName }}[]" data-field="{{ rowCheckboxField }}" value="{{ item[rowCheckboxField] }}">'
                                     +'</th>'
                                     + '<template v-for="( i, field ) in fields">'
@@ -138,7 +138,7 @@ Vue.component('vtable', {
 
                             +'<tfoot>'
                                 +'<tr>'
-                                    +'<td class="manage-column column-cb check-column">'
+                                    +'<td v-if="\'hide\' !== hideCb" class="manage-column column-cb check-column">'
                                         +'<label class="screen-reader-text" for="cb-select-all-2">Select All</label>'
                                         +'<input id="cb-select-all-2" type="checkbox">'
                                     +'</td>'
@@ -255,6 +255,11 @@ Vue.component('vtable', {
             required: true
         },
 
+        'wpnonce': {
+            type: String,
+            required: true
+        },
+
         'page': {
             type: String,
             default: function() {
@@ -335,6 +340,20 @@ Vue.component('vtable', {
                     btnText: 'Search Contact',
                     btnId: 'search-submit'
                 }
+            }
+        },
+
+        hideCb: {
+            type: String,
+            default: function () {
+                return '';
+            }
+        },
+
+        afterFetchData: {
+            type: String,
+            default: function () {
+                return '';
             }
         }
     },
@@ -771,7 +790,7 @@ Vue.component('vtable', {
                 postData = '',
                 data = {
                     action: this.action,
-                    _wpnonce: wpVueTable.nonce
+                    _wpnonce: this.wpnonce
                 };
 
             this.ajaxloader = true;
@@ -812,20 +831,24 @@ Vue.component('vtable', {
 
             var postData = postData + '&' + pagination.join('&');
 
-            // console.log( postData );
-
             this.ajax = jQuery.post( wpVueTable.ajaxurl, postData, function( resp ) {
+                self.ajaxloader = false;
+                self.isLoaded   = true;
+
                 if ( resp.success ) {
-                    self.ajaxloader = false;
-                    self.isLoaded   = true;
                     self.tableData  = resp.data.data;
                     self.totalItem  = resp.data.total_items;
                     if ( self.totalPage < self.pageNumberInput ) {
                         self.pageNumberInput = self.totalPage;
                         self.currentPage = self.totalPage;
                     }
+
+                    // call method from $parent if exists
+                    self.callRowActionCallback( { callback: self.afterFetchData }, resp.data );
+
                 } else {
-                    alert(resp);
+                    // display error
+                    alert(resp.data);
                 }
             } );
         },
