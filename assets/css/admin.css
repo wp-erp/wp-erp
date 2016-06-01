@@ -2418,28 +2418,36 @@ form.erp-form .erp-form-field label {
   text-align: center;
   border-left: 1px solid #e1e1e1;
 }
-.erp-ac-report-income-statement-table {
+.erp-ac-income-satement-wrap .postbox {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.erp-ac-income-satement-wrap .postbox .inside {
+  margin-bottom: 0;
+  padding: 0;
+}
+.erp-ac-income-satement-wrap .erp-ac-report-income-statement-table {
   width: 100%;
   border-collapse: collapse;
 }
-.erp-ac-report-income-statement-table tr td a {
+.erp-ac-income-satement-wrap .erp-ac-report-income-statement-table tr td a {
   text-decoration: none;
   color: #00a0d2;
 }
-.erp-ac-report-income-statement-table .erp-ac-odd td {
+.erp-ac-income-satement-wrap .erp-ac-report-income-statement-table .erp-ac-odd td {
   padding-top: 7px;
   background: rgba(238, 238, 238, 0.37);
 }
-.erp-ac-report-income-statement-table .erp-ac-even td {
+.erp-ac-income-satement-wrap .erp-ac-report-income-statement-table .erp-ac-even td {
   border-bottom: 1px solid #eee;
   padding-top: 16px;
   padding-bottom: 13px;
 }
-.erp-ac-report-income-statement-table tr td:nth-child(2) {
+.erp-ac-income-satement-wrap .erp-ac-report-income-statement-table tr td:nth-child(2) {
   text-align: right;
   padding-right: 40px;
 }
-.erp-ac-report-income-statement-table .erp-ac-even-first td {
+.erp-ac-income-satement-wrap .erp-ac-report-income-statement-table .erp-ac-even-first td {
   padding-top: 9px;
 }
 @media print {

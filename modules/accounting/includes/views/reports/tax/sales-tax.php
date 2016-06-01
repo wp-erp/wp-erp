@@ -38,7 +38,7 @@
 						<td><?php echo erp_ac_get_price( $tax['sales']['tax_credit'] ); ?></td>
 						<td><?php echo erp_ac_get_price( $tax['expense']['trns_subtotal'] ); ?></td>
 						<td><?php echo erp_ac_get_price( $tax['expense']['tax_debit'] ); ?></td>
-						<td><?php echo $net_tax < 0 ? '('.erp_ac_get_price( $net_tax ).')' : erp_ac_get_price( $net_tax ); ?></td>
+						<td><?php echo $net_tax < 0 ? erp_ac_get_price( $net_tax ) : erp_ac_get_price( $net_tax ); ?></td>
 
 					</tr>
 				<?php

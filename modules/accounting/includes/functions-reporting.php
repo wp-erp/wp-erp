@@ -14,7 +14,7 @@ function erp_ac_get_reports() {
         ],
         'sales-tax' => [
             'title'       => __( 'Sales Tax', 'erp' ),
-            'description' => __( 'See the sales tax summary.', 'erp' )
+            'description' => __( 'It generates report based on the sales tax charged or paid for the current financial cycle/year.', 'erp' )
         ],
         'income-statement' => [
              'title'       => __( 'Income Statement', 'erp' ),
@@ -248,7 +248,7 @@ function erp_ac_get_tax_total() {
     $tax_total = 0;
 
     foreach ( $journals as $key => $journal ) {
-        $tax_total = $tax_total + array_sum( wp_list_pluck( $journal, 'debit' ) );
+        $tax_total = $tax_total + array_sum( wp_list_pluck( $journal, 'credit' ) ) + array_sum( wp_list_pluck( $journal, 'debit' ) );
     }
     
     return $tax_total;

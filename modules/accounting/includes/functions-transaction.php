@@ -698,6 +698,8 @@ function erp_ac_get_transaction_for_sales() {
     $accounts_id     = [];
     $financial_start = erp_financial_start_date();
     $financial_end   = erp_financial_end_date();
+    $payable_tax     = erp_ac_get_tax_payable_ledger();
+    $payable_tax     = wp_list_pluck( $payable_tax, 'id' );
 
     $accounts = erp_ac_get_chart_dropdown([
         'exclude'  => [1, 2, 3],
@@ -708,6 +710,8 @@ function erp_ac_get_transaction_for_sales() {
         $options     = isset( $account['options'] ) ? $account['options'] : [];
         $accounts_id = array_merge( $accounts_id, wp_list_pluck( $options, 'id' ) );
     }
+
+    $accounts_id = array_merge( $accounts_id, $payable_tax );
 
     $cache_key     = 'erp-ac-get-transaction-by-sales-' . md5( get_current_user_id() );
     $sales_journal = wp_cache_get( $cache_key, 'erp' );
@@ -766,7 +770,6 @@ function erp_ac_get_expnese_transaction_without_tax() {
     $tax_payable     = erp_ac_get_tax_payable_ledger();
     $tax             = array_merge( $tax_reveivable, $tax_payable );
     $tax_ledgers     = wp_list_pluck( $tax, 'id' );
-
 
     $accounts = erp_ac_get_chart_dropdown([
         'exclude'  => [2, 4, 5],
