@@ -1,4 +1,4 @@
-;( function($) {
+;( function($, wperp) {
     Vue.config.debug = 1;
 
     var mixin = {
@@ -78,6 +78,151 @@
     }
 
     if ( $( '.erp-crm-customer-listing' ).length > 0 ) {
+        Vue.component( 'save-search', {
+            props: {
+                searchFields: {
+                    type: Object,
+                    default: function() {
+                        return {};
+                    }
+                },
+                index: '',
+                totalSearchItem:''
+            },
+
+            template: '#erp-crm-save-search-item',
+
+            data: function() {
+                return {
+                    andSelection: '',
+                    orSelection: '',
+                    searchData: [],
+                    isdisabled:false,
+                    marginClass: {
+                        'marginbottomonly' : true
+                    },
+                    searchOptions: wpErpCrm.searchFields
+                }
+            },
+
+            watch: {
+                searchFields: {
+                    deep: true,
+                    immediate: true,
+                    handler: function () {
+                        jQuery('.selecttwo').trigger('change');
+
+                        if ( this.isdisabled ) {
+                            this.marginClass.marginbottomonly = false;
+                        } else {
+                            this.marginClass.marginbottomonly = true;
+                        }
+                    }
+                },
+
+                andSelection: function( newVal, oldVal ){
+                    this.andAdd( this.index );
+                },
+
+                orSelection: function( newVal, oldVal ){
+                    this.orAdd( this.index );
+                }
+
+            },
+
+            computed: {
+                isdisabled: function() {
+                    var hasValue = [];
+
+                    if ( !_.isEmpty( this.searchFields ) ) {
+                        _.each( this.searchFields, function( val ) {
+                            if ( _.isEmpty( val ) ) {
+                                hasValue.push(true);
+                            } else {
+                                hasValue.push(false);
+                            }
+                        });
+
+                        if ( _.contains( hasValue, false ) ) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+
+                    } else {
+                        return true;
+                    }
+
+                    return true;
+                }
+            },
+
+            methods: {
+
+                andAdd: function( index ) {
+
+                    if ( ! this.andSelection ) {
+                        return;
+                    }
+
+                    if ( !saveSearch.searchItem[index].hasOwnProperty(this.andSelection) ) {
+                        saveSearch.$set('searchItem[' + index +']["' + this.andSelection + '"]', []);
+                    }
+
+                    var obj = jQuery.extend({}, wpErpCrm.searchFields[this.andSelection]);
+
+                    if ( wpErpCrm.searchFields[this.andSelection].hasOwnProperty('options') ) {
+                        obj.options = wpErpCrm.searchFields[this.andSelection].options;
+                    }
+
+                    saveSearch.searchItem[index][this.andSelection].push( obj );
+
+                    this.andSelection = '';
+
+                },
+
+                orAdd: function(){
+                    if ( ! this.orSelection ) {
+                        return;
+                    }
+
+                    var object = {};
+
+                    var obj = jQuery.extend({}, wpErpCrm.searchFields[this.orSelection]);
+
+                    object[ this.orSelection ] = [obj]
+
+                    saveSearch.searchItem.push( object );
+
+                    this.orSelection = '';
+                },
+
+                hasValue: function( obj, key, value ) {
+                    return obj.hasOwnProperty(key) && obj[key] === value;
+                },
+
+                removeSearchField: function( searchVal, searchField ) {
+
+                    searchVal.$remove(searchField);
+
+                    var isEmpty = true;
+                    jQuery.each(this.searchFields, function () {
+                        if (this.length) {
+                            isEmpty = false;
+                        }
+                    });
+
+                    if (isEmpty) {
+                        if ( saveSearch.searchItem.length == 1 )  {
+                            return;
+                        }
+                        saveSearch.searchItem.$remove(this.searchFields);
+                    }
+
+                }
+            }
+        });
+
 
         var tableColumns = [
             {
@@ -673,8 +818,89 @@
                         $('select#erp-select-user-for-assign-contact')
                             .append('<option value="' + this.$refs.vtable.customData.filter_assign_contact.id + '" selected>' + this.$refs.vtable.customData.filter_assign_contact.display_name + '</option>').trigger('change')
                     }
-                }
+                },
 
+                filterAdvanceSearch: function() {
+
+                    var filters = {
+                        'first_name[]': [ '^s', '^r' ],
+                        'or': '',
+                        'last_name[]': [ '~xs' ],
+                    };
+
+                    this.$refs.vtable.additionalUrlString = filters;
+                    this.$refs.vtable.fetchData();
+                },
+
+                renderSearchFields: function() {
+                    var self = this;
+                    var queryString = window.location.search;
+                    var orSelection = queryString.split('&or&');
+                    var res = [];
+                    var saveSearchQueryString = wperp.erpGetParamByName( 'erp_save_search', queryString );
+
+                    this.isSaveSearchFilter = ( saveSearchQueryString =='0' ||  saveSearchQueryString == null ) ? false : true;
+
+                    _.each( orSelection, function( orSelect, index ) {
+                        var arr = {};
+                        var result = {};
+                        var mainObj = {};
+                        var keys = Object.keys( wpErpCrm.searchFields );
+
+                        wperp.erp_parse_str( orSelect, arr );
+
+                        for ( type in arr ) {
+                            if ( keys.indexOf(type) > -1) {
+                                result[type] = arr[type];
+                            }
+                        }
+
+                        _.each( result, function( value, index ) {
+                            var fieldArr = [];
+
+                            if ( _.isObject( value ) ) {
+                                _.each( value, function( val, i ) {
+                                    var obj = {};
+
+                                    var seachVal  = wperp.parseCondition(val);
+                                    obj.title     = wpErpCrm.searchFields[index].title;
+                                    obj.type      = wpErpCrm.searchFields[index].type;
+                                    obj.text      = seachVal.val;
+                                    obj.condval   = seachVal.condition;
+                                    obj.condition = wpErpCrm.searchFields[index].condition;
+
+                                    if ( obj.type == 'dropdown' ) {
+                                        obj.options = wpErpCrm.searchFields[index].options;
+                                    }
+
+                                    fieldArr.push(obj);
+                                    mainObj[index] = fieldArr;
+
+                                });
+                            } else {
+                                var obj = {};
+                                var seachVal = wperp.parseCondition(value);
+                                obj.title     = wpErpCrm.searchFields[index].title;
+                                obj.type      = wpErpCrm.searchFields[index].type;
+                                obj.text      = seachVal.val;
+                                obj.condval   = seachVal.condition;
+                                obj.condition = wpErpCrm.searchFields[index].condition;
+
+                                if ( obj.type == 'dropdown' ) {
+                                    obj.options = wpErpCrm.searchFields[index].options;
+                                }
+
+                                fieldArr.push(obj);
+                                mainObj[index] = fieldArr;
+                            }
+                        });
+
+                        res.push( mainObj );
+                    });
+
+                    console.log( res );
+                    // this.searchItem = res;
+                },
             },
 
             ready: function() {
@@ -686,6 +912,7 @@
                 $( 'body' ).on( 'click', 'a#erp-crm-create-contact-other-type', this.makeUserAsContact );
                 this.initSearchCrmAgent();
                 this.setContactOwnerSearchValue();
+                // this.renderSearchFields();
             },
 
             events: {
@@ -1111,4 +1338,5 @@
         });
     }
 
-})(jQuery)
+})(jQuery, window.wperp );
+

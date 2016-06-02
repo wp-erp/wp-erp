@@ -362,6 +362,9 @@
   border: 1px solid #e3e3e3;
   margin: 15px 0px;
 }
+.erp-crm-customer .erp-crm--contact-advance-filter {
+  margin: 15px 0px;
+}
 .erp-advance-search-filter {
   position: relative;
   margin-bottom: 25px;

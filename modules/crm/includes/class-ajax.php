@@ -185,6 +185,13 @@ class Ajax_Handler {
         $this->send_success( $contacts );
     }
 
+    /**
+     * Get contact companies relations
+     *
+     * @since 1.1.0
+     *
+     * @return josn
+     */
     public function get_contact_companies() {
         $this->verify_nonce( 'wp-erp-crm-nonce' );
 
@@ -209,6 +216,13 @@ class Ajax_Handler {
         $this->send_success( $data );
     }
 
+    /**
+     * Get assignable contact
+     *
+     * @since 1.1.0
+     *
+     * @return json
+     */
     public function get_assignable_contact() {
         $this->verify_nonce( 'wp-erp-crm-nonce' );
 

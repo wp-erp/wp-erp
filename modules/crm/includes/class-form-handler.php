@@ -18,10 +18,65 @@ class Form_Handler {
      * @return void
      */
     public function __construct() {
-        add_action( 'load-crm_page_erp-sales-contact-groups', array( $this, 'contact_groups_bulk_action') );
-        add_action( 'admin_init', array( $this, 'handle_save_search_submit' ), 10 );
-        // add_action( 'admin_head', array( $this, 'handle_canonical_url' ), 10 );
-        add_action( 'erp_hr_after_employee_permission_set', array( $this, 'employee_permission_set'), 10, 2 );
+        add_action( 'load-crm_page_erp-sales-contact-groups', [ $this, 'contact_groups_bulk_action' ] );
+        // add_action( 'admin_init', array( $this, 'handle_save_search_submit' ), 10 );
+        add_action( 'admin_head', [ $this, 'handle_canonical_url' ], 10 );
+        add_action( 'erp_hr_after_employee_permission_set', [ $this, 'employee_permission_set' ], 10, 2 );
+        add_filter( 'erp_get_people_pre_query', [ $this, 'contact_advance_filter' ], 10, 2 );
+    }
+
+    function contact_advance_filter( $sql, $args ) {
+        $postdata = $_REQUEST;
+        $allowed    = array_flip( array_keys( erp_crm_get_serach_key( 'crm_page_erp-sales-customers' ) ) ) + ['or'=>''];
+        $serach_array = [];
+
+        $serach_array = array_intersect_key( $postdata, $allowed );
+
+        echo '<pre>';
+        print_r( $postdata );
+        echo '</pre>';
+
+        $pep_fileds  = [ 'first_name', 'last_name', 'company', 'phone', 'mobile', 'other', 'fax', 'notes', 'street_1', 'street_2', 'city', 'postal_code', 'currency' ];
+
+        // $filters_array = [];
+        // foreach ( $serach_array as $filter_key => $filter_val ) {
+        //     if ( $filter_key == 'or' ) {
+        //         continue;
+        //     }
+        //     $filters_array[][$filter_key] = $filter_val;
+        // }
+
+        var_dump( $serach_array, $filters_array ); die();
+
+        if ( $serach_array ) {
+            $id=0;
+            $sql['where'][] = "AND (";
+            foreach ( $serach_array as $field => $value ) {
+                if ( in_array( $field, $pep_fileds ) ) {
+                    if ( $value ) {
+                        $val = erp_crm_get_save_search_regx( $value );
+                        $sql['where'][] = "(";
+                        $j=0;
+                        foreach ( $val as $search_val => $search_condition ) {
+                            $addOr = ( $j == count( $val )-1 ) ? '' : " OR ";
+                            $sql['where'][] = "people.$field $search_condition '$search_val' OR $field.meta_value $search_condition '$search_val'$addOr";
+                            $j++;
+                        }
+                        $sql['where'][] = ( $i == count( $serach_array )-1 ) ? ")" : " ) AND";
+                    }
+                }
+                $i++;
+            }
+            $sql['where'][] = ")";
+        }
+
+        echo( implode( ' ', $sql['where'] ) );
+
+        die();
+
+        // and ( people.first_name LIKE 's%' OR first_name.meta_value LIKE 's%' or people.first_name LIKE 'r%' OR first_name.meta_value LIKE 'r%' )
+
+        // die();
     }
 
     function employee_permission_set( $post, $user ) {
@@ -33,7 +88,6 @@ class Form_Handler {
 
     public function handle_canonical_url() {
         if ( isset( $_GET['page'] ) && ( $_GET['page'] == 'erp-sales-customers' || $_GET['page'] == 'erp-sales-companies' ) ) {
-            echo 'adfasdf';
             ?>
                 <script>
                     window.history.replaceState = false;

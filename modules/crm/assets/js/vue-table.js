@@ -361,7 +361,8 @@ Vue.component('vtable', {
             ajaxloader: false,
             isLoaded: false,
             extraBulkActionData: '',
-            extraBulkActionSelectData:{}
+            extraBulkActionSelectData:{},
+            additionalUrlString: {}
         }
     },
 
@@ -780,20 +781,38 @@ Vue.component('vtable', {
 
             var queryString = self.removeParam( ['page', 'type', 'paged'], window.location.search );
 
+            additionalParameter = jQuery.extend( {}, self.additionalParams, self.additionalUrlString );
+
             if ( queryString ) {
                 self.parseStr( queryString, queryObj );
-                queryPostData = jQuery.extend( {}, queryObj, this.additionalParams );
-                postData   = jQuery.param( queryPostData );
-                self.activeTopNavFilter = queryPostData[this.topNavFilter.field];
-                self.searchQuery = queryPostData[this.search.params];
-                self.sortOrder.field = queryPostData['orderby'];
+
+                var queryObjAfterFilter = {};
+                for ( query in queryObj ) {
+                    if ( typeof queryObj[query] == 'object' ) {
+                        var arr = [];
+                        if ( queryObj.hasOwnProperty(query) ) {
+                            for( key in queryObj[query] ) {
+                                arr.push( queryObj[query][key] );
+                            }
+                            queryObjAfterFilter[query+'[]'] = arr;
+                        }
+                    } else {
+                        queryObjAfterFilter[query] = queryObj[query];
+                    }
+                }
+
+                queryPostData            = jQuery.extend( {}, queryObjAfterFilter, additionalParameter );
+                postData                 = jQuery.param( queryPostData );
+                self.activeTopNavFilter  = queryPostData[this.topNavFilter.field];
+                self.searchQuery         = queryPostData[this.search.params];
+                self.sortOrder.field     = queryPostData['orderby'];
                 self.sortOrder.direction = queryPostData['order'];
-                var postData = postData + '&' + jQuery.param(data);
+                var postData             = postData + '&' + jQuery.param(data);
             } else {
 
-                if ( typeof this.additionalParams !== 'undefined' ) {
-                    if ( Object.keys(this.additionalParams).length > 0  ) {
-                        postData += '&'+jQuery.param( this.additionalParams );
+                if ( typeof additionalParameter !== 'undefined' ) {
+                    if ( Object.keys(additionalParameter).length > 0  ) {
+                        postData += '&'+jQuery.param( additionalParameter );
                     }
                 }
 
@@ -801,7 +820,6 @@ Vue.component('vtable', {
             }
 
             var paged = self.getParamByName( 'paged' ) ;
-            // var offset = ( paged ) ? ( paged - 1 ) * this.perPage : ( this.currentPage - 1 ) * this.perPage
             self.currentPage = ( paged ) ? paged : 1;
             var offset = ( self.currentPage - 1 ) * self.perPage;
 
@@ -838,14 +856,33 @@ Vue.component('vtable', {
 
             var queryString = self.removeParam( ['page', 'type'], window.location.search );
 
+            additionalParameter = jQuery.extend( {}, self.additionalParams, self.additionalUrlString );
+
             if ( queryString ) {
                 self.parseStr( queryString, queryObj );
-                queryPostData = jQuery.extend( {}, queryObj, self.additionalParams );
+                var queryObjAfterFilter = {};
+
+                for ( query in queryObj ) {
+                    if ( typeof queryObj[query] == 'object' ) {
+                        var arr = [];
+                        if ( queryObj.hasOwnProperty(query) ) {
+                            for( key in queryObj[query] ) {
+                                arr.push( queryObj[query][key] );
+                            }
+                            queryObjAfterFilter[query+'[]'] = arr;
+                        }
+                    } else {
+                        queryObjAfterFilter[query] = queryObj[query];
+                    }
+                }
+
+                queryPostData = jQuery.extend( {}, queryObjAfterFilter, additionalParameter );
+                console.log( queryPostData );
                 queryParams   = jQuery.param( queryPostData );
             } else {
-                if ( typeof self.additionalParams !== 'undefined' ) {
-                    if ( Object.keys( self.additionalParams ).length > 0  ) {
-                        queryParams = jQuery.param( self.additionalParams );
+                if ( typeof additionalParameter !== 'undefined' ) {
+                    if ( Object.keys( additionalParameter ).length > 0  ) {
+                        queryParams = jQuery.param( additionalParameter );
                     }
                 }
             }
@@ -865,10 +902,11 @@ Vue.component('vtable', {
             }
 
             if ( queryParams ) {
-                var url = ( paged ) ? self.page + '&' + queryParams + paged : self.page + '&' + queryParams;
+                var url = ( paged ) ? self.page + '&' + queryParams + paged: self.page + '&' + queryParams;
             } else {
                 var url = ( paged ) ? self.page + paged : self.page;
             }
+
             window.history.pushState( null, null, url );
         }
     },

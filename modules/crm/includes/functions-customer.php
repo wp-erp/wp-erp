@@ -1620,6 +1620,8 @@ function erp_crm_save_search_query_filter( $people ) {
         }
     }
 
+    var_dump( $query_data ); die();
+
     if ( !empty( $query_data ) ) {
         $people = erp_crm_save_search_query_builder( $people, $query_data );
     }
