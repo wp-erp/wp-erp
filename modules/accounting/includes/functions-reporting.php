@@ -21,8 +21,8 @@ function erp_ac_get_reports() {
              'description' => __( 'A summary of a management\'s performance as reflecte the profitability of an organization during the time interval.', 'erp' )
         ],
         'balance-sheet' => [
-            'title'       => '',
-            'description' => ''
+            'title'       => __( 'Balance Sheet', 'erp' ),
+            'description' => __( 'This is a report gives you an immediate status of your accounts at a specified date. You can call it a "Snapshot" view of the current position (day) of the financial year.', 'erp' )
         ],
         // 'profit-loss' => [
         //     'title'       => __( 'Profit and Loss', 'accounting' ),

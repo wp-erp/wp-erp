@@ -2450,6 +2450,55 @@ form.erp-form .erp-form-field label {
 .erp-ac-income-satement-wrap .erp-ac-report-income-statement-table .erp-ac-even-first td {
   padding-top: 9px;
 }
+.erp-ac-balance-sheet-wrap .metabox-holder {
+  width: 100%;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+.erp-ac-balance-sheet-wrap .metabox-holder .postbox {
+  float: left;
+  width: 32%;
+  margin: 5px .3%;
+}
+.erp-ac-balance-sheet-wrap .metabox-holder .postbox .inside {
+  margin: 11px 0px 46px 0;
+}
+.erp-ac-balance-sheet-wrap .metabox-holder .postbox .erp-ac-total-count {
+  width: 95%;
+  position: absolute;
+  background: #eee;
+  padding: 10px;
+  bottom: 1px;
+}
+.erp-ac-balance-sheet-wrap .metabox-holder .postbox .erp-ac-total-count table {
+  width: 100%;
+}
+.erp-ac-balance-sheet-wrap .metabox-holder .postbox .erp-ac-total-count table td {
+  width: 50%;
+}
+.erp-ac-balance-sheet-wrap .metabox-holder .postbox .erp-ac-total-count table tr > td:last-child {
+  text-align: right;
+  padding-right: 12px;
+}
+.erp-ac-balance-sheet-wrap .widefat {
+  border: none;
+  border-collapse: collapse;
+}
+.erp-ac-balance-sheet-wrap .widefat tr > td:first-child {
+  width: 80%;
+}
+.erp-ac-balance-sheet-wrap .widefat tr > td:last-child,
+.erp-ac-balance-sheet-wrap .widefat tr > th:last-child {
+  text-align: right;
+}
+.erp-ac-balance-sheet-wrap .widefat td,
+.erp-ac-balance-sheet-wrap .widefat th {
+  border: none;
+}
 @media print {
   .erp-grid-container .col-3 {
     width: 50%;
