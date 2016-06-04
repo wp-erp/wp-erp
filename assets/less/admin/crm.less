@@ -273,14 +273,83 @@
 
             .filter-item {
                 float:left;
-                margin-right: 7px;
-                padding: 6px 10px;
+                margin-right: 6px;
                 border: 1px solid #e5e5e5;
                 -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
                 -moz-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
                 -ms-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
                 box-shadow: 0 1px 1px rgba(0,0,0,0.04);
                 background-color: #fff;
+                margin-bottom: 9px;
+
+                .filter-content {
+                    input, select {
+                        vertical-align: middle;
+                        margin-right:5px;
+                    }
+
+                    .filter-left {
+                        padding: 4px 10px;
+                        float: left;
+                    }
+
+                    .filter-right {
+                        float: left;
+                        padding: 10px;
+                        background: #F5F5F5;
+                        height: 100%;
+                        color: #fff;
+
+                        a {
+                            color: #afafaf;
+
+                            &:first-child {
+                                border-right: 2px solid #fff;
+                                margin-right: 8px;
+                                padding-right: 8px;
+                            }
+                        }
+                    }
+                }
+
+                .filter-details {
+                    .filter-left {
+                        padding: 6px 10px;
+                        float: left;
+                    }
+                    .filter-right {
+                        float: left;
+                        padding: 6px 10px;
+                        background: #F5F5F5;
+                        height: 100%;
+                        color: #fff;
+
+                        a {
+                            color: #afafaf;
+                        }
+                    }
+                }
+
+            }
+
+        }
+        .or-divider {
+            position: relative;
+            text-align: center;
+            margin: 11px 0px;
+
+            hr {
+                border-top: 1px solid #D6D6D6;
+            }
+
+            span {
+                position: absolute;
+                top: -9px;
+                left: 45%;
+                font-size: 14px;
+                background: #F1F1F1;
+                width: 50px;
+                color: #afafaf;
             }
         }
     }

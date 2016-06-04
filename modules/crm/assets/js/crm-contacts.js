@@ -307,20 +307,29 @@
             template:
                 '<div class="filter-item">'
                     + '<div class="filter-content" v-if="field.editable">'
-                        + '<select id="filter-key" v-model="fieldObj.filterKey">'
-                            + '<option value="">--Select a field--</option>'
-                            + '<option v-for="( searchKey, searchField ) in searchFields" value="{{ searchKey }}">{{ searchField.title }}</option>'
-                        + '</select>'
-                        + '<select id="filter-condition" v-model="fieldObj.filterCondition" v-if="fieldObj.filterKey">'
-                            + '<option v-for="( conditionSign, condition ) in searchFields[fieldObj.filterKey].condition" value="{{ conditionSign }}">{{ condition }}</option>'
-                        + '</select>'
-                        + '<input type="text" class="input-text" v-model="fieldObj.filterValue" v-if="fieldObj.filterKey">'
-                        + '<button class="button" @click.prevent="applyFilter(field)"><i class="fa fa-check" aria-hidden="true"></i></button>'
-                        + '<a href="#" @click.prevent="removeFilter(field)"><i class="fa fa-times" aria-hidden="true"></i></a>'
+                        + '<div class="filter-left">'
+                            + '<select id="filter-key" v-model="fieldObj.filterKey">'
+                                + '<option value="">--Select a field--</option>'
+                                + '<option v-for="( searchKey, searchField ) in searchFields" value="{{ searchKey }}">{{ searchField.title }}</option>'
+                            + '</select>'
+                            + '<select id="filter-condition" v-model="fieldObj.filterCondition" v-if="fieldObj.filterKey">'
+                                + '<option v-for="( conditionSign, condition ) in searchFields[fieldObj.filterKey].condition" value="{{ conditionSign }}">{{ condition }}</option>'
+                            + '</select>'
+                            + '<input type="text" class="input-text" v-model="fieldObj.filterValue" v-if="fieldObj.filterKey">'
+                        + '</div>'
+                        + '<div class="filter-right">'
+                            + '<a href="#" @click.prevent="applyFilter(field)"><i class="fa fa-check" aria-hidden="true"></i></a>'
+                            + '<a href="#" @click.prevent="removeFilter(field)"><i class="fa fa-times" aria-hidden="true"></i></a>'
+                        + '</div>'
+                        + '<div class="clearfix"></div>'
                     + '</div>'
                     + '<div class="filter-details" v-else @click.prevent="editFilterItem( field )">'
-                        + '{{ searchFields[field.key].title }} <span style="color:#0085ba">{{ searchFields[field.key].condition[field.condition] }}</span> {{ field.value }}'
-                        + '<a href="#" @click.prevent="removeFilter(field)"><i class="fa fa-times" aria-hidden="true"></i></a>'
+                        + '<div class="filter-left">'
+                            + '{{ searchFields[field.key].title }} <span style="color:#0085ba; font-style:italic; margin:0px 2px;">{{ searchFields[field.key].condition[field.condition] }}</span> {{ field.value }}'
+                        + '</div>'
+                        + '<div class="filter-right">'
+                            + '<a href="#" @click.prevent="removeFilter(field)"><i class="fa fa-times" aria-hidden="true"></i></a>'
+                        + '</div>'
                     + '</div>'
                 + '</div>',
 
@@ -377,8 +386,13 @@
             template:
                 '<div class="erp-advance-search-filters">'
                     + '<div class="erp-advance-search-or-wrapper" v-for="(index,fieldItem) in fields">'
-                        + '<button class="add-filter button button-primary" @click.prevent="addNewFilter( index )">Add Filter</button>'
+                        + '<div class="or-divider" v-show="( this.fields.length > 1 ) && ( index != 0)">'
+                            + '<hr>'
+                            + '<span>Or</span>'
+                        + '</div>'
+                        + '<button :disabled="editableMode" class="add-filter button button-primary" @click.prevent="addNewFilter( index )"><i class="fa fa-filter" aria-hidden="true"></i> Add Filter</button>'
                         + '<filter-item :editable-mode=editableMode :field=field :field-index=fieldIndex :index=index v-for="( fieldIndex, field ) in fieldItem"></filter-item>'
+                        + '<button :disabled="editableMode" class="add-filter button" v-show="( this.fields[index].length > 0 && index == this.fields.length-1 )" @click.prevent="addNewOrFilter( index )"><i class="fa fa-filter" aria-hidden="true"></i> Or Filter</button>'
                         + '<div class="clearfix"></div>'
                     + '</div>'
                 + '</div>',
@@ -388,24 +402,6 @@
                     editableMode: false,
                     fields: [
                         [
-                            {
-                                key: 'first_name',
-                                condition: '!',
-                                value: 's',
-                                editable: false
-                            },
-                            {
-                                key: 'first_name',
-                                condition: '~',
-                                value: 'a',
-                                editable: false
-                            },
-                            {
-                                key: 'last_name',
-                                condition: '!~',
-                                value: 'x',
-                                editable: false
-                            },
                         ]
                     ],
                 }
@@ -413,7 +409,15 @@
 
             methods: {
 
+                isEnableOrFilter: function() {
+                    console.log( this.fields.length );
+                },
+
                 addNewFilter: function( index ) {
+                    if( this.editableMode ) {
+                        return;
+                    }
+
                     this.fields[index].push({
                         key: '',
                         condition: '',
@@ -422,7 +426,24 @@
                     });
 
                     this.editableMode = true;
+                    this.isEnableOrFilter();
+                },
+
+                addNewOrFilter: function() {
+                    this.fields.push( [
+                        {
+                            key: '',
+                            condition: '',
+                            value: '',
+                            editable: true
+                        }
+                    ]);
+                    this.editableMode = true;
                 }
+            },
+
+            ready: function() {
+                this.isEnableOrFilter();
             },
 
             events: {
@@ -438,6 +459,10 @@
                         this.editableMode = false;
                     }
                     this.fields[index].$remove( this.fields[index][fieldIndex] );
+
+                    if ( this.fields[index].length == 0 && this.fields.length > 1 ) {
+                        this.fields.splice( index, 1 );
+                    }
                 },
 
                 isEditableMode: function( isEditable ) {
