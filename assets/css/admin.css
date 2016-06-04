@@ -362,8 +362,24 @@
   border: 1px solid #e3e3e3;
   margin: 15px 0px;
 }
-.erp-crm-customer .erp-crm--contact-advance-filter {
-  margin: 15px 0px;
+.erp-crm-customer .erp-advance-search-filters {
+  margin: 20px 0px;
+}
+.erp-crm-customer .erp-advance-search-filters .erp-advance-search-or-wrapper .add-filter {
+  float: left;
+  margin-right: 9px;
+  height: 31px;
+}
+.erp-crm-customer .erp-advance-search-filters .erp-advance-search-or-wrapper .filter-item {
+  float: left;
+  margin-right: 7px;
+  padding: 6px 10px;
+  border: 1px solid #e5e5e5;
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  -ms-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  background-color: #fff;
 }
 .erp-advance-search-filter {
   position: relative;

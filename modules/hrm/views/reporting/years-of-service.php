@@ -6,6 +6,7 @@
 
         $all_user_id = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees WHERE status = 'active'" );
 
+        $hire_data = [];
         foreach ( $all_user_id as $user_id ) {
 
             $employee = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );

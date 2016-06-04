@@ -27,16 +27,26 @@ class Form_Handler {
 
     function contact_advance_filter( $sql, $args ) {
         $postdata = $_REQUEST;
-        $allowed    = array_flip( array_keys( erp_crm_get_serach_key( 'crm_page_erp-sales-customers' ) ) ) + ['or'=>''];
-        $serach_array = [];
 
-        $serach_array = array_intersect_key( $postdata, $allowed );
+        if ( !isset( $postdata['erpadvancefilter'] ) || empty( $postdata['erpadvancefilter'] ) ) {
+            return $sql;
+        }
 
-        echo '<pre>';
-        print_r( $postdata );
-        echo '</pre>';
+        $or_query   = explode( '&or&', $postdata['erpadvancefilter'] );
+        $allowed    = erp_crm_get_serach_key( 'crm_page_erp-sales-customers' );
+        $query_data = [];
 
-        $pep_fileds  = [ 'first_name', 'last_name', 'company', 'phone', 'mobile', 'other', 'fax', 'notes', 'street_1', 'street_2', 'city', 'postal_code', 'currency' ];
+        if ( $or_query ) {
+            foreach( $or_query as $or_q ) {
+                parse_str( $or_q, $output );
+                $serach_array = array_intersect_key( $output, array_flip( array_keys( $allowed ) ) );
+                $query_data[] = $serach_array;
+            }
+        }
+
+        var_dump( $query_data );
+        die();
+        // $pep_fileds  = [ 'first_name', 'last_name', 'company', 'phone', 'mobile', 'other', 'fax', 'notes', 'street_1', 'street_2', 'city', 'postal_code', 'currency' ];
 
         // $filters_array = [];
         // foreach ( $serach_array as $filter_key => $filter_val ) {
@@ -46,33 +56,33 @@ class Form_Handler {
         //     $filters_array[][$filter_key] = $filter_val;
         // }
 
-        var_dump( $serach_array, $filters_array ); die();
+        // var_dump( $serach_array, $filters_array ); die();
 
-        if ( $serach_array ) {
-            $id=0;
-            $sql['where'][] = "AND (";
-            foreach ( $serach_array as $field => $value ) {
-                if ( in_array( $field, $pep_fileds ) ) {
-                    if ( $value ) {
-                        $val = erp_crm_get_save_search_regx( $value );
-                        $sql['where'][] = "(";
-                        $j=0;
-                        foreach ( $val as $search_val => $search_condition ) {
-                            $addOr = ( $j == count( $val )-1 ) ? '' : " OR ";
-                            $sql['where'][] = "people.$field $search_condition '$search_val' OR $field.meta_value $search_condition '$search_val'$addOr";
-                            $j++;
-                        }
-                        $sql['where'][] = ( $i == count( $serach_array )-1 ) ? ")" : " ) AND";
-                    }
-                }
-                $i++;
-            }
-            $sql['where'][] = ")";
-        }
+        // if ( $serach_array ) {
+        //     $id=0;
+        //     $sql['where'][] = "AND (";
+        //     foreach ( $serach_array as $field => $value ) {
+        //         if ( in_array( $field, $pep_fileds ) ) {
+        //             if ( $value ) {
+        //                 $val = erp_crm_get_save_search_regx( $value );
+        //                 $sql['where'][] = "(";
+        //                 $j=0;
+        //                 foreach ( $val as $search_val => $search_condition ) {
+        //                     $addOr = ( $j == count( $val )-1 ) ? '' : " OR ";
+        //                     $sql['where'][] = "people.$field $search_condition '$search_val' OR $field.meta_value $search_condition '$search_val'$addOr";
+        //                     $j++;
+        //                 }
+        //                 $sql['where'][] = ( $i == count( $serach_array )-1 ) ? ")" : " ) AND";
+        //             }
+        //         }
+        //         $i++;
+        //     }
+        //     $sql['where'][] = ")";
+        // }
 
-        echo( implode( ' ', $sql['where'] ) );
+        // echo( implode( ' ', $sql['where'] ) );
 
-        die();
+        // die();
 
         // and ( people.first_name LIKE 's%' OR first_name.meta_value LIKE 's%' or people.first_name LIKE 'r%' OR first_name.meta_value LIKE 'r%' )
 

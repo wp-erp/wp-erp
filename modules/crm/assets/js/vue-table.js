@@ -34,7 +34,7 @@ Vue.component('vtable', {
                         +'</template>'
 
                         +'<div class="tablenav-pages" :class="{ \'one-page\': hidePagination }">'
-                            +'<span class="displaying-num">{{ totalItem }} item</span>'
+                            +'<span v-if="totalItem" class="displaying-num">{{ totalItem }} {{ totalItem | pluralize \'item\' }}</span>'
                             +'<span class="pagination-links">'
                                 +'<span v-if="isFirstPage()" class="tablenav-pages-navspan" aria-hidden="true">«</span>'
                                 +'<a v-else class="first-page" href="#" @click.prevent="goFirstPage()"><span class="screen-reader-text">First page</span><span aria-hidden="true">«</span></a>'
@@ -57,7 +57,7 @@ Vue.component('vtable', {
                         +'<table class="vtable wp-list-table widefat fixed striped {{ tableClass }}">'
                             +'<thead>'
                                 +'<tr>'
-                                    +'<td id="cb" class="manage-column column-cb check-column">'
+                                    +'<td v-if="\'hide\' !== hideCb" id="cb" class="manage-column column-cb check-column">'
                                         +'<label class="screen-reader-text" for="cb-select-all-1">Select All</label>'
                                         +'<input id="cb-select-all-1" type="checkbox">'
                                     +'</td>'
@@ -86,7 +86,7 @@ Vue.component('vtable', {
 
                             +'<tbody id="the-list" data-wp-lists="list:{{ tableClass }}" class="vtbale-tbody">'
                                 +'<tr v-if="( tableData.length > 0 )" v-for="(itemIndex, item) in tableData" transition="vtable-item">'
-                                    +'<th scope="row" class="check-column">'
+                                    +'<th v-if="\'hide\' !== hideCb" scope="row" class="check-column">'
                                         +'<input type="checkbox" v-model="checkboxItems" class="{{ rowCheckboxId }}" name="{{ rowCheckboxName }}[]" data-field="{{ rowCheckboxField }}" value="{{ item[rowCheckboxField] }}">'
                                     +'</th>'
                                     + '<template v-for="( i, field ) in fields">'
@@ -132,13 +132,13 @@ Vue.component('vtable', {
                                     + '</template>'
                                 +'</tr>'
                                 +'<tr v-if="( tableData.length < 1 ) || !isLoaded">'
-                                    +'<td colspan="{{ this.fields.length+1 }}"><span v-if="!isLoaded">Loading...</span><span v-else>No result found</span></td>'
+                                    +'<td :colspan="columnCount"><span v-if="!isLoaded">Loading...</span><span v-else>No result found</span></td>'
                                 +'</tr>'
                             +'</tbody>'
 
                             +'<tfoot>'
                                 +'<tr>'
-                                    +'<td class="manage-column column-cb check-column">'
+                                    +'<td v-if="\'hide\' !== hideCb" class="manage-column column-cb check-column">'
                                         +'<label class="screen-reader-text" for="cb-select-all-2">Select All</label>'
                                         +'<input id="cb-select-all-2" type="checkbox">'
                                     +'</td>'
@@ -179,7 +179,7 @@ Vue.component('vtable', {
                         +'</div>'
 
                         +'<div class="tablenav-pages" :class="{ \'one-page\': hidePagination }">'
-                            +'<span class="displaying-num">{{ totalItem }} item</span>'
+                            +'<span v-if="totalItem" class="displaying-num">{{ totalItem }} {{ totalItem | pluralize \'item\' }}</span>'
                             +'<span class="pagination-links">'
                                 +'<span v-if="isFirstPage()" class="tablenav-pages-navspan" aria-hidden="true">«</span>'
                                 +'<a v-else class="first-page" href="#" @click.prevent="goFirstPage()"><span class="screen-reader-text">First page</span><span aria-hidden="true">«</span></a>'
@@ -251,6 +251,11 @@ Vue.component('vtable', {
         },
 
         'action': {
+            type: String,
+            required: true
+        },
+
+        'wpnonce': {
             type: String,
             required: true
         },
@@ -336,6 +341,27 @@ Vue.component('vtable', {
                     btnId: 'search-submit'
                 }
             }
+        },
+
+        hideCb: {
+            type: String,
+            default: function () {
+                return '';
+            }
+        },
+
+        afterFetchData: {
+            type: String,
+            default: function () {
+                return '';
+            }
+        },
+
+        removeUrlParams: {
+            type: Array,
+            default: function() {
+                return [];
+            }
         }
     },
 
@@ -362,7 +388,7 @@ Vue.component('vtable', {
             isLoaded: false,
             extraBulkActionData: '',
             extraBulkActionSelectData:{},
-            additionalUrlString: {}
+            additionalUrlString: {},
         }
     },
 
@@ -392,7 +418,7 @@ Vue.component('vtable', {
         },
 
         columnCount: function() {
-            return this.fields.length+1;
+            return this.hideCb ? this.fields.length : ( this.fields.length + 1 );
         }
     },
 
@@ -632,7 +658,8 @@ Vue.component('vtable', {
         searchCloseAction: function( query ) {
             if ( query == '' ) {
                 this.additionalParams[this.search.params] = '';
-                this.currentPage = 1
+                this.currentPage = 1;
+                this.pageNumberInput = 1;
                 this.activeTopNavFilter = this.topNavFilter.default;
                 this.fetchData();
             }
@@ -647,7 +674,7 @@ Vue.component('vtable', {
             if (queryString !== "") {
                 params_arr = queryString.split("&");
                 for (var i = params_arr.length - 1; i >= 0; i -= 1) {
-                    param = params_arr[i].split("=")[0];
+                    param = params_arr[i].split("=")[0].replace('[]', '');
                     if ( key.indexOf(param) > -1 ) {
                         params_arr.splice(i, 1);
                     }
@@ -772,36 +799,36 @@ Vue.component('vtable', {
                 postData = '',
                 data = {
                     action: this.action,
-                    _wpnonce: wpVueTable.nonce
+                    _wpnonce: this.wpnonce
                 };
 
             this.ajaxloader = true;
 
             self.setQueryParmsIntoUrl();
 
-            var queryString = self.removeParam( ['page', 'type', 'paged'], window.location.search );
+            var removalQueryParam = ['page', 'type', 'or', 'paged' ].concat( Object.keys( wpErpCrm.searchFields ) );
 
-            additionalParameter = jQuery.extend( {}, self.additionalParams, self.additionalUrlString );
-
+            var queryString = self.removeParam( removalQueryParam, window.location.search );
+            // additionalParameter = jQuery.extend( {}, self.additionalParams, self.additionalUrlString );
             if ( queryString ) {
                 self.parseStr( queryString, queryObj );
 
-                var queryObjAfterFilter = {};
-                for ( query in queryObj ) {
-                    if ( typeof queryObj[query] == 'object' ) {
-                        var arr = [];
-                        if ( queryObj.hasOwnProperty(query) ) {
-                            for( key in queryObj[query] ) {
-                                arr.push( queryObj[query][key] );
-                            }
-                            queryObjAfterFilter[query+'[]'] = arr;
-                        }
-                    } else {
-                        queryObjAfterFilter[query] = queryObj[query];
-                    }
-                }
+                // var queryObjAfterFilter = {};
+                // for ( query in queryObj ) {
+                //     if ( typeof queryObj[query] == 'object' ) {
+                //         var arr = [];
+                //         if ( queryObj.hasOwnProperty(query) ) {
+                //             for( key in queryObj[query] ) {
+                //                 arr.push( queryObj[query][key] );
+                //             }
+                //             queryObjAfterFilter[query+'[]'] = arr;
+                //         }
+                //     } else {
+                //         queryObjAfterFilter[query] = queryObj[query];
+                //     }
+                // }
 
-                queryPostData            = jQuery.extend( {}, queryObjAfterFilter, additionalParameter );
+                queryPostData            = jQuery.extend( {}, queryObj, self.additionalParams );
                 postData                 = jQuery.param( queryPostData );
                 self.activeTopNavFilter  = queryPostData[this.topNavFilter.field];
                 self.searchQuery         = queryPostData[this.search.params];
@@ -809,14 +836,13 @@ Vue.component('vtable', {
                 self.sortOrder.direction = queryPostData['order'];
                 var postData             = postData + '&' + jQuery.param(data);
             } else {
-
-                if ( typeof additionalParameter !== 'undefined' ) {
-                    if ( Object.keys(additionalParameter).length > 0  ) {
-                        postData += '&'+jQuery.param( additionalParameter );
+                if ( typeof self.additionalParams !== 'undefined' ) {
+                    if ( Object.keys( self.additionalParams ).length > 0  ) {
+                        postData += '&'+jQuery.param( self.additionalParams );
                     }
                 }
 
-                var postData = jQuery.param(data) + '&' + postData  ;
+                var postData = jQuery.param(data) + postData  ;
             }
 
             var paged = self.getParamByName( 'paged' ) ;
@@ -828,22 +854,32 @@ Vue.component('vtable', {
                 'offset=' + offset
             ];
 
-            var postData = postData + '&' + pagination.join('&');
+            if ( typeof self.additionalUrlString['advanceFilter'] != 'undefined' && self.additionalUrlString['advanceFilter'] != '' ) {
+                var advanceFilter = '&erpadvancefilter=' + encodeURIComponent( self.additionalUrlString['advanceFilter'].toString() );
+            } else {
+                var advanceFilter = '&erpadvancefilter=';
+            }
 
-            // console.log( postData );
+            var postData = postData + '&' + pagination.join('&') + advanceFilter;
 
             this.ajax = jQuery.post( wpVueTable.ajaxurl, postData, function( resp ) {
+                self.ajaxloader = false;
+                self.isLoaded   = true;
+
                 if ( resp.success ) {
-                    self.ajaxloader = false;
-                    self.isLoaded   = true;
                     self.tableData  = resp.data.data;
-                    self.totalItem  = resp.data.total_items;
+                    self.totalItem  = parseInt(resp.data.total_items);
                     if ( self.totalPage < self.pageNumberInput ) {
                         self.pageNumberInput = self.totalPage;
                         self.currentPage = self.totalPage;
                     }
+
+                    // call method from $parent if exists
+                    self.callRowActionCallback( { callback: self.afterFetchData }, resp.data );
+
                 } else {
-                    alert(resp);
+                    // display error
+                    alert(resp.data);
                 }
             } );
         },
@@ -854,42 +890,23 @@ Vue.component('vtable', {
                 queryParams = '',
                 url= '';
 
-            var queryString = self.removeParam( ['page', 'type'], window.location.search );
-
-            additionalParameter = jQuery.extend( {}, self.additionalParams, self.additionalUrlString );
+            var removalQueryParam = ['page', 'type', 'or' ].concat( Object.keys( wpErpCrm.searchFields ) );
+            var queryString = self.removeParam( removalQueryParam, window.location.search );
+            var advanceFilterString = self.filterOnlyAdvanceQueryParams( window.location.search );
 
             if ( queryString ) {
                 self.parseStr( queryString, queryObj );
-                var queryObjAfterFilter = {};
-
-                for ( query in queryObj ) {
-                    if ( typeof queryObj[query] == 'object' ) {
-                        var arr = [];
-                        if ( queryObj.hasOwnProperty(query) ) {
-                            for( key in queryObj[query] ) {
-                                arr.push( queryObj[query][key] );
-                            }
-                            queryObjAfterFilter[query+'[]'] = arr;
-                        }
-                    } else {
-                        queryObjAfterFilter[query] = queryObj[query];
-                    }
-                }
-
-                queryPostData = jQuery.extend( {}, queryObjAfterFilter, additionalParameter );
-                console.log( queryPostData );
+                queryPostData = jQuery.extend( {}, queryObj, self.additionalParams );
                 queryParams   = jQuery.param( queryPostData );
             } else {
-                if ( typeof additionalParameter !== 'undefined' ) {
-                    if ( Object.keys( additionalParameter ).length > 0  ) {
-                        queryParams = jQuery.param( additionalParameter );
+                if ( typeof self.additionalParams !== 'undefined' ) {
+                    if ( Object.keys( self.additionalParams ).length > 0  ) {
+                        queryParams = jQuery.param( self.additionalParams );
                     }
                 }
             }
 
             queryParams = self.removeParam( ['type','paged'], '?' + queryParams )
-
-            // console.log( self.currentPage );
 
             if ( self.currentPage > 1 ) {
                 if ( self.currentPage > self.totalPage ) {
@@ -901,13 +918,52 @@ Vue.component('vtable', {
                 var paged = '';
             }
 
-            if ( queryParams ) {
-                var url = ( paged ) ? self.page + '&' + queryParams + paged: self.page + '&' + queryParams;
+
+            if ( typeof self.additionalUrlString['advanceFilter'] != 'undefined' && self.additionalUrlString['advanceFilter'] != '' ) {
+                var advanceFilter = ( advanceFilterString ) ?  '&' + advanceFilterString : '&' + self.additionalUrlString['advanceFilter'];
             } else {
-                var url = ( paged ) ? self.page + paged : self.page;
+                var advanceFilter = advanceFilterString ?  '&' + advanceFilterString : '';
+            }
+
+            if ( queryParams ) {
+                var url = ( paged ) ? self.page + '&' + queryParams + paged + advanceFilter: self.page + '&' + queryParams + advanceFilter;
+            } else {
+                var url = ( paged ) ? self.page + paged + advanceFilter : self.page + advanceFilter;
             }
 
             window.history.pushState( null, null, url );
+        },
+
+        filterOnlyAdvanceQueryParams: function( queryString ) {
+            var self = this;
+            var res = [];
+            var orSelection = queryString.split('&or&');
+
+            jQuery.each( orSelection, function( index, orSelect ) {
+                var arr = {};
+                var r = [];
+                var keys = Object.keys( wpErpCrm.searchFields );
+
+                self.parseStr( orSelect, arr );
+
+                for ( type in arr ) {
+                    if ( keys.indexOf(type) > -1) {
+                        if ( typeof arr[type] == 'object' ) {
+                            for ( key in arr[type] ) {
+                                var s = type + '[]=' + arr[type][key];
+                                r.push(s);
+                            }
+                        } else {
+                            var s = type +'[]=' + arr[type]
+                            r.push(s)
+                        }
+
+                    }
+                }
+                res.push( r.join('&') );
+            });
+
+            return res.join('&or&')
         }
     },
 

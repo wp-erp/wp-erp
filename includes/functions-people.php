@@ -51,7 +51,7 @@ function erp_get_peoples( $args = [] ) {
     $users_tb    = $wpdb->users;
     $usermeta_tb = $wpdb->usermeta;
 
-    $pep_fileds  = [ 'first_name', 'last_name', 'company', 'phone', 'mobile',
+    $pep_fileds  = [ 'first_name', 'last_name', 'phone', 'mobile',
             'other', 'fax', 'notes', 'street_1', 'street_2', 'city', 'state', 'postal_code', 'country',
             'currency' ];
 
@@ -67,7 +67,9 @@ function erp_get_peoples( $args = [] ) {
             $type_sql = ( $type != 'all' ) ? "and `name` = '" . $type ."'" : '';
         }
 
-        $sql['select'][] = "SELECT people.id, people.user_id, people.company, people.created_by, people.created, COALESCE( people.email, users.user_email ) AS email,
+        $custom_sql['select'][] = "SELECT *";
+
+        $sql['select'][] = "FROM ( SELECT people.id, people.user_id, people.company, people.created_by, people.created, COALESCE( people.email, users.user_email ) AS email,
                 COALESCE( people.website, users.user_url ) AS website,";
 
         $sql['join'][] = "LEFT JOIN $users_tb AS users ON people.user_id = users.ID";
@@ -80,49 +82,48 @@ function erp_get_peoples( $args = [] ) {
         $sql['select'][] = "GROUP_CONCAT( t.name SEPARATOR ',') AS types";
         $sql['join'][]   = "LEFT JOIN $type_rel_tb AS r ON people.id = r.people_id LEFT JOIN $types_tb AS t ON r.people_types_id = t.id";
         $sql_from_tb     = "FROM $pep_tb AS people";
+        $sql_contact_type = "WHERE ( select count(*) from $types_tb
+            inner join  $type_rel_tb
+                on $types_tb.`id` = $type_rel_tb.`people_types_id`
+                where $type_rel_tb.`people_id` = people.`id` $type_sql and $trashed_sql
+          ) >= 1";
 
-        $sql['where'][] = "WHERE ( select count(*) from $types_tb
-                    inner join  $type_rel_tb
-                        on $types_tb.`id` = $type_rel_tb.`people_types_id`
-                        where $type_rel_tb.`people_id` = people.`id` $type_sql and $trashed_sql
-                  ) >= 1";
+        $custom_sql['join'] = [];
 
-        $sql_group_by = "GROUP BY `people`.`id`";
+        $custom_sql['where'][] = 'WHERE 1=1';
+        $sql_group_by = "GROUP BY `people`.`id` ) as people";
         $sql_order_by = "ORDER BY $orderby $order";
 
         // Check if want all data without any pagination
         $sql_limit = ( $number != '-1' && !$count ) ? "LIMIT $number OFFSET $offset" : '';
 
         if ( $meta_query ) {
-            $sql['join'][] = "LEFT JOIN $pepmeta_tb as people_meta on people.id = people_meta.`erp_people_id`";
+            $custom_sql['join'][] = "LEFT JOIN $pepmeta_tb as people_meta on people.id = people_meta.`erp_people_id`";
 
             $meta_key      = isset( $meta_query['meta_key'] ) ? $meta_query['meta_key'] : '';
             $meta_value    = isset( $meta_query['meta_value'] ) ? $meta_query['meta_value'] : '';
             $compare       = isset( $meta_query['compare'] ) ? $meta_query['compare'] : '=';
 
-            $sql['where'][] = "AND people_meta.meta_key='$meta_key' and people_meta.meta_value='$meta_value'";
+            $custom_sql['where'][] = "AND people_meta.meta_key='$meta_key' and people_meta.meta_value='$meta_value'";
         }
 
         // Check is the row want to search
         if ( ! empty( $s ) ) {
-            $sql['where'][] = "AND ( ( first_name.meta_value LIKE '%$s%' OR people.first_name LIKE '%$s%')";
-            $sql['where'][] = "OR ( last_name.meta_value LIKE '%$s%' OR people.last_name LIKE '%$s%')";
-            $sql['where'][] = "OR ( people.company LIKE '%$s%') )";
+            $custom_sql['where'][] = "AND first_name LIKE '%$s%'";
+            $custom_sql['where'][] = "OR last_name LIKE '%$s%'";
+            $custom_sql['where'][] = "OR company LIKE '%$s%'";
         }
 
         // Check if args count true, then return total count customer according to above filter
         if ( $count ) {
-            unset( $sql['select'] );
-            $sql_group_by = '';
+            unset( $custom_sql['select'] );
             $sql_order_by = '';
-            $sql['select'][] = 'SELECT COUNT( DISTINCT people.id ) as total_number';
+            $custom_sql['select'][] = 'SELECT COUNT(*) as total_number';
         }
 
-        $sql         = apply_filters( 'erp_get_people_pre_query', $sql, $args );
-        $final_query = implode( ' ', $sql['select'] ) . ' ' . $sql_from_tb . ' ' . implode( ' ', $sql['join'] ) . ' ' . implode( ' ', $sql['where'] ) . ' ' . $sql_group_by . ' ' . $sql_order_by . ' ' . $sql_limit;
+        $sql         = apply_filters( 'erp_get_people_pre_query', $sql, $custom_sql, $args );
+        $final_query = implode( ' ', $custom_sql['select'] ) . ' ' . implode( ' ', $sql['select'] ) . ' ' . $sql_from_tb . ' ' . implode( ' ', $sql['join'] ) . ' ' . $sql_contact_type . ' ' . $sql_group_by . ' ' . implode( ' ', $custom_sql['join'] ) . ' ' . implode( ' ', $custom_sql['where'] ) . ' ' . $sql_order_by . ' ' . $sql_limit;
 
-        // print_r( $final_query );
-        // die();
         if ( $count ) {
             // Only filtered total count of people
             $items = $wpdb->get_var( apply_filters( 'erp_get_people_total_count_query', $final_query, $args ) );
@@ -249,74 +250,6 @@ function erp_restore_people( $data ) {
 
         do_action( 'erp_after_restoring_people', $people_id, $data );
     }
-}
-
-/**
- * Get peoples by a given field
- *
- * @since 1.0
- *
- * @param  string $field
- * @param  mixed  $value
- *
- * @return array
- */
-function erp_get_peoples_by( $field, $value ) {
-    global $wpdb;
-
-    $sql = "SELECT * FROM (
-    SELECT people.id as id, people.user_id,
-
-        CASE WHEN people.user_id then user.user_email ELSE people.email END as email,
-        CASE WHEN people.user_id then user.user_url ELSE people.website END as website,
-        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'first_name' then user_meta.meta_value ELSE people.first_name END) as first_name,
-        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'last_name' then user_meta.meta_value ELSE people.last_name END) as last_name,
-        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'company' then user_meta.meta_value ELSE people.company END) as company,
-        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'phone' then user_meta.meta_value ELSE people.phone END) as phone,
-        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'mobile' then user_meta.meta_value ELSE people.mobile END) as mobile,
-        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'other' then user_meta.meta_value ELSE people.other END) as other,
-        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'fax' then user_meta.meta_value ELSE people.fax END) as fax,
-        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'notes' then user_meta.meta_value ELSE people.notes END) as notes,
-        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'street_1' then user_meta.meta_value ELSE people.street_1 END) as street_1,
-        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'street_2' then user_meta.meta_value ELSE people.street_2 END) as street_2,
-        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'city' then user_meta.meta_value ELSE people.city END) as city,
-        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'state' then user_meta.meta_value ELSE people.state END) as state,
-        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'postal_code' then user_meta.meta_value ELSE people.postal_code END) as postal_code,
-        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'country' then user_meta.meta_value ELSE people.country END) as country,
-        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'currency' then user_meta.meta_value ELSE people.currency END) as currency,
-        MAX(CASE WHEN people.user_id AND user_meta.meta_key = 'created' then user_meta.meta_value ELSE people.created END) as created,
-
-        GROUP_CONCAT(DISTINCT p_types.name) as types
-
-    FROM {$wpdb->prefix}erp_peoples as people
-    LEFT JOIN {$wpdb->prefix}users AS user on user.ID = people.user_id
-    LEFT JOIN {$wpdb->prefix}usermeta AS user_meta on user_meta.user_id = people.user_id
-    LEFT JOIN {$wpdb->prefix}erp_people_type_relations as p_types_rel on p_types_rel.people_id = people.id
-    LEFT JOIN {$wpdb->prefix}erp_people_types as p_types on p_types.id = p_types_rel.people_types_id
-    ";
-
-
-    $sql .= " GROUP BY people.id ) as people";
-
-    if ( is_array( $value ) ) {
-        $separeted_values = "'" . implode( "','", $value ) . "'";
-
-        $sql .= " WHERE $field IN ( $separeted_values )";
-    } else {
-        $sql .= " WHERE $field = '$value'";
-    }
-
-    $results = $wpdb->get_results( $sql );
-
-    $results = array_map( function( $item ) {
-        $item->types = explode( ',', $item->types );
-
-        return $item;
-    }, $results);
-
-    $items = erp_array_to_object( $results );
-
-    return $items;
 }
 
 /**

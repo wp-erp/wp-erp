@@ -301,10 +301,156 @@
             }
         }
 
+        Vue.component( 'filter-item', {
+            props: [ 'field', 'fieldIndex', 'index', 'editableMode' ],
+
+            template:
+                '<div class="filter-item">'
+                    + '<div class="filter-content" v-if="field.editable">'
+                        + '<select id="filter-key" v-model="fieldObj.filterKey">'
+                            + '<option value="">--Select a field--</option>'
+                            + '<option v-for="( searchKey, searchField ) in searchFields" value="{{ searchKey }}">{{ searchField.title }}</option>'
+                        + '</select>'
+                        + '<select id="filter-condition" v-model="fieldObj.filterCondition" v-if="fieldObj.filterKey">'
+                            + '<option v-for="( conditionSign, condition ) in searchFields[fieldObj.filterKey].condition" value="{{ conditionSign }}">{{ condition }}</option>'
+                        + '</select>'
+                        + '<input type="text" class="input-text" v-model="fieldObj.filterValue" v-if="fieldObj.filterKey">'
+                        + '<button class="button" @click.prevent="applyFilter(field)"><i class="fa fa-check" aria-hidden="true"></i></button>'
+                        + '<a href="#" @click.prevent="removeFilter(field)"><i class="fa fa-times" aria-hidden="true"></i></a>'
+                    + '</div>'
+                    + '<div class="filter-details" v-else @click.prevent="editFilterItem( field )">'
+                        + '{{ searchFields[field.key].title }} <span style="color:#0085ba">{{ searchFields[field.key].condition[field.condition] }}</span> {{ field.value }}'
+                        + '<a href="#" @click.prevent="removeFilter(field)"><i class="fa fa-times" aria-hidden="true"></i></a>'
+                    + '</div>'
+                + '</div>',
+
+            data: function() {
+                return {
+                    fieldObj : {
+                        filterKey : '',
+                        filterCondition : '',
+                        filterValue : ''
+                    },
+
+                    isEditable: false,
+                    searchFields: []
+                }
+            },
+
+            computed: {
+                searchFields: function() {
+                    return wpErpCrm.searchFields;
+                }
+            },
+
+            methods: {
+
+                applyFilter: function() {
+                    if ( ! this.fieldObj.filterKey || ! this.fieldObj.filterValue ) {
+                        return;
+                    }
+
+                    this.field.editable = false;
+                    this.$dispatch( 'changeFilterObject', this.fieldObj, this.fieldIndex, this.index, false );
+                },
+
+                removeFilter: function( field ) {
+                    this.$dispatch( 'removeFilterObject',  this.fieldObj, this.fieldIndex, this.index, field.editable );
+                },
+
+                editFilterItem: function( field ) {
+                    if ( this.editableMode ) {
+                        return;
+                    }
+                    this.isEditable = true;
+                    this.fieldObj.filterKey = field.key;
+                    this.fieldObj.filterCondition = field.condition;
+                    this.fieldObj.filterValue = field.value;
+                    this.field.editable = true;
+
+                    this.$dispatch( 'isEditableMode', true );
+                }
+            }
+        });
+
+        Vue.component( 'advance-search', {
+            template:
+                '<div class="erp-advance-search-filters">'
+                    + '<div class="erp-advance-search-or-wrapper" v-for="(index,fieldItem) in fields">'
+                        + '<button class="add-filter button button-primary" @click.prevent="addNewFilter( index )">Add Filter</button>'
+                        + '<filter-item :editable-mode=editableMode :field=field :field-index=fieldIndex :index=index v-for="( fieldIndex, field ) in fieldItem"></filter-item>'
+                        + '<div class="clearfix"></div>'
+                    + '</div>'
+                + '</div>',
+
+            data: function() {
+                return {
+                    editableMode: false,
+                    fields: [
+                        [
+                            {
+                                key: 'first_name',
+                                condition: '!',
+                                value: 's',
+                                editable: false
+                            },
+                            {
+                                key: 'first_name',
+                                condition: '~',
+                                value: 'a',
+                                editable: false
+                            },
+                            {
+                                key: 'last_name',
+                                condition: '!~',
+                                value: 'x',
+                                editable: false
+                            },
+                        ]
+                    ],
+                }
+            },
+
+            methods: {
+
+                addNewFilter: function( index ) {
+                    this.fields[index].push({
+                        key: '',
+                        condition: '',
+                        value: '',
+                        editable: true
+                    });
+
+                    this.editableMode = true;
+                }
+            },
+
+            events: {
+                'changeFilterObject': function( fieldObj, fieldIndex, index, editableMode ) {
+                    this.fields[index][fieldIndex].key = fieldObj.filterKey;
+                    this.fields[index][fieldIndex].condition = fieldObj.filterCondition;
+                    this.fields[index][fieldIndex].value = fieldObj.filterValue;
+                    this.editableMode = editableMode;
+                },
+
+                'removeFilterObject': function( fieldObj, fieldIndex, index, isEditable ) {
+                    if ( isEditable ) {
+                        this.editableMode = false;
+                    }
+                    this.fields[index].$remove( this.fields[index][fieldIndex] );
+                },
+
+                isEditableMode: function( isEditable ) {
+                    this.editableMode = isEditable;
+                }
+            }
+        });
+
         var contact = new Vue({
             el: '#wp-erp',
             mixins: [mixin],
             data : {
+                wpnonce: wpVueTable.nonce,
                 fields: tableColumns,
                 itemRowActions: [
                     {
@@ -361,7 +507,8 @@
                     btnId: 'search-submit',
                     placeholder: ( wpErpCrm.contact_type == 'company' ) ? 'Search Compnay' : 'Search Contact',
                 },
-                isRequestDone: false
+                isRequestDone: false,
+                removeUrlParams: []
             },
 
             methods: {
@@ -821,14 +968,59 @@
                 },
 
                 filterAdvanceSearch: function() {
+                    var filters = [
+                        {
+                            first_name : [
+                                {
+                                    condition: '!',
+                                    value: 'x'
+                                },
 
-                    var filters = {
-                        'first_name[]': [ '^s', '^r' ],
-                        'or': '',
-                        'last_name[]': [ '~xs' ],
-                    };
+                                {
+                                    condition: '!~',
+                                    value: 'a'
+                                },
+                            ],
 
-                    this.$refs.vtable.additionalUrlString = filters;
+                            last_name: [
+                                {
+                                    condition: '~',
+                                    value: 'p'
+                                }
+                            ]
+                        },
+
+                        {
+                            first_name : [
+                                {
+                                    condition: '!',
+                                    value: 'x'
+                                }
+                            ],
+                        }
+                    ]
+
+                    var queryString = [];
+
+                    $.each( filters, function( index, filter ) {
+                        var str = [];
+                        $.each( filter, function( index, filterObj ) {
+                            for( i in filterObj ) {
+                                var s = index + '[]=' +filterObj[i].condition+filterObj[i].value
+                                str.push(s);
+                            }
+                        });
+
+                        queryString.push( str.join('&') );
+                    });
+
+                    var queryUrl = queryString.join('&or&');
+
+                    this.$refs.vtable.additionalUrlString['advanceFilter']= queryUrl;
+                    this.removeUrlParams = Object.keys( wpErpCrm.searchFields );
+
+                    // first_name[]=!s&first_name[]=~a&last_name[]=^s&or&first_name[]=$r
+
                     this.$refs.vtable.fetchData();
                 },
 
@@ -903,8 +1095,14 @@
                 },
             },
 
+            created: function() {
+                self.removeUrlParams = Object.keys( wpErpCrm.searchFields );
+            },
+
             ready: function() {
                 var self = this;
+
+                self.removeUrlParams = Object.keys( wpErpCrm.searchFields );
 
                 $( 'body' ).on( 'click', 'a#erp-set-customer-photo', this.setPhoto );
                 $( 'body' ).on( 'click', 'a.erp-remove-photo', this.removePhoto );

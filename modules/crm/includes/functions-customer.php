@@ -2662,7 +2662,7 @@ function erp_handle_user_bulk_actions() {
             $life_stage    = $_POST['life_stage'];
             $contact_owner = $_POST['contact_owner'];
 
-            $contacts = erp_get_peoples_by( 'user_id', $user_ids );
+            $contacts = erp_get_people_by( 'user_id', $user_ids );
 
             if ( ! empty( $contacts ) ) {
                 $contact_ids = wp_list_pluck( $contacts, 'user_id' );

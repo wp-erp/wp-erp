@@ -27,11 +27,7 @@ if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_co
         <?php endif ?>
     </h2>
 
-    <div class="erp-advance-search-filter" id="erp-crm-save-search">
-        <div class="erp-filter-search-wrapper">
-            <button class="button button-primary" @click.prevent="filterAdvanceSearch()">Add Filter</button>
-        </div>
-    </div>
+    <advance-search></advance-search>
 
     <div class="erp-advance-search-filter" id="erp-crm-save-search">
         <div class="erp-filter-search-wrapper">
@@ -95,8 +91,9 @@ if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_co
         row-checkbox-id="erp-crm-customer-id-checkbox"
         row-checkbox-name="customer_id"
         action="erp-crm-get-contacts"
-        page="<?php echo add_query_arg( [ 'page' => 'erp-sales-customers' ], admin_url( 'admin.php' ) ); ?>"
-        per-page="20"
+        :wpnonce="wpnonce"
+        page = "<?php echo add_query_arg( [ 'page' => 'erp-sales-customers' ], admin_url( 'admin.php' ) ); ?>"
+        per-page="4"
         :fields=fields
         :item-row-actions=itemRowActions
         :search="search"
@@ -104,6 +101,7 @@ if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_co
         :bulkactions="bulkactions"
         :extra-bulk-action="extraBulkAction"
         :additional-params="additionalParams"
+        :remove-url-params="removeUrlParams"
         :custom-data = '<?php echo json_encode( $custom_data, JSON_UNESCAPED_UNICODE ); ?>'
     ></vtable>
 
