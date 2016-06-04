@@ -469,7 +469,8 @@
                                         var obj = {
                                             key: type,
                                             condition: parseCondition.condition,
-                                            value: parseCondition.val
+                                            value: parseCondition.val,
+                                            editable: false
                                         }
 
                                         r.push( obj );
@@ -479,7 +480,8 @@
                                     var obj = {
                                         key: type,
                                         condition: parseCondition.condition,
-                                        value: parseCondition.val
+                                        value: parseCondition.val,
+                                        editable: false
                                     }
 
                                     r.push( obj );

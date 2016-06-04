@@ -125,8 +125,6 @@ function erp_get_peoples( $args = [] ) {
         $final_query = $wrapper_select . ' ' . implode( ' ', $custom_sql['select'] ) . ' ' . implode( ' ', $sql['select'] ) . ' ' . $sql_from_tb . ' ' . implode( ' ', $sql['join'] ) . ' ' . $sql_contact_type . ' ' . $sql_group_by . ' ' . implode( ' ', $custom_sql['join'] ) . ' ' . implode( ' ', $custom_sql['where'] ) . ' ' . $sql_order_by . ' ' . $sql_limit;
 
         if ( $count ) {
-
-            // print_r( $final_query ); die();
             // Only filtered total count of people
             $items = $wpdb->get_var( apply_filters( 'erp_get_people_total_count_query', $final_query, $args ) );
         } else {
