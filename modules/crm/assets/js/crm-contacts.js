@@ -433,11 +433,69 @@
                         }
                     ]);
                     this.editableMode = true;
+                },
+
+                parseCondition: function( value ) {
+                    var obj = {};
+                    var res = value.split(/([a-zA-Z0-9\s\-\_\+\.\:]+)/);
+                    if ( res[0] == '' ) {
+                        obj.condition = '';
+                        obj.val = res[1];
+                    } else {
+                        obj.condition = res[0];
+                        obj.val = res[1];
+                    }
+
+                    return obj;
+                },
+
+                reRenderFilterFromUrl: function( queryString ) {
+                    var self = this;
+                    var filters = [];
+                    var orSelection = queryString.split('&or&');
+
+                    jQuery.each( orSelection, function( index, orSelect ) {
+                        var arr = {};
+                        var r = [];
+                        var keys = Object.keys( wpErpCrm.searchFields );
+
+                        wperp.erp_parse_str( orSelect, arr );
+
+                        for ( type in arr ) {
+                            if ( keys.indexOf(type) > -1) {
+                                if ( typeof arr[type] == 'object' ) {
+                                    for ( key in arr[type] ) {
+                                        var parseCondition = self.parseCondition( arr[type][key] );
+                                        var obj = {
+                                            key: type,
+                                            condition: parseCondition.condition,
+                                            value: parseCondition.val
+                                        }
+
+                                        r.push( obj );
+                                    }
+                                } else {
+                                    var parseCondition = self.parseCondition( arr[type] );
+                                    var obj = {
+                                        key: type,
+                                        condition: parseCondition.condition,
+                                        value: parseCondition.val
+                                    }
+
+                                    r.push( obj );
+                                }
+
+                            }
+                        }
+                        filters.push( r );
+                    });
+
+                    this.fields = filters;
                 }
             },
 
             ready: function() {
-
+                this.reRenderFilterFromUrl( window.location.search );
             },
 
             events: {
@@ -1032,7 +1090,6 @@
                         queryString.push( str.join('&') );
                     });
 
-                    console.log( queryString );
                     // var queryUrl = queryString.join('&or&');
 
                     // console.log( queryUrl );
@@ -1109,8 +1166,6 @@
 
                         res.push( mainObj );
                     });
-
-                    // this.searchItem = res;
                 },
             },
 
@@ -1147,7 +1202,7 @@
                     });
 
                     var queryUrl = queryString.join('&or&');
-                    console.log( queryUrl );
+
                     this.$refs.vtable.additionalUrlString['advanceFilter']= queryUrl;
                     this.$refs.vtable.fetchData();
                 },

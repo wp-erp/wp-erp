@@ -918,8 +918,6 @@ Vue.component('vtable', {
                 var paged = '';
             }
 
-            console.log( self.additionalUrlString['advanceFilter'] );
-
             if ( typeof self.additionalUrlString['advanceFilter'] == 'undefined' ) {
                 if ( advanceFilterString ) {
                     var advanceFilter = '&' + advanceFilterString;
@@ -929,16 +927,6 @@ Vue.component('vtable', {
             } else {
                 var advanceFilter = ( self.additionalUrlString['advanceFilter'] ) ? '&' + self.additionalUrlString['advanceFilter'] : '';
             }
-
-            // if ( typeof self.additionalUrlString['advanceFilter'] != 'undefined' && self.additionalUrlString['advanceFilter'] != '' ) {
-            //     var advanceFilter = ( typeof self.additionalUrlString['advanceFilter'] == 'undefined' ) ?  '&' + advanceFilterString : '&' + self.additionalUrlString['advanceFilter'];
-            // } else {
-            //     if ( typeof self.additionalUrlString['advanceFilter'] == 'undefined' ) {
-            //         var advanceFilter = advanceFilterString;
-            //     } else {
-            //         var advanceFilter = '&' + self.additionalUrlString['advanceFilter'];
-            //     }
-            // }
 
             if ( queryParams ) {
                 var url = ( paged ) ? self.page + '&' + queryParams + paged + advanceFilter: self.page + '&' + queryParams + advanceFilter;
