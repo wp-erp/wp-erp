@@ -818,27 +818,11 @@ Vue.component('vtable', {
 
             self.setQueryParmsIntoUrl( advanceFilter );
 
-            var removalQueryParam = ['page', 'type', 'or', 'paged' ].concat( Object.keys( wpErpCrm.searchFields ) );
+            var removalQueryParam = ['page', 'type', 'or' ].concat( Object.keys( wpErpCrm.searchFields ) );
             var queryString = self.removeParam( removalQueryParam, window.location.search );
 
             if ( queryString ) {
                 self.parseStr( queryString, queryObj );
-
-                // var queryObjAfterFilter = {};
-                // for ( query in queryObj ) {
-                //     if ( typeof queryObj[query] == 'object' ) {
-                //         var arr = [];
-                //         if ( queryObj.hasOwnProperty(query) ) {
-                //             for( key in queryObj[query] ) {
-                //                 arr.push( queryObj[query][key] );
-                //             }
-                //             queryObjAfterFilter[query+'[]'] = arr;
-                //         }
-                //     } else {
-                //         queryObjAfterFilter[query] = queryObj[query];
-                //     }
-                // }
-
                 queryPostData            = jQuery.extend( {}, queryObj, self.additionalParams );
                 postData                 = jQuery.param( queryPostData );
                 self.activeTopNavFilter  = queryPostData[this.topNavFilter.field];
@@ -898,7 +882,6 @@ Vue.component('vtable', {
 
             var removalQueryParam = ['page', 'type', 'or' ].concat( Object.keys( wpErpCrm.searchFields ) );
             var queryString = self.removeParam( removalQueryParam, window.location.search );
-            // var advanceFilterString = self.filterOnlyAdvanceQueryParams( window.location.search );
 
             if ( queryString ) {
                 self.parseStr( queryString, queryObj );
@@ -912,7 +895,7 @@ Vue.component('vtable', {
                 }
             }
 
-            queryParams = self.removeParam( ['type','paged'], '?' + queryParams )
+            queryParams = self.removeParam( ['type'], '?' + queryParams )
 
             if ( self.currentPage > 1 ) {
                 if ( self.currentPage > self.totalPage ) {
@@ -920,19 +903,14 @@ Vue.component('vtable', {
                 } else {
                     var paged = '&paged=' + self.currentPage;
                 }
+                queryParams = self.removeParam( ['paged'], '?' + queryParams );
             } else {
+                // queryParams = self.removeParam( ['paged'], '?' + queryParams );
                 var paged = '';
+                self.currentPage = 1;
             }
 
-            // if ( typeof self.additionalUrlString['advanceFilter'] == 'undefined' ) {
-            //     if ( advanceFilterString ) {
-            //         var advanceFilter = '&' + advanceFilterString;
-            //     } else {
-            //         var advanceFilter = '';
-            //     }
-            // } else {
-            //     var advanceFilter = ( self.additionalUrlString['advanceFilter'] ) ? '&' + self.additionalUrlString['advanceFilter'] : '';
-            // }
+            console.log( paged );
 
             if ( queryParams ) {
                 var url = ( paged ) ? self.page + '&' + queryParams + paged + advanceFilter: self.page + '&' + queryParams + advanceFilter;
@@ -988,6 +966,8 @@ Vue.component('vtable', {
         },
     },
 
+    created: function() {
+    },
     ready: function() {
         var self = this;
 
