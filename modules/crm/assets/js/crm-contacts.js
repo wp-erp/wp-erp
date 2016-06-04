@@ -358,7 +358,6 @@
                     if ( ! this.fieldObj.filterKey || ! this.fieldObj.filterValue ) {
                         return;
                     }
-
                     this.field.editable = false;
                     this.$dispatch( 'changeFilterObject', this.fieldObj, this.fieldIndex, this.index, false );
                 },
@@ -409,10 +408,6 @@
 
             methods: {
 
-                isEnableOrFilter: function() {
-                    console.log( this.fields.length );
-                },
-
                 addNewFilter: function( index ) {
                     if( this.editableMode ) {
                         return;
@@ -426,7 +421,6 @@
                     });
 
                     this.editableMode = true;
-                    this.isEnableOrFilter();
                 },
 
                 addNewOrFilter: function() {
@@ -443,7 +437,7 @@
             },
 
             ready: function() {
-                this.isEnableOrFilter();
+
             },
 
             events: {
@@ -452,6 +446,8 @@
                     this.fields[index][fieldIndex].condition = fieldObj.filterCondition;
                     this.fields[index][fieldIndex].value = fieldObj.filterValue;
                     this.editableMode = editableMode;
+
+                    this.$dispatch( 'filterContactList', this.fields );
                 },
 
                 'removeFilterObject': function( fieldObj, fieldIndex, index, isEditable ) {
@@ -994,59 +990,58 @@
 
                 filterAdvanceSearch: function() {
                     var filters = [
-                        {
-                            first_name : [
-                                {
-                                    condition: '!',
-                                    value: 'x'
-                                },
+                        [
+                            {
+                                key: 'first_name',
+                                condition: '!',
+                                value: 'x'
+                            },
 
-                                {
-                                    condition: '!~',
-                                    value: 'a'
-                                },
-                            ],
+                            {
+                                key: 'first_name',
+                                condition: '!~',
+                                value: 'a'
+                            },
 
-                            last_name: [
-                                {
-                                    condition: '~',
-                                    value: 'p'
-                                }
-                            ]
-                        },
+                            {
+                                key: 'last_name',
+                                condition: '~',
+                                value: 'p'
+                            }
+                        ],
 
-                        {
-                            first_name : [
-                                {
-                                    condition: '!',
-                                    value: 'x'
-                                }
-                            ],
-                        }
-                    ]
+                        [
+                            {
+                                key: 'first_name',
+                                condition: '!~',
+                                value: 'a'
+                            },
+
+                        ]
+                    ];
 
                     var queryString = [];
 
                     $.each( filters, function( index, filter ) {
                         var str = [];
-                        $.each( filter, function( index, filterObj ) {
-                            for( i in filterObj ) {
-                                var s = index + '[]=' +filterObj[i].condition+filterObj[i].value
-                                str.push(s);
-                            }
+                        $.each( filter, function( i, filterObj ) {
+                            var s = filterObj.key + '[]=' +filterObj.condition+filterObj.value
+                            str.push(s);
                         });
 
                         queryString.push( str.join('&') );
                     });
 
-                    var queryUrl = queryString.join('&or&');
+                    console.log( queryString );
+                    // var queryUrl = queryString.join('&or&');
 
-                    this.$refs.vtable.additionalUrlString['advanceFilter']= queryUrl;
-                    this.removeUrlParams = Object.keys( wpErpCrm.searchFields );
+                    // console.log( queryUrl );
+                    // this.$refs.vtable.additionalUrlString['advanceFilter']= queryUrl;
+                    // this.removeUrlParams = Object.keys( wpErpCrm.searchFields );
 
                     // first_name[]=!s&first_name[]=~a&last_name[]=^s&or&first_name[]=$r
 
-                    this.$refs.vtable.fetchData();
+                    // this.$refs.vtable.fetchData();
                 },
 
                 renderSearchFields: function() {
@@ -1115,7 +1110,6 @@
                         res.push( mainObj );
                     });
 
-                    console.log( res );
                     // this.searchItem = res;
                 },
             },
@@ -1139,6 +1133,25 @@
             },
 
             events: {
+                'filterContactList': function( fields ) {
+                    var queryString = [];
+
+                    $.each( fields, function( index, filter ) {
+                        var str = [];
+                        $.each( filter, function( i, filterObj ) {
+                            var s = filterObj.key + '[]=' +filterObj.condition+filterObj.value
+                            str.push(s);
+                        });
+
+                        queryString.push( str.join('&') );
+                    });
+
+                    var queryUrl = queryString.join('&or&');
+                    console.log( queryUrl );
+                    this.$refs.vtable.additionalUrlString['advanceFilter']= queryUrl;
+                    this.$refs.vtable.fetchData();
+                },
+
                 'vtable:action': function( action, data, index ) {
                     if ( 'edit' == action ) {
                         this.editContact( data, index );

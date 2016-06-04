@@ -918,12 +918,27 @@ Vue.component('vtable', {
                 var paged = '';
             }
 
+            console.log( self.additionalUrlString['advanceFilter'] );
 
-            if ( typeof self.additionalUrlString['advanceFilter'] != 'undefined' && self.additionalUrlString['advanceFilter'] != '' ) {
-                var advanceFilter = ( advanceFilterString ) ?  '&' + advanceFilterString : '&' + self.additionalUrlString['advanceFilter'];
+            if ( typeof self.additionalUrlString['advanceFilter'] == 'undefined' ) {
+                if ( advanceFilterString ) {
+                    var advanceFilter = '&' + advanceFilterString;
+                } else {
+                    var advanceFilter = '';
+                }
             } else {
-                var advanceFilter = advanceFilterString ?  '&' + advanceFilterString : '';
+                var advanceFilter = ( self.additionalUrlString['advanceFilter'] ) ? '&' + self.additionalUrlString['advanceFilter'] : '';
             }
+
+            // if ( typeof self.additionalUrlString['advanceFilter'] != 'undefined' && self.additionalUrlString['advanceFilter'] != '' ) {
+            //     var advanceFilter = ( typeof self.additionalUrlString['advanceFilter'] == 'undefined' ) ?  '&' + advanceFilterString : '&' + self.additionalUrlString['advanceFilter'];
+            // } else {
+            //     if ( typeof self.additionalUrlString['advanceFilter'] == 'undefined' ) {
+            //         var advanceFilter = advanceFilterString;
+            //     } else {
+            //         var advanceFilter = '&' + self.additionalUrlString['advanceFilter'];
+            //     }
+            // }
 
             if ( queryParams ) {
                 var url = ( paged ) ? self.page + '&' + queryParams + paged + advanceFilter: self.page + '&' + queryParams + advanceFilter;
@@ -976,7 +991,7 @@ Vue.component('vtable', {
         'vtable:refresh': function() {
             this.currentPage = 1;
             this.fetchData();
-        }
+        },
     },
 
     ready: function() {
@@ -994,6 +1009,10 @@ Vue.component('vtable', {
                 jQuery(this).trigger('change');
             }
         });
+
+        // jQuery(window).bind('onbeforeunload', function() {
+        //     alert('No lol');
+        // });
 
         jQuery(window).bind("popstate", function() {
             // this.fetchData();

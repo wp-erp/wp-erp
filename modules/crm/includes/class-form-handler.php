@@ -22,7 +22,7 @@ class Form_Handler {
         // add_action( 'admin_init', array( $this, 'handle_save_search_submit' ), 10 );
         add_action( 'admin_head', [ $this, 'handle_canonical_url' ], 10 );
         add_action( 'erp_hr_after_employee_permission_set', [ $this, 'employee_permission_set' ], 10, 2 );
-        add_filter( 'erp_get_people_pre_query', [ $this, 'contact_advance_filter' ], 10, 2 );
+        // add_filter( 'erp_get_people_pre_query', [ $this, 'contact_advance_filter' ], 10, 2 );
     }
 
     function contact_advance_filter( $sql, $args ) {
