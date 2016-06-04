@@ -517,6 +517,8 @@
                     if ( this.fields[index].length == 0 && this.fields.length > 1 ) {
                         this.fields.splice( index, 1 );
                     }
+
+                    this.$dispatch( 'filterContactList', this.fields );
                 },
 
                 isEditableMode: function( isEditable ) {
