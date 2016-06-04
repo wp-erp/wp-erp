@@ -67,7 +67,7 @@ function erp_get_peoples( $args = [] ) {
             $type_sql = ( $type != 'all' ) ? "and `name` = '" . $type ."'" : '';
         }
 
-        $custom_sql['select'][] = "SELECT *";
+        $wrapper_select = "SELECT *";
 
         $sql['select'][] = "FROM ( SELECT people.id, people.user_id, people.company, people.created_by, people.created, COALESCE( people.email, users.user_email ) AS email,
                 COALESCE( people.website, users.user_url ) AS website,";
@@ -116,15 +116,17 @@ function erp_get_peoples( $args = [] ) {
 
         // Check if args count true, then return total count customer according to above filter
         if ( $count ) {
-            unset( $custom_sql['select'] );
             $sql_order_by = '';
-            $custom_sql['select'][] = 'SELECT COUNT(*) as total_number';
+            $wrapper_select = 'SELECT COUNT(*) as total_number';
         }
 
-        $sql         = apply_filters( 'erp_get_people_pre_query', $sql, $custom_sql, $args );
-        $final_query = implode( ' ', $custom_sql['select'] ) . ' ' . implode( ' ', $sql['select'] ) . ' ' . $sql_from_tb . ' ' . implode( ' ', $sql['join'] ) . ' ' . $sql_contact_type . ' ' . $sql_group_by . ' ' . implode( ' ', $custom_sql['join'] ) . ' ' . implode( ' ', $custom_sql['where'] ) . ' ' . $sql_order_by . ' ' . $sql_limit;
+        $custom_sql  = apply_filters( 'erp_get_people_pre_where_join', $custom_sql, $args );
+        $sql         = apply_filters( 'erp_get_people_pre_query', $sql, $args );
+        $final_query = $wrapper_select . ' ' . implode( ' ', $custom_sql['select'] ) . ' ' . implode( ' ', $sql['select'] ) . ' ' . $sql_from_tb . ' ' . implode( ' ', $sql['join'] ) . ' ' . $sql_contact_type . ' ' . $sql_group_by . ' ' . implode( ' ', $custom_sql['join'] ) . ' ' . implode( ' ', $custom_sql['where'] ) . ' ' . $sql_order_by . ' ' . $sql_limit;
 
         if ( $count ) {
+
+            // print_r( $final_query ); die();
             // Only filtered total count of people
             $items = $wpdb->get_var( apply_filters( 'erp_get_people_total_count_query', $final_query, $args ) );
         } else {

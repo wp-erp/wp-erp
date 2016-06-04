@@ -804,12 +804,23 @@ Vue.component('vtable', {
 
             this.ajaxloader = true;
 
-            self.setQueryParmsIntoUrl();
+            var advanceFilterString = self.filterOnlyAdvanceQueryParams( window.location.search );
+
+            if ( typeof self.additionalUrlString['advanceFilter'] == 'undefined' ) {
+                if ( advanceFilterString ) {
+                    var advanceFilter = '&' + advanceFilterString;
+                } else {
+                    var advanceFilter = '';
+                }
+            } else {
+                var advanceFilter = ( self.additionalUrlString['advanceFilter'] ) ? '&' + self.additionalUrlString['advanceFilter'] : '';
+            }
+
+            self.setQueryParmsIntoUrl( advanceFilter );
 
             var removalQueryParam = ['page', 'type', 'or', 'paged' ].concat( Object.keys( wpErpCrm.searchFields ) );
-
             var queryString = self.removeParam( removalQueryParam, window.location.search );
-            // additionalParameter = jQuery.extend( {}, self.additionalParams, self.additionalUrlString );
+
             if ( queryString ) {
                 self.parseStr( queryString, queryObj );
 
@@ -854,13 +865,8 @@ Vue.component('vtable', {
                 'offset=' + offset
             ];
 
-            if ( typeof self.additionalUrlString['advanceFilter'] != 'undefined' && self.additionalUrlString['advanceFilter'] != '' ) {
-                var advanceFilter = '&erpadvancefilter=' + encodeURIComponent( self.additionalUrlString['advanceFilter'].toString() );
-            } else {
-                var advanceFilter = '&erpadvancefilter=';
-            }
-
-            var postData = postData + '&' + pagination.join('&') + advanceFilter;
+            var filterArgs = advanceFilter ? '&erpadvancefilter=' + encodeURIComponent( advanceFilter.indexOf('&') == 0 ? advanceFilter.substring(1) : advanceFilter ) : '' ;
+            var postData = postData + '&' + pagination.join('&') + filterArgs;
 
             this.ajax = jQuery.post( wpVueTable.ajaxurl, postData, function( resp ) {
                 self.ajaxloader = false;
@@ -884,7 +890,7 @@ Vue.component('vtable', {
             } );
         },
 
-        setQueryParmsIntoUrl: function() {
+        setQueryParmsIntoUrl: function( advanceFilter ) {
             var self = this,
                 queryObj = {},
                 queryParams = '',
@@ -892,7 +898,7 @@ Vue.component('vtable', {
 
             var removalQueryParam = ['page', 'type', 'or' ].concat( Object.keys( wpErpCrm.searchFields ) );
             var queryString = self.removeParam( removalQueryParam, window.location.search );
-            var advanceFilterString = self.filterOnlyAdvanceQueryParams( window.location.search );
+            // var advanceFilterString = self.filterOnlyAdvanceQueryParams( window.location.search );
 
             if ( queryString ) {
                 self.parseStr( queryString, queryObj );
@@ -918,15 +924,15 @@ Vue.component('vtable', {
                 var paged = '';
             }
 
-            if ( typeof self.additionalUrlString['advanceFilter'] == 'undefined' ) {
-                if ( advanceFilterString ) {
-                    var advanceFilter = '&' + advanceFilterString;
-                } else {
-                    var advanceFilter = '';
-                }
-            } else {
-                var advanceFilter = ( self.additionalUrlString['advanceFilter'] ) ? '&' + self.additionalUrlString['advanceFilter'] : '';
-            }
+            // if ( typeof self.additionalUrlString['advanceFilter'] == 'undefined' ) {
+            //     if ( advanceFilterString ) {
+            //         var advanceFilter = '&' + advanceFilterString;
+            //     } else {
+            //         var advanceFilter = '';
+            //     }
+            // } else {
+            //     var advanceFilter = ( self.additionalUrlString['advanceFilter'] ) ? '&' + self.additionalUrlString['advanceFilter'] : '';
+            // }
 
             if ( queryParams ) {
                 var url = ( paged ) ? self.page + '&' + queryParams + paged + advanceFilter: self.page + '&' + queryParams + advanceFilter;
@@ -998,13 +1004,9 @@ Vue.component('vtable', {
             }
         });
 
-        // jQuery(window).bind('onbeforeunload', function() {
-        //     alert('No lol');
+        // jQuery(window).bind("popstate", function() {
+        //     // this.fetchData();
         // });
-
-        jQuery(window).bind("popstate", function() {
-            // this.fetchData();
-        });
 
         this.fetchData();
         this.pageNumberInput = this.currentPage;

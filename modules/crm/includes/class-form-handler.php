@@ -22,10 +22,10 @@ class Form_Handler {
         // add_action( 'admin_init', array( $this, 'handle_save_search_submit' ), 10 );
         add_action( 'admin_head', [ $this, 'handle_canonical_url' ], 10 );
         add_action( 'erp_hr_after_employee_permission_set', [ $this, 'employee_permission_set' ], 10, 2 );
-        // add_filter( 'erp_get_people_pre_query', [ $this, 'contact_advance_filter' ], 10, 2 );
+        add_filter( 'erp_get_people_pre_where_join', [ $this, 'contact_advance_filter' ], 10, 2 );
     }
 
-    function contact_advance_filter( $sql, $args ) {
+    function contact_advance_filter( $custom_sql, $args ) {
         $postdata = $_REQUEST;
 
         if ( !isset( $postdata['erpadvancefilter'] ) || empty( $postdata['erpadvancefilter'] ) ) {
@@ -44,9 +44,10 @@ class Form_Handler {
             }
         }
 
-        var_dump( $query_data );
-        die();
-        // $pep_fileds  = [ 'first_name', 'last_name', 'company', 'phone', 'mobile', 'other', 'fax', 'notes', 'street_1', 'street_2', 'city', 'postal_code', 'currency' ];
+
+        // var_dump( $query_data );
+
+        $pep_fileds  = [ 'first_name', 'last_name', 'email', 'company', 'phone', 'mobile', 'other', 'fax', 'notes', 'street_1', 'street_2', 'city', 'postal_code', 'currency' ];
 
         // $filters_array = [];
         // foreach ( $serach_array as $filter_key => $filter_val ) {
@@ -58,31 +59,34 @@ class Form_Handler {
 
         // var_dump( $serach_array, $filters_array ); die();
 
-        // if ( $serach_array ) {
-        //     $id=0;
-        //     $sql['where'][] = "AND (";
-        //     foreach ( $serach_array as $field => $value ) {
-        //         if ( in_array( $field, $pep_fileds ) ) {
-        //             if ( $value ) {
-        //                 $val = erp_crm_get_save_search_regx( $value );
-        //                 $sql['where'][] = "(";
-        //                 $j=0;
-        //                 foreach ( $val as $search_val => $search_condition ) {
-        //                     $addOr = ( $j == count( $val )-1 ) ? '' : " OR ";
-        //                     $sql['where'][] = "people.$field $search_condition '$search_val' OR $field.meta_value $search_condition '$search_val'$addOr";
-        //                     $j++;
-        //                 }
-        //                 $sql['where'][] = ( $i == count( $serach_array )-1 ) ? ")" : " ) AND";
-        //             }
-        //         }
-        //         $i++;
-        //     }
-        //     $sql['where'][] = ")";
-        // }
+        if ( $query_data ) {
 
-        // echo( implode( ' ', $sql['where'] ) );
+            foreach ( $query_data as $key=>$or_query ) {
+                if ( $or_query ) {
+                    $i=0;
+                    $custom_sql['where'][] = ( $key == 0 ) ? "AND (" : 'OR (';
+                    foreach ( $or_query as $field => $value ) {
+                        if ( in_array( $field, $pep_fileds ) ) {
+                            if ( $value ) {
+                                $val = erp_crm_get_save_search_regx( $value );
+                                $custom_sql['where'][] = "(";
+                                $j=0;
+                                foreach ( $val as $search_val => $search_condition ) {
+                                    $addOr = ( $j == count( $val )-1 ) ? '' : " OR ";
+                                    $custom_sql['where'][] = "$field $search_condition '$search_val' $addOr";
+                                    $j++;
+                                }
+                                $custom_sql['where'][] = ( $i == count( $or_query )-1 ) ? ")" : " ) AND";
+                            }
+                        }
+                        $i++;
+                    }
+                    $custom_sql['where'][] = ")";
+                }
+            }
+        }
 
-        // die();
+        return $custom_sql;
 
         // and ( people.first_name LIKE 's%' OR first_name.meta_value LIKE 's%' or people.first_name LIKE 'r%' OR first_name.meta_value LIKE 'r%' )
 
