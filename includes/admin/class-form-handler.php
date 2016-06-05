@@ -51,9 +51,8 @@ class Form_Handler {
             $active_modules = wperp()->modules->get_active_modules();
             $all_modules    = array_merge( $all_modules, $active_modules );
         }
-
-        update_option( 'erp_modules', $all_modules );
-        wp_redirect( $_POST['_wp_http_referer'] );
+        update_option( 'erp_modules', $all_modules ); 
+        wp_redirect( $_POST['_wp_http_referer'] ); 
         exit();
     }
 

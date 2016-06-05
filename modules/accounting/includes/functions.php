@@ -218,7 +218,7 @@ function erp_ac_get_price_decimals() {
  *
  * @return string
  */
-function erp_ac_get_price( $price, $args = array() ) {
+function erp_ac_get_price( $main_price, $args = array() ) {
     extract( apply_filters( 'erp_ac_price_args', wp_parse_args( $args, array(
         'currency'           => erp_ac_get_currency(),
         'decimal_separator'  => erp_ac_get_price_decimal_separator(),
@@ -229,9 +229,10 @@ function erp_ac_get_price( $price, $args = array() ) {
         'currency_symbol'    => erp_ac_get_currency_symbol()
     ) ) ) );
 
-    $price           = number_format( $price, $decimals, $decimal_separator, $thousand_separator );
+    $price           = number_format( abs( $main_price ), $decimals, $decimal_separator, $thousand_separator );
     $formatted_price = $symbol ? sprintf( $price_format, $currency_symbol, $price ) : $price;
-    
+    $formatted_price = ( $main_price < 0 ) ? '(' . $formatted_price . ')' : $formatted_price; 
+
     return apply_filters( 'erp_ac_price', $formatted_price, $price, $args );
 }
 

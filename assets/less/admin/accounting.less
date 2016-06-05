@@ -503,9 +503,103 @@ form.erp-form .erp-form-field label {
     }    
 }
 
-.erp-ac-report-income-statement-table {
-    width: 100%;
+.erp-ac-income-satement-wrap {
+    .postbox {
+        margin-bottom: 0;
+        padding-bottom: 0;
+
+        .inside {
+            margin-bottom: 0;
+            padding: 0;            
+        }
+    }
+    .erp-ac-report-income-statement-table {
+        width: 100%;
+        border-collapse: collapse;
+
+        tr td a {
+            text-decoration: none;
+            color: #00a0d2;
+        }
+        .erp-ac-odd td {
+            padding-top: 7px;
+            background: rgba(238, 238, 238, 0.37);
+        }
+        .erp-ac-even td {
+            border-bottom: 1px solid #eee;
+            padding-top: 16px;
+            padding-bottom: 13px;
+        } 
+
+        tr td:nth-child(2) {
+            text-align: right;
+            padding-right: 40px;
+        }
+
+        .erp-ac-even-first {
+            td {
+                padding-top: 9px;
+            }
+        }
+    }    
 }
+
+.erp-ac-balance-sheet-wrap {
+
+    .metabox-holder {
+        width: 100%;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-flex-wrap: wrap;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    
+        .postbox {
+            float: left;
+            width: 32%;
+            margin: 5px .3%;
+
+            .inside {
+                margin: 11px 0px 46px 0;
+            }
+
+            .erp-ac-total-count {
+                width: 93.5%;
+                position: absolute;
+                background: #fafafa;
+                padding: 10px;
+                bottom: 0px;
+                
+                table {
+                    width: 100%;
+                    td {
+                        width: 50%;
+                    }
+                    tr>td:last-child {
+                        text-align: right;
+                        padding-right: 12px;
+                    }
+                }
+            }
+        }
+    }
+    .widefat {
+        border: none;
+        border-collapse: collapse;
+        tr>td:first-child {
+            width: 80%;
+        }
+        tr>td:last-child, tr>th:last-child {
+            text-align: right;
+        }
+        td, th {
+            border: none;
+        }
+    }
+
+}
+
 
 
 @media print {

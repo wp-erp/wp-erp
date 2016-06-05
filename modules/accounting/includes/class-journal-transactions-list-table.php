@@ -137,7 +137,7 @@ class Journal_Transactions extends \WP_List_Table {
 
         if ( in_array( $this->type_id, $this->chart_group['customer'] ) ) {
             //var_dump( $item->debit, $this->customer_prev_balance);
-            $balance =  ( $item->debit + $this->customer_prev_balance ) - $item->credit;
+            $balance =  ( $item->credit + $this->customer_prev_balance ) - $item->debit;
             $this->customer_prev_balance = $balance;
         }
 
