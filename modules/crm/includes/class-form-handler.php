@@ -18,10 +18,79 @@ class Form_Handler {
      * @return void
      */
     public function __construct() {
-        add_action( 'load-crm_page_erp-sales-contact-groups', array( $this, 'contact_groups_bulk_action') );
-        add_action( 'admin_init', array( $this, 'handle_save_search_submit' ), 10 );
-        // add_action( 'admin_head', array( $this, 'handle_canonical_url' ), 10 );
-        add_action( 'erp_hr_after_employee_permission_set', array( $this, 'employee_permission_set'), 10, 2 );
+        add_action( 'load-crm_page_erp-sales-contact-groups', [ $this, 'contact_groups_bulk_action' ] );
+        // add_action( 'admin_init', array( $this, 'handle_save_search_submit' ), 10 );
+        add_action( 'admin_head', [ $this, 'handle_canonical_url' ], 10 );
+        add_action( 'erp_hr_after_employee_permission_set', [ $this, 'employee_permission_set' ], 10, 2 );
+        add_filter( 'erp_get_people_pre_where_join', [ $this, 'contact_advance_filter' ], 10, 2 );
+    }
+
+    function contact_advance_filter( $custom_sql, $args ) {
+        $postdata = $_REQUEST;
+
+        if ( !isset( $postdata['erpadvancefilter'] ) || empty( $postdata['erpadvancefilter'] ) ) {
+            return $sql;
+        }
+
+        $or_query   = explode( '&or&', $postdata['erpadvancefilter'] );
+        $allowed    = erp_crm_get_serach_key( 'crm_page_erp-sales-customers' );
+        $query_data = [];
+
+        if ( $or_query ) {
+            foreach( $or_query as $or_q ) {
+                parse_str( $or_q, $output );
+                $serach_array = array_intersect_key( $output, array_flip( array_keys( $allowed ) ) );
+                $query_data[] = $serach_array;
+            }
+        }
+
+
+        // var_dump( $query_data );
+
+        $pep_fileds  = [ 'first_name', 'last_name', 'email', 'company', 'phone', 'mobile', 'other', 'fax', 'notes', 'street_1', 'street_2', 'city', 'postal_code', 'currency' ];
+
+        // $filters_array = [];
+        // foreach ( $serach_array as $filter_key => $filter_val ) {
+        //     if ( $filter_key == 'or' ) {
+        //         continue;
+        //     }
+        //     $filters_array[][$filter_key] = $filter_val;
+        // }
+
+        // var_dump( $serach_array, $filters_array ); die();
+
+        if ( $query_data ) {
+
+            foreach ( $query_data as $key=>$or_query ) {
+                if ( $or_query ) {
+                    $i=0;
+                    $custom_sql['where'][] = ( $key == 0 ) ? "AND (" : 'OR (';
+                    foreach ( $or_query as $field => $value ) {
+                        if ( in_array( $field, $pep_fileds ) ) {
+                            if ( $value ) {
+                                $val = erp_crm_get_save_search_regx( $value );
+                                $custom_sql['where'][] = "(";
+                                $j=0;
+                                foreach ( $val as $search_val => $search_condition ) {
+                                    $addOr = ( $j == count( $val )-1 ) ? '' : " OR ";
+                                    $custom_sql['where'][] = "$field $search_condition '$search_val' $addOr";
+                                    $j++;
+                                }
+                                $custom_sql['where'][] = ( $i == count( $or_query )-1 ) ? ")" : " ) AND";
+                            }
+                        }
+                        $i++;
+                    }
+                    $custom_sql['where'][] = ")";
+                }
+            }
+        }
+
+        return $custom_sql;
+
+        // and ( people.first_name LIKE 's%' OR first_name.meta_value LIKE 's%' or people.first_name LIKE 'r%' OR first_name.meta_value LIKE 'r%' )
+
+        // die();
     }
 
     function employee_permission_set( $post, $user ) {
@@ -33,7 +102,6 @@ class Form_Handler {
 
     public function handle_canonical_url() {
         if ( isset( $_GET['page'] ) && ( $_GET['page'] == 'erp-sales-customers' || $_GET['page'] == 'erp-sales-companies' ) ) {
-            echo 'adfasdf';
             ?>
                 <script>
                     window.history.replaceState = false;

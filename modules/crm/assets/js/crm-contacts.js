@@ -1,4 +1,4 @@
-;( function($) {
+;( function($, wperp) {
     Vue.config.debug = 1;
 
     var mixin = {
@@ -78,6 +78,151 @@
     }
 
     if ( $( '.erp-crm-customer-listing' ).length > 0 ) {
+        Vue.component( 'save-search', {
+            props: {
+                searchFields: {
+                    type: Object,
+                    default: function() {
+                        return {};
+                    }
+                },
+                index: '',
+                totalSearchItem:''
+            },
+
+            template: '#erp-crm-save-search-item',
+
+            data: function() {
+                return {
+                    andSelection: '',
+                    orSelection: '',
+                    searchData: [],
+                    isdisabled:false,
+                    marginClass: {
+                        'marginbottomonly' : true
+                    },
+                    searchOptions: wpErpCrm.searchFields
+                }
+            },
+
+            watch: {
+                searchFields: {
+                    deep: true,
+                    immediate: true,
+                    handler: function () {
+                        jQuery('.selecttwo').trigger('change');
+
+                        if ( this.isdisabled ) {
+                            this.marginClass.marginbottomonly = false;
+                        } else {
+                            this.marginClass.marginbottomonly = true;
+                        }
+                    }
+                },
+
+                andSelection: function( newVal, oldVal ){
+                    this.andAdd( this.index );
+                },
+
+                orSelection: function( newVal, oldVal ){
+                    this.orAdd( this.index );
+                }
+
+            },
+
+            computed: {
+                isdisabled: function() {
+                    var hasValue = [];
+
+                    if ( !_.isEmpty( this.searchFields ) ) {
+                        _.each( this.searchFields, function( val ) {
+                            if ( _.isEmpty( val ) ) {
+                                hasValue.push(true);
+                            } else {
+                                hasValue.push(false);
+                            }
+                        });
+
+                        if ( _.contains( hasValue, false ) ) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+
+                    } else {
+                        return true;
+                    }
+
+                    return true;
+                }
+            },
+
+            methods: {
+
+                andAdd: function( index ) {
+
+                    if ( ! this.andSelection ) {
+                        return;
+                    }
+
+                    if ( !saveSearch.searchItem[index].hasOwnProperty(this.andSelection) ) {
+                        saveSearch.$set('searchItem[' + index +']["' + this.andSelection + '"]', []);
+                    }
+
+                    var obj = jQuery.extend({}, wpErpCrm.searchFields[this.andSelection]);
+
+                    if ( wpErpCrm.searchFields[this.andSelection].hasOwnProperty('options') ) {
+                        obj.options = wpErpCrm.searchFields[this.andSelection].options;
+                    }
+
+                    saveSearch.searchItem[index][this.andSelection].push( obj );
+
+                    this.andSelection = '';
+
+                },
+
+                orAdd: function(){
+                    if ( ! this.orSelection ) {
+                        return;
+                    }
+
+                    var object = {};
+
+                    var obj = jQuery.extend({}, wpErpCrm.searchFields[this.orSelection]);
+
+                    object[ this.orSelection ] = [obj]
+
+                    saveSearch.searchItem.push( object );
+
+                    this.orSelection = '';
+                },
+
+                hasValue: function( obj, key, value ) {
+                    return obj.hasOwnProperty(key) && obj[key] === value;
+                },
+
+                removeSearchField: function( searchVal, searchField ) {
+
+                    searchVal.$remove(searchField);
+
+                    var isEmpty = true;
+                    jQuery.each(this.searchFields, function () {
+                        if (this.length) {
+                            isEmpty = false;
+                        }
+                    });
+
+                    if (isEmpty) {
+                        if ( saveSearch.searchItem.length == 1 )  {
+                            return;
+                        }
+                        saveSearch.searchItem.$remove(this.searchFields);
+                    }
+
+                }
+            }
+        });
+
 
         var tableColumns = [
             {
@@ -156,6 +301,234 @@
             }
         }
 
+        Vue.component( 'filter-item', {
+            props: [ 'field', 'fieldIndex', 'index', 'editableMode' ],
+
+            template:
+                '<div class="filter-item">'
+                    + '<div class="filter-content" v-if="field.editable">'
+                        + '<div class="filter-left">'
+                            + '<select id="filter-key" v-model="fieldObj.filterKey">'
+                                + '<option value="">--Select a field--</option>'
+                                + '<option v-for="( searchKey, searchField ) in searchFields" value="{{ searchKey }}">{{ searchField.title }}</option>'
+                            + '</select>'
+                            + '<select id="filter-condition" v-model="fieldObj.filterCondition" v-if="fieldObj.filterKey">'
+                                + '<option v-for="( conditionSign, condition ) in searchFields[fieldObj.filterKey].condition" value="{{ conditionSign }}">{{ condition }}</option>'
+                            + '</select>'
+                            + '<input type="text" class="input-text" v-model="fieldObj.filterValue" v-if="fieldObj.filterKey">'
+                        + '</div>'
+                        + '<div class="filter-right">'
+                            + '<a href="#" @click.prevent="applyFilter(field)"><i class="fa fa-check" aria-hidden="true"></i></a>'
+                            + '<a href="#" @click.prevent="removeFilter(field)"><i class="fa fa-times" aria-hidden="true"></i></a>'
+                        + '</div>'
+                        + '<div class="clearfix"></div>'
+                    + '</div>'
+                    + '<div class="filter-details" v-else @click.prevent="editFilterItem( field )">'
+                        + '<div class="filter-left">'
+                            + '{{ searchFields[field.key].title }} <span style="color:#0085ba; font-style:italic; margin:0px 2px;">{{ searchFields[field.key].condition[field.condition] }}</span> {{ field.value }}'
+                        + '</div>'
+                        + '<div class="filter-right">'
+                            + '<a href="#" @click.prevent="removeFilter(field)"><i class="fa fa-times" aria-hidden="true"></i></a>'
+                        + '</div>'
+                    + '</div>'
+                + '</div>',
+
+            data: function() {
+                return {
+                    fieldObj : {
+                        filterKey : '',
+                        filterCondition : '',
+                        filterValue : ''
+                    },
+
+                    isEditable: false,
+                    searchFields: []
+                }
+            },
+
+            computed: {
+                searchFields: function() {
+                    return wpErpCrm.searchFields;
+                }
+            },
+
+            methods: {
+
+                applyFilter: function() {
+                    if ( ! this.fieldObj.filterKey || ! this.fieldObj.filterValue ) {
+                        return;
+                    }
+                    this.field.editable = false;
+                    this.$dispatch( 'changeFilterObject', this.fieldObj, this.fieldIndex, this.index, false );
+                },
+
+                removeFilter: function( field ) {
+                    this.$dispatch( 'removeFilterObject',  this.fieldObj, this.fieldIndex, this.index, field.editable );
+                },
+
+                editFilterItem: function( field ) {
+                    if ( this.editableMode ) {
+                        return;
+                    }
+                    this.isEditable = true;
+                    this.fieldObj.filterKey = field.key;
+                    this.fieldObj.filterCondition = field.condition;
+                    this.fieldObj.filterValue = field.value;
+                    this.field.editable = true;
+
+                    this.$dispatch( 'isEditableMode', true );
+                }
+            }
+        });
+
+        Vue.component( 'advance-search', {
+            template:
+                '<div class="erp-advance-search-filters">'
+                    + '<div class="erp-advance-search-or-wrapper" v-for="(index,fieldItem) in fields">'
+                        + '<div class="or-divider" v-show="( this.fields.length > 1 ) && ( index != 0)">'
+                            + '<hr>'
+                            + '<span>Or</span>'
+                        + '</div>'
+                        + '<button :disabled="editableMode" class="add-filter button button-primary" @click.prevent="addNewFilter( index )"><i class="fa fa-filter" aria-hidden="true"></i> Add Filter</button>'
+                        + '<filter-item :editable-mode=editableMode :field=field :field-index=fieldIndex :index=index v-for="( fieldIndex, field ) in fieldItem"></filter-item>'
+                        + '<button :disabled="editableMode" class="add-filter button" v-show="( this.fields[index].length > 0 && index == this.fields.length-1 )" @click.prevent="addNewOrFilter( index )"><i class="fa fa-filter" aria-hidden="true"></i> Or Filter</button>'
+                        + '<div class="clearfix"></div>'
+                    + '</div>'
+                + '</div>',
+
+            data: function() {
+                return {
+                    editableMode: false,
+                    fields: [
+                        [
+                        ]
+                    ],
+                }
+            },
+
+            methods: {
+
+                addNewFilter: function( index ) {
+                    if( this.editableMode ) {
+                        return;
+                    }
+
+                    this.fields[index].push({
+                        key: '',
+                        condition: '',
+                        value: '',
+                        editable: true
+                    });
+
+                    this.editableMode = true;
+                },
+
+                addNewOrFilter: function() {
+                    this.fields.push( [
+                        {
+                            key: '',
+                            condition: '',
+                            value: '',
+                            editable: true
+                        }
+                    ]);
+                    this.editableMode = true;
+                },
+
+                parseCondition: function( value ) {
+                    var obj = {};
+                    var res = value.split(/([a-zA-Z0-9\s\-\_\+\.\:]+)/);
+                    if ( res[0] == '' ) {
+                        obj.condition = '';
+                        obj.val = res[1];
+                    } else {
+                        obj.condition = res[0];
+                        obj.val = res[1];
+                    }
+
+                    return obj;
+                },
+
+                reRenderFilterFromUrl: function( queryString ) {
+                    var self = this;
+                    var filters = [];
+                    var orSelection = queryString.split('&or&');
+
+                    jQuery.each( orSelection, function( index, orSelect ) {
+                        var arr = {};
+                        var r = [];
+                        var keys = Object.keys( wpErpCrm.searchFields );
+
+                        wperp.erp_parse_str( orSelect, arr );
+
+                        for ( type in arr ) {
+                            if ( keys.indexOf(type) > -1) {
+                                if ( typeof arr[type] == 'object' ) {
+                                    for ( key in arr[type] ) {
+                                        var parseCondition = self.parseCondition( arr[type][key] );
+                                        var obj = {
+                                            key: type,
+                                            condition: parseCondition.condition,
+                                            value: parseCondition.val,
+                                            editable: false
+                                        }
+
+                                        r.push( obj );
+                                    }
+                                } else {
+                                    var parseCondition = self.parseCondition( arr[type] );
+                                    var obj = {
+                                        key: type,
+                                        condition: parseCondition.condition,
+                                        value: parseCondition.val,
+                                        editable: false
+                                    }
+
+                                    r.push( obj );
+                                }
+
+                            }
+                        }
+                        filters.push( r );
+                    });
+
+                    this.fields = filters;
+                }
+            },
+
+            ready: function() {
+                this.reRenderFilterFromUrl( window.location.search );
+            },
+
+            events: {
+                'changeFilterObject': function( fieldObj, fieldIndex, index, editableMode ) {
+                    this.fields[index][fieldIndex].key = fieldObj.filterKey;
+                    this.fields[index][fieldIndex].condition = fieldObj.filterCondition;
+                    this.fields[index][fieldIndex].value = fieldObj.filterValue;
+                    this.editableMode = editableMode;
+
+                    this.$dispatch( 'filterContactList', this.fields );
+                },
+
+                'removeFilterObject': function( fieldObj, fieldIndex, index, isEditable ) {
+                    if ( isEditable ) {
+                        this.editableMode = false;
+                    }
+                    this.fields[index].$remove( this.fields[index][fieldIndex] );
+
+                    if ( this.fields[index].length == 0 && this.fields.length > 1 ) {
+                        this.fields.splice( index, 1 );
+                    }
+
+                    this.$dispatch( 'filterContactList', this.fields );
+                },
+
+                isEditableMode: function( isEditable ) {
+                    this.editableMode = isEditable;
+                }
+            }
+        });
+
         var contact = new Vue({
             el: '#wp-erp',
             mixins: [mixin],
@@ -217,7 +590,8 @@
                     btnId: 'search-submit',
                     placeholder: ( wpErpCrm.contact_type == 'company' ) ? 'Search Compnay' : 'Search Contact',
                 },
-                isRequestDone: false
+                isRequestDone: false,
+                removeUrlParams: []
             },
 
             methods: {
@@ -674,12 +1048,139 @@
                         $('select#erp-select-user-for-assign-contact')
                             .append('<option value="' + this.$refs.vtable.customData.filter_assign_contact.id + '" selected>' + this.$refs.vtable.customData.filter_assign_contact.display_name + '</option>').trigger('change')
                     }
-                }
+                },
 
+                filterAdvanceSearch: function() {
+                    var filters = [
+                        [
+                            {
+                                key: 'first_name',
+                                condition: '!',
+                                value: 'x'
+                            },
+
+                            {
+                                key: 'first_name',
+                                condition: '!~',
+                                value: 'a'
+                            },
+
+                            {
+                                key: 'last_name',
+                                condition: '~',
+                                value: 'p'
+                            }
+                        ],
+
+                        [
+                            {
+                                key: 'first_name',
+                                condition: '!~',
+                                value: 'a'
+                            },
+
+                        ]
+                    ];
+
+                    var queryString = [];
+
+                    $.each( filters, function( index, filter ) {
+                        var str = [];
+                        $.each( filter, function( i, filterObj ) {
+                            var s = filterObj.key + '[]=' +filterObj.condition+filterObj.value
+                            str.push(s);
+                        });
+
+                        queryString.push( str.join('&') );
+                    });
+
+                    // var queryUrl = queryString.join('&or&');
+
+                    // console.log( queryUrl );
+                    // this.$refs.vtable.additionalUrlString['advanceFilter']= queryUrl;
+                    // this.removeUrlParams = Object.keys( wpErpCrm.searchFields );
+
+                    // first_name[]=!s&first_name[]=~a&last_name[]=^s&or&first_name[]=$r
+
+                    // this.$refs.vtable.fetchData();
+                },
+
+                renderSearchFields: function() {
+                    var self = this;
+                    var queryString = window.location.search;
+                    var orSelection = queryString.split('&or&');
+                    var res = [];
+                    var saveSearchQueryString = wperp.erpGetParamByName( 'erp_save_search', queryString );
+
+                    this.isSaveSearchFilter = ( saveSearchQueryString =='0' ||  saveSearchQueryString == null ) ? false : true;
+
+                    _.each( orSelection, function( orSelect, index ) {
+                        var arr = {};
+                        var result = {};
+                        var mainObj = {};
+                        var keys = Object.keys( wpErpCrm.searchFields );
+
+                        wperp.erp_parse_str( orSelect, arr );
+
+                        for ( type in arr ) {
+                            if ( keys.indexOf(type) > -1) {
+                                result[type] = arr[type];
+                            }
+                        }
+
+                        _.each( result, function( value, index ) {
+                            var fieldArr = [];
+
+                            if ( _.isObject( value ) ) {
+                                _.each( value, function( val, i ) {
+                                    var obj = {};
+
+                                    var seachVal  = wperp.parseCondition(val);
+                                    obj.title     = wpErpCrm.searchFields[index].title;
+                                    obj.type      = wpErpCrm.searchFields[index].type;
+                                    obj.text      = seachVal.val;
+                                    obj.condval   = seachVal.condition;
+                                    obj.condition = wpErpCrm.searchFields[index].condition;
+
+                                    if ( obj.type == 'dropdown' ) {
+                                        obj.options = wpErpCrm.searchFields[index].options;
+                                    }
+
+                                    fieldArr.push(obj);
+                                    mainObj[index] = fieldArr;
+
+                                });
+                            } else {
+                                var obj = {};
+                                var seachVal = wperp.parseCondition(value);
+                                obj.title     = wpErpCrm.searchFields[index].title;
+                                obj.type      = wpErpCrm.searchFields[index].type;
+                                obj.text      = seachVal.val;
+                                obj.condval   = seachVal.condition;
+                                obj.condition = wpErpCrm.searchFields[index].condition;
+
+                                if ( obj.type == 'dropdown' ) {
+                                    obj.options = wpErpCrm.searchFields[index].options;
+                                }
+
+                                fieldArr.push(obj);
+                                mainObj[index] = fieldArr;
+                            }
+                        });
+
+                        res.push( mainObj );
+                    });
+                },
+            },
+
+            created: function() {
+                self.removeUrlParams = Object.keys( wpErpCrm.searchFields );
             },
 
             ready: function() {
                 var self = this;
+
+                self.removeUrlParams = Object.keys( wpErpCrm.searchFields );
 
                 $( 'body' ).on( 'click', 'a#erp-set-customer-photo', this.setPhoto );
                 $( 'body' ).on( 'click', 'a.erp-remove-photo', this.removePhoto );
@@ -687,9 +1188,29 @@
                 $( 'body' ).on( 'click', 'a#erp-crm-create-contact-other-type', this.makeUserAsContact );
                 this.initSearchCrmAgent();
                 this.setContactOwnerSearchValue();
+                // this.renderSearchFields();
             },
 
             events: {
+                'filterContactList': function( fields ) {
+                    var queryString = [];
+
+                    $.each( fields, function( index, filter ) {
+                        var str = [];
+                        $.each( filter, function( i, filterObj ) {
+                            var s = filterObj.key + '[]=' +filterObj.condition+filterObj.value
+                            str.push(s);
+                        });
+
+                        queryString.push( str.join('&') );
+                    });
+
+                    var queryUrl = queryString.join('&or&');
+
+                    this.$refs.vtable.additionalUrlString['advanceFilter']= queryUrl;
+                    this.$refs.vtable.fetchData();
+                },
+
                 'vtable:action': function( action, data, index ) {
                     if ( 'edit' == action ) {
                         this.editContact( data, index );
@@ -1112,4 +1633,5 @@
         });
     }
 
-})(jQuery)
+})(jQuery, window.wperp );
+

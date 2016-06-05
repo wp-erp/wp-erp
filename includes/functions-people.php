@@ -51,7 +51,7 @@ function erp_get_peoples( $args = [] ) {
     $users_tb    = $wpdb->users;
     $usermeta_tb = $wpdb->usermeta;
 
-    $pep_fileds  = [ 'first_name', 'last_name', 'company', 'phone', 'mobile',
+    $pep_fileds  = [ 'first_name', 'last_name', 'phone', 'mobile',
             'other', 'fax', 'notes', 'street_1', 'street_2', 'city', 'state', 'postal_code', 'country',
             'currency' ];
 
@@ -67,7 +67,9 @@ function erp_get_peoples( $args = [] ) {
             $type_sql = ( $type != 'all' ) ? "and `name` = '" . $type ."'" : '';
         }
 
-        $sql['select'][] = "SELECT people.id, people.user_id, people.company, people.created_by, people.created, COALESCE( people.email, users.user_email ) AS email,
+        $wrapper_select = "SELECT *";
+
+        $sql['select'][] = "FROM ( SELECT people.id, people.user_id, people.company, people.created_by, people.created, COALESCE( people.email, users.user_email ) AS email,
                 COALESCE( people.website, users.user_url ) AS website,";
 
         $sql['join'][] = "LEFT JOIN $users_tb AS users ON people.user_id = users.ID";
@@ -80,46 +82,47 @@ function erp_get_peoples( $args = [] ) {
         $sql['select'][] = "GROUP_CONCAT( t.name SEPARATOR ',') AS types";
         $sql['join'][]   = "LEFT JOIN $type_rel_tb AS r ON people.id = r.people_id LEFT JOIN $types_tb AS t ON r.people_types_id = t.id";
         $sql_from_tb     = "FROM $pep_tb AS people";
+        $sql_contact_type = "WHERE ( select count(*) from $types_tb
+            inner join  $type_rel_tb
+                on $types_tb.`id` = $type_rel_tb.`people_types_id`
+                where $type_rel_tb.`people_id` = people.`id` $type_sql and $trashed_sql
+          ) >= 1";
 
-        $sql['where'][] = "WHERE ( select count(*) from $types_tb
-                    inner join  $type_rel_tb
-                        on $types_tb.`id` = $type_rel_tb.`people_types_id`
-                        where $type_rel_tb.`people_id` = people.`id` $type_sql and $trashed_sql
-                  ) >= 1";
+        $custom_sql['join'] = [];
 
-        $sql_group_by = "GROUP BY `people`.`id`";
+        $custom_sql['where'][] = 'WHERE 1=1';
+        $sql_group_by = "GROUP BY `people`.`id` ) as people";
         $sql_order_by = "ORDER BY $orderby $order";
 
         // Check if want all data without any pagination
         $sql_limit = ( $number != '-1' && !$count ) ? "LIMIT $number OFFSET $offset" : '';
 
         if ( $meta_query ) {
-            $sql['join'][] = "LEFT JOIN $pepmeta_tb as people_meta on people.id = people_meta.`erp_people_id`";
+            $custom_sql['join'][] = "LEFT JOIN $pepmeta_tb as people_meta on people.id = people_meta.`erp_people_id`";
 
             $meta_key      = isset( $meta_query['meta_key'] ) ? $meta_query['meta_key'] : '';
             $meta_value    = isset( $meta_query['meta_value'] ) ? $meta_query['meta_value'] : '';
             $compare       = isset( $meta_query['compare'] ) ? $meta_query['compare'] : '=';
 
-            $sql['where'][] = "AND people_meta.meta_key='$meta_key' and people_meta.meta_value='$meta_value'";
+            $custom_sql['where'][] = "AND people_meta.meta_key='$meta_key' and people_meta.meta_value='$meta_value'";
         }
 
         // Check is the row want to search
         if ( ! empty( $s ) ) {
-            $sql['where'][] = "AND ( ( first_name.meta_value LIKE '%$s%' OR people.first_name LIKE '%$s%')";
-            $sql['where'][] = "OR ( last_name.meta_value LIKE '%$s%' OR people.last_name LIKE '%$s%')";
-            $sql['where'][] = "OR ( people.company LIKE '%$s%') )";
+            $custom_sql['where'][] = "AND first_name LIKE '%$s%'";
+            $custom_sql['where'][] = "OR last_name LIKE '%$s%'";
+            $custom_sql['where'][] = "OR company LIKE '%$s%'";
         }
 
         // Check if args count true, then return total count customer according to above filter
         if ( $count ) {
-            unset( $sql['select'] );
-            $sql_group_by = '';
             $sql_order_by = '';
-            $sql['select'][] = 'SELECT COUNT( DISTINCT people.id ) as total_number';
+            $wrapper_select = 'SELECT COUNT(*) as total_number';
         }
 
+        $custom_sql  = apply_filters( 'erp_get_people_pre_where_join', $custom_sql, $args );
         $sql         = apply_filters( 'erp_get_people_pre_query', $sql, $args );
-        $final_query = implode( ' ', $sql['select'] ) . ' ' . $sql_from_tb . ' ' . implode( ' ', $sql['join'] ) . ' ' . implode( ' ', $sql['where'] ) . ' ' . $sql_group_by . ' ' . $sql_order_by . ' ' . $sql_limit;
+        $final_query = $wrapper_select . ' ' . implode( ' ', $custom_sql['select'] ) . ' ' . implode( ' ', $sql['select'] ) . ' ' . $sql_from_tb . ' ' . implode( ' ', $sql['join'] ) . ' ' . $sql_contact_type . ' ' . $sql_group_by . ' ' . implode( ' ', $custom_sql['join'] ) . ' ' . implode( ' ', $custom_sql['where'] ) . ' ' . $sql_order_by . ' ' . $sql_limit;
 
         if ( $count ) {
             // Only filtered total count of people

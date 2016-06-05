@@ -186,8 +186,7 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
                     }
 
                 }); //popup
-            },
-
+            }
         });
     });
 </script>

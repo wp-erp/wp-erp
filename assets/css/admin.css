@@ -362,6 +362,80 @@
   border: 1px solid #e3e3e3;
   margin: 15px 0px;
 }
+.erp-crm-customer .erp-advance-search-filters {
+  margin: 20px 0px;
+}
+.erp-crm-customer .erp-advance-search-filters .erp-advance-search-or-wrapper .add-filter {
+  float: left;
+  margin-right: 9px;
+  height: 31px;
+}
+.erp-crm-customer .erp-advance-search-filters .erp-advance-search-or-wrapper .filter-item {
+  float: left;
+  margin-right: 6px;
+  border: 1px solid #e5e5e5;
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  -ms-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  background-color: #fff;
+  margin-bottom: 9px;
+}
+.erp-crm-customer .erp-advance-search-filters .erp-advance-search-or-wrapper .filter-item .filter-content input,
+.erp-crm-customer .erp-advance-search-filters .erp-advance-search-or-wrapper .filter-item .filter-content select {
+  vertical-align: middle;
+  margin-right: 5px;
+}
+.erp-crm-customer .erp-advance-search-filters .erp-advance-search-or-wrapper .filter-item .filter-content .filter-left {
+  padding: 4px 10px;
+  float: left;
+}
+.erp-crm-customer .erp-advance-search-filters .erp-advance-search-or-wrapper .filter-item .filter-content .filter-right {
+  float: left;
+  padding: 10px;
+  background: #F5F5F5;
+  height: 100%;
+  color: #fff;
+}
+.erp-crm-customer .erp-advance-search-filters .erp-advance-search-or-wrapper .filter-item .filter-content .filter-right a {
+  color: #23282D;
+}
+.erp-crm-customer .erp-advance-search-filters .erp-advance-search-or-wrapper .filter-item .filter-content .filter-right a:first-child {
+  border-right: 2px solid #fff;
+  margin-right: 8px;
+  padding-right: 8px;
+}
+.erp-crm-customer .erp-advance-search-filters .erp-advance-search-or-wrapper .filter-item .filter-details .filter-left {
+  padding: 6px 10px;
+  float: left;
+}
+.erp-crm-customer .erp-advance-search-filters .erp-advance-search-or-wrapper .filter-item .filter-details .filter-right {
+  float: left;
+  padding: 6px 10px;
+  background: #F5F5F5;
+  height: 100%;
+  color: #fff;
+}
+.erp-crm-customer .erp-advance-search-filters .erp-advance-search-or-wrapper .filter-item .filter-details .filter-right a {
+  color: #23282D;
+}
+.erp-crm-customer .erp-advance-search-filters .or-divider {
+  position: relative;
+  text-align: center;
+  margin: 11px 0px;
+}
+.erp-crm-customer .erp-advance-search-filters .or-divider hr {
+  border-top: 1px solid #D6D6D6;
+}
+.erp-crm-customer .erp-advance-search-filters .or-divider span {
+  position: absolute;
+  top: -9px;
+  left: 45%;
+  font-size: 14px;
+  background: #F1F1F1;
+  width: 50px;
+  color: #afafaf;
+}
 .erp-advance-search-filter {
   position: relative;
   margin-bottom: 25px;

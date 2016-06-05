@@ -355,6 +355,13 @@ Vue.component('vtable', {
             default: function () {
                 return '';
             }
+        },
+
+        removeUrlParams: {
+            type: Array,
+            default: function() {
+                return [];
+            }
         }
     },
 
@@ -380,7 +387,8 @@ Vue.component('vtable', {
             ajaxloader: false,
             isLoaded: false,
             extraBulkActionData: '',
-            extraBulkActionSelectData:{}
+            extraBulkActionSelectData:{},
+            additionalUrlString: {},
         }
     },
 
@@ -650,7 +658,8 @@ Vue.component('vtable', {
         searchCloseAction: function( query ) {
             if ( query == '' ) {
                 this.additionalParams[this.search.params] = '';
-                this.currentPage = 1
+                this.currentPage = 1;
+                this.pageNumberInput = 1;
                 this.activeTopNavFilter = this.topNavFilter.default;
                 this.fetchData();
             }
@@ -665,7 +674,7 @@ Vue.component('vtable', {
             if (queryString !== "") {
                 params_arr = queryString.split("&");
                 for (var i = params_arr.length - 1; i >= 0; i -= 1) {
-                    param = params_arr[i].split("=")[0];
+                    param = params_arr[i].split("=")[0].replace('[]', '');
                     if ( key.indexOf(param) > -1 ) {
                         params_arr.splice(i, 1);
                     }
@@ -795,32 +804,43 @@ Vue.component('vtable', {
 
             this.ajaxloader = true;
 
-            self.setQueryParmsIntoUrl();
+            var advanceFilterString = self.filterOnlyAdvanceQueryParams( window.location.search );
 
-            var queryString = self.removeParam( ['page', 'type', 'paged'], window.location.search );
+            if ( typeof self.additionalUrlString['advanceFilter'] == 'undefined' ) {
+                if ( advanceFilterString ) {
+                    var advanceFilter = '&' + advanceFilterString;
+                } else {
+                    var advanceFilter = '';
+                }
+            } else {
+                var advanceFilter = ( self.additionalUrlString['advanceFilter'] ) ? '&' + self.additionalUrlString['advanceFilter'] : '';
+            }
+
+            self.setQueryParmsIntoUrl( advanceFilter );
+
+            var removalQueryParam = ['page', 'type', 'or' ].concat( self.customData.searchFields );
+            var queryString = self.removeParam( removalQueryParam, window.location.search );
 
             if ( queryString ) {
                 self.parseStr( queryString, queryObj );
-                queryPostData = jQuery.extend( {}, queryObj, this.additionalParams );
-                postData   = jQuery.param( queryPostData );
-                self.activeTopNavFilter = queryPostData[this.topNavFilter.field];
-                self.searchQuery = queryPostData[this.search.params];
-                self.sortOrder.field = queryPostData['orderby'];
+                queryPostData            = jQuery.extend( {}, queryObj, self.additionalParams );
+                postData                 = jQuery.param( queryPostData );
+                self.activeTopNavFilter  = queryPostData[this.topNavFilter.field];
+                self.searchQuery         = queryPostData[this.search.params];
+                self.sortOrder.field     = queryPostData['orderby'];
                 self.sortOrder.direction = queryPostData['order'];
-                var postData = postData + '&' + jQuery.param(data);
+                var postData             = postData + '&' + jQuery.param(data);
             } else {
-
-                if ( typeof this.additionalParams !== 'undefined' ) {
-                    if ( Object.keys(this.additionalParams).length > 0  ) {
-                        postData += '&'+jQuery.param( this.additionalParams );
+                if ( typeof self.additionalParams !== 'undefined' ) {
+                    if ( Object.keys( self.additionalParams ).length > 0  ) {
+                        postData += '&'+jQuery.param( self.additionalParams );
                     }
                 }
 
-                var postData = jQuery.param(data) + '&' + postData  ;
+                var postData = jQuery.param(data) + postData  ;
             }
 
             var paged = self.getParamByName( 'paged' ) ;
-            // var offset = ( paged ) ? ( paged - 1 ) * this.perPage : ( this.currentPage - 1 ) * this.perPage
             self.currentPage = ( paged ) ? paged : 1;
             var offset = ( self.currentPage - 1 ) * self.perPage;
 
@@ -829,7 +849,8 @@ Vue.component('vtable', {
                 'offset=' + offset
             ];
 
-            var postData = postData + '&' + pagination.join('&');
+            var filterArgs = advanceFilter ? '&erpadvancefilter=' + encodeURIComponent( advanceFilter.indexOf('&') == 0 ? advanceFilter.substring(1) : advanceFilter ) : '' ;
+            var postData = postData + '&' + pagination.join('&') + filterArgs;
 
             this.ajax = jQuery.post( wpVueTable.ajaxurl, postData, function( resp ) {
                 self.ajaxloader = false;
@@ -853,13 +874,14 @@ Vue.component('vtable', {
             } );
         },
 
-        setQueryParmsIntoUrl: function() {
+        setQueryParmsIntoUrl: function( advanceFilter ) {
             var self = this,
                 queryObj = {},
                 queryParams = '',
                 url= '';
 
-            var queryString = self.removeParam( ['page', 'type'], window.location.search );
+            var removalQueryParam = ['page', 'type', 'or' ].concat( self.customData.searchFields );
+            var queryString = self.removeParam( removalQueryParam, window.location.search );
 
             if ( queryString ) {
                 self.parseStr( queryString, queryObj );
@@ -873,9 +895,7 @@ Vue.component('vtable', {
                 }
             }
 
-            queryParams = self.removeParam( ['type','paged'], '?' + queryParams )
-
-            // console.log( self.currentPage );
+            queryParams = self.removeParam( ['type'], '?' + queryParams )
 
             if ( self.currentPage > 1 ) {
                 if ( self.currentPage > self.totalPage ) {
@@ -883,16 +903,51 @@ Vue.component('vtable', {
                 } else {
                     var paged = '&paged=' + self.currentPage;
                 }
+                queryParams = self.removeParam( ['paged'], '?' + queryParams );
             } else {
+                // queryParams = self.removeParam( ['paged'], '?' + queryParams );
                 var paged = '';
             }
 
             if ( queryParams ) {
-                var url = ( paged ) ? self.page + '&' + queryParams + paged : self.page + '&' + queryParams;
+                var url = ( paged ) ? self.page + '&' + queryParams + paged + advanceFilter: self.page + '&' + queryParams + advanceFilter;
             } else {
-                var url = ( paged ) ? self.page + paged : self.page;
+                var url = ( paged ) ? self.page + paged + advanceFilter : self.page + advanceFilter;
             }
+
             window.history.pushState( null, null, url );
+        },
+
+        filterOnlyAdvanceQueryParams: function( queryString ) {
+            var self = this;
+            var res = [];
+            var orSelection = queryString.split('&or&');
+
+            jQuery.each( orSelection, function( index, orSelect ) {
+                var arr = {};
+                var r = [];
+                var keys = self.customData.searchFields;
+
+                self.parseStr( orSelect, arr );
+
+                for ( type in arr ) {
+                    if ( keys.indexOf(type) > -1) {
+                        if ( typeof arr[type] == 'object' ) {
+                            for ( key in arr[type] ) {
+                                var s = type + '[]=' + arr[type][key];
+                                r.push(s);
+                            }
+                        } else {
+                            var s = type +'[]=' + arr[type]
+                            r.push(s)
+                        }
+
+                    }
+                }
+                res.push( r.join('&') );
+            });
+
+            return res.join('&or&')
         }
     },
 
@@ -905,9 +960,11 @@ Vue.component('vtable', {
         'vtable:refresh': function() {
             this.currentPage = 1;
             this.fetchData();
-        }
+        },
     },
 
+    created: function() {
+    },
     ready: function() {
         var self = this;
 
@@ -924,9 +981,9 @@ Vue.component('vtable', {
             }
         });
 
-        jQuery(window).bind("popstate", function() {
-            // this.fetchData();
-        });
+        // jQuery(window).bind("popstate", function() {
+        //     // this.fetchData();
+        // });
 
         this.fetchData();
         this.pageNumberInput = this.currentPage;

@@ -203,12 +203,11 @@ class Customer_Relationship {
             }
 
             if ( !isset( $_GET['action'] ) ) {
-                wp_enqueue_script( 'wp-erp-crm-vue-save-search', WPERP_CRM_ASSETS . "/js/save-search$suffix.js", array( 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
-                wp_localize_script( 'wp-erp-crm-vue-save-search', 'wpCRMSaveSearch', [
-                    'ajaxurl'         => admin_url( 'admin-ajax.php' ),
-                    'nonce'           => wp_create_nonce( 'wp-erp-crm-save-search' ),
-                    'searchFields'    => erp_crm_get_serach_key( $hook )
-                ] );
+                // wp_enqueue_script( 'wp-erp-crm-vue-save-search', WPERP_CRM_ASSETS . "/js/save-search$suffix.js", array( 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
+                // wp_localize_script( 'wp-erp-crm-vue-save-search', 'wpCRMSaveSearch', [
+                //     'ajaxurl'         => admin_url( 'admin-ajax.php' ),
+                //     'nonce'           => wp_create_nonce( 'wp-erp-crm-save-search' ),
+                // ] );
             }
 
             wp_localize_script( 'wp-erp-crm-vue-component', 'wpCRMvue', $contact_actvity_localize );
@@ -235,6 +234,8 @@ class Customer_Relationship {
             $localize_script['statuses']       = erp_crm_customer_get_status_count( 'contact' );
             $localize_script['contact_type']   = 'contact';
             $localize_script['life_stages']    = erp_crm_get_life_stages_dropdown_raw();
+            $localize_script['searchFields']   = erp_crm_get_serach_key( $hook );
+
             $country = \WeDevs\ERP\Countries::instance();
             wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
         }
