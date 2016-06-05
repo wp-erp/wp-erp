@@ -361,6 +361,10 @@ class Imap {
     public function mark_seen_emails( $email_ids ) {
         $comma_separated_ids = implode( ',', $email_ids );
 
+        if ( empty( $comma_separated_ids ) ) {
+            return false;
+        }
+
         $status = imap_setflag_full( $this->connection, $comma_separated_ids, "\\Seen" );
 
         return $status;
