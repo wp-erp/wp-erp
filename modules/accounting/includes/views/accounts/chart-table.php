@@ -24,27 +24,11 @@
                     <tr>
                         <td class="col-code"><?php echo $chart->code; ?></td>
                         <td class="col-name">
-                            <?php
-                            if ( erp_ac_view_single_account() ) {
-                                ?>
-                                <a href="<?php echo erp_ac_get_account_url( $chart->id ); ?>"><?php echo esc_html( $chart->name ); ?></a>
-                                <?php
-                            } else {
-                                echo esc_html( $chart->name );
-                            }
-                            ?>
+                            <?php echo erp_ac_get_account_url( $chart->id, esc_html( $chart->name ) ); ?>
                         </td>
                         <td class="col-type"><?php echo $chart->type_name; ?></td>
                         <td class="col-transactions">
-                            <?php
-                            if ( erp_ac_view_single_account() ) {
-                                ?>
-                                <a href="<?php echo erp_ac_get_account_url( $chart->id ); ?>"><?php echo intval( $chart->entries ); ?></a>
-                                <?php
-                            } else {
-                                echo intval( $chart->entries );
-                            }
-                            ?>
+                            <?php echo erp_ac_get_account_url( $chart->id, intval( $chart->entries ) ); ?>
                             
                         </td>
                         <td class="col-action">

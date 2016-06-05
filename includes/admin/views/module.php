@@ -48,6 +48,7 @@ $inactive_color     = $tab == 'inactive' ? 'erp-nav-tab-active' : '';
 		<tbody id="the-list">
 
 		<?php
+		
 			foreach ( $modules as $slug => $module ) {
 				$checked = array_key_exists( $slug, $all_active_modules ) ? $slug : '';
 				?>

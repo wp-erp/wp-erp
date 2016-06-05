@@ -19,7 +19,7 @@ class Admin_Menu {
      * @return void
      */
     public function admin_menu() {
-
+        
         $dashboard      = 'erp_ac_view_dashboard';
         $customer       = 'erp_ac_view_customer';
         $vendor         = 'erp_ac_view_vendor';
@@ -253,6 +253,10 @@ class Admin_Menu {
 
             case 'income-statement':
                 $template = dirname( __FILE__ ) . '/views/reports/income-statement/statement.php';
+                break;
+
+            case 'balance-sheet':
+                $template = dirname( __FILE__ ) . '/views/reports/balance-sheet/balance-sheet.php';
                 break;
 
             default:

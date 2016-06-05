@@ -69,9 +69,21 @@ function erp_ac_vendor_edit_url( $vendor_id ) {
 	return apply_filters( 'erp_ac_vendor_edit_url', $url, $vendor_id );
 }
 
-function erp_ac_get_account_url( $account_id ) {
-	$url = admin_url( 'admin.php?page=erp-accounting-charts&action=view&id=' . $account_id );
-	return apply_filters( 'erp_ac_get_account_url', $url, $account_id );
+function erp_ac_get_account_url( $account_id, $content = '' ) {
+	$url = add_query_arg(array(
+			'page'   => 'erp-accounting-charts',
+			'action' => 'view',
+			'id'     => $account_id
+		), 
+		admin_url( 'admin.php' ) 
+	);
+
+	if ( erp_ac_view_single_account() ) {
+		$url = sprintf( '<a href="%s">%s</a>', $url, $content );
+		return apply_filters( 'erp_ac_get_account_url', $url, $account_id, $content );		
+	}
+
+	return apply_filters( 'erp_ac_get_account_url', $url, $account_id, $content );
 }
 function erp_ac_get_singe_tax_report_url( $tax_id ) {
 	$url_args = [
@@ -94,4 +106,23 @@ function erp_ac_get_sales_tax_report_url() {
 	return apply_filters( 'erp_ac_get_sales_tax_report_url', $url );
 }
 
+function erp_ac_get_sales_url( $content ) {
+	if ( ! current_user_can( 'erp_ac_view_sale' ) ) {
+		return apply_filters( 'erp_ac_get_sales_url', $content );
+	}
+	$url = sprintf( '<a href="%s">%s</a>', add_query_arg( array( 'page' => 'erp-accounting-sales' ), admin_url('admin.php') ), $content );
+	
+	return apply_filters( 'erp_ac_get_sales_url', $url, $content );
+}
+
+function erp_ac_get_expense_url( $content ) {
+	
+	if ( current_user_can( 'erp_ac_view_expense' ) ) {
+		$url = sprintf( '<a href="%s">%s</a>', add_query_arg( array( 'page' => 'erp-accounting-expense' ), admin_url('admin.php') ), $content );
+		
+		return apply_filters( 'erp_ac_get_expense_url', $url, $content );
+	}
+
+	return apply_filters( 'erp_ac_get_sales_url', $content );
+}
 

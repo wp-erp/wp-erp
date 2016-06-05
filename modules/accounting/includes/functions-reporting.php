@@ -14,15 +14,15 @@ function erp_ac_get_reports() {
         ],
         'sales-tax' => [
             'title'       => __( 'Sales Tax', 'erp' ),
-            'description' => __( 'See the sales tax summary.', 'erp' )
+            'description' => __( 'It generates report based on the sales tax charged or paid for the current financial cycle/year.', 'erp' )
         ],
         'income-statement' => [
              'title'       => __( 'Income Statement', 'erp' ),
              'description' => __( 'A summary of a management\'s performance as reflecte the profitability of an organization during the time interval.', 'erp' )
         ],
         'balance-sheet' => [
-            'title'       => '',
-            'description' => ''
+            'title'       => __( 'Balance Sheet', 'erp' ),
+            'description' => __( 'This is a report gives you an immediate status of your accounts at a specified date. You can call it a "Snapshot" view of the current position (day) of the financial year.', 'erp' )
         ],
         // 'profit-loss' => [
         //     'title'       => __( 'Profit and Loss', 'accounting' ),
@@ -233,7 +233,7 @@ function erp_ac_get_expense_total() {
     $expense_transaction = erp_ac_get_expnese_transaction_without_tax();
     $journals            = array_filter( wp_list_pluck( $expense_transaction, 'journals' ) );
     $expense_total       = 0;
-
+ 
     foreach ( $journals as $key => $journal ) {
         $expense_total = $expense_total + array_sum( wp_list_pluck( $journal, 'debit' ) );
     }
@@ -248,7 +248,7 @@ function erp_ac_get_tax_total() {
     $tax_total = 0;
 
     foreach ( $journals as $key => $journal ) {
-        $tax_total = $tax_total + array_sum( wp_list_pluck( $journal, 'debit' ) );
+        $tax_total = $tax_total + array_sum( wp_list_pluck( $journal, 'credit' ) ) + array_sum( wp_list_pluck( $journal, 'debit' ) );
     }
     
     return $tax_total;
