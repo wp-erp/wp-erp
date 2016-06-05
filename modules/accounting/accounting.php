@@ -279,8 +279,8 @@ class Accounting {
      * @return void
      */
     public function activate() {
-        $installer = new WeDevs\ERP\Accounting\Install();
-        $installer->install();
+        //$installer = new WeDevs\ERP\Accounting\Install();
+        //$installer->install();
     }
 
     /**
