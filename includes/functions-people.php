@@ -122,7 +122,7 @@ function erp_get_peoples( $args = [] ) {
 
         $custom_sql  = apply_filters( 'erp_get_people_pre_where_join', $custom_sql, $args );
         $sql         = apply_filters( 'erp_get_people_pre_query', $sql, $args );
-        $final_query = $wrapper_select . ' ' . implode( ' ', $custom_sql['select'] ) . ' ' . implode( ' ', $sql['select'] ) . ' ' . $sql_from_tb . ' ' . implode( ' ', $sql['join'] ) . ' ' . $sql_contact_type . ' ' . $sql_group_by . ' ' . implode( ' ', $custom_sql['join'] ) . ' ' . implode( ' ', $custom_sql['where'] ) . ' ' . $sql_order_by . ' ' . $sql_limit;
+        $final_query = $wrapper_select . ' ' . implode( ' ', $sql['select'] ) . ' ' . $sql_from_tb . ' ' . implode( ' ', $sql['join'] ) . ' ' . $sql_contact_type . ' ' . $sql_group_by . ' ' . implode( ' ', $custom_sql['join'] ) . ' ' . implode( ' ', $custom_sql['where'] ) . ' ' . $sql_order_by . ' ' . $sql_limit;
 
         if ( $count ) {
             // Only filtered total count of people
