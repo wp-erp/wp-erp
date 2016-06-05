@@ -2468,11 +2468,11 @@ form.erp-form .erp-form-field label {
   margin: 11px 0px 46px 0;
 }
 .erp-ac-balance-sheet-wrap .metabox-holder .postbox .erp-ac-total-count {
-  width: 95%;
+  width: 93.5%;
   position: absolute;
-  background: #eee;
+  background: #fafafa;
   padding: 10px;
-  bottom: 1px;
+  bottom: 0px;
 }
 .erp-ac-balance-sheet-wrap .metabox-holder .postbox .erp-ac-total-count table {
   width: 100%;

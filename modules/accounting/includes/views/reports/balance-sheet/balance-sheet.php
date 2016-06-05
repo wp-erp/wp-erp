@@ -135,6 +135,38 @@
 	</div>	
 </div>
 
+<?php
+
+
+global $wpdb;
+$financial_start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+$financial_end   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+
+$sql = "SELECT led.id, led.code, led.name, led.type_id, types.name as type_name, types.class_id, class.name as class_name, sum(jour.debit) as debit, sum(jour.credit) as credit
+FROM wp_erp_ac_ledger as led
+LEFT JOIN wp_erp_ac_chart_types as types ON types.id = led.type_id
+LEFT JOIN wp_erp_ac_chart_classes as class ON class.id = types.class_id
+LEFT JOIN wp_erp_ac_journals as jour ON jour.ledger_id = led.id
+LEFT JOIN wp_erp_ac_transactions as tran ON tran.id = jour.transaction_id
+WHERE tran.status IS NULL OR tran.status != 'draft' AND ( tran.issue_date >= '$financial_start' AND tran.issue_date <= '$financial_end' )
+GROUP BY led.id";
+
+$ledgers = $wpdb->get_results( $sql );
+$charts  = [];
+pr($ledgers);  die();
+if ( $ledgers ) {
+    foreach ($ledgers as $ledger) {
+    
+        if ( ! isset( $charts[ $ledger->class_id ] ) ) {
+            $charts[ $ledger->class_id ]['label'] = $ledger->class_name;
+            $charts[ $ledger->class_id ]['ledgers'][] = $ledger;
+        } else {
+            $charts[ $ledger->class_id ]['ledgers'][] = $ledger;
+        }
+    }
+}
+
+echo '<pre>'; print_r( $charts ); echo '</pre>';
 
 
 		
