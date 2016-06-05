@@ -432,7 +432,8 @@
 .erp-crm-customer .erp-advance-search-filters .erp-advance-search-or-wrapper .add-filter {
   float: left;
   margin-right: 9px;
-  height: 31px;
+  height: 30px;
+  margin-top: 1px;
 }
 .erp-crm-customer .erp-advance-search-filters .erp-advance-search-or-wrapper .filter-item {
   float: left;

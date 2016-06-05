@@ -25,11 +25,22 @@ class Form_Handler {
         add_filter( 'erp_get_people_pre_where_join', [ $this, 'contact_advance_filter' ], 10, 2 );
     }
 
+    /**
+     * Advance filter for contact and company
+     *
+     * @since 1.1.0
+     *
+     * @param  array $custom_sql
+     * @param  array $args
+     *
+     * @return array
+     */
     function contact_advance_filter( $custom_sql, $args ) {
         $postdata = $_REQUEST;
+        $pep_fileds  = [ 'first_name', 'last_name', 'email', 'company', 'phone', 'mobile', 'other', 'fax', 'notes', 'street_1', 'street_2', 'city', 'postal_code', 'currency' ];
 
         if ( !isset( $postdata['erpadvancefilter'] ) || empty( $postdata['erpadvancefilter'] ) ) {
-            return $sql;
+            return $custom_sql;
         }
 
         $or_query   = explode( '&or&', $postdata['erpadvancefilter'] );
@@ -43,21 +54,6 @@ class Form_Handler {
                 $query_data[] = $serach_array;
             }
         }
-
-
-        // var_dump( $query_data );
-
-        $pep_fileds  = [ 'first_name', 'last_name', 'email', 'company', 'phone', 'mobile', 'other', 'fax', 'notes', 'street_1', 'street_2', 'city', 'postal_code', 'currency' ];
-
-        // $filters_array = [];
-        // foreach ( $serach_array as $filter_key => $filter_val ) {
-        //     if ( $filter_key == 'or' ) {
-        //         continue;
-        //     }
-        //     $filters_array[][$filter_key] = $filter_val;
-        // }
-
-        // var_dump( $serach_array, $filters_array ); die();
 
         if ( $query_data ) {
 
@@ -87,10 +83,6 @@ class Form_Handler {
         }
 
         return $custom_sql;
-
-        // and ( people.first_name LIKE 's%' OR first_name.meta_value LIKE 's%' or people.first_name LIKE 'r%' OR first_name.meta_value LIKE 'r%' )
-
-        // die();
     }
 
     function employee_permission_set( $post, $user ) {
