@@ -818,7 +818,7 @@ Vue.component('vtable', {
 
             self.setQueryParmsIntoUrl( advanceFilter );
 
-            var removalQueryParam = ['page', 'type', 'or' ].concat( self.customData.searchFields );
+            var removalQueryParam = ['page', 'type', 'or', 'paged' ].concat( self.customData.searchFields );
             var queryString = self.removeParam( removalQueryParam, window.location.search );
 
             if ( queryString ) {
@@ -905,7 +905,8 @@ Vue.component('vtable', {
                 }
                 queryParams = self.removeParam( ['paged'], '?' + queryParams );
             } else {
-                // queryParams = self.removeParam( ['paged'], '?' + queryParams );
+                // var paged = '&paged=' + self.currentPage;
+                queryParams = self.removeParam( ['paged'], '?' + queryParams );
                 var paged = '';
             }
 
@@ -927,11 +928,9 @@ Vue.component('vtable', {
                 var arr = {};
                 var r = [];
                 var keys = self.customData.searchFields;
-
                 self.parseStr( orSelect, arr );
-
                 for ( type in arr ) {
-                    if ( keys.indexOf(type) > -1) {
+                    if ( keys && keys.indexOf(type) > -1) {
                         if ( typeof arr[type] == 'object' ) {
                             for ( key in arr[type] ) {
                                 var s = type + '[]=' + arr[type][key];
