@@ -1856,7 +1856,8 @@ function erp_crm_get_save_search_item( $args = [] ) {
         'id'      => 0,
         'user_id' => get_current_user_id(),
         'global' => 1,
-        'groupby' => 'global'
+        'groupby' => 'global',
+        'option_key' => 'id'
     ];
 
     $args  = wp_parse_args( $args, $defaults );
@@ -1874,8 +1875,10 @@ function erp_crm_get_save_search_item( $args = [] ) {
 
     foreach ( $search_keys as $key => $search_values ) {
         if ( $key == 0 ) {
+            $results[$key]['id'] = __( 'own_search', 'erp' );
             $results[$key]['name'] = __( 'Own Search', 'erp' );
         } else {
+            $results[$key]['id'] = __( 'global_search', 'erp' );
             $results[$key]['name'] = __( 'Global Search', 'erp' );
         }
 
@@ -1883,6 +1886,7 @@ function erp_crm_get_save_search_item( $args = [] ) {
             $results[$key]['options'][] = [
                 'id' => $value['id'],
                 'text' => $value['search_name'],
+                'value' => $value['search_val']
             ];
         }
     }

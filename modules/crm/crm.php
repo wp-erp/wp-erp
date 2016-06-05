@@ -230,11 +230,12 @@ class Customer_Relationship {
 
         if ( 'crm_page_erp-sales-customers' == $hook ) {
             $customer = new Contact( null, 'contact' );
-            $localize_script['customer_empty'] = $customer->to_array();
-            $localize_script['statuses']       = erp_crm_customer_get_status_count( 'contact' );
-            $localize_script['contact_type']   = 'contact';
-            $localize_script['life_stages']    = erp_crm_get_life_stages_dropdown_raw();
-            $localize_script['searchFields']   = erp_crm_get_serach_key( $hook );
+            $localize_script['customer_empty']    = $customer->to_array();
+            $localize_script['statuses']          = erp_crm_customer_get_status_count( 'contact' );
+            $localize_script['contact_type']      = 'contact';
+            $localize_script['life_stages']       = erp_crm_get_life_stages_dropdown_raw();
+            $localize_script['searchFields']      = erp_crm_get_serach_key( $hook );
+            $localize_script['saveAdvanceSearch'] = erp_crm_get_save_search_item();
 
             $country = \WeDevs\ERP\Countries::instance();
             wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
