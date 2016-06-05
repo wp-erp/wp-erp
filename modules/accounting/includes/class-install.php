@@ -1,245 +1,48 @@
 <?php
+namespace WeDevs\ERP\Accounting;
 /**
- * Installation related functions and actions.
- *
- * @author Tareq Hasan
- * @package ERP
+ * Installer class
  */
+class Install {
 
-// don't call the file directly
-if ( !defined( 'ABSPATH' ) ) exit;
-
-/**
- * Installer Class
- *
- * @package ERP
- */
-class WeDevs_ERP_Installer {
-
-    use \WeDevs\ERP\Framework\Traits\Hooker;
-
-    /**
-     * Binding all events
-     *
-     * @since 1.0
-     *
-     * @return void
-     */
-    function __construct() {
-        $this->set_default_modules();
-
-        register_activation_hook( WPERP_FILE, array( $this, 'activate' ) );
-        register_deactivation_hook( WPERP_FILE, array( $this, 'deactivate' ) );
-
-        $this->action( 'admin_menu', 'welcome_screen_menu' );
-        $this->action( 'admin_head', 'welcome_screen_menu_remove' );
-    }
-
-    /**
-     * Placeholder for activation function
-     * Nothing being called here yet.
-     *
-     * @since 1.0
-     *
-     * @return void
-     */
-    public function activate() {
-        $current_erp_version = get_option( 'wp_erp_version', null );
-        $current_db_version  = get_option( 'wp_erp_db_version', null );
-
+    public function install() {
         $this->create_tables();
         $this->populate_data();
+        $this->create_roles();
+        $this->set_role();
+    }
 
-        if ( is_null( $current_erp_version ) ) {
-            $this->set_role();
+    /**
+     * Create user roles and capabilities
+     *
+     * @since 0.1
+     *
+     * @return void
+     */
+    public function create_roles() {
+        $roles = erp_ac_get_roles();
+
+        if ( $roles ) {
+            foreach ($roles as $key => $role) {
+                add_role( $key, $role['name'], $role['capabilities'] );
+            }
         }
+    }
 
-        $this->create_roles(); // @TODO: Needs to change later :)
-        $this->create_cron_jobs();
-        $this->setup_default_emails();
+    function set_role() {
+        $admins = get_users( array( 'role' => 'administrator' ) );
 
-
-        if ( is_null( $current_erp_version ) && is_null( $current_db_version ) && apply_filters( 'erp_enable_setup_wizard', true ) ) {
-            set_transient( '_erp_activation_redirect', 1, 30 );
+        if ( $admins ) {
+            foreach ($admins as $user) {
+                $user->add_role( erp_ac_get_manager_role() );
+            }
         }
     }
 
     /**
-     * Include required files to prevent fatal errors
+     * Create necessary tables
      *
-     * @return void
-     */
-    function includes() {
-        include_once WPERP_MODULES . '/hrm/includes/functions-capabilities.php';
-        include_once WPERP_MODULES . '/crm/includes/functions-capabilities.php';
-        include_once WPERP_MODULES . '/accounting/includes/function-capabilities.php';
-    }
-
-    /**
-     * Set default mail subject, heading and body
-     *
-     * @since 1.0
-     *
-     * @return void
-     */
-    function setup_default_emails() {
-
-        //Employee welcome
-        $welcome = [
-            'subject' => 'Welcome {full_name} to {company_name}',
-            'heading' => 'Welcome Onboard {first_name}!',
-            'body'    => 'Dear {full_name},
-
-Welcome aboard as a <strong>{job_title}</strong> in our <strong>{dept_title}</strong> team at <strong>{company_name}</strong>! I am pleased to have you working with us. You were selected for employment due to the attributes that you displayed that appear to match the qualities I look for in an employee.
-
-I’m looking forward to seeing you grow and develop into an outstanding employee that exhibits a high level of care, concern, and compassion for others. I hope that you will find your work to be rewarding, challenging, and meaningful.
-
-Your <strong>{type}</strong> employment will start from <strong>{joined_date}</strong> and you will be reporting to <strong>{reporting_to}</strong>.
-
-Please take your time and review our yearly goals so that you can know what is expected and make a positive contribution. Again, I look forward to seeing you grow as a professional while enhancing the lives of the clients entrusted in your care.
-
-Sincerely,
-Manager Name
-CEO, Company Name
-
-{login_info}'
-        ];
-
-        update_option( 'erp_email_settings_employee-welcome', $welcome );
-
-        //New Leave Request
-        $new_leave_request = [
-            'subject' => 'New leave request received from {employee_name}',
-            'heading' => 'New Leave Request',
-            'body'    => 'Hello,
-
-A new leave request has been received from {employee_url}.
-
-<strong>Leave type:</strong> {leave_type}
-<strong>Date:</strong> {date_from} to {date_to}
-<strong>Days:</strong> {no_days}
-<strong>Reason:</strong> {reason}
-
-Please approve/reject this leave application by going following:
-
-{requests_url}
-
-Thanks.'
-        ];
-
-        update_option( 'erp_email_settings_new-leave-request', $new_leave_request );
-
-        //Approved Leave Request
-        $approved_request = [
-            'subject' => 'Your leave request has been approved',
-            'heading' => 'Leave Request Approved',
-            'body'    => 'Hello {employee_name},
-
-Your <strong>{leave_type}</strong> type leave request for <strong>{no_days} days</strong> from {date_from} to {date_to} has been approved.
-
-Regards
-Manager Name
-Company'
-        ];
-
-        update_option( 'erp_email_settings_approved-leave-request', $approved_request );
-
-        //Rejected Leave Request
-        $reject_request = [
-            'subject' => 'Your leave request has been rejected',
-            'heading' => 'Leave Request Rejected',
-            'body'    => 'Hello {employee_name},
-
-Your <strong>{leave_type}</strong> type leave request for <strong>{no_days} days</strong> from {date_from} to {date_to} has been rejected.
-
-The reason of rejection is: {reject_reason}
-
-Regards
-Manager Name
-Company'
-        ];
-
-        update_option( 'erp_email_settings_rejected-leave-request', $reject_request );
-
-        // New Task Assigned
-        $new_task_assigned = [
-            'subject' => 'New task has been assigned to you',
-            'heading' => 'New Task Assigned',
-            'body'    => 'Hello {employee_name},
-
-A new task <strong>{task_title}</strong> has been assigned to you by {created_by}.
-Due Date: {due_date}
-
-Regards
-Manager Name
-Company'
-        ];
-
-        update_option( 'erp_email_settings_new-task-assigned', $new_task_assigned );
-    }
-
-    /**
-     * Create cron jobs
-     *
-     * @return void
-     */
-    public function create_cron_jobs() {
-        wp_schedule_event( time(), 'per_minute', 'erp_per_minute_scheduled_events' );
-        wp_schedule_event( time(), 'daily', 'erp_daily_scheduled_events' );
-        wp_schedule_event( time(), 'weekly', 'erp_weekly_scheduled_events' );
-    }
-
-    /**
-     * Placeholder for deactivation function
-     *
-     * Nothing being called here yet.
-     */
-    public function deactivate() {
-        wp_clear_scheduled_hook( 'erp_per_minute_scheduled_events' );
-        wp_clear_scheduled_hook( 'erp_daily_scheduled_events' );
-        wp_clear_scheduled_hook( 'erp_weekly_scheduled_events' );
-
-        remove_role('erp_crm_manager');
-        remove_role('erp_crm_agent');
-    }
-
-    /**
-     * Welcome screen menu page cb
-     *
-     * @since 1.0
-     *
-     * @return void
-     */
-    public function welcome_screen_menu() {
-        add_dashboard_page( __( 'Welcome to WP ERP', 'erp' ), 'WP ERP', 'manage_options', 'erp-welcome', array( $this, 'welcome_screen_content' ) );
-    }
-
-    /**
-     * Welcome screen menu remove
-     *
-     * @since 1.0
-     *
-     * @return void
-     */
-    public function welcome_screen_menu_remove() {
-        remove_submenu_page( 'index.php', 'erp-welcome' );
-    }
-
-    /**
-     * Render welcome screen content
-     *
-     * @since 1.0
-     *
-     * @return void
-     */
-    public function welcome_screen_content() {
-        include WPERP_VIEWS . '/welcome-screen.php';
-    }
-
-    /**
-     * Create necessary table for ERP & HRM
-     *
-     * @since 1.0
+     * @since 0.1
      *
      * @return  void
      */
@@ -259,8 +62,132 @@ Company'
         }
 
         $table_schema = [
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_ac_chart_classes` (
+                `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+                `name` varchar(100) DEFAULT NULL,
+                PRIMARY KEY (`id`)
+            ) $collate;",
 
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_company_locations` (
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_ac_chart_types` (
+              `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+              `name` varchar(60) NOT NULL DEFAULT '',
+              `class_id` tinyint(3) NOT NULL,
+              PRIMARY KEY (`id`),
+              KEY `class_id` (`class_id`)
+            ) $collate;",
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_ac_journals` (
+              `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+              `ledger_id` int(11) unsigned NOT NULL,
+              `transaction_id` bigint(20) unsigned NOT NULL,
+              `type` varchar(20) DEFAULT NULL,
+              `debit` decimal(10,2) unsigned DEFAULT NULL,
+              `credit` decimal(10,2) unsigned DEFAULT NULL,
+              PRIMARY KEY (`id`),
+              KEY `ledger_id` (`ledger_id`),
+              KEY `transaction_id` (`transaction_id`)
+            ) $collate;",
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_ac_ledger` (
+              `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+              `code` varchar(10) DEFAULT NULL,
+              `name` varchar(100) DEFAULT NULL,
+              `description` text,
+              `parent` int(11) unsigned NOT NULL DEFAULT '0',
+              `type_id` int(3) unsigned NOT NULL DEFAULT '0',
+              `currency` varchar(10) DEFAULT '',
+              `tax` bigint(20) DEFAULT NULL,
+              `cash_account` tinyint(2) unsigned NOT NULL DEFAULT '0',
+              `reconcile` tinyint(2) unsigned NOT NULL DEFAULT '0',
+              `system` tinyint(2) unsigned NOT NULL DEFAULT '0',
+              `active` tinyint(2) unsigned NOT NULL DEFAULT '1',
+              PRIMARY KEY (`id`),
+              KEY `code` (`code`),
+              KEY `type_id` (`type_id`),
+              KEY `parent` (`parent`)
+            ) $collate;",
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_ac_banks` (
+              `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+              `ledger_id` int(10) unsigned DEFAULT NULL,
+              `account_number` varchar(20) DEFAULT NULL,
+              `bank_name` varchar(30) DEFAULT NULL,
+              PRIMARY KEY (`id`),
+              KEY `ledger_id` (`ledger_id`)
+            ) $collate;",
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_ac_transactions` (
+              `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+              `type` varchar(10) DEFAULT NULL,
+              `form_type` varchar(20) DEFAULT NULL,
+              `status` varchar(20) DEFAULT NULL,
+              `user_id` bigint(20) unsigned DEFAULT NULL,
+              `billing_address` tinytext,
+              `ref` varchar(50) DEFAULT NULL,
+              `summary` text,
+              `issue_date` date DEFAULT NULL,
+              `due_date` date DEFAULT NULL,
+              `currency` varchar(10) DEFAULT NULL,
+              `conversion_rate` decimal(2,2) unsigned DEFAULT NULL,
+              `total` decimal(10,2) DEFAULT '0.00',
+              `due` decimal(10,2) unsigned DEFAULT '0.00',
+              `trans_total` decimal(10,2) DEFAULT '0.00',
+              `files` varchar(255) DEFAULT NULL,
+              `parent` bigint(20) unsigned NOT NULL DEFAULT '0',
+              `created_by` int(11) unsigned DEFAULT NULL,
+              `created_at` datetime DEFAULT NULL,
+              PRIMARY KEY (`id`),
+              KEY `user_id` (`user_id`),
+              KEY `type` (`type`),
+              KEY `status` (`status`),
+              KEY `issue_date` (`issue_date`)
+            ) $collate;",
+
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_ac_transaction_items` (
+              `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+              `transaction_id` bigint(20) unsigned DEFAULT NULL,
+              `journal_id` bigint(20) unsigned DEFAULT NULL,
+              `product_id` int(10) unsigned DEFAULT NULL,
+              `description` text,
+              `qty` tinyint(5) unsigned NOT NULL DEFAULT '1',
+              `unit_price` decimal(10,2) unsigned NOT NULL DEFAULT '0.00',
+              `discount` tinyint(3) unsigned NOT NULL DEFAULT '0',
+              `tax` tinyint(3) unsigned NOT NULL DEFAULT '0',
+              `line_total` decimal(10,2) unsigned NOT NULL DEFAULT '0.00',
+              `order` tinyint(3) unsigned NOT NULL DEFAULT '0',
+              PRIMARY KEY (`id`),
+              KEY `transaction_id` (`transaction_id`),
+              KEY `journal_id` (`journal_id`),
+              KEY `product_id` (`product_id`)
+            ) $collate;",
+
+          "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_ac_payments` (
+            `id` bigint(20) NOT NULL AUTO_INCREMENT,
+            `transaction_id` int(11) NOT NULL,
+            `parent` int(11) NOT NULL,
+            `child` int(11) NOT NULL,
+            PRIMARY KEY (`id`)
+          ) $collate;",
+
+          "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_ac_tax` (
+            `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+            `name` varchar(255) DEFAULT NULL,
+            `tax_number` varchar(255) DEFAULT NULL,
+            `is_compound` varchar(5) DEFAULT NULL,
+            `created_by` bigint(20) NOT NULL,
+             PRIMARY KEY (`id`)
+          ) $collate;",
+          
+          "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_ac_tax_items` (
+            `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+            `tax_id` bigint(20) NOT NULL,
+            `component_name` varchar(255) DEFAULT NULL,
+            `agency_name` varchar(255) DEFAULT NULL,
+            `tax_rate` float NOT NULL,
+            PRIMARY KEY (`id`)
+          ) $collate;",
+          
+          "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_company_locations` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
                 `company_id` int(11) unsigned DEFAULT NULL,
                 `name` varchar(255) DEFAULT NULL,
@@ -648,30 +575,15 @@ Company'
         ];
 
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+
         foreach ( $table_schema as $table ) {
             dbDelta( $table );
         }
-
     }
 
-    /**
-     * Populate tables with initial data
-     *
-     * @return void
-     */
     public function populate_data() {
         global $wpdb;
 
-        // check if people_types exists
-        if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_people_types` LIMIT 0, 1" ) ) {
-            $sql = "INSERT INTO `{$wpdb->prefix}erp_people_types` (`id`, `name`)
-                    VALUES (1,'contact'), (2,'company'), (3,'customer'), (4,'vendor');";
-
-            $wpdb->query( $sql );
-        }
-
-        //Accounting
-        
         // check if classes exists
         if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_ac_chart_classes` LIMIT 0, 1" ) ) {
             $sql = "INSERT INTO `{$wpdb->prefix}erp_ac_chart_classes` (`id`, `name`)
@@ -771,96 +683,4 @@ Company'
             $wpdb->query( $sql );
         }
     }
-
-    /**
-     * Set default module for initial erp setup
-     *
-     * @since 1.0
-     *
-     * @return void
-     */
-    public function set_default_modules() {
-
-        if ( get_option( 'wp_erp_version' ) ) {
-            return ;
-        }
-
-        $default = [
-            'hrm' => [
-                'title'       => __( 'HR Management', 'erp' ),
-                'slug'        => 'erp-hrm',
-                'description' => __( 'Human Resource Mnanagement', 'erp' ),
-                'callback'    => '\WeDevs\ERP\HRM\Human_Resource',
-                'modules'     => apply_filters( 'erp_hr_modules', [ ] )
-            ],
-
-            'crm' => [
-                'title'       => __( 'CR Management', 'erp' ),
-                'slug'        => 'erp-crm',
-                'description' => __( 'Client Resource Management', 'erp' ),
-                'callback'    => '\WeDevs\ERP\CRM\Customer_Relationship',
-                'modules'     => apply_filters( 'erp_crm_modules', [ ] )
-            ]
-        ];
-
-        update_option( 'erp_modules', $default );
-    }
-
-    /**
-     * Create user roles and capabilities
-     *
-     * @since 1.0
-     *
-     * @return void
-     */
-    public function create_roles() {
-        $this->includes();
-
-        $roles_hr = erp_hr_get_roles();
-
-        if ( $roles_hr ) {
-            foreach ($roles_hr as $key => $role) {
-                add_role( $key, $role['name'], $role['capabilities'] );
-            }
-        }
-
-        $roles_crm = erp_crm_get_roles();
-
-        if ( $roles_crm ) {
-            foreach ($roles_crm as $key => $role) {
-                add_role( $key, $role['name'], $role['capabilities'] );
-            }
-        }
-
-        $roles_ac = erp_ac_get_roles();
-
-        if ( $roles_ac ) {
-            foreach ($roles_ac as $key => $role) {
-                add_role( $key, $role['name'], $role['capabilities'] );
-            }
-        }
-    }
-
-    /**
-     * Set erp_hr_manager role for admin user
-     *
-     * @since 1.0
-     *
-     * @return void
-     */
-    public function set_role() {
-        $this->includes();
-
-        $admins = get_users( array( 'role' => 'administrator' ) );
-
-        if ( $admins ) {
-            foreach ($admins as $user) {
-                $user->add_role( erp_hr_get_manager_role() );
-                $user->add_role( erp_crm_get_manager_role() );
-                $user->add_role( erp_ac_get_manager_role() );
-            }
-        }
-    }
 }
-
-new WeDevs_ERP_Installer();
