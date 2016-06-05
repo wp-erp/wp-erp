@@ -121,10 +121,6 @@ class Updates {
             }
         }
 
-        // update to latest version
-        update_option( 'wp_erp_version', WPERP_VERSION );
-        update_option( 'wp_erp_db_version', WPERP_VERSION );
-
         $location = remove_query_arg( ['wperp_do_update'], $_SERVER['REQUEST_URI'] );
         wp_redirect( $location );
         exit();

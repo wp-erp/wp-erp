@@ -62,6 +62,11 @@ class WeDevs_ERP_Installer {
         if ( is_null( $current_erp_version ) && is_null( $current_db_version ) && apply_filters( 'erp_enable_setup_wizard', true ) ) {
             set_transient( '_erp_activation_redirect', 1, 30 );
         }
+
+        // update to latest version
+        $latest_version = erp_get_version();
+        update_option( 'wp_erp_version', $latest_version );
+        update_option( 'wp_erp_db_version', $latest_version );
     }
 
     /**

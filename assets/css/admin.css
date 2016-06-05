@@ -2478,14 +2478,13 @@ form.erp-form .erp-form-field label {
 #erp-ac-tax-popup-content .fa-times-circle {
   cursor: pointer;
 }
-.erp-ac-tax-report-wrap .erp-ac-report-tax-date {
+.erp-ac-report-tax-date {
   width: 20%;
   padding: 7px 10px;
   border: 1px solid #e5e5e5;
   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
   background: #fff;
-  float: left;
   margin-right: 10px;
 }
 .erp-ac-tax-report-wrap .erp-ac-tax-report-table th,
@@ -2525,6 +2524,13 @@ form.erp-form .erp-form-field label {
 .erp-ac-income-satement-wrap .erp-ac-report-income-statement-table .erp-ac-even-first td {
   padding-top: 9px;
 }
+.erp-ac-balance-sheet-wrap h1 {
+  font-size: 23px;
+  font-weight: 400;
+  margin: 0;
+  padding: 9px 15px 4px 0;
+  line-height: 29px;
+}
 .erp-ac-balance-sheet-wrap .metabox-holder {
   width: 100%;
   display: -webkit-flex;
@@ -2537,7 +2543,7 @@ form.erp-form .erp-form-field label {
 .erp-ac-balance-sheet-wrap .metabox-holder .postbox {
   float: left;
   width: 32%;
-  margin: 5px .3%;
+  margin: 0px .3% 0 0;
 }
 .erp-ac-balance-sheet-wrap .metabox-holder .postbox .inside {
   margin: 11px 0px 46px 0;
