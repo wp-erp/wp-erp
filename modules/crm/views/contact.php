@@ -1,4 +1,6 @@
 <?php
+global $current_screen;
+
 $advance_search_id =  isset( $_GET['erp_save_search' ] ) ? $_GET['erp_save_search' ] : 0;
 $if_advance_search = ( isset( $_GET['erp_save_search' ] ) && $_GET['erp_save_search' ] == 0 ) ? true : false;
 
@@ -9,14 +11,15 @@ if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_co
         'filter_assign_contact' => [
             'id'           => $id,
             'display_name' => get_the_author_meta( 'display_name', $id )
-        ]
+        ],
+        'searchFields' => array_keys( erp_crm_get_serach_key( $current_screen->base ) )
     ];
 } else {
-    $custom_data = new stdClass();
+    $custom_data = [
+        'searchFields' => array_keys( erp_crm_get_serach_key( $current_screen->base ) )
+    ];
 }
 ?>
-
-    <?php //erp_crm_save_search_query_filter(null); ?>
 
 <div class="wrap erp-crm-customer erp-crm-customer-listing" id="wp-erp" v-cloak>
 

@@ -818,7 +818,7 @@ Vue.component('vtable', {
 
             self.setQueryParmsIntoUrl( advanceFilter );
 
-            var removalQueryParam = ['page', 'type', 'or' ].concat( Object.keys( wpErpCrm.searchFields ) );
+            var removalQueryParam = ['page', 'type', 'or' ].concat( self.customData.searchFields );
             var queryString = self.removeParam( removalQueryParam, window.location.search );
 
             if ( queryString ) {
@@ -880,7 +880,7 @@ Vue.component('vtable', {
                 queryParams = '',
                 url= '';
 
-            var removalQueryParam = ['page', 'type', 'or' ].concat( Object.keys( wpErpCrm.searchFields ) );
+            var removalQueryParam = ['page', 'type', 'or' ].concat( self.customData.searchFields );
             var queryString = self.removeParam( removalQueryParam, window.location.search );
 
             if ( queryString ) {
@@ -907,10 +907,7 @@ Vue.component('vtable', {
             } else {
                 // queryParams = self.removeParam( ['paged'], '?' + queryParams );
                 var paged = '';
-                self.currentPage = 1;
             }
-
-            console.log( paged );
 
             if ( queryParams ) {
                 var url = ( paged ) ? self.page + '&' + queryParams + paged + advanceFilter: self.page + '&' + queryParams + advanceFilter;
@@ -929,7 +926,7 @@ Vue.component('vtable', {
             jQuery.each( orSelection, function( index, orSelect ) {
                 var arr = {};
                 var r = [];
-                var keys = Object.keys( wpErpCrm.searchFields );
+                var keys = self.customData.searchFields;
 
                 self.parseStr( orSelect, arr );
 
