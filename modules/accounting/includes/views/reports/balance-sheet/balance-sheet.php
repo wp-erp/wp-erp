@@ -20,7 +20,7 @@ WHERE tran.status IS NULL OR tran.status != 'draft' AND ( tran.issue_date >= '$f
 GROUP BY led.id";
 
 $ledgers = $wpdb->get_results( $sql );
-pr($ledgers);
+
 $charts = [];
 
 foreach ($ledgers as $ledger) {
@@ -33,9 +33,15 @@ $liabilities = isset( $charts[2] ) ? $charts[2] : [];
 $equities    = isset( $charts[5] ) ? $charts[5] : [];
 ?>
 		
-
+<div class="warp erp-ac-balance-sheet-wrap">
 <h1><?php _e( 'Accounting Reports: Balance Sheet', 'erp' ); ?></h1>
-<div class="warp erp-ac-balance-sheet-wrap">	
+<p class="erp-ac-report-tax-date">
+<?php 
+$start = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_start_date() ) ) );
+$end   = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_end_date() ) ) );
+printf( '<i class="fa fa-calendar"></i> %1$s %2$s %3$s %4$s', __( 'From', 'accounting' ), $start, __( 'to', 'accounting' ),  $end); ?>
+</p>
+	
 	<div class="metabox-holder">
 
 		<div class="postbox ">
@@ -156,9 +162,9 @@ $equities    = isset( $charts[5] ) ? $charts[5] : [];
 	             		<?php
 	             			$liabilitie_total_balance = 0; 
 	             			foreach ( $equities as $key => $equity ) {
-	             				$account = reset( $liabilitie );
-	             				$debit   = array_sum( wp_list_pluck( $liabilitie, 'debit' ) );
-	             				$credit  = array_sum( wp_list_pluck( $liabilitie, 'credit' ) );
+	             				$account = reset( $equity );
+	             				$debit   = array_sum( wp_list_pluck( $equity, 'debit' ) );
+	             				$credit  = array_sum( wp_list_pluck( $equity, 'credit' ) );
 	             				$balance = $credit - $debit;
 	             				$balance = erp_ac_get_price( $balance, [ 'symbol' => false ] );
 
@@ -177,14 +183,6 @@ $equities    = isset( $charts[5] ) ? $charts[5] : [];
 	             			}
 
 	             		?>
-	             		<tr>
-	             			<td><a href="">Owners Contribution</a></td>
-	             			<td>$7.0</td>
-	             		</tr>
-	             		<tr>
-	             			<td><a href="">Retained Earnings</a></td>
-	             			<td>$7.0</td>
-	             		</tr>
 	             	</tbody>
 	            </table>
 			</div>
@@ -192,8 +190,8 @@ $equities    = isset( $charts[5] ) ? $charts[5] : [];
 			<div class="erp-ac-total-count">
             	<table>
 		           	<tr>
-		           		<td><strong>Total</strong></td>
-		           		<td><strong>$100</strong></td>
+		           		<td><strong><?php _e( 'Total', 'erp' ); ?></strong></td>
+		           		<td><strong><?php echo $liabilitie_total_balance; ?></strong></td>
 		           	</tr>
 	           	</table>
 
