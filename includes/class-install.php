@@ -768,7 +768,7 @@ Company'
             `is_compound` varchar(5) DEFAULT NULL,
              PRIMARY KEY (`id`)
           ) $collate;",
-          
+
           "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_ac_tax_items` (
             `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
             `tax_id` bigint(20) NOT NULL,
@@ -804,7 +804,7 @@ Company'
         }
 
         //Accounting
-        
+
         // check if classes exists
         if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_ac_chart_classes` LIMIT 0, 1" ) ) {
             $sql = "INSERT INTO `{$wpdb->prefix}erp_ac_chart_classes` (`id`, `name`)

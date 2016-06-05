@@ -134,7 +134,7 @@ function erp_ac_create_table() {
         `is_compound` varchar(5) DEFAULT NULL,
          PRIMARY KEY (`id`)
       ) $collate;",
-      
+
       "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_ac_tax_items` (
         `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
         `tax_id` bigint(20) NOT NULL,
@@ -156,7 +156,7 @@ function erp_ac_create_table() {
 function erp_ac_populate_data() {
 	global $wpdb;
     //accounting
-    
+
     // check if classes exists
     if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_ac_chart_classes` LIMIT 0, 1" ) ) {
         $sql = "INSERT INTO `{$wpdb->prefix}erp_ac_chart_classes` (`id`, `name`)
@@ -265,7 +265,7 @@ function erp_ac_table_update() {
 	$cols = $wpdb->get_col( "DESC " . $table );
 
 	if ( ! in_array( 'sub_total', $cols ) ) {
-		$wpdb->query( "ALTER TABLE $table ADD `sub_total` DECIMAL(10,2) NOT NULL AFTER `conversion_rate`" );	
+		$wpdb->query( "ALTER TABLE $table ADD `sub_total` DECIMAL(10,2) NOT NULL AFTER `conversion_rate`" );
 	}
 
 	$ledger = $wpdb->prefix . 'erp_ac_ledger';
@@ -273,18 +273,18 @@ function erp_ac_table_update() {
 	$cols = $wpdb->get_col( "DESC " . $ledger );
 
 	if ( ! in_array( 'created_by', $cols ) ) {
-		$wpdb->query( "ALTER TABLE $ledger ADD `created_by` bigint(20) NOT NULL AFTER `active`" );	
+		$wpdb->query( "ALTER TABLE $ledger ADD `created_by` bigint(20) NOT NULL AFTER `active`" );
 	}
 
 	$item_table = $wpdb->prefix . 'erp_ac_transaction_items';
 	$item_cols  = $wpdb->get_col( "DESC " . $item_table );
 
 	if ( ! in_array( 'tax_rate',$item_cols ) ) {
-		$wpdb->query( "ALTER TABLE $item_table ADD `tax_rate` DECIMAL(10,2) NOT NULL AFTER `tax`" );	
+		$wpdb->query( "ALTER TABLE $item_table ADD `tax_rate` DECIMAL(10,2) NOT NULL AFTER `tax`" );
 	}
 
 	if ( ! in_array( 'tax_journal', $item_cols ) ) {
-		$wpdb->query( "ALTER TABLE $item_table ADD `tax_journal` BIGINT(20) NOT NULL AFTER `tax_rate`" );	
+		$wpdb->query( "ALTER TABLE $item_table ADD `tax_journal` BIGINT(20) NOT NULL AFTER `tax_rate`" );
 	}
 
 	$account_table = $wpdb->prefix . 'erp_ac_banks';
@@ -293,10 +293,9 @@ function erp_ac_table_update() {
 }
 
 function erp_ac_update_manager_capabilities() {
-
     remove_role( 'erp_ac_manager' );
-
     $installer = new \WeDevs_ERP_Installer();
+    $installer->set_role();
     $installer->create_roles();
 }
 
