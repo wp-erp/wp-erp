@@ -109,7 +109,7 @@ $tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                         ?>
 
                         <span class="balance-wrap">
-                            <strong><?php _e( 'Balance:', 'accounting' ); ?> <?php echo erp_ac_get_currency_symbol(); ?><span class="erp-ac-bank-amount">0</span></strong>
+                            <strong><?php _e( 'Balance: ', 'accounting' ); ?><span class="erp-ac-bank-amount">0</span></strong>
                         </span>
                     </li>
                 </ul>
