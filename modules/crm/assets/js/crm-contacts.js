@@ -298,7 +298,46 @@
                         text: ''
                     }
                 ]
+            },
+
+            'filterSaveAdvanceFiter' : {
+                name: 'filter_save_filter',
+                type: 'select_optgroup', // or text|email|number|url|datefield
+                id: 'erp-select-save-advance-filter',
+                class: 'erp-save-advance-filter',
+                placeholder: 'Select a save filter',
+                options: [
+                    {
+                        optgroup: 'Own Search',
+                        options: [
+                            {
+                                id: 1,
+                                text: 'Test 1 search'
+                            },
+
+                            {
+                                id: 2,
+                                text: 'Test 2 search'
+                            }
+                        ]
+                    },
+                    {
+                        optgroup: 'Global Search',
+                        options: [
+                            {
+                                id: 3,
+                                text: 'Global 3 search'
+                            },
+
+                            {
+                                id: 4,
+                                text: 'Global 4 search'
+                            }
+                        ]
+                    }
+                ]
             }
+
         }
 
         Vue.component( 'filter-item', {
@@ -396,7 +435,13 @@
                     + '</div>'
                 + '</div>'
                 + '<div class="erp-advance-search-save-wrapper" v-if="ifHasAnyFilter()">'
-                    + '<p>Save filters</p>'
+                    + '<div class="saveasnew-wrapper" v-show="isNewSave">'
+                        + '<input type="text" class="save-search-name" v-model="saveSearchObj.searchName">'
+                        + '<input type="checkbox" class="save-search-global" v-model="saveSearchObj.searchItGlobal"> Make it global filter'
+                        + '<input type="submit" class="button button-primary" @click.prevent="searchSave()" value="Save">'
+                        + '<input type="submit" class="button" @click.prevent="cancelSave()" value="Cancel">'
+                    + '</div>'
+                    + '<button class="button button-primary" v-show="!isNewSave" @click.prevent="saveAsNew()">Save this Filter</button>'
                 + '</div>',
 
             data: function() {
@@ -406,10 +451,59 @@
                         [
                         ]
                     ],
+                    isNewSave: false,
+                    isUpdateSaveSearch: false,
+                    saveSearchObj: {
+                        searchName: '',
+                        searchItGlobal: false,
+                    }
                 }
             },
 
             methods: {
+
+                cancelSave: function() {
+                    this.isNewSave = false;
+                },
+
+                searchSave: function() {
+                    var self = this;
+                    var queryUrl = contact.makeQueryStringFromFilter( this.fields );
+                    var data = {
+                        action : 'erp_crm_create_new_save_search',
+                        form_data : {
+                            search_name: this.saveSearchObj.searchName,
+                            search_it_global: this.saveSearchObj.searchItGlobal,
+                            search_fields: queryUrl,
+                        },
+                        _wpnonce : wpErpCrm.nonce
+                    }
+
+                    if ( ! queryUrl ) {
+                        alert( 'You have not any filter for saving' );
+                    }
+
+                    jQuery.post( wpErpCrm.ajaxurl, data, function( resp ) {
+                        if ( resp.success ) {
+
+                            if (  self.isNewSave ) {
+
+                                self.isNewSave = false;
+                            } else {
+
+                                self.isUpdateSaveSearch = false;
+                            }
+
+                        } else {
+                            alert( resp.data );
+                        };
+                    });
+
+                },
+
+                saveAsNew: function() {
+                    this.isNewSave = true;
+                },
 
                 ifHasAnyFilter: function() {
                     if ( this.fields.length > 0 ) {
@@ -511,7 +605,6 @@
 
             ready: function() {
                 this.reRenderFilterFromUrl( window.location.search );
-                console.log( this.ifHasAnyFilter() );
             },
 
             events: {
@@ -1061,6 +1154,31 @@
                         $('select#erp-select-user-for-assign-contact')
                             .append('<option value="' + this.$refs.vtable.customData.filter_assign_contact.id + '" selected>' + this.$refs.vtable.customData.filter_assign_contact.display_name + '</option>').trigger('change')
                     }
+                },
+
+                makeQueryStringFromFilter: function( fields ) {
+                    var queryString = [];
+                    var queryUrl = '';
+
+                    if ( fields.length < 0 ) {
+                        return queryUrl;
+                    }
+
+                    $.each( fields, function( index, filter ) {
+                        var str = [];
+                        if ( filter.length < 0 ) {
+                            return;
+                        }
+                        $.each( filter, function( i, filterObj ) {
+                            var s = filterObj.key + '[]=' +filterObj.condition+filterObj.value
+                            str.push(s);
+                        });
+
+                        queryString.push( str.join('&') );
+                    });
+
+                    queryUrl = queryString.join('&or&');
+                    return queryUrl;
                 }
             },
 
@@ -1076,20 +1194,7 @@
 
             events: {
                 'filterContactList': function( fields ) {
-                    var queryString = [];
-
-                    $.each( fields, function( index, filter ) {
-                        var str = [];
-                        $.each( filter, function( i, filterObj ) {
-                            var s = filterObj.key + '[]=' +filterObj.condition+filterObj.value
-                            str.push(s);
-                        });
-
-                        queryString.push( str.join('&') );
-                    });
-
-                    var queryUrl = queryString.join('&or&');
-
+                    var queryUrl = this.makeQueryStringFromFilter( fields );
                     this.$refs.vtable.additionalUrlString['advanceFilter']= queryUrl;
                     this.$refs.vtable.fetchData();
                 },

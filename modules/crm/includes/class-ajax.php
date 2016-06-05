@@ -1042,23 +1042,25 @@ class Ajax_Handler {
      * @return json
      */
     public function create_save_search() {
-        $this->verify_nonce( 'wp-erp-crm-save-search' );
+        $this->verify_nonce( 'wp-erp-crm-nonce' );
 
-        parse_str( $_POST['form_data'] );
+        $postdata = $_POST['form_data'];
 
-        if ( ! $save_search ) {
-            $this->send_error( __( 'Search item not found', 'erp' ) );
+        if ( ! $postdata ) {
+            $this->send_error( __( 'No data not found', 'erp' ) );
         }
 
-        if ( ! $erp_save_search_name ) {
-            $this->send_error( __( 'Search Key name not found', 'erp' ) );
+        if ( isset( $postdata['search_name'] ) && empty( $postdata['search_name'] ) ) {
+            $this->send_error( __( 'Search name not found', 'erp' ) );
         }
 
-        $postdata = [
-            'save_search' => ( isset( $save_search ) && !empty( $save_search ) ) ? $save_search : []
-        ];
+        if ( isset( $postdata['search_fields'] ) && empty( $postdata['search_fields'] ) ) {
+            $this->send_error( __( 'Search filters not found', 'erp' ) );
+        }
 
-        $query_string = erp_crm_get_save_search_query_string( $postdata );
+        $search_fields = ( isset( $postdata['search_fields'] ) && !empty( $postdata['search_fields'] ) ) ? $postdata['search_fields'] : '';
+
+        var_dump( $postdata['search_it_global'] ); die();
 
         if ( ! $query_string ) {
             $this->send_error( __( 'Query not found', 'erp' ) );
@@ -1067,9 +1069,9 @@ class Ajax_Handler {
         $data = [
             'id'          => isset( $erp_update_save_search_id ) ? $erp_update_save_search_id : 0,
             'user_id'     => get_current_user_id(),
-            'global'      => $erp_save_serach_make_global,
-            'search_name' => $erp_save_search_name,
-            'search_val'  => $query_string,
+            'global'      => ( $postdata['search_it_global'] == 'true' ) ? 1 : 0,
+            'search_name' => $postdata['search_name'],
+            'search_val'  => $search_fields,
         ];
 
         $result = erp_crm_insert_save_search( $data );

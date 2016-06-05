@@ -768,7 +768,7 @@ Company'
             `is_compound` varchar(5) DEFAULT NULL,
              PRIMARY KEY (`id`)
           ) $collate;",
-          
+
           "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_ac_tax_items` (
             `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
             `tax_id` bigint(20) NOT NULL,
@@ -804,109 +804,7 @@ Company'
         }
 
         //Accounting
-        
-        // check if classes exists
-        if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_ac_chart_classes` LIMIT 0, 1" ) ) {
-            $sql = "INSERT INTO `{$wpdb->prefix}erp_ac_chart_classes` (`id`, `name`)
-                    VALUES (1,'Assets'), (2,'Liabilities'), (3,'Expenses'), (4,'Income'), (5,'Equity');";
 
-            $wpdb->query( $sql );
-        }
-
-        // check if chart types exists
-        if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_ac_chart_types` LIMIT 0, 1" ) ) {
-            $sql = "INSERT INTO `{$wpdb->prefix}erp_ac_chart_types` (`id`, `name`, `class_id`)
-                    VALUES (1,'Current Asset',1), (2,'Fixed Asset',1), (3,'Inventory',1),
-                        (4,'Non-current Asset',1), (5,'Prepayment',1), (6,'Bank & Cash',1), (7,'Current Liability',2),
-                        (8,'Liability',2), (9,'Non-current Liability',2), (10,'Depreciation',3),
-                        (11,'Direct Costs',3), (12,'Expense',3), (13,'Revenue',4), (14,'Sales',4),
-                        (15,'Other Income',4), (16,'Equity',5);";
-
-            $wpdb->query( $sql );
-        }
-
-        // check if ledger exists
-        if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_ac_ledger` LIMIT 0, 1" ) ) {
-
-            $sql = "INSERT INTO `{$wpdb->prefix}erp_ac_ledger` (`id`, `code`, `name`, `description`, `parent`, `type_id`, `currency`, `tax`, `cash_account`, `reconcile`, `system`, `active`)
-                        VALUES
-                        (1,'120','Accounts Receivable',NULL,0,1,'',NULL,0,0,1,1),
-                        (2,'140','Inventory',NULL,0,3,'',NULL,0,0,1,1),
-                        (3,'150','Office Equipment',NULL,0,2,'',NULL,0,0,1,1),
-                        (4,'151','Less Accumulated Depreciation on Office Equipment',NULL,0,2,'',NULL,0,0,1,1),
-                        (5,'160','Computer Equipment',NULL,0,2,'',NULL,0,0,1,1),
-                        (6,'161','Less Accumulated Depreciation on Computer Equipment',NULL,0,2,'',NULL,0,0,1,1),
-                        (7,'090','Petty Cash',NULL,0,6,'',NULL,1,1,0,1),
-                        (8,'200','Accounts Payable',NULL,0,7,'',NULL,0,0,1,1),
-                        (9,'205','Accruals',NULL,0,7,'',NULL,0,0,0,1),
-                        (10,'210','Unpaid Expense Claims',NULL,0,7,'',NULL,0,0,1,1),
-                        (11,'215','Wages Payable',NULL,0,7,'',NULL,0,0,1,1),
-                        (12,'216','Wages Payable - Payroll',NULL,0,7,'',NULL,0,0,0,1),
-                        (13,'220','Sales Tax',NULL,0,7,'',NULL,0,0,1,1),
-                        (14,'230','Employee Tax Payable',NULL,0,7,'',NULL,0,0,0,1),
-                        (15,'235','Employee Benefits Payable',NULL,0,7,'',NULL,0,0,0,1),
-                        (16,'236','Employee Deductions payable',NULL,0,7,'',NULL,0,0,0,1),
-                        (17,'240','Income Tax Payable',NULL,0,7,'',NULL,0,0,0,1),
-                        (18,'250','Suspense',NULL,0,7,'',NULL,0,0,0,1),
-                        (19,'255','Historical Adjustments',NULL,0,7,'',NULL,0,0,1,1),
-                        (20,'260','Rounding',NULL,0,7,'',NULL,0,0,1,1),
-                        (21,'835','Revenue Received in Advance',NULL,0,7,'',NULL,0,0,0,1),
-                        (22,'855','Clearing Account',NULL,0,7,'',NULL,0,0,0,1),
-                        (23,'290','Loan',NULL,0,9,'',NULL,0,0,0,1),
-                        (24,'500','Costs of Goods Sold',NULL,0,11,'',NULL,0,0,1,1),
-                        (25,'600','Advertising',NULL,0,12,'',NULL,0,0,0,1),
-                        (26,'605','Bank Service Charges',NULL,0,12,'',NULL,0,0,0,1),
-                        (27,'610','Janitorial Expenses',NULL,0,12,'',NULL,0,0,0,1),
-                        (28,'615','Consulting & Accounting',NULL,0,12,'',NULL,0,0,0,1),
-                        (29,'620','Entertainment',NULL,0,12,'',NULL,0,0,0,1),
-                        (30,'624','Postage & Delivary',NULL,0,12,'',NULL,0,0,0,1),
-                        (31,'628','General Expenses',NULL,0,12,'',NULL,0,0,0,1),
-                        (32,'632','Insurance',NULL,0,12,'',NULL,0,0,0,1),
-                        (33,'636','Legal Expenses',NULL,0,12,'',NULL,0,0,0,1),
-                        (34,'640','Utilities',NULL,0,12,'',NULL,0,0,1,1),
-                        (35,'644','Automobile Expenses',NULL,0,12,'',NULL,0,0,0,1),
-                        (36,'648','Office Expenses',NULL,0,12,'',NULL,0,0,1,1),
-                        (37,'652','Printing & Stationary',NULL,0,12,'',NULL,0,0,0,1),
-                        (38,'656','Rent',NULL,0,12,'',NULL,0,0,1,1),
-                        (39,'660','Repairs & Maintenance',NULL,0,12,'',NULL,0,0,0,1),
-                        (40,'664','Wages & Salaries',NULL,0,12,'',NULL,0,0,0,1),
-                        (41,'668','Payroll Tax Expense',NULL,0,12,'',NULL,0,0,0,1),
-                        (42,'672','Dues & Subscriptions',NULL,0,12,'',NULL,0,0,0,1),
-                        (43,'676','Telephone & Internet',NULL,0,12,'',NULL,0,0,0,1),
-                        (44,'680','Travel',NULL,0,12,'',NULL,0,0,0,1),
-                        (45,'684','Bad Debts',NULL,0,12,'',NULL,0,0,0,1),
-                        (46,'700','Depreciation',NULL,0,10,'',NULL,0,0,1,1),
-                        (47,'710','Income Tax Expense',NULL,0,12,'',NULL,0,0,0,1),
-                        (48,'715','Employee Benefits Expense',NULL,0,12,'',NULL,0,0,0,1),
-                        (49,'800','Interest Expense',NULL,0,12,'',NULL,0,0,0,1),
-                        (50,'810','Bank Revaluations',NULL,0,12,'',NULL,0,0,1,1),
-                        (51,'815','Unrealized Currency Gains',NULL,0,12,'',NULL,0,0,1,1),
-                        (52,'820','Realized Currency Gains',NULL,0,12,'',NULL,0,0,1,1),
-                        (53,'825','Sales Discount',NULL,0,12,'',NULL,0,0,1,1),
-                        (54,'400','Sales',NULL,0,13,'',NULL,0,0,0,1),
-                        (55,'460','Interest Income',NULL,0,13,'',NULL,0,0,0,1),
-                        (56,'470','Other Revenue',NULL,0,13,'',NULL,0,0,0,1),
-                        (57,'475','Purchase Discount',NULL,0,13,'',NULL,0,0,1,1),
-                        (58,'300','Owners Contribution',NULL,0,16,'',NULL,0,0,0,1),
-                        (59,'310','Owners Draw',NULL,0,16,'',NULL,0,0,0,1),
-                        (60,'320','Retained Earnings',NULL,0,16,'',NULL,0,0,1,1),
-                        (61,'330','Common Stock',NULL,0,16,'',NULL,0,0,0,1),
-                        (62,'092','Savings Account',NULL,0,6,'',NULL,1,1,0,1);";
-
-            $wpdb->query( $sql );
-        }
-
-        // check if banks exists
-        if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_ac_banks` LIMIT 0, 1" ) ) {
-            $sql = "INSERT INTO `{$wpdb->prefix}erp_ac_banks` (`id`, `ledger_id`, `account_number`, `bank_name`)
-                    VALUES  (1,7,'',''), (2,62,'012345689','ABC Bank');";
-
-            $wpdb->query( $sql );
-        }
-
-
-        //accounting
-        
         // check if classes exists
         if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_ac_chart_classes` LIMIT 0, 1" ) ) {
             $sql = "INSERT INTO `{$wpdb->prefix}erp_ac_chart_classes` (`id`, `name`)
