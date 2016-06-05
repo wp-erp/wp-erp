@@ -8,6 +8,16 @@ $tax_total     = erp_ac_get_tax_total();
 <div class="wrap erp-ac-income-satement-wrap">
 
 	<h1><?php _e( 'Accounting Reports: Income Statement', 'erp' ); ?></h1>
+
+	<p class="erp-ac-report-tax-date">
+	<?php 
+	$start = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_start_date() ) ) );
+	$end   = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_end_date() ) ) );
+	printf( '<i class="fa fa-calendar"></i> %1$s %2$s %3$s %4$s', __( 'From', 'accounting' ), $start, __( 'to', 'accounting' ),  $end); 
+	?>
+	</p>
+
+
 	<div class="metabox-holder">
 		<div class="postbox">
 			<h2 class="hndle"><span><?php _e( 'Income Statement', 'erp' ); ?></span></h2>
@@ -58,6 +68,7 @@ $tax_total     = erp_ac_get_tax_total();
 
 	</div>
 </div>
+
 
 
 
