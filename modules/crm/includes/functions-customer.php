@@ -2784,11 +2784,17 @@ function erp_crm_check_new_inbound_emails() {
     try {
         $imap = new \WeDevs\ERP\Imap( $mail_server, $port, $protocol, $username, $password, $authentication );
 
-        if ( isset( $imap_options['schedule'] ) && $imap_options['schedule'] == 'weekly' ) {
-            $date = date( "d M Y", strtotime( "-7 days" ) );
+        $last_checked = get_option( 'erp_crm_inbound_emails_last_checked', date( "d M Y" ) );
+
+        if ( isset( $imap_options['schedule'] ) && $imap_options['schedule'] == 'monthly' ) {
+            $date = date( "d M Y", strtotime( "{$last_checked} -1 month" ) );
+        } else if ( $imap_options['schedule'] == 'weekly' ) {
+            $date = date( "d M Y", strtotime( "{$last_checked} -1 week" ) );
         } else {
-            $date = date( "d M Y", strtotime( "-1 days" ) );
+            $date = date( "d M Y", strtotime( "{$last_checked} -1 days" ) );
         }
+
+        update_option( 'erp_crm_inbound_emails_last_checked', date( "d M Y" ) );
 
         $emails = $imap->get_emails( "Inbox", "UNSEEN SINCE \"$date\"" );
 
