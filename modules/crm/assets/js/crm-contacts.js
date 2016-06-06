@@ -390,6 +390,7 @@
                             search_name: this.saveSearchObj.searchName,
                             search_it_global: this.saveSearchObj.searchItGlobal,
                             search_fields: queryUrl,
+                            type: wpErpCrm.contact_type
                         },
                         _wpnonce : wpErpCrm.nonce
                     };
@@ -400,30 +401,68 @@
 
                     jQuery.post( wpErpCrm.ajaxurl, data, function( resp ) {
                         if ( resp.success ) {
+                            console.log( resp );
+
                             if ( ! self.isUpdate ) {
-                                contact.extraBulkAction.filterSaveAdvanceFiter.options = contact.extraBulkAction.filterSaveAdvanceFiter.options.filter( function( item ) {
+                                    console.log(  contact.extraBulkAction.filterSaveAdvanceFiter.options.length );
+                                if ( contact.extraBulkAction.filterSaveAdvanceFiter.options.length < 1 ) {
                                     if ( resp.data.global == '0' ) {
-                                        if ( item.id == 'own_search' ) {
-                                            item.options.push( {
+                                        contact.extraBulkAction.filterSaveAdvanceFiter.options.push( {
+                                            id: 'own_search',
+                                            name: 'Own Search',
+                                            options: [ {
                                                 id: resp.data.id,
                                                 text: resp.data.search_name,
                                                 value: resp.data.search_val,
-                                            });
-                                        }
-                                        return item;
+                                            } ]
+                                        }, {
+                                            id: 'global_search',
+                                            name: 'Global Search',
+                                            options: []
+                                        } );
                                     } else {
-                                        if ( item.id == 'global_search' ) {
-                                            item.options.push( {
+                                        contact.extraBulkAction.filterSaveAdvanceFiter.options.push({
+                                            id: 'global_search',
+                                            name: 'Global Search',
+                                            options: [ {
                                                 id: resp.data.id,
                                                 text: resp.data.search_name,
-                                                value: resp.data.search_val
-                                            });
-                                        }
-                                        return item;
+                                                value: resp.data.search_val,
+                                            } ]
+                                        }, {
+                                            id: 'own_search',
+                                            name: 'Own Search',
+                                            options: []
+                                        });
                                     }
-                                })
+                                } else {
+                                    contact.extraBulkAction.filterSaveAdvanceFiter.options = contact.extraBulkAction.filterSaveAdvanceFiter.options.filter( function( item ) {
+                                        if ( resp.data.global == '0' ) {
+
+                                            if ( item.id == 'own_search' ) {
+                                                item.options.push( {
+                                                    id: resp.data.id,
+                                                    text: resp.data.search_name,
+                                                    value: resp.data.search_val,
+                                                });
+                                            }
+                                            return item;
+                                        } else {
+                                            if ( item.id == 'global_search' ) {
+                                                item.options.push( {
+                                                    id: resp.data.id,
+                                                    text: resp.data.search_name,
+                                                    value: resp.data.search_val
+                                                });
+                                            }
+                                            return item;
+                                        }
+                                    });
+                                }
 
                                 self.isNewSave = false;
+                                self.saveSearchObj.searchName     = '';
+                                self.saveSearchObj.searchItGlobal = false;
 
                                 setTimeout( function() {
                                     $('select#erp-select-save-advance-filter').val( resp.data.id ).trigger('change');
@@ -511,6 +550,7 @@
             ready: function() {
                 this.renderFilterFromUrl();
                 this.isUpdateSaveSearch = ( wperp.erpGetParamByName('filter_save_filter', window.location.search ) ) ? true : false;
+                this.showHideSegment = ( this.ifHasAnyFilter() ) ? true : false;
             },
 
             events: {

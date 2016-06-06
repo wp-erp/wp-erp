@@ -67,9 +67,9 @@ function erp_get_peoples( $args = [] ) {
             $type_sql = ( $type != 'all' ) ? "and `name` = '" . $type ."'" : '';
         }
 
-        $wrapper_select = "SELECT *";
+        $wrapper_select = "SELECT * FROM";
 
-        $sql['select'][] = "FROM ( SELECT people.id, people.user_id, people.company, people.created_by, people.created, COALESCE( people.email, users.user_email ) AS email,
+        $sql['select'][] = "( SELECT people.id, people.user_id, people.company, people.created_by, people.created, COALESCE( people.email, users.user_email ) AS email,
                 COALESCE( people.website, users.user_url ) AS website,";
 
         $sql['join'][] = "LEFT JOIN $users_tb AS users ON people.user_id = users.ID";

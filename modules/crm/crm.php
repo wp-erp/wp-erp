@@ -235,7 +235,7 @@ class Customer_Relationship {
             $localize_script['contact_type']      = 'contact';
             $localize_script['life_stages']       = erp_crm_get_life_stages_dropdown_raw();
             $localize_script['searchFields']      = erp_crm_get_serach_key( $hook );
-            $localize_script['saveAdvanceSearch'] = erp_crm_get_save_search_item();
+            $localize_script['saveAdvanceSearch'] = erp_crm_get_save_search_item( [ 'type' => 'contact' ] );
 
             $country = \WeDevs\ERP\Countries::instance();
             wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
@@ -248,7 +248,7 @@ class Customer_Relationship {
             $localize_script['contact_type']      = 'company';
             $localize_script['life_stages']       = erp_crm_get_life_stages_dropdown_raw();
             $localize_script['searchFields']      = erp_crm_get_serach_key( $hook );
-            $localize_script['saveAdvanceSearch'] = erp_crm_get_save_search_item();
+            $localize_script['saveAdvanceSearch'] = erp_crm_get_save_search_item( [ 'type' => 'company' ] );
             $country = \WeDevs\ERP\Countries::instance();
             wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
         }

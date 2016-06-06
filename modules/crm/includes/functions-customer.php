@@ -1853,10 +1853,10 @@ function erp_crm_insert_save_search( $data ) {
 function erp_crm_get_save_search_item( $args = [] ) {
 
     $defaults = [
-        'id'      => 0,
-        'user_id' => get_current_user_id(),
-        'global' => 1,
-        'groupby' => 'global',
+        'id'         => 0,
+        'user_id'    => get_current_user_id(),
+        'type'       => '',
+        'groupby'    => 'global',
         'option_key' => 'id'
     ];
 
@@ -1867,9 +1867,13 @@ function erp_crm_get_save_search_item( $args = [] ) {
     }
 
     $results = [];
-    $search_keys = WeDevs\ERP\CRM\Models\SaveSearch::where( 'user_id', '=',  $args['user_id'] )
-                ->orWhere('global', '=', $args['global']  )
-                ->get()
+    $search_keys = WeDevs\ERP\CRM\Models\SaveSearch::where( 'user_id', '=',  $args['user_id'] );
+
+    if ( isset( $args['type'] ) && !empty( $args['type'] ) ) {
+        $search_keys = $search_keys->where( 'type', $args['type'] );
+    }
+
+    $search_keys = $search_keys->get()
                 ->groupBy( $args['groupby'] )
                 ->toArray();
 
