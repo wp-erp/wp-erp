@@ -27,8 +27,11 @@ Vue.component('vtable', {
                                     +'<select v-if="( extraActions.type == \'select\')" name="{{ extraActions.name }}" id="{{ extraActions.id }}" class="v-select-field {{ extraActions.class }}" style="width:200px;">'
                                         +'<option v-for="bulkOption in extraActions.options" value="{{ bulkOption.id }}">{{ bulkOption.text }}</option>'
                                     +'</select>'
-                                    +'<select v-if="( extraActions.type == \'select_optgroup\')" name="{{ extraActions.name }}" id="{{ extraActions.id }}" class="v-select-field {{ extraActions.class }}" style="width:200px;">'
-                                        + '<optgroup v-for="bulkOptionGroup in extraActions.options" label="bulkOptionGroup.optgroup">'
+                                    +'<select v-if="( extraActions.type == \'select_optgroup\')" name="{{ extraActions.name }}" id="{{ extraActions.id }}" class="v-select-field {{ extraActions.class }}" data-placeholder="{{ extraActions.placeholder }}" style="width:200px;">'
+                                        + '<template v-if="extraActions.default">'
+                                            + '<option value="{{ extraActions.default.id }}">{{ extraActions.default.text }}</option>'
+                                        + '</template>'
+                                        + '<optgroup v-for="bulkOptionGroup in extraActions.options" label="{{ bulkOptionGroup.name }}">'
                                             +'<option v-for="bulkOption in bulkOptionGroup.options" value="{{ bulkOption.id }}">{{ bulkOption.text }}</option>'
                                         + '</optgroup>'
                                     +'</select>'
@@ -441,6 +444,7 @@ Vue.component('vtable', {
 
         handleExtraBulkAction: function() {
             var data = jQuery.extend( {}, this.extraBulkActionData, this.extraBulkActionSelectData );
+            this.$dispatch('vtable:extra-bulk-action', data, this.checkboxItems );
             this.additionalParams = jQuery.extend( true, this.additionalParams, data );
             this.fetchData();
         },

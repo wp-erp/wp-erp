@@ -261,96 +261,116 @@
         margin: 15px 0px;
     }
 
-    .erp-advance-search-filters {
-        margin: 20px 0px;
+    #erp-contact-advance-search-segment {
+        margin: 15px 0px;
 
-        .erp-advance-search-or-wrapper {
-            .add-filter {
-                float:left;
-                margin-right: 9px;
-                height: 30px;
-                margin-top: 1px;
-            }
+        .erp-advance-search-filters {
+            padding: 15px;
+            background: #fff;
 
-            .filter-item {
-                float:left;
-                margin-right: 6px;
-                border: 1px solid #e5e5e5;
-                -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
-                -moz-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
-                -ms-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
-                box-shadow: 0 1px 1px rgba(0,0,0,0.04);
-                background-color: #fff;
-                margin-bottom: 9px;
+            .erp-advance-search-or-wrapper {
+                .add-filter {
+                    float:left;
+                    margin-right: 9px;
+                    height: 30px;
+                    margin-top: 6px;
+                }
 
-                .filter-content {
-                    input, select {
-                        vertical-align: middle;
-                        margin-right:5px;
-                    }
+                .filter-item {
+                    float:left;
+                    margin: 6px 8px 3px 0px;
+                    border: 1px solid #e5e5e5;
+                    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+                    -moz-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+                    -ms-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+                    box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+                    background-color: #fff;
 
-                    .filter-left {
-                        padding: 4px 10px;
-                        float: left;
-                    }
+                    .filter-content {
+                        input, select {
+                            vertical-align: middle;
+                            margin-right:5px;
+                        }
 
-                    .filter-right {
-                        float: left;
-                        padding: 10px;
-                        background: #F5F5F5;
-                        height: 100%;
-                        color: #fff;
+                        .filter-left {
+                            padding: 4px 10px;
+                            float: left;
+                        }
 
-                        a {
-                            color: #23282D;
+                        .filter-right {
+                            float: left;
+                            padding: 10px;
+                            background: #F5F5F5;
+                            height: 100%;
+                            color: #fff;
 
-                            &:first-child {
-                                border-right: 2px solid #fff;
-                                margin-right: 8px;
-                                padding-right: 8px;
+                            a {
+                                color: #23282D;
+
+                                &:first-child {
+                                    border-right: 2px solid #fff;
+                                    margin-right: 8px;
+                                    padding-right: 8px;
+                                }
                             }
                         }
                     }
-                }
 
-                .filter-details {
-                    .filter-left {
-                        padding: 6px 10px;
-                        float: left;
-                    }
-                    .filter-right {
-                        float: left;
-                        padding: 6px 10px;
-                        background: #F5F5F5;
-                        height: 100%;
-                        color: #fff;
+                    .filter-details {
+                        .filter-left {
+                            padding: 6px 10px;
+                            float: left;
+                            cursor:pointer;
+                        }
+                        .filter-right {
+                            float: left;
+                            padding: 6px 10px;
+                            background: #F5F5F5;
+                            height: 100%;
+                            color: #fff;
 
-                        a {
-                            color: #23282D;
+                            a {
+                                color: #23282D;
+                            }
                         }
                     }
+
                 }
 
             }
+            .or-divider {
+                position: relative;
+                text-align: center;
+                margin: 15px 0px;
 
+                span {
+                    position: absolute;
+                    top: -9px;
+                    left: 45%;
+                    font-size: 14px;
+                    background: #FFF;
+                    width: 50px;
+                    color: #afafaf;
+                }
+            }
         }
-        .or-divider {
-            position: relative;
-            text-align: center;
-            margin: 11px 0px;
+        .erp-advance-search-action-wrapper {
+            padding: 15px;
+            background: #fff;
+            border-top: 1px solid #eee;
 
-            hr {
-                border-top: 1px solid #D6D6D6;
+            button{
+                margin-right: 8px;
             }
 
-            span {
-                position: absolute;
-                top: -9px;
-                left: 45%;
-                font-size: 14px;
-                background: #F1F1F1;
-                width: 50px;
-                color: #afafaf;
+            .saveasnew-wrapper {
+                .save-search-name,
+                label {
+                    margin-right: 15px;
+                }
+                input[type="submit"] {
+                    margin-right:8px;
+                }
             }
         }
     }

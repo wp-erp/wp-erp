@@ -1853,10 +1853,11 @@ function erp_crm_insert_save_search( $data ) {
 function erp_crm_get_save_search_item( $args = [] ) {
 
     $defaults = [
-        'id'      => 0,
-        'user_id' => get_current_user_id(),
-        'global' => 1,
-        'groupby' => 'global'
+        'id'         => 0,
+        'user_id'    => get_current_user_id(),
+        'type'       => '',
+        'groupby'    => 'global',
+        'option_key' => 'id'
     ];
 
     $args  = wp_parse_args( $args, $defaults );
@@ -1866,16 +1867,22 @@ function erp_crm_get_save_search_item( $args = [] ) {
     }
 
     $results = [];
-    $search_keys = WeDevs\ERP\CRM\Models\SaveSearch::where( 'user_id', '=',  $args['user_id'] )
-                ->orWhere('global', '=', $args['global']  )
-                ->get()
+    $search_keys = WeDevs\ERP\CRM\Models\SaveSearch::where( 'user_id', '=',  $args['user_id'] );
+
+    if ( isset( $args['type'] ) && !empty( $args['type'] ) ) {
+        $search_keys = $search_keys->where( 'type', $args['type'] );
+    }
+
+    $search_keys = $search_keys->get()
                 ->groupBy( $args['groupby'] )
                 ->toArray();
 
     foreach ( $search_keys as $key => $search_values ) {
         if ( $key == 0 ) {
+            $results[$key]['id'] = __( 'own_search', 'erp' );
             $results[$key]['name'] = __( 'Own Search', 'erp' );
         } else {
+            $results[$key]['id'] = __( 'global_search', 'erp' );
             $results[$key]['name'] = __( 'Global Search', 'erp' );
         }
 
@@ -1883,6 +1890,7 @@ function erp_crm_get_save_search_item( $args = [] ) {
             $results[$key]['options'][] = [
                 'id' => $value['id'],
                 'text' => $value['search_name'],
+                'value' => $value['search_val']
             ];
         }
     }
@@ -2780,13 +2788,21 @@ function erp_crm_check_new_inbound_emails() {
     try {
         $imap = new \WeDevs\ERP\Imap( $mail_server, $port, $protocol, $username, $password, $authentication );
 
-        if ( isset( $imap_options['schedule'] ) && $imap_options['schedule'] == 'weekly' ) {
-            $date = date( "d M Y", strtotime( "-7 days" ) );
+        $last_checked = get_option( 'erp_crm_inbound_emails_last_checked', date( "d M Y" ) );
+
+        if ( isset( $imap_options['schedule'] ) && $imap_options['schedule'] == 'monthly' ) {
+            $date = date( "d M Y", strtotime( "{$last_checked} -1 month" ) );
+        } else if ( $imap_options['schedule'] == 'weekly' ) {
+            $date = date( "d M Y", strtotime( "{$last_checked} -1 week" ) );
         } else {
-            $date = date( "d M Y", strtotime( "-1 days" ) );
+            $date = date( "d M Y", strtotime( "{$last_checked} -1 days" ) );
         }
 
+        update_option( 'erp_crm_inbound_emails_last_checked', date( "d M Y" ) );
+
         $emails = $imap->get_emails( "Inbox", "UNSEEN SINCE \"$date\"" );
+
+        do_action( 'erp_crm_new_inbound_emails', $emails );
 
         $email_regexp = '([a-z0-9]+[.][0-9]+[.][0-9]+[.][r][1|2])@' . $_SERVER['HTTP_HOST'];
 

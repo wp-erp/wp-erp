@@ -1,9 +1,6 @@
 <?php
 global $current_screen;
 
-$advance_search_id =  isset( $_GET['erp_save_search' ] ) ? $_GET['erp_save_search' ] : 0;
-$if_advance_search = ( isset( $_GET['erp_save_search' ] ) && $_GET['erp_save_search' ] == 0 ) ? true : false;
-
 if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_contact' ] ) ) {
     $id = intval( $_GET['filter_assign_contact'] );
 
@@ -28,10 +25,12 @@ if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_co
         <?php if ( current_user_can( 'erp_crm_add_contact' ) ): ?>
             <a href="#" @click.prevent="addContact( 'contact', '<?php _e( 'Add New Contact', 'erp' ); ?>' )" id="erp-customer-new" class="erp-contact-new add-new-h2"><?php _e( 'Add New Contact', 'erp' ); ?></a>
         <?php endif ?>
+
+        <a href="#" @click.prevent="addSearchSegment()" id="erp-contact-search-segmen" class="erp-search-segment add-new-h2"><?php _e( 'Add Search Segment', 'erp' ); ?></a>
     </h2>
 
     <!-- Advance search filter vue component -->
-    <advance-search></advance-search>
+    <advance-search :show-hide-segment="showHideSegment"></advance-search>
 
     <!-- vue table for displaying contact list -->
     <vtable v-ref:vtable

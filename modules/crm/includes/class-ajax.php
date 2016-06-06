@@ -1054,21 +1054,24 @@ class Ajax_Handler {
             $this->send_error( __( 'Search name not found', 'erp' ) );
         }
 
+        if ( isset( $postdata['type'] ) && empty( $postdata['type'] ) ) {
+            $this->send_error( __( 'Contact Type not found', 'erp' ) );
+        }
+
         if ( isset( $postdata['search_fields'] ) && empty( $postdata['search_fields'] ) ) {
             $this->send_error( __( 'Search filters not found', 'erp' ) );
         }
 
         $search_fields = ( isset( $postdata['search_fields'] ) && !empty( $postdata['search_fields'] ) ) ? $postdata['search_fields'] : '';
 
-        var_dump( $postdata['search_it_global'] ); die();
-
-        if ( ! $query_string ) {
+        if ( ! $search_fields ) {
             $this->send_error( __( 'Query not found', 'erp' ) );
         }
 
         $data = [
-            'id'          => isset( $erp_update_save_search_id ) ? $erp_update_save_search_id : 0,
+            'id'          => $postdata['id'] ? $postdata['id'] : 0,
             'user_id'     => get_current_user_id(),
+            'type'        => $postdata['type'],
             'global'      => ( $postdata['search_it_global'] == 'true' ) ? 1 : 0,
             'search_name' => $postdata['search_name'],
             'search_val'  => $search_fields,
@@ -1091,7 +1094,7 @@ class Ajax_Handler {
      * @return json object
      */
     public function get_save_search() {
-        $this->verify_nonce( 'wp-erp-crm-save-search' );
+        $this->verify_nonce( 'wp-erp-crm-nonce' );
 
         $id = ( isset( $_POST['search_id'] ) && ! empty( $_POST['search_id'] ) ) ? $_POST['search_id'] : 0;
 
