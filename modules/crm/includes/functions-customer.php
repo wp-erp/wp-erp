@@ -2792,6 +2792,8 @@ function erp_crm_check_new_inbound_emails() {
 
         $emails = $imap->get_emails( "Inbox", "UNSEEN SINCE \"$date\"" );
 
+        do_action( 'erp_crm_new_inbound_emails', $emails );
+
         $email_regexp = '([a-z0-9]+[.][0-9]+[.][0-9]+[.][r][1|2])@' . $_SERVER['HTTP_HOST'];
 
         $filtered_emails = [];
