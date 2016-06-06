@@ -1058,8 +1058,6 @@ class Ajax_Handler {
             $this->send_error( __( 'Search filters not found', 'erp' ) );
         }
 
-        var_dump( $postdata );
-        die();
 
         $search_fields = ( isset( $postdata['search_fields'] ) && !empty( $postdata['search_fields'] ) ) ? $postdata['search_fields'] : '';
 
@@ -1068,7 +1066,7 @@ class Ajax_Handler {
         }
 
         $data = [
-            'id'          => isset( $postdata['id'] ) ? $postdata['id'] : 0,
+            'id'          => $postdata['id'] ? $postdata['id'] : 0,
             'user_id'     => get_current_user_id(),
             'global'      => ( $postdata['search_it_global'] == 'true' ) ? 1 : 0,
             'search_name' => $postdata['search_name'],

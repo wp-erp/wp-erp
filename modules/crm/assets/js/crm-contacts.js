@@ -207,6 +207,10 @@
                 id: 'erp-select-save-advance-filter',
                 class: 'erp-save-advance-filter',
                 placeholder: 'Select a save filter',
+                default: {
+                    id: '',
+                    text: '--Select save filter --'
+                },
                 options: wpErpCrm.saveAdvanceSearch
             }
 
@@ -293,31 +297,36 @@
         });
 
         Vue.component( 'advance-search', {
+            props: [ 'showHideSegment' ],
+
             mixins: [ mixin ],
 
             template:
-                '<div class="erp-advance-search-filters">'
-                    + '<div class="erp-advance-search-or-wrapper" v-for="(index,fieldItem) in fields">'
-                        + '<div class="or-divider" v-show="( this.fields.length > 1 ) && ( index != 0)">'
-                            + '<hr>'
-                            + '<span>Or</span>'
+                '<div id="erp-contact-advance-search-segment" v-show="showHideSegment">'
+                    +'<div class="erp-advance-search-filters">'
+                        + '<div class="erp-advance-search-or-wrapper" v-for="(index,fieldItem) in fields">'
+                            + '<div class="or-divider" v-show="( this.fields.length > 1 ) && ( index != 0)">'
+                                + '<hr>'
+                                + '<span>Or</span>'
+                            + '</div>'
+                            + '<button :disabled="editableMode" class="add-filter button" @click.prevent="addNewFilter( index )"><i class="fa fa-filter" aria-hidden="true"></i> Add Filter</button>'
+                            + '<filter-item :editable-mode=editableMode :field=field :field-index=fieldIndex :index=index v-for="( fieldIndex, field ) in fieldItem"></filter-item>'
+                            + '<button :disabled="editableMode" class="add-filter button" v-show="( this.fields[index].length > 0 && index == this.fields.length-1 )" @click.prevent="addNewOrFilter( index )"><i class="fa fa-filter" aria-hidden="true"></i> Or Filter</button>'
+                            + '<div class="clearfix"></div>'
                         + '</div>'
-                        + '<button :disabled="editableMode" class="add-filter button button-primary" @click.prevent="addNewFilter( index )"><i class="fa fa-filter" aria-hidden="true"></i> Add Filter</button>'
-                        + '<filter-item :editable-mode=editableMode :field=field :field-index=fieldIndex :index=index v-for="( fieldIndex, field ) in fieldItem"></filter-item>'
-                        + '<button :disabled="editableMode" class="add-filter button" v-show="( this.fields[index].length > 0 && index == this.fields.length-1 )" @click.prevent="addNewOrFilter( index )"><i class="fa fa-filter" aria-hidden="true"></i> Or Filter</button>'
-                        + '<div class="clearfix"></div>'
                     + '</div>'
-                + '</div>'
-                + '<div class="erp-advance-search-save-wrapper" v-if="ifHasAnyFilter()">'
-                    + '<div class="saveasnew-wrapper" v-show="isNewSave">'
-                        + '<input type="text" class="save-search-name" v-model="saveSearchObj.searchName">'
-                        + '<input type="checkbox" class="save-search-global" v-model="saveSearchObj.searchItGlobal"> Make it global filter'
-                        + '<input type="submit" class="button button-primary" v-if="isUpdateSaveSearch && !isNewSave" @click.prevent="searchSave(\'update\')" value="Update">'
-                        + '<input type="submit" class="button button-primary" v-if="!isUpdateSaveSearch && isNewSave" @click.prevent="searchSave(\'save\')" value="Save">'
-                        + '<input type="submit" class="button" @click.prevent="cancelSave()" value="Cancel">'
+                    + '<div class="erp-advance-search-action-wrapper" v-if="ifHasAnyFilter()">'
+                        + '<div class="saveasnew-wrapper" v-show="isNewSave">'
+                            + '<input type="text" class="save-search-name" v-model="saveSearchObj.searchName" placeholder="Search name..">'
+                            + '<label for="save-search-global"><input type="checkbox" id="save-search-global" class="save-search-global" v-model="saveSearchObj.searchItGlobal"> Make it global filter</label>'
+                            + '<input type="submit" class="button button-primary" v-if="isUpdate" @click.prevent="searchSave(\'update\')" value="Update">'
+                            + '<input type="submit" class="button button-primary" v-if="!isUpdate" @click.prevent="searchSave(\'save\')" value="Save">'
+                            + '<input type="submit" class="button" v-if="isUpdate" @click.prevent="cancelSave(\'update\')" value="Cancel">'
+                            + '<input type="submit" class="button" v-if="!isUpdate" @click.prevent="cancelSave(\'save\')" value="Cancel">'
+                        + '</div>'
+                        + '<button class="button button-primary" v-show="!isNewSave" @click.prevent="saveAsNew()">Save new Segment</button>'
+                        + '<button class="button button" v-show="isUpdateSaveSearch && !isNewSave" @click.prevent="updateSave()">Update this Segment</button>'
                     + '</div>'
-                    + '<button class="button button-primary" v-show="!isNewSave" @click.prevent="saveAsNew()">Save new Segment</button>'
-                    + '<button class="button button" v-show="isUpdateSaveSearch && !isNewSave" @click.prevent="updateSave()">Update this Segment</button>'
                 + '</div>',
 
             data: function() {
@@ -328,6 +337,7 @@
                         ]
                     ],
                     isNewSave: false,
+                    isUpdate: false,
                     isUpdateSaveSearch: false,
                     saveSearchObj: {
                         searchName: '',
@@ -338,8 +348,15 @@
 
             methods: {
 
-                cancelSave: function() {
-                    this.isNewSave = false;
+                cancelSave: function( flag ) {
+                    if ( flag == 'save' ) {
+                        this.isNewSave = false;
+                    } else {
+                        this.isNewSave = false;
+                        this.isUpdateSaveSearch = true;
+                    }
+                    this.saveSearchObj.searchName = '';
+                    this.saveSearchObj.searchItGlobal = false;
                 },
 
                 updateSave: function() {
@@ -352,11 +369,11 @@
 
                     $.post( wpErpCrm.ajaxurl, data, function( resp ) {
                         if ( resp.success ) {
-                            self.saveSearchObj.searchName     = resp.data.search_name;
-                            self.saveSearchObj.searchItGlobal = ( resp.data.global == 0 ) ? false : true;
-
                             self.isUpdateSaveSearch = false;
                             self.isNewSave = true;
+                            self.isUpdate = true;
+                            self.saveSearchObj.searchName     = resp.data.search_name;
+                            self.saveSearchObj.searchItGlobal = ( resp.data.global == 0 ) ? false : true;
                         } else {
                             alert( resp.data );
                         };
@@ -369,13 +386,13 @@
                     var data = {
                         action : 'erp_crm_create_new_save_search',
                         form_data : {
-                            id: ( flag == 'save' ) ? 0 : wperp.erpGetParamByName( 'filter_save_filter', window.location.search ),
+                            id: ( flag == 'save' ) ? '0' : wperp.erpGetParamByName( 'filter_save_filter', window.location.search ),
                             search_name: this.saveSearchObj.searchName,
                             search_it_global: this.saveSearchObj.searchItGlobal,
                             search_fields: queryUrl,
                         },
                         _wpnonce : wpErpCrm.nonce
-                    }
+                    };
 
                     if ( ! queryUrl ) {
                         alert( 'You have not any filter for saving' );
@@ -383,15 +400,14 @@
 
                     jQuery.post( wpErpCrm.ajaxurl, data, function( resp ) {
                         if ( resp.success ) {
-
-                            if (  self.isNewSave ) {
-
+                            if ( ! self.isUpdate ) {
                                 contact.extraBulkAction.filterSaveAdvanceFiter.options = contact.extraBulkAction.filterSaveAdvanceFiter.options.filter( function( item ) {
                                     if ( resp.data.global == '0' ) {
                                         if ( item.id == 'own_search' ) {
                                             item.options.push( {
                                                 id: resp.data.id,
-                                                text: resp.data.search_name
+                                                text: resp.data.search_name,
+                                                value: resp.data.search_val,
                                             });
                                         }
                                         return item;
@@ -399,7 +415,8 @@
                                         if ( item.id == 'global_search' ) {
                                             item.options.push( {
                                                 id: resp.data.id,
-                                                text: resp.data.search_name
+                                                text: resp.data.search_name,
+                                                value: resp.data.search_val
                                             });
                                         }
                                         return item;
@@ -407,11 +424,22 @@
                                 })
 
                                 self.isNewSave = false;
-                            } else {
 
-                                // self.isUpdateSaveSearch = false;
+                                setTimeout( function() {
+                                    $('select#erp-select-save-advance-filter').val( resp.data.id ).trigger('change');
+                                },500);
+
+                            } else {
+                                jQuery('#erp-select-save-advance-filter').find('option[value="'+ resp.data.id +'"]').text( resp.data.search_name );
+                                setTimeout( function() {
+                                    $('select#erp-select-save-advance-filter').trigger('change');
+                                    contact.setAdvanceFilter();
+                                },500);
+
+                                self.isNewSave = false;
+                                self.isUpdateSaveSearch = true;
                             }
-                            $('select#erp-select-save-advance-filter').val(resp.data.id.toString()).trigger('change');
+
                         } else {
                             alert( resp.data );
                         };
@@ -421,6 +449,7 @@
 
                 saveAsNew: function() {
                     this.isNewSave = true;
+                    this.isUpdate = false;
                 },
 
                 ifHasAnyFilter: function() {
@@ -514,6 +543,7 @@
                         this.fields = fields;
                         this.isUpdateSaveSearch = true;
                     }
+                    this.editableMode = false;
                 },
 
                 isEditableMode: function( isEditable ) {
@@ -583,7 +613,8 @@
                     btnId: 'search-submit',
                     placeholder: ( wpErpCrm.contact_type == 'company' ) ? 'Search Compnay' : 'Search Contact',
                 },
-                isRequestDone: false
+                isRequestDone: false,
+                showHideSegment: false
             },
 
             methods: {
@@ -1072,6 +1103,10 @@
                         placeholder: $(this).attr('data-placeholder'),
                         allowClear: true
                     })
+                },
+
+                addSearchSegment: function() {
+                    this.showHideSegment = !this.showHideSegment;
                 }
             },
 
@@ -1084,6 +1119,10 @@
                 this.initSearchCrmAgent();
                 this.setContactOwnerSearchValue();
                 this.setAdvanceFilter();
+
+                if ( wperp.erpGetParamByName('filter_save_filter', window.location.search ) ) {
+                    this.showHideSegment = true;
+                }
             },
 
             events: {
