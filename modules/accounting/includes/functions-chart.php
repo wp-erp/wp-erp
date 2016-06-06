@@ -77,7 +77,7 @@ function erp_ac_get_individual_bank_balance( $bank_id ) {
     $get_journals = \WeDevs\ERP\Accounting\Model\Journal::ofledger( $bank_id )->get()->toArray();
     $debit        = array_sum( wp_list_pluck( $get_journals, 'debit' ) );
     $credit       = array_sum( wp_list_pluck( $get_journals, 'credit' ) );
-    $total_amount = $credit - $debit;
+    $total_amount = $debit - $credit;
 
     return erp_ac_get_price( $total_amount );
 }

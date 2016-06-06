@@ -91,7 +91,6 @@ final class WeDevs_ERP {
      * within our plugin.
      */
     public function __construct() {
-
         // dry check on older PHP versions, if found deactivate itself with an error
         register_activation_hook( __FILE__, array( $this, 'auto_deactivate' ) );
 

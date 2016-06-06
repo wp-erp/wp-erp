@@ -11,7 +11,8 @@
 
 	$start = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_start_date() ) ) );
 	$end   = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_end_date() ) ) );
-	printf( '<i class="fa fa-calendar"></i> %1$s %2$s %3$s %4$s', __( 'From', 'accounting' ), $start, __( 'to', 'accounting' ),  $end); ?>
+	printf( '<i class="fa fa-calendar"></i> %1$s %2$s %3$s %4$s', __( 'From', 'accounting' ), $start, __( 'to', 'accounting' ),  $end); 
+	?>
 	</p>
 	<table class="wp-list-table widefat fixed striped erp-ac-tax-report-table">
 		<thead>

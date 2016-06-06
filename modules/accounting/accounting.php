@@ -48,14 +48,7 @@ class Accounting {
      * within our plugin.
      */
     public function __construct() {
-
-        // dry check on older PHP versions, if found deactivate itself with an error
-        register_activation_hook( __FILE__, array( $this, 'auto_deactivate' ) );
-
-        // bail out if older PHP versions
-        if ( ! $this->is_supported_php() ) {
-            return;
-        }
+        $this->deactive_accounting_module();
 
          // Define constants
         $this->define_constants();
@@ -64,7 +57,7 @@ class Accounting {
         $this->includes();
 
         // installation
-        register_activation_hook( __FILE__, array( $this, 'activate' ) );
+        //register_activation_hook( __FILE__, array( $this, 'activate' ) );
 
         // Localize our plugin
         add_action( 'init', array( $this, 'localization_setup' ) );
@@ -78,200 +71,36 @@ class Accounting {
         //add_action( 'admin_init', array( $this, 'test' ) );
     }
 
-    function faker() {
-        $results = [];
+    function deactive_accounting_module() {
+        /**
+         * Detect plugin. For use on Front End only.
+         */
+        include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 
-        $fake_customers = [
-            [
-                'first_name'  => 'Baker',
-                'last_name'   => 'Vingle',
-                'email'       => 'InezBSimpson@inbound.plus',
-                'company'     => 'Payless Cashways',
-                'type'        => 'customer',
-                'street_1'    => 'Dhanmondi',
-                'city'        => 'Dhaka',
-                'state'       => 'Bangladesh',
-            ],
-            [
-                'first_name'  => 'Matthews',
-                'last_name'   => 'Eugene',
-                'email'       => 'EugeneMMatthews@inbound.plus',
-                'company'     => 'The Original House of Pies',
-                'type'        => 'customer',
-                'street_1'    => 'Dhanmondi',
-                'city'        => 'Dhaka',
-                'state'       => 'Bangladesh',
-            ],
-            [
-                'first_name'  => 'William',
-                'last_name'   => 'Robertson',
-                'email'       => 'WilliamCRobertson@inbound.plus',
-                'company'     => 'Back To Basics Chiropractic Clinic',
-                'type'        => 'customer',
-                'street_1'    => 'Dhanmondi',
-                'city'        => 'Dhaka',
-                'state'       => 'Bangladesh',
-            ]
-        ];
-
-        foreach ( $fake_customers as $customer ) { 
-            $results[] = erp_insert_people( $customer );
-        }
-
-        return $results;
-    }
-
-    function faker_vendors() {
-        $results = [];
-
-        $fake_vendors = [
-            [
-                'first_name'  => 'Deborah',
-                'last_name'   => 'Iverson',
-                'email'       => 'DeborahRIverson@inbound.plus',
-                'company'     => 'Endicott Johnson',
-                'type'        => 'vendor',
-                'street_1'    => 'Mohammadpur',
-                'city'        => 'Dhaka',
-                'state'       => 'Bangladesh',
-            ],
-            [
-                'first_name'  => 'Linda',
-                'last_name'   => 'Pinkston',
-                'email'       => 'LindaJPinkston@inbound.plus',
-                'company'     => 'Country Club Markets',
-                'type'        => 'vendor',
-                'street_1'    => 'Mohammadpur',
-                'city'        => 'Dhaka',
-                'state'       => 'Bangladesh',
-            ],
-            [
-                'first_name'  => 'Raymond',
-                'last_name'   => 'Reynolds',
-                'email'       => 'RaymondAReynolds@inbound.plus',
-                'company'     => 'Atlas Architectural Designs',
-                'type'        => 'vendor',
-                'street_1'    => 'Mohammadpur',
-                'city'        => 'Dhaka',
-                'state'       => 'Bangladesh',
-            ]
-        ];
-
-        foreach ( $fake_vendors as $vendor ) { 
-            $results[] = erp_insert_people( $vendor );
-        }
-
-        return $results;
-    }
-
-    function test() {
-        $args       = array( 'type' => 'vendor' );
-        $vendors    = erp_get_peoples( $args );
-        $vendors_id = wp_list_pluck( $vendors, 'id' );
-        
-        if ( ! count( $vendors_id ) ) {
-            $vendors_id = $this->faker_vendors();
-        } 
-
-        $sales_type     = ['invoice', 'payment'];
-        $sales_ledger   = [53, 54, 55];
-        $expense_type   = ['payment_voucher', 'vendor_credit'];
-        $bank_accounts  = [7, 60];
-
-        // insert some expense data
-        for ($i = 0; $i <= 50; $i++) {
-            $form_type   = $expense_type[ array_rand( $expense_type ) ];
-            $trans_total = rand( 100, 20000 );
-            $user_id     = $vendors_id[ array_rand( $vendors_id ) ];
-
-            erp_ac_insert_transaction( [
-                'type'            => 'expense',
-                'form_type'       => $form_type,
-                'account_id'      => ( $form_type == 'vendor_credit' ) ? 8 : $bank_accounts[ array_rand( $bank_accounts ) ],
-                'status'          => 'closed',
-                'user_id'         => $user_id,
-                'billing_address' => 'Dhanmondi, Dhaka',
-                'ref'             => '',
-                'issue_date'      => date( 'Y-m-d', strtotime( '-' . $i . ' days' ) ),
-                'due_date'        => ( $form_type == 'vendor_credit' ) ? date( 'Y-m-d', strtotime( '+' . $i + 7 . ' days' ) ) : null,
-                'summary'         => '',
-                'total'           => $trans_total,
-                'trans_total'     => $trans_total,
-                'files'           => '',
-                'partial_id'      => [],
-                'currency'        => '',
-                'created_by'      => 1,
-                'created_at'      => current_time( 'mysql' )
-            ], [
-                [
-                    'account_id'  => rand( 24, 49 ),
-                    'description' => 'Some random description',
-                    'qty'         => 1,
-                    'unit_price'  => $trans_total,
-                    'discount'    => 0,
-                    'line_total'  => $trans_total,
-                ]
-            ] );
-        }
-
-        $args = array( 'type'   => 'customer' );
-
-        $peoples    = erp_get_peoples( $args );
-        $peoples_id = wp_list_pluck( $peoples, 'id' );
-        
-        if ( ! count( $peoples ) ) {
-            $peoples_id = $this->faker();
-        } 
- 
-        $sales_ledger  = [53, 54, 55];
-        $data_count    = 50;
-        $expense_type  = ['payment_voucher', 'vendor_credit'];
-        $sales_type    = ['invoice', 'payment'];
-        $bank_accounts = [7, 60];
-        
-        for ($i = 0; $i < $data_count; $i++) {
-            $form_type   = $sales_type[ array_rand( $sales_type ) ];
-            $trans_total = rand( 100, 20000 );
-            $user_id     = $peoples_id[ array_rand( $peoples_id ) ]; 
+        // check for plugin using plugin name
+        if ( is_plugin_active( 'accounting/accounting.php' ) ) {
+            $accounting = dirname( WPERP_PATH ) . '/accounting/accounting.php';
+            deactivate_plugins( $accounting );
             
-            erp_ac_insert_transaction( [
-                'id'              => '',
-                'type'            => 'sales',
-                'form_type'       => $form_type,
-                'account_id'      => ( $form_type == 'invoice' ) ? 1 : $bank_accounts[ array_rand( $bank_accounts ) ],
-                'status'          => 'closed',
-                'user_id'         => $user_id,
-                'billing_address' => 'Dhanmondi, Dhaka',
-                'ref'             => '',
-                'issue_date'      => date( 'Y-m-d', strtotime( '-' . $i . ' days' ) ),
-                'due_date'        => ( $form_type == 'invoice' ) ? date( 'Y-m-d', strtotime( '+' . $i + 7 . ' days' ) ) : null,
-                'summary'         => '',
-                'total'           => $trans_total,
-                'trans_total'     => $trans_total,
-                'files'           => '',
-                'currency'        => erp_get_option('erp_ac_currency'),
-                'created_by'      => 1,
-                'created_at'      => current_time( 'mysql' ),
-                'partial_id'      => [],
-                'items_id'        => [$i => ''],
-                'journals_id'     => [$i => ''],
-                'line_total'      => [$trans_total]
-            ], [
-                [
-                    'item_id'   => '',
-                    'journal_id' => '',
-                    'account_id'  => $sales_ledger[ array_rand( $sales_ledger ) ],
-                    'description' => 'Some random description',
-                    'qty'         => 1,
-                    'unit_price'  => $trans_total,
-                    'discount'    => 0,
-                    'line_total'  => $trans_total,
-                ]
-            ] );
-        }
-
-        
+            activate_plugins( WPERP_FILE );
+            wp_safe_redirect( admin_url( '/plugins.php' ), 302 );
+            exit;            
+        } 
     }
+
+    // function deactive_accounting_module() {
+    //     /**
+    //      * Detect plugin. For use on Front End only.
+    //      */
+    //     include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+
+    //     // check for plugin using plugin name
+    //     if ( class_exists( 'WeDevs_ERP_Accounting' ) ) {
+    //         $accounting = dirname( WPERP_PATH ) . '/accounting/accounting.php';
+    //         deactivate_plugins( $accounting );
+    //     } 
+    // }
+
 
     /**
      * Plugin activation
@@ -290,39 +119,6 @@ class Accounting {
      */
     public function localization_setup() {
         load_plugin_textdomain( 'accounting', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-    }
-
-    /**
-     * Check if the PHP version is supported
-     *
-     * @return bool
-     */
-    public function is_supported_php() {
-        if ( version_compare( PHP_VERSION, $this->min_php, '<=' ) ) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Bail out if the php version is lower than
-     *
-     * @return void
-     */
-    function auto_deactivate() {
-        if ( $this->is_supported_php() ) {
-            return;
-        }
-
-        deactivate_plugins( basename( __FILE__ ) );
-
-        $error = __( '<h1>An Error Occured</h1>', 'accounting' );
-        $error .= __( '<h2>Your installed PHP Version is: ', 'accounting' ) . PHP_VERSION . '</h2>';
-        $error .= __( '<p>The <strong>Accounting</strong> plugin requires PHP version <strong>', 'accounting' ) . $this->min_php . __( '</strong> or greater', 'accounting' );
-        $error .= __( '<p>The version of your PHP is ', 'accounting' ) . '<a href="http://php.net/supported-versions.php" target="_blank"><strong>' . __( 'unsupported and old', 'accounting' ) . '</strong></a>.';
-        $error .= __( 'You should update your PHP software or contact your host regarding this matter.</p>', 'accounting' );
-        wp_die( $error, __( 'Plugin Activation Error', 'accounting' ), array( 'response' => 200, 'back_link' => true ) );
     }
 
     /**

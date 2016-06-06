@@ -226,7 +226,7 @@ class Admin_Menu {
     public function page_reports() {
         $type   = isset( $_GET['type'] ) ? $_GET['type'] : '';
         $pagenum          = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
-        $limit            = 2;
+        $limit            = 20;
         $offset           = ( $pagenum - 1 ) * $limit;
 
 
@@ -237,10 +237,10 @@ class Admin_Menu {
 
             case 'sales-tax':
                 if ( isset( $_GET['action'] ) && intval( $_GET['id'] ) ) {
-                    $tax_id = $_GET['id'];
-                    $taxs = erp_ac_normarlize_tax_from_transaction( [ 'tax_id' => [$_GET['id']], 'offset'  => $offset, 'number' => $limit] );
-                    $taxs = $taxs['individuals'][$_GET['id']];
-                    $count= erp_ac_get_sales_tax_report_count( ['tax_id' => [$_GET['id']] ] );
+                    $tax_id  = $_GET['id'];
+                    $taxs    = erp_ac_normarlize_tax_from_transaction( [ 'tax_id' => [$_GET['id']], 'offset'  => $offset, 'number' => $limit] );
+                    $taxs    = $taxs['individuals'][$_GET['id']];
+                    $count   = erp_ac_get_sales_tax_report_count( ['tax_id' => [$_GET['id']] ] );
                     $taxinfo = erp_ac_get_tax_info();
                     
                     $template = dirname( __FILE__ ) . '/views/reports/tax/single-sales-tax.php';

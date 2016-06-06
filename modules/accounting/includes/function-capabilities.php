@@ -1,4 +1,6 @@
 <?php
+if ( !function_exists( 'erp_ac_get_manager_role' ) ) {
+
 
 /**
  * The manager role for HR employees
@@ -419,7 +421,7 @@ function erp_ac_view_other_journals() {
 }
 
 
- 
+}
 
 
 

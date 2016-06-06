@@ -125,9 +125,13 @@ class Logger {
     function new_transaction( $transaction_id, $args, $items ) {
         
         $people         = erp_get_people( $args['user_id'] );
-        $people         = $people ? $people : get_user_by( 'id', $args['user_id'] );
-        //var_dump( $people); die();
-        $name           = isset( $people->display_name ) ? $people->display_name : $people->first_name . ' ' . $people->last_name;
+        if ( is_wp_error( $people ) ) {
+            $name = '';
+        } else {
+            $people = $people ? $people : get_user_by( 'id', $args['user_id'] );
+            $name   = isset( $people->display_name ) ? $people->display_name : $people->first_name . ' ' . $people->last_name;
+        }
+        
         $page           = $args['type'] == 'sales' ? 'erp-accounting-customers' : 'erp-accounting-vendors';
         $component_page = $args['type'] == 'sales' ? 'erp-accounting-sales' : 'erp-accounting-expense';
         $user_url       = admin_url( 'admin.php?page=' . $page . '&action=view&id=' . $args['user_id'] );
@@ -204,14 +208,22 @@ class Logger {
      * @return void
      */
     public function update_customer( $fields ) {
-        $page      = $fields['type'] == 'vendor' ? 'erp-accounting-vendors' : 'erp-accounting-customers';
+        $page        = $fields['type'] == 'vendor' ? 'erp-accounting-vendors' : 'erp-accounting-customers';
         $customer_id = isset( $fields['id'] ) ? intval( $fields['id'] ) : 0;
-        $customer = (array) erp_get_people( $customer_id );
-        $component = $fields['type'] == 'vendor' ? __( 'vendor', 'accounting' ) : __( 'customer', 'accounting' );
+        $customer    = (array) erp_get_people( $customer_id );
+        $component   = $fields['type'] == 'vendor' ? __( 'vendor', 'accounting' ) : __( 'customer', 'accounting' );
 
         if ( $customer ) {
             unset( $customer['created_at'], $customer['updated_at'] );
         }
+        
+        if ( in_array( $fields['type'], $customer['types'] ) ) {
+            $customer['type'] = $fields['type'];
+        } else {
+            $customer['type'] = '';
+        }
+
+        unset( $customer['types'] );
 
         $changes = $this->get_array_diff( $fields, $customer );
 

@@ -41,7 +41,7 @@ $tax_total     = erp_ac_get_tax_total();
 					</tr>
 					<tr class="erp-ac-even">
 						<td><?php _e( 'Overhead ', 'erp' ); ?><span title="Selling, General and Administrative Expenses">(SG&A)</span></td>
-						<td><?php echo erp_ac_get_expense_url( erp_ac_get_price( $expense_total ) ); ?></td>
+						<td><?php echo erp_ac_get_price( $expense_total ); ?></td>
 					</tr>
 					<tr class="erp-ac-odd"> 
 						<td><strong><?php _e( 'Operating income', 'erp' ); ?></strong></td>
