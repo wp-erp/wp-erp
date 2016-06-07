@@ -50,49 +50,60 @@ $credit_total = 0.00;
         </thead>
 
         <tbody>
-            <?php if ( $charts ) { ?>
-
-                <?php foreach ($charts as $class) {  ?>
-                    <tr class="chart-head">
-                        <td colspan="3"><strong><?php echo $class['label'] ?></strong></td>
-                    </tr>
-
-                    <?php foreach ($class['ledgers'] as $ledger) {
+            <?php if ( $charts ) { 
+                    $report = 0;
+                    foreach ($charts as $class) {  
+                    
+                        foreach ($class['ledgers'] as $ledger) {
                         
-                        if ( $ledger->id == 1 ) {
-                            $debit  =  floatval( $ledger->debit ) - floatval( $ledger->credit );
-                            $credit = '0.00';
-                        } else {
-                            $debit        = floatval( $ledger->debit );
-                            $credit       = floatval( $ledger->credit );
-                        }
+                            if ( $ledger->id == 1 ) {
+                                $debit  =  floatval( $ledger->debit ) - floatval( $ledger->credit );
+                                $credit = '0.00';
+                            } else {
+                                $debit        = floatval( $ledger->debit );
+                                $credit       = floatval( $ledger->credit );
+                            }
 
-                        $new_balance = $debit - $credit;
+                            $new_balance = $debit - $credit;
 
-                        if ( $new_balance >= 0 ) {
-                            $debit = $new_balance;
-                            $credit = 0;
-                        } else {
-                            $credit = abs( $new_balance );
-                            $debit = 0;
-                        }
+                            if ( $new_balance >= 0 ) {
+                                $debit = $new_balance;
+                                $credit = 0;
+                            } else {
+                                $credit = abs( $new_balance );
+                                $debit = 0;
+                            }
 
-                        $debit_total  += $debit;
-                        $credit_total += $credit;
-                        $ledger_individul_url = admin_url( 'admin.php?page=erp-accounting-charts&action=view&id=' . $ledger->id );
+                            $debit_total  += $debit;
+                            $credit_total += $credit;
+                            $ledger_individul_url = admin_url( 'admin.php?page=erp-accounting-charts&action=view&id=' . $ledger->id );
+                            
+                            if ( $debit == 0 && $credit == 0 ) {
+                                continue;
+                            }
+                            $report = $report + 1;
+                            ?>
+                            <tr class="chart-head">
+                                <td colspan="3"><strong><?php echo $class['label'] ?></strong></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="<?php echo $ledger_individul_url; ?>"><?php printf( '&nbsp; &nbsp; &nbsp;%s (%s)', $ledger->name, $ledger->code ); ?></a>
+                                </td>
+                                <td class="col-price"><?php echo erp_ac_get_price( $debit ); ?></td>
+                                <td class="col-price"><?php echo erp_ac_get_price( $credit ); ?></td>
+                            </tr>
+                    <?php } 
+                    } 
+                    
+                    if ( $report == 0 ) {
                         ?>
-                        <tr>
-                            <td>
-                                <a href="<?php echo $ledger_individul_url; ?>"><?php printf( '&nbsp; &nbsp; &nbsp;%s (%s)', $ledger->name, $ledger->code ); ?></a>
-                            </td>
-                            <td class="col-price"><?php echo erp_ac_get_price( $debit ); ?></td>
-                            <td class="col-price"><?php echo erp_ac_get_price( $credit ); ?></td>
-                        </tr>
-                    <?php } ?>
-                <?php } ?>
-
-            <?php } else { ?>
-
+                            <tr><td colspan="3"><?php _e( 'No Data Found!' , 'erp'); ?></td></tr>
+                        <?php
+                    }
+                    
+                 } else { ?>
+                <tr><td colspan="3"><?php _e( 'No Data Found!' , 'erp'); ?></td></tr>
             <?php } ?>
         </tbody>
 

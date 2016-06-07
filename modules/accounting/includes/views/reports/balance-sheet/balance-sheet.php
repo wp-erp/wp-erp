@@ -31,6 +31,15 @@ foreach ($ledgers as $ledger) {
 $assets      = isset( $charts[1] ) ? $charts[1] : [];
 $liabilities = isset( $charts[2] ) ? $charts[2] : [];
 $equities    = isset( $charts[5] ) ? $charts[5] : [];
+
+$sales_total   = erp_ac_get_sales_total();
+$goods_sold    = erp_ac_get_good_sold_total_amount();
+$expense_total = erp_ac_get_expense_total();
+$tax_total     = erp_ac_get_tax_total();
+$gross         = $sales_total - $goods_sold;
+$operating     = $gross - $expense_total;
+$net_income    = $operating - $tax_total;
+$income =  $sales_total-$expense_total; 
 ?>
 		
 <div class="warp erp-ac-balance-sheet-wrap">
@@ -58,13 +67,14 @@ printf( '<i class="fa fa-calendar"></i> %1$s %2$s %3$s %4$s', __( 'From', 'accou
 	             	<tbody>
 	             		<?php
 	             			$assets_total_balance = 0; 
-	             			foreach ( $assets as $key => $asset ) {
-	             				$account = reset( $asset );
-	             				$debit   = array_sum( wp_list_pluck( $asset, 'debit' ) );
-	             				$credit  = array_sum( wp_list_pluck( $asset, 'credit' ) );
-	             				$balance = $credit - $debit;
-	             				$balance = erp_ac_get_price( $balance, [ 'symbol' => false ] );
 
+	             			foreach ( $assets as $key => $asset ) {
+								$account   = reset( $asset );
+								$debit     = array_sum( wp_list_pluck( $asset, 'debit' ) );
+								$credit    = array_sum( wp_list_pluck( $asset, 'credit' ) );
+								$balance   = $debit - $credit;
+								$ac_amount = erp_ac_get_price( $balance, [ 'symbol' => false ] );
+	             				
 	             				if ( $balance == 0 ) {
 	             					continue;
 	             				}
@@ -74,7 +84,7 @@ printf( '<i class="fa fa-calendar"></i> %1$s %2$s %3$s %4$s', __( 'From', 'accou
 	             				?>
 	             					<tr>
 				             			<td><?php echo erp_ac_get_account_url( $account->id, $account->name ); ?></td>
-				             			<td><?php echo $balance; ?></td>
+				             			<td><?php echo $ac_amount; ?></td>
 				             		</tr>
 	             				<?php
 	             			}
@@ -88,7 +98,7 @@ printf( '<i class="fa fa-calendar"></i> %1$s %2$s %3$s %4$s', __( 'From', 'accou
 				<table>
 		           	<tr>
 		           		<td><strong><?php _e( 'Total', 'erp'); ?></strong></td>
-		           		<td><strong><?php echo $assets_total_balance; ?></strong></td>
+		           		<td><strong><?php echo erp_ac_get_price( $assets_total_balance, [ 'symbol' => false ] ); ?></strong></td>
 		           	</tr>
 	           	</table>
 
@@ -160,13 +170,14 @@ printf( '<i class="fa fa-calendar"></i> %1$s %2$s %3$s %4$s', __( 'From', 'accou
 	             	
 	             	<tbody>
 	             		<?php
-	             			$liabilitie_total_balance = 0; 
+	             			$liabilitie_total_balance = $income;
+	             			
 	             			foreach ( $equities as $key => $equity ) {
-	             				$account = reset( $equity );
-	             				$debit   = array_sum( wp_list_pluck( $equity, 'debit' ) );
-	             				$credit  = array_sum( wp_list_pluck( $equity, 'credit' ) );
-	             				$balance = $credit - $debit;
-	             				$balance = erp_ac_get_price( $balance, [ 'symbol' => false ] );
+								$account   = reset( $equity );
+								$debit     = array_sum( wp_list_pluck( $equity, 'debit' ) );
+								$credit    = array_sum( wp_list_pluck( $equity, 'credit' ) );
+								$balance   = $credit - $debit;
+								$ac_amount = erp_ac_get_price( $balance, [ 'symbol' => false ] );
 
 	             				if ( $balance == 0 ) {
 	             					continue;
@@ -177,12 +188,17 @@ printf( '<i class="fa fa-calendar"></i> %1$s %2$s %3$s %4$s', __( 'From', 'accou
 	             				?>
 	             					<tr>
 				             			<td><?php echo erp_ac_get_account_url( $account->id, $account->name ); ?></td>
-				             			<td><?php echo $balance; ?></td>
+				             			<td><?php echo $ac_amount; ?></td>
 				             		</tr>
 	             				<?php
 	             			}
 
 	             		?>
+
+	             		<tr>
+	             			<td><?php _e( 'Net Income', 'erp' ) ?></td>
+	             			<td><?php echo erp_ac_get_price( $income, [ 'symbol' => false ] ); ?></td>
+				        </tr>
 	             	</tbody>
 	            </table>
 			</div>
@@ -191,7 +207,7 @@ printf( '<i class="fa fa-calendar"></i> %1$s %2$s %3$s %4$s', __( 'From', 'accou
             	<table>
 		           	<tr>
 		           		<td><strong><?php _e( 'Total', 'erp' ); ?></strong></td>
-		           		<td><strong><?php echo $liabilitie_total_balance; ?></strong></td>
+		           		<td><strong><?php echo erp_ac_get_price( $liabilitie_total_balance, [ 'symbol' => false ] ); ?></strong></td>
 		           	</tr>
 	           	</table>
 

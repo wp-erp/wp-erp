@@ -3672,13 +3672,13 @@ ul.edit-address li.city-wrap span {
 }
 .erp-settings .erp-subsubsub li a {
   text-decoration: none;
-  font-weight: 600;
   border: none;
   line-height: 2;
   padding: .2em;
 }
 .erp-settings .erp-nav-tab-active {
   color: #000;
+  font-weight: 600;
 }
 .erp-attachment-area {
   overflow: auto;

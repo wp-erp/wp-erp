@@ -158,14 +158,22 @@ function erp_ac_new_customer( $postdata ) {
     if ( ! $field_id ) {
         if ( $fields['type'] == 'customer' && erp_ac_create_customer() ) {
             $insert_id = erp_insert_people( $fields );
-            do_action( 'erp_ac_after_new_customer', $insert_id, $fields );
+            
+            if ( ! is_wp_error( $insert_id ) ) {
+                do_action( 'erp_ac_after_new_customer', $insert_id, $fields );    
+            }
+            
         } else {
             $insert_id = false;
         }
 
         if ( $fields['type'] == 'vendor' && erp_ac_create_vendor() ) {
             $insert_id = erp_insert_people( $fields );
-            do_action( 'erp_ac_after_new_vendor', $insert_id, $fields );
+
+            if ( ! is_wp_error( $insert_id ) ) {
+                do_action( 'erp_ac_after_new_vendor', $insert_id, $fields );    
+            }
+            
         } else {
             $insert_id = false;
         }

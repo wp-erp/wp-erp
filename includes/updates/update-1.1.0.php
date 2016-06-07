@@ -172,7 +172,7 @@ function erp_ac_create_table() {
  * @return void
  */
 function erp_ac_populate_data() {
-	global $wpdb;
+    global $wpdb;
 
     // check if classes exists
     if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_ac_chart_classes` LIMIT 0, 1" ) ) {
@@ -284,38 +284,37 @@ function erp_ac_populate_data() {
  * @return void
  */
 function erp_ac_table_update() {
-	global $wpdb;
+    global $wpdb;
 
-	$table = $wpdb->prefix . 'erp_ac_transactions';
+    $table = $wpdb->prefix . 'erp_ac_transactions';
+    $cols = $wpdb->get_col( "DESC " . $table );
 
-	$cols = $wpdb->get_col( "DESC " . $table );
+    if ( ! in_array( 'sub_total', $cols ) ) {
+        $wpdb->query( "ALTER TABLE $table ADD `sub_total` DECIMAL(10,2) NOT NULL AFTER `conversion_rate`" );
+    }
 
-	if ( ! in_array( 'sub_total', $cols ) ) {
-		$wpdb->query( "ALTER TABLE $table ADD `sub_total` DECIMAL(10,2) NOT NULL AFTER `conversion_rate`" );
-	}
+    $ledger = $wpdb->prefix . 'erp_ac_ledger';
 
-	$ledger = $wpdb->prefix . 'erp_ac_ledger';
+    $cols = $wpdb->get_col( "DESC " . $ledger );
 
-	$cols = $wpdb->get_col( "DESC " . $ledger );
+    if ( ! in_array( 'created_by', $cols ) ) {
+        $wpdb->query( "ALTER TABLE $ledger ADD `created_by` bigint(20) NOT NULL AFTER `active`" );
+    }
 
-	if ( ! in_array( 'created_by', $cols ) ) {
-		$wpdb->query( "ALTER TABLE $ledger ADD `created_by` bigint(20) NOT NULL AFTER `active`" );
-	}
+    $item_table = $wpdb->prefix . 'erp_ac_transaction_items';
+    $item_cols  = $wpdb->get_col( "DESC " . $item_table );
 
-	$item_table = $wpdb->prefix . 'erp_ac_transaction_items';
-	$item_cols  = $wpdb->get_col( "DESC " . $item_table );
+    if ( ! in_array( 'tax_rate',$item_cols ) ) {
+        $wpdb->query( "ALTER TABLE $item_table ADD `tax_rate` DECIMAL(10,2) NOT NULL AFTER `tax`" );
+    }
 
-	if ( ! in_array( 'tax_rate',$item_cols ) ) {
-		$wpdb->query( "ALTER TABLE $item_table ADD `tax_rate` DECIMAL(10,2) NOT NULL AFTER `tax`" );
-	}
+    if ( ! in_array( 'tax_journal', $item_cols ) ) {
+        $wpdb->query( "ALTER TABLE $item_table ADD `tax_journal` BIGINT(20) NOT NULL AFTER `tax_rate`" );
+    }
 
-	if ( ! in_array( 'tax_journal', $item_cols ) ) {
-		$wpdb->query( "ALTER TABLE $item_table ADD `tax_journal` BIGINT(20) NOT NULL AFTER `tax_rate`" );
-	}
+    $account_table = $wpdb->prefix . 'erp_ac_banks';
 
-	$account_table = $wpdb->prefix . 'erp_ac_banks';
-
-	$wpdb->update( $account_table, array( 'ledger_id' => 62 ), array( 'id' => 2, 'ledger_id' => 60 ), array( '%d' ), array( '%d', '%d' ) );
+    $wpdb->update( $account_table, array( 'ledger_id' => 62 ), array( 'id' => 2, 'ledger_id' => 60 ), array( '%d' ), array( '%d', '%d' ) );
 }
 
 /**
@@ -375,20 +374,38 @@ function erp_crm_update_column_data() {
     $wpdb->query( "UPDATE {$wpdb->prefix}erp_peoples SET `created_by`='$user_id'" );
 }
 
+/**
+ * Set active module
+ *
+ * @package WPERP/Accounting
+ *
+ * @since 1.1.0
+ *
+ * @return void
+ */
+function erp_ac_active_module() {
+    $module = get_option( 'erp_modules' );
+
+    if ( ! array_key_exists( 'accounting', $module ) ) {
+        $module['accounting'] = [
+            'title'       => __( 'Accountig Management', 'erp' ),
+            'slug'        => 'erp-accounting',
+            'description' => __( 'Accountig Management', 'erp' ),
+            'callback'    => '\WeDevs\ERP\Accounting\Accountig',
+            'modules'     => apply_filters( 'erp_accounting_modules', [ ] )
+        ];
+    }
+
+    update_option( 'erp_modules', $module );
+}
+
 // Update all accounting releated function
-erp_ac_update_manager_capabilities();
 erp_ac_create_table();
 erp_ac_populate_data();
 erp_ac_table_update();
+erp_ac_active_module();
+erp_ac_update_manager_capabilities();
 
 // Update all CRM related function
 erp_crm_update_table_column();
 erp_crm_update_column_data();
-
-
-
-
-
-
-
-
