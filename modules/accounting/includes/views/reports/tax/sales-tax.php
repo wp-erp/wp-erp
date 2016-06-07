@@ -43,7 +43,15 @@
 					</tr>
 				<?php
 			}
+
+			if ( ! $taxs ) {
+				?>
+				<tr><td colspan="6"><?php _e( 'No Result Found!', 'erp' ); ?></td></tr>
+				<?php
+			}
 			?>
+
+
 		</tbody>
 	</table>
 

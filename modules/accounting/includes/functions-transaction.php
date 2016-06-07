@@ -720,6 +720,8 @@ function erp_ac_get_transaction_for_sales() {
         $sales_journal = WeDevs\ERP\Accounting\Model\Transaction::with(['journals' => function($q) use($accounts_id) {
             return $q->whereIn( 'ledger_id', $accounts_id );
         }])
+        ->where( 'type', '=', 'sales' )
+        ->where( 'status', '!=', 'draft' )
         ->where( 'issue_date', '>=', $financial_start )
         ->where( 'issue_date', '<=', $financial_end )
         ->get()->toArray();
@@ -752,6 +754,8 @@ function erp_ac_get_expnese_transaction() {
         $expense_journal = WeDevs\ERP\Accounting\Model\Transaction::with(['journals' => function($q) use($accounts_id) {
             return $q->whereIn( 'ledger_id', $accounts_id );
         }])
+        ->where( 'type', '=', 'expense' )
+        ->where( 'status', '!=', 'draft' )
         ->where( 'issue_date', '>=', $financial_start )
         ->where( 'issue_date', '<=', $financial_end )
         ->get()->toArray();
@@ -772,10 +776,10 @@ function erp_ac_get_expnese_transaction_without_tax() {
     $tax_ledgers     = wp_list_pluck( $tax, 'id' );
 
     $accounts = erp_ac_get_chart_dropdown([
-        'exclude'  => [2, 4, 5],
+        'exclude'  => [1, 2, 4, 5],
 
     ] );
-    
+
     foreach ( $accounts as $key => $account ) {
         $options     = isset( $account['options'] ) ? $account['options'] : [];
         $accounts_id = array_merge( $accounts_id, wp_list_pluck( $options, 'id' ) );
@@ -797,6 +801,8 @@ function erp_ac_get_expnese_transaction_without_tax() {
         $expense_journal = WeDevs\ERP\Accounting\Model\Transaction::with(['journals' => function($q) use($accounts_id) {
             return $q->whereIn( 'ledger_id', $accounts_id )->where( 'type', '=', 'line_item' );
         }])
+        ->where( 'type', '=', 'expense' )
+        ->where( 'status', '!=', 'draft' )
         ->where( 'issue_date', '>=', $financial_start )
         ->where( 'issue_date', '<=', $financial_end )
         ->get()->toArray();
@@ -822,6 +828,7 @@ function erp_ac_get_transaction_for_tax() {
         $tax_journal = \WeDevs\ERP\Accounting\Model\Transaction::with(['journals' => function($q) use( $tax_ledgers ) {
             return $q->whereIn( 'ledger_id', $tax_ledgers );
         }])
+        ->where( 'status', '!=', 'draft' )
         ->where( 'issue_date', '>=', $financial_start )
         ->where( 'issue_date', '<=', $financial_end )
         ->get()->toArray();
