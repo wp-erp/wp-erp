@@ -547,7 +547,6 @@
                             alert( resp.data );
                         };
                     });
-
                 },
 
                 saveAsNew: function() {
@@ -630,9 +629,11 @@
                 },
 
                 'removeFilterObject': function( fieldObj, fieldIndex, index, isEditable ) {
+
                     if ( isEditable ) {
                         this.editableMode = false;
                     }
+
                     this.fields[index].$remove( this.fields[index][fieldIndex] );
 
                     if ( this.fields[index].length == 0 && this.fields.length > 1 ) {

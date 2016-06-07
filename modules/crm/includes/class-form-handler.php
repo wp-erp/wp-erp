@@ -20,7 +20,7 @@ class Form_Handler {
     public function __construct() {
         add_action( 'load-crm_page_erp-sales-contact-groups', [ $this, 'contact_groups_bulk_action' ] );
         add_action( 'admin_head', [ $this, 'handle_canonical_url' ], 10 );
-        add_action( 'erp_hr_after_employee_permission_set', [ $this, 'employee_permission_set' ], 10, 2 );
+        add_action( 'erp_hr_after_employee_permission_set', [ $this, 'crm_permission_set' ], 10, 2 );
         add_filter( 'erp_get_people_pre_where_join', [ $this, 'contact_advance_filter' ], 10, 2 );
     }
 
@@ -111,13 +111,30 @@ class Form_Handler {
         return $custom_sql;
     }
 
-    function employee_permission_set( $post, $user ) {
+    /**
+     * CRM Permission set
+     *
+     * @since 1.0.1
+     *
+     * @param  array $post
+     * @param  object $user
+     *
+     * @return void
+     */
+    public function crm_permission_set( $post, $user ) {
         $user_profile = new \WeDevs\ERP\CRM\User_Profile();
         $post['crm_manager'] = isset( $post['crm_manager'] ) && $post['crm_manager'] == 'on' ? erp_crm_get_manager_role() : false;
         $post['crm_agent']   = isset( $post['crm_agent'] ) && $post['crm_agent'] == 'on' ? erp_crm_get_agent_role() : false;
         $user_profile->update_user( $user->ID, $post );
     }
 
+    /**
+     * Handle canonical url for contact|company page
+     *
+     * @since 1.1.0
+     *
+     * @return void
+     */
     public function handle_canonical_url() {
         if ( isset( $_GET['page'] ) && ( $_GET['page'] == 'erp-sales-customers' || $_GET['page'] == 'erp-sales-companies' ) ) {
             ?>
@@ -188,10 +205,7 @@ class Form_Handler {
                 default:
                     wp_redirect( $redirect );
                     exit();
-
             }
         }
-
     }
-
 }

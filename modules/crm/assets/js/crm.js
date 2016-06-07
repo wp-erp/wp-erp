@@ -26,8 +26,6 @@
             // handle postbox toggle
             $('body').on( 'click', 'div.erp-handlediv', this.handlePostboxToggle );
 
-            $( '.erp-crm-customer' ).on( 'click', 'a#erp-advance-search-button, a#erp-show-save-search-field', this.showAdvanceFilter );
-
             // CRM Dashboard
             $( '.crm-dashboard' ).on( 'click', 'a.erp-crm-dashbaord-show-details-schedule', this.dashboard.showScheduleDetails );
 
@@ -42,7 +40,6 @@
 
             $('body').on('change', 'select#erp-crm-template-shortcodes', this.saveReplies.setShortcodes );
 
-            this.checkVisibaleAdvanceSearch();
             // Erp ToolTips using tiptip
             this.initTipTips();
         },
@@ -130,31 +127,6 @@
             }
         },
 
-        checkVisibaleAdvanceSearch: function() {
-            if ($('#wp-erp').find( '.erp-advance-search-filter' ).is(':visible')) {
-                $('#erp-advance-search-button').html( '<span class="dashicons dashicons-no"></span>Hide Search');
-            } else {
-                $('#erp-advance-search-button').html( '<span class="dashicons dashicons-admin-generic"></span>Advanced Search');
-            }
-        },
-
-        showAdvanceFilter: function(e) {
-            e.preventDefault();
-
-            var self = $(this);
-            self.closest('#wp-erp').find('.erp-advance-search-filter').slideToggle(300, function() {
-
-                var hide = ( self.attr('id') == 'erp-advance-search-button' ) ? '<span class="dashicons dashicons-no"></span>Hide Search' : 'Hide Fields';
-                var show = ( self.attr('id') == 'erp-advance-search-button' ) ? '<span class="dashicons dashicons-admin-generic"></span>Advanced Search' : 'Show Fields';
-
-                if ($(this).is(':visible')) {
-                    self.html( hide );
-                } else {
-                    self.html( show );
-                }
-            });
-        },
-
         triggerCustomerScheduleAllDay: function() {
             var self = $(this);
 
@@ -171,10 +143,8 @@
             var self = $(this);
 
             if ( self.is(':checked') ) {
-                // self.closest('.erp-crm-new-schedule-wrapper').find('#schedule-notification-wrap').find('input, select').removeAttr( 'disabled' );
                 self.closest('.erp-crm-new-schedule-wrapper').find('#schedule-notification-wrap').show();
             } else {
-                // self.closest('.erp-crm-new-schedule-wrapper').find('#schedule-notification-wrap').find('input, select').attr( 'disabled', 'disabled' );
                 self.closest('.erp-crm-new-schedule-wrapper').find('#schedule-notification-wrap').hide();
             };
         },

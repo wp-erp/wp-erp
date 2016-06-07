@@ -1030,10 +1030,6 @@ class Ajax_Handler {
         $this->send_success( __( 'Feed Deleted successfully', 'erp' ) );
     }
 
-    public function add_schedules_from_calendar() {
-        $this->verify_nonce( 'wp-erp-crm-add-schedules' );
-    }
-
     /**
      * Create Save Search
      *
