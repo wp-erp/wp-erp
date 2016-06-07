@@ -67,7 +67,7 @@ Vue.component('vtable', {
                                 +'<tr>'
                                     +'<td v-if="\'hide\' !== hideCb" id="cb" class="manage-column column-cb check-column">'
                                         +'<label class="screen-reader-text" for="cb-select-all-1">Select All</label>'
-                                        +'<input id="cb-select-all-1" type="checkbox">'
+                                        +'<input id="cb-select-all-1" v-model="checkAllCheckbox" @change="triggerAllCheckBox()" type="checkbox">'
                                     +'</td>'
                                     +'<template v-for="(i,field) in fields">'
                                         +'<template v-if="i==0">'
@@ -148,7 +148,7 @@ Vue.component('vtable', {
                                 +'<tr>'
                                     +'<td v-if="\'hide\' !== hideCb" class="manage-column column-cb check-column">'
                                         +'<label class="screen-reader-text" for="cb-select-all-2">Select All</label>'
-                                        +'<input id="cb-select-all-2" type="checkbox">'
+                                        +'<input id="cb-select-all-2" v-model="checkAllCheckbox" @change="triggerAllCheckBox()" type="checkbox">'
                                     +'</td>'
                                     +'<template v-for="(i,field) in fields">'
                                         +'<template v-if="i==0">'
@@ -389,6 +389,7 @@ Vue.component('vtable', {
             searchQuery: '',
             currentTopNavFilter: '',
             activeTopNavFilter: '',
+            checkAllCheckbox: false,
             checkboxItems: [],
             bulkaction1: '-1',
             bulkaction2: '-1',
@@ -432,14 +433,25 @@ Vue.component('vtable', {
 
     methods: {
 
+        triggerAllCheckBox: function(){
+            if ( this.checkAllCheckbox ) {
+                this.checkboxItems = [];
+
+                for( key in this.tableData ) {
+                    this.checkboxItems.push( this.tableData[key].id );
+                }
+
+            } else {
+                this.checkboxItems = [];
+            }
+        },
+
         hasExtraBulkAction: function() {
             return Object.keys( this.extraBulkAction ).length > 0;
         },
 
         handleBulkAction: function(action) {
             this.$dispatch('vtable:default-bulk-action', action, this.checkboxItems );
-            this.checkboxItems = [];
-            this.bulkaction1 = this.bulkaction2 = '-1';
         },
 
         handleExtraBulkAction: function() {
@@ -967,6 +979,8 @@ Vue.component('vtable', {
 
         'vtable:refresh': function() {
             this.currentPage = 1;
+            this.checkboxItems = [];
+            this.bulkaction1 = this.bulkaction2 = '-1';
             this.fetchData();
         },
     },

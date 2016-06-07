@@ -941,6 +941,7 @@
 
                 assignContact: function( ids, type ) {
                     var self = this;
+                    console.log( ids.length );
 
                     if ( ids.length > 0 ) {
                         $.erpPopup({
