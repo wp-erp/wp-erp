@@ -80,27 +80,9 @@ class Accounting {
         // check for plugin using plugin name
         if ( is_plugin_active( 'accounting/accounting.php' ) ) {
             $accounting = dirname( WPERP_PATH ) . '/accounting/accounting.php';
-            deactivate_plugins( $accounting );
-            
-            activate_plugins( WPERP_FILE );
-            wp_safe_redirect( admin_url( '/plugins.php' ), 302 );
-            exit;            
+            deactivate_plugins( $accounting );            
         } 
     }
-
-    // function deactive_accounting_module() {
-    //     /**
-    //      * Detect plugin. For use on Front End only.
-    //      */
-    //     include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-
-    //     // check for plugin using plugin name
-    //     if ( class_exists( 'WeDevs_ERP_Accounting' ) ) {
-    //         $accounting = dirname( WPERP_PATH ) . '/accounting/accounting.php';
-    //         deactivate_plugins( $accounting );
-    //     } 
-    // }
-
 
     /**
      * Plugin activation
@@ -138,12 +120,26 @@ class Accounting {
      * @return void
      */
     private function define_constants() {
-        define( 'WPERP_ACCOUNTING_VERSION', $this->version );
-        define( 'WPERP_ACCOUNTING_PATH', dirname( __FILE__ ) );
-        define( 'WPERP_ACCOUNTING_URL', plugins_url( '', __FILE__ ) );
-        define( 'WPERP_ACCOUNTING_ASSETS', WPERP_ACCOUNTING_URL . '/assets' );
-        define( 'WPERP_ACCOUNTING_JS_TMPL', WPERP_ACCOUNTING_PATH . '/includes/views/js-templates' );
-        define( 'WPERP_ACCOUNTING_VIEWS', WPERP_ACCOUNTING_PATH . '/includes/views' );
+        
+        $this->define( 'WPERP_ACCOUNTING_VERSION', $this->version );
+        $this->define( 'WPERP_ACCOUNTING_PATH', dirname( __FILE__ ) );
+        $this->define( 'WPERP_ACCOUNTING_URL', plugins_url( '', __FILE__ ) );
+        $this->define( 'WPERP_ACCOUNTING_ASSETS', WPERP_ACCOUNTING_URL . '/assets' );
+        $this->define( 'WPERP_ACCOUNTING_JS_TMPL', WPERP_ACCOUNTING_PATH . '/includes/views/js-templates' );
+        $this->define( 'WPERP_ACCOUNTING_VIEWS', WPERP_ACCOUNTING_PATH . '/includes/views' );
+    }
+
+    /**
+     * Define constant if not already set
+     *
+     * @param  string $name
+     * @param  string|bool $value
+     * @return type
+     */
+    private function define( $name, $value ) {
+        if ( ! defined( $name ) ) {
+            define( $name, $value );
+        }
     }
 
     /**
@@ -152,6 +148,10 @@ class Accounting {
      * @return void
      */
     private function includes() {
+
+        if ( function_exists( 'erp_ac_get_manager_role' ) ) {
+            return;
+        }        
     
         require_once WPERP_ACCOUNTING_PATH . '/includes/function-capabilities.php';
         require_once WPERP_ACCOUNTING_PATH . '/includes/actions-filters.php';
