@@ -335,8 +335,9 @@
                             + '<input type="submit" class="button" v-if="isUpdate" @click.prevent="cancelSave(\'update\')" value="Cancel">'
                             + '<input type="submit" class="button" v-if="!isUpdate" @click.prevent="cancelSave(\'save\')" value="Cancel">'
                         + '</div>'
-                        + '<button class="button button-primary" v-show="!isNewSave" @click.prevent="saveAsNew()">Save new Segment</button>'
-                        + '<button class="button button" v-show="isUpdateSaveSearch && !isNewSave" @click.prevent="updateSave()">Update this Segment</button>'
+                        + '<button :disabled="editableMode" class="button button-primary" v-show="!isNewSave" @click.prevent="saveAsNew()">Save new Segment</button>'
+                        + '<button :disabled="editableMode" class="button button" v-show="isUpdateSaveSearch && !isNewSave" @click.prevent="updateSave()">Update this Segment</button>'
+                        + '<button :disabled="editableMode" class="button button" style="float:right;" v-show="!isNewSave" @click.prevent="resetFilter()">Reset all filter</button>'
                     + '</div>'
                 + '</div>',
 
@@ -358,6 +359,11 @@
             },
 
             methods: {
+
+                resetFilter: function() {
+                    this.$dispatch('resetAllFilters');
+                    this.fields = [[]];
+                },
 
                 cancelSave: function( flag ) {
                     if ( flag == 'save' ) {
@@ -1241,6 +1247,13 @@
                             this.$broadcast( 'setFilterFields', false );
                         }
                     }
+                },
+
+                'resetAllFilters': function() {
+                    this.$refs.vtable.additionalUrlString['advanceFilter'] = '';
+                    this.$nextTick(function(){
+                        this.$broadcast('vtable:reload');
+                    })
                 }
             }
         });
