@@ -1199,7 +1199,9 @@ function erp_crm_create_new_contact_subscriber( $args = [] ) {
         return new WP_Error( 'user-id', __( 'No contact founds', 'erp' ) );
     }
 
-    return \WeDevs\ERP\CRM\Models\ContactSubscriber::create( $args );
+    $subscriber = \WeDevs\ERP\CRM\Models\ContactSubscriber::create( $args );
+
+    return do_action( 'erp_crm_create_contact_subscriber', $subscriber );
 }
 
 /**
