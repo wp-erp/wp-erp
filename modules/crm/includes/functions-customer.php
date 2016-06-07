@@ -1389,7 +1389,6 @@ function erp_crm_get_serach_key( $type = '' ) {
             'title'       => __( 'Email', 'erp' ),
             'type' => 'text',
             'text' => '',
-            'condval' => '',
             'condition'   => [
                 '~'  => __( 'contains', 'erp' ),
                 '!~' => __( 'not contains', 'erp' ),
@@ -1402,7 +1401,6 @@ function erp_crm_get_serach_key( $type = '' ) {
             'title'     => __( 'Phone', 'erp' ),
             'type'      => 'text',
             'text'      => '',
-            'condval'   => '',
             'condition' => [
                 ''   => __( 'has', 'erp' ),
                 '~'  => __( 'contains', 'erp' ),
@@ -1416,7 +1414,6 @@ function erp_crm_get_serach_key( $type = '' ) {
             'title'     => __( 'Mobile', 'erp' ),
             'type'      => 'text',
             'text'      => '',
-            'condval'   => '',
             'condition' => [
                 ''   => __( 'has', 'erp' ),
                 '~'  => __( 'contains', 'erp' ),
@@ -1430,7 +1427,6 @@ function erp_crm_get_serach_key( $type = '' ) {
             'title'     => __( 'Website', 'erp' ),
             'type'      => 'text',
             'text'      => '',
-            'condval'   => '',
             'condition' => [
                 ''   => __( 'has', 'erp' ),
                 '~'  => __( 'contains', 'erp' ),
@@ -1444,7 +1440,6 @@ function erp_crm_get_serach_key( $type = '' ) {
             'title'     => __( 'City', 'erp' ),
             'type'      => 'text',
             'text'      => '',
-            'condval'   => '',
             'condition' => [
                 ''   => __( 'from', 'erp' ),
                 '!'  => __( 'not from', 'erp' ),
@@ -1457,7 +1452,6 @@ function erp_crm_get_serach_key( $type = '' ) {
             'title'     => __( 'Country/State', 'erp' ),
             'type'      => 'dropdown',
             'text'      => '',
-            'condval'   => '',
             'condition' => [
                 ''   => __( 'from', 'erp' ),
                 '!'  => __( 'not from', 'erp' )
@@ -1467,11 +1461,11 @@ function erp_crm_get_serach_key( $type = '' ) {
 
     ];
 
-    if ( $type == 'crm_page_erp-sales-customers' ) {
+    if ( 'contact' == $type ) {
         $fields = erp_crm_get_customer_serach_key() + $fields;
     }
 
-    if ( $type == 'crm_page_erp-sales-companies' ) {
+    if ( 'company' == $type ) {
         $fields = erp_crm_get_company_serach_key() + $fields;
     }
 
@@ -1491,7 +1485,6 @@ function erp_crm_get_customer_serach_key() {
             'title'       => __( 'First Name', 'erp' ),
             'type' => 'text',
             'text' => '',
-            'condval' => '',
             'condition'   => [
                 ''   => __( 'is', 'erp' ),
                 '!'  => __( 'is not', 'erp' ),
@@ -1506,7 +1499,6 @@ function erp_crm_get_customer_serach_key() {
             'title'       => __( 'Last Name', 'erp' ),
             'type' => 'text',
             'text' => '',
-            'condval' => '',
             'condition'   => [
                 ''   => __( 'is', 'erp' ),
                 '!'  => __( 'is not', 'erp' ),
@@ -1532,7 +1524,6 @@ function erp_crm_get_company_serach_key() {
             'title'       => __( 'Company Name', 'erp' ),
             'type' => 'text',
             'text' => '',
-            'condval' => '',
             'condition'   => [
                 ''   => __( 'is', 'erp' ),
                 '!'  => __( 'is not', 'erp' ),

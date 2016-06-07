@@ -1,19 +1,16 @@
 <?php
-global $current_screen;
-
 if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_contact' ] ) ) {
     $id = intval( $_GET['filter_assign_contact'] );
-
     $custom_data = [
         'filter_assign_contact' => [
             'id'           => $id,
             'display_name' => get_the_author_meta( 'display_name', $id )
         ],
-        'searchFields' => array_keys( erp_crm_get_serach_key( $current_screen->base ) )
+        'searchFields' => array_keys( erp_crm_get_serach_key( 'contact' ) )
     ];
 } else {
     $custom_data = [
-        'searchFields' => array_keys( erp_crm_get_serach_key( $current_screen->base ) )
+        'searchFields' => array_keys( erp_crm_get_serach_key( 'contact' ) )
     ];
 }
 ?>
@@ -26,7 +23,7 @@ if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_co
             <a href="#" @click.prevent="addContact( 'contact', '<?php _e( 'Add New Contact', 'erp' ); ?>' )" id="erp-customer-new" class="erp-contact-new add-new-h2"><?php _e( 'Add New Contact', 'erp' ); ?></a>
         <?php endif ?>
 
-        <a href="#" @click.prevent="addSearchSegment()" id="erp-contact-search-segmen" class="erp-search-segment add-new-h2"><?php _e( 'Add Search Segment', 'erp' ); ?></a>
+        <a href="#" @click.prevent="addSearchSegment()" id="erp-contact-search-segmen" class="erp-search-segment add-new-h2" v-text="( showHideSegment ) ? '<?php _e( 'Hide Search Segment', 'erp' ); ?>' : '<?php _e( 'Add Search Segment', 'erp' ); ?>'"></a>
     </h2>
 
     <!-- Advance search filter vue component -->
@@ -41,7 +38,7 @@ if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_co
         action="erp-crm-get-contacts"
         :wpnonce="wpnonce"
         page = "<?php echo add_query_arg( [ 'page' => 'erp-sales-customers' ], admin_url( 'admin.php' ) ); ?>"
-        per-page="4"
+        per-page="20"
         :fields=fields
         :item-row-actions=itemRowActions
         :search="search"

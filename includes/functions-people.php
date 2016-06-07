@@ -69,7 +69,7 @@ function erp_get_peoples( $args = [] ) {
 
         $wrapper_select = "SELECT * FROM";
 
-        $sql['select'][] = "( SELECT people.id, people.user_id, people.company, people.created_by, people.created, COALESCE( people.email, users.user_email ) AS email,
+        $sql['select'][] = "( SELECT people.id as id, people.user_id as user_id, people.company as company, people.created_by as created_by, people.created as created, COALESCE( people.email, users.user_email ) AS email,
                 COALESCE( people.website, users.user_url ) AS website,";
 
         $sql['join'][] = "LEFT JOIN $users_tb AS users ON people.user_id = users.ID";
@@ -117,12 +117,14 @@ function erp_get_peoples( $args = [] ) {
         // Check if args count true, then return total count customer according to above filter
         if ( $count ) {
             $sql_order_by = '';
-            $wrapper_select = 'SELECT COUNT(*) as total_number';
+            $wrapper_select = 'SELECT COUNT(*) as total_number FROM';
         }
 
         $custom_sql  = apply_filters( 'erp_get_people_pre_where_join', $custom_sql, $args );
         $sql         = apply_filters( 'erp_get_people_pre_query', $sql, $args );
         $final_query = $wrapper_select . ' ' . implode( ' ', $sql['select'] ) . ' ' . $sql_from_tb . ' ' . implode( ' ', $sql['join'] ) . ' ' . $sql_contact_type . ' ' . $sql_group_by . ' ' . implode( ' ', $custom_sql['join'] ) . ' ' . implode( ' ', $custom_sql['where'] ) . ' ' . $sql_order_by . ' ' . $sql_limit;
+
+        // print_r( $final_query ); die();
 
         if ( $count ) {
             // Only filtered total count of people

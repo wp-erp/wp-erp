@@ -1,5 +1,13 @@
 <?php
-
+/**
+ * Create tables
+ *
+ * @package WPERP/Accounting
+ *
+ * @since 1.1.0
+ *
+ * @return void
+ */
 function erp_ac_create_table() {
     global $wpdb;
 
@@ -154,9 +162,17 @@ function erp_ac_create_table() {
     }
 }
 
+/**
+ * Populate all table datas
+ *
+ * @package WPERP/Accounting
+ *
+ * @since 1.1.0
+ *
+ * @return void
+ */
 function erp_ac_populate_data() {
     global $wpdb;
-    //accounting
 
     // check if classes exists
     if ( ! $wpdb->get_var( "SELECT id FROM `{$wpdb->prefix}erp_ac_chart_classes` LIMIT 0, 1" ) ) {
@@ -258,11 +274,19 @@ function erp_ac_populate_data() {
     }
 }
 
+/**
+ * Update existing tables
+ *
+ * @package WPERP/Accounting
+ *
+ * @since 1.1.0
+ *
+ * @return void
+ */
 function erp_ac_table_update() {
     global $wpdb;
 
     $table = $wpdb->prefix . 'erp_ac_transactions';
-
     $cols = $wpdb->get_col( "DESC " . $table );
 
     if ( ! in_array( 'sub_total', $cols ) ) {
@@ -293,6 +317,72 @@ function erp_ac_table_update() {
     $wpdb->update( $account_table, array( 'ledger_id' => 62 ), array( 'id' => 2, 'ledger_id' => 60 ), array( '%d' ), array( '%d', '%d' ) );
 }
 
+/**
+ * Update manager capabilities
+ *
+ * @package WPERP/Accounting
+ *
+ * @since 1.1.0
+ *
+ * @return void
+ */
+function erp_ac_update_manager_capabilities() {
+    remove_role( 'erp_ac_manager' );
+
+	$installer = new \WeDevs_ERP_Installer();
+	$installer->create_roles();
+	$installer->set_role();
+}
+
+/**
+ * Update existing tables
+ *
+ * @package WPERP/CRM
+ *
+ * @since 1.1.0
+ *
+ * @return void
+ */
+function erp_crm_update_table_column() {
+    global $wpdb;
+    $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_crm_save_search ADD `type` VARCHAR(255) AFTER `id`" );
+    $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_peoples ADD `created_by` BIGINT(20) AFTER `currency`" );
+}
+
+/**
+ * Update some data for newly added column
+ *
+ * @package WPERP/Accounting
+ *
+ * @since 1.1.0
+ *
+ * @return void
+ */
+function erp_crm_update_column_data() {
+    global $wpdb;
+
+    $super_user_email = get_option('admin_email');
+    $user_info        = get_user_by('email', $super_user_email );
+
+    $wpdb->query( "UPDATE {$wpdb->prefix}erp_crm_save_search SET `type`='contact' WHERE `search_val` LIKE '%first_name%' OR `search_val` LIKE '%last_name%'" );
+    $wpdb->query( "UPDATE {$wpdb->prefix}erp_crm_save_search SET `type`='company' WHERE `search_val` LIKE '%company%'" );
+
+    if ( ! $user_info ) {
+        return;
+    }
+    $user_id = $user_info->ID;
+    $wpdb->query( "UPDATE {$wpdb->prefix}erp_peoples SET `created_by`='$user_id'" );
+}
+
+/**
+ * Set active module
+ *
+ * @package WPERP/Accounting
+ *
+ * @since 1.1.0
+ *
+ * @return void
+ */
 function erp_ac_active_module() {
     $module = get_option( 'erp_modules' );
 
@@ -309,23 +399,13 @@ function erp_ac_active_module() {
     update_option( 'erp_modules', $module );
 }
 
-
-function erp_ac_update_manager_capabilities() {
-    remove_role( 'erp_ac_manager' );
-   
-    $installer = new \WeDevs_ERP_Installer();
-    $installer->create_roles();
-    $installer->set_role();
-}
-
-
+// Update all accounting releated function
 erp_ac_create_table();
 erp_ac_populate_data();
 erp_ac_table_update();
 erp_ac_active_module();
 erp_ac_update_manager_capabilities();
 
-
-
-
-
+// Update all CRM related function
+erp_crm_update_table_column();
+erp_crm_update_column_data();

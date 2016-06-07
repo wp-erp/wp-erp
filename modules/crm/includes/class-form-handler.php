@@ -44,7 +44,7 @@ class Form_Handler {
         }
 
         $or_query   = explode( '&or&', $postdata['erpadvancefilter'] );
-        $allowed    = erp_crm_get_serach_key( 'crm_page_erp-sales-customers' );
+        $allowed    = erp_crm_get_serach_key( $postdata['type'] );
         $query_data = [];
 
         if ( $or_query ) {

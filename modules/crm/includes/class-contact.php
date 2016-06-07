@@ -334,8 +334,9 @@ class Contact extends \WeDevs\ERP\People {
      * @return string
      */
     public function get_birthday() {
-        if ( $this->date_of_birth ) {
-            return erp_format_date( $this->date_of_birth );
+        $birth_day = $this->get_meta( 'date_of_birth', true );
+        if ( $birth_day ) {
+            return erp_format_date( $birth_day );
         }
     }
 

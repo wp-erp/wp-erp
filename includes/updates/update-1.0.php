@@ -161,7 +161,6 @@ function wperp_update_1_0_populate_types_table() {
  */
 function wperp_update_1_0_drop_types_column() {
     global $wpdb;
-
     $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_peoples DROP COLUMN `type`, `deleted_at`" );
 }
 

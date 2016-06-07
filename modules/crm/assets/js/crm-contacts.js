@@ -230,7 +230,14 @@
                             + '<select id="filter-condition" v-model="fieldObj.filterCondition" v-if="fieldObj.filterKey">'
                                 + '<option v-for="( conditionSign, condition ) in searchFields[fieldObj.filterKey].condition" value="{{ conditionSign }}">{{ condition }}</option>'
                             + '</select>'
-                            + '<input type="text" class="input-text" v-model="fieldObj.filterValue" v-if="fieldObj.filterKey">'
+                            + '<template v-if="fieldObj.filterKey">'
+                                + '<input type="{{ searchFields[fieldObj.filterKey].type }}" v-if="ifSelectedTextField( searchFields[fieldObj.filterKey].type )" class="input-text" v-model="fieldObj.filterValue">'
+                                + '<input type="text" v-if="searchFields[fieldObj.filterKey].type == \'date\'" v-datepicker class="input-text" v-model="fieldObj.filterValue">'
+                                + '<input type="number" v-if="searchFields[fieldObj.filterKey].type == \'number\'" min="0" step="1" class="input-text" v-model="fieldObj.filterValue">'
+                                + '<select v-if="searchFields[fieldObj.filterKey].type == \'dropdown\'" class="input-select" v-model="fieldObj.filterValue">'
+                                    + '{{{ searchFields[fieldObj.filterKey].options }}}'
+                                + '</select>'
+                            + '</template>'
                         + '</div>'
                         + '<div class="filter-right">'
                             + '<a href="#" @click.prevent="applyFilter(field)"><i class="fa fa-check" aria-hidden="true"></i></a>'
@@ -268,6 +275,10 @@
             },
 
             methods: {
+
+                ifSelectedTextField: function( type ) {
+                    return ( type == 'text' || type == 'url' || type == 'email' ) ? true : false;
+                },
 
                 applyFilter: function() {
                     if ( ! this.fieldObj.filterKey || ! this.fieldObj.filterValue ) {
@@ -324,8 +335,9 @@
                             + '<input type="submit" class="button" v-if="isUpdate" @click.prevent="cancelSave(\'update\')" value="Cancel">'
                             + '<input type="submit" class="button" v-if="!isUpdate" @click.prevent="cancelSave(\'save\')" value="Cancel">'
                         + '</div>'
-                        + '<button class="button button-primary" v-show="!isNewSave" @click.prevent="saveAsNew()">Save new Segment</button>'
-                        + '<button class="button button" v-show="isUpdateSaveSearch && !isNewSave" @click.prevent="updateSave()">Update this Segment</button>'
+                        + '<button :disabled="editableMode" class="button button-primary" v-show="!isNewSave" @click.prevent="saveAsNew()">Save new Segment</button>'
+                        + '<button :disabled="editableMode" class="button button" v-show="isUpdateSaveSearch && !isNewSave" @click.prevent="updateSave()">Update this Segment</button>'
+                        + '<button :disabled="editableMode" class="button button" style="float:right;" v-show="!isNewSave" @click.prevent="resetFilter()">Reset all filter</button>'
                     + '</div>'
                 + '</div>',
 
@@ -347,6 +359,11 @@
             },
 
             methods: {
+
+                resetFilter: function() {
+                    this.$dispatch('resetAllFilters');
+                    this.fields = [[]];
+                },
 
                 cancelSave: function( flag ) {
                     if ( flag == 'save' ) {
@@ -401,10 +418,7 @@
 
                     jQuery.post( wpErpCrm.ajaxurl, data, function( resp ) {
                         if ( resp.success ) {
-                            console.log( resp );
-
                             if ( ! self.isUpdate ) {
-                                    console.log(  contact.extraBulkAction.filterSaveAdvanceFiter.options.length );
                                 if ( contact.extraBulkAction.filterSaveAdvanceFiter.options.length < 1 ) {
                                     if ( resp.data.global == '0' ) {
                                         contact.extraBulkAction.filterSaveAdvanceFiter.options.push( {
@@ -676,7 +690,7 @@
                 },
 
                 contactOwner: function( value, item ) {
-                    return ( Object.keys( item.assign_to ).length > 0 ) ? '<a href="#">' + item.assign_to.display_name + '</a>' : '—';
+                    return ( Object.keys( item.assign_to ).length > 0 ) ? '<a>' + item.assign_to.display_name + '</a>' : '—';
                 },
 
                 onlyTrased: function( rowAction ) {
@@ -1160,8 +1174,8 @@
                 this.setContactOwnerSearchValue();
                 this.setAdvanceFilter();
 
-                if ( wperp.erpGetParamByName('filter_save_filter', window.location.search ) ) {
-                    this.showHideSegment = true;
+                if ( wperp.erpGetParamByName('filter_save_filter', window.location.search ) !== null ) {
+                    self.showHideSegment = true;
                 }
             },
 
@@ -1225,6 +1239,7 @@
                                 });
                             } );
 
+                            this.showHideSegment = true;
                             fields = this.reRenderFilterFromUrl( queryString );
                             this.$broadcast( 'setFilterFields', fields );
                             this.$refs.vtable.additionalUrlString['advanceFilter']= queryString;
@@ -1232,6 +1247,13 @@
                             this.$broadcast( 'setFilterFields', false );
                         }
                     }
+                },
+
+                'resetAllFilters': function() {
+                    this.$refs.vtable.additionalUrlString['advanceFilter'] = '';
+                    this.$nextTick(function(){
+                        this.$broadcast('vtable:reload');
+                    })
                 }
             }
         });
