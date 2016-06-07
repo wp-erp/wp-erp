@@ -520,6 +520,7 @@ Company'
                 `postal_code` varchar(10) DEFAULT NULL,
                 `country` varchar(20) DEFAULT NULL,
                 `currency` varchar(5) DEFAULT NULL,
+                `created_by` BIGINT(20) DEFAULT NULL,
                 `created` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`),
                 KEY `user_id` (`user_id`)
@@ -636,6 +637,7 @@ Company'
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_save_search` (
               `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
               `user_id` int(11) DEFAULT NULL,
+              `type` VARCHAR(255) DEFAULT NULL,
               `global` tinyint(4) DEFAULT '0',
               `search_name` text,
               `search_val` text,
@@ -650,7 +652,7 @@ Company'
               PRIMARY KEY (`id`)
             ) $collate;",
 
-                        "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_ac_chart_classes` (
+            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_ac_chart_classes` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
                 `name` varchar(100) DEFAULT NULL,
                 PRIMARY KEY (`id`)

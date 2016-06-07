@@ -38,7 +38,7 @@ if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_co
         action="erp-crm-get-contacts"
         :wpnonce="wpnonce"
         page = "<?php echo add_query_arg( [ 'page' => 'erp-sales-customers' ], admin_url( 'admin.php' ) ); ?>"
-        per-page="4"
+        per-page="20"
         :fields=fields
         :item-row-actions=itemRowActions
         :search="search"
