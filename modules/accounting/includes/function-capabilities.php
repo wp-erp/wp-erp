@@ -77,11 +77,11 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
                 'capabilities' => erp_ac_get_caps_for_role( erp_ac_get_manager_role() )
             ],
 
-            erp_ac_get_agency_role() => [
-                'name'         => __( 'Accounting Agency', 'accounting' ),
-                'public'       => false,
-                'capabilities' => erp_ac_get_caps_for_role( erp_ac_get_agency_role() )
-            ]
+            // erp_ac_get_agency_role() => [
+            //     'name'         => __( 'Accounting Agency', 'accounting' ),
+            //     'public'       => false,
+            //     'capabilities' => erp_ac_get_caps_for_role( erp_ac_get_agency_role() )
+            // ]
         ];
 
         return apply_filters( 'erp_ac_get_roles', $roles );
@@ -143,55 +143,55 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
 
                 break;
 
-            case erp_ac_get_agency_role():
+            // case erp_ac_get_agency_role():
 
-                $caps = [ 
-                    'read'                            => true, 
-                    'erp_ac_view_dashboard'           => true,   
-                    'erp_ac_view_customer'            => true,    
-                    'erp_ac_view_other_customers'     => true, 
-                    'erp_ac_create_customer'          => true,
-                    'erp_ac_edit_customer'            => true,    
-                    'erp_ac_edit_other_customers'     => true, 
-                    'erp_ac_delete_customer'          => true,  
-                    'erp_ac_delete_other_customers'   => true,   
-                    'erp_ac_view_vendor'              => true,  
-                    'erp_ac_view_single_vendor'       => true,
-                    'erp_ac_view_other_vendors'       => true,   
-                    'erp_ac_create_vendor'            => true,    
-                    'erp_ac_edit_vendor'              => true,  
-                    'erp_ac_edit_other_vendors'       => true,   
-                    'erp_ac_delete_vendor'            => true,    
-                    'erp_ac_delete_other_vendors'     => true, 
-                    'erp_ac_view_sale'                => true,   
-                    'erp_ac_view_other_sales'         => true, 
-                    'erp_ac_view_sales_summary'       => true,   
-                    'erp_ac_create_sales_payment'     => true, 
-                    'erp_ac_publish_sales_payment'    => true,    
-                    'erp_ac_create_sales_invoice'     => true, 
-                    'erp_ac_publish_sales_invoice'    => true,    
-                    'erp_ac_view_expense'             => true,    
-                    'erp_ac_view_other_expenses'      => true,  
-                    'erp_ac_view_expenses_summary'    => true,    
-                    'erp_ac_create_expenses_voucher'  => true,  
-                    'erp_ac_publish_expenses_voucher' => true, 
-                    'erp_ac_create_expenses_credit'   => true,   
-                    'erp_ac_publish_expenses_credit'  => true,  
-                    'erp_ac_view_account_lists'       => true,   
-                    'erp_ac_view_single_account'      => true,  
-                    'erp_ac_create_account'           => true,  
-                    'erp_ac_edit_account'            => true,    
-                    'erp_ac_delete_account'          => true,  
-                    'erp_ac_view_bank_accounts'       => true,   
-                    'erp_ac_create_bank_transfer'     => true, 
-                    'erp_ac_view_journal'             => true, 
-                    'erp_ac_view_other_journals'      => true,   
-                    'erp_ac_create_journal'           => true,   
-                    'erp_ac_view_reports'             => true
+            //     $caps = [ 
+            //         'read'                            => true, 
+            //         'erp_ac_view_dashboard'           => true,   
+            //         'erp_ac_view_customer'            => true,    
+            //         'erp_ac_view_other_customers'     => true, 
+            //         'erp_ac_create_customer'          => true,
+            //         'erp_ac_edit_customer'            => true,    
+            //         'erp_ac_edit_other_customers'     => true, 
+            //         'erp_ac_delete_customer'          => true,  
+            //         'erp_ac_delete_other_customers'   => true,   
+            //         'erp_ac_view_vendor'              => true,  
+            //         'erp_ac_view_single_vendor'       => true,
+            //         'erp_ac_view_other_vendors'       => true,   
+            //         'erp_ac_create_vendor'            => true,    
+            //         'erp_ac_edit_vendor'              => true,  
+            //         'erp_ac_edit_other_vendors'       => true,   
+            //         'erp_ac_delete_vendor'            => true,    
+            //         'erp_ac_delete_other_vendors'     => true, 
+            //         'erp_ac_view_sale'                => true,   
+            //         'erp_ac_view_other_sales'         => true, 
+            //         'erp_ac_view_sales_summary'       => true,   
+            //         'erp_ac_create_sales_payment'     => true, 
+            //         'erp_ac_publish_sales_payment'    => true,    
+            //         'erp_ac_create_sales_invoice'     => true, 
+            //         'erp_ac_publish_sales_invoice'    => true,    
+            //         'erp_ac_view_expense'             => true,    
+            //         'erp_ac_view_other_expenses'      => true,  
+            //         'erp_ac_view_expenses_summary'    => true,    
+            //         'erp_ac_create_expenses_voucher'  => true,  
+            //         'erp_ac_publish_expenses_voucher' => true, 
+            //         'erp_ac_create_expenses_credit'   => true,   
+            //         'erp_ac_publish_expenses_credit'  => true,  
+            //         'erp_ac_view_account_lists'       => true,   
+            //         'erp_ac_view_single_account'      => true,  
+            //         'erp_ac_create_account'           => true,  
+            //         'erp_ac_edit_account'            => true,    
+            //         'erp_ac_delete_account'          => true,  
+            //         'erp_ac_view_bank_accounts'       => true,   
+            //         'erp_ac_create_bank_transfer'     => true, 
+            //         'erp_ac_view_journal'             => true, 
+            //         'erp_ac_view_other_journals'      => true,   
+            //         'erp_ac_create_journal'           => true,   
+            //         'erp_ac_view_reports'             => true
 
-                ];
+            //     ];
 
-                break;
+             //   break;
         }
 
         return apply_filters( 'erp_ac_get_caps_for_role', $caps, $role );
