@@ -287,7 +287,6 @@ class Customer_Relationship {
 
                 if ( isset( $_GET['action'] ) && $_GET['action'] == 'view' ) {
                     erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-assign-company.php', 'erp-crm-new-assign-company' );
-                    erp_get_js_template( WPERP_CRM_JS_TMPL . '/customer-edit-company.php', 'erp-crm-customer-edit-company');
                     erp_get_js_template( WPERP_CRM_JS_TMPL . '/customer-social.php', 'erp-crm-customer-social' );
                     erp_get_js_template( WPERP_CRM_JS_TMPL . '/customer-feed-edit.php', 'erp-crm-customer-edit-feed' );
                     erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-subscriber-contact.php', 'erp-crm-assign-subscriber-contact' );

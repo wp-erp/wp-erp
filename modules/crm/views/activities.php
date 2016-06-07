@@ -1,6 +1,6 @@
 
 <?php
-$contacts = erp_crm_get_contact_dropdown();
+// $contacts = erp_crm_get_contact_dropdown();
 $feeds_tab = erp_crm_get_customer_feeds_nav();
 ?>
 <div class="wrap erp erp-crm-activities erp-single-customer" id="wp-erp">
@@ -21,18 +21,15 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
             </div>
 
             <div class="filters">
-                <select style="width:180px;" v-selecttwo="filterFeeds.created_by" class="select2" v-model="filterFeeds.created_by" id="activity-created-by" data-placeholder="<?php _e( 'Created by..', 'erp' ) ?>">
+                <select style="width:260px;" v-selecttwo="filterFeeds.created_by" class="select2" v-model="filterFeeds.created_by" id="activity-created-by" data-placeholder="<?php _e( 'Created by..', 'erp' ) ?>">
                     <option value="-1"><?php _e( 'All', 'erp' ) ?></option>
                     <?php echo erp_crm_get_employees_dropdown(); ?>
                 </select>
             </div>
 
             <div class="filters">
-                <select style="width:180px;" v-selecttwo="filterFeeds.customer_id" class="select2" v-model="filterFeeds.customer_id" id="activity-created-for"  data-placeholder="<?php _e( 'Created for..', 'erp' ) ?>">
-                    <option value="-1"><?php _e( 'All', 'erp' ) ?></option>
-                    <?php foreach ( $contacts as $contact_id => $contact_name ) : ?>
-                        <option value="<?php echo $contact_id; ?>"><?php echo $contact_name; ?></option>
-                    <?php endforeach ?>
+                <select style="width:260px;" v-selecttwo="filterFeeds.customer_id" data-types="contact,company"  class="erp-crm-contact-list-dropdown" v-model="filterFeeds.customer_id" id="activity-created-for"  data-placeholder="<?php _e( 'Created for..', 'erp' ) ?>">
+                    <option value=""></option>
                 </select>
             </div>
 

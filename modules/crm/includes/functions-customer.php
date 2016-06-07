@@ -471,20 +471,6 @@ function erp_crm_customer_remove_company( $id ) {
 }
 
 /**
- * Get Customer Company by ID
- *
- * @since 1.0
- *
- * @return array
- */
-function erp_crm_customer_company_by_id( $query_id ) {
-    global $wpdb;
-
-    $sql = "SELECT * FROM {$wpdb->prefix}erp_crm_customer_companies WHERE id = $query_id";
-    return $wpdb->get_row( $sql, ARRAY_A );
-}
-
-/**
  * Get social fields
  *
  * @since 1.0

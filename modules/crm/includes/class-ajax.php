@@ -33,9 +33,9 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-crm-get-contacts', 'get_all_contact' );
         $this->action( 'wp_ajax_erp-crm-get-contact-companies', 'get_contact_companies' );
         $this->action( 'wp_ajax_erp-crm-get-assignable-group', 'get_assignable_contact' );
+        $this->action( 'wp_ajax_erp-search-crm-contacts', 'search_crm_contacts' );
 
         $this->action( 'wp_ajax_erp-crm-customer-add-company', 'customer_add_company' );
-        $this->action( 'wp_ajax_erp-crm-customer-edit-company', 'customer_edit_company' );
         $this->action( 'wp_ajax_erp-crm-customer-update-company', 'customer_update_company' );
         $this->action( 'wp_ajax_erp-crm-customer-remove-company', 'customer_remove_company' );
         $this->action( 'wp_ajax_erp-search-crm-user', 'search_crm_user' );
@@ -493,22 +493,9 @@ class Ajax_Handler {
     }
 
     /**
-     * Get data for Company edit field for customer
-     */
-    public function customer_edit_company() {
-
-        $query_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
-
-        $result = erp_crm_customer_company_by_id( $query_id );
-
-        $this->send_success( $result );
-    }
-
-    /**
      * Save Company edit field for customer
      */
     public function customer_update_company() {
-
         $this->verify_nonce( 'wp-erp-crm-customer-update-company-nonce' );
 
         $row_id     = isset( $_REQUEST['row_id'] ) ? intval( $_REQUEST['row_id'] ) : 0;
@@ -517,7 +504,6 @@ class Ajax_Handler {
         $result = erp_crm_customer_update_company( $row_id, $company_id );
 
         $this->send_success( __( 'Company has been updated successfully', 'erp' ) );
-
     }
 
     /**
@@ -547,7 +533,6 @@ class Ajax_Handler {
         }
 
         $found_crm_user = [];
-
         $crm_users = erp_crm_get_crm_user( [ 's' => $term ] );
 
         if ( ! empty( $crm_users ) ) {
@@ -557,6 +542,43 @@ class Ajax_Handler {
         }
 
         $this->send_success( $found_crm_user );
+    }
+
+    /**
+     * Search CRM contacts by keywords
+     *
+     * @since 1.1.0
+     *
+     * @return json
+     */
+    public function search_crm_contacts() {
+        $this->verify_nonce( 'wp-erp-crm-nonce' );
+        $term = isset( $_REQUEST['s'] ) ? stripslashes( $_REQUEST['s'] ) : '';
+        $types = isset( $_REQUEST['types'] ) ? $_REQUEST['types'] : '';
+
+        if ( empty( $term ) ) {
+            die();
+        }
+
+        if ( empty( $types ) ) {
+            die();
+        }
+
+        $found_crm_contact = [];
+        $type              = ( count( $types ) > 1 ) ? $types : reset( $types );
+        $crm_contacts      = erp_get_peoples( [ 's' => $term, 'type' => $type ] );
+
+        if ( ! empty( $crm_contacts ) ) {
+            foreach ( $crm_contacts as $user ) {
+                if ( in_array( 'company', $user->types ) ) {
+                    $found_crm_contact[ $user->id ] = $user->company;
+                } else {
+                    $found_crm_contact[ $user->id ] = $user->first_name . ' ' . $user->last_name;
+                }
+            }
+        }
+
+        $this->send_success( $found_crm_contact );
     }
 
     /**

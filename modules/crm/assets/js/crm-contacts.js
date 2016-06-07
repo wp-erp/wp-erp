@@ -75,6 +75,49 @@
                 });
             },
 
+            initContactListAjax: function() {
+                $( 'select.erp-crm-contact-list-dropdown' ).select2({
+                    allowClear: true,
+                    placeholder: $(this).attr( 'data-placeholder' ),
+                    minimumInputLength: 3,
+                    ajax: {
+                        url: wpErpCrm.ajaxurl,
+                        dataType: 'json',
+                        delay: 250,
+                        escapeMarkup: function( m ) {
+                            return m;
+                        },
+                        data: function (params) {
+                            return {
+                                s: params.term, // search term
+                                _wpnonce: wpErpCrm.nonce,
+                                types: $(this).attr( 'data-types' ).split(','),
+                                action: 'erp-search-crm-contacts'
+                            };
+                        },
+                        processResults: function ( data, params ) {
+                            var terms = [];
+                            console.log( data );
+                            if ( data) {
+                                $.each( data.data, function( id, text ) {
+                                    terms.push({
+                                        id: id,
+                                        text: text
+                                    });
+                                });
+                            }
+
+                            if ( terms.length ) {
+                                return { results: terms };
+                            } else {
+                                return { results: '' };
+                            }
+                        },
+                        cache: true
+                    }
+                });
+            },
+
             reRenderFilterFromUrl: function( queryString ) {
                 var self = this;
                 var filters = [];
@@ -1405,6 +1448,9 @@
                         id: 'erp-crm-single-contact-company',
                         content: wperp.template('erp-crm-new-assign-company')( data ).trim(),
                         extraClass: 'smaller',
+                        onReady: function() {
+                            self.initContactListAjax();
+                        },
                         onSubmit: function(modal) {
                             modal.disableButton();
 

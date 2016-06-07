@@ -3,15 +3,7 @@
     <# if ( ! data.group_id ) { #>
 
         <div class="row" data-selected = "'{{ data.user_id }}'">
-            <?php erp_html_form_input( array(
-                'label'       => __( 'Contact', 'erp' ),
-                'name'        => 'user_id',
-                'type'        => 'select',
-                'class'        => 'select2',
-                'id'          => 'erp-crm-contact-subscriber-user',
-                'required'    => true,
-                'options'     => erp_crm_get_contact_dropdown( [ '' => __( '--Select a contact--', 'erp' ) ] )
-            ) ); ?>
+
         </div>
 
     <# } #>
