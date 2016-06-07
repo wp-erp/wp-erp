@@ -19,7 +19,6 @@ class Form_Handler {
      */
     public function __construct() {
         add_action( 'load-crm_page_erp-sales-contact-groups', [ $this, 'contact_groups_bulk_action' ] );
-        // add_action( 'admin_init', array( $this, 'handle_save_search_submit' ), 10 );
         add_action( 'admin_head', [ $this, 'handle_canonical_url' ], 10 );
         add_action( 'erp_hr_after_employee_permission_set', [ $this, 'employee_permission_set' ], 10, 2 );
         add_filter( 'erp_get_people_pre_where_join', [ $this, 'contact_advance_filter' ], 10, 2 );
@@ -74,6 +73,25 @@ class Form_Handler {
                                 }
                                 $custom_sql['where'][] = ( $i == count( $or_query )-1 ) ? ")" : " ) AND";
                             }
+                        } else if ( $field == 'country_state' ) {
+                            $custom_sql['where'][] = "(";
+                            $j=0;
+
+                            foreach ( $value as $key => $search_value ) {
+                                $search_condition_regx = erp_crm_get_save_search_regx( $search_value );
+                                $condition = array_shift( $search_condition_regx );
+                                $key_value = explode( ':', $search_value ); // seperate BAN:DHA to an array [ 0=>BAN, 1=>DHA]
+                                $addOr = ( $j == count( $value )-1 ) ? '' : " OR ";
+
+                                if ( count( $key_value ) > 1 ) {
+                                    $custom_sql['where'][] = "((country $condition '$key_value[0]') AND (state $condition '$key_value[1]'))$addOr";
+                                } else {
+                                    $custom_sql['where'][] = "(country $condition '$key_value[0]')$addOr";
+                                }
+
+                                $j++;
+                            }
+                            $custom_sql['where'][] = ( $i == count( $or_query )-1 ) ? ")" : " ) AND";
                         }
                         $i++;
                     }
@@ -99,40 +117,6 @@ class Form_Handler {
                     window.history.replaceState = false;
                 </script>
             <?php
-        }
-    }
-
-    public function handle_save_search_submit() {
-
-        if ( isset( $_POST['save_search_submit'] ) && wp_verify_nonce( $_POST['wp-erp-crm-save-search-nonce'], 'wp-erp-crm-save-search-nonce-action' ) ) {
-
-            $query_args = [];
-            $request_uri = $_POST['erp_crm_http_referer'];
-            $search_string = erp_crm_get_save_search_query_string( $_POST );
-
-
-            if ( ! empty( $_REQUEST['orderby'] ) ) {
-                $query_args['orderby'] = esc_attr( $_REQUEST['orderby'] );
-            }
-
-            if ( ! empty( $_REQUEST['order'] ) ) {
-                $query_args['order'] = esc_attr( $_REQUEST['order'] );
-            }
-
-            if ( ! empty( $_REQUEST['status'] ) ) {
-                $query_args['status'] = esc_attr( $_REQUEST['status'] );
-            }
-
-            if ( ! empty( $_REQUEST['s'] ) ) {
-                $query_args['s'] = esc_attr( $_REQUEST['s'] );
-            }
-
-            if ( $query_args ) {
-                $request_uri = add_query_arg( $query_args, $request_uri );
-            }
-
-            wp_redirect( $request_uri .'&erp_save_search=0&'. $search_string );
-            exit();
         }
     }
 
