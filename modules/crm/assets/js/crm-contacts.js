@@ -230,7 +230,14 @@
                             + '<select id="filter-condition" v-model="fieldObj.filterCondition" v-if="fieldObj.filterKey">'
                                 + '<option v-for="( conditionSign, condition ) in searchFields[fieldObj.filterKey].condition" value="{{ conditionSign }}">{{ condition }}</option>'
                             + '</select>'
-                            + '<input type="text" class="input-text" v-model="fieldObj.filterValue" v-if="fieldObj.filterKey">'
+                            + '<template v-if="fieldObj.filterKey">'
+                                + '<input type="{{ searchFields[fieldObj.filterKey].type }}" v-if="ifSelectedTextField( searchFields[fieldObj.filterKey].type )" class="input-text" v-model="fieldObj.filterValue">'
+                                + '<input type="text" v-if="searchFields[fieldObj.filterKey].type == \'date\'" v-datepicker class="input-text" v-model="fieldObj.filterValue">'
+                                + '<input type="number" v-if="searchFields[fieldObj.filterKey].type == \'number\'" min="0" step="1" class="input-text" v-model="fieldObj.filterValue">'
+                                + '<select v-if="searchFields[fieldObj.filterKey].type == \'dropdown\'" class="input-select" v-model="fieldObj.filterValue">'
+                                    + '{{{ searchFields[fieldObj.filterKey].options }}}'
+                                + '</select>'
+                            + '</template>'
                         + '</div>'
                         + '<div class="filter-right">'
                             + '<a href="#" @click.prevent="applyFilter(field)"><i class="fa fa-check" aria-hidden="true"></i></a>'
@@ -268,6 +275,10 @@
             },
 
             methods: {
+
+                ifSelectedTextField: function( type ) {
+                    return ( type == 'text' || type == 'url' || type == 'email' ) ? true : false;
+                },
 
                 applyFilter: function() {
                     if ( ! this.fieldObj.filterKey || ! this.fieldObj.filterValue ) {
@@ -401,10 +412,7 @@
 
                     jQuery.post( wpErpCrm.ajaxurl, data, function( resp ) {
                         if ( resp.success ) {
-                            console.log( resp );
-
                             if ( ! self.isUpdate ) {
-                                    console.log(  contact.extraBulkAction.filterSaveAdvanceFiter.options.length );
                                 if ( contact.extraBulkAction.filterSaveAdvanceFiter.options.length < 1 ) {
                                     if ( resp.data.global == '0' ) {
                                         contact.extraBulkAction.filterSaveAdvanceFiter.options.push( {

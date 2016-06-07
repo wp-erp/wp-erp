@@ -1,19 +1,16 @@
 <?php
-global $current_screen;
-
 if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_contact' ] ) ) {
     $id = intval( $_GET['filter_assign_contact'] );
-
     $custom_data = [
         'filter_assign_contact' => [
             'id'           => $id,
             'display_name' => get_the_author_meta( 'display_name', $id )
         ],
-        'searchFields' => array_keys( erp_crm_get_serach_key( $current_screen->base ) )
+        'searchFields' => array_keys( erp_crm_get_serach_key( 'contact' ) )
     ];
 } else {
     $custom_data = [
-        'searchFields' => array_keys( erp_crm_get_serach_key( $current_screen->base ) )
+        'searchFields' => array_keys( erp_crm_get_serach_key( 'contact' ) )
     ];
 }
 ?>

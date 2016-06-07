@@ -294,16 +294,26 @@ function erp_ac_table_update() {
 
 function erp_ac_update_manager_capabilities() {
     remove_role( 'erp_ac_manager' );
-   
+
 	$installer = new \WeDevs_ERP_Installer();
 	$installer->create_roles();
 	$installer->set_role();
 }
 
+function erp_crm_update_table_column() {
+    global $wpdb;
+    $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_crm_save_search ADD `type` VARCHAR(255) AFTER `id`" );
+    $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_peoples ADD `created_by` BIGINT(20) AFTER `currency`" );
+}
+
+// Update all accounting releated function
 erp_ac_update_manager_capabilities();
 erp_ac_create_table();
 erp_ac_populate_data();
 erp_ac_table_update();
+
+// Update all CRM related function
+erp_crm_update_table_column();
 
 
 
