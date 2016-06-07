@@ -1451,6 +1451,34 @@ function erp_crm_get_serach_key( $type = '' ) {
             ]
         ],
 
+        'street_1' => [
+            'title'     => __( 'Stree 1', 'erp' ),
+            'type'      => 'text',
+            'text'      => '',
+            'condition' => [
+                '%'  => __( 'has', 'erp' ),
+                '!%' => __( 'has not', 'erp' ),
+                ''   => __( 'from', 'erp' ),
+                '!'  => __( 'not from', 'erp' ),
+                '~'  => __( 'contains', 'erp' ),
+                '!~' => __( 'not contains', 'erp' )
+            ]
+        ],
+
+        'street_2' => [
+            'title'     => __( 'Stree 2', 'erp' ),
+            'type'      => 'text',
+            'text'      => '',
+            'condition' => [
+                '%'  => __( 'has', 'erp' ),
+                '!%' => __( 'has not', 'erp' ),
+                ''   => __( 'from', 'erp' ),
+                '!'  => __( 'not from', 'erp' ),
+                '~'  => __( 'contains', 'erp' ),
+                '!~' => __( 'not contains', 'erp' )
+            ]
+        ],
+
         'country_state' => [
             'title'     => __( 'Country/State', 'erp' ),
             'type'      => 'dropdown',
@@ -1462,6 +1490,49 @@ function erp_crm_get_serach_key( $type = '' ) {
             'options' => \WeDevs\ERP\Countries::instance()->country_dropdown_options(),
         ],
 
+        'postal_code' => [
+            'title'     => __( 'Postal Code', 'erp' ),
+            'type'      => 'text',
+            'text'      => '',
+            'condition' => [
+                '%'  => __( 'has', 'erp' ),
+                '!%' => __( 'has not', 'erp' ),
+                ''   => __( 'from', 'erp' ),
+                '!'  => __( 'not from', 'erp' ),
+                '~'  => __( 'contains', 'erp' ),
+                '!~' => __( 'not contains', 'erp' ),
+                '^'  => __( 'begins with', 'erp' ),
+                '$'  => __( 'ends with', 'erp' ),
+            ]
+        ],
+
+        'notes' => [
+            'title'     => __( 'Notes', 'erp' ),
+            'type'      => 'text',
+            'text'      => '',
+            'condition' => [
+                '%'  => __( 'has', 'erp' ),
+                '!%' => __( 'has not', 'erp' ),
+                '~'  => __( 'contains', 'erp' ),
+                '!~' => __( 'not contains', 'erp' ),
+                '^'  => __( 'begins with', 'erp' ),
+                '$'  => __( 'ends with', 'erp' ),
+            ]
+        ],
+
+        'other' => [
+            'title'     => __( 'Others Fields', 'erp' ),
+            'type'      => 'text',
+            'text'      => '',
+            'condition' => [
+                '%'  => __( 'has', 'erp' ),
+                '!%' => __( 'has not', 'erp' ),
+                '~'  => __( 'contains', 'erp' ),
+                '!~' => __( 'not contains', 'erp' ),
+                '^'  => __( 'begins with', 'erp' ),
+                '$'  => __( 'ends with', 'erp' ),
+            ]
+        ]
     ];
 
     if ( 'contact' == $type ) {
