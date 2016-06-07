@@ -20,10 +20,10 @@ function erp_ac_get_reports() {
              'title'       => __( 'Income Statement', 'erp' ),
              'description' => __( 'A summary of a management\'s performance as reflecte the profitability of an organization during the time interval.', 'erp' )
         ],
-        // 'balance-sheet' => [
-        //     'title'       => __( 'Balance Sheet', 'erp' ),
-        //     'description' => __( 'This is a report gives you an immediate status of your accounts at a specified date. You can call it a "Snapshot" view of the current position (day) of the financial year.', 'erp' )
-        // ],
+        'balance-sheet' => [
+            'title'       => __( 'Balance Sheet', 'erp' ),
+            'description' => __( 'This is a report gives you an immediate status of your accounts at a specified date. You can call it a "Snapshot" view of the current position (day) of the financial year.', 'erp' )
+        ],
         // 'profit-loss' => [
         //     'title'       => __( 'Profit and Loss', 'accounting' ),
         //     'description' => __( '', 'accounting' )
@@ -207,11 +207,12 @@ function erp_ac_normarlize_tax_from_transaction( $args = [] ) {
 
 function erp_ac_get_sales_total() {
     $sales_transaction = erp_ac_get_transaction_for_sales();
+
     $journals          = array_filter( wp_list_pluck( $sales_transaction, 'journals' ) );
     $sales_total       = 0;
 
     foreach ( $journals as $key => $journal ) {
-        $sales_total = $sales_total + array_sum( wp_list_pluck( $journal, 'credit' ) );
+        $sales_total = $sales_total + array_sum( wp_list_pluck( $journal, 'credit' ) ) - array_sum( wp_list_pluck( $journal, 'debit' ) );
     }
     
     return $sales_total;
@@ -223,7 +224,7 @@ function erp_ac_get_good_sold_total_amount() {
     $sales_total       = 0;
 
     foreach ( $journals as $key => $journal ) {
-        $sales_total = $sales_total + array_sum( wp_list_pluck( $journal, 'debit' ) );
+        $sales_total = $sales_total + array_sum( wp_list_pluck( $journal, 'debit' ) ) - array_sum( wp_list_pluck( $journal, 'credit' ) );
     }
     
     return $sales_total;
@@ -235,7 +236,7 @@ function erp_ac_get_expense_total() {
     $expense_total       = 0;
  
     foreach ( $journals as $key => $journal ) {
-        $expense_total = $expense_total + array_sum( wp_list_pluck( $journal, 'debit' ) );
+        $expense_total = $expense_total + array_sum( wp_list_pluck( $journal, 'debit' ) ) - array_sum( wp_list_pluck( $journal, 'credit' ) );
     }
     
     return $expense_total;

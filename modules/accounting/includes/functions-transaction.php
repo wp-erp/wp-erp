@@ -679,7 +679,7 @@ function erp_ac_get_transaction_by_journal_id( $journal_id ) {
     $cache_key     = 'erp-ac-get-transaction-by-journal-id-' . md5( get_current_user_id() );
     $sales_journal = wp_cache_get( $cache_key, 'erp' );
 
-    if ( false === $sales_journal ) {
+    //if ( false === $sales_journal ) {
         $sales_journal = WeDevs\ERP\Accounting\Model\Transaction::with(['journals' => function($q) use( $journal_id ) {
             return $q->where( 'ledger_id', '=', $journal_id );
         }])
@@ -688,7 +688,7 @@ function erp_ac_get_transaction_by_journal_id( $journal_id ) {
         ->get()->toArray();
 
         wp_cache_set( $cache_key, $sales_journal, 'erp' );
-    }
+   // }
 
     return $sales_journal;
 }
@@ -702,7 +702,7 @@ function erp_ac_get_transaction_for_sales() {
     $payable_tax     = wp_list_pluck( $payable_tax, 'id' );
 
     $accounts = erp_ac_get_chart_dropdown([
-        'exclude'  => [1, 2, 3],
+        'exclude'  => [1, 2, 3, 5],
 
     ] );
     
@@ -716,18 +716,19 @@ function erp_ac_get_transaction_for_sales() {
     $cache_key     = 'erp-ac-get-transaction-by-sales-' . md5( get_current_user_id() );
     $sales_journal = wp_cache_get( $cache_key, 'erp' );
 
-    if ( false === $sales_journal ) {
+    //if ( false === $sales_journal ) {
         $sales_journal = WeDevs\ERP\Accounting\Model\Transaction::with(['journals' => function($q) use($accounts_id) {
             return $q->whereIn( 'ledger_id', $accounts_id );
         }])
-        ->where( 'type', '=', 'sales' )
+        ->whereIn( 'type', ['sales', 'journal']  )
         ->where( 'status', '!=', 'draft' )
+        ->orWhereNull( 'status' )
         ->where( 'issue_date', '>=', $financial_start )
         ->where( 'issue_date', '<=', $financial_end )
         ->get()->toArray();
 
         wp_cache_set( $cache_key, $sales_journal, 'erp' );
-    }
+    //}
 
     return $sales_journal;
 }
@@ -750,18 +751,19 @@ function erp_ac_get_expnese_transaction() {
     $cache_key     = 'erp-ac-get-expnese-transaction-' . md5( get_current_user_id() );
     $expense_journal = wp_cache_get( $cache_key, 'erp' );
 
-    if ( false === $expense_journal ) {
+    //if ( false === $expense_journal ) {
         $expense_journal = WeDevs\ERP\Accounting\Model\Transaction::with(['journals' => function($q) use($accounts_id) {
             return $q->whereIn( 'ledger_id', $accounts_id );
         }])
-        ->where( 'type', '=', 'expense' )
+        ->whereIn( 'type', ['expense', 'journal'] )
         ->where( 'status', '!=', 'draft' )
+        ->orWhereNull( 'status' )
         ->where( 'issue_date', '>=', $financial_start )
         ->where( 'issue_date', '<=', $financial_end )
         ->get()->toArray();
 
         wp_cache_set( $cache_key, $expense_journal, 'erp' );
-    }
+   // }
 
     return $expense_journal;
 }
@@ -801,8 +803,9 @@ function erp_ac_get_expnese_transaction_without_tax() {
         $expense_journal = WeDevs\ERP\Accounting\Model\Transaction::with(['journals' => function($q) use($accounts_id) {
             return $q->whereIn( 'ledger_id', $accounts_id )->where( 'type', '=', 'line_item' );
         }])
-        ->where( 'type', '=', 'expense' )
+        ->whereIn( 'type', ['expense', 'journal'] )
         ->where( 'status', '!=', 'draft' )
+        ->orWhereNull( 'status' )
         ->where( 'issue_date', '>=', $financial_start )
         ->where( 'issue_date', '<=', $financial_end )
         ->get()->toArray();
@@ -824,7 +827,7 @@ function erp_ac_get_transaction_for_tax() {
     $cache_key     = 'erp-ac-get-transaction-for-tax-' . md5( get_current_user_id() );
     $tax_journal = wp_cache_get( $cache_key, 'erp' );
 
-    if ( false === $tax_journal ) {
+    //if ( false === $tax_journal ) {
         $tax_journal = \WeDevs\ERP\Accounting\Model\Transaction::with(['journals' => function($q) use( $tax_ledgers ) {
             return $q->whereIn( 'ledger_id', $tax_ledgers );
         }])
@@ -834,7 +837,7 @@ function erp_ac_get_transaction_for_tax() {
         ->get()->toArray();
 
         wp_cache_set( $cache_key, $tax_journal, 'erp' );
-    }
+    //}
 
     return $tax_journal;
 }

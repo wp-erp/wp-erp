@@ -158,7 +158,6 @@ function erp_ac_new_customer( $postdata ) {
     if ( ! $field_id ) {
         if ( $fields['type'] == 'customer' && erp_ac_create_customer() ) {
             $insert_id = erp_insert_people( $fields );
-            
             if ( ! is_wp_error( $insert_id ) ) {
                 do_action( 'erp_ac_after_new_customer', $insert_id, $fields );    
             }

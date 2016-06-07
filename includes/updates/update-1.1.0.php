@@ -308,6 +308,10 @@ function erp_ac_table_update() {
         $wpdb->query( "ALTER TABLE $item_table ADD `tax_rate` DECIMAL(10,2) NOT NULL AFTER `tax`" );
     }
 
+    if ( ! in_array( 'type', $item_cols ) ) {
+        $wpdb->query( "ALTER TABLE $item_table ADD `type` varchar(20) DEFAULT NULL AFTER `product_id`" );
+    }
+
     if ( ! in_array( 'tax_journal', $item_cols ) ) {
         $wpdb->query( "ALTER TABLE $item_table ADD `tax_journal` BIGINT(20) NOT NULL AFTER `tax_rate`" );
     }
