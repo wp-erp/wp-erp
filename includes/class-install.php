@@ -641,6 +641,8 @@ Company'
               `global` tinyint(4) DEFAULT '0',
               `search_name` text,
               `search_val` text,
+              `created_at` datetime DEFAULT NULL,
+              `updated_at` datetime DEFAULT NULL,
               PRIMARY KEY (`id`)
             ) $collate;",
 

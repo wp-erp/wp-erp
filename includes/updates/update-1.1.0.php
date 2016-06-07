@@ -350,6 +350,8 @@ function erp_ac_update_manager_capabilities() {
 function erp_crm_update_table_column() {
     global $wpdb;
     $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_crm_save_search ADD `type` VARCHAR(255) AFTER `id`" );
+    $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_crm_save_search ADD `created_at` DATETIME DEFAULT NULL" );
+    $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_crm_save_search ADD `udpated_at` DATETIME DEFAULT NULL" );
     $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_peoples ADD `created_by` BIGINT(20) AFTER `currency`" );
 }
 
