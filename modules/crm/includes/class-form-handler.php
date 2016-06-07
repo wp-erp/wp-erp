@@ -68,7 +68,15 @@ class Form_Handler {
                                 $j=0;
                                 foreach ( $val as $search_val => $search_condition ) {
                                     $addOr = ( $j == count( $val )-1 ) ? '' : " OR ";
-                                    $custom_sql['where'][] = "$field $search_condition '$search_val' $addOr";
+
+                                    if ( 'has_not' == $search_val ) {
+                                        $custom_sql['where'][] = "( $field is null OR $field = '' ) $addOr";
+                                    } else if ( 'if_has' == $search_val ) {
+                                        $custom_sql['where'][] = "( $field is not null AND $field != '' ) $addOr";
+                                    } else {
+                                        $custom_sql['where'][] = "$field $search_condition '$search_val' $addOr";
+                                    }
+
                                     $j++;
                                 }
                                 $custom_sql['where'][] = ( $i == count( $or_query )-1 ) ? ")" : " ) AND";
@@ -84,7 +92,7 @@ class Form_Handler {
                                 $addOr = ( $j == count( $value )-1 ) ? '' : " OR ";
 
                                 if ( count( $key_value ) > 1 ) {
-                                    $custom_sql['where'][] = "((country $condition '$key_value[0]') AND (state $condition '$key_value[1]'))$addOr";
+                                    $custom_sql['where'][] = "( country $condition '$key_value[0]' AND state $condition '$key_value[1]')$addOr";
                                 } else {
                                     $custom_sql['where'][] = "(country $condition '$key_value[0]')$addOr";
                                 }

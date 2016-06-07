@@ -227,10 +227,10 @@
                                 + '<option value="">--Select a field--</option>'
                                 + '<option v-for="( searchKey, searchField ) in searchFields" value="{{ searchKey }}">{{ searchField.title }}</option>'
                             + '</select>'
-                            + '<select id="filter-condition" v-model="fieldObj.filterCondition" v-if="fieldObj.filterKey">'
+                            + '<select id="filter-condition" v-model="fieldObj.filterCondition" v-if="fieldObj.filterKey" @change="setCondiationWiseValue( fieldObj.filterCondition )">'
                                 + '<option v-for="( conditionSign, condition ) in searchFields[fieldObj.filterKey].condition" value="{{ conditionSign }}">{{ condition }}</option>'
                             + '</select>'
-                            + '<template v-if="fieldObj.filterKey">'
+                            + '<template v-if="fieldObj.filterKey && isSomeCondition( fieldObj.filterCondition )">'
                                 + '<input type="{{ searchFields[fieldObj.filterKey].type }}" v-if="ifSelectedTextField( searchFields[fieldObj.filterKey].type )" class="input-text" v-model="fieldObj.filterValue">'
                                 + '<input type="text" v-if="searchFields[fieldObj.filterKey].type == \'date\'" v-datepicker class="input-text" v-model="fieldObj.filterValue">'
                                 + '<input type="number" v-if="searchFields[fieldObj.filterKey].type == \'number\'" min="0" step="1" class="input-text" v-model="fieldObj.filterValue">'
@@ -246,9 +246,16 @@
                         + '<div class="clearfix"></div>'
                     + '</div>'
                     + '<div class="filter-details" v-else @click.prevent="editFilterItem( field )">'
-                        + '<div class="filter-left">'
-                            + '{{ searchFields[field.key].title }} <span style="color:#0085ba; font-style:italic; margin:0px 2px;">{{ searchFields[field.key].condition[field.condition] }}</span> {{ field.value }}'
-                        + '</div>'
+                        + '<template v-if="isHasOrHasNotViaValue( field.value )">'
+                            + '<div class="filter-left">'
+                                + '<span style="color:#0085ba; font-style:italic; margin:0px 2px;">{{ field.value.replace("_", " ") | capitalize }}</span> {{ searchFields[field.key].title }}'
+                            + '</div>'
+                        + '</template>'
+                        + '<template v-else>'
+                            + '<div class="filter-left">'
+                                + '{{ searchFields[field.key].title }} <span style="color:#0085ba; font-style:italic; margin:0px 2px;">{{ searchFields[field.key].condition[field.condition] }}</span> {{ field.value }}'
+                            + '</div>'
+                        + '</template>'
                         + '<div class="filter-right">'
                             + '<a href="#" @click.prevent="removeFilter(field)"><i class="fa fa-times" aria-hidden="true"></i></a>'
                         + '</div>'
@@ -276,14 +283,56 @@
 
             methods: {
 
+                setCondiationWiseValue: function( condition ) {
+                    if ( condition == '!%' ) {
+                        this.fieldObj.filterValue = 'has_not';
+                    } else if ( condition == '%' ) {
+                        this.fieldObj.filterValue = 'if_has';
+                    } else {
+                        this.fieldObj.filterValue = '';
+                    }
+                },
+
+                getSymbolForSomeCondition: function( value ) {
+                    switch(value) {
+                        case 'has_not':
+                            return '!%';
+                            break;
+                        case 'if_has':
+                            return '%';
+                            break;
+                        default:
+                            return '';
+                    }
+                },
+
+                isHasOrHasNotViaValue: function( value ) {
+                    if ( value == 'has_not' || value == 'if_has' ) {
+                        return true;
+                    }
+                    return false;
+                },
+
+                isSomeCondition: function( condition ) {
+                    if ( condition == '!%' ||  condition == '%' ) {
+                        return false;
+                    }
+                    return true;
+                },
+
                 ifSelectedTextField: function( type ) {
                     return ( type == 'text' || type == 'url' || type == 'email' ) ? true : false;
                 },
 
                 applyFilter: function() {
-                    if ( ! this.fieldObj.filterKey || ! this.fieldObj.filterValue ) {
+                    if ( ! this.fieldObj.filterKey || ( ! this.fieldObj.filterValue && this.isSomeCondition( this.fieldObj.filterCondition ) ) ) {
                         return;
                     }
+
+                    if ( this.fieldObj.filterCondition == '%' || this.fieldObj.filterCondition == '!%' ) {
+                        this.fieldObj.filterCondition = '';
+                    }
+
                     this.field.editable = false;
                     this.$dispatch( 'changeFilterObject', this.fieldObj, this.fieldIndex, this.index, false );
                 },
@@ -296,10 +345,11 @@
                     if ( this.editableMode ) {
                         return;
                     }
+
                     this.isEditable = true;
                     this.fieldObj.filterKey = field.key;
-                    this.fieldObj.filterCondition = field.condition;
-                    this.fieldObj.filterValue = field.value;
+                    this.fieldObj.filterCondition = this.isHasOrHasNotViaValue( field.value ) ? this.getSymbolForSomeCondition( field.value ) : field.condition;
+                    this.fieldObj.filterValue = this.isHasOrHasNotViaValue( field.value ) ? '' : field.value;
                     this.field.editable = true;
 
                     this.$dispatch( 'isEditableMode', true );
@@ -573,6 +623,8 @@
                     this.fields[index][fieldIndex].condition = fieldObj.filterCondition;
                     this.fields[index][fieldIndex].value = fieldObj.filterValue;
                     this.editableMode = editableMode;
+
+                    console.log( fieldObj );
 
                     this.$dispatch( 'filterContactList', this.fields );
                 },

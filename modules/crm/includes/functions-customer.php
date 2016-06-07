@@ -1402,7 +1402,8 @@ function erp_crm_get_serach_key( $type = '' ) {
             'type'      => 'text',
             'text'      => '',
             'condition' => [
-                ''   => __( 'has', 'erp' ),
+                '%'  => __( 'has', 'erp' ),
+                '!%' => __( 'has not', 'erp' ),
                 '~'  => __( 'contains', 'erp' ),
                 '!~' => __( 'not contains', 'erp' ),
                 '^'  => __( 'begins with', 'erp' ),
@@ -1415,7 +1416,8 @@ function erp_crm_get_serach_key( $type = '' ) {
             'type'      => 'text',
             'text'      => '',
             'condition' => [
-                ''   => __( 'has', 'erp' ),
+                '%'  => __( 'has', 'erp' ),
+                '!%' => __( 'has not', 'erp' ),
                 '~'  => __( 'contains', 'erp' ),
                 '!~' => __( 'not contains', 'erp' ),
                 '^'  => __( 'begins with', 'erp' ),
@@ -1428,7 +1430,8 @@ function erp_crm_get_serach_key( $type = '' ) {
             'type'      => 'text',
             'text'      => '',
             'condition' => [
-                ''   => __( 'has', 'erp' ),
+                '%'  => __( 'has', 'erp' ),
+                '!%' => __( 'has not', 'erp' ),
                 '~'  => __( 'contains', 'erp' ),
                 '!~' => __( 'not contains', 'erp' ),
                 '^'  => __( 'begins with', 'erp' ),
@@ -1545,7 +1548,7 @@ function erp_crm_get_company_serach_key() {
  *
  * @return array
  */
-function erp_crm_get_save_search_regx( $values ) {
+function erp_crm_get_save_search_regx( $values ) {  // %%sabbir
     $result = [];
 
     if ( is_array( $values ) ) {
