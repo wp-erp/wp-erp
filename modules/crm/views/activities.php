@@ -1,6 +1,5 @@
 
 <?php
-// $contacts = erp_crm_get_contact_dropdown();
 $feeds_tab = erp_crm_get_customer_feeds_nav();
 ?>
 <div class="wrap erp erp-crm-activities erp-single-customer" id="wp-erp">

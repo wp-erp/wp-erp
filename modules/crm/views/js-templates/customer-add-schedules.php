@@ -1,5 +1,3 @@
-<?php $contacts = erp_crm_get_contact_dropdown(); ?>
-
 <div class="erp-crm-new-schedule-wrapper">
     <# if( new Date( data.current_date ) >= new Date() ) { #>
         <div class="feed-schedule-wrapper">
@@ -10,11 +8,8 @@
                 </p>
 
                 <p class="erp-left schedule-assign-user">
-                    <select name="user_id" required class="select2" id="assing-contact" style="width: 100%" data-placeholder="Assign to a contact..">
-                        <option value=""><?php _e( '--Select--', 'erp' ) ?></option>
-                        <?php foreach ( $contacts as $contact_id => $contact_name ) : ?>
-                            <option value="<?php echo $contact_id; ?>"><?php echo $contact_name; ?></option>
-                        <?php endforeach ?>
+                    <select name="user_id" required class="erp-crm-contact-list-dropdown" id="assing-contact" style="width: 100%" data-types="contact,company" data-placeholder="<?php _e( 'Assign to a contact or company..', 'erp' ) ?>">
+                        <option value=""></option>
                     </select>
                 </p>
                 <div class="clearfix"></div>
@@ -109,11 +104,8 @@
     <# } else { #>
         <div class="feed-log-activity">
             <p>
-                <select required name="user_id" class="select2" id="assing-contact" style="width: 100%" data-placeholder="Assign to a contact..">
-                    <option value=""><?php _e( '--Select--', 'erp' ) ?></option>
-                    <?php foreach ( $contacts as $contact_id => $contact_name ) : ?>
-                        <option value="<?php echo $contact_id; ?>"><?php echo $contact_name; ?></option>
-                    <?php endforeach ?>
+                <select required name="user_id" class="erp-crm-contact-list-dropdown" id="assing-contact"  data-types="contact,company" style="width: 100%" data-placeholder="<?php _e( 'Assign to a contact or company..', 'erp' ) ?>">
+                    <option value=""></option>
                 </select>
             </p>
 
