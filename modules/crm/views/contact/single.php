@@ -1,5 +1,5 @@
 <div class="wrap erp erp-crm-customer erp-single-customer" id="wp-erp">
-
+<?php //var_dump( $customer ); ?>
     <h2><?php _e( 'Contact #', 'erp' ); echo $customer->id; ?>
         <a href="<?php echo add_query_arg( ['page' => 'erp-sales-customers'], admin_url( 'admin.php' ) ); ?>" id="erp-contact-list" class="add-new-h2"><?php _e( 'Back to Contact list', 'erp' ); ?></a>
 

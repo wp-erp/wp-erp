@@ -1168,8 +1168,8 @@
                 this.setContactOwnerSearchValue();
                 this.setAdvanceFilter();
 
-                if ( wperp.erpGetParamByName('filter_save_filter', window.location.search ) ) {
-                    this.showHideSegment = true;
+                if ( wperp.erpGetParamByName('filter_save_filter', window.location.search ) !== null ) {
+                    self.showHideSegment = true;
                 }
             },
 
@@ -1233,6 +1233,7 @@
                                 });
                             } );
 
+                            this.showHideSegment = true;
                             fields = this.reRenderFilterFromUrl( queryString );
                             this.$broadcast( 'setFilterFields', fields );
                             this.$refs.vtable.additionalUrlString['advanceFilter']= queryString;
