@@ -684,7 +684,7 @@
                 },
 
                 contactOwner: function( value, item ) {
-                    return ( Object.keys( item.assign_to ).length > 0 ) ? '<a href="#">' + item.assign_to.display_name + '</a>' : '—';
+                    return ( Object.keys( item.assign_to ).length > 0 ) ? '<a>' + item.assign_to.display_name + '</a>' : '—';
                 },
 
                 onlyTrased: function( rowAction ) {
