@@ -132,12 +132,12 @@ class Commands extends \WP_CLI_Command {
         } 
 
         // insert some sales data
-        $data_count     = 5;
+        $data_count     = 10;
 
         $sales_type     = ['invoice', 'payment'];
         $sales_ledger   = [53, 54, 55];
         $expense_type   = ['payment_voucher', 'vendor_credit'];
-        $bank_accounts  = [7, 60];
+        $bank_accounts  = [7, 62];
 
 
         for ($i = 0; $i < $data_count; $i++) {
@@ -155,7 +155,7 @@ class Commands extends \WP_CLI_Command {
                 'type'            => 'sales',
                 'form_type'       => $form_type,
                 'account_id'      => ( $form_type == 'invoice' ) ? 1 : $bank_accounts[ array_rand( $bank_accounts ) ],
-                'status'          => ( $form_type == 'invoice' ) ? 'awaiting_payment' : 'closed',
+                'status'          => 'draft', //( $form_type == 'invoice' ) ? 'awaiting_payment' : 'closed',
                 'user_id'         => $user_id,
                 'billing_address' => 'Dhanmondi, Dhaka',
                 'ref'             => '',
@@ -212,7 +212,7 @@ class Commands extends \WP_CLI_Command {
                 'type'            => 'expense',
                 'form_type'       => $form_type,
                 'account_id'      => ( $form_type == 'vendor_credit' ) ? 8 : $bank_accounts[ array_rand( $bank_accounts ) ],
-                'status'          => 'closed',
+                'status'          => 'draft', //'closed',
                 'user_id'         => $user_id,
                 'billing_address' => 'Dhanmondi, Dhaka',
                 'ref'             => '',

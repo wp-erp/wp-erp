@@ -684,6 +684,8 @@ function erp_ac_get_transaction_by_journal_id( $journal_id ) {
         $sales_journal = WeDevs\ERP\Accounting\Model\Transaction::with(['journals' => function($q) use( $journal_id ) {
             return $q->where( 'ledger_id', '=', $journal_id );
         }])
+        ->where( 'status', '!=', 'draft' )
+        ->orWhereNull( 'status' )
         ->where( 'issue_date', '>=', $financial_start )
         ->where( 'issue_date', '<=', $financial_end )
         ->get()->toArray();
