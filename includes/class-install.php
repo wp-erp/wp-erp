@@ -65,8 +65,8 @@ class WeDevs_ERP_Installer {
 
         // update to latest version
         $latest_version = erp_get_version();
-        update_option( 'wp_erp_version', $latest_version );
-        update_option( 'wp_erp_db_version', $latest_version );
+        //update_option( 'wp_erp_version', $latest_version );
+        //update_option( 'wp_erp_db_version', $latest_version );
     }
 
     /**
