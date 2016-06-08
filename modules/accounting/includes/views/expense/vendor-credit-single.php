@@ -108,7 +108,7 @@ $taxinfo             = erp_ac_get_tax_info();
                                 <td><?php echo $line->qty; ?></td>
                                 <td><?php echo erp_ac_get_price( $line->unit_price ); ?></td>
                                 <td><?php echo $line->discount; ?></td>
-                                <td><?php echo $taxinfo[$line->tax]['name'] .' ('. $taxinfo[$line->tax]['rate'] .'%)'; ?></td>
+                                <td><?php echo $line->tax ? $taxinfo[$line->tax]['name'] .' ('. $taxinfo[$line->tax]['rate'] .'%)' : '0.00'; ?></td>
                                 <td><?php echo erp_ac_get_price( $line->line_total ); ?></td>
                             </tr>
                         <?php } ?>

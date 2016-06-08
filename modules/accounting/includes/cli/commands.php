@@ -112,7 +112,10 @@ class Commands extends \WP_CLI_Command {
      * Seed the database
      */
     public function seed( $args ) {
-        global $wpdb;
+        global $wpdb, $current_user;
+        
+        $supper_admin_email = get_option( 'admin_email' );
+        $current_user       = get_user_by( 'email', $supper_admin_email );
 
         // truncate table
         $tables = ['erp_ac_transactions', 'erp_ac_transaction_items', 'erp_ac_journals'];
@@ -129,7 +132,7 @@ class Commands extends \WP_CLI_Command {
         } 
 
         // insert some sales data
-        $data_count     = 50;
+        $data_count     = 5;
 
         $sales_type     = ['invoice', 'payment'];
         $sales_ledger   = [53, 54, 55];
@@ -146,8 +149,8 @@ class Commands extends \WP_CLI_Command {
             $trans_total = rand( 100, 20000 );
             $user_id     = $customers_id[ array_rand( $customers_id ) ];
             $date        = $date[ array_rand( $date ) ];
-            
-            erp_ac_insert_transaction( [
+
+            $sales = [
                 'id'              => '',
                 'type'            => 'sales',
                 'form_type'       => $form_type,
@@ -161,26 +164,34 @@ class Commands extends \WP_CLI_Command {
                 'summary'         => '',
                 'total'           => $trans_total,
                 'trans_total'     => $trans_total,
+                'sub_total'       => $trans_total,
                 'files'           => '',
-                'currency'        => erp_get_option('erp_ac_currency'),
+                'currency'        => erp_ac_get_currency(),
                 'created_by'      => 1,
                 'created_at'      => current_time( 'mysql' ),
                 'partial_id'      => [],
                 'items_id'        => [$i => ''],
                 'journals_id'     => [$i => ''],
                 'line_total'      => [$trans_total]
-            ], [
+            ];
+
+            $sales_item = [
                 [
-                    'item_id'   => '',
-                    'journal_id' => '',
+                    'item_id'     => '',
+                    'journal_id'  => '',
                     'account_id'  => $sales_ledger[ array_rand( $sales_ledger ) ],
                     'description' => 'Some random description',
                     'qty'         => 1,
                     'unit_price'  => $trans_total,
                     'discount'    => 0,
                     'line_total'  => $trans_total,
+                    'tax'         => '-1',
+                    'tax_rate'    => '0.00',
+                    'tax_journal' => 0
                 ]
-            ] );
+            ];
+
+            erp_ac_insert_transaction( $sales, $sales_item );
         }
 
         $args       = array( 'type' => 'vendor' );
