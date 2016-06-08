@@ -825,9 +825,10 @@
 
                 error: function() {
                     var clone_form = $('.erp-ac-voucher-table-wrap-clone').html();
-                    if ( clone_form == '' ) {
+                    if ( typeof( clone_form ) == 'undefined' ) {
                         return;
                     }
+
                     $('.erp-form').find('.erp-ac-voucher-table-wrap').html(clone_form);
                     $('.erp-form').find( 'input[name="submit_erp_ac_trans_draft"]' ).show();
                     $('.erp-form').find( '.erp-ac-selece-custom' ).addClass('erp-select2');
