@@ -48,8 +48,7 @@ class Accounting {
      * within our plugin.
      */
     public function __construct() {
-        $this->deactive_accounting_module();
-
+        //$this->deactive_accounting_module();
          // Define constants
         $this->define_constants();
 
@@ -71,18 +70,18 @@ class Accounting {
         //add_action( 'admin_init', array( $this, 'test' ) );
     }
 
-    function deactive_accounting_module() {
-        /**
-         * Detect plugin. For use on Front End only.
-         */
-        include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+    // function deactive_accounting_module() {
+    //     /**
+    //      * Detect plugin. For use on Front End only.
+    //      */
+    //     include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 
-        // check for plugin using plugin name
-        if ( is_plugin_active( 'accounting/accounting.php' ) ) {
-            $accounting = dirname( WPERP_PATH ) . '/accounting/accounting.php';
-            deactivate_plugins( $accounting );            
-        } 
-    }
+    //     // check for plugin using plugin name
+    //     if ( is_plugin_active( 'accounting/accounting.php' ) ) {
+    //         $accounting = dirname( WPERP_PATH ) . '/accounting/accounting.php';
+    //         deactivate_plugins( $accounting );            
+    //     } 
+    // }
 
     /**
      * Plugin activation

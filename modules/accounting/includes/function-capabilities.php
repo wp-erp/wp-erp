@@ -1,4 +1,19 @@
 <?php
+function deactive_accounting_module() {
+    /**
+     * Detect plugin. For use on Front End only.
+     */
+    include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+
+    // check for plugin using plugin name
+    if ( is_plugin_active( 'accounting/accounting.php' ) ) {
+        $accounting = dirname( WPERP_PATH ) . '/accounting/accounting.php';
+        deactivate_plugins( $accounting );            
+    } 
+}
+
+deactive_accounting_module();
+
 if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
 
 
