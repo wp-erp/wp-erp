@@ -117,7 +117,7 @@ class Updates {
         foreach ( self::$updates as $version => $path ) {
             if ( version_compare( $installed_version, $version, '<' ) ) {
                 include $path;
-                //update_option( 'wp_erp_version', $version );
+                update_option( 'wp_erp_version', $version );
             }
         }
 

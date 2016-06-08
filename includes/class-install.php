@@ -65,8 +65,8 @@ class WeDevs_ERP_Installer {
 
         // update to latest version
         $latest_version = erp_get_version();
-        //update_option( 'wp_erp_version', $latest_version );
-        //update_option( 'wp_erp_db_version', $latest_version );
+        update_option( 'wp_erp_version', $latest_version );
+        update_option( 'wp_erp_db_version', $latest_version );
     }
 
     /**
@@ -1002,7 +1002,7 @@ Company'
             foreach ($admins as $user) {
                 $user->add_role( erp_hr_get_manager_role() );
                 $user->add_role( erp_crm_get_manager_role() );
-               // $user->add_role( erp_ac_get_manager_role() );
+                $user->add_role( erp_ac_get_manager_role() );
             }
         }
     }

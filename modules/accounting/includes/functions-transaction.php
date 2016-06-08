@@ -329,6 +329,7 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
             $trans = WeDevs\ERP\Accounting\Model\Transaction::find( $args['id'] )->update( $args );
             $trans_id    = $trans ? $args['id'] : false;
         } else {
+
             $trans    = WeDevs\ERP\Accounting\Model\Transaction::create( $args );
             $trans_id = $trans->id;
         }
