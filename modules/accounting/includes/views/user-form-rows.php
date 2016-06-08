@@ -59,7 +59,7 @@
             'label'       => __( 'Email', 'erp' ),
             'name'        => 'email',
             'id'          => 'email',
-            'required'    => false,
+            'required'    => true,
             'type'        => 'text',
             'placeholder' => __( 'you@domain.com', 'erp' ),
             'class'       => 'regular-text',

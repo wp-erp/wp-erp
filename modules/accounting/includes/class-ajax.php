@@ -138,6 +138,7 @@ class Ajax_Handler {
         $this->verify_nonce( 'erp-ac-nonce' );
         parse_str( $_POST['post'], $postdata );
         $insert_id = erp_ac_new_customer( $postdata );
+        
         if ( $insert_id ) {
             $this->send_success( [ 'id' => $insert_id] );
         } else {

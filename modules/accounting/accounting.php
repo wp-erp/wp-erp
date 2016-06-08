@@ -49,7 +49,6 @@ class Accounting {
      */
     public function __construct() {
         $this->deactive_accounting_module();
-
          // Define constants
         $this->define_constants();
 
@@ -61,6 +60,11 @@ class Accounting {
 
         // plugin not installed notice
         add_action( 'admin_notices', array( $this, 'admin_notice' ) );
+        //add_action( 'init', array( $this, 'test' ) );
+    }
+
+    function test() {
+        pr( wp_get_current_user() ); die();
     }
 
     function deactive_accounting_module() {
@@ -72,9 +76,10 @@ class Accounting {
         // check for plugin using plugin name
         if ( is_plugin_active( 'accounting/accounting.php' ) ) {
             $accounting = dirname( WPERP_PATH ) . '/accounting/accounting.php';
-            deactivate_plugins( $accounting );
-        }
+            deactivate_plugins( $accounting );            
+        } 
     }
+
 
     /**
      * Init the accounting module

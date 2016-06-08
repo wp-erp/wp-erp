@@ -331,7 +331,7 @@ function erp_ac_table_update() {
  * @return void
  */
 function erp_ac_update_manager_capabilities() {
-    remove_role( 'erp_ac_manager' );
+  remove_role( 'erp_ac_manager' );
 
 	$installer = new \WeDevs_ERP_Installer();
 	$installer->create_roles();
@@ -421,6 +421,7 @@ function erp_ac_active_module() {
 
     update_option( 'erp_modules', $module );
 }
+
 
 // Update all accounting releated function
 erp_ac_create_table();

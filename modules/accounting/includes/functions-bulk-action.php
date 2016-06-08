@@ -162,11 +162,7 @@ function erp_ac_new_customer( $postdata ) {
                 do_action( 'erp_ac_after_new_customer', $insert_id, $fields );
             }
 
-        } else {
-            $insert_id = false;
-        }
-
-        if ( $fields['type'] == 'vendor' && erp_ac_create_vendor() ) {
+        } else if ( $fields['type'] == 'vendor' && erp_ac_create_vendor() ) {
             $insert_id = erp_insert_people( $fields );
 
             if ( ! is_wp_error( $insert_id ) ) {
@@ -185,11 +181,7 @@ function erp_ac_new_customer( $postdata ) {
             $message      = 'update';
             do_action( 'erp_ac_before_update_customer', $fields );
             $insert_id    = erp_insert_people( $fields );
-        } else {
-            $insert_id    = false;
-        }
-
-        if ( $fields['type'] == 'vendor' && erp_ac_current_user_can_edit_vendor( $customer->created_by ) ) {
+        } else if ( $fields['type'] == 'vendor' && erp_ac_current_user_can_edit_vendor( $customer->created_by ) ) {
             $fields['id'] = $field_id;
             $message      = 'update';
             do_action( 'erp_ac_before_update_vendor', $fields );
