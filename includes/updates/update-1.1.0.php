@@ -363,8 +363,8 @@ function erp_crm_update_table_column() {
         $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_crm_save_search ADD `created_at` DATETIME DEFAULT NULL" );
     }
 
-    if ( ! in_array( 'udpated_at', $save_search_tb_col ) ) {
-        $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_crm_save_search ADD `udpated_at` DATETIME DEFAULT NULL" );
+    if ( ! in_array( 'updated_at', $save_search_tb_col ) ) {
+        $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_crm_save_search ADD `updated_at` DATETIME DEFAULT NULL" );
     }
 
     if ( ! in_array( 'created_by', $people_tb_col ) ) {
