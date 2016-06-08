@@ -65,7 +65,7 @@ $tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
     $dropdown_html = erp_ac_render_account_dropdown_html( $dropdown, array(
         'name'     => 'line_account[]',
         'selected' => isset( $journal['ledger_id'] ) ? $journal['ledger_id'] : false,
-        'class'    => 'select2'
+        'class'    => 'erp-select2'
     ) );
 
     ?>
@@ -83,7 +83,7 @@ $tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                                 'name'        => 'user_id',
                                 'type'        => 'select',
                                 'value'       => $selected_vendor,
-                                'class'       => 'select2 erp-ac-vendor-drop erp-ac-not-found-in-drop',
+                                'class'       => 'erp-select2 erp-ac-vendor-drop erp-ac-not-found-in-drop',
                                 'options'     => [ '' => __( '&mdash; Select &mdash;', 'erp' ) ] + erp_get_peoples_array( ['type' => 'vendor', 'number' => 100 ] ),
                                 'custom_attr' => [
                                     'data-content' => 'erp-ac-new-vendor-content-pop',
@@ -102,7 +102,7 @@ $tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                             'name'        => 'account_id',
                             'placeholder' => __( 'Select an Account', 'erp' ),
                             'type'        => 'select',
-                            'class'       => 'select2 erp-ac-voucher-bank',
+                            'class'       => 'erp-select2 erp-ac-voucher-bank',
                             'value'       => $account_id ? $account_id : $selected_account_id,
                             'options'     => [ '' => __( '&mdash; Select &mdash;', 'erp' ) ] + erp_ac_get_bank_dropdown()
                         ) );

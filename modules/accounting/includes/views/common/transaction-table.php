@@ -32,7 +32,7 @@
                 $dropdown_html = erp_ac_render_account_dropdown_html( $dropdown, array(
                     'name'     => 'line_account[]',
                     'selected' => isset( $journal['ledger_id'] ) ? $journal['ledger_id'] : false,
-                    'class'    => 'select2 erp-ac-account-dropdown'
+                    'class'    => 'erp-select2 erp-ac-account-dropdown'
                 ) );
 
                 include WPERP_ACCOUNTING_VIEWS . '/common/transaction-table-tr-render.php';

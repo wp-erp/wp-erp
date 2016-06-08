@@ -32,7 +32,7 @@
                     'name'        => 'account_id',
                     'placeholder' => __( 'Select an Account', 'erp' ),
                     'type'        => 'select',
-                    'class'       => 'select2 erp-ac-bank-ac-drpdwn erp-ac-bank-ac-drpdwn-frm',
+                    'class'       => 'erp-select2 erp-ac-bank-ac-drpdwn erp-ac-bank-ac-drpdwn-frm',
                     'value'       => isset( $main_ledger_id ) ? intval( $main_ledger_id ) : '',
                     'required'    => true,
                     'options'     => [ '' => __( '&mdash; Select &mdash;', 'erp' ) ] + erp_ac_get_bank_dropdown()

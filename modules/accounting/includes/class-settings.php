@@ -47,7 +47,7 @@ class Settings extends ERP_Settings_Page {
                 'title'   => __( 'Currency', 'erp' ),
                 'id'      => 'erp_ac_currency',
                 'type'    => 'select',
-                'class'   => 'select2',
+                'class'   => 'erp-select2',
                 'options' => erp_get_currency_list_with_symbol(),
                 'default' => 'USD'
             ),
@@ -55,7 +55,7 @@ class Settings extends ERP_Settings_Page {
                 'title'   => __( 'Currency Position', 'erp' ),
                 'id'      => 'erp_ac_currency_position',
                 'type'    => 'select',
-                'class'   => 'select2',
+                'class'   => 'erp-select2',
                 'options' => array(
                     'left'        => sprintf( '%1$s (%2$s99.99)', __( 'Left', 'erp' ), erp_ac_get_currency_symbol() ),
                     'right'       => sprintf( '%1$s (99.99%2$s)', __( 'Right', 'erp' ), erp_ac_get_currency_symbol() ),

@@ -278,7 +278,7 @@ function erp_ac_get_chart_dropdown( $args = [] ) {
         'selected'    => '0',
         'name'        => 'chart-of-accounts',
         'exclude'     => false,
-        'class'       => 'select2',
+        'class'       => 'erp-select2',
         'required'    => false,
     ];
     $args         = wp_parse_args( $args, $defaults );
@@ -329,7 +329,7 @@ function erp_ac_render_account_dropdown_html( $account_charts = [], $args = [] )
         'select_text' => __( '&#8212; Select &#8212;', 'erp' ),
         'selected'    => '0',
         'name'        => 'chart-of-accounts',
-        'class'       => 'select2',
+        'class'       => 'erp-select2',
         'required'    => true,
     ];
     $args         = wp_parse_args( $args, $defaults );

@@ -68,7 +68,7 @@ $tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
     $dropdown_html = erp_ac_render_account_dropdown_html( $dropdown, array(
         'name'     => 'line_account[]',
         'selected' => isset( $journal['ledger_id'] ) ? $journal['ledger_id'] : false,
-        'class'    => 'select2'
+        'class'    => 'erp-select2'
     ) );
 
     ?>
@@ -87,7 +87,7 @@ $tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                                 'label'       => __( 'Vendor', 'erp' ),
                                 'name'        => 'user_id',
                                 'type'        => 'select',
-                                'class'       => 'select2 erp-ac-vendor-drop erp-ac-not-found-in-drop',
+                                'class'       => 'erp-select2 erp-ac-vendor-drop erp-ac-not-found-in-drop',
                                 'options'     => [ '-1' => __( '&mdash; Select &mdash;', 'erp' ) ] + erp_get_peoples_array( ['type' => 'vendor', 'number' => 100 ] ),
                                 'custom_attr' => [
                                     'data-placeholder' => __( 'Select a payee', 'erp' ),

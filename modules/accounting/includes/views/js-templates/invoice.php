@@ -31,7 +31,7 @@
                     'label'       => __( 'Deposit To', 'erp' ),
                     'name'        => 'account_id',
                     'placeholder' => __( 'Select an Account', 'erp' ),
-                    'type'        => 'select',
+                    'type'        => 'erp-select',
                     'class'       => 'select2 erp-ac-bank-ac-drpdwn erp-ac-bank-ac-drpdwn-frm',
                     'value'       => isset( $main_ledger_id ) ? intval( $main_ledger_id ) : '',
                     'required'    => true,
