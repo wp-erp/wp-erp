@@ -349,10 +349,27 @@ function erp_ac_update_manager_capabilities() {
  */
 function erp_crm_update_table_column() {
     global $wpdb;
-    $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_crm_save_search ADD `type` VARCHAR(255) AFTER `id`" );
-    $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_crm_save_search ADD `created_at` DATETIME DEFAULT NULL" );
-    $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_crm_save_search ADD `udpated_at` DATETIME DEFAULT NULL" );
-    $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_peoples ADD `created_by` BIGINT(20) AFTER `currency`" );
+
+    $save_search_tb     = $wpdb->prefix . 'erp_crm_save_search';
+    $people_tb          = $wpdb->prefix . 'erp_peoples';
+    $save_search_tb_col = $wpdb->get_col( "DESC " . $save_search_tb );
+    $people_tb_col      = $wpdb->get_col( "DESC " . $people_tb );
+
+    if ( ! in_array( 'type', $save_search_tb_col ) ) {
+        $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_crm_save_search ADD `type` VARCHAR(255) AFTER `id`" );
+    }
+
+    if ( ! in_array( 'created_at', $save_search_tb_col ) ) {
+        $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_crm_save_search ADD `created_at` DATETIME DEFAULT NULL" );
+    }
+
+    if ( ! in_array( 'udpated_at', $save_search_tb_col ) ) {
+        $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_crm_save_search ADD `udpated_at` DATETIME DEFAULT NULL" );
+    }
+
+    if ( ! in_array( 'created_by', $people_tb_col ) ) {
+        $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_peoples ADD `created_by` BIGINT(20) AFTER `currency`" );
+    }
 }
 
 /**
