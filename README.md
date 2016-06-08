@@ -10,7 +10,6 @@ An open-source ERP (Enterprise Resource Planning) solution for WordPress
 
 ## Other Components
 
-* [Accounting](https://github.com/wp-erp/accounting)
 * [Project Management](https://wedevs.com/products/plugins/wp-project-manager-pro/)
 
 ## Available Add-ons
