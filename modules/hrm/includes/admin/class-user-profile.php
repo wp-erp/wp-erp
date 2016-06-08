@@ -41,6 +41,10 @@ class User_Profile {
         // HR role we want the user to have
         $new_role = isset( $_POST['hr_manager'] ) ? sanitize_text_field( $_POST['hr_manager'] ) : false;
 
+        if ( ! $new_role ) {
+            return;
+        }
+
         // Bail if current user cannot promote the passing user
         if ( ! current_user_can( 'promote_user', $user_id ) ) {
             return;
