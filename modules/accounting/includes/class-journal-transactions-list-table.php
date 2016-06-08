@@ -80,11 +80,11 @@ class Journal_Transactions extends \WP_List_Table {
                 $type = $item->type;
 
                 if ( 'expense' == $item->type ) {
-                    $type = __( 'Expense', 'accounting' );
+                    $type = __( 'Expense', 'erp' );
                 } elseif ( 'sales' == $item->type ) {
-                    $type = __( 'Sales', 'accounting' );
+                    $type = __( 'Sales', 'erp' );
                 } elseif ( 'journal' == $item->type ) {
-                    $type = __( 'Journal Entry', 'accounting' );
+                    $type = __( 'Journal Entry', 'erp' );
                 }
 
                 return sprintf( '<a href="#" data-transaction_id="%s" class="erp-ac-transaction-report">%s</a>', $item->transaction_id, $type );
@@ -119,15 +119,15 @@ class Journal_Transactions extends \WP_List_Table {
     function get_columns() {
         $columns = array(
             //'cb'             => '<input type="checkbox" />',
-            'issue_date'     => __( 'Date', 'accounting' ),
-            'transaction_id' => __( 'Transaction', 'accounting' ),
-            'type'           => __( 'Type', 'accounting' ),
-            'form_type'      => __( 'Entry Type', 'accounting' ),
-            'ref'            => __( 'Ref', 'accounting' ),
-            'summary'        => __( 'Summary', 'accounting' ),
-            'debit'          => __( 'Debit', 'accounting' ),
-            'credit'         => __( 'Credit', 'accounting' ),
-            'balance'        => __( 'Balance', 'accounting' )
+            'issue_date'     => __( 'Date', 'erp' ),
+            'transaction_id' => __( 'Transaction', 'erp' ),
+            'type'           => __( 'Type', 'erp' ),
+            'form_type'      => __( 'Entry Type', 'erp' ),
+            'ref'            => __( 'Ref', 'erp' ),
+            'summary'        => __( 'Summary', 'erp' ),
+            'debit'          => __( 'Debit', 'erp' ),
+            'credit'         => __( 'Credit', 'erp' ),
+            'balance'        => __( 'Balance', 'erp' )
         );
 
         return $columns;
@@ -204,26 +204,26 @@ class Journal_Transactions extends \WP_List_Table {
                 'value'       => $type,
                 'type'       => 'select',
                 'options' => [
-                    ''        => __( 'All Types', 'accounting' ),
-                    'sales'   => __( 'Sales', 'accounting' ),
-                    'expense' => __( 'Expense', 'accounting' ),
-                    'journal' => __( 'Journal Entries', 'accounting' )
+                    ''        => __( 'All Types', 'erp' ),
+                    'sales'   => __( 'Sales', 'erp' ),
+                    'expense' => __( 'Expense', 'erp' ),
+                    'journal' => __( 'Journal Entries', 'erp' )
                 ],
-                'placeholder' => __( 'Start Date', 'accounting' )
+                'placeholder' => __( 'Start Date', 'erp' )
             ]);
 
             erp_html_form_input([
                 'name'        => 'start_date',
                 'class'       => 'erp-date-field',
                 'value'       => $start_date,
-                'placeholder' => __( 'Start Date', 'accounting' )
+                'placeholder' => __( 'Start Date', 'erp' )
             ]);
 
             erp_html_form_input([
                 'name'        => 'end_date',
                 'class'       => 'erp-date-field',
                 'value'       => $end_date,
-                'placeholder' => __( 'End Date', 'accounting' )
+                'placeholder' => __( 'End Date', 'erp' )
             ]);
 
             submit_button( __( 'Filter' ), 'button', 'submit_filter_sales', false );

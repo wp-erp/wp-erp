@@ -14,10 +14,10 @@ WP ERP is the framework for weDevs's enterprise resource management system. This
 
 * HR Module
 * CRM Module
+* Accounting Module
 
 Other available modules
 
-* [Accounting](https://wordpress.org/plugins/accounting) - A free and rich double entry accounting system.
 * Project Management via [WP Project Manager](https://wordpress.org/plugins/wedevs-project-manager/)
 
 = Links =

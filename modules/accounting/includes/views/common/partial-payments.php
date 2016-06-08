@@ -3,14 +3,14 @@ if ( ! $partial_transaction ) {
 	return;
 }
 ?>
-<h2><?php _e( 'Related Payments', 'accounting' ); ?></h2>
+<h2><?php _e( 'Related Payments', 'erp' ); ?></h2>
 <table class="wp-list-table widefat fixed striped transactions">
     <thead>
         <tr>
-            <th><?php _e( 'Date', 'accounting' ); ?></th>
-            <th><?php _e( 'Ref', 'accounting' ); ?></th>
-            <th><?php _e( 'Total', 'accounting' ); ?></th>
-            <th><?php _e( 'Status', 'accounting' ); ?></th>
+            <th><?php _e( 'Date', 'erp' ); ?></th>
+            <th><?php _e( 'Ref', 'erp' ); ?></th>
+            <th><?php _e( 'Total', 'erp' ); ?></th>
+            <th><?php _e( 'Status', 'erp' ); ?></th>
         </tr>
     </thead>
 
@@ -19,7 +19,7 @@ if ( ! $partial_transaction ) {
         if ( ! $partial_transaction ) {
             ?>
             <tr>
-                <td colspan="4"><?php _e( 'No related payment found!', 'accounting' ); ?>
+                <td colspan="4"><?php _e( 'No related payment found!', 'erp' ); ?>
             </tr>
             <?php
         }

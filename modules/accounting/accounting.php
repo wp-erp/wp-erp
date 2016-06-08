@@ -56,19 +56,11 @@ class Accounting {
         // Include required files
         $this->includes();
 
-        // installation
-        //register_activation_hook( __FILE__, array( $this, 'activate' ) );
-
-        // Localize our plugin
-        add_action( 'init', array( $this, 'localization_setup' ) );
-
         // load the module
         add_action( 'erp_loaded', array( $this, 'plugin_init' ) );
 
         // plugin not installed notice
         add_action( 'admin_notices', array( $this, 'admin_notice' ) );
-
-        //add_action( 'admin_init', array( $this, 'test' ) );
     }
 
     function deactive_accounting_module() {
@@ -80,27 +72,8 @@ class Accounting {
         // check for plugin using plugin name
         if ( is_plugin_active( 'accounting/accounting.php' ) ) {
             $accounting = dirname( WPERP_PATH ) . '/accounting/accounting.php';
-            deactivate_plugins( $accounting );            
-        } 
-    }
-
-    /**
-     * Plugin activation
-     *
-     * @return void
-     */
-    public function activate() {
-        //$installer = new WeDevs\ERP\Accounting\Install();
-        //$installer->install();
-    }
-
-    /**
-     * Initialize plugin for localization
-     *
-     * @uses load_plugin_textdomain()
-     */
-    public function localization_setup() {
-        load_plugin_textdomain( 'accounting', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+            deactivate_plugins( $accounting );
+        }
     }
 
     /**
@@ -120,7 +93,7 @@ class Accounting {
      * @return void
      */
     private function define_constants() {
-        
+
         $this->define( 'WPERP_ACCOUNTING_VERSION', $this->version );
         $this->define( 'WPERP_ACCOUNTING_PATH', dirname( __FILE__ ) );
         $this->define( 'WPERP_ACCOUNTING_URL', plugins_url( '', __FILE__ ) );
@@ -151,8 +124,8 @@ class Accounting {
 
         if ( function_exists( 'erp_ac_get_manager_role' ) ) {
             return;
-        }        
-    
+        }
+
         require_once WPERP_ACCOUNTING_PATH . '/includes/function-capabilities.php';
         require_once WPERP_ACCOUNTING_PATH . '/includes/actions-filters.php';
         require_once WPERP_ACCOUNTING_PATH . '/includes/functions-transaction.php';
@@ -232,7 +205,7 @@ class Accounting {
            'plupload'   => array(
                'url'              => admin_url( 'admin-ajax.php' ) . '?nonce=' . wp_create_nonce( 'erp_ac_featured_img' ),
                'flash_swf_url'    => includes_url( 'js/plupload/plupload.flash.swf' ),
-               'filters'          => array( array('title' => __( 'Allowed Files', 'accounting' ), 'extensions' => '*')),
+               'filters'          => array( array('title' => __( 'Allowed Files', 'erp' ), 'extensions' => '*')),
                'multipart'        => true,
                'urlstream_upload' => true,
            )
@@ -256,7 +229,7 @@ class Accounting {
     public function admin_notice() {
         if ( ! function_exists( 'wperp' ) ) {
             echo '<div class="message error"><p>';
-            echo __( '<strong>Error:</strong> WP ERP Plugin is required to use accounting plugin.', 'accounting' );
+            echo __( '<strong>Error:</strong> WP ERP Plugin is required to use accounting plugin.', 'erp' );
             echo '</p></div>';
         }
     }
@@ -285,11 +258,11 @@ class Accounting {
 
         if ( $current_screen->base == 'erp-settings_page_erp-settings' && isset( $_GET['section'] ) && $_GET['section'] == 'erp_ac_tax' ) {
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/new-tax-form.php', 'erp-ac-new-tax-form-popup' );
-            erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/tax-items.php', 'erp-ac-items-details-popup' );   
+            erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/tax-items.php', 'erp-ac-items-details-popup' );
         }
     }
 
-} 
+}
 
 
 

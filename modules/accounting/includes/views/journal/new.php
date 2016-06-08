@@ -1,5 +1,5 @@
 <div class="wrap erp-ac-journal-entry erp-ac-form-wrap">
-    <h2><?php _e( 'New Journal Entry', 'accounting' ); ?></h2>
+    <h2><?php _e( 'New Journal Entry', 'erp' ); ?></h2>
 
     <form action="" method="post" class="erp-form" id="erp-journal-form">
 
@@ -7,7 +7,7 @@
             <li class="erp-form-field row-ref">
                 <?php
                 erp_html_form_input( array(
-                    'label' => __( 'Reference', 'accounting' ),
+                    'label' => __( 'Reference', 'erp' ),
                     'name'  => 'ref',
                     'type'  => 'text',
                     'class' => 'erp-ac-reference-field',
@@ -17,7 +17,7 @@
             </li>
             <li class="erp-form-field row-issue-date">
                 <?php erp_html_form_input( array(
-                    'label'    => __( 'Date', 'accounting' ),
+                    'label'    => __( 'Date', 'erp' ),
                     'name'     => 'issue_date',
                     'id'       => 'issue_date',
                     'required' => true,
@@ -28,12 +28,12 @@
             </li>
             <li class="erp-form-field row-summary">
                 <?php erp_html_form_input( array(
-                    'label'       => __( 'Summary', 'accounting' ),
+                    'label'       => __( 'Summary', 'erp' ),
                     'name'        => 'summary',
                     'id'          => 'summary',
                     'required'    => true,
                     'type'        => 'textarea',
-                    'placeholder' => __( 'Summary', 'accounting' ),
+                    'placeholder' => __( 'Summary', 'erp' ),
                     'custom_attr' => array( 'rows' => 5, 'cols' => 30 ),
                 ) ); ?>
             </li>
@@ -42,10 +42,10 @@
         <table class="erp-table erp-ac-transaction-table journal-table">
             <thead>
                 <tr>
-                    <th class="col-chart"><?php _e( 'Account', 'accounting' ); ?></th>
-                    <th class="col-desc"><?php _e( 'Description', 'accounting' ); ?></th>
-                    <th class="col-amount"><?php _e( 'Debit', 'accounting' ); ?></th>
-                    <th class="col-amount"><?php _e( 'Credit', 'accounting' ); ?></th>
+                    <th class="col-chart"><?php _e( 'Account', 'erp' ); ?></th>
+                    <th class="col-desc"><?php _e( 'Description', 'erp' ); ?></th>
+                    <th class="col-amount"><?php _e( 'Debit', 'erp' ); ?></th>
+                    <th class="col-amount"><?php _e( 'Credit', 'erp' ); ?></th>
                     <th class="col-action">&nbsp;</th>
                 </tr>
             </thead>
@@ -137,8 +137,8 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <th><a href="#" class="button add-line"><?php _e( '+ Add Line', 'accounting' ); ?></a></th>
-                    <th class="align-right"><?php _e( 'Total', 'accounting' ); ?></th>
+                    <th><a href="#" class="button add-line"><?php _e( '+ Add Line', 'erp' ); ?></a></th>
+                    <th class="align-right"><?php _e( 'Total', 'erp' ); ?></th>
                     <th class="col-amount">
                         <input type="text" name="debit_total" class="debit-price-total" readonly value="<?php echo erp_ac_get_price_for_field( '0.00', ['symbol'=>false] ); ?>">
                     </th>
@@ -154,7 +154,7 @@
         <input type="hidden" name="erp-action" value="ac-new-journal-entry">
 
         <?php wp_nonce_field( 'erp-ac-journal-entry' ); ?>
-        <?php submit_button( __( 'Add Journal Entry', 'accounting' ), 'primary', 'submit_erp_ac_journal' ); ?>
+        <?php submit_button( __( 'Add Journal Entry', 'erp' ), 'primary', 'submit_erp_ac_journal' ); ?>
 
     </form>
 </div>

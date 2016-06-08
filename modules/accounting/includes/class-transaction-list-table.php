@@ -31,7 +31,7 @@ class Transaction_List_Table extends \WP_List_Table {
      * @return void
      */
     function no_items() {
-        _e( 'No transaction found!', 'accounting' );
+        _e( 'No transaction found!', 'erp' );
     }
 
     /**
@@ -79,14 +79,14 @@ class Transaction_List_Table extends \WP_List_Table {
     function get_columns() {
         $columns = array(
             'cb'         => '<input type="checkbox" />',
-            'issue_date' => __( 'Date', 'accounting' ),
-            'due_date'   => __( 'Due Date', 'accounting' ),
-            'form_type'  => __( 'Type', 'accounting' ),
-            'user_id'    => __( 'Vendor', 'accounting' ),
-            'ref'        => __( 'Ref', 'accounting' ),
-            'due'        => __( 'Due', 'accounting' ),
-            'total'      => __( 'Total', 'accounting' ),
-            'status'     => __( 'Status', 'accounting' ),
+            'issue_date' => __( 'Date', 'erp' ),
+            'due_date'   => __( 'Due Date', 'erp' ),
+            'form_type'  => __( 'Type', 'erp' ),
+            'user_id'    => __( 'Vendor', 'erp' ),
+            'ref'        => __( 'Ref', 'erp' ),
+            'due'        => __( 'Due', 'erp' ),
+            'total'      => __( 'Total', 'erp' ),
+            'status'     => __( 'Status', 'erp' ),
         );
 
         return $columns;
@@ -112,7 +112,7 @@ class Transaction_List_Table extends \WP_List_Table {
      */
     //function get_bulk_actions() {
         //$actions = array(
-          //  'trash'  => __( 'Move to Trash', 'accounting' ),
+          //  'trash'  => __( 'Move to Trash', 'erp' ),
         //);
         //return $actions;
     //}
@@ -134,11 +134,11 @@ class Transaction_List_Table extends \WP_List_Table {
         $url               = admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id );
         $user_display_name = '';
         $actions           = array();
-        // $actions['view']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), $item->id, __( 'View this transaction', 'accounting' ), __( 'View', 'accounting' ) );
-        // $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=delete&id=' . $item->id ), $item->id, __( 'Delete this item', 'accounting' ), __( 'Delete', 'accounting' ) );
+        // $actions['view']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), $item->id, __( 'View this transaction', 'erp' ), __( 'View', 'erp' ) );
+        // $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=delete&id=' . $item->id ), $item->id, __( 'Delete this item', 'erp' ), __( 'Delete', 'erp' ) );
 
         if ( ! $item->user_id ) {
-            $user_display_name = __( '(no vendor)', 'accounting' );
+            $user_display_name = __( '(no vendor)', 'erp' );
         } else {
             $transaction = \WeDevs\ERP\Accounting\Model\Transaction::find( $item->id );
             $user_display_name = ( NULL !== $transaction->user ) ? $transaction->user->first_name . ' ' . $transaction->user->last_name : '--';
@@ -190,8 +190,8 @@ class Transaction_List_Table extends \WP_List_Table {
         //     $status_links[ $key ] = sprintf( '<a href="%s" class="%s">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => $key ), $base_link ), $class, $value['label'], $value['count'] );
         // }
         //
-        //$status_links['all'] = sprintf( '<a href="%s">%s<span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'all' ), $base_link ), __( 'All', 'accounting' ), $this->customer_get_status_count('customer') );
-        //$status_links['trash'] = sprintf( '<a href="%s" >%s<span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'trash' ), $base_link ), __( 'Trash', 'accounting' ), $this->count_trashed_customers() );
+        //$status_links['all'] = sprintf( '<a href="%s">%s<span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'all' ), $base_link ), __( 'All', 'erp' ), $this->customer_get_status_count('customer') );
+        //$status_links['trash'] = sprintf( '<a href="%s" >%s<span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'trash' ), $base_link ), __( 'Trash', 'erp' ), $this->count_trashed_customers() );
 
         return $status_links;
     }
@@ -222,34 +222,34 @@ class Transaction_List_Table extends \WP_List_Table {
                 'name'    => 'form_type',
                 'type'    => 'select',
                 'value'   => isset( $_REQUEST['form_type'] ) && ! empty( $_REQUEST['form_type'] ) ? strtolower( $_REQUEST['form_type'] ) : '',
-                'options' => [ '' => __( 'All Types', 'accounting' ) ] + $types
+                'options' => [ '' => __( 'All Types', 'erp' ) ] + $types
             ]);
 
             erp_html_form_input([
                 'name'        => 'user_id',
                 'type'        => 'hidden',
                 'class'       => 'erp-ac-customer-search',
-                'placeholder' => __( 'Search for Customer', 'accounting' ),
+                'placeholder' => __( 'Search for Customer', 'erp' ),
             ]);
 
             erp_html_form_input([
                 'name'        => 'start_date',
                 'class'       => 'erp-date-field',
                 'value'       => isset( $_REQUEST['start_date'] ) && !empty( $_REQUEST['start_date'] ) ? $_REQUEST['start_date'] : '',
-                'placeholder' => __( 'Start Date', 'accounting' )
+                'placeholder' => __( 'Start Date', 'erp' )
             ]);
 
             erp_html_form_input([
                 'name'        => 'end_date',
                 'class'       => 'erp-date-field',
                 'value'       => isset( $_REQUEST['end_date'] ) && !empty( $_REQUEST['end_date'] ) ? $_REQUEST['end_date'] : '',
-                'placeholder' => __( 'End Date', 'accounting' )
+                'placeholder' => __( 'End Date', 'erp' )
             ]);
 
             erp_html_form_input([
                 'name'        => 'ref',
                 'value'       => isset( $_REQUEST['ref'] ) && ! empty( $_REQUEST['ref'] ) ? $_REQUEST['ref'] : '',
-                'placeholder' => __( 'Ref No.', 'accounting' )
+                'placeholder' => __( 'Ref No.', 'erp' )
             ]);
 
             submit_button( __( 'Filter' ), 'button', 'submit_filter_sales', false );
@@ -333,11 +333,11 @@ class Transaction_List_Table extends \WP_List_Table {
         if ( 'expense' == $args['type'] && ! erp_ac_view_other_expenses() ) {
             $args['created_by'] = get_current_user_id();
         }
-        
+
         if ( 'journal' == $args['type'] && ! erp_ac_view_other_journals() ) {
             $args['created_by'] = get_current_user_id();
         }
-        
+
         $this->items = $this->get_transactions( $args );
 
         $this->set_pagination_args( array(

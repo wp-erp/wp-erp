@@ -7,11 +7,11 @@
  */
 function erp_ac_get_chart_classes() {
     $classes = [
-        1 => __( 'Assets', 'accounting' ),
-        2 => __( 'Liabilities', 'accounting' ),
-        3 => __( 'Expenses', 'accounting' ),
-        4 => __( 'Income', 'accounting' ),
-        5 => __( 'Equity', 'accounting' ),
+        1 => __( 'Assets', 'erp' ),
+        2 => __( 'Liabilities', 'erp' ),
+        3 => __( 'Expenses', 'erp' ),
+        4 => __( 'Income', 'erp' ),
+        5 => __( 'Equity', 'erp' ),
     ];
 
     return $classes;
@@ -37,7 +37,7 @@ function erp_ac_get_all_chart( $args = [] ) {
 
     $args      = wp_parse_args( $args, $defaults );
     $cache_key = 'erp-ac-chart-all-' . md5( serialize( $args ) );
-    $items     = wp_cache_get( $cache_key, 'accounting' );
+    $items     = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $items ) {
         $condition = '';
@@ -63,7 +63,7 @@ function erp_ac_get_all_chart( $args = [] ) {
 
         $items = $wpdb->get_results( $sql );
 
-        wp_cache_set( $cache_key, $items, 'accounting' );
+        wp_cache_set( $cache_key, $items, 'erp' );
     }
 
     return $items;
@@ -130,7 +130,7 @@ function erp_ac_insert_chart( $args = array() ) {
 
     // some basic validation
     if ( empty( $args['name'] ) ) {
-        return new WP_Error( 'no-name', __( 'No Name provided.', 'accounting' ) );
+        return new WP_Error( 'no-name', __( 'No Name provided.', 'erp' ) );
     }
 
     // remove row id to determine if new or update
@@ -178,12 +178,12 @@ function erp_ac_get_all_chart_types() {
     global $wpdb;
 
     $cache_key = 'erp-ac-chart-type-all';
-    $items     = wp_cache_get( $cache_key, 'accounting' );
+    $items     = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $items ) {
         $items = $wpdb->get_results( 'SELECT * FROM ' . $wpdb->prefix . 'erp_ac_chart_types ORDER BY class_id ASC' );
 
-        wp_cache_set( $cache_key, $items, 'accounting' );
+        wp_cache_set( $cache_key, $items, 'erp' );
     }
 
     return $items;
@@ -200,12 +200,12 @@ function erp_ac_get_chart_types_by_class_id( $class_id ) {
     global $wpdb;
 
     $cache_key = 'erp-ac-chart-type-by-class-id';
-    $items     = wp_cache_get( $cache_key, 'accounting' );
+    $items     = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $items ) {
         $items = $wpdb->get_results( 'SELECT * FROM ' . $wpdb->prefix . 'erp_ac_chart_types WHERE class_id = '. $class_id .' ORDER BY class_id ASC' );
 
-        wp_cache_set( $cache_key, $items, 'accounting' );
+        wp_cache_set( $cache_key, $items, 'erp' );
     }
 
     return $items;
@@ -286,7 +286,7 @@ function erp_ac_get_chart_dropdown( $args = [] ) {
     global $wpdb;
 
     $cache_key = 'erp-account-ledgers-list';
-    $ledgers = wp_cache_get( $cache_key, 'accounting' );
+    $ledgers = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $ledgers ) {
         $sql = "SELECT led.id, led.code, led.name, class.name as class_name, class.id as class_id from {$wpdb->prefix}erp_ac_ledger as led
@@ -295,7 +295,7 @@ function erp_ac_get_chart_dropdown( $args = [] ) {
             ORDER BY led.id ASC";
 
         $ledgers = $wpdb->get_results( $sql );
-        wp_cache_set( $cache_key, $ledgers, 'accounting' );
+        wp_cache_set( $cache_key, $ledgers, 'erp' );
     }
 
     // build the array
@@ -326,7 +326,7 @@ function erp_ac_get_chart_dropdown( $args = [] ) {
 function erp_ac_render_account_dropdown_html( $account_charts = [], $args = [] ) {
 
     $defaults       = [
-        'select_text' => __( '&#8212; Select &#8212;', 'accounting' ),
+        'select_text' => __( '&#8212; Select &#8212;', 'erp' ),
         'selected'    => '0',
         'name'        => 'chart-of-accounts',
         'class'       => 'erp-select2',

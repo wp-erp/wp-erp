@@ -1,7 +1,7 @@
 <ol class="erp-form-fields">
 
     <li class="erp-form-field row-account-type-id">
-        <label for="account_type_id"><?php _e( 'Account Type', 'accounting' ); ?></label>
+        <label for="account_type_id"><?php _e( 'Account Type', 'erp' ); ?></label>
 
         <?php
         $custom_attr = isset( $item->id ) ? [ 'disabled' => 'disabled' ] : [];
@@ -22,19 +22,19 @@
 
     <li class="erp-form-field row-name">
         <?php erp_html_form_input( array(
-            'label'    => __( 'Account Code', 'accounting' ),
+            'label'    => __( 'Account Code', 'erp' ),
             'name'     => 'code',
             'required' => true,
             'type'     => 'number',
             'class'    => 'small-text',
-            'help'    => __( 'A unique code/number for this account', 'accounting' ),
+            'help'    => __( 'A unique code/number for this account', 'erp' ),
             'value'    => isset( $item->code ) ? $item->code : '',
         ) ); ?>
     </li>
 
     <li class="erp-form-field row-name">
         <?php erp_html_form_input( array(
-            'label'    => __( 'Name', 'accounting' ),
+            'label'    => __( 'Name', 'erp' ),
             'name'     => 'name',
             'required' => true,
             'type'     => 'text',
@@ -45,7 +45,7 @@
 
     <li class="erp-form-field row-description">
         <?php erp_html_form_input( array(
-            'label'    => __( 'Description', 'accounting' ),
+            'label'    => __( 'Description', 'erp' ),
             'name'     => 'description',
             'required' => false,
             'type'     => 'textarea',
@@ -58,12 +58,12 @@
     </li>
 
     <li class="show_if_bank">
-        <h3><?php _e( 'Bank Details', 'accounting' ); ?></h3>
+        <h3><?php _e( 'Bank Details', 'erp' ); ?></h3>
     </li>
 
     <li class="erp-form-field row-name show_if_bank">
         <?php erp_html_form_input( array(
-            'label'    => __( 'Account Number', 'accounting' ),
+            'label'    => __( 'Account Number', 'erp' ),
             'name'     => 'bank[account_number]',
             'required' => false,
             'type'     => 'text',
@@ -74,7 +74,7 @@
 
     <li class="erp-form-field row-name show_if_bank">
         <?php erp_html_form_input( array(
-            'label'    => __( 'Bank Name', 'accounting' ),
+            'label'    => __( 'Bank Name', 'erp' ),
             'name'     => 'bank[bank_name]',
             'required' => false,
             'type'     => 'text',
@@ -87,13 +87,13 @@
 
         <li class="erp-form-field row-active">
             <?php erp_html_form_input( [
-                'label'    => __( 'Status', 'accounting' ),
+                'label'    => __( 'Status', 'erp' ),
                 'name'     => 'active',
                 'type'     => 'select',
                 'value'    => isset( $item->active ) ? $item->active : 1,
                 'options'  => [
-                    '1' => __( 'Active', 'accounting' ),
-                    '0' => __( 'Inactive', 'accounting' ),
+                    '1' => __( 'Active', 'erp' ),
+                    '0' => __( 'Inactive', 'erp' ),
                 ],
             ] ); ?>
         </li>

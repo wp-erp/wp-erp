@@ -63,7 +63,7 @@ class Vendor_List_Table extends Customer_List_Table {
     function column_customer( $item ) {
 
         $data_hard         = ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) ? 1 : 0;
-        $delete_text       = ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) ? __( 'Permanent Delete', 'accounting' ) : __( 'Delete', 'accounting' );
+        $delete_text       = ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) ? __( 'Permanent Delete', 'erp' ) : __( 'Delete', 'erp' );
 
         $actions            = array();
         if ( erp_ac_current_user_can_edit_vendor( $item->created_by ) ) {
@@ -78,13 +78,13 @@ class Vendor_List_Table extends Customer_List_Table {
         if ( erp_ac_create_expenses_credit() || erp_ac_publish_expenses_credit() ) {
             $actions['expense'] = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->expense_slug . '&action=new&type=vendor_credit&vendor_id=' . $item->id ), $item->id, __( 'Create Credit', 'wp-erp-ac' ), __( 'Vendor Credit', 'wp-erp-ac' ) );
         }
-        
+
         if ( erp_ac_current_user_can_delete_vendor( $item->created_by ) ) {
-            $actions['delete'] = sprintf( '<a href="%s" class="erp-ac-submitdelete" data-id="%d" data-hard=%d title="%s" data-type="%s">%s</a>', '#', $item->id, $data_hard, __( 'Delete this item', 'accounting' ), $this->type, $delete_text );
+            $actions['delete'] = sprintf( '<a href="%s" class="erp-ac-submitdelete" data-id="%d" data-hard=%d title="%s" data-type="%s">%s</a>', '#', $item->id, $data_hard, __( 'Delete this item', 'erp' ), $this->type, $delete_text );
         }
 
         if ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) {
-            $actions['restore'] = sprintf( '<a href="#" class="erp-ac-restoreCustomer" data-id="%d" title="%s" data-type="%s">%s</a>', $item->id, __( 'Restore this item', 'accounting' ), $this->type, __( 'Restore', 'accounting' ) );
+            $actions['restore'] = sprintf( '<a href="#" class="erp-ac-restoreCustomer" data-id="%d" title="%s" data-type="%s">%s</a>', $item->id, __( 'Restore this item', 'erp' ), $this->type, __( 'Restore', 'erp' ) );
         }
 
         if ( ! erp_ac_current_user_can_view_single_vendor() ) {
@@ -104,8 +104,8 @@ class Vendor_List_Table extends Customer_List_Table {
         $status_links   = array();
         $base_link      = admin_url( 'admin.php?page=erp-accounting-vendors' );
 
-        $status_links['all']   = sprintf( '<a href="%s">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'all' ), $base_link ), __( 'All', 'accounting' ), $this->customer_get_status_count( 'vendor' ) );
-        $status_links['trash'] = sprintf( '<a href="%s" >%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'trash' ), $base_link ), __( 'Trash', 'accounting' ), $this->count_trashed_customers() );
+        $status_links['all']   = sprintf( '<a href="%s">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'all' ), $base_link ), __( 'All', 'erp' ), $this->customer_get_status_count( 'vendor' ) );
+        $status_links['trash'] = sprintf( '<a href="%s" >%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'trash' ), $base_link ), __( 'Trash', 'erp' ), $this->count_trashed_customers() );
 
         return $status_links;
     }

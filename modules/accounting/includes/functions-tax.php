@@ -1,6 +1,6 @@
 <?php
 function erp_ac_tax_type() {
-	return [ 0 => __( 'Single Tax', 'accounting' ), 1 => __( 'Multi Tax', 'accounting' ) ];
+	return [ 0 => __( 'Single Tax', 'erp' ), 1 => __( 'Multi Tax', 'erp' ) ];
 }
 
 function erp_ac_new_tax( $postdata ) {
@@ -19,7 +19,7 @@ function erp_ac_new_tax( $postdata ) {
     if ( $postdata['id'] ) {
         return $tax->find( $postdata['id'] )->update( $args );
     } else {
-        return $tax->create( $args );    
+        return $tax->create( $args );
     }
 }
 
@@ -29,16 +29,16 @@ function erp_ac_update_tax_items( $args, $tax_id = false ) {
     }
 
     $is_compound = isset( $args['compound'] ) ? true : false;
-    
+
     if ( ! $is_compound ) {
         $args['items_id'] = array( reset( $args['items_id'] ) );
     }
-    
+
     $tax_items = new WeDevs\ERP\Accounting\Model\Tax_Items();
-    
+
     if ( intval( $args['id'] ) ) {
-        $get_deleted_items = $tax_items->select('id')->where( 'tax_id', '=', intval( $args['id'] ) )->get()->toArray();  
-        $get_deleted_items = wp_list_pluck( $get_deleted_items, 'id' );        
+        $get_deleted_items = $tax_items->select('id')->where( 'tax_id', '=', intval( $args['id'] ) )->get()->toArray();
+        $get_deleted_items = wp_list_pluck( $get_deleted_items, 'id' );
         $insert_args       = array();
         $arg_items         = isset( $args['items_id'] ) && is_array( $args['items_id'] ) ? $args['items_id'] : array();
 
@@ -51,18 +51,18 @@ function erp_ac_update_tax_items( $args, $tax_id = false ) {
             );
 
             if ( $item_id ) {
-                $tax_items->find( $item_id )->update( $insert_args );    
+                $tax_items->find( $item_id )->update( $insert_args );
             } else {
                 $tax_items->create( $insert_args );
             }
         }
 
         $delete = array_diff( $get_deleted_items, $args['items_id'] );
-        
+
         if ( is_array( $delete ) && count( $delete ) ) {
-            erp_ac_remove_tax_items( $delete );    
+            erp_ac_remove_tax_items( $delete );
         }
-        
+
     } else {
         $insert_args = array();
         $arg_items = isset( $args['items_id'] ) && is_array( $args['items_id'] ) ? $args['items_id'] : array();
@@ -76,23 +76,23 @@ function erp_ac_update_tax_items( $args, $tax_id = false ) {
             );
         }
 
-        $tax_items->insert( $insert_args );    
+        $tax_items->insert( $insert_args );
     }
 }
 
 function erp_ac_remove_tax_items( $items_id ) {
     $tax_items = new WeDevs\ERP\Accounting\Model\Tax_Items();
-    
+
     if ( is_array( $items_id ) ) {
         $tax_items->destroy( $items_id );
         return true;
     }
-    
+
     $tax_items->find($items_id)->delete();
 }
 
 function erp_ac_delete_tax( $tax_id ) {
-    
+
     $ledgers       = WeDevs\ERP\Accounting\Model\Ledger::with( [ 'journals' ] )->WHERE( 'tax', '=', $tax_id )->get()->toArray();
     $record_exist = false;
     $ledgers_id   = [];
@@ -100,12 +100,12 @@ function erp_ac_delete_tax( $tax_id ) {
     foreach ( $ledgers as $ledger_attr ) {
         $ledgers_id[] = $ledger_attr['id'];
         if ( $ledger_attr['journals'] ) {
-            $record_exist = true; 
+            $record_exist = true;
         }
     }
-    
+
     if ( $record_exist ) {
-        return new WP_Error( 'id_exist', __( 'The tax record can not be deleted as it contains one or more transactions.', 'accounting' ) );
+        return new WP_Error( 'id_exist', __( 'The tax record can not be deleted as it contains one or more transactions.', 'erp' ) );
     }
 
     //Delete tax items
@@ -131,7 +131,7 @@ function erp_ac_delete_tax( $tax_id ) {
 function erp_ac_get_tax_dropdown() {
     $taxs    = erp_ac_get_all_tax( [ 'number' => '-1' ] );
     $drpdown = [];
-    
+
     foreach ($taxs as $tax ) {
         $drpdown[$tax->id] = $tax->name;
     }
@@ -141,24 +141,24 @@ function erp_ac_get_tax_dropdown() {
 
 function erp_ac_get_tax_info() {
     $cache_key       = 'erp-ac-tax-info-' . md5( serialize( get_current_user_id() ) );
-    $tax_rate_info   = wp_cache_get( $cache_key, 'accounting' );
+    $tax_rate_info   = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $tax_rate_info ) {
         $taxs      = erp_ac_get_all_tax( [ 'number' => '-1', 'join' => ['items'] ] );
         $tax_rate_info = [];
-        
+
         foreach ($taxs as $tax ) {
             $tax_info = [];
-            
+
             if ( $tax->items ) {
-                $rate       = wp_list_pluck( $tax->items, 'tax_rate' );  
-                $tax_info = [ 'id' => $tax->id, 'name' => $tax->name, 'number' => $tax->tax_number, 'rate' =>  array_sum( $rate ) ];  
+                $rate       = wp_list_pluck( $tax->items, 'tax_rate' );
+                $tax_info = [ 'id' => $tax->id, 'name' => $tax->name, 'number' => $tax->tax_number, 'rate' =>  array_sum( $rate ) ];
             }
-             
+
             $tax_rate_info[$tax->id] = $tax_info;
         }
 
-        wp_cache_set( $cache_key, $tax_rate_info, 'accounting' );
+        wp_cache_set( $cache_key, $tax_rate_info, 'erp' );
     }
     return $tax_rate_info;
 }
@@ -178,7 +178,7 @@ function erp_ac_get_all_tax( $args = [] ) {
 
     $args            = wp_parse_args( $args, $defaults );
     $cache_key       = 'erp-ac-tax-all-' . md5( serialize( $args ) );
-    $items           = wp_cache_get( $cache_key, 'accounting' );
+    $items           = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $items ) {
         $tax = new WeDevs\ERP\Accounting\Model\Tax();
@@ -212,7 +212,7 @@ function erp_ac_get_all_tax( $args = [] ) {
             $items = erp_array_to_object( $items );
         }
 
-        wp_cache_set( $cache_key, $items, 'accounting' );
+        wp_cache_set( $cache_key, $items, 'erp' );
     }
 
     return $items;
@@ -223,26 +223,26 @@ function erp_ac_tax_component_fields() {
     erp_html_form_input( array(
         'name'        => 'items_id[]',
         'type'        => 'hidden',
-    ) ); 
+    ) );
 
     erp_html_form_input( array(
         'name'        => 'component_name[]',
         'type'        => 'text',
-        'placeholder' => __( 'Component name', 'accounting' ),
+        'placeholder' => __( 'Component name', 'erp' ),
         'required'    => true,
     ) );
 
     erp_html_form_input( array(
         'name'        => 'agency_name[]',
         'type'        => 'text',
-        'placeholder' => __( 'Agency name', 'accounting' ),
+        'placeholder' => __( 'Agency name', 'erp' ),
         'required'    => true
     ) );
 
     erp_html_form_input( array(
         'name'        => 'tax_rate[]',
         'type'        => 'text',
-        'placeholder' => __( 'Rate(0.00%)', 'accounting' ),
+        'placeholder' => __( 'Rate(0.00%)', 'erp' ),
         'required'    => true
     ) );
 }
@@ -253,12 +253,12 @@ function erp_ac_tax_component_field_with_value() {
         'name'        => 'items_id[]',
         'type'        => 'hidden',
         'value'       => '{{items.id}}',
-    ) ); 
+    ) );
 
     erp_html_form_input( array(
         'name'        => 'component_name[]',
         'type'        => 'text',
-        'placeholder' => __( 'Component name', 'accounting' ),
+        'placeholder' => __( 'Component name', 'erp' ),
         'required'    => true,
         'value'       => '{{items.component_name}}'
     ) );
@@ -267,7 +267,7 @@ function erp_ac_tax_component_field_with_value() {
         'name'        => 'agency_name[]',
         'type'        => 'text',
         'value'       => '{{items.agency_name}}',
-        'placeholder' => __( 'Agency name', 'accounting' ),
+        'placeholder' => __( 'Agency name', 'erp' ),
         'required'    => true
     ) );
 
@@ -275,7 +275,7 @@ function erp_ac_tax_component_field_with_value() {
         'name'        => 'tax_rate[]',
         'type'        => 'text',
         'value'       => '{{items.tax_rate}}',
-        'placeholder' => __( 'Rate(0.00%)', 'accounting' ),
+        'placeholder' => __( 'Rate(0.00%)', 'erp' ),
         'required'    => true
     ) );
 }
@@ -296,7 +296,7 @@ function erp_ac_new_tax_account( $postdata, $tax_id ) {
         'tax'     => $tax_id,
         'code'    => $receitvable_code
     );
-    
+
     erp_ac_insert_chart( $receivable_account );
 
     $payable_code = erp_ac_accounting_code_generator();
@@ -308,7 +308,7 @@ function erp_ac_new_tax_account( $postdata, $tax_id ) {
         'tax'     => $tax_id,
         'code'    => $payable_code
     );
-    
+
     erp_ac_insert_chart( $payable_account );
 }
 
@@ -327,9 +327,9 @@ function erp_ac_accounting_code_generator() {
 function erp_ac_get_trans_unit_tax_rate( $items ) {
     $itms_tax = [];
     $tax_info = erp_ac_get_tax_info();
-    
+
     foreach ( $items as $item ) {
-        
+
         if ( $item['tax'] === '0' ) {
             continue;
         }
@@ -345,7 +345,7 @@ function erp_ac_get_trans_unit_tax_rate( $items ) {
         $print_tax[$tax_id] = [
             'label' => sprintf( '%1$s %2$s (%3$s)', $tax_info[$tax_id]['name'], $itm_tax['tax_rate'] . '%', $tax_info[$tax_id]['number'] ),
             'total_amount' => $itm_tax['tax_total']
-        ];    
+        ];
     }
 
     return $print_tax;
@@ -353,7 +353,7 @@ function erp_ac_get_trans_unit_tax_rate( $items ) {
 
 function erp_ac_get_tax_account_from_tax_id( $tax_id, $type ) {
     $cache_key = 'erp-ac-tax-' . $tax_id . $type . md5( serialize( get_current_user_id() ) );
-    $account_id = wp_cache_get( $cache_key, 'accounting' );
+    $account_id = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $account_id ) {
         if ( $type == 'sales' ) {
@@ -371,8 +371,8 @@ function erp_ac_get_tax_account_from_tax_id( $tax_id, $type ) {
                 $account_id = $account['id'];
             }
         }
-        
-        wp_cache_set( $cache_key, $account_id, 'accounting' );
+
+        wp_cache_set( $cache_key, $account_id, 'erp' );
     }
 
     return $account_id;

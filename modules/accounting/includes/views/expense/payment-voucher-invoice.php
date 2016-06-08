@@ -1,10 +1,10 @@
 <table class="wp-list-table widefat fixed striped widefat erp-ac-transaction-table" style="margin: 20px 0;">
     <thead>
         <tr>
-            <th class="col-ac"><?php _e( 'Voucher ID', 'accounting' ); ?></th>
-            <th class="col-ac"><?php _e( 'Due', 'accounting' ); ?></th>
-            <th class="col-ac"><?php _e( 'Total', 'accounting' ); ?></th>
-            <th class="col-desc"><?php _e( 'Amount', 'accounting' ); ?></th>
+            <th class="col-ac"><?php _e( 'Voucher ID', 'erp' ); ?></th>
+            <th class="col-ac"><?php _e( 'Due', 'erp' ); ?></th>
+            <th class="col-ac"><?php _e( 'Total', 'erp' ); ?></th>
+            <th class="col-desc"><?php _e( 'Amount', 'erp' ); ?></th>
             <th class="col-action">&nbsp;</th>
         </tr>
     </thead>
@@ -83,7 +83,7 @@
         <tr>
             <th>&nbsp;</th>
             <th class="align-right"></th>
-            <th class="col-amount"><?php _e( 'Total', 'accounting' ); ?></th>
+            <th class="col-amount"><?php _e( 'Total', 'erp' ); ?></th>
             <th class="erp-ac-total-due col-amount">
 
                 <?php erp_html_form_input( array(

@@ -3,7 +3,7 @@
     if ( erp_ac_create_expenses_voucher() || erp_ac_create_expenses_credit() ) {
         ?>
         <h2>
-            <?php _e( 'Expense Transactions', 'accounting' ); ?>
+            <?php _e( 'Expense Transactions', 'erp' ); ?>
 
             <?php
             $form_types = erp_ac_get_expense_form_types();
@@ -12,8 +12,8 @@
                     if ( 'payment_voucher' == $key && ( erp_ac_create_expenses_voucher() || erp_ac_publish_expenses_voucher() ) ) {
                         printf( '<a class="add-new-h2" href="%s%s" title="%s">%s</a> ', admin_url( 'admin.php?page=erp-accounting-expense&action=new&type=' ), $key, esc_attr( $form['description'] ), $form['label'] );
                     }
-                
-                    if ( 'vendor_credit' == $key && ( erp_ac_create_expenses_credit() || erp_ac_publish_expenses_credit() ) ) { 
+
+                    if ( 'vendor_credit' == $key && ( erp_ac_create_expenses_credit() || erp_ac_publish_expenses_credit() ) ) {
                         printf( '<a class="add-new-h2" href="%s%s" title="%s">%s</a> ', admin_url( 'admin.php?page=erp-accounting-expense&action=new&type=' ), $key, esc_attr( $form['description'] ), $form['label'] );
                     }
 
@@ -21,10 +21,10 @@
             }
             ?>
         </h2>
-    <?php 
+    <?php
     }
 
-    
+
     if ( erp_ac_view_expenses_summary() ) {
         include_once dirname( dirname( __FILE__ ) ) . '/common/transaction-chart.php';
     }
