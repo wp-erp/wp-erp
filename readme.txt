@@ -175,6 +175,24 @@ If you are unable to use any of the methods due to internet connectivity and fil
 
 * Beta Release
 
+**v1.1.0 -> June 8, 2016**
+
+ * [new] Merge accounting module
+ * [new] Currency formating
+ * [new] Income tax settings
+ * [new] Income tax report
+ * [new] Income statement report
+ * [new] Balance sheet report
+ * [new] Permission management system
+ * [new] Save as draft for all transaction
+ * [improved] All transaction table with balance column and short view popup link
+ * [update] All transaction query make for current financial year.
+ * [update] Include tax field in transactio form
+ * [fix] Bank chart
+ * [fix] Customer and vendor create time eamil field is required
+ * [fix] ref number make unique
+
+
 == Upgrade Notice ==
 
 Nothing here right now.
