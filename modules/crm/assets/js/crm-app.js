@@ -2,23 +2,6 @@
  *****************    Vue Filters     *************************
  **************************************************************/
 
-Vue.filter('formatDate', function (date, format ) {
-    return wperp.dateFormat( date, format );
-})
-
-// Vue filter for formatting Feeds as a group by object
-Vue.filter('formatFeeds', function ( feeds ) {
-    var feedsData = _.groupBy( feeds, function( data ) {
-        return data.created_timeline_date;
-    });
-
-    return feedsData;
-});
-
-// Vue filter for formatting Feeds as a group by object
-Vue.filter('formatDateTime', function ( date ) {
-    return wperp.dateFormat( date, 'F, j' ) + ' at ' + wperp.timeFormat( date )
-});
 
 /******************************************************************
 *******************      Component       **************************
@@ -318,7 +301,7 @@ Vue.component( 'log-activity', {
 
         var self = this;
         jQuery(this.$el).find('trix-editor').get(0).addEventListener('trix-change', function (e) {
-            self.feedData.message = e.path[0].innerHTML;
+            self.feedData.message = e.target.innerHTML;
         });
 
         done();
@@ -383,7 +366,6 @@ Vue.component( 'tasks-note', {
                 self.val( invitedUser ).trigger('change');
             } else {
                 self.val( invitedUser.split(',') ).trigger('change');
-                // jQuery('#erp-crm-task-assign-contact').select2().select2( "val", invitedUser.split(',') );
             }
 
         }
@@ -429,7 +411,7 @@ Vue.component( 'tasks-note', {
 
         var self = this;
         jQuery(this.$el).find('trix-editor').get(0).addEventListener('trix-change', function (e) {
-            self.feedData.message = e.path[0].innerHTML;
+            self.feedData.message = e.target.innerHTML;
         });
 
         done();
@@ -549,7 +531,7 @@ Vue.component( 'email-note', {
         var self = this;
 
         jQuery(self.$el).find('trix-editor').get(0).addEventListener('trix-change', function (e) {
-            self.feedData.message = e.path[0].innerHTML;
+            self.feedData.message = e.target.innerHTML;
         });
 
         done();
@@ -670,7 +652,7 @@ Vue.component( 'schedule-note', {
 
         var self = this;
         jQuery(this.$el).find('trix-editor').get(0).addEventListener('trix-change', function (e) {
-            self.feedData.message = e.path[0].innerHTML;
+            self.feedData.message = e.target.innerHTML;
         });
 
         done();

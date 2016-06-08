@@ -46,7 +46,8 @@ window.wperp = window.wperp || {};
      * @return {void}
      */
     wperp.timeFormat = function( date ) {
-        date = new Date( date );
+        var d = date.toString();
+        date = new Date( d.substr(0, 4), d.substr(5, 2) - 1, d.substr(8, 2), d.substr(11, 2), d.substr(14, 2), d.substr(17, 2) );
         var hours = date.getHours();
         var minutes = date.getMinutes();
         var ampm = hours >= 12 ? 'pm' : 'am';
@@ -58,7 +59,8 @@ window.wperp = window.wperp || {};
     };
 
     wperp.dateFormat = function ( date, format ) {
-        date = new Date( date );
+        var d = date.toString();
+        date = new Date( d.substr(0, 4), d.substr(5, 2) - 1, d.substr(8, 2), d.substr(11, 2), d.substr(14, 2), d.substr(17, 2) );
         var month = ("0" + (date.getMonth() + 1)).slice(-2),
             day   = ("0" + date.getDate()).slice(-2),
             year  = date.getFullYear(),
@@ -67,6 +69,7 @@ window.wperp = window.wperp || {};
             monthName = monthArray[date.getMonth()],
             monthShortName = monthShortArray[date.getMonth()];
 
+        console.log( date, month, day, year );
         var pattern = {
             Y: year,
             m: month,
