@@ -1,5 +1,5 @@
 ;( function($, wperp) {
-    Vue.config.debug = 1;
+    // Vue.config.debug = 1;
 
     var mixin = {
         methods: {

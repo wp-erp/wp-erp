@@ -62,7 +62,7 @@ class Scripts {
         wp_register_script( 'erp-vuejs', $vendor . '/vue/vue' . $this->suffix . '.js', array( 'jquery' ), $this->version, true );
         wp_register_script( 'erp-trix-editor', $vendor . '/trix/trix.js', array( 'jquery' ), $this->version, true );
         wp_register_script( 'erp-chosen', $vendor . '/chosen/chosen.jquery' . $this->suffix . '.js', array( 'jquery' ), $this->version, true );
-        wp_register_script( 'erp-nprogress', $vendor . '/nprogress/nprogress' . $this->suffix . '.js', array( 'jquery' ), $this->version, true );
+        wp_register_script( 'erp-nprogress', $vendor . '/nprogress/nprogress.js', array( 'jquery' ), $this->version, true );
 
         // sweet alert
         wp_register_script( 'erp-sweetalert', $vendor . '/sweetalert/sweetalert.min.js', array( 'jquery' ), $this->version, true );
