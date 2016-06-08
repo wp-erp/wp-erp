@@ -17,3 +17,4 @@ add_action( 'erp_hr_leave_policy_new', 'erp_hr_apply_policy_existing_employee', 
 
 // Filters *****************************************************************/
 add_filter( 'erp_map_meta_caps', 'erp_hr_map_meta_caps', 10, 4 );
+add_filter( 'editable_roles', 'erp_hr_filter_editable_roles' );

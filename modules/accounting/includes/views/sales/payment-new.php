@@ -58,7 +58,7 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
     $dropdown_html = erp_ac_render_account_dropdown_html( $dropdown, array(
         'name'     => 'line_account[]',
         'selected' => isset( $journal['ledger_id'] ) ? $journal['ledger_id'] : false,
-        'class'    => 'select2'
+        'class'    => 'erp-select2'
     ) );
 
     ?>
@@ -79,7 +79,7 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
                                 'placeholder' => __( 'Select a payee', 'accounting' ),
                                 'value'       => isset( $transaction['user_id'] ) ? $transaction['user_id'] : '',
                                 'type'        => 'select',
-                                'class'       => $transaction_id ? 'select2 erp-ac-not-found-in-drop' : 'select2 erp-ac-payment-receive erp-ac-not-found-in-drop',
+                                'class'       => $transaction_id ? 'erp-select2 erp-ac-not-found-in-drop' : 'erp-select2 erp-ac-payment-receive erp-ac-not-found-in-drop',
                                 'options'     => [ '' => __( '&mdash; Select &mdash;', 'accounting' ) ] + erp_get_peoples_array( ['type' => 'customer', 'number' => 100 ] ),
                                 'custom_attr' => [
                                     'data-content' => 'erp-ac-new-customer-content-pop',
@@ -92,7 +92,7 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
                                 <div><a href="#" data-content="erp-ac-new-customer-content-pop" class="erp-ac-not-found-btn-in-drop erp-ac-more-customer"><?php _e( 'Create New', 'accounting' ); ?></a></div>
                                 <?php
                             }
-                            ?> 
+                            ?>
                         </div>
                     </li>
 
@@ -134,7 +134,7 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
                                 'name'        => 'account_id',
                                 'placeholder' => __( 'Select an Account', 'accounting' ),
                                 'type'        => 'select',
-                                'class'       => 'select2 erp-ac-deposit-dropdown',
+                                'class'       => 'erp-select2 erp-ac-deposit-dropdown',
                                 'value'       => $main_ledger_id,
                                 'required'    => true,
                                 'options'     => [ '' => __( '&mdash; Select &mdash;', 'accounting' ) ] + erp_ac_get_bank_dropdown()
@@ -169,7 +169,7 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
         ?>
 
         <?php wp_nonce_field( 'erp-ac-trans-new' ); ?>
-        
+
         <?php
         if ( erp_ac_publish_sales_payment() ) {
             ?>
@@ -177,12 +177,12 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
             <?php
         }
         ?>
-        
+
         <input type="submit" name="submit_erp_ac_trans_draft" id="submit_erp_ac_trans_draft" class="button button-secondary" value="<?php _e( 'Save as Draft', 'accounting' ); ?>">
     </form>
     <div class="erp-ac-receive-payment-table-clone" style="display: none;">
 
-        <?php 
+        <?php
         $dropdown_html = erp_ac_render_account_dropdown_html( $dropdown, array(
             'name'     => 'line_account[]',
             'class'    => 'erp-ac-selece-custom'

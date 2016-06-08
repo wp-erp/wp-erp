@@ -18,7 +18,7 @@
         $lilne_total = 0;
         $journals = [];
         $jor_itms['journal'] = isset( $jor_itms['journal'] ) ? $jor_itms['journal'] : [];
-        
+
         foreach ( $jor_itms['journal'] as  $journal ) {
             $journals[$journal['id']] = $journal;
         }
@@ -28,11 +28,11 @@
 
             foreach (  $jor_itms['item'] as $key => $item  ) {
                 $journal = $journals[$item['journal_id']];
-                
+
                 $dropdown_html = erp_ac_render_account_dropdown_html( $dropdown, array(
                     'name'     => 'line_account[]',
                     'selected' => isset( $journal['ledger_id'] ) ? $journal['ledger_id'] : false,
-                    'class'    => 'select2 erp-ac-account-dropdown'
+                    'class'    => 'erp-select2 erp-ac-account-dropdown'
                 ) );
 
                 include WPERP_ACCOUNTING_VIEWS . '/common/transaction-table-tr-render.php';
@@ -46,7 +46,7 @@
         }
 
         $sub_total = isset( $transaction['sub_total'] ) ? erp_ac_get_price_for_field( $transaction['sub_total'], ['symbol' => false] ) : '0.00';
- 
+
         ?>
     </tbody>
     <tfoot>
@@ -96,8 +96,8 @@
         <th>&nbsp;</th>
     </tr>
 </table>
-<?php 
- 
+<?php
+
 
 
 
