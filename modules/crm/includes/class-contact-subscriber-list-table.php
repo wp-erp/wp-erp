@@ -168,13 +168,13 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
      * @return string
      */
     function column_name( $subscriber_contact ) {
-        $contact = new \WeDevs\ERP\CRM\Contact( $subscriber_contact->user_id );
-        $actions           = array();
-        $delete_url        = '';
-        $edit_url        = '';
+        $contact    = new \WeDevs\ERP\CRM\Contact( $subscriber_contact->user_id );
+        $actions    = array();
+        $delete_url = '';
+        $edit_url   = '';
 
-        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $edit_url, $subscriber_contact->user_id, __( 'Edit this item', 'erp' ), __( 'Edit', 'erp' ) );
-        $actions['delete']   = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $subscriber_contact->user_id, __( 'Delete this item', 'erp' ), __( 'Delete', 'erp' ) );
+        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" data-name="%s" title="%s">%s</a>', $edit_url, $subscriber_contact->user_id, $contact->get_full_name(), __( 'Edit this item', 'erp' ), __( 'Edit', 'erp' ) );
+        $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $subscriber_contact->user_id, __( 'Delete this item', 'erp' ), __( 'Delete', 'erp' ) );
 
         return sprintf( '%4$s <a href="%3$s"><strong>%1$s</strong></a> %2$s', $contact->get_full_name(), $this->row_actions( $actions ), erp_crm_get_details_url( $contact->id, $contact->types ) , $contact->get_avatar() );
     }

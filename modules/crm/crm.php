@@ -202,14 +202,6 @@ class Customer_Relationship {
                 wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", array( 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
             }
 
-            if ( !isset( $_GET['action'] ) ) {
-                // wp_enqueue_script( 'wp-erp-crm-vue-save-search', WPERP_CRM_ASSETS . "/js/save-search$suffix.js", array( 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
-                // wp_localize_script( 'wp-erp-crm-vue-save-search', 'wpCRMSaveSearch', [
-                //     'ajaxurl'         => admin_url( 'admin-ajax.php' ),
-                //     'nonce'           => wp_create_nonce( 'wp-erp-crm-save-search' ),
-                // ] );
-            }
-
             wp_localize_script( 'wp-erp-crm-vue-component', 'wpCRMvue', $contact_actvity_localize );
             wp_enqueue_script( 'post' );
         }
