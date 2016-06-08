@@ -42,16 +42,16 @@ function erp_ac_get_all_chart( $args = [] ) {
     if ( false === $items ) {
         $condition = '';
         $limit = '';
-        
+
         if ( $args['number'] != '-1' && ! empty( $args['number'] ) ) {
             $limit = "LIMIT {$args['offset']}, {$args['number']}";
-        } 
+        }
 
         if ( $args['class_id'] != '-1' && ! empty( $args['class_id'] ) ) {
             $class_id = $args['class_id'];
             $condition .= "WHERE ct.class_id = $class_id";
-        } 
-        
+        }
+
         $sql = "SELECT ch.*, ct.class_id, ct.name as type_name, count(jour.ledger_id) as entries
             FROM {$wpdb->prefix}erp_ac_ledger AS ch
             LEFT JOIN {$wpdb->prefix}erp_ac_chart_types AS ct ON ct.id = ch.type_id
@@ -278,7 +278,7 @@ function erp_ac_get_chart_dropdown( $args = [] ) {
         'selected'    => '0',
         'name'        => 'chart-of-accounts',
         'exclude'     => false,
-        'class'       => 'select2',
+        'class'       => 'erp-select2',
         'required'    => false,
     ];
     $args         = wp_parse_args( $args, $defaults );
@@ -329,7 +329,7 @@ function erp_ac_render_account_dropdown_html( $account_charts = [], $args = [] )
         'select_text' => __( '&#8212; Select &#8212;', 'accounting' ),
         'selected'    => '0',
         'name'        => 'chart-of-accounts',
-        'class'       => 'select2',
+        'class'       => 'erp-select2',
         'required'    => true,
     ];
     $args         = wp_parse_args( $args, $defaults );
@@ -482,7 +482,7 @@ function chart_grouping() {
 }
 
 function erp_ac_delete_chart( $chart_id ) {
-    
+
     if ( ! erp_ac_delete_account() ) {
         return new WP_Error( 'error', __( 'You do not have sufficient permissions', 'erp' ) );
     }

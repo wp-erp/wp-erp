@@ -13,7 +13,7 @@
             $( 'table.erp-ac-transaction-table.journal-table' ).on( 'click', '.remove-line', this.journal.onChange );
             $( 'table.erp-ac-transaction-table.journal-table' ).on( 'change', 'input.line_debit, input.line_credit', this.journal.onChange );
 
-            // chart of accounts 
+            // chart of accounts
             $( 'form#erp-ac-accounts-form').on( 'change', 'input#code', this.accounts.checkCode );
             $( '.chart-of-accounts').on( 'click', '.erp-ac-remove-account', this.accounts.remove );
 
@@ -30,9 +30,9 @@
             $('.erp-ac-form-wrap').on( 'change', '.erp-ac-vendor-drop', this.vendorAddress );
             $('.invoice-preview-wrap').on( 'click', 'a.add-invoice-payment', self, this.invoicePayment );
             $('.invoice-preview-wrap').on( 'click', 'a.add-vendor-credit-payment', self, this.vendoerCreditPayment );
-            
+
             $('.invoice-preview-wrap').on( 'click', 'a.erp-ac-print', this.print );
-            
+
             $('.erp-ac-customer-list-table-wrap, .erp-ac-vendor-list-table-wrap').on( 'click', 'a.erp-ac-submitdelete', this.customer.remove );
             $('.erp-ac-customer-list-table-wrap, .erp-ac-vendor-list-table-wrap' ).on( 'click', 'a.erp-ac-restoreCustomer', this.customer.restore );
             $('.erp-ac-receive-payment-table, .erp-ac-voucher-table-wrap' ).on( 'click', '.erp-ac-remove-line', this.removePartialLine );
@@ -40,15 +40,15 @@
             $('body, .erp-ac-form-wrap' ).on( 'keyup', '.erp-ac-reference-field', this.keyupReference );
             $('body' ).on( 'click', '.erp-ac-not-found-btn-in-drop', this.dropDownAddMore );
             $('.erp-ac-transaction-report').on('click', this.transactionReport );
-            
-            this.initTipTip(); 
+
+            this.initTipTip();
             $(document.body ).on( 'keyup change', '.line_price, .line_credit, .line_debit, .erp-ac-line-due', this.keyUpNumberFormating );
 
             //checking user existance
             $('.erp-ac-users-wrap').on('focusout', 'input[name="email"]', this.users.checkUsers );
             $('.erp-ac-users-wrap').on('click', '.erp-ac-convert-user-info', this.users.convertUser );
 
-            //tax 
+            //tax
             $('.erp-settings').on( 'click', '#erp-ac-new-tax-add-btn', this.tax.new );
             $('body').on( 'change', '.erp-ac-tax-radio', this.tax.radio );
             $('body').on( 'click', '.erp-ac-multi-tax-add-more', this.tax.moreField );
@@ -62,7 +62,7 @@
         users: {
             clickOff: function() {
                 $('.erp-ac-users-wrap').off('click', '.erp-ac-convert-user-info', ERP_Accounting.users.convertUser );
-            }, 
+            },
 
             clickOn: function() {
                 $('.erp-ac-users-wrap').on('click', '.erp-ac-convert-user-info', ERP_Accounting.users.convertUser );
@@ -70,7 +70,7 @@
 
             convertUser: function(e) {
                 e.preventDefault();
-                
+
                 var self = $(this);
 
                 ERP_Accounting.users.clickOff();
@@ -105,7 +105,7 @@
                         email: email
                     },
                     success: function(res) {
-                        
+
                         $('#message').slideUp(500);
                         $('input[name="submit_erp_ac_customer"]').prop('disabled', false);
                     },
@@ -117,7 +117,7 @@
                     }
                 });
 
-            },            
+            },
         },
 
         tax: {
@@ -128,71 +128,71 @@
 
             delete: function(e) {
                 e.preventDefault();
-            
+
                 var self = $(this);
 
-                swal({   
-                    title: ERP_AC.message.confirm,   
-                    type: "warning",   
+                swal({
+                    title: ERP_AC.message.confirm,
+                    type: "warning",
                     cancelButtonText: ERP_AC.message.cancel,
                     //confirmButtonText: 'asdfasd',
-                    showCancelButton: true,   
-                    confirmButtonColor: "#DD6B55",   
-                    confirmButtonText: ERP_AC.message.delete,   
-                    closeOnConfirm: false, 
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: ERP_AC.message.delete,
+                    closeOnConfirm: false,
                     showCancelButton: true,   closeOnConfirm: false,   showLoaderOnConfirm: true,
-                }, 
-                function(){   
-                
+                },
+                function(){
+
                     wp.ajax.send('erp-ac-delete-tax', {
                         data: {
                             'tax_id': self.data('tax_id'),
-                            '_wpnonce': ERP_AC.nonce 
+                            '_wpnonce': ERP_AC.nonce
                         },
                         success: function(res) {
-                            swal("", ERP_AC.message.tax_deleted, "success"); 
+                            swal("", ERP_AC.message.tax_deleted, "success");
                             ERP_Accounting.tax.pageReload();
                         },
                         error: function(error) {
                             swal({
-                                title: ERP_AC.message.error,   
-                                text: error,   
-                                type: "error",   
+                                title: ERP_AC.message.error,
+                                text: error,
+                                type: "error",
                                 confirmButtonText: "OK",
                                 confirmButtonColor: "#DD6B55"
                             });
                         }
                     });
-                    
+
                 });
-            },  
+            },
 
             compound: function(e) {
                 e.preventDefault();
                 var self = $(this),
                     is_checked = self.prop('checked');
-                
+
                 if ( is_checked ) {
-                    $('.erp-ac-multi-tax-add-more').show(); 
-                    $('.erp-ac-multiple-sub-tax-field').find('.row').show(); 
-                    
+                    $('.erp-ac-multi-tax-add-more').show();
+                    $('.erp-ac-multiple-sub-tax-field').find('.row').show();
+
                     var  sub_tx_wrap = $('.erp-ac-multiple-sub-tax-field').find('.row').length;
 
                     if ( sub_tx_wrap > 2 ) {
                         $('.erp-ac-remove-field').show();
-                    } 
+                    }
 
                 } else {
                     $('.erp-ac-multi-tax-add-more').hide();
-                    $('.erp-ac-multiple-sub-tax-field').find('.row:gt(1)').hide(); 
+                    $('.erp-ac-multiple-sub-tax-field').find('.row:gt(1)').hide();
                     $('.erp-ac-remove-field').hide();
                 }
-                
+
             },
 
             details: function(e) {
                 e.preventDefault();
-                
+
                 var self = $(this),
                     data = self.data('items'),
                     id   = self.data('id');
@@ -208,7 +208,7 @@
 
             selectable: function() {
                 var checked = $('[data-checkbox]');
-                        
+
                 $.each( checked, function( key, dom ) {
                     var self     = $(dom),
                         data_val       = self.data('checkbox'),
@@ -216,14 +216,14 @@
                         checkbox_value = checkbox_field.val();
 
                     if ( data_val === checkbox_value ) {
-                        checkbox_field.prop( 'checked', true );    
+                        checkbox_field.prop( 'checked', true );
                     }
 
-                    $('input[type="radio"][value="'+data_val+'"]').prop('checked', true );                
-                }); 
+                    $('input[type="radio"][value="'+data_val+'"]').prop('checked', true );
+                });
 
                 var selected = $('[data-selected]');
-                
+
                 $.each( selected, function( key, dom ) {
 
                     var self     = $(dom),
@@ -237,7 +237,7 @@
             new: function(e) {
                 e.preventDefault();
 
-                var self = $(this), 
+                var self = $(this),
                     content = self.data('items'),
                     content = ( content === undefined ) ? [] : content,
                     id = self.data('id'),
@@ -246,7 +246,7 @@
 
                 $.erpPopup({
                     title: ERP_AC.message.new_tax,
-                    button: is_edit ? ERP_AC.message.tax_update : ERP_AC.message.new, 
+                    button: is_edit ? ERP_AC.message.tax_update : ERP_AC.message.new,
                     id: 'erp-ac-tax-popup-content',
                     content: wperp.template('erp-ac-new-tax-form-popup')({ 'content' : content, 'id' : id, 'app_accounts' : app_accounts, 'is_edit' : is_edit }).trim(),
                     extraClass: 'large',
@@ -254,22 +254,22 @@
                     onReady: function(modal) {
                         ERP_Accounting.tax.selectable();
                         ERP_Accounting.tax.radio_status();
-                        $('.select2').select2({
+                        $('.erp-select2').select2({
                             'theme': 'classic'
                         }).change(function(event) {
-                            
+
                         });
                     },
 
                     onSubmit: function(modal) {
-            
+
                         wp.ajax.send('erp-ac-new-tax', {
                             data: {
                                 'post': this.serialize(),
-                                '_wpnonce': ERP_AC.nonce 
+                                '_wpnonce': ERP_AC.nonce
                             },
                             success: function(res) {
-                            
+
                                 modal.closeModal();
                                 ERP_Accounting.tax.pageReload();
                                 //location.reload();
@@ -288,14 +288,14 @@
             },
 
             radio_status: function() {
-            
+
                 var self = $('input[type="radio"][value="multiple_tax"]').is(':checked') ? $('input[type="radio"][value="multiple_tax"]') : $('input[type="radio"][value="single_tax"]'),
                     value = self.attr('value');
-                
+
                 if ( value == 'single_tax' ) {
                     $('.erp-ac-multiple-tax-field').find('input[type="text"]').attr('disabled', 'disabled');
                     $('.erp-ac-single-tax-field').find('input[type="text"]').removeAttr('disabled');
-                    
+
                     $('.erp-ac-single-tax-field').slideDown(200);
                     $('.erp-ac-multiple-tax-field').slideUp(200);
                 } else {
@@ -315,18 +315,18 @@
 
             removeField: function(e) {
                 e.preventDefault();
-                
+
                 var self = $(this),
                     sub_tx_wrap = $('.erp-ac-multiple-sub-tax-field'),
                     row_length = sub_tx_wrap.find('.row').length;
-                 
+
                 if ( row_length > 2 ) {
                     self.closest('.row').remove();
-                    
+
                     if ( row_length <= 3 ) {
                         sub_tx_wrap.find('.fa-times-circle').hide();
                     }
-                } 
+                }
             }
         },
 
@@ -355,7 +355,7 @@
 
             if ( current_value !== newvalue ) {
                 self.val( newvalue );
-            } 
+            }
         },
 
         calNumNormal: function( $number ) {
@@ -390,10 +390,10 @@
                 changeYear: true,
                 yearRange: '-100:+0',
             });
-            
+
             ERP_Accounting.dueDateField();
-            
-            $( '.select2' ).select2({
+
+            $( '.erp-select2' ).select2({
                 placeholder: $(this).attr('data-placeholder'),
             });
         },
@@ -401,7 +401,7 @@
         dueDateField: function() {
             var dateToday = new Date();
             var yrRange = "-45:" + (dateToday.getFullYear() + 2);
-            
+
             $( '.erp-due-date-field').datepicker({
                 dateFormat: 'yy-mm-dd',
                 changeMonth: true,
@@ -428,11 +428,11 @@
                     wp.ajax.send( 'erp-ac-transaction-report', {
                         data: {
                             'transaction_id': transaction_id,
-                            '_wpnonce': ERP_AC.nonce 
+                            '_wpnonce': ERP_AC.nonce
                         },
                         success: function(res) {
                             $("#"+modal.id).find('.content').html(res.content);
-                            
+
                         },
                         error: function() {
 
@@ -449,20 +449,20 @@
          */
         reload: function( wrap, content, res ) {
             $( '.'+wrap ).load( window.location.href + ' .' + content, function() {
-                
+
                 var select = $('.'+wrap).find( '.'+content ).find( '.erp-ac-not-found-in-drop' );
-                
+
                 select.find('option[value="'+res.id+'"]').attr('selected', 'selected');
                 ERP_Accounting.select2AddMoreContent();
             } );
-            
+
         },
 
         dropDownAddMore: function(e) {
             e.preventDefault();
-            var self = $(this), 
+            var self = $(this),
                 content_id = self.data('content');
-   
+
             $.erpPopup({
                 title: content_id == 'erp-ac-new-customer-content-pop' ? ERP_AC.message.new_customer : ERP_AC.message.new_vendor,
                 button: ERP_AC.message.new,
@@ -471,17 +471,17 @@
                 extraClass: 'large',
 
                 onReady: function(modal) {
-                    
+
                     $('form.erp-modal-form').addClass('erp-form');
                     $('#'+modal.id).css({ 'z-index': '9999'});
-                    $('select.select2').select2("close");
+                    $('select.erp-select2').select2("close");
                 },
                 onSubmit: function(modal) {
-        
+
                     wp.ajax.send('erp-ac-new-customer-vendor', {
                         data: {
                             'post': this.serialize(),
-                            '_wpnonce': ERP_AC.nonce 
+                            '_wpnonce': ERP_AC.nonce
                         },
                         success: function(res) {
                             ERP_Accounting.reload( 'erp-ac-replace-wrap', 'erp-ac-replace-content', res );
@@ -544,9 +544,9 @@
 
         reference: function(e) {
             e.preventDefault();
-            
+
             var self = $(this);
-            
+
             wp.ajax.send('erp-ac-reference', {
                 data: {
                     '_wpnonce': ERP_AC.nonce,
@@ -590,11 +590,11 @@
             e.preventDefault();
 
             if ( $(this).prop('checked') ) {
-                $('.erp-ac-single-check').prop('checked', true);    
+                $('.erp-ac-single-check').prop('checked', true);
             } else {
                 $('.erp-ac-single-check').prop('checked', false);
             }
-            
+
         },
 
         singleCheck: function(e) {
@@ -602,13 +602,13 @@
             var single_check = $('.erp-ac-single-check');
 
             $('.erp-ac-all-check').prop('checked', true);
- 
+
             $.each( single_check, function( key, value ) {
                 if ( ! $(value).prop('checked') ) {
                     $('.erp-ac-all-check').prop('checked', false);
                     return false;
                 }
-            }); 
+            });
         },
 
         customer: {
@@ -637,7 +637,7 @@
             },
 
             delete_action: function( self ) {
-                
+
                 if ( confirm( wpErpCrm.delConfirmCustomer ) ) {
                     wp.ajax.send( 'erp-ac-customer-delete', {
                         data: {
@@ -828,10 +828,10 @@
                     if ( clone_form == '' ) {
                         return;
                     }
-                    $('.erp-form').find('.erp-ac-voucher-table-wrap').html(clone_form); 
-                    $('.erp-form').find( 'input[name="submit_erp_ac_trans_draft"]' ).show(); 
-                    $('.erp-form').find( '.erp-ac-selece-custom' ).addClass('select2');
-                    $('.select2').select2();
+                    $('.erp-form').find('.erp-ac-voucher-table-wrap').html(clone_form);
+                    $('.erp-form').find( 'input[name="submit_erp_ac_trans_draft"]' ).show();
+                    $('.erp-form').find( '.erp-ac-selece-custom' ).addClass('erp-select2');
+                    $('.erp-select2').select2();
                     ERP_Accounting.incrementField();
                 }
             } );
@@ -871,7 +871,7 @@
             if ( from == '' || to == '' ) {
                 return;
             }
-            
+
             if ( from === to ) {
                 submit_btn.prop( 'disabled', true );
                 alert( 'Please choose another account' );
@@ -913,12 +913,12 @@
 
         checkBankBalance: function(e) {
             e.preventDefault();
-            
+
             var self = $(this),
                 bank_id  = self.val();
-                fld_name = self.attr('name'), 
+                fld_name = self.attr('name'),
                 banlance_wrap = ( fld_name == 'form_account_id' ) ? 'balance-wrap-from' : 'balance-wrap-to';
-            
+
             if ( bank_id == '' ) {
                 $('.'+banlance_wrap).find( '.erp-ac-bank-amount' ).html(0);
                 return;
@@ -952,7 +952,7 @@
             var line_due_total = 0;
 
             $.each( $('.erp-ac-line-due'), function( key, line_due ) {
-                var due = $(line_due).val()  === '' ? '0' : ERP_Accounting.calNumNormal( $(line_due).val() ); 
+                var due = $(line_due).val()  === '' ? '0' : ERP_Accounting.calNumNormal( $(line_due).val() );
                 line_due_total = parseFloat( due ) + parseFloat( line_due_total );
             } );
 
@@ -980,20 +980,20 @@
 
                 error: function() {
                     var clone_form = $('.erp-ac-receive-payment-table-clone').html();
-                    
+
                     if ( clone_form == '' ) {
                         return;
                     }
-                    $('.erp-form').find('.erp-ac-receive-payment-table').html(clone_form); 
-                    $('.erp-form').find( 'input[name="submit_erp_ac_trans_draft"]' ).show(); 
-                    $('.erp-form').find( '.erp-ac-selece-custom' ).addClass('select2');
-                    $('.select2').select2();
+                    $('.erp-form').find('.erp-ac-receive-payment-table').html(clone_form);
+                    $('.erp-form').find( 'input[name="submit_erp_ac_trans_draft"]' ).show();
+                    $('.erp-form').find( '.erp-ac-selece-custom' ).addClass('erp-select2');
+                    $('.erp-select2').select2();
                     ERP_Accounting.incrementField();
                 }
             } );
         },
 
-         
+
         /**
          * Table related general functions
          *
@@ -1033,7 +1033,7 @@
                 tr.after( clone );
 
                 // re-initialize selec2
-                $('.erp-ac-transaction-table .select2').select2();
+                $('.erp-ac-transaction-table .erp-select2').select2();
             }
         },
 
@@ -1050,7 +1050,7 @@
                 var total_tax = [];
 
                 table.find('tbody > tr').each(function(index, el) {
-                    
+
                     if ( ! $(el).is(":visible") ) {
                         return;
                     }
@@ -1065,14 +1065,14 @@
 
                     if ( tax_id != '-1' ) {
                         var tax_info = erp_ac_tax.rate[tax_id];
-                            line_tax =  parseFloat( tax_info.rate ); 
+                            line_tax =  parseFloat( tax_info.rate );
 
                         tax_amount = ( parseFloat( line_price ) * parseFloat( line_tax ) ) / 100;
-                    } 
+                    }
 
                     var prev_tax = isNaN( total_tax[tax_id] ) ? parseFloat('0.00') : total_tax[tax_id];
                     total_tax[tax_id] = tax_amount + prev_tax;
-                    
+
                     qty        = ERP_Accounting.calNumNormal( qty );
                     line_price = ERP_Accounting.calNumNormal( line_price );
                     discount   = ERP_Accounting.calNumNormal( discount );
@@ -1095,17 +1095,17 @@
                 });
 
                 var total_tax_amout = parseFloat( 0.00 );
-                
+
                 $.each( total_tax, function( tax_id, tax_amounts ) {
                     if ( typeof tax_amounts != 'undefined' ) {
                         total_tax_amout = parseFloat( tax_amounts ) + total_tax_amout;
-                        $('input[data-tax_id="'+tax_id+'"]').val( ERP_Accounting.numFormating( tax_amounts ) );    
+                        $('input[data-tax_id="'+tax_id+'"]').val( ERP_Accounting.numFormating( tax_amounts ) );
                     }
                 });
 
                 var sub_total = total,
                     total     = sub_total + total_tax_amout;
-               
+
                 table.find('tfoot input.sub-total').val( ERP_Accounting.numFormating( sub_total ) );
                 table.find('tfoot input.price-total').val( ERP_Accounting.numFormating( total ) );
             },
@@ -1117,16 +1117,16 @@
 
             taxDropdown: function() {
 
-                var table = $('.erp-ac-transaction-form-table'), 
+                var table = $('.erp-ac-transaction-form-table'),
                     taxs = table.find('.erp-ac-tax-dropdown'),
                     taxs_id = [];
-                
+
                 $.each( taxs, function( key, value ) {
                     var id = $(value).val();
                     if ( id != '-1' ) {
                         taxs_id.push(id);
                     }
-                    
+
                 });
 
                 var unique_taxs = $.unique( taxs_id ),
@@ -1137,7 +1137,7 @@
                     return;
                 }
                 table.find('.erp-ac-tr-wrap').remove();
-                
+
                 var tr_wrap  = $('#erp-ac-hidden-tax-table').find('.erp-ac-tr-wrap');
 
                 $.each( unique_taxs, function( key, tax_id ) {
@@ -1149,7 +1149,7 @@
 
                     var clone = tr_wrap.clone();
                     table.find('.erp-ac-price-total-wrap').before(clone);
-                        
+
                 });
             }
         },
@@ -1217,18 +1217,18 @@
                     id   = self.data('id');
 
 
-                swal({   
-                    title: ERP_AC.message.confirm,   
-                    type: "warning",   
+                swal({
+                    title: ERP_AC.message.confirm,
+                    type: "warning",
                     cancelButtonText: ERP_AC.message.cancel,
                     //confirmButtonText: 'asdfasd',
-                    showCancelButton: true,   
-                    confirmButtonColor: "#DD6B55",   
-                    confirmButtonText: ERP_AC.message.delete,   
-                    closeOnConfirm: false, 
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: ERP_AC.message.delete,
+                    closeOnConfirm: false,
                     showCancelButton: true,   closeOnConfirm: false,   showLoaderOnConfirm: true,
-                }, 
-                function(){  
+                },
+                function(){
 
                     wp.ajax.send( 'erp-ac-remove-account', {
                         data: {
@@ -1236,23 +1236,23 @@
                             _wpnonce: ERP_AC.nonce,
                         },
                         success: function(res) {
-                            swal("", res.success, "success"); 
+                            swal("", res.success, "success");
                             self.closest('tr').remove();
                         },
                         error: function(res) {
-                            
+
                             swal({
-                                title: ERP_AC.message.error,   
-                                text: res.error,   
-                                type: "error",   
+                                title: ERP_AC.message.error,
+                                text: res.error,
+                                type: "error",
                                 confirmButtonText: "OK",
                                 confirmButtonColor: "#DD6B55"
                             });
                         }
-                    }); 
+                    });
                 });
 
-                
+
             },
 
             checkCode: function() {
