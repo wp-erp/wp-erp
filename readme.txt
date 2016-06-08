@@ -150,6 +150,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
  * [imporve] Save search filter improvement
  * [imporve] People insert and fetching query optimized
  * [imporve] Contact and company single page converted into vue js
+ * [imporve] Added more filter into advance search segment
  * [update] Transaction query update for current financial year.
  * [update] Include tax field in transaction form
  * [update] Vuejs updated
