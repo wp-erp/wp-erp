@@ -6,6 +6,7 @@ An open-source ERP (Enterprise Resource Planning) solution for WordPress
 
 * HRM - Human Resource Management
 * CRM - Customer Relationship Management
+* Accounting - Double Entry Accounting
 
 ## Other Components
 
