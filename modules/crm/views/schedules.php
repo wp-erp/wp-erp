@@ -126,6 +126,48 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
                             'step': 15
                         });
 
+                        $( 'select.erp-crm-contact-list-dropdown' ).select2({
+                            allowClear: true,
+                            placeholder: $(this).attr( 'data-placeholder' ),
+                            minimumInputLength: 3,
+                            ajax: {
+                                url: wpErpCrm.ajaxurl,
+                                dataType: 'json',
+                                delay: 250,
+                                escapeMarkup: function( m ) {
+                                    return m;
+                                },
+                                data: function (params) {
+                                    return {
+                                        s: params.term, // search term
+                                        _wpnonce: wpErpCrm.nonce,
+                                        types: $(this).attr( 'data-types' ).split(','),
+                                        action: 'erp-search-crm-contacts'
+                                    };
+                                },
+                                processResults: function ( data, params ) {
+                                    var terms = [];
+
+                                    if ( data) {
+                                        $.each( data.data, function( id, text ) {
+                                            terms.push({
+                                                id: id,
+                                                text: text
+                                            });
+                                        });
+                                    }
+
+                                    if ( terms.length ) {
+                                        return { results: terms };
+                                    } else {
+                                        return { results: '' };
+                                    }
+                                },
+                                cache: true
+                            }
+                        });
+
+
                         $( 'input[type=checkbox][name="allow_notification"]', modal ).trigger('change');
                     },
 
