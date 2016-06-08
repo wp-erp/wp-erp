@@ -124,6 +124,38 @@ If you are unable to use any of the methods due to internet connectivity and fil
 
 == Changelog ==
 
+**v1.1.0 -> June 8, 2016**
+
+ * [new] Merge accounting module
+ * [new] Currency formating
+ * [new] Income tax settings
+ * [new] Income tax report
+ * [new] Income statement report
+ * [new] Balance sheet report
+ * [new] Permission management system
+ * [new] Save as draft for all transaction
+ * [new] Convert wp list table into vue js in contact and company listing page
+ * [fix] Bank chart
+ * [fix] Customer and vendor create time email field is required
+ * [fix] ref number make unique
+ * [fix] Role updating fixed when contact edit
+ * [fix] Contact group assign and editing problem fixed
+ * [fix] Trix editor firefox compability fixed
+ * [fix] Adding and editing feed problem fixed when using firefox browser
+ * [fix] Dashboard page contact fetching error fixed
+ * [fix] Activity page loading problem fixed
+ * [fix] Schedule page loading problem fixed
+ * [fix] Select2 conflict fixed with accounting
+ * [improve] All transaction table with balance column and short view popup link
+ * [imporve] Save search filter improvement
+ * [imporve] People insert and fetching query optimized
+ * [imporve] Contact and company single page converted into vue js
+ * [update] Transaction query update for current financial year.
+ * [update] Include tax field in transaction form
+ * [update] Vuejs updated
+ * [update] Select2 updated
+ * [update] Trix editor js updated
+
 **v1.0.1 -> April 27, 2016**
 
  * [fix] Employee performance fetching was returning all entries
@@ -174,23 +206,6 @@ If you are unable to use any of the methods due to internet connectivity and fil
 **v0.1 -> March 18, 2016**
 
 * Beta Release
-
-**v1.1.0 -> June 8, 2016**
-
- * [new] Merge accounting module
- * [new] Currency formating
- * [new] Income tax settings
- * [new] Income tax report
- * [new] Income statement report
- * [new] Balance sheet report
- * [new] Permission management system
- * [new] Save as draft for all transaction
- * [improved] All transaction table with balance column and short view popup link
- * [update] Transaction query update for current financial year.
- * [update] Include tax field in transaction form
- * [fix] Bank chart
- * [fix] Customer and vendor create time email field is required
- * [fix] ref number make unique
 
 
 == Upgrade Notice ==
