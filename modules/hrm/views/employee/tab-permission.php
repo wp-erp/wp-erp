@@ -12,7 +12,7 @@
             'type'  => 'checkbox',
             'tag'   => 'div',
             'value' => $is_manager,
-            'help'  => __( 'This Employee is Manager', 'erp'  )
+            'help'  => __( 'This Employee is HR Manager', 'erp'  )
         ) );
         ?>
 

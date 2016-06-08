@@ -2,7 +2,7 @@
 
     <# if ( ! data.group_id ) { #>
         <div class="row" data-selected = "'{{ data.user_id }}'">
-            <label for="erp-select-customer-company"><?php _e( 'Company Name', 'erp' ); ?> <span class="required">*</span></label>
+            <label for="erp-select-customer-company"><?php _e( 'Contact/Company', 'erp' ); ?> <span class="required">*</span></label>
             <select style="width:240px;" name="user_id" id="erp-crm-contact-subscriber-user" required="required" data-types="contact,company" class="erp-crm-contact-list-dropdown" data-placeholder="<?php _e( 'Select a Contact or company', 'erp' )?>">
                 <option value=""><?php _e( 'Select a contact or company', 'erp' ); ?></option>
             </select>

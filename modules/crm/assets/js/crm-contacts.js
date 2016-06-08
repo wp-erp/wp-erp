@@ -839,7 +839,7 @@
                     var self = this;
 
                     $.erpPopup({
-                        title: 'Edit this' + wpErpCrm.contact_type,
+                        title: 'Edit this ' + wpErpCrm.contact_type,
                         button: wpErpCrm.update_submit,
                         id: 'erp-customer-edit',
                         onReady: function() {

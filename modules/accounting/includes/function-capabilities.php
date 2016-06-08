@@ -222,7 +222,7 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
             'type'  => 'checkbox',
             'tag'   => 'div',
             'value' => $is_manager,
-            'help'  => __( 'This Employee is Manager', 'accounting'  )
+            'help'  => __( 'This Employee is Accounting Manager', 'erp'  )
         ) );
     }
 

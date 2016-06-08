@@ -41,6 +41,10 @@ class User_Profile {
         // AC role we want the user to have
         $new_role = isset( $post['ac_manager'] ) ? sanitize_text_field( $post['ac_manager'] ) : false;
 
+        if ( ! $new_role ) {
+            return;
+        }
+
         // Bail if current user cannot promote the passing user
         if ( ! current_user_can( 'promote_user', $user_id ) ) {
             return;

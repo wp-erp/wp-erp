@@ -527,11 +527,11 @@ function erp_insert_people( $args = array() ) {
         // Check if WP user or not. If WP user, then handle those data into users and usermeta table
         if ( $args['user_id'] ) {
             $user_id = wp_update_user( [
-                'ID' => $args['user_id'],
+                'ID'         => $args['user_id'],
                 'first_name' => $args['first_name'],
-                'last_name' => $args['last_name'],
-                'user_url' => $args['website'],
-                'user_email' => $args['email']
+                'last_name'  => $args['last_name'],
+                'user_url'   => $args['website'],
+                'user_email' => $args['email'],
             ] );
 
             if ( is_wp_error( $user_id ) ) {
