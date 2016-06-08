@@ -7,6 +7,7 @@ add_action( 'admin_init', 'erp_process_actions' );
 add_action( 'admin_footer', 'erp_import_export_javascript' );
 add_action( 'admin_init', 'erp_process_import_export' );
 add_action( 'admin_footer', 'erp_email_settings_javascript' );
+add_action( 'admin_notices', 'erp_importer_notices' );
 
 /** Filters *******************************************************************/
 
