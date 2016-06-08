@@ -7,7 +7,7 @@ $taxinfo = erp_ac_get_tax_info();
 ?>
 <div class="wrap">
 
-    <h2><?php _e( 'Payment', 'accounting' ); ?></h2>
+    <h2><?php _e( 'Payment', 'erp' ); ?></h2>
 
     <div class="invoice-preview-wrap">
 
@@ -16,11 +16,11 @@ $taxinfo = erp_ac_get_tax_info();
                 <div class="col-6">
                     <?php if ( $status ) {
                         ?>
-                        <a href="#" class="button button-large erp-ac-print erp-hide-print"><?php _e( 'Print', 'accounting' ); ?></a>
+                        <a href="#" class="button button-large erp-ac-print erp-hide-print"><?php _e( 'Print', 'erp' ); ?></a>
                         <?php
                     } else {
                         ?>
-                        <a href="<?php echo $url; ?>" class="button button-large"><?php _e( 'Edit Invoice', 'accounting' ); ?></a>
+                        <a href="<?php echo $url; ?>" class="button button-large"><?php _e( 'Edit Invoice', 'erp' ); ?></a>
                         <?php
                     }
                     ?>
@@ -28,7 +28,7 @@ $taxinfo = erp_ac_get_tax_info();
             </div>
             <div class="row">
                 <div class="invoice-number">
-                    <?php printf( __( 'Payment: <strong>%d</strong>', 'accounting' ), $transaction->id ); ?>
+                    <?php printf( __( 'Payment: <strong>%d</strong>', 'erp' ), $transaction->id ); ?>
                 </div>
             </div>
 
@@ -49,7 +49,7 @@ $taxinfo = erp_ac_get_tax_info();
 
             <div class="row">
                 <div class="col-3">
-                    <div class="bill-to"><?php _e( 'Bill to:', 'accounting' ); ?></div>
+                    <div class="bill-to"><?php _e( 'Bill to:', 'erp' ); ?></div>
                     <strong><?php echo $user->get_full_name(); ?></strong>
                     <div class="billing-address"><?php echo nl2br( $transaction->billing_address ); ?></div>
                 </div>
@@ -57,19 +57,19 @@ $taxinfo = erp_ac_get_tax_info();
                     <table class="table info-table">
                         <tbody>
                             <tr>
-                                <th><?php _e( 'Payment Number', 'accounting' ); ?>:</th>
+                                <th><?php _e( 'Payment Number', 'erp' ); ?>:</th>
                                 <td>31</td>
                             </tr>
                             <tr>
-                                <th><?php _e( 'Payment Date', 'accounting' ); ?>:</th>
+                                <th><?php _e( 'Payment Date', 'erp' ); ?>:</th>
                                 <td><?php echo erp_format_date( $transaction->issue_date ); ?></td>
                             </tr>
                             <tr>
-                                <th><?php _e( 'Due Date', 'accounting' ); ?>:</th>
+                                <th><?php _e( 'Due Date', 'erp' ); ?>:</th>
                                 <td><?php echo erp_format_date( $transaction->due_date ); ?></td>
                             </tr>
                             <tr>
-                                <th><?php _e( 'Amount Due', 'accounting' ); ?>:</th>
+                                <th><?php _e( 'Amount Due', 'erp' ); ?>:</th>
                                 <td><?php echo erp_ac_get_price( $transaction->due ); ?></td>
                             </tr>
                         </tbody>
@@ -83,12 +83,12 @@ $taxinfo = erp_ac_get_tax_info();
                 <table class="table fixed striped">
                     <thead>
                         <tr>
-                            <th class="align-left product-name"><?php _e( 'Product', 'accounting' ) ?></th>
-                            <th><?php _e( 'Quantity', 'accounting' ) ?></th>
-                            <th><?php _e( 'Unit Price', 'accounting' ) ?></th>
-                            <th><?php _e( 'Discount', 'accounting' ) ?></th>
-                            <th><?php _e( 'Tax(%)', 'accounting' ); ?></th>
-                            <th><?php _e( 'Amount', 'accounting' ) ?></th>
+                            <th class="align-left product-name"><?php _e( 'Product', 'erp' ) ?></th>
+                            <th><?php _e( 'Quantity', 'erp' ) ?></th>
+                            <th><?php _e( 'Unit Price', 'erp' ) ?></th>
+                            <th><?php _e( 'Discount', 'erp' ) ?></th>
+                            <th><?php _e( 'Tax(%)', 'erp' ); ?></th>
+                            <th><?php _e( 'Amount', 'erp' ) ?></th>
                         </tr>
                     </thead>
 
@@ -118,15 +118,15 @@ $taxinfo = erp_ac_get_tax_info();
                     <table class="table info-table align-right">
                         <tbody>
                             <tr>
-                                <th><?php _e( 'Sub Total', 'accounting' ); ?></th>
+                                <th><?php _e( 'Sub Total', 'erp' ); ?></th>
                                 <td><?php echo erp_ac_get_price( $transaction->sub_total ); ?></td>
                             </tr>
                             <tr>
-                                <th><?php _e( 'Total', 'accounting' ); ?></th>
+                                <th><?php _e( 'Total', 'erp' ); ?></th>
                                 <td><?php echo erp_ac_get_price( $transaction->total ); ?></td>
                             </tr>
                             <tr>
-                                <th><?php _e( 'Total Paid', 'accounting' ); ?></th>
+                                <th><?php _e( 'Total Paid', 'erp' ); ?></th>
                                 <td>
                                     <?php
                                     $total_paid = floatval( $transaction->total ) - floatval( $transaction->due );

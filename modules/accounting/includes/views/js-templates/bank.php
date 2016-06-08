@@ -2,7 +2,7 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Date', 'accounting' ),
+            'label'       => __( 'Date', 'erp' ),
             'name'        => 'date',
             'id'          => 'erp-ac-date',
             'class'       => 'erp-date-field',
@@ -14,19 +14,19 @@
         <?php
 
             erp_html_form_input( array(
-                'label'       => __( 'From Account', 'accounting' ),
+                'label'       => __( 'From Account', 'erp' ),
                 'name'        => 'form_account_id',
-                'placeholder' => __( 'Select an Account', 'accounting' ),
+                'placeholder' => __( 'Select an Account', 'erp' ),
                 'type'        => 'select',
                 'class'       => 'select2 erp-ac-bank-ac-drpdwn erp-ac-bank-ac-drpdwn-frm',
                 'required'    => true,
                 'value'       => '',
-                'options'     => [ '' => __( '&mdash; Select &mdash;', 'accounting' ) ] + erp_ac_get_bank_dropdown()
+                'options'     => [ '' => __( '&mdash; Select &mdash;', 'erp' ) ] + erp_ac_get_bank_dropdown()
             ) );
 
          ?>
         <span class="balance-wrap-from">
-            <strong><?php _e( 'Balance:', 'accounting' ); ?> <?php echo erp_ac_get_currency_symbol(); ?><span class="erp-ac-bank-amount">0</span></strong>
+            <strong><?php _e( 'Balance:', 'erp' ); ?> <?php echo erp_ac_get_currency_symbol(); ?><span class="erp-ac-bank-amount">0</span></strong>
         </span>
     </div>
 
@@ -35,20 +35,20 @@
         <?php
 
             erp_html_form_input( array(
-                'label'       => __( 'To Account', 'accounting' ),
+                'label'       => __( 'To Account', 'erp' ),
                 'name'        => 'to_account_id',
-                'placeholder' => __( 'Select an Account', 'accounting' ),
+                'placeholder' => __( 'Select an Account', 'erp' ),
                 'type'        => 'select',
                 'class'       => 'select2 erp-ac-bank-ac-drpdwn erp-ac-bank-ac-drpdwn-to',
                 'required'    => true,
                 'value'       => '',
-                'options'     => [ '' => __( '&mdash; Select &mdash;', 'accounting' ) ] + erp_ac_get_bank_dropdown()
+                'options'     => [ '' => __( '&mdash; Select &mdash;', 'erp' ) ] + erp_ac_get_bank_dropdown()
             ) );
 
          ?>
 
          <span class="balance-wrap-to">
-            <strong><?php _e( 'Balance:', 'accounting' ); ?> <?php echo erp_ac_get_currency_symbol(); ?><span class="erp-ac-bank-amount">0</span></strong>
+            <strong><?php _e( 'Balance:', 'erp' ); ?> <?php echo erp_ac_get_currency_symbol(); ?><span class="erp-ac-bank-amount">0</span></strong>
         </span>
     </div>
 
@@ -56,7 +56,7 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Amount', 'accounting' ),
+            'label'       => __( 'Amount', 'erp' ),
             'type'        => 'number',
             'name'        => 'amount',
             'id'          => 'erp-ac-amount',
@@ -68,7 +68,7 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Memo', 'accounting' ),
+            'label'       => __( 'Memo', 'erp' ),
             'name'        => 'memo',
             'type'        => 'textarea',
             'id'          => 'erp-ac-memo',

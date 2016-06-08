@@ -1,5 +1,5 @@
 <div class="wrap erp accounting-dashboard">
-    <h2><?php _e( 'Accounting', 'accounting' ); ?></h2>
+    <h2><?php _e( 'Accounting', 'erp' ); ?></h2>
 
     <div class="erp-single-container">
 

@@ -3,7 +3,7 @@
     <div class="row">
             <?php
             erp_html_form_input( array(
-                'label' => __( 'Reference', 'accounting' ),
+                'label' => __( 'Reference', 'erp' ),
                 'name'  => 'ref',
                 'type'  => 'text',
                 'addon' => '#',
@@ -15,7 +15,7 @@
     <div class="row">
             <?php
             erp_html_form_input( array(
-                'label'       => __( 'Payment Date', 'accounting' ),
+                'label'       => __( 'Payment Date', 'erp' ),
                 'name'        => 'issue_date',
                 'placeholder' => date( 'Y-m-d' ),
                 'type'        => 'text',
@@ -28,21 +28,21 @@
     <div class="row">
             <?php
                 erp_html_form_input( array(
-                    'label'       => __( 'From Account', 'accounting' ),
+                    'label'       => __( 'From Account', 'erp' ),
                     'name'        => 'account_id',
-                    'placeholder' => __( 'Select an Account', 'accounting' ),
+                    'placeholder' => __( 'Select an Account', 'erp' ),
                     'type'        => 'select',
                     'class'       => 'select2 erp-ac-bank-ac-drpdwn erp-ac-bank-ac-drpdwn-frm',
                     'value'       => isset( $main_ledger_id ) ? intval( $main_ledger_id ) : '',
                     'required'    => true,
-                    'options'     => [ '' => __( '&mdash; Select &mdash;', 'accounting' ) ] + erp_ac_get_bank_dropdown()
+                    'options'     => [ '' => __( '&mdash; Select &mdash;', 'erp' ) ] + erp_ac_get_bank_dropdown()
                 ) );
             ?>
     </div>
     <div class="row">
             <?php
                 erp_html_form_input( array(
-                    'label'       => __( 'Due Amount', 'accounting' ),
+                    'label'       => __( 'Due Amount', 'erp' ),
                    // 'name'        => 'line_total[]',
                     'type'        => 'text',
                     'custom_attr' => ['disabled' => 'disabled'],
@@ -54,7 +54,7 @@
     <div class="row">
             <?php
                 erp_html_form_input( array(
-                    'label'       => __( 'Payment Amount', 'accounting' ),
+                    'label'       => __( 'Payment Amount', 'erp' ),
                     'type'        => 'number',
                     'name'        => 'line_total[]',
                     'required'    => true,
@@ -66,9 +66,9 @@
     <div class="row">
             <?php
             erp_html_form_input( array(
-                'label'       => __( 'Memo', 'accounting' ),
+                'label'       => __( 'Memo', 'erp' ),
                 'name'        => 'summary',
-                'placeholder' => __( 'Internal information', 'accounting' ),
+                'placeholder' => __( 'Internal information', 'erp' ),
                 'type'        => 'textarea',
                 'value'       => isset( $transaction['summary'] ) ? $transaction['summary'] : '',
                 'custom_attr' => [
@@ -108,7 +108,7 @@
     <div class="row">
             <?php
             erp_html_form_input( array(
-                'label'       => __( 'Attachment', 'accounting' ),
+                'label'       => __( 'Attachment', 'erp' ),
                 'name'        => 'file',
                 'id'          => 'erp-ac-upload-file',
                 'type'        => 'file',

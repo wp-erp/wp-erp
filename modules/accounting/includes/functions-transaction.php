@@ -21,7 +21,7 @@ function erp_ac_get_all_transaction( $args = array() ) {
 
     $args            = wp_parse_args( $args, $defaults );
     $cache_key       = 'erp-ac-transaction-all-' . md5( serialize( $args ) );
-    $items           = wp_cache_get( $cache_key, 'accounting' );
+    $items           = wp_cache_get( $cache_key, 'erp' );
     $financial_start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
     $financial_end   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
 
@@ -144,7 +144,7 @@ function erp_ac_get_all_transaction( $args = array() ) {
             $items = erp_array_to_object( $items );
         }
 
-        wp_cache_set( $cache_key, $items, 'accounting' );
+        wp_cache_set( $cache_key, $items, 'erp' );
     }
 
     return $items;
@@ -157,7 +157,7 @@ function erp_ac_get_all_transaction( $args = array() ) {
  */
 function erp_ac_get_transaction_count( $type = 'expense', $user_id = 0 ) {
     $cache_key = 'erp-ac-' . $type . '-' . $user_id . '-count';
-    $count     = wp_cache_get( $cache_key, 'accounting' );
+    $count     = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $count ) {
         $trans = new WeDevs\ERP\Accounting\Model\Transaction();
@@ -181,7 +181,7 @@ function erp_ac_get_transaction_count( $type = 'expense', $user_id = 0 ) {
  */
 function erp_ac_get_transaction( $id = 0 ) {
     $cache_key   = 'erp-ac-transaction' . $id;
-    $transaction = wp_cache_get( $cache_key, 'accounting' );
+    $transaction = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $transaction ) {
         $transaction = WeDevs\ERP\Accounting\Model\Transaction::find( $id )->toArray();
@@ -191,7 +191,7 @@ function erp_ac_get_transaction( $id = 0 ) {
 }
 
 function er_ac_insert_transaction_permiss( $args ) {
-    
+
     if ( $args['type'] == 'sales' && $args['form_type'] == 'payment' && $args['status'] == 'draft' ) {
         if ( ! erp_ac_create_sales_payment() ) {
             return new WP_Error( 'error', __( 'You do not have sufficient permissions', 'erp' ) );
@@ -250,7 +250,7 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
     global $wpdb;
 
     if ( ! $items ) {
-        return new WP_Error( 'no-items', __( 'No transaction items found', 'accounting' ) );
+        return new WP_Error( 'no-items', __( 'No transaction items found', 'erp' ) );
     }
 
     $defaults = array(
@@ -284,7 +284,7 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
 
     // get valid transaction type and form type
     if ( ! in_array( $args['type'], [ 'expense', 'sales', 'transfer' ] ) ) {
-        return new WP_Error( 'invalid-trans-type', __( 'Error: Invalid transaction type.', 'accounting' ) );
+        return new WP_Error( 'invalid-trans-type', __( 'Error: Invalid transaction type.', 'erp' ) );
     }
 
     $form_types = ( $args['type'] == 'expense' ) ? erp_ac_get_expense_form_types() : erp_ac_get_sales_form_types();
@@ -298,17 +298,17 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
     }
 
     if ( ! array_key_exists( $args['form_type'], $form_types ) ) {
-        return new WP_Error( 'invalid-form-type', __( 'Error: Invalid form type', 'accounting' ) );
+        return new WP_Error( 'invalid-form-type', __( 'Error: Invalid form type', 'erp' ) );
     }
 
     $form_type = $form_types[ $args['form_type'] ];
 
     // some basic validation
     if ( empty( $args['issue_date'] ) ) {
-        return new WP_Error( 'no-issue_date', __( 'No Issue Date provided.', 'accounting' ) );
+        return new WP_Error( 'no-issue_date', __( 'No Issue Date provided.', 'erp' ) );
     }
     if ( empty( $args['total'] ) ) {
-        return new WP_Error( 'no-total', __( 'No Total provided.', 'accounting' ) );
+        return new WP_Error( 'no-total', __( 'No Total provided.', 'erp' ) );
     }
 
     $is_update = $args['id'] && ! is_array( $args['id'] ) ? true : false;
@@ -335,7 +335,7 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
         }
 
         if ( ! $trans_id ) {
-            throw new Exception( __( 'Could not create transaction', 'accounting' ) );
+            throw new Exception( __( 'Could not create transaction', 'erp' ) );
         }
 
 
@@ -358,7 +358,7 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
         }
 
         if ( ! $main_journal ) {
-            throw new Exception( __( 'Could not insert main journal item', 'accounting' ) );
+            throw new Exception( __( 'Could not insert main journal item', 'erp' ) );
         }
 
         // enter the transaction items
@@ -366,7 +366,7 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
         $item_entry_type = ( $form_type['type'] == 'credit' ) ? 'debit' : 'credit';
 
         $jor_db_items = [];
-        
+
         if ( $is_update ) {
             $get_journals_line_item = WeDevs\ERP\Accounting\Model\Journal::where( 'transaction_id', '=', $args['id'] )->where('type', '=', 'line_item' )->get()->toArray();
             $jor_prev_ids  = wp_list_pluck( $get_journals_line_item, 'id' );
@@ -375,18 +375,18 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
         foreach ($items as $key => $item) {
 
             $journal_id = erp_ac_journal_update( $item, $item_entry_type, $args, $trans_id );
-            
+
             if ( ! $journal_id ) {
-                throw new Exception( __( 'Could not insert journal item', 'accounting' ) );
+                throw new Exception( __( 'Could not insert journal item', 'erp' ) );
             }
-            
+
             $tax_id  = erp_ac_tax_update( $item, $item_entry_type, $args, $trans_id );
-       
+
             $item_id = erp_ac_item_update( $item, $args, $trans_id, $journal_id, $tax_id, $order );
 
 
             if ( ! $item_id ) {
-                throw new Exception( __( 'Could not insert transaction item', 'accounting' ) );
+                throw new Exception( __( 'Could not insert transaction item', 'erp' ) );
             }
 
             $order++;
@@ -496,11 +496,11 @@ function erp_ac_item_update( $item, $args, $trans_id, $journal_id, $tax_journal,
         $trans_item_id = $trans_item ? $trans_item->id : false;
     }
 
-    return $trans_item_id; 
+    return $trans_item_id;
 }
 
 function erp_ac_journal_update( $item, $item_entry_type, $args, $trans_id ) {
- 
+
     if ( intval( $item['journal_id'] ) ) {
 
         $line_item_update = WeDevs\ERP\Accounting\Model\Journal::where( 'id', '=', $item['journal_id'] )
@@ -509,7 +509,7 @@ function erp_ac_journal_update( $item, $item_entry_type, $args, $trans_id ) {
                 'type'           => 'line_item',
                 $item_entry_type => $item['line_total']
             ]);
-            
+
         $journal_id = intval( $item['journal_id'] );
 
     } else {
@@ -527,9 +527,9 @@ function erp_ac_journal_update( $item, $item_entry_type, $args, $trans_id ) {
 }
 
 function erp_ac_tax_update( $item, $item_entry_type, $args, $trans_id ) {
-    
+
     $tax_account_id = erp_ac_get_tax_account_from_tax_id( $item['tax'], $args['type'] );
-    
+
     if ( intval( $item['tax_journal'] ) ) {
 
         if ( intval( $tax_account_id ) ) {
@@ -542,7 +542,7 @@ function erp_ac_tax_update( $item, $item_entry_type, $args, $trans_id ) {
         } else {
             WeDevs\ERP\Accounting\Model\Journal::where( 'id', $item['tax_journal'] )->delete();
         }
-    
+
     } else {
         if ( intval( $tax_account_id ) ) {
             $tax_journal = WeDevs\ERP\Accounting\Model\Journal::create([
@@ -603,7 +603,7 @@ function erp_ac_get_ledger_transactions( $ledger_id, $args = [] ) {
     $financial_end   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
 
     $cache_key = 'erp-ac-ledger-transactions-' . md5( serialize( $args ) );
-    $items     = wp_cache_get( $cache_key, 'accounting' );
+    $items     = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $items ) {
         $where = sprintf( 'WHERE jour.ledger_id = %d', absint( $ledger_id ) );
@@ -636,7 +636,7 @@ function erp_ac_get_ledger_transactions( $ledger_id, $args = [] ) {
             $limit";
 
         $items = $wpdb->get_results( $sql );
-        wp_cache_set( $cache_key, $items, 'accounting' );
+        wp_cache_set( $cache_key, $items, 'erp' );
     }
 
     return $items;
@@ -649,9 +649,9 @@ function erp_ac_toltip_per_transaction_ledgers( $transaction ) {
     <table class='erp-ac-toltip-table wp-list-table widefat fixed striped' cellspacing='0'>
         <thead>
             <tr>
-                <th><?php _e( 'Ledger', 'accounting' ); ?></th>
-                <th><?php _e( 'Debit', 'accounting' ); ?></th>
-                <th><?php _e( 'Credit', 'accounting' ); ?></th>
+                <th><?php _e( 'Ledger', 'erp' ); ?></th>
+                <th><?php _e( 'Debit', 'erp' ); ?></th>
+                <th><?php _e( 'Credit', 'erp' ); ?></th>
             </tr>
         </thead>
         <tbody>
@@ -706,7 +706,7 @@ function erp_ac_get_transaction_for_sales() {
         'exclude'  => [1, 2, 3, 5],
 
     ] );
-    
+
     foreach ( $accounts as $key => $account ) {
         $options     = isset( $account['options'] ) ? $account['options'] : [];
         $accounts_id = array_merge( $accounts_id, wp_list_pluck( $options, 'id' ) );
@@ -743,7 +743,7 @@ function erp_ac_get_expnese_transaction() {
         'exclude'  => [2, 4, 5],
 
     ] );
-    
+
     foreach ( $accounts as $key => $account ) {
         $options     = isset( $account['options'] ) ? $account['options'] : [];
         $accounts_id = array_merge( $accounts_id, wp_list_pluck( $options, 'id' ) );
@@ -789,7 +789,7 @@ function erp_ac_get_expnese_transaction_without_tax() {
     }
 
     foreach ( $accounts_id as $key => $account_id ) {
-        
+
         if ( in_array( $account_id, $tax_ledgers ) ) {
             unset( $accounts_id[$key] );
         } else if ( $account_id == 24 ) {
@@ -824,7 +824,7 @@ function erp_ac_get_transaction_for_tax() {
     $tax_payable     = erp_ac_get_tax_payable_ledger();
     $tax             = array_merge( $tax_reveivable, $tax_payable );
     $tax_ledgers     = wp_list_pluck( $tax, 'id' );
-    
+
     $cache_key     = 'erp-ac-get-transaction-for-tax-' . md5( get_current_user_id() );
     $tax_journal = wp_cache_get( $cache_key, 'erp' );
 

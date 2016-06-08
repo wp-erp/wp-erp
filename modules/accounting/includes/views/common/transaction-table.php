@@ -18,7 +18,7 @@
         $lilne_total = 0;
         $journals = [];
         $jor_itms['journal'] = isset( $jor_itms['journal'] ) ? $jor_itms['journal'] : [];
-        
+
         foreach ( $jor_itms['journal'] as  $journal ) {
             $journals[$journal['id']] = $journal;
         }
@@ -28,7 +28,7 @@
 
             foreach (  $jor_itms['item'] as $key => $item  ) {
                 $journal = $journals[$item['journal_id']];
-                
+
                 $dropdown_html = erp_ac_render_account_dropdown_html( $dropdown, array(
                     'name'     => 'line_account[]',
                     'selected' => isset( $journal['ledger_id'] ) ? $journal['ledger_id'] : false,
@@ -46,7 +46,7 @@
         }
 
         $sub_total = isset( $transaction['sub_total'] ) ? erp_ac_get_price_for_field( $transaction['sub_total'], ['symbol' => false] ) : '0.00';
- 
+
         ?>
     </tbody>
     <tfoot>
@@ -68,15 +68,15 @@
 
         ?>
         <tr class="erp-ac-price-total-wrap">
-            <th colspan="7" class="align-right"><?php _e( 'Subtotal', 'accounting' ); ?></th>
+            <th colspan="7" class="align-right"><?php _e( 'Subtotal', 'erp' ); ?></th>
             <th class="col-amount">
                 <input type="text" name="sub_total" placeholder="0.00" class="sub-total" readonly value="<?php echo $sub_total; ?>">
             </th>
             <th>&nbsp;</th>
         </tr>
         <tr class="">
-            <th><a href="#" class="button add-line"><?php _e( '+ Add Line', 'accounting' ); ?></a></th>
-            <th colspan="6" class="align-right"><?php _e( 'Total', 'accounting' ); ?></th>
+            <th><a href="#" class="button add-line"><?php _e( '+ Add Line', 'erp' ); ?></a></th>
+            <th colspan="6" class="align-right"><?php _e( 'Total', 'erp' ); ?></th>
             <th class="col-amount">
                 <input type="text" name="price_total" class="price-total" readonly value="<?php echo erp_ac_get_price_for_field( $lilne_total, ['symbol'=>false] ); ?>">
             </th>
@@ -96,8 +96,8 @@
         <th>&nbsp;</th>
     </tr>
 </table>
-<?php 
- 
+<?php
+
 
 
 

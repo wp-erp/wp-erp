@@ -160,15 +160,15 @@ class Form_Handler {
         }
 
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-ac-customer' ) ) {
-            die( __( 'Are you cheating?', 'accounting' ) );
+            die( __( 'Are you cheating?', 'erp' ) );
         }
 
         if ( ! current_user_can( 'read' ) ) {
-            wp_die( __( 'Permission Denied!', 'accounting' ) );
+            wp_die( __( 'Permission Denied!', 'erp' ) );
         }
 
         $insert_id = erp_ac_new_customer( $_POST );
-        $message   = __( 'new', 'accounting' );
+        $message   = __( 'new', 'erp' );
 
         if ( $_POST['type'] == 'customer' ) {
             $page_url    = admin_url( 'admin.php?page=erp-accounting-customers' );
@@ -197,11 +197,11 @@ class Form_Handler {
         }
 
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-ac-chart' ) ) {
-            die( __( 'Are you cheating?', 'accounting' ) );
+            die( __( 'Are you cheating?', 'erp' ) );
         }
 
         if ( ! current_user_can( 'read' ) ) {
-            wp_die( __( 'Permission Denied!', 'accounting' ) );
+            wp_die( __( 'Permission Denied!', 'erp' ) );
         }
 
         $message  = 'new';
@@ -217,16 +217,16 @@ class Form_Handler {
 
         // some basic validation
         if ( ! $field_id && Model\Ledger::code( $code )->get()->first() !== null ) {
-            $errors[] = __( 'Error: The account code is already exists.', 'accounting' );
+            $errors[] = __( 'Error: The account code is already exists.', 'erp' );
         }
 
         // some basic validation
         if ( $field_id && Model\Ledger::code( $code )->where( 'id', '!=', $field_id )->get()->first() !== null ) {
-            $errors[] = __( 'Error: The account code is already exists.', 'accounting' );
+            $errors[] = __( 'Error: The account code is already exists.', 'erp' );
         }
 
         if ( ! $name ) {
-            $errors[] = __( 'Error: Name is required.', 'accounting' );
+            $errors[] = __( 'Error: Name is required.', 'erp' );
         }
 
         // bail out if error found
@@ -295,11 +295,11 @@ class Form_Handler {
      */
     public function transaction_form() {
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-ac-trans-new' ) ) {
-            die( __( 'Are you cheating?', 'accounting' ) );
+            die( __( 'Are you cheating?', 'erp' ) );
         }
 
         if ( ! current_user_can( 'read' ) ) {
-            wp_die( __( 'Permission Denied!', 'accounting' ) );
+            wp_die( __( 'Permission Denied!', 'erp' ) );
         }
 
         $errors          = array();
@@ -325,21 +325,21 @@ class Form_Handler {
         $journals_id     = isset( $_POST['journals_id'] ) ? $_POST['journals_id'] : [];
         $partial_id      = isset( $_POST['partial_id'] ) ? $_POST['partial_id'] : [];
         $sub_total       = isset( $_POST['sub_total'] ) ? $_POST['sub_total'] : '0.00';
-       
+
         //for draft
         $status = isset( $_POST['submit_erp_ac_trans_draft'] ) ? 'draft' : $status;
 
         // some basic validation
         if ( ! $issue_date ) {
-            $errors[] = __( 'Error: Issue Date is required', 'accounting' );
+            $errors[] = __( 'Error: Issue Date is required', 'erp' );
         }
 
         if ( ! $account_id ) {
-            $errors[] = __( 'Error: Account ID is required', 'accounting' );
+            $errors[] = __( 'Error: Account ID is required', 'erp' );
         }
 
         if ( ! $total ) {
-            $errors[] = __( 'Error: Total is required', 'accounting' );
+            $errors[] = __( 'Error: Total is required', 'erp' );
         }
 
         // bail out if error found
@@ -417,15 +417,15 @@ class Form_Handler {
     }
 
     public function journal_entry() {
-        
+
         if ( ! erp_ac_create_journal() ) {
             return new WP_Error( 'error', __( 'You do not have sufficient permissions', 'erp' ) );
         }
-        
+
         global $wpdb;
 
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-ac-journal-entry' ) ) {
-            die( __( 'Are you cheating?', 'accounting' ) );
+            die( __( 'Are you cheating?', 'erp' ) );
         }
 
         $ref          = isset( $_POST['ref'] ) ? sanitize_text_field( $_POST['ref'] ) : '';
@@ -435,11 +435,11 @@ class Form_Handler {
         $credit_total = isset( $_POST['credit_total'] ) ? floatval( $_POST['credit_total'] ) : 0.00;
 
         if ( $debit_total < 0 || $credit_total < 0 ) {
-            wp_die( __( 'Value can not be negative', 'accounting' ) );
+            wp_die( __( 'Value can not be negative', 'erp' ) );
         }
 
         if ( $debit_total != $credit_total ) {
-            wp_die( __( 'Debit and credit total did not match.', 'accounting' ) );
+            wp_die( __( 'Debit and credit total did not match.', 'erp' ) );
         }
 
         $args = [
@@ -461,7 +461,7 @@ class Form_Handler {
             $trans = $transaction->create( $args );
 
             if ( ! $trans->id ) {
-                throw new Exception( __( 'Could not create transaction', 'accounting' ) );
+                throw new Exception( __( 'Could not create transaction', 'erp' ) );
             }
 
             // insert items
@@ -485,7 +485,7 @@ class Form_Handler {
                 ]);
 
                 if ( ! $journal->id ) {
-                    throw new Exception( __( 'Could not insert journal item', 'accounting' ) );
+                    throw new Exception( __( 'Could not insert journal item', 'erp' ) );
                 }
 
                 $item = [
@@ -502,7 +502,7 @@ class Form_Handler {
                 $trans_item = $trans->items()->create( $item );
 
                 if ( ! $trans_item->id ) {
-                    throw new Exception( __( 'Could not insert transaction item', 'accounting' ) );
+                    throw new Exception( __( 'Could not insert transaction item', 'erp' ) );
                 }
 
                 $order++;

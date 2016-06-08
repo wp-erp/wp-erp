@@ -7,11 +7,11 @@
     if ( isset( $_GET['msg'] ) ) {
         switch ( $_GET['msg'] ) {
             case 'update':
-                erp_html_show_notice( __( 'Customer info has been updated!', 'accounting' ) );
+                erp_html_show_notice( __( 'Customer info has been updated!', 'erp' ) );
                 break;
 
             case 'new':
-                erp_html_show_notice( __( 'New customer has been added!', 'accounting' ) );
+                erp_html_show_notice( __( 'New customer has been added!', 'erp' ) );
                 break;
         }
     }

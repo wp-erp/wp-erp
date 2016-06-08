@@ -25,14 +25,14 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
     function get_columns() {
         $columns = array(
             'cb'         => '<input type="checkbox" />',
-            'issue_date' => __( 'Date', 'accounting' ),
-            'form_type'  => __( 'Type', 'accounting' ),
-            'ref'        => __( 'Ref', 'accounting' ),
-            'user_id'    => __( 'Customer', 'accounting' ),
-            'due_date'   => __( 'Due Date', 'accounting' ),
-            'due'        => __( 'Due', 'accounting' ),
-            'total'      => __( 'Total', 'accounting' ),
-            'status'     => __( 'Status', 'accounting' ),
+            'issue_date' => __( 'Date', 'erp' ),
+            'form_type'  => __( 'Type', 'erp' ),
+            'ref'        => __( 'Ref', 'erp' ),
+            'user_id'    => __( 'Customer', 'erp' ),
+            'due_date'   => __( 'Due Date', 'erp' ),
+            'due'        => __( 'Due', 'erp' ),
+            'total'      => __( 'Total', 'erp' ),
+            'status'     => __( 'Status', 'erp' ),
         );
 
         return $columns;

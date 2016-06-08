@@ -73,13 +73,13 @@ $tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                         <div class="erp-ac-replace-content">
                             <?php
                             erp_html_form_input( array(
-                                'label'       => __( 'Customer', 'accounting' ),
+                                'label'       => __( 'Customer', 'erp' ),
                                 'name'        => 'user_id',
-                                'placeholder' => __( 'Select a payee', 'accounting' ),
+                                'placeholder' => __( 'Select a payee', 'erp' ),
                                 'type'        => 'select',
                                 'class'       => 'select2 erp-ac-customer-drop erp-ac-not-found-in-drop',
                                 'value'       => $customer_id ? $customer_id : '',
-                                'options'     => [ '' => __( '&mdash; Select &mdash;', 'accounting' ) ] + erp_get_peoples_array( ['type' => 'customer', 'number' => 100 ] ),
+                                'options'     => [ '' => __( '&mdash; Select &mdash;', 'erp' ) ] + erp_get_peoples_array( ['type' => 'customer', 'number' => 100 ] ),
                                 'custom_attr' => [
                                     'data-content' => 'erp-ac-new-customer-content-pop',
                                 ],
@@ -88,17 +88,17 @@ $tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                             <?php
                             if ( erp_ac_create_customer() ) {
                                 ?>
-                                <div><a href="#" data-content="erp-ac-new-customer-content-pop" class="erp-ac-not-found-btn-in-drop erp-ac-more-customer"><?php _e( 'Create New', 'accounting' ); ?></a></div>
+                                <div><a href="#" data-content="erp-ac-new-customer-content-pop" class="erp-ac-not-found-btn-in-drop erp-ac-more-customer"><?php _e( 'Create New', 'erp' ); ?></a></div>
                                 <?php
                             }
-                            ?> 
+                            ?>
                         </div>
                     </li>
 
                     <li class="erp-form-field">
                         <?php
                         erp_html_form_input( array(
-                            'label' => __( 'Reference', 'accounting' ),
+                            'label' => __( 'Reference', 'erp' ),
                             'name'  => 'ref',
                             'type'  => 'text',
                             'class' => 'erp-ac-reference-field',
@@ -115,7 +115,7 @@ $tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                     <li class="erp-form-field">
                         <?php
                         erp_html_form_input( array(
-                            'label'       => __( 'Invoice Date', 'accounting' ),
+                            'label'       => __( 'Invoice Date', 'erp' ),
                             'name'        => 'issue_date',
                             'placeholder' => date( 'Y-m-d' ),
                             'type'        => 'text',
@@ -129,7 +129,7 @@ $tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                     <li class="erp-form-field">
                         <?php
                         erp_html_form_input( array(
-                            'label'       => __( 'Due Date', 'accounting' ),
+                            'label'       => __( 'Due Date', 'erp' ),
                             'name'        => 'due_date',
                             'placeholder' => date( 'Y-m-d' ),
                             'type'        => 'text',
@@ -145,7 +145,7 @@ $tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
             <li class="erp-form-field">
                 <?php
                 erp_html_form_input( array(
-                    'label'       => __( 'Billing Address', 'accounting' ),
+                    'label'       => __( 'Billing Address', 'erp' ),
                     'name'        => 'billing_address',
                     'placeholder' => '',
                     'type'        => 'textarea',
@@ -188,7 +188,7 @@ $tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
             <?php
         }
         ?>
-        
+
         <input type="submit" name="submit_erp_ac_trans_draft" id="submit_erp_ac_trans_draft" class="button button-secondary" value="Save as Draft">
 
     </form>

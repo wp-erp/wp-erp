@@ -100,7 +100,7 @@ class Ajax_Handler {
     function new_tax() {
         $this->verify_nonce( 'erp-ac-nonce' );
         parse_str( $_POST['post'], $postdata );
-        
+
         $new_tax = erp_ac_new_tax( $postdata );
         $tax_id = $postdata['id'] ? $postdata['id'] : $new_tax->id;
 
@@ -141,7 +141,7 @@ class Ajax_Handler {
         if ( $insert_id ) {
             $this->send_success( [ 'id' => $insert_id] );
         } else {
-            $this->send_error( __( 'Required unique value!', 'accounting' ) );
+            $this->send_error( __( 'Required unique value!', 'erp' ) );
         }
     }
 
@@ -152,7 +152,7 @@ class Ajax_Handler {
         $trans = $trans->where( 'ref', '=', $ref )->get()->toArray();
 
         if ( $trans ) {
-            $this->send_error( __( 'Required unique value!', 'accounting' ) );
+            $this->send_error( __( 'Required unique value!', 'erp' ) );
         } else {
             $this->send_success();
         }
@@ -166,7 +166,7 @@ class Ajax_Handler {
         ] );
 
         if ( $transactions ) {
-            $this->send_error( __( 'You can not remove this user', 'accounting' ) );
+            $this->send_error( __( 'You can not remove this user', 'erp' ) );
         } else {
             $this->send_success();
         }
@@ -186,7 +186,7 @@ class Ajax_Handler {
         $customer_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
 
         if ( ! $customer_id ) {
-            $this->send_error( __( 'No Customer found', 'accounting' ) );
+            $this->send_error( __( 'No Customer found', 'erp' ) );
         }
 
         $type = isset( $_REQUEST['type'] ) ? $_REQUEST['type'] : '';
@@ -199,7 +199,7 @@ class Ajax_Handler {
         erp_restore_people( $data );
 
         // @TODO: check permission
-        $this->send_success( __( 'Customer has been removed successfully', 'accounting' ) );
+        $this->send_success( __( 'Customer has been removed successfully', 'erp' ) );
     }
 
 
@@ -219,7 +219,7 @@ class Ajax_Handler {
         $type        = isset( $_REQUEST['type'] ) ? $_REQUEST['type'] : 0;
 
         if ( ! $customer_id ) {
-            $this->send_error( __( 'No Customer found', 'accounting' ) );
+            $this->send_error( __( 'No Customer found', 'erp' ) );
         }
 
         $data = array(
@@ -231,7 +231,7 @@ class Ajax_Handler {
         erp_ac_customer_delete( $data );
 
         // @TODO: check permission
-        $this->send_success( __( 'Customer has been removed successfully', 'accounting' ) );
+        $this->send_success( __( 'Customer has been removed successfully', 'erp' ) );
     }
 
     function receive_individual_vendoer_credit() {

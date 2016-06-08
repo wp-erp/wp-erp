@@ -36,7 +36,7 @@ class Logger {
     function new_account( $insert_id, $fields ) {
 
         $url     = admin_url( 'admin.php?page=erp-accounting-charts&action=view&id=' . $insert_id );
-        $message = sprintf( '%1$s <a href="%2$s">%3$s</a> %4$s', __( 'New account', 'accounting' ), $url, $fields['name'], __( 'has been created', 'accounting' ) );
+        $message = sprintf( '%1$s <a href="%2$s">%3$s</a> %4$s', __( 'New account', 'erp' ), $url, $fields['name'], __( 'has been created', 'erp' ) );
 
         erp_log()->add([
             'component'     => 'Accounting',
@@ -54,7 +54,7 @@ class Logger {
         if ( ! $insert_id ) return;
 
         $url     = admin_url( 'admin.php?page=erp-accounting-charts&action=view&id=' . $insert_id );
-        $message = sprintf( '%1$s <a href="%2$s">%3$s</a> %4$s', __( 'New account', 'accounting' ), $url, $fields['name'], __( 'has been created', 'accounting' ) );
+        $message = sprintf( '%1$s <a href="%2$s">%3$s</a> %4$s', __( 'New account', 'erp' ), $url, $fields['name'], __( 'has been created', 'erp' ) );
 
         $bank            = erp_ac_get_chart($insert_id)->toArray();
         $sub_bnk_detail  = [];
@@ -72,8 +72,8 @@ class Logger {
             unset( $bank_details['id'], $bank_details['ledger_id'] );
         }
 
-        $field_status = $fields['active'] ? __( 'Active', 'accounting' ) : __( 'Inactive', 'accounting' );
-        $db_bank_status = $bank['active'] ? __( 'Active', 'accounting' ) : __( 'Inactive', 'accounting' );
+        $field_status = $fields['active'] ? __( 'Active', 'erp' ) : __( 'Inactive', 'erp' );
+        $db_bank_status = $bank['active'] ? __( 'Active', 'erp' ) : __( 'Inactive', 'erp' );
 
         unset( $fields['active'], $bank['active'] );
 
@@ -103,16 +103,16 @@ class Logger {
     function new_journal( $transaction_id, $args, $post ) {
         $url = admin_url( 'admin.php?page=erp-accounting-journal&action=view&id=' . $transaction_id );
         $message = sprintf( '%1$s <a href="%2$s">%3$s</a> %4$s %5$s',
-            __( 'Created', 'accounting' ),
+            __( 'Created', 'erp' ),
             $url,
-            __( 'journal', 'accounting' ),
-            __( 'with amount', 'accounting' ),
+            __( 'journal', 'erp' ),
+            __( 'with amount', 'erp' ),
             erp_ac_get_price( $args['trans_total'] )
         );
 
         erp_log()->add([
             'component'     => 'Accounting',
-            'sub_component' => __( 'journal', 'accounting' ),
+            'sub_component' => __( 'journal', 'erp' ),
             'old_value'     => '',
             'new_value'     => '',
             'message'       => $message,
@@ -123,7 +123,7 @@ class Logger {
     }
 
     function new_transaction( $transaction_id, $args, $items ) {
-        
+
         $people         = erp_get_people( $args['user_id'] );
         if ( is_wp_error( $people ) ) {
             $name = '';
@@ -131,35 +131,35 @@ class Logger {
             $people = $people ? $people : get_user_by( 'id', $args['user_id'] );
             $name   = isset( $people->display_name ) ? $people->display_name : $people->first_name . ' ' . $people->last_name;
         }
-        
+
         $page           = $args['type'] == 'sales' ? 'erp-accounting-customers' : 'erp-accounting-vendors';
         $component_page = $args['type'] == 'sales' ? 'erp-accounting-sales' : 'erp-accounting-expense';
         $user_url       = admin_url( 'admin.php?page=' . $page . '&action=view&id=' . $args['user_id'] );
         $component_url  = admin_url( 'admin.php?page=' . $component_page . '&action=view&id=' . $transaction_id );
 
         if ( $args['form_type'] == 'payment_voucher' ) {
-            $form_type = __( 'payment voucher', 'accounting' );
+            $form_type = __( 'payment voucher', 'erp' );
         } else if ( $args['form_type'] == 'vendor_credit' ) {
-            $form_type = __( 'vendor credit', 'accounting' );
+            $form_type = __( 'vendor credit', 'erp' );
         } else {
             $form_type = $args['form_type'];
         }
 
         $message = sprintf( '%1$s <a href="%2$s">%3$s </a> %4$s %5$s <a href="%6$s">%7$s</a> %8$s %9$s',
-            __( 'Created', 'accounting' ),
+            __( 'Created', 'erp' ),
             $component_url,
             $args['type'],
             $form_type,
-            __( 'for', 'accounting' ),
+            __( 'for', 'erp' ),
             $user_url,
             $name,
-            __( 'with amount', 'accounting' ),
+            __( 'with amount', 'erp' ),
             erp_ac_get_price( $args['trans_total'] )
         );
 
         erp_log()->add([
             'component'     => 'Accounting',
-            'sub_component' => $args['type'] == 'sales' ? __( 'Sales', 'accounting' ) : __( 'Expenses', 'accounting' ),
+            'sub_component' => $args['type'] == 'sales' ? __( 'Sales', 'erp' ) : __( 'Expenses', 'erp' ),
             'old_value'     => '',
             'new_value'     => '',
             'message'       => $message,
@@ -183,14 +183,14 @@ class Logger {
 
         $page      = $fields['type'] == 'vendor' ? 'erp-accounting-vendors' : 'erp-accounting-customers';
         $url       = sprintf( '<a href="%1$s"><strong>%2$s</strong></a>', admin_url( 'admin.php?page='. $page .'&action=view&id=' . $customer_id ), $fields['first_name'] . ' ' . $fields['last_name'] );
-        $component = $fields['type'] == 'vendor' ? __( 'vendor', 'accounting' ) : __( 'customer', 'accounting' );
+        $component = $fields['type'] == 'vendor' ? __( 'vendor', 'erp' ) : __( 'customer', 'erp' );
 
         erp_log()->add([
             'component'     => 'Accounting',
-            'sub_component' => $fields['type'] == 'vendor' ? __( 'Vendor', 'accounting' ) : __( 'Customer', 'accounting' ),
+            'sub_component' => $fields['type'] == 'vendor' ? __( 'Vendor', 'erp' ) : __( 'Customer', 'erp' ),
             'old_value'     => '',
             'new_value'     => '',
-            'message'       => esc_html( $url )   .' '. $component . __( ' has been created', 'accounting' ),
+            'message'       => esc_html( $url )   .' '. $component . __( ' has been created', 'erp' ),
             'changetype'    => 'add',
             'created_by'    => get_current_user_id()
 
@@ -211,12 +211,12 @@ class Logger {
         $page        = $fields['type'] == 'vendor' ? 'erp-accounting-vendors' : 'erp-accounting-customers';
         $customer_id = isset( $fields['id'] ) ? intval( $fields['id'] ) : 0;
         $customer    = (array) erp_get_people( $customer_id );
-        $component   = $fields['type'] == 'vendor' ? __( 'vendor', 'accounting' ) : __( 'customer', 'accounting' );
+        $component   = $fields['type'] == 'vendor' ? __( 'vendor', 'erp' ) : __( 'customer', 'erp' );
 
         if ( $customer ) {
             unset( $customer['created_at'], $customer['updated_at'] );
         }
-        
+
         if ( in_array( $fields['type'], $customer['types'] ) ) {
             $customer['type'] = $fields['type'];
         } else {
@@ -231,11 +231,11 @@ class Logger {
 
         erp_log()->add([
             'component'     => 'Accounting',
-            'sub_component' => $fields['type'] == 'vendor' ? __( 'Vendor', 'accounting' ) : __( 'Customer', 'accounting' ),
+            'sub_component' => $fields['type'] == 'vendor' ? __( 'Vendor', 'erp' ) : __( 'Customer', 'erp' ),
             'changetype'    => 'edit',
             'old_value'     => $changes['old_val'],
             'new_value'     => $changes['new_val'],
-            'message'       => esc_html( $url ) .' '. $component  . __( ' has been updated', 'accounting' ),
+            'message'       => esc_html( $url ) .' '. $component  . __( ' has been updated', 'erp' ),
             'created_by'    => get_current_user_id()
         ]);
     }
@@ -533,7 +533,7 @@ class Logger {
 
                 if ( isset( $key['department'] ) ) {
                     if ( $key['department'] == '-1' ) {
-                        $key['department'] = __( 'All Department', 'accounting' );
+                        $key['department'] = __( 'All Department', 'erp' );
                     } else {
                         $department = new \WeDevs\ERP\HRM\Department( intval( $key['department'] ) );
                         $key['department'] = $department->title;
@@ -542,7 +542,7 @@ class Logger {
 
                 if ( isset( $key['designation'] ) ) {
                     if ( $key['designation'] == '-1' ) {
-                        $key['designation'] = __( 'All Designation', 'accounting' );
+                        $key['designation'] = __( 'All Designation', 'erp' );
                     } else {
                         $designation = new \WeDevs\ERP\HRM\Designation( intval( $key['designation'] ) );
                         $key['designation'] = $designation->title;
@@ -551,7 +551,7 @@ class Logger {
 
                 if ( isset( $key['location'] ) ) {
                     if ( $key['location'] == '-1' ) {
-                        $key['location'] = __( 'All Location', 'accounting' );
+                        $key['location'] = __( 'All Location', 'erp' );
                     } else {
                         $location = erp_company_get_location_dropdown_raw();
                         $key['location'] = $location[$key['location']];
@@ -559,12 +559,12 @@ class Logger {
                 }
 
                 if ( isset( $key['gender'] ) ) {
-                    $gender = erp_hr_get_genders( __( 'All', 'accounting' ) );
+                    $gender = erp_hr_get_genders( __( 'All', 'erp' ) );
                     $key['gender'] = $gender[$key['gender']];
                 }
 
                 if ( isset( $key['marital'] ) ) {
-                    $marital = erp_hr_get_marital_statuses( __( 'All', 'accounting' ) );
+                    $marital = erp_hr_get_marital_statuses( __( 'All', 'erp' ) );
                     $key['marital'] = $marital[$key['marital']];
                 }
 
