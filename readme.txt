@@ -186,10 +186,10 @@ If you are unable to use any of the methods due to internet connectivity and fil
  * [new] Permission management system
  * [new] Save as draft for all transaction
  * [improved] All transaction table with balance column and short view popup link
- * [update] All transaction query make for current financial year.
- * [update] Include tax field in transactio form
+ * [update] Transaction query update for current financial year.
+ * [update] Include tax field in transaction form
  * [fix] Bank chart
- * [fix] Customer and vendor create time eamil field is required
+ * [fix] Customer and vendor create time email field is required
  * [fix] ref number make unique
 
 
