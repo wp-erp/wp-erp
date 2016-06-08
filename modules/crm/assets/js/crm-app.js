@@ -2,141 +2,6 @@
  *****************    Vue Filters     *************************
  **************************************************************/
 
-Vue.filter('formatDate', function (date, format ) {
-    return wperp.dateFormat( date, format );
-})
-
-// Vue filter for formatting Feeds as a group by object
-Vue.filter('formatFeeds', function ( feeds ) {
-    var feedsData = _.groupBy( feeds, function( data ) {
-        return data.created_timeline_date;
-    });
-
-    return feedsData;
-});
-
-// Vue filter for formatting Feeds as a group by object
-Vue.filter('formatDateTime', function ( date ) {
-    return wperp.dateFormat( date, 'F, j' ) + ' at ' + wperp.timeFormat( date )
-});
-
-
-
-/*****************************************************************
- *******************     Vue Directive     ***********************
- ****************************************************************/
-
-// Vue directive for Date picker
-Vue.directive( 'datepicker', {
-    params: ['datedisable'],
-    twoWay: true,
-    bind: function () {
-        var vm = this.vm;
-        var key = this.expression;
-
-        if ( this.params.datedisable == 'previous' ) {
-            jQuery(this.el).datepicker({
-                minDate: 0,
-                dateFormat: 'yy-mm-dd',
-                changeMonth: true,
-                changeYear: true,
-                yearRange: '-100:+0',
-                onClose: function (date) {
-                    vm.$set(key, date);
-                }
-            });
-        } else if ( this.params.datedisable == 'upcomming' ) {
-            jQuery(this.el).datepicker({
-                maxDate: 0,
-                dateFormat: 'yy-mm-dd',
-                changeMonth: true,
-                changeYear: true,
-                yearRange: '-100:+0',
-                onClose: function (date) {
-                    vm.$set(key, date);
-                }
-            });
-        } else {
-            jQuery(this.el).datepicker({
-                dateFormat: 'yy-mm-dd',
-                changeMonth: true,
-                changeYear: true,
-                yearRange: '-100:+0',
-                onClose: function (date) {
-                    if ( date.match(/^(0?[1-9]|[12][0-9]|3[01])[\/\-\.](0?[1-9]|1[012])[\/\-\.]\d{4}$/) )
-                        vm.$set(key, date);
-                    else {
-                        vm.$set(key, "");
-                    }
-                }
-            });
-        };
-    },
-    update: function (val) {
-        jQuery(this.el).datepicker('setDate', val);
-    }
-});
-
-// Vue directive for Date picker
-Vue.directive( 'timepicker', {
-    bind: function () {
-        var vm = this.vm;
-        var key = this.expression;
-
-        jQuery(this.el).timepicker({
-            'scrollDefault': 'now',
-            'step': 15
-        });
-    },
-
-    update: function (val) {
-        jQuery(this.el).timepicker('setTime', val);
-    }
-});
-
-// Vue directive for Date picker
-Vue.directive( 'tiptip', {
-    bind: function () {
-        jQuery(this.el).tipTip( {
-            defaultPosition: "top",
-            fadeIn: 100,
-            fadeOut: 100,
-            content: this.el.__vue__.title
-        } );
-    }
-});
-
-// Select2 Direcetive
-Vue.directive('selecttwo', {
-
-    bind: function () {
-        var self = this;
-        var vm = this.vm;
-        var key = this.expression;
-
-        var select = jQuery(this.el);
-
-        select.on('change', function () {
-            var search_key = jQuery(this).attr('data-searchkey');
-            var search_key_index = jQuery(this).attr('data-searchkeyindex');
-
-            if ( search_key && search_key_index ) {
-                key = key.replace('search_key', search_key);
-                key = key.replace('search_field_key', search_key_index);
-            }
-            vm.$set( key, select.val() );
-        });
-
-        select.select2({
-            width : 'resolve',
-            placeholder: jQuery(this.el).attr('data-placeholder'),
-            allowClear: true
-        });
-    },
-});
-
-/************************ End Vue Directive **********************/
-
 
 /******************************************************************
 *******************      Component       **************************
@@ -436,7 +301,7 @@ Vue.component( 'log-activity', {
 
         var self = this;
         jQuery(this.$el).find('trix-editor').get(0).addEventListener('trix-change', function (e) {
-            self.feedData.message = e.path[0].innerHTML;
+            self.feedData.message = e.target.innerHTML;
         });
 
         done();
@@ -501,7 +366,6 @@ Vue.component( 'tasks-note', {
                 self.val( invitedUser ).trigger('change');
             } else {
                 self.val( invitedUser.split(',') ).trigger('change');
-                // jQuery('#erp-crm-task-assign-contact').select2().select2( "val", invitedUser.split(',') );
             }
 
         }
@@ -547,7 +411,7 @@ Vue.component( 'tasks-note', {
 
         var self = this;
         jQuery(this.$el).find('trix-editor').get(0).addEventListener('trix-change', function (e) {
-            self.feedData.message = e.path[0].innerHTML;
+            self.feedData.message = e.target.innerHTML;
         });
 
         done();
@@ -667,7 +531,7 @@ Vue.component( 'email-note', {
         var self = this;
 
         jQuery(self.$el).find('trix-editor').get(0).addEventListener('trix-change', function (e) {
-            self.feedData.message = e.path[0].innerHTML;
+            self.feedData.message = e.target.innerHTML;
         });
 
         done();
@@ -788,7 +652,7 @@ Vue.component( 'schedule-note', {
 
         var self = this;
         jQuery(this.$el).find('trix-editor').get(0).addEventListener('trix-change', function (e) {
-            self.feedData.message = e.path[0].innerHTML;
+            self.feedData.message = e.target.innerHTML;
         });
 
         done();
@@ -1102,10 +966,10 @@ var vm = new Vue({
             if ( filter ) {
                 vm.progressStart('#erp-crm-activities-filter');
 
-                data.customer_id = filter.customer_id;
-                data.created_by = filter.created_by;
+                data.customer_id = ( filter.customer_id != '-1' ) ? filter.customer_id : '';
+                data.created_by = ( filter.created_by != '-1' ) ? filter.created_by : '';
                 data.created_at = filter.created_at;
-                data.type = filter.type;
+                data.type = ( filter.type != '-1' ) ? filter.type : '';
                 data.offset = 0;
                 this.offset = 0;
                 this.loadingFinish = false;

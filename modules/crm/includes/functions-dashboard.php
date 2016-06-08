@@ -13,11 +13,8 @@ function erp_crm_dashboard_right_widgets_area() {
     erp_admin_dash_metabox( __( '<i class="fa fa-calendar-check-o"></i> Upcoming Schedules', 'erp' ), 'erp_crm_dashboard_widget_upcoming_schedules' );
     erp_admin_dash_metabox( __( '<i class="fa fa-users"></i> Recently Added', 'erp' ), 'erp_crm_dashboard_widget_latest_contact' );
 
-    // Display the cloud inbound emails widget only if the site is connected with cloud.
-    $is_cloud_active = erp_is_cloud_active();
-    if ( $is_cloud_active ) {
-        erp_admin_dash_metabox( __( '<i class="fa fa-envelope"></i> Total Inbound Emails', 'erp' ), 'erp_crm_dashboard_widget_cloud_inbound_emails' );
-    }
+
+    erp_admin_dash_metabox( __( '<i class="fa fa-envelope"></i> Total Inbound Emails', 'erp' ), 'erp_crm_dashboard_widget_inbound_emails' );
 }
 
 /**
@@ -302,13 +299,13 @@ function erp_crm_dashboard_widget_latest_contact() {
 }
 
 /**
- * CRM Dashboard Cloud Inbound Emails widget.
+ * CRM Dashboard Inbound Emails widget.
  *
  * @since 1.0
  *
  * @return void [html]
  */
-function erp_crm_dashboard_widget_cloud_inbound_emails() {
-    $total_emails_count = get_option( 'wp_erp_cloud_email_count', 0 );
+function erp_crm_dashboard_widget_inbound_emails() {
+    $total_emails_count = get_option( 'wp_erp_inbound_email_count', 0 );
     echo '<h1 style="text-align: center;">' . $total_emails_count . '</h1>';
 }

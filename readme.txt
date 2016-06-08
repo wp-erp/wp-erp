@@ -1,8 +1,8 @@
 === WP ERP ===
 Contributors: tareq1988, wedevs, sabbir1991, asaquzzaman
 Tags: small business, SME, contact, contacts, CRM, Customer Relationship Management, employee, leave management, hr, hrm, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
-Requires at least: 4.2
-Tested up to: 4.4.2
+Requires at least: 4.4
+Tested up to: 4.5.2
 Stable tag: trunk
 License: GPLv2
 Donate Link: https://tareq.co/donate
@@ -14,17 +14,17 @@ WP ERP is the framework for weDevs's enterprise resource management system. This
 
 * HR Module
 * CRM Module
+* Accounting Module
 
 Other available modules
 
-* [Accounting](https://wordpress.org/plugins/accounting) - A free and rich double entry accounting system.
 * Project Management via [WP Project Manager](https://wordpress.org/plugins/wedevs-project-manager/)
 
 = Links =
-* [Github](https://github.com/wp-erp/wp-erp)
-* [Documentation](http://wperp.com/documentation/)
-* [Project Site](http://wperp.com/)
-* [Extensions](http://wperp.com/downloads/)
+* [Github](https://github.com/wp-erp/wp-erp/?utm_medium=referral&utm_source=wordpress.org&utm_campaign=WP+ERP+Readme&utm_content=Repo+Link)
+* [Documentation](https://wperp.com/documentation/?utm_medium=referral&utm_source=wordpress.org&utm_campaign=WP+ERP+Readme&utm_content=Home+Page)
+* [Project Site](https://wperp.com/?utm_medium=referral&utm_source=wordpress.org&utm_campaign=WP+ERP+Readme&utm_content=Home+Page)
+* [Extensions](https://wperp.com/?utm_medium=referral&utm_source=wordpress.org&utm_campaign=WP+ERP+Readme&utm_content=Downloads)
 
 = Core Features =
 
@@ -59,8 +59,26 @@ Other available modules
 * Overall activity overview
 * Group contacts depending on various factors
 
+= Accounting Module Transactions =
+
+* Invoice - Create invoice for your customer for any sales.
+* Payment - Add payments to the against the invoices.
+* Payment Voucher - Add your direct cash and bank purchases.
+* Vendor Credit - Purchase in credit from vendors.
+* Journal Entry
+* Chart of Accounts
+* Bank Accounts
+* Tax management
+* Reporting - Trial Balance, Balance Sheet, Income Statement
+
 = Contribute =
 This may have bugs and lack of many features. If you want to contribute on this project, you are more than welcome. Please fork the repository from [Github](https://github.com/wp-erp/wp-erp).
+
+
+= Checkout Our Other Products =
+* [Dokan - Multivendor Plugin](https://wedevs.com/products/plugins/dokan/?utm_medium=referral&utm_source=wporg&utm_campaign=WP+ERP+Readme&utm_content=Dokan)
+* [WP User Frontend Pro](https://wedevs.com/products/plugins/wp-user-frontend-pro/?utm_medium=referral&utm_source=wporg&utm_campaign=WP+ERP+Readme&utm_content=WP+User+Frontend+Pro)
+* [WP Project Manager](https://wedevs.com/products/plugins/wp-project-manager-pro/?utm_medium=referral&utm_source=wporg&utm_campaign=WP+ERP+Readme&utm_content=WP+Project+Manager)
 
 
 == Installation ==
@@ -124,6 +142,40 @@ If you are unable to use any of the methods due to internet connectivity and fil
 
 == Changelog ==
 
+**v1.1.0 -> June 8, 2016**
+
+ * [new] Merge accounting module
+ * [new] Currency formating
+ * [new] Income tax settings
+ * [new] Income tax report
+ * [new] Income statement report
+ * [new] Balance sheet report
+ * [new] Permission management system
+ * [new] Save as draft for all transaction
+ * [new] Convert wp list table into vue js in contact and company listing page
+ * [new] SMTP and IMAP/POP3 integration added into core
+ * [fix] Bank chart
+ * [fix] Customer and vendor create time email field is required
+ * [fix] ref number make unique
+ * [fix] Role updating fixed when contact edit
+ * [fix] Contact group assign and editing problem fixed
+ * [fix] Trix editor firefox compability fixed
+ * [fix] Adding and editing feed problem fixed when using firefox browser
+ * [fix] Dashboard page contact fetching error fixed
+ * [fix] Activity page loading problem fixed
+ * [fix] Schedule page loading problem fixed
+ * [fix] Select2 conflict fixed with accounting
+ * [improve] All transaction table with balance column and short view popup link
+ * [imporve] Save search filter improvement
+ * [imporve] People insert and fetching query optimized
+ * [imporve] Contact and company single page converted into vue js
+ * [imporve] Added more filter into advance search segment
+ * [update] Transaction query update for current financial year.
+ * [update] Include tax field in transaction form
+ * [update] Vuejs updated
+ * [update] Select2 updated
+ * [update] Trix editor js updated
+
 **v1.0.1 -> April 27, 2016**
 
  * [fix] Employee performance fetching was returning all entries
@@ -174,6 +226,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
 **v0.1 -> March 18, 2016**
 
 * Beta Release
+
 
 == Upgrade Notice ==
 

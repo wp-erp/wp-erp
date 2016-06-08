@@ -56,6 +56,7 @@ class Contact extends \WeDevs\ERP\People {
             'types'         => [],
             'notes'         => '',
             'other'         => '',
+            'currency'      => '',
             'social'        => [],
             'source'        => '',
             'assign_to'     => '',
@@ -75,33 +76,51 @@ class Contact extends \WeDevs\ERP\People {
                 $fields[$key] = $value;
             }
 
-            $fields['first_name'] = $this->get_first_name();
-            $fields['last_name']  = $this->get_last_name();
-            $fields['email']      = $this->get_email();
-            $fields['website']    = $this->is_wp_user() ? \get_user_by( 'id', $this->user_id )->user_url : $this->website;
-
             $avatar_id              = (int) $this->get_meta( 'photo_id', true );
             $fields['avatar']['id'] = $avatar_id;
 
             if ( $avatar_id ) {
                 $fields['avatar']['url'] = wp_get_attachment_url( $avatar_id );
+                $fields['avatar']['img'] = $this->get_avatar();
+            } else {
+                $fields['avatar']['url'] = erp_crm_get_avatar_url( $this->id, $this->email, $this->user_id );
+                $fields['avatar']['img'] = $this->get_avatar();
             }
 
             foreach ( $fields['social'] as $key => $value ) {
                 $fields['social'][$key] = $this->get_meta( $key, true );
             }
 
+
             $contact_groups           = erp_crm_get_editable_assign_contact( $this->id );
             $fields['contact_groups'] = $contact_groups;
             $fields['group_id']       = wp_list_pluck( $contact_groups, 'group_id' );
 
+            $contact_owner_id = $this->get_meta( '_assign_crm_agent', true );
+
+            if ( $contact_owner_id ) {
+                $user = \get_user_by( 'id', $contact_owner_id );
+
+                $contact_owner = [
+                    'id'           => $user->ID,
+                    'avatar'       => get_avatar_url( $user->ID ),
+                    'first_name'   => $user->first_name,
+                    'last_name'    => $user->last_name,
+                    'display_name' => $user->display_name,
+                    'email'        => $user->user_email
+                ];
+            }
+
             $fields['life_stage']     = $this->get_meta( 'life_stage', true );
             $fields['date_of_birth']  = $this->get_meta( 'date_of_birth', true );
             $fields['source']         = $this->get_meta( 'source', true );
-            $fields['assign_to']      = $this->get_meta( '_assign_crm_agent', true );
+            $fields['assign_to']      = $contact_owner;
+            $fields['created']        = erp_format_date( $this->created );
+            $fields['created_by']     = $this->created_by;
+            $fields['details_url']    = $this->get_details_url();
         }
 
-        return apply_filters( 'erp_crm_get_contacts_fields', $fields, $this->data, $this->id, $this->contact_type );
+        return apply_filters( 'erp_crm_get_contacts_fields', $fields, $this->data, $this->id, $this->types );
     }
 
     /**
@@ -264,7 +283,7 @@ class Contact extends \WeDevs\ERP\People {
      */
     public function get_country() {
         if ( $this->id ) {
-            return erp_get_country_name( $this->country );
+            return ( $this->country != '-1' ) ? erp_get_country_name( $this->country ) : '—';
         }
     }
 
@@ -277,7 +296,7 @@ class Contact extends \WeDevs\ERP\People {
      */
     public function get_state() {
         if ( $this->id ) {
-            return erp_get_state_name( $this->country, $this->state );
+            return ( $this->state != '-1' ) ? erp_get_state_name( $this->country, $this->state ) : '—';
         }
     }
 
@@ -315,8 +334,9 @@ class Contact extends \WeDevs\ERP\People {
      * @return string
      */
     public function get_birthday() {
-        if ( $this->date_of_birth ) {
-            return erp_format_date( $this->date_of_birth );
+        $birth_day = $this->get_meta( 'date_of_birth', true );
+        if ( $birth_day ) {
+            return erp_format_date( $birth_day );
         }
     }
 

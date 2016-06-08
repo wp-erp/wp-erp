@@ -3,9 +3,9 @@
     <h2 class="erp-hide-print"><?php _e( 'Employee', 'erp' );
 
      if ( current_user_can( 'erp_create_employee' ) ) {
-            ?>
-    <a href="#" id="erp-employee-new" class="add-new-h2 erp-hide-print"><?php _e( 'Add New', 'erp' ); ?></a>
-            <?php
+        ?>
+        <a href="#" id="erp-employee-new" class="add-new-h2 erp-hide-print"><?php _e( 'Add New', 'erp' ); ?></a>
+        <?php
     }
     ?>
     </h2>
@@ -88,7 +88,7 @@
 
                 <?php
                 $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'general';
-                $tabs = apply_filters( 'erp_hr_employee_single_tabs', array(
+                $tabs       = apply_filters( 'erp_hr_employee_single_tabs', array(
                     'general' => array(
                         'title'    => __( 'General Info', 'erp' ),
                         'callback' => 'erp_hr_employee_single_tab_general'
@@ -113,7 +113,7 @@
                         'title'    => __( 'Permission', 'erp' ),
                         'callback' => 'erp_hr_employee_single_tab_permission'
                     ),
-                ) );
+                ), $employee );
 
                 if ( ! current_user_can( 'erp_create_review' ) && isset( $tabs['permission'] ) && isset( $tabs['performance'] ) && isset( $tabs['notes'] ) ) {
                     unset( $tabs['permission'] );

@@ -216,7 +216,7 @@ function erp_crm_permission_management_field( $employee ) {
         'type'  => 'checkbox',
         'tag'   => 'div',
         'value' => $is_manager,
-        'help'  => __( 'This Employee is Manager', 'erp'  )
+        'help'  => __( 'This Employee is CRM Manager', 'erp'  )
     ) );
 
     erp_html_form_input( array(

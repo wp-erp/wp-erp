@@ -25,6 +25,7 @@ class Updates {
     /** @var array DB updates that need to be run */
     private static $updates = [
         '1.0' => 'updates/update-1.0.php',
+        '1.1.0' => 'updates/update-1.1.0.php',
     ];
 
     /**
@@ -119,9 +120,6 @@ class Updates {
                 update_option( 'wp_erp_version', $version );
             }
         }
-
-        // finally update to the latest version
-        update_option( 'wp_erp_version', WPERP_VERSION );
 
         $location = remove_query_arg( ['wperp_do_update'], $_SERVER['REQUEST_URI'] );
         wp_redirect( $location );

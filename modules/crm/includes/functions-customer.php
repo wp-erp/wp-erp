@@ -4,21 +4,17 @@
  */
 
 /**
- * Get an avatar avatar
+ * Get an avatar
  *
  * @param  integer  avatar size in pixels
  *
  * @return string  image with HTML tag
  */
-function erp_crm_get_avatar( $id, $size = 32, $user = false ) {
+function erp_crm_get_avatar( $id, $email = '', $user_id = 0, $size = 32 ) {
 
     if ( $id ) {
 
-        if ( $user ) {
-            return get_avatar( $id, $size );
-        }
-
-        $user_photo_id = erp_people_get_meta( $id, 'photo_id', true );
+        $user_photo_id = ( $user_id ) ? get_user_meta( $user_id, 'photo_id', true ) : erp_people_get_meta( $id, 'photo_id', true );
 
         if ( ! empty( $user_photo_id ) ) {
             $image = wp_get_attachment_thumb_url( $user_photo_id );
@@ -26,7 +22,27 @@ function erp_crm_get_avatar( $id, $size = 32, $user = false ) {
         }
     }
 
-    return get_avatar( $id, $size );
+    return ( $email ) ? get_avatar( $email, $size ) : get_avatar( $id, $size );
+}
+
+/**
+ * Get an avatar url for people
+ *
+ * @param  integer  avatar size in pixels
+ *
+ * @return string  image with HTML tag
+ */
+function erp_crm_get_avatar_url( $id, $email='', $user_id = 0, $size = 32 ) {
+
+    if ( $id ) {
+        $user_photo_id = ( $user_id ) ? get_user_meta( $user_id, 'photo_id', true ) : erp_people_get_meta( $id, 'photo_id', true );
+
+        if ( ! empty( $user_photo_id ) ) {
+            return wp_get_attachment_thumb_url( $user_photo_id );
+        }
+    }
+
+    return $email ? get_avatar_url( $email, $size ) : get_avatar_url( $id, $size );
 }
 
 /**
@@ -41,13 +57,14 @@ function erp_crm_get_avatar( $id, $size = 32, $user = false ) {
 function erp_crm_get_employees( $args = [] ) {
     global $wpdb;
 
-    $defaults = array(
+    $defaults = [
         'number'     => 20,
         'offset'     => 0,
         'orderby'    => 'hiring_date',
         'order'      => 'DESC',
-        'no_object'  => false
-    );
+        'no_object'  => false,
+        'status'     => 'active'
+    ];
 
     $args  = wp_parse_args( $args, $defaults );
     $where = array();
@@ -58,6 +75,8 @@ function erp_crm_get_employees( $args = [] ) {
     $cache_key = 'erp-crm-get-employees-' . md5( serialize( $args ) );
     $results   = wp_cache_get( $cache_key, 'erp' );
     $users     = array();
+
+    $employee_result = $employee_result->where( 'status', $args['status'] );
 
     // Check if want all data without any pagination
     if ( $args['number'] != '-1' ) {
@@ -98,7 +117,7 @@ function erp_crm_get_employees( $args = [] ) {
  * @return html
  */
 function erp_crm_get_employees_dropdown( $selected = '' ) {
-    $employees = erp_crm_get_employees( ['number' => -1, 'no_object' => true ] );
+    $employees = erp_crm_get_employees( [ 'status' => 'active', 'number' => -1, 'no_object' => true ] );
     $dropdown  = '';
 
     if ( $employees ) {
@@ -120,7 +139,7 @@ function erp_crm_get_employees_dropdown( $selected = '' ) {
  * @return string
  */
 function erp_crm_get_employees_with_own( $selected = '' ) {
-    $employees = erp_crm_get_employees( ['number' => -1, 'no_object' => true ] );
+    $employees = erp_crm_get_employees( [ 'status' => 'active', 'number' => -1, 'no_object' => true ] );
     $dropdown  = '';
 
     if ( $employees ) {
@@ -222,7 +241,7 @@ function erp_crm_get_customer_type( $label = [] ) {
 function erp_crm_get_life_stages_dropdown( $label = [], $selected = '' ) {
 
     $life_stages = erp_crm_get_life_stages_dropdown_raw( $label );
-    $dropdown     = '';
+    $dropdown    = '';
 
     if ( $life_stages ) {
         foreach ( $life_stages as $key => $title ) {
@@ -304,6 +323,11 @@ function erp_crm_customer_get_status_count( $type = null ) {
         $counts['all']['count'] += (int) $row['num'];
     }
 
+    $counts['trash'] = [
+        'count' => erp_crm_count_trashed_customers( $type ),
+        'label' => __( 'Trash', 'erp' )
+    ];
+
     return $counts;
 }
 
@@ -338,19 +362,38 @@ function erp_crm_customer_add_company( $customer_id, $company_id ) {
 /**
  * Get all the companies for a single costomer
  *
- * @since 1.0
+ * @since 1.1.0
+ *
+ * @param $postdata array
  *
  * @return array
  */
-function erp_crm_customer_get_company( $customer_id ) {
-
+function erp_crm_customer_get_company( $postdata ) {
     global $wpdb;
+    $results = [];
+
+    if ( isset( $postdata['id'] ) && empty( $postdata['id'] ) ) {
+        return new WP_Error( 'no-ids', __( 'No contact found', 'erp' ) );
+    }
 
     $sql = "SELECT com.* FROM " . $wpdb->prefix . "erp_crm_customer_companies AS com
             LEFT JOIN " . $wpdb->prefix . "erp_peoples AS peop ON peop.id = com.company_id
-            WHERE com.customer_id = ". $customer_id;
+            WHERE com.customer_id = ". $postdata['id'];
 
-    return $wpdb->get_results( $sql );
+    $data = $wpdb->get_results( $sql, ARRAY_A );
+
+    if ( $data ) {
+        foreach ( $data as $key => $value ) {
+            $company = new \WeDevs\ERP\CRM\Contact( intval( $value['company_id'] ) );
+            $results[$key] = $value;
+            $results[$key]['contact_details'] = $company->to_array();
+            $country = $results[$key]['contact_details']['country'];
+            $results[$key]['contact_details']['country'] = erp_get_country_name( $country );
+            $results[$key]['contact_details']['state'] = erp_get_state_name( $country, $results[$key]['contact_details']['state'] );
+        }
+    }
+
+    return $results;
 }
 
 /**
@@ -358,17 +401,36 @@ function erp_crm_customer_get_company( $customer_id ) {
  *
  * @since 1.0
  *
+ * @param [type] $[name] [<description>]
+ *
  * @return array
  */
-function erp_crm_company_get_customers( $company_id ) {
-
+function erp_crm_company_get_customers( $postdata ) {
     global $wpdb;
+    $results = [];
+
+    if ( isset( $postdata['id'] ) && empty( $postdata['id'] ) ) {
+        return new WP_Error( 'no-ids', __( 'No comapany found', 'erp' ) );
+    }
 
     $sql = "SELECT  com.* FROM " . $wpdb->prefix . "erp_crm_customer_companies AS com
             LEFT JOIN " . $wpdb->prefix . "erp_peoples AS peop ON peop.id = com.customer_id
-            WHERE com.company_id = ". $company_id;
+            WHERE com.company_id = ". $postdata['id'];
 
-    return $wpdb->get_results( $sql );
+    $data = $wpdb->get_results( $sql, ARRAY_A );
+
+    if ( $data ) {
+        foreach ( $data as $key => $value ) {
+            $customer = new \WeDevs\ERP\CRM\Contact( intval( $value['customer_id'] ) );
+            $results[$key] = $value;
+            $results[$key]['contact_details'] = $customer->to_array();
+            $country = $results[$key]['contact_details']['country'];
+            $results[$key]['contact_details']['country'] = erp_get_country_name( $country );
+            $results[$key]['contact_details']['state'] = erp_get_state_name( $country, $results[$key]['contact_details']['state'] );
+        }
+    }
+
+    return $results;
 }
 
 /**
@@ -406,20 +468,6 @@ function erp_crm_customer_update_company( $row_id, $company_id ) {
 function erp_crm_customer_remove_company( $id ) {
     global $wpdb;
     $wpdb->delete( $wpdb->prefix . 'erp_crm_customer_companies', ['id' => $id] );
-}
-
-/**
- * Get Customer Company by ID
- *
- * @since 1.0
- *
- * @return array
- */
-function erp_crm_customer_company_by_id( $query_id ) {
-    global $wpdb;
-
-    $sql = "SELECT * FROM {$wpdb->prefix}erp_crm_customer_companies WHERE id = $query_id";
-    return $wpdb->get_row( $sql, ARRAY_A );
 }
 
 /**
@@ -701,7 +749,7 @@ function erp_crm_save_customer_feed_data( $data ) {
         $activity['contact']['last_name'] = get_user_meta( $activity['contact']['user_id'], 'last_name', true );
     }
 
-    unset( $value['extra']['invite_contact'] );
+    unset( $activity['extra']['invite_contact'] );
 
     $activity['contact']['types']      = wp_list_pluck( $activity['contact']['types'], 'name' );
     $activity['message']               = stripslashes( $activity['message'] );
@@ -837,7 +885,7 @@ function erp_crm_send_schedule_notification( $activity, $extra = false ) {
             foreach ( $users as $key => $user ) {
                 // @TODO: Add customer body template for seding email to user
                 $body = 'You have a schedule after ' . $extra['notification_time_interval'] . $extra['notification_time'] . ' at ' . $activity['start_date'];
-                wp_mail( $user, 'ERP Schedule', $body );
+                erp_mail( $user, 'ERP Schedule', $body );
             }
 
             break;
@@ -862,18 +910,17 @@ function erp_crm_send_schedule_notification( $activity, $extra = false ) {
  * @return void
  */
 function erp_crm_assign_task_to_users( $data, $save_data ) {
-
     if ( $save_data['id'] ) {
         \WeDevs\ERP\CRM\Models\ActivityUser::where( 'activity_id', $save_data['id'] )->delete();
     }
 
     $user_ids = [];
 
-    if ( isset( $data['extra']['invite_contact'] ) && count( $data['extra']['invite_contact'] ) > 0 ) {
-        foreach ( $data['extra']['invite_contact'] as $key => $user ) {
-            $res = \WeDevs\ERP\CRM\Models\ActivityUser::create( [ 'activity_id' => $data['id'], 'user_id' => $user ] );
+    if ( isset( $data['extra']['invited_user'] ) && count( $data['extra']['invited_user'] ) > 0 ) {
+        foreach ( $data['extra']['invited_user'] as $key => $user ) {
+            $res = \WeDevs\ERP\CRM\Models\ActivityUser::create( [ 'activity_id' => $data['id'], 'user_id' => $user['id'] ] );
 
-            $user_ids[] = $user;
+            $user_ids[] = $user['id'];
 
             do_action( 'erp_crm_after_assign_task_to_user', $data, $save_data );
         }
@@ -884,7 +931,6 @@ function erp_crm_assign_task_to_users( $data, $save_data ) {
             $assigned_task->trigger( ['activity_id' => $data['id'], 'user_ids' => $user_ids] );
         }
     }
-
 }
 
 /**
@@ -1139,7 +1185,9 @@ function erp_crm_create_new_contact_subscriber( $args = [] ) {
         return new WP_Error( 'user-id', __( 'No contact founds', 'erp' ) );
     }
 
-    return \WeDevs\ERP\CRM\Models\ContactSubscriber::create( $args );
+    $subscriber = \WeDevs\ERP\CRM\Models\ContactSubscriber::create( $args );
+
+    return do_action( 'erp_crm_create_contact_subscriber', $subscriber );
 }
 
 /**
@@ -1166,6 +1214,10 @@ function erp_crm_get_editable_assign_contact( $user_id ) {
  * @return array
  */
 function erp_crm_get_user_assignable_groups( $user_id ) {
+    if ( ! $user_id ) {
+        return new WP_Error( 'no-user-id', __( 'No contact found', 'erp' ) );
+    }
+
     $data = \WeDevs\ERP\CRM\Models\ContactSubscriber::with('groups')->where( 'user_id', $user_id )->distinct()->get()->toArray();
     return $data;
 }
@@ -1325,7 +1377,6 @@ function erp_crm_get_serach_key( $type = '' ) {
             'title'       => __( 'Email', 'erp' ),
             'type' => 'text',
             'text' => '',
-            'condval' => '',
             'condition'   => [
                 '~'  => __( 'contains', 'erp' ),
                 '!~' => __( 'not contains', 'erp' ),
@@ -1338,9 +1389,9 @@ function erp_crm_get_serach_key( $type = '' ) {
             'title'     => __( 'Phone', 'erp' ),
             'type'      => 'text',
             'text'      => '',
-            'condval'   => '',
             'condition' => [
-                ''   => __( 'has', 'erp' ),
+                '%'  => __( 'has', 'erp' ),
+                '!%' => __( 'has not', 'erp' ),
                 '~'  => __( 'contains', 'erp' ),
                 '!~' => __( 'not contains', 'erp' ),
                 '^'  => __( 'begins with', 'erp' ),
@@ -1352,9 +1403,9 @@ function erp_crm_get_serach_key( $type = '' ) {
             'title'     => __( 'Mobile', 'erp' ),
             'type'      => 'text',
             'text'      => '',
-            'condval'   => '',
             'condition' => [
-                ''   => __( 'has', 'erp' ),
+                '%'  => __( 'has', 'erp' ),
+                '!%' => __( 'has not', 'erp' ),
                 '~'  => __( 'contains', 'erp' ),
                 '!~' => __( 'not contains', 'erp' ),
                 '^'  => __( 'begins with', 'erp' ),
@@ -1366,9 +1417,9 @@ function erp_crm_get_serach_key( $type = '' ) {
             'title'     => __( 'Website', 'erp' ),
             'type'      => 'text',
             'text'      => '',
-            'condval'   => '',
             'condition' => [
-                ''   => __( 'has', 'erp' ),
+                '%'  => __( 'has', 'erp' ),
+                '!%' => __( 'has not', 'erp' ),
                 '~'  => __( 'contains', 'erp' ),
                 '!~' => __( 'not contains', 'erp' ),
                 '^'  => __( 'begins with', 'erp' ),
@@ -1380,8 +1431,35 @@ function erp_crm_get_serach_key( $type = '' ) {
             'title'     => __( 'City', 'erp' ),
             'type'      => 'text',
             'text'      => '',
-            'condval'   => '',
             'condition' => [
+                ''   => __( 'from', 'erp' ),
+                '!'  => __( 'not from', 'erp' ),
+                '~'  => __( 'contains', 'erp' ),
+                '!~' => __( 'not contains', 'erp' )
+            ]
+        ],
+
+        'street_1' => [
+            'title'     => __( 'Stree 1', 'erp' ),
+            'type'      => 'text',
+            'text'      => '',
+            'condition' => [
+                '%'  => __( 'has', 'erp' ),
+                '!%' => __( 'has not', 'erp' ),
+                ''   => __( 'from', 'erp' ),
+                '!'  => __( 'not from', 'erp' ),
+                '~'  => __( 'contains', 'erp' ),
+                '!~' => __( 'not contains', 'erp' )
+            ]
+        ],
+
+        'street_2' => [
+            'title'     => __( 'Stree 2', 'erp' ),
+            'type'      => 'text',
+            'text'      => '',
+            'condition' => [
+                '%'  => __( 'has', 'erp' ),
+                '!%' => __( 'has not', 'erp' ),
                 ''   => __( 'from', 'erp' ),
                 '!'  => __( 'not from', 'erp' ),
                 '~'  => __( 'contains', 'erp' ),
@@ -1393,7 +1471,6 @@ function erp_crm_get_serach_key( $type = '' ) {
             'title'     => __( 'Country/State', 'erp' ),
             'type'      => 'dropdown',
             'text'      => '',
-            'condval'   => '',
             'condition' => [
                 ''   => __( 'from', 'erp' ),
                 '!'  => __( 'not from', 'erp' )
@@ -1401,13 +1478,56 @@ function erp_crm_get_serach_key( $type = '' ) {
             'options' => \WeDevs\ERP\Countries::instance()->country_dropdown_options(),
         ],
 
+        'postal_code' => [
+            'title'     => __( 'Postal Code', 'erp' ),
+            'type'      => 'text',
+            'text'      => '',
+            'condition' => [
+                '%'  => __( 'has', 'erp' ),
+                '!%' => __( 'has not', 'erp' ),
+                ''   => __( 'from', 'erp' ),
+                '!'  => __( 'not from', 'erp' ),
+                '~'  => __( 'contains', 'erp' ),
+                '!~' => __( 'not contains', 'erp' ),
+                '^'  => __( 'begins with', 'erp' ),
+                '$'  => __( 'ends with', 'erp' ),
+            ]
+        ],
+
+        'notes' => [
+            'title'     => __( 'Notes', 'erp' ),
+            'type'      => 'text',
+            'text'      => '',
+            'condition' => [
+                '%'  => __( 'has', 'erp' ),
+                '!%' => __( 'has not', 'erp' ),
+                '~'  => __( 'contains', 'erp' ),
+                '!~' => __( 'not contains', 'erp' ),
+                '^'  => __( 'begins with', 'erp' ),
+                '$'  => __( 'ends with', 'erp' ),
+            ]
+        ],
+
+        'other' => [
+            'title'     => __( 'Others Fields', 'erp' ),
+            'type'      => 'text',
+            'text'      => '',
+            'condition' => [
+                '%'  => __( 'has', 'erp' ),
+                '!%' => __( 'has not', 'erp' ),
+                '~'  => __( 'contains', 'erp' ),
+                '!~' => __( 'not contains', 'erp' ),
+                '^'  => __( 'begins with', 'erp' ),
+                '$'  => __( 'ends with', 'erp' ),
+            ]
+        ]
     ];
 
-    if ( $type == 'crm_page_erp-sales-customers' ) {
+    if ( 'contact' == $type ) {
         $fields = erp_crm_get_customer_serach_key() + $fields;
     }
 
-    if ( $type == 'crm_page_erp-sales-companies' ) {
+    if ( 'company' == $type ) {
         $fields = erp_crm_get_company_serach_key() + $fields;
     }
 
@@ -1427,7 +1547,6 @@ function erp_crm_get_customer_serach_key() {
             'title'       => __( 'First Name', 'erp' ),
             'type' => 'text',
             'text' => '',
-            'condval' => '',
             'condition'   => [
                 ''   => __( 'is', 'erp' ),
                 '!'  => __( 'is not', 'erp' ),
@@ -1442,7 +1561,6 @@ function erp_crm_get_customer_serach_key() {
             'title'       => __( 'Last Name', 'erp' ),
             'type' => 'text',
             'text' => '',
-            'condval' => '',
             'condition'   => [
                 ''   => __( 'is', 'erp' ),
                 '!'  => __( 'is not', 'erp' ),
@@ -1468,7 +1586,6 @@ function erp_crm_get_company_serach_key() {
             'title'       => __( 'Company Name', 'erp' ),
             'type' => 'text',
             'text' => '',
-            'condval' => '',
             'condition'   => [
                 ''   => __( 'is', 'erp' ),
                 '!'  => __( 'is not', 'erp' ),
@@ -1490,7 +1607,7 @@ function erp_crm_get_company_serach_key() {
  *
  * @return array
  */
-function erp_crm_get_save_search_regx( $values ) {
+function erp_crm_get_save_search_regx( $values ) {  // %%sabbir
     $result = [];
 
     if ( is_array( $values ) ) {
@@ -1555,6 +1672,8 @@ function erp_crm_save_search_query_filter( $people ) {
             $query_data[] = $serach_array;
         }
     }
+
+    var_dump( $query_data ); die();
 
     if ( !empty( $query_data ) ) {
         $people = erp_crm_save_search_query_builder( $people, $query_data );
@@ -1787,10 +1906,11 @@ function erp_crm_insert_save_search( $data ) {
 function erp_crm_get_save_search_item( $args = [] ) {
 
     $defaults = [
-        'id'      => 0,
-        'user_id' => get_current_user_id(),
-        'global' => 1,
-        'groupby' => 'global'
+        'id'         => 0,
+        'user_id'    => get_current_user_id(),
+        'type'       => '',
+        'groupby'    => 'global',
+        'option_key' => 'id'
     ];
 
     $args  = wp_parse_args( $args, $defaults );
@@ -1800,16 +1920,22 @@ function erp_crm_get_save_search_item( $args = [] ) {
     }
 
     $results = [];
-    $search_keys = WeDevs\ERP\CRM\Models\SaveSearch::where( 'user_id', '=',  $args['user_id'] )
-                ->orWhere('global', '=', $args['global']  )
-                ->get()
+    $search_keys = WeDevs\ERP\CRM\Models\SaveSearch::where( 'user_id', '=',  $args['user_id'] );
+
+    if ( isset( $args['type'] ) && !empty( $args['type'] ) ) {
+        $search_keys = $search_keys->where( 'type', $args['type'] );
+    }
+
+    $search_keys = $search_keys->get()
                 ->groupBy( $args['groupby'] )
                 ->toArray();
 
     foreach ( $search_keys as $key => $search_values ) {
         if ( $key == 0 ) {
+            $results[$key]['id'] = __( 'own_search', 'erp' );
             $results[$key]['name'] = __( 'Own Search', 'erp' );
         } else {
+            $results[$key]['id'] = __( 'global_search', 'erp' );
             $results[$key]['name'] = __( 'Global Search', 'erp' );
         }
 
@@ -1817,6 +1943,7 @@ function erp_crm_get_save_search_item( $args = [] ) {
             $results[$key]['options'][] = [
                 'id' => $value['id'],
                 'text' => $value['search_name'],
+                'value' => $value['search_val']
             ];
         }
     }
@@ -1915,36 +2042,33 @@ function erp_crm_get_next_seven_day_schedules_activities( $user_id = '' ) {
 }
 
 /**
- * Fetch & Save email activity from api server.
+ * Save email activity & send to contact owner
  *
- * @since 1.0
+ * @param  array  $email
+ * @param  string $inbound_email_address
  *
  * @return void
  */
-function erp_crm_save_email_activity() {
-    header('Access-Control-Allow-Origin: *');
-
-    $postdata = $_POST;
-    $api_key  = get_option( 'wp_erp_apikey' );
-
-    unset( $postdata['action'] );
+function erp_crm_save_email_activity( $email, $inbound_email_address ) {
 
     $save_data = [
-        'user_id'       => $postdata['user_id'],
-        'created_by'    => $postdata['created_by'],
-        'message'       => $postdata['message'],
+        'user_id'       => $email['cid'],
+        'created_by'    => $email['sid'],
+        'message'       => $email['body'],
         'type'          => 'email',
-        'email_subject' => $postdata['email_subject'],
+        'email_subject' => $email['subject'],
         'extra'         => base64_encode( json_encode( [ 'replied' => 1 ] ) ),
     ];
 
     $data = erp_crm_save_customer_feed_data( $save_data );
 
-    $contact_id       = (int) $postdata['user_id'];
-    $sender_id        = (int) $postdata['created_by'];
-    $contact_owner_id = erp_people_get_meta( $contact_id, '_assign_crm_agent', true );
+    $contact_id = (int) $save_data['user_id'];
+    $sender_id  = $save_data['created_by'];
+
+    $contact = new \WeDevs\ERP\CRM\Contact( $contact_id );
+
+    $contact_owner_id = $contact->get_contact_owner();
     $contact_owner    = get_userdata( $contact_owner_id );
-    $created_by       = get_userdata( $sender_id );
 
     // Send an email to contact owner
     if ( isset( $contact_owner_id ) ) {
@@ -1953,87 +2077,69 @@ function erp_crm_save_email_activity() {
         $headers = "";
         $headers .= "Content-Type: text/html; charset=UTF-8" . "\r\n";
 
-        $is_cloud_active = erp_is_cloud_active();
+        $message_id = md5( uniqid( time() ) ) . '.' . $contact_id . '.' . $contact_owner_id . '.r2@' . $_SERVER['HTTP_HOST'];
 
-        if ( $is_cloud_active ) {
-            $wp_erp_api_key = get_option( 'wp_erp_apikey' );
+        $custom_headers = [
+            "Message-ID" => "<{$message_id}>",
+            "In-Reply-To" => "<{$message_id}>",
+            "References" => "<{$message_id}>",
+        ];
 
-            $reply_to = $wp_erp_api_key . "-" . $contact_owner_id . "-" . $contact_id . "-co" . "@incloud.wperp.com";
-            $headers .= "Reply-To: WP ERP <$reply_to>" . "\r\n";
-        }
+        $reply_to = $inbound_email_address;
+        $headers .= "Reply-To: WP ERP <$reply_to>" . "\r\n";
 
-        add_filter( 'wp_mail_from', 'erp_crm_get_email_from_address' );
-        add_filter( 'wp_mail_from_name', 'erp_crm_get_email_from_name' );
-
-        wp_mail( $to_email, $postdata['email_subject'], $postdata['message'], $headers );
-
-        remove_filter( 'wp_mail_from', 'erp_crm_get_email_from_address' );
-        remove_filter( 'wp_mail_from_name', 'erp_crm_get_email_from_name' );
+        erp_mail( $to_email, $email['subject'], $email['body'], $headers, [], $custom_headers );
     }
 
     // Update email counter
-    update_option( 'wp_erp_cloud_email_count', get_option( 'wp_erp_cloud_email_count', 0 ) + 1 );
-
-    status_header(200);
-    exit;
+    update_option( 'wp_erp_inbound_email_count', get_option( 'wp_erp_inbound_email_count', 0 ) + 1 );
 }
 
 /**
- * Fetch & Save contact owner email activity from api server.
+ * Save email activity by contact owner & send to contact
  *
- * @since 1.0
+ * @param  array  $email
+ * @param  string $inbound_email_address
  *
  * @return void
  */
-function erp_crm_save_contact_owner_email_activity() {
-    header('Access-Control-Allow-Origin: *');
-
-    $postdata = $_POST;
-    $api_key  = get_option( 'wp_erp_apikey' );
-
-    unset( $postdata['action'] );
-
+function erp_crm_save_contact_owner_email_activity( $email, $inbound_email_address ) {
     $save_data = [
-        'user_id'       => $postdata['user_id'],
-        'created_by'    => $postdata['created_by'],
-        'message'       => $postdata['message'],
-        'type'          => $postdata['type'],
-        'email_subject' => $postdata['email_subject'],
+        'user_id'       => $email['cid'],
+        'created_by'    => $email['sid'],
+        'message'       => $email['body'],
+        'type'          => 'email',
+        'email_subject' => $email['subject'],
         'extra'         => base64_encode( json_encode( [ 'replied' => 1 ] ) ),
     ];
 
     $data = erp_crm_save_customer_feed_data( $save_data );
 
-    $contact_id = intval( $postdata['user_id'] );
+    $contact_id = intval( $save_data['user_id'] );
 
     $contact = new \WeDevs\ERP\CRM\Contact( $contact_id );
 
     $headers = "";
     $headers .= "Content-Type: text/html; charset=UTF-8" . "\r\n";
 
-    $is_cloud_active = erp_is_cloud_active();
+    $erp_is_imap_active = erp_is_imap_active();
 
-    if ( $is_cloud_active ) {
-        $wp_erp_api_key = get_option( 'wp_erp_apikey' );
+    $message_id = md5( uniqid( time() ) ) . '.' . $save_data['user_id'] . '.' . $save_data['created_by'] . '.r1@' . $_SERVER['HTTP_HOST'];
 
-        $reply_to = $wp_erp_api_key . "-" . $postdata['created_by'] . "-" . $contact_id . "@incloud.wperp.com";
-        $headers .= "Reply-To: WP ERP <$reply_to>" . "\r\n";
-    }
+    $custom_headers = [
+        "Message-ID" => "<{$message_id}>",
+        "In-Reply-To" => "<{$message_id}>",
+        "References" => "<{$message_id}>",
+    ];
 
-    add_filter( 'wp_mail_from', 'erp_crm_get_email_from_address' );
-    add_filter( 'wp_mail_from_name', 'erp_crm_get_email_from_name' );
+    $reply_to = $inbound_email_address;
+    $headers .= "Reply-To: WP ERP <$reply_to>" . "\r\n";
 
     // Send email a contact
-    wp_mail( $contact->email, $postdata['email_subject'], $postdata['message'], $headers );
-
-    remove_filter( 'wp_mail_from', 'erp_crm_get_email_from_address' );
-    remove_filter( 'wp_mail_from_name', 'erp_crm_get_email_from_name' );
+    erp_mail( $contact->email, $email['subject'], $email['body'], $headers, [], $custom_headers );
 
     // Update email counter
-    update_option( 'wp_erp_cloud_email_count', get_option( 'wp_erp_cloud_email_count', 0 ) + 1 );
-
-    status_header(200);
-    exit;
+    update_option( 'wp_erp_inbound_email_count', get_option( 'wp_erp_inbound_email_count', 0 ) + 1 );
 }
 
 /**
@@ -2087,9 +2193,9 @@ function erp_crm_prepare_calendar_schedule_data( $schedules ) {
  * @return array
  */
 function erp_crm_get_schedule_data( $tab = '' ) {
-    $args           = [
-        'number'     => -1,
-        'type'       => 'log_activity'
+    $args = [
+        'number' => -1,
+        'type'   => 'log_activity'
     ];
 
     if ( $tab == 'own' ) {
@@ -2110,7 +2216,7 @@ function erp_crm_get_schedule_data( $tab = '' ) {
  * @return string
  */
 function erp_crm_get_email_from_address() {
-    $settings = get_option( 'erp_settings_erp-email', [] );
+    $settings = get_option( 'erp_settings_erp-email_general', [] );
 
     if ( array_key_exists( 'from_email', $settings ) ) {
         return sanitize_email( $settings['from_email'] );
@@ -2304,7 +2410,6 @@ function erp_crm_activity_schedule_notification_type() {
 }
 
 /**
-<<<<<<< HEAD
  * Insert and update save replies
  *
  * @since 1.0
@@ -2618,7 +2723,7 @@ function erp_handle_user_bulk_actions() {
             $life_stage    = $_POST['life_stage'];
             $contact_owner = $_POST['contact_owner'];
 
-            $contacts = erp_get_peoples_by( 'user_id', $user_ids );
+            $contacts = erp_get_people_by( 'user_id', $user_ids );
 
             if ( ! empty( $contacts ) ) {
                 $contact_ids = wp_list_pluck( $contacts, 'user_id' );
@@ -2681,13 +2786,13 @@ function erp_user_bulk_actions_notices() {
  * @return void
  */
 function erp_create_contact_from_created_user( $user_id ) {
-    $user_auto_import = (int) erp_get_option( 'user_auto_import', 'erp_settings_erp-crm', 0 );
+    $user_auto_import = (int) erp_get_option( 'user_auto_import', 'erp_settings_erp-crm_contacts', 0 );
 
     if ( ! $user_auto_import ) {
         return;
     }
 
-    $default_roles = erp_get_option( 'user_roles', 'erp_settings_erp-crm', [] );
+    $default_roles = erp_get_option( 'user_roles', 'erp_settings_erp-crm_contacts', [] );
     $user          = get_userdata( $user_id );
 
     $matched_roles = array_intersect( $user->roles, $default_roles );
@@ -2701,12 +2806,88 @@ function erp_create_contact_from_created_user( $user_id ) {
     $data['user_id'] = $user_id;
 
     $contact_id    = erp_insert_people( $data );
-    $contact_owner = erp_get_option( 'contact_owner', 'erp_settings_erp-crm', null );
+    $contact_owner = erp_get_option( 'contact_owner', 'erp_settings_erp-crm_contacts', null );
     $contact_owner = ( $contact_owner ) ? $contact_owner : get_current_user_id();
-    $life_stage    = erp_get_option( 'life_stage', 'erp_settings_erp-crm', 'opportunity' );
+    $life_stage    = erp_get_option( 'life_stage', 'erp_settings_erp-crm_contacts', 'opportunity' );
 
     update_user_meta( $user_id, '_assign_crm_agent', $contact_owner );
     update_user_meta( $user_id, 'life_stage', $life_stage );
+    erp_people_update_meta( $contact_id, 'life_stage', $life_stage );
 
     return;
+}
+
+/**
+ * Check new inbound emails
+ *
+ * @return void
+ */
+function erp_crm_check_new_inbound_emails() {
+    $is_imap_active = erp_is_imap_active();
+
+    if ( ! $is_imap_active ) {
+        return;
+    }
+
+    $imap_options = get_option( 'erp_settings_erp-email_imap', [] );
+
+    $mail_server = $imap_options['mail_server'];
+    $username = $imap_options['username'];
+    $password = $imap_options['password'];
+    $protocol = $imap_options['protocol'];
+    $port = isset( $imap_options['port'] ) ? $imap_options['port'] : 993;
+    $authentication = isset( $imap_options['authentication'] ) ? $imap_options['authentication'] : 'ssl';
+
+    try {
+        $imap = new \WeDevs\ERP\Imap( $mail_server, $port, $protocol, $username, $password, $authentication );
+
+        $last_checked = get_option( 'erp_crm_inbound_emails_last_checked', date( "d M Y" ) );
+
+        if ( isset( $imap_options['schedule'] ) && $imap_options['schedule'] == 'monthly' ) {
+            $date = date( "d M Y", strtotime( "{$last_checked} -1 month" ) );
+        } else if ( $imap_options['schedule'] == 'weekly' ) {
+            $date = date( "d M Y", strtotime( "{$last_checked} -1 week" ) );
+        } else {
+            $date = date( "d M Y", strtotime( "{$last_checked} -1 days" ) );
+        }
+
+        update_option( 'erp_crm_inbound_emails_last_checked', date( "d M Y" ) );
+
+        $emails = $imap->get_emails( "Inbox", "UNSEEN SINCE \"$date\"" );
+
+        do_action( 'erp_crm_new_inbound_emails', $emails );
+
+        $email_regexp = '([a-z0-9]+[.][0-9]+[.][0-9]+[.][r][1|2])@' . $_SERVER['HTTP_HOST'];
+
+        $filtered_emails = [];
+        foreach ( $emails as $email ) {
+            if ( isset( $email['headers']['References'] ) && preg_match( '/<'.$email_regexp.'>/', $email['headers']['References'], $matches ) ) {
+
+                $filtered_emails[] = $email;
+
+                $message_id = $matches[1];
+                $message_id_parts = explode('.', $message_id);
+
+                $email['cid'] = $message_id_parts[1];
+                $email['sid'] = $message_id_parts[2];
+
+                // Save & sent the email
+                switch ( $message_id_parts[3] ) {
+                    case 'r1':
+                        erp_crm_save_email_activity( $email, $imap_options['username'] );
+                        break;
+                    case 'r2':
+                        erp_crm_save_contact_owner_email_activity( $email, $imap_options['username'] );
+                        break;
+                }
+            }
+        }
+
+        $email_ids = wp_list_pluck( $filtered_emails, 'id' );
+        // Mark the emails as seen
+        $imap->mark_seen_emails( $email_ids );
+
+    } catch( \Exception $e ) {
+        // $e->getMessage();
+    }
 }

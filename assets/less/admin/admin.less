@@ -141,6 +141,7 @@
 
 @import "crm.less";
 @import "hrm.less";
+@import "accounting.less";
 
 #wp-admin-bar-erp-mode-switch .ab-icon.dashicons-randomize {
     padding-top: 7px !important;
@@ -181,6 +182,53 @@ table.erp-table {
 /*----------------------------------------
   Table style in settings area
 ----------------------------------------*/
+.vtable-wrap {
+
+    .list-table-inner {
+        form {
+
+        }
+    }
+
+    .vtbale-table-wrapper {
+        position: relative;
+
+        table.vtable {
+            position: relative;
+            width: 100%;
+            height: 100%;
+
+            tbody.vtbale-tbody {
+                tr.vtable-ajax-loading {
+                    height: 50px;
+                }
+            }
+        }
+
+        .vtable-loader-bg {
+            width: 100%;
+            height: 100%;
+            background: #fafafa;
+            position: absolute;
+            top: 0px;
+            left:0px;
+            opacity: 0.4;
+        }
+
+        .vtable-loader {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: url('../../assets/images/spinner-2x.gif') center center no-repeat;
+            z-index: 99;
+            background-size: 30px;
+            top:38%;
+            left:50%;
+        }
+
+    }
+
+}
 
 td.erp-settings-table-wrapper {
     padding: 0 15px 10px 0;;
@@ -1008,16 +1056,18 @@ ul.edit-address {
         padding: 0px;
         margin: 0px;
         white-space: nowrap;
+
         a {
             text-decoration: none;
-            font-weight: 600;
             border: none;
             line-height: 2;
             padding: .2em;
         }
     }
+
     .erp-nav-tab-active {
         color: #000;
+        font-weight: 600;
     }
 }
 

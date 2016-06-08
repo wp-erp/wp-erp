@@ -3,33 +3,19 @@
     <# if ( data.type == 'assign_company' ) { #>
 
         <div class="row">
-            <?php erp_html_form_input( array(
-                'label'       => __( 'Company Name', 'erp' ),
-                'name'        => 'erp_assign_company_id',
-                'type'        => 'select',
-                'id'          => 'erp-select-customer-company',
-                'class'       => 'erp-crm-select2-add-more erp-crm-customer-company-dropdown',
-                'custom_attr' => ['data-id' => 'erp-contact-new', 'data-type' => 'company', 'data-single' => 1 ],
-                'required'    => true,
-                'options'     => [ '' => __( '--Select a Company--', 'erp' ) ] + erp_get_peoples_array( [ 'type' => 'company', 'number' => -1 ] )
-            ) ); ?>
+            <label for="erp-select-customer-company"><?php _e( 'Company Name', 'erp' ); ?> <span class="required">*</span></label>
+            <select style="width:240px;" name="erp_assign_company_id" id="erp-select-customer-company" required="required" data-types="company" class="erp-crm-contact-list-dropdown" data-placeholder="<?php _e( 'Select a company', 'erp' )?>">
+                <option value=""><?php _e( 'Select a Company', 'erp' ); ?></option>
+            </select>
         </div>
 
     <# } else if ( data.type == 'assign_customer' ) { #>
-
         <div class="row">
-            <?php erp_html_form_input( array(
-                'label'       => __( 'Contact Name', 'erp' ),
-                'name'        => 'erp_assign_customer_id',
-                'type'        => 'select',
-                'id'          => 'erp-select-customer-company',
-                'class'       => 'erp-crm-select2-add-more erp-crm-customer-company-dropdown',
-                'custom_attr' => ['data-id' => 'erp-contact-new', 'data-type' => 'contact', 'data-single' => 1 ],
-                'required'    => true,
-                'options'     => [ '' => __( '--Select a Contact--', 'erp' ) ] + erp_get_peoples_array( [ 'type' => 'contact', 'number' => -1 ] )
-            ) ); ?>
+            <label for="erp-select-customer-company"><?php _e( 'Contact Name', 'erp' ); ?> <span class="required">*</span></label>
+            <select style="width:240px;" name="erp_assign_customer_id" id="erp-select-customer-company" required="required" data-types="contact" class="erp-crm-contact-list-dropdown" data-placeholder="<?php _e( 'Select a Contact', 'erp' )?>">
+                <option value=""><?php _e( 'Select a Contact', 'erp' ); ?></option>
+            </select>
         </div>
-
     <# } #>
 
     <?php wp_nonce_field( 'wp-erp-crm-assign-customer-company-nonce' ); ?>

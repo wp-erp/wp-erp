@@ -155,6 +155,11 @@ function erp_hr_employee_create( $args = array() ) {
         'employee_id'   => $data['personal']['employee_id']
     );
 
+    // employees should not be able to change hiring date, unset when their profile
+    if ( $update && ! current_user_can( erp_hr_get_manager_role() ) ) {
+        unset( $employee_table_data['hiring_date'] );
+    }
+
     if ( ! $update ) {
         $employee_table_data['status'] = $data['work']['status'];
     }
@@ -637,11 +642,10 @@ function erp_hr_get_marital_statuses( $select_text = null ) {
  * @return array all the type
  */
 function erp_hr_get_terminate_type( $selected = NULL ) {
-    $type = apply_filters( 'erp_hr_terminate_type', array(
+    $type = apply_filters( 'erp_hr_terminate_type', [
         'voluntary'   => __( 'Voluntary', 'erp' ),
-        'involuntary' => __( 'Involuntary', 'erp' ),
-        'death'       => __( 'Death', 'erp' )
-    ) );
+        'involuntary' => __( 'Involuntary', 'erp' )
+    ] );
 
     if ( $selected ) {
         return ( isset( $type[$selected] ) ) ? $type[$selected] : '';
@@ -656,11 +660,20 @@ function erp_hr_get_terminate_type( $selected = NULL ) {
  * @return array all the reason
  */
 function erp_hr_get_terminate_reason( $selected = NULL ) {
-    $reason = apply_filters( 'erp_hr_terminate_reason', array(
-        'attendance'        => __( 'Attendance', 'erp' ),
-        'other_employement' => __( 'Other Employment', 'erp' ),
-        'relocation'        => __( 'Relocation', 'erp' )
-    ) );
+    $reason = apply_filters( 'erp_hr_terminate_reason', [
+        'attendance'            => __( 'Attendance', 'erp' ),
+        'better_employment'     => __( 'Better Employment Conditions', 'erp' ),
+        'career_prospect'       => __( 'Career Prospect', 'erp' ),
+        'death'                 => __( 'Death', 'erp' ),
+        'desertion'             => __( 'Desertion', 'erp' ),
+        'dismissed'             => __( 'Dismissed', 'erp' ),
+        'dissatisfaction'       => __( 'Dissatisfaction with the job', 'erp' ),
+        'higher_pay'            => __( 'Higher Pay', 'erp' ),
+        'other_employement'     => __( 'Other Employment', 'erp' ),
+        'personality_conflicts' => __( 'Personality Conflicts', 'erp' ),
+        'relocation'            => __( 'Relocation', 'erp' ),
+        'retirement'            => __( 'Retirement', 'erp' ),
+    ] );
 
     if ( $selected ) {
         return ( isset( $reason[$selected] ) ) ? $reason[$selected] : '';
@@ -851,8 +864,12 @@ function erp_hr_employee_remove_history( $history_id ) {
  *
  * @return string  url of the employee details page
  */
-function erp_hr_url_single_employee( $employee_id ) {
-    $url = admin_url( 'admin.php?page=erp-hr-employee&action=view&id=' . $employee_id );
+function erp_hr_url_single_employee( $employee_id, $tab = null ) {
+    if ( $tab ) {
+        $tab = '&tab=' . $tab;
+    }
+
+    $url = admin_url( 'admin.php?page=erp-hr-employee&action=view&id=' . $employee_id . $tab );
 
     return apply_filters( 'erp_hr_url_single_employee', $url, $employee_id );
 }

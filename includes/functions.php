@@ -43,6 +43,7 @@ function erp_get_currencies() {
     return array_unique( apply_filters( 'erp_currencies', array(
         'AED' => __( 'United Arab Emirates Dirham', 'erp' ),
         'AUD' => __( 'Australian Dollars', 'erp' ),
+        'AZD' => __( 'Argentine Peso'),
         'BDT' => __( 'Bangladeshi Taka', 'erp' ),
         'BRL' => __( 'Brazilian Real', 'erp' ),
         'BGN' => __( 'Bulgarian Lev', 'erp' ),
@@ -147,6 +148,7 @@ function erp_get_currency_symbol( $currency = '' ) {
             $currency_symbol = '&#1083;&#1074;.';
             break;
         case 'AUD' :
+        case 'AZD' :
         case 'CAD' :
         case 'CLP' :
         case 'COP' :
@@ -676,170 +678,37 @@ function erp_cron_intervals( $schedules ) {
         'display'   => __( 'Every Minute', 'erp' )
     );
 
+    $schedules['two_min'] = array(
+        'interval'  => MINUTE_IN_SECONDS * 2,
+        'display'   => __( 'Every 2 Minutes', 'erp' )
+    );
+
+    $schedules['five_min'] = array(
+        'interval'  => MINUTE_IN_SECONDS * 5,
+        'display'   => __( 'Every 5 Minutes', 'erp' )
+    );
+
+    $schedules['ten_min'] = array(
+        'interval'  => MINUTE_IN_SECONDS * 10,
+        'display'   => __( 'Every 10 Minutes', 'erp' )
+    );
+
+    $schedules['fifteen_min'] = array(
+        'interval'  => MINUTE_IN_SECONDS * 15,
+        'display'   => __( 'Every 15 Minutes', 'erp' )
+    );
+
+    $schedules['thirty_min'] = array(
+        'interval'  => MINUTE_IN_SECONDS * 30,
+        'display'   => __( 'Every 30 Minutes', 'erp' )
+    );
+
     $schedules['weekly'] = array(
         'interval'  => DAY_IN_SECONDS * 7,
         'display'  => __( 'Once Weekly', 'erp' )
     );
 
     return (array)$schedules;
-}
-
-/**
- * Display erp activation notice.
- *
- * @since 1.0
- *
- * @return void
- */
-function erp_activation_notice() {
-
-    if ( !current_user_can( 'manage_options' ) ) {
-        return;
-    }
-    $apikey  = get_option( 'wp_erp_apikey' );
-    $dismiss = get_option( 'wp_erp_activation_dismiss' );
-
-    if ( ! $apikey && ! $dismiss ) {
-    ?>
-    <div class="notice erp-activation-cloud-prompt" id="erp-activation-container">
-        <div class="activation-prompt-text">
-            <?php _e( "You're awesome for installing <strong>WP ERP!</strong> Get API Key to get access to wperp <em>cloud</em> features!", "wp-erp" ) ?>
-        </div>
-
-        <div class="activation-form-container">
-            <input type="email" name="email" placeholder="email@example.com" value="<?php echo esc_attr( get_option( 'admin_email' ) ); ?>" />
-            <button class="button-primary" id="get-api-key"><?php _e( 'Get API Key', 'erp' ); ?></button>
-            <a id="dismiss" href="#"><?php _e( 'Dismiss', 'erp' ); ?></a>
-        </div>
-    </div>
-    <?php
-    }
-}
-
-/**
- * Erp activation's JavaScript enqueue.
- *
- * @since  1.0
- *
- * @return void
- */
-function erp_activation_notice_javascript() { ?>
-    <script type="text/javascript" >
-    jQuery( document ).ready( function($) {
-
-        $container = $( "#erp-activation-container" );
-        $( "#erp-activation-container button#get-api-key" ).click( function(e) {
-            e.preventDefault();
-
-            var data = {
-                'action': 'erp_activation_notice',
-                'email': $(e.target).parent().find( "input[name=email]" ).val(),
-                '_wpnonce': '<?php echo wp_create_nonce( "wp-erp-activation-nonce" ); ?>'
-            };
-
-            $.post( ajaxurl, data, function(response) {
-                if( response.success ) {
-                    $( "[id=erp-activation-container]" ).hide();
-                    document.location.reload();
-                } else {
-                    if( response.data.error ) {
-                        alert( response.data.error );
-                    } else {
-                        alert( response.data );
-                    }
-                }
-            });
-        });
-
-        $( "#erp-activation-container a#dismiss" ).click( function(e) {
-            e.preventDefault();
-
-            var data = {
-                'action': 'erp_activation_notice',
-                'dismiss': true,
-                '_wpnonce': '<?php echo wp_create_nonce( "wp-erp-activation-nonce" ); ?>'
-            };
-
-            $.post( ajaxurl, data, function(response) {
-                if( response.success ) {
-                    $container.hide();
-                }
-            });
-        });
-
-        $( "a#wp-erp-disconnect-api" ).click( function(e) {
-            e.preventDefault();
-
-            var data = {
-                'action': 'erp_activation_notice',
-                'disconnect': true,
-                '_wpnonce': '<?php echo wp_create_nonce( "wp-erp-activation-nonce" ); ?>'
-            };
-
-            $.post( ajaxurl, data, function(response) {
-                if( response.success ) {
-                    document.location.reload();
-                }
-            });
-        });
-    });
-    </script> <?php
-}
-
-/**
- * Activate or deactivate erp api cloud features by server.
- *
- * @return void
- */
-function erp_api_mode_change() {
-    header('Access-Control-Allow-Origin: *');
-
-    $postdata    = $_POST;
-    $api_key     = get_option( 'wp_erp_apikey' );
-
-    $is_verified = erp_cloud_verify_request( $postdata, $api_key  );
-
-    if ( $is_verified ) {
-        $status = isset( $_POST['status'] ) && in_array( $_POST['status'], ['yes', 'no'] ) ? $_POST['status'] : 'yes';
-
-        update_option( 'wp_erp_api_active', $_POST['status'] );
-    }
-}
-
-/**
- * Determine if the erp cloud feature is active or not.
- *
- * @return boolean
- */
-function erp_is_cloud_active() {
-    $wp_erp_api_key    = get_option( 'wp_erp_apikey', null );
-    $wp_erp_api_active = get_option( 'wp_erp_api_active', 'no' );
-
-    if ( $wp_erp_api_key && 'yes' == $wp_erp_api_active ) {
-        return true;
-    }
-
-    return false;
-}
-
-/**
- * Verify given http request.
- *
- * @param  array  $vars
- * @param  string $api_key
- *
- * @return boolean
- */
-function erp_cloud_verify_request( $vars, $api_key ) {
-    if ( ! isset( $vars['verify_key'] ) ) {
-        return false;
-    }
-
-    $verify_key = $vars['verify_key'];
-
-    unset( $vars['verify_key'] );
-
-    return ( hash_hmac( 'sha256', serialize( $vars ), $api_key ) === $verify_key );
 }
 
 /**
@@ -1020,9 +889,27 @@ function erp_get_license_status( $addon ) {
  * @return void
  */
 function erp_import_export_javascript() {
-    $contact_company_fields = [
+    $contact_fields = [
         'first_name',
         'last_name',
+        'email',
+        'phone',
+        'mobile',
+        'other',
+        'website',
+        'fax',
+        'notes',
+        'street_1',
+        'street_2',
+        'city',
+        'state',
+        'postal_code',
+        'country',
+        'currency',
+        'type',
+    ];
+
+    $company_fields = [
         'email',
         'company',
         'phone',
@@ -1089,23 +976,48 @@ function erp_import_export_javascript() {
 
         jQuery(document).ready(function($) {
             var fields = [];
+            var required_fields = [];
 
-            var contact_company_fields = <?php echo json_encode( $contact_company_fields ); ?>;
+            var contact_fields = <?php echo json_encode( $contact_fields ) ; ?>;
+            var company_fields = <?php echo json_encode( $company_fields ); ?>;
 
             var employee_fields = <?php echo json_encode( $employee_fields ); ?>;
 
-            fields = contact_company_fields;
-            if ( $( 'form#export_form #type' ).val() == 'employee' ) {
-                fields = employee_fields;
+
+            switch ( $( 'form#export_form #type' ).val() ) {
+                case 'contact':
+                    fields = contact_fields;
+
+                    break;
+
+                case 'company':
+                    fields = company_fields;
+
+                    break;
+
+                case 'employee':
+                    fields = employee_fields;
+
+                    break;
             }
 
-            var required_fields = [
+            var contact_required_fields = [
                 'first_name',
                 'last_name',
                 'email',
                 'user_email',
+            ];
+
+            var company_required_fields = [
+                'email',
                 'company'
-            ]
+            ];
+
+            var employee_required_fields = [
+                'first_name',
+                'last_name',
+                'user_email',
+            ];
 
             var html = '<ul class="erp-list list-inline">';
             for ( var i = 0;  i < fields.length; i++ ) {
@@ -1121,10 +1033,21 @@ function erp_import_export_javascript() {
             $( 'form#export_form #type' ).on( 'change', function( e ) {
                 e.preventDefault();
 
-                if ( $(this).val() == 'employee' ) {
-                    fields = employee_fields;
-                } else {
-                    fields = contact_company_fields;
+                switch ( $(this).val() ) {
+                    case 'contact':
+                        fields = contact_fields;
+
+                        break;
+
+                    case 'company':
+                        fields = company_fields;
+
+                        break;
+
+                    case 'employee':
+                        fields = employee_fields;
+
+                        break;
                 }
 
                 html = '<ul class="erp-list list-inline">';
@@ -1146,11 +1069,26 @@ function erp_import_export_javascript() {
 
                 var fields_html = '';
 
-                if ( $( 'form#import_form #type' ).val() == 'employee' ) {
-                    fields = employee_fields;
-                } else {
-                    fields = contact_company_fields;
+                switch ( $( 'form#import_form #type' ).val() ) {
+                    case 'contact':
+                        fields = contact_fields;
+                        required_fields = contact_required_fields;
+
+                        break;
+
+                    case 'company':
+                        fields = company_fields;
+                        required_fields = company_required_fields;
+
+                        break;
+
+                    case 'employee':
+                        fields = employee_fields;
+                        required_fields = employee_required_fields;
+
+                        break;
                 }
+
 
                 var required = '';
                 var red_span = '';
@@ -1329,9 +1267,9 @@ function erp_process_import_export() {
                         if ( is_wp_error( $item_insert_id ) ) {
                             continue;
                         } else {
-                            $contact_owner = erp_get_option( 'contact_owner', 'erp_settings_erp-crm', null );
-                            $contact_owner = ( $contact_owner ) ? $contact_owner : get_current_user_id();
-                            $life_stage    = erp_get_option( 'life_stage', 'erp_settings_erp-crm', 'opportunity' );
+                            $current_user  = get_current_user_id();
+                            $contact_owner = erp_get_option( 'contact_owner', 'erp_settings_erp-crm_contacts', $current_user );
+                            $life_stage    = erp_get_option( 'life_stage', 'erp_settings_erp-crm_contacts', 'opportunity' );
                             erp_people_update_meta( $item_insert_id, '_assign_crm_agent', $contact_owner );
                             erp_people_update_meta( $item_insert_id, 'life_stage', $life_stage );
                         }
@@ -1342,7 +1280,7 @@ function erp_process_import_export() {
             }
         }
 
-        wp_redirect( admin_url( 'admin.php?page=erp-tools&tab=import' ) );
+        wp_redirect( admin_url( 'admin.php?page=erp-tools&tab=import&imported=' . $x ) );
         exit();
     }
 
@@ -1432,6 +1370,23 @@ function erp_process_import_export() {
 }
 
 /**
+ * Display importer tool notice.
+ *
+ *
+ * @return void
+ */
+function erp_importer_notices() {
+    if ( ! isset( $_REQUEST['page'] ) || $_REQUEST['page'] != 'erp-tools' || ! isset( $_REQUEST['tab'] ) || $_REQUEST['tab'] != 'import' ) {
+        return;
+    }
+
+    if ( isset( $_REQUEST['imported'] ) ) {
+        $message = sprintf( __( '%s items successfully imported.', 'erp' ), number_format_i18n( $_REQUEST['imported'] ) );
+        echo "<div class='updated'><p>{$message}</p></div>";
+    }
+}
+
+/**
  * Merge user defined arguments into defaults array.
  *
  * This function is similiar to wordpress wp_parse_args().
@@ -1456,4 +1411,189 @@ function erp_parse_args_recursive( &$args, $defaults = [] ) {
     }
 
     return $r;
+}
+
+/**
+ * ERP Email sender
+ *
+ * @param string|array $to
+ * @param string       $subject
+ * @param string       $message
+ * @param string|array $headers
+ * @param array        $attachments
+ * @param array        $custom_headers
+ *
+ * @return boolean
+ */
+function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $custom_headers = [] ) {
+
+    $callback = function( $phpmailer ) use( $custom_headers ) {
+        $erp_email_settings = get_option( 'erp_settings_erp-email_general', [] );
+        $erp_email_smtp_settings = get_option( 'erp_settings_erp-email_smtp', [] );
+
+        if ( ! isset( $erp_email_settings['from_email'] ) ) {
+            $from_email = get_option( 'admin_email' );
+        } else {
+            $from_email = $erp_email_settings['from_email'];
+        }
+
+        if ( ! isset( $erp_email_settings['from_name'] ) ) {
+            global $current_user;
+
+            $from_name = $current_user->display_name;
+        } else {
+            $from_name = $erp_email_settings['from_name'];
+        }
+
+        $content_type = 'text/html';
+
+        $phpmailer->From = apply_filters( 'erp_mail_from', $from_email );
+        $phpmailer->FromName = apply_filters( 'erp_mail_from_name', $from_name );
+        $phpmailer->ContentType = apply_filters( 'erp_mail_content_type', $content_type );
+
+        //Return-Path
+        $phpmailer->Sender = apply_filters( 'erp_mail_return_path', $phpmailer->From );
+
+        if ( ! empty( $custom_headers ) ) {
+            foreach ( $custom_headers as $key => $value ) {
+                $phpmailer->addCustomHeader( $key, $value );
+            }
+        }
+
+        if ( isset( $erp_email_smtp_settings['debug'] ) && $erp_email_smtp_settings['debug'] == 'yes' ) {
+            $phpmailer->SMTPDebug = true;
+        }
+
+        if ( isset( $erp_email_smtp_settings['enable_smtp'] ) && $erp_email_smtp_settings['enable_smtp'] ) {
+            $phpmailer->Mailer = 'smtp'; //'smtp', 'mail', or 'sendmail'
+
+            $phpmailer->Host = $erp_email_smtp_settings['mail_server'];
+            $phpmailer->SMTPSecure = ( $erp_email_smtp_settings['authentication'] != '' ) ? $erp_email_smtp_settings['authentication'] : 'ssl';
+            $phpmailer->Port = $erp_email_smtp_settings['port'];
+
+            $phpmailer->SMTPAuth = true;
+            $phpmailer->Username = $erp_email_smtp_settings['username'];
+            $phpmailer->Password = $erp_email_smtp_settings['password'];
+        }
+    };
+
+    add_action( 'phpmailer_init', $callback );
+
+    ob_start();
+    $is_mail_sent = wp_mail( $to, $subject, $message, $headers, $attachments );
+    $debug_log = ob_get_clean();
+    if ( ! $is_mail_sent ) {
+        error_log( $debug_log );
+    }
+
+    remove_action( 'phpmailer_init', $callback );
+
+    return $is_mail_sent;
+}
+
+/**
+ * Email JavaScript enqueue.
+ *
+ * @return void
+ */
+function erp_email_settings_javascript() {
+    wp_enqueue_style( 'erp-sweetalert' );
+    wp_enqueue_script( 'erp-sweetalert' );
+    ?>
+    <script type="text/javascript">
+        jQuery( document ).ready( function($) {
+            $( "a#smtp-test-connection" ).click( function(e) {
+                e.preventDefault();
+                $( "a#smtp-test-connection" ).attr( 'disabled', 'disabled' );
+                $( "a#smtp-test-connection" ).parent().find( '.erp-loader' ).show();
+
+                var data = {
+                    'action': 'erp_smtp_test_connection',
+                    'enable_smtp': $('input[name=enable_smtp]:checked').val(),
+                    'mail_server': $('input[name=mail_server]').val(),
+                    'port': $('input[name=port]').val(),
+                    'authentication': $('select[name=authentication]').val(),
+                    'username': $('input[name=username]').val(),
+                    'password': $('input[name=password]').val(),
+                    'to' : $('#smtp_test_email_address').val(),
+                    '_wpnonce': '<?php echo wp_create_nonce( "erp-smtp-test-connection-nonce" ); ?>'
+                };
+
+                $.post( ajaxurl, data, function(response) {
+                    $( "a#smtp-test-connection" ).removeAttr( 'disabled' );
+                    $( "a#smtp-test-connection" ).parent().find( '.erp-loader' ).hide();
+
+                    var type = response.success ? 'success' : 'error';
+
+                    if (response.data) {
+                        swal({
+                            title: '',
+                            text: response.data,
+                            type: type,
+                            confirmButtonText: crmContactFormsSettings.labelOK,
+                            confirmButtonColor: '#008ec2'
+                        });
+                    }
+                });
+            });
+        });
+
+        jQuery( document ).ready( function($) {
+            $( "a#imap-test-connection" ).click( function(e) {
+                e.preventDefault();
+                $( "a#imap-test-connection" ).attr( 'disabled', 'disabled' );
+                $( "a#imap-test-connection" ).parent().find( '.erp-loader' ).show();
+
+                var data = {
+                    'action': 'erp_imap_test_connection',
+                    'mail_server': $('input[name=mail_server]').val(),
+                    'username': $('input[name=username]').val(),
+                    'password': $('input[name=password]').val(),
+                    'protocol': $('select[name=protocol]').val(),
+                    'port': $('input[name=port]').val(),
+                    'authentication': $('select[name=authentication]').val(),
+                    '_wpnonce': '<?php echo wp_create_nonce( "erp-imap-test-connection-nonce" ); ?>'
+                };
+
+                $.post( ajaxurl, data, function(response) {
+                    $( "a#imap-test-connection" ).removeAttr( 'disabled' );
+                    $( "a#imap-test-connection" ).parent().find( '.erp-loader' ).hide();
+
+                    var type = response.success ? 'success' : 'error';
+
+                    if ( response.data ) {
+                        var status = response.success ? 1 : 0;
+                        $('#imap_status').val(status);
+
+                        swal({
+                            title: '',
+                            text: response.data,
+                            type: type,
+                            confirmButtonText: crmContactFormsSettings.labelOK,
+                            confirmButtonColor: '#008ec2'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+    <?php
+}
+
+/**
+ * Determine if the inbound/imap mail feature is active or not.
+ *
+ * @return boolean
+ */
+function erp_is_imap_active() {
+    $options = get_option( 'erp_settings_erp-email_imap', [] );
+
+    $imap_status = (boolean) isset( $options['imap_status'] ) ? $options['imap_status'] : 0;
+    $enable_imap = ( isset( $options['enable_imap'] ) && $options['enable_imap'] == 'yes' ) ? true : false;
+
+    if ( $enable_imap && $imap_status ) {
+        return true;
+    }
+
+    return false;
 }

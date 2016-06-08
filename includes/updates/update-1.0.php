@@ -22,7 +22,7 @@ function wperp_update_1_0_set_role() {
  *
  * @since 1.0
  *
- * @return [type] [description]
+ * @return void
  */
 function wperp_update_1_0_create_table() {
     global $wpdb;
@@ -53,6 +53,8 @@ function wperp_update_1_0_create_table() {
 
 /**
  * Create erp_people_types table
+ *
+ * @since 1.0
  *
  * @return void
  */
@@ -116,6 +118,8 @@ function wperp_update_1_0_schedules() {
 /**
  * Populate the contact relations table with people type data
  *
+ * @since 1.0
+ *
  * @return void
  */
 function wperp_update_1_0_populate_types_table() {
@@ -151,11 +155,12 @@ function wperp_update_1_0_populate_types_table() {
 /**
  * Drop the type column in people table
  *
+ * @since 1.0
+ *
  * @return void
  */
 function wperp_update_1_0_drop_types_column() {
     global $wpdb;
-
     $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_peoples DROP COLUMN `type`, `deleted_at`" );
 }
 

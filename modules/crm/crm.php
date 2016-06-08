@@ -120,7 +120,10 @@ class Customer_Relationship {
         wp_enqueue_media();
         wp_enqueue_style( 'erp-tiptip' );
         wp_enqueue_script( 'erp-tiptip' );
-        wp_enqueue_script( 'erp-crm', WPERP_CRM_ASSETS . "/js/crm$suffix.js", array( 'erp-script', 'erp-timepicker' ), date( 'Ymd' ), true );
+        wp_enqueue_script( 'erp-vuejs', false, [ 'jquery', 'erp-script' ], false, true );
+        wp_enqueue_script( 'erp-vue-table', WPERP_CRM_ASSETS . "/js/vue-table$suffix.js", array( 'erp-vuejs', 'jquery' ), date( 'Ymd' ), true );
+        wp_enqueue_script( 'erp-vue-list-animation', WPERP_CRM_ASSETS . "/js/vue-animated-list.js", array( 'erp-vuejs', 'jquery' ), date( 'Ymd' ), true );
+
 
         $localize_script = apply_filters( 'erp_crm_localize_script', array(
             'ajaxurl'               => admin_url( 'admin-ajax.php' ),
@@ -137,9 +140,9 @@ class Customer_Relationship {
             'customer_upload_photo' => __( 'Upload Photo', 'erp' ),
             'customer_set_photo'    => __( 'Set Photo', 'erp' ),
             'confirm'               => __( 'Are you sure?', 'erp' ),
-            'delConfirmCustomer'    => __( 'Are you sure to delete this customer?', 'erp' ),
+            'delConfirmCustomer'    => __( 'Are you sure want to delete?', 'erp' ),
             'delConfirm'            => __( 'Are you sure to delete this?', 'erp' ),
-            'checkedConfirm'        => __( 'Alteast one item must be checked', 'erp' ),
+            'checkedConfirm'        => __( 'Select atleast one group', 'erp' ),
             'contact_exit'          => __( 'Already exists as a contact or company', 'erp' ),
             'make_contact_text'     => __( 'This user already exists! Want to make this user a', 'erp' ),
             'create_contact_text'   => __( 'Create new', 'erp' ),
@@ -156,7 +159,7 @@ class Customer_Relationship {
             'confirm'              => __( 'Are you sure?', 'erp' ),
             'date_format'          => get_option( 'date_format' ),
             'timeline_feed_header' => apply_filters( 'erp_crm_contact_timeline_feeds_header', '' ),
-            'timeline_feed_body' => apply_filters( 'erp_crm_contact_timeline_feeds_body', '' )
+            'timeline_feed_body'   => apply_filters( 'erp_crm_contact_timeline_feeds_body', '' )
         ] );
 
         if ( 'crm_page_erp-sales-schedules' == $hook ) {
@@ -170,56 +173,37 @@ class Customer_Relationship {
         if ( 'crm_page_erp-sales-activities' == $hook ) {
             wp_enqueue_script( 'underscore' );
             wp_enqueue_script( 'erp-vuejs' );
-            wp_enqueue_style( 'wp-erp-nprogress', WPERP_CRM_ASSETS . '/css/nprogress.css' );
-            wp_enqueue_script( 'wp-erp-nprogress', WPERP_CRM_ASSETS . "/js/nprogress$suffix.js", array( 'jquery' ), date( 'Ymd' ), true );
-            wp_enqueue_script( 'wp-erp-crm-vue-component', WPERP_CRM_ASSETS . "/js/crm-components.js", array( 'wp-erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
+            wp_enqueue_style( 'erp-nprogress' );
+            wp_enqueue_script( 'erp-nprogress' );
+            wp_enqueue_script( 'wp-erp-crm-vue-component', WPERP_CRM_ASSETS . "/js/crm-components.js", array( 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
 
             do_action( 'erp_crm_load_contact_vue_sripts' );
 
-            wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", array( 'wp-erp-crm-vue-component', 'wp-erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
+            wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", array( 'wp-erp-crm-vue-component', 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
             wp_enqueue_script( 'post' );
             wp_localize_script( 'wp-erp-crm-vue-component', 'wpCRMvue', $contact_actvity_localize );
         }
 
         // if it's an customer page
-        if ( 'crm_page_erp-sales-customers' == $hook || 'crm_page_erp-sales-companies' == $hook  ) {
-
+        if ( ( 'crm_page_erp-sales-customers' == $hook || 'crm_page_erp-sales-companies' == $hook ) ) {
             wp_enqueue_style( 'erp-timepicker' );
             wp_enqueue_script( 'erp-timepicker' );
             wp_enqueue_script( 'erp-vuejs' );
             wp_enqueue_script( 'erp-trix-editor' );
             wp_enqueue_style( 'erp-trix-editor' );
             wp_enqueue_script( 'underscore' );
-            wp_enqueue_style( 'wp-erp-nprogress', WPERP_CRM_ASSETS . '/css/nprogress.css' );
-            wp_enqueue_script( 'wp-erp-nprogress', WPERP_CRM_ASSETS . "/js/nprogress$suffix.js", array( 'jquery' ), date( 'Ymd' ), true );
-            wp_enqueue_script( 'wp-erp-crm-vue-component', WPERP_CRM_ASSETS . "/js/crm-components.js", array( 'wp-erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
+            wp_enqueue_style( 'erp-nprogress' );
+            wp_enqueue_script( 'erp-nprogress' );
+            wp_enqueue_script( 'wp-erp-crm-vue-component', WPERP_CRM_ASSETS . "/js/crm-components.js", array( 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
 
             do_action( 'erp_crm_load_contact_vue_sripts' );
 
-            wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", array( 'wp-erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
-            wp_enqueue_script( 'wp-erp-crm-vue-save-search', WPERP_CRM_ASSETS . "/js/save-search$suffix.js", array( 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
-            wp_enqueue_script( 'post' );
-
-            if ( 'crm_page_erp-sales-customers' == $hook ) {
-                $customer = new Contact( null, 'contact' );
+            if ( isset( $_GET['action'] ) && $_GET['action'] == 'view' ) {
+                wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", array( 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
             }
-
-            if ( 'crm_page_erp-sales-companies' == $hook ) {
-                $customer = new Contact( null, 'company' );
-            }
-
-            $country  = \WeDevs\ERP\Countries::instance();
 
             wp_localize_script( 'wp-erp-crm-vue-component', 'wpCRMvue', $contact_actvity_localize );
-
-            wp_localize_script( 'wp-erp-crm-vue-save-search', 'wpCRMSaveSearch', [
-                'ajaxurl'         => admin_url( 'admin-ajax.php' ),
-                'nonce'           => wp_create_nonce( 'wp-erp-crm-save-search' ),
-                'searchFields'    => erp_crm_get_serach_key( $hook )
-            ] );
-
-            $localize_script['customer_empty'] = $customer->to_array();
-            $localize_script['wpErpCountries'] = $country->load_country_states();
+            wp_enqueue_script( 'post' );
         }
 
         if ( 'erp-settings_page_erp-settings' == $hook && isset( $_GET['tab'] ) && $_GET['tab'] == 'erp-crm' ) {
@@ -236,9 +220,49 @@ class Customer_Relationship {
             wp_enqueue_script( 'erp-flotchart-tooltip' );
         }
 
+        if ( 'crm_page_erp-sales-customers' == $hook ) {
+            $customer = new Contact( null, 'contact' );
+            $localize_script['customer_empty']    = $customer->to_array();
+            $localize_script['statuses']          = erp_crm_customer_get_status_count( 'contact' );
+            $localize_script['contact_type']      = 'contact';
+            $localize_script['life_stages']       = erp_crm_get_life_stages_dropdown_raw();
+            $localize_script['searchFields']      = erp_crm_get_serach_key( 'contact' );
+            $localize_script['saveAdvanceSearch'] = erp_crm_get_save_search_item( [ 'type' => 'contact' ] );
+
+            $country = \WeDevs\ERP\Countries::instance();
+            wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
+        }
+
+        if ( 'crm_page_erp-sales-companies' == $hook ) {
+            $customer = new Contact( null, 'company' );
+            $localize_script['customer_empty']    = $customer->to_array();
+            $localize_script['statuses']          = erp_crm_customer_get_status_count( 'company' );
+            $localize_script['contact_type']      = 'company';
+            $localize_script['life_stages']       = erp_crm_get_life_stages_dropdown_raw();
+            $localize_script['searchFields']      = erp_crm_get_serach_key( 'company' );
+            $localize_script['saveAdvanceSearch'] = erp_crm_get_save_search_item( [ 'type' => 'company' ] );
+            $country = \WeDevs\ERP\Countries::instance();
+            wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
+        }
+
+        wp_localize_script( 'erp-vue-table', 'wpVueTable', [
+            'ajaxurl' => admin_url( 'admin-ajax.php' ),
+            'nonce'   => wp_create_nonce( 'wp-erp-vue-table' )
+        ] );
+
+        wp_enqueue_script( 'erp-crm', WPERP_CRM_ASSETS . "/js/crm$suffix.js", array( 'erp-script', 'erp-timepicker' ), date( 'Ymd' ), true );
+        wp_enqueue_script( 'erp-crm-contact', WPERP_CRM_ASSETS . "/js/crm-contacts$suffix.js", array( 'erp-vue-table', 'erp-vue-list-animation', 'erp-script', 'erp-vuejs', 'underscore', 'erp-tiptip', 'jquery', 'erp-select2' ), date( 'Ymd' ), true );
         wp_localize_script( 'erp-crm', 'wpErpCrm', $localize_script );
+        wp_localize_script( 'erp-crm-contact', 'wpErpCrm', $localize_script );
     }
 
+    /**
+     * Load all js template in footer
+     *
+     * @since 1.0
+     *
+     * @return void
+     */
     public function load_js_template() {
         global $current_screen;
 
@@ -255,7 +279,6 @@ class Customer_Relationship {
 
                 if ( isset( $_GET['action'] ) && $_GET['action'] == 'view' ) {
                     erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-assign-company.php', 'erp-crm-new-assign-company' );
-                    erp_get_js_template( WPERP_CRM_JS_TMPL . '/customer-edit-company.php', 'erp-crm-customer-edit-company');
                     erp_get_js_template( WPERP_CRM_JS_TMPL . '/customer-social.php', 'erp-crm-customer-social' );
                     erp_get_js_template( WPERP_CRM_JS_TMPL . '/customer-feed-edit.php', 'erp-crm-customer-edit-feed' );
                     erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-subscriber-contact.php', 'erp-crm-assign-subscriber-contact' );

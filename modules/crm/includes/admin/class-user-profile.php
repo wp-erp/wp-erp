@@ -54,6 +54,10 @@ class User_Profile {
         $new_crm_manager_role = isset( $post['crm_manager'] ) ? sanitize_text_field( $post['crm_manager'] ) : false;
         $new_crm_agent_role   = isset( $post['crm_agent'] ) ? sanitize_text_field( $post['crm_agent'] ) : false;
 
+        if ( ! $new_crm_manager_role && ! $new_crm_agent_role ) {
+            return;
+        }
+
         // Bail if current user cannot promote the passing user
         if ( ! current_user_can( 'promote_user', $user_id ) ) {
             return;

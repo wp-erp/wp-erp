@@ -24,9 +24,9 @@ class Ajax {
         $this->action( 'wp_ajax_erp_audit_log_view', 'view_edit_log_changes');
         $this->action( 'wp_ajax_erp_file_upload', 'file_uploader' );
         $this->action( 'wp_ajax_erp_file_del', 'file_delete' );
-        $this->action( 'wp_ajax_erp_activation_notice', 'erp_activation_notice_callback' );
-
         $this->action( 'wp_ajax_erp_people_exists', 'check_people' );
+        $this->action( 'wp_ajax_erp_smtp_test_connection', 'smtp_test_connection' );
+        $this->action( 'wp_ajax_erp_imap_test_connection', 'imap_test_connection' );
     }
 
     function file_delete() {
@@ -177,53 +177,6 @@ class Ajax {
     }
 
     /**
-     * Handle erp activation ajax request.
-     *
-     * @return void
-     */
-    public function erp_activation_notice_callback() {
-        $this->verify_nonce( 'wp-erp-activation-nonce' );
-
-        if ( isset( $_POST['dismiss'] ) ) {
-            update_option( 'wp_erp_activation_dismiss', true );
-
-            $this->send_success();
-        }
-
-        if ( isset( $_POST['email'] ) ) {
-            $email      = $_POST['email'];
-            $site_url   = site_url();
-
-            $response = wp_remote_get( 'http://api.wperp.com/apikey?email=' . $email . '&site_url=' . $site_url  );
-
-            if ( is_array( $response ) ) {
-                $body = json_decode( wp_remote_retrieve_body( $response ), true );
-
-                if ( isset( $body['apikey'] ) ) {
-                    update_option( 'wp_erp_apikey', $body['apikey'] );
-                    update_option( 'wp_erp_api_active', $body['status'] );
-
-                    if ( isset( $body['email_count'] ) ) {
-                        update_option( 'wp_erp_cloud_email_count', $body['email_count'] );
-                    }
-
-                    $this->send_success();
-                } else {
-                    $this->send_error( $body );
-                }
-            }
-        }
-
-        if ( isset( $_POST['disconnect'] ) ) {
-            delete_option( 'wp_erp_activation_dismiss' );
-            delete_option( 'wp_erp_apikey' );
-            delete_option( 'wp_erp_api_active' );
-
-            $this->send_success();
-        }
-    }
-
-    /**
      * Check if a people exists
      *
      * @return void
@@ -257,6 +210,135 @@ class Ajax {
 
         // seems like we found one
         $this->send_error( $people );
+    }
+
+    /**
+     * Test the SMTP connection.
+     *
+     * @return void
+     */
+    public function smtp_test_connection() {
+        $this->verify_nonce( 'erp-smtp-test-connection-nonce' );
+
+        if ( empty( $_REQUEST['mail_server'] ) ) {
+            $this->send_error( __( 'No host address provided', 'erp' ) );
+        }
+
+        if ( empty( $_REQUEST['port'] ) ) {
+            $this->send_error( __( 'No port address provided', 'erp' ) );
+        }
+
+        if ( empty( $_REQUEST['username'] ) ) {
+            $this->send_error( __( 'No email address provided', 'erp' ) );
+        }
+
+        if ( empty( $_REQUEST['password'] ) ) {
+            $this->send_error( __( 'No email password provided', 'erp' ) );
+        }
+
+        if ( empty( $_REQUEST['to'] ) ) {
+            $this->send_error( __( 'No testing email address provided', 'erp' ) );
+        }
+
+        $mail_server = $_REQUEST['mail_server'];
+        $port = isset( $_REQUEST['port'] ) ? $_REQUEST['port'] : 465;
+        $authentication = isset( $_REQUEST['authentication'] ) ? $_REQUEST['authentication'] : 'ssl';
+        $username = $_REQUEST['username'];
+        $password = $_REQUEST['password'];
+
+        global $phpmailer;
+
+        if ( ! is_object( $phpmailer ) || ! is_a( $phpmailer, 'PHPMailer' ) ) {
+            require_once ABSPATH . WPINC . '/class-phpmailer.php';
+            require_once ABSPATH . WPINC . '/class-smtp.php';
+            $phpmailer = new \PHPMailer( true );
+        }
+
+        $to      = $_REQUEST['to'];
+        $subject = __( 'ERP SMTP Test Mail', 'erp' );
+        $message = __( 'This is a test email by WP ERP.', 'erp' );
+
+        $erp_email_settings = get_option( 'erp_settings_erp-email_general', [] );
+
+        if ( ! isset( $erp_email_settings['from_email'] ) ) {
+            $from_email = get_option( 'admin_email' );
+        } else {
+            $from_email = $erp_email_settings['from_email'];
+        }
+
+        if ( ! isset( $erp_email_settings['from_name'] ) ) {
+            global $current_user;
+
+            $from_name = $current_user->display_name;
+        } else {
+            $from_name = $erp_email_settings['from_name'];
+        }
+
+        $content_type = 'text/html';
+
+        $phpmailer->AddAddress( $to );
+        $phpmailer->From       = $from_email;
+        $phpmailer->FromName   = $from_name;
+        $phpmailer->Sender     = $phpmailer->From;
+        $phpmailer->Subject    = $subject;
+        $phpmailer->Body       = $message;
+        $phpmailer->Mailer     = 'smtp';
+        $phpmailer->Host       = $mail_server;
+        $phpmailer->SMTPSecure = $authentication;
+        $phpmailer->Port       = $port;
+        $phpmailer->SMTPAuth   = true;
+        $phpmailer->Username   = $username;
+        $phpmailer->Password   = $password;
+        $phpmailer->isHTML(true);
+
+        try {
+            $result = $phpmailer->Send();
+
+            $this->send_success( __( 'Test email has been sent.', 'erp' ) );
+        } catch( \Exception $e ) {
+            $this->send_error( $e->getMessage() );
+        }
+    }
+
+    /**
+     * Test the Imap connection.
+     *
+     * @return void
+     */
+    public function imap_test_connection() {
+        $this->verify_nonce( 'erp-imap-test-connection-nonce' );
+
+        if ( empty( $_REQUEST['mail_server'] ) ) {
+            $this->send_error( __( 'No host address provided', 'erp' ) );
+        }
+
+        if ( empty( $_REQUEST['username'] ) ) {
+            $this->send_error( __( 'No email address provided', 'erp' ) );
+        }
+
+        if ( empty( $_REQUEST['password'] ) ) {
+            $this->send_error( __( 'No email password provided', 'erp' ) );
+        }
+
+        if ( empty( $_REQUEST['port'] ) ) {
+            $this->send_error( __( 'No port address provided', 'erp' ) );
+        }
+
+        $mail_server = $_REQUEST['mail_server'];
+        $username = $_REQUEST['username'];
+        $password = $_REQUEST['password'];
+        $protocol = $_REQUEST['protocol'];
+        $port = isset( $_REQUEST['port'] ) ? $_REQUEST['port'] : 993;
+        $authentication = isset( $_REQUEST['authentication'] ) ? $_REQUEST['authentication'] : 'ssl';
+
+        try {
+            $imap = new \WeDevs\ERP\Imap( $mail_server, $port, $protocol, $username, $password, $authentication );
+            $imap->is_connected();
+
+            $this->send_success( __( 'Your IMAP connection is established.', 'erp' ) );
+        } catch( \Exception $e ) {
+            $this->send_error( $e->getMessage() );
+        }
     }
 }
 

@@ -73,7 +73,6 @@ class User_Profile {
     }
 
     public static function profile_update_role( $user_id = 0 ) {
-
         // Bail if no user ID was passed
         if ( empty( $user_id ) )
             return;

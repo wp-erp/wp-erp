@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                                         <tr>
                                             <td colspan="2" valign="middle" id="credit">
                                                 <?php
-                                                $settings = get_option( 'erp_settings_erp-email', [] );
+                                                $settings = get_option( 'erp_settings_erp-email_general', [] );
                                                 if ( isset( $settings['footer_text'] ) && !empty( $settings['footer_text'] ) ) {
                                                     $footer_text = $settings['footer_text'];
                                                 }

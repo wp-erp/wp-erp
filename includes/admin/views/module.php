@@ -11,19 +11,14 @@ $all_url            = admin_url( 'admin.php/?page=erp-modules' );
 $active_url         = admin_url( 'admin.php/?page=erp-modules&tab=active' );
 $inactive_url       = admin_url( 'admin.php/?page=erp-modules&tab=inactive' );
 
-$all_color          = ! $tab ? 'erp-nav-tab-active' : '';
-$active_color       = $tab == 'active' ? 'erp-nav-tab-active' : '';
-$inactive_color     = $tab == 'inactive' ? 'erp-nav-tab-active' : '';
-
-
-
+$current_tab        = isset( $_GET['tab'] ) ? $_GET['tab'] : ''
 ?>
 <div class="wrap erp-settings">
 	<h2><?php _e( 'Modules', 'erp' ); ?></h2>
 	<ul class="erp-subsubsub">
-		<li><a class="erp-nav-tab <?php echo $all_color; ?>" href="<?php echo $all_url; ?>"><?php printf( __( 'All (%s) |', 'erp' ), $count_all ); ?></a></li>
-		<li><a class="erp-nav-tab <?php echo $active_color ; ?>" href="<?php echo $active_url; ?>"><?php printf( __( 'Active (%s) |', 'erp' ), $count_active ); ?></a></li>
-		<li><a class="erp-nav-tab <?php echo $inactive_color; ?>" href="<?php echo $inactive_url; ?>"><?php printf( __( 'Inactive (%s)', 'erp' ), $count_inactive  ); ?></a></li>
+		<li><a class="erp-nav-tab<?php echo $current_tab == '' ? ' erp-nav-tab-active' : ''; ?>" href="<?php echo $all_url; ?>"><?php printf( __( 'All (%s) |', 'erp' ), $count_all ); ?></a></li>
+		<li><a class="erp-nav-tab<?php echo $current_tab == 'active' ? ' erp-nav-tab-active' : ''; ?>" href="<?php echo $active_url; ?>"><?php printf( __( 'Active (%s) |', 'erp' ), $count_active ); ?></a></li>
+		<li><a class="erp-nav-tab<?php echo $current_tab == 'inactive' ? ' erp-nav-tab-active' : ''; ?>" href="<?php echo $inactive_url; ?>"><?php printf( __( 'Inactive (%s)', 'erp' ), $count_inactive  ); ?></a></li>
 	</ul>
 
 
@@ -31,7 +26,7 @@ $inactive_color     = $tab == 'inactive' ? 'erp-nav-tab-active' : '';
 	<table class="widefat fixed plugins" cellspacing="0">
 		<thead>
 			<tr>
-				<th scope="col" id="cb" class="manage-column column-cb check-column">&nbsp;</th>
+				<td scope="col" id="cb" class="manage-column column-cb check-column">&nbsp;</td>
 				<th scope="col" id="name" class="manage-column column-name" style="width: 190px;"><?php _e( 'Title', 'erp' ); ?></th>
 				<th scope="col" id="description" class="manage-column column-description"><?php _e( 'Description', 'erp' ); ?></th>
 			</tr>
@@ -39,7 +34,7 @@ $inactive_color     = $tab == 'inactive' ? 'erp-nav-tab-active' : '';
 
 		<tfoot>
 			<tr>
-				<th scope="col" class="manage-column column-cb check-column">&nbsp;</th>
+				<td scope="col" class="manage-column column-cb check-column">&nbsp;</td>
 				<th scope="col" class="manage-column column-name" style="width: 190px;"><?php _e( 'Title', 'erp' ); ?></th>
 				<th scope="col" class="manage-column column-description"><?php _e( 'Description', 'erp' ); ?></th>
 			</tr>
@@ -48,6 +43,7 @@ $inactive_color     = $tab == 'inactive' ? 'erp-nav-tab-active' : '';
 		<tbody id="the-list">
 
 		<?php
+
 			foreach ( $modules as $slug => $module ) {
 				$checked = array_key_exists( $slug, $all_active_modules ) ? $slug : '';
 				?>

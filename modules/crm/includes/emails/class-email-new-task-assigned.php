@@ -20,9 +20,10 @@ class New_Task_Assigned extends Email {
         $this->heading     = __( 'New Task Assigned', 'erp');
 
         $this->find = [
-            'task_title' => '{task_title}',
-            'due_date'   => '{due_date}',
-            'created_by' => '{created_by}',
+            'employee_name' => '{employee_name}',
+            'task_title'    => '{task_title}',
+            'due_date'      => '{due_date}',
+            'created_by'    => '{created_by}',
         ];
 
         $this->action( 'erp_admin_field_' . $this->id . '_help_texts', 'replace_keys' );
@@ -54,14 +55,16 @@ class New_Task_Assigned extends Email {
         $this->heading = $this->get_option( 'heading', $this->heading );
         $this->subject = $this->get_option( 'subject', $this->subject );
 
-        $this->replace = [
-            'task_title' => $extra->task_title,
-            'due_date'   => erp_format_date( $activity->start_date ),
-            'created_by' => $current_user->display_name,
-        ];
 
         foreach ($data['user_ids'] as $id) {
             $employee = new \WeDevs\ERP\HRM\Employee( intval( $id ) );
+
+            $this->replace = [
+                'employee_name' => $employee->get_full_name(),
+                'task_title'    => $extra->task_title,
+                'due_date'      => erp_format_date( $activity->start_date ),
+                'created_by'    => $current_user->display_name,
+            ];
 
             if ( $employee ) {
                 $this->send( $employee->user_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );

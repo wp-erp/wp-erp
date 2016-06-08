@@ -16,7 +16,8 @@
             button: 'Submit',
             extraClass: '',
             onReady: function() {},
-            onSubmit: function() {}
+            onSubmit: function() {},
+            beforeClose: function() {}
         };
 
     // The actual plugin constructor
@@ -170,8 +171,10 @@
                 e.preventDefault();
             }
 
-            $('#'+this.id).remove();
-            $('.'+this.id).remove();
+            this.settings.beforeClose.call( false, this );
+
+            $('#' + this.id).remove();
+            $('.' + this.id).remove();
             return;
             // var modal = $('.erp-modal' );
 

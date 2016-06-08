@@ -17,7 +17,7 @@
                 <td>
                     <input type="text" v-if="searchField.type == 'text'" name="save_search[{{index}}][{{searchKey}}][value][]" v-bind:value="searchField.text" v-model="searchField.text">
 
-                    <select class="selecttwo select2" v-selecttwo="searchFields.search_key[search_field_key].text" data-searchkey="{{{ searchKey }}}" data-searchkeyindex="{{searchFieldKey}}" style="width:240px;" v-if="searchField.type == 'dropdown'" name="save_search[{{index}}][{{searchKey}}][value][]" v-bind:value="searchField.text" v-model="searchField.text" data-placeholder="<?php _e( '--Select--', 'erp' ); ?>">
+                    <select class="selecttwo select2" data-searchkey="{{{ searchKey }}}" data-searchkeyindex="{{searchFieldKey}}" style="width:240px;" v-if="searchField.type == 'dropdown'" name="save_search[{{index}}][{{searchKey}}][value][]" v-bind:value="searchField.text" v-model="searchField.text" data-placeholder="<?php _e( '--Select--', 'erp' ); ?>">
                         {{{ searchField.options }}}
                     </select>
                 </td>
@@ -30,14 +30,14 @@
 <div class="erp-save-search-filter-actions">
     <div class="and-action erp-left">
         <label for="or-action-add" v-if="!isdisabled"><?php _e( 'And', 'erp' ); ?></label>
-        <select name="and-action-add" v-selecttwo="andSelection" class="select2 selecttwo and-action-add" style="width: 180px;" id="and-action-add" v-model="andSelection" v-on:change="andAdd(index)" data-placeholder="<?php _e( 'Select a field', 'erp' ); ?>">
+        <select name="and-action-add" class="and-action-add" style="width: 180px;" id="and-action-add" v-model="andSelection" v-on:change="andAdd(index)" data-placeholder="<?php _e( 'Select a field', 'erp' ); ?>">
             <option value=""><?php _e( '--Select--', 'erp' ); ?></option>
             <option v-for="( key, searchOption ) in searchOptions" value="{{key}}">{{ searchOption.title }}</option>
         </select>
     </div>
     <div class="or-action erp-right" v-if="!isdisabled && (totalSearchItem-1) == index ">
         <label for="or-action-add"><?php _e( 'Or', 'erp' ); ?></label>
-        <select name="or-action-add" v-selecttwo="orSelection" class="select2 selecttwo or-action-add" style="width: 180px;" id="or-action-add" v-model="orSelection" v-on:change="orAdd(index)"  data-placeholder="<?php _e( 'Select a field', 'erp' ); ?>">
+        <select name="or-action-add" class="or-action-add" style="width: 180px;" id="or-action-add" v-model="orSelection" v-on:change="orAdd(index)"  data-placeholder="<?php _e( 'Select a field', 'erp' ); ?>">
             <option value=""><?php _e( '--Select--', 'erp' ); ?></option>
             <option v-for="( key, searchOption ) in searchOptions" value="{{key}}">{{ searchOption.title }}</option>
         </select>

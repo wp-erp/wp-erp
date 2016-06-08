@@ -295,7 +295,7 @@ class Contact_List_Table extends \WP_List_Table {
             $status_links[ $key ] = sprintf( '<a href="%s" class="%s">%s <span class="count">(%s)</span></a>', ( $key == 'all' ) ? add_query_arg( array( 'status' => $key ), $all_base_link ) : add_query_arg( array( 'status' => $key ), $base_link ), $class, $value['label'], $value['count'] );
         }
 
-        $status_links[ 'trash' ] = sprintf( '<a href="%s" class="status-trash">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'trash' ), $base_link ), __( 'Trash', 'erp' ), erp_crm_count_trashed_customers( $this->contact_type ) );
+        // $status_links[ 'trash' ] = sprintf( '<a href="%s" class="status-trash">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'trash' ), $base_link ), __( 'Trash', 'erp' ), erp_crm_count_trashed_customers( $this->contact_type ) );
 
         return $status_links;
     }
@@ -352,7 +352,7 @@ class Contact_List_Table extends \WP_List_Table {
         $sortable              = $this->get_sortable_columns();
         $this->_column_headers = [ $columns, $hidden, $sortable ];
 
-        $per_page              = 20;
+        $per_page              = 2;
         $current_page          = $this->get_pagenum();
         $offset                = ( $current_page -1 ) * $per_page;
         $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : 'all';
@@ -385,13 +385,14 @@ class Contact_List_Table extends \WP_List_Table {
                     $args['trashed'] = true;
                 } else {
                     $args['meta_query'] = [
-                        'meta_key' => 'life_stage',
+                        'meta_key'   => 'life_stage',
                         'meta_value' => $_REQUEST['status']
                     ];
                 }
             }
         }
 
+        // Filter by assign contact ( contact owner )
         if ( isset( $_REQUEST['filter_assign_contact'] ) && ! empty( $_REQUEST['filter_assign_contact'] ) ) {
             $args['meta_query'] = [
                 'meta_key' => '_assign_crm_agent',

@@ -340,24 +340,6 @@ class Email extends ERP_Settings_Page {
     }
 
     /**
-     * Get from name for email.
-     *
-     * @return string
-     */
-    public function get_from_name() {
-        return wp_specialchars_decode( esc_html( $this->get_setting( 'from_name' ) ), ENT_QUOTES );
-    }
-
-    /**
-     * Get from email address.
-     *
-     * @return string
-     */
-    public function get_from_address() {
-        return sanitize_email( $this->get_setting( 'from_email' ) );
-    }
-
-    /**
      * Send the email.
      *
      * @param string $to
@@ -368,17 +350,8 @@ class Email extends ERP_Settings_Page {
      * @return bool
      */
     public function send( $to, $subject, $message, $headers, $attachments ) {
-
-        add_filter( 'wp_mail_from', array( $this, 'get_from_address' ) );
-        add_filter( 'wp_mail_from_name', array( $this, 'get_from_name' ) );
-        add_filter( 'wp_mail_content_type', array( $this, 'get_content_type' ) );
-
         $message = apply_filters( 'erp_mail_content', $this->style_inline( $message ) );
-        $return  = wp_mail( $to, $subject, $message, $headers, $attachments );
-
-        remove_filter( 'wp_mail_from', array( $this, 'get_from_address' ) );
-        remove_filter( 'wp_mail_from_name', array( $this, 'get_from_name' ) );
-        remove_filter( 'wp_mail_content_type', array( $this, 'get_content_type' ) );
+        $return  = erp_mail( $to, $subject, $message, $headers, $attachments );
 
         return $return;
     }
@@ -405,7 +378,7 @@ class Email extends ERP_Settings_Page {
      * @return string
      */
     public function get_setting( $option, $default = '' ) {
-        $settings = get_option( 'erp_settings_erp-email', [] );
+        $settings = get_option( 'erp_settings_erp-email_general', [] );
 
         if ( array_key_exists( $option, $settings ) ) {
             return $settings[ $option ];

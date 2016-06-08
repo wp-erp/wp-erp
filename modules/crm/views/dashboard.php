@@ -24,7 +24,7 @@
                                     <ul class="erp-dashboard-total-counter-list">
                                         <?php
                                         foreach ( $contacts_count as $contact_key => $contact_value ) {
-                                            if ( $contact_key == 'all' ) {
+                                            if ( $contact_key == 'all' || $contact_key == 'trash' ) {
                                                 continue;
                                             }
                                             ?>
@@ -35,6 +35,8 @@
                                                             echo sprintf( _n( '%s Customer', '%s Customers', $contact_value['count'], 'erp' ), number_format_i18n( $contact_value['count'] ), 0 );
                                                         } else if ( $contact_key == 'opportunity' ) {
                                                             echo sprintf( _n( '%s Opportunity', '%s Opportunites', $contact_value['count'], 'erp' ), number_format_i18n( $contact_value['count'] ), 0 );
+                                                        } elseif( $contact_key == 'subscriber' ) {
+                                                            echo sprintf( _n( '%s Subscriber', '%s Subscribers', $contact_value['count'], 'erp' ), number_format_i18n( $contact_value['count'] ), 0 );
                                                         } else {
                                                             echo sprintf( _n( '%s Lead', '%s Leads', $contact_value['count'], 'erp' ), number_format_i18n( $contact_value['count'] ), 0 );
                                                         }
@@ -65,17 +67,19 @@
                                     <ul class="erp-dashboard-total-counter-list">
                                         <?php
                                         foreach ( $companies_count as $company_key => $company_value ) {
-                                            if ( $company_key == 'all' ) {
+                                            if ( $company_key == 'all' || $company_key == 'trash' ) {
                                                 continue;
                                             }
                                             ?>
                                             <li>
-                                                <a href="<?php echo add_query_arg( [ 'page' => 'erp-sales-customers', 'status' => $company_key ], admin_url( 'admin.php' ) ); ?>">
+                                                <a href="<?php echo add_query_arg( [ 'page' => 'erp-sales-companies', 'status' => $company_key ], admin_url( 'admin.php' ) ); ?>">
                                                     <?php
                                                         if ( $company_key == 'customer' ) {
                                                             echo sprintf( _n( '%s Customer', '%s Customers', $company_value['count'], 'erp' ), number_format_i18n( $company_value['count'] ), 0 );
                                                         } else if ( $company_key == 'opportunity' ) {
                                                             echo sprintf( _n( '%s Opportunity', '%s Opportunites', $company_value['count'], 'erp' ), number_format_i18n( $company_value['count'] ), 0 );
+                                                        } elseif ( $company_key == 'subscriber' ) {
+                                                            echo sprintf( _n( '%s Subscriber', '%s Subscribers', $company_value['count'], 'erp' ), number_format_i18n( $company_value['count'] ), 0 );
                                                         } else {
                                                             echo sprintf( _n( '%s Lead', '%s Leads', $company_value['count'], 'erp' ), number_format_i18n( $company_value['count'] ), 0 );
                                                         }

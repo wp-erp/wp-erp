@@ -260,6 +260,120 @@
         border: 1px solid #e3e3e3;
         margin: 15px 0px;
     }
+
+    #erp-contact-advance-search-segment {
+        margin: 15px 0px;
+
+        .erp-advance-search-filters {
+            padding: 15px;
+            background: #fff;
+
+            .erp-advance-search-or-wrapper {
+                .add-filter {
+                    float:left;
+                    margin-right: 9px;
+                    height: 30px;
+                    margin-top: 6px;
+                }
+
+                .filter-item {
+                    float:left;
+                    margin: 6px 8px 3px 0px;
+                    border: 1px solid #e5e5e5;
+                    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+                    -moz-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+                    -ms-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+                    box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+                    background-color: #fff;
+
+                    .filter-content {
+                        input, select {
+                            vertical-align: middle;
+                            margin-right:5px;
+                        }
+
+                        .filter-left {
+                            padding: 4px 10px;
+                            float: left;
+                        }
+
+                        .filter-right {
+                            float: left;
+                            padding: 10px;
+                            background: #F5F5F5;
+                            height: 100%;
+                            color: #fff;
+
+                            a {
+                                color: #23282D;
+
+                                &:first-child {
+                                    border-right: 2px solid #fff;
+                                    margin-right: 8px;
+                                    padding-right: 8px;
+                                }
+                            }
+                        }
+                    }
+
+                    .filter-details {
+                        .filter-left {
+                            padding: 6px 10px;
+                            float: left;
+                            cursor:pointer;
+                        }
+                        .filter-right {
+                            float: left;
+                            padding: 6px 10px;
+                            background: #F5F5F5;
+                            height: 100%;
+                            color: #fff;
+
+                            a {
+                                color: #23282D;
+                            }
+                        }
+                    }
+
+                }
+
+            }
+            .or-divider {
+                position: relative;
+                text-align: center;
+                margin: 15px 0px;
+
+                span {
+                    position: absolute;
+                    top: -9px;
+                    left: 45%;
+                    font-size: 14px;
+                    background: #FFF;
+                    width: 50px;
+                    color: #afafaf;
+                }
+            }
+        }
+        .erp-advance-search-action-wrapper {
+            padding: 15px;
+            background: #fff;
+            border-top: 1px solid #eee;
+
+            button{
+                margin-right: 8px;
+            }
+
+            .saveasnew-wrapper {
+                .save-search-name,
+                label {
+                    margin-right: 15px;
+                }
+                input[type="submit"] {
+                    margin-right:8px;
+                }
+            }
+        }
+    }
 }
 
 .erp-advance-search-filter {
@@ -573,6 +687,8 @@
             .company-profile-content {
 
                 .postbox {
+                    margin-bottom: 15px;
+
                     .action {
                         position: absolute;
                         top: 12px;
@@ -586,6 +702,13 @@
                     }
 
                     .erp-hndle {
+                        .customer-avatar {
+                            img {
+                                width: 20px;
+                                height: 20px;
+                                margin-right:2px;
+                            }
+                        }
                         .customer-name {
                             position: relative;
                             top:-5px;
@@ -1281,11 +1404,11 @@
                 border-bottom: none;
 
                 &.schedule-title {
-                    width: 67%;
+                    width: 63%;
                 }
 
                 &.schedule-assign-user {
-                    width: 30%;
+                    width: 36%;
                 }
 
             }
