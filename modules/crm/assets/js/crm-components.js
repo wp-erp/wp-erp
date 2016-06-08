@@ -5,6 +5,23 @@ window.wpErpVue = window.wpErpVue || {};
     /*****************************************************************
      *******************     Vue Directive     ***********************
      ****************************************************************/
+    Vue.filter('formatDate', function (date, format ) {
+        return wperp.dateFormat( date, format );
+    })
+
+    // Vue filter for formatting Feeds as a group by object
+    Vue.filter('formatFeeds', function ( feeds ) {
+        var feedsData = _.groupBy( feeds, function( data ) {
+            return data.created_timeline_date;
+        });
+
+        return feedsData;
+    });
+
+    // Vue filter for formatting Feeds as a group by object
+    Vue.filter('formatDateTime', function ( date ) {
+        return wperp.dateFormat( date, 'F, j' ) + ' at ' + wperp.timeFormat( date )
+    });
 
     // Vue directive for Date picker
     Vue.directive( 'datepicker', {
