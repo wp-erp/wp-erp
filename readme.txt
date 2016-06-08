@@ -21,7 +21,7 @@ Other available modules
 * Project Management via [WP Project Manager](https://wordpress.org/plugins/wedevs-project-manager/)
 
 = Links =
-* [Github](https://github.com/wp-erp/wp-erp)
+* [Github](https://github.com/wp-erp/wp-erp/?utm_medium=referral&utm_source=wordpress.org&utm_campaign=WP+ERP+Readme&utm_content=Repo+Link)
 * [Documentation](https://wperp.com/documentation/?utm_medium=referral&utm_source=wordpress.org&utm_campaign=WP+ERP+Readme&utm_content=Home+Page)
 * [Project Site](https://wperp.com/?utm_medium=referral&utm_source=wordpress.org&utm_campaign=WP+ERP+Readme&utm_content=Home+Page)
 * [Extensions](https://wperp.com/?utm_medium=referral&utm_source=wordpress.org&utm_campaign=WP+ERP+Readme&utm_content=Downloads)
@@ -59,8 +59,26 @@ Other available modules
 * Overall activity overview
 * Group contacts depending on various factors
 
+= Accounting Module Transactions =
+
+* Invoice - Create invoice for your customer for any sales.
+* Payment - Add payments to the against the invoices.
+* Payment Voucher - Add your direct cash and bank purchases.
+* Vendor Credit - Purchase in credit from vendors.
+* Journal Entry
+* Chart of Accounts
+* Bank Accounts
+* Tax management
+* Reporting - Trial Balance, Balance Sheet, Income Statement
+
 = Contribute =
 This may have bugs and lack of many features. If you want to contribute on this project, you are more than welcome. Please fork the repository from [Github](https://github.com/wp-erp/wp-erp).
+
+
+= Checkout Our Other Products =
+* [Dokan - Multivendor Plugin](https://wedevs.com/products/plugins/dokan/?utm_medium=referral&utm_source=wporg&utm_campaign=WP+ERP+Readme&utm_content=Dokan)
+* [WP User Frontend Pro](https://wedevs.com/products/plugins/wp-user-frontend-pro/?utm_medium=referral&utm_source=wporg&utm_campaign=WP+ERP+Readme&utm_content=WP+User+Frontend+Pro)
+* [WP Project Manager](https://wedevs.com/products/plugins/wp-project-manager-pro/?utm_medium=referral&utm_source=wporg&utm_campaign=WP+ERP+Readme&utm_content=WP+Project+Manager)
 
 
 == Installation ==
@@ -135,6 +153,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
  * [new] Permission management system
  * [new] Save as draft for all transaction
  * [new] Convert wp list table into vue js in contact and company listing page
+ * [new] SMTP and IMAP/POP3 integration added into core
  * [fix] Bank chart
  * [fix] Customer and vendor create time email field is required
  * [fix] ref number make unique
