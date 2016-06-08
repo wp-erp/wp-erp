@@ -98,7 +98,8 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
                 $caps = [
                     'read'                            => true, 
                     'erp_ac_view_dashboard'           => true,   
-                    'erp_ac_view_customer'            => true,    
+                    'erp_ac_view_customer'            => true,  
+                    'erp_ac_view_single_customer'     => true,
                     'erp_ac_view_other_customers'     => true, 
                     'erp_ac_create_customer'          => true,
                     'erp_ac_edit_customer'            => true,    

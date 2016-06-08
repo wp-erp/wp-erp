@@ -889,9 +889,27 @@ function erp_get_license_status( $addon ) {
  * @return void
  */
 function erp_import_export_javascript() {
-    $contact_company_fields = [
+    $contact_fields = [
         'first_name',
         'last_name',
+        'email',
+        'phone',
+        'mobile',
+        'other',
+        'website',
+        'fax',
+        'notes',
+        'street_1',
+        'street_2',
+        'city',
+        'state',
+        'postal_code',
+        'country',
+        'currency',
+        'type',
+    ];
+
+    $company_fields = [
         'email',
         'company',
         'phone',
@@ -958,23 +976,48 @@ function erp_import_export_javascript() {
 
         jQuery(document).ready(function($) {
             var fields = [];
+            var required_fields = [];
 
-            var contact_company_fields = <?php echo json_encode( $contact_company_fields ); ?>;
+            var contact_fields = <?php echo json_encode( $contact_fields ) ; ?>;
+            var company_fields = <?php echo json_encode( $company_fields ); ?>;
 
             var employee_fields = <?php echo json_encode( $employee_fields ); ?>;
 
-            fields = contact_company_fields;
-            if ( $( 'form#export_form #type' ).val() == 'employee' ) {
-                fields = employee_fields;
+
+            switch ( $( 'form#export_form #type' ).val() ) {
+                case 'contact':
+                    fields = contact_fields;
+
+                    break;
+
+                case 'company':
+                    fields = company_fields;
+
+                    break;
+
+                case 'employee':
+                    fields = employee_fields;
+
+                    break;
             }
 
-            var required_fields = [
+            var contact_required_fields = [
                 'first_name',
                 'last_name',
                 'email',
                 'user_email',
+            ];
+
+            var company_required_fields = [
+                'email',
                 'company'
-            ]
+            ];
+
+            var employee_required_fields = [
+                'first_name',
+                'last_name',
+                'user_email',
+            ];
 
             var html = '<ul class="erp-list list-inline">';
             for ( var i = 0;  i < fields.length; i++ ) {
@@ -990,10 +1033,21 @@ function erp_import_export_javascript() {
             $( 'form#export_form #type' ).on( 'change', function( e ) {
                 e.preventDefault();
 
-                if ( $(this).val() == 'employee' ) {
-                    fields = employee_fields;
-                } else {
-                    fields = contact_company_fields;
+                switch ( $(this).val() ) {
+                    case 'contact':
+                        fields = contact_fields;
+
+                        break;
+
+                    case 'company':
+                        fields = company_fields;
+
+                        break;
+
+                    case 'employee':
+                        fields = employee_fields;
+
+                        break;
                 }
 
                 html = '<ul class="erp-list list-inline">';
@@ -1015,11 +1069,26 @@ function erp_import_export_javascript() {
 
                 var fields_html = '';
 
-                if ( $( 'form#import_form #type' ).val() == 'employee' ) {
-                    fields = employee_fields;
-                } else {
-                    fields = contact_company_fields;
+                switch ( $( 'form#import_form #type' ).val() ) {
+                    case 'contact':
+                        fields = contact_fields;
+                        required_fields = contact_required_fields;
+
+                        break;
+
+                    case 'company':
+                        fields = company_fields;
+                        required_fields = company_required_fields;
+
+                        break;
+
+                    case 'employee':
+                        fields = employee_fields;
+                        required_fields = employee_required_fields;
+
+                        break;
                 }
+
 
                 var required = '';
                 var red_span = '';
@@ -1198,8 +1267,8 @@ function erp_process_import_export() {
                         if ( is_wp_error( $item_insert_id ) ) {
                             continue;
                         } else {
-                            $contact_owner = erp_get_option( 'contact_owner', 'erp_settings_erp-crm_contacts', null );
-                            $contact_owner = ( $contact_owner ) ? $contact_owner : get_current_user_id();
+                            $current_user  = get_current_user_id();
+                            $contact_owner = erp_get_option( 'contact_owner', 'erp_settings_erp-crm_contacts', $current_user );
                             $life_stage    = erp_get_option( 'life_stage', 'erp_settings_erp-crm_contacts', 'opportunity' );
                             erp_people_update_meta( $item_insert_id, '_assign_crm_agent', $contact_owner );
                             erp_people_update_meta( $item_insert_id, 'life_stage', $life_stage );
@@ -1211,7 +1280,7 @@ function erp_process_import_export() {
             }
         }
 
-        wp_redirect( admin_url( 'admin.php?page=erp-tools&tab=import' ) );
+        wp_redirect( admin_url( 'admin.php?page=erp-tools&tab=import&imported=' . $x ) );
         exit();
     }
 
@@ -1297,6 +1366,23 @@ function erp_process_import_export() {
         }
 
         exit();
+    }
+}
+
+/**
+ * Display importer tool notice.
+ *
+ *
+ * @return void
+ */
+function erp_importer_notices() {
+    if ( ! isset( $_REQUEST['page'] ) || $_REQUEST['page'] != 'erp-tools' || ! isset( $_REQUEST['tab'] ) || $_REQUEST['tab'] != 'import' ) {
+        return;
+    }
+
+    if ( isset( $_REQUEST['imported'] ) ) {
+        $message = sprintf( __( '%s items successfully imported.', 'erp' ), number_format_i18n( $_REQUEST['imported'] ) );
+        echo "<div class='updated'><p>{$message}</p></div>";
     }
 }
 
