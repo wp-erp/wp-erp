@@ -1,5 +1,5 @@
 <div class="wrap erp-ac-bank-account-wrap">
-    <h2><?php _e( 'Bank Account', 'accounting' ); ?></h2>
+    <h2><?php _e( 'Bank Account', 'erp' ); ?></h2>
 
     <div class="bank-accounts">
     <?php
@@ -65,18 +65,18 @@
                     <?php
                         if ( erp_ac_create_sales_payment() || erp_ac_publish_sales_payment() ) {
                             ?>
-                            <a class="add-new-h2" href="<?php echo admin_url('admin.php?page=erp-accounting-sales&action=new&type=payment&receive_payment=true&bank='.$bank['id']); ?>"><?php _e( 'Receive Money', 'accounting' ); ?></a>
+                            <a class="add-new-h2" href="<?php echo admin_url('admin.php?page=erp-accounting-sales&action=new&type=payment&receive_payment=true&bank='.$bank['id']); ?>"><?php _e( 'Receive Money', 'erp' ); ?></a>
                             <?php
                         }
                         if ( erp_ac_create_expenses_voucher() || erp_ac_publish_expenses_voucher() ) {
                             ?>
-                            <a class="add-new-h2" href="<?php echo admin_url('admin.php?page=erp-accounting-expense&action=new&type=payment_voucher&spend_money=true&bank='.$bank['id']); ?>"><?php _e( 'Spend Money', 'accounting' ); ?></a>
+                            <a class="add-new-h2" href="<?php echo admin_url('admin.php?page=erp-accounting-expense&action=new&type=payment_voucher&spend_money=true&bank='.$bank['id']); ?>"><?php _e( 'Spend Money', 'erp' ); ?></a>
                             <?php
                         }
-                    
+
                     if ( erp_ac_create_bank_transfer() ) {
                         ?>
-                        <a class="add-new-h2 erp-ac-transfer-money-btn" href="#"><?php _e( 'Transfer Money', 'accounting' ); ?></a>
+                        <a class="add-new-h2 erp-ac-transfer-money-btn" href="#"><?php _e( 'Transfer Money', 'erp' ); ?></a>
                         <?php
                     }
                     ?>
@@ -98,8 +98,8 @@
 $date_attr = json_encode( $price );
 $bank_name = json_encode( $bank_name );
 $symbol    = json_encode( erp_ac_get_currency_symbol() );
-$xlabel = __( 'Date', 'accounting' );
-$ylabel = __( 'Amount', 'accounting' );
+$xlabel = __( 'Date', 'erp' );
+$ylabel = __( 'Amount', 'erp' );
 ?>
 
 <script type="text/javascript">

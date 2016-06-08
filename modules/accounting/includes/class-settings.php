@@ -25,8 +25,8 @@ class Settings extends ERP_Settings_Page {
      */
     public function get_sections() {
         $sections = array(
-            'currency_option' => __( 'Currency Options', 'accounting' ),
-            'erp_ac_tax'          => __( 'Sales Tax', 'accounting' )
+            'currency_option' => __( 'Currency Options', 'erp' ),
+            'erp_ac_tax'          => __( 'Sales Tax', 'erp' )
         );
 
         return apply_filters( 'erp_get_sections_' . $this->id, $sections );
@@ -41,10 +41,10 @@ class Settings extends ERP_Settings_Page {
 
         $fields['currency_option'] = array(
 
-            array( 'title' => __( '', 'accounting' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
+            array( 'title' => __( '', 'erp' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
 
             array(
-                'title'   => __( 'Currency', 'accounting' ),
+                'title'   => __( 'Currency', 'erp' ),
                 'id'      => 'erp_ac_currency',
                 'type'    => 'select',
                 'class'   => 'erp-select2',
@@ -57,10 +57,10 @@ class Settings extends ERP_Settings_Page {
                 'type'    => 'select',
                 'class'   => 'erp-select2',
                 'options' => array(
-                    'left'        => sprintf( '%1$s (%2$s99.99)', __( 'Left', 'accounting' ), erp_ac_get_currency_symbol() ),
-                    'right'       => sprintf( '%1$s (99.99%2$s)', __( 'Right', 'accounting' ), erp_ac_get_currency_symbol() ),
-                    'left_space'  => sprintf( '%1$s (%2$s 99.99)', __( 'Left with space', 'accounting' ), erp_ac_get_currency_symbol() ),
-                    'right_space' => sprintf( '%1$s (99.99 %2$s)', __( 'Right with space', 'accounting' ), erp_ac_get_currency_symbol() ),
+                    'left'        => sprintf( '%1$s (%2$s99.99)', __( 'Left', 'erp' ), erp_ac_get_currency_symbol() ),
+                    'right'       => sprintf( '%1$s (99.99%2$s)', __( 'Right', 'erp' ), erp_ac_get_currency_symbol() ),
+                    'left_space'  => sprintf( '%1$s (%2$s 99.99)', __( 'Left with space', 'erp' ), erp_ac_get_currency_symbol() ),
+                    'right_space' => sprintf( '%1$s (99.99 %2$s)', __( 'Right with space', 'erp' ), erp_ac_get_currency_symbol() ),
                 ),
             ),
 
@@ -120,12 +120,12 @@ class Settings extends ERP_Settings_Page {
 
         $fields = array(
 
-            array( 'title' => __( 'Accounting Settings', 'accounting' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
+            array( 'title' => __( 'Accounting Settings', 'erp' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
 
             array(
-                'title'   => __( 'Home Currency', 'accounting' ),
+                'title'   => __( 'Home Currency', 'erp' ),
                 'id'      => 'base_currency',
-                'desc'    => __( 'The base currency of the system.', 'accounting' ),
+                'desc'    => __( 'The base currency of the system.', 'erp' ),
                 'type'    => 'select',
                 'options' => erp_get_currencies()
             ),

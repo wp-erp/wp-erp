@@ -44,37 +44,37 @@ if ( $screen->base == 'accounting_page_erp-accounting-sales'  ) {
     }
 
     $payment_received[] = [
-        'label' => __( 'Received', 'accounting' ),
+        'label' => __( 'Received', 'erp' ),
         'data'  =>  $received,
         'color' => '#A3C716'
     ];
 
     $payment_received[] = [
-        'label' => __( 'Outstanding', 'accounting' ),
+        'label' => __( 'Outstanding', 'erp' ),
         'data'  => $outstanding,
         'color' => '#B7C9D1'
     ];
 
     $payment_status[] = [
-        'label' => __( 'Paid', 'accounting' ),
+        'label' => __( 'Paid', 'erp' ),
         'data'  => $paid,
         'color' => '#A3C716'
     ];
 
     $payment_status[] = [
-        'label' => __( 'Overdue', 'accounting' ),
+        'label' => __( 'Overdue', 'erp' ),
         'data'  => $overdue,
         'color' => '#DB4F4F'
     ];
 
     $payment_status[] = [
-        'label' => __( 'Partial', 'accounting' ),
+        'label' => __( 'Partial', 'erp' ),
         'data'  => $partial,
         'color' => '#E1C518'
     ];
 
     $payment_status[] = [
-        'label' => __( 'Draft', 'accounting' ),
+        'label' => __( 'Draft', 'erp' ),
         'data'  => $draft,
         'color' => '#6C90A2'
     ];
@@ -122,37 +122,37 @@ if ( $screen->base == 'accounting_page_erp-accounting-sales'  ) {
     }
 
     $payment_received[] = [
-        'label' => __( 'Paid', 'accounting' ),
+        'label' => __( 'Paid', 'erp' ),
         'data'  =>  $received,
         'color' => '#A3C716'
     ];
 
     $payment_received[] = [
-        'label' => __( 'Outstanding', 'accounting' ),
+        'label' => __( 'Outstanding', 'erp' ),
         'data'  =>  $outstanding,
         'color' => '#B7C9D1'
     ];
 
     $payment_status[] = [
-        'label' => __( 'Paid', 'accounting' ),
+        'label' => __( 'Paid', 'erp' ),
         'data'  => $expense,
         'color' => '#A3C716'
     ];
 
     $payment_status[] = [
-        'label' => __( 'Overdue', 'accounting' ),
+        'label' => __( 'Overdue', 'erp' ),
         'data'  => $overdue,
         'color' => '#DB4F4F'
     ];
 
     $payment_status[] = [
-        'label' => __( 'Partial', 'accounting' ),
+        'label' => __( 'Partial', 'erp' ),
         'data'  => $partial,
         'color' => '#E1C518'
     ];
 
     $payment_status[] = [
-        'label' => __( 'Draft', 'accounting' ),
+        'label' => __( 'Draft', 'erp' ),
         'data'  => $draft,
         'color' => '#6C90A2'
     ];
@@ -201,37 +201,37 @@ if ( $screen->base == 'accounting_page_erp-accounting-sales'  ) {
     }
 
     $payment_received[] = [
-        'label' => __( 'Received', 'accounting' ),
+        'label' => __( 'Received', 'erp' ),
         'data'  =>  $received,
         'color' => '#A3C716'
     ];
 
     $payment_received[] = [
-        'label' => __( 'Outstanding', 'accounting' ),
+        'label' => __( 'Outstanding', 'erp' ),
         'data'  =>  $outstanding,
         'color' => '#B7C9D1'
     ];
 
     $payment_status[] = [
-        'label' => __( 'Paid', 'accounting' ),
+        'label' => __( 'Paid', 'erp' ),
         'data'  => $paid,
         'color' => '#A3C716'
     ];
 
     $payment_status[] = [
-        'label' => __( 'Overdue', 'accounting' ),
+        'label' => __( 'Overdue', 'erp' ),
         'data'  => $overdue,
         'color' => '#DB4F4F'
     ];
 
     $payment_status[] = [
-        'label' => __( 'Partial', 'accounting' ),
+        'label' => __( 'Partial', 'erp' ),
         'data'  => $partial,
         'color' => '#E1C518'
     ];
 
     $payment_status[] = [
-        'label' => __( 'Draft', 'accounting' ),
+        'label' => __( 'Draft', 'erp' ),
         'data'  => $draft,
         'color' => '#6C90A2'
     ];
@@ -279,37 +279,37 @@ if ( $screen->base == 'accounting_page_erp-accounting-sales'  ) {
     }
 
     $payment_received[] = [
-        'label' => __( 'Expense', 'accounting' ),
+        'label' => __( 'Expense', 'erp' ),
         'data'  => $received,
         'color' => '#A3C716'
     ];
 
     $payment_received[] = [
-        'label' => __( 'Outstanding', 'accounting' ),
+        'label' => __( 'Outstanding', 'erp' ),
         'data'  => $outstanding,
         'color' => '#B7C9D1'
     ];
 
     $payment_status[] = [
-        'label' => __( 'Paid', 'accounting' ),
+        'label' => __( 'Paid', 'erp' ),
         'data'  => $expense,
         'color' => '#A3C716'
     ];
 
     $payment_status[] = [
-        'label' => __( 'Overdue', 'accounting' ),
+        'label' => __( 'Overdue', 'erp' ),
         'data'  => $overdue,
         'color' => '#DB4F4F'
     ];
 
     $payment_status[] = [
-        'label' => __( 'Partial', 'accounting' ),
+        'label' => __( 'Partial', 'erp' ),
         'data'  => $partial,
         'color' => '#E1C518'
     ];
 
     $payment_status[] = [
-        'label' => __( 'Draft', 'accounting' ),
+        'label' => __( 'Draft', 'erp' ),
         'data'  => $draft,
         'color' => '#6C90A2'
     ];
@@ -321,17 +321,17 @@ $payment_status = json_encode( $payment_status );
 ?>
 <div class="payment-stat-chart">
     <div class="payment-metrics">
-        <span class="title"><?php _e( 'Payments', 'accounting' ); ?></span>
+        <span class="title"><?php _e( 'Payments', 'erp' ); ?></span>
         <div id="payment-received-stat"></div>
     </div>
 
     <div class="payment-metrics">
-        <span class="title"><?php _e( 'Status', 'accounting' ); ?></span>
+        <span class="title"><?php _e( 'Status', 'erp' ); ?></span>
         <div id="payment-status-stat"></div>
     </div>
 
     <div class="payment-metrics single-metric">
-        <span class="title"><?php _e( 'Total Outstanding Payments', 'accounting' ); ?></span>
+        <span class="title"><?php _e( 'Total Outstanding Payments', 'erp' ); ?></span>
         <span class="value"><?php echo erp_ac_get_price( $outstanding ); ?></span>
     </div>
 </div>

@@ -8,24 +8,24 @@
 
     <div class="transaction-to">
         <ul>
-            <li><?php _e( 'Billing Address', 'accounting' ); ?>: <?php echo $transaction->billing_address; ?></li>
-            <li><?php _e( 'Issue Date', 'accounting' ); ?>: <?php echo $transaction->issue_date; ?></li>
-            <li><?php _e( 'Summary', 'accounting' ); ?>: <?php echo $transaction->summary; ?></li>
+            <li><?php _e( 'Billing Address', 'erp' ); ?>: <?php echo $transaction->billing_address; ?></li>
+            <li><?php _e( 'Issue Date', 'erp' ); ?>: <?php echo $transaction->issue_date; ?></li>
+            <li><?php _e( 'Summary', 'erp' ); ?>: <?php echo $transaction->summary; ?></li>
         </ul>
     </div>
 
     <table class="widefat striped">
         <thead>
             <tr>
-                <th><?php _e( 'Account', 'accounting' ); ?></th>
-                <th><?php _e( 'Product', 'accounting' ); ?></th>
-                <th><?php _e( 'Description', 'accounting' ); ?></th>
-                <th><?php _e( 'Qty', 'accounting' ); ?></th>
-                <th><?php _e( 'Unit Price', 'accounting' ); ?></th>
-                <th><?php _e( 'Discount', 'accounting' ); ?></th>
-                <th><?php _e( 'Tax', 'accounting' ); ?></th>
-                <th><?php _e( 'Tax Amount', 'accounting' ); ?></th>
-                <th><?php _e( 'Amount', 'accounting' ); ?></th>
+                <th><?php _e( 'Account', 'erp' ); ?></th>
+                <th><?php _e( 'Product', 'erp' ); ?></th>
+                <th><?php _e( 'Description', 'erp' ); ?></th>
+                <th><?php _e( 'Qty', 'erp' ); ?></th>
+                <th><?php _e( 'Unit Price', 'erp' ); ?></th>
+                <th><?php _e( 'Discount', 'erp' ); ?></th>
+                <th><?php _e( 'Tax', 'erp' ); ?></th>
+                <th><?php _e( 'Tax Amount', 'erp' ); ?></th>
+                <th><?php _e( 'Amount', 'erp' ); ?></th>
             </tr>
         </thead>
 
@@ -47,7 +47,7 @@
 
         <tfoot>
             <tr>
-                <th colspan="6" class="align-right"><?php _e( 'Total', 'accounting' ); ?></th>
+                <th colspan="6" class="align-right"><?php _e( 'Total', 'erp' ); ?></th>
                 <th><strong><?php echo $transaction->total; ?></strong></th>
             </tr>
         </tfoot>

@@ -1,15 +1,15 @@
-<?php 
-$files = $transaction->files ? maybe_unserialize( $transaction->files ) : []; 
+<?php
+$files = $transaction->files ? maybe_unserialize( $transaction->files ) : [];
 if ( ! $files ) {
     return;
 }
 ?>
 <div class="erp-hide-print erp-single-transaction-attachment-area">
-        <h2><?php _e( 'Attachments', 'accounting' ); ?></h2>
+        <h2><?php _e( 'Attachments', 'erp' ); ?></h2>
         <ul class="erp-attachment-list">
             <?php if ( ! $files ) { ?>
 
-                <li><?php _e( 'No attachments found!', 'accounting' ); ?></li>
+                <li><?php _e( 'No attachments found!', 'erp' ); ?></li>
             <?php } ?>
 
 

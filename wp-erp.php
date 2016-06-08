@@ -3,7 +3,7 @@
  * Plugin Name: WP ERP
  * Description: An Open Source ERP Solution for WordPress. Built-in HR and CRM system for WordPress
  * Plugin URI: https://wperp.com
- * Author: weDevs 1.1.0
+ * Author: weDevs
  * Author URI: https://wedevs.com
  * Version: 1.1.0
  * License: GPL2
@@ -206,6 +206,7 @@ final class WeDevs_ERP {
         require_once WPERP_INCLUDES . '/functions-html.php';
         require_once WPERP_INCLUDES . '/functions-company.php';
         require_once WPERP_INCLUDES . '/functions-people.php';
+        require_once WPERP_INCLUDES . '/lib/class-wedevs-insights.php';
 
         if ( is_admin() ) {
             require_once WPERP_INCLUDES . '/admin/functions.php';
@@ -224,6 +225,7 @@ final class WeDevs_ERP {
         new \WeDevs\ERP\Admin\User_Profile();
         new \WeDevs\ERP\Scripts();
         new \WeDevs\ERP\Updates();
+        new \WeDevs\ERP\Tracker();
 
         $this->container['modules']     = new \WeDevs\ERP\Framework\Modules();
         $this->container['emailer']     = \WeDevs\ERP\Emailer::init();

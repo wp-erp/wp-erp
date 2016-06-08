@@ -19,7 +19,7 @@ class Admin_Menu {
      * @return void
      */
     public function admin_menu() {
-        
+
         $dashboard      = 'erp_ac_view_dashboard';
         $customer       = 'erp_ac_view_customer';
         $vendor         = 'erp_ac_view_vendor';
@@ -29,19 +29,19 @@ class Admin_Menu {
         $bank           = 'erp_ac_view_bank_accounts';
         $journal        = 'erp_ac_view_journal';
         $reports        = 'erp_ac_view_reports';
-       
-        add_menu_page( __( 'Accounting', 'accounting' ), __( 'Accounting', 'accounting' ), $dashboard, 'erp-accounting', array( $this, 'dashboard_page' ), 'dashicons-chart-pie', null );
-        
-        $dashboard      = add_submenu_page( 'erp-accounting', __( 'Dashboard', 'accounting' ), __( 'Dashboard', 'accounting' ), $dashboard, 'erp-accounting', array( $this, 'dashboard_page' ) );
-        $customer       = add_submenu_page( 'erp-accounting', __( 'Customers', 'accounting' ), __( 'Customers', 'accounting' ), $customer, 'erp-accounting-customers', array( $this, 'page_customers' ) );
-        $vendor         = add_submenu_page( 'erp-accounting', __( 'Vendors', 'accounting' ), __( 'Vendors', 'accounting' ), $vendor, 'erp-accounting-vendors', array( $this, 'page_vendors' ) );
-        $sale           = add_submenu_page( 'erp-accounting', __( 'Sales', 'accounting' ), __( 'Sales', 'accounting' ), $sale, 'erp-accounting-sales', array( $this, 'page_sales' ) );
-        $expense        = add_submenu_page( 'erp-accounting', __( 'Expenses', 'accounting' ), __( 'Expenses', 'accounting' ), $expense, 'erp-accounting-expense', array( $this, 'page_expenses' ) );
-        $account_charts = add_submenu_page( 'erp-accounting', __( 'Chart of Accounts', 'accounting' ), __( 'Chart of Accounts', 'accounting' ), $account_charts, 'erp-accounting-charts', array( $this, 'page_chart_of_accounting' ) );
-        $bank           = add_submenu_page( 'erp-accounting', __( 'Bank Accounts', 'accounting' ), __( 'Bank Accounts', 'accounting' ), $bank, 'erp-accounting-bank', array( $this, 'page_bank' ) );
-        $journal        = add_submenu_page( 'erp-accounting', __( 'Journal Entry', 'accounting' ), __( 'Journal Entry', 'accounting' ), $journal, 'erp-accounting-journal', array( $this, 'page_journal_entry' ) );
-        $reports        = add_submenu_page( 'erp-accounting', __( 'Reports', 'accounting' ), __( 'Reports', 'accounting' ), $reports, 'erp-accounting-reports', array( $this, 'page_reports' ) );
-        
+
+        add_menu_page( __( 'Accounting', 'erp' ), __( 'Accounting', 'erp' ), $dashboard, 'erp-accounting', array( $this, 'dashboard_page' ), 'dashicons-chart-pie', null );
+
+        $dashboard      = add_submenu_page( 'erp-accounting', __( 'Dashboard', 'erp' ), __( 'Dashboard', 'erp' ), $dashboard, 'erp-accounting', array( $this, 'dashboard_page' ) );
+        $customer       = add_submenu_page( 'erp-accounting', __( 'Customers', 'erp' ), __( 'Customers', 'erp' ), $customer, 'erp-accounting-customers', array( $this, 'page_customers' ) );
+        $vendor         = add_submenu_page( 'erp-accounting', __( 'Vendors', 'erp' ), __( 'Vendors', 'erp' ), $vendor, 'erp-accounting-vendors', array( $this, 'page_vendors' ) );
+        $sale           = add_submenu_page( 'erp-accounting', __( 'Sales', 'erp' ), __( 'Sales', 'erp' ), $sale, 'erp-accounting-sales', array( $this, 'page_sales' ) );
+        $expense        = add_submenu_page( 'erp-accounting', __( 'Expenses', 'erp' ), __( 'Expenses', 'erp' ), $expense, 'erp-accounting-expense', array( $this, 'page_expenses' ) );
+        $account_charts = add_submenu_page( 'erp-accounting', __( 'Chart of Accounts', 'erp' ), __( 'Chart of Accounts', 'erp' ), $account_charts, 'erp-accounting-charts', array( $this, 'page_chart_of_accounting' ) );
+        $bank           = add_submenu_page( 'erp-accounting', __( 'Bank Accounts', 'erp' ), __( 'Bank Accounts', 'erp' ), $bank, 'erp-accounting-bank', array( $this, 'page_bank' ) );
+        $journal        = add_submenu_page( 'erp-accounting', __( 'Journal Entry', 'erp' ), __( 'Journal Entry', 'erp' ), $journal, 'erp-accounting-journal', array( $this, 'page_journal_entry' ) );
+        $reports        = add_submenu_page( 'erp-accounting', __( 'Reports', 'erp' ), __( 'Reports', 'erp' ), $reports, 'erp-accounting-reports', array( $this, 'page_reports' ) );
+
 
         add_action( 'admin_print_styles-' . $dashboard, array( $this, 'chart_script' ) );
         add_action( 'admin_print_styles-' . $customer, array( $this, 'chart_script' ) );
@@ -58,7 +58,7 @@ class Admin_Menu {
 
     function expense_chart_script() {
         $this->chart_script();
-        wp_localize_script( 'wp-erp-ac-js', 'erp_ac_tax', [ 'rate' => erp_ac_get_tax_info() ] );   
+        wp_localize_script( 'wp-erp-ac-js', 'erp_ac_tax', [ 'rate' => erp_ac_get_tax_info() ] );
     }
 
     function chart_script() {
@@ -242,7 +242,7 @@ class Admin_Menu {
                     $taxs    = $taxs['individuals'][$_GET['id']];
                     $count   = erp_ac_get_sales_tax_report_count( ['tax_id' => [$_GET['id']] ] );
                     $taxinfo = erp_ac_get_tax_info();
-                    
+
                     $template = dirname( __FILE__ ) . '/views/reports/tax/single-sales-tax.php';
                 } else {
                     $taxs = erp_ac_normarlize_tax_from_transaction();
@@ -314,7 +314,7 @@ class Admin_Menu {
             case 'view':
                 if ( erp_ac_current_user_can_view_single_customer() ) {
                     $customer = new \WeDevs\ERP\People( $id );
-                    $template = dirname( __FILE__ ) . '/views/customer/single.php';                    
+                    $template = dirname( __FILE__ ) . '/views/customer/single.php';
                 }
                 break;
 
@@ -357,7 +357,7 @@ class Admin_Menu {
             case 'view':
                 if ( erp_ac_current_user_can_view_single_vendor() ) {
                     $vendor = new \WeDevs\ERP\People( $id );
-                    $template = dirname( __FILE__ ) . '/views/vendor/single.php';                    
+                    $template = dirname( __FILE__ ) . '/views/vendor/single.php';
                 }
                 break;
 

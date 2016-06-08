@@ -10,7 +10,7 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Name', 'accounting' ),
+            'label'       => __( 'Name', 'erp' ),
             'name'        => 'tax_name',
             'value'       => '{{data.content.name}}',
             'type'        => 'text',
@@ -20,31 +20,31 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Tax Number', 'accounting' ),
-            'name'        => 'tax_number', //applicable_accounts[] 
+            'label'       => __( 'Tax Number', 'erp' ),
+            'name'        => 'tax_number', //applicable_accounts[]
             'type'        => 'text',
             'value'       => '{{data.content.tax_number}}'
         ) ); ?>
     </div>
 
     <div class="erp-ac-multiple-sub-tax-field">
-        <h4><?php _e( 'Tax Component', 'accounting' ); ?></h4>
-        <p> 
+        <h4><?php _e( 'Tax Component', 'erp' ); ?></h4>
+        <p>
             <div class="row" data-checkbox="{{data.content.is_compound}}">
                 <?php erp_html_form_input( array(
-                    'label'       => __( 'Compound', 'accounting' ),
-                    'name'        => 'compound', //applicable_accounts[] 
+                    'label'       => __( 'Compound', 'erp' ),
+                    'name'        => 'compound', //applicable_accounts[]
                     'type'        => 'checkbox',
-                    'help'         => __( 'Is this tax compound', 'accounting' ),
+                    'help'         => __( 'Is this tax compound', 'erp' ),
                     'id'          => 'erp-ac-compound',
                     'class'       => 'erp-ac-checkbox',
                     'value'       => ''
                 ) ); ?>
             </div>
-      
+
         </p>
             <# if ( data.is_edit ) {
-                _.each( data.content.items, function( items, index ) { 
+                _.each( data.content.items, function( items, index ) {
                     #>
                     <div class="row">
                         <?php erp_ac_tax_component_field_with_value(); ?>
@@ -53,11 +53,11 @@
                         <# } else { #>
                             <span><i style="display: none;" class="fa fa-times-circle erp-ac-remove-field"></i></span>
                         <# } #>
-                        
+
                     </div>
                     <#
                 });
-                
+
             } else { #>
                 <div class="row">
                     <?php erp_ac_tax_component_fields(); ?>
@@ -66,9 +66,9 @@
             <# } #>
     </div>
     <# if ( data.content.is_compound === 'on' ) { #>
-        <a href="#" class="button-secondary erp-ac-multi-tax-add-more"><?php _e( 'Add More', 'accounting' ); ?></a>
+        <a href="#" class="button-secondary erp-ac-multi-tax-add-more"><?php _e( 'Add More', 'erp' ); ?></a>
     <#  } else { #>
-        <a href="#" style="display: none;" class="button-secondary erp-ac-multi-tax-add-more"><?php _e( 'Add More', 'accounting' ); ?></a>
+        <a href="#" style="display: none;" class="button-secondary erp-ac-multi-tax-add-more"><?php _e( 'Add More', 'erp' ); ?></a>
     <# } #>
 
 

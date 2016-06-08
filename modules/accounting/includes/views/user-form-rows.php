@@ -1,18 +1,18 @@
 <?php
     if( isset( $_GET['page'] ) && $_GET['page'] == 'erp-accounting-customers' ) {
-        $message = __( 'User already exists. Do you want to import as a customer?', 'accounting' );
+        $message = __( 'User already exists. Do you want to import as a customer?', 'erp' );
         $user    = __('Import Customer', 'accounting');
         $type    = 'customer';
     } else {
-        $message = __( 'User already exists. Do you want to import as a vendor?', 'accounting' );
-        $user    = __( 'Import Vendor', 'accounting' );
+        $message = __( 'User already exists. Do you want to import as a vendor?', 'erp' );
+        $user    = __( 'Import Vendor', 'erp' );
         $type    = 'vendor';
     }
 
     if ( isset( $_GET['status'] ) && $_GET['status'] == 'new' ) {
         ?>
         <div class="updated notice notice-success is-dismissible">
-            <p><?php printf( '%s %s', ucfirst($type), __( 'create successfull', 'accounting' ) ); ?></p>
+            <p><?php printf( '%s %s', ucfirst($type), __( 'create successfull', 'erp' ) ); ?></p>
             <button type="button" class="notice-dismiss">
                 <span class="screen-reader-text">Dismiss this notice.</span>
             </button>
@@ -32,67 +32,67 @@
 <ul class="erp-form-fields erp-list">
     <li class="erp-form-field row-first-name">
         <?php erp_html_form_input( array(
-            'label'       => __( 'First Name', 'accounting' ),
+            'label'       => __( 'First Name', 'erp' ),
             'name'        => 'first_name',
             'id'          => 'first_name',
             'required'    => true,
             'type'        => 'text',
-            'placeholder' => __( 'John', 'accounting' ),
+            'placeholder' => __( 'John', 'erp' ),
             'class'       => 'regular-text',
             'value'       => isset( $item->first_name ) ? $item->first_name : ''
         ) ); ?>
     </li>
     <li class="erp-form-field row-last-name">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Last Name', 'accounting' ),
+            'label'       => __( 'Last Name', 'erp' ),
             'name'        => 'last_name',
             'id'          => 'last_name',
             'required'    => true,
             'type'        => 'text',
-            'placeholder' => __( 'Doe', 'accounting' ),
+            'placeholder' => __( 'Doe', 'erp' ),
             'class'       => 'regular-text',
             'value'       => isset( $item->last_name ) ? $item->last_name : '',
         ) ); ?>
     </li>
     <li class="erp-form-field row-email">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Email', 'accounting' ),
+            'label'       => __( 'Email', 'erp' ),
             'name'        => 'email',
             'id'          => 'email',
-            'required'    => false,
+            'required'    => true,
             'type'        => 'text',
-            'placeholder' => __( 'you@domain.com', 'accounting' ),
+            'placeholder' => __( 'you@domain.com', 'erp' ),
             'class'       => 'regular-text',
             'value'       => isset( $item->email ) ? $item->email : '',
         ) ); ?>
     </li>
     <li class="erp-form-field row-company">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Compnay', 'accounting' ),
+            'label'       => __( 'Compnay', 'erp' ),
             'name'        => 'company',
             'id'          => 'company',
             'required'    => false,
             'type'        => 'text',
-            'placeholder' => __( 'ABC Corporation', 'accounting' ),
+            'placeholder' => __( 'ABC Corporation', 'erp' ),
             'class'       => 'regular-text',
             'value'       => isset( $item->company ) ? $item->company : '',
         ) ); ?>
     </li>
     <li class="erp-form-field row-phone">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Phone', 'accounting' ),
+            'label'       => __( 'Phone', 'erp' ),
             'name'        => 'phone',
             'id'          => 'phone',
             'required'    => false,
             'type'        => 'text',
-            'placeholder' => __( '(541) 754-3010', 'accounting' ),
+            'placeholder' => __( '(541) 754-3010', 'erp' ),
             'class'       => 'regular-text',
             'value'       => isset( $item->phone ) ? $item->phone : '',
         ) ); ?>
     </li>
     <li class="erp-form-field row-mobile">
         <?php erp_html_form_input( array(
-            'label'    => __( 'Mobile', 'accounting' ),
+            'label'    => __( 'Mobile', 'erp' ),
             'name'     => 'mobile',
             'id'       => 'mobile',
             'required' => false,
@@ -103,7 +103,7 @@
     </li>
     <li class="erp-form-field row-other">
         <?php erp_html_form_input( array(
-            'label'    => __( 'Other', 'accounting' ),
+            'label'    => __( 'Other', 'erp' ),
             'name'     => 'other',
             'id'       => 'other',
             'required' => false,
@@ -114,19 +114,19 @@
     </li>
     <li class="erp-form-field row-website">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Website', 'accounting' ),
+            'label'       => __( 'Website', 'erp' ),
             'name'        => 'website',
             'id'          => 'website',
             'required'    => false,
             'type'        => 'text',
-            'placeholder' => __( 'http://domain.com', 'accounting' ),
+            'placeholder' => __( 'http://domain.com', 'erp' ),
             'class'       => 'regular-text',
             'value'       => isset( $item->website ) ? $item->website : '',
         ) ); ?>
     </li>
     <li class="erp-form-field row-fax">
         <?php erp_html_form_input( array(
-            'label'    => __( 'Fax', 'accounting' ),
+            'label'    => __( 'Fax', 'erp' ),
             'name'     => 'fax',
             'id'       => 'fax',
             'required' => false,
@@ -137,91 +137,91 @@
     </li>
     <li class="erp-form-field row-notes">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Notes', 'accounting' ),
+            'label'       => __( 'Notes', 'erp' ),
             'name'        => 'notes',
             'id'          => 'notes',
             'required'    => false,
             'type'        => 'textarea',
-            'placeholder' => __( 'Some information about this user', 'accounting' ),
+            'placeholder' => __( 'Some information about this user', 'erp' ),
             'custom_attr' => array( 'rows' => 5, 'cols' => 30 ),
             'value'       => isset( $item->notes ) ? $item->notes : '',
         ) ); ?>
     </li>
     <li class="erp-form-field row-street-1">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Street 1', 'accounting' ),
+            'label'       => __( 'Street 1', 'erp' ),
             'name'        => 'street_1',
             'id'          => 'street_1',
             'required'    => false,
             'type'        => 'text',
-            'placeholder' => __( 'Street 1', 'accounting' ),
+            'placeholder' => __( 'Street 1', 'erp' ),
             'class'       => 'regular-text',
             'value'       => isset( $item->street_1 ) ? $item->street_1 : '',
         ) ); ?>
     </li>
     <li class="erp-form-field row-street-1">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Street 2', 'accounting' ),
+            'label'       => __( 'Street 2', 'erp' ),
             'name'        => 'street_2',
             'id'          => 'street_2',
             'required'    => false,
             'type'        => 'text',
-            'placeholder' => __( 'Street 2', 'accounting' ),
+            'placeholder' => __( 'Street 2', 'erp' ),
             'class'       => 'regular-text',
             'value'       => isset( $item->street_1 ) ? $item->street_2 : '',
         ) ); ?>
     </li>
     <li class="erp-form-field row-city">
         <?php erp_html_form_input( array(
-            'label'       => __( 'City', 'accounting' ),
+            'label'       => __( 'City', 'erp' ),
             'name'        => 'city',
             'id'          => 'city',
             'required'    => false,
             'type'        => 'text',
-            'placeholder' => __( 'City/Town', 'accounting' ),
+            'placeholder' => __( 'City/Town', 'erp' ),
             'class'       => 'regular-text',
             'value'       => isset( $item->city ) ? $item->city : '',
         ) ); ?>
     </li>
     <li class="erp-form-field row-state">
         <?php erp_html_form_input( array(
-            'label'       => __( 'State', 'accounting' ),
+            'label'       => __( 'State', 'erp' ),
             'name'        => 'state',
             'id'          => 'state',
             'required'    => false,
             'type'        => 'text',
-            'placeholder' => __( 'State/Province', 'accounting' ),
+            'placeholder' => __( 'State/Province', 'erp' ),
             'class'       => 'regular-text',
             'value'       => isset( $item->state ) ? $item->state : '',
         ) ); ?>
     </li>
     <li class="erp-form-field row-postal-code">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Post Code', 'accounting' ),
+            'label'       => __( 'Post Code', 'erp' ),
             'name'        => 'postal_code',
             'id'          => 'postal_code',
             'required'    => false,
             'type'        => 'text',
-            'placeholder' => __( 'Postal Code', 'accounting' ),
+            'placeholder' => __( 'Postal Code', 'erp' ),
             'class'       => 'regular-text',
             'value'       => isset( $item->postal_code ) ? $item->postal_code : '',
         ) ); ?>
     </li>
     <li class="erp-form-field row-country">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Country', 'accounting' ),
+            'label'       => __( 'Country', 'erp' ),
             'name'        => 'country',
             'id'          => 'country',
             'required'    => false,
             'type'        => 'text',
-            'placeholder' => __( 'Country', 'accounting' ),
+            'placeholder' => __( 'Country', 'erp' ),
             'class'       => 'regular-text',
             'value'       => isset( $item->country ) ? $item->country : '',
         ) ); ?>
     </li>
     <li class="erp-form-field row-currency">
         <?php erp_html_form_input( array(
-            'label'       => __( 'User Currency', 'accounting' ),
+            'label'       => __( 'User Currency', 'erp' ),
             'name'        => 'currency',
             'id'          => 'currency',
             'required'    => false,

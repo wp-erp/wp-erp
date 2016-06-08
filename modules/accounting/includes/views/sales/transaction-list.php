@@ -3,7 +3,7 @@
     if ( erp_ac_create_sales_payment() || erp_ac_create_sales_invoice() ) {
         ?>
         <h2>
-            <?php _e( 'Sales Transactions', 'accounting' ); ?>
+            <?php _e( 'Sales Transactions', 'erp' ); ?>
 
             <?php
             $form_types = erp_ac_get_sales_form_types();

@@ -4,14 +4,14 @@ function erp_ac_get_expense_form_types() {
     $form_types = [
         'payment_voucher' => [
             'name'        => 'payment_voucher',
-            'label'       => __( 'Payment Voucher', 'accounting' ),
-            'description' => __( 'A purchase that has been made through bank or cash.', 'accounting' ),
+            'label'       => __( 'Payment Voucher', 'erp' ),
+            'description' => __( 'A purchase that has been made through bank or cash.', 'erp' ),
             'type'        => 'credit'
         ],
         'vendor_credit' => [
             'name'        => 'vendor_credit',
-            'label'       => __( 'Vendor Credit', 'accounting' ),
-            'description' => __( 'A purchase that has been made as credit from vendor.', 'accounting' ),
+            'label'       => __( 'Vendor Credit', 'erp' ),
+            'description' => __( 'A purchase that has been made as credit from vendor.', 'erp' ),
             'type'        => 'credit'
         ],
     ];
@@ -23,14 +23,14 @@ function erp_ac_get_sales_form_types() {
     $form_types = [
         'payment' => [
             'name'        => 'payment',
-            'label'       => __( 'Payment', 'accounting' ),
-            'description' => __( '', 'accounting' ),
+            'label'       => __( 'Payment', 'erp' ),
+            'description' => __( '', 'erp' ),
             'type'        => 'debit'
         ],
         'invoice' => [
             'name'        => 'invoice',
-            'label'       => __( 'Invoice', 'accounting' ),
-            'description' => __( '', 'accounting' ),
+            'label'       => __( 'Invoice', 'erp' ),
+            'description' => __( '', 'erp' ),
             'type'        => 'debit'
         ],
     ];
@@ -42,8 +42,8 @@ function erp_ac_get_bank_form_types() {
     $form_types = [
         'bank' => [
             'name'        => 'bank',
-            'label'       => __( 'Bank', 'accounting' ),
-            'description' => __( '', 'accounting' ),
+            'label'       => __( 'Bank', 'erp' ),
+            'description' => __( '', 'erp' ),
             'type'        => 'credit'
         ],
     ];
@@ -64,28 +64,28 @@ function erp_ac_get_status_label( $items, $slug ) {
 
     switch ( $status ) {
         case 'closed':
-            $label = __( 'Closed', 'accounting' );
+            $label = __( 'Closed', 'erp' );
             break;
 
         case 'paid':
-            $label = __( 'Paid', 'accounting' );
+            $label = __( 'Paid', 'erp' );
             break;
 
         case 'awaiting_payment':
-            $label = __( 'Awaiting Payment', 'accounting' );
+            $label = __( 'Awaiting Payment', 'erp' );
             break;
 
         case 'overdue':
-            $label = __( 'Overdue', 'accounting' );
+            $label = __( 'Overdue', 'erp' );
             break;
 
         case 'partial':
-            $label = __( 'Partially Paid', 'accounting' );
+            $label = __( 'Partially Paid', 'erp' );
             break;
 
         case 'draft':
             $url   = admin_url( 'admin.php?page='.$slug.'&action=new&type=' . $items->form_type . '&transaction_id=' . $items->id );
-            $label = sprintf( '%1s<a href="%2s">%3s</a>', __( 'Draft', 'accounting' ), $url, __( ' (Edit)', 'accounting') );
+            $label = sprintf( '%1s<a href="%2s">%3s</a>', __( 'Draft', 'erp' ), $url, __( ' (Edit)', 'accounting') );
             break;
     }
 
@@ -168,7 +168,7 @@ function erp_ac_get_symbol_format_for_label( $label ) {
             $format = '%2$s&nbsp;(%1$s)';
         break;
     }
-    
+
     $print_label = sprintf( $format, erp_ac_get_currency_symbol() , $label );
 
     return apply_filters( 'erp_ac_label_symbol_format', $print_label, $format, $label );
@@ -231,7 +231,7 @@ function erp_ac_get_price( $main_price, $args = array() ) {
 
     $price           = number_format( abs( $main_price ), $decimals, $decimal_separator, $thousand_separator );
     $formatted_price = $symbol ? sprintf( $price_format, $currency_symbol, $price ) : $price;
-    $formatted_price = ( $main_price < 0 ) ? '(' . $formatted_price . ')' : $formatted_price; 
+    $formatted_price = ( $main_price < 0 ) ? '(' . $formatted_price . ')' : $formatted_price;
 
     return apply_filters( 'erp_ac_price', $formatted_price, $price, $args );
 }
@@ -255,7 +255,7 @@ function erp_ac_get_price_for_field( $price, $args = array() ) {
 
 function erp_ac_format_decimal( $number ) {
     $locale   = localeconv();
-    
+
     $decimals = array( erp_ac_get_price_decimal_separator(), $locale['decimal_point'], $locale['mon_decimal_point'] );
 
     // Remove locale from string
@@ -276,19 +276,19 @@ function erp_ac_get_customer($id) {
 
 function erp_ac_message() {
     $message = array(
-        'confirm'       => __( 'Are you sure!', 'accounting' ),
-        'new_customer'  => __( 'New Customer', 'accounting' ),
-        'new_vendor'    => __( 'New Vendor', 'accounting' ),
-        'new'           => __( 'Create New', 'accounting' ),
-        'transaction'   => __( 'Transaction History', 'accounting' ),
-        'processing'    => __( 'Processing please wait!', 'accounting' ),
-        'new_tax'       => __( 'Tax Rates', 'accounting' ),
-        'tax_item'      => __( 'Tax item details', 'accounting' ),
-        'tax_update'    => __( 'Tax Update', 'accounting' ),
-        'tax_deleted'   => __( 'Your tax record has been deleted successfully', 'accounting' ),
-        'delete'        => __( 'Yes, delete it!', 'accounting' ),
-        'cancel'        => __( 'Cancel', 'accounting' ),
-        'error'         => __( 'Error!', 'accounting' ), 
+        'confirm'       => __( 'Are you sure!', 'erp' ),
+        'new_customer'  => __( 'New Customer', 'erp' ),
+        'new_vendor'    => __( 'New Vendor', 'erp' ),
+        'new'           => __( 'Create New', 'erp' ),
+        'transaction'   => __( 'Transaction History', 'erp' ),
+        'processing'    => __( 'Processing please wait!', 'erp' ),
+        'new_tax'       => __( 'Tax Rates', 'erp' ),
+        'tax_item'      => __( 'Tax item details', 'erp' ),
+        'tax_update'    => __( 'Tax Update', 'erp' ),
+        'tax_deleted'   => __( 'Your tax record has been deleted successfully', 'erp' ),
+        'delete'        => __( 'Yes, delete it!', 'erp' ),
+        'cancel'        => __( 'Cancel', 'erp' ),
+        'error'         => __( 'Error!', 'erp' ),
     );
 
     return apply_filters( 'erp_ac_message', $message );

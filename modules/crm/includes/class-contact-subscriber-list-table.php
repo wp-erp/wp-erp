@@ -75,6 +75,7 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
      */
     function column_default( $subscriber_contact, $column_name ) {
         $contact = new \WeDevs\ERP\CRM\Contact( $subscriber_contact->user_id );
+        $type = '';
 
         switch ( $column_name ) {
             case 'name':
@@ -83,7 +84,16 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
                 return $contact->get_email();
 
             case 'type':
-                return ucfirst( $contact->type );
+
+                if ( in_array( 'company', $contact->types ) ) {
+                    $type = __( 'Company', 'erp' );
+                }
+
+                if(  in_array( 'contact', $contact->types ) ) {
+                    $type = __( 'Contact', 'erp' );
+                }
+
+                return $type;
 
             case 'group':
 

@@ -64,7 +64,7 @@ class User_Profile {
         ?>
         <label for="erp-ac-manager">
             <input type="checkbox" id="erp-ac-manager" <?php echo $checked; ?> name="ac_manager" value="<?php echo erp_ac_get_manager_role(); ?>">
-            <span class="description"><?php _e( 'Accounting Manager', 'accounting' ); ?></span>
+            <span class="description"><?php _e( 'Accounting Manager', 'erp' ); ?></span>
         </label>
 
         <?php

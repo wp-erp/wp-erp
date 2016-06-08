@@ -1,5 +1,5 @@
 <div class="wrap">
-    <h2><?php _e( 'Update Customer', 'accounting' ); ?></h2>
+    <h2><?php _e( 'Update Customer', 'erp' ); ?></h2>
 
     <?php $item = erp_ac_get_customer( $id ); ?>
 
@@ -11,7 +11,7 @@
         <input type="hidden" name="type" value="customer">
 
         <?php wp_nonce_field( 'erp-ac-customer' ); ?>
-        <?php submit_button( __( 'Update Customer', 'accounting' ), 'primary', 'submit_erp_ac_customer' ); ?>
+        <?php submit_button( __( 'Update Customer', 'erp' ), 'primary', 'submit_erp_ac_customer' ); ?>
 
     </form>
 </div>

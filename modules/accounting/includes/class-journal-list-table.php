@@ -25,10 +25,10 @@ class Journal_List_Table extends Transaction_List_Table {
     function get_columns() {
         $columns = array(
             'cb'         => '<input type="checkbox" />',
-            'ref'        => __( 'Ref', 'accounting' ),
-            'issue_date' => __( 'Date', 'accounting' ),
-            'summary'    => __( 'Summary', 'accounting' ),
-            'total'      => __( 'Total', 'accounting' ),
+            'ref'        => __( 'Ref', 'erp' ),
+            'issue_date' => __( 'Date', 'erp' ),
+            'summary'    => __( 'Summary', 'erp' ),
+            'total'      => __( 'Total', 'erp' ),
         );
 
         return $columns;

@@ -16,10 +16,10 @@ function erp_ac_customer_delete( $data ) {
     } else {
         $ids = array( intval( $data['id'] ) );
     }
- 
+
     foreach ( $ids as $key => $user_id ) {
         $people = erp_get_people($user_id);
-        if ( ! erp_ac_current_user_can_delete_customer( $people->created_by ) ) { 
+        if ( ! erp_ac_current_user_can_delete_customer( $people->created_by ) ) {
            unset( $ids[ $key] );
         }
     }
@@ -32,7 +32,7 @@ function erp_ac_customer_delete( $data ) {
 
     do_action( 'erp_ac_delete_customer', $data );
     erp_delete_people( $data );
-            
+
 }
 
 function erp_ac_vendor_delete( $data ) {
@@ -42,10 +42,10 @@ function erp_ac_vendor_delete( $data ) {
     } else {
         $ids = array( intval( $data['id'] ) );
     }
- 
+
     foreach ( $ids as $key => $user_id ) {
         $people = erp_get_people($user_id);
-        if ( ! erp_ac_current_user_can_delete_vendor( $people->created_by ) ) { 
+        if ( ! erp_ac_current_user_can_delete_vendor( $people->created_by ) ) {
            unset( $ids[ $key] );
         }
     }
@@ -58,7 +58,7 @@ function erp_ac_vendor_delete( $data ) {
 
     do_action( 'erp_ac_delete_vendor', $data );
     erp_delete_people( $data );
-            
+
 }
 
 /**
@@ -118,11 +118,11 @@ function erp_ac_new_customer( $postdata ) {
 
     // some basic validation
     if ( ! $first_name ) {
-        $errors[] = __( 'Error: First Name is required', 'accounting' );
+        $errors[] = __( 'Error: First Name is required', 'erp' );
     }
 
     if ( ! $last_name ) {
-        $errors[] = __( 'Error: Last Name is required', 'accounting' );
+        $errors[] = __( 'Error: Last Name is required', 'erp' );
     }
 
     // bail out if error found
@@ -159,37 +159,29 @@ function erp_ac_new_customer( $postdata ) {
         if ( $fields['type'] == 'customer' && erp_ac_create_customer() ) {
             $insert_id = erp_insert_people( $fields );
             if ( ! is_wp_error( $insert_id ) ) {
-                do_action( 'erp_ac_after_new_customer', $insert_id, $fields );    
+                do_action( 'erp_ac_after_new_customer', $insert_id, $fields );
             }
-            
-        } else {
-            $insert_id = false;
-        }
 
-        if ( $fields['type'] == 'vendor' && erp_ac_create_vendor() ) {
+        } else if ( $fields['type'] == 'vendor' && erp_ac_create_vendor() ) {
             $insert_id = erp_insert_people( $fields );
 
             if ( ! is_wp_error( $insert_id ) ) {
-                do_action( 'erp_ac_after_new_vendor', $insert_id, $fields );    
+                do_action( 'erp_ac_after_new_vendor', $insert_id, $fields );
             }
-            
+
         } else {
             $insert_id = false;
         }
 
     } else {
         $customer = new \WeDevs\ERP\People( $field_id );
-        
+
         if ( $fields['type'] == 'customer' && erp_ac_current_user_can_edit_customer( $customer->created_by ) ) {
             $fields['id'] = $field_id;
             $message      = 'update';
             do_action( 'erp_ac_before_update_customer', $fields );
             $insert_id    = erp_insert_people( $fields );
-        } else {
-            $insert_id    = false;
-        }
-
-        if ( $fields['type'] == 'vendor' && erp_ac_current_user_can_edit_vendor( $customer->created_by ) ) {
+        } else if ( $fields['type'] == 'vendor' && erp_ac_current_user_can_edit_vendor( $customer->created_by ) ) {
             $fields['id'] = $field_id;
             $message      = 'update';
             do_action( 'erp_ac_before_update_vendor', $fields );
