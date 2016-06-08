@@ -141,6 +141,7 @@ function erp_ac_create_table() {
         `name` varchar(255) DEFAULT NULL,
         `tax_number` varchar(255) DEFAULT NULL,
         `is_compound` varchar(5) DEFAULT NULL,
+        'created_by` bigint(20) unsigned NOT NULL,
          PRIMARY KEY (`id`)
       ) $collate;",
 
