@@ -417,8 +417,7 @@
                                     };
                                 } );
 
-                                $('.select2').select2();
-
+                                WeDevs_ERP_CRM.initContactListAjax();
                                 $( '.loader', modal ).remove();
                             }
                         });
@@ -453,7 +452,8 @@
                 e.preventDefault();
 
                 var self = $( this ),
-                query_id = self.data( 'id' );
+                query_id = self.data( 'id' ),
+                name = self.data( 'name' );
 
                 $.erpPopup({
                     title: self.attr('title'),
@@ -468,6 +468,7 @@
                         wp.ajax.send( 'erp-crm-edit-contact-subscriber', {
                             data: {
                                 id: query_id,
+                                name: name,
                                 _wpnonce: wpErpCrm.nonce
                             },
                             success: function( res ) {
