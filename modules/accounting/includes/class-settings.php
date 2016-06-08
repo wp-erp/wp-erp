@@ -47,7 +47,7 @@ class Settings extends ERP_Settings_Page {
                 'title'   => __( 'Currency', 'accounting' ),
                 'id'      => 'erp_ac_currency',
                 'type'    => 'select',
-                'class'   => 'select2',
+                'class'   => 'erp-select2',
                 'options' => erp_get_currency_list_with_symbol(),
                 'default' => 'USD'
             ),
@@ -55,7 +55,7 @@ class Settings extends ERP_Settings_Page {
                 'title'   => __( 'Currency Position', 'erp' ),
                 'id'      => 'erp_ac_currency_position',
                 'type'    => 'select',
-                'class'   => 'select2',
+                'class'   => 'erp-select2',
                 'options' => array(
                     'left'        => sprintf( '%1$s (%2$s99.99)', __( 'Left', 'accounting' ), erp_ac_get_currency_symbol() ),
                     'right'       => sprintf( '%1$s (99.99%2$s)', __( 'Right', 'accounting' ), erp_ac_get_currency_symbol() ),
@@ -107,7 +107,7 @@ class Settings extends ERP_Settings_Page {
         $fields['erp_ac_tax']['submit_button'] = false;
 
         $section = $section === false ? $fields['checkout'] : isset( $fields[$section] ) ? $fields[$section] : array();
-        
+
         return apply_filters( 'erp_ac_settings_section_fields_' . $this->id , $section );
     }
 

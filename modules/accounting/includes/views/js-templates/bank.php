@@ -18,7 +18,7 @@
                 'name'        => 'form_account_id',
                 'placeholder' => __( 'Select an Account', 'accounting' ),
                 'type'        => 'select',
-                'class'       => 'select2 erp-ac-bank-ac-drpdwn erp-ac-bank-ac-drpdwn-frm',
+                'class'       => 'erp-select2 erp-ac-bank-ac-drpdwn erp-ac-bank-ac-drpdwn-frm',
                 'required'    => true,
                 'value'       => '',
                 'options'     => [ '' => __( '&mdash; Select &mdash;', 'accounting' ) ] + erp_ac_get_bank_dropdown()
@@ -26,7 +26,7 @@
 
          ?>
         <span class="balance-wrap-from">
-            <strong><?php _e( 'Balance:', 'accounting' ); ?> <?php echo erp_ac_get_currency_symbol(); ?><span class="erp-ac-bank-amount">0</span></strong>
+            <strong><?php _e( 'Balance:', 'accounting' ); ?> <span class="erp-ac-bank-amount">0</span></strong>
         </span>
     </div>
 
@@ -39,7 +39,7 @@
                 'name'        => 'to_account_id',
                 'placeholder' => __( 'Select an Account', 'accounting' ),
                 'type'        => 'select',
-                'class'       => 'select2 erp-ac-bank-ac-drpdwn erp-ac-bank-ac-drpdwn-to',
+                'class'       => 'erp-select2 erp-ac-bank-ac-drpdwn erp-ac-bank-ac-drpdwn-to',
                 'required'    => true,
                 'value'       => '',
                 'options'     => [ '' => __( '&mdash; Select &mdash;', 'accounting' ) ] + erp_ac_get_bank_dropdown()
@@ -48,7 +48,7 @@
          ?>
 
          <span class="balance-wrap-to">
-            <strong><?php _e( 'Balance:', 'accounting' ); ?> <?php echo erp_ac_get_currency_symbol(); ?><span class="erp-ac-bank-amount">0</span></strong>
+            <strong><?php _e( 'Balance:', 'accounting' ); ?> <span class="erp-ac-bank-amount">0</span></strong>
         </span>
     </div>
 
