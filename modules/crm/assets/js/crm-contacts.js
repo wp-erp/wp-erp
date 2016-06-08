@@ -173,7 +173,7 @@
                 name: 'name',
                 title: ( wpErpCrm.contact_type == 'contact') ? 'Contact name' : 'Company name',
                 callback: 'fullName',
-                sortField: 'id',
+                sortField: 'first_name',
             },
             {
                 name: 'email',
@@ -421,8 +421,8 @@
                     + '</div>'
                     + '<div class="erp-advance-search-action-wrapper" v-if="ifHasAnyFilter()">'
                         + '<div class="saveasnew-wrapper" v-show="isNewSave">'
-                            + '<input type="text" class="save-search-name" v-model="saveSearchObj.searchName" placeholder="Search name..">'
-                            + '<label for="save-search-global"><input type="checkbox" id="save-search-global" class="save-search-global" v-model="saveSearchObj.searchItGlobal"> Make it global filter</label>'
+                            + '<input type="text" class="save-search-name" v-model="saveSearchObj.searchName" placeholder="Name this filter..">'
+                            + '<label for="save-search-global"><input type="checkbox" id="save-search-global" class="save-search-global" v-model="saveSearchObj.searchItGlobal"> Make filter available for all agents</label>'
                             + '<input type="submit" class="button button-primary" v-if="isUpdate" @click.prevent="searchSave(\'update\')" value="Update">'
                             + '<input type="submit" class="button button-primary" v-if="!isUpdate" @click.prevent="searchSave(\'save\')" value="Save">'
                             + '<input type="submit" class="button" v-if="isUpdate" @click.prevent="cancelSave(\'update\')" value="Cancel">'
