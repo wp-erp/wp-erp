@@ -7,16 +7,18 @@ Stable tag: trunk
 License: GPLv2
 Donate Link: https://tareq.co/donate
 
-An Open Source ERP & CRM Solution for WordPress
+An Open Source ERP, CRM & Accounting Solution for WordPress
 
 == Description ==
 WP ERP is the framework for weDevs's enterprise resource management system. This plugin includes -
+
+= Core Modules =
 
 * HR Module
 * CRM Module
 * Accounting Module
 
-Other available modules
+= Other Modules =
 
 * Project Management via [WP Project Manager](https://wordpress.org/plugins/wedevs-project-manager/)
 
@@ -59,7 +61,7 @@ Other available modules
 * Overall activity overview
 * Group contacts depending on various factors
 
-= Accounting Module Transactions =
+= Accounting Module =
 
 * Invoice - Create invoice for your customer for any sales.
 * Payment - Add payments to the against the invoices.
@@ -134,6 +136,13 @@ If you are unable to use any of the methods due to internet connectivity and fil
 21. Schedules page, see whom to call, have a meeting and manage them.
 22. Manage your company details, add locations if you have multiple branches/locations.
 23. We log everything whats happening across the system and log everything for easy audit logging.
+24. Accounting Dashboard
+25. Sales transactions list
+26. Expense transactions list
+27. Creating new invoice (sales)
+28. Creating a basic journal entry.
+29. Bank Accounts
+30. Chart of accounts listing
 
 == Frequently Asked Questions ==
 **Q.** Do you have any limit on customers, users or clients?
