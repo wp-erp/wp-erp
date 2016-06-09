@@ -94,7 +94,7 @@
                 erp_html_form_input( array(
                     'type'        => 'text',
                     'name'        => 'price_total',
-                    'value'       => erp_ac_get_price( $total_due, ['symbol' => false] ),
+                    'value'       => $total_due,
                     'class'       => 'erp-ac-total-due price-total',
                     'custom_attr' => array( 'readonly' => true )
                 ) ); ?>
