@@ -6,6 +6,7 @@
  * @return array
  */
 function erp_ac_get_reports() {
+
     $reports = [
         'trial-balance' => [
             'title'       => __( 'Trial Balance', 'erp' ),
@@ -77,18 +78,6 @@ function erp_ac_reporting_query() {
 
 
     return $ledgers;
-}
-
-function erp_ac_transaction_report( $transaction_id ) {
-    $args = [
-        'id'          => $transaction_id,
-        'join'        => ['journals'],
-        'with_ledger' => true,
-        'output_by'   => 'array'
-    ];
-
-    $transaction = erp_ac_get_all_transaction( $args );
-    return erp_ac_toltip_per_transaction_ledgers( reset( $transaction ) );
 }
 
 function erp_ac_get_sales_tax_report( $args ) {
@@ -230,54 +219,80 @@ function erp_ac_normarlize_tax_from_transaction( $args = [] ) {
 
 }
 
-function erp_ac_get_sales_total() {
-    $sales_transaction = erp_ac_get_transaction_for_sales();
+function erp_ac_get_sales_total_without_tax( $charts ) {
 
-    $journals          = array_filter( wp_list_pluck( $sales_transaction, 'journals' ) );
-    $sales_total       = 0;
-
-    foreach ( $journals as $key => $journal ) {
-        $sales_total = $sales_total + array_sum( wp_list_pluck( $journal, 'credit' ) ) - array_sum( wp_list_pluck( $journal, 'debit' ) );
+    $sales_journals  = isset( $charts[4] ) ? $charts[4] : [];
+    $sales_total    = 0;
+    
+    foreach ( $sales_journals as $key => $ledger_jours ) {
+        $sales_total  = $sales_total + array_sum( wp_list_pluck( $ledger_jours, 'credit' ) ) - array_sum( wp_list_pluck( $ledger_jours, 'debit' ) );
     }
-
+    
     return $sales_total;
 }
 
-function erp_ac_get_good_sold_total_amount() {
-    $sales_transaction = erp_ac_get_transaction_by_journal_id( 24 );
-    $journals          = array_filter( wp_list_pluck( $sales_transaction, 'journals' ) );
-    $sales_total       = 0;
+function erp_ac_get_sales_tax_total( $charts ) {
+    $payable_tax          = erp_ac_get_tax_payable_ledger();
+    $payable_tax          = wp_list_pluck( $payable_tax, 'id' );
+    $payable_tax_journals = [];
+    $tax_total            = 0;
+    $libility_payable_tax_journals = isset( $charts[2] ) ? $charts[2] : [];
 
-    foreach ( $journals as $key => $journal ) {
-        $sales_total = $sales_total + array_sum( wp_list_pluck( $journal, 'debit' ) ) - array_sum( wp_list_pluck( $journal, 'credit' ) );
+    foreach ( $libility_payable_tax_journals as $key => $libility_journal ) {
+        if ( in_array( $key , $payable_tax ) ) {
+            $payable_tax_journals[$key] = $libility_journal;
+        }
     }
-
-    return $sales_total;
-}
-
-function erp_ac_get_expense_total() {
-    $expense_transaction = erp_ac_get_expnese_transaction_without_tax();
-    $journals            = array_filter( wp_list_pluck( $expense_transaction, 'journals' ) );
-    $expense_total       = 0;
-
-    foreach ( $journals as $key => $journal ) {
-        $expense_total = $expense_total + array_sum( wp_list_pluck( $journal, 'debit' ) ) - array_sum( wp_list_pluck( $journal, 'credit' ) );
+    
+    foreach ( $payable_tax_journals as $key => $ledger_jours ) {
+        $tax_total  = $tax_total + array_sum( wp_list_pluck( $ledger_jours, 'credit' ) ) - array_sum( wp_list_pluck( $ledger_jours, 'debit' ) );
     }
-
-    return $expense_total;
-}
-
-function erp_ac_get_tax_total() {
-    $tax_transaction = erp_ac_get_transaction_for_tax();
-
-    $journals  = array_filter( wp_list_pluck( $tax_transaction, 'journals' ) );
-    $tax_total = 0;
-
-    foreach ( $journals as $key => $journal ) {
-        $tax_total = $tax_total + array_sum( wp_list_pluck( $journal, 'credit' ) ) + array_sum( wp_list_pluck( $journal, 'debit' ) );
-    }
-
+    
     return $tax_total;
+}
+
+function erp_ac_get_good_sold_total_amount( $charts ) {
+    $sales_journals = isset( $charts[3] ) ? $charts[3] : [];
+    $goods_sold     = isset( $sales_journals[24] ) ? $sales_journals[24] : [];
+    $sales_total    = 0;
+    $sales_total    = array_sum( wp_list_pluck( $goods_sold, 'debit' ) ) - array_sum( wp_list_pluck( $goods_sold, 'credit' ) );
+    
+    return $sales_total;
+}
+
+function erp_ac_get_expense_total_without_tax( $charts ) {
+    $expense_journals     = isset( $charts[3] ) ? $charts[3] : [];
+    $receivable_tax       = erp_ac_get_tax_receivable_ledger();
+    $receivable_tax       = wp_list_pluck( $receivable_tax, 'id' );
+    $payable_tax_journals = [];
+    $expense_total        = 0;
+    
+    foreach ( $expense_journals as $key => $ledger_jours ) {
+        if ( in_array( $key, $receivable_tax ) ) {
+            continue;
+        }
+        $expense_total  = $expense_total + array_sum( wp_list_pluck( $ledger_jours, 'debit' ) ) - array_sum( wp_list_pluck( $ledger_jours, 'credit' ) );
+    }
+    
+    return $expense_total;
+    
+}
+
+function erp_ac_get_expense_tax_total( $charts ) {
+    $expense_journals     = isset( $charts[3] ) ? $charts[3] : [];
+    $receivable_tax       = erp_ac_get_tax_receivable_ledger();
+    $receivable_tax       = wp_list_pluck( $receivable_tax, 'id' );
+    $payable_tax_journals = [];
+    $expense_tax_total    = 0;
+    
+    foreach ( $expense_journals as $key => $ledger_jours ) {
+        if ( in_array( $key, $receivable_tax ) ) {
+            $expense_tax_total  = $expense_tax_total + array_sum( wp_list_pluck( $ledger_jours, 'debit' ) ) - array_sum( wp_list_pluck( $ledger_jours, 'credit' ) );
+        }
+        
+    }
+    
+    return $expense_tax_total;
 }
 
 

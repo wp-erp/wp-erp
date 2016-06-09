@@ -1,33 +1,7 @@
 <?php
-$query = erp_ac_reporting_query();
- 
-     echo '<pre>'; print_r( $query ); echo '</pre>'; die();
-    
-global $wpdb;
-$tbl_ledger      = $wpdb->prefix . 'erp_ac_ledger';
-$tbl_type        = $wpdb->prefix . 'erp_ac_chart_types';
-$tbl_class       = $wpdb->prefix . 'erp_ac_chart_classes';
-$tbl_journals    = $wpdb->prefix . 'erp_ac_journals';
-$tbl_transaction = $wpdb->prefix . 'erp_ac_transactions';
-
-$financial_start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
-$financial_end   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
-
-$sql = "SELECT led.id, led.code, led.name, led.type_id, types.name as type_name, types.class_id, class.name as class_name, sum(jour.debit) as debit, sum(jour.credit) as credit
-FROM $tbl_ledger as led
-LEFT JOIN $tbl_type as types ON types.id = led.type_id
-LEFT JOIN $tbl_class as class ON class.id = types.class_id
-LEFT JOIN $tbl_journals as jour ON jour.ledger_id = led.id
-LEFT JOIN $tbl_transaction as tran ON tran.id = jour.transaction_id
-WHERE tran.status IS NULL OR tran.status != 'draft' AND ( tran.issue_date >= '$financial_start' AND tran.issue_date <= '$financial_end' )
-GROUP BY led.id";
-
-$ledgers = $wpdb->get_results( $sql );
-
-$charts = [];
+$ledgers = erp_ac_reporting_query();
 
 foreach ($ledgers as $ledger) {
-
     $charts[$ledger->class_id][$ledger->id][] = $ledger;
 }
 
@@ -35,14 +9,15 @@ $assets      = isset( $charts[1] ) ? $charts[1] : [];
 $liabilities = isset( $charts[2] ) ? $charts[2] : [];
 $equities    = isset( $charts[5] ) ? $charts[5] : [];
 
-$sales_total   = erp_ac_get_sales_total();
-$goods_sold    = erp_ac_get_good_sold_total_amount();
-$expense_total = erp_ac_get_expense_total();
-$tax_total     = erp_ac_get_tax_total();
+$sales_total   = erp_ac_get_sales_total_without_tax( $charts ) + erp_ac_get_sales_tax_total( $charts );
+$goods_sold    = erp_ac_get_good_sold_total_amount( $charts );
+$expense_total = erp_ac_get_expense_total_without_tax( $charts );
+$expense_total = $expense_total - $goods_sold;
+$tax_total     = erp_ac_get_sales_tax_total( $charts ) + erp_ac_get_expense_tax_total( $charts );
 $gross         = $sales_total - $goods_sold;
 $operating     = $gross - $expense_total;
 $net_income    = $operating - $tax_total;
-//$income        =  $sales_total-$expense_total;
+
 ?>
 
 <div class="warp erp-ac-balance-sheet-wrap">
