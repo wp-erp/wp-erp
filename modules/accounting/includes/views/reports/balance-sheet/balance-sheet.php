@@ -1,5 +1,8 @@
 <?php
-
+$query = erp_ac_reporting_query();
+ 
+     echo '<pre>'; print_r( $query ); echo '</pre>'; die();
+    
 global $wpdb;
 $tbl_ledger      = $wpdb->prefix . 'erp_ac_ledger';
 $tbl_type        = $wpdb->prefix . 'erp_ac_chart_types';
