@@ -50,7 +50,7 @@ function erp_ac_get_reports() {
         // ],
     ];
 
-    return apply_filters( 'erp_hr_reports', $reports );
+    return apply_filters( 'erp_ac_reports', $reports );
 }
 
 function erp_ac_reporting_query() {

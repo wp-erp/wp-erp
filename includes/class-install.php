@@ -58,6 +58,9 @@ class WeDevs_ERP_Installer {
         $this->create_cron_jobs();
         $this->setup_default_emails();
 
+        // does it needs any update?
+        $updater = new \WeDevs\ERP\Updates();
+        $updater->perform_updates();
 
         if ( is_null( $current_erp_version ) && is_null( $current_db_version ) && apply_filters( 'erp_enable_setup_wizard', true ) ) {
             set_transient( '_erp_activation_redirect', 1, 30 );
@@ -770,7 +773,7 @@ Company'
             `name` varchar(255) DEFAULT NULL,
             `tax_number` varchar(255) DEFAULT NULL,
             `is_compound` varchar(5) DEFAULT NULL,
-            'created_by` bigint(20) unsigned NOT NULL,
+            `created_by` bigint(20) unsigned NOT NULL,
              PRIMARY KEY (`id`)
           ) $collate;",
 
