@@ -251,12 +251,19 @@ class Ajax_Handler {
     public function create_customer() {
         $this->verify_nonce( 'wp-erp-crm-customer-nonce' );
 
-        // @TODO: check permission
         unset( $_POST['_wp_http_referer'] );
         unset( $_POST['_wpnonce'] );
         unset( $_POST['action'] );
 
         $posted      = array_map( 'strip_tags_deep', $_POST );
+
+        if ( ! $posted['id'] && ! current_user_can( 'erp_crm_add_contact' ) ) {
+            $this->send_error( __( 'You don\'t have any permission to add new contact', 'erp' ) );
+        }
+
+        if ( $posted['id'] && ! current_user_can( 'erp_crm_edit_contact', $posted['id'] ) ) {
+            $this->send_error( __( 'You don\'t have any permission to edit this contact', 'erp' ) );
+        }
 
         $customer_id = erp_insert_people( $posted );
 
@@ -336,12 +343,28 @@ class Ajax_Handler {
 
         $this->verify_nonce( 'wp-erp-crm-nonce' );
 
+        $ids         = [];
         $customer_id = ( isset( $_REQUEST['id'] ) && is_array( $_REQUEST['id'] ) ) ? (array)$_REQUEST['id'] : intval( $_REQUEST['id'] );
         $hard        = isset( $_REQUEST['hard'] ) ? intval( $_REQUEST['hard'] ) : 0;
         $type        = isset( $_REQUEST['type'] ) ? $_REQUEST['type'] : '';
 
+        // Check permission for trashing and permanent deleting contact;
+        if ( is_array( $customer_id ) ) {
+            foreach ( $customer_id as $contact_id ) {
+                if ( ! current_user_can( 'erp_crm_delete_contact', $contact_id, $hard ) ) {
+                    continue;
+                }
+                $ids[] = $contact_id;
+            }
+        } else {
+            if ( ! current_user_can( 'erp_crm_delete_contact', $customer_id, $hard ) ) {
+                $this->send_error( __( 'You don\'t have any permission to delete this contact', 'erp' ) );
+            }
+            $ids[] = $customer_id;
+        }
+
         $data = [
-            'id'   => $customer_id,
+            'id'   => $ids,
             'hard' => $hard,
             'type' => $type
         ];

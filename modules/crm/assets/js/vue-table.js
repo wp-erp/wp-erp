@@ -108,7 +108,7 @@ Vue.component('vtable', {
                                                             + '{{{ callRowActionCallback( rowAction, item ) }}}'
                                                         + '</template>'
                                                         + '<template v-else>'
-                                                            + '<span class="{{ rowAction.class }}" v-if="showRowAction( rowAction )">'
+                                                            + '<span class="{{ rowAction.class }}" v-if="showRowAction( rowAction, item )">'
                                                                 + '<a v-if="!hasPreventRowAction( rowAction )" href="{{{ rowActionLinkCallback( rowAction, item, itemIndex ) }}}" title="{{ rowAction.attrTitle }}">{{ rowAction.title }}</a>'
                                                                 + '<a v-else href="#" @click.prevent="callAction( rowAction.action, item, itemIndex )" title="{{ rowAction.attrTitle }}">{{ rowAction.title }}</a>'
                                                                 + '<span v-if="rowActionIndex != ( itemRowActions.length - 1)"> | </span>'
@@ -582,7 +582,7 @@ Vue.component('vtable', {
             }
         },
 
-        showRowAction: function( rowAction ) {
+        showRowAction: function( rowAction, item ) {
             if ( ! rowAction.hasOwnProperty('showIf') ) {
                 return true;
             }
@@ -591,7 +591,7 @@ Vue.component('vtable', {
             var func = args.shift()
 
             if ( typeof this.$parent[func] == 'function' ) {
-                return this.$parent[func].call( this.$parent, rowAction )
+                return this.$parent[func].call( this.$parent, item )
             }
             return null;
         },
@@ -974,6 +974,8 @@ Vue.component('vtable', {
     events: {
 
         'vtable:reload': function() {
+            this.checkboxItems = [];
+            this.bulkaction1 = this.bulkaction2 = '-1';
             this.fetchData();
         },
 
@@ -985,8 +987,6 @@ Vue.component('vtable', {
         },
     },
 
-    created: function() {
-    },
     ready: function() {
         var self = this;
 
@@ -1002,10 +1002,6 @@ Vue.component('vtable', {
                 jQuery(this).trigger('change');
             }
         });
-
-        // jQuery(window).bind("popstate", function() {
-        //     // this.fetchData();
-        // });
 
         this.fetchData();
         this.pageNumberInput = this.currentPage;
