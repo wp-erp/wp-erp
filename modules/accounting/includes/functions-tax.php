@@ -317,7 +317,7 @@ function erp_ac_accounting_code_generator() {
     $ledger = wp_list_pluck( $ledger, 'code' );
     $code   = random_int( 0, 999 );
 
-    if ( in_array( $ledger, $code ) ) {
+    if ( in_array( $code, $ledger ) ) {
         erp_ac_accounting_code_generator();
     }
 

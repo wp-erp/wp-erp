@@ -315,9 +315,7 @@ function erp_ac_pagination( $total, $limit, $pagenum ) {
     }
 }
 
-function pr($value) {
-    echo '<pre>'; print_r( $value ); echo '</pre>';
-}
+
 
 
 

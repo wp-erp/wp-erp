@@ -466,7 +466,7 @@ class Ajax_Handler {
     function receive_payment() {
 
         $this->verify_nonce( 'erp-ac-nonce' );
-        $user_id = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : false;
+        $user_id    = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : false;
         $account_id = isset( $_POST['account_id'] ) ? intval( $_POST['account_id'] ) : false;
 
         if ( ! $user_id ) {

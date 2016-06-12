@@ -57,7 +57,7 @@ $tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
     <?php
     $selected_account_id = isset( $_GET['account_id'] ) ? intval( $_GET['account_id'] ) : 0;
     $dropdown = erp_ac_get_chart_dropdown([
-        'exclude'  => [2, 4, 5],
+        'exclude'  => [1, 2, 4, 5],
 
     ] );
 

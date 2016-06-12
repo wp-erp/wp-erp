@@ -51,7 +51,7 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
 
     <?php
     $dropdown = erp_ac_get_chart_dropdown([
-        'exclude'  => [1, 2, 3],
+        'exclude'  => [1, 2, 3, 5],
 
     ] );
 
