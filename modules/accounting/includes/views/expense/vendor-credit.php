@@ -58,10 +58,10 @@ $tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
 
     <?php
     $dropdown = erp_ac_get_chart_dropdown([
-        'exclude'  => [2, 4, 5],
+        'exclude'  => [1, 2, 4, 5],
 
     ] );
-
+    
     $banks_id = wp_list_pluck( erp_ac_get_bank_accounts(), 'id' );
     $dropdown = erp_ac_exclude_chart( $dropdown, $banks_id );
 
