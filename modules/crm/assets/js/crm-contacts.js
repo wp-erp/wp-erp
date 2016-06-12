@@ -213,7 +213,7 @@
             {
                 id : 'permanent_delete',
                 text : 'Permanent Delete',
-                showIf : 'onlyTrased'
+                showIf : 'showPermanentDelete'
             },
 
             {
@@ -735,7 +735,7 @@
                         attrTitle: 'Permanent Delete this contact',
                         class: 'delete',
                         action: 'permanent_delete',
-                        showIf: 'showPermanentDelte'
+                        showIf: 'showPermanentDelete'
                     },
                     {
                         title: 'Restore',
@@ -805,8 +805,12 @@
                     return false;
                 },
 
-                showPermanentDelte: function( item ) {
+                showPermanentDelete: function( item ) {
                     if ( this.$refs.vtable.currentTopNavFilter == 'trash' ) {
+                        if ( wpErpCrm.isAgent ) {
+                            return false;
+                        }
+
                         if ( typeof item == 'undefined' ) {
                             return true;
                         }
