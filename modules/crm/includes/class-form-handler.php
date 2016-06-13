@@ -35,15 +35,14 @@ class Form_Handler {
      * @return array
      */
     function contact_advance_filter( $custom_sql, $args ) {
-        $postdata = $_REQUEST;
         $pep_fileds  = [ 'first_name', 'last_name', 'email', 'company', 'phone', 'mobile', 'other', 'fax', 'notes', 'street_1', 'street_2', 'city', 'postal_code', 'currency' ];
 
-        if ( !isset( $postdata['erpadvancefilter'] ) || empty( $postdata['erpadvancefilter'] ) ) {
+        if ( !isset( $args['erpadvancefilter'] ) || empty( $args['erpadvancefilter'] ) ) {
             return $custom_sql;
         }
 
-        $or_query   = explode( '&or&', $postdata['erpadvancefilter'] );
-        $allowed    = erp_crm_get_serach_key( $postdata['type'] );
+        $or_query   = explode( '&or&', $args['erpadvancefilter'] );
+        $allowed    = erp_crm_get_serach_key( $args['type'] );
         $query_data = [];
 
         if ( $or_query ) {

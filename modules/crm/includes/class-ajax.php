@@ -152,6 +152,10 @@ class Ajax_Handler {
             ];
         }
 
+        if ( isset( $_REQUEST['erpadvancefilter'] ) && ! empty( $_REQUEST['erpadvancefilter'] ) ) {
+            $args['erpadvancefilter'] = $_REQUEST['erpadvancefilter'];
+        }
+
         $contacts['data']  = erp_get_peoples( $args );
 
         $args['count'] = true;
@@ -340,7 +344,6 @@ class Ajax_Handler {
      * @return json
      */
     public function customer_remove() {
-
         $this->verify_nonce( 'wp-erp-crm-nonce' );
 
         $ids         = [];
@@ -388,7 +391,6 @@ class Ajax_Handler {
      * @return json
      */
     public function customer_restore() {
-
         $this->verify_nonce( 'wp-erp-crm-nonce' );
 
         $customer_id = ( isset( $_REQUEST['id'] ) && is_array( $_REQUEST['id'] ) ) ? (array)$_REQUEST['id'] : intval( $_REQUEST['id'] );
