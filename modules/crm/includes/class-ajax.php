@@ -643,7 +643,11 @@ class Ajax_Handler {
             $this->send_error( __( 'No contact found', 'erp' ) );
         }
 
-        erp_people_update_meta( $output['assign_contact_id'], '_assign_crm_agent', $output['erp_select_assign_contact'] );
+        if ( $output['assign_contact_user_id'] ) {
+            update_user_meta( $output['assign_contact_user_id'], '_assign_crm_agent', $output['erp_select_assign_contact'] );
+        } else {
+            erp_people_update_meta( $output['assign_contact_id'], '_assign_crm_agent', $output['erp_select_assign_contact'] );
+        }
 
         $this->send_success( __( 'Assing to agent successfully', 'erp' ) );
     }
