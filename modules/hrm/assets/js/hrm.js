@@ -32,6 +32,7 @@
             $( '.erp-hr-employees' ).on( 'click', 'a#erp-employee-new', this.employee.create );
             $( '.erp-hr-employees' ).on( 'click', 'span.edit a', this.employee.edit );
             $( '.erp-hr-employees' ).on( 'click', 'a.submitdelete', this.employee.remove );
+            $( '.erp-hr-employees' ).on( 'click', 'a.submitrestore', this.employee.restore );
             $( '.erp-hr-employees' ).on( 'click', 'a#erp-empl-status', this.employee.updateJobStatus );
             $( '.erp-hr-employees' ).on( 'click', 'a#erp-empl-compensation', this.employee.updateJobStatus );
             $( '.erp-hr-employees' ).on( 'click', 'a#erp-empl-jobinfo', this.employee.updateJobStatus );
@@ -739,6 +740,31 @@
                         }
                     });
                 }
+            },
+
+            restore: function(e) {
+                e.preventDefault();
+
+                var self = $(this);
+
+                if ( confirm( wpErpHr.restoreConfirmEmployee ) ) {
+                    wp.ajax.send( 'erp-hr-emp-restore', {
+                        data: {
+                            _wpnonce: wpErpHr.nonce,
+                            id: self.data( 'id' ),
+                        },
+                        success: function() {
+                            self.closest('tr').fadeOut( 'fast', function() {
+                                $(this).remove();
+                                WeDevs_ERP_HR.employee.reload();
+                            });
+                        },
+                        error: function(response) {
+                            alert( response );
+                        }
+                    });
+                }
+
             },
 
             general: {
