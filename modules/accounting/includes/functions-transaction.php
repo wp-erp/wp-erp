@@ -93,7 +93,9 @@ function erp_ac_get_all_transaction( $args = array() ) {
             $transaction = $transaction->where( 'status', '=', $args['status'] );
         }
 
-        $transaction = $transaction->orWhereNull( 'status' );
+        if ( isset( $args['type'] ) && is_array( $args['type'] ) && in_array( 'journal', $args['type'] ) ) {
+            $transaction = $transaction->orWhereNull( 'status' );
+        }
 
         if ( isset( $args['form_type'] ) &&  is_array( $args['form_type'] ) && array_key_exists( 'in', $args['form_type'] ) ) {
             $transaction = $transaction->whereIn( 'form_type', $args['form_type']['in'] );
