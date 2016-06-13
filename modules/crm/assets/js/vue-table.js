@@ -29,7 +29,7 @@ Vue.component('vtable', {
                                     +'</select>'
                                     +'<select v-if="( extraActions.type == \'select_optgroup\')" name="{{ extraActions.name }}" id="{{ extraActions.id }}" class="v-select-field {{ extraActions.class }}" data-placeholder="{{ extraActions.placeholder }}" style="width:200px;">'
                                         + '<template v-if="extraActions.default">'
-                                            + '<option value="{{ extraActions.default.id }}">{{ extraActions.default.text }}</option>'
+                                            + '<option disabled="disabled" selected="selected" value="{{ extraActions.default.id }}">{{ extraActions.default.text }}</option>'
                                         + '</template>'
                                         + '<optgroup v-for="bulkOptionGroup in extraActions.options" label="{{ bulkOptionGroup.name }}">'
                                             +'<option v-for="bulkOption in bulkOptionGroup.options" value="{{ bulkOption.id }}">{{ bulkOption.text }}</option>'
