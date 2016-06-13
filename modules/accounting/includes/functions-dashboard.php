@@ -26,7 +26,7 @@ function erp_ac_dashboard_right_column() {
 function erp_ac_dashboard_banks() {
     $bank_journals = erp_ac_get_bank_journals();
     $transactions = erp_ac_get_all_transaction([
-        'type'   => ['expense', 'sales'],
+        'type'   => ['expense', 'sales', 'journal'],
         'status' => array( 'not_in' => array( 'draft' ) )
     ]);
     $transactions_id = wp_list_pluck( $transactions, 'id' );
@@ -161,7 +161,7 @@ function erp_ac_dashboard_net_income() {
 
     $incomes_args = [
         'join'       => ['journals'],
-        'type'       => [ 'sales', 'expense', 'journal'],
+        'type'       => ['sales', 'expense', 'journal'],
         'status'     => ['not_in' => 'draft'],
         //'wherein'    => [ 'form_type' => [ 'payment', 'payment_voucher' ], 'status' => [ 'closed', 'paid' ] ],
         'groupby'    => 'type',
@@ -244,7 +244,7 @@ function erp_ac_dashboard_net_income() {
         $income     = $income + array_sum( $credit_arr );
         $expense    = $expense + array_sum( $debit_arr );
     }
-    $expense = $expense <= 0 ? 0 : $expense;
+    $expense = ( $expense <= 0 ) ? 0 : $expense;
     $net_income = $income - $expense;
     ?>
     <ul>
@@ -320,12 +320,12 @@ function erp_ac_dashboard_income_expense() {
                 if ( in_array( $journal['ledger_id'], $expense_tax_ledgers ) ) {
                     continue;
                 }
-                $ex = ( $journal['debit'] - $journal['credit'] ) <= 0 ? 0 : ( $journal['debit'] - $journal['credit'] ); 
+                $ex = $journal['debit'] - $journal['credit']; 
                 $total = $total + $ex;
             }
         }
 
-        $expense_data[$date_ex] = $total <= 0 ? 0 : $total;
+        $expense_data[$date_ex] = ( $total <= 0 ) ? 0 : $total;
     }
 
     //echo '<pre>'; print_r($incomes); echo '</pre>'; die();
@@ -584,7 +584,12 @@ function erp_ac_dashboard_expense_chart() {
         }
     }
     $ledger_data = [];
+
     foreach ( $expense_data as $id => $ledg_data ) {
+        if ( array_sum( $ledg_data ) <= 0 ) {
+            continue;
+        }
+
         $ledger_data[$id] = array_sum( $ledg_data );
     }
 
