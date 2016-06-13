@@ -25,8 +25,9 @@ class Settings extends ERP_Settings_Page {
      */
     public function get_sections() {
         $sections = array(
+            'general'         => __( 'General', 'erp' ),
             'currency_option' => __( 'Currency Options', 'erp' ),
-            'erp_ac_tax'          => __( 'Sales Tax', 'erp' )
+            'erp_ac_tax'      => __( 'Sales Tax', 'erp' )
         );
 
         return apply_filters( 'erp_get_sections_' . $this->id, $sections );
@@ -38,6 +39,47 @@ class Settings extends ERP_Settings_Page {
      * @return array
      */
     public function get_section_fields( $section = '' ) {
+
+        $fields['general'] = array(
+            array( 'title' => __( '', 'erp' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
+
+            array(
+                'title' => __( 'Sales Payment', 'erp' ),
+                'id'    => 'sales_payment',
+                'type'  => 'text',
+                'desc'  => __( 'Slaes payment invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
+            ),
+
+            array(
+                'title' => __( 'Sales Invoice', 'erp' ),
+                'id'    => 'sales_invoice',
+                'type'  => 'text',
+                'desc'  => __( 'Slaes invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
+            ),
+
+            array(
+                'title' => __( 'Expense Voucher', 'erp' ),
+                'id'    => 'expense_voucher',
+                'type'  => 'text',
+                'desc'  => __( 'Expense voucher invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
+            ),
+
+            array(
+                'title' => __( 'Expense Credit', 'erp' ),
+                'id'    => 'expense_credit',
+                'type'  => 'text',
+                'desc'  => __( 'Expense credit invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
+           ),
+
+            array(
+                'title' => __( 'Journal', 'erp' ),
+                'id'    => 'journal',
+                'type'  => 'text',
+                'desc'  => __( 'Journal invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
+            ),
+
+            array( 'type' => 'sectionend', 'id' => 'script_styling_options' ),
+        );
 
         $fields['currency_option'] = array(
 

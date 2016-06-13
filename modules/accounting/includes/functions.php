@@ -315,6 +315,17 @@ function erp_ac_pagination( $total, $limit, $pagenum ) {
     }
 }
 
+function erp_ac_invoice_prefix( $type, $id ) {
+
+    $prefix = erp_get_option( $type );
+
+    if ( empty( $prefix ) ) {
+        return $id;
+    }
+
+    return str_replace( '{id}', $id, $prefix );   
+}
+
 
 
 
