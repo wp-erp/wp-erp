@@ -381,6 +381,10 @@
 .erp-customer-form ol.fields-inline li {
   display: inline-block;
 }
+.erp-crm-customer table.wp-list-table .row-actions > span:last-child > span,
+.erp-crm-subscriber-contact table.wp-list-table .row-actions > span:last-child > span {
+  display: none;
+}
 .erp-crm-customer table.wp-list-table .column-name img,
 .erp-crm-subscriber-contact table.wp-list-table .column-name img {
   float: left;

@@ -182,6 +182,18 @@ function erp_crm_get_details_url( $id, $type ) {
 
     return admin_url( 'admin.php' );
 }
+
+// function erp_crm_item_row_actions() {
+//     $item_row_action = [];
+
+//     $item_row_action['edit'] =  [
+//         'title'     => __( 'Edit', 'erp' ),
+//         'attrTitle' => __( 'Edit this contact', 'erp' ),
+//         'class'     => 'edit',
+//         'action'    => 'edit'
+//     ],
+// }
+
 /**
  * Get CRM life statges
  *

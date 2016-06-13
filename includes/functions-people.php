@@ -82,7 +82,8 @@ function erp_get_peoples( $args = [] ) {
         $sql['select'][] = "GROUP_CONCAT( t.name SEPARATOR ',') AS types";
         $sql['join'][]   = "LEFT JOIN $type_rel_tb AS r ON people.id = r.people_id LEFT JOIN $types_tb AS t ON r.people_types_id = t.id";
         $sql_from_tb     = "FROM $pep_tb AS people";
-        $sql_contact_type = "WHERE ( select count(*) from $types_tb
+        $sql['where'][]    = "where 1=1";
+        $sql['where'][]    = "AND ( select count(*) from $types_tb
             inner join  $type_rel_tb
                 on $types_tb.`id` = $type_rel_tb.`people_types_id`
                 where $type_rel_tb.`people_id` = people.`id` $type_sql and $trashed_sql
@@ -122,7 +123,7 @@ function erp_get_peoples( $args = [] ) {
 
         $custom_sql  = apply_filters( 'erp_get_people_pre_where_join', $custom_sql, $args );
         $sql         = apply_filters( 'erp_get_people_pre_query', $sql, $args );
-        $final_query = $wrapper_select . ' ' . implode( ' ', $sql['select'] ) . ' ' . $sql_from_tb . ' ' . implode( ' ', $sql['join'] ) . ' ' . $sql_contact_type . ' ' . $sql_group_by . ' ' . implode( ' ', $custom_sql['join'] ) . ' ' . implode( ' ', $custom_sql['where'] ) . ' ' . $sql_order_by . ' ' . $sql_limit;
+        $final_query = $wrapper_select . ' ' . implode( ' ', $sql['select'] ) . ' ' . $sql_from_tb . ' ' . implode( ' ', $sql['join'] ) . ' ' . implode( ' ', $sql['where'] ) . ' ' . $sql_group_by . ' ' . implode( ' ', $custom_sql['join'] ) . ' ' . implode( ' ', $custom_sql['where'] ) . ' ' . $sql_order_by . ' ' . $sql_limit;
 
         // print_r( $final_query ); die();
 

@@ -22,6 +22,7 @@ class Form_Handler {
         add_action( 'admin_head', [ $this, 'handle_canonical_url' ], 10 );
         add_action( 'erp_hr_after_employee_permission_set', [ $this, 'crm_permission_set' ], 10, 2 );
         add_filter( 'erp_get_people_pre_where_join', [ $this, 'contact_advance_filter' ], 10, 2 );
+        add_filter( 'erp_get_people_pre_query', [ $this, 'is_people_belongs_to_saved_search' ], 10, 2 );
     }
 
     /**
@@ -35,15 +36,14 @@ class Form_Handler {
      * @return array
      */
     function contact_advance_filter( $custom_sql, $args ) {
-        $postdata = $_REQUEST;
         $pep_fileds  = [ 'first_name', 'last_name', 'email', 'company', 'phone', 'mobile', 'other', 'fax', 'notes', 'street_1', 'street_2', 'city', 'postal_code', 'currency' ];
 
-        if ( !isset( $postdata['erpadvancefilter'] ) || empty( $postdata['erpadvancefilter'] ) ) {
+        if ( !isset( $args['erpadvancefilter'] ) || empty( $args['erpadvancefilter'] ) ) {
             return $custom_sql;
         }
 
-        $or_query   = explode( '&or&', $postdata['erpadvancefilter'] );
-        $allowed    = erp_crm_get_serach_key( $postdata['type'] );
+        $or_query   = explode( '&or&', $args['erpadvancefilter'] );
+        $allowed    = erp_crm_get_serach_key( $args['type'] );
         $query_data = [];
 
         if ( $or_query ) {
@@ -109,6 +109,26 @@ class Form_Handler {
         }
 
         return $custom_sql;
+    }
+
+    /**
+     * SQL filter to check if a people id is belongs to a saved search
+     *
+     * @since 1.1.1
+     *
+     * @param array $sql
+     * @param array $args
+     *
+     * @return array
+     */
+    public function is_people_belongs_to_saved_search( $sql, $args ) {
+        if ( empty( $args['erpadvancefilter'] ) || empty( $args['test_user'] ) ) {
+            return $sql;
+        }
+
+        $sql['where'][] = "AND people.id = " . $args['test_user'];
+
+        return $sql;
     }
 
     /**

@@ -213,7 +213,7 @@
             {
                 id : 'permanent_delete',
                 text : 'Permanent Delete',
-                showIf : 'onlyTrased'
+                showIf : 'showPermanentDelete'
             },
 
             {
@@ -713,7 +713,8 @@
                         title: 'Edit',
                         attrTitle: 'Edit this contact',
                         class: 'edit',
-                        action: 'edit'
+                        action: 'edit',
+                        showIf: 'checkPermission'
                     },
                     {
                         title: 'View',
@@ -721,7 +722,6 @@
                         class: 'view',
                         action: 'view',
                         callback: 'contact_view_link'
-
                     },
                     {
                         title: 'Delete',
@@ -735,7 +735,7 @@
                         attrTitle: 'Permanent Delete this contact',
                         class: 'delete',
                         action: 'permanent_delete',
-                        showIf: 'onlyTrased'
+                        showIf: 'showPermanentDelete'
                     },
                     {
                         title: 'Restore',
@@ -789,17 +789,76 @@
                     return ( Object.keys( item.assign_to ).length > 0 ) ? '<a>' + item.assign_to.display_name + '</a>' : '—';
                 },
 
-                onlyTrased: function( rowAction ) {
-                    if ( this.$refs.vtable.currentTopNavFilter == 'trash' ) {
+                checkPermission: function( item ) {
+                    if ( typeof item == 'undefined' ) {
+                        return;
+                    }
+
+                    if( wpErpCrm.isCrmManager ) {
                         return true;
+                    }
+
+                    if ( wpErpCrm.isAgent && wpErpCrm.current_user_id == item.assign_to.id ) {
+                        return true;
+                    }
+
+                    return false;
+                },
+
+                showPermanentDelete: function( item ) {
+                    if ( this.$refs.vtable.currentTopNavFilter == 'trash' ) {
+                        if ( wpErpCrm.isAgent ) {
+                            return false;
+                        }
+
+                        if ( typeof item == 'undefined' ) {
+                            return true;
+                        }
+
+                        if( wpErpCrm.isCrmManager ) {
+                            return true;
+                        }
+
+                        if ( wpErpCrm.isAgent ) {
+                            return false;
+                        }
+                    }
+
+                    return false;
+                },
+
+                onlyTrased: function( item ) {
+                    if ( this.$refs.vtable.currentTopNavFilter == 'trash' ) {
+                        if ( typeof item == 'undefined' ) {
+                            return true;
+                        }
+
+                        if( wpErpCrm.isCrmManager ) {
+                            return true;
+                        }
+
+                        if ( wpErpCrm.isAgent && wpErpCrm.current_user_id == item.assign_to.id ) {
+                            return true;
+                        }
                     }
                     return false;
                 },
 
-                whenNotTrased: function( rowAction ) {
+                whenNotTrased: function( item ) {
                     if ( this.$refs.vtable.currentTopNavFilter != 'trash' ) {
-                        return true;
+                        if ( typeof item == 'undefined' ) {
+                            return true;
+                        }
+
+                        if( wpErpCrm.isCrmManager ) {
+                            return true;
+                        }
+
+                        if ( wpErpCrm.isAgent && wpErpCrm.current_user_id == item.assign_to.id ) {
+                            return true;
+                        }
                     }
+
                     return false;
                 },
 
