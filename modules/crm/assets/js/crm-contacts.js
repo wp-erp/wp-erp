@@ -1769,6 +1769,7 @@
                     var mainWrap = $(event.target).closest('.erp-crm-assign-contact');
 
                     mainWrap.find('.user-wrap').hide();
+                    mainWrap.find('span#erp-crm-edit-assign-contact-to-agent').hide();
                     this.initSearchCrmAgent();
                     mainWrap.find('.assign-form').fadeIn();
                 },
@@ -1777,21 +1778,29 @@
                     var self = this;
 
                     var target = $(event.target),
+                        form = target.closest('form'),
                         data = {
                             action : 'erp-crm-save-assign-contact',
                             _wpnonce: wpErpCrm.nonce,
-                            formData: target.closest('form').serialize()
+                            formData: form.serialize()
                         };
+
+                    form.find('.assign-form-loader').removeClass('erp-hide');
 
                     wp.ajax.send( {
                         data: data,
                         success: function( res ) {
-                            $('.erp-crm-assign-contact').load( window.location.href + ' .inner-wrap', function() {
+                            $('.user-wrap').load( window.location.href + ' .user-wrap-content', function() {
                                 self.initSearchCrmAgent();
+                                form.find('.assign-form-loader').addClass('erp-hide');
+                                var mainWrap = target.closest('.erp-crm-assign-contact');
+                                mainWrap.find('.assign-form').hide();
+                                mainWrap.find('.user-wrap').fadeIn();
+                                mainWrap.find('span#erp-crm-edit-assign-contact-to-agent').fadeIn();
                             } );
-
                         },
                         error: function(error) {
+                            form.find('.assign-form-loader').addClass('erp-hide');
                             alert( error );
                         }
                     });
@@ -1800,7 +1809,7 @@
                 cancelAssignContact: function() {
                     var target = $(event.target);
                     var mainWrap = target.closest('.erp-crm-assign-contact');
-
+                    mainWrap.find('span#erp-crm-edit-assign-contact-to-agent').fadeIn();
                     mainWrap.find('.assign-form').hide();
                     mainWrap.find('.user-wrap').fadeIn();
                 }

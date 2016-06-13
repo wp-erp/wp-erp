@@ -720,7 +720,10 @@
   margin-top: 0px;
   padding: 5px 0px 5px;
 }
-.erp-single-customer .erp-single-customer-content .customer-basic-info .erp-crm-assign-contact h4:after {
+.erp-single-customer .erp-single-customer-content .customer-basic-info .erp-crm-assign-contact .inner-wrap {
+  position: relative;
+}
+.erp-single-customer .erp-single-customer-content .customer-basic-info .erp-crm-assign-contact .inner-wrap h4:after {
   content: ' ';
   position: relative;
   top: -9px;
@@ -729,31 +732,34 @@
   width: 65%;
   border: 1px solid #eee;
 }
-.erp-single-customer .erp-single-customer-content .customer-basic-info .erp-crm-assign-contact .user-wrap {
+.erp-single-customer .erp-single-customer-content .customer-basic-info .erp-crm-assign-contact .inner-wrap .user-wrap {
   position: relative;
 }
-.erp-single-customer .erp-single-customer-content .customer-basic-info .erp-crm-assign-contact .user-wrap img {
+.erp-single-customer .erp-single-customer-content .customer-basic-info .erp-crm-assign-contact .inner-wrap .user-wrap img {
   float: left;
   margin-right: 10px;
 }
-.erp-single-customer .erp-single-customer-content .customer-basic-info .erp-crm-assign-contact .user-wrap span#erp-crm-edit-assign-contact-to-agent {
+.erp-single-customer .erp-single-customer-content .customer-basic-info .erp-crm-assign-contact .inner-wrap span#erp-crm-edit-assign-contact-to-agent {
   position: absolute;
-  top: 1%;
+  top: 50%;
   right: 2%;
   cursor: pointer;
 }
-.erp-single-customer .erp-single-customer-content .customer-basic-info .erp-crm-assign-contact .assign-form .crm-aget-search-select-wrap {
+.erp-single-customer .erp-single-customer-content .customer-basic-info .erp-crm-assign-contact .inner-wrap .assign-form .crm-aget-search-select-wrap {
   margin-bottom: 15px;
 }
-.erp-single-customer .erp-single-customer-content .customer-basic-info .erp-crm-assign-contact .user-details {
+.erp-single-customer .erp-single-customer-content .customer-basic-info .erp-crm-assign-contact .inner-wrap .assign-form .assign-form-loader {
+  margin: 4px 0px 0px 6px;
+}
+.erp-single-customer .erp-single-customer-content .customer-basic-info .erp-crm-assign-contact .inner-wrap .user-details {
   float: left;
   margin-top: -2px;
 }
-.erp-single-customer .erp-single-customer-content .customer-basic-info .erp-crm-assign-contact .user-details a {
+.erp-single-customer .erp-single-customer-content .customer-basic-info .erp-crm-assign-contact .inner-wrap .user-details a {
   text-decoration: none;
   display: block;
 }
-.erp-single-customer .erp-single-customer-content .customer-basic-info .erp-crm-assign-contact .user-details span {
+.erp-single-customer .erp-single-customer-content .customer-basic-info .erp-crm-assign-contact .inner-wrap .user-details span {
   font-style: italic;
 }
 .erp-single-customer .erp-single-customer-content .customer-company-info .company-profile-content .postbox {
