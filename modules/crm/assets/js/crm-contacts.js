@@ -666,8 +666,6 @@
                     this.fields[index][fieldIndex].value = fieldObj.filterValue;
                     this.editableMode = editableMode;
 
-                    console.log( fieldObj );
-
                     this.$dispatch( 'filterContactList', this.fields );
                 },
 

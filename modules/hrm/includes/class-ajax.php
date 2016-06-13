@@ -42,6 +42,7 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-hr-employee-new', 'employee_create' );
         $this->action( 'wp_ajax_erp-hr-emp-get', 'employee_get' );
         $this->action( 'wp_ajax_erp-hr-emp-delete', 'employee_remove' );
+        $this->action( 'wp_ajax_erp-hr-emp-restore', 'employee_restore' );
         $this->action( 'wp_ajax_erp-hr-emp-update-status', 'employee_update_employment' );
         $this->action( 'wp_ajax_erp-hr-emp-update-comp', 'employee_update_compensation' );
         $this->action( 'wp_ajax_erp-hr-emp-delete-history', 'employee_remove_history' );
@@ -500,6 +501,33 @@ class Ajax_Handler {
         // @TODO: check permission
         $this->send_success( __( 'Employee has been removed successfully', 'erp' ) );
     }
+
+    /**
+     * Restore an employee from the company
+     *
+     * @since 1.1.1
+     *
+     * @return void
+     */
+    public function employee_restore() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        global $wpdb;
+
+        $employee_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+        $user        = get_user_by( 'id', $employee_id );
+
+        if ( ! $user ) {
+            $this->send_error( __( 'No employee found', 'erp' ) );
+        }
+
+        if ( in_array( 'employee', $user->roles ) ) {
+            erp_employee_restore( $employee_id );
+        }
+
+        $this->send_success( __( 'Employee has been restore successfully', 'erp' ) );
+    }
+
 
     /**
      * Update employment status

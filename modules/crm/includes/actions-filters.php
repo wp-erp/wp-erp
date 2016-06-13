@@ -17,5 +17,4 @@ add_action( 'user_register', 'erp_create_contact_from_created_user' );
 add_action( 'erp_crm_inbound_email_scheduled_events', 'erp_crm_check_new_inbound_emails' );
 
 // Filters *****************************************************************/
-add_filter( 'erp_people_query_object', 'erp_crm_save_search_query_filter' );
 add_filter( 'erp_map_meta_caps', 'erp_crm_map_meta_caps', 10, 4 );

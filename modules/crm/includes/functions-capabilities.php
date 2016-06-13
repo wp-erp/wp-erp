@@ -246,15 +246,19 @@ function erp_crm_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args 
 
         case 'erp_crm_edit_contact':
         case 'erp_crm_delete_contact':
-            $contact_id = isset( $args[0] ) ? $args[0] : false;
-            $data_hard = isset( $args[1] ) ? $args[1] : false;
+            $contact_id      = isset( $args[0] ) ? $args[0] : false;
+            $data_hard       = isset( $args[1] ) ? $args[1] : false;
+            $contact_user_id = isset( $args[2] ) ? $args[2] : false;
 
             $crm_manager_role = erp_crm_get_manager_role();
             $crm_agent_role   = erp_crm_get_agent_role();
 
             if ( user_can( $user_id, $crm_agent_role ) ) {
-
-                $assign_id = erp_people_get_meta( $contact_id, '_assign_crm_agent', true );
+                if ( $contact_user_id ) {
+                    $assign_id = get_user_meta( $contact_user_id, '_assign_crm_agent', true );
+                } else {
+                    $assign_id = erp_people_get_meta( $contact_id, '_assign_crm_agent', true );
+                }
 
                 if ( $assign_id != $user_id ) {
                     $caps = ['do_not_allow'];
