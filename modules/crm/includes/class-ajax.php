@@ -265,7 +265,7 @@ class Ajax_Handler {
             $this->send_error( __( 'You don\'t have any permission to add new contact', 'erp' ) );
         }
 
-        if ( $posted['id'] && ! current_user_can( 'erp_crm_edit_contact', $posted['id'] ) ) {
+        if ( $posted['id'] && ! current_user_can( 'erp_crm_edit_contact', $posted['id'], false, $posted['user_id'] ) ) {
             $this->send_error( __( 'You don\'t have any permission to edit this contact', 'erp' ) );
         }
 
