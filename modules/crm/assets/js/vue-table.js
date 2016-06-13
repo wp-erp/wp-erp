@@ -974,12 +974,14 @@ Vue.component('vtable', {
     events: {
 
         'vtable:reload': function() {
+            this.checkAllCheckbox = false;
             this.checkboxItems = [];
             this.bulkaction1 = this.bulkaction2 = '-1';
             this.fetchData();
         },
 
         'vtable:refresh': function() {
+            this.checkAllCheckbox = false;
             this.currentPage = 1;
             this.checkboxItems = [];
             this.bulkaction1 = this.bulkaction2 = '-1';
