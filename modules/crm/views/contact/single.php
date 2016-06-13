@@ -1,5 +1,4 @@
-<div class="wrap erp erp-crm-customer erp-single-customer" id="wp-erp">
-<?php //var_dump( $customer ); ?>
+<div class="wrap erp erp-crm-customer erp-single-customer" id="wp-erp" v-cloak>
     <h2><?php _e( 'Contact #', 'erp' ); echo $customer->id; ?>
         <a href="<?php echo add_query_arg( ['page' => 'erp-sales-customers'], admin_url( 'admin.php' ) ); ?>" id="erp-contact-list" class="add-new-h2"><?php _e( 'Back to Contact list', 'erp' ); ?></a>
 
@@ -79,10 +78,12 @@
                                     <h4><?php _e( 'Contact Owner', 'erp' ); ?></h4>
                                     <div class="user-wrap">
                                         <?php
-                                            $crm_user_id = erp_people_get_meta( $customer->id, '_assign_crm_agent', true );
+                                            $crm_user_id = $customer->get_contact_owner();
                                             if ( !empty( $crm_user_id ) ) {
                                                 $user        = get_user_by( 'id', $crm_user_id );
                                                 $user_string = esc_html( $user->display_name );
+                                            } else {
+                                                $user_string = '';
                                             }
                                         ?>
                                         <?php if ( $crm_user_id ): ?>
@@ -138,6 +139,7 @@
                         :id="<?php echo $customer->id; ?>"
                         add-button-txt="<?php _e( 'Assign Contact Groups', 'erp' ) ?>"
                         title="<?php _e( 'Contact Group', 'erp' ); ?>"
+                        is-permitted="<?php echo current_user_can( 'erp_crm_edit_contact', $customer->id ); ?>"
                     ></contact-assign-group>
 
                 </div>
