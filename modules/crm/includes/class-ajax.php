@@ -265,7 +265,7 @@ class Ajax_Handler {
             $this->send_error( __( 'You don\'t have any permission to add new contact', 'erp' ) );
         }
 
-        if ( $posted['id'] && ! current_user_can( 'erp_crm_edit_contact', $posted['id'], false, $posted['user_id'] ) ) {
+        if ( $posted['id'] && ! current_user_can( 'erp_crm_edit_contact', $posted['id'] ) ) {
             $this->send_error( __( 'You don\'t have any permission to edit this contact', 'erp' ) );
         }
 
@@ -366,6 +366,10 @@ class Ajax_Handler {
             $ids[] = $customer_id;
         }
 
+        if ( empty( $ids ) ) {
+            $this->send_error( __( 'Can not delete - You do not own this contact(s)', 'erp' ) );
+        }
+
         $data = [
             'id'   => $ids,
             'hard' => $hard,
@@ -422,6 +426,7 @@ class Ajax_Handler {
     public function bulk_assign_group() {
         $this->verify_nonce( 'wp-erp-crm-bulk-contact-subscriber' );
 
+        $ids                = [];
         $contact_subscriber = [];
         $user_ids           = ( isset( $_POST['user_id'] ) && ! empty( $_POST['user_id'] ) ) ? explode(',', $_POST['user_id'] ) : [];
         $group_ids          = ( isset( $_POST['group_id'] ) && ! empty( $_POST['group_id'] ) ) ? $_POST['group_id'] : [];
@@ -434,7 +439,19 @@ class Ajax_Handler {
             $this->send_error( __( 'Atleast one group must be selected', 'erp' ) );
         }
 
-        foreach ( $user_ids as $user_key => $user_id ) {
+        // Check permission for trashing and permanent deleting contact;
+        foreach ( $user_ids as $contact_id ) {
+            if ( ! current_user_can( 'erp_crm_edit_contact', $contact_id ) ) {
+                continue;
+            }
+            $ids[] = $contact_id;
+        }
+
+        if ( empty( $ids ) ) {
+            $this->send_error( __( 'Can not assign any group - You do not own this contact(s)', 'erp' ) );
+        }
+
+        foreach ( $ids as $user_key => $user_id ) {
             foreach ( $group_ids as $group_key => $group_id ) {
                 $contact_subscriber = [
                     'user_id'  => $user_id,
@@ -626,7 +643,11 @@ class Ajax_Handler {
             $this->send_error( __( 'No contact found', 'erp' ) );
         }
 
-        erp_people_update_meta( $output['assign_contact_id'], '_assign_crm_agent', $output['erp_select_assign_contact'] );
+        if ( $output['assign_contact_user_id'] ) {
+            update_user_meta( $output['assign_contact_user_id'], '_assign_crm_agent', $output['erp_select_assign_contact'] );
+        } else {
+            erp_people_update_meta( $output['assign_contact_id'], '_assign_crm_agent', $output['erp_select_assign_contact'] );
+        }
 
         $this->send_success( __( 'Assing to agent successfully', 'erp' ) );
     }

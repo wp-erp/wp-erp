@@ -248,14 +248,15 @@ function erp_crm_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args 
         case 'erp_crm_delete_contact':
             $contact_id      = isset( $args[0] ) ? $args[0] : false;
             $data_hard       = isset( $args[1] ) ? $args[1] : false;
-            $contact_user_id = isset( $args[2] ) ? $args[2] : false;
 
             $crm_manager_role = erp_crm_get_manager_role();
             $crm_agent_role   = erp_crm_get_agent_role();
 
             if ( user_can( $user_id, $crm_agent_role ) ) {
-                if ( $contact_user_id ) {
-                    $assign_id = get_user_meta( $contact_user_id, '_assign_crm_agent', true );
+                $contact_user_id = \WeDevs\ERP\Framework\Models\People::select('user_id')->where( 'id', $contact_id )->first();
+
+                if ( isset( $contact_user_id->user_id ) && $contact_user_id->user_id ) {
+                    $assign_id = get_user_meta( $contact_user_id->user_id, '_assign_crm_agent', true );
                 } else {
                     $assign_id = erp_people_get_meta( $contact_id, '_assign_crm_agent', true );
                 }

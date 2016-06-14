@@ -61,6 +61,9 @@ class Accounting {
         // plugin not installed notice
         add_action( 'admin_notices', array( $this, 'admin_notice' ) );
         //add_action( 'init', array( $this, 'test' ) );
+
+        // trigger after accounting module loaded
+        do_action('erp_accounting_loaded');
     }
 
     function test() {

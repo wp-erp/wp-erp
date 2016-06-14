@@ -78,31 +78,32 @@
                                 <div class="inner-wrap">
                                     <h4><?php _e( 'Contact Owner', 'erp' ); ?></h4>
                                     <div class="user-wrap">
-                                        <?php
-                                            $crm_user_id = erp_people_get_meta( $customer->id, '_assign_crm_agent', true );
-                                            if ( !empty( $crm_user_id ) ) {
-                                                $user        = get_user_by( 'id', $crm_user_id );
-                                                $user_string = esc_html( $user->display_name );
-                                            }
-                                        ?>
-                                        <?php if ( $crm_user_id ): ?>
-                                            <?php echo erp_crm_get_avatar( $crm_user_id, 32 ); ?>
-                                            <div class="user-details">
-                                                <a href="#"><?php echo get_the_author_meta( 'display_name', $crm_user_id ); ?></a>
-                                                <span><?php echo  get_the_author_meta( 'user_email', $crm_user_id ); ?></span>
-                                            </div>
-                                        <?php else: ?>
-                                            <div class="user-details">
-                                                <p><?php _e( 'Nobody', 'erp' ) ?></p>
-                                            </div>
-                                        <?php endif ?>
-
-                                        <div class="clearfix"></div>
-
-                                        <?php if ( current_user_can( 'erp_crm_edit_contact' ) ): ?>
-                                            <span @click.prevent="assignContact()" id="erp-crm-edit-assign-contact-to-agent"><i class="fa fa-pencil-square-o"></i></span>
-                                        <?php endif ?>
+                                        <div class="user-wrap-content">
+                                            <?php
+                                                $crm_user_id = erp_people_get_meta( $customer->id, '_assign_crm_agent', true );
+                                                if ( !empty( $crm_user_id ) ) {
+                                                    $user        = get_user_by( 'id', $crm_user_id );
+                                                    $user_string = esc_html( $user->display_name );
+                                                }
+                                            ?>
+                                            <?php if ( $crm_user_id ): ?>
+                                                <?php echo erp_crm_get_avatar( $crm_user_id, 32 ); ?>
+                                                <div class="user-details">
+                                                    <a href="#"><?php echo get_the_author_meta( 'display_name', $crm_user_id ); ?></a>
+                                                    <span><?php echo  get_the_author_meta( 'user_email', $crm_user_id ); ?></span>
+                                                </div>
+                                            <?php else: ?>
+                                                <div class="user-details">
+                                                    <p><?php _e( 'Nobody', 'erp' ) ?></p>
+                                                </div>
+                                            <?php endif ?>
+                                            <div class="clearfix"></div>
+                                        </div>
                                     </div>
+
+                                    <?php if ( current_user_can( 'erp_crm_edit_contact' ) ): ?>
+                                        <span @click.prevent="assignContact()" id="erp-crm-edit-assign-contact-to-agent"><i class="fa fa-pencil-square-o"></i></span>
+                                    <?php endif ?>
 
                                     <div class="assign-form erp-hide">
                                         <form action="" method="post">
@@ -119,6 +120,7 @@
                                             <input type="hidden" name="assign_contact_id" value="<?php echo $customer->id; ?>">
                                             <input type="submit" @click.prevent="saveAssignContact()" class="button button-primary save-edit-assign-contact" name="erp_assign_contacts" value="<?php _e( 'Assign', 'erp' ); ?>">
                                             <input type="submit" @click.prevent="cancelAssignContact()" class="button cancel-edit-assign-contact" value="<?php _e( 'Cancel', 'erp' ); ?>">
+                                            <span class="erp-loader erp-hide assign-form-loader"></span>
                                         </form>
                                     </div>
                                 </div>
