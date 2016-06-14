@@ -135,7 +135,7 @@ class Admin_Menu {
 
                     $template = dirname( __FILE__ ) . '/views/expense/payment-voucher.php';
 
-                } elseif ( $type == 'vendor_credit' && ( erp_ac_create_expenses_credit() || erp_ac_publish_expenses_credit() ) ) {
+                } else if ( $type == 'vendor_credit' && ( erp_ac_create_expenses_credit() || erp_ac_publish_expenses_credit() ) ) {
 
                     $template = dirname( __FILE__ ) . '/views/expense/vendor-credit.php';
 

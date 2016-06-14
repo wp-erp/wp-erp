@@ -45,35 +45,35 @@ class Settings extends ERP_Settings_Page {
 
             array(
                 'title' => __( 'Sales Payment', 'erp' ),
-                'id'    => 'sales_payment',
+                'id'    => 'erp_ac_payment',
                 'type'  => 'text',
                 'desc'  => __( 'Slaes payment invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
             ),
 
             array(
                 'title' => __( 'Sales Invoice', 'erp' ),
-                'id'    => 'sales_invoice',
+                'id'    => 'erp_ac_invoice',
                 'type'  => 'text',
                 'desc'  => __( 'Slaes invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
             ),
 
             array(
                 'title' => __( 'Expense Voucher', 'erp' ),
-                'id'    => 'expense_voucher',
+                'id'    => 'erp_ac_payment_voucher',
                 'type'  => 'text',
                 'desc'  => __( 'Expense voucher invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
             ),
 
             array(
                 'title' => __( 'Expense Credit', 'erp' ),
-                'id'    => 'expense_credit',
+                'id'    => 'erp_ac_vendor_credit',
                 'type'  => 'text',
                 'desc'  => __( 'Expense credit invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
            ),
 
             array(
                 'title' => __( 'Journal', 'erp' ),
-                'id'    => 'journal',
+                'id'    => 'erp_ac_journal',
                 'type'  => 'text',
                 'desc'  => __( 'Journal invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
             ),
