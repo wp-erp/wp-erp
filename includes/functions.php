@@ -72,6 +72,7 @@ function erp_get_currencies() {
         'NGN' => __( 'Nigerian Naira', 'erp' ),
         'NOK' => __( 'Norwegian Krone', 'erp' ),
         'NZD' => __( 'New Zealand Dollar', 'erp' ),
+        'OMR' => __( 'Omani Rial', 'erp'),
         'PYG' => __( 'Paraguayan Guaraní', 'erp' ),
         'PHP' => __( 'Philippine Pesos', 'erp' ),
         'PLN' => __( 'Polish Zloty', 'erp' ),
@@ -171,7 +172,7 @@ function erp_get_currency_symbol( $currency = '' ) {
             $currency_symbol = '&#1088;&#1091;&#1073;.';
             break;
         case 'KRW' : $currency_symbol = '&#8361;'; break;
-            case 'PYG' : $currency_symbol = '&#8370;'; break;
+        case 'PYG' : $currency_symbol = '&#8370;'; break;
         case 'TRY' : $currency_symbol = '&#8378;'; break;
         case 'NOK' : $currency_symbol = '&#107;&#114;'; break;
         case 'ZAR' : $currency_symbol = '&#82;'; break;
@@ -184,6 +185,7 @@ function erp_get_currency_symbol( $currency = '' ) {
         case 'NPR' : $currency_symbol = 'Rs.'; break;
         case 'ISK' : $currency_symbol = 'Kr.'; break;
         case 'ILS' : $currency_symbol = '&#8362;'; break;
+        case 'OMR' : $currency_symbol = 'ر.ع.'; break;
         case 'PHP' : $currency_symbol = '&#8369;'; break;
         case 'PLN' : $currency_symbol = '&#122;&#322;'; break;
         case 'SEK' : $currency_symbol = '&#107;&#114;'; break;

@@ -139,6 +139,10 @@ class Admin_Menu {
 
                     $template = dirname( __FILE__ ) . '/views/expense/vendor-credit.php';
 
+                } else {
+
+                    $template = apply_filters( 'erp_ac_sales_transaction_template', $template );
+
                 }
 
                 break;
