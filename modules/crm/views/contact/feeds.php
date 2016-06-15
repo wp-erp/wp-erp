@@ -37,11 +37,9 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
     <div class="activity-content">
 
         <ul class="timeline" v-if = "feeds.length">
-
             <template v-for="( month, feed_obj ) in feeds | formatFeeds">
-
                 <li class="time-label">
-                    <span class="bg-red">{{ month | formatDate 'F, Y' }}</span>
+                    <span class="bg-red">{{ feed_obj[0].feed_month }}, {{ feed_obj[0].feed_year }}</span>
                 </li>
 
                 <li v-for="feed in feed_obj">
