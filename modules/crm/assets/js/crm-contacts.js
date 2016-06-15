@@ -884,7 +884,6 @@
                                     self.$nextTick(function() {
                                         this.$broadcast('vtable:reload');
                                     });
-                                    // self.$refs.vtable.topNavFilter.data = res.statuses;
                                  },
                                 error: function(error) {
                                     modal.enableButton();

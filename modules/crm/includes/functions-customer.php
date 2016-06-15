@@ -854,12 +854,11 @@ function erp_crm_customer_delete_activity_feed( $feed_id ) {
  */
 function erp_crm_customer_schedule_notification() {
     $schedules = \WeDevs\ERP\CRM\Models\Activity::schedules()->get()->toArray();
-
     foreach ( $schedules as $key => $activity ) {
         $extra = json_decode( base64_decode( $activity['extra'] ), true );
 
         if ( isset ( $extra['allow_notification'] ) && $extra['allow_notification'] == 'true' ) {
-            if ( current_time('mysql') == $extra['notification_datetime'] ) {
+            if ( current_time('Y-m-d H:i:00') == $extra['notification_datetime'] ) {
                 erp_crm_send_schedule_notification( $activity, $extra );
             }
         }
@@ -877,8 +876,7 @@ function erp_crm_customer_schedule_notification() {
  * @return void
  */
 function erp_crm_send_schedule_notification( $activity, $extra = false ) {
-
-    if ( ! is_user_logged_in() ) {
+    if ( ! $extra ) {
         return;
     }
 
@@ -890,14 +888,13 @@ function erp_crm_send_schedule_notification( $activity, $extra = false ) {
                 $users[] = get_the_author_meta( 'user_email', $contact );
             }
 
-            $created_user = get_the_author_meta('user_email', $activity['created_by'] );
-
+            $created_user = get_the_author_meta( 'user_email', $activity['created_by'] );
             array_push( $users, $created_user );
 
             foreach ( $users as $key => $user ) {
                 // @TODO: Add customer body template for seding email to user
-                $body = 'You have a schedule after ' . $extra['notification_time_interval'] . $extra['notification_time'] . ' at ' . $activity['start_date'];
-                erp_mail( $user, 'ERP Schedule', $body );
+                $body = sprintf( __( 'You have a schedule after %s %s at %s', 'erp' ), $extra['notification_time_interval'], $extra['notification_time'], date( 'F j, Y, g:i a', strtotime( $activity['start_date'] ) ) );
+                erp_mail( $user, __( 'ERP Schedule', 'erp' ), $body );
             }
 
             break;
