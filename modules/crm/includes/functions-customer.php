@@ -2614,10 +2614,10 @@ function erp_crm_check_new_inbound_emails() {
     $imap_options = get_option( 'erp_settings_erp-email_imap', [] );
 
     $mail_server = $imap_options['mail_server'];
-    $username = $imap_options['username'];
-    $password = $imap_options['password'];
-    $protocol = $imap_options['protocol'];
-    $port = isset( $imap_options['port'] ) ? $imap_options['port'] : 993;
+    $username       = $imap_options['username'];
+    $password       = $imap_options['password'];
+    $protocol       = $imap_options['protocol'];
+    $port           = isset( $imap_options['port'] ) ? $imap_options['port'] : 993;
     $authentication = isset( $imap_options['authentication'] ) ? $imap_options['authentication'] : 'ssl';
 
     try {

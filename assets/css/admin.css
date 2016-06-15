@@ -1080,7 +1080,6 @@
   position: relative;
   list-style: none;
   margin: 0px;
-  border-right: 1px solid #484f51;
 }
 .erp-single-customer .erp-customer-feeds .activity-form ul.nav-item li.active {
   background: #191E23;
