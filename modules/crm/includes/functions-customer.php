@@ -706,7 +706,7 @@ function erp_crm_get_feed_activity( $postdata ) {
         $value['message']               = stripslashes( $value['message'] );
         $value['created_by']['avatar']  = get_avatar_url( $value['created_by']['ID'] );
         $value['created_date']          = date( 'Y-m-d', strtotime( $value['created_at'] ) );
-        $value['created_timeline_date'] = date( 'Y-m', strtotime( $value['created_at'] ) );
+        $value['created_timeline_date'] = date( 'Y-m-01', strtotime( $value['created_at'] ) );
         $feeds[]                        = $value;
     }
 
@@ -767,7 +767,7 @@ function erp_crm_save_customer_feed_data( $data ) {
     $activity['message']               = stripslashes( $activity['message'] );
     $activity['created_by']['avatar']  = get_avatar_url( $activity['created_by']['ID'] );
     $activity['created_date']          = date( 'Y-m-d', strtotime( $activity['created_at'] ) );
-    $activity['created_timeline_date'] = date( 'Y-m', strtotime( $activity['created_at'] ) );
+    $activity['created_timeline_date'] = date( 'Y-m-01', strtotime( $activity['created_at'] ) );
 
     return $activity;
 }
