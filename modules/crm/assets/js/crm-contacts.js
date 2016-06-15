@@ -881,8 +881,11 @@
                                     modal.enableButton();
                                     modal.closeModal();
                                     self.$refs.vtable.tableData.unshift(res.data);
-                                    self.$refs.vtable.topNavFilter.data = res.statuses;
-                                },
+                                    self.$nextTick(function() {
+                                        this.$broadcast('vtable:reload');
+                                    });
+                                    // self.$refs.vtable.topNavFilter.data = res.statuses;
+                                 },
                                 error: function(error) {
                                     modal.enableButton();
                                     alert( error );
