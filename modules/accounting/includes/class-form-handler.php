@@ -423,6 +423,19 @@ class Form_Handler {
         if ( ! erp_ac_create_journal() ) {
             return new WP_Error( 'error', __( 'You do not have sufficient permissions', 'erp' ) );
         }
+        
+        if ( empty( $_POST['invoice'] ) ) {
+            return new WP_Error( 'error', __( 'Invoice number required', 'erp' ) );
+        }
+
+        $invoice = isset( $_POST['invoice'] ) ? $_POST['invoice'] : '';
+        $trans   = new \WeDevs\ERP\Accounting\Model\Transaction();
+        $trans   = $trans->where( 'invoice_number', '=', $invoice )->get()->toArray();
+
+        if ( $trans ) {
+            return new WP_Error( 'error', __( 'Please insert unique invoice number', 'erp' ) );
+        }
+
 
         global $wpdb;
 
@@ -465,7 +478,7 @@ class Form_Handler {
             $trans = $transaction->create( $args );
 
             if ( $trans->id ) {
-                erp_ac_update_invoice_number( $args['form_type'] );
+                erp_ac_update_invoice_number( 'journal' );
             }
 
             if ( ! $trans->id ) {

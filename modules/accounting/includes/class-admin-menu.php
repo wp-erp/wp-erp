@@ -121,7 +121,7 @@ class Admin_Menu {
             echo '<h1>You do not have sufficient permissions to access this page.</h1>';
         }
     }
-
+    
     public function page_expenses() {
         $action   = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
         $type     = isset( $_GET['type'] ) ? $_GET['type'] : 'pv';

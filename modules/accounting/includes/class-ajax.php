@@ -164,10 +164,10 @@ class Ajax_Handler {
         $this->verify_nonce( 'erp-ac-nonce' );
         $invoice   = isset( $_POST['invoice'] ) ? $_POST['invoice'] : '';
         $trans = new \WeDevs\ERP\Accounting\Model\Transaction();
-        $trans = $trans->where( 'invoice', '=', $invoice )->get()->toArray();
+        $trans = $trans->where( 'invoice_number', '=', $invoice )->get()->toArray();
 
         if ( $trans ) {
-            $this->send_error( __( 'Unique value required', 'erp' ) );
+            $this->send_error( __( 'Invoice already exists. Please use an unique number', 'erp' ) );
         } else {
             $this->send_success();
         }

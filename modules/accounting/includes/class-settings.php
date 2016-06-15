@@ -25,8 +25,8 @@ class Settings extends ERP_Settings_Page {
      */
     public function get_sections() {
         $sections = array(
-            'general'         => __( 'General', 'erp' ),
-            'currency_option' => __( 'Currency Options', 'erp' ),
+            'currency_option' => __( 'Currency Settings', 'erp' ),
+            'general'         => __( 'Invoice Formatting', 'erp' ),
             'erp_ac_tax'      => __( 'Sales Tax', 'erp' )
         );
 
@@ -47,14 +47,14 @@ class Settings extends ERP_Settings_Page {
                 'title' => __( 'Sales Payment', 'erp' ),
                 'id'    => 'erp_ac_payment',
                 'type'  => 'text',
-                'desc'  => __( 'Slaes payment invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
+                'desc'  => __( 'Sales payment invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
             ),
 
             array(
                 'title' => __( 'Sales Invoice', 'erp' ),
                 'id'    => 'erp_ac_invoice',
                 'type'  => 'text',
-                'desc'  => __( 'Slaes invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
+                'desc'  => __( 'Sales invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
             ),
 
             array(
