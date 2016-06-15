@@ -36,8 +36,12 @@
             $('.erp-ac-customer-list-table-wrap, .erp-ac-vendor-list-table-wrap').on( 'click', 'a.erp-ac-submitdelete', this.customer.remove );
             $('.erp-ac-customer-list-table-wrap, .erp-ac-vendor-list-table-wrap' ).on( 'click', 'a.erp-ac-restoreCustomer', this.customer.restore );
             $('.erp-ac-receive-payment-table, .erp-ac-voucher-table-wrap' ).on( 'click', '.erp-ac-remove-line', this.removePartialLine );
-            $('.erp-ac-form-wrap, .erp-ac-form-wrap' ).on( 'change', '.erp-ac-reference-field', this.reference );
-            $('.erp-ac-form-wrap, .erp-ac-form-wrap' ).on( 'keyup', '.erp-ac-reference-field', this.keyupReference );
+            $('.erp-ac-form-wrap' ).on( 'change', '.erp-ac-reference-field', this.reference );
+            $('.erp-ac-form-wrap' ).on( 'keyup', '.erp-ac-reference-field', this.keyupReference );
+            
+            $('.erp-ac-form-wrap' ).on( 'keyup', '.erp-ac-check-invoice-number', this.keyupInvoice );
+            $('.erp-ac-form-wrap' ).on( 'change', '.erp-ac-check-invoice-number', this.changeInvoice );
+
             $('body' ).on( 'click', '.erp-ac-not-found-btn-in-drop', this.dropDownAddMore );
             $('.erp-ac-transaction-report').on('click', this.transactionReport );
 
@@ -526,6 +530,41 @@
                     return markup;
                 }
 
+            });
+        },
+
+        keyupInvoice: function(e) {
+            e.preventDefault();
+ 
+            $('input[name="submit_erp_ac_trans"]').prop('disabled',true);
+            $('input[name="submit_erp_ac_trans_draft"]').prop('disabled',true);
+            $('input[name="submit_erp_ac_journal"]').prop('disabled',true);
+        },
+
+        changeInvoice: function(e) {
+            e.preventDefault();
+
+            var self = $(this);
+
+            wp.ajax.send('erp-ac-check-invoice-number', {
+                data: {
+                    '_wpnonce': ERP_AC.nonce,
+                    invoice: self.val(),
+                },
+
+                success: function(res) {
+                    $('input[name="submit_erp_ac_trans"]').prop('disabled',false);
+                    $('input[name="submit_erp_ac_trans_draft"]').prop('disabled',false);
+                    $('input[name="submit_erp_ac_journal"]').prop('disabled',false);
+                },
+
+                error: function(res) {
+                    self.val('');
+                    alert(res);
+                   // $('input[name="submit_erp_ac_trans"]').prop('disabled',false);
+                   // $('input[name="submit_erp_ac_trans_draft"]').prop('disabled',false);
+                   // $('input[name="submit_erp_ac_journal"]').prop('disabled',false);
+                }
             });
         },
 

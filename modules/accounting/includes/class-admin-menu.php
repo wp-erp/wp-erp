@@ -121,7 +121,7 @@ class Admin_Menu {
             echo '<h1>You do not have sufficient permissions to access this page.</h1>';
         }
     }
-
+    
     public function page_expenses() {
         $action   = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
         $type     = isset( $_GET['type'] ) ? $_GET['type'] : 'pv';
@@ -135,9 +135,13 @@ class Admin_Menu {
 
                     $template = dirname( __FILE__ ) . '/views/expense/payment-voucher.php';
 
-                } elseif ( $type == 'vendor_credit' && ( erp_ac_create_expenses_credit() || erp_ac_publish_expenses_credit() ) ) {
+                } else if ( $type == 'vendor_credit' && ( erp_ac_create_expenses_credit() || erp_ac_publish_expenses_credit() ) ) {
 
                     $template = dirname( __FILE__ ) . '/views/expense/vendor-credit.php';
+
+                } else {
+
+                    $template = apply_filters( 'erp_ac_sales_transaction_template', $template );
 
                 }
 

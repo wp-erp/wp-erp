@@ -65,7 +65,7 @@ $tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
 
     <form action="" method="post" class="erp-form" style="margin-top: 30px;">
 
-        <ul class="form-fields block" style="width:50%;">
+        <ul class="form-fields block" style="width:100%;">
 
             <li>
                 <ul class="erp-form-fields two-col block">
@@ -104,6 +104,18 @@ $tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                             'class' => 'erp-ac-reference-field',
                             'addon' => '#',
                             'value' => isset( $transaction['ref'] ) ? $transaction['ref'] : ''
+                        ) );
+                        ?>
+                    </li>
+                    <li class="erp-form-field">
+                        <?php
+                        erp_html_form_input( array(
+                            'label'    => __( 'Invoice Number', 'erp' ),
+                            'name'     => 'invoice',
+                            'type'     => 'text',
+                            'required' => true,
+                            'class'    => 'erp-ac-check-invoice-number',
+                            'value'    => erp_ac_invoice_prefix( 'erp_ac_invoice', erp_ac_generate_invoice_id( 'invoice' ) )
                         ) );
                         ?>
                     </li>

@@ -49,7 +49,10 @@ $taxinfo             = erp_ac_get_tax_info();
             ?>
             <div class="row">
                 <div class="invoice-number">
-                    <?php printf( __( 'Invoice: <strong>%d</strong>', 'erp' ), $transaction->id ); ?>
+                    <?php 
+                        $ivoice = isset( $transaction->invoice_number ) ? $transaction->invoice_number : $transaction->id; 
+                        printf( __( 'Invoice: <strong>%s</strong>', 'erp' ), $ivoice ); 
+                    ?>
                 </div>
             </div>
 

@@ -29,6 +29,7 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-ac-customer-restore', 'customer_restore' );
         $this->action( 'wp_ajax_erp-ac-user-delete-status', 'user_delete_status' );
         $this->action( 'wp_ajax_erp-ac-reference', 'check_unique_reference' );
+        $this->action( 'wp_ajax_erp-ac-check-invoice-number', 'check_unique_invioce' );
         $this->action( 'wp_ajax_erp-ac-new-customer-vendor', 'new_vendor_customer' );
         $this->action( 'wp_ajax_erp-ac-transaction-report', 'transaction_report' );
         $this->action( 'wp_ajax_erp_people_convert', 'convert_user' );
@@ -148,12 +149,25 @@ class Ajax_Handler {
 
     function check_unique_reference() {
         $this->verify_nonce( 'erp-ac-nonce' );
-        $ref = isset( $_POST['reference'] ) ? $_POST['reference'] : '';
+        $ref   = isset( $_POST['reference'] ) ? $_POST['reference'] : '';
         $trans = new \WeDevs\ERP\Accounting\Model\Transaction();
         $trans = $trans->where( 'ref', '=', $ref )->get()->toArray();
 
         if ( $trans ) {
-            $this->send_error( __( 'Required unique value!', 'erp' ) );
+            $this->send_error( __( 'Unique value required', 'erp' ) );
+        } else {
+            $this->send_success();
+        }
+    }
+
+    function check_unique_invioce() {
+        $this->verify_nonce( 'erp-ac-nonce' );
+        $invoice   = isset( $_POST['invoice'] ) ? $_POST['invoice'] : '';
+        $trans = new \WeDevs\ERP\Accounting\Model\Transaction();
+        $trans = $trans->where( 'invoice_number', '=', $invoice )->get()->toArray();
+
+        if ( $trans ) {
+            $this->send_error( __( 'Invoice already exists. Please use an unique number', 'erp' ) );
         } else {
             $this->send_success();
         }

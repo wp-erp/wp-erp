@@ -28,7 +28,11 @@ $taxinfo = erp_ac_get_tax_info();
             </div>
             <div class="row">
                 <div class="invoice-number">
-                    <?php printf( __( 'Payment: <strong>%s</strong>', 'erp' ), erp_ac_invoice_prefix( 'sales_payment', $transaction->id ) ); ?>
+                    <?php 
+                        $ivoice = isset( $transaction->invoice_number ) ? $transaction->invoice_number : $transaction->id;
+                        printf( __( 'Payment: <strong>%s</strong>', 'erp' ), $ivoice ); 
+
+                    ?>
                 </div>
             </div>
 
