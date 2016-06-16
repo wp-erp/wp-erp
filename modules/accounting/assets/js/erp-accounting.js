@@ -38,7 +38,7 @@
             $('.erp-ac-receive-payment-table, .erp-ac-voucher-table-wrap' ).on( 'click', '.erp-ac-remove-line', this.removePartialLine );
             $('body' ).on( 'change', '.erp-ac-reference-field', this.reference );
             $('body' ).on( 'keyup', '.erp-ac-reference-field', this.keyupReference );
-            
+
             $('body' ).on( 'keyup', '.erp-ac-check-invoice-number', this.keyupInvoice );
             $('body' ).on( 'change', '.erp-ac-check-invoice-number', this.changeInvoice );
 
@@ -102,22 +102,41 @@
             checkUsers: function(e) {
                 e.preventDefault();
                 var self = $(this),
-                    email = self.val();
+                    form = self.closest('form'),
+                    email = self.val(),
+                    type = form.find('input[name=type]').val(),
+                    id   = form.find('input[name=field_id]').val();
+
+                var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+                if ( email == '' || !re.test( email ) ) {
+                    return false;
+                }
+
+                if ( id != '0' ) {
+                    return false;
+                }
 
                 wp.ajax.send( 'erp_people_exists', {
                     data: {
                         email: email
                     },
                     success: function(res) {
-
                         $('#message').slideUp(500);
                         $('input[name="submit_erp_ac_customer"]').prop('disabled', false);
                     },
                     error: function(res) {
-                        $('#message').slideUp(100);
-                        $('.erp-ac-convert-user-info').attr( 'data-people_id', res.id );
-                        $('#message').slideDown(500);
-                        $('input[name="submit_erp_ac_customer"]').prop('disabled', true);
+                        if ( $.inArray( 'customer', res.types ) != -1 || $.inArray( 'vendor', res.types ) != -1 ) {
+                            $('#message').slideUp(100);
+                            $('#message').html( '<p><span class="erp-ac-user-exsitance-notice">' + ERP_AC.message.alreadyExist + '</span></p>' );
+                            $('#message').slideDown(500);
+                            $('input[name="submit_erp_ac_customer"]').prop('disabled', true);
+                        } else {
+                            $('#message').slideUp(100);
+                            $('.erp-ac-convert-user-info').attr( 'data-people_id', res.id );
+                            $('#message').slideDown(500);
+                            $('input[name="submit_erp_ac_customer"]').prop('disabled', true);
+                        }
                     }
                 });
 
@@ -535,7 +554,7 @@
 
         keyupInvoice: function(e) {
             e.preventDefault();
- 
+
             $('input[name="submit_erp_ac_trans"]').prop('disabled',true);
             $('input[name="submit_erp_ac_trans_draft"]').prop('disabled',true);
             $('input[name="submit_erp_ac_journal"]').prop('disabled',true);
@@ -760,9 +779,9 @@
                     due_amount : self.data('due_amount'),
                     partial_id : self.data('transaction_id'),
                 }).trim(),
-                
+
                 extraClass: 'large',
-                
+
                 onReady: function(modal) {
                     var type = $('.erp-ac-check-invoice-number').data('type');
                     wp.ajax.send( {

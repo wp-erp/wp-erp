@@ -79,8 +79,8 @@ class Accounting {
         // check for plugin using plugin name
         if ( is_plugin_active( 'accounting/accounting.php' ) ) {
             $accounting = dirname( WPERP_PATH ) . '/accounting/accounting.php';
-            deactivate_plugins( $accounting );            
-        } 
+            deactivate_plugins( $accounting );
+        }
     }
 
 
