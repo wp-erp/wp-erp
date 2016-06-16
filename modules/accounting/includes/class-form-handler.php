@@ -363,7 +363,7 @@ class Form_Handler {
             'user_id'         => $user_id,
             'billing_address' => $billing_address,
             'ref'             => $ref,
-            'invoice'         => $invoice,
+            'invoice_number'  => $invoice,
             'issue_date'      => $issue_date,
             'due_date'        => $due_date,
             'summary'         => $summary,
@@ -466,7 +466,7 @@ class Form_Handler {
             'total'           => $debit_total,
             'conversion_rate' => 1,
             'trans_total'     => $debit_total,
-            'invoice'         => $invoice,
+            'invoice_number'  => $invoice,
             'created_by'      => get_current_user_id(),
             'created_at'      => current_time( 'mysql' )
         ];

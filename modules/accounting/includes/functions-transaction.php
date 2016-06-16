@@ -244,7 +244,7 @@ function er_ac_insert_transaction_permiss( $args ) {
         }
     }
 
-    if ( empty( $args['invoice'] ) ) {
+    if ( empty( $args['invoice_number'] ) ) {
         return new WP_Error( 'error', __( 'Invoice number required', 'erp' ) );
     }
 }
@@ -329,7 +329,7 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
         'summary'         => '',
         'total'           => '',
         'sub_total'       => '0.00',
-        'invoice'         => erp_ac_generate_invoice_id( $args['form_type'] ),
+        'invoice_number'  => erp_ac_generate_invoice_id( $args['form_type'] ),
         'files'           => '',
         'currency'        => '',
         'created_by'      => get_current_user_id(),
@@ -729,7 +729,7 @@ function erp_ac_toltip_per_transaction_ledgers( $transaction ) {
         <?php
     }
     ?>
-        </tabody>
+        </tbody>
     </table>
     <?php
     return ob_get_clean();
