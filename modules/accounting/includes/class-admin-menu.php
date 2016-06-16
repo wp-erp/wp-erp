@@ -95,6 +95,8 @@ class Admin_Menu {
                     $template = dirname( __FILE__ ) . '/views/sales/invoice-new.php';
                 } else if ( $type == 'payment' && ( erp_ac_create_sales_payment() || erp_ac_publish_sales_payment() ) ) {
                    $template = dirname( __FILE__ ) . '/views/sales/payment-new.php';
+                }else {
+                    $template = apply_filters( 'erp_ac_invoice_transaction_template', $template );
                 }
 
                 break;
