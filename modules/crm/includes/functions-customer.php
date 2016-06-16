@@ -854,6 +854,11 @@ function erp_crm_customer_delete_activity_feed( $feed_id ) {
  */
 function erp_crm_customer_schedule_notification() {
     $schedules = \WeDevs\ERP\CRM\Models\Activity::schedules()->get()->toArray();
+
+    if ( empty( $schedules ) )  {
+        return;
+    }
+
     foreach ( $schedules as $key => $activity ) {
         $extra = json_decode( base64_decode( $activity['extra'] ), true );
         if ( isset ( $extra['allow_notification'] ) && $extra['allow_notification'] == 'true' ) {
@@ -896,7 +901,7 @@ function erp_crm_send_schedule_notification( $activity, $extra = false ) {
                 $body = sprintf( __( 'You have a schedule after %s %s at %s', 'erp' ), $extra['notification_time_interval'], $extra['notification_time'], date( 'F j, Y, g:i a', strtotime( $activity['start_date'] ) ) );
                 erp_mail( $user, __( 'ERP Schedule', 'erp' ), $body );
             }
-            erp_crm_update_schedule_notification_flag( $activity_id, true );
+            erp_crm_update_schedule_notification_flag( $activity['id'], true );
             break;
 
         default:
