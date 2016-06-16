@@ -29,7 +29,7 @@ $taxinfo = erp_ac_get_tax_info();
             <div class="row">
                 <div class="invoice-number">
                     <?php 
-                        $ivoice = isset( $transaction->invoice_number ) ? $transaction->invoice_number : $transaction->id;
+                        $ivoice = isset( $transaction->invoice_number ) && ! empty( $transaction->invoice_number ) ? $transaction->invoice_number : $transaction->id;
                         printf( __( 'Payment: <strong>%s</strong>', 'erp' ), $ivoice ); 
 
                     ?>
@@ -62,7 +62,7 @@ $taxinfo = erp_ac_get_tax_info();
                         <tbody>
                             <tr>
                                 <th><?php _e( 'Payment Number', 'erp' ); ?>:</th>
-                                <td>31</td>
+                                <td><?php echo $ivoice; ?></td>
                             </tr>
                             <tr>
                                 <th><?php _e( 'Payment Date', 'erp' ); ?>:</th>

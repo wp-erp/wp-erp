@@ -35,7 +35,7 @@ $taxinfo             = erp_ac_get_tax_info();
             <div class="row">
                 <div class="invoice-number">
                     <?php 
-                        $ivoice = isset( $transaction->invoice_number ) ? $transaction->invoice_number : $transaction->id;
+                        $ivoice = isset( $transaction->invoice_number ) && ! empty( $transaction->invoice_number ) ? $transaction->invoice_number : $transaction->id;
                         printf( __( 'Credit: <strong>%s</strong>', 'erp' ), $ivoice ); 
                     ?>
                 </div>
@@ -67,7 +67,7 @@ $taxinfo             = erp_ac_get_tax_info();
                         <tbody>
                             <tr>
                                 <th><?php _e( 'Credit Number', 'erp' ); ?>:</th>
-                                <td><?php echo $transaction->id; ?></td>
+                                <td><?php echo $ivoice; ?></td>
                             </tr>
                             <tr>
                                 <th><?php _e( 'Credit Date', 'erp' ); ?>:</th>

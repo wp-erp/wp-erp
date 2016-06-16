@@ -44,38 +44,43 @@ class Settings extends ERP_Settings_Page {
             array( 'title' => __( '', 'erp' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
 
             array(
-                'title' => __( 'Sales Payment', 'erp' ),
-                'id'    => 'erp_ac_payment',
-                'type'  => 'text',
-                'desc'  => __( 'Sales payment invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
+                'title'   => __( 'Sales Payment', 'erp' ),
+                'id'      => 'erp_ac_payment',
+                'type'    => 'text',
+                'default' => 'SPN-{id}',
+                'desc'    => __( 'Sales payment invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
             ),
 
             array(
-                'title' => __( 'Sales Invoice', 'erp' ),
-                'id'    => 'erp_ac_invoice',
-                'type'  => 'text',
-                'desc'  => __( 'Sales invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
+                'title'   => __( 'Sales Invoice', 'erp' ),
+                'id'      => 'erp_ac_invoice',
+                'type'    => 'text',
+                'default' => 'INV-{id}',
+                'desc'    => __( 'Sales invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
             ),
 
             array(
-                'title' => __( 'Expense Voucher', 'erp' ),
-                'id'    => 'erp_ac_payment_voucher',
-                'type'  => 'text',
-                'desc'  => __( 'Expense voucher invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
+                'title'   => __( 'Expense Voucher', 'erp' ),
+                'id'      => 'erp_ac_payment_voucher',
+                'type'    => 'text',
+                'default' => 'EVN-{id}',
+                'desc'    => __( 'Expense voucher invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
             ),
 
             array(
-                'title' => __( 'Expense Credit', 'erp' ),
-                'id'    => 'erp_ac_vendor_credit',
-                'type'  => 'text',
-                'desc'  => __( 'Expense credit invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
+                'title'   => __( 'Expense Credit', 'erp' ),
+                'id'      => 'erp_ac_vendor_credit',
+                'type'    => 'text',
+                'default' => 'ECN-{id}',
+                'desc'    => __( 'Expense credit invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
            ),
 
             array(
-                'title' => __( 'Journal', 'erp' ),
-                'id'    => 'erp_ac_journal',
-                'type'  => 'text',
-                'desc'  => __( 'Journal invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
+                'title'   => __( 'Journal', 'erp' ),
+                'id'      => 'erp_ac_journal',
+                'type'    => 'text',
+                'default' => 'JRNN-{id}',
+                'desc'    => __( 'Journal invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
             ),
 
             array( 'type' => 'sectionend', 'id' => 'script_styling_options' ),

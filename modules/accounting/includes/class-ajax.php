@@ -36,6 +36,26 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-ac-new-tax', 'new_tax' );
         $this->action( 'wp_ajax_erp-ac-delete-tax', 'delete_tax' );
         $this->action( 'wp_ajax_erp-ac-remove-account', 'remove_account' );
+        $this->action( 'wp_ajax_erp-ac-get-invoice-number', 'popup_get_invoice_number' );
+    }
+
+    function popup_get_invoice_number() {
+        $this->verify_nonce( 'erp-ac-nonce' );
+        $type = isset( $_POST['type'] ) ? $_POST['type'] : false;
+
+        if ( ! $type ) {
+            $this->send_error( array( 'error' => __( 'Type required', 'erp' ) ) );
+        }
+
+        if ( $type == 'invoice' ) {
+            $invoice_number = erp_ac_invoice_prefix( 'erp_ac_invoice', erp_ac_generate_invoice_id( 'invoice' ) );    
+        }
+
+        if ( $type == 'vendor_credit' ) {
+            $invoice_number = erp_ac_invoice_prefix( 'erp_ac_vendor_credit', erp_ac_generate_invoice_id( 'vendor_credit' ) );      
+        } 
+        
+        $this->send_success( array( 'invoice_number' => $invoice_number ) );
     }
 
     function remove_account() {
@@ -154,7 +174,7 @@ class Ajax_Handler {
         $trans = $trans->where( 'ref', '=', $ref )->get()->toArray();
 
         if ( $trans ) {
-            $this->send_error( __( 'Unique value required', 'erp' ) );
+            $this->send_error( __( 'Reference already exists. Please use an unique number', 'erp' ) );
         } else {
             $this->send_success();
         }
@@ -162,11 +182,10 @@ class Ajax_Handler {
 
     function check_unique_invioce() {
         $this->verify_nonce( 'erp-ac-nonce' );
-        $invoice   = isset( $_POST['invoice'] ) ? $_POST['invoice'] : '';
-        $trans = new \WeDevs\ERP\Accounting\Model\Transaction();
-        $trans = $trans->where( 'invoice_number', '=', $invoice )->get()->toArray();
+        $invoice = isset( $_POST['invoice'] ) ? $_POST['invoice'] : '';
+        $trans = erp_ac_check_invoice_number_unique( $invoice );
 
-        if ( $trans ) {
+        if ( ! $trans ) {
             $this->send_error( __( 'Invoice already exists. Please use an unique number', 'erp' ) );
         } else {
             $this->send_success();
