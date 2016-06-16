@@ -589,6 +589,7 @@ Company'
                 `end_date` datetime DEFAULT NULL,
                 `created_by` int(11) DEFAULT NULL,
                 `extra` longtext,
+                `sent_notification` tinyint(4) DEFAULT '0',
                 `created_at` datetime DEFAULT NULL,
                 `updated_at` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`)

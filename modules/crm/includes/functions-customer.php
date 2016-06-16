@@ -856,10 +856,11 @@ function erp_crm_customer_schedule_notification() {
     $schedules = \WeDevs\ERP\CRM\Models\Activity::schedules()->get()->toArray();
     foreach ( $schedules as $key => $activity ) {
         $extra = json_decode( base64_decode( $activity['extra'] ), true );
-
         if ( isset ( $extra['allow_notification'] ) && $extra['allow_notification'] == 'true' ) {
-            if ( current_time('Y-m-d H:i:00') == $extra['notification_datetime'] ) {
-                erp_crm_send_schedule_notification( $activity, $extra );
+            if ( ( current_time( 'mysql' ) >= $extra['notification_datetime'] ) && ( $activity['start_date'] >= current_time( 'mysql' ) ) ) {
+                if ( ! $activity['sent_notification'] ) {
+                    erp_crm_send_schedule_notification( $activity, $extra );
+                }
             }
         }
     }
@@ -892,17 +893,34 @@ function erp_crm_send_schedule_notification( $activity, $extra = false ) {
             array_push( $users, $created_user );
 
             foreach ( $users as $key => $user ) {
-                // @TODO: Add customer body template for seding email to user
                 $body = sprintf( __( 'You have a schedule after %s %s at %s', 'erp' ), $extra['notification_time_interval'], $extra['notification_time'], date( 'F j, Y, g:i a', strtotime( $activity['start_date'] ) ) );
                 erp_mail( $user, __( 'ERP Schedule', 'erp' ), $body );
             }
-
+            erp_crm_update_schedule_notification_flag( $activity_id, true );
             break;
 
         default:
             do_action( 'erp_crm_send_schedule_notification', $activity, $extra );
             break;
     }
+}
+
+/**
+ * Update notification flag in customer activity feeds
+ *
+ * @since 1.1.1
+ *
+ * @param  integer $activity_id
+ * @param  boolean $flag
+ *
+ * @return void
+ */
+function erp_crm_update_schedule_notification_flag( $activity_id, $flag ) {
+    if ( !$activity_id ) {
+        return;
+    }
+
+    \WeDevs\ERP\CRM\Models\Activity::find( $activity_id )->update( [ 'sent_notification' => $flag ] );
 }
 
 /**

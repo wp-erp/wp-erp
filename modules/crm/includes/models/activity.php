@@ -11,7 +11,7 @@ use WeDevs\ERP\Framework\Model;
 class Activity extends Model {
     protected $table = 'erp_crm_customer_activities';
 
-    protected $fillable = [ 'user_id', 'type', 'message', 'email_subject', 'log_type', 'start_date', 'end_date', 'created_by', 'extra' ];
+    protected $fillable = [ 'user_id', 'type', 'message', 'email_subject', 'log_type', 'start_date', 'end_date', 'sent_notification', 'created_by', 'extra' ];
 
     public $timestamps = true;
 
@@ -24,6 +24,9 @@ class Activity extends Model {
     }
 
     public static function scopeSchedules( $query ) {
-        return $query->where( 'start_date', '>', current_time( 'mysql' ) )->where( 'created_by', '=', get_current_user_id() );
+        return $query->where( 'start_date', '>', current_time( 'mysql' ) )
+                    ->where( 'type', 'log_activity' )
+                    ->where( 'sent_notification', false )
+                    ->where( 'created_by', '=', get_current_user_id() );
     }
 }
