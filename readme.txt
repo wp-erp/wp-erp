@@ -151,6 +151,31 @@ If you are unable to use any of the methods due to internet connectivity and fil
 
 == Changelog ==
 
+**v1.1.1 -> June 16, 2016**
+ * [fix] Accounting report query optimzation
+ * [fix] Partial payment amount problem fixed
+ * [fix] Contact and company permission problem fixed for CRM agent
+ * [fix] Bulkaction permission fixed for contact and company listing
+ * [fix] Javascript null date problem fixed
+ * [Fix] Fixed enable disable problem at reference number entry time
+ * [Fix] Save search dropdown default value problem fixed
+ * [Fix] Fixed CRM contact table after a bulk action, items don't get deselect
+ * [Fix] Fixed schedule calander styling problem
+ * [fix] CRM agent permission problem fixed
+ * [fix] Fix assign group permission problem
+ * [fix] Fix assign contact issue when deal with wp user contacts
+ * [fix] Contact group edit and assign problem fixed
+ * [fix] Fixed total number counting when add new contact
+ * [fix] Fixed schedule notification problem
+ * [fix] Timeline date issue in contact single page
+ * [new] Added loading effect when assign contact owner
+ * [new] Invoice number generator functionality in accounting
+ * [new] Added support for Omanian Rial currency
+ * [new] Added some filter and action hook in sales transaction
+ * [new] Added restore functionality in HRM employee table
+ * [Update] Accounting dashaboard updated
+ * [Update] Updated filter and hook for people query sql
+
 **v1.1.0 -> June 8, 2016**
 
  * [new] Merge accounting module

@@ -158,11 +158,11 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
      */
     function get_columns() {
         $columns = array(
-            'cb'             => '<input type="checkbox" />',
-            'name'           => __( 'Name', 'erp' ),
-            'email'          => __( 'Email', 'erp' ),
-            'type'           => __( 'Contact Type', 'erp' ),
-            'group'          => __( 'Group', 'erp' ),
+            'cb'    => '<input type="checkbox" />',
+            'name'  => __( 'Name', 'erp' ),
+            'email' => __( 'Email', 'erp' ),
+            'type'  => __( 'Contact Type', 'erp' ),
+            'group' => __( 'Group', 'erp' ),
         );
 
         return apply_filters( 'erp_crm_contact_subscribe_table_cols', $columns );
@@ -183,8 +183,10 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
         $delete_url = '';
         $edit_url   = '';
 
-        $actions['edit']   = sprintf( '<a href="%s" data-id="%d" data-name="%s" title="%s">%s</a>', $edit_url, $subscriber_contact->user_id, $contact->get_full_name(), __( 'Edit this item', 'erp' ), __( 'Edit', 'erp' ) );
-        $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $subscriber_contact->user_id, __( 'Delete this item', 'erp' ), __( 'Delete', 'erp' ) );
+        if ( current_user_can( 'erp_crm_delete_contact', $contact->id ) ) {
+            $actions['edit']   = sprintf( '<a href="%s" data-id="%d" data-name="%s" title="%s">%s</a>', $edit_url, $subscriber_contact->user_id, $contact->get_full_name(), __( 'Edit this item', 'erp' ), __( 'Edit', 'erp' ) );
+            $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $subscriber_contact->user_id, __( 'Delete this item', 'erp' ), __( 'Delete', 'erp' ) );
+        }
 
         return sprintf( '%4$s <a href="%3$s"><strong>%1$s</strong></a> %2$s', $contact->get_full_name(), $this->row_actions( $actions ), erp_crm_get_details_url( $contact->id, $contact->types ) , $contact->get_avatar() );
     }

@@ -773,23 +773,31 @@ class Ajax_Handler {
      * @return json
      */
     public function assign_contact_as_subscriber() {
-
         $this->verify_nonce( 'wp-erp-crm-contact-subscriber' );
 
         $data = [];
 
-        if ( isset ( $_POST['group_id'] ) && isset( $_POST['user_id'] ) ) {
-            foreach ( $_POST['group_id'] as $key => $group_id ) {
-                $data = [
-                    'user_id'  => $_POST['user_id'],
-                    'group_id' => $group_id,
-                ];
-            }
-            erp_crm_create_new_contact_subscriber( $data );
+        $user_id = ( isset( $_POST['user_id'] ) && !empty( $_POST['user_id'] ) ) ? (int) $_POST['user_id'] : 0;
+        $group_ids = ( isset( $_POST['group_id'] ) && !empty( $_POST['group_id'] ) ) ? (array) $_POST['group_id'] : [];
+
+        if ( ! $user_id ) {
+            $this->send_error( __( 'No user data found', 'erp' ) );
         }
 
+        if ( ! current_user_can( 'erp_crm_edit_contact', $user_id ) ) {
+            $this->send_error( __( 'You don\'t have any permission to assign this contact in a group', 'erp' ) );
+        }
 
-        return $this->send_success( __( 'Succesfully subscriber for this user', 'erp' ) );
+        foreach ( $group_ids as $key => $group_id ) {
+            $data = [
+                'user_id'  => $user_id,
+                'group_id' => $group_id,
+            ];
+        }
+
+        erp_crm_create_new_contact_subscriber( $data );
+
+        $this->send_success( __( 'Succesfully subscriber for this user', 'erp' ) );
     }
 
     /**
@@ -803,6 +811,10 @@ class Ajax_Handler {
         $this->verify_nonce( 'wp-erp-crm-nonce' );
 
         $user_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+
+        if ( ! current_user_can( 'erp_crm_edit_contact', $user_id ) ) {
+            $this->send_error( __( 'You don\'t have any permission to remove this contact from a group', 'erp' ) );
+        }
 
         if ( ! $user_id ) {
             $this->send_error( __( 'No subscriber user found', 'erp' ) );
@@ -825,6 +837,10 @@ class Ajax_Handler {
 
         $user_id = isset( $_REQUEST['user_id'] ) ? intval( $_REQUEST['user_id'] ) : 0;
         $group_id = isset( $_POST['group_id'] ) ? $_POST['group_id'] : [];
+
+        if ( ! current_user_can( 'erp_crm_edit_contact', $user_id ) ) {
+            $this->send_error( __( 'You don\'t have any permission to assign this contact', 'erp' ) );
+        }
 
         if ( ! $user_id ) {
             $this->send_error( __( 'No subscriber user found', 'erp' ) );

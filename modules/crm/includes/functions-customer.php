@@ -706,7 +706,7 @@ function erp_crm_get_feed_activity( $postdata ) {
         $value['message']               = stripslashes( $value['message'] );
         $value['created_by']['avatar']  = get_avatar_url( $value['created_by']['ID'] );
         $value['created_date']          = date( 'Y-m-d', strtotime( $value['created_at'] ) );
-        $value['created_timeline_date'] = date( 'Y-m', strtotime( $value['created_at'] ) );
+        $value['created_timeline_date'] = date( 'Y-m-01', strtotime( $value['created_at'] ) );
         $feeds[]                        = $value;
     }
 
@@ -767,7 +767,7 @@ function erp_crm_save_customer_feed_data( $data ) {
     $activity['message']               = stripslashes( $activity['message'] );
     $activity['created_by']['avatar']  = get_avatar_url( $activity['created_by']['ID'] );
     $activity['created_date']          = date( 'Y-m-d', strtotime( $activity['created_at'] ) );
-    $activity['created_timeline_date'] = date( 'Y-m', strtotime( $activity['created_at'] ) );
+    $activity['created_timeline_date'] = date( 'Y-m-01', strtotime( $activity['created_at'] ) );
 
     return $activity;
 }
@@ -854,12 +854,11 @@ function erp_crm_customer_delete_activity_feed( $feed_id ) {
  */
 function erp_crm_customer_schedule_notification() {
     $schedules = \WeDevs\ERP\CRM\Models\Activity::schedules()->get()->toArray();
-
     foreach ( $schedules as $key => $activity ) {
         $extra = json_decode( base64_decode( $activity['extra'] ), true );
 
         if ( isset ( $extra['allow_notification'] ) && $extra['allow_notification'] == 'true' ) {
-            if ( current_time('mysql') == $extra['notification_datetime'] ) {
+            if ( current_time('Y-m-d H:i:00') == $extra['notification_datetime'] ) {
                 erp_crm_send_schedule_notification( $activity, $extra );
             }
         }
@@ -877,8 +876,7 @@ function erp_crm_customer_schedule_notification() {
  * @return void
  */
 function erp_crm_send_schedule_notification( $activity, $extra = false ) {
-
-    if ( ! is_user_logged_in() ) {
+    if ( ! $extra ) {
         return;
     }
 
@@ -890,14 +888,13 @@ function erp_crm_send_schedule_notification( $activity, $extra = false ) {
                 $users[] = get_the_author_meta( 'user_email', $contact );
             }
 
-            $created_user = get_the_author_meta('user_email', $activity['created_by'] );
-
+            $created_user = get_the_author_meta( 'user_email', $activity['created_by'] );
             array_push( $users, $created_user );
 
             foreach ( $users as $key => $user ) {
                 // @TODO: Add customer body template for seding email to user
-                $body = 'You have a schedule after ' . $extra['notification_time_interval'] . $extra['notification_time'] . ' at ' . $activity['start_date'];
-                erp_mail( $user, 'ERP Schedule', $body );
+                $body = sprintf( __( 'You have a schedule after %s %s at %s', 'erp' ), $extra['notification_time_interval'], $extra['notification_time'], date( 'F j, Y, g:i a', strtotime( $activity['start_date'] ) ) );
+                erp_mail( $user, __( 'ERP Schedule', 'erp' ), $body );
             }
 
             break;
@@ -2614,10 +2611,10 @@ function erp_crm_check_new_inbound_emails() {
     $imap_options = get_option( 'erp_settings_erp-email_imap', [] );
 
     $mail_server = $imap_options['mail_server'];
-    $username = $imap_options['username'];
-    $password = $imap_options['password'];
-    $protocol = $imap_options['protocol'];
-    $port = isset( $imap_options['port'] ) ? $imap_options['port'] : 993;
+    $username       = $imap_options['username'];
+    $password       = $imap_options['password'];
+    $protocol       = $imap_options['protocol'];
+    $port           = isset( $imap_options['port'] ) ? $imap_options['port'] : 993;
     $authentication = isset( $imap_options['authentication'] ) ? $imap_options['authentication'] : 'ssl';
 
     try {
