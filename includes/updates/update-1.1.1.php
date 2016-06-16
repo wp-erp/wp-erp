@@ -358,8 +358,10 @@ function erp_crm_update_table_column() {
 
     $save_search_tb     = $wpdb->prefix . 'erp_crm_save_search';
     $people_tb          = $wpdb->prefix . 'erp_peoples';
+    $activity_tb        = $wpdb->prefix . 'erp_crm_customer_activities';
     $save_search_tb_col = $wpdb->get_col( "DESC " . $save_search_tb );
     $people_tb_col      = $wpdb->get_col( "DESC " . $people_tb );
+    $activity_tb_col    = $wpdb->get_col( "DESC " . $activity_tb );
 
     if ( ! in_array( 'type', $save_search_tb_col ) ) {
         $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_crm_save_search ADD `type` VARCHAR(255) AFTER `id`" );
@@ -375,6 +377,10 @@ function erp_crm_update_table_column() {
 
     if ( ! in_array( 'created_by', $people_tb_col ) ) {
         $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_peoples ADD `created_by` BIGINT(20) AFTER `currency`" );
+    }
+
+    if ( ! in_array( 'sent_notification', $activity_tb_col ) ) {
+        $wpdb->query( "ALTER TABLE {$wpdb->prefix}erp_crm_customer_activities ADD `sent_notification` TINYINT(4) DEFAULT '0' AFTER `extra`" );
     }
 }
 

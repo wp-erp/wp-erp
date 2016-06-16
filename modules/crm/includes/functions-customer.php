@@ -919,7 +919,6 @@ function erp_crm_update_schedule_notification_flag( $activity_id, $flag ) {
     if ( !$activity_id ) {
         return;
     }
-
     \WeDevs\ERP\CRM\Models\Activity::find( $activity_id )->update( [ 'sent_notification' => $flag ] );
 }
 
