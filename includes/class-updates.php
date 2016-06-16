@@ -26,6 +26,7 @@ class Updates {
     private static $updates = [
         '1.0' => 'updates/update-1.0.php',
         '1.1.0' => 'updates/update-1.1.0.php',
+        '1.1.1' => 'updates/update-1.1.1.php',
     ];
 
     /**
