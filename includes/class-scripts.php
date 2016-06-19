@@ -86,8 +86,8 @@ class Scripts {
         wp_register_script( 'erp-admin-settings', $js . '/settings' . $this->suffix . '.js', array( 'jquery' ), $this->version, true );
 
         // tether.js
-        wp_register_script( 'erp-tether-main', $vendor . '/tether/tether' . $this->suffix . '.js', array( 'jquery' ), $this->version, true );
-        wp_register_script( 'erp-tether-drop', $vendor . '/tether/drop' . $this->suffix . '.js', array( 'jquery' ), $this->version, true );
+        wp_register_script( 'erp-tether-main', $vendor . '/tether/tether.min.js', array( 'jquery' ), $this->version, true );
+        wp_register_script( 'erp-tether-drop', $vendor . '/tether/drop.min.js', array( 'jquery' ), $this->version, true );
     }
 
     /**
