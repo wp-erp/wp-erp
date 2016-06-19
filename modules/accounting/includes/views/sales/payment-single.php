@@ -4,6 +4,10 @@ $user    = new \WeDevs\ERP\People( intval( $transaction->user_id ) );
 $status  = $transaction->status == 'draft' ? false : true;
 $url     = admin_url( 'admin.php?page=erp-accounting-sales&action=new&type=invoice&transaction_id=' . $transaction->id );
 $taxinfo = erp_ac_get_tax_info();
+
+$current_user  = wp_get_current_user();
+$sender        = $current_user->user_email;
+$email_subject = __( 'Payment ', 'erp' ) . $transaction->ref . __( ' from ', 'erp' ) . $company->name;
 ?>
 <div class="wrap">
 
@@ -12,11 +16,12 @@ $taxinfo = erp_ac_get_tax_info();
     <div class="invoice-preview-wrap">
 
         <div class="erp-grid-container">
-            <div class="row invoice-buttons erp-hide-print">
+            <div class="row payment-buttons erp-hide-print" id="payment-button-container" data-theme="drop-theme-hubspot-popovers">
                 <div class="col-6">
                     <?php if ( $status ) {
                         ?>
                         <a href="#" class="button button-large erp-ac-print erp-hide-print"><?php _e( 'Print', 'erp' ); ?></a>
+                        <a class="button button-large drop-target"><i class="fa fa-cogs"></i>&nbsp;<?php _e( 'More Actions', 'erp' ); ?></a>
                         <?php
                     } else {
                         ?>
@@ -25,12 +30,21 @@ $taxinfo = erp_ac_get_tax_info();
                     }
                     ?>
                 </div>
+
+                <template class="more-action-content">
+                    <ul>
+                        <li><a href="#" class="payment-duplicate"><?php _e( 'Duplicate', 'erp' ); ?></a></li>
+                        <li><a href="<?php echo wp_nonce_url( admin_url( "admin-ajax.php?action=erp-ac-sales-payment-export&transaction_id={$transaction->id}" ), 'accounting-payment-export' ); ?>" class="payment-export-pdf"><?php _e( 'Export as PDF', 'erp' ); ?></a></li>
+                        <li><a href="#" data-transaction-id="<?php echo $transaction->id; ?>" data-sender="<?php echo $sender; ?>" data-receiver="<?php echo $user->email; ?>" data-subject="<?php echo $email_subject; ?>" data-title="<?php _e( 'Send Bill', 'erp' ); ?>" data-button="<?php _e( 'Send', 'erp' ); ?>" data-type="payment" class="payment-send-email"><?php _e( 'Send Via Email', 'erp' ); ?></a></li>
+                    </ul>
+                </template>
+
             </div>
             <div class="row">
                 <div class="invoice-number">
                     <?php 
-                        $ivoice = isset( $transaction->invoice_number ) && ! empty( $transaction->invoice_number ) ? $transaction->invoice_number : $transaction->id;
-                        printf( __( 'Payment: <strong>%s</strong>', 'erp' ), $ivoice ); 
+                        $invoice = isset( $transaction->invoice_number ) && ! empty( $transaction->invoice_number ) ? $transaction->invoice_number : $transaction->id;
+                        printf( __( 'Payment: <strong>%s</strong>', 'erp' ), $invoice );
 
                     ?>
                 </div>
@@ -62,7 +76,7 @@ $taxinfo = erp_ac_get_tax_info();
                         <tbody>
                             <tr>
                                 <th><?php _e( 'Payment Number', 'erp' ); ?>:</th>
-                                <td><?php echo $ivoice; ?></td>
+                                <td><?php echo $invoice; ?></td>
                             </tr>
                             <tr>
                                 <th><?php _e( 'Payment Date', 'erp' ); ?>:</th>

@@ -8,6 +8,7 @@
             this.incrementField();
             this.select2AddMoreContent();
             this.initFields();
+            $('.erp-color-picker').wpColorPicker();
 
             // journal entry
             $( 'table.erp-ac-transaction-table.journal-table' ).on( 'click', '.remove-line', this.journal.onChange );
@@ -61,12 +62,27 @@
             $('.erp-settings').on( 'click', '.erp-ac-tax-edit', this.tax.new );
             $('body').on( 'change', '#erp-ac-compound', this.tax.compound );
             $('.erp-settings').on( 'click', '.erp-ac-tax-delete', this.tax.delete );
-        },
 
-        users: {
-            clickOff: function() {
-                $('.erp-ac-users-wrap').off('click', '.erp-ac-convert-user-info', ERP_Accounting.users.convertUser );
-            },
+            // invoice
+            this.invoice.initialize();
+            $( 'body' ).on( 'click', '.invoice-duplicate', this.invoice.duplicate );
+            $( 'body' ).on( 'click', '.invoice-send-email', this.invoice.sendEmail );
+            $( 'body' ).on( 'click', '.invoice-email-new-receiver', this.invoice.addNewReceiver );
+
+            // payment
+            this.payment.initialize();
+            $( 'body' ).on( 'click', '.payment-duplicate', this.payment.duplicate );
+            $( 'body' ).on( 'click', '.payment-send-email', this.invoice.sendEmail );
+        },
+    //}
+
+    //if ( target ) {
+    //
+
+    users: {
+    clickOff: function() {
+        $('.erp-ac-users-wrap').off('click', '.erp-ac-convert-user-info', ERP_Accounting.users.convertUser );
+    },
 
             clickOn: function() {
                 $('.erp-ac-users-wrap').on('click', '.erp-ac-convert-user-info', ERP_Accounting.users.convertUser );
@@ -350,6 +366,122 @@
                         sub_tx_wrap.find('.fa-times-circle').hide();
                     }
                 }
+            }
+        },
+
+        invoice: {
+            initialize: function () {
+
+                var moreActions, theme, openOn, target, content;
+
+                moreActions = $('.invoice-buttons');
+
+                if ( moreActions.length > 0 ) {
+                    target = moreActions.find('.drop-target');
+                    theme = moreActions.data('theme');
+                    openOn = 'click';
+                    content =  $('.more-action-content').html();
+                    moreActions.addClass(theme);
+
+                    var drop = new Drop({
+                        target: target[0],
+                        classes: theme,
+                        position: 'bottom center',
+                        constrainToWindow: true,
+                        constrainToScrollParent: false,
+                        openOn: openOn,
+                        content: content
+                    });
+
+                }
+            },
+
+            duplicate: function ( e ) {
+                e.preventDefault();
+                alert('duplicate');
+            },
+
+            sendEmail: function( e ) {
+                e.preventDefault();
+
+                var self, type, title, button, sender, receiver, subject, transaction_id;
+
+                self = $(this);
+                type = self.data('type');
+                title = self.data('title');
+                button = self.data('button');
+                sender = self.data('sender');
+                receiver = self.data('receiver');
+                subject = self.data('subject');
+                transactionId = self.data('transaction-id');
+
+                $.erpPopup({
+                    title: title,
+                    button: button,
+                    id: 'erp-ac-invoice-send-email',
+                    content: wperp.template( 'erp-ac-send-email-invoice-pop' )({type: type, sender: sender, receiver: receiver, subject: subject, transactionId: transactionId}).trim(),
+                    extraClass: 'large',
+
+                    onReady: function(modal) {
+
+                    },
+
+                    onSubmit: function(modal) {
+                        wp.ajax.send({
+                            data: this.serialize(),
+                            success: function (response) {
+                                modal.closeModal();
+                                console.log(response);
+                            },
+                            error: function (error) {
+                                console.error(error);
+                            }
+                        });
+                    }
+                });
+            },
+
+            addNewReceiver: function( e ) {
+                e.preventDefault();
+                $('.row-email-to').append('<div class="row">' +
+                    '<label>&nbsp;</label>' +
+                    '<input type="text" name="email-to[]" placeholder="name@example.com">' +
+                    '<a class="receiver-filed-remove" style="cursor:pointer"><i class="fa fa-close"></i></a>' +
+                    '</div>');
+
+            }
+        },
+
+        payment: {
+            initialize: function () {
+
+                var moreActions, theme, openOn, target, content;
+
+                moreActions = $('.payment-buttons');
+
+                if ( moreActions.length > 0 ) {
+                    target = moreActions.find('.drop-target');
+                    theme = moreActions.data('theme');
+                    openOn = 'click';
+                    content =  $('.more-action-content').html();
+                    moreActions.addClass(theme);
+
+                    var drop = new Drop({
+                        target: target[0],
+                        classes: theme,
+                        position: 'bottom center',
+                        constrainToWindow: true,
+                        constrainToScrollParent: false,
+                        openOn: openOn,
+                        content: content
+                    });
+
+                }
+            },
+
+            duplicate: function ( e ) {
+                e.preventDefault();
+                alert('duplicate');
             }
         },
 

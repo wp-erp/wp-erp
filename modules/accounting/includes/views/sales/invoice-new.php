@@ -1,7 +1,6 @@
 <?php
 $customer_id = isset( $_GET['customer'] ) && $_GET['customer'] == 'true' ? intval( $_GET['id'] ) : false;
 $transaction_id = isset( $_GET['transaction_id'] ) ? intval( $_GET['transaction_id'] ) : false;
-
 $transaction = [];
 $jor_itms    = [];
 
