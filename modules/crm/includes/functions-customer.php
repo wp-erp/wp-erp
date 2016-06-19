@@ -1263,6 +1263,8 @@ function erp_crm_get_user_assignable_groups( $user_id ) {
  * @return boolean
  */
 function erp_crm_contact_subscriber_delete( $user_id ) {
+    do_action( 'erp_crm_pre_unsubscribed_contact', $user_id );
+
     if ( is_array( $user_id ) ) {
         return \WeDevs\ERP\CRM\Models\ContactSubscriber::whereIn( 'user_id', $user_id )->delete();
     } else {

@@ -905,10 +905,16 @@ function erp_hr_leave_get_requests_count() {
 function erp_hr_leave_request_update_status( $request_id, $status ) {
     global $wpdb;
 
-    return $wpdb->update( $wpdb->prefix . 'erp_hr_leave_requests',
-        array( 'status' => $status ),
-        array( 'id' => $request_id )
+    $updated = $wpdb->update( $wpdb->prefix . 'erp_hr_leave_requests',
+        [ 'status' => $status ],
+        [ 'id' => $request_id ]
     );
+
+    $status = ( $status == 1 ) ? 'approved' : 'pending';
+
+    do_action( "erp_hr_leave_request_{$status}", $request_id );
+
+    return $updated;
 }
 
 /**
