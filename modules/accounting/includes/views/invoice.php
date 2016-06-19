@@ -79,7 +79,7 @@ $invoice->add_total( __( 'TOTAL', 'erp' ), html_entity_decode( erp_ac_get_price(
 //$invoice->add_total( __( 'TOTAL RP', 'erp' ), html_entity_decode( erp_ac_get_price( $total_paid ) ), true );
 
 //Add Badge
-$invoice->add_badge( __( 'DUE', 'erp' ) );
+//$invoice->add_badge( __( 'DUE', 'erp' ) );
 
 //Add Title
 //$invoice->add_title("Payment information");

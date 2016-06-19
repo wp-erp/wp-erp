@@ -437,7 +437,7 @@ class PDF_Invoicer extends FPDF {
 			$badge  = ' ' . strtoupper( $this->badge ) . ' ';
 			$resetX = $this->getX();
 			$resetY = $this->getY();
-			$this->setXY( $badgeX, $badgeY + 15 );
+//			$this->setXY( $badgeX, $badgeY );
 			$this->SetLineWidth( 0.4 );
 			$this->SetDrawColor( $this->color[0], $this->color[1], $this->color[2] );
 			$this->setTextColor( $this->color[0], $this->color[1], $this->color[2] );
@@ -480,7 +480,7 @@ class PDF_Invoicer extends FPDF {
 		$this->SetFont( $this->font, '', 8 );
 		$this->SetTextColor( 50, 50, 50 );
 		$this->Cell( 0, 10, $this->footernote, 0, 0, 'L' );
-		$this->Cell( 0, 10, $this->l['page'] . ' ' . $this->PageNo() . ' ' . $this->l['page_of'] . ' {nb}', 0, 0, 'R' );
+		$this->Cell( 0, 10, $this->l['page'] . ' ' . $this->PageNo() . ' ' . 'of' . ' {nb}', 0, 0, 'R' );
 	}
 	
 	/*******************************************************************************
