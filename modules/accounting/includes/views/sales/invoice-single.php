@@ -10,6 +10,9 @@ $url                 = admin_url( 'admin.php?page=erp-accounting-sales&action=ne
 $more_details_url    = erp_ac_get_slaes_payment_invoice_url( $transaction->id );
 $taxinfo             = erp_ac_get_tax_info();
 
+$current_user        = wp_get_current_user();
+$sender              = $current_user->user_email;
+$email_subject       = __( 'Invoice ', 'erp' ) . $transaction->ref . __( ' from ', 'erp' ) . $company->name;
 ?>
 <div class="wrap">
 
@@ -28,12 +31,13 @@ $taxinfo             = erp_ac_get_tax_info();
             <?php
             if ( ! isset( $popup_status ) ) {
                 ?>
-                <div class="row invoice-buttons erp-hide-print">
+                <div class="row invoice-buttons erp-hide-print" id="invoice-button-container" data-theme="drop-theme-hubspot-popovers">
                     <div class="col-6">
                         <?php if ( $status ) {
                             ?>
-                            <a href="#" data-transaction_id=<?php echo $transaction->id; ?> data-due_amount=<?php echo $transaction->due; ?> data-customer_id=<?php echo intval($transaction->user_id); ?> class="button button-primary button-large add-invoice-payment erp-hide-print"><?php _e( 'Add Payment', 'erp' ); ?></a>
-                            <a href="#" class="button button-large erp-ac-print erp-hide-print"><?php _e( 'Print', 'erp' ); ?></a>
+                            <a href="#" data-transaction_id=<?php echo $transaction->id; ?> data-due_amount=<?php echo $transaction->due; ?> data-customer_id=<?php echo intval($transaction->user_id); ?> class="button button-primary button-large add-invoice-payment erp-hide-print"><?php _e( 'Add Payment', 'accounting' ); ?></a>
+                            <a href="#" class="button button-large erp-ac-print erp-hide-print"><i class="fa fa-print"></i>&nbsp;<?php _e( 'Print', 'accounting' ); ?></a>
+                            <a class="button button-large drop-target"><i class="fa fa-cogs"></i>&nbsp;<?php _e( 'More Actions', 'accounting' ); ?></a>
                             <?php
                         } else {
                             ?>
@@ -44,12 +48,20 @@ $taxinfo             = erp_ac_get_tax_info();
                     </div>
                 </div>
 
+                <template class="more-action-content">
+                    <ul>
+                        <li><a href="#" class="invoice-duplicate"><?php _e( 'Duplicate', 'erp' ); ?></a></li>
+                        <li><a href="<?php echo wp_nonce_url( admin_url( "admin-ajax.php?action=erp-ac-sales-invoice-export&transaction_id={$transaction->id}" ), 'accounting-invoice-export' ); ?>" class="invoice-export-pdf"><?php _e( 'Export as PDF', 'erp' ); ?></a></li>
+                        <li><a href="#" data-transaction-id="<?php echo $transaction->id; ?>" data-sender="<?php echo $sender; ?>" data-receiver="<?php echo $user->email; ?>" data-subject="<?php echo $email_subject; ?>" data-title="<?php _e( 'Send Invoice', 'erp' ); ?>" data-button="<?php _e( 'Send', 'erp' ); ?>" data-type="invoice" class="invoice-send-email"><?php _e( 'Send Via Email', 'erp' ); ?></a></li>
+                    </ul>
+                </template>
+
                 <?php
             }
             ?>
             <div class="row">
                 <div class="invoice-number">
-                    <?php 
+                    <?php
                         $ivoice = isset( $transaction->invoice_number ) && ! empty( $transaction->invoice_number ) ? $transaction->invoice_number : $transaction->id; 
                         printf( __( 'Invoice: <strong>%s</strong>', 'erp' ), $ivoice ); 
                     ?>
@@ -127,7 +139,9 @@ $taxinfo             = erp_ac_get_tax_info();
                                 <td><?php echo $line->qty; ?></td>
                                 <td><?php echo erp_ac_get_price( $line->unit_price ); ?></td>
                                 <td><?php echo $line->discount; ?></td>
-                                <td><?php echo $line->tax ? $taxinfo[$line->tax]['name'] .' ('. $taxinfo[$line->tax]['rate'] .'%)' : '0.00'; ?></td>
+
+                                <td><?php //echo $taxinfo[$line->tax]['name'] .' ('. $taxinfo[$line->tax]['rate'] .'%)'; ?></td>
+                                <td><?php echo ( $line->tax_rate * $line->line_total ) / 100; ?></td>
                                 <td><?php echo erp_ac_get_price( $line->line_total ); ?></td>
                             </tr>
                         <?php } ?>

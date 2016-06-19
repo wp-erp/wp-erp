@@ -133,6 +133,12 @@ class Settings extends ERP_Settings_Page {
                 'default' => 2
             ),
 
+            array(
+                'title'   => __( 'PDF Theme Color', 'erp' ),
+                'type'    => 'text',
+                'id'      => 'erp_ac_pdf_theme_color',
+                'class'   => 'erp-color-picker'
+            ),
 
             array( 'type' => 'sectionend', 'id' => 'script_styling_options' ),
 

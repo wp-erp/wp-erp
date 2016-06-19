@@ -188,39 +188,42 @@ class Accounting {
     }
 
     public function enqueue_scripts() {
-       // styles
-       wp_enqueue_style( 'wp-erp-ac-styles', WPERP_ACCOUNTING_ASSETS . '/css/accounting.css', false, date( 'Ymd' ) );
-       wp_enqueue_script('erp-sweetalert');
-       // scripts
-       wp_enqueue_script( 'accounting', WPERP_ACCOUNTING_ASSETS . '/js/accounting.min.js', array( 'jquery' ), date( 'Ymd' ), true );
-       wp_enqueue_script( 'wp-erp-ac-js', WPERP_ACCOUNTING_ASSETS . '/js/erp-accounting.js', array( 'jquery', 'erp-tiptip' ), date( 'Ymd' ), true );
+        // styles
+        wp_enqueue_style( 'erp-tether-drop-theme' );
+        wp_enqueue_style( 'wp-erp-ac-styles', WPERP_ACCOUNTING_ASSETS . '/css/accounting.css', false, date( 'Ymd' ) );
+        // scripts
+        wp_enqueue_script('erp-sweetalert');
+        wp_enqueue_script( 'erp-tether-main' );
+        wp_enqueue_script( 'erp-tether-drop' );
+        wp_enqueue_script( 'accounting', WPERP_ACCOUNTING_ASSETS . '/js/accounting.min.js', array( 'jquery' ), date( 'Ymd' ), true );
+        wp_enqueue_script( 'wp-erp-ac-js', WPERP_ACCOUNTING_ASSETS . '/js/erp-accounting.js', array( 'jquery', 'erp-tiptip' ), date( 'Ymd' ), true );
 
-       $erp_ac_de_separator = erp_get_option('erp_ac_de_separator');
-       $erp_ac_th_separator = erp_get_option('erp_ac_th_separator');
-       $erp_ac_nm_decimal = erp_get_option('erp_ac_nm_decimal');
+        $erp_ac_de_separator = erp_get_option('erp_ac_de_separator');
+        $erp_ac_th_separator = erp_get_option('erp_ac_th_separator');
+        $erp_ac_nm_decimal = erp_get_option('erp_ac_nm_decimal');
 
-       wp_localize_script( 'wp-erp-ac-js', 'ERP_AC', array(
+        wp_localize_script( 'wp-erp-ac-js', 'ERP_AC', array(
 
-           'nonce'              => wp_create_nonce( 'erp-ac-nonce' ),
-           'confirmMsg'         => __( 'Are you sure?', 'erp-accounting' ),
-           'ajaxurl'            => admin_url( 'admin-ajax.php' ),
-           'decimal_separator'  => empty( $erp_ac_de_separator ) ? '.' : erp_get_option('erp_ac_de_separator'),
-           'thousand_separator' => empty( $erp_ac_th_separator ) ? ',' : erp_get_option('erp_ac_th_separator'),
-           'number_decimal'     => empty( $erp_ac_nm_decimal ) ? '2' : erp_get_option('erp_ac_nm_decimal'),
-           'currency'           => erp_get_option('erp_ac_currency'),
-           'symbol'             => erp_ac_get_currency_symbol(),
-           'message'    => erp_ac_message(),
-           'plupload'   => array(
-               'url'              => admin_url( 'admin-ajax.php' ) . '?nonce=' . wp_create_nonce( 'erp_ac_featured_img' ),
-               'flash_swf_url'    => includes_url( 'js/plupload/plupload.flash.swf' ),
-               'filters'          => array( array('title' => __( 'Allowed Files', 'erp' ), 'extensions' => '*')),
-               'multipart'        => true,
-               'urlstream_upload' => true,
-           )
-       ));
+            'nonce'              => wp_create_nonce( 'erp-ac-nonce' ),
+            'confirmMsg'         => __( 'Are you sure?', 'erp-accounting' ),
+            'ajaxurl'            => admin_url( 'admin-ajax.php' ),
+            'decimal_separator'  => empty( $erp_ac_de_separator ) ? '.' : erp_get_option('erp_ac_de_separator'),
+            'thousand_separator' => empty( $erp_ac_th_separator ) ? ',' : erp_get_option('erp_ac_th_separator'),
+            'number_decimal'     => empty( $erp_ac_nm_decimal ) ? '2' : erp_get_option('erp_ac_nm_decimal'),
+            'currency'           => erp_get_option('erp_ac_currency'),
+            'symbol'             => erp_ac_get_currency_symbol(),
+            'message'    => erp_ac_message(),
+            'plupload'   => array(
+                'url'              => admin_url( 'admin-ajax.php' ) . '?nonce=' . wp_create_nonce( 'erp_ac_featured_img' ),
+                'flash_swf_url'    => includes_url( 'js/plupload/plupload.flash.swf' ),
+                'filters'          => array( array('title' => __( 'Allowed Files', 'accounting' ), 'extensions' => '*')),
+                'multipart'        => true,
+                'urlstream_upload' => true,
+            )
+        ));
 
-       wp_enqueue_style( 'erp-sweetalert' );
-   }
+        wp_enqueue_style( 'erp-sweetalert' );
+    }
 
     public function add_settings_page( $settings = array() ) {
 
@@ -262,6 +265,7 @@ class Accounting {
         if ( $current_screen->base == 'accounting_page_erp-accounting-sales' ) {
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/invoice.php', 'erp-ac-invoice-payment-pop' );
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/customer.php', 'erp-ac-new-customer-content-pop' );
+            erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/send-invoice.php', 'erp-ac-send-email-invoice-pop' );
         }
 
         if ( $current_screen->base == 'erp-settings_page_erp-settings' && isset( $_GET['section'] ) && $_GET['section'] == 'erp_ac_tax' ) {
