@@ -30,7 +30,7 @@ if ( $transaction->invoice_number ) {
 
 // Set reference
 if ( $transaction->ref ) {
-    $invoice->set_reference( $transaction->ref, __( 'PAYMENT NUMBER', 'erp' ) );
+    $invoice->set_reference( $transaction->invoice_number, __( 'PAYMENT NUMBER', 'erp' ) );
 }
 
 // Set VAT No
@@ -44,6 +44,11 @@ if ( $transaction-> issue_date ) {
 // Set Due Date
 if ( $transaction->due_date ) {
     $invoice->set_reference( erp_format_date( $transaction->due_date ), __( 'DUE DATE', 'erp' ) );
+}
+
+// Set Due Amount
+if ( $transaction->due ) {
+    $invoice->set_reference( html_entity_decode( erp_ac_get_price( $transaction->due ) ), __( 'AMOUNT DUE', 'erp' ) );
 }
 
 // Set from Address
