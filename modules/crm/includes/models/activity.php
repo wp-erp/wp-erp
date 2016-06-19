@@ -26,7 +26,6 @@ class Activity extends Model {
     public static function scopeSchedules( $query ) {
         return $query->where( 'start_date', '>', current_time( 'mysql' ) )
                     ->where( 'type', 'log_activity' )
-                    ->where( 'sent_notification', false )
-                    ->where( 'created_by', '=', get_current_user_id() );
+                    ->where( 'sent_notification', false );
     }
 }
