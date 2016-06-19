@@ -383,16 +383,17 @@
                     content =  $('.more-action-content').html();
                     moreActions.addClass(theme);
 
-                    var drop = new Drop({
-                        target: target[0],
-                        classes: theme,
-                        position: 'bottom center',
-                        constrainToWindow: true,
-                        constrainToScrollParent: false,
-                        openOn: openOn,
-                        content: content
-                    });
-
+                    if ( target[0] ) {
+                        var drop = new Drop({
+                            target: target[0],
+                            classes: theme,
+                            position: 'bottom center',
+                            constrainToWindow: true,
+                            constrainToScrollParent: false,
+                            openOn: openOn,
+                            content: content
+                        });
+                    }
                 }
             },
 
