@@ -7,7 +7,7 @@ $taxinfo = erp_ac_get_tax_info();
 
 $current_user  = wp_get_current_user();
 $sender        = $current_user->user_email;
-$email_subject = __( 'Payment ', 'erp' ) . $transaction->ref . __( ' from ', 'erp' ) . $company->name;
+$email_subject = __( 'Payment#', 'erp' ) . $transaction->invoice_number . __( ' from ', 'erp' ) . $company->name;
 ?>
 <div class="wrap">
 

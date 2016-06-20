@@ -89,5 +89,5 @@ $invoice->add_total( __( 'TOTAL', 'erp' ), html_entity_decode( erp_ac_get_price(
 //$invoice->set_footer_note("http://www.wedevs.com");
 
 //Render the PDF
-$file_path = isset( $file_path ) ? $file_path : __( 'Invoice', 'erp' ) . '.pdf';
+$file_path = isset( $file_path ) ? $file_path : $transaction->invoice_number . '.pdf';
 $invoice->render( $file_path, $output_method );

@@ -29,9 +29,9 @@ if ( $transaction->invoice_number ) {
 }
 
 // Set reference
-if ( $transaction->ref ) {
+if ( $transaction->invoice_number ) {
     $invoice->set_reference( $transaction->invoice_number, __( 'PAYMENT NUMBER', 'erp' ) );
-
+}
 
 // Set VAT No
 //$invoice->set_reference( '2034802394', __( 'VAT NO', 'accounting' ) );
@@ -91,5 +91,5 @@ $invoice->add_badge(__( 'PAID', 'erp' ) );
 //Set footer note
 //$invoice->set_footer_note("http://www.wedevs.com");
 //Render the PDF
-$file_path = isset( $file_path ) ? $file_path : __( 'Payment', 'erp' ) . '.pdf';
+$file_path = isset( $file_path ) ? $file_path : $transaction->invoice_number . '.pdf';
 $invoice->render( $file_path, $output_method );

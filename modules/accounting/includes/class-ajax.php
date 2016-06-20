@@ -588,16 +588,18 @@ class Ajax_Handler {
         $body           = isset( $_REQUEST['email-body'] ) ? sanitize_text_field( $_REQUEST['email-body'] ) : '';
         $attach_pdf     = isset( $_REQUEST['attachment'] ) && 'on' == $_REQUEST['attachment'] ? true : false;
         $transaction_id = isset( $_REQUEST['transaction_id'] ) ? $_REQUEST['transaction_id'] : 0;
+        $transaction    = Model\Transaction::find( $transaction_id );
         $output_method  = 'F';
 
         $upload_path    = wp_upload_dir();
-        $file_name      = 'invoice' == $type ? __( 'Invoice', 'erp' ) : __( 'Payment', 'erp' );
+        $file_name      = $transaction->invoice_number;
         $include_file   = 'invoice' == $type ? 'invoice' : 'payment';
         $file_path      = $upload_path['basedir'] . '/' . $file_name . '.pdf';
 
         include WPERP_ACCOUNTING_VIEWS . '/' . $include_file . '.php';
 
         $invoice_email = new Emails\Accounting_Invoice_Email();
+
         $invoice_email->trigger( $receiver, $subject, $body, $file_path );
 
         unlink( $file_path );
