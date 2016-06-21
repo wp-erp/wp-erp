@@ -381,11 +381,6 @@ form.erp-form .erp-form-field label {
   border-left: 1px solid #e1e1e1;
 }
 
-#erp-ac-invoice-send-email input[type="text"], #erp-ac-invoice-send-email input[type="email"], #erp-ac-invoice-send-email textarea {
-  width: 500px;
-  margin-bottom: 10px;
-}
-
 #erp-ac-invoice-send-email textarea {
   height: 100px;
 }
