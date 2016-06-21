@@ -4,3 +4,4 @@ composer.json
 composer.lock
 package.json
 plugin-deploy.sh
+vendor/composer/autoload_static.php
