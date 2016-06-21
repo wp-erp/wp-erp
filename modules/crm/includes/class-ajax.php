@@ -152,6 +152,10 @@ class Ajax_Handler {
             ];
         }
 
+        if ( isset( $_REQUEST['erpadvancefilter'] ) && ! empty( $_REQUEST['erpadvancefilter'] ) ) {
+            $args['erpadvancefilter'] = $_REQUEST['erpadvancefilter'];
+        }
+
         $contacts['data']  = erp_get_peoples( $args );
 
         $args['count'] = true;
@@ -251,12 +255,19 @@ class Ajax_Handler {
     public function create_customer() {
         $this->verify_nonce( 'wp-erp-crm-customer-nonce' );
 
-        // @TODO: check permission
         unset( $_POST['_wp_http_referer'] );
         unset( $_POST['_wpnonce'] );
         unset( $_POST['action'] );
 
         $posted      = array_map( 'strip_tags_deep', $_POST );
+
+        if ( ! $posted['id'] && ! current_user_can( 'erp_crm_add_contact' ) ) {
+            $this->send_error( __( 'You don\'t have any permission to add new contact', 'erp' ) );
+        }
+
+        if ( $posted['id'] && ! current_user_can( 'erp_crm_edit_contact', $posted['id'] ) ) {
+            $this->send_error( __( 'You don\'t have any permission to edit this contact', 'erp' ) );
+        }
 
         $customer_id = erp_insert_people( $posted );
 
@@ -333,15 +344,34 @@ class Ajax_Handler {
      * @return json
      */
     public function customer_remove() {
-
         $this->verify_nonce( 'wp-erp-crm-nonce' );
 
+        $ids         = [];
         $customer_id = ( isset( $_REQUEST['id'] ) && is_array( $_REQUEST['id'] ) ) ? (array)$_REQUEST['id'] : intval( $_REQUEST['id'] );
         $hard        = isset( $_REQUEST['hard'] ) ? intval( $_REQUEST['hard'] ) : 0;
         $type        = isset( $_REQUEST['type'] ) ? $_REQUEST['type'] : '';
 
+        // Check permission for trashing and permanent deleting contact;
+        if ( is_array( $customer_id ) ) {
+            foreach ( $customer_id as $contact_id ) {
+                if ( ! current_user_can( 'erp_crm_delete_contact', $contact_id, $hard ) ) {
+                    continue;
+                }
+                $ids[] = $contact_id;
+            }
+        } else {
+            if ( ! current_user_can( 'erp_crm_delete_contact', $customer_id, $hard ) ) {
+                $this->send_error( __( 'You don\'t have any permission to delete this contact', 'erp' ) );
+            }
+            $ids[] = $customer_id;
+        }
+
+        if ( empty( $ids ) ) {
+            $this->send_error( __( 'Can not delete - You do not own this contact(s)', 'erp' ) );
+        }
+
         $data = [
-            'id'   => $customer_id,
+            'id'   => $ids,
             'hard' => $hard,
             'type' => $type
         ];
@@ -365,7 +395,6 @@ class Ajax_Handler {
      * @return json
      */
     public function customer_restore() {
-
         $this->verify_nonce( 'wp-erp-crm-nonce' );
 
         $customer_id = ( isset( $_REQUEST['id'] ) && is_array( $_REQUEST['id'] ) ) ? (array)$_REQUEST['id'] : intval( $_REQUEST['id'] );
@@ -397,6 +426,7 @@ class Ajax_Handler {
     public function bulk_assign_group() {
         $this->verify_nonce( 'wp-erp-crm-bulk-contact-subscriber' );
 
+        $ids                = [];
         $contact_subscriber = [];
         $user_ids           = ( isset( $_POST['user_id'] ) && ! empty( $_POST['user_id'] ) ) ? explode(',', $_POST['user_id'] ) : [];
         $group_ids          = ( isset( $_POST['group_id'] ) && ! empty( $_POST['group_id'] ) ) ? $_POST['group_id'] : [];
@@ -409,7 +439,19 @@ class Ajax_Handler {
             $this->send_error( __( 'Atleast one group must be selected', 'erp' ) );
         }
 
-        foreach ( $user_ids as $user_key => $user_id ) {
+        // Check permission for trashing and permanent deleting contact;
+        foreach ( $user_ids as $contact_id ) {
+            if ( ! current_user_can( 'erp_crm_edit_contact', $contact_id ) ) {
+                continue;
+            }
+            $ids[] = $contact_id;
+        }
+
+        if ( empty( $ids ) ) {
+            $this->send_error( __( 'Can not assign any group - You do not own this contact(s)', 'erp' ) );
+        }
+
+        foreach ( $ids as $user_key => $user_id ) {
             foreach ( $group_ids as $group_key => $group_id ) {
                 $contact_subscriber = [
                     'user_id'  => $user_id,
@@ -601,7 +643,11 @@ class Ajax_Handler {
             $this->send_error( __( 'No contact found', 'erp' ) );
         }
 
-        erp_people_update_meta( $output['assign_contact_id'], '_assign_crm_agent', $output['erp_select_assign_contact'] );
+        if ( $output['assign_contact_user_id'] ) {
+            update_user_meta( $output['assign_contact_user_id'], '_assign_crm_agent', $output['erp_select_assign_contact'] );
+        } else {
+            erp_people_update_meta( $output['assign_contact_id'], '_assign_crm_agent', $output['erp_select_assign_contact'] );
+        }
 
         $this->send_success( __( 'Assing to agent successfully', 'erp' ) );
     }
@@ -727,23 +773,31 @@ class Ajax_Handler {
      * @return json
      */
     public function assign_contact_as_subscriber() {
-
         $this->verify_nonce( 'wp-erp-crm-contact-subscriber' );
 
         $data = [];
 
-        if ( isset ( $_POST['group_id'] ) && isset( $_POST['user_id'] ) ) {
-            foreach ( $_POST['group_id'] as $key => $group_id ) {
-                $data = [
-                    'user_id'  => $_POST['user_id'],
-                    'group_id' => $group_id,
-                ];
-            }
-            erp_crm_create_new_contact_subscriber( $data );
+        $user_id = ( isset( $_POST['user_id'] ) && !empty( $_POST['user_id'] ) ) ? (int) $_POST['user_id'] : 0;
+        $group_ids = ( isset( $_POST['group_id'] ) && !empty( $_POST['group_id'] ) ) ? (array) $_POST['group_id'] : [];
+
+        if ( ! $user_id ) {
+            $this->send_error( __( 'No user data found', 'erp' ) );
         }
 
+        if ( ! current_user_can( 'erp_crm_edit_contact', $user_id ) ) {
+            $this->send_error( __( 'You don\'t have any permission to assign this contact in a group', 'erp' ) );
+        }
 
-        return $this->send_success( __( 'Succesfully subscriber for this user', 'erp' ) );
+        foreach ( $group_ids as $key => $group_id ) {
+            $data = [
+                'user_id'  => $user_id,
+                'group_id' => $group_id,
+            ];
+        }
+
+        erp_crm_create_new_contact_subscriber( $data );
+
+        $this->send_success( __( 'Succesfully subscriber for this user', 'erp' ) );
     }
 
     /**
@@ -757,6 +811,10 @@ class Ajax_Handler {
         $this->verify_nonce( 'wp-erp-crm-nonce' );
 
         $user_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+
+        if ( ! current_user_can( 'erp_crm_edit_contact', $user_id ) ) {
+            $this->send_error( __( 'You don\'t have any permission to remove this contact from a group', 'erp' ) );
+        }
 
         if ( ! $user_id ) {
             $this->send_error( __( 'No subscriber user found', 'erp' ) );
@@ -779,6 +837,10 @@ class Ajax_Handler {
 
         $user_id = isset( $_REQUEST['user_id'] ) ? intval( $_REQUEST['user_id'] ) : 0;
         $group_id = isset( $_POST['group_id'] ) ? $_POST['group_id'] : [];
+
+        if ( ! current_user_can( 'erp_crm_edit_contact', $user_id ) ) {
+            $this->send_error( __( 'You don\'t have any permission to assign this contact', 'erp' ) );
+        }
 
         if ( ! $user_id ) {
             $this->send_error( __( 'No subscriber user found', 'erp' ) );

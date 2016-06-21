@@ -1,4 +1,4 @@
-<div class="wrap">
+<div class="wrap erp-ac-users-wrap">
     <h2><?php _e( 'Update Customer', 'erp' ); ?></h2>
 
     <?php $item = erp_ac_get_customer( $id ); ?>

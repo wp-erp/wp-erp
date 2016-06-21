@@ -8,6 +8,7 @@
             this.incrementField();
             this.select2AddMoreContent();
             this.initFields();
+            $('.erp-color-picker').wpColorPicker();
 
             // journal entry
             $( 'table.erp-ac-transaction-table.journal-table' ).on( 'click', '.remove-line', this.journal.onChange );
@@ -36,8 +37,12 @@
             $('.erp-ac-customer-list-table-wrap, .erp-ac-vendor-list-table-wrap').on( 'click', 'a.erp-ac-submitdelete', this.customer.remove );
             $('.erp-ac-customer-list-table-wrap, .erp-ac-vendor-list-table-wrap' ).on( 'click', 'a.erp-ac-restoreCustomer', this.customer.restore );
             $('.erp-ac-receive-payment-table, .erp-ac-voucher-table-wrap' ).on( 'click', '.erp-ac-remove-line', this.removePartialLine );
-            $('body, .erp-ac-form-wrap' ).on( 'change', '.erp-ac-reference-field', this.reference );
-            $('body, .erp-ac-form-wrap' ).on( 'keyup', '.erp-ac-reference-field', this.keyupReference );
+            $('body' ).on( 'change', '.erp-ac-reference-field', this.reference );
+            $('body' ).on( 'keyup', '.erp-ac-reference-field', this.keyupReference );
+
+            $('body' ).on( 'keyup', '.erp-ac-check-invoice-number', this.keyupInvoice );
+            $('body' ).on( 'change', '.erp-ac-check-invoice-number', this.changeInvoice );
+
             $('body' ).on( 'click', '.erp-ac-not-found-btn-in-drop', this.dropDownAddMore );
             $('.erp-ac-transaction-report').on('click', this.transactionReport );
 
@@ -57,12 +62,27 @@
             $('.erp-settings').on( 'click', '.erp-ac-tax-edit', this.tax.new );
             $('body').on( 'change', '#erp-ac-compound', this.tax.compound );
             $('.erp-settings').on( 'click', '.erp-ac-tax-delete', this.tax.delete );
-        },
 
-        users: {
-            clickOff: function() {
-                $('.erp-ac-users-wrap').off('click', '.erp-ac-convert-user-info', ERP_Accounting.users.convertUser );
-            },
+            // invoice
+            this.invoice.initialize();
+            $( 'body' ).on( 'click', '.invoice-duplicate', this.invoice.duplicate );
+            $( 'body' ).on( 'click', '.invoice-send-email', this.invoice.sendEmail );
+            $( 'body' ).on( 'click', '.invoice-email-new-receiver', this.invoice.addNewReceiver );
+
+            // payment
+            this.payment.initialize();
+            $( 'body' ).on( 'click', '.payment-duplicate', this.payment.duplicate );
+            $( 'body' ).on( 'click', '.payment-send-email', this.invoice.sendEmail );
+        },
+    //}
+
+    //if ( target ) {
+    //
+
+    users: {
+    clickOff: function() {
+        $('.erp-ac-users-wrap').off('click', '.erp-ac-convert-user-info', ERP_Accounting.users.convertUser );
+    },
 
             clickOn: function() {
                 $('.erp-ac-users-wrap').on('click', '.erp-ac-convert-user-info', ERP_Accounting.users.convertUser );
@@ -98,22 +118,41 @@
             checkUsers: function(e) {
                 e.preventDefault();
                 var self = $(this),
-                    email = self.val();
+                    form = self.closest('form'),
+                    email = self.val(),
+                    type = form.find('input[name=type]').val(),
+                    id   = form.find('input[name=field_id]').val();
+
+                var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+                if ( email == '' || !re.test( email ) ) {
+                    return false;
+                }
+
+                if ( id != '0' ) {
+                    return false;
+                }
 
                 wp.ajax.send( 'erp_people_exists', {
                     data: {
                         email: email
                     },
                     success: function(res) {
-
                         $('#message').slideUp(500);
                         $('input[name="submit_erp_ac_customer"]').prop('disabled', false);
                     },
                     error: function(res) {
-                        $('#message').slideUp(100);
-                        $('.erp-ac-convert-user-info').attr( 'data-people_id', res.id );
-                        $('#message').slideDown(500);
-                        $('input[name="submit_erp_ac_customer"]').prop('disabled', true);
+                        if ( $.inArray( 'customer', res.types ) != -1 || $.inArray( 'vendor', res.types ) != -1 ) {
+                            $('#message').slideUp(100);
+                            $('#message').html( '<p><span class="erp-ac-user-exsitance-notice">' + ERP_AC.message.alreadyExist + '</span></p>' );
+                            $('#message').slideDown(500);
+                            $('input[name="submit_erp_ac_customer"]').prop('disabled', true);
+                        } else {
+                            $('#message').slideUp(100);
+                            $('.erp-ac-convert-user-info').attr( 'data-people_id', res.id );
+                            $('#message').slideDown(500);
+                            $('input[name="submit_erp_ac_customer"]').prop('disabled', true);
+                        }
                     }
                 });
 
@@ -330,6 +369,135 @@
             }
         },
 
+        invoice: {
+            initialize: function () {
+
+                var moreActions, theme, openOn, target, content;
+
+                moreActions = $('.invoice-buttons');
+
+                if ( moreActions.length > 0 ) {
+                    target = moreActions.find('.drop-target');
+                    theme = moreActions.data('theme');
+                    openOn = 'click';
+                    content =  $('.more-action-content').html();
+                    moreActions.addClass(theme);
+
+                    if ( target[0] ) {
+                        var drop = new Drop({
+                            target: target[0],
+                            classes: theme,
+                            position: 'bottom center',
+                            constrainToWindow: true,
+                            constrainToScrollParent: false,
+                            openOn: openOn,
+                            content: content
+                        });
+                    }
+                }
+            },
+
+            duplicate: function ( e ) {
+                e.preventDefault();
+            },
+
+            sendEmail: function( e ) {
+                e.preventDefault();
+
+                var self, type, title, button, sender, receiver, subject, transaction_id;
+
+                self = $(this);
+                type = self.data('type');
+                title = self.data('title');
+                button = self.data('button');
+                sender = self.data('sender');
+                receiver = self.data('receiver');
+                subject = self.data('subject');
+                transactionId = self.data('transaction-id');
+
+                $.erpPopup({
+                    title: title,
+                    button: button,
+                    id: 'erp-ac-invoice-send-email',
+                    content: wperp.template( 'erp-ac-send-email-invoice-pop' )({type: type, sender: sender, receiver: receiver, subject: subject, transactionId: transactionId}).trim(),
+                    extraClass: 'large',
+
+                    onReady: function(modal) {
+
+                    },
+
+                    onSubmit: function(modal) {
+                        modal.disableButton();
+                        wp.ajax.send({
+                            data: this.serialize(),
+                            success: function (response) {
+                                swal({
+                                    title: ERP_AC.emailConfirm,
+                                    timer: 2000,
+                                    text: ERP_AC.emailConfirmMsg,
+                                    type: 'success'
+                                });
+                                modal.enableButton();
+                                modal.closeModal();
+                            },
+                            error: function (error) {
+                                alert(error);
+                            }
+                        });
+                    }
+                });
+            },
+
+            addNewReceiver: function( e ) {
+                e.preventDefault();
+                $('.subject').before('<span class="single-receiver"><div class="row">' +
+                    '<label>&nbsp;</label>' +
+                    '<input type="text" name="email-to[]" placeholder="name@example.com">' +
+                    '<a class="receiver-filed-remove" style="cursor:pointer"><i class="fa fa-close remove-receiver"></i></a>' +
+                    '</div></span>');
+
+                $('.remove-receiver').on('click', function(e) {
+                    e.preventDefault();
+
+                    $(e.target).closest('.single-receiver').remove();
+                });
+
+            }
+        },
+
+        payment: {
+            initialize: function () {
+
+                var moreActions, theme, openOn, target, content;
+
+                moreActions = $('.payment-buttons');
+
+                if ( moreActions.length > 0 ) {
+                    target = moreActions.find('.drop-target');
+                    theme = moreActions.data('theme');
+                    openOn = 'click';
+                    content =  $('.more-action-content').html();
+                    moreActions.addClass(theme);
+
+                    var drop = new Drop({
+                        target: target[0],
+                        classes: theme,
+                        position: 'bottom center',
+                        constrainToWindow: true,
+                        constrainToScrollParent: false,
+                        openOn: openOn,
+                        content: content
+                    });
+
+                }
+            },
+
+            duplicate: function ( e ) {
+                e.preventDefault();
+                alert('duplicate');
+            }
+        },
+
         keyUpNumberFormating: function(e) {
             e.preventDefault();
 
@@ -529,6 +697,43 @@
             });
         },
 
+        keyupInvoice: function(e) {
+            e.preventDefault();
+
+            $('input[name="submit_erp_ac_trans"]').prop('disabled',true);
+            $('input[name="submit_erp_ac_trans_draft"]').prop('disabled',true);
+            $('input[name="submit_erp_ac_journal"]').prop('disabled',true);
+            $('button[type="submit"]').prop('disabled',true);
+        },
+
+        changeInvoice: function(e) {
+            e.preventDefault();
+
+            var self = $(this);
+
+            wp.ajax.send('erp-ac-check-invoice-number', {
+                data: {
+                    '_wpnonce': ERP_AC.nonce,
+                    invoice: self.val(),
+                },
+
+                success: function(res) {
+                    $('input[name="submit_erp_ac_trans"]').prop('disabled',false);
+                    $('input[name="submit_erp_ac_trans_draft"]').prop('disabled',false);
+                    $('input[name="submit_erp_ac_journal"]').prop('disabled',false);
+                    $('button[type="submit"]').prop('disabled',false);
+                },
+
+                error: function(res) {
+                    self.val('');
+                    alert(res);
+                   // $('input[name="submit_erp_ac_trans"]').prop('disabled',false);
+                   // $('input[name="submit_erp_ac_trans_draft"]').prop('disabled',false);
+                   // $('input[name="submit_erp_ac_journal"]').prop('disabled',false);
+                }
+            });
+        },
+
         keyupReference: function(e) {
             e.preventDefault();
             var self = $(this);
@@ -536,9 +741,13 @@
             if ( self.val() == '' ) {
                 $('input[name="submit_erp_ac_trans"]').prop('disabled',false);
                 $('input[name="submit_erp_ac_trans_draft"]').prop('disabled',false);
+                $('input[name="submit_erp_ac_journal"]').prop('disabled',false);
+                $('button[type="submit"]').prop('disabled',false);
             } else {
                 $('input[name="submit_erp_ac_trans"]').prop('disabled',true);
                 $('input[name="submit_erp_ac_trans_draft"]').prop('disabled',true);
+                $('input[name="submit_erp_ac_journal"]').prop('disabled',true);
+                $('button[type="submit"]').prop('disabled',true);
             }
         },
 
@@ -556,11 +765,17 @@
                 success: function(res) {
                     $('input[name="submit_erp_ac_trans"]').prop('disabled',false);
                     $('input[name="submit_erp_ac_trans_draft"]').prop('disabled',false);
+                    $('input[name="submit_erp_ac_journal"]').prop('disabled',false);
+                    $('button[type="submit"]').prop('disabled',false);
                 },
 
                 error: function(res) {
                     self.val('');
                     alert(res);
+                    $('input[name="submit_erp_ac_trans"]').prop('disabled',false);
+                    $('input[name="submit_erp_ac_trans_draft"]').prop('disabled',false);
+                    $('input[name="submit_erp_ac_journal"]').prop('disabled',false);
+                    $('button[type="submit"]').prop('disabled',false);
                 }
             });
         },
@@ -709,8 +924,23 @@
                     due_amount : self.data('due_amount'),
                     partial_id : self.data('transaction_id'),
                 }).trim(),
+
                 extraClass: 'large',
+
                 onReady: function(modal) {
+                    var type = $('.erp-ac-check-invoice-number').data('type');
+                    wp.ajax.send( {
+                        data: {
+                            action: 'erp-ac-get-invoice-number',
+                            type : type,
+                            _wpnonce : ERP_AC.nonce
+                        },
+                        success: function(res) {
+                            $('.erp-ac-check-invoice-number').val( res.invoice_number );
+                        },
+                        error: function(error) {
+                        }
+                    });
                     $('#erp-ac-invoice-payment-popup').find('.erp-ac-chart-drop-down').addClass('select2');
                     ERP_Accounting.initFields();
                 },
@@ -743,6 +973,19 @@
                 }).trim(),
                 extraClass: 'large',
                 onReady: function(modal) {
+                    var type = $('.erp-ac-check-invoice-number').data('type');
+                    wp.ajax.send( {
+                        data: {
+                            action: 'erp-ac-get-invoice-number',
+                            type : type,
+                            _wpnonce : ERP_AC.nonce
+                        },
+                        success: function(res) {
+                            $('.erp-ac-check-invoice-number').val( res.invoice_number );
+                        },
+                        error: function(error) {
+                        }
+                    });
                     $('#erp-ac-invoice-payment-popup').find('.erp-ac-chart-drop-down').addClass('select2');
                     ERP_Accounting.initFields();
                 },

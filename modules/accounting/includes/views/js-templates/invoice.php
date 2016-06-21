@@ -13,6 +13,19 @@
             ?>
     </div>
     <div class="row">
+        <?php
+            erp_html_form_input( array(
+                'label'    => __( 'Invoice Number', 'erp' ),
+                'name'     => 'invoice',
+                'type'     => 'text',
+                'required' => true,
+                'class'    => 'erp-ac-check-invoice-number',
+                'custom_attr' => ['data-type' => 'invoice'],
+                'value'    => ''
+            ) );
+        ?>
+    </div>
+    <div class="row">
             <?php
             erp_html_form_input( array(
                 'label'       => __( 'Payment Date', 'erp' ),
@@ -31,8 +44,8 @@
                     'label'       => __( 'Deposit To', 'erp' ),
                     'name'        => 'account_id',
                     'placeholder' => __( 'Select an Account', 'erp' ),
-                    'type'        => 'erp-select',
-                    'class'       => 'select2 erp-ac-bank-ac-drpdwn erp-ac-bank-ac-drpdwn-frm',
+                    'type'        => 'select',
+                    'class'       => 'erp-select2 erp-ac-bank-ac-drpdwn erp-ac-bank-ac-drpdwn-frm',
                     'value'       => isset( $main_ledger_id ) ? intval( $main_ledger_id ) : '',
                     'required'    => true,
                     'options'     => [ '' => __( '&mdash; Select &mdash;', 'erp' ) ] + erp_ac_get_bank_dropdown()

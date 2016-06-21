@@ -93,6 +93,10 @@ function erp_ac_get_all_transaction( $args = array() ) {
             $transaction = $transaction->where( 'status', '=', $args['status'] );
         }
 
+        if ( isset( $args['type'] ) && is_array( $args['type'] ) && in_array( 'journal', $args['type'] ) ) {
+            $transaction = $transaction->orWhereNull( 'status' );
+        }
+
         if ( isset( $args['form_type'] ) &&  is_array( $args['form_type'] ) && array_key_exists( 'in', $args['form_type'] ) ) {
             $transaction = $transaction->whereIn( 'form_type', $args['form_type']['in'] );
         } else if ( isset( $args['form_type'] ) &&  is_array( $args['form_type'] ) && array_key_exists( 'not_in', $args['form_type'] ) ) {
@@ -190,6 +194,17 @@ function erp_ac_get_transaction( $id = 0 ) {
     return $transaction;
 }
 
+function erp_ac_check_invoice_number_unique( $invoice_number ) {
+    $trans = new \WeDevs\ERP\Accounting\Model\Transaction();
+    $trans = $trans->where( 'invoice_number', '=', $invoice_number )->get()->toArray();
+
+    if ( $trans ) {
+        return false;
+    } 
+    
+    return true;
+}
+
 function er_ac_insert_transaction_permiss( $args ) {
 
     if ( $args['type'] == 'sales' && $args['form_type'] == 'payment' && $args['status'] == 'draft' ) {
@@ -239,6 +254,69 @@ function er_ac_insert_transaction_permiss( $args ) {
             return new WP_Error( 'error', __( 'You do not have sufficient permissions', 'erp' ) );
         }
     }
+
+    if ( empty( $args['invoice_number'] ) ) {
+        return new WP_Error( 'error', __( 'Invoice number required', 'erp' ) );
+    }
+
+    if ( ! erp_ac_check_invoice_number_unique( $args['invoice_number'] ) ) {
+        return new WP_Error( 'error', __( 'Invoice already exists. Please use an unique number', 'erp' ) );
+    }
+}
+
+function erp_ac_generate_invoice_id( $form_type = '' ) {
+
+    $invoice_number = 1;
+
+    if ( $form_type == 'invoice' ) {
+        $invoice_number = get_option( 'erp_ac_sales_invoice_number' );
+        $invoice_number = empty( $invoice_number ) ? 1 : ( $invoice_number + 1 );
+    
+    } else if ( $form_type == 'payment' ) {
+        $invoice_number = get_option( 'erp_ac_sales_payment_number' );
+        $invoice_number = empty( $invoice_number ) ? 1 : ( $invoice_number + 1 );
+    
+    } else if ( $form_type == 'payment_voucher' ) {
+        $invoice_number = get_option( 'erp_ac_expense_voucher_number' );
+        $invoice_number = empty( $invoice_number ) ? 1 : ( $invoice_number + 1 );
+    
+    } else if ( $form_type == 'vendor_credit' ) {
+        $invoice_number = get_option( 'erp_ac_expense_credit_number' );
+        $invoice_number = empty( $invoice_number ) ? 1 : ( $invoice_number + 1 );
+    
+    } else if ( $form_type == 'journal' ) {
+        $invoice_number = get_option( 'erp_ac_journal_number' );
+        $invoice_number = empty( $invoice_number ) ? 1 : ( $invoice_number + 1 );
+    
+    } else {
+        return false;
+    }
+
+    return str_pad( $invoice_number, 4, '0', STR_PAD_LEFT );
+}
+
+function erp_ac_update_invoice_number( $form_type ) {
+    $invoice_number = erp_ac_generate_invoice_id( $form_type );
+
+    if ( $invoice_number === false ) {
+        return;
+    }
+
+    if ( $form_type == 'invoice' ) {
+        update_option( 'erp_ac_sales_invoice_number', $invoice_number );
+    
+    } else if ( $form_type == 'payment' ) {
+        update_option( 'erp_ac_sales_payment_number', $invoice_number );
+    
+    } else if ( $form_type == 'payment_voucher' ) {
+        update_option( 'erp_ac_expense_voucher_number', $invoice_number );
+    
+    } else if ( $form_type == 'vendor_credit' ) {
+        update_option( 'erp_ac_expense_credit_number', $invoice_number );
+    
+    } else if ( $form_type == 'journal' ) {
+        update_option( 'erp_ac_journal_number', $invoice_number );
+    }
 }
 
 /**
@@ -266,6 +344,7 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
         'summary'         => '',
         'total'           => '',
         'sub_total'       => '0.00',
+        'invoice_number'  => erp_ac_generate_invoice_id( $args['form_type'] ),
         'files'           => '',
         'currency'        => '',
         'created_by'      => get_current_user_id(),
@@ -332,6 +411,9 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
 
             $trans    = WeDevs\ERP\Accounting\Model\Transaction::create( $args );
             $trans_id = $trans->id;
+            if ( $trans->id ) {
+                erp_ac_update_invoice_number( $args['form_type'] );
+            }
         }
 
         if ( ! $trans_id ) {
@@ -559,10 +641,6 @@ function erp_ac_tax_update( $item, $item_entry_type, $args, $trans_id ) {
     return isset( $tax_journal_id ) ? $tax_journal_id : false;
 }
 
-function erp_ac_update_items_after_transaction( $trans, $journal_id, $item, $order ) {
-    echo 'updated'; die();
-}
-
 function erp_ac_create_items_after_transaction( $trans, $journal_id, $item, $order ) {
     //echo 'create';  die();
     $trans_item = $trans->items()->create([
@@ -666,184 +744,13 @@ function erp_ac_toltip_per_transaction_ledgers( $transaction ) {
         <?php
     }
     ?>
-        </tabody>
+        </tbody>
     </table>
     <?php
     return ob_get_clean();
 }
 
-function erp_ac_get_transaction_by_journal_id( $journal_id ) {
 
-    $financial_start = erp_financial_start_date();
-    $financial_end   = erp_financial_end_date();
-
-    $cache_key     = 'erp-ac-get-transaction-by-journal-id-' . md5( get_current_user_id() );
-    $sales_journal = wp_cache_get( $cache_key, 'erp' );
-
-    //if ( false === $sales_journal ) {
-        $sales_journal = WeDevs\ERP\Accounting\Model\Transaction::with(['journals' => function($q) use( $journal_id ) {
-            return $q->where( 'ledger_id', '=', $journal_id );
-        }])
-        ->where( 'status', '!=', 'draft' )
-        ->orWhereNull( 'status' )
-        ->where( 'issue_date', '>=', $financial_start )
-        ->where( 'issue_date', '<=', $financial_end )
-        ->get()->toArray();
-
-        wp_cache_set( $cache_key, $sales_journal, 'erp' );
-   // }
-
-    return $sales_journal;
-}
-
-function erp_ac_get_transaction_for_sales() {
-
-    $accounts_id     = [];
-    $financial_start = erp_financial_start_date();
-    $financial_end   = erp_financial_end_date();
-    $payable_tax     = erp_ac_get_tax_payable_ledger();
-    $payable_tax     = wp_list_pluck( $payable_tax, 'id' );
-
-    $accounts = erp_ac_get_chart_dropdown([
-        'exclude'  => [1, 2, 3, 5],
-
-    ] );
-
-    foreach ( $accounts as $key => $account ) {
-        $options     = isset( $account['options'] ) ? $account['options'] : [];
-        $accounts_id = array_merge( $accounts_id, wp_list_pluck( $options, 'id' ) );
-    }
-
-    $accounts_id = array_merge( $accounts_id, $payable_tax );
-
-    $cache_key     = 'erp-ac-get-transaction-by-sales-' . md5( get_current_user_id() );
-    $sales_journal = wp_cache_get( $cache_key, 'erp' );
-
-    //if ( false === $sales_journal ) {
-        $sales_journal = WeDevs\ERP\Accounting\Model\Transaction::with(['journals' => function($q) use($accounts_id) {
-            return $q->whereIn( 'ledger_id', $accounts_id );
-        }])
-        ->whereIn( 'type', ['sales', 'journal']  )
-        ->where( 'status', '!=', 'draft' )
-        ->orWhereNull( 'status' )
-        ->where( 'issue_date', '>=', $financial_start )
-        ->where( 'issue_date', '<=', $financial_end )
-        ->get()->toArray();
-
-        wp_cache_set( $cache_key, $sales_journal, 'erp' );
-    //}
-
-    return $sales_journal;
-}
-
-function erp_ac_get_expnese_transaction() {
-    $accounts_id     = [];
-    $financial_start = erp_financial_start_date();
-    $financial_end   = erp_financial_end_date();
-
-    $accounts = erp_ac_get_chart_dropdown([
-        'exclude'  => [2, 4, 5],
-
-    ] );
-
-    foreach ( $accounts as $key => $account ) {
-        $options     = isset( $account['options'] ) ? $account['options'] : [];
-        $accounts_id = array_merge( $accounts_id, wp_list_pluck( $options, 'id' ) );
-    }
-
-    $cache_key     = 'erp-ac-get-expnese-transaction-' . md5( get_current_user_id() );
-    $expense_journal = wp_cache_get( $cache_key, 'erp' );
-
-    //if ( false === $expense_journal ) {
-        $expense_journal = WeDevs\ERP\Accounting\Model\Transaction::with(['journals' => function($q) use($accounts_id) {
-            return $q->whereIn( 'ledger_id', $accounts_id );
-        }])
-        ->whereIn( 'type', ['expense', 'journal'] )
-        ->where( 'status', '!=', 'draft' )
-        ->orWhereNull( 'status' )
-        ->where( 'issue_date', '>=', $financial_start )
-        ->where( 'issue_date', '<=', $financial_end )
-        ->get()->toArray();
-
-        wp_cache_set( $cache_key, $expense_journal, 'erp' );
-   // }
-
-    return $expense_journal;
-}
-
-function erp_ac_get_expnese_transaction_without_tax() {
-    $accounts_id     = [];
-    $financial_start = erp_financial_start_date();
-    $financial_end   = erp_financial_end_date();
-    $tax_reveivable  = erp_ac_get_tax_receivable_ledger();
-    $tax_payable     = erp_ac_get_tax_payable_ledger();
-    $tax             = array_merge( $tax_reveivable, $tax_payable );
-    $tax_ledgers     = wp_list_pluck( $tax, 'id' );
-
-    $accounts = erp_ac_get_chart_dropdown([
-        'exclude'  => [1, 2, 4, 5],
-
-    ] );
-
-    foreach ( $accounts as $key => $account ) {
-        $options     = isset( $account['options'] ) ? $account['options'] : [];
-        $accounts_id = array_merge( $accounts_id, wp_list_pluck( $options, 'id' ) );
-    }
-
-    foreach ( $accounts_id as $key => $account_id ) {
-
-        if ( in_array( $account_id, $tax_ledgers ) ) {
-            unset( $accounts_id[$key] );
-        } else if ( $account_id == 24 ) {
-            unset( $accounts_id[$key] );
-        }
-    }
-
-    $cache_key     = 'erp-ac-get-expnese-transaction-' . md5( get_current_user_id() );
-    $expense_journal = wp_cache_get( $cache_key, 'erp' );
-
-    //if ( false === $expense_journal ) {
-        $expense_journal = WeDevs\ERP\Accounting\Model\Transaction::with(['journals' => function($q) use($accounts_id) {
-            return $q->whereIn( 'ledger_id', $accounts_id )->where( 'type', '=', 'line_item' );
-        }])
-        ->whereIn( 'type', ['expense', 'journal'] )
-        ->where( 'status', '!=', 'draft' )
-        ->orWhereNull( 'status' )
-        ->where( 'issue_date', '>=', $financial_start )
-        ->where( 'issue_date', '<=', $financial_end )
-        ->get()->toArray();
-
-        wp_cache_set( $cache_key, $expense_journal, 'erp' );
-    //}
-
-    return $expense_journal;
-}
-
-function erp_ac_get_transaction_for_tax() {
-    $financial_start = erp_financial_start_date();
-    $financial_end   = erp_financial_end_date();
-    $tax_reveivable  = erp_ac_get_tax_receivable_ledger();
-    $tax_payable     = erp_ac_get_tax_payable_ledger();
-    $tax             = array_merge( $tax_reveivable, $tax_payable );
-    $tax_ledgers     = wp_list_pluck( $tax, 'id' );
-
-    $cache_key     = 'erp-ac-get-transaction-for-tax-' . md5( get_current_user_id() );
-    $tax_journal = wp_cache_get( $cache_key, 'erp' );
-
-    //if ( false === $tax_journal ) {
-        $tax_journal = \WeDevs\ERP\Accounting\Model\Transaction::with(['journals' => function($q) use( $tax_ledgers ) {
-            return $q->whereIn( 'ledger_id', $tax_ledgers );
-        }])
-        ->where( 'status', '!=', 'draft' )
-        ->where( 'issue_date', '>=', $financial_start )
-        ->where( 'issue_date', '<=', $financial_end )
-        ->get()->toArray();
-
-        wp_cache_set( $cache_key, $tax_journal, 'erp' );
-    //}
-
-    return $tax_journal;
-}
 
 
 

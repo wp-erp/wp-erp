@@ -24,6 +24,9 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
     .fc-title {
         cursor: pointer;
     }
+    .fc-day-grid-event .fc-content {
+        white-space: normal;
+    }
 </style>
 
 <script>

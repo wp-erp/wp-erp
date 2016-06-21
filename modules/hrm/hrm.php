@@ -179,6 +179,7 @@ class Human_Resource {
             'delConfirmPolicy'       => __( 'Are you sure to delete this policy?', 'erp' ),
             'delConfirmHoliday'      => __( 'Are you sure to delete this Holiday?', 'erp' ),
             'delConfirmEmployee'     => __( 'Are you sure to delete this employee?', 'erp' ),
+            'restoreConfirmEmployee' => __( 'Are you sure to restore this employee?', 'erp' ),
             'delConfirmEmployeeNote' => __( 'Are you sure to delete this employee note?', 'erp' ),
             'delConfirmEntitlement'  => __( 'Are you sure to delete this Entitlement? If yes, then all leave request under this entitlement also permanently deleted', 'erp' ),
             'make_employee_text'     => __( 'This user already exists, Do you want to make this user as a employee?', 'erp' ),

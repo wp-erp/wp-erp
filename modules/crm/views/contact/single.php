@@ -1,5 +1,4 @@
-<div class="wrap erp erp-crm-customer erp-single-customer" id="wp-erp">
-<?php //var_dump( $customer ); ?>
+<div class="wrap erp erp-crm-customer erp-single-customer" id="wp-erp" v-cloak>
     <h2><?php _e( 'Contact #', 'erp' ); echo $customer->id; ?>
         <a href="<?php echo add_query_arg( ['page' => 'erp-sales-customers'], admin_url( 'admin.php' ) ); ?>" id="erp-contact-list" class="add-new-h2"><?php _e( 'Back to Contact list', 'erp' ); ?></a>
 
@@ -78,31 +77,36 @@
                                 <div class="inner-wrap">
                                     <h4><?php _e( 'Contact Owner', 'erp' ); ?></h4>
                                     <div class="user-wrap">
-                                        <?php
-                                            $crm_user_id = erp_people_get_meta( $customer->id, '_assign_crm_agent', true );
-                                            if ( !empty( $crm_user_id ) ) {
-                                                $user        = get_user_by( 'id', $crm_user_id );
-                                                $user_string = esc_html( $user->display_name );
-                                            }
-                                        ?>
-                                        <?php if ( $crm_user_id ): ?>
-                                            <?php echo erp_crm_get_avatar( $crm_user_id, 32 ); ?>
-                                            <div class="user-details">
-                                                <a href="#"><?php echo get_the_author_meta( 'display_name', $crm_user_id ); ?></a>
-                                                <span><?php echo  get_the_author_meta( 'user_email', $crm_user_id ); ?></span>
-                                            </div>
-                                        <?php else: ?>
-                                            <div class="user-details">
-                                                <p><?php _e( 'Nobody', 'erp' ) ?></p>
-                                            </div>
-                                        <?php endif ?>
+                                        <div class="user-wrap-content">
+                                            <?php
+                                                $crm_user_id = $customer->get_contact_owner();
+                                                if ( !empty( $crm_user_id ) ) {
+                                                    $user        = get_user_by( 'id', $crm_user_id );
+                                                    $user_string = esc_html( $user->display_name );
+                                                } else {
+                                                    $user_string = '';
+                                                }
+                                            ?>
+                                            <?php if ( $crm_user_id ): ?>
+                                                <?php echo erp_crm_get_avatar( $crm_user_id, 32 ); ?>
+                                                <div class="user-details">
+                                                    <a href="#"><?php echo get_the_author_meta( 'display_name', $crm_user_id ); ?></a>
+                                                    <span><?php echo  get_the_author_meta( 'user_email', $crm_user_id ); ?></span>
+                                                </div>
+                                            <?php else: ?>
+                                                <div class="user-details">
+                                                    <p><?php _e( 'Nobody', 'erp' ) ?></p>
+                                                </div>
+                                            <?php endif ?>
 
-                                        <div class="clearfix"></div>
+                                            <div class="clearfix"></div>
 
-                                        <?php if ( current_user_can( 'erp_crm_edit_contact' ) ): ?>
-                                            <span @click.prevent="assignContact()" id="erp-crm-edit-assign-contact-to-agent"><i class="fa fa-pencil-square-o"></i></span>
-                                        <?php endif ?>
+                                        </div>
                                     </div>
+
+                                    <?php if ( current_user_can( 'erp_crm_edit_contact' ) ): ?>
+                                        <span @click.prevent="assignContact()" id="erp-crm-edit-assign-contact-to-agent"><i class="fa fa-pencil-square-o"></i></span>
+                                    <?php endif ?>
 
                                     <div class="assign-form erp-hide">
                                         <form action="" method="post">
@@ -117,8 +121,10 @@
                                             </div>
 
                                             <input type="hidden" name="assign_contact_id" value="<?php echo $customer->id; ?>">
+                                            <input type="hidden" name="assign_contact_user_id" value="<?php echo $customer->user_id; ?>">
                                             <input type="submit" @click.prevent="saveAssignContact()" class="button button-primary save-edit-assign-contact" name="erp_assign_contacts" value="<?php _e( 'Assign', 'erp' ); ?>">
                                             <input type="submit" @click.prevent="cancelAssignContact()" class="button cancel-edit-assign-contact" value="<?php _e( 'Cancel', 'erp' ); ?>">
+                                            <span class="erp-loader erp-hide assign-form-loader"></span>
                                         </form>
                                     </div>
                                 </div>
@@ -138,6 +144,7 @@
                         :id="<?php echo $customer->id; ?>"
                         add-button-txt="<?php _e( 'Assign Contact Groups', 'erp' ) ?>"
                         title="<?php _e( 'Contact Group', 'erp' ); ?>"
+                        is-permitted="<?php echo current_user_can( 'erp_crm_edit_contact', $customer->id ); ?>"
                     ></contact-assign-group>
 
                 </div>

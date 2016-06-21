@@ -1,9 +1,15 @@
 <?php
+$ledgers = erp_ac_reporting_query();
 
-$sales_total   = erp_ac_get_sales_total();
-$goods_sold    = erp_ac_get_good_sold_total_amount();
-$expense_total = erp_ac_get_expense_total();
-$tax_total     = erp_ac_get_tax_total();
+foreach ($ledgers as $ledger) {
+    $charts[$ledger->class_id][$ledger->id][] = $ledger;
+}
+
+$sales_total   = erp_ac_get_sales_total_without_tax( $charts ) + erp_ac_get_sales_tax_total( $charts );
+$goods_sold    = erp_ac_get_good_sold_total_amount( $charts );
+$expense_total = erp_ac_get_expense_total_without_tax( $charts );
+$expense_total = $expense_total - $goods_sold;
+$tax_total     = erp_ac_get_sales_tax_total( $charts ) + erp_ac_get_expense_tax_total( $charts );
 
 ?>
 <div class="wrap erp-ac-income-satement-wrap">

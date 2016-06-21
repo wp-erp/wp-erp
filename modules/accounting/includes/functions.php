@@ -289,6 +289,7 @@ function erp_ac_message() {
         'delete'        => __( 'Yes, delete it!', 'erp' ),
         'cancel'        => __( 'Cancel', 'erp' ),
         'error'         => __( 'Error!', 'erp' ),
+        'alreadyExist'  => __( 'Already exists as a customer or vendor', 'erp' )
     );
 
     return apply_filters( 'erp_ac_message', $message );
@@ -315,9 +316,18 @@ function erp_ac_pagination( $total, $limit, $pagenum ) {
     }
 }
 
-function pr($value) {
-    echo '<pre>'; print_r( $value ); echo '</pre>';
+function erp_ac_invoice_prefix( $type, $id ) {
+
+    $prefix = erp_get_option( $type );
+
+    if ( empty( $prefix ) ) {
+        return $id;
+    }
+
+    return str_replace( '{id}', $id, $prefix );
 }
+
+
 
 
 

@@ -29,12 +29,36 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-ac-customer-restore', 'customer_restore' );
         $this->action( 'wp_ajax_erp-ac-user-delete-status', 'user_delete_status' );
         $this->action( 'wp_ajax_erp-ac-reference', 'check_unique_reference' );
+        $this->action( 'wp_ajax_erp-ac-check-invoice-number', 'check_unique_invioce' );
         $this->action( 'wp_ajax_erp-ac-new-customer-vendor', 'new_vendor_customer' );
         $this->action( 'wp_ajax_erp-ac-transaction-report', 'transaction_report' );
         $this->action( 'wp_ajax_erp_people_convert', 'convert_user' );
         $this->action( 'wp_ajax_erp-ac-new-tax', 'new_tax' );
         $this->action( 'wp_ajax_erp-ac-delete-tax', 'delete_tax' );
         $this->action( 'wp_ajax_erp-ac-remove-account', 'remove_account' );
+        $this->action( 'wp_ajax_erp-ac-sales-invoice-export', 'sales_invoice_export' );
+        $this->action( 'wp_ajax_erp-ac-sales-payment-export', 'sales_payment_export' );
+        $this->action( 'wp_ajax_erp-ac-invoice-send-email', 'sales_invoice_send_email' );
+        $this->action( 'wp_ajax_erp-ac-get-invoice-number', 'popup_get_invoice_number' );
+    }
+
+    function popup_get_invoice_number() {
+        $this->verify_nonce( 'erp-ac-nonce' );
+        $type = isset( $_POST['type'] ) ? $_POST['type'] : false;
+
+        if ( ! $type ) {
+            $this->send_error( array( 'error' => __( 'Type required', 'erp' ) ) );
+        }
+
+        if ( $type == 'invoice' ) {
+            $invoice_number = erp_ac_invoice_prefix( 'erp_ac_invoice', erp_ac_generate_invoice_id( 'invoice' ) );
+        }
+
+        if ( $type == 'vendor_credit' ) {
+            $invoice_number = erp_ac_invoice_prefix( 'erp_ac_vendor_credit', erp_ac_generate_invoice_id( 'vendor_credit' ) );
+        }
+
+        $this->send_success( array( 'invoice_number' => $invoice_number ) );
     }
 
     function remove_account() {
@@ -138,7 +162,7 @@ class Ajax_Handler {
         $this->verify_nonce( 'erp-ac-nonce' );
         parse_str( $_POST['post'], $postdata );
         $insert_id = erp_ac_new_customer( $postdata );
-        
+
         if ( $insert_id ) {
             $this->send_success( [ 'id' => $insert_id] );
         } else {
@@ -148,12 +172,24 @@ class Ajax_Handler {
 
     function check_unique_reference() {
         $this->verify_nonce( 'erp-ac-nonce' );
-        $ref = isset( $_POST['reference'] ) ? $_POST['reference'] : '';
+        $ref   = isset( $_POST['reference'] ) ? $_POST['reference'] : '';
         $trans = new \WeDevs\ERP\Accounting\Model\Transaction();
         $trans = $trans->where( 'ref', '=', $ref )->get()->toArray();
 
         if ( $trans ) {
-            $this->send_error( __( 'Required unique value!', 'erp' ) );
+            $this->send_error( __( 'Reference already exists. Please use an unique number', 'erp' ) );
+        } else {
+            $this->send_success();
+        }
+    }
+
+    function check_unique_invioce() {
+        $this->verify_nonce( 'erp-ac-nonce' );
+        $invoice = isset( $_POST['invoice'] ) ? $_POST['invoice'] : '';
+        $trans = erp_ac_check_invoice_number_unique( $invoice );
+
+        if ( ! $trans ) {
+            $this->send_error( __( 'Invoice already exists. Please use an unique number', 'erp' ) );
         } else {
             $this->send_success();
         }
@@ -466,7 +502,7 @@ class Ajax_Handler {
     function receive_payment() {
 
         $this->verify_nonce( 'erp-ac-nonce' );
-        $user_id = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : false;
+        $user_id    = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : false;
         $account_id = isset( $_POST['account_id'] ) ? intval( $_POST['account_id'] ) : false;
 
         if ( ! $user_id ) {
@@ -504,5 +540,74 @@ class Ajax_Handler {
         }
 
         $this->send_error();
+    }
+
+    /**
+     * Accounting Sales Invoice Export
+     */
+    public function sales_invoice_export() {
+
+        check_ajax_referer( 'accounting-invoice-export' );
+
+        $transaction_id = isset( $_REQUEST['transaction_id'] ) ? $_REQUEST['transaction_id'] : 0;
+        $output_method  = 'D';
+
+        if ( $transaction_id ) {
+            include WPERP_ACCOUNTING_VIEWS . '/pdf/invoice.php';
+        }
+
+        exit;
+    }
+
+    /**
+     * Accounting Payment Invoice Export
+     */
+    public function sales_payment_export() {
+
+        check_ajax_referer( 'accounting-payment-export' );
+
+        $transaction_id = isset( $_REQUEST['transaction_id'] ) ? $_REQUEST['transaction_id'] : 0;
+        $output_method  = 'D';
+
+        if ( $transaction_id ) {
+            include WPERP_ACCOUNTING_VIEWS . '/pdf/payment.php';
+        }
+
+        exit;
+    }
+
+    /**
+     * Send Invoice via Email
+     *
+     * @return bool
+     */
+    public function sales_invoice_send_email() {
+
+        $this->verify_nonce( 'erp-ac-invoice-send-email' );
+
+        $type           = isset( $_REQUEST['type'] ) ? sanitize_text_field( $_REQUEST['type'] ) : '';
+        $sender         = isset( $_REQUEST['email-from'] ) ? sanitize_text_field( $_REQUEST['email-from'] ) : '';
+        $receiver       = isset( $_REQUEST['email-to'] ) ? $_REQUEST['email-to'] : '';
+        $subject        = isset( $_REQUEST['email-subject'] ) ? sanitize_text_field( $_REQUEST['email-subject'] ) : '';
+        $body           = isset( $_REQUEST['email-body'] ) ? sanitize_text_field( $_REQUEST['email-body'] ) : '';
+        $attach_pdf     = isset( $_REQUEST['attachment'] ) && 'on' == $_REQUEST['attachment'] ? true : false;
+        $transaction_id = isset( $_REQUEST['transaction_id'] ) ? $_REQUEST['transaction_id'] : 0;
+        $transaction    = Model\Transaction::find( $transaction_id );
+        $output_method  = 'F';
+
+        $upload_path    = wp_upload_dir();
+        $file_name      = $transaction->invoice_number;
+        $include_file   = 'invoice' == $type ? 'invoice' : 'payment';
+        $file_path      = $upload_path['basedir'] . '/' . $file_name . '.pdf';
+
+        include WPERP_ACCOUNTING_VIEWS . '/pdf/' . $include_file . '.php';
+
+        $invoice_email = new Emails\Accounting_Invoice_Email();
+
+        $invoice_email->trigger( $receiver, $subject, $body, $file_path );
+
+        unlink( $file_path );
+
+        wp_send_json_success();
     }
 }

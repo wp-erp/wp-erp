@@ -57,7 +57,7 @@ $tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
     <?php
     $selected_account_id = isset( $_GET['account_id'] ) ? intval( $_GET['account_id'] ) : 0;
     $dropdown = erp_ac_get_chart_dropdown([
-        'exclude'  => [2, 4, 5],
+        'exclude'  => [1, 2, 4, 5],
 
     ] );
 
@@ -71,7 +71,7 @@ $tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
     ?>
     <form action="" method="post" class="erp-form" style="margin-top: 30px;">
 
-        <ul class="form-fields block" style="width:70%;">
+        <ul class="form-fields block" style="width:100%;">
 
             <li>
                 <ul class="erp-form-fields two-col block">
@@ -111,6 +111,19 @@ $tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                         <span class="balance-wrap">
                             <strong><?php _e( 'Balance: ', 'erp' ); ?><span class="erp-ac-bank-amount">0</span></strong>
                         </span>
+                    </li>
+
+                    <li class="erp-form-field">
+                        <?php
+                        erp_html_form_input( array(
+                            'label'    => __( 'Invoice Number', 'erp' ),
+                            'name'     => 'invoice',
+                            'type'     => 'text',
+                            'required' => true,
+                            'class'    => 'erp-ac-check-invoice-number',
+                            'value'    => erp_ac_invoice_prefix( 'erp_ac_payment_voucher', erp_ac_generate_invoice_id( 'payment_voucher' ) )
+                        ) );
+                        ?>
                     </li>
                 </ul>
             </li>

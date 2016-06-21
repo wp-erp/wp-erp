@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.1.0\n"
+"Project-Id-Version: WP ERP 1.1.1\n"
 "Report-Msgid-Bugs-To: http://wperp.com/support/\n"
-"POT-Creation-Date: 2016-06-08 10:27:25+00:00\n"
+"POT-Creation-Date: 2016-06-21 18:35:23+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4625,7 +4625,7 @@ msgid "Log changes"
 msgstr ""
 
 #: includes/admin/class-ajax.php:188 includes/admin/class-ajax.php:232
-#: includes/admin/class-ajax.php:316 modules/hrm/includes/class-ajax.php:755
+#: includes/admin/class-ajax.php:316 modules/hrm/includes/class-ajax.php:783
 msgid "No email address provided"
 msgstr ""
 
@@ -4759,6 +4759,7 @@ msgid "Sections"
 msgstr ""
 
 #: includes/admin/class-audit-list-table.php:191
+#: modules/accounting/includes/views/js-templates/send-invoice.php:29
 msgid "Message"
 msgstr ""
 
@@ -4784,9 +4785,9 @@ msgstr ""
 #: includes/admin/views/company-editor.php:61
 #: modules/accounting/includes/views/user-form-rows.php:212
 #: modules/accounting/includes/views/user-form-rows.php:217
-#: modules/crm/includes/functions-customer.php:2506
+#: modules/crm/includes/functions-customer.php:2416
 #: modules/crm/views/company/single.php:70
-#: modules/crm/views/contact/single.php:70
+#: modules/crm/views/contact/single.php:69
 #: modules/crm/views/js-templates/new-customer.php:178
 #: modules/hrm/views/employee/tab-general.php:51
 #: modules/hrm/views/js-templates/new-employee.php:349
@@ -4813,7 +4814,7 @@ msgstr ""
 #: modules/accounting/includes/class-customer-list-table.php:85
 #: modules/accounting/includes/class-vendor-list-table.php:47
 #: modules/crm/includes/class-contact-subscriber-list-table.php:89
-#: modules/crm/includes/functions-customer.php:222
+#: modules/crm/includes/functions-customer.php:234
 #: modules/crm/views/company.php:22 modules/crm/views/dashboard.php:62
 msgid "Company"
 msgstr ""
@@ -4932,7 +4933,7 @@ msgid "The date the company officially started."
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:239
-#: modules/accounting/includes/class-settings.php:47
+#: modules/accounting/includes/class-settings.php:94
 msgid "Currency"
 msgstr ""
 
@@ -5108,9 +5109,9 @@ msgstr ""
 #: includes/admin/views/address.php:30
 #: includes/admin/views/company-editor.php:50 includes/class-company.php:41
 #: modules/accounting/includes/views/user-form-rows.php:176
-#: modules/crm/includes/functions-customer.php:1431
+#: modules/crm/includes/functions-customer.php:1464
 #: modules/crm/views/company/single.php:68
-#: modules/crm/views/contact/single.php:68
+#: modules/crm/views/contact/single.php:67
 #: modules/crm/views/js-templates/new-customer.php:171
 #: modules/hrm/views/employee/tab-general.php:50
 #: modules/hrm/views/js-templates/new-employee.php:342
@@ -5129,7 +5130,7 @@ msgstr ""
 #: includes/class-countries.php:150
 #: modules/accounting/includes/views/common/transaction-table-tr-render.php:67
 #: modules/crm/views/js-templates/new-customer.php:192
-#: modules/hrm/includes/class-ajax.php:1420
+#: modules/hrm/includes/class-ajax.php:1448
 #: modules/hrm/views/employee/tab-job.php:19
 #: modules/hrm/views/js-templates/compensation.php:27
 #: modules/hrm/views/js-templates/compensation.php:37
@@ -5186,10 +5187,10 @@ msgstr ""
 #: modules/accounting/includes/views/user-form-rows.php:83
 #: modules/accounting/includes/views/vendor/vendor-details.php:6
 #: modules/crm/includes/class-contact-list-table.php:196
-#: modules/crm/includes/functions-customer.php:1389
-#: modules/crm/includes/functions-customer.php:2476
+#: modules/crm/includes/functions-customer.php:1422
+#: modules/crm/includes/functions-customer.php:2386
 #: modules/crm/views/company/single.php:63
-#: modules/crm/views/contact/single.php:63
+#: modules/crm/views/contact/single.php:62
 #: modules/hrm/views/js-templates/new-employee.php:242
 msgid "Phone"
 msgstr ""
@@ -5198,9 +5199,9 @@ msgstr ""
 #: modules/accounting/includes/views/customer/user-details.php:8
 #: modules/accounting/includes/views/user-form-rows.php:129
 #: modules/accounting/includes/views/vendor/vendor-details.php:8
-#: modules/crm/includes/functions-customer.php:2491
+#: modules/crm/includes/functions-customer.php:2401
 #: modules/crm/views/company/single.php:64
-#: modules/crm/views/contact/single.php:64
+#: modules/crm/views/contact/single.php:63
 msgid "Fax"
 msgstr ""
 
@@ -5208,8 +5209,8 @@ msgstr ""
 #: modules/accounting/includes/views/customer/user-details.php:7
 #: modules/accounting/includes/views/user-form-rows.php:95
 #: modules/accounting/includes/views/vendor/vendor-details.php:7
-#: modules/crm/includes/functions-customer.php:1403
-#: modules/crm/includes/functions-customer.php:2481
+#: modules/crm/includes/functions-customer.php:1436
+#: modules/crm/includes/functions-customer.php:2391
 #: modules/crm/views/js-templates/new-customer.php:130
 #: modules/hrm/views/employee/tab-general.php:55
 #: modules/hrm/views/js-templates/new-employee.php:234
@@ -5220,10 +5221,10 @@ msgstr ""
 #: modules/accounting/includes/views/customer/user-details.php:9
 #: modules/accounting/includes/views/user-form-rows.php:117
 #: modules/accounting/includes/views/vendor/vendor-details.php:9
-#: modules/crm/includes/functions-customer.php:1417
-#: modules/crm/includes/functions-customer.php:2486
+#: modules/crm/includes/functions-customer.php:1450
+#: modules/crm/includes/functions-customer.php:2396
 #: modules/crm/views/company/single.php:65
-#: modules/crm/views/contact/single.php:65
+#: modules/crm/views/contact/single.php:64
 #: modules/crm/views/js-templates/new-customer.php:139
 #: modules/hrm/views/js-templates/new-employee.php:317
 msgid "Website"
@@ -5233,11 +5234,11 @@ msgstr ""
 msgid "Company Logo"
 msgstr ""
 
-#: includes/admin/views/company-editor.php:157 includes/class-scripts.php:136
+#: includes/admin/views/company-editor.php:157 includes/class-scripts.php:143
 msgid "Remove company logo"
 msgstr ""
 
-#: includes/admin/views/company-editor.php:163 includes/class-scripts.php:135
+#: includes/admin/views/company-editor.php:163 includes/class-scripts.php:142
 msgid "Upload company logo"
 msgstr ""
 
@@ -5267,7 +5268,7 @@ msgstr ""
 #: modules/crm/includes/class-campaigns-list-table.php:89
 #: modules/crm/includes/class-contact-group-list-table.php:94
 #: modules/crm/includes/class-contact-list-table.php:226
-#: modules/crm/includes/class-contact-subscriber-list-table.php:186
+#: modules/crm/includes/class-contact-subscriber-list-table.php:187
 #: modules/crm/views/js-templates/customer-timeline-item.php:14
 #: modules/hrm/includes/class-announcement.php:129
 #: modules/hrm/includes/class-department-list-table.php:211
@@ -5348,12 +5349,12 @@ msgid "Title"
 msgstr ""
 
 #: includes/admin/views/module.php:31 includes/admin/views/module.php:39
-#: includes/framework/settings/email.php:305
+#: includes/framework/settings/email.php:206
 #: includes/framework/settings/integration.php:57
 #: modules/accounting/includes/views/accounts/form-fields.php:48
 #: modules/accounting/includes/views/common/transaction-table.php:5
 #: modules/accounting/includes/views/expense/single.php:22
-#: modules/accounting/includes/views/journal/new.php:46
+#: modules/accounting/includes/views/journal/new.php:58
 #: modules/crm/views/js-templates/new-contact-group.php:16
 #: modules/hrm/views/employee/tab-leave.php:115
 #: modules/hrm/views/js-templates/holiday.php:49
@@ -5491,7 +5492,7 @@ msgstr ""
 msgid "Save Changes"
 msgstr ""
 
-#: includes/admin/views/welcome-screen.php:4 includes/class-install.php:219
+#: includes/admin/views/welcome-screen.php:4 includes/class-install.php:222
 msgid "Welcome to WP ERP"
 msgstr ""
 
@@ -5533,9 +5534,9 @@ msgstr ""
 
 #: includes/class-company.php:42
 #: modules/accounting/includes/views/user-form-rows.php:188
-#: modules/crm/includes/functions-customer.php:2511
+#: modules/crm/includes/functions-customer.php:2421
 #: modules/crm/views/company/single.php:69
-#: modules/crm/views/contact/single.php:69
+#: modules/crm/views/contact/single.php:68
 #: modules/hrm/views/employee/tab-general.php:52
 msgid "State"
 msgstr ""
@@ -5557,6 +5558,7 @@ msgid "Any State"
 msgstr ""
 
 #: includes/class-email.php:449
+#: modules/accounting/includes/views/js-templates/send-invoice.php:18
 #: modules/crm/includes/admin/class-settings.php:179
 #: modules/crm/views/js-templates/customer-add-schedules.php:127
 #: modules/crm/views/js-templates/new-save-replies.php:16
@@ -5602,25 +5604,25 @@ msgid ""
 "will be replaced by original values"
 msgstr ""
 
-#: includes/class-install.php:928 includes/framework/modules.php:38
+#: includes/class-install.php:933 includes/framework/modules.php:38
 #: modules/hrm/includes/admin/class-menu.php:25
 #: modules/hrm/views/dashboard.php:2
 msgid "HR Management"
 msgstr ""
 
-#: includes/class-install.php:930
+#: includes/class-install.php:935
 msgid "Human Resource Mnanagement"
 msgstr ""
 
-#: includes/class-install.php:936 includes/framework/modules.php:45
+#: includes/class-install.php:941 includes/framework/modules.php:45
 msgid "CR Management"
 msgstr ""
 
-#: includes/class-install.php:938 includes/framework/modules.php:47
+#: includes/class-install.php:943 includes/framework/modules.php:47
 msgid "Client Resource Management"
 msgstr ""
 
-#: includes/class-install.php:944 includes/class-install.php:946
+#: includes/class-install.php:949 includes/class-install.php:951
 #: includes/updates/update-1.1.0.php:415 includes/updates/update-1.1.0.php:417
 msgid "Accountig Management"
 msgstr ""
@@ -5642,29 +5644,29 @@ msgstr ""
 msgid "Enter valid license key for automatic updates."
 msgstr ""
 
-#: includes/class-scripts.php:134
+#: includes/class-scripts.php:141
 msgid "Set company logo"
 msgstr ""
 
-#: includes/class-scripts.php:137
+#: includes/class-scripts.php:144
 msgid "Update Location"
 msgstr ""
 
-#: includes/class-scripts.php:138
+#: includes/class-scripts.php:145
 msgid "Create"
 msgstr ""
 
-#: includes/class-scripts.php:139 modules/crm/crm.php:138
+#: includes/class-scripts.php:146 modules/crm/crm.php:138
 #: modules/hrm/hrm.php:162 modules/hrm/views/employee/tab-job.php:25
 msgid "Update"
 msgstr ""
 
-#: includes/class-scripts.php:140 modules/accounting/accounting.php:202
+#: includes/class-scripts.php:147 modules/accounting/accounting.php:210
 #: modules/crm/crm.php:142 modules/crm/crm.php:159 modules/hrm/hrm.php:177
 msgid "Are you sure?"
 msgstr ""
 
-#: includes/class-scripts.php:145 modules/accounting/accounting.php:213
+#: includes/class-scripts.php:152 modules/accounting/accounting.php:221
 msgid "Allowed Files"
 msgstr ""
 
@@ -5674,17 +5676,17 @@ msgid ""
 "to collect non-sensitive diagnostic data and usage information."
 msgstr ""
 
-#: includes/class-updates.php:78
+#: includes/class-updates.php:79
 msgid ""
 "<strong>WP ERP Data Update Required</strong> &#8211; We need to update your "
 "install to the latest version"
 msgstr ""
 
-#: includes/class-updates.php:79
+#: includes/class-updates.php:80
 msgid "Run the updater"
 msgstr ""
 
-#: includes/class-updates.php:84
+#: includes/class-updates.php:85
 msgid ""
 "It is strongly recommended that you backup your database before proceeding. "
 "Are you sure you wish to run the updater now?"
@@ -5803,7 +5805,7 @@ msgid "Enable SMTP"
 msgstr ""
 
 #: includes/framework/settings/email.php:126
-#: includes/framework/settings/email.php:220
+#: includes/framework/settings/email.php:380
 msgid "Mail Server"
 msgstr ""
 
@@ -5812,7 +5814,7 @@ msgid "SMTP host address."
 msgstr ""
 
 #: includes/framework/settings/email.php:136
-#: includes/framework/settings/email.php:256
+#: includes/framework/settings/email.php:416
 msgid "Port"
 msgstr ""
 
@@ -5821,47 +5823,47 @@ msgid "SSL: 465<br> TLS: 587"
 msgstr ""
 
 #: includes/framework/settings/email.php:143
-#: includes/framework/settings/email.php:263
+#: includes/framework/settings/email.php:423
 msgid "Authentication"
 msgstr ""
 
 #: includes/framework/settings/email.php:146
-#: includes/framework/settings/email.php:268
+#: includes/framework/settings/email.php:428
 msgid "Authentication type."
 msgstr ""
 
 #: includes/framework/settings/email.php:147
-#: includes/framework/settings/email.php:266
+#: includes/framework/settings/email.php:426
 msgid "None"
 msgstr ""
 
 #: includes/framework/settings/email.php:147
-#: includes/framework/settings/email.php:266
+#: includes/framework/settings/email.php:426
 msgid "SSL"
 msgstr ""
 
 #: includes/framework/settings/email.php:147
-#: includes/framework/settings/email.php:266
+#: includes/framework/settings/email.php:426
 msgid "TLS"
 msgstr ""
 
 #: includes/framework/settings/email.php:151
-#: includes/framework/settings/email.php:230
+#: includes/framework/settings/email.php:390
 msgid "Username"
 msgstr ""
 
 #: includes/framework/settings/email.php:157
-#: includes/framework/settings/email.php:233
+#: includes/framework/settings/email.php:393
 msgid "Your email id."
 msgstr ""
 
 #: includes/framework/settings/email.php:161
-#: includes/framework/settings/email.php:240
+#: includes/framework/settings/email.php:400
 msgid "Password"
 msgstr ""
 
 #: includes/framework/settings/email.php:164
-#: includes/framework/settings/email.php:243
+#: includes/framework/settings/email.php:403
 msgid "Your email password."
 msgstr ""
 
@@ -5869,51 +5871,7 @@ msgstr ""
 msgid "Debug"
 msgstr ""
 
-#: includes/framework/settings/email.php:186
-msgid "IMAP/POP3 Options"
-msgstr ""
-
-#: includes/framework/settings/email.php:188
-msgid "Email incoming settings for ERP."
-msgstr ""
-
-#: includes/framework/settings/email.php:196
-msgid "Enable IMAP"
-msgstr ""
-
-#: includes/framework/settings/email.php:211
-msgid "Cron Schedule"
-msgstr ""
-
-#: includes/framework/settings/email.php:214
-msgid "Interval time to run cron."
-msgstr ""
-
-#: includes/framework/settings/email.php:226
-msgid "IMAP/POP3 host address."
-msgstr ""
-
-#: includes/framework/settings/email.php:247
-msgid "Protocol"
-msgstr ""
-
-#: includes/framework/settings/email.php:250
-msgid "Protocol type."
-msgstr ""
-
-#: includes/framework/settings/email.php:251
-msgid "IMAP"
-msgstr ""
-
-#: includes/framework/settings/email.php:251
-msgid "POP3"
-msgstr ""
-
-#: includes/framework/settings/email.php:259
-msgid "IMAP: 993<br> POP3: 995"
-msgstr ""
-
-#: includes/framework/settings/email.php:304
+#: includes/framework/settings/email.php:205
 #: modules/accounting/includes/class-customer-list-table.php:86
 #: modules/accounting/includes/class-vendor-list-table.php:48
 #: modules/accounting/includes/views/customer/user-details.php:5
@@ -5921,10 +5879,10 @@ msgstr ""
 #: modules/accounting/includes/views/vendor/vendor-details.php:5
 #: modules/crm/includes/class-contact-list-table.php:195
 #: modules/crm/includes/class-contact-subscriber-list-table.php:163
-#: modules/crm/includes/functions-customer.php:523
-#: modules/crm/includes/functions-customer.php:1377
-#: modules/crm/includes/functions-customer.php:2408
-#: modules/crm/includes/functions-customer.php:2471
+#: modules/crm/includes/functions-customer.php:535
+#: modules/crm/includes/functions-customer.php:1410
+#: modules/crm/includes/functions-customer.php:2318
+#: modules/crm/includes/functions-customer.php:2381
 #: modules/crm/views/js-templates/customer-add-schedules.php:81
 #: modules/crm/views/js-templates/new-customer.php:75
 #: modules/hrm/views/employee/tab-general.php:11
@@ -5932,29 +5890,29 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: includes/framework/settings/email.php:344
+#: includes/framework/settings/email.php:245
 #: includes/framework/settings/integration.php:96
 msgid "Configure"
 msgstr ""
 
-#: includes/framework/settings/email.php:375
+#: includes/framework/settings/email.php:276
 msgid "An email address to test the connection."
 msgstr ""
 
-#: includes/framework/settings/email.php:376
+#: includes/framework/settings/email.php:277
 msgid "Send Test Email"
 msgstr ""
 
-#: includes/framework/settings/email.php:378
-#: includes/framework/settings/email.php:398
+#: includes/framework/settings/email.php:279
+#: includes/framework/settings/email.php:299
 msgid "Click on the above button before saving the settings."
 msgstr ""
 
-#: includes/framework/settings/email.php:396
+#: includes/framework/settings/email.php:297
 msgid "Test Connection"
 msgstr ""
 
-#: includes/framework/settings/email.php:415
+#: includes/framework/settings/email.php:316
 #: modules/accounting/includes/class-customer-transaction-list-table.php:35
 #: modules/accounting/includes/class-sales-transaction-list-table.php:35
 #: modules/accounting/includes/class-transaction-list-table.php:89
@@ -5968,12 +5926,64 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: includes/framework/settings/email.php:418
+#: includes/framework/settings/email.php:319
 msgid "Connected"
 msgstr ""
 
-#: includes/framework/settings/email.php:418
+#: includes/framework/settings/email.php:319
 msgid "Not Connected"
+msgstr ""
+
+#: includes/framework/settings/email.php:333
+#: includes/framework/settings/email.php:346
+msgid "IMAP/POP3 Options"
+msgstr ""
+
+#: includes/framework/settings/email.php:336
+msgid ""
+"Your server does not have PHP IMAP extension loaded. To enable this "
+"feature, please contact your hosting provider and ask to enable PHP IMAP "
+"extension."
+msgstr ""
+
+#: includes/framework/settings/email.php:348
+msgid "Email incoming settings for ERP."
+msgstr ""
+
+#: includes/framework/settings/email.php:356
+msgid "Enable IMAP"
+msgstr ""
+
+#: includes/framework/settings/email.php:371
+msgid "Cron Schedule"
+msgstr ""
+
+#: includes/framework/settings/email.php:374
+msgid "Interval time to run cron."
+msgstr ""
+
+#: includes/framework/settings/email.php:386
+msgid "IMAP/POP3 host address."
+msgstr ""
+
+#: includes/framework/settings/email.php:407
+msgid "Protocol"
+msgstr ""
+
+#: includes/framework/settings/email.php:410
+msgid "Protocol type."
+msgstr ""
+
+#: includes/framework/settings/email.php:411
+msgid "IMAP"
+msgstr ""
+
+#: includes/framework/settings/email.php:411
+msgid "POP3"
+msgstr ""
+
+#: includes/framework/settings/email.php:419
+msgid "IMAP: 993<br> POP3: 995"
 msgstr ""
 
 #: includes/framework/settings/general.php:24
@@ -6063,129 +6073,129 @@ msgstr ""
 msgid " from your computer."
 msgstr ""
 
-#: includes/functions-people.php:161 includes/functions-people.php:222
-#: modules/crm/includes/functions-customer.php:2423
+#: includes/functions-people.php:162 includes/functions-people.php:223
+#: modules/crm/includes/functions-customer.php:2333
 msgid "No data found"
 msgstr ""
 
-#: includes/functions-people.php:165 includes/functions-people.php:226
+#: includes/functions-people.php:166 includes/functions-people.php:227
 msgid "No type found"
 msgstr ""
 
-#: includes/functions-people.php:324
+#: includes/functions-people.php:325
 msgid "No field provided"
 msgstr ""
 
-#: includes/functions-people.php:328
+#: includes/functions-people.php:329
 msgid "No value provided"
 msgstr ""
 
-#: includes/functions-people.php:437
+#: includes/functions-people.php:438
 msgid "No First Name provided."
 msgstr ""
 
-#: includes/functions-people.php:440
+#: includes/functions-people.php:441
 msgid "No Last Name provided."
 msgstr ""
 
-#: includes/functions-people.php:448
+#: includes/functions-people.php:449
 msgid "No Company Name provided."
 msgstr ""
 
-#: includes/functions-people.php:454
+#: includes/functions-people.php:455
 msgid "Please provide a valid email address"
 msgstr ""
 
-#: includes/functions-people.php:471
+#: includes/functions-people.php:472
 msgid "The people type is invalid."
 msgstr ""
 
-#: includes/functions-people.php:476
+#: includes/functions-people.php:477
 msgid "No user type provided."
 msgstr ""
 
-#: includes/functions-people.php:505
+#: includes/functions-people.php:506
 msgid "This %s already exists."
 msgstr ""
 
-#: includes/functions-people.php:645
+#: includes/functions-people.php:646
 #: modules/hrm/includes/functions-employee.php:606
 msgid "Advertisement"
 msgstr ""
 
-#: includes/functions-people.php:646
+#: includes/functions-people.php:647
 msgid "Chat"
 msgstr ""
 
-#: includes/functions-people.php:647
+#: includes/functions-people.php:648
 msgid "Contact Form"
 msgstr ""
 
-#: includes/functions-people.php:648
+#: includes/functions-people.php:649
 msgid "Employee Referral"
 msgstr ""
 
-#: includes/functions-people.php:649
+#: includes/functions-people.php:650
 msgid "External Referral"
 msgstr ""
 
-#: includes/functions-people.php:650
+#: includes/functions-people.php:651
 msgid "Marketing campaign"
 msgstr ""
 
-#: includes/functions-people.php:651
+#: includes/functions-people.php:652
 msgid "Newsletter"
 msgstr ""
 
-#: includes/functions-people.php:652
+#: includes/functions-people.php:653
 msgid "OnlineStore"
 msgstr ""
 
-#: includes/functions-people.php:653
+#: includes/functions-people.php:654
 msgid "Optin Forms"
 msgstr ""
 
-#: includes/functions-people.php:654
+#: includes/functions-people.php:655
 msgid "Partner"
 msgstr ""
 
-#: includes/functions-people.php:655
+#: includes/functions-people.php:656
 msgid "Phone Call"
 msgstr ""
 
-#: includes/functions-people.php:656
+#: includes/functions-people.php:657
 msgid "Public Relations"
 msgstr ""
 
-#: includes/functions-people.php:657
+#: includes/functions-people.php:658
 msgid "Sales Mail Alias"
 msgstr ""
 
-#: includes/functions-people.php:658
+#: includes/functions-people.php:659
 msgid "Search Engine"
 msgstr ""
 
-#: includes/functions-people.php:659
+#: includes/functions-people.php:660
 msgid "Seminar-Internal"
 msgstr ""
 
-#: includes/functions-people.php:660
+#: includes/functions-people.php:661
 msgid "Seminar Partner"
 msgstr ""
 
-#: includes/functions-people.php:661
+#: includes/functions-people.php:662
 msgid "Social Media"
 msgstr ""
 
-#: includes/functions-people.php:662
+#: includes/functions-people.php:663
 msgid "Trade Show"
 msgstr ""
 
-#: includes/functions-people.php:663
+#: includes/functions-people.php:664
 msgid "Web Download"
 msgstr ""
 
-#: includes/functions-people.php:664
+#: includes/functions-people.php:665
 msgid "Web Research"
 msgstr ""
 
@@ -6314,169 +6324,173 @@ msgid "New Zealand Dollar"
 msgstr ""
 
 #: includes/functions.php:75
-msgid "Paraguayan Guaraní"
+msgid "Omani Rial"
 msgstr ""
 
 #: includes/functions.php:76
-msgid "Philippine Pesos"
+msgid "Paraguayan Guaraní"
 msgstr ""
 
 #: includes/functions.php:77
-msgid "Polish Zloty"
+msgid "Philippine Pesos"
 msgstr ""
 
 #: includes/functions.php:78
-msgid "Pounds Sterling"
+msgid "Polish Zloty"
 msgstr ""
 
 #: includes/functions.php:79
-msgid "Romanian Leu"
+msgid "Pounds Sterling"
 msgstr ""
 
 #: includes/functions.php:80
-msgid "Russian Ruble"
+msgid "Romanian Leu"
 msgstr ""
 
 #: includes/functions.php:81
-msgid "Singapore Dollar"
+msgid "Russian Ruble"
 msgstr ""
 
 #: includes/functions.php:82
-msgid "South African rand"
+msgid "Singapore Dollar"
 msgstr ""
 
 #: includes/functions.php:83
-msgid "Swedish Krona"
+msgid "South African rand"
 msgstr ""
 
 #: includes/functions.php:84
-msgid "Swiss Franc"
+msgid "Swedish Krona"
 msgstr ""
 
 #: includes/functions.php:85
-msgid "Taiwan New Dollars"
+msgid "Swiss Franc"
 msgstr ""
 
 #: includes/functions.php:86
-msgid "Thai Baht"
+msgid "Taiwan New Dollars"
 msgstr ""
 
 #: includes/functions.php:87
-msgid "Turkish Lira"
+msgid "Thai Baht"
 msgstr ""
 
 #: includes/functions.php:88
-msgid "US Dollars"
+msgid "Turkish Lira"
 msgstr ""
 
 #: includes/functions.php:89
-msgid "Vietnamese Dong"
+msgid "US Dollars"
 msgstr ""
 
 #: includes/functions.php:90
+msgid "Vietnamese Dong"
+msgstr ""
+
+#: includes/functions.php:91
 msgid "Egyptian Pound"
 msgstr ""
 
-#: includes/functions.php:351
+#: includes/functions.php:353
 msgid "Invalid date provided"
 msgstr ""
 
-#: includes/functions.php:459
+#: includes/functions.php:461
 msgid "Very Bad"
 msgstr ""
 
-#: includes/functions.php:460
+#: includes/functions.php:462
 msgid "Poor"
 msgstr ""
 
-#: includes/functions.php:461
+#: includes/functions.php:463
 msgid "Average"
 msgstr ""
 
-#: includes/functions.php:462
+#: includes/functions.php:464
 msgid "Good"
 msgstr ""
 
-#: includes/functions.php:463
+#: includes/functions.php:465
 msgid "Excellent"
 msgstr ""
 
-#: includes/functions.php:678
+#: includes/functions.php:680
 msgid "Every Minute"
 msgstr ""
 
-#: includes/functions.php:683
+#: includes/functions.php:685
 msgid "Every 2 Minutes"
 msgstr ""
 
-#: includes/functions.php:688
+#: includes/functions.php:690
 msgid "Every 5 Minutes"
 msgstr ""
 
-#: includes/functions.php:693
+#: includes/functions.php:695
 msgid "Every 10 Minutes"
 msgstr ""
 
-#: includes/functions.php:698
+#: includes/functions.php:700
 msgid "Every 15 Minutes"
 msgstr ""
 
-#: includes/functions.php:703
+#: includes/functions.php:705
 msgid "Every 30 Minutes"
 msgstr ""
 
-#: includes/functions.php:708 includes/lib/class-wedevs-insights.php:471
+#: includes/functions.php:710 includes/lib/class-wedevs-insights.php:471
 msgid "Once Weekly"
 msgstr ""
 
-#: includes/functions.php:795 includes/functions.php:835
+#: includes/functions.php:797 includes/functions.php:837
 msgid ""
 "Your license key expired on %s. Please <a href=\"%s\" target=\"_blank\" "
 "title=\"Renew your license key\">renew your license key</a>."
 msgstr ""
 
-#: includes/functions.php:804
+#: includes/functions.php:806
 msgid ""
 "Invalid license. Please <a href=\"%s\" target=\"_blank\" title=\"Visit "
 "account page\">visit your account page</a> and verify it."
 msgstr ""
 
-#: includes/functions.php:813
+#: includes/functions.php:815
 msgid ""
 "Your %s is not active for this URL. Please <a href=\"%s\" target=\"_blank\" "
 "title=\"Visit account page\">visit your account page</a> to manage your "
 "license key URLs."
 msgstr ""
 
-#: includes/functions.php:821
+#: includes/functions.php:823
 msgid "This is not a %s."
 msgstr ""
 
-#: includes/functions.php:825
+#: includes/functions.php:827
 msgid ""
 "Your license key has reached its activation limit. <a href=\"%s\">View "
 "possible upgrades</a> now."
 msgstr ""
 
-#: includes/functions.php:848
+#: includes/functions.php:850
 msgid "License key never expires."
 msgstr ""
 
-#: includes/functions.php:853
+#: includes/functions.php:855
 msgid ""
 "Your license key expires soon! It expires on %s. <a href=\"%s\" "
 "target=\"_blank\" title=\"Renew license\">Renew your license key</a>."
 msgstr ""
 
-#: includes/functions.php:861
+#: includes/functions.php:863
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/functions.php:1134
+#: includes/functions.php:1136
 msgid "&mdash; Select Field &mdash;"
 msgstr ""
 
-#: includes/functions.php:1384
+#: includes/functions.php:1386
 msgid "%s items successfully imported."
 msgstr ""
 
@@ -6535,7 +6549,15 @@ msgstr ""
 msgid "Canel"
 msgstr ""
 
-#: modules/accounting/accounting.php:237
+#: modules/accounting/accounting.php:208
+msgid "Sent"
+msgstr ""
+
+#: modules/accounting/accounting.php:209
+msgid "The email has been sent"
+msgstr ""
+
+#: modules/accounting/accounting.php:245
 msgid "<strong>Error:</strong> WP ERP Plugin is required to use accounting plugin."
 msgstr ""
 
@@ -6584,41 +6606,53 @@ msgstr ""
 msgid "Reports"
 msgstr ""
 
-#: modules/accounting/includes/class-ajax.php:54
+#: modules/accounting/includes/class-ajax.php:50
+msgid "Type required"
+msgstr ""
+
+#: modules/accounting/includes/class-ajax.php:78
 msgid "Account record has been deleted successfully"
 msgstr ""
 
-#: modules/accounting/includes/class-ajax.php:64
-#: modules/crm/includes/class-ajax.php:441
-#: modules/hrm/includes/class-ajax.php:787
+#: modules/accounting/includes/class-ajax.php:88
+#: modules/crm/includes/class-ajax.php:483
+#: modules/hrm/includes/class-ajax.php:815
 msgid "User not found"
 msgstr ""
 
-#: modules/accounting/includes/class-ajax.php:68
-#: modules/crm/includes/class-ajax.php:445
+#: modules/accounting/includes/class-ajax.php:92
+#: modules/crm/includes/class-ajax.php:487
 msgid "Type not found"
 msgstr ""
 
-#: modules/accounting/includes/class-ajax.php:145
-#: modules/accounting/includes/class-ajax.php:156
+#: modules/accounting/includes/class-ajax.php:169
 msgid "Required unique value!"
 msgstr ""
 
-#: modules/accounting/includes/class-ajax.php:170
+#: modules/accounting/includes/class-ajax.php:180
+msgid "Reference already exists. Please use an unique number"
+msgstr ""
+
+#: modules/accounting/includes/class-ajax.php:192
+#: modules/accounting/includes/functions-transaction.php:263
+msgid "Invoice already exists. Please use an unique number"
+msgstr ""
+
+#: modules/accounting/includes/class-ajax.php:206
 msgid "You can not remove this user"
 msgstr ""
 
-#: modules/accounting/includes/class-ajax.php:190
-#: modules/accounting/includes/class-ajax.php:223
+#: modules/accounting/includes/class-ajax.php:226
+#: modules/accounting/includes/class-ajax.php:259
 msgid "No Customer found"
 msgstr ""
 
-#: modules/accounting/includes/class-ajax.php:203
-#: modules/accounting/includes/class-ajax.php:235
+#: modules/accounting/includes/class-ajax.php:239
+#: modules/accounting/includes/class-ajax.php:271
 msgid "Customer has been removed successfully"
 msgstr ""
 
-#: modules/accounting/includes/class-ajax.php:425
+#: modules/accounting/includes/class-ajax.php:461
 msgid "No enough money from your transfer account"
 msgstr ""
 
@@ -6630,19 +6664,19 @@ msgstr ""
 #: modules/accounting/includes/class-log.php:190
 #: modules/accounting/includes/class-log.php:234
 #: modules/accounting/includes/class-sales-transaction-list-table.php:31
-#: modules/accounting/includes/views/sales/invoice-new.php:76
+#: modules/accounting/includes/views/sales/invoice-new.php:75
 #: modules/accounting/includes/views/sales/payment-new.php:77
-#: modules/crm/includes/functions-customer.php:197
-#: modules/crm/includes/functions-customer.php:221
+#: modules/crm/includes/functions-customer.php:209
+#: modules/crm/includes/functions-customer.php:233
 msgid "Customer"
 msgstr ""
 
 #: modules/accounting/includes/class-customer-list-table.php:88
 #: modules/accounting/includes/class-journal-transactions-list-table.php:130
 #: modules/accounting/includes/class-vendor-list-table.php:50
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:63
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:115
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:168
+#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:41
+#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:93
+#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:146
 msgid "Balance"
 msgstr ""
 
@@ -6651,9 +6685,9 @@ msgstr ""
 #: modules/accounting/includes/class-customer-list-table.php:170
 #: modules/accounting/includes/class-vendor-list-table.php:66
 #: modules/crm/includes/class-contact-list-table.php:220
-#: modules/crm/includes/class-contact-list-table.php:259
+#: modules/crm/includes/class-contact-list-table.php:258
 #: modules/hrm/includes/class-employee-list-table.php:166
-#: modules/hrm/includes/class-employee-list-table.php:198
+#: modules/hrm/includes/class-employee-list-table.php:202
 msgid "Permanent Delete"
 msgstr ""
 
@@ -6669,8 +6703,8 @@ msgstr ""
 #: modules/crm/includes/class-contact-group-list-table.php:100
 #: modules/crm/includes/class-contact-group-list-table.php:127
 #: modules/crm/includes/class-contact-list-table.php:220
-#: modules/crm/includes/class-contact-subscriber-list-table.php:187
-#: modules/crm/includes/class-contact-subscriber-list-table.php:201
+#: modules/crm/includes/class-contact-subscriber-list-table.php:188
+#: modules/crm/includes/class-contact-subscriber-list-table.php:203
 #: modules/crm/views/js-templates/customer-timeline-item.php:15
 #: modules/hrm/includes/class-department-list-table.php:212
 #: modules/hrm/includes/class-designation-list-table.php:84
@@ -6693,7 +6727,7 @@ msgstr ""
 
 #: modules/accounting/includes/class-customer-list-table.php:110
 #: modules/accounting/includes/class-vendor-list-table.php:70
-#: modules/crm/includes/class-contact-subscriber-list-table.php:186
+#: modules/crm/includes/class-contact-subscriber-list-table.php:187
 #: modules/hrm/includes/class-department-list-table.php:211
 #: modules/hrm/includes/class-designation-list-table.php:83
 #: modules/hrm/includes/class-employee-list-table.php:169
@@ -6709,8 +6743,8 @@ msgstr ""
 
 #: modules/accounting/includes/class-customer-list-table.php:116
 #: modules/accounting/includes/class-vendor-list-table.php:83
-#: modules/crm/includes/class-contact-list-table.php:233
-#: modules/crm/includes/class-contact-subscriber-list-table.php:187
+#: modules/crm/includes/class-contact-list-table.php:232
+#: modules/crm/includes/class-contact-subscriber-list-table.php:188
 #: modules/hrm/includes/class-department-list-table.php:212
 #: modules/hrm/includes/class-designation-list-table.php:84
 #: modules/hrm/includes/class-employee-list-table.php:173
@@ -6724,23 +6758,25 @@ msgstr ""
 
 #: modules/accounting/includes/class-customer-list-table.php:120
 #: modules/accounting/includes/class-vendor-list-table.php:87
-#: modules/crm/includes/class-contact-list-table.php:237
+#: modules/crm/includes/class-contact-list-table.php:236
+#: modules/hrm/includes/class-employee-list-table.php:177
 msgid "Restore this item"
 msgstr ""
 
 #: modules/accounting/includes/class-customer-list-table.php:120
 #: modules/accounting/includes/class-customer-list-table.php:169
 #: modules/accounting/includes/class-vendor-list-table.php:87
-#: modules/crm/includes/class-contact-list-table.php:237
-#: modules/crm/includes/class-contact-list-table.php:260
-#: modules/hrm/includes/class-employee-list-table.php:199
+#: modules/crm/includes/class-contact-list-table.php:236
+#: modules/crm/includes/class-contact-list-table.php:259
+#: modules/hrm/includes/class-employee-list-table.php:177
+#: modules/hrm/includes/class-employee-list-table.php:203
 msgid "Restore"
 msgstr ""
 
 #: modules/accounting/includes/class-customer-list-table.php:164
-#: modules/crm/includes/class-contact-list-table.php:252
+#: modules/crm/includes/class-contact-list-table.php:251
 #: modules/hrm/includes/class-department-list-table.php:283
-#: modules/hrm/includes/class-employee-list-table.php:192
+#: modules/hrm/includes/class-employee-list-table.php:196
 #: modules/hrm/views/leave/holiday.php:169
 #: modules/hrm/views/leave/leave-policies.php:143
 msgid "Move to Trash"
@@ -6750,12 +6786,12 @@ msgstr ""
 #: modules/accounting/includes/class-log.php:562
 #: modules/accounting/includes/class-log.php:567
 #: modules/accounting/includes/class-vendor-list-table.php:107
-#: modules/crm/includes/functions-customer.php:290
+#: modules/crm/includes/functions-customer.php:302
 #: modules/crm/views/activities.php:24
 #: modules/hrm/includes/class-hr-log.php:798
 #: modules/hrm/includes/class-hr-log.php:803
 #: modules/hrm/includes/functions-employee.php:339
-#: modules/hrm/includes/functions-leave.php:925
+#: modules/hrm/includes/functions-leave.php:931
 #: modules/hrm/views/js-templates/leave-policy.php:83
 #: modules/hrm/views/js-templates/leave-policy.php:94
 msgid "All"
@@ -6763,8 +6799,8 @@ msgstr ""
 
 #: modules/accounting/includes/class-customer-list-table.php:200
 #: modules/accounting/includes/class-vendor-list-table.php:108
-#: modules/crm/includes/functions-customer.php:328
-#: modules/hrm/includes/class-employee-list-table.php:232
+#: modules/crm/includes/functions-customer.php:340
+#: modules/hrm/includes/class-employee-list-table.php:236
 msgid "Trash"
 msgstr ""
 
@@ -6776,7 +6812,7 @@ msgstr ""
 #: modules/accounting/includes/class-vendor-transaction-list-table.php:29
 #: modules/accounting/includes/views/bank/bank.php:101
 #: modules/accounting/includes/views/common/partial-payments.php:10
-#: modules/accounting/includes/views/journal/new.php:20
+#: modules/accounting/includes/views/journal/new.php:32
 #: modules/accounting/includes/views/js-templates/bank.php:5
 #: modules/hrm/includes/class-announcement.php:247
 #: modules/hrm/views/employee/tab-job.php:39
@@ -6807,13 +6843,13 @@ msgstr ""
 #: modules/accounting/includes/class-transaction-list-table.php:83
 #: modules/accounting/includes/class-vendor-transaction-list-table.php:32
 #: modules/accounting/includes/views/bank/invoice.php:72
-#: modules/accounting/includes/views/expense/payment-voucher-single.php:84
-#: modules/accounting/includes/views/expense/vendor-credit-single.php:74
-#: modules/accounting/includes/views/expense/vendor-credit.php:137
-#: modules/accounting/includes/views/journal/single.php:76
-#: modules/accounting/includes/views/sales/invoice-new.php:132
-#: modules/accounting/includes/views/sales/invoice-single.php:89
-#: modules/accounting/includes/views/sales/payment-single.php:68
+#: modules/accounting/includes/views/expense/payment-voucher-single.php:87
+#: modules/accounting/includes/views/expense/vendor-credit-single.php:77
+#: modules/accounting/includes/views/expense/vendor-credit.php:150
+#: modules/accounting/includes/views/journal/single.php:79
+#: modules/accounting/includes/views/sales/invoice-new.php:143
+#: modules/accounting/includes/views/sales/invoice-single.php:104
+#: modules/accounting/includes/views/sales/payment-single.php:86
 msgid "Due Date"
 msgstr ""
 
@@ -6831,33 +6867,33 @@ msgstr ""
 #: modules/accounting/includes/class-sales-transaction-list-table.php:34
 #: modules/accounting/includes/class-transaction-list-table.php:88
 #: modules/accounting/includes/class-vendor-transaction-list-table.php:34
-#: modules/accounting/includes/functions-dashboard.php:70
+#: modules/accounting/includes/functions-dashboard.php:78
 #: modules/accounting/includes/views/bank/invoice.php:123
 #: modules/accounting/includes/views/common/partial-payments.php:12
 #: modules/accounting/includes/views/common/transaction-table.php:79
 #: modules/accounting/includes/views/expense/payment-voucher-invoice.php:6
 #: modules/accounting/includes/views/expense/payment-voucher-invoice.php:86
-#: modules/accounting/includes/views/expense/payment-voucher-single.php:141
+#: modules/accounting/includes/views/expense/payment-voucher-single.php:144
 #: modules/accounting/includes/views/expense/single.php:50
-#: modules/accounting/includes/views/expense/vendor-credit-single.php:131
-#: modules/accounting/includes/views/journal/new.php:141
-#: modules/accounting/includes/views/journal/single.php:128
+#: modules/accounting/includes/views/expense/vendor-credit-single.php:134
+#: modules/accounting/includes/views/journal/new.php:153
+#: modules/accounting/includes/views/journal/single.php:131
 #: modules/accounting/includes/views/js-templates/tax-items.php:33
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:100
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:153
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:210
+#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:78
+#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:131
+#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:188
 #: modules/accounting/includes/views/reports/trial-balance.php:118
 #: modules/accounting/includes/views/sales/bank-ransfer-form.php:6
 #: modules/accounting/includes/views/sales/bank-ransfer-form.php:89
-#: modules/accounting/includes/views/sales/invoice-single.php:147
-#: modules/accounting/includes/views/sales/payment-single.php:125
+#: modules/accounting/includes/views/sales/invoice-single.php:164
+#: modules/accounting/includes/views/sales/payment-single.php:143
 msgid "Total"
 msgstr ""
 
 #: modules/accounting/includes/class-form-handler.php:163
 #: modules/accounting/includes/class-form-handler.php:200
 #: modules/accounting/includes/class-form-handler.php:298
-#: modules/accounting/includes/class-form-handler.php:428
+#: modules/accounting/includes/class-form-handler.php:443
 msgid "Are you cheating?"
 msgstr ""
 
@@ -6881,61 +6917,70 @@ msgstr ""
 msgid "Error: Name is required."
 msgstr ""
 
-#: modules/accounting/includes/class-form-handler.php:334
+#: modules/accounting/includes/class-form-handler.php:335
 msgid "Error: Issue Date is required"
 msgstr ""
 
-#: modules/accounting/includes/class-form-handler.php:338
+#: modules/accounting/includes/class-form-handler.php:339
 msgid "Error: Account ID is required"
 msgstr ""
 
-#: modules/accounting/includes/class-form-handler.php:342
+#: modules/accounting/includes/class-form-handler.php:343
 msgid "Error: Total is required"
 msgstr ""
 
-#: modules/accounting/includes/class-form-handler.php:422
+#: modules/accounting/includes/class-form-handler.php:424
 #: modules/accounting/includes/functions-chart.php:142
 #: modules/accounting/includes/functions-chart.php:154
 #: modules/accounting/includes/functions-chart.php:487
-#: modules/accounting/includes/functions-transaction.php:197
-#: modules/accounting/includes/functions-transaction.php:203
-#: modules/accounting/includes/functions-transaction.php:209
-#: modules/accounting/includes/functions-transaction.php:215
-#: modules/accounting/includes/functions-transaction.php:221
-#: modules/accounting/includes/functions-transaction.php:227
-#: modules/accounting/includes/functions-transaction.php:233
-#: modules/accounting/includes/functions-transaction.php:239
+#: modules/accounting/includes/functions-transaction.php:212
+#: modules/accounting/includes/functions-transaction.php:218
+#: modules/accounting/includes/functions-transaction.php:224
+#: modules/accounting/includes/functions-transaction.php:230
+#: modules/accounting/includes/functions-transaction.php:236
+#: modules/accounting/includes/functions-transaction.php:242
+#: modules/accounting/includes/functions-transaction.php:248
+#: modules/accounting/includes/functions-transaction.php:254
 msgid "You do not have sufficient permissions"
 msgstr ""
 
-#: modules/accounting/includes/class-form-handler.php:438
+#: modules/accounting/includes/class-form-handler.php:428
+#: modules/accounting/includes/functions-transaction.php:259
+msgid "Invoice number required"
+msgstr ""
+
+#: modules/accounting/includes/class-form-handler.php:436
+msgid "Please insert unique invoice number"
+msgstr ""
+
+#: modules/accounting/includes/class-form-handler.php:454
 msgid "Value can not be negative"
 msgstr ""
 
-#: modules/accounting/includes/class-form-handler.php:442
+#: modules/accounting/includes/class-form-handler.php:458
 msgid "Debit and credit total did not match."
 msgstr ""
 
-#: modules/accounting/includes/class-form-handler.php:464
-#: modules/accounting/includes/functions-transaction.php:338
+#: modules/accounting/includes/class-form-handler.php:485
+#: modules/accounting/includes/functions-transaction.php:420
 msgid "Could not create transaction"
 msgstr ""
 
-#: modules/accounting/includes/class-form-handler.php:488
-#: modules/accounting/includes/functions-transaction.php:380
+#: modules/accounting/includes/class-form-handler.php:509
+#: modules/accounting/includes/functions-transaction.php:462
 msgid "Could not insert journal item"
 msgstr ""
 
-#: modules/accounting/includes/class-form-handler.php:505
-#: modules/accounting/includes/functions-transaction.php:389
+#: modules/accounting/includes/class-form-handler.php:526
+#: modules/accounting/includes/functions-transaction.php:471
 msgid "Could not insert transaction item"
 msgstr ""
 
 #: modules/accounting/includes/class-journal-list-table.php:30
 #: modules/accounting/includes/class-journal-transactions-list-table.php:127
 #: modules/accounting/includes/views/expense/single.php:13
-#: modules/accounting/includes/views/journal/new.php:31
-#: modules/accounting/includes/views/journal/new.php:36
+#: modules/accounting/includes/views/journal/new.php:43
+#: modules/accounting/includes/views/journal/new.php:48
 msgid "Summary"
 msgstr ""
 
@@ -6945,7 +6990,7 @@ msgstr ""
 
 #: modules/accounting/includes/class-journal-transactions-list-table.php:83
 #: modules/accounting/includes/class-journal-transactions-list-table.php:209
-#: modules/accounting/includes/functions-dashboard.php:221
+#: modules/accounting/includes/functions-dashboard.php:252
 #: modules/accounting/includes/views/common/transaction-chart.php:282
 msgid "Expense"
 msgstr ""
@@ -6959,14 +7004,14 @@ msgid "Entry Type"
 msgstr ""
 
 #: modules/accounting/includes/class-journal-transactions-list-table.php:128
-#: modules/accounting/includes/functions-transaction.php:653
-#: modules/accounting/includes/views/journal/new.php:47
+#: modules/accounting/includes/functions-transaction.php:731
+#: modules/accounting/includes/views/journal/new.php:59
 msgid "Debit"
 msgstr ""
 
 #: modules/accounting/includes/class-journal-transactions-list-table.php:129
-#: modules/accounting/includes/functions-transaction.php:654
-#: modules/accounting/includes/views/journal/new.php:48
+#: modules/accounting/includes/functions-transaction.php:732
+#: modules/accounting/includes/views/journal/new.php:60
 msgid "Credit"
 msgstr ""
 
@@ -7114,59 +7159,117 @@ msgid "A new entitlement has been created for"
 msgstr ""
 
 #: modules/accounting/includes/class-settings.php:28
-msgid "Currency Options"
+msgid "Currency Settings"
 msgstr ""
 
 #: modules/accounting/includes/class-settings.php:29
+msgid "Invoice Formatting"
+msgstr ""
+
+#: modules/accounting/includes/class-settings.php:30
 #: modules/accounting/includes/functions-reporting.php:16
 msgid "Sales Tax"
 msgstr ""
 
+#: modules/accounting/includes/class-settings.php:47
+msgid "Sales Payment"
+msgstr ""
+
+#: modules/accounting/includes/class-settings.php:51
+msgid ""
+"Sales payment invoice format. Rearrange if you like. <strong>prefix-{id}, "
+"{id}-postfix, prefix-{id}-postfix</strong>"
+msgstr ""
+
 #: modules/accounting/includes/class-settings.php:55
-msgid "Currency Position"
+msgid "Sales Invoice"
 msgstr ""
 
-#: modules/accounting/includes/class-settings.php:60
-msgid "Left"
-msgstr ""
-
-#: modules/accounting/includes/class-settings.php:61
-msgid "Right"
-msgstr ""
-
-#: modules/accounting/includes/class-settings.php:62
-msgid "Left with space"
+#: modules/accounting/includes/class-settings.php:59
+msgid ""
+"Sales invoice format. Rearrange if you like. <strong>prefix-{id}, "
+"{id}-postfix, prefix-{id}-postfix</strong>"
 msgstr ""
 
 #: modules/accounting/includes/class-settings.php:63
-msgid "Right with space"
+msgid "Expense Voucher"
 msgstr ""
 
-#: modules/accounting/includes/class-settings.php:68
-msgid "Thousand Separator"
+#: modules/accounting/includes/class-settings.php:67
+msgid ""
+"Expense voucher invoice format. Rearrange if you like. <strong>prefix-{id}, "
+"{id}-postfix, prefix-{id}-postfix</strong>"
 msgstr ""
 
-#: modules/accounting/includes/class-settings.php:76
-msgid "Decimal Separator"
+#: modules/accounting/includes/class-settings.php:71
+msgid "Expense Credit"
+msgstr ""
+
+#: modules/accounting/includes/class-settings.php:75
+msgid ""
+"Expense credit invoice format. Rearrange if you like. <strong>prefix-{id}, "
+"{id}-postfix, prefix-{id}-postfix</strong>"
+msgstr ""
+
+#: modules/accounting/includes/class-settings.php:79
+msgid "Journal"
 msgstr ""
 
 #: modules/accounting/includes/class-settings.php:83
-msgid "Number of Decimals"
+msgid ""
+"Journal invoice format. Rearrange if you like. <strong>prefix-{id}, "
+"{id}-postfix, prefix-{id}-postfix</strong>"
 msgstr ""
 
-#: modules/accounting/includes/class-settings.php:96
-msgid "Sales Taxes"
+#: modules/accounting/includes/class-settings.php:102
+msgid "Currency Position"
+msgstr ""
+
+#: modules/accounting/includes/class-settings.php:107
+msgid "Left"
+msgstr ""
+
+#: modules/accounting/includes/class-settings.php:108
+msgid "Right"
+msgstr ""
+
+#: modules/accounting/includes/class-settings.php:109
+msgid "Left with space"
+msgstr ""
+
+#: modules/accounting/includes/class-settings.php:110
+msgid "Right with space"
+msgstr ""
+
+#: modules/accounting/includes/class-settings.php:115
+msgid "Thousand Separator"
 msgstr ""
 
 #: modules/accounting/includes/class-settings.php:123
+msgid "Decimal Separator"
+msgstr ""
+
+#: modules/accounting/includes/class-settings.php:130
+msgid "Number of Decimals"
+msgstr ""
+
+#: modules/accounting/includes/class-settings.php:137
+msgid "PDF Theme Color"
+msgstr ""
+
+#: modules/accounting/includes/class-settings.php:149
+msgid "Sales Taxes"
+msgstr ""
+
+#: modules/accounting/includes/class-settings.php:176
 msgid "Accounting Settings"
 msgstr ""
 
-#: modules/accounting/includes/class-settings.php:126
+#: modules/accounting/includes/class-settings.php:179
 msgid "Home Currency"
 msgstr ""
 
-#: modules/accounting/includes/class-settings.php:128
+#: modules/accounting/includes/class-settings.php:181
 msgid "The base currency of the system."
 msgstr ""
 
@@ -7232,25 +7335,25 @@ msgstr ""
 
 #: modules/accounting/includes/functions-chart.php:10
 #: modules/accounting/includes/views/chart-of-accounts.php:37
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:57
+#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:35
 msgid "Assets"
 msgstr ""
 
 #: modules/accounting/includes/functions-chart.php:11
 #: modules/accounting/includes/views/chart-of-accounts.php:38
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:109
+#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:87
 msgid "Liabilities"
 msgstr ""
 
 #: modules/accounting/includes/functions-chart.php:13
-#: modules/accounting/includes/functions-dashboard.php:220
+#: modules/accounting/includes/functions-dashboard.php:251
 #: modules/accounting/includes/views/chart-of-accounts.php:40
 msgid "Income"
 msgstr ""
 
 #: modules/accounting/includes/functions-chart.php:14
 #: modules/accounting/includes/views/chart-of-accounts.php:41
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:162
+#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:140
 msgid "Equity"
 msgstr ""
 
@@ -7293,8 +7396,8 @@ msgid "Business Expense"
 msgstr ""
 
 #: modules/accounting/includes/functions-dashboard.php:21
-#: modules/accounting/includes/functions-dashboard.php:223
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:200
+#: modules/accounting/includes/functions-dashboard.php:254
+#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:178
 msgid "Net Income"
 msgstr ""
 
@@ -7302,28 +7405,28 @@ msgstr ""
 msgid "Bills you need to pay"
 msgstr ""
 
-#: modules/accounting/includes/functions-dashboard.php:129
-#: modules/accounting/includes/functions-dashboard.php:477
+#: modules/accounting/includes/functions-dashboard.php:137
+#: modules/accounting/includes/functions-dashboard.php:515
 msgid "Coming Due"
 msgstr ""
 
-#: modules/accounting/includes/functions-dashboard.php:133
-#: modules/accounting/includes/functions-dashboard.php:481
+#: modules/accounting/includes/functions-dashboard.php:141
+#: modules/accounting/includes/functions-dashboard.php:519
 msgid "1-30 days overdue"
 msgstr ""
 
-#: modules/accounting/includes/functions-dashboard.php:137
-#: modules/accounting/includes/functions-dashboard.php:485
+#: modules/accounting/includes/functions-dashboard.php:145
+#: modules/accounting/includes/functions-dashboard.php:523
 msgid "31-60 days overdue"
 msgstr ""
 
-#: modules/accounting/includes/functions-dashboard.php:141
-#: modules/accounting/includes/functions-dashboard.php:489
+#: modules/accounting/includes/functions-dashboard.php:149
+#: modules/accounting/includes/functions-dashboard.php:527
 msgid "61-90 days overdue"
 msgstr ""
 
-#: modules/accounting/includes/functions-dashboard.php:145
-#: modules/accounting/includes/functions-dashboard.php:493
+#: modules/accounting/includes/functions-dashboard.php:153
+#: modules/accounting/includes/functions-dashboard.php:531
 msgid "> 90 days overdue"
 msgstr ""
 
@@ -7345,7 +7448,7 @@ msgid ""
 msgstr ""
 
 #: modules/accounting/includes/functions-reporting.php:20
-#: modules/accounting/includes/views/reports/income-statement/statement.php:24
+#: modules/accounting/includes/views/reports/income-statement/statement.php:30
 msgid "Income Statement"
 msgstr ""
 
@@ -7393,31 +7496,31 @@ msgstr ""
 msgid "Rate(0.00%)"
 msgstr ""
 
-#: modules/accounting/includes/functions-transaction.php:253
+#: modules/accounting/includes/functions-transaction.php:331
 msgid "No transaction items found"
 msgstr ""
 
-#: modules/accounting/includes/functions-transaction.php:287
+#: modules/accounting/includes/functions-transaction.php:366
 msgid "Error: Invalid transaction type."
 msgstr ""
 
-#: modules/accounting/includes/functions-transaction.php:301
+#: modules/accounting/includes/functions-transaction.php:380
 msgid "Error: Invalid form type"
 msgstr ""
 
-#: modules/accounting/includes/functions-transaction.php:308
+#: modules/accounting/includes/functions-transaction.php:387
 msgid "No Issue Date provided."
 msgstr ""
 
-#: modules/accounting/includes/functions-transaction.php:311
+#: modules/accounting/includes/functions-transaction.php:390
 msgid "No Total provided."
 msgstr ""
 
-#: modules/accounting/includes/functions-transaction.php:361
+#: modules/accounting/includes/functions-transaction.php:443
 msgid "Could not insert main journal item"
 msgstr ""
 
-#: modules/accounting/includes/functions-transaction.php:652
+#: modules/accounting/includes/functions-transaction.php:730
 msgid "Ledger"
 msgstr ""
 
@@ -7431,7 +7534,7 @@ msgstr ""
 
 #: modules/accounting/includes/functions.php:26
 #: modules/accounting/includes/views/journal/single.php:11
-#: modules/accounting/includes/views/sales/payment-single.php:10
+#: modules/accounting/includes/views/sales/payment-single.php:14
 msgid "Payment"
 msgstr ""
 
@@ -7499,7 +7602,7 @@ msgstr ""
 #: modules/accounting/includes/functions.php:282
 #: modules/accounting/includes/views/expense/payment-voucher.php:94
 #: modules/accounting/includes/views/expense/vendor-credit.php:99
-#: modules/accounting/includes/views/sales/invoice-new.php:91
+#: modules/accounting/includes/views/sales/invoice-new.php:90
 #: modules/accounting/includes/views/sales/payment-new.php:92
 msgid "Create New"
 msgstr ""
@@ -7533,8 +7636,8 @@ msgid "Yes, delete it!"
 msgstr ""
 
 #: modules/accounting/includes/functions.php:290
-#: modules/crm/views/company/single.php:121
-#: modules/crm/views/contact/single.php:121
+#: modules/crm/views/company/single.php:122
+#: modules/crm/views/contact/single.php:126
 #: modules/crm/views/js-templates/customer-email-note.php:52
 #: modules/crm/views/js-templates/customer-log-activity.php:47
 #: modules/crm/views/js-templates/customer-newnote.php:19
@@ -7547,11 +7650,15 @@ msgstr ""
 msgid "Error!"
 msgstr ""
 
-#: modules/accounting/includes/functions.php:306
-msgid "&laquo;"
+#: modules/accounting/includes/functions.php:292
+msgid "Already exists as a customer or vendor"
 msgstr ""
 
 #: modules/accounting/includes/functions.php:307
+msgid "&laquo;"
+msgstr ""
+
+#: modules/accounting/includes/functions.php:308
 msgid "&raquo;"
 msgstr ""
 
@@ -7571,7 +7678,7 @@ msgstr ""
 #: modules/crm/views/company/single.php:62
 #: modules/crm/views/js-templates/new-contact-group.php:5
 #: modules/crm/views/js-templates/new-save-replies.php:5
-#: modules/hrm/includes/class-ajax.php:1145
+#: modules/hrm/includes/class-ajax.php:1173
 #: modules/hrm/views/employee/tab-general.php:194
 #: modules/hrm/views/js-templates/dependents.php:5
 #: modules/hrm/views/reporting/headcount.php:157
@@ -7653,14 +7760,14 @@ msgstr ""
 #: modules/accounting/includes/views/bank/invoice.php:94
 #: modules/accounting/includes/views/common/transaction-table.php:11
 #: modules/accounting/includes/views/expense/payment-voucher-invoice.php:7
-#: modules/accounting/includes/views/expense/payment-voucher-single.php:107
+#: modules/accounting/includes/views/expense/payment-voucher-single.php:110
 #: modules/accounting/includes/views/expense/single.php:28
-#: modules/accounting/includes/views/expense/vendor-credit-single.php:97
-#: modules/accounting/includes/views/journal/single.php:98
+#: modules/accounting/includes/views/expense/vendor-credit-single.php:100
+#: modules/accounting/includes/views/journal/single.php:101
 #: modules/accounting/includes/views/js-templates/bank.php:59
 #: modules/accounting/includes/views/sales/bank-ransfer-form.php:7
-#: modules/accounting/includes/views/sales/invoice-single.php:112
-#: modules/accounting/includes/views/sales/payment-single.php:91
+#: modules/accounting/includes/views/sales/invoice-single.php:127
+#: modules/accounting/includes/views/sales/payment-single.php:109
 msgid "Amount"
 msgstr ""
 
@@ -7671,7 +7778,7 @@ msgstr ""
 #: modules/accounting/includes/views/bank/invoice.php:12
 #: modules/accounting/includes/views/expense/payment-voucher-single.php:16
 #: modules/accounting/includes/views/journal/single.php:13
-#: modules/accounting/includes/views/sales/invoice-single.php:20
+#: modules/accounting/includes/views/sales/invoice-single.php:23
 msgid "More Details"
 msgstr ""
 
@@ -7679,94 +7786,92 @@ msgstr ""
 #: modules/accounting/includes/views/expense/payment-voucher-single.php:31
 #: modules/accounting/includes/views/expense/vendor-credit-single.php:25
 #: modules/accounting/includes/views/journal/single.php:28
-#: modules/accounting/includes/views/sales/invoice-single.php:36
-#: modules/accounting/includes/views/sales/payment-single.php:19
+#: modules/accounting/includes/views/sales/invoice-single.php:39
+#: modules/accounting/includes/views/sales/payment-single.php:23
 #: modules/hrm/views/employee/single.php:79
 msgid "Print"
 msgstr ""
 
 #: modules/accounting/includes/views/bank/invoice.php:35
-#: modules/accounting/includes/views/journal/single.php:44
-#: modules/accounting/includes/views/sales/payment-single.php:31
 msgid "Payment: <strong>%d</strong>"
 msgstr ""
 
 #: modules/accounting/includes/views/bank/invoice.php:56
-#: modules/accounting/includes/views/expense/payment-voucher-single.php:68
-#: modules/accounting/includes/views/expense/vendor-credit-single.php:58
-#: modules/accounting/includes/views/sales/invoice-single.php:73
-#: modules/accounting/includes/views/sales/payment-single.php:52
+#: modules/accounting/includes/views/expense/payment-voucher-single.php:71
+#: modules/accounting/includes/views/expense/vendor-credit-single.php:61
+#: modules/accounting/includes/views/sales/invoice-single.php:88
+#: modules/accounting/includes/views/sales/payment-single.php:70
 msgid "Bill to:"
 msgstr ""
 
 #: modules/accounting/includes/views/bank/invoice.php:64
-#: modules/accounting/includes/views/journal/single.php:68
-#: modules/accounting/includes/views/sales/payment-single.php:60
+#: modules/accounting/includes/views/journal/single.php:71
+#: modules/accounting/includes/views/sales/payment-single.php:78
 msgid "Payment Number"
 msgstr ""
 
 #: modules/accounting/includes/views/bank/invoice.php:68
-#: modules/accounting/includes/views/expense/payment-voucher.php:123
-#: modules/accounting/includes/views/journal/single.php:72
-#: modules/accounting/includes/views/js-templates/invoice.php:18
-#: modules/accounting/includes/views/js-templates/vendor-credit-single.php:18
-#: modules/accounting/includes/views/sales/payment-new.php:119
-#: modules/accounting/includes/views/sales/payment-single.php:64
+#: modules/accounting/includes/views/expense/payment-voucher.php:136
+#: modules/accounting/includes/views/journal/single.php:75
+#: modules/accounting/includes/views/js-templates/invoice.php:31
+#: modules/accounting/includes/views/js-templates/vendor-credit-single.php:31
+#: modules/accounting/includes/views/sales/payment-new.php:132
+#: modules/accounting/includes/views/sales/payment-single.php:82
 msgid "Payment Date"
 msgstr ""
 
 #: modules/accounting/includes/views/bank/invoice.php:76
-#: modules/accounting/includes/views/expense/payment-voucher-single.php:88
-#: modules/accounting/includes/views/expense/vendor-credit-single.php:78
-#: modules/accounting/includes/views/journal/single.php:80
-#: modules/accounting/includes/views/sales/invoice-single.php:93
-#: modules/accounting/includes/views/sales/payment-single.php:72
+#: modules/accounting/includes/views/expense/payment-voucher-single.php:91
+#: modules/accounting/includes/views/expense/vendor-credit-single.php:81
+#: modules/accounting/includes/views/journal/single.php:83
+#: modules/accounting/includes/views/sales/invoice-single.php:108
+#: modules/accounting/includes/views/sales/payment-single.php:90
 msgid "Amount Due"
 msgstr ""
 
 #: modules/accounting/includes/views/bank/invoice.php:90
-#: modules/accounting/includes/views/expense/payment-voucher-single.php:102
+#: modules/accounting/includes/views/expense/payment-voucher-single.php:105
 #: modules/accounting/includes/views/expense/single.php:21
-#: modules/accounting/includes/views/expense/vendor-credit-single.php:92
-#: modules/accounting/includes/views/journal/single.php:94
-#: modules/accounting/includes/views/sales/invoice-single.php:107
-#: modules/accounting/includes/views/sales/payment-single.php:86
+#: modules/accounting/includes/views/expense/vendor-credit-single.php:95
+#: modules/accounting/includes/views/journal/single.php:97
+#: modules/accounting/includes/views/sales/invoice-single.php:122
+#: modules/accounting/includes/views/sales/payment-single.php:104
 msgid "Product"
 msgstr ""
 
 #: modules/accounting/includes/views/bank/invoice.php:91
-#: modules/accounting/includes/views/expense/payment-voucher-single.php:103
-#: modules/accounting/includes/views/expense/vendor-credit-single.php:93
-#: modules/accounting/includes/views/sales/invoice-single.php:108
-#: modules/accounting/includes/views/sales/payment-single.php:87
+#: modules/accounting/includes/views/expense/payment-voucher-single.php:106
+#: modules/accounting/includes/views/expense/vendor-credit-single.php:96
+#: modules/accounting/includes/views/sales/invoice-single.php:123
+#: modules/accounting/includes/views/sales/payment-single.php:105
 msgid "Quantity"
 msgstr ""
 
 #: modules/accounting/includes/views/bank/invoice.php:92
 #: modules/accounting/includes/views/common/transaction-table.php:7
-#: modules/accounting/includes/views/expense/payment-voucher-single.php:104
+#: modules/accounting/includes/views/expense/payment-voucher-single.php:107
 #: modules/accounting/includes/views/expense/single.php:24
-#: modules/accounting/includes/views/expense/vendor-credit-single.php:94
-#: modules/accounting/includes/views/journal/single.php:96
-#: modules/accounting/includes/views/sales/invoice-single.php:109
-#: modules/accounting/includes/views/sales/payment-single.php:88
+#: modules/accounting/includes/views/expense/vendor-credit-single.php:97
+#: modules/accounting/includes/views/journal/single.php:99
+#: modules/accounting/includes/views/sales/invoice-single.php:124
+#: modules/accounting/includes/views/sales/payment-single.php:106
 msgid "Unit Price"
 msgstr ""
 
 #: modules/accounting/includes/views/bank/invoice.php:93
 #: modules/accounting/includes/views/common/transaction-table.php:8
-#: modules/accounting/includes/views/expense/payment-voucher-single.php:105
+#: modules/accounting/includes/views/expense/payment-voucher-single.php:108
 #: modules/accounting/includes/views/expense/single.php:25
-#: modules/accounting/includes/views/expense/vendor-credit-single.php:95
-#: modules/accounting/includes/views/sales/invoice-single.php:110
-#: modules/accounting/includes/views/sales/payment-single.php:89
+#: modules/accounting/includes/views/expense/vendor-credit-single.php:98
+#: modules/accounting/includes/views/sales/invoice-single.php:125
+#: modules/accounting/includes/views/sales/payment-single.php:107
 msgid "Discount"
 msgstr ""
 
 #: modules/accounting/includes/views/bank/invoice.php:127
-#: modules/accounting/includes/views/expense/payment-voucher-single.php:145
-#: modules/accounting/includes/views/journal/single.php:132
-#: modules/accounting/includes/views/sales/payment-single.php:129
+#: modules/accounting/includes/views/expense/payment-voucher-single.php:148
+#: modules/accounting/includes/views/journal/single.php:135
+#: modules/accounting/includes/views/sales/payment-single.php:147
 msgid "Total Paid"
 msgstr ""
 
@@ -7788,20 +7893,21 @@ msgstr ""
 
 #: modules/accounting/includes/views/common/memo.php:6
 #: modules/accounting/includes/views/js-templates/bank.php:71
-#: modules/accounting/includes/views/js-templates/invoice.php:69
-#: modules/accounting/includes/views/js-templates/vendor-credit-single.php:69
+#: modules/accounting/includes/views/js-templates/invoice.php:82
+#: modules/accounting/includes/views/js-templates/vendor-credit-single.php:82
 msgid "Memo"
 msgstr ""
 
 #: modules/accounting/includes/views/common/memo.php:8
-#: modules/accounting/includes/views/js-templates/invoice.php:71
-#: modules/accounting/includes/views/js-templates/vendor-credit-single.php:71
+#: modules/accounting/includes/views/js-templates/invoice.php:84
+#: modules/accounting/includes/views/js-templates/vendor-credit-single.php:84
 msgid "Internal information"
 msgstr ""
 
 #: modules/accounting/includes/views/common/memo.php:22
-#: modules/accounting/includes/views/js-templates/invoice.php:111
-#: modules/accounting/includes/views/js-templates/vendor-credit-single.php:111
+#: modules/accounting/includes/views/js-templates/invoice.php:124
+#: modules/accounting/includes/views/js-templates/send-invoice.php:40
+#: modules/accounting/includes/views/js-templates/vendor-credit-single.php:124
 msgid "Attachment"
 msgstr ""
 
@@ -7842,7 +7948,7 @@ msgstr ""
 
 #: modules/accounting/includes/views/common/transaction-table.php:4
 #: modules/accounting/includes/views/expense/single.php:20
-#: modules/accounting/includes/views/journal/new.php:45
+#: modules/accounting/includes/views/journal/new.php:57
 msgid "Account"
 msgstr ""
 
@@ -7852,10 +7958,10 @@ msgid "Qty"
 msgstr ""
 
 #: modules/accounting/includes/views/common/transaction-table.php:9
-#: modules/accounting/includes/views/expense/payment-voucher-single.php:106
-#: modules/accounting/includes/views/expense/vendor-credit-single.php:96
-#: modules/accounting/includes/views/sales/invoice-single.php:111
-#: modules/accounting/includes/views/sales/payment-single.php:90
+#: modules/accounting/includes/views/expense/payment-voucher-single.php:109
+#: modules/accounting/includes/views/expense/vendor-credit-single.php:99
+#: modules/accounting/includes/views/sales/invoice-single.php:126
+#: modules/accounting/includes/views/sales/payment-single.php:108
 msgid "Tax(%)"
 msgstr ""
 
@@ -7869,7 +7975,7 @@ msgid "Subtotal"
 msgstr ""
 
 #: modules/accounting/includes/views/common/transaction-table.php:78
-#: modules/accounting/includes/views/journal/new.php:140
+#: modules/accounting/includes/views/journal/new.php:152
 msgid "+ Add Line"
 msgstr ""
 
@@ -7914,22 +8020,22 @@ msgstr ""
 msgid "Edit Voucher"
 msgstr ""
 
-#: modules/accounting/includes/views/expense/payment-voucher-single.php:47
-msgid "Voucher: <strong>%d</strong>"
+#: modules/accounting/includes/views/expense/payment-voucher-single.php:49
+msgid "Voucher: <strong>%s</strong>"
 msgstr ""
 
-#: modules/accounting/includes/views/expense/payment-voucher-single.php:76
+#: modules/accounting/includes/views/expense/payment-voucher-single.php:79
 msgid "Voucher Number"
 msgstr ""
 
-#: modules/accounting/includes/views/expense/payment-voucher-single.php:80
+#: modules/accounting/includes/views/expense/payment-voucher-single.php:83
 msgid "Voucher Date"
 msgstr ""
 
-#: modules/accounting/includes/views/expense/payment-voucher-single.php:137
-#: modules/accounting/includes/views/expense/vendor-credit-single.php:127
-#: modules/accounting/includes/views/sales/invoice-single.php:143
-#: modules/accounting/includes/views/sales/payment-single.php:121
+#: modules/accounting/includes/views/expense/payment-voucher-single.php:140
+#: modules/accounting/includes/views/expense/vendor-credit-single.php:130
+#: modules/accounting/includes/views/sales/invoice-single.php:160
+#: modules/accounting/includes/views/sales/payment-single.php:139
 msgid "Sub Total"
 msgstr ""
 
@@ -7938,57 +8044,68 @@ msgstr ""
 #: modules/accounting/includes/views/expense/vendor-credit.php:91
 #: modules/accounting/includes/views/js-templates/bank.php:24
 #: modules/accounting/includes/views/js-templates/bank.php:45
-#: modules/accounting/includes/views/js-templates/invoice.php:38
-#: modules/accounting/includes/views/js-templates/vendor-credit-single.php:38
-#: modules/accounting/includes/views/sales/invoice-new.php:82
+#: modules/accounting/includes/views/js-templates/invoice.php:51
+#: modules/accounting/includes/views/js-templates/vendor-credit-single.php:51
+#: modules/accounting/includes/views/sales/invoice-new.php:81
 #: modules/accounting/includes/views/sales/payment-new.php:83
-#: modules/accounting/includes/views/sales/payment-new.php:140
+#: modules/accounting/includes/views/sales/payment-new.php:153
 msgid "&mdash; Select &mdash;"
 msgstr ""
 
 #: modules/accounting/includes/views/expense/payment-voucher.php:101
 #: modules/accounting/includes/views/js-templates/bank.php:17
-#: modules/accounting/includes/views/js-templates/vendor-credit-single.php:31
+#: modules/accounting/includes/views/js-templates/vendor-credit-single.php:44
 msgid "From Account"
 msgstr ""
 
 #: modules/accounting/includes/views/expense/payment-voucher.php:103
 #: modules/accounting/includes/views/js-templates/bank.php:19
 #: modules/accounting/includes/views/js-templates/bank.php:40
-#: modules/accounting/includes/views/js-templates/invoice.php:33
-#: modules/accounting/includes/views/js-templates/vendor-credit-single.php:33
-#: modules/accounting/includes/views/sales/payment-new.php:135
+#: modules/accounting/includes/views/js-templates/invoice.php:46
+#: modules/accounting/includes/views/js-templates/vendor-credit-single.php:46
+#: modules/accounting/includes/views/sales/payment-new.php:148
 msgid "Select an Account"
 msgstr ""
 
-#: modules/accounting/includes/views/expense/payment-voucher.php:137
+#: modules/accounting/includes/views/expense/payment-voucher.php:119
+#: modules/accounting/includes/views/expense/vendor-credit.php:119
+#: modules/accounting/includes/views/journal/new.php:21
+#: modules/accounting/includes/views/js-templates/invoice.php:18
+#: modules/accounting/includes/views/js-templates/vendor-credit-single.php:18
+#: modules/accounting/includes/views/sales/invoice-new.php:112
+#: modules/accounting/includes/views/sales/invoice-single.php:96
+#: modules/accounting/includes/views/sales/payment-new.php:115
+msgid "Invoice Number"
+msgstr ""
+
+#: modules/accounting/includes/views/expense/payment-voucher.php:150
 #: modules/accounting/includes/views/expense/vendor-credit.php:106
 #: modules/accounting/includes/views/journal/new.php:10
 #: modules/accounting/includes/views/js-templates/invoice.php:6
 #: modules/accounting/includes/views/js-templates/vendor-credit-single.php:6
-#: modules/accounting/includes/views/sales/invoice-new.php:101
+#: modules/accounting/includes/views/sales/invoice-new.php:100
 #: modules/accounting/includes/views/sales/payment-new.php:102
 msgid "Reference"
 msgstr ""
 
 #: modules/accounting/includes/views/expense/single.php:11
-#: modules/accounting/includes/views/expense/vendor-credit.php:153
-#: modules/accounting/includes/views/sales/invoice-new.php:148
+#: modules/accounting/includes/views/expense/vendor-credit.php:166
+#: modules/accounting/includes/views/sales/invoice-new.php:159
 msgid "Billing Address"
 msgstr ""
 
 #: modules/accounting/includes/views/expense/single.php:12
-#: modules/accounting/includes/views/expense/vendor-credit.php:123
+#: modules/accounting/includes/views/expense/vendor-credit.php:136
 msgid "Issue Date"
 msgstr ""
 
 #: modules/accounting/includes/views/expense/single.php:26
-#: modules/accounting/includes/views/reports/income-statement/statement.php:55
+#: modules/accounting/includes/views/reports/income-statement/statement.php:61
 #: modules/accounting/includes/views/reports/tax/sales-tax.php:13
 msgid "Tax"
 msgstr ""
 
-#: modules/accounting/includes/views/expense/transaction-list.php:6
+#: modules/accounting/includes/views/expense/transaction-list.php:5
 msgid "Expense Transactions"
 msgstr ""
 
@@ -7998,32 +8115,103 @@ msgstr ""
 
 #: modules/accounting/includes/views/expense/vendor-credit-single.php:29
 #: modules/accounting/includes/views/journal/single.php:32
-#: modules/accounting/includes/views/sales/invoice-single.php:40
-#: modules/accounting/includes/views/sales/payment-single.php:23
+#: modules/accounting/includes/views/sales/invoice-single.php:44
+#: modules/accounting/includes/views/sales/payment-single.php:28
 msgid "Edit Invoice"
 msgstr ""
 
-#: modules/accounting/includes/views/expense/vendor-credit-single.php:37
-msgid "Credit: <strong>%d</strong>"
+#: modules/accounting/includes/views/expense/vendor-credit-single.php:39
+msgid "Credit: <strong>%s</strong>"
 msgstr ""
 
-#: modules/accounting/includes/views/expense/vendor-credit-single.php:66
+#: modules/accounting/includes/views/expense/vendor-credit-single.php:69
 msgid "Credit Number"
 msgstr ""
 
-#: modules/accounting/includes/views/expense/vendor-credit-single.php:70
+#: modules/accounting/includes/views/expense/vendor-credit-single.php:73
 msgid "Credit Date"
 msgstr ""
 
-#: modules/accounting/includes/views/expense/vendor-credit-single.php:135
-#: modules/accounting/includes/views/sales/invoice-single.php:151
+#: modules/accounting/includes/views/expense/vendor-credit-single.php:138
+#: modules/accounting/includes/views/sales/invoice-single.php:168
 msgid "Total Related Payments"
 msgstr ""
 
 #: modules/accounting/includes/views/expense/vendor-credit.php:93
-#: modules/accounting/includes/views/sales/invoice-new.php:78
+#: modules/accounting/includes/views/sales/invoice-new.php:77
 #: modules/accounting/includes/views/sales/payment-new.php:79
 msgid "Select a payee"
+msgstr ""
+
+#: modules/accounting/includes/views/invoice.php:23
+msgid "INVOICE"
+msgstr ""
+
+#: modules/accounting/includes/views/invoice.php:32
+msgid "INVOICE NUMBER"
+msgstr ""
+
+#: modules/accounting/includes/views/invoice.php:37
+msgid "REFERENCE"
+msgstr ""
+
+#: modules/accounting/includes/views/invoice.php:45
+msgid "ISSUE DATE"
+msgstr ""
+
+#: modules/accounting/includes/views/invoice.php:50
+#: modules/accounting/includes/views/payment.php:46
+msgid "DUE DATE"
+msgstr ""
+
+#: modules/accounting/includes/views/invoice.php:57
+#: modules/accounting/includes/views/payment.php:58
+msgid "FROM"
+msgstr ""
+
+#: modules/accounting/includes/views/invoice.php:64
+#: modules/accounting/includes/views/payment.php:65
+msgid "TO"
+msgstr ""
+
+#: modules/accounting/includes/views/invoice.php:68
+#: modules/accounting/includes/views/payment.php:70
+msgid "PRODUCT"
+msgstr ""
+
+#: modules/accounting/includes/views/invoice.php:68
+#: modules/accounting/includes/views/payment.php:70
+msgid "QUANTITY"
+msgstr ""
+
+#: modules/accounting/includes/views/invoice.php:68
+#: modules/accounting/includes/views/payment.php:70
+msgid "UNIT PRICE"
+msgstr ""
+
+#: modules/accounting/includes/views/invoice.php:68
+#: modules/accounting/includes/views/payment.php:70
+msgid "DISCOUNT"
+msgstr ""
+
+#: modules/accounting/includes/views/invoice.php:68
+#: modules/accounting/includes/views/payment.php:70
+msgid "TAX(%)"
+msgstr ""
+
+#: modules/accounting/includes/views/invoice.php:68
+#: modules/accounting/includes/views/payment.php:70
+msgid "AMOUNT"
+msgstr ""
+
+#: modules/accounting/includes/views/invoice.php:77
+#: modules/accounting/includes/views/payment.php:81
+msgid "SUB TOTAL"
+msgstr ""
+
+#: modules/accounting/includes/views/invoice.php:78
+#: modules/accounting/includes/views/payment.php:82
+msgid "TOTAL"
 msgstr ""
 
 #: modules/accounting/includes/views/journal/list.php:5
@@ -8038,8 +8226,13 @@ msgstr ""
 msgid "New Journal Entry"
 msgstr ""
 
-#: modules/accounting/includes/views/journal/new.php:157
+#: modules/accounting/includes/views/journal/new.php:169
 msgid "Add Journal Entry"
+msgstr ""
+
+#: modules/accounting/includes/views/journal/single.php:46
+#: modules/accounting/includes/views/sales/payment-single.php:47
+msgid "Payment: <strong>%s</strong>"
 msgstr ""
 
 #: modules/accounting/includes/views/js-templates/bank.php:29
@@ -8051,18 +8244,18 @@ msgstr ""
 msgid "To Account"
 msgstr ""
 
-#: modules/accounting/includes/views/js-templates/invoice.php:31
-#: modules/accounting/includes/views/sales/payment-new.php:133
+#: modules/accounting/includes/views/js-templates/invoice.php:44
+#: modules/accounting/includes/views/sales/payment-new.php:146
 msgid "Deposit To"
 msgstr ""
 
-#: modules/accounting/includes/views/js-templates/invoice.php:45
-#: modules/accounting/includes/views/js-templates/vendor-credit-single.php:45
+#: modules/accounting/includes/views/js-templates/invoice.php:58
+#: modules/accounting/includes/views/js-templates/vendor-credit-single.php:58
 msgid "Due Amount"
 msgstr ""
 
-#: modules/accounting/includes/views/js-templates/invoice.php:57
-#: modules/accounting/includes/views/js-templates/vendor-credit-single.php:57
+#: modules/accounting/includes/views/js-templates/invoice.php:70
+#: modules/accounting/includes/views/js-templates/vendor-credit-single.php:70
 msgid "Payment Amount"
 msgstr ""
 
@@ -8088,6 +8281,23 @@ msgstr ""
 msgid "Add More"
 msgstr ""
 
+#: modules/accounting/includes/views/js-templates/send-invoice.php:5
+#: modules/hrm/views/employee/tab-general.php:87
+#: modules/hrm/views/js-templates/new-leave-request.php:28
+#: modules/hrm/views/js-templates/work-experience.php:36
+#: modules/hrm/views/leave/holiday.php:53
+#: modules/hrm/views/leave/new-request.php:47
+msgid "To"
+msgstr ""
+
+#: modules/accounting/includes/views/js-templates/send-invoice.php:13
+msgid "Add Another Recipient"
+msgstr ""
+
+#: modules/accounting/includes/views/js-templates/send-invoice.php:45
+msgid "Attach the invoice as PDF"
+msgstr ""
+
 #: modules/accounting/includes/views/js-templates/tax-items.php:5
 msgid "Component Name"
 msgstr ""
@@ -8105,12 +8315,36 @@ msgstr ""
 msgid "No data found!"
 msgstr ""
 
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:46
+#: modules/accounting/includes/views/payment.php:24
+msgid "PAYMENT"
+msgstr ""
+
+#: modules/accounting/includes/views/payment.php:33
+msgid "PAYMENT NUMBER"
+msgstr ""
+
+#: modules/accounting/includes/views/payment.php:41
+msgid "PAYMENT DATE"
+msgstr ""
+
+#: modules/accounting/includes/views/payment.php:51
+msgid "AMOUNT DUE"
+msgstr ""
+
+#: modules/accounting/includes/views/payment.php:83
+msgid "TOTAL RP"
+msgstr ""
+
+#: modules/accounting/includes/views/payment.php:86
+msgid "PAID"
+msgstr ""
+
+#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:24
 msgid "Accounting Reports: Balance Sheet"
 msgstr ""
 
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:51
-#: modules/accounting/includes/views/reports/income-statement/statement.php:17
+#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:29
+#: modules/accounting/includes/views/reports/income-statement/statement.php:23
 #: modules/accounting/includes/views/reports/tax/sales-tax.php:8
 #: modules/accounting/includes/views/reports/tax/single-sales-tax.php:14
 #: modules/hrm/views/employee/tab-general.php:86
@@ -8121,44 +8355,44 @@ msgstr ""
 msgid "From"
 msgstr ""
 
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:51
-#: modules/accounting/includes/views/reports/income-statement/statement.php:17
+#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:29
+#: modules/accounting/includes/views/reports/income-statement/statement.php:23
 #: modules/accounting/includes/views/reports/tax/sales-tax.php:8
 #: modules/accounting/includes/views/reports/tax/single-sales-tax.php:14
 msgid "to"
 msgstr ""
 
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:62
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:114
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:167
+#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:40
+#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:92
+#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:145
 msgid "Accounts"
 msgstr ""
 
-#: modules/accounting/includes/views/reports/income-statement/statement.php:11
+#: modules/accounting/includes/views/reports/income-statement/statement.php:17
 msgid "Accounting Reports: Income Statement"
 msgstr ""
 
-#: modules/accounting/includes/views/reports/income-statement/statement.php:29
+#: modules/accounting/includes/views/reports/income-statement/statement.php:35
 msgid "Revenue"
 msgstr ""
 
-#: modules/accounting/includes/views/reports/income-statement/statement.php:33
+#: modules/accounting/includes/views/reports/income-statement/statement.php:39
 msgid "Cost of goods sold"
 msgstr ""
 
-#: modules/accounting/includes/views/reports/income-statement/statement.php:37
+#: modules/accounting/includes/views/reports/income-statement/statement.php:43
 msgid "Gross income"
 msgstr ""
 
-#: modules/accounting/includes/views/reports/income-statement/statement.php:44
+#: modules/accounting/includes/views/reports/income-statement/statement.php:50
 msgid "Overhead "
 msgstr ""
 
-#: modules/accounting/includes/views/reports/income-statement/statement.php:48
+#: modules/accounting/includes/views/reports/income-statement/statement.php:54
 msgid "Operating income"
 msgstr ""
 
-#: modules/accounting/includes/views/reports/income-statement/statement.php:59
+#: modules/accounting/includes/views/reports/income-statement/statement.php:65
 msgid "Net income"
 msgstr ""
 
@@ -8238,38 +8472,80 @@ msgstr ""
 msgid "Invoice ID"
 msgstr ""
 
-#: modules/accounting/includes/views/sales/invoice-new.php:44
+#: modules/accounting/includes/views/sales/invoice-new.php:43
 msgid "New Invoice"
 msgstr ""
 
-#: modules/accounting/includes/views/sales/invoice-new.php:118
-#: modules/accounting/includes/views/sales/invoice-single.php:85
+#: modules/accounting/includes/views/sales/invoice-new.php:129
+#: modules/accounting/includes/views/sales/invoice-single.php:100
 msgid "Invoice Date"
 msgstr ""
 
-#: modules/accounting/includes/views/sales/invoice-single.php:18
+#: modules/accounting/includes/views/sales/invoice-single.php:15
+msgid "Invoice#"
+msgstr ""
+
+#: modules/accounting/includes/views/sales/invoice-single.php:15
+#: modules/accounting/includes/views/sales/payment-single.php:10
+msgid " from "
+msgstr ""
+
+#: modules/accounting/includes/views/sales/invoice-single.php:21
 msgid "Invoice "
 msgstr ""
 
-#: modules/accounting/includes/views/sales/invoice-single.php:35
+#: modules/accounting/includes/views/sales/invoice-single.php:38
 msgid "Add Payment"
 msgstr ""
 
-#: modules/accounting/includes/views/sales/invoice-single.php:52
-msgid "Invoice: <strong>%d</strong>"
+#: modules/accounting/includes/views/sales/invoice-single.php:40
+#: modules/accounting/includes/views/sales/payment-single.php:24
+msgid "More Actions"
 msgstr ""
 
-#: modules/accounting/includes/views/sales/invoice-single.php:81
-msgid "Invoice Number"
+#: modules/accounting/includes/views/sales/invoice-single.php:53
+#: modules/accounting/includes/views/sales/payment-single.php:36
+msgid "Duplicate"
+msgstr ""
+
+#: modules/accounting/includes/views/sales/invoice-single.php:54
+#: modules/accounting/includes/views/sales/payment-single.php:37
+msgid "Export as PDF"
+msgstr ""
+
+#: modules/accounting/includes/views/sales/invoice-single.php:55
+msgid "Send Invoice"
+msgstr ""
+
+#: modules/accounting/includes/views/sales/invoice-single.php:55
+#: modules/accounting/includes/views/sales/payment-single.php:38
+msgid "Send"
+msgstr ""
+
+#: modules/accounting/includes/views/sales/invoice-single.php:55
+#: modules/accounting/includes/views/sales/payment-single.php:38
+msgid "Send Via Email"
+msgstr ""
+
+#: modules/accounting/includes/views/sales/invoice-single.php:66
+msgid "Invoice: <strong>%s</strong>"
 msgstr ""
 
 #: modules/accounting/includes/views/sales/payment-new.php:50
-#: modules/accounting/includes/views/sales/payment-new.php:176
+#: modules/accounting/includes/views/sales/payment-new.php:189
 msgid "Receive Payment"
 msgstr ""
 
-#: modules/accounting/includes/views/sales/payment-new.php:181
+#: modules/accounting/includes/views/sales/payment-new.php:194
 msgid "Save as Draft"
+msgstr ""
+
+#: modules/accounting/includes/views/sales/payment-single.php:10
+msgid "Payment#"
+msgstr ""
+
+#: modules/accounting/includes/views/sales/payment-single.php:38
+msgid "Send Bill"
 msgstr ""
 
 #: modules/accounting/includes/views/sales/transaction-list.php:6
@@ -8305,9 +8581,9 @@ msgid "create successfull"
 msgstr ""
 
 #: modules/accounting/includes/views/user-form-rows.php:35
-#: modules/crm/includes/functions-customer.php:1547
-#: modules/crm/includes/functions-customer.php:2456
-#: modules/crm/views/contact/single.php:60
+#: modules/crm/includes/functions-customer.php:1580
+#: modules/crm/includes/functions-customer.php:2366
+#: modules/crm/views/contact/single.php:59
 #: modules/crm/views/js-templates/new-customer.php:37
 #: modules/hrm/views/employee/tab-general.php:8
 #: modules/hrm/views/js-templates/new-employee.php:28
@@ -8319,9 +8595,9 @@ msgid "John"
 msgstr ""
 
 #: modules/accounting/includes/views/user-form-rows.php:47
-#: modules/crm/includes/functions-customer.php:1561
-#: modules/crm/includes/functions-customer.php:2461
-#: modules/crm/views/contact/single.php:61
+#: modules/crm/includes/functions-customer.php:1594
+#: modules/crm/includes/functions-customer.php:2371
+#: modules/crm/views/contact/single.php:60
 #: modules/crm/views/js-templates/new-customer.php:47
 #: modules/hrm/views/employee/tab-general.php:9
 #: modules/hrm/views/js-templates/new-employee.php:47
@@ -8361,7 +8637,7 @@ msgid "http://domain.com"
 msgstr ""
 
 #: modules/accounting/includes/views/user-form-rows.php:140
-#: modules/crm/includes/functions-customer.php:1498
+#: modules/crm/includes/functions-customer.php:1531
 #: modules/crm/views/js-templates/new-customer.php:262
 #: modules/hrm/views/employee/single.php:105
 #: modules/hrm/views/employee/tab-notes.php:2
@@ -8375,17 +8651,17 @@ msgstr ""
 
 #: modules/accounting/includes/views/user-form-rows.php:152
 #: modules/accounting/includes/views/user-form-rows.php:157
-#: modules/crm/includes/functions-customer.php:2496
+#: modules/crm/includes/functions-customer.php:2406
 #: modules/crm/views/company/single.php:66
-#: modules/crm/views/contact/single.php:66
+#: modules/crm/views/contact/single.php:65
 msgid "Street 1"
 msgstr ""
 
 #: modules/accounting/includes/views/user-form-rows.php:164
 #: modules/accounting/includes/views/user-form-rows.php:169
-#: modules/crm/includes/functions-customer.php:2501
+#: modules/crm/includes/functions-customer.php:2411
 #: modules/crm/views/company/single.php:67
-#: modules/crm/views/contact/single.php:67
+#: modules/crm/views/contact/single.php:66
 msgid "Street 2"
 msgstr ""
 
@@ -8402,10 +8678,10 @@ msgid "Post Code"
 msgstr ""
 
 #: modules/accounting/includes/views/user-form-rows.php:205
-#: modules/crm/includes/functions-customer.php:1482
-#: modules/crm/includes/functions-customer.php:2516
+#: modules/crm/includes/functions-customer.php:1515
+#: modules/crm/includes/functions-customer.php:2426
 #: modules/crm/views/company/single.php:71
-#: modules/crm/views/contact/single.php:71
+#: modules/crm/views/contact/single.php:70
 #: modules/hrm/views/employee/tab-general.php:53
 msgid "Postal Code"
 msgstr ""
@@ -8607,177 +8883,213 @@ msgstr ""
 msgid "CRM Agent"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:201
+#: modules/crm/includes/class-ajax.php:205
 msgid "Type must be required"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:232
+#: modules/crm/includes/class-ajax.php:236
 msgid "No company or contact found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:322
+#: modules/crm/includes/class-ajax.php:265
+msgid "You don't have any permission to add new contact"
+msgstr ""
+
+#: modules/crm/includes/class-ajax.php:269
+msgid "You don't have any permission to edit this contact"
+msgstr ""
+
+#: modules/crm/includes/class-ajax.php:333
 msgid "Cotact does not exists."
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:405
+#: modules/crm/includes/class-ajax.php:364
+msgid "You don't have any permission to delete this contact"
+msgstr ""
+
+#: modules/crm/includes/class-ajax.php:370
+msgid "Can not delete - You do not own this contact(s)"
+msgstr ""
+
+#: modules/crm/includes/class-ajax.php:435
 msgid "Contact must be required"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:409
+#: modules/crm/includes/class-ajax.php:439
 msgid "Atleast one group must be selected"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:423
+#: modules/crm/includes/class-ajax.php:451
+msgid "Can not assign any group - You do not own this contact(s)"
+msgstr ""
+
+#: modules/crm/includes/class-ajax.php:465
 msgid "Selected contact are successfully subscribed"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:472
+#: modules/crm/includes/class-ajax.php:514
 msgid "Company already assigned. Choose another company"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:476
+#: modules/crm/includes/class-ajax.php:518
 msgid "Contact already assigned. Choose another contact"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:480
-#: modules/crm/includes/class-ajax.php:601
-#: modules/crm/includes/functions-customer.php:376
-#: modules/crm/includes/functions-customer.php:1218
-#: modules/crm/includes/functions-customer.php:2628
+#: modules/crm/includes/class-ajax.php:522
+#: modules/crm/includes/class-ajax.php:643
+#: modules/crm/includes/functions-customer.php:388
+#: modules/crm/includes/functions-customer.php:1249
+#: modules/crm/includes/functions-customer.php:2538
 msgid "No contact found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:491
+#: modules/crm/includes/class-ajax.php:533
 msgid "Company has been added successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:506
+#: modules/crm/includes/class-ajax.php:548
 msgid "Company has been updated successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:522
+#: modules/crm/includes/class-ajax.php:564
 msgid "hello"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:597
+#: modules/crm/includes/class-ajax.php:639
 msgid "Please select a user"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:606
+#: modules/crm/includes/class-ajax.php:652
 msgid "Assing to agent successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:621
+#: modules/crm/includes/class-ajax.php:667
 msgid "Contact Group Name must be required"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:632
+#: modules/crm/includes/class-ajax.php:678
 msgid "Contact group save successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:667
-#: modules/crm/includes/class-ajax.php:1209
-#: modules/crm/includes/class-ajax.php:1235
+#: modules/crm/includes/class-ajax.php:713
+#: modules/crm/includes/class-ajax.php:1271
+#: modules/crm/includes/class-ajax.php:1297
 msgid "Somthing wrong, Please try later"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:672
-#: modules/crm/includes/class-ajax.php:767
+#: modules/crm/includes/class-ajax.php:718
+#: modules/crm/includes/class-ajax.php:825
 msgid "Contact group delete successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:704
+#: modules/crm/includes/class-ajax.php:750
 msgid "Contact not found. Try again"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:714
+#: modules/crm/includes/class-ajax.php:760
 msgid "Subscribed on"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:715
+#: modules/crm/includes/class-ajax.php:761
 msgid "Unsubscribed on"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:746
+#: modules/crm/includes/class-ajax.php:784
+msgid "No user data found"
+msgstr ""
+
+#: modules/crm/includes/class-ajax.php:788
+msgid "You don't have any permission to assign this contact in a group"
+msgstr ""
+
+#: modules/crm/includes/class-ajax.php:800
 msgid "Succesfully subscriber for this user"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:762
-#: modules/crm/includes/class-ajax.php:784
+#: modules/crm/includes/class-ajax.php:816
+msgid "You don't have any permission to remove this contact from a group"
+msgstr ""
+
+#: modules/crm/includes/class-ajax.php:820
+#: modules/crm/includes/class-ajax.php:846
 msgid "No subscriber user found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:789
+#: modules/crm/includes/class-ajax.php:842
+msgid "You don't have any permission to assign this contact"
+msgstr ""
+
+#: modules/crm/includes/class-ajax.php:851
 msgid "Contact group edit successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:821
+#: modules/crm/includes/class-ajax.php:883
 msgid "No customer found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:830
+#: modules/crm/includes/class-ajax.php:892
 msgid "Succesfully added social profiles"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:859
+#: modules/crm/includes/class-ajax.php:921
 msgid "Customer not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:863
+#: modules/crm/includes/class-ajax.php:925
 msgid "Content must be required"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:882
-#: modules/crm/includes/class-ajax.php:945
-#: modules/crm/includes/class-ajax.php:975
-#: modules/crm/includes/class-ajax.php:991
-#: modules/crm/includes/class-ajax.php:1019
+#: modules/crm/includes/class-ajax.php:944
+#: modules/crm/includes/class-ajax.php:1007
+#: modules/crm/includes/class-ajax.php:1037
+#: modules/crm/includes/class-ajax.php:1053
+#: modules/crm/includes/class-ajax.php:1081
 msgid "Somthing is wrong, Please try later"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1047
+#: modules/crm/includes/class-ajax.php:1109
 msgid "Feeds Not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1052
+#: modules/crm/includes/class-ajax.php:1114
 msgid "Feed Deleted successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1068
+#: modules/crm/includes/class-ajax.php:1130
 msgid "No data not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1072
-#: modules/crm/includes/class-ajax.php:1120
-#: modules/crm/includes/class-ajax.php:1141
+#: modules/crm/includes/class-ajax.php:1134
+#: modules/crm/includes/class-ajax.php:1182
+#: modules/crm/includes/class-ajax.php:1203
 msgid "Search name not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1076
+#: modules/crm/includes/class-ajax.php:1138
 msgid "Contact Type not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1080
+#: modules/crm/includes/class-ajax.php:1142
 msgid "Search filters not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1086
+#: modules/crm/includes/class-ajax.php:1148
 msgid "Query not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1101
+#: modules/crm/includes/class-ajax.php:1163
 msgid "Search does not save"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1164
+#: modules/crm/includes/class-ajax.php:1226
 msgid "Schedule data no found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1218
+#: modules/crm/includes/class-ajax.php:1280
 msgid "No results found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1244
+#: modules/crm/includes/class-ajax.php:1306
 msgid "Save reply item delete successfully"
 msgstr ""
 
@@ -8832,14 +9144,14 @@ msgid "Select from saved searches"
 msgstr ""
 
 #: modules/crm/includes/class-contact-list-table.php:92
-#: modules/crm/views/company/single.php:111
-#: modules/crm/views/contact/single.php:111
+#: modules/crm/views/company/single.php:112
+#: modules/crm/views/contact/single.php:115
 msgid "Search a crm agent"
 msgstr ""
 
 #: modules/crm/includes/class-contact-list-table.php:93
-#: modules/crm/views/company/single.php:112
-#: modules/crm/views/contact/single.php:112
+#: modules/crm/views/company/single.php:113
+#: modules/crm/views/contact/single.php:116
 msgid "Select a agent"
 msgstr ""
 
@@ -8883,15 +9195,15 @@ msgstr ""
 msgid "View this customer"
 msgstr ""
 
-#: modules/crm/includes/class-contact-list-table.php:230
+#: modules/crm/includes/class-contact-list-table.php:229
 msgid "View"
 msgstr ""
 
-#: modules/crm/includes/class-contact-list-table.php:253
+#: modules/crm/includes/class-contact-list-table.php:252
 msgid "Add to Contact group"
 msgstr ""
 
-#: modules/crm/includes/class-contact-list-table.php:337
+#: modules/crm/includes/class-contact-list-table.php:336
 msgid "Advanced Search"
 msgstr ""
 
@@ -8945,8 +9257,8 @@ msgid "OK"
 msgstr ""
 
 #: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:74
-#: modules/crm/views/company/single.php:139
-#: modules/crm/views/contact/single.php:140
+#: modules/crm/views/company/single.php:141
+#: modules/crm/views/contact/single.php:146
 #: modules/crm/views/js-templates/new-customer.php:214
 msgid "Contact Group"
 msgstr ""
@@ -9028,237 +9340,245 @@ msgstr ""
 msgid "Me"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:198
+#: modules/crm/includes/functions-customer.php:210
 msgid "Lead"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:199
+#: modules/crm/includes/functions-customer.php:211
 msgid "Opportunity"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:200
+#: modules/crm/includes/functions-customer.php:212
 msgid "Subscriber"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:413
+#: modules/crm/includes/functions-customer.php:425
 msgid "No comapany found"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:484
+#: modules/crm/includes/functions-customer.php:496
 #: modules/crm/views/js-templates/new-customer.php:304
 msgid "Facebook"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:489
+#: modules/crm/includes/functions-customer.php:501
 #: modules/crm/views/js-templates/new-customer.php:312
 msgid "Twitter"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:494
+#: modules/crm/includes/functions-customer.php:506
 #: modules/crm/views/js-templates/new-customer.php:320
 msgid "Google Plus"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:499
+#: modules/crm/includes/functions-customer.php:511
 #: modules/crm/views/js-templates/new-customer.php:328
 msgid "Linkedin"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:518
+#: modules/crm/includes/functions-customer.php:530
 msgid "New Note"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:528
+#: modules/crm/includes/functions-customer.php:540
 msgid "Log Activity"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:533
+#: modules/crm/includes/functions-customer.php:545
 msgid "Schedule"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:538
+#: modules/crm/includes/functions-customer.php:550
 msgid "Tasks"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1181
+#: modules/crm/includes/functions-customer.php:901
+msgid "You have a schedule after %s %s at %s"
+msgstr ""
+
+#: modules/crm/includes/functions-customer.php:902
+msgid "ERP Schedule"
+msgstr ""
+
+#: modules/crm/includes/functions-customer.php:1212
 msgid "No group selected"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1185
+#: modules/crm/includes/functions-customer.php:1216
 msgid "No contact founds"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1381
-#: modules/crm/includes/functions-customer.php:1395
-#: modules/crm/includes/functions-customer.php:1409
-#: modules/crm/includes/functions-customer.php:1423
-#: modules/crm/includes/functions-customer.php:1437
-#: modules/crm/includes/functions-customer.php:1451
-#: modules/crm/includes/functions-customer.php:1465
-#: modules/crm/includes/functions-customer.php:1490
-#: modules/crm/includes/functions-customer.php:1504
-#: modules/crm/includes/functions-customer.php:1518
-#: modules/crm/includes/functions-customer.php:1553
-#: modules/crm/includes/functions-customer.php:1567
-#: modules/crm/includes/functions-customer.php:1592
+#: modules/crm/includes/functions-customer.php:1414
+#: modules/crm/includes/functions-customer.php:1428
+#: modules/crm/includes/functions-customer.php:1442
+#: modules/crm/includes/functions-customer.php:1456
+#: modules/crm/includes/functions-customer.php:1470
+#: modules/crm/includes/functions-customer.php:1484
+#: modules/crm/includes/functions-customer.php:1498
+#: modules/crm/includes/functions-customer.php:1523
+#: modules/crm/includes/functions-customer.php:1537
+#: modules/crm/includes/functions-customer.php:1551
+#: modules/crm/includes/functions-customer.php:1586
+#: modules/crm/includes/functions-customer.php:1600
+#: modules/crm/includes/functions-customer.php:1625
 msgid "contains"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1382
-#: modules/crm/includes/functions-customer.php:1396
-#: modules/crm/includes/functions-customer.php:1410
-#: modules/crm/includes/functions-customer.php:1424
-#: modules/crm/includes/functions-customer.php:1438
-#: modules/crm/includes/functions-customer.php:1452
-#: modules/crm/includes/functions-customer.php:1466
-#: modules/crm/includes/functions-customer.php:1491
-#: modules/crm/includes/functions-customer.php:1505
-#: modules/crm/includes/functions-customer.php:1519
-#: modules/crm/includes/functions-customer.php:1554
-#: modules/crm/includes/functions-customer.php:1568
-#: modules/crm/includes/functions-customer.php:1593
+#: modules/crm/includes/functions-customer.php:1415
+#: modules/crm/includes/functions-customer.php:1429
+#: modules/crm/includes/functions-customer.php:1443
+#: modules/crm/includes/functions-customer.php:1457
+#: modules/crm/includes/functions-customer.php:1471
+#: modules/crm/includes/functions-customer.php:1485
+#: modules/crm/includes/functions-customer.php:1499
+#: modules/crm/includes/functions-customer.php:1524
+#: modules/crm/includes/functions-customer.php:1538
+#: modules/crm/includes/functions-customer.php:1552
+#: modules/crm/includes/functions-customer.php:1587
+#: modules/crm/includes/functions-customer.php:1601
+#: modules/crm/includes/functions-customer.php:1626
 msgid "not contains"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1383
-#: modules/crm/includes/functions-customer.php:1397
-#: modules/crm/includes/functions-customer.php:1411
-#: modules/crm/includes/functions-customer.php:1425
-#: modules/crm/includes/functions-customer.php:1492
-#: modules/crm/includes/functions-customer.php:1506
-#: modules/crm/includes/functions-customer.php:1520
-#: modules/crm/includes/functions-customer.php:1555
-#: modules/crm/includes/functions-customer.php:1569
-#: modules/crm/includes/functions-customer.php:1594
+#: modules/crm/includes/functions-customer.php:1416
+#: modules/crm/includes/functions-customer.php:1430
+#: modules/crm/includes/functions-customer.php:1444
+#: modules/crm/includes/functions-customer.php:1458
+#: modules/crm/includes/functions-customer.php:1525
+#: modules/crm/includes/functions-customer.php:1539
+#: modules/crm/includes/functions-customer.php:1553
+#: modules/crm/includes/functions-customer.php:1588
+#: modules/crm/includes/functions-customer.php:1602
+#: modules/crm/includes/functions-customer.php:1627
 msgid "begins with"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1384
-#: modules/crm/includes/functions-customer.php:1398
-#: modules/crm/includes/functions-customer.php:1412
-#: modules/crm/includes/functions-customer.php:1426
-#: modules/crm/includes/functions-customer.php:1493
-#: modules/crm/includes/functions-customer.php:1507
-#: modules/crm/includes/functions-customer.php:1521
-#: modules/crm/includes/functions-customer.php:1556
-#: modules/crm/includes/functions-customer.php:1570
-#: modules/crm/includes/functions-customer.php:1595
+#: modules/crm/includes/functions-customer.php:1417
+#: modules/crm/includes/functions-customer.php:1431
+#: modules/crm/includes/functions-customer.php:1445
+#: modules/crm/includes/functions-customer.php:1459
+#: modules/crm/includes/functions-customer.php:1526
+#: modules/crm/includes/functions-customer.php:1540
+#: modules/crm/includes/functions-customer.php:1554
+#: modules/crm/includes/functions-customer.php:1589
+#: modules/crm/includes/functions-customer.php:1603
+#: modules/crm/includes/functions-customer.php:1628
 msgid "ends with"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1393
-#: modules/crm/includes/functions-customer.php:1407
-#: modules/crm/includes/functions-customer.php:1421
-#: modules/crm/includes/functions-customer.php:1447
-#: modules/crm/includes/functions-customer.php:1461
-#: modules/crm/includes/functions-customer.php:1486
-#: modules/crm/includes/functions-customer.php:1502
-#: modules/crm/includes/functions-customer.php:1516
+#: modules/crm/includes/functions-customer.php:1426
+#: modules/crm/includes/functions-customer.php:1440
+#: modules/crm/includes/functions-customer.php:1454
+#: modules/crm/includes/functions-customer.php:1480
+#: modules/crm/includes/functions-customer.php:1494
+#: modules/crm/includes/functions-customer.php:1519
+#: modules/crm/includes/functions-customer.php:1535
+#: modules/crm/includes/functions-customer.php:1549
 msgid "has"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1394
-#: modules/crm/includes/functions-customer.php:1408
-#: modules/crm/includes/functions-customer.php:1422
-#: modules/crm/includes/functions-customer.php:1448
-#: modules/crm/includes/functions-customer.php:1462
-#: modules/crm/includes/functions-customer.php:1487
-#: modules/crm/includes/functions-customer.php:1503
-#: modules/crm/includes/functions-customer.php:1517
+#: modules/crm/includes/functions-customer.php:1427
+#: modules/crm/includes/functions-customer.php:1441
+#: modules/crm/includes/functions-customer.php:1455
+#: modules/crm/includes/functions-customer.php:1481
+#: modules/crm/includes/functions-customer.php:1495
+#: modules/crm/includes/functions-customer.php:1520
+#: modules/crm/includes/functions-customer.php:1536
+#: modules/crm/includes/functions-customer.php:1550
 msgid "has not"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1435
-#: modules/crm/includes/functions-customer.php:1449
-#: modules/crm/includes/functions-customer.php:1463
-#: modules/crm/includes/functions-customer.php:1475
-#: modules/crm/includes/functions-customer.php:1488
+#: modules/crm/includes/functions-customer.php:1468
+#: modules/crm/includes/functions-customer.php:1482
+#: modules/crm/includes/functions-customer.php:1496
+#: modules/crm/includes/functions-customer.php:1508
+#: modules/crm/includes/functions-customer.php:1521
 msgid "from"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1436
-#: modules/crm/includes/functions-customer.php:1450
-#: modules/crm/includes/functions-customer.php:1464
-#: modules/crm/includes/functions-customer.php:1476
-#: modules/crm/includes/functions-customer.php:1489
+#: modules/crm/includes/functions-customer.php:1469
+#: modules/crm/includes/functions-customer.php:1483
+#: modules/crm/includes/functions-customer.php:1497
+#: modules/crm/includes/functions-customer.php:1509
+#: modules/crm/includes/functions-customer.php:1522
 msgid "not from"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1443
+#: modules/crm/includes/functions-customer.php:1476
 msgid "Stree 1"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1457
+#: modules/crm/includes/functions-customer.php:1490
 msgid "Stree 2"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1471
+#: modules/crm/includes/functions-customer.php:1504
 msgid "Country/State"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1512
+#: modules/crm/includes/functions-customer.php:1545
 msgid "Others Fields"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1551
-#: modules/crm/includes/functions-customer.php:1565
-#: modules/crm/includes/functions-customer.php:1590
+#: modules/crm/includes/functions-customer.php:1584
+#: modules/crm/includes/functions-customer.php:1598
+#: modules/crm/includes/functions-customer.php:1623
 msgid "is"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1552
-#: modules/crm/includes/functions-customer.php:1566
-#: modules/crm/includes/functions-customer.php:1591
+#: modules/crm/includes/functions-customer.php:1585
+#: modules/crm/includes/functions-customer.php:1599
+#: modules/crm/includes/functions-customer.php:1624
 msgid "is not"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1586
-#: modules/crm/includes/functions-customer.php:2466
+#: modules/crm/includes/functions-customer.php:1619
+#: modules/crm/includes/functions-customer.php:2376
 #: modules/crm/views/js-templates/new-assign-company.php:6
 #: modules/crm/views/js-templates/new-customer.php:60
-#: modules/hrm/includes/class-ajax.php:1005
+#: modules/hrm/includes/class-ajax.php:1033
 msgid "Company Name"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1935
+#: modules/crm/includes/functions-customer.php:1738
 msgid "own_search"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1936
+#: modules/crm/includes/functions-customer.php:1739
 msgid "Own Search"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1938
+#: modules/crm/includes/functions-customer.php:1741
 msgid "global_search"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:1939
+#: modules/crm/includes/functions-customer.php:1742
 msgid "Global Search"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2437
+#: modules/crm/includes/functions-customer.php:2347
 msgid "Please enter an template name"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2441
+#: modules/crm/includes/functions-customer.php:2351
 msgid "Template body must be required"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2583
-#: modules/crm/includes/functions-customer.php:2602
+#: modules/crm/includes/functions-customer.php:2493
+#: modules/crm/includes/functions-customer.php:2512
 msgid "No record found"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2624
+#: modules/crm/includes/functions-customer.php:2534
 msgid "No template found"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2672
-#: modules/crm/includes/functions-customer.php:2673
+#: modules/crm/includes/functions-customer.php:2582
+#: modules/crm/includes/functions-customer.php:2583
 msgid "Import into CRM"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2774
+#: modules/crm/includes/functions-customer.php:2684
 msgid "%s contacts created."
 msgstr ""
 
@@ -9329,29 +9649,29 @@ msgstr ""
 msgid "on"
 msgstr ""
 
-#: modules/crm/includes/functions-dashboard.php:172
-#: modules/crm/views/schedules.php:43
+#: modules/crm/includes/functions-dashboard.php:175
+#: modules/crm/views/schedules.php:46
 msgid "Log Details"
 msgstr ""
 
-#: modules/crm/includes/functions-dashboard.php:250
+#: modules/crm/includes/functions-dashboard.php:253
 msgid "Contact Lists"
 msgstr ""
 
-#: modules/crm/includes/functions-dashboard.php:265
-#: modules/crm/includes/functions-dashboard.php:291
+#: modules/crm/includes/functions-dashboard.php:268
+#: modules/crm/includes/functions-dashboard.php:294
 msgid "Created on"
 msgstr ""
 
-#: modules/crm/includes/functions-dashboard.php:271
+#: modules/crm/includes/functions-dashboard.php:274
 msgid "No contacts found"
 msgstr ""
 
-#: modules/crm/includes/functions-dashboard.php:276
+#: modules/crm/includes/functions-dashboard.php:279
 msgid "Company Lists"
 msgstr ""
 
-#: modules/crm/includes/functions-dashboard.php:297
+#: modules/crm/includes/functions-dashboard.php:300
 msgid "No companies found"
 msgstr ""
 
@@ -9372,16 +9692,16 @@ msgid "Created Date.."
 msgstr ""
 
 #: modules/crm/views/activities.php:73 modules/crm/views/company/feeds.php:66
-#: modules/crm/views/contact/feeds.php:69
+#: modules/crm/views/contact/feeds.php:68
 msgid "Load More"
 msgstr ""
 
 #: modules/crm/views/activities.php:74 modules/crm/views/company/feeds.php:67
-#: modules/crm/views/contact/feeds.php:70
+#: modules/crm/views/contact/feeds.php:69
 msgid "Loading.."
 msgstr ""
 
-#: modules/crm/views/activities.php:79 modules/crm/views/contact/feeds.php:75
+#: modules/crm/views/activities.php:79 modules/crm/views/contact/feeds.php:74
 msgid "No Activity found for this Contact"
 msgstr ""
 
@@ -9410,7 +9730,7 @@ msgid "Back to Company list"
 msgstr ""
 
 #: modules/crm/views/company/single.php:58
-#: modules/crm/views/contact/single.php:56
+#: modules/crm/views/contact/single.php:55
 #: modules/hrm/views/employee/tab-general.php:4
 #: modules/hrm/views/employee/tab-general.php:20
 #: modules/hrm/views/employee/tab-general.php:44
@@ -9422,42 +9742,42 @@ msgid "Click to toggle"
 msgstr ""
 
 #: modules/crm/views/company/single.php:59
-#: modules/crm/views/contact/single.php:57
+#: modules/crm/views/contact/single.php:56
 #: modules/hrm/views/employee/tab-general.php:5
 msgid "Basic Info"
 msgstr ""
 
 #: modules/crm/views/company/single.php:72
-#: modules/crm/views/contact/single.php:72
+#: modules/crm/views/contact/single.php:71
 msgid "Source"
 msgstr ""
 
 #: modules/crm/views/company/single.php:79
-#: modules/crm/views/contact/single.php:79
+#: modules/crm/views/contact/single.php:78
 #: modules/crm/views/js-templates/new-customer.php:231
 msgid "Contact Owner"
 msgstr ""
 
-#: modules/crm/views/company/single.php:96
-#: modules/crm/views/contact/single.php:96
+#: modules/crm/views/company/single.php:97
+#: modules/crm/views/contact/single.php:98
 msgid "Nobody"
 msgstr ""
 
-#: modules/crm/views/company/single.php:120
-#: modules/crm/views/contact/single.php:120
+#: modules/crm/views/company/single.php:121
+#: modules/crm/views/contact/single.php:125
 msgid "Assign"
 msgstr ""
 
-#: modules/crm/views/company/single.php:132
+#: modules/crm/views/company/single.php:134
 msgid "Assing a contact"
 msgstr ""
 
-#: modules/crm/views/company/single.php:133
+#: modules/crm/views/company/single.php:135
 msgid "contacts"
 msgstr ""
 
-#: modules/crm/views/company/single.php:138
-#: modules/crm/views/contact/single.php:139
+#: modules/crm/views/company/single.php:140
+#: modules/crm/views/contact/single.php:145
 msgid "Assign Contact Groups"
 msgstr ""
 
@@ -9473,23 +9793,23 @@ msgstr ""
 msgid "Add Search Segment"
 msgstr ""
 
-#: modules/crm/views/contact/single.php:3
+#: modules/crm/views/contact/single.php:2
 msgid "Contact #"
 msgstr ""
 
-#: modules/crm/views/contact/single.php:4
+#: modules/crm/views/contact/single.php:3
 msgid "Back to Contact list"
 msgstr ""
 
-#: modules/crm/views/contact/single.php:8
+#: modules/crm/views/contact/single.php:7
 msgid "Edit this contact"
 msgstr ""
 
-#: modules/crm/views/contact/single.php:8
+#: modules/crm/views/contact/single.php:7
 msgid "Edit this Contact"
 msgstr ""
 
-#: modules/crm/views/contact/single.php:62
+#: modules/crm/views/contact/single.php:61
 #: modules/crm/views/js-templates/new-customer.php:120
 #: modules/hrm/views/employee/tab-general.php:57
 #: modules/hrm/views/employee/tab-general.php:196
@@ -9498,11 +9818,11 @@ msgstr ""
 msgid "Date of Birth"
 msgstr ""
 
-#: modules/crm/views/contact/single.php:133
+#: modules/crm/views/contact/single.php:139
 msgid "Assign a company"
 msgstr ""
 
-#: modules/crm/views/contact/single.php:134
+#: modules/crm/views/contact/single.php:140
 msgid "companies"
 msgstr ""
 
@@ -9678,7 +9998,7 @@ msgstr ""
 
 #: modules/crm/views/js-templates/customer-add-schedules.php:96
 #: modules/crm/views/js-templates/customer-schedule-note.php:96
-#: modules/hrm/includes/class-ajax.php:1388
+#: modules/hrm/includes/class-ajax.php:1416
 #: modules/hrm/views/js-templates/leave-days.php:7
 msgid "day"
 msgstr ""
@@ -9774,7 +10094,7 @@ msgid "Update Note"
 msgstr ""
 
 #: modules/crm/views/js-templates/customer-schedule-note.php:108
-#: modules/crm/views/schedules.php:106
+#: modules/crm/views/schedules.php:109
 msgid "Create Schedule"
 msgstr ""
 
@@ -9956,15 +10276,15 @@ msgstr ""
 msgid "All Schedules"
 msgstr ""
 
-#: modules/crm/views/schedules.php:105
+#: modules/crm/views/schedules.php:108
 msgid "Add new Log"
 msgstr ""
 
-#: modules/crm/views/schedules.php:105
+#: modules/crm/views/schedules.php:108
 msgid "Add new Schedule"
 msgstr ""
 
-#: modules/crm/views/schedules.php:106
+#: modules/crm/views/schedules.php:109
 msgid "Create Log"
 msgstr ""
 
@@ -10084,28 +10404,32 @@ msgid "Are you sure to delete this employee?"
 msgstr ""
 
 #: modules/hrm/hrm.php:182
-msgid "Are you sure to delete this employee note?"
+msgid "Are you sure to restore this employee?"
 msgstr ""
 
 #: modules/hrm/hrm.php:183
+msgid "Are you sure to delete this employee note?"
+msgstr ""
+
+#: modules/hrm/hrm.php:184
 msgid ""
 "Are you sure to delete this Entitlement? If yes, then all leave request "
 "under this entitlement also permanently deleted"
 msgstr ""
 
-#: modules/hrm/hrm.php:184
+#: modules/hrm/hrm.php:185
 msgid "This user already exists, Do you want to make this user as a employee?"
 msgstr ""
 
-#: modules/hrm/hrm.php:185
+#: modules/hrm/hrm.php:186
 msgid "This employee already exists"
 msgstr ""
 
-#: modules/hrm/hrm.php:186
+#: modules/hrm/hrm.php:187
 msgid "Employee successfully created"
 msgstr ""
 
-#: modules/hrm/hrm.php:187
+#: modules/hrm/hrm.php:188
 msgid "Click to create employee"
 msgstr ""
 
@@ -10171,81 +10495,86 @@ msgstr ""
 msgid "HR Manager"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:161
+#: modules/hrm/includes/class-ajax.php:162
 msgid "File upload error!"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:229
+#: modules/hrm/includes/class-ajax.php:230
 msgid "Somthing wrong !"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:276
-#: modules/hrm/includes/class-ajax.php:391
-#: modules/hrm/includes/class-ajax.php:414
-#: modules/hrm/includes/class-ajax.php:531
-#: modules/hrm/includes/class-ajax.php:573
-#: modules/hrm/includes/class-ajax.php:623
-#: modules/hrm/includes/class-ajax.php:1484
+#: modules/hrm/includes/class-ajax.php:277
+#: modules/hrm/includes/class-ajax.php:392
+#: modules/hrm/includes/class-ajax.php:415
+#: modules/hrm/includes/class-ajax.php:559
+#: modules/hrm/includes/class-ajax.php:601
+#: modules/hrm/includes/class-ajax.php:651
+#: modules/hrm/includes/class-ajax.php:1512
 #: modules/hrm/includes/class-form-handler.php:424
 #: modules/hrm/includes/class-form-handler.php:521
 msgid "Something went wrong!"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:341
+#: modules/hrm/includes/class-ajax.php:342
 msgid "Department has been deleted"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:344
-#: modules/hrm/includes/class-ajax.php:1321
+#: modules/hrm/includes/class-ajax.php:345
+#: modules/hrm/includes/class-ajax.php:1349
 msgid "Something went worng!"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:411
+#: modules/hrm/includes/class-ajax.php:412
 msgid "Designation has been deleted"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:469
+#: modules/hrm/includes/class-ajax.php:470
 msgid "Employee does not exists."
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:492
+#: modules/hrm/includes/class-ajax.php:493
+#: modules/hrm/includes/class-ajax.php:521
 msgid "No employee found"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:501
+#: modules/hrm/includes/class-ajax.php:502
 msgid "Employee has been removed successfully"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:520
+#: modules/hrm/includes/class-ajax.php:528
+msgid "Employee has been restore successfully"
+msgstr ""
+
+#: modules/hrm/includes/class-ajax.php:548
 msgid "Status error"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:554
+#: modules/hrm/includes/class-ajax.php:582
 msgid "Enter a valid pay rate."
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:558
+#: modules/hrm/includes/class-ajax.php:586
 msgid "Pay Type does not exists."
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:562
+#: modules/hrm/includes/class-ajax.php:590
 msgid "Reason does not exists."
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:734
+#: modules/hrm/includes/class-ajax.php:762
 msgid "Something wrong"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:808
+#: modules/hrm/includes/class-ajax.php:836
 msgid "Employee already exist."
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:885
+#: modules/hrm/includes/class-ajax.php:913
 #: modules/hrm/views/js-templates/performance-reviews.php:6
 msgid "Review Date"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:886
+#: modules/hrm/includes/class-ajax.php:914
 #: modules/hrm/views/employee/tab-general.php:31
 #: modules/hrm/views/employee/tab-performance.php:22
 #: modules/hrm/views/js-templates/job-info.php:46
@@ -10254,32 +10583,32 @@ msgstr ""
 msgid "Reporting To"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:912
-#: modules/hrm/includes/class-ajax.php:938
+#: modules/hrm/includes/class-ajax.php:940
+#: modules/hrm/includes/class-ajax.php:966
 #: modules/hrm/views/js-templates/performance-comments.php:6
 msgid "Reference Date"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:913
+#: modules/hrm/includes/class-ajax.php:941
 #: modules/hrm/views/employee/tab-performance.php:86
 #: modules/hrm/views/js-templates/performance-comments.php:16
 msgid "Reviewer"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:939
+#: modules/hrm/includes/class-ajax.php:967
 #: modules/hrm/views/employee/tab-performance.php:138
 #: modules/hrm/views/js-templates/performance-goals.php:16
 msgid "Completion Date"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:957
-#: modules/hrm/includes/class-ajax.php:1013
-#: modules/hrm/includes/class-ajax.php:1084
-#: modules/hrm/includes/class-ajax.php:1151
+#: modules/hrm/includes/class-ajax.php:985
+#: modules/hrm/includes/class-ajax.php:1041
+#: modules/hrm/includes/class-ajax.php:1112
+#: modules/hrm/includes/class-ajax.php:1179
 msgid "%s is required"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1006
+#: modules/hrm/includes/class-ajax.php:1034
 #: modules/hrm/views/employee/tab-general.php:85
 #: modules/hrm/views/employee/tab-job.php:146
 #: modules/hrm/views/js-templates/job-info.php:36
@@ -10289,98 +10618,98 @@ msgstr ""
 msgid "Job Title"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1007
+#: modules/hrm/includes/class-ajax.php:1035
 #: modules/hrm/views/leave/holiday.php:51
 msgid "From date"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1008
+#: modules/hrm/includes/class-ajax.php:1036
 #: modules/hrm/views/leave/holiday.php:54
 msgid "To date"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1076
+#: modules/hrm/includes/class-ajax.php:1104
 #: modules/hrm/views/employee/tab-general.php:137
 #: modules/hrm/views/js-templates/education-form.php:5
 msgid "School Name"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1077
+#: modules/hrm/includes/class-ajax.php:1105
 #: modules/hrm/views/employee/tab-general.php:138
 #: modules/hrm/views/js-templates/education-form.php:15
 msgid "Degree"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1078
+#: modules/hrm/includes/class-ajax.php:1106
 msgid "Field"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1079
+#: modules/hrm/includes/class-ajax.php:1107
 msgid "Completion date"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1146
+#: modules/hrm/includes/class-ajax.php:1174
 msgid "Relation"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1266
-#: modules/hrm/includes/class-ajax.php:1270
+#: modules/hrm/includes/class-ajax.php:1294
+#: modules/hrm/includes/class-ajax.php:1298
 msgid "Holiday exist in your selected date"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1318
+#: modules/hrm/includes/class-ajax.php:1346
 msgid "Policy has been deleted"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1341
-#: modules/hrm/includes/class-ajax.php:1406
-#: modules/hrm/includes/class-ajax.php:1446
+#: modules/hrm/includes/class-ajax.php:1369
+#: modules/hrm/includes/class-ajax.php:1434
+#: modules/hrm/includes/class-ajax.php:1474
 msgid "Please select an employee"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1347
-#: modules/hrm/includes/class-ajax.php:1450
+#: modules/hrm/includes/class-ajax.php:1375
+#: modules/hrm/includes/class-ajax.php:1478
 msgid "Please select a policy"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1357
+#: modules/hrm/includes/class-ajax.php:1385
 msgid "Invalid date range"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1361
+#: modules/hrm/includes/class-ajax.php:1389
 msgid "Date range must be within %s to %s"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1367
+#: modules/hrm/includes/class-ajax.php:1395
 msgid "Existing Leave Record found within selected range!"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1373
+#: modules/hrm/includes/class-ajax.php:1401
 msgid "Your leave duration exceeded entitlement!"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1414
+#: modules/hrm/includes/class-ajax.php:1442
 #: modules/hrm/views/js-templates/new-leave-request.php:5
 msgid "Leave Type"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1427
+#: modules/hrm/includes/class-ajax.php:1455
 msgid ""
 "Selected user is not entitled to any leave policy. Set leave entitlement to "
 "apply for leave"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1460
-#: modules/hrm/includes/class-ajax.php:1462
-#: modules/hrm/includes/class-ajax.php:1465
+#: modules/hrm/includes/class-ajax.php:1488
+#: modules/hrm/includes/class-ajax.php:1490
+#: modules/hrm/includes/class-ajax.php:1493
 msgid "days are available"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1510
+#: modules/hrm/includes/class-ajax.php:1538
 msgid "Leave request has been submitted successfully!"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1512
+#: modules/hrm/includes/class-ajax.php:1540
 msgid "Something went wrong, please try again."
 msgstr ""
 
@@ -10909,7 +11238,7 @@ msgid "No one is on vacation on this or next month"
 msgstr ""
 
 #: modules/hrm/includes/functions-dashboard-widgets.php:192
-#: modules/hrm/includes/functions-leave.php:927
+#: modules/hrm/includes/functions-leave.php:933
 msgid "Pending"
 msgstr ""
 
@@ -11194,11 +11523,11 @@ msgstr ""
 msgid "No leave policy provided."
 msgstr ""
 
-#: modules/hrm/includes/functions-leave.php:926
+#: modules/hrm/includes/functions-leave.php:932
 msgid "Approved"
 msgstr ""
 
-#: modules/hrm/includes/functions-leave.php:928
+#: modules/hrm/includes/functions-leave.php:934
 msgid "Rejected"
 msgstr ""
 
@@ -11372,14 +11701,6 @@ msgstr ""
 #: modules/hrm/views/employee/tab-general.php:84
 #: modules/hrm/views/js-templates/work-experience.php:5
 msgid "Previous Company"
-msgstr ""
-
-#: modules/hrm/views/employee/tab-general.php:87
-#: modules/hrm/views/js-templates/new-leave-request.php:28
-#: modules/hrm/views/js-templates/work-experience.php:36
-#: modules/hrm/views/leave/holiday.php:53
-#: modules/hrm/views/leave/new-request.php:47
-msgid "To"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:88

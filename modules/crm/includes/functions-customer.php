@@ -182,6 +182,18 @@ function erp_crm_get_details_url( $id, $type ) {
 
     return admin_url( 'admin.php' );
 }
+
+// function erp_crm_item_row_actions() {
+//     $item_row_action = [];
+
+//     $item_row_action['edit'] =  [
+//         'title'     => __( 'Edit', 'erp' ),
+//         'attrTitle' => __( 'Edit this contact', 'erp' ),
+//         'class'     => 'edit',
+//         'action'    => 'edit'
+//     ],
+// }
+
 /**
  * Get CRM life statges
  *
@@ -694,7 +706,7 @@ function erp_crm_get_feed_activity( $postdata ) {
         $value['message']               = stripslashes( $value['message'] );
         $value['created_by']['avatar']  = get_avatar_url( $value['created_by']['ID'] );
         $value['created_date']          = date( 'Y-m-d', strtotime( $value['created_at'] ) );
-        $value['created_timeline_date'] = date( 'Y-m', strtotime( $value['created_at'] ) );
+        $value['created_timeline_date'] = date( 'Y-m-01', strtotime( $value['created_at'] ) );
         $feeds[]                        = $value;
     }
 
@@ -755,7 +767,7 @@ function erp_crm_save_customer_feed_data( $data ) {
     $activity['message']               = stripslashes( $activity['message'] );
     $activity['created_by']['avatar']  = get_avatar_url( $activity['created_by']['ID'] );
     $activity['created_date']          = date( 'Y-m-d', strtotime( $activity['created_at'] ) );
-    $activity['created_timeline_date'] = date( 'Y-m', strtotime( $activity['created_at'] ) );
+    $activity['created_timeline_date'] = date( 'Y-m-01', strtotime( $activity['created_at'] ) );
 
     return $activity;
 }
@@ -843,12 +855,17 @@ function erp_crm_customer_delete_activity_feed( $feed_id ) {
 function erp_crm_customer_schedule_notification() {
     $schedules = \WeDevs\ERP\CRM\Models\Activity::schedules()->get()->toArray();
 
+    if ( empty( $schedules ) )  {
+        return;
+    }
+
     foreach ( $schedules as $key => $activity ) {
         $extra = json_decode( base64_decode( $activity['extra'] ), true );
-
         if ( isset ( $extra['allow_notification'] ) && $extra['allow_notification'] == 'true' ) {
-            if ( current_time('mysql') == $extra['notification_datetime'] ) {
-                erp_crm_send_schedule_notification( $activity, $extra );
+            if ( ( current_time( 'mysql' ) >= $extra['notification_datetime'] ) && ( $activity['start_date'] >= current_time( 'mysql' ) ) ) {
+                if ( ! $activity['sent_notification'] ) {
+                    erp_crm_send_schedule_notification( $activity, $extra );
+                }
             }
         }
     }
@@ -865,8 +882,7 @@ function erp_crm_customer_schedule_notification() {
  * @return void
  */
 function erp_crm_send_schedule_notification( $activity, $extra = false ) {
-
-    if ( ! is_user_logged_in() ) {
+    if ( ! $extra ) {
         return;
     }
 
@@ -878,22 +894,37 @@ function erp_crm_send_schedule_notification( $activity, $extra = false ) {
                 $users[] = get_the_author_meta( 'user_email', $contact );
             }
 
-            $created_user = get_the_author_meta('user_email', $activity['created_by'] );
-
+            $created_user = get_the_author_meta( 'user_email', $activity['created_by'] );
             array_push( $users, $created_user );
 
             foreach ( $users as $key => $user ) {
-                // @TODO: Add customer body template for seding email to user
-                $body = 'You have a schedule after ' . $extra['notification_time_interval'] . $extra['notification_time'] . ' at ' . $activity['start_date'];
-                erp_mail( $user, 'ERP Schedule', $body );
+                $body = sprintf( __( 'You have a schedule after %s %s at %s', 'erp' ), $extra['notification_time_interval'], $extra['notification_time'], date( 'F j, Y, g:i a', strtotime( $activity['start_date'] ) ) );
+                erp_mail( $user, __( 'ERP Schedule', 'erp' ), $body );
             }
-
+            erp_crm_update_schedule_notification_flag( $activity['id'], true );
             break;
 
         default:
             do_action( 'erp_crm_send_schedule_notification', $activity, $extra );
             break;
     }
+}
+
+/**
+ * Update notification flag in customer activity feeds
+ *
+ * @since 1.1.1
+ *
+ * @param  integer $activity_id
+ * @param  boolean $flag
+ *
+ * @return void
+ */
+function erp_crm_update_schedule_notification_flag( $activity_id, $flag ) {
+    if ( !$activity_id ) {
+        return;
+    }
+    \WeDevs\ERP\CRM\Models\Activity::find( $activity_id )->update( [ 'sent_notification' => $flag ] );
 }
 
 /**
@@ -1232,6 +1263,8 @@ function erp_crm_get_user_assignable_groups( $user_id ) {
  * @return boolean
  */
 function erp_crm_contact_subscriber_delete( $user_id ) {
+    do_action( 'erp_crm_pre_unsubscribed_contact', $user_id );
+
     if ( is_array( $user_id ) ) {
         return \WeDevs\ERP\CRM\Models\ContactSubscriber::whereIn( 'user_id', $user_id )->delete();
     } else {
@@ -1646,236 +1679,6 @@ function erp_crm_get_save_search_regx( $values ) {  // %%sabbir
 }
 
 /**
- * Save Search query filter
- *
- * @since 1.0
- *
- * @param  collection $people [object]
- *
- * @return collection
- */
-function erp_crm_save_search_query_filter( $people ) {
-
-    global $current_screen;
-
-    $query_string = $_SERVER['QUERY_STRING'];
-
-    $or_query   = explode( '&or&', $query_string );
-    $page_id    = ( isset( $current_screen->base ) ) ? $current_screen->base : '';
-    $allowed    = erp_crm_get_serach_key( $page_id );
-    $query_data = [];
-
-    if ( $or_query ) {
-        foreach( $or_query as $or_q ) {
-            parse_str( $or_q, $output );
-            $serach_array = array_intersect_key( $output, array_flip( array_keys( $allowed ) ) );
-            $query_data[] = $serach_array;
-        }
-    }
-
-    var_dump( $query_data ); die();
-
-    if ( !empty( $query_data ) ) {
-        $people = erp_crm_save_search_query_builder( $people, $query_data );
-    }
-
-    return $people;
-}
-
-/**
- * Save Search query builder
- *
- * @since 1.0
- *
- * @param object $people
- * @param array $query_data
- *
- * @return object
- */
-function erp_crm_save_search_query_builder( $people, $query_data ) {
-    $i = 0;
-
-    foreach( $query_data as $query_param ) {
-        if ( $i == 0 ) {
-            $people = $people->where( function( $query ) use( $query_param ) {
-                foreach( $query_param as $key => $value ) {
-                    if( is_array( $value ) ) {
-                        $filter_value = erp_crm_get_save_search_regx( $value );
-                        $j = 0;
-                        if ( $key == 'country_state' ) {
-
-                            $query->where( function( $query1 ) use( $filter_value, $j, $key ) {
-
-                                foreach( $filter_value as $q_val => $q_key ) {
-                                    if ( $j == 0 ) {
-                                        $key_value = explode(':', $q_val); // seperate BAN:DHA to an array [ 0=>BAN, 1=>DHA]
-                                        $keys = explode('_', $key); // seperate country_state to an array [ 0=>country, 1=>state]
-                                        if ( count( $key_value ) > 1 ) {
-
-                                            $query1->where( function($query2) use( $key_value, $keys, $q_key ){
-
-                                                // Foreach those [ 0=>BAN, 1=>DHA ] value as nes_key = 0,1 and $nes_val = BAN,DHA
-                                                foreach ( $key_value as $nes_key => $nes_val) {
-                                                    $query2->where( $keys[$nes_key], $q_key, $nes_val );
-                                                }
-                                            });
-                                            # code...
-                                        } else {
-                                            $query1->where( $keys[key( $key_value ) ], $q_key, $key_value[0] );
-                                        }
-
-                                    } else {
-                                        $key_value = explode(':', $q_val); // seperate BAN:DHA to an array [ 0=>BAN, 1=>DHA]
-                                        $keys = explode('_', $key); // seperate country_state to an array [ 0=>country, 1=>state]
-
-                                        if ( count( $key_value ) > 1 ) {
-
-                                            $query1->orWhere( function($query2) use( $key_value, $keys, $q_key ){
-
-                                                // Foreach those [ 0=>BAN, 1=>DHA ] value as nes_key = 0,1 and $nes_val = BAN,DHA
-                                                foreach ( $key_value as $nes_key => $nes_val) {
-                                                    $query2->where( $keys[$nes_key], $q_key, $nes_val );
-                                                }
-                                            });
-                                            # code...
-                                        } else {
-                                            $query1->orWhere( $keys[key( $key_value ) ], $q_key, $key_value[0] );
-                                        }
-                                    }
-                                    $j++;
-                                }
-                            });
-                        } else {
-                            $query->where( function( $query1 ) use( $filter_value, $j, $key ) {
-                                foreach( $filter_value as $q_val => $q_key ) {
-                                    if ( $j == 0 ) {
-                                        $query1->where( $key, $q_key, $q_val );
-                                    } else {
-                                        $query1->orWhere( $key, $q_key, $q_val );
-                                    }
-                                    $j++;
-                                }
-                            });
-                        }
-                    } else {
-                        $filter_value = erp_crm_get_save_search_regx( $value );
-                        $query->where( $key, $filter_value[key( $filter_value )], key( $filter_value ) );
-                    }
-                }
-                return $query;
-            } );
-        } else {
-            $people = $people->orWhere( function( $query ) use( $query_param ) {
-            $filter_value = [];
-                foreach( $query_param as $key => $value ) {
-                    if( is_array( $value ) ) {
-                        $filter_value = erp_crm_get_save_search_regx( $value );
-                        $j = 0;
-                        if ( $key == 'country_state' ) {
-                            $query->where( function( $query1 ) use( $filter_value, $j, $key ) {
-                                foreach( $filter_value as $q_val => $q_key ) {
-                                    if ( $j == 0 ) {
-                                        $key_value = explode(':', $q_val); // seperate BAN:DHA to an array [ 0=>BAN, 1=>DHA]
-                                        $keys = explode('_', $key); // seperate country_state to an array [ 0=>country, 1=>state]
-                                        if ( count( $key_value ) > 1 ) {
-
-                                            $query1->where( function($query2) use( $key_value, $keys, $q_key ){
-
-                                                // Foreach those [ 0=>BAN, 1=>DHA ] value as nes_key = 0,1 and $nes_val = BAN,DHA
-                                                foreach ( $key_value as $nes_key => $nes_val) {
-                                                    $query2->where( $keys[$nes_key], $q_key, $nes_val );
-                                                }
-                                            });
-                                            # code...
-                                        } else {
-                                            $query1->where( $keys[key( $key_value ) ], $q_key, $key_value[0] );
-                                        }
-
-                                    } else {
-                                        $key_value = explode(':', $q_val); // seperate BAN:DHA to an array [ 0=>BAN, 1=>DHA]
-                                        $keys = explode('_', $key); // seperate country_state to an array [ 0=>country, 1=>state]
-
-                                        if ( count( $key_value ) > 1 ) {
-
-                                            $query1->orWhere( function($query2) use( $key_value, $keys, $q_key ){
-
-                                                // Foreach those [ 0=>BAN, 1=>DHA ] value as nes_key = 0,1 and $nes_val = BAN,DHA
-                                                foreach ( $key_value as $nes_key => $nes_val) {
-                                                    $query2->where( $keys[$nes_key], $q_key, $nes_val );
-                                                }
-                                            });
-                                            # code...
-                                        } else {
-                                            $query1->orWhere( $keys[key( $key_value ) ], $q_key, $key_value[0] );
-                                        }
-                                    }
-                                    $j++;
-                                }
-                            });
-                        } else {
-                            $query->where( function( $query1 ) use( $filter_value, $j, $key ) {
-                                foreach( $filter_value as $q_val => $q_key ) {
-                                    if ( $j == 0 ) {
-                                        $query1->where( $key, $q_key, $q_val );
-                                    } else {
-                                        $query1->orWhere( $key, $q_key, $q_val );
-                                    }
-                                    $j++;
-                                }
-                            });
-                        }
-                    } else {
-                        $filter_value = erp_crm_get_save_search_regx( $value );
-                        $query->where( $key, $filter_value[key( $filter_value )], key( $filter_value ) );
-                    }
-                }
-                return $query;
-            } );
-        }
-        $i++;
-    }
-
-    return $people;
-}
-
-/**
- * Get save serach query string
- *
- * @since 1.0
- *
- * @param  array $postdata
- *
- * @return string
- */
-function erp_crm_get_save_search_query_string( $postdata ){
-
-    $save_search          = ( isset( $postdata['save_search'] ) && !empty( $postdata['save_search'] ) ) ? $postdata['save_search'] : '';
-    $search_string        = '';
-    $search_string_arr    = [];
-
-    if ( !$save_search ) {
-        return $search_string;
-    }
-
-    foreach(  $save_search as $search_data ) {
-        $search_pair = [];
-        foreach( $search_data as $search_key=>$search_field ) {
-            $values = array_map( function( $value ) use( $search_field ) {
-                $condition = isset( $search_field['condition'] ) ? $search_field['condition'] : '';
-                return $condition.$value;
-            },  $search_field['value'] );
-
-            $search_pair[$search_key] = $values;
-        }
-        $search_string[] = http_build_query( $search_pair );
-    }
-
-    $search_string = implode( '&or&', $search_string );
-
-    return $search_string;
-}
-
-/**
  * Insert save search
  *
  * @since 1.0
@@ -1982,6 +1785,113 @@ function erp_crm_get_search_by_already_saved( $save_search_id ) {
 
     return $data->search_val;
 }
+
+/**
+ * Advance filter for contact and company
+ *
+ * @since 1.1.0
+ *
+ * @param  array $custom_sql
+ * @param  array $args
+ *
+ * @return array
+ */
+function erp_crm_contact_advance_filter( $custom_sql, $args ) {
+    $pep_fileds  = [ 'first_name', 'last_name', 'email', 'website', 'company', 'phone', 'mobile', 'other', 'fax', 'notes', 'street_1', 'street_2', 'city', 'postal_code', 'currency' ];
+
+    if ( !isset( $args['erpadvancefilter'] ) || empty( $args['erpadvancefilter'] ) ) {
+        return $custom_sql;
+    }
+
+    $or_query   = explode( '&or&', $args['erpadvancefilter'] );
+    $allowed    = erp_crm_get_serach_key( $args['type'] );
+    $query_data = [];
+
+    if ( $or_query ) {
+        foreach( $or_query as $or_q ) {
+            parse_str( $or_q, $output );
+            $serach_array = array_intersect_key( $output, array_flip( array_keys( $allowed ) ) );
+            $query_data[] = $serach_array;
+        }
+    }
+
+    if ( $query_data ) {
+
+        foreach ( $query_data as $key=>$or_query ) {
+            if ( $or_query ) {
+                $i=0;
+                $custom_sql['where'][] = ( $key == 0 ) ? "AND (" : 'OR (';
+                foreach ( $or_query as $field => $value ) {
+                    if ( in_array( $field, $pep_fileds ) ) {
+                        if ( $value ) {
+                            $val = erp_crm_get_save_search_regx( $value );
+                            $custom_sql['where'][] = "(";
+                            $j=0;
+                            foreach ( $val as $search_val => $search_condition ) {
+                                $addOr = ( $j == count( $val )-1 ) ? '' : " OR ";
+
+                                if ( 'has_not' == $search_val ) {
+                                    $custom_sql['where'][] = "( $field is null OR $field = '' ) $addOr";
+                                } else if ( 'if_has' == $search_val ) {
+                                    $custom_sql['where'][] = "( $field is not null AND $field != '' ) $addOr";
+                                } else {
+                                    $custom_sql['where'][] = "$field $search_condition '$search_val' $addOr";
+                                }
+
+                                $j++;
+                            }
+                            $custom_sql['where'][] = ( $i == count( $or_query )-1 ) ? ")" : " ) AND";
+                        }
+                    } else if ( $field == 'country_state' ) {
+                        $custom_sql['where'][] = "(";
+                        $j=0;
+
+                        foreach ( $value as $key => $search_value ) {
+                            $search_condition_regx = erp_crm_get_save_search_regx( $search_value );
+                            $condition = array_shift( $search_condition_regx );
+                            $key_value = explode( ':', $search_value ); // seperate BAN:DHA to an array [ 0=>BAN, 1=>DHA]
+                            $addOr = ( $j == count( $value )-1 ) ? '' : " OR ";
+
+                            if ( count( $key_value ) > 1 ) {
+                                $custom_sql['where'][] = "( country $condition '$key_value[0]' AND state $condition '$key_value[1]')$addOr";
+                            } else {
+                                $custom_sql['where'][] = "(country $condition '$key_value[0]')$addOr";
+                            }
+
+                            $j++;
+                        }
+                        $custom_sql['where'][] = ( $i == count( $or_query )-1 ) ? ")" : " ) AND";
+                    }
+                    $i++;
+                }
+                $custom_sql['where'][] = ")";
+            }
+        }
+    }
+
+    return $custom_sql;
+}
+
+/**
+ * SQL filter to check if a people id is belongs to a saved search
+ *
+ * @since 1.1.1
+ *
+ * @param array $sql
+ * @param array $args
+ *
+ * @return array
+ */
+function erp_crm_is_people_belongs_to_saved_search( $sql, $args ) {
+    if ( empty( $args['erpadvancefilter'] ) || empty( $args['test_user'] ) ) {
+        return $sql;
+    }
+
+    $sql['where'][] = "AND people.id = " . $args['test_user'];
+
+    return $sql;
+}
+
 
 /**
  * Get todays schedules activities
@@ -2832,10 +2742,10 @@ function erp_crm_check_new_inbound_emails() {
     $imap_options = get_option( 'erp_settings_erp-email_imap', [] );
 
     $mail_server = $imap_options['mail_server'];
-    $username = $imap_options['username'];
-    $password = $imap_options['password'];
-    $protocol = $imap_options['protocol'];
-    $port = isset( $imap_options['port'] ) ? $imap_options['port'] : 993;
+    $username       = $imap_options['username'];
+    $password       = $imap_options['password'];
+    $protocol       = $imap_options['protocol'];
+    $port           = isset( $imap_options['port'] ) ? $imap_options['port'] : 993;
     $authentication = isset( $imap_options['authentication'] ) ? $imap_options['authentication'] : 'ssl';
 
     try {

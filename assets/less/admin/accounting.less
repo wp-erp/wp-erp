@@ -413,6 +413,18 @@ form.erp-form .erp-form-field label {
 }
 
 .erp-ac-form-wrap {
+    .two-col {
+        .erp-form-field {
+            width: 28% !important;
+            input, select {
+                width: 80%;
+            }
+
+            .select2-container {
+                width: 81% !important;
+            }
+        }
+    }
     .erp-ac-more-customer {
         text-decoration: none;
         font-size: 11px;
@@ -607,7 +619,12 @@ form.erp-form .erp-form-field label {
 
 }
 
-
+#erp-ac-invoice-send-email{
+    input[type="text"], input[type="email"], textarea {
+        width: 500px;
+        margin-bottom: 10px;
+    }
+}
 
 @media print {
     .erp-grid-container .col-3 {

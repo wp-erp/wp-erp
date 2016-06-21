@@ -380,6 +380,11 @@ form.erp-form .erp-form-field label {
   text-align: center;
   border-left: 1px solid #e1e1e1;
 }
+
+#erp-ac-invoice-send-email textarea {
+  height: 100px;
+}
+
 @media print {
   .erp-grid-container .col-3 {
     width: 50%;

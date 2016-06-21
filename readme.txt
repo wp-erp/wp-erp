@@ -2,21 +2,23 @@
 Contributors: tareq1988, wedevs, sabbir1991, asaquzzaman
 Tags: small business, SME, contact, contacts, CRM, Customer Relationship Management, employee, leave management, hr, hrm, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 4.5.2
+Tested up to: 4.5.3
 Stable tag: trunk
 License: GPLv2
 Donate Link: https://tareq.co/donate
 
-An Open Source ERP & CRM Solution for WordPress
+An Open Source HR, CRM & Accounting Solution for WordPress
 
 == Description ==
 WP ERP is the framework for weDevs's enterprise resource management system. This plugin includes -
+
+= Core Modules =
 
 * HR Module
 * CRM Module
 * Accounting Module
 
-Other available modules
+= Other Modules =
 
 * Project Management via [WP Project Manager](https://wordpress.org/plugins/wedevs-project-manager/)
 
@@ -59,7 +61,7 @@ Other available modules
 * Overall activity overview
 * Group contacts depending on various factors
 
-= Accounting Module Transactions =
+= Accounting Module =
 
 * Invoice - Create invoice for your customer for any sales.
 * Payment - Add payments to the against the invoices.
@@ -134,6 +136,13 @@ If you are unable to use any of the methods due to internet connectivity and fil
 21. Schedules page, see whom to call, have a meeting and manage them.
 22. Manage your company details, add locations if you have multiple branches/locations.
 23. We log everything whats happening across the system and log everything for easy audit logging.
+24. Accounting Dashboard
+25. Sales transactions list
+26. Expense transactions list
+27. Creating new invoice (sales)
+28. Creating a basic journal entry.
+29. Bank Accounts
+30. Chart of accounts listing
 
 == Frequently Asked Questions ==
 **Q.** Do you have any limit on customers, users or clients?
@@ -141,6 +150,33 @@ If you are unable to use any of the methods due to internet connectivity and fil
   => No. We did not put any limit on anything. You can create as much entries as you want.
 
 == Changelog ==
+
+**v1.1.1 -> June 22, 2016**
+
+ * [fix] Accounting report query optimzation
+ * [fix] Partial payment amount problem fixed
+ * [fix] Contact and company permission problem fixed for CRM agent
+ * [fix] Bulkaction permission fixed for contact and company listing
+ * [fix] Javascript null date problem fixed
+ * [Fix] Fixed enable disable problem at reference number entry time
+ * [Fix] Save search dropdown default value problem fixed
+ * [Fix] Fixed CRM contact table after a bulk action, items don't get deselect
+ * [Fix] Fixed schedule calander styling problem
+ * [fix] CRM agent permission problem fixed
+ * [fix] Fix assign group permission problem
+ * [fix] Fix assign contact issue when deal with wp user contacts
+ * [fix] Contact group edit and assign problem fixed
+ * [fix] Fixed total number counting when add new contact
+ * [fix] Fixed schedule notification problem
+ * [fix] Timeline date issue in contact single page
+ * [new] Added loading effect when assign contact owner
+ * [new] Invoice number generator functionality in accounting
+ * [new] Added support for Omanian Rial currency
+ * [new] Added some filter and action hook in sales transaction
+ * [new] Added restore functionality in HRM employee table
+ * [new] Export invoices as PDF and send via email
+ * [Update] Accounting dashaboard updated
+ * [Update] Updated filter and hook for people query sql
 
 **v1.1.0 -> June 8, 2016**
 

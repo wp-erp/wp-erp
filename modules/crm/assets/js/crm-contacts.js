@@ -97,7 +97,6 @@
                         },
                         processResults: function ( data, params ) {
                             var terms = [];
-                            console.log( data );
                             if ( data) {
                                 $.each( data.data, function( id, text ) {
                                     terms.push({
@@ -213,7 +212,7 @@
             {
                 id : 'permanent_delete',
                 text : 'Permanent Delete',
-                showIf : 'onlyTrased'
+                showIf : 'showPermanentDelete'
             },
 
             {
@@ -666,8 +665,6 @@
                     this.fields[index][fieldIndex].value = fieldObj.filterValue;
                     this.editableMode = editableMode;
 
-                    console.log( fieldObj );
-
                     this.$dispatch( 'filterContactList', this.fields );
                 },
 
@@ -713,7 +710,8 @@
                         title: 'Edit',
                         attrTitle: 'Edit this contact',
                         class: 'edit',
-                        action: 'edit'
+                        action: 'edit',
+                        showIf: 'checkPermission'
                     },
                     {
                         title: 'View',
@@ -721,7 +719,6 @@
                         class: 'view',
                         action: 'view',
                         callback: 'contact_view_link'
-
                     },
                     {
                         title: 'Delete',
@@ -735,7 +732,7 @@
                         attrTitle: 'Permanent Delete this contact',
                         class: 'delete',
                         action: 'permanent_delete',
-                        showIf: 'onlyTrased'
+                        showIf: 'showPermanentDelete'
                     },
                     {
                         title: 'Restore',
@@ -789,17 +786,76 @@
                     return ( Object.keys( item.assign_to ).length > 0 ) ? '<a>' + item.assign_to.display_name + '</a>' : '—';
                 },
 
-                onlyTrased: function( rowAction ) {
-                    if ( this.$refs.vtable.currentTopNavFilter == 'trash' ) {
+                checkPermission: function( item ) {
+                    if ( typeof item == 'undefined' ) {
+                        return;
+                    }
+
+                    if( wpErpCrm.isCrmManager ) {
                         return true;
+                    }
+
+                    if ( wpErpCrm.isAgent && wpErpCrm.current_user_id == item.assign_to.id ) {
+                        return true;
+                    }
+
+                    return false;
+                },
+
+                showPermanentDelete: function( item ) {
+                    if ( this.$refs.vtable.currentTopNavFilter == 'trash' ) {
+                        if ( wpErpCrm.isAgent ) {
+                            return false;
+                        }
+
+                        if ( typeof item == 'undefined' ) {
+                            return true;
+                        }
+
+                        if( wpErpCrm.isCrmManager ) {
+                            return true;
+                        }
+
+                        if ( wpErpCrm.isAgent ) {
+                            return false;
+                        }
+                    }
+
+                    return false;
+                },
+
+                onlyTrased: function( item ) {
+                    if ( this.$refs.vtable.currentTopNavFilter == 'trash' ) {
+                        if ( typeof item == 'undefined' ) {
+                            return true;
+                        }
+
+                        if( wpErpCrm.isCrmManager ) {
+                            return true;
+                        }
+
+                        if ( wpErpCrm.isAgent && wpErpCrm.current_user_id == item.assign_to.id ) {
+                            return true;
+                        }
                     }
                     return false;
                 },
 
-                whenNotTrased: function( rowAction ) {
+                whenNotTrased: function( item ) {
                     if ( this.$refs.vtable.currentTopNavFilter != 'trash' ) {
-                        return true;
+                        if ( typeof item == 'undefined' ) {
+                            return true;
+                        }
+
+                        if( wpErpCrm.isCrmManager ) {
+                            return true;
+                        }
+
+                        if ( wpErpCrm.isAgent && wpErpCrm.current_user_id == item.assign_to.id ) {
+                            return true;
+                        }
                     }
+
                     return false;
                 },
 
@@ -824,8 +880,10 @@
                                     modal.enableButton();
                                     modal.closeModal();
                                     self.$refs.vtable.tableData.unshift(res.data);
-                                    self.$refs.vtable.topNavFilter.data = res.statuses;
-                                },
+                                    self.$nextTick(function() {
+                                        this.$broadcast('vtable:reload');
+                                    });
+                                 },
                                 error: function(error) {
                                     modal.enableButton();
                                     alert( error );
@@ -938,6 +996,7 @@
                             },
                             error: function(res) {
                                 alert( res );
+                                self.$refs.vtable.ajaxloader = false;
                             }
                         });
                     } else {
@@ -975,6 +1034,7 @@
                             },
                             error: function(res) {
                                 alert( res );
+                                self.$refs.vtable.ajaxloader = false;
                             }
                         });
                     } else {
@@ -984,7 +1044,6 @@
 
                 assignContact: function( ids, type ) {
                     var self = this;
-                    console.log( ids.length );
 
                     if ( ids.length > 0 ) {
                         $.erpPopup({
@@ -1007,6 +1066,7 @@
                                     error: function(error) {
                                         modal.enableButton();
                                         alert( error );
+                                        self.$refs.vtable.ajaxloader = false;
                                     }
                                 });
                             }
@@ -1014,6 +1074,7 @@
 
                     } else {
                         alert( wpErpCrm.checkedConfirm );
+                        self.$refs.vtable.ajaxloader = false;
                     }
                 },
 
@@ -1495,7 +1556,7 @@
         });
 
         Vue.component( 'contact-assign-group', {
-            props: [ 'id', 'title', 'addButtonTxt' ],
+            props: [ 'id', 'title', 'addButtonTxt', 'isPermitted' ],
 
             mixins:[mixin],
 
@@ -1504,18 +1565,26 @@
                     + '<div class="erp-handlediv" @click.prevent="handlePostboxToggle()" title="Click to toggle"><br></div>'
                     + '<h3 class="erp-hndle" @click.prevent="handlePostboxToggle()"><span>{{ title }}</span></h3>'
                     + '<div class="inside contact-group-content">'
-                        + '<div v-if="items" class="contact-group-list">'
-                            + '<p v-for="item in items">{{ item.groups.name }}'
+                        + '<div class="contact-group-list">'
+                            + '<p v-if="isItems" v-for="item in items">{{ item.groups.name }}'
                                 + '<tooltip :content="subscriberInfo( item )" :title="subscribeInfoToolTip(item)"></tooltip>'
                             + '</p>'
-                            + '<a href="#" @click.prevent="assigContactGroup()" id="erp-contact-update-assign-group" data-id="" title="{{ addButtonTxt }}"><i class="fa fa-plus"></i> {{ addButtonTxt }}</a>'
+                            + '<div v-if="!isItems && !isPermitted">No group found</div>'
+                            + '<a href="#" v-if="isPermitted" @click.prevent="assigContactGroup()" id="erp-contact-update-assign-group" data-id="" title="{{ addButtonTxt }}"><i class="fa fa-plus"></i> {{ addButtonTxt }}</a>'
                         + '</div>'
                     + '</div>'
                 + '</div><!-- .postbox -->',
 
             data: function() {
                 return {
-                    items: []
+                    items: [],
+                    isItems: false
+                }
+            },
+
+            computed: {
+                isItems: function() {
+                    return this.items.length > 0;
                 }
             },
 
@@ -1701,6 +1770,7 @@
                     var mainWrap = $(event.target).closest('.erp-crm-assign-contact');
 
                     mainWrap.find('.user-wrap').hide();
+                    mainWrap.find('span#erp-crm-edit-assign-contact-to-agent').hide();
                     this.initSearchCrmAgent();
                     mainWrap.find('.assign-form').fadeIn();
                 },
@@ -1709,21 +1779,29 @@
                     var self = this;
 
                     var target = $(event.target),
+                        form = target.closest('form'),
                         data = {
                             action : 'erp-crm-save-assign-contact',
                             _wpnonce: wpErpCrm.nonce,
-                            formData: target.closest('form').serialize()
+                            formData: form.serialize()
                         };
+
+                    form.find('.assign-form-loader').removeClass('erp-hide');
 
                     wp.ajax.send( {
                         data: data,
                         success: function( res ) {
-                            $('.erp-crm-assign-contact').load( window.location.href + ' .inner-wrap', function() {
+                            $('.user-wrap').load( window.location.href + ' .user-wrap-content', function() {
                                 self.initSearchCrmAgent();
+                                form.find('.assign-form-loader').addClass('erp-hide');
+                                var mainWrap = target.closest('.erp-crm-assign-contact');
+                                mainWrap.find('.assign-form').hide();
+                                mainWrap.find('.user-wrap').fadeIn();
+                                mainWrap.find('span#erp-crm-edit-assign-contact-to-agent').fadeIn();
                             } );
-
                         },
                         error: function(error) {
+                            form.find('.assign-form-loader').addClass('erp-hide');
                             alert( error );
                         }
                     });
@@ -1732,7 +1810,7 @@
                 cancelAssignContact: function() {
                     var target = $(event.target);
                     var mainWrap = target.closest('.erp-crm-assign-contact');
-
+                    mainWrap.find('span#erp-crm-edit-assign-contact-to-agent').fadeIn();
                     mainWrap.find('.assign-form').hide();
                     mainWrap.find('.user-wrap').fadeIn();
                 }

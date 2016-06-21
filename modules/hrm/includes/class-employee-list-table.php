@@ -160,9 +160,9 @@ class Employee_List_Table extends \WP_List_Table {
      * @return string
      */
     function column_name( $employee ) {
-        $actions           = array();
-        $delete_url        = '';
-        $data_hard = ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) ? 1 : 0;
+        $actions     = array();
+        $delete_url  = '';
+        $data_hard   = ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) ? 1 : 0;
         $delete_text = ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) ? __( 'Permanent Delete', 'erp' ) : __( 'Delete', 'erp' );
 
         if ( current_user_can( 'erp_edit_employee', $employee->id ) ) {
@@ -171,6 +171,10 @@ class Employee_List_Table extends \WP_List_Table {
 
         if ( current_user_can( 'erp_delete_employee' ) ) {
             $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" data-hard=%d title="%s">%s</a>', $delete_url, $employee->id, $data_hard, __( 'Delete this item', 'erp' ), $delete_text );
+        }
+
+        if ( $data_hard ) {
+            $actions['restore'] = sprintf( '<a href="%s" class="submitrestore" data-id="%d" title="%s">%s</a>', $delete_url, $employee->id,  __( 'Restore this item', 'erp' ), __( 'Restore', 'erp' ) );
         }
 
         return sprintf( '%4$s <a href="%3$s"><strong>%1$s</strong></a> %2$s', $employee->get_full_name(), $this->row_actions( $actions ), erp_hr_url_single_employee( $employee->id ), $employee->get_avatar() );

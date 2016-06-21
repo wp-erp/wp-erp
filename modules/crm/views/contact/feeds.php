@@ -37,7 +37,6 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
     <div class="activity-content">
 
         <ul class="timeline" v-if = "feeds.length">
-
             <template v-for="( month, feed_obj ) in feeds | formatFeeds">
 
                 <li class="time-label">

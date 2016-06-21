@@ -25,8 +25,9 @@ class Settings extends ERP_Settings_Page {
      */
     public function get_sections() {
         $sections = array(
-            'currency_option' => __( 'Currency Options', 'erp' ),
-            'erp_ac_tax'          => __( 'Sales Tax', 'erp' )
+            'currency_option' => __( 'Currency Settings', 'erp' ),
+            'general'         => __( 'Invoice Formatting', 'erp' ),
+            'erp_ac_tax'      => __( 'Sales Tax', 'erp' )
         );
 
         return apply_filters( 'erp_get_sections_' . $this->id, $sections );
@@ -38,6 +39,52 @@ class Settings extends ERP_Settings_Page {
      * @return array
      */
     public function get_section_fields( $section = '' ) {
+
+        $fields['general'] = array(
+            array( 'title' => __( '', 'erp' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
+
+            array(
+                'title'   => __( 'Sales Payment', 'erp' ),
+                'id'      => 'erp_ac_payment',
+                'type'    => 'text',
+                'default' => 'SPN-{id}',
+                'desc'    => __( 'Sales payment invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
+            ),
+
+            array(
+                'title'   => __( 'Sales Invoice', 'erp' ),
+                'id'      => 'erp_ac_invoice',
+                'type'    => 'text',
+                'default' => 'INV-{id}',
+                'desc'    => __( 'Sales invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
+            ),
+
+            array(
+                'title'   => __( 'Expense Voucher', 'erp' ),
+                'id'      => 'erp_ac_payment_voucher',
+                'type'    => 'text',
+                'default' => 'EVN-{id}',
+                'desc'    => __( 'Expense voucher invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
+            ),
+
+            array(
+                'title'   => __( 'Expense Credit', 'erp' ),
+                'id'      => 'erp_ac_vendor_credit',
+                'type'    => 'text',
+                'default' => 'ECN-{id}',
+                'desc'    => __( 'Expense credit invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
+           ),
+
+            array(
+                'title'   => __( 'Journal', 'erp' ),
+                'id'      => 'erp_ac_journal',
+                'type'    => 'text',
+                'default' => 'JRNN-{id}',
+                'desc'    => __( 'Journal invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
+            ),
+
+            array( 'type' => 'sectionend', 'id' => 'script_styling_options' ),
+        );
 
         $fields['currency_option'] = array(
 
@@ -86,6 +133,12 @@ class Settings extends ERP_Settings_Page {
                 'default' => 2
             ),
 
+            array(
+                'title'   => __( 'PDF Theme Color', 'erp' ),
+                'type'    => 'text',
+                'id'      => 'erp_ac_pdf_theme_color',
+                'class'   => 'erp-color-picker'
+            ),
 
             array( 'type' => 'sectionend', 'id' => 'script_styling_options' ),
 

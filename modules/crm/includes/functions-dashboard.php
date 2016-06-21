@@ -152,6 +152,9 @@ function erp_crm_dashboard_widget_my_schedules() {
         .fc-title {
             cursor: pointer;
         }
+        .fc-day-grid-event .fc-content {
+            white-space: normal;
+        }
     </style>
 
     <div id="erp-crm-calendar"></div>

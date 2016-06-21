@@ -210,6 +210,10 @@
 
     table.wp-list-table {
 
+        .row-actions > span:last-child > span {
+           display: none;
+        }
+
         .column-name {
             img {
                 float: left;
@@ -631,52 +635,61 @@
         }
 
         .customer-basic-info {
+
             .erp-crm-assign-contact {
                 margin-top: 0px;
                 padding: 5px 0px 5px;
 
-                h4:after {
-                    content: ' ';
-                    position: relative;
-                    top: -9px;
-                    left: 34%;
-                    display: block;
-                    width: 65%;
-                    border: 1px solid #eee;
-                }
-
-                .user-wrap {
+                .inner-wrap {
                     position: relative;
 
-                    img {
-                        float: left;
-                        margin-right: 10px;
+                    h4:after {
+                        content: ' ';
+                        position: relative;
+                        top: -9px;
+                        left: 34%;
+                        display: block;
+                        width: 65%;
+                        border: 1px solid #eee;
+                    }
+
+                    .user-wrap {
+                        position: relative;
+
+                        img {
+                            float: left;
+                            margin-right: 10px;
+                        }
                     }
 
                     span#erp-crm-edit-assign-contact-to-agent {
                         position: absolute;
-                        top: 1%;
+                        top: 50%;
                         right: 2%;
                         cursor: pointer;
                     }
-                }
 
-                .assign-form {
-                    .crm-aget-search-select-wrap {
-                        margin-bottom: 15px;
+                    .assign-form {
+                        .crm-aget-search-select-wrap {
+                            margin-bottom: 15px;
+                        }
+
+                        .assign-form-loader {
+                            margin: 4px 0px 0px 6px;
+                        }
                     }
-                }
 
-                .user-details {
-                    float: left;
-                    margin-top: -2px;
+                    .user-details {
+                        float: left;
+                        margin-top: -2px;
 
-                    a {
-                        text-decoration: none;
-                        display: block;
-                    }
-                    span {
-                        font-style: italic;
+                        a {
+                            text-decoration: none;
+                            display: block;
+                        }
+                        span {
+                            font-style: italic;
+                        }
                     }
                 }
             }
@@ -1069,7 +1082,7 @@
                     position: relative;
                     list-style: none;
                     margin:0px;
-                    border-right: 1px solid #484f51;
+                    // border-right: 1px solid #484f51;
 
                     &.active {
                         background: #191E23;

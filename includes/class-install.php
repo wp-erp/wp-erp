@@ -589,6 +589,7 @@ Company'
                 `end_date` datetime DEFAULT NULL,
                 `created_by` int(11) DEFAULT NULL,
                 `extra` longtext,
+                `sent_notification` tinyint(4) DEFAULT '0',
                 `created_at` datetime DEFAULT NULL,
                 `updated_at` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`)
@@ -729,6 +730,7 @@ Company'
               `total` decimal(10,2) DEFAULT '0.00',
               `due` decimal(10,2) unsigned DEFAULT '0.00',
               `trans_total` decimal(10,2) DEFAULT '0.00',
+              `invoice_number` varchar(200) NOT NULL,
               `files` varchar(255) DEFAULT NULL,
               `parent` bigint(20) unsigned NOT NULL DEFAULT '0',
               `created_by` int(11) unsigned DEFAULT NULL,

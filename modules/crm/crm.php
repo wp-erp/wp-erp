@@ -228,6 +228,9 @@ class Customer_Relationship {
             $localize_script['life_stages']       = erp_crm_get_life_stages_dropdown_raw();
             $localize_script['searchFields']      = erp_crm_get_serach_key( 'contact' );
             $localize_script['saveAdvanceSearch'] = erp_crm_get_save_search_item( [ 'type' => 'contact' ] );
+            $localize_script['isAdmin']           = current_user_can( 'manage_options' );
+            $localize_script['isCrmManager']      = current_user_can( 'erp_crm_manager' );
+            $localize_script['isAgent']           = current_user_can( 'erp_crm_agent' );
 
             $country = \WeDevs\ERP\Countries::instance();
             wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
@@ -241,6 +244,10 @@ class Customer_Relationship {
             $localize_script['life_stages']       = erp_crm_get_life_stages_dropdown_raw();
             $localize_script['searchFields']      = erp_crm_get_serach_key( 'company' );
             $localize_script['saveAdvanceSearch'] = erp_crm_get_save_search_item( [ 'type' => 'company' ] );
+            $localize_script['isAdmin']           = current_user_can( 'manage_options' );
+            $localize_script['isCrmManager']      = current_user_can( 'erp_crm_manager' );
+            $localize_script['isAgent']           = current_user_can( 'erp_crm_agent' );
+
             $country = \WeDevs\ERP\Countries::instance();
             wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
         }

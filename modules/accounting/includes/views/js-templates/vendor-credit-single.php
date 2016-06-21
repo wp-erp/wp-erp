@@ -13,6 +13,19 @@
             ?>
     </div>
     <div class="row">
+        <?php
+            erp_html_form_input( array(
+                'label'       => __( 'Invoice Number', 'erp' ),
+                'name'        => 'invoice',
+                'type'        => 'text',
+                'required'    => true,
+                'class'       => 'erp-ac-check-invoice-number',
+                'custom_attr' => ['data-type' => 'vendor_credit'],
+                'value'       => ''
+            ) );
+        ?>
+    </div>
+    <div class="row">
             <?php
             erp_html_form_input( array(
                 'label'       => __( 'Payment Date', 'erp' ),

@@ -29,7 +29,7 @@ Vue.component('vtable', {
                                     +'</select>'
                                     +'<select v-if="( extraActions.type == \'select_optgroup\')" name="{{ extraActions.name }}" id="{{ extraActions.id }}" class="v-select-field {{ extraActions.class }}" data-placeholder="{{ extraActions.placeholder }}" style="width:200px;">'
                                         + '<template v-if="extraActions.default">'
-                                            + '<option value="{{ extraActions.default.id }}">{{ extraActions.default.text }}</option>'
+                                            + '<option disabled="disabled" selected="selected" value="{{ extraActions.default.id }}">{{ extraActions.default.text }}</option>'
                                         + '</template>'
                                         + '<optgroup v-for="bulkOptionGroup in extraActions.options" label="{{ bulkOptionGroup.name }}">'
                                             +'<option v-for="bulkOption in bulkOptionGroup.options" value="{{ bulkOption.id }}">{{ bulkOption.text }}</option>'
@@ -108,7 +108,7 @@ Vue.component('vtable', {
                                                             + '{{{ callRowActionCallback( rowAction, item ) }}}'
                                                         + '</template>'
                                                         + '<template v-else>'
-                                                            + '<span class="{{ rowAction.class }}" v-if="showRowAction( rowAction )">'
+                                                            + '<span class="{{ rowAction.class }}" v-if="showRowAction( rowAction, item )">'
                                                                 + '<a v-if="!hasPreventRowAction( rowAction )" href="{{{ rowActionLinkCallback( rowAction, item, itemIndex ) }}}" title="{{ rowAction.attrTitle }}">{{ rowAction.title }}</a>'
                                                                 + '<a v-else href="#" @click.prevent="callAction( rowAction.action, item, itemIndex )" title="{{ rowAction.attrTitle }}">{{ rowAction.title }}</a>'
                                                                 + '<span v-if="rowActionIndex != ( itemRowActions.length - 1)"> | </span>'
@@ -582,7 +582,7 @@ Vue.component('vtable', {
             }
         },
 
-        showRowAction: function( rowAction ) {
+        showRowAction: function( rowAction, item ) {
             if ( ! rowAction.hasOwnProperty('showIf') ) {
                 return true;
             }
@@ -591,7 +591,7 @@ Vue.component('vtable', {
             var func = args.shift()
 
             if ( typeof this.$parent[func] == 'function' ) {
-                return this.$parent[func].call( this.$parent, rowAction )
+                return this.$parent[func].call( this.$parent, item )
             }
             return null;
         },
@@ -974,10 +974,14 @@ Vue.component('vtable', {
     events: {
 
         'vtable:reload': function() {
+            this.checkAllCheckbox = false;
+            this.checkboxItems = [];
+            this.bulkaction1 = this.bulkaction2 = '-1';
             this.fetchData();
         },
 
         'vtable:refresh': function() {
+            this.checkAllCheckbox = false;
             this.currentPage = 1;
             this.checkboxItems = [];
             this.bulkaction1 = this.bulkaction2 = '-1';
@@ -985,8 +989,6 @@ Vue.component('vtable', {
         },
     },
 
-    created: function() {
-    },
     ready: function() {
         var self = this;
 
@@ -1002,10 +1004,6 @@ Vue.component('vtable', {
                 jQuery(this).trigger('change');
             }
         });
-
-        // jQuery(window).bind("popstate", function() {
-        //     // this.fetchData();
-        // });
 
         this.fetchData();
         this.pageNumberInput = this.currentPage;

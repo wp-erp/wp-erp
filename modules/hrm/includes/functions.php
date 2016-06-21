@@ -137,3 +137,21 @@ function erp_parent_sort( array $objects, array &$result=array(), $parent=0, $de
     }
     return $result;
 }
+
+/**
+ * Check today's birthday through schedule job.
+ *
+ * @since 1.1
+ *
+ * @return array
+ */
+function erp_hr_schedule_check_todays_birthday() {
+    $birthdays = erp_hr_get_todays_birthday();
+
+    // Do the action if someone's birthday today
+    if ( ! empty( $birthdays ) ) {
+        do_action( 'erp_hr_happened_birthday_today', $birthdays );
+    }
+
+    return $birthdays;
+}

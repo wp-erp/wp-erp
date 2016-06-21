@@ -84,6 +84,10 @@ class Scripts {
         wp_register_script( 'erp-script', $js . '/erp' . $this->suffix . '.js', array( 'jquery', 'backbone', 'underscore', 'wp-util', 'jquery-ui-datepicker' ), $this->version, true );
         wp_register_script( 'erp-file-upload', $js . '/upload' . $this->suffix . '.js', array( 'jquery', 'plupload-handlers' ), $this->version, true );
         wp_register_script( 'erp-admin-settings', $js . '/settings' . $this->suffix . '.js', array( 'jquery' ), $this->version, true );
+
+        // tether.js
+        wp_register_script( 'erp-tether-main', $vendor . '/tether/tether.min.js', array( 'jquery' ), $this->version, true );
+        wp_register_script( 'erp-tether-drop', $vendor . '/tether/drop.min.js', array( 'jquery' ), $this->version, true );
     }
 
     /**
@@ -110,6 +114,9 @@ class Scripts {
 
         // sweet alert
         wp_register_style( 'erp-sweetalert', $vendor . '/sweetalert/sweetalert.css', false, $this->version );
+
+        // tether drop theme
+        wp_register_style( 'erp-tether-drop-theme', $vendor . '/tether/drop-theme.min.css', false, $this->version );
 
         // core css files
         wp_register_style( 'erp-styles', $css . '/admin.css', false, $this->version );
