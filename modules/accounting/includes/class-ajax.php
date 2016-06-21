@@ -51,13 +51,13 @@ class Ajax_Handler {
         }
 
         if ( $type == 'invoice' ) {
-            $invoice_number = erp_ac_invoice_prefix( 'erp_ac_invoice', erp_ac_generate_invoice_id( 'invoice' ) );    
+            $invoice_number = erp_ac_invoice_prefix( 'erp_ac_invoice', erp_ac_generate_invoice_id( 'invoice' ) );
         }
 
         if ( $type == 'vendor_credit' ) {
-            $invoice_number = erp_ac_invoice_prefix( 'erp_ac_vendor_credit', erp_ac_generate_invoice_id( 'vendor_credit' ) );      
-        } 
-        
+            $invoice_number = erp_ac_invoice_prefix( 'erp_ac_vendor_credit', erp_ac_generate_invoice_id( 'vendor_credit' ) );
+        }
+
         $this->send_success( array( 'invoice_number' => $invoice_number ) );
     }
 
@@ -162,7 +162,7 @@ class Ajax_Handler {
         $this->verify_nonce( 'erp-ac-nonce' );
         parse_str( $_POST['post'], $postdata );
         $insert_id = erp_ac_new_customer( $postdata );
-        
+
         if ( $insert_id ) {
             $this->send_success( [ 'id' => $insert_id] );
         } else {
@@ -556,7 +556,7 @@ class Ajax_Handler {
             include WPERP_ACCOUNTING_VIEWS . '/invoice.php';
         }
 
-        wp_die();
+        exit;
     }
 
     /**
@@ -573,7 +573,7 @@ class Ajax_Handler {
             include WPERP_ACCOUNTING_VIEWS . '/payment.php';
         }
 
-        wp_die();
+        exit;
     }
 
     /**
