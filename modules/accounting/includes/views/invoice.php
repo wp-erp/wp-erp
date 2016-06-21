@@ -14,7 +14,7 @@ $invoice->set_theme_color( $theme_color );
 $logo_id = (int) $company->logo;
 
 if ( $logo_id ) {
-    $image = wp_get_attachment_image_src( $logo_id, 'medium' );
+    $image = wp_get_attachment_image_src( $logo_id, 'full' );
     $url   = $image[0];
     $invoice->set_logo( $url );
 }

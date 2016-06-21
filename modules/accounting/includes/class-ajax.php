@@ -555,6 +555,8 @@ class Ajax_Handler {
         if ( $transaction_id ) {
             include WPERP_ACCOUNTING_VIEWS . '/invoice.php';
         }
+
+        wp_die();
     }
 
     /**
@@ -570,6 +572,8 @@ class Ajax_Handler {
         if ( $transaction_id ) {
             include WPERP_ACCOUNTING_VIEWS . '/payment.php';
         }
+
+        wp_die();
     }
 
     /**
