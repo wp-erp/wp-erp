@@ -2,12 +2,12 @@
 Contributors: tareq1988, wedevs, sabbir1991, asaquzzaman
 Tags: small business, SME, contact, contacts, CRM, Customer Relationship Management, employee, leave management, hr, hrm, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 4.5.2
+Tested up to: 4.5.3
 Stable tag: trunk
 License: GPLv2
 Donate Link: https://tareq.co/donate
 
-An Open Source ERP, CRM & Accounting Solution for WordPress
+An Open Source HR, CRM & Accounting Solution for WordPress
 
 == Description ==
 WP ERP is the framework for weDevs's enterprise resource management system. This plugin includes -
@@ -151,7 +151,8 @@ If you are unable to use any of the methods due to internet connectivity and fil
 
 == Changelog ==
 
-**v1.1.1 -> June 16, 2016**
+**v1.1.1 -> June 22, 2016**
+
  * [fix] Accounting report query optimzation
  * [fix] Partial payment amount problem fixed
  * [fix] Contact and company permission problem fixed for CRM agent
@@ -173,6 +174,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
  * [new] Added support for Omanian Rial currency
  * [new] Added some filter and action hook in sales transaction
  * [new] Added restore functionality in HRM employee table
+ * [new] Export invoices as PDF and send via email
  * [Update] Accounting dashaboard updated
  * [Update] Updated filter and hook for people query sql
 
