@@ -96,10 +96,3 @@
         <th>&nbsp;</th>
     </tr>
 </table>
-<?php
-
-
-
-
-
-

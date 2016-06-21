@@ -553,7 +553,7 @@ class Ajax_Handler {
         $output_method  = 'D';
 
         if ( $transaction_id ) {
-            include WPERP_ACCOUNTING_VIEWS . '/invoice.php';
+            include WPERP_ACCOUNTING_VIEWS . '/pdf/invoice.php';
         }
 
         exit;
@@ -570,7 +570,7 @@ class Ajax_Handler {
         $output_method  = 'D';
 
         if ( $transaction_id ) {
-            include WPERP_ACCOUNTING_VIEWS . '/payment.php';
+            include WPERP_ACCOUNTING_VIEWS . '/pdf/payment.php';
         }
 
         exit;
@@ -600,7 +600,7 @@ class Ajax_Handler {
         $include_file   = 'invoice' == $type ? 'invoice' : 'payment';
         $file_path      = $upload_path['basedir'] . '/' . $file_name . '.pdf';
 
-        include WPERP_ACCOUNTING_VIEWS . '/' . $include_file . '.php';
+        include WPERP_ACCOUNTING_VIEWS . '/pdf/' . $include_file . '.php';
 
         $invoice_email = new Emails\Accounting_Invoice_Email();
 
