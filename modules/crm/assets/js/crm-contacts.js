@@ -97,7 +97,6 @@
                         },
                         processResults: function ( data, params ) {
                             var terms = [];
-                            console.log( data );
                             if ( data) {
                                 $.each( data.data, function( id, text ) {
                                     terms.push({
