@@ -266,27 +266,27 @@ function er_ac_insert_transaction_permiss( $args ) {
 
 function erp_ac_generate_invoice_id( $form_type = '' ) {
 
-    $invoice_number = 0;
+    $invoice_number = 1;
 
     if ( $form_type == 'invoice' ) {
         $invoice_number = get_option( 'erp_ac_sales_invoice_number' );
-        $invoice_number = empty( $invoice_number ) ? 0 : ( $invoice_number + 1 );
+        $invoice_number = empty( $invoice_number ) ? 1 : ( $invoice_number + 1 );
     
     } else if ( $form_type == 'payment' ) {
         $invoice_number = get_option( 'erp_ac_sales_payment_number' );
-        $invoice_number = empty( $invoice_number ) ? 0 : ( $invoice_number + 1 );
+        $invoice_number = empty( $invoice_number ) ? 1 : ( $invoice_number + 1 );
     
     } else if ( $form_type == 'payment_voucher' ) {
         $invoice_number = get_option( 'erp_ac_expense_voucher_number' );
-        $invoice_number = empty( $invoice_number ) ? 0 : ( $invoice_number + 1 );
+        $invoice_number = empty( $invoice_number ) ? 1 : ( $invoice_number + 1 );
     
     } else if ( $form_type == 'vendor_credit' ) {
         $invoice_number = get_option( 'erp_ac_expense_credit_number' );
-        $invoice_number = empty( $invoice_number ) ? 0 : ( $invoice_number + 1 );
+        $invoice_number = empty( $invoice_number ) ? 1 : ( $invoice_number + 1 );
     
     } else if ( $form_type == 'journal' ) {
         $invoice_number = get_option( 'erp_ac_journal_number' );
-        $invoice_number = empty( $invoice_number ) ? 0 : ( $invoice_number + 1 );
+        $invoice_number = empty( $invoice_number ) ? 1 : ( $invoice_number + 1 );
     
     } else {
         return false;
