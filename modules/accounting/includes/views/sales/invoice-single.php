@@ -12,7 +12,7 @@ $taxinfo             = erp_ac_get_tax_info();
 
 $current_user        = wp_get_current_user();
 $sender              = $current_user->user_email;
-$email_subject       = __( 'Invoice ', 'erp' ) . $transaction->ref . __( ' from ', 'erp' ) . $company->name;
+$email_subject       = __( 'Invoice#', 'erp' ) . $transaction->invoice_number . __( ' from ', 'erp' ) . $company->name;
 ?>
 <div class="wrap">
 
@@ -37,7 +37,7 @@ $email_subject       = __( 'Invoice ', 'erp' ) . $transaction->ref . __( ' from 
                             ?>
                             <a href="#" data-transaction_id=<?php echo $transaction->id; ?> data-due_amount=<?php echo $transaction->due; ?> data-customer_id=<?php echo intval($transaction->user_id); ?> class="button button-primary button-large add-invoice-payment erp-hide-print"><?php _e( 'Add Payment', 'accounting' ); ?></a>
                             <a href="#" class="button button-large erp-ac-print erp-hide-print"><i class="fa fa-print"></i>&nbsp;<?php _e( 'Print', 'accounting' ); ?></a>
-                            <a class="button button-large drop-target"><i class="fa fa-cogs"></i>&nbsp;<?php _e( 'More Actions', 'accounting' ); ?></a>
+                            <a class="button button-large drop-target"><i class="fa fa-cog"></i>&nbsp;<?php _e( 'More Actions', 'accounting' ); ?></a>
                             <?php
                         } else {
                             ?>
@@ -62,8 +62,8 @@ $email_subject       = __( 'Invoice ', 'erp' ) . $transaction->ref . __( ' from 
             <div class="row">
                 <div class="invoice-number">
                     <?php
-                        $ivoice = isset( $transaction->invoice_number ) && ! empty( $transaction->invoice_number ) ? $transaction->invoice_number : $transaction->id; 
-                        printf( __( 'Invoice: <strong>%s</strong>', 'erp' ), $ivoice ); 
+                        $ivoice = isset( $transaction->invoice_number ) && ! empty( $transaction->invoice_number ) ? $transaction->invoice_number : $transaction->id;
+                        printf( __( 'Invoice: <strong>%s</strong>', 'erp' ), $ivoice );
                     ?>
                 </div>
             </div>

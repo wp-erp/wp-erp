@@ -182,106 +182,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
         ];
         // End SMTP settings
 
-        $fields['imap'][] = [
-            'title' => __( 'IMAP/POP3 Options', 'erp' ),
-            'type'  => 'title',
-            'desc'  => __( 'Email incoming settings for ERP.', 'erp' )
-        ];
-
-        $fields['imap'][] = [
-            'type' => 'imap_status',
-        ];
-
-        $fields['imap'][] = [
-            'title'   => __( 'Enable IMAP', 'erp' ),
-            'id'      => 'enable_imap',
-            'type'    => 'radio',
-            'options' => [ 'yes' => 'Yes', 'no' => 'No' ],
-            'default' => 'no'
-        ];
-
-        $schedules = wp_get_schedules();
-
-        $cron_schedules = [];
-        foreach( $schedules as $key => $value ) {
-            $cron_schedules[$key] = $value['display'];
-        }
-
-        $fields['imap'][] = [
-            'title'   => __( 'Cron Schedule', 'erp' ),
-            'id'      => 'schedule',
-            'type'    => 'select',
-            'desc'    => __( 'Interval time to run cron.', 'erp' ),
-            'options' => $cron_schedules,
-            'default' => 'hourly',
-        ];
-
-        $fields['imap'][] = [
-            'title'             => __( 'Mail Server', 'erp' ),
-            'id'                => 'mail_server',
-            'type'              => 'text',
-            'custom_attributes' => [
-                'placeholder'   => 'imap.gmail.com'
-            ],
-            'desc'              => __( 'IMAP/POP3 host address.', 'erp' ),
-        ];
-
-        $fields['imap'][] = [
-            'title'             => __( 'Username', 'erp' ),
-            'id'                => 'username',
-            'type'              => 'text',
-            'desc'              => __( 'Your email id.', 'erp' ),
-            'custom_attributes' => [
-                'placeholder'   => 'email@example.com'
-            ]
-        ];
-
-        $fields['imap'][] = [
-            'title' => __( 'Password', 'erp' ),
-            'id'    => 'password',
-            'type'  => 'password',
-            'desc'  => __( 'Your email password.', 'erp' )
-        ];
-
-        $fields['imap'][] = [
-            'title'   => __( 'Protocol', 'erp' ),
-            'id'      => 'protocol',
-            'type'    => 'select',
-            'desc'    => __( 'Protocol type.', 'erp' ),
-            'options' => [ 'imap' => __( 'IMAP', 'erp' ), 'pop3' => __( 'POP3', 'erp') ],
-            'default' =>  'imap',
-        ];
-
-        $fields['imap'][] = [
-            'title' => __( 'Port', 'erp' ),
-            'id'    => 'port',
-            'type'  => 'text',
-            'desc'  => __( 'IMAP: 993<br> POP3: 995', 'erp' ),
-        ];
-
-        $fields['imap'][] = [
-            'title'   => __( 'Authentication', 'erp' ),
-            'id'      => 'authentication',
-            'type'    => 'select',
-            'options' => [ 'ssl' => __( 'SSL', 'erp' ), 'tls' => __( 'TLS', 'erp'), 'notls' => __( 'None', 'erp') ],
-            'default' =>  'ssl',
-            'desc'    => __( 'Authentication type.', 'erp' ),
-        ];
-
-        $fields['imap'][] = [
-            'type' => 'imap_test_connection',
-        ];
-
-        $fields['imap'][] = [
-            'id'      => 'imap_status',
-            'type'    => 'hidden',
-            'default' => 0,
-        ];
-
-        $fields['imap'][] = [
-            'type' => 'sectionend',
-            'id'   => 'script_styling_options'
-        ];
+        $fields['imap'] = $this->get_imap_settings_fields();
         // End IMAP settings
 
         $fields = apply_filters( 'erp_settings_email_section_fields', $fields, $section );
@@ -419,6 +320,130 @@ class ERP_Email_Settings extends ERP_Settings_Page {
             </td>
         </tr>
         <?php
+    }
+
+    /**
+     * Get IMAP Settings Fields.
+     *
+     * @return array
+     */
+    protected function get_imap_settings_fields() {
+        if ( ! extension_loaded( 'imap' ) || ! function_exists( 'imap_open' ) ) {
+            $fields[] = [
+                'title' => __( 'IMAP/POP3 Options', 'erp' ),
+                'type'  => 'title',
+                'desc'  => sprintf(
+                    '%s' . __( 'Your server does not have PHP IMAP extension loaded. To enable this feature, please contact your hosting provider and ask to enable PHP IMAP extension.', 'erp' ) . '%s',
+                    '<section class="notice notice-warning"><p>',
+                    '</p></section>'
+                )
+            ];
+
+            return $fields;
+        }
+
+        $fields[] = [
+            'title' => __( 'IMAP/POP3 Options', 'erp' ),
+            'type'  => 'title',
+            'desc'  => __( 'Email incoming settings for ERP.', 'erp' )
+        ];
+
+        $fields[] = [
+            'type' => 'imap_status',
+        ];
+
+        $fields[] = [
+            'title'   => __( 'Enable IMAP', 'erp' ),
+            'id'      => 'enable_imap',
+            'type'    => 'radio',
+            'options' => [ 'yes' => 'Yes', 'no' => 'No' ],
+            'default' => 'no'
+        ];
+
+        $schedules = wp_get_schedules();
+
+        $cron_schedules = [];
+        foreach( $schedules as $key => $value ) {
+            $cron_schedules[$key] = $value['display'];
+        }
+
+        $fields[] = [
+            'title'   => __( 'Cron Schedule', 'erp' ),
+            'id'      => 'schedule',
+            'type'    => 'select',
+            'desc'    => __( 'Interval time to run cron.', 'erp' ),
+            'options' => $cron_schedules,
+            'default' => 'hourly',
+        ];
+
+        $fields[] = [
+            'title'             => __( 'Mail Server', 'erp' ),
+            'id'                => 'mail_server',
+            'type'              => 'text',
+            'custom_attributes' => [
+                'placeholder'   => 'imap.gmail.com'
+            ],
+            'desc'              => __( 'IMAP/POP3 host address.', 'erp' ),
+        ];
+
+        $fields[] = [
+            'title'             => __( 'Username', 'erp' ),
+            'id'                => 'username',
+            'type'              => 'text',
+            'desc'              => __( 'Your email id.', 'erp' ),
+            'custom_attributes' => [
+                'placeholder'   => 'email@example.com'
+            ]
+        ];
+
+        $fields[] = [
+            'title' => __( 'Password', 'erp' ),
+            'id'    => 'password',
+            'type'  => 'password',
+            'desc'  => __( 'Your email password.', 'erp' )
+        ];
+
+        $fields[] = [
+            'title'   => __( 'Protocol', 'erp' ),
+            'id'      => 'protocol',
+            'type'    => 'select',
+            'desc'    => __( 'Protocol type.', 'erp' ),
+            'options' => [ 'imap' => __( 'IMAP', 'erp' ), 'pop3' => __( 'POP3', 'erp') ],
+            'default' =>  'imap',
+        ];
+
+        $fields[] = [
+            'title' => __( 'Port', 'erp' ),
+            'id'    => 'port',
+            'type'  => 'text',
+            'desc'  => __( 'IMAP: 993<br> POP3: 995', 'erp' ),
+        ];
+
+        $fields[] = [
+            'title'   => __( 'Authentication', 'erp' ),
+            'id'      => 'authentication',
+            'type'    => 'select',
+            'options' => [ 'ssl' => __( 'SSL', 'erp' ), 'tls' => __( 'TLS', 'erp'), 'notls' => __( 'None', 'erp') ],
+            'default' =>  'ssl',
+            'desc'    => __( 'Authentication type.', 'erp' ),
+        ];
+
+        $fields[] = [
+            'type' => 'imap_test_connection',
+        ];
+
+        $fields[] = [
+            'id'      => 'imap_status',
+            'type'    => 'hidden',
+            'default' => 0,
+        ];
+
+        $fields[] = [
+            'type' => 'sectionend',
+            'id'   => 'script_styling_options'
+        ];
+
+        return $fields;
     }
 
     /**

@@ -1,13 +1,4 @@
 <div class="invoice-send-email-popup">
-    <div class="row">
-        <?php erp_html_form_input( array(
-            'label'       => __( 'From', 'erp' ),
-            'name'        => 'email-from',
-            'value'       => '{{data.sender}}',
-            'id'          => 'erp-ac-email-from',
-            'required'    => true,
-        ) ); ?>
-    </div>
 
     <div class="row row-email-to">
         <?php erp_html_form_input( array(
@@ -22,7 +13,7 @@
         <a class="invoice-email-new-receiver" title="<?php _e( 'Add Another Recipient', 'erp' ); ?>" style="cursor:pointer"><i class="fa fa-plus fa-lg"></i></a>
     </div>
 
-    <div class="row">
+    <div class="row subject">
         <?php erp_html_form_input( array(
             'label'       => __( 'Subject', 'erp' ),
             'name'        => 'email-subject',
@@ -39,7 +30,8 @@
             'name'        => 'email-body',
             'id'          => 'erp-ac-email-body',
             'type'        => 'textarea',
-            'placeholder' => 'Enter your message...'
+            'placeholder' => 'Enter your message...',
+            'required'    => true
         ) ); ?>
     </div>
 

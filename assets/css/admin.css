@@ -2615,6 +2615,12 @@ form.erp-form .erp-form-field label {
 .erp-ac-balance-sheet-wrap .widefat th {
   border: none;
 }
+#erp-ac-invoice-send-email input[type="text"],
+#erp-ac-invoice-send-email input[type="email"],
+#erp-ac-invoice-send-email textarea {
+  width: 500px;
+  margin-bottom: 10px;
+}
 @media print {
   .erp-grid-container .col-3 {
     width: 50%;

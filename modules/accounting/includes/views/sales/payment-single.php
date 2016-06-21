@@ -7,7 +7,7 @@ $taxinfo = erp_ac_get_tax_info();
 
 $current_user  = wp_get_current_user();
 $sender        = $current_user->user_email;
-$email_subject = __( 'Payment ', 'erp' ) . $transaction->ref . __( ' from ', 'erp' ) . $company->name;
+$email_subject = __( 'Payment#', 'erp' ) . $transaction->invoice_number . __( ' from ', 'erp' ) . $company->name;
 ?>
 <div class="wrap">
 
@@ -21,7 +21,7 @@ $email_subject = __( 'Payment ', 'erp' ) . $transaction->ref . __( ' from ', 'er
                     <?php if ( $status ) {
                         ?>
                         <a href="#" class="button button-large erp-ac-print erp-hide-print"><?php _e( 'Print', 'erp' ); ?></a>
-                        <a class="button button-large drop-target"><i class="fa fa-cogs"></i>&nbsp;<?php _e( 'More Actions', 'erp' ); ?></a>
+                        <a class="button button-large drop-target"><i class="fa fa-cog"></i>&nbsp;<?php _e( 'More Actions', 'erp' ); ?></a>
                         <?php
                     } else {
                         ?>
@@ -42,7 +42,7 @@ $email_subject = __( 'Payment ', 'erp' ) . $transaction->ref . __( ' from ', 'er
             </div>
             <div class="row">
                 <div class="invoice-number">
-                    <?php 
+                    <?php
                         $invoice = isset( $transaction->invoice_number ) && ! empty( $transaction->invoice_number ) ? $transaction->invoice_number : $transaction->id;
                         printf( __( 'Payment: <strong>%s</strong>', 'erp' ), $invoice );
 

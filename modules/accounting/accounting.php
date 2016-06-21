@@ -205,6 +205,8 @@ class Accounting {
         wp_localize_script( 'wp-erp-ac-js', 'ERP_AC', array(
 
             'nonce'              => wp_create_nonce( 'erp-ac-nonce' ),
+            'emailConfirm'       => __( 'Sent', 'erp' ),
+            'emailConfirmMsg'    => __( 'The email has been sent', 'erp' ),
             'confirmMsg'         => __( 'Are you sure?', 'erp-accounting' ),
             'ajaxurl'            => admin_url( 'admin-ajax.php' ),
             'decimal_separator'  => empty( $erp_ac_de_separator ) ? '.' : erp_get_option('erp_ac_de_separator'),

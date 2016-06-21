@@ -399,7 +399,6 @@
 
             duplicate: function ( e ) {
                 e.preventDefault();
-                alert('duplicate');
             },
 
             sendEmail: function( e ) {
@@ -428,14 +427,21 @@
                     },
 
                     onSubmit: function(modal) {
+                        modal.disableButton();
                         wp.ajax.send({
                             data: this.serialize(),
                             success: function (response) {
+                                swal({
+                                    title: ERP_AC.emailConfirm,
+                                    timer: 2000,
+                                    text: ERP_AC.emailConfirmMsg,
+                                    type: 'success'
+                                });
+                                modal.enableButton();
                                 modal.closeModal();
-                                console.log(response);
                             },
                             error: function (error) {
-                                console.error(error);
+                                alert(error);
                             }
                         });
                     }
@@ -444,11 +450,17 @@
 
             addNewReceiver: function( e ) {
                 e.preventDefault();
-                $('.row-email-to').append('<div class="row">' +
+                $('.subject').before('<span class="single-receiver"><div class="row">' +
                     '<label>&nbsp;</label>' +
                     '<input type="text" name="email-to[]" placeholder="name@example.com">' +
-                    '<a class="receiver-filed-remove" style="cursor:pointer"><i class="fa fa-close"></i></a>' +
-                    '</div>');
+                    '<a class="receiver-filed-remove" style="cursor:pointer"><i class="fa fa-close remove-receiver"></i></a>' +
+                    '</div></span>');
+
+                $('.remove-receiver').on('click', function(e) {
+                    e.preventDefault();
+
+                    $(e.target).closest('.single-receiver').remove();
+                });
 
             }
         },
