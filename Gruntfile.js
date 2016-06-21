@@ -120,12 +120,12 @@ module.exports = function(grunt) {
             main: {
                 options: {
                     mode: 'zip',
-                    archive: './build/wp-erp-v' + pkg.version + '.zip'
+                    archive: './build/erp-v' + pkg.version + '.zip'
                 },
                 expand: true,
                 cwd: 'build/',
                 src: ['**/*'],
-                dest: 'wp-erp'
+                dest: 'erp'
             }
         },
 
