@@ -113,7 +113,7 @@ class Commands extends \WP_CLI_Command {
      */
     public function seed( $args ) {
         global $wpdb, $current_user;
-         
+    
         $supper_admin_email = get_option( 'admin_email' );
         $current_user       = get_user_by( 'email', $supper_admin_email );
 
