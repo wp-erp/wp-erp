@@ -1787,6 +1787,113 @@ function erp_crm_get_search_by_already_saved( $save_search_id ) {
 }
 
 /**
+ * Advance filter for contact and company
+ *
+ * @since 1.1.0
+ *
+ * @param  array $custom_sql
+ * @param  array $args
+ *
+ * @return array
+ */
+function erp_crm_contact_advance_filter( $custom_sql, $args ) {
+    $pep_fileds  = [ 'first_name', 'last_name', 'email', 'website', 'company', 'phone', 'mobile', 'other', 'fax', 'notes', 'street_1', 'street_2', 'city', 'postal_code', 'currency' ];
+
+    if ( !isset( $args['erpadvancefilter'] ) || empty( $args['erpadvancefilter'] ) ) {
+        return $custom_sql;
+    }
+
+    $or_query   = explode( '&or&', $args['erpadvancefilter'] );
+    $allowed    = erp_crm_get_serach_key( $args['type'] );
+    $query_data = [];
+
+    if ( $or_query ) {
+        foreach( $or_query as $or_q ) {
+            parse_str( $or_q, $output );
+            $serach_array = array_intersect_key( $output, array_flip( array_keys( $allowed ) ) );
+            $query_data[] = $serach_array;
+        }
+    }
+
+    if ( $query_data ) {
+
+        foreach ( $query_data as $key=>$or_query ) {
+            if ( $or_query ) {
+                $i=0;
+                $custom_sql['where'][] = ( $key == 0 ) ? "AND (" : 'OR (';
+                foreach ( $or_query as $field => $value ) {
+                    if ( in_array( $field, $pep_fileds ) ) {
+                        if ( $value ) {
+                            $val = erp_crm_get_save_search_regx( $value );
+                            $custom_sql['where'][] = "(";
+                            $j=0;
+                            foreach ( $val as $search_val => $search_condition ) {
+                                $addOr = ( $j == count( $val )-1 ) ? '' : " OR ";
+
+                                if ( 'has_not' == $search_val ) {
+                                    $custom_sql['where'][] = "( $field is null OR $field = '' ) $addOr";
+                                } else if ( 'if_has' == $search_val ) {
+                                    $custom_sql['where'][] = "( $field is not null AND $field != '' ) $addOr";
+                                } else {
+                                    $custom_sql['where'][] = "$field $search_condition '$search_val' $addOr";
+                                }
+
+                                $j++;
+                            }
+                            $custom_sql['where'][] = ( $i == count( $or_query )-1 ) ? ")" : " ) AND";
+                        }
+                    } else if ( $field == 'country_state' ) {
+                        $custom_sql['where'][] = "(";
+                        $j=0;
+
+                        foreach ( $value as $key => $search_value ) {
+                            $search_condition_regx = erp_crm_get_save_search_regx( $search_value );
+                            $condition = array_shift( $search_condition_regx );
+                            $key_value = explode( ':', $search_value ); // seperate BAN:DHA to an array [ 0=>BAN, 1=>DHA]
+                            $addOr = ( $j == count( $value )-1 ) ? '' : " OR ";
+
+                            if ( count( $key_value ) > 1 ) {
+                                $custom_sql['where'][] = "( country $condition '$key_value[0]' AND state $condition '$key_value[1]')$addOr";
+                            } else {
+                                $custom_sql['where'][] = "(country $condition '$key_value[0]')$addOr";
+                            }
+
+                            $j++;
+                        }
+                        $custom_sql['where'][] = ( $i == count( $or_query )-1 ) ? ")" : " ) AND";
+                    }
+                    $i++;
+                }
+                $custom_sql['where'][] = ")";
+            }
+        }
+    }
+
+    return $custom_sql;
+}
+
+/**
+ * SQL filter to check if a people id is belongs to a saved search
+ *
+ * @since 1.1.1
+ *
+ * @param array $sql
+ * @param array $args
+ *
+ * @return array
+ */
+function erp_crm_is_people_belongs_to_saved_search( $sql, $args ) {
+    if ( empty( $args['erpadvancefilter'] ) || empty( $args['test_user'] ) ) {
+        return $sql;
+    }
+
+    $sql['where'][] = "AND people.id = " . $args['test_user'];
+
+    return $sql;
+}
+
+
+/**
  * Get todays schedules activities
  *
  * @since 1.0
