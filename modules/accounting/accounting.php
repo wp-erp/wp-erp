@@ -49,6 +49,7 @@ class Accounting {
      */
     public function __construct() {
         $this->deactive_accounting_module();
+
          // Define constants
         $this->define_constants();
 
@@ -174,6 +175,7 @@ class Accounting {
      * @return void
      */
     public function init_actions() {
+
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
         add_action( 'admin_footer', array( $this, 'admin_js_templates' ) );
     }
@@ -197,7 +199,7 @@ class Accounting {
         wp_enqueue_script( 'erp-tether-drop' );
         wp_enqueue_script( 'accounting', WPERP_ACCOUNTING_ASSETS . '/js/accounting.min.js', array( 'jquery' ), date( 'Ymd' ), true );
         wp_enqueue_script( 'wp-erp-ac-js', WPERP_ACCOUNTING_ASSETS . '/js/erp-accounting.js', array( 'jquery', 'erp-tiptip' ), date( 'Ymd' ), true );
-
+        //get_admin_page_parent() 
         $erp_ac_de_separator = erp_get_option('erp_ac_de_separator');
         $erp_ac_th_separator = erp_get_option('erp_ac_th_separator');
         $erp_ac_nm_decimal = erp_get_option('erp_ac_nm_decimal');
