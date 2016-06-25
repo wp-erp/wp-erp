@@ -113,6 +113,7 @@ function erp_get_peoples( $args = [] ) {
             $custom_sql['where'][] = "AND first_name LIKE '%$s%'";
             $custom_sql['where'][] = "OR last_name LIKE '%$s%'";
             $custom_sql['where'][] = "OR company LIKE '%$s%'";
+            $custom_sql['where'][] = "OR email LIKE '%$s%'";
         }
 
         // Check if args count true, then return total count customer according to above filter
