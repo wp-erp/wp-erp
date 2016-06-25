@@ -138,7 +138,8 @@
                                         key: type,
                                         condition: parseCondition.condition,
                                         value: parseCondition.val,
-                                        editable: false
+                                        editable: false,
+                                        title: '',
                                     }
 
                                     r.push( obj );
@@ -149,7 +150,8 @@
                                     key: type,
                                     condition: parseCondition.condition,
                                     value: parseCondition.val,
-                                    editable: false
+                                    editable: false,
+                                    title: '',
                                 }
 
                                 r.push( obj );
@@ -295,7 +297,9 @@
                         + '</template>'
                         + '<template v-else>'
                             + '<div class="filter-left">'
-                                + '{{ searchFields[field.key].title }} <span style="color:#0085ba; font-style:italic; margin:0px 2px;">{{ searchFields[field.key].condition[field.condition] }}</span> {{ field.value }}'
+                                + '{{ searchFields[field.key].title }} <span style="color:#0085ba; font-style:italic; margin:0px 2px;">{{ searchFields[field.key].condition[field.condition] }}</span> '
+                                + '<span v-if="!field.title">{{ field.value }}</span>'
+                                + '<span v-else>{{ field.title }}</span>'
                             + '</div>'
                         + '</template>'
                         + '<div class="filter-right">'
@@ -613,7 +617,8 @@
                         key: '',
                         condition: '',
                         value: '',
-                        editable: true
+                        editable: true,
+                        title: '',
                     });
 
                     this.editableMode = true;
@@ -626,7 +631,8 @@
                             key: '',
                             condition: '',
                             value: '',
-                            editable: true
+                            editable: true,
+                            title: ''
                         }
                     ]);
                     this.editableMode = true;
@@ -663,6 +669,7 @@
                     this.fields[index][fieldIndex].key = fieldObj.filterKey;
                     this.fields[index][fieldIndex].condition = fieldObj.filterCondition;
                     this.fields[index][fieldIndex].value = fieldObj.filterValue;
+                    this.fields[index][fieldIndex].title = '';
                     this.editableMode = editableMode;
 
                     this.$dispatch( 'filterContactList', this.fields );
@@ -695,6 +702,27 @@
 
                 isEditableMode: function( isEditable ) {
                     this.editableMode = isEditable;
+                }
+            },
+
+            watch: {
+                fields: {
+                    deep: true,
+                    handler: function (newFields) {
+                        var component = this,
+                            i = 0;
+
+                        for( i = 0; i < newFields.length; i++ ) {
+                            $( newFields[i] ).each( function ( j ) {
+                                var field = wpErpCrm.searchFields[ this.key ];
+
+                                if ( field && 'dropdown' === field.type && field.options ) {
+                                    var select = $( '<select>' + field.options + '</select>' );
+                                    component.fields[i][j].title = select.find( '[value="' + component.fields[i][j].value + '"]' ).html();
+                                }
+                            });
+                        }
+                    }
                 }
             }
         });

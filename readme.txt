@@ -151,6 +151,10 @@ If you are unable to use any of the methods due to internet connectivity and fil
 
 == Changelog ==
 
+**vnew
+ * [fix] Transaction update time check invoice number uniquness
+ * [update] Transaction insert form filtering  
+
 **v1.1.1 -> June 22, 2016**
 
  * [fix] Accounting report query optimzation

@@ -194,10 +194,16 @@ function erp_ac_get_transaction( $id = 0 ) {
     return $transaction;
 }
 
-function erp_ac_check_invoice_number_unique( $invoice_number ) {
-    $trans = new \WeDevs\ERP\Accounting\Model\Transaction();
-    $trans = $trans->where( 'invoice_number', '=', $invoice_number )->get()->toArray();
-
+function erp_ac_check_invoice_number_unique( $args, $is_update = false ) {
+    if ( $is_update ) {
+        $trans = new \WeDevs\ERP\Accounting\Model\Transaction();
+        $trans = $trans->where( 'invoice_number', '=', $args['invoice_number'] )
+                        ->where( 'id', '!=', $args['id'] )->get()->toArray(); 
+    } else {
+        $trans = new \WeDevs\ERP\Accounting\Model\Transaction();
+        $trans = $trans->where( 'invoice_number', '=', $args['invoice_number'] )->get()->toArray();    
+    }
+    
     if ( $trans ) {
         return false;
     } 
@@ -205,7 +211,7 @@ function erp_ac_check_invoice_number_unique( $invoice_number ) {
     return true;
 }
 
-function er_ac_insert_transaction_permiss( $args ) {
+function er_ac_insert_transaction_permiss( $args, $is_update ) {
 
     if ( $args['type'] == 'sales' && $args['form_type'] == 'payment' && $args['status'] == 'draft' ) {
         if ( ! erp_ac_create_sales_payment() ) {
@@ -259,7 +265,7 @@ function er_ac_insert_transaction_permiss( $args ) {
         return new WP_Error( 'error', __( 'Invoice number required', 'erp' ) );
     }
 
-    if ( ! erp_ac_check_invoice_number_unique( $args['invoice_number'] ) ) {
+    if ( ! erp_ac_check_invoice_number_unique( $args, $is_update ) ) {
         return new WP_Error( 'error', __( 'Invoice already exists. Please use an unique number', 'erp' ) );
     }
 }
@@ -352,8 +358,9 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
     );
 
     $args       = wp_parse_args( $args, $defaults );
+    $is_update  = $args['id'] && ! is_array( $args['id'] ) ? true : false;
 
-    $permission = er_ac_insert_transaction_permiss( $args );
+    $permission = er_ac_insert_transaction_permiss( $args, $is_update );
 
     if ( is_wp_error( $permission ) ) {
         return $permission;
@@ -389,8 +396,6 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
     if ( empty( $args['total'] ) ) {
         return new WP_Error( 'no-total', __( 'No Total provided.', 'erp' ) );
     }
-
-    $is_update = $args['id'] && ! is_array( $args['id'] ) ? true : false;
 
     // remove row id to determine if new or update
     $row_id          = (int) $args['id'];
@@ -748,6 +753,22 @@ function erp_ac_toltip_per_transaction_ledgers( $transaction ) {
     </table>
     <?php
     return ob_get_clean();
+}
+
+function erp_ac_tran_from_header() {
+    $header = [
+        'account'     => __( 'Account', 'erp' ),
+        'description' => __( 'Description', 'erp' ),
+        'qty'         => __( 'Qty', 'erp' ),
+        'unit_price'  => __( 'Unit Price', 'erp' ),
+        'discount'    => __( 'Discount', 'erp' ),
+        'tax'         => __( 'Tax(%)', 'erp' ),
+        'tax_amount'  => __( 'Tax Amount', 'erp' ),
+        'amount'      => __( 'Amount', 'erp' ),
+        'action'      => '&nbsp;'
+    ];
+
+    return apply_filters( 'erp_ac_trans_form_header', $header );
 }
 
 
