@@ -73,7 +73,7 @@ function erp_get_currencies() {
         'NOK' => __( 'Norwegian Krone', 'erp' ),
         'NZD' => __( 'New Zealand Dollar', 'erp' ),
         'OMR' => __( 'Omani Rial', 'erp'),
-        'IRR' => __('Iranian rial', 'erp'),
+        'IRR' => __('Iranian Rial', 'erp'),
         'PYG' => __( 'Paraguayan Guaraní', 'erp' ),
         'PHP' => __( 'Philippine Pesos', 'erp' ),
         'PLN' => __( 'Polish Zloty', 'erp' ),
