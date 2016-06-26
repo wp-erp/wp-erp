@@ -57,14 +57,17 @@
         </ol>
 
         <ol class="form-fields two-col">
-            <li>
-                <?php erp_html_form_input( array(
-                    'label' => __( 'Employee ID', 'erp' ),
-                    'name'  => 'personal[employee_id]',
-                    'value' => '{{ data.employee_id }}'
-                ) ); ?>
-            </li>
-
+            <?php if( current_user_can( 'erp_edit_employee' ) ): ?>
+                <li>
+                    <?php erp_html_form_input( array(
+                        'label' => __( 'Employee ID', 'erp' ),
+                        'name'  => 'personal[employee_id]',
+                        'value' => '{{ data.employee_id }}'
+                    ) ); ?>
+                </li>
+            <?php else: ?>
+                <input type="hidden" name="personal[employee_id]" value="{{ data.employee_id }}">
+            <?php endif; ?>
             <li>
                 <?php erp_html_form_input( array(
                     'label'    => __( 'Email', 'erp' ),
