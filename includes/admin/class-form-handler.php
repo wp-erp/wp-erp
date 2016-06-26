@@ -51,8 +51,8 @@ class Form_Handler {
             $active_modules = wperp()->modules->get_active_modules();
             $all_modules    = array_merge( $all_modules, $active_modules );
         }
-        update_option( 'erp_modules', $all_modules ); 
-        wp_redirect( $_POST['_wp_http_referer'] ); 
+        update_option( 'erp_modules', $all_modules );
+        wp_redirect( $_POST['_wp_http_referer'] );
         exit();
     }
 
@@ -96,16 +96,18 @@ class Form_Handler {
         ];
 
         if ( ! $this->is_valid_input( $posted, 'name' ) ) {
-            $errors[] = __( 'Company name is required', 'erp' );
+            $errors[] = 'error-company=1';
         }
 
         if ( ! $this->is_valid_input( $posted['address'], 'country' ) ) {
-            $errors[] = __( 'Country is required', 'erp' );
+            $errors[] = 'error-country=1';
         }
 
         if ( $errors ) {
-            var_dump( $errors );
-            die();
+            $args = implode( '&' , $errors );
+            $redirect_to = admin_url( 'admin.php?page=erp-company&action=edit&msg=error&' . $args );
+            wp_redirect( $redirect_to );
+            exit;
         }
 
         $args = [
