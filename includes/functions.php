@@ -43,7 +43,7 @@ function erp_get_currencies() {
     return array_unique( apply_filters( 'erp_currencies', array(
         'AED' => __( 'United Arab Emirates Dirham', 'erp' ),
         'AUD' => __( 'Australian Dollars', 'erp' ),
-        'AZD' => __( 'Argentine Peso'),
+        'AZD' => __( 'Argentine Peso', 'erp' ),
         'BDT' => __( 'Bangladeshi Taka', 'erp' ),
         'BRL' => __( 'Brazilian Real', 'erp' ),
         'BGN' => __( 'Bulgarian Lev', 'erp' ),
@@ -72,7 +72,8 @@ function erp_get_currencies() {
         'NGN' => __( 'Nigerian Naira', 'erp' ),
         'NOK' => __( 'Norwegian Krone', 'erp' ),
         'NZD' => __( 'New Zealand Dollar', 'erp' ),
-        'OMR' => __( 'Omani Rial', 'erp'),
+        'OMR' => __( 'Omani Rial', 'erp' ),
+        'IRR' => __( 'Iranian Rial', 'erp' ),
         'PYG' => __( 'Paraguayan Guaraní', 'erp' ),
         'PHP' => __( 'Philippine Pesos', 'erp' ),
         'PLN' => __( 'Polish Zloty', 'erp' ),
@@ -186,6 +187,7 @@ function erp_get_currency_symbol( $currency = '' ) {
         case 'ISK' : $currency_symbol = 'Kr.'; break;
         case 'ILS' : $currency_symbol = '&#8362;'; break;
         case 'OMR' : $currency_symbol = 'ر.ع.'; break;
+        case 'IRR' : $currency_symbol = '﷼'; break;
         case 'PHP' : $currency_symbol = '&#8369;'; break;
         case 'PLN' : $currency_symbol = '&#122;&#322;'; break;
         case 'SEK' : $currency_symbol = '&#107;&#114;'; break;
