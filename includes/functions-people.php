@@ -122,9 +122,20 @@ function erp_get_peoples( $args = [] ) {
             $wrapper_select = 'SELECT COUNT(*) as total_number FROM';
         }
 
-        $custom_sql  = apply_filters( 'erp_get_people_pre_where_join', $custom_sql, $args );
-        $sql         = apply_filters( 'erp_get_people_pre_query', $sql, $args );
-        $final_query = $wrapper_select . ' ' . implode( ' ', $sql['select'] ) . ' ' . $sql_from_tb . ' ' . implode( ' ', $sql['join'] ) . ' ' . implode( ' ', $sql['where'] ) . ' ' . $sql_group_by . ' ' . implode( ' ', $custom_sql['join'] ) . ' ' . implode( ' ', $custom_sql['where'] ) . ' ' . $sql_order_by . ' ' . $sql_limit;
+        $custom_sql      = apply_filters( 'erp_get_people_pre_where_join', $custom_sql, $args );
+        $sql             = apply_filters( 'erp_get_people_pre_query', $sql, $args );
+        $custom_group_by = ( ! empty( $custom_sql['group_by'] ) ) ? "GROUP BY " . implode( ', ', $custom_sql['group_by'] ) . ' ' : '';
+        $final_query     = $wrapper_select . ' '
+                            . implode( ' ', $sql['select'] ) . ' '
+                            . $sql_from_tb . ' '
+                            . implode( ' ', $sql['join'] ) . ' '
+                            . implode( ' ', $sql['where'] ) . ' '
+                            . $sql_group_by . ' '
+                            . implode( ' ', $custom_sql['join'] ) . ' '
+                            . implode( ' ', $custom_sql['where'] ) . ' '
+                            . $custom_group_by
+                            . $sql_order_by . ' '
+                            . $sql_limit;
 
         // print_r( $final_query ); die();
 

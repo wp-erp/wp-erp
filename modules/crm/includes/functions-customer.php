@@ -1541,6 +1541,18 @@ function erp_crm_get_serach_key( $type = '' ) {
             ]
         ],
 
+        'contact_group' => [
+            'title' => __( 'Contact Group', 'erp' ),
+            'type'  => 'dropdown',
+            'text' => '',
+            'condition' => [
+                '' => __( 'in group', 'erp' ),
+                '!' => __( 'not in group', 'erp' ),
+                '!~' => __( 'unsubscribed from' ),
+            ],
+            'options' => erp_html_generate_dropdown( wp_list_pluck( \WeDevs\ERP\CRM\Models\ContactGroup::select( 'id', 'name' )->get()->keyBy( 'id' )->toArray(), 'name' ) )
+        ],
+
         'other' => [
             'title'     => __( 'Others Fields', 'erp' ),
             'type'      => 'text',
@@ -1797,6 +1809,8 @@ function erp_crm_get_search_by_already_saved( $save_search_id ) {
  * @return array
  */
 function erp_crm_contact_advance_filter( $custom_sql, $args ) {
+    global $wpdb;
+
     $pep_fileds  = [ 'first_name', 'last_name', 'email', 'website', 'company', 'phone', 'mobile', 'other', 'fax', 'notes', 'street_1', 'street_2', 'city', 'postal_code', 'currency' ];
 
     if ( !isset( $args['erpadvancefilter'] ) || empty( $args['erpadvancefilter'] ) ) {
@@ -1816,6 +1830,7 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
     }
 
     if ( $query_data ) {
+        $is_contact_group_joined = false;
 
         foreach ( $query_data as $key=>$or_query ) {
             if ( $or_query ) {
@@ -1861,9 +1876,55 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
                             $j++;
                         }
                         $custom_sql['where'][] = ( $i == count( $or_query )-1 ) ? ")" : " ) AND";
+
+                    } else if ( $field == 'contact_group' ) {
+                        if ( ! $is_contact_group_joined ) {
+                            $custom_sql['join'][] = "LEFT JOIN {$wpdb->prefix}erp_crm_contact_subscriber as subscriber ON people.id = subscriber.user_id";
+
+                            if ( ! $args['count'] ) {
+                                $custom_sql['group_by'][] = 'people.id';
+                            }
+
+                            $is_contact_group_joined = true;
+                        }
+
+                        $custom_sql['where'][] = "(";
+
+                        $and_clause = [];
+                        foreach ( $value as $j => $search ) {
+                            $addOr = ( $j == count( $value ) - 1 ) ? '' : " OR ";
+                            $search_condition_regx = erp_crm_get_save_search_regx( $search );
+                            $condition = array_shift( $search_condition_regx );
+
+                            switch ( $condition ) {
+                                case 'NOT LIKE':
+                                    $search = str_replace( '!~' , '', $search );
+                                    $and_clause[] = "( subscriber.group_id = {$search} AND subscriber.unsubscribe_at IS NOT NULL )";
+                                    break;
+
+                                case '!=':
+                                    $search = str_replace( '!' , '', $search );
+                                     $and_clause[] = "subscriber.group_id != {$search}";
+                                    break;
+
+                                default:
+                                    $and_clause[] = "( subscriber.group_id = {$search} AND subscriber.unsubscribe_at IS NULL )";
+                                    break;
+                            }
+                        }
+
+                        if ( ! empty( $and_clause ) ) {
+                            $custom_sql['where'][] = implode( " OR ", $and_clause );
+                        } else {
+                            $custom_sql['where'][] = "1=1";
+                        }
+
+                        $custom_sql['where'][] = ( $i == count( $or_query )-1 ) ? ")" : " ) AND";
                     }
+
                     $i++;
                 }
+
                 $custom_sql['where'][] = ")";
             }
         }
