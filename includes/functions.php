@@ -1432,7 +1432,7 @@ function erp_parse_args_recursive( &$args, $defaults = [] ) {
 function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $custom_headers = [] ) {
 
     $callback = function( $phpmailer ) use( $custom_headers ) {
-        $erp_email_settings = get_option( 'erp_settings_erp-email_general', [] );
+        $erp_email_settings      = get_option( 'erp_settings_erp-email_general', [] );
         $erp_email_smtp_settings = get_option( 'erp_settings_erp-email_smtp', [] );
 
         if ( ! isset( $erp_email_settings['from_email'] ) ) {
@@ -1449,10 +1449,10 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
             $from_name = $erp_email_settings['from_name'];
         }
 
-        $content_type = 'text/html';
+        $content_type           = 'text/html';
 
-        $phpmailer->From = apply_filters( 'erp_mail_from', $from_email );
-        $phpmailer->FromName = apply_filters( 'erp_mail_from_name', $from_name );
+        $phpmailer->From        = apply_filters( 'erp_mail_from', $from_email );
+        $phpmailer->FromName    = apply_filters( 'erp_mail_from_name', $from_name );
         $phpmailer->ContentType = apply_filters( 'erp_mail_content_type', $content_type );
 
         //Return-Path
@@ -1468,16 +1468,18 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
             $phpmailer->SMTPDebug = true;
         }
 
-        if ( isset( $erp_email_smtp_settings['enable_smtp'] ) && $erp_email_smtp_settings['enable_smtp'] ) {
-            $phpmailer->Mailer = 'smtp'; //'smtp', 'mail', or 'sendmail'
+        if ( isset( $erp_email_smtp_settings['enable_smtp'] ) && $erp_email_smtp_settings['enable_smtp'] == 'yes' ) {
+            $phpmailer->Mailer     = 'smtp'; //'smtp', 'mail', or 'sendmail'
 
-            $phpmailer->Host = $erp_email_smtp_settings['mail_server'];
-            $phpmailer->SMTPSecure = ( $erp_email_smtp_settings['authentication'] != '' ) ? $erp_email_smtp_settings['authentication'] : 'ssl';
-            $phpmailer->Port = $erp_email_smtp_settings['port'];
+            $phpmailer->Host       = $erp_email_smtp_settings['mail_server'];
+            $phpmailer->SMTPSecure = ( $erp_email_smtp_settings['authentication'] != '' ) ? $erp_email_smtp_settings['authentication'] : 'smtp';
+            $phpmailer->Port       = $erp_email_smtp_settings['port'];
 
-            $phpmailer->SMTPAuth = true;
-            $phpmailer->Username = $erp_email_smtp_settings['username'];
-            $phpmailer->Password = $erp_email_smtp_settings['password'];
+            if ( $erp_email_smtp_settings['authentication'] != '' ) {
+                $phpmailer->SMTPAuth   = true;
+                $phpmailer->Username   = $erp_email_smtp_settings['username'];
+                $phpmailer->Password   = $erp_email_smtp_settings['password'];
+            }
         }
     };
 

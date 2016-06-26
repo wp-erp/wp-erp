@@ -17,7 +17,11 @@ class Form_Handler {
      */
     public function __construct() {
         $this->action( 'erp_action_create_new_company', 'create_new_company' );
+
         $this->action( 'admin_init', 'save_settings' );
+        $this->action( 'admin_init', 'tools_general' );
+        $this->action( 'admin_init', 'tools_test_mail' );
+
         add_action( 'load-erp-settings_page_erp-audit-log', array( $this, 'audit_log_bulk_action' ) );
     }
 
@@ -159,8 +163,52 @@ class Form_Handler {
         $redirect = remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'filter_audit_log' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
         wp_redirect( $redirect );
         exit();
-
     }
+
+    /**
+     * Handle all the forms in the tools page
+     *
+     * @return void
+     */
+    public function tools_general() {
+
+        // admin menu form
+        if ( isset( $_POST['erp_admin_menu'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'erp-remove-menu-nonce' ) ) {
+
+            $menu     = isset( $_POST['menu'] ) ? array_map( 'strip_tags', $_POST['menu'] ) : [];
+            $bar_menu = isset( $_POST['admin_menu'] ) ? array_map( 'strip_tags', $_POST['admin_menu'] ) : [];
+
+            update_option( '_erp_admin_menu', $menu );
+            update_option( '_erp_adminbar_menu', $bar_menu );
+        }
+    }
+
+    /**
+     * Send test email
+     *
+     * @since 1.1.2
+     *
+     * @return void
+     */
+    public function tools_test_mail() {
+        if ( isset( $_POST['erp_send_test_email'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'erp-test-email-nonce' ) ) {
+
+            $to      = isset( $_POST['to'] ) ? sanitize_text_field( $_POST['to'] ) : '';
+            $subject = sprintf( __( 'Test email from %s', 'erp' ), get_bloginfo( 'name' ) );
+            $body    = isset( $_POST['body'] ) ? $_POST['body'] : '';
+
+            if ( empty( $body ) ) {
+                $body = sprintf( __( 'This test email proves that your WordPress installation at %1$s can send emails.\n\nSent: %2$s', 'erp' ), get_bloginfo( 'url' ), date( 'r' ) );
+            }
+
+            erp_mail( $to, $subject, $body );
+
+            $redirect_to = admin_url( 'admin.php?page=erp-tools&tab=misc&sent=true' );
+            wp_redirect( $redirect_to );
+            exit;
+        }
+    }
+
 }
 
 new Form_Handler();
