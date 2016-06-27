@@ -1,6 +1,7 @@
 
 <?php
 $feeds_tab = erp_crm_get_customer_feeds_nav();
+$crm_users = erp_crm_get_crm_user();
 ?>
 <div class="wrap erp erp-crm-activities erp-single-customer" id="wp-erp">
 
@@ -22,7 +23,9 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
             <div class="filters">
                 <select style="width:260px;" v-selecttwo="filterFeeds.created_by" class="select2" v-model="filterFeeds.created_by" id="activity-created-by" data-placeholder="<?php _e( 'Created by..', 'erp' ) ?>">
                     <option value="-1"><?php _e( 'All', 'erp' ) ?></option>
-                    <?php echo erp_crm_get_employees_dropdown(); ?>
+                    <?php foreach ( $crm_users as $crm_user ) : ?>
+                        <option value="<?php echo $crm_user->ID ?>"><?php echo $crm_user->display_name; ?></option>
+                    <?php endforeach ?>
                 </select>
             </div>
 
