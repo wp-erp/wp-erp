@@ -228,7 +228,34 @@ window.wperp = window.wperp || {};
             $( '.erp-hr-audit-log' ).on( 'click', 'a.erp-audit-log-view-changes', this.viewLogChanges );
             $( 'body').on( 'change', '#filter_duration', this.customFilter );
 
+            //button group
+            $('body').on( 'click', this.btn.groupAction );
+
             this.initFields();
+        },
+
+        btn: {
+            groupAction: function(e) {
+                if ( typeof e !== 'undefined' ) {
+                    e.preventDefault();
+                }
+
+                var self = $(e.target.nodeName),
+                    btn_group  = self.closest('.erp-btn-group'),
+                    menu_ul = self.closest('.erp-dropdown-menu');
+
+                if ( self.hasClass('erp-drop-down-btn') ) {
+                    
+                    if ( btn_group.hasClass('erp-btn-open') ) {
+                        btn_group.removeClass('erp-btn-open');
+                    } else {
+                        btn_group.addClass('erp-btn-open');
+                    }
+                } else {
+                    btn_group.removeClass('erp-btn-open');
+                }
+                
+            }
         },
 
         afterNewLocation: function(e, res) {

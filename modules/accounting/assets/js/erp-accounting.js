@@ -74,15 +74,11 @@
             $( 'body' ).on( 'click', '.payment-duplicate', this.payment.duplicate );
             $( 'body' ).on( 'click', '.payment-send-email', this.invoice.sendEmail );
         },
-    //}
 
-    //if ( target ) {
-    //
-
-    users: {
-    clickOff: function() {
-        $('.erp-ac-users-wrap').off('click', '.erp-ac-convert-user-info', ERP_Accounting.users.convertUser );
-    },
+        users: {
+            clickOff: function() {
+                $('.erp-ac-users-wrap').off('click', '.erp-ac-convert-user-info', ERP_Accounting.users.convertUser );
+            },
 
             clickOn: function() {
                 $('.erp-ac-users-wrap').on('click', '.erp-ac-convert-user-info', ERP_Accounting.users.convertUser );

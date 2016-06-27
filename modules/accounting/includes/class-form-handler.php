@@ -421,11 +421,11 @@ class Form_Handler {
     public function journal_entry() {
 
         if ( ! erp_ac_create_journal() ) {
-            return new WP_Error( 'error', __( 'You do not have sufficient permissions', 'erp' ) );
+            return new \WP_Error( 'error', __( 'You do not have sufficient permissions', 'erp' ) );
         }
         
         if ( empty( $_POST['invoice'] ) ) {
-            return new WP_Error( 'error', __( 'Invoice number required', 'erp' ) );
+            return new \WP_Error( 'error', __( 'Invoice number required', 'erp' ) );
         }
 
         $invoice = isset( $_POST['invoice'] ) ? $_POST['invoice'] : '';
@@ -433,7 +433,7 @@ class Form_Handler {
         $trans   = $trans->where( 'invoice_number', '=', $invoice )->get()->toArray();
 
         if ( $trans ) {
-            return new WP_Error( 'error', __( 'Please insert unique invoice number', 'erp' ) );
+            return new \WP_Error( 'error', __( 'Please insert unique invoice number', 'erp' ) );
         }
 
 
@@ -482,7 +482,7 @@ class Form_Handler {
             }
 
             if ( ! $trans->id ) {
-                throw new Exception( __( 'Could not create transaction', 'erp' ) );
+                throw new \Exception( __( 'Could not create transaction', 'erp' ) );
             }
 
             // insert items
@@ -506,7 +506,7 @@ class Form_Handler {
                 ]);
 
                 if ( ! $journal->id ) {
-                    throw new Exception( __( 'Could not insert journal item', 'erp' ) );
+                    throw new \Exception( __( 'Could not insert journal item', 'erp' ) );
                 }
 
                 $item = [
@@ -523,7 +523,7 @@ class Form_Handler {
                 $trans_item = $trans->items()->create( $item );
 
                 if ( ! $trans_item->id ) {
-                    throw new Exception( __( 'Could not insert transaction item', 'erp' ) );
+                    throw new \Exception( __( 'Could not insert transaction item', 'erp' ) );
                 }
 
                 $order++;
