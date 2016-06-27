@@ -228,23 +228,25 @@ class Ajax {
             $this->send_error( __( 'No port address provided', 'erp' ) );
         }
 
-        if ( empty( $_REQUEST['username'] ) ) {
-            $this->send_error( __( 'No email address provided', 'erp' ) );
-        }
+        if ( $_REQUEST['authentication'] !== '' ) {
+            if ( empty( $_REQUEST['username'] ) ) {
+                $this->send_error( __( 'No email address provided', 'erp' ) );
+            }
 
-        if ( empty( $_REQUEST['password'] ) ) {
-            $this->send_error( __( 'No email password provided', 'erp' ) );
+            if ( empty( $_REQUEST['password'] ) ) {
+                $this->send_error( __( 'No email password provided', 'erp' ) );
+            }
         }
 
         if ( empty( $_REQUEST['to'] ) ) {
             $this->send_error( __( 'No testing email address provided', 'erp' ) );
         }
 
-        $mail_server = $_REQUEST['mail_server'];
-        $port = isset( $_REQUEST['port'] ) ? $_REQUEST['port'] : 465;
-        $authentication = isset( $_REQUEST['authentication'] ) ? $_REQUEST['authentication'] : 'ssl';
-        $username = $_REQUEST['username'];
-        $password = $_REQUEST['password'];
+        $mail_server    = $_REQUEST['mail_server'];
+        $port           = isset( $_REQUEST['port'] ) ? $_REQUEST['port'] : 465;
+        $authentication = isset( $_REQUEST['authentication'] ) ? $_REQUEST['authentication'] : 'smtp';
+        $username       = $_REQUEST['username'];
+        $password       = $_REQUEST['password'];
 
         global $phpmailer;
 
@@ -286,9 +288,13 @@ class Ajax {
         $phpmailer->Host       = $mail_server;
         $phpmailer->SMTPSecure = $authentication;
         $phpmailer->Port       = $port;
-        $phpmailer->SMTPAuth   = true;
-        $phpmailer->Username   = $username;
-        $phpmailer->Password   = $password;
+
+        if ( $_REQUEST['authentication'] !== '' ) {
+            $phpmailer->SMTPAuth   = true;
+            $phpmailer->Username   = $username;
+            $phpmailer->Password   = $password;
+        }
+
         $phpmailer->isHTML(true);
 
         try {

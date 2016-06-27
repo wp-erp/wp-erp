@@ -92,15 +92,15 @@ function erp_hr_dashboard_widget_latest_announcement() {
     }
 
     if ( $announcements ) {
-        ?>
-      <ul class="erp-list erp-dashboard-announcement">
+    ?>
+    <ul class="erp-list erp-dashboard-announcement">
         <?php
         $i = 0;
         foreach ( $announcements as $key => $announcement ): ?>
-            <li <?php //echo ( $announcement->status == 'unread' ) ? 'class="unread"' : ''; ?>>
+            <li>
                 <div class="announcement-title">
                     <a href="#" <?php echo ( $announcement->status == 'read' ) ? 'class="read"' : ''; ?>><?php echo $announcement->post_title; ?></a>
-                    <span class="announcement-date"><?php echo erp_format_date( $announcement->post_date ); ?></span>
+                    | <span class="announcement-date"><?php echo erp_format_date( $announcement->post_date ); ?></span>
                 </div >
                 <?php echo ( 0 == $i ) ? '<p>' . wp_trim_words( $announcement->post_content, 50 ) . '</p>' : ''; ?>
                 <div class="announcement-row-actions">

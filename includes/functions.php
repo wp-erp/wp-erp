@@ -43,7 +43,7 @@ function erp_get_currencies() {
     return array_unique( apply_filters( 'erp_currencies', array(
         'AED' => __( 'United Arab Emirates Dirham', 'erp' ),
         'AUD' => __( 'Australian Dollars', 'erp' ),
-        'AZD' => __( 'Argentine Peso'),
+        'AZD' => __( 'Argentine Peso', 'erp' ),
         'BDT' => __( 'Bangladeshi Taka', 'erp' ),
         'BRL' => __( 'Brazilian Real', 'erp' ),
         'BGN' => __( 'Bulgarian Lev', 'erp' ),
@@ -72,7 +72,8 @@ function erp_get_currencies() {
         'NGN' => __( 'Nigerian Naira', 'erp' ),
         'NOK' => __( 'Norwegian Krone', 'erp' ),
         'NZD' => __( 'New Zealand Dollar', 'erp' ),
-        'OMR' => __( 'Omani Rial', 'erp'),
+        'OMR' => __( 'Omani Rial', 'erp' ),
+        'IRR' => __( 'Iranian Rial', 'erp' ),
         'PYG' => __( 'Paraguayan Guaraní', 'erp' ),
         'PHP' => __( 'Philippine Pesos', 'erp' ),
         'PLN' => __( 'Polish Zloty', 'erp' ),
@@ -186,6 +187,7 @@ function erp_get_currency_symbol( $currency = '' ) {
         case 'ISK' : $currency_symbol = 'Kr.'; break;
         case 'ILS' : $currency_symbol = '&#8362;'; break;
         case 'OMR' : $currency_symbol = 'ر.ع.'; break;
+        case 'IRR' : $currency_symbol = '﷼'; break;
         case 'PHP' : $currency_symbol = '&#8369;'; break;
         case 'PLN' : $currency_symbol = '&#122;&#322;'; break;
         case 'SEK' : $currency_symbol = '&#107;&#114;'; break;
@@ -1430,7 +1432,7 @@ function erp_parse_args_recursive( &$args, $defaults = [] ) {
 function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $custom_headers = [] ) {
 
     $callback = function( $phpmailer ) use( $custom_headers ) {
-        $erp_email_settings = get_option( 'erp_settings_erp-email_general', [] );
+        $erp_email_settings      = get_option( 'erp_settings_erp-email_general', [] );
         $erp_email_smtp_settings = get_option( 'erp_settings_erp-email_smtp', [] );
 
         if ( ! isset( $erp_email_settings['from_email'] ) ) {
@@ -1447,10 +1449,10 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
             $from_name = $erp_email_settings['from_name'];
         }
 
-        $content_type = 'text/html';
+        $content_type           = 'text/html';
 
-        $phpmailer->From = apply_filters( 'erp_mail_from', $from_email );
-        $phpmailer->FromName = apply_filters( 'erp_mail_from_name', $from_name );
+        $phpmailer->From        = apply_filters( 'erp_mail_from', $from_email );
+        $phpmailer->FromName    = apply_filters( 'erp_mail_from_name', $from_name );
         $phpmailer->ContentType = apply_filters( 'erp_mail_content_type', $content_type );
 
         //Return-Path
@@ -1466,16 +1468,18 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
             $phpmailer->SMTPDebug = true;
         }
 
-        if ( isset( $erp_email_smtp_settings['enable_smtp'] ) && $erp_email_smtp_settings['enable_smtp'] ) {
-            $phpmailer->Mailer = 'smtp'; //'smtp', 'mail', or 'sendmail'
+        if ( isset( $erp_email_smtp_settings['enable_smtp'] ) && $erp_email_smtp_settings['enable_smtp'] == 'yes' ) {
+            $phpmailer->Mailer     = 'smtp'; //'smtp', 'mail', or 'sendmail'
 
-            $phpmailer->Host = $erp_email_smtp_settings['mail_server'];
-            $phpmailer->SMTPSecure = ( $erp_email_smtp_settings['authentication'] != '' ) ? $erp_email_smtp_settings['authentication'] : 'ssl';
-            $phpmailer->Port = $erp_email_smtp_settings['port'];
+            $phpmailer->Host       = $erp_email_smtp_settings['mail_server'];
+            $phpmailer->SMTPSecure = ( $erp_email_smtp_settings['authentication'] != '' ) ? $erp_email_smtp_settings['authentication'] : 'smtp';
+            $phpmailer->Port       = $erp_email_smtp_settings['port'];
 
-            $phpmailer->SMTPAuth = true;
-            $phpmailer->Username = $erp_email_smtp_settings['username'];
-            $phpmailer->Password = $erp_email_smtp_settings['password'];
+            if ( $erp_email_smtp_settings['authentication'] != '' ) {
+                $phpmailer->SMTPAuth   = true;
+                $phpmailer->Username   = $erp_email_smtp_settings['username'];
+                $phpmailer->Password   = $erp_email_smtp_settings['password'];
+            }
         }
     };
 

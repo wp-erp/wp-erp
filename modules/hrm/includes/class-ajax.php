@@ -876,7 +876,7 @@ class Ajax_Handler {
 
         $post_data = [
             'title' => get_the_title(),
-            'content' => get_the_content()
+            'content' => wpautop( get_the_content() )
         ];
 
         wp_reset_postdata();

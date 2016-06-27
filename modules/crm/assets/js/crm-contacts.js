@@ -36,7 +36,7 @@
             initSearchCrmAgent: function() {
                 $( 'select#erp-select-user-for-assign-contact' ).select2({
                     allowClear: true,
-                    placeholder: 'Select an Agent',
+                    placeholder: 'Filter by Owner',
                     minimumInputLength: 3,
                     ajax: {
                         url: wpErpCrm.ajaxurl,
@@ -138,7 +138,8 @@
                                         key: type,
                                         condition: parseCondition.condition,
                                         value: parseCondition.val,
-                                        editable: false
+                                        editable: false,
+                                        title: '',
                                     }
 
                                     r.push( obj );
@@ -149,7 +150,8 @@
                                     key: type,
                                     condition: parseCondition.condition,
                                     value: parseCondition.val,
-                                    editable: false
+                                    editable: false,
+                                    title: '',
                                 }
 
                                 r.push( obj );
@@ -234,7 +236,7 @@
                 type: 'select', // or text|email|number|url|datefield
                 id: 'erp-select-user-for-assign-contact',
                 class: 'erp-filter-contact-owner',
-                placeholder: 'Select an agent',
+                placeholder: 'Filter by Owner',
                 options: [
                     {
                         id : '',
@@ -248,7 +250,7 @@
                 type: 'select_optgroup', // or text|email|number|url|datefield
                 id: 'erp-select-save-advance-filter',
                 class: 'erp-save-advance-filter',
-                placeholder: 'Select a save filter',
+                placeholder: 'Filter by Segment',
                 default: {
                     id: '',
                     text: '--Select save filter --'
@@ -295,7 +297,9 @@
                         + '</template>'
                         + '<template v-else>'
                             + '<div class="filter-left">'
-                                + '{{ searchFields[field.key].title }} <span style="color:#0085ba; font-style:italic; margin:0px 2px;">{{ searchFields[field.key].condition[field.condition] }}</span> {{ field.value }}'
+                                + '{{ searchFields[field.key].title }} <span style="color:#0085ba; font-style:italic; margin:0px 2px;">{{ searchFields[field.key].condition[field.condition] }}</span> '
+                                + '<span v-if="!field.title">{{ field.value }}</span>'
+                                + '<span v-else>{{ field.title }}</span>'
                             + '</div>'
                         + '</template>'
                         + '<div class="filter-right">'
@@ -420,8 +424,8 @@
                     + '</div>'
                     + '<div class="erp-advance-search-action-wrapper" v-if="ifHasAnyFilter()">'
                         + '<div class="saveasnew-wrapper" v-show="isNewSave">'
-                            + '<input type="text" class="save-search-name" v-model="saveSearchObj.searchName" placeholder="Name this filter..">'
-                            + '<label for="save-search-global"><input type="checkbox" id="save-search-global" class="save-search-global" v-model="saveSearchObj.searchItGlobal"> Make filter available for all agents</label>'
+                            + '<input type="text" class="save-search-name" v-model="saveSearchObj.searchName" placeholder="Name this Segment..">'
+                            + '<label for="save-search-global"><input type="checkbox" id="save-search-global" class="save-search-global" v-model="saveSearchObj.searchItGlobal"> Make segment available for all users</label>'
                             + '<input type="submit" class="button button-primary" v-if="isUpdate" @click.prevent="searchSave(\'update\')" value="Update">'
                             + '<input type="submit" class="button button-primary" v-if="!isUpdate" @click.prevent="searchSave(\'save\')" value="Save">'
                             + '<input type="submit" class="button" v-if="isUpdate" @click.prevent="cancelSave(\'update\')" value="Cancel">'
@@ -613,7 +617,8 @@
                         key: '',
                         condition: '',
                         value: '',
-                        editable: true
+                        editable: true,
+                        title: '',
                     });
 
                     this.editableMode = true;
@@ -626,7 +631,8 @@
                             key: '',
                             condition: '',
                             value: '',
-                            editable: true
+                            editable: true,
+                            title: ''
                         }
                     ]);
                     this.editableMode = true;
@@ -663,6 +669,7 @@
                     this.fields[index][fieldIndex].key = fieldObj.filterKey;
                     this.fields[index][fieldIndex].condition = fieldObj.filterCondition;
                     this.fields[index][fieldIndex].value = fieldObj.filterValue;
+                    this.fields[index][fieldIndex].title = '';
                     this.editableMode = editableMode;
 
                     this.$dispatch( 'filterContactList', this.fields );
@@ -695,6 +702,27 @@
 
                 isEditableMode: function( isEditable ) {
                     this.editableMode = isEditable;
+                }
+            },
+
+            watch: {
+                fields: {
+                    deep: true,
+                    handler: function (newFields) {
+                        var component = this,
+                            i = 0;
+
+                        for( i = 0; i < newFields.length; i++ ) {
+                            $( newFields[i] ).each( function ( j ) {
+                                var field = wpErpCrm.searchFields[ this.key ];
+
+                                if ( field && 'dropdown' === field.type && field.options ) {
+                                    var select = $( '<select>' + field.options + '</select>' );
+                                    component.fields[i][j].title = select.find( '[value="' + component.fields[i][j].value + '"]' ).html();
+                                }
+                            });
+                        }
+                    }
                 }
             }
         });
@@ -761,7 +789,14 @@
                     placeholder: ( wpErpCrm.contact_type == 'company' ) ? 'Search Compnay' : 'Search Contact',
                 },
                 isRequestDone: false,
-                showHideSegment: false
+                showHideSegment: false,
+                segmentBtnText: '',
+            },
+
+            computed: {
+                segmentBtnText: function() {
+                    return ( this.showHideSegment ) ? '<i class="fa fa-search" aria-hidden="true"></i> Hide Search Segment' : '<i class="fa fa-search" aria-hidden="true"></i> Search Segment';
+                }
             },
 
             methods: {
