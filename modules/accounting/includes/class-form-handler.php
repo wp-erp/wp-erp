@@ -388,7 +388,7 @@ class Form_Handler {
                 continue;
             }
 
-            $items[] = [
+            $items[] = apply_filters( 'erp_ac_transaction_lines', [
                 'item_id'     => isset( $_POST['items_id'][$key] ) ? $_POST['items_id'][$key] : [],
                 'journal_id'  => isset( $_POST['journals_id'][$key] ) ? $_POST['journals_id'][$key] : [],
                 'account_id'  => (int) $acc_id,
@@ -400,7 +400,7 @@ class Form_Handler {
                 'tax_rate'    => isset( $_POST['tax_rate'][$key] ) ? $_POST['tax_rate'][$key] : 0,
                 'line_total'  => erp_ac_format_decimal( $line_total ),
                 'tax_journal' => isset( $_POST['tax_journal'][$key] ) ? $_POST['tax_journal'][$key] : 0
-            ];
+            ], $key, $_POST );
         }
 
         // New or edit?
@@ -421,11 +421,11 @@ class Form_Handler {
     public function journal_entry() {
 
         if ( ! erp_ac_create_journal() ) {
-            return new WP_Error( 'error', __( 'You do not have sufficient permissions', 'erp' ) );
+            return new \WP_Error( 'error', __( 'You do not have sufficient permissions', 'erp' ) );
         }
-        
+
         if ( empty( $_POST['invoice'] ) ) {
-            return new WP_Error( 'error', __( 'Invoice number required', 'erp' ) );
+            return new \WP_Error( 'error', __( 'Invoice number required', 'erp' ) );
         }
 
         $invoice = isset( $_POST['invoice'] ) ? $_POST['invoice'] : '';
@@ -433,9 +433,8 @@ class Form_Handler {
         $trans   = $trans->where( 'invoice_number', '=', $invoice )->get()->toArray();
 
         if ( $trans ) {
-            return new WP_Error( 'error', __( 'Please insert unique invoice number', 'erp' ) );
+            return new \WP_Error( 'error', __( 'Please insert unique invoice number', 'erp' ) );
         }
-
 
         global $wpdb;
 
