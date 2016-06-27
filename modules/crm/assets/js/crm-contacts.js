@@ -36,7 +36,7 @@
             initSearchCrmAgent: function() {
                 $( 'select#erp-select-user-for-assign-contact' ).select2({
                     allowClear: true,
-                    placeholder: 'Select an Agent',
+                    placeholder: 'Filter by Owner',
                     minimumInputLength: 3,
                     ajax: {
                         url: wpErpCrm.ajaxurl,
@@ -236,7 +236,7 @@
                 type: 'select', // or text|email|number|url|datefield
                 id: 'erp-select-user-for-assign-contact',
                 class: 'erp-filter-contact-owner',
-                placeholder: 'Select an agent',
+                placeholder: 'Filter by Owner',
                 options: [
                     {
                         id : '',
@@ -250,7 +250,7 @@
                 type: 'select_optgroup', // or text|email|number|url|datefield
                 id: 'erp-select-save-advance-filter',
                 class: 'erp-save-advance-filter',
-                placeholder: 'Select a save filter',
+                placeholder: 'Filter by Segment',
                 default: {
                     id: '',
                     text: '--Select save filter --'
@@ -424,8 +424,8 @@
                     + '</div>'
                     + '<div class="erp-advance-search-action-wrapper" v-if="ifHasAnyFilter()">'
                         + '<div class="saveasnew-wrapper" v-show="isNewSave">'
-                            + '<input type="text" class="save-search-name" v-model="saveSearchObj.searchName" placeholder="Name this filter..">'
-                            + '<label for="save-search-global"><input type="checkbox" id="save-search-global" class="save-search-global" v-model="saveSearchObj.searchItGlobal"> Make filter available for all agents</label>'
+                            + '<input type="text" class="save-search-name" v-model="saveSearchObj.searchName" placeholder="Name this Segment..">'
+                            + '<label for="save-search-global"><input type="checkbox" id="save-search-global" class="save-search-global" v-model="saveSearchObj.searchItGlobal"> Make segment available for all users</label>'
                             + '<input type="submit" class="button button-primary" v-if="isUpdate" @click.prevent="searchSave(\'update\')" value="Update">'
                             + '<input type="submit" class="button button-primary" v-if="!isUpdate" @click.prevent="searchSave(\'save\')" value="Save">'
                             + '<input type="submit" class="button" v-if="isUpdate" @click.prevent="cancelSave(\'update\')" value="Cancel">'
@@ -789,7 +789,14 @@
                     placeholder: ( wpErpCrm.contact_type == 'company' ) ? 'Search Compnay' : 'Search Contact',
                 },
                 isRequestDone: false,
-                showHideSegment: false
+                showHideSegment: false,
+                segmentBtnText: '',
+            },
+
+            computed: {
+                segmentBtnText: function() {
+                    return ( this.showHideSegment ) ? '<i class="fa fa-search" aria-hidden="true"></i> Hide Search Segment' : '<i class="fa fa-search" aria-hidden="true"></i> Search Segment';
+                }
             },
 
             methods: {

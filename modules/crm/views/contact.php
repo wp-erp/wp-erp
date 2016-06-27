@@ -23,7 +23,7 @@ if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_co
             <a href="#" @click.prevent="addContact( 'contact', '<?php _e( 'Add New Contact', 'erp' ); ?>' )" id="erp-customer-new" class="erp-contact-new add-new-h2"><?php _e( 'Add New Contact', 'erp' ); ?></a>
         <?php endif ?>
 
-        <a href="#" @click.prevent="addSearchSegment()" id="erp-contact-search-segmen" class="erp-search-segment add-new-h2" v-text="( showHideSegment ) ? '<?php _e( 'Hide Search Segment', 'erp' ); ?>' : '<?php _e( 'Add Search Segment', 'erp' ); ?>'"></a>
+        <a href="#" @click.prevent="addSearchSegment()" id="erp-contact-search-segmen" class="erp-search-segment add-new-h2">{{{ segmentBtnText }}}</a>
     </h2>
 
     <!-- Advance search filter vue component -->
