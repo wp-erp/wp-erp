@@ -199,13 +199,12 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
 <!-- Single button -->
 <div class="erp-btn-group">
   <button type="button" class="erp-drop-down-btn erp-btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Action <span class="erp-caret"></span>
+    <?php _e( 'Save as Draft', 'erp' ); ?> <span class="erp-caret"></span>
   </button>
   <ul class="erp-dropdown-menu">
-    <li><a href="#">Action</a></li>
-    <li><a href="#">Another action</a></li>
-    <li><a href="#">Something else here</a></li>
-    <li><a href="#">Separated link</a></li>
+    <li><a href="#"><?php _e( 'Save as Draft', 'erp' ); ?></a></li>
+    <li><a href="#"><?php _e( 'Save & submit for approval', 'erp' ); ?></a></li>
+    <li><a href="#"><?php _e( 'Save & add another', 'erp' ); ?></a></li>
   </ul>
 </div>
 
