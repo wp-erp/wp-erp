@@ -183,7 +183,7 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
 
         <?php wp_nonce_field( 'erp-ac-trans-new' ); ?>
 
-        <?php
+<!--         <?php
         if ( erp_ac_publish_sales_payment() ) {
             ?>
             <input type="submit" name="submit_erp_ac_trans" id="submit_erp_ac_trans" class="button button-primary" value="<?php _e( 'Receive Payment', 'erp' ); ?>">
@@ -192,6 +192,26 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
         ?>
 
         <input type="submit" name="submit_erp_ac_trans_draft" id="submit_erp_ac_trans_draft" class="button button-secondary" value="<?php _e( 'Save as Draft', 'erp' ); ?>">
+
+
+ -->
+
+<!-- Single button -->
+<div class="erp-btn-group">
+  <button type="button" class="erp-drop-down-btn erp-btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Action <span class="erp-caret"></span>
+  </button>
+  <ul class="erp-dropdown-menu">
+    <li><a href="#">Action</a></li>
+    <li><a href="#">Another action</a></li>
+    <li><a href="#">Something else here</a></li>
+    <li><a href="#">Separated link</a></li>
+  </ul>
+</div>
+
+
+
+
     </form>
     <div class="erp-ac-receive-payment-table-clone" style="display: none;">
 

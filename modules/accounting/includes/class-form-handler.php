@@ -481,7 +481,7 @@ class Form_Handler {
             }
 
             if ( ! $trans->id ) {
-                throw new Exception( __( 'Could not create transaction', 'erp' ) );
+                throw new \Exception( __( 'Could not create transaction', 'erp' ) );
             }
 
             // insert items
@@ -505,7 +505,7 @@ class Form_Handler {
                 ]);
 
                 if ( ! $journal->id ) {
-                    throw new Exception( __( 'Could not insert journal item', 'erp' ) );
+                    throw new \Exception( __( 'Could not insert journal item', 'erp' ) );
                 }
 
                 $item = [
@@ -522,7 +522,7 @@ class Form_Handler {
                 $trans_item = $trans->items()->create( $item );
 
                 if ( ! $trans_item->id ) {
-                    throw new Exception( __( 'Could not insert transaction item', 'erp' ) );
+                    throw new \Exception( __( 'Could not insert transaction item', 'erp' ) );
                 }
 
                 $order++;
