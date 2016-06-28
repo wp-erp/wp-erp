@@ -237,7 +237,7 @@ window.wperp = window.wperp || {};
         btn: {
             groupAction: function(e) {
                 if ( typeof e !== 'undefined' ) {
-                    e.preventDefault();
+                    return;
                 }
 
                 var self = $(e.target.nodeName),
