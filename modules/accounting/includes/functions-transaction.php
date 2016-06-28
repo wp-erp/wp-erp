@@ -550,7 +550,7 @@ function erp_ac_item_update( $item, $args, $trans_id, $journal_id, $tax_journal,
     if ( intval( $item['item_id'] ) ) {
         $trans_item = WeDevs\ERP\Accounting\Model\Transaction_Items::where( 'id', '=', $item['item_id'] )
             ->update([
-                'product_id'  => '',
+                'product_id'  => isset( $item['product_id'] ) ? $item['product_id'] : '',
                 'description' => $item['description'],
                 'qty'         => $item['qty'],
                 'unit_price'  => $item['unit_price'],
@@ -567,7 +567,7 @@ function erp_ac_item_update( $item, $args, $trans_id, $journal_id, $tax_journal,
     } else {
         $trans_item = WeDevs\ERP\Accounting\Model\Transaction_Items::create([
             'journal_id'     => $journal_id,
-            'product_id'     => '',
+            'product_id'     => isset( $item['product_id'] ) ? $item['product_id'] : '',
             'transaction_id' => $trans_id,
             'description'    => $item['description'],
             'qty'            => $item['qty'],
