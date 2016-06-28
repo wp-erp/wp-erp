@@ -771,6 +771,18 @@ function erp_ac_tran_from_header() {
     return apply_filters( 'erp_ac_trans_form_header', $header );
 }
 
+function erp_ac_get_status_according_with_btn( $btn ) {
+    $button = [
+        'save_and_draft'               => 'draft',
+        'save_and_submit_for_approval' => 'pending',
+        'save_and_add_another'         => 'draft',
+        'approve'                      => 'closed',
+        'approve_and_add_another'      => 'closed'
+    ];
+
+    return $button[$btn];
+}
+
 
 
 

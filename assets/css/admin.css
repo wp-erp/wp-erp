@@ -2621,6 +2621,12 @@ form.erp-form .erp-form-field label {
   width: 500px;
   margin-bottom: 10px;
 }
+.erp-ac-btn-group-wrap {
+  margin-top: 5%;
+}
+.erp-ac-btn-group-wrap .erp-btn-group-first-child-after {
+  margin-right: 18.4%;
+}
 @media print {
   .erp-grid-container .col-3 {
     width: 50%;
@@ -2654,7 +2660,7 @@ form.erp-form .erp-form-field label {
   display: inline-block;
   padding: 6px 12px;
   margin-bottom: 0;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 400;
   line-height: 1.42857143;
   text-align: center;
@@ -2669,7 +2675,26 @@ form.erp-form .erp-form-field label {
   user-select: none;
   background-image: none;
   border: 1px solid transparent;
-  border-radius: 4px;
+  border-radius: 4px 0 0 4px;
+}
+.erp-btn-group .erp-drop-down-child-btn,
+.erp-btn-group-vertical .erp-drop-down-child-btn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  margin-left: -1px;
+}
+.erp-btn-group .erp-sr-only,
+.erp-btn-group-vertical .erp-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
 }
 .erp-btn-group .erp-btn-info,
 .erp-btn-group-vertical .erp-btn-info,
@@ -2749,6 +2774,10 @@ form.erp-form .erp-form-field label {
   color: #262626;
   text-decoration: none;
   background-color: #f5f5f5;
+}
+.erp-btn-group .erp-drop-down-cancel-btn,
+.erp-btn-group-vertical .erp-drop-down-cancel-btn {
+  border-radius: 4px;
 }
 .erp-btn-open > .erp-dropdown-menu {
   display: block;

@@ -288,11 +288,6 @@ class Form_Handler {
         exit;
     }
 
-    /**
-     * Handle the transaction new and edit form
-     *
-     * @return void
-     */
     public function transaction_form() {
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-ac-trans-new' ) ) {
             die( __( 'Are you cheating?', 'erp' ) );
@@ -302,33 +297,54 @@ class Form_Handler {
             wp_die( __( 'Permission Denied!', 'erp' ) );
         }
 
+        $insert_id = $this->transaction_data_process( $_POST );
+
+        if ( is_wp_error( $insert_id ) ) {
+            $redirect_to = add_query_arg( array( 'msg' => $insert_id->get_error_message() ), $page_url );
+        } else {
+            $redirect_to = add_query_arg( array( 'msg' => 'success' ), $page_url );
+        }
+
+        wp_safe_redirect( $redirect_to );
+        exit;
+    }
+
+    /**
+     * Handle the transaction new and edit form
+     *
+     * @return void
+     */
+    public function transaction_data_process( $postdata ) {
+ 
+
         $errors          = array();
-        $field_id        = isset( $_POST['field_id'] ) ? intval( $_POST['field_id'] ) : 0;
-        $page            = isset( $_POST['page'] ) ? sanitize_text_field( $_POST['page'] ) : '';
-        $type            = isset( $_POST['type'] ) ? sanitize_text_field( $_POST['type'] ) : '';
-        $form_type       = isset( $_POST['form_type'] ) ? sanitize_text_field( $_POST['form_type'] ) : '';
-        $account_id      = isset( $_POST['account_id'] ) ? intval( $_POST['account_id'] ) : 0;
-        $status          = isset( $_POST['status'] ) ? sanitize_text_field( $_POST['status'] ) : 'closed';
-        $user_id         = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
-        $billing_address = isset( $_POST['billing_address'] ) ? wp_kses_post( $_POST['billing_address'] ) : '';
-        $ref             = isset( $_POST['ref'] ) ? sanitize_text_field( $_POST['ref'] ) : '';
-        $issue_date      = isset( $_POST['issue_date'] ) ? sanitize_text_field( $_POST['issue_date'] ) : '';
-        $due_date        = isset( $_POST['due_date'] ) ? sanitize_text_field( $_POST['due_date'] ) : '';
-        $summary         = isset( $_POST['summary'] ) ? wp_kses_post( $_POST['summary'] ) : '';
-        $total           = isset( $_POST['price_total'] ) ? sanitize_text_field( erp_ac_format_decimal( $_POST['price_total'] ) ) : '';
-        $files           = isset( $_POST['files'] ) ? maybe_serialize( $_POST['files'] ) : '';
-        $currency        = isset( $_POST['currency'] ) ? sanitize_text_field( $_POST['currency'] ) : 'USD';
-        $transaction_id  = isset( $_POST['id'] ) ? $_POST['id'] : false;
-        $line_account    = isset( $_POST['line_account'] ) ? $_POST['line_account'] : array();
+        $insert_id       = 0;
+        $field_id        = isset( $postdata['field_id'] ) ? intval( $postdata['field_id'] ) : 0;
+        $page            = isset( $postdata['page'] ) ? sanitize_text_field( $postdata['page'] ) : '';
+        $type            = isset( $postdata['type'] ) ? sanitize_text_field( $postdata['type'] ) : '';
+        $form_type       = isset( $postdata['form_type'] ) ? sanitize_text_field( $postdata['form_type'] ) : '';
+        $account_id      = isset( $postdata['account_id'] ) ? intval( $postdata['account_id'] ) : 0;
+        $status          = isset( $postdata['status'] ) ? sanitize_text_field( $postdata['status'] ) : 'closed';
+        $user_id         = isset( $postdata['user_id'] ) ? intval( $postdata['user_id'] ) : 0;
+        $billing_address = isset( $postdata['billing_address'] ) ? wp_kses_post( $postdata['billing_address'] ) : '';
+        $ref             = isset( $postdata['ref'] ) ? sanitize_text_field( $postdata['ref'] ) : '';
+        $issue_date      = isset( $postdata['issue_date'] ) ? sanitize_text_field( $postdata['issue_date'] ) : '';
+        $due_date        = isset( $postdata['due_date'] ) ? sanitize_text_field( $postdata['due_date'] ) : '';
+        $summary         = isset( $postdata['summary'] ) ? wp_kses_post( $postdata['summary'] ) : '';
+        $total           = isset( $postdata['price_total'] ) ? sanitize_text_field( erp_ac_format_decimal( $postdata['price_total'] ) ) : '';
+        $files           = isset( $postdata['files'] ) ? maybe_serialize( $postdata['files'] ) : '';
+        $currency        = isset( $postdata['currency'] ) ? sanitize_text_field( $postdata['currency'] ) : 'USD';
+        $transaction_id  = isset( $postdata['id'] ) ? $postdata['id'] : false;
+        $line_account    = isset( $postdata['line_account'] ) ? $postdata['line_account'] : array();
         $page_url        = admin_url( 'admin.php?page=' . $page );
-        $items_id        = isset( $_POST['items_id'] ) ? $_POST['items_id'] : [];
-        $journals_id     = isset( $_POST['journals_id'] ) ? $_POST['journals_id'] : [];
-        $partial_id      = isset( $_POST['partial_id'] ) ? $_POST['partial_id'] : [];
-        $sub_total       = isset( $_POST['sub_total'] ) ? $_POST['sub_total'] : '0.00';
-        $invoice         = isset( $_POST['invoice'] ) ? $_POST['invoice'] : erp_ac_generate_invoice_id( $form_type );
+        $items_id        = isset( $postdata['items_id'] ) ? $postdata['items_id'] : [];
+        $journals_id     = isset( $postdata['journals_id'] ) ? $postdata['journals_id'] : [];
+        $partial_id      = isset( $postdata['partial_id'] ) ? $postdata['partial_id'] : [];
+        $sub_total       = isset( $postdata['sub_total'] ) ? $postdata['sub_total'] : '0.00';
+        $invoice         = isset( $postdata['invoice'] ) ? $postdata['invoice'] : erp_ac_generate_invoice_id( $form_type );
 
         //for draft
-        $status = isset( $_POST['submit_erp_ac_trans_draft'] ) ? 'draft' : $status;
+        $status = isset( $postdata['submit_erp_ac_trans_draft'] ) ? 'draft' : $status;
 
         // some basic validation
         if ( ! $issue_date ) {
@@ -372,7 +388,7 @@ class Form_Handler {
             'trans_total'     => $total,
             'files'           => $files,
             'currency'        => $currency,
-            'line_total'      => isset( $_POST['line_total'] ) ? $_POST['line_total'] : array()
+            'line_total'      => isset( $postdata['line_total'] ) ? $postdata['line_total'] : array()
         ];
 
         // set invoice and vendor credit due to full amount
@@ -382,25 +398,25 @@ class Form_Handler {
 
         $items = [];
         foreach ( $line_account as $key => $acc_id) {
-            $line_total = erp_ac_format_decimal( $_POST['line_total'][ $key ] );
+            $line_total = erp_ac_format_decimal( $postdata['line_total'][ $key ] );
 
             if ( ! $acc_id || ! $line_total ) {
                 continue;
             }
 
             $items[] = apply_filters( 'erp_ac_transaction_lines', [
-                'item_id'     => isset( $_POST['items_id'][$key] ) ? $_POST['items_id'][$key] : [],
-                'journal_id'  => isset( $_POST['journals_id'][$key] ) ? $_POST['journals_id'][$key] : [],
+                'item_id'     => isset( $postdata['items_id'][$key] ) ? $postdata['items_id'][$key] : [],
+                'journal_id'  => isset( $postdata['journals_id'][$key] ) ? $postdata['journals_id'][$key] : [],
                 'account_id'  => (int) $acc_id,
-                'description' => sanitize_text_field( $_POST['line_desc'][ $key ] ),
-                'qty'         => intval( $_POST['line_qty'][ $key ] ),
-                'unit_price'  => erp_ac_format_decimal( $_POST['line_unit_price'][ $key ] ),
-                'discount'    => erp_ac_format_decimal( $_POST['line_discount'][ $key ] ),
-                'tax'         => isset( $_POST['line_tax'][$key] ) ? $_POST['line_tax'][$key] : 0,
-                'tax_rate'    => isset( $_POST['tax_rate'][$key] ) ? $_POST['tax_rate'][$key] : 0,
+                'description' => sanitize_text_field( $postdata['line_desc'][ $key ] ),
+                'qty'         => intval( $postdata['line_qty'][ $key ] ),
+                'unit_price'  => erp_ac_format_decimal( $postdata['line_unit_price'][ $key ] ),
+                'discount'    => erp_ac_format_decimal( $postdata['line_discount'][ $key ] ),
+                'tax'         => isset( $postdata['line_tax'][$key] ) ? $postdata['line_tax'][$key] : 0,
+                'tax_rate'    => isset( $postdata['tax_rate'][$key] ) ? $postdata['tax_rate'][$key] : 0,
                 'line_total'  => erp_ac_format_decimal( $line_total ),
-                'tax_journal' => isset( $_POST['tax_journal'][$key] ) ? $_POST['tax_journal'][$key] : 0
-            ], $key, $_POST );
+                'tax_journal' => isset( $postdata['tax_journal'][$key] ) ? $postdata['tax_journal'][$key] : 0
+            ], $key, $postdata );
         }
 
         // New or edit?
@@ -408,14 +424,7 @@ class Form_Handler {
             $insert_id = erp_ac_insert_transaction( $fields, $items );
         }
 
-        if ( is_wp_error( $insert_id ) ) {
-            $redirect_to = add_query_arg( array( 'msg' => $insert_id->get_error_message() ), $page_url );
-        } else {
-            $redirect_to = add_query_arg( array( 'msg' => 'success' ), $page_url );
-        }
-
-        wp_safe_redirect( $redirect_to );
-        exit;
+        return $insert_id;
     }
 
     public function journal_entry() {

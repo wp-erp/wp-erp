@@ -34,12 +34,21 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-ac-transaction-report', 'transaction_report' );
         $this->action( 'wp_ajax_erp_people_convert', 'convert_user' );
         $this->action( 'wp_ajax_erp-ac-new-tax', 'new_tax' );
-        $this->action( 'wp_ajax_erp-ac-delete-tax', 'delete_tax' );
+        $this->action( 'wp_ajax_erp-ac-delete-tax', 'delete_tax' ); 
         $this->action( 'wp_ajax_erp-ac-remove-account', 'remove_account' );
         $this->action( 'wp_ajax_erp-ac-sales-invoice-export', 'sales_invoice_export' );
         $this->action( 'wp_ajax_erp-ac-sales-payment-export', 'sales_payment_export' );
         $this->action( 'wp_ajax_erp-ac-invoice-send-email', 'sales_invoice_send_email' );
         $this->action( 'wp_ajax_erp-ac-get-invoice-number', 'popup_get_invoice_number' );
+        $this->action( 'wp_ajax_erp_ac_trans_form_submit', 'transaction_form_submit' );
+    }
+
+    function transaction_form_submit() {
+        $this->verify_nonce( 'erp-ac-nonce' );
+        parse_str( $_POST['form_data'], $postdata );
+        $postdata['status']  = erp_ac_get_status_according_with_btn( $_POST['btn_status'] );
+        
+        
     }
 
     function popup_get_invoice_number() {
