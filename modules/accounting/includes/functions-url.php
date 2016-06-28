@@ -106,11 +106,17 @@ function erp_ac_get_sales_tax_report_url() {
 	return apply_filters( 'erp_ac_get_sales_tax_report_url', $url );
 }
 
-function erp_ac_get_sales_url( $content ) {
+function erp_ac_get_sales_url( $content = false ) {
 	if ( ! current_user_can( 'erp_ac_view_sale' ) ) {
 		return apply_filters( 'erp_ac_get_sales_url', $content );
 	}
-	$url = sprintf( '<a href="%s">%s</a>', add_query_arg( array( 'page' => 'erp-accounting-sales' ), admin_url('admin.php') ), $content );
+
+	if ( $content ) {
+		$url = sprintf( '<a href="%s">%s</a>', add_query_arg( array( 'page' => 'erp-accounting-sales' ), admin_url('admin.php') ), $content );
+	} else {
+		$url = add_query_arg( array( 'page' => 'erp-accounting-sales' ), admin_url('admin.php') );
+	}
+	
 	
 	return apply_filters( 'erp_ac_get_sales_url', $url, $content );
 }

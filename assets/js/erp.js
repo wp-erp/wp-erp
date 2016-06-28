@@ -236,15 +236,11 @@ window.wperp = window.wperp || {};
 
         btn: {
             groupAction: function(e) {
-                if ( typeof e !== 'undefined' ) {
-                    return;
-                }
 
-                var self = $(e.target.nodeName),
-                    btn_group  = self.closest('.erp-btn-group'),
-                    menu_ul = self.closest('.erp-dropdown-menu');
+                var self = $(e.target);
 
-                if ( self.hasClass('erp-drop-down-btn') ) {
+                if ( self.hasClass('erp-drop-down-child-btn') ) {
+                    var btn_group  = self.closest('.erp-btn-group');
                     
                     if ( btn_group.hasClass('erp-btn-open') ) {
                         btn_group.removeClass('erp-btn-open');
@@ -252,6 +248,7 @@ window.wperp = window.wperp || {};
                         btn_group.addClass('erp-btn-open');
                     }
                 } else {
+                    var btn_group  = $('.erp-btn-group');
                     btn_group.removeClass('erp-btn-open');
                 }
                 

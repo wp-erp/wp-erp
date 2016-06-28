@@ -73,6 +73,32 @@
             this.payment.initialize();
             $( 'body' ).on( 'click', '.payment-duplicate', this.payment.duplicate );
             $( 'body' ).on( 'click', '.payment-send-email', this.invoice.sendEmail );
+
+            //trns form submit
+            $( '.erp-form' ).on( 'click', '.erp-ac-trns-form-submit-btn', this.transaction.submit );
+        },
+
+        transaction: {
+            submit: function(e) {
+                e.preventDefault();
+                var self = $(this),
+                    form = self.closest('form'),
+                    btn_status = self.data('btn_status');
+
+                wp.ajax.send( 'erp_ac_trans_form_submit', {
+                    data: {
+                        '_wpnonce': ERP_AC.nonce,
+                        'btn_status' : btn_status,
+                        'form_data': form.serialize()
+                    },
+                    success: function(res) {
+                        
+                    },
+                    error: function(res) {
+                        
+                    }
+                });
+            }
         },
 
         users: {
