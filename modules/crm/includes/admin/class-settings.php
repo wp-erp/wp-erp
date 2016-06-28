@@ -57,8 +57,7 @@ class CRM_Settings extends ERP_Settings_Page {
         ];
 
         global $wp_roles;
-        $wp_roles = new \WP_Roles();
-        $roles    = $wp_roles->get_names();
+        $roles = $wp_roles->get_names();
 
         $fields['contacts'][] = [
             'title'   => __( 'User\'s Roles', 'erp' ),
@@ -75,7 +74,7 @@ class CRM_Settings extends ERP_Settings_Page {
         $users = ['' => __( '&mdash; Select Owner &mdash;', 'erp' )];
 
         foreach ( $crm_users as $user ) {
-            $users[$user->ID] = $user->display_name;
+            $users[ $user->ID ] = $user->display_name . ' &lt;' . $user->user_email . '&gt;';
         }
 
         $fields['contacts'][] = [

@@ -1154,6 +1154,41 @@ function erp_import_export_javascript() {
                 $( "#export_form #fields input[type=checkbox]" ).prop( 'checked', $(this).prop( "checked" ) );
             });
 
+            $( "#users_import_form" ).on( 'submit', function(e) {
+                e.preventDefault();
+                statusDiv = $( "div.import-status-indicator" );
+
+                statusDiv.show();
+
+                var form = $(this),
+                    submit = form.find('input[type=submit]');
+                submit.attr('disabled', 'disabled');
+
+                var data = {
+                    'action': 'erp_import_users_as_contacts',
+                    'user_role': $(this).find('select[name=user_role]').val(),
+                    'contact_owner': $(this).find('select[name=contact_owner]').val(),
+                    'life_stage': $(this).find('select[name=life_stage]').val(),
+                    'contact_group': $(this).find('select[name=contact_group]').val(),
+                    '_wpnonce': $(this).find('input[name=_wpnonce]').val()
+                };
+
+                $.post( ajaxurl, data, function(response) {
+                    if ( response.success ) {
+                        var percent = Math.floor( ( 100 / response.data.total_items ) * response.data.imported );
+                        statusDiv.find( '#progress-total' ).html( percent + '%' );
+                        statusDiv.find( '#progressbar-total' ).val( percent );
+                        statusDiv.find( '#completed-total' ).html( 'Imported ' + response.data.imported + ' out of ' + response.data.total_items );
+                        if ( response.data.left > 0 ) {
+                            form.submit();
+                            return;
+                        } else {
+                            submit.removeAttr('disabled');
+                        }
+                    }
+                });
+            });
+
         });
     </script>
     <?php

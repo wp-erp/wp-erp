@@ -18,7 +18,7 @@ $users       = erp_crm_get_crm_user();
                             <option value=""><?php _e( '&mdash; Select Owner &mdash;', 'erp' ); ?></option>
                             <?php
                             foreach ( $users as $user ) {
-                                echo '<option value="' . $user->ID . '">' . $user->display_name . '</option>';
+                                echo '<option value="' . $user->ID . '">' . $user->display_name . ' &lt;' . $user->user_email . '&gt;' . '</option>';
                             }
                             ?>
                         </select>

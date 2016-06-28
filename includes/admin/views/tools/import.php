@@ -40,3 +40,106 @@
         </form>
     </div><!-- .inside -->
 </div><!-- .postbox -->
+
+<?php
+    if ( $is_crm_activated ) {
+?>
+    <div class="postbox">
+        <div class="inside">
+            <h3><?php _e( 'Import Users', 'erp' ); ?></h3>
+
+            <form method="post" action="<?php echo admin_url( 'admin.php?page=erp-tools' ); ?>" enctype="multipart/form-data" id="users_import_form">
+
+                <?php
+                    global $wp_roles;
+                    delete_option( 'erp_users_to_contacts_import_attempt' );
+
+                    $life_stages    = erp_crm_get_life_stages_dropdown_raw();
+                    $crm_users      = erp_crm_get_crm_user();
+                    $contact_groups = erp_crm_get_contact_groups( [ 'number' => '-1' ] );
+
+                    $groups = ['' => __( '&mdash; Select Group &mdash;', 'erp' )];
+                    foreach ( $contact_groups as $group ) {
+                        $groups[ $group->id ] = $group->name;
+                    }
+
+                    $roles        = $wp_roles->get_names();
+                    $default_role = get_option( 'default_role', '' );
+
+                    foreach ( $crm_users as $user ) {
+                        $users[ $user->ID ] = $user->display_name . ' &lt;' . $user->user_email . '&gt;';
+                    }
+                ?>
+                <table class="form-table">
+                    <tbody>
+                        <tr>
+                            <th>
+                                <label for="user_role"><?php _e( 'User Role', 'erp' ); ?></label>
+                            </th>
+                            <td>
+                                <select name="user_role" id="user_role" multiple="true">
+                                    <?php echo erp_html_generate_dropdown( $roles, $default_role ); ?>
+                                </select>
+                                <p class="description"><?php _e( 'Selected user role are considered to import.', 'erp' ); ?></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                <label for="contact_owner"><?php _e( 'Contact Owner', 'erp' ); ?></label>
+                            </th>
+                            <td>
+                                <select name="contact_owner" id="contact_owner">
+                                    <?php
+                                        $current_user = get_current_user_id();
+                                        echo erp_html_generate_dropdown( $users, $current_user );
+                                    ?>
+                                </select>
+                                <p class="description"><?php _e( 'Contact owner for contact.', 'erp' ); ?></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                <label for="life_stage"><?php _e( 'Life Stage', 'erp' ); ?></label>
+                            </th>
+                            <td>
+                                <select name="life_stage" id="life_stage">
+                                    <?php echo erp_html_generate_dropdown( $life_stages ); ?>
+                                </select>
+                                <p class="description"><?php _e( 'Life stage for contact.', 'erp' ); ?></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                <label for="contact_group"><?php _e( 'Contact Group', 'erp' ); ?></label>
+                            </th>
+                            <td>
+                                <select name="contact_group">
+                                    <?php echo erp_html_generate_dropdown( $groups ); ?>
+                                </select>
+                                <p class="description"><?php _e( 'Imported contacts will be subscribed in selected group.', 'erp' ); ?></p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br />
+                <div class="import-status-indicator" style="display: none;">
+                    <div class="status" style="text-align: center; font-size: 1.5em;">
+                        <span id="progress-total">100%</span>
+                    </div>
+                    <div class="progress">
+                        <progress style="width:100%;" id="progressbar-total" max="100" value="0"></progress>
+                    </div>
+                    <div class="status" style="text-align: center; font-size: 1.5em;">
+                        <span id="completed-total"></span>
+                    </div>
+                </div>
+
+                <?php wp_nonce_field( 'erp-import-export-nonce' ); ?>
+                <?php submit_button( __( 'Import', 'erp' ), 'primary', 'erp_import_users' ); ?>
+                <span class="erp-loader" style="display: none;"></span>
+            </form>
+        </div><!-- .inside -->
+    </div><!-- .postbox -->
+<?php
+    }
+?>
