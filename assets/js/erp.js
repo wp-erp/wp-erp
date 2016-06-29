@@ -205,6 +205,29 @@ window.wperp = window.wperp || {};
         return decodeURIComponent(results[2].replace(/\+/g, " "));
     };
 
+    wperp.swalSpinnerVisible = function() {
+        swal({
+            title: '',   
+            html: true,
+            showCancelButton: false,
+            showConfirmButton: false,
+        });
+
+        $('.la-ball-fall').css({
+            'opacity' : 1,
+            'visibility' : 'visible',
+            'top' : '-17px',
+            'color' : '#008ec2'
+        });
+    };
+
+    wperp.swalSpinnerHidden = function() {
+        $('.la-ball-fall').css({
+            'opacity' : 0,
+            'visibility' : 'hidden',
+        });
+    };
+
     var WeDevs_ERP = {
 
         /**

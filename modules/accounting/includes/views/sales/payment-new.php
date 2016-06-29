@@ -48,7 +48,6 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
 <div class="wrap erp-ac-form-wrap">
 
     <h2><?php _e( 'Receive Payment', '$domain' ); ?></h2>
-
     <?php
     $dropdown = erp_ac_get_chart_dropdown([
         'exclude'  => [1, 2, 3, 5],
@@ -253,3 +252,5 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
     </div>
 
 </div>
+
+

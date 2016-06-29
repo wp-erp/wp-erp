@@ -48,7 +48,13 @@ class Ajax_Handler {
         parse_str( $_POST['form_data'], $postdata );
         $postdata['status']  = erp_ac_get_status_according_with_btn( $_POST['btn_status'] );
         
-        
+        $transaction = \WeDevs\ERP\Accounting\Form_Handler::transaction_data_process( $postdata );
+
+        if ( is_wp_error( $transaction ) ) {
+            wp_send_json_error( array( 'message' => $transaction->get_error_message() ) );
+        } else {
+            wp_send_json_success( array( 'message' => __( 'Transaction has been created successfully', 'erp' ) ) );
+        }
     }
 
     function popup_get_invoice_number() {
