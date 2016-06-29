@@ -1156,13 +1156,13 @@ function erp_import_export_javascript() {
 
             $( "#users_import_form" ).on( 'submit', function(e) {
                 e.preventDefault();
-                statusDiv = $( "div.import-status-indicator" );
+                statusDiv = $( "div#import-status-indicator" );
 
                 statusDiv.show();
 
                 var form = $(this),
-                    submit = form.find('input[type=submit]');
-                submit.attr('disabled', 'disabled');
+                    submit = form.find( 'input[type=submit]' );
+                submit.attr( 'disabled', 'disabled' );
 
                 var data = {
                     'action': 'erp_import_users_as_contacts',
@@ -1173,17 +1173,41 @@ function erp_import_export_javascript() {
                     '_wpnonce': $(this).find('input[name=_wpnonce]').val()
                 };
 
+                var total_items = 0, left = 0, imported = 0, percent = 0, type = 'success', message = '';
+
                 $.post( ajaxurl, data, function(response) {
                     if ( response.success ) {
-                        var percent = Math.floor( ( 100 / response.data.total_items ) * response.data.imported );
+                        total_items = response.data.total_items;
+                        left = response.data.left;
+                        imported = total_items - left;
+
+                        if ( imported > 0 || total_items > 0 ) {
+                            percent = Math.floor( ( 100 / total_items ) * ( imported ) );
+
+                            type = 'success';
+                            message = 'Successfully imported all users!';
+                        } else {
+                            message = 'No users found to import!';
+                            type = 'error';
+                        }
+
                         statusDiv.find( '#progress-total' ).html( percent + '%' );
                         statusDiv.find( '#progressbar-total' ).val( percent );
-                        statusDiv.find( '#completed-total' ).html( 'Imported ' + response.data.imported + ' out of ' + response.data.total_items );
+                        statusDiv.find( '#completed-total' ).html( 'Imported ' + imported + ' out of ' + response.data.total_items );
+
                         if ( response.data.left > 0 ) {
                             form.submit();
                             return;
                         } else {
-                            submit.removeAttr('disabled');
+                            submit.removeAttr( 'disabled' );
+
+                            swal({
+                                title: '',
+                                text: message,
+                                type: type,
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#008ec2'
+                            });
                         }
                     }
                 });
@@ -1571,7 +1595,7 @@ function erp_email_settings_javascript() {
                             title: '',
                             text: response.data,
                             type: type,
-                            confirmButtonText: crmContactFormsSettings.labelOK,
+                            confirmButtonText: 'OK',
                             confirmButtonColor: '#008ec2'
                         });
                     }
@@ -1610,7 +1634,7 @@ function erp_email_settings_javascript() {
                             title: '',
                             text: response.data,
                             type: type,
-                            confirmButtonText: crmContactFormsSettings.labelOK,
+                            confirmButtonText: 'OK',
                             confirmButtonColor: '#008ec2'
                         });
                     }

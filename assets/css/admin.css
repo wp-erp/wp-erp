@@ -3974,6 +3974,23 @@ ul.edit-address li.city-wrap span {
   margin-left: 30px;
   text-align: right;
 }
+.erp-progress-status-indicator .status {
+  text-align: center;
+  font-size: 16px;
+}
+.erp-progress-status-indicator .status #progress-total {
+  font-weight: bold;
+  color: #3b99fc;
+}
+.erp-progress-status-indicator .status #completed-total {
+  color: green;
+}
+.erp-progress-status-indicator .status #failed-total {
+  color: red;
+}
+.erp-progress-status-indicator .progress progress {
+  width: 100%;
+}
 /*****/
 /**
 * Media Query for responsive

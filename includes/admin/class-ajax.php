@@ -356,7 +356,7 @@ class Ajax {
     public function import_users_as_contacts() {
         $this->verify_nonce( 'erp-import-export-nonce' );
 
-        $limit = 10; // Limit to import per request
+        $limit = 50; // Limit to import per request
 
         $attempt = get_option( 'erp_users_to_contacts_import_attempt', 1 );
         update_option( 'erp_users_to_contacts_import_attempt', $attempt + 1 );
@@ -408,8 +408,7 @@ class Ajax {
             delete_option( 'erp_users_to_contacts_import_attempt' );
         }
 
-        $imported = $total_items - $left;
-        $this->send_success( ['left' => $left, 'imported' => $imported, 'total_items' => $total_items] );
+        $this->send_success( ['left' => $left, 'total_items' => $total_items] );
     }
 }
 

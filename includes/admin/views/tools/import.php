@@ -122,21 +122,20 @@
                     </tbody>
                 </table>
                 <br />
-                <div class="import-status-indicator" style="display: none;">
-                    <div class="status" style="text-align: center; font-size: 1.5em;">
+                <div id="import-status-indicator" class="erp-progress-status-indicator" style="display: none;">
+                    <div class="status">
                         <span id="progress-total">100%</span>
                     </div>
                     <div class="progress">
-                        <progress style="width:100%;" id="progressbar-total" max="100" value="0"></progress>
+                        <progress id="progressbar-total" max="100" value="0"></progress>
                     </div>
-                    <div class="status" style="text-align: center; font-size: 1.5em;">
+                    <div class="status">
                         <span id="completed-total"></span>
                     </div>
                 </div>
 
                 <?php wp_nonce_field( 'erp-import-export-nonce' ); ?>
                 <?php submit_button( __( 'Import', 'erp' ), 'primary', 'erp_import_users' ); ?>
-                <span class="erp-loader" style="display: none;"></span>
             </form>
         </div><!-- .inside -->
     </div><!-- .postbox -->
