@@ -35,15 +35,22 @@
                             <label for="from"><?php _e( 'From', 'erp' ); ?></label>
                         </th>
                         <td>
-                            <?php erp_html_form_input([
-                                'type'        => 'text',
-                                'name'        => 'from',
-                                'value'       => sprintf( '%s <%s>', $email_settings['from_name'], $email_settings['from_email'] ),
-                                'custom_attr' => [
-                                    'readonly' => 'readonly',
-                                    'size'     => 40
-                                ]
-                            ]); ?>
+                            <?php
+                                global $current_user;
+
+                                $from_name  = ( ! empty( $email_settings['from_name'] ) ) ? $email_settings['from_name'] : $current_user->display_name;
+                                $from_email = ( ! empty( $email_settings['from_email'] ) ) ? $email_settings['from_email'] : get_option( 'admin_email' );
+
+                                erp_html_form_input([
+                                    'type'        => 'text',
+                                    'name'        => 'from',
+                                    'value'       => sprintf( '%s <%s>', $from_name, $from_email ),
+                                    'custom_attr' => [
+                                        'readonly' => 'readonly',
+                                        'size'     => 40
+                                    ]
+                                ]);
+                            ?>
                         </td>
                     </tr>
                     <tr>
