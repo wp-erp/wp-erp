@@ -1154,6 +1154,65 @@ function erp_import_export_javascript() {
                 $( "#export_form #fields input[type=checkbox]" ).prop( 'checked', $(this).prop( "checked" ) );
             });
 
+            $( "#users_import_form" ).on( 'submit', function(e) {
+                e.preventDefault();
+                statusDiv = $( "div#import-status-indicator" );
+
+                statusDiv.show();
+
+                var form = $(this),
+                    submit = form.find( 'input[type=submit]' );
+                submit.attr( 'disabled', 'disabled' );
+
+                var data = {
+                    'action': 'erp_import_users_as_contacts',
+                    'user_role': $(this).find('select[name=user_role]').val(),
+                    'contact_owner': $(this).find('select[name=contact_owner]').val(),
+                    'life_stage': $(this).find('select[name=life_stage]').val(),
+                    'contact_group': $(this).find('select[name=contact_group]').val(),
+                    '_wpnonce': $(this).find('input[name=_wpnonce]').val()
+                };
+
+                var total_items = 0, left = 0, imported = 0, percent = 0, type = 'success', message = '';
+
+                $.post( ajaxurl, data, function(response) {
+                    if ( response.success ) {
+                        total_items = response.data.total_items;
+                        left = response.data.left;
+                        imported = total_items - left;
+
+                        if ( imported > 0 || total_items > 0 ) {
+                            percent = Math.floor( ( 100 / total_items ) * ( imported ) );
+
+                            type = 'success';
+                            message = 'Successfully imported all users!';
+                        } else {
+                            message = 'No users found to import!';
+                            type = 'error';
+                        }
+
+                        statusDiv.find( '#progress-total' ).html( percent + '%' );
+                        statusDiv.find( '#progressbar-total' ).val( percent );
+                        statusDiv.find( '#completed-total' ).html( 'Imported ' + imported + ' out of ' + response.data.total_items );
+
+                        if ( response.data.left > 0 ) {
+                            form.submit();
+                            return;
+                        } else {
+                            submit.removeAttr( 'disabled' );
+
+                            swal({
+                                title: '',
+                                text: message,
+                                type: type,
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#008ec2'
+                            });
+                        }
+                    }
+                });
+            });
+
         });
     </script>
     <?php
@@ -1536,7 +1595,7 @@ function erp_email_settings_javascript() {
                             title: '',
                             text: response.data,
                             type: type,
-                            confirmButtonText: crmContactFormsSettings.labelOK,
+                            confirmButtonText: 'OK',
                             confirmButtonColor: '#008ec2'
                         });
                     }
@@ -1575,7 +1634,7 @@ function erp_email_settings_javascript() {
                             title: '',
                             text: response.data,
                             type: type,
-                            confirmButtonText: crmContactFormsSettings.labelOK,
+                            confirmButtonText: 'OK',
                             confirmButtonColor: '#008ec2'
                         });
                     }
