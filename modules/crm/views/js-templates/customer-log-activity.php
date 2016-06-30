@@ -17,7 +17,7 @@ $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
     </p>
 
     <p v-if="feedData.log_type == 'email'">
-        <label>Subject</label>
+        <label><?php _e( 'Subject', 'erp' ) ?></label>
         <span class="sep">:</span>
         <span class="value">
             <input type="text" class="email_subject" name="email_subject" v-model="feedData.email_subject" placeholder="<?php _e( 'Subject log...', 'erp' ); ?>">

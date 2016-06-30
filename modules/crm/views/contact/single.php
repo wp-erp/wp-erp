@@ -1,4 +1,4 @@
-<div class="wrap erp erp-crm-customer erp-single-customer" id="wp-erp" v-cloak>
+<div class="wrap erp erp-crm-customer erp-single-customer" id="wp-erp">
     <h2><?php _e( 'Contact #', 'erp' ); echo $customer->id; ?>
         <a href="<?php echo add_query_arg( ['page' => 'erp-sales-customers'], admin_url( 'admin.php' ) ); ?>" id="erp-contact-list" class="add-new-h2"><?php _e( 'Back to Contact list', 'erp' ); ?></a>
 
@@ -12,7 +12,7 @@
     <div class="erp-grid-container erp-single-customer-content">
         <div class="row">
 
-            <div class="col-2 column-left erp-single-customer-row">
+            <div class="col-2 column-left erp-single-customer-row" id="erp-customer-details" v-cloak>
                 <div class="left-content">
                     <div class="customer-image-wraper">
                         <div class="row">
@@ -131,7 +131,6 @@
                             </div>
                         </div>
                     </div><!-- .postbox -->
-                    <?php //echo sprintf( '%s\'s %s', $customer->get_first_name(), __( 'Company', 'erp' ) ); ?>
 
                     <contact-company-relation
                         :id="<?php echo $customer->id; ?>"
@@ -147,6 +146,7 @@
                         is-permitted="<?php echo current_user_can( 'erp_crm_edit_contact', $customer->id ); ?>"
                     ></contact-assign-group>
 
+                    <?php do_action( 'erp_crm_contact_left_widgets', $customer ); ?>
                 </div>
             </div>
 

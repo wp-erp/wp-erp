@@ -55,6 +55,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                     <?php do_action( 'erp_crm_customer_feed_icon' ); ?>
 
                     <timeline-item :feed="feed" disbale-footer="false"></timeline-item>
+                    <!-- <component :is="feed.component" :feed="feed" disbale-footer="false"></component> -->
 
                 </li>
 

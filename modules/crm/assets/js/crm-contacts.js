@@ -1722,7 +1722,7 @@
 
 
         var contactSingle = new Vue({
-            el: '#wp-erp',
+            el: '#erp-customer-details',
 
             mixins: [mixin],
 

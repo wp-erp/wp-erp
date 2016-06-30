@@ -12,7 +12,7 @@ var TimeLineItem = {
             editfeedData: {},
             isEditable: false,
             isReplied: false,
-            emailViewedTime: false
+            emailViewedTime: false,
         }
     },
 
@@ -115,6 +115,12 @@ var TimeLineItem = {
             handler: function () {
                 this.notify();
             }
+        }
+    },
+
+    events:{
+        'disableTimelineFooter': function( flag ) {
+            this.disbaleFooter = flag;
         }
     }
 };
