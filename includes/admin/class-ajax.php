@@ -377,9 +377,22 @@ class Ajax {
             $total_items = $user_query->get_total();
         }
 
-        foreach ( $users as $user ) {
+        $user_ids = [];
+        $user_ids = wp_list_pluck( $users, 'ID' );
+        $contacts = erp_get_people_by( 'user_id', $user_ids );
+
+        $exists = get_option( 'erp_users_to_contacts_import_exists', 0 );
+
+        if ( ! empty( $contacts ) && is_array( $contacts ) ) {
+            $contact_ids = wp_list_pluck( $contacts, 'user_id' );
+            $user_ids    = array_diff( $user_ids, $contact_ids );
+            $exists      += count( $contact_ids );
+            update_option( 'erp_users_to_contacts_import_exists', $exists );
+        }
+
+        foreach ( $user_ids as $user_id ) {
             $data['type']    = 'contact';
-            $data['user_id'] = (int) $user->ID;
+            $data['user_id'] = (int) $user_id;
 
             $contact_id = erp_insert_people( $data );
 
@@ -406,9 +419,10 @@ class Ajax {
 
         if ( $left === 0 ) {
             delete_option( 'erp_users_to_contacts_import_attempt' );
+            delete_option( 'erp_users_to_contacts_import_exists' );
         }
 
-        $this->send_success( ['left' => $left, 'total_items' => $total_items] );
+        $this->send_success( ['left' => $left, 'total_items' => $total_items, 'exists' => $exists] );
     }
 }
 

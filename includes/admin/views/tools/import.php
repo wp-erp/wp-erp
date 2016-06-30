@@ -53,6 +53,7 @@
                 <?php
                     global $wp_roles;
                     delete_option( 'erp_users_to_contacts_import_attempt' );
+                    delete_option( 'erp_users_to_contacts_import_exists' );
 
                     $life_stages    = erp_crm_get_life_stages_dropdown_raw();
                     $crm_users      = erp_crm_get_crm_user();
@@ -131,6 +132,7 @@
                     </div>
                     <div class="status">
                         <span id="completed-total"></span>
+                        <span id="failed-total"></span>
                     </div>
                 </div>
 

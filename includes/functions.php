@@ -1173,13 +1173,15 @@ function erp_import_export_javascript() {
                     '_wpnonce': $(this).find('input[name=_wpnonce]').val()
                 };
 
-                var total_items = 0, left = 0, imported = 0, percent = 0, type = 'success', message = '';
+                var total_items = 0, left = 0, imported = 0, exists = 0, percent = 0, type = 'success', message = '';
 
                 $.post( ajaxurl, data, function(response) {
                     if ( response.success ) {
                         total_items = response.data.total_items;
                         left = response.data.left;
+                        exists = response.data.exists;
                         imported = total_items - left;
+                        done = imported - exists;
 
                         if ( imported > 0 || total_items > 0 ) {
                             percent = Math.floor( ( 100 / total_items ) * ( imported ) );
@@ -1193,7 +1195,10 @@ function erp_import_export_javascript() {
 
                         statusDiv.find( '#progress-total' ).html( percent + '%' );
                         statusDiv.find( '#progressbar-total' ).val( percent );
-                        statusDiv.find( '#completed-total' ).html( 'Imported ' + imported + ' out of ' + response.data.total_items );
+                        statusDiv.find( '#completed-total' ).html( 'Imported ' + done + ' out of ' + response.data.total_items );
+                        if ( exists > 0 ) {
+                            statusDiv.find( '#failed-total' ).html( 'Already Exist ' + exists );
+                        }
 
                         if ( response.data.left > 0 ) {
                             form.submit();
