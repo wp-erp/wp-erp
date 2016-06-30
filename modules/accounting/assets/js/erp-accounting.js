@@ -85,6 +85,8 @@
                     form = self.closest('form'),
                     btn_status = self.data('btn_status');
 
+                wperp.swalSpinnerVisible();
+
                 wp.ajax.send( 'erp_ac_trans_form_submit', {
                     data: {
                         '_wpnonce': ERP_AC.nonce,
@@ -92,12 +94,21 @@
                         'form_data': form.serialize()
                     },
                     success: function(res) {
-                        
+                        wperp.swalSpinnerHidden();
+                        swal("", res.message, "success");
                     },
                     error: function(res) {
-                        
+                        wperp.swalSpinnerHidden();
+                        swal({
+                            title: ERP_AC.message.error,
+                            text: res.message,
+                            type: "error",
+                            confirmButtonText: "OK",
+                            confirmButtonColor: "#DD6B55"
+                        });
                     }
                 });
+                
             }
         },
 
