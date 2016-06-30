@@ -893,6 +893,7 @@ function erp_get_license_status( $addon ) {
  * @return void
  */
 function erp_import_export_javascript() {
+
     $contact_fields = [
         'first_name',
         'last_name',
@@ -912,6 +913,15 @@ function erp_import_export_javascript() {
         'currency',
         'type',
     ];
+
+
+    $field_builder_contacts_fields = get_option( 'erp-contact-fields' );
+
+    if ( ! empty( $field_builder_contacts_fields ) ) {
+        foreach ( $field_builder_contacts_fields as $field ) {
+            $contact_fields[] = $field['name'];
+        }
+    }
 
     $company_fields = [
         'email',
@@ -1006,10 +1016,7 @@ function erp_import_export_javascript() {
             }
 
             var contact_required_fields = [
-                'first_name',
-                'last_name',
-                'email',
-                'user_email',
+                'first_name'
             ];
 
             var company_required_fields = [
@@ -1123,7 +1130,11 @@ function erp_import_export_javascript() {
                 var file = this.files[0];
 
                 var reader = new FileReader();
-                reader.readAsText(file);
+
+                var first5000 = file.slice(0, 5000);
+                reader.readAsText( first5000 );
+
+                // reader.readAsText(file);
 
                 reader.onload = function(e) {
                     var csv = reader.result;
@@ -1239,6 +1250,14 @@ function erp_process_import_export() {
     $departments  = erp_hr_get_departments_dropdown_raw();
     $designations = erp_hr_get_designation_dropdown_raw();
 
+    $field_builder_options = get_option( 'erp-contact-fields' );
+
+    if ( ! empty( $field_builder_options ) ) {
+        foreach ( $field_builder_options as $field ) {
+            $field_builder_contacts_fields[] = $field['name'];
+        }
+    }
+
 
     if ( isset( $_POST['erp_import_csv'] ) ) {
         $fields = $_POST['fields'];
@@ -1330,6 +1349,15 @@ function erp_process_import_export() {
                     }
 
                     if ( ( $type == 'contact' || $type == 'company' ) && $is_crm_activated ) {
+                        // If not exist any email address then generate a dummy one.
+                        if ( ! isset( $data[$x]['email'] ) ) {
+                            $data[$x]['email'] = md5( uniqid( time() ) ) . '_rand@example.com';
+                        }
+
+                        if ( ! isset( $data[$x]['last_name'] ) ) {
+                            $data[$x]['last_name'] = '_';
+                        }
+
                         $item_insert_id = erp_insert_people( $data[$x] );
 
                         if ( is_wp_error( $item_insert_id ) ) {
@@ -1340,6 +1368,11 @@ function erp_process_import_export() {
                             $life_stage    = erp_get_option( 'life_stage', 'erp_settings_erp-crm_contacts', 'opportunity' );
                             erp_people_update_meta( $item_insert_id, '_assign_crm_agent', $contact_owner );
                             erp_people_update_meta( $item_insert_id, 'life_stage', $life_stage );
+
+
+                            foreach ( $field_builder_contacts_fields as $field ) {
+                                erp_people_update_meta( $item_insert_id, $field, $data[$x][$field] );
+                            }
                         }
                     }
                 }
