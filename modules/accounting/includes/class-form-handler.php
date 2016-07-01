@@ -299,10 +299,26 @@ class Form_Handler {
 
         $insert_id = $this->transaction_data_process( $_POST );
 
+
+        $page = isset( $_POST['page'] ) ? sanitize_text_field( $_POST['page'] ) : '';
+        $page_url   = admin_url( 'admin.php?page=' . $page );
+
         if ( is_wp_error( $insert_id ) ) {
             $redirect_to = add_query_arg( array( 'msg' => $insert_id->get_error_message() ), $page_url );
+            wp_safe_redirect( $redirect_to );
+            exit;
         } else {
             $redirect_to = add_query_arg( array( 'msg' => 'success' ), $page_url );
+        }
+        
+        if ( $_POST['redirect'] == 'same_page' ) {
+            $url = remove_query_arg( ['transaction_id'], wp_unslash( $_SERVER['REQUEST_URI'] ) );
+            $redirect_to = $url; 
+        } else if ( $_POST['redirect'] == 'single_page' ) {
+            if ( $_POST['type'] == 'sales' ) {
+                $redirect_to = erp_ac_get_slaes_payment_invoice_url( $insert_id );    
+            }
+            
         }
 
         wp_safe_redirect( $redirect_to );
@@ -315,8 +331,8 @@ class Form_Handler {
      * @return void
      */
     public function transaction_data_process( $postdata ) {
- 
 
+        $status          = erp_ac_get_btn_status( $postdata );
         $errors          = array();
         $insert_id       = 0;
         $field_id        = isset( $postdata['field_id'] ) ? intval( $postdata['field_id'] ) : 0;
@@ -324,7 +340,7 @@ class Form_Handler {
         $type            = isset( $postdata['type'] ) ? sanitize_text_field( $postdata['type'] ) : '';
         $form_type       = isset( $postdata['form_type'] ) ? sanitize_text_field( $postdata['form_type'] ) : '';
         $account_id      = isset( $postdata['account_id'] ) ? intval( $postdata['account_id'] ) : 0;
-        $status          = isset( $postdata['status'] ) ? sanitize_text_field( $postdata['status'] ) : 'closed';
+        //$status          = isset( $postdata['status'] ) ? sanitize_text_field( $postdata['status'] ) : 'closed';
         $user_id         = isset( $postdata['user_id'] ) ? intval( $postdata['user_id'] ) : 0;
         $billing_address = isset( $postdata['billing_address'] ) ? wp_kses_post( $postdata['billing_address'] ) : '';
         $ref             = isset( $postdata['ref'] ) ? sanitize_text_field( $postdata['ref'] ) : '';
@@ -344,7 +360,7 @@ class Form_Handler {
         $invoice         = isset( $postdata['invoice'] ) ? $postdata['invoice'] : erp_ac_generate_invoice_id( $form_type );
 
         //for draft
-        $status = isset( $postdata['submit_erp_ac_trans_draft'] ) ? 'draft' : $status;
+        //$status = isset( $postdata['submit_erp_ac_trans_draft'] ) ? 'draft' : $status;
 
         // some basic validation
         if ( ! $issue_date ) {

@@ -81,9 +81,18 @@
         transaction: {
             submit: function(e) {
                 e.preventDefault();
+                
                 var self = $(this),
                     form = self.closest('form'),
+                    redirect = self.data('redirect'),
                     btn_status = self.data('btn_status');
+                
+                $('#erp-ac-redirect').val(redirect);
+                $('#erp-ac-btn-status').val(btn_status);
+                form.find( 'input[name="submit_erp_ac_trans"]' ).trigger('click');
+                
+                return false;
+                    
 
                 wperp.swalSpinnerVisible();
 
@@ -95,7 +104,13 @@
                     },
                     success: function(res) {
                         wperp.swalSpinnerHidden();
-                        swal("", res.message, "success");
+                        swal({ title: "", text: res.message, type: "success"}, function() {
+                            if ( add_another === '1' ) {
+                                location.reload();    
+                            } else {
+                                location.href = res.return_url;
+                            }
+                        });
                     },
                     error: function(res) {
                         wperp.swalSpinnerHidden();

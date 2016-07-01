@@ -64,7 +64,7 @@ function erp_ac_get_status_label( $items, $slug ) {
 
     switch ( $status ) {
         case 'closed':
-            $label = __( 'Closed', 'erp' );
+            $label = __( 'Paid', 'erp' );
             break;
 
         case 'paid':
@@ -81,6 +81,10 @@ function erp_ac_get_status_label( $items, $slug ) {
 
         case 'partial':
             $label = __( 'Partially Paid', 'erp' );
+            break;
+
+        case 'awaiting_approval':
+            $label = __( 'Awaiting approval', 'erp' );
             break;
 
         case 'draft':
