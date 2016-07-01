@@ -1351,11 +1351,24 @@ function erp_process_import_export() {
                     if ( ( $type == 'contact' || $type == 'company' ) && $is_crm_activated ) {
                         // If not exist any email address then generate a dummy one.
                         if ( ! isset( $data[$x]['email'] ) ) {
-                            $data[$x]['email'] = md5( uniqid( time() ) ) . '_rand@example.com';
+                            $rand = substr( sha1( uniqid( time() ) ), 0, 8 );
+                            $data[$x]['email'] = "rand_{$rand}@example.com";
                         }
 
-                        if ( ! isset( $data[$x]['last_name'] ) ) {
-                            $data[$x]['last_name'] = '_';
+                        if ( empty( $data[$x]['last_name'] ) ) {
+                            $name_parts = explode( ' ' , trim( $data[$x]['first_name'] ) );
+
+                            if ( count( $name_parts ) > 1 ) {
+                                $last_name = trim( array_pop( $name_parts ) );
+                            }
+
+                            if ( ! empty( $last_name ) ) {
+                                $data[$x]['first_name'] = implode( ' ' , $name_parts );
+                                $data[$x]['last_name'] = $last_name;
+
+                            } else {
+                                $data[$x]['last_name'] = '_';
+                            }
                         }
 
                         $item_insert_id = erp_insert_people( $data[$x] );
@@ -1370,8 +1383,10 @@ function erp_process_import_export() {
                             erp_people_update_meta( $item_insert_id, 'life_stage', $life_stage );
 
 
-                            foreach ( $field_builder_contacts_fields as $field ) {
-                                erp_people_update_meta( $item_insert_id, $field, $data[$x][$field] );
+                            if ( ! empty( $field_builder_contacts_fields ) ) {
+                                foreach ( $field_builder_contacts_fields as $field ) {
+                                    erp_people_update_meta( $item_insert_id, $field, $data[$x][$field] );
+                                }
                             }
                         }
                     }
