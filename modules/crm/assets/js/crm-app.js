@@ -874,13 +874,23 @@ var vm = new Vue({
                     }, 500 )
 
                 } else {
+                    document.getElementById("erp-crm-activity-feed-form").reset();
+
+                    if ( resp.data.skipActivity ) {
+                        if ( resp.data.msg ) {
+                            alert( resp.data.msg );
+                        }
+
+                        vm.progreassDone();
+                        self.$broadcast( 'customerFeedAddded', resp );
+                        return false;
+                    }
+
                     vm.feeds.splice( 0, 0, resp.data );
 
                     if ( vm.feeds.length > vm.limit ) {
                         vm.feeds.$remove( vm.feeds[vm.feeds.length-1] );
                     }
-
-                    document.getElementById("erp-crm-activity-feed-form").reset();
 
                     if ( vm.feedData.type == 'log_activity' ) {
                         vm.feedData.log_type      = '';
@@ -934,6 +944,8 @@ var vm = new Vue({
                     } else {
                         vm.progreassDone();
                     }
+
+                    self.$broadcast( 'customerFeedAddded', resp );
                 }
             });
         },
