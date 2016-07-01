@@ -49,11 +49,20 @@ class Ajax_Handler {
         $postdata['status']  = erp_ac_get_status_according_with_btn( $_POST['btn_status'] );
         
         $transaction = \WeDevs\ERP\Accounting\Form_Handler::transaction_data_process( $postdata );
+        $return_url = '';
+
+        if ( $postdata['type'] == 'sales' ) {
+            $return_url = erp_ac_get_sales_url( false );
+        } else if ( $postdata['type'] == 'expense' ) {
+            $return_url = erp_ac_get_sales_url( false );
+        } else if ( $postdata['type'] == 'journal' ) {
+            $return_url = erp_ac_get_journal_url( false );
+        } 
 
         if ( is_wp_error( $transaction ) ) {
             wp_send_json_error( array( 'message' => $transaction->get_error_message() ) );
         } else {
-            wp_send_json_success( array( 'message' => __( 'Transaction has been created successfully', 'erp' ) ) );
+            wp_send_json_success( array( 'return_url' => $return_url, 'message' => __( 'Transaction has been created successfully', 'erp' ) ) );
         }
     }
 
@@ -108,7 +117,7 @@ class Ajax_Handler {
         }
 
         $people_obj = \WeDevs\ERP\Framework\Models\People::find( $id );
-        $type_obj = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $type )->first();
+        $type_obj   = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $type )->first();
         $people_obj->assignType( $type_obj );
 
         if ( $type == 'customer' ) {
@@ -141,10 +150,10 @@ class Ajax_Handler {
         parse_str( $_POST['post'], $postdata );
 
         $new_tax = erp_ac_new_tax( $postdata );
-        $tax_id = $postdata['id'] ? $postdata['id'] : $new_tax->id;
+        $tax_id  = $postdata['id'] ? $postdata['id'] : $new_tax->id;
 
         if ( $tax_id ) {
-            $items = erp_ac_update_tax_items( $postdata, $tax_id );
+            $items   = erp_ac_update_tax_items( $postdata, $tax_id );
             $account = erp_ac_new_tax_account( $postdata, $tax_id );
             $this->send_success();
         }
