@@ -3,7 +3,7 @@ $account        = isset( $_GET['receive_payment'] ) && $_GET['receive_payment'] 
 $account_id     = $account && isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : false;
 $customer_class = $account_id ? 'erp-ac-payment-receive' : '';
 $transaction_id = isset( $_GET['transaction_id'] ) ? intval( $_GET['transaction_id'] ) : false;
-
+$cancel_url     = erp_ac_get_sales_url();
 $transaction    = [];
 $jor_itms       = [];
 $main_ledger_id = '';
@@ -48,7 +48,6 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
 <div class="wrap erp-ac-form-wrap">
 
     <h2><?php _e( 'Receive Payment', '$domain' ); ?></h2>
-
     <?php
     $dropdown = erp_ac_get_chart_dropdown([
         'exclude'  => [1, 2, 3, 5],
@@ -183,15 +182,60 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
 
         <?php wp_nonce_field( 'erp-ac-trans-new' ); ?>
 
-        <?php
+<!--         <?php
         if ( erp_ac_publish_sales_payment() ) {
             ?>
             <input type="submit" name="submit_erp_ac_trans" id="submit_erp_ac_trans" class="button button-primary" value="<?php _e( 'Receive Payment', 'erp' ); ?>">
             <?php
         }
         ?>
+-->
+        <input type="submit" name="submit_erp_ac_trans" style="display: none;">
+        <input type="hidden" id="erp-ac-btn-status" name="btn_status" value="">
+        <input type="hidden" id="erp-ac-redirect" name="redirect" value="0">
 
-        <input type="submit" name="submit_erp_ac_trans_draft" id="submit_erp_ac_trans_draft" class="button button-secondary" value="<?php _e( 'Save as Draft', 'erp' ); ?>">
+
+
+
+<!-- Single button -->
+    <div class="erp-ac-btn-group-wrap">
+        <div class="erp-btn-group">
+            <button type="button" data-redirect="0" data-btn_status="save_and_draft" class="erp-drop-down-btn erp-btn-info erp-ac-trns-form-submit-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <?php _e( 'Save as Draft', 'erp' ); ?>
+            </button>
+            <button type="button" class="erp-drop-down-btn erp-drop-down-child-btn erp-btn-info">
+                <span class="erp-caret"></span>
+                <span class="erp-sr-only"><?php _e( 'Toggle Dropdown', 'erp' ); ?></span>
+            </button>
+            <ul class="erp-dropdown-menu">
+                <li><a class="erp-ac-trns-form-submit-btn" data-redirect="0" data-btn_status="save_and_draft" href="#"><?php _e( 'Save as Draft', 'erp' ); ?></a></li>
+                <li><a class="erp-ac-trns-form-submit-btn" data-redirect="0" data-btn_status="save_and_submit_for_approval" href="#"><?php _e( 'Save & submit for approval', 'erp' ); ?></a></li>
+                <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="save_and_add_another" href="#"><?php _e( 'Save & add another', 'erp' ); ?></a></li>
+            </ul>
+        </div>
+        <div class="erp-btn-group erp-btn-group-first-child-after"></div>
+        <div class="erp-btn-group">
+            <button  data-redirect="single_page" data-btn_status="approve" type="button" class="erp-drop-down-btn erp-btn-info erp-ac-trns-form-submit-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <?php _e( 'Approve', 'erp' ); ?> 
+            </button>
+            <button type="button" class="erp-drop-down-btn erp-drop-down-child-btn erp-btn-info">
+                <span class="erp-caret"></span>
+                <span class="erp-sr-only"><?php _e( 'Toggle Dropdown', 'erp' ); ?></span>
+            </button>
+            <ul class="erp-dropdown-menu">
+                <li><a class="erp-ac-trns-form-submit-btn" data-redirect="single_page" data-btn_status="approve" href="#"><?php _e( 'Approve', 'erp' ); ?></a></li>
+                <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="approve_and_add_another" href="#"><?php _e( 'Approve & add another', 'erp' ); ?></a></li>
+            </ul>
+        </div>
+
+        <div class="erp-btn-group">
+          <button type="button" onclick="window.location.href='<?php echo $cancel_url; ?>'" class="erp-drop-down-btn erp-drop-down-cancel-btn erp-btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <?php _e( 'Cancel', 'erp' ); ?> 
+          </button>
+        </div>
+    </div>
+
+
     </form>
     <div class="erp-ac-receive-payment-table-clone" style="display: none;">
 
@@ -206,3 +250,5 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
     </div>
 
 </div>
+
+

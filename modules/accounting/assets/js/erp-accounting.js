@@ -73,16 +73,64 @@
             this.payment.initialize();
             $( 'body' ).on( 'click', '.payment-duplicate', this.payment.duplicate );
             $( 'body' ).on( 'click', '.payment-send-email', this.invoice.sendEmail );
+
+            //trns form submit
+            $( '.erp-form' ).on( 'click', '.erp-ac-trns-form-submit-btn', this.transaction.submit );
         },
-    //}
 
-    //if ( target ) {
-    //
+        transaction: {
+            submit: function(e) {
+                e.preventDefault();
+                
+                var self = $(this),
+                    form = self.closest('form'),
+                    redirect = self.data('redirect'),
+                    btn_status = self.data('btn_status');
+                
+                $('#erp-ac-redirect').val(redirect);
+                $('#erp-ac-btn-status').val(btn_status);
+                form.find( 'input[name="submit_erp_ac_trans"]' ).trigger('click');
+                
+                return false;
+                    
 
-    users: {
-    clickOff: function() {
-        $('.erp-ac-users-wrap').off('click', '.erp-ac-convert-user-info', ERP_Accounting.users.convertUser );
-    },
+                wperp.swalSpinnerVisible();
+
+                wp.ajax.send( 'erp_ac_trans_form_submit', {
+                    data: {
+                        '_wpnonce': ERP_AC.nonce,
+                        'btn_status' : btn_status,
+                        'form_data': form.serialize()
+                    },
+                    success: function(res) {
+                        wperp.swalSpinnerHidden();
+                        swal({ title: "", text: res.message, type: "success"}, function() {
+                            if ( add_another === '1' ) {
+                                location.reload();    
+                            } else {
+                                location.href = res.return_url;
+                            }
+                        });
+                    },
+                    error: function(res) {
+                        wperp.swalSpinnerHidden();
+                        swal({
+                            title: ERP_AC.message.error,
+                            text: res.message,
+                            type: "error",
+                            confirmButtonText: "OK",
+                            confirmButtonColor: "#DD6B55"
+                        });
+                    }
+                });
+                
+            }
+        },
+
+        users: {
+            clickOff: function() {
+                $('.erp-ac-users-wrap').off('click', '.erp-ac-convert-user-info', ERP_Accounting.users.convertUser );
+            },
 
             clickOn: function() {
                 $('.erp-ac-users-wrap').on('click', '.erp-ac-convert-user-info', ERP_Accounting.users.convertUser );

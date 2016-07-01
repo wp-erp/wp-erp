@@ -12,6 +12,17 @@ function erp_ac_get_journal_invoice_url( $transaction_id ) {
 	return apply_filters( 'erp_ac_journal_invoice_url', $url, $transaction_id );
 }
 
+function erp_ac_get_journal_url( $content = false ) {
+	
+	$url_args = [
+		'page'   => 'erp-accounting-journal',
+	];
+
+	$url = add_query_arg( $url_args, admin_url( 'admin.php' ) );
+
+	return apply_filters( 'erp_ac_journal_url', $url, $content );
+}
+
 function erp_ac_get_slaes_payment_invoice_url( $transaction_id ) {
 	$url_args = [
 		'page'   => 'erp-accounting-sales',
@@ -106,23 +117,34 @@ function erp_ac_get_sales_tax_report_url() {
 	return apply_filters( 'erp_ac_get_sales_tax_report_url', $url );
 }
 
-function erp_ac_get_sales_url( $content ) {
+function erp_ac_get_sales_url( $content = false ) {
 	if ( ! current_user_can( 'erp_ac_view_sale' ) ) {
 		return apply_filters( 'erp_ac_get_sales_url', $content );
 	}
-	$url = sprintf( '<a href="%s">%s</a>', add_query_arg( array( 'page' => 'erp-accounting-sales' ), admin_url('admin.php') ), $content );
+
+	if ( $content ) {
+		$url = sprintf( '<a href="%s">%s</a>', add_query_arg( array( 'page' => 'erp-accounting-sales' ), admin_url('admin.php') ), $content );
+	} else {
+		$url = add_query_arg( array( 'page' => 'erp-accounting-sales' ), admin_url('admin.php') );
+	}
+	
 	
 	return apply_filters( 'erp_ac_get_sales_url', $url, $content );
 }
 
-function erp_ac_get_expense_url( $content ) {
+function erp_ac_get_expense_url( $content = false ) {
 	
-	if ( current_user_can( 'erp_ac_view_expense' ) ) {
-		$url = sprintf( '<a href="%s">%s</a>', add_query_arg( array( 'page' => 'erp-accounting-expense' ), admin_url('admin.php') ), $content );
-		
-		return apply_filters( 'erp_ac_get_expense_url', $url, $content );
+	if ( ! current_user_can( 'erp_ac_view_expense' ) ) {
+		return apply_filters( 'erp_ac_get_sales_url', $content );
 	}
 
-	return apply_filters( 'erp_ac_get_sales_url', $content );
+	if ( $content ) {
+		$url = sprintf( '<a href="%s">%s</a>', add_query_arg( array( 'page' => 'erp-accounting-expense' ), admin_url('admin.php') ), $content );
+	} else {
+		$url = add_query_arg( array( 'page' => 'erp-accounting-expense' ), admin_url('admin.php') );
+	}
+	
+	
+	return apply_filters( 'erp_ac_get_expense_url', $url, $content );
 }
 

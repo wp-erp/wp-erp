@@ -34,12 +34,36 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-ac-transaction-report', 'transaction_report' );
         $this->action( 'wp_ajax_erp_people_convert', 'convert_user' );
         $this->action( 'wp_ajax_erp-ac-new-tax', 'new_tax' );
-        $this->action( 'wp_ajax_erp-ac-delete-tax', 'delete_tax' );
+        $this->action( 'wp_ajax_erp-ac-delete-tax', 'delete_tax' ); 
         $this->action( 'wp_ajax_erp-ac-remove-account', 'remove_account' );
         $this->action( 'wp_ajax_erp-ac-sales-invoice-export', 'sales_invoice_export' );
         $this->action( 'wp_ajax_erp-ac-sales-payment-export', 'sales_payment_export' );
         $this->action( 'wp_ajax_erp-ac-invoice-send-email', 'sales_invoice_send_email' );
         $this->action( 'wp_ajax_erp-ac-get-invoice-number', 'popup_get_invoice_number' );
+        $this->action( 'wp_ajax_erp_ac_trans_form_submit', 'transaction_form_submit' );
+    }
+
+    function transaction_form_submit() {
+        $this->verify_nonce( 'erp-ac-nonce' );
+        parse_str( $_POST['form_data'], $postdata );
+        $postdata['status']  = erp_ac_get_status_according_with_btn( $_POST['btn_status'] );
+        
+        $transaction = \WeDevs\ERP\Accounting\Form_Handler::transaction_data_process( $postdata );
+        $return_url = '';
+
+        if ( $postdata['type'] == 'sales' ) {
+            $return_url = erp_ac_get_sales_url( false );
+        } else if ( $postdata['type'] == 'expense' ) {
+            $return_url = erp_ac_get_sales_url( false );
+        } else if ( $postdata['type'] == 'journal' ) {
+            $return_url = erp_ac_get_journal_url( false );
+        } 
+
+        if ( is_wp_error( $transaction ) ) {
+            wp_send_json_error( array( 'message' => $transaction->get_error_message() ) );
+        } else {
+            wp_send_json_success( array( 'return_url' => $return_url, 'message' => __( 'Transaction has been created successfully', 'erp' ) ) );
+        }
     }
 
     function popup_get_invoice_number() {
@@ -93,7 +117,7 @@ class Ajax_Handler {
         }
 
         $people_obj = \WeDevs\ERP\Framework\Models\People::find( $id );
-        $type_obj = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $type )->first();
+        $type_obj   = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $type )->first();
         $people_obj->assignType( $type_obj );
 
         if ( $type == 'customer' ) {
@@ -126,10 +150,10 @@ class Ajax_Handler {
         parse_str( $_POST['post'], $postdata );
 
         $new_tax = erp_ac_new_tax( $postdata );
-        $tax_id = $postdata['id'] ? $postdata['id'] : $new_tax->id;
+        $tax_id  = $postdata['id'] ? $postdata['id'] : $new_tax->id;
 
         if ( $tax_id ) {
-            $items = erp_ac_update_tax_items( $postdata, $tax_id );
+            $items   = erp_ac_update_tax_items( $postdata, $tax_id );
             $account = erp_ac_new_tax_account( $postdata, $tax_id );
             $this->send_success();
         }

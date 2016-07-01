@@ -550,7 +550,7 @@ function erp_ac_item_update( $item, $args, $trans_id, $journal_id, $tax_journal,
     if ( intval( $item['item_id'] ) ) {
         $trans_item = WeDevs\ERP\Accounting\Model\Transaction_Items::where( 'id', '=', $item['item_id'] )
             ->update([
-                'product_id'  => '',
+                'product_id'  => isset( $item['product_id'] ) ? $item['product_id'] : '',
                 'description' => $item['description'],
                 'qty'         => $item['qty'],
                 'unit_price'  => $item['unit_price'],
@@ -567,7 +567,7 @@ function erp_ac_item_update( $item, $args, $trans_id, $journal_id, $tax_journal,
     } else {
         $trans_item = WeDevs\ERP\Accounting\Model\Transaction_Items::create([
             'journal_id'     => $journal_id,
-            'product_id'     => '',
+            'product_id'     => isset( $item['product_id'] ) ? $item['product_id'] : '',
             'transaction_id' => $trans_id,
             'description'    => $item['description'],
             'qty'            => $item['qty'],
@@ -771,6 +771,37 @@ function erp_ac_tran_from_header() {
     return apply_filters( 'erp_ac_trans_form_header', $header );
 }
 
+function erp_ac_get_btn_status( $postdata ) {
+    if ( $postdata['form_type'] == 'payment' ) {
+        return erp_ac_get_status_according_with_btn( $postdata['btn_status'] );
+    } else if ( $postdata['form_type'] == 'invoice' ) {
+        return erp_ac_get_status_invoice_according_with_btn( $postdata['btn_status'] );
+    }
+}
+
+function erp_ac_get_status_according_with_btn( $btn ) {
+    $button = [
+        'save_and_draft'               => 'draft',
+        'save_and_submit_for_approval' => 'awaiting_approval',
+        'save_and_add_another'         => 'draft',
+        'approve'                      => 'closed',
+        'approve_and_add_another'      => 'closed'
+    ];
+
+    return $button[$btn];
+}
+
+function erp_ac_get_status_invoice_according_with_btn( $btn ) {
+    $button = [
+        'save_and_draft'               => 'draft',
+        'save_and_submit_for_approval' => 'awaiting_approval',
+        'save_and_add_another'         => 'draft',
+        'approve'                      => 'awaiting_payment',
+        'approve_and_add_another'      => 'awaiting_payment'
+    ];
+
+    return $button[$btn];
+}
 
 
 

@@ -205,6 +205,29 @@ window.wperp = window.wperp || {};
         return decodeURIComponent(results[2].replace(/\+/g, " "));
     };
 
+    wperp.swalSpinnerVisible = function() {
+        swal({
+            title: '',   
+            html: true,
+            showCancelButton: false,
+            showConfirmButton: false,
+        });
+
+        $('.la-ball-fall').css({
+            'opacity' : 1,
+            'visibility' : 'visible',
+            'top' : '-17px',
+            'color' : '#008ec2'
+        });
+    };
+
+    wperp.swalSpinnerHidden = function() {
+        $('.la-ball-fall').css({
+            'opacity' : 0,
+            'visibility' : 'hidden',
+        });
+    };
+
     var WeDevs_ERP = {
 
         /**
@@ -228,7 +251,31 @@ window.wperp = window.wperp || {};
             $( '.erp-hr-audit-log' ).on( 'click', 'a.erp-audit-log-view-changes', this.viewLogChanges );
             $( 'body').on( 'change', '#filter_duration', this.customFilter );
 
+            //button group
+            $('body').on( 'click', this.btn.groupAction );
+
             this.initFields();
+        },
+
+        btn: {
+            groupAction: function(e) {
+
+                var self = $(e.target);
+
+                if ( self.hasClass('erp-drop-down-child-btn') ) {
+                    var btn_group  = self.closest('.erp-btn-group');
+                    
+                    if ( btn_group.hasClass('erp-btn-open') ) {
+                        btn_group.removeClass('erp-btn-open');
+                    } else {
+                        btn_group.addClass('erp-btn-open');
+                    }
+                } else {
+                    var btn_group  = $('.erp-btn-group');
+                    btn_group.removeClass('erp-btn-open');
+                }
+                
+            }
         },
 
         afterNewLocation: function(e, res) {

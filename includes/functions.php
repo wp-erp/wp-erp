@@ -893,6 +893,7 @@ function erp_get_license_status( $addon ) {
  * @return void
  */
 function erp_import_export_javascript() {
+
     $contact_fields = [
         'first_name',
         'last_name',
@@ -912,6 +913,15 @@ function erp_import_export_javascript() {
         'currency',
         'type',
     ];
+
+
+    $field_builder_contacts_fields = get_option( 'erp-contact-fields' );
+
+    if ( ! empty( $field_builder_contacts_fields ) ) {
+        foreach ( $field_builder_contacts_fields as $field ) {
+            $contact_fields[] = $field['name'];
+        }
+    }
 
     $company_fields = [
         'email',
@@ -1006,10 +1016,7 @@ function erp_import_export_javascript() {
             }
 
             var contact_required_fields = [
-                'first_name',
-                'last_name',
-                'email',
-                'user_email',
+                'first_name'
             ];
 
             var company_required_fields = [
@@ -1123,7 +1130,11 @@ function erp_import_export_javascript() {
                 var file = this.files[0];
 
                 var reader = new FileReader();
-                reader.readAsText(file);
+
+                var first5000 = file.slice(0, 5000);
+                reader.readAsText( first5000 );
+
+                // reader.readAsText(file);
 
                 reader.onload = function(e) {
                     var csv = reader.result;
@@ -1154,6 +1165,70 @@ function erp_import_export_javascript() {
                 $( "#export_form #fields input[type=checkbox]" ).prop( 'checked', $(this).prop( "checked" ) );
             });
 
+            $( "#users_import_form" ).on( 'submit', function(e) {
+                e.preventDefault();
+                statusDiv = $( "div#import-status-indicator" );
+
+                statusDiv.show();
+
+                var form = $(this),
+                    submit = form.find( 'input[type=submit]' );
+                submit.attr( 'disabled', 'disabled' );
+
+                var data = {
+                    'action': 'erp_import_users_as_contacts',
+                    'user_role': $(this).find('select[name=user_role]').val(),
+                    'contact_owner': $(this).find('select[name=contact_owner]').val(),
+                    'life_stage': $(this).find('select[name=life_stage]').val(),
+                    'contact_group': $(this).find('select[name=contact_group]').val(),
+                    '_wpnonce': $(this).find('input[name=_wpnonce]').val()
+                };
+
+                var total_items = 0, left = 0, imported = 0, exists = 0, percent = 0, type = 'success', message = '';
+
+                $.post( ajaxurl, data, function(response) {
+                    if ( response.success ) {
+                        total_items = response.data.total_items;
+                        left = response.data.left;
+                        exists = response.data.exists;
+                        imported = total_items - left;
+                        done = imported - exists;
+
+                        if ( imported > 0 || total_items > 0 ) {
+                            percent = Math.floor( ( 100 / total_items ) * ( imported ) );
+
+                            type = 'success';
+                            message = 'Successfully imported all users!';
+                        } else {
+                            message = 'No users found to import!';
+                            type = 'error';
+                        }
+
+                        statusDiv.find( '#progress-total' ).html( percent + '%' );
+                        statusDiv.find( '#progressbar-total' ).val( percent );
+                        statusDiv.find( '#completed-total' ).html( 'Imported ' + done + ' out of ' + response.data.total_items );
+                        if ( exists > 0 ) {
+                            statusDiv.find( '#failed-total' ).html( 'Already Exist ' + exists );
+                        }
+
+                        if ( response.data.left > 0 ) {
+                            form.submit();
+                            return;
+                        } else {
+                            submit.removeAttr( 'disabled' );
+
+                            swal({
+                                title: '',
+                                text: message,
+                                type: type,
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#008ec2'
+                            });
+                        }
+                    }
+                });
+            });
+
         });
     </script>
     <?php
@@ -1174,6 +1249,14 @@ function erp_process_import_export() {
 
     $departments  = erp_hr_get_departments_dropdown_raw();
     $designations = erp_hr_get_designation_dropdown_raw();
+
+    $field_builder_options = get_option( 'erp-contact-fields' );
+
+    if ( ! empty( $field_builder_options ) ) {
+        foreach ( $field_builder_options as $field ) {
+            $field_builder_contacts_fields[] = $field['name'];
+        }
+    }
 
 
     if ( isset( $_POST['erp_import_csv'] ) ) {
@@ -1266,6 +1349,28 @@ function erp_process_import_export() {
                     }
 
                     if ( ( $type == 'contact' || $type == 'company' ) && $is_crm_activated ) {
+                        // If not exist any email address then generate a dummy one.
+                        if ( ! isset( $data[$x]['email'] ) ) {
+                            $rand = substr( sha1( uniqid( time() ) ), 0, 8 );
+                            $data[$x]['email'] = "rand_{$rand}@example.com";
+                        }
+
+                        if ( empty( $data[$x]['last_name'] ) ) {
+                            $name_parts = explode( ' ' , trim( $data[$x]['first_name'] ) );
+
+                            if ( count( $name_parts ) > 1 ) {
+                                $last_name = trim( array_pop( $name_parts ) );
+                            }
+
+                            if ( ! empty( $last_name ) ) {
+                                $data[$x]['first_name'] = implode( ' ' , $name_parts );
+                                $data[$x]['last_name'] = $last_name;
+
+                            } else {
+                                $data[$x]['last_name'] = '_';
+                            }
+                        }
+
                         $item_insert_id = erp_insert_people( $data[$x] );
 
                         if ( is_wp_error( $item_insert_id ) ) {
@@ -1276,6 +1381,13 @@ function erp_process_import_export() {
                             $life_stage    = erp_get_option( 'life_stage', 'erp_settings_erp-crm_contacts', 'opportunity' );
                             erp_people_update_meta( $item_insert_id, '_assign_crm_agent', $contact_owner );
                             erp_people_update_meta( $item_insert_id, 'life_stage', $life_stage );
+
+
+                            if ( ! empty( $field_builder_contacts_fields ) ) {
+                                foreach ( $field_builder_contacts_fields as $field ) {
+                                    erp_people_update_meta( $item_insert_id, $field, $data[$x][$field] );
+                                }
+                            }
                         }
                     }
                 }
@@ -1536,7 +1648,7 @@ function erp_email_settings_javascript() {
                             title: '',
                             text: response.data,
                             type: type,
-                            confirmButtonText: crmContactFormsSettings.labelOK,
+                            confirmButtonText: 'OK',
                             confirmButtonColor: '#008ec2'
                         });
                     }
@@ -1575,7 +1687,7 @@ function erp_email_settings_javascript() {
                             title: '',
                             text: response.data,
                             type: type,
-                            confirmButtonText: crmContactFormsSettings.labelOK,
+                            confirmButtonText: 'OK',
                             confirmButtonColor: '#008ec2'
                         });
                     }

@@ -142,6 +142,7 @@
 @import "crm.less";
 @import "hrm.less";
 @import "accounting.less";
+@import "bootstrap-button-groups.less";
 
 #wp-admin-bar-erp-mode-switch .ab-icon.dashicons-randomize {
     padding-top: 7px !important;
@@ -1201,4 +1202,25 @@ ul.edit-address {
         text-align: right;
     }
 }
+
+.erp-progress-status-indicator {
+    .status {
+        text-align: center; font-size: 16px;
+        #progress-total {
+            font-weight: bold; color: #3b99fc;
+        }
+        #completed-total {
+            color: green;
+        }
+        #failed-total {
+            color: red;
+        }
+    }
+    .progress {
+        progress {
+            width:100%;
+        }
+    }
+}
+
 @import "responsive.less";
