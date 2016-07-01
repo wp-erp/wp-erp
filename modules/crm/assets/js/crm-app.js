@@ -849,6 +849,11 @@ var vm = new Vue({
             };
 
             jQuery.post( wpCRMvue.ajaxurl, self.feedData, function( resp ) {
+                if ( ! resp.success ) {
+                    alert( resp.data );
+                    vm.progreassDone(true);
+                    return false;
+                }
 
                 if ( self.feedData.id ) {
                     vm.progreassDone(true);
