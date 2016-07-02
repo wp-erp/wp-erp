@@ -62,7 +62,7 @@ class Auditlog_List_Table extends \WP_List_Table {
 
             <label class="screen-reader-text" for="filter_module"><?php _e( 'Filter by Module', 'erp' ) ?></label>
             <select name="filter_module" id="filter_module">
-                <option value=""><?php _e( '-- Select module --', 'erp' ); ?></option>
+                <option value=""><?php _e( '&mdash; All Modules &mdash;', 'erp' ); ?></option>
                 <?php foreach ( $modules as $key => $module ): ?>
                     <option value="<?php echo $module['component'] ?>" <?php selected( $selected_module, $module['component'] ); ?>><?php echo $module['component']; ?></option>
                 <?php endforeach ?>
@@ -70,14 +70,14 @@ class Auditlog_List_Table extends \WP_List_Table {
 
             <label class="screen-reader-text" for="filter_section"><?php _e( 'Filter by Section', 'erp' ) ?></label>
             <select name="filter_section" id="filter_section">
-                <option value=""><?php _e( '-- Select Section --', 'erp' ); ?></option>
+                <option value=""><?php _e( '&mdash; All Sections &mdash;', 'erp' ); ?></option>
                 <?php foreach ( $sections as $key => $section ): ?>
-                    <option value="<?php echo $section['sub_component'] ?>" <?php selected( $section['sub_component'], $selected_section ); ?>><?php echo $section['sub_component']; ?></option>
+                    <option value="<?php echo $section['sub_component'] ?>" <?php selected( $section['sub_component'], $selected_section ); ?>><?php echo ucfirst( $section['sub_component'] ); ?></option>
                 <?php endforeach ?>
             </select>
             <label class="screen-reader-text" for="new_role"><?php _e( 'Filter by Duration', 'erp' ) ?></label>
             <select name="filter_duration" id="filter_duration">
-                <option value="-1"><?php _e( '- Select Duration -', 'erp' ) ?></option>
+                <option value="-1"><?php _e( '&mdash; All Times &mdash;', 'erp' ) ?></option>
                 <?php
                 $types = $this->erp_log_get_filters();
 
@@ -220,7 +220,7 @@ class Auditlog_List_Table extends \WP_List_Table {
         $sortable              = $this->get_sortable_columns();
         $this->_column_headers = array( $columns, $hidden, $sortable );
 
-        $per_page              = 10;
+        $per_page              = 30;
         $current_page          = $this->get_pagenum();
         $offset                = ( $current_page -1 ) * $per_page;
         $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '2';
