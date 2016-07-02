@@ -773,17 +773,41 @@ function erp_ac_tran_from_header() {
 
 function erp_ac_get_btn_status( $postdata ) {
     
-    if ( $postdata['form_type'] == 'payment' || $postdata['form_type'] == 'payment_voucher' ) {
+    if ( $postdata['form_type'] == 'payment' ) {
         return erp_ac_get_status_according_with_btn( $postdata['btn_status'] );
     } else if ( $postdata['form_type'] == 'invoice' || $postdata['form_type'] == 'vendor_credit' ) {
         return erp_ac_get_status_invoice_according_with_btn( $postdata['btn_status'] );
-    } 
+    } else if ( $postdata['form_type'] == 'payment_voucher' ) {
+        return erp_ac_get_voucher_status_according_with_btn( $postdata['btn_status'] );
+    }
 }
 
+/**
+ * Get transaction submit data status for payment voucher
+ * @param  string $btn 
+ * @return string
+ */
+function erp_ac_get_voucher_status_according_with_btn( $btn ) {
+    $button = [
+        'save_and_draft'               => 'draft',
+        'save_and_submit_for_approval' => 'pending',
+        'save_and_add_another'         => 'draft',
+        'approve'                      => 'paid',
+        'approve_and_add_another'      => 'paid'
+    ];
+
+    return $button[$btn];
+}
+
+/**
+ * Get transaction submit data status for payment 
+ * @param  string $btn 
+ * @return string      
+ */
 function erp_ac_get_status_according_with_btn( $btn ) {
     $button = [
         'save_and_draft'               => 'draft',
-        'save_and_submit_for_approval' => 'awaiting_approval',
+        'save_and_submit_for_approval' => 'pending',
         'save_and_add_another'         => 'draft',
         'approve'                      => 'closed',
         'approve_and_add_another'      => 'closed'
@@ -792,10 +816,15 @@ function erp_ac_get_status_according_with_btn( $btn ) {
     return $button[$btn];
 }
 
+/**
+ * Get transaction submit data status for payment invoice and vendor credit
+ * @param  string $btn 
+ * @return string      
+ */
 function erp_ac_get_status_invoice_according_with_btn( $btn ) {
     $button = [
         'save_and_draft'               => 'draft',
-        'save_and_submit_for_approval' => 'awaiting_approval',
+        'save_and_submit_for_approval' => 'pending',
         'save_and_add_another'         => 'draft',
         'approve'                      => 'awaiting_payment',
         'approve_and_add_another'      => 'awaiting_payment'

@@ -218,10 +218,10 @@ $tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
         
         <div class="erp-ac-btn-group-wrap">
             <div class="erp-btn-group">
-                <button type="button" data-redirect="0" data-btn_status="save_and_draft" class="erp-drop-down-btn erp-btn-info erp-ac-trns-form-submit-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" data-redirect="0" data-btn_status="save_and_draft" class="erp-drop-down-btn button erp-ac-trns-form-submit-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <?php _e( 'Save as Draft', 'erp' ); ?>
                 </button>
-                <button type="button" class="erp-drop-down-btn erp-drop-down-child-btn erp-btn-info">
+                <button type="button" class="erp-drop-down-btn erp-drop-down-child-btn button">
                     <span class="erp-caret"></span>
                     <span class="erp-sr-only"><?php _e( 'Toggle Dropdown', 'erp' ); ?></span>
                 </button>
@@ -233,10 +233,10 @@ $tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
             </div>
             <div class="erp-btn-group erp-btn-group-first-child-after"></div>
             <div class="erp-btn-group">
-                <button  data-redirect="single_page" data-btn_status="approve" type="button" class="erp-drop-down-btn erp-btn-info erp-ac-trns-form-submit-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button  data-redirect="single_page" data-btn_status="approve" type="button" class="erp-drop-down-btn button button-primary erp-ac-trns-form-submit-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <?php _e( 'Approve', 'erp' ); ?> 
                 </button>
-                <button type="button" class="erp-drop-down-btn erp-drop-down-child-btn erp-btn-info">
+                <button type="button" class="erp-drop-down-btn erp-drop-down-child-btn button button-primary">
                     <span class="erp-caret"></span>
                     <span class="erp-sr-only"><?php _e( 'Toggle Dropdown', 'erp' ); ?></span>
                 </button>
@@ -247,7 +247,7 @@ $tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
             </div>
 
             <div class="erp-btn-group">
-              <button type="button" onclick="window.location.href='<?php echo $cancel_url; ?>'" class="erp-drop-down-btn erp-drop-down-cancel-btn erp-btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <button type="button" onclick="window.location.href='<?php echo $cancel_url; ?>'" class="erp-drop-down-btn erp-drop-down-cancel-btn button dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <?php _e( 'Cancel', 'erp' ); ?> 
               </button>
             </div>
