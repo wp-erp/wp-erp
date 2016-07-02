@@ -312,13 +312,13 @@ class Form_Handler {
         }
         
         if ( $_POST['redirect'] == 'same_page' ) {
-            $url = remove_query_arg( ['transaction_id'], wp_unslash( $_SERVER['REQUEST_URI'] ) );
-            $redirect_to = $url; 
+            $redirect_to = remove_query_arg( ['transaction_id'], wp_unslash( $_SERVER['REQUEST_URI'] ) );
         } else if ( $_POST['redirect'] == 'single_page' ) {
             if ( $_POST['type'] == 'sales' ) {
                 $redirect_to = erp_ac_get_slaes_payment_invoice_url( $insert_id );    
-            }
-            
+            } else if ( $_POST['type'] == 'expense' ) {
+                $redirect_to = erp_ac_get_expense_voucher_url( $insert_id );    
+            } 
         }
 
         wp_safe_redirect( $redirect_to );

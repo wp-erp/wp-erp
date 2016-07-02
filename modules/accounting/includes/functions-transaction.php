@@ -772,11 +772,12 @@ function erp_ac_tran_from_header() {
 }
 
 function erp_ac_get_btn_status( $postdata ) {
-    if ( $postdata['form_type'] == 'payment' ) {
+    
+    if ( $postdata['form_type'] == 'payment' || $postdata['form_type'] == 'payment_voucher' ) {
         return erp_ac_get_status_according_with_btn( $postdata['btn_status'] );
-    } else if ( $postdata['form_type'] == 'invoice' ) {
+    } else if ( $postdata['form_type'] == 'invoice' || $postdata['form_type'] == 'vendor_credit' ) {
         return erp_ac_get_status_invoice_according_with_btn( $postdata['btn_status'] );
-    }
+    } 
 }
 
 function erp_ac_get_status_according_with_btn( $btn ) {
