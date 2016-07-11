@@ -349,10 +349,10 @@ class Contact extends \WeDevs\ERP\People {
      */
     public function get_source() {
         $sources = erp_crm_contact_sources();
-        $source = '';
+        $source = $this->get_meta( 'source', true );
 
-        if ( array_key_exists( $this->source , $sources ) ) {
-            $source = $sources[ $this->source ];
+        if ( array_key_exists( $source , $sources ) ) {
+            $source = $sources[ $source ];
         }
 
         return $source;
