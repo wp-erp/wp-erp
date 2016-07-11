@@ -1473,7 +1473,6 @@ table.widefat.cfi-table {
 .cfi-table th,
 .cfi-table td {
   padding: 10px 20px;
-  text-align: center;
 }
 .cfi-table th {
   background-color: #fff;
@@ -1482,6 +1481,9 @@ table.widefat.cfi-table {
 }
 .cfi-table td {
   border-bottom: 1px solid #E1E1E1;
+}
+.cfi-table td.cfi-contact-options {
+  text-align: center;
 }
 .cfi-table td.cfi-contact-options .button {
   margin: 0 3px 6px;

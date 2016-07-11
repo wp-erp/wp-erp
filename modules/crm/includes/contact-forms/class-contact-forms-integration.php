@@ -8,12 +8,6 @@ class Contact_Forms_Integration {
 
     use ContactForms;
 
-    /**
-     * ERP_Settings_Contact_Forms class instance
-     *
-     * @var object
-     */
-    protected $settings;
 
     /**
      * The class constructor
@@ -113,12 +107,16 @@ class Contact_Forms_Integration {
             }
 
             if ( $people_id = erp_insert_people( $contact ) ) {
-                erp_people_update_meta( $people_id, 'life_stage', 'lead' );
+                $customer = new \WeDevs\ERP\CRM\Contact( absint( $people_id ) );
 
-                $plugin_list = $this->get_plugin_list();
-                erp_people_update_meta( $people_id, 'source', 'contact_form' );
+                $customer->update_meta( 'life_stage', 'lead' );
+                $customer->update_meta( 'source', 'contact_form' );
 
-                if ( !empty( $cfi_settings[ $plugin ][ $form_id ]['contact_group'] ) ) {
+                if ( ! empty( $cfi_settings[ $plugin ][ $form_id ]['contact_owner'] ) ) {
+                    $customer->update_meta( '_assign_crm_agent', $cfi_settings[ $plugin ][ $form_id ]['contact_owner'] );
+                }
+
+                if ( ! empty( $cfi_settings[ $plugin ][ $form_id ]['contact_group'] ) ) {
                     $groups = array( $cfi_settings[ $plugin ][ $form_id ]['contact_group'] );
                     erp_crm_edit_contact_subscriber( $groups, $people_id );
                 }
