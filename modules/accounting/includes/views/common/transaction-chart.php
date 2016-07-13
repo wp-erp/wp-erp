@@ -316,7 +316,7 @@ if ( $screen->base == 'accounting_page_erp-accounting-sales'  ) {
 }
 
 $payment_received = json_encode( $payment_received );
-$payment_status = json_encode( $payment_status );
+$payment_status   = json_encode( $payment_status );
 
 ?>
 <div class="payment-stat-chart">
@@ -337,13 +337,13 @@ $payment_status = json_encode( $payment_status );
 </div>
 <?php $symbol         = json_encode( $symbol ); ?>
 <script type="text/javascript">
-    ;(function($) {
+    (function($) {
 
         $(document).ready( function() {
             ERP_AC_paymentReceived = <?php echo $payment_received; ?>;
             ERP_AC_paymentStatus = <?php echo $payment_status; ?>;
             ERP_AC_symbol = <?php echo $symbol; ?>;
-            
+
             $.plot('#payment-received-stat', ERP_AC_paymentReceived, {
                 series: {
                     pie: {

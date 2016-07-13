@@ -171,7 +171,9 @@
 
 // accounting transaction table
 table.erp-ac-transaction-table {
+    margin: 20px 0 20px -16px;
     width: 100%;
+    width: ~"calc(100% + 32px)";
     table-layout: fixed;
 
     td, th {
@@ -216,6 +218,11 @@ table.erp-ac-transaction-table {
     th.col-discount,
     td.col-discount {
         width: 85px;
+    }
+
+    th:first-child,
+    td:first-child {
+        padding-left: 15px;
     }
 }
 
@@ -347,7 +354,7 @@ table.vendor-list-table {
     .erp-attachment-list {
         li {
             display: inline-block;
-            
+
             img {
                 border: 1px solid #ddd;
                 padding: 5px;
@@ -386,20 +393,34 @@ table.vendor-list-table {
     }
 }
 
-form.erp-form .block .erp-form-field label {
-    float: none;
-    display: block;
-    margin-bottom: 10px;
+form.erp-form {
+
+    &.erp-ac-transaction-form {
+        margin-top: 20px;
+        background: #f9f9f9;
+        padding: 15px;
+        border: 1px solid rgba(216, 216, 216, 0.54);
+        padding-top: 0;
+        margin-bottom: 40px;
+    }
+
+    .block .erp-form-field label {
+        float: none;
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .erp-form-field label {
+        float: left;
+        min-width: 150px;
+        font-weight: bold;
+        vertical-align: top;
+        color: #23282d;
+        font-size: 14px;
+    }
 }
 
-form.erp-form .erp-form-field label {
-    float: left;
-    min-width: 150px;
-    font-weight: bold;
-    vertical-align: top;
-    color: #23282d;
-    font-size: 14px;
-}
+
 .erp-ac-toltip-table {
     border-top: 1px solid #fff;
     border-left: 1px solid #fff;
@@ -491,7 +512,7 @@ form.erp-form .erp-form-field label {
 
     .fa-times-circle {
         cursor: pointer;
-    }  
+    }
 }
 
 .erp-ac-report-tax-date {
@@ -508,12 +529,12 @@ form.erp-form .erp-form-field label {
 
 .erp-ac-tax-report-wrap {
     .erp-ac-tax-report-table {
-         
+
         th, td {
             text-align: center;
             border-left: 1px solid #e1e1e1;
         }
-    }    
+    }
 }
 
 .erp-ac-income-satement-wrap {
@@ -523,7 +544,7 @@ form.erp-form .erp-form-field label {
 
         .inside {
             margin-bottom: 0;
-            padding: 0;            
+            padding: 0;
         }
     }
     .erp-ac-report-income-statement-table {
@@ -542,7 +563,7 @@ form.erp-form .erp-form-field label {
             border-bottom: 1px solid #eee;
             padding-top: 16px;
             padding-bottom: 13px;
-        } 
+        }
 
         tr td:nth-child(2) {
             text-align: right;
@@ -554,7 +575,7 @@ form.erp-form .erp-form-field label {
                 padding-top: 9px;
             }
         }
-    }    
+    }
 }
 
 .erp-ac-balance-sheet-wrap {
@@ -573,7 +594,7 @@ form.erp-form .erp-form-field label {
         -webkit-flex-wrap: wrap;
         -ms-flex-wrap: wrap;
         flex-wrap: wrap;
-    
+
         .postbox {
             float: left;
             width: 32%;
@@ -589,7 +610,7 @@ form.erp-form .erp-form-field label {
                 background: #fafafa;
                 padding: 10px;
                 bottom: 0px;
-                
+
                 table {
                     width: 100%;
                     td {
@@ -627,9 +648,18 @@ form.erp-form .erp-form-field label {
 }
 
 .erp-ac-btn-group-wrap {
-    margin-top: 5%;
-    .erp-btn-group-first-child-after {
-        margin-right: 15.6%;
+    .clearfix();
+    background: #fcfcfc;
+    border-top: 1px solid #eee;
+    margin: 20px -15px -15px -15px;
+    padding: 15px;
+
+    .erp-button-bar-left {
+        float: left;
+    }
+
+    .erp-button-bar-right {
+        float: right;
     }
 }
 
