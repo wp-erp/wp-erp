@@ -85,6 +85,12 @@ function erp_ac_get_all_transaction( $args = array() ) {
             $transaction = $transaction->where( 'ref', '=', $args['ref'] );
         }
 
+        if ( isset( $args['status'] ) && $args['status'] == 'deleted' ) {
+            //$transaction = $transaction->where( 'status', '==', 'deleted' );            
+        } else {
+            $transaction = $transaction->where( 'status', '!=', 'deleted' );
+        }
+
         if ( isset( $args['status'] ) &&  is_array( $args['status'] ) && array_key_exists( 'in', $args['status'] ) ) {
             $transaction = $transaction->whereIn( 'status', $args['status']['in'] );
         } else if ( isset( $args['status'] ) &&  is_array( $args['status'] ) && array_key_exists( 'not_in', $args['status'] ) ) {
@@ -831,6 +837,20 @@ function erp_ac_get_status_invoice_according_with_btn( $btn ) {
     ];
 
     return $button[$btn];
+}
+
+/**
+ * Update transaction
+ *
+ * @param  int $id
+ * @param  array $args
+ *
+ * @since  1.1.1
+ *
+ * @return  boolen
+ */
+function erp_ac_update_transaction( $id, $args ) {
+    return \WeDevs\ERP\Accounting\Model\Transaction::find( $id )->update( $args );
 }
 
 

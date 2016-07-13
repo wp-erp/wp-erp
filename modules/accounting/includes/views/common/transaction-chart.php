@@ -337,60 +337,63 @@ $payment_status = json_encode( $payment_status );
 </div>
 <?php $symbol         = json_encode( $symbol ); ?>
 <script type="text/javascript">
-    jQuery(function($) {
-        var paymentReceived = <?php echo $payment_received; ?>;
-        var paymentStatus = <?php echo $payment_status; ?>;
-        var symbol = <?php echo $symbol; ?>;
+    ;(function($) {
 
-        $.plot('#payment-received-stat', paymentReceived, {
-            series: {
-                pie: {
-                    innerRadius: 0.5,
-                    show: true
-                }
-            },
-            grid: {
-                hoverable: true,
-                clickable: false,
-                borderWidth: 1
-            },
-            tooltip: true,
-            tooltipOpts: {
-                defaultTheme: true,
-                content: "%s - "+symbol+"%n",
-            },
-            legend: {
-                show: true,
-                labelFormatter: function(label, series) {
+        $(document).ready( function() {
+            ERP_AC_paymentReceived = <?php echo $payment_received; ?>;
+            ERP_AC_paymentStatus = <?php echo $payment_status; ?>;
+            ERP_AC_symbol = <?php echo $symbol; ?>;
+            
+            $.plot('#payment-received-stat', ERP_AC_paymentReceived, {
+                series: {
+                    pie: {
+                        innerRadius: 0.5,
+                        show: true
+                    }
+                },
+                grid: {
+                    hoverable: true,
+                    clickable: false,
+                    borderWidth: 1
+                },
+                tooltip: true,
+                tooltipOpts: {
+                    defaultTheme: true,
+                    content: "%s - "+ERP_AC_symbol+"%n",
+                },
+                legend: {
+                    show: true,
+                    labelFormatter: function(label, series) {
 
-                    return symbol + series.data[0][1] + '<br>' + label;
+                        return ERP_AC_symbol + series.data[0][1] + '<br>' + label;
+                    }
+                },
+            });
+
+            $.plot('#payment-status-stat', ERP_AC_paymentStatus, {
+                series: {
+                    pie: {
+                        innerRadius: 0.5,
+                        show: true
+                    }
+                },
+                grid: {
+                    hoverable: true,
+                    clickable: false,
+                    borderWidth: 1
+                },
+                tooltip: true,
+                tooltipOpts: {
+                    defaultTheme: true,
+                    content: "<strong>%n</strong> %s",
+                },
+                legend: {
+                    show: true,
+                    labelFormatter: function(label, series) {
+                        return '<strong>' + series.data[0][1] + '</strong> ' + label;
+                    }
                 }
-            },
+            });
         });
-
-        $.plot('#payment-status-stat', paymentStatus, {
-            series: {
-                pie: {
-                    innerRadius: 0.5,
-                    show: true
-                }
-            },
-            grid: {
-                hoverable: true,
-                clickable: false,
-                borderWidth: 1
-            },
-            tooltip: true,
-            tooltipOpts: {
-                defaultTheme: true,
-                content: "<strong>%n</strong> %s",
-            },
-            legend: {
-                show: true,
-                labelFormatter: function(label, series) {
-                    return '<strong>' + series.data[0][1] + '</strong> ' + label;
-                }
-            }
-        });
-    });
+    })(jQuery);
 </script>

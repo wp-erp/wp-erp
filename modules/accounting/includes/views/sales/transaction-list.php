@@ -1,4 +1,5 @@
 <div class="wrap erp-accounting">
+    <div id="erp-accounting">
     <?php
     if ( erp_ac_create_sales_payment() || erp_ac_create_sales_invoice() ) {
         ?>
@@ -30,7 +31,7 @@
     }
     ?>
 
-    <form method="get">
+    <form method="get" class="erp-accounting-tbl-form">
         <input type="hidden" name="page" value="erp-accounting-sales">
 
         <?php
@@ -40,4 +41,5 @@
         $list_table->display();
         ?>
     </form>
+    </div>
 </div>

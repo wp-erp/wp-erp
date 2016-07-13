@@ -11,7 +11,7 @@ $main_ledger_id = '';
 if ( $transaction_id ) {
     $transaction = erp_ac_get_all_transaction([
         'id'     => $transaction_id,
-        'status' => 'draft',
+        'status' => [ 'in' => ['draft', 'pending']],
         'join'   => ['journals', 'items'],
         'type'   => ['sales'],
         'output_by' => 'array'

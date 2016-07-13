@@ -33,6 +33,12 @@ function erp_ac_get_sales_form_types() {
             'description' => __( '', 'erp' ),
             'type'        => 'debit'
         ],
+        'deleted' => [
+            'name'        => 'trash',
+            'label'       => __( 'Trash', 'erp' ),
+            'description' => __( '', 'erp' ),
+            'type'        => 'debit'
+        ],
     ];
 
     return apply_filters( 'erp_ac_get_sales_form_types', $form_types );
@@ -72,24 +78,33 @@ function erp_ac_get_status_label( $items, $slug ) {
             break;
 
         case 'awaiting_payment':
-            $label = __( 'Awaiting Payment', 'erp' );
+            $label = __( 'Awaiting for Payment', 'erp' );
             break;
 
         case 'overdue':
             $label = __( 'Overdue', 'erp' );
             break;
 
+        case 'deleted':
+            $label = __( 'Trash', 'erp' );
+            break;
+
         case 'partial':
             $label = __( 'Partially Paid', 'erp' );
             break;
 
-        case 'awaiting_approval':
-            $label = __( 'Awaiting approval', 'erp' );
+        case 'void':
+            $label = __( 'Void', 'erp' );
+            break;
+
+        case 'pending':
+            $url   = admin_url( 'admin.php?page='.$slug.'&action=new&type=' . $items->form_type . '&transaction_id=' . $items->id );
+            $label = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Awaiting for approval', 'erp' ) );
             break;
 
         case 'draft':
             $url   = admin_url( 'admin.php?page='.$slug.'&action=new&type=' . $items->form_type . '&transaction_id=' . $items->id );
-            $label = sprintf( '%1s<a href="%2s">%3s</a>', __( 'Draft', 'erp' ), $url, __( ' (Edit)', 'accounting') );
+            $label = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Draft', 'erp' ) );
             break;
     }
 
@@ -291,6 +306,8 @@ function erp_ac_message() {
         'tax_update'    => __( 'Tax Update', 'erp' ),
         'tax_deleted'   => __( 'Your tax record has been deleted successfully', 'erp' ),
         'delete'        => __( 'Yes, delete it!', 'erp' ),
+        'void'          => __( 'Yes, void it!', 'erp' ),
+        'restore'       => __( 'Yes, restore it!', 'erp' ),
         'cancel'        => __( 'Cancel', 'erp' ),
         'error'         => __( 'Error!', 'erp' ),
         'alreadyExist'  => __( 'Already exists as a customer or vendor', 'erp' )
