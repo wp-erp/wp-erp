@@ -288,5 +288,4 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
 
         include dirname( dirname( __FILE__ ) ) . '/common/transaction-table.php';?>
     </div>
-
 </div>

@@ -192,12 +192,17 @@ function erp_ac_get_transaction_count( $type = 'expense', $user_id = 0 ) {
 function erp_ac_get_transaction( $id = 0 ) {
     $cache_key   = 'erp-ac-transaction' . $id;
     $transaction = wp_cache_get( $cache_key, 'erp' );
+    $results     = [];
 
     if ( false === $transaction ) {
-        $transaction = WeDevs\ERP\Accounting\Model\Transaction::find( $id )->toArray();
+        $transaction = WeDevs\ERP\Accounting\Model\Transaction::find( $id ); //->toArray();
+
+        if ( ! empty( $transaction ) ) {
+            $results = $transaction->toArray();
+        }
     }
 
-    return $transaction;
+    return $results;
 }
 
 function erp_ac_check_invoice_number_unique( $args, $is_update = false ) {
