@@ -14,6 +14,12 @@ function erp_ac_get_expense_form_types() {
             'description' => __( 'A purchase that has been made as credit from vendor.', 'erp' ),
             'type'        => 'credit'
         ],
+        // 'deleted' => [
+        //     'name'        => 'trash',
+        //     'label'       => __( 'Trash', 'erp' ),
+        //     'description' => __( '', 'erp' ),
+        //     'type'        => 'debit'
+        // ],
     ];
 
     return apply_filters( 'erp_ac_get_expense_form_types', $form_types );
@@ -33,12 +39,12 @@ function erp_ac_get_sales_form_types() {
             'description' => __( '', 'erp' ),
             'type'        => 'debit'
         ],
-        'deleted' => [
-            'name'        => 'trash',
-            'label'       => __( 'Trash', 'erp' ),
-            'description' => __( '', 'erp' ),
-            'type'        => 'debit'
-        ],
+        // 'deleted' => [
+        //     'name'        => 'trash',
+        //     'label'       => __( 'Trash', 'erp' ),
+        //     'description' => __( '', 'erp' ),
+        //     'type'        => 'debit'
+        // ],
     ];
 
     return apply_filters( 'erp_ac_get_sales_form_types', $form_types );
@@ -78,7 +84,9 @@ function erp_ac_get_status_label( $items, $slug ) {
             break;
 
         case 'awaiting_payment':
-            $label = __( 'Awaiting for Payment', 'erp' );
+            $url   = admin_url( 'admin.php?page='.$slug.'&action=new&type=' . $items->form_type . '&transaction_id=' . $items->id );
+            $label = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Awaiting for Payment', 'erp' ) );
+            //$label = __( 'Awaiting for Payment', 'erp' );
             break;
 
         case 'overdue':
@@ -310,7 +318,10 @@ function erp_ac_message() {
         'restore'       => __( 'Yes, restore it!', 'erp' ),
         'cancel'        => __( 'Cancel', 'erp' ),
         'error'         => __( 'Error!', 'erp' ),
-        'alreadyExist'  => __( 'Already exists as a customer or vendor', 'erp' )
+        'alreadyExist'  => __( 'Already exists as a customer or vendor', 'erp' ),
+        'transaction_status' => __( 'Transaction Status', 'erp' ),
+        'submit'        => __( 'Submit', 'erp' ),
+        'redo'          => __( 'Yes, redo it!', 'erp' ),
     );
 
     return apply_filters( 'erp_ac_message', $message );

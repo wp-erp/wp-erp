@@ -28,8 +28,8 @@
     }
     ?>
 
-    <form method="post">
-        <input type="hidden" name="page" value="ttest_list_table">
+    <form method="get">
+        <input type="hidden" name="page" value="erp-accounting-expense">
 
         <?php
         $list_table = new WeDevs\ERP\Accounting\Expense_Transaction_List_Table();

@@ -173,26 +173,20 @@ class Transaction_List_Table extends \WP_List_Table {
     function column_issue_date( $item ) {
         
         if ( $item->status == 'pending' || $item->status == 'draft' ) {
-            $actions['delete'] = sprintf( '<a href="#" class="erp-accountin-trns-row-del" data-id="%d" title="%s">%s</a>', $item->id, __( 'Delete', 'erp' ), __( 'Trash', 'erp' ) );
+            $actions['delete'] = sprintf( '<a href="#" class="erp-accountin-trns-row-del" data-id="%d" title="%s">%s</a>', $item->id, __( 'Delete', 'erp' ), __( 'Delete', 'erp' ) );
         }
 
 
-        if ( $item->status == 'pending' ) {
+        if ( $item->status == 'pending' || $item->status == 'draft' || $item->status == 'awaiting_payment' ) {
             $url   = admin_url( 'admin.php?page='.$this->slug.'&action=new&type=' . $item->form_type . '&transaction_id=' . $item->id );
             $actions['edit'] = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Edit', 'erp' ) );
         }
 
-
-        if ( $item->status == 'draft' ) {
-            $url   = admin_url( 'admin.php?page='.$this->slug.'&action=new&type=' . $item->form_type . '&transaction_id=' . $item->id );
-            $actions['edit'] = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Edit', 'erp' ) );
+        if ( ( $item->status == 'paid' || $item->status == 'closed' ) && $item->form_type == 'invoice' ) {
+            //$actions['redo'] = sprintf( '<a class="erp-accounting-redo" data-type="%1$s" data-id="%2$s" href="#">%3$s</a>', $item->type, $item->id, __( 'Redo', 'erp' ) );
         }
 
-        if ( $item->status == 'deleted' ) {
-            $actions['trash'] = sprintf( '<a class="erp-accounting-trash" data-id="%1$s" href="#">%2$s</a>', $item->id, __( 'Restore', 'erp' ) );
-        }
-
-        if ( $item->status == 'paid' || $item->status == 'closed' ) {
+        if ( $item->status == 'awaiting_payment' ) {
             $actions['void'] = sprintf( '<a class="erp-accounting-void" data-id="%1$s" href="#">%2$s</a>', $item->id, __( 'Void', 'erp' ) );
         }
 

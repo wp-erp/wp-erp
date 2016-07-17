@@ -77,15 +77,58 @@
             //trns form submit
             $( '.erp-form' ).on( 'click', '.erp-ac-trns-form-submit-btn', this.transaction.submit );
 
-            //Transaction table row action
+            //Transaction table row action 
             $( '.erp-accounting' ).on( 'click', '.erp-accountin-trns-row-del', this.transaction.rowDelete );
             $( '.erp-accounting' ).on( 'click', '.erp-accounting-trash', this.transaction.trash );
             $( '.erp-accounting' ).on( 'click', '.erp-accounting-void', this.transaction.void );
+            $( '.erp-accounting' ).on( 'click', '.erp-accounting-redo', this.transaction.redo );
         },
 
         transaction: {
             pageReload: function() {
                 $('.erp-accounting').load( window.location.href + ' #erp-accounting' );
+            },
+
+            redo: function(e) {
+                e.preventDefault();
+                var self = $(this),
+                    id   = self.data('id');
+                
+                swal({
+                    title: ERP_AC.message.confirm,
+                    type: "warning",
+                    cancelButtonText: ERP_AC.message.cancel,
+                    //confirmButtonText: 'asdfasd',
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: ERP_AC.message.redo,
+                    closeOnConfirm: false,
+                    showCancelButton: true,   closeOnConfirm: false,   showLoaderOnConfirm: true,
+                },
+                function(){
+
+                    wp.ajax.send('erp-ac-trns-redo', {
+                        data: {
+                            'id': id,
+                            '_wpnonce': ERP_AC.nonce
+                        },
+                        success: function(res) {
+                            swal("", res.success, "success");
+                            location.reload();
+                            //ERP_Accounting.transaction.pageReload();
+                        },
+                        error: function(error) {
+                            swal({
+                                title: error.error,
+                                text: error,
+                                type: "error",
+                                confirmButtonText: "OK",
+                                confirmButtonColor: "#DD6B55"
+                            });
+                        }
+                    });
+
+                });
             },
 
             void: function(e) {
@@ -133,41 +176,35 @@
             trash: function(e) {
                 e.preventDefault();
                 var self = $(this),
-                    id   = self.data('id');
-                
-                swal({
-                    title: ERP_AC.message.confirm,
-                    type: "warning",
-                    cancelButtonText: ERP_AC.message.cancel,
-                    showCancelButton: true,
-                    confirmButtonColor: "#008ec2",
-                    confirmButtonText: ERP_AC.message.restore,
-                    closeOnConfirm: false,
-                    showCancelButton: true,   closeOnConfirm: false,   showLoaderOnConfirm: true,
-                },
-                function(){
+                    id   = self.data('id'),
+                    type = self.data('type');
 
-                    wp.ajax.send('erp-ac-trns-restore', {
-                        data: {
-                            'id': id,
-                            '_wpnonce': ERP_AC.nonce
-                        },
-                        success: function(res) {
-                            swal("", res.success, "success");
-                            location.href = res.url;
-                            //ERP_Accounting.transaction.pageReload();
-                        },
-                        error: function(error) {
-                            swal({
-                                title: error.error,
-                                text: error,
-                                type: "error",
-                                confirmButtonText: "OK",
-                                confirmButtonColor: "#DD6B55"
-                            });
-                        }
-                    });
+                $.erpPopup({
+                    title: ERP_AC.message.transaction_status,
+                    button: ERP_AC.message.submit,
+                    id: 'erp-ac-tax-items-details-popup-content',
+                    content: wperp.template('erp-ac-trash-form-popup')({}).trim(),
+                    extraClass: 'smaller',
 
+                    onSubmit: function(modal) {
+
+                        wp.ajax.send('erp-ac-trns-restore', {
+                            data: {
+                                'id': id,
+                                'type' : type,
+                                'data' : this.serialize(),
+                                '_wpnonce': ERP_AC.nonce
+                            },
+                            success: function(res) {
+                                //swal("", res.success, "success");
+                                location.href = res.url;
+                                //ERP_Accounting.transaction.pageReload();
+                            },
+                            error: function(error) {
+                            
+                            }
+                        });
+                    }
                 });
             },
 
