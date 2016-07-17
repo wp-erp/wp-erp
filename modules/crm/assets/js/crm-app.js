@@ -707,10 +707,6 @@ var vm = new Vue({
         }
     },
 
-    compiled: function() {
-        this.fetchFeeds();
-    },
-
     watch: {
         filterFeeds: {
             deep: true,
@@ -1059,6 +1055,7 @@ var vm = new Vue({
 
     ready: function() {
         this.setLocaliziString();
+        this.fetchFeeds();
     }
 });
 
