@@ -505,5 +505,70 @@ window.wpErpVue = window.wpErpVue || {};
         }
     } );
 
+    Vue.component( 'log-activity-component', {
+        props: [ 'i18n', 'feed' ],
+
+        mixins: [ TimilineMixin ],
+
+        template: '#erp-crm-timeline-feed-log-activity',
+
+        data: function() {
+            return {
+                headerText: '',
+            }
+        },
+
+        computed: {
+            headerText: function() {
+                var txt;
+                if ( this.countUser == 1 ) {
+                    return i18n.logHeaderTextSingleUser
+                          .replace( '{{logType}}', this.logType )
+                          .replace( '{{logDateTime}}', this.logDateTime )
+                          .replace( '{{createdForUser}}', this.createdForUser )
+                          .replace( '{{otherUser}}', this.feed.extra.invited_user[0].name )
+                }
+            },
+
+            countUser: function () {
+                var count = this.feed.extra.invited_user.length;
+                return ( count <= 1 ) ? count : count + ' ' + i18n.others;
+            },
+
+            invitedUser: function() {
+                var self = this;
+                return this.feed.extra.invited_user.map( function( elm ) {
+                    if ( elm.id == wpCRMvue.current_user_id ) {
+                        return i18n.you;
+                    } else {
+                        return elm.name;
+                    }
+                } ).join("<br>");
+            },
+
+            createdUserImg: function() {
+                return this.feed.created_by.avatar;
+            },
+
+            createdUserName: function() {
+                return ( this.feed.created_by.ID == wpCRMvue.current_user_id ) ? this.i18n.you : this.feed.created_by.display_name;
+            },
+
+            createdForUser: function() {
+                return _.contains( this.feed.contact.types, 'company' ) ? this.feed.contact.company : this.feed.contact.first_name + ' ' + this.feed.contact.last_name;
+            },
+
+            logType: function() {
+                return ( this.feed.log_type == 'email' ) ? i18n.an + ' ' + this.feed.log_type : i18n.a + ' ' + this.feed.log_type;
+            },
+
+            logDateTime: function() {
+                return vm.$options.filters.formatDateTime( this.feed.start_date );
+            }
+
+        }
+
+    });
+
 })(jQuery, window.wpErpVue );
 
