@@ -192,12 +192,17 @@ function erp_ac_get_transaction_count( $type = 'expense', $user_id = 0 ) {
 function erp_ac_get_transaction( $id = 0 ) {
     $cache_key   = 'erp-ac-transaction' . $id;
     $transaction = wp_cache_get( $cache_key, 'erp' );
+    $results     = [];
 
     if ( false === $transaction ) {
-        $transaction = WeDevs\ERP\Accounting\Model\Transaction::find( $id )->toArray();
+        $transaction = WeDevs\ERP\Accounting\Model\Transaction::find( $id ); //->toArray();
+
+        if ( ! empty( $transaction ) ) {
+            $results = $transaction->toArray();
+        }
     }
 
-    return $transaction;
+    return $results;
 }
 
 function erp_ac_check_invoice_number_unique( $args, $is_update = false ) {
@@ -795,11 +800,8 @@ function erp_ac_get_btn_status( $postdata ) {
  */
 function erp_ac_get_voucher_status_according_with_btn( $btn ) {
     $button = [
-        'save_and_draft'               => 'draft',
-        'save_and_submit_for_approval' => 'pending',
-        'save_and_add_another'         => 'draft',
-        'approve'                      => 'paid',
-        'approve_and_add_another'      => 'paid'
+        'payment'                 => 'paid',
+        'payment_and_add_another' => 'paid'
     ];
 
     return $button[$btn];
@@ -812,11 +814,8 @@ function erp_ac_get_voucher_status_according_with_btn( $btn ) {
  */
 function erp_ac_get_status_according_with_btn( $btn ) {
     $button = [
-        'save_and_draft'               => 'draft',
-        'save_and_submit_for_approval' => 'pending',
-        'save_and_add_another'         => 'draft',
-        'approve'                      => 'closed',
-        'approve_and_add_another'      => 'closed'
+        'payment'                 => 'closed',
+        'payment_and_add_another' => 'closed'
     ];
 
     return $button[$btn];
@@ -853,6 +852,21 @@ function erp_ac_update_transaction( $id, $args ) {
     return \WeDevs\ERP\Accounting\Model\Transaction::find( $id )->update( $args );
 }
 
+/**
+ * Remove transaction. Only for draft and pending 
+ *
+ * @param  int $id
+ *
+ * @since  1.1.1
+ *
+ * @return  boolen
+ */
+function erp_ac_remove_transaction( $id ) {
+    $delete = \WeDevs\ERP\Accounting\Model\Transaction::where( 'id', '=', $id )->delete();
+    \WeDevs\ERP\Accounting\Model\Transaction_Items::where( 'transaction_id', '=', $id )->delete();
+    \WeDevs\ERP\Accounting\Model\Journal::where( 'transaction_id', '=', $id )->delete();
+    return $delete;
+}
 
 
 

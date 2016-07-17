@@ -198,6 +198,45 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
         <input type="hidden" id="erp-ac-redirect" name="redirect" value="0">
 
         <div class="erp-ac-btn-group-wrap">
+             <div class="erp-button-bar-left">
+                <div class="erp-btn-group">
+                    <button  data-redirect="single_page" data-btn_status="payment" type="button" class="erp-drop-down-btn button button-primary erp-ac-trns-form-submit-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <?php _e( 'Payment', 'erp' ); ?>
+                    </button>
+                    <button type="button" class="erp-drop-down-btn erp-drop-down-child-btn button button-primary">
+                        <span class="erp-caret"></span>
+                        <span class="erp-sr-only"><?php _e( 'Toggle Dropdown', 'erp' ); ?></span>
+                    </button>
+                    <ul class="erp-dropdown-menu">
+                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="single_page" data-btn_status="payment" href="#"><?php _e( 'Payment', 'erp' ); ?></a></li>
+                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="payment_and_add_another" href="#"><?php _e( 'Payment & add another', 'erp' ); ?></a></li>
+                    </ul>
+                </div>
+
+                <!-- <div class="erp-btn-group">
+                    <button type="button" data-redirect="0" data-btn_status="save_and_draft" class="erp-drop-down-btn button erp-ac-trns-form-submit-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <?php _e( 'Save as Draft', 'erp' ); ?>
+                    </button>
+                    <button type="button" class="erp-drop-down-btn erp-drop-down-child-btn button">
+                        <span class="erp-caret"></span>
+                        <span class="erp-sr-only"><?php _e( 'Toggle Dropdown', 'erp' ); ?></span>
+                    </button>
+                    <ul class="erp-dropdown-menu">
+                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="0" data-btn_status="save_and_draft" href="#"><?php _e( 'Save as Draft', 'erp' ); ?></a></li>
+                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="0" data-btn_status="save_and_submit_for_approval" href="#"><?php _e( 'Save & submit for approval', 'erp' ); ?></a></li>
+                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="save_and_add_another" href="#"><?php _e( 'Save & add another', 'erp' ); ?></a></li>
+                    </ul>
+                </div> -->
+            </div> 
+
+            <div class="erp-button-bar-right">
+                
+
+                <a href="<?php echo esc_url( $cancel_url ); ?>" class="button"><?php _e( 'Cancel', 'erp' ); ?></a>
+            </div>
+        </div>
+
+<!--         <div class="erp-ac-btn-group-wrap">
 
             <div class="erp-button-bar-left">
                 <div class="erp-btn-group">
@@ -234,7 +273,7 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                 <a href="<?php echo esc_url( $cancel_url ); ?>" class="button"><?php _e( 'Cancel', 'erp' ); ?></a>
             </div>
 
-        </div>
+        </div> -->
 
     </form>
 
@@ -249,5 +288,4 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
 
         include dirname( dirname( __FILE__ ) ) . '/common/transaction-table.php';?>
     </div>
-
 </div>
