@@ -105,13 +105,13 @@ window.wpErpVue = window.wpErpVue || {};
 
     // Select2 Direcetive
     Vue.directive('selecttwo', {
-        bind: function(){
+        bind:function() {
             var self   = this;
             var vm     = this.vm;
             var key    = this.expression;
             var select = jQuery(this.el);
-
-           select.on('change', function(){
+       
+            select.on('change', function() {
                 var search_key = jQuery(this).attr('data-searchkey');
                 var search_key_index = jQuery(this).attr('data-searchkeyindex');
                 if ( search_key && search_key_index ) {
@@ -129,6 +129,75 @@ window.wpErpVue = window.wpErpVue || {};
         },
     });
 
+    /** Vue MIXIN for timeline items */
+
+    var TimilineMixin = {
+        data: function() {
+            return {
+                feedData: { message: '' },
+                editfeedData: {},
+                showFooter: false,
+                isEditable: false
+            }
+        },
+        methods: {
+            toggleFooter: function() {
+                this.showFooter = !this.showFooter;
+            },
+
+            editFeed: function( feed ) {
+                this.editfeedData = feed;
+                this.isEditable = true;
+            },
+
+            cancelUpdate: function() {
+                this.isEditable = false;
+                this.editfeedData = {};
+            },
+
+            deleteFeed: function( feed ) {
+                var data = {
+                    action : 'erp_crm_delete_customer_activity',
+                    feed_id : feed.id,
+                    _wpnonce : wpCRMvue.nonce
+                };
+
+
+                if ( confirm( wpCRMvue.confirm ) ) {
+                    vm.progressStart('#timeline-item-'+feed.id );
+                    jQuery.post( wpCRMvue.ajaxurl, data, function( resp ) {
+                        if ( resp.success ) {
+                            vm.progreassDone(true);
+                            setTimeout( function() {
+                                vm.feeds.$remove( feed );
+                            }, 500);
+                        } else {
+                            alert( resp.data );
+                        };
+                    });
+                };
+            },
+
+            updateCustomerFeed: function( feed_id ) {
+                vm.addCustomerFeed( this, feed_id );
+            },
+
+            notify: function() {
+                this.$broadcast('bindEditFeedData', this.feed );
+            }
+        },
+
+        watch: {
+            editfeedData: {
+                deep: true,
+                immediate: true,
+                handler: function () {
+                    this.notify();
+                }
+            }
+        }
+    };
+
     /************************ End Vue Directive **********************/
 
     var erp = erpVue || {};
@@ -141,32 +210,33 @@ window.wpErpVue = window.wpErpVue || {};
     erp.TimeLineHeader = {
         props: [ 'feed' ],
 
-        template: '<span class="timeline-feed-avatar">'
-                        + '<img v-bind:src="createdUserImg">'
+        template:
+                '<span class="timeline-feed-avatar">'
+                    + '<img v-bind:src="createdUserImg">'
+                +'</span>'
+                +'<span class="timeline-feed-header-text">'
+                    +'<strong v-if="!isRepliedEmail">{{createdUserName}} </strong>'
+                    +'<strong v-if="isRepliedEmail">{{createdForUser}} </strong>'
+                    +'<span v-if="isNote">created a note for <strong>{{ createdForUser }}</strong></span>'
+                    +'<span v-if="isEmail">sent an email to <strong>{{ createdForUser }}</strong></span>'
+                    +'<span v-if="isRepliedEmail">replied to <strong>{{ createdUserName }}r</strong> email</span>'
+                    +'<span v-if="isLog">'
+                        +'logged {{ logType }} on {{ logDateTime | formatDateTime }} for <strong>{{ createdForUser }}</strong>'
+                        +' <span v-if="countUser == 1">and <strong>{{ feed.extra.invited_user[0].name }}</strong></span>'
+                        +'<span v-if="( countUser != 0 ) && countUser != 1"> and <strong><tooltip :content="countUser" :title="invitedUser"></tooltip></strong></span>'
                     +'</span>'
-                    +'<span class="timeline-feed-header-text">'
-                        +'<strong v-if="!isRepliedEmail">{{createdUserName}} </strong>'
-                        +'<strong v-if="isRepliedEmail">{{createdForUser}} </strong>'
-                        +'<span v-if="isNote">created a note for <strong>{{ createdForUser }}</strong></span>'
-                        +'<span v-if="isEmail">sent an email to <strong>{{ createdForUser }}</strong></span>'
-                        +'<span v-if="isRepliedEmail">replied to <strong>{{ createdUserName }}r</strong> email</span>'
-                        +'<span v-if="isLog">'
-                            +'logged {{ logType }} on {{ logDateTime | formatDateTime }} for <strong>{{ createdForUser }}</strong>'
-                            +' <span v-if="countUser == 1">and <strong>{{ feed.extra.invited_user[0].name }}</strong></span>'
-                            +'<span v-if="( countUser != 0 ) && countUser != 1"> and <strong><tooltip :content="countUser" :title="invitedUser"></tooltip></strong></span>'
-                        +'</span>'
-                        +'<span v-if="isSchedule">'
-                            +'have scheduled {{ logType }} with '
-                            +'<strong>{{ createdForUser }}</strong>'
-                                +' <span v-if="countUser == 1">and <strong>{{ invitedSingleUser }}</strong></span>'
-                            +'<span v-if="( countUser != 0 ) && countUser != 1"> and <strong><tooltip :content="countUser" :title="invitedUser"></tooltip></strong></span>'
-                        +'</span>'
-                        +'<span v-if="isTasks">created a task for </strong>'
-                            +' <span v-if="countUser == 1"><strong>{{ invitedSingleUser }}</strong></span>'
-                            +'<span v-if="( countUser != 0 ) && countUser != 1"><strong><tooltip :content="countUser" :title="invitedUser"></tooltip></strong></span>'
-                        +'</span>'
-                        + wpCRMvue.timeline_feed_header
-                    +'</span>',
+                    +'<span v-if="isSchedule">'
+                        +'have scheduled {{ logType }} with '
+                        +'<strong>{{ createdForUser }}</strong>'
+                            +' <span v-if="countUser == 1">and <strong>{{ invitedSingleUser }}</strong></span>'
+                        +'<span v-if="( countUser != 0 ) && countUser != 1"> and <strong><tooltip :content="countUser" :title="invitedUser"></tooltip></strong></span>'
+                    +'</span>'
+                    +'<span v-if="isTasks">created a task for </strong>'
+                        +' <span v-if="countUser == 1"><strong>{{ invitedSingleUser }}</strong></span>'
+                        +'<span v-if="( countUser != 0 ) && countUser != 1"><strong><tooltip :content="countUser" :title="invitedUser"></tooltip></strong></span>'
+                    +'</span>'
+                    + wpCRMvue.timeline_feed_header
+                +'</span>',
 
         components: {
             'tooltip' : erp.ToolTip
@@ -332,6 +402,40 @@ window.wpErpVue = window.wpErpVue || {};
             }
         }
     };
+
+    Vue.component( 'new-note-component', {
+        props: [ 'i18n', 'feed' ],
+
+        mixins: [ TimilineMixin ],
+
+        data: function() {
+            return {
+                headerText: '',
+            }
+        },
+
+        template: '#erp-crm-timeline-feed-new-note',
+
+        computed: {
+            headerText: function() {
+                return this.i18n.headertext
+                        .replace( '{{createdUserName}}', this.createdUserName )
+                        .replace( '{{createdForUser}}', this.createdForUser );
+            },
+
+            createdUserImg: function() {
+                return this.feed.created_by.avatar;
+            },
+
+            createdUserName: function() {
+                return ( this.feed.created_by.ID == wpCRMvue.current_user_id ) ? this.i18n.you : this.feed.created_by.display_name;
+            },
+
+            createdForUser: function() {
+                return _.contains( this.feed.contact.types, 'company' ) ? this.feed.contact.company : this.feed.contact.first_name + ' ' + this.feed.contact.last_name;
+            },
+        }
+    });
 
 })(jQuery, window.wpErpVue );
 

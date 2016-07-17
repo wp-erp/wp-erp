@@ -697,7 +697,8 @@ var vm = new Vue({
             created_by: '',
             customer_id: '',
             created_at: ''
-        }
+        },
+        i18n: {}
     },
 
     events: {
@@ -720,6 +721,10 @@ var vm = new Vue({
     },
 
     methods: {
+
+        loadTimelineComponent: function( type ) {
+            return type.replace('_','-') + '-component';
+        },
 
         loadMoreContent: function( feeds ) {
             vm.progressStart('.feed-load-more');
@@ -1034,9 +1039,27 @@ var vm = new Vue({
          */
         isSchedule: function( date ) {
             return new Date() < new Date( date );
+        },
+
+        setLocaliziString: function() {
+            var self = this;
+
+            data = {
+                action: 'erp_crm_set_localize_string'
+            };
+
+            jQuery.post( wpCRMvue.ajaxurl, data, function( resp ) {
+                if ( resp.success ) {
+                    self.i18n = resp.data;
+                }
+            });
         }
 
     },
+
+    ready: function() {
+        this.setLocaliziString();
+    }
 });
 
 /******************** End Main Vue instance **********************/

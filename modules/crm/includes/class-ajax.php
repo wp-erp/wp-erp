@@ -23,6 +23,8 @@ class Ajax_Handler {
      */
     public function __construct() {
 
+        // Set localize string
+        $this->action( 'wp_ajax_erp_crm_set_localize_string', 'load_localize_string' );
         // Customer
         $this->action( 'wp_ajax_erp-crm-customer-new', 'create_customer' );
         $this->action( 'wp_ajax_erp-crm-customer-get', 'customer_get' );
@@ -80,6 +82,18 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-crm-edit-save-replies', 'edit_save_replies' );
         $this->action( 'wp_ajax_erp-crm-delete-save-replies', 'delete_save_replies' );
         $this->action( 'wp_ajax_erp-crm-load-save-replies-data', 'load_save_replies' );
+    }
+
+    /**
+     * Load crm localize string for customer signle view
+     *
+     * @since 1.1.2
+     *
+     * @return array
+     */
+    public function load_localize_string() {
+        $strings = erp_crm_get_contact_feeds_localize_string();
+        $this->send_success( $strings );
     }
 
     /**

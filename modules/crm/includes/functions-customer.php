@@ -628,6 +628,20 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
 }
 
 /**
+ * Format activity feeds message when feed display in activity streams
+ *
+ * @since 1.1.2
+ *
+ * @param  string $message
+ * @param  array $activity
+ *
+ * @return string
+ */
+function erp_crm_format_activity_feed_message( $message, $activity ) {
+    return apply_filters( 'erp_crm_format_activity_feed_message', stripslashes( $message ), $activity );
+}
+
+/**
  * Get all customer feeds
  *
  * @since 1.0
@@ -703,7 +717,7 @@ function erp_crm_get_feed_activity( $postdata ) {
         $value['contact']['types'] = wp_list_pluck( $value['contact']['types'], 'name' );
 
         unset( $value['extra']['invite_contact'] );
-        $value['message']               = stripslashes( $value['message'] );
+        $value['message']               = erp_crm_format_activity_feed_message( $value['message'], $value );
         $value['created_by']['avatar']  = get_avatar_url( $value['created_by']['ID'] );
         $value['created_date']          = date( 'Y-m-d', strtotime( $value['created_at'] ) );
         $value['created_timeline_date'] = date( 'Y-m-01', strtotime( $value['created_at'] ) );
@@ -765,7 +779,7 @@ function erp_crm_save_customer_feed_data( $data ) {
     unset( $activity['extra']['invite_contact'] );
 
     $activity['contact']['types']      = wp_list_pluck( $activity['contact']['types'], 'name' );
-    $activity['message']               = stripslashes( $activity['message'] );
+    $activity['message']               = erp_crm_format_activity_feed_message( $activity['message'], $activity );
     $activity['created_by']['avatar']  = get_avatar_url( $activity['created_by']['ID'] );
     $activity['created_date']          = date( 'Y-m-d', strtotime( $activity['created_at'] ) );
     $activity['created_timeline_date'] = date( 'Y-m-01', strtotime( $activity['created_at'] ) );

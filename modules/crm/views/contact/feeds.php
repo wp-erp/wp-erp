@@ -43,7 +43,9 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                     <span class="bg-red">{{ month | formatDate 'F, Y' }}</span>
                 </li>
 
+
                 <li v-for="feed in feed_obj">
+                    <!-- <pre>{{ feed | json }}</pre> -->
 
                     <i v-if="(feed.type == 'email') && ( feed.extra.replied != 1 )" class="fa fa-envelope-o"></i>
                     <i v-if="(feed.type == 'email') && ( feed.extra.replied == 1 )" class="fa fa-reply"></i>
@@ -54,7 +56,8 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
 
                     <?php do_action( 'erp_crm_customer_feed_icon' ); ?>
 
-                    <timeline-item :feed="feed" disbale-footer="false"></timeline-item>
+                    <timeline-feed :i18n="i18n" :is="loadTimelineComponent( feed.type )" :feed="feed"></timeline-feed>
+                    <!-- <timeline-item :is="feed.type" :feed="feed" disbale-footer="false"></timeline-item> -->
                     <!-- <component :is="feed.component" :feed="feed" disbale-footer="false"></component> -->
 
                 </li>

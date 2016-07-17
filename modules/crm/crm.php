@@ -74,6 +74,7 @@ class Customer_Relationship {
      */
     private function includes() {
         require_once WPERP_CRM_PATH . '/includes/actions-filters.php';
+        require_once WPERP_CRM_PATH . '/includes/functions-localize.php';
         require_once WPERP_CRM_PATH . '/includes/functions-customer.php';
         require_once WPERP_CRM_PATH . '/includes/functions-dashboard.php';
         require_once WPERP_CRM_PATH . '/includes/functions-capabilities.php';
@@ -159,7 +160,7 @@ class Customer_Relationship {
             'confirm'              => __( 'Are you sure?', 'erp' ),
             'date_format'          => get_option( 'date_format' ),
             'timeline_feed_header' => apply_filters( 'erp_crm_contact_timeline_feeds_header', '' ),
-            'timeline_feed_body'   => apply_filters( 'erp_crm_contact_timeline_feeds_body', '' )
+            'timeline_feed_body'   => apply_filters( 'erp_crm_contact_timeline_feeds_body', '' ),
         ] );
 
         if ( 'crm_page_erp-sales-schedules' == $hook ) {
@@ -289,6 +290,7 @@ class Customer_Relationship {
                     erp_get_js_template( WPERP_CRM_JS_TMPL . '/customer-social.php', 'erp-crm-customer-social' );
                     erp_get_js_template( WPERP_CRM_JS_TMPL . '/customer-feed-edit.php', 'erp-crm-customer-edit-feed' );
                     erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-subscriber-contact.php', 'erp-crm-assign-subscriber-contact' );
+                    erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/timeline-new-note.php', 'erp-crm-timeline-feed-new-note' );
                     erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/customer-newnote.php', 'erp-crm-new-note-template' );
                     erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/customer-log-activity.php', 'erp-crm-log-activity-template' );
                     erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/customer-email-note.php', 'erp-crm-email-note-template' );

@@ -5,7 +5,7 @@
 
         <?php if ( current_user_can( 'erp_crm_edit_contact', $customer->id ) ): ?>
             <span class="edit">
-                <a href="#" data-id="<?php echo $customer->id; ?>" data-single_view="1" title="<?php _e( 'Edit this Company', 'erp' ); ?>" class="add-new-h2"><?php _e( 'Edit this Company', 'erp' ); ?></a>
+                <a href="#" @click.prevent="editContact( 'company', '<?php echo $customer->id; ?>', '<?php _e( 'Edit this company', 'erp' ); ?>' )" data-id="<?php echo $customer->id; ?>" data-single_view="1" title="<?php _e( 'Edit this Company', 'erp' ); ?>" class="add-new-h2"><?php _e( 'Edit this Company', 'erp' ); ?></a>
             </span>
         <?php endif ?>
     </h2>
