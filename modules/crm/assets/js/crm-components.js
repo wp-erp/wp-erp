@@ -137,12 +137,23 @@ window.wpErpVue = window.wpErpVue || {};
                 feedData: { message: '' },
                 editfeedData: {},
                 showFooter: false,
-                isEditable: false
+                isEditable: false,
+                isReplied: false
             }
         },
         methods: {
             toggleFooter: function() {
-                this.showFooter = !this.showFooter;
+                if ( wpCRMvue.isAdmin || wpCRMvue.isCrmManager || this.checkOwnFeeds() ) {
+                    if ( this.disbaleFooter == 'true' ) {
+                        this.showFooter = false;
+                    } else {
+                        this.showFooter = !this.showFooter;
+                    }
+                }
+            },
+
+            checkOwnFeeds: function() {
+                return ( wpCRMvue.isAgent ) && this.feed.created_by.ID == wpCRMvue.current_user_id;
             },
 
             editFeed: function( feed ) {
@@ -154,6 +165,13 @@ window.wpErpVue = window.wpErpVue || {};
                 this.isEditable = false;
                 this.editfeedData = {};
             },
+
+            replyEmailFeed: function( feed ) {
+                this.editfeedData = feed;
+                this.isReplied = true;
+                this.isEditable = false;
+            },
+
 
             deleteFeed: function( feed ) {
                 var data = {
@@ -219,7 +237,7 @@ window.wpErpVue = window.wpErpVue || {};
                     +'<strong v-if="isRepliedEmail">{{createdForUser}} </strong>'
                     +'<span v-if="isNote">created a note for <strong>{{ createdForUser }}</strong></span>'
                     +'<span v-if="isEmail">sent an email to <strong>{{ createdForUser }}</strong></span>'
-                    +'<span v-if="isRepliedEmail">replied to <strong>{{ createdUserName }}r</strong> email</span>'
+                    +'<span v-if="isRepliedEmail">replied to <strong>{{ createdUserName }}</strong> email</span>'
                     +'<span v-if="isLog">'
                         +'logged {{ logType }} on {{ logDateTime | formatDateTime }} for <strong>{{ createdForUser }}</strong>'
                         +' <span v-if="countUser == 1">and <strong>{{ feed.extra.invited_user[0].name }}</strong></span>'
@@ -418,7 +436,7 @@ window.wpErpVue = window.wpErpVue || {};
 
         computed: {
             headerText: function() {
-                return this.i18n.headertext
+                return this.i18n.newNoteHeadertext
                         .replace( '{{createdUserName}}', this.createdUserName )
                         .replace( '{{createdForUser}}', this.createdForUser );
             },
@@ -436,6 +454,56 @@ window.wpErpVue = window.wpErpVue || {};
             },
         }
     });
+
+    Vue.component( 'email-component', {
+        props: [ 'i18n', 'feed' ],
+
+        mixins: [ TimilineMixin ],
+
+        template: '#erp-crm-timeline-feed-email',
+
+        data: function() {
+            return {
+                headerText: '',
+                emailViewedTime: false,
+            }
+        },
+
+        computed: {
+            headerText: function() {
+                return ( ! this.isRepliedEmail ) ? this.i18n.emailHeadertext
+                        .replace( '{{createdUserName}}', this.createdUserName )
+                        .replace( '{{createdForUser}}', this.createdForUser )
+                        : this.i18n.replyEmailHeadertext
+                        .replace( '{{createdUserName}}', this.createdUserName )
+                        .replace( '{{createdForUser}}', this.createdForUser );
+            },
+
+            emailViewedTime: function() {
+                if ( this.feed.extra.email_opened_at ) {
+                    return this.i18n.viewdOn.replace( '{{viewdOn}}', vm.$options.filters.formatDateTime( this.feed.extra.email_opened_at ) );
+                } else {
+                    return false;
+                }
+            },
+
+            createdUserImg: function() {
+                return this.feed.created_by.avatar;
+            },
+
+            createdUserName: function() {
+                return ( this.feed.created_by.ID == wpCRMvue.current_user_id ) ? this.i18n.you : this.feed.created_by.display_name;
+            },
+
+            createdForUser: function() {
+                return _.contains( this.feed.contact.types, 'company' ) ? this.feed.contact.company : this.feed.contact.first_name + ' ' + this.feed.contact.last_name;
+            },
+
+            isRepliedEmail: function() {
+                return ( this.feed.type == 'email' ) && this.feed.extra.replied == 1;
+            },
+        }
+    } );
 
 })(jQuery, window.wpErpVue );
 

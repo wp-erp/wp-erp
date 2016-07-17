@@ -13,6 +13,12 @@ function erp_crm_get_contact_feeds_localize_string() {
         'edit'        => __( 'Edit', 'erp' ),
         'delete'        => __( 'Delete', 'erp' ),
         'editThisFeed'        => __( 'Edit this feed', 'erp' ),
-        'headertext' => sprintf( __( '<strong>%1s</strong> created a note for <strong>%2s</strong>', 'erp' ), '{{createdUserName}}', '{{createdForUser}}' ),
+        'newNoteHeadertext' => sprintf( __( '<strong>%1s</strong> created a note for <strong>%2s</strong>', 'erp' ), '{{createdUserName}}', '{{createdForUser}}' ),
+        'emailSubject' => __( 'Subject', 'erp' ),
+        'reply' => __( 'Reply', 'erp' ),
+        'replyThisEmail' => __( 'Reply this email', 'erp' ),
+        'viewdOn' => sprintf( __( 'Viewd on %s', 'erp' ), '{{viewdOn}}' ),
+        'emailHeadertext' => sprintf( __( '<strong>%1s</strong> sent an email to <strong>%2s</strong>', 'erp' ), '{{createdUserName}}', '{{createdForUser}}' ),
+        'replyEmailHeadertext' => sprintf( __( '<strong>%1s</strong> replied to <strong>%2s</strong>', 'erp' ), '{{createdForUser}}', '{{createdUserName}}' ),
     ];
 }
