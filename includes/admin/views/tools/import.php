@@ -41,9 +41,7 @@
     </div><!-- .inside -->
 </div><!-- .postbox -->
 
-<?php
-    if ( $is_crm_activated ) {
-?>
+<?php if ( $is_crm_activated ) { ?>
     <div class="postbox">
         <div class="inside">
             <h3><?php _e( 'Import Users', 'erp' ); ?></h3>
@@ -78,7 +76,7 @@
                                 <label for="user_role"><?php _e( 'User Role', 'erp' ); ?></label>
                             </th>
                             <td>
-                                <select name="user_role" id="user_role" multiple="true">
+                                <select name="user_role" class="erp-select2" id="user_role" multiple="true">
                                     <?php echo erp_html_generate_dropdown( $roles, $default_role ); ?>
                                 </select>
                                 <p class="description"><?php _e( 'Selected user role are considered to import.', 'erp' ); ?></p>

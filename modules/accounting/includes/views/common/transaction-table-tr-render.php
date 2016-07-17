@@ -2,10 +2,12 @@
     $item = isset( $item ) ? $item : [];
 
     foreach ( erp_ac_tran_from_header() as $header_slug => $head ) {
+        $row_class = 'col-' . $header_slug;
+
         switch ( $header_slug ) {
             case 'account':
                 ?>
-                    <td class="col-ac">
+                    <td class="<?php echo $row_class; ?>">
                         <?php echo $dropdown_html; ?>
                     </td>
 
@@ -14,7 +16,7 @@
 
             case 'description':
                 ?>
-                    <td class="col-desc">
+                    <td class="<?php echo $row_class; ?>">
                         <?php
                         erp_html_form_input( array(
                             'name'  => 'line_desc[]',
@@ -28,7 +30,7 @@
 
             case 'qty':
                 ?>
-                    <td class="col-qty">
+                    <td class="<?php echo $row_class; ?>">
                         <?php
                         erp_html_form_input( array(
                             'name'        => 'line_qty[]',
@@ -44,7 +46,7 @@
 
             case 'unit_price':
                 ?>
-                    <td class="col-unit-price">
+                    <td class="<?php echo $row_class; ?>">
                         <?php
                         erp_html_form_input( array(
                             'name'        => 'line_unit_price[]',
@@ -64,7 +66,7 @@
 
             case 'discount':
                 ?>
-                    <td class="col-discount">
+                    <td class="<?php echo $row_class; ?>">
                         <?php
                         erp_html_form_input( array(
                             'name'        => 'line_discount[]',
@@ -82,7 +84,7 @@
 
             case 'tax':
                 ?>
-                    <td class="col-discount">
+                    <td class="<?php echo $row_class; ?>">
                         <?php
                         erp_html_form_input( array(
                             'name'        => 'line_tax[]',
@@ -91,8 +93,8 @@
                             //'addon'     => '%',
                             //'addon_pos' => 'after',
                             'value'       => isset( $item['tax'] ) ? $item['tax'] : 0,
-                            'options'     => ['-1' => __( '- Select -', 'erp' ) ] + erp_ac_get_tax_dropdown()  
-                            
+                            'options'     => ['-1' => __( '- Select -', 'erp' ) ] + erp_ac_get_tax_dropdown()
+
                         ) );
                         ?>
                         <?php
@@ -100,7 +102,7 @@
                             'name'        => 'tax_journal[]',
                             'type'        => 'hidden',
                             'value'       => isset( $item['tax_journal'] ) ? $item['tax_journal'] : 0,
-                            
+
                         ) );
                         ?>
                     </td>
@@ -109,7 +111,7 @@
 
             case 'tax_amount':
                 ?>
-                    <td class="col-discount">
+                    <td class="<?php echo $row_class; ?>">
                         <?php
                         erp_html_form_input( array(
                             'name'        => 'tax_amount[]',
@@ -139,7 +141,7 @@
 
             case 'amount':
                 ?>
-                    <td class="col-amount">
+                    <td class="<?php echo $row_class; ?>">
                         <?php
                         erp_html_form_input( array(
                             'name'        => 'line_total[]',
@@ -175,7 +177,7 @@
 
             case 'action':
                 ?>
-                    <td class="col-action">
+                    <td class="<?php echo $row_class; ?>">
                         <a href="#" class="remove-line"><span class="dashicons dashicons-trash"></span></a>
                         <a href="#" class="move-line"><span class="dashicons dashicons-menu"></span></a>
                     </td>
@@ -191,8 +193,3 @@
 ?>
 
 </tr>
-
-
-
-
-

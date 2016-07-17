@@ -24,7 +24,7 @@ if ( ! $partial_transaction ) {
             <?php
         }
         foreach ( $partial_transaction as $key => $partial_trns ) {
-            $url    = admin_url( 'admin.php?page=erp-accounting-sales&action=view&id=' . $partial_trns['id'] );
+            $url        = admin_url( 'admin.php?page=erp-accounting-sales&action=view&id=' . $partial_trns['id'] );
             $issue_date = sprintf( '<a href="%1$s">%2$s</a>', $url, erp_format_date( $partial_trns['issue_date'] ) );
 
             ?>

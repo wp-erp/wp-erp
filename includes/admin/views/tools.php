@@ -3,8 +3,8 @@
     <?php
         $current_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'general';
 
-        $is_crm_activated = wperp()->modules->is_module_active( 'crm' );
-        $is_hrm_activated = wperp()->modules->is_module_active( 'hrm' );
+        $is_crm_activated = erp_is_module_active( 'crm' );
+        $is_hrm_activated = erp_is_module_active( 'hrm' );
 
         $export_import_types = [];
         if ( $is_crm_activated ) {

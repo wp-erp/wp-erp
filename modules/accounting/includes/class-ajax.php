@@ -41,6 +41,54 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-ac-invoice-send-email', 'sales_invoice_send_email' );
         $this->action( 'wp_ajax_erp-ac-get-invoice-number', 'popup_get_invoice_number' );
         $this->action( 'wp_ajax_erp_ac_trans_form_submit', 'transaction_form_submit' );
+        $this->action( 'wp_ajax_erp-ac-trns-row-del', 'transaction_delete_row' );
+        $this->action( 'wp_ajax_erp-ac-trns-restore', 'transaction_restore' );
+        $this->action( 'wp_ajax_erp-ac-trns-void', 'transaction_void' );
+    }
+
+    function transaction_void() {
+        $this->verify_nonce( 'erp-ac-nonce' );
+        $trns_id = isset( $_POST['id'] ) ? $_POST['id'] : false;
+        $delete = false;
+        if ( $trns_id ) {
+            $delete = erp_ac_update_transaction( $trns_id, ['status' => 'void'] );
+        }
+
+        if ( $delete ) {
+            $this->send_success( array( 'success' => __( 'Transaction has been void successfully', 'erp' ) ) );
+        } else {
+            $this->send_error( array( 'error' => __( 'Unknown Error', 'erp' ) ) );
+        }
+    }
+
+    function transaction_restore() {
+        $this->verify_nonce( 'erp-ac-nonce' );
+        $trns_id = isset( $_POST['id'] ) ? $_POST['id'] : false;
+        $delete = false;
+        if ( $trns_id ) {
+            $delete = erp_ac_update_transaction( $trns_id, ['status' => 'draft'] );
+        }
+
+        if ( $delete ) {
+            $this->send_success( array( 'url' => erp_ac_get_sales_url(), 'success' => __( 'Transaction status has been changed successfully', 'erp' ) ) );
+        } else {
+            $this->send_error( array( 'error' => __( 'Unknown Error', 'erp' ) ) );
+        }
+    }
+
+    function transaction_delete_row() {
+        $this->verify_nonce( 'erp-ac-nonce' );
+        $trns_id = isset( $_POST['id'] ) ? $_POST['id'] : false;
+        $delete = false;
+        if ( $trns_id ) {
+            $delete = erp_ac_update_transaction( $trns_id, ['status' => 'deleted'] );
+        }
+
+        if ( $delete ) {
+            $this->send_success( array( 'success' => __( 'Transaction has been deleted successfully', 'erp' ) ) );
+        } else {
+            $this->send_error( array( 'error' => __( 'Unknown Error', 'erp' ) ) );
+        }
     }
 
     function transaction_form_submit() {

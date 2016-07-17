@@ -85,6 +85,12 @@ function erp_ac_get_all_transaction( $args = array() ) {
             $transaction = $transaction->where( 'ref', '=', $args['ref'] );
         }
 
+        if ( isset( $args['status'] ) && $args['status'] == 'deleted' ) {
+            //$transaction = $transaction->where( 'status', '==', 'deleted' );            
+        } else {
+            $transaction = $transaction->where( 'status', '!=', 'deleted' );
+        }
+
         if ( isset( $args['status'] ) &&  is_array( $args['status'] ) && array_key_exists( 'in', $args['status'] ) ) {
             $transaction = $transaction->whereIn( 'status', $args['status']['in'] );
         } else if ( isset( $args['status'] ) &&  is_array( $args['status'] ) && array_key_exists( 'not_in', $args['status'] ) ) {
@@ -773,17 +779,41 @@ function erp_ac_tran_from_header() {
 
 function erp_ac_get_btn_status( $postdata ) {
     
-    if ( $postdata['form_type'] == 'payment' || $postdata['form_type'] == 'payment_voucher' ) {
+    if ( $postdata['form_type'] == 'payment' ) {
         return erp_ac_get_status_according_with_btn( $postdata['btn_status'] );
     } else if ( $postdata['form_type'] == 'invoice' || $postdata['form_type'] == 'vendor_credit' ) {
         return erp_ac_get_status_invoice_according_with_btn( $postdata['btn_status'] );
-    } 
+    } else if ( $postdata['form_type'] == 'payment_voucher' ) {
+        return erp_ac_get_voucher_status_according_with_btn( $postdata['btn_status'] );
+    }
 }
 
+/**
+ * Get transaction submit data status for payment voucher
+ * @param  string $btn 
+ * @return string
+ */
+function erp_ac_get_voucher_status_according_with_btn( $btn ) {
+    $button = [
+        'save_and_draft'               => 'draft',
+        'save_and_submit_for_approval' => 'pending',
+        'save_and_add_another'         => 'draft',
+        'approve'                      => 'paid',
+        'approve_and_add_another'      => 'paid'
+    ];
+
+    return $button[$btn];
+}
+
+/**
+ * Get transaction submit data status for payment 
+ * @param  string $btn 
+ * @return string      
+ */
 function erp_ac_get_status_according_with_btn( $btn ) {
     $button = [
         'save_and_draft'               => 'draft',
-        'save_and_submit_for_approval' => 'awaiting_approval',
+        'save_and_submit_for_approval' => 'pending',
         'save_and_add_another'         => 'draft',
         'approve'                      => 'closed',
         'approve_and_add_another'      => 'closed'
@@ -792,16 +822,35 @@ function erp_ac_get_status_according_with_btn( $btn ) {
     return $button[$btn];
 }
 
+/**
+ * Get transaction submit data status for payment invoice and vendor credit
+ * @param  string $btn 
+ * @return string      
+ */
 function erp_ac_get_status_invoice_according_with_btn( $btn ) {
     $button = [
         'save_and_draft'               => 'draft',
-        'save_and_submit_for_approval' => 'awaiting_approval',
+        'save_and_submit_for_approval' => 'pending',
         'save_and_add_another'         => 'draft',
         'approve'                      => 'awaiting_payment',
         'approve_and_add_another'      => 'awaiting_payment'
     ];
 
     return $button[$btn];
+}
+
+/**
+ * Update transaction
+ *
+ * @param  int $id
+ * @param  array $args
+ *
+ * @since  1.1.1
+ *
+ * @return  boolen
+ */
+function erp_ac_update_transaction( $id, $args ) {
+    return \WeDevs\ERP\Accounting\Model\Transaction::find( $id )->update( $args );
 }
 
 

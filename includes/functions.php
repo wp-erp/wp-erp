@@ -1244,8 +1244,8 @@ function erp_process_import_export() {
         return;
     }
 
-    $is_crm_activated = wperp()->modules->is_module_active( 'crm' );
-    $is_hrm_activated = wperp()->modules->is_module_active( 'hrm' );
+    $is_crm_activated = erp_is_module_active( 'crm' );
+    $is_hrm_activated = erp_is_module_active( 'hrm' );
 
     $departments  = erp_hr_get_departments_dropdown_raw();
     $designations = erp_hr_get_designation_dropdown_raw();
@@ -1714,4 +1714,15 @@ function erp_is_imap_active() {
     }
 
     return false;
+}
+
+/**
+ * Determine if the module is active or not.
+ *
+ * @return boolean
+ */
+function erp_is_module_active( $module_key ) {
+    $modules = get_option( 'erp_modules', [] );
+
+    return isset( $modules[ $module_key ] );
 }

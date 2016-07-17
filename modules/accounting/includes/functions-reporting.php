@@ -71,11 +71,10 @@ function erp_ac_reporting_query() {
     LEFT JOIN $tbl_class as class ON class.id = types.class_id
     LEFT JOIN $tbl_journals as jour ON jour.ledger_id = led.id
     LEFT JOIN $tbl_transaction as tran ON tran.id = jour.transaction_id
-    WHERE tran.status IS NULL OR tran.status != 'draft' AND ( tran.issue_date >= '$financial_start' AND tran.issue_date <= '$financial_end' )
+    WHERE ( tran.status IS NULL OR ( tran.status != 'draft' AND tran.status != 'void' AND tran.status != 'deleted' ) ) AND ( tran.issue_date >= '$financial_start' AND tran.issue_date <= '$financial_end' )
     GROUP BY led.id";
 
     $ledgers = $wpdb->get_results( $sql );
-
 
     return $ledgers;
 }

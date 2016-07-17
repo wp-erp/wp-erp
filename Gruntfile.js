@@ -17,7 +17,8 @@ module.exports = function(grunt) {
             admin: {
                 files: {
                     '<%= dirs.css %>/admin.css': '<%= dirs.less %>/admin/admin.less',
-                    '<%= dirs.css %>/setup.css': '<%= dirs.less %>/admin/setup.less'
+                    '<%= dirs.css %>/setup.css': '<%= dirs.less %>/admin/setup.less',
+                    '<%= dirs.css %>/accounting.css': '<%= dirs.less %>/admin/accounting.less'
                 }
             }
         },

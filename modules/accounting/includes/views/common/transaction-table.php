@@ -1,30 +1,19 @@
-
-<table class="widefat erp-ac-transaction-table payment-voucher-table erp-ac-transaction-form-table" style="margin: 20px 0;">
+<table class="widefat erp-ac-transaction-table payment-voucher-table erp-ac-transaction-form-table">
     <thead>
         <tr>
             <?php
             foreach ( erp_ac_tran_from_header() as $header_slug => $head ) {
                 ?><th class="<?php echo 'col-' . $header_slug; ?>"><?php echo $head ?></th><?php
-               
+
             }
             ?>
-<!--             <th class="col-ac"><?php _e( 'Account', '$domain' ); ?></th>
-            <th class="col-desc"><?php _e( 'Description', '$domain' ); ?></th>
-            <th class="col-qty"><?php _e( 'Qty', '$domain' ); ?></th>
-            <th class="col-unit-price"><?php  _e( 'Unit Price', 'accountign' ); ?></th>
-            <th class="col-discount"><?php _e( 'Discount', '$domain' ); ?></th>
-            <th class="col-unit-price"><?php  _e( 'Tax(%)', 'accountign' ); ?></th>
-            <th class="col-unit-price"><?php  _e( 'Tax Amount', 'accountign' ); ?></th>
-            <th class="col-amount"><?php  _e( 'Amount', 'accountign' ); ?></th>
-            <th class="col-action">&nbsp;</th> -->
         </tr>
     </thead>
 
     <tbody>
         <?php
-
-        $lilne_total = 0;
-        $journals = [];
+        $lilne_total         = 0;
+        $journals            = [];
         $jor_itms['journal'] = isset( $jor_itms['journal'] ) ? $jor_itms['journal'] : [];
 
         foreach ( $jor_itms['journal'] as  $journal ) {

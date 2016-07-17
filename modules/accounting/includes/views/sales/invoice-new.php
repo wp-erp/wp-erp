@@ -1,15 +1,15 @@
 <?php
-$customer_id = isset( $_GET['customer'] ) && $_GET['customer'] == 'true' ? intval( $_GET['id'] ) : false;
+$customer_id    = isset( $_GET['customer'] ) && $_GET['customer'] == 'true' ? intval( $_GET['id'] ) : false;
 $transaction_id = isset( $_GET['transaction_id'] ) ? intval( $_GET['transaction_id'] ) : false;
-$transaction = [];
-$jor_itms    = [];
-$cancel_url  = erp_ac_get_sales_url();
+$transaction    = [];
+$jor_itms       = [];
+$cancel_url     = erp_ac_get_sales_url();
 
 if ( $transaction_id ) {
     $transaction = erp_ac_get_all_transaction([
         'id'        => $transaction_id,
         'form_type' => 'invoice',
-        'status'    => 'draft',
+        'status'    => [ 'in' => ['draft', 'pending'] ],
         'join'      => ['journals', 'items'],
         'type'      => ['sales'],
         'output_by' => 'array'
@@ -17,6 +17,7 @@ if ( $transaction_id ) {
 
     $transaction = reset( $transaction );
     $customer_id = isset( $transaction['user_id'] ) ? intval( $transaction['user_id'] ) : false;
+
     foreach ( $transaction['journals'] as $key => $journal ) {
 
         $journal_id = $journal['id'];
@@ -37,11 +38,11 @@ if ( $transaction_id ) {
 }
 
 $items_for_tax = isset( $transaction['items'] ) ? $transaction['items'] : [];
-$tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
+$tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
 ?>
 
 <div class="wrap erp-ac-form-wrap">
-    <h2><?php _e( 'New Invoice', '$domain' ); ?></h2>
+    <h2><?php _e( 'New Invoice', 'erp' ); ?></h2>
 
     <?php
     $accounts_receivable_id = WeDevs\ERP\Accounting\Model\Ledger::code('120')->first()->id;
@@ -52,8 +53,9 @@ $tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
     ] );
 
     $filter_option = reset( $dropdown );
-    $options = wp_list_pluck( $filter_option['options'], 'code' );
-    $code_key = array_search( '475', $options );
+    $options       = wp_list_pluck( $filter_option['options'], 'code' );
+    $code_key      = array_search( '475', $options );
+
     unset( $dropdown[4]['options'][$code_key] );
 
     $dropdown_html = erp_ac_render_account_dropdown_html( $dropdown, array(
@@ -63,7 +65,7 @@ $tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
     ) );
      ?>
 
-    <form action="" method="post" class="erp-form" style="margin-top: 30px;">
+    <form action="" method="post" class="erp-form erp-ac-transaction-form erp-ac-invoice-form">
 
         <ul class="form-fields block" style="width:100%;">
 
@@ -182,61 +184,58 @@ $tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
         <input type="hidden" name="form_type" value="invoice">
         <input type="hidden" name="page" value="erp-accounting-sales">
         <input type="hidden" name="erp-action" value="ac-new-invoice">
-        <?php
-            erp_html_form_input( array(
-                'name'        => 'id',
-                'type'        => 'hidden',
-                'value'       => $transaction_id
-            ) );
-        ?>
 
+        <?php erp_html_form_input( array(
+            'name'        => 'id',
+            'type'        => 'hidden',
+            'value'       => $transaction_id
+        ) ); ?>
 
         <?php wp_nonce_field( 'erp-ac-trans-new' ); ?>
-
 
         <input type="submit" name="submit_erp_ac_trans" style="display: none;">
         <input type="hidden" id="erp-ac-btn-status" name="btn_status" value="">
         <input type="hidden" id="erp-ac-redirect" name="redirect" value="0">
 
 
+        <div class="erp-ac-btn-group-wrap">
 
-<!-- Single button -->
-    <div class="erp-ac-btn-group-wrap">
-        <div class="erp-btn-group">
-            <button type="button" data-redirect="0" data-btn_status="save_and_draft" class="erp-drop-down-btn erp-btn-info erp-ac-trns-form-submit-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <?php _e( 'Save as Draft', 'erp' ); ?>
-            </button>
-            <button type="button" class="erp-drop-down-btn erp-drop-down-child-btn erp-btn-info">
-                <span class="erp-caret"></span>
-                <span class="erp-sr-only"><?php _e( 'Toggle Dropdown', 'erp' ); ?></span>
-            </button>
-            <ul class="erp-dropdown-menu">
-                <li><a class="erp-ac-trns-form-submit-btn" data-redirect="0" data-btn_status="save_and_draft" href="#"><?php _e( 'Save as Draft', 'erp' ); ?></a></li>
-                <li><a class="erp-ac-trns-form-submit-btn" data-redirect="0" data-btn_status="save_and_submit_for_approval" href="#"><?php _e( 'Save & submit for approval', 'erp' ); ?></a></li>
-                <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="save_and_add_another" href="#"><?php _e( 'Save & add another', 'erp' ); ?></a></li>
-            </ul>
-        </div>
-        <div class="erp-btn-group erp-btn-group-first-child-after"></div>
-        <div class="erp-btn-group">
-            <button  data-redirect="single_page" data-btn_status="approve" type="button" class="erp-drop-down-btn erp-btn-info erp-ac-trns-form-submit-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <?php _e( 'Approve', 'erp' ); ?> 
-            </button>
-            <button type="button" class="erp-drop-down-btn erp-drop-down-child-btn erp-btn-info">
-                <span class="erp-caret"></span>
-                <span class="erp-sr-only"><?php _e( 'Toggle Dropdown', 'erp' ); ?></span>
-            </button>
-            <ul class="erp-dropdown-menu">
-                <li><a class="erp-ac-trns-form-submit-btn" data-redirect="single_page" data-btn_status="approve" href="#"><?php _e( 'Approve', 'erp' ); ?></a></li>
-                <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="approve_and_add_another" href="#"><?php _e( 'Approve & add another', 'erp' ); ?></a></li>
-            </ul>
-        </div>
+            <div class="erp-button-bar-left">
+                <div class="erp-btn-group">
+                    <button type="button" data-redirect="0" data-btn_status="save_and_draft" class="erp-drop-down-btn button erp-ac-trns-form-submit-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <?php _e( 'Save as Draft', 'erp' ); ?>
+                    </button>
+                    <button type="button" class="erp-drop-down-btn erp-drop-down-child-btn button">
+                        <span class="erp-caret"></span>
+                        <span class="erp-sr-only"><?php _e( 'Toggle Dropdown', 'erp' ); ?></span>
+                    </button>
+                    <ul class="erp-dropdown-menu">
+                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="0" data-btn_status="save_and_draft" href="#"><?php _e( 'Save as Draft', 'erp' ); ?></a></li>
+                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="0" data-btn_status="save_and_submit_for_approval" href="#"><?php _e( 'Save & submit for approval', 'erp' ); ?></a></li>
+                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="save_and_add_another" href="#"><?php _e( 'Save & add another', 'erp' ); ?></a></li>
+                    </ul>
+                </div>
+            </div>
 
-        <div class="erp-btn-group">
-          <button type="button" onclick="window.location.href='<?php echo $cancel_url; ?>'" class="erp-drop-down-btn erp-drop-down-cancel-btn erp-btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <?php _e( 'Cancel', 'erp' ); ?> 
-          </button>
+            <div class="erp-button-bar-right">
+                <div class="erp-btn-group">
+                    <button  data-redirect="single_page" data-btn_status="approve" type="button" class="erp-drop-down-btn button button-primary erp-ac-trns-form-submit-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <?php _e( 'Approve', 'erp' ); ?>
+                    </button>
+                    <button type="button" class="erp-drop-down-btn button button-primary erp-drop-down-child-btn erp-btn-info">
+                        <span class="erp-caret"></span>
+                        <span class="erp-sr-only"><?php _e( 'Toggle Dropdown', 'erp' ); ?></span>
+                    </button>
+                    <ul class="erp-dropdown-menu">
+                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="single_page" data-btn_status="approve" href="#"><?php _e( 'Approve', 'erp' ); ?></a></li>
+                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="approve_and_add_another" href="#"><?php _e( 'Approve & add another', 'erp' ); ?></a></li>
+                    </ul>
+                </div>
+
+                <a href="<?php echo esc_url( $cancel_url ); ?>" class="button"><?php _e( 'Cancel', 'erp' ); ?></a>
+            </div>
+
         </div>
-    </div>    
 
     </form>
 </div>
