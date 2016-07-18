@@ -1,0 +1,84 @@
+body {
+    background-color: #F1F1F1 !important;
+}
+
+
+
+#wrap {
+
+}
+
+.main-container {
+    display: flex;
+    align-items: center;
+    padding: 50px 0 50px;
+    flex-direction: column;
+}
+
+.invoice {
+    background-color: white;
+    height: 1022px;
+    width: 818px;
+    border-top: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.footer {
+    padding-top: 25px;
+}
+
+.title {
+
+}
+
+.summary {
+    width: 100%;
+    height: 50px;
+    text-align: center;
+    padding-bottom: 20px;
+
+}
+
+.actions {
+    width: 818px;
+    padding-bottom: 20px;
+    text-align: right;
+}
+
+.invoice-header {
+    min-height: 150px;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.invoice-address {
+    height: 150px;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.invoice-table {
+    padding: 20px;
+}
+
+.invoice-subtotal {
+    height: 150px;
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px;
+}
+
+.invoice-extra {
+
+}
+
+.logo {
+    max-width: 120px;
+    height: auto;
+}
+
+.company-address {
+}

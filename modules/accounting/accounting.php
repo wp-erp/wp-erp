@@ -170,6 +170,7 @@ class Accounting {
     public function init_actions() {
 
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+        add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_front' ) );
         add_action( 'admin_footer', array( $this, 'admin_js_templates' ) );
     }
 
@@ -228,6 +229,17 @@ class Accounting {
         wp_enqueue_style( 'erp-sweetalert' );
     }
 
+    /**
+     * Enqueue scripts for front end
+     *
+     * @since 1.1.2
+     * @return void
+     */
+    public function enqueue_scripts_front() {
+        wp_enqueue_script( 'invoice-script-front', WPERP_ACCOUNTING_ASSETS . '/js/invoice-front.js', array( 'jquery' ), date( 'Ymd' ), true );
+        wp_enqueue_style( 'invoice-style-front', WPERP_ASSETS . '/css/invoice-front.css', false, $this->plugin->version );
+    }
+
     public function add_settings_page( $settings = array() ) {
 
         $settings[] = include __DIR__ . '/includes/class-settings.php';
@@ -256,6 +268,7 @@ class Accounting {
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/invoice.php', 'erp-ac-invoice-payment-pop' );
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/customer.php', 'erp-ac-new-customer-content-pop' );
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/send-invoice.php', 'erp-ac-send-email-invoice-pop' );
+            erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/get-invoice-link.php', 'erp-ac-get-invoice-link-pop' );
         }
 
         if ( $current_screen->base == 'erp-settings_page_erp-settings' && isset( $_GET['section'] ) && $_GET['section'] == 'erp_ac_tax' ) {

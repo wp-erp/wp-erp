@@ -348,6 +348,80 @@ function erp_ac_invoice_prefix( $type, $id ) {
     return str_replace( '{id}', $id, $prefix );
 }
 
+/**
+ * Get unique transaction hash for sharing to customer
+ *
+ * @param object $transaction
+ * @param string $algo
+ * @since 1.1.2
+ * @return string
+ */
+function erp_ac_get_invoice_link_hash( $transaction = '', $algo = 'sha256' ) {
+
+    if ( $transaction ) {
+
+        $to_hash     = $transaction->id . $transaction->form_type . $transaction->invoice_number;
+        $hash_string = hash( $algo, $to_hash );
+    }
+
+    return $hash_string;
+}
+
+/**
+ * Varify transaction hash
+ *
+ * @param object $transaction
+ * @param string $hash_to_verify
+ * @since 1.1.2
+ * @return bool
+ */
+function erp_ac_verify_invoice_link_hash( $transaction = '', $hash_to_verify = '',  $algo = 'sha256' ) {
+
+    if ( $transaction && $hash_to_verify ) {
+
+        $to_hash       = $transaction['id'] . $transaction['form_type'] . $transaction['invoice_number'];
+        $hash_original = hash( $algo, $to_hash );
+
+        if ( $hash_original === $hash_to_verify ) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
+ * Callback to template_redirect hook
+ * Shows template when invoice readonly link is called
+ *
+ * @since 1.1.2
+ * @return mixed
+ */
+function erp_ac_readonly_invoice_template() {
+
+    $query          = isset( $_REQUEST['query'] ) ? esc_attr( $_REQUEST['query'] ) : '';
+    $transaction_id = isset( $_REQUEST['trans_id'] ) ? intval( $_REQUEST['trans_id'] ) : '';
+    $auth_id        = isset( $_REQUEST['auth'] ) ? esc_attr( $_REQUEST['auth'] ) : '';
+    $verified       = false;
+
+    if ( !$query || !$transaction_id || !$auth_id ) {
+        return;
+    }
+
+    $transaction = erp_ac_get_transaction( $transaction_id );
+
+    if ( $transaction ) {
+        $verified = erp_ac_verify_invoice_link_hash( $transaction, $auth_id );
+    }
+
+    if ( $verified ) {
+        include WPERP_ACCOUNTING_VIEWS . '/sales/template-invoice-readonly.php';
+        exit();
+    }
+
+    return;
+}
+
 
 
 

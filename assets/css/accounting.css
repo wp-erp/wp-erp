@@ -522,3 +522,29 @@ form.erp-form .erp-form-field label {
     width: 50%;
   }
 }
+
+#erp-ac-invoice-get-link .content {
+  height: 100%;
+}
+
+#ac-invoice-get-link-container {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+#invoice-link-input {
+  width: 300px;
+  height: 40px;
+}
+
+#invoice-link-button {
+  height: 40px;
+  width:60px;
+}
+
+#invoice-link-button:hover {
+  background-color: #f1f1f1;
+}
+

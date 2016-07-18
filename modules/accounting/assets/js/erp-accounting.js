@@ -66,6 +66,7 @@
             // invoice
             this.invoice.initialize();
             $( 'body' ).on( 'click', '.invoice-duplicate', this.invoice.duplicate );
+            $( 'body' ).on( 'click', '.invoice-get-link', this.invoice.getLink );
             $( 'body' ).on( 'click', '.invoice-send-email', this.invoice.sendEmail );
             $( 'body' ).on( 'click', '.invoice-email-new-receiver', this.invoice.addNewReceiver );
 
@@ -579,11 +580,41 @@
                 }
             },
 
-            duplicate: function ( e ) {
+            duplicate: function (e) {
                 e.preventDefault();
             },
 
-            sendEmail: function( e ) {
+            getLink: function(e) {
+                e.preventDefault();
+
+                var self, title, button, url;
+
+                self = $(this);
+                type = self.data('type');
+                title = self.data('title');
+                button = self.data('button');
+                url = self.data('url');
+
+                $.erpPopup({
+                    title: title,
+                    button: button,
+                    id: 'erp-ac-invoice-get-link',
+                    content: wperp.template( 'erp-ac-get-invoice-link-pop' )({type: type}).trim(),
+                    extraClass: 'smaller',
+                    onReady: function() {
+                        $('#invoice-link-input').val(url).select();
+                        $('#invoice-link-button').on('click', function(e) {
+                            e.preventDefault();
+                        });
+                    },
+                    onSubmit: function(modal) {
+                        modal.closeModal();
+                    }
+
+                });
+            },
+
+            sendEmail: function(e) {
                 e.preventDefault();
 
                 var self, type, title, button, sender, receiver, subject, transaction_id;
