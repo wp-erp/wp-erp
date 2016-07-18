@@ -210,21 +210,6 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
                         <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="payment_and_add_another" href="#"><?php _e( 'Payment & add another', 'erp' ); ?></a></li>
                     </ul>
                 </div>
-
-                <!-- <div class="erp-btn-group">
-                    <button type="button" data-redirect="0" data-btn_status="save_and_draft" class="erp-drop-down-btn button erp-ac-trns-form-submit-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <?php _e( 'Save as Draft', 'erp' ); ?>
-                    </button>
-                    <button type="button" class="erp-drop-down-btn erp-drop-down-child-btn button">
-                        <span class="erp-caret"></span>
-                        <span class="erp-sr-only"><?php _e( 'Toggle Dropdown', 'erp' ); ?></span>
-                    </button>
-                    <ul class="erp-dropdown-menu">
-                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="0" data-btn_status="save_and_draft" href="#"><?php _e( 'Save as Draft', 'erp' ); ?></a></li>
-                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="0" data-btn_status="save_and_submit_for_approval" href="#"><?php _e( 'Save & submit for approval', 'erp' ); ?></a></li>
-                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="save_and_add_another" href="#"><?php _e( 'Save & add another', 'erp' ); ?></a></li>
-                    </ul>
-                </div> -->
             </div> 
 
             <div class="erp-button-bar-right">
