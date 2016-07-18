@@ -45,7 +45,7 @@ $notification_types = erp_crm_activity_schedule_notification_type();
 
     <div class="clearfix"></div>
     <p>
-        <select name="invite_contact" id="erp-crm-activity-invite-contact" v-model="feedData.invite_contact" v-selecttwo="feedData.inviteContact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="Invite a contact">
+        <select name="invite_contact" id="erp-crm-activity-invite-contact" v-model="feedData.invite_contact" v-selecttwo="feedData.inviteContact" class="erp-select2" multiple="multiple" style="width: 100%" data-placeholder="Invite a contact">
             <?php echo erp_crm_get_employees_dropdown(); ?>
         </select>
     </p>

@@ -6,13 +6,15 @@
             <img v-bind:src="createdUserImg">
         </span>
         <span class="timeline-feed-header-text">
-            {{{ headerText }}}
+            <template v-if="isLog">{{{ headerText }}}</template>
+            <template v-if="isSchedule">{{{ headerScheduleText }}}</template>
             <span v-if="( countUser != 0 && countUser != 1 )"> and <strong><tooltip :content="countUser" :title="invitedUser"></tooltip></strong></span>
         </span>
     </h3>
 
     <div class="timeline-body" @click="toggleFooter">
-        <div class="timeline-email-subject" v-if="islogTypeEmail">{{i18n.emailSubject}} : {{feed.email_subject}}</div>
+        <div class="timeline-email-subject" v-if="isLog && islogTypeEmail">{{i18n.emailSubject}} : {{feed.email_subject}}</div>
+        <div class="timeline-email-subject" v-if="isSchedule"><i class="fa fa-bookmark"></i> &nbsp; {{ feed.extra.schedule_title }}  &nbsp;|&nbsp;  <i class="fa fa-calendar-check-o"></i> &nbsp;{{ datetime }}</div>
         <div class="timeline-email-body">{{{ feed.message }}}</div>
     </div>
 
@@ -32,7 +34,8 @@
 
     <div class="timeline-body">
         <form action="" method="post" @submit.prevent = "updateCustomerFeed( feed.id )" id="erp-crm-activity-edit-feed-form">
-            <log-activity :feed="feed"></log-activity>
+            <log-activity :feed="feed" v-if="isLog"></log-activity>
+            <schedule-note :feed="feed" v-if="isSchedule"></schedule-note>
         </form>
     </div>
 </div>

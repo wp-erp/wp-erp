@@ -540,18 +540,35 @@ window.wpErpVue = window.wpErpVue || {};
             headerText: function() {
                 if ( this.countUser == 1 ) {
                     return this.i18n.logHeaderTextSingleUser
-                          .replace( '{{logType}}', this.logType )
-                          .replace( '{{logDateTime}}', this.logDateTime )
-                          .replace( '{{createdForUser}}', this.createdForUser )
-                          .replace( '{{otherUser}}', this.feed.extra.invited_user[0].name );
+                        .replace( '{{createdUserName}}', this.createdUserName )
+                        .replace( '{{logType}}', this.logType )
+                        .replace( '{{logDateTime}}', this.logDateTime )
+                        .replace( '{{createdForUser}}', this.createdForUser )
+                        .replace( '{{otherUser}}', this.feed.extra.invited_user[0].name );
                 } else {
                     return this.i18n.logHeaderText
-                          .replace( '{{logType}}', this.logType )
-                          .replace( '{{logDateTime}}', this.logDateTime )
-                          .replace( '{{createdForUser}}', this.createdForUser )
+                        .replace( '{{createdUserName}}', this.createdUserName )
+                        .replace( '{{logType}}', this.logType )
+                        .replace( '{{logDateTime}}', this.logDateTime )
+                        .replace( '{{createdForUser}}', this.createdForUser )
                 }
-
             },
+
+            headerScheduleText: function() {
+                if ( this.countUser == 1 ) {
+                    return this.i18n.scheduleHeaderTextSingleUser
+                        .replace( '{{createdUserName}}', this.createdUserName )
+                        .replace( '{{logType}}', this.logType )
+                        .replace( '{{createdForUser}}', this.createdForUser )
+                        .replace( '{{otherUser}}', this.feed.extra.invited_user[0].name );
+                } else {
+                    return this.i18n.scheduleHeaderText
+                        .replace( '{{createdUserName}}', this.createdUserName )
+                        .replace( '{{logType}}', this.logType )
+                        .replace( '{{createdForUser}}', this.createdForUser )
+                }
+            },
+
 
             countUser: function () {
                 if (!this.feed.extra.invited_user) {
@@ -594,9 +611,50 @@ window.wpErpVue = window.wpErpVue || {};
 
             logDateTime: function() {
                 return vm.$options.filters.formatDateTime( this.feed.start_date );
+            },
+
+            isLog: function() {
+                return ( this.feed.type == 'log_activity' ) && !( new Date() < new Date( this.feed.start_date ) );
+            },
+
+            isSchedule: function() {
+                return ( this.feed.type == 'log_activity' ) && ( new Date() < new Date( this.feed.start_date ) );
+            },
+
+            datetime: function() {
+                var datetime;
+
+                if ( this.isSchedule ) {
+                        var startDate = wperp.dateFormat( this.feed.start_date, 'j F' ),
+                        startTime = wperp.timeFormat( this.feed.start_date ),
+                        endDate = wperp.dateFormat( this.feed.end_date, 'j F' ),
+                        endTime = wperp.timeFormat( this.feed.end_date );
+
+
+                    if ( this.feed.extra.all_day == 'true' ) {
+                        if ( wperp.dateFormat( this.feed.start_date, 'Y-m-d' ) == wperp.dateFormat( this.feed.end_date, 'Y-m-d' ) ) {
+                            var datetime = startDate;
+                        } else {
+                            var datetime = startDate + ' to ' + endDate;
+                        }
+                    } else {
+                        if ( wperp.dateFormat( this.feed.start_date, 'Y-m-d' ) == wperp.dateFormat( this.feed.end_date, 'Y-m-d' ) ) {
+                            var datetime = startDate + ' at ' + startTime + ' to ' + endTime;
+                        } else {
+                            var datetime = startDate + ' at ' + startTime + ' to ' + endDate + ' at ' + endTime;
+                        }
+                    }
+                }
+
+                // if ( this.isTasks ) {
+                //     startDate = wperp.dateFormat( this.feed.start_date, 'j F' ),
+                //     startTime = wperp.timeFormat( this.feed.start_date ),
+                //     datetime = startDate + ' at ' + startTime;
+                // }
+
+                return datetime;
             }
         }
-
     });
 
 })(jQuery, window.wpErpVue );
