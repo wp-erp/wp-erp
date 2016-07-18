@@ -1,136 +1,3 @@
-/******************************************************************
-*******************      Component's      *************************
-*******************************************************************/
-var TimeLineItem = {
-    props: ['feed', 'disbaleFooter'],
-    template : '#erp-crm-timeline-item-template',
-
-    data: function() {
-        return {
-            feedData: { message: '' },
-            showFooter : false,
-            editfeedData: {},
-            isEditable: false,
-            isReplied: false,
-            emailViewedTime: false,
-        }
-    },
-
-    methods: {
-
-        toggleFooter: function() {
-
-            if ( wpCRMvue.isAdmin || wpCRMvue.isCrmManager || this.checkOwnFeeds() ) {
-                if ( this.disbaleFooter == 'true' ) {
-                    this.showFooter = false;
-                } else {
-                    this.showFooter = !this.showFooter;
-                }
-            }
-        },
-
-        /**
-         * Check is user agent and its own feeds or not
-         *
-         * @return {boolean}
-         */
-        checkOwnFeeds: function() {
-            return ( wpCRMvue.isAgent ) && this.feed.created_by.ID == wpCRMvue.current_user_id;
-        },
-
-        /**
-         * Delete Activity feed
-         *
-         * @param  {[object]} feed
-         *
-         * @return {[void | alert]}
-         */
-        deleteFeed: function( feed ) {
-            var data = {
-                action : 'erp_crm_delete_customer_activity',
-                feed_id : feed.id,
-                _wpnonce : wpCRMvue.nonce
-            };
-
-
-            if ( confirm( wpCRMvue.confirm ) ) {
-                vm.progressStart('#timeline-item-'+feed.id );
-                jQuery.post( wpCRMvue.ajaxurl, data, function( resp ) {
-                    if ( resp.success ) {
-                        vm.progreassDone(true);
-                        setTimeout( function() {
-                            vm.feeds.$remove( feed );
-                        }, 500);
-                    } else {
-                        alert( resp.data );
-                    };
-                });
-            };
-        },
-
-        editFeed: function( feed ) {
-            this.editfeedData = feed;
-            this.isEditable = true;
-        },
-
-        replyEmailFeed: function( feed ) {
-            this.editfeedData = feed;
-            this.isReplied = true;
-            this.isEditable = false;
-        },
-
-        cancelUpdate: function() {
-            this.isEditable = false;
-            this.isReplied = false;
-            this.editfeedData = {};
-        },
-
-        isSchedule: function( date ) {
-            return new Date() < new Date( date );
-        },
-
-        updateCustomerFeed: function( feed_id ) {
-            vm.addCustomerFeed( this, feed_id );
-        },
-
-        notify: function() {
-            this.$broadcast('bindEditFeedData', this.feed );
-        }
-    },
-
-    computed: {
-        emailViewedTime: function() {
-            if ( this.feed.extra.email_opened_at ) {
-                return 'Viewed on ' + vm.$options.filters.formatDateTime( this.feed.extra.email_opened_at )
-            } else {
-                return false;
-            }
-        }
-    },
-
-    watch: {
-        editfeedData: {
-            deep: true,
-            immediate: true,
-            handler: function () {
-                this.notify();
-            }
-        }
-    },
-
-    events:{
-        'disableTimelineFooter': function( flag ) {
-            this.disbaleFooter = flag;
-        }
-    }
-};
-
-
-Vue.component( 'tooltip', window.wpErpVue.ToolTip );
-Vue.component( 'timeline-header', window.wpErpVue.TimeLineHeader );
-Vue.component( 'timeline-body', window.wpErpVue.TimeLineBody );
-Vue.component( 'timeline-item', TimeLineItem );
-
 /**
  * New Note Component
  *
@@ -223,7 +90,7 @@ Vue.component( 'log-activity', {
                 message: '',
                 log_type: '',
                 email_subject: '',
-                inviteContact: '',
+                inviteContact: [],
                 dt: '',
                 tp: ''
             },
@@ -243,6 +110,10 @@ Vue.component( 'log-activity', {
         }
     },
 
+    compiled: function() {
+        this.feedData.inviteContact = this.feedData.invite_contact ? this.feedData.invite_contact : [] ;
+    },
+
     events: {
         'bindEditFeedData': function (feed ) {
             this.feedData.log_type      = feed.log_type;
@@ -251,15 +122,10 @@ Vue.component( 'log-activity', {
             this.feedData.tp            = wperp.timeFormat( feed.start_date );
 
             if ( feed.log_type == 'meeting' && ! _.isEmpty( feed.extra.invited_user ) ) {
-                var invitedUser             = feed.extra.invited_user.map( function( elm ) { return elm.id } ).join(',');
+                var invitedUser             = feed.extra.invited_user.map( function( elm ) { return elm.id } );
                 this.feedData.inviteContact = invitedUser;
-                var self = jQuery( this.$el ).find( 'select.select2' );
-
-                if ( String(invitedUser).indexOf(',') == '-1' ) {
-                    self.select2().select2( 'val', invitedUser );
-                } else {
-                    self.select2().select2( 'val', invitedUser.split(',') );
-                }
+                // var self = jQuery( this.$el ).find( 'select.select2' );
+                // self.val( invitedUser ).trigger('change');
             };
 
         }
@@ -361,13 +227,9 @@ Vue.component( 'tasks-note', {
             this.feedData.tp            = wperp.timeFormat( feed.start_date );
             var invitedUser             = feed.extra.invited_user.map( function( elm ) { return elm.id } ).join(',');
             this.feedData.inviteContact = invitedUser;
-            var self = jQuery( this.$el ).find( 'select.select2' );
 
-            if ( String(invitedUser).indexOf(',') == '-1' ) {
-                self.val( invitedUser ).trigger('change');
-            } else {
-                self.val( invitedUser.split(',') ).trigger('change');
-            }
+            var self = jQuery( this.$el ).find( 'select.select2' );
+            self.val( invitedUser ).trigger('change');
 
         }
     },
@@ -566,16 +428,21 @@ Vue.component( 'schedule-note', {
                 tpStart                     : '',
                 dtEnd                       : '',
                 tpEnd                       : '',
-                inviteContact               : ''
+                inviteContact               : []
             },
 
             isValid: false
         }
     },
 
+    compiled: function() {
+        this.feedData.inviteContact = this.feedData.invite_contact ? this.feedData.invite_contact : [] ;
+    },
+
+
     events: {
         'bindEditFeedData': function (feed ) {
-            var invitedUser = feed.extra.invited_user.map( function( elm ) { return elm.id } ).join(',');
+            var invitedUser = feed.extra.invited_user.map( function( elm ) { return elm.id } );
             this.feedData.all_day                    = feed.extra.all_day == 'true' ? true : false;
             this.feedData.allow_notification         = feed.extra.allow_notification == 'true' ? true : false;
             this.feedData.schedule_title             = feed.extra.schedule_title;
@@ -590,13 +457,7 @@ Vue.component( 'schedule-note', {
             this.feedData.inviteContact              = invitedUser;
 
             var self = jQuery( this.$el ).find( 'select.select2' );
-
-            if ( String(invitedUser).indexOf(',') == '-1' ) {
-                self.select2().select2( 'val', invitedUser );
-            } else {
-                self.select2().select2( 'val', invitedUser.split(',') );
-            }
-
+            self.val( invitedUser ).trigger('change');
         }
     },
 
@@ -644,6 +505,9 @@ Vue.component( 'schedule-note', {
             deep: true,
             immediate: true,
             handler: function () {
+                if ( this.feedData.inviteContact == null ) {
+                    this.feedData.inviteContact = [];
+                }
                 this.notify();
             }
         }
