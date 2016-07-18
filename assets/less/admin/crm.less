@@ -1208,6 +1208,28 @@
                 .cancel-timeline-feed-edit {
                     cursor: pointer;
                 }
+
+                &.timeline-header-as-title {
+                    .timeline-body {
+                        padding: 0;
+
+                        .timeline-feed-header-text {
+                            line-height: 1;
+                            display: block;
+                            border-bottom: 1px solid #eee;
+                            padding: 10px;
+                        }
+                    }
+
+                    .activity-unordered-list {
+                        list-style-type: disc;
+                        padding: 5px 10px 5px 30px;
+                    }
+
+                    a {
+                        text-decoration: none !important;
+                    }
+                }
             }
             .timeline > li > .timeline-item > .time {
                 color: #999;
