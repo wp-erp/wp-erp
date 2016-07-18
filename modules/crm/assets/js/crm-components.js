@@ -582,7 +582,7 @@ window.wpErpVue = window.wpErpVue || {};
                 var self = this;
                 return this.feed.extra.invited_user.map( function( elm ) {
                     if ( elm.id == wpCRMvue.current_user_id ) {
-                        return this.i18n.you;
+                        return self.i18n.you;
                     } else {
                         return elm.name;
                     }
@@ -646,16 +646,80 @@ window.wpErpVue = window.wpErpVue || {};
                     }
                 }
 
-                // if ( this.isTasks ) {
-                //     startDate = wperp.dateFormat( this.feed.start_date, 'j F' ),
-                //     startTime = wperp.timeFormat( this.feed.start_date ),
-                //     datetime = startDate + ' at ' + startTime;
-                // }
-
                 return datetime;
             }
         }
     });
+
+    Vue.component( 'tasks-component', {
+        props: [ 'i18n', 'feed' ],
+
+        mixins: [ TimilineMixin ],
+
+        data: function() {
+            return {
+                headerText: '',
+            }
+        },
+
+        template: '#erp-crm-timeline-feed-task-note',
+
+        computed: {
+            headerText: function() {
+                return this.i18n.taskHeaderText
+                        .replace( '{{createdUserName}}', this.createdUserName )
+                        .replace( '{{createdForUser}}', this.createdForUser );
+            },
+
+            countUser: function () {
+                if (!this.feed.extra.invited_user) {
+                    return 0;
+                }
+                var count = this.feed.extra.invited_user.length;
+                return ( count <= 1 ) ? count : count + ' peoples';
+            },
+
+            invitedSingleUser: function() {
+                if ( this.feed.extra.invited_user[0].id == wpCRMvue.current_user_id ) {
+                    return this.i18n.yourself;
+                } else {
+                    return this.feed.extra.invited_user[0].name;
+                }
+            },
+
+            invitedUser: function() {
+                var self = this;
+                return this.feed.extra.invited_user.map( function( elm ) {
+                    if ( elm.id == wpCRMvue.current_user_id ) {
+                            return self.i18n.yourself;
+                    } else {
+                        return elm.name;
+                    }
+                } ).join("<br>");
+            },
+
+            createdUserImg: function() {
+                return this.feed.created_by.avatar;
+            },
+
+            createdUserName: function() {
+                return ( this.feed.created_by.ID == wpCRMvue.current_user_id ) ? this.i18n.you : this.feed.created_by.display_name;
+            },
+
+            createdForUser: function() {
+                return _.contains( this.feed.contact.types, 'company' ) ? this.feed.contact.company : this.feed.contact.first_name + ' ' + this.feed.contact.last_name;
+            },
+
+            datetime: function() {
+                var datetime;
+                startDate = wperp.dateFormat( this.feed.start_date, 'j F' ),
+                startTime = wperp.timeFormat( this.feed.start_date ),
+                datetime = startDate + ' at ' + startTime;
+                return datetime;
+            }
+        }
+
+    } );
 
 })(jQuery, window.wpErpVue );
 
