@@ -1,3 +1,6 @@
+<i v-if="( feed.extra.replied != 1 )" class="fa fa-envelope-o"></i>
+<i v-if="( feed.extra.replied == 1 )" class="fa fa-reply"></i>
+
 <div class="timeline-item" id="timeline-item-{{ feed.id }}" v-if="!isReplied">
     <tooltip content="<i class='fa fa-clock-o'></i>" :title="feed.created_at | formatDateTime"></tooltip>
     <tooltip v-if="emailViewedTime" content="<i class='fa fa-eye'></i>" :title="emailViewedTime"></tooltip>

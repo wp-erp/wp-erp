@@ -197,7 +197,7 @@ class Customer_Relationship {
             wp_enqueue_script( 'erp-nprogress' );
             wp_enqueue_script( 'wp-erp-crm-vue-component', WPERP_CRM_ASSETS . "/js/crm-components.js", array( 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
 
-            do_action( 'erp_crm_load_contact_vue_sripts' );
+            do_action( 'erp_crm_load_contact_vue_scripts' );
 
             if ( isset( $_GET['action'] ) && $_GET['action'] == 'view' ) {
                 wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", array( 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );

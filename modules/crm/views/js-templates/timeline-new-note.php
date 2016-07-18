@@ -1,3 +1,5 @@
+<i class="fa fa-file-text-o"></i>
+
 <div class="timeline-item" id="timeline-item-{{ feed.id }}" v-if="!isEditable">
     <tooltip content="<i class='fa fa-clock-o'></i>" :title="feed.created_at | formatDateTime"></tooltip>
 

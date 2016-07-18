@@ -1,3 +1,6 @@
+<i v-if="isLog" class="fa fa-list"></i>
+<i v-if="isSchedule" class="fa fa-calendar-check-o"></i>
+
 <div class="timeline-item" id="timeline-item-{{ feed.id }}" v-if="!isEditable">
     <tooltip content="<i class='fa fa-clock-o'></i>" :title="feed.created_at | formatDateTime"></tooltip>
 
