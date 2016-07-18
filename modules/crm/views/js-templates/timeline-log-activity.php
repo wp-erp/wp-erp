@@ -7,10 +7,12 @@
         </span>
         <span class="timeline-feed-header-text">
             {{{ headerText }}}
+            <span v-if="( countUser != 0 && countUser != 1 )"> and <strong><tooltip :content="countUser" :title="invitedUser"></tooltip></strong></span>
         </span>
     </h3>
 
     <div class="timeline-body" @click="toggleFooter">
+        <div class="timeline-email-subject" v-if="islogTypeEmail">{{i18n.emailSubject}} : {{feed.email_subject}}</div>
         <div class="timeline-email-body">{{{ feed.message }}}</div>
     </div>
 

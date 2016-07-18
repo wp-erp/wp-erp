@@ -253,10 +253,12 @@ Vue.component( 'log-activity', {
             if ( feed.log_type == 'meeting' && ! _.isEmpty( feed.extra.invited_user ) ) {
                 var invitedUser             = feed.extra.invited_user.map( function( elm ) { return elm.id } ).join(',');
                 this.feedData.inviteContact = invitedUser;
-                var self = jQuery( this.$el ).find( 'select.select2' );
-
+                var self = jQuery( 'select#erp-crm-activity-invite-contact' );
                 if ( String(invitedUser).indexOf(',') == '-1' ) {
-                    self.select2().select2( 'val', invitedUser );
+                // console.log( self, invitedUser );
+                    jQuery( 'select#erp-crm-activity-invite-contact' ).val(invitedUser);
+                    jQuery('select#erp-crm-activity-invite-contact').trigger('change');
+                    // self.select2().select2( 'val', '63' );
                 } else {
                     self.select2().select2( 'val', invitedUser.split(',') );
                 }

@@ -25,6 +25,5 @@ function erp_crm_get_contact_feeds_localize_string() {
         'replyEmailHeadertext'      => sprintf( __( '<strong>%1s</strong> replied to <strong>%2s</strong>', 'erp' ), '{{createdForUser}}', '{{createdUserName}}' ),
         'logHeaderText'             => sprintf( __( 'You logged %1s on %2s for <strong>%3s</strong>', 'erp' ), '{{logType}}', '{{logDateTime}}', '{{createdForUser}}' ),
         'logHeaderTextSingleUser'   => sprintf( __( 'You logged %1s on %2s for <strong>%3s</strong> and <strong>%4s</strong>', 'erp' ), '{{logType}}', '{{logDateTime}}', '{{createdForUser}}', '{{otherUser}}' ),
-        'logHeaderTextMultipleUser' => sprintf( __( 'You logged %1s on %2s for <strong>%3s</strong> and <strong><tooltip :content="%4s" :title="%5s"></tooltip></strong>', 'erp' ), '{{logType}}', '{{logDateTime}}', '{{createdForUser}}', '{{countUser}}', '{{invitedUser}}' )
     ];
 }

@@ -121,11 +121,27 @@ window.wpErpVue = window.wpErpVue || {};
                 vm.$set(key, select.val());
            });
 
+
             select.select2({
                 width : 'resolve',
                 placeholder: jQuery(this.el).attr('data-placeholder'),
                 allowClear: true
             });
+        },
+
+        update: function (newValue, oldValue) {
+            var self   = this;
+            var select = jQuery(self.el);
+
+            if ( newValue && !oldValue ) {
+                if ( String(newValue).indexOf(',') == '-1' ) {
+                    select.val(newValue);
+                    select.trigger('change');
+                } else {
+                    select.val(newValue.split(','));
+                    select.trigger('change');
+                }
+            }
         },
     });
 
@@ -421,6 +437,8 @@ window.wpErpVue = window.wpErpVue || {};
         }
     };
 
+    Vue.component( 'tooltip', window.wpErpVue.ToolTip );
+
     Vue.component( 'new-note-component', {
         props: [ 'i18n', 'feed' ],
 
@@ -520,26 +538,34 @@ window.wpErpVue = window.wpErpVue || {};
 
         computed: {
             headerText: function() {
-                var txt;
                 if ( this.countUser == 1 ) {
-                    return i18n.logHeaderTextSingleUser
+                    return this.i18n.logHeaderTextSingleUser
                           .replace( '{{logType}}', this.logType )
                           .replace( '{{logDateTime}}', this.logDateTime )
                           .replace( '{{createdForUser}}', this.createdForUser )
-                          .replace( '{{otherUser}}', this.feed.extra.invited_user[0].name )
+                          .replace( '{{otherUser}}', this.feed.extra.invited_user[0].name );
+                } else {
+                    return this.i18n.logHeaderText
+                          .replace( '{{logType}}', this.logType )
+                          .replace( '{{logDateTime}}', this.logDateTime )
+                          .replace( '{{createdForUser}}', this.createdForUser )
                 }
+
             },
 
             countUser: function () {
+                if (!this.feed.extra.invited_user) {
+                    return 0;
+                }
                 var count = this.feed.extra.invited_user.length;
-                return ( count <= 1 ) ? count : count + ' ' + i18n.others;
+                return ( count <= 1 ) ? count : count + ' ' + this.i18n.others;
             },
 
             invitedUser: function() {
                 var self = this;
                 return this.feed.extra.invited_user.map( function( elm ) {
                     if ( elm.id == wpCRMvue.current_user_id ) {
-                        return i18n.you;
+                        return this.i18n.you;
                     } else {
                         return elm.name;
                     }
@@ -559,13 +585,16 @@ window.wpErpVue = window.wpErpVue || {};
             },
 
             logType: function() {
-                return ( this.feed.log_type == 'email' ) ? i18n.an + ' ' + this.feed.log_type : i18n.a + ' ' + this.feed.log_type;
+                return ( this.feed.log_type == 'email' ) ? this.i18n.an + ' ' + this.feed.log_type : this.i18n.a + ' ' + this.feed.log_type;
+            },
+
+            islogTypeEmail: function() {
+                return this.feed.log_type == 'email';
             },
 
             logDateTime: function() {
                 return vm.$options.filters.formatDateTime( this.feed.start_date );
             }
-
         }
 
     });
