@@ -151,9 +151,15 @@ If you are unable to use any of the methods due to internet connectivity and fil
 
 == Changelog ==
 
-**vnew
+**v1.1.2 -> Comming Soon....**
+ * [new] Settings for invoice formating
+ * [new] Set submit group button for sales payment and invoice
+ * [new] Set submit group button for expense payment voucher and vendor credit
  * [fix] Transaction update time check invoice number uniquness
- * [update] Transaction insert form filtering  
+ * [update] Transaction insert form filtering for table row and column 
+ * [update] currency schema update
+ * [update] Update query according with submit group button for sales and expenses
+ * [update] transaction table column name change from invoice to invoice_number
 
 **v1.1.1 -> June 22, 2016**
 
