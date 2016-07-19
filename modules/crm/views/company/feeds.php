@@ -45,15 +45,9 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                 </li>
 
                 <li v-for="feed in feed_obj">
-
-                    <i v-if="(feed.type == 'email') && ( feed.extra.replied != 1 )" class="fa fa-envelope-o"></i>
-                    <i v-if="(feed.type == 'email') && ( feed.extra.replied == 1 )" class="fa fa-reply"></i>
-                    <i v-if="feed.type == 'new_note'" class="fa fa-file-text-o" @click.prevent="toggleFooter"></i>
-                    <i v-if="feed.type == 'log_activity'" class="fa fa-list" @click.prevent="toggleFooter"></i>
-                    <i v-if=" ( feed.type == 'log_activity' && isSchedule( feed.start_date )  )" class="fa fa-calendar-check-o" @click.prevent="toggleFooter"></i>
-
-                    <timeline-item :feed="feed"></timeline-item>
-
+                    <timeline-feed :i18n="i18n" :is="loadTimelineComponent( feed.type )" :feed="feed"></timeline-feed>
+                    <!-- <timeline-item :is="feed.type" :feed="feed" disbale-footer="false"></timeline-item> -->
+                    <!-- <component :is="feed.component" :feed="feed" disbale-footer="false"></component> -->
                 </li>
 
 
