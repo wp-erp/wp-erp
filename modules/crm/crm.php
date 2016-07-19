@@ -178,7 +178,7 @@ class Customer_Relationship {
             wp_enqueue_script( 'erp-nprogress' );
             wp_enqueue_script( 'wp-erp-crm-vue-component', WPERP_CRM_ASSETS . "/js/crm-components.js", array( 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
 
-            do_action( 'erp_crm_load_contact_vue_sripts' );
+            do_action( 'erp_crm_load_contact_vue_scripts' );
 
             wp_enqueue_script( 'wp-erp-crm-vue-customer', WPERP_CRM_ASSETS . "/js/crm-app$suffix.js", array( 'wp-erp-crm-vue-component', 'erp-nprogress', 'erp-script', 'erp-vuejs', 'underscore', 'erp-select2', 'erp-tiptip' ), date( 'Ymd' ), true );
             wp_enqueue_script( 'post' );
@@ -299,7 +299,6 @@ class Customer_Relationship {
                     erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/customer-email-note.php', 'erp-crm-email-note-template' );
                     erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/customer-schedule-note.php', 'erp-crm-schedule-note-template' );
                     erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/customer-tasks-note.php', 'erp-crm-tasks-note-template' );
-                    erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/customer-timeline-item.php', 'erp-crm-timeline-item-template' );
 
                     do_action( 'erp_crm_load_vue_js_template' );
                 }
