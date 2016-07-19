@@ -121,7 +121,7 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                             'type'     => 'text',
                             'required' => true,
                             'class'    => 'erp-ac-check-invoice-number',
-                            'value'    => erp_ac_invoice_prefix( 'erp_ac_payment_voucher', erp_ac_generate_invoice_id( 'payment_voucher' ) )
+                            'value'    => isset( $transaction['invoice_number']  ) ? $transaction['invoice_number'] : erp_ac_invoice_prefix( 'erp_ac_payment_voucher', erp_ac_generate_invoice_id( 'payment_voucher' ) )
                         ) );
                         ?>
                     </li>

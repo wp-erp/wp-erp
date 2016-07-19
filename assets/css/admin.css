@@ -1128,6 +1128,22 @@
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item .cancel-timeline-feed-edit {
   cursor: pointer;
 }
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item.timeline-header-as-title .timeline-body {
+  padding: 0;
+}
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item.timeline-header-as-title .timeline-body .timeline-feed-header-text {
+  line-height: 1;
+  display: block;
+  border-bottom: 1px solid #eee;
+  padding: 10px;
+}
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item.timeline-header-as-title .activity-unordered-list {
+  list-style-type: disc;
+  padding: 5px 10px 5px 30px;
+}
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item.timeline-header-as-title a {
+  text-decoration: none !important;
+}
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .time {
   color: #999;
   float: right;

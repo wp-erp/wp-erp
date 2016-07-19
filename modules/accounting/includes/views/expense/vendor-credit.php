@@ -8,7 +8,7 @@ $jor_itms       = [];
 if ( $transaction_id ) {
     $transaction = erp_ac_get_all_transaction([
         'id'        => $transaction_id,
-        'status'    => [ 'in' => ['draft', 'pending']],
+        'status'    => [ 'in' => ['draft', 'pending', 'awaiting_payment']],
         'join'      => ['journals', 'items'],
         'type'      => ['expense'],
         'output_by' => 'array'
@@ -111,7 +111,7 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                             'type'     => 'text',
                             'required' => true,
                             'class'    => 'erp-ac-check-invoice-number',
-                            'value'    => erp_ac_invoice_prefix( 'erp_ac_vendor_credit', erp_ac_generate_invoice_id( 'vendor_credit' ) )
+                            'value'    => isset( $transaction['invoice_number']  ) ? $transaction['invoice_number'] : erp_ac_invoice_prefix( 'erp_ac_vendor_credit', erp_ac_generate_invoice_id( 'vendor_credit' ) )
                         ) );
                         ?>
                     </li>
