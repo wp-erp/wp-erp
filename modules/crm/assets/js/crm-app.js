@@ -204,10 +204,6 @@ Vue.component( 'tasks-note', {
         }
     },
 
-    compiled: function() {
-        this.feedData.inviteContact = this.feedData.invite_contact ? this.feedData.invite_contact : [] ;
-    },
-
     methods: {
         notify: function () {
             this.$dispatch('bindFeedData', this.feedData );
@@ -225,11 +221,11 @@ Vue.component( 'tasks-note', {
             this.feedData.task_title    = feed.extra.task_title;
             this.feedData.dt            = wperp.dateFormat( feed.start_date, 'Y-m-d' );
             this.feedData.tp            = wperp.timeFormat( feed.start_date );
-            var invitedUser             = feed.extra.invited_user.map( function( elm ) { return elm.id } ).join(',');
-            this.feedData.inviteContact = invitedUser;
+            var invitedUser             = feed.extra.invited_user.map( function( elm ) { return elm.id } );
+            this.feedData.inviteContact = invitedUser ? invitedUser : [];
 
-            var self = jQuery( this.$el ).find( 'select.select2' );
-            self.val( invitedUser ).trigger('change');
+            // var self = jQuery( this.$el ).find( 'select.select2' );
+            // self.val( invitedUser ).trigger('change');
 
         }
     },
@@ -262,9 +258,9 @@ Vue.component( 'tasks-note', {
             deep: true,
             immediate: true,
             handler: function () {
-                if ( this.feedData.inviteContact == null ) {
-                    this.feedData.inviteContact = [];
-                }
+                // if ( this.feedData.inviteContact == null ) {
+                //     this.feedData.inviteContact = [];
+                // }
                 this.notify();
             }
         }
@@ -439,7 +435,6 @@ Vue.component( 'schedule-note', {
         this.feedData.inviteContact = this.feedData.invite_contact ? this.feedData.invite_contact : [] ;
     },
 
-
     events: {
         'bindEditFeedData': function (feed ) {
             var invitedUser = feed.extra.invited_user.map( function( elm ) { return elm.id } );
@@ -454,7 +449,7 @@ Vue.component( 'schedule-note', {
             this.feedData.tpStart                    = wperp.timeFormat( feed.start_date );
             this.feedData.dtEnd                      = wperp.dateFormat( feed.end_date, 'Y-m-d' );
             this.feedData.tpEnd                      = wperp.timeFormat( feed.end_date );
-            this.feedData.inviteContact              = invitedUser;
+            this.feedData.inviteContact              = invitedUser ? invitedUser : [];
 
             var self = jQuery( this.$el ).find( 'select.select2' );
             self.val( invitedUser ).trigger('change');
@@ -505,9 +500,9 @@ Vue.component( 'schedule-note', {
             deep: true,
             immediate: true,
             handler: function () {
-                if ( this.feedData.inviteContact == null ) {
-                    this.feedData.inviteContact = [];
-                }
+                // if ( this.feedData.inviteContact == null ) {
+                //     this.feedData.inviteContact = [];
+                // }
                 this.notify();
             }
         }
