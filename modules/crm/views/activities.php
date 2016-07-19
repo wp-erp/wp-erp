@@ -53,18 +53,7 @@ $crm_users = erp_crm_get_crm_user();
                     </li>
 
                     <li v-for="feed in feed_obj">
-
-                        <i v-if="(feed.type == 'email') && ( feed.extra.replied != 1 )" class="fa fa-envelope-o"></i>
-                        <i v-if="(feed.type == 'email') && ( feed.extra.replied == 1 )" class="fa fa-reply"></i>
-                        <i v-if="feed.type == 'new_note'" class="fa fa-file-text-o"></i>
-                        <i v-if="feed.type == 'log_activity'" class="fa fa-list"></i>
-                        <i v-if="( feed.type == 'log_activity' && isSchedule( feed.start_date )  )" class="fa fa-calendar-check-o"></i>
-                        <i v-if="feed.type == 'tasks'" class="fa fa-check-square-o"></i>
-
-                        <?php do_action( 'erp_crm_customer_feed_icon' ); ?>
-
-                        <timeline-item :feed="feed" disbale-footer="true"></timeline-item>
-
+                        <timeline-feed :i18n="i18n" :is="loadTimelineComponent( feed.type )" :feed="feed"></timeline-feed>
                     </li>
 
                 </template>

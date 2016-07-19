@@ -1095,9 +1095,9 @@ class Ajax_Handler {
                     $this->send_error( __( 'Somthing is wrong, Please try later', 'erp' ) );
                 }
 
-                // do_action( 'erp_crm_save_customer_tasks_activity_feed', $save_data, $postdata );
+                do_action( 'erp_crm_save_customer_tasks_activity_feed', $save_data, $postdata );
 
-                // erp_crm_assign_task_to_users( $data, $save_data );
+                erp_crm_assign_task_to_users( $data, $save_data );
 
                 $this->send_success( $data );
 

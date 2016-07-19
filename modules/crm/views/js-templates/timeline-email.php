@@ -19,7 +19,7 @@
         <div class="timeline-email-body">{{{feed.message}}}</div>
     </div>
 
-    <div class="timeline-footer" v-if="(feed.type == 'email') && (feed.extra.replied == 1 ) && showFooter">
+    <div class="timeline-footer" v-if="(feed.extra.replied == 1 ) && showFooter && !isActivityPage()">
         <a href="#" @click.prevent="replyEmailFeed( feed )">{{i18n.reply}}</a>
     </div>
 </div>
@@ -29,7 +29,7 @@
     <span class="time cancel-timeline-feed-edit" @click.prevent="cancelUpdate"><i class="fa fa-times"></i></span>
 
     <h3 class="timeline-header">
-        <i class="fa fa-reply"></i> {{i18n.replyThisEmail}}; ?>
+        <i class="fa fa-reply"></i> {{i18n.replyThisEmail}}
     </h3>
 
     <div class="timeline-body">
