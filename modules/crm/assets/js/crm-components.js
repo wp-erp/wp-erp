@@ -156,6 +156,7 @@ window.wpErpVue = window.wpErpVue || {};
             toggleFooter: function() {
                 if ( wpCRMvue.isAdmin || wpCRMvue.isCrmManager || this.checkOwnFeeds() ) {
                     if ( this.disbaleFooter == 'true' ) {
+                        console.log( this.disbaleFooter );
                         this.showFooter = false;
                     } else {
                         this.showFooter = !this.showFooter;
@@ -183,6 +184,9 @@ window.wpErpVue = window.wpErpVue || {};
                 this.isEditable = false;
             },
 
+            isActivityPage: function() {
+                return ( wpCRMvue.isActivityPage === undefined ) ? false : true;
+            },
 
             deleteFeed: function( feed ) {
                 var data = {

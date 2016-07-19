@@ -21,7 +21,7 @@
         <div class="timeline-email-body">{{{ feed.message }}}</div>
     </div>
 
-    <div class="timeline-footer" v-if="showFooter">
+    <div class="timeline-footer" v-if="!isActivityPage() && showFooter">
         <a href="#" @click.prevent="editFeed( feed )">{{ i18n.edit }} |</a>
         <a href="#" @click.prevent="deleteFeed( feed )">{{ i18n.delete }}</a>
     </div>

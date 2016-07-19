@@ -1452,7 +1452,7 @@
         });
     }
 
-    if ( $( '.erp-single-customer' ).length > 0 ) {
+    if ( $( '.erp-single-customer' ).length > 0 && ! $( '.erp-crm-activities' ).length > 0) {
         Vue.component( 'contact-company-relation', {
             props: [ 'id', 'title', 'type', 'addButtonTxt' ],
 
