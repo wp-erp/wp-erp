@@ -321,6 +321,9 @@ class Customer_Relationship {
                 erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/timeline-email.php', 'erp-crm-timeline-feed-email' );
                 erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/timeline-log-activity.php', 'erp-crm-timeline-feed-log-activity' );
                 erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/timeline-task.php', 'erp-crm-timeline-feed-task-note' );
+
+                do_action( 'erp_crm_load_vue_js_template' );
+
                 break;
 
             case 'crm_page_erp-sales-schedules':

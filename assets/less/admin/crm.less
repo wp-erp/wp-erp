@@ -1209,32 +1209,31 @@
                     cursor: pointer;
                 }
 
-                &.timeline-header-as-title {
+                &.timeline-oneliner {
+                    background: none;
+                    box-shadow: none;
+
                     .timeline-body {
                         padding: 0;
 
                         .timeline-feed-header-text {
-                            line-height: 1;
+                            line-height: 1.5;
                             display: block;
                             border-bottom: 1px solid #eee;
-                            padding: 10px;
+                            padding: 4px 0;
+
+                            a {
+                                text-decoration: none;
+                                font-weight: bold;
+                            }
                         }
-                    }
-
-                    .activity-unordered-list {
-                        list-style-type: disc;
-                        padding: 5px 10px 5px 30px;
-                    }
-
-                    a {
-                        text-decoration: none !important;
                     }
                 }
             }
             .timeline > li > .timeline-item > .time {
                 color: #999;
                 float: right;
-                padding: 10px;
+                padding: 8px 10px;
                 font-size: 12px;
             }
             .timeline > li > .timeline-item > .timeline-header {
@@ -1342,7 +1341,7 @@
                 font-size: 15px;
                 line-height: 30px;
                 position: absolute;
-                color: #fafafa;
+                color: #828282;
                 background: #dfdfdf;
                 border-radius: 50%;
                 text-align: center;
