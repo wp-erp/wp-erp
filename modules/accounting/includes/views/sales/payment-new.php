@@ -220,15 +220,16 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
         </div>
     </form>
 
-    <div class="erp-ac-receive-payment-table-clone" style="display: none;">
+    <div class="erp-ac-receive-payment-table-clone"  id="erp-ac-hidden-new-payment" style="display: none;">
 
         <?php
         $dropdown_html = erp_ac_render_account_dropdown_html( $dropdown, array(
             'name'     => 'line_account[]',
-            'class'    => 'erp-ac-selece-custom'
+            'class'    => 'erp-select2'
         ) );
 
-        $jor_itms = [];
+        $jor_itms = []; 
+        $hidden = false;
         include dirname( dirname( __FILE__ ) ) . '/common/transaction-table.php';?>
     </div>
 

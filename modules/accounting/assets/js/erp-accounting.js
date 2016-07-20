@@ -783,6 +783,10 @@
             $( '.erp-select2' ).select2({
                 placeholder: $(this).attr('data-placeholder'),
             });
+
+            $('#erp-ac-hidden-new-payment').find('.erp-select2').select2('destroy');
+            $('#erp-ac-new-payment-voucher').find('.erp-select2').select2('destroy');
+            // $('#erp-ac-hidden-new-payment').find('span.select2').remove();
         },
 
         dueDateField: function() {
@@ -1439,6 +1443,7 @@
                     $('.erp-form').find('.erp-ac-receive-payment-table').html(res);
                     $('.erp-form').find( 'input[name="submit_erp_ac_trans_draft"]' ).hide();
                     ERP_Accounting.initTipTip();
+                    
                 },
 
                 error: function() {
@@ -1449,7 +1454,7 @@
                     }
                     $('.erp-form').find('.erp-ac-receive-payment-table').html(clone_form);
                     $('.erp-form').find( 'input[name="submit_erp_ac_trans_draft"]' ).show();
-                    $('.erp-form').find( '.erp-ac-selece-custom' ).addClass('erp-select2');
+                    //$('.erp-form').find( '.erp-ac-selece-custom' ).addClass('erp-select2');
                     $('.erp-select2').select2();
                     ERP_Accounting.incrementField();
                 }

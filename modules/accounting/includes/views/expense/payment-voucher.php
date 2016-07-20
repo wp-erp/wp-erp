@@ -277,12 +277,12 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
 
     </form>
 
-    <div class="erp-ac-voucher-table-wrap-clone" style="display: none;">
+    <div class="erp-ac-voucher-table-wrap-clone" id="erp-ac-new-payment-voucher" style="display: none;">
 
     <?php
         $dropdown_html = erp_ac_render_account_dropdown_html( $dropdown, array(
             'name'     => 'line_account[]',
-            'class'    => 'erp-ac-selece-custom'
+            'class'    => 'erp-select2 erp-ac-selece-custom'
         ) );
         $jor_itms = [];
 
