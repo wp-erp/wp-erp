@@ -348,15 +348,48 @@ function erp_ac_pagination( $total, $limit, $pagenum ) {
     }
 }
 
+/**
+ * Get invoice prefix
+ * 
+ * @param  string $type
+ * @param  int $id  
+ *
+ * @since  1.1.2
+ * 
+ * @return string
+ */
 function erp_ac_invoice_prefix( $type, $id ) {
 
-    $prefix = erp_get_option( $type );
+    $prefix         = erp_get_option( $type );
+    $default_prefix = erp_ac_get_default_invoice_prefix( $type );
+    $prefix         = empty( $prefix ) ? $default_prefix : $prefix;
 
     if ( empty( $prefix ) ) {
         return $id;
     }
 
     return str_replace( '{id}', $id, $prefix );
+}
+
+/**
+ * Get default invoice prefix
+ * 
+ * @param  string $type 
+ *
+ * @since  1.1.2
+ * 
+ * @return mixed string or array 
+ */
+function erp_ac_get_default_invoice_prefix( $type = false ) {
+    $prefix = [
+        'erp_ac_payment'         => 'SPN-{id}',
+        'erp_ac_invoice'         => 'INV-{id}',
+        'erp_ac_payment_voucher' => 'EVN-{id}',
+        'erp_ac_vendor_credit'   => 'ECN-{id}',
+        'erp_ac_journal'         => 'JRNN-{id}'
+    ];
+
+    return $type ? $prefix[$type] : $prefix;
 }
 
 
