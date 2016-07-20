@@ -160,6 +160,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
  * [update] currency schema update
  * [update] Update query according with submit group button for sales and expenses
  * [update] transaction table column name change from invoice to invoice_number
+ * [update] Set default invoice prefix
 
 **v1.1.1 -> June 22, 2016**
 
