@@ -10,7 +10,7 @@
         <span class="timeline-feed-header-text">
             {{{ headerText }}}
             <template v-if="countUser == 1"><strong>{{invitedSingleUser}}</strong></template>
-            <span v-if="( countUser != 0 && countUser != 1 )"> and <strong><tooltip :content="countUser" :title="invitedUser"></tooltip></strong></span>
+            <span v-if="( countUser != 0 && countUser != 1 )"><strong><tooltip :content="countUser" :title="invitedUser"></tooltip></strong></span>
         </span>
     </h3>
 
