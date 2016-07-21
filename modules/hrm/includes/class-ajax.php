@@ -1398,7 +1398,7 @@ class Ajax_Handler {
         $is_policy_valid = erp_hrm_is_valid_leave_duration( $start_date, $end_date, $policy_id, $id );
 
         if ( ! $is_policy_valid ) {
-            $this->send_error( __( 'Your leave duration exceeded entitlement!', 'erp' ) );
+            $this->send_error( __( 'Sorry! You do not have any leave left under this leave policy', 'erp' ) );
         }
 
         $days = erp_hr_get_work_days_between_dates( $start_date, $end_date );
