@@ -129,15 +129,18 @@ function erp_hrm_is_valid_leave_duration( $start_date, $end_date, $policy_id, $u
         return true;
     }
 
+    $financial_start_date = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+    $financial_end_date   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+
     $user_request = new \WeDevs\ERP\HRM\Models\Leave_request();
     $policy       = new \WeDevs\ERP\HRM\Models\Leave_Policies();
 
-    $user_request = $user_request->where( function( $condition ) use( $start_date, $end_date, $user_id, $policy_id ) {
-        $start_date = date( 'Y-m-d', strtotime( $start_date ) );
-        $end_date   = date( 'Y-m-d', strtotime( $end_date ) );
+    $user_request = $user_request->where( function( $condition ) use( $financial_start_date, $financial_end_date, $user_id, $policy_id ) {
+        //$start_date = date( 'Y-m-d', strtotime( $start_date ) );
+       // $end_date   = date( 'Y-m-d', strtotime( $end_date ) );
 
-        $condition->where( 'start_date', '<=', $start_date );
-        $condition->where( 'end_date', '>=', $end_date );
+        $condition->where( 'start_date', '>=', $financial_start_date );
+        $condition->where( 'end_date', '<=', $financial_end_date );
         $condition->where( 'user_id', '=', $user_id );
         $condition->where( 'policy_id', '=', $policy_id );
     } );
