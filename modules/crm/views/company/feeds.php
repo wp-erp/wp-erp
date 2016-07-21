@@ -46,8 +46,6 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
 
                 <li v-for="feed in feed_obj">
                     <timeline-feed :i18n="i18n" :is="loadTimelineComponent( feed.type )" :feed="feed"></timeline-feed>
-                    <!-- <timeline-item :is="feed.type" :feed="feed" disbale-footer="false"></timeline-item> -->
-                    <!-- <component :is="feed.component" :feed="feed" disbale-footer="false"></component> -->
                 </li>
 
 
