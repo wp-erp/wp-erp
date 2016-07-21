@@ -1454,9 +1454,9 @@
                     }
                     $('.erp-form').find('.erp-ac-receive-payment-table').html(clone_form);
                     $('.erp-form').find( 'input[name="submit_erp_ac_trans_draft"]' ).show();
-                    //$('.erp-form').find( '.erp-ac-selece-custom' ).addClass('erp-select2');
                     $('.erp-select2').select2();
                     ERP_Accounting.incrementField();
+                    ERP_Accounting.initFields();
                 }
             } );
         },
