@@ -1135,7 +1135,8 @@ function erp_hr_leave_get_balance( $user_id ) {
 
         // calculate available
         foreach ($balance as &$policy) {
-            $policy['available'] = $policy['entitlement'] - $policy['total'];
+            $available = $policy['entitlement'] - $policy['total'];
+            $policy['available'] = $available < 0 ? 0 : $available;
         }
 
         return $balance;
