@@ -1,4 +1,4 @@
-<div class="wrap erp erp-crm-customer erp-single-customer" id="wp-erp">
+<div class="wrap erp erp-crm-customer erp-single-customer" id="wp-erp" v-cloak>
     <h2><?php _e( 'Contact #', 'erp' ); echo $customer->id; ?>
         <a href="<?php echo add_query_arg( ['page' => 'erp-sales-customers'], admin_url( 'admin.php' ) ); ?>" id="erp-contact-list" class="add-new-h2"><?php _e( 'Back to Contact list', 'erp' ); ?></a>
 
@@ -12,7 +12,7 @@
     <div class="erp-grid-container erp-single-customer-content">
         <div class="row">
 
-            <div class="col-2 column-left erp-single-customer-row" id="erp-customer-details" v-cloak>
+            <div class="col-2 column-left erp-single-customer-row" id="erp-customer-details">
                 <div class="left-content">
                     <div class="customer-image-wraper">
                         <div class="row">
