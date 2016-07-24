@@ -109,12 +109,13 @@ class Contact extends \WeDevs\ERP\People {
                     'display_name' => $user->display_name,
                     'email'        => $user->user_email
                 ];
+
+                $fields['assign_to']      = $contact_owner;
             }
 
             $fields['life_stage']     = $this->get_meta( 'life_stage', true );
             $fields['date_of_birth']  = $this->get_meta( 'date_of_birth', true );
             $fields['source']         = $this->get_meta( 'source', true );
-            $fields['assign_to']      = $contact_owner;
             $fields['created']        = erp_format_date( $this->created );
             $fields['created_by']     = $this->created_by;
             $fields['details_url']    = $this->get_details_url();
