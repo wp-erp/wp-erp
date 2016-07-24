@@ -139,6 +139,7 @@
                         :id="<?php echo $customer->id; ?>"
                         add-button-txt="<?php _e( 'Assign Contact Groups', 'erp' ) ?>"
                         title="<?php _e( 'Contact Group', 'erp' ); ?>"
+                        is-permitted="<?php echo current_user_can( 'erp_crm_edit_contact', $customer->id ); ?>"
                     ></contact-assign-group>
 
                 </div>
