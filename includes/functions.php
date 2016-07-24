@@ -886,6 +886,106 @@ function erp_get_license_status( $addon ) {
 }
 
 /**
+ * Get all fields for import/export operation.
+ *
+ * @return array
+ */
+function erp_get_import_export_fields() {
+     $erp_fields = [
+        'contact' => [
+            'required_fields' => [
+                'first_name',
+            ],
+            'fields' => [
+                'first_name',
+                'last_name',
+                'email',
+                'phone',
+                'mobile',
+                'other',
+                'website',
+                'fax',
+                'notes',
+                'street_1',
+                'street_2',
+                'city',
+                'state',
+                'postal_code',
+                'country',
+                'currency',
+            ]
+        ],
+        'company' => [
+            'required_fields' => [
+                'email',
+                'company',
+            ],
+            'fields' => [
+                'email',
+                'company',
+                'phone',
+                'mobile',
+                'other',
+                'website',
+                'fax',
+                'notes',
+                'street_1',
+                'street_2',
+                'city',
+                'state',
+                'postal_code',
+                'country',
+                'currency',
+            ]
+        ],
+        'employee' => [
+            'required_fields' => [
+                'first_name',
+                'last_name',
+                'user_email',
+            ],
+            'fields' => [
+                'first_name',
+                'middle_name',
+                'last_name',
+                'user_email',
+                'designation',
+                'department',
+                'location',
+                'hiring_source',
+                'hiring_date',
+                'date_of_birth',
+                'reporting_to',
+                'pay_rate',
+                'pay_type',
+                'type',
+                'status',
+                'other_email',
+                'phone',
+                'work_phone',
+                'mobile',
+                'address',
+                'gender',
+                'marital_status',
+                'nationality',
+                'driving_license',
+                'hobbies',
+                'user_url',
+                'description',
+                'street_1',
+                'street_2',
+                'city',
+                'country',
+                'state',
+                'postal_code',
+            ]
+        ]
+    ];
+
+    return apply_filters( 'erp_import_export_csv_fields', $erp_fields );
+}
+
+/**
  * ERP Import/Export JavaScript enqueue.
  *
  * @since  1.0
@@ -893,213 +993,88 @@ function erp_get_license_status( $addon ) {
  * @return void
  */
 function erp_import_export_javascript() {
+    global $current_screen;
 
-    $contact_fields = [
-        'first_name',
-        'last_name',
-        'email',
-        'phone',
-        'mobile',
-        'other',
-        'website',
-        'fax',
-        'notes',
-        'street_1',
-        'street_2',
-        'city',
-        'state',
-        'postal_code',
-        'country',
-        'currency',
-        'type',
-    ];
-
-
-    $field_builder_contacts_fields = get_option( 'erp-contact-fields' );
-
-    if ( ! empty( $field_builder_contacts_fields ) ) {
-        foreach ( $field_builder_contacts_fields as $field ) {
-            $contact_fields[] = $field['name'];
-        }
+    if ( 'erp-settings_page_erp-tools' !== $current_screen->base ) {
+        return;
     }
 
-    $company_fields = [
-        'email',
-        'company',
-        'phone',
-        'mobile',
-        'other',
-        'website',
-        'fax',
-        'notes',
-        'street_1',
-        'street_2',
-        'city',
-        'state',
-        'postal_code',
-        'country',
-        'currency',
-        'type',
-    ];
+    if ( ! isset( $_GET['tab'] ) || ! in_array( $_GET['tab'], ['import', 'export'] ) ) {
+        return;
+    }
 
-    $employee_fields = [
-        'first_name',
-        'middle_name',
-        'last_name',
-        'user_email',
-        'designation',
-        'department',
-        'location',
-        'hiring_source',
-        'hiring_date',
-        'date_of_birth',
-        'reporting_to',
-        'pay_rate',
-        'pay_type',
-        'type',
-        'status',
-        'other_email',
-        'phone',
-        'work_phone',
-        'mobile',
-        'address',
-        'gender',
-        'marital_status',
-        'nationality',
-        'driving_license',
-        'hobbies',
-        'user_url',
-        'description',
-        'street_1',
-        'street_2',
-        'city',
-        'country',
-        'state',
-        'postal_code'
-    ];
+    $erp_fields = erp_get_import_export_fields();
     ?>
     <script type="text/javascript">
-        function erp_title_case(string) {
-            // \u00C0-\u00ff for a happy Latin-1
-            return string.toLowerCase().replace(/_/g, ' ').replace(/\b([a-z\u00C0-\u00ff])/g, function (_, initial) {
-                return initial.toUpperCase();
-            }).replace(/(\s(?:de|a|o|e|da|do|em|ou|[\u00C0-\u00ff]))\b/ig, function (_, match) {
-                return match.toLowerCase();
-            });
-        }
+        jQuery( document ).ready( function( $ ) {
 
-        jQuery(document).ready(function($) {
-            var fields = [];
-            var required_fields = [];
+            function erp_str_title_case( string ) {
+                var str = string.replace( /_/g, ' ' );
 
-            var contact_fields = <?php echo json_encode( $contact_fields ) ; ?>;
-            var company_fields = <?php echo json_encode( $company_fields ); ?>;
-
-            var employee_fields = <?php echo json_encode( $employee_fields ); ?>;
-
-
-            switch ( $( 'form#export_form #type' ).val() ) {
-                case 'contact':
-                    fields = contact_fields;
-
-                    break;
-
-                case 'company':
-                    fields = company_fields;
-
-                    break;
-
-                case 'employee':
-                    fields = employee_fields;
-
-                    break;
+                return str.toLowerCase().split( ' ' ).map( function ( word ) {
+                    return ( word.charAt( 0 ).toUpperCase() + word.slice( 1 ) );
+                } ).join(' ');
             }
 
-            var contact_required_fields = [
-                'first_name'
-            ];
+            function erp_csv_field_mapper( file_selector, fields_selector ) {
+                var file = file_selector.files[0];
 
-            var company_required_fields = [
-                'email',
-                'company'
-            ];
+                var reader = new FileReader();
 
-            var employee_required_fields = [
-                'first_name',
-                'last_name',
-                'user_email',
-            ];
+                var first5000 = file.slice( 0, 5000 );
+                reader.readAsText( first5000 );
 
-            var html = '<ul class="erp-list list-inline">';
-            for ( var i = 0;  i < fields.length; i++ ) {
-                html += '<li><label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + erp_title_case( fields[i] ) + '</label></li>';
+                reader.onload = function( e ) {
+                    var csv = reader.result;
+                    // Split the input into lines
+                    lines = csv.split('\n'),
+                    // Extract column names from the first line
+                    columnNamesLine = lines[0];
+                    columnNames = columnNamesLine.split(',');
+
+                    var html = '';
+
+                    html += '<option value="">&mdash; Select Field &mdash;</option>';
+                    columnNames.forEach( function( item, index ) {
+                        item = item.replace( /"/g, "" );
+
+                        html += '<option value="' + index + '">' + item + '</option>';
+                    } );
+
+                    if ( html ) {
+                        $( fields_selector ).html( html );
+
+                        var field, field_label;
+                        $( fields_selector ).each( function() {
+                            field_label = $( this ).parent().parent().find( 'label' ).text();
+
+                            var options = $( this ).find( 'option' );
+                            var targetOption = $( options ).filter ( function () {
+                                var option_text = $( this ).html();
+
+                                var re = new RegExp( field_label, 'i' );
+
+                                return re.test( option_text );
+                            } );
+
+                            if ( targetOption ) {
+                                $( options ).removeAttr( "selected" );
+                                $( this ).val( $( targetOption ).val() );
+                            }
+                        } );
+                    }
+                };
             }
 
-            html += '<ul>';
-
-            if ( html ) {
-                $( '#fields' ).html( html );
-            }
-
-            $( 'form#export_form #type' ).on( 'change', function( e ) {
-                e.preventDefault();
-
-                switch ( $(this).val() ) {
-                    case 'contact':
-                        fields = contact_fields;
-
-                        break;
-
-                    case 'company':
-                        fields = company_fields;
-
-                        break;
-
-                    case 'employee':
-                        fields = employee_fields;
-
-                        break;
-                }
-
-                html = '<ul class="erp-list list-inline">';
-                for ( var i = 0;  i < fields.length; i++ ) {
-                    html += '<li><label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + erp_title_case( fields[i] ) + '</label></li>';
-                }
-
-                html += '<ul>';
-
-                if ( html ) {
-                    $( 'form#export_form #fields' ).html( html );
-                }
-            });
-
-            $( 'form#import_form #csv_file' ).on( 'change', function( e ) {
-                e.preventDefault();
-
+            function erp_csv_importer_field_handler( file_selector ) {
                 $( '#fields_container' ).show();
 
                 var fields_html = '';
 
-                switch ( $( 'form#import_form #type' ).val() ) {
-                    case 'contact':
-                        fields = contact_fields;
-                        required_fields = contact_required_fields;
+                var type = $( 'form#import_form #type' ).val();
 
-                        break;
-
-                    case 'company':
-                        fields = company_fields;
-                        required_fields = company_required_fields;
-
-                        break;
-
-                    case 'employee':
-                        fields = employee_fields;
-                        required_fields = employee_required_fields;
-
-                        break;
-                }
-
+                fields = erp_fields[ type ] ? erp_fields[ type ].fields : [];
+                required_fields = erp_fields[ type ] ? erp_fields[ type ].required_fields : [];
 
                 var required = '';
                 var red_span = '';
@@ -1116,7 +1091,7 @@ function erp_import_export_javascript() {
                     fields_html += `
                         <tr>
                             <th>
-                                <label for="fields[` + fields[i] + `]">` + erp_title_case( fields[i] ) + red_span + `</label>
+                                <label for="fields[` + fields[i] + `]" class="csv_field_labels">` + erp_str_title_case( fields[i] ) + red_span + `</label>
                             </th>
                             <td>
                                 <select name="fields[` + fields[i] + `]" class="csv_fields" ` + required + `>
@@ -1127,37 +1102,69 @@ function erp_import_export_javascript() {
 
                 $( '#fields_container' ).html( fields_html );
 
-                var file = this.files[0];
+                erp_csv_field_mapper( file_selector, '.csv_fields' );
+            }
 
-                var reader = new FileReader();
+            var fields = [];
+            var required_fields = [];
 
-                var first5000 = file.slice(0, 5000);
-                reader.readAsText( first5000 );
+            var erp_fields = <?php echo json_encode( $erp_fields ) ; ?>;
 
-                // reader.readAsText(file);
+            var type = $( 'form#export_form #type' ).val();
 
-                reader.onload = function(e) {
-                    var csv = reader.result;
-                    // Split the input into lines
-                    lines = csv.split('\n'),
-                    // Extract column names from the first line
-                    columnNamesLine = lines[0];
-                    columnNames = columnNamesLine.split(',');
+            fields = erp_fields[ type ] ? erp_fields[ type ].fields : [];
 
-                    var html = '';
+            var html = '<ul class="erp-list list-inline">';
+            for ( var i = 0;  i < fields.length; i++ ) {
+                html += '<li><label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + erp_str_title_case( fields[i] ) + '</label></li>';
+            }
 
-                    html += '<option value=""><?php _e( '&mdash; Select Field &mdash;', 'erp' ); ?></option>';
-                    columnNames.forEach( function( item, index ) {
-                        item = item.replace(/"/g, ""); ;
-                        html += '<option value="' + index + '">' + item + '</option>';
-                    } );
+            html += '<ul>';
 
-                    if ( html ) {
-                        $( '.csv_fields' ).html( html );
-                    }
-                };
+            if ( html ) {
+                $( '#fields' ).html( html );
+            }
 
+            $( 'form#export_form #type' ).on( 'change', function( e ) {
+                e.preventDefault();
+
+                var type = $( this ).val();
+                fields = erp_fields[ type ] ? erp_fields[ type ].fields : [];
+
+                html = '<ul class="erp-list list-inline">';
+                for ( var i = 0;  i < fields.length; i++ ) {
+                    html += '<li><label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + erp_str_title_case( fields[i] ) + '</label></li>';
+                }
+
+                html += '<ul>';
+
+                if ( html ) {
+                    $( 'form#export_form #fields' ).html( html );
+                }
             });
+
+            $( 'form#import_form #csv_file' ).on( 'change', function( e ) {
+                e.preventDefault();
+
+                if ( ! this ) {
+                    return;
+                }
+
+                erp_csv_importer_field_handler( this );
+            });
+
+            $( 'form#import_form #type' ).on( 'change', function( e ) {
+                $( '#fields_container' ).html( '' );
+                $( '#fields_container' ).hide();
+
+                var file = $( 'form#import_form #csv_file' ).get(0);
+
+                if ( ! file ) {
+                    return;
+                }
+
+                erp_csv_importer_field_handler( file );
+            } );
 
             $( "#export_form #selecctall" ).change( function(e) {
                 e.preventDefault();
@@ -1258,10 +1265,21 @@ function erp_process_import_export() {
         }
     }
 
-
     if ( isset( $_POST['erp_import_csv'] ) ) {
-        $fields = $_POST['fields'];
-        $type   = $_POST['type'];
+        $fields = ! empty( $_POST['fields'] ) ? $_POST['fields'] : [];
+        $type   = isset( $_POST['type'] ) ? $_POST['type'] : '';
+
+        if ( empty( $type ) ) {
+            return;
+        }
+
+        $data = ['type' => $type, 'fields', 'file' => $_FILES['csv_file'] ];
+
+        do_action( 'erp_import_export_csv_action', $data );
+
+        if ( in_array( $type, ['contact', 'company', 'employee'] ) ) {
+            return;
+        }
 
         $employee_fields = [
             'work' => [
