@@ -1128,6 +1128,7 @@ function erp_import_export_javascript() {
             $( 'form#export_form #type' ).on( 'change', function( e ) {
                 e.preventDefault();
 
+                $( "#export_form #selecctall" ).prop( 'checked', false );
                 var type = $( this ).val();
                 fields = erp_fields[ type ] ? erp_fields[ type ].fields : [];
 
@@ -1157,13 +1158,14 @@ function erp_import_export_javascript() {
                 $( '#fields_container' ).html( '' );
                 $( '#fields_container' ).hide();
 
-                var file = $( 'form#import_form #csv_file' ).get(0);
+                var sample_csv_url = $( 'form#import_form' ).find( '#download_sample_wrap input' ).val();
+                $( 'form#import_form' ).find( '#download_sample_wrap a' ).attr( 'href', sample_csv_url + '&type=' + $( this ).val() );
 
-                if ( ! file ) {
+                if ( $( 'form#import_form #csv_file' ).val() == "" ) {
                     return;
+                } else {
+                    erp_csv_importer_field_handler( $( 'form#import_form #csv_file' ).get(0) );
                 }
-
-                erp_csv_importer_field_handler( file );
             } );
 
             $( "#export_form #selecctall" ).change( function(e) {
@@ -1251,6 +1253,7 @@ function erp_process_import_export() {
         return;
     }
 
+
     $is_crm_activated = erp_is_module_active( 'crm' );
     $is_hrm_activated = erp_is_module_active( 'hrm' );
 
@@ -1277,7 +1280,7 @@ function erp_process_import_export() {
 
         do_action( 'erp_import_export_csv_action', $data );
 
-        if ( in_array( $type, ['contact', 'company', 'employee'] ) ) {
+        if ( ! in_array( $type, ['contact', 'company', 'employee'] ) ) {
             return;
         }
 
@@ -1481,25 +1484,7 @@ function erp_process_import_export() {
 
         $file_name = 'export_' . date( 'd_m_Y' ) . '.csv';
 
-        header( 'Content-Type: text/csv; charset=utf-8' );
-        header( 'Content-Disposition: attachment; filename=' . $file_name );
-
-        $output = fopen( 'php://output', 'w' );
-
-        $columns = array_map( function( $replace ) {
-            $replace = ucwords( str_replace( '_', ' ', $replace ) );
-
-            return $replace;
-        }, $fields );
-
-        fputcsv( $output, $columns );
-
-        foreach( $csv_items as $row )
-        {
-            fputcsv( $output, $row );
-        }
-
-        exit();
+        erp_make_csv_file( $csv_items, $file_name );
     }
 }
 
@@ -1743,4 +1728,75 @@ function erp_is_module_active( $module_key ) {
     $modules = get_option( 'erp_modules', [] );
 
     return isset( $modules[ $module_key ] );
+}
+
+/**
+ * Make csv file from array and force download
+ *
+ * @param array   $items
+ * @param boolean $field_data (optional)
+ *
+ * @param string  $file_name
+ */
+function erp_make_csv_file( $items, $file_name, $field_data = true ) {
+    $file_name = ( ! empty( $file_name ) ) ? $file_name : 'csv_' . date( 'd_m_Y' ) . '.csv';
+
+    if ( empty( $items ) ) {
+        return;
+    }
+
+    $columns = array_keys( $items[0] );
+
+    header( 'Content-Type: text/csv; charset=utf-8' );
+    header( 'Content-Disposition: attachment; filename=' . $file_name );
+
+    $output = fopen( 'php://output', 'w' );
+
+    $columns = array_map( function( $column ) {
+        $column = ucwords( str_replace( '_', ' ', $column ) );
+
+        return $column;
+    }, $columns );
+
+    fputcsv( $output, $columns );
+
+    if ( $field_data ) {
+        foreach ( $items as $row ) {
+            fputcsv( $output, $row );
+        }
+    }
+
+    exit();
+}
+
+/**
+ * Import/Export sample CSV download action hook
+ *
+ * @param void
+ */
+function erp_import_export_download_sample_action() {
+    if ( ! isset( $_GET['action'] ) || $_GET['action'] != 'download_sample' ) {
+        return;
+    }
+
+    if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'erp-emport-export-sample-nonce' ) ) {
+        return;
+    }
+
+    if ( ! isset( $_GET['type'] ) ) {
+        return;
+    }
+
+    $type   = strtolower( $_GET['type'] );
+    $fields = erp_get_import_export_fields();
+
+    if ( isset( $fields[ $type ] ) ) {
+        $keys      = $fields[ $type ]['fields'];
+        $keys      = array_flip( $keys );
+        $file_name = "sample_csv_{$type}.csv";
+
+        erp_make_csv_file( [ $keys ], $file_name, false );
+    }
+
+    return;
 }

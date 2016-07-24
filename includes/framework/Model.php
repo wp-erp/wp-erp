@@ -24,7 +24,7 @@ class Model extends \WeDevs\ORM\Eloquent\Model {
      * @param  mixed  $value
      * @return void
      */
-    public function setCreatedAt($value) {
+    public function setCreatedAt( $value ) {
         $this->{static::CREATED_AT} = current_time( 'mysql' );
     }
 
@@ -34,7 +34,7 @@ class Model extends \WeDevs\ORM\Eloquent\Model {
      * @param  mixed  $value
      * @return void
      */
-    public function setUpdatedAt($value) {
+    public function setUpdatedAt( $value ) {
         $this->{static::UPDATED_AT} = current_time( 'mysql' );
     }
 }
