@@ -256,7 +256,16 @@
                 var self = $(this),
                     form = self.closest('form'),
                     redirect = self.data('redirect'),
-                    btn_status = self.data('btn_status');
+                    btn_status = self.data('btn_status'),
+                    issue_date = $('input[name="issue_date"]').val(),
+                    due_date = $('input[name="due_date"]').val(),
+                    form_type = $('input[name="form_type"]').val();
+
+                if ( form_type == 'invoice' || form_type == 'vendor_credit' ) {
+                    if ( new Date(issue_date) >= new Date(due_date)) {
+                        $('input[name="due_date"]').val('');
+                    }
+                }
                 
                 $('#erp-ac-redirect').val(redirect);
                 $('#erp-ac-btn-status').val(btn_status);
@@ -264,7 +273,6 @@
                 
                 return false;
                     
-
                 wperp.swalSpinnerVisible();
 
                 wp.ajax.send( 'erp_ac_trans_form_submit', {

@@ -224,6 +224,12 @@ function erp_ac_check_invoice_number_unique( $args, $is_update = false ) {
 
 function er_ac_insert_transaction_permiss( $args, $is_update ) {
 
+    if ( $args['form_type'] == 'invoice' || $args['form_type'] == 'vendor_credit' ) {
+        if( strtotime( $args['issue_date'] ) > strtotime( $args['due_date'] ) ) {
+            return new WP_Error( 'error', __( 'Due date should be greater than issue date', 'erp' ) );
+        }
+    }
+
     if ( $args['type'] == 'sales' && $args['form_type'] == 'payment' && $args['status'] == 'draft' ) {
         if ( ! erp_ac_create_sales_payment() ) {
             return new WP_Error( 'error', __( 'You do not have sufficient permissions', 'erp' ) );
