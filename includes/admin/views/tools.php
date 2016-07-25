@@ -6,17 +6,23 @@
         $is_crm_activated = erp_is_module_active( 'crm' );
         $is_hrm_activated = erp_is_module_active( 'hrm' );
 
-        $export_import_types = [];
-        if ( $is_crm_activated ) {
-            $export_import_types['contact'] = __( 'Contact', 'erp' );
-            $export_import_types['company'] = __( 'Company', 'erp' );
+        $erp_import_export_fields = erp_get_import_export_fields();
+        $keys = array_keys( $erp_import_export_fields );
+
+        $import_export_types = [];
+        foreach ( $keys as $type ) {
+            $import_export_types[ $type ] = __( ucwords( $type ), 'erp' );
         }
 
-        if ( $is_hrm_activated ) {
-            $export_import_types['employee'] = __( 'Employee', 'erp' );
+        if ( ! $is_crm_activated ) {
+            unset( $import_export_types['contact'] );
+            unset( $import_export_types['company'] );
         }
 
-        $export_import_types = apply_filters( 'erp_import_export_item_types', $export_import_types );
+        if ( ! $is_hrm_activated ) {
+            unset( $import_export_types['employee'] );
+        }
+
         $tabs = [
             'general' => __( 'General', 'erp' ),
         ];

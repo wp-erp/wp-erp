@@ -192,12 +192,17 @@ function erp_ac_get_transaction_count( $type = 'expense', $user_id = 0 ) {
 function erp_ac_get_transaction( $id = 0 ) {
     $cache_key   = 'erp-ac-transaction' . $id;
     $transaction = wp_cache_get( $cache_key, 'erp' );
+    $results     = [];
 
     if ( false === $transaction ) {
-        $transaction = WeDevs\ERP\Accounting\Model\Transaction::find( $id )->toArray();
+        $transaction = WeDevs\ERP\Accounting\Model\Transaction::find( $id ); //->toArray();
+
+        if ( ! empty( $transaction ) ) {
+            $results = $transaction->toArray();
+        }
     }
 
-    return $transaction;
+    return $results;
 }
 
 function erp_ac_check_invoice_number_unique( $args, $is_update = false ) {
@@ -218,6 +223,12 @@ function erp_ac_check_invoice_number_unique( $args, $is_update = false ) {
 }
 
 function er_ac_insert_transaction_permiss( $args, $is_update ) {
+
+    if ( $args['form_type'] == 'invoice' || $args['form_type'] == 'vendor_credit' ) {
+        if( strtotime( $args['issue_date'] ) > strtotime( $args['due_date'] ) ) {
+            return new WP_Error( 'error', __( 'Due date should be greater than issue date', 'erp' ) );
+        }
+    }
 
     if ( $args['type'] == 'sales' && $args['form_type'] == 'payment' && $args['status'] == 'draft' ) {
         if ( ! erp_ac_create_sales_payment() ) {
@@ -623,7 +634,7 @@ function erp_ac_tax_update( $item, $item_entry_type, $args, $trans_id ) {
 
     $tax_account_id = erp_ac_get_tax_account_from_tax_id( $item['tax'], $args['type'] );
 
-    if ( intval( $item['tax_journal'] ) ) {
+    if ( isset( $item['tax_journal'] ) && intval( $item['tax_journal'] ) ) {
 
         if ( intval( $tax_account_id ) ) {
             $tax_journal = WeDevs\ERP\Accounting\Model\Journal::where( 'id', '=', $item['tax_journal'] )->update([
@@ -795,11 +806,8 @@ function erp_ac_get_btn_status( $postdata ) {
  */
 function erp_ac_get_voucher_status_according_with_btn( $btn ) {
     $button = [
-        'save_and_draft'               => 'draft',
-        'save_and_submit_for_approval' => 'pending',
-        'save_and_add_another'         => 'draft',
-        'approve'                      => 'paid',
-        'approve_and_add_another'      => 'paid'
+        'payment'                 => 'paid',
+        'payment_and_add_another' => 'paid'
     ];
 
     return $button[$btn];
@@ -812,11 +820,8 @@ function erp_ac_get_voucher_status_according_with_btn( $btn ) {
  */
 function erp_ac_get_status_according_with_btn( $btn ) {
     $button = [
-        'save_and_draft'               => 'draft',
-        'save_and_submit_for_approval' => 'pending',
-        'save_and_add_another'         => 'draft',
-        'approve'                      => 'closed',
-        'approve_and_add_another'      => 'closed'
+        'payment'                 => 'closed',
+        'payment_and_add_another' => 'closed'
     ];
 
     return $button[$btn];
@@ -853,6 +858,40 @@ function erp_ac_update_transaction( $id, $args ) {
     return \WeDevs\ERP\Accounting\Model\Transaction::find( $id )->update( $args );
 }
 
+/**
+ * Remove transaction. Only for draft and pending 
+ *
+ * @param  int $id
+ *
+ * @since  1.1.1
+ *
+ * @return  boolen
+ */
+function erp_ac_remove_transaction( $id ) {
+    $delete = \WeDevs\ERP\Accounting\Model\Transaction::where( 'id', '=', $id )->delete();
+    \WeDevs\ERP\Accounting\Model\Transaction_Items::where( 'transaction_id', '=', $id )->delete();
+    \WeDevs\ERP\Accounting\Model\Journal::where( 'transaction_id', '=', $id )->delete();
+    return $delete;
+}
+
+/**
+ * Vendor lists 
+ *
+ * @since  1.1.1
+ *
+ * @return  array
+ */
+function erp_ac_get_vendors() {
+    $users = [];
+    $vendors = erp_get_peoples( ['type' => 'vendor', 'number' => 100 ] );
+    foreach ( $vendors as $user ) {
+        if ( in_array( 'vendor', $user->types ) ) {
+            $users[$user->id] = empty( $user->company ) ? __( 'No Title', 'erp' ) : $user->company;
+        }
+    }
+
+    return $users;
+}
 
 
 

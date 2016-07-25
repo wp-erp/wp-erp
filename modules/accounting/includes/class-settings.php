@@ -47,7 +47,7 @@ class Settings extends ERP_Settings_Page {
                 'title'   => __( 'Sales Payment', 'erp' ),
                 'id'      => 'erp_ac_payment',
                 'type'    => 'text',
-                'default' => 'SPN-{id}',
+                'default' => erp_ac_get_default_invoice_prefix( 'erp_ac_payment' ),
                 'desc'    => __( 'Sales payment invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
             ),
 
@@ -55,7 +55,7 @@ class Settings extends ERP_Settings_Page {
                 'title'   => __( 'Sales Invoice', 'erp' ),
                 'id'      => 'erp_ac_invoice',
                 'type'    => 'text',
-                'default' => 'INV-{id}',
+                'default' => erp_ac_get_default_invoice_prefix( 'erp_ac_invoice' ),
                 'desc'    => __( 'Sales invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
             ),
 
@@ -63,7 +63,7 @@ class Settings extends ERP_Settings_Page {
                 'title'   => __( 'Expense Voucher', 'erp' ),
                 'id'      => 'erp_ac_payment_voucher',
                 'type'    => 'text',
-                'default' => 'EVN-{id}',
+                'default' => erp_ac_get_default_invoice_prefix( 'erp_ac_payment_voucher' ),
                 'desc'    => __( 'Expense voucher invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
             ),
 
@@ -71,7 +71,7 @@ class Settings extends ERP_Settings_Page {
                 'title'   => __( 'Expense Credit', 'erp' ),
                 'id'      => 'erp_ac_vendor_credit',
                 'type'    => 'text',
-                'default' => 'ECN-{id}',
+                'default' => erp_ac_get_default_invoice_prefix( 'erp_ac_vendor_credit' ),
                 'desc'    => __( 'Expense credit invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
            ),
 
@@ -79,7 +79,7 @@ class Settings extends ERP_Settings_Page {
                 'title'   => __( 'Journal', 'erp' ),
                 'id'      => 'erp_ac_journal',
                 'type'    => 'text',
-                'default' => 'JRNN-{id}',
+                'default' => erp_ac_get_default_invoice_prefix( 'erp_ac_journal' ),
                 'desc'    => __( 'Journal invoice format. Rearrange if you like. <strong>prefix-{id}, {id}-postfix, prefix-{id}-postfix</strong>', 'erp' )
             ),
 

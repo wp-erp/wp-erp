@@ -99,17 +99,20 @@ class Announcement {
         $capability = 'erp_hr_manager';
 
         register_post_type( $this->post_type, array(
-            'label'           => __( 'Announcement', 'erp' ),
-            'description'     => '',
-            'public'          => false,
-            'show_ui'         => true,
-            'show_in_menu'    => true,
-            'capability_type' => 'post',
-            'hierarchical'    => false,
-            'rewrite'         => array( 'slug' => '' ),
-            'query_var'       => false,
-            'supports'        => array( 'title', 'editor' ),
-            'capabilities'    => array(
+            'label'               => __( 'Announcement', 'erp' ),
+            'description'         => '',
+            'public'              => true,
+            'show_ui'             => true,
+            'show_in_menu'        => false,
+            'show_in_nav_menus'   => true,
+            'exclude_from_search' => false,
+            'publicly_queryable'  => false,
+            'capability_type'     => 'post',
+            'hierarchical'        => false,
+            'rewrite'             => array( 'slug' => '' ),
+            'query_var'           => false,
+            'supports'            => array( 'title', 'editor' ),
+            'capabilities'        => array(
                 'edit_post'          => $capability,
                 'read_post'          => $capability,
                 'delete_posts'       => $capability,
@@ -182,7 +185,7 @@ class Announcement {
                 <tr class="selected_employee_field">
                     <th><?php _e( 'Select Employees', 'erp' ); ?></th>
                     <td>
-                        <select name="hr_announcement_assign_employee[]" data-placeholder= '<?php echo __( 'Select Employees...', 'erp' ); ?>' id="hr_announcement_assign_employee" class="select2" multiple="multiple">
+                        <select name="hr_announcement_assign_employee[]" data-placeholder= '<?php echo __( 'Select Employees...', 'erp' ); ?>' id="hr_announcement_assign_employee" class="erp-select2" multiple="multiple">
                             <option></option>
                             <?php
                             foreach ( $employees as $user ) {

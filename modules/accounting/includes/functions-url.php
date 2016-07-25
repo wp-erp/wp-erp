@@ -148,3 +148,22 @@ function erp_ac_get_expense_url( $content = false ) {
 	return apply_filters( 'erp_ac_get_expense_url', $url, $content );
 }
 
+/**
+ * vendor credit edit url
+ *
+ * @param  int $id
+ * 
+ * @return string
+ */
+function erp_ac_get_vendor_credit_edit_url( $id ) {
+	$url_args = [
+		'page'   => 'erp-accounting-expense',
+		'action' => 'new',
+		'type'   => 'vendor_credit',
+		'transaction_id' => $id
+	];
+	
+	$url = add_query_arg( $url_args, admin_url( 'admin.php' ) );
+	return apply_filters( 'erp_ac_get_vendor_credit_edit_url', $url );
+}
+

@@ -8,7 +8,7 @@ $jor_itms       = [];
 if ( $transaction_id ) {
     $transaction = erp_ac_get_all_transaction([
         'id'        => $transaction_id,
-        'status'    => 'draft',
+        'status'    => [ 'in' => ['draft', 'pending', 'awaiting_payment']],
         'join'      => ['journals', 'items'],
         'type'      => ['expense'],
         'output_by' => 'array'
@@ -73,12 +73,13 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                     <li class="erp-form-field erp-ac-replace-wrap">
                         <div class="erp-ac-replace-content">
                             <?php
+    
                             erp_html_form_input( array(
                                 'label'       => __( 'Vendor', 'erp' ),
                                 'name'        => 'user_id',
                                 'type'        => 'select',
                                 'class'       => 'erp-select2 erp-ac-vendor-drop erp-ac-not-found-in-drop',
-                                'options'     => [ '-1' => __( '&mdash; Select &mdash;', 'erp' ) ] + erp_get_peoples_array( ['type' => 'vendor', 'number' => 100 ] ),
+                                'options'     => [ '-1' => __( '&mdash; Select &mdash;', 'erp' ) ] + erp_ac_get_vendors(),
                                 'custom_attr' => [
                                     'data-placeholder' => __( 'Select a payee', 'erp' ),
                                     'data-content' => 'erp-ac-new-vendor-content-pop',
@@ -111,7 +112,7 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                             'type'     => 'text',
                             'required' => true,
                             'class'    => 'erp-ac-check-invoice-number',
-                            'value'    => erp_ac_invoice_prefix( 'erp_ac_vendor_credit', erp_ac_generate_invoice_id( 'vendor_credit' ) )
+                            'value'    => isset( $transaction['invoice_number']  ) ? $transaction['invoice_number'] : erp_ac_invoice_prefix( 'erp_ac_vendor_credit', erp_ac_generate_invoice_id( 'vendor_credit' ) )
                         ) );
                         ?>
                     </li>
@@ -210,6 +211,75 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
 
             <div class="erp-button-bar-left">
                 <div class="erp-btn-group">
+                    <?php 
+                        if ( isset( $transaction['status'] ) && $transaction['status'] == 'pending' ) {
+                            ?>
+                            <button type="button" data-redirect="0" data-btn_status="save_and_submit_for_approval" class="button erp-ac-trns-form-submit-btn">
+                                <?php _e( 'Save', 'erp' ); ?>
+                            </button>
+                            <?php
+                        } else if ( isset( $transaction['status'] ) && $transaction['status'] == 'awaiting_payment' ) {
+
+                        } else {
+                            ?>
+                             <button type="button" data-redirect="0" data-btn_status="save_and_draft" class="erp-drop-down-btn button erp-ac-trns-form-submit-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <?php _e( 'Save as Draft', 'erp' ); ?>
+                            </button>
+                            <button type="button" class="erp-drop-down-btn erp-drop-down-child-btn button">
+                                <span class="erp-caret"></span>
+                                <span class="erp-sr-only"><?php _e( 'Toggle Dropdown', 'erp' ); ?></span>
+                            </button>
+                            <ul class="erp-dropdown-menu">
+                                <li><a class="erp-ac-trns-form-submit-btn" data-redirect="0" data-btn_status="save_and_draft" href="#"><?php _e( 'Save as Draft', 'erp' ); ?></a></li>
+                                <li><a class="erp-ac-trns-form-submit-btn" data-redirect="0" data-btn_status="save_and_submit_for_approval" href="#"><?php _e( 'Save & submit for approval', 'erp' ); ?></a></li>
+                                <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="save_and_add_another" href="#"><?php _e( 'Save & add another', 'erp' ); ?></a></li>
+                            </ul>
+
+                            <?php
+                        }
+                        ?>
+                   
+                </div>
+            </div>
+
+            <div class="erp-button-bar-right">
+                <div class="erp-btn-group">
+                    <?php
+                    if ( isset( $transaction['status'] ) && $transaction['status'] == 'awaiting_payment' ) {
+                        ?>
+                        <button  data-redirect="single_page" data-btn_status="approve" type="button" class="button button-primary erp-ac-trns-form-submit-btn">
+                            <?php _e( 'Update', 'erp' ); ?>
+                        </button>
+                        <?php
+                    } else {
+                        ?>
+                        <button  data-redirect="single_page" data-btn_status="approve" type="button" class="erp-drop-down-btn button button-primary erp-ac-trns-form-submit-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <?php _e( 'Approve', 'erp' ); ?>
+                        </button>
+                        <button type="button" class="erp-drop-down-btn button button-primary erp-drop-down-child-btn erp-btn-info">
+                            <span class="erp-caret"></span>
+                            <span class="erp-sr-only"><?php _e( 'Toggle Dropdown', 'erp' ); ?></span>
+                        </button>
+                        <ul class="erp-dropdown-menu">
+                            <li><a class="erp-ac-trns-form-submit-btn" data-redirect="single_page" data-btn_status="approve" href="#"><?php _e( 'Approve', 'erp' ); ?></a></li>
+                            <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="approve_and_add_another" href="#"><?php _e( 'Approve & add another', 'erp' ); ?></a></li>
+                        </ul>
+
+                        <?php
+                    }
+                    ?>
+                    
+                </div>
+
+                <a href="<?php echo esc_url( $cancel_url ); ?>" class="button"><?php _e( 'Cancel', 'erp' ); ?></a>
+            </div>
+
+        </div>
+
+        <!-- <div class="erp-ac-btn-group-wrap">
+
+            <div class="erp-button-bar-left">
+                <div class="erp-btn-group">
                     <button type="button" data-redirect="0" data-btn_status="save_and_draft" class="erp-drop-down-btn button erp-ac-trns-form-submit-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <?php _e( 'Save as Draft', 'erp' ); ?>
                     </button>
@@ -242,7 +312,7 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
 
                 <a href="<?php echo esc_url( $cancel_url ); ?>" class="button"><?php _e( 'Cancel', 'erp' ); ?></a>
             </div>
-        </div>
+        </div> -->
     </form>
 
 </div>

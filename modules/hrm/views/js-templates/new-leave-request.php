@@ -1,3 +1,7 @@
+<?php
+$employee_types = erp_hr_get_assign_policy_from_entitlement( get_current_user_id() );
+$types = $employee_types ? $employee_types : [];
+?>
 <div class="erp-hr-leave-request-new">
 
     <div class="row">
@@ -8,7 +12,7 @@
             'value'    => '',
             'required' => true,
             'type'     => 'select',
-            'options'  => array( '' => __( '- Select -', 'erp' ) ) + erp_hr_leave_get_policies_dropdown_raw()
+            'options'  => array( '' => __( '- Select -', 'erp' ) ) + $types
         ) ); ?>
     </div>
 

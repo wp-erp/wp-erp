@@ -117,12 +117,16 @@ function erp_ac_new_customer( $postdata ) {
     }
 
     // some basic validation
-    if ( ! $first_name ) {
+    if ( $type == 'customer' && ! $first_name ) {
         $errors[] = __( 'Error: First Name is required', 'erp' );
     }
 
-    if ( ! $last_name ) {
+    if ( $type == 'customer' && ! $last_name ) {
         $errors[] = __( 'Error: Last Name is required', 'erp' );
+    }
+
+    if ( $type == 'vendor' && ! $company ) {
+        $errors[] = __( 'Error: Company Name is required', 'erp' );
     }
 
     // bail out if error found
