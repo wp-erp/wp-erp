@@ -170,7 +170,6 @@ class Accounting {
     public function init_actions() {
 
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-        add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_front' ) );
         add_action( 'admin_footer', array( $this, 'admin_js_templates' ) );
     }
 
@@ -197,6 +196,7 @@ class Accounting {
         wp_enqueue_script( 'erp-sweetalert' );
         wp_enqueue_script( 'erp-tether-main' );
         wp_enqueue_script( 'erp-tether-drop' );
+        wp_enqueue_script( 'erp-clipboard' );
         wp_enqueue_script( 'accounting', WPERP_ACCOUNTING_ASSETS . '/js/accounting.min.js', array( 'jquery' ), date( 'Ymd' ), true );
         wp_enqueue_script( 'wp-erp-ac-js', WPERP_ACCOUNTING_ASSETS . '/js/erp-accounting.js', array( 'jquery', 'erp-tiptip' ), date( 'Ymd' ), true );
 
@@ -209,7 +209,8 @@ class Accounting {
             'nonce'              => wp_create_nonce( 'erp-ac-nonce' ),
             'emailConfirm'       => __( 'Sent', 'erp' ),
             'emailConfirmMsg'    => __( 'The email has been sent', 'erp' ),
-            'confirmMsg'         => __( 'Are you sure?', 'erp-accounting' ),
+            'confirmMsg'         => __( 'Are you sure?', 'erp' ),
+            'copied'             => __( 'Copied', 'erp' ),
             'ajaxurl'            => admin_url( 'admin-ajax.php' ),
             'decimal_separator'  => empty( $erp_ac_de_separator ) ? '.' : erp_get_option('erp_ac_de_separator'),
             'thousand_separator' => empty( $erp_ac_th_separator ) ? ',' : erp_get_option('erp_ac_th_separator'),
@@ -220,24 +221,13 @@ class Accounting {
             'plupload'   => array(
                 'url'              => admin_url( 'admin-ajax.php' ) . '?nonce=' . wp_create_nonce( 'erp_ac_featured_img' ),
                 'flash_swf_url'    => includes_url( 'js/plupload/plupload.flash.swf' ),
-                'filters'          => array( array('title' => __( 'Allowed Files', 'accounting' ), 'extensions' => '*')),
+                'filters'          => array( array('title' => __( 'Allowed Files', 'erp' ), 'extensions' => '*')),
                 'multipart'        => true,
                 'urlstream_upload' => true,
             )
         ));
 
         wp_enqueue_style( 'erp-sweetalert' );
-    }
-
-    /**
-     * Enqueue scripts for front end
-     *
-     * @since 1.1.2
-     * @return void
-     */
-    public function enqueue_scripts_front() {
-        wp_enqueue_script( 'invoice-script-front', WPERP_ACCOUNTING_ASSETS . '/js/invoice-front.js', array( 'jquery' ), date( 'Ymd' ), true );
-        wp_enqueue_style( 'invoice-style-front', WPERP_ASSETS . '/css/invoice-front.css', false, $this->plugin->version );
     }
 
     public function add_settings_page( $settings = array() ) {
@@ -268,7 +258,6 @@ class Accounting {
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/invoice.php', 'erp-ac-invoice-payment-pop' );
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/customer.php', 'erp-ac-new-customer-content-pop' );
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/send-invoice.php', 'erp-ac-send-email-invoice-pop' );
-            erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/get-invoice-link.php', 'erp-ac-get-invoice-link-pop' );
         }
 
         if ( $current_screen->base == 'erp-settings_page_erp-settings' && isset( $_GET['section'] ) && $_GET['section'] == 'erp_ac_tax' ) {

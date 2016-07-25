@@ -69,6 +69,7 @@
             $( 'body' ).on( 'click', '.invoice-get-link', this.invoice.getLink );
             $( 'body' ).on( 'click', '.invoice-send-email', this.invoice.sendEmail );
             $( 'body' ).on( 'click', '.invoice-email-new-receiver', this.invoice.addNewReceiver );
+            this.invoice.copyReadonlyLink();
 
             // payment
             this.payment.initialize();
@@ -587,29 +588,18 @@
             getLink: function(e) {
                 e.preventDefault();
 
-                var self, title, button, url;
+                $('#get-readonly-link').hide();
+                $('#copy-readonly-link').show();
+                $('#erp-tips-get-link').tipTip();
+            },
 
-                self = $(this);
-                type = self.data('type');
-                title = self.data('title');
-                button = self.data('button');
-                url = self.data('url');
+            copyReadonlyLink: function() {
+                clipboard = new Clipboard('.copy-readonly-invoice');
 
-                $.erpPopup({
-                    title: title,
-                    button: button,
-                    id: 'erp-ac-invoice-get-link',
-                    content: wperp.template( 'erp-ac-get-invoice-link-pop' )({type: type}).trim(),
-                    extraClass: 'smaller',
-                    onReady: function() {
-                        $('#invoice-link-input').val(url).select();
-                        $('#invoice-link-button').on('click', function(e) {
-                            e.preventDefault();
-                        });
-                    },
-                    onSubmit: function(modal) {
-                        modal.closeModal();
-                    }
+                clipboard.on('success', function() {
+                    clipboard.destroy();
+                    $('#erp-tips-get-link').tipTip({content:'copied'});
+                    $('#erp-tips-get-link').mouseover();
 
                 });
             },
@@ -623,6 +613,7 @@
                 type = self.data('type');
                 title = self.data('title');
                 button = self.data('button');
+                url = self.data('url');
                 sender = self.data('sender');
                 receiver = self.data('receiver');
                 subject = self.data('subject');
@@ -632,11 +623,11 @@
                     title: title,
                     button: button,
                     id: 'erp-ac-invoice-send-email',
-                    content: wperp.template( 'erp-ac-send-email-invoice-pop' )({type: type, sender: sender, receiver: receiver, subject: subject, transactionId: transactionId}).trim(),
+                    content: wperp.template( 'erp-ac-send-email-invoice-pop' )({type: type, sender: sender, receiver: receiver, subject: subject, transactionId: transactionId, url: url}).trim(),
                     extraClass: 'large',
 
                     onReady: function(modal) {
-
+                        $('#erp-ac-email-body').val(url);
                     },
 
                     onSubmit: function(modal) {

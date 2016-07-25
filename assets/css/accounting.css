@@ -497,6 +497,11 @@ form.erp-form .erp-form-field label {
   width: 500px;
   margin-bottom: 10px;
 }
+
+#erp-ac-invoice-send-email textarea {
+  height: 100px;
+}
+
 .erp-ac-btn-group-wrap {
   background: #fcfcfc;
   border-top: 1px solid #eee;
@@ -521,30 +526,5 @@ form.erp-form .erp-form-field label {
   .erp-grid-container .col-3 {
     width: 50%;
   }
-}
-
-#erp-ac-invoice-get-link .content {
-  height: 100%;
-}
-
-#ac-invoice-get-link-container {
-  display: flex;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-}
-
-#invoice-link-input {
-  width: 300px;
-  height: 40px;
-}
-
-#invoice-link-button {
-  height: 40px;
-  width:60px;
-}
-
-#invoice-link-button:hover {
-  background-color: #f1f1f1;
 }
 
