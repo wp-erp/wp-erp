@@ -634,7 +634,7 @@ function erp_ac_tax_update( $item, $item_entry_type, $args, $trans_id ) {
 
     $tax_account_id = erp_ac_get_tax_account_from_tax_id( $item['tax'], $args['type'] );
 
-    if ( intval( $item['tax_journal'] ) ) {
+    if ( isset( $item['tax_journal'] ) && intval( $item['tax_journal'] ) ) {
 
         if ( intval( $tax_account_id ) ) {
             $tax_journal = WeDevs\ERP\Accounting\Model\Journal::where( 'id', '=', $item['tax_journal'] )->update([

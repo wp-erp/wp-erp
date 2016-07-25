@@ -44,7 +44,7 @@ class Vendor_List_Table extends Customer_List_Table {
         $columns = array(
             'cb'       => '<input type="checkbox" />',
             'company'  => __( 'Vendor', 'wp-erp-ac' ),
-            'customer' => __( 'Owner', 'wp-erp-ac' ),
+            'customer' => __( 'Vendor Owner', 'wp-erp-ac' ),
             'email'    => __( 'Email', 'wp-erp-ac' ),
             'phone'    => __( 'Phone', 'wp-erp-ac' ),
             'balance'  => __( 'Balance', 'wp-erp-ac' ),

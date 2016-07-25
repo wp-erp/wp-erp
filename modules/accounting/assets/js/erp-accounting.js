@@ -262,7 +262,7 @@
                     form_type = $('input[name="form_type"]').val();
 
                 if ( form_type == 'invoice' || form_type == 'vendor_credit' ) {
-                    if ( new Date(issue_date) >= new Date(due_date)) {
+                    if ( new Date(issue_date) > new Date(due_date)) {
                         $('input[name="due_date"]').val('');
                     }
                 }
