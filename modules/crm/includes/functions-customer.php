@@ -1040,11 +1040,19 @@ function erp_crm_get_contact_groups( $args = [] ) {
                 ->toArray();
 
         foreach( $results as $key => $group ) {
-            $subscriber = array_count_values( wp_list_pluck( $group['contact_subscriber'], 'status' ) );
+            $subscribers = array_filter( $group['contact_subscriber'], function ( $subscriber ) {
+                return 'subscribe' === $subscriber['status'];
+            } );
+
+            $unsubscribers = array_filter( $group['contact_subscriber'], function ( $subscriber ) {
+                return $subscriber['unsubscribe_at'];
+            } );
+
             unset( $group['contact_subscriber'] );
+
             $items[$key] = $group;
-            $items[$key]['subscriber'] = isset( $subscriber['subscribe'] ) ? $subscriber['subscribe'] : 0;
-            $items[$key]['unsubscriber'] = isset( $subscriber['unsubscribe'] ) ? $subscriber['unsubscribe'] : 0;
+            $items[$key]['unsubscriber'] = count( $unsubscribers );
+            $items[$key]['subscriber'] = count( $subscribers );
         }
 
         $items = erp_array_to_object( $items );
