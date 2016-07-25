@@ -1,3 +1,8 @@
+<?php
+    $page           = '?page=erp-tools&tab=import&action=download_sample';
+    $nonce          = 'erp-emport-export-sample-nonce';
+    $csv_sample_url = wp_nonce_url( $page, $nonce );
+?>
 <div class="postbox">
     <div class="inside">
         <h3><?php _e( 'Import CSV', 'erp' ); ?></h3>
@@ -12,7 +17,7 @@
                         </th>
                         <td>
                             <select name="type" id="type">
-                                <?php foreach ( $export_import_types as $key => $value ) { ?>
+                                <?php foreach ( $import_export_types as $key => $value ) { ?>
                                     <option value="<?php echo $key; ?>"><?php _e( $value, 'erp' ); ?></option>
                                 <?php } ?>
                             </select>
@@ -26,6 +31,10 @@
                         <td>
                             <input type="file" name="csv_file" id="csv_file" />
                             <p class="description"><?php _e( 'Upload a csv file.', 'erp' ); ?></p>
+                            <p id="download_sample_wrap">
+                                <input type="hidden" value="<?php echo $csv_sample_url; ?>" />
+                                <a href="<?php echo $csv_sample_url; ?>&type=contact">Download Sample CSV</a>
+                            </p>
                         </td>
                     </tr>
                 </tbody>
@@ -44,7 +53,7 @@
 <?php if ( $is_crm_activated ) { ?>
     <div class="postbox">
         <div class="inside">
-            <h3><?php _e( 'Import Users', 'erp' ); ?></h3>
+            <h3><?php _e( 'Import Users into CRM', 'erp' ); ?></h3>
 
             <form method="post" action="<?php echo admin_url( 'admin.php?page=erp-tools' ); ?>" enctype="multipart/form-data" id="users_import_form">
 

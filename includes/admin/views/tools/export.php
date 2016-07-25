@@ -12,7 +12,7 @@
                         </th>
                         <td>
                             <select name="type" id="type">
-                                <?php foreach ( $export_import_types as $key => $value ) { ?>
+                                <?php foreach ( $import_export_types as $key => $value ) { ?>
                                     <option value="<?php echo $key; ?>"><?php _e( $value, 'erp' ); ?></option>
                                 <?php } ?>
                             </select>
