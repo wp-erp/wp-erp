@@ -156,6 +156,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
  * [new] Set submit group button for sales payment and invoice
  * [new] Set submit group button for expense payment voucher and vendor credit
  * [fix] Transaction update time check invoice number uniquness
+ * [fix] Transaction due date should be greater than issue date
  * [update] Transaction insert form filtering for table row and column 
  * [update] currency schema update
  * [update] Update query according with submit group button for sales and expenses

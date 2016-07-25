@@ -43,8 +43,8 @@ class Vendor_List_Table extends Customer_List_Table {
     function get_columns() {
         $columns = array(
             'cb'       => '<input type="checkbox" />',
-            'customer' => __( 'Vendor', 'wp-erp-ac' ),
-            'company'  => __( 'Company', 'wp-erp-ac' ),
+            'company'  => __( 'Vendor', 'wp-erp-ac' ),
+            'customer' => __( 'Owner', 'wp-erp-ac' ),
             'email'    => __( 'Email', 'wp-erp-ac' ),
             'phone'    => __( 'Phone', 'wp-erp-ac' ),
             'balance'  => __( 'Balance', 'wp-erp-ac' ),
@@ -54,14 +54,48 @@ class Vendor_List_Table extends Customer_List_Table {
     }
 
     /**
+     * Default column values if no callback found
+     *
+     * @param  object  $item
+     * @param  string  $column_name
+     *
+     * @return string
+     */
+    function column_default( $item, $column_name ) {
+
+        switch ( $column_name ) {
+            case 'customer':
+                return $item->first_name . ' ' . $item->last_name;
+
+            case 'company':
+                return $item->company;
+
+            case 'email':
+                return $item->email;
+
+            case 'phone':
+                return $item->phone;
+
+            case 'balance':
+                return '$0';
+
+            default:
+                return isset( $item->$column_name ) ? $item->$column_name : '';
+        }
+    }
+
+    function column_customer( $item ) {
+        return $item->first_name . ' ' . $item->last_name;
+    }
+    /**
      * Render the designation name column
      *
      * @param  object  $item
      *
      * @return string
      */
-    function column_customer( $item ) {
-
+    function column_company( $item ) {
+        $item->company     = empty( $item->company ) ? __( 'No Name Found!', 'erp' ) : $item->company;
         $data_hard         = ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) ? 1 : 0;
         $delete_text       = ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) ? __( 'Permanent Delete', 'erp' ) : __( 'Delete', 'erp' );
 
@@ -88,10 +122,10 @@ class Vendor_List_Table extends Customer_List_Table {
         }
 
         if ( ! erp_ac_current_user_can_view_single_vendor() ) {
-           return get_avatar( $item->email, 32 ) . sprintf( '<strong>%1$s</strong> %2$s', $item->first_name . ' ' . $item->last_name, $this->row_actions( $actions ) );
+           return sprintf( '<strong>%1$s</strong> %2$s', $item->company, $this->row_actions( $actions ) );
         }
 
-        return get_avatar( $item->email, 32 ) . sprintf( '<a href="%1$s"><strong>%2$s</strong></a> %3$s', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), $item->first_name . ' ' . $item->last_name, $this->row_actions( $actions ) );
+        return sprintf( '<a href="%1$s"><strong>%2$s</strong></a> %3$s', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), $item->company, $this->row_actions( $actions ) );
     }
 
     /**
@@ -108,6 +142,19 @@ class Vendor_List_Table extends Customer_List_Table {
         $status_links['trash'] = sprintf( '<a href="%s" >%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'trash' ), $base_link ), __( 'Trash', 'erp' ), $this->count_trashed_customers() );
 
         return $status_links;
+    }
+
+    /**
+     * Get sortable columns
+     *
+     * @return array
+     */
+    function get_sortable_columns() {
+        $sortable_columns = array(
+            'company' => array( 'company', true ),
+        );
+
+        return $sortable_columns;
     }
 
 }
