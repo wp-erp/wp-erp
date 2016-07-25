@@ -5,7 +5,7 @@
 
         <?php
         $item = null;
-
+        $item_type = 'customer';
         include dirname( dirname( __FILE__ ) ) . '/user-form-rows.php';
         ?>
 
