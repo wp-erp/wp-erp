@@ -190,7 +190,7 @@ class Accounting {
     public function enqueue_scripts() {
         // styles
         wp_enqueue_style( 'erp-tether-drop-theme' );
-        wp_enqueue_style( 'wp-erp-ac-styles', WPERP_ASSETS . '/css/accounting.css', false, $this->plugin->version );
+        wp_enqueue_style( 'wp-erp-ac-styles', WPERP_ASSETS . '/css/accounting.css', array( 'wp-color-picker' ), $this->plugin->version );
 
         // scripts
         wp_enqueue_script( 'erp-sweetalert' );
@@ -198,7 +198,7 @@ class Accounting {
         wp_enqueue_script( 'erp-tether-drop' );
         wp_enqueue_script( 'erp-clipboard' );
         wp_enqueue_script( 'accounting', WPERP_ACCOUNTING_ASSETS . '/js/accounting.min.js', array( 'jquery' ), date( 'Ymd' ), true );
-        wp_enqueue_script( 'wp-erp-ac-js', WPERP_ACCOUNTING_ASSETS . '/js/erp-accounting.js', array( 'jquery', 'erp-tiptip' ), date( 'Ymd' ), true );
+        wp_enqueue_script( 'wp-erp-ac-js', WPERP_ACCOUNTING_ASSETS . '/js/erp-accounting.js', array( 'jquery', 'wp-color-picker', 'erp-tiptip' ), date( 'Ymd' ), true );
 
         $erp_ac_de_separator = erp_get_option('erp_ac_de_separator');
         $erp_ac_th_separator = erp_get_option('erp_ac_th_separator');
@@ -246,6 +246,7 @@ class Accounting {
         global $current_screen;
 
         if ( $current_screen->base == 'accounting_page_erp-accounting-expense' ) {
+            erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/invoice.php', 'erp-ac-invoice-payment-pop' );
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/vendor-credit-single.php', 'erp-ac-vendoer-credit-single-payment' );
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/vendor.php', 'erp-ac-new-vendor-content-pop' );
         }
@@ -253,7 +254,7 @@ class Accounting {
         if ( $current_screen->base == 'accounting_page_erp-accounting-bank' ) {
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/bank.php', 'erp-ac-transfer-money-pop' );
         }
-
+        
         if ( $current_screen->base == 'accounting_page_erp-accounting-sales' ) {
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/invoice.php', 'erp-ac-invoice-payment-pop' );
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/customer.php', 'erp-ac-new-customer-content-pop' );
@@ -263,6 +264,10 @@ class Accounting {
         if ( $current_screen->base == 'erp-settings_page_erp-settings' && isset( $_GET['section'] ) && $_GET['section'] == 'erp_ac_tax' ) {
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/new-tax-form.php', 'erp-ac-new-tax-form-popup' );
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/tax-items.php', 'erp-ac-items-details-popup' );
+        }
+
+        if ( $current_screen->base == 'accounting_page_erp-accounting-sales' || $current_screen->base == 'accounting_page_erp-accounting-expense' ) {
+            erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/trash.php', 'erp-ac-trash-form-popup' );
         }
     }
 

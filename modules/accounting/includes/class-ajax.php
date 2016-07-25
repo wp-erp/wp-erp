@@ -15,6 +15,11 @@ class Ajax_Handler {
     use Ajax;
     use Hooker;
 
+    /**
+     * Initial action for this class
+     *
+     * @return void
+     */
     function __construct() {
         $this->action( 'wp_ajax_erp_ac_ledger_check_code', 'check_ledger_code' );
         $this->action( 'wp_ajax_erp_ac_payment_receive', 'receive_payment' );
@@ -44,8 +49,38 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-ac-trns-row-del', 'transaction_delete_row' );
         $this->action( 'wp_ajax_erp-ac-trns-restore', 'transaction_restore' );
         $this->action( 'wp_ajax_erp-ac-trns-void', 'transaction_void' );
+        $this->action( 'wp_ajax_erp-ac-trns-redo', 'transaction_redo' );
     }
 
+    /**
+     * Change transaction status paid or closed to awating payment
+     *
+     * @since  1.1.1
+     * 
+     * @return void
+     */
+    function transaction_redo() {
+        $this->verify_nonce( 'erp-ac-nonce' );
+        $trns_id = isset( $_POST['id'] ) ? $_POST['id'] : false;
+        $update  = false;
+        if ( $trns_id ) {
+            $update = erp_ac_update_transaction( $trns_id, ['status' => 'awaiting_payment'] );
+        }
+
+        if ( $update ) {
+            $this->send_success( array( 'success' => __( 'Transaction status has been changed successfully', 'erp' ) ) );
+        } else {
+            $this->send_error( array( 'error' => __( 'Unknown Error', 'erp' ) ) );
+        }
+    }
+
+    /**
+     * Change transaction status awating for payment to void
+     *
+     * @since  1.1.1
+     * 
+     * @return void
+     */
     function transaction_void() {
         $this->verify_nonce( 'erp-ac-nonce' );
         $trns_id = isset( $_POST['id'] ) ? $_POST['id'] : false;
@@ -63,28 +98,47 @@ class Ajax_Handler {
 
     function transaction_restore() {
         $this->verify_nonce( 'erp-ac-nonce' );
+        parse_str( $_POST['data'], $postdata );
+        
         $trns_id = isset( $_POST['id'] ) ? $_POST['id'] : false;
-        $delete = false;
+        $type    = $_POST['type'];
+        $delete  = false;
+
         if ( $trns_id ) {
-            $delete = erp_ac_update_transaction( $trns_id, ['status' => 'draft'] );
+            $delete = erp_ac_update_transaction( $trns_id, ['status' => $postdata['status']] );
+        }
+
+        if ( $type == 'journal' ) {
+            $url = erp_ac_get_journal_url();
+        } else if ( $type == 'expense' ) {
+            $url = erp_ac_get_expense_url();
+        } else {
+            $url = erp_ac_get_sales_url();
         }
 
         if ( $delete ) {
-            $this->send_success( array( 'url' => erp_ac_get_sales_url(), 'success' => __( 'Transaction status has been changed successfully', 'erp' ) ) );
+            $this->send_success( array( 'url' => $url, 'success' => __( 'Transaction status has been changed successfully', 'erp' ) ) );
         } else {
             $this->send_error( array( 'error' => __( 'Unknown Error', 'erp' ) ) );
         }
     }
 
+    /**
+     * Delete transaction
+     *
+     * @since  1.1.1
+     * 
+     * @return void
+     */
     function transaction_delete_row() {
         $this->verify_nonce( 'erp-ac-nonce' );
         $trns_id = isset( $_POST['id'] ) ? $_POST['id'] : false;
         $delete = false;
         if ( $trns_id ) {
-            $delete = erp_ac_update_transaction( $trns_id, ['status' => 'deleted'] );
+            $delete = erp_ac_remove_transaction( $trns_id );
         }
 
-        if ( $delete ) {
+        if ( $delete === NULL ) {
             $this->send_success( array( 'success' => __( 'Transaction has been deleted successfully', 'erp' ) ) );
         } else {
             $this->send_error( array( 'error' => __( 'Unknown Error', 'erp' ) ) );

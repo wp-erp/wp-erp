@@ -157,6 +157,12 @@ class Ninja_Forms {
 
         // first check if submitted form has settings or not
         $cfi_settings = get_option( 'wperp_crm_contact_forms', '' );
+
+        // if we don't have any setting, then do not proceed
+        if ( empty( $cfi_settings['ninja_forms'] ) ) {
+            return;
+        }
+
         $nf_settings = $cfi_settings['ninja_forms'];
 
         if ( in_array( $form_id , array_keys( $nf_settings ) ) ) {

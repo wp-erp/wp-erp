@@ -1128,10 +1128,27 @@
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item .cancel-timeline-feed-edit {
   cursor: pointer;
 }
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item.timeline-oneliner {
+  background: none;
+  box-shadow: none;
+}
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item.timeline-oneliner .timeline-body {
+  padding: 0;
+}
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item.timeline-oneliner .timeline-body .timeline-feed-header-text {
+  line-height: 1.5;
+  display: block;
+  border-bottom: 1px solid #eee;
+  padding: 4px 0;
+}
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item.timeline-oneliner .timeline-body .timeline-feed-header-text a {
+  text-decoration: none;
+  font-weight: bold;
+}
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .time {
   color: #999;
   float: right;
-  padding: 10px;
+  padding: 8px 10px;
   font-size: 12px;
 }
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-header {
@@ -1212,7 +1229,7 @@
   font-size: 15px;
   line-height: 30px;
   position: absolute;
-  color: #fafafa;
+  color: #a2a2a2;
   background: #dfdfdf;
   border-radius: 50%;
   text-align: center;

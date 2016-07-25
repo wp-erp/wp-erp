@@ -304,7 +304,7 @@ class Form_Handler {
         $page_url   = admin_url( 'admin.php?page=' . $page );
 
         if ( is_wp_error( $insert_id ) ) {
-            $redirect_to = add_query_arg( array( 'msg' => $insert_id->get_error_message() ), $page_url );
+            $redirect_to = add_query_arg( array( 'message' => $insert_id->get_error_message() ), $page_url );
             wp_safe_redirect( $redirect_to );
             exit;
         } else {

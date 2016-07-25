@@ -102,6 +102,12 @@ class CF7 {
 
         // first check if submitted form has settings or not
         $cfi_settings = get_option( 'wperp_crm_contact_forms', '' );
+
+        // if we don't have any setting, then do not proceed
+        if ( empty( $cfi_settings['contact_form_7'] ) ) {
+            return;
+        }
+
         $cf7_settings = $cfi_settings['contact_form_7'];
 
         if ( in_array( $_POST['_wpcf7'] , array_keys( $cf7_settings ) ) ) {

@@ -19,6 +19,12 @@
         </div>
         <?php
     }
+
+    if ( isset( $item ) && $item ) {
+        $item_type = in_array( 'customer', $item->types ) ? 'customer' : 'vendor';
+    };
+
+    
 ?>
 
 <div id="message" class="info notice notice-info" style="display: none;">
@@ -35,7 +41,7 @@
             'label'       => __( 'First Name', 'erp' ),
             'name'        => 'first_name',
             'id'          => 'first_name',
-            'required'    => true,
+            'required'    =>  ( $item_type == 'customer' ) ? true : false,
             'type'        => 'text',
             'placeholder' => __( 'John', 'erp' ),
             'class'       => 'regular-text',
@@ -47,7 +53,7 @@
             'label'       => __( 'Last Name', 'erp' ),
             'name'        => 'last_name',
             'id'          => 'last_name',
-            'required'    => true,
+            'required'    => ( $item_type == 'customer' ) ? true : false,
             'type'        => 'text',
             'placeholder' => __( 'Doe', 'erp' ),
             'class'       => 'regular-text',
@@ -68,10 +74,10 @@
     </li>
     <li class="erp-form-field row-company">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Compnay', 'erp' ),
+            'label'       => __( 'Vendor', 'erp' ),
             'name'        => 'company',
             'id'          => 'company',
-            'required'    => false,
+            'required'    => ( $item_type == 'vendor' ) ? true : false,
             'type'        => 'text',
             'placeholder' => __( 'ABC Corporation', 'erp' ),
             'class'       => 'regular-text',
