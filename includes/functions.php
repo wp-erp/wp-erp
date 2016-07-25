@@ -1276,9 +1276,9 @@ function erp_process_import_export() {
             return;
         }
 
-        $data = ['type' => $type, 'fields', 'file' => $_FILES['csv_file'] ];
+        $data = ['type' => $type, 'fields' => $fields, 'file' => $_FILES['csv_file'] ];
 
-        do_action( 'erp_import_export_csv_action', $data );
+        do_action( 'erp_tool_import_csv_action', $data );
 
         if ( ! in_array( $type, ['contact', 'company', 'employee'] ) ) {
             return;
