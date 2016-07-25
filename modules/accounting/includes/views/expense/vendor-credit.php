@@ -73,12 +73,13 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                     <li class="erp-form-field erp-ac-replace-wrap">
                         <div class="erp-ac-replace-content">
                             <?php
+    
                             erp_html_form_input( array(
                                 'label'       => __( 'Vendor', 'erp' ),
                                 'name'        => 'user_id',
                                 'type'        => 'select',
                                 'class'       => 'erp-select2 erp-ac-vendor-drop erp-ac-not-found-in-drop',
-                                'options'     => [ '-1' => __( '&mdash; Select &mdash;', 'erp' ) ] + erp_get_peoples_array( ['type' => 'vendor', 'number' => 100 ] ),
+                                'options'     => [ '-1' => __( '&mdash; Select &mdash;', 'erp' ) ] + erp_ac_get_vendors(),
                                 'custom_attr' => [
                                     'data-placeholder' => __( 'Select a payee', 'erp' ),
                                     'data-content' => 'erp-ac-new-vendor-content-pop',

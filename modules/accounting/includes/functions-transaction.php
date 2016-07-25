@@ -874,6 +874,25 @@ function erp_ac_remove_transaction( $id ) {
     return $delete;
 }
 
+/**
+ * Vendor lists 
+ *
+ * @since  1.1.1
+ *
+ * @return  array
+ */
+function erp_ac_get_vendors() {
+    $users = [];
+    $vendors = erp_get_peoples( ['type' => 'vendor', 'number' => 100 ] );
+    foreach ( $vendors as $user ) {
+        if ( in_array( 'vendor', $user->types ) ) {
+            $users[$user->id] = empty( $user->company ) ? __( 'No Title', 'erp' ) : $user->company;
+        }
+    }
+
+    return $users;
+}
+
 
 
 
