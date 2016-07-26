@@ -247,7 +247,7 @@ class Accounting {
 
         if ( $current_screen->base == 'accounting_page_erp-accounting-expense' ) {
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/invoice.php', 'erp-ac-invoice-payment-pop' );
-            erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/vendor-credit-single.php', 'erp-ac-vendoer-credit-single-payment' );
+            //erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/vendor-credit-single.php', 'erp-ac-vendoer-credit-single-payment' );
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/vendor.php', 'erp-ac-new-vendor-content-pop' );
         }
 

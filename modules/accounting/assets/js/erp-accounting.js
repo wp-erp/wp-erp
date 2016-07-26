@@ -30,7 +30,7 @@
             $('.erp-ac-form-wrap').on( 'change', '.erp-ac-customer-drop', this.customerAddress );
             $('.erp-ac-form-wrap').on( 'change', '.erp-ac-vendor-drop', this.vendorAddress );
             $('.invoice-preview-wrap').on( 'click', 'a.add-invoice-payment', self, this.invoicePayment );
-            $('.invoice-preview-wrap').on( 'click', 'a.add-vendor-credit-payment', self, this.vendoerCreditPayment );
+           // $('.invoice-preview-wrap').on( 'click', 'a.add-vendor-credit-payment', self, this.vendoerCreditPayment );
 
             $('.invoice-preview-wrap').on( 'click', 'a.erp-ac-print', this.print );
 
@@ -1176,6 +1176,7 @@
                     customer_id : self.data('customer_id'),
                     due_amount : self.data('due_amount'),
                     partial_id : self.data('transaction_id'),
+                    type : self.data('type')
                 }).trim(),
 
                 extraClass: 'large',
@@ -1212,50 +1213,50 @@
             }); //popup
         },
 
-        vendoerCreditPayment: function(e) {
-            e.preventDefault();
-            var self = $(this);
-            $.erpPopup({
-                title: 'Invoice',
-                button: 'submit',
-                id: 'erp-ac-vendor-credit-popup',
-                content: wperp.template('erp-ac-vendoer-credit-single-payment')({
-                    customer_id : self.data('customer_id'),
-                    due_amount : self.data('due_amount'),
-                    partial_id : self.data('transaction_id'),
-                }).trim(),
-                extraClass: 'large',
-                onReady: function(modal) {
-                    var type = $('.erp-ac-check-invoice-number').data('type');
-                    wp.ajax.send( {
-                        data: {
-                            action: 'erp-ac-get-invoice-number',
-                            type : type,
-                            _wpnonce : ERP_AC.nonce
-                        },
-                        success: function(res) {
-                            $('.erp-ac-check-invoice-number').val( res.invoice_number );
-                        },
-                        error: function(error) {
-                        }
-                    });
-                    $('#erp-ac-invoice-payment-popup').find('.erp-ac-chart-drop-down').addClass('select2');
-                    ERP_Accounting.initFields();
-                },
-                onSubmit: function(modal) {
-                    wp.ajax.send( {
-                        data: this.serialize()+'&_wpnonce='+ERP_AC.nonce,
-                        success: function(res) {
-                            modal.closeModal();
-                            location.reload();
-                        },
-                        error: function(error) {
-                            alert( error );
-                        }
-                    });
-                }
-            }); //popup
-        },
+        // vendoerCreditPayment: function(e) {
+        //     e.preventDefault();
+        //     var self = $(this);
+        //     $.erpPopup({
+        //         title: 'Invoice',
+        //         button: 'submit',
+        //         id: 'erp-ac-vendor-credit-popup',
+        //         content: wperp.template('erp-ac-vendoer-credit-single-payment')({
+        //             customer_id : self.data('customer_id'),
+        //             due_amount : self.data('due_amount'),
+        //             partial_id : self.data('transaction_id'),
+        //         }).trim(),
+        //         extraClass: 'large',
+        //         onReady: function(modal) {
+        //             var type = $('.erp-ac-check-invoice-number').data('type');
+        //             wp.ajax.send( {
+        //                 data: {
+        //                     action: 'erp-ac-get-invoice-number',
+        //                     type : type,
+        //                     _wpnonce : ERP_AC.nonce
+        //                 },
+        //                 success: function(res) {
+        //                     $('.erp-ac-check-invoice-number').val( res.invoice_number );
+        //                 },
+        //                 error: function(error) {
+        //                 }
+        //             });
+        //             $('#erp-ac-invoice-payment-popup').find('.erp-ac-chart-drop-down').addClass('select2');
+        //             ERP_Accounting.initFields();
+        //         },
+        //         onSubmit: function(modal) {
+        //             wp.ajax.send( {
+        //                 data: this.serialize()+'&_wpnonce='+ERP_AC.nonce,
+        //                 success: function(res) {
+        //                     modal.closeModal();
+        //                     location.reload();
+        //                 },
+        //                 error: function(error) {
+        //                     alert( error );
+        //                 }
+        //             });
+        //         }
+        //     }); //popup
+        // },
 
         vendorAddress: function(e) {
             e.preventDefault();

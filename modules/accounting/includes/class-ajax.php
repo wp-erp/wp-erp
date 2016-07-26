@@ -29,7 +29,7 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp_ac_customer_address', 'customer_address' );
         $this->action( 'wp_ajax_erp_ac_vendor_address', 'vendor_address' );
         $this->action( 'wp_ajax_erp_ac_individual_invoice_payment', 'receive_individual_invoice' );
-        $this->action( 'wp_ajax_erp_ac_vendoer_credit_payment', 'receive_individual_vendoer_credit' );
+        //$this->action( 'wp_ajax_erp_ac_vendoer_credit_payment', 'receive_individual_vendoer_credit' );
         $this->action( 'wp_ajax_erp-ac-customer-delete', 'customer_remove' );
         $this->action( 'wp_ajax_erp-ac-customer-restore', 'customer_restore' );
         $this->action( 'wp_ajax_erp-ac-user-delete-status', 'user_delete_status' );
@@ -176,12 +176,12 @@ class Ajax_Handler {
             $this->send_error( array( 'error' => __( 'Type required', 'erp' ) ) );
         }
 
-        if ( $type == 'invoice' ) {
-            $invoice_number = erp_ac_invoice_prefix( 'erp_ac_invoice', erp_ac_generate_invoice_id( 'invoice' ) );
+        if ( $type == 'payment' ) {
+            $invoice_number = erp_ac_invoice_prefix( 'erp_ac_payment', erp_ac_generate_invoice_id( 'payment' ) );
         }
 
-        if ( $type == 'vendor_credit' ) {
-            $invoice_number = erp_ac_invoice_prefix( 'erp_ac_vendor_credit', erp_ac_generate_invoice_id( 'vendor_credit' ) );
+        if ( $type == 'payment_voucher' ) {
+            $invoice_number = erp_ac_invoice_prefix( 'erp_ac_payment_voucher', erp_ac_generate_invoice_id( 'payment_voucher' ) );
         }
 
         $this->send_success( array( 'invoice_number' => $invoice_number ) );
@@ -397,59 +397,60 @@ class Ajax_Handler {
         $this->send_success( __( 'Customer has been removed successfully', 'erp' ) );
     }
 
-    function receive_individual_vendoer_credit() {
-        $this->verify_nonce( 'erp-ac-nonce' );
+    // function receive_individual_vendoer_credit() {
+    //     $this->verify_nonce( 'erp-ac-nonce' );
 
-        $args = [
-            'id'          => '',
-            'partial_id'  => $_POST['partial_id'],
-            'items_id'    => [],
-            'journals_id' => [],
-            'type'        => 'expense',
-            'form_type'   => 'payment_voucher',
-            'account_id'  => $_POST['account_id'],
-            'status'      => 'paid',
-            'user_id'     => $_POST['user_id'],
-            'ref'         => $_POST['ref'],
-            'issue_date'  => $_POST['issue_date'],
-            'summary'     => $_POST['summary'],
-            'total'       => reset( $_POST['line_total'] ),
-            'trans_total' => reset( $_POST['line_total'] ),
-            'files'       => isset( $_POST['files'] ) ? maybe_serialize( $_POST['files'] ) : '',
-            'currency'    => erp_ac_get_currency(),
-            'line_total'  => $_POST['line_total'],
-        ];
+    //     $args = [
+    //         'id'          => '',
+    //         'partial_id'  => $_POST['partial_id'],
+    //         'items_id'    => [],
+    //         'journals_id' => [],
+    //         'type'        => 'expense',
+    //         'form_type'   => 'payment_voucher',
+    //         'account_id'  => $_POST['account_id'],
+    //         'status'      => 'paid',
+    //         'user_id'     => $_POST['user_id'],
+    //         'ref'         => $_POST['ref'],
+    //         'issue_date'  => $_POST['issue_date'],
+    //         'summary'     => $_POST['summary'],
+    //         'total'       => reset( $_POST['line_total'] ),
+    //         'trans_total' => reset( $_POST['line_total'] ),
+    //         'files'       => isset( $_POST['files'] ) ? maybe_serialize( $_POST['files'] ) : '',
+    //         'currency'    => erp_ac_get_currency(),
+    //         'line_total'  => $_POST['line_total'],
+    //     ];
 
-        $items[] = [
-            'item_id'     => [],
-            'journal_id'  => [],
-            'account_id'  => 1,
-            'description' => '',
-            'qty'         => 1,
-            'unit_price'  => 0,
-            'discount'    => 0,
-            'line_total'  => reset( $_POST['line_total'] )
+    //     $items[] = [
+    //         'item_id'     => [],
+    //         'journal_id'  => [],
+    //         'account_id'  => 1,
+    //         'description' => '',
+    //         'qty'         => 1,
+    //         'unit_price'  => 0,
+    //         'discount'    => 0,
+    //         'line_total'  => reset( $_POST['line_total'] )
 
-        ];
+    //     ];
 
-        $transaction = erp_ac_insert_transaction( $args, $items );
+    //     $transaction = erp_ac_insert_transaction( $args, $items );
 
-        if ( $transaction ) {
-            $this->send_success();
-        }
+    //     if ( $transaction ) {
+    //         $this->send_success();
+    //     }
 
-    }
+    // }
 
     function receive_individual_invoice() {
         $this->verify_nonce( 'erp-ac-nonce' );
+
         $args = [
             'id'          => '',
             'partial_id'  => $_POST['partial_id'],
             'items_id'    => [],
-            'type'        => 'sales',
-            'form_type'   => 'payment',
+            'type'        => $_POST['type'],
+            'form_type'   => $_POST['form_type'],
             'account_id'  => $_POST['account_id'],
-            'status'      => 'closed',
+            'status'      => $_POST['type'] == 'sales' ? 'closed' : 'paid',
             'user_id'     => $_POST['user_id'],
             'ref'         => $_POST['ref'],
             'issue_date'  => $_POST['issue_date'],
@@ -459,7 +460,8 @@ class Ajax_Handler {
             'files'       => isset( $_POST['files'] ) ? maybe_serialize( $_POST['files'] ) : '',
             'currency'    => erp_ac_get_currency(),
             'line_total'  => $_POST['line_total'],
-            'journals_id' => []
+            'journals_id' => [],
+            'invoice_number' => $_POST['invoice']
 
         ];
 
@@ -471,8 +473,10 @@ class Ajax_Handler {
             'qty'         => 1,
             'unit_price'  => 0,
             'discount'    => 0,
-            'line_total'  => reset( $_POST['line_total'] )
-
+            'line_total'  => reset( $_POST['line_total'] ),
+            'tax'         => 0,
+            'tax_rate'    => '0.00',
+            'tax_journal' => 0
         ];
 
         $transaction = erp_ac_insert_transaction( $args, $items );

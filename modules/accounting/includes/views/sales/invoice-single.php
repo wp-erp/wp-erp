@@ -48,13 +48,13 @@ $readonly_url        = add_query_arg( [ 'query' => 'readonly_invoice', 'trans_id
                             <?php
                         } else if ( $transaction->status == 'partial' ) {
                             ?>
-                            <a title="hello" href="#" data-transaction_id=<?php echo $transaction->id; ?> data-due_amount=<?php echo $transaction->due; ?> data-customer_id=<?php echo intval($transaction->user_id); ?> class="button button-primary button-large add-invoice-payment erp-hide-print"><?php _e( 'Add Payment', 'erp' ); ?></a>
+                            <a data-type="payment" title="hello" href="#" data-transaction_id=<?php echo $transaction->id; ?> data-due_amount=<?php echo $transaction->due; ?> data-customer_id=<?php echo intval($transaction->user_id); ?> class="button button-primary button-large add-invoice-payment erp-hide-print"><?php _e( 'Add Payment', 'erp' ); ?></a>
                             <a href="#" class="button button-large erp-ac-print erp-hide-print"><i class="fa fa-print"></i>&nbsp;<?php _e( 'Print', 'erp' ); ?></a>
                             <a class="button button-large drop-target"><i class="fa fa-cog"></i>&nbsp;<?php _e( 'More Actions', 'erp' ); ?></a>
                             <?php
                         } else {
                             ?>
-                            <a href="#" data-transaction_id=<?php echo $transaction->id; ?> data-due_amount=<?php echo $transaction->due; ?> data-customer_id=<?php echo intval($transaction->user_id); ?> class="button button-primary button-large add-invoice-payment erp-hide-print"><?php _e( 'Add Payment', 'accounting' ); ?></a>
+                            <a data-type="payment" href="#" data-transaction_id=<?php echo $transaction->id; ?> data-due_amount=<?php echo $transaction->due; ?> data-customer_id=<?php echo intval($transaction->user_id); ?> class="button button-primary button-large add-invoice-payment erp-hide-print"><?php _e( 'Add Payment', 'accounting' ); ?></a>
                             <a href="<?php echo $url; ?>" class="button button-large"><?php _e( 'Edit Invoice', 'erp' ); ?></a>
                             <a href="#" class="button button-large erp-ac-print erp-hide-print"><i class="fa fa-print"></i>&nbsp;<?php _e( 'Print', 'accounting' ); ?></a>
                             <a class="button button-large drop-target"><i class="fa fa-cog"></i>&nbsp;<?php _e( 'More Actions', 'accounting' ); ?></a>
