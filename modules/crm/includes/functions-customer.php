@@ -628,6 +628,20 @@ function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
 }
 
 /**
+ * Format activity feeds message when feed display in activity streams
+ *
+ * @since 1.1.2
+ *
+ * @param  string $message
+ * @param  array $activity
+ *
+ * @return string
+ */
+function erp_crm_format_activity_feed_message( $message, $activity ) {
+    return apply_filters( 'erp_crm_format_activity_feed_message', stripslashes( $message ), $activity );
+}
+
+/**
  * Get all customer feeds
  *
  * @since 1.0
@@ -703,10 +717,11 @@ function erp_crm_get_feed_activity( $postdata ) {
         $value['contact']['types'] = wp_list_pluck( $value['contact']['types'], 'name' );
 
         unset( $value['extra']['invite_contact'] );
-        $value['message']               = stripslashes( $value['message'] );
+        $value['message']               = erp_crm_format_activity_feed_message( $value['message'], $value );
         $value['created_by']['avatar']  = get_avatar_url( $value['created_by']['ID'] );
         $value['created_date']          = date( 'Y-m-d', strtotime( $value['created_at'] ) );
         $value['created_timeline_date'] = date( 'Y-m-01', strtotime( $value['created_at'] ) );
+        // $value['component'] = 'timeline-item';
         $feeds[]                        = $value;
     }
 
@@ -764,7 +779,7 @@ function erp_crm_save_customer_feed_data( $data ) {
     unset( $activity['extra']['invite_contact'] );
 
     $activity['contact']['types']      = wp_list_pluck( $activity['contact']['types'], 'name' );
-    $activity['message']               = stripslashes( $activity['message'] );
+    $activity['message']               = erp_crm_format_activity_feed_message( $activity['message'], $activity );
     $activity['created_by']['avatar']  = get_avatar_url( $activity['created_by']['ID'] );
     $activity['created_date']          = date( 'Y-m-d', strtotime( $activity['created_at'] ) );
     $activity['created_timeline_date'] = date( 'Y-m-01', strtotime( $activity['created_at'] ) );
@@ -1025,11 +1040,19 @@ function erp_crm_get_contact_groups( $args = [] ) {
                 ->toArray();
 
         foreach( $results as $key => $group ) {
-            $subscriber = array_count_values( wp_list_pluck( $group['contact_subscriber'], 'status' ) );
+            $subscribers = array_filter( $group['contact_subscriber'], function ( $subscriber ) {
+                return 'subscribe' === $subscriber['status'];
+            } );
+
+            $unsubscribers = array_filter( $group['contact_subscriber'], function ( $subscriber ) {
+                return $subscriber['unsubscribe_at'];
+            } );
+
             unset( $group['contact_subscriber'] );
+
             $items[$key] = $group;
-            $items[$key]['subscriber'] = isset( $subscriber['subscribe'] ) ? $subscriber['subscribe'] : 0;
-            $items[$key]['unsubscriber'] = isset( $subscriber['unsubscribe'] ) ? $subscriber['unsubscribe'] : 0;
+            $items[$key]['unsubscriber'] = count( $unsubscribers );
+            $items[$key]['subscriber'] = count( $subscribers );
         }
 
         $items = erp_array_to_object( $items );
@@ -1541,6 +1564,18 @@ function erp_crm_get_serach_key( $type = '' ) {
             ]
         ],
 
+        'contact_group' => [
+            'title' => __( 'Contact Group', 'erp' ),
+            'type'  => 'dropdown',
+            'text' => '',
+            'condition' => [
+                '' => __( 'in group', 'erp' ),
+                '!' => __( 'not in group', 'erp' ),
+                '!~' => __( 'unsubscribed from' ),
+            ],
+            'options' => erp_html_generate_dropdown( wp_list_pluck( \WeDevs\ERP\CRM\Models\ContactGroup::select( 'id', 'name' )->get()->keyBy( 'id' )->toArray(), 'name' ) )
+        ],
+
         'other' => [
             'title'     => __( 'Others Fields', 'erp' ),
             'type'      => 'text',
@@ -1797,6 +1832,8 @@ function erp_crm_get_search_by_already_saved( $save_search_id ) {
  * @return array
  */
 function erp_crm_contact_advance_filter( $custom_sql, $args ) {
+    global $wpdb;
+
     $pep_fileds  = [ 'first_name', 'last_name', 'email', 'website', 'company', 'phone', 'mobile', 'other', 'fax', 'notes', 'street_1', 'street_2', 'city', 'postal_code', 'currency' ];
 
     if ( !isset( $args['erpadvancefilter'] ) || empty( $args['erpadvancefilter'] ) ) {
@@ -1816,6 +1853,7 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
     }
 
     if ( $query_data ) {
+        $is_contact_group_joined = false;
 
         foreach ( $query_data as $key=>$or_query ) {
             if ( $or_query ) {
@@ -1861,9 +1899,55 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
                             $j++;
                         }
                         $custom_sql['where'][] = ( $i == count( $or_query )-1 ) ? ")" : " ) AND";
+
+                    } else if ( $field == 'contact_group' ) {
+                        if ( ! $is_contact_group_joined ) {
+                            $custom_sql['join'][] = "LEFT JOIN {$wpdb->prefix}erp_crm_contact_subscriber as subscriber ON people.id = subscriber.user_id";
+
+                            if ( ! $args['count'] ) {
+                                $custom_sql['group_by'][] = 'people.id';
+                            }
+
+                            $is_contact_group_joined = true;
+                        }
+
+                        $custom_sql['where'][] = "(";
+
+                        $and_clause = [];
+                        foreach ( $value as $j => $search ) {
+                            $addOr = ( $j == count( $value ) - 1 ) ? '' : " OR ";
+                            $search_condition_regx = erp_crm_get_save_search_regx( $search );
+                            $condition = array_shift( $search_condition_regx );
+
+                            switch ( $condition ) {
+                                case 'NOT LIKE':
+                                    $search = str_replace( '!~' , '', $search );
+                                    $and_clause[] = "( subscriber.group_id = {$search} AND subscriber.unsubscribe_at IS NOT NULL )";
+                                    break;
+
+                                case '!=':
+                                    $search = str_replace( '!' , '', $search );
+                                     $and_clause[] = "subscriber.group_id != {$search}";
+                                    break;
+
+                                default:
+                                    $and_clause[] = "( subscriber.group_id = {$search} AND subscriber.unsubscribe_at IS NULL )";
+                                    break;
+                            }
+                        }
+
+                        if ( ! empty( $and_clause ) ) {
+                            $custom_sql['where'][] = implode( " OR ", $and_clause );
+                        } else {
+                            $custom_sql['where'][] = "1=1";
+                        }
+
+                        $custom_sql['where'][] = ( $i == count( $or_query )-1 ) ? ")" : " ) AND";
                     }
+
                     $i++;
                 }
+
                 $custom_sql['where'][] = ")";
             }
         }
@@ -2296,7 +2380,7 @@ function erp_crm_get_crm_user_dropdown( $label = [] ) {
     $list = [];
 
     foreach ( $users as $key => $user ) {
-        $list[$user->ID] = esc_html( $user->display_name ) . '(' . esc_html( $user->user_email ) . ')';
+        $list[$user->ID] = esc_html( $user->display_name ) . ' (' . esc_html( $user->user_email ) . ')';
     }
 
     if ( $label ) {

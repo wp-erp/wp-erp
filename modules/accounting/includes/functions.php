@@ -14,6 +14,12 @@ function erp_ac_get_expense_form_types() {
             'description' => __( 'A purchase that has been made as credit from vendor.', 'erp' ),
             'type'        => 'credit'
         ],
+        // 'deleted' => [
+        //     'name'        => 'trash',
+        //     'label'       => __( 'Trash', 'erp' ),
+        //     'description' => __( '', 'erp' ),
+        //     'type'        => 'debit'
+        // ],
     ];
 
     return apply_filters( 'erp_ac_get_expense_form_types', $form_types );
@@ -33,6 +39,12 @@ function erp_ac_get_sales_form_types() {
             'description' => __( '', 'erp' ),
             'type'        => 'debit'
         ],
+        // 'deleted' => [
+        //     'name'        => 'trash',
+        //     'label'       => __( 'Trash', 'erp' ),
+        //     'description' => __( '', 'erp' ),
+        //     'type'        => 'debit'
+        // ],
     ];
 
     return apply_filters( 'erp_ac_get_sales_form_types', $form_types );
@@ -64,7 +76,7 @@ function erp_ac_get_status_label( $items, $slug ) {
 
     switch ( $status ) {
         case 'closed':
-            $label = __( 'Closed', 'erp' );
+            $label = __( 'Paid', 'erp' );
             break;
 
         case 'paid':
@@ -72,20 +84,35 @@ function erp_ac_get_status_label( $items, $slug ) {
             break;
 
         case 'awaiting_payment':
-            $label = __( 'Awaiting Payment', 'erp' );
+            $url   = admin_url( 'admin.php?page='.$slug.'&action=new&type=' . $items->form_type . '&transaction_id=' . $items->id );
+            $label = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Awaiting for Payment', 'erp' ) );
+            //$label = __( 'Awaiting for Payment', 'erp' );
             break;
 
         case 'overdue':
             $label = __( 'Overdue', 'erp' );
             break;
 
+        case 'deleted':
+            $label = __( 'Trash', 'erp' );
+            break;
+
         case 'partial':
             $label = __( 'Partially Paid', 'erp' );
             break;
 
+        case 'void':
+            $label = __( 'Void', 'erp' );
+            break;
+
+        case 'pending':
+            $url   = admin_url( 'admin.php?page='.$slug.'&action=new&type=' . $items->form_type . '&transaction_id=' . $items->id );
+            $label = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Awaiting for approval', 'erp' ) );
+            break;
+
         case 'draft':
             $url   = admin_url( 'admin.php?page='.$slug.'&action=new&type=' . $items->form_type . '&transaction_id=' . $items->id );
-            $label = sprintf( '%1s<a href="%2s">%3s</a>', __( 'Draft', 'erp' ), $url, __( ' (Edit)', 'accounting') );
+            $label = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Draft', 'erp' ) );
             break;
     }
 
@@ -287,9 +314,14 @@ function erp_ac_message() {
         'tax_update'    => __( 'Tax Update', 'erp' ),
         'tax_deleted'   => __( 'Your tax record has been deleted successfully', 'erp' ),
         'delete'        => __( 'Yes, delete it!', 'erp' ),
+        'void'          => __( 'Yes, void it!', 'erp' ),
+        'restore'       => __( 'Yes, restore it!', 'erp' ),
         'cancel'        => __( 'Cancel', 'erp' ),
         'error'         => __( 'Error!', 'erp' ),
-        'alreadyExist'  => __( 'Already exists as a customer or vendor', 'erp' )
+        'alreadyExist'  => __( 'Already exists as a customer or vendor', 'erp' ),
+        'transaction_status' => __( 'Transaction Status', 'erp' ),
+        'submit'        => __( 'Submit', 'erp' ),
+        'redo'          => __( 'Yes, redo it!', 'erp' ),
     );
 
     return apply_filters( 'erp_ac_message', $message );
@@ -316,15 +348,123 @@ function erp_ac_pagination( $total, $limit, $pagenum ) {
     }
 }
 
+/**
+ * Get invoice prefix
+ * 
+ * @param  string $type
+ * @param  int $id  
+ *
+ * @since  1.1.2
+ * 
+ * @return string
+ */
 function erp_ac_invoice_prefix( $type, $id ) {
 
-    $prefix = erp_get_option( $type );
+    $prefix         = erp_get_option( $type );
+    $default_prefix = erp_ac_get_default_invoice_prefix( $type );
+    $prefix         = empty( $prefix ) ? $default_prefix : $prefix;
 
     if ( empty( $prefix ) ) {
         return $id;
     }
 
     return str_replace( '{id}', $id, $prefix );
+}
+
+/**
+ * Get default invoice prefix
+ *
+ * @param  string $type
+ *
+ * @since  1.1.2
+ *
+ * @return mixed string or array
+ */
+function erp_ac_get_default_invoice_prefix( $type = false ) {
+
+    $prefix = [
+        'erp_ac_payment'         => 'SPN-{id}',
+        'erp_ac_invoice'         => 'INV-{id}',
+        'erp_ac_payment_voucher' => 'EVN-{id}',
+        'erp_ac_vendor_credit'   => 'ECN-{id}',
+        'erp_ac_journal'         => 'JRNN-{id}'
+    ];
+
+    return $type ? $prefix[$type] : $prefix;
+}
+
+/**
+ * Get unique transaction hash for sharing to customer
+ *
+ * @param object $transaction
+ * @param string $algo
+ * @since 1.1.2
+ * @return string
+ */
+function erp_ac_get_invoice_link_hash( $transaction = '', $algo = 'sha256' ) {
+
+    if ( $transaction ) {
+
+        $to_hash     = $transaction->id . $transaction->form_type . $transaction->invoice_number;
+        $hash_string = hash( $algo, $to_hash );
+    }
+
+    return $hash_string;
+}
+
+/**
+ * Varify transaction hash
+ *
+ * @param object $transaction
+ * @param string $hash_to_verify
+ * @since 1.1.2
+ * @return bool
+ */
+function erp_ac_verify_invoice_link_hash( $transaction = '', $hash_to_verify = '',  $algo = 'sha256' ) {
+
+    if ( $transaction && $hash_to_verify ) {
+
+        $to_hash       = $transaction['id'] . $transaction['form_type'] . $transaction['invoice_number'];
+        $hash_original = hash( $algo, $to_hash );
+
+        if ( $hash_original === $hash_to_verify ) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
+ * Callback to template_redirect hook
+ * Shows template when invoice readonly link is called
+ *
+ * @since 1.1.2
+ * @return mixed
+ */
+function erp_ac_readonly_invoice_template() {
+
+    $query          = isset( $_REQUEST['query'] ) ? esc_attr( $_REQUEST['query'] ) : '';
+    $transaction_id = isset( $_REQUEST['trans_id'] ) ? intval( $_REQUEST['trans_id'] ) : '';
+    $auth_id        = isset( $_REQUEST['auth'] ) ? esc_attr( $_REQUEST['auth'] ) : '';
+    $verified       = false;
+
+    if ( !$query || !$transaction_id || !$auth_id ) {
+        return;
+    }
+
+    $transaction = erp_ac_get_transaction( $transaction_id );
+
+    if ( $transaction ) {
+        $verified = erp_ac_verify_invoice_link_hash( $transaction, $auth_id );
+    }
+
+    if ( $verified ) {
+        include WPERP_ACCOUNTING_VIEWS . '/sales/template-invoice-readonly.php';
+        exit();
+    }
+
+    return;
 }
 
 

@@ -63,17 +63,22 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
      */
     public function admin_scripts() {
         $crm_contact_forms_settings = [
-            'nonce'                 => wp_create_nonce( 'erp_settings_contact_forms' ),
-            'plugins'               => array_keys( $this->active_plugin_list ),
-            'forms'                 => $this->forms,
-            'mappedData'            => get_option( 'wperp_crm_contact_forms', '' ),
-            'crmOptions'            => $this->crm_options,
-            'notMapped'             => __( 'Not Set', 'erp' ),
-            'scriptDebug'           => defined( 'SCRIPT_DEBUG' ) ? SCRIPT_DEBUG : false,
-            'labelOK'               => __( 'OK', 'erp' ),
-            'labelContactGroups'    => __( 'Contact Group', 'erp' ),
-            'labelSelectGroup'     => __( 'Select Contact Group', 'erp' ),
-            'contactGroups'         => $this->get_contact_groups()
+            'nonce'             => wp_create_nonce( 'erp_settings_contact_forms' ),
+            'plugins'           => array_keys( $this->active_plugin_list ),
+            'forms'             => $this->forms,
+            'mappedData'        => get_option( 'wperp_crm_contact_forms', '' ),
+            'crmOptions'        => $this->crm_options,
+            'scriptDebug'       => defined( 'SCRIPT_DEBUG' ) ? SCRIPT_DEBUG : false,
+            'contactGroups'     => $this->get_contact_groups(),
+            'contactOwners'     => erp_crm_get_crm_user_dropdown(),
+            'i18n' => [
+                'notMapped'             => __( 'Not Set', 'erp' ),
+                'labelOK'               => __( 'OK', 'erp' ),
+                'labelContactGroups'    => __( 'Contact Group', 'erp' ),
+                'labelSelectGroup'      => __( 'Select Contact Group', 'erp' ),
+                'labelContactOwner'     => __( 'Contact Owner', 'erp' ),
+                'labelSelectOwner'      => __( 'Select Owner', 'erp' ),
+            ],
         ];
 
         wp_enqueue_style( 'erp-sweetalert' );
@@ -234,21 +239,19 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
                             <td colspan="3" class="cfi-contact-options">
                                 <button
                                     type="button"
-                                    class="button"
                                     v-for="(option, optionTitle) in crmOptions"
                                     v-if="!optionIsAnObject(option)"
                                     v-on:click="mapOption(field, option)"
-                                    :disabled="isOptionMapped(field, option)"
+                                    :class="['button', isOptionMapped(field, option) ? 'button-primary active' : '']"
                                 >{{ optionTitle }}</button>
 
                                 <span v-for="(option, options) in crmOptions" v-if="optionIsAnObject(option)">
                                     <button
                                         type="button"
-                                        class="button"
                                         v-for="(childOption, childOptionTitle) in options.options"
                                         v-if="optionIsAnObject(option)"
                                         v-on:click="mapChildOption(field, option, childOption)"
-                                        :disabled="isChildOptionMapped(field, option, childOption)"
+                                        :class="['button', isChildOptionMapped(field, option, childOption) ? 'button-primary active' : '']"
                                     >{{ options.title + ' - ' + childOptionTitle }}</button>
                                 </span>
                             </td>
@@ -258,10 +261,21 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
                         <tr>
                             <td colspan="3">
                                 <label>
-                                    {{ labelContactGroups }}
+                                    {{ i18n.labelContactGroups }} <span>&nbsp;&nbsp;&nbsp;</span>
                                     <select class="cfi-contact-group" v-model="formData.contactGroup">
-                                        <option value="0">{{ labelSelectGroup }}</option>
+                                        <option value="0">{{ i18n.labelSelectGroup }}</option>
                                         <option v-for="(groupId, groupName) in contactGroups" value="{{ groupId }}">{{ groupName }}</option>
+                                    </select>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <label>
+                                    {{ i18n.labelContactOwner }} <span class="required">*</span>
+                                    <select class="cfi-contact-group" v-model="formData.contactOwner">
+                                        <option value="0">{{ i18n.labelSelectOwner }}</option>
+                                        <option v-for="(userId, user) in contactOwners" value="{{ userId }}">{{ user }}</option>
                                     </select>
                                 </label>
                             </td>
@@ -331,12 +345,16 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
                     implode( ', ' , $required_options )
                 );
 
+            } else if ( empty( absint( $_POST['contactOwner'] ) ) ) {
+                $response['msg'] = __( 'Please set a contact owner.', 'erp' );
+
             } else {
                 $settings = get_option( 'wperp_crm_contact_forms' );
 
                 $settings[ $_POST['plugin'] ][ $_POST['formId'] ] = [
                     'map' => $_POST['map'],
-                    'contact_group' => $_POST['contactGroup']
+                    'contact_group' => $_POST['contactGroup'],
+                    'contact_owner' => $_POST['contactOwner']
                 ];
 
                 update_option( 'wperp_crm_contact_forms', $settings );
@@ -390,7 +408,8 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
                     'success' => true,
                     'msg' => __( 'Settings reset successfully', 'erp' ),
                     'map' => $map,
-                    'contactGroup' => 0
+                    'contactGroup' => 0,
+                    'contactOwner' => 0,
                 ];
 
             } else {

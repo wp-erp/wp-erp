@@ -1,130 +1,3 @@
-/******************************************************************
-*******************      Component's      *************************
-*******************************************************************/
-var TimeLineItem = {
-    props: ['feed', 'disbaleFooter'],
-    template : '#erp-crm-timeline-item-template',
-
-    data: function() {
-        return {
-            feedData: { message: '' },
-            showFooter : false,
-            editfeedData: {},
-            isEditable: false,
-            isReplied: false,
-            emailViewedTime: false
-        }
-    },
-
-    methods: {
-
-        toggleFooter: function() {
-
-            if ( wpCRMvue.isAdmin || wpCRMvue.isCrmManager || this.checkOwnFeeds() ) {
-                if ( this.disbaleFooter == 'true' ) {
-                    this.showFooter = false;
-                } else {
-                    this.showFooter = !this.showFooter;
-                }
-            }
-        },
-
-        /**
-         * Check is user agent and its own feeds or not
-         *
-         * @return {boolean}
-         */
-        checkOwnFeeds: function() {
-            return ( wpCRMvue.isAgent ) && this.feed.created_by.ID == wpCRMvue.current_user_id;
-        },
-
-        /**
-         * Delete Activity feed
-         *
-         * @param  {[object]} feed
-         *
-         * @return {[void | alert]}
-         */
-        deleteFeed: function( feed ) {
-            var data = {
-                action : 'erp_crm_delete_customer_activity',
-                feed_id : feed.id,
-                _wpnonce : wpCRMvue.nonce
-            };
-
-
-            if ( confirm( wpCRMvue.confirm ) ) {
-                vm.progressStart('#timeline-item-'+feed.id );
-                jQuery.post( wpCRMvue.ajaxurl, data, function( resp ) {
-                    if ( resp.success ) {
-                        vm.progreassDone(true);
-                        setTimeout( function() {
-                            vm.feeds.$remove( feed );
-                        }, 500);
-                    } else {
-                        alert( resp.data );
-                    };
-                });
-            };
-        },
-
-        editFeed: function( feed ) {
-            this.editfeedData = feed;
-            this.isEditable = true;
-        },
-
-        replyEmailFeed: function( feed ) {
-            this.editfeedData = feed;
-            this.isReplied = true;
-            this.isEditable = false;
-        },
-
-        cancelUpdate: function() {
-            this.isEditable = false;
-            this.isReplied = false;
-            this.editfeedData = {};
-        },
-
-        isSchedule: function( date ) {
-            return new Date() < new Date( date );
-        },
-
-        updateCustomerFeed: function( feed_id ) {
-            vm.addCustomerFeed( this, feed_id );
-        },
-
-        notify: function() {
-            this.$broadcast('bindEditFeedData', this.feed );
-        }
-    },
-
-    computed: {
-        emailViewedTime: function() {
-            if ( this.feed.extra.email_opened_at ) {
-                return 'Viewed on ' + vm.$options.filters.formatDateTime( this.feed.extra.email_opened_at )
-            } else {
-                return false;
-            }
-        }
-    },
-
-    watch: {
-        editfeedData: {
-            deep: true,
-            immediate: true,
-            handler: function () {
-                this.notify();
-            }
-        }
-    }
-};
-
-
-Vue.component( 'tooltip', window.wpErpVue.ToolTip );
-Vue.component( 'timeline-header', window.wpErpVue.TimeLineHeader );
-Vue.component( 'timeline-body', window.wpErpVue.TimeLineBody );
-Vue.component( 'timeline-item', TimeLineItem );
-
 /**
  * New Note Component
  *
@@ -217,7 +90,7 @@ Vue.component( 'log-activity', {
                 message: '',
                 log_type: '',
                 email_subject: '',
-                inviteContact: '',
+                inviteContact: [],
                 dt: '',
                 tp: ''
             },
@@ -237,6 +110,10 @@ Vue.component( 'log-activity', {
         }
     },
 
+    compiled: function() {
+        this.feedData.inviteContact = this.feedData.invite_contact ? this.feedData.invite_contact : [] ;
+    },
+
     events: {
         'bindEditFeedData': function (feed ) {
             this.feedData.log_type      = feed.log_type;
@@ -245,15 +122,10 @@ Vue.component( 'log-activity', {
             this.feedData.tp            = wperp.timeFormat( feed.start_date );
 
             if ( feed.log_type == 'meeting' && ! _.isEmpty( feed.extra.invited_user ) ) {
-                var invitedUser             = feed.extra.invited_user.map( function( elm ) { return elm.id } ).join(',');
+                var invitedUser             = feed.extra.invited_user.map( function( elm ) { return elm.id } );
                 this.feedData.inviteContact = invitedUser;
-                var self = jQuery( this.$el ).find( 'select.select2' );
-
-                if ( String(invitedUser).indexOf(',') == '-1' ) {
-                    self.select2().select2( 'val', invitedUser );
-                } else {
-                    self.select2().select2( 'val', invitedUser.split(',') );
-                }
+                // var self = jQuery( this.$el ).find( 'select.select2' );
+                // self.val( invitedUser ).trigger('change');
             };
 
         }
@@ -332,10 +204,6 @@ Vue.component( 'tasks-note', {
         }
     },
 
-    compiled: function() {
-        this.feedData.inviteContact = this.feedData.invite_contact ? this.feedData.invite_contact : [] ;
-    },
-
     methods: {
         notify: function () {
             this.$dispatch('bindFeedData', this.feedData );
@@ -353,15 +221,11 @@ Vue.component( 'tasks-note', {
             this.feedData.task_title    = feed.extra.task_title;
             this.feedData.dt            = wperp.dateFormat( feed.start_date, 'Y-m-d' );
             this.feedData.tp            = wperp.timeFormat( feed.start_date );
-            var invitedUser             = feed.extra.invited_user.map( function( elm ) { return elm.id } ).join(',');
-            this.feedData.inviteContact = invitedUser;
-            var self = jQuery( this.$el ).find( 'select.select2' );
+            var invitedUser             = feed.extra.invited_user.map( function( elm ) { return elm.id } );
+            this.feedData.inviteContact = invitedUser ? invitedUser : [];
 
-            if ( String(invitedUser).indexOf(',') == '-1' ) {
-                self.val( invitedUser ).trigger('change');
-            } else {
-                self.val( invitedUser.split(',') ).trigger('change');
-            }
+            // var self = jQuery( this.$el ).find( 'select.select2' );
+            // self.val( invitedUser ).trigger('change');
 
         }
     },
@@ -394,9 +258,9 @@ Vue.component( 'tasks-note', {
             deep: true,
             immediate: true,
             handler: function () {
-                if ( this.feedData.inviteContact == null ) {
-                    this.feedData.inviteContact = [];
-                }
+                // if ( this.feedData.inviteContact == null ) {
+                //     this.feedData.inviteContact = [];
+                // }
                 this.notify();
             }
         }
@@ -560,16 +424,20 @@ Vue.component( 'schedule-note', {
                 tpStart                     : '',
                 dtEnd                       : '',
                 tpEnd                       : '',
-                inviteContact               : ''
+                inviteContact               : []
             },
 
             isValid: false
         }
     },
 
+    compiled: function() {
+        this.feedData.inviteContact = this.feedData.invite_contact ? this.feedData.invite_contact : [] ;
+    },
+
     events: {
         'bindEditFeedData': function (feed ) {
-            var invitedUser = feed.extra.invited_user.map( function( elm ) { return elm.id } ).join(',');
+            var invitedUser = feed.extra.invited_user.map( function( elm ) { return elm.id } );
             this.feedData.all_day                    = feed.extra.all_day == 'true' ? true : false;
             this.feedData.allow_notification         = feed.extra.allow_notification == 'true' ? true : false;
             this.feedData.schedule_title             = feed.extra.schedule_title;
@@ -581,16 +449,10 @@ Vue.component( 'schedule-note', {
             this.feedData.tpStart                    = wperp.timeFormat( feed.start_date );
             this.feedData.dtEnd                      = wperp.dateFormat( feed.end_date, 'Y-m-d' );
             this.feedData.tpEnd                      = wperp.timeFormat( feed.end_date );
-            this.feedData.inviteContact              = invitedUser;
+            this.feedData.inviteContact              = invitedUser ? invitedUser : [];
 
             var self = jQuery( this.$el ).find( 'select.select2' );
-
-            if ( String(invitedUser).indexOf(',') == '-1' ) {
-                self.select2().select2( 'val', invitedUser );
-            } else {
-                self.select2().select2( 'val', invitedUser.split(',') );
-            }
-
+            self.val( invitedUser ).trigger('change');
         }
     },
 
@@ -638,6 +500,9 @@ Vue.component( 'schedule-note', {
             deep: true,
             immediate: true,
             handler: function () {
+                // if ( this.feedData.inviteContact == null ) {
+                //     this.feedData.inviteContact = [];
+                // }
                 this.notify();
             }
         }
@@ -691,17 +556,14 @@ var vm = new Vue({
             created_by: '',
             customer_id: '',
             created_at: ''
-        }
+        },
+        i18n: {}
     },
 
     events: {
         'bindFeedData': function (feedData) {
             this.feedData = feedData;
         }
-    },
-
-    compiled: function() {
-        this.fetchFeeds();
     },
 
     watch: {
@@ -714,6 +576,10 @@ var vm = new Vue({
     },
 
     methods: {
+
+        loadTimelineComponent: function( type ) {
+            return type.replace('_','-') + '-component';
+        },
 
         loadMoreContent: function( feeds ) {
             vm.progressStart('.feed-load-more');
@@ -849,6 +715,11 @@ var vm = new Vue({
             };
 
             jQuery.post( wpCRMvue.ajaxurl, self.feedData, function( resp ) {
+                if ( ! resp.success ) {
+                    alert( resp.data );
+                    vm.progreassDone(true);
+                    return false;
+                }
 
                 if ( self.feedData.id ) {
                     vm.progreassDone(true);
@@ -869,13 +740,23 @@ var vm = new Vue({
                     }, 500 )
 
                 } else {
+                    document.getElementById("erp-crm-activity-feed-form").reset();
+
+                    if ( resp.data.skipActivity ) {
+                        if ( resp.data.msg ) {
+                            alert( resp.data.msg );
+                        }
+
+                        vm.progreassDone();
+                        self.$broadcast( 'customerFeedAddded', resp );
+                        return false;
+                    }
+
                     vm.feeds.splice( 0, 0, resp.data );
 
                     if ( vm.feeds.length > vm.limit ) {
                         vm.feeds.$remove( vm.feeds[vm.feeds.length-1] );
                     }
-
-                    document.getElementById("erp-crm-activity-feed-form").reset();
 
                     if ( vm.feedData.type == 'log_activity' ) {
                         vm.feedData.log_type      = '';
@@ -929,6 +810,8 @@ var vm = new Vue({
                     } else {
                         vm.progreassDone();
                     }
+
+                    self.$broadcast( 'customerFeedAddded', resp );
                 }
             });
         },
@@ -1011,9 +894,28 @@ var vm = new Vue({
          */
         isSchedule: function( date ) {
             return new Date() < new Date( date );
+        },
+
+        setLocaliziString: function() {
+            var self = this;
+
+            data = {
+                action: 'erp_crm_set_localize_string'
+            };
+
+            jQuery.post( wpCRMvue.ajaxurl, data, function( resp ) {
+                if ( resp.success ) {
+                    self.i18n = resp.data;
+                }
+            });
         }
 
     },
+
+    ready: function() {
+        this.setLocaliziString();
+        this.fetchFeeds();
+    }
 });
 
 /******************** End Main Vue instance **********************/

@@ -52,7 +52,8 @@ class Ninja_Forms {
                         'name' => $form_id,
                         'title' => $form->settings['form_title'],
                         'fields' => [],
-                        'contactGroup' => '0'
+                        'contactGroup' => '0',
+                        'contactOwner' => '0'
                     ];
 
                     foreach ( $form->fields as $i => $field ) {
@@ -71,6 +72,10 @@ class Ninja_Forms {
                     if ( !empty( $saved_settings['ninja_forms'][ $form_id ]['contact_group'] ) ) {
                         $forms[ $form_id ]['contactGroup'] = $saved_settings['ninja_forms'][ $form_id ]['contact_group'];
                     }
+
+                    if ( !empty( $saved_settings['ninja_forms'][ $form_id ]['contact_owner'] ) ) {
+                        $forms[ $form_id ]['contactOwner'] = $saved_settings['ninja_forms'][ $form_id ]['contact_owner'];
+                    }
                 }
             }
 
@@ -87,7 +92,8 @@ class Ninja_Forms {
                     'name' => $form_id,
                     'title' => $form_settings['title'],
                     'fields' => [],
-                    'contactGroup' => '0'
+                    'contactGroup' => '0',
+                    'contactOwner' => '0'
                 ];
 
                 foreach ( $fields as $i => $field ) {
@@ -107,6 +113,10 @@ class Ninja_Forms {
 
                 if ( !empty( $saved_settings['ninja_forms'][ $form_id ]['contact_group'] ) ) {
                     $forms[ $form_id ]['contactGroup'] = $saved_settings['ninja_forms'][ $form_id ]['contact_group'];
+                }
+
+                if ( !empty( $saved_settings['ninja_forms'][ $form_id ]['contact_owner'] ) ) {
+                    $forms[ $form_id ]['contactOwner'] = $saved_settings['ninja_forms'][ $form_id ]['contact_owner'];
                 }
             }
         }
@@ -147,6 +157,12 @@ class Ninja_Forms {
 
         // first check if submitted form has settings or not
         $cfi_settings = get_option( 'wperp_crm_contact_forms', '' );
+
+        // if we don't have any setting, then do not proceed
+        if ( empty( $cfi_settings['ninja_forms'] ) ) {
+            return;
+        }
+
         $nf_settings = $cfi_settings['ninja_forms'];
 
         if ( in_array( $form_id , array_keys( $nf_settings ) ) ) {

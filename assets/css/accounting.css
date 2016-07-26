@@ -109,7 +109,9 @@
   width: 25%;
 }
 table.erp-ac-transaction-table {
+  margin: 20px 0 20px -16px;
   width: 100%;
+  width: calc(100% + 32px);
   table-layout: fixed;
 }
 table.erp-ac-transaction-table td,
@@ -158,6 +160,10 @@ table.erp-ac-transaction-table td.col-action a.move-row {
 table.erp-ac-transaction-table th.col-discount,
 table.erp-ac-transaction-table td.col-discount {
   width: 85px;
+}
+table.erp-ac-transaction-table th:first-child,
+table.erp-ac-transaction-table td:first-child {
+  padding-left: 15px;
 }
 table.vendor-list-table td.column-customer,
 table.vendor-list-table th.column-customer {
@@ -281,6 +287,14 @@ table.vendor-list-table th.column-customer img {
 .erp-ac-voucher-table-wrap .erp-ac-all-check-th input[type="checkbox"] {
   width: auto;
 }
+form.erp-form.erp-ac-transaction-form {
+  margin-top: 20px;
+  background: #f9f9f9;
+  padding: 15px;
+  border: 1px solid rgba(216, 216, 216, 0.54);
+  padding-top: 0;
+  margin-bottom: 40px;
+}
 form.erp-form .block .erp-form-field label {
   float: none;
   display: block;
@@ -305,6 +319,16 @@ form.erp-form .erp-form-field label {
   border-bottom: 1px solid #fff;
   border-right: 1px solid #fff;
   padding: 3px;
+}
+.erp-ac-form-wrap .two-col .erp-form-field {
+  width: 28% !important;
+}
+.erp-ac-form-wrap .two-col .erp-form-field input,
+.erp-ac-form-wrap .two-col .erp-form-field select {
+  width: 80%;
+}
+.erp-ac-form-wrap .two-col .erp-form-field .select2-container {
+  width: 81% !important;
 }
 .erp-ac-form-wrap .erp-ac-more-customer {
   text-decoration: none;
@@ -365,14 +389,13 @@ form.erp-form .erp-form-field label {
 #erp-ac-tax-popup-content .fa-times-circle {
   cursor: pointer;
 }
-.erp-ac-tax-report-wrap .erp-ac-report-tax-date {
+.erp-ac-report-tax-date {
   width: 20%;
   padding: 7px 10px;
   border: 1px solid #e5e5e5;
   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
   background: #fff;
-  float: left;
   margin-right: 10px;
 }
 .erp-ac-tax-report-wrap .erp-ac-tax-report-table th,
@@ -380,11 +403,120 @@ form.erp-form .erp-form-field label {
   text-align: center;
   border-left: 1px solid #e1e1e1;
 }
-
-#erp-ac-invoice-send-email textarea {
-  height: 100px;
+.erp-ac-income-satement-wrap .postbox {
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
-
+.erp-ac-income-satement-wrap .postbox .inside {
+  margin-bottom: 0;
+  padding: 0;
+}
+.erp-ac-income-satement-wrap .erp-ac-report-income-statement-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.erp-ac-income-satement-wrap .erp-ac-report-income-statement-table tr td a {
+  text-decoration: none;
+  color: #00a0d2;
+}
+.erp-ac-income-satement-wrap .erp-ac-report-income-statement-table .erp-ac-odd td {
+  padding-top: 7px;
+  background: rgba(238, 238, 238, 0.37);
+}
+.erp-ac-income-satement-wrap .erp-ac-report-income-statement-table .erp-ac-even td {
+  border-bottom: 1px solid #eee;
+  padding-top: 16px;
+  padding-bottom: 13px;
+}
+.erp-ac-income-satement-wrap .erp-ac-report-income-statement-table tr td:nth-child(2) {
+  text-align: right;
+  padding-right: 40px;
+}
+.erp-ac-income-satement-wrap .erp-ac-report-income-statement-table .erp-ac-even-first td {
+  padding-top: 9px;
+}
+.erp-ac-balance-sheet-wrap h1 {
+  font-size: 23px;
+  font-weight: 400;
+  margin: 0;
+  padding: 9px 15px 4px 0;
+  line-height: 29px;
+}
+.erp-ac-balance-sheet-wrap .metabox-holder {
+  width: 100%;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+.erp-ac-balance-sheet-wrap .metabox-holder .postbox {
+  float: left;
+  width: 32%;
+  margin: 0px .3% 0 0;
+}
+.erp-ac-balance-sheet-wrap .metabox-holder .postbox .inside {
+  margin: 11px 0px 46px 0;
+}
+.erp-ac-balance-sheet-wrap .metabox-holder .postbox .erp-ac-total-count {
+  width: 93.5%;
+  position: absolute;
+  background: #fafafa;
+  padding: 10px;
+  bottom: 0px;
+}
+.erp-ac-balance-sheet-wrap .metabox-holder .postbox .erp-ac-total-count table {
+  width: 100%;
+}
+.erp-ac-balance-sheet-wrap .metabox-holder .postbox .erp-ac-total-count table td {
+  width: 50%;
+}
+.erp-ac-balance-sheet-wrap .metabox-holder .postbox .erp-ac-total-count table tr > td:last-child {
+  text-align: right;
+  padding-right: 12px;
+}
+.erp-ac-balance-sheet-wrap .widefat {
+  border: none;
+  border-collapse: collapse;
+}
+.erp-ac-balance-sheet-wrap .widefat tr > td:first-child {
+  width: 80%;
+}
+.erp-ac-balance-sheet-wrap .widefat tr > td:last-child,
+.erp-ac-balance-sheet-wrap .widefat tr > th:last-child {
+  text-align: right;
+}
+.erp-ac-balance-sheet-wrap .widefat td,
+.erp-ac-balance-sheet-wrap .widefat th {
+  border: none;
+}
+#erp-ac-invoice-send-email input[type="text"],
+#erp-ac-invoice-send-email input[type="email"],
+#erp-ac-invoice-send-email textarea {
+  width: 500px;
+  margin-bottom: 10px;
+}
+.erp-ac-btn-group-wrap {
+  background: #fcfcfc;
+  border-top: 1px solid #eee;
+  margin: 20px -15px -15px -15px;
+  padding: 15px;
+}
+.erp-ac-btn-group-wrap:before,
+.erp-ac-btn-group-wrap:after {
+  content: " ";
+  display: table;
+}
+.erp-ac-btn-group-wrap:after {
+  clear: both;
+}
+.erp-ac-btn-group-wrap .erp-button-bar-left {
+  float: left;
+}
+.erp-ac-btn-group-wrap .erp-button-bar-right {
+  float: right;
+}
 @media print {
   .erp-grid-container .col-3 {
     width: 50%;

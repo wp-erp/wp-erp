@@ -1,6 +1,7 @@
 
 <?php
 $feeds_tab = erp_crm_get_customer_feeds_nav();
+$crm_users = erp_crm_get_crm_user();
 ?>
 <div class="wrap erp erp-crm-activities erp-single-customer" id="wp-erp">
 
@@ -22,7 +23,9 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
             <div class="filters">
                 <select style="width:260px;" v-selecttwo="filterFeeds.created_by" class="select2" v-model="filterFeeds.created_by" id="activity-created-by" data-placeholder="<?php _e( 'Created by..', 'erp' ) ?>">
                     <option value="-1"><?php _e( 'All', 'erp' ) ?></option>
-                    <?php echo erp_crm_get_employees_dropdown(); ?>
+                    <?php foreach ( $crm_users as $crm_user ) : ?>
+                        <option value="<?php echo $crm_user->ID ?>"><?php echo $crm_user->display_name; ?></option>
+                    <?php endforeach ?>
                 </select>
             </div>
 
@@ -50,18 +53,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                     </li>
 
                     <li v-for="feed in feed_obj">
-
-                        <i v-if="(feed.type == 'email') && ( feed.extra.replied != 1 )" class="fa fa-envelope-o"></i>
-                        <i v-if="(feed.type == 'email') && ( feed.extra.replied == 1 )" class="fa fa-reply"></i>
-                        <i v-if="feed.type == 'new_note'" class="fa fa-file-text-o"></i>
-                        <i v-if="feed.type == 'log_activity'" class="fa fa-list"></i>
-                        <i v-if="( feed.type == 'log_activity' && isSchedule( feed.start_date )  )" class="fa fa-calendar-check-o"></i>
-                        <i v-if="feed.type == 'tasks'" class="fa fa-check-square-o"></i>
-
-                        <?php do_action( 'erp_crm_customer_feed_icon' ); ?>
-
-                        <timeline-item :feed="feed" disbale-footer="true"></timeline-item>
-
+                        <timeline-feed :i18n="i18n" :is="loadTimelineComponent( feed.type )" :feed="feed"></timeline-feed>
                     </li>
 
                 </template>

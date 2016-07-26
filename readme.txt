@@ -151,6 +151,49 @@ If you are unable to use any of the methods due to internet connectivity and fil
 
 == Changelog ==
 
+**v1.1.2 -> June 26, 2016**
+ * [new] Settings for invoice formatting
+ * [new] Set submit group button for sales payment and invoice
+ * [new] Set submit group button for expense payment voucher and vendor credit
+ * [new] Add email search in contact and company listing
+ * [new] Display dropdown text instead of value in save search filter details
+ * [new] Add contact group filter option in saved search segment
+ * [new] Added Iranian Rial currency and change India currency symbol
+ * [new] Bulk users to contacts importer tools added
+ * [new] Contact Forms Integration: add contact owner field
+ * [new] Added localization for js string in activity feeds
+ * [new] CSV sample file generator added
+ * [fix] Transaction update time check for invoice number uniquness
+ * [fix] Transaction due date should be greater than issue date
+ * [fix] Leave request quota validation problem when apply leave
+ * [fix] Select2 rendering problem in expense
+ * [fix] Defualt invoice prefix set at transaction time
+ * [fix] Error message problem fixed when company settings updated
+ * [fix] Employee edit their own Employee ID
+ * [fix] Employees without manager or agent permission are listed in Activities page - Create By filter
+ * [fix] Contact Source is not showing in single view sidebar in CRM
+ * [fix] User's role isn't showing correctly on edit page
+ * [fix] Fixing select2 derective issues
+ * [fix] Announcement select2 issue fixed when select employee
+ * [fix] Leave policy rendering problem in employee my profile page
+ * [fix] HR dashboard calendar loading error
+ * [fix] Contact editing problem
+ * [fix] Line breaking problem in announcement email
+ * [update] Transaction insert form filtering for table row and column
+ * [update] Currency schema update
+ * [update] Update query according with submit group button for sales and expenses
+ * [update] transaction table column name change from invoice to invoice_number
+ * [update] Table column field length increase for decimal type
+ * [update] Set default invoice prefix
+ * [update] Customer and vendor fields are required when add new transaction
+ * [update] Vendor name is required when new verndor is created
+ * [update] Save search labeling change to search segment
+ * [update] Users to contacts tool progress changes
+ * [update] CRM contacts CSV imported improvements
+ * [update] Change crm activity component structure for extending thirdparty integration
+ * [update] Change invoice url format for sharing
+ * [update] Set wp mysql timezone instead of carbon
+
 **v1.1.1 -> June 22, 2016**
 
  * [fix] Accounting report query optimzation

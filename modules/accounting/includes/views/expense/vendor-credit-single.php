@@ -7,7 +7,7 @@ $partial_transaction = \WeDevs\ERP\Accounting\Model\Transaction::whereIn( 'id', 
 $symbol              = erp_ac_get_currency_symbol();
 
 $status              = $transaction->status == 'draft' ? false : true;
-$url                 = admin_url( 'admin.php?page=erp-accounting-expense&action=new&type=payment_voucher&transaction_id=' . $transaction->id );
+$url                 = erp_ac_get_vendor_credit_edit_url( $transaction->id );
 $taxinfo             = erp_ac_get_tax_info();
 ?>
 <div class="wrap">
@@ -19,16 +19,32 @@ $taxinfo             = erp_ac_get_tax_info();
         <div class="erp-grid-container">
             <div class="row invoice-buttons erp-hide-print">
                 <div class="col-6">
-                    <?php if ( $status ) {
-                        ?>
-                        <a href="#" data-transaction_id=<?php echo $transaction->id; ?> data-due_amount=<?php echo $transaction->due; ?> data-customer_id=<?php echo intval($transaction->user_id); ?> class="button button-primary button-large add-vendor-credit-payment erp-hide-print"><?php _e( 'New Voucher', 'erp' ); ?></a>
-                        <a href="#" class="button button-large erp-ac-print erp-hide-print"><?php _e( 'Print', 'erp' ); ?></a>
-                        <?php
-                    } else {
-                        ?>
-                        <a href="<?php echo $url; ?>" class="button button-large"><?php _e( 'Edit Invoice', 'erp' ); ?></a>
-                        <?php
-                    }
+                    <?php
+                        if ( $transaction->status == 'draft' || $transaction->status == 'pending'  ) {
+                            ?>
+                            <a href="<?php echo $url; ?>" class="button button-large"><?php _e( 'Edit Invoice', 'erp' ); ?></a>
+                            <a href="#" class="button button-large erp-ac-print erp-hide-print"><i class="fa fa-print"></i>&nbsp;<?php _e( 'Print', 'accounting' ); ?></a>
+                            <a class="button button-large drop-target"><i class="fa fa-cog"></i>&nbsp;<?php _e( 'More Actions', 'accounting' ); ?></a>
+                            <?php   
+                        } else if ( $transaction->status == 'paid' || $transaction->status == 'closed' ) {
+                            ?>
+                            <a href="#" class="button button-large erp-ac-print erp-hide-print"><i class="fa fa-print"></i>&nbsp;<?php _e( 'Print', 'accounting' ); ?></a>
+                            <a class="button button-large drop-target"><i class="fa fa-cog"></i>&nbsp;<?php _e( 'More Actions', 'accounting' ); ?></a>
+                            <?php
+                        } else if ( $transaction->status == 'partial' ) {
+                            ?>
+                            <a href="#" data-type="payment_voucher" data-transaction_id="<?php echo $transaction->id; ?>" data-due_amount="<?php echo $transaction->due; ?>" data-customer_id="<?php echo intval($transaction->user_id); ?>" class="button button-primary button-large add-invoice-payment erp-hide-print"><?php _e( 'Add Payment', 'accounting' ); ?></a>
+                            <a href="#" class="button button-large erp-ac-print erp-hide-print"><i class="fa fa-print"></i>&nbsp;<?php _e( 'Print', 'accounting' ); ?></a>
+                            <a class="button button-large drop-target"><i class="fa fa-cog"></i>&nbsp;<?php _e( 'More Actions', 'accounting' ); ?></a>
+                            <?php
+                        } else {
+                            ?>
+                            <a href="#" data-type="payment_voucher" data-transaction_id=<?php echo $transaction->id; ?> data-due_amount=<?php echo $transaction->due; ?> data-customer_id=<?php echo intval($transaction->user_id); ?> class="button button-primary button-large add-invoice-payment erp-hide-print"><?php _e( 'Add Payment', 'accounting' ); ?></a>
+                            <a href="<?php echo $url; ?>" class="button button-large"><?php _e( 'Edit Invoice', 'erp' ); ?></a>
+                            <a href="#" class="button button-large erp-ac-print erp-hide-print"><i class="fa fa-print"></i>&nbsp;<?php _e( 'Print', 'accounting' ); ?></a>
+                            <a class="button button-large drop-target"><i class="fa fa-cog"></i>&nbsp;<?php _e( 'More Actions', 'accounting' ); ?></a>
+                            <?php
+                        } 
                     ?>
                 </div>
             </div>

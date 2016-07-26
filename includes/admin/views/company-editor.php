@@ -5,6 +5,20 @@
         <div class="updated">
             <p><?php _e( 'Company information has been updated!', 'erp' ); ?></p>
         </div>
+    <?php } else if ( isset( $_GET['msg'] ) && $_GET['msg'] == 'error' ) { ?>
+        <?php
+            if ( ! empty( $_GET['error-company'] ) ) {
+                $errors[] = __( 'Company name is required', 'erp' );
+            }
+
+            if ( ! empty( $_GET['error-country'] ) ) {
+                $errors[] = __( 'Country is required', 'erp' );
+            }
+
+            foreach ( $errors as $error ) {
+                printf( '<div class="error"><p>%s</p></div>', $error );
+            }
+        ?>
     <?php } ?>
 
     <?php $country = \WeDevs\ERP\Countries::instance(); ?>

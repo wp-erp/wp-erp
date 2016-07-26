@@ -43,7 +43,7 @@ function erp_get_currencies() {
     return array_unique( apply_filters( 'erp_currencies', array(
         'AED' => __( 'United Arab Emirates Dirham', 'erp' ),
         'AUD' => __( 'Australian Dollars', 'erp' ),
-        'AZD' => __( 'Argentine Peso'),
+        'AZD' => __( 'Argentine Peso', 'erp' ),
         'BDT' => __( 'Bangladeshi Taka', 'erp' ),
         'BRL' => __( 'Brazilian Real', 'erp' ),
         'BGN' => __( 'Bulgarian Lev', 'erp' ),
@@ -72,7 +72,8 @@ function erp_get_currencies() {
         'NGN' => __( 'Nigerian Naira', 'erp' ),
         'NOK' => __( 'Norwegian Krone', 'erp' ),
         'NZD' => __( 'New Zealand Dollar', 'erp' ),
-        'OMR' => __( 'Omani Rial', 'erp'),
+        'OMR' => __( 'Omani Rial', 'erp' ),
+        'IRR' => __( 'Iranian Rial', 'erp' ),
         'PYG' => __( 'Paraguayan Guaraní', 'erp' ),
         'PHP' => __( 'Philippine Pesos', 'erp' ),
         'PLN' => __( 'Polish Zloty', 'erp' ),
@@ -181,11 +182,12 @@ function erp_get_currency_symbol( $currency = '' ) {
         case 'DKK' : $currency_symbol = 'kr.'; break;
         case 'HUF' : $currency_symbol = '&#70;&#116;'; break;
         case 'IDR' : $currency_symbol = 'Rp'; break;
-        case 'INR' : $currency_symbol = 'Rs.'; break;
+        case 'INR' : $currency_symbol = '&#8377;'; break;
         case 'NPR' : $currency_symbol = 'Rs.'; break;
         case 'ISK' : $currency_symbol = 'Kr.'; break;
         case 'ILS' : $currency_symbol = '&#8362;'; break;
         case 'OMR' : $currency_symbol = 'ر.ع.'; break;
+        case 'IRR' : $currency_symbol = '﷼'; break;
         case 'PHP' : $currency_symbol = '&#8369;'; break;
         case 'PLN' : $currency_symbol = '&#122;&#322;'; break;
         case 'SEK' : $currency_symbol = '&#107;&#114;'; break;
@@ -884,6 +886,106 @@ function erp_get_license_status( $addon ) {
 }
 
 /**
+ * Get all fields for import/export operation.
+ *
+ * @return array
+ */
+function erp_get_import_export_fields() {
+     $erp_fields = [
+        'contact' => [
+            'required_fields' => [
+                'first_name',
+            ],
+            'fields' => [
+                'first_name',
+                'last_name',
+                'email',
+                'phone',
+                'mobile',
+                'other',
+                'website',
+                'fax',
+                'notes',
+                'street_1',
+                'street_2',
+                'city',
+                'state',
+                'postal_code',
+                'country',
+                'currency',
+            ]
+        ],
+        'company' => [
+            'required_fields' => [
+                'email',
+                'company',
+            ],
+            'fields' => [
+                'email',
+                'company',
+                'phone',
+                'mobile',
+                'other',
+                'website',
+                'fax',
+                'notes',
+                'street_1',
+                'street_2',
+                'city',
+                'state',
+                'postal_code',
+                'country',
+                'currency',
+            ]
+        ],
+        'employee' => [
+            'required_fields' => [
+                'first_name',
+                'last_name',
+                'user_email',
+            ],
+            'fields' => [
+                'first_name',
+                'middle_name',
+                'last_name',
+                'user_email',
+                'designation',
+                'department',
+                'location',
+                'hiring_source',
+                'hiring_date',
+                'date_of_birth',
+                'reporting_to',
+                'pay_rate',
+                'pay_type',
+                'type',
+                'status',
+                'other_email',
+                'phone',
+                'work_phone',
+                'mobile',
+                'address',
+                'gender',
+                'marital_status',
+                'nationality',
+                'driving_license',
+                'hobbies',
+                'user_url',
+                'description',
+                'street_1',
+                'street_2',
+                'city',
+                'country',
+                'state',
+                'postal_code',
+            ]
+        ]
+    ];
+
+    return apply_filters( 'erp_import_export_csv_fields', $erp_fields );
+}
+
+/**
  * ERP Import/Export JavaScript enqueue.
  *
  * @since  1.0
@@ -891,206 +993,88 @@ function erp_get_license_status( $addon ) {
  * @return void
  */
 function erp_import_export_javascript() {
-    $contact_fields = [
-        'first_name',
-        'last_name',
-        'email',
-        'phone',
-        'mobile',
-        'other',
-        'website',
-        'fax',
-        'notes',
-        'street_1',
-        'street_2',
-        'city',
-        'state',
-        'postal_code',
-        'country',
-        'currency',
-        'type',
-    ];
+    global $current_screen;
 
-    $company_fields = [
-        'email',
-        'company',
-        'phone',
-        'mobile',
-        'other',
-        'website',
-        'fax',
-        'notes',
-        'street_1',
-        'street_2',
-        'city',
-        'state',
-        'postal_code',
-        'country',
-        'currency',
-        'type',
-    ];
+    if ( 'erp-settings_page_erp-tools' !== $current_screen->base ) {
+        return;
+    }
 
-    $employee_fields = [
-        'first_name',
-        'middle_name',
-        'last_name',
-        'user_email',
-        'designation',
-        'department',
-        'location',
-        'hiring_source',
-        'hiring_date',
-        'date_of_birth',
-        'reporting_to',
-        'pay_rate',
-        'pay_type',
-        'type',
-        'status',
-        'other_email',
-        'phone',
-        'work_phone',
-        'mobile',
-        'address',
-        'gender',
-        'marital_status',
-        'nationality',
-        'driving_license',
-        'hobbies',
-        'user_url',
-        'description',
-        'street_1',
-        'street_2',
-        'city',
-        'country',
-        'state',
-        'postal_code'
-    ];
+    if ( ! isset( $_GET['tab'] ) || ! in_array( $_GET['tab'], ['import', 'export'] ) ) {
+        return;
+    }
+
+    $erp_fields = erp_get_import_export_fields();
     ?>
     <script type="text/javascript">
-        function erp_title_case(string) {
-            // \u00C0-\u00ff for a happy Latin-1
-            return string.toLowerCase().replace(/_/g, ' ').replace(/\b([a-z\u00C0-\u00ff])/g, function (_, initial) {
-                return initial.toUpperCase();
-            }).replace(/(\s(?:de|a|o|e|da|do|em|ou|[\u00C0-\u00ff]))\b/ig, function (_, match) {
-                return match.toLowerCase();
-            });
-        }
+        jQuery( document ).ready( function( $ ) {
 
-        jQuery(document).ready(function($) {
-            var fields = [];
-            var required_fields = [];
+            function erp_str_title_case( string ) {
+                var str = string.replace( /_/g, ' ' );
 
-            var contact_fields = <?php echo json_encode( $contact_fields ) ; ?>;
-            var company_fields = <?php echo json_encode( $company_fields ); ?>;
-
-            var employee_fields = <?php echo json_encode( $employee_fields ); ?>;
-
-
-            switch ( $( 'form#export_form #type' ).val() ) {
-                case 'contact':
-                    fields = contact_fields;
-
-                    break;
-
-                case 'company':
-                    fields = company_fields;
-
-                    break;
-
-                case 'employee':
-                    fields = employee_fields;
-
-                    break;
+                return str.toLowerCase().split( ' ' ).map( function ( word ) {
+                    return ( word.charAt( 0 ).toUpperCase() + word.slice( 1 ) );
+                } ).join(' ');
             }
 
-            var contact_required_fields = [
-                'first_name',
-                'last_name',
-                'email',
-                'user_email',
-            ];
+            function erp_csv_field_mapper( file_selector, fields_selector ) {
+                var file = file_selector.files[0];
 
-            var company_required_fields = [
-                'email',
-                'company'
-            ];
+                var reader = new FileReader();
 
-            var employee_required_fields = [
-                'first_name',
-                'last_name',
-                'user_email',
-            ];
+                var first5000 = file.slice( 0, 5000 );
+                reader.readAsText( first5000 );
 
-            var html = '<ul class="erp-list list-inline">';
-            for ( var i = 0;  i < fields.length; i++ ) {
-                html += '<li><label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + erp_title_case( fields[i] ) + '</label></li>';
+                reader.onload = function( e ) {
+                    var csv = reader.result;
+                    // Split the input into lines
+                    lines = csv.split('\n'),
+                    // Extract column names from the first line
+                    columnNamesLine = lines[0];
+                    columnNames = columnNamesLine.split(',');
+
+                    var html = '';
+
+                    html += '<option value="">&mdash; Select Field &mdash;</option>';
+                    columnNames.forEach( function( item, index ) {
+                        item = item.replace( /"/g, "" );
+
+                        html += '<option value="' + index + '">' + item + '</option>';
+                    } );
+
+                    if ( html ) {
+                        $( fields_selector ).html( html );
+
+                        var field, field_label;
+                        $( fields_selector ).each( function() {
+                            field_label = $( this ).parent().parent().find( 'label' ).text();
+
+                            var options = $( this ).find( 'option' );
+                            var targetOption = $( options ).filter ( function () {
+                                var option_text = $( this ).html();
+
+                                var re = new RegExp( field_label, 'i' );
+
+                                return re.test( option_text );
+                            } );
+
+                            if ( targetOption ) {
+                                $( options ).removeAttr( "selected" );
+                                $( this ).val( $( targetOption ).val() );
+                            }
+                        } );
+                    }
+                };
             }
 
-            html += '<ul>';
-
-            if ( html ) {
-                $( '#fields' ).html( html );
-            }
-
-            $( 'form#export_form #type' ).on( 'change', function( e ) {
-                e.preventDefault();
-
-                switch ( $(this).val() ) {
-                    case 'contact':
-                        fields = contact_fields;
-
-                        break;
-
-                    case 'company':
-                        fields = company_fields;
-
-                        break;
-
-                    case 'employee':
-                        fields = employee_fields;
-
-                        break;
-                }
-
-                html = '<ul class="erp-list list-inline">';
-                for ( var i = 0;  i < fields.length; i++ ) {
-                    html += '<li><label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + erp_title_case( fields[i] ) + '</label></li>';
-                }
-
-                html += '<ul>';
-
-                if ( html ) {
-                    $( 'form#export_form #fields' ).html( html );
-                }
-            });
-
-            $( 'form#import_form #csv_file' ).on( 'change', function( e ) {
-                e.preventDefault();
-
+            function erp_csv_importer_field_handler( file_selector ) {
                 $( '#fields_container' ).show();
 
                 var fields_html = '';
 
-                switch ( $( 'form#import_form #type' ).val() ) {
-                    case 'contact':
-                        fields = contact_fields;
-                        required_fields = contact_required_fields;
+                var type = $( 'form#import_form #type' ).val();
 
-                        break;
-
-                    case 'company':
-                        fields = company_fields;
-                        required_fields = company_required_fields;
-
-                        break;
-
-                    case 'employee':
-                        fields = employee_fields;
-                        required_fields = employee_required_fields;
-
-                        break;
-                }
-
+                fields = erp_fields[ type ] ? erp_fields[ type ].fields : [];
+                required_fields = erp_fields[ type ] ? erp_fields[ type ].required_fields : [];
 
                 var required = '';
                 var red_span = '';
@@ -1107,7 +1091,7 @@ function erp_import_export_javascript() {
                     fields_html += `
                         <tr>
                             <th>
-                                <label for="fields[` + fields[i] + `]">` + erp_title_case( fields[i] ) + red_span + `</label>
+                                <label for="fields[` + fields[i] + `]" class="csv_field_labels">` + erp_str_title_case( fields[i] ) + red_span + `</label>
                             </th>
                             <td>
                                 <select name="fields[` + fields[i] + `]" class="csv_fields" ` + required + `>
@@ -1118,38 +1102,140 @@ function erp_import_export_javascript() {
 
                 $( '#fields_container' ).html( fields_html );
 
-                var file = this.files[0];
+                erp_csv_field_mapper( file_selector, '.csv_fields' );
+            }
 
-                var reader = new FileReader();
-                reader.readAsText(file);
+            var fields = [];
+            var required_fields = [];
 
-                reader.onload = function(e) {
-                    var csv = reader.result;
-                    // Split the input into lines
-                    lines = csv.split('\n'),
-                    // Extract column names from the first line
-                    columnNamesLine = lines[0];
-                    columnNames = columnNamesLine.split(',');
+            var erp_fields = <?php echo json_encode( $erp_fields ) ; ?>;
 
-                    var html = '';
+            var type = $( 'form#export_form #type' ).val();
 
-                    html += '<option value=""><?php _e( '&mdash; Select Field &mdash;', 'erp' ); ?></option>';
-                    columnNames.forEach( function( item, index ) {
-                        item = item.replace(/"/g, ""); ;
-                        html += '<option value="' + index + '">' + item + '</option>';
-                    } );
+            fields = erp_fields[ type ] ? erp_fields[ type ].fields : [];
 
-                    if ( html ) {
-                        $( '.csv_fields' ).html( html );
-                    }
-                };
+            var html = '<ul class="erp-list list-inline">';
+            for ( var i = 0;  i < fields.length; i++ ) {
+                html += '<li><label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + erp_str_title_case( fields[i] ) + '</label></li>';
+            }
 
+            html += '<ul>';
+
+            if ( html ) {
+                $( '#fields' ).html( html );
+            }
+
+            $( 'form#export_form #type' ).on( 'change', function( e ) {
+                e.preventDefault();
+
+                $( "#export_form #selecctall" ).prop( 'checked', false );
+                var type = $( this ).val();
+                fields = erp_fields[ type ] ? erp_fields[ type ].fields : [];
+
+                html = '<ul class="erp-list list-inline">';
+                for ( var i = 0;  i < fields.length; i++ ) {
+                    html += '<li><label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + erp_str_title_case( fields[i] ) + '</label></li>';
+                }
+
+                html += '<ul>';
+
+                if ( html ) {
+                    $( 'form#export_form #fields' ).html( html );
+                }
             });
+
+            $( 'form#import_form #csv_file' ).on( 'change', function( e ) {
+                e.preventDefault();
+
+                if ( ! this ) {
+                    return;
+                }
+
+                erp_csv_importer_field_handler( this );
+            });
+
+            $( 'form#import_form #type' ).on( 'change', function( e ) {
+                $( '#fields_container' ).html( '' );
+                $( '#fields_container' ).hide();
+
+                var sample_csv_url = $( 'form#import_form' ).find( '#download_sample_wrap input' ).val();
+                $( 'form#import_form' ).find( '#download_sample_wrap a' ).attr( 'href', sample_csv_url + '&type=' + $( this ).val() );
+
+                if ( $( 'form#import_form #csv_file' ).val() == "" ) {
+                    return;
+                } else {
+                    erp_csv_importer_field_handler( $( 'form#import_form #csv_file' ).get(0) );
+                }
+            } );
 
             $( "#export_form #selecctall" ).change( function(e) {
                 e.preventDefault();
 
                 $( "#export_form #fields input[type=checkbox]" ).prop( 'checked', $(this).prop( "checked" ) );
+            });
+
+            $( "#users_import_form" ).on( 'submit', function(e) {
+                e.preventDefault();
+                statusDiv = $( "div#import-status-indicator" );
+
+                statusDiv.show();
+
+                var form = $(this),
+                    submit = form.find( 'input[type=submit]' );
+                submit.attr( 'disabled', 'disabled' );
+
+                var data = {
+                    'action': 'erp_import_users_as_contacts',
+                    'user_role': $(this).find('select[name=user_role]').val(),
+                    'contact_owner': $(this).find('select[name=contact_owner]').val(),
+                    'life_stage': $(this).find('select[name=life_stage]').val(),
+                    'contact_group': $(this).find('select[name=contact_group]').val(),
+                    '_wpnonce': $(this).find('input[name=_wpnonce]').val()
+                };
+
+                var total_items = 0, left = 0, imported = 0, exists = 0, percent = 0, type = 'success', message = '';
+
+                $.post( ajaxurl, data, function(response) {
+                    if ( response.success ) {
+                        total_items = response.data.total_items;
+                        left = response.data.left;
+                        exists = response.data.exists;
+                        imported = total_items - left;
+                        done = imported - exists;
+
+                        if ( imported > 0 || total_items > 0 ) {
+                            percent = Math.floor( ( 100 / total_items ) * ( imported ) );
+
+                            type = 'success';
+                            message = 'Successfully imported all users!';
+                        } else {
+                            message = 'No users found to import!';
+                            type = 'error';
+                        }
+
+                        statusDiv.find( '#progress-total' ).html( percent + '%' );
+                        statusDiv.find( '#progressbar-total' ).val( percent );
+                        statusDiv.find( '#completed-total' ).html( 'Imported ' + done + ' out of ' + response.data.total_items );
+                        if ( exists > 0 ) {
+                            statusDiv.find( '#failed-total' ).html( 'Already Exist ' + exists );
+                        }
+
+                        if ( response.data.left > 0 ) {
+                            form.submit();
+                            return;
+                        } else {
+                            submit.removeAttr( 'disabled' );
+
+                            swal({
+                                title: '',
+                                text: message,
+                                type: type,
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#008ec2'
+                            });
+                        }
+                    }
+                });
             });
 
         });
@@ -1167,16 +1253,36 @@ function erp_process_import_export() {
         return;
     }
 
-    $is_crm_activated = wperp()->modules->is_module_active( 'crm' );
-    $is_hrm_activated = wperp()->modules->is_module_active( 'hrm' );
+
+    $is_crm_activated = erp_is_module_active( 'crm' );
+    $is_hrm_activated = erp_is_module_active( 'hrm' );
 
     $departments  = erp_hr_get_departments_dropdown_raw();
     $designations = erp_hr_get_designation_dropdown_raw();
 
+    $field_builder_options = get_option( 'erp-contact-fields' );
+
+    if ( ! empty( $field_builder_options ) ) {
+        foreach ( $field_builder_options as $field ) {
+            $field_builder_contacts_fields[] = $field['name'];
+        }
+    }
 
     if ( isset( $_POST['erp_import_csv'] ) ) {
-        $fields = $_POST['fields'];
-        $type   = $_POST['type'];
+        $fields = ! empty( $_POST['fields'] ) ? $_POST['fields'] : [];
+        $type   = isset( $_POST['type'] ) ? $_POST['type'] : '';
+
+        if ( empty( $type ) ) {
+            return;
+        }
+
+        $data = ['type' => $type, 'fields' => $fields, 'file' => $_FILES['csv_file'] ];
+
+        do_action( 'erp_tool_import_csv_action', $data );
+
+        if ( ! in_array( $type, ['contact', 'company', 'employee'] ) ) {
+            return;
+        }
 
         $employee_fields = [
             'work' => [
@@ -1264,6 +1370,28 @@ function erp_process_import_export() {
                     }
 
                     if ( ( $type == 'contact' || $type == 'company' ) && $is_crm_activated ) {
+                        // If not exist any email address then generate a dummy one.
+                        if ( ! isset( $data[$x]['email'] ) ) {
+                            $rand = substr( sha1( uniqid( time() ) ), 0, 8 );
+                            $data[$x]['email'] = "rand_{$rand}@example.com";
+                        }
+
+                        if ( empty( $data[$x]['last_name'] ) ) {
+                            $name_parts = explode( ' ' , trim( $data[$x]['first_name'] ) );
+
+                            if ( count( $name_parts ) > 1 ) {
+                                $last_name = trim( array_pop( $name_parts ) );
+                            }
+
+                            if ( ! empty( $last_name ) ) {
+                                $data[$x]['first_name'] = implode( ' ' , $name_parts );
+                                $data[$x]['last_name'] = $last_name;
+
+                            } else {
+                                $data[$x]['last_name'] = '_';
+                            }
+                        }
+
                         $item_insert_id = erp_insert_people( $data[$x] );
 
                         if ( is_wp_error( $item_insert_id ) ) {
@@ -1274,6 +1402,13 @@ function erp_process_import_export() {
                             $life_stage    = erp_get_option( 'life_stage', 'erp_settings_erp-crm_contacts', 'opportunity' );
                             erp_people_update_meta( $item_insert_id, '_assign_crm_agent', $contact_owner );
                             erp_people_update_meta( $item_insert_id, 'life_stage', $life_stage );
+
+
+                            if ( ! empty( $field_builder_contacts_fields ) ) {
+                                foreach ( $field_builder_contacts_fields as $field ) {
+                                    erp_people_update_meta( $item_insert_id, $field, $data[$x][$field] );
+                                }
+                            }
                         }
                     }
                 }
@@ -1349,25 +1484,7 @@ function erp_process_import_export() {
 
         $file_name = 'export_' . date( 'd_m_Y' ) . '.csv';
 
-        header( 'Content-Type: text/csv; charset=utf-8' );
-        header( 'Content-Disposition: attachment; filename=' . $file_name );
-
-        $output = fopen( 'php://output', 'w' );
-
-        $columns = array_map( function( $replace ) {
-            $replace = ucwords( str_replace( '_', ' ', $replace ) );
-
-            return $replace;
-        }, $fields );
-
-        fputcsv( $output, $columns );
-
-        foreach( $csv_items as $row )
-        {
-            fputcsv( $output, $row );
-        }
-
-        exit();
+        erp_make_csv_file( $csv_items, $file_name );
     }
 }
 
@@ -1430,7 +1547,7 @@ function erp_parse_args_recursive( &$args, $defaults = [] ) {
 function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $custom_headers = [] ) {
 
     $callback = function( $phpmailer ) use( $custom_headers ) {
-        $erp_email_settings = get_option( 'erp_settings_erp-email_general', [] );
+        $erp_email_settings      = get_option( 'erp_settings_erp-email_general', [] );
         $erp_email_smtp_settings = get_option( 'erp_settings_erp-email_smtp', [] );
 
         if ( ! isset( $erp_email_settings['from_email'] ) ) {
@@ -1447,10 +1564,10 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
             $from_name = $erp_email_settings['from_name'];
         }
 
-        $content_type = 'text/html';
+        $content_type           = 'text/html';
 
-        $phpmailer->From = apply_filters( 'erp_mail_from', $from_email );
-        $phpmailer->FromName = apply_filters( 'erp_mail_from_name', $from_name );
+        $phpmailer->From        = apply_filters( 'erp_mail_from', $from_email );
+        $phpmailer->FromName    = apply_filters( 'erp_mail_from_name', $from_name );
         $phpmailer->ContentType = apply_filters( 'erp_mail_content_type', $content_type );
 
         //Return-Path
@@ -1466,16 +1583,18 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
             $phpmailer->SMTPDebug = true;
         }
 
-        if ( isset( $erp_email_smtp_settings['enable_smtp'] ) && $erp_email_smtp_settings['enable_smtp'] ) {
-            $phpmailer->Mailer = 'smtp'; //'smtp', 'mail', or 'sendmail'
+        if ( isset( $erp_email_smtp_settings['enable_smtp'] ) && $erp_email_smtp_settings['enable_smtp'] == 'yes' ) {
+            $phpmailer->Mailer     = 'smtp'; //'smtp', 'mail', or 'sendmail'
 
-            $phpmailer->Host = $erp_email_smtp_settings['mail_server'];
-            $phpmailer->SMTPSecure = ( $erp_email_smtp_settings['authentication'] != '' ) ? $erp_email_smtp_settings['authentication'] : 'ssl';
-            $phpmailer->Port = $erp_email_smtp_settings['port'];
+            $phpmailer->Host       = $erp_email_smtp_settings['mail_server'];
+            $phpmailer->SMTPSecure = ( $erp_email_smtp_settings['authentication'] != '' ) ? $erp_email_smtp_settings['authentication'] : 'smtp';
+            $phpmailer->Port       = $erp_email_smtp_settings['port'];
 
-            $phpmailer->SMTPAuth = true;
-            $phpmailer->Username = $erp_email_smtp_settings['username'];
-            $phpmailer->Password = $erp_email_smtp_settings['password'];
+            if ( $erp_email_smtp_settings['authentication'] != '' ) {
+                $phpmailer->SMTPAuth   = true;
+                $phpmailer->Username   = $erp_email_smtp_settings['username'];
+                $phpmailer->Password   = $erp_email_smtp_settings['password'];
+            }
         }
     };
 
@@ -1532,7 +1651,7 @@ function erp_email_settings_javascript() {
                             title: '',
                             text: response.data,
                             type: type,
-                            confirmButtonText: crmContactFormsSettings.labelOK,
+                            confirmButtonText: 'OK',
                             confirmButtonColor: '#008ec2'
                         });
                     }
@@ -1571,7 +1690,7 @@ function erp_email_settings_javascript() {
                             title: '',
                             text: response.data,
                             type: type,
-                            confirmButtonText: crmContactFormsSettings.labelOK,
+                            confirmButtonText: 'OK',
                             confirmButtonColor: '#008ec2'
                         });
                     }
@@ -1598,4 +1717,86 @@ function erp_is_imap_active() {
     }
 
     return false;
+}
+
+/**
+ * Determine if the module is active or not.
+ *
+ * @return boolean
+ */
+function erp_is_module_active( $module_key ) {
+    $modules = get_option( 'erp_modules', [] );
+
+    return isset( $modules[ $module_key ] );
+}
+
+/**
+ * Make csv file from array and force download
+ *
+ * @param array   $items
+ * @param boolean $field_data (optional)
+ *
+ * @param string  $file_name
+ */
+function erp_make_csv_file( $items, $file_name, $field_data = true ) {
+    $file_name = ( ! empty( $file_name ) ) ? $file_name : 'csv_' . date( 'd_m_Y' ) . '.csv';
+
+    if ( empty( $items ) ) {
+        return;
+    }
+
+    $columns = array_keys( $items[0] );
+
+    header( 'Content-Type: text/csv; charset=utf-8' );
+    header( 'Content-Disposition: attachment; filename=' . $file_name );
+
+    $output = fopen( 'php://output', 'w' );
+
+    $columns = array_map( function( $column ) {
+        $column = ucwords( str_replace( '_', ' ', $column ) );
+
+        return $column;
+    }, $columns );
+
+    fputcsv( $output, $columns );
+
+    if ( $field_data ) {
+        foreach ( $items as $row ) {
+            fputcsv( $output, $row );
+        }
+    }
+
+    exit();
+}
+
+/**
+ * Import/Export sample CSV download action hook
+ *
+ * @param void
+ */
+function erp_import_export_download_sample_action() {
+    if ( ! isset( $_GET['action'] ) || $_GET['action'] != 'download_sample' ) {
+        return;
+    }
+
+    if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'erp-emport-export-sample-nonce' ) ) {
+        return;
+    }
+
+    if ( ! isset( $_GET['type'] ) ) {
+        return;
+    }
+
+    $type   = strtolower( $_GET['type'] );
+    $fields = erp_get_import_export_fields();
+
+    if ( isset( $fields[ $type ] ) ) {
+        $keys      = $fields[ $type ]['fields'];
+        $keys      = array_flip( $keys );
+        $file_name = "sample_csv_{$type}.csv";
+
+        erp_make_csv_file( [ $keys ], $file_name, false );
+    }
+
+    return;
 }

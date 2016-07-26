@@ -95,15 +95,27 @@
         ) ); ?>
     </div>
 
-    <div class="row">
-        <?php erp_html_form_input( array(
-            'label'    => __( 'Effective Date', 'erp' ),
-            'name'     => 'effective_date',
-            'value'    => '{{ data.effective_date }}',
-            'class'    => 'erp-leave-date-field',
-            'help'    => __( 'The date when the policy will be applicable from', 'erp' )
-        ) ); ?>
-    </div>
+    <# if ( data.id ) { #>
+        <div class="row">
+            <?php erp_html_form_input( array(
+                'label'    => __( 'Effective Date', 'erp' ),
+                'name'     => 'effective_date',
+                'value'    => '{{ data.effective_date }}',
+                'class'    => 'erp-leave-date-field',
+                'help'    => __( 'The date when the policy will be applicable from', 'erp' )
+            ) ); ?>
+        </div>
+    <# } else { #>
+        <div class="row">
+            <?php erp_html_form_input( array(
+                'label'    => __( 'Effective Date', 'erp' ),
+                'name'     => 'effective_date',
+                'value'    => date( 'Y-m-d' ),
+                'class'    => 'erp-leave-date-field',
+                'help'    => __( 'The date when the policy will be applicable from', 'erp' )
+            ) ); ?>
+        </div>
+    <# } #>
 
     <div class="row" data-selected="{{ data.activate }}">
         <?php erp_html_form_input( array(

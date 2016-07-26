@@ -27,14 +27,14 @@
         new Vue({
             el: '#' + id,
             data: {
+                i18n: crmContactFormsSettings.i18n,
                 plugin: plugin,
                 formId: formId,
                 formData: crmContactFormsSettings.forms[plugin][formId],
                 totalFields: 0,
                 crmOptions: crmContactFormsSettings.crmOptions,
-                labelContactGroups: crmContactFormsSettings.labelContactGroups,
-                labelSelectGroup: crmContactFormsSettings.labelSelectGroup,
                 contactGroups: crmContactFormsSettings.contactGroups,
+                contactOwners: crmContactFormsSettings.contactOwners,
                 activeDropDown: null
             },
 
@@ -62,7 +62,7 @@
                         title = this.crmOptions[arr[0]].title + ' - ' + this.crmOptions[arr[0]].options[arr[1]];
                     }
 
-                    return title ? title : crmContactFormsSettings.notMapped;
+                    return title ? title : this.i18n.notMapped;
                 },
 
                 optionIsAnObject: function (option) {
@@ -120,7 +120,8 @@
                             plugin: this.plugin,
                             formId: this.formId,
                             map: self.formData.map,
-                            contactGroup: self.formData.contactGroup
+                            contactGroup: self.formData.contactGroup,
+                            contactOwner: self.formData.contactOwner,
                         }
 
                     }).done(function (response) {
@@ -128,6 +129,7 @@
                         if ('erp_settings_reset_contact_form' === action && response.success) {
                             self.$set('formData.map', response.map);
                             self.$set('formData.contactGroup', response.contactGroup);
+                            self.$set('formData.contactOwner', response.contactOwner);
                         }
 
                         var type = response.success ? 'success' : 'error';
@@ -137,7 +139,7 @@
                                 title: '',
                                 text: response.msg,
                                 type: type,
-                                confirmButtonText: crmContactFormsSettings.labelOK,
+                                confirmButtonText: self.i18n.labelOK,
                                 confirmButtonColor: '#008ec2'
                             });
                         }

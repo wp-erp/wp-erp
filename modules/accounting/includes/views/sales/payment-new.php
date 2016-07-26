@@ -3,7 +3,7 @@ $account        = isset( $_GET['receive_payment'] ) && $_GET['receive_payment'] 
 $account_id     = $account && isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : false;
 $customer_class = $account_id ? 'erp-ac-payment-receive' : '';
 $transaction_id = isset( $_GET['transaction_id'] ) ? intval( $_GET['transaction_id'] ) : false;
-
+$cancel_url     = erp_ac_get_sales_url();
 $transaction    = [];
 $jor_itms       = [];
 $main_ledger_id = '';
@@ -11,7 +11,7 @@ $main_ledger_id = '';
 if ( $transaction_id ) {
     $transaction = erp_ac_get_all_transaction([
         'id'     => $transaction_id,
-        'status' => 'draft',
+        'status' => [ 'in' => ['draft', 'pending']],
         'join'   => ['journals', 'items'],
         'type'   => ['sales'],
         'output_by' => 'array'
@@ -48,7 +48,6 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
 <div class="wrap erp-ac-form-wrap">
 
     <h2><?php _e( 'Receive Payment', '$domain' ); ?></h2>
-
     <?php
     $dropdown = erp_ac_get_chart_dropdown([
         'exclude'  => [1, 2, 3, 5],
@@ -63,7 +62,7 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
 
     ?>
 
-    <form action="" method="post" class="erp-form" style="margin-top: 30px;">
+    <form action="" method="post" class="erp-form erp-ac-transaction-form erp-ac-payment-form">
 
         <ul class="form-fields block" style="width:100%;">
 
@@ -79,6 +78,7 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
                                 'placeholder' => __( 'Select a payee', 'erp' ),
                                 'value'       => isset( $transaction['user_id'] ) ? $transaction['user_id'] : '',
                                 'type'        => 'select',
+                                'required'    => true,
                                 'class'       => $transaction_id ? 'erp-select2 erp-ac-not-found-in-drop' : 'erp-select2 erp-ac-payment-receive erp-ac-not-found-in-drop',
                                 'options'     => [ '' => __( '&mdash; Select &mdash;', 'erp' ) ] + erp_get_peoples_array( ['type' => 'customer', 'number' => 100 ] ),
                                 'custom_attr' => [
@@ -117,7 +117,7 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
                             'type'     => 'text',
                             'required' => true,
                             'class'    => 'erp-ac-check-invoice-number',
-                            'value'    => erp_ac_invoice_prefix( 'erp_ac_payment', erp_ac_generate_invoice_id( 'payment' ) )
+                            'value'    => isset( $transaction['invoice_number']  ) ? $transaction['invoice_number'] : erp_ac_invoice_prefix( 'erp_ac_payment', erp_ac_generate_invoice_id( 'payment' ) )
                         ) );
                         ?>
                     </li>
@@ -183,25 +183,54 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
 
         <?php wp_nonce_field( 'erp-ac-trans-new' ); ?>
 
-        <?php
+<!--         <?php
         if ( erp_ac_publish_sales_payment() ) {
             ?>
             <input type="submit" name="submit_erp_ac_trans" id="submit_erp_ac_trans" class="button button-primary" value="<?php _e( 'Receive Payment', 'erp' ); ?>">
             <?php
         }
         ?>
+-->
+        <input type="submit" name="submit_erp_ac_trans" style="display: none;">
+        <input type="hidden" id="erp-ac-btn-status" name="btn_status" value="">
+        <input type="hidden" id="erp-ac-redirect" name="redirect" value="0">
 
-        <input type="submit" name="submit_erp_ac_trans_draft" id="submit_erp_ac_trans_draft" class="button button-secondary" value="<?php _e( 'Save as Draft', 'erp' ); ?>">
+
+        <div class="erp-ac-btn-group-wrap">
+             <div class="erp-button-bar-left">
+                <div class="erp-btn-group">
+                    <button  data-redirect="single_page" data-btn_status="payment" type="button" class="erp-drop-down-btn button button-primary erp-ac-trns-form-submit-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <?php _e( 'Payment', 'erp' ); ?>
+                    </button>
+                    <button type="button" class="erp-drop-down-btn erp-drop-down-child-btn button button-primary">
+                        <span class="erp-caret"></span>
+                        <span class="erp-sr-only"><?php _e( 'Toggle Dropdown', 'erp' ); ?></span>
+                    </button>
+                    <ul class="erp-dropdown-menu">
+                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="single_page" data-btn_status="payment" href="#"><?php _e( 'Payment', 'erp' ); ?></a></li>
+                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="payment_and_add_another" href="#"><?php _e( 'Payment & add another', 'erp' ); ?></a></li>
+                    </ul>
+                </div>
+            </div> 
+
+            <div class="erp-button-bar-right">
+                
+
+                <a href="<?php echo esc_url( $cancel_url ); ?>" class="button"><?php _e( 'Cancel', 'erp' ); ?></a>
+            </div>
+        </div>
     </form>
-    <div class="erp-ac-receive-payment-table-clone" style="display: none;">
+
+    <div class="erp-ac-receive-payment-table-clone"  id="erp-ac-hidden-new-payment" style="display: none;">
 
         <?php
         $dropdown_html = erp_ac_render_account_dropdown_html( $dropdown, array(
             'name'     => 'line_account[]',
-            'class'    => 'erp-ac-selece-custom'
+            'class'    => 'erp-select2'
         ) );
 
-        $jor_itms = [];
+        $jor_itms = []; 
+        $hidden = false;
         include dirname( dirname( __FILE__ ) ) . '/common/transaction-table.php';?>
     </div>
 

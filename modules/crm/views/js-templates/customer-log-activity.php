@@ -17,7 +17,7 @@ $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
     </p>
 
     <p v-if="feedData.log_type == 'email'">
-        <label>Subject</label>
+        <label><?php _e( 'Subject', 'erp' ) ?></label>
         <span class="sep">:</span>
         <span class="value">
             <input type="text" class="email_subject" name="email_subject" v-model="feedData.email_subject" placeholder="<?php _e( 'Subject log...', 'erp' ); ?>">
@@ -25,7 +25,7 @@ $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
     </p>
 
     <p v-if="feedData.log_type == 'meeting'">
-        <select name="selected_contact" id="erp-crm-activity-invite-contact" v-model="feedData.invite_contact" v-selecttwo="feedData.inviteContact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="Select contacts...">
+        <select name="selected_contact" id="erp-crm-activity-invite-contact" v-model="feedData.inviteContact" v-selecttwo="feedData.inviteContact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="Select contacts...">
             <?php echo erp_crm_get_employees_dropdown(); ?>
         </select>
     </p>

@@ -171,7 +171,31 @@ class Transaction_List_Table extends \WP_List_Table {
      * @return string
      */
     function column_issue_date( $item ) {
-        return sprintf( '<a href="%1$s">%2$s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), erp_format_date( $item->issue_date ) );
+        
+        if ( $item->status == 'pending' || $item->status == 'draft' ) {
+            $actions['delete'] = sprintf( '<a href="#" class="erp-accountin-trns-row-del" data-id="%d" title="%s">%s</a>', $item->id, __( 'Delete', 'erp' ), __( 'Delete', 'erp' ) );
+        }
+
+
+        if ( $item->status == 'pending' || $item->status == 'draft' || $item->status == 'awaiting_payment' ) {
+            $url   = admin_url( 'admin.php?page='.$this->slug.'&action=new&type=' . $item->form_type . '&transaction_id=' . $item->id );
+            $actions['edit'] = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Edit', 'erp' ) );
+        }
+
+        if ( ( $item->status == 'paid' || $item->status == 'closed' ) && $item->form_type == 'invoice' ) {
+            //$actions['redo'] = sprintf( '<a class="erp-accounting-redo" data-type="%1$s" data-id="%2$s" href="#">%3$s</a>', $item->type, $item->id, __( 'Redo', 'erp' ) );
+        }
+
+        if ( $item->status == 'awaiting_payment' ) {
+            $actions['void'] = sprintf( '<a class="erp-accounting-void" data-id="%1$s" href="#">%2$s</a>', $item->id, __( 'Void', 'erp' ) );
+        }
+
+
+        if ( isset( $actions ) && count( $actions ) ) {
+            return sprintf( '<a href="%1$s">%2$s</a> %3$s', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), erp_format_date( $item->issue_date ), $this->row_actions( $actions ) );
+        } else {
+            return sprintf( '<a href="%1$s">%2$s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), erp_format_date( $item->issue_date ) );
+        }
     }
 
 
@@ -252,7 +276,7 @@ class Transaction_List_Table extends \WP_List_Table {
                 'placeholder' => __( 'Ref No.', 'erp' )
             ]);
 
-            submit_button( __( 'Filter' ), 'button', 'submit_filter_sales', false );
+            submit_button( __( 'Filter', 'erp' ), 'button', 'submit_filter_sales', false );
 
             echo '</div>';
         }
@@ -319,7 +343,11 @@ class Transaction_List_Table extends \WP_List_Table {
         }
 
         if ( isset( $_REQUEST['form_type'] ) && ! empty( $_REQUEST['form_type'] ) ) {
-            $args['form_type'] = $_REQUEST['form_type'];
+            if ( $_REQUEST['form_type'] == 'deleted' ) {
+                $args['status'] = $_REQUEST['form_type'];
+            } else {
+                $args['form_type'] = $_REQUEST['form_type'];    
+            }
         }
 
         if ( isset( $_REQUEST['ref'] ) && ! empty( $_REQUEST['ref'] ) ) {

@@ -5,7 +5,6 @@ $payments            = \WeDevs\ERP\Accounting\Model\Payment::where('child', '=',
 $partials_id         = wp_list_pluck( $payments, 'transaction_id' );
 $partial_transaction = \WeDevs\ERP\Accounting\Model\Transaction::whereIn( 'id', $partials_id )->get()->toArray();
 
-$status              = $transaction->status == 'draft' ? false : true;
 $url                 = admin_url( 'admin.php?page=erp-accounting-sales&action=new&type=invoice&transaction_id=' . $transaction->id );
 $more_details_url    = erp_ac_get_slaes_payment_invoice_url( $transaction->id );
 $taxinfo             = erp_ac_get_tax_info();
@@ -13,6 +12,8 @@ $taxinfo             = erp_ac_get_tax_info();
 $current_user        = wp_get_current_user();
 $sender              = $current_user->user_email;
 $email_subject       = __( 'Invoice#', 'erp' ) . $transaction->invoice_number . __( ' from ', 'erp' ) . $company->name;
+$link_hash           = erp_ac_get_invoice_link_hash( $transaction );
+$readonly_url        = add_query_arg( [ 'query' => 'readonly_invoice', 'trans_id' => $transaction->id, 'auth' => $link_hash ], site_url() );
 ?>
 <div class="wrap">
 
@@ -20,7 +21,7 @@ $email_subject       = __( 'Invoice#', 'erp' ) . $transaction->invoice_number . 
     <?php
         _e( 'Invoice ', 'erp' );
         if ( isset( $popup_status ) ) {
-            printf( '<a href="%1$s" class="erp-ac-more-details">%2$s &rarr;</a>', $more_details_url, __('More Details','accounting') );
+            printf( '<a href="%1$s" class="erp-ac-more-details">%2$s &rarr;</a>', $more_details_url, __('More Details','erp') );
         }
     ?>
     </h2>
@@ -33,26 +34,43 @@ $email_subject       = __( 'Invoice#', 'erp' ) . $transaction->invoice_number . 
                 ?>
                 <div class="row invoice-buttons erp-hide-print" id="invoice-button-container" data-theme="drop-theme-hubspot-popovers">
                     <div class="col-6">
-                        <?php if ( $status ) {
+                        <?php
+                        if ( $transaction->status == 'draft' || $transaction->status == 'pending'  ) {
                             ?>
-                            <a href="#" data-transaction_id=<?php echo $transaction->id; ?> data-due_amount=<?php echo $transaction->due; ?> data-customer_id=<?php echo intval($transaction->user_id); ?> class="button button-primary button-large add-invoice-payment erp-hide-print"><?php _e( 'Add Payment', 'accounting' ); ?></a>
+                            <a href="<?php echo $url; ?>" class="button button-large"><?php _e( 'Edit Invoice', 'erp' ); ?></a>
+                            <a href="#" class="button button-large erp-ac-print erp-hide-print"><i class="fa fa-print"></i>&nbsp;<?php _e( 'Print', 'accounting' ); ?></a>
+                            <a class="button button-large drop-target"><i class="fa fa-cog"></i>&nbsp;<?php _e( 'More Actions', 'accounting' ); ?></a>
+                            <?php   
+                        } else if ( $transaction->status == 'paid' || $transaction->status == 'closed' ) {
+                            ?>
                             <a href="#" class="button button-large erp-ac-print erp-hide-print"><i class="fa fa-print"></i>&nbsp;<?php _e( 'Print', 'accounting' ); ?></a>
                             <a class="button button-large drop-target"><i class="fa fa-cog"></i>&nbsp;<?php _e( 'More Actions', 'accounting' ); ?></a>
                             <?php
+                        } else if ( $transaction->status == 'partial' ) {
+                            ?>
+                            <a data-type="payment" title="hello" href="#" data-transaction_id=<?php echo $transaction->id; ?> data-due_amount=<?php echo $transaction->due; ?> data-customer_id=<?php echo intval($transaction->user_id); ?> class="button button-primary button-large add-invoice-payment erp-hide-print"><?php _e( 'Add Payment', 'erp' ); ?></a>
+                            <a href="#" class="button button-large erp-ac-print erp-hide-print"><i class="fa fa-print"></i>&nbsp;<?php _e( 'Print', 'erp' ); ?></a>
+                            <a class="button button-large drop-target"><i class="fa fa-cog"></i>&nbsp;<?php _e( 'More Actions', 'erp' ); ?></a>
+                            <?php
                         } else {
                             ?>
+                            <a data-type="payment" href="#" data-transaction_id=<?php echo $transaction->id; ?> data-due_amount=<?php echo $transaction->due; ?> data-customer_id=<?php echo intval($transaction->user_id); ?> class="button button-primary button-large add-invoice-payment erp-hide-print"><?php _e( 'Add Payment', 'accounting' ); ?></a>
                             <a href="<?php echo $url; ?>" class="button button-large"><?php _e( 'Edit Invoice', 'erp' ); ?></a>
+                            <a href="#" class="button button-large erp-ac-print erp-hide-print"><i class="fa fa-print"></i>&nbsp;<?php _e( 'Print', 'accounting' ); ?></a>
+                            <a class="button button-large drop-target"><i class="fa fa-cog"></i>&nbsp;<?php _e( 'More Actions', 'accounting' ); ?></a>
                             <?php
-                        }
+                        } 
                         ?>
                     </div>
                 </div>
 
                 <template class="more-action-content">
                     <ul>
-                        <li><a href="#" class="invoice-duplicate"><?php _e( 'Duplicate', 'erp' ); ?></a></li>
+<!--                        <li><a href="#" class="invoice-duplicate">--><?php //_e( 'Duplicate', 'erp' ); ?><!--</a></li>-->
                         <li><a href="<?php echo wp_nonce_url( admin_url( "admin-ajax.php?action=erp-ac-sales-invoice-export&transaction_id={$transaction->id}" ), 'accounting-invoice-export' ); ?>" class="invoice-export-pdf"><?php _e( 'Export as PDF', 'erp' ); ?></a></li>
-                        <li><a href="#" data-transaction-id="<?php echo $transaction->id; ?>" data-sender="<?php echo $sender; ?>" data-receiver="<?php echo $user->email; ?>" data-subject="<?php echo $email_subject; ?>" data-title="<?php _e( 'Send Invoice', 'erp' ); ?>" data-button="<?php _e( 'Send', 'erp' ); ?>" data-type="invoice" class="invoice-send-email"><?php _e( 'Send Via Email', 'erp' ); ?></a></li>
+                        <li id="get-readonly-link"><a href="#" data-title="<?php _e( 'Get Invoice Link', 'erp' ); ?>" class="invoice-get-link"><?php _e( 'Get Link', 'erp' ); ?></a></li>
+                        <li id="copy-readonly-link" style="display: none"><input onClick="this.select();" type="text" value="<?php echo esc_url( $readonly_url ); ?>" id="invoice-readonly-link">&nbsp;<a data-clipboard-target="#invoice-readonly-link" class="copy-readonly-invoice" title="<?php _e('Click to copy', 'erp' ); ?>" id="erp-tips-get-link" style="cursor: pointer"><i class="fa fa-copy"></i></a></li>
+                        <li><a href="#" data-url="<?php echo esc_url( $readonly_url ); ?>" data-transaction-id="<?php echo $transaction->id; ?>" data-sender="<?php echo $sender; ?>" data-receiver="<?php echo $user->email; ?>" data-subject="<?php echo $email_subject; ?>" data-title="<?php _e( 'Send Invoice', 'erp' ); ?>" data-button="<?php _e( 'Send', 'erp' ); ?>" data-type="invoice" class="invoice-send-email"><?php _e( 'Send Via Email', 'erp' ); ?></a></li>
                     </ul>
                 </template>
 

@@ -18,8 +18,6 @@ class Admin_Menu {
         $this->action( 'admin_menu', 'admin_menu', 99 );
         $this->action( 'admin_menu', 'hide_admin_menus', 100 );
         $this->action( 'wp_before_admin_bar_render', 'hide_admin_bar_links', 100 );
-
-        $this->action( 'init', 'tools_page_handler' );
     }
 
     /**
@@ -118,41 +116,7 @@ class Admin_Menu {
         }
     }
 
-    /**
-     * Handle all the forms in the tools page
-     *
-     * @return void
-     */
-    public function tools_page_handler() {
 
-        // admin menu form
-        if ( isset( $_POST['erp_admin_menu'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'erp-remove-menu-nonce' ) ) {
-
-            $menu     = isset( $_POST['menu'] ) ? array_map( 'strip_tags', $_POST['menu'] ) : [];
-            $bar_menu = isset( $_POST['admin_menu'] ) ? array_map( 'strip_tags', $_POST['admin_menu'] ) : [];
-
-            update_option( '_erp_admin_menu', $menu );
-            update_option( '_erp_adminbar_menu', $bar_menu );
-        }
-    }
-
-    /**
-     * Handles the dashboard page
-     *
-     * @return void
-     */
-    public function dashboard_page() {
-        echo "Dashboard!";
-    }
-
-    /**
-     * Handles the employee page
-     *
-     * @return void
-     */
-    public function employee_page() {
-        echo "employee!";
-    }
 
     /**
      * Handles the company page

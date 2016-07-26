@@ -17,7 +17,8 @@ module.exports = function(grunt) {
             admin: {
                 files: {
                     '<%= dirs.css %>/admin.css': '<%= dirs.less %>/admin/admin.less',
-                    '<%= dirs.css %>/setup.css': '<%= dirs.less %>/admin/setup.less'
+                    '<%= dirs.css %>/setup.css': '<%= dirs.less %>/admin/setup.less',
+                    '<%= dirs.css %>/accounting.css': '<%= dirs.less %>/admin/accounting.less'
                 }
             }
         },
@@ -120,12 +121,12 @@ module.exports = function(grunt) {
             main: {
                 options: {
                     mode: 'zip',
-                    archive: './build/wp-erp-v' + pkg.version + '.zip'
+                    archive: './build/erp-v' + pkg.version + '.zip'
                 },
                 expand: true,
                 cwd: 'build/',
                 src: ['**/*'],
-                dest: 'wp-erp'
+                dest: 'erp'
             }
         },
 

@@ -44,8 +44,8 @@ function erp_ac_create_table() {
           `ledger_id` int(11) unsigned NOT NULL,
           `transaction_id` bigint(20) unsigned NOT NULL,
           `type` varchar(20) DEFAULT NULL,
-          `debit` decimal(10,2) unsigned DEFAULT NULL,
-          `credit` decimal(10,2) unsigned DEFAULT NULL,
+          `debit` DECIMAL(13,4) unsigned DEFAULT NULL,
+          `credit` DECIMAL(13,4) unsigned DEFAULT NULL,
           PRIMARY KEY (`id`),
           KEY `ledger_id` (`ledger_id`),
           KEY `transaction_id` (`transaction_id`)
@@ -93,10 +93,10 @@ function erp_ac_create_table() {
           `due_date` date DEFAULT NULL,
           `currency` varchar(10) DEFAULT NULL,
           `conversion_rate` decimal(2,2) unsigned DEFAULT NULL,
-          `sub_total` DECIMAL(10,2) DEFAULT '0.00',
-          `total` decimal(10,2) DEFAULT '0.00',
-          `due` decimal(10,2) unsigned DEFAULT '0.00',
-          `trans_total` decimal(10,2) DEFAULT '0.00',
+          `sub_total` DECIMAL(13,4) DEFAULT '0.00',
+          `total` DECIMAL(13,4) DEFAULT '0.00',
+          `due` DECIMAL(13,4) unsigned DEFAULT '0.00',
+          `trans_total` DECIMAL(13,4) DEFAULT '0.00',
           `files` varchar(255) DEFAULT NULL,
           `parent` bigint(20) unsigned NOT NULL DEFAULT '0',
           `created_by` int(11) unsigned DEFAULT NULL,
@@ -115,12 +115,12 @@ function erp_ac_create_table() {
           `product_id` int(10) unsigned DEFAULT NULL,
           `description` text,
           `qty` tinyint(5) unsigned NOT NULL DEFAULT '1',
-          `unit_price` decimal(10,2) unsigned NOT NULL DEFAULT '0.00',
+          `unit_price` DECIMAL(13,4) unsigned NOT NULL DEFAULT '0.00',
           `discount` tinyint(3) unsigned NOT NULL DEFAULT '0',
           `tax` tinyint(3) unsigned NOT NULL DEFAULT '0',
-          `tax_rate` DECIMAL(10,2) NOT NULL,
+          `tax_rate` DECIMAL(13,4) NOT NULL,
           `tax_journal` BIGINT(20) NOT NULL,
-          `line_total` decimal(10,2) unsigned NOT NULL DEFAULT '0.00',
+          `line_total` DECIMAL(13,4) unsigned NOT NULL DEFAULT '0.00',
           `order` tinyint(3) unsigned NOT NULL DEFAULT '0',
           PRIMARY KEY (`id`),
           KEY `transaction_id` (`transaction_id`),
@@ -291,7 +291,7 @@ function erp_ac_table_update() {
     $cols = $wpdb->get_col( "DESC " . $table );
 
     if ( ! in_array( 'sub_total', $cols ) ) {
-        $wpdb->query( "ALTER TABLE $table ADD `sub_total` DECIMAL(10,2) NOT NULL AFTER `conversion_rate`" );
+        $wpdb->query( "ALTER TABLE $table ADD `sub_total` DECIMAL(13,4) NOT NULL AFTER `conversion_rate`" );
     }
 
     $ledger = $wpdb->prefix . 'erp_ac_ledger';
@@ -306,7 +306,7 @@ function erp_ac_table_update() {
     $item_cols  = $wpdb->get_col( "DESC " . $item_table );
 
     if ( ! in_array( 'tax_rate',$item_cols ) ) {
-        $wpdb->query( "ALTER TABLE $item_table ADD `tax_rate` DECIMAL(10,2) NOT NULL AFTER `tax`" );
+        $wpdb->query( "ALTER TABLE $item_table ADD `tax_rate` DECIMAL(13,4) NOT NULL AFTER `tax`" );
     }
 
     if ( ! in_array( 'type', $item_cols ) ) {

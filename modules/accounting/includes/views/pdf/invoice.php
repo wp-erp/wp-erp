@@ -1,6 +1,5 @@
 <?php
 $company     = new WeDevs\ERP\Company();
-$transaction = WeDevs\ERP\Accounting\Model\Transaction::find( $transaction_id );
 $user        = new \WeDevs\ERP\People( intval( $transaction->user_id ) );
 $theme_color = erp_get_option( 'erp_ac_pdf_theme_color', false, '#9e9e9e' );
 
@@ -89,5 +88,6 @@ $invoice->add_total( __( 'TOTAL', 'erp' ), html_entity_decode( erp_ac_get_price(
 //$invoice->set_footer_note("http://www.wedevs.com");
 
 //Render the PDF
-$file_name = sprintf( '%s_%s.pdf', $transaction->invoice_number, date( 'd-m-Y' ) );
+//$file_name = sprintf( '%s_%s.pdf', $transaction->invoice_number, date( 'd-m-Y' ) );
+//wp_send_json_success($file_name);
 $invoice->render( $file_name, $output_method );

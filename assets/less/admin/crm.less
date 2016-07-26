@@ -1208,11 +1208,32 @@
                 .cancel-timeline-feed-edit {
                     cursor: pointer;
                 }
+
+                &.timeline-oneliner {
+                    background: none;
+                    box-shadow: none;
+
+                    .timeline-body {
+                        padding: 0;
+
+                        .timeline-feed-header-text {
+                            line-height: 1.5;
+                            display: block;
+                            border-bottom: 1px solid #eee;
+                            padding: 4px 0;
+
+                            a {
+                                text-decoration: none;
+                                font-weight: bold;
+                            }
+                        }
+                    }
+                }
             }
             .timeline > li > .timeline-item > .time {
                 color: #999;
                 float: right;
-                padding: 10px;
+                padding: 8px 10px;
                 font-size: 12px;
             }
             .timeline > li > .timeline-item > .timeline-header {
@@ -1320,7 +1341,7 @@
                 font-size: 15px;
                 line-height: 30px;
                 position: absolute;
-                color: #fafafa;
+                color: #a2a2a2;
                 background: #dfdfdf;
                 border-radius: 50%;
                 text-align: center;
@@ -1566,7 +1587,6 @@ table.widefat.cfi-table {
     th,
     td {
         padding: 10px 20px;
-        text-align: center;
     }
 
     th {
@@ -1577,6 +1597,10 @@ table.widefat.cfi-table {
 
      td {
         border-bottom: 1px solid #E1E1E1;
+
+        &.cfi-contact-options {
+            text-align: center;
+        }
     }
 
     td.cfi-contact-options .button {

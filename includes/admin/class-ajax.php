@@ -27,6 +27,7 @@ class Ajax {
         $this->action( 'wp_ajax_erp_people_exists', 'check_people' );
         $this->action( 'wp_ajax_erp_smtp_test_connection', 'smtp_test_connection' );
         $this->action( 'wp_ajax_erp_imap_test_connection', 'imap_test_connection' );
+        $this->action( 'wp_ajax_erp_import_users_as_contacts', 'import_users_as_contacts' );
     }
 
     function file_delete() {
@@ -228,23 +229,25 @@ class Ajax {
             $this->send_error( __( 'No port address provided', 'erp' ) );
         }
 
-        if ( empty( $_REQUEST['username'] ) ) {
-            $this->send_error( __( 'No email address provided', 'erp' ) );
-        }
+        if ( $_REQUEST['authentication'] !== '' ) {
+            if ( empty( $_REQUEST['username'] ) ) {
+                $this->send_error( __( 'No email address provided', 'erp' ) );
+            }
 
-        if ( empty( $_REQUEST['password'] ) ) {
-            $this->send_error( __( 'No email password provided', 'erp' ) );
+            if ( empty( $_REQUEST['password'] ) ) {
+                $this->send_error( __( 'No email password provided', 'erp' ) );
+            }
         }
 
         if ( empty( $_REQUEST['to'] ) ) {
             $this->send_error( __( 'No testing email address provided', 'erp' ) );
         }
 
-        $mail_server = $_REQUEST['mail_server'];
-        $port = isset( $_REQUEST['port'] ) ? $_REQUEST['port'] : 465;
-        $authentication = isset( $_REQUEST['authentication'] ) ? $_REQUEST['authentication'] : 'ssl';
-        $username = $_REQUEST['username'];
-        $password = $_REQUEST['password'];
+        $mail_server    = $_REQUEST['mail_server'];
+        $port           = isset( $_REQUEST['port'] ) ? $_REQUEST['port'] : 465;
+        $authentication = isset( $_REQUEST['authentication'] ) ? $_REQUEST['authentication'] : 'smtp';
+        $username       = $_REQUEST['username'];
+        $password       = $_REQUEST['password'];
 
         global $phpmailer;
 
@@ -286,9 +289,13 @@ class Ajax {
         $phpmailer->Host       = $mail_server;
         $phpmailer->SMTPSecure = $authentication;
         $phpmailer->Port       = $port;
-        $phpmailer->SMTPAuth   = true;
-        $phpmailer->Username   = $username;
-        $phpmailer->Password   = $password;
+
+        if ( $_REQUEST['authentication'] !== '' ) {
+            $phpmailer->SMTPAuth   = true;
+            $phpmailer->Username   = $username;
+            $phpmailer->Password   = $password;
+        }
+
         $phpmailer->isHTML(true);
 
         try {
@@ -339,6 +346,83 @@ class Ajax {
         } catch( \Exception $e ) {
             $this->send_error( $e->getMessage() );
         }
+    }
+
+    /**
+     * Import users as crm contacts.
+     *
+     * @return void
+     */
+    public function import_users_as_contacts() {
+        $this->verify_nonce( 'erp-import-export-nonce' );
+
+        $limit = 50; // Limit to import per request
+
+        $attempt = get_option( 'erp_users_to_contacts_import_attempt', 1 );
+        update_option( 'erp_users_to_contacts_import_attempt', $attempt + 1 );
+        $offset = ( $attempt - 1 ) * $limit;
+
+        $user_role     = $_REQUEST['user_role'];
+        $contact_owner = sanitize_text_field( $_REQUEST['contact_owner'] );
+        $life_stage    = sanitize_text_field( $_REQUEST['life_stage'] );
+        $contact_group = sanitize_text_field( $_REQUEST['contact_group'] );
+
+        if ( ! empty( $user_role ) ) {
+            $user_query  = new \WP_User_Query( ['role__in' => $user_role, 'number' => $limit, 'offset' => $offset] );
+            $users       = $user_query->get_results();
+            $total_items = $user_query->get_total();
+        } else {
+            $user_query  = new \WP_User_Query( ['number' => $limit, 'offset' => $offset] );
+            $users       = $user_query->get_results();
+            $total_items = $user_query->get_total();
+        }
+
+        $user_ids = [];
+        $user_ids = wp_list_pluck( $users, 'ID' );
+        $contacts = erp_get_people_by( 'user_id', $user_ids );
+
+        $exists = get_option( 'erp_users_to_contacts_import_exists', 0 );
+
+        if ( ! empty( $contacts ) && is_array( $contacts ) ) {
+            $contact_ids = wp_list_pluck( $contacts, 'user_id' );
+            $user_ids    = array_diff( $user_ids, $contact_ids );
+            $exists      += count( $contact_ids );
+            update_option( 'erp_users_to_contacts_import_exists', $exists );
+        }
+
+        foreach ( $user_ids as $user_id ) {
+            $data['type']    = 'contact';
+            $data['user_id'] = (int) $user_id;
+
+            $contact_id = erp_insert_people( $data );
+
+            if ( is_wp_error( $contact_id ) ) {
+                continue;
+            } else {
+                update_user_meta( $data['user_id'], '_assign_crm_agent', $contact_owner );
+                update_user_meta( $data['user_id'], 'life_stage', $life_stage );
+                erp_people_update_meta( $data['user_id'], 'life_stage', $life_stage );
+            }
+
+            // Subscribe to a group if any group has been selected
+            if ( ! empty( $contact_group ) && ! is_wp_error( $contact_id ) ) {
+                erp_crm_create_new_contact_subscriber( ['user_id' => (int) $contact_id, 'group_id' => (int) $contact_group] );
+            }
+        }
+
+        // re-calculate stats
+        if ( $total_items <= ( $attempt * $limit ) ) {
+            $left = 0;
+        } else {
+            $left = $total_items - ( $attempt * $limit );
+        }
+
+        if ( $left === 0 ) {
+            delete_option( 'erp_users_to_contacts_import_attempt' );
+            delete_option( 'erp_users_to_contacts_import_exists' );
+        }
+
+        $this->send_success( ['left' => $left, 'total_items' => $total_items, 'exists' => $exists] );
     }
 }
 

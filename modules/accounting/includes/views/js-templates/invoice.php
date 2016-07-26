@@ -1,3 +1,12 @@
+<# 
+    var type = 'sales',
+        form_type = 'payment';
+
+    if ( data.type == 'payment_voucher' ) {
+        type = 'expense',
+        form_type = 'payment_voucher';
+    }
+#>
 <div class="erp-ac-transfer-money-js-temp-wrap">
 
     <div class="row">
@@ -20,7 +29,7 @@
                 'type'     => 'text',
                 'required' => true,
                 'class'    => 'erp-ac-check-invoice-number',
-                'custom_attr' => ['data-type' => 'invoice'],
+                'custom_attr' => ['data-type' => '{{data.type}}'],
                 'value'    => ''
             ) );
         ?>
@@ -115,6 +124,22 @@
                 'name'        => 'partial_id[]',
                 'type'        => 'hidden',
                 'value'       => '{{ data.partial_id }}',
+            ) );
+        ?>
+
+        <?php
+            erp_html_form_input( array(
+                'type'        => 'hidden',
+                'name'        => 'type',
+                'value'       => '{{type}}',
+            ) );
+        ?>
+
+        <?php
+            erp_html_form_input( array(
+                'type'        => 'hidden',
+                'name'        => 'form_type',
+                'value'       => '{{form_type}}',
             ) );
         ?>
 

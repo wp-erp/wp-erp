@@ -16,20 +16,20 @@ $save_replies = erp_crm_get_save_replies();
 
     <p class="email-from" v-if="!feed">
         <input type="hidden"  v-model="feedData.created_by" name="created_by" value="<?php echo $current_user->ID; ?>">
-        <label>Form</label>
+        <label><?php _e( 'From', 'erp' ); ?></label>
         <span class="sep">:</span>
         <span class="value"><?php echo $current_user->display_name; ?></span>
     </p>
 
     <p class="email-to" v-if="!feed">
         <input type="hidden" name="user_id" v-model="feedData.user_id" value="<?php echo $customer->id; ?>">
-        <label>To</label>
+        <label><?php _e( 'To', 'erp' ) ?></label>
         <span class="sep">:</span>
         <span class="value"><?php echo $customer->get_full_name(); ?></span>
     </p>
 
     <p class="email-subject" v-if="!feed">
-        <label>Subject</label>
+        <label><?php _e( 'Subject', 'erp' ); ?></label>
         <span class="sep">:</span>
         <span class="value">
             <input type="text" name="email_subject" v-model="feedData.email_subject" placeholder="<?php _e( 'Subject...', 'erp' ); ?>">
