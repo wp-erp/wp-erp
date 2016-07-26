@@ -35,7 +35,7 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
             return;
         }
 
-        $groups         = erp_crm_get_contact_group_dropdown( [ '' => __( 'All Groups', 'erp' ) ] );
+        $groups         = erp_crm_get_contact_group_dropdown();
         $selected_group = ( isset( $_GET['filter_contact_group'] ) ) ? $_GET['filter_contact_group'] : 0;
         ?>
         <div class="alignleft actions">
@@ -158,11 +158,12 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
      */
     function get_columns() {
         $columns = array(
-            'cb'    => '<input type="checkbox" />',
-            'name'  => __( 'Name', 'erp' ),
-            'email' => __( 'Email', 'erp' ),
-            'type'  => __( 'Contact Type', 'erp' ),
-            'group' => __( 'Group', 'erp' ),
+            'cb'                     => '<input type="checkbox" />',
+            'name'                   => __( 'Name', 'erp' ),
+            'email'                  => __( 'Email', 'erp' ),
+            'type'                   => __( 'Contact Type', 'erp' ),
+            'group'                  => __( 'Group', 'erp' ),
+            'subscription_status'    => __( 'Status', 'erp' )
         );
 
         return apply_filters( 'erp_crm_contact_subscribe_table_cols', $columns );
@@ -220,6 +221,23 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
         return sprintf(
             '<input type="checkbox" name="suscriber_contact_id[]" value="%s" />', $item->user_id
         );
+    }
+
+    /**
+     * Subscribed or unsubscribed status for a contact
+     *
+     * @since 1.1.2
+     *
+     * @param  object  $item
+     *
+     * @return string
+     */
+    function column_subscription_status( $item ) {
+        if ( !empty( $item->data[0]->unsubscribe_at ) ) {
+            return __( 'Unsubscribed', 'erp' );
+        } else {
+            return __( 'Subscribed', 'erp' );
+        }
     }
 
     /**

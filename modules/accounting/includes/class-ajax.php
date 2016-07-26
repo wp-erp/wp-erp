@@ -676,6 +676,8 @@ class Ajax_Handler {
         check_ajax_referer( 'accounting-invoice-export' );
 
         $transaction_id = isset( $_REQUEST['transaction_id'] ) ? $_REQUEST['transaction_id'] : 0;
+        $transaction    = Model\Transaction::find( $transaction_id );
+        $file_name      = sprintf( '%s_%s.pdf', $transaction->invoice_number, $transaction->issue_date );
         $output_method  = 'D';
 
         if ( $transaction_id ) {
@@ -693,6 +695,8 @@ class Ajax_Handler {
         check_ajax_referer( 'accounting-payment-export' );
 
         $transaction_id = isset( $_REQUEST['transaction_id'] ) ? $_REQUEST['transaction_id'] : 0;
+        $transaction    = Model\Transaction::find( $transaction_id );
+        $file_name      = sprintf( '%s_%s.pdf', $transaction->invoice_number, $transaction->issue_date );
         $output_method  = 'D';
 
         if ( $transaction_id ) {
@@ -717,22 +721,21 @@ class Ajax_Handler {
         $subject        = isset( $_REQUEST['email-subject'] ) ? sanitize_text_field( $_REQUEST['email-subject'] ) : '';
         $body           = isset( $_REQUEST['email-body'] ) ? sanitize_text_field( $_REQUEST['email-body'] ) : '';
         $attach_pdf     = isset( $_REQUEST['attachment'] ) && 'on' == $_REQUEST['attachment'] ? true : false;
-        $transaction_id = isset( $_REQUEST['transaction_id'] ) ? $_REQUEST['transaction_id'] : 0;
+        $transaction_id = isset( $_REQUEST['transaction_id'] ) ? intval( $_REQUEST['transaction_id'] ) : 0;
         $transaction    = Model\Transaction::find( $transaction_id );
         $output_method  = 'F';
-
         $upload_path    = wp_upload_dir();
-        $file_name      = $transaction->invoice_number;
         $include_file   = 'invoice' == $type ? 'invoice' : 'payment';
-        $file_path      = $upload_path['basedir'] . '/' . $file_name . '.pdf';
+        $file_name      = sprintf( '%s/%s_%s.pdf', $upload_path['basedir'], $transaction->invoice_number, $transaction->issue_date );
 
         include WPERP_ACCOUNTING_VIEWS . '/pdf/' . $include_file . '.php';
 
         $invoice_email = new Emails\Accounting_Invoice_Email();
+        $file_name     = $attach_pdf ? $file_name : '';
 
-        $invoice_email->trigger( $receiver, $subject, $body, $file_path );
+        $invoice_email->trigger( $receiver, $subject, $body, $file_name );
 
-        unlink( $file_path );
+        unlink( $file_name );
 
         wp_send_json_success();
     }

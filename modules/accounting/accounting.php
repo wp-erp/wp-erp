@@ -196,6 +196,7 @@ class Accounting {
         wp_enqueue_script( 'erp-sweetalert' );
         wp_enqueue_script( 'erp-tether-main' );
         wp_enqueue_script( 'erp-tether-drop' );
+        wp_enqueue_script( 'erp-clipboard' );
         wp_enqueue_script( 'accounting', WPERP_ACCOUNTING_ASSETS . '/js/accounting.min.js', array( 'jquery' ), date( 'Ymd' ), true );
         wp_enqueue_script( 'wp-erp-ac-js', WPERP_ACCOUNTING_ASSETS . '/js/erp-accounting.js', array( 'jquery', 'wp-color-picker', 'erp-tiptip' ), date( 'Ymd' ), true );
 
@@ -208,7 +209,8 @@ class Accounting {
             'nonce'              => wp_create_nonce( 'erp-ac-nonce' ),
             'emailConfirm'       => __( 'Sent', 'erp' ),
             'emailConfirmMsg'    => __( 'The email has been sent', 'erp' ),
-            'confirmMsg'         => __( 'Are you sure?', 'erp-accounting' ),
+            'confirmMsg'         => __( 'Are you sure?', 'erp' ),
+            'copied'             => __( 'Copied', 'erp' ),
             'ajaxurl'            => admin_url( 'admin-ajax.php' ),
             'decimal_separator'  => empty( $erp_ac_de_separator ) ? '.' : erp_get_option('erp_ac_de_separator'),
             'thousand_separator' => empty( $erp_ac_th_separator ) ? ',' : erp_get_option('erp_ac_th_separator'),
@@ -219,7 +221,7 @@ class Accounting {
             'plupload'   => array(
                 'url'              => admin_url( 'admin-ajax.php' ) . '?nonce=' . wp_create_nonce( 'erp_ac_featured_img' ),
                 'flash_swf_url'    => includes_url( 'js/plupload/plupload.flash.swf' ),
-                'filters'          => array( array('title' => __( 'Allowed Files', 'accounting' ), 'extensions' => '*')),
+                'filters'          => array( array('title' => __( 'Allowed Files', 'erp' ), 'extensions' => '*')),
                 'multipart'        => true,
                 'urlstream_upload' => true,
             )

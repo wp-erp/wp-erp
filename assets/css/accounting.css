@@ -497,6 +497,11 @@ form.erp-form .erp-form-field label {
   width: 500px;
   margin-bottom: 10px;
 }
+
+#erp-ac-invoice-send-email textarea {
+  height: 100px;
+}
+
 .erp-ac-btn-group-wrap {
   background: #fcfcfc;
   border-top: 1px solid #eee;
@@ -522,3 +527,4 @@ form.erp-form .erp-form-field label {
     width: 50%;
   }
 }
+
