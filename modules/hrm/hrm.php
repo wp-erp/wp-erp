@@ -185,7 +185,8 @@ class Human_Resource {
             'make_employee_text'     => __( 'This user already exists, Do you want to make this user as a employee?', 'erp' ),
             'employee_exit'          => __( 'This employee already exists', 'erp' ),
             'employee_created'       => __( 'Employee successfully created', 'erp' ),
-            'create_employee_text'   => __( 'Click to create employee', 'erp' )
+            'create_employee_text'   => __( 'Click to create employee', 'erp' ),
+            'empty_entitlement_text' => sprintf( '<span>%s <a href="%s" title="%s">%s</a></span>', __( 'Please create entitlement first', 'erp' ), add_query_arg( [ 'page' => 'erp-leave-assign', 'tab' => 'assignment' ], admin_url( 'admin.php' ) ), __( 'Create Entitlement', 'erp' ), __( 'Create Entitlement', 'erp' ) ),
         ) );
 
         // if its an employee page

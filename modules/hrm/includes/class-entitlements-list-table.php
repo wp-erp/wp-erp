@@ -26,6 +26,9 @@ class Entitlement_List_Table extends \WP_List_Table {
         }
         $filter_by_year = ( isset( $_REQUEST['filter_by_year'] ) ) ? $_REQUEST['filter_by_year'] : '';
         $date = \WeDevs\ERP\HRM\Models\Leave_Entitlement::select( 'to_date' )->distinct()->get()->toArray();
+        if ( ! $date ) {
+            return;
+        }
         ?>
         <div class="alignleft actions">
             <label class="screen-reader-text" for="filter_by_year"><?php _e( 'Filter by Year', 'erp' ) ?></label>

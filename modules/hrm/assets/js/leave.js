@@ -393,7 +393,8 @@
             setPolicy: function() {
                 Leave.leave.resetDateRange();
                 var self = $(this),
-                    leavetypewrap = $('div.erp-hr-leave-reqs-wrap').find('.erp-hr-leave-type-wrapper')
+                    leaveWrap = $('div.erp-hr-leave-reqs-wrap'),
+                    leavetypewrap = leaveWrap.find('.erp-hr-leave-type-wrapper')
 
                 leavetypewrap.html('');
 
@@ -408,9 +409,11 @@
                     },
                     success: function(resp) {
                         leavetypewrap.html( resp ).hide().fadeIn();
+                        leaveWrap.find( 'input[type="text"], textarea').removeAttr('disabled');
                     },
                     error: function(resp) {
-                        alert( resp );
+                        leavetypewrap.html( wpErpHr.empty_entitlement_text ).hide().fadeIn();
+                        // alert( resp );
                     }
                 } );
             },
