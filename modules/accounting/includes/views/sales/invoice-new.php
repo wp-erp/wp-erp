@@ -79,6 +79,7 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                                 'name'        => 'user_id',
                                 'placeholder' => __( 'Select a payee', 'erp' ),
                                 'type'        => 'select',
+                                'required'    => true,
                                 'class'       => 'erp-select2 erp-ac-customer-drop erp-ac-not-found-in-drop',
                                 'value'       => $customer_id ? $customer_id : '',
                                 'options'     => [ '' => __( '&mdash; Select &mdash;', 'erp' ) ] + erp_get_peoples_array( ['type' => 'customer', 'number' => 100 ] ),
