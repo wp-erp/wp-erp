@@ -379,6 +379,7 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
     );
 
     $args       = wp_parse_args( $args, $defaults );
+    
     $is_update  = $args['id'] && ! is_array( $args['id'] ) ? true : false;
 
     $permission = er_ac_insert_transaction_permiss( $args, $is_update );
