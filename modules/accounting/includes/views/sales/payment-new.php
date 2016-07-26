@@ -78,6 +78,7 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
                                 'placeholder' => __( 'Select a payee', 'erp' ),
                                 'value'       => isset( $transaction['user_id'] ) ? $transaction['user_id'] : '',
                                 'type'        => 'select',
+                                'required'    => true,
                                 'class'       => $transaction_id ? 'erp-select2 erp-ac-not-found-in-drop' : 'erp-select2 erp-ac-payment-receive erp-ac-not-found-in-drop',
                                 'options'     => [ '' => __( '&mdash; Select &mdash;', 'erp' ) ] + erp_get_peoples_array( ['type' => 'customer', 'number' => 100 ] ),
                                 'custom_attr' => [

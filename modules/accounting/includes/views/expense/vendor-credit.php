@@ -78,6 +78,7 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                                 'label'       => __( 'Vendor', 'erp' ),
                                 'name'        => 'user_id',
                                 'type'        => 'select',
+                                'required'    => true,
                                 'class'       => 'erp-select2 erp-ac-vendor-drop erp-ac-not-found-in-drop',
                                 'options'     => [ '-1' => __( '&mdash; Select &mdash;', 'erp' ) ] + erp_ac_get_vendors(),
                                 'custom_attr' => [

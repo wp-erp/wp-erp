@@ -285,6 +285,10 @@ function er_ac_insert_transaction_permiss( $args, $is_update ) {
     if ( ! erp_ac_check_invoice_number_unique( $args, $is_update ) ) {
         return new WP_Error( 'error', __( 'Invoice already exists. Please use an unique number', 'erp' ) );
     }
+
+    if ( ! intval( $args['user_id'] ) ) {
+        return new WP_Error( 'error', __( 'User ID (Customer or Vendor) requird', 'erp' ) );
+    }
 }
 
 function erp_ac_generate_invoice_id( $form_type = '' ) {
