@@ -2263,6 +2263,11 @@ function erp_crm_track_email_opened() {
  * @return void
  */
 function erp_crm_contact_forms() {
+    // do not proceed if CRM is not active
+    if ( ! wperp()->modules->is_module_active( 'crm' ) ) {
+        return;
+    }
+
     new \WeDevs\ERP\CRM\ContactForms\CF7();
     new \WeDevs\ERP\CRM\ContactForms\Ninja_Forms();
     \WeDevs\ERP\CRM\ContactForms\Contact_Forms_Integration::init();
