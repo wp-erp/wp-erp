@@ -72,7 +72,7 @@ class Updates {
      * @return void
      */
     public function show_update_notice() {
-        if ( ! $this->is_needs_update() ) {
+        if ( ! current_user_can( 'update_plugins' ) || ! $this->is_needs_update() ) {
             return;
         }
         ?>
