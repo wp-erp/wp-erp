@@ -114,7 +114,7 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                         </span>
                     </li>
 
-                    <li class="erp-form-field">
+                   <!--  <li class="erp-form-field">
                         <?php
                         erp_html_form_input( array(
                             'label'    => __( 'Invoice Number', 'erp' ),
@@ -125,7 +125,7 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                             'value'    => isset( $transaction['invoice_number']  ) ? $transaction['invoice_number'] : erp_ac_invoice_prefix( 'erp_ac_payment_voucher', erp_ac_generate_invoice_id( 'payment_voucher' ) )
                         ) );
                         ?>
-                    </li>
+                    </li> -->
                 </ul>
             </li>
 

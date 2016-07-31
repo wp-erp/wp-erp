@@ -291,61 +291,6 @@ function er_ac_insert_transaction_permiss( $args, $is_update ) {
     }
 }
 
-function erp_ac_generate_invoice_id( $form_type = '' ) {
-
-    $invoice_number = 1;
-
-    if ( $form_type == 'invoice' ) {
-        $invoice_number = get_option( 'erp_ac_sales_invoice_number' );
-        $invoice_number = empty( $invoice_number ) ? 1 : ( $invoice_number + 1 );
-    
-    } else if ( $form_type == 'payment' ) {
-        $invoice_number = get_option( 'erp_ac_sales_payment_number' );
-        $invoice_number = empty( $invoice_number ) ? 1 : ( $invoice_number + 1 );
-    
-    } else if ( $form_type == 'payment_voucher' ) {
-        $invoice_number = get_option( 'erp_ac_expense_voucher_number' );
-        $invoice_number = empty( $invoice_number ) ? 1 : ( $invoice_number + 1 );
-    
-    } else if ( $form_type == 'vendor_credit' ) {
-        $invoice_number = get_option( 'erp_ac_expense_credit_number' );
-        $invoice_number = empty( $invoice_number ) ? 1 : ( $invoice_number + 1 );
-    
-    } else if ( $form_type == 'journal' ) {
-        $invoice_number = get_option( 'erp_ac_journal_number' );
-        $invoice_number = empty( $invoice_number ) ? 1 : ( $invoice_number + 1 );
-    
-    } else {
-        return false;
-    }
-
-    return str_pad( $invoice_number, 4, '0', STR_PAD_LEFT );
-}
-
-function erp_ac_update_invoice_number( $form_type ) {
-    $invoice_number = erp_ac_generate_invoice_id( $form_type );
-
-    if ( $invoice_number === false ) {
-        return;
-    }
-
-    if ( $form_type == 'invoice' ) {
-        update_option( 'erp_ac_sales_invoice_number', $invoice_number );
-    
-    } else if ( $form_type == 'payment' ) {
-        update_option( 'erp_ac_sales_payment_number', $invoice_number );
-    
-    } else if ( $form_type == 'payment_voucher' ) {
-        update_option( 'erp_ac_expense_voucher_number', $invoice_number );
-    
-    } else if ( $form_type == 'vendor_credit' ) {
-        update_option( 'erp_ac_expense_credit_number', $invoice_number );
-    
-    } else if ( $form_type == 'journal' ) {
-        update_option( 'erp_ac_journal_number', $invoice_number );
-    }
-}
-
 /**
  * Insert a new transaction
  *

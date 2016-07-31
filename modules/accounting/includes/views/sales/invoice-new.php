@@ -87,8 +87,7 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                                     'data-content' => 'erp-ac-new-customer-content-pop',
                                 ],
                             ) );
-                            ?>
-                            <?php
+                            
                             if ( erp_ac_create_customer() ) {
                                 ?>
                                 <div><a href="#" data-content="erp-ac-new-customer-content-pop" class="erp-ac-not-found-btn-in-drop erp-ac-more-customer"><?php _e( 'Create New', 'erp' ); ?></a></div>

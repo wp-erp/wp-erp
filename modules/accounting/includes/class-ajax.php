@@ -461,8 +461,6 @@ class Ajax_Handler {
             'currency'    => erp_ac_get_currency(),
             'line_total'  => $_POST['line_total'],
             'journals_id' => [],
-            'invoice_number' => $_POST['invoice']
-
         ];
 
         $items[] = [

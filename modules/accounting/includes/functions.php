@@ -367,8 +367,132 @@ function erp_ac_invoice_prefix( $type, $id ) {
     if ( empty( $prefix ) ) {
         return $id;
     }
+    
+    return erp_ac_check_invoice_existance( $type, $id, $prefix );
+}
 
-    return str_replace( '{id}', $id, $prefix );
+/**
+ * Check invoice existance, in exist then generate new
+ * 
+ * @param  string $form_type
+ * @param  string $invoice  
+ *
+ * @since  1.1.2
+ * 
+ * @return string
+ */
+function erp_ac_check_invoice_existance( $type, $invoice_number, $prefix ) {
+    
+    $invoice_number = erp_ac_invoice_num_str_pad( $invoice_number );
+    $invoice        = str_replace( '{id}', $invoice_number, $prefix );
+    $form_type = '';
+
+    if ( $type == 'erp_ac_invoice' ) {
+        $form_type = 'invoice';
+    } else if ( $type == 'erp_ac_payment' ) {
+        $form_type = 'payment';
+    }
+
+
+    $check_number = \WeDevs\ERP\Accounting\Model\Transaction::select(['invoice_number'])->where( 'invoice_number', '=', $invoice )->where('form_type', '=', $form_type )->get()->toArray();
+
+    if ( $check_number ) {
+        $check_number = \WeDevs\ERP\Accounting\Model\Transaction::select(['invoice_number'])->where('form_type', '=', $form_type )->get()->toArray(); 
+        $check_number = wp_list_pluck( $check_number, 'invoice_number' );
+        $check_status = true;
+
+        while ( $check_status ) {
+            $invoice_number = $invoice_number + 1;
+            $invoice_number = erp_ac_invoice_num_str_pad( $invoice_number );
+            $invoice        = str_replace( '{id}', $invoice_number, $prefix );
+            
+            if ( ! in_array( $invoice, $check_number ) ) {
+                $check_status = false;
+            }
+        }
+    }
+
+    return $invoice;
+}
+
+/**
+ * Str pad for invoice number
+ * 
+ * @param  int $invoice_number  
+ *
+ * @since  1.1.2
+ * 
+ * @return string
+ */
+function erp_ac_invoice_num_str_pad( $invoice_number ) {
+    return str_pad( $invoice_number, 4, '0', STR_PAD_LEFT );
+}
+
+/**
+ * Generate invoice id
+ * 
+ * @param  string $form_type 
+ * 
+ * @return int
+ */
+function erp_ac_generate_invoice_id( $form_type = '' ) {
+
+    $invoice_number = 1;
+
+    if ( $form_type == 'invoice' ) {
+        $invoice_number = get_option( 'erp_ac_sales_invoice_number' );
+        $invoice_number = empty( $invoice_number ) ? 1 : ( $invoice_number + 1 );
+        //$format         = erp_get_option( 'erp_ac_invoice' );
+    
+    } else if ( $form_type == 'payment' ) {
+        $invoice_number = get_option( 'erp_ac_sales_payment_number' );
+        $invoice_number = empty( $invoice_number ) ? 1 : ( $invoice_number + 1 );
+        //$format         = erp_get_option( 'erp_ac_payment' );
+    
+    } else if ( $form_type == 'payment_voucher' ) {
+        $invoice_number = get_option( 'erp_ac_expense_voucher_number' );
+        $invoice_number = empty( $invoice_number ) ? 1 : ( $invoice_number + 1 );
+        //$format         = erp_get_option( 'erp_ac_payment_voucher' );
+    
+    } else if ( $form_type == 'vendor_credit' ) {
+        $invoice_number = get_option( 'erp_ac_expense_credit_number' );
+        $invoice_number = empty( $invoice_number ) ? 1 : ( $invoice_number + 1 );
+        //$format         = erp_get_option( 'erp_ac_vendor_credit' );
+    
+    } else if ( $form_type == 'journal' ) {
+        $invoice_number = get_option( 'erp_ac_journal_number' );
+        $invoice_number = empty( $invoice_number ) ? 1 : ( $invoice_number + 1 );
+        //$format         = erp_get_option( 'erp_ac_journal' );
+    
+    } else {
+        return false;
+    }
+
+    return $invoice_number; //str_pad( $invoice_number, 4, '0', STR_PAD_LEFT );
+}
+
+function erp_ac_update_invoice_number( $form_type ) {
+    $invoice_number = erp_ac_generate_invoice_id( $form_type );
+
+    if ( $invoice_number === false ) {
+        return;
+    }
+
+    if ( $form_type == 'invoice' ) {
+        update_option( 'erp_ac_sales_invoice_number', $invoice_number );
+    
+    } else if ( $form_type == 'payment' ) {
+        update_option( 'erp_ac_sales_payment_number', $invoice_number );
+    
+    } else if ( $form_type == 'payment_voucher' ) {
+        update_option( 'erp_ac_expense_voucher_number', $invoice_number );
+    
+    } else if ( $form_type == 'vendor_credit' ) {
+        update_option( 'erp_ac_expense_credit_number', $invoice_number );
+    
+    } else if ( $form_type == 'journal' ) {
+        update_option( 'erp_ac_journal_number', $invoice_number );
+    }
 }
 
 /**
