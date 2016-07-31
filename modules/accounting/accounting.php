@@ -254,7 +254,7 @@ class Accounting {
         if ( $current_screen->base == 'accounting_page_erp-accounting-bank' ) {
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/bank.php', 'erp-ac-transfer-money-pop' );
         }
-        
+
         if ( $current_screen->base == 'accounting_page_erp-accounting-sales' ) {
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/invoice.php', 'erp-ac-invoice-payment-pop' );
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/customer.php', 'erp-ac-new-customer-content-pop' );

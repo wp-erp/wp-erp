@@ -116,8 +116,6 @@ class Admin_Menu {
         }
     }
 
-
-
     /**
      * Handles the company page
      *
