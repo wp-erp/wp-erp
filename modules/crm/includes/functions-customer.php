@@ -581,12 +581,7 @@ function erp_crm_check_customer_exist_company( $customer_id, $company_id ) {
  * @return array
  */
 function erp_crm_customer_prepare_schedule_postdata( $postdata ) {
-
-    if ( !is_user_logged_in() ) {
-        return;
-    }
-
-    if ( ! $postdata ) {
+    if ( empty( $postdata ) ) {
         return;
     }
 
