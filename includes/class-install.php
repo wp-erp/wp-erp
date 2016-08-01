@@ -731,7 +731,7 @@ Company'
               `due` DECIMAL(13,4) unsigned DEFAULT '0.00',
               `trans_total` DECIMAL(13,4) DEFAULT '0.00',
               `invoice_number` INT(10) UNSIGNED NULL DEFAULT '0',
-              `invoice_prefix` VARCHAR(20) NOT NULL,
+              `invoice_format` VARCHAR(20) NOT NULL,
               `files` varchar(255) DEFAULT NULL,
               `parent` bigint(20) unsigned NOT NULL DEFAULT '0',
               `created_by` int(11) unsigned DEFAULT NULL,

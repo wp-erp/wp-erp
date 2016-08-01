@@ -968,6 +968,7 @@
                 data: {
                     '_wpnonce': ERP_AC.nonce,
                     invoice: self.val(),
+                    form_type : $('input[name="form_type"]').val()
                 },
 
                 success: function(res) {

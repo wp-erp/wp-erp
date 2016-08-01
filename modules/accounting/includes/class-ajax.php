@@ -311,8 +311,9 @@ class Ajax_Handler {
 
     function check_unique_invioce() {
         $this->verify_nonce( 'erp-ac-nonce' );
-        $invoice = isset( $_POST['invoice'] ) ? $_POST['invoice'] : '';
-        $trans = erp_ac_check_invoice_number_unique( $invoice );
+        $invoice   = isset( $_POST['invoice'] ) ? $_POST['invoice'] : '';
+        $form_type = $_POST['form_type'];
+        $trans     = erp_ac_check_invoice_number_unique( $invoice, $form_type );
 
         if ( ! $trans ) {
             $this->send_error( __( 'Invoice already exists. Please use an unique number', 'erp' ) );
