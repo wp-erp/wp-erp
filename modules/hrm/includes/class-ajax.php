@@ -682,6 +682,7 @@ class Ajax_Handler {
         $this->verify_nonce( 'employee_update_jobinfo' );
 
         $employee_id  = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+
         $location     = isset( $_POST['location'] ) ? intval( $_POST['location'] ) : 0;
         $department   = isset( $_POST['department'] ) ? intval( $_POST['department'] ) : 0;
         $designation  = isset( $_POST['designation'] ) ? intval( $_POST['designation'] ) : 0;
@@ -691,6 +692,11 @@ class Ajax_Handler {
         $employee = new Employee( $employee_id );
 
         if ( $employee->id ) {
+            // Check permission
+            if ( ! current_user_can( 'erp_edit_employee', $employee->id ) ) {
+                $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+            }
+
             do_action( 'erp_hr_employee_job_info_create', $employee->id );
             $employee->update_job_info( $department, $designation, $reporting_to, $location, $date );
             $this->send_success();
@@ -714,6 +720,11 @@ class Ajax_Handler {
         $employee = new Employee( $employee_id );
 
         if ( $employee->id ) {
+            // Check permission
+            if ( ! current_user_can( 'erp_edit_employee', $employee_id ) ) {
+                $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+            }
+
             $employee->add_note( $note, $note_by );
         }
 
@@ -750,8 +761,12 @@ class Ajax_Handler {
         check_admin_referer( 'wp-erp-hr-nonce' );
 
         $note_id     = isset( $_POST['note_id'] ) ? intval( $_POST['note_id'] ) : 0;
-
         $employee = new Employee();
+
+        // Check permission
+        if ( ! current_user_can( 'erp_edit_employee', $employee->id ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
 
         if ( $employee->delete_note( $note_id ) ) {
             $this->send_success();
@@ -784,6 +799,11 @@ class Ajax_Handler {
             'eligible_for_rehire' => $eligible_for_rehire
         ];
 
+        // Check permission
+        if ( ! current_user_can( 'erp_edit_employee', $employee_id ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
         $result = erp_hr_employee_terminate( $fields );
 
         if ( is_wp_error( $result ) ) {
@@ -808,6 +828,11 @@ class Ajax_Handler {
 
         if ( ! $id ) {
             $this->send_error( __( 'Something wrong', 'erp' ) );
+        }
+
+        // Check permission
+        if ( ! current_user_can( 'erp_edit_employee', $id ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
         \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $id )->update( ['status'=>'active'] );
@@ -941,8 +966,11 @@ class Ajax_Handler {
      */
     public function employee_update_performance() {
 
+        // check permission for adding performance
+        if ( isset( $_POST['employee_id'] ) && $_POST['employee_id'] && ! current_user_can( 'erp_edit_employee', $_POST['employee_id'] ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
 
-        // TODO: permission check
         $type = isset( $_POST['type'] ) ? $_POST['type'] : '';
 
         if ( $type && $type == 'reviews' ) {
@@ -1053,6 +1081,10 @@ class Ajax_Handler {
 
         $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
 
+        if ( ! current_user_can( 'erp_delete_review' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
         \WeDevs\ERP\HRM\Models\Performance::find( $id )->delete();
 
         $this->send_success();
@@ -1066,9 +1098,13 @@ class Ajax_Handler {
     public function employee_work_experience_create() {
         $this->verify_nonce( 'erp-work-exp-form' );
 
-        // TODO: permission check
-
         $employee_id  = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+
+        // Check permission
+        if ( ! current_user_can( 'erp_edit_employee', $employee_id ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
         $exp_id       = isset( $_POST['exp_id'] ) ? intval( $_POST['exp_id'] ) : 0;
         $company_name = isset( $_POST['company_name'] ) ? strip_tags( $_POST['company_name'] ) : '';
         $job_title    = isset( $_POST['job_title'] ) ? strip_tags( $_POST['job_title'] ) : '';
