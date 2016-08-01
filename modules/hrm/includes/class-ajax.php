@@ -1153,8 +1153,17 @@ class Ajax_Handler {
     public function employee_work_experience_delete() {
         $this->verify_nonce( 'wp-erp-hr-nonce' );
 
-        // @TODO: check permission
-        $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+        $id          = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+        $employee_id = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+
+        if ( ! $employee_id ) {
+            $this->send_error( __( 'No employee found', 'erp' ) );
+        }
+
+        // Check permission
+        if ( ! current_user_can( 'erp_edit_employee', $employee_id ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
 
         if ( $id ) {
             do_action( 'erp_hr_employee_experience_delete', $id );

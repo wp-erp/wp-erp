@@ -810,6 +810,7 @@
                         wp.ajax.send( self.data('action'), {
                             data: {
                                 id: self.data('id'),
+                                employee_id: self.data('employee_id'),
                                 _wpnonce: wpErpHr.nonce
                             },
                             success: function() {
