@@ -784,7 +784,7 @@ function erp_hr_get_genders( $select_text = null ) {
  * @return array all the statuses
  */
 function erp_hr_get_pay_type() {
-    $genders = array(
+    $types = array(
         'hourly'   => __( 'Hourly', 'erp' ),
         'daily'    => __( 'Daily', 'erp' ),
         'weekly'   => __( 'Weekly', 'erp' ),
@@ -793,7 +793,7 @@ function erp_hr_get_pay_type() {
         'contract' => __( 'Contract', 'erp' ),
     );
 
-    return apply_filters( 'erp_hr_pay_type', $genders );
+    return apply_filters( 'erp_hr_pay_type', $types );
 }
 
 /**
@@ -802,12 +802,13 @@ function erp_hr_get_pay_type() {
  * @return array all the statuses
  */
 function erp_hr_get_pay_change_reasons() {
-    $genders = array(
+    $reasons = array(
         'promotion'   => __( 'Promotion', 'erp' ),
-        'performance' => __( 'Performance', 'erp' )
+        'performance' => __( 'Performance', 'erp' ),
+        'increment'   => __( 'Increment', 'erp' )
     );
 
-    return apply_filters( 'erp_hr_pay_change_reasons', $genders );
+    return apply_filters( 'erp_hr_pay_change_reasons', $reasons );
 }
 
 /**

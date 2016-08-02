@@ -120,10 +120,10 @@ class Admin_Menu {
         if ( file_exists( $template ) ) {
             include $template;
         } else {
-            echo '<h1>You do not have sufficient permissions to access this page.</h1>';
+            echo sprintf( '<h1>%s</h1>', __( 'You do not have sufficient permissions to access this page.', 'erp' ) );
         }
     }
-    
+
     public function page_expenses() {
         $action   = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
         $type     = isset( $_GET['type'] ) ? $_GET['type'] : 'pv';
@@ -168,7 +168,7 @@ class Admin_Menu {
         if ( file_exists( $template ) ) {
             include $template;
         } else {
-            echo '<h1>You do not have sufficient permissions to access this page.</h1>';
+            echo sprintf( '<h1>%s</h1>', __( 'You do not have sufficient permissions to access this page.', 'erp' ) );
         }
     }
 
@@ -206,7 +206,7 @@ class Admin_Menu {
         if ( file_exists( $template ) ) {
             include $template;
         } else {
-            echo '<h1>You do not have sufficient permissions to access this page.</h1>';
+            echo sprintf( '<h1>%s</h1>', __( 'You do not have sufficient permissions to access this page.', 'erp' ) );
         }
     }
 
@@ -302,7 +302,7 @@ class Admin_Menu {
         if ( file_exists( $template ) ) {
             include $template;
         } else {
-            echo '<h1>You do not have sufficient permissions to access this page.</h1>';
+            echo sprintf( '<h1>%s</h1>', __( 'You do not have sufficient permissions to access this page.', 'erp' ) );
         }
     }
 
@@ -345,7 +345,7 @@ class Admin_Menu {
         if ( file_exists( $template ) ) {
             include $template;
         } else {
-            echo '<h1>You do not have sufficient permissions to access this page.</h1>';
+            echo sprintf( '<h1>%s</h1>', __( 'You do not have sufficient permissions to access this page.', 'erp' ) );
         }
     }
 

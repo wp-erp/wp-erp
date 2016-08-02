@@ -152,6 +152,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
 == Changelog ==
 
 **v1.1.2 -> June 26, 2016**
+
  * [new] Settings for invoice formatting
  * [new] Set submit group button for sales payment and invoice
  * [new] Set submit group button for expense payment voucher and vendor credit

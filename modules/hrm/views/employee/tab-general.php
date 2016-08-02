@@ -102,7 +102,7 @@
                                     <?php if ( current_user_can( 'erp_edit_employee', $employee->id ) ) : ?>
                                         <div class="row-actions erp-hide-print">
                                             <a href="#" class="work-experience-edit" data-template="erp-employment-work-experience" data-title="<?php esc_attr_e( 'Work Experience', 'erp' ); ?>" data-data='<?php echo json_encode( $experience ); ?>' data-button="<?php esc_attr_e( 'Update Experience', 'erp' ); ?>"><span class="dashicons dashicons-edit"></span></a>
-                                            <a href="#" class="work-experience-delete" data-id="<?php echo $experience->id; ?>" data-action="erp-hr-emp-delete-exp"><span class="dashicons dashicons-trash"></span></a>
+                                            <a href="#" class="work-experience-delete" data-employee_id="<?php echo $employee->id; ?>" data-id="<?php echo $experience->id; ?>" data-action="erp-hr-emp-delete-exp"><span class="dashicons dashicons-trash"></span></a>
                                         </div>
                                     <?php endif; ?>
                                 </td>
@@ -157,7 +157,7 @@
                                     <?php if ( current_user_can( 'erp_edit_employee', $employee->id ) ) : ?>
                                         <div class="row-actions erp-hide-print">
                                             <a href="#" class="education-edit" data-template="erp-employment-education" data-title="<?php esc_attr_e( 'Education', 'erp' ); ?>" data-data='<?php echo json_encode( $education ); ?>' data-button="<?php esc_attr_e( 'Update Info', 'erp' ); ?>"><span class="dashicons dashicons-edit"></span></a>
-                                            <a href="#" class="education-delete" data-id="<?php echo $education->id; ?>" data-action="erp-hr-emp-delete-education"><span class="dashicons dashicons-trash"></span></a>
+                                            <a href="#" class="education-delete" data-employee_id="<?php echo $employee->id; ?>" data-id="<?php echo $education->id; ?>" data-action="erp-hr-emp-delete-education"><span class="dashicons dashicons-trash"></span></a>
                                         </div>
                                     <?php endif; ?>
                                 </td>
@@ -208,7 +208,7 @@
                                     <?php if ( current_user_can( 'erp_edit_employee', $employee->id ) ) : ?>
                                         <div class="row-actions erp-hide-print">
                                             <a href="#" class="dependent-edit" data-template="erp-employment-dependent" data-title="<?php esc_attr_e( 'Dependents', 'erp' ); ?>" data-data='<?php echo json_encode( $dependent ); ?>' data-button="<?php esc_attr_e( 'Update Dependent', 'erp' ); ?>"><span class="dashicons dashicons-edit"></span></a>
-                                            <a href="#" class="dependent-delete" data-id="<?php echo $dependent->id; ?>" data-action="erp-hr-emp-delete-dependent"><span class="dashicons dashicons-trash"></span></a>
+                                            <a href="#" class="dependent-delete" data-employee_id="<?php echo $employee->id; ?>" data-id="<?php echo $dependent->id; ?>" data-action="erp-hr-emp-delete-dependent"><span class="dashicons dashicons-trash"></span></a>
                                         </div>
                                     <?php endif; ?>
                                 </td>
