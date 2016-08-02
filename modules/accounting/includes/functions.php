@@ -479,24 +479,33 @@ function erp_ac_update_invoice_number( $form_type ) {
     
     if ( $form_type == 'invoice' ) {
         $invoice_number = get_option( 'erp_ac_sales_invoice_number', 1 );
-        $get_invoice_number = WeDevs\ERP\Accounting\Model\Transaction::select('invoice_number')
-            ->where( 'form_type', '=', $form_type )
-            ->where( 'invoice_number', '>=', $invoice_number )
-            ->get()->toArray();
-        $get_invoice_number = wp_list_pluck( $get_invoice_number, 'invoice_number' );
-        $status = true;
+    } else if ( $form_type == 'payment' ) {
+        $invoice_number = get_option( 'erp_ac_sales_payment_number', 1 );
+    }
+    $get_invoice_number = WeDevs\ERP\Accounting\Model\Transaction::select('invoice_number')
+        ->where( 'form_type', '=', $form_type )
+        ->where( 'invoice_number', '>=', $invoice_number )
+        ->get()->toArray();
+    $get_invoice_number = wp_list_pluck( $get_invoice_number, 'invoice_number' );
+    $status = true;
 
-        while( $status ) {
-            if ( in_array( $invoice_number, $get_invoice_number ) ) {
-                $invoice_number = $invoice_number + 1;
-            } else {
-                $status = false;
-            }
+    while( $status ) {
+        if ( in_array( $invoice_number, $get_invoice_number ) ) {
+            $invoice_number = $invoice_number + 1;
+        } else {
+            $status = false;
         }
+    }
+
+    if ( $form_type == 'invoice' ) {
         update_option( 'erp_ac_sales_invoice_number', $invoice_number );
+    } else if ( $form_type == 'payment' ) {
+        update_option( 'erp_ac_sales_payment_number', $invoice_number );
+    }
+        
 
         
-    } //else if ( $form_type == 'payment' ) {
+     //else if ( $form_type == 'payment' ) {
     //     $invoice_number = get_option( 'erp_ac_sales_payment_number', 1 );
     //     $get_invoice_number = WeDevs\ERP\Accounting\Model\Transaction::select('invoice_number')
     //         ->where( 'form_type', '=', $form_type )

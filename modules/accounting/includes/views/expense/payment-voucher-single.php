@@ -46,8 +46,7 @@ $taxinfo          = erp_ac_get_tax_info();
             <div class="row">
                 <div class="invoice-number">
                     <?php 
-                        $ivoice = $transaction->ref;
-                        printf( __( 'Referance: <strong>%s</strong>', 'erp' ), $ivoice ); 
+                        printf( __( 'Voucher Number: <strong>%s</strong>', 'erp' ), $transaction->id ); 
                     ?>
                 </div>
             </div>
@@ -78,7 +77,7 @@ $taxinfo          = erp_ac_get_tax_info();
                         <tbody>
                             <tr>
                                 <th><?php _e( 'Referance Number', 'erp' ); ?>:</th>
-                                <td><?php echo $ivoice; ?></td>
+                                <td><?php echo $transaction->ref; ?></td>
                             </tr>
                             <tr>
                                 <th><?php _e( 'Voucher Date', 'erp' ); ?>:</th>

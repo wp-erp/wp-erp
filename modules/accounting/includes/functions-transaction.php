@@ -99,7 +99,7 @@ function erp_ac_get_all_transaction( $args = array() ) {
             $transaction = $transaction->where( 'status', '=', $args['status'] );
         }
 
-        if ( isset( $args['type'] ) && is_array( $args['type'] ) && in_array( 'journal', $args['type'] ) ) {
+        if ( isset( $args['type'] ) && ( ( is_array( $args['type'] ) && in_array( 'journal', $args['type'] ) ) || $args['type'] == 'journal' )  ) {
             $transaction = $transaction->orWhereNull( 'status' );
         }
 
@@ -148,6 +148,7 @@ function erp_ac_get_all_transaction( $args = array() ) {
                 ->orderBy( 'created_at', $args['order'] )
                 ->get()
                 ->toArray();
+                
         }
 
         if ( $args['output_by'] == 'object' ) {
