@@ -345,7 +345,7 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
                     implode( ', ' , $required_options )
                 );
 
-            } else if ( empty( absint( $_POST['contactOwner'] ) ) ) {
+            } else if ( empty( $_POST['contactOwner'] ) && absint( $_POST['contactOwner'] ) ) {
                 $response['msg'] = __( 'Please set a contact owner.', 'erp' );
 
             } else {
