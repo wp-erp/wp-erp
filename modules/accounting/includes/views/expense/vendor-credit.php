@@ -104,19 +104,6 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                         ) );
                         ?>
                     </li>
-
-                   <!--  <li class="erp-form-field">
-                        <?php
-                        erp_html_form_input( array(
-                            'label'    => __( 'Invoice Number', 'erp' ),
-                            'name'     => 'invoice',
-                            'type'     => 'text',
-                            'required' => true,
-                            'class'    => 'erp-ac-check-invoice-number',
-                            'value'    => isset( $transaction['invoice_number']  ) ? $transaction['invoice_number'] : erp_ac_invoice_prefix( 'erp_ac_vendor_credit', erp_ac_generate_invoice_id( 'vendor_credit' ) )
-                        ) );
-                        ?>
-                    </li> -->
                 </ul>
             </li>
 

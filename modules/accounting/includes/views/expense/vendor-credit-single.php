@@ -51,8 +51,8 @@ $taxinfo             = erp_ac_get_tax_info();
             <div class="row">
                 <div class="invoice-number">
                     <?php 
-                        $ivoice = isset( $transaction->invoice_number ) && ! empty( $transaction->invoice_number ) ? $transaction->invoice_number : $transaction->id;
-                        printf( __( 'Credit: <strong>%s</strong>', 'erp' ), $ivoice ); 
+                        $ivoice = $transaction->ref;
+                        printf( __( 'Referance: <strong>%s</strong>', 'erp' ), $ivoice ); 
                     ?>
                 </div>
             </div>
@@ -82,7 +82,7 @@ $taxinfo             = erp_ac_get_tax_info();
                     <table class="table info-table">
                         <tbody>
                             <tr>
-                                <th><?php _e( 'Credit Number', 'erp' ); ?>:</th>
+                                <th><?php _e( 'Referance Number', 'erp' ); ?>:</th>
                                 <td><?php echo $ivoice; ?></td>
                             </tr>
                             <tr>

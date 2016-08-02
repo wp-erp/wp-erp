@@ -113,19 +113,6 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                             <strong><?php _e( 'Balance: ', 'erp' ); ?><span class="erp-ac-bank-amount">0</span></strong>
                         </span>
                     </li>
-
-                   <!--  <li class="erp-form-field">
-                        <?php
-                        erp_html_form_input( array(
-                            'label'    => __( 'Invoice Number', 'erp' ),
-                            'name'     => 'invoice',
-                            'type'     => 'text',
-                            'required' => true,
-                            'class'    => 'erp-ac-check-invoice-number',
-                            'value'    => isset( $transaction['invoice_number']  ) ? $transaction['invoice_number'] : erp_ac_invoice_prefix( 'erp_ac_payment_voucher', erp_ac_generate_invoice_id( 'payment_voucher' ) )
-                        ) );
-                        ?>
-                    </li> -->
                 </ul>
             </li>
 
@@ -290,3 +277,5 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
         include dirname( dirname( __FILE__ ) ) . '/common/transaction-table.php';?>
     </div>
 </div>
+
+

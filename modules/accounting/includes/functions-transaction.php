@@ -314,7 +314,7 @@ function er_ac_insert_transaction_permiss( $args, $is_update ) {
         }
     }
 
-    if ( ! erp_ac_check_invoice_number_unique( $args['invoice_number'], $args['form_type'], $is_update, $args['id'] ) ) {
+    if ( ( $args['form_type'] == 'invoice' || $args['form_type'] == 'payment' ) && ! erp_ac_check_invoice_number_unique( $args['invoice_number'], $args['form_type'], $is_update, $args['id'] ) ) {
         return new WP_Error( 'error', __( 'Invoice already exists. Please use an unique number', 'erp' ) );
     }
 

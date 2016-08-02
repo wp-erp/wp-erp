@@ -15,18 +15,7 @@
                 ) );
                 ?>
             </li>
-            <li class="erp-form-field">
-                <?php
-                erp_html_form_input( array(
-                    'label'    => __( 'Invoice Number', 'erp' ),
-                    'name'     => 'invoice',
-                    'type'     => 'text',
-                    'required' => true,
-                    'class'    => 'erp-ac-check-invoice-number',
-                    'value'    => erp_ac_invoice_prefix( 'erp_ac_journal', erp_ac_generate_invoice_id( 'journal' ) )
-                ) );
-                ?>
-            </li>
+
             <li class="erp-form-field row-issue-date">
                 <?php erp_html_form_input( array(
                     'label'    => __( 'Date', 'erp' ),

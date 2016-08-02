@@ -116,6 +116,9 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                             'name'     => 'invoice',
                             'type'     => 'text',
                             'required' => true,
+                            'custom_attr' => [
+                                'data-old_val' => isset( $transaction['invoice_number']  ) ? erp_ac_get_invoice_number( $transaction['invoice_number'], $transaction['invoice_format'] ) : erp_ac_get_auto_generated_invoice( 'invoice' ),
+                            ],
                             'class'    => 'erp-ac-check-invoice-number',
                             'value'    => isset( $transaction['invoice_number']  ) ? erp_ac_get_invoice_number( $transaction['invoice_number'], $transaction['invoice_format'] ) : erp_ac_get_auto_generated_invoice( 'invoice' )
                         ) );
