@@ -649,9 +649,9 @@ function erp_ac_readonly_invoice_template() {
  * 
  * @return array
  */
-function erp_ac_get_invoice_num_fromat_from_sibmit_invoice( $submit_invoice, $invoice_format ) {
+function erp_ac_get_invoice_num_fromat_from_submit_invoice( $submit_invoice, $invoice_format ) {
     //was found
-    $pattern = str_replace( '{id}' , '([0-9]+)', $invoice_format ); // INV-([0-9])+-INV
+    $pattern = str_replace( '{id}', '([0-9]+)', $invoice_format ); // INV-([0-9])+-INV
     
     preg_match( "/${pattern}/", $submit_invoice, $match );
  
