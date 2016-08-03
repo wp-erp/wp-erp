@@ -99,7 +99,7 @@ function erp_ac_get_all_transaction( $args = array() ) {
             $transaction = $transaction->where( 'status', '=', $args['status'] );
         }
 
-        if ( isset( $args['type'] ) && is_array( $args['type'] ) && in_array( 'journal', $args['type'] ) ) {
+        if ( isset( $args['type'] ) && ( ( is_array( $args['type'] ) && in_array( 'journal', $args['type'] ) ) || $args['type'] == 'journal' )  ) {
             $transaction = $transaction->orWhereNull( 'status' );
         }
 
@@ -148,6 +148,7 @@ function erp_ac_get_all_transaction( $args = array() ) {
                 ->orderBy( 'created_at', $args['order'] )
                 ->get()
                 ->toArray();
+                
         }
 
         if ( $args['output_by'] == 'object' ) {
@@ -205,14 +206,50 @@ function erp_ac_get_transaction( $id = 0 ) {
     return $results;
 }
 
-function erp_ac_check_invoice_number_unique( $args, $is_update = false ) {
+/**
+ * Chck from DB is invoice number unique or not
+ * 
+ * @param  string  $invoice_number 
+ * @param  stirng  $form_type      
+ * @param  boolean $is_update      
+ * @param  mixed $trns_id        
+ * 
+ * @return boolean                  
+ */
+function erp_ac_check_invoice_number_unique( $invoice, $form_type, $is_update = false, $trns_id = false ) {
+    $invoice_format = erp_ac_get_invoice_format( $form_type );
+    $invoice_number = erp_ac_get_invoice_num_fromat_from_sibmit_invoice( $invoice, $invoice_format );
+
     if ( $is_update ) {
         $trans = new \WeDevs\ERP\Accounting\Model\Transaction();
-        $trans = $trans->where( 'invoice_number', '=', $args['invoice_number'] )
-                        ->where( 'id', '!=', $args['id'] )->get()->toArray(); 
+         if ( $invoice_number == 0 ) {
+            $trans = $trans->where( 'invoice_format', '=', $invoice )
+                ->where( 'form_type', '=', $form_type )
+                ->where( 'id', '!=', $trns_id )
+                ->get()
+                ->toArray(); 
+        } else {
+            $trans = $trans->where( 'invoice_number', '=', $invoice_number )
+                ->where( 'form_type', '=', $form_type )
+                ->where( 'id', '!=', $trns_id )
+                ->get()
+                ->toArray(); 
+        }
+
     } else {
+        
         $trans = new \WeDevs\ERP\Accounting\Model\Transaction();
-        $trans = $trans->where( 'invoice_number', '=', $args['invoice_number'] )->get()->toArray();    
+        if ( $invoice_number == 0 ) {
+            $trans = $trans->where( 'invoice_format', '=', $invoice )
+                ->where( 'form_type', '=', $form_type )
+                ->get()
+                ->toArray(); 
+        } else {
+            $trans = $trans->where( 'invoice_number', '=', $invoice_number )
+                ->where( 'form_type', '=', $form_type )
+                ->get()
+                ->toArray(); 
+        }
     }
     
     if ( $trans ) {
@@ -278,71 +315,12 @@ function er_ac_insert_transaction_permiss( $args, $is_update ) {
         }
     }
 
-    if ( empty( $args['invoice_number'] ) ) {
-        return new WP_Error( 'error', __( 'Invoice number required', 'erp' ) );
-    }
-
-    if ( ! erp_ac_check_invoice_number_unique( $args, $is_update ) ) {
+    if ( ( $args['form_type'] == 'invoice' || $args['form_type'] == 'payment' ) && ! erp_ac_check_invoice_number_unique( $args['invoice_number'], $args['form_type'], $is_update, $args['id'] ) ) {
         return new WP_Error( 'error', __( 'Invoice already exists. Please use an unique number', 'erp' ) );
     }
 
     if ( ! intval( $args['user_id'] ) ) {
         return new WP_Error( 'error', __( 'User ID (Customer or Vendor) requird', 'erp' ) );
-    }
-}
-
-function erp_ac_generate_invoice_id( $form_type = '' ) {
-
-    $invoice_number = 1;
-
-    if ( $form_type == 'invoice' ) {
-        $invoice_number = get_option( 'erp_ac_sales_invoice_number' );
-        $invoice_number = empty( $invoice_number ) ? 1 : ( $invoice_number + 1 );
-    
-    } else if ( $form_type == 'payment' ) {
-        $invoice_number = get_option( 'erp_ac_sales_payment_number' );
-        $invoice_number = empty( $invoice_number ) ? 1 : ( $invoice_number + 1 );
-    
-    } else if ( $form_type == 'payment_voucher' ) {
-        $invoice_number = get_option( 'erp_ac_expense_voucher_number' );
-        $invoice_number = empty( $invoice_number ) ? 1 : ( $invoice_number + 1 );
-    
-    } else if ( $form_type == 'vendor_credit' ) {
-        $invoice_number = get_option( 'erp_ac_expense_credit_number' );
-        $invoice_number = empty( $invoice_number ) ? 1 : ( $invoice_number + 1 );
-    
-    } else if ( $form_type == 'journal' ) {
-        $invoice_number = get_option( 'erp_ac_journal_number' );
-        $invoice_number = empty( $invoice_number ) ? 1 : ( $invoice_number + 1 );
-    
-    } else {
-        return false;
-    }
-
-    return str_pad( $invoice_number, 4, '0', STR_PAD_LEFT );
-}
-
-function erp_ac_update_invoice_number( $form_type ) {
-    $invoice_number = erp_ac_generate_invoice_id( $form_type );
-
-    if ( $invoice_number === false ) {
-        return;
-    }
-
-    if ( $form_type == 'invoice' ) {
-        update_option( 'erp_ac_sales_invoice_number', $invoice_number );
-    
-    } else if ( $form_type == 'payment' ) {
-        update_option( 'erp_ac_sales_payment_number', $invoice_number );
-    
-    } else if ( $form_type == 'payment_voucher' ) {
-        update_option( 'erp_ac_expense_voucher_number', $invoice_number );
-    
-    } else if ( $form_type == 'vendor_credit' ) {
-        update_option( 'erp_ac_expense_credit_number', $invoice_number );
-    
-    } else if ( $form_type == 'journal' ) {
-        update_option( 'erp_ac_journal_number', $invoice_number );
     }
 }
 
@@ -371,14 +349,15 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
         'summary'         => '',
         'total'           => '',
         'sub_total'       => '0.00',
-        'invoice_number'  => erp_ac_generate_invoice_id( $args['form_type'] ),
+        'invoice_number'  => erp_ac_get_auto_generated_invoice( $args['form_type'] ),
+        'invoice_format'  => erp_ac_get_invoice_format( $args['form_type'] ),
         'files'           => '',
         'currency'        => '',
         'created_by'      => get_current_user_id(),
         'created_at'      => current_time( 'mysql' )
     );
 
-    $args       = wp_parse_args( $args, $defaults );
+    $args = wp_parse_args( $args, $defaults ); //strpos($mystring, $findme);
     
     $is_update  = $args['id'] && ! is_array( $args['id'] ) ? true : false;
 
@@ -386,6 +365,15 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
 
     if ( is_wp_error( $permission ) ) {
         return $permission;
+    }
+
+    $invoice = erp_ac_get_invoice_num_fromat_from_sibmit_invoice( $args['invoice_number'], $args['invoice_format'] );
+    
+    if ( $invoice == 0 ) {
+        $args['invoice_format'] = $args['invoice_number'];
+        $args['invoice_number'] = 0;
+    } else {
+        $args['invoice_number'] = $invoice;
     }
 
     $table_name = $wpdb->prefix . 'erp_ac_transactions';
@@ -434,6 +422,7 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
 
             $trans = WeDevs\ERP\Accounting\Model\Transaction::find( $args['id'] )->update( $args );
             $trans_id    = $trans ? $args['id'] : false;
+            erp_ac_update_invoice_number( $args['form_type'] );
         } else {
 
             $trans    = WeDevs\ERP\Accounting\Model\Transaction::create( $args );

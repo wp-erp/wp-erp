@@ -357,7 +357,7 @@ class Form_Handler {
         $journals_id     = isset( $postdata['journals_id'] ) ? $postdata['journals_id'] : [];
         $partial_id      = isset( $postdata['partial_id'] ) ? $postdata['partial_id'] : [];
         $sub_total       = isset( $postdata['sub_total'] ) ? $postdata['sub_total'] : '0.00';
-        $invoice         = isset( $postdata['invoice'] ) ? $postdata['invoice'] : erp_ac_generate_invoice_id( $form_type );
+        $invoice         = isset( $postdata['invoice'] ) ? $postdata['invoice'] : '';
 
         //for draft
         //$status = isset( $postdata['submit_erp_ac_trans_draft'] ) ? 'draft' : $status;
@@ -395,12 +395,12 @@ class Form_Handler {
             'user_id'         => $user_id,
             'billing_address' => $billing_address,
             'ref'             => $ref,
-            'invoice_number'  => $invoice,
             'issue_date'      => $issue_date,
             'due_date'        => $due_date,
             'summary'         => $summary,
             'total'           => $total,
             'sub_total'       => $sub_total,
+            'invoice_number'  => $invoice,
             'trans_total'     => $total,
             'files'           => $files,
             'currency'        => $currency,
@@ -449,17 +449,17 @@ class Form_Handler {
             return new \WP_Error( 'error', __( 'You do not have sufficient permissions', 'erp' ) );
         }
 
-        if ( empty( $_POST['invoice'] ) ) {
-            return new \WP_Error( 'error', __( 'Invoice number required', 'erp' ) );
-        }
+        // if ( empty( $_POST['invoice'] ) ) {
+        //     return new \WP_Error( 'error', __( 'Invoice number required', 'erp' ) );
+        // }
 
-        $invoice = isset( $_POST['invoice'] ) ? $_POST['invoice'] : '';
-        $trans   = new \WeDevs\ERP\Accounting\Model\Transaction();
-        $trans   = $trans->where( 'invoice_number', '=', $invoice )->get()->toArray();
+        // $invoice = isset( $_POST['invoice'] ) ? $_POST['invoice'] : '';
+        // $trans   = new \WeDevs\ERP\Accounting\Model\Transaction();
+        // $trans   = $trans->where( 'invoice_number', '=', $invoice )->get()->toArray();
 
-        if ( $trans ) {
-            return new \WP_Error( 'error', __( 'Please insert unique invoice number', 'erp' ) );
-        }
+        // if ( $trans ) {
+        //     return new \WP_Error( 'error', __( 'Please insert unique invoice number', 'erp' ) );
+        // }
 
         global $wpdb;
 
@@ -472,7 +472,7 @@ class Form_Handler {
         $summary      = isset( $_POST['summary'] ) ? sanitize_text_field( $_POST['summary'] ) : '';
         $debit_total  = isset( $_POST['debit_total'] ) ? floatval( $_POST['debit_total'] ) : 0.00;
         $credit_total = isset( $_POST['credit_total'] ) ? floatval( $_POST['credit_total'] ) : 0.00;
-        $invoice      = isset( $_POST['invoice'] ) ? $_POST['invoice'] : erp_ac_generate_invoice_id( $form_type );
+        //$invoice      = $_POST['invoice'];
 
         if ( $debit_total < 0 || $credit_total < 0 ) {
             wp_die( __( 'Value can not be negative', 'erp' ) );
@@ -490,7 +490,7 @@ class Form_Handler {
             'total'           => $debit_total,
             'conversion_rate' => 1,
             'trans_total'     => $debit_total,
-            'invoice_number'  => $invoice,
+            'invoice_number'  => NULL,
             'created_by'      => get_current_user_id(),
             'created_at'      => current_time( 'mysql' )
         ];
@@ -501,9 +501,9 @@ class Form_Handler {
             $transaction = new \WeDevs\ERP\Accounting\Model\Transaction();
             $trans = $transaction->create( $args );
 
-            if ( $trans->id ) {
-                erp_ac_update_invoice_number( 'journal' );
-            }
+            // if ( $trans->id ) {
+            //     erp_ac_update_invoice_number( 'journal' );
+            // }
 
             if ( ! $trans->id ) {
                 throw new \Exception( __( 'Could not create transaction', 'erp' ) );

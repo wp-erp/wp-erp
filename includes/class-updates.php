@@ -28,6 +28,7 @@ class Updates {
         '1.1.0' => 'updates/update-1.1.0.php',
         '1.1.1' => 'updates/update-1.1.1.php',
         '1.1.2' => 'updates/update-1.1.2.php',
+        '1.1.3' => 'updates/update-1.1.3.php',
     ];
 
     /**

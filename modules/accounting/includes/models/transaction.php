@@ -7,7 +7,7 @@ class Transaction extends Model {
     protected $primaryKey = 'id';
     protected $table      = 'erp_ac_transactions';
     public $timestamps    = false;
-    protected $fillable   = [ 'type', 'form_type', 'status', 'user_id', 'billing_address', 'ref', 'summary', 'issue_date', 'due_date', 'currency', 'conversion_rate', 'sub_total', 'total', 'due', 'trans_total', 'invoice_number', 'files', 'created_by', 'created_at'];
+    protected $fillable   = [ 'type', 'form_type', 'status', 'user_id', 'billing_address', 'ref', 'summary', 'issue_date', 'due_date', 'currency', 'conversion_rate', 'sub_total', 'total', 'due', 'trans_total', 'invoice_number', 'invoice_format', 'files', 'created_by', 'created_at'];
 
     public function items() {
         return $this->hasMany( 'WeDevs\ERP\Accounting\Model\Transaction_Items', 'transaction_id' );

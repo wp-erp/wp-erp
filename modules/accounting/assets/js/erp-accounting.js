@@ -962,12 +962,14 @@
         changeInvoice: function(e) {
             e.preventDefault();
 
-            var self = $(this);
+            var self = $(this),
+                old_invoice = self.data('old_val');
 
             wp.ajax.send('erp-ac-check-invoice-number', {
                 data: {
                     '_wpnonce': ERP_AC.nonce,
                     invoice: self.val(),
+                    form_type : $('input[name="form_type"]').val(),
                 },
 
                 success: function(res) {
@@ -978,7 +980,7 @@
                 },
 
                 error: function(res) {
-                    self.val('');
+                    self.val(old_invoice);
                     alert(res);
                    // $('input[name="submit_erp_ac_trans"]').prop('disabled',false);
                    // $('input[name="submit_erp_ac_trans_draft"]').prop('disabled',false);

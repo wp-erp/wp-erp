@@ -11,11 +11,14 @@ if ( ! class_exists ( 'WP_List_Table' ) ) {
 class Journal_List_Table extends Transaction_List_Table {
 
     function __construct() {
-        parent::__construct();
 
         $this->type = 'journal';
         $this->slug = 'erp-accounting-journal';
+        
+        parent::__construct();
+
     }
+
 
     /**
      * Get the column names
