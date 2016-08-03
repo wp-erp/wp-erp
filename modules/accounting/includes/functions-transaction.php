@@ -218,7 +218,7 @@ function erp_ac_get_transaction( $id = 0 ) {
  */
 function erp_ac_check_invoice_number_unique( $invoice, $form_type, $is_update = false, $trns_id = false ) {
     $invoice_format = erp_ac_get_invoice_format( $form_type );
-    $invoice_number = erp_ac_get_invoice_num_fromat_from_sibmit_invoice( $invoice, $invoice_format );
+    $invoice_number = erp_ac_get_invoice_num_fromat_from_submit_invoice( $invoice, $invoice_format );
 
     if ( $is_update ) {
         $trans = new \WeDevs\ERP\Accounting\Model\Transaction();
@@ -367,7 +367,7 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
         return $permission;
     }
 
-    $invoice = erp_ac_get_invoice_num_fromat_from_sibmit_invoice( $args['invoice_number'], $args['invoice_format'] );
+    $invoice = erp_ac_get_invoice_num_fromat_from_submit_invoice( $args['invoice_number'], $args['invoice_format'] );
     
     if ( $invoice == 0 ) {
         $args['invoice_format'] = $args['invoice_number'];
