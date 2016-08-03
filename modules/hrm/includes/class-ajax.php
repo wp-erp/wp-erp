@@ -377,7 +377,7 @@ class Ajax_Handler {
         $this->verify_nonce( 'erp-new-desig' );
 
         //check permission
-        if ( current_user_can( 'erp_manage_designation' ) ) {
+        if ( ! current_user_can( 'erp_manage_designation' ) ) {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
@@ -429,7 +429,7 @@ class Ajax_Handler {
         $this->verify_nonce( 'wp-erp-hr-nonce' );
 
         //check permission
-        if ( current_user_can( 'erp_manage_designation' ) ) {
+        if ( ! current_user_can( 'erp_manage_designation' ) ) {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 

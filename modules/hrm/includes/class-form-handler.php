@@ -17,7 +17,6 @@ class Form_Handler {
      * Hook 'em all
      */
     public function __construct() {
-
         add_action( 'erp_action_hr-leave-assign-policy', array( $this, 'leave_entitlement' ) );
         add_action( 'erp_action_hr-leave-req-new', array( $this, 'leave_request' ) );
 
@@ -92,9 +91,14 @@ class Form_Handler {
      * @return void [redirection]
      */
     public function leave_policies() {
-
+        // Check nonce validaion
         if ( ! $this->verify_current_page_screen( 'erp-leave-policies', 'bulk-leave_policies' ) ) {
             return;
+        }
+
+        // Check permission
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            wp_die( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
         if ( isset( $_POST['action'] ) && $_POST['action'] == 'trash' ) {
@@ -117,6 +121,11 @@ class Form_Handler {
     public function entitlement_bulk_action() {
         if ( ! $this->verify_current_page_screen( 'erp-leave-assign', 'bulk-entitlements' ) ) {
             return;
+        }
+
+        // Check permission
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            wp_die( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
         $employee_table = new \WeDevs\ERP\HRM\Entitlement_List_Table();
@@ -153,8 +162,14 @@ class Form_Handler {
      * @return void redirect
      */
     public function leave_request_bulk_action() {
+        // Check nonce validaion
         if ( ! $this->verify_current_page_screen( 'erp-leave', 'bulk-leaves' ) ) {
             return;
+        }
+
+        // Check permission
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            wp_die( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
         $leave_request_table = new \WeDevs\ERP\HRM\Leave_Requests_List_Table();
@@ -233,9 +248,14 @@ class Form_Handler {
      * @return void [redirection]
      */
     public function employee_bulk_action() {
-
+        // Nonce validation
         if ( ! $this->verify_current_page_screen( 'erp-hr-employee', 'bulk-employees' ) ) {
             return;
+        }
+
+        // Check permission if not hr manager then go out from here
+        if ( ! current_user_can( erp_hr_get_manager_role() ) ) {
+            wp_die( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
         $employee_table = new \WeDevs\ERP\HRM\Employee_List_Table();
@@ -296,6 +316,11 @@ class Form_Handler {
             return;
         }
 
+        // Check permission if not hr manager then go out from here
+        if ( ! current_user_can( erp_hr_get_manager_role() ) ) {
+            wp_die( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
         $employee_table = new \WeDevs\ERP\HRM\Designation_List_Table();
         $action = $employee_table->current_action();
 
@@ -329,10 +354,16 @@ class Form_Handler {
      * @return void [redirection]
      */
     public function department_bulk_action() {
-
+        // Check nonce validation
         if ( ! $this->verify_current_page_screen( 'erp-hr-depts', 'bulk-departments' ) ) {
             return;
         }
+
+        // Check permission if not hr manager then go out from here
+        if ( ! current_user_can( erp_hr_get_manager_role() ) ) {
+            wp_die( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
 
         $employee_table = new \WeDevs\ERP\HRM\Department_List_Table();
         $action         = $employee_table->current_action();
@@ -370,9 +401,14 @@ class Form_Handler {
      * @return void
      */
     public function holiday_action() {
-
+        // Check nonce validation
         if ( ! $this->verify_current_page_screen( 'erp-holiday-assign', 'bulk-holiday' ) ) {
             return;
+        }
+
+        // Check permission
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            wp_die( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
         $this->remove_holiday( $_GET );
@@ -380,7 +416,6 @@ class Form_Handler {
         $query_arg = add_query_arg( array( 's' => $_GET['s'], 'from' => $_GET['from'], 'to' => $_GET['to'] ), $_GET['_wp_http_referer'] );
         wp_redirect( $query_arg );
         exit();
-
     }
 
     /**
@@ -393,6 +428,11 @@ class Form_Handler {
      * @return boolean
      */
     public function remove_holiday( $get ) {
+
+        // Check permission
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            wp_die( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
 
         if ( isset( $get['action'] ) && $get['action'] == 'trash' ) {
             if ( isset( $get['holiday_id'] ) ) {
@@ -422,6 +462,10 @@ class Form_Handler {
 
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-hr-leave-assign' ) ) {
             die( __( 'Something went wrong!', 'erp' ) );
+        }
+
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            wp_die( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
         $affected        = 0;
@@ -521,6 +565,10 @@ class Form_Handler {
             die( __( 'Something went wrong!', 'erp' ) );
         }
 
+        if ( ! current_user_can( 'erp_leave_create_request' ) ) {
+            wp_die( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
         $employee_id  = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
         $leave_policy = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : 0;
         $start_date   = isset( $_POST['leave_from'] ) ? sanitize_text_field( $_POST['leave_from'] ) : date_i18n( 'Y-m-d' );
@@ -554,12 +602,19 @@ class Form_Handler {
      */
     public function leave_request_status_change() {
 
+        // If not leave bulk action then go out from here
         if ( ! isset( $_GET['leave_action'] ) ) {
             return;
         }
 
+        // Verify the nonce validation
         if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'erp-hr-leave-req-nonce' ) ) {
             return;
+        }
+
+        // Check permission if not have then bell out :)
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            wp_die( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
         $action  = $_GET['leave_action'];
@@ -634,13 +689,19 @@ class Form_Handler {
      * @return void
      */
     public function handle_employee_status_update() {
-
+        // If not submit this form then return
         if ( ! isset( $_POST['employee_status'] ) ) {
             return;
         }
 
+        // Nonce validaion
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'wp-erp-hr-employee-update-nonce' ) ) {
             return;
+        }
+
+        // Check permission
+        if ( ! current_user_can( erp_hr_get_manager_role() ) ) {
+            wp_die( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
         if ( $_POST['employee_status'] == 'terminated' ) {
