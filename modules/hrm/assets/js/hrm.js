@@ -246,7 +246,7 @@
                                 modal.closeModal();
                             },
                             error: function(error) {
-                                alert( error );
+                                modal.showError( error );
                             }
                         });
                     }
@@ -304,7 +304,7 @@
                                 modal.closeModal();
                             },
                             error: function(error) {
-                                alert( error );
+                                modal.showError( error );
                             }
                         });
                     }
@@ -394,7 +394,7 @@
                                 modal.closeModal();
                             },
                             error: function(error) {
-                                alert( error );
+                                modal.showError( error );
                             }
                         });
                     }
@@ -446,7 +446,7 @@
                                 modal.closeModal();
                             },
                             error: function(error) {
-                                alert( error );
+                                modal.showError( error );
                             }
                         });
                     }
@@ -597,7 +597,7 @@
                             },
                             error: function(error) {
                                 modal.enableButton();
-                                alert(error);
+                                modal.showError(error);
                             }
                         });
                     }
@@ -705,7 +705,7 @@
                             },
                             error: function(error) {
                                 modal.enableButton();
-                                alert( error );
+                                modal.showError( error );
                             }
                         });
                     }
@@ -794,7 +794,7 @@
                                 },
                                 error: function(error) {
                                     modal.enableButton();
-                                    alert( error );
+                                    modal.showError( error );
                                 }
                             });
                         }
@@ -860,7 +860,7 @@
                             },
                             error: function(error) {
                                 modal.enableButton();
-                                alert( error );
+                                modal.showError( error );
                             }
                         });
                     }
@@ -1001,7 +1001,7 @@
                                     },
                                     error: function(error) {
                                         modal.enableButton();
-                                        alert( error );
+                                        modal.showError( error );
                                     }
                                 });
                             }
@@ -1152,7 +1152,7 @@
                             },
                             error: function(error) {
                                 modal.enableButton();
-                                alert( error );
+                                modal.showError( error );
                             }
                         });
                     }
@@ -1221,7 +1221,7 @@
                             },
                             error: function(error) {
                                 modal.enableButton();
-                                alert( error );
+                                modal.showError( error );
                             }
                         });
                     }
@@ -1280,7 +1280,7 @@
                                     },
                                     error: function(error) {
                                         modal.enableButton();
-                                        alert( error );
+                                        modal.showError( error );
                                     }
                                 });
                             }
@@ -1311,7 +1311,7 @@
                                     },
                                     error: function(error) {
                                         modal.enableButton();
-                                        alert( error );
+                                        modal.showError( error );
                                     }
                                 });
                             }
