@@ -815,6 +815,9 @@
                             },
                             success: function() {
                                 WeDevs_ERP_HR.reloadPage();
+                            },
+                            error: function(error) {
+                                alert( error );
                             }
                         });
                     }

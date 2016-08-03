@@ -142,6 +142,8 @@
                         is-permitted="<?php echo current_user_can( 'erp_crm_edit_contact', $customer->id ); ?>"
                     ></contact-assign-group>
 
+                    <?php do_action( 'erp_crm_company_left_widgets', $customer ); ?>
+
                 </div>
             </div>
 

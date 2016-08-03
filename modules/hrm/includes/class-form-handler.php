@@ -68,7 +68,7 @@ class Form_Handler {
      * @return boolean
      */
     public function verify_current_page_screen( $page_id, $bulk_action ) {
-        
+
         if ( ! isset( $_REQUEST['_wpnonce'] ) || ! isset( $_GET['page'] ) ) {
             return false;
         }
