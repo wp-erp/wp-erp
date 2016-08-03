@@ -156,7 +156,6 @@ window.wpErpVue = window.wpErpVue || {};
             toggleFooter: function() {
                 if ( wpCRMvue.isAdmin || wpCRMvue.isCrmManager || this.checkOwnFeeds() ) {
                     if ( this.disbaleFooter == 'true' ) {
-                        console.log( this.disbaleFooter );
                         this.showFooter = false;
                     } else {
                         this.showFooter = !this.showFooter;
