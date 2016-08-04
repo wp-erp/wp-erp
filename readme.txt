@@ -151,6 +151,17 @@ If you are unable to use any of the methods due to internet connectivity and fil
 
 == Changelog ==
 
+**v1.1.3 -> Aug 4, 2016**
+
+ * [fix] Added loading feedback when submitting form for all popup
+ * [fix] Invoice number formatting functionality
+ * [fix] HR all capabilities problem fixed
+ * [fix] Hook contact form integration to plugins_loaded hook
+ * [fix] Removed logged in user check for cron job
+ * [fix] Hide plugin updater for non-admin
+ * [new] Life stage, contact owner & group added on CSV contact importer form
+ * [new] added some hooks and filters
+
 **v1.1.2 -> June 26, 2016**
 
  * [new] Settings for invoice formatting
