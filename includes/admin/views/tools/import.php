@@ -1,7 +1,32 @@
 <?php
+
+    if ( ! $is_crm_activated && ! $is_hrm_activated ) {
+        return;
+    }
+
     $page           = '?page=erp-tools&tab=import&action=download_sample';
     $nonce          = 'erp-emport-export-sample-nonce';
     $csv_sample_url = wp_nonce_url( $page, $nonce );
+
+    $users       = [];
+    $life_stages = [];
+    $groups      = [];
+
+    if ( $is_crm_activated ) {
+        $life_stages    = erp_crm_get_life_stages_dropdown_raw();
+        $crm_users      = erp_crm_get_crm_user();
+
+        foreach ( $crm_users as $user ) {
+            $users[ $user->ID ] = $user->display_name . ' &lt;' . $user->user_email . '&gt;';
+        }
+
+        $contact_groups = erp_crm_get_contact_groups( [ 'number' => '-1' ] );
+
+        $groups = ['' => __( '&mdash; Select Group &mdash;', 'erp' )];
+        foreach ( $contact_groups as $group ) {
+            $groups[ $group->id ] = $group->name;
+        }
+    }
 ?>
 <div class="postbox">
     <div class="inside">
@@ -38,6 +63,44 @@
                         </td>
                     </tr>
                 </tbody>
+                <tbody id="crm_contact_lifestage_owner_wrap">
+                    <tr>
+                        <th>
+                            <label for="contact_owner"><?php _e( 'Contact Owner', 'erp' ); ?></label>
+                        </th>
+                        <td>
+                            <select name="contact_owner" id="contact_owner">
+                                <?php
+                                    $current_user = get_current_user_id();
+                                    echo erp_html_generate_dropdown( $users, $current_user );
+                                ?>
+                            </select>
+                            <p class="description"><?php _e( 'Contact owner for contact.', 'erp' ); ?></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <label for="life_stage"><?php _e( 'Life Stage', 'erp' ); ?></label>
+                        </th>
+                        <td>
+                            <select name="life_stage" id="life_stage">
+                                <?php echo erp_html_generate_dropdown( $life_stages ); ?>
+                            </select>
+                            <p class="description"><?php _e( 'Life stage for contact.', 'erp' ); ?></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <label for="contact_group"><?php _e( 'Contact Group', 'erp' ); ?></label>
+                        </th>
+                        <td>
+                            <select name="contact_group">
+                                <?php echo erp_html_generate_dropdown( $groups ); ?>
+                            </select>
+                            <p class="description"><?php _e( 'Imported contacts will be subscribed in selected group.', 'erp' ); ?></p>
+                        </td>
+                    </tr>
+                </tbody>
 
                 <tbody id="fields_container" style="display: none;">
 
@@ -62,21 +125,8 @@
                     delete_option( 'erp_users_to_contacts_import_attempt' );
                     delete_option( 'erp_users_to_contacts_import_exists' );
 
-                    $life_stages    = erp_crm_get_life_stages_dropdown_raw();
-                    $crm_users      = erp_crm_get_crm_user();
-                    $contact_groups = erp_crm_get_contact_groups( [ 'number' => '-1' ] );
-
-                    $groups = ['' => __( '&mdash; Select Group &mdash;', 'erp' )];
-                    foreach ( $contact_groups as $group ) {
-                        $groups[ $group->id ] = $group->name;
-                    }
-
                     $roles        = $wp_roles->get_names();
                     $default_role = get_option( 'default_role', '' );
-
-                    foreach ( $crm_users as $user ) {
-                        $users[ $user->ID ] = $user->display_name . ' &lt;' . $user->user_email . '&gt;';
-                    }
                 ?>
                 <table class="form-table">
                     <tbody>
