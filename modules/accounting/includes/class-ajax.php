@@ -39,7 +39,7 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-ac-transaction-report', 'transaction_report' );
         $this->action( 'wp_ajax_erp_people_convert', 'convert_user' );
         $this->action( 'wp_ajax_erp-ac-new-tax', 'new_tax' );
-        $this->action( 'wp_ajax_erp-ac-delete-tax', 'delete_tax' ); 
+        $this->action( 'wp_ajax_erp-ac-delete-tax', 'delete_tax' );
         $this->action( 'wp_ajax_erp-ac-remove-account', 'remove_account' );
         $this->action( 'wp_ajax_erp-ac-sales-invoice-export', 'sales_invoice_export' );
         $this->action( 'wp_ajax_erp-ac-sales-payment-export', 'sales_payment_export' );
@@ -56,7 +56,7 @@ class Ajax_Handler {
      * Change transaction status paid or closed to awating payment
      *
      * @since  1.1.1
-     * 
+     *
      * @return void
      */
     function transaction_redo() {
@@ -78,7 +78,7 @@ class Ajax_Handler {
      * Change transaction status awating for payment to void
      *
      * @since  1.1.1
-     * 
+     *
      * @return void
      */
     function transaction_void() {
@@ -99,7 +99,7 @@ class Ajax_Handler {
     function transaction_restore() {
         $this->verify_nonce( 'erp-ac-nonce' );
         parse_str( $_POST['data'], $postdata );
-        
+
         $trns_id = isset( $_POST['id'] ) ? $_POST['id'] : false;
         $type    = $_POST['type'];
         $delete  = false;
@@ -127,7 +127,7 @@ class Ajax_Handler {
      * Delete transaction
      *
      * @since  1.1.1
-     * 
+     *
      * @return void
      */
     function transaction_delete_row() {
@@ -149,7 +149,7 @@ class Ajax_Handler {
         $this->verify_nonce( 'erp-ac-nonce' );
         parse_str( $_POST['form_data'], $postdata );
         $postdata['status']  = erp_ac_get_status_according_with_btn( $_POST['btn_status'] );
-        
+
         $transaction = \WeDevs\ERP\Accounting\Form_Handler::transaction_data_process( $postdata );
         $return_url = '';
 
@@ -159,7 +159,7 @@ class Ajax_Handler {
             $return_url = erp_ac_get_sales_url( false );
         } else if ( $postdata['type'] == 'journal' ) {
             $return_url = erp_ac_get_journal_url( false );
-        } 
+        }
 
         if ( is_wp_error( $transaction ) ) {
             wp_send_json_error( array( 'message' => $transaction->get_error_message() ) );
@@ -176,12 +176,8 @@ class Ajax_Handler {
             $this->send_error( array( 'error' => __( 'Type required', 'erp' ) ) );
         }
 
-        if ( $type == 'payment' ) {
-            $invoice_number = erp_ac_invoice_prefix( 'erp_ac_payment', erp_ac_generate_invoice_id( 'payment' ) );
-        }
-
-        if ( $type == 'payment_voucher' ) {
-            $invoice_number = erp_ac_invoice_prefix( 'erp_ac_payment_voucher', erp_ac_generate_invoice_id( 'payment_voucher' ) );
+        if ( ( 'payment' === $type ) || ( 'payment_voucher' === $type ) ) {
+            $invoice_number = erp_ac_get_auto_generated_invoice( $type );
         }
 
         $this->send_success( array( 'invoice_number' => $invoice_number ) );
