@@ -2866,6 +2866,12 @@ table.audit-log-table th.col-date {
   display: inline-block;
   margin: 0;
 }
+.erp-modal footer li .erp-loader {
+  position: relative;
+  margin-right: 7px;
+  padding-top: 18px;
+  top: 5px;
+}
 .erp-modal .button-secondary,
 .erp-modal .button-primary:active {
   vertical-align: baseline;

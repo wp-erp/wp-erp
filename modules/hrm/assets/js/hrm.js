@@ -246,7 +246,7 @@
                                 modal.closeModal();
                             },
                             error: function(error) {
-                                alert( error );
+                                modal.showError( error );
                             }
                         });
                     }
@@ -304,7 +304,7 @@
                                 modal.closeModal();
                             },
                             error: function(error) {
-                                alert( error );
+                                modal.showError( error );
                             }
                         });
                     }
@@ -394,7 +394,7 @@
                                 modal.closeModal();
                             },
                             error: function(error) {
-                                alert( error );
+                                modal.showError( error );
                             }
                         });
                     }
@@ -446,7 +446,7 @@
                                 modal.closeModal();
                             },
                             error: function(error) {
-                                alert( error );
+                                modal.showError( error );
                             }
                         });
                     }
@@ -597,7 +597,7 @@
                             },
                             error: function(error) {
                                 modal.enableButton();
-                                alert(error);
+                                modal.showError(error);
                             }
                         });
                     }
@@ -705,7 +705,7 @@
                             },
                             error: function(error) {
                                 modal.enableButton();
-                                alert( error );
+                                modal.showError( error );
                             }
                         });
                     }
@@ -794,7 +794,7 @@
                                 },
                                 error: function(error) {
                                     modal.enableButton();
-                                    alert( error );
+                                    modal.showError( error );
                                 }
                             });
                         }
@@ -810,10 +810,14 @@
                         wp.ajax.send( self.data('action'), {
                             data: {
                                 id: self.data('id'),
+                                employee_id: self.data('employee_id'),
                                 _wpnonce: wpErpHr.nonce
                             },
                             success: function() {
                                 WeDevs_ERP_HR.reloadPage();
+                            },
+                            error: function(error) {
+                                alert( error );
                             }
                         });
                     }
@@ -856,7 +860,7 @@
                             },
                             error: function(error) {
                                 modal.enableButton();
-                                alert( error );
+                                modal.showError( error );
                             }
                         });
                     }
@@ -997,7 +1001,7 @@
                                     },
                                     error: function(error) {
                                         modal.enableButton();
-                                        alert( error );
+                                        modal.showError( error );
                                     }
                                 });
                             }
@@ -1148,7 +1152,7 @@
                             },
                             error: function(error) {
                                 modal.enableButton();
-                                alert( error );
+                                modal.showError( error );
                             }
                         });
                     }
@@ -1217,7 +1221,7 @@
                             },
                             error: function(error) {
                                 modal.enableButton();
-                                alert( error );
+                                modal.showError( error );
                             }
                         });
                     }
@@ -1276,7 +1280,7 @@
                                     },
                                     error: function(error) {
                                         modal.enableButton();
-                                        alert( error );
+                                        modal.showError( error );
                                     }
                                 });
                             }
@@ -1307,7 +1311,7 @@
                                     },
                                     error: function(error) {
                                         modal.enableButton();
-                                        alert( error );
+                                        modal.showError( error );
                                     }
                                 });
                             }

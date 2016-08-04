@@ -188,7 +188,7 @@ class Employee_List_Table extends \WP_List_Table {
     function get_bulk_actions() {
         $actions = [];
 
-        if ( ! current_user_can( 'erp_hr_manager' ) ) {
+        if ( ! current_user_can( erp_hr_get_manager_role() ) ) {
             return $actions;
         }
 

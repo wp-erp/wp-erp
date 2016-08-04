@@ -27,6 +27,7 @@ class Journal_Transactions extends \WP_List_Table {
             'plural'   => 'entries',
             'ajax'     => false
         ) );
+
     }
 
     function get_table_classes() {
@@ -310,8 +311,10 @@ class Journal_Transactions extends \WP_List_Table {
         $individual_ledger = \WeDevs\ERP\Accounting\Model\Ledger::select('type_id')->find( $ledger_id );
         $this->type_id     = $individual_ledger->type_id;
 
+
         // count = -1
         $args['number'] = '-1';
+        
         $all_items = erp_ac_get_ledger_transactions( $args );
 
         $this->set_pagination_args( array(

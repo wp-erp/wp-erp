@@ -16,6 +16,9 @@
             <footer>
                 <ul>
                     <li>
+                        <div class="erp-loader erp-hide"></div>
+                    </li>
+                    <li>
                         <span class="activate">
                             <button type="submit" class="button-primary"></button>
                         </span>

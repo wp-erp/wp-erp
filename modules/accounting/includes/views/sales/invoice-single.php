@@ -80,7 +80,7 @@ $readonly_url        = add_query_arg( [ 'query' => 'readonly_invoice', 'trans_id
             <div class="row">
                 <div class="invoice-number">
                     <?php
-                        $ivoice = isset( $transaction->invoice_number ) && ! empty( $transaction->invoice_number ) ? $transaction->invoice_number : $transaction->id;
+                        $ivoice = isset( $transaction->invoice_number ) ? erp_ac_get_invoice_number( $transaction->invoice_number, $transaction->invoice_format ) : $transaction->id;
                         printf( __( 'Invoice: <strong>%s</strong>', 'erp' ), $ivoice );
                     ?>
                 </div>

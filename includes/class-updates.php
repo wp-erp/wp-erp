@@ -28,6 +28,7 @@ class Updates {
         '1.1.0' => 'updates/update-1.1.0.php',
         '1.1.1' => 'updates/update-1.1.1.php',
         '1.1.2' => 'updates/update-1.1.2.php',
+        '1.1.3' => 'updates/update-1.1.3.php',
     ];
 
     /**
@@ -72,7 +73,7 @@ class Updates {
      * @return void
      */
     public function show_update_notice() {
-        if ( ! $this->is_needs_update() ) {
+        if ( ! current_user_can( 'update_plugins' ) || ! $this->is_needs_update() ) {
             return;
         }
         ?>

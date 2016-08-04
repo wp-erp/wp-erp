@@ -351,24 +351,198 @@ function erp_ac_pagination( $total, $limit, $pagenum ) {
 /**
  * Get invoice prefix
  * 
- * @param  string $type
+ * @param  string $form_type
  * @param  int $id  
  *
  * @since  1.1.2
  * 
  * @return string
  */
-function erp_ac_invoice_prefix( $type, $id ) {
+function erp_ac_get_auto_generated_invoice( $form_type ) {
+    $invoice_number = erp_ac_generate_invoice_id( $form_type );
+    $invoice_number = erp_ac_invoice_num_str_pad( $invoice_number );
+    $prefix         = erp_ac_get_invoice_format( $form_type ); 
+    return str_replace( '{id}', $invoice_number, $prefix );
+}
 
-    $prefix         = erp_get_option( $type );
-    $default_prefix = erp_ac_get_default_invoice_prefix( $type );
-    $prefix         = empty( $prefix ) ? $default_prefix : $prefix;
-
-    if ( empty( $prefix ) ) {
-        return $id;
+/**
+ * Get invoice prefix
+ * 
+ * @param  string $form_type
+ *
+ * @since  1.1.2
+ * 
+ * @return string
+ */
+function erp_ac_get_invoice_format( $form_type ) {
+    if ( $form_type == 'invoice' ) {
+        return erp_get_option( 'erp_ac_invoice', false, 'INV-{id}' );
+    } else if ( $form_type == 'payment' ) {
+        return erp_get_option( 'erp_ac_payment', false, 'SPN-{id}' );
+    } else if ( $form_type == 'journal' ) {
+        return erp_get_option( 'erp_ac_journal', false, 'JRNN-{id}' );
     }
 
-    return str_replace( '{id}', $id, $prefix );
+    return false;
+}
+
+/**
+ * Check invoice existance, in exist then generate new
+ * 
+ * @param  string $form_type
+ * @param  string $invoice  
+ *
+ * @since  1.1.2
+ * 
+ * @return string
+ */
+function erp_ac_check_invoice_existance( $type, $invoice_number, $prefix ) {
+    
+    $invoice_number = erp_ac_invoice_num_str_pad( $invoice_number );
+    $invoice        = str_replace( '{id}', $invoice_number, $prefix );
+    $form_type = '';
+
+    if ( $type == 'erp_ac_invoice' ) {
+        $form_type = 'invoice';
+    } else if ( $type == 'erp_ac_payment' ) {
+        $form_type = 'payment';
+    }
+
+
+    $check_number = \WeDevs\ERP\Accounting\Model\Transaction::select(['invoice_number'])->where( 'invoice_number', '=', $invoice )->where('form_type', '=', $form_type )->get()->toArray();
+
+    if ( $check_number ) {
+        $check_number = \WeDevs\ERP\Accounting\Model\Transaction::select(['invoice_number'])->where('form_type', '=', $form_type )->get()->toArray(); 
+        $check_number = wp_list_pluck( $check_number, 'invoice_number' );
+        $check_status = true;
+
+        while ( $check_status ) {
+            $invoice_number = $invoice_number + 1;
+            $invoice_number = erp_ac_invoice_num_str_pad( $invoice_number );
+            $invoice        = str_replace( '{id}', $invoice_number, $prefix );
+            
+            if ( ! in_array( $invoice, $check_number ) ) {
+                $check_status = false;
+            }
+        }
+    }
+
+    return $invoice;
+}
+
+/**
+ * Str pad for invoice number
+ * 
+ * @param  int $invoice_number  
+ *
+ * @since  1.1.2
+ * 
+ * @return string
+ */
+function erp_ac_invoice_num_str_pad( $invoice_number ) {
+    return str_pad( $invoice_number, 4, '0', STR_PAD_LEFT );
+}
+
+/**
+ * Generate invoice id
+ * 
+ * @param  string $form_type 
+ * 
+ * @return int
+ */
+function erp_ac_generate_invoice_id( $form_type = '' ) {
+
+    $invoice_number = false;
+
+    if ( $form_type == 'invoice' ) {
+        $invoice_number = get_option( 'erp_ac_sales_invoice_number', 1 );
+    
+    } else if ( $form_type == 'payment' ) {
+        $invoice_number = get_option( 'erp_ac_sales_payment_number', 1 );
+    
+    } else if ( $form_type == 'journal' ) {
+        $invoice_number = get_option( 'erp_ac_journal_number', 1 );
+    
+    } 
+
+    return $invoice_number; //str_pad( $invoice_number, 4, '0', STR_PAD_LEFT );
+}
+
+/**
+ * Update Invoice number 
+ * 
+ * @param  string $form_type 
+ * 
+ * @return void
+ */
+function erp_ac_update_invoice_number( $form_type ) {
+    
+    if ( $form_type == 'invoice' ) {
+        $invoice_number = get_option( 'erp_ac_sales_invoice_number', 1 );
+    } else if ( $form_type == 'payment' ) {
+        $invoice_number = get_option( 'erp_ac_sales_payment_number', 1 );
+    }
+    $get_invoice_number = WeDevs\ERP\Accounting\Model\Transaction::select('invoice_number')
+        ->where( 'form_type', '=', $form_type )
+        ->where( 'invoice_number', '>=', $invoice_number )
+        ->get()->toArray();
+    $get_invoice_number = wp_list_pluck( $get_invoice_number, 'invoice_number' );
+    $status = true;
+
+    while( $status ) {
+        if ( in_array( $invoice_number, $get_invoice_number ) ) {
+            $invoice_number = $invoice_number + 1;
+        } else {
+            $status = false;
+        }
+    }
+
+    if ( $form_type == 'invoice' ) {
+        update_option( 'erp_ac_sales_invoice_number', $invoice_number );
+    } else if ( $form_type == 'payment' ) {
+        update_option( 'erp_ac_sales_payment_number', $invoice_number );
+    }
+        
+
+        
+     //else if ( $form_type == 'payment' ) {
+    //     $invoice_number = get_option( 'erp_ac_sales_payment_number', 1 );
+    //     $get_invoice_number = WeDevs\ERP\Accounting\Model\Transaction::select('invoice_number')
+    //         ->where( 'form_type', '=', $form_type )
+    //         ->where( 'invoice_number', '>=', $invoice_number )
+    //         ->get()->toArray();
+    //     $get_invoice_number = wp_list_pluck( $get_invoice_number, 'invoice_number' );
+
+    //     $status = true;
+
+    //     while( $status ) {
+    //         if ( in_array( $invoice_number, $get_invoice_number ) ) {
+    //             $invoice_number = $invoice_number + 1;
+    //         } else {
+    //             $status = false;
+    //         }
+    //     }
+    //     update_option( 'erp_ac_sales_payment_number', $invoice_number );
+        
+    // } else if ( $form_type == 'journal' ) {
+    //     $invoice_number = get_option( 'erp_ac_journal_number', 1 );
+    //     $get_invoice_number = WeDevs\ERP\Accounting\Model\Transaction::select('invoice_number')
+    //         ->where( 'form_type', '=', $form_type )
+    //         ->where( 'invoice_number', '>=', $invoice_number )
+    //         ->get()->toArray();
+    //     $get_invoice_number = wp_list_pluck( $get_invoice_number, 'invoice_number' );
+
+    //     $status = true;
+
+    //     while( $status ) {
+    //         if ( in_array( $invoice_number, $get_invoice_number ) ) {
+    //             $invoice_number = $invoice_number + 1;
+    //         } else {
+    //             $status = false;
+    //         }
+    //     }
+    //     update_option( 'erp_ac_journal_number', $invoice_number );
+    // }
 }
 
 /**
@@ -467,6 +641,49 @@ function erp_ac_readonly_invoice_template() {
     return;
 }
 
+/**
+ * Get invoice number and format fron transaction submit value
+ *
+ * @param  string $submit_invoice
+ * @param  string $invoice_format
+ * 
+ * @return array
+ */
+function erp_ac_get_invoice_num_fromat_from_submit_invoice( $submit_invoice, $invoice_format ) {
+    //was found
+    $pattern = str_replace( '{id}', '([0-9]+)', $invoice_format ); // INV-([0-9])+-INV
+    
+    preg_match( "/${pattern}/", $submit_invoice, $match );
+ 
+    $id            = isset( $match[1] ) ? $match[1] : false;
+    $check_invoice = false;
+    
+    if ( $id === false ) {
+        return 0;
+    } 
+
+    $check_invoice = str_replace( '{id}', $id, $invoice_format );
+
+    $invoice_number = $check_invoice == $submit_invoice ? intval( $id ) : 0;
+
+    return $invoice_number;
+}
+
+/**
+ * Get invoice number
+ *
+ * @param  int $invoice_number
+ * @param  string $invoice_number
+ * 
+ * @return string
+ */
+function erp_ac_get_invoice_number( $invoice_number, $invoice_format ) {
+    if ( $invoice_number != 0 ) {
+        return  str_replace( '{id}', erp_ac_invoice_num_str_pad( $invoice_number ), $invoice_format );
+    } else {
+        return $invoice_format;
+    }
+}
 
 
 

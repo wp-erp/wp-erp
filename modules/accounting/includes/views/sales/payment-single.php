@@ -43,7 +43,8 @@ $email_subject = __( 'Payment#', 'erp' ) . $transaction->invoice_number . __( ' 
             <div class="row">
                 <div class="invoice-number">
                     <?php
-                        $invoice = isset( $transaction->invoice_number ) && ! empty( $transaction->invoice_number ) ? $transaction->invoice_number : $transaction->id;
+
+                        $invoice = isset( $transaction->invoice_number ) ? erp_ac_get_invoice_number( $transaction->invoice_number, $transaction->invoice_format ) : $transaction->id;
                         printf( __( 'Payment: <strong>%s</strong>', 'erp' ), $invoice );
 
                     ?>

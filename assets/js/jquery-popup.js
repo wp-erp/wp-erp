@@ -67,7 +67,7 @@
          */
         formSubmit: function(e) {
             e.preventDefault();
-
+            $('.erp-modal-backdrop, .erp-modal' ).find( '.erp-loader' ).removeClass('erp-hide');
             this.settings.onSubmit.call( $(e.currentTarget), this );
         },
 
@@ -171,6 +171,8 @@
                 e.preventDefault();
             }
 
+            $('.erp-modal-backdrop, .erp-modal' ).find( '.erp-loader' ).addClass('erp-hide');
+
             this.settings.beforeClose.call( false, this );
 
             $('#' + this.id).remove();
@@ -190,6 +192,12 @@
             // }
 
             // this.enableButton();
+        },
+
+        showError: function(message) {
+            $('.erp-modal-backdrop, .erp-modal' ).find( '.erp-loader' ).addClass('erp-hide');
+            alert(message);
+
         }
     });
 
