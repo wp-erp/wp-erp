@@ -490,7 +490,7 @@ class Form_Handler {
             'total'           => $debit_total,
             'conversion_rate' => 1,
             'trans_total'     => $debit_total,
-            'invoice_number'  => NULL,
+            'invoice_number'  => 0,
             'created_by'      => get_current_user_id(),
             'created_at'      => current_time( 'mysql' )
         ];
