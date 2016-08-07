@@ -964,7 +964,7 @@
                                  },
                                 error: function(error) {
                                     modal.enableButton();
-                                    alert( error );
+                                    modal.showError( error );
                                 }
                             });
                         }
@@ -1036,7 +1036,7 @@
                                 },
                                 error: function(error) {
                                     modal.enableButton();
-                                    alert( error );
+                                    modal.showError( error );
                                 }
                             });
                         }
@@ -1143,7 +1143,7 @@
                                     },
                                     error: function(error) {
                                         modal.enableButton();
-                                        alert( error );
+                                        modal.showError( error );
                                         self.$refs.vtable.ajaxloader = false;
                                     }
                                 });
@@ -1299,7 +1299,7 @@
                                         },
                                         error: function(error) {
                                             modal.enableButton();
-                                            alert( error );
+                                            modal.showError( error );
                                         }
                                     });
                                 }
@@ -1560,7 +1560,7 @@
                                 },
                                 error: function(error) {
                                     modal.enableButton();
-                                    alert( error );
+                                    modal.showError( error );
                                 }
                             });
                         }
@@ -1690,7 +1690,7 @@
                                 },
                                 error: function(error) {
                                     modal.enableButton();
-                                    alert( error );
+                                    modal.showError( error );
                                 }
                             });
                         }
@@ -1794,7 +1794,7 @@
                                 },
                                 error: function(error) {
                                     modal.enableButton();
-                                    alert( error );
+                                    modal.showError( error );
                                 }
                             });
                         }

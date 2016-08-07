@@ -187,7 +187,6 @@ function erp_crm_dashboard_widget_my_schedules() {
                                 },
 
                                 success: function( response ) {
-                                    console.log( response );
                                     var startDate = wperp.dateFormat( response.start_date, 'j F' ),
                                         startTime = wperp.timeFormat( response.start_date ),
                                         endDate = wperp.dateFormat( response.end_date, 'j F' ),

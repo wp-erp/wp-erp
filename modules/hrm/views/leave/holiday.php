@@ -13,7 +13,6 @@ class Leave_Holiday_List_Table extends WP_List_Table {
             'ajax'     => false
         ) );
 
-        $this->table_css();
     }
 
     /**
@@ -24,19 +23,6 @@ class Leave_Holiday_List_Table extends WP_List_Table {
     function get_table_classes() {
         return array( 'widefat', 'fixed', 'striped', 'erp-leave-policy-list-table', $this->_args['plural'] );
     }
-    /**
-     * Table column width css
-     *
-     * @return void
-     */
-    function table_css() {
-        echo '<style type="text/css">';
-        echo '.wp-list-table .column-name img { float: left; margin-right: 10px; margin-top: 1px; }';
-        echo '.wp-list-table .column-balance { width: 8%; }';
-        echo '.wp-list-table .column-status { width: 8%; }';
-        echo '.wp-list-table .column-comments { width: 25%; }';
-        echo '</style>';
-    }
 
     function extra_tablenav( $which ) {
         if ( $which != 'top' ) return;
@@ -45,7 +31,6 @@ class Leave_Holiday_List_Table extends WP_List_Table {
         $from         = isset( $_GET['from'] ) ? $_GET['from'] : '';
         $to           = isset( $_GET['to'] ) ? $_GET['to'] : '';
         ?>
-
 
         <label class="screen-reader-text" for="new_role"><?php _e( 'From', 'erp' ) ?></label>
         <input type="text" placeholder="<?php _e( 'From date', 'erp' ); ?>" name="from" value="<?php echo $from; ?>" class="erp-leave-date-picker-from">
@@ -166,7 +151,7 @@ class Leave_Holiday_List_Table extends WP_List_Table {
      */
     function get_bulk_actions() {
         $actions = array(
-            'trash'  => __( 'Move to Trash', 'erp' ),
+            'trash'  => __( 'Delete', 'erp' ),
         );
         return $actions;
     }

@@ -1154,9 +1154,21 @@ function erp_import_export_javascript() {
                 erp_csv_importer_field_handler( this );
             });
 
+            if ( $( 'form#import_form' ).find( '#type' ).val() == 'employee' ) {
+                $( 'form#import_form' ).find( '#crm_contact_lifestage_owner_wrap' ).hide();
+            } else {
+                $( 'form#import_form' ).find( '#crm_contact_lifestage_owner_wrap' ).show();
+            }
+
             $( 'form#import_form #type' ).on( 'change', function( e ) {
                 $( '#fields_container' ).html( '' );
                 $( '#fields_container' ).hide();
+
+                if ( $( this ).val() == 'employee' ) {
+                    $( 'form#import_form' ).find( '#crm_contact_lifestage_owner_wrap' ).hide();
+                } else {
+                    $( 'form#import_form' ).find( '#crm_contact_lifestage_owner_wrap' ).show();
+                }
 
                 var sample_csv_url = $( 'form#import_form' ).find( '#download_sample_wrap input' ).val();
                 $( 'form#import_form' ).find( '#download_sample_wrap a' ).attr( 'href', sample_csv_url + '&type=' + $( this ).val() );
@@ -1351,7 +1363,7 @@ function erp_process_import_export() {
                                     $data[$x][$key] = $line[$value];
                                 }
                             } else {
-                                $data[$x][$key] = $line[$value];
+                                $data[$x][$key] = isset( $line[$value] ) ? $line[$value] : '';
                                 $data[$x]['type'] = $type;
                             }
                         }
@@ -1397,11 +1409,15 @@ function erp_process_import_export() {
                         if ( is_wp_error( $item_insert_id ) ) {
                             continue;
                         } else {
-                            $current_user  = get_current_user_id();
-                            $contact_owner = erp_get_option( 'contact_owner', 'erp_settings_erp-crm_contacts', $current_user );
-                            $life_stage    = erp_get_option( 'life_stage', 'erp_settings_erp-crm_contacts', 'opportunity' );
+                            $contact_owner = isset( $_POST['contact_owner'] ) ? intval( $_POST['contact_owner'] ) : get_current_user_id();
+                            $life_stage    = isset( $_POST['life_stage'] ) ? sanitize_key( $_POST['life_stage'] ) : '';
                             erp_people_update_meta( $item_insert_id, '_assign_crm_agent', $contact_owner );
                             erp_people_update_meta( $item_insert_id, 'life_stage', $life_stage );
+
+                            if ( isset( $_POST['contact_group'] ) && ! empty( $_POST['contact_group'] ) ) {
+                                $contact_group = intval( $_POST['contact_group'] );
+                                erp_crm_create_new_contact_subscriber( ['user_id' => (int) $item_insert_id, 'group_id' => $contact_group] );
+                            }
 
 
                             if ( ! empty( $field_builder_contacts_fields ) ) {
@@ -1417,7 +1433,7 @@ function erp_process_import_export() {
             }
         }
 
-        wp_redirect( admin_url( 'admin.php?page=erp-tools&tab=import&imported=' . $x ) );
+        wp_redirect( admin_url( 'admin.php?page=erp-tools&tab=import&imported=' . $x - 1 ) );
         exit();
     }
 

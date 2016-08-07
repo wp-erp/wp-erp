@@ -123,8 +123,6 @@ class Customer_Relationship {
         wp_enqueue_script( 'erp-tiptip' );
         wp_enqueue_script( 'erp-vuejs', false, [ 'jquery', 'erp-script' ], false, true );
         wp_enqueue_script( 'erp-vue-table', WPERP_CRM_ASSETS . "/js/vue-table$suffix.js", array( 'erp-vuejs', 'jquery' ), date( 'Ymd' ), true );
-        wp_enqueue_script( 'erp-vue-list-animation', WPERP_CRM_ASSETS . "/js/vue-animated-list.js", array( 'erp-vuejs', 'jquery' ), date( 'Ymd' ), true );
-
 
         $localize_script = apply_filters( 'erp_crm_localize_script', array(
             'ajaxurl'               => admin_url( 'admin-ajax.php' ),
@@ -261,7 +259,7 @@ class Customer_Relationship {
         ] );
 
         wp_enqueue_script( 'erp-crm', WPERP_CRM_ASSETS . "/js/crm$suffix.js", array( 'erp-script', 'erp-timepicker' ), date( 'Ymd' ), true );
-        wp_enqueue_script( 'erp-crm-contact', WPERP_CRM_ASSETS . "/js/crm-contacts$suffix.js", array( 'erp-vue-table', 'erp-vue-list-animation', 'erp-script', 'erp-vuejs', 'underscore', 'erp-tiptip', 'jquery', 'erp-select2' ), date( 'Ymd' ), true );
+        wp_enqueue_script( 'erp-crm-contact', WPERP_CRM_ASSETS . "/js/crm-contacts$suffix.js", array( 'erp-vue-table', 'erp-script', 'erp-vuejs', 'underscore', 'erp-tiptip', 'jquery', 'erp-select2' ), date( 'Ymd' ), true );
         wp_localize_script( 'erp-crm', 'wpErpCrm', $localize_script );
         wp_localize_script( 'erp-crm-contact', 'wpErpCrm', $localize_script );
     }

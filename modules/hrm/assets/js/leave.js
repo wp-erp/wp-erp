@@ -177,7 +177,7 @@
                     },
                     error: function(error) {
                         modal.enableButton();
-                        alert( error );
+                        modal.showError( error );
                     }
                 });
             },
@@ -350,8 +350,8 @@
                                 modal.closeModal();
                             },
                             error: function(error) {
-                                alert( error );
                                 modal.enableButton();
+                                modal.showError( error );
                             }
                         });
                     }
@@ -485,7 +485,7 @@
                                 //location.reload();
                             },
                             error: function(error) {
-                                alert( error );
+                                modal.showError( error );
                             }
                         });
                     }

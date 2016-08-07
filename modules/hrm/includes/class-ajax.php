@@ -100,11 +100,16 @@ class Ajax_Handler {
         // script reload
         $this->action( 'wp_ajax_erp_hr_script_reload', 'employee_template_refresh' );
         $this->action( 'wp_ajax_erp_hr_new_dept_tmp_reload', 'new_dept_tmp_reload' );
-        $this->action( 'wp_ajax_erp-hr-holiday-delete', 'dept_remove' );
+        $this->action( 'wp_ajax_erp-hr-holiday-delete', 'holiday_remove' );
     }
 
     function leave_reject() {
         $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        // Check permission
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
 
         $request_id = isset( $_POST['leave_request_id'] ) ? intval( $_POST['leave_request_id'] ) : 0;
         $comments   = isset( $_POST['reason'] ) ? $_POST['reason'] : '';
@@ -129,8 +134,14 @@ class Ajax_Handler {
      *
      * @return json
      */
-    function dept_remove() {
+    function holiday_remove() {
         $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        // Check permission
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
         $holiday = erp_hr_delete_holidays( array( 'id' => intval( $_POST['id'] ) ) );
         $this->send_success();
     }
@@ -219,6 +230,12 @@ class Ajax_Handler {
      */
     public function remove_entitlement() {
         $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        // Check permission
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
         $id        = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
         $user_id   = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
         $policy_id = isset( $_POST['policy_id'] ) ? intval( $_POST['policy_id'] ) : 0;
@@ -360,7 +377,7 @@ class Ajax_Handler {
         $this->verify_nonce( 'erp-new-desig' );
 
         //check permission
-        if ( current_user_can( 'erp_manage_designation' ) ) {
+        if ( ! current_user_can( 'erp_manage_designation' ) ) {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
@@ -412,7 +429,7 @@ class Ajax_Handler {
         $this->verify_nonce( 'wp-erp-hr-nonce' );
 
         //check permission
-        if ( current_user_can( 'erp_manage_designation' ) ) {
+        if ( ! current_user_can( 'erp_manage_designation' ) ) {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
@@ -1181,9 +1198,13 @@ class Ajax_Handler {
     public function employee_education_create() {
         $this->verify_nonce( 'erp-hr-education-form' );
 
-        // TODO: permission check
-
         $employee_id = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+
+        // Check permission
+        if ( ! current_user_can( 'erp_edit_employee', $employee_id ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
         $edu_id      = isset( $_POST['edu_id'] ) ? intval( $_POST['edu_id'] ) : 0;
         $school      = isset( $_POST['school'] ) ? strip_tags( $_POST['school'] ) : '';
         $degree      = isset( $_POST['degree'] ) ? strip_tags( $_POST['degree'] ) : '';
@@ -1234,8 +1255,17 @@ class Ajax_Handler {
     public function employee_education_delete() {
         $this->verify_nonce( 'wp-erp-hr-nonce' );
 
-        // @TODO: check permission
-        $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+        $id          = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+        $employee_id = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+
+        if ( ! $employee_id ) {
+            $this->send_error( __( 'No employee found', 'erp' ) );
+        }
+
+        // Check permission
+        if ( ! current_user_can( 'erp_edit_employee', $employee_id ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
 
         if ( $id ) {
             do_action( 'erp_hr_employee_education_delete', $id );
@@ -1252,10 +1282,13 @@ class Ajax_Handler {
      */
     public function employee_dependent_create() {
         $this->verify_nonce( 'erp-hr-dependent-form' );
-
-        // TODO: permission check
-
         $employee_id = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+
+        // Check permission
+        if ( ! current_user_can( 'erp_edit_employee', $employee_id ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
         $dep_id      = isset( $_POST['dep_id'] ) ? intval( $_POST['dep_id'] ) : 0;
         $name        = isset( $_POST['name'] ) ? strip_tags( $_POST['name'] ) : '';
         $relation    = isset( $_POST['relation'] ) ? strip_tags( $_POST['relation'] ) : '';
@@ -1298,8 +1331,17 @@ class Ajax_Handler {
     public function employee_dependent_delete() {
         $this->verify_nonce( 'wp-erp-hr-nonce' );
 
-        // @TODO: check permission
-        $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+        $id          = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+        $employee_id = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+
+        if ( ! $employee_id ) {
+            $this->send_error( __( 'No employee found', 'erp' ) );
+        }
+
+        // Check permission
+        if ( ! current_user_can( 'erp_edit_employee', $employee_id ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
 
         if ( $id ) {
             do_action( 'erp_hr_employee_dependents_delete', $id );
@@ -1318,6 +1360,10 @@ class Ajax_Handler {
      */
     public function leave_policy_create() {
         $this->verify_nonce( 'erp-leave-policy' );
+
+        if ( ! current_user_can( 'erp_leave_create_request' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
 
         $policy_id      = isset( $_POST['policy-id'] ) ? intval( $_POST['policy-id'] ) : 0;
         $name           = isset( $_POST['name'] ) ? sanitize_text_field( $_POST['name'] ) : '';
@@ -1367,6 +1413,10 @@ class Ajax_Handler {
      */
     public function holiday_create() {
         $this->verify_nonce( 'erp-leave-holiday' );
+
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
 
         $holiday_id   = isset( $_POST['holiday_id'] ) ? intval( $_POST['holiday_id'] ) : 0;
         $title        = isset( $_POST['title'] ) ? sanitize_text_field( $_POST['title'] ) : '';
@@ -1426,7 +1476,9 @@ class Ajax_Handler {
     public function leave_policy_delete() {
         $this->verify_nonce( 'wp-erp-hr-nonce' );
 
-        // @TODO: check permission
+        if ( ! current_user_can( 'erp_leave_manage' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
 
         $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
         if ( $id ) {
@@ -1603,6 +1655,10 @@ class Ajax_Handler {
 
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-leave-req-new' ) ) {
             $this->send_error( __( 'Something went wrong!', 'erp' ) );
+        }
+
+        if ( ! current_user_can( 'erp_leave_create_request' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
         $employee_id  = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;

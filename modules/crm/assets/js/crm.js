@@ -262,7 +262,7 @@
                             },
 
                             error: function( response ) {
-                                alert(response);
+                                modal.showError(response);
                             }
 
                         });
@@ -301,7 +301,7 @@
                             },
                             error: function(error) {
                                 modal.enableButton();
-                                alert( error );
+                                modal.showError( error );
                             }
                         });
                     }
@@ -349,7 +349,7 @@
                             },
                             error: function(error) {
                                 modal.enableButton();
-                                alert( error );
+                                modal.showError( error );
                             }
                         });
                     }
@@ -442,7 +442,7 @@
                                 }
                             });
                         } else {
-                            alert( wpErpCrm.checkedConfirm );
+                            modal.showError( wpErpCrm.checkedConfirm );
                         }
                     }
                 }); //popup
@@ -510,7 +510,7 @@
                             },
                             error: function(error) {
                                 modal.enableButton();
-                                alert( error );
+                                modal.showError( error );
                             }
                         });
                     }
@@ -573,7 +573,7 @@
                             },
                             error: function(error) {
                                 modal.enableButton();
-                                alert( error );
+                                modal.showError( error );
                             }
                         });
                     }
@@ -622,7 +622,7 @@
                             },
                             error: function(error) {
                                 modal.enableButton();
-                                alert( error );
+                                modal.showError( error );
                             }
                         });
                     }

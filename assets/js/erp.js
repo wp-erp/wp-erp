@@ -207,7 +207,7 @@ window.wperp = window.wperp || {};
 
     wperp.swalSpinnerVisible = function() {
         swal({
-            title: '',   
+            title: '',
             html: true,
             showCancelButton: false,
             showConfirmButton: false,
@@ -264,7 +264,7 @@ window.wperp = window.wperp || {};
 
                 if ( self.hasClass('erp-drop-down-child-btn') ) {
                     var btn_group  = self.closest('.erp-btn-group');
-                    
+
                     if ( btn_group.hasClass('erp-btn-open') ) {
                         btn_group.removeClass('erp-btn-open');
                     } else {
@@ -274,7 +274,7 @@ window.wperp = window.wperp || {};
                     var btn_group  = $('.erp-btn-group');
                     btn_group.removeClass('erp-btn-open');
                 }
-                
+
             }
         },
 
@@ -449,7 +449,7 @@ window.wperp = window.wperp || {};
                             modal.closeModal();
                         },
                         error: function(error) {
-                            alert( error );
+                            modal.showError( error );
                         }
                     });
                 }
@@ -489,7 +489,7 @@ window.wperp = window.wperp || {};
                             modal.closeModal();
                         },
                         error: function(error) {
-                            alert( error );
+                            modal.showError( error );
                         }
                     });
                 }

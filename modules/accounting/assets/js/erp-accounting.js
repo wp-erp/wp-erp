@@ -79,7 +79,7 @@
             //trns form submit
             $( '.erp-form' ).on( 'click', '.erp-ac-trns-form-submit-btn', this.transaction.submit );
 
-            //Transaction table row action 
+            //Transaction table row action
             $( '.erp-accounting' ).on( 'click', '.erp-accountin-trns-row-del', this.transaction.rowDelete );
             $( '.erp-accounting' ).on( 'click', '.erp-accounting-trash', this.transaction.trash );
             $( '.erp-accounting' ).on( 'click', '.erp-accounting-void', this.transaction.void );
@@ -95,7 +95,7 @@
                 e.preventDefault();
                 var self = $(this),
                     id   = self.data('id');
-                
+
                 swal({
                     title: ERP_AC.message.confirm,
                     type: "warning",
@@ -137,7 +137,7 @@
                 e.preventDefault();
                 var self = $(this),
                     id   = self.data('id');
-                
+
                 swal({
                     title: ERP_AC.message.confirm,
                     type: "warning",
@@ -203,7 +203,7 @@
                                 //ERP_Accounting.transaction.pageReload();
                             },
                             error: function(error) {
-                            
+
                             }
                         });
                     }
@@ -214,7 +214,7 @@
                 e.preventDefault();
                 var self = $(this),
                     id   = self.data('id');
-                
+
                 swal({
                     title: ERP_AC.message.confirm,
                     type: "warning",
@@ -254,7 +254,7 @@
 
             submit: function(e) {
                 e.preventDefault();
-                
+
                 var self = $(this),
                     form = self.closest('form'),
                     redirect = self.data('redirect'),
@@ -268,13 +268,13 @@
                         $('input[name="due_date"]').val('');
                     }
                 }
-                
+
                 $('#erp-ac-redirect').val(redirect);
                 $('#erp-ac-btn-status').val(btn_status);
                 form.find( 'input[name="submit_erp_ac_trans"]' ).trigger('click');
-                
+
                 return false;
-                    
+
                 wperp.swalSpinnerVisible();
 
                 wp.ajax.send( 'erp_ac_trans_form_submit', {
@@ -287,7 +287,7 @@
                         wperp.swalSpinnerHidden();
                         swal({ title: "", text: res.message, type: "success"}, function() {
                             if ( add_another === '1' ) {
-                                location.reload();    
+                                location.reload();
                             } else {
                                 location.href = res.return_url;
                             }
@@ -304,7 +304,7 @@
                         });
                     }
                 });
-                
+
             }
         },
 
@@ -543,7 +543,7 @@
                                 //location.reload();
                             },
                             error: function(error) {
-                                alert( error );
+                                modal.showError( error );
                             }
                         });
                     }
@@ -690,7 +690,7 @@
                                 modal.closeModal();
                             },
                             error: function (error) {
-                                alert(error);
+                                modal.showError(error);
                             }
                         });
                     }
@@ -856,7 +856,6 @@
 
                         },
                         error: function() {
-
                         }
                     });
                 },
@@ -909,7 +908,7 @@
                             modal.closeModal();
                         },
                         error: function(error) {
-                            alert( error );
+                            modal.showError( error );
                         }
                     });
                 }
@@ -1208,7 +1207,7 @@
                             location.reload();
                         },
                         error: function(error) {
-                            alert( error );
+                            modal.showError( error );
                         }
                     });
                 }
@@ -1253,7 +1252,7 @@
         //                     location.reload();
         //                 },
         //                 error: function(error) {
-        //                     alert( error );
+        //                     modal.showError( error );
         //                 }
         //             });
         //         }
@@ -1405,7 +1404,7 @@
                             location.reload();
                         },
                         error: function(error) {
-                            alert( error );
+                            modal.showError( error );
                         }
                     });
                 }
@@ -1477,7 +1476,7 @@
                     $('.erp-form').find('.erp-ac-receive-payment-table').html(res);
                     $('.erp-form').find( 'input[name="submit_erp_ac_trans_draft"]' ).hide();
                     ERP_Accounting.initTipTip();
-                    
+
                 },
 
                 error: function() {
