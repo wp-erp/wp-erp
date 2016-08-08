@@ -357,7 +357,7 @@ class Form_Handler {
         $journals_id     = isset( $postdata['journals_id'] ) ? $postdata['journals_id'] : [];
         $partial_id      = isset( $postdata['partial_id'] ) ? $postdata['partial_id'] : [];
         $sub_total       = isset( $postdata['sub_total'] ) ? $postdata['sub_total'] : '0.00';
-        $invoice         = isset( $postdata['invoice'] ) ? $postdata['invoice'] : '';
+        $invoice         = isset( $postdata['invoice'] ) ? $postdata['invoice'] : 0;
 
         //for draft
         //$status = isset( $postdata['submit_erp_ac_trans_draft'] ) ? 'draft' : $status;

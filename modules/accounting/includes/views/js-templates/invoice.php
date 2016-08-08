@@ -21,6 +21,7 @@
             ) );
             ?>
     </div>
+    <# if ( type == 'sales' ) { #>
     <div class="row">
         <?php
             erp_html_form_input( array(
@@ -34,6 +35,7 @@
             ) );
         ?>
     </div>
+    <# } #>
     <div class="row">
             <?php
             erp_html_form_input( array(

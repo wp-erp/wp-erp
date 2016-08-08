@@ -477,6 +477,7 @@ function erp_ac_generate_invoice_id( $form_type = '' ) {
  */
 function erp_ac_update_invoice_number( $form_type ) {
     
+    $invoice_number = '';
     if ( $form_type == 'invoice' ) {
         $invoice_number = get_option( 'erp_ac_sales_invoice_number', 1 );
     } else if ( $form_type == 'payment' ) {
@@ -503,46 +504,6 @@ function erp_ac_update_invoice_number( $form_type ) {
         update_option( 'erp_ac_sales_payment_number', $invoice_number );
     }
         
-
-        
-     //else if ( $form_type == 'payment' ) {
-    //     $invoice_number = get_option( 'erp_ac_sales_payment_number', 1 );
-    //     $get_invoice_number = WeDevs\ERP\Accounting\Model\Transaction::select('invoice_number')
-    //         ->where( 'form_type', '=', $form_type )
-    //         ->where( 'invoice_number', '>=', $invoice_number )
-    //         ->get()->toArray();
-    //     $get_invoice_number = wp_list_pluck( $get_invoice_number, 'invoice_number' );
-
-    //     $status = true;
-
-    //     while( $status ) {
-    //         if ( in_array( $invoice_number, $get_invoice_number ) ) {
-    //             $invoice_number = $invoice_number + 1;
-    //         } else {
-    //             $status = false;
-    //         }
-    //     }
-    //     update_option( 'erp_ac_sales_payment_number', $invoice_number );
-        
-    // } else if ( $form_type == 'journal' ) {
-    //     $invoice_number = get_option( 'erp_ac_journal_number', 1 );
-    //     $get_invoice_number = WeDevs\ERP\Accounting\Model\Transaction::select('invoice_number')
-    //         ->where( 'form_type', '=', $form_type )
-    //         ->where( 'invoice_number', '>=', $invoice_number )
-    //         ->get()->toArray();
-    //     $get_invoice_number = wp_list_pluck( $get_invoice_number, 'invoice_number' );
-
-    //     $status = true;
-
-    //     while( $status ) {
-    //         if ( in_array( $invoice_number, $get_invoice_number ) ) {
-    //             $invoice_number = $invoice_number + 1;
-    //         } else {
-    //             $status = false;
-    //         }
-    //     }
-    //     update_option( 'erp_ac_journal_number', $invoice_number );
-    // }
 }
 
 /**
