@@ -143,6 +143,7 @@ function erp_hrm_is_valid_leave_duration( $start_date, $end_date, $policy_id, $u
         $condition->where( 'end_date', '<=', $financial_end_date );
         $condition->where( 'user_id', '=', $user_id );
         $condition->where( 'policy_id', '=', $policy_id );
+        $condition->where( 'status', '!=', 3 );
     } );
 
     $user_enti_count = $user_request->sum( 'days' );
