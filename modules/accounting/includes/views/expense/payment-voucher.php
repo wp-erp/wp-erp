@@ -103,6 +103,7 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                             'name'        => 'account_id',
                             'placeholder' => __( 'Select an Account', 'erp' ),
                             'type'        => 'select',
+                            'required'    => true,
                             'class'       => 'erp-select2 erp-ac-voucher-bank',
                             'value'       => $account_id ? $account_id : $selected_account_id,
                             'options'     => [ '' => __( '&mdash; Select &mdash;', 'erp' ) ] + erp_ac_get_bank_dropdown()
