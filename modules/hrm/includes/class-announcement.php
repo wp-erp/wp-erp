@@ -103,7 +103,7 @@ class Announcement {
             'description'         => '',
             'public'              => true,
             'show_ui'             => true,
-            'show_in_menu'        => false,
+            'show_in_menu'        => true,
             'show_in_nav_menus'   => true,
             'exclude_from_search' => false,
             'publicly_queryable'  => false,

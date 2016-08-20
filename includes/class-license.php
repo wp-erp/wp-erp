@@ -50,7 +50,9 @@ class License {
      * @return boolean
      */
     private function is_local_server() {
-        return ( in_array( $_SERVER['REMOTE_ADDR'], array( '127.0.0.1', '::1' ) ) || substr( $_SERVER['HTTP_HOST'], -4 ) == '.dev' );
+        $is_local = ( in_array( $_SERVER['REMOTE_ADDR'], array( '127.0.0.1', '::1' ) ) || substr( $_SERVER['HTTP_HOST'], -4 ) == '.dev' );
+
+        return apply_filters( 'erp_lc_is_local_server', $is_local );
     }
 
     /**
