@@ -376,15 +376,23 @@
                             type : type
                         },
                         success: function(resp) {
-                            var html = wp.template('erp-leave-days')(resp);
+                            var html = wp.template('erp-leave-days')(resp.print);
 
                             $('div.erp-hr-leave-req-show-days').html( html );
-                            submit.removeAttr('disabled');
+                        
+                            if ( parseInt( resp.leave_count ) <= 0 ) {
+                                submit.prop('disabled', true);
+                            } else {
+                                submit.prop('disabled', false);
+                            }
+                            
                         },
                         error: function(response) {
                             $('div.erp-hr-leave-req-show-days').empty();
                             submit.attr( 'disabled', 'disable' );
-                            alert( response );
+                            if ( typeof response != 'undefined' ) {
+                                alert( response );
+                            }
                         }
                     });
                 }
