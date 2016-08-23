@@ -1165,7 +1165,7 @@
 
                     if ( ids.length > 0 ) {
                         $.erpPopup({
-                            title: wpErpCrm.popup.customer_assing_group,
+                            title: wpErpCrm.popup.customer_assign_group,
                             button: wpErpCrm.add_submit,
                             id: 'erp-crm-customer-bulk-assign-group',
                             content: wperp.template('erp-crm-new-bulk-contact-group')({ user_id:ids }).trim(),

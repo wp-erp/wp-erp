@@ -1,4 +1,4 @@
-<div class="crm-customer-assing-company-wrap">
+<div class="crm-customer-assign-company-wrap">
 
     <# if ( data.type == 'assign_company' ) { #>
 

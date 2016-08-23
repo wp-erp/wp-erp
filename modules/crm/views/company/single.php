@@ -131,7 +131,7 @@
                     <contact-company-relation
                         :id="<?php echo $customer->id; ?>"
                         type="company_contacts"
-                        add-button-txt="<?php _e( 'Assing a contact', 'erp' ) ?>"
+                        add-button-txt="<?php _e( 'Assign a contact', 'erp' ) ?>"
                         title="<?php echo sprintf( '%s\'s %s', $customer->get_full_name(), __( 'contacts', 'erp' ) ); ?>"
                     ></contact-company-relation>
 

@@ -47,7 +47,7 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-crm-contact-group', 'contact_group_create' );
         $this->action( 'wp_ajax_erp-crm-edit-contact-group', 'contact_group_edit' );
         $this->action( 'wp_ajax_erp-crm-contact-group-delete', 'contact_group_delete' );
-        $this->action( 'wp_ajax_erp-crm-exclued-already-assigned-contact', 'check_assing_contact' );
+        $this->action( 'wp_ajax_erp-crm-exclued-already-assigned-contact', 'check_assign_contact' );
 
         // Contact Subscriber
         $this->action( 'wp_ajax_erp-crm-contact-subscriber', 'assign_contact_as_subscriber' );
@@ -664,7 +664,7 @@ class Ajax_Handler {
             erp_people_update_meta( $output['assign_contact_id'], '_assign_crm_agent', $output['erp_select_assign_contact'] );
         }
 
-        $this->send_success( __( 'Assing to agent successfully', 'erp' ) );
+        $this->send_success( __( 'Assign to agent successfully', 'erp' ) );
     }
 
 
@@ -740,7 +740,7 @@ class Ajax_Handler {
      *
      * @return json
      */
-    public function check_assing_contact() {
+    public function check_assign_contact() {
         $this->verify_nonce( 'wp-erp-crm-nonce' );
 
         $result = erp_crm_get_assign_subscriber_contact();
@@ -781,7 +781,7 @@ class Ajax_Handler {
     }
 
     /**
-     * Assing Contact as a subscriber
+     * Assign Contact as a subscriber
      *
      * @since 1.0
      *
@@ -841,7 +841,7 @@ class Ajax_Handler {
     }
 
     /**
-     * Assing contact after edit form submission
+     * Assign contact after edit form submission
      *
      * @since 1.0
      *
