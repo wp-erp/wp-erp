@@ -475,8 +475,9 @@
                             + '<input type="submit" class="button" v-if="!isUpdate" @click.prevent="cancelSave(\'save\')" value="Cancel">'
                         + '</div>'
                         + '<button :disabled="editableMode" class="button button-primary" v-show="!isNewSave" @click.prevent="saveAsNew()">Save new Segment</button>'
-                        + '<button :disabled="editableMode" class="button button" v-show="isUpdateSaveSearch && !isNewSave" @click.prevent="updateSave()">Update this Segment</button>'
-                        + '<button :disabled="editableMode" class="button button" style="float:right;" v-show="!isNewSave" @click.prevent="resetFilter()">Reset all filter</button>'
+                        + '<button :disabled="editableMode" class="button" v-show="isUpdateSaveSearch && !isNewSave" @click.prevent="updateSave()">Update this Segment</button>'
+                        + '<button :disabled="editableMode" class="erp-button-danger button" style="float:right;" v-show="isUpdateSaveSearch && !isNewSave" @click.prevent="removeFilter()">Delete this Segment</button>'
+                        + '<button :disabled="editableMode" class="button" style="float:right;" v-show="!isNewSave" @click.prevent="resetFilter()">Reset all filter</button>'
                     + '</div>'
                 + '</div>',
 
@@ -502,6 +503,10 @@
                 resetFilter: function() {
                     this.$dispatch('resetAllFilters');
                     this.fields = [[]];
+                },
+
+                removeFilter: function() {
+
                 },
 
                 cancelSave: function( flag ) {

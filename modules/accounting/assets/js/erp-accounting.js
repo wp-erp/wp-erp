@@ -17,7 +17,6 @@
             // chart of accounts
             $( 'form#erp-ac-accounts-form').on( 'change', 'input#code', this.accounts.checkCode );
             $( '.chart-of-accounts').on( 'click', '.erp-ac-remove-account', this.accounts.remove );
-
             $('.erp-ac-form-wrap').on('change', '.erp-ac-payment-receive', this.paymentReceive );
 
             //invoice and vendor credit calculate
@@ -891,10 +890,8 @@
                 extraClass: 'large',
 
                 onReady: function(modal) {
-
                     $('form.erp-modal-form').addClass('erp-form');
                     $('#'+modal.id).css({ 'z-index': '9999'});
-                    $('select.erp-select2').select2("close");
                 },
                 onSubmit: function(modal) {
 
