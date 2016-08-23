@@ -72,7 +72,8 @@ class Ajax_Handler {
         // Save Search actions
         $this->action( 'wp_ajax_erp_crm_create_new_save_search', 'create_save_search' );
         $this->action( 'wp_ajax_erp_crm_get_save_search_data', 'get_save_search' );
-        $this->action( 'wp_ajax_erp_crm_delete_save_search_data', 'delete_save_search' );
+        // $this->action( 'wp_ajax_erp_crm_delete_save_search_data', 'delete_save_search' );
+        $this->action( 'wp_ajax_erp-crm-delete-search-segment', 'delete_save_search' );
 
         // CRM Dashboard
         $this->action( 'wp_ajax_erp-crm-get-single-schedule-details', 'get_single_schedule_details' );
@@ -1209,12 +1210,16 @@ class Ajax_Handler {
      * @return json boolean
      */
     public function delete_save_search() {
-        $this->verify_nonce( 'wp-erp-crm-save-search' );
+        $this->verify_nonce( 'wp-erp-crm-nonce' );
 
-        $id = ( isset( $_POST['search_id'] ) && ! empty( $_POST['search_id'] ) ) ? $_POST['search_id'] : 0;
+        if ( ! current_user_can( erp_crm_get_manager_role() ) || ! current_user_can( erp_crm_get_agent_role() ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $id = ( isset( $_POST['filterId'] ) && ! empty( $_POST['filterId'] ) ) ? $_POST['filterId'] : 0;
 
         if ( ! $id ) {
-            $this->send_error( __( 'Search name not found', 'erp' ) );
+            $this->send_error( __( 'Search segment not found', 'erp' ) );
         }
 
         $result = erp_crm_delete_save_search_item( $id );

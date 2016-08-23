@@ -476,7 +476,7 @@
                         + '</div>'
                         + '<button :disabled="editableMode" class="button button-primary" v-show="!isNewSave" @click.prevent="saveAsNew()">Save new Segment</button>'
                         + '<button :disabled="editableMode" class="button" v-show="isUpdateSaveSearch && !isNewSave" @click.prevent="updateSave()">Update this Segment</button>'
-                        + '<button :disabled="editableMode" class="erp-button-danger button" style="float:right;" v-show="isUpdateSaveSearch && !isNewSave" @click.prevent="removeFilter()">Delete this Segment</button>'
+                        + '<button :disabled="editableMode" class="erp-button-danger button" style="float:right;" v-show="isUpdateSaveSearch && !isNewSave" @click.prevent="removeSegment()">Delete this Segment</button>'
                         + '<button :disabled="editableMode" class="button" style="float:right;" v-show="!isNewSave" @click.prevent="resetFilter()">Reset all filter</button>'
                     + '</div>'
                 + '</div>',
@@ -505,8 +505,36 @@
                     this.fields = [[]];
                 },
 
-                removeFilter: function() {
+                removeSegment: function() {
+                    var self = this;
 
+                    if ( confirm( wpErpCrm.delConfirmCustomer ) ) {
+                        self.$refs.vtable.ajaxloader = false;
+
+                        wp.ajax.send( 'erp-crm-delete-search-segment', {
+                            data: {
+                                _wpnonce: wpErpCrm.nonce,
+                                filterId: wperp.erpGetParamByName( 'filter_save_filter', window.location.search )
+                            },
+                            success: function(res) {
+                                self.resetFilter();
+
+                                self.$nextTick(function() {
+                                    this.$broadcast('vtable:reload')
+                                });
+
+                                self.$refs.vtable.ajaxloader = false;
+
+                                setTimeout( function() {
+                                    $('select#erp-select-save-advance-filter').val( resp.data.id ).trigger('change');
+                                },500);
+                            },
+                            error: function(res) {
+                                alert( res );
+                                self.$refs.vtable.ajaxloader = false;
+                            }
+                        });
+                    }
                 },
 
                 cancelSave: function( flag ) {
@@ -1449,10 +1477,16 @@
                 },
 
                 'resetAllFilters': function() {
+                    var url = wperp.erpRemoveURLParameter( window.location.search, 'filter_save_filter' );
                     this.$refs.vtable.additionalUrlString['advanceFilter'] = '';
+                    window.history.pushState( null, null, url );
                     this.$nextTick(function(){
                         this.$broadcast('vtable:reload');
-                    })
+                    });
+                    setTimeout( function() {
+                        $('select#erp-select-save-advance-filter').val('').trigger('change');
+                    },500);
+
                 }
             }
         });
