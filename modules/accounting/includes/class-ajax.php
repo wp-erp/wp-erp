@@ -675,13 +675,8 @@ class Ajax_Handler {
         check_ajax_referer( 'accounting-invoice-export' );
 
         $transaction_id = isset( $_REQUEST['transaction_id'] ) ? $_REQUEST['transaction_id'] : 0;
-        $transaction    = Model\Transaction::find( $transaction_id );
-        $file_name      = sprintf( '%s_%s.pdf', $transaction->invoice_number, $transaction->issue_date );
-        $output_method  = 'D';
 
-        if ( $transaction_id ) {
-            include WPERP_ACCOUNTING_VIEWS . '/pdf/invoice.php';
-        }
+        erp_ac_send_invoice_pdf( $transaction_id );
 
         exit;
     }
@@ -714,27 +709,32 @@ class Ajax_Handler {
 
         $this->verify_nonce( 'erp-ac-invoice-send-email' );
 
-        $type           = isset( $_REQUEST['type'] ) ? sanitize_text_field( $_REQUEST['type'] ) : '';
-        $sender         = isset( $_REQUEST['email-from'] ) ? sanitize_text_field( $_REQUEST['email-from'] ) : '';
-        $receiver       = isset( $_REQUEST['email-to'] ) ? $_REQUEST['email-to'] : '';
-        $subject        = isset( $_REQUEST['email-subject'] ) ? sanitize_text_field( $_REQUEST['email-subject'] ) : '';
-        $body           = isset( $_REQUEST['email-body'] ) ? sanitize_text_field( $_REQUEST['email-body'] ) : '';
-        $attach_pdf     = isset( $_REQUEST['attachment'] ) && 'on' == $_REQUEST['attachment'] ? true : false;
+//        $type           = isset( $_REQUEST['type'] ) ? sanitize_text_field( $_REQUEST['type'] ) : '';
+//        $sender         = isset( $_REQUEST['email-from'] ) ? sanitize_text_field( $_REQUEST['email-from'] ) : '';
+//        $receiver       = isset( $_REQUEST['email-to'] ) ? $_REQUEST['email-to'] : '';
+//        $subject        = isset( $_REQUEST['email-subject'] ) ? sanitize_text_field( $_REQUEST['email-subject'] ) : '';
+//        $body           = isset( $_REQUEST['email-body'] ) ? sanitize_text_field( $_REQUEST['email-body'] ) : '';
+//        $attach_pdf     = isset( $_REQUEST['attachment'] ) && 'on' == $_REQUEST['attachment'] ? true : false;
+
         $transaction_id = isset( $_REQUEST['transaction_id'] ) ? intval( $_REQUEST['transaction_id'] ) : 0;
-        $transaction    = Model\Transaction::find( $transaction_id );
-        $output_method  = 'F';
-        $upload_path    = wp_upload_dir();
-        $include_file   = 'invoice' == $type ? 'invoice' : 'payment';
-        $file_name      = sprintf( '%s/%s_%s.pdf', $upload_path['basedir'], $transaction->invoice_number, $transaction->issue_date );
 
-        include WPERP_ACCOUNTING_VIEWS . '/pdf/' . $include_file . '.php';
+        erp_ac_send_email_with_pdf_attached( $transaction_id, $_REQUEST );
 
-        $invoice_email = new Emails\Accounting_Invoice_Email();
-        $file_name     = $attach_pdf ? $file_name : '';
 
-        $invoice_email->trigger( $receiver, $subject, $body, $file_name );
-
-        unlink( $file_name );
+        //        $transaction    = Model\Transaction::find( $transaction_id );
+//        $output_method  = 'F';
+//        $upload_path    = wp_upload_dir();
+//        $include_file   = 'invoice' == $type ? 'invoice' : 'payment';
+//        $file_name      = sprintf( '%s/%s_%s.pdf', $upload_path['basedir'], $transaction->invoice_number, $transaction->issue_date );
+//
+//        include WPERP_ACCOUNTING_VIEWS . '/pdf/' . $include_file . '.php';
+//
+//        $invoice_email = new Emails\Accounting_Invoice_Email();
+//        $file_name     = $attach_pdf ? $file_name : '';
+//
+//        $invoice_email->trigger( $receiver, $subject, $body, $file_name );
+//
+//        unlink( $file_name );
 
         wp_send_json_success();
     }
