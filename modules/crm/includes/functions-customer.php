@@ -2860,7 +2860,7 @@ function erp_crm_check_new_inbound_emails() {
                 $filtered_emails[] = $email;
 
                 $message_id = $matches[1];
-                $message_id_parts = explode('.', $message_id);
+                $message_id_parts = explode( '.', $message_id );
 
                 $email['cid'] = $message_id_parts[1];
                 $email['sid'] = $message_id_parts[2];
@@ -2874,6 +2874,11 @@ function erp_crm_check_new_inbound_emails() {
                         erp_crm_save_contact_owner_email_activity( $email, $imap_options['username'] );
                         break;
                 }
+
+                $type = ( $message_id_parts[3] == 'r2' ) ? 'owner_to_contact' : 'contact_to_owner';
+                $email['type'] = $type;
+
+                do_action( 'erp_crm_contact_inbound_email', $email );
             }
         }
 

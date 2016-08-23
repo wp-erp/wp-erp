@@ -1543,7 +1543,7 @@ class Ajax_Handler {
         $is_policy_valid = erp_hrm_is_valid_leave_duration( $start_date, $end_date, $policy_id, $id );
 
         if ( ! $is_policy_valid ) {
-            $this->send_error( __( 'Sorry! You do not have any leave left under this0 leave policy', 'erp' ) );
+            $this->send_error( __( 'Sorry! You do not have any leave left under this leave policy', 'erp' ) );
         }
 
         $days = erp_hr_get_work_days_between_dates( $start_date, $end_date );
@@ -1558,9 +1558,10 @@ class Ajax_Handler {
             $date['date'] = erp_format_date( $date['date'], 'D, M d' );
         }
 
+        $leave_count = $days['total'];
         $days['total'] = sprintf( '%d %s', $days['total'], _n( 'day', 'days', $days['total'], 'erp' ) );
 
-        $this->send_success( $days );
+        $this->send_success( array( 'print' => $days, 'leave_count' => $leave_count ) );
     }
 
     /**

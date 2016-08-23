@@ -1561,15 +1561,7 @@
                     var line_tax   = parseFloat('0.00');
                     var tax_amount = parseFloat('0.00');
 
-                    if ( tax_id != '-1' ) {
-                        var tax_info = erp_ac_tax.rate[tax_id];
-                            line_tax =  parseFloat( tax_info.rate );
-
-                        tax_amount = ( parseFloat( line_price ) * parseFloat( line_tax ) ) / 100;
-                    }
-
-                    var prev_tax = isNaN( total_tax[tax_id] ) ? parseFloat('0.00') : total_tax[tax_id];
-                    total_tax[tax_id] = tax_amount + prev_tax;
+                    
 
                     qty        = ERP_Accounting.calNumNormal( qty );
                     line_price = ERP_Accounting.calNumNormal( line_price );
@@ -1581,6 +1573,16 @@
                     if ( discount > 0 ) {
                         price -= ( price * discount ) / 100;
                     }
+
+                    if ( tax_id != '-1' ) {
+                        var tax_info = erp_ac_tax.rate[tax_id];
+                            line_tax =  parseFloat( tax_info.rate );
+
+                        tax_amount = ( parseFloat( price ) * parseFloat( line_tax ) ) / 100;
+                    }
+
+                    var prev_tax = isNaN( total_tax[tax_id] ) ? parseFloat('0.00') : total_tax[tax_id];
+                    total_tax[tax_id] = tax_amount + prev_tax;
 
                     total += price;
 
