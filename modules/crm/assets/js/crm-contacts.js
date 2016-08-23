@@ -509,29 +509,35 @@
                     var self = this;
 
                     if ( confirm( wpErpCrm.delConfirmCustomer ) ) {
-                        self.$refs.vtable.ajaxloader = false;
-
+                        var filterID = wperp.erpGetParamByName( 'filter_save_filter', window.location.search );
                         wp.ajax.send( 'erp-crm-delete-search-segment', {
                             data: {
                                 _wpnonce: wpErpCrm.nonce,
-                                filterId: wperp.erpGetParamByName( 'filter_save_filter', window.location.search )
+                                filterId: filterID
                             },
                             success: function(res) {
+                                contact.extraBulkAction.filterSaveAdvanceFiter.options = contact.extraBulkAction.filterSaveAdvanceFiter.options.filter( function( items ) {
+                                    var options = items.options.filter( function( arr ) {
+                                        return arr.id !== filterID;
+                                    } );
+
+                                    items.options = options;
+                                    return items;
+                                });
+
+                                setTimeout( function() {
+                                    $('select#erp-select-save-advance-filter').trigger('change');
+                                    contact.setAdvanceFilter();
+                                },500);
+
                                 self.resetFilter();
 
                                 self.$nextTick(function() {
                                     this.$broadcast('vtable:reload')
                                 });
-
-                                self.$refs.vtable.ajaxloader = false;
-
-                                setTimeout( function() {
-                                    $('select#erp-select-save-advance-filter').val( resp.data.id ).trigger('change');
-                                },500);
                             },
                             error: function(res) {
                                 alert( res );
-                                self.$refs.vtable.ajaxloader = false;
                             }
                         });
                     }
@@ -652,7 +658,8 @@
 
                                 setTimeout( function() {
                                     $('select#erp-select-save-advance-filter').val( resp.data.id ).trigger('change');
-                                },500);
+                                    contact.setAdvanceFilter();
+                                }, 500 );
 
                             } else {
                                 jQuery('#erp-select-save-advance-filter').find('option[value="'+ resp.data.id +'"]').text( resp.data.search_name );
@@ -1477,13 +1484,16 @@
                 },
 
                 'resetAllFilters': function() {
-                    var url = wperp.erpRemoveURLParameter( window.location.search, 'filter_save_filter' );
                     this.$refs.vtable.additionalUrlString['advanceFilter'] = '';
-                    window.history.pushState( null, null, url );
+
+                    delete this.$refs.vtable.additionalParams['filter_save_filter'];
+
                     this.$nextTick(function(){
                         this.$broadcast('vtable:reload');
                     });
                     setTimeout( function() {
+                        var finalUrl = wperp.erpRemoveURLParameter( window.location.search, 'filter_save_filter' );
+                        window.history.pushState( null, null, finalUrl );
                         $('select#erp-select-save-advance-filter').val('').trigger('change');
                     },500);
 

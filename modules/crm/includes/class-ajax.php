@@ -1212,7 +1212,7 @@ class Ajax_Handler {
     public function delete_save_search() {
         $this->verify_nonce( 'wp-erp-crm-nonce' );
 
-        if ( ! current_user_can( erp_crm_get_manager_role() ) || ! current_user_can( erp_crm_get_agent_role() ) ) {
+        if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
