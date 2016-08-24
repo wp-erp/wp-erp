@@ -475,8 +475,9 @@
                             + '<input type="submit" class="button" v-if="!isUpdate" @click.prevent="cancelSave(\'save\')" value="Cancel">'
                         + '</div>'
                         + '<button :disabled="editableMode" class="button button-primary" v-show="!isNewSave" @click.prevent="saveAsNew()">Save new Segment</button>'
-                        + '<button :disabled="editableMode" class="button button" v-show="isUpdateSaveSearch && !isNewSave" @click.prevent="updateSave()">Update this Segment</button>'
-                        + '<button :disabled="editableMode" class="button button" style="float:right;" v-show="!isNewSave" @click.prevent="resetFilter()">Reset all filter</button>'
+                        + '<button :disabled="editableMode" class="button" v-show="isUpdateSaveSearch && !isNewSave" @click.prevent="updateSave()">Update this Segment</button>'
+                        + '<button :disabled="editableMode" class="erp-button-danger button" style="float:right;" v-show="isUpdateSaveSearch && !isNewSave" @click.prevent="removeSegment()">Delete this Segment</button>'
+                        + '<button :disabled="editableMode" class="button" style="float:right;" v-show="!isNewSave" @click.prevent="resetFilter()">Reset all filter</button>'
                     + '</div>'
                 + '</div>',
 
@@ -502,6 +503,44 @@
                 resetFilter: function() {
                     this.$dispatch('resetAllFilters');
                     this.fields = [[]];
+                },
+
+                removeSegment: function() {
+                    var self = this;
+
+                    if ( confirm( wpErpCrm.delConfirmCustomer ) ) {
+                        var filterID = wperp.erpGetParamByName( 'filter_save_filter', window.location.search );
+                        wp.ajax.send( 'erp-crm-delete-search-segment', {
+                            data: {
+                                _wpnonce: wpErpCrm.nonce,
+                                filterId: filterID
+                            },
+                            success: function(res) {
+                                contact.extraBulkAction.filterSaveAdvanceFiter.options = contact.extraBulkAction.filterSaveAdvanceFiter.options.filter( function( items ) {
+                                    var options = items.options.filter( function( arr ) {
+                                        return arr.id !== filterID;
+                                    } );
+
+                                    items.options = options;
+                                    return items;
+                                });
+
+                                setTimeout( function() {
+                                    $('select#erp-select-save-advance-filter').trigger('change');
+                                    contact.setAdvanceFilter();
+                                },500);
+
+                                self.resetFilter();
+
+                                self.$nextTick(function() {
+                                    this.$broadcast('vtable:reload')
+                                });
+                            },
+                            error: function(res) {
+                                alert( res );
+                            }
+                        });
+                    }
                 },
 
                 cancelSave: function( flag ) {
@@ -619,7 +658,8 @@
 
                                 setTimeout( function() {
                                     $('select#erp-select-save-advance-filter').val( resp.data.id ).trigger('change');
-                                },500);
+                                    contact.setAdvanceFilter();
+                                }, 500 );
 
                             } else {
                                 jQuery('#erp-select-save-advance-filter').find('option[value="'+ resp.data.id +'"]').text( resp.data.search_name );
@@ -1125,7 +1165,7 @@
 
                     if ( ids.length > 0 ) {
                         $.erpPopup({
-                            title: wpErpCrm.popup.customer_assing_group,
+                            title: wpErpCrm.popup.customer_assign_group,
                             button: wpErpCrm.add_submit,
                             id: 'erp-crm-customer-bulk-assign-group',
                             content: wperp.template('erp-crm-new-bulk-contact-group')({ user_id:ids }).trim(),
@@ -1445,9 +1485,18 @@
 
                 'resetAllFilters': function() {
                     this.$refs.vtable.additionalUrlString['advanceFilter'] = '';
+
+                    delete this.$refs.vtable.additionalParams['filter_save_filter'];
+
                     this.$nextTick(function(){
                         this.$broadcast('vtable:reload');
-                    })
+                    });
+                    setTimeout( function() {
+                        var finalUrl = wperp.erpRemoveURLParameter( window.location.search, 'filter_save_filter' );
+                        window.history.pushState( null, null, finalUrl );
+                        $('select#erp-select-save-advance-filter').val('').trigger('change');
+                    },500);
+
                 }
             }
         });

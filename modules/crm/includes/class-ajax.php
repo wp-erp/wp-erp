@@ -47,7 +47,7 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-crm-contact-group', 'contact_group_create' );
         $this->action( 'wp_ajax_erp-crm-edit-contact-group', 'contact_group_edit' );
         $this->action( 'wp_ajax_erp-crm-contact-group-delete', 'contact_group_delete' );
-        $this->action( 'wp_ajax_erp-crm-exclued-already-assigned-contact', 'check_assing_contact' );
+        $this->action( 'wp_ajax_erp-crm-exclued-already-assigned-contact', 'check_assign_contact' );
 
         // Contact Subscriber
         $this->action( 'wp_ajax_erp-crm-contact-subscriber', 'assign_contact_as_subscriber' );
@@ -72,7 +72,8 @@ class Ajax_Handler {
         // Save Search actions
         $this->action( 'wp_ajax_erp_crm_create_new_save_search', 'create_save_search' );
         $this->action( 'wp_ajax_erp_crm_get_save_search_data', 'get_save_search' );
-        $this->action( 'wp_ajax_erp_crm_delete_save_search_data', 'delete_save_search' );
+        // $this->action( 'wp_ajax_erp_crm_delete_save_search_data', 'delete_save_search' );
+        $this->action( 'wp_ajax_erp-crm-delete-search-segment', 'delete_save_search' );
 
         // CRM Dashboard
         $this->action( 'wp_ajax_erp-crm-get-single-schedule-details', 'get_single_schedule_details' );
@@ -663,7 +664,7 @@ class Ajax_Handler {
             erp_people_update_meta( $output['assign_contact_id'], '_assign_crm_agent', $output['erp_select_assign_contact'] );
         }
 
-        $this->send_success( __( 'Assing to agent successfully', 'erp' ) );
+        $this->send_success( __( 'Assign to agent successfully', 'erp' ) );
     }
 
 
@@ -739,7 +740,7 @@ class Ajax_Handler {
      *
      * @return json
      */
-    public function check_assing_contact() {
+    public function check_assign_contact() {
         $this->verify_nonce( 'wp-erp-crm-nonce' );
 
         $result = erp_crm_get_assign_subscriber_contact();
@@ -780,7 +781,7 @@ class Ajax_Handler {
     }
 
     /**
-     * Assing Contact as a subscriber
+     * Assign Contact as a subscriber
      *
      * @since 1.0
      *
@@ -840,7 +841,7 @@ class Ajax_Handler {
     }
 
     /**
-     * Assing contact after edit form submission
+     * Assign contact after edit form submission
      *
      * @since 1.0
      *
@@ -1209,12 +1210,16 @@ class Ajax_Handler {
      * @return json boolean
      */
     public function delete_save_search() {
-        $this->verify_nonce( 'wp-erp-crm-save-search' );
+        $this->verify_nonce( 'wp-erp-crm-nonce' );
 
-        $id = ( isset( $_POST['search_id'] ) && ! empty( $_POST['search_id'] ) ) ? $_POST['search_id'] : 0;
+        if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $id = ( isset( $_POST['filterId'] ) && ! empty( $_POST['filterId'] ) ) ? $_POST['filterId'] : 0;
 
         if ( ! $id ) {
-            $this->send_error( __( 'Search name not found', 'erp' ) );
+            $this->send_error( __( 'Search segment not found', 'erp' ) );
         }
 
         $result = erp_crm_delete_save_search_item( $id );

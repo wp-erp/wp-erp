@@ -148,9 +148,13 @@ function erp_parent_sort( array $objects, array &$result=array(), $parent=0, $de
 function erp_hr_schedule_check_todays_birthday() {
     $birthdays = erp_hr_get_todays_birthday();
 
-    // Do the action if someone's birthday today
-    if ( ! empty( $birthdays ) ) {
-        do_action( 'erp_hr_happened_birthday_today', $birthdays );
+    // Do the action if someone's birthday today run only in cron
+    if ( defined( 'DOING_CRON' ) && DOING_CRON && ! empty( $birthdays ) ) {
+        do_action( 'erp_hr_happened_birthday_today_all', $birthdays );
+
+        foreach ( $birthdays as $birthday ) {
+            do_action( 'erp_hr_happened_birthday_today', $birthday->user_id );
+        }
     }
 
     return $birthdays;

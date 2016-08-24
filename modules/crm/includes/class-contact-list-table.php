@@ -249,7 +249,7 @@ class Contact_List_Table extends \WP_List_Table {
     function get_bulk_actions() {
         $actions = array(
             'delete'       => __( 'Move to Trash', 'erp' ),
-            'assing_group' => __( 'Add to Contact group', 'erp' )
+            'assign_group' => __( 'Add to Contact group', 'erp' )
         );
 
         if ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) {

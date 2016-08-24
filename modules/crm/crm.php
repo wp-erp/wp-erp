@@ -131,7 +131,7 @@ class Customer_Relationship {
                 'customer_title'         => __( 'Add New Customer', 'erp' ),
                 'customer_update_title'  => __( 'Edit Customer', 'erp' ),
                 'customer_social_title'  => __( 'Customer Social Profile', 'erp' ),
-                'customer_assing_group'  => __( 'Add to Contact groups', 'erp' ),
+                'customer_assign_group'  => __( 'Add to Contact groups', 'erp' ),
             ),
             'add_submit'            => __( 'Add New', 'erp' ),
             'update_submit'         => __( 'Update', 'erp' ),

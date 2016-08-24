@@ -888,6 +888,73 @@ function erp_ac_get_vendors() {
 }
 
 
+/**
+ * Send pdf after new invoice
+ *
+ * @param $transaction_id
+ * @param string $output_method
+ *
+ * @since 1.1.4
+ *
+ * @return void
+ */
+function erp_ac_send_invoice_pdf( $transaction_id, $output_method = 'D' ) {
+    $transaction    = \WeDevs\ERP\Accounting\Model\Transaction::find( $transaction_id );
+    $file_name      = sprintf( '%s_%s.pdf', $transaction->invoice_number, $transaction->issue_date );
+
+    if ( $transaction ) {
+        include WPERP_ACCOUNTING_VIEWS . '/pdf/invoice.php';
+    }
+}
+
+/**
+ * Send pdf invoice with email
+ *
+ * @param $transaction_id
+ * @param array $args
+ *
+ * @since 1.1.4
+ * @return void
+ */
+function erp_ac_send_email_with_pdf_attached( $transaction_id, $args = [] ) {
+
+    $type       = isset( $args['type'] ) ? sanitize_text_field( $args['type'] ) : '';
+    $sender     = isset( $args['email-from'] ) ? sanitize_text_field( $args['email-from'] ) : '';
+    $receiver   = isset( $args['email-to'] ) ? $args['email-to'] : '';
+    $subject    = isset( $args['email-subject'] ) ? sanitize_text_field( $args['email-subject'] ) : '';
+    $body       = isset( $args['email-body'] ) ? sanitize_text_field( $args['email-body'] ) : '';
+    $attach_pdf = isset( $args['attachment'] ) && 'on' == $args['attachment'] ? true : false;
+
+    $transaction = \WeDevs\ERP\Accounting\Model\Transaction::find( $transaction_id );
+
+    $file_name     = erp_ac_pdf_link_generator( $transaction );
+    $invoice_email = new \WeDevs\ERP\Accounting\Emails\Accounting_Invoice_Email();
+    $file_name     = $attach_pdf ? $file_name : '';
+
+    $invoice_email->trigger( $receiver, $subject, $body, $file_name );
+
+    unlink( $file_name );
+}
+
+/**
+ * Get invoice pdf link
+ *
+ * @param $transaction
+ * @param string $type
+ * @return string
+ *
+ * @since 1.1.4
+ * @return string
+ */
+function erp_ac_pdf_link_generator( $transaction, $type = 'invoice' ) {
+    $upload_path    = wp_upload_dir();
+    $include_file   = 'invoice' == $type ? 'invoice' : 'payment';
+    $file_name      = sprintf( '%s/%s_%s.pdf', $upload_path['basedir'], $transaction->invoice_number, $transaction->issue_date );
+    $output_method  = 'F';
+    include WPERP_ACCOUNTING_VIEWS . '/pdf/' . $include_file . '.php';
+    return $file_name;
+}
+
 
 
 
