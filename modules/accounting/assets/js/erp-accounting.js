@@ -1478,7 +1478,7 @@
 
                 error: function() {
                     var clone_form = $('.erp-ac-receive-payment-table-clone').html();
-                    ///console.log($(clone_form).find('.erp-select2').select2('destroy') );
+                    
                     if ( clone_form == '' ) {
                         return;
                     }
@@ -1486,6 +1486,7 @@
                     $('.erp-form').find('.erp-ac-receive-payment-table').html(clone_form);
                     $('.erp-form').find( 'input[name="submit_erp_ac_trans_draft"]' ).show();
                     $('.erp-select2').select2();
+                    
                     ERP_Accounting.incrementField();
                     ERP_Accounting.initFields();
                 }
@@ -1618,7 +1619,7 @@
 
             taxDropdown: function() {
 
-                var table = $('.erp-ac-transaction-form-table'),
+                var table = $('.erp-ac-transaction-form').find('.erp-ac-transaction-form-table'),
                     taxs = table.find('.erp-ac-tax-dropdown'),
                     taxs_id = [];
 

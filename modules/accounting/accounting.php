@@ -57,9 +57,6 @@ class Accounting {
 
         // trigger after accounting module loaded
         do_action('erp_accounting_loaded');
-
-        
-        
     }
 
     /**

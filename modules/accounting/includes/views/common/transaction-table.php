@@ -36,6 +36,7 @@
             }
 
         } else {
+            
             for ($i = 0; $i < 1; $i++) {
                 include WPERP_ACCOUNTING_VIEWS . '/common/transaction-table-tr-render.php';
             }
