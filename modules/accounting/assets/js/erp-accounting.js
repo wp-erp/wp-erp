@@ -1481,10 +1481,11 @@
 
                 error: function() {
                     var clone_form = $('.erp-ac-receive-payment-table-clone').html();
-
+                    ///console.log($(clone_form).find('.erp-select2').select2('destroy') );
                     if ( clone_form == '' ) {
                         return;
                     }
+
                     $('.erp-form').find('.erp-ac-receive-payment-table').html(clone_form);
                     $('.erp-form').find( 'input[name="submit_erp_ac_trans_draft"]' ).show();
                     $('.erp-select2').select2();
@@ -1534,7 +1535,7 @@
                 tr.after( clone );
 
                 // re-initialize selec2
-                $('.erp-ac-transaction-table .erp-select2').select2();
+                $('.erp-ac-transaction-form').find('.erp-ac-transaction-table .erp-select2').select2();
             }
         },
 

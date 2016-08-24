@@ -12,10 +12,8 @@
     <tbody>
         <?php
         $total_due = 0;
-        //echo '<pre>'; print_r( $results ); echo '</pre>'; die();
         foreach ( $results as $key => $result  ) {
         $invoice_url = erp_ac_get_slaes_payment_invoice_url( $result['id'] );
-        //echo '<pre>'; print_r( $result ); echo '</pre>';
         ?>
         <tr>
             <td class="col-ac">
