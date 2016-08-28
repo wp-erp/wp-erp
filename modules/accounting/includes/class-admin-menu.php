@@ -19,7 +19,6 @@ class Admin_Menu {
      * @return void
      */
     public function admin_menu() {
-
         $dashboard      = 'erp_ac_view_dashboard';
         $customer       = 'erp_ac_view_customer';
         $vendor         = 'erp_ac_view_vendor';
@@ -50,46 +49,114 @@ class Admin_Menu {
         add_action( 'admin_print_styles-' . $expense, array( $this, 'expense_chart_script' ) );
         add_action( 'admin_print_styles-' . $journal, array( $this, 'journal_script' ) );
         add_action( 'admin_print_styles-' . $account_charts, array( $this, 'chart_account_script' ) );
+        add_action( 'admin_print_styles-' . $reports, array( $this, 'reports_script' ) );
         add_action( 'admin_print_styles-' . 'erp-settings_page_erp-settings', array( $this, 'accounting_settings_script' ) );
     }
 
+    /**
+     * Load dashboard scripts
+     *
+     * @since 1.1.4
+     *
+     * @return void
+     */
     public function dashboard_script() {
         $this->chart_script();
         $this->common_scripts();
     }
 
+    /**
+     * Load Bank page scripts
+     *
+     * @since 1.1.4
+     *
+     * @return void
+     */
     public function bank_script() {
         $this->chart_script();
         $this->common_scripts();
     }
 
+    /**
+     * Load sales chart scripts
+     *
+     * @since 1.1.4
+     *
+     * @return void
+     */
     public function sales_chart_script() {
         $this->chart_script();
         $this->common_scripts();
         wp_localize_script( 'wp-erp-ac-js', 'erp_ac_tax', [ 'rate' => erp_ac_get_tax_info() ] );
     }
 
+    /**
+     * Load expense chart scripts
+     *
+     * @since 1.1.4
+     *
+     * @return void
+     */
     public function expense_chart_script() {
         $this->chart_script();
         $this->common_scripts();
         wp_localize_script( 'wp-erp-ac-js', 'erp_ac_tax', [ 'rate' => erp_ac_get_tax_info() ] );
     }
 
+    /**
+     * Load Journal scripts
+     *
+     * @since 1.1.4
+     *
+     * @return void
+     */
     public function journal_script() {
         $this->common_scripts();
     }
 
+    /**
+     * Load chart of account scripts
+     *
+     * @since 1.1.4
+     *
+     * @return void
+     */
     public function chart_account_script() {
         $this->common_scripts();
     }
 
+    /**
+     * Load account settings in ERP Settings menu scripts
+     *
+     * @since 1.1.4
+     *
+     * @return void
+     */
     public function accounting_settings_script() {
         if ( isset( $_GET['tab'] ) && 'accounting' == $_GET['tab'] ) {
             $this->common_scripts();
         }
     }
 
-    function chart_script() {
+    /**
+     * Load Reports scripts
+     *
+     * @since 1.1.4
+     *
+     * @return void
+     */
+    public function reports_script() {
+        $this->common_scripts();
+    }
+
+    /**
+     * Load all chart scripts
+     *
+     * @since 1.1.4
+     *
+     * @return void
+     */
+    public function chart_script() {
         wp_enqueue_script( 'plupload-handlers' );
         wp_enqueue_script( 'erp-file-upload' );
         wp_enqueue_script( 'erp-flotchart' );
@@ -103,6 +170,13 @@ class Admin_Menu {
         wp_enqueue_script('erp-flotchart-selection');
     }
 
+    /**
+     * Load common scripts
+     *
+     * @since 1.1.4
+     *
+     * @return void
+     */
     public function common_scripts() {
         $erp_ac_de_separator = erp_get_option('erp_ac_de_separator');
         $erp_ac_th_separator = erp_get_option('erp_ac_th_separator');
@@ -146,10 +220,24 @@ class Admin_Menu {
         ));
     }
 
+    /**
+     * Callback for dashboard view page
+     *
+     * @since 1.0
+     *
+     * @return void
+     */
     public function dashboard_page() {
         include dirname( __FILE__ ) . '/views/dashboard.php';
     }
 
+   /**
+     * Render page sales view page
+     *
+     * @since 1.0
+     *
+     * @return void
+     */
     public function page_sales() {
         $action   = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
         $type     = isset( $_GET['type'] ) ? $_GET['type'] : 'pv';
@@ -192,6 +280,13 @@ class Admin_Menu {
         }
     }
 
+    /**
+     * Render page expense page
+     *
+     * @since 1.0
+     *
+     * @return void
+     */
     public function page_expenses() {
         $action   = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
         $type     = isset( $_GET['type'] ) ? $_GET['type'] : 'pv';
@@ -240,6 +335,13 @@ class Admin_Menu {
         }
     }
 
+    /**
+     * Render page chart accounting page
+     *
+     * @since 1.0
+     *
+     * @return void
+     */
     public function page_chart_of_accounting() {
         $action = isset( $_GET['action'] ) ? $_GET['action'] : 'list';
         $id     = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
@@ -278,6 +380,13 @@ class Admin_Menu {
         }
     }
 
+    /**
+     * Render bank page
+     *
+     * @since 1.0
+     *
+     * @return void
+     */
     public function page_bank() {
         $action   = isset( $_GET['action'] ) ? $_GET['action'] : '';
         $id       = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
@@ -297,6 +406,13 @@ class Admin_Menu {
         }
     }
 
+    /**
+     * Render page reports
+     *
+     * @since 1.0
+     *
+     * @return void
+     */
     public function page_reports() {
         $type   = isset( $_GET['type'] ) ? $_GET['type'] : '';
         $pagenum          = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
@@ -345,6 +461,13 @@ class Admin_Menu {
         }
     }
 
+    /**
+     * Render journal entry page
+     *
+     * @since 1.0
+     *
+     * @return void
+     */
     public function page_journal_entry() {
         $action   = isset( $_GET['action'] ) ? $_GET['action'] : '';
         $id       = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;

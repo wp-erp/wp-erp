@@ -151,6 +151,21 @@ If you are unable to use any of the methods due to internet connectivity and fil
 
 == Changelog ==
 
+**v1.1.4 -> Aug 28, 2016**
+
+ * [fix] New expense time undefined invoice_number problem fixed
+ * [fix] Ignore rejected leaves during validating duration
+ * [fix] Tax calculation problem fixed
+ * [fix] Announcement permission problem fixed
+ * [fix] Employee can not take leave in weekend
+ * [fix] Problem to take leave when no leave days available fixed
+ * [fix] Duplicate row item created in payemnt and invoice fixed
+ * [fix] Employee birthday check hook changes
+ * [fix] Fixed save search segment reset filter functionality
+ * [new] Delete functionality in save search segment
+ * [new] Voucher create time from account is required
+ * [new] Action hook 'erp_crm_contact_inbound_email' added
+
 **v1.1.3 -> Aug 4, 2016**
 
  * [fix] Added loading feedback when submitting form for all popup
