@@ -59,7 +59,7 @@ class Ajax_Handler {
      *
      * @return void
      */
-    function transaction_redo() {
+    public function transaction_redo() {
         $this->verify_nonce( 'erp-ac-nonce' );
         $trns_id = isset( $_POST['id'] ) ? $_POST['id'] : false;
         $update  = false;
@@ -81,7 +81,7 @@ class Ajax_Handler {
      *
      * @return void
      */
-    function transaction_void() {
+    public function transaction_void() {
         $this->verify_nonce( 'erp-ac-nonce' );
         $trns_id = isset( $_POST['id'] ) ? $_POST['id'] : false;
         $delete = false;
@@ -96,7 +96,14 @@ class Ajax_Handler {
         }
     }
 
-    function transaction_restore() {
+    /**
+     * Transaction restore functionality
+     *
+     * @since 1.0
+     *
+     * @return void
+     */
+    public function transaction_restore() {
         $this->verify_nonce( 'erp-ac-nonce' );
         parse_str( $_POST['data'], $postdata );
 
@@ -130,7 +137,7 @@ class Ajax_Handler {
      *
      * @return void
      */
-    function transaction_delete_row() {
+    public function transaction_delete_row() {
         $this->verify_nonce( 'erp-ac-nonce' );
         $trns_id = isset( $_POST['id'] ) ? $_POST['id'] : false;
         $delete = false;
@@ -145,7 +152,14 @@ class Ajax_Handler {
         }
     }
 
-    function transaction_form_submit() {
+    /**
+     * Transaction form submission
+     *
+     * @since  1.0
+     *
+     * @return void
+     */
+    public function transaction_form_submit() {
         $this->verify_nonce( 'erp-ac-nonce' );
         parse_str( $_POST['form_data'], $postdata );
         $postdata['status']  = erp_ac_get_status_according_with_btn( $_POST['btn_status'] );
@@ -168,7 +182,14 @@ class Ajax_Handler {
         }
     }
 
-    function popup_get_invoice_number() {
+    /**
+     * Get invoice number from popup
+     *
+     * @since  1.0
+     *
+     * @return void
+     */
+    public function popup_get_invoice_number() {
         $this->verify_nonce( 'erp-ac-nonce' );
         $type = isset( $_POST['type'] ) ? $_POST['type'] : false;
 
@@ -183,7 +204,14 @@ class Ajax_Handler {
         $this->send_success( array( 'invoice_number' => $invoice_number ) );
     }
 
-    function remove_account() {
+    /**
+     * Remove an account chart
+     *
+     * @since  1.0
+     *
+     * @return void
+     */
+    public function remove_account() {
         $this->verify_nonce( 'erp-ac-nonce' );
 
         $chart_id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : false;
@@ -200,7 +228,14 @@ class Ajax_Handler {
         $this->send_success( array( 'success' => __( 'Account record has been deleted successfully', 'erp' ) ) );
     }
 
-    function convert_user() {
+    /**
+     * Convert a user into customer or vendor
+     *
+     * @since  1.0
+     *
+     * @return void
+     */
+    public function convert_user() {
         $this->verify_nonce( 'erp-ac-nonce' );
 
         $id = isset( $_POST['people_id'] ) ? $_POST['people_id'] : 0;
@@ -227,7 +262,14 @@ class Ajax_Handler {
         $this->send_success( array( 'redirect' => $redirect ) );
     }
 
-    function delete_tax() {
+    /**
+     * Delete tax
+     *
+     * @since  1.1.0
+     *
+     * @return void
+     */
+    public function delete_tax() {
         $this->verify_nonce( 'erp-ac-nonce' );
         $tax_id = isset( $_POST['tax_id'] ) ? intval( $_POST['tax_id'] ) : false;
         $delete = '';
@@ -243,7 +285,14 @@ class Ajax_Handler {
         $this->send_success();
     }
 
-    function new_tax() {
+    /**
+     * Create a new tax
+     *
+     * @since  1.1.0
+     *
+     * @return void
+     */
+    public function new_tax() {
         $this->verify_nonce( 'erp-ac-nonce' );
         parse_str( $_POST['post'], $postdata );
 
@@ -259,7 +308,14 @@ class Ajax_Handler {
         $this->send_error();
     }
 
-    function transaction_report() {
+    /**
+     * Show transaction report
+     *
+     * @since  1.0
+     *
+     * @return void
+     */
+    public function transaction_report() {
         $this->verify_nonce( 'erp-ac-nonce' );
         $transaction_id = isset( $_POST['transaction_id'] ) ? intval( $_POST['transaction_id'] ) : false;
         $transaction    = Model\Transaction::find( $transaction_id );
@@ -280,7 +336,14 @@ class Ajax_Handler {
         $this->send_success( [ 'content' => ob_get_clean()] );
     }
 
-    function new_vendor_customer() {
+    /**
+     * Create new vendor or customer
+     *
+     * @since  1.0
+     *
+     * @return void
+     */
+    public function new_vendor_customer() {
         $this->verify_nonce( 'erp-ac-nonce' );
         parse_str( $_POST['post'], $postdata );
         $insert_id = erp_ac_new_customer( $postdata );
@@ -292,7 +355,14 @@ class Ajax_Handler {
         }
     }
 
-    function check_unique_reference() {
+    /**
+     * Check unique reference in transaction
+     *
+     * @since  1.0
+     *
+     * @return void
+     */
+    public function check_unique_reference() {
         $this->verify_nonce( 'erp-ac-nonce' );
         $ref   = isset( $_POST['reference'] ) ? $_POST['reference'] : '';
         $trans = new \WeDevs\ERP\Accounting\Model\Transaction();
@@ -305,7 +375,14 @@ class Ajax_Handler {
         }
     }
 
-    function check_unique_invioce() {
+    /**
+     * Check unique invoice number
+     *
+     * @since  1.1.0
+     *
+     * @return void
+     */
+    public function check_unique_invioce() {
         $this->verify_nonce( 'erp-ac-nonce' );
         $invoice   = isset( $_POST['invoice'] ) ? $_POST['invoice'] : '';
         $form_type = $_POST['form_type'];
@@ -318,7 +395,14 @@ class Ajax_Handler {
         }
     }
 
-    function user_delete_status() {
+    /**
+     * Delete user status
+     *
+     * @since  1.0
+     *
+     * @return void
+     */
+    public function user_delete_status() {
         $this->verify_nonce( 'erp-ac-nonce' );
         $transactions = erp_ac_get_all_transaction( [
             'type' => ['expense', 'sales'],
@@ -340,7 +424,6 @@ class Ajax_Handler {
      * @return json
      */
     public function customer_restore() {
-
         $this->verify_nonce( 'erp-ac-nonce' );
 
         $customer_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
@@ -356,9 +439,9 @@ class Ajax_Handler {
             'type' => $type
         ];
 
+        // @TODO: check permission
         erp_restore_people( $data );
 
-        // @TODO: check permission
         $this->send_success( __( 'Customer has been removed successfully', 'erp' ) );
     }
 
@@ -394,50 +477,15 @@ class Ajax_Handler {
         $this->send_success( __( 'Customer has been removed successfully', 'erp' ) );
     }
 
-    // function receive_individual_vendoer_credit() {
-    //     $this->verify_nonce( 'erp-ac-nonce' );
 
-    //     $args = [
-    //         'id'          => '',
-    //         'partial_id'  => $_POST['partial_id'],
-    //         'items_id'    => [],
-    //         'journals_id' => [],
-    //         'type'        => 'expense',
-    //         'form_type'   => 'payment_voucher',
-    //         'account_id'  => $_POST['account_id'],
-    //         'status'      => 'paid',
-    //         'user_id'     => $_POST['user_id'],
-    //         'ref'         => $_POST['ref'],
-    //         'issue_date'  => $_POST['issue_date'],
-    //         'summary'     => $_POST['summary'],
-    //         'total'       => reset( $_POST['line_total'] ),
-    //         'trans_total' => reset( $_POST['line_total'] ),
-    //         'files'       => isset( $_POST['files'] ) ? maybe_serialize( $_POST['files'] ) : '',
-    //         'currency'    => erp_ac_get_currency(),
-    //         'line_total'  => $_POST['line_total'],
-    //     ];
-
-    //     $items[] = [
-    //         'item_id'     => [],
-    //         'journal_id'  => [],
-    //         'account_id'  => 1,
-    //         'description' => '',
-    //         'qty'         => 1,
-    //         'unit_price'  => 0,
-    //         'discount'    => 0,
-    //         'line_total'  => reset( $_POST['line_total'] )
-
-    //     ];
-
-    //     $transaction = erp_ac_insert_transaction( $args, $items );
-
-    //     if ( $transaction ) {
-    //         $this->send_success();
-    //     }
-
-    // }
-
-    function receive_individual_invoice() {
+    /**
+     * Recieve individual invoice
+     *
+     * @since  1.0
+     *
+     * @return void
+     */
+    public function receive_individual_invoice() {
         $this->verify_nonce( 'erp-ac-nonce' );
 
         $args = [
@@ -482,7 +530,14 @@ class Ajax_Handler {
 
     }
 
-    function vendor_address() {
+    /**
+     * Get vendor address fields
+     *
+     * @since  1.0
+     *
+     * @return void
+     */
+    public function vendor_address() {
         $this->verify_nonce( 'erp-ac-nonce' );
         $user_id = intval( $_POST['vendor_id'] );
 
@@ -505,7 +560,14 @@ class Ajax_Handler {
         $this->send_success( implode('', $args));
     }
 
-    function customer_address() {
+    /**
+     * Get customer address fields
+     *
+     * @since  1.0
+     *
+     * @return void
+     */
+    public function customer_address() {
         $this->verify_nonce( 'erp-ac-nonce' );
         $customer_id = intval( $_POST['customer_id'] );
 
@@ -528,23 +590,21 @@ class Ajax_Handler {
         $this->send_success( implode('', $args));
     }
 
-    function erp_ac_vendor_voucher() {
+    /**
+     * Payment voucher invoice
+     *
+     * @since  1.0
+     *
+     * @return void
+     */
+    public function erp_ac_vendor_voucher() {
         $this->verify_nonce( 'erp-ac-nonce' );
+
         $vendor = intval( $_POST['vendor'] );
+
         if ( ! $vendor ) {
             $this->send_error();
         }
-
-        //     $results = erp_ac_get_all_transaction([
-        //     'form_type'   => 'invoice',
-        //     'status'      => ['in' => ['awaiting_payment', 'partial']],
-        //     'user_id'     => $user_id,
-        //     'parent'      => 0,
-        //     'type'        => 'sales',
-        //     'join'        => ['journals'],
-        //     'with_ledger' => true,
-        //     'output_by'   => 'array'
-        // ]);
 
         $transactions = erp_ac_get_all_transaction([
             'user_id'   => $vendor,
@@ -564,7 +624,14 @@ class Ajax_Handler {
         $this->send_success( ob_get_clean() );
     }
 
-    function bank_balance() {
+    /**
+     * Get individual bank balance
+     *
+     * @since  1.0
+     *
+     * @return void
+     */
+    public function bank_balance() {
         $this->verify_nonce( 'erp-ac-nonce' );
 
         $bank_id      = isset( $_POST['bank_id'] ) ? intval( $_POST['bank_id'] ) : 0;
@@ -573,19 +640,26 @@ class Ajax_Handler {
         $this->send_success( array( 'total_amount' => $total_amount ) );
     }
 
-    function transfer_money() {
+    /**
+     * Transfer money to acc
+     *
+     * @since  1.0
+     *
+     * @return void
+     */
+    public function transfer_money() {
         $this->verify_nonce( 'erp-ac-nonce' );
+
         $from   = intval( $_POST['form_account_id'] );
         $to     = intval( $_POST['to_account_id'] );
         $amount = floatval( $_POST['amount'] );
 
-        $debit_credit = erp_ac_bank_credit_total_amount( $from );
+        $debit_credit  = erp_ac_bank_credit_total_amount( $from );
         $ledger_amount = abs( $debit_credit['debit'] - $debit_credit['credit'] );
 
         if ( $ledger_amount < $to ) {
             $this->send_error( __( 'No enough money from your transfer account', 'wp-account' ) );
         }
-
 
         $args = array(
             'type'            => 'transfer',
@@ -624,9 +698,16 @@ class Ajax_Handler {
         $this->send_error();
     }
 
-    function receive_payment() {
-
+    /**
+     * Receive a payment
+     *
+     * @since  1.1.1
+     *
+     * @return void
+     */
+    public function receive_payment() {
         $this->verify_nonce( 'erp-ac-nonce' );
+
         $user_id    = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : false;
         $account_id = isset( $_POST['account_id'] ) ? intval( $_POST['account_id'] ) : false;
 
@@ -645,7 +726,6 @@ class Ajax_Handler {
             'output_by'   => 'array'
         ]);
 
-
         if ( ! $results ) {
             $this->send_error();
         }
@@ -655,6 +735,13 @@ class Ajax_Handler {
         $this->send_success( ob_get_clean() );
     }
 
+    /**
+     * Check ledget code
+     *
+     * @since 1.0
+     *
+     * @return void
+     */
     public function check_ledger_code() {
         $this->verify_nonce( 'erp-ac-nonce' );
 
@@ -669,23 +756,28 @@ class Ajax_Handler {
 
     /**
      * Accounting Sales Invoice Export
+     *
+     * @since 1.0
+     *
+     * @return void
      */
     public function sales_invoice_export() {
-
         check_ajax_referer( 'accounting-invoice-export' );
 
         $transaction_id = isset( $_REQUEST['transaction_id'] ) ? $_REQUEST['transaction_id'] : 0;
 
         erp_ac_send_invoice_pdf( $transaction_id );
-
         exit;
     }
 
     /**
-     * Accounting Payment Invoice Export
+     * Accounting Payment Invoice Export as pdf
+     *
+     * @since 1.0
+     *
+     * @return void
      */
     public function sales_payment_export() {
-
         check_ajax_referer( 'accounting-payment-export' );
 
         $transaction_id = isset( $_REQUEST['transaction_id'] ) ? $_REQUEST['transaction_id'] : 0;
@@ -696,17 +788,17 @@ class Ajax_Handler {
         if ( $transaction_id ) {
             include WPERP_ACCOUNTING_VIEWS . '/pdf/payment.php';
         }
-
         exit;
     }
 
     /**
      * Send Invoice via Email
      *
-     * @return bool
+     * @since 1.0
+     *
+     * @return void
      */
     public function sales_invoice_send_email() {
-
         $this->verify_nonce( 'erp-ac-invoice-send-email' );
 
         $transaction_id = isset( $_REQUEST['transaction_id'] ) ? intval( $_REQUEST['transaction_id'] ) : 0;
