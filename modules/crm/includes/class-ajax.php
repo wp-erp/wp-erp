@@ -951,6 +951,11 @@ class Ajax_Handler {
             $this->send_error( __( 'Customer not found', 'erp' ) );
         }
 
+        // Check permission
+        if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
         if ( isset( $postdata['message'] ) && empty( $postdata['message'] ) ) {
             $this->send_error( __( 'Content must be required', 'erp' ) );
         }
