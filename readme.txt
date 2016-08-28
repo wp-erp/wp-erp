@@ -162,6 +162,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
  * [fix] Duplicate row item created in payemnt and invoice fixed
  * [fix] Employee birthday check hook changes
  * [fix] Fixed save search segment reset filter functionality
+ * [fix] Updated some crm permissions
  * [new] Delete functionality in save search segment
  * [new] Voucher create time from account is required
  * [new] Action hook 'erp_crm_contact_inbound_email' added
