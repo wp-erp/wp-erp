@@ -275,7 +275,7 @@
         contactGroup : {
 
             pageReload: function() {
-                $( '.erp-crm-contact-group' ).load( window.location.href + ' .erp-crm-contact-group' );
+                $( '.erp-crm-contact-group-list-table-wrap' ).load( window.location.href + ' .erp-crm-contact-group-list-table-inner' );
             },
 
             create: function(e) {
@@ -384,7 +384,7 @@
 
         subscriberContact: {
             pageReload: function() {
-                $( '.erp-crm-subscriber-contact' ).load( window.location.href + ' .erp-crm-subscriber-contact' );
+                $( '.erp-crm-subscriber-contact-list-table-wrap' ).load( window.location.href + ' .erp-crm-subscriber-contact-list-table-inner' );
             },
 
             create: function(e) {

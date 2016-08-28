@@ -580,6 +580,13 @@ class Ajax_Handler {
 
     }
 
+    /**
+     * Search crm users
+     *
+     * @since 1.1.0
+     *
+     * @return void
+     */
     public function search_crm_user() {
         $this->verify_nonce( 'wp-erp-crm-nonce' );
 
@@ -677,6 +684,11 @@ class Ajax_Handler {
      */
     public function contact_group_create() {
         $this->verify_nonce( 'wp-erp-crm-contact-group' );
+
+        // Check permission
+        if ( ! current_user_can( 'erp_crm_create_groups' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
 
         if ( empty( $_POST['group_name'] ) ) {
             $this->send_error( __('Contact Group Name must be required', 'erp' ) );
