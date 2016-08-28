@@ -217,7 +217,6 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
      * @return string
      */
     function column_cb( $item ) {
-        // var_dump( $item );
         return sprintf(
             '<input type="checkbox" name="suscriber_contact_id[]" value="%s" />', $item->user_id
         );
