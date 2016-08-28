@@ -76,17 +76,25 @@ class Updates {
         if ( ! current_user_can( 'update_plugins' ) || ! $this->is_needs_update() ) {
             return;
         }
-        ?>
-        <div id="message" class="updated">
-            <p><?php _e( '<strong>WP ERP Data Update Required</strong> &#8211; We need to update your install to the latest version', 'erp' ); ?></p>
-            <p class="submit"><a href="<?php echo add_query_arg( [ 'wperp_do_update' => true ], $_SERVER['REQUEST_URI'] ); ?>" class="wperp-update-btn button-primary"><?php _e( 'Run the updater', 'erp' ); ?></a></p>
-        </div>
 
-        <script type="text/javascript">
-            jQuery('.wperp-update-btn').click('click', function(){
-                return confirm( '<?php _e( 'It is strongly recommended that you backup your database before proceeding. Are you sure you wish to run the updater now?', 'erp' ); ?>' );
-            });
-        </script>
+        if ( ! is_null( WPERP_VERSION ) && version_compare( WPERP_VERSION, max( array_keys( self::$updates ) ), '<=' ) ) {
+            ?>
+                <div id="message" class="updated">
+                    <p><?php _e( '<strong>WP ERP Data Update Required</strong> &#8211; We need to update your install to the latest version', 'erp' ); ?></p>
+                    <p class="submit"><a href="<?php echo add_query_arg( [ 'wperp_do_update' => true ], $_SERVER['REQUEST_URI'] ); ?>" class="wperp-update-btn button-primary"><?php _e( 'Run the updater', 'erp' ); ?></a></p>
+                </div>
+
+                <script type="text/javascript">
+                    jQuery('.wperp-update-btn').click('click', function(){
+                        return confirm( '<?php _e( 'It is strongly recommended that you backup your database before proceeding. Are you sure you wish to run the updater now?', 'erp' ); ?>' );
+                    });
+                </script>
+            <?php
+        } else {
+            update_option( 'wp_erp_version', WPERP_VERSION );
+        }
+
+        ?>
         <?php
     }
 
@@ -128,6 +136,4 @@ class Updates {
         wp_redirect( $location );
         exit();
     }
-
-
 }

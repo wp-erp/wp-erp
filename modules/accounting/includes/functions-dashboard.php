@@ -7,7 +7,6 @@
 function erp_ac_dashboard_left_column() {
     erp_admin_dash_metabox( __( 'Income & Expenses', 'erp' ), 'erp_ac_dashboard_income_expense' );
     erp_admin_dash_metabox( __( 'Cash & Bank Balance', 'erp' ), 'erp_ac_dashboard_banks', 'bank-balance' );
-
     erp_admin_dash_metabox( __( 'Invoice payable to you', 'erp' ), 'erp_ac_dashboard_invoice_payable' );
 }
 
@@ -20,7 +19,6 @@ function erp_ac_dashboard_right_column() {
     erp_admin_dash_metabox( __( 'Business Expense', 'erp' ), 'erp_ac_dashboard_expense_chart' );
     erp_admin_dash_metabox( __( 'Net Income', 'erp' ), 'erp_ac_dashboard_net_income', 'bank-balance' );
     erp_admin_dash_metabox( __( 'Bills you need to pay', 'erp' ), 'erp_ac_dashboard_bills_payable' );
-
 }
 
 function erp_ac_dashboard_banks() {
@@ -65,7 +63,7 @@ function erp_ac_dashboard_banks() {
             <li>
                 <span class="account-title">
                     <?php echo $bank_url; ?>
-                </span> 
+                </span>
                 <span class="price">
                     <?php echo $total_journal; ?>
                 </span>
@@ -163,7 +161,6 @@ function erp_ac_dashboard_net_income() {
         'join'       => ['journals'],
         'type'       => ['sales', 'expense', 'journal'],
         'status'     => ['not_in' => 'draft'],
-        //'wherein'    => [ 'form_type' => [ 'payment', 'payment_voucher' ], 'status' => [ 'closed', 'paid' ] ],
         'groupby'    => 'type',
         'output_by'  => 'array'
 
@@ -173,8 +170,6 @@ function erp_ac_dashboard_net_income() {
     $expense = 0;
 
     $transections = erp_ac_get_all_transaction( $incomes_args );
-        //echo '<pre>'; print_r($transections['journal']); echo '</pre>';
-        //echo '<pre>'; print_r($transections['expense']); echo '</pre>'; die();
     $sales        = isset( $transections['sales'] ) ? $transections['sales'] : [];
     $expenses     = isset( $transections['expense'] ) ? $transections['expense'] : [];
     $journals_tr  = isset( $transections['journal'] ) ? $transections['journal'] : [];
@@ -320,7 +315,7 @@ function erp_ac_dashboard_income_expense() {
                 if ( in_array( $journal['ledger_id'], $expense_tax_ledgers ) ) {
                     continue;
                 }
-                $ex = $journal['debit'] - $journal['credit']; 
+                $ex = $journal['debit'] - $journal['credit'];
                 $total = $total + $ex;
             }
         }

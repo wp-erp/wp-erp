@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP ERP 1.1.4\n"
 "Report-Msgid-Bugs-To: http://wperp.com/support/\n"
-"POT-Creation-Date: 2016-08-28 06:53:20+00:00\n"
+"POT-Creation-Date: 2016-08-28 11:24:25+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4816,7 +4816,7 @@ msgid "ERP Settings"
 msgstr ""
 
 #: includes/admin/class-menu.php:41 includes/admin/views/company-editor.php:2
-#: modules/accounting/includes/class-customer-list-table.php:85
+#: modules/accounting/includes/class-customer-list-table.php:84
 #: modules/crm/includes/class-contact-subscriber-list-table.php:89
 #: modules/crm/includes/functions-customer.php:234
 #: modules/crm/views/company.php:22 modules/crm/views/dashboard.php:62
@@ -5193,7 +5193,7 @@ msgid "Address Line 2 "
 msgstr ""
 
 #: includes/admin/views/company-editor.php:112
-#: modules/accounting/includes/class-customer-list-table.php:87
+#: modules/accounting/includes/class-customer-list-table.php:86
 #: modules/accounting/includes/class-vendor-list-table.php:49
 #: modules/accounting/includes/views/customer/user-details.php:6
 #: modules/accounting/includes/views/user-form-rows.php:89
@@ -5269,7 +5269,7 @@ msgid "Company Details"
 msgstr ""
 
 #: includes/admin/views/company.php:17
-#: modules/accounting/includes/class-customer-list-table.php:110
+#: modules/accounting/includes/class-customer-list-table.php:109
 #: modules/accounting/includes/class-transaction-list-table.php:182
 #: modules/accounting/includes/class-vendor-list-table.php:104
 #: modules/accounting/includes/views/accounts/chart-table.php:40
@@ -5814,17 +5814,17 @@ msgid ""
 "to collect non-sensitive diagnostic data and usage information."
 msgstr ""
 
-#: includes/class-updates.php:81
+#: includes/class-updates.php:83
 msgid ""
 "<strong>WP ERP Data Update Required</strong> &#8211; We need to update your "
 "install to the latest version"
 msgstr ""
 
-#: includes/class-updates.php:82
+#: includes/class-updates.php:84
 msgid "Run the updater"
 msgstr ""
 
-#: includes/class-updates.php:87
+#: includes/class-updates.php:89
 msgid ""
 "It is strongly recommended that you backup your database before proceeding. "
 "Are you sure you wish to run the updater now?"
@@ -6005,7 +6005,7 @@ msgid "Debug"
 msgstr ""
 
 #: includes/framework/settings/email.php:205
-#: modules/accounting/includes/class-customer-list-table.php:86
+#: modules/accounting/includes/class-customer-list-table.php:85
 #: modules/accounting/includes/class-vendor-list-table.php:48
 #: modules/accounting/includes/views/customer/user-details.php:5
 #: modules/accounting/includes/views/user-form-rows.php:65
@@ -6746,14 +6746,14 @@ msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
 #: modules/accounting/includes/class-ajax.php:71
-#: modules/accounting/includes/class-ajax.php:120
+#: modules/accounting/includes/class-ajax.php:127
 msgid "Transaction status has been changed successfully"
 msgstr ""
 
 #: modules/accounting/includes/class-ajax.php:73
 #: modules/accounting/includes/class-ajax.php:95
-#: modules/accounting/includes/class-ajax.php:122
-#: modules/accounting/includes/class-ajax.php:144
+#: modules/accounting/includes/class-ajax.php:129
+#: modules/accounting/includes/class-ajax.php:151
 msgid "Unknown Error"
 msgstr ""
 
@@ -6761,69 +6761,69 @@ msgstr ""
 msgid "Transaction has been void successfully"
 msgstr ""
 
-#: modules/accounting/includes/class-ajax.php:142
+#: modules/accounting/includes/class-ajax.php:149
 msgid "Transaction has been deleted successfully"
 msgstr ""
 
-#: modules/accounting/includes/class-ajax.php:167
+#: modules/accounting/includes/class-ajax.php:181
 msgid "Transaction has been created successfully"
 msgstr ""
 
-#: modules/accounting/includes/class-ajax.php:176
+#: modules/accounting/includes/class-ajax.php:197
 msgid "Type required"
 msgstr ""
 
-#: modules/accounting/includes/class-ajax.php:200
+#: modules/accounting/includes/class-ajax.php:228
 msgid "Account record has been deleted successfully"
 msgstr ""
 
-#: modules/accounting/includes/class-ajax.php:210
+#: modules/accounting/includes/class-ajax.php:245
 #: modules/crm/includes/class-ajax.php:498
 #: modules/hrm/includes/class-ajax.php:905
 msgid "User not found"
 msgstr ""
 
-#: modules/accounting/includes/class-ajax.php:214
+#: modules/accounting/includes/class-ajax.php:249
 #: modules/crm/includes/class-ajax.php:502
 msgid "Type not found"
 msgstr ""
 
-#: modules/accounting/includes/class-ajax.php:291
+#: modules/accounting/includes/class-ajax.php:354
 msgid "Required unique value!"
 msgstr ""
 
-#: modules/accounting/includes/class-ajax.php:302
+#: modules/accounting/includes/class-ajax.php:372
 msgid "Reference already exists. Please use an unique number"
 msgstr ""
 
-#: modules/accounting/includes/class-ajax.php:315
+#: modules/accounting/includes/class-ajax.php:392
 #: modules/accounting/includes/functions-transaction.php:319
 msgid "Invoice already exists. Please use an unique number"
 msgstr ""
 
-#: modules/accounting/includes/class-ajax.php:329
+#: modules/accounting/includes/class-ajax.php:413
 msgid "You can not remove this user"
 msgstr ""
 
-#: modules/accounting/includes/class-ajax.php:349
-#: modules/accounting/includes/class-ajax.php:382
+#: modules/accounting/includes/class-ajax.php:432
+#: modules/accounting/includes/class-ajax.php:465
 msgid "No Customer found"
 msgstr ""
 
-#: modules/accounting/includes/class-ajax.php:362
-#: modules/accounting/includes/class-ajax.php:394
+#: modules/accounting/includes/class-ajax.php:445
+#: modules/accounting/includes/class-ajax.php:477
 msgid "Customer has been removed successfully"
 msgstr ""
 
-#: modules/accounting/includes/class-ajax.php:586
+#: modules/accounting/includes/class-ajax.php:661
 msgid "No enough money from your transfer account"
 msgstr ""
 
-#: modules/accounting/includes/class-customer-list-table.php:43
+#: modules/accounting/includes/class-customer-list-table.php:42
 msgid "No customer found!"
 msgstr ""
 
-#: modules/accounting/includes/class-customer-list-table.php:84
+#: modules/accounting/includes/class-customer-list-table.php:83
 #: modules/accounting/includes/class-log.php:190
 #: modules/accounting/includes/class-log.php:234
 #: modules/accounting/includes/class-sales-transaction-list-table.php:31
@@ -6834,7 +6834,7 @@ msgstr ""
 msgid "Customer"
 msgstr ""
 
-#: modules/accounting/includes/class-customer-list-table.php:88
+#: modules/accounting/includes/class-customer-list-table.php:87
 #: modules/accounting/includes/class-journal-transactions-list-table.php:131
 #: modules/accounting/includes/class-vendor-list-table.php:50
 #: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:41
@@ -6843,9 +6843,9 @@ msgstr ""
 msgid "Balance"
 msgstr ""
 
+#: modules/accounting/includes/class-customer-list-table.php:103
 #: modules/accounting/includes/class-customer-list-table.php:104
-#: modules/accounting/includes/class-customer-list-table.php:105
-#: modules/accounting/includes/class-customer-list-table.php:170
+#: modules/accounting/includes/class-customer-list-table.php:169
 #: modules/accounting/includes/class-vendor-list-table.php:100
 #: modules/crm/includes/class-contact-list-table.php:220
 #: modules/crm/includes/class-contact-list-table.php:258
@@ -6854,8 +6854,8 @@ msgstr ""
 msgid "Permanent Delete"
 msgstr ""
 
+#: modules/accounting/includes/class-customer-list-table.php:103
 #: modules/accounting/includes/class-customer-list-table.php:104
-#: modules/accounting/includes/class-customer-list-table.php:105
 #: modules/accounting/includes/class-transaction-list-table.php:176
 #: modules/accounting/includes/class-vendor-list-table.php:100
 #: modules/accounting/includes/views/accounts/chart-table.php:46
@@ -6890,7 +6890,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: modules/accounting/includes/class-customer-list-table.php:110
+#: modules/accounting/includes/class-customer-list-table.php:109
 #: modules/accounting/includes/class-vendor-list-table.php:104
 #: modules/crm/includes/class-contact-subscriber-list-table.php:188
 #: modules/hrm/includes/class-department-list-table.php:211
@@ -6902,11 +6902,11 @@ msgstr ""
 msgid "Edit this item"
 msgstr ""
 
-#: modules/accounting/includes/class-customer-list-table.php:113
+#: modules/accounting/includes/class-customer-list-table.php:112
 msgid "Create Invoice"
 msgstr ""
 
-#: modules/accounting/includes/class-customer-list-table.php:116
+#: modules/accounting/includes/class-customer-list-table.php:115
 #: modules/accounting/includes/class-vendor-list-table.php:117
 #: modules/crm/includes/class-contact-list-table.php:232
 #: modules/crm/includes/class-contact-subscriber-list-table.php:189
@@ -6921,15 +6921,15 @@ msgstr ""
 msgid "Delete this item"
 msgstr ""
 
-#: modules/accounting/includes/class-customer-list-table.php:120
+#: modules/accounting/includes/class-customer-list-table.php:119
 #: modules/accounting/includes/class-vendor-list-table.php:121
 #: modules/crm/includes/class-contact-list-table.php:236
 #: modules/hrm/includes/class-employee-list-table.php:177
 msgid "Restore this item"
 msgstr ""
 
-#: modules/accounting/includes/class-customer-list-table.php:120
-#: modules/accounting/includes/class-customer-list-table.php:169
+#: modules/accounting/includes/class-customer-list-table.php:119
+#: modules/accounting/includes/class-customer-list-table.php:168
 #: modules/accounting/includes/class-vendor-list-table.php:121
 #: modules/crm/includes/class-contact-list-table.php:236
 #: modules/crm/includes/class-contact-list-table.php:259
@@ -6938,7 +6938,7 @@ msgstr ""
 msgid "Restore"
 msgstr ""
 
-#: modules/accounting/includes/class-customer-list-table.php:164
+#: modules/accounting/includes/class-customer-list-table.php:163
 #: modules/crm/includes/class-contact-list-table.php:251
 #: modules/hrm/includes/class-department-list-table.php:283
 #: modules/hrm/includes/class-employee-list-table.php:196
@@ -6946,7 +6946,7 @@ msgstr ""
 msgid "Move to Trash"
 msgstr ""
 
-#: modules/accounting/includes/class-customer-list-table.php:199
+#: modules/accounting/includes/class-customer-list-table.php:198
 #: modules/accounting/includes/class-log.php:562
 #: modules/accounting/includes/class-log.php:567
 #: modules/accounting/includes/class-vendor-list-table.php:141
@@ -6961,7 +6961,7 @@ msgstr ""
 msgid "All"
 msgstr ""
 
-#: modules/accounting/includes/class-customer-list-table.php:200
+#: modules/accounting/includes/class-customer-list-table.php:199
 #: modules/accounting/includes/class-vendor-list-table.php:142
 #: modules/accounting/includes/functions.php:97
 #: modules/crm/includes/functions-customer.php:340
@@ -7033,7 +7033,7 @@ msgstr ""
 #: modules/accounting/includes/class-sales-transaction-list-table.php:34
 #: modules/accounting/includes/class-transaction-list-table.php:88
 #: modules/accounting/includes/class-vendor-transaction-list-table.php:34
-#: modules/accounting/includes/functions-dashboard.php:78
+#: modules/accounting/includes/functions-dashboard.php:76
 #: modules/accounting/includes/views/bank/invoice.php:123
 #: modules/accounting/includes/views/common/partial-payments.php:12
 #: modules/accounting/includes/views/common/transaction-table.php:77
@@ -7158,7 +7158,7 @@ msgstr ""
 
 #: modules/accounting/includes/class-journal-transactions-list-table.php:84
 #: modules/accounting/includes/class-journal-transactions-list-table.php:210
-#: modules/accounting/includes/functions-dashboard.php:252
+#: modules/accounting/includes/functions-dashboard.php:247
 #: modules/accounting/includes/views/common/transaction-chart.php:282
 msgid "Expense"
 msgstr ""
@@ -7528,7 +7528,7 @@ msgid "Liabilities"
 msgstr ""
 
 #: modules/accounting/includes/functions-chart.php:13
-#: modules/accounting/includes/functions-dashboard.php:251
+#: modules/accounting/includes/functions-dashboard.php:246
 #: modules/accounting/includes/views/chart-of-accounts.php:40
 msgid "Income"
 msgstr ""
@@ -7569,46 +7569,46 @@ msgstr ""
 msgid "Cash & Bank Balance"
 msgstr ""
 
-#: modules/accounting/includes/functions-dashboard.php:11
+#: modules/accounting/includes/functions-dashboard.php:10
 msgid "Invoice payable to you"
 msgstr ""
 
-#: modules/accounting/includes/functions-dashboard.php:20
+#: modules/accounting/includes/functions-dashboard.php:19
 msgid "Business Expense"
 msgstr ""
 
-#: modules/accounting/includes/functions-dashboard.php:21
-#: modules/accounting/includes/functions-dashboard.php:254
+#: modules/accounting/includes/functions-dashboard.php:20
+#: modules/accounting/includes/functions-dashboard.php:249
 #: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:178
 msgid "Net Income"
 msgstr ""
 
-#: modules/accounting/includes/functions-dashboard.php:22
+#: modules/accounting/includes/functions-dashboard.php:21
 msgid "Bills you need to pay"
 msgstr ""
 
-#: modules/accounting/includes/functions-dashboard.php:137
-#: modules/accounting/includes/functions-dashboard.php:515
+#: modules/accounting/includes/functions-dashboard.php:135
+#: modules/accounting/includes/functions-dashboard.php:510
 msgid "Coming Due"
 msgstr ""
 
-#: modules/accounting/includes/functions-dashboard.php:141
-#: modules/accounting/includes/functions-dashboard.php:519
+#: modules/accounting/includes/functions-dashboard.php:139
+#: modules/accounting/includes/functions-dashboard.php:514
 msgid "1-30 days overdue"
 msgstr ""
 
-#: modules/accounting/includes/functions-dashboard.php:145
-#: modules/accounting/includes/functions-dashboard.php:523
+#: modules/accounting/includes/functions-dashboard.php:143
+#: modules/accounting/includes/functions-dashboard.php:518
 msgid "31-60 days overdue"
 msgstr ""
 
-#: modules/accounting/includes/functions-dashboard.php:149
-#: modules/accounting/includes/functions-dashboard.php:527
+#: modules/accounting/includes/functions-dashboard.php:147
+#: modules/accounting/includes/functions-dashboard.php:522
 msgid "61-90 days overdue"
 msgstr ""
 
-#: modules/accounting/includes/functions-dashboard.php:153
-#: modules/accounting/includes/functions-dashboard.php:531
+#: modules/accounting/includes/functions-dashboard.php:151
+#: modules/accounting/includes/functions-dashboard.php:526
 msgid "> 90 days overdue"
 msgstr ""
 
