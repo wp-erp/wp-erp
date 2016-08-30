@@ -1427,6 +1427,7 @@ class Ajax_Handler {
         $title        = isset( $_POST['title'] ) ? sanitize_text_field( $_POST['title'] ) : '';
         $start_date   = isset( $_POST['start_date'] ) ? $_POST['start_date']  : '';
         $end_date     = isset( $_POST['end_date'] ) && ! empty( $_POST['end_date'] ) ? $_POST['end_date'] : $start_date;
+        $end_date     = date( 'Y-m-d H:i:s', strtotime( $end_date . ' +1 day' )  );
         $description  = isset( $_POST['description'] ) ? $_POST['description'] : '';
         $range_status = isset( $_POST['range'] ) ? $_POST['range'] : 'off';
         $error        = true;
@@ -1449,7 +1450,7 @@ class Ajax_Handler {
         }
 
         if ( $range_status == 'off' ) {
-            $end_date = $start_date;
+            $end_date = date( 'Y-m-d H:i:s', strtotime( $start_date . ' +1 day' )  );
         }
 
         if ( is_wp_error( $error ) ) {
