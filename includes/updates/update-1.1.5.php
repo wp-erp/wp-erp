@@ -3,11 +3,6 @@ $results = \WeDevs\ERP\HRM\Models\Leave_Holiday::select('id', 'start', 'end')->g
         
 if ( $results ) {
     foreach ( $results as $key => $result ) {
-    	
-    	if ( $result->start != $result->end ) {
-    		continue;
-    	}
-
         $date = new \DateTime($result->end);
         $date->modify('+1 day');
         $new_date = $date->format('Y-m-d H:i:s') ;
