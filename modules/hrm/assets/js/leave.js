@@ -379,13 +379,13 @@
                             var html = wp.template('erp-leave-days')(resp.print);
 
                             $('div.erp-hr-leave-req-show-days').html( html );
-                        
+
                             if ( parseInt( resp.leave_count ) <= 0 ) {
                                 submit.prop('disabled', true);
                             } else {
                                 submit.prop('disabled', false);
                             }
-                            
+
                         },
                         error: function(response) {
                             $('div.erp-hr-leave-req-show-days').empty();

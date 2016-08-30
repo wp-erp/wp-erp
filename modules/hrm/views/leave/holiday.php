@@ -70,7 +70,7 @@ class Leave_Holiday_List_Table extends WP_List_Table {
 
             case 'duration':
 
-                $days = erp_date_duration( $holiday->start, $holiday->end ) + 1;
+                $days = erp_date_duration( $holiday->start, $holiday->end );
                 return $days .' '. _n( __( 'day', 'erp' ), __( 'days', 'erp' ), $days );
 
             case 'description':
