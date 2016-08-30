@@ -415,6 +415,7 @@ function erp_hr_get_holidays( $args = [] ) {
             $holidays = erp_array_to_object(
                 $holiday_results->skip( $args['offset'] )
                                 ->take( $args['number'] )
+                                ->orderBy( $args['orderby'], $args['order'] )
                                 ->get()
                                 ->toArray()
             );

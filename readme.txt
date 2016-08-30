@@ -2,7 +2,7 @@
 Contributors: tareq1988, wedevs, sabbir1991, asaquzzaman
 Tags: small business, SME, contact, contacts, CRM, Customer Relationship Management, employee, leave management, hr, hrm, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 4.5.3
+Tested up to: 4.6
 Stable tag: trunk
 License: GPLv2
 Donate Link: https://tareq.co/donate
@@ -150,6 +150,22 @@ If you are unable to use any of the methods due to internet connectivity and fil
   => No. We did not put any limit on anything. You can create as much entries as you want.
 
 == Changelog ==
+
+**v1.1.4 -> Aug 28, 2016**
+
+ * [fix] New expense time undefined invoice_number problem fixed
+ * [fix] Ignore rejected leaves during validating duration
+ * [fix] Tax calculation problem fixed
+ * [fix] Announcement permission problem fixed
+ * [fix] Employee can not take leave in weekend
+ * [fix] Problem to take leave when no leave days available fixed
+ * [fix] Duplicate row item created in payemnt and invoice fixed
+ * [fix] Employee birthday check hook changes
+ * [fix] Fixed save search segment reset filter functionality
+ * [fix] Updated some crm permissions
+ * [new] Delete functionality in save search segment
+ * [new] Voucher create time from account is required
+ * [new] Action hook 'erp_crm_contact_inbound_email' added
 
 **v1.1.3 -> Aug 4, 2016**
 

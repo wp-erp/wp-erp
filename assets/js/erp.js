@@ -274,31 +274,7 @@ window.wperp = window.wperp || {};
             $( '.erp-hr-audit-log' ).on( 'click', 'a.erp-audit-log-view-changes', this.viewLogChanges );
             $( 'body').on( 'change', '#filter_duration', this.customFilter );
 
-            //button group
-            $('body').on( 'click', this.btn.groupAction );
-
             this.initFields();
-        },
-
-        btn: {
-            groupAction: function(e) {
-
-                var self = $(e.target);
-
-                if ( self.hasClass('erp-drop-down-child-btn') ) {
-                    var btn_group  = self.closest('.erp-btn-group');
-
-                    if ( btn_group.hasClass('erp-btn-open') ) {
-                        btn_group.removeClass('erp-btn-open');
-                    } else {
-                        btn_group.addClass('erp-btn-open');
-                    }
-                } else {
-                    var btn_group  = $('.erp-btn-group');
-                    btn_group.removeClass('erp-btn-open');
-                }
-
-            }
         },
 
         afterNewLocation: function(e, res) {
@@ -562,3 +538,161 @@ jQuery.fn.serializeObject = function() {
     });
     return o;
 };
+
+// erpDropdown forked version of bootstrap dropdown
++function ($) {
+    'use strict';
+
+    // DROPDOWN CLASS DEFINITION
+    // =========================
+
+    var backdrop = '.erp-dropdown-backdrop'
+    var toggle   = '[data-toggle="erp-dropdown"]'
+    var ERPDropdown = function (element) {
+        $(element).on('click.erp.dropdown', this.toggle)
+    }
+
+    ERPDropdown.VERSION = '1.0.0' // bootstrap dropdown 3.3.7
+
+    function getParent($this) {
+        var selector = $this.attr('data-target')
+
+        if (!selector) {
+            selector = $this.attr('href')
+            selector = selector && /#[A-Za-z]/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+        }
+
+        var $parent = selector && $(selector)
+
+        return $parent && $parent.length ? $parent : $this.parent()
+    }
+
+    function clearMenus(e) {
+        if (e && e.which === 3) return
+        $(backdrop).remove()
+        $(toggle).each(function () {
+            var $this         = $(this)
+            var $parent       = getParent($this)
+            var relatedTarget = { relatedTarget: this }
+
+            if (!$parent.hasClass('open')) return
+
+            if (e && e.type == 'click' && /input|textarea/i.test(e.target.tagName) && $.contains($parent[0], e.target)) return
+
+            $parent.trigger(e = $.Event('hide.erp.dropdown', relatedTarget))
+
+            if (e.isDefaultPrevented()) return
+
+            $this.attr('aria-expanded', 'false')
+            $parent.removeClass('open').trigger($.Event('hidden.erp.dropdown', relatedTarget))
+        })
+    }
+
+    ERPDropdown.prototype.toggle = function (e) {
+        var $this = $(this)
+
+        if ($this.is('.disabled, :disabled')) return
+
+        var $parent  = getParent($this)
+        var isActive = $parent.hasClass('open')
+
+        clearMenus()
+
+        if (!isActive) {
+            if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
+                // if mobile we use a backdrop because click events don't delegate
+                $(document.createElement('div'))
+                    .addClass('erp-dropdown-backdrop')
+                    .insertAfter($(this))
+                    .on('click', clearMenus)
+            }
+
+            var relatedTarget = { relatedTarget: this }
+            $parent.trigger(e = $.Event('show.erp.dropdown', relatedTarget))
+
+            if (e.isDefaultPrevented()) return
+
+            $this
+                .trigger('focus')
+                .attr('aria-expanded', 'true')
+
+            $parent
+                .toggleClass('open')
+                .trigger($.Event('shown.erp.dropdown', relatedTarget))
+        }
+
+        return false
+    }
+
+    ERPDropdown.prototype.keydown = function (e) {
+        if (!/(38|40|27|32)/.test(e.which) || /input|textarea/i.test(e.target.tagName)) return
+
+        var $this = $(this)
+
+        e.preventDefault()
+        e.stopPropagation()
+
+        if ($this.is('.disabled, :disabled')) return
+
+        var $parent  = getParent($this)
+        var isActive = $parent.hasClass('open')
+
+        if (!isActive && e.which != 27 || isActive && e.which == 27) {
+            if (e.which == 27) $parent.find(toggle).trigger('focus')
+            return $this.trigger('click')
+        }
+
+        var desc = ' li:not(.disabled):visible a'
+        var $items = $parent.find('.erp-dropdown-menu' + desc)
+
+        if (!$items.length) return
+
+        var index = $items.index(e.target)
+
+        if (e.which == 38 && index > 0)                 index--         // up
+        if (e.which == 40 && index < $items.length - 1) index++         // down
+        if (!~index)                                    index = 0
+
+        $items.eq(index).trigger('focus')
+    }
+
+
+    // DROPDOWN PLUGIN DEFINITION
+    // ==========================
+
+    function Plugin(option) {
+        return this.each(function () {
+            var $this = $(this)
+            var data  = $this.data('erp.dropdown')
+
+            if (!data) $this.data('erp.dropdown', (data = new ERPDropdown(this)))
+            if (typeof option == 'string') data[option].call($this)
+        })
+    }
+
+    var old = $.fn.erpDropdown
+
+    $.fn.erpDropdown             = Plugin
+    $.fn.erpDropdown.Constructor = ERPDropdown
+
+
+    // DROPDOWN NO CONFLICT
+    // ====================
+
+    $.fn.erpDropdown.noConflict = function () {
+        $.fn.erpDropdown = old
+        return this
+    }
+
+
+    // APPLY TO STANDARD DROPDOWN ELEMENTS
+    // ===================================
+
+    $(document)
+        .on('click.erp.dropdown.data-api', clearMenus)
+        .on('click.erp.dropdown.data-api', '.erp-dropdown form', function (e) { e.stopPropagation() })
+        .on('click.erp.dropdown.data-api', toggle, ERPDropdown.prototype.toggle)
+        .on('keydown.erp.dropdown.data-api', toggle, ERPDropdown.prototype.keydown)
+        .on('keydown.erp.dropdown.data-api', '.erp-dropdown-menu', ERPDropdown.prototype.keydown)
+
+}(jQuery);

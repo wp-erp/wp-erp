@@ -8,8 +8,8 @@
         <a href="<?php echo add_query_arg( [ 'page'=>'erp-sales-contact-groups', 'groupaction' => 'view-subscriber' ], admin_url('admin.php') ); ?>" class="add-new-h2" title="<?php _e( 'View all subscriber contact', 'erp' ); ?>"><?php _e( 'View all subscriber', 'erp' ); ?></a>
     </h2>
 
-    <div class="list-table-wrap">
-        <div class="list-table-inner">
+    <div class="list-table-wrap erp-crm-contact-group-list-table-wrap">
+        <div class="list-table-inner erp-crm-contact-group-list-table-inner">
 
             <form method="get">
                 <input type="hidden" name="page" value="erp-sales-contact-groups">

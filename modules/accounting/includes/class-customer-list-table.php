@@ -19,7 +19,6 @@ class Customer_List_Table extends \WP_List_Table {
     protected $user_balance = null;
 
     function __construct() {
-
         $this->slug = 'erp-accounting-customers';
         $this->type = 'customer';
 

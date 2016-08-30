@@ -155,7 +155,12 @@ class Ajax_Handler {
      */
     function get_holiday() {
         $this->verify_nonce( 'wp-erp-hr-nonce' );
-        $holiday = erp_hr_get_holidays( array( 'id' => intval( $_POST['id'] ) ) );
+
+        $holiday = erp_hr_get_holidays( [
+            'id'     => absint( $_POST['id'] ),
+            'number' => -1
+        ] );
+
         $this->send_success( array( 'holiday' => $holiday ) );
     }
 

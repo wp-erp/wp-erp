@@ -580,6 +580,13 @@ class Ajax_Handler {
 
     }
 
+    /**
+     * Search crm users
+     *
+     * @since 1.1.0
+     *
+     * @return void
+     */
     public function search_crm_user() {
         $this->verify_nonce( 'wp-erp-crm-nonce' );
 
@@ -678,6 +685,11 @@ class Ajax_Handler {
     public function contact_group_create() {
         $this->verify_nonce( 'wp-erp-crm-contact-group' );
 
+        // Check permission
+        if ( ! current_user_can( 'erp_crm_create_groups' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
         if ( empty( $_POST['group_name'] ) ) {
             $this->send_error( __('Contact Group Name must be required', 'erp' ) );
         }
@@ -701,7 +713,6 @@ class Ajax_Handler {
      * @return json
      */
     public function contact_group_edit() {
-
         $this->verify_nonce( 'wp-erp-crm-nonce' );
 
         $query_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
@@ -719,10 +730,14 @@ class Ajax_Handler {
      * @return json
      */
     public function contact_group_delete() {
-
         $this->verify_nonce( 'wp-erp-crm-nonce' );
 
         $query_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+
+        // Check permission
+        if ( ! current_user_can( 'erp_crm_delete_groups' ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
 
         if ( ! $query_id ) {
             $this->send_error( __( 'Somthing wrong, Please try later', 'erp' ) );
@@ -936,6 +951,11 @@ class Ajax_Handler {
             $this->send_error( __( 'Customer not found', 'erp' ) );
         }
 
+        // Check permission
+        if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
         if ( isset( $postdata['message'] ) && empty( $postdata['message'] ) ) {
             $this->send_error( __( 'Content must be required', 'erp' ) );
         }
@@ -1120,6 +1140,10 @@ class Ajax_Handler {
     public function delete_customer_activity_feeds() {
         $this->verify_nonce( 'wp-erp-crm-customer-feed' );
 
+        if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
         if ( ! $_POST['feed_id'] ) {
             $this->send_error( __( 'Feeds Not found', 'erp' ) );
         }
@@ -1138,6 +1162,10 @@ class Ajax_Handler {
      */
     public function create_save_search() {
         $this->verify_nonce( 'wp-erp-crm-nonce' );
+
+        if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
 
         $postdata = $_POST['form_data'];
 
