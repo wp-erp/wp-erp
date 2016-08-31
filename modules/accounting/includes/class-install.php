@@ -195,7 +195,7 @@ class Install {
                 `address_2` varchar(255) DEFAULT NULL,
                 `city` varchar(100) DEFAULT NULL,
                 `state` varchar(100) DEFAULT NULL,
-                `zip` int(6) DEFAULT NULL,
+                `zip` varchar(10) DEFAULT NULL,
                 `country` varchar(5) DEFAULT NULL,
                 `fax` varchar(20) DEFAULT NULL,
                 `phone` varchar(20) DEFAULT NULL,

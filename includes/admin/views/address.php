@@ -54,10 +54,10 @@
 
     <li class="row">
         <?php erp_html_form_input( array(
-            'label'   => __( 'Postal / Zip Code', 'erp' ),
-            'name'    => 'zip',
-            'type'    => 'number',
-            'value'   => '{{ data.zip }}',
+            'label'     => __( 'Postal / Zip Code', 'erp' ),
+            'name'      => 'zip',
+            'type'      => 'text',
+            'value'     => '{{ data.zip }}',
         ) ); ?>
     </li>
 
