@@ -66,7 +66,7 @@ class Leave_Holiday_List_Table extends WP_List_Table {
                 return erp_format_date( $holiday->start );
 
             case 'end':
-                return erp_format_date( $holiday->end );
+                return erp_format_date( date( 'Y-m-d' , strtotime( $holiday->end . '-1day' ) ) );
 
             case 'duration':
 
@@ -222,7 +222,7 @@ class Leave_Holiday_List_Table extends WP_List_Table {
         }
 
         if ( isset( $_GET['to'] ) && $_GET['to'] != '' ) {
-            $args['to'] = date( 'Y-m-d', strtotime( $_GET['to'] ) );
+            $args['to'] = date( 'Y-m-d', strtotime( $_GET['to'] . '+1day' ) );
         } else {
             $args['to'] = date( 'Y-12-31' );
         }

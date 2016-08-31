@@ -1,5 +1,5 @@
 <?php
-$results = \WeDevs\ERP\HRM\Models\Leave_Holiday::select('id', 'start', 'end')->get();
+$results = \WeDevs\ERP\HRM\Models\Leave_Holiday::select('id', 'end')->get();
         
 if ( $results ) {
     foreach ( $results as $key => $result ) {
