@@ -503,10 +503,17 @@ function erp_insert_people( $args = array() ) {
             if ( null == $people_obj ) {
                 $new_people = \WeDevs\ERP\Framework\Models\People::create( [ 'user_id' => $user->ID, 'created_by' => get_current_user_id(), 'created' => current_time('mysql') ] );
                 $new_people->assignType( $type_obj );
-                return $new_people->id;
+                $people_id = $new_people->id;
             } else {
-                return $people_obj->id;
+                $people_id = $people_obj->id;
             }
+
+            $args['wp_user'] = $user;
+
+            do_action( 'erp_create_new_people', $people_id, $args );
+
+            return $people_id;
+
         } else {
             $people_obj = \WeDevs\ERP\Framework\Models\People::whereEmail( $args['email'] )->first();
 
