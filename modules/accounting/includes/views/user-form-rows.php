@@ -24,7 +24,7 @@
         $item_type = in_array( 'customer', $item->types ) ? 'customer' : 'vendor';
     };
 
-    
+
 ?>
 
 <div id="message" class="info notice notice-info" style="display: none;">
@@ -225,15 +225,18 @@
             'value'       => isset( $item->country ) ? $item->country : '',
         ) ); ?>
     </li>
-    <li class="erp-form-field row-currency">
-        <?php erp_html_form_input( array(
-            'label'       => __( 'User Currency', 'erp' ),
-            'name'        => 'currency',
-            'id'          => 'currency',
-            'required'    => false,
-            'type'        => 'select',
-            'options'     => erp_get_currencies(),
-            'value'       => isset( $item->currency ) ? $item->currency : '',
-        ) ); ?>
-    </li>
+
+    <!-- <li class="erp-form-field row-currency"> -->
+        <?php
+            // erp_html_form_input( array(
+            //     'label'       => __( 'User Currency', 'erp' ),
+            //     'name'        => 'currency',
+            //     'id'          => 'currency',
+            //     'required'    => false,
+            //     'type'        => 'select',
+            //     'options'     => erp_get_currencies(),
+            //     'value'       => isset( $item->currency ) ? $item->currency : '',
+            // ) );
+        ?>
+    <!-- </li> -->
 </ul>
