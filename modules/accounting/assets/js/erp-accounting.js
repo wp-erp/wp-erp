@@ -813,9 +813,26 @@
                 placeholder: $(this).attr('data-placeholder'),
             });
 
+
             $('#erp-ac-hidden-new-payment').find('.erp-select2').select2('destroy');
             $('#erp-ac-new-payment-voucher').find('.erp-select2').select2('destroy');
             // $('#erp-ac-hidden-new-payment').find('span.select2').remove();
+
+            ERP_Accounting.setCountryStateValue();
+        },
+
+        setCountryStateValue: function() {
+            $('select.erp-country-select').trigger('change');
+
+            var element = $( 'ul.erp-form-fields' ).find( 'li.row-state' ),
+                selectedVal = element.data('selected');
+
+            if ( selectedVal !== '' ) {
+                element.find( 'select' ).val( selectedVal );
+            }
+
+            $('select.erp-state-select').trigger('change');
+
         },
 
         dueDateField: function() {
@@ -1478,7 +1495,7 @@
 
                 error: function() {
                     var clone_form = $('.erp-ac-receive-payment-table-clone').html();
-                    
+
                     if ( clone_form == '' ) {
                         return;
                     }
@@ -1486,7 +1503,7 @@
                     $('.erp-form').find('.erp-ac-receive-payment-table').html(clone_form);
                     $('.erp-form').find( 'input[name="submit_erp_ac_trans_draft"]' ).show();
                     $('.erp-select2').select2();
-                    
+
                     ERP_Accounting.incrementField();
                     ERP_Accounting.initFields();
                 }
@@ -1563,7 +1580,7 @@
                     var line_tax   = parseFloat('0.00');
                     var tax_amount = parseFloat('0.00');
 
-                    
+
 
                     qty        = ERP_Accounting.calNumNormal( qty );
                     line_price = ERP_Accounting.calNumNormal( line_price );
