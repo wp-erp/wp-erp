@@ -86,7 +86,7 @@ function erp_ac_get_all_transaction( $args = array() ) {
         }
 
         if ( isset( $args['status'] ) && $args['status'] == 'deleted' ) {
-            //$transaction = $transaction->where( 'status', '==', 'deleted' );            
+            //$transaction = $transaction->where( 'status', '==', 'deleted' );
         } else {
             $transaction = $transaction->where( 'status', '!=', 'deleted' );
         }
@@ -148,7 +148,7 @@ function erp_ac_get_all_transaction( $args = array() ) {
                 ->orderBy( 'created_at', $args['order'] )
                 ->get()
                 ->toArray();
-                
+
         }
 
         if ( $args['output_by'] == 'object' ) {
@@ -208,13 +208,13 @@ function erp_ac_get_transaction( $id = 0 ) {
 
 /**
  * Chck from DB is invoice number unique or not
- * 
- * @param  string  $invoice_number 
- * @param  stirng  $form_type      
- * @param  boolean $is_update      
- * @param  mixed $trns_id        
- * 
- * @return boolean                  
+ *
+ * @param  string  $invoice_number
+ * @param  stirng  $form_type
+ * @param  boolean $is_update
+ * @param  mixed $trns_id
+ *
+ * @return boolean
  */
 function erp_ac_check_invoice_number_unique( $invoice, $form_type, $is_update = false, $trns_id = false ) {
     $invoice_format = erp_ac_get_invoice_format( $form_type );
@@ -227,35 +227,35 @@ function erp_ac_check_invoice_number_unique( $invoice, $form_type, $is_update = 
                 ->where( 'form_type', '=', $form_type )
                 ->where( 'id', '!=', $trns_id )
                 ->get()
-                ->toArray(); 
+                ->toArray();
         } else {
             $trans = $trans->where( 'invoice_number', '=', $invoice_number )
                 ->where( 'form_type', '=', $form_type )
                 ->where( 'id', '!=', $trns_id )
                 ->get()
-                ->toArray(); 
+                ->toArray();
         }
 
     } else {
-        
+
         $trans = new \WeDevs\ERP\Accounting\Model\Transaction();
         if ( $invoice_number == 0 ) {
             $trans = $trans->where( 'invoice_format', '=', $invoice )
                 ->where( 'form_type', '=', $form_type )
                 ->get()
-                ->toArray(); 
+                ->toArray();
         } else {
             $trans = $trans->where( 'invoice_number', '=', $invoice_number )
                 ->where( 'form_type', '=', $form_type )
                 ->get()
-                ->toArray(); 
+                ->toArray();
         }
     }
-    
+
     if ( $trans ) {
         return false;
-    } 
-    
+    }
+
     return true;
 }
 
@@ -358,7 +358,7 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
     );
 
     $args = wp_parse_args( $args, $defaults ); //strpos($mystring, $findme);
-    
+
     $is_update  = $args['id'] && ! is_array( $args['id'] ) ? true : false;
 
     $permission = er_ac_insert_transaction_permiss( $args, $is_update );
@@ -368,7 +368,7 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
     }
 
     $invoice = erp_ac_get_invoice_num_fromat_from_submit_invoice( $args['invoice_number'], $args['invoice_format'] );
-    
+
     if ( $invoice == 0 ) {
         $args['invoice_format'] = $args['invoice_number'];
         $args['invoice_number'] = 0;
@@ -546,6 +546,9 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
         }
 
         do_action( 'erp_ac_new_transaction', $trans_id, $args, $items );
+
+        // Transaction type hook eg: erp_ac_new_transaction_sales
+        do_action( "erp_ac_new_transaction_{$args['type']}", $trans_id, $args, $items );
 
         return $trans_id;
 
@@ -783,7 +786,7 @@ function erp_ac_tran_from_header() {
 }
 
 function erp_ac_get_btn_status( $postdata ) {
-    
+
     if ( $postdata['form_type'] == 'payment' ) {
         return erp_ac_get_status_according_with_btn( $postdata['btn_status'] );
     } else if ( $postdata['form_type'] == 'invoice' || $postdata['form_type'] == 'vendor_credit' ) {
@@ -795,7 +798,7 @@ function erp_ac_get_btn_status( $postdata ) {
 
 /**
  * Get transaction submit data status for payment voucher
- * @param  string $btn 
+ * @param  string $btn
  * @return string
  */
 function erp_ac_get_voucher_status_according_with_btn( $btn ) {
@@ -808,9 +811,9 @@ function erp_ac_get_voucher_status_according_with_btn( $btn ) {
 }
 
 /**
- * Get transaction submit data status for payment 
- * @param  string $btn 
- * @return string      
+ * Get transaction submit data status for payment
+ * @param  string $btn
+ * @return string
  */
 function erp_ac_get_status_according_with_btn( $btn ) {
     $button = [
@@ -823,8 +826,8 @@ function erp_ac_get_status_according_with_btn( $btn ) {
 
 /**
  * Get transaction submit data status for payment invoice and vendor credit
- * @param  string $btn 
- * @return string      
+ * @param  string $btn
+ * @return string
  */
 function erp_ac_get_status_invoice_according_with_btn( $btn ) {
     $button = [
@@ -853,7 +856,7 @@ function erp_ac_update_transaction( $id, $args ) {
 }
 
 /**
- * Remove transaction. Only for draft and pending 
+ * Remove transaction. Only for draft and pending
  *
  * @param  int $id
  *
@@ -869,7 +872,7 @@ function erp_ac_remove_transaction( $id ) {
 }
 
 /**
- * Vendor lists 
+ * Vendor lists
  *
  * @since  1.1.1
  *

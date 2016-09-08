@@ -1265,7 +1265,6 @@ function erp_process_import_export() {
         return;
     }
 
-
     $is_crm_activated = erp_is_module_active( 'crm' );
     $is_hrm_activated = erp_is_module_active( 'hrm' );
 
@@ -1422,7 +1421,9 @@ function erp_process_import_export() {
 
                             if ( ! empty( $field_builder_contacts_fields ) ) {
                                 foreach ( $field_builder_contacts_fields as $field ) {
-                                    erp_people_update_meta( $item_insert_id, $field, $data[$x][$field] );
+                                    if ( isset( $data[$x][$field] ) ) {
+                                        erp_people_update_meta( $item_insert_id, $field, $data[$x][$field] );
+                                    }
                                 }
                             }
                         }
