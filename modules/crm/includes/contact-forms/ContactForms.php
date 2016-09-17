@@ -52,7 +52,7 @@ trait ContactForms {
      */
     public function get_crm_contact_options() {
         $options = [];
-        $contact = new Contact();
+        $contact = new Contact( null, 'contact' );
         $crm_options = $contact->to_array();
 
         $ignore_options = apply_filters( 'erp_contact_forms_ignore_options', [

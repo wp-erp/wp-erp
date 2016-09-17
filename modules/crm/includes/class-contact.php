@@ -386,4 +386,3 @@ class Contact extends \WeDevs\ERP\People {
         return $contact_owner;
     }
 }
-
