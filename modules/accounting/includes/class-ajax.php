@@ -731,7 +731,7 @@ class Ajax_Handler {
         }
 
         ob_start();
-        include_once WPERP_ACCOUNTING_VIEWS . '/sales/bank-ransfer-form.php';
+        include_once WPERP_ACCOUNTING_VIEWS . '/sales/bank-transfer-form.php';
         $this->send_success( ob_get_clean() );
     }
 
