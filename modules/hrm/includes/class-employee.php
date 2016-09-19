@@ -514,15 +514,15 @@ class Employee {
 
         switch ( $which ) {
             case 'mobile':
-                $phone = $this->user->mobile;
+                $phone = isset( $this->user->mobile ) ? $this->user->mobile : '';
                 break;
 
             case 'phone':
-                $phone = $this->user->phone;
+                $phone = isset( $this->user->phone ) ? $this->user->phone : '';
                 break;
 
             default:
-                $phone = $this->user->work_phone;
+                $phone = isset( $this->user->work_phone ) ? $this->user->work_phone : '';
                 break;
         }
 
