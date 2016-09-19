@@ -5,7 +5,7 @@
  * Plugin URI: https://wperp.com
  * Author: weDevs
  * Author URI: https://wedevs.com
- * Version: 1.1.4
+ * Version: 1.1.5
  * License: GPL2
  * Text Domain: erp
  * Domain Path: /i18n/languages/
