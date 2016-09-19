@@ -80,6 +80,7 @@ function erp_get_currencies() {
         'GBP' => __( 'Pounds Sterling', 'erp' ),
         'RON' => __( 'Romanian Leu', 'erp' ),
         'RUB' => __( 'Russian Ruble', 'erp' ),
+        'SR'  => __( 'Saudi Riyal', 'erp'),
         'SGD' => __( 'Singapore Dollar', 'erp' ),
         'ZAR' => __( 'South African rand', 'erp' ),
         'SEK' => __( 'Swedish Krona', 'erp' ),
@@ -137,18 +138,10 @@ function erp_get_currencies_dropdown( $selected = '' ) {
 function erp_get_currency_symbol( $currency = '' ) {
 
     switch ( $currency ) {
-        case 'AED' :
-            $currency_symbol = 'د.إ';
-            break;
-        case 'BDT':
-            $currency_symbol = '&#2547;';
-            break;
-        case 'BRL' :
-            $currency_symbol = '&#82;&#36;';
-            break;
-        case 'BGN' :
-            $currency_symbol = '&#1083;&#1074;.';
-            break;
+        case 'AED' : $currency_symbol = 'د.إ'; break;
+        case 'BDT' : $currency_symbol = '&#2547;'; break;
+        case 'BRL' : $currency_symbol = '&#82;&#36;'; break;
+        case 'BGN' : $currency_symbol = '&#1083;&#1074;.'; break;
         case 'AUD' :
         case 'AZD' :
         case 'CAD' :
@@ -161,17 +154,13 @@ function erp_get_currency_symbol( $currency = '' ) {
         case 'USD' :
             $currency_symbol = '&#36;';
             break;
-        case 'EUR' :
-            $currency_symbol = '&euro;';
-            break;
+        case 'EUR' : $currency_symbol = '&euro;'; break;
         case 'CNY' :
         case 'RMB' :
         case 'JPY' :
             $currency_symbol = '&yen;';
             break;
-        case 'RUB' :
-            $currency_symbol = '&#1088;&#1091;&#1073;.';
-            break;
+        case 'RUB' : $currency_symbol = '&#1088;&#1091;&#1073;.'; break;
         case 'KRW' : $currency_symbol = '&#8361;'; break;
         case 'PYG' : $currency_symbol = '&#8370;'; break;
         case 'TRY' : $currency_symbol = '&#8378;'; break;
@@ -191,6 +180,7 @@ function erp_get_currency_symbol( $currency = '' ) {
         case 'PHP' : $currency_symbol = '&#8369;'; break;
         case 'PLN' : $currency_symbol = '&#122;&#322;'; break;
         case 'SEK' : $currency_symbol = '&#107;&#114;'; break;
+        case 'SR'  : $currency_symbol = 'SR'; break;
         case 'CHF' : $currency_symbol = '&#67;&#72;&#70;'; break;
         case 'TWD' : $currency_symbol = '&#78;&#84;&#36;'; break;
         case 'THB' : $currency_symbol = '&#3647;'; break;
@@ -1265,7 +1255,6 @@ function erp_process_import_export() {
         return;
     }
 
-
     $is_crm_activated = erp_is_module_active( 'crm' );
     $is_hrm_activated = erp_is_module_active( 'hrm' );
 
@@ -1422,7 +1411,9 @@ function erp_process_import_export() {
 
                             if ( ! empty( $field_builder_contacts_fields ) ) {
                                 foreach ( $field_builder_contacts_fields as $field ) {
-                                    erp_people_update_meta( $item_insert_id, $field, $data[$x][$field] );
+                                    if ( isset( $data[$x][$field] ) ) {
+                                        erp_people_update_meta( $item_insert_id, $field, $data[$x][$field] );
+                                    }
                                 }
                             }
                         }

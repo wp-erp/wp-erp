@@ -922,10 +922,6 @@
 
                 showPermanentDelete: function( item ) {
                     if ( this.$refs.vtable.currentTopNavFilter == 'trash' ) {
-                        if ( wpErpCrm.isAgent ) {
-                            return false;
-                        }
-
                         if ( typeof item == 'undefined' ) {
                             return true;
                         }

@@ -282,7 +282,7 @@ class Journal_Transactions extends \WP_List_Table {
             'offset'  => $offset,
             'number'  => $per_page,
             'orderby' => 'issue_date',
-            'order'   => 'DESC'
+            'order'   => 'ASC'
         );
 
         if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {
@@ -314,7 +314,7 @@ class Journal_Transactions extends \WP_List_Table {
 
         // count = -1
         $args['number'] = '-1';
-        
+
         $all_items = erp_ac_get_ledger_transactions( $args );
 
         $this->set_pagination_args( array(

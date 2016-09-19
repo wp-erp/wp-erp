@@ -188,13 +188,12 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
 
         <div class="erp-ac-btn-group-wrap">
              <div class="erp-button-bar-left">
-                <div class="erp-btn-group">
-                    <button  data-redirect="single_page" data-btn_status="payment" type="button" class="erp-drop-down-btn button button-primary erp-ac-trns-form-submit-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="button-group erp-button-group">
+                    <button  data-redirect="single_page" data-btn_status="payment" type="button" class="button button-primary erp-ac-trns-form-submit-btn">
                         <?php _e( 'Payment', 'erp' ); ?>
                     </button>
-                    <button type="button" class="erp-drop-down-btn erp-drop-down-child-btn button button-primary">
-                        <span class="erp-caret"></span>
-                        <span class="erp-sr-only"><?php _e( 'Toggle Dropdown', 'erp' ); ?></span>
+                    <button type="button" class="button button-primary erp-dropdown-toggle" data-toggle="erp-dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="caret"></span>
                     </button>
                     <ul class="erp-dropdown-menu">
                         <li><a class="erp-ac-trns-form-submit-btn" data-redirect="single_page" data-btn_status="payment" href="#"><?php _e( 'Payment', 'erp' ); ?></a></li>
@@ -216,10 +215,10 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                         <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="save_and_add_another" href="#"><?php _e( 'Save & add another', 'erp' ); ?></a></li>
                     </ul>
                 </div> -->
-            </div> 
+            </div>
 
             <div class="erp-button-bar-right">
-                
+
 
                 <a href="<?php echo esc_url( $cancel_url ); ?>" class="button"><?php _e( 'Cancel', 'erp' ); ?></a>
             </div>

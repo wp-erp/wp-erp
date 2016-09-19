@@ -24,7 +24,7 @@
         $item_type = in_array( 'customer', $item->types ) ? 'customer' : 'vendor';
     };
 
-    
+
 ?>
 
 <div id="message" class="info notice notice-info" style="display: none;">
@@ -189,18 +189,30 @@
             'value'       => isset( $item->city ) ? $item->city : '',
         ) ); ?>
     </li>
-    <li class="erp-form-field row-state">
+
+    <li class="erp-form-field row-country">
+        <label for="erp-popup-country"><?php _e( 'Country', 'erp' ); ?></label>
+        <select name="country" id="erp-popup-country" class="erp-country-select erp-select2" data-parent="ul" style="width:350px;">
+            <?php
+                $country = \WeDevs\ERP\Countries::instance();
+                $selected_country = isset( $item->country ) ? $item->country : '';
+                echo $country->country_dropdown( $selected_country );
+            ?>
+        </select>
+    </li>
+
+    <li class="erp-form-field row-state" data-selected="<?php echo isset( $item->state ) ? $item->state : ''; ?>">
         <?php erp_html_form_input( array(
-            'label'       => __( 'State', 'erp' ),
-            'name'        => 'state',
-            'id'          => 'state',
-            'required'    => false,
-            'type'        => 'text',
-            'placeholder' => __( 'State/Province', 'erp' ),
-            'class'       => 'regular-text',
-            'value'       => isset( $item->state ) ? $item->state : '',
+            'label'   => __( 'Province / State', 'erp' ),
+            'name'    => 'state',
+            'id'      => 'erp-state',
+            'type'    => 'select',
+            'class'   => 'erp-state-select erp-select2',
+            'options' => array( '' => __( '- Select -', 'erp' ) ),
+            'custom_attr' => array( 'style' => 'width:350px;' )
         ) ); ?>
     </li>
+
     <li class="erp-form-field row-postal-code">
         <?php erp_html_form_input( array(
             'label'       => __( 'Post Code', 'erp' ),
@@ -213,27 +225,18 @@
             'value'       => isset( $item->postal_code ) ? $item->postal_code : '',
         ) ); ?>
     </li>
-    <li class="erp-form-field row-country">
-        <?php erp_html_form_input( array(
-            'label'       => __( 'Country', 'erp' ),
-            'name'        => 'country',
-            'id'          => 'country',
-            'required'    => false,
-            'type'        => 'text',
-            'placeholder' => __( 'Country', 'erp' ),
-            'class'       => 'regular-text',
-            'value'       => isset( $item->country ) ? $item->country : '',
-        ) ); ?>
-    </li>
-    <li class="erp-form-field row-currency">
-        <?php erp_html_form_input( array(
-            'label'       => __( 'User Currency', 'erp' ),
-            'name'        => 'currency',
-            'id'          => 'currency',
-            'required'    => false,
-            'type'        => 'select',
-            'options'     => erp_get_currencies(),
-            'value'       => isset( $item->currency ) ? $item->currency : '',
-        ) ); ?>
-    </li>
+
+    <!-- <li class="erp-form-field row-currency"> -->
+        <?php
+            // erp_html_form_input( array(
+            //     'label'       => __( 'User Currency', 'erp' ),
+            //     'name'        => 'currency',
+            //     'id'          => 'currency',
+            //     'required'    => false,
+            //     'type'        => 'select',
+            //     'options'     => erp_get_currencies(),
+            //     'value'       => isset( $item->currency ) ? $item->currency : '',
+            // ) );
+        ?>
+    <!-- </li> -->
 </ul>

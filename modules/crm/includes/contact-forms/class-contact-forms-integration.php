@@ -101,13 +101,21 @@ class Contact_Forms_Integration {
                             $contact[ 'first_name' ] = implode( ' ' , $name_arr );
                         }
                     } else {
-                        $contact[ $option ] = $data[ $field ];
+                        // check for nested options like social.facebook
+                        $is_nested = preg_match_all( '/(.*)\.(.*)/', $option, $match );
+
+                        if ( $is_nested ) {
+                            $contact[ $match[1][0] ][ $match[2][0] ] = $data[ $field ];
+                        } else {
+                            $contact[ $option ] = $data[ $field ];
+                        }
+
                     }
                 }
             }
 
             if ( $people_id = erp_insert_people( $contact ) ) {
-                $customer = new \WeDevs\ERP\CRM\Contact( absint( $people_id ) );
+                $customer = new \WeDevs\ERP\CRM\Contact( absint( $people_id ), 'contact' );
 
                 $customer->update_meta( 'life_stage', 'lead' );
                 $customer->update_meta( 'source', 'contact_form' );
@@ -119,6 +127,26 @@ class Contact_Forms_Integration {
                 if ( ! empty( $cfi_settings[ $plugin ][ $form_id ]['contact_group'] ) ) {
                     $groups = array( $cfi_settings[ $plugin ][ $form_id ]['contact_group'] );
                     erp_crm_edit_contact_subscriber( $groups, $people_id );
+                }
+
+                // update meta data
+                $people = new \WeDevs\ERP\Framework\Models\People();
+                $people_columns = $people->getFillable();
+                $people_columns = array_merge( $people_columns, [ 'type', 'id' ] );
+
+                foreach ( $contact as $option => $value ) {
+                    if ( ! in_array( $option, $people_columns ) ) {
+
+                        if ( is_array( $value ) ) {
+                            foreach ( $value as $child_option => $child_value ) {
+                                $customer->update_meta( $child_option, $child_value );
+                            }
+
+                        } else {
+                            $customer->update_meta( $option, $value );
+                        }
+
+                    }
                 }
             }
 

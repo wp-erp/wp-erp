@@ -79,7 +79,7 @@ class Ajax {
         $address_2     = isset( $_POST['address_2'] ) ? sanitize_text_field( $_POST['address_2'] ) : '';
         $city          = isset( $_POST['city'] ) ? sanitize_text_field( $_POST['city'] ) : '';
         $state         = isset( $_POST['state'] ) ? sanitize_text_field( $_POST['state'] ) : '';
-        $zip           = isset( $_POST['zip'] ) ? intval( $_POST['zip'] ) : '';
+        $zip           = isset( $_POST['zip'] ) ? sanitize_text_field( $_POST['zip'] )  : '';
         $country       = isset( $_POST['country'] ) ? sanitize_text_field( $_POST['country'] ) : '';
         $location_id   = isset( $_POST['location_id'] ) ? intval( $_POST['location_id'] ) : 0;
 

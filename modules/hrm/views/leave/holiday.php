@@ -27,9 +27,8 @@ class Leave_Holiday_List_Table extends WP_List_Table {
     function extra_tablenav( $which ) {
         if ( $which != 'top' ) return;
 
-        $get_holidays = erp_hr_get_holidays();
-        $from         = isset( $_GET['from'] ) ? $_GET['from'] : '';
-        $to           = isset( $_GET['to'] ) ? $_GET['to'] : '';
+        $from         = isset( $_GET['from'] ) ? $_GET['from'] : date( 'Y-01-01' );
+        $to           = isset( $_GET['to'] ) ? $_GET['to'] : date( 'Y-12-31' );
         ?>
 
         <label class="screen-reader-text" for="new_role"><?php _e( 'From', 'erp' ) ?></label>
@@ -67,11 +66,11 @@ class Leave_Holiday_List_Table extends WP_List_Table {
                 return erp_format_date( $holiday->start );
 
             case 'end':
-                return erp_format_date( $holiday->end );
+                return erp_format_date( date( 'Y-m-d' , strtotime( $holiday->end . '-1day' ) ) );
 
             case 'duration':
 
-                $days = erp_date_duration( $holiday->start, $holiday->end ) + 1;
+                $days = erp_date_duration( $holiday->start, $holiday->end );
                 return $days .' '. _n( __( 'day', 'erp' ), __( 'days', 'erp' ), $days );
 
             case 'description':
@@ -139,6 +138,7 @@ class Leave_Holiday_List_Table extends WP_List_Table {
     function get_sortable_columns() {
         $sortable_columns = array(
             'title' => array( 'title', true ),
+            'start' => array( 'start', true ),
         );
 
         return $sortable_columns;
@@ -207,6 +207,8 @@ class Leave_Holiday_List_Table extends WP_List_Table {
         $args = array(
             'offset' => $offset,
             'number' => $per_page,
+            'orderby' => 'start',
+            'order' => 'ASC'
         );
 
         if ( ! empty( $_GET['s'] ) ) {
@@ -215,10 +217,14 @@ class Leave_Holiday_List_Table extends WP_List_Table {
 
         if ( isset( $_GET['from'] ) && $_GET['from'] != '' ) {
             $args['from'] = date( 'Y-m-d', strtotime( $_GET['from'] ) );
+        } else {
+            $args['from'] = date( 'Y-01-01' );
         }
 
         if ( isset( $_GET['to'] ) && $_GET['to'] != '' ) {
-            $args['to'] = date( 'Y-m-d', strtotime( $_GET['to'] ) );
+            $args['to'] = date( 'Y-m-d', strtotime( $_GET['to'] . '+1day' ) );
+        } else {
+            $args['to'] = date( 'Y-12-31' );
         }
 
         if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {

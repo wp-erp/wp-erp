@@ -282,8 +282,8 @@ class PDF_Invoicer extends FPDF {
 			$this->SetTextColor( 100, 100, 100 );
 			$this->Ln( 7 );
 			for ( $i = 1; $i < max( count( $this->from ), count( $this->to ) ); $i++ ) {
-				$this->Cell( $width, $lineheight, iconv( "UTF-8", "ISO-8859-1", $this->from[$i] ), 0, 0, 'L' );
-				$this->Cell( 0, $lineheight, iconv( "UTF-8", "ISO-8859-1", $this->to[$i] ), 0, 0, 'L' );
+				$this->Cell( $width, $lineheight, iconv( "UTF-8", "ISO-8859-1", isset( $this->from[$i] ) ? $this->from[$i] : '' ), 0, 0, 'L' );
+				$this->Cell( 0, $lineheight, iconv( "UTF-8", "ISO-8859-1", isset( $this->to[$i] ) ? $this->to[$i] : '' ), 0, 0, 'L' );
 				$this->Ln( 5 );
 			}
 			$this->Ln( -6 );
@@ -292,7 +292,7 @@ class PDF_Invoicer extends FPDF {
 
         $this->columns = $this->get_table_headers_count();
 
-		
+
 		//Table header
 		if ( !isset( $this->productsEnded ) ) {
 			$width_other = ( $this->document['w'] - $this->margins['l'] - $this->margins['r'] - $this->first_column_width - ( $this->columns * $this->columnSpacing ) ) / ( $this->columns - 1 );
@@ -452,7 +452,7 @@ class PDF_Invoicer extends FPDF {
 				$this->Ln( 18 );
 			}
 		}
-		
+
 		//Add information
 		foreach ( $this->addText as $text ) {
 			if ( $text[0] == 'title' ) {
@@ -482,7 +482,7 @@ class PDF_Invoicer extends FPDF {
 		$this->Cell( 0, 10, $this->footernote, 0, 0, 'L' );
 		$this->Cell( 0, 10, $this->l['page'] . ' ' . $this->PageNo() . ' ' . 'of' . ' {nb}', 0, 0, 'R' );
 	}
-	
+
 	/*******************************************************************************
 	*                                                                              *
 	*                               Private methods                                *

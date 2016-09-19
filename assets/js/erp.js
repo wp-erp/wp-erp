@@ -269,7 +269,10 @@ window.wperp = window.wperp || {};
 
             // on popup, country change event
             $( 'body' ).on('change', 'select.erp-country-select', this.populateState );
+
             $( 'body' ).on( 'erp-hr-after-new-location', this.afterNewLocation );
+
+            // $('select.erp-country-select').trigger('change');
 
             $( '.erp-hr-audit-log' ).on( 'click', 'a.erp-audit-log-view-changes', this.viewLogChanges );
             $( 'body').on( 'change', '#filter_duration', this.customFilter );
@@ -385,6 +388,7 @@ window.wperp = window.wperp || {};
             if ( typeof wpErpCountries === 'undefined' ) {
                 return false;
             }
+
 
             var self = $(this),
                 country = self.val(),

@@ -15,7 +15,7 @@
     'address_1' => $vendor->street_1,
     'address_2' => '',
     'city'      => $vendor->city,
-    'state'     => $vendor->state,
+    'state'     => erp_get_state_name( $vendor->country, $vendor->state ),
     'postcode'  => $vendor->postcode,
-    'country'   => $vendor->country,
+    'country'   => erp_get_country_name( $vendor->country ),
 ]); ?>
