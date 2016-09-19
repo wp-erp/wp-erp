@@ -490,7 +490,7 @@
              * @return {void}
              */
             reload: function() {
-                $( '.erp-hr-employees' ).load( window.location.href + ' .erp-hr-employees' );
+                $( '.erp-hr-employee-table-wrap' ).load( window.location.href + ' .erp-hr-employee-table-wrap-inner' );
             },
 
             /**
