@@ -9,8 +9,8 @@
     }
     ?>
     </h2>
-    <div class="erp-single-container" id="erp-single-container-wrap">
-        <div class="erp-area-left full-width">
+    <div class="erp-single-container erp-hr-employees-wrap" id="erp-single-container-wrap">
+        <div class="erp-area-left full-width erp-hr-employees-wrap-inner">
             <div id="erp-area-left-inner">
 
                 <script type="text/javascript">

@@ -490,7 +490,7 @@
              * @return {void}
              */
             reload: function() {
-                $( '.erp-hr-employee-table-wrap' ).load( window.location.href + ' .erp-hr-employee-table-wrap-inner' );
+                $( '.erp-hr-employees-wrap' ).load( window.location.href + ' .erp-hr-employees-wrap-inner' );
             },
 
             /**
@@ -1046,6 +1046,7 @@
                     }
                 });
             },
+
             showLoadMoreBtn: function(){
                 if( $('ul.notes-list li').length >= 10 ){
                     $('.wperp-load-more-btn').show();
@@ -1053,6 +1054,7 @@
                     $('.wperp-load-more-btn').hide();
                 }
             },
+
             loadNotes: function(e) {
                 e.preventDefault();
 
