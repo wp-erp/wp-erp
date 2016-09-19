@@ -1021,6 +1021,7 @@
                     submit = form.find( 'input[type=submit]');
 
                 submit.attr('disabled', 'disabled');
+                form.find('.erp-note-loader').show();
 
                 wp.ajax.send({
                     data: form.serializeObject(),
@@ -1036,6 +1037,7 @@
                                 $('ul.notes-list li').last().remove();
                             }
                             WeDevs_ERP_HR.employee.showLoadMoreBtn() ;
+                            form.find('.erp-note-loader').hide();
                             form.find('textarea').val('');
                             submit.removeAttr( 'disabled' );
                         });
@@ -1043,6 +1045,7 @@
                     },
                     error: function() {
                         submit.removeAttr('disabled');
+                        form.find('.erp-note-loader').hide();
                     }
                 });
             },

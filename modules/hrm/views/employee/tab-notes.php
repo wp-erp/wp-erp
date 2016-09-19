@@ -15,6 +15,7 @@
 
         <?php wp_nonce_field( 'wp-erp-hr-employee-nonce' ); ?>
         <?php submit_button( __( 'Add Note', 'erp' ), 'primary' ); ?>
+        <span class="erp-loader erp-note-loader"></span>
     </form>
 
     <?php
