@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: WP ERP
- * Description: An Open Source ERP Solution for WordPress. Built-in HR and CRM system for WordPress
+ * Description: An Open Source ERP Solution for WordPress. Built-in HR, CRM and Accounting system for WordPress
  * Plugin URI: https://wperp.com
  * Author: weDevs
  * Author URI: https://wedevs.com
@@ -52,7 +52,7 @@ final class WeDevs_ERP {
      *
      * @var string
      */
-    public $version = '1.1.4';
+    public $version = '1.1.5';
 
     /**
      * Minimum PHP version required
