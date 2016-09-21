@@ -61,7 +61,6 @@ class Scripts {
         wp_register_script( 'erp-timepicker', $vendor . '/timepicker/jquery.timepicker.min.js', array( 'jquery', 'erp-momentjs' ), $this->version, true );
         wp_register_script( 'erp-vuejs', $vendor . '/vue/vue' . $this->suffix . '.js', array( 'jquery' ), $this->version, true );
         wp_register_script( 'erp-trix-editor', $vendor . '/trix/trix.js', array( 'jquery' ), $this->version, true );
-        wp_register_script( 'erp-chosen', $vendor . '/chosen/chosen.jquery' . $this->suffix . '.js', array( 'jquery' ), $this->version, true );
         wp_register_script( 'erp-nprogress', $vendor . '/nprogress/nprogress.js', array( 'jquery' ), $this->version, true );
 
         // sweet alert
@@ -113,7 +112,6 @@ class Scripts {
 
         // jquery UI
         wp_register_style( 'jquery-ui', $vendor . '/jquery-ui/jquery-ui-1.9.1.custom.css' );
-        wp_register_style( 'erp-chosen', $vendor . '/chosen/chosen' . $this->suffix . '.css' );
 
         // sweet alert
         wp_register_style( 'erp-sweetalert', $vendor . '/sweetalert/sweetalert.css', false, $this->version );
@@ -134,7 +132,6 @@ class Scripts {
         $screen = get_current_screen();
 
         wp_enqueue_script( 'erp-select2' );
-        wp_enqueue_script( 'erp-chosen' );
         wp_enqueue_script( 'erp-popup' );
         wp_enqueue_script( 'erp-script' );
 
@@ -182,7 +179,6 @@ class Scripts {
         wp_enqueue_style( 'erp-fontawesome' );
         wp_enqueue_style( 'erp-select2' );
         wp_enqueue_style( 'jquery-ui' );
-        wp_enqueue_style( 'erp-chosen' );
 
         wp_enqueue_style( 'erp-styles' );
     }

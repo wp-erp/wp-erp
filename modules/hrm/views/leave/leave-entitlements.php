@@ -51,7 +51,7 @@ $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : '';
                 'label'    => __( 'Leave Policy', 'erp' ),
                 'name'     => 'leave_policy',
                 'type'     => 'select',
-                'class'    => 'chosen-select',
+                'class'    => 'leave-policy-select',
                 'tag'      => 'li',
                 'required' => true,
                 'options'  => array( 0 => __( '- Select -', 'erp' ) ) + erp_hr_leave_get_policies_dropdown_raw()
@@ -63,7 +63,7 @@ $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : '';
                 'type'     => 'select',
                 'tag'      => 'li',
                 'required' => true,
-                'class'    => 'chosen-select',
+                'class'    => 'leave-period-select',
                 'options'  => erp_hr_leave_period(),
             ) );
 
@@ -71,7 +71,7 @@ $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : '';
                 'label'    => __( 'Employee', 'erp' ),
                 'name'     => 'single_employee',
                 'type'     => 'select',
-                'class'    => 'chosen-select show-if-single',
+                'class'    => 'erp-select2 show-if-single',
                 'tag'      => 'li',
                 'required' => true,
                 'options'  => erp_hr_get_employees_dropdown_raw()
@@ -81,7 +81,7 @@ $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : '';
                 'label'    => __( 'Location', 'erp' ),
                 'name'     => 'location',
                 'type'     => 'select',
-                'class'    => 'chosen-select show-if-multiple',
+                'class'    => 'erp-select2 show-if-multiple',
                 'tag'      => 'li',
                 'options'  => erp_company_get_location_dropdown_raw( __( 'All Locations', 'erp' ) )
             ) );
@@ -90,7 +90,7 @@ $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : '';
                 'label'    => __( 'Department', 'erp' ),
                 'name'     => 'department',
                 'type'     => 'select',
-                'class'    => 'chosen-select show-if-multiple',
+                'class'    => 'erp-select2 show-if-multiple',
                 'tag'      => 'li',
                 'options'  => erp_hr_get_departments_dropdown_raw( __( 'All Departments', 'erp' ) )
             ) );
