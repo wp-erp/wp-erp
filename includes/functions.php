@@ -1261,11 +1261,19 @@ function erp_process_import_export() {
     $departments  = erp_hr_get_departments_dropdown_raw();
     $designations = erp_hr_get_designation_dropdown_raw();
 
-    $field_builder_options = get_option( 'erp-contact-fields' );
+    $field_builder_contact_options = get_option( 'erp-contact-fields' );
 
-    if ( ! empty( $field_builder_options ) ) {
-        foreach ( $field_builder_options as $field ) {
+    if ( ! empty( $field_builder_contact_options ) ) {
+        foreach ( $field_builder_contact_options as $field ) {
             $field_builder_contacts_fields[] = $field['name'];
+        }
+    }
+
+    $field_builder_employee_options = get_option( 'erp-employee-fields' );
+
+    if ( ! empty( $field_builder_employee_options ) ) {
+        foreach ( $field_builder_employee_options as $field ) {
+            $field_builder_employees_fields[] = $field['name'];
         }
     }
 
@@ -1339,31 +1347,31 @@ function erp_process_import_export() {
                             if ( $type == 'employee' ) {
                                 if ( in_array( $key, $employee_fields['work'] ) ) {
                                     if ( $key == 'designation' ) {
-                                        $data[$x]['work'][$key] = array_search( $line[$value], $designations );
+                                        $data[ $x ]['work'][ $key ] = array_search( $line[ $value ], $designations );
                                     } else if ( $key == 'department' ) {
-                                        $data[$x]['work'][$key] = array_search( $line[$value], $departments );
+                                        $data[ $x ]['work'][ $key ] = array_search( $line[ $value ], $departments );
                                     } else {
-                                        $data[$x]['work'][$key] = $line[$value];
+                                        $data[ $x ]['work'][ $key ] = $line[ $value ];
                                     }
 
                                 } else if ( in_array( $key, $employee_fields['personal'] ) ) {
-                                    $data[$x]['personal'][$key] = $line[$value];
+                                    $data[ $x ]['personal'][ $key ] = $line[ $value ];
                                 } else {
-                                    $data[$x][$key] = $line[$value];
+                                    $data[ $x ][ $key ] = $line[ $value ];
                                 }
                             } else {
-                                $data[$x][$key] = isset( $line[$value] ) ? $line[$value] : '';
-                                $data[$x]['type'] = $type;
+                                $data[ $x ][ $key ] = isset( $line[ $value ] ) ? $line[ $value ] : '';
+                                $data[ $x ]['type'] = $type;
                             }
                         }
                     }
 
                     if ( $type == 'employee' && $is_hrm_activated ) {
-                        if ( ! isset( $data[$x]['work']['status'] ) ) {
-                            $data[$x]['work']['status'] = 'active';
+                        if ( ! isset( $data[ $x ]['work']['status'] ) ) {
+                            $data[ $x ]['work']['status'] = 'active';
                         }
 
-                        $item_insert_id = erp_hr_employee_create( $data[$x] );
+                        $item_insert_id = erp_hr_employee_create( $data[ $x ] );
 
                         if ( is_wp_error( $item_insert_id ) ) {
                             continue;
@@ -1372,28 +1380,28 @@ function erp_process_import_export() {
 
                     if ( ( $type == 'contact' || $type == 'company' ) && $is_crm_activated ) {
                         // If not exist any email address then generate a dummy one.
-                        if ( ! isset( $data[$x]['email'] ) ) {
+                        if ( ! isset( $data[ $x ]['email'] ) ) {
                             $rand = substr( sha1( uniqid( time() ) ), 0, 8 );
-                            $data[$x]['email'] = "rand_{$rand}@example.com";
+                            $data[ $x ]['email'] = "rand_{$rand}@example.com";
                         }
 
-                        if ( empty( $data[$x]['last_name'] ) ) {
-                            $name_parts = explode( ' ' , trim( $data[$x]['first_name'] ) );
+                        if ( empty( $data[ $x ]['last_name'] ) ) {
+                            $name_parts = explode( ' ' , trim( $data[ $x ]['first_name'] ) );
 
                             if ( count( $name_parts ) > 1 ) {
                                 $last_name = trim( array_pop( $name_parts ) );
                             }
 
                             if ( ! empty( $last_name ) ) {
-                                $data[$x]['first_name'] = implode( ' ' , $name_parts );
-                                $data[$x]['last_name'] = $last_name;
+                                $data[ $x ]['first_name'] = implode( ' ' , $name_parts );
+                                $data[ $x ]['last_name']  = $last_name;
 
                             } else {
-                                $data[$x]['last_name'] = '_';
+                                $data[ $x ]['last_name'] = '_';
                             }
                         }
 
-                        $item_insert_id = erp_insert_people( $data[$x] );
+                        $item_insert_id = erp_insert_people( $data[ $x ] );
 
                         if ( is_wp_error( $item_insert_id ) ) {
                             continue;
@@ -1411,8 +1419,8 @@ function erp_process_import_export() {
 
                             if ( ! empty( $field_builder_contacts_fields ) ) {
                                 foreach ( $field_builder_contacts_fields as $field ) {
-                                    if ( isset( $data[$x][$field] ) ) {
-                                        erp_people_update_meta( $item_insert_id, $field, $data[$x][$field] );
+                                    if ( isset( $data[ $x ][ $field ] ) ) {
+                                        erp_people_update_meta( $item_insert_id, $field, $data[ $x ][ $field ] );
                                     }
                                 }
                             }
@@ -1465,23 +1473,31 @@ function erp_process_import_export() {
             foreach ( $fields as $field ) {
                 if ( $type == 'employee' ) {
 
-                    switch ( $field ) {
-                        case 'department':
-                            $csv_items[$x][$field] = $item->get_department_title();
-                            break;
+                    if ( in_array( $field, $field_builder_employees_fields ) ) {
+                        $csv_items[ $x ][ $field ] = get_user_meta( $item->id, $field, true );
+                    } else {
+                        switch ( $field ) {
+                            case 'department':
+                                $csv_items[ $x ][ $field ] = $item->get_department_title();
+                                break;
 
-                        case 'designation':
-                            $csv_items[$x][$field] = $item->get_job_title();
-                            break;
+                            case 'designation':
+                                $csv_items[ $x ][ $field ] = $item->get_job_title();
+                                break;
 
-                        default:
-                            $csv_items[$x][$field] = $item->{$field};
-                            break;
+                            default:
+                                $csv_items[ $x ][ $field ] = $item->{$field};
+                                break;
+                        }
                     }
 
                 } else {
-                    if ( isset( $item->{$field} ) ) {
-                        $csv_items[$x][$field] = $item->{$field};
+                    if ( in_array( $field, $field_builder_contacts_fields ) ) {
+                        $csv_items[ $x ][ $field ] = erp_people_get_meta( $item->id, $field, true );
+                    } else {
+                        if ( isset( $item->{$field} ) ) {
+                            $csv_items[ $x ][ $field ] = $item->{$field};
+                        }
                     }
                 }
             }
