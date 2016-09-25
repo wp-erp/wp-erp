@@ -230,6 +230,11 @@ final class WeDevs_ERP {
         $this->container['modules']     = new \WeDevs\ERP\Framework\Modules();
         $this->container['emailer']     = \WeDevs\ERP\Emailer::init();
         $this->container['integration'] = \WeDevs\ERP\Integration::init();
+
+        // APIs
+        add_action( 'rest_api_init', function () {
+            new \WeDevs\ERP\API\Contacts();
+        });
     }
 
     /**
