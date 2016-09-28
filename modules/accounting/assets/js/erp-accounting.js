@@ -1326,6 +1326,8 @@
                     action: 'erp_ac_vendor_voucher',
                     _wpnonce: ERP_AC.nonce,
                     vendor: self.val(),
+                    type : $('input[name="type"]').val(),
+                    form_type : $('input[name="form_type"]').val()
                     //account_id: $('.erp-ac-deposit-dropdown').val()
                 },
 

@@ -502,6 +502,25 @@ function erp_ac_delete_chart( $chart_id ) {
     return new WP_Error( 'error', __('Unexpected error!', 'erp') );
 }
 
+/**
+ * Account code generator if its empty
+ *
+ * @since  1.1.5
+ * 
+ * @return int
+ */
+function erp_ac_accounting_code_generator() {
+    $ledger = WeDevs\ERP\Accounting\Model\Ledger::select( 'code' )->get()->toArray();
+    $ledger = wp_list_pluck( $ledger, 'code' );
+    $code   = random_int( 0, 999 );
+
+    if ( in_array( $code, $ledger ) ) {
+        erp_ac_accounting_code_generator();
+    }
+
+    return $code;
+}
+
 
 
 

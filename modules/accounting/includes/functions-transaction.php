@@ -379,11 +379,9 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
     $table_name = $wpdb->prefix . 'erp_ac_transactions';
 
     // get valid transaction type and form type
-    if ( ! in_array( $args['type'], [ 'expense', 'sales', 'transfer' ] ) ) {
+    if ( ! in_array( $args['type'], [ 'expense', 'reimbur', 'sales', 'transfer' ] ) ) {
         return new WP_Error( 'invalid-trans-type', __( 'Error: Invalid transaction type.', 'erp' ) );
     }
-
-    $form_types = ( $args['type'] == 'expense' ) ? erp_ac_get_expense_form_types() : erp_ac_get_sales_form_types();
 
     if ( $args['type'] == 'expense' ) {
         $form_types = erp_ac_get_expense_form_types();
@@ -392,6 +390,8 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
     } else {
         $form_types = erp_ac_get_sales_form_types();
     }
+
+    $form_types = apply_filters( 'erp_ac_form_types', $form_types, $args );
 
     if ( ! array_key_exists( $args['form_type'], $form_types ) ) {
         return new WP_Error( 'invalid-form-type', __( 'Error: Invalid form type', 'erp' ) );
@@ -513,7 +513,7 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
         $wpdb->query( 'COMMIT' );
 
         //for partial payment
-        if ( $args['form_type'] == 'payment' || $args['form_type'] == 'payment_voucher' ) {
+        if ( $args['form_type'] == 'payment' || $args['form_type'] == 'payment_voucher' || $args['form_type'] == 'reimbur_payment' ) {
 
             $transaction_ids = $args['partial_id'];
 
@@ -786,19 +786,25 @@ function erp_ac_tran_from_header() {
 }
 
 function erp_ac_get_btn_status( $postdata ) {
-
+    $status = false;
     if ( $postdata['form_type'] == 'payment' ) {
-        return erp_ac_get_status_according_with_btn( $postdata['btn_status'] );
+        $status = erp_ac_get_status_according_with_btn( $postdata['btn_status'] );
+    
     } else if ( $postdata['form_type'] == 'invoice' || $postdata['form_type'] == 'vendor_credit' ) {
-        return erp_ac_get_status_invoice_according_with_btn( $postdata['btn_status'] );
+        $status = erp_ac_get_status_invoice_according_with_btn( $postdata['btn_status'] );
+    
     } else if ( $postdata['form_type'] == 'payment_voucher' ) {
-        return erp_ac_get_voucher_status_according_with_btn( $postdata['btn_status'] );
+        $status = erp_ac_get_voucher_status_according_with_btn( $postdata['btn_status'] );
     }
+
+    return apply_filters( 'erp_ac_trans_status', $status, $postdata );
 }
 
 /**
  * Get transaction submit data status for payment voucher
+ * 
  * @param  string $btn
+ * 
  * @return string
  */
 function erp_ac_get_voucher_status_according_with_btn( $btn ) {

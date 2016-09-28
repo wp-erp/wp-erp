@@ -214,7 +214,6 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
 
             <div class="erp-button-bar-right">
 
-
                 <a href="<?php echo esc_url( $cancel_url ); ?>" class="button"><?php _e( 'Cancel', 'erp' ); ?></a>
             </div>
         </div>
