@@ -12,8 +12,8 @@
         ?>
     </h2>
 
-    <div class="list-table-wrap">
-        <div class="list-table-inner">
+    <div class="list-table-wrap erp-hr-employees-wrap">
+        <div class="list-table-inner erp-hr-employees-wrap-inner">
 
             <form method="get">
                 <input type="hidden" name="page" value="erp-hr-employee">

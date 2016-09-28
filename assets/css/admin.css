@@ -1868,9 +1868,9 @@ table.leaves td.column-status .status-3 {
  * Employee notes tab
  */
 .note-tab-wrap .note-form {
-  padding: 15px;
+  padding: 12px;
   border: 1px solid #ddd;
-  max-width: 500px;
+  position: relative;
 }
 .note-tab-wrap .note-form:before,
 .note-tab-wrap .note-form:after {
@@ -1893,9 +1893,14 @@ table.leaves td.column-status .status-3 {
   padding: 10px;
 }
 .note-tab-wrap .note-form p.submit {
-  margin: 15px 0 0 0;
+  margin: 9px 0 0 0;
   padding: 0;
   float: right;
+}
+.note-tab-wrap .note-form span.erp-note-loader {
+  right: 100px;
+  bottom: 15px;
+  display: none;
 }
 .note-tab-wrap ul.notes-list .avatar-wrap {
   float: left;

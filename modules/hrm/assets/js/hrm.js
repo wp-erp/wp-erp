@@ -490,7 +490,7 @@
              * @return {void}
              */
             reload: function() {
-                $( '.erp-hr-employees' ).load( window.location.href + ' .erp-hr-employees' );
+                $( '.erp-hr-employees-wrap' ).load( window.location.href + ' .erp-hr-employees-wrap-inner' );
             },
 
             /**
@@ -1021,6 +1021,7 @@
                     submit = form.find( 'input[type=submit]');
 
                 submit.attr('disabled', 'disabled');
+                form.find('.erp-note-loader').show();
 
                 wp.ajax.send({
                     data: form.serializeObject(),
@@ -1036,6 +1037,7 @@
                                 $('ul.notes-list li').last().remove();
                             }
                             WeDevs_ERP_HR.employee.showLoadMoreBtn() ;
+                            form.find('.erp-note-loader').hide();
                             form.find('textarea').val('');
                             submit.removeAttr( 'disabled' );
                         });
@@ -1043,9 +1045,11 @@
                     },
                     error: function() {
                         submit.removeAttr('disabled');
+                        form.find('.erp-note-loader').hide();
                     }
                 });
             },
+
             showLoadMoreBtn: function(){
                 if( $('ul.notes-list li').length >= 10 ){
                     $('.wperp-load-more-btn').show();
@@ -1053,6 +1057,7 @@
                     $('.wperp-load-more-btn').hide();
                 }
             },
+
             loadNotes: function(e) {
                 e.preventDefault();
 

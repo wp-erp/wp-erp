@@ -1,7 +1,7 @@
-<div class="note-tab-wrap">
+<div class="note-tab-wrap erp-grid-container">
     <h3><?php _e( 'Notes', 'erp' ) ?></h3>
 
-    <form action="" class="note-form" method="post">
+    <form action="" class="note-form row" method="post">
         <?php erp_html_form_input( array(
             'name'        => 'note',
             'required'    => true,
@@ -15,6 +15,7 @@
 
         <?php wp_nonce_field( 'wp-erp-hr-employee-nonce' ); ?>
         <?php submit_button( __( 'Add Note', 'erp' ), 'primary' ); ?>
+        <span class="erp-loader erp-note-loader"></span>
     </form>
 
     <?php

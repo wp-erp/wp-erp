@@ -2,7 +2,7 @@
 Contributors: tareq1988, wedevs, sabbir1991, asaquzzaman
 Tags: small business, SME, contact, contacts, CRM, Customer Relationship Management, employee, leave management, hr, hrm, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 4.6
+Tested up to: 4.6.1
 Stable tag: trunk
 License: GPLv2
 Donate Link: https://tareq.co/donate
@@ -150,6 +150,25 @@ If you are unable to use any of the methods due to internet connectivity and fil
   => No. We did not put any limit on anything. You can create as much entries as you want.
 
 == Changelog ==
+
+**v1.1.5 -> Sep 19, 2016**
+
+ * [fix] Holiday date calculation problem fixed
+ * [fix] Ajax request for edit holiday
+ * [fix] Change holiday listing order
+ * [fix] Update leave holiday search, table end column for iCal
+ * [fix] Fix payment dropdown button in Payment Voucher create page
+ * [fix] Remove currency option in vendor and customer add, edit
+ * [fix] Contact deleting permission issues
+ * [fix] Pdf invoice class undefined problem
+ * [fix] Fix issue_date problem in chart of accounting
+ * [fix] Reloading employee list problem fixed in js
+ * [fix] Change some style in employee note section and added loading effect
+ * [new] Add letter support to company location zip code
+ * [new] Added country and state select2 in accounting vendor and customer
+ * [new] Custom Fields support in contact form
+ * [new] Added erp_create_new_people hook if people is an existing wp user
+ * [new] Added Saudi Riyal currency
 
 **v1.1.4 -> Aug 28, 2016**
 
