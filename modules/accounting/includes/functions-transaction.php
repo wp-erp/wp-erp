@@ -378,8 +378,10 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
 
     $table_name = $wpdb->prefix . 'erp_ac_transactions';
 
+    $register_type = apply_filters( 'erp_ac_register_type', [ 'expense', 'sales', 'transfer' ] );
+
     // get valid transaction type and form type
-    if ( ! in_array( $args['type'], [ 'expense', 'reimbur', 'sales', 'transfer' ] ) ) {
+    if ( ! in_array( $args['type'], $register_type ) ) {
         return new WP_Error( 'invalid-trans-type', __( 'Error: Invalid transaction type.', 'erp' ) );
     }
 
