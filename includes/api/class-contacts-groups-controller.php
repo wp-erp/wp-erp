@@ -1,0 +1,269 @@
+<?php
+namespace WeDevs\ERP\API;
+
+use WP_REST_Server;
+use WP_REST_Response;
+use WP_Error;
+
+class Contacts_Groups_Controller extends REST_Controller {
+    /**
+     * Endpoint namespace.
+     *
+     * @var string
+     */
+    protected $namespace = 'erp';
+
+    /**
+     * Route base.
+     *
+     * @var string
+     */
+    protected $rest_base = 'crm/contacts/groups';
+
+    /**
+     * Register the routes for the objects of the controller.
+     */
+    public function register_routes() {
+        register_rest_route( $this->namespace, '/' . $this->rest_base, [
+            [
+                'methods'  => WP_REST_Server::READABLE,
+                'callback' => [ $this, 'get_groups' ],
+                'args'     => $this->get_collection_params(),
+            ],
+            [
+                'methods'  => WP_REST_Server::CREATABLE,
+                'callback' => [ $this, 'create_group' ],
+                'args'     => $this->get_endpoint_args_for_item_schema(),
+            ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
+            [
+                'methods'  => WP_REST_Server::READABLE,
+                'callback' => [ $this, 'get_group' ],
+            ],
+            [
+                'methods'  => WP_REST_Server::EDITABLE,
+                'callback' => [ $this, 'update_group' ],
+            ],
+            [
+                'methods'  => WP_REST_Server::DELETABLE,
+                'callback' => [ $this, 'delete_group' ],
+            ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/subscribes', [
+            [
+                'methods'  => WP_REST_Server::READABLE,
+                'callback' => [ $this, 'get_subscribed_contacts' ],
+                'args'     => $this->get_collection_params(),
+            ],
+            [
+                'methods'  => WP_REST_Server::CREATABLE,
+                'callback' => [ $this, 'subscribe_contact' ],
+            ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<group_id>[\d]+)' . '/subscribes' . '/(?P<contact_id>[\d]+)', [
+            [
+                'methods'  => WP_REST_Server::DELETABLE,
+                'callback' => [ $this, 'delete_subscribed_contact' ],
+            ],
+        ] );
+    }
+
+    /**
+     * Get a collection of groups
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_groups( $request ) {
+        $args = [
+            'number' => $request['per_page'],
+            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+        ];
+
+        $items       = erp_crm_get_contact_groups( $args );
+        $total_items = erp_crm_get_contact_groups( [ 'count' => true ] );
+        $response    = $this->format_collection_response( $response, $request, $items, $total_items );
+
+        return $response;
+    }
+
+    /**
+     * Get a specific group
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_group( $request ) {
+        $id    = (int) $request['id'];
+        $item = (object) erp_crm_get_contact_group_by_id( $id );
+
+        if ( empty( $id ) || empty( $item->id ) ) {
+            return new WP_Error( 'rest_group_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+        }
+
+        $item  = $this->prepare_item_for_response( $item, $request );
+        $response = rest_ensure_response( $item );
+
+        return $response;
+    }
+
+    /**
+     * Create a group
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Request
+     */
+    public function create_group( $request ) {
+        $data = [
+            'name'        => $request['name'],
+            'description' => $request['description'],
+        ];
+
+        $group = erp_crm_save_contact_group( $data );
+
+        return new WP_REST_Response( $group, 200 );
+    }
+
+    /**
+     * Update a group
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Request
+     */
+    public function update_group( $request ) {
+        $data = [
+            'id'          => intval( $request['id'] ),
+            'name'        => $request['name'],
+            'description' => $request['description'],
+        ];
+
+        $group = erp_crm_save_contact_group( $data );
+
+        return new WP_REST_Response( $group_id, 200 );
+    }
+
+    /**
+     * Delete a group
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Request
+     */
+    public function delete_group( $request ) {
+        $group_id = (int) $request['id'];
+
+        erp_crm_contact_group_delete( $group_id );
+
+        return new WP_REST_Response( true, 200 );
+    }
+
+    /**
+     * Get a collection of subscribed contacts
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_subscribed_contacts( $request ) {
+        $data = [
+            'group_id' => intval( $request['group_id'] ),
+        ];
+
+        $contacts = erp_crm_get_subscriber_contact( $data );
+
+        return new WP_REST_Response( $contacts, 200 );
+    }
+
+    /**
+     * Subscribe a contact to a group
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Request
+     */
+    public function subscribe_contact( $request ) {
+        $data = [
+            'group_id' => intval( $request['id'] ),
+            'user_id'  => intval( $request['contact_id'] ),
+        ];
+
+        $result = erp_crm_create_new_contact_subscriber( $data );
+
+        return new WP_REST_Response( $result, 200 );
+    }
+
+    /**
+     * Unsubscribe a contact from a group
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Request
+     */
+    public function delete_subscribed_contact( $request ) {
+        $data = [
+            'group_id' => intval( $request['group_id'] ),
+            'user_id'  => intval( $request['contact_id'] ),
+        ];
+
+        $result = erp_crm_contact_subscriber_delete( $data['user_id'] );
+
+        return new WP_REST_Response( $result, 200 );
+    }
+
+    /**
+     * Prepare a single item for create or update
+     *
+     * @param WP_REST_Request $request Request object.
+     *
+     * @return array $prepared_item
+     */
+    protected function prepare_item_for_database( $request ) {
+        $prepared_item = [];
+
+        // required arguments.
+        if ( isset( $request['name'] ) ) {
+            $prepared_item['name'] = $request['name'];
+        }
+        if ( isset( $request['description'] ) ) {
+            $prepared_item['description'] = $request['description'];
+        }
+
+        // optional arguments.
+        if ( isset( $request['id'] ) ) {
+            $prepared_item['id'] = absint( $request['id'] );
+        }
+
+        return $prepared_item;
+    }
+
+    /**
+     * Prepare a single user output for response
+     *
+     * @param object $item
+     * @param WP_REST_Request $request Request object.
+     *
+     * @return WP_REST_Response $response Response data.
+     */
+    public function prepare_item_for_response( $item, $request ) {
+        $data = [
+            'id'          => (int) $item->id,
+            'name'        => $item->name,
+            'description' => $item->description,
+        ];
+
+        // Wrap the data in a response object
+        $response = rest_ensure_response( $data );
+
+        $response->add_links( $this->prepare_links( $item ) );
+
+        return $response;
+    }
+}

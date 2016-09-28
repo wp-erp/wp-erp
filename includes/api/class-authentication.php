@@ -1,6 +1,8 @@
 <?php
 namespace WeDevs\ERP\API;
 
+use WP_Error;
+
 /**
  * WP Rest API Basic Authentication class
  */
@@ -43,7 +45,7 @@ class Authentication {
         }
 
         // Check that we're trying to authenticate
-        if ( !isset( $_SERVER['PHP_AUTH_USER'] ) ) {
+        if ( ! isset( $_SERVER['PHP_AUTH_USER'] ) ) {
             return $user;
         }
 

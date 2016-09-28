@@ -207,6 +207,7 @@ final class WeDevs_ERP {
         require_once WPERP_INCLUDES . '/functions-company.php';
         require_once WPERP_INCLUDES . '/functions-people.php';
         require_once WPERP_INCLUDES . '/lib/class-wedevs-insights.php';
+        require_once WPERP_INCLUDES . '/api/class-api-registrar.php';
 
         if ( is_admin() ) {
             require_once WPERP_INCLUDES . '/admin/functions.php';
@@ -226,15 +227,11 @@ final class WeDevs_ERP {
         new \WeDevs\ERP\Scripts();
         new \WeDevs\ERP\Updates();
         new \WeDevs\ERP\Tracker();
+        new \WeDevs\ERP\API\API_Registrar();
 
         $this->container['modules']     = new \WeDevs\ERP\Framework\Modules();
         $this->container['emailer']     = \WeDevs\ERP\Emailer::init();
         $this->container['integration'] = \WeDevs\ERP\Integration::init();
-
-        // APIs
-        add_action( 'rest_api_init', function () {
-            new \WeDevs\ERP\API\Contacts();
-        });
     }
 
     /**
@@ -301,7 +298,6 @@ final class WeDevs_ERP {
             }
         }
     }
-
 } // WeDevs_ERP
 
 /**
