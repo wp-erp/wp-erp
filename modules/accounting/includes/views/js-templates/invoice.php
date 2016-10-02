@@ -83,6 +83,8 @@
                     'name'        => 'line_total[]',
                     'required'    => true,
                     'value'       => '',
+                    'class'       => 'erp-ac-payment-amount',
+                    'custom_attr' => ['data-amount' => '{{ data.due_amount }}']
                 ) );
             ?>
     </div>

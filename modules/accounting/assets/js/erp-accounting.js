@@ -71,9 +71,10 @@
             this.invoice.copyReadonlyLink();
 
             // payment
-            this.payment.initialize();
+            this.payment.initialize(); 
             $( 'body' ).on( 'click', '.payment-duplicate', this.payment.duplicate );
             $( 'body' ).on( 'click', '.payment-send-email', this.invoice.sendEmail );
+            $( 'body' ).on( 'keyup change', '.erp-ac-payment-amount', this.payment.checkPaymentAmount );
 
             //trns form submit
             $( '.erp-form' ).on( 'click', '.erp-ac-trns-form-submit-btn', this.transaction.submit );
@@ -714,6 +715,17 @@
         },
 
         payment: {
+            checkPaymentAmount : function(e) {
+                e.preventDefault();
+                var self = $(this),
+                    self_amount = self.val(),
+                    total_amount = self.data('amount');
+                
+                if ( parseInt( self_amount ) > parseInt( total_amount ) ) {
+                    self.val(total_amount);
+                }
+            },
+
             initialize: function () {
 
                 var moreActions, theme, openOn, target, content;
