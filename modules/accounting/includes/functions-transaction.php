@@ -328,6 +328,9 @@ function er_ac_insert_transaction_permiss( $args, $is_update ) {
  * Insert a new transaction
  *
  * @param array $args
+ * @param array $items
+ *
+ * @return int/boolen
  */
 function erp_ac_insert_transaction( $args = [], $items = [] ) {
     global $wpdb;
@@ -515,7 +518,7 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
         $wpdb->query( 'COMMIT' );
 
         //for partial payment
-        if ( $args['form_type'] == 'payment' || $args['form_type'] == 'payment_voucher' || $args['form_type'] == 'reimbur_payment' ) {
+        if ( erp_ac_is_prtial( $args ) ) { //$args['form_type'] == 'payment' || $args['form_type'] == 'payment_voucher' || $args['form_type'] == 'reimbur_payment' ) {
 
             $transaction_ids = $args['partial_id'];
 
@@ -558,9 +561,41 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
         $wpdb->query( 'ROLLBACK' );
         return new WP_error( 'final-exception', $e->getMessage() );
     }
+
     return false;
 }
 
+/**
+ * Check is the payment type partial or not
+ *
+ * @param  array $trans
+ *
+ * @return  boolen
+ */
+function erp_ac_is_prtial( $trans ) {
+    $partial = apply_filters( 'erp_ac_partial_types', ['payment', 'payment_voucher'], $trans );
+
+    if ( in_array( $trans['form_type'], $partial ) ) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Update transaction item
+ *
+ * @since  1.1.5
+ * 
+ * @param  array $item        
+ * @param  array $args        
+ * @param  int $trans_id    
+ * @param  int $journal_id  
+ * @param  int $tax_journal 
+ * @param  int $order       
+ * 
+ * @return int             
+ */
 function erp_ac_item_update( $item, $args, $trans_id, $journal_id, $tax_journal, $order ) {
 
     if ( intval( $item['item_id'] ) ) {

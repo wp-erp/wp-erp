@@ -409,8 +409,8 @@ class Form_Handler {
             'line_total'      => isset( $postdata['line_total'] ) ? $postdata['line_total'] : array()
         ];
 
-        // set invoice and vendor credit due to full amount
-        if ( in_array( $form_type, [ 'invoice', 'vendor_credit' ] ) ) {
+        // set invoice and vendor credit for due to full amount
+        if ( $this->is_due_trans( $form_type, $postdata ) ) { //in_array( $form_type, [ 'invoice', 'vendor_credit' ] ) ) {
             $fields['due'] = $total;
         }
 
@@ -443,6 +443,23 @@ class Form_Handler {
         }
 
         return $insert_id;
+    }
+
+    /**
+     * Check is the payment type partial or not
+     *
+     * @param  array $trans
+     *
+     * @return  boolen
+     */
+    function is_due_trans( $form_type, $postdata ) {
+        $due = apply_filters( 'erp_ac_is_due_trans', ['invoice', 'vendor_credit'], $postdata );
+
+        if ( in_array( $form_type, $due ) ) {
+            return true;
+        }
+
+        return false;
     }
 
     public function journal_entry() {
