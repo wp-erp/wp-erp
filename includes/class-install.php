@@ -749,7 +749,7 @@ Company'
               `journal_id` bigint(20) unsigned DEFAULT NULL,
               `product_id` int(10) unsigned DEFAULT NULL,
               `description` text,
-              `qty` tinyint(5) unsigned NOT NULL DEFAULT '1',
+              `qty` int(11) unsigned NOT NULL DEFAULT '1',
               `unit_price` DECIMAL(13,4) unsigned NOT NULL DEFAULT '0.00',
               `discount` tinyint(3) unsigned NOT NULL DEFAULT '0',
               `tax` tinyint(3) unsigned NOT NULL DEFAULT '0',
