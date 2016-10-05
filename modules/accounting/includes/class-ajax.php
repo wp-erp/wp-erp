@@ -600,19 +600,22 @@ class Ajax_Handler {
     public function erp_ac_vendor_voucher() {
         $this->verify_nonce( 'erp-ac-nonce' );
 
-        $vendor = intval( $_POST['vendor'] );
+        $vendor    = intval( $_POST['vendor'] );
+        $type      = $_POST['type'];
+        $form_type = $_POST['form_type'];
 
         if ( ! $vendor ) {
             $this->send_error();
         }
 
         $transactions = erp_ac_get_all_transaction([
-            'user_id'   => $vendor,
-            'form_type' => 'vendor_credit',
-            'status'    => array( 'in' => array( 'awaiting_payment', 'partial' ) ),
-            'join'      => ['journals'],
+            'user_id'     => $vendor,
+            'type'        => $type,
+            //'form_type'   => $form_type,
+            'status'      => array( 'in' => array( 'awaiting_payment', 'partial' ) ),
+            'join'        => ['journals'],
             'with_ledger' => true,
-            'output_by' => 'array'
+            'output_by'   => 'array'
         ]);
 
         if ( ! $transactions ) {

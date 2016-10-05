@@ -24,7 +24,7 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
      */
     function get_columns() {
         $columns = array(
-            'cb'         => '<input type="checkbox" />',
+           // 'cb'         => '<input type="checkbox" />',
             'issue_date' => __( 'Date', 'erp' ),
             'form_type'  => __( 'Type', 'erp' ),
             'ref'        => __( 'Ref', 'erp' ),

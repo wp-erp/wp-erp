@@ -29,7 +29,7 @@ $taxinfo          = erp_ac_get_tax_info();
                         <?php if ( $status ) {
                             ?>
                             <a href="#" class="button button-large erp-ac-print erp-hide-print"><?php _e( 'Print', 'erp' ); ?></a>
-                            <a class="button button-large drop-target"><i class="fa fa-cog"></i>&nbsp;<?php _e( 'More Actions', 'accounting' ); ?></a>
+                            <!-- <a class="button button-large drop-target"><i class="fa fa-cog"></i>&nbsp;<?php _e( 'More Actions', 'accounting' ); ?></a> -->
                             <?php
                         } else {
                             ?>

@@ -1,10 +1,9 @@
 <?php
 namespace WeDevs\ERP;
-//require ( 'fpdf.php.php' );
 
-class PDF_Invoicer extends FPDF {
+class PDF_Invoicer extends tFPDF {
 
-	public $font            = 'helvetica';
+	public $font;
 	public $columnOpacity   = 0.06;
 	public $columnSpacing   = 0.3;
 	public $referenceformat = [ '.', ',' ];
@@ -21,12 +20,12 @@ class PDF_Invoicer extends FPDF {
 	public $issue_date = [];
 	public $due_date = [];
 	public $from_title;
-    public $from;
+	public $from;
 	public $to_title;
 	public $to;
-    public $table_headers = [];
-    public $first_column_width = 62;
-    public $columns;
+	public $table_headers = [];
+	public $first_column_width = 62;
+	public $columns;
 	public $items;
 	public $totals;
 	public $badge;
@@ -47,8 +46,9 @@ class PDF_Invoicer extends FPDF {
 	protected $JSwap  = [ "A" => 101, "B" => 100, "C" => 99 ];
 
 	// Constructor
-	public function __construct( $size = 'A4', $currency = '€', $language = 'en' ) {
+	public function __construct( $size = 'A4', $currency = '$', $language = 'en' ) {
 
+		$this->font = 'helvetica';
 		$this->items              = [];
 		$this->totals             = [];
 		$this->addText            = [];
@@ -57,7 +57,7 @@ class PDF_Invoicer extends FPDF {
 		$this->setDocumentSize( $size );
 		$this->set_theme_color( "#222222" );
 
-		$this->FPDF( 'P', 'mm', [ $this->document['w'], $this->document['h'] ] );
+		parent::__construct( 'P', 'mm', [ $this->document['w'], $this->document['h'] ] );
 		$this->AliasNbPages();
 		$this->SetMargins( $this->margins['l'], $this->margins['t'], $this->margins['r'] );
 	}
@@ -74,12 +74,12 @@ class PDF_Invoicer extends FPDF {
 		$this->color = $this->hex2rgb( $rgbcolor );
 	}
 
-    public function set_reference( $value, $title ) {
-        $this->reference[] = [
-            'value' => $value,
-            'title' => $title
-        ];
-    }
+	public function set_reference( $value, $title ) {
+		$this->reference[] = [
+			'value' => $value,
+			'title' => $title
+		];
+	}
 
 	public function set_logo( $logo = 0, $maxWidth = 0, $maxHeight = 0 ) {
 
@@ -91,48 +91,48 @@ class PDF_Invoicer extends FPDF {
 		$this->dimensions = $this->resizeToFit( $logo );
 	}
 
-    /**
-     * Set title for the from address
-     * @return string
-     */
-    public function set_from_title( $title = '' ) {
-        $this->from_title = $title ? $title : 'From';
-    }
+	/**
+	 * Set title for the from address
+	 * @return string
+	 */
+	public function set_from_title( $title = '' ) {
+		$this->from_title = $title ? $title : 'From';
+	}
 
 	public function set_from( $data ) {
 		$this->from = $data;
 	}
 
-    /**
-     * Set title for the from address
-     * @return string
-     */
-    public function set_to_title( $title = '' ) {
-        $this->to_title = $title ? $title : 'To';
-    }
+	/**
+	 * Set title for the from address
+	 * @return string
+	 */
+	public function set_to_title( $title = '' ) {
+		$this->to_title = $title ? $title : 'To';
+	}
 
 	public function set_to_address( $data ) {
 		$this->to = $data;
 	}
 
-    /**
-     * Set Table Headers
-     */
-    public function set_table_headers( $headers = [] ) {
-        $this->table_headers = $headers;
-    }
+	/**
+	 * Set Table Headers
+	 */
+	public function set_table_headers( $headers = [] ) {
+		$this->table_headers = $headers;
+	}
 
-    /**
-     * Get table headers count
-     */
-    public function get_table_headers_count() {
-        return count( $this->table_headers );
-    }
+	/**
+	 * Get table headers count
+	 */
+	public function get_table_headers_count() {
+		return count( $this->table_headers );
+	}
 
-    // Set first column width
-    public function set_first_column_width( $width ) {
-        $this->first_column_width = $width;
-    }
+	// Set first column width
+	public function set_first_column_width( $width ) {
+		$this->first_column_width = $width;
+	}
 
 	public function set_number_format( $decimals, $thousands_sep ) {
 		$this->referenceformat = [ $decimals, $thousands_sep ];
@@ -144,17 +144,17 @@ class PDF_Invoicer extends FPDF {
 
 	public function add_item(  ) {
 
-        $item = func_get_args();
+		$item = func_get_args();
 
 		$this->items[] = $item;
 	}
 
 	public function add_total( $name, $value, $colored = 0 ) {
 
-        $t['name']      = $name;
-        $t['value']     = $value;
-        $t['colored']   = $colored;
-        $this->totals[] = $t;
+		$t['name']      = $name;
+		$t['value']     = $value;
+		$t['colored']   = $colored;
+		$this->totals[] = $t;
 	}
 
 	public function add_title( $title ) {
@@ -184,63 +184,63 @@ class PDF_Invoicer extends FPDF {
 	}
 
 	/*******************************************************************************
-	*                                                                              *
-	*                               Create Invoice                                 *
-	*                                                                              *
-	*******************************************************************************/
+	 *                                                                              *
+	 *                               Create Invoice                                 *
+	 *                                                                              *
+	 *******************************************************************************/
 	public function Header() {
 
 		if ( isset( $this->logo ) ) {
 			$this->Image( $this->logo, $this->margins['l'], $this->margins['t'], $this->dimensions[0], $this->dimensions[1] );
 		}
 
-        // Barcode
-        if ( $this->barcode && 1 == $this->PageNo() ) {
-            $this->SetFont( 'Arial', '', 8 );
-            $this->set_barcode_data();
-            $this->Code128( 130, 10, $this->barcode, 60, 15 );
-        }
+		// Barcode
+		if ( $this->barcode && 1 == $this->PageNo() ) {
+			$this->SetFont( 'Arial', '', 8 );
+			$this->set_barcode_data();
+			$this->Code128( 130, 10, $this->barcode, 60, 15 );
+		}
 
-        //Title
-        $this->SetTextColor( 0, 0, 0 );
-        $this->SetFont( $this->font, 'B', 20 );
-        $this->Cell( 0, 5, iconv( "UTF-8", "ISO-8859-1", strtoupper( $this->title ) ), 0, 1, 'C' );
-        $this->Ln( 5 );
+		//Title
+		$this->SetTextColor( 0, 0, 0 );
+		$this->SetFont( $this->font, '', 20 );
+		$this->Cell( 0, 5, iconv( "UTF-8", "ISO-8859-1", strtoupper( $this->title ) ), 0, 1, 'C' );
+		$this->Ln( 5 );
 
-        $lineheight = 5;
-        //Calculate position of strings
-        $this->SetFont( $this->font, 'B', 9 );
+		$lineheight = 5;
+		//Calculate position of strings
+		$this->SetFont( $this->font, 'B', 9 );
 
-        $temp_ref = [];
+		$temp_ref = [];
 
-        foreach ( $this->reference as $ref ) {
-            foreach ( $ref as $key => $value ) {
-                if ( 'title' == $key ) {
-                    $temp_ref[] = $value;
-                }
-            }
-        }
+		foreach ( $this->reference as $ref ) {
+			foreach ( $ref as $key => $value ) {
+				if ( 'title' == $key ) {
+					$temp_ref[] = $value;
+				}
+			}
+		}
 
-        $max_ref_width =  max( array_map( [$this, 'GetStringWidth'], $temp_ref ) );
+		$max_ref_width =  max( array_map( [$this, 'GetStringWidth'], $temp_ref ) );
 
-        $positionX = $this->document['w'] - $this->margins['l'] - $this->margins['r'] - $max_ref_width - 35;
+		$positionX = $this->document['w'] - $this->margins['l'] - $this->margins['r'] - $max_ref_width - 35;
 
-        if ( $this->reference ) {
+		if ( $this->reference ) {
 
-            if ( is_array( $this->reference ) ) {
+			if ( is_array( $this->reference ) ) {
 
-                foreach ( $this->reference as $data ) {
+				foreach ( $this->reference as $data ) {
 
-                    $this->Cell( $positionX, $lineheight );
-                    $this->SetFont( $this->font, 'B', 9 );
-                    $this->SetTextColor( $this->color[0], $this->color[1], $this->color[2] );
-                    $this->Cell( 32, $lineheight, iconv( "UTF-8", "ISO-8859-1", $data['title'] ) . ':', 0, 0, 'L' );
-                    $this->SetTextColor( 50, 50, 50 );
-                    $this->SetFont( $this->font, '', 9 );
-                    $this->Cell( 0, $lineheight, $data['value'], 0, 1, 'R' );
-                }
-            }
-        }
+					$this->Cell( $positionX, $lineheight );
+					$this->SetFont( $this->font, 'B', 9 );
+					$this->SetTextColor( $this->color[0], $this->color[1], $this->color[2] );
+					$this->Cell( 32, $lineheight, iconv( "UTF-8", "ISO-8859-1", $data['title'] ) . ':', 0, 0, 'L' );
+					$this->SetTextColor( 50, 50, 50 );
+					$this->SetFont( $this->font, '', 9 );
+					$this->Cell( 0, $lineheight, $data['value'], 0, 1, 'R' );
+				}
+			}
+		}
 
 		//First page
 		if ( $this->PageNo() == 1 ) {
@@ -290,7 +290,7 @@ class PDF_Invoicer extends FPDF {
 		}
 		$this->Ln( 5 );
 
-        $this->columns = $this->get_table_headers_count();
+		$this->columns = $this->get_table_headers_count();
 
 
 		//Table header
@@ -300,15 +300,15 @@ class PDF_Invoicer extends FPDF {
 			$this->Ln( 12 );
 			$this->SetFont( $this->font, 'B', 9 );
 
-            foreach ( $this->table_headers as $key => $header ) {
-                if ( 0 == $key ) {
-                    $this->Cell( 1, 10, '', 0, 0, 'L', 0 );
-                    $this->Cell( $this->first_column_width, 10, iconv( "UTF-8", "ISO-8859-1", $header ), 0, 0, 'L', 0 );
-                } else {
-                    $this->Cell( $this->columnSpacing, 10, '', 0, 0, 'L', 0 );
-                    $this->Cell( $width_other, 10, iconv( "UTF-8", "ISO-8859-1", $header ), 0, 0, 'C', 0 );
-                }
-            }
+			foreach ( $this->table_headers as $key => $header ) {
+				if ( 0 == $key ) {
+					$this->Cell( 1, 10, '', 0, 0, 'L', 0 );
+					$this->Cell( $this->first_column_width, 10, iconv( "UTF-8", "ISO-8859-1", $header ), 0, 0, 'L', 0 );
+				} else {
+					$this->Cell( $this->columnSpacing, 10, '', 0, 0, 'L', 0 );
+					$this->Cell( $width_other, 10, iconv( "UTF-8", "ISO-8859-1", $header ), 0, 0, 'C', 0 );
+				}
+			}
 
 			$this->Ln();
 			$this->SetLineWidth( 0.3 );
@@ -376,7 +376,7 @@ class PDF_Invoicer extends FPDF {
 						continue;
 					}
 
-					$this->SetFont($this->font,'',8);
+					$this->SetFont('DejaVu','',8);
 					$this->SetTextColor(50,50,50);
 					$this->SetFillColor($bgcolor, $bgcolor, $bgcolor);
 					$this->Cell( $width_other, $cHeight, $column, 0, 0, 'C', 1 );
@@ -411,13 +411,13 @@ class PDF_Invoicer extends FPDF {
 				$this->Cell( 1, $cellHeight, '', 0, 0, 'L', 1 );
 				$this->Cell( $width_other - 1, $cellHeight, iconv( 'UTF-8', 'windows-1252', $total['name'] ), 0, 0, 'L', 1 );
 				$this->Cell( $this->columnSpacing, $cellHeight, '', 0, 0, 'L', 0 );
-				$this->SetFont( $this->font, 'b', 8 );
+				$this->SetFont( 'DejaVu', 'b', 8 );
 				$this->SetFillColor( $bgcolor, $bgcolor, $bgcolor );
 				if ( $total['colored'] ) {
 					$this->SetTextColor( 255, 255, 255 );
 					$this->SetFillColor( $this->color[0], $this->color[1], $this->color[2] );
 				}
-				$this->Cell( $width_other, $cellHeight, iconv( 'UTF-8', 'windows-1252', $total['value'] ), 0, 0, 'C', 1 );
+				$this->Cell( $width_other, $cellHeight, $total['value'], 0, 0, 'C', 1 );
 				$this->Ln();
 				$this->Ln( $this->columnSpacing );
 			}
@@ -484,10 +484,10 @@ class PDF_Invoicer extends FPDF {
 	}
 
 	/*******************************************************************************
-	*                                                                              *
-	*                               Private methods                                *
-	*                                                                              *
-	*******************************************************************************/
+	 *                                                                              *
+	 *                               Private methods                                *
+	 *                                                                              *
+	 *******************************************************************************/
 
 	private function setDocumentSize( $dsize ) {
 

@@ -312,18 +312,6 @@ function erp_ac_new_tax_account( $postdata, $tax_id ) {
     erp_ac_insert_chart( $payable_account );
 }
 
-function erp_ac_accounting_code_generator() {
-    $ledger = WeDevs\ERP\Accounting\Model\Ledger::select( 'code' )->get()->toArray();
-    $ledger = wp_list_pluck( $ledger, 'code' );
-    $code   = random_int( 0, 999 );
-
-    if ( in_array( $code, $ledger ) ) {
-        erp_ac_accounting_code_generator();
-    }
-
-    return $code;
-}
-
 function erp_ac_get_trans_unit_tax_rate( $items ) {
     $itms_tax = [];
     $tax_info = erp_ac_get_tax_info();

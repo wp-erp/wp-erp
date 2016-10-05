@@ -8,7 +8,7 @@ if ( $screen->base == 'accounting_page_erp-accounting-sales'  ) {
         'output_by' => 'array',
         'join'      => ['payments'],
         'number'    => -1,
-        'form_type' => [ 'in' => ['invoice', 'payment'] ]
+        'form_type' => [ 'in' => ['payment'] ]
     ]);
 
     $current_time = current_time( 'mysql' );
@@ -86,7 +86,7 @@ if ( $screen->base == 'accounting_page_erp-accounting-sales'  ) {
         'output_by' => 'array',
         'number'    => -1,
         'join'      => ['payments'],
-        'form_type' => [ 'in' => ['vendor_credit', 'payment_voucher'] ]
+        'form_type' => [ 'in' => ['payment_voucher'] ]
     ]);
 
     $current_time = current_time( 'mysql' );

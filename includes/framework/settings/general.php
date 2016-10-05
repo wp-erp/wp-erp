@@ -57,6 +57,14 @@ class ERP_Settings_General extends ERP_Settings_Page {
             ),
 
             array(
+                'title'   => __( 'Currency', 'erp' ),
+                'id'      => 'erp_currency',
+                'type'    => 'select',
+                'options' => erp_get_currency_list_with_symbol(),
+                'default' => 'USD'
+            ),
+
+            array(
                 'title'   => __( 'Enable Debug Mode', 'erp' ),
                 'id'      => 'erp_debug_mode',
                 'type'    => 'select',

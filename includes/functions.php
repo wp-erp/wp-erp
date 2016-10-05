@@ -88,7 +88,7 @@ function erp_get_currencies() {
         'TWD' => __( 'Taiwan New Dollars', 'erp' ),
         'THB' => __( 'Thai Baht', 'erp' ),
         'TRY' => __( 'Turkish Lira', 'erp' ),
-        'USD' => __( 'US Dollars', 'erp' ),
+        'USD' => __( 'US Dollar', 'erp' ),
         'VND' => __( 'Vietnamese Dong', 'erp' ),
         'EGP' => __( 'Egyptian Pound', 'erp' ),
     ) ) );
@@ -128,6 +128,18 @@ function erp_get_currencies_dropdown( $selected = '' ) {
 
     return $options;
 }
+
+/**
+ * Get global currency
+ *
+ * @since 1.1.6
+ *
+ * @return string
+ */
+function erp_get_currency() {
+    return erp_get_option( 'erp_currency', 'erp_settings_general', 'USD' );
+}
+
 
 /**
  * Get Currency symbol.
