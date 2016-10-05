@@ -167,8 +167,8 @@ abstract class REST_Controller {
      */
     public function get_endpoint_args_for_item_schema( $method = WP_REST_Server::CREATABLE ) {
 
-        $schema                = $this->get_item_schema();
-        $schema_properties     = ! empty( $schema['properties'] ) ? $schema['properties'] : [];
+        $schema            = $this->get_item_schema();
+        $schema_properties = ! empty( $schema['properties'] ) ? $schema['properties'] : [];
         $endpoint_args = [];
 
         foreach ( $schema_properties as $field_id => $params ) {
@@ -217,6 +217,20 @@ abstract class REST_Controller {
     }
 
     /**
+     * Adds multiple links to the response.
+     *
+     * @param   object $response
+     * @param   object $item
+     *
+     * @return  object
+     */
+    protected function add_links( $response, $item ) {
+        $response->data['_links'] = $this->prepare_links( $item );
+
+        return $response;
+    }
+
+    /**
      * Prepare links for the request.
      *
      * @param  object $item
@@ -225,12 +239,8 @@ abstract class REST_Controller {
      */
     protected function prepare_links( $item ) {
         $links = [
-            'self' => [
-                'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $item->id ) ),
-            ],
-            'collection' => [
-                'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
-            ],
+            'self'       => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $item->id ) ),
+            'collection' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
         ];
 
         return $links;
@@ -246,15 +256,7 @@ abstract class REST_Controller {
      *
      * @return object
      */
-    public function format_collection_response( $response, $request, $items, $total_items ) {
-        $formated_items = [];
-        foreach ( $items as $item ) {
-            $data = $this->prepare_item_for_response( $item, $request );
-            $formated_items[] = $this->prepare_response_for_collection( $data );
-        }
-
-        $response = rest_ensure_response( $formated_items );
-
+    public function format_collection_response( $response, $request, $total_items ) {
         // Store pagation values for headers then unset for count query.
         $per_page = (int) $request['per_page'];
         $page     = (int) $request['page'];
@@ -262,7 +264,6 @@ abstract class REST_Controller {
         $response->header( 'X-WP-Total', (int) $total_items );
         $max_pages = ceil( $total_items / $per_page );
         $response->header( 'X-WP-TotalPages', (int) $max_pages );
-
         $base = add_query_arg( $request->get_query_params(), rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ) );
 
         if ( $page > 1 ) {
@@ -274,6 +275,7 @@ abstract class REST_Controller {
             $response->link_header( 'prev', $prev_link );
         }
         if ( $max_pages > $page ) {
+
             $next_page = $page + 1;
             $next_link = add_query_arg( 'page', $next_page, $base );
             $response->link_header( 'next', $next_link );

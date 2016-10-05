@@ -33,8 +33,9 @@ class Contacts_Groups_Controller extends REST_Controller {
             [
                 'methods'  => WP_REST_Server::CREATABLE,
                 'callback' => [ $this, 'create_group' ],
-                'args'     => $this->get_endpoint_args_for_item_schema(),
+                'args'     => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
             ],
+            'schema' => [ $this, 'get_public_item_schema' ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
@@ -87,7 +88,15 @@ class Contacts_Groups_Controller extends REST_Controller {
 
         $items       = erp_crm_get_contact_groups( $args );
         $total_items = erp_crm_get_contact_groups( [ 'count' => true ] );
-        $response    = $this->format_collection_response( $response, $request, $items, $total_items );
+
+        $formated_items = [];
+        foreach ( $items as $item ) {
+            $data = $this->prepare_item_for_response( $item, $request );
+            $formated_items[] = $this->prepare_response_for_collection( $data );
+        }
+
+        $response = rest_ensure_response( $formated_items );
+        $response = $this->format_collection_response( $response, $request, $total_items );
 
         return $response;
     }
@@ -128,7 +137,7 @@ class Contacts_Groups_Controller extends REST_Controller {
 
         $group = erp_crm_save_contact_group( $data );
 
-        return new WP_REST_Response( $group, 200 );
+        return new WP_REST_Response( $group, 201 );
     }
 
     /**
@@ -147,7 +156,7 @@ class Contacts_Groups_Controller extends REST_Controller {
 
         $group = erp_crm_save_contact_group( $data );
 
-        return new WP_REST_Response( $group_id, 200 );
+        return new WP_REST_Response( $group_id, 201 );
     }
 
     /**
@@ -162,7 +171,7 @@ class Contacts_Groups_Controller extends REST_Controller {
 
         erp_crm_contact_group_delete( $group_id );
 
-        return new WP_REST_Response( true, 200 );
+        return new WP_REST_Response( true, 204 );
     }
 
     /**
@@ -173,13 +182,38 @@ class Contacts_Groups_Controller extends REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_subscribed_contacts( $request ) {
-        $data = [
-            'group_id' => intval( $request['group_id'] ),
+        $args = [
+            'group_id' => intval( $request['id'] ),
+            'number'   => $request['per_page'],
+            'offset'   => ( $request['per_page'] * ( $request['page'] - 1 ) ),
         ];
 
-        $contacts = erp_crm_get_subscriber_contact( $data );
+        $subscribers   = erp_crm_get_subscriber_contact( $args );
+        $args['count'] = true;
+        $total_items   = erp_crm_get_subscriber_contact( $args );
 
-        return new WP_REST_Response( $contacts, 200 );
+        $item_ids = [];
+        foreach ( $subscribers as $subscriber ) {
+            $item_ids[] = $subscriber->user_id;
+        }
+
+        $items = [];
+        if ( ! empty( $item_ids ) ) {
+            $items = erp_get_people_by( 'id', $item_ids );
+        }
+
+        $contacts_controller = new Contacts_Controller();
+
+        $formated_items = [];
+        foreach ( $items as $item ) {
+            $data = $contacts_controller->prepare_item_for_response( $item, $request );
+            $formated_items[] = $this->prepare_response_for_collection( $data );
+        }
+
+        $response = rest_ensure_response( $formated_items );
+        $response = $this->format_collection_response( $response, $request, $total_items );
+
+        return $response;
     }
 
     /**
@@ -197,7 +231,7 @@ class Contacts_Groups_Controller extends REST_Controller {
 
         $result = erp_crm_create_new_contact_subscriber( $data );
 
-        return new WP_REST_Response( $result, 200 );
+        return new WP_REST_Response( true, 201 );
     }
 
     /**
@@ -215,7 +249,7 @@ class Contacts_Groups_Controller extends REST_Controller {
 
         $result = erp_crm_contact_subscriber_delete( $data['user_id'] );
 
-        return new WP_REST_Response( $result, 200 );
+        return new WP_REST_Response( $result, 204 );
     }
 
     /**
@@ -262,7 +296,7 @@ class Contacts_Groups_Controller extends REST_Controller {
         // Wrap the data in a response object
         $response = rest_ensure_response( $data );
 
-        $response->add_links( $this->prepare_links( $item ) );
+        $response = $this->add_links( $response, $item );
 
         return $response;
     }

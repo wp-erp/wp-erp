@@ -688,6 +688,10 @@ function erp_crm_get_feed_activity( $postdata ) {
         $results = $results->skip( $postdata['offset'] )->take( $postdata['limit'] );
     }
 
+    if ( isset( $postdata['count'] ) && $postdata['count'] ) {
+        return $results->count();
+    }
+
     $results = $results->get()->toArray();
 
     foreach ( $results as $key => $value ) {

@@ -74,7 +74,28 @@ class Contacts_Controller extends REST_Controller {
 
         $items       = erp_get_peoples( $args );
         $total_items = erp_get_peoples( [ 'count' => true ] );
-        $response    = $this->format_collection_response( $response, $request, $items, $total_items );
+
+        $formated_items = [];
+        foreach ( $items as $item ) {
+            $additional_fields = [];
+
+            if ( isset( $request['include'] ) ) {
+                $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
+
+                if ( in_array( 'owner', $include_params ) ) {
+                    $contact_owner_id = ( $item->user_id ) ? get_user_meta( $item->user_id, '_assign_crm_agent', true ) : erp_people_get_meta( $item->id, '_assign_crm_agent', true );
+
+                    $item->owner = $this->get_user( $contact_owner_id );
+                    $additional_fields = ['owner' => $item->owner];
+                }
+            }
+
+            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $formated_items[] = $this->prepare_response_for_collection( $data );
+        }
+
+        $response = rest_ensure_response( $formated_items );
+        $response = $this->format_collection_response( $response, $request, $total_items );
 
         return $response;
     }
@@ -87,15 +108,27 @@ class Contacts_Controller extends REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_contact( $request ) {
-        $id       = (int) $request['id'];
-        $contact  = erp_get_people( $id );
+        $id   = (int) $request['id'];
+        $item = erp_get_people( $id );
 
-        if ( empty( $id ) || empty( $contact->id ) ) {
+        if ( empty( $id ) || empty( $item->id ) ) {
             return new WP_Error( 'rest_contact_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $contact  = $this->prepare_item_for_response( $contact, $request );
-        $response = rest_ensure_response( $contact );
+        $additional_fields = [];
+        if ( isset( $request['include'] ) ) {
+            $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
+
+            if ( in_array( 'owner', $include_params ) ) {
+                $contact_owner_id = ( $item->user_id ) ? get_user_meta( $item->user_id, '_assign_crm_agent', true ) : erp_people_get_meta( $item->id, '_assign_crm_agent', true );
+
+                $item->owner = $this->get_user( $contact_owner_id );
+                $additional_fields = ['owner' => $item->owner];
+            }
+        }
+
+        $item  = $this->prepare_item_for_response( $item, $request, $additional_fields );
+        $response = rest_ensure_response( $item );
 
         return $response;
     }
@@ -136,6 +169,14 @@ class Contacts_Controller extends REST_Controller {
         $item = erp_get_people( $id );
         if ( ! $item ) {
             return new WP_Error( 'rest_contact_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
+        }
+
+        if ( isset( $request['email'] ) ) {
+            unset( $request['email'] );
+        }
+
+        if ( isset( $request['type'] ) ) {
+            unset( $request['type'] );
         }
 
         $item = $this->prepare_item_for_database( $request );
@@ -245,10 +286,11 @@ class Contacts_Controller extends REST_Controller {
      *
      * @param object $item
      * @param WP_REST_Request $request Request object.
+     * @param array $additional_fields (optional)
      *
      * @return WP_REST_Response $response Response data.
      */
-    public function prepare_item_for_response( $item, $request ) {
+    public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $data = [
             'id'          => (int) $item->id,
             'first_name'  => $item->first_name,
@@ -272,10 +314,13 @@ class Contacts_Controller extends REST_Controller {
             'user_id'     => (int) $item->user_id,
         ];
 
+        $data = array_merge( $data, $additional_fields );
+
         // Wrap the data in a response object
         $response = rest_ensure_response( $data );
 
-        $response->add_links( $this->prepare_links( $item ) );
+        $response = $this->add_links( $response, $item );
+        // $response->add_links( $this->prepare_links( $item ) );
 
         return $response;
     }
@@ -450,5 +495,35 @@ class Contacts_Controller extends REST_Controller {
         ];
 
         return $schema;
+    }
+
+    /**
+     * Retrieve a wp user
+     *
+     * @param  integer $user_id
+     *
+     * @return array
+     */
+    public function get_user( $user_id ) {
+        $user = get_user_by( 'ID', $user_id );
+
+        if ( ! $user ) {
+            return null;
+        }
+
+        $data = [
+            'ID'            => $user->ID,
+            'user_nicename' => $user->user_nicename,
+            'user_email'    => $user->user_email,
+            'user_url'      => $user->user_url,
+            'display_name'  => $user->display_name,
+            'avatar'        => get_avatar_url( $user->ID ),
+            '_links'        => [
+                'self'       => rest_url( sprintf( '/%s/%s/%d', $this->namespace, 'users', $user->ID ) ),
+                'collection' => rest_url( sprintf( '/%s/%s', $this->namespace, 'users' ) ),
+            ]
+        ];
+
+        return $data;
     }
 }
