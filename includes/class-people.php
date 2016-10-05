@@ -14,8 +14,13 @@ class People extends Item {
      * @return void
      */
     protected function populate( $item ) {
-        $this->id   = (int) $item->id;
-        $this->data = $item;
+        if ( $item && ! is_wp_error( $item ) ) {
+            $this->id   = (int) $item->id;
+            $this->data = $item;
+
+        } else {
+            $this->id   = 0;
+        }
     }
 
     /**
