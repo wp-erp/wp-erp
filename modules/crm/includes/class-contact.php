@@ -20,6 +20,10 @@ class Contact extends \WeDevs\ERP\People {
      * @param int|object $contact
      */
     public function __construct( $contact = null, $type = null ) {
+        if ( ! is_object( $contact ) ) {
+            $contact = absint( $contact );
+        }
+
         parent::__construct( $contact );
         $this->types = $type ? (array)$type : $this->types;
     }
