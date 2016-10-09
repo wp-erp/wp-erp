@@ -996,6 +996,7 @@
                                     self.$refs.vtable.tableData.unshift(res.data);
                                     self.$nextTick(function() {
                                         this.$broadcast('vtable:reload');
+                                        self.$refs.vtable.topNavFilter.data = res.statuses;
                                     });
                                  },
                                 error: function(error) {
@@ -1067,7 +1068,10 @@
                                 success: function(res) {
                                     modal.enableButton();
                                     modal.closeModal();
-                                    self.$refs.vtable.tableData.$set( index, res.data );
+                                    // self.$refs.vtable.tableData.$set( index, res.data );
+                                    self.$nextTick(function() {
+                                        this.$broadcast('vtable:reload')
+                                    });
                                     self.$refs.vtable.topNavFilter.data = res.statuses;
                                 },
                                 error: function(error) {
