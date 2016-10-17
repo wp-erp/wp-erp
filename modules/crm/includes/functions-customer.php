@@ -713,7 +713,11 @@ function erp_crm_get_feed_activity( $postdata ) {
             $value['contact']['last_name'] = get_user_meta( $value['contact']['user_id'], 'last_name', true );
         }
 
-        $value['contact']['types'] = wp_list_pluck( $value['contact']['types'], 'name' );
+        if ( ! empty( $value['contact']['types'] ) ) {
+            $value['contact']['types'] = wp_list_pluck( $value['contact']['types'], 'name' );
+        } else {
+            $value['contact']['types'] = [];
+        }
 
         unset( $value['extra']['invite_contact'] );
         $value['message']               = erp_crm_format_activity_feed_message( $value['message'], $value );

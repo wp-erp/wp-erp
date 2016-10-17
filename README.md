@@ -21,7 +21,7 @@ An open-source ERP (Enterprise Resource Planning) solution for WordPress
 
 ## Minimum Requirement
  - PHP 5.4.0
- - WordPress 3.6+
+ - WordPress 4.4+
 
 ## Installation
 
