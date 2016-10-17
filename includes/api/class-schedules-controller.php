@@ -61,10 +61,9 @@ class Schedules_Controller extends REST_Controller {
      */
     public function get_schedules( $request ) {
         $args = [
-            'limit'      => $request['per_page'],
-            'offset'     => ( $request['per_page'] * ( $request['page'] - 1 ) ),
-            'type'       => 'log_activity',
-            'created_by' => get_current_user_id(),
+            'limit'  => $request['per_page'],
+            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+            'type'   => 'log_activity',
         ];
 
         $items = erp_crm_get_feed_activity( $args );
