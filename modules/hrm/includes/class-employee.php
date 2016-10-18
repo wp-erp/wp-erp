@@ -710,7 +710,7 @@ class Employee {
         $sql = "SELECT *
                 FROM {$wpdb->prefix}erp_hr_employee_history
                 WHERE user_id = %d
-                ORDER BY id DESC";
+                ORDER BY date DESC";
 
         $history = array( 'job' => array(), 'compensation' => array(), 'employment' => array() );
         $results = $wpdb->get_results( $wpdb->prepare( $sql , $this->id ) );
