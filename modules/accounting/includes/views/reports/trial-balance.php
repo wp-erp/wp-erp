@@ -52,7 +52,7 @@ $credit_total = 0.00;
         <tbody>
             <?php if ( $charts ) {
 
-                    foreach ($charts as $class) {
+                    foreach ( $charts as $class ) {
                         $report = 0;
                         ?>
 

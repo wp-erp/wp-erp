@@ -320,6 +320,7 @@ function erp_ac_message() {
         'transaction_status' => __( 'Transaction Status', 'erp' ),
         'submit'        => __( 'Submit', 'erp' ),
         'redo'          => __( 'Yes, redo it!', 'erp' ),
+        'yes'           => __( 'Yes, do it!', 'erp' ),
     );
 
     return apply_filters( 'erp_ac_message', $message );

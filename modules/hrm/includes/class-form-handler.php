@@ -601,7 +601,7 @@ class Form_Handler {
      * @return void
      */
     public function leave_request_status_change() {
-
+        
         // If not leave bulk action then go out from here
         if ( ! isset( $_GET['leave_action'] ) ) {
             return;

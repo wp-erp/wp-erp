@@ -200,7 +200,7 @@ class Transaction_List_Table extends \WP_List_Table {
 
 
 
-    /**
+/**
      * Set the views
      *
      * @return array
@@ -208,7 +208,6 @@ class Transaction_List_Table extends \WP_List_Table {
     public function get_views() {
         $status_links   = array();
         $base_link      = admin_url( 'admin.php?page=sample-page' );
-
         // foreach ($this->counts as $key => $value) {
         //     $class = ( $key == $this->page_status ) ? 'current' : 'status-' . $key;
         //     $status_links[ $key ] = sprintf( '<a href="%s" class="%s">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => $key ), $base_link ), $class, $value['label'], $value['count'] );
@@ -216,7 +215,6 @@ class Transaction_List_Table extends \WP_List_Table {
         //
         //$status_links['all'] = sprintf( '<a href="%s">%s<span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'all' ), $base_link ), __( 'All', 'erp' ), $this->customer_get_status_count('customer') );
         //$status_links['trash'] = sprintf( '<a href="%s" >%s<span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'trash' ), $base_link ), __( 'Trash', 'erp' ), $this->count_trashed_customers() );
-
         return $status_links;
     }
 

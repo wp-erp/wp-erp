@@ -223,8 +223,6 @@ class Human_Resource {
     public function admin_js_templates() {
         global $current_screen;
 
-        // var_dump( $current_screen->base );
-
         switch ($current_screen->base) {
             case 'toplevel_page_erp-hr':
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-leave-request.php', 'erp-new-leave-req' );
