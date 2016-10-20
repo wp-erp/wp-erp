@@ -287,9 +287,9 @@ class Customer_List_Table extends \WP_List_Table {
         }
         $this->user_balance = isset( $users ) ? $users : '0.00';
 
-        $this->set_pagination_args( array(
+        $this->set_pagination_args(array(
             'total_items' => erp_get_peoples_count( $this->type ),
             'per_page'    => $per_page
-        ) );
+        ));
     }
 }
