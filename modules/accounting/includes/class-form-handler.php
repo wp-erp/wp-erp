@@ -323,7 +323,8 @@ class Form_Handler {
                 $redirect_to = erp_ac_get_expense_voucher_url( $insert_id );    
             } 
         }
-        $redirect_to = apply_filters( 'erp_ac_redirect_after_transaction', $redirect_to, $_POST );
+
+        $redirect_to = apply_filters( 'erp_ac_redirect_after_transaction', $redirect_to, $insert_id, $_POST );
         wp_safe_redirect( $redirect_to );
         exit;
     }
