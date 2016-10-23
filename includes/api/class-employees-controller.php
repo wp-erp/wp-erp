@@ -577,6 +577,10 @@ class Employees_Controller extends REST_Controller {
 
         $experience = Work_Experience::where( ['id' => $exp_id, 'employee_id' => $employee_id] )->first();
 
+        if ( ! $experience ) {
+            return new WP_Error( 'rest_invalid_experience', __( 'Invalid experience id.' ), array( 'status' => 404 ) );
+        }
+
         $response   = $this->prepare_experience_for_response( $experience, $request );
 
         return $response;
@@ -755,6 +759,10 @@ class Employees_Controller extends REST_Controller {
         $employee_id = (int) $request['id'];
 
         $education = Education::where( ['id' => $edu_id, 'employee_id' => $employee_id] )->first();
+
+        if ( ! $education ) {
+            return new WP_Error( 'rest_invalid_education', __( 'Invalid education id.' ), array( 'status' => 404 ) );
+        }
 
         $response  = $this->prepare_education_for_response( $education, $request );
 
@@ -939,6 +947,10 @@ class Employees_Controller extends REST_Controller {
         $employee_id = (int) $request['id'];
 
         $dependent = Dependents::where( ['id' => $dep_id, 'employee_id' => $employee_id] )->first();
+
+        if ( ! $dependent ) {
+            return new WP_Error( 'rest_invalid_dependent', __( 'Invalid dependent id.' ), array( 'status' => 404 ) );
+        }
 
         $response  = $this->prepare_dependent_for_response( $dependent, $request );
 
