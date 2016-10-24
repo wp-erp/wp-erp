@@ -1,5 +1,13 @@
 <?php
-
+/**
+ * Get url for journal invoice
+ *
+ * @param  int $transaction_id 
+ * 
+ * @since 1.1.5
+ * 
+ * @return str
+ */
 function erp_ac_get_journal_invoice_url( $transaction_id ) {
 	$url_args = [
 		'page'   => 'erp-accounting-journal',
@@ -12,6 +20,15 @@ function erp_ac_get_journal_invoice_url( $transaction_id ) {
 	return apply_filters( 'erp_ac_journal_invoice_url', $url, $transaction_id );
 }
 
+/**
+ * Get url for journal 
+ *
+ * @param  str $content 
+ * 
+ * @since 1.1.5
+ * 
+ * @return str
+ */
 function erp_ac_get_journal_url( $content = false ) {
 	
 	$url_args = [
@@ -23,6 +40,15 @@ function erp_ac_get_journal_url( $content = false ) {
 	return apply_filters( 'erp_ac_journal_url', $url, $content );
 }
 
+/**
+ * Get url for sales payment 
+ *
+ * @param  int $transaction_id 
+ * 
+ * @since 1.1.5
+ * 
+ * @return str
+ */
 function erp_ac_get_slaes_payment_invoice_url( $transaction_id ) {
 	$url_args = [
 		'page'   => 'erp-accounting-sales',
@@ -35,6 +61,15 @@ function erp_ac_get_slaes_payment_invoice_url( $transaction_id ) {
 	return apply_filters( 'slaes_payment_invoice_url', $url, $transaction_id );
 }
 
+/**
+ * Get url for bank transfer invoice
+ *
+ * @param  int $transaction_id 
+ * 
+ * @since 1.1.5
+ * 
+ * @return str
+ */
 function erp_ac_get_bank_transfer_invoice_url( $transaction_id ) {
 	$url_args = [
 		'page'   => 'erp-accounting-bank',
@@ -47,6 +82,15 @@ function erp_ac_get_bank_transfer_invoice_url( $transaction_id ) {
 	return apply_filters( 'bank_transfer_invoice_url', $url, $transaction_id );
 }
 
+/**
+ * Get url for expense voucher
+ *
+ * @param  int $transaction_id 
+ * 
+ * @since 1.1.5
+ * 
+ * @return str
+ */
 function erp_ac_get_expense_voucher_url( $transaction_id ) {
 	$url_args = [
 		'page'   => 'erp-accounting-expense',
@@ -59,6 +103,15 @@ function erp_ac_get_expense_voucher_url( $transaction_id ) {
 	return apply_filters( 'erp_ac_get_expense_voucher_url', $url, $transaction_id );
 }
 
+/**
+ * Get url for customer edit
+ *
+ * @param  int $customer_id 
+ * 
+ * @since 1.1.5
+ * 
+ * @return str
+ */
 function erp_ac_customer_edit_url( $customer_id ) {
 	$url_args = [
 		'page'   => 'erp-accounting-customers',
@@ -69,6 +122,16 @@ function erp_ac_customer_edit_url( $customer_id ) {
 	$url = add_query_arg( $url_args, admin_url( 'admin.php' ) );
 	return apply_filters( 'erp_ac_customer_edit_url', $url, $customer_id );
 }
+
+/**
+ * Get url for vendor edit
+ *
+ * @param  int $vendor_id 
+ * 
+ * @since 1.1.5
+ * 
+ * @return str
+ */
 function erp_ac_vendor_edit_url( $vendor_id ) {
 	$url_args = [
 		'page'   => 'erp-accounting-vendors',
@@ -80,6 +143,16 @@ function erp_ac_vendor_edit_url( $vendor_id ) {
 	return apply_filters( 'erp_ac_vendor_edit_url', $url, $vendor_id );
 }
 
+/**
+ * Get url for individual account
+ *
+ * @param  int $account_id
+ * @param  str $content
+ * 
+ * @since 1.1.5
+ * 
+ * @return str
+ */
 function erp_ac_get_account_url( $account_id, $content = '' ) {
 	$url = add_query_arg(array(
 			'page'   => 'erp-accounting-charts',
@@ -96,6 +169,16 @@ function erp_ac_get_account_url( $account_id, $content = '' ) {
 
 	return apply_filters( 'erp_ac_get_account_url', $url, $account_id, $content );
 }
+
+/**
+ * Get url for individual tax report
+ *
+ * @param  int $tax_id 
+ * 
+ * @since 1.1.5
+ * 
+ * @return str
+ */
 function erp_ac_get_singe_tax_report_url( $tax_id ) {
 	$url_args = [
 		'page'   => 'erp-accounting-reports',
@@ -107,6 +190,14 @@ function erp_ac_get_singe_tax_report_url( $tax_id ) {
 	$url = add_query_arg( $url_args, admin_url( 'admin.php' ) );
 	return apply_filters( 'erp_ac_get_singe_tax_report_url', $url, $tax_id );
 }
+
+/**
+ * Get url for sales tax report
+ * 
+ * @since 1.1.5
+ * 
+ * @return str
+ */
 function erp_ac_get_sales_tax_report_url() {
 	$url_args = [
 		'page'   => 'erp-accounting-reports',
@@ -117,6 +208,15 @@ function erp_ac_get_sales_tax_report_url() {
 	return apply_filters( 'erp_ac_get_sales_tax_report_url', $url );
 }
 
+/**
+ * Get url for sales menu
+ *
+ * @param  str $content 
+ * 
+ * @since 1.1.5
+ * 
+ * @return str
+ */
 function erp_ac_get_sales_url( $content = false ) {
 	if ( ! current_user_can( 'erp_ac_view_sale' ) ) {
 		return apply_filters( 'erp_ac_get_sales_url', $content );
@@ -128,10 +228,41 @@ function erp_ac_get_sales_url( $content = false ) {
 		$url = add_query_arg( array( 'page' => 'erp-accounting-sales' ), admin_url('admin.php') );
 	}
 	
-	
 	return apply_filters( 'erp_ac_get_sales_url', $url, $content );
 }
 
+/**
+ * Get url for section sales menu
+ *
+ * @param  str $slag
+ * 
+ * @since 1.1.5
+ * 
+ * @return str
+ */
+function erp_ac_get_section_sales_url( $slag = false ) {
+	$sales_url = erp_ac_get_sales_url();
+	
+	if ( $slag ) {
+		$slag = str_replace( '_', '-', $slag );
+	} else {
+		$slag = 'all';
+	}
+	
+	$url = add_query_arg( array( 'section' => $slag ), $sales_url );
+
+	return apply_filters( 'erp_ac_get_section_sales_url', $url, $slag );
+}
+
+/**
+ * Get url for expense
+ *
+ * @param  str $content
+ * 
+ * @since 1.1.5
+ * 
+ * @return str
+ */
 function erp_ac_get_expense_url( $content = false ) {
 	
 	if ( ! current_user_can( 'erp_ac_view_expense' ) ) {
@@ -166,4 +297,8 @@ function erp_ac_get_vendor_credit_edit_url( $id ) {
 	$url = add_query_arg( $url_args, admin_url( 'admin.php' ) );
 	return apply_filters( 'erp_ac_get_vendor_credit_edit_url', $url );
 }
+
+
+
+
 
