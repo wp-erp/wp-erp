@@ -128,24 +128,12 @@ class Announcements_Controller extends REST_Controller {
 
         $type = ( $request['recipient_type'] == 'all_employees' ) ? 'all_employee' : 'selected_employee';
 
+        $employees = [];
         if ( $type == 'selected_employee' ) {
             $employees = explode( ',', str_replace( ' ', '', $request['employees'] ) );
-        } else {
-            $employees_collection = erp_hr_get_employees( ['no_object' => true] );
-
-            if ( $employees_collection ) {
-                foreach ( $employees_collection as $user ) {
-                    $employees[] = $user->user_id;
-                }
-            }
         }
 
-        // selected_employee, all_employee
-        update_post_meta( $id, '_announcement_type', $type );
-        update_post_meta( $id, '_announcement_selected_user', $employees );
-
-        $announcement_obj = new \WeDevs\ERP\HRM\Announcement();
-        $announcement_obj->process_employee_announcement_data( $employees, $id ) ;
+        erp_hr_assign_announcements_to_employees( $id, $type, $employees );
 
         $announcement     = get_post( $id );
         $announcement->id = $announcement->ID;
