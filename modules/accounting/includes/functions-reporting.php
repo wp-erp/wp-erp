@@ -64,6 +64,10 @@ function erp_ac_reporting_query() {
 
     $financial_start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
     $financial_end   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+    $where           = "tran.status IS NULL OR tran.status != 'draft' AND ( tran.issue_date >= '$financial_start' AND tran.issue_date <= '$financial_end' )";
+    $join            = '';
+    $where           = apply_filters( 'erp_ac_trial_balance_where', $where );
+    $join           = apply_filters( 'erp_ac_trial_balance_join', $join );
 
     $sql = "SELECT led.id, led.code, led.name, led.type_id, types.name as type_name, types.class_id, class.name as class_name, sum(jour.debit) as debit, sum(jour.credit) as credit
     FROM $tbl_ledger as led
@@ -71,13 +75,35 @@ function erp_ac_reporting_query() {
     LEFT JOIN $tbl_class as class ON class.id = types.class_id
     LEFT JOIN $tbl_journals as jour ON jour.ledger_id = led.id
     LEFT JOIN $tbl_transaction as tran ON tran.id = jour.transaction_id
-    WHERE ( tran.status IS NULL OR ( tran.status != 'draft' AND tran.status != 'void' AND tran.status != 'deleted' ) ) AND ( tran.issue_date >= '$financial_start' AND tran.issue_date <= '$financial_end' )
-    AND (tran.type = 'reimbur' AND tran.status != 'awaiting_approval')
+    $join
+    WHERE 
+    $where
     GROUP BY led.id";
 
-    $ledgers = $wpdb->get_results( $sql );
+    return $wpdb->get_results( $sql );
 
-    return $ledgers;
+    // global $wpdb;
+    // $tbl_ledger      = $wpdb->prefix . 'erp_ac_ledger';
+    // $tbl_type        = $wpdb->prefix . 'erp_ac_chart_types';
+    // $tbl_class       = $wpdb->prefix . 'erp_ac_chart_classes';
+    // $tbl_journals    = $wpdb->prefix . 'erp_ac_journals';
+    // $tbl_transaction = $wpdb->prefix . 'erp_ac_transactions';
+
+    // $financial_start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+    // $financial_end   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+
+    // $sql = "SELECT led.id, led.code, led.name, led.type_id, types.name as type_name, types.class_id, class.name as class_name, sum(jour.debit) as debit, sum(jour.credit) as credit
+    // FROM $tbl_ledger as led
+    // LEFT JOIN $tbl_type as types ON types.id = led.type_id
+    // LEFT JOIN $tbl_class as class ON class.id = types.class_id
+    // LEFT JOIN $tbl_journals as jour ON jour.ledger_id = led.id
+    // LEFT JOIN $tbl_transaction as tran ON tran.id = jour.transaction_id
+    // WHERE ( tran.status IS NULL OR ( tran.status != 'draft' AND tran.status != 'void' AND tran.status != 'deleted' ) ) AND ( tran.issue_date >= '$financial_start' AND tran.issue_date <= '$financial_end' )
+    // GROUP BY led.id";
+
+    // $ledgers = $wpdb->get_results( $sql );
+
+    // return $ledgers;
 }
 
 function erp_ac_get_sales_tax_report( $args ) {
@@ -295,37 +321,14 @@ function erp_ac_get_expense_tax_total( $charts ) {
     return $expense_tax_total;
 }
 
-/**
- * Get trial balance
- *
- * @return array
- */
-function erp_ac_get_trial_balance() {
-    global $wpdb;
-    $tbl_ledger      = $wpdb->prefix . 'erp_ac_ledger';
-    $tbl_type        = $wpdb->prefix . 'erp_ac_chart_types';
-    $tbl_class       = $wpdb->prefix . 'erp_ac_chart_classes';
-    $tbl_journals    = $wpdb->prefix . 'erp_ac_journals';
-    $tbl_transaction = $wpdb->prefix . 'erp_ac_transactions';
 
-    $financial_start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
-    $financial_end   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
-    $where           = "tran.status IS NULL OR tran.status != 'draft' AND ( tran.issue_date >= '{$financial_start}' AND tran.issue_date <= '{$financial_end}' )";
-    $where           = apply_filters( 'erp_ac_trial_balance_where', $where );
 
-    $sql = "SELECT led.id, led.code, led.name, led.type_id, types.name as type_name, types.class_id, class.name as class_name, sum(jour.debit) as debit, sum(jour.credit) as credit
-    FROM $tbl_ledger as led
-    LEFT JOIN $tbl_type as types ON types.id = led.type_id
-    LEFT JOIN $tbl_class as class ON class.id = types.class_id
-    LEFT JOIN $tbl_journals as jour ON jour.ledger_id = led.id
-    LEFT JOIN $tbl_transaction as tran ON tran.id = jour.transaction_id
-    WHERE 
-    $where
-    AND (tran.type = 'reimbur' AND tran.status != 'awaiting_approval')
-    GROUP BY led.id";
 
-    return $wpdb->get_results( $sql );
-}
+
+
+
+
+
 
 
 

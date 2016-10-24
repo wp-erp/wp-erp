@@ -1,5 +1,5 @@
 <?php
-$ledgers = erp_ac_get_trial_balance();
+$ledgers = erp_ac_reporting_query(); 
 $charts  = [];
 
 if ( $ledgers ) {
