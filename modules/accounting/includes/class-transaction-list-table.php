@@ -356,6 +356,10 @@ class Transaction_List_Table extends \WP_List_Table {
             $args['created_by'] = get_current_user_id();
         }
 
+        if ( isset( $_REQUEST['section'] ) ) {
+            $args['status']  = str_replace('-', '_', $_REQUEST['section'] );
+        }
+
         if ( 'expense' == $args['type'] && ! erp_ac_view_other_expenses() ) {
             $args['created_by'] = get_current_user_id();
         }

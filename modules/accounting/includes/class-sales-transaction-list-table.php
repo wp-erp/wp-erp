@@ -9,8 +9,10 @@ if ( ! class_exists ( 'WP_List_Table' ) ) {
  * List table class
  */
 class Sales_Transaction_List_Table extends Transaction_List_Table {
-    
+    private $page_status = '';
+
     function __construct() {
+        global $page_status;
         parent::__construct();
 
         $this->type = 'sales';
@@ -39,9 +41,44 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
     }
 
     /**
+     * Render the issue date column
+     *
+     * @param  object  $item
+     *
+     * @return string
+     */
+    function column_issue_date( $item ) {
+        
+        if ( $$item->status == 'draft' ) {
+            $actions['delete'] = sprintf( '<a href="#" class="erp-accountin-trns-row-del" data-id="%d" title="%s">%s</a>', $item->id, __( 'Delete', 'erp' ), __( 'Delete', 'erp' ) );
+        }
+
+
+        if ( $item->status == 'pending' || $item->status == 'draft' || $item->status == 'awaiting_payment' ) {
+            $url   = admin_url( 'admin.php?page='.$this->slug.'&action=new&type=' . $item->form_type . '&transaction_id=' . $item->id );
+            $actions['edit'] = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Edit', 'erp' ) );
+        }
+
+        if ( ( $item->status == 'paid' || $item->status == 'closed' ) && $item->form_type == 'invoice' ) {
+            //$actions['redo'] = sprintf( '<a class="erp-accounting-redo" data-type="%1$s" data-id="%2$s" href="#">%3$s</a>', $item->type, $item->id, __( 'Redo', 'erp' ) );
+        }
+
+        if ( $item->status == 'awaiting_payment' ) {
+            $actions['void'] = sprintf( '<a class="erp-accounting-void" data-id="%1$s" href="#">%2$s</a>', $item->id, __( 'Void', 'erp' ) );
+        }
+
+
+        if ( isset( $actions ) && count( $actions ) ) {
+            return sprintf( '<a href="%1$s">%2$s</a> %3$s', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), erp_format_date( $item->issue_date ), $this->row_actions( $actions ) );
+        } else {
+            return sprintf( '<a href="%1$s">%2$s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), erp_format_date( $item->issue_date ) );
+        }
+    }
+
+    /**
      * Count sales status
      *
-     * @since  1.1.5
+     * @since  1.1.6
      *
      * @return  array
      */
@@ -82,7 +119,7 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
     /**
      * Get section for sales table list
      *
-     * @since  1.1.5
+     * @since  1.1.6
      * 
      * @return array
      */
@@ -93,7 +130,7 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
             'all'   => [
                 'label' => __( 'All', 'erp' ),
                 'count' => array_sum( $counts),
-                'url'   => erp_ac_get_section_sales_url( 'all' )
+                'url'   => erp_ac_get_section_sales_url()
             ],
 
             'draft' => [
@@ -132,10 +169,11 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
     public function get_views() {
         $counts       = $this->get_section();
         $status_links = array();
-        $base_link    = admin_url( 'admin.php?page=erp-hr-employee' );
-        
+        $section      = isset( $_REQUEST['section'] ) ? $_REQUEST['section'] : 'all';
+
         foreach ( $counts as $key => $value ) {
-            $class = ( $key == $this->page_status ) ? 'current' : 'status-' . $key;
+            $key   = str_replace( '_', '-', $key );
+            $class = ( $key == $section ) ? 'current' : 'status-' . $key;
             $status_links[ $key ] = sprintf( '<a href="%s" class="%s">%s <span class="count">(%s)</span></a>', $value['url'], $class, $value['label'], $value['count'] );
         }
 
@@ -151,4 +189,3 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
         return erp_ac_get_sales_form_types();
     }
 }
-
