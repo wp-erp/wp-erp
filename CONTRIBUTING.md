@@ -25,7 +25,7 @@ GitHub is for *bug reports and contributions only* - if you have a support quest
 * Push the changes to your fork and submit a pull request on the master branch of the WP ERP repository. Existing maintenance branches will be maintained by the WP ERP developers (me).
 * Please don't modify the changelog or .pot file/s - this will be maintained by WP ERP developers.
 
-At this point you're waiting on us to merge your pull request. We'll review all pull requests, and make suggestions and changes if necessary.
+At this point you're waiting on us to merge your pull request. We'll review all pull requests and make suggestions/ changes if necessary.
 
 **Don't be scared**. Any contribution at all is appreciated and important. I'll be more than happy to give you feedback and work with you to ensure you're able to contribute. :)
 
