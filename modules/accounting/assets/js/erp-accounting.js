@@ -71,7 +71,7 @@
             this.invoice.copyReadonlyLink();
 
             // payment
-            this.payment.initialize(); 
+            this.payment.initialize();
             $( 'body' ).on( 'click', '.payment-duplicate', this.payment.duplicate );
             $( 'body' ).on( 'click', '.payment-send-email', this.invoice.sendEmail );
             $( 'body' ).on( 'keyup change', '.erp-ac-payment-amount', this.payment.checkPaymentAmount );
@@ -80,7 +80,7 @@
             $( '.erp-form' ).on( 'click', '.erp-ac-trns-form-submit-btn', this.transaction.submit );
 
             //Transaction table row action
-            $( '.erp-accounting' ).on( 'click', '.erp-accountin-trns-row-del', this.transaction.rowDelete );
+            $( '.erp-accounting' ).on( 'click', '.erp-accountin-trns-row-bulk-action', this.transaction.rowBalkAction );
             $( '.erp-accounting' ).on( 'click', '.erp-accounting-trash', this.transaction.trash );
             $( '.erp-accounting' ).on( 'click', '.erp-accounting-void', this.transaction.void );
             $( '.erp-accounting' ).on( 'click', '.erp-accounting-redo', this.transaction.redo );
@@ -210,10 +210,9 @@
                 });
             },
 
-            rowDelete: function(e) {
+            rowBalkAction: function(e) {
                 e.preventDefault();
-                var self = $(this),
-                    id   = self.data('id');
+                var self = $(this);
 
                 swal({
                     title: ERP_AC.message.confirm,
@@ -222,15 +221,16 @@
                     //confirmButtonText: 'asdfasd',
                     showCancelButton: true,
                     confirmButtonColor: "#DD6B55",
-                    confirmButtonText: ERP_AC.message.delete,
+                    confirmButtonText: ERP_AC.message.yes,
                     closeOnConfirm: false,
                     showCancelButton: true,   closeOnConfirm: false,   showLoaderOnConfirm: true,
                 },
                 function(){
 
-                    wp.ajax.send('erp-ac-trns-row-del', {
+                    wp.ajax.send('erp-ac-row-bulk-action', {
                         data: {
-                            'id': id,
+                            'id': self.data('id'),
+                            'status': self.data('status'),
                             '_wpnonce': ERP_AC.nonce
                         },
                         success: function(res) {
@@ -720,7 +720,7 @@
                 var self = $(this),
                     self_amount = self.val(),
                     total_amount = self.data('amount');
-                
+
                 if ( parseInt( self_amount ) > parseInt( total_amount ) ) {
                     self.val(total_amount);
                 }
