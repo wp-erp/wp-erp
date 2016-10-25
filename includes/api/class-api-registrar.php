@@ -35,6 +35,7 @@ class API_Registrar {
             '\WeDevs\ERP\API\Designations_Controller',
             '\WeDevs\ERP\API\Employees_Controller',
             '\WeDevs\ERP\API\Announcements_Controller',
+            '\WeDevs\ERP\API\Leave_Policies_Controller',
         ];
 
         $controllers = apply_filters( 'erp_rest_api_controllers', $controllers );

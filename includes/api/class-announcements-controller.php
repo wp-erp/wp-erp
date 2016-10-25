@@ -167,6 +167,15 @@ class Announcements_Controller extends REST_Controller {
         $id   = wp_insert_post( $item );
         $announcement = get_post( $id );
 
+        $type = ( $request['recipient_type'] == 'all_employees' ) ? 'all_employee' : 'selected_employee';
+
+        $employees = [];
+        if ( $type == 'selected_employee' ) {
+            $employees = explode( ',', str_replace( ' ', '', $request['employees'] ) );
+        }
+
+        erp_hr_assign_announcements_to_employees( $id, $type, $employees );
+
         $announcement->id = $announcement->ID;
 
         $request->set_param( 'context', 'edit' );
@@ -218,8 +227,11 @@ class Announcements_Controller extends REST_Controller {
             $prepared_item['ID'] = absint( $request['id'] );
         }
 
-        $prepared_item['post_status'] = 'publish';
-        $prepared_item['post_type']   = 'erp_hr_announcement';
+        if ( isset( $request['status'] ) ) {
+            $prepared_item['post_status'] = $request['status'];
+        }
+
+        $prepared_item['post_type'] = 'erp_hr_announcement';
 
         return $prepared_item;
     }
@@ -235,9 +247,10 @@ class Announcements_Controller extends REST_Controller {
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $data = [
-            'id'    => (int) $item->id,
-            'title' => $item->post_title,
-            'body'  => $item->post_content,
+            'id'     => (int) $item->id,
+            'title'  => $item->post_title,
+            'body'   => $item->post_content,
+            'status' => $item->post_status,
         ];
 
         $data = array_merge( $data, $additional_fields );
@@ -258,7 +271,7 @@ class Announcements_Controller extends REST_Controller {
     public function get_item_schema() {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
-            'title'      => 'designation',
+            'title'      => 'announcement',
             'type'       => 'object',
             'properties' => [
                 'id'          => [

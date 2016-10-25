@@ -354,13 +354,11 @@ function erp_hr_leave_get_policies( $args = array() ) {
  * @return \stdClass
  */
 function erp_hr_leave_get_policy( $policy_id ) {
-    global $wpdb;
-
-    $policy = \WeDevs\ERP\HRM\Models\Leave_Policies::select( array( 'id', 'name', 'value', 'color' ) )
+    $policy = \WeDevs\ERP\HRM\Models\Leave_Policies::select( array( 'id', 'name', 'value', 'color', 'department', 'designation', 'gender', 'marital', 'activate', 'execute_day', 'effective_date', 'location', 'description' ) )
                 ->find( $policy_id )
                 ->toArray();
 
-    return  (object) $policy;
+    return (object) $policy;
 }
 
 /**
