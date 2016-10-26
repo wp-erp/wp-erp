@@ -42,7 +42,7 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
             'status'     => __( 'Status', 'erp' ),
         );
 
-        if ( $section == 'draft' || $section == 'awaiting-payment' || $section == 'closed' || $section == 'void' ) {
+        if ( $section == 'awaiting-approval' || $section == 'draft' || $section == 'awaiting-payment' || $section == 'closed' || $section == 'void' ) {
             $action = [ 'cb' => '<input type="checkbox" />'];
             $columns = array_merge( $action, $columns );
         }
@@ -61,8 +61,11 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
      */
     function column_issue_date( $item ) {
         if ( $item->status == 'draft' ) {
-            $url   = admin_url( 'admin.php?page='.$this->slug.'&action=new&type=' . $item->form_type . '&transaction_id=' . $item->id );
-            $actions['payment'] = sprintf( '<a class="erp-accountin-trns-row-bulk-action" data-status="%1s" data-id="%2d" href="%3s">%4s</a>', 'awaiting_payment', $item->id, $url, __( 'Payment', 'erp' ) );
+            $actions['approval'] = sprintf( '<a class="erp-accountin-trns-row-bulk-action" data-status="%1s" data-id="%2d" href="#">%4s</a>', 'awaiting_approval', $item->id, __( 'Approve', 'erp' ) );
+        }
+
+        if ( $item->status == 'awaiting_approval' ) {
+            $actions['payment'] = sprintf( '<a class="erp-accountin-trns-row-bulk-action" data-id="%1$s" data-status="%2$s" href="#">%3$s</a>', $item->id, 'awaiting_payment', __( 'Payment', 'erp' ) );
         }
 
         if ( $item->status == 'awaiting_payment' ) {
@@ -70,15 +73,15 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
             $actions['paid'] = sprintf( '<a href="%1$s">%2$s</a>', $url, __( 'Paid', 'erp' ) );
         }
 
-        if ( $item->status == 'awaiting_payment' || $item->status == 'closed' ) {
-            $actions['void'] = sprintf( '<a class="erp-accountin-trns-row-bulk-action" data-id="%1$s" data-status="%2s" href="#">%3$s</a>', $item->id, 'void', __( 'Void', 'erp' ) );
+        if ( $item->status == 'awaiting_approval' || $item->status == 'awaiting_payment' || $item->status == 'closed' ) {
+            $actions['void'] = sprintf( '<a class="erp-accountin-trns-row-bulk-action" data-id="%1$s" data-status="%2$s" href="#">%3$s</a>', $item->id, 'void', __( 'Void', 'erp' ) );
         }
 
         if ( $item->status == 'void' ) {
-            $actions['draft'] = sprintf( '<a class="erp-accountin-trns-row-bulk-action" data-id="%1$s" data-status="%2s" href="#">%3$s</a>', $item->id, 'draft', __( 'Draft', 'erp' ) );
+            $actions['draft'] = sprintf( '<a class="erp-accountin-trns-row-bulk-action" data-id="%1$s" data-status="%2$s" href="#">%3$s</a>', $item->id, 'draft', __( 'Draft', 'erp' ) );
         }
 
-        if ( $item->status == 'pending' || $item->status == 'draft' || $item->status == 'awaiting_payment' ) {
+        if ( $item->status == 'pending' || $item->status == 'draft' || $item->status == 'awaiting_payment' || $item->status == 'awaiting_approval' ) {
             $url   = admin_url( 'admin.php?page='.$this->slug.'&action=new&type=' . $item->form_type . '&transaction_id=' . $item->id );
             $actions['edit'] = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Edit', 'erp' ) );
         }
@@ -161,6 +164,10 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
                     'void'  => __( 'Void', 'erp' ),
                 ];
             } else if ( $section == 'void' ) {
+                $type = [
+                    'draft'  => __( 'Draft', 'erp' ),
+                ];
+            } else if ( $section == 'awaiting-approval' ) {
                 $type = [
                     'draft'  => __( 'Draft', 'erp' ),
                 ];
@@ -260,6 +267,12 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
                 'label' => __( 'Draft', 'erp' ),
                 'count' => isset( $counts['draft'] ) ? intval( $counts['draft'] ) : 0,
                 'url'   => erp_ac_get_section_sales_url( 'draft' )
+            ],
+
+            'awaiting_approval' => [
+                'label' => __( 'Awaiting Approval', 'erp' ),
+                'count' => isset( $counts['awaiting_approval'] ) ? intval( $counts['awaiting_approval'] ) : 0,
+                'url'   => erp_ac_get_section_sales_url( 'awaiting_approval' )
             ],
 
             'awaiting_payment' => [
