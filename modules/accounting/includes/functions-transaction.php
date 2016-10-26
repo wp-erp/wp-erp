@@ -586,15 +586,15 @@ function erp_ac_is_prtial( $trans ) {
  * Update transaction item
  *
  * @since  1.1.5
- * 
- * @param  array $item        
- * @param  array $args        
- * @param  int $trans_id    
- * @param  int $journal_id  
- * @param  int $tax_journal 
- * @param  int $order       
- * 
- * @return int             
+ *
+ * @param  array $item
+ * @param  array $args
+ * @param  int $trans_id
+ * @param  int $journal_id
+ * @param  int $tax_journal
+ * @param  int $order
+ *
+ * @return int
  */
 function erp_ac_item_update( $item, $args, $trans_id, $journal_id, $tax_journal, $order ) {
 
@@ -826,10 +826,10 @@ function erp_ac_get_btn_status( $postdata ) {
     $status = false;
     if ( $postdata['form_type'] == 'payment' ) {
         $status = erp_ac_get_status_according_with_btn( $postdata['btn_status'] );
-    
+
     } else if ( $postdata['form_type'] == 'invoice' || $postdata['form_type'] == 'vendor_credit' ) {
         $status = erp_ac_get_status_invoice_according_with_btn( $postdata['btn_status'] );
-    
+
     } else if ( $postdata['form_type'] == 'payment_voucher' ) {
         $status = erp_ac_get_voucher_status_according_with_btn( $postdata['btn_status'] );
     }
@@ -839,9 +839,9 @@ function erp_ac_get_btn_status( $postdata ) {
 
 /**
  * Get transaction submit data status for payment voucher
- * 
+ *
  * @param  string $btn
- * 
+ *
  * @return string
  */
 function erp_ac_get_voucher_status_according_with_btn( $btn ) {
@@ -875,10 +875,10 @@ function erp_ac_get_status_according_with_btn( $btn ) {
 function erp_ac_get_status_invoice_according_with_btn( $btn ) {
     $button = [
         'save_and_draft'               => 'draft',
-        'save_and_submit_for_approval' => 'pending',
+        'save_and_submit_for_approval' => 'awaiting_approval',
         'save_and_add_another'         => 'draft',
         'approve'                      => 'awaiting_payment',
-        'approve_and_add_another'      => 'awaiting_payment'
+        'save_and_submit_for_payment'  => 'awaiting_payment'
     ];
 
     return $button[$btn];

@@ -61,11 +61,11 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
      */
     function column_issue_date( $item ) {
         if ( $item->status == 'draft' ) {
-            $actions['approval'] = sprintf( '<a class="erp-accountin-trns-row-bulk-action" data-status="%1s" data-id="%2d" href="#">%4s</a>', 'awaiting_approval', $item->id, __( 'Approve', 'erp' ) );
+            $actions['approval'] = sprintf( '<a class="erp-accountin-trns-row-bulk-action" data-status="%1s" data-id="%2d" href="#">%4s</a>', 'awaiting_approval', $item->id, __( 'Submit for approval', 'erp' ) );
         }
 
         if ( $item->status == 'awaiting_approval' ) {
-            $actions['payment'] = sprintf( '<a class="erp-accountin-trns-row-bulk-action" data-id="%1$s" data-status="%2$s" href="#">%3$s</a>', $item->id, 'awaiting_payment', __( 'Payment', 'erp' ) );
+            $actions['payment'] = sprintf( '<a class="erp-accountin-trns-row-bulk-action" data-id="%1$s" data-status="%2$s" href="#">%3$s</a>', $item->id, 'awaiting_payment', __( 'Submit for Payment', 'erp' ) );
         }
 
         if ( $item->status == 'awaiting_payment' ) {
@@ -152,7 +152,7 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
         if ( 'top' == $which && $this->items ) {
             if ( $section == 'draft' ) {
                 $type = [
-                    'awaiting_payment'  => __( 'Payment', 'erp' ),
+                    'awaiting_approval'  => __( 'Approve', 'erp' ),
                     'delete' => __( 'Delete', 'erp' )
                 ];
             } else if ( $section == 'awaiting-payment' ) {
@@ -169,7 +169,8 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
                 ];
             } else if ( $section == 'awaiting-approval' ) {
                 $type = [
-                    'draft'  => __( 'Draft', 'erp' ),
+                    'awaiting_payment'  => __( 'Payment', 'erp' ),
+                    'void'  => __( 'Void', 'erp' ),
                 ];
             }
 

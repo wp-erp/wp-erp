@@ -9,7 +9,7 @@ if ( $transaction_id ) {
     $transaction = erp_ac_get_all_transaction([
         'id'        => $transaction_id,
         'form_type' => 'invoice',
-        'status'    => [ 'in' => ['draft', 'pending', 'awaiting_payment'] ],
+        'status'    => [ 'in' => ['draft', 'awaiting_approval', 'awaiting_payment'] ],
         'join'      => ['journals', 'items'],
         'type'      => ['sales'],
         'output_by' => 'array'
@@ -138,7 +138,7 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                             'type'        => 'text',
                             'required' => true,
                             'class'       => 'erp-date-field',
-                            'value' => isset( $transaction['issue_date'] ) ? $transaction['issue_date'] : ''
+                            'value' => isset( $transaction['issue_date'] ) ? $transaction['issue_date'] : date( 'Y-m-d', strtotime( current_time( 'mysql' ) ) )
                         ) );
                         ?>
                     </li>
@@ -212,7 +212,7 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                         <?php
                     } else if ( isset( $transaction['status'] ) && $transaction['status'] == 'awaiting_payment' ) {
 
-                    } else {
+                    } else if ( ! isset( $transaction['status'] ) || ( isset( $transaction['status'] ) && $transaction['status'] == 'draft' ) ) {
                         ?>
                         <div class="button-group erp-button-group">
                              <button type="button" data-redirect="0" data-btn_status="save_and_draft" class="button erp-ac-trns-form-submit-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -223,7 +223,6 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                             </button>
                             <ul class="erp-dropdown-menu">
                                 <li><a class="erp-ac-trns-form-submit-btn" data-redirect="0" data-btn_status="save_and_draft" href="#"><?php _e( 'Save as Draft', 'erp' ); ?></a></li>
-                                <li><a class="erp-ac-trns-form-submit-btn" data-redirect="0" data-btn_status="save_and_submit_for_approval" href="#"><?php _e( 'Save & submit for approval', 'erp' ); ?></a></li>
                                 <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="save_and_add_another" href="#"><?php _e( 'Save & add another', 'erp' ); ?></a></li>
                             </ul>
 
@@ -235,24 +234,48 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
 
             <div class="erp-button-bar-right">
                 <?php
-                if ( isset( $transaction['status'] ) && $transaction['status'] == 'awaiting_payment' ) {
-                    ?>
-                    <button  data-redirect="single_page" data-btn_status="approve" type="button" class="button button-primary erp-ac-trns-form-submit-btn">
-                        <?php _e( 'Update', 'erp' ); ?>
-                    </button>
-                    <?php
-                } else {
+                if ( ! isset( $transaction['status'] ) || ( isset( $transaction['status'] ) && $transaction['status'] == 'draft' ) ) {
                     ?>
                     <div class="button-group erp-button-group">
-                        <button  data-redirect="single_page" data-btn_status="approve" type="button" class="button button-primary erp-ac-trns-form-submit-btn">
-                            <?php _e( 'Approve', 'erp' ); ?>
+                        <button  data-redirect="single_page" data-btn_status="save_and_submit_for_approval" type="button" class="button button-primary erp-ac-trns-form-submit-btn">
+                            <?php _e( 'Submit for Approval', 'erp' ); ?>
                         </button>
                         <button type="button" class="button button-primary erp-dropdown-toggle" data-toggle="erp-dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="caret"></span>
                         </button>
                         <ul class="erp-dropdown-menu">
-                            <li><a class="erp-ac-trns-form-submit-btn" data-redirect="single_page" data-btn_status="approve" href="#"><?php _e( 'Approve', 'erp' ); ?></a></li>
-                            <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="approve_and_add_another" href="#"><?php _e( 'Approve & add another', 'erp' ); ?></a></li>
+                            <li><a class="erp-ac-trns-form-submit-btn" data-redirect="single_page" data-btn_status="save_and_submit_for_approval" href="#"><?php _e( 'Submit for Approval', 'erp' ); ?></a></li>
+                            <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="approve_and_add_another" href="#"><?php _e( 'Submit for approval & add another', 'erp' ); ?></a></li>
+                        </ul>
+                    </div>
+                    <?php
+                } else if ( ( isset( $transaction['status'] ) && $transaction['status'] == 'awaiting_approval' ) ) {
+                    ?>
+                    <div class="button-group erp-button-group">
+                        <button  data-redirect="single_page" data-btn_status="save_and_submit_for_approval" type="button" class="button button-primary erp-ac-trns-form-submit-btn">
+                            <?php _e( 'Submit for Approval', 'erp' ); ?>
+                        </button>
+                        <button type="button" class="button button-primary erp-dropdown-toggle" data-toggle="erp-dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="erp-dropdown-menu">
+                            <li><a class="erp-ac-trns-form-submit-btn" data-redirect="single_page" data-btn_status="save_and_submit_for_approval" href="#"><?php _e( 'Submit for Approval', 'erp' ); ?></a></li>
+                            <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="approve_and_add_another" href="#"><?php _e( 'Submit for approval & add another', 'erp' ); ?></a></li>
+                        </ul>
+                    </div>
+                    <?php
+                } else if ( ( isset( $transaction['status'] ) && $transaction['status'] == 'awaiting_payment' ) ) {
+                    ?>
+                    <div class="button-group erp-button-group">
+                        <button  data-redirect="single_page" data-btn_status="save_and_submit_for_payment" type="button" class="button button-primary erp-ac-trns-form-submit-btn">
+                            <?php _e( 'Submit for Payment', 'erp' ); ?>
+                        </button>
+                        <button type="button" class="button button-primary erp-dropdown-toggle" data-toggle="erp-dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="erp-dropdown-menu">
+                            <li><a class="erp-ac-trns-form-submit-btn" data-redirect="single_page" data-btn_status="save_and_submit_for_payment" href="#"><?php _e( 'Submit for Payment', 'erp' ); ?></a></li>
+                            <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="save_and_submit_for_payment" href="#"><?php _e( 'Submit for Payment & add another', 'erp' ); ?></a></li>
                         </ul>
                     </div>
                     <?php
