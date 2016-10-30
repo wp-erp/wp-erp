@@ -12,7 +12,7 @@ $cancel_url     = erp_ac_get_expense_url();
 if ( $transaction_id ) {
     $transaction = erp_ac_get_all_transaction([
         'id'     => $transaction_id,
-        'status' => 'draft',
+        'status' => ['in' => ['awaiting_payment', 'partial']],
         'join'   => ['journals', 'items'],
         'type'   => ['expense'],
         'output_by' => 'array'
@@ -126,7 +126,7 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                             'name'        => 'issue_date',
                             'placeholder' => date( 'Y-m-d' ),
                             'type'        => 'text',
-                            'value'       => isset( $transaction['issue_date'] ) ? $transaction['issue_date'] : '',
+                            'value'       => isset( $transaction['issue_date'] ) ? $transaction['issue_date'] : date( 'Y-m-d', strtotime( current_time( 'mysql' ) ) ),
                             'required' => true,
                             'class'       => 'erp-date-field',
                         ) );
@@ -150,7 +150,22 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
 
         </ul>
         <div class="erp-ac-voucher-table-wrap">
-            <?php include dirname( dirname( __FILE__ ) ) . '/common/transaction-table.php'; ?>
+        <?php
+            if ( $transaction_id ) {
+                $transactions = erp_ac_get_all_transaction([
+                    'user_id'     => $selected_vendor,
+                    'type'        => 'expense',
+                    //'form_type'   => $form_type,
+                    'status'      => array( 'in' => array( 'awaiting_payment', 'partial' ) ),
+                    'join'        => ['journals'],
+                    'with_ledger' => true,
+                    'output_by'   => 'array'
+                ]);
+                include_once dirname( dirname( __FILE__ ) ) . '/expense/payment-voucher-invoice.php';
+            } else {
+                include dirname( dirname( __FILE__ ) ) . '/common/transaction-table.php';
+            }
+        ?>
         </div>
         <?php include dirname( dirname( __FILE__ ) ) . '/common/memo.php'; ?>
 

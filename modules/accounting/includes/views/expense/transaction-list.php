@@ -35,6 +35,7 @@
         $list_table = new WeDevs\ERP\Accounting\Expense_Transaction_List_Table();
         $list_table->prepare_items();
         // $list_table->search_box( 'search', 'search_id' );
+        $list_table->views();
         $list_table->display();
         ?>
     </form>

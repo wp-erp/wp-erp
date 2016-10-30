@@ -13,6 +13,12 @@ class Expense_Transaction_List_Table extends Transaction_List_Table {
     function __construct() {
         parent::__construct();
 
+         \WP_List_Table::__construct([
+            'singular' => 'expense',
+            'plural'   => 'expenses',
+            'ajax'     => false
+        ]);
+
         $this->type = 'expense';
         $this->slug = 'erp-accounting-expense';
     }

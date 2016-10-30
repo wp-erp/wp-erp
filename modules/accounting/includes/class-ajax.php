@@ -147,6 +147,10 @@ class Ajax_Handler {
                 $update = erp_ac_remove_transaction( $trns_id );
                 break;
 
+            case 'void':
+                erp_ac_update_transaction_to_void( $trns_id, ['status' => $status] );
+                break;
+
             default:
                 $update = erp_ac_update_transaction( $trns_id, ['status' => $status] );
                 break;
@@ -724,7 +728,7 @@ class Ajax_Handler {
         }
 
         $results = erp_ac_get_all_transaction([
-            'form_type'   => 'invoice',
+            //'form_type'   => 'invoice',
             'status'      => ['in' => ['awaiting_payment', 'partial']],
             'user_id'     => $user_id,
             'parent'      => 0,

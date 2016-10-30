@@ -75,7 +75,7 @@ function erp_ac_get_slaes_payment_url( $transaction_id = false ) {
         'page'   => 'erp-accounting-sales',
         'action' => 'new',
         'type'   => 'payment',
-        'id'     => $transaction_id ? $transaction_id : 0
+        'transaction_id'     => $transaction_id ? $transaction_id : 0
     ];
 
     $url = add_query_arg( $url_args, admin_url( 'admin.php' ) );
@@ -102,27 +102,6 @@ function erp_ac_get_bank_transfer_invoice_url( $transaction_id ) {
 	$url = add_query_arg( $url_args, admin_url( 'admin.php' ) );
 
 	return apply_filters( 'bank_transfer_invoice_url', $url, $transaction_id );
-}
-
-/**
- * Get url for expense voucher
- *
- * @param  int $transaction_id
- *
- * @since 1.1.0
- *
- * @return str
- */
-function erp_ac_get_expense_voucher_url( $transaction_id ) {
-	$url_args = [
-		'page'   => 'erp-accounting-expense',
-		'action' => 'view',
-		'id'     => $transaction_id
-	];
-
-	$url = add_query_arg( $url_args, admin_url( 'admin.php' ) );
-
-	return apply_filters( 'erp_ac_get_expense_voucher_url', $url, $transaction_id );
 }
 
 /**
@@ -298,6 +277,46 @@ function erp_ac_get_expense_url( $content = false ) {
 
 
 	return apply_filters( 'erp_ac_get_expense_url', $url, $content );
+}
+
+/**
+ * Get url for expense voucher
+ *
+ * @param  int $transaction_id
+ *
+ * @since 1.1.0
+ *
+ * @return str
+ */
+function erp_ac_get_expense_voucher_url( $transaction_id ) {
+    $url_args = [
+        'page'   => 'erp-accounting-expense',
+        'action' => 'view',
+        'id'     => $transaction_id
+    ];
+
+    $url = add_query_arg( $url_args, admin_url( 'admin.php' ) );
+
+    return apply_filters( 'erp_ac_get_expense_voucher_url', $url, $transaction_id );
+}
+
+/**
+ * voucher payment url
+ *
+ * @param  int $id
+ *
+ * @return string
+ */
+function erp_ac_get_vendor_credit_payment_url( $id ) {
+    $url_args = [
+        'page'   => 'erp-accounting-expense',
+        'action' => 'new',
+        'type'   => 'payment_voucher',
+        'transaction_id' => $id
+    ];
+
+    $url = add_query_arg( $url_args, admin_url( 'admin.php' ) );
+    return apply_filters( 'erp_ac_get_vendor_credit_payment_url', $url );
 }
 
 /**

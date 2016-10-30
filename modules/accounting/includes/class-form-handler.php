@@ -23,8 +23,35 @@ class Form_Handler {
         add_action( 'load-accounting_page_erp-accounting-customers', array( $this, 'customer_bulk_action') );
         add_action( 'load-accounting_page_erp-accounting-vendors', array( $this, 'vendor_bulk_action') );
         add_action( 'load-accounting_page_erp-accounting-sales', array( $this, 'sales_bulk_action') );
+        add_action( 'load-accounting_page_erp-accounting-expense', array( $this, 'expense_bulk_action') );
 
         add_action( 'erp_hr_after_employee_permission_set', array( $this, 'employee_permission_set'), 10, 2 );
+    }
+
+    function expense_bulk_action() {
+        if ( ! $this->verify_current_page_screen( 'erp-accounting-expense', 'bulk-expenses' ) ) {
+            return;
+        }
+
+        if ( ! isset( $_REQUEST['transaction_id'] ) || ! isset( $_REQUEST['submit_sales_bulk_action'] ) ) {
+            return;
+        }
+
+        $action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : '';
+
+        foreach ( $_REQUEST['transaction_id'] as $key => $trans_id ) {
+            switch ( $action ) {
+                case 'delete':
+                    erp_ac_remove_transaction( $trans_id );
+                    break;
+
+                default:
+                    erp_ac_update_transaction( $trans_id, ['status' => $action] );
+                    break;
+            }
+        }
+
+        wp_safe_redirect( $_REQUEST['_wp_http_referer'] );
     }
 
     /**

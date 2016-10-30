@@ -52,7 +52,7 @@ class Transaction_List_Table extends \WP_List_Table {
                 return  ( strtotime( $item->due_date ) > 0 )  ? erp_format_date( $item->due_date ) : '&mdash;';
 
             case 'form_type':
-                return sprintf('<a href="#" data-transaction_id="%1$s" class="erp-ac-transaction-report">%2$s</a>', $item->id, $item->form_type );
+                return sprintf('<a href="#" data-transaction_id="%1$s" class="erp-ac-transaction-report">%2$s</a>', $item->id, str_replace( '_', ' ', $item->form_type ) );
 
             case 'user_id':
                 return $item->user_id;
@@ -77,8 +77,9 @@ class Transaction_List_Table extends \WP_List_Table {
      * @return array
      */
     function get_columns() {
+        $section = isset( $_GET['section'] ) ? $_GET['section'] : false;
         $columns = array(
-            'cb'         => '<input type="checkbox" />',
+            //'cb'         => '<input type="checkbox" />',
             'issue_date' => __( 'Date', 'erp' ),
             'due_date'   => __( 'Due Date', 'erp' ),
             'form_type'  => __( 'Type', 'erp' ),
@@ -88,6 +89,11 @@ class Transaction_List_Table extends \WP_List_Table {
             'total'      => __( 'Total', 'erp' ),
             'status'     => __( 'Status', 'erp' ),
         );
+
+        if ( $section == 'awaiting-approval' || $section == 'draft' || $section == 'awaiting-payment' || $section == 'closed' || $section == 'void' ) {
+            $action = [ 'cb' => '<input type="checkbox" />'];
+            $columns = array_merge( $action, $columns );
+        }
 
         return $columns;
     }
@@ -170,26 +176,73 @@ class Transaction_List_Table extends \WP_List_Table {
      *
      * @return string
      */
+    // function column_issue_date( $item ) {
+
+    //     if ( $item->status == 'pending' || $item->status == 'draft' ) {
+    //         $actions['delete'] = sprintf( '<a href="#" class="erp-accountin-trns-row-del" data-id="%d" title="%s">%s</a>', $item->id, __( 'Delete', 'erp' ), __( 'Delete', 'erp' ) );
+    //     }
+
+
+    //     if ( $item->status == 'pending' || $item->status == 'draft' || $item->status == 'awaiting_payment' ) {
+    //         $url   = admin_url( 'admin.php?page='.$this->slug.'&action=new&type=' . $item->form_type . '&transaction_id=' . $item->id );
+    //         $actions['edit'] = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Edit', 'erp' ) );
+    //     }
+
+    //     if ( ( $item->status == 'paid' || $item->status == 'closed' ) && $item->form_type == 'invoice' ) {
+    //         //$actions['redo'] = sprintf( '<a class="erp-accounting-redo" data-type="%1$s" data-id="%2$s" href="#">%3$s</a>', $item->type, $item->id, __( 'Redo', 'erp' ) );
+    //     }
+
+    //     if ( $item->status == 'awaiting_payment' ) {
+    //         $actions['void'] = sprintf( '<a class="erp-accounting-void" data-id="%1$s" href="#">%2$s</a>', $item->id, __( 'Void', 'erp' ) );
+    //     }
+
+
+    //     if ( isset( $actions ) && count( $actions ) ) {
+    //         return sprintf( '<a href="%1$s">%2$s</a> %3$s', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), erp_format_date( $item->issue_date ), $this->row_actions( $actions ) );
+    //     } else {
+    //         return sprintf( '<a href="%1$s">%2$s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), erp_format_date( $item->issue_date ) );
+    //     }
+    // }
+
+    /**
+     * Render the issue date column
+     *
+     * @since  1.1.6
+     *
+     * @param  object  $item
+     *
+     * @return string
+     */
     function column_issue_date( $item ) {
-        
-        if ( $item->status == 'pending' || $item->status == 'draft' ) {
-            $actions['delete'] = sprintf( '<a href="#" class="erp-accountin-trns-row-del" data-id="%d" title="%s">%s</a>', $item->id, __( 'Delete', 'erp' ), __( 'Delete', 'erp' ) );
+        if ( $item->status == 'draft' ) {
+            $actions['approval'] = sprintf( '<a class="erp-accountin-trns-row-bulk-action" data-status="%1s" data-id="%2d" href="#">%4s</a>', 'awaiting_approval', $item->id, __( 'Submit for approval', 'erp' ) );
         }
 
+        if ( $item->status == 'awaiting_approval' ) {
+            $actions['payment'] = sprintf( '<a class="erp-accountin-trns-row-bulk-action" data-id="%1$s" data-status="%2$s" href="#">%3$s</a>', $item->id, 'awaiting_payment', __( 'Submit for Payment', 'erp' ) );
+        }
 
-        if ( $item->status == 'pending' || $item->status == 'draft' || $item->status == 'awaiting_payment' ) {
+        if ( $item->status == 'awaiting_payment' || $item->status == 'partial' ) {
+            $url = $this->slug == 'erp-accounting-expense' ? erp_ac_get_vendor_credit_payment_url( $item->id ) : erp_ac_get_slaes_payment_url( $item->id );
+            $actions['paid'] = sprintf( '<a href="%1$s">%2$s</a>', $url, __( 'Paid', 'erp' ) );
+        }
+
+        if ( $item->status == 'awaiting_approval' || $item->status == 'awaiting_payment' || $item->status == 'closed' || $item->status == 'partial' ) {
+            $actions['void'] = sprintf( '<a class="erp-accountin-trns-row-bulk-action" data-id="%1$s" data-status="%2$s" href="#">%3$s</a>', $item->id, 'void', __( 'Void', 'erp' ) );
+        }
+
+        if ( $item->status == 'void' ) {
+            //$actions['draft'] = sprintf( '<a class="erp-accountin-trns-row-bulk-action" data-id="%1$s" data-status="%2$s" href="#">%3$s</a>', $item->id, 'draft', __( 'Draft', 'erp' ) );
+        }
+
+        if ( $item->status == 'pending' || $item->status == 'draft' || $item->status == 'awaiting_payment' || $item->status == 'awaiting_approval' ) {
             $url   = admin_url( 'admin.php?page='.$this->slug.'&action=new&type=' . $item->form_type . '&transaction_id=' . $item->id );
             $actions['edit'] = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Edit', 'erp' ) );
         }
 
-        if ( ( $item->status == 'paid' || $item->status == 'closed' ) && $item->form_type == 'invoice' ) {
-            //$actions['redo'] = sprintf( '<a class="erp-accounting-redo" data-type="%1$s" data-id="%2$s" href="#">%3$s</a>', $item->type, $item->id, __( 'Redo', 'erp' ) );
+        if ( $item->status == 'draft' || $item->status == 'void' ) {
+            $actions['delete'] = sprintf( '<a href="#" class="erp-accountin-trns-row-bulk-action" data-status="%s" data-id="%d" title="%s">%s</a>', 'delete', $item->id, __( 'Delete', 'erp' ), __( 'Delete', 'erp' ) );
         }
-
-        if ( $item->status == 'awaiting_payment' ) {
-            $actions['void'] = sprintf( '<a class="erp-accounting-void" data-id="%1$s" href="#">%2$s</a>', $item->id, __( 'Void', 'erp' ) );
-        }
-
 
         if ( isset( $actions ) && count( $actions ) ) {
             return sprintf( '<a href="%1$s">%2$s</a> %3$s', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), erp_format_date( $item->issue_date ), $this->row_actions( $actions ) );
@@ -198,24 +251,171 @@ class Transaction_List_Table extends \WP_List_Table {
         }
     }
 
+    /**
+     * Field for bulk action
+     *
+     * @since  1.1.6
+     *
+     * @return void
+     */
+    public function bulk_actions( $which = '' ) {
+        $section = isset( $_GET['section'] ) ? $_GET['section'] : false;
+        $type    = [];
 
+        if ( 'top' == $which && $this->items ) {
+            if ( $section == 'draft' ) {
+                $type = [
+                    'awaiting_approval'  => __( 'Approve', 'erp' ),
+                    'delete' => __( 'Delete', 'erp' )
+                ];
+            } else if ( $section == 'awaiting-payment' ) {
+                $type = [
+                    'void'  => __( 'Void', 'erp' ),
+                ];
+            } else if ( $section == 'closed' ) {
+                $type = [
+                    'void'  => __( 'Void', 'erp' ),
+                ];
+            } else if ( $section == 'void' ) {
+                $type = [
+                    'delete'  => __( 'Delete', 'erp' ),
+                ];
+            } else if ( $section == 'awaiting-approval' ) {
+                $type = [
+                    'awaiting_payment'  => __( 'Payment', 'erp' ),
+                    'void'  => __( 'Void', 'erp' ),
+                ];
+            }
 
-/**
+            if ( $section ) {
+                erp_html_form_input([
+                    'name'    => 'action',
+                    'type'    => 'select',
+                    'options' => [ '-1' => __( 'Bulk Actions', 'erp' ) ] + $type
+                ]);
+
+                submit_button( __( 'Action', 'erp' ), 'button', 'submit_sales_bulk_action', false );
+            }
+
+        }
+    }
+
+    /**
      * Set the views
      *
      * @return array
      */
     public function get_views() {
-        $status_links   = array();
-        $base_link      = admin_url( 'admin.php?page=sample-page' );
-        // foreach ($this->counts as $key => $value) {
-        //     $class = ( $key == $this->page_status ) ? 'current' : 'status-' . $key;
-        //     $status_links[ $key ] = sprintf( '<a href="%s" class="%s">%s <span class="count">(%s)</span></a>', add_query_arg( array( 'status' => $key ), $base_link ), $class, $value['label'], $value['count'] );
-        // }
-        //
-        //$status_links['all'] = sprintf( '<a href="%s">%s<span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'all' ), $base_link ), __( 'All', 'erp' ), $this->customer_get_status_count('customer') );
-        //$status_links['trash'] = sprintf( '<a href="%s" >%s<span class="count">(%s)</span></a>', add_query_arg( array( 'status' => 'trash' ), $base_link ), __( 'Trash', 'erp' ), $this->count_trashed_customers() );
+        $counts       = $this->get_section();
+        $status_links = array();
+        $section      = isset( $_REQUEST['section'] ) ? $_REQUEST['section'] : 'all';
+
+        foreach ( $counts as $key => $value ) {
+            $key   = str_replace( '_', '-', $key );
+            $class = ( $key == $section ) ? 'current' : 'status-' . $key;
+            $status_links[ $key ] = sprintf( '<a href="%s" class="%s">%s <span class="count">(%s)</span></a>', $value['url'], $class, $value['label'], $value['count'] );
+        }
+
         return $status_links;
+    }
+
+
+    /**
+     * Count sales status
+     *
+     * @since  1.1.6
+     *
+     * @return  array
+     */
+    function get_counts() {
+        $cache_key = 'erp-ac-sales-trnasction-counts-' . get_current_user_id();
+        $results = wp_cache_get( $cache_key, 'erp' );
+        $type = isset( $_REQUEST['form_type'] ) ? $_REQUEST['form_type'] : false;
+
+        if ( false === $results ) {
+            $trans = new \WeDevs\ERP\Accounting\Model\Transaction();
+            $db = new \WeDevs\ORM\Eloquent\Database();
+
+            if ( $type ) {
+                $results = $trans->select( array( 'status', $db->raw('COUNT(id) as num') ) )
+                            ->where( 'type', '=', $this->type )
+                            ->where( 'form_type', '=', $type )
+                            ->groupBy('status')
+                            ->get()->toArray();
+            } else {
+                $results = $trans->select( array( 'status', $db->raw('COUNT(id) as num') ) )
+                            ->where( 'type', '=', $this->type )
+                            ->groupBy('status')
+                            ->get()->toArray();
+            }
+
+            wp_cache_set( $cache_key, $results, 'erp' );
+        }
+
+        $count = [];
+
+        foreach ( $results as $key => $value ) {
+            $count[$value['status']] = $value['num'];
+        }
+
+        return $count;
+    }
+
+    /**
+     * Get section for sales table list
+     *
+     * @since  1.1.6
+     *
+     * @return array
+     */
+    public function get_section() {
+        $counts = $this->get_counts();
+
+        $section = [
+            'all'   => [
+                'label' => __( 'All', 'erp' ),
+                'count' => array_sum( $counts),
+                'url'   => erp_ac_get_section_sales_url()
+            ],
+
+            'draft' => [
+                'label' => __( 'Draft', 'erp' ),
+                'count' => isset( $counts['draft'] ) ? intval( $counts['draft'] ) : 0,
+                'url'   => erp_ac_get_section_sales_url( 'draft' )
+            ],
+
+            'awaiting_approval' => [
+                'label' => __( 'Awaiting Approval', 'erp' ),
+                'count' => isset( $counts['awaiting_approval'] ) ? intval( $counts['awaiting_approval'] ) : 0,
+                'url'   => erp_ac_get_section_sales_url( 'awaiting_approval' )
+            ],
+
+            'awaiting_payment' => [
+                'label' => __( 'Awaiting Payment', 'erp' ),
+                'count' => isset( $counts['awaiting_payment'] ) ? intval( $counts['awaiting_payment'] ) : 0,
+                'url'   => erp_ac_get_section_sales_url( 'awaiting_payment' )
+            ],
+
+            'partial' => [
+                'label' => __( 'Partial', 'erp' ),
+                'count' => isset( $counts['partial'] ) ? intval( $counts['partial'] ) : 0,
+                'url'   => erp_ac_get_section_sales_url( 'partial' )
+            ],
+
+            'closed' => [
+                'label' => __( 'Paid', 'erp' ),
+                'count' => isset( $counts['closed'] ) ? intval( $counts['closed'] ) : 0,
+                'url'   => erp_ac_get_section_sales_url( 'closed' )
+            ],
+
+            'void' => [
+                'label' => __( 'Void', 'erp' ),
+                'count' => isset( $counts['void'] ) ? intval( $counts['void'] ) : 0,
+                'url'   => erp_ac_get_section_sales_url( 'void' )
+            ]
+        ];
+
+        return $section;
     }
 
     public function get_form_types() {
@@ -344,7 +544,7 @@ class Transaction_List_Table extends \WP_List_Table {
             if ( $_REQUEST['form_type'] == 'deleted' ) {
                 $args['status'] = $_REQUEST['form_type'];
             } else {
-                $args['form_type'] = $_REQUEST['form_type'];    
+                $args['form_type'] = $_REQUEST['form_type'];
             }
         }
 

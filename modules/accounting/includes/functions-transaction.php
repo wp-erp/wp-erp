@@ -1001,6 +1001,43 @@ function erp_ac_pdf_link_generator( $transaction, $type = 'invoice' ) {
     return $file_name;
 }
 
+/**
+ * Update transaction status to void
+ *
+ * @since  1.1.6
+ *
+ * @param  int $transaction_id
+ *
+ * @return void
+ */
+function erp_ac_update_transaction_to_void( $transaction_id ) {
+    $partial_id = \WeDevs\ERP\Accounting\Model\Payment::select(['child'])->where( 'transaction_id', '=', $transaction_id )->pluck('child');
 
+    if ( $partial_id ) {
+        $child = erp_ac_get_transaction( $transaction_id );
+        $parent  = erp_ac_get_transaction( $partial_id );
+        $child_trans_total = $child['trans_total'];
+        $parent_trans_total = $parent['trans_total'];
 
+        if ( $parent_trans_total == $child_trans_total ) {
+            $status = 'awaiting_payment';
+            erp_ac_update_transaction( $partial_id, ['status' => 'awaiting_payment'] );
 
+        } else if ( $parent_trans_total > $child_trans_total ) {
+            $sub_total = $parent['due'] + $child['trans_total'];
+            $status = ( $sub_total == $parent_trans_total ) ? 'awaiting_payment' : 'partial';
+            erp_ac_update_transaction( $partial_id, [ 'status' => $status, 'due' => $sub_total ] );
+        }
+    }
+
+    $childrens = \WeDevs\ERP\Accounting\Model\Payment::select(['transaction_id'])->where( 'child', '=', $transaction_id )->get()->toArray();
+    $childrens = wp_list_pluck( $childrens, 'transaction_id' );
+
+    if ( $childrens ) {
+        foreach ( $childrens as $key => $id ) {
+            erp_ac_update_transaction( $id, ['status' => 'void'] );
+        }
+    }
+
+    erp_ac_update_transaction( $transaction_id, ['status' => 'void'] );
+}

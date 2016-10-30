@@ -59,43 +59,43 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
      *
      * @return string
      */
-    function column_issue_date( $item ) {
-        if ( $item->status == 'draft' ) {
-            $actions['approval'] = sprintf( '<a class="erp-accountin-trns-row-bulk-action" data-status="%1s" data-id="%2d" href="#">%4s</a>', 'awaiting_approval', $item->id, __( 'Submit for approval', 'erp' ) );
-        }
+    // function column_issue_date( $item ) {
+    //     if ( $item->status == 'draft' ) {
+    //         $actions['approval'] = sprintf( '<a class="erp-accountin-trns-row-bulk-action" data-status="%1s" data-id="%2d" href="#">%4s</a>', 'awaiting_approval', $item->id, __( 'Submit for approval', 'erp' ) );
+    //     }
 
-        if ( $item->status == 'awaiting_approval' ) {
-            $actions['payment'] = sprintf( '<a class="erp-accountin-trns-row-bulk-action" data-id="%1$s" data-status="%2$s" href="#">%3$s</a>', $item->id, 'awaiting_payment', __( 'Submit for Payment', 'erp' ) );
-        }
+    //     if ( $item->status == 'awaiting_approval' ) {
+    //         $actions['payment'] = sprintf( '<a class="erp-accountin-trns-row-bulk-action" data-id="%1$s" data-status="%2$s" href="#">%3$s</a>', $item->id, 'awaiting_payment', __( 'Submit for Payment', 'erp' ) );
+    //     }
 
-        if ( $item->status == 'awaiting_payment' ) {
-            $url = erp_ac_get_slaes_payment_url( $item->id );
-            $actions['paid'] = sprintf( '<a href="%1$s">%2$s</a>', $url, __( 'Paid', 'erp' ) );
-        }
+    //     if ( $item->status == 'awaiting_payment' ) {
+    //         $url = erp_ac_get_slaes_payment_url( $item->id );
+    //         $actions['paid'] = sprintf( '<a href="%1$s">%2$s</a>', $url, __( 'Paid', 'erp' ) );
+    //     }
 
-        if ( $item->status == 'awaiting_approval' || $item->status == 'awaiting_payment' || $item->status == 'closed' ) {
-            $actions['void'] = sprintf( '<a class="erp-accountin-trns-row-bulk-action" data-id="%1$s" data-status="%2$s" href="#">%3$s</a>', $item->id, 'void', __( 'Void', 'erp' ) );
-        }
+    //     if ( $item->status == 'awaiting_approval' || $item->status == 'awaiting_payment' || $item->status == 'closed' ) {
+    //         $actions['void'] = sprintf( '<a class="erp-accountin-trns-row-bulk-action" data-id="%1$s" data-status="%2$s" href="#">%3$s</a>', $item->id, 'void', __( 'Void', 'erp' ) );
+    //     }
 
-        if ( $item->status == 'void' ) {
-            $actions['draft'] = sprintf( '<a class="erp-accountin-trns-row-bulk-action" data-id="%1$s" data-status="%2$s" href="#">%3$s</a>', $item->id, 'draft', __( 'Draft', 'erp' ) );
-        }
+    //     if ( $item->status == 'void' ) {
+    //         $actions['draft'] = sprintf( '<a class="erp-accountin-trns-row-bulk-action" data-id="%1$s" data-status="%2$s" href="#">%3$s</a>', $item->id, 'draft', __( 'Draft', 'erp' ) );
+    //     }
 
-        if ( $item->status == 'pending' || $item->status == 'draft' || $item->status == 'awaiting_payment' || $item->status == 'awaiting_approval' ) {
-            $url   = admin_url( 'admin.php?page='.$this->slug.'&action=new&type=' . $item->form_type . '&transaction_id=' . $item->id );
-            $actions['edit'] = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Edit', 'erp' ) );
-        }
+    //     if ( $item->status == 'pending' || $item->status == 'draft' || $item->status == 'awaiting_payment' || $item->status == 'awaiting_approval' ) {
+    //         $url   = admin_url( 'admin.php?page='.$this->slug.'&action=new&type=' . $item->form_type . '&transaction_id=' . $item->id );
+    //         $actions['edit'] = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Edit', 'erp' ) );
+    //     }
 
-        if ( $item->status == 'draft' ) {
-            $actions['delete'] = sprintf( '<a href="#" class="erp-accountin-trns-row-bulk-action" data-status="%s" data-id="%d" title="%s">%s</a>', 'delete', $item->id, __( 'Delete', 'erp' ), __( 'Delete', 'erp' ) );
-        }
+    //     if ( $item->status == 'draft' ) {
+    //         $actions['delete'] = sprintf( '<a href="#" class="erp-accountin-trns-row-bulk-action" data-status="%s" data-id="%d" title="%s">%s</a>', 'delete', $item->id, __( 'Delete', 'erp' ), __( 'Delete', 'erp' ) );
+    //     }
 
-        if ( isset( $actions ) && count( $actions ) ) {
-            return sprintf( '<a href="%1$s">%2$s</a> %3$s', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), erp_format_date( $item->issue_date ), $this->row_actions( $actions ) );
-        } else {
-            return sprintf( '<a href="%1$s">%2$s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), erp_format_date( $item->issue_date ) );
-        }
-    }
+    //     if ( isset( $actions ) && count( $actions ) ) {
+    //         return sprintf( '<a href="%1$s">%2$s</a> %3$s', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), erp_format_date( $item->issue_date ), $this->row_actions( $actions ) );
+    //     } else {
+    //         return sprintf( '<a href="%1$s">%2$s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), erp_format_date( $item->issue_date ) );
+    //     }
+    // }
 
     /**
      * Count sales status
@@ -165,7 +165,7 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
                 ];
             } else if ( $section == 'void' ) {
                 $type = [
-                    'draft'  => __( 'Draft', 'erp' ),
+                    'delete'  => __( 'Delete', 'erp' ),
                 ];
             } else if ( $section == 'awaiting-approval' ) {
                 $type = [
@@ -254,49 +254,49 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
      *
      * @return array
      */
-    public function get_section() {
-        $counts = $this->get_counts();
+    // public function get_section() {
+    //     $counts = $this->get_counts();
 
-        $section = [
-            'all'   => [
-                'label' => __( 'All', 'erp' ),
-                'count' => array_sum( $counts),
-                'url'   => erp_ac_get_section_sales_url()
-            ],
+    //     $section = [
+    //         'all'   => [
+    //             'label' => __( 'All', 'erp' ),
+    //             'count' => array_sum( $counts),
+    //             'url'   => erp_ac_get_section_sales_url()
+    //         ],
 
-            'draft' => [
-                'label' => __( 'Draft', 'erp' ),
-                'count' => isset( $counts['draft'] ) ? intval( $counts['draft'] ) : 0,
-                'url'   => erp_ac_get_section_sales_url( 'draft' )
-            ],
+    //         'draft' => [
+    //             'label' => __( 'Draft', 'erp' ),
+    //             'count' => isset( $counts['draft'] ) ? intval( $counts['draft'] ) : 0,
+    //             'url'   => erp_ac_get_section_sales_url( 'draft' )
+    //         ],
 
-            'awaiting_approval' => [
-                'label' => __( 'Awaiting Approval', 'erp' ),
-                'count' => isset( $counts['awaiting_approval'] ) ? intval( $counts['awaiting_approval'] ) : 0,
-                'url'   => erp_ac_get_section_sales_url( 'awaiting_approval' )
-            ],
+    //         'awaiting_approval' => [
+    //             'label' => __( 'Awaiting Approval', 'erp' ),
+    //             'count' => isset( $counts['awaiting_approval'] ) ? intval( $counts['awaiting_approval'] ) : 0,
+    //             'url'   => erp_ac_get_section_sales_url( 'awaiting_approval' )
+    //         ],
 
-            'awaiting_payment' => [
-                'label' => __( 'Awaiting Payment', 'erp' ),
-                'count' => isset( $counts['awaiting_payment'] ) ? intval( $counts['awaiting_payment'] ) : 0,
-                'url'   => erp_ac_get_section_sales_url( 'awaiting_payment' )
-            ],
+    //         'awaiting_payment' => [
+    //             'label' => __( 'Awaiting Payment', 'erp' ),
+    //             'count' => isset( $counts['awaiting_payment'] ) ? intval( $counts['awaiting_payment'] ) : 0,
+    //             'url'   => erp_ac_get_section_sales_url( 'awaiting_payment' )
+    //         ],
 
-            'closed' => [
-                'label' => __( 'Paid', 'erp' ),
-                'count' => isset( $counts['closed'] ) ? intval( $counts['closed'] ) : 0,
-                'url'   => erp_ac_get_section_sales_url( 'closed' )
-            ],
+    //         'closed' => [
+    //             'label' => __( 'Paid', 'erp' ),
+    //             'count' => isset( $counts['closed'] ) ? intval( $counts['closed'] ) : 0,
+    //             'url'   => erp_ac_get_section_sales_url( 'closed' )
+    //         ],
 
-            'void' => [
-                'label' => __( 'Void', 'erp' ),
-                'count' => isset( $counts['void'] ) ? intval( $counts['void'] ) : 0,
-                'url'   => erp_ac_get_section_sales_url( 'void' )
-            ]
-        ];
+    //         'void' => [
+    //             'label' => __( 'Void', 'erp' ),
+    //             'count' => isset( $counts['void'] ) ? intval( $counts['void'] ) : 0,
+    //             'url'   => erp_ac_get_section_sales_url( 'void' )
+    //         ]
+    //     ];
 
-        return $section;
-    }
+    //     return $section;
+    // }
 
     /**
      * Set the views
