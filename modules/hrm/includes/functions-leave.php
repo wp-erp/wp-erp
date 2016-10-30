@@ -384,8 +384,10 @@ function erp_hr_count_leave_policies() {
 function erp_hr_get_holidays( $args = [] ) {
 
     $defaults = array(
-        'number' => 20,
-        'offset' => 0,
+        'number'  => 20,
+        'offset'  => 0,
+        'orderby' => 'created_at',
+        'order'   => 'DESC',
     );
 
     $args  = wp_parse_args( $args, $defaults );

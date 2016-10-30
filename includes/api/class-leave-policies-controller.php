@@ -244,7 +244,7 @@ class Leave_Policies_Controller extends REST_Controller {
         }
 
         if ( isset( $request['effective_date'] ) ) {
-            $prepared_item['effective_date'] = $request['effective_date'];
+            $prepared_item['effective_date'] = date( 'Y-m-d', strtotime( $request['effective_date'] ) );
         }
 
         if ( isset( $request['location'] ) ) {
@@ -277,7 +277,7 @@ class Leave_Policies_Controller extends REST_Controller {
             'marital'        => ( $item->marital != -1 ) ? $item->marital : null,
             'activate'       => $this->activate_types[ $item->activate ],
             'execute_day'    => (int) $item->execute_day,
-            'effective_date' => $item->effective_date,
+            'effective_date' => date( 'Y-m-d', strtotime( $item->effective_date ) ),
             'location'       => ( $item->location != -1 ) ? $item->location : null,
             'description'    => $item->description,
         ];
@@ -306,16 +306,6 @@ class Leave_Policies_Controller extends REST_Controller {
                 if ( $designation_id ) {
                     $designation = $designations_controller->get_designation( ['id' => $designation_id ] );
                     $data['designation'] = ! is_wp_error( $designation ) ? $designation->get_data() : null;
-                }
-            }
-
-            if ( in_array( 'reporting_to', $include_params ) ) {
-                $reporting_to_id      = (int) $item->reporting_to;
-                $data['reporting_to'] = null;
-
-                if ( $reporting_to_id ) {
-                    $reporting_to = $this->get_employee( ['id' => $reporting_to_id ] );
-                    $data['reporting_to'] = ! is_wp_error( $reporting_to ) ? $reporting_to->get_data() : null;
                 }
             }
         }
