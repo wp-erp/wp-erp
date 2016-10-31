@@ -722,7 +722,7 @@ function erp_ac_create_items_after_transaction( $trans, $journal_id, $item, $ord
  *
  * @return array
  */
-function erp_ac_get_ledger_transactions( $ledger_id, $args = [] ) {
+function erp_ac_get_ledger_transactions( $args = [], $ledger_id = false ) {
     global $wpdb;
 
     $defaults = [
@@ -740,7 +740,11 @@ function erp_ac_get_ledger_transactions( $ledger_id, $args = [] ) {
     $items     = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $items ) {
-        $where = sprintf( 'WHERE jour.ledger_id = %d', absint( $ledger_id ) );
+        $where = 'WHERE 1=1';
+        if ( $ledger_id ) {
+            $where = sprintf( 'WHERE jour.ledger_id = %d', absint( $ledger_id ) );
+        }
+
         $limit = ( $args['number'] == '-1' ) ? '' : sprintf( 'LIMIT %d, %d', $args['offset'], $args['number'] );
 
         if ( isset( $args['start_date'] ) && ! empty( $args['start_date'] ) ) {
@@ -846,8 +850,8 @@ function erp_ac_get_btn_status( $postdata ) {
  */
 function erp_ac_get_voucher_status_according_with_btn( $btn ) {
     $button = [
-        'payment'                 => 'paid',
-        'payment_and_add_another' => 'paid'
+        'payment'                 => 'closed',
+        'payment_and_add_another' => 'closed'
     ];
 
     return $button[$btn];
@@ -908,9 +912,13 @@ function erp_ac_update_transaction( $id, $args ) {
  * @return  boolen
  */
 function erp_ac_remove_transaction( $id ) {
+
     $delete = \WeDevs\ERP\Accounting\Model\Transaction::where( 'id', '=', $id )->delete();
     \WeDevs\ERP\Accounting\Model\Transaction_Items::where( 'transaction_id', '=', $id )->delete();
     \WeDevs\ERP\Accounting\Model\Journal::where( 'transaction_id', '=', $id )->delete();
+    \WeDevs\ERP\Accounting\Model\Payment::where( 'transaction_id', '=', $id )->delete();
+    \WeDevs\ERP\Accounting\Model\Payment::where( 'child', '=', $id )->delete();
+
     return $delete;
 }
 
@@ -1020,8 +1028,7 @@ function erp_ac_update_transaction_to_void( $transaction_id ) {
         $parent_trans_total = $parent['trans_total'];
 
         if ( $parent_trans_total == $child_trans_total ) {
-            $status = 'awaiting_payment';
-            erp_ac_update_transaction( $partial_id, ['status' => 'awaiting_payment'] );
+            erp_ac_update_transaction( $partial_id, ['status' => 'awaiting_payment', 'due' => $parent_trans_total ] );
 
         } else if ( $parent_trans_total > $child_trans_total ) {
             $sub_total = $parent['due'] + $child['trans_total'];

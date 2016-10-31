@@ -90,7 +90,7 @@ class Transaction_List_Table extends \WP_List_Table {
             'status'     => __( 'Status', 'erp' ),
         );
 
-        if ( $section == 'awaiting-approval' || $section == 'draft' || $section == 'awaiting-payment' || $section == 'closed' || $section == 'void' ) {
+        if ( $section == 'awaiting-approval' || $section == 'draft' || $section == 'awaiting-payment' || $section == 'closed' || $section == 'void' || $section == 'paid' ) {
             $action = [ 'cb' => '<input type="checkbox" />'];
             $columns = array_merge( $action, $columns );
         }
@@ -227,7 +227,7 @@ class Transaction_List_Table extends \WP_List_Table {
             $actions['paid'] = sprintf( '<a href="%1$s">%2$s</a>', $url, __( 'Paid', 'erp' ) );
         }
 
-        if ( $item->status == 'awaiting_approval' || $item->status == 'awaiting_payment' || $item->status == 'closed' || $item->status == 'partial' ) {
+        if ( $item->status == 'awaiting_approval' || $item->status == 'awaiting_payment' || $item->status == 'closed' || $item->status == 'partial' || $item->status == 'paid' ) {
             $actions['void'] = sprintf( '<a class="erp-accountin-trns-row-bulk-action" data-id="%1$s" data-status="%2$s" href="#">%3$s</a>', $item->id, 'void', __( 'Void', 'erp' ) );
         }
 
@@ -283,6 +283,10 @@ class Transaction_List_Table extends \WP_List_Table {
             } else if ( $section == 'awaiting-approval' ) {
                 $type = [
                     'awaiting_payment'  => __( 'Payment', 'erp' ),
+                    'void'  => __( 'Void', 'erp' ),
+                ];
+            } else if ( $section == 'paid' ) {
+                $type = [
                     'void'  => __( 'Void', 'erp' ),
                 ];
             }

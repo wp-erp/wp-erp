@@ -9,7 +9,7 @@ if ( ! class_exists ( 'WP_List_Table' ) ) {
 /**
  * List table class
  */
-class Journal_Transactions extends \WP_List_Table {
+class Journal_Transactions_List_Table extends \WP_List_Table {
 
     protected $slug         = null;
     protected $last_balance = 0;
@@ -135,7 +135,7 @@ class Journal_Transactions extends \WP_List_Table {
     }
 
     function column_balance( $item ) {
-
+        $balance = 0;
         if ( in_array( $this->type_id, $this->chart_group['customer'] ) ) {
             //var_dump( $item->debit, $this->customer_prev_balance);
             $balance =  ( $item->debit + $this->customer_prev_balance ) - $item->credit;
@@ -279,6 +279,7 @@ class Journal_Transactions extends \WP_List_Table {
 
         // only ncessary because we have sample data
         $args = array(
+            'type'    => 'journal',
             'offset'  => $offset,
             'number'  => $per_page,
             'orderby' => 'issue_date',
@@ -306,10 +307,10 @@ class Journal_Transactions extends \WP_List_Table {
             $args['form_type'] = $_REQUEST['form_type'];
         }
 
-        $this->items       = erp_ac_get_ledger_transactions( $ledger_id, $args );
+        $this->items       = erp_ac_get_ledger_transactions( $args, $ledger_id );
         $this->chart_group = chart_grouping();
         $individual_ledger = \WeDevs\ERP\Accounting\Model\Ledger::select('type_id')->find( $ledger_id );
-        $this->type_id     = $individual_ledger->type_id;
+        $this->type_id     = isset( $individual_ledger->type_id ) ? $individual_ledger->type_id : false;
 
 
         // count = -1
