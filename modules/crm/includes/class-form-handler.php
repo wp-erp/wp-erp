@@ -108,7 +108,7 @@ class Form_Handler {
                 case 'delete':
 
                     if ( isset( $_GET['suscriber_contact_id'] ) && !empty( $_GET['suscriber_contact_id'] ) ) {
-                        erp_crm_contact_subscriber_delete( $_GET['suscriber_contact_id'] );
+                        erp_crm_contact_subscriber_delete( $_GET['suscriber_contact_id'], $_GET['filter_contact_group'] );
                     }
 
                     wp_redirect( $redirect );

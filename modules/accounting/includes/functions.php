@@ -114,6 +114,11 @@ function erp_ac_get_status_label( $items, $slug ) {
             $url   = admin_url( 'admin.php?page='.$slug.'&action=new&type=' . $items->form_type . '&transaction_id=' . $items->id );
             $label = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Draft', 'erp' ) );
             break;
+
+        case 'awaiting_approval':
+            $url   = admin_url( 'admin.php?page='.$slug.'&action=new&type=' . $items->form_type . '&transaction_id=' . $items->id );
+            $label = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Awaiting for approval', 'erp' ) );
+            break;
     }
 
     return apply_filters( 'erp_ac_status_labels', $label, $status );

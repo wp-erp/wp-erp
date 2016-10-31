@@ -1346,13 +1346,26 @@ function erp_process_import_export() {
             ]
         ];
 
-        $handle = fopen( $_FILES['csv_file']['tmp_name'], 'r' );
-        if ( $handle ) {
+        $csv_file    = $_FILES['csv_file']['tmp_name'];
+        $handle      = fopen( $csv_file, 'r' );
+        $csv_content = fread( $handle, filesize( $csv_file ) );
+        fclose( $handle );
+
+        $csv_data = [];
+
+        $csv_data = array_map( function( $csv_line ) {
+            return str_getcsv( $csv_line );
+        }, preg_split("/((\r?\n)|(\r\n?))/", $csv_content ) );
+
+        unset( $csv_data[0] );
+
+        if ( ! empty( $csv_data ) ) {
             $data = [];
 
             $x = 0;
-            while ( $line = fgetcsv( $handle ) ) {
-                if ( $x > 0 ) {
+
+            foreach ( $csv_data as $line ){
+                if ( ! empty( $line ) ) {
 
                     foreach ( $fields as $key => $value ) {
                         if ( is_numeric( $value ) ) {
@@ -1442,9 +1455,12 @@ function erp_process_import_export() {
 
                 $x++;
             }
+
         }
 
-        wp_redirect( admin_url( 'admin.php?page=erp-tools&tab=import&imported=' . $x - 1 ) );
+        $arg = ( $x ) ? "&imported=$x" : null;
+
+        wp_redirect( admin_url( 'admin.php?page=erp-tools&tab=import' . $arg ) );
         exit();
     }
 

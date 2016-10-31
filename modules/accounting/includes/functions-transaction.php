@@ -586,15 +586,15 @@ function erp_ac_is_prtial( $trans ) {
  * Update transaction item
  *
  * @since  1.1.5
- * 
- * @param  array $item        
- * @param  array $args        
- * @param  int $trans_id    
- * @param  int $journal_id  
- * @param  int $tax_journal 
- * @param  int $order       
- * 
- * @return int             
+ *
+ * @param  array $item
+ * @param  array $args
+ * @param  int $trans_id
+ * @param  int $journal_id
+ * @param  int $tax_journal
+ * @param  int $order
+ *
+ * @return int
  */
 function erp_ac_item_update( $item, $args, $trans_id, $journal_id, $tax_journal, $order ) {
 
@@ -826,10 +826,10 @@ function erp_ac_get_btn_status( $postdata ) {
     $status = false;
     if ( $postdata['form_type'] == 'payment' ) {
         $status = erp_ac_get_status_according_with_btn( $postdata['btn_status'] );
-    
+
     } else if ( $postdata['form_type'] == 'invoice' || $postdata['form_type'] == 'vendor_credit' ) {
         $status = erp_ac_get_status_invoice_according_with_btn( $postdata['btn_status'] );
-    
+
     } else if ( $postdata['form_type'] == 'payment_voucher' ) {
         $status = erp_ac_get_voucher_status_according_with_btn( $postdata['btn_status'] );
     }
@@ -839,9 +839,9 @@ function erp_ac_get_btn_status( $postdata ) {
 
 /**
  * Get transaction submit data status for payment voucher
- * 
+ *
  * @param  string $btn
- * 
+ *
  * @return string
  */
 function erp_ac_get_voucher_status_according_with_btn( $btn ) {
@@ -875,10 +875,10 @@ function erp_ac_get_status_according_with_btn( $btn ) {
 function erp_ac_get_status_invoice_according_with_btn( $btn ) {
     $button = [
         'save_and_draft'               => 'draft',
-        'save_and_submit_for_approval' => 'pending',
+        'save_and_submit_for_approval' => 'awaiting_approval',
         'save_and_add_another'         => 'draft',
         'approve'                      => 'awaiting_payment',
-        'approve_and_add_another'      => 'awaiting_payment'
+        'save_and_submit_for_payment'  => 'awaiting_payment'
     ];
 
     return $button[$btn];
@@ -1001,6 +1001,43 @@ function erp_ac_pdf_link_generator( $transaction, $type = 'invoice' ) {
     return $file_name;
 }
 
+/**
+ * Update transaction status to void
+ *
+ * @since  1.1.6
+ *
+ * @param  int $transaction_id
+ *
+ * @return void
+ */
+function erp_ac_update_transaction_to_void( $transaction_id ) {
+    $partial_id = \WeDevs\ERP\Accounting\Model\Payment::select(['child'])->where( 'transaction_id', '=', $transaction_id )->pluck('child');
 
+    if ( $partial_id ) {
+        $child = erp_ac_get_transaction( $transaction_id );
+        $parent  = erp_ac_get_transaction( $partial_id );
+        $child_trans_total = $child['trans_total'];
+        $parent_trans_total = $parent['trans_total'];
 
+        if ( $parent_trans_total == $child_trans_total ) {
+            $status = 'awaiting_payment';
+            erp_ac_update_transaction( $partial_id, ['status' => 'awaiting_payment'] );
 
+        } else if ( $parent_trans_total > $child_trans_total ) {
+            $sub_total = $parent['due'] + $child['trans_total'];
+            $status = ( $sub_total == $parent_trans_total ) ? 'awaiting_payment' : 'partial';
+            erp_ac_update_transaction( $partial_id, [ 'status' => $status, 'due' => $sub_total ] );
+        }
+    }
+
+    $childrens = \WeDevs\ERP\Accounting\Model\Payment::select(['transaction_id'])->where( 'child', '=', $transaction_id )->get()->toArray();
+    $childrens = wp_list_pluck( $childrens, 'transaction_id' );
+
+    if ( $childrens ) {
+        foreach ( $childrens as $key => $id ) {
+            erp_ac_update_transaction( $id, ['status' => 'void'] );
+        }
+    }
+
+    erp_ac_update_transaction( $transaction_id, ['status' => 'void'] );
+}

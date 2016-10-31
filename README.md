@@ -14,7 +14,7 @@ An open-source ERP (Enterprise Resource Planning) solution for WordPress
 
 ## Available Add-ons
 
-* Custom Field Builider
+* Custom Field Builder
 * Employee Recruitment
 * Document Manager
 * Attendance Management
