@@ -1280,17 +1280,22 @@ function erp_crm_get_user_assignable_groups( $user_id ) {
  *
  * @since 1.0
  *
- * @param  integer $user_id
+ * @param  integer $id
+ * @param  integer $group_id
  *
  * @return boolean
  */
-function erp_crm_contact_subscriber_delete( $user_id ) {
-    do_action( 'erp_crm_pre_unsubscribed_contact', $user_id );
+function erp_crm_contact_subscriber_delete( $id, $group_id ) {
+    if ( empty( $id ) || empty( $group_id ) ) {
+        return false;
+    }
 
-    if ( is_array( $user_id ) ) {
-        return \WeDevs\ERP\CRM\Models\ContactSubscriber::whereIn( 'user_id', $user_id )->delete();
+    do_action( 'erp_crm_pre_unsubscribed_contact', $id, $group_id );
+
+    if ( is_array( $id ) ) {
+        return \WeDevs\ERP\CRM\Models\ContactSubscriber::whereIn( 'user_id', $id )->where( 'group_id', $group_id )->delete();
     } else {
-        return \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )->delete();
+        return \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $id )->where( 'group_id', $group_id )->delete();
     }
 }
 
