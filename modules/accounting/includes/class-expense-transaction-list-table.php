@@ -67,6 +67,12 @@ class Expense_Transaction_List_Table extends Transaction_List_Table {
                 'url'   => erp_ac_get_section_sales_url( 'awaiting_payment' )
             ],
 
+            'partial' => [
+                'label' => __( 'Partial', 'erp' ),
+                'count' => isset( $counts['partial'] ) ? intval( $counts['partial'] ) : 0,
+                'url'   => erp_ac_get_section_sales_url( 'partial' )
+            ],
+
             'closed' => [
                 'label' => __( 'Paid-Voucher', 'erp' ),
                 'count' => isset( $counts['closed'] ) ? intval( $counts['closed'] ) : 0,

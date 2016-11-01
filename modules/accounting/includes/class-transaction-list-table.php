@@ -90,7 +90,7 @@ class Transaction_List_Table extends \WP_List_Table {
             'status'     => __( 'Status', 'erp' ),
         );
 
-        if ( $section == 'awaiting-approval' || $section == 'draft' || $section == 'awaiting-payment' || $section == 'closed' || $section == 'void' || $section == 'paid' ) {
+        if ( $section == 'awaiting-approval' || $section == 'draft' || $section == 'awaiting-payment' || $section == 'closed' || $section == 'void' || $section == 'paid' || $section == 'partial' ) {
             $action = [ 'cb' => '<input type="checkbox" />'];
             $columns = array_merge( $action, $columns );
         }
