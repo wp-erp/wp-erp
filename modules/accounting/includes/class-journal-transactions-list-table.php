@@ -128,7 +128,7 @@ class Journal_Transactions_List_Table extends \WP_List_Table {
             'summary'        => __( 'Summary', 'erp' ),
             'debit'          => __( 'Debit', 'erp' ),
             'credit'         => __( 'Credit', 'erp' ),
-            'balance'        => __( 'Balance', 'erp' )
+            //'balance'        => __( 'Balance', 'erp' )
         );
 
         return $columns;
@@ -311,7 +311,6 @@ class Journal_Transactions_List_Table extends \WP_List_Table {
         $this->chart_group = chart_grouping();
         $individual_ledger = \WeDevs\ERP\Accounting\Model\Ledger::select('type_id')->find( $ledger_id );
         $this->type_id     = isset( $individual_ledger->type_id ) ? $individual_ledger->type_id : false;
-
 
         // count = -1
         $args['number'] = '-1';

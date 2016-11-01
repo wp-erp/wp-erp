@@ -128,7 +128,7 @@ if ( $transaction_id ) {
                             'type'     => 'text',
                             'required' => true,
                             'class'    => 'erp-ac-check-invoice-number',
-                            'value'    => isset( $transaction['invoice_number']  ) ? erp_ac_get_invoice_number( $transaction['invoice_number'], $transaction['invoice_format'] ) : erp_ac_get_auto_generated_invoice( 'payment' )
+                            'value'    => isset( $transaction['invoice_number']  ) && ! $partial ? erp_ac_get_invoice_number( $transaction['invoice_number'], $transaction['invoice_format'] ) : erp_ac_get_auto_generated_invoice( 'payment' )
                         ) );
                         ?>
                     </li>

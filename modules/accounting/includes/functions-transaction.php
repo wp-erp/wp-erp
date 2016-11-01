@@ -527,19 +527,15 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
                 $transaction = erp_ac_get_transaction( $id );
                 $due         = $transaction['due'];
 
-                if ( $line_total > $due ) {
-                    continue;
-                }
-
                 $new_due = $due - $line_total;
 
                 if ( $new_due <= 0  ) {
                     $update_field['status'] = 'paid';
+                    $update_field['due'] = 0;
                 } else {
                     $update_field['status'] = 'partial';
+                    $update_field['due'] = $new_due;
                 }
-
-                $update_field['due'] = $new_due;
 
                 \WeDevs\ERP\Accounting\Model\Transaction::find( $id )->update( $update_field );
                 \WeDevs\ERP\Accounting\Model\Payment::create( array(

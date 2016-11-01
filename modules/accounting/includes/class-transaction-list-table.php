@@ -289,6 +289,10 @@ class Transaction_List_Table extends \WP_List_Table {
                 $type = [
                     'void'  => __( 'Void', 'erp' ),
                 ];
+            } else if ( $section == 'partial' ) {
+                $type = [
+                    'void'  => __( 'Void', 'erp' ),
+                ];
             }
 
             if ( $section ) {

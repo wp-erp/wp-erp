@@ -42,7 +42,7 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
             'status'     => __( 'Status', 'erp' ),
         );
 
-        if ( $section == 'awaiting-approval' || $section == 'draft' || $section == 'awaiting-payment' || $section == 'closed' || $section == 'void' || $section == 'paid' ) {
+        if ( $section == 'awaiting-approval' || $section == 'draft' || $section == 'awaiting-payment' || $section == 'closed' || $section == 'void' || $section == 'paid' || $section == 'partial' ) {
             $action = [ 'cb' => '<input type="checkbox" />'];
             $columns = array_merge( $action, $columns );
         }
@@ -128,6 +128,10 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
                     'void'  => __( 'Void', 'erp' ),
                 ];
             } else if ( $section == 'paid' ) {
+                $type = [
+                    'void'  => __( 'Void', 'erp' ),
+                ];
+            } else if ( $section == 'partial' ) {
                 $type = [
                     'void'  => __( 'Void', 'erp' ),
                 ];
@@ -239,6 +243,11 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
                 'label' => __( 'Awaiting Payment', 'erp' ),
                 'count' => isset( $counts['awaiting_payment'] ) ? intval( $counts['awaiting_payment'] ) : 0,
                 'url'   => erp_ac_get_section_sales_url( 'awaiting_payment' )
+            ],
+            'partial' => [
+                'label' => __( 'Partial', 'erp' ),
+                'count' => isset( $counts['partial'] ) ? intval( $counts['partial'] ) : 0,
+                'url'   => erp_ac_get_section_sales_url( 'partial' )
             ],
 
             'closed' => [
