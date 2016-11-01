@@ -266,7 +266,7 @@ class Journal_Transactions_List_Table extends \WP_List_Table {
      */
     function prepare_items() {
 
-        $ledger_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
+        $ledger_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : false;
         $columns               = $this->get_columns();
         $hidden                = array( );
         $sortable              = $this->get_sortable_columns();
@@ -276,15 +276,20 @@ class Journal_Transactions_List_Table extends \WP_List_Table {
         $current_page          = $this->get_pagenum();
         $offset                = ( $current_page -1 ) * $per_page;
         $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '2';
+        $page                  = isset( $_GET['page'] ) ? $_GET['page'] : false;
 
         // only ncessary because we have sample data
         $args = array(
-            'type'    => 'journal',
+            //'type'    => 'journal',
             'offset'  => $offset,
             'number'  => $per_page,
             'orderby' => 'issue_date',
             'order'   => 'ASC'
         );
+
+        if ( ! $ledger_id && $page == 'erp-accounting-journal') {
+            $args['type'] = 'journal';
+        }
 
         if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {
             $args['orderby'] = $_REQUEST['orderby'];
