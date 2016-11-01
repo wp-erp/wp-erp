@@ -242,14 +242,12 @@ class Contacts_Groups_Controller extends REST_Controller {
      * @return WP_Error|WP_REST_Request
      */
     public function delete_subscribed_contact( $request ) {
-        $data = [
-            'group_id' => intval( $request['group_id'] ),
-            'user_id'  => intval( $request['contact_id'] ),
-        ];
+        $contact_id = intval( $request['contact_id'] );
+        $group_id   = intval( $request['group_id'] );
 
-        $result = erp_crm_contact_subscriber_delete( $data['user_id'] );
+        erp_crm_contact_subscriber_delete( $contact_id, $group_id );
 
-        return new WP_REST_Response( $result, 204 );
+        return new WP_REST_Response( true, 204 );
     }
 
     /**

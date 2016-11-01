@@ -66,11 +66,9 @@ class Schedules_Controller extends REST_Controller {
             'type'   => 'log_activity',
         ];
 
-        $items = erp_crm_get_feed_activity( $args );
-        $items = erp_array_to_object( $items );
-        $total_items = 20;
-
-        // var_dump( $items ); exit;
+        $items       = erp_crm_get_feed_activity( $args );
+        $items       = erp_array_to_object( $items );
+        $total_items = erp_crm_get_feed_activity( ['count' => true] );
 
         $formated_items = [];
         foreach ( $items as $item ) {
@@ -95,14 +93,9 @@ class Schedules_Controller extends REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_todays_schedules( $request ) {
-        // $args = [
-        //     'limit'  => $request['per_page'],
-        //     'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
-        // ];
-
         $items = erp_crm_get_todays_schedules_activity( 1 );
         $items = erp_array_to_object( $items );
-        $total_items = 20;
+        $total_items = null;
 
         $formated_items = [];
         foreach ( $items as $item ) {
@@ -129,7 +122,7 @@ class Schedules_Controller extends REST_Controller {
         $items = erp_crm_get_next_seven_day_schedules_activities( 1 );
 
         $items = erp_array_to_object( $items );
-        $total_items = 20;
+        $total_items = null;
 
         $formated_items = [];
         foreach ( $items as $item ) {
