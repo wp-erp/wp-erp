@@ -180,7 +180,7 @@
                 ?>
                     <td class="<?php echo $row_class; ?>">
                         <a href="#" class="remove-line"><span class="dashicons dashicons-trash"></span></a>
-                        <a href="#" class="move-line"><span class="dashicons dashicons-menu"></span></a>
+                        <!-- <a href="#" class="move-line"><span class="dashicons dashicons-menu"></span></a> -->
                     </td>
                 <?php
                 break;
