@@ -44,6 +44,9 @@ class Form_Handler {
                 case 'delete':
                     erp_ac_remove_transaction( $trans_id );
                     break;
+                case 'void':
+                    erp_ac_update_transaction_to_void( $trans_id );
+                    break;
 
                 default:
                     erp_ac_update_transaction( $trans_id, ['status' => $action] );
@@ -77,6 +80,10 @@ class Form_Handler {
             switch ( $action ) {
                 case 'delete':
                     erp_ac_remove_transaction( $trans_id );
+                    break;
+
+                case 'void':
+                    erp_ac_update_transaction_to_void( $trans_id );
                     break;
 
                 default:

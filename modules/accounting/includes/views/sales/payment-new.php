@@ -128,7 +128,7 @@ if ( $transaction_id ) {
                             'type'     => 'text',
                             'required' => true,
                             'class'    => 'erp-ac-check-invoice-number',
-                            'value'    => isset( $transaction['invoice_number']  ) ? erp_ac_get_invoice_number( $transaction['invoice_number'], $transaction['invoice_format'] ) : erp_ac_get_auto_generated_invoice( 'payment' )
+                            'value'    => isset( $transaction['invoice_number']  ) && ! $partial ? erp_ac_get_invoice_number( $transaction['invoice_number'], $transaction['invoice_format'] ) : erp_ac_get_auto_generated_invoice( 'payment' )
                         ) );
                         ?>
                     </li>
@@ -224,6 +224,10 @@ if ( $transaction_id ) {
 
         <div class="erp-ac-btn-group-wrap">
              <div class="erp-button-bar-left">
+                <a href="<?php echo esc_url( $cancel_url ); ?>" class="button"><?php _e( 'Cancel', 'erp' ); ?></a>
+            </div>
+
+            <div class="erp-button-bar-right">
                 <div class="button-group erp-button-group">
                     <button  data-redirect="single_page" data-btn_status="payment" type="button" class="button button-primary erp-ac-trns-form-submit-btn">
                         <?php _e( 'Payment', 'erp' ); ?>
@@ -236,11 +240,6 @@ if ( $transaction_id ) {
                         <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="payment_and_add_another" href="#"><?php _e( 'Payment & add another', 'erp' ); ?></a></li>
                     </ul>
                 </div>
-            </div>
-
-            <div class="erp-button-bar-right">
-
-                <a href="<?php echo esc_url( $cancel_url ); ?>" class="button"><?php _e( 'Cancel', 'erp' ); ?></a>
             </div>
         </div>
     </form>

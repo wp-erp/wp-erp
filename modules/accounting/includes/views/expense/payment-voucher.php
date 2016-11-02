@@ -8,6 +8,7 @@ $transaction_id = isset( $_GET['transaction_id'] ) ? intval( $_GET['transaction_
 $transaction    = [];
 $jor_itms       = [];
 $cancel_url     = erp_ac_get_expense_url();
+$partial = false;
 
 if ( $transaction_id ) {
     $transaction = erp_ac_get_all_transaction([
@@ -19,8 +20,9 @@ if ( $transaction_id ) {
     ]);
 
     $transaction = reset( $transaction );
-    //var_dump( $transaction ); die();
-    //$account_id  = $transaction['account_id'];
+    if ( $transaction ) {
+        $partial = true;
+    }
 
     foreach ( $transaction['journals'] as $key => $journal ) {
 
@@ -177,9 +179,9 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
         <input type="hidden" name="erp-action" value="ac-new-payment-voucher">
         <?php
             erp_html_form_input( array(
-                'name'        => 'id',
-                'type'        => 'hidden',
-                'value'       => $transaction_id
+                'name'  => 'id',
+                'type'  => 'hidden',
+                'value' => ! $partial ? $transaction_id : ''
             ) );
         ?>
 
@@ -203,6 +205,10 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
 
         <div class="erp-ac-btn-group-wrap">
              <div class="erp-button-bar-left">
+                <a href="<?php echo esc_url( $cancel_url ); ?>" class="button"><?php _e( 'Cancel', 'erp' ); ?></a>
+            </div>
+
+            <div class="erp-button-bar-right">
                 <div class="button-group erp-button-group">
                     <button  data-redirect="single_page" data-btn_status="payment" type="button" class="button button-primary erp-ac-trns-form-submit-btn">
                         <?php _e( 'Payment', 'erp' ); ?>
@@ -215,68 +221,8 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                         <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="payment_and_add_another" href="#"><?php _e( 'Payment & add another', 'erp' ); ?></a></li>
                     </ul>
                 </div>
-
-                <!-- <div class="erp-btn-group">
-                    <button type="button" data-redirect="0" data-btn_status="save_and_draft" class="erp-drop-down-btn button erp-ac-trns-form-submit-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <?php _e( 'Save as Draft', 'erp' ); ?>
-                    </button>
-                    <button type="button" class="erp-drop-down-btn erp-drop-down-child-btn button">
-                        <span class="erp-caret"></span>
-                        <span class="erp-sr-only"><?php _e( 'Toggle Dropdown', 'erp' ); ?></span>
-                    </button>
-                    <ul class="erp-dropdown-menu">
-                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="0" data-btn_status="save_and_draft" href="#"><?php _e( 'Save as Draft', 'erp' ); ?></a></li>
-                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="0" data-btn_status="save_and_submit_for_approval" href="#"><?php _e( 'Save & submit for approval', 'erp' ); ?></a></li>
-                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="save_and_add_another" href="#"><?php _e( 'Save & add another', 'erp' ); ?></a></li>
-                    </ul>
-                </div> -->
-            </div>
-
-            <div class="erp-button-bar-right">
-
-
-                <a href="<?php echo esc_url( $cancel_url ); ?>" class="button"><?php _e( 'Cancel', 'erp' ); ?></a>
             </div>
         </div>
-
-<!--         <div class="erp-ac-btn-group-wrap">
-
-            <div class="erp-button-bar-left">
-                <div class="erp-btn-group">
-                    <button type="button" data-redirect="0" data-btn_status="save_and_draft" class="erp-drop-down-btn button erp-ac-trns-form-submit-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <?php _e( 'Save as Draft', 'erp' ); ?>
-                    </button>
-                    <button type="button" class="erp-drop-down-btn erp-drop-down-child-btn button">
-                        <span class="erp-caret"></span>
-                        <span class="erp-sr-only"><?php _e( 'Toggle Dropdown', 'erp' ); ?></span>
-                    </button>
-                    <ul class="erp-dropdown-menu">
-                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="0" data-btn_status="save_and_draft" href="#"><?php _e( 'Save as Draft', 'erp' ); ?></a></li>
-                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="0" data-btn_status="save_and_submit_for_approval" href="#"><?php _e( 'Save & submit for approval', 'erp' ); ?></a></li>
-                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="save_and_add_another" href="#"><?php _e( 'Save & add another', 'erp' ); ?></a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="erp-button-bar-right">
-                <div class="erp-btn-group">
-                    <button  data-redirect="single_page" data-btn_status="approve" type="button" class="erp-drop-down-btn button button-primary erp-ac-trns-form-submit-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <?php _e( 'Approve', 'erp' ); ?>
-                    </button>
-                    <button type="button" class="erp-drop-down-btn erp-drop-down-child-btn button button-primary">
-                        <span class="erp-caret"></span>
-                        <span class="erp-sr-only"><?php _e( 'Toggle Dropdown', 'erp' ); ?></span>
-                    </button>
-                    <ul class="erp-dropdown-menu">
-                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="single_page" data-btn_status="approve" href="#"><?php _e( 'Approve', 'erp' ); ?></a></li>
-                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="approve_and_add_another" href="#"><?php _e( 'Approve & add another', 'erp' ); ?></a></li>
-                    </ul>
-                </div>
-
-                <a href="<?php echo esc_url( $cancel_url ); ?>" class="button"><?php _e( 'Cancel', 'erp' ); ?></a>
-            </div>
-
-        </div> -->
 
     </form>
 

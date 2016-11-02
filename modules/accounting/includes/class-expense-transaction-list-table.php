@@ -32,6 +32,69 @@ class Expense_Transaction_List_Table extends Transaction_List_Table {
         return erp_ac_get_expense_form_types();
     }
 
+    /**
+     * Get section for sales table list
+     *
+     * @since  1.1.6
+     *
+     * @return array
+     */
+    public function get_section() {
+        $counts = $this->get_counts();
+
+        $section = [
+            'all'   => [
+                'label' => __( 'All', 'erp' ),
+                'count' => array_sum( $counts),
+                'url'   => erp_ac_get_section_sales_url()
+            ],
+
+            'draft' => [
+                'label' => __( 'Draft', 'erp' ),
+                'count' => isset( $counts['draft'] ) ? intval( $counts['draft'] ) : 0,
+                'url'   => erp_ac_get_section_sales_url( 'draft' )
+            ],
+
+            'awaiting_approval' => [
+                'label' => __( 'Awaiting Approval', 'erp' ),
+                'count' => isset( $counts['awaiting_approval'] ) ? intval( $counts['awaiting_approval'] ) : 0,
+                'url'   => erp_ac_get_section_sales_url( 'awaiting_approval' )
+            ],
+
+            'awaiting_payment' => [
+                'label' => __( 'Awaiting Payment', 'erp' ),
+                'count' => isset( $counts['awaiting_payment'] ) ? intval( $counts['awaiting_payment'] ) : 0,
+                'url'   => erp_ac_get_section_sales_url( 'awaiting_payment' )
+            ],
+
+            'partial' => [
+                'label' => __( 'Partial', 'erp' ),
+                'count' => isset( $counts['partial'] ) ? intval( $counts['partial'] ) : 0,
+                'url'   => erp_ac_get_section_sales_url( 'partial' )
+            ],
+
+            'closed' => [
+                'label' => __( 'Paid-Voucher', 'erp' ),
+                'count' => isset( $counts['closed'] ) ? intval( $counts['closed'] ) : 0,
+                'url'   => erp_ac_get_section_sales_url( 'closed' )
+            ],
+
+            'paid' => [
+                'label' => __( 'Paid-Credit', 'erp' ),
+                'count' => isset( $counts['paid'] ) ? intval( $counts['paid'] ) : 0,
+                'url'   => erp_ac_get_section_sales_url( 'paid' )
+            ],
+
+            'void' => [
+                'label' => __( 'Void', 'erp' ),
+                'count' => isset( $counts['void'] ) ? intval( $counts['void'] ) : 0,
+                'url'   => erp_ac_get_section_sales_url( 'void' )
+            ]
+        ];
+
+        return $section;
+    }
+
     public function column_user_id( $item ) {
         $url               = admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id );
         $user_display_name = '';
