@@ -523,6 +523,10 @@ form.erp-form .erp-form-field label {
 .erp-ac-btn-group-wrap .erp-button-bar-right {
   float: right;
 }
+.erp-ac-btn-group-wrap .erp-dropdown-menu {
+  right: 0;
+  left: inherit;
+}
 .erp-accounting-tbl-form #issue_date {
   width: 16%;
 }
