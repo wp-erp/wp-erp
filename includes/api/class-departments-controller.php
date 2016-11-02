@@ -295,34 +295,4 @@ class Departments_Controller extends REST_Controller {
             '_links' => $this->prepare_links( $parent ),
         ];
     }
-
-    /**
-     * Retrieve a wp user
-     *
-     * @param  integer $user_id
-     *
-     * @return array
-     */
-    public function get_user( $user_id ) {
-        $user = get_user_by( 'ID', $user_id );
-
-        if ( ! $user ) {
-            return null;
-        }
-
-        $data = [
-            'ID'            => $user->ID,
-            'user_nicename' => $user->user_nicename,
-            'user_email'    => $user->user_email,
-            'user_url'      => $user->user_url,
-            'display_name'  => $user->display_name,
-            'avatar'        => get_avatar_url( $user->ID ),
-            '_links'        => [
-                'self'       => rest_url( sprintf( '/%s/%s/%d', $this->namespace, 'users', $user->ID ) ),
-                'collection' => rest_url( sprintf( '/%s/%s', $this->namespace, 'users' ) ),
-            ]
-        ];
-
-        return $data;
-    }
 }

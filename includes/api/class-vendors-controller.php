@@ -5,7 +5,7 @@ use WP_REST_Server;
 use WP_REST_Response;
 use WP_Error;
 
-class Contacts_Controller extends REST_Controller {
+class Vendors_Controller extends REST_Controller {
     /**
      * Endpoint namespace.
      *
@@ -18,7 +18,7 @@ class Contacts_Controller extends REST_Controller {
      *
      * @var string
      */
-    protected $rest_base = 'crm/contacts';
+    protected $rest_base = 'accounting/vendors';
 
     /**
      * Register the routes for the objects of the controller.
@@ -27,12 +27,12 @@ class Contacts_Controller extends REST_Controller {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_contacts' ],
+                'callback' => [ $this, 'get_vendors' ],
                 'args'     => $this->get_collection_params(),
             ],
             [
                 'methods'  => WP_REST_Server::CREATABLE,
-                'callback' => [ $this, 'create_contact' ],
+                'callback' => [ $this, 'create_vendor' ],
                 'args'     => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
@@ -41,39 +41,48 @@ class Contacts_Controller extends REST_Controller {
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
             [
                 'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_contact' ],
+                'callback' => [ $this, 'get_vendor' ],
                 'args'     => [
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
             ],
             [
                 'methods'  => WP_REST_Server::EDITABLE,
-                'callback' => [ $this, 'update_contact' ],
+                'callback' => [ $this, 'update_vendor' ],
                 'args'     => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
             ],
             [
                 'methods'  => WP_REST_Server::DELETABLE,
-                'callback' => [ $this, 'delete_contact' ],
+                'callback' => [ $this, 'delete_vendor' ],
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/transactions', [
+            [
+                'methods'  => WP_REST_Server::READABLE,
+                'callback' => [ $this, 'get_transactions' ],
+                'args'     => $this->get_collection_params(),
+            ],
         ] );
     }
 
     /**
-     * Get a collection of contacts
+     * Get a collection of vendors
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_contacts( $request ) {
+    public function get_vendors( $request ) {
         $args = [
             'number' => $request['per_page'],
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+            'type'   => 'vendor'
         ];
 
         $items       = erp_get_peoples( $args );
-        $total_items = erp_get_peoples( [ 'count' => true ] );
+        $total_items = erp_get_peoples( [ 'type' => 'vendor', 'count' => true ] );
 
         $formated_items = [];
         foreach ( $items as $item ) {
@@ -83,9 +92,9 @@ class Contacts_Controller extends REST_Controller {
                 $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
 
                 if ( in_array( 'owner', $include_params ) ) {
-                    $contact_owner_id = ( $item->user_id ) ? get_user_meta( $item->user_id, '_assign_crm_agent', true ) : erp_people_get_meta( $item->id, '_assign_crm_agent', true );
+                    $vendor_owner_id = ( $item->user_id ) ? get_user_meta( $item->user_id, '_assign_crm_agent', true ) : erp_people_get_meta( $item->id, '_assign_crm_agent', true );
 
-                    $item->owner = $this->get_user( $contact_owner_id );
+                    $item->owner = $this->get_user( $vendor_owner_id );
                     $additional_fields = ['owner' => $item->owner];
                 }
             }
@@ -101,18 +110,18 @@ class Contacts_Controller extends REST_Controller {
     }
 
     /**
-     * Get a specific contact
+     * Get a specific vendor
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_contact( $request ) {
+    public function get_vendor( $request ) {
         $id   = (int) $request['id'];
         $item = erp_get_people( $id );
 
         if ( empty( $id ) || empty( $item->id ) ) {
-            return new WP_Error( 'rest_contact_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_vendor_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
         $additional_fields = [];
@@ -120,9 +129,9 @@ class Contacts_Controller extends REST_Controller {
             $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
 
             if ( in_array( 'owner', $include_params ) ) {
-                $contact_owner_id = ( $item->user_id ) ? get_user_meta( $item->user_id, '_assign_crm_agent', true ) : erp_people_get_meta( $item->id, '_assign_crm_agent', true );
+                $vendor_owner_id = ( $item->user_id ) ? get_user_meta( $item->user_id, '_assign_crm_agent', true ) : erp_people_get_meta( $item->id, '_assign_crm_agent', true );
 
-                $item->owner = $this->get_user( $contact_owner_id );
+                $item->owner = $this->get_user( $vendor_owner_id );
                 $additional_fields = ['owner' => $item->owner];
             }
         }
@@ -134,21 +143,21 @@ class Contacts_Controller extends REST_Controller {
     }
 
     /**
-     * Create a contact
+     * Create a vendor
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function create_contact( $request ) {
+    public function create_vendor( $request ) {
         $item = $this->prepare_item_for_database( $request );
 
         $id   = erp_insert_people( $item );
 
-        $contact = erp_get_people( $id );
+        $vendor = erp_get_people( $id );
 
         $request->set_param( 'context', 'edit' );
-        $response = $this->prepare_item_for_response( $contact, $request );
+        $response = $this->prepare_item_for_response( $vendor, $request );
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
         $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
@@ -157,35 +166,26 @@ class Contacts_Controller extends REST_Controller {
     }
 
     /**
-     * Update a contact
+     * Update a vendor
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function update_contact( $request ) {
+    public function update_vendor( $request ) {
         $id = (int) $request['id'];
 
         $item = erp_get_people( $id );
         if ( ! $item ) {
-            return new WP_Error( 'rest_contact_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
-        }
-
-        if ( isset( $request['email'] ) ) {
-            unset( $request['email'] );
-        }
-
-        if ( isset( $request['type'] ) ) {
-            unset( $request['type'] );
+            return new WP_Error( 'rest_vendor_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
         }
 
         $item = $this->prepare_item_for_database( $request );
 
         erp_insert_people( $item );
 
-        $contact = erp_get_people( $id );
-
-        $response = $this->prepare_item_for_response( $contact, $request );
+        $vendor = erp_get_people( $id );
+        $response = $this->prepare_item_for_response( $vendor, $request );
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
         $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
@@ -194,24 +194,46 @@ class Contacts_Controller extends REST_Controller {
     }
 
     /**
-     * Delete a contact
+     * Delete a vendor
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function delete_contact( $request ) {
+    public function delete_vendor( $request ) {
         $id = (int) $request['id'];
 
         $data = [
             'id'   => $id,
             'hard' => false,
-            'type' => 'contact'
+            'type' => 'vendor'
         ];
 
         erp_delete_people( $data );
 
         return new WP_REST_Response( true, 200 );
+    }
+
+    /**
+     * Get a collection of transactions
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_transactions( $request ) {
+        $id = (int) $request['id'];
+
+        $args = [
+            'number' => $request['per_page'],
+            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+            'type'   => 'expense',
+            'user_id' => $id,
+        ];
+
+        $transactions = erp_ac_get_all_transaction( $args );
+
+        return new WP_REST_Response( $transactions, 200 );
     }
 
     /**
@@ -239,8 +261,8 @@ class Contacts_Controller extends REST_Controller {
         if ( isset( $request['id'] ) ) {
             $prepared_item['id'] = absint( $request['id'] );
         }
-        if ( isset( $request['company'] ) ) {
-            $prepared_item['company'] = $request['company'];
+        if ( isset( $request['vendor'] ) ) {
+            $prepared_item['company'] = $request['vendor'];
         }
         if ( isset( $request['phone'] ) ) {
             $prepared_item['phone'] = $request['phone'];
@@ -281,9 +303,8 @@ class Contacts_Controller extends REST_Controller {
         if ( isset( $request['currency'] ) ) {
             $prepared_item['currency'] = $request['currency'];
         }
-        if ( isset( $request['type'] ) ) {
-            $prepared_item['type'] = $request['type'];
-        }
+
+        $prepared_item['type'] = 'vendor';
 
         return $prepared_item;
     }
@@ -303,7 +324,7 @@ class Contacts_Controller extends REST_Controller {
             'first_name'  => $item->first_name,
             'last_name'   => $item->last_name,
             'email'       => $item->email,
-            'company'     => $item->company,
+            'vendor'      => $item->company,
             'phone'       => $item->phone,
             'mobile'      => $item->mobile,
             'other'       => $item->other,
@@ -316,9 +337,6 @@ class Contacts_Controller extends REST_Controller {
             'state'       => $item->state,
             'postal_code' => $item->postal_code,
             'country'     => $item->country,
-            'currency'    => $item->currency,
-            'types'       => $item->types,
-            'user_id'     => (int) $item->user_id,
         ];
 
         $data = array_merge( $data, $additional_fields );
@@ -327,7 +345,6 @@ class Contacts_Controller extends REST_Controller {
         $response = rest_ensure_response( $data );
 
         $response = $this->add_links( $response, $item );
-        // $response->add_links( $this->prepare_links( $item ) );
 
         return $response;
     }
@@ -340,7 +357,7 @@ class Contacts_Controller extends REST_Controller {
     public function get_item_schema() {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
-            'title'      => 'contact',
+            'title'      => 'vendor',
             'type'       => 'object',
             'properties' => [
                 'id'          => [
@@ -372,13 +389,14 @@ class Contacts_Controller extends REST_Controller {
                     'context'     => [ 'edit' ],
                     'required'    => true,
                 ],
-                'company'     => [
-                    'description' => __( 'Company for the resource.' ),
+                'vendor'     => [
+                    'description' => __( 'Vendor for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
+                    'required'    => true,
                 ],
                 'phone'       => [
                     'description' => __( 'Phone for the resource.' ),
@@ -468,30 +486,6 @@ class Contacts_Controller extends REST_Controller {
                 ],
                 'country'         => [
                     'description' => __( 'Country of the resource.' ),
-                    'type'        => 'string',
-                    'context'     => [ 'embed', 'view', 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
-                ],
-                'currency'        => [
-                    'description' => __( 'Currency of the resource.' ),
-                    'type'        => 'string',
-                    'context'     => [ 'embed', 'view', 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
-                ],
-                'type'            => [
-                    'description' => __( 'Type of the resource.' ),
-                    'type'        => 'string',
-                    'context'     => [ 'embed', 'view', 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
-                ],
-                'user_id'         => [
-                    'description' => __( 'User ID of the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'arg_options' => [
