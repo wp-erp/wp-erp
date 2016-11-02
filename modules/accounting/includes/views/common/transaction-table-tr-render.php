@@ -53,10 +53,11 @@
                             'type'        => 'text',
                             'placeholder' => erp_ac_get_price_for_field( '0.00', ['symbol' => false] ),
                             'class'       => 'line_price',
-                            'value'       => isset( $item['unit_price'] ) ? erp_ac_get_price_for_field( $item['unit_price'], ['symbol' => false] ) : erp_ac_get_price_for_field( '0.00', ['symbol' => false] ),
+                            'value'       => isset( $item['unit_price'] ) && ( $item['unit_price'] > 0 ) ? erp_ac_get_price_for_field( $item['unit_price'], ['symbol' => false] ) : '',
                             'custom_attr'    => [
                                 'data-value' => isset( $item['unit_price'] ) ? erp_ac_get_price_for_field( $item['unit_price'], ['symbol' => false] ) : erp_ac_get_price_for_field( '0.00', ['symbol' => false] ),
-                            ]
+                            ],
+                            'required'    => true,
 
                            ) );
                         ?>
