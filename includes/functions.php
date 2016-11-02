@@ -1458,9 +1458,9 @@ function erp_process_import_export() {
 
         }
 
-        $arg = ( $x ) ? "&imported=$x" : null;
+        // $arg = ( $x ) ? "&imported=$x" : null;
 
-        wp_redirect( admin_url( 'admin.php?page=erp-tools&tab=import' . $arg ) );
+        wp_redirect( admin_url( "admin.php?page=erp-tools&tab=import&imported=$x" ) );
         exit();
     }
 
@@ -1551,8 +1551,13 @@ function erp_importer_notices() {
     }
 
     if ( isset( $_REQUEST['imported'] ) ) {
-        $message = sprintf( __( '%s items successfully imported.', 'erp' ), number_format_i18n( $_REQUEST['imported'] ) );
-        echo "<div class='updated'><p>{$message}</p></div>";
+        if ( intval( $_REQUEST['imported'] ) == 0 ) {
+            $message = __( 'Nothing to import or items are already exists.', 'erp' );
+            echo "<div class='notice error'><p>{$message}</p></div>";
+        } else {
+            $message = sprintf( __( '%s items successfully imported.', 'erp' ), number_format_i18n( $_REQUEST['imported'] ) );
+            echo "<div class='notice updated'><p>{$message}</p></div>";
+        }
     }
 }
 
