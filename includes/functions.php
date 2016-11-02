@@ -1776,6 +1776,23 @@ function erp_is_imap_active() {
 }
 
 /**
+ * Check if the ERP Email SMTP settings is enabled or not
+ *
+ * @since 1.1.6
+ *
+ * @return boolean
+ */
+function erp_is_smtp_enabled() {
+    $erp_email_smtp_settings = get_option( 'erp_settings_erp-email_smtp', [] );
+
+    if ( isset( $erp_email_smtp_settings['enable_smtp'] ) && filter_var( $erp_email_smtp_settings['enable_smtp'], FILTER_VALIDATE_BOOLEAN ) ) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
  * Determine if the module is active or not.
  *
  * @return boolean
