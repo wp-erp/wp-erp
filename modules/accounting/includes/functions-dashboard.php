@@ -255,29 +255,24 @@ function erp_ac_dashboard_net_income() {
 function erp_ac_dashboard_income_expense() {
 
     $db    = new \WeDevs\ORM\Eloquent\Database();
-    $first = date( 'Y-01-01', strtotime( current_time( 'mysql' ) ) );
-    $last  = date( 'Y-12-t', strtotime( current_time( 'mysql' ) ) );
+    $first = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+    $last   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
 
     $incomes_args = [
-        'join'       => ['journals'],
         'start_date' => $first,
         'end_date'   => $last,
-        //'form_type'  => 'payment',
-        'type'       => [ 'sales', 'journal' ],
-        'status'     => ['not_in' => 'draft'],
+        'type'       => ['sales'],
+        'status'     => ['in' => ['awaiting_payment', 'closed', 'partial'] ],
         'select'     => [ '*', $db->raw( 'MONTHNAME( issue_date ) as month' ) ],
         'groupby'    => 'month',
         'output_by'  => 'array'
     ];
 
     $expense_args = [
-        'join'       => ['journals'],
         'start_date' => $first,
         'end_date'   => $last,
-        //'form_type'  => 'payment_voucher',
-        'type'       => [ 'expense', 'journal' ],
-        'status'     => ['not_in' => 'draft'],
-        //'status'     => 'paid',
+        'type'       => ['expense'],
+        'status'     => ['in' => ['awaiting_payment', 'closed', 'partial'] ],
         'select'     => [ '*', $db->raw( 'MONTHNAME( issue_date ) as month' ) ],
         'groupby'    => 'month',
         'output_by'  => 'array'
@@ -286,15 +281,8 @@ function erp_ac_dashboard_income_expense() {
     $current_year = date( 'Y', strtotime( current_time( 'mysql' ) ) );
     $prev_year    = date( 'Y', strtotime( '-1 year', strtotime( current_time( 'mysql' ) ) ) );
 
-    $incomes        = erp_ac_get_all_transaction( $incomes_args );
-    $income_ledgers = erp_ac_get_ledger_by_class_id( 4 );
-    $income_ledgers = wp_list_pluck( $income_ledgers, 'id' );
-
-    $expenses            = erp_ac_get_all_transaction( $expense_args );
-    $expense_ledgers     = erp_ac_get_ledger_by_class_id( 3 );
-    $expense_ledgers     = wp_list_pluck( $expense_ledgers, 'id' );
-    $expense_tax_ledgers = erp_ac_get_tax_receivable_ledger();
-    $expense_tax_ledgers = wp_list_pluck( $expense_tax_ledgers, 'id' );
+    $incomes  = erp_ac_get_all_transaction( $incomes_args );
+    $expenses = erp_ac_get_all_transaction( $expense_args );
 
     $expense_data = [];
     $income_data  = [];
@@ -304,41 +292,31 @@ function erp_ac_dashboard_income_expense() {
         $date_ex  = strtotime( date( 'Y-m-d', strtotime(  $current_year .'-'. $ex_month['month']  ) ) ) * 1000;
         $total    = 0;
 
-        foreach ( $expense as $key => $journal_val ) {
+        foreach ( $expense as $key => $details ) {
 
-            foreach ( $journal_val['journals'] as $key => $journal ) {
-
-                if ( ! in_array( $journal['ledger_id'], $expense_ledgers ) ) {
-                    continue;
-                }
-
-                if ( in_array( $journal['ledger_id'], $expense_tax_ledgers ) ) {
-                    continue;
-                }
-                $ex = $journal['debit'] - $journal['credit'];
-                $total = $total + $ex;
+            if ( $details->status == 'partial' ) {
+                $total = $total + $details->due;
+            } else {
+                $total = $total + $details->trans_total;
             }
         }
 
-        $expense_data[$date_ex] = ( $total <= 0 ) ? 0 : $total;
+        $expense_data[$date_ex] = $total;
     }
 
-    //echo '<pre>'; print_r($incomes); echo '</pre>'; die();
-    foreach ($incomes as $key => $income ) {
+    foreach ( $incomes as $key => $income ) {
         $in_month = date_parse( $key );
         $date_in  = strtotime( date( 'Y-m-d', strtotime(  $current_year .'-'. $in_month['month']  ) ) ) * 1000;
         $total    = 0;
 
-        foreach ( $income as $key => $journal_val ) {
-
-            foreach ( $journal_val['journals'] as $key => $journal ) {
-
-                if ( ! in_array( $journal['ledger_id'], $income_ledgers ) ) {
-                    continue;
-                }
-                $total = $total + $journal['debit'] - $journal['credit'];
+        foreach ( $income as $key => $details ) {
+            if ( $details->status == 'partial' ) {
+                $total = $total + $details->due;
+            } else {
+                $total = $total + $details->trans_total;
             }
         }
+
         $income_data[$date_in] = $total;
     }
 
