@@ -509,17 +509,17 @@ function erp_ac_dashboard_bills_payable() {
 }
 
 function erp_ac_dashboard_expense_chart() {
-    $first  = date( 'Y-01-01', strtotime( current_time( 'mysql' ) ) );
-    $second = date( 'Y-12-t', strtotime( current_time( 'mysql' ) ) );
+    $first  = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+    $last   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+
     $db     = new \WeDevs\ORM\Eloquent\Database();
 
     $expense_args = [
         'join'       => ['journals'],
         'start_date' => $first,
-        'end_date'   => $second,
-        //'form_type'  => 'payment_voucher',
-        'type'       => ['expense', 'journal'],
-        'status'     => ['not_in' => 'draft'],
+        'end_date'   => $last,
+        'type'       => ['expense'],
+        'status'     => ['in' => ['awaiting_payment', 'closed', 'partial'] ],
         'select'     => [ '*', $db->raw( 'MONTHNAME( issue_date ) as month' ) ],
         'groupby'    => 'month',
         'output_by'  => 'array'
@@ -541,7 +541,6 @@ function erp_ac_dashboard_expense_chart() {
     foreach ( $expenses as $key => $expense ) {
 
         foreach ( $expense as $key => $journal_val ) {
-
             foreach ( $journal_val['journals'] as $key => $journal ) {
 
                 if ( ! in_array( $journal['ledger_id'], $expense_ledgers ) ) {
