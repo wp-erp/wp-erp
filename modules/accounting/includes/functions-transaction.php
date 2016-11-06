@@ -366,8 +366,14 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
 
     $permission = er_ac_insert_transaction_permiss( $args, $is_update );
 
+    $validation = er_ac_insert_transaction_validation( $args, $items, $is_update );
+
     if ( is_wp_error( $permission ) ) {
         return $permission;
+    }
+
+    if ( is_wp_error( $validation ) ) {
+        return $validation;
     }
 
     $invoice = erp_ac_get_invoice_num_fromat_from_submit_invoice( $args['invoice_number'], $args['invoice_format'] );
@@ -559,6 +565,23 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
     }
 
     return false;
+}
+
+/**
+ * Check validation before new transaction
+ *
+ * @param  array $args
+ * @param  array $items
+ * @param  boleen $update
+ *
+ * @return  boolen
+ */
+function er_ac_insert_transaction_validation( $args, $items, $update ) {
+    foreach ( $items as $key => $item ) {
+        if ( $item['discount'] > 100 ) {
+            return new WP_Error( 'error', __( 'Discount value must be less than or equal to 100', 'erp' ) );
+        }
+    }
 }
 
 /**

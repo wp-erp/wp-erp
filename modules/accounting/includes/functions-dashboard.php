@@ -80,11 +80,15 @@ function erp_ac_dashboard_banks() {
 }
 
 function erp_ac_dashboard_invoice_payable() {
+    $first = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+    $last  = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
 
     $incomes_args = [
+        'start_date' => $first,
+        'end_date'   => $last,
         'form_type'  => 'invoice',
         'type'       => 'sales',
-        'status'     => 'awaiting_payment',
+        'status'     => ['in' => ['awaiting_payment', 'partial'] ],
     ];
 
     $invoices = erp_ac_get_all_transaction( $incomes_args );
@@ -387,10 +391,15 @@ function erp_ac_dashboard_income_expense() {
 
 
 function erp_ac_dashboard_bills_payable() {
+    $first = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+    $last  = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+
     $incomes_args = [
+        'start_date' => $first,
+        'end_date'   => $last,
         'form_type'  => 'vendor_credit',
         'type'       => 'expense',
-        'status'     => 'awaiting_payment',
+        'status'     => ['in' => ['awaiting_payment', 'partial'] ],
     ];
 
     $invoices = erp_ac_get_all_transaction( $incomes_args );
