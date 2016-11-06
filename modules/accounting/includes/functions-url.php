@@ -255,6 +255,29 @@ function erp_ac_get_section_sales_url( $slag = false ) {
 }
 
 /**
+ * Get url for sales
+ *
+ * @param  str $content
+ *
+ * @since 1.1.0
+ *
+ * @return str
+ */
+function erp_ac_get_sales_menu_url( $content = false ) {
+    if ( ! current_user_can( 'erp_ac_view_sale' ) ) {
+        return apply_filters( 'erp_ac_get_sales_url', $content );
+    }
+
+    if ( $content ) {
+        $url = sprintf( '<a href="%s">%s</a>', add_query_arg( array( 'page' => 'erp-accounting-sales' ), admin_url('admin.php') ), $content );
+    } else {
+        $url = add_query_arg( array( 'page' => 'erp-accounting-sales' ), admin_url('admin.php') );
+    }
+
+    return apply_filters( 'erp_ac_get_sales_menu_url', $url, $content );
+}
+
+/**
  * Get url for expense
  *
  * @param  str $content
@@ -266,7 +289,7 @@ function erp_ac_get_section_sales_url( $slag = false ) {
 function erp_ac_get_expense_url( $content = false ) {
 
 	if ( ! current_user_can( 'erp_ac_view_expense' ) ) {
-		return apply_filters( 'erp_ac_get_sales_url', $content );
+		return apply_filters( 'erp_ac_get_expense_url', $content );
 	}
 
 	if ( $content ) {

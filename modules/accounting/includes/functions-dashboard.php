@@ -156,97 +156,49 @@ function erp_ac_dashboard_invoice_payable() {
 }
 
 function erp_ac_dashboard_net_income() {
+    $first = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+    $last  = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
 
     $incomes_args = [
-        'join'       => ['journals'],
-        'type'       => ['sales', 'expense', 'journal'],
-        'status'     => ['not_in' => 'draft'],
+        'type'       => ['sales', 'expense'],
+        'status'     => ['in' => ['awaiting_payment', 'closed', 'partial'] ],
         'groupby'    => 'type',
+        'start_date' => $first,
+        'end_date'   => $last,
         'output_by'  => 'array'
 
     ];
 
-    $income = 0;
-    $expense = 0;
+    $transections  = erp_ac_get_all_transaction( $incomes_args );
+    $expenses      = isset( $transections['expense'] ) ? $transections['expense'] : [];
+    $sales         = isset( $transections['sales'] ) ? $transections['sales'] : [];
+    $expense_total = 0;
+    $sales_total   = 0;
 
-    $transections = erp_ac_get_all_transaction( $incomes_args );
-    $sales        = isset( $transections['sales'] ) ? $transections['sales'] : [];
-    $expenses     = isset( $transections['expense'] ) ? $transections['expense'] : [];
-    $journals_tr  = isset( $transections['journal'] ) ? $transections['journal'] : [];
+    foreach ( $expenses as $key => $details ) {
 
-    $income_ledger_attr  = erp_ac_get_ledger_by_class_id( 4 );
-    $income_ledgers      = wp_list_pluck( $income_ledger_attr, 'id' );
-
-    $expense_ledger_attr = erp_ac_get_ledger_by_class_id( 3 );
-    $expense_ledgers     = wp_list_pluck( $expense_ledger_attr, 'id' );
-
-    $expense_tax_ledgers = erp_ac_get_tax_receivable_ledger();
-    $expense_tax_ledgers = wp_list_pluck( $expense_tax_ledgers, 'id' );
-
-    $inc_exp_info = [];
-
-    foreach (  $journals_tr as $key => $journal_tr ) {
-
-        foreach ( $journal_tr['journals'] as $jor_key => $jor_attr ) {
-            if ( in_array( $jor_attr['ledger_id'], $income_ledgers ) ) {
-                $income = $income + $jor_attr['debit'] - $jor_attr['credit'];
-            }
-
-            if ( in_array( $jor_attr['ledger_id'], $expense_ledgers ) ) {
-                $ex = ( $jor_attr['debit'] - $jor_attr['credit'] );
-                $expense = $expense +  $ex;
-            }
+        if ( $details->status == 'partial' ) {
+            $expense_total = $expense_total + $details->due;
+        } else {
+            $expense_total = $expense_total + $details->trans_total;
         }
     }
 
-    foreach ( $sales as $key => $arrs ) {
-        $credit = [];
-        foreach ( $arrs['journals'] as $key => $journal ) {
-            if ( $journal['type'] == 'main' ) {
-                $main_id = $journal['ledger_id'];
-            }
-
-            if ( in_array( $journal['ledger_id'], $income_ledgers ) && $journal['type'] != 'main' ) {
-                $credit[] = $journal['credit'];
-            }
+    foreach ( $sales as $key => $details ) {
+        if ( $details->status == 'partial' ) {
+            $sales_total = $sales_total + $details->due;
+        } else {
+            $sales_total = $sales_total + $details->trans_total;
         }
-
-        $inc_exp_info[$main_id]['credit'] = $credit;
     }
 
-    foreach ( $expenses as $key => $arrs ) {
-        $debit = [];
-        foreach ( $arrs['journals'] as $key => $journal ) {
-            if ( in_array( $journal['ledger_id'], $expense_tax_ledgers ) ) {
-                continue;
-            }
-
-            if ( $journal['type'] == 'main' ) {
-                $main_id = $journal['ledger_id'];
-            }
-
-            if ( in_array( $journal['ledger_id'], $expense_ledgers ) && $journal['type'] != 'main' ) {
-                $debit[] = $journal['debit'];
-            }
-        }
-
-        $inc_exp_info[$main_id]['debit'] = $debit;
-    }
-
-    foreach ( $inc_exp_info as $inc_exp ) {
-        $credit_arr = isset( $inc_exp['credit'] ) ? $inc_exp['credit'] : array();
-        $debit_arr  = isset( $inc_exp['debit'] ) ? $inc_exp['debit'] : array();
-        $income     = $income + array_sum( $credit_arr );
-        $expense    = $expense + array_sum( $debit_arr );
-    }
-    $expense = ( $expense <= 0 ) ? 0 : $expense;
-    $net_income = $income - $expense;
+    $net_income = $sales_total - $expense_total;
     ?>
     <ul>
-        <li><span class="account-title"><?php _e( 'Income', 'erp' ); ?></span> <span class="price"><a href="#"><?php echo erp_ac_get_price( $income ); ?></a></span></li>
-        <li><span class="account-title"><?php _e( 'Expense', 'erp' ); ?></span> <span class="price"><a href="#"><?php echo erp_ac_get_price( $expense ); ?></a></span></li>
+        <li><span class="account-title"><?php _e( 'Income', 'erp' ); ?></span> <span class="price"><a href="<?php echo erp_ac_get_sales_menu_url(); ?>"><?php echo erp_ac_get_price( $sales_total ); ?></a></span></li>
+        <li><span class="account-title"><?php _e( 'Expense', 'erp' ); ?></span> <span class="price"><a href="<?php echo erp_ac_get_expense_url(); ?>"><?php echo erp_ac_get_price( $expense_total ); ?></a></span></li>
         <li class="total">
-            <span class="account-title"><?php _e( 'Net Income', 'erp' ); ?></span> <span class="price"><a href="#"><?php echo erp_ac_get_price( $net_income ); ?></a></span>
+            <span class="account-title"><?php _e( 'Net Income', 'erp' ); ?></span> <span class="price"><?php echo erp_ac_get_price( $net_income ); ?></span>
         </li>
     </ul>
     <?php
