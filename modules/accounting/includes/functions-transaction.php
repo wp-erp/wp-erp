@@ -319,7 +319,7 @@ function er_ac_insert_transaction_permiss( $args, $is_update ) {
         return new WP_Error( 'error', __( 'Invoice already exists. Please use an unique number', 'erp' ) );
     }
 
-    if ( ! intval( $args['user_id'] ) ) {
+    if ( ! intval( $args['user_id'] ) || $args['user_id'] == '-1' ) {
         return new WP_Error( 'error', __( 'User ID (Customer or Vendor) requird', 'erp' ) );
     }
 }

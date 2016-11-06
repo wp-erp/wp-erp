@@ -77,7 +77,7 @@
                             'addon_pos'   => 'after',
                             'class'       => 'line_dis',
                             'value'       => isset( $item['discount'] ) ? $item['discount'] : '0',
-                            'custom_attr' => array( 'max' => 100 )
+                            'custom_attr' => array( 'max' => 100, 'step' => 'any' )
                         ) );
                         ?>
                     </td>
