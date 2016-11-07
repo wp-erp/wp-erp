@@ -211,14 +211,14 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
             <div class="erp-button-bar-right">
                 <div class="button-group erp-button-group">
                     <button  data-redirect="single_page" data-btn_status="payment" type="button" class="button button-primary erp-ac-trns-form-submit-btn">
-                        <?php _e( 'Payment', 'erp' ); ?>
+                        <?php _e( 'Pay', 'erp' ); ?>
                     </button>
                     <button type="button" class="button button-primary erp-dropdown-toggle" data-toggle="erp-dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="caret"></span>
                     </button>
                     <ul class="erp-dropdown-menu">
-                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="single_page" data-btn_status="payment" href="#"><?php _e( 'Payment', 'erp' ); ?></a></li>
-                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="payment_and_add_another" href="#"><?php _e( 'Payment & add another', 'erp' ); ?></a></li>
+                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="single_page" data-btn_status="payment" href="#"><?php _e( 'Pay', 'erp' ); ?></a></li>
+                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="payment_and_add_another" href="#"><?php _e( 'Pay & add another', 'erp' ); ?></a></li>
                     </ul>
                 </div>
             </div>

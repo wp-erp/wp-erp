@@ -201,7 +201,7 @@ class Admin_Menu {
             'nonce'              => wp_create_nonce( 'erp-ac-nonce' ),
             'emailConfirm'       => __( 'Sent', 'erp' ),
             'emailConfirmMsg'    => __( 'The email has been sent', 'erp' ),
-            'confirmMsg'         => __( 'Are you sure?', 'erp' ),
+            'confirmMsg'         => __( 'You are about to permanently delete this item.', 'erp' ),
             'copied'             => __( 'Copied', 'erp' ),
             'ajaxurl'            => admin_url( 'admin-ajax.php' ),
             'decimal_separator'  => empty( $erp_ac_de_separator ) ? '.' : erp_get_option('erp_ac_de_separator'),

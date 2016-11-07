@@ -306,7 +306,7 @@ function erp_ac_get_customer($id) {
 
 function erp_ac_message() {
     $message = array(
-        'confirm'       => __( 'Are you sure!', 'erp' ),
+        'confirm'       => __( 'You are about to permanently delete this item.', 'erp' ),
         'new_customer'  => __( 'New Customer', 'erp' ),
         'new_vendor'    => __( 'New Vendor', 'erp' ),
         'new'           => __( 'Create New', 'erp' ),
