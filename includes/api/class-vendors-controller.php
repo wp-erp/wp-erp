@@ -211,7 +211,7 @@ class Vendors_Controller extends REST_Controller {
 
         erp_delete_people( $data );
 
-        return new WP_REST_Response( true, 200 );
+        return new WP_REST_Response( true, 204 );
     }
 
     /**

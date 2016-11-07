@@ -211,7 +211,7 @@ class Contacts_Controller extends REST_Controller {
 
         erp_delete_people( $data );
 
-        return new WP_REST_Response( true, 200 );
+        return new WP_REST_Response( true, 204 );
     }
 
     /**
@@ -327,7 +327,6 @@ class Contacts_Controller extends REST_Controller {
         $response = rest_ensure_response( $data );
 
         $response = $this->add_links( $response, $item );
-        // $response->add_links( $this->prepare_links( $item ) );
 
         return $response;
     }
