@@ -212,10 +212,24 @@
 
             rowBalkAction: function(e) {
                 e.preventDefault();
-                var self = $(this);
+                var self = $(this),
+                    status = self.data('status'),
+                    text = '';
+
+                switch( status ) {
+                    case 'void':
+                        text = ERP_AC.message.void;
+                        break;
+                    case 'delete':
+                        text = ERP_AC.message.delete;
+                        break;
+                    default:
+                        text = ERP_AC.message.confirm;
+                }
 
                 swal({
-                    title: ERP_AC.message.confirm,
+                    title: '',
+                    text: text,
                     type: "warning",
                     cancelButtonText: ERP_AC.message.cancel,
                     //confirmButtonText: 'asdfasd',
