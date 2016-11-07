@@ -69,8 +69,12 @@ class Log {
 	        $audit_log = $audit_log->where( 'component', $args['component'] );
 	    }
 
-	    if ( isset( $args['sub_component'] ) && ! empty( $args['sub_component'] ) ) {
-	        $audit_log = $audit_log->where( 'sub_component', $args['sub_component'] );
+        if ( isset( $args['sub_component'] ) && ! empty( $args['sub_component'] ) ) {
+            $audit_log = $audit_log->where( 'sub_component', $args['sub_component'] );
+        }
+
+	    if ( isset( $args['data_id'] ) && ! empty( $args['data_id'] ) ) {
+	        $audit_log = $audit_log->where( 'data_id', $args['data_id'] );
 	    }
 
 	    if ( isset( $args['old_value'] ) && ! empty( $args['old_value'] ) ) {
@@ -130,7 +134,8 @@ class Log {
 
 		$defaults = array(
 			'component'     => 'HRM',
-			'sub_component' => '',
+            'sub_component' => '',
+			'data_id'       => null,
 			'old_value'     => '',
 			'new_value'     => '',
 			'message'       => '',
@@ -139,7 +144,7 @@ class Log {
 			'created_at'    => current_time('mysql')
 	    );
 
-	    $formated = ['%s', '%s', '%s', '%s', '%s', '%s', '%d'];
+	    $formated = ['%s', '%s', '%d', '%s', '%s', '%s', '%s', '%d'];
 
 	    $fields = wp_parse_args( $args, $defaults );
 
@@ -162,8 +167,12 @@ class Log {
 	        $audit_log = $audit_log->where( 'component', $args['component'] );
 	    }
 
-	    if ( isset( $args['sub_component'] ) && ! empty( $args['sub_component'] ) ) {
-	        $audit_log = $audit_log->where( 'sub_component', $args['sub_component'] );
+        if ( isset( $args['sub_component'] ) && ! empty( $args['sub_component'] ) ) {
+            $audit_log = $audit_log->where( 'sub_component', $args['sub_component'] );
+        }
+
+	    if ( isset( $args['data_id'] ) && ! empty( $args['data_id'] ) ) {
+	        $audit_log = $audit_log->where( 'data_id', $args['data_id'] );
 	    }
 
 	    if ( isset( $args['old_value'] ) && ! empty( $args['old_value'] ) ) {

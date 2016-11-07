@@ -500,6 +500,7 @@ Company'
                 `user_id` bigint(20) unsigned NOT NULL,
                 `post_id` bigint(11) NOT NULL,
                 `status` varchar(30) NOT NULL,
+                `email_status` varchar(30) NOT NULL,
                 PRIMARY KEY (id)
             ) $collate;",
 
@@ -561,6 +562,7 @@ Company'
                 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
                 `component` varchar(50) NOT NULL DEFAULT '',
                 `sub_component` varchar(50) NOT NULL DEFAULT '',
+                `data_id` bigint(20) DEFAULT NULL,
                 `old_value` longtext,
                 `new_value` longtext,
                 `message` longtext,
