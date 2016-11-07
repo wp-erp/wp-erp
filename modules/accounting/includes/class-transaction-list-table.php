@@ -507,7 +507,7 @@ class Transaction_List_Table extends \WP_List_Table {
      * @return int
      */
     protected function get_transaction_count( $args ) {
-        return erp_ac_get_transaction_count( $args['type'] );
+        return erp_ac_get_transaction_count( $args );
     }
 
     /**

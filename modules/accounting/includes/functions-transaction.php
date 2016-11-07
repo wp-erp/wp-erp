@@ -166,8 +166,9 @@ function erp_ac_get_all_transaction( $args = array() ) {
  *
  * @return array
  */
-function erp_ac_get_transaction_count( $type = 'expense', $user_id = 0 ) {
-    $cache_key = 'erp-ac-' . $type . '-' . $user_id . '-count';
+function erp_ac_get_transaction_count( $args, $user_id = 0 ) {
+    $status = isset( $args['status'] ) ? $args['status'] : false;
+    $cache_key = 'erp-ac-' . $args['type'] . '-' . $user_id . '-count';
     $count     = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $count ) {
@@ -177,7 +178,11 @@ function erp_ac_get_transaction_count( $type = 'expense', $user_id = 0 ) {
             $trans = $trans->where( 'user_id', '=', $user_id );
         }
 
-        $count = $trans->type( $type )->count();
+        if ( $status ) {
+            $trans = $trans->where( 'status', '=', $args['status'] );
+        }
+
+        $count = $trans->type( $args['type'] )->count();
     }
 
     return (int) $count;
