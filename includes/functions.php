@@ -718,19 +718,6 @@ function erp_cron_intervals( $schedules ) {
 }
 
 /**
- * forward given end_date by 1 day to make fullcalendar range compatible
- *
- * @param string $end_date saved $end_date from db
- *
- * @since 0.1
- *
- * @return string end_date
- */
-function erp_fullcalendar_end_date( $end_date ) {
-    return date( 'Y-m-d H:i:s', strtotime( $end_date . '+1 day' ) );
-}
-
-/**
  * Show user own media attachment
  *
  * @since 1.0

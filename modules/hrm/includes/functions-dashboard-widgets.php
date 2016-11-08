@@ -195,7 +195,7 @@ function erp_hr_dashboard_widget_leave_calendar() {
             'id'        => $leave_request->id,
             'title'     => $event_label,
             'start'     => $leave_request->start_date,
-            'end'       => erp_fullcalendar_end_date( $leave_request->end_date ),
+            'end'       => $leave_request->end_date,
             'url'       => erp_hr_url_single_employee( $leave_request->user_id, 'leave' ),
             'color'     => $leave_request->color,
         );
@@ -206,7 +206,7 @@ function erp_hr_dashboard_widget_leave_calendar() {
             'id'        => $holiday->id,
             'title'     => $holiday->title,
             'start'     => $holiday->start,
-            'end'       => erp_fullcalendar_end_date( $holiday->end ),
+            'end'       => $holiday->end,
             'color'     => '#FF5354',
             'img'       => '',
             'holiday'   => true
