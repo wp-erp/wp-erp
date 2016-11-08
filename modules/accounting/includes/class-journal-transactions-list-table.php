@@ -40,7 +40,7 @@ class Journal_Transactions_List_Table extends \WP_List_Table {
      * @return void
      */
     function no_items() {
-        _e( 'No entry found!', 'wp-erp-ac' );
+        _e( 'No entry found!', 'erp' );
     }
 
     /**
@@ -240,8 +240,8 @@ class Journal_Transactions_List_Table extends \WP_List_Table {
      */
     function get_bulk_actions() {
         $actions = array(
-            // 'trash'  => __( 'Move to Trash', 'wp-erp-ac' ),
-            // 'email'  => __( 'Send Email', 'wp-erp-ac' ),
+            // 'trash'  => __( 'Move to Trash', 'erp' ),
+            // 'email'  => __( 'Send Email', 'erp' ),
         );
         return $actions;
     }

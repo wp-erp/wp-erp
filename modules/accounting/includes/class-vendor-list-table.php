@@ -32,7 +32,7 @@ class Vendor_List_Table extends Customer_List_Table {
      * @return void
      */
     function no_items() {
-        _e( 'No vendor found!', 'wp-erp-ac' );
+        _e( 'No vendor found!', 'erp' );
     }
 
     /**
@@ -43,11 +43,11 @@ class Vendor_List_Table extends Customer_List_Table {
     function get_columns() {
         $columns = array(
             'cb'       => '<input type="checkbox" />',
-            'company'  => __( 'Vendor', 'wp-erp-ac' ),
-            'customer' => __( 'Vendor Owner', 'wp-erp-ac' ),
-            'email'    => __( 'Email', 'wp-erp-ac' ),
-            'phone'    => __( 'Phone', 'wp-erp-ac' ),
-            'balance'  => __( 'Balance', 'wp-erp-ac' ),
+            'company'  => __( 'Vendor', 'erp' ),
+            'customer' => __( 'Vendor Owner', 'erp' ),
+            'email'    => __( 'Email', 'erp' ),
+            'phone'    => __( 'Phone', 'erp' ),
+            'balance'  => __( 'Balance', 'erp' ),
         );
 
         return $columns;
@@ -101,16 +101,16 @@ class Vendor_List_Table extends Customer_List_Table {
 
         $actions            = array();
         if ( erp_ac_current_user_can_edit_vendor( $item->created_by ) ) {
-            $actions['edit']    = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=edit&id=' . $item->id ), $item->id, __( 'Edit this item', 'wp-erp-ac' ), __( 'Edit', 'wp-erp-ac' ) );
+            $actions['edit']    = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=edit&id=' . $item->id ), $item->id, __( 'Edit this item', 'erp' ), __( 'Edit', 'erp' ) );
         }
 
         if ( erp_ac_create_expenses_voucher() || erp_ac_publish_expenses_voucher() ) {
 
-            $actions['invoice'] = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->expense_slug . '&action=new&type=payment_voucher&vendor_id=' . $item->id ), $item->id, __( 'Create Voucher', 'wp-erp-ac' ), __( 'Payment Voucher', 'wp-erp-ac' ) );
+            $actions['invoice'] = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->expense_slug . '&action=new&type=payment_voucher&vendor_id=' . $item->id ), $item->id, __( 'Create Voucher', 'erp' ), __( 'Payment Voucher', 'erp' ) );
         }
 
         if ( erp_ac_create_expenses_credit() || erp_ac_publish_expenses_credit() ) {
-            $actions['expense'] = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->expense_slug . '&action=new&type=vendor_credit&vendor_id=' . $item->id ), $item->id, __( 'Create Credit', 'wp-erp-ac' ), __( 'Vendor Credit', 'wp-erp-ac' ) );
+            $actions['expense'] = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->expense_slug . '&action=new&type=vendor_credit&vendor_id=' . $item->id ), $item->id, __( 'Create Credit', 'erp' ), __( 'Vendor Credit', 'erp' ) );
         }
 
         if ( erp_ac_current_user_can_delete_vendor( $item->created_by ) ) {
