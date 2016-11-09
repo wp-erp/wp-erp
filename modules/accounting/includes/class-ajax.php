@@ -148,7 +148,6 @@ class Ajax_Handler {
                 break;
 
             case 'void':
-                 var_dump( $_POST ); die();
                 erp_ac_update_transaction_to_void( $trns_id, ['status' => $status] );
                 break;
 
