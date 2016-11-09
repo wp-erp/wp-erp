@@ -840,17 +840,22 @@ class Ajax_Handler {
     public function assign_contact_delete() {
         $this->verify_nonce( 'wp-erp-crm-nonce' );
 
-        $user_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+        $user_id  = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
+        $group_id = isset( $_REQUEST['group_id'] ) ? intval( $_REQUEST['group_id'] ) : 0;
 
         if ( ! current_user_can( 'erp_crm_edit_contact', $user_id ) ) {
             $this->send_error( __( 'You don\'t have any permission to remove this contact from a group', 'erp' ) );
         }
 
         if ( ! $user_id ) {
-            $this->send_error( __( 'No subscriber user found', 'erp' ) );
+            $this->send_error( __( 'No subscriber contact found', 'erp' ) );
         }
 
-        erp_crm_contact_subscriber_delete( $user_id );
+        if ( ! $group_id ) {
+            $this->send_error( __( 'No subscriber group found', 'erp' ) );
+        }
+
+        erp_crm_contact_subscriber_delete( $user_id, $group_id );
 
         $this->send_success( __( 'Contact group delete successfully', 'erp' ) );
     }

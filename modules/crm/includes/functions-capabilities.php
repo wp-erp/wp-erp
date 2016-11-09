@@ -244,6 +244,12 @@ function erp_crm_permission_management_field( $employee ) {
 function erp_crm_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
     switch ( $cap ) {
 
+        /**
+         * CRM Manager -> can soft+hard delete own and others contacts
+         * CRM Manager && CRM Agent -> can soft+hard delete own and others contacts
+         * CRM Agent -> can only soft delete own contacts
+         * None -> cannot delete
+         */
         case 'erp_crm_edit_contact':
         case 'erp_crm_delete_contact':
             $contact_id      = isset( $args[0] ) ? $args[0] : false;
@@ -252,7 +258,7 @@ function erp_crm_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args 
             $crm_manager_role = erp_crm_get_manager_role();
             $crm_agent_role   = erp_crm_get_agent_role();
 
-            if ( user_can( $user_id, $crm_agent_role ) ) {
+            if ( ! user_can( $user_id, $crm_manager_role ) && user_can( $user_id, $crm_agent_role ) ) {
                 $contact_user_id = \WeDevs\ERP\Framework\Models\People::select('user_id')->where( 'id', $contact_id )->first();
 
                 if ( isset( $contact_user_id->user_id ) && $contact_user_id->user_id ) {
@@ -268,6 +274,9 @@ function erp_crm_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args 
                         $caps = ['do_not_allow'];
                     }
                 }
+
+            } else if ( ! user_can( $user_id, $crm_manager_role ) ) {
+                $caps = ['do_not_allow'];
             }
 
         break;

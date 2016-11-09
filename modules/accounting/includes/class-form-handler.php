@@ -22,16 +22,102 @@ class Form_Handler {
 
         add_action( 'load-accounting_page_erp-accounting-customers', array( $this, 'customer_bulk_action') );
         add_action( 'load-accounting_page_erp-accounting-vendors', array( $this, 'vendor_bulk_action') );
+        add_action( 'load-accounting_page_erp-accounting-sales', array( $this, 'sales_bulk_action') );
+        add_action( 'load-accounting_page_erp-accounting-expense', array( $this, 'expense_bulk_action') );
 
         add_action( 'erp_hr_after_employee_permission_set', array( $this, 'employee_permission_set'), 10, 2 );
     }
 
+    function expense_bulk_action() {
+        if ( ! $this->verify_current_page_screen( 'erp-accounting-expense', 'bulk-expenses' ) ) {
+            return;
+        }
+
+        if ( ! isset( $_REQUEST['transaction_id'] ) || ! isset( $_REQUEST['submit_sales_bulk_action'] ) ) {
+            return;
+        }
+
+        $action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : '';
+
+        foreach ( $_REQUEST['transaction_id'] as $key => $trans_id ) {
+            switch ( $action ) {
+                case 'delete':
+                    erp_ac_remove_transaction( $trans_id );
+                    break;
+                case 'void':
+                    erp_ac_update_transaction_to_void( $trans_id );
+                    break;
+
+                default:
+                    erp_ac_update_transaction( $trans_id, ['status' => $action] );
+                    break;
+            }
+        }
+
+        wp_safe_redirect( $_REQUEST['_wp_http_referer'] );
+    }
+
+    /**
+     * Bulk action for sales list table
+     *
+     * @since  1.1.0
+     *
+     * @return void
+     */
+    function sales_bulk_action() {
+
+        if ( ! $this->verify_current_page_screen( 'erp-accounting-sales', 'bulk-sales' ) ) {
+            return;
+        }
+
+        if ( ! isset( $_REQUEST['transaction_id'] ) || ! isset( $_REQUEST['submit_sales_bulk_action'] ) ) {
+            return;
+        }
+
+        $action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : '';
+
+        foreach ( $_REQUEST['transaction_id'] as $key => $trans_id ) {
+            switch ( $action ) {
+                case 'delete':
+                    erp_ac_remove_transaction( $trans_id );
+                    break;
+
+                case 'void':
+                    erp_ac_update_transaction_to_void( $trans_id );
+                    break;
+
+                default:
+                    erp_ac_update_transaction( $trans_id, ['status' => $action] );
+                    break;
+            }
+        }
+
+        wp_safe_redirect( $_REQUEST['_wp_http_referer'] );
+    }
+
+    /**
+     * Update employee role as accounting manager
+     *
+     * @param  array $post
+     * @param  object $user
+     *
+     * @since  1.1.0
+     *
+     * @return void
+     */
     function employee_permission_set( $post, $user ) {
         $user_profile = new \WeDevs\ERP\Accounting\User_Profile();
         $post['ac_manager'] = isset( $post['ac_manager'] ) && $post['ac_manager'] == 'on' ? erp_ac_get_manager_role() : false;
         $user_profile->update_user( $user->ID, $post );
     }
 
+    /**
+     * Bulk action for customer list table
+     *
+     * @since  1.1.0
+     *
+     * @return void
+     */
     function customer_bulk_action() {
 
         if ( ! $this->verify_current_page_screen( 'erp-accounting-customers', 'bulk-customers' ) ) {
@@ -73,7 +159,13 @@ class Form_Handler {
         }
     }
 
-
+    /**
+     * Bulk action for vendor list table
+     *
+     * @since  1.1.0
+     *
+     * @return void
+     */
     function vendor_bulk_action() {
 
         if ( ! $this->verify_current_page_screen( 'erp-accounting-vendors', 'bulk-customers' ) ) {
@@ -115,6 +207,13 @@ class Form_Handler {
         }
     }
 
+    /**
+     * Redirect after transaction list table submit for search
+     *
+     * @since  1.1.0
+     *
+     * @return void
+     */
     function bulk_search() {
         $redirect_to = add_query_arg( array( 's' => $_POST['s'] ), $_POST['_wp_http_referer'] );
         wp_redirect( $redirect_to );
@@ -155,6 +254,7 @@ class Form_Handler {
      * @return void
      */
     public function handle_customer_form() {
+
         if ( ! isset( $_POST['submit_erp_ac_customer'] ) ) {
             return;
         }
@@ -288,6 +388,13 @@ class Form_Handler {
         exit;
     }
 
+    /**
+     * Transaction form data
+     *
+     * @since  1.1.0
+     *
+     * @return void
+     */
     public function transaction_form() {
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-ac-trans-new' ) ) {
             die( __( 'Are you cheating?', 'erp' ) );
@@ -310,17 +417,21 @@ class Form_Handler {
         } else {
             $redirect_to = add_query_arg( array( 'msg' => 'success' ), $page_url );
         }
-        
+
         if ( $_POST['redirect'] == 'same_page' ) {
             $redirect_to = remove_query_arg( ['transaction_id'], wp_unslash( $_SERVER['REQUEST_URI'] ) );
+
         } else if ( $_POST['redirect'] == 'single_page' ) {
+
             if ( $_POST['type'] == 'sales' ) {
-                $redirect_to = erp_ac_get_slaes_payment_invoice_url( $insert_id );    
+                $redirect_to = erp_ac_get_slaes_payment_invoice_url( $insert_id );
+
             } else if ( $_POST['type'] == 'expense' ) {
-                $redirect_to = erp_ac_get_expense_voucher_url( $insert_id );    
-            } 
+                $redirect_to = erp_ac_get_expense_voucher_url( $insert_id );
+            }
         }
 
+        $redirect_to = apply_filters( 'erp_ac_redirect_after_transaction', $redirect_to, $insert_id, $_POST );
         wp_safe_redirect( $redirect_to );
         exit;
     }
@@ -331,7 +442,6 @@ class Form_Handler {
      * @return void
      */
     public function transaction_data_process( $postdata ) {
-
         $status          = erp_ac_get_btn_status( $postdata );
         $errors          = array();
         $insert_id       = 0;
@@ -407,8 +517,8 @@ class Form_Handler {
             'line_total'      => isset( $postdata['line_total'] ) ? $postdata['line_total'] : array()
         ];
 
-        // set invoice and vendor credit due to full amount
-        if ( in_array( $form_type, [ 'invoice', 'vendor_credit' ] ) ) {
+        // set invoice and vendor credit for due to full amount
+        if ( $this->is_due_trans( $form_type, $postdata ) ) { //in_array( $form_type, [ 'invoice', 'vendor_credit' ] ) ) {
             $fields['due'] = $total;
         }
 
@@ -443,23 +553,36 @@ class Form_Handler {
         return $insert_id;
     }
 
+    /**
+     * Check is the payment type partial or not
+     *
+     * @param  array $trans
+     *
+     * @return  boolen
+     */
+    function is_due_trans( $form_type, $postdata ) {
+        $due = apply_filters( 'erp_ac_is_due_trans', ['invoice', 'vendor_credit'], $postdata );
+
+        if ( in_array( $form_type, $due ) ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * New journal
+     *
+     * @since 1.1.0
+     *
+     * @return  boolen
+     */
     public function journal_entry() {
 
         if ( ! erp_ac_create_journal() ) {
             return new \WP_Error( 'error', __( 'You do not have sufficient permissions', 'erp' ) );
         }
 
-        // if ( empty( $_POST['invoice'] ) ) {
-        //     return new \WP_Error( 'error', __( 'Invoice number required', 'erp' ) );
-        // }
-
-        // $invoice = isset( $_POST['invoice'] ) ? $_POST['invoice'] : '';
-        // $trans   = new \WeDevs\ERP\Accounting\Model\Transaction();
-        // $trans   = $trans->where( 'invoice_number', '=', $invoice )->get()->toArray();
-
-        // if ( $trans ) {
-        //     return new \WP_Error( 'error', __( 'Please insert unique invoice number', 'erp' ) );
-        // }
 
         global $wpdb;
 

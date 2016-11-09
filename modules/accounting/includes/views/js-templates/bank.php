@@ -62,7 +62,7 @@
             'id'          => 'erp-ac-amount',
             'value'       => '',
             'required'    => true,
-            'custom_attr' => array( 'min' => '0' )
+            'custom_attr' => array( 'min' => '0', 'step' => 'any'  )
         ) ); ?>
     </div>
 

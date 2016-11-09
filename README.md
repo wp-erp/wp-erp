@@ -14,14 +14,14 @@ An open-source ERP (Enterprise Resource Planning) solution for WordPress
 
 ## Available Add-ons
 
-* Custom Field Builider
+* Custom Field Builder
 * Employee Recruitment
 * Document Manager
 * Attendance Management
 
 ## Minimum Requirement
  - PHP 5.4.0
- - WordPress 3.6+
+ - WordPress 4.4+
 
 ## Installation
 

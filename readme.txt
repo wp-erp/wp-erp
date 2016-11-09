@@ -151,6 +151,30 @@ If you are unable to use any of the methods due to internet connectivity and fil
 
 == Changelog ==
 
+**v1.1.6 -> Nov 9, 2016**
+
+* [Fix] Query fix dashboard income & expense, business expense, net income, invoice payable to and bill you need to pay
+* [Fix] Fix overdue payment problem
+* [Fix] Unnecessary select checkboxes in accounting module
+* [Fix] Transaction list table total item query
+* [Fix] Unsubscribe contact from a specific group
+* [Fix] Unable to change CRM contact owner problem
+* [Fix] Menu item are not in open/fixed mode when announcement is selected
+* [Fix] Contact status refreshing problem during edit and add contact
+* [Fix] Permission for CRM manager to delete others contacts
+* [Fix] Custom field fix on csv export
+* [New] Add Currency option in Settings - General Options
+* [New] Unicode support added to PDF
+* [New] Add new column `email_status` and `data_id` in `erp_hr_announcement` and `erp_audit_log` table respectively
+* [Update] Set default current date for new invoice, payment, vendor credit and payment voucher
+* [Update] Button status for all new transaction time
+* [Update] Sales and expense list table according with transaction status
+* [Update] Sales and expense bulk action for different transaction section
+* [Update] All transaction report query
+* [Update] Journal query and journal list table class for filtering only journal type transaction
+* [Update] Improve announcement functionality
+* [Update] Chosen js removed from core
+
 **v1.1.5 -> Sep 19, 2016**
 
  * [fix] Holiday date calculation problem fixed

@@ -7,7 +7,7 @@
         <input type="hidden" name="id" value="<?php echo $ledger->id; ?>">
 
         <?php
-        $list_table = new WeDevs\ERP\Accounting\Journal_Transactions();
+        $list_table = new WeDevs\ERP\Accounting\Journal_Transactions_List_Table();
         $list_table->prepare_items();
         $list_table->views();
         $list_table->display();

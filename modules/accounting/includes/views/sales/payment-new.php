@@ -7,17 +7,22 @@ $cancel_url     = erp_ac_get_sales_url();
 $transaction    = [];
 $jor_itms       = [];
 $main_ledger_id = '';
+$partial        = false;
 
 if ( $transaction_id ) {
     $transaction = erp_ac_get_all_transaction([
         'id'     => $transaction_id,
-        'status' => [ 'in' => ['draft', 'pending']],
+        'status' => ['in' => ['awaiting_payment', 'partial']],
         'join'   => ['journals', 'items'],
         'type'   => ['sales'],
         'output_by' => 'array'
     ]);
 
     $transaction = reset( $transaction );
+
+    if ( $transaction ) {
+        $partial = true;
+    }
 
     foreach ( $transaction['journals'] as $key => $journal ) {
 
@@ -43,6 +48,12 @@ $items_for_tax = isset( $transaction['items'] ) ? $transaction['items'] : [];
 $tax_labels = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
 
 $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledger_id;
+
+if ( $transaction_id ) {
+    $selected_customer = isset( $transaction['user_id'] ) ? $transaction['user_id'] : '';
+} else {
+    $selected_customer = isset( $_GET['vendor_id'] ) ? intval( $_GET['vendor_id'] ) : '';
+}
 
 ?>
 <div class="wrap erp-ac-form-wrap">
@@ -117,7 +128,7 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
                             'type'     => 'text',
                             'required' => true,
                             'class'    => 'erp-ac-check-invoice-number',
-                            'value'    => isset( $transaction['invoice_number']  ) ? erp_ac_get_invoice_number( $transaction['invoice_number'], $transaction['invoice_format'] ) : erp_ac_get_auto_generated_invoice( 'payment' )
+                            'value'    => isset( $transaction['invoice_number']  ) && ! $partial ? erp_ac_get_invoice_number( $transaction['invoice_number'], $transaction['invoice_format'] ) : erp_ac_get_auto_generated_invoice( 'payment' )
                         ) );
                         ?>
                     </li>
@@ -135,7 +146,7 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
                             'type'        => 'text',
                             'required'    => true,
                             'class'       => 'erp-date-field',
-                            'value'       => isset( $transaction['issue_date'] ) ? $transaction['issue_date'] : ''
+                            'value'       => isset( $transaction['issue_date'] ) ? $transaction['issue_date'] : date( 'Y-m-d', strtotime( current_time( 'mysql' ) ) )
                         ) );
                         ?>
                     </li>
@@ -160,9 +171,24 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
 
         </ul>
 
-
         <div class="erp-ac-receive-payment-table">
-            <?php include dirname( dirname( __FILE__ ) ) . '/common/transaction-table.php';?>
+        <?php
+            if ( $transaction_id ) {
+                $results = erp_ac_get_all_transaction([
+                    'form_type'   => ['in' => ['invoice', 'payment']],
+                    'status'      => ['in' => ['awaiting_payment', 'partial']],
+                    'user_id'     => $selected_customer,
+                    'parent'      => 0,
+                    'type'        => 'sales',
+                    'join'        => ['journals'],
+                    'with_ledger' => true,
+                    'output_by'   => 'array'
+                ]);
+                include dirname( dirname( __FILE__ ) ) . '/sales/bank-transfer-form.php';
+            } else {
+                include dirname( dirname( __FILE__ ) ) . '/common/transaction-table.php';
+            }
+        ?>
         </div>
 
         <?php include dirname( dirname( __FILE__ ) ) . '/common/memo.php'; ?>
@@ -177,7 +203,7 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
             erp_html_form_input( array(
                 'name'        => 'id',
                 'type'        => 'hidden',
-                'value'       => $transaction_id
+                'value'       => ! $partial ? $transaction_id : ''
             ) );
         ?>
 
@@ -198,24 +224,22 @@ $main_ledger_id = isset( $_GET['bank'] ) ? intval( $_GET['bank'] ) : $main_ledge
 
         <div class="erp-ac-btn-group-wrap">
              <div class="erp-button-bar-left">
+                <a href="<?php echo esc_url( $cancel_url ); ?>" class="button"><?php _e( 'Cancel', 'erp' ); ?></a>
+            </div>
+
+            <div class="erp-button-bar-right">
                 <div class="button-group erp-button-group">
                     <button  data-redirect="single_page" data-btn_status="payment" type="button" class="button button-primary erp-ac-trns-form-submit-btn">
-                        <?php _e( 'Payment', 'erp' ); ?>
+                        <?php _e( 'Pay', 'erp' ); ?>
                     </button>
                     <button type="button" class="button button-primary erp-dropdown-toggle" data-toggle="erp-dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="caret"></span>
                     </button>
                     <ul class="erp-dropdown-menu">
-                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="single_page" data-btn_status="payment" href="#"><?php _e( 'Payment', 'erp' ); ?></a></li>
-                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="payment_and_add_another" href="#"><?php _e( 'Payment & add another', 'erp' ); ?></a></li>
+                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="single_page" data-btn_status="payment" href="#"><?php _e( 'Pay', 'erp' ); ?></a></li>
+                        <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="payment_and_add_another" href="#"><?php _e( 'Pay & Add another', 'erp' ); ?></a></li>
                     </ul>
                 </div>
-            </div>
-
-            <div class="erp-button-bar-right">
-
-
-                <a href="<?php echo esc_url( $cancel_url ); ?>" class="button"><?php _e( 'Cancel', 'erp' ); ?></a>
             </div>
         </div>
     </form>

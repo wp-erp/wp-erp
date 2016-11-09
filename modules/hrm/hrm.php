@@ -59,7 +59,6 @@ class Human_Resource {
      * @return void
      */
     private function includes() {
-
         require_once WPERP_HRM_PATH . '/includes/functions-url.php';
         require_once WPERP_HRM_PATH . '/includes/functions.php';
         require_once WPERP_HRM_PATH . '/includes/functions-department.php';
@@ -69,6 +68,7 @@ class Human_Resource {
         require_once WPERP_HRM_PATH . '/includes/functions-capabilities.php';
         require_once WPERP_HRM_PATH . '/includes/functions-dashboard-widgets.php';
         require_once WPERP_HRM_PATH . '/includes/functions-reporting.php';
+        require_once WPERP_HRM_PATH . '/includes/functions-announcement.php';
         require_once WPERP_HRM_PATH . '/includes/actions-filters.php';
     }
 
@@ -222,8 +222,6 @@ class Human_Resource {
      */
     public function admin_js_templates() {
         global $current_screen;
-
-        // var_dump( $current_screen->base );
 
         switch ($current_screen->base) {
             case 'toplevel_page_erp-hr':

@@ -42,8 +42,8 @@ class Admin_Menu {
         $reports        = add_submenu_page( 'erp-accounting', __( 'Reports', 'erp' ), __( 'Reports', 'erp' ), $reports, 'erp-accounting-reports', array( $this, 'page_reports' ) );
 
         add_action( 'admin_print_styles-' . $dashboard, array( $this, 'dashboard_script' ) );
-        add_action( 'admin_print_styles-' . $customer, array( $this, 'common_scripts' ) );
-        add_action( 'admin_print_styles-' . $vendor, array( $this, 'common_scripts' ) );
+        add_action( 'admin_print_styles-' . $customer, array( $this, 'sales_chart_script' ) );
+        add_action( 'admin_print_styles-' . $vendor, array( $this, 'sales_chart_script' ) );
         add_action( 'admin_print_styles-' . $bank, array( $this, 'bank_script' ) );
         add_action( 'admin_print_styles-' . $sale, array( $this, 'sales_chart_script' ) );
         add_action( 'admin_print_styles-' . $expense, array( $this, 'expense_chart_script' ) );
@@ -201,7 +201,7 @@ class Admin_Menu {
             'nonce'              => wp_create_nonce( 'erp-ac-nonce' ),
             'emailConfirm'       => __( 'Sent', 'erp' ),
             'emailConfirmMsg'    => __( 'The email has been sent', 'erp' ),
-            'confirmMsg'         => __( 'Are you sure?', 'erp' ),
+            'confirmMsg'         => __( 'You are about to permanently delete this item.', 'erp' ),
             'copied'             => __( 'Copied', 'erp' ),
             'ajaxurl'            => admin_url( 'admin-ajax.php' ),
             'decimal_separator'  => empty( $erp_ac_de_separator ) ? '.' : erp_get_option('erp_ac_de_separator'),

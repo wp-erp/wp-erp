@@ -46,7 +46,7 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-ac-invoice-send-email', 'sales_invoice_send_email' );
         $this->action( 'wp_ajax_erp-ac-get-invoice-number', 'popup_get_invoice_number' );
         $this->action( 'wp_ajax_erp_ac_trans_form_submit', 'transaction_form_submit' );
-        $this->action( 'wp_ajax_erp-ac-trns-row-del', 'transaction_delete_row' );
+        $this->action( 'wp_ajax_erp-ac-row-bulk-action', 'transaction_row_bulk_action' );
         $this->action( 'wp_ajax_erp-ac-trns-restore', 'transaction_restore' );
         $this->action( 'wp_ajax_erp-ac-trns-void', 'transaction_void' );
         $this->action( 'wp_ajax_erp-ac-trns-redo', 'transaction_redo' );
@@ -137,19 +137,28 @@ class Ajax_Handler {
      *
      * @return void
      */
-    public function transaction_delete_row() {
+    public function transaction_row_bulk_action() {
         $this->verify_nonce( 'erp-ac-nonce' );
         $trns_id = isset( $_POST['id'] ) ? $_POST['id'] : false;
-        $delete = false;
-        if ( $trns_id ) {
-            $delete = erp_ac_remove_transaction( $trns_id );
+        $status  = isset( $_POST['status'] ) ? $_POST['status'] : false;
+
+        switch ( $status ) {
+            case 'delete':
+                $update = erp_ac_remove_transaction( $trns_id );
+                break;
+
+            case 'void':
+                erp_ac_update_transaction_to_void( $trns_id, ['status' => $status] );
+                break;
+
+            default:
+                $update = erp_ac_update_transaction( $trns_id, ['status' => $status] );
+                break;
         }
 
-        if ( $delete === NULL ) {
-            $this->send_success( array( 'success' => __( 'Transaction has been deleted successfully', 'erp' ) ) );
-        } else {
-            $this->send_error( array( 'error' => __( 'Unknown Error', 'erp' ) ) );
-        }
+        $this->send_success( array( 'success' => __( 'Transaction has been updated successfully', 'erp' ) ) );
+
+        //$this->send_error( array( 'error' => __( 'Unknown Error', 'erp' ) ) );
     }
 
     /**
@@ -600,19 +609,22 @@ class Ajax_Handler {
     public function erp_ac_vendor_voucher() {
         $this->verify_nonce( 'erp-ac-nonce' );
 
-        $vendor = intval( $_POST['vendor'] );
+        $vendor    = intval( $_POST['vendor'] );
+        $type      = $_POST['type'];
+        $form_type = $_POST['form_type'];
 
         if ( ! $vendor ) {
             $this->send_error();
         }
 
         $transactions = erp_ac_get_all_transaction([
-            'user_id'   => $vendor,
-            'form_type' => 'vendor_credit',
-            'status'    => array( 'in' => array( 'awaiting_payment', 'partial' ) ),
-            'join'      => ['journals'],
+            'user_id'     => $vendor,
+            'type'        => $type,
+            //'form_type'   => $form_type,
+            'status'      => array( 'in' => array( 'awaiting_payment', 'partial' ) ),
+            'join'        => ['journals'],
             'with_ledger' => true,
-            'output_by' => 'array'
+            'output_by'   => 'array'
         ]);
 
         if ( ! $transactions ) {
@@ -716,7 +728,7 @@ class Ajax_Handler {
         }
 
         $results = erp_ac_get_all_transaction([
-            'form_type'   => 'invoice',
+            //'form_type'   => 'invoice',
             'status'      => ['in' => ['awaiting_payment', 'partial']],
             'user_id'     => $user_id,
             'parent'      => 0,

@@ -166,8 +166,9 @@ function erp_ac_get_all_transaction( $args = array() ) {
  *
  * @return array
  */
-function erp_ac_get_transaction_count( $type = 'expense', $user_id = 0 ) {
-    $cache_key = 'erp-ac-' . $type . '-' . $user_id . '-count';
+function erp_ac_get_transaction_count( $args, $user_id = 0 ) {
+    $status = isset( $args['status'] ) ? $args['status'] : false;
+    $cache_key = 'erp-ac-' . $args['type'] . '-' . $user_id . '-count';
     $count     = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $count ) {
@@ -177,7 +178,11 @@ function erp_ac_get_transaction_count( $type = 'expense', $user_id = 0 ) {
             $trans = $trans->where( 'user_id', '=', $user_id );
         }
 
-        $count = $trans->type( $type )->count();
+        if ( $status ) {
+            $trans = $trans->where( 'status', '=', $args['status'] );
+        }
+
+        $count = $trans->type( $args['type'] )->count();
     }
 
     return (int) $count;
@@ -319,7 +324,7 @@ function er_ac_insert_transaction_permiss( $args, $is_update ) {
         return new WP_Error( 'error', __( 'Invoice already exists. Please use an unique number', 'erp' ) );
     }
 
-    if ( ! intval( $args['user_id'] ) ) {
+    if ( ! intval( $args['user_id'] ) || $args['user_id'] == '-1' ) {
         return new WP_Error( 'error', __( 'User ID (Customer or Vendor) requird', 'erp' ) );
     }
 }
@@ -328,6 +333,9 @@ function er_ac_insert_transaction_permiss( $args, $is_update ) {
  * Insert a new transaction
  *
  * @param array $args
+ * @param array $items
+ *
+ * @return int/boolen
  */
 function erp_ac_insert_transaction( $args = [], $items = [] ) {
     global $wpdb;
@@ -363,8 +371,14 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
 
     $permission = er_ac_insert_transaction_permiss( $args, $is_update );
 
+    $validation = er_ac_insert_transaction_validation( $args, $items, $is_update );
+
     if ( is_wp_error( $permission ) ) {
         return $permission;
+    }
+
+    if ( is_wp_error( $validation ) ) {
+        return $validation;
     }
 
     $invoice = erp_ac_get_invoice_num_fromat_from_submit_invoice( $args['invoice_number'], $args['invoice_format'] );
@@ -378,12 +392,12 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
 
     $table_name = $wpdb->prefix . 'erp_ac_transactions';
 
+    $register_type = apply_filters( 'erp_ac_register_type', [ 'expense', 'sales', 'transfer' ] );
+
     // get valid transaction type and form type
-    if ( ! in_array( $args['type'], [ 'expense', 'sales', 'transfer' ] ) ) {
+    if ( ! in_array( $args['type'], $register_type ) ) {
         return new WP_Error( 'invalid-trans-type', __( 'Error: Invalid transaction type.', 'erp' ) );
     }
-
-    $form_types = ( $args['type'] == 'expense' ) ? erp_ac_get_expense_form_types() : erp_ac_get_sales_form_types();
 
     if ( $args['type'] == 'expense' ) {
         $form_types = erp_ac_get_expense_form_types();
@@ -392,6 +406,8 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
     } else {
         $form_types = erp_ac_get_sales_form_types();
     }
+
+    $form_types = apply_filters( 'erp_ac_form_types', $form_types, $args );
 
     if ( ! array_key_exists( $args['form_type'], $form_types ) ) {
         return new WP_Error( 'invalid-form-type', __( 'Error: Invalid form type', 'erp' ) );
@@ -513,7 +529,7 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
         $wpdb->query( 'COMMIT' );
 
         //for partial payment
-        if ( $args['form_type'] == 'payment' || $args['form_type'] == 'payment_voucher' ) {
+        if ( erp_ac_is_prtial( $args ) ) { //$args['form_type'] == 'payment' || $args['form_type'] == 'payment_voucher' || $args['form_type'] == 'reimbur_payment' ) {
 
             $transaction_ids = $args['partial_id'];
 
@@ -522,19 +538,15 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
                 $transaction = erp_ac_get_transaction( $id );
                 $due         = $transaction['due'];
 
-                if ( $line_total > $due ) {
-                    continue;
-                }
-
                 $new_due = $due - $line_total;
 
                 if ( $new_due <= 0  ) {
                     $update_field['status'] = 'paid';
+                    $update_field['due'] = 0;
                 } else {
                     $update_field['status'] = 'partial';
+                    $update_field['due'] = $new_due;
                 }
-
-                $update_field['due'] = $new_due;
 
                 \WeDevs\ERP\Accounting\Model\Transaction::find( $id )->update( $update_field );
                 \WeDevs\ERP\Accounting\Model\Payment::create( array(
@@ -556,9 +568,58 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
         $wpdb->query( 'ROLLBACK' );
         return new WP_error( 'final-exception', $e->getMessage() );
     }
+
     return false;
 }
 
+/**
+ * Check validation before new transaction
+ *
+ * @param  array $args
+ * @param  array $items
+ * @param  boleen $update
+ *
+ * @return  boolen
+ */
+function er_ac_insert_transaction_validation( $args, $items, $update ) {
+    foreach ( $items as $key => $item ) {
+        if ( $item['discount'] > 100 ) {
+            return new WP_Error( 'error', __( 'Discount value must be less than or equal to 100', 'erp' ) );
+        }
+    }
+}
+
+/**
+ * Check is the payment type partial or not
+ *
+ * @param  array $trans
+ *
+ * @return  boolen
+ */
+function erp_ac_is_prtial( $trans ) {
+    $partial = apply_filters( 'erp_ac_partial_types', ['payment', 'payment_voucher'], $trans );
+
+    if ( in_array( $trans['form_type'], $partial ) ) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Update transaction item
+ *
+ * @since  1.1.5
+ *
+ * @param  array $item
+ * @param  array $args
+ * @param  int $trans_id
+ * @param  int $journal_id
+ * @param  int $tax_journal
+ * @param  int $order
+ *
+ * @return int
+ */
 function erp_ac_item_update( $item, $args, $trans_id, $journal_id, $tax_journal, $order ) {
 
     if ( intval( $item['item_id'] ) ) {
@@ -685,7 +746,7 @@ function erp_ac_create_items_after_transaction( $trans, $journal_id, $item, $ord
  *
  * @return array
  */
-function erp_ac_get_ledger_transactions( $ledger_id, $args = [] ) {
+function erp_ac_get_ledger_transactions( $args = [], $ledger_id = false ) {
     global $wpdb;
 
     $defaults = [
@@ -703,7 +764,11 @@ function erp_ac_get_ledger_transactions( $ledger_id, $args = [] ) {
     $items     = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $items ) {
-        $where = sprintf( 'WHERE jour.ledger_id = %d', absint( $ledger_id ) );
+        $where = 'WHERE 1=1';
+        if ( $ledger_id ) {
+            $where = sprintf( 'WHERE jour.ledger_id = %d', absint( $ledger_id ) );
+        }
+
         $limit = ( $args['number'] == '-1' ) ? '' : sprintf( 'LIMIT %d, %d', $args['offset'], $args['number'] );
 
         if ( isset( $args['start_date'] ) && ! empty( $args['start_date'] ) ) {
@@ -786,25 +851,31 @@ function erp_ac_tran_from_header() {
 }
 
 function erp_ac_get_btn_status( $postdata ) {
-
+    $status = false;
     if ( $postdata['form_type'] == 'payment' ) {
-        return erp_ac_get_status_according_with_btn( $postdata['btn_status'] );
+        $status = erp_ac_get_status_according_with_btn( $postdata['btn_status'] );
+
     } else if ( $postdata['form_type'] == 'invoice' || $postdata['form_type'] == 'vendor_credit' ) {
-        return erp_ac_get_status_invoice_according_with_btn( $postdata['btn_status'] );
+        $status = erp_ac_get_status_invoice_according_with_btn( $postdata['btn_status'] );
+
     } else if ( $postdata['form_type'] == 'payment_voucher' ) {
-        return erp_ac_get_voucher_status_according_with_btn( $postdata['btn_status'] );
+        $status = erp_ac_get_voucher_status_according_with_btn( $postdata['btn_status'] );
     }
+
+    return apply_filters( 'erp_ac_trans_status', $status, $postdata );
 }
 
 /**
  * Get transaction submit data status for payment voucher
+ *
  * @param  string $btn
+ *
  * @return string
  */
 function erp_ac_get_voucher_status_according_with_btn( $btn ) {
     $button = [
-        'payment'                 => 'paid',
-        'payment_and_add_another' => 'paid'
+        'payment'                 => 'closed',
+        'payment_and_add_another' => 'closed'
     ];
 
     return $button[$btn];
@@ -832,10 +903,10 @@ function erp_ac_get_status_according_with_btn( $btn ) {
 function erp_ac_get_status_invoice_according_with_btn( $btn ) {
     $button = [
         'save_and_draft'               => 'draft',
-        'save_and_submit_for_approval' => 'pending',
+        'save_and_submit_for_approval' => 'awaiting_approval',
         'save_and_add_another'         => 'draft',
         'approve'                      => 'awaiting_payment',
-        'approve_and_add_another'      => 'awaiting_payment'
+        'save_and_submit_for_payment'  => 'awaiting_payment'
     ];
 
     return $button[$btn];
@@ -865,9 +936,13 @@ function erp_ac_update_transaction( $id, $args ) {
  * @return  boolen
  */
 function erp_ac_remove_transaction( $id ) {
+
     $delete = \WeDevs\ERP\Accounting\Model\Transaction::where( 'id', '=', $id )->delete();
     \WeDevs\ERP\Accounting\Model\Transaction_Items::where( 'transaction_id', '=', $id )->delete();
     \WeDevs\ERP\Accounting\Model\Journal::where( 'transaction_id', '=', $id )->delete();
+    \WeDevs\ERP\Accounting\Model\Payment::where( 'transaction_id', '=', $id )->delete();
+    \WeDevs\ERP\Accounting\Model\Payment::where( 'child', '=', $id )->delete();
+
     return $delete;
 }
 
@@ -958,6 +1033,42 @@ function erp_ac_pdf_link_generator( $transaction, $type = 'invoice' ) {
     return $file_name;
 }
 
+/**
+ * Update transaction status to void
+ *
+ * @since  1.1.6
+ *
+ * @param  int $transaction_id
+ *
+ * @return void
+ */
+function erp_ac_update_transaction_to_void( $transaction_id ) {
+    $partial_id = \WeDevs\ERP\Accounting\Model\Payment::select(['child'])->where( 'transaction_id', '=', $transaction_id )->pluck('child');
 
+    if ( $partial_id ) {
+        $child = erp_ac_get_transaction( $transaction_id );
+        $parent  = erp_ac_get_transaction( $partial_id );
+        $child_trans_total = $child['trans_total'];
+        $parent_trans_total = $parent['trans_total'];
 
+        if ( $parent_trans_total == $child_trans_total ) {
+            erp_ac_update_transaction( $partial_id, ['status' => 'awaiting_payment', 'due' => $parent_trans_total ] );
 
+        } else if ( $parent_trans_total > $child_trans_total ) {
+            $sub_total = $parent['due'] + $child['trans_total'];
+            $status = ( $sub_total == $parent_trans_total ) ? 'awaiting_payment' : 'partial';
+            erp_ac_update_transaction( $partial_id, [ 'status' => $status, 'due' => $sub_total ] );
+        }
+    }
+
+    $childrens = \WeDevs\ERP\Accounting\Model\Payment::select(['transaction_id'])->where( 'child', '=', $transaction_id )->get()->toArray();
+    $childrens = wp_list_pluck( $childrens, 'transaction_id' );
+
+    if ( $childrens ) {
+        foreach ( $childrens as $key => $id ) {
+            erp_ac_update_transaction( $id, ['status' => 'void'] );
+        }
+    }
+
+    erp_ac_update_transaction( $transaction_id, ['status' => 'void'] );
+}

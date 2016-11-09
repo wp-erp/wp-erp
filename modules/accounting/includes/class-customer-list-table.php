@@ -39,7 +39,7 @@ class Customer_List_Table extends \WP_List_Table {
      * @return void
      */
     function no_items() {
-        _e( 'No customer found!', 'wp-erp-ac' );
+        _e( 'No customer found!', 'erp' );
     }
 
     /**
@@ -80,11 +80,11 @@ class Customer_List_Table extends \WP_List_Table {
     function get_columns() {
         $columns = array(
             'cb'       => '<input type="checkbox" />',
-            'customer' => __( 'Customer', 'wp-erp-ac' ),
-            'company'  => __( 'Company', 'wp-erp-ac' ),
-            'email'    => __( 'Email', 'wp-erp-ac' ),
-            'phone'    => __( 'Phone', 'wp-erp-ac' ),
-            'balance'  => __( 'Balance', 'wp-erp-ac' ),
+            'customer' => __( 'Customer', 'erp' ),
+            'company'  => __( 'Company', 'erp' ),
+            'email'    => __( 'Email', 'erp' ),
+            'phone'    => __( 'Phone', 'erp' ),
+            'balance'  => __( 'Balance', 'erp' ),
         );
 
         return $columns;
@@ -106,10 +106,10 @@ class Customer_List_Table extends \WP_List_Table {
         $created_by        = isset( $item->created_by ) ? intval( $item->created_by ) : 0;
 
         if ( erp_ac_current_user_can_edit_customer( $created_by ) ) {
-            $actions['edit']    = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=edit&id=' . $item->id ), $item->id, __( 'Edit this item', 'wp-erp-ac' ), __( 'Edit', 'wp-erp-ac' ) );
+            $actions['edit']    = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=edit&id=' . $item->id ), $item->id, __( 'Edit this item', 'erp' ), __( 'Edit', 'erp' ) );
         }
 
-        $actions['invoice'] = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=erp-accounting-sales&action=new&type=invoice&customer=true&id=' . $item->id ), $item->id, __( 'Create Invoice', 'wp-erp-ac' ), __( 'Create Invoice', 'wp-erp-ac' ) );
+        $actions['invoice'] = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=erp-accounting-sales&action=new&type=invoice&customer=true&id=' . $item->id ), $item->id, __( 'Create Invoice', 'erp' ), __( 'Create Invoice', 'erp' ) );
 
         if ( erp_ac_current_user_can_delete_customer( $created_by ) ) {
             $actions['delete'] = sprintf( '<a href="%s" class="erp-ac-submitdelete" data-id="%d" data-hard=%d title="%s" data-type="%s">%s</a>', '#', $item->id, $data_hard, __( 'Delete this item', 'erp' ), $this->type, $delete_text );
@@ -160,13 +160,13 @@ class Customer_List_Table extends \WP_List_Table {
      */
     function get_bulk_actions() {
         $actions = array(
-            'trash'  => __( 'Move to Trash', 'wp-erp-ac' ),
+            'trash'  => __( 'Move to Trash', 'erp' ),
         );
 
         if ( isset( $_GET['status'] ) && $_GET['status'] == 'trash' ) {
             $actions = array(
-                'restore'  => __( 'Restore', 'wp-erp-ac' ),
-                'delete'  => __( 'Permanent Delete', 'wp-erp-ac' ),
+                'restore'  => __( 'Restore', 'erp' ),
+                'delete'  => __( 'Permanent Delete', 'erp' ),
             );
         }
         return $actions;
@@ -287,9 +287,9 @@ class Customer_List_Table extends \WP_List_Table {
         }
         $this->user_balance = isset( $users ) ? $users : '0.00';
 
-        $this->set_pagination_args( array(
+        $this->set_pagination_args(array(
             'total_items' => erp_get_peoples_count( $this->type ),
             'per_page'    => $per_page
-        ) );
+        ));
     }
 }

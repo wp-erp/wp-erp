@@ -225,7 +225,7 @@
                 ) ); ?>
             </li>
 
-            <?php if ( current_user_can( 'erp_crm_manager' ) ): ?>
+            <?php if ( current_user_can( 'administrator' ) || current_user_can( 'erp_crm_manager' ) ): ?>
                 <li data-selected = "{{ data.assign_to.id }}">
                     <?php erp_html_form_input( array(
                         'label'       => __( 'Contact Owner', 'erp' ),
@@ -237,9 +237,7 @@
                         'options'     => erp_crm_get_crm_user_dropdown( [ '' => '--Select--' ] )
                     ) ); ?>
                 </li>
-            <?php endif ?>
-
-            <?php if ( current_user_can( 'erp_crm_agent' ) ): ?>
+            <?php elseif ( current_user_can( 'erp_crm_agent' ) ): ?>
                 <input type="hidden" name="assign_to" value="<?php echo get_current_user_id(); ?>">
             <?php endif ?>
 

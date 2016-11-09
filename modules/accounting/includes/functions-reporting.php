@@ -64,6 +64,10 @@ function erp_ac_reporting_query() {
 
     $financial_start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
     $financial_end   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+    $where           = "tran.status IS NULL OR tran.status NOT IN( 'draft', 'void', 'awaiting_approval' ) AND ( tran.issue_date >= '$financial_start' AND tran.issue_date <= '$financial_end' )";
+    $join            = '';
+    $where           = apply_filters( 'erp_ac_trial_balance_where', $where );
+    $join           = apply_filters( 'erp_ac_trial_balance_join', $join );
 
     $sql = "SELECT led.id, led.code, led.name, led.type_id, types.name as type_name, types.class_id, class.name as class_name, sum(jour.debit) as debit, sum(jour.credit) as credit
     FROM $tbl_ledger as led
@@ -71,12 +75,12 @@ function erp_ac_reporting_query() {
     LEFT JOIN $tbl_class as class ON class.id = types.class_id
     LEFT JOIN $tbl_journals as jour ON jour.ledger_id = led.id
     LEFT JOIN $tbl_transaction as tran ON tran.id = jour.transaction_id
-    WHERE ( tran.status IS NULL OR ( tran.status != 'draft' AND tran.status != 'void' AND tran.status != 'deleted' ) ) AND ( tran.issue_date >= '$financial_start' AND tran.issue_date <= '$financial_end' )
+    $join
+    WHERE
+    $where
     GROUP BY led.id";
 
-    $ledgers = $wpdb->get_results( $sql );
-
-    return $ledgers;
+    return $wpdb->get_results( $sql );
 }
 
 function erp_ac_get_sales_tax_report( $args ) {
@@ -222,11 +226,11 @@ function erp_ac_get_sales_total_without_tax( $charts ) {
 
     $sales_journals  = isset( $charts[4] ) ? $charts[4] : [];
     $sales_total    = 0;
-    
+
     foreach ( $sales_journals as $key => $ledger_jours ) {
         $sales_total  = $sales_total + array_sum( wp_list_pluck( $ledger_jours, 'credit' ) ) - array_sum( wp_list_pluck( $ledger_jours, 'debit' ) );
     }
-    
+
     return $sales_total;
 }
 
@@ -242,11 +246,11 @@ function erp_ac_get_sales_tax_total( $charts ) {
             $payable_tax_journals[$key] = $libility_journal;
         }
     }
-    
+
     foreach ( $payable_tax_journals as $key => $ledger_jours ) {
         $tax_total  = $tax_total + array_sum( wp_list_pluck( $ledger_jours, 'credit' ) ) - array_sum( wp_list_pluck( $ledger_jours, 'debit' ) );
     }
-    
+
     return $tax_total;
 }
 
@@ -255,7 +259,7 @@ function erp_ac_get_good_sold_total_amount( $charts ) {
     $goods_sold     = isset( $sales_journals[24] ) ? $sales_journals[24] : [];
     $sales_total    = 0;
     $sales_total    = array_sum( wp_list_pluck( $goods_sold, 'debit' ) ) - array_sum( wp_list_pluck( $goods_sold, 'credit' ) );
-    
+
     return $sales_total;
 }
 
@@ -265,16 +269,16 @@ function erp_ac_get_expense_total_without_tax( $charts ) {
     $receivable_tax       = wp_list_pluck( $receivable_tax, 'id' );
     $payable_tax_journals = [];
     $expense_total        = 0;
-    
+
     foreach ( $expense_journals as $key => $ledger_jours ) {
         if ( in_array( $key, $receivable_tax ) ) {
             continue;
         }
         $expense_total  = $expense_total + array_sum( wp_list_pluck( $ledger_jours, 'debit' ) ) - array_sum( wp_list_pluck( $ledger_jours, 'credit' ) );
     }
-    
+
     return $expense_total;
-    
+
 }
 
 function erp_ac_get_expense_tax_total( $charts ) {
@@ -283,16 +287,25 @@ function erp_ac_get_expense_tax_total( $charts ) {
     $receivable_tax       = wp_list_pluck( $receivable_tax, 'id' );
     $payable_tax_journals = [];
     $expense_tax_total    = 0;
-    
+
     foreach ( $expense_journals as $key => $ledger_jours ) {
         if ( in_array( $key, $receivable_tax ) ) {
             $expense_tax_total  = $expense_tax_total + array_sum( wp_list_pluck( $ledger_jours, 'debit' ) ) - array_sum( wp_list_pluck( $ledger_jours, 'credit' ) );
         }
-        
+
     }
-    
+
     return $expense_tax_total;
 }
+
+
+
+
+
+
+
+
+
 
 
 

@@ -74,12 +74,13 @@
             this.payment.initialize();
             $( 'body' ).on( 'click', '.payment-duplicate', this.payment.duplicate );
             $( 'body' ).on( 'click', '.payment-send-email', this.invoice.sendEmail );
+            $( 'body' ).on( 'keyup change', '.erp-ac-payment-amount', this.payment.checkPaymentAmount );
 
             //trns form submit
             $( '.erp-form' ).on( 'click', '.erp-ac-trns-form-submit-btn', this.transaction.submit );
 
             //Transaction table row action
-            $( '.erp-accounting' ).on( 'click', '.erp-accountin-trns-row-del', this.transaction.rowDelete );
+            $( '.erp-accounting' ).on( 'click', '.erp-accountin-trns-row-bulk-action', this.transaction.rowBalkAction );
             $( '.erp-accounting' ).on( 'click', '.erp-accounting-trash', this.transaction.trash );
             $( '.erp-accounting' ).on( 'click', '.erp-accounting-void', this.transaction.void );
             $( '.erp-accounting' ).on( 'click', '.erp-accounting-redo', this.transaction.redo );
@@ -209,27 +210,41 @@
                 });
             },
 
-            rowDelete: function(e) {
+            rowBalkAction: function(e) {
                 e.preventDefault();
                 var self = $(this),
-                    id   = self.data('id');
+                    status = self.data('status'),
+                    text = '';
+
+                switch( status ) {
+                    case 'void':
+                        text = ERP_AC.message.void;
+                        break;
+                    case 'delete':
+                        text = ERP_AC.message.delete;
+                        break;
+                    default:
+                        text = ERP_AC.message.confirm;
+                }
 
                 swal({
-                    title: ERP_AC.message.confirm,
+                    title: '',
+                    text: text,
                     type: "warning",
                     cancelButtonText: ERP_AC.message.cancel,
                     //confirmButtonText: 'asdfasd',
                     showCancelButton: true,
                     confirmButtonColor: "#DD6B55",
-                    confirmButtonText: ERP_AC.message.delete,
+                    confirmButtonText: ERP_AC.message.yes,
                     closeOnConfirm: false,
                     showCancelButton: true,   closeOnConfirm: false,   showLoaderOnConfirm: true,
                 },
                 function(){
 
-                    wp.ajax.send('erp-ac-trns-row-del', {
+                    wp.ajax.send('erp-ac-row-bulk-action', {
                         data: {
-                            'id': id,
+                            'id': self.data('id'),
+                            'status': self.data('status'),
                             '_wpnonce': ERP_AC.nonce
                         },
                         success: function(res) {
@@ -714,6 +729,17 @@
         },
 
         payment: {
+            checkPaymentAmount : function(e) {
+                e.preventDefault();
+                var self = $(this),
+                    self_amount = self.val(),
+                    total_amount = self.data('amount');
+
+                if ( parseInt( self_amount ) > parseInt( total_amount ) ) {
+                    self.val(total_amount);
+                }
+            },
+
             initialize: function () {
 
                 var moreActions, theme, openOn, target, content;
@@ -1326,6 +1352,8 @@
                     action: 'erp_ac_vendor_voucher',
                     _wpnonce: ERP_AC.nonce,
                     vendor: self.val(),
+                    type : $('input[name="type"]').val(),
+                    form_type : $('input[name="form_type"]').val()
                     //account_id: $('.erp-ac-deposit-dropdown').val()
                 },
 

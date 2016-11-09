@@ -1223,6 +1223,10 @@
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-body #schedule .schedule-notification p label {
   width: 33%;
 }
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-body ul {
+  list-style-type: disc;
+  margin-left: 2em;
+}
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-body .timeline-email-subject {
   padding: 0px 0px 10px;
   border-bottom: 1px solid #eee;
@@ -3042,7 +3046,7 @@ ul.edit-address li.city-wrap span {
   white-space: nowrap;
   vertical-align: middle;
   background-color: #f5f5f5;
-  padding: 3px 12px;
+  padding: 2px 12px;
   display: table-cell;
   border: 1px solid #ddd;
   text-align: center;
@@ -3203,6 +3207,10 @@ ul.edit-address li.city-wrap span {
 }
 .erp-progress-status-indicator .progress progress {
   width: 100%;
+}
+trix-editor ul {
+  list-style-type: disc;
+  margin-left: 2em;
 }
 /*****/
 /**

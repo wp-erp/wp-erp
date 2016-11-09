@@ -527,7 +527,8 @@
                     wp.ajax.send( 'erp-crm-contact-subscriber-delete', {
                         data: {
                             '_wpnonce': wpErpCrm.nonce,
-                            id: self.data( 'id' )
+                            id: self.data( 'id' ),
+                            group_id: self.data( 'group_id' )
                         },
                         success: function() {
                             self.closest('tr').fadeOut( 'fast', function() {

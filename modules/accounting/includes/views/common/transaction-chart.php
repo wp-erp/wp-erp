@@ -5,10 +5,11 @@ $symbol = erp_ac_get_currency_symbol();
 if ( $screen->base == 'accounting_page_erp-accounting-sales'  ) {
     $transactions = erp_ac_get_all_transaction([
         'type'      => ['sales'],
+        'status'    => ['in' => ['closed', 'partial', 'awaiting_payment']],
         'output_by' => 'array',
         'join'      => ['payments'],
         'number'    => -1,
-        'form_type' => [ 'in' => ['invoice', 'payment'] ]
+        'form_type' => [ 'in' => ['payment'] ]
     ]);
 
     $current_time = current_time( 'mysql' );
@@ -83,10 +84,11 @@ if ( $screen->base == 'accounting_page_erp-accounting-sales'  ) {
 
     $transactions = erp_ac_get_all_transaction([
         'type'      => ['expense'],
+        'status'    => ['in' => ['closed', 'partial', 'awaiting_payment']],
         'output_by' => 'array',
         'number'    => -1,
         'join'      => ['payments'],
-        'form_type' => [ 'in' => ['vendor_credit', 'payment_voucher'] ]
+        'form_type' => [ 'in' => ['payment_voucher'] ]
     ]);
 
     $current_time = current_time( 'mysql' );
@@ -161,6 +163,7 @@ if ( $screen->base == 'accounting_page_erp-accounting-sales'  ) {
 
     $transactions = erp_ac_get_all_transaction([
         'type'      => ['sales'],
+        'status'    => ['in' => ['closed', 'partial', 'awaiting_payment']],
         'output_by' => 'array',
         'number'    => -1,
         'join'      => ['payments'],
@@ -239,6 +242,7 @@ if ( $screen->base == 'accounting_page_erp-accounting-sales'  ) {
 } else if ( $screen->base == 'accounting_page_erp-accounting-vendors' ) {
     $transactions = erp_ac_get_all_transaction([
         'type'      => ['expense'],
+        'status'    => ['in' => ['closed', 'partial', 'awaiting_payment']],
         'output_by' => 'array',
         'join'      => ['payments'],
         'number'    => -1,

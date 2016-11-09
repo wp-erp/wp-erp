@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2c6fac1e03e3c2c7f69613c2fab3c5c2",
-    "content-hash": "3b0ac6b9a18e9a06509e7e21132d7e96",
+    "hash": "83d36b4f0f3112d3821d6c980e12119b",
+    "content-hash": "b016f94c386400ff23b6e0a1f9866318",
     "packages": [
         {
             "name": "danielstjules/stringy",
@@ -331,12 +331,12 @@
             "version": "1.0.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/johngrogg/ics-parser.git",
+                "url": "https://github.com/u01jmg3/ics-parser.git",
                 "reference": "6085a18242eaf98e6586e3defa7705fa207847ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/johngrogg/ics-parser/zipball/6085a18242eaf98e6586e3defa7705fa207847ac",
+                "url": "https://api.github.com/repos/u01jmg3/ics-parser/zipball/6085a18242eaf98e6586e3defa7705fa207847ac",
                 "reference": "6085a18242eaf98e6586e3defa7705fa207847ac",
                 "shasum": ""
             },
@@ -364,7 +364,7 @@
                 "ical",
                 "ics"
             ],
-            "time": "2016-03-10 17:27:22"
+            "time": "2016-03-16 13:31:55"
         },
         {
             "name": "nesbot/carbon",
@@ -535,6 +535,69 @@
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
             "time": "2016-06-14 11:18:07"
+        },
+        {
+            "name": "symfony/var-dumper",
+            "version": "v2.8.12",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/var-dumper.git",
+                "reference": "08761341cc4a3b2d9d9578364f7c655b178254aa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/08761341cc4a3b2d9d9578364f7c655b178254aa",
+                "reference": "08761341cc4a3b2d9d9578364f7c655b178254aa",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.9",
+                "symfony/polyfill-mbstring": "~1.0"
+            },
+            "require-dev": {
+                "twig/twig": "~1.20|~2.0"
+            },
+            "suggest": {
+                "ext-symfony_debug": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.8-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "Resources/functions/dump.php"
+                ],
+                "psr-4": {
+                    "Symfony\\Component\\VarDumper\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony mechanism for exploring and dumping PHP variables",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "debug",
+                "dump"
+            ],
+            "time": "2016-09-29 14:06:15"
         },
         {
             "name": "tareq1988/wp-eloquent",

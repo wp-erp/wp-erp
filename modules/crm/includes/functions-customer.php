@@ -709,7 +709,11 @@ function erp_crm_get_feed_activity( $postdata ) {
             $value['contact']['last_name'] = get_user_meta( $value['contact']['user_id'], 'last_name', true );
         }
 
-        $value['contact']['types'] = wp_list_pluck( $value['contact']['types'], 'name' );
+        if ( ! empty( $value['contact']['types'] ) ) {
+            $value['contact']['types'] = wp_list_pluck( $value['contact']['types'], 'name' );
+        } else {
+            $value['contact']['types'] = [];
+        }
 
         unset( $value['extra']['invite_contact'] );
         $value['message']               = erp_crm_format_activity_feed_message( $value['message'], $value );
@@ -1276,17 +1280,22 @@ function erp_crm_get_user_assignable_groups( $user_id ) {
  *
  * @since 1.0
  *
- * @param  integer $user_id
+ * @param  integer $id
+ * @param  integer $group_id
  *
  * @return boolean
  */
-function erp_crm_contact_subscriber_delete( $user_id ) {
-    do_action( 'erp_crm_pre_unsubscribed_contact', $user_id );
+function erp_crm_contact_subscriber_delete( $id, $group_id ) {
+    if ( empty( $id ) || empty( $group_id ) ) {
+        return false;
+    }
 
-    if ( is_array( $user_id ) ) {
-        return \WeDevs\ERP\CRM\Models\ContactSubscriber::whereIn( 'user_id', $user_id )->delete();
+    do_action( 'erp_crm_pre_unsubscribed_contact', $id, $group_id );
+
+    if ( is_array( $id ) ) {
+        return \WeDevs\ERP\CRM\Models\ContactSubscriber::whereIn( 'user_id', $id )->where( 'group_id', $group_id )->delete();
     } else {
-        return \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )->delete();
+        return \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $id )->where( 'group_id', $group_id )->delete();
     }
 }
 
@@ -2414,34 +2423,64 @@ function erp_crm_activity_schedule_notification_type() {
  */
 function erp_crm_insert_save_replies( $args = [] ) {
     if ( ! $args ) {
-        return new WP_Error( 'no-data', __( 'No data found', 'erp' ) );
+        return new WP_Error( 'no-data', __( 'Template name and body content are required', 'erp' ) );
     }
 
-    $defaults = [
-        'id'       => 0,
-        'name'     => '',
-        'subject'  => '',
-        'template' => '',
+    if ( empty( $args['id'] ) ) {
+        $args['id'] = 0;
+    }
+
+    $save_replies = WeDevs\ERP\CRM\Models\Save_Replies::firstOrNew( [ 'id' => $args['id'] ] );
+
+    $current_data = [
+        'name'     => $save_replies->name,
+        'subject'  => $save_replies->subject,
+        'template' => $save_replies->template,
     ];
 
-    $args = wp_parse_args( $args, $defaults );
+    $args = wp_parse_args( $args, $current_data );
 
-
+    // validation
     if ( empty( $args['name'] ) ) {
-        return new WP_Error( 'no-name', __( 'Please enter an template name', 'erp' ) );
+        return new WP_Error( 'no-name', __( 'Template name is required', 'erp' ) );
     }
 
     if ( empty( $args['template'] ) ) {
-        return new WP_Error( 'no-template', __( 'Template body must be required', 'erp' ) );
+        return new WP_Error( 'no-template', __( 'Template body is required', 'erp' ) );
     }
 
-    if ( $args['id'] ) {
-        $res = WeDevs\ERP\CRM\Models\Save_Replies::find( $args['id'] )->update( $args );
+    // update or insert new
+    if ( $save_replies->exists ) {
+        $save_replies->update( $args );
+
+        $old_value  = base64_encode( maybe_serialize( $current_data ) );
+        $new_value  = base64_encode( maybe_serialize( $args ) );
+        $message    = sprintf( __( '<strong>%s</strong> has been updated', 'erp' ), $current_data['name'] );
+        $changetype = 'edit';
+
     } else {
-        $res = WeDevs\ERP\CRM\Models\Save_Replies::create( $args );
+        $save_replies->setRawAttributes( $args, true );
+        $save_replies->save();
+
+        $old_value  = '';
+        $new_value  = '';
+        $message    = sprintf( __( '<strong>%s</strong> has been created', 'erp' ), $args['name'] );
+        $changetype = 'add';
     }
 
-    return $res;
+    // audit log
+    erp_log()->add( [
+        'component'     => 'CRM',
+        'sub_component' => 'Saved Replies',
+        'old_value'     => $old_value,
+        'new_value'     => $new_value,
+        'message'       => $message,
+        'changetype'    => $changetype,
+        'created_by'    => get_current_user_id()
+
+    ] );
+
+    return $save_replies;
 }
 
 function erp_crm_get_save_replies_shortcodes() {
