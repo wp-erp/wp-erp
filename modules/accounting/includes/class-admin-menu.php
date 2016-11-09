@@ -42,8 +42,8 @@ class Admin_Menu {
         $reports        = add_submenu_page( 'erp-accounting', __( 'Reports', 'erp' ), __( 'Reports', 'erp' ), $reports, 'erp-accounting-reports', array( $this, 'page_reports' ) );
 
         add_action( 'admin_print_styles-' . $dashboard, array( $this, 'dashboard_script' ) );
-        add_action( 'admin_print_styles-' . $customer, array( $this, 'common_scripts' ) );
-        add_action( 'admin_print_styles-' . $vendor, array( $this, 'common_scripts' ) );
+        add_action( 'admin_print_styles-' . $customer, array( $this, 'sales_chart_script' ) );
+        add_action( 'admin_print_styles-' . $vendor, array( $this, 'sales_chart_script' ) );
         add_action( 'admin_print_styles-' . $bank, array( $this, 'bank_script' ) );
         add_action( 'admin_print_styles-' . $sale, array( $this, 'sales_chart_script' ) );
         add_action( 'admin_print_styles-' . $expense, array( $this, 'expense_chart_script' ) );
