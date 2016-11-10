@@ -2,7 +2,9 @@
 $screen = get_current_screen();
 $symbol = erp_ac_get_currency_symbol();
 
-if ( $screen->base == 'accounting_page_erp-accounting-sales'  ) {
+$hook = str_replace( sanitize_title( __( 'Accounting', 'erp' ) ) , 'accounting', $screen->base );
+
+if ( $hook == 'accounting_page_erp-accounting-sales'  ) {
     $transactions = erp_ac_get_all_transaction([
         'type'      => ['sales'],
         'status'    => ['in' => ['closed', 'partial', 'awaiting_payment']],
@@ -80,7 +82,7 @@ if ( $screen->base == 'accounting_page_erp-accounting-sales'  ) {
         'color' => '#6C90A2'
     ];
 
-} else if ( $screen->base == 'accounting_page_erp-accounting-expense' ) {
+} else if ( $hook == 'accounting_page_erp-accounting-expense' ) {
 
     $transactions = erp_ac_get_all_transaction([
         'type'      => ['expense'],
@@ -159,7 +161,7 @@ if ( $screen->base == 'accounting_page_erp-accounting-sales'  ) {
         'color' => '#6C90A2'
     ];
 
-} else if ( $screen->base == 'accounting_page_erp-accounting-customers' ) {
+} else if ( $hook == 'accounting_page_erp-accounting-customers' ) {
 
     $transactions = erp_ac_get_all_transaction([
         'type'      => ['sales'],
@@ -239,7 +241,7 @@ if ( $screen->base == 'accounting_page_erp-accounting-sales'  ) {
         'color' => '#6C90A2'
     ];
 
-} else if ( $screen->base == 'accounting_page_erp-accounting-vendors' ) {
+} else if ( $hook == 'accounting_page_erp-accounting-vendors' ) {
     $transactions = erp_ac_get_all_transaction([
         'type'      => ['expense'],
         'status'    => ['in' => ['closed', 'partial', 'awaiting_payment']],

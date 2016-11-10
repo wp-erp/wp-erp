@@ -1,6 +1,4 @@
 <?php
-global $current_screen;
-
 if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_contact' ] ) ) {
     $id = intval( $_GET['filter_assign_contact'] );
 
