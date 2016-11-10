@@ -59,7 +59,7 @@ class Customer_Transaction_List_Table extends Sales_Transaction_List_Table {
      * @return int
      */
     protected function get_transaction_count( $args ) {
-        return erp_ac_get_transaction_count( $args['type'], $this->customer_id );
+        return erp_ac_get_transaction_count( $args, $this->customer_id );
     }
 
 }

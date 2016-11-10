@@ -219,12 +219,12 @@ class Transaction_List_Table extends \WP_List_Table {
         }
 
         if ( $item->status == 'awaiting_approval' ) {
-            $actions['payment'] = sprintf( '<a class="erp-accountin-trns-row-bulk-action" data-id="%1$s" data-status="%2$s" href="#">%3$s</a>', $item->id, 'awaiting_payment', __( 'Submit for Payment', 'erp' ) );
+            $actions['payment'] = sprintf( '<a class="erp-accountin-trns-row-bulk-action" data-id="%1$s" data-status="%2$s" href="#">%3$s</a>', $item->id, 'awaiting_payment', __( 'Approve', 'erp' ) );
         }
 
         if ( $item->status == 'awaiting_payment' || $item->status == 'partial' ) {
             $url = $this->slug == 'erp-accounting-expense' ? erp_ac_get_vendor_credit_payment_url( $item->id ) : erp_ac_get_slaes_payment_url( $item->id );
-            $actions['paid'] = sprintf( '<a href="%1$s">%2$s</a>', $url, __( 'Paid', 'erp' ) );
+            $actions['paid'] = sprintf( '<a href="%1$s">%2$s</a>', $url, __( 'Pay Now', 'erp' ) );
         }
 
         if ( $item->status == 'awaiting_approval' || $item->status == 'awaiting_payment' || $item->status == 'closed' || $item->status == 'partial' || $item->status == 'paid' ) {
@@ -282,7 +282,7 @@ class Transaction_List_Table extends \WP_List_Table {
                 ];
             } else if ( $section == 'awaiting-approval' ) {
                 $type = [
-                    'awaiting_payment'  => __( 'Payment', 'erp' ),
+                    'awaiting_payment'  => __( 'Approve', 'erp' ),
                     'void'  => __( 'Void', 'erp' ),
                 ];
             } else if ( $section == 'paid' ) {
@@ -507,7 +507,7 @@ class Transaction_List_Table extends \WP_List_Table {
      * @return int
      */
     protected function get_transaction_count( $args ) {
-        return erp_ac_get_transaction_count( $args['type'] );
+        return erp_ac_get_transaction_count( $args );
     }
 
     /**

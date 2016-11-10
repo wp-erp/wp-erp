@@ -718,19 +718,6 @@ function erp_cron_intervals( $schedules ) {
 }
 
 /**
- * forward given end_date by 1 day to make fullcalendar range compatible
- *
- * @param string $end_date saved $end_date from db
- *
- * @since 0.1
- *
- * @return string end_date
- */
-function erp_fullcalendar_end_date( $end_date ) {
-    return date( 'Y-m-d H:i:s', strtotime( $end_date . '+1 day' ) );
-}
-
-/**
  * Show user own media attachment
  *
  * @since 1.0
@@ -1769,6 +1756,23 @@ function erp_is_imap_active() {
     $enable_imap = ( isset( $options['enable_imap'] ) && $options['enable_imap'] == 'yes' ) ? true : false;
 
     if ( $enable_imap && $imap_status ) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Check if the ERP Email SMTP settings is enabled or not
+ *
+ * @since 1.1.6
+ *
+ * @return boolean
+ */
+function erp_is_smtp_enabled() {
+    $erp_email_smtp_settings = get_option( 'erp_settings_erp-email_smtp', [] );
+
+    if ( isset( $erp_email_smtp_settings['enable_smtp'] ) && filter_var( $erp_email_smtp_settings['enable_smtp'], FILTER_VALIDATE_BOOLEAN ) ) {
         return true;
     }
 

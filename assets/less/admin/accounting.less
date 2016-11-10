@@ -202,7 +202,7 @@ table.erp-ac-transaction-table {
 
     th.col-action,
     td.col-action {
-        width: 50px;
+        width: 30px;
         padding: 8px 0;
 
         a {
@@ -223,6 +223,11 @@ table.erp-ac-transaction-table {
     th:first-child,
     td:first-child {
         padding-left: 15px;
+    }
+
+    .line-total, .sub-total, .price-total {
+        padding: 3px 5px;
+        margin: 0;
     }
 }
 
@@ -660,6 +665,10 @@ form.erp-form {
 
     .erp-button-bar-right {
         float: right;
+    }
+    .erp-dropdown-menu {
+        right: 0;
+        left: inherit;
     }
 }
 

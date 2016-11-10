@@ -166,8 +166,9 @@ function erp_ac_get_all_transaction( $args = array() ) {
  *
  * @return array
  */
-function erp_ac_get_transaction_count( $type = 'expense', $user_id = 0 ) {
-    $cache_key = 'erp-ac-' . $type . '-' . $user_id . '-count';
+function erp_ac_get_transaction_count( $args, $user_id = 0 ) {
+    $status = isset( $args['status'] ) ? $args['status'] : false;
+    $cache_key = 'erp-ac-' . $args['type'] . '-' . $user_id . '-count';
     $count     = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $count ) {
@@ -177,7 +178,11 @@ function erp_ac_get_transaction_count( $type = 'expense', $user_id = 0 ) {
             $trans = $trans->where( 'user_id', '=', $user_id );
         }
 
-        $count = $trans->type( $type )->count();
+        if ( $status ) {
+            $trans = $trans->where( 'status', '=', $args['status'] );
+        }
+
+        $count = $trans->type( $args['type'] )->count();
     }
 
     return (int) $count;
@@ -319,7 +324,7 @@ function er_ac_insert_transaction_permiss( $args, $is_update ) {
         return new WP_Error( 'error', __( 'Invoice already exists. Please use an unique number', 'erp' ) );
     }
 
-    if ( ! intval( $args['user_id'] ) ) {
+    if ( ! intval( $args['user_id'] ) || $args['user_id'] == '-1' ) {
         return new WP_Error( 'error', __( 'User ID (Customer or Vendor) requird', 'erp' ) );
     }
 }
@@ -366,8 +371,14 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
 
     $permission = er_ac_insert_transaction_permiss( $args, $is_update );
 
+    $validation = er_ac_insert_transaction_validation( $args, $items, $is_update );
+
     if ( is_wp_error( $permission ) ) {
         return $permission;
+    }
+
+    if ( is_wp_error( $validation ) ) {
+        return $validation;
     }
 
     $invoice = erp_ac_get_invoice_num_fromat_from_submit_invoice( $args['invoice_number'], $args['invoice_format'] );
@@ -559,6 +570,23 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
     }
 
     return false;
+}
+
+/**
+ * Check validation before new transaction
+ *
+ * @param  array $args
+ * @param  array $items
+ * @param  boleen $update
+ *
+ * @return  boolen
+ */
+function er_ac_insert_transaction_validation( $args, $items, $update ) {
+    foreach ( $items as $key => $item ) {
+        if ( $item['discount'] > 100 ) {
+            return new WP_Error( 'error', __( 'Discount value must be less than or equal to 100', 'erp' ) );
+        }
+    }
 }
 
 /**

@@ -145,7 +145,7 @@ table.erp-ac-transaction-table td.col-qty {
 }
 table.erp-ac-transaction-table th.col-action,
 table.erp-ac-transaction-table td.col-action {
-  width: 50px;
+  width: 30px;
   padding: 8px 0;
 }
 table.erp-ac-transaction-table th.col-action a,
@@ -164,6 +164,12 @@ table.erp-ac-transaction-table td.col-discount {
 table.erp-ac-transaction-table th:first-child,
 table.erp-ac-transaction-table td:first-child {
   padding-left: 15px;
+}
+table.erp-ac-transaction-table .line-total,
+table.erp-ac-transaction-table .sub-total,
+table.erp-ac-transaction-table .price-total {
+  padding: 3px 5px;
+  margin: 0;
 }
 table.vendor-list-table td.column-customer,
 table.vendor-list-table th.column-customer {
@@ -516,6 +522,10 @@ form.erp-form .erp-form-field label {
 }
 .erp-ac-btn-group-wrap .erp-button-bar-right {
   float: right;
+}
+.erp-ac-btn-group-wrap .erp-dropdown-menu {
+  right: 0;
+  left: inherit;
 }
 .erp-accounting-tbl-form #issue_date {
   width: 16%;

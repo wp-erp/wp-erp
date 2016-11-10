@@ -270,7 +270,7 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                         </button>
                         <ul class="erp-dropdown-menu">
                             <li><a class="erp-ac-trns-form-submit-btn" data-redirect="single_page" data-btn_status="save_and_submit_for_payment" href="#"><?php _e( 'Submit for Payment', 'erp' ); ?></a></li>
-                            <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="save_and_submit_for_payment" href="#"><?php _e( 'Submit for Payment & add another', 'erp' ); ?></a></li>
+                            <li><a class="erp-ac-trns-form-submit-btn" data-redirect="same_page" data-btn_status="save_and_submit_for_payment" href="#"><?php _e( 'Submit for Payment & Add Another', 'erp' ); ?></a></li>
                         </ul>
                     </div>
                     <?php
