@@ -126,6 +126,51 @@ class Sales_Controller extends REST_Controller {
     public function create_sale( $request ) {
         $trans_data = $this->prepare_item_for_database( $request );
 
+        if ( empty( $request['form_type'] ) || ! in_array( $request['form_type'], ['payment', 'invoice'] ) ) {
+            return new WP_Error( 'rest_sale_invalid_form_type', __( 'Invalid form type.' ), [ 'status' => 404 ] );
+        }
+
+        if ( empty( $request['customer'] ) ) {
+            return new WP_Error( 'rest_sale_invalid_customer', __( 'Required customer.' ), [ 'status' => 404 ] );
+        }
+
+        if ( $trans_data['form_type'] == 'payment' ) {
+            $due_transactions = erp_ac_get_all_transaction([
+                'status'      => ['in' => ['awaiting_payment', 'partial']],
+                'user_id'     => $request['customer'],
+                'parent'      => 0,
+                'type'        => 'sales',
+                'join'        => ['journals'],
+                'with_ledger' => true,
+                'output_by'   => 'array',
+            ]);
+
+            if ( ! empty( $due_transactions ) && empty( $request['partial_id'] ) ) {
+                $due_items = [];
+
+                foreach ( $due_transactions as $due_transaction ) {
+                    $due_items[] = [
+                        'transaction_id' => (int) $due_transaction['id'],
+                        'account_id'     => 1,
+                        'due'            => (float) $due_transaction['due'],
+                    ];
+                }
+
+                $error_response = rest_ensure_response( [
+                    'code'    => 'rest_sale_due_invoices',
+                    'message' => __( 'You\'ve some due invoices.', 'erp' ),
+                    'data'    => $due_items
+                ] );
+                $error_response->set_status( 404 );
+
+                return $error_response;
+            }
+
+            if ( ! empty( $request['partial_id'] ) ) {
+                $trans_data['status'] = 'closed';
+            }
+        }
+
         $items = $this->prepare_trans_items_for_database( $request );
 
         $tax_total = array_reduce( $items, function( $total, $value ) {
@@ -138,6 +183,11 @@ class Sales_Controller extends REST_Controller {
 
         $trans_data['trans_total'] = $trans_data['sub_total'] + $tax_total;
         $trans_data['total']       = $trans_data['trans_total'];
+        $trans_data['line_total']  = array_pluck( $items, 'line_total' );
+
+        if ( $trans_data['form_type'] == 'invoice' ) {
+            $trans_data['due'] = $trans_data['total'];
+        }
 
         $id = erp_ac_insert_transaction( $trans_data, $items );
 
@@ -145,7 +195,8 @@ class Sales_Controller extends REST_Controller {
             return $id;
         }
 
-        $transaction = (object) erp_ac_get_transaction( $id );
+        $transaction = \WeDevs\ERP\Accounting\Model\Transaction::find( $id );
+        $transaction->items = $transaction->items->toArray();
 
         $request->set_param( 'context', 'edit' );
         $response = $this->prepare_item_for_response( $transaction, $request );
@@ -171,7 +222,17 @@ class Sales_Controller extends REST_Controller {
             return new WP_Error( 'rest_sale_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
         }
 
+        if ( empty( $request['form_type'] ) || ! in_array( $request['form_type'], ['payment', 'invoice'] ) ) {
+            return new WP_Error( 'rest_sale_invalid_form_type', __( 'Invalid form type.' ), [ 'status' => 404 ] );
+        }
+
+        if ( empty( $request['customer'] ) ) {
+            return new WP_Error( 'rest_sale_invalid_customer', __( 'Required customer.' ), [ 'status' => 404 ] );
+        }
+
         $trans_data = $this->prepare_item_for_database( $request );
+
+        $items = $this->prepare_trans_items_for_database( $request );
 
         $tax_total = array_reduce( $items, function( $total, $value ) {
             return $total + $value['tax_rate'];
@@ -183,6 +244,7 @@ class Sales_Controller extends REST_Controller {
 
         $trans_data['trans_total'] = $trans_data['sub_total'] + $tax_total;
         $trans_data['total']       = $trans_data['trans_total'];
+        $trans_data['line_total']  = array_pluck( $items, 'line_total' );
 
         $id = erp_ac_insert_transaction( $trans_data, $items );
 
@@ -190,9 +252,11 @@ class Sales_Controller extends REST_Controller {
             return $id;
         }
 
-        $transaction = (object) erp_ac_get_transaction( $id );
-        $response    = $this->prepare_item_for_response( $transaction, $request );
-        $response    = rest_ensure_response( $response );
+        $transaction = \WeDevs\ERP\Accounting\Model\Transaction::find( $id );
+        $transaction->items = $transaction->items->toArray();
+
+        $response = $this->prepare_item_for_response( $transaction, $request );
+        $response = rest_ensure_response( $response );
         $response->set_status( 201 );
         $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
 
@@ -228,10 +292,20 @@ class Sales_Controller extends REST_Controller {
     protected function prepare_item_for_database( $request ) {
         $prepared_item = [];
 
+        $prepared_item['id']              = isset( $request['id'] ) ? intval( $request['id'] ) : 0;
         $prepared_item['type']            = 'sales';
         $prepared_item['form_type']       = isset( $request['form_type'] ) ? sanitize_text_field( $request['form_type'] ) : '';
         $prepared_item['account_id']      = isset( $request['account_id'] ) ? intval( $request['account_id'] ) : 0;
-        $prepared_item['status']          = isset( $request['status'] ) ? sanitize_text_field( $request['status'] ) : '';
+
+        if ( $request['form_type'] == 'payment' ) {
+            $prepared_item['partial_id']  = ! empty( $request['partial_id'] ) ? explode( ",", str_replace( " ", "", $request['partial_id'] ) ) : [];
+        }
+
+        if ( $request['form_type'] == 'invoice' ) {
+            $prepared_item['account_id'] = 1;
+        }
+
+        $prepared_item['status']          = ( $prepared_item['form_type'] == 'payment' ) ? 'closed' : 'draft';
         $prepared_item['user_id']         = isset( $request['customer'] ) ? intval( $request['customer'] ) : 0;
         $prepared_item['billing_address'] = isset( $request['billing_address'] ) ? wp_kses_post( $request['billing_address'] ) : '';
         $prepared_item['ref']             = isset( $request['reference'] ) ? sanitize_text_field( $request['reference'] ) : '';
@@ -263,6 +337,7 @@ class Sales_Controller extends REST_Controller {
             'issue_date'        => $item->issue_date,
             'due_date'          => $item->due_date,
             'currency'          => $item->currency,
+            'conversion_rate'   => (float) $item->conversion_rate,
             'items'             => $this->format_transaction_items( $item->items ),
             'sub_total'         => (float) $item->sub_total,
             'total'             => (float) $item->total,
@@ -316,17 +391,20 @@ class Sales_Controller extends REST_Controller {
 
         foreach ( $request['items'] as $item ) {
             $unit_price = (float) erp_ac_format_decimal( $item['unit_price'] );
+            $qty        = intval( $item['qty'] );
             $discount   = (int) erp_ac_format_decimal( $item['discount'] );
             $tax        = isset( $item['tax'] ) ? $item['tax'] : 0;
 
             $items[] = [
-                'journal_id'  => isset( $item['journal_id'] ) ? $item['journal_id'] : 0,
-                'account_id'  => (int) $item['account_id'],
+                'item_id'     => isset( $item['id'] ) ? intval( $item['id'] ) : 0,
+                'journal_id'  => isset( $item['journal_id'] ) ? intval( $item['journal_id'] ) : 0,
+                'product_id'  => isset( $item['product_id'] ) ? intval( $item['product_id'] ) : 0,
+                'account_id'  => isset( $item['account_id'] ) ? intval( $item['account_id'] ) : 0,
                 'description' => sanitize_text_field( $item['description'] ),
-                'qty'         => intval( $item['qty'] ),
+                'qty'         => $qty,
                 'unit_price'  => $unit_price,
                 'discount'    => $discount,
-                'line_total'  => ( $unit_price - $discount ),
+                'line_total'  => ( ( $unit_price * $qty ) - $discount ),
                 'tax'         => $tax,
                 'tax_rate'    => isset( $taxes[ $tax ] ) ? $taxes[ $tax ] : 0,
                 'tax_journal' => isset( $item['tax_journal'] ) ? $item['tax_journal'] : 0
@@ -355,7 +433,7 @@ class Sales_Controller extends REST_Controller {
                 'discount'    => (float) $item['discount'],
                 'tax'         => (float) $item['tax'],
                 'tax_rate'    => (float) $item['tax_rate'],
-                'tax_journal' => (float) $item['tax_journal'],
+                'tax_journal' => (int) $item['tax_journal'],
                 'line_total'  => (float) $item['line_total'],
                 'order'       => (int) $item['order'],
             ];
