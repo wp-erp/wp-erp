@@ -44,6 +44,8 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
 <div class="wrap erp-ac-form-wrap">
     <h2><?php _e( 'New Invoice', 'erp' ); ?></h2>
 
+    <?php erp_ac_view_error_message(); ?>
+
     <?php
     $accounts_receivable_id = WeDevs\ERP\Accounting\Model\Ledger::code('120')->first()->id;
 

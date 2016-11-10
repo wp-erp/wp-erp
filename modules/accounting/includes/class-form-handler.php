@@ -8,7 +8,7 @@ namespace WeDevs\ERP\Accounting;
  * @subpackage Sub Package
  */
 class Form_Handler {
-
+    public static $errors;
     /**
      * Hook 'em all
      */
@@ -406,14 +406,14 @@ class Form_Handler {
 
         $insert_id = $this->transaction_data_process( $_POST );
 
-
-        $page = isset( $_POST['page'] ) ? sanitize_text_field( $_POST['page'] ) : '';
-        $page_url   = admin_url( 'admin.php?page=' . $page );
-
+        $page_url = isset( $_POST['_wp_http_referer'] ) ? $_POST['_wp_http_referer'] : '';
         if ( is_wp_error( $insert_id ) ) {
-            $redirect_to = add_query_arg( array( 'message' => $insert_id->get_error_message() ), $page_url );
+            self::$errors = $insert_id->get_error_message();
+            $redirect_to = add_query_arg( array( 'message' => $insert_id ), $page_url );
+            //var_dump( $insert_id, $redirect_to); die();
             wp_safe_redirect( $redirect_to );
             exit;
+
         } else {
             $redirect_to = add_query_arg( array( 'msg' => 'success' ), $page_url );
         }
@@ -471,26 +471,23 @@ class Form_Handler {
 
         //for draft
         //$status = isset( $postdata['submit_erp_ac_trans_draft'] ) ? 'draft' : $status;
-
+        $error = new \WP_Error();
         // some basic validation
         if ( ! $issue_date ) {
-            $errors[] = __( 'Error: Issue Date is required', 'erp' );
+            $error->add( 'required_issue_date', __( 'Error: Issue Date is required', 'erp' ) );
         }
 
         if ( ! $account_id ) {
-            $errors[] = __( 'Error: Account ID is required', 'erp' );
+            $error->add( 'required_account_id', __( 'Error: Account ID is required', 'erp' ) );
         }
 
         if ( ! $total ) {
-            $errors[] = __( 'Error: Total is required', 'erp' );
+            $error->add( 'required_total_amount', __( 'Error: Total is required', 'erp' ) );
         }
 
         // bail out if error found
-        if ( $errors ) {
-            $first_error = reset( $errors );
-            $redirect_to = add_query_arg( array( 'error' => $first_error ), $page_url );
-            wp_safe_redirect( $redirect_to );
-            exit;
+        if ( is_wp_error( $error ) ) {
+            return $error;
         }
 
         $fields = [
