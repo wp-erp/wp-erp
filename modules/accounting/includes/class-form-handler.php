@@ -20,10 +20,11 @@ class Form_Handler {
         add_action( 'erp_action_ac-new-sales-payment', array( $this, 'transaction_form' ) );
         add_action( 'erp_action_ac-new-journal-entry', array( $this, 'journal_entry' ) );
 
-        add_action( 'load-accounting_page_erp-accounting-customers', array( $this, 'customer_bulk_action') );
-        add_action( 'load-accounting_page_erp-accounting-vendors', array( $this, 'vendor_bulk_action') );
-        add_action( 'load-accounting_page_erp-accounting-sales', array( $this, 'sales_bulk_action') );
-        add_action( 'load-accounting_page_erp-accounting-expense', array( $this, 'expense_bulk_action') );
+        $accounting = sanitize_title( __( 'Accounting', 'erp' ) );
+        add_action( "load-{$accounting}_page_erp-accounting-customers", array( $this, 'customer_bulk_action') );
+        add_action( "load-{$accounting}_page_erp-accounting-vendors", array( $this, 'vendor_bulk_action') );
+        add_action( "load-{$accounting}_page_erp-accounting-sales", array( $this, 'sales_bulk_action') );
+        add_action( "load-{$accounting}_page_erp-accounting-expense", array( $this, 'expense_bulk_action') );
 
         add_action( 'erp_hr_after_employee_permission_set', array( $this, 'employee_permission_set'), 10, 2 );
     }
