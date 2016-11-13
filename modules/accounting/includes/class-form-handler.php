@@ -410,7 +410,6 @@ class Form_Handler {
         if ( is_wp_error( $insert_id ) ) {
             self::$errors = $insert_id->get_error_message();
             $redirect_to = add_query_arg( array( 'message' => $insert_id ), $page_url );
-            //var_dump( $insert_id, $redirect_to); die();
             wp_safe_redirect( $redirect_to );
             exit;
 
@@ -469,25 +468,17 @@ class Form_Handler {
         $sub_total       = isset( $postdata['sub_total'] ) ? $postdata['sub_total'] : '0.00';
         $invoice         = isset( $postdata['invoice'] ) ? $postdata['invoice'] : 0;
 
-        //for draft
-        //$status = isset( $postdata['submit_erp_ac_trans_draft'] ) ? 'draft' : $status;
-        $error = new \WP_Error();
         // some basic validation
         if ( ! $issue_date ) {
-            $error->add( 'required_issue_date', __( 'Error: Issue Date is required', 'erp' ) );
+            return new \WP_Error( 'required_issue_date', __( 'Error: Issue Date is required', 'erp' ) );
         }
 
         if ( ! $account_id ) {
-            $error->add( 'required_account_id', __( 'Error: Account ID is required', 'erp' ) );
+            return new \WP_Error( 'required_account_id', __( 'Error: Account ID is required', 'erp' ) );
         }
 
         if ( ! $total ) {
-            $error->add( 'required_total_amount', __( 'Error: Total is required', 'erp' ) );
-        }
-
-        // bail out if error found
-        if ( is_wp_error( $error ) ) {
-            return $error;
+            return new \WP_Error( 'required_total_amount', __( 'Error: Total is required', 'erp' ) );
         }
 
         $fields = [

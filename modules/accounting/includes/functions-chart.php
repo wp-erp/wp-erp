@@ -506,7 +506,7 @@ function erp_ac_delete_chart( $chart_id ) {
  * Account code generator if its empty
  *
  * @since  1.1.5
- * 
+ *
  * @return int
  */
 function erp_ac_accounting_code_generator() {
@@ -519,6 +519,30 @@ function erp_ac_accounting_code_generator() {
     }
 
     return $code;
+}
+
+/**
+ * Get all charts by class
+ *
+ * @param  int $class_id
+ *
+ * @since  1.1.7
+ *
+ * @return array
+ */
+function erp_ac_get_charts_by_class( $class_id = false ) {
+    $charts     = [];
+    $all_charts = erp_ac_get_all_chart( [ 'number' => -1 ]);
+
+    foreach ( $all_charts as $chart ) {
+        $charts[ $chart->class_id ][] = $chart;
+    }
+
+    if ( intval( $class_id ) ) {
+        return isset( $charts[$class_id] ) ? $charts[$class_id] : array();
+    }
+
+    return $charts;
 }
 
 
