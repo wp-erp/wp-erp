@@ -1436,23 +1436,6 @@ class Ajax_Handler {
         $range_status = isset( $_POST['range'] ) ? $_POST['range'] : 'off';
         $error        = true;
 
-        $holidays = erp_hr_get_holidays( array( 'number' => '-1' ) );
-
-        if ( $holidays ) {
-            foreach ( $holidays as $holiday ) {
-                $prev_start = date( 'Y-m-d', strtotime( $holiday->start ) );
-                $prev_end   = date( 'Y-m-d', strtotime( $holiday->end ) );
-
-                if ( erp_check_date_range_in_range_exist( $prev_start, $prev_end, $start_date, $end_date ) && ( $holiday->id != $holiday_id ) ) {
-                    $error = new \WP_Error( 'msg', __( 'Holiday exist in your selected date', 'erp' ) );
-                }
-
-                if ( erp_check_date_range_in_range_exist( $start_date, $end_date, $prev_start, $prev_end ) && ( $holiday->id != $holiday_id ) ) {
-                    $error = new \WP_Error( 'msg', __( 'Holiday exist in your selected date', 'erp' ) );
-                }
-            }
-        }
-
         if ( $range_status == 'off' ) {
             $end_date = date( 'Y-m-d H:i:s', strtotime( $start_date . ' +1 day' )  );
         }
