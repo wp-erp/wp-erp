@@ -1,5 +1,5 @@
 <?php
-$ledgers = erp_ac_reporting_query(); 
+$ledgers = erp_ac_reporting_query();
 $charts  = [];
 
 if ( $ledgers ) {
@@ -20,7 +20,11 @@ $credit_total = 0.00;
 
 <div class="wrap">
     <h2><?php _e( 'Trial Balance', 'erp' ); ?></h2>
-
+    <form action="">
+        <input type="text" class="erp-date-picker-from" placeholder="<?php _e( 'From', 'erp' ); ?>" name="trial_start">
+        <input type="text" class="erp-date-picker-to" placeholder="<?php _e( 'To', 'erp' ); ?>" name="trial_end">
+        <input type="submit" class="button button-primary" name="report_filter" value="<?php _e( 'Filter', 'erp' ); ?>">
+    </form>
     <table class="table widefat striped">
         <thead>
             <tr>
