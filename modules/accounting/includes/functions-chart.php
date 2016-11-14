@@ -32,7 +32,8 @@ function erp_ac_get_all_chart( $args = [] ) {
         'offset'     => 0,
         'orderby'    => 'id',
         'order'      => 'ASC',
-        'class_id'   => '-1'
+        'class_id'   => '-1',
+        'count'      => false
     );
 
     $args      = wp_parse_args( $args, $defaults );
@@ -52,16 +53,26 @@ function erp_ac_get_all_chart( $args = [] ) {
             $condition .= "WHERE ct.class_id = $class_id";
         }
 
-        $sql = "SELECT ch.*, ct.class_id, ct.name as type_name, count(jour.ledger_id) as entries
-            FROM {$wpdb->prefix}erp_ac_ledger AS ch
+        $select_sql   = "SELECT ch.*, ct.class_id, ct.name as type_name, count(jour.ledger_id) as entries";
+
+        $group_by_sql = "GROUP BY ch.id";
+        $order_by_sql = "ORDER BY {$args['orderby']} {$args['order']}";
+
+        if ( $args['count'] ) {
+            $select_sql   = "SELECT count(*)";
+            $group_by_sql = "";
+            $order_by_sql = "";
+        }
+
+        $sql = $select_sql . " FROM {$wpdb->prefix}erp_ac_ledger AS ch
             LEFT JOIN {$wpdb->prefix}erp_ac_chart_types AS ct ON ct.id = ch.type_id
             LEFT JOIN {$wpdb->prefix}erp_ac_journals as jour ON jour.ledger_id = ch.id
             $condition
-            GROUP BY ch.id
-            ORDER BY {$args['orderby']} {$args['order']}
+            $group_by_sql
+            $order_by_sql
             $limit";
 
-        $items = $wpdb->get_results( $sql );
+        $items = $args['count'] ? $wpdb->get_var( $sql ) : $wpdb->get_results( $sql );
 
         wp_cache_set( $cache_key, $items, 'erp' );
     }
@@ -227,7 +238,6 @@ function erp_ac_get_all_chart_types_array() {
 
     return $types;
 }
-
 
 function erp_ac_get_charts() {
     $raw = [
@@ -520,33 +530,3 @@ function erp_ac_accounting_code_generator() {
 
     return $code;
 }
-
-/**
- * Get all charts by class
- *
- * @param  int $class_id
- *
- * @since  1.1.7
- *
- * @return array
- */
-function erp_ac_get_charts_by_class( $class_id = false ) {
-    $charts     = [];
-    $all_charts = erp_ac_get_all_chart( [ 'number' => -1 ]);
-
-    foreach ( $all_charts as $chart ) {
-        $charts[ $chart->class_id ][] = $chart;
-    }
-
-    if ( intval( $class_id ) ) {
-        return isset( $charts[$class_id] ) ? $charts[$class_id] : array();
-    }
-
-    return $charts;
-}
-
-
-
-
-
-
