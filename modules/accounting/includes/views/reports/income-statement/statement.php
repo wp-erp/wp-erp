@@ -1,5 +1,7 @@
 <?php
-$ledgers = erp_ac_reporting_query();
+$start = isset( $_GET['start'] ) ? $_GET['start'] : false;
+$end   = isset( $_GET['end'] ) ? $_GET['end'] : false;
+$ledgers = erp_ac_reporting_query( $start, $end );
 
 foreach ($ledgers as $ledger) {
     $charts[$ledger->class_id][$ledger->id][] = $ledger;
@@ -24,6 +26,7 @@ $tax_total     = erp_ac_get_sales_tax_total( $charts ) + erp_ac_get_expense_tax_
     ?>
     </p>
 
+    <?php erp_ac_report_filter_form();?>
 
     <div class="metabox-holder">
         <div class="postbox">

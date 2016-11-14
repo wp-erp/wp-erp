@@ -47,7 +47,7 @@ function erp_ac_report_filter_form() {
 
     wp_nonce_field('erp_ac_nonce_report');
 
-    submit_button( __( 'Filter', 'erp' ), 'primary', 'erp_ac_report_filter', false );
+    submit_button( __( 'Filter', 'erp' ), 'secondary', 'erp_ac_report_filter', false );
 
     echo '</form>';
 }
