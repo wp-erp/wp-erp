@@ -260,7 +260,6 @@
 
         policy: {
             periodField: function() {
-
                 $('.erp-hr-leave-period').on( 'change', function() {
                     var self = $(this).val();
                     if ( self == 2 ) {
@@ -276,8 +275,9 @@
                     data: this.serializeObject(),
                     success: function() {
                         modal.closeModal();
-
-                        $( '.list-table-wrap' ).load( window.location.href + ' .list-wrap-inner' );
+                        $( '.list-table-wrap' ).load( window.location.href + ' .list-wrap-inner', function() {
+                            Leave.initToggleCheckbox();
+                        } );
                     },
                     error: function(error) {
                         modal.enableButton();

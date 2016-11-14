@@ -425,7 +425,6 @@
              */
             afterNew: function( e, res ) {
                 var selectdrop = $('.erp-hr-desi-drop-down');
-
                 wperp.scriptReload( 'erp_hr_script_reload', 'tmpl-erp-new-employee' );
                 selectdrop.append('<option selected="selected" value="'+res.id+'">'+res.title+'</option>');
                 WeDevs_ERP_HR.employee.select2AddMoreActive('erp-hr-desi-drop-down');
@@ -438,7 +437,9 @@
              * @return {void}
              */
             reload: function() {
-                $( '.erp-hr-designation' ).load( window.location.href + ' .erp-hr-designation' );
+                $( '.erp-hr-designation' ).load( window.location.href + ' .erp-hr-designation', function() {
+                    WeDevs_ERP_HR.initToggleCheckbox();
+                } );
             },
 
             /**
@@ -564,7 +565,9 @@
              * @return {void}
              */
             reload: function() {
-                $( '.erp-hr-employees-wrap' ).load( window.location.href + ' .erp-hr-employees-wrap-inner' );
+                $( '.erp-hr-employees-wrap' ).load( window.location.href + ' .erp-hr-employees-wrap-inner', function() {
+                    WeDevs_ERP_HR.initToggleCheckbox();
+                } );
             },
 
             /**
