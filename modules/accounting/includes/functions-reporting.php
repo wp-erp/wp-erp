@@ -54,7 +54,7 @@ function erp_ac_get_reports() {
     return apply_filters( 'erp_ac_reports', $reports );
 }
 
-function erp_ac_reporting_query() {
+function erp_ac_reporting_query( $start = false, $end = false ) {
     global $wpdb;
     $tbl_ledger      = $wpdb->prefix . 'erp_ac_ledger';
     $tbl_type        = $wpdb->prefix . 'erp_ac_chart_types';
@@ -62,8 +62,8 @@ function erp_ac_reporting_query() {
     $tbl_journals    = $wpdb->prefix . 'erp_ac_journals';
     $tbl_transaction = $wpdb->prefix . 'erp_ac_transactions';
 
-    $financial_start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
-    $financial_end   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+    $financial_start = ( $start && ! empty( $start ) ) ? $start : date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+    $financial_end   = ( $end && ! empty( $end ) ) ? $end : date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
     $where           = "tran.status IS NULL OR tran.status NOT IN( 'draft', 'void', 'awaiting_approval' ) AND ( tran.issue_date >= '$financial_start' AND tran.issue_date <= '$financial_end' )";
     $join            = '';
     $where           = apply_filters( 'erp_ac_trial_balance_where', $where );

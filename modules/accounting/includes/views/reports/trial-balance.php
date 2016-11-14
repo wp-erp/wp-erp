@@ -1,4 +1,6 @@
 <?php
+$start = isset( $_GET['start'] ) ? $_GET['start'] : false;
+$end   = isset( $_GET['end'] ) ? $_GET['end'] : false;
 $ledgers = erp_ac_reporting_query();
 $charts  = [];
 
