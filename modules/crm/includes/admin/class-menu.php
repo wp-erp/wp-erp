@@ -51,6 +51,7 @@ class Admin_Menu {
      */
     public function crm_calendar_script() {
         wp_enqueue_script( 'erp-fullcalendar' );
+        enqueue_fullcalendar_locale();
         wp_enqueue_style( 'erp-fullcalendar' );
     }
 
