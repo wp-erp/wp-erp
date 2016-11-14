@@ -189,7 +189,7 @@
                             },
                             success: function(response) {
                                 $( '.loader', modal).remove();
-                                var holiday = response.holiday[0];
+                                var holiday = response.holiday;
 
                                 $( '#erp-hr-holiday-title', modal ).val( holiday.title );
                                 $( '#erp-hr-holiday-start', modal ).val( holiday.start );
@@ -198,7 +198,12 @@
                                 $( '#erp-hr-holiday-description', modal ).val( holiday.description );
                                 $( '#erp-hr-holiday-action', modal ).val( 'erp_hr_holiday_create' );
 
-                                if ( holiday.start != holiday.end ) {
+                                var date1 = new Date( holiday.start );
+                                var date2 = new Date( holiday.end );
+                                var timeDiff = Math.abs( date2.getTime() - date1.getTime() );
+                                var diffDays = Math.ceil( timeDiff / ( 1000 * 3600 * 24 ) );
+
+                                if ( diffDays > 0 ) {
                                     $( '#erp-hr-holiday-range' ).attr( 'checked', 'checked' );
                                     $( '#erp-hr-holiday-range' ).trigger( 'change' );
                                 };

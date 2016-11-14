@@ -161,6 +161,10 @@ class Ajax_Handler {
             'number' => -1
         ] );
 
+        $holiday          = (array) reset( $holiday );
+        $holiday['end']   = date( 'Y-m-d' , strtotime( $holiday['end'] . '-1day' ) );
+        $holiday['start'] = date( 'Y-m-d' , strtotime( $holiday['start'] ) );
+
         $this->send_success( array( 'holiday' => $holiday ) );
     }
 
