@@ -15,6 +15,7 @@ class Form_Handler {
     public function __construct() {
         add_action( 'admin_init', array( $this, 'handle_customer_form' ) );
         add_action( 'admin_init', array( $this, 'chart_form' ) );
+        add_action( 'admin_init', array( $this, 'report_filter' ) );
         add_action( 'erp_action_ac-new-payment-voucher', array( $this, 'transaction_form' ) );
         add_action( 'erp_action_ac-new-invoice', array( $this, 'transaction_form' ) );
         add_action( 'erp_action_ac-new-sales-payment', array( $this, 'transaction_form' ) );
@@ -26,6 +27,32 @@ class Form_Handler {
         add_action( 'load-accounting_page_erp-accounting-expense', array( $this, 'expense_bulk_action') );
 
         add_action( 'erp_hr_after_employee_permission_set', array( $this, 'employee_permission_set'), 10, 2 );
+    }
+
+    /**
+     * Filter report by date range
+     *
+     * @since  1.1.6
+     *
+     * @return  void
+     */
+    function report_filter() {
+        if ( ! isset( $_POST['erp_ac_report_filter'] ) ) {
+            return;
+        }
+        if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp_ac_nonce_report' ) ) {
+            return new \WP_Error( 'nonce', __( 'Error: Are you cheating!', 'erp' ) );
+        }
+
+        $url = add_query_arg( array(
+                'start' => $_POST['start'],
+                'end'   => $_POST['end']
+            ),
+            $_POST['_wp_http_referer']
+        );
+
+        wp_safe_redirect( $url );
+        exit();
     }
 
     function expense_bulk_action() {
