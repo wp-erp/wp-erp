@@ -99,16 +99,19 @@ class Chart_Of_Accounts_Controller extends REST_Controller {
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
         ];
 
+        $count_args = ['count' => true];
+
         if ( isset( $request['group'] ) ) {
             $group = ucwords( strtolower( $request['group'] ) );
 
-            $all_groups       = erp_ac_get_chart_classes();
-            $all_groups       = array_flip( $all_groups );
-            $args['class_id'] = isset( $all_groups[ $group ] ) ? $all_groups[ $group ] : 0;
+            $all_groups             = erp_ac_get_chart_classes();
+            $all_groups             = array_flip( $all_groups );
+            $args['class_id']       = isset( $all_groups[ $group ] ) ? $all_groups[ $group ] : 0;
+            $count_args['class_id'] = $args['class_id'];
         }
 
         $items       = erp_ac_get_all_chart( $args );
-        $total_items = erp_ac_get_all_chart( ['class_id' => $args['class_id'], 'count' => true] );
+        $total_items = erp_ac_get_all_chart( $count_args );
 
         $formated_items = [];
         foreach ( $items as $item ) {
@@ -139,7 +142,11 @@ class Chart_Of_Accounts_Controller extends REST_Controller {
             return new WP_Error( 'rest_chart_of_account_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $item     = $this->prepare_item_for_response( $item, $request, [] );
+        $group_id   = (int) $item->charts->class_id;
+        $all_groups = erp_ac_get_chart_classes();
+        $additional_fields['group'] = isset( $all_groups[ $group_id ] ) ? $all_groups[ $group_id ] : '';
+
+        $item     = $this->prepare_item_for_response( $item, $request, $additional_fields );
         $response = rest_ensure_response( $item );
 
         return $response;
@@ -155,6 +162,11 @@ class Chart_Of_Accounts_Controller extends REST_Controller {
     public function create_account( $request ) {
         $item = $this->prepare_item_for_database( $request );
 
+        if ( $item['type_id'] == 6 ) {
+            $item['cash_account'] = 1;
+            $item['reconcile']    = 1;
+        }
+
         $id = erp_ac_insert_chart( $item );
 
         if ( is_wp_error( $id ) ) {
@@ -162,6 +174,14 @@ class Chart_Of_Accounts_Controller extends REST_Controller {
         }
 
         $account = erp_ac_get_chart( $id );
+
+        if ( $item['type_id'] == 6 && isset( $request['bank_account'] ) && isset( $request['bank_name'] ) ) {
+            $ledger = \WeDevs\ERP\Accounting\Model\Ledger::find( $id );
+            $ledger->bank_details()->create([
+                'account_number' => sanitize_text_field( $request['bank_account'] ),
+                'bank_name'      => sanitize_text_field( $request['bank_name'] )
+            ]);
+        }
 
         $request->set_param( 'context', 'edit' );
         $response = $this->prepare_item_for_response( $account, $request );
@@ -193,10 +213,23 @@ class Chart_Of_Accounts_Controller extends REST_Controller {
 
         $item = $this->prepare_item_for_database( $request );
 
+        if ( $item['type_id'] == 6 ) {
+            $item['cash_account'] = 1;
+            $item['reconcile']    = 1;
+        }
+
         $result = erp_ac_insert_chart( $item );
 
         if ( is_wp_error( $result ) ) {
             return $result;
+        }
+
+        if ( $item['type_id'] == 6 && isset( $request['bank_account'] ) && isset( $request['bank_name'] ) ) {
+            $ledger = \WeDevs\ERP\Accounting\Model\Ledger::find( $id );
+            $ledger->bank_details()->update([
+                'account_number' => sanitize_text_field( $request['bank_account'] ),
+                'bank_name'      => sanitize_text_field( $request['bank_name'] )
+            ]);
         }
 
         $account = erp_ac_get_chart( $id );
@@ -243,6 +276,7 @@ class Chart_Of_Accounts_Controller extends REST_Controller {
         $prepared_item['code']        = isset( $request['code'] ) ? intval( $request['code'] ) : 0;
         $prepared_item['name']        = isset( $request['name'] ) ? $request['name'] : '';
         $prepared_item['description'] = isset( $request['description'] ) ? $request['description'] : '';
+        $prepared_item['active']      = isset( $request['active'] ) ? intval( $request['active'] ) : 1;
 
         return $prepared_item;
     }

@@ -45,6 +45,7 @@ class API_Registrar {
             '\WeDevs\ERP\API\Sales_Controller',
             '\WeDevs\ERP\API\Expenses_Controller',
             '\WeDevs\ERP\API\Chart_Of_Accounts_Controller',
+            '\WeDevs\ERP\API\Bank_Accounts_Controller',
         ];
 
         $controllers = apply_filters( 'erp_rest_api_controllers', $controllers );
