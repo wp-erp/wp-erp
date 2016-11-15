@@ -669,7 +669,7 @@ class Ajax_Handler {
         $debit_credit  = erp_ac_bank_credit_total_amount( $from );
         $ledger_amount = abs( $debit_credit['debit'] - $debit_credit['credit'] );
 
-        if ( $ledger_amount < $to ) {
+        if ( $ledger_amount < $amount ) {
             $this->send_error( __( 'No enough money from your transfer account', 'wp-account' ) );
         }
 
