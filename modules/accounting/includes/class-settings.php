@@ -91,14 +91,6 @@ class Settings extends ERP_Settings_Page {
             array( 'title' => __( '', 'erp' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
 
             array(
-                'title'   => __( 'Currency', 'erp' ),
-                'id'      => 'erp_ac_currency',
-                'type'    => 'select',
-                'class'   => 'erp-select2',
-                'options' => erp_get_currency_list_with_symbol(),
-                'default' => 'USD'
-            ),
-            array(
                 'title'   => __( 'Currency Position', 'erp' ),
                 'id'      => 'erp_ac_currency_position',
                 'type'    => 'select',
