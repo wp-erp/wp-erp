@@ -59,16 +59,7 @@ class Journal_Transactions_List_Table extends \WP_List_Table {
                 if ( $item->type == 'journal' ) {
                     $url = sprintf( '<a href="%1$s">%2$s</a>', erp_ac_get_journal_invoice_url( $item->transaction_id ), $item->issue_date );
 
-                } else if( $item->type == 'sales' ) {
-                    $url = sprintf( '<a href="%1$s">%2$s</a>', erp_ac_get_slaes_payment_invoice_url( $item->transaction_id ), $item->issue_date );
-
-                } else if( $item->type == 'transfer' ) {
-                    $url = sprintf( '<a href="%1$s">%2$s</a>', erp_ac_get_bank_transfer_invoice_url( $item->transaction_id ), $item->issue_date );
-
-                } else if( $item->type == 'expense' ) {
-                    $url = sprintf( '<a href="%1$s">%2$s</a>', erp_ac_get_expense_voucher_url( $item->transaction_id ), $item->issue_date );
-
-                }else {
+                } else {
                     $url = $item->issue_date;
                 }
 
@@ -121,13 +112,9 @@ class Journal_Transactions_List_Table extends \WP_List_Table {
         $columns = array(
             //'cb'             => '<input type="checkbox" />',
             'issue_date'     => __( 'Date', 'erp' ),
-            'transaction_id' => __( 'Transaction', 'erp' ),
-            'type'           => __( 'Type', 'erp' ),
-            'form_type'      => __( 'Entry Type', 'erp' ),
             'ref'            => __( 'Ref', 'erp' ),
             'summary'        => __( 'Summary', 'erp' ),
-            'debit'          => __( 'Debit', 'erp' ),
-            'credit'         => __( 'Credit', 'erp' ),
+            'total'          => __( 'Total', 'erp' ),
             //'balance'        => __( 'Balance', 'erp' )
         );
 
@@ -199,19 +186,6 @@ class Journal_Transactions_List_Table extends \WP_List_Table {
             if ( isset( $_REQUEST['form_type'] ) && !empty( $_REQUEST['form_type'] ) ) {
                 $form_type = $_REQUEST['form_type'];
             }
-
-            erp_html_form_input([
-                'name'        => 'type',
-                'value'       => $type,
-                'type'       => 'select',
-                'options' => [
-                    ''        => __( 'All Types', 'erp' ),
-                    'sales'   => __( 'Sales', 'erp' ),
-                    'expense' => __( 'Expense', 'erp' ),
-                    'journal' => __( 'Journal Entries', 'erp' )
-                ],
-                'placeholder' => __( 'Start Date', 'erp' )
-            ]);
 
             erp_html_form_input([
                 'name'        => 'start_date',
