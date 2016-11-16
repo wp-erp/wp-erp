@@ -119,7 +119,7 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                             'placeholder' => date( 'Y-m-d' ),
                             'type'        => 'text',
                             'required'    => true,
-                            'class'       => 'erp-date-field',
+                            'class'       => 'erp-date-picker-from',
                             'value'       => isset( $transaction['issue_date'] ) ? $transaction['issue_date'] : date( 'Y-m-d', strtotime( current_time( 'mysql' ) ) ),
                         ) );
                         ?>
@@ -133,7 +133,7 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                             'placeholder' => date( 'Y-m-d' ),
                             'type'        => 'text',
                             'required'    => true,
-                            'class'       => 'erp-due-date-field',
+                            'class'       => 'erp-date-picker-to',
                             'value'       => isset( $transaction['due_date'] ) ? $transaction['due_date'] : '',
                         ) );
                         ?>
