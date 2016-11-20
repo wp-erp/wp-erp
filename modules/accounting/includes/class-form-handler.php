@@ -8,24 +8,75 @@ namespace WeDevs\ERP\Accounting;
  * @subpackage Sub Package
  */
 class Form_Handler {
-
+    public static $errors;
     /**
      * Hook 'em all
      */
     public function __construct() {
         add_action( 'admin_init', array( $this, 'handle_customer_form' ) );
         add_action( 'admin_init', array( $this, 'chart_form' ) );
+        add_action( 'admin_init', array( $this, 'report_filter' ) );
         add_action( 'erp_action_ac-new-payment-voucher', array( $this, 'transaction_form' ) );
         add_action( 'erp_action_ac-new-invoice', array( $this, 'transaction_form' ) );
         add_action( 'erp_action_ac-new-sales-payment', array( $this, 'transaction_form' ) );
         add_action( 'erp_action_ac-new-journal-entry', array( $this, 'journal_entry' ) );
 
-        add_action( 'load-accounting_page_erp-accounting-customers', array( $this, 'customer_bulk_action') );
-        add_action( 'load-accounting_page_erp-accounting-vendors', array( $this, 'vendor_bulk_action') );
-        add_action( 'load-accounting_page_erp-accounting-sales', array( $this, 'sales_bulk_action') );
-        add_action( 'load-accounting_page_erp-accounting-expense', array( $this, 'expense_bulk_action') );
+        $accounting = sanitize_title( __( 'Accounting', 'erp' ) );
+        add_action( "load-{$accounting}_page_erp-accounting-customers", array( $this, 'customer_bulk_action') );
+        add_action( "load-{$accounting}_page_erp-accounting-vendors", array( $this, 'vendor_bulk_action') );
+        add_action( "load-{$accounting}_page_erp-accounting-sales", array( $this, 'sales_bulk_action') );
+        add_action( "load-{$accounting}_page_erp-accounting-expense", array( $this, 'expense_bulk_action') );
+        add_action( 'load-{$accounting}_page_erp-accounting-journal', array( $this, 'journal_bulk_action') );
 
         add_action( 'erp_hr_after_employee_permission_set', array( $this, 'employee_permission_set'), 10, 2 );
+    }
+
+    /**
+     * Journal bulk action
+     *
+     * @since  1.1.6
+     *
+     * @return  void
+     */
+    function journal_bulk_action() {
+        if ( ! $this->verify_current_page_screen( 'erp-accounting-journal', 'bulk-journals' ) ) {
+            return;
+        }
+
+        $url = add_query_arg( array(
+            'start_date' => isset( $_REQUEST['start_date'] ) ? $_REQUEST['start_date'] : '',
+            'end_date'   => isset( $_REQUEST['end_date'] ) ? $_REQUEST['end_date'] : '',
+            'ref'        => isset( $_REQUEST['ref'] ) ? $_REQUEST['ref'] : '',
+        ), erp_ac_get_journal_url() );
+
+        wp_safe_redirect( $url );
+        exit();
+    }
+
+    /**
+     * Filter report by date range
+     *
+     * @since  1.1.6
+     *
+     * @return  void
+     */
+    function report_filter() {
+        if ( ! isset( $_POST['erp_ac_report_filter'] ) ) {
+            return;
+        }
+        if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp_ac_nonce_report' ) ) {
+            return new \WP_Error( 'nonce', __( 'Error: Are you cheating!', 'erp' ) );
+        }
+
+        $url = add_query_arg( array(
+                'start' => $_POST['start'],
+                'end'   => $_POST['end']
+            ),
+            $_POST['_wp_http_referer']
+        );
+
+        wp_safe_redirect( $url );
+        exit();
     }
 
     function expense_bulk_action() {
@@ -406,14 +457,13 @@ class Form_Handler {
 
         $insert_id = $this->transaction_data_process( $_POST );
 
-
-        $page = isset( $_POST['page'] ) ? sanitize_text_field( $_POST['page'] ) : '';
-        $page_url   = admin_url( 'admin.php?page=' . $page );
-
+        $page_url = isset( $_POST['_wp_http_referer'] ) ? $_POST['_wp_http_referer'] : '';
         if ( is_wp_error( $insert_id ) ) {
-            $redirect_to = add_query_arg( array( 'message' => $insert_id->get_error_message() ), $page_url );
+            self::$errors = $insert_id->get_error_message();
+            $redirect_to = add_query_arg( array( 'message' => $insert_id ), $page_url );
             wp_safe_redirect( $redirect_to );
             exit;
+
         } else {
             $redirect_to = add_query_arg( array( 'msg' => 'success' ), $page_url );
         }
@@ -469,28 +519,17 @@ class Form_Handler {
         $sub_total       = isset( $postdata['sub_total'] ) ? $postdata['sub_total'] : '0.00';
         $invoice         = isset( $postdata['invoice'] ) ? $postdata['invoice'] : 0;
 
-        //for draft
-        //$status = isset( $postdata['submit_erp_ac_trans_draft'] ) ? 'draft' : $status;
-
         // some basic validation
         if ( ! $issue_date ) {
-            $errors[] = __( 'Error: Issue Date is required', 'erp' );
+            return new \WP_Error( 'required_issue_date', __( 'Error: Issue Date is required', 'erp' ) );
         }
 
         if ( ! $account_id ) {
-            $errors[] = __( 'Error: Account ID is required', 'erp' );
+            return new \WP_Error( 'required_account_id', __( 'Error: Account ID is required', 'erp' ) );
         }
 
         if ( ! $total ) {
-            $errors[] = __( 'Error: Total is required', 'erp' );
-        }
-
-        // bail out if error found
-        if ( $errors ) {
-            $first_error = reset( $errors );
-            $redirect_to = add_query_arg( array( 'error' => $first_error ), $page_url );
-            wp_safe_redirect( $redirect_to );
-            exit;
+            return new \WP_Error( 'required_total_amount', __( 'Error: Total is required', 'erp' ) );
         }
 
         $fields = [

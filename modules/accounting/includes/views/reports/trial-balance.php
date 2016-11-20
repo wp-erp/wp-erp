@@ -1,5 +1,7 @@
 <?php
-$ledgers = erp_ac_reporting_query(); 
+$start = isset( $_GET['start'] ) ? $_GET['start'] : false;
+$end   = isset( $_GET['end'] ) ? $_GET['end'] : false;
+$ledgers = erp_ac_reporting_query( $start, $end );
 $charts  = [];
 
 if ( $ledgers ) {
@@ -16,11 +18,12 @@ if ( $ledgers ) {
 
 $debit_total = 0.00;
 $credit_total = 0.00;
+
 ?>
 
 <div class="wrap">
     <h2><?php _e( 'Trial Balance', 'erp' ); ?></h2>
-
+    <?php erp_ac_report_filter_form();?>
     <table class="table widefat striped">
         <thead>
             <tr>

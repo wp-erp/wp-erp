@@ -130,6 +130,7 @@ class Scripts {
      */
     public function enqueue_scripts() {
         $screen = get_current_screen();
+        $hook = str_replace( sanitize_title( __( 'HR Management', 'erp' ) ) , 'hr-management', $screen->base );
 
         wp_enqueue_script( 'erp-select2' );
         wp_enqueue_script( 'erp-popup' );
@@ -156,7 +157,7 @@ class Scripts {
         ) );
 
         // load country/state JSON on new company page
-        if ( 'toplevel_page_erp-company' == $screen->base || isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'new', 'edit' ) ) ) {
+        if ( 'toplevel_page_erp-company' == $hook || isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'new', 'edit' ) ) ) {
             wp_enqueue_script( 'post' );
             wp_enqueue_media();
 
@@ -164,7 +165,7 @@ class Scripts {
             wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
         }
 
-        if ( 'hr-management_page_erp-hr-employee' == $screen->base ) {
+        if ( 'hr-management_page_erp-hr-employee' == $hook ) {
             $country = \WeDevs\ERP\Countries::instance();
             wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
         }

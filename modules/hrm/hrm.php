@@ -128,6 +128,8 @@ class Human_Resource {
     public function admin_scripts( $hook ) {
         // var_dump( $hook );
 
+        $hook = str_replace( sanitize_title( __( 'HR Management', 'erp' ) ) , 'hr-management', $hook );
+
         $suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '';
 
         wp_enqueue_media();
@@ -223,7 +225,10 @@ class Human_Resource {
     public function admin_js_templates() {
         global $current_screen;
 
-        switch ($current_screen->base) {
+        // main HR menu
+        $hook = str_replace( sanitize_title( __( 'HR Management', 'erp' ) ) , 'hr-management', $current_screen->base );
+
+        switch ($hook) {
             case 'toplevel_page_erp-hr':
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-leave-request.php', 'erp-new-leave-req' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/leave-days.php', 'erp-leave-days' );
@@ -256,7 +261,12 @@ class Human_Resource {
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-designation.php', 'erp-new-desig' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/employee-terminate.php', 'erp-employment-terminate' );
                 break;
+        }
 
+        // leave menu
+        $hook = str_replace( sanitize_title( __( 'Leave', 'erp' ) ) , 'leave', $current_screen->base );
+
+        switch ($hook) {
             case 'leave_page_erp-leave-policies':
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/leave-policy.php', 'erp-leave-policy' );
                 break;
@@ -268,6 +278,7 @@ class Human_Resource {
             case 'toplevel_page_erp-leave':
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/leave-reject.php', 'erp-hr-leave-reject-js-tmp' );
                 break;
+
             default:
                 # code...
                 break;

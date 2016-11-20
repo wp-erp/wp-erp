@@ -224,27 +224,31 @@ function erp_ac_tax_component_fields() {
         'name'        => 'items_id[]',
         'type'        => 'hidden',
     ) );
-
+    ?><li><?php
     erp_html_form_input( array(
         'name'        => 'component_name[]',
+        'label'       => __( 'Component name', 'erp' ),
         'type'        => 'text',
-        'placeholder' => __( 'Component name', 'erp' ),
+       // 'placeholder' => __( 'Component name', 'erp' ),
         'required'    => true,
     ) );
-
+    ?></li><li><?php
     erp_html_form_input( array(
         'name'        => 'agency_name[]',
+        'label'       => __( 'Agency name', 'erp' ),
         'type'        => 'text',
-        'placeholder' => __( 'Agency name', 'erp' ),
+       // 'placeholder' => __( 'Agency name', 'erp' ),
         'required'    => true
     ) );
-
+    ?></li><li><?php
     erp_html_form_input( array(
         'name'        => 'tax_rate[]',
+        'label'       => __( 'Rate(0.00%)', 'erp' ),
         'type'        => 'text',
-        'placeholder' => __( 'Rate(0.00%)', 'erp' ),
+        'placeholder' => __( '0.00%', 'erp' ),
         'required'    => true
     ) );
+    ?></li><?php
 }
 
 function erp_ac_tax_component_field_with_value() {
@@ -254,30 +258,34 @@ function erp_ac_tax_component_field_with_value() {
         'type'        => 'hidden',
         'value'       => '{{items.id}}',
     ) );
-
+    ?><li><?php
     erp_html_form_input( array(
         'name'        => 'component_name[]',
         'type'        => 'text',
-        'placeholder' => __( 'Component name', 'erp' ),
+        'label'       => __( 'Component name', 'erp' ),
+        //'placeholder' => __( 'Component name', 'erp' ),
         'required'    => true,
         'value'       => '{{items.component_name}}'
     ) );
-
+    ?></li><li><?php
     erp_html_form_input( array(
         'name'        => 'agency_name[]',
+        'label'       => __( 'Agency name', 'erp' ),
         'type'        => 'text',
         'value'       => '{{items.agency_name}}',
-        'placeholder' => __( 'Agency name', 'erp' ),
+        //'placeholder' => __( 'Agency name', 'erp' ),
         'required'    => true
     ) );
-
+    ?></li><li><?php
     erp_html_form_input( array(
         'name'        => 'tax_rate[]',
         'type'        => 'text',
+        'label'       => __( 'Rate(0.00%)', 'erp' ),
         'value'       => '{{items.tax_rate}}',
-        'placeholder' => __( 'Rate(0.00%)', 'erp' ),
+        'placeholder' => __( '0.00%', 'erp' ),
         'required'    => true
     ) );
+    ?></li><?php
 }
 
 function erp_ac_new_tax_account( $postdata, $tax_id ) {

@@ -1,7 +1,7 @@
 <div class="wrap">
     <h2><?php echo esc_html( $ledger->name ); ?></h2>
 
-    <form method="get">
+    <form method="get" class="erp-ac-list-table-form">
         <input type="hidden" name="page" value="erp-accounting-charts">
         <input type="hidden" name="action" value="view">
         <input type="hidden" name="id" value="<?php echo $ledger->id; ?>">

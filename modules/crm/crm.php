@@ -116,6 +116,7 @@ class Customer_Relationship {
     }
 
     public function admin_scripts( $hook ) {
+        $hook = str_replace( sanitize_title( __( 'CRM', 'erp' ) ) , 'crm', $hook );
         $suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '';
 
         wp_enqueue_media();
@@ -273,10 +274,9 @@ class Customer_Relationship {
      */
     public function load_js_template() {
         global $current_screen;
+        $hook = str_replace( sanitize_title( __( 'CRM', 'erp' ) ) , 'crm', $current_screen->base );
 
-        // var_dump( $current_screen ); die();
-
-        switch ( $current_screen->base ) {
+        switch ( $hook ) {
 
             case 'crm_page_erp-sales-customers':
             case 'crm_page_erp-sales-companies':
