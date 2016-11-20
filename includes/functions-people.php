@@ -656,33 +656,14 @@ function erp_people_delete_meta( $people_id, $meta_key, $meta_value = '' ) {
 }
 
 /**
- * Get the contact sources
+ * Get people all main db fields
+ *
+ * @since 1.1.7
  *
  * @return array
  */
-function erp_crm_contact_sources() {
-    $sources = array(
-        'advert'             => __( 'Advertisement', 'erp' ),
-        'chat'               => __( 'Chat', 'erp' ),
-        'contact_form'       => __( 'Contact Form', 'erp' ),
-        'employee_referral'  => __( 'Employee Referral', 'erp' ),
-        'external_referral'  => __( 'External Referral', 'erp' ),
-        'marketing_campaign' => __( 'Marketing campaign', 'erp' ),
-        'newsletter'         => __( 'Newsletter', 'erp' ),
-        'online_store'       => __( 'OnlineStore', 'erp' ),
-        'optin_form'         => __( 'Optin Forms', 'erp' ),
-        'partner'            => __( 'Partner', 'erp' ),
-        'phone'              => __( 'Phone Call', 'erp' ),
-        'public_relations'   => __( 'Public Relations', 'erp' ),
-        'sales_mail_alias'   => __( 'Sales Mail Alias', 'erp' ),
-        'search_engine'      => __( 'Search Engine', 'erp' ),
-        'seminar_internal'   => __( 'Seminar-Internal', 'erp' ),
-        'seminar_partner'    => __( 'Seminar Partner', 'erp' ),
-        'social_media'       => __( 'Social Media', 'erp' ),
-        'trade_show'         => __( 'Trade Show', 'erp' ),
-        'web_download'       => __( 'Web Download', 'erp' ),
-        'web_research'       => __( 'Web Research', 'erp' ),
-    );
-
-    return apply_filters( 'erp_crm_contact_sources', $sources );
+function erp_get_people_main_field() {
+    return apply_filters( 'erp_get_people_main_field', [
+        'user_id', 'first_name', 'last_name', 'company', 'email', 'phone', 'mobile', 'other', 'website', 'fax', 'notes', 'street_1', 'street_2', 'city', 'state', 'postal_code', 'country', 'currency', 'created_by', 'created'
+    ] );
 }

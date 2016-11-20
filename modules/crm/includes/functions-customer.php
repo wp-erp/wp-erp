@@ -183,17 +183,6 @@ function erp_crm_get_details_url( $id, $type ) {
     return admin_url( 'admin.php' );
 }
 
-// function erp_crm_item_row_actions() {
-//     $item_row_action = [];
-
-//     $item_row_action['edit'] =  [
-//         'title'     => __( 'Edit', 'erp' ),
-//         'attrTitle' => __( 'Edit this contact', 'erp' ),
-//         'class'     => 'edit',
-//         'action'    => 'edit'
-//     ],
-// }
-
 /**
  * Get CRM life statges
  *
@@ -2929,3 +2918,93 @@ function erp_crm_check_new_inbound_emails() {
         // $e->getMessage();
     }
 }
+
+/**
+ * Get the contact sources
+ *
+ * @return array
+ */
+function erp_crm_contact_sources() {
+    $sources = array(
+        'advert'             => __( 'Advertisement', 'erp' ),
+        'chat'               => __( 'Chat', 'erp' ),
+        'contact_form'       => __( 'Contact Form', 'erp' ),
+        'employee_referral'  => __( 'Employee Referral', 'erp' ),
+        'external_referral'  => __( 'External Referral', 'erp' ),
+        'marketing_campaign' => __( 'Marketing campaign', 'erp' ),
+        'newsletter'         => __( 'Newsletter', 'erp' ),
+        'online_store'       => __( 'OnlineStore', 'erp' ),
+        'optin_form'         => __( 'Optin Forms', 'erp' ),
+        'partner'            => __( 'Partner', 'erp' ),
+        'phone'              => __( 'Phone Call', 'erp' ),
+        'public_relations'   => __( 'Public Relations', 'erp' ),
+        'sales_mail_alias'   => __( 'Sales Mail Alias', 'erp' ),
+        'search_engine'      => __( 'Search Engine', 'erp' ),
+        'seminar_internal'   => __( 'Seminar-Internal', 'erp' ),
+        'seminar_partner'    => __( 'Seminar Partner', 'erp' ),
+        'social_media'       => __( 'Social Media', 'erp' ),
+        'trade_show'         => __( 'Trade Show', 'erp' ),
+        'web_download'       => __( 'Web Download', 'erp' ),
+        'web_research'       => __( 'Web Research', 'erp' ),
+    );
+
+    return apply_filters( 'erp_crm_contact_sources', $sources );
+}
+
+/**
+ * Get contact all meta fields
+ *
+ * @since 1.1.7
+ *
+ * @return array
+ */
+function erm_crm_get_contact_meta_fileds() {
+    $main_meta_field = [
+        'life_stage', '_assign_crm_agent', 'date_of_birth', 'source'
+    ];
+
+    $social_field = array_keys( erp_crm_get_social_field() ) ;
+
+    return apply_filters( 'erm_crm_get_contact_meta_fileds', array_merge( $main_meta_field, $social_field ) );
+}
+
+/**
+ * Instant sync peoplemeta with wp usermetadata when matches any
+ * meta keys of people metakeys
+ *
+ * @since 1.1.7
+ *
+ * @param  integer $meta_id
+ * @param  integer $object_id
+ * @param  string $meta_key
+ * @param  array|string $_meta_value
+ *
+ * @return void
+ */
+function erp_crm_sync_people_meta_data( $meta_id, $object_id, $meta_key, $_meta_value ) {
+
+
+    $allowed_people_field =
+    $cache_key = 'erp_people_id_user_' . $object_id;
+    $people_id = wp_cache_get( $cache_key, 'erp' );
+
+    if ( 'not_found' == $people_id ) {
+        return;
+    }
+
+    if ( false === $people_id  ) {
+        $people = \WeDevs\ERP\Framework\Models\People::whereUserId( $object_id )->first();
+
+        if ( null == $people ) {
+            wp_cache_set( $cache_key, 'not_found', 'erp', HOUR_IN_SECONDS );
+        } else {
+            $people_id = $people->id;
+            wp_cache_set( $cache_key, $people_id, 'erp', HOUR_IN_SECONDS );
+        }
+    }
+
+    if ( ! $people_id ) {
+        return;
+    }
+}
+
