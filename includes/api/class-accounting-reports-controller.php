@@ -178,14 +178,14 @@ class Accounting_Reports_Controller extends REST_Controller {
             $data[] = [
                 'tax' => $tax['sales']['tax_name'],
                 'tax_payable' => [
-                    'transaction_sub_total' => (float) erp_ac_get_price( $tax['sales']['trns_subtotal'] ),
-                    'tax_amount'            => (float) erp_ac_get_price( $tax['sales']['tax_credit'] ),
+                    'transaction_sub_total' => erp_ac_get_price( $tax['sales']['trns_subtotal'], ['symbol' => false] ),
+                    'tax_amount'            => erp_ac_get_price( $tax['sales']['tax_credit'], ['symbol' => false] ),
                 ],
                 'tax_receivable' => [
-                    'transaction_sub_total' => (float) erp_ac_get_price( $tax['expense']['trns_subtotal'] ),
-                    'tax_amount'            => (float) erp_ac_get_price( $tax['expense']['tax_debit'] ),
+                    'transaction_sub_total' => erp_ac_get_price( $tax['expense']['trns_subtotal'], ['symbol' => false] ),
+                    'tax_amount'            => erp_ac_get_price( $tax['expense']['tax_debit'], ['symbol' => false] ),
                 ],
-                'net_tax' => (float) erp_ac_get_price( ( $tax['sales']['tax_credit'] - $tax['expense']['tax_debit'] ) ),
+                'net_tax' => erp_ac_get_price( ( $tax['sales']['tax_credit'] - $tax['expense']['tax_debit'] ), ['symbol' => false] ),
             ];
         }
 
@@ -213,11 +213,27 @@ class Accounting_Reports_Controller extends REST_Controller {
         $liabilities = ! empty( $charts[2] ) ? $charts[2] : [];
         $equities    = ! empty( $charts[5] ) ? $charts[5] : [];
 
+        $sales_total   = erp_ac_get_sales_total_without_tax( $charts ) + erp_ac_get_sales_tax_total( $charts );
+        $goods_sold    = erp_ac_get_good_sold_total_amount( $charts );
+        $expense_total = erp_ac_get_expense_total_without_tax( $charts );
+        $expense_total = $expense_total - $goods_sold;
+        $tax_total     = erp_ac_get_sales_tax_total( $charts ) + erp_ac_get_expense_tax_total( $charts );
+        $gross         = $sales_total - $goods_sold;
+        $operating     = $gross - $expense_total;
+        $net_income    = $operating - $tax_total;
+
         $data = [
             'assets'      => $this->process_individual_balance_sheet( $assets ),
             'liabilities' => $this->process_individual_balance_sheet( $liabilities ),
-            'equities'    => $this->process_individual_balance_sheet( $equities ),
         ];
+
+        $equities_data             = $this->process_individual_balance_sheet( $equities, $net_income );
+        $equities_data['accounts'] = ! empty( $equities_data['accounts'] ) ? $equities_data['accounts'] : [];
+        $equities_data['accounts'] = array_merge( $equities_data['accounts'], [
+            'net_income' => erp_ac_get_price( $net_income, [ 'symbol' => false ] ),
+        ] );
+
+        $data['equities'] = $equities_data;
 
         $response = rest_ensure_response( $data );
         $response = $this->format_collection_response( $response, $request, 0 );
@@ -225,9 +241,15 @@ class Accounting_Reports_Controller extends REST_Controller {
         return $response;
     }
 
-    protected function process_individual_balance_sheet( $items ) {
-        $total_balance = 0;
-
+    /**
+     * Process the individual balance sheet
+     *
+     * @param  array   $items
+     * @param  integer $total_balance
+     *
+     * @return array
+     */
+    protected function process_individual_balance_sheet( $items, $total_balance = 0 ) {
         $data = [];
         foreach ( $items as $key => $item ) {
             $account = reset( $item );
