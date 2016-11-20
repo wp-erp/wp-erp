@@ -2983,10 +2983,16 @@ function erm_crm_get_contact_meta_fileds() {
  */
 function erp_crm_sync_people_meta_data( $meta_id, $object_id, $meta_key, $_meta_value ) {
 
+    $cache_key         = 'erp_people_id_user_' . $object_id;
+    $people_id         = wp_cache_get( $cache_key, 'erp' );
+    $people_field      = erp_get_people_main_field();
+    $people_meta_field = erm_crm_get_contact_meta_fileds();
 
-    $allowed_people_field =
-    $cache_key = 'erp_people_id_user_' . $object_id;
-    $people_id = wp_cache_get( $cache_key, 'erp' );
+    if ( ! in_array( $meta_key, $people_field ) ) {
+        if ( ! in_array( $meta_key, $people_meta_field ) ) {
+            return;
+        }
+    }
 
     if ( 'not_found' == $people_id ) {
         return;
@@ -2996,15 +3002,25 @@ function erp_crm_sync_people_meta_data( $meta_id, $object_id, $meta_key, $_meta_
         $people = \WeDevs\ERP\Framework\Models\People::whereUserId( $object_id )->first();
 
         if ( null == $people ) {
-            wp_cache_set( $cache_key, 'not_found', 'erp', HOUR_IN_SECONDS );
+            wp_cache_set( $cache_key, 'not_found', 'erp' );
         } else {
             $people_id = $people->id;
-            wp_cache_set( $cache_key, $people_id, 'erp', HOUR_IN_SECONDS );
+            wp_cache_set( $cache_key, $people_id, 'erp' );
         }
     }
 
     if ( ! $people_id ) {
         return;
+    }
+
+    error_log( print_r( $people_id, true ) );
+
+    if ( in_array( $meta_key, $people_field ) ) {
+        \WeDevs\ERP\Framework\Models\People::find( $people_id )->update( [ $meta_key => $_meta_value ] );
+    }
+
+    if ( in_array( $meta_key, $people_meta_field ) ) {
+        erp_people_update_meta( $people_id, $meta_key, $_meta_value );
     }
 }
 
