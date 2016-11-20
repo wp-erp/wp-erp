@@ -983,8 +983,9 @@ function erp_get_import_export_fields() {
  */
 function erp_import_export_javascript() {
     global $current_screen;
+    $hook = str_replace( sanitize_title( __( 'ERP Settings', 'erp' ) ) , 'erp-settings', $current_screen->base );
 
-    if ( 'erp-settings_page_erp-tools' !== $current_screen->base ) {
+    if ( 'erp-settings_page_erp-tools' !== $hook ) {
         return;
     }
 

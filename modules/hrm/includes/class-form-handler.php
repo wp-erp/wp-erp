@@ -26,16 +26,18 @@ class Form_Handler {
         add_action( 'admin_init', array( $this, 'leave_request_status_change' ) );
         add_action( 'admin_init', array( $this, 'handle_employee_status_update' ) );
         add_action( 'admin_init', array( $this, 'handle_leave_calendar_filter' ) );
-        add_action( 'load-leave_page_erp-holiday-assign', array( $this, 'holiday_action' ) );
-        add_action( 'load-hr-management_page_erp-hr-employee', array( $this, 'employee_bulk_action' ) );
-        add_action( 'load-hr-management_page_erp-hr-designation', array( $this, 'designation_bulk_action' ) );
-        add_action( 'load-hr-management_page_erp-hr-depts', array( $this, 'department_bulk_action' ) );
-        add_action( 'load-leave_page_erp-leave-policies', array( $this, 'leave_policies' ) );
-        add_action( 'load-leave_page_erp-leave-assign', array( $this, 'entitlement_bulk_action' ) );
-        add_action( 'load-toplevel_page_erp-leave', array( $this, 'leave_request_bulk_action' ) );
 
-        // ERP HR Reporting
-        add_action( 'load-hr-management_page_erp-hr-reporting', array( $this, 'reporting_headcount_bulk_action' ) );
+        $hr_management = sanitize_title( __( 'HR Management', 'erp' ) );
+        add_action( "load-{$hr_management}_page_erp-hr-employee", array( $this, 'employee_bulk_action' ) );
+        add_action( "load-{$hr_management}_page_erp-hr-designation", array( $this, 'designation_bulk_action' ) );
+        add_action( "load-{$hr_management}_page_erp-hr-depts", array( $this, 'department_bulk_action' ) );
+        add_action( "load-{$hr_management}_page_erp-hr-reporting", array( $this, 'reporting_headcount_bulk_action' ) );
+
+        $leave = sanitize_title( __( 'Leave', 'erp' ) );
+        add_action( 'load-toplevel_page_erp-leave', array( $this, 'leave_request_bulk_action' ) );
+        add_action( "load-{$leave}_page_erp-leave-assign", array( $this, 'entitlement_bulk_action' ) );
+        add_action( "load-{$leave}_page_erp-holiday-assign", array( $this, 'holiday_action' ) );
+        add_action( "load-{$leave}_page_erp-leave-policies", array( $this, 'leave_policies' ) );
     }
 
     /**
@@ -601,7 +603,7 @@ class Form_Handler {
      * @return void
      */
     public function leave_request_status_change() {
-        
+
         // If not leave bulk action then go out from here
         if ( ! isset( $_GET['leave_action'] ) ) {
             return;
