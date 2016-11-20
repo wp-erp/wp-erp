@@ -85,22 +85,12 @@ function erp_ac_get_all_transaction( $args = array() ) {
             $transaction = $transaction->where( 'ref', '=', $args['ref'] );
         }
 
-        if ( isset( $args['status'] ) && $args['status'] == 'deleted' ) {
-            //$transaction = $transaction->where( 'status', '==', 'deleted' );
-        } else {
-            $transaction = $transaction->where( 'status', '!=', 'deleted' );
-        }
-
         if ( isset( $args['status'] ) &&  is_array( $args['status'] ) && array_key_exists( 'in', $args['status'] ) ) {
             $transaction = $transaction->whereIn( 'status', $args['status']['in'] );
         } else if ( isset( $args['status'] ) &&  is_array( $args['status'] ) && array_key_exists( 'not_in', $args['status'] ) ) {
             $transaction = $transaction->whereNotIn( 'status', [$args['status']['not_in']] );
         } else if ( isset( $args['status'] ) &&  ! is_array( $args['status'] ) ) {
             $transaction = $transaction->where( 'status', '=', $args['status'] );
-        }
-
-        if ( isset( $args['type'] ) && ( ( is_array( $args['type'] ) && in_array( 'journal', $args['type'] ) ) || $args['type'] == 'journal' )  ) {
-            $transaction = $transaction->orWhereNull( 'status' );
         }
 
         if ( isset( $args['form_type'] ) &&  is_array( $args['form_type'] ) && array_key_exists( 'in', $args['form_type'] ) ) {

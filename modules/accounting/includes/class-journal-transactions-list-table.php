@@ -9,98 +9,24 @@ if ( ! class_exists ( 'WP_List_Table' ) ) {
 /**
  * List table class
  */
-class Journal_Transactions_List_Table extends \WP_List_Table {
-
-    protected $slug         = null;
-    protected $last_balance = 0;
-    public $chart_group     = [];
-    public $type_id;
-    public $customer_prev_balance  = 0;
-    public $vendor_prev_balance    = 0;
+class Journal_Transactions_List_Table extends Transaction_List_Table {
+    public $type_id = [];
+    public $chart_group  = [];
+    public $account_prev_balance = 0;
 
     function __construct() {
 
-        $this->slug = 'erp-accounting-charts';
+        $this->type = 'journal';
+        $this->slug = 'erp-accounting-journal';
 
-        parent::__construct( array(
-            'singular' => 'entry',
-            'plural'   => 'entries',
+        parent::__construct();
+
+        \WP_List_Table::__construct([
+            'singular' => 'journal',
+            'plural'   => 'journals',
             'ajax'     => false
-        ) );
+        ]);
 
-    }
-
-    function get_table_classes() {
-        return array( 'widefat', 'fixed', 'striped', $this->_args['plural'] );
-    }
-
-    /**
-     * Message to show if no designation found
-     *
-     * @return void
-     */
-    function no_items() {
-        _e( 'No entry found!', 'erp' );
-    }
-
-    /**
-     * Default column values if no callback found
-     *
-     * @param  object  $item
-     * @param  string  $column_name
-     *
-     * @return string
-     */
-    function column_default( $item, $column_name ) {
-
-        switch ( $column_name ) {
-            case 'issue_date':
-
-                if ( $item->type == 'journal' ) {
-                    $url = sprintf( '<a href="%1$s">%2$s</a>', erp_ac_get_journal_invoice_url( $item->transaction_id ), $item->issue_date );
-
-                } else {
-                    $url = $item->issue_date;
-                }
-
-                return $url;
-
-            case 'transaction_id':
-                return $item->transaction_id;
-
-            case 'type':
-                $type = $item->type;
-
-                if ( 'expense' == $item->type ) {
-                    $type = __( 'Expense', 'erp' );
-                } elseif ( 'sales' == $item->type ) {
-                    $type = __( 'Sales', 'erp' );
-                } elseif ( 'journal' == $item->type ) {
-                    $type = __( 'Journal Entry', 'erp' );
-                }
-
-                return sprintf( '<a href="#" data-transaction_id="%s" class="erp-ac-transaction-report">%s</a>', $item->transaction_id, $type );
-
-            case 'form_type':
-                return $item->form_type;
-
-            case 'ref':
-                return $item->ref;
-
-            case 'summary':
-                return $item->summary;
-
-            case 'debit':
-                //return $item->form_type == 'invoice' ? $item->credit : '0.00';
-                return $item->status != 'draft' ? $item->debit : '';
-
-            case 'credit':
-                //return $item->form_type == 'payment' ? $item->debit : '0.00';
-                return $item->status != 'draft' ? $item->credit : '';
-
-            default:
-                return isset( $item->$column_name ) ? $item->$column_name : '';
-        }
     }
 
     /**
@@ -109,50 +35,57 @@ class Journal_Transactions_List_Table extends \WP_List_Table {
      * @return array
      */
     function get_columns() {
+        $ledger_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : false;
         $columns = array(
-            //'cb'             => '<input type="checkbox" />',
-            'issue_date'     => __( 'Date', 'erp' ),
-            'ref'            => __( 'Ref', 'erp' ),
-            'summary'        => __( 'Summary', 'erp' ),
-            'total'          => __( 'Total', 'erp' ),
-            //'balance'        => __( 'Balance', 'erp' )
+            'cb'         => '<input type="checkbox" />',
+            'issue_date' => __( 'Date', 'erp' ),
+            'ref'        => __( 'Ref', 'erp' ),
+            'summary'    => __( 'Summary', 'erp' ),
+            'total'      => __( 'Total', 'erp' )
         );
+
+        if ( $ledger_id ) {
+            $columns['balance'] = __( 'Balance', 'erp' );
+        }
 
         return $columns;
     }
 
+    /**
+     * Balance
+     *
+     * @param  array $item
+     *
+     * @return string
+     */
     function column_balance( $item ) {
         $balance = 0;
-        if ( in_array( $this->type_id, $this->chart_group['customer'] ) ) {
-            //var_dump( $item->debit, $this->customer_prev_balance);
-            $balance =  ( $item->debit + $this->customer_prev_balance ) - $item->credit;
-            $this->customer_prev_balance = $balance;
-        }
 
-        if ( in_array( $this->type_id, $this->chart_group['vendor'] ) ) {
-            $balance =  ( $item->credit + $this->vendor_prev_balance ) - $item->debit;
-            $this->vendor_prev_balance = $balance;
-        }
+        // if ( in_array( $this->type_id, $this->chart_group['customer'] ) ) {
+        //     $balance =  ( $item->debit + $this->customer_prev_balance ) - $item->credit;
+        //     $this->customer_prev_balance = $balance;
+        // }
 
-        return erp_ac_get_price( $balance, ['symbol' => false] );
+        // if ( in_array( $this->type_id, $this->chart_group['vendor'] ) ) {
+        //     $balance =  ( $item->credit + $this->vendor_prev_balance ) - $item->debit;
+        //     $this->vendor_prev_balance = $balance;
+        // }
+
+        $balance =  ( $item->debit + $this->account_prev_balance ) - $item->credit;
+        $this->account_prev_balance = $balance;
+
+        return erp_ac_get_price( $balance );
     }
 
     /**
-     * Get sortable columns
+     * Get section for sales table list
+     *
+     * @since  1.1.6
      *
      * @return array
      */
-    function get_sortable_columns() {
-        $sortable_columns = array(
-            'issue_date'     => array( 'issue_date', true ),
-            'transaction_id' => array( 'transaction_id', true ),
-            'type'           => array( 'type', true ),
-            'form_type'      => array( 'form_type', true ),
-            'debit'          => array( 'debit', true ),
-            'credit'         => array( 'credit', true ),
-        );
-
-        return $sortable_columns;
+    public function get_section() {
+        return [];
     }
 
     /**
@@ -165,72 +98,37 @@ class Journal_Transactions_List_Table extends \WP_List_Table {
     public function extra_tablenav( $which ) {
         if ( 'top' == $which ) {
             echo '<div class="alignleft actions">';
-
-            $start_date = '';
-            $end_date   = '';
-            $type       = '';
-            $form_type  = '';
-
-            if ( isset( $_REQUEST['start_date'] ) && !empty( $_REQUEST['start_date'] ) ) {
-                $start_date = $_REQUEST['start_date'];
-            }
-
-            if ( isset( $_REQUEST['end_date'] ) && !empty( $_REQUEST['end_date'] ) ) {
-                $end_date = $_REQUEST['end_date'];
-            }
-
-            if ( isset( $_REQUEST['type'] ) && !empty( $_REQUEST['type'] ) ) {
-                $type = $_REQUEST['type'];
-            }
-
-            if ( isset( $_REQUEST['form_type'] ) && !empty( $_REQUEST['form_type'] ) ) {
-                $form_type = $_REQUEST['form_type'];
-            }
+            erp_html_form_input([
+                'name'        => 'user_id',
+                'type'        => 'hidden',
+                'class'       => 'erp-ac-customer-search',
+                'placeholder' => __( 'Search for Customer', 'erp' ),
+            ]);
 
             erp_html_form_input([
                 'name'        => 'start_date',
-                'class'       => 'erp-date-field',
-                'value'       => $start_date,
+                'class'       => 'erp-date-picker-from',
+                'value'       => isset( $_REQUEST['start_date'] ) && !empty( $_REQUEST['start_date'] ) ? $_REQUEST['start_date'] : '',
                 'placeholder' => __( 'Start Date', 'erp' )
             ]);
 
             erp_html_form_input([
                 'name'        => 'end_date',
-                'class'       => 'erp-date-field',
-                'value'       => $end_date,
+                'class'       => 'erp-date-picker-to',
+                'value'       => isset( $_REQUEST['end_date'] ) && !empty( $_REQUEST['end_date'] ) ? $_REQUEST['end_date'] : '',
                 'placeholder' => __( 'End Date', 'erp' )
             ]);
 
-            submit_button( __( 'Filter' ), 'button', 'submit_filter_sales', false );
+            erp_html_form_input([
+                'name'        => 'ref',
+                'value'       => isset( $_REQUEST['ref'] ) && ! empty( $_REQUEST['ref'] ) ? $_REQUEST['ref'] : '',
+                'placeholder' => __( 'Ref No.', 'erp' )
+            ]);
+
+            submit_button( __( 'Filter', 'erp' ), 'button', 'submit_filter_sales', false );
 
             echo '</div>';
         }
-    }
-
-    /**
-     * Set the bulk actions
-     *
-     * @return array
-     */
-    function get_bulk_actions() {
-        $actions = array(
-            // 'trash'  => __( 'Move to Trash', 'erp' ),
-            // 'email'  => __( 'Send Email', 'erp' ),
-        );
-        return $actions;
-    }
-
-    /**
-     * Render the checkbox column
-     *
-     * @param  object  $item
-     *
-     * @return string
-     */
-    function column_cb( $item ) {
-        return sprintf(
-            '<input type="checkbox" name="customer_id[]" value="%d" />', $item->id
-        );
     }
 
     /**
@@ -239,37 +137,30 @@ class Journal_Transactions_List_Table extends \WP_List_Table {
      * @return void
      */
     function prepare_items() {
-
         $ledger_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : false;
         $columns               = $this->get_columns();
         $hidden                = array( );
         $sortable              = $this->get_sortable_columns();
         $this->_column_headers = array( $columns, $hidden, $sortable );
 
-        $per_page              = 20;
+        $per_page              = 25;
         $current_page          = $this->get_pagenum();
         $offset                = ( $current_page -1 ) * $per_page;
         $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '2';
-        $page                  = isset( $_GET['page'] ) ? $_GET['page'] : false;
 
         // only ncessary because we have sample data
         $args = array(
-            //'type'    => 'journal',
-            'offset'  => $offset,
-            'number'  => $per_page,
-            'orderby' => 'issue_date',
-            'order'   => 'ASC'
+            'type'   => $this->type,
+            'offset' => $offset,
+            'number' => $per_page,
         );
-
-        if ( ! $ledger_id && $page == 'erp-accounting-journal') {
-            $args['type'] = 'journal';
-        }
 
         if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {
             $args['orderby'] = $_REQUEST['orderby'];
             $args['order']   = $_REQUEST['order'] ;
         }
 
+        // search params
         if ( isset( $_REQUEST['start_date'] ) && !empty( $_REQUEST['start_date'] ) ) {
             $args['start_date'] = $_REQUEST['start_date'];
         }
@@ -278,26 +169,48 @@ class Journal_Transactions_List_Table extends \WP_List_Table {
             $args['end_date'] = $_REQUEST['end_date'];
         }
 
-        if ( isset( $_REQUEST['type'] ) && !empty( $_REQUEST['type'] ) ) {
-            $args['type'] = $_REQUEST['type'];
+        if ( isset( $_REQUEST['form_type'] ) && ! empty( $_REQUEST['form_type'] ) ) {
+            if ( $_REQUEST['form_type'] == 'deleted' ) {
+                $args['status'] = $_REQUEST['form_type'];
+            } else {
+                $args['form_type'] = $_REQUEST['form_type'];
+            }
         }
 
-        if ( isset( $_REQUEST['form_type'] ) && !empty( $_REQUEST['form_type'] ) ) {
-            $args['form_type'] = $_REQUEST['form_type'];
+        if ( isset( $_REQUEST['ref'] ) && ! empty( $_REQUEST['ref'] ) ) {
+            $args['ref'] = $_REQUEST['ref'];
         }
 
-        $this->items       = erp_ac_get_ledger_transactions( $args, $ledger_id );
-        $this->chart_group = chart_grouping();
-        $individual_ledger = \WeDevs\ERP\Accounting\Model\Ledger::select('type_id')->find( $ledger_id );
-        $this->type_id     = isset( $individual_ledger->type_id ) ? $individual_ledger->type_id : false;
+        if ( 'sales' == $args['type'] && ! erp_ac_view_other_sales() ) {
+            $args['created_by'] = get_current_user_id();
+        }
 
-        // count = -1
-        $args['number'] = '-1';
+        if ( isset( $_REQUEST['section'] ) ) {
+            $args['status']  = str_replace('-', '_', $_REQUEST['section'] );
+        }
 
-        $all_items = erp_ac_get_ledger_transactions( $args );
+        if ( 'expense' == $args['type'] && ! erp_ac_view_other_expenses() ) {
+            $args['created_by'] = get_current_user_id();
+        }
+
+        if ( 'journal' == $args['type'] && ! erp_ac_view_other_journals() ) {
+            $args['created_by'] = get_current_user_id();
+        }
+
+        if ( $ledger_id ) {
+            $this->ledger_id = true;
+            // $this->chart_group = erp_ac_chart_grouping();
+            // var_dump( $this->chart_group ); die();
+            // $individual_ledger = \WeDevs\ERP\Accounting\Model\Ledger::select('type_id')->find( $ledger_id );
+            // $this->type_id     = isset( $individual_ledger->type_id ) ? $individual_ledger->type_id : false;
+
+            $this->items = erp_ac_get_ledger_transactions( $args, $ledger_id );
+        } else {
+            $this->items = $this->get_transactions( $args );
+        }
 
         $this->set_pagination_args( array(
-            'total_items' => count( $all_items ),
+            'total_items' => $this->get_transaction_count( $args ),
             'per_page'    => $per_page
         ) );
     }

@@ -470,7 +470,7 @@ function erp_ac_exclude_chart( $dropdown = [], $accounts_id = [] ) {
 
 // Inside customer included Assets and Expenses
 // Inside vendor included Liabilities and Equity
-function chart_grouping() {
+function erp_ac_chart_grouping() {
     $chart_classes =  \WeDevs\ERP\Accounting\Model\Chart_Classes::with(['types'])->get()->toArray();
 
     // Inside customer included Assets and Expenses

@@ -20,13 +20,34 @@ class Form_Handler {
         add_action( 'erp_action_ac-new-invoice', array( $this, 'transaction_form' ) );
         add_action( 'erp_action_ac-new-sales-payment', array( $this, 'transaction_form' ) );
         add_action( 'erp_action_ac-new-journal-entry', array( $this, 'journal_entry' ) );
-
         add_action( 'load-accounting_page_erp-accounting-customers', array( $this, 'customer_bulk_action') );
         add_action( 'load-accounting_page_erp-accounting-vendors', array( $this, 'vendor_bulk_action') );
         add_action( 'load-accounting_page_erp-accounting-sales', array( $this, 'sales_bulk_action') );
         add_action( 'load-accounting_page_erp-accounting-expense', array( $this, 'expense_bulk_action') );
-
+        add_action( 'load-accounting_page_erp-accounting-journal', array( $this, 'journal_bulk_action') );
         add_action( 'erp_hr_after_employee_permission_set', array( $this, 'employee_permission_set'), 10, 2 );
+    }
+
+    /**
+     * Journal bulk action
+     *
+     * @since  1.1.6
+     *
+     * @return  void
+     */
+    function journal_bulk_action() {
+        if ( ! $this->verify_current_page_screen( 'erp-accounting-journal', 'bulk-journals' ) ) {
+            return;
+        }
+
+        $url = add_query_arg( array(
+            'start_date' => isset( $_REQUEST['start_date'] ) ? $_REQUEST['start_date'] : '',
+            'end_date'   => isset( $_REQUEST['end_date'] ) ? $_REQUEST['end_date'] : '',
+            'ref'        => isset( $_REQUEST['ref'] ) ? $_REQUEST['ref'] : '',
+        ), erp_ac_get_journal_url() );
+
+        wp_safe_redirect( $url );
+        exit();
     }
 
     /**

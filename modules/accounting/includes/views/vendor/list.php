@@ -2,7 +2,7 @@
     <?php if ( erp_ac_create_vendor() ) { ?>
         <h2><?php _e( 'Vendors', 'erp-accounting' ); ?> <a href="<?php echo admin_url( 'admin.php?page=erp-accounting-vendors&action=new' ); ?>" class="add-new-h2"><?php _e( 'Add New', 'erp-accounting' ); ?></a></h2>
     <?php } ?>
-    
+
 
     <?php
     if ( isset( $_GET['msg'] ) ) {
@@ -19,7 +19,7 @@
     ?>
     <div class="inner-table-wrap">
         <div class="list-table-inner">
-            <form method="post">
+            <form method="post" class="erp-ac-list-table-form">
                 <input type="hidden" name="page" value="ttest_list_table">
 
                 <?php

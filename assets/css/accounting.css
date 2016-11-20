@@ -213,6 +213,15 @@ table.vendor-list-table th.column-customer img {
 .erp-ac-journal-entry table.journal-table th.invalid {
   color: red;
 }
+.erp-ac-list-table-form .bulkactions {
+  display: none;
+}
+.erp-ac-list-table-form .actions input:not([type="submit"]) {
+  padding: 5px;
+}
+.erp-ac-list-table-form .actions input {
+  margin-right: 5px;
+}
 .invoice-preview-wrap {
   padding: 20px;
   background-color: #fff;
