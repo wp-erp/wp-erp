@@ -39,13 +39,15 @@ class API_Registrar {
             '\WeDevs\ERP\API\Leave_Entitlements_Controller',
             '\WeDevs\ERP\API\Leave_Holidays_Controller',
             '\WeDevs\ERP\API\Leave_Requests_Controller',
-            '\WeDevs\ERP\API\HR_Reports_Controller',
+            '\WeDevs\ERP\API\HRM_Reports_Controller',
             '\WeDevs\ERP\API\Customers_Controller',
             '\WeDevs\ERP\API\Vendors_Controller',
             '\WeDevs\ERP\API\Sales_Controller',
             '\WeDevs\ERP\API\Expenses_Controller',
             '\WeDevs\ERP\API\Chart_Of_Accounts_Controller',
             '\WeDevs\ERP\API\Bank_Accounts_Controller',
+            '\WeDevs\ERP\API\Journals_Controller',
+            '\WeDevs\ERP\API\Accounting_Reports_Controller',
         ];
 
         $controllers = apply_filters( 'erp_rest_api_controllers', $controllers );

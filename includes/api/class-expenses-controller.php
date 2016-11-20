@@ -75,7 +75,7 @@ class Expenses_Controller extends REST_Controller {
         ];
 
         $items       = erp_ac_get_all_transaction( $args );
-        $total_items = erp_ac_get_transaction_count( $args['type'] );
+        $total_items = erp_ac_get_transaction_count( ['type' => 'expense'] );
 
         $formated_items = [];
         foreach ( $items as $item ) {
@@ -102,7 +102,7 @@ class Expenses_Controller extends REST_Controller {
         $id   = (int) $request['id'];
         $item = \WeDevs\ERP\Accounting\Model\Transaction::find( $id );
 
-        if ( empty( $id ) || empty( $item->id ) ) {
+        if ( empty( $id ) || empty( $item->id ) || $item->type != 'expense' ) {
             return new WP_Error( 'rest_expense_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 

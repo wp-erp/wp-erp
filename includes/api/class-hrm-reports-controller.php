@@ -5,7 +5,7 @@ use WP_REST_Server;
 use WP_REST_Response;
 use WP_Error;
 
-class HR_Reports_Controller extends REST_Controller {
+class HRM_Reports_Controller extends REST_Controller {
     /**
      * Endpoint namespace.
      *
@@ -96,7 +96,7 @@ class HR_Reports_Controller extends REST_Controller {
         $formated_items = $emp_all_data;
 
         $response = rest_ensure_response( $formated_items );
-        $response = $this->format_collection_response( $response, $request, null );
+        $response = $this->format_collection_response( $response, $request, 0 );
 
         return $response;
     }
@@ -131,7 +131,7 @@ class HR_Reports_Controller extends REST_Controller {
         $formated_items = $gender_ratio;
 
         $response = rest_ensure_response( $formated_items );
-        $response = $this->format_collection_response( $response, $request, $total_items );
+        $response = $this->format_collection_response( $response, $request, 0 );
 
         return $response;
     }
@@ -154,7 +154,7 @@ class HR_Reports_Controller extends REST_Controller {
         for ( $i = 0; $i <= 11; $i++ ) {
             $month        = date( "Y-m", strtotime( $this_month ." -$i months" ) );
             $js_month     = strtotime( $month. '-01' ) * 1000;
-            $count        = erp_hr_get_headcount( $month, $query_dept, 'month' );
+            $count        = erp_hr_get_headcount( $month, '', 'month' );
 
             $chart_data[] = (object) [
                 'month' => $month,
@@ -165,7 +165,7 @@ class HR_Reports_Controller extends REST_Controller {
         $formated_items = $chart_data;
 
         $response = rest_ensure_response( $formated_items );
-        $response = $this->format_collection_response( $response, $request, $total_items );
+        $response = $this->format_collection_response( $response, $request, 0 );
 
         return $response;
     }
@@ -186,6 +186,9 @@ class HR_Reports_Controller extends REST_Controller {
         global $wpdb;
 
         $user_ids    = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees LIMIT {$args['number']} OFFSET {$args['offset']}" );
+
+        $total_items = (int) $wpdb->get_var( "SELECT count(*) FROM {$wpdb->prefix}erp_hr_employees" );
+
         $date_format = get_option( 'date_format' );
 
         $formated_items = [];

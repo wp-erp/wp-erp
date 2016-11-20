@@ -5,7 +5,7 @@ use WP_REST_Server;
 use WP_REST_Response;
 use WP_Error;
 
-class Sales_Controller extends REST_Controller {
+class Journals_Controller extends REST_Controller {
     /**
      * Endpoint namespace.
      *
@@ -18,7 +18,7 @@ class Sales_Controller extends REST_Controller {
      *
      * @var string
      */
-    protected $rest_base = 'accounting/sales';
+    protected $rest_base = 'accounting/journals';
 
     /**
      * Register the routes for the objects of the controller.
@@ -27,12 +27,12 @@ class Sales_Controller extends REST_Controller {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_sales' ],
+                'callback' => [ $this, 'get_journals' ],
                 'args'     => $this->get_collection_params(),
             ],
             [
                 'methods'  => WP_REST_Server::CREATABLE,
-                'callback' => [ $this, 'create_sale' ],
+                'callback' => [ $this, 'create_journal' ],
                 'args'     => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
@@ -41,41 +41,34 @@ class Sales_Controller extends REST_Controller {
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
             [
                 'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_sale' ],
+                'callback' => [ $this, 'get_journal' ],
                 'args'     => [
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
-            ],
-            [
-                'methods'  => WP_REST_Server::EDITABLE,
-                'callback' => [ $this, 'update_sale' ],
-                'args'     => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
-            ],
-            [
-                'methods'  => WP_REST_Server::DELETABLE,
-                'callback' => [ $this, 'delete_sale' ],
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
     }
 
     /**
-     * Get a collection of sales
+     * Get a collection of journals
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_sales( $request ) {
+    public function get_journals( $request ) {
         $args = [
             'number' => $request['per_page'],
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
-            'type'   => 'sales',
-            'join'   => ['items'],
+            'type'   => 'journal',
         ];
 
-        $items       = erp_ac_get_all_transaction( $args );
-        $total_items = erp_ac_get_transaction_count( ['type' => 'sales'] );
+        $items          = erp_ac_get_ledger_transactions( $args );
+        $args['number'] = -1;
+        $total_items    = count( erp_ac_get_ledger_transactions( $args ) );
+
+        // dd( $items );
 
         $formated_items = [];
         foreach ( $items as $item ) {
@@ -92,23 +85,33 @@ class Sales_Controller extends REST_Controller {
     }
 
     /**
-     * Get a specific sale
+     * Get a specific journal
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_sale( $request ) {
+    public function get_journal( $request ) {
         $id   = (int) $request['id'];
         $item = \WeDevs\ERP\Accounting\Model\Transaction::find( $id );
 
-        if ( empty( $id ) || empty( $item->id ) || $item->type != 'sales' ) {
-            return new WP_Error( 'rest_sale_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+        if ( empty( $id ) || empty( $item->id ) || $item->type != 'journal' ) {
+            return new WP_Error( 'rest_journal_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
-        $item->items = $item->items->toArray();
+        $transaction_items = $item->items->toArray();
+        $items             = [];
+        foreach ( $transaction_items as $transaction_item ) {
+            $items[] = [
+                'journal_id' => (int) $transaction_item['journal_id'],
+                'unit_price' => (float) $transaction_item['unit_price'],
+                'total'      => (float) $transaction_item['line_total'],
+            ];
+        }
 
-        $additional_fields = [];
+        dd($transaction_items);
+
+        $additional_fields = ['items' => $items];
 
         $item     = $this->prepare_item_for_response( $item, $request, $additional_fields );
         $response = rest_ensure_response( $item );
@@ -117,13 +120,13 @@ class Sales_Controller extends REST_Controller {
     }
 
     /**
-     * Create a sale
+     * Create a journal
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function create_sale( $request ) {
+    public function create_journal( $request ) {
         $trans_data = $this->prepare_item_for_database( $request );
 
         if ( empty( $request['form_type'] ) || ! in_array( $request['form_type'], ['payment', 'invoice'] ) ) {
@@ -208,81 +211,6 @@ class Sales_Controller extends REST_Controller {
     }
 
     /**
-     * Update a sale
-     *
-     * @param WP_REST_Request $request
-     *
-     * @return WP_Error|WP_REST_Request
-     */
-    public function update_sale( $request ) {
-        $id = (int) $request['id'];
-
-        $item = (object) erp_ac_get_transaction( $id );
-        if ( ! $item ) {
-            return new WP_Error( 'rest_sale_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
-        }
-
-        if ( empty( $request['form_type'] ) || ! in_array( $request['form_type'], ['payment', 'invoice'] ) ) {
-            return new WP_Error( 'rest_sale_invalid_form_type', __( 'Invalid form type.' ), [ 'status' => 404 ] );
-        }
-
-        if ( empty( $request['customer'] ) ) {
-            return new WP_Error( 'rest_sale_invalid_customer', __( 'Required customer.' ), [ 'status' => 404 ] );
-        }
-
-        $trans_data = $this->prepare_item_for_database( $request );
-
-        $items = $this->prepare_trans_items_for_database( $request );
-
-        $tax_total = array_reduce( $items, function( $total, $value ) {
-            return $total + $value['tax_rate'];
-        } );
-
-        $trans_data['sub_total'] = array_reduce( $items, function( $total, $value ) {
-            return $total + $value['line_total'];
-        } );
-
-        $trans_data['trans_total'] = $trans_data['sub_total'] + $tax_total;
-        $trans_data['total']       = $trans_data['trans_total'];
-        $trans_data['line_total']  = array_pluck( $items, 'line_total' );
-
-        $id = erp_ac_insert_transaction( $trans_data, $items );
-
-        if ( is_wp_error( $id ) ) {
-            return $id;
-        }
-
-        $transaction = \WeDevs\ERP\Accounting\Model\Transaction::find( $id );
-        $transaction->items = $transaction->items->toArray();
-
-        $response = $this->prepare_item_for_response( $transaction, $request );
-        $response = rest_ensure_response( $response );
-        $response->set_status( 201 );
-        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
-
-        return $response;
-    }
-
-    /**
-     * Delete a sale
-     *
-     * @param WP_REST_Request $request
-     *
-     * @return WP_Error|WP_REST_Request
-     */
-    public function delete_sale( $request ) {
-        $id = (int) $request['id'];
-
-        $result = erp_ac_remove_transaction( $id );
-
-        if ( is_wp_error( $result ) ) {
-            return $result;
-        }
-
-        return new WP_REST_Response( true, 204 );
-    }
-
-    /**
      * Prepare a single item for create or update
      *
      * @param WP_REST_Request $request Request object.
@@ -328,40 +256,18 @@ class Sales_Controller extends REST_Controller {
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $data = [
-            'id'                => (int) $item->id,
-            'form_type'         => $item->form_type,
-            'status'            => $item->status,
-            'billing_address'   => $item->billing_address,
-            'reference'         => $item->ref,
-            'summary'           => $item->summary,
-            'issue_date'        => $item->issue_date,
-            'due_date'          => $item->due_date,
-            'currency'          => $item->currency,
-            'conversion_rate'   => (float) $item->conversion_rate,
-            'items'             => $this->format_transaction_items( $item->items ),
-            'sub_total'         => (float) $item->sub_total,
-            'total'             => (float) $item->total,
-            'due'               => (float) $item->due,
-            'trans_total'       => (float) $item->trans_total,
-            'invoice'           => erp_ac_get_invoice_number( $item->invoice_number, $item->invoice_format ),
-            'parent'            => (int) $item->parent,
-            'created_at'        => $item->created_at,
+            'id'         => (int) $item->id,
+            'reference'  => $item->ref,
+            'issue_date' => $item->issue_date,
+            'summary'    => $item->summary,
+            'debit'      => (float) $item->debit,
+            'credit'     => (float) $item->credit,
+            'total'      => (float) $item->total,
+            'created_at' => $item->created_at,
         ];
 
         if ( isset( $request['include'] ) ) {
             $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
-
-            if ( in_array( 'customer', $include_params ) ) {
-                $customers_controller = new Customers_Controller();
-
-                $customer_id  = (int) $item->user_id;
-                $data['customer'] = null;
-
-                if ( $customer_id ) {
-                    $customer = $customers_controller->get_customer( ['id' => $customer_id ] );
-                    $data['customer'] = ! is_wp_error( $customer ) ? $customer->get_data() : null;
-                }
-            }
 
             if ( in_array( 'created_by', $include_params ) ) {
                 $data['created_by'] = $this->get_user( intval( $item->created_by ) );
@@ -376,68 +282,6 @@ class Sales_Controller extends REST_Controller {
         $response = $this->add_links( $response, $item );
 
         return $response;
-    }
-
-    /**
-     * Prepare transaction items for database
-     *
-     * @param  array $request
-     *
-     * @return array
-     */
-    protected function prepare_trans_items_for_database( $request ) {
-        $taxes = erp_ac_get_tax_info();
-        $taxes = array_pluck( $taxes, 'rate', 'id' );
-
-        foreach ( $request['items'] as $item ) {
-            $unit_price = (float) erp_ac_format_decimal( $item['unit_price'] );
-            $qty        = intval( $item['qty'] );
-            $discount   = (int) erp_ac_format_decimal( $item['discount'] );
-            $tax        = isset( $item['tax'] ) ? $item['tax'] : 0;
-
-            $items[] = [
-                'item_id'     => isset( $item['id'] ) ? intval( $item['id'] ) : 0,
-                'journal_id'  => isset( $item['journal_id'] ) ? intval( $item['journal_id'] ) : 0,
-                'product_id'  => isset( $item['product_id'] ) ? intval( $item['product_id'] ) : 0,
-                'account_id'  => isset( $item['account_id'] ) ? intval( $item['account_id'] ) : 0,
-                'description' => sanitize_text_field( $item['description'] ),
-                'qty'         => $qty,
-                'unit_price'  => $unit_price,
-                'discount'    => $discount,
-                'line_total'  => ( ( $unit_price * $qty ) - $discount ),
-                'tax'         => $tax,
-                'tax_rate'    => isset( $taxes[ $tax ] ) ? $taxes[ $tax ] : 0,
-                'tax_journal' => isset( $item['tax_journal'] ) ? $item['tax_journal'] : 0
-            ];
-        }
-
-        return $items;
-    }
-
-    /**
-     * Format the transaction's items
-     *
-     * @param  array $items
-     *
-     * @return array
-     */
-    protected function format_transaction_items( $items ) {
-        return array_map( function( $item ) {
-            return [
-                'id'          => (int) $item['id'],
-                'journal_id'  => (int) $item['journal_id'],
-                'product_id'  => (int) $item['product_id'],
-                'description' => $item['description'],
-                'qty'         => (int) $item['qty'],
-                'unit_price'  => (float) $item['unit_price'],
-                'discount'    => (float) $item['discount'],
-                'tax'         => (float) $item['tax'],
-                'tax_rate'    => (float) $item['tax_rate'],
-                'tax_journal' => (int) $item['tax_journal'],
-                'line_total'  => (float) $item['line_total'],
-                'order'       => (int) $item['order'],
-            ];
-        }, $items );
     }
 
     /**
