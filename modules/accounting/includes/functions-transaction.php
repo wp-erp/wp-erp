@@ -788,6 +788,7 @@ function erp_ac_get_ledger_transactions( $args = [], $ledger_id = false ) {
             $limit";
 
         $items = $wpdb->get_results( $sql );
+
         wp_cache_set( $cache_key, $items, 'erp' );
     }
 

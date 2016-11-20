@@ -29,6 +29,22 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
 
     }
 
+
+    /**
+     * Render the issue date column
+     *
+     * @since  1.1.6
+     *
+     * @param  object  $item
+     *
+     * @return string
+     */
+    function column_issue_date( $item ) {
+
+            return sprintf( '<a href="%1$s">%2$s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), erp_format_date( $item->issue_date ) );
+
+    }
+
     /**
      * Get the column names
      *
@@ -41,14 +57,26 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
             'issue_date' => __( 'Date', 'erp' ),
             'ref'        => __( 'Ref', 'erp' ),
             'summary'    => __( 'Summary', 'erp' ),
-            'total'      => __( 'Total', 'erp' )
+            'total'      => __( 'Total', 'erp' ),
         );
 
         if ( $ledger_id ) {
+            unset( $columns['total'] );
+            unset( $columns['summary'] );
+            $columns['debit']   = __( 'Debit', 'erp' );
+            $columns['credit']  = __( 'Credit', 'erp' );
             $columns['balance'] = __( 'Balance', 'erp' );
         }
 
         return $columns;
+    }
+
+    function column_debit( $item ) {
+        return empty( $item->debit ) ? '&#8212' : erp_ac_get_price( $item->debit, ['symbol' => false] );
+    }
+
+    function column_credit( $item ) {
+        return empty( $item->credit ) ? '&#8212' : erp_ac_get_price( $item->credit, ['symbol' => false] );
     }
 
     /**
@@ -150,7 +178,7 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
 
         // only ncessary because we have sample data
         $args = array(
-            'type'   => $this->type,
+            //'type'   => $this->type,
             'offset' => $offset,
             'number' => $per_page,
         );
@@ -181,20 +209,8 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
             $args['ref'] = $_REQUEST['ref'];
         }
 
-        if ( 'sales' == $args['type'] && ! erp_ac_view_other_sales() ) {
-            $args['created_by'] = get_current_user_id();
-        }
-
         if ( isset( $_REQUEST['section'] ) ) {
             $args['status']  = str_replace('-', '_', $_REQUEST['section'] );
-        }
-
-        if ( 'expense' == $args['type'] && ! erp_ac_view_other_expenses() ) {
-            $args['created_by'] = get_current_user_id();
-        }
-
-        if ( 'journal' == $args['type'] && ! erp_ac_view_other_journals() ) {
-            $args['created_by'] = get_current_user_id();
         }
 
         if ( $ledger_id ) {
@@ -205,12 +221,14 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
             // $this->type_id     = isset( $individual_ledger->type_id ) ? $individual_ledger->type_id : false;
 
             $this->items = erp_ac_get_ledger_transactions( $args, $ledger_id );
+
         } else {
+            $args['type'] = $this->type;
             $this->items = $this->get_transactions( $args );
         }
 
         $this->set_pagination_args( array(
-            'total_items' => $this->get_transaction_count( $args ),
+            'total_items' => $ledger_id ? 0 : $this->get_transaction_count( $args ),
             'per_page'    => $per_page
         ) );
     }
