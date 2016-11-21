@@ -41,7 +41,7 @@ if ( $hook == 'accounting_page_erp-accounting-sales'  ) {
             $paid = $paid + 1;
         }
 
-        if ( $current_time <= $transaction['due_date'] && 'partial' == $transaction['status'] ) {
+        if ( 'partial' == $transaction['status'] ) {
             $partial  = $partial + 1;
         }
 
@@ -122,7 +122,7 @@ if ( $hook == 'accounting_page_erp-accounting-sales'  ) {
             $expense = $expense + 1;
         }
 
-        if ( $current_time <= $transaction['due_date'] && 'partial' == $transaction['status'] ) {
+        if ( 'partial' == $transaction['status'] ) {
             $partial  = $partial + 1;
         }
 
@@ -203,7 +203,7 @@ if ( $hook == 'accounting_page_erp-accounting-sales'  ) {
             $paid = $paid + 1;
         }
 
-        if ( $current_time <= $transaction['due_date'] && 'partial' == $transaction['status'] ) {
+        if ( 'partial' == $transaction['status'] ) {
             $partial  = $partial + 1;
         }
 
@@ -282,7 +282,7 @@ if ( $hook == 'accounting_page_erp-accounting-sales'  ) {
             $expense = $expense + 1;
         }
 
-        if ( $current_time <= $transaction['due_date'] && 'partial' == $transaction['status'] ) {
+        if ( 'partial' == $transaction['status'] ) {
             $partial  = $partial + 1;
         }
 
