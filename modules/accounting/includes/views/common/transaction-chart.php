@@ -45,7 +45,10 @@ if ( $hook == 'accounting_page_erp-accounting-sales'  ) {
             $partial  = $partial + 1;
         }
 
-        $received    = $received + ( $transaction['trans_total'] - $transaction['due'] );
+        if ( $transaction['form_type'] == 'payment' && $transaction['status'] == 'closed' ) {
+            $received    = $received + ( $transaction['trans_total'] - $transaction['due'] );
+        }
+
         $outstanding = $transaction['due'] + $outstanding;
 
     }
@@ -126,7 +129,9 @@ if ( $hook == 'accounting_page_erp-accounting-sales'  ) {
             $partial  = $partial + 1;
         }
 
-        $received = $received + ( $transaction['trans_total'] - $transaction['due'] );
+        if ( $transaction['form_type'] == 'payment_voucher' && $transaction['status'] == 'closed' ) {
+            $received    = $received + ( $transaction['trans_total'] - $transaction['due'] );
+        }
         $outstanding = $transaction['due'] + $outstanding;
     }
 
@@ -207,7 +212,9 @@ if ( $hook == 'accounting_page_erp-accounting-sales'  ) {
             $partial  = $partial + 1;
         }
 
-        $received = $received + ( $transaction['trans_total'] - $transaction['due'] );
+        if ( $transaction['form_type'] == 'payment' && $transaction['status'] == 'closed' ) {
+            $received    = $received + ( $transaction['trans_total'] - $transaction['due'] );
+        }
     }
 
     $payment_received[] = [
@@ -286,7 +293,10 @@ if ( $hook == 'accounting_page_erp-accounting-sales'  ) {
             $partial  = $partial + 1;
         }
 
-        $received    = $received + ( $transaction['trans_total'] - $transaction['due'] );
+        if ( $transaction['form_type'] == 'payment_voucher' && $transaction['status'] == 'closed' ) {
+            $received    = $received + ( $transaction['trans_total'] - $transaction['due'] );
+        }
+
         $outstanding = $transaction['due'] + $outstanding;
 
     }
