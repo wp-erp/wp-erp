@@ -173,6 +173,7 @@ function erp_ac_dashboard_net_income() {
 
     ];
 
+    $incomes_args  = apply_filters( 'erp_ac_net_income_args', $incomes_args );
     $transections  = erp_ac_get_all_transaction( $incomes_args );
     $expenses      = isset( $transections['expense'] ) ? $transections['expense'] : [];
     $sales         = isset( $transections['sales'] ) ? $transections['sales'] : [];
@@ -187,6 +188,8 @@ function erp_ac_dashboard_net_income() {
             $expense_total = $expense_total + $details->trans_total;
         }
     }
+
+    $expense_total = apply_filters( 'erp_ac_net_expense', $expense_total, $transections );
 
     foreach ( $sales as $key => $details ) {
         if ( $details->status == 'partial' ) {
@@ -397,11 +400,12 @@ function erp_ac_dashboard_bills_payable() {
     $incomes_args = [
         'start_date' => $first,
         'end_date'   => $last,
-        'form_type'  => 'vendor_credit',
-        'type'       => 'expense',
+        'form_type'  => ['vendor_credit'],
+        'type'       => ['expense'],
         'status'     => ['in' => ['awaiting_payment', 'partial'] ],
     ];
 
+    $incomes_args = apply_filters( 'erp_ac_bill_payable_arags', $incomes_args );
     $invoices = erp_ac_get_all_transaction( $incomes_args );
 
     $priv_day = date( 'Y-m-d', strtotime( '-1 day', strtotime( current_time( 'mysql' ) ) ) );
@@ -486,6 +490,7 @@ function erp_ac_dashboard_expense_chart() {
         'output_by'  => 'array'
     ];
 
+    $expense_args        = apply_filters( 'erp_ac_expense_pie_chart',  $expense_args );
     $expenses            = erp_ac_get_all_transaction( $expense_args );
     $expense_ledger_attr = erp_ac_get_ledger_by_class_id( 3 );
     $expense_ledgers     = wp_list_pluck( $expense_ledger_attr, 'id' );
