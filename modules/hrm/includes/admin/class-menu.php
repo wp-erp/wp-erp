@@ -131,6 +131,7 @@ class Admin_Menu {
         $template = apply_filters( 'erp_hr_employee_my_profile_templates', $template, $action, $id );
 
         if ( file_exists( $template ) ) {
+            $is_my_profile_page = true;
             include $template;
         }
     }
