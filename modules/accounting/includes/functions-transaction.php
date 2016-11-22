@@ -113,6 +113,8 @@ function erp_ac_get_all_transaction( $args = array() ) {
 
         if ( isset( $args['id'] ) && ! empty( $args['id'] ) ) {
             $transaction = $transaction->where( 'id', '=', $args['id'] );
+        } else {
+            $transaction = $transaction->type( $args['type'] );
         }
 
         if ( isset( $args['groupby'] ) && ! empty( $args['groupby'] ) ) {
@@ -121,8 +123,7 @@ function erp_ac_get_all_transaction( $args = array() ) {
                 $transaction = $transaction->skip( $args['offset'] )->take( $args['number'] );
             }
 
-            $items = $transaction->type( $args['type'] )
-                ->orderBy( $args['orderby'], $args['order'] )
+            $items = $transaction->orderBy( $args['orderby'], $args['order'] )
                 ->orderBy( 'created_at', $args['order'] )
                 ->get()
                 ->groupBy( $args['groupby'] )
@@ -133,12 +134,10 @@ function erp_ac_get_all_transaction( $args = array() ) {
                 $transaction = $transaction->skip( $args['offset'] )->take( $args['number'] );
             }
 
-            $items = $transaction->type( $args['type'] )
-                ->orderBy( $args['orderby'], $args['order'] )
+            $items = $transaction->orderBy( $args['orderby'], $args['order'] )
                 ->orderBy( 'created_at', $args['order'] )
                 ->get()
                 ->toArray();
-
         }
 
         if ( $args['output_by'] == 'object' ) {
@@ -185,20 +184,29 @@ function erp_ac_get_transaction_count( $args, $user_id = 0 ) {
  *
  * @return array
  */
-function erp_ac_get_transaction( $id = 0 ) {
-    $cache_key   = 'erp-ac-transaction' . $id;
-    $transaction = wp_cache_get( $cache_key, 'erp' );
-    $results     = [];
-
-    if ( false === $transaction ) {
-        $transaction = WeDevs\ERP\Accounting\Model\Transaction::find( $id ); //->toArray();
-
-        if ( ! empty( $transaction ) ) {
-            $results = $transaction->toArray();
-        }
+function erp_ac_get_transaction( $id = 0, $args = [] ) {
+    if ( ! intval( $id ) ) {
+        return false;
     }
 
-    return $results;
+    $args['id']        = $id;
+    $args['output_by'] = isset( $args['output_by'] ) && ! empty( $args['output_by'] ) ? $args['output_by'] : 'array';
+    $cache_key         = 'erp-ac-transaction' . md5( serialize( $args ) );
+    $transaction       = wp_cache_get( $cache_key, 'erp' );
+
+    if ( false === $transaction ) {
+        $transaction = erp_ac_get_all_transaction( $args );
+        $transaction = reset( $transaction );
+
+        wp_cache_set( $cache_key, $transaction, 'erp' );
+        // $transaction = WeDevs\ERP\Accounting\Model\Transaction::find( $id ); //->toArray();
+
+        // if ( ! empty( $transaction ) ) {
+        //     $transaction = $transaction->toArray();
+        // }
+    }
+
+    return $transaction;
 }
 
 /**
