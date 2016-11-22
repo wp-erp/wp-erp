@@ -3013,8 +3013,6 @@ function erp_crm_sync_people_meta_data( $meta_id, $object_id, $meta_key, $_meta_
         return;
     }
 
-    error_log( print_r( $people_id, true ) );
-
     if ( in_array( $meta_key, $people_field ) ) {
         \WeDevs\ERP\Framework\Models\People::find( $people_id )->update( [ $meta_key => $_meta_value ] );
     }
