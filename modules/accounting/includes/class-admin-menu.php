@@ -426,8 +426,9 @@ class Admin_Menu {
                 break;
 
             case 'sales-tax':
-                $start = isset( $_GET['start'] ) ? $_GET['start'] : false;
-                $end   = isset( $_GET['end'] ) ? $_GET['end'] : false;
+
+                $start = isset( $_GET['start'] ) ? $_GET['start'] : date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+                $end   = isset( $_GET['end'] ) ? $_GET['end'] : date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
 
                 if ( isset( $_GET['action'] ) && intval( $_GET['id'] ) ) {
                     $tax_id  = $_GET['id'];

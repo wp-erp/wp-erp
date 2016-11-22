@@ -617,13 +617,9 @@ class Form_Handler {
      * @return  boolen
      */
     public function journal_entry() {
-
         if ( ! erp_ac_create_journal() ) {
             return new \WP_Error( 'error', __( 'You do not have sufficient permissions', 'erp' ) );
         }
-
-
-        global $wpdb;
 
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-ac-journal-entry' ) ) {
             die( __( 'Are you cheating?', 'erp' ) );
@@ -634,7 +630,6 @@ class Form_Handler {
         $summary      = isset( $_POST['summary'] ) ? sanitize_text_field( $_POST['summary'] ) : '';
         $debit_total  = isset( $_POST['debit_total'] ) ? floatval( $_POST['debit_total'] ) : 0.00;
         $credit_total = isset( $_POST['credit_total'] ) ? floatval( $_POST['credit_total'] ) : 0.00;
-        //$invoice      = $_POST['invoice'];
 
         if ( $debit_total < 0 || $credit_total < 0 ) {
             wp_die( __( 'Value can not be negative', 'erp' ) );
@@ -645,85 +640,31 @@ class Form_Handler {
         }
 
         $args = [
-            'type'            => 'journal',
-            'ref'             => $ref,
-            'summary'         => $summary,
-            'issue_date'      => $issue_date,
-            'total'           => $debit_total,
-            'conversion_rate' => 1,
-            'trans_total'     => $debit_total,
-            'invoice_number'  => 0,
-            'created_by'      => get_current_user_id(),
-            'created_at'      => current_time( 'mysql' )
+            'type'       => 'journal',
+            'ref'        => $ref,
+            'summary'    => $summary,
+            'issue_date' => $issue_date,
         ];
 
-        try {
-            $wpdb->query( 'START TRANSACTION' );
-
-            $transaction = new \WeDevs\ERP\Accounting\Model\Transaction();
-            $trans = $transaction->create( $args );
-
-            // if ( $trans->id ) {
-            //     erp_ac_update_invoice_number( 'journal' );
-            // }
-
-            if ( ! $trans->id ) {
-                throw new \Exception( __( 'Could not create transaction', 'erp' ) );
+        $items = [];
+        foreach ( $_POST['journal_account'] as $key => $account_id ) {
+            $debit  = floatval( $_POST['line_debit'][ $key ] );
+            $credit = floatval( $_POST['line_credit'][ $key ] );
+            if ( $debit ) {
+                $type   = 'debit';
+                $amount = $debit;
+            } else {
+                $type   = 'credit';
+                $amount = $credit;
             }
 
-            // insert items
-            $order = 1;
-            foreach ( $_POST['journal_account'] as $key => $account_id) {
-                $debit  = floatval( $_POST['line_debit'][ $key ] );
-                $credit = floatval( $_POST['line_credit'][ $key ] );
-
-                if ( $debit ) {
-                    $type   = 'debit';
-                    $amount = $debit;
-                } else {
-                    $type   = 'credit';
-                    $amount = $credit;
-                }
-
-                $journal = $trans->journals()->create([
-                    'ledger_id' => $account_id,
-                    'type'      => 'line_item',
-                    $type       => $amount
-                ]);
-
-                if ( ! $journal->id ) {
-                    throw new \Exception( __( 'Could not insert journal item', 'erp' ) );
-                }
-
-                $item = [
-                    'journal_id'  => $journal->id,
-                    'product_id'  => '',
-                    'description' => sanitize_text_field( $_POST['line_desc'][ $key ] ),
-                    'qty'         => 1,
-                    'unit_price'  => $amount,
-                    'discount'    => 0,
-                    'line_total'  => $amount,
-                    'order'       => $order,
-                ];
-
-                $trans_item = $trans->items()->create( $item );
-
-                if ( ! $trans_item->id ) {
-                    throw new \Exception( __( 'Could not insert transaction item', 'erp' ) );
-                }
-
-                $order++;
-            }
-
-            $wpdb->query( 'COMMIT' );
-
-        } catch (Exception $e) {
-            $wpdb->query( 'ROLLBACK' );
-
-            wp_die( $e->getMessage() );
+            $items[] = [
+                'ledger_id' => (int) $account_id,
+                $type       => $amount,
+            ];
         }
 
-        do_action( 'erp_ac_new_journal', $trans->id, $args, $_POST );
+        erp_ac_new_journal( $args, $items );
 
         $location = admin_url( 'admin.php?page=erp-accounting-journal&msg=success' );
         wp_redirect( $location );

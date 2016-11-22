@@ -33,7 +33,7 @@ if ( $hook == 'accounting_page_erp-accounting-sales'  ) {
             continue;
         }
 
-        if ( $current_time > $transaction['due_date'] && $transaction['due'] > 0 ) {
+        if ( ( date( 'Y-m-d', strtotime( $current_time ) ) > date( 'Y-m-d', strtotime( $transaction['due_date'] ) ) )  && $transaction['due'] > 0 ) {
             $overdue     = $overdue + 1;
         }
 
@@ -41,11 +41,16 @@ if ( $hook == 'accounting_page_erp-accounting-sales'  ) {
             $paid = $paid + 1;
         }
 
-        if ( $current_time <= $transaction['due_date'] && 'partial' == $transaction['status'] ) {
+        if ( 'partial' == $transaction['status'] ) {
             $partial  = $partial + 1;
         }
 
-        $received    = $received + ( $transaction['trans_total'] - $transaction['due'] );
+        if ( $transaction['status'] == 'partial' ) {
+            $received = $received + $transaction['due'];
+        } else if ( $transaction['status'] != 'draft' ) {
+            $received = $received + $transaction['trans_total'];
+        }
+
         $outstanding = $transaction['due'] + $outstanding;
 
     }
@@ -114,7 +119,7 @@ if ( $hook == 'accounting_page_erp-accounting-sales'  ) {
             continue;
         }
 
-        if ( $current_time > $transaction['due_date'] && $transaction['due'] > 0 ) {
+        if ( ( date( 'Y-m-d', strtotime( $current_time ) ) > date( 'Y-m-d', strtotime( $transaction['due_date'] ) ) ) && $transaction['due'] > 0 ) {
             $overdue  = $overdue + 1;
         }
 
@@ -122,11 +127,16 @@ if ( $hook == 'accounting_page_erp-accounting-sales'  ) {
             $expense = $expense + 1;
         }
 
-        if ( $current_time <= $transaction['due_date'] && 'partial' == $transaction['status'] ) {
+        if ( 'partial' == $transaction['status'] ) {
             $partial  = $partial + 1;
         }
 
-        $received = $received + ( $transaction['trans_total'] - $transaction['due'] );
+        if ( $transaction['status'] == 'partial' ) {
+            $received = $received + $transaction['due'];
+        } else if ( $transaction['status'] != 'draft' ) {
+            $received = $received + $transaction['trans_total'];
+        }
+
         $outstanding = $transaction['due'] + $outstanding;
     }
 
@@ -195,7 +205,7 @@ if ( $hook == 'accounting_page_erp-accounting-sales'  ) {
 
         $outstanding = $transaction['due'] + $outstanding;
 
-        if ( $current_time > $transaction['due_date'] && $transaction['due'] > 0 ) {
+        if ( ( date( 'Y-m-d', strtotime( $current_time ) ) > date( 'Y-m-d', strtotime( $transaction['due_date'] ) ) ) && $transaction['due'] > 0 ) {
             $overdue     = $overdue + 1;
         }
 
@@ -203,11 +213,15 @@ if ( $hook == 'accounting_page_erp-accounting-sales'  ) {
             $paid = $paid + 1;
         }
 
-        if ( $current_time <= $transaction['due_date'] && 'partial' == $transaction['status'] ) {
+        if ( 'partial' == $transaction['status'] ) {
             $partial  = $partial + 1;
         }
 
-        $received = $received + ( $transaction['trans_total'] - $transaction['due'] );
+        if ( $transaction['status'] == 'partial' ) {
+            $received = $received + $transaction['due'];
+        } else if ( $transaction['status'] != 'draft' ) {
+            $received = $received + $transaction['trans_total'];
+        }
     }
 
     $payment_received[] = [
@@ -274,7 +288,7 @@ if ( $hook == 'accounting_page_erp-accounting-sales'  ) {
             continue;
         }
 
-        if ( $current_time > $transaction['due_date'] && $transaction['due'] > 0 ) {
+        if ( ( date( 'Y-m-d', strtotime( $current_time ) ) > date( 'Y-m-d', strtotime( $transaction['due_date'] ) ) ) && $transaction['due'] > 0 ) {
             $overdue  = $overdue + 1;
         }
 
@@ -282,11 +296,16 @@ if ( $hook == 'accounting_page_erp-accounting-sales'  ) {
             $expense = $expense + 1;
         }
 
-        if ( $current_time <= $transaction['due_date'] && 'partial' == $transaction['status'] ) {
+        if ( 'partial' == $transaction['status'] ) {
             $partial  = $partial + 1;
         }
 
-        $received    = $received + ( $transaction['trans_total'] - $transaction['due'] );
+        if ( $transaction['status'] == 'partial' ) {
+            $received = $received + $transaction['due'];
+        } else if ( $transaction['status'] != 'draft' ) {
+            $received = $received + $transaction['trans_total'];
+        }
+
         $outstanding = $transaction['due'] + $outstanding;
 
     }

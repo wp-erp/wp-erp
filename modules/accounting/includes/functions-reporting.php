@@ -154,7 +154,6 @@ function erp_ac_get_sales_tax_report_count( $args = [] ) {
 
 function erp_ac_normarlize_tax_from_transaction( $args = [] ) {
     $transactions = erp_ac_get_sales_tax_report( $args );
-
     $individual_info = [];
     $tax_info        = erp_ac_get_tax_info();
 
@@ -206,7 +205,7 @@ function erp_ac_normarlize_tax_from_transaction( $args = [] ) {
         $tax_unit_info[$tax_id]['expense']['rate']          = $tax_info[$tax_id]['rate'];
         $tax_unit_info[$tax_id]['expense']['tax_debit']     = array_sum( wp_list_pluck( $expense, 'tax_debit' ) );
         $tax_unit_info[$tax_id]['expense']['tax_credit']    = array_sum( wp_list_pluck( $expense, 'tax_credit' ) );
-        }
+    }
 
     return array( 'individuals' => $individual_info, 'units' => $tax_unit_info );
 }
