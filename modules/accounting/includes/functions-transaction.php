@@ -561,6 +561,106 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
 }
 
 /**
+ * Insert a new journal
+ *
+ * @since  1.1.7
+ *
+ * @param array $args
+ * @param array $items
+ *
+ * @return int/boolen
+ */
+function erp_ac_new_journal( $args = [], $items = [] ) {
+    global $wpdb;
+
+    $defaults = [
+        'type'            => 'journal',
+        'ref'             => '',
+        'issue_date'      => '',
+        'summary'         => '',
+        'total'           => 0,
+        'conversion_rate' => 1,
+        'trans_total'     => 0,
+        'invoice_number'  => 0,
+        'created_by'      => get_current_user_id(),
+        'created_at'      => current_time( 'mysql' )
+    ];
+
+    $args = wp_parse_args( $args, $defaults );
+
+    try {
+        $wpdb->query( 'START TRANSACTION' );
+
+        $transaction = new \WeDevs\ERP\Accounting\Model\Transaction();
+
+        $args['sub_total'] = array_reduce( $items, function( $total, $item ) {
+            $amount = ( isset( $item['debit'] ) && $item['debit'] > 0 ) ? $item['debit'] : $item['credit'];
+
+            return $total + $amount;
+        } );
+
+        $args['trans_total'] = $args['sub_total'];
+        $args['total']       = $args['trans_total'];
+
+        $trans = $transaction->create( $args );
+
+        if ( ! $trans->id ) {
+            throw new \Exception( __( 'Could not create transaction', 'erp' ) );
+        }
+
+        $transaction_items = [];
+
+        $order = 1;
+        foreach ( $items as $item ) {
+            if ( isset( $item['debit'] ) && $item['debit'] > 0 ) {
+                $type   = 'debit';
+                $amount = $item['debit'];
+            } else {
+                $type   = 'credit';
+                $amount = $item['credit'];
+            }
+
+            $journal = $trans->journals()->create( [
+                'ledger_id' => $item['ledger_id'],
+                'type'      => 'line_item',
+                $type       => $amount
+            ] );
+
+            $transaction_item = [
+                'journal_id'  => $journal->id,
+                'description' => isset( $item['description'] ) ? $item['description'] : '',
+                'qty'         => 1,
+                'unit_price'  => $amount,
+                'discount'    => 0,
+                'line_total'  => $amount,
+                'order'       => $order,
+            ];
+
+            $trans_item = $trans->items()->create( $transaction_item );
+
+            if ( ! $trans_item->id ) {
+                throw new \Exception( __( 'Could not insert transaction item', 'erp' ) );
+            }
+
+            $order ++;
+        }
+
+        $wpdb->query( 'COMMIT' );
+
+        do_action( 'erp_ac_new_journal', $trans->id, $args, [] );
+
+        return $trans->id;
+
+    } catch (Exception $e) {
+        $wpdb->query( 'ROLLBACK' );
+
+        return new WP_error( 'final-exception', $e->getMessage() );
+    }
+
+    return false;
+}
+
+/**
  * Check validation before new transaction
  *
  * @param  array $args
