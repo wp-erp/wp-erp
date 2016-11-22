@@ -1000,8 +1000,8 @@ function erp_hr_leave_get_entitlements( $args = array() ) {
     $where = 'WHERE 1 = 1';
 
     if ( ! empty( $args['year'] ) ) {
-        $from_date = date( $args['year'].'-m-d H:i:s',  strtotime( erp_financial_start_date() ) );
-        $to_date   = date( $args['year'].'-m-d H:i:s',  strtotime( erp_financial_end_date() ) );
+        $from_date = date( 'Y-m-d H:i:s',  strtotime( erp_financial_start_date() ) );
+        $to_date   = date( 'Y-m-d H:i:s',  strtotime( erp_financial_end_date() ) );
         $where .= " AND en.from_date >= date('$from_date') AND en.to_date <= date('$to_date')";
     }
 
