@@ -117,28 +117,18 @@ function erp_ac_get_all_transaction( $args = array() ) {
             $transaction = $transaction->type( $args['type'] );
         }
 
-        if ( isset( $args['groupby'] ) && ! empty( $args['groupby'] ) ) {
-
-            if ( $args['number'] != -1 ) {
-                $transaction = $transaction->skip( $args['offset'] )->take( $args['number'] );
-            }
-
-            $items = $transaction->orderBy( $args['orderby'], $args['order'] )
-                ->orderBy( 'created_at', $args['order'] )
-                ->get()
-                ->groupBy( $args['groupby'] )
-                ->toArray();
-        } else {
-
-            if ( $args['number'] != -1 ) {
-                $transaction = $transaction->skip( $args['offset'] )->take( $args['number'] );
-            }
-
-            $items = $transaction->orderBy( $args['orderby'], $args['order'] )
-                ->orderBy( 'created_at', $args['order'] )
-                ->get()
-                ->toArray();
+        if ( $args['number'] != -1 ) {
+            $transaction = $transaction->skip( $args['offset'] )->take( $args['number'] );
         }
+
+        if ( isset( $args['groupby'] ) && ! empty( $args['groupby'] ) ) {
+            $transaction = $transaction->groupBy( $args['groupby'] );
+        }
+
+        $items = $transaction->orderBy( $args['orderby'], $args['order'] )
+            ->orderBy( 'created_at', $args['order'] )
+            ->get()
+            ->toArray();
 
         if ( $args['output_by'] == 'object' ) {
             $items = erp_array_to_object( $items );
