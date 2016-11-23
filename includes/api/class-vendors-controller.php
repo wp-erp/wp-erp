@@ -11,7 +11,7 @@ class Vendors_Controller extends REST_Controller {
      *
      * @var string
      */
-    protected $namespace = 'erp';
+    protected $namespace = 'erp/v1';
 
     /**
      * Route base.
