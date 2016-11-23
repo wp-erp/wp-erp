@@ -1,7 +1,7 @@
 <div class="wrap erp-ac-journal-entry erp-ac-form-wrap">
     <h2><?php _e( 'New Journal Entry', 'erp' ); ?></h2>
 
-    <form action="" method="post" class="erp-form" id="erp-journal-form">
+    <form action="" method="post" class="erp-form erp-ac-transaction-form" id="erp-journal-form">
 
         <ul class="erp-form-fields">
             <li class="erp-form-field row-ref">

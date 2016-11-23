@@ -72,10 +72,28 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
         return sprintf( '<a href="%1$s">%2$s</a> %3$s', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), erp_format_date( $item->issue_date ), $this->row_actions( $actions ) );
     }
 
+    /**
+     * Render the debit column
+     *
+     * @since  1.1.6
+     *
+     * @param  object  $item
+     *
+     * @return string
+     */
     function column_debit( $item ) {
         return empty( $item->debit ) ? '&#8212' : erp_ac_get_price( $item->debit, ['symbol' => false] );
     }
 
+    /**
+     * Render the credit column
+     *
+     * @since  1.1.6
+     *
+     * @param  object  $item
+     *
+     * @return string
+     */
     function column_credit( $item ) {
         return empty( $item->credit ) ? '&#8212' : erp_ac_get_price( $item->credit, ['symbol' => false] );
     }
