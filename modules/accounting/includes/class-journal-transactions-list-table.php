@@ -31,21 +31,6 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
 
 
     /**
-     * Render the issue date column
-     *
-     * @since  1.1.6
-     *
-     * @param  object  $item
-     *
-     * @return string
-     */
-    function column_issue_date( $item ) {
-
-            return sprintf( '<a href="%1$s">%2$s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), erp_format_date( $item->issue_date ) );
-
-    }
-
-    /**
      * Get the column names
      *
      * @return array
@@ -71,6 +56,22 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
         return $columns;
     }
 
+    /**
+     * Render the issue date column
+     *
+     * @since  1.1.6
+     *
+     * @param  object  $item
+     *
+     * @return string
+     */
+    function column_issue_date( $item ) {
+
+        $url   = admin_url( 'admin.php?page='.$this->slug.'&action=new&journal_id=' . $item->id );
+        $actions['edit'] = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Edit', 'erp' ) );
+        return sprintf( '<a href="%1$s">%2$s</a> %3$s', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), erp_format_date( $item->issue_date ), $this->row_actions( $actions ) );
+    }
+
     function column_debit( $item ) {
         return empty( $item->debit ) ? '&#8212' : erp_ac_get_price( $item->debit, ['symbol' => false] );
     }
@@ -88,16 +89,6 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
      */
     function column_balance( $item ) {
         $balance = 0;
-
-        // if ( in_array( $this->type_id, $this->chart_group['customer'] ) ) {
-        //     $balance =  ( $item->debit + $this->customer_prev_balance ) - $item->credit;
-        //     $this->customer_prev_balance = $balance;
-        // }
-
-        // if ( in_array( $this->type_id, $this->chart_group['vendor'] ) ) {
-        //     $balance =  ( $item->credit + $this->vendor_prev_balance ) - $item->debit;
-        //     $this->vendor_prev_balance = $balance;
-        // }
 
         $balance =  ( $item->debit + $this->account_prev_balance ) - $item->credit;
         $this->account_prev_balance = $balance;
