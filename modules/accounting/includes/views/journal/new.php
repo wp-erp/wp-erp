@@ -12,6 +12,7 @@
                     'type'  => 'text',
                     'class' => 'erp-ac-reference-field',
                     'addon' => '#',
+                    'value' => isset( $journal['ref'] ) ? $journal['ref'] : ''
                 ) );
                 ?>
             </li>
@@ -24,7 +25,7 @@
                     'required' => true,
                     'type'     => 'text',
                     'class'    => 'erp-date-field',
-                    'value'    => date( 'Y-m-d', current_time( 'timestamp' ) ),
+                    'value'    => isset( $journal['issue_date'] ) ? date( 'Y-m-d', strtotime( $journal['issue_date'] ) ) : date( 'Y-m-d', current_time( 'timestamp' ) ),
                 ) ); ?>
             </li>
             <li class="erp-form-field row-summary">
@@ -36,6 +37,7 @@
                     'type'        => 'textarea',
                     'placeholder' => __( 'Summary', 'erp' ),
                     'custom_attr' => array( 'rows' => 5, 'cols' => 30 ),
+                    'value'       => isset( $journal['summary'] ) ? $journal['summary'] : ''
                 ) ); ?>
             </li>
         </ul>
@@ -52,99 +54,86 @@
             </thead>
 
             <tbody>
-                <tr>
-                    <td class="col-chart">
-                        <?php
-                        $account = erp_ac_get_chart_dropdown();
-                        echo erp_ac_render_account_dropdown_html( $account, ['name' => 'journal_account[]'] );
 
-                        ?>
-                    </td>
-                    <td class="col-desc">
-                        <?php
-                        erp_html_form_input( array(
-                            'name'  => 'line_desc[]',
-                            'type'  => 'text'
-                        ) );
-                        ?>
-                    </td>
-                    <td class="col-amount">
-                        <?php
-                        erp_html_form_input( array(
-                            'name'        => 'line_debit[]',
-                            'type'        => 'text',
-                            'class'       => 'line_debit',
-                            'placeholder' => erp_ac_get_price_for_field( '0.00', ['symbol'=>false] )
-                        ) );
-                        ?>
-                    </td>
-                    <td class="col-amount">
-                        <?php
-                        erp_html_form_input( array(
-                            'name'        => 'line_credit[]',
-                            'type'        => 'text',
-                            'class'       => 'line_credit',
-                            'placeholder' => erp_ac_get_price_for_field( '0.00', ['symbol'=>false] )
-                        ) );
-                        ?>
-                    </td>
-                    <td class="col-action">
-                        <a href="#" class="remove-line"><span class="dashicons dashicons-trash"></span></a>
-                        <a href="#" class="move-line"><span class="dashicons dashicons-menu"></span></a>
-                    </td>
-                </tr>
+            <?php
+                $items        = isset( $journal['journals'] ) && count( $journal['journals'] ) ? $journal['journals'] : [1,2];
+                $line_item    = isset( $journal['items'] ) ? $journal['items'] : [];
+                $total_debit  = 0;
+                $total_credit = 0;
 
-                <tr>
-                    <td class="col-chart">
-                        <?php
-                        $account = erp_ac_get_chart_dropdown();
-                        echo erp_ac_render_account_dropdown_html( $account, ['name' => 'journal_account[]'] );
+                foreach ( $items as $key => $item ) {
+                    ?>
+                    <tr>
+                        <td class="col-chart">
+                            <?php
+                            $account = erp_ac_get_chart_dropdown();
+                            echo erp_ac_render_account_dropdown_html( $account, [
+                                    'name' => 'journal_account[]',
+                                    'selected' => isset( $item['ledger_id'] ) ? $item['ledger_id'] : ''
+                                ] );
 
-                        ?>
-                    </td>
-                    <td class="col-desc">
-                        <?php
-                        erp_html_form_input( array(
-                            'name'  => 'line_desc[]',
-                            'type'  => 'text'
-                        ) );
-                        ?>
-                    </td>
-                    <td class="col-amount">
-                        <?php
-                        erp_html_form_input( array(
-                            'name'        => 'line_debit[]',
-                            'type'        => 'text',
-                            'class'       => 'line_debit',
-                            'placeholder' => erp_ac_get_price_for_field( '0.00', ['symbol'=>false] )
-                        ) );
-                        ?>
-                    </td>
-                    <td class="col-amount">
-                        <?php
-                        erp_html_form_input( array(
-                            'name'        => 'line_credit[]',
-                            'type'        => 'text',
-                            'class'       => 'line_credit',
-                            'placeholder' => erp_ac_get_price_for_field( '0.00', ['symbol'=>false] )
-                        ) );
-                        ?>
-                    </td>
-                    <td class="col-action">
-                        <a href="#" class="remove-line"><span class="dashicons dashicons-trash"></span></a>
-                        <a href="#" class="move-line"><span class="dashicons dashicons-menu"></span></a>
-                    </td>
-                </tr>
+                            ?>
+                        </td>
+                        <td class="col-desc">
+                            <?php
+                            erp_html_form_input( array(
+                                'name'  => 'line_desc[]',
+                                'type'  => 'text',
+                                'value' => isset( $line_item[$key]['description'] ) ? $line_item[$key]['description'] : '',
+                            ) );
+                            ?>
+                        </td>
+                        <td class="col-amount">
+                            <?php
+                            erp_html_form_input( array(
+                                'name'        => 'line_debit[]',
+                                'type'        => 'text',
+                                'class'       => 'line_debit',
+                                'placeholder' => erp_ac_get_price_for_field( '0.00', ['symbol'=>false] ),
+                                'value'       => isset( $item['debit'] ) ? erp_ac_get_price_for_field( $item['debit'], ['symbol'=>false] ) : ''
+                            ) );
+                            ?>
+                        </td>
+                        <td class="col-amount">
+                            <?php
+                            erp_html_form_input( array(
+                                'name'        => 'line_credit[]',
+                                'type'        => 'text',
+                                'class'       => 'line_credit',
+                                'placeholder' => erp_ac_get_price_for_field( '0.00', ['symbol'=>false] ),
+                                'value'       => isset( $item['credit'] ) ? erp_ac_get_price_for_field( $item['credit'], ['symbol'=>false] ) : ''
+                            ) );
+                            ?>
+                        </td>
+                        <td class="col-action">
+                            <a href="#" class="remove-line"><span class="dashicons dashicons-trash"></span></a>
+                            <!-- <a href="#" class="move-line"><span class="dashicons dashicons-menu"></span></a> -->
+                        </td>
+                    </tr>
+
+                    <?php
+                    $debit        = isset( $item['debit'] ) ? $item['debit'] : 0;
+                    $credit       = isset( $item['credit'] ) ? $item['credit'] : 0;
+                    $total_debit  = $total_debit + $debit;
+                    $total_credit = $total_credit + $credit;
+                }
+
+                $total_debit = $total_debit > 0 ? erp_ac_get_price_for_field( $total_debit, ['symbol'=>false] ) : erp_ac_get_price_for_field( '0.00', ['symbol'=>false] );
+                $total_credit = $total_credit > 0 ? erp_ac_get_price_for_field( $total_credit, ['symbol'=>false] ) : erp_ac_get_price_for_field( '0.00', ['symbol'=>false] );
+
+
+            ?>
+
             </tbody>
             <tfoot>
                 <tr>
                     <th><a href="#" class="button add-line"><?php _e( '+ Add Line', 'erp' ); ?></a></th>
                     <th class="align-right"><?php _e( 'Total', 'erp' ); ?></th>
                     <th class="col-amount">
-                        <input type="text" name="debit_total" class="debit-price-total" readonly value="<?php echo erp_ac_get_price_for_field( '0.00', ['symbol'=>false] ); ?>">
+                        <input type="text" name="debit_total" class="debit-price-total" readonly value="<?php echo $total_debit; ?>">
                     </th>
                     <th class="col-amount">
-                        <input type="text" name="credit_total" class="credit-price-total" readonly value="<?php echo erp_ac_get_price_for_field( '0.00', ['symbol'=>false] ); ?>">
+                        <input type="text" name="credit_total" class="credit-price-total" readonly value="<?php echo $total_credit; ?>">
                     </th>
                     <th class="col-diff"><?php echo erp_ac_get_price_for_field( '0.00', ['symbol'=>false] ); ?></th>
                 </tr>

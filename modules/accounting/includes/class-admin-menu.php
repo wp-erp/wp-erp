@@ -485,6 +485,16 @@ class Admin_Menu {
 
             case 'new':
                 if ( erp_ac_create_journal() ) {
+                    $journal_id = isset( $_GET['journal_id'] ) ? intval( $_GET['journal_id'] ) : false;
+                    $journal    = [];
+
+                    if ( $journal_id ) {
+                        $journal = erp_ac_get_transaction( $journal_id, [
+                            'join' => ['journals', 'items'],
+                            'type' => 'journal'
+                        ]);
+                    }
+var_dump( $journal );
                     $template = dirname( __FILE__ ) . '/views/journal/new.php';
                 }
                 break;
