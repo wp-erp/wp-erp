@@ -458,83 +458,20 @@ function erp_insert_people( $args = array() ) {
 
     // check if a valid people type exists in the database
     if ( null === $type_obj ) {
-        $errors[] = new WP_Error( 'no-type_found', __( 'The people type is invalid.', 'erp' ) );
+        return new WP_Error( 'no-type_found', __( 'The people type is invalid.', 'erp' ) );
     }
 
     // if an empty type provided
     if ( '' == $people_type ) {
-        $errors[] = new WP_Error( 'no-type', __( 'No user type provided.', 'erp' ) );
+        return new WP_Error( 'no-type', __( 'No user type provided.', 'erp' ) );
     }
-
-
-
-    $errors[] = apply_filters( 'erp_people_validation_error', $errors );
-
-    if ( !empty( $errors ) ) {
-        return $errors;
-    }
-
-    if ( ! $row_id ) {
-        // insert either as wp user or new people
-
-        if ( $args['user_id'] ) {
-             $user = \get_user_by( 'id', $args['user_id'] );
-        } else {
-             $user = \get_user_by( 'email', $args['email'] );
-        }
-
-        //check for duplicate user
-        if ( $user ) {
-            $people_obj = \WeDevs\ERP\Framework\Models\People::where( 'user_id', $user->ID )->first();
-
-            // Check if exist in wp user table but not people table
-            if ( null == $people_obj ) {
-                $args['user_id'] = $user->ID;
-                $args['email'] = $user->user_email;
-                $args['first_name'] = $user
-            } else {
-                $people_id = $people_obj->id;
-            }
-
-            $new_people = \WeDevs\ERP\Framework\Models\People::create( [ 'user_id' => $user->ID, 'created_by' => get_current_user_id(), 'created' => current_time('mysql') ] );
-            $new_people->assignType( $type_obj );
-            $people_id = $new_people->id;
-            $args['wp_user'] = $user;
-
-            do_action( 'erp_create_new_people', $people_id, $args );
-
-            return $people_id;
-
-        } else {
-            $people_obj = \WeDevs\ERP\Framework\Models\People::whereEmail( $args['email'] )->first();
-
-            // Check already email exist in contact table
-            if ( null !== $people_obj ) {
-
-                // Check if person found, then check is same type person or not
-                if ( $people_obj->hasType( $people_type ) ) {
-                    return new WP_Error( 'type-exist', sprintf( __( 'This %s already exists.', 'erp' ), $people_type ) );
-                } else {
-                    $people_obj->assignType( $people_type );
-                    return $people_obj->id;
-                }
-            }
-        }
-
-    } else {
-        // Udpate either as wp usr or people
-    }
-
 
     if ( 'contact' == $people_type ) {
         if ( empty( $args['user_id'] ) ) {
             // some basic validation
-            // Check if contact first name and last name provide or not
-            if ( empty( $args['first_name'] ) ) {
-                return new WP_Error( 'no-first_name', __( 'No First Name provided.', 'erp' ) );
-            }
-            if ( empty( $args['last_name'] ) ) {
-                return new WP_Error( 'no-last_name', __( 'No Last Name provided.', 'erp' ) );
+            // Check if contact first name or last name provide or not
+            if ( empty( $args['first_name'] ) && empty( $args['phone'] ) && empty( $args['email'] ) ) {
+                return new WP_Error( 'no-basic-data', __( 'You must need to fillup either first name or phone or email', 'erp' ) );
             }
         }
     }
@@ -551,76 +488,103 @@ function erp_insert_people( $args = array() ) {
         return new WP_Error( 'invalid-email', __( 'Please provide a valid email address', 'erp' ) );
     }
 
+    $errors = apply_filters( 'erp_people_validation_error', [], $args );
+
+    if ( !empty( $errors ) ) {
+        return $errors;
+    }
 
     if ( ! $row_id ) {
-
-        $type_obj = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $people_type )->first();
-
-        // check if a valid people type exists in the database
-        if ( null === $type_obj ) {
-            return new WP_Error( 'no-type_found', __( 'The people type is invalid.', 'erp' ) );
-        }
-
-        // if an empty type provided
-        if ( '' == $people_type ) {
-            return new WP_Error( 'no-type', __( 'No user type provided.', 'erp' ) );
-        }
+        // insert either as wp user or new people
 
         if ( $args['user_id'] ) {
-             $user = \get_user_by( 'id', $args['user_id'] );
+            $user = \get_user_by( 'id', $args['user_id'] );
         } else {
-             $user = \get_user_by( 'email', $args['email'] );
+            $user = \get_user_by( 'email', $args['email'] );
         }
 
-        //check for duplicate user
+
+        // check if data is alreayd wp user or not
         if ( $user ) {
             $people_obj = \WeDevs\ERP\Framework\Models\People::where( 'user_id', $user->ID )->first();
 
+
             // Check if exist in wp user table but not people table
             if ( null == $people_obj ) {
-                $new_people = \WeDevs\ERP\Framework\Models\People::create( [ 'user_id' => $user->ID, 'created_by' => get_current_user_id(), 'created' => current_time('mysql') ] );
-                $new_people->assignType( $type_obj );
-                $people_id = $new_people->id;
+                // Then fetch all data from wp users and insert into people and people meta table
+                $main = [];
+                $meta = [];
+                $people_field      = erp_get_people_main_field();
+                $people_meta_field = erm_crm_get_contact_meta_fileds();
+
+                $people_fields = array_merge( $people_field, $people_meta_field );
+
+                if( ( $key = array_search('user_id', $people_fields ) ) !== false ) {
+                    unset( $people_fields[$key] );
+                }
+
+                $userdata = \WeDevs\ORM\WP\UserMeta::where( 'user_id', $user->ID )->whereIn( 'meta_key', $people_fields )->get()->toArray();
+
+                foreach ( $userdata as $key => $value ) {
+                    unset( $value['umeta_id' ], $value['user_id'] );
+                    if ( in_array( $value['meta_key'], $people_field ) ) {
+                        $main[] = $value;
+                    } else {
+                        $meta[] = $value;
+                    }
+                }
+
+                $main_field_data = wp_list_pluck( $main, 'meta_value', 'meta_key' );
+                $main_field_data['user_id'] = $user->ID;
+                $main_field_data['email'] = $user->user_email;
+                $main_field_data['website'] = $user->user_url;
+                $main_field_data['created'] = current_time( 'mysql' );
+
+                $people = \WeDevs\ERP\Framework\Models\People::create( $main_field_data );
+                $people->assignType( $type_obj );
+
+                $new_meta = [];
+                if ( $people->id ) {
+                    $meta = array_map( function( $item ) use( $people ) {
+                        $item['erp_people_id'] = $people->id;
+                        return $item;
+                    }, $meta );
+
+                    \WeDevs\ERP\Framework\Models\Peoplemeta::insert( $meta );
+                    return $people->id;
+                }
+
             } else {
-                $people_id = $people_obj->id;
+                // return error or message people alreay exist in people table
+                return new WP_Error( 'already-wpuser-exist', __( 'This user already exist as a people', 'erp' ) );
             }
 
-            $args['wp_user'] = $user;
-
-            do_action( 'erp_create_new_people', $people_id, $args );
-
-            return $people_id;
-
         } else {
+            // So the people is not wp user. That's why we process those data into people table
             $people_obj = \WeDevs\ERP\Framework\Models\People::whereEmail( $args['email'] )->first();
 
             // Check already email exist in contact table
-            if ( null !== $people_obj ) {
-
-                // Check if person found, then check is same type person or not
+            if ( null != $people_obj ) {
+                // Yes people alreayd exist with this email
                 if ( $people_obj->hasType( $people_type ) ) {
-                    return new WP_Error( 'type-exist', sprintf( __( 'This %s already exists.', 'erp' ), $people_type ) );
+                    // Yes applicable type exist for this people so throw an error
+                    return new WP_Error( 'type-exist', sprintf( __( 'This %s people already exists.', 'erp' ), $people_type ) );
                 } else {
+                    // Not found this type so assign a applicable type
                     $people_obj->assignType( $people_type );
                     return $people_obj->id;
                 }
+            } else {
+                $args['created'] = current_time( 'mysql' );
+                // insert a new
+                $people = \WeDevs\ERP\Framework\Models\People::create( $args );
+                $people->assignType( $type_obj );
+                return $people->id;
             }
         }
 
-        $args['created'] = current_time( 'mysql' );
-
-        // insert a new
-        $people = WeDevs\ERP\Framework\Models\People::create( $args );
-        $people->assignType( $type_obj );
-
-        do_action( 'erp_create_new_people', $people->id, $args );
-
-        if ( $people->id ) {
-            return $people->id;
-        }
-
     } else {
-
+        // Update people or wp_user
         // Check if WP user or not. If WP user, then handle those data into users and usermeta table
         if ( $args['user_id'] ) {
             $user_id = wp_update_user( [
@@ -640,7 +604,6 @@ function erp_insert_people( $args = array() ) {
                     update_user_meta( $user_id, $key, $arg );
                 }
             }
-
         } else {
             // Not a WP user, so simply handle those data into peoples and peoplemeta table
             // do update method here

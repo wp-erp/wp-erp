@@ -38,7 +38,6 @@
                                 'name'        => 'first_name',
                                 'id'          => 'first_name',
                                 'value'       => '{{ data.first_name }}',
-                                'required'    => true,
                                 'custom_attr' => array( 'maxlength' => 30 )
                             ) ); ?>
                         </li>
@@ -48,7 +47,6 @@
                                 'name'        => 'last_name',
                                 'id'          => 'last_name',
                                 'value'       => '{{ data.last_name }}',
-                                'required'    => true,
                                 'custom_attr' => array( 'maxlength' => 30 )
                             ) ); ?>
                         </li>
@@ -61,7 +59,6 @@
                         'name'        => 'company',
                         'id'          => 'company',
                         'value'       => '{{ data.company }}',
-                        'required'    => true,
                         'custom_attr' => array( 'maxlength' => 30 )
                     ) ); ?>
                 </li>
@@ -76,7 +73,6 @@
                     'name'     => 'email',
                     'value'    => '{{ data.email }}',
                     'id'       => 'erp-crm-new-contact-email',
-                    'required' => true,
                     'type'     => 'email'
                 ) ); ?>
             </li>
