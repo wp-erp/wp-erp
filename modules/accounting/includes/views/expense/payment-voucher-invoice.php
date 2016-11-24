@@ -1,4 +1,4 @@
-<table class="wp-list-table widefat fixed striped widefat erp-ac-transaction-table" style="margin: 20px 0;">
+<table class="wp-list-table widefat fixed striped widefat erp-ac-transaction-table">
     <thead>
         <tr>
             <th class="col-ac"><?php _e( 'Voucher ID', 'erp' ); ?></th>

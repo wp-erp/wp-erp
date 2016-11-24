@@ -1,4 +1,4 @@
-<table class="wp-list-table widefat fixed striped erp-ac-transaction-table" style="margin: 20px 0;">
+<table class="wp-list-table widefat fixed striped erp-ac-transaction-table">
     <thead>
         <tr>
             <th class="col-ac"><?php _e( 'Invoice ID', 'erp' ); ?></th>
