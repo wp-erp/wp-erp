@@ -603,8 +603,10 @@ function erp_ac_new_journal( $args = [], $items = [] ) {
         if ( intval( $args['id'] ) ) {
             $id  = $args['id'];
             unset( $args['id'] );
+
             $trans = $transaction->find( $id );
-            $transaction->update( $args );
+            $trans->update( $args );
+
         } else {
             $trans = $transaction->create( $args );
         }
@@ -627,8 +629,8 @@ function erp_ac_new_journal( $args = [], $items = [] ) {
             }
 
             if ( intval( $item['journal_id'] ) ) {
-                $journal = $trans->journals()->fiind( $item['journal_id'] );
-                $trans->update( [
+                $journal = $trans->journals()->find( $item['journal_id'] );
+                $journal->update( [
                         'ledger_id' => $item['ledger_id'],
                         'type'      => 'line_item',
                         $type       => $amount
@@ -655,7 +657,8 @@ function erp_ac_new_journal( $args = [], $items = [] ) {
 
             if ( intval( $item['item_id'] ) ) {
                 $trans_item = $trans->items()->find($item['item_id']);
-                $trans->update( $transaction_item );
+                $trans_item->update( $transaction_item );
+
             } else {
                 $trans_item = $trans->items()->create( $transaction_item );
             }
