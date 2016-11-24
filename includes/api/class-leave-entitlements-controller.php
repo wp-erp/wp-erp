@@ -135,8 +135,7 @@ class Leave_Entitlements_Controller extends REST_Controller {
     public function delete_entitlement( $request ) {
         $id = (int) $request['id'];
 
-        $entitlement = \WeDevs\ERP\HRM\Models\Leave_Entitlement::find( $id );
-
+        $item        = \WeDevs\ERP\HRM\Models\Leave_Entitlement::find( $id );
         $employee_id = (int) $item->user_id;
         $policy_id   = (int) $item->policy_id;
 
@@ -241,13 +240,41 @@ class Leave_Entitlements_Controller extends REST_Controller {
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'name'        => [
-                    'description' => __( 'Name for the resource.' ),
+                'employee_id'          => [
+                    'description' => __( 'Employee id for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'required'    => true,
+                ],
+                'policy'          => [
+                    'description' => __( 'Policy for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'required'    => true,
+                ],
+                'days'            => [
+                    'description' => __( 'Days for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'required'    => true,
+                ],
+                'start_date'      => [
+                    'description' => __( 'Start date for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
+                    'required'    => true,
+                ],
+                'end_date'        => [
+                    'description' => __( 'End date for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
                 ],
             ],
         ];

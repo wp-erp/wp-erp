@@ -344,6 +344,21 @@ class Leave_Policies_Controller extends REST_Controller {
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
+                    'required'    => true,
+                ],
+                'days'        => [
+                    'description' => __( 'Days for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'required'    => true,
+                ],
+                'color'       => [
+                    'description' => __( 'Color for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
                 ],
             ],
         ];

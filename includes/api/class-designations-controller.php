@@ -183,8 +183,8 @@ class Designations_Controller extends REST_Controller {
         $prepared_item = [];
 
         // required arguments.
-        if ( isset( $request['name'] ) ) {
-            $prepared_item['title'] = $request['name'];
+        if ( isset( $request['title'] ) ) {
+            $prepared_item['title'] = $request['title'];
         }
 
         // optional arguments.
@@ -213,7 +213,7 @@ class Designations_Controller extends REST_Controller {
 
         $data = [
             'id'              => (int) $item->id,
-            'name'            => $item->title,
+            'title'           => $item->title,
             'description'     => $item->description,
             'total_employees' => $total_employees,
         ];
@@ -239,19 +239,20 @@ class Designations_Controller extends REST_Controller {
             'title'      => 'designation',
             'type'       => 'object',
             'properties' => [
-                'id'          => [
+                'id'            => [
                     'description' => __( 'Unique identifier for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'name'  => [
-                    'description' => __( 'Name for the resource.' ),
+                'title'         => [
+                    'description' => __( 'Title for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
+                    'required'    => true,
                 ],
                 'description'  => [
                     'description' => __( 'Description for the resource.' ),

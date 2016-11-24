@@ -224,12 +224,20 @@ class Contacts_Groups_Controller extends REST_Controller {
      * @return WP_Error|WP_REST_Request
      */
     public function subscribe_contact( $request ) {
-        $data = [
-            'group_id' => intval( $request['id'] ),
-            'user_id'  => intval( $request['contact_id'] ),
-        ];
+        if ( ! isset( $request['contact_ids'] ) || empty( $request['contact_ids'] ) ) {
+            return new WP_Error( 'rest_group_invalid_contact_ids', __( 'Required contact ids.' ), [ 'status' => 400 ] );
+        }
 
-        $result = erp_crm_create_new_contact_subscriber( $data );
+        $contact_ids = explode( ',', str_replace( ' ', '', $request['contact_ids'] ) );
+
+        foreach ( $contact_ids as $contact_id ) {
+            $data = [
+                'group_id' => intval( $request['id'] ),
+                'user_id'  => intval( $contact_id ),
+            ];
+
+            $result = erp_crm_create_new_contact_subscriber( $data );
+        }
 
         return new WP_REST_Response( true, 201 );
     }
@@ -297,5 +305,37 @@ class Contacts_Groups_Controller extends REST_Controller {
         $response = $this->add_links( $response, $item );
 
         return $response;
+    }
+
+    /**
+     * Get the User's schema, conforming to JSON Schema
+     *
+     * @return array
+     */
+    public function get_item_schema() {
+        $schema = [
+            '$schema'    => 'http://json-schema.org/draft-04/schema#',
+            'title'      => 'contact group',
+            'type'       => 'object',
+            'properties' => [
+                'id'     => [
+                    'description' => __( 'Unique identifier for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'readonly'    => true,
+                ],
+                'name'  => [
+                    'description' => __( 'Name for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
+                ],
+            ],
+        ];
+
+        return $schema;
     }
 }

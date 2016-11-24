@@ -274,27 +274,46 @@ class Announcements_Controller extends REST_Controller {
             'title'      => 'announcement',
             'type'       => 'object',
             'properties' => [
-                'id'          => [
+                'id'              => [
                     'description' => __( 'Unique identifier for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'title'       => [
+                'title'           => [
                     'description' => __( 'Title for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
+                    'required'    => true,
                 ],
-                'body'        => [
+                'body'            => [
                     'description' => __( 'Body for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
+                    'required'    => true,
+                ],
+                'status'          => [
+                    'description' => __( 'Status for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'recipient_type'  => [
+                    'description' => __( 'Recipient type for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
                 ],
             ],
         ];

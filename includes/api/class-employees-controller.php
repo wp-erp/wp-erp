@@ -42,6 +42,14 @@ class Employees_Controller extends REST_Controller {
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/bulk', [
+            [
+                'methods'  => WP_REST_Server::CREATABLE,
+                'callback' => [ $this, 'create_employees' ],
+            ],
+            'schema' => [ $this, 'get_public_item_schema' ],
+        ] );
+
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
             [
                 'methods'  => WP_REST_Server::READABLE,
@@ -214,6 +222,28 @@ class Employees_Controller extends REST_Controller {
         $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
 
         return $response;
+    }
+
+    /**
+     * Create employees
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Request
+     */
+    public function create_employees( $request ) {
+        $employees = json_decode( $request->get_body(), true );
+
+        foreach ( $employees as $employee ) {
+            $item = $this->prepare_item_for_database( $employee );
+            $id   = erp_hr_employee_create( $item );
+
+            if ( is_wp_error( $id ) ) {
+                return $id;
+            }
+        }
+
+        return new WP_REST_Response( true, 201 );
     }
 
     /**
@@ -502,45 +532,6 @@ class Employees_Controller extends REST_Controller {
     }
 
     /**
-     * Get the User's schema, conforming to JSON Schema
-     *
-     * @return array
-     */
-    public function get_item_schema() {
-        $schema = [
-            '$schema'    => 'http://json-schema.org/draft-04/schema#',
-            'title'      => 'department',
-            'type'       => 'object',
-            'properties' => [
-                'id'          => [
-                    'description' => __( 'Unique identifier for the resource.' ),
-                    'type'        => 'integer',
-                    'context'     => [ 'embed', 'view', 'edit' ],
-                    'readonly'    => true,
-                ],
-                'first_name'  => [
-                    'description' => __( 'First Name for the resource.' ),
-                    'type'        => 'string',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
-                ],
-                'last_name'  => [
-                    'description' => __( 'Last Name for the resource.' ),
-                    'type'        => 'string',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
-                ],
-            ],
-        ];
-
-        return $schema;
-    }
-
-    /**
      * Get a collection of employee's experiences
      *
      * @param WP_REST_Request $request
@@ -596,6 +587,22 @@ class Employees_Controller extends REST_Controller {
     public function create_experience( $request ) {
         $request['employee_id'] = $request['id'];
         unset( $request['id'] );
+
+        if ( ! isset( $request['company_name'] ) ) {
+            return new WP_Error( 'rest_experience_required_fields', __( 'Required company_name.' ), array( 'status' => 400 ) );
+        }
+
+        if ( ! isset( $request['job_title'] ) ) {
+            return new WP_Error( 'rest_experience_required_fields', __( 'Required job_title.' ), array( 'status' => 400 ) );
+        }
+
+        if ( ! isset( $request['from'] ) ) {
+            return new WP_Error( 'rest_experience_required_fields', __( 'Required from.' ), array( 'status' => 400 ) );
+        }
+
+        if ( ! isset( $request['to'] ) ) {
+            return new WP_Error( 'rest_experience_required_fields', __( 'Required to.' ), array( 'status' => 400 ) );
+        }
 
         $item       = $this->prepare_experience_for_database( $request );
         $experience = Work_Experience::create( $item );
@@ -779,6 +786,18 @@ class Employees_Controller extends REST_Controller {
     public function create_education( $request ) {
         $request['employee_id'] = $request['id'];
         unset( $request['id'] );
+
+        if ( ! isset( $request['school'] ) ) {
+            return new WP_Error( 'rest_experience_required_fields', __( 'Required school.' ), array( 'status' => 400 ) );
+        }
+
+        if ( ! isset( $request['degree'] ) ) {
+            return new WP_Error( 'rest_experience_required_fields', __( 'Required degree.' ), array( 'status' => 400 ) );
+        }
+
+        if ( ! isset( $request['field'] ) ) {
+            return new WP_Error( 'rest_experience_required_fields', __( 'Required field.' ), array( 'status' => 400 ) );
+        }
 
         $item      = $this->prepare_education_for_database( $request );
         $education = Education::create( $item );
@@ -968,6 +987,14 @@ class Employees_Controller extends REST_Controller {
         $request['employee_id'] = $request['id'];
         unset( $request['id'] );
 
+        if ( ! isset( $request['name'] ) ) {
+            return new WP_Error( 'rest_experience_required_fields', __( 'Required name.' ), array( 'status' => 400 ) );
+        }
+
+        if ( ! isset( $request['relation'] ) ) {
+            return new WP_Error( 'rest_experience_required_fields', __( 'Required relation.' ), array( 'status' => 400 ) );
+        }
+
         $item      = $this->prepare_dependent_for_database( $request );
         $dependent = Dependents::create( $item );
 
@@ -1082,5 +1109,213 @@ class Employees_Controller extends REST_Controller {
         $response = rest_ensure_response( $data );
 
         return $response;
+    }
+
+    /**
+     * Get the User's schema, conforming to JSON Schema
+     *
+     * @return array
+     */
+    public function get_item_schema() {
+        $schema = [
+            '$schema'    => 'http://json-schema.org/draft-04/schema#',
+            'title'      => 'employee',
+            'type'       => 'object',
+            'properties' => [
+                'id'          => [
+                    'description' => __( 'Unique identifier for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'readonly'    => true,
+                ],
+                'first_name'  => [
+                    'description' => __( 'First name for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
+                ],
+                'middle_name'  => [
+                    'description' => __( 'Middle name for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'last_name'   => [
+                    'description' => __( 'Last name for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
+                ],
+                'email'       => [
+                    'description' => __( 'The email address for the resource.' ),
+                    'type'        => 'string',
+                    'format'      => 'email',
+                    'context'     => [ 'edit' ],
+                    'required'    => true,
+                ],
+                'location'    => [
+                    'description' => __( 'Location for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'hiring_source' => [
+                    'description' => __( 'Hiring source for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'hiring_date'   => [
+                    'description' => __( 'Hiring date for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'date_of_birth' => [
+                    'description' => __( 'Date of birth for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'pay_rate' => [
+                    'description' => __( 'Pay rate for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'pay_type' => [
+                    'description' => __( 'Pay type for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'type'        => [
+                    'description' => __( 'Type for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
+                ],
+                'status'      => [
+                    'description' => __( 'Status for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
+                ],
+                'phone'       => [
+                    'description' => __( 'Phone for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'work_phone'   => [
+                    'description' => __( 'Work phone for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'mobile'      => [
+                    'description' => __( 'Mobile for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'other'       => [
+                    'description' => __( 'Other for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'user_url'    => [
+                    'description' => __( 'Website of the resource.' ),
+                    'type'        => 'string',
+                    'format'      => 'uri',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                ],
+                'street_1'        => [
+                    'description' => __( 'Street 1 of the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'street_2'        => [
+                    'description' => __( 'Street 1 of the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'city'            => [
+                    'description' => __( 'City of the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'state'           => [
+                    'description' => __( 'State of the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'postal_code'     => [
+                    'description' => __( 'Postal Code of the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'country'         => [
+                    'description' => __( 'Country of the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+            ],
+        ];
+
+        return $schema;
     }
 }

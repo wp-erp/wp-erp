@@ -38,6 +38,14 @@ class Contacts_Controller extends REST_Controller {
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/bulk', [
+            [
+                'methods'  => WP_REST_Server::CREATABLE,
+                'callback' => [ $this, 'create_contacts' ],
+            ],
+            'schema' => [ $this, 'get_public_item_schema' ],
+        ] );
+
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
             [
                 'methods'  => WP_REST_Server::READABLE,
@@ -142,7 +150,6 @@ class Contacts_Controller extends REST_Controller {
      */
     public function create_contact( $request ) {
         $item = $this->prepare_item_for_database( $request );
-
         $id   = erp_insert_people( $item );
 
         $contact = erp_get_people( $id );
@@ -154,6 +161,28 @@ class Contacts_Controller extends REST_Controller {
         $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
 
         return $response;
+    }
+
+    /**
+     * Create contacts
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Request
+     */
+    public function create_contacts( $request ) {
+        $contacts = json_decode( $request->get_body(), true );
+
+        foreach ( $contacts as $contact ) {
+            $item = $this->prepare_item_for_database( $contact );
+            $id   = erp_insert_people( $item );
+
+            if ( is_wp_error( $id ) ) {
+                return $id;
+            }
+        }
+
+        return new WP_REST_Response( true, 201 );
     }
 
     /**
@@ -355,6 +384,7 @@ class Contacts_Controller extends REST_Controller {
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
+                    'required'    => true,
                 ],
                 'last_name'   => [
                     'description' => __( 'Last name for the resource.' ),
@@ -363,6 +393,7 @@ class Contacts_Controller extends REST_Controller {
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
+                    'required'    => true,
                 ],
                 'email'       => [
                     'description' => __( 'The email address for the resource.' ),
@@ -496,6 +527,7 @@ class Contacts_Controller extends REST_Controller {
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
+                    'required'    => true,
                 ],
             ],
         ];

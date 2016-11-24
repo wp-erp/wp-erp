@@ -184,13 +184,17 @@ class Departments_Controller extends REST_Controller {
         $prepared_item = [];
 
         // required arguments.
-        if ( isset( $request['name'] ) ) {
-            $prepared_item['title'] = $request['name'];
+        if ( isset( $request['title'] ) ) {
+            $prepared_item['title'] = $request['title'];
         }
 
         // optional arguments.
         if ( isset( $request['id'] ) ) {
             $prepared_item['id'] = absint( $request['id'] );
+        }
+
+        if ( isset( $request['description'] ) ) {
+            $prepared_item['description'] = $request['description'];
         }
 
         if ( isset( $request['parent'] ) ) {
@@ -216,7 +220,8 @@ class Departments_Controller extends REST_Controller {
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $data = [
             'id'              => (int) $item->id,
-            'name'            => $item->name,
+            'title'           => $item->title,
+            'description'     => $item->description,
             'total_employees' => $item->num_of_employees()
         ];
 
@@ -243,37 +248,6 @@ class Departments_Controller extends REST_Controller {
     }
 
     /**
-     * Get the User's schema, conforming to JSON Schema
-     *
-     * @return array
-     */
-    public function get_item_schema() {
-        $schema = [
-            '$schema'    => 'http://json-schema.org/draft-04/schema#',
-            'title'      => 'department',
-            'type'       => 'object',
-            'properties' => [
-                'id'          => [
-                    'description' => __( 'Unique identifier for the resource.' ),
-                    'type'        => 'integer',
-                    'context'     => [ 'embed', 'view', 'edit' ],
-                    'readonly'    => true,
-                ],
-                'name'  => [
-                    'description' => __( 'Name for the resource.' ),
-                    'type'        => 'string',
-                    'context'     => [ 'edit' ],
-                    'arg_options' => [
-                        'sanitize_callback' => 'sanitize_text_field',
-                    ],
-                ],
-            ],
-        ];
-
-        return $schema;
-    }
-
-    /**
      * Get the parent of a department
      *
      * @param  object $item
@@ -291,8 +265,58 @@ class Departments_Controller extends REST_Controller {
 
         return [
             'id'     => $parent->id,
-            'name'   => $parent->name,
+            'title'  => $parent->title,
             '_links' => $this->prepare_links( $parent ),
         ];
+    }
+
+    /**
+     * Get the User's schema, conforming to JSON Schema
+     *
+     * @return array
+     */
+    public function get_item_schema() {
+        $schema = [
+            '$schema'    => 'http://json-schema.org/draft-04/schema#',
+            'title'      => 'department',
+            'type'       => 'object',
+            'properties' => [
+                'id'    => [
+                    'description' => __( 'Unique identifier for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'readonly'    => true,
+                ],
+                'title'  => [
+                    'description' => __( 'Title for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
+                ],
+                'description'  => [
+                    'description' => __( 'Description for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'parent' => [
+                    'description' => __( 'Parent for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'edit' ],
+                ],
+                'head'   => [
+                    'description' => __( 'Head for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'edit' ],
+                ],
+            ],
+        ];
+
+        return $schema;
     }
 }
