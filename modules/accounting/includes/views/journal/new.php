@@ -2,7 +2,6 @@
     <h2><?php _e( 'New Journal Entry', 'erp' ); ?></h2>
 
     <form action="" method="post" class="erp-form erp-ac-transaction-form" id="erp-journal-form">
-
         <ul class="erp-form-fields">
             <li class="erp-form-field row-ref">
                 <?php
@@ -28,6 +27,7 @@
                     'value'    => isset( $journal['issue_date'] ) ? date( 'Y-m-d', strtotime( $journal['issue_date'] ) ) : date( 'Y-m-d', current_time( 'timestamp' ) ),
                 ) ); ?>
             </li>
+
             <li class="erp-form-field row-summary">
                 <?php erp_html_form_input( array(
                     'label'       => __( 'Summary', 'erp' ),
@@ -54,13 +54,11 @@
             </thead>
 
             <tbody>
-
             <?php
 
                 $items = [];
 
                 foreach ( $journal['journals'] as $key => $value ) {
-
                     array_map( function( $item ) use ( $value, &$items ) {
 
                         if ( $item['journal_id'] == $value['id'] ) {
@@ -92,6 +90,7 @@
 
                             ?>
                         </td>
+
                         <td class="col-desc">
                             <?php
                             erp_html_form_input( array(
@@ -101,6 +100,7 @@
                             ) );
                             ?>
                         </td>
+
                         <td class="col-amount">
                             <?php
                             erp_html_form_input( array(
@@ -112,6 +112,7 @@
                             ) );
                             ?>
                         </td>
+
                         <td class="col-amount">
                             <?php
                             erp_html_form_input( array(
@@ -123,10 +124,12 @@
                             ) );
                             ?>
                         </td>
+
                         <td class="col-action">
                             <a href="#" class="remove-line"><span class="dashicons dashicons-trash"></span></a>
                             <!-- <a href="#" class="move-line"><span class="dashicons dashicons-menu"></span></a> -->
                         </td>
+
                         <?php
                         erp_html_form_input( array(
                             'name'  => 'journal_id[]',
@@ -153,8 +156,6 @@
 
                 $total_debit = $total_debit > 0 ? erp_ac_get_price_for_field( $total_debit, ['symbol'=>false] ) : erp_ac_get_price_for_field( '0.00', ['symbol'=>false] );
                 $total_credit = $total_credit > 0 ? erp_ac_get_price_for_field( $total_credit, ['symbol'=>false] ) : erp_ac_get_price_for_field( '0.00', ['symbol'=>false] );
-
-
             ?>
 
             </tbody>
@@ -173,7 +174,6 @@
             </tfoot>
         </table>
 
-
         <input type="hidden" name="erp-action" value="ac-new-journal-entry">
 
         <?php wp_nonce_field( 'erp-ac-journal-entry' ); ?>
@@ -181,3 +181,4 @@
 
     </form>
 </div>
+
