@@ -574,6 +574,7 @@ function erp_ac_new_journal( $args = [], $items = [] ) {
     global $wpdb;
 
     $defaults = [
+        'id'              => 0,
         'type'            => 'journal',
         'ref'             => '',
         'issue_date'      => '',
@@ -587,7 +588,7 @@ function erp_ac_new_journal( $args = [], $items = [] ) {
     ];
 
     $args = wp_parse_args( $args, $defaults );
-
+var_dump( $args ); die();
     try {
         $wpdb->query( 'START TRANSACTION' );
 
@@ -602,7 +603,11 @@ function erp_ac_new_journal( $args = [], $items = [] ) {
         $args['trans_total'] = $args['sub_total'];
         $args['total']       = $args['trans_total'];
 
-        $trans = $transaction->create( $args );
+        if ( intval( $args['id'] ) ) {
+            $trans = $transaction->update( $args );
+        } else {
+            $trans = $transaction->create( $args );
+        }
 
         if ( ! $trans->id ) {
             throw new \Exception( __( 'Could not create transaction', 'erp' ) );

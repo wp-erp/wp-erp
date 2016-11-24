@@ -57,6 +57,7 @@
             <?php
 
                 $items = [];
+                $journal['journals'] = isset( $journal['journals'] ) ? $journal['journals'] : [];
 
                 foreach ( $journal['journals'] as $key => $value ) {
                     array_map( function( $item ) use ( $value, &$items ) {
@@ -76,6 +77,8 @@
                     'type'  => 'hidden',
                     'value' => isset( $journal['id'] ) ? $journal['id'] : 0,
                 ) );
+
+                $items = count( $items ) ? $items : [1,2];
 
                 foreach ( $items as $key => $item ) {
                     ?>
