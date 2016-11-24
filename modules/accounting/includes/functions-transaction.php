@@ -574,21 +574,18 @@ function erp_ac_new_journal( $args = [], $items = [] ) {
     global $wpdb;
 
     $defaults = [
-        'id'              => 0,
         'type'            => 'journal',
         'ref'             => '',
         'issue_date'      => '',
         'summary'         => '',
-        'total'           => 0,
         'conversion_rate' => 1,
-        'trans_total'     => 0,
         'invoice_number'  => 0,
         'created_by'      => get_current_user_id(),
         'created_at'      => current_time( 'mysql' )
     ];
 
     $args = wp_parse_args( $args, $defaults );
-var_dump( $args ); die();
+
     try {
         $wpdb->query( 'START TRANSACTION' );
 
@@ -604,7 +601,10 @@ var_dump( $args ); die();
         $args['total']       = $args['trans_total'];
 
         if ( intval( $args['id'] ) ) {
-            $trans = $transaction->update( $args );
+            $id  = $args['id'];
+            unset( $args['id'] );
+            $trans = $transaction->find( $id );
+            $transaction->update( $args );
         } else {
             $trans = $transaction->create( $args );
         }
@@ -620,16 +620,28 @@ var_dump( $args ); die();
             if ( isset( $item['debit'] ) && $item['debit'] > 0 ) {
                 $type   = 'debit';
                 $amount = $item['debit'];
+
             } else {
                 $type   = 'credit';
                 $amount = $item['credit'];
             }
 
-            $journal = $trans->journals()->create( [
-                'ledger_id' => $item['ledger_id'],
-                'type'      => 'line_item',
-                $type       => $amount
-            ] );
+            if ( intval( $item['journal_id'] ) ) {
+                $journal = $trans->journals()->fiind( $item['journal_id'] );
+                $trans->update( [
+                        'ledger_id' => $item['ledger_id'],
+                        'type'      => 'line_item',
+                        $type       => $amount
+                    ]
+                );
+
+            } else {
+                $journal = $trans->journals()->create( [
+                    'ledger_id' => $item['ledger_id'],
+                    'type'      => 'line_item',
+                    $type       => $amount
+                ] );
+            }
 
             $transaction_item = [
                 'journal_id'  => $journal->id,
@@ -641,7 +653,12 @@ var_dump( $args ); die();
                 'order'       => $order,
             ];
 
-            $trans_item = $trans->items()->create( $transaction_item );
+            if ( intval( $item['item_id'] ) ) {
+                $trans_item = $trans->items()->find($item['item_id']);
+                $trans->update( $transaction_item );
+            } else {
+                $trans_item = $trans->items()->create( $transaction_item );
+            }
 
             if ( ! $trans_item->id ) {
                 throw new \Exception( __( 'Could not insert transaction item', 'erp' ) );
