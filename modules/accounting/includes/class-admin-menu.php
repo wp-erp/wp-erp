@@ -494,7 +494,7 @@ class Admin_Menu {
                             'type' => 'journal'
                         ]);
                     }
-var_dump( $journal );
+
                     $template = dirname( __FILE__ ) . '/views/journal/new.php';
                 }
                 break;

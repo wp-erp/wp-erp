@@ -56,10 +56,28 @@
             <tbody>
 
             <?php
-                $items        = isset( $journal['journals'] ) && count( $journal['journals'] ) ? $journal['journals'] : [1,2];
-                $line_item    = isset( $journal['items'] ) ? $journal['items'] : [];
+
+                $items = [];
+
+                foreach ( $journal['journals'] as $key => $value ) {
+
+                    array_map( function( $item ) use ( $value, &$items ) {
+
+                        if ( $item['journal_id'] == $value['id'] ) {
+                            $items[] = array_merge( $value, $item );
+                        }
+
+                    }, $journal['items'] );
+                }
+
                 $total_debit  = 0;
                 $total_credit = 0;
+
+                erp_html_form_input( array(
+                    'name'  => 'id',
+                    'type'  => 'hidden',
+                    'value' => isset( $journal['id'] ) ? $journal['id'] : 0,
+                ) );
 
                 foreach ( $items as $key => $item ) {
                     ?>
@@ -79,7 +97,7 @@
                             erp_html_form_input( array(
                                 'name'  => 'line_desc[]',
                                 'type'  => 'text',
-                                'value' => isset( $line_item[$key]['description'] ) ? $line_item[$key]['description'] : '',
+                                'value' => isset( $item['description'] ) ? $item['description'] : ''
                             ) );
                             ?>
                         </td>
@@ -109,6 +127,21 @@
                             <a href="#" class="remove-line"><span class="dashicons dashicons-trash"></span></a>
                             <!-- <a href="#" class="move-line"><span class="dashicons dashicons-menu"></span></a> -->
                         </td>
+                        <?php
+                        erp_html_form_input( array(
+                            'name'  => 'journal_id[]',
+                            'type'  => 'hidden',
+                            'value' => isset( $item['journal_id'] ) ? $item['journal_id'] : 0
+                        ) );
+                        ?>
+
+                        <?php
+                        erp_html_form_input( array(
+                            'name'  => 'item_id[]',
+                            'type'  => 'hidden',
+                            'value' => isset( $item['id'] ) ? $item['id'] : 0
+                        ) );
+                        ?>
                     </tr>
 
                     <?php

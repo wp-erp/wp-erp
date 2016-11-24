@@ -640,6 +640,7 @@ class Form_Handler {
         }
 
         $args = [
+            'id'         => isset( $_POST['id'] ) ? intval( $_POST['id'] ) : false,
             'type'       => 'journal',
             'ref'        => $ref,
             'summary'    => $summary,
@@ -661,6 +662,8 @@ class Form_Handler {
             }
 
             $items[] = [
+                'item_id'     => isset( $_POST['item_id'][ $key ] ) ? intval( $_POST['item_id'][ $key ] ) : false,
+                'journal_id'  => isset( $_POST['journal_id'][ $key ] ) ? intval( $_POST['journal_id'][ $key ] ) : false,
                 'ledger_id'   => (int) $account_id,
                 $type         => $amount,
                 'description' => $des
