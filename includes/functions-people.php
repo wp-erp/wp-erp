@@ -431,26 +431,25 @@ function erp_insert_people( $args = array() ) {
         'country'     => '',
         'currency'    => '',
         'type'        => '',
-        'user_id'     => 0,
-        'created_by'  => get_current_user_id(),
+        'user_id'     => 0
     );
 
     $args        = wp_parse_args( $args, $defaults );
-    $args        = wp_array_slice_assoc( $args, array_keys( $defaults ) );
     $errors      = [];
+    $args['created_by'] = get_current_user_id();
+
+    var_dump( $args ); die();
 
     $people_type = $args['type'];
 
     unset( $args['type'] );
 
-    /** New check for new people table mapping */
-
     // remove row id to determine if new or update
     if ( isset( $args['id'] ) ) {
-        $row_id = (int) $args['id'];
+        $id = (int) $args['id'];
         unset( $args['id'] );
     } else {
-        $row_id = null;
+        $id = null;
     }
 
     // Some validation
@@ -478,8 +477,8 @@ function erp_insert_people( $args = array() ) {
 
     // Check if company name provide or not
     if ( 'company' == $people_type ) {
-        if ( empty( $args['company'] ) ) {
-            return new WP_Error( 'no-company', __( 'No Company Name provided.', 'erp' ) );
+        if ( empty( $args['company'] ) && empty( $args['phone'] ) && empty( $args['email'] ) ) {
+            return new WP_Error( 'no-company', __( 'You must need to fillup either Company name or email or phone', 'erp' ) );
         }
     }
 
@@ -494,7 +493,7 @@ function erp_insert_people( $args = array() ) {
         return $errors;
     }
 
-    if ( ! $row_id ) {
+    if ( ! $id ) {
         // insert either as wp user or new people
 
         if ( $args['user_id'] ) {
@@ -564,7 +563,7 @@ function erp_insert_people( $args = array() ) {
             $people_obj = \WeDevs\ERP\Framework\Models\People::whereEmail( $args['email'] )->first();
 
             // Check already email exist in contact table
-            if ( null != $people_obj ) {
+            if ( $people_obj ) {
                 // Yes people alreayd exist with this email
                 if ( $people_obj->hasType( $people_type ) ) {
                     // Yes applicable type exist for this people so throw an error
@@ -607,12 +606,12 @@ function erp_insert_people( $args = array() ) {
         } else {
             // Not a WP user, so simply handle those data into peoples and peoplemeta table
             // do update method here
-            WeDevs\ERP\Framework\Models\People::find( $row_id )->update( $args );
+            WeDevs\ERP\Framework\Models\People::find( $id )->update( $args );
         }
 
-        do_action( 'erp_update_people', $row_id, $args );
+        do_action( 'erp_update_people', $id, $args );
 
-        return $row_id;
+        return $id;
     }
 
     return false;
