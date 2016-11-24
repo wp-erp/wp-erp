@@ -586,6 +586,27 @@ function erp_ac_new_journal( $args = [], $items = [] ) {
 
     $args = wp_parse_args( $args, $defaults );
 
+    $journals_id = [];
+    $items_id    = [];
+
+    if ( intval( $args['id'] ) ) {
+
+        $journal = erp_ac_get_transaction( $args['id'], [
+            'join' => ['journals', 'items'],
+            'type' => 'journal'
+        ]);
+
+        $journals_id = wp_list_pluck( $journal['journals'], 'id' );
+        $items_id    = wp_list_pluck( $journal['items'], 'id' );
+
+        $submit_journals_id = wp_list_pluck( $items, 'journal_id' );
+        $submit_items_id    = wp_list_pluck( $items, 'item_id' );
+
+        $journals_id = array_diff( $journals_id, $submit_journals_id );
+        $items_id    = array_diff( $items_id, $submit_items_id );
+
+    }
+
     try {
         $wpdb->query( 'START TRANSACTION' );
 
@@ -669,6 +690,9 @@ function erp_ac_new_journal( $args = [], $items = [] ) {
 
             $order ++;
         }
+
+        \WeDevs\ERP\Accounting\Model\Journal::destroy( $journals_id );
+        \WeDevs\ERP\Accounting\Model\Transaction_Items::destroy( $items_id );
 
         $wpdb->query( 'COMMIT' );
 
