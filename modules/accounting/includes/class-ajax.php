@@ -557,12 +557,12 @@ class Ajax_Handler {
         $people = erp_get_people( $user_id );
 
         $args = [
-            'address_1' => $people->street_1 ."\n",
-            'address_2' => $people->street_2 ."\n",
-            'city'      => $people->city ."\n",
-            'state'     => erp_get_state_name( $people->country, $people->state ) ."\n",
-            'postcode'  => $people->postal_code ."\n",
-            'country'   => erp_get_country_name( $people->country ) ."\n",
+            'address_1' => isset( $people->street_1 ) ? $people->street_1 ."\n" : '',
+            'address_2' => isset( $people->street_2 ) ? $people->street_2 ."\n" : '',
+            'city'      => isset( $people->city ) ? $people->city ."\n" : '',
+            'state'     => isset( $people->country ) && isset( $people->state ) ? erp_get_state_name( $people->country, $people->state ) ."\n" : '',
+            'postcode'  => isset( $people->postal_code ) ? $people->postal_code ."\n" : '',
+            'country'   => isset( $people->country ) ? erp_get_country_name( $people->country ) ."\n" : '',
 
         ];
 
