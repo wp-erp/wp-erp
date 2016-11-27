@@ -436,18 +436,26 @@ function erp_insert_people( $args = array() ) {
 
     $args        = wp_parse_args( $args, $defaults );
     $errors      = [];
-    $args['created_by'] = get_current_user_id();
+    $main_fields = [];
+    $meta_fields = [];
 
-    var_dump( $args ); die();
+    foreach ( $args as $key => $value ) {
+        if ( array_key_exists( $key, $defaults ) ) {
+            $main_fields[$key] = $value;
+        } else {
+            $meta_fields[$key] = $value;
+        }
+    }
 
-    $people_type = $args['type'];
+    $main_fields['created_by'] = get_current_user_id();
 
-    unset( $args['type'] );
+    $people_type = $main_fields['type'];
+    unset( $main_fields['type'] );
 
     // remove row id to determine if new or update
-    if ( isset( $args['id'] ) ) {
-        $id = (int) $args['id'];
-        unset( $args['id'] );
+    if ( isset( $main_fields['id'] ) ) {
+        $id = (int) $main_fields['id'];
+        unset( $main_fields['id'] );
     } else {
         $id = null;
     }
@@ -466,10 +474,10 @@ function erp_insert_people( $args = array() ) {
     }
 
     if ( 'contact' == $people_type ) {
-        if ( empty( $args['user_id'] ) ) {
+        if ( empty( $main_fields['user_id'] ) ) {
             // some basic validation
-            // Check if contact first name or last name provide or not
-            if ( empty( $args['first_name'] ) && empty( $args['phone'] ) && empty( $args['email'] ) ) {
+            // Check if contact first name or email or phone provided or not
+            if ( empty( $main_fields['first_name'] ) && empty( $main_fields['phone'] ) && empty( $main_fields['email'] ) ) {
                 return new WP_Error( 'no-basic-data', __( 'You must need to fillup either first name or phone or email', 'erp' ) );
             }
         }
@@ -477,17 +485,17 @@ function erp_insert_people( $args = array() ) {
 
     // Check if company name provide or not
     if ( 'company' == $people_type ) {
-        if ( empty( $args['company'] ) && empty( $args['phone'] ) && empty( $args['email'] ) ) {
+        if ( empty( $main_fields['company'] ) && empty( $main_fields['phone'] ) && empty( $main_fields['email'] ) ) {
             return new WP_Error( 'no-company', __( 'You must need to fillup either Company name or email or phone', 'erp' ) );
         }
     }
 
     // Check if not empty and valid email
-    if ( ! empty( $args['email'] ) && ! is_email( $args['email'] ) ) {
+    if ( ! empty( $main_fields['email'] ) && ! is_email( $main_fields['email'] ) ) {
         return new WP_Error( 'invalid-email', __( 'Please provide a valid email address', 'erp' ) );
     }
 
-    $errors = apply_filters( 'erp_people_validation_error', [], $args );
+    $errors = apply_filters( 'erp_people_validation_error', [], $main_fields, $meta_fields );
 
     if ( !empty( $errors ) ) {
         return $errors;
@@ -496,27 +504,25 @@ function erp_insert_people( $args = array() ) {
     if ( ! $id ) {
         // insert either as wp user or new people
 
-        if ( $args['user_id'] ) {
-            $user = \get_user_by( 'id', $args['user_id'] );
+        if ( $main_fields['user_id'] ) {
+            $user = \get_user_by( 'id', $main_fields['user_id'] );
         } else {
-            $user = \get_user_by( 'email', $args['email'] );
+            $user = \get_user_by( 'email', $main_fields['email'] );
         }
-
 
         // check if data is alreayd wp user or not
         if ( $user ) {
             $people_obj = \WeDevs\ERP\Framework\Models\People::where( 'user_id', $user->ID )->first();
 
-
             // Check if exist in wp user table but not people table
             if ( null == $people_obj ) {
                 // Then fetch all data from wp users and insert into people and people meta table
-                $main = [];
-                $meta = [];
-                $people_field      = erp_get_people_main_field();
-                $people_meta_field = erm_crm_get_contact_meta_fileds();
+                // $main = [];
+                // $meta = [];
+                // $people_field      = erp_get_people_main_field();
+                // $people_meta_field = erm_crm_get_contact_meta_fileds();
 
-                $people_fields = array_merge( $people_field, $people_meta_field );
+                $people_fields = array_merge( $main_fields, $meta_fields );
 
                 if( ( $key = array_search('user_id', $people_fields ) ) !== false ) {
                     unset( $people_fields[$key] );
@@ -560,7 +566,7 @@ function erp_insert_people( $args = array() ) {
 
         } else {
             // So the people is not wp user. That's why we process those data into people table
-            $people_obj = \WeDevs\ERP\Framework\Models\People::whereEmail( $args['email'] )->first();
+            $people_obj = \WeDevs\ERP\Framework\Models\People::whereEmail( $main_fields['email'] )->first();
 
             // Check already email exist in contact table
             if ( $people_obj ) {
@@ -574,42 +580,61 @@ function erp_insert_people( $args = array() ) {
                     return $people_obj->id;
                 }
             } else {
-                $args['created'] = current_time( 'mysql' );
+                $meta_array = [];
+                $main_fields['created'] = current_time( 'mysql' );
                 // insert a new
-                $people = \WeDevs\ERP\Framework\Models\People::create( $args );
-                $people->assignType( $type_obj );
-                return $people->id;
+                $people = \WeDevs\ERP\Framework\Models\People::create( $main_fields );
+
+                if ( $people->id ) {
+                    $people->assignType( $type_obj );
+                    foreach ( $meta_fields as $key => $value ) {
+                        $meta_array[] = [
+                            'erp_people_id' => $people->id,
+                            'meta_key' => $key,
+                            'meta_value' => $value,
+                        ];
+                    }
+                    \WeDevs\ERP\Framework\Models\Peoplemeta::insert( $meta_array );
+
+                    return $people->id;
+                } else {
+                    return new WP_Error( 'no-people-created', __( 'Something wrong, please try again', 'erp' ) );
+                }
             }
         }
 
     } else {
         // Update people or wp_user
         // Check if WP user or not. If WP user, then handle those data into users and usermeta table
-        if ( $args['user_id'] ) {
+        if ( $main_fields['user_id'] ) {
             $user_id = wp_update_user( [
-                'ID'         => $args['user_id'],
-                'first_name' => $args['first_name'],
-                'last_name'  => $args['last_name'],
-                'user_url'   => $args['website'],
-                'user_email' => $args['email'],
+                'ID'         => $main_fields['user_id'],
+                'first_name' => $main_fields['first_name'],
+                'last_name'  => $main_fields['last_name'],
+                'user_url'   => $main_fields['website'],
+                'user_email' => $main_fields['email'],
             ] );
 
             if ( is_wp_error( $user_id ) ) {
                 return new WP_Error( 'update-user', $user_id->get_error_message() );
             } else {
-                unset( $args['id'], $args['user_id'], $args['first_name'], $args['last_name'], $args['email'], $args['website'], $args['type'], $args['company'] );
-
-                foreach ( $args as $key => $arg ) {
+                unset( $main_fields['id'], $main_fields['user_id'], $main_fields['email'], $main_fields['website'], $main_fields['type'], $main_fields['company'] );
+                $all_fields = array_merge( $main_fields, $meta_fields );
+                foreach ( $all_fields as $key => $arg ) {
                     update_user_meta( $user_id, $key, $arg );
                 }
             }
         } else {
             // Not a WP user, so simply handle those data into peoples and peoplemeta table
             // do update method here
-            WeDevs\ERP\Framework\Models\People::find( $id )->update( $args );
+            WeDevs\ERP\Framework\Models\People::find( $id )->update( $main_fields );
+            foreach ( $meta_fields as $key => $value ) {
+                erp_people_update_meta( $id, $key, $value );
+            }
+
         }
 
-        do_action( 'erp_update_people', $id, $args );
+        do_action( 'erp_update_people', $id, $main_fields );
 
         return $id;
     }

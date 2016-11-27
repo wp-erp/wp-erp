@@ -270,21 +270,18 @@ class Ajax_Handler {
     public function create_customer() {
         $this->verify_nonce( 'wp-erp-crm-customer-nonce' );
 
-        unset( $_POST['_wp_http_referer'] );
-        unset( $_POST['_wpnonce'] );
-        unset( $_POST['action'] );
+        $posted = array_map( 'strip_tags_deep', $_POST );
+        $data   = array_merge( $posted['contact']['main'], $posted['contact']['meta'], $posted['contact']['social'] );
 
-        $posted      = array_map( 'strip_tags_deep', $_POST );
-
-        if ( ! $posted['id'] && ! current_user_can( 'erp_crm_add_contact' ) ) {
+        if ( ! $data['id'] && ! current_user_can( 'erp_crm_add_contact' ) ) {
             $this->send_error( __( 'You don\'t have any permission to add new contact', 'erp' ) );
         }
 
-        if ( $posted['id'] && ! current_user_can( 'erp_crm_edit_contact', $posted['id'] ) ) {
+        if ( $data['id'] && ! current_user_can( 'erp_crm_edit_contact', $data['id'] ) ) {
             $this->send_error( __( 'You don\'t have any permission to edit this contact', 'erp' ) );
         }
 
-        $customer_id = erp_insert_people( $posted );
+        $customer_id = erp_insert_people( $data );
 
         if ( is_wp_error( $customer_id ) ) {
             $this->send_error( $customer_id->get_error_message() );
@@ -292,35 +289,35 @@ class Ajax_Handler {
 
         $customer = new Contact( intval( $customer_id ) );
 
-        if ( $posted['photo_id'] ) {
-            $customer->update_meta( 'photo_id', $posted['photo_id'] );
-        }
+        // if ( $posted['photo_id'] ) {
+        //     $customer->update_meta( 'photo_id', $posted['photo_id'] );
+        // }
 
-        if ( $posted['life_stage'] ) {
-            $customer->update_meta( 'life_stage', $posted['life_stage'] );
-        }
+        // if ( $posted['life_stage'] ) {
+        //     $customer->update_meta( 'life_stage', $posted['life_stage'] );
+        // }
 
-        if ( !empty( $posted['date_of_birth'] ) ) {
-            $customer->update_meta( 'date_of_birth', $posted['date_of_birth'] );
-        }
+        // if ( !empty( $posted['date_of_birth'] ) ) {
+        //     $customer->update_meta( 'date_of_birth', $posted['date_of_birth'] );
+        // }
 
-        if ( $posted['source'] ) {
-            $customer->update_meta( 'source', $posted['source'] );
-        }
+        // if ( $posted['source'] ) {
+        //     $customer->update_meta( 'source', $posted['source'] );
+        // }
 
-        if ( $posted['assign_to'] ) {
-            $customer->update_meta( '_assign_crm_agent', $posted['assign_to'] );
-        }
+        // if ( $posted['assign_to'] ) {
+        //     $customer->update_meta( 'assign_crm_agent', $posted['assign_to'] );
+        // }
 
         $group_ids = ( isset( $posted['group_id'] ) && !empty( $posted['group_id'] ) ) ? $posted['group_id'] : [];
 
         erp_crm_edit_contact_subscriber( $group_ids, $customer_id );
 
-        if ( isset( $posted['social'] ) ) {
-            foreach ( $posted['social'] as $field => $value ) {
-                $customer->update_meta( $field, $value );
-            }
-        }
+        // if ( isset( $posted['social'] ) ) {
+        //     foreach ( $posted['social'] as $field => $value ) {
+        //         $customer->update_meta( $field, $value );
+        //     }
+        // }
 
         do_action( 'erp_crm_save_contact_data', $customer, $customer_id, $posted );
 

@@ -188,7 +188,7 @@
                         attachment = attachment.toJSON();
 
                         var html = '<img src="' + attachment.url + '" alt="" />';
-                            html += '<input type="hidden" id="customer-photo-id" name="photo_id" value="' + attachment.id + '" />';
+                            html += '<input type="hidden" id="customer-photo-id" name="contact[meta][photo_id]" value="' + attachment.id + '" />';
                             html += '<a href="#" class="erp-remove-photo">&times;</a>';
 
                         $( '.photo-container', '.erp-customer-form' ).html( html );
@@ -202,7 +202,7 @@
                 e.preventDefault();
 
                 var html = '<a href="#" id="erp-set-customer-photo" class="button button-small">' + wpErpCrm.customer_upload_photo + '</a>';
-                    html += '<input type="hidden" name="photo_id" id="custossmer-photo-id" value="0">';
+                    html += '<input type="hidden" name="contact[meta][photo_id]" id="custossmer-photo-id" value="0">';
 
                 $( '.photo-container', '.erp-customer-form' ).html( html );
             },
