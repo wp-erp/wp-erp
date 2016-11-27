@@ -250,10 +250,9 @@ function erp_ac_dashboard_income_expense() {
         $ex_month = date_parse( $key );
         $date_ex  = strtotime( date( 'Y-m-d', strtotime(  $current_year .'-'. $ex_month['month']  ) ) ) * 1000;
         $total    = 0;
-
         foreach ( $expense as $key => $details ) {
 
-            if ( $details->status == 'partial' ) {
+            if ( $details['status'] == 'partial' ) {
                 $total = $total + $details->due;
             } else {
                 $total = $total + $details->trans_total;
@@ -269,10 +268,11 @@ function erp_ac_dashboard_income_expense() {
         $total    = 0;
 
         foreach ( $income as $key => $details ) {
-            if ( $details->status == 'partial' ) {
-                $total = $total + $details->due;
+
+            if ( $details['status'] == 'partial' ) {
+                $total = $total + $details['due'];
             } else {
-                $total = $total + $details->trans_total;
+                $total = $total + $details['trans_total'];
             }
         }
 
