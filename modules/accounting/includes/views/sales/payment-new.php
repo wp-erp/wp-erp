@@ -59,6 +59,7 @@ if ( $transaction_id ) {
 <div class="wrap erp-ac-form-wrap">
 
     <h2><?php _e( 'Receive Payment', '$domain' ); ?></h2>
+    <?php erp_ac_view_error_message(); ?>
     <?php
     $dropdown = erp_ac_get_chart_dropdown([
         'exclude'  => [1, 2, 3, 5],

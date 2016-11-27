@@ -42,7 +42,7 @@ function erp_html_form_custom_attr( $attr = array(), $other_attr = array() ) {
 
     if ( ! empty( $attr ) && is_array( $attr ) ) {
         foreach ( $attr as $attribute => $value ) {
-            if ( ! empty( $value ) ) {
+            if ( $value != '' ) {
                 $custom_attributes[] = esc_attr( $attribute ) . '="' . esc_attr( $value ) . '"';
             }
         }

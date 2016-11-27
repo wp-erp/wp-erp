@@ -84,7 +84,7 @@ class Customer_List_Table extends \WP_List_Table {
             'company'  => __( 'Company', 'erp' ),
             'email'    => __( 'Email', 'erp' ),
             'phone'    => __( 'Phone', 'erp' ),
-            'balance'  => __( 'Balance', 'erp' ),
+            'balance'  => __( 'Expense', 'erp' ),
         );
 
         return $columns;
@@ -276,8 +276,10 @@ class Customer_List_Table extends \WP_List_Table {
 
         $users_id = wp_list_pluck( $this->items, 'id' );
         $trans_arg = [
-            'user_id' => [ 'in' => $users_id ],
-            'type'    => $this->slug == 'erp-accounting-vendors' ? 'expense' : 'sales',
+            'user_id'   => [ 'in' => $users_id ],
+            'type'      => $this->slug == 'erp-accounting-vendors' ? 'expense' : 'sales',
+            'form_type' => $this->slug == 'erp-accounting-vendors' ? 'payment_voucher' : 'payment',
+            'status'    => 'closed'
         ];
 
         $transactions = erp_ac_get_all_transaction( $trans_arg );
