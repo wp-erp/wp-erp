@@ -3,6 +3,7 @@
 
     <form action="" method="post" class="erp-form erp-ac-transaction-form" id="erp-journal-form">
         <ul class="erp-form-fields">
+
             <li class="erp-form-field row-ref">
                 <?php
                 erp_html_form_input( array(
@@ -184,4 +185,3 @@
 
     </form>
 </div>
-
