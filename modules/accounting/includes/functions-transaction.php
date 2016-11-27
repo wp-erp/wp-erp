@@ -618,7 +618,7 @@ function erp_ac_new_journal( $args = [], $items = [] ) {
         $transaction = new \WeDevs\ERP\Accounting\Model\Transaction();
 
         $args['sub_total'] = array_reduce( $items, function( $total, $item ) {
-            $amount = ( isset( $item['debit'] ) && $item['debit'] > 0 ) ? $item['debit'] : $item['credit'];
+            $amount = ( isset( $item['credit'] ) && $item['credit'] > 0 ) ? $item['credit'] : 0;
 
             return $total + $amount;
         } );
