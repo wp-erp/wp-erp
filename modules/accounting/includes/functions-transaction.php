@@ -122,13 +122,18 @@ function erp_ac_get_all_transaction( $args = array() ) {
         }
 
         if ( isset( $args['groupby'] ) && ! empty( $args['groupby'] ) ) {
-            $transaction = $transaction->groupBy( $args['groupby'] );
-        }
+            $items = $transaction->orderBy( $args['orderby'], $args['order'] )
+                ->orderBy( 'created_at', $args['order'] )
+                ->get()
+                ->groupBy( $args['groupby'] )
+                ->toArray();
 
-        $items = $transaction->orderBy( $args['orderby'], $args['order'] )
-            ->orderBy( 'created_at', $args['order'] )
-            ->get()
-            ->toArray();
+        } else {
+            $items = $transaction->orderBy( $args['orderby'], $args['order'] )
+                ->orderBy( 'created_at', $args['order'] )
+                ->get()
+                ->toArray();
+        }
 
         if ( $args['output_by'] == 'object' ) {
             $items = erp_array_to_object( $items );
