@@ -13,7 +13,7 @@ $desc=array (
 );
 $up=-63;
 $ut=44;
-$ttffile='/Applications/MAMP/htdocs/erp/wp-content/plugins/wp-erp/includes/pdf/font/unifont/DejaVuSansCondensed.ttf';
+$ttffile= WPERP_INCLUDES . '/pdf/font/unifont/DejaVuSansCondensed.ttf';
 $originalsize=643852;
 $fontkey='dejavu';
 ?>
