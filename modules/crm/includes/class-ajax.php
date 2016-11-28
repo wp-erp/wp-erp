@@ -319,10 +319,10 @@ class Ajax_Handler {
         //     }
         // }
 
-        do_action( 'erp_crm_save_contact_data', $customer, $customer_id, $posted );
+        do_action( 'erp_crm_save_contact_data', $customer, $customer_id, $data );
 
         $data = $customer->to_array();
-        $statuses = erp_crm_customer_get_status_count( $posted['type'] );
+        $statuses = erp_crm_customer_get_status_count( $data['type'] );
 
         $this->send_success( [ 'data' => $data, 'statuses' => $statuses ] );
     }

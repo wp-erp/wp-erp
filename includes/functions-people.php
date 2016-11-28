@@ -517,27 +517,35 @@ function erp_insert_people( $args = array() ) {
             // Check if exist in wp user table but not people table
             if ( null == $people_obj ) {
                 // Then fetch all data from wp users and insert into people and people meta table
-                // $main = [];
-                // $meta = [];
+                $main = [];
+                $meta = [];
                 // $people_field      = erp_get_people_main_field();
                 // $people_meta_field = erm_crm_get_contact_meta_fileds();
 
-                $people_fields = array_merge( $main_fields, $meta_fields );
+                $people_fields = $args;
 
-                if( ( $key = array_search('user_id', $people_fields ) ) !== false ) {
-                    unset( $people_fields[$key] );
-                }
+                unset( $people_fields['user_id'] );
 
-                $userdata = \WeDevs\ORM\WP\UserMeta::where( 'user_id', $user->ID )->whereIn( 'meta_key', $people_fields )->get()->toArray();
+                $userdata = \WeDevs\ORM\WP\UserMeta::where( 'user_id', $user->ID )->whereIn( 'meta_key', array_keys( $people_fields ) )->get()->toArray();
 
-                foreach ( $userdata as $key => $value ) {
-                    unset( $value['umeta_id' ], $value['user_id'] );
-                    if ( in_array( $value['meta_key'], $people_field ) ) {
-                        $main[] = $value;
+                $user_metadata = wp_list_pluck( $userdata, 'meta_value', 'meta_key' );
+                // var_dump( $user_metadata ); die();
+
+                foreach ( $people_fields as $key => $value ) {
+                    // unset( $value['umeta_id' ], $value['user_id'] );
+                    if ( array_key_exists( $key, $user_metadata ) ) {
+                        if ( $value == $user_metadata[$key] ) {
+                            $same[$key] = $value;
+                        } else {
+                            $changes[$key] = $value;
+                        }
                     } else {
-                        $meta[] = $value;
+                        $changes[$key] = $value;
                     }
                 }
+
+                var_dump( $changes, $same ); die();
+
 
                 $main_field_data = wp_list_pluck( $main, 'meta_value', 'meta_key' );
                 $main_field_data['user_id'] = $user->ID;
@@ -548,14 +556,16 @@ function erp_insert_people( $args = array() ) {
                 $people = \WeDevs\ERP\Framework\Models\People::create( $main_field_data );
                 $people->assignType( $type_obj );
 
-                $new_meta = [];
                 if ( $people->id ) {
-                    $meta = array_map( function( $item ) use( $people ) {
-                        $item['erp_people_id'] = $people->id;
-                        return $item;
-                    }, $meta );
+                    $same_meta = array_map( function( $item, $key ) use( $people ) {
+                        return [
+                            'erp_people_id' => $people->id,
+                            'meta_key' => $key,
+                            'meta_value' => $item
+                        ];
+                    }, $same, array_keys( $same ) );
 
-                    \WeDevs\ERP\Framework\Models\Peoplemeta::insert( $meta );
+                    \WeDevs\ERP\Framework\Models\Peoplemeta::insert( $same_meta );
                     return $people->id;
                 }
 
