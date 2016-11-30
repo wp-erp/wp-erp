@@ -122,13 +122,18 @@ function erp_ac_get_all_transaction( $args = array() ) {
         }
 
         if ( isset( $args['groupby'] ) && ! empty( $args['groupby'] ) ) {
-            $transaction = $transaction->groupBy( $args['groupby'] );
-        }
+            $items = $transaction->orderBy( $args['orderby'], $args['order'] )
+                ->orderBy( 'created_at', $args['order'] )
+                ->get()
+                ->groupBy( $args['groupby'] )
+                ->toArray();
 
-        $items = $transaction->orderBy( $args['orderby'], $args['order'] )
-            ->orderBy( 'created_at', $args['order'] )
-            ->get()
-            ->toArray();
+        } else {
+            $items = $transaction->orderBy( $args['orderby'], $args['order'] )
+                ->orderBy( 'created_at', $args['order'] )
+                ->get()
+                ->toArray();
+        }
 
         if ( $args['output_by'] == 'object' ) {
             $items = erp_array_to_object( $items );
@@ -578,9 +583,7 @@ function erp_ac_new_journal( $args = [], $items = [] ) {
         'ref'             => '',
         'issue_date'      => '',
         'summary'         => '',
-        'total'           => 0,
         'conversion_rate' => 1,
-        'trans_total'     => 0,
         'invoice_number'  => 0,
         'created_by'      => get_current_user_id(),
         'created_at'      => current_time( 'mysql' )
@@ -588,13 +591,34 @@ function erp_ac_new_journal( $args = [], $items = [] ) {
 
     $args = wp_parse_args( $args, $defaults );
 
+    $journals_id = [];
+    $items_id    = [];
+
+    if ( intval( $args['id'] ) ) {
+
+        $journal = erp_ac_get_transaction( $args['id'], [
+            'join' => ['journals', 'items'],
+            'type' => 'journal'
+        ]);
+
+        $journals_id = wp_list_pluck( $journal['journals'], 'id' );
+        $items_id    = wp_list_pluck( $journal['items'], 'id' );
+
+        $submit_journals_id = wp_list_pluck( $items, 'journal_id' );
+        $submit_items_id    = wp_list_pluck( $items, 'item_id' );
+
+        $journals_id = array_diff( $journals_id, $submit_journals_id );
+        $items_id    = array_diff( $items_id, $submit_items_id );
+
+    }
+
     try {
         $wpdb->query( 'START TRANSACTION' );
 
         $transaction = new \WeDevs\ERP\Accounting\Model\Transaction();
 
         $args['sub_total'] = array_reduce( $items, function( $total, $item ) {
-            $amount = ( isset( $item['debit'] ) && $item['debit'] > 0 ) ? $item['debit'] : $item['credit'];
+            $amount = ( isset( $item['credit'] ) && $item['credit'] > 0 ) ? $item['credit'] : 0;
 
             return $total + $amount;
         } );
@@ -602,7 +626,16 @@ function erp_ac_new_journal( $args = [], $items = [] ) {
         $args['trans_total'] = $args['sub_total'];
         $args['total']       = $args['trans_total'];
 
-        $trans = $transaction->create( $args );
+        if ( intval( $args['id'] ) ) {
+            $id  = $args['id'];
+            unset( $args['id'] );
+
+            $trans = $transaction->find( $id );
+            $trans->update( $args );
+
+        } else {
+            $trans = $transaction->create( $args );
+        }
 
         if ( ! $trans->id ) {
             throw new \Exception( __( 'Could not create transaction', 'erp' ) );
@@ -615,16 +648,28 @@ function erp_ac_new_journal( $args = [], $items = [] ) {
             if ( isset( $item['debit'] ) && $item['debit'] > 0 ) {
                 $type   = 'debit';
                 $amount = $item['debit'];
+
             } else {
                 $type   = 'credit';
                 $amount = $item['credit'];
             }
 
-            $journal = $trans->journals()->create( [
-                'ledger_id' => $item['ledger_id'],
-                'type'      => 'line_item',
-                $type       => $amount
-            ] );
+            if ( intval( $item['journal_id'] ) ) {
+                $journal = $trans->journals()->find( $item['journal_id'] );
+                $journal->update( [
+                        'ledger_id' => $item['ledger_id'],
+                        'type'      => 'line_item',
+                        $type       => $amount
+                    ]
+                );
+
+            } else {
+                $journal = $trans->journals()->create( [
+                    'ledger_id' => $item['ledger_id'],
+                    'type'      => 'line_item',
+                    $type       => $amount
+                ] );
+            }
 
             $transaction_item = [
                 'journal_id'  => $journal->id,
@@ -636,7 +681,13 @@ function erp_ac_new_journal( $args = [], $items = [] ) {
                 'order'       => $order,
             ];
 
-            $trans_item = $trans->items()->create( $transaction_item );
+            if ( intval( $item['item_id'] ) ) {
+                $trans_item = $trans->items()->find($item['item_id']);
+                $trans_item->update( $transaction_item );
+
+            } else {
+                $trans_item = $trans->items()->create( $transaction_item );
+            }
 
             if ( ! $trans_item->id ) {
                 throw new \Exception( __( 'Could not insert transaction item', 'erp' ) );
@@ -644,6 +695,9 @@ function erp_ac_new_journal( $args = [], $items = [] ) {
 
             $order ++;
         }
+
+        \WeDevs\ERP\Accounting\Model\Journal::destroy( $journals_id );
+        \WeDevs\ERP\Accounting\Model\Transaction_Items::destroy( $items_id );
 
         $wpdb->query( 'COMMIT' );
 

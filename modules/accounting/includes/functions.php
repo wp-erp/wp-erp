@@ -304,7 +304,7 @@ function erp_ac_get_customer($id) {
     return erp_get_people( $id );
 }
 
-function erp_ac_message() {
+function erp_ac_message( $message_ke = false ) {
     $message = array(
         'confirm'       => __( 'Are you sure!', 'erp' ),
         'new_customer'  => __( 'New Customer', 'erp' ),
@@ -326,9 +326,15 @@ function erp_ac_message() {
         'submit'        => __( 'Submit', 'erp' ),
         'redo'          => __( 'Yes, redo it!', 'erp' ),
         'yes'           => __( 'Yes, do it!', 'erp' ),
+        'no_result'     => __( 'No Result Found!', 'erp' )
     );
 
-    return apply_filters( 'erp_ac_message', $message );
+    if ( $message_ke ) {
+        return apply_filters( 'erp_ac_message', $message[$message_ke] );
+    } else {
+        return apply_filters( 'erp_ac_message', $message );
+    }
+
 }
 
 function erp_ac_get_version() {

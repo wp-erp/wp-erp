@@ -640,6 +640,7 @@ class Form_Handler {
         }
 
         $args = [
+            'id'         => isset( $_POST['id'] ) ? intval( $_POST['id'] ) : false,
             'type'       => 'journal',
             'ref'        => $ref,
             'summary'    => $summary,
@@ -650,6 +651,8 @@ class Form_Handler {
         foreach ( $_POST['journal_account'] as $key => $account_id ) {
             $debit  = floatval( $_POST['line_debit'][ $key ] );
             $credit = floatval( $_POST['line_credit'][ $key ] );
+            $des    = isset( $_POST['line_desc'][ $key ] ) ? $_POST['line_desc'][ $key ] : '';
+
             if ( $debit ) {
                 $type   = 'debit';
                 $amount = $debit;
@@ -659,8 +662,11 @@ class Form_Handler {
             }
 
             $items[] = [
-                'ledger_id' => (int) $account_id,
-                $type       => $amount,
+                'item_id'     => isset( $_POST['item_id'][ $key ] ) ? intval( $_POST['item_id'][ $key ] ) : false,
+                'journal_id'  => isset( $_POST['journal_id'][ $key ] ) ? intval( $_POST['journal_id'][ $key ] ) : false,
+                'ledger_id'   => (int) $account_id,
+                $type         => $amount,
+                'description' => $des
             ];
         }
 
