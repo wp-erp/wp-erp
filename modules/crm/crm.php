@@ -140,11 +140,11 @@ class Customer_Relationship {
             'customer_upload_photo' => __( 'Upload Photo', 'erp' ),
             'customer_set_photo'    => __( 'Set Photo', 'erp' ),
             'confirm'               => __( 'Are you sure?', 'erp' ),
-            'delConfirmCustomer'    => __( 'Are you sure want to delete?', 'erp' ),
+            'delConfirmCustomer'    => __( 'Are you sure to delete?', 'erp' ),
             'delConfirm'            => __( 'Are you sure to delete this?', 'erp' ),
             'checkedConfirm'        => __( 'Select atleast one group', 'erp' ),
             'contact_exit'          => __( 'Already exists as a contact or company', 'erp' ),
-            'make_contact_text'     => __( 'This user already exists! Want to make this user a', 'erp' ),
+            'make_contact_text'     => __( 'This user already exists! Do you want to make this user a', 'erp' ),
             'create_contact_text'   => __( 'Create new', 'erp' ),
             'current_user_id'       => get_current_user_id(),
         ) );

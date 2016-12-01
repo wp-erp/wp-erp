@@ -444,7 +444,7 @@ function erp_insert_people( $args = array() ) {
     $errors         = [];
     $unchanged_data = [];
 
-    $args['created_by'] = get_current_user_id();
+    $args['created_by'] = get_current_user_id() ? get_current_user_id() : 1;
 
     $people_type = $args['type'];
     unset( $args['type'] );
