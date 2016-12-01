@@ -25,32 +25,27 @@
                     <# } #>
                 </div>
             </li>
+        </ol>
 
-             <# if ( _.contains( data.types, 'contact' ) ) { #>
-                <li class="full-width name-container clearfix">
-                    <?php erp_html_form_label( __( 'Full Name', 'erp' ), 'full-name', true ); ?>
-
-                    <ol class="fields-inline">
-
-                        <li>
-                            <?php erp_html_form_input( array(
-                                'label'       => __( 'First Name', 'erp' ),
-                                'name'        => 'contact[main][first_name]',
-                                'id'          => 'first_name',
-                                'value'       => '{{ data.first_name }}',
-                                'custom_attr' => array( 'maxlength' => 30 )
-                            ) ); ?>
-                        </li>
-                        <li>
-                            <?php erp_html_form_input( array(
-                                'label'       => __( 'Last Name', 'erp' ),
-                                'name'        => 'contact[main][last_name]',
-                                'id'          => 'last_name',
-                                'value'       => '{{ data.last_name }}',
-                                'custom_attr' => array( 'maxlength' => 30 )
-                            ) ); ?>
-                        </li>
-                    </ol>
+        <ol class="form-fields two-col">
+            <# if ( _.contains( data.types, 'contact' ) ) { #>
+                <li>
+                    <?php erp_html_form_input( array(
+                        'label'       => __( 'First Name', 'erp' ),
+                        'name'        => 'contact[main][first_name]',
+                        'id'          => 'first_name',
+                        'value'       => '{{ data.first_name }}',
+                        'custom_attr' => array( 'maxlength' => 30 )
+                    ) ); ?>
+                </li>
+                <li>
+                    <?php erp_html_form_input( array(
+                        'label'       => __( 'Last Name', 'erp' ),
+                        'name'        => 'contact[main][last_name]',
+                        'id'          => 'last_name',
+                        'value'       => '{{ data.last_name }}',
+                        'custom_attr' => array( 'maxlength' => 30 )
+                    ) ); ?>
                 </li>
             <# } else if ( _.contains( data.types, 'company' ) ) { #>
                 <li class="full-width customer-company-name clearfix">
@@ -63,8 +58,8 @@
                     ) ); ?>
                 </li>
             <# } #>
-
         </ol>
+
 
         <ol class="form-fields two-col">
             <li>
