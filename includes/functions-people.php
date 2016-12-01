@@ -411,54 +411,80 @@ function erp_get_people_by( $field, $value ) {
  */
 function erp_insert_people( $args = array() ) {
 
+    if ( empty( $args['id'] ) ) {
+        $args['id'] = 0;
+    }
+
+    $existing_people = \WeDevs\ERP\Framework\Models\People::firstOrNew( [ 'id' => $args['id'] ] );
+
     $defaults = array(
-        'id'          => null,
-        'first_name'  => '',
-        'last_name'   => '',
-        'email'       => '',
-        'company'     => '',
-        'phone'       => '',
-        'mobile'      => '',
-        'other'       => '',
-        'website'     => '',
-        'fax'         => '',
-        'notes'       => '',
-        'street_1'    => '',
-        'street_2'    => '',
-        'city'        => '',
-        'state'       => '',
-        'postal_code' => '',
-        'country'     => '',
-        'currency'    => '',
-        'type'        => '',
-        'user_id'     => 0,
-        'created_by'  => get_current_user_id(),
+        'id'          => $existing_people->id,
+        'first_name'  => $existing_people->first_name,
+        'last_name'   => $existing_people->last_name,
+        'email'       => $existing_people->email,
+        'company'     => $existing_people->company,
+        'phone'       => $existing_people->phone,
+        'mobile'      => $existing_people->mobile,
+        'other'       => $existing_people->other,
+        'website'     => $existing_people->website,
+        'fax'         => $existing_people->fax,
+        'notes'       => $existing_people->notes,
+        'street_1'    => $existing_people->street_1,
+        'street_2'    => $existing_people->street_2,
+        'city'        => $existing_people->city,
+        'state'       => $existing_people->state,
+        'postal_code' => $existing_people->postal_code,
+        'country'     => $existing_people->country,
+        'currency'    => $existing_people->currency,
+        'user_id'     => $existing_people->user_id,
+        'type'        => ''
     );
 
-    $args        = wp_parse_args( $args, $defaults );
-    $args        = wp_array_slice_assoc( $args, array_keys( $defaults ) );
+    $args           = wp_parse_args( $args, $defaults );
+    $errors         = [];
+    $unchanged_data = [];
+
+    $args['created_by'] = get_current_user_id() ? get_current_user_id() : 1;
 
     $people_type = $args['type'];
-
     unset( $args['type'] );
+
+    if ( ! $existing_people->id ) {
+        // if an empty type provided
+        if ( '' == $people_type ) {
+            return new WP_Error( 'no-type', __( 'No user type provided.', 'erp' ) );
+        }
+
+        // Some validation
+        $type_obj = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $people_type )->first();
+
+        // check if a valid people type exists in the database
+        if ( null === $type_obj ) {
+            return new WP_Error( 'no-type_found', __( 'The people type is invalid.', 'erp' ) );
+        }
+
+        if ( ! empty( $args['email'] ) ) {
+            $existing_people_by_email = \WeDevs\ERP\Framework\Models\People::where( 'email', $args['email'] )->first();
+
+            if ( $existing_people_by_email && $existing_people_by_email->hasType( $people_type ) ) {
+                return new WP_Error( 'email-already-exist', __( 'The people already exists', 'erp' ) );
+            }
+        }
+    }
 
     if ( 'contact' == $people_type ) {
         if ( empty( $args['user_id'] ) ) {
-            // some basic validation
-            // Check if contact first name and last name provide or not
-            if ( empty( $args['first_name'] ) ) {
-                return new WP_Error( 'no-first_name', __( 'No First Name provided.', 'erp' ) );
-            }
-            if ( empty( $args['last_name'] ) ) {
-                return new WP_Error( 'no-last_name', __( 'No Last Name provided.', 'erp' ) );
+            // Check if contact first name or email or phone provided or not
+            if ( empty( $args['first_name'] ) && empty( $args['phone'] ) && empty( $args['email'] ) ) {
+                return new WP_Error( 'no-basic-data', __( 'You must need to fillup either first name or phone or email', 'erp' ) );
             }
         }
     }
 
     // Check if company name provide or not
     if ( 'company' == $people_type ) {
-        if ( empty( $args['company'] ) ) {
-            return new WP_Error( 'no-company', __( 'No Company Name provided.', 'erp' ) );
+        if ( empty( $args['company'] ) && empty( $args['phone'] ) && empty( $args['email'] ) ) {
+            return new WP_Error( 'no-company', __( 'You must need to fillup either Company name or email or phone', 'erp' ) );
         }
     }
 
@@ -467,115 +493,94 @@ function erp_insert_people( $args = array() ) {
         return new WP_Error( 'invalid-email', __( 'Please provide a valid email address', 'erp' ) );
     }
 
-    // remove row id to determine if new or update
-    if ( isset( $args['id'] ) ) {
-        $row_id = (int) $args['id'];
-        unset( $args['id'] );
-    } else {
-        $row_id = null;
+    $errors = apply_filters( 'erp_people_validation_error', [], $args );
+
+    if ( !empty( $errors ) ) {
+        return $errors;
     }
 
-    if ( ! $row_id ) {
+    if ( $args['user_id'] ) {
+        $user = \get_user_by( 'id', $args['user_id'] );
+    } else {
+        $user = \get_user_by( 'email', $args['email'] );
+    }
 
-        $type_obj = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $people_type )->first();
-
-        // check if a valid people type exists in the database
-        if ( null === $type_obj ) {
-            return new WP_Error( 'no-type_found', __( 'The people type is invalid.', 'erp' ) );
+    if ( ! $existing_people->id ) {
+        if ( ! $user ) {
+            $user             = new stdClass();
+            $user->ID         = 0;
+            $user->user_url   = '';
+            $user->user_email = '';
         }
 
-        // if an empty type provided
-        if ( '' == $people_type ) {
-            return new WP_Error( 'no-type', __( 'No user type provided.', 'erp' ) );
-        }
+        $people = \WeDevs\ERP\Framework\Models\People::create( [
+                'user_id'    => $user->ID,
+                'email'      => ! empty( $args['email'] ) ? $args['email'] : $user->user_email,
+                'website'    => ! empty( $args['website'] ) ? $args['website'] : $user->user_url,
+                'created_by' => $args['created_by'],
+                'created'    => current_time( 'mysql' )
+            ]
+        );
 
-        if ( $args['user_id'] ) {
-             $user = \get_user_by( 'id', $args['user_id'] );
+        if ( ! $people->id ) {
+            return new WP_Error( 'people-not-created', __( 'Something went wrong, please try again', 'erp' ) );
+        }
+    } else {
+        $people = $existing_people;
+    }
+
+    if ( isset( $user->ID ) && $user->ID ) {
+        // Set data for updating record
+        $user_id = wp_update_user( [
+            'ID'         => $user->id,
+            'user_url'   => ! empty( $args['website'] ) ? $args['website'] : $user->user_url,
+            'user_email' => ! empty( $args['email'] ) ? $args['email'] : $user->user_email
+        ] );
+
+        if ( is_wp_error( $user_id ) ) {
+            return new WP_Error( 'update-user', $user_id->get_error_message() );
         } else {
-             $user = \get_user_by( 'email', $args['email'] );
-        }
+            $people->update( [ 'user_id' => $user_id, 'email' => $args['email'], 'website' => $args['website'] ] );
 
-        //check for duplicate user
-        if ( $user ) {
-            $people_obj = \WeDevs\ERP\Framework\Models\People::where( 'user_id', $user->ID )->first();
-
-            // Check if exist in wp user table but not people table
-            if ( null == $people_obj ) {
-                $new_people = \WeDevs\ERP\Framework\Models\People::create( [ 'user_id' => $user->ID, 'created_by' => get_current_user_id(), 'created' => current_time('mysql') ] );
-                $new_people->assignType( $type_obj );
-                $people_id = $new_people->id;
-            } else {
-                $people_id = $people_obj->id;
-            }
-
-            $args['wp_user'] = $user;
-
-            do_action( 'erp_create_new_people', $people_id, $args );
-
-            return $people_id;
-
-        } else {
-            $people_obj = \WeDevs\ERP\Framework\Models\People::whereEmail( $args['email'] )->first();
-
-            // Check already email exist in contact table
-            if ( null !== $people_obj ) {
-
-                // Check if person found, then check is same type person or not
-                if ( $people_obj->hasType( $people_type ) ) {
-                    return new WP_Error( 'type-exist', sprintf( __( 'This %s already exists.', 'erp' ), $people_type ) );
-                } else {
-                    $people_obj->assignType( $people_type );
-                    return $people_obj->id;
+            unset( $args['id'], $args['user_id'], $args['email'], $args['website'] );
+            foreach ( $args as $key => $value ) {
+                if ( ! update_user_meta( $user_id, $key, $value ) ) {
+                    $unchanged_data[$key] = $value;
                 }
             }
         }
+    } else {
+        $unchanged_data = $args;
+    }
 
-        $args['created'] = current_time( 'mysql' );
+    $main_fields = [];
+    $meta_fields = [];
 
-        // insert a new
-        $people = WeDevs\ERP\Framework\Models\People::create( $args );
+    if ( $unchanged_data ) {
+        foreach ( $unchanged_data as $key => $value ) {
+            if ( array_key_exists( $key, $defaults ) ) {
+                $main_fields[$key] = $value;
+            } else {
+                $meta_fields[$key] = $value;
+            }
+        }
+    }
+
+    if ( ! empty( $main_fields ) ) {
+        $people->update( $main_fields );
+    }
+
+    if ( ! empty( $type_obj ) && ! $people->hasType( $type_obj ) ) {
         $people->assignType( $type_obj );
-
-        do_action( 'erp_create_new_people', $people->id, $args );
-
-        if ( $people->id ) {
-            return $people->id;
-        }
-
-    } else {
-
-        // Check if WP user or not. If WP user, then handle those data into users and usermeta table
-        if ( $args['user_id'] ) {
-            $user_id = wp_update_user( [
-                'ID'         => $args['user_id'],
-                'first_name' => $args['first_name'],
-                'last_name'  => $args['last_name'],
-                'user_url'   => $args['website'],
-                'user_email' => $args['email'],
-            ] );
-
-            if ( is_wp_error( $user_id ) ) {
-                return new WP_Error( 'update-user', $user_id->get_error_message() );
-            } else {
-                unset( $args['id'], $args['user_id'], $args['first_name'], $args['last_name'], $args['email'], $args['website'], $args['type'], $args['company'] );
-
-                foreach ( $args as $key => $arg ) {
-                    update_user_meta( $user_id, $key, $arg );
-                }
-            }
-
-        } else {
-            // Not a WP user, so simply handle those data into peoples and peoplemeta table
-            // do update method here
-            WeDevs\ERP\Framework\Models\People::find( $row_id )->update( $args );
-        }
-
-        do_action( 'erp_update_people', $row_id, $args );
-
-        return $row_id;
     }
 
-    return false;
+    if ( ! empty( $meta_fields ) ) {
+        foreach ( $meta_fields as $key => $value ) {
+            erp_people_update_meta( $people->id, $key, $value );
+        }
+    }
+
+    return $people->id;
 }
 
 /**
@@ -656,33 +661,14 @@ function erp_people_delete_meta( $people_id, $meta_key, $meta_value = '' ) {
 }
 
 /**
- * Get the contact sources
+ * Get people all main db fields
+ *
+ * @since 1.1.7
  *
  * @return array
  */
-function erp_crm_contact_sources() {
-    $sources = array(
-        'advert'             => __( 'Advertisement', 'erp' ),
-        'chat'               => __( 'Chat', 'erp' ),
-        'contact_form'       => __( 'Contact Form', 'erp' ),
-        'employee_referral'  => __( 'Employee Referral', 'erp' ),
-        'external_referral'  => __( 'External Referral', 'erp' ),
-        'marketing_campaign' => __( 'Marketing campaign', 'erp' ),
-        'newsletter'         => __( 'Newsletter', 'erp' ),
-        'online_store'       => __( 'OnlineStore', 'erp' ),
-        'optin_form'         => __( 'Optin Forms', 'erp' ),
-        'partner'            => __( 'Partner', 'erp' ),
-        'phone'              => __( 'Phone Call', 'erp' ),
-        'public_relations'   => __( 'Public Relations', 'erp' ),
-        'sales_mail_alias'   => __( 'Sales Mail Alias', 'erp' ),
-        'search_engine'      => __( 'Search Engine', 'erp' ),
-        'seminar_internal'   => __( 'Seminar-Internal', 'erp' ),
-        'seminar_partner'    => __( 'Seminar Partner', 'erp' ),
-        'social_media'       => __( 'Social Media', 'erp' ),
-        'trade_show'         => __( 'Trade Show', 'erp' ),
-        'web_download'       => __( 'Web Download', 'erp' ),
-        'web_research'       => __( 'Web Research', 'erp' ),
-    );
-
-    return apply_filters( 'erp_crm_contact_sources', $sources );
+function erp_get_people_main_field() {
+    return apply_filters( 'erp_get_people_main_field', [
+        'user_id', 'first_name', 'last_name', 'company', 'email', 'phone', 'mobile', 'other', 'website', 'fax', 'notes', 'street_1', 'street_2', 'city', 'state', 'postal_code', 'country', 'currency', 'created_by', 'created'
+    ] );
 }
