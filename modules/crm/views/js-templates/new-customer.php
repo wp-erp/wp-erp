@@ -130,6 +130,16 @@
                     'class' => 'erp-date-field erp-crm-date-field'
                 ) ); ?>
             </li>
+            <li>
+                <?php erp_html_form_input( array(
+                    'label' => __( 'Age', 'erp' ),
+                    'name'  => 'contact[meta][contact_age]',
+                    'value' => '{{ data.contact_age }}',
+                    'class' => '',
+                    'type'  => 'number',
+                    'custom_attr' => [ 'min' => 1, 'step' => 1 ]
+                ) ); ?>
+            </li>
             <# } #>
 
             <li>
@@ -139,7 +149,6 @@
                     'value' => '{{ data.mobile }}'
                 ) ); ?>
             </li>
-
 
             <li>
                 <?php erp_html_form_input( array(

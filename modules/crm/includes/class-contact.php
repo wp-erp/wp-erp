@@ -64,6 +64,7 @@ class Contact extends \WeDevs\ERP\People {
             'social'        => [],
             'source'        => '',
             'assign_to'     => '',
+            'contact_age'   => '',
             'group_id'      => [],
         );
 
@@ -120,6 +121,7 @@ class Contact extends \WeDevs\ERP\People {
             $fields['life_stage']     = $this->get_meta( 'life_stage', true );
             $fields['date_of_birth']  = $this->get_meta( 'date_of_birth', true );
             $fields['source']         = $this->get_meta( 'source', true );
+            $fields['contact_age']    = $this->get_meta( 'contact_age', true );
             $fields['created']        = erp_format_date( $this->created );
             $fields['created_by']     = $this->created_by;
             $fields['details_url']    = $this->get_details_url();
@@ -343,6 +345,18 @@ class Contact extends \WeDevs\ERP\People {
         if ( $birth_day ) {
             return erp_format_date( $birth_day );
         }
+    }
+
+    /**
+     * Get contact age
+     *
+     * @since 1.1.7
+     *
+     * @return string
+     */
+    public function get_contact_age() {
+        $contact_age = $this->get_meta( 'contact_age', true );
+        return $contact_age ? $contact_age : '—';
     }
 
     /**
