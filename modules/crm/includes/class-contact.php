@@ -100,7 +100,7 @@ class Contact extends \WeDevs\ERP\People {
             $fields['contact_groups'] = $contact_groups;
             $fields['group_id']       = wp_list_pluck( $contact_groups, 'group_id' );
 
-            $contact_owner_id = $this->get_meta( '_assign_crm_agent', true );
+            $contact_owner_id = $this->get_meta( 'contact_owner', true );
 
             if ( $contact_owner_id ) {
                 $user = \get_user_by( 'id', $contact_owner_id );
@@ -385,7 +385,7 @@ class Contact extends \WeDevs\ERP\People {
      * @return string
      */
     public function get_contact_owner() {
-        $contact_owner = $this->get_meta( '_assign_crm_agent', true );
+        $contact_owner = $this->get_meta( 'contact_owner', true );
 
         return $contact_owner;
     }

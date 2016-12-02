@@ -162,7 +162,7 @@ class Ajax_Handler {
 
         if ( isset( $_REQUEST['filter_assign_contact'] ) && ! empty( $_REQUEST['filter_assign_contact'] ) ) {
             $args['meta_query'] = [
-                'meta_key' => '_assign_crm_agent',
+                'meta_key' => 'contact_owner',
                 'meta_value' => $_REQUEST['filter_assign_contact']
             ];
         }
@@ -178,7 +178,7 @@ class Ajax_Handler {
 
         foreach ( $contacts['data'] as $key => $contact ) {
             $contact_owner    = [];
-            $contact_owner_id = ( $contact['user_id'] ) ? get_user_meta( $contact['user_id'], '_assign_crm_agent', true ) : erp_people_get_meta( $contact['id'], '_assign_crm_agent', true );
+            $contact_owner_id = erp_people_get_meta( $contact['id'], 'contact_owner', true );
 
             if ( $contact_owner_id ) {
                 $user = \get_user_by( 'id', $contact_owner_id );

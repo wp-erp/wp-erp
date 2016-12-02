@@ -124,6 +124,9 @@ class Contact_List_Table extends \WP_List_Table {
 
         $assign_contact_id = $customer_data->get_contact_owner();
 
+        var_dump( $assign_contact_id );
+        die();
+
         switch ( $column_name ) {
             case 'email':
                 return erp_get_clickable( 'email', $customer_data->get_email() );
@@ -394,7 +397,7 @@ class Contact_List_Table extends \WP_List_Table {
         // Filter by assign contact ( contact owner )
         if ( isset( $_REQUEST['filter_assign_contact'] ) && ! empty( $_REQUEST['filter_assign_contact'] ) ) {
             $args['meta_query'] = [
-                'meta_key' => '_assign_crm_agent',
+                'meta_key' => 'contact_owner',
                 'meta_value' => $_REQUEST['filter_assign_contact']
             ];
         }

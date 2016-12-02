@@ -67,77 +67,78 @@ function erp_get_peoples( $args = [] ) {
             $type_sql = ( $type != 'all' ) ? "and `name` = '" . $type ."'" : '';
         }
 
-        $wrapper_select = "SELECT * FROM";
+        $wrapper_select = "SELECT people.*, ";
 
-        $sql['select'][] = "( SELECT people.id as id, people.user_id as user_id, people.company as company, people.created_by as created_by, people.created as created, COALESCE( people.email, users.user_email ) AS email,
-                COALESCE( people.website, users.user_url ) AS website,";
+        // $sql['select'][] = "( SELECT people.id as id, people.user_id as user_id, people.company as company, people.created_by as created_by, people.created as created, COALESCE( people.email, users.user_email ) AS email,
+        //         COALESCE( people.website, users.user_url ) AS website,";
 
-        $sql['join'][] = "LEFT JOIN $users_tb AS users ON people.user_id = users.ID";
+        // $sql['select'][] = "GROUP_CONCAT( t.name SEPARATOR ',') AS types";
 
-        foreach ( $pep_fileds as $key => $field ) {
-            $sql['select'][] = "COALESCE( people.$field, $field.meta_value ) AS $field,";
-            $sql['join'][]   = "LEFT JOIN $usermeta_tb AS $field ON people.user_id = $field.user_id AND $field.meta_key = '$field'";
-        }
+        // $sql['join'][] = "LEFT JOIN $users_tb AS users ON people.user_id = users.ID";
+
+        // foreach ( $pep_fileds as $key => $field ) {
+        //     $sql['select'][] = "COALESCE( people.$field, $field.meta_value ) AS $field,";
+        //     $sql['join'][]   = "LEFT JOIN $usermeta_tb AS $field ON people.user_id = $field.user_id AND $field.meta_key = '$field'";
+        // }
 
         $sql['select'][] = "GROUP_CONCAT( t.name SEPARATOR ',') AS types";
         $sql['join'][]   = "LEFT JOIN $type_rel_tb AS r ON people.id = r.people_id LEFT JOIN $types_tb AS t ON r.people_types_id = t.id";
         $sql_from_tb     = "FROM $pep_tb AS people";
-        $sql['where'][]    = "where 1=1";
-        $sql['where'][]    = "AND ( select count(*) from $types_tb
+        $sql['where'][]  = "where 1=1";
+        $sql['where'][]  = "AND ( select count(*) from $types_tb
             inner join  $type_rel_tb
                 on $types_tb.`id` = $type_rel_tb.`people_types_id`
                 where $type_rel_tb.`people_id` = people.`id` $type_sql and $trashed_sql
           ) >= 1";
 
-        $custom_sql['join'] = [];
+        // $custom_sql['join'] = [];
 
-        $custom_sql['where'][] = 'WHERE 1=1';
-        $sql_group_by = "GROUP BY `people`.`id` ) as people";
+        // $custom_sql['where'][] = 'WHERE 1=1';
+        $sql_group_by = "GROUP BY `people`.`id`";
         $sql_order_by = "ORDER BY $orderby $order";
 
         // Check if want all data without any pagination
         $sql_limit = ( $number != '-1' && !$count ) ? "LIMIT $number OFFSET $offset" : '';
 
         if ( $meta_query ) {
-            $custom_sql['join'][] = "LEFT JOIN $pepmeta_tb as people_meta on people.id = people_meta.`erp_people_id`";
+            $sql['join'][] = "LEFT JOIN $pepmeta_tb as people_meta on people.id = people_meta.`erp_people_id`";
 
             $meta_key      = isset( $meta_query['meta_key'] ) ? $meta_query['meta_key'] : '';
             $meta_value    = isset( $meta_query['meta_value'] ) ? $meta_query['meta_value'] : '';
             $compare       = isset( $meta_query['compare'] ) ? $meta_query['compare'] : '=';
 
-            $custom_sql['where'][] = "AND people_meta.meta_key='$meta_key' and people_meta.meta_value='$meta_value'";
+            $sql['where'][] = "AND people_meta.meta_key='$meta_key' and people_meta.meta_value='$meta_value'";
         }
 
         // Check is the row want to search
         if ( ! empty( $s ) ) {
-            $custom_sql['where'][] = "AND first_name LIKE '%$s%'";
-            $custom_sql['where'][] = "OR last_name LIKE '%$s%'";
-            $custom_sql['where'][] = "OR company LIKE '%$s%'";
-            $custom_sql['where'][] = "OR email LIKE '%$s%'";
+            $sql['where'][] = "AND first_name LIKE '%$s%'";
+            $sql['where'][] = "OR last_name LIKE '%$s%'";
+            $sql['where'][] = "OR company LIKE '%$s%'";
+            $sql['where'][] = "OR email LIKE '%$s%'";
         }
 
         // Check if args count true, then return total count customer according to above filter
         if ( $count ) {
             $sql_order_by = '';
-            $wrapper_select = 'SELECT COUNT(*) as total_number FROM';
+            $sql_group_by = '';
+            $wrapper_select = 'SELECT COUNT(people.id) as total_number';
+            unset( $sql['select'][0] );
         }
 
-        $custom_sql      = apply_filters( 'erp_get_people_pre_where_join', $custom_sql, $args );
+        // $custom_sql      = apply_filters( 'erp_get_people_pre_where_join', $custom_sql, $args );
         $sql             = apply_filters( 'erp_get_people_pre_query', $sql, $args );
-        $custom_group_by = ( ! empty( $custom_sql['group_by'] ) ) ? "GROUP BY " . implode( ', ', $custom_sql['group_by'] ) . ' ' : '';
+        // /$custom_group_by = ( ! empty( $custom_sql['group_by'] ) ) ? "GROUP BY " . implode( ', ', $custom_sql['group_by'] ) . ' ' : '';
         $final_query     = $wrapper_select . ' '
                             . implode( ' ', $sql['select'] ) . ' '
                             . $sql_from_tb . ' '
                             . implode( ' ', $sql['join'] ) . ' '
                             . implode( ' ', $sql['where'] ) . ' '
                             . $sql_group_by . ' '
-                            . implode( ' ', $custom_sql['join'] ) . ' '
-                            . implode( ' ', $custom_sql['where'] ) . ' '
-                            . $custom_group_by
+                            // . $custom_group_by
                             . $sql_order_by . ' '
                             . $sql_limit;
 
-        // print_r( $final_query ); die();
 
         if ( $count ) {
             // Only filtered total count of people
@@ -145,7 +146,6 @@ function erp_get_peoples( $args = [] ) {
         } else {
             // Fetch results from people table
             $results = $wpdb->get_results( apply_filters( 'erp_get_people_total_query', $final_query, $args ), ARRAY_A );
-
             array_walk( $results, function( &$results ) {
                 $results['types'] = explode(',', $results['types'] );
             });
