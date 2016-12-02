@@ -48,12 +48,6 @@ function erp_get_peoples( $args = [] ) {
     $pepmeta_tb  = $wpdb->prefix . 'erp_peoplemeta';
     $types_tb    = $wpdb->prefix . 'erp_people_types';
     $type_rel_tb = $wpdb->prefix . 'erp_people_type_relations';
-    $users_tb    = $wpdb->users;
-    $usermeta_tb = $wpdb->usermeta;
-
-    $pep_fileds  = [ 'first_name', 'last_name', 'phone', 'mobile',
-            'other', 'fax', 'notes', 'street_1', 'street_2', 'city', 'state', 'postal_code', 'country',
-            'currency' ];
 
     if ( false === $items ) {
         extract( $args );
@@ -130,14 +124,14 @@ function erp_get_peoples( $args = [] ) {
         $sql             = apply_filters( 'erp_get_people_pre_query', $sql, $args );
         // /$custom_group_by = ( ! empty( $custom_sql['group_by'] ) ) ? "GROUP BY " . implode( ', ', $custom_sql['group_by'] ) . ' ' : '';
         $final_query     = $wrapper_select . ' '
-                            . implode( ' ', $sql['select'] ) . ' '
-                            . $sql_from_tb . ' '
-                            . implode( ' ', $sql['join'] ) . ' '
-                            . implode( ' ', $sql['where'] ) . ' '
-                            . $sql_group_by . ' '
-                            // . $custom_group_by
-                            . $sql_order_by . ' '
-                            . $sql_limit;
+                        . implode( ' ', $sql['select'] ) . ' '
+                        . $sql_from_tb . ' '
+                        . implode( ' ', $sql['join'] ) . ' '
+                        . implode( ' ', $sql['where'] ) . ' '
+                        . $sql_group_by . ' '
+                        // . $custom_group_by
+                        . $sql_order_by . ' '
+                        . $sql_limit;
 
 
         if ( $count ) {
@@ -346,49 +340,29 @@ function erp_get_people_by( $field, $value ) {
 
     if ( false === $people ) {
 
-        $people_fileds = [ 'first_name', 'last_name', 'company', 'phone', 'mobile',
-            'other', 'fax', 'notes', 'street_1', 'street_2', 'city', 'state', 'postal_code', 'country',
-            'currency' ]; // meta only
-
-        $sql = "SELECT * FROM (
-        SELECT people.id as id, people.user_id, people.created_by,
-
-            CASE WHEN people.user_id then user.user_email ELSE people.email END as email,
-            CASE WHEN people.user_id then user.user_url ELSE people.website END as website,";
-
-
-        foreach ( $people_fileds as $field_name ) {
-            $sql .= "MAX(CASE WHEN people.user_id AND user_meta.meta_key = '$field_name' then user_meta.meta_value ELSE people.$field_name END) as $field_name,";
-        }
-
+        $sql = "SELECT people.*, ";
         $sql .= "GROUP_CONCAT(DISTINCT p_types.name) as types
-
         FROM {$wpdb->prefix}erp_peoples as people
-        LEFT JOIN {$wpdb->prefix}users AS user on user.ID = people.user_id
-        LEFT JOIN {$wpdb->prefix}usermeta AS user_meta on user_meta.user_id = people.user_id
         LEFT JOIN {$wpdb->prefix}erp_people_type_relations as p_types_rel on p_types_rel.people_id = people.id
         LEFT JOIN {$wpdb->prefix}erp_people_types as p_types on p_types.id = p_types_rel.people_types_id
         ";
 
-        $sql .= " GROUP BY people.id ) as people";
-
         if ( is_array( $value ) ) {
             $separeted_values = "'" . implode( "','", $value ) . "'";
 
-            $sql .= " WHERE $field IN ( $separeted_values )";
+            $sql .= " WHERE `people`.$field IN ( $separeted_values )";
         } else {
-            $sql .= " WHERE $field = '$value'";
+            $sql .= " WHERE `people`.$field = '$value'";
         }
+
+        $sql .= " GROUP BY people.id ";
 
         $results = $wpdb->get_results( $sql );
 
-
         $results = array_map( function( $item ) {
             $item->types = explode( ',', $item->types );
-
             return $item;
-        }, $results);
-
+        }, $results );
 
         if ( is_array( $value ) ) {
             $people = erp_array_to_object( $results );
