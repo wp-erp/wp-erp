@@ -22,4 +22,3 @@ add_action( 'added_user_meta', 'erp_crm_sync_people_meta_data', 10, 4 );
 add_filter( 'erp_map_meta_caps', 'erp_crm_map_meta_caps', 10, 4 );
 add_filter( 'erp_get_people_pre_query', 'erp_crm_contact_advance_filter', 10, 2 );
 add_filter( 'erp_get_people_pre_query', 'erp_crm_is_people_belongs_to_saved_search', 10, 2 );
-

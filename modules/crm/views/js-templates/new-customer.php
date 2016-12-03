@@ -132,7 +132,7 @@
             </li>
             <li>
                 <?php erp_html_form_input( array(
-                    'label' => __( 'Age', 'erp' ),
+                    'label' => __( 'Age (years)', 'erp' ),
                     'name'  => 'contact[meta][contact_age]',
                     'value' => '{{ data.contact_age }}',
                     'class' => '',

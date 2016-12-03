@@ -436,14 +436,6 @@ function erp_insert_people( $args = array() ) {
         if ( null === $type_obj ) {
             return new WP_Error( 'no-type_found', __( 'The people type is invalid.', 'erp' ) );
         }
-
-        if ( ! empty( $args['email'] ) ) {
-            $existing_people_by_email = \WeDevs\ERP\Framework\Models\People::where( 'email', $args['email'] )->first();
-
-            if ( $existing_people_by_email && $existing_people_by_email->hasType( $people_type ) ) {
-                return new WP_Error( 'email-already-exist', __( 'The people already exists', 'erp' ) );
-            }
-        }
     }
 
     if ( 'contact' == $people_type ) {
@@ -487,19 +479,33 @@ function erp_insert_people( $args = array() ) {
             $user->user_email = '';
         }
 
-        $people = \WeDevs\ERP\Framework\Models\People::create( [
-                'user_id'    => $user->ID,
-                'email'      => ! empty( $args['email'] ) ? $args['email'] : $user->user_email,
-                'website'    => ! empty( $args['website'] ) ? $args['website'] : $user->user_url,
-                'created_by' => $args['created_by'],
-                'created'    => current_time( 'mysql' )
-            ]
-        );
+        $existing_people_by_email = \WeDevs\ERP\Framework\Models\People::where( 'email', $args['email'] )->first();
+
+        if ( $existing_people_by_email && $existing_people_by_email->hasType( $people_type) ) {
+            return new WP_Error( 'email-already-exist', __( 'The people already exists', 'erp' ) );
+        } else if ( $existing_people_by_email && ! $existing_people_by_email->hasType( $people_type) ) {
+            $people = $existing_people_by_email;
+        } else {
+            $people = \WeDevs\ERP\Framework\Models\People::create( [
+                    'user_id'    => $user->ID,
+                    'email'      => ! empty( $args['email'] ) ? $args['email'] : $user->user_email,
+                    'website'    => ! empty( $args['website'] ) ? $args['website'] : $user->user_url,
+                    'created_by' => $args['created_by'],
+                    'created'    => current_time( 'mysql' )
+                ]
+            );
+        }
 
         if ( ! $people->id ) {
             return new WP_Error( 'people-not-created', __( 'Something went wrong, please try again', 'erp' ) );
         }
     } else {
+        $existing_people_by_email = \WeDevs\ERP\Framework\Models\People::type( $people_type )->where( 'email', $args['email'] )->first();
+
+        if ( !empty( $existing_people_by_email->id ) && $existing_people_by_email->id != $existing_people->id ) {
+            return new WP_Error( 'email-already-exist', __( 'This people email already exists', 'erp' ) );
+        }
+
         $people = $existing_people;
     }
 
