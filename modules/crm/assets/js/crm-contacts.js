@@ -1232,6 +1232,9 @@
                             if ( $.inArray( 'contact', response.types ) != -1 || $.inArray( 'company', response.types ) != -1 ) {
                                 form.find('.modal-suggession').remove();
                                 form.find('header.modal-header').append('<div class="modal-suggession">' + wpErpCrm.contact_exit + '</div>');
+                            } else if ( 'wp_user' == response.data.types ) {
+                                form.find('.modal-suggession').remove();
+                                form.find('header.modal-header').append('<div class="modal-suggession">' + wpErpCrm.wpuser_make_contact_text + ' ' + type + ' ? <a href="#" id="erp-crm-create-contact-other-type" data-type="'+ type +'" data-is_wp="yes" data-user_id="'+ response.data.ID +'">' + wpErpCrm.create_contact_text + ' ' + type + '</a></div>');
                             } else {
                                 form.find('.modal-suggession').remove();
                                 form.find('header.modal-header').append('<div class="modal-suggession">' + wpErpCrm.make_contact_text + ' ' + type + ' ? <a href="#" id="erp-crm-create-contact-other-type" data-type="'+ type +'" data-user_id="'+ response.id +'">' + wpErpCrm.create_contact_text + ' ' + type + '</a></div>');
@@ -1251,7 +1254,8 @@
 
                     var self = $(e.target),
                         type = self.data('type'),
-                        user_id = self.data('user_id');
+                        user_id = self.data('user_id'),
+                        is_wp = self.data('is_wp');
 
 
                     if ( this.isRequestDone ) {
@@ -1265,9 +1269,10 @@
                         data: {
                             user_id: user_id,
                             type: type,
+                            is_wp: is_wp,
                             _wpnonce: wpErpCrm.nonce
                         },
-                        success: function() {
+                        success: function( resp ) {
                             this.isRequestDone = false;
                             self.closest('.modal-suggession').find('.erp-loader').remove();
                             self.closest('.erp-modal').remove();
@@ -1281,10 +1286,11 @@
                                     var modal = this;
 
                                     $( 'header', modal).after( $('<div class="loader"></div>').show() );
-
+                                    var customer_id = ( 'yes' == is_wp ) ? resp : user_id;
+                                    console.log( customer_id, is_wp, resp );
                                     wp.ajax.send( 'erp-crm-customer-get', {
                                         data: {
-                                            id: user_id,
+                                            id: customer_id,
                                             _wpnonce: wpErpCrm.nonce
                                         },
                                         success: function( response ) {

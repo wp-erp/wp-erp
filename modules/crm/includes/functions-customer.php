@@ -2986,22 +2986,12 @@ function erp_crm_sync_people_meta_data( $meta_id, $object_id, $meta_key, $_meta_
     $cache_key         = 'erp_people_id_user_' . $object_id;
     $people_id         = wp_cache_get( $cache_key, 'erp' );
     $people_field      = erp_get_people_main_field();
-    // $people_meta_field = erm_crm_get_contact_meta_fileds();
 
-    // if ( ! in_array( $meta_key, $people_field ) ) {
-    //     // if ( ! in_array( $meta_key, $people_meta_field ) ) {
-    //         return;
-    //     // }
-    // }
-    error_log( $meta_key .': mark1');
     if ( 'not_found' == $people_id ) {
-        error_log( $meta_key .': mark2');
         return;
     }
 
-    error_log( $meta_key .': mark3');
     if ( false === $people_id  ) {
-        error_log( $meta_key .': mark4');
         $people = \WeDevs\ERP\Framework\Models\People::whereUserId( $object_id )->first();
 
         if ( null == $people ) {
@@ -3013,15 +3003,12 @@ function erp_crm_sync_people_meta_data( $meta_id, $object_id, $meta_key, $_meta_
     }
 
     if ( ! $people_id ) {
-        error_log( $meta_key .': mark5');
         return;
     }
 
     if ( in_array( $meta_key, $people_field ) ) {
-        error_log( $meta_key .': mark6');
         \WeDevs\ERP\Framework\Models\People::find( $people_id )->update( [ $meta_key => $_meta_value ] );
     } else {
-        error_log( $meta_key .': mark7');
         erp_people_update_meta( $people_id, $meta_key, $_meta_value );
     }
 }

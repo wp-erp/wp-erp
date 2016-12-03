@@ -490,6 +490,7 @@ class Ajax_Handler {
 
         $id   = isset( $_POST['user_id'] ) ? $_POST['user_id'] : 0;
         $type = isset( $_POST['type'] ) ? $_POST['type'] : '';
+        $is_wp = isset( $_POST['is_wp'] ) ? $_POST['is_wp'] : 'no';
 
         if ( ! $id ) {
             $this->send_error( __( 'User not found', 'erp' ) );
@@ -499,9 +500,44 @@ class Ajax_Handler {
             $this->send_error( __( 'Type not found', 'erp' ) );
         }
 
-        $people_obj = \WeDevs\ERP\Framework\Models\People::find( $id );
-        $type_obj   = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $type )->first();
-        $people_obj->assignType( $type_obj );
+        if ( 'yes' == $is_wp ) {
+            $user = \get_user_by( 'id', $id );
+
+            $args = [
+                'first_name'  => $user->first_name,
+                'last_name'   => $user->last_name,
+                'email'       => $user->user_email,
+                'company'     => get_user_meta( $user->ID, 'company', true ),
+                'phone'       => get_user_meta( $user->ID, 'phone', true ),
+                'mobile'      => get_user_meta( $user->ID, 'mobile', true ),
+                'other'       => get_user_meta( $user->ID, 'other', true ),
+                'website'     => $user->user_url,
+                'fax'         => get_user_meta( $user->ID, 'fax', true ),
+                'notes'       => get_user_meta( $user->ID, 'notes', true ),
+                'street_1'    => get_user_meta( $user->ID, 'street_1', true ),
+                'street_2'    => get_user_meta( $user->ID, 'street_2', true ),
+                'city'        => get_user_meta( $user->ID, 'city', true ),
+                'state'       => get_user_meta( $user->ID, 'state', true ),
+                'postal_code' => get_user_meta( $user->ID, 'postal_code', true ),
+                'country'     => get_user_meta( $user->ID, 'country', true ),
+                'currency'    => get_user_meta( $user->ID, 'currency', true ),
+                'user_id'     => $user->ID,
+                'type'        => $type,
+                'photo_id'    => get_user_meta( $user->ID, 'photo_id', true )
+            ];
+
+            $people_id = erp_insert_people( $args );
+
+            if ( is_wp_error( $people_id ) ) {
+                $this->send_error( $people_id->get_error_message() );
+            }
+
+            $this->send_success( $people_id );
+        } else {
+            $people_obj = \WeDevs\ERP\Framework\Models\People::find( $id );
+            $type_obj   = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $type )->first();
+            $people_obj->assignType( $type_obj );
+        }
 
         $this->send_success();
     }
