@@ -89,6 +89,8 @@
                                                 if ( !empty( $crm_user_id ) ) {
                                                     $user        = get_user_by( 'id', $crm_user_id );
                                                     $user_string = esc_html( $user->display_name );
+                                                } else {
+                                                    $user_string = '';
                                                 }
                                             ?>
                                             <?php if ( $crm_user_id ): ?>

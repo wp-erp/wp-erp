@@ -27,10 +27,13 @@
                             </div>
                             <div class="col-4 details">
                                 <h3><?php echo $customer->get_full_name(); ?></h3>
-                                <p>
-                                    <i class="fa fa-envelope"></i>&nbsp;
-                                    <?php echo erp_get_clickable( 'email', $customer->get_email() ); ?>
-                                </p>
+
+                                <?php if ( $customer->get_email() ): ?>
+                                    <p>
+                                        <i class="fa fa-envelope"></i>&nbsp;
+                                        <?php echo erp_get_clickable( 'email', $customer->get_email() ); ?>
+                                    </p>
+                                <?php endif ?>
 
                                 <?php if ( $customer->get_mobile() != '—' ): ?>
                                     <p>
