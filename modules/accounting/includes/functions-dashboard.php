@@ -24,7 +24,7 @@ function erp_ac_dashboard_right_column() {
 function erp_ac_dashboard_banks() {
     $bank_journals = erp_ac_get_bank_journals();
     $transactions = erp_ac_get_all_transaction([
-        'type'   => ['expense', 'sales', 'journal'],
+        'type'   => ['expense', 'sales', 'journal', 'transfer'],
         'status' => array( 'not_in' => array( 'draft', 'void', 'awaiting_approval' ) ),
         'number' => -1
     ]);
@@ -54,7 +54,7 @@ function erp_ac_dashboard_banks() {
 
     $total   = 0;
     $symbole = erp_ac_get_currency_symbol();
-
+//echo '<pre>'; print_r( $bank_journals ); echo '</pre>'; die();
     ?>
     <ul>
         <?php foreach ( $bank_journals as $id => $journal ) {
