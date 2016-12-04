@@ -2034,7 +2034,7 @@ function erp_crm_get_next_seven_day_schedules_activities( $user_id = '' ) {
  * @param  array  $email
  * @param  string $inbound_email_address
  *
- * @return void
+ * @return array erp_crm_save_customer_feed_data
  */
 function erp_crm_save_email_activity( $email, $inbound_email_address ) {
 
@@ -2047,7 +2047,7 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
         'extra'         => base64_encode( json_encode( [ 'replied' => 1 ] ) ),
     ];
 
-    $data = erp_crm_save_customer_feed_data( $save_data );
+    $customer_feed_data = erp_crm_save_customer_feed_data( $save_data );
 
     $contact_id = (int) $save_data['user_id'];
     $sender_id  = $save_data['created_by'];
@@ -2080,6 +2080,8 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
 
     // Update email counter
     update_option( 'wp_erp_inbound_email_count', get_option( 'wp_erp_inbound_email_count', 0 ) + 1 );
+
+    return $customer_feed_data;
 }
 
 /**
@@ -2088,7 +2090,7 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
  * @param  array  $email
  * @param  string $inbound_email_address
  *
- * @return void
+ * @return array customer_feed_data
  */
 function erp_crm_save_contact_owner_email_activity( $email, $inbound_email_address ) {
     $save_data = [
@@ -2100,7 +2102,7 @@ function erp_crm_save_contact_owner_email_activity( $email, $inbound_email_addre
         'extra'         => base64_encode( json_encode( [ 'replied' => 1 ] ) ),
     ];
 
-    $data = erp_crm_save_customer_feed_data( $save_data );
+    $customer_feed_data = erp_crm_save_customer_feed_data( $save_data );
 
     $contact_id = intval( $save_data['user_id'] );
 
@@ -2127,6 +2129,8 @@ function erp_crm_save_contact_owner_email_activity( $email, $inbound_email_addre
 
     // Update email counter
     update_option( 'wp_erp_inbound_email_count', get_option( 'wp_erp_inbound_email_count', 0 ) + 1 );
+
+    return $customer_feed_data;
 }
 
 /**
@@ -2890,23 +2894,24 @@ function erp_crm_check_new_inbound_emails() {
                 $message_id = $matches[1];
                 $message_id_parts = explode( '.', $message_id );
 
-                $email['cid'] = $message_id_parts[1];
-                $email['sid'] = $message_id_parts[2];
+                $email['hash']  = $message_id_parts[0];
+                $email['cid']   = $message_id_parts[1];
+                $email['sid']   = $message_id_parts[2];
 
                 // Save & sent the email
                 switch ( $message_id_parts[3] ) {
                     case 'r1':
-                        erp_crm_save_email_activity( $email, $imap_options['username'] );
+                        $customer_feed_data = erp_crm_save_email_activity( $email, $imap_options['username'] );
                         break;
                     case 'r2':
-                        erp_crm_save_contact_owner_email_activity( $email, $imap_options['username'] );
+                        $customer_feed_data = erp_crm_save_contact_owner_email_activity( $email, $imap_options['username'] );
                         break;
                 }
 
                 $type = ( $message_id_parts[3] == 'r2' ) ? 'owner_to_contact' : 'contact_to_owner';
                 $email['type'] = $type;
 
-                do_action( 'erp_crm_contact_inbound_email', $email );
+                do_action( 'erp_crm_contact_inbound_email', $email, $customer_feed_data );
             }
         }
 
