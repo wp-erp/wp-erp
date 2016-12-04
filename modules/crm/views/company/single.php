@@ -3,10 +3,15 @@
     <h2><?php _e( 'Company #', 'erp' ); echo $customer->id; ?>
         <a href="<?php echo add_query_arg( ['page' => 'erp-sales-companies'], admin_url( 'admin.php' ) ); ?>" id="erp-contact-list" class="add-new-h2"><?php _e( 'Back to Company list', 'erp' ); ?></a>
 
-        <?php if ( current_user_can( 'erp_crm_edit_contact', $customer->id ) ): ?>
+        <?php if ( current_user_can( 'erp_crm_edit_contact', $customer->id ) || current_user_can( erp_crm_get_manager_role() ) ): ?>
             <span class="edit">
                 <a href="#" @click.prevent="editContact( 'company', '<?php echo $customer->id; ?>', '<?php _e( 'Edit this company', 'erp' ); ?>' )" data-id="<?php echo $customer->id; ?>" data-single_view="1" title="<?php _e( 'Edit this Company', 'erp' ); ?>" class="add-new-h2"><?php _e( 'Edit this Company', 'erp' ); ?></a>
             </span>
+            <?php if ( ! $customer->user_id ): ?>
+                <span class="make-wp-user">
+                    <a href="#" @click.prevent="makeWPUser( 'company', '<?php echo $customer->id; ?>', '<?php _e( 'Make WP User', 'erp' ); ?>', '<?php echo $customer->email ?>' )" data-single_view="1" title="<?php _e( 'Make this contact as a WP User', 'erp' ); ?>" class="add-new-h2"><?php _e( 'Make WP User', 'erp' ); ?></a>
+                </span>
+            <?php endif ?>
         <?php endif ?>
     </h2>
 

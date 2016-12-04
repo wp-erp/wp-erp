@@ -134,20 +134,21 @@ class Customer_Relationship {
                 'customer_social_title'  => __( 'Customer Social Profile', 'erp' ),
                 'customer_assign_group'  => __( 'Add to Contact groups', 'erp' ),
             ),
-            'add_submit'            => __( 'Add New', 'erp' ),
-            'update_submit'         => __( 'Update', 'erp' ),
-            'save_submit'           => __( 'Save', 'erp' ),
-            'customer_upload_photo' => __( 'Upload Photo', 'erp' ),
-            'customer_set_photo'    => __( 'Set Photo', 'erp' ),
-            'confirm'               => __( 'Are you sure?', 'erp' ),
-            'delConfirmCustomer'    => __( 'Are you sure to delete?', 'erp' ),
-            'delConfirm'            => __( 'Are you sure to delete this?', 'erp' ),
-            'checkedConfirm'        => __( 'Select atleast one group', 'erp' ),
-            'contact_exit'          => __( 'Already exists as a contact or company', 'erp' ),
-            'make_contact_text'     => __( 'This user already exists! Do you want to make this user as a', 'erp' ),
-            'wpuser_make_contact_text'     => __( 'This is wp user! Do you want to create this user as a', 'erp' ),
-            'create_contact_text'   => __( 'Create new', 'erp' ),
-            'current_user_id'       => get_current_user_id(),
+            'add_submit'                  => __( 'Add New', 'erp' ),
+            'update_submit'               => __( 'Update', 'erp' ),
+            'save_submit'                 => __( 'Save', 'erp' ),
+            'customer_upload_photo'       => __( 'Upload Photo', 'erp' ),
+            'customer_set_photo'          => __( 'Set Photo', 'erp' ),
+            'confirm'                     => __( 'Are you sure?', 'erp' ),
+            'delConfirmCustomer'          => __( 'Are you sure to delete?', 'erp' ),
+            'delConfirm'                  => __( 'Are you sure to delete this?', 'erp' ),
+            'checkedConfirm'              => __( 'Select atleast one group', 'erp' ),
+            'contact_exit'                => __( 'Already exists as a contact or company', 'erp' ),
+            'make_contact_text'           => __( 'This user already exists! Do you want to make this user as a', 'erp' ),
+            'wpuser_make_contact_text'    => __( 'This is wp user! Do you want to create this user as a', 'erp' ),
+            'create_contact_text'         => __( 'Create new', 'erp' ),
+            'current_user_id'             => get_current_user_id(),
+            'successfully_created_wpuser' => __( 'WP User created successfully', 'erp' ),
         ) );
 
         $contact_actvity_localize = apply_filters( 'erp_crm_contact_localize_var', [
@@ -283,6 +284,7 @@ class Customer_Relationship {
             case 'crm_page_erp-sales-companies':
 
                 erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-customer.php', 'erp-crm-new-contact' );
+                erp_get_js_template( WPERP_CRM_JS_TMPL . '/make-wp-user.php', 'erp-make-wp-user' );
                 erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-bulk-contact-group.php', 'erp-crm-new-bulk-contact-group' );
                 erp_get_vue_component_template( WPERP_CRM_JS_TMPL . '/save-search-fields.php', 'erp-crm-save-search-item' );
 

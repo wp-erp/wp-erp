@@ -6,6 +6,12 @@
             <span class="edit">
                 <a href="#" @click.prevent="editContact( 'contact', '<?php echo $customer->id; ?>', '<?php _e( 'Edit this contact', 'erp' ); ?>' )" data-id="<?php echo $customer->id; ?>" data-single_view="1" title="<?php _e( 'Edit this Contact', 'erp' ); ?>" class="add-new-h2"><?php _e( 'Edit this Contact', 'erp' ); ?></a>
             </span>
+
+            <?php if ( ! $customer->user_id ): ?>
+                <span class="make-wp-user">
+                    <a href="#" @click.prevent="makeWPUser( 'contact', '<?php echo $customer->id; ?>', '<?php _e( 'Make WP User', 'erp' ); ?>', '<?php echo $customer->email ?>' )" data-single_view="1" title="<?php _e( 'Make this contact as a WP User', 'erp' ); ?>" class="add-new-h2"><?php _e( 'Make WP User', 'erp' ); ?></a>
+                </span>
+            <?php endif ?>
         <?php endif ?>
     </h2>
 
@@ -70,6 +76,7 @@
                                 <li><?php erp_print_key_value( __( 'Country', 'erp' ), $customer->get_country() ); ?></li>
                                 <li><?php erp_print_key_value( __( 'Postal Code', 'erp' ), $customer->get_postal_code() ); ?></li>
                                 <li><?php erp_print_key_value( __( 'Source', 'erp' ), $customer->get_source() ); ?></li>
+                                <li><?php erp_print_key_value( __( 'Life stage', 'erp' ), $customer->get_life_stage() ); ?></li>
 
                                 <?php do_action( 'erp_crm_single_contact_basic_info', $customer ); ?>
                             </ul>
