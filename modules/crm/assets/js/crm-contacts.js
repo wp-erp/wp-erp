@@ -1198,7 +1198,8 @@
 
                 checkEmailForContact: function(e) {
 
-                    var self = $(e.target),
+                    var instance = this,
+                        self = $(e.target),
                         form = self.closest('form'),
                         val = self.val(),
                         type = form.find('#erp-customer-type').val(),
@@ -1243,6 +1244,7 @@
                             $('.modal-suggession').hide().slideDown( function() {
                                 form.find('.content-container').css({ 'marginTop': '15px' });
                             });
+
                         }
                     });
                 },
@@ -1256,7 +1258,6 @@
                         type = self.data('type'),
                         user_id = self.data('user_id'),
                         is_wp = self.data('is_wp');
-
 
                     if ( this.isRequestDone ) {
                         return;
@@ -1273,10 +1274,15 @@
                             _wpnonce: wpErpCrm.nonce
                         },
                         success: function( resp ) {
-                            this.isRequestDone = false;
+                            selfVue.isRequestDone = false;
                             self.closest('.modal-suggession').find('.erp-loader').remove();
                             self.closest('.erp-modal').remove();
                             $('.erp-modal-backdrop').remove();
+
+                            selfVue.$nextTick(function() {
+                                this.$broadcast('vtable:reload')
+                            });
+                            selfVue.$refs.vtable.topNavFilter.data = resp.statuses;
 
                             $.erpPopup({
                                 title: wpErpCrm.update_submit + ' ' + type,
@@ -1286,7 +1292,7 @@
                                     var modal = this;
 
                                     $( 'header', modal).after( $('<div class="loader"></div>').show() );
-                                    var customer_id = ( 'yes' == is_wp ) ? resp : user_id;
+                                    var customer_id = ( 'yes' == is_wp ) ? resp.id : user_id;
 
                                     wp.ajax.send( 'erp-crm-customer-get', {
                                         data: {

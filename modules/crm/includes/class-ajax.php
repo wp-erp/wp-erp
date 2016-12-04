@@ -507,14 +507,16 @@ class Ajax_Handler {
                 $this->send_error( $people_id->get_error_message() );
             }
 
-            $this->send_success( $people_id );
         } else {
             $people_obj = \WeDevs\ERP\Framework\Models\People::find( $id );
             $type_obj   = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $type )->first();
             $people_obj->assignType( $type_obj );
+            $people_id = $people_obj->id;
         }
 
-        $this->send_success();
+        $statuses = erp_crm_customer_get_status_count( $type );
+
+        $this->send_success( [ 'id' => $people_id, 'statuses' => $statuses ] );
     }
 
     /**
