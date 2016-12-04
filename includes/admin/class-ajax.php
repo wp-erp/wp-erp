@@ -197,7 +197,7 @@ class Ajax {
             $peep = \WeDevs\ERP\Framework\Models\People::with('types')->whereUserId( $user->ID )->first();
 
             if ( null === $peep ) {
-                $user->types = 'wp_user';
+                $user->data->types = 'wp_user';
                 $people = $user;
             } else {
                 $people        = (object) $peep->toArray();
