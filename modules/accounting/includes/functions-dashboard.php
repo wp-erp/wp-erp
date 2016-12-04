@@ -219,7 +219,7 @@ function erp_ac_dashboard_income_expense() {
 
     $db    = new \WeDevs\ORM\Eloquent\Database();
     $first = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
-    $last   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+    $last  = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
 
     $incomes_args = [
         'start_date' => $first,
@@ -232,6 +232,8 @@ function erp_ac_dashboard_income_expense() {
         'number'     => -1
     ];
 
+    $incomes_args = apply_filters( 'erp_ac_dashboard_income_args', $incomes_args );
+
     $expense_args = [
         'start_date' => $first,
         'end_date'   => $last,
@@ -242,6 +244,8 @@ function erp_ac_dashboard_income_expense() {
         'output_by'  => 'array',
         'number'     => -1
     ];
+
+    $expense_args = apply_filters( 'erp_ac_dashboard_expense_args', $expense_args );
 
     $current_year = date( 'Y', strtotime( current_time( 'mysql' ) ) );
     $prev_year    = date( 'Y', strtotime( '-1 year', strtotime( current_time( 'mysql' ) ) ) );
