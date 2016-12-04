@@ -538,18 +538,25 @@ function erp_ac_dashboard_expense_chart() {
 
         $ledger_data[$id] = array_sum( $ledg_data );
     }
-
+    $no_result = erp_ac_message('no_result');
     ?>
     <script type="text/javascript">
         (function() {
             jQuery(function($) {
 
                 function labelFormatter(label, series) {
-                    return "<div style='font-size:8pt; text-align:center; padding:2px; color:white;'>" + label + "<br>" + Math.round(series.percent) + "%</div>";
+
+                    if ( label === false ) {
+                        return "<div style='font-size:10pt; text-align:center; padding:2px; color:white;'>"+no_result+"</div>";
+                    } else {
+                        return "<div style='font-size:8pt; text-align:center; padding:2px; color:white;'>" + label + "<br>" + Math.round(series.percent) + "%</div>";
+                    }
+
                 }
 
                 var ledgers = <?php echo json_encode( $ledger_data ); ?>,
                     labels  = <?php echo json_encode( $labels ); ?>,
+                    no_result = '<?php echo $no_result; ?>',
                     data    = [];
 
                 $.each( ledgers, function( id,val ) {
@@ -558,8 +565,15 @@ function erp_ac_dashboard_expense_chart() {
 
                 if ( data.length == 0 ) {
                     var data = [
-                        { label: "No Result Found!",  data: 11.1},
-                    ];
+                        { label: false, data: -1},
+                    ],
+                    radius = 0.1,
+                    content = '',
+                    colors = ['#0073aa'];
+                } else {
+                    var radius = 3/4,
+                        content = "%s %p.0%",
+                        colors = [ '#1abc9c', '#2ecc71', '#4aa3df', '#9b59b6', '#f39c12', '#d35400', '#2c3e50'];
                 }
 
                 $.plot('#expense-pie-chart', data, {
@@ -569,23 +583,23 @@ function erp_ac_dashboard_expense_chart() {
                             radius: 1,
                             label: {
                                 show: true,
-                                radius: 3/4,
-                                formatter: labelFormatter
+                                radius: radius,
+                                formatter: labelFormatter,
                             }
                         }
                     },
                     grid: {
                         hoverable: true
                     },
-                    colors: [ '#1abc9c', '#2ecc71', '#4aa3df', '#9b59b6', '#f39c12', '#d35400', '#2c3e50'],
+                    colors: colors,
                     tooltip: true,
                     tooltipOpts: {
                         defaultTheme: false,
-                        content: "%s %p.0%",
+                        content: content,
                     },
                     legend: {
                         show: false
-                    }
+                    },
                 });
             });
         })();

@@ -59,6 +59,7 @@
                                 <li><?php erp_print_key_value( __( 'First Name', 'erp' ), $customer->get_first_name() ); ?></li>
                                 <li><?php erp_print_key_value( __( 'Last Name', 'erp' ), $customer->get_last_name() ); ?></li>
                                 <li><?php erp_print_key_value( __( 'Date of Birth', 'erp' ), $customer->get_birthday() ); ?></li>
+                                <li><?php erp_print_key_value( __( 'Age', 'erp' ), $customer->get_contact_age() ); ?></li>
                                 <li><?php erp_print_key_value( __( 'Phone', 'erp' ), $customer->get_phone() ); ?></li>
                                 <li><?php erp_print_key_value( __( 'Fax', 'erp' ), $customer->get_fax() ); ?></li>
                                 <li><?php erp_print_key_value( __( 'Website', 'erp' ), $customer->get_website() ); ?></li>

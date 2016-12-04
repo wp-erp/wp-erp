@@ -183,17 +183,6 @@ function erp_crm_get_details_url( $id, $type ) {
     return admin_url( 'admin.php' );
 }
 
-// function erp_crm_item_row_actions() {
-//     $item_row_action = [];
-
-//     $item_row_action['edit'] =  [
-//         'title'     => __( 'Edit', 'erp' ),
-//         'attrTitle' => __( 'Edit this contact', 'erp' ),
-//         'class'     => 'edit',
-//         'action'    => 'edit'
-//     ],
-// }
-
 /**
  * Get CRM life statges
  *
@@ -2045,7 +2034,7 @@ function erp_crm_get_next_seven_day_schedules_activities( $user_id = '' ) {
  * @param  array  $email
  * @param  string $inbound_email_address
  *
- * @return void
+ * @return array erp_crm_save_customer_feed_data
  */
 function erp_crm_save_email_activity( $email, $inbound_email_address ) {
 
@@ -2058,7 +2047,7 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
         'extra'         => base64_encode( json_encode( [ 'replied' => 1 ] ) ),
     ];
 
-    $data = erp_crm_save_customer_feed_data( $save_data );
+    $customer_feed_data = erp_crm_save_customer_feed_data( $save_data );
 
     $contact_id = (int) $save_data['user_id'];
     $sender_id  = $save_data['created_by'];
@@ -2091,6 +2080,8 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
 
     // Update email counter
     update_option( 'wp_erp_inbound_email_count', get_option( 'wp_erp_inbound_email_count', 0 ) + 1 );
+
+    return $customer_feed_data;
 }
 
 /**
@@ -2099,7 +2090,7 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
  * @param  array  $email
  * @param  string $inbound_email_address
  *
- * @return void
+ * @return array customer_feed_data
  */
 function erp_crm_save_contact_owner_email_activity( $email, $inbound_email_address ) {
     $save_data = [
@@ -2111,7 +2102,7 @@ function erp_crm_save_contact_owner_email_activity( $email, $inbound_email_addre
         'extra'         => base64_encode( json_encode( [ 'replied' => 1 ] ) ),
     ];
 
-    $data = erp_crm_save_customer_feed_data( $save_data );
+    $customer_feed_data = erp_crm_save_customer_feed_data( $save_data );
 
     $contact_id = intval( $save_data['user_id'] );
 
@@ -2138,6 +2129,8 @@ function erp_crm_save_contact_owner_email_activity( $email, $inbound_email_addre
 
     // Update email counter
     update_option( 'wp_erp_inbound_email_count', get_option( 'wp_erp_inbound_email_count', 0 ) + 1 );
+
+    return $customer_feed_data;
 }
 
 /**
@@ -2901,23 +2894,24 @@ function erp_crm_check_new_inbound_emails() {
                 $message_id = $matches[1];
                 $message_id_parts = explode( '.', $message_id );
 
-                $email['cid'] = $message_id_parts[1];
-                $email['sid'] = $message_id_parts[2];
+                $email['hash']  = $message_id_parts[0];
+                $email['cid']   = $message_id_parts[1];
+                $email['sid']   = $message_id_parts[2];
 
                 // Save & sent the email
                 switch ( $message_id_parts[3] ) {
                     case 'r1':
-                        erp_crm_save_email_activity( $email, $imap_options['username'] );
+                        $customer_feed_data = erp_crm_save_email_activity( $email, $imap_options['username'] );
                         break;
                     case 'r2':
-                        erp_crm_save_contact_owner_email_activity( $email, $imap_options['username'] );
+                        $customer_feed_data = erp_crm_save_contact_owner_email_activity( $email, $imap_options['username'] );
                         break;
                 }
 
                 $type = ( $message_id_parts[3] == 'r2' ) ? 'owner_to_contact' : 'contact_to_owner';
                 $email['type'] = $type;
 
-                do_action( 'erp_crm_contact_inbound_email', $email );
+                do_action( 'erp_crm_contact_inbound_email', $email, $customer_feed_data );
             }
         }
 
@@ -2927,5 +2921,99 @@ function erp_crm_check_new_inbound_emails() {
 
     } catch( \Exception $e ) {
         // $e->getMessage();
+    }
+}
+
+/**
+ * Get the contact sources
+ *
+ * @return array
+ */
+function erp_crm_contact_sources() {
+    $sources = array(
+        'advert'             => __( 'Advertisement', 'erp' ),
+        'chat'               => __( 'Chat', 'erp' ),
+        'contact_form'       => __( 'Contact Form', 'erp' ),
+        'employee_referral'  => __( 'Employee Referral', 'erp' ),
+        'external_referral'  => __( 'External Referral', 'erp' ),
+        'marketing_campaign' => __( 'Marketing campaign', 'erp' ),
+        'newsletter'         => __( 'Newsletter', 'erp' ),
+        'online_store'       => __( 'OnlineStore', 'erp' ),
+        'optin_form'         => __( 'Optin Forms', 'erp' ),
+        'partner'            => __( 'Partner', 'erp' ),
+        'phone'              => __( 'Phone Call', 'erp' ),
+        'public_relations'   => __( 'Public Relations', 'erp' ),
+        'sales_mail_alias'   => __( 'Sales Mail Alias', 'erp' ),
+        'search_engine'      => __( 'Search Engine', 'erp' ),
+        'seminar_internal'   => __( 'Seminar-Internal', 'erp' ),
+        'seminar_partner'    => __( 'Seminar Partner', 'erp' ),
+        'social_media'       => __( 'Social Media', 'erp' ),
+        'trade_show'         => __( 'Trade Show', 'erp' ),
+        'web_download'       => __( 'Web Download', 'erp' ),
+        'web_research'       => __( 'Web Research', 'erp' ),
+    );
+
+    return apply_filters( 'erp_crm_contact_sources', $sources );
+}
+
+/**
+ * Get contact all meta fields
+ *
+ * @since 1.1.7
+ *
+ * @return array
+ */
+// function erm_crm_get_contact_meta_fileds() {
+//     $main_meta_field = [
+//         'life_stage', '_assign_crm_agent', 'date_of_birth', 'source'
+//     ];
+
+//     $social_field = array_keys( erp_crm_get_social_field() ) ;
+
+//     return apply_filters( 'erm_crm_get_contact_meta_fileds', array_merge( $main_meta_field, $social_field ) );
+// }
+
+/**
+ * Instant sync peoplemeta with wp usermetadata when matches any
+ * meta keys of people metakeys
+ *
+ * @since 1.1.7
+ *
+ * @param  integer $meta_id
+ * @param  integer $object_id
+ * @param  string $meta_key
+ * @param  array|string $_meta_value
+ *
+ * @return void
+ */
+function erp_crm_sync_people_meta_data( $meta_id, $object_id, $meta_key, $_meta_value ) {
+
+    $cache_key         = 'erp_people_id_user_' . $object_id;
+    $people_id         = wp_cache_get( $cache_key, 'erp' );
+    $people_field      = erp_get_people_main_field();
+
+    if ( 'not_found' == $people_id ) {
+        return;
+    }
+
+    if ( false === $people_id  ) {
+        $people = \WeDevs\ERP\Framework\Models\People::whereUserId( $object_id )->first();
+
+        if ( null == $people ) {
+            wp_cache_set( $cache_key, 'not_found', 'erp' );
+        } else {
+            $people_id = $people->id;
+            wp_cache_set( $cache_key, $people_id, 'erp' );
+        }
+    }
+
+    if ( ! $people_id ) {
+        return;
+    }
+
+    if ( in_array( $meta_key, $people_field ) ) {
+        \WeDevs\ERP\Framework\Models\People::find( $people_id )->update( [ $meta_key => $_meta_value ] );
+    } else {
+        erp_people_update_meta( $people_id, $meta_key, $_meta_value );
     }
 }

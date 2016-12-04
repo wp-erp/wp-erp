@@ -197,7 +197,8 @@ class Ajax {
             $peep = \WeDevs\ERP\Framework\Models\People::with('types')->whereUserId( $user->ID )->first();
 
             if ( null === $peep ) {
-                $this->send_success();
+                $user->types = 'wp_user';
+                $people = $user;
             } else {
                 $people        = (object) $peep->toArray();
                 $people->types = wp_list_pluck( $peep->types->toArray(), 'name' );
