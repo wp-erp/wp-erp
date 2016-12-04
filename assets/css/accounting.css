@@ -210,8 +210,13 @@ table.vendor-list-table th.column-customer img {
 .erp-ac-journal-entry table.journal-table th {
   text-align: left;
 }
-.erp-ac-journal-entry table.journal-table th.invalid {
+.erp-ac-journal-entry table.journal-table .invalid {
+  display: block;
   color: red;
+  text-align: justify;
+}
+.erp-ac-journal-entry table.journal-table .valid {
+  display: none;
 }
 .erp-ac-list-table-form .bulkactions {
   display: none;

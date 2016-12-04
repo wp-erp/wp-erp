@@ -48,7 +48,7 @@ function erp_ac_get_all_transaction( $args = array() ) {
         if ( isset( $args['user_id'] ) &&  is_array( $args['user_id'] ) && array_key_exists( 'in', $args['user_id'] ) ) {
             $transaction = $transaction->whereIn( 'user_id', $args['user_id']['in'] );
         } else if ( isset( $args['user_id'] ) &&  is_array( $args['user_id'] ) && array_key_exists( 'not_in', $args['user_id'] ) ) {
-            $transaction = $transaction->whereNotIn( 'user_id', [$args['user_id']['not_in']] );
+            $transaction = $transaction->whereNotIn( 'user_id', $args['user_id']['not_in'] );
         } else if ( isset( $args['user_id'] ) &&  ! is_array( $args['user_id'] ) ) {
             $transaction = $transaction->where( 'user_id', '=', $args['user_id'] );
         }
@@ -56,7 +56,7 @@ function erp_ac_get_all_transaction( $args = array() ) {
         if ( isset( $args['created_by'] ) &&  is_array( $args['created_by'] ) && array_key_exists( 'in', $args['created_by'] ) ) {
             $transaction = $transaction->whereIn( 'created_by', $args['created_by']['in'] );
         } else if ( isset( $args['created_by'] ) &&  is_array( $args['created_by'] ) && array_key_exists( 'not_in', $args['created_by'] ) ) {
-            $transaction = $transaction->whereNotIn( 'created_by', [$args['created_by']['not_in']] );
+            $transaction = $transaction->whereNotIn( 'created_by', $args['created_by']['not_in'] );
         } else if ( isset( $args['created_by'] ) &&  ! is_array( $args['created_by'] ) ) {
             $transaction = $transaction->where( 'created_by', '=', $args['created_by'] );
         }
@@ -86,9 +86,16 @@ function erp_ac_get_all_transaction( $args = array() ) {
         }
 
         if ( isset( $args['status'] ) &&  is_array( $args['status'] ) && array_key_exists( 'in', $args['status'] ) ) {
-            $transaction = $transaction->whereIn( 'status', $args['status']['in'] );
+            $transaction = $transaction->where( function($q)use($args) {
+                $q->whereNull( 'status' )
+                  ->orWhereIn( 'status', $args['status']['in'] );
+            } );
+            //$transaction = $transaction->whereIn( 'status', $args['status']['in'] );
         } else if ( isset( $args['status'] ) &&  is_array( $args['status'] ) && array_key_exists( 'not_in', $args['status'] ) ) {
-            $transaction = $transaction->whereNotIn( 'status', [$args['status']['not_in']] );
+            $transaction = $transaction->where( function($q)use($args) {
+                $q->whereNull( 'status' )
+                  ->orWhereNotIn( 'status', $args['status']['not_in'] );
+            } );
         } else if ( isset( $args['status'] ) &&  ! is_array( $args['status'] ) ) {
             $transaction = $transaction->where( 'status', '=', $args['status'] );
         }
@@ -96,7 +103,7 @@ function erp_ac_get_all_transaction( $args = array() ) {
         if ( isset( $args['form_type'] ) &&  is_array( $args['form_type'] ) && array_key_exists( 'in', $args['form_type'] ) ) {
             $transaction = $transaction->whereIn( 'form_type', $args['form_type']['in'] );
         } else if ( isset( $args['form_type'] ) &&  is_array( $args['form_type'] ) && array_key_exists( 'not_in', $args['form_type'] ) ) {
-            $transaction = $transaction->whereNotIn( 'form_type', [$args['form_type']['not_in']] );
+            $transaction = $transaction->whereNotIn( 'form_type', $args['form_type']['not_in'] );
         } else if ( isset( $args['form_type'] ) &&  ! is_array( $args['form_type'] ) ) {
             $transaction = $transaction->where( 'form_type', '=', $args['form_type'] );
         }
@@ -151,9 +158,11 @@ function erp_ac_get_all_transaction( $args = array() ) {
  * @return array
  */
 function erp_ac_get_transaction_count( $args, $user_id = 0 ) {
-    $status = isset( $args['status'] ) ? $args['status'] : false;
+    $status    = isset( $args['status'] ) ? $args['status'] : false;
     $cache_key = 'erp-ac-' . $args['type'] . '-' . $user_id . '-count';
     $count     = wp_cache_get( $cache_key, 'erp' );
+    $start = isset( $args['start_date'] ) ? $args['start_date'] :  date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+    $end = isset( $args['end_date'] ) ? $args['end_date'] : date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
 
     if ( false === $count ) {
         $trans = new WeDevs\ERP\Accounting\Model\Transaction();
@@ -166,6 +175,8 @@ function erp_ac_get_transaction_count( $args, $user_id = 0 ) {
             $trans = $trans->where( 'status', '=', $args['status'] );
         }
 
+        $trans = $trans->where( 'issue_date', '>=', $start );
+        $trans = $trans->where( 'issue_date', '<=', $end );
         $count = $trans->type( $args['type'] )->count();
     }
 

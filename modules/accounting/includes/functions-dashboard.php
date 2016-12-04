@@ -24,9 +24,11 @@ function erp_ac_dashboard_right_column() {
 function erp_ac_dashboard_banks() {
     $bank_journals = erp_ac_get_bank_journals();
     $transactions = erp_ac_get_all_transaction([
-        'type'   => ['expense', 'sales', 'journal'],
-        'status' => array( 'not_in' => array( 'draft' ) )
+        'type'   => ['expense', 'sales', 'journal', 'transfer'],
+        'status' => array( 'not_in' => array( 'draft', 'void', 'awaiting_approval' ) ),
+        'number' => -1
     ]);
+
     $transactions_id = wp_list_pluck( $transactions, 'id' );
     $all_journals    = wp_list_pluck( $transactions, 'id' );
 
@@ -52,7 +54,7 @@ function erp_ac_dashboard_banks() {
 
     $total   = 0;
     $symbole = erp_ac_get_currency_symbol();
-
+//echo '<pre>'; print_r( $bank_journals ); echo '</pre>'; die();
     ?>
     <ul>
         <?php foreach ( $bank_journals as $id => $journal ) {
@@ -89,6 +91,7 @@ function erp_ac_dashboard_invoice_payable() {
         'form_type'  => 'invoice',
         'type'       => 'sales',
         'status'     => ['in' => ['awaiting_payment', 'partial'] ],
+        'number'     => -1
     ];
 
     $invoices = erp_ac_get_all_transaction( $incomes_args );
@@ -169,7 +172,8 @@ function erp_ac_dashboard_net_income() {
         'groupby'    => 'type',
         'start_date' => $first,
         'end_date'   => $last,
-        'output_by'  => 'array'
+        'output_by'  => 'array',
+        'number'     => -1
 
     ];
 
@@ -224,7 +228,8 @@ function erp_ac_dashboard_income_expense() {
         'status'     => ['in' => ['awaiting_payment', 'closed', 'partial'] ],
         'select'     => [ '*', $db->raw( 'MONTHNAME( issue_date ) as month' ) ],
         'groupby'    => 'month',
-        'output_by'  => 'array'
+        'output_by'  => 'array',
+        'number'     => -1
     ];
 
     $expense_args = [
@@ -234,7 +239,8 @@ function erp_ac_dashboard_income_expense() {
         'status'     => ['in' => ['awaiting_payment', 'closed', 'partial'] ],
         'select'     => [ '*', $db->raw( 'MONTHNAME( issue_date ) as month' ) ],
         'groupby'    => 'month',
-        'output_by'  => 'array'
+        'output_by'  => 'array',
+        'number'     => -1
     ];
 
     $current_year = date( 'Y', strtotime( current_time( 'mysql' ) ) );
@@ -403,6 +409,7 @@ function erp_ac_dashboard_bills_payable() {
         'form_type'  => ['vendor_credit'],
         'type'       => ['expense'],
         'status'     => ['in' => ['awaiting_payment', 'partial'] ],
+        'number'     => -1
     ];
 
     $incomes_args = apply_filters( 'erp_ac_bill_payable_arags', $incomes_args );
@@ -487,7 +494,8 @@ function erp_ac_dashboard_expense_chart() {
         'status'     => ['in' => ['awaiting_payment', 'closed', 'partial'] ],
         'select'     => [ '*', $db->raw( 'MONTHNAME( issue_date ) as month' ) ],
         'groupby'    => 'month',
-        'output_by'  => 'array'
+        'output_by'  => 'array',
+        'number'     => -1
     ];
 
     $expense_args        = apply_filters( 'erp_ac_expense_pie_chart',  $expense_args );

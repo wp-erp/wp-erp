@@ -1,6 +1,6 @@
 <?php
-$start = isset( $_GET['start'] ) ? $_GET['start'] : false;
-$end   = isset( $_GET['end'] ) ? $_GET['end'] : false;
+$start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) ); //isset( $_GET['start'] ) ? $_GET['start'] : false;
+$end   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) ); //isset( $_GET['end'] ) ? $_GET['end'] : false;
 $ledgers = erp_ac_reporting_query( $start, $end );
 $charts  = [];
 
@@ -23,7 +23,7 @@ $credit_total = 0.00;
 
 <div class="wrap">
     <h2><?php _e( 'Trial Balance', 'erp' ); ?></h2>
-    <?php erp_ac_report_filter_form();?>
+    <?php //erp_ac_report_filter_form();?>
     <table class="table widefat striped">
         <thead>
             <tr>

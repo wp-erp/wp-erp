@@ -26,11 +26,10 @@ class Transaction extends Model {
     }
 
     public function scopeType( $query, $type = 'expense' ) {
-        
         if ( is_array( $type ) ) {
-            return $query->whereIn( 'type', $type );    
+            return $query->whereIn( 'type', $type );
         } else {
-            return $query->where( 'type', '=', $type );    
+            return $query->where( 'type', '=', $type );
         }
     }
 

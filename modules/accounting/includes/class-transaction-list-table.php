@@ -278,9 +278,12 @@ class Transaction_List_Table extends \WP_List_Table {
      * @return  array
      */
     function get_counts() {
+        global $wpdb;
         $cache_key = 'erp-ac-sales-trnasction-counts-' . get_current_user_id();
         $results = wp_cache_get( $cache_key, 'erp' );
         $type = isset( $_REQUEST['form_type'] ) ? $_REQUEST['form_type'] : false;
+        $start = isset( $_GET['start_date'] ) ? $_GET['start_date'] :  date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+        $end = isset( $_GET['end_date'] ) ? $_GET['end_date'] : date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
 
         if ( false === $results ) {
             $trans = new \WeDevs\ERP\Accounting\Model\Transaction();
@@ -290,11 +293,15 @@ class Transaction_List_Table extends \WP_List_Table {
                 $results = $trans->select( array( 'status', $db->raw('COUNT(id) as num') ) )
                             ->where( 'type', '=', $this->type )
                             ->where( 'form_type', '=', $type )
+                            ->where( 'issue_date', '>=', $start )
+                            ->where( 'issue_date', '<=', $end )
                             ->groupBy('status')
                             ->get()->toArray();
             } else {
                 $results = $trans->select( array( 'status', $db->raw('COUNT(id) as num') ) )
                             ->where( 'type', '=', $this->type )
+                            ->where( 'issue_date', '>=', $start )
+                            ->where( 'issue_date', '<=', $end )
                             ->groupBy('status')
                             ->get()->toArray();
             }
