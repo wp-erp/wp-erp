@@ -173,7 +173,16 @@
                     <th class="col-amount">
                         <input type="text" name="credit_total" class="credit-price-total" readonly value="<?php echo $total_credit; ?>">
                     </th>
-                    <th class="col-diff"><?php echo erp_ac_get_price_for_field( '0.00', ['symbol'=>false] ); ?></th>
+
+                </tr>
+                <tr>
+
+                    <th colspan="2" class="align-right"></th>
+                    <th colspan="2" class="col-amount">
+                        <div class="valid erp-ac-journal-diff">
+                            <?php _e( 'The amount of debit and credit are not same', 'erp' ); ?>
+                        </div>
+                    </th>
                 </tr>
             </tfoot>
         </table>

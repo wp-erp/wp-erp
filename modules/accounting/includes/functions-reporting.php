@@ -60,13 +60,25 @@ function erp_ac_reporting_query( $start = false, $end = false ) {
     $tbl_class       = $wpdb->prefix . 'erp_ac_chart_classes';
     $tbl_journals    = $wpdb->prefix . 'erp_ac_journals';
     $tbl_transaction = $wpdb->prefix . 'erp_ac_transactions';
+    $query           = [];
 
-    $financial_start = ( $start && ! empty( $start ) ) ? $start : date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
-    $financial_end   = ( $end && ! empty( $end ) ) ? $end : date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
-    $where           = "tran.status IS NULL OR tran.status NOT IN( 'draft', 'void', 'awaiting_approval' ) AND ( tran.issue_date >= '$financial_start' AND tran.issue_date <= '$financial_end' )";
+    $financial_start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+    $financial_end   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+
+    if ( $start ) {
+        $query[] = "tran.issue_date >= '$financial_start'";
+    }
+
+    if ( $end ) {
+        $query[] = "tran.issue_date <= '$financial_end'";
+    }
+
+    $query  = $query ? ' AND ' . implode( ' AND ', $query ) : '';
+
+    $where           = "( tran.status IS NULL OR tran.status NOT IN( 'draft', 'void', 'awaiting_approval' ) ) AND ( 1=1 $query )";
     $join            = '';
     $where           = apply_filters( 'erp_ac_trial_balance_where', $where );
-    $join           = apply_filters( 'erp_ac_trial_balance_join', $join );
+    $join            = apply_filters( 'erp_ac_trial_balance_join', $join );
 
     $sql = "SELECT led.id, led.code, led.name, led.type_id, types.name as type_name, types.class_id, class.name as class_name, sum(jour.debit) as debit, sum(jour.credit) as credit
     FROM $tbl_ledger as led
@@ -103,7 +115,6 @@ function erp_ac_get_sales_tax_report( $args ) {
 
     $cache_key  = 'erp-ac-tax-report' . md5( serialize( $args ) ) . md5( serialize( get_current_user_id() ) );
     $tax_report = wp_cache_get( $cache_key, 'erp' );
-
     if ( false === $tax_report ) {
         $tax_report = WeDevs\ERP\Accounting\Model\Transaction::with([ 'journals' => function( $q ) use( $args ) {
             return $q->with([ 'ledger' => function( $l ) use( $args ) {
