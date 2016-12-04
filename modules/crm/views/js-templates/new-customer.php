@@ -1,8 +1,12 @@
 <div class="erp-customer-form">
 
     <# if ( _.contains( data.types, 'company' ) ) { #>
+        <span class="required">* <?php _e( 'Company name or email or phone is required', 'erp' ) ?></span>
+
         <?php do_action( 'erp_crm_company_form_top' ); ?>
     <# } else { #>
+        <span class="required">* <?php _e( 'First name or email or phone is required', 'erp' ); ?></span>
+
         <?php do_action( 'erp_crm_contact_form_top' ); ?>
     <# } #>
 

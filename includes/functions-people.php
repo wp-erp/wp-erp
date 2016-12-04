@@ -462,8 +462,8 @@ function erp_insert_people( $args = array() ) {
 
         $existing_people_by_email = \WeDevs\ERP\Framework\Models\People::where( 'email', $args['email'] )->first();
 
-        if ( $existing_people_by_email && $existing_people_by_email->hasType( $people_type) ) {
-            return new WP_Error( 'email-already-exist', __( 'The people already exists', 'erp' ) );
+        if ( ! empty( $existing_people_by_email->email ) && $existing_people_by_email->hasType( $people_type) ) {
+            return new WP_Error( 'email-already-exist', __( 'This people already exists', 'erp' ) );
         } else if ( $existing_people_by_email && ! $existing_people_by_email->hasType( $people_type) ) {
             $people = $existing_people_by_email;
         } else {
