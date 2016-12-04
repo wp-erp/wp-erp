@@ -63,18 +63,6 @@ function erp_get_peoples( $args = [] ) {
 
         $wrapper_select = "SELECT people.*, ";
 
-        // $sql['select'][] = "( SELECT people.id as id, people.user_id as user_id, people.company as company, people.created_by as created_by, people.created as created, COALESCE( people.email, users.user_email ) AS email,
-        //         COALESCE( people.website, users.user_url ) AS website,";
-
-        // $sql['select'][] = "GROUP_CONCAT( t.name SEPARATOR ',') AS types";
-
-        // $sql['join'][] = "LEFT JOIN $users_tb AS users ON people.user_id = users.ID";
-
-        // foreach ( $pep_fileds as $key => $field ) {
-        //     $sql['select'][] = "COALESCE( people.$field, $field.meta_value ) AS $field,";
-        //     $sql['join'][]   = "LEFT JOIN $usermeta_tb AS $field ON people.user_id = $field.user_id AND $field.meta_key = '$field'";
-        // }
-
         $sql['select'][] = "GROUP_CONCAT( t.name SEPARATOR ',') AS types";
         $sql['join'][]   = "LEFT JOIN $type_rel_tb AS r ON people.id = r.people_id LEFT JOIN $types_tb AS t ON r.people_types_id = t.id";
         $sql_from_tb     = "FROM $pep_tb AS people";
@@ -85,9 +73,6 @@ function erp_get_peoples( $args = [] ) {
                 where $type_rel_tb.`people_id` = people.`id` $type_sql and $trashed_sql
           ) >= 1";
 
-        // $custom_sql['join'] = [];
-
-        // $custom_sql['where'][] = 'WHERE 1=1';
         $sql_group_by = "GROUP BY `people`.`id`";
         $sql_order_by = "ORDER BY $orderby $order";
 
@@ -120,16 +105,13 @@ function erp_get_peoples( $args = [] ) {
             unset( $sql['select'][0] );
         }
 
-        // $custom_sql      = apply_filters( 'erp_get_people_pre_where_join', $custom_sql, $args );
         $sql             = apply_filters( 'erp_get_people_pre_query', $sql, $args );
-        // /$custom_group_by = ( ! empty( $custom_sql['group_by'] ) ) ? "GROUP BY " . implode( ', ', $custom_sql['group_by'] ) . ' ' : '';
         $final_query     = $wrapper_select . ' '
                         . implode( ' ', $sql['select'] ) . ' '
                         . $sql_from_tb . ' '
                         . implode( ' ', $sql['join'] ) . ' '
                         . implode( ' ', $sql['where'] ) . ' '
                         . $sql_group_by . ' '
-                        // . $custom_group_by
                         . $sql_order_by . ' '
                         . $sql_limit;
 
@@ -349,7 +331,6 @@ function erp_get_people_by( $field, $value ) {
 
         if ( is_array( $value ) ) {
             $separeted_values = "'" . implode( "','", $value ) . "'";
-
             $sql .= " WHERE `people`.$field IN ( $separeted_values )";
         } else {
             $sql .= " WHERE `people`.$field = '$value'";

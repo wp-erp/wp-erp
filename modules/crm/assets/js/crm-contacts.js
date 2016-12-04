@@ -1865,6 +1865,52 @@
                     mainWrap.find('.assign-form').fadeIn();
                 },
 
+                makeWPUser: function( type, id, title, email ) {
+                    var data = {
+                        id : id,
+                        type: type,
+                        email: email,
+                    };
+
+                    $.erpPopup({
+                        title: title,
+                        button: wpErpCrm.update_submit,
+                        id: 'erp-make-wp-user-form',
+                        content: wperp.template('erp-make-wp-user')( data ).trim(),
+                        extraClass: 'smaller',
+                        onSubmit: function( modal ) {
+                            modal.disableButton();
+
+                            wp.ajax.send( {
+                                data: this.serialize(),
+                                success: function( res ) {
+                                    modal.enableButton();
+                                    modal.closeModal();
+                                    swal({
+                                        title: '',
+                                        text: wpErpCrm.successfully_created_wpuser,
+                                        type: 'success',
+                                        confirmButtonText: 'OK',
+                                        confirmButtonColor: '#008ec2',
+                                        closeOnConfirm: false
+                                    },
+                                    function(isConfirm){
+                                        if (isConfirm) {
+                                            window.location.reload();
+                                        }
+                                    });
+                                },
+                                error: function(error) {
+                                    modal.enableButton();
+                                    modal.showError( error );
+                                }
+                            });
+
+
+                        }
+                    });
+                },
+
                 saveAssignContact: function() {
                     var self = this;
 

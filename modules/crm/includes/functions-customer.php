@@ -3012,3 +3012,70 @@ function erp_crm_sync_people_meta_data( $meta_id, $object_id, $meta_key, $_meta_
         erp_people_update_meta( $people_id, $meta_key, $_meta_value );
     }
 }
+
+/**
+ * Make crm contact to wp user
+ *
+ * @since 1.1.7
+ *
+ * @param integer $customer_id
+ * @param string $email [ optional ]
+ *
+ * @return void
+ **/
+function erp_crm_make_wp_user( $customer_id, $args = [] ) {
+
+    if ( ! $customer_id ) {
+        return new WP_Error( 'no-ids', __( 'No contact found', 'erp' ) );
+    }
+
+    $people = (array) erp_get_people_by( 'id', intval( $customer_id ) );
+
+    $email = ! empty( $people['email'] ) ? $people['email'] : $args['email'];
+    $role = ! empty( $args['role'] ) ? $args['role'] : 'subscriber';
+    $type = ! empty( $args['type'] ) ? $args['type'] : '';
+
+    if ( empty( $email ) ) {
+        return new WP_Error( 'no-email', __( 'No email found for creating wp user', 'erp' ) );
+    }
+
+    // attempt to create the user
+    $userdata = array(
+        'user_login'   => $email,
+        'user_email'   => $email,
+        'first_name'   => ( 'company' == $type ) ? $people['company'] : $people['first_name'],
+        'last_name'    => ( 'company' == $type ) ? '' : $people['last_name'],
+        'user_url'     => $people['website'],
+        'display_name' => ( 'company' == $type ) ? $people['company'] : $people['first_name'] . ' ' . $people['last_name'],
+    );
+
+    $userdata['user_pass'] = wp_generate_password( 12 );
+    $userdata['role'] = $role;
+
+    $userdata = apply_filters( 'erp_crm_make_wpuser_args', $userdata );
+    $user_id  = wp_insert_user( $userdata );
+
+    if ( is_wp_error( $user_id ) ) {
+        return $user_id;
+    }
+
+    if ( $args['notify_email'] ) {
+        wp_send_new_user_notifications( $user_id );
+    }
+
+    $people_meta = \WeDevs\ERP\Framework\Models\Peoplemeta::where( 'erp_people_id', $customer_id )->get()->toArray();
+    $meta_array = wp_list_pluck( $people_meta, 'meta_value', 'meta_key' );
+
+    unset( $people['id'], $people['user_id'], $people['website'], $people['email'], $people['created'], $people['types'], $people['first_name'], $people['last_name'] );
+    $people_array = array_merge( $people, $meta_array );
+
+    if ( $people_array ) {
+        foreach ( $people_array as $key => $value ) {
+            update_user_meta( $user_id, $key, $value );
+        }
+    }
+
+    \WeDevs\ERP\Framework\Models\People::find( $customer_id )->update( [ 'user_id' => $user_id, 'email' => $email ] );
+
+    return true;
+}
