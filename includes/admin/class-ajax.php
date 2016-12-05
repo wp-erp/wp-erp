@@ -200,7 +200,8 @@ class Ajax {
             $peep = \WeDevs\ERP\Framework\Models\People::with('types')->whereUserId( $user->ID )->first();
 
             if ( null === $peep ) {
-                $this->send_success();
+                $user->data->types = 'wp_user';
+                $people = $user;
             } else {
                 $people        = (object) $peep->toArray();
                 $people->types = wp_list_pluck( $peep->types->toArray(), 'name' );
@@ -402,9 +403,9 @@ class Ajax {
             if ( is_wp_error( $contact_id ) ) {
                 continue;
             } else {
-                update_user_meta( $data['user_id'], '_assign_crm_agent', $contact_owner );
+                update_user_meta( $data['user_id'], 'contact_owner', $contact_owner );
                 update_user_meta( $data['user_id'], 'life_stage', $life_stage );
-                erp_people_update_meta( $data['user_id'], 'life_stage', $life_stage );
+                erp_people_update_meta( $contact_id, 'life_stage', $life_stage );
             }
 
             // Subscribe to a group if any group has been selected

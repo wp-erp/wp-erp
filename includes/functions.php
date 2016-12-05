@@ -1421,7 +1421,7 @@ function erp_process_import_export() {
                         } else {
                             $contact_owner = isset( $_POST['contact_owner'] ) ? intval( $_POST['contact_owner'] ) : get_current_user_id();
                             $life_stage    = isset( $_POST['life_stage'] ) ? sanitize_key( $_POST['life_stage'] ) : '';
-                            erp_people_update_meta( $item_insert_id, '_assign_crm_agent', $contact_owner );
+                            erp_people_update_meta( $item_insert_id, 'contact_owner', $contact_owner );
                             erp_people_update_meta( $item_insert_id, 'life_stage', $life_stage );
 
                             if ( isset( $_POST['contact_group'] ) && ! empty( $_POST['contact_group'] ) ) {

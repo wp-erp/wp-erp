@@ -183,17 +183,6 @@ function erp_crm_get_details_url( $id, $type ) {
     return admin_url( 'admin.php' );
 }
 
-// function erp_crm_item_row_actions() {
-//     $item_row_action = [];
-
-//     $item_row_action['edit'] =  [
-//         'title'     => __( 'Edit', 'erp' ),
-//         'attrTitle' => __( 'Edit this contact', 'erp' ),
-//         'class'     => 'edit',
-//         'action'    => 'edit'
-//     ],
-// }
-
 /**
  * Get CRM life statges
  *
@@ -2049,7 +2038,7 @@ function erp_crm_get_next_seven_day_schedules_activities( $user_id = '' ) {
  * @param  array  $email
  * @param  string $inbound_email_address
  *
- * @return void
+ * @return array erp_crm_save_customer_feed_data
  */
 function erp_crm_save_email_activity( $email, $inbound_email_address ) {
 
@@ -2062,7 +2051,7 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
         'extra'         => base64_encode( json_encode( [ 'replied' => 1 ] ) ),
     ];
 
-    $data = erp_crm_save_customer_feed_data( $save_data );
+    $customer_feed_data = erp_crm_save_customer_feed_data( $save_data );
 
     $contact_id = (int) $save_data['user_id'];
     $sender_id  = $save_data['created_by'];
@@ -2095,6 +2084,8 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
 
     // Update email counter
     update_option( 'wp_erp_inbound_email_count', get_option( 'wp_erp_inbound_email_count', 0 ) + 1 );
+
+    return $customer_feed_data;
 }
 
 /**
@@ -2103,7 +2094,7 @@ function erp_crm_save_email_activity( $email, $inbound_email_address ) {
  * @param  array  $email
  * @param  string $inbound_email_address
  *
- * @return void
+ * @return array customer_feed_data
  */
 function erp_crm_save_contact_owner_email_activity( $email, $inbound_email_address ) {
     $save_data = [
@@ -2115,7 +2106,7 @@ function erp_crm_save_contact_owner_email_activity( $email, $inbound_email_addre
         'extra'         => base64_encode( json_encode( [ 'replied' => 1 ] ) ),
     ];
 
-    $data = erp_crm_save_customer_feed_data( $save_data );
+    $customer_feed_data = erp_crm_save_customer_feed_data( $save_data );
 
     $contact_id = intval( $save_data['user_id'] );
 
@@ -2142,6 +2133,8 @@ function erp_crm_save_contact_owner_email_activity( $email, $inbound_email_addre
 
     // Update email counter
     update_option( 'wp_erp_inbound_email_count', get_option( 'wp_erp_inbound_email_count', 0 ) + 1 );
+
+    return $customer_feed_data;
 }
 
 /**
@@ -2776,7 +2769,7 @@ function erp_handle_user_bulk_actions() {
                 if ( is_wp_error( $contact_id ) ) {
                     continue;
                 } else {
-                    update_user_meta( $user_id, '_assign_crm_agent', $contact_owner );
+                    update_user_meta( $user_id, 'contact_owner', $contact_owner );
                     update_user_meta( $user_id, 'life_stage', $life_stage );
                     erp_people_update_meta( $contact_id, 'life_stage', $life_stage );
                 }
@@ -2847,7 +2840,7 @@ function erp_create_contact_from_created_user( $user_id ) {
     $contact_owner = ( $contact_owner ) ? $contact_owner : get_current_user_id();
     $life_stage    = erp_get_option( 'life_stage', 'erp_settings_erp-crm_contacts', 'opportunity' );
 
-    update_user_meta( $user_id, '_assign_crm_agent', $contact_owner );
+    update_user_meta( $user_id, 'contact_owner', $contact_owner );
     update_user_meta( $user_id, 'life_stage', $life_stage );
     erp_people_update_meta( $contact_id, 'life_stage', $life_stage );
 
@@ -2905,23 +2898,24 @@ function erp_crm_check_new_inbound_emails() {
                 $message_id = $matches[1];
                 $message_id_parts = explode( '.', $message_id );
 
-                $email['cid'] = $message_id_parts[1];
-                $email['sid'] = $message_id_parts[2];
+                $email['hash']  = $message_id_parts[0];
+                $email['cid']   = $message_id_parts[1];
+                $email['sid']   = $message_id_parts[2];
 
                 // Save & sent the email
                 switch ( $message_id_parts[3] ) {
                     case 'r1':
-                        erp_crm_save_email_activity( $email, $imap_options['username'] );
+                        $customer_feed_data = erp_crm_save_email_activity( $email, $imap_options['username'] );
                         break;
                     case 'r2':
-                        erp_crm_save_contact_owner_email_activity( $email, $imap_options['username'] );
+                        $customer_feed_data = erp_crm_save_contact_owner_email_activity( $email, $imap_options['username'] );
                         break;
                 }
 
                 $type = ( $message_id_parts[3] == 'r2' ) ? 'owner_to_contact' : 'contact_to_owner';
                 $email['type'] = $type;
 
-                do_action( 'erp_crm_contact_inbound_email', $email );
+                do_action( 'erp_crm_contact_inbound_email', $email, $customer_feed_data );
             }
         }
 
@@ -2931,5 +2925,185 @@ function erp_crm_check_new_inbound_emails() {
 
     } catch( \Exception $e ) {
         // $e->getMessage();
+    }
+}
+
+/**
+ * Get the contact sources
+ *
+ * @return array
+ */
+function erp_crm_contact_sources() {
+    $sources = array(
+        'advert'             => __( 'Advertisement', 'erp' ),
+        'chat'               => __( 'Chat', 'erp' ),
+        'contact_form'       => __( 'Contact Form', 'erp' ),
+        'employee_referral'  => __( 'Employee Referral', 'erp' ),
+        'external_referral'  => __( 'External Referral', 'erp' ),
+        'marketing_campaign' => __( 'Marketing campaign', 'erp' ),
+        'newsletter'         => __( 'Newsletter', 'erp' ),
+        'online_store'       => __( 'OnlineStore', 'erp' ),
+        'optin_form'         => __( 'Optin Forms', 'erp' ),
+        'partner'            => __( 'Partner', 'erp' ),
+        'phone'              => __( 'Phone Call', 'erp' ),
+        'public_relations'   => __( 'Public Relations', 'erp' ),
+        'sales_mail_alias'   => __( 'Sales Mail Alias', 'erp' ),
+        'search_engine'      => __( 'Search Engine', 'erp' ),
+        'seminar_internal'   => __( 'Seminar-Internal', 'erp' ),
+        'seminar_partner'    => __( 'Seminar Partner', 'erp' ),
+        'social_media'       => __( 'Social Media', 'erp' ),
+        'trade_show'         => __( 'Trade Show', 'erp' ),
+        'web_download'       => __( 'Web Download', 'erp' ),
+        'web_research'       => __( 'Web Research', 'erp' ),
+    );
+
+    return apply_filters( 'erp_crm_contact_sources', $sources );
+}
+
+/**
+ * Get contact all meta fields
+ *
+ * @since 1.1.7
+ *
+ * @return array
+ */
+function erp_crm_get_contact_meta_fields() {
+    // core meta keys
+    $core_fields = [
+        'life_stage', 'contact_owner', 'date_of_birth', 'age', 'source'
+    ];
+
+    $social_fields = array_keys( erp_crm_get_social_field() ) ;
+
+    return apply_filters( 'erp_crm_contact_meta_fields', array_merge( $core_fields, $social_fields ) );
+}
+
+/**
+ * Instant sync peoplemeta with wp usermetadata when matches any
+ * meta keys of people metakeys
+ *
+ * @since 1.1.7
+ *
+ * @param  integer $meta_id
+ * @param  integer $object_id
+ * @param  string $meta_key
+ * @param  array|string $_meta_value
+ *
+ * @return void
+ */
+function erp_crm_sync_people_meta_data( $meta_id, $object_id, $meta_key, $_meta_value ) {
+
+    $cache_key          = 'erp_people_id_user_' . $object_id;
+    $people_id          = wp_cache_get( $cache_key, 'erp' );
+    $people_field       = erp_get_people_main_field();
+    $people_meta_fields = erp_crm_get_contact_meta_fields();
+
+    if ( 'not_found' == $people_id ) {
+        return;
+    }
+
+    if ( false === $people_id  ) {
+        $people = \WeDevs\ERP\Framework\Models\People::whereUserId( $object_id )->first();
+
+        if ( null == $people ) {
+            wp_cache_set( $cache_key, 'not_found', 'erp' );
+        } else {
+            $people_id = $people->id;
+            wp_cache_set( $cache_key, $people_id, 'erp' );
+        }
+    }
+
+    if ( ! $people_id ) {
+        return;
+    }
+
+    if ( in_array( $meta_key, $people_field ) ) {
+        \WeDevs\ERP\Framework\Models\People::find( $people_id )->update( [ $meta_key => $_meta_value ] );
+    }
+
+    if ( in_array( $meta_key , $people_meta_fields ) ) {
+        erp_people_update_meta( $people_id, $meta_key, $_meta_value );
+    }
+}
+
+/**
+ * Make crm contact to wp user
+ *
+ * @since 1.1.7
+ *
+ * @param integer $customer_id
+ * @param array $args [ default : [] ]
+ *
+ * @return void
+ **/
+function erp_crm_make_wp_user( $customer_id, $args = [] ) {
+
+    if ( ! $customer_id ) {
+        return new WP_Error( 'no-ids', __( 'No contact found', 'erp' ) );
+    }
+
+    $people = (array) erp_get_people_by( 'id', intval( $customer_id ) );
+
+    $email = ! empty( $people['email'] ) ? $people['email'] : $args['email'];
+    $role = ! empty( $args['role'] ) ? $args['role'] : 'subscriber';
+    $type = ! empty( $args['type'] ) ? $args['type'] : '';
+
+    if ( empty( $email ) ) {
+        return new WP_Error( 'no-email', __( 'No email found for creating wp user', 'erp' ) );
+    }
+
+    // attempt to create the user
+    $userdata = array(
+        'user_login'   => $email,
+        'user_email'   => $email,
+        'first_name'   => ( 'company' == $type ) ? $people['company'] : $people['first_name'],
+        'last_name'    => ( 'company' == $type ) ? '' : $people['last_name'],
+        'user_url'     => $people['website'],
+        'display_name' => ( 'company' == $type ) ? $people['company'] : $people['first_name'] . ' ' . $people['last_name'],
+    );
+
+    $userdata['user_pass'] = wp_generate_password( 12 );
+    $userdata['role'] = $role;
+
+    $userdata = apply_filters( 'erp_crm_make_wpuser_args', $userdata );
+    $user_id  = wp_insert_user( $userdata );
+
+    if ( is_wp_error( $user_id ) ) {
+        return $user_id;
+    }
+
+    if ( $args['notify_email'] ) {
+        wp_send_new_user_notifications( $user_id );
+    }
+
+    $people_meta = \WeDevs\ERP\Framework\Models\Peoplemeta::where( 'erp_people_id', $customer_id )->get()->toArray();
+    $meta_array = wp_list_pluck( $people_meta, 'meta_value', 'meta_key' );
+
+    unset( $people['id'], $people['user_id'], $people['website'], $people['email'], $people['created'], $people['types'], $people['first_name'], $people['last_name'] );
+    $people_array = array_merge( $people, $meta_array );
+
+    if ( $people_array ) {
+        foreach ( $people_array as $key => $value ) {
+            update_user_meta( $user_id, $key, $value );
+        }
+    }
+
+    \WeDevs\ERP\Framework\Models\People::find( $customer_id )->update( [ 'user_id' => $user_id, 'email' => $email ] );
+
+    return true;
+}
+
+/**
+ * WP user on delete update contact user id
+ *
+ * @since 1.1.7
+ *
+ * @return void
+ **/
+function erp_crm_contact_on_delete( $user_id, $hard = 0) {
+    $people = \WeDevs\ERP\Framework\Models\People::where( 'user_id', $user_id )->first();
+
+    if ( $people->id ) {
+        \WeDevs\ERP\Framework\Models\People::find( $people->id )->update( [ 'user_id' => null ] );
     }
 }

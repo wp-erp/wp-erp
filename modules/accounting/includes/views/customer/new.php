@@ -1,6 +1,8 @@
 <div class="wrap erp-ac-users-wrap">
     <h2><?php _e( 'Add Customer', 'erp' ); ?></h2>
 
+    <?php erp_ac_view_error_message(); ?>
+
     <form action="" method="post" class="erp-form">
 
         <?php

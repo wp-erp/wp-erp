@@ -1685,17 +1685,17 @@
                     credit_total += parseFloat( credit );
                 });
 
-                var diff = debit_total - credit_total;
+                var diff = Math.abs( credit_total - debit_total );
 
                 table.find('tfoot input.debit-price-total').val( ERP_Accounting.numFormating( debit_total ) );
                 table.find('tfoot input.credit-price-total').val( ERP_Accounting.numFormating( credit_total ) );
 
                 if ( diff !== 0 ) {
-                    table.find('th.col-diff').addClass('invalid').text( ERP_Accounting.numFormating( diff ) );
+                    table.find('.erp-ac-journal-diff').removeClass('valid').addClass('invalid').val( ERP_Accounting.numFormating( diff ) );
                     $( '#submit_erp_ac_journal' ).attr('disabled', 'disabled');
 
                 } else {
-                    table.find('th.col-diff').removeClass('invalid').text( ERP_Accounting.numFormating( diff ) );
+                    table.find('.erp-ac-journal-diff').removeClass('invalid').addClass('valid').val( ERP_Accounting.numFormating( diff ) );
                     $( '#submit_erp_ac_journal' ).removeAttr('disabled');
                 }
 

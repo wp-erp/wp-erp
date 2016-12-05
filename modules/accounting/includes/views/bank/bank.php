@@ -5,17 +5,23 @@
     <?php
     $banks      = erp_ac_get_bank_account();
     $db         = new \WeDevs\ORM\Eloquent\Database();
-    $start_date = erp_financial_start_date();
-    $end_date   = erp_financial_end_date();
+    $start_date = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+    $end_date   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
 
     foreach ( $banks as $key => $bank ) {
 
         $ledger_id = $bank['id'];
 
         $transactions = WeDevs\ERP\Accounting\Model\Transaction::select( [ '*', $db->raw( 'DATE( issue_date ) as `created`' ) ] )
+                        ->whereNull( 'status' )
+                        ->orWhereNotIn( 'status', ['draft', 'void', 'awaiting_approval'] )
+                        ->where('issue_date', '>=', $start_date )
+                        ->where('issue_date', '<=', $end_date )
                         ->with( [ 'journals' => function( $q ) use( $ledger_id ) {
                             $q->ofLedger( $ledger_id );
-                        } ] )->where('issue_date', '>=', $start_date )->get()->groupBy('created');
+                        } ] )
+                        ->get()->groupBy('created');
+
         $plot_date     = [];
         $plot_data     = [];
         $amount_totals = [];

@@ -489,7 +489,10 @@ class Ajax_Handler {
             $this->send_error( $employee_id->get_error_message() );
         }
 
-        $employee               = new Employee( $employee_id );
+        // we cached empty employee data right after creating, calling from erp_hr_employee_create method
+        wp_cache_delete( 'erp-empl-' . $employee_id, 'erp' );
+
+        $employee                = new Employee( $employee_id );
         $data                   = $employee->to_array();
         $data['work']['joined'] = $employee->get_joined_date();
         $data['work']['type']   = $employee->get_type();

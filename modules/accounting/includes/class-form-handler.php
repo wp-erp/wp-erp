@@ -68,13 +68,17 @@ class Form_Handler {
             return new \WP_Error( 'nonce', __( 'Error: Are you cheating!', 'erp' ) );
         }
 
-        $url = add_query_arg( array(
-                'start' => $_POST['start'],
-                'end'   => $_POST['end']
-            ),
-            $_POST['_wp_http_referer']
-        );
+        $date = [];
 
+        if ( isset( $_POST['start'] ) ) {
+            $date['start'] = $_POST['start'];
+        }
+
+        if ( isset( $_POST['end'] ) ) {
+            $date['end'] = $_POST['end'];
+        }
+
+        $url = add_query_arg( $date, $_POST['_wp_http_referer'] );
         wp_safe_redirect( $url );
         exit();
     }

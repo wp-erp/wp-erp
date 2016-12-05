@@ -24,26 +24,30 @@ function erp_ac_view_error_message() {
  *
  * @return void
  */
-function erp_ac_report_filter_form() {
-    $start = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_start_date() ) ) );
-    $end   = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_end_date() ) ) );
+function erp_ac_report_filter_form($start = true, $end = true) {
+    $start = $start ? erp_format_date( date( 'Y-m-d', strtotime( erp_financial_start_date() ) ) ) : false;
+    $end   = $end ? erp_format_date( date( 'Y-m-d', strtotime( erp_financial_end_date() ) ) ) : false;
     echo '<form action="" method="post">';
 
-    erp_html_form_input( array(
-        'name'        => 'start',
-        'type'        => 'text',
-        'class'       => 'erp-date-picker-from',
-        'placeholder' => __( 'Form', 'erp' ),
-        'value'       => isset( $_GET['start'] ) ? $_GET['start'] : $start
-    ) );
+    if ( $start ) {
+        erp_html_form_input( array(
+            'name'        => 'start',
+            'type'        => 'text',
+            'class'       => 'erp-date-picker-from',
+            'placeholder' => __( 'Form', 'erp' ),
+            'value'       => isset( $_GET['start'] ) ? $_GET['start'] : $start
+        ) );
+    }
 
-    erp_html_form_input( array(
-        'name'        => 'end',
-        'type'        => 'text',
-        'class'       => 'erp-date-picker-to',
-        'placeholder' => __( 'To', 'erp' ),
-        'value'       => isset( $_GET['end'] ) ? $_GET['end'] : $start
-    ) );
+    if ( $end ) {
+        erp_html_form_input( array(
+            'name'        => 'end',
+            'type'        => 'text',
+            'class'       => 'erp-date-picker-to',
+            'placeholder' => __( 'To', 'erp' ),
+            'value'       => isset( $_GET['end'] ) ? $_GET['end'] : $end
+        ) );
+    }
 
     wp_nonce_field('erp_ac_nonce_report');
 

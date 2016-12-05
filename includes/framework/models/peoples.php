@@ -13,6 +13,17 @@ class People extends Model {
             'currency', 'created_by', 'created' ];
 
     /**
+     * Peoplemeta model relation
+     *
+     * @since 1.1.7
+     *
+     * @return object
+     */
+    public function meta() {
+        return $this->hasMany( '\WeDevs\ERP\Framework\Models\Peoplemeta', 'erp_people_id' );
+    }
+
+    /**
      * Fetch people with types
      *
      * @param object $query
@@ -137,4 +148,5 @@ class People extends Model {
 
         return false;
     }
+
 }
