@@ -3028,7 +3028,7 @@ function erp_crm_sync_people_meta_data( $meta_id, $object_id, $meta_key, $_meta_
  * @since 1.1.7
  *
  * @param integer $customer_id
- * @param string $email [ optional ]
+ * @param array $args [ default : [] ]
  *
  * @return void
  **/
