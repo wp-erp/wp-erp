@@ -2963,15 +2963,16 @@ function erp_crm_contact_sources() {
  *
  * @return array
  */
-// function erm_crm_get_contact_meta_fileds() {
-//     $main_meta_field = [
-//         'life_stage', '_assign_crm_agent', 'date_of_birth', 'source'
-//     ];
+function erp_crm_get_contact_meta_fields() {
+    // core meta keys
+    $core_fields = [
+        'life_stage', 'contact_owner', 'date_of_birth', 'age', 'source'
+    ];
 
-//     $social_field = array_keys( erp_crm_get_social_field() ) ;
+    $social_fields = array_keys( erp_crm_get_social_field() ) ;
 
-//     return apply_filters( 'erm_crm_get_contact_meta_fileds', array_merge( $main_meta_field, $social_field ) );
-// }
+    return apply_filters( 'erp_crm_contact_meta_fields', array_merge( $core_fields, $social_fields ) );
+}
 
 /**
  * Instant sync peoplemeta with wp usermetadata when matches any
@@ -2988,9 +2989,10 @@ function erp_crm_contact_sources() {
  */
 function erp_crm_sync_people_meta_data( $meta_id, $object_id, $meta_key, $_meta_value ) {
 
-    $cache_key         = 'erp_people_id_user_' . $object_id;
-    $people_id         = wp_cache_get( $cache_key, 'erp' );
-    $people_field      = erp_get_people_main_field();
+    $cache_key          = 'erp_people_id_user_' . $object_id;
+    $people_id          = wp_cache_get( $cache_key, 'erp' );
+    $people_field       = erp_get_people_main_field();
+    $people_meta_fields = erp_crm_get_contact_meta_fields();
 
     if ( 'not_found' == $people_id ) {
         return;
@@ -3013,7 +3015,9 @@ function erp_crm_sync_people_meta_data( $meta_id, $object_id, $meta_key, $_meta_
 
     if ( in_array( $meta_key, $people_field ) ) {
         \WeDevs\ERP\Framework\Models\People::find( $people_id )->update( [ $meta_key => $_meta_value ] );
-    } else {
+    }
+
+    if ( in_array( $meta_key , $people_meta_fields ) ) {
         erp_people_update_meta( $people_id, $meta_key, $_meta_value );
     }
 }
