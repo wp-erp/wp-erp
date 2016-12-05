@@ -3096,6 +3096,6 @@ function erp_crm_contact_on_delete( $user_id, $hard = 0) {
     $people = \WeDevs\ERP\Framework\Models\People::where( 'user_id', $user_id )->first();
 
     if ( $people->id ) {
-        \WeDevs\ERP\Framework\Models\People::find( $people->id )->update( [ 'user_id' => 0 ] );
+        \WeDevs\ERP\Framework\Models\People::find( $people->id )->update( [ 'user_id' => null ] );
     }
 }
