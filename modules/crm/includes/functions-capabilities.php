@@ -262,9 +262,9 @@ function erp_crm_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args 
                 $contact_user_id = \WeDevs\ERP\Framework\Models\People::select('user_id')->where( 'id', $contact_id )->first();
 
                 if ( isset( $contact_user_id->user_id ) && $contact_user_id->user_id ) {
-                    $assign_id = get_user_meta( $contact_user_id->user_id, '_assign_crm_agent', true );
+                    $assign_id = get_user_meta( $contact_user_id->user_id, 'contact_owner', true );
                 } else {
-                    $assign_id = erp_people_get_meta( $contact_id, '_assign_crm_agent', true );
+                    $assign_id = erp_people_get_meta( $contact_id, 'contact_owner', true );
                 }
 
                 if ( $assign_id != $user_id ) {

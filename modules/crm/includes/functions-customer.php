@@ -2765,7 +2765,7 @@ function erp_handle_user_bulk_actions() {
                 if ( is_wp_error( $contact_id ) ) {
                     continue;
                 } else {
-                    update_user_meta( $user_id, '_assign_crm_agent', $contact_owner );
+                    update_user_meta( $user_id, 'contact_owner', $contact_owner );
                     update_user_meta( $user_id, 'life_stage', $life_stage );
                     erp_people_update_meta( $contact_id, 'life_stage', $life_stage );
                 }
@@ -2836,7 +2836,7 @@ function erp_create_contact_from_created_user( $user_id ) {
     $contact_owner = ( $contact_owner ) ? $contact_owner : get_current_user_id();
     $life_stage    = erp_get_option( 'life_stage', 'erp_settings_erp-crm_contacts', 'opportunity' );
 
-    update_user_meta( $user_id, '_assign_crm_agent', $contact_owner );
+    update_user_meta( $user_id, 'contact_owner', $contact_owner );
     update_user_meta( $user_id, 'life_stage', $life_stage );
     erp_people_update_meta( $contact_id, 'life_stage', $life_stage );
 
