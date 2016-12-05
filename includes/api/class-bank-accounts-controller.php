@@ -215,39 +215,46 @@ class Bank_Accounts_Controller extends REST_Controller {
             'title'      => 'bank account',
             'type'       => 'object',
             'properties' => [
-                'id'          => [
+                'id'              => [
                     'description' => __( 'Unique identifier for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'code'  => [
-                    'description' => __( 'Code for the resource.' ),
-                    'type'        => 'integer',
-                    'context'     => [ 'edit' ],
-                ],
-                'name'  => [
-                    'description' => __( 'Name for the resource.' ),
-                    'type'        => 'string',
-                    'context'     => [ 'edit' ],
-                ],
-                'description'  => [
-                    'description' => __( 'Description for the resource.' ),
+                'date'            => [
+                    'description' => __( 'Date for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
+                    'required'    => true,
                 ],
-                'account_number'  => [
-                    'description' => __( 'Account number for the resource.' ),
+                'from_account_id' => [
+                    'description' => __( 'From account id for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
+                    'required'    => true,
                 ],
-                'balance'  => [
-                    'description' => __( 'Balance for the resource.' ),
+                'to_account_id'   => [
+                    'description' => __( 'To account id for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
+                    'required'    => true,
+                ],
+                'amount'          => [
+                    'description' => __( 'Amount for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'edit' ],
+                    'required'    => true,
+                ],
+                'memo'            => [
+                    'description' => __( 'Memo for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
                 ],
             ],
         ];

@@ -116,7 +116,7 @@ class Leave_Holidays_Controller extends REST_Controller {
      * @return WP_Error|WP_REST_Request
      */
     public function create_holiday( $request ) {
-        $item      = $this->prepare_item_for_database( $request );
+        $item       = $this->prepare_item_for_database( $request );
 
         $holiday_id = erp_hr_leave_insert_holiday( $item );
         $holiday    = \WeDevs\ERP\HRM\Models\Leave_Holiday::find( $holiday_id );
@@ -254,6 +254,32 @@ class Leave_Holidays_Controller extends REST_Controller {
                 ],
                 'name'        => [
                     'description' => __( 'Name for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
+                ],
+                'start_date'  => [
+                    'description' => __( 'Start date for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
+                ],
+                'end_date'    => [
+                    'description' => __( 'End date for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'description' => [
+                    'description' => __( 'Description for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [

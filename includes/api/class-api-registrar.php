@@ -9,12 +9,19 @@ class API_Registrar {
      * Constructor
      */
     public function __construct() {
+        $options        = get_option( 'erp_settings_erp-api_general', [] );
+        $is_api_enabled = ( isset( $options['enable_api'] ) && $options['enable_api'] == 'yes' ) ? true : false;
+
+        if ( ! $is_api_enabled ) {
+            return;
+        }
+
         if ( ! class_exists( 'WP_REST_Server' ) ) {
             return;
         }
 
         // Authenticate
-        // new Authentication();
+        new Authentication();
 
         // Init REST API routes.
         add_action( 'rest_api_init', [ $this, 'register_rest_routes' ], 10 );

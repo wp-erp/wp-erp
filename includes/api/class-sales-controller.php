@@ -127,11 +127,19 @@ class Sales_Controller extends REST_Controller {
         $trans_data = $this->prepare_item_for_database( $request );
 
         if ( empty( $request['form_type'] ) || ! in_array( $request['form_type'], ['payment', 'invoice'] ) ) {
-            return new WP_Error( 'rest_sale_invalid_form_type', __( 'Invalid form type.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_sale_invalid_form_type', __( 'Invalid form type.' ), [ 'status' => 400 ] );
         }
 
         if ( empty( $request['customer'] ) ) {
-            return new WP_Error( 'rest_sale_invalid_customer', __( 'Required customer.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_sale_invalid_customer', __( 'Required customer.' ), [ 'status' => 400 ] );
+        }
+
+        if ( $request['form_type'] == 'invoice' && ( ! isset( $request['due_date'] ) || empty( $request['due_date'] ) ) ) {
+            return new WP_Error( 'rest_sale_invalid_due_date', __( 'Required due_date field.' ), [ 'status' => 400 ] );
+        }
+
+        if ( $request['form_type'] == 'payment' && ( ! isset( $request['account_id'] ) || empty( $request['account_id'] ) ) ) {
+            return new WP_Error( 'rest_sale_invalid_account_id', __( 'Required account_id field.' ), [ 'status' => 400 ] );
         }
 
         if ( $trans_data['form_type'] == 'payment' ) {
@@ -223,11 +231,19 @@ class Sales_Controller extends REST_Controller {
         }
 
         if ( empty( $request['form_type'] ) || ! in_array( $request['form_type'], ['payment', 'invoice'] ) ) {
-            return new WP_Error( 'rest_sale_invalid_form_type', __( 'Invalid form type.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_sale_invalid_form_type', __( 'Invalid form type.' ), [ 'status' => 400 ] );
         }
 
         if ( empty( $request['customer'] ) ) {
-            return new WP_Error( 'rest_sale_invalid_customer', __( 'Required customer.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_sale_invalid_customer', __( 'Required customer.' ), [ 'status' => 400 ] );
+        }
+
+        if ( $request['form_type'] == 'invoice' && ( ! isset( $request['due_date'] ) || empty( $request['due_date'] ) ) ) {
+            return new WP_Error( 'rest_sale_invalid_due_date', __( 'Required due_date field.' ), [ 'status' => 400 ] );
+        }
+
+        if ( $request['form_type'] == 'payment' && ( ! isset( $request['account_id'] ) || empty( $request['account_id'] ) ) ) {
+            return new WP_Error( 'rest_sale_invalid_account_id', __( 'Required account_id field.' ), [ 'status' => 400 ] );
         }
 
         $trans_data = $this->prepare_item_for_database( $request );
@@ -451,27 +467,86 @@ class Sales_Controller extends REST_Controller {
             'title'      => 'sale',
             'type'       => 'object',
             'properties' => [
-                'id'          => [
+                'id'              => [
                     'description' => __( 'Unique identifier for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'type'  => [
-                    'description' => __( 'Type for the resource.' ),
+                'form_type'       => [
+                    'description' => __( 'Form type for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
+                ],
+                'account_id'      => [
+                    'description' => __( 'Account id for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'edit' ],
+                ],
+                'billing_address' => [
+                    'description' => __( 'Billing address for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'status'  => [
-                    'description' => __( 'Status for the resource.' ),
+                'reference'       => [
+                    'description' => __( 'Reference for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
+                ],
+                'summary'         => [
+                    'description' => __( 'Summary for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'issue_date'      => [
+                    'description' => __( 'Issue date for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
+                ],
+                'due_date'        => [
+                    'description' => __( 'Due date for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'currency'        => [
+                    'description' => __( 'Currency for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'customer'        => [
+                    'description' => __( 'Customer for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'edit' ],
+                    'required'    => true,
+                ],
+                'items'           => [
+                    'description' => __( 'Items for the resource.' ),
+                    'type'        => 'array',
+                    'context'     => [ 'edit' ],
+                    'required'    => true,
                 ],
             ],
         ];

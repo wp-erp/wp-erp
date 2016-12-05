@@ -38,6 +38,8 @@ class ERP_Admin_Settings {
                 $settings[] = include __DIR__ . '/settings/license.php';
             }
 
+            $settings[] = include __DIR__ . '/settings/api.php';
+
             self::$settings = $settings;
         }
 
@@ -126,7 +128,7 @@ class ERP_Admin_Settings {
 
         self::section_output();
 
-        $current_class->save( $current_section ); 
+        $current_class->save( $current_section );
         $current_class->output( $current_section );
 
     }

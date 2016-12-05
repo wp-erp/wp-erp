@@ -277,6 +277,11 @@ window.wperp = window.wperp || {};
             $( '.erp-hr-audit-log' ).on( 'click', 'a.erp-audit-log-view-changes', this.viewLogChanges );
             $( 'body').on( 'change', '#filter_duration', this.customFilter );
 
+            // API
+            $( 'body').on( 'click', 'a#erp-api-new-key-btn', this.apiNewkey );
+            $( '.erp-api-key-single').on( 'click', 'a.edit-key', this.apiEditKey );
+            $( '.erp-api-key-single').on( 'click', 'a.remove-key', this.apiRemoveKey );
+
             this.initFields();
         },
 
@@ -530,6 +535,95 @@ window.wperp = window.wperp || {};
                     },
                     success: function() {
                         $('#company-locations').load( window.location.href + ' #company-locations-inside' );
+                    }
+                });
+            }
+        },
+
+        // API
+        apiNewkey: function(e) {
+            e.preventDefault();
+
+            var self = $(this);
+
+            $.erpPopup({
+                title: self.data('title'),
+                button: wpErp.create,
+                id: 'erp-api-new-key-modal',
+                content: wp.template( 'erp-api' )({ id: 0 }).trim(),
+                extraClass: 'medium',
+                onReady: function() {
+                    $( '.select2' ).select2();
+                    $( '.api_access' ).remove();
+                },
+                onSubmit: function(modal) {
+                    wp.ajax.send( {
+                        data: this.serialize(),
+                        success: function(res) {
+                            modal.closeModal();
+
+                            location.reload();
+                        },
+                        error: function(error) {
+                            modal.showError( error );
+                        }
+                    });
+                }
+            });
+        },
+
+        apiEditKey: function(e) {
+            e.preventDefault();
+
+            var self = $(this);
+
+            $.erpPopup({
+                title: self.data('title'),
+                button: wpErp.update,
+                id: 'erp-api-edit-key-modal',
+                content: wp.template( 'erp-api' )( self.data('data') ),
+                extraClass: 'medium',
+                onReady: function() {
+                    $( '.select2' ).select2();
+
+                    $( 'li[data-selected]', this ).each(function() {
+                        var self = $(this),
+                            selected = self.data('selected');
+
+                        if ( selected !== '' ) {
+                            self.find( 'select' ).val( selected );
+                        }
+                    });
+
+                    $( 'select.erp-api-user-select').change();
+                },
+                onSubmit: function(modal) {
+                    wp.ajax.send( {
+                        data: this.serializeObject(),
+                        success: function() {
+                            modal.closeModal();
+
+                            location.reload();
+                        },
+                        error: function(error) {
+                            modal.showError( error );
+                        }
+                    });
+                }
+            });
+        },
+
+        apiRemoveKey: function(e) {
+            e.preventDefault();
+
+            if ( confirm( wpErpHr.confirm ) ) {
+                wp.ajax.send( 'erp-api-delete-key', {
+                    data: {
+                        id: $(this).data('id'),
+                        _wpnonce: wpErp.nonce
+                    },
+                    success: function() {
+                        location.reload();
                     }
                 });
             }

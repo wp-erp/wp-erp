@@ -4,6 +4,7 @@ namespace WeDevs\ERP\Admin;
 use WeDevs\ERP\Admin\Models\Company_Locations;
 use WeDevs\ERP\Company;
 use WeDevs\ERP\Framework\Traits\Hooker;
+use WeDevs\ERP\Framework\Models\APIKey;
 
 /**
  * The ajax handler class
@@ -28,6 +29,8 @@ class Ajax {
         $this->action( 'wp_ajax_erp_smtp_test_connection', 'smtp_test_connection' );
         $this->action( 'wp_ajax_erp_imap_test_connection', 'imap_test_connection' );
         $this->action( 'wp_ajax_erp_import_users_as_contacts', 'import_users_as_contacts' );
+        $this->action( 'wp_ajax_erp-api-key', 'new_api_key');
+        $this->action( 'wp_ajax_erp-api-delete-key', 'delete_api_key');
     }
 
     function file_delete() {
@@ -423,6 +426,57 @@ class Ajax {
         }
 
         $this->send_success( ['left' => $left, 'total_items' => $total_items, 'exists' => $exists] );
+    }
+
+    /**
+     * New api key
+     *
+     * @return void
+     */
+    public function new_api_key() {
+        $this->verify_nonce( 'erp-api-key' );
+
+        $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+
+        if ( $id ) {
+            $api_key = \WeDevs\ERP\Framework\Models\APIKey::find( $id );
+
+            $api_key->update( [
+                'name'    => sanitize_text_field( $_POST['name'] ),
+                'user_id' => intval( $_POST['user_id'] ),
+            ] );
+
+            $this->send_success( $api_key );
+        }
+
+        $api_key = [
+            'name'       => sanitize_text_field( $_POST['name'] ),
+            'api_key'    => 'ck_' . erp_generate_key(),
+            'api_secret' => 'cs_' . erp_generate_key(),
+            'user_id'    => intval( $_POST['user_id'] ),
+            'created_at' => current_time( 'mysql' ),
+        ];
+
+        $data = \WeDevs\ERP\Framework\Models\APIKey::create( $api_key );
+
+        $this->send_success( $data );
+    }
+
+    /**
+     * Delete api key
+     *
+     * @return void
+     */
+    public function delete_api_key() {
+        $this->verify_nonce( 'erp-nonce' );
+
+        $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+
+        if ( $id ) {
+            APIKey::find( $id )->delete();
+        }
+
+        $this->send_success();
     }
 }
 

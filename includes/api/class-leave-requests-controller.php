@@ -110,6 +110,11 @@ class Leave_Requests_Controller extends REST_Controller {
     public function create_leave_request( $request ) {
         $item = $this->prepare_item_for_database( $request );
 
+        $policies = erp_hr_get_assign_policy_from_entitlement( $request['employee_id'] );
+        if ( ! $policies ) {
+            return new WP_Error( 'rest_leave_request_required_entitlement', __( 'Set entitlement to the employee first.' ), [ 'status' => 400 ] );
+        }
+
         $id            = erp_hr_leave_insert_request( $item );
         $leave_request = erp_hr_get_leave_request( $id );
 
@@ -223,7 +228,45 @@ class Leave_Requests_Controller extends REST_Controller {
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
-                ]
+                ],
+                'employee_id' => [
+                    'description' => __( 'Employee id for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'edit' ],
+                    'required'    => true,
+                ],
+                'policy'      => [
+                    'description' => __( 'Employee id for the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'edit' ],
+                    'required'    => true,
+                ],
+                'start_date'  => [
+                    'description' => __( 'Start date for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
+                ],
+                'end_date'    => [
+                    'description' => __( 'End date for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
+                ],
+                'reason'     => [
+                    'description' => __( 'Reason for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
             ],
         ];
 

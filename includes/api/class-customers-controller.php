@@ -366,6 +366,7 @@ class Customers_Controller extends REST_Controller {
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
+                    'required'    => true,
                 ],
                 'last_name'   => [
                     'description' => __( 'Last name for the resource.' ),
@@ -374,6 +375,7 @@ class Customers_Controller extends REST_Controller {
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
+                    'required'    => true,
                 ],
                 'email'       => [
                     'description' => __( 'The email address for the resource.' ),

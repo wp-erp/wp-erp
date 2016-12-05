@@ -1898,3 +1898,20 @@ function enqueue_fullcalendar_locale() {
         wp_enqueue_script( 'erp-fullcalendar-locale', WPERP_ASSETS . "/vendor/fullcalendar/lang/{$script}.js", array( 'erp-fullcalendar' ), null, true );
     }
 }
+
+/**
+ * Generate random key
+ *
+ * @since 1.1.8
+ *
+ * @return string
+ */
+function erp_generate_key() {
+    if ( function_exists( 'openssl_random_pseudo_bytes' ) ) {
+        $key = bin2hex( openssl_random_pseudo_bytes( 20 ) );
+    } else {
+        $key = sha1( wp_rand() );
+    }
+
+    return $key;
+}

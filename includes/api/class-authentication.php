@@ -2,6 +2,7 @@
 namespace WeDevs\ERP\API;
 
 use WP_Error;
+use WeDevs\ERP\Framework\Models\APIKey;
 
 /**
  * WP Rest API Basic Authentication class
@@ -9,73 +10,55 @@ use WP_Error;
 class Authentication {
 
     public function __construct() {
+        add_filter( 'determine_current_user', [ $this, 'authenticate' ], 100 );
         add_filter( 'rest_authentication_errors', [ $this, 'check_rest_api_authentication' ] );
-        add_filter( 'determine_current_user', [ $this, 'json_basic_auth_handler' ], 20 );
-        add_filter( 'json_authentication_errors', [ $this, 'json_basic_auth_error' ] );
     }
 
-    public function check_rest_api_authentication( $result ) {
-        if ( ! empty( $result ) ) {
-            return $result;
-        }
+    public function check_rest_api_authentication( $error ) {
+        global $erp_rest_authentication_error;
 
-        if ( ! isset( $_SERVER['PHP_AUTH_USER'] ) && ! isset( $_SERVER['PHP_AUTH_PW'] ) ) {
-            return new WP_Error( 'restx_logged_out', 'Sorry, you must be logged in to make a request.', array( 'status' => 401 ) );
-        }
-
-        $username = $_SERVER['PHP_AUTH_USER'];
-        $password = $_SERVER['PHP_AUTH_PW'];
-        $user     = wp_authenticate( $username, $password );
-
-        if ( is_wp_error( $user ) ) {
-            return $user;
-        }
-
-        return $result;
-    }
-
-    public function json_basic_auth_handler( $user ) {
-        global $wp_json_basic_auth_error;
-
-        $wp_json_basic_auth_error = null;
-
-        // Don't authenticate twice
-        if ( ! empty( $user ) ) {
-            return $user;
-        }
-
-        // Check that we're trying to authenticate
-        if ( ! isset( $_SERVER['PHP_AUTH_USER'] ) ) {
-            return $user;
-        }
-
-        $username = $_SERVER['PHP_AUTH_USER'];
-        $password = $_SERVER['PHP_AUTH_PW'];
-
-        remove_filter( 'determine_current_user', 'json_basic_auth_handler', 20 );
-
-        $user = wp_authenticate( $username, $password );
-
-        add_filter( 'determine_current_user', 'json_basic_auth_handler', 20 );
-
-        if ( is_wp_error( $user ) ) {
-            $wp_json_basic_auth_error = $user;
-            return null;
-        }
-
-        $wp_json_basic_auth_error = true;
-
-        return $user->ID;
-    }
-
-    public function json_basic_auth_error( $error ) {
-        // Passthrough other errors
         if ( ! empty( $error ) ) {
             return $error;
         }
 
-        global $wp_json_basic_auth_error;
+        return $erp_rest_authentication_error;
+    }
 
-        return $wp_json_basic_auth_error;
+    public function authenticate( $user_id ) {
+        global $erp_rest_authentication_error;
+
+        // Don't authenticate twice
+        if ( ! empty( $user_id ) ) {
+            return $user_id;
+        }
+
+        $consumer_key    = '';
+        $consumer_secret = '';
+
+        if ( ! empty( $_GET['consumer_key'] ) && ! empty( $_GET['consumer_secret'] ) ) {
+            $consumer_key    = $_GET['consumer_key'];
+            $consumer_secret = $_GET['consumer_secret'];
+        }
+
+        if ( ! $consumer_key && ! empty( $_SERVER['PHP_AUTH_USER'] ) && ! empty( $_SERVER['PHP_AUTH_PW'] ) ) {
+            $consumer_key    = $_SERVER['PHP_AUTH_USER'];
+            $consumer_secret = $_SERVER['PHP_AUTH_PW'];
+        }
+
+        if ( empty( $consumer_key ) || empty( $consumer_secret ) ) {
+            $erp_rest_authentication_error = new WP_Error( 'erp_rest_authentication_error', __( 'Required consumer key & consumer secret.', 'erp' ), array( 'status' => 401 ) );
+            return false;
+        }
+
+        $api = APIKey::where( 'api_key', $consumer_key )->first();
+
+        if ( ! $api || ! hash_equals( $api->api_secret, $consumer_secret ) ) {
+            $erp_rest_authentication_error = new WP_Error( 'erp_rest_authentication_error', __( 'Consumer secret is invalid.', 'erp' ), array( 'status' => 401 ) );
+            return false;
+        }
+
+        $api->update( ['last_accessed_at' => current_time( 'mysql' )] );
+
+        return $api->user_id;
     }
 }

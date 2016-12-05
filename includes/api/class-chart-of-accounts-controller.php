@@ -360,11 +360,22 @@ class Chart_Of_Accounts_Controller extends REST_Controller {
                     'description' => __( 'Type for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
+                    'required'    => true,
                 ],
                 'code'  => [
                     'description' => __( 'Code for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
+                    'required'    => true,
+                ],
+                'name'  => [
+                    'description' => __( 'Name for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
                 ],
                 'description'  => [
                     'description' => __( 'Description for the resource.' ),

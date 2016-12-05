@@ -313,6 +313,12 @@ class Contacts_Controller extends REST_Controller {
         if ( isset( $request['type'] ) ) {
             $prepared_item['type'] = $request['type'];
         }
+        if ( isset( $request['owner'] ) ) {
+            $prepared_item['contact_owner'] = $request['owner'];
+        }
+        if ( isset( $request['life_stage'] ) ) {
+            $prepared_item['life_stage'] = $request['life_stage'];
+        }
 
         return $prepared_item;
     }
@@ -328,26 +334,27 @@ class Contacts_Controller extends REST_Controller {
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $data = [
-            'id'          => (int) $item->id,
-            'first_name'  => $item->first_name,
-            'last_name'   => $item->last_name,
-            'email'       => $item->email,
-            'company'     => $item->company,
-            'phone'       => $item->phone,
-            'mobile'      => $item->mobile,
-            'other'       => $item->other,
-            'website'     => $item->website,
-            'fax'         => $item->fax,
-            'notes'       => $item->notes,
-            'street_1'    => $item->street_1,
-            'street_2'    => $item->street_2,
-            'city'        => $item->city,
-            'state'       => $item->state,
-            'postal_code' => $item->postal_code,
-            'country'     => $item->country,
-            'currency'    => $item->currency,
-            'types'       => $item->types,
-            'user_id'     => (int) $item->user_id,
+            'id'            => (int) $item->id,
+            'first_name'    => $item->first_name,
+            'last_name'     => $item->last_name,
+            'email'         => $item->email,
+            'company'       => $item->company,
+            'phone'         => $item->phone,
+            'mobile'        => $item->mobile,
+            'other'         => $item->other,
+            'website'       => $item->website,
+            'fax'           => $item->fax,
+            'notes'         => $item->notes,
+            'street_1'      => $item->street_1,
+            'street_2'      => $item->street_2,
+            'city'          => $item->city,
+            'state'         => $item->state,
+            'postal_code'   => $item->postal_code,
+            'country'       => $item->country,
+            'currency'      => $item->currency,
+            'types'         => $item->types,
+            'user_id'       => (int) $item->user_id,
+            'life_stage'    => $item->life_stage,
         ];
 
         $data = array_merge( $data, $additional_fields );
@@ -520,8 +527,14 @@ class Contacts_Controller extends REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'user_id'         => [
-                    'description' => __( 'User ID of the resource.' ),
+                'owner'           => [
+                    'description' => __( 'Owner of the resource.' ),
+                    'type'        => 'integer',
+                    'context'     => [ 'embed', 'view', 'edit' ],
+                    'required'    => true,
+                ],
+                'life_stage'      => [
+                    'description' => __( 'Life stage of the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'arg_options' => [

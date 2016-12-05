@@ -233,21 +233,37 @@ class Journals_Controller extends REST_Controller {
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'type'  => [
-                    'description' => __( 'Type for the resource.' ),
+                'reference'  => [
+                    'description' => __( 'Reference for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'status'  => [
-                    'description' => __( 'Status for the resource.' ),
+                'summary'  => [
+                    'description' => __( 'Summary for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
+                    'required'    => true,
+                ],
+                'issue_date'  => [
+                    'description' => __( 'Issue date for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
+                ],
+                'items'  => [
+                    'description' => __( 'Items for the resource.' ),
+                    'type'        => 'array',
+                    'context'     => [ 'edit' ],
+                    'required'    => true,
                 ],
             ],
         ];
