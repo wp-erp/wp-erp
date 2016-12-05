@@ -120,7 +120,7 @@ function erp_ac_get_all_transaction( $args = array() ) {
 
         if ( isset( $args['id'] ) && ! empty( $args['id'] ) ) {
             $transaction = $transaction->where( 'id', '=', $args['id'] );
-        } else {
+        } else if ( $args['type'] != 'any' ) {
             $transaction = $transaction->type( $args['type'] );
         }
 
@@ -141,8 +141,6 @@ function erp_ac_get_all_transaction( $args = array() ) {
                 ->get()
                 ->toArray();
         }
-        global $wpdb;
-        //echo $wpdb->last_query; die();
 
         if ( $args['output_by'] == 'object' ) {
             $items = erp_array_to_object( $items );

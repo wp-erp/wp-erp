@@ -105,7 +105,7 @@ $email_subject = __( 'Payment#', 'erp' ) . $transaction->invoice_number . __( ' 
                             <th class="align-left product-name"><?php _e( 'Product', 'erp' ) ?></th>
                             <th><?php _e( 'Quantity', 'erp' ) ?></th>
                             <th><?php _e( 'Unit Price', 'erp' ) ?></th>
-                            <th><?php _e( 'Discount', 'erp' ) ?></th>
+                            <th><?php _e( 'Discount(%)', 'erp' ) ?></th>
                             <th><?php _e( 'Tax(%)', 'erp' ); ?></th>
                             <th><?php _e( 'Amount', 'erp' ) ?></th>
                         </tr>

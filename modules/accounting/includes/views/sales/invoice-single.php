@@ -140,7 +140,7 @@ $readonly_url        = add_query_arg( [ 'query' => 'readonly_invoice', 'trans_id
                             <th class="align-left product-name"><?php _e( 'Product', 'erp' ) ?></th>
                             <th><?php _e( 'Quantity', 'erp' ) ?></th>
                             <th><?php _e( 'Unit Price', 'erp' ) ?></th>
-                            <th><?php _e( 'Discount', 'erp' ) ?></th>
+                            <th><?php _e( 'Discount(%)', 'erp' ) ?></th>
                             <th><?php _e( 'Tax(%)', 'erp' ); ?></th>
                             <th><?php _e( 'Amount', 'erp' ) ?></th>
                         </tr>
@@ -158,7 +158,7 @@ $readonly_url        = add_query_arg( [ 'query' => 'readonly_invoice', 'trans_id
                                 <td><?php echo erp_ac_get_price( $line->unit_price ); ?></td>
                                 <td><?php echo $line->discount; ?></td>
 
-                                <td><?php //echo $taxinfo[$line->tax]['name'] .' ('. $taxinfo[$line->tax]['rate'] .'%)'; ?></td>
+                                <td><?php echo $taxinfo[$line->tax]['name'] .' ('. $taxinfo[$line->tax]['rate'] .'%)'; ?></td>
                                 <td><?php echo ( $line->tax_rate * $line->line_total ) / 100; ?></td>
                                 <td><?php echo erp_ac_get_price( $line->line_total ); ?></td>
                             </tr>
