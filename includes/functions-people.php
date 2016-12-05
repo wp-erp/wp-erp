@@ -483,7 +483,7 @@ function erp_insert_people( $args = array() ) {
     } else {
         $existing_people_by_email = \WeDevs\ERP\Framework\Models\People::type( $people_type )->where( 'email', $args['email'] )->first();
 
-        if ( !empty( $existing_people_by_email->id ) && $existing_people_by_email->id != $existing_people->id ) {
+        if ( !empty( $existing_people_by_email->email ) && $existing_people_by_email->id != $existing_people->id ) {
             return new WP_Error( 'email-already-exist', __( 'This people email already exists', 'erp' ) );
         }
 
@@ -539,6 +539,12 @@ function erp_insert_people( $args = array() ) {
         foreach ( $meta_fields as $key => $value ) {
             erp_people_update_meta( $people->id, $key, $value );
         }
+    }
+
+    if ( ! $existing_people->id ) {
+        do_action( 'erp_create_new_people', $people->id, $args );
+    } else {
+        do_action( 'erp_update_people', $people->id, $args );
     }
 
     return $people->id;
