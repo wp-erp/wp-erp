@@ -518,16 +518,16 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v3.1.7",
+            "version": "v3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "2f4b6114b75c506dd1ee7eb485b35facbcb2d873"
+                "reference": "64ab6fc0b42e5386631f408e6adcaaff8eee5ba1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/2f4b6114b75c506dd1ee7eb485b35facbcb2d873",
-                "reference": "2f4b6114b75c506dd1ee7eb485b35facbcb2d873",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/64ab6fc0b42e5386631f408e6adcaaff8eee5ba1",
+                "reference": "64ab6fc0b42e5386631f408e6adcaaff8eee5ba1",
                 "shasum": ""
             },
             "require": {
@@ -551,7 +551,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.1-dev"
+                    "dev-master": "3.2-dev"
                 }
             },
             "autoload": {
@@ -578,7 +578,7 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2016-11-18 21:15:08"
+            "time": "2016-11-18 21:17:59"
         },
         {
             "name": "symfony/var-dumper",
@@ -649,12 +649,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tareq1988/wp-eloquent.git",
-                "reference": "c4d466e4ecfa410a0cc22a087da104163532b7ba"
+                "reference": "da4b3d9776cbf8ddf880196e4c7659971ec38647"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tareq1988/wp-eloquent/zipball/c4d466e4ecfa410a0cc22a087da104163532b7ba",
-                "reference": "c4d466e4ecfa410a0cc22a087da104163532b7ba",
+                "url": "https://api.github.com/repos/tareq1988/wp-eloquent/zipball/da4b3d9776cbf8ddf880196e4c7659971ec38647",
+                "reference": "da4b3d9776cbf8ddf880196e4c7659971ec38647",
                 "shasum": ""
             },
             "require": {
@@ -686,7 +686,7 @@
                 "sql",
                 "wordpress"
             ],
-            "time": "2016-11-11 14:20:59"
+            "time": "2016-12-05 09:27:37"
         }
     ],
     "packages-dev": [],
