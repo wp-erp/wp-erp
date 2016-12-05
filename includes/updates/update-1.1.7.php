@@ -21,13 +21,18 @@ function erp_update_poeple_meta_1_1_7() {
  **/
 function erp_update_poeples_1_1_7() {
 
-    $peoples = \WeDevs\ERP\Framework\Models\Peoplemeta::whereNotNull( 'user_id' )->get()->toArray();
+    $people = \WeDevs\ERP\Framework\Models\People::whereNotNull( 'user_id' )->where( 'user_id', '!=', 0 )->get();
 
-    foreach ( $peoles as $key => $value ) {
-        # code...
-    }
+    $people->each( function ( $contact ) {
+        $meta        = $contact->meta()->availableMeta()->lists( 'meta_value', 'meta_key' );
+        $main_fields = $contact->toArray();
 
+        $all_fields = array_merge( $main_fields, $meta );
+
+        erp_insert_people( $all_fields );
+    } );
 }
 
-
+// Run udpater functions
 erp_update_poeple_meta_1_1_7();
+erp_update_poeples_1_1_7();

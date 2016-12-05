@@ -399,10 +399,8 @@ function erp_insert_people( $args = array() ) {
     $errors         = [];
     $unchanged_data = [];
 
-    $args['created_by'] = get_current_user_id() ? get_current_user_id() : 1;
-
     $people_type = $args['type'];
-    unset( $args['type'] );
+    unset( $args['type'], $args['created_by'], $args['created'] );
 
     if ( ! $existing_people->id ) {
         // if an empty type provided
@@ -459,6 +457,8 @@ function erp_insert_people( $args = array() ) {
             $user->user_url   = '';
             $user->user_email = '';
         }
+
+        $args['created_by'] = get_current_user_id() ? get_current_user_id() : 1;
 
         $existing_people_by_email = \WeDevs\ERP\Framework\Models\People::where( 'email', $args['email'] )->first();
 
