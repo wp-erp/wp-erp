@@ -121,7 +121,7 @@ class Contact_Forms_Integration {
                 $customer->update_meta( 'source', 'contact_form' );
 
                 if ( ! empty( $cfi_settings[ $plugin ][ $form_id ]['contact_owner'] ) ) {
-                    $customer->update_meta( '_assign_crm_agent', $cfi_settings[ $plugin ][ $form_id ]['contact_owner'] );
+                    $customer->update_meta( 'contact_owner', $cfi_settings[ $plugin ][ $form_id ]['contact_owner'] );
                 }
 
                 if ( ! empty( $cfi_settings[ $plugin ][ $form_id ]['contact_group'] ) ) {

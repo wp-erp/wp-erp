@@ -2765,7 +2765,7 @@ function erp_handle_user_bulk_actions() {
                 if ( is_wp_error( $contact_id ) ) {
                     continue;
                 } else {
-                    update_user_meta( $user_id, '_assign_crm_agent', $contact_owner );
+                    update_user_meta( $user_id, 'contact_owner', $contact_owner );
                     update_user_meta( $user_id, 'life_stage', $life_stage );
                     erp_people_update_meta( $contact_id, 'life_stage', $life_stage );
                 }
@@ -2836,7 +2836,7 @@ function erp_create_contact_from_created_user( $user_id ) {
     $contact_owner = ( $contact_owner ) ? $contact_owner : get_current_user_id();
     $life_stage    = erp_get_option( 'life_stage', 'erp_settings_erp-crm_contacts', 'opportunity' );
 
-    update_user_meta( $user_id, '_assign_crm_agent', $contact_owner );
+    update_user_meta( $user_id, 'contact_owner', $contact_owner );
     update_user_meta( $user_id, 'life_stage', $life_stage );
     erp_people_update_meta( $contact_id, 'life_stage', $life_stage );
 
@@ -2963,15 +2963,16 @@ function erp_crm_contact_sources() {
  *
  * @return array
  */
-// function erm_crm_get_contact_meta_fileds() {
-//     $main_meta_field = [
-//         'life_stage', '_assign_crm_agent', 'date_of_birth', 'source'
-//     ];
+function erp_crm_get_contact_meta_fields() {
+    // core meta keys
+    $core_fields = [
+        'life_stage', 'contact_owner', 'date_of_birth', 'age', 'source'
+    ];
 
-//     $social_field = array_keys( erp_crm_get_social_field() ) ;
+    $social_fields = array_keys( erp_crm_get_social_field() ) ;
 
-//     return apply_filters( 'erm_crm_get_contact_meta_fileds', array_merge( $main_meta_field, $social_field ) );
-// }
+    return apply_filters( 'erp_crm_contact_meta_fields', array_merge( $core_fields, $social_fields ) );
+}
 
 /**
  * Instant sync peoplemeta with wp usermetadata when matches any
@@ -2988,9 +2989,10 @@ function erp_crm_contact_sources() {
  */
 function erp_crm_sync_people_meta_data( $meta_id, $object_id, $meta_key, $_meta_value ) {
 
-    $cache_key         = 'erp_people_id_user_' . $object_id;
-    $people_id         = wp_cache_get( $cache_key, 'erp' );
-    $people_field      = erp_get_people_main_field();
+    $cache_key          = 'erp_people_id_user_' . $object_id;
+    $people_id          = wp_cache_get( $cache_key, 'erp' );
+    $people_field       = erp_get_people_main_field();
+    $people_meta_fields = erp_crm_get_contact_meta_fields();
 
     if ( 'not_found' == $people_id ) {
         return;
@@ -3013,7 +3015,9 @@ function erp_crm_sync_people_meta_data( $meta_id, $object_id, $meta_key, $_meta_
 
     if ( in_array( $meta_key, $people_field ) ) {
         \WeDevs\ERP\Framework\Models\People::find( $people_id )->update( [ $meta_key => $_meta_value ] );
-    } else {
+    }
+
+    if ( in_array( $meta_key , $people_meta_fields ) ) {
         erp_people_update_meta( $people_id, $meta_key, $_meta_value );
     }
 }
@@ -3024,7 +3028,7 @@ function erp_crm_sync_people_meta_data( $meta_id, $object_id, $meta_key, $_meta_
  * @since 1.1.7
  *
  * @param integer $customer_id
- * @param string $email [ optional ]
+ * @param array $args [ default : [] ]
  *
  * @return void
  **/
@@ -3096,6 +3100,6 @@ function erp_crm_contact_on_delete( $user_id, $hard = 0) {
     $people = \WeDevs\ERP\Framework\Models\People::where( 'user_id', $user_id )->first();
 
     if ( $people->id ) {
-        \WeDevs\ERP\Framework\Models\People::find( $people->id )->update( [ 'user_id' => 0 ] );
+        \WeDevs\ERP\Framework\Models\People::find( $people->id )->update( [ 'user_id' => null ] );
     }
 }

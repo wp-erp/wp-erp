@@ -29,10 +29,13 @@
                             </div>
                             <div class="col-4 details">
                                 <h3><?php echo $customer->get_full_name(); ?></h3>
-                                <p>
-                                    <i class="fa fa-envelope"></i>&nbsp;
-                                    <?php echo erp_get_clickable( 'email', $customer->get_email() ); ?>
-                                </p>
+
+                                <?php if ( $customer->get_email() ): ?>
+                                    <p>
+                                        <i class="fa fa-envelope"></i>&nbsp;
+                                        <?php echo erp_get_clickable( 'email', $customer->get_email() ); ?>
+                                    </p>
+                                <?php endif ?>
 
                                 <?php if ( $customer->get_mobile() != '—' ): ?>
                                     <p>
@@ -85,7 +88,7 @@
                                     <div class="user-wrap">
                                         <div class="user-wrap-content">
                                             <?php
-                                                $crm_user_id = erp_people_get_meta( $customer->id, '_assign_crm_agent', true );
+                                                $crm_user_id = erp_people_get_meta( $customer->id, 'contact_owner', true );
                                                 if ( !empty( $crm_user_id ) ) {
                                                     $user        = get_user_by( 'id', $crm_user_id );
                                                     $user_string = esc_html( $user->display_name );
