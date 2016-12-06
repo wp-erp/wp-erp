@@ -37,7 +37,7 @@
                             'type'        => 'number',
                             //'placeholder' => 1,
                             'value'       => isset( $item['qty'] ) && $item['qty'] ? $item['qty'] : 1,
-                            'class'       => 'line_qty'
+                            'class'       => 'line_qty',
                         ) );
                         ?>
                     </td>

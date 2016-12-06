@@ -460,11 +460,11 @@ class Form_Handler {
         }
 
         $insert_id = $this->transaction_data_process( $_POST );
+        $page_url  = isset( $_POST['_wp_http_referer'] ) ? $_POST['_wp_http_referer'] : '';
 
-        $page_url = isset( $_POST['_wp_http_referer'] ) ? $_POST['_wp_http_referer'] : '';
         if ( is_wp_error( $insert_id ) ) {
             self::$errors = $insert_id->get_error_message();
-            $redirect_to = add_query_arg( array( 'message' => $insert_id ), $page_url );
+            $redirect_to  = add_query_arg( array( 'message' => $insert_id ), $page_url );
             wp_safe_redirect( $redirect_to );
             exit;
 
@@ -583,6 +583,7 @@ class Form_Handler {
                 'discount'    => erp_ac_format_decimal( $postdata['line_discount'][ $key ] ),
                 'tax'         => isset( $postdata['line_tax'][$key] ) ? $postdata['line_tax'][$key] : 0,
                 'tax_rate'    => isset( $postdata['tax_rate'][$key] ) ? $postdata['tax_rate'][$key] : 0,
+                'tax_amount'    => isset( $postdata['tax_amount'][$key] ) ? $postdata['tax_amount'][$key] : 0,
                 'line_total'  => erp_ac_format_decimal( $line_total ),
                 'tax_journal' => isset( $postdata['tax_journal'][$key] ) ? $postdata['tax_journal'][$key] : 0
             ], $key, $postdata );

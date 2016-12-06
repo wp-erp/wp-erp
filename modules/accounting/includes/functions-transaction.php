@@ -369,12 +369,9 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
         'created_at'      => current_time( 'mysql' )
     );
 
-    $args = wp_parse_args( $args, $defaults ); //strpos($mystring, $findme);
-
+    $args       = wp_parse_args( $args, $defaults ); //strpos($mystring, $findme);
     $is_update  = $args['id'] && ! is_array( $args['id'] ) ? true : false;
-
     $permission = er_ac_insert_transaction_permiss( $args, $is_update );
-
     $validation = er_ac_insert_transaction_validation( $args, $items, $is_update );
 
     if ( is_wp_error( $permission ) ) {
@@ -490,8 +487,7 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
             $jor_prev_ids  = wp_list_pluck( $get_journals_line_item, 'id' );
         }
 
-        foreach ($items as $key => $item) {
-
+        foreach ( $items as $key => $item ) {
             $journal_id = erp_ac_journal_update( $item, $item_entry_type, $args, $trans_id );
 
             if ( ! $journal_id ) {
@@ -499,9 +495,7 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
             }
 
             $tax_id  = erp_ac_tax_update( $item, $item_entry_type, $args, $trans_id );
-
             $item_id = erp_ac_item_update( $item, $args, $trans_id, $journal_id, $tax_id, $order );
-
 
             if ( ! $item_id ) {
                 throw new Exception( __( 'Could not insert transaction item', 'erp' ) );
@@ -511,7 +505,6 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
         }
 
         if ( $is_update ) {
-
             $tax_jor_id = wp_list_pluck( $items, 'tax_journal' );
 
             foreach ( $jor_prev_ids as $key => $jor_prev_id ) {
@@ -521,7 +514,6 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
             }
 
             $remove_jours = $remove_items = array_diff( $jor_prev_ids, $args['journals_id'] );
-
             $tax_journal_ids = WeDevs\ERP\Accounting\Model\Transaction_Items::select('tax_journal')->whereIn( 'journal_id', $remove_jours )->get()->toArray();
             $tax_journal_ids = wp_list_pluck( $tax_journal_ids, 'tax_journal' );
             $remove_jours    = array_merge( $remove_jours, $tax_journal_ids );
@@ -541,8 +533,7 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
                 $line_total  = isset( $args['line_total'][$key] ) ? $args['line_total'][$key] : 0;
                 $transaction = erp_ac_get_transaction( $id );
                 $due         = $transaction['due'];
-
-                $new_due = $due - $line_total;
+                $new_due     = $due - $line_total;
 
                 if ( $new_due <= 0  ) {
                     $update_field['status'] = 'paid';
@@ -850,7 +841,7 @@ function erp_ac_tax_update( $item, $item_entry_type, $args, $trans_id ) {
         if ( intval( $tax_account_id ) ) {
             $tax_journal = WeDevs\ERP\Accounting\Model\Journal::where( 'id', '=', $item['tax_journal'] )->update([
                 'ledger_id'      => $tax_account_id,
-                $item_entry_type => ( $item['unit_price'] * $item['tax_rate'] ) / 100
+                $item_entry_type => $item['tax_amount']
             ]);
 
             $tax_journal_id =  intval( $item['tax_journal'] );
@@ -864,7 +855,7 @@ function erp_ac_tax_update( $item, $item_entry_type, $args, $trans_id ) {
                 'transaction_id' => $trans_id,
                 'ledger_id'      => $tax_account_id,
                 'type'           => 'line_item',
-                $item_entry_type => ( $item['unit_price'] * $item['tax_rate'] ) / 100
+                $item_entry_type => $item['tax_amount']
             ]);
 
             $tax_journal_id = $tax_journal ? $tax_journal->id : false;
