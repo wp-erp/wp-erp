@@ -583,7 +583,7 @@ class Form_Handler {
                 'discount'    => erp_ac_format_decimal( $postdata['line_discount'][ $key ] ),
                 'tax'         => isset( $postdata['line_tax'][$key] ) ? $postdata['line_tax'][$key] : 0,
                 'tax_rate'    => isset( $postdata['tax_rate'][$key] ) ? $postdata['tax_rate'][$key] : 0,
-                'tax_amount'    => isset( $postdata['tax_amount'][$key] ) ? $postdata['tax_amount'][$key] : 0,
+                'tax_amount'  => isset( $postdata['tax_amount'][$key] ) ? $postdata['tax_amount'][$key] : 0,
                 'line_total'  => erp_ac_format_decimal( $line_total ),
                 'tax_journal' => isset( $postdata['tax_journal'][$key] ) ? $postdata['tax_journal'][$key] : 0
             ], $key, $postdata );
