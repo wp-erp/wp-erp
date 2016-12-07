@@ -26,34 +26,49 @@ class Announcements_Controller extends REST_Controller {
     public function register_routes() {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_announcements' ],
-                'args'     => $this->get_collection_params(),
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_announcements' ],
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_manage_announcement' );
+                },
             ],
             [
-                'methods'  => WP_REST_Server::CREATABLE,
-                'callback' => [ $this, 'create_announcement' ],
-                'args'     => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'create_announcement' ],
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_manage_announcement' );
+                },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
             [
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_announcement' ],
-                'args'     => [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_announcement' ],
+                'args'                => [
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_manage_announcement' );
+                },
             ],
             [
-                'methods'  => WP_REST_Server::EDITABLE,
-                'callback' => [ $this, 'update_announcement' ],
-                'args'     => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => [ $this, 'update_announcement' ],
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_manage_announcement' );
+                },
             ],
             [
-                'methods'  => WP_REST_Server::DELETABLE,
-                'callback' => [ $this, 'delete_announcement' ],
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'delete_announcement' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_manage_announcement' );
+                },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );

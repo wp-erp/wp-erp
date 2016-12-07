@@ -26,34 +26,45 @@ class Sales_Controller extends REST_Controller {
     public function register_routes() {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_sales' ],
-                'args'     => $this->get_collection_params(),
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_sales' ],
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_sale' );
+                },
             ],
             [
-                'methods'  => WP_REST_Server::CREATABLE,
-                'callback' => [ $this, 'create_sale' ],
-                'args'     => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'create_sale' ],
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                'permission_callback' => [ $this, 'create_update_permission_check' ],
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
             [
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_sale' ],
-                'args'     => [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_sale' ],
+                'args'                => [
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_sale' );
+                },
             ],
             [
-                'methods'  => WP_REST_Server::EDITABLE,
-                'callback' => [ $this, 'update_sale' ],
-                'args'     => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => [ $this, 'update_sale' ],
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                'permission_callback' => [ $this, 'create_update_permission_check' ],
             ],
             [
-                'methods'  => WP_REST_Server::DELETABLE,
-                'callback' => [ $this, 'delete_sale' ],
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'delete_sale' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_sale' );
+                },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
@@ -552,5 +563,30 @@ class Sales_Controller extends REST_Controller {
         ];
 
         return $schema;
+    }
+
+    /**
+     * Sale create/update permission check
+     *
+     * @param  [type] $request
+     *
+     * @return boolean
+     */
+    public function create_update_permission_check( $request ) {
+        $form_type = isset( $request['form_type'] ) ? $request['form_type'] : '';
+
+        switch ( $form_type ) {
+            case 'invoice':
+                return current_user_can( 'erp_ac_create_sales_invoice' );
+                break;
+
+            case 'payment':
+                return current_user_can( 'erp_ac_create_sales_payment' );
+                break;
+
+            default:
+                return false;
+                break;
+        }
     }
 }

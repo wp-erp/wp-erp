@@ -30,121 +30,184 @@ class Employees_Controller extends REST_Controller {
     public function register_routes() {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_employees' ],
-                'args'     => $this->get_collection_params(),
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_employees' ],
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
             ],
             [
-                'methods'  => WP_REST_Server::CREATABLE,
-                'callback' => [ $this, 'create_employee' ],
-                'args'     => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'create_employee' ],
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_create_employee' );
+                },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/bulk', [
             [
-                'methods'  => WP_REST_Server::CREATABLE,
-                'callback' => [ $this, 'create_employees' ],
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'create_employees' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_create_employee' );
+                },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
             [
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_employee' ],
-                'args'     => [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_employee' ],
+                'args'                => [
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
             ],
             [
-                'methods'  => WP_REST_Server::EDITABLE,
-                'callback' => [ $this, 'update_employee' ],
-                'args'     => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => [ $this, 'update_employee' ],
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
             ],
             [
-                'methods'  => WP_REST_Server::DELETABLE,
-                'callback' => [ $this, 'delete_employee' ],
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'delete_employee' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_delete_employee' );
+                },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/experiences', [
             [
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_experiences' ],
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_experiences' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
             ],
             [
-                'methods'  => WP_REST_Server::CREATABLE,
-                'callback' => [ $this, 'create_experience' ],
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'create_experience' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
             ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/experiences' . '/(?P<exp_id>[\d]+)', [
             [
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_experience' ],
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_experience' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
             ],
             [
-                'methods'  => WP_REST_Server::EDITABLE,
-                'callback' => [ $this, 'update_experience' ],
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => [ $this, 'update_experience' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
             ],
             [
-                'methods'  => WP_REST_Server::DELETABLE,
-                'callback' => [ $this, 'delete_experience' ],
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'delete_experience' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
             ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/educations', [
             [
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_educations' ],
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_educations' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
             ],
             [
-                'methods'  => WP_REST_Server::CREATABLE,
-                'callback' => [ $this, 'create_education' ],
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'create_education' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
             ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/educations' . '/(?P<edu_id>[\d]+)', [
             [
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_education' ],
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_education' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
             ],
             [
-                'methods'  => WP_REST_Server::EDITABLE,
-                'callback' => [ $this, 'update_education' ],
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => [ $this, 'update_education' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
             ],
             [
-                'methods'  => WP_REST_Server::DELETABLE,
-                'callback' => [ $this, 'delete_education' ],
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'delete_education' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
             ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/dependents', [
             [
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_dependents' ],
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_dependents' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
             ],
             [
-                'methods'  => WP_REST_Server::CREATABLE,
-                'callback' => [ $this, 'create_dependent' ],
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'create_dependent' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
             ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/dependents' . '/(?P<dep_id>[\d]+)', [
             [
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_dependent' ],
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_dependent' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
             ],
             [
-                'methods'  => WP_REST_Server::EDITABLE,
-                'callback' => [ $this, 'update_dependent' ],
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => [ $this, 'update_dependent' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
             ],
             [
-                'methods'  => WP_REST_Server::DELETABLE,
-                'callback' => [ $this, 'delete_dependent' ],
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'delete_dependent' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
             ],
         ] );
     }

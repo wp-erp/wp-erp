@@ -26,30 +26,42 @@ class Accounting_Reports_Controller extends REST_Controller {
     public function register_routes() {
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/trial-balances', [
             [
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_trial_balances' ],
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_trial_balances' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_reports' );
+                },
             ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/income-statements', [
             [
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_income_statements' ],
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_income_statements' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_reports' );
+                },
             ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/sales-taxes', [
             [
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_sales_taxes' ],
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_sales_taxes' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_reports' );
+                },
             ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/balance-sheets', [
             [
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_balance_sheets' ],
-                'args'     => $this->get_collection_params(),
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_balance_sheets' ],
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_reports' );
+                },
             ],
         ] );
     }

@@ -26,38 +26,53 @@ class HRM_Reports_Controller extends REST_Controller {
     public function register_routes() {
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/age-profiles', [
             [
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_age_profiles' ],
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_age_profiles' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_hr_manager' );
+                },
             ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/gender-profiles', [
             [
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_gender_profiles' ],
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_gender_profiles' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_hr_manager' );
+                },
             ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/head-counts', [
             [
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_head_counts' ],
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_head_counts' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_hr_manager' );
+                },
             ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/salary-histories', [
             [
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_salary_histories' ],
-                'args'     => $this->get_collection_params(),
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_salary_histories' ],
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_hr_manager' );
+                },
             ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/year-of-services', [
             [
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_year_of_services' ],
-                'args'     => $this->get_collection_params(),
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_year_of_services' ],
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_hr_manager' );
+                },
             ],
         ] );
     }

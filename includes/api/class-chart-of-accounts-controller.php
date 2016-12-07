@@ -26,41 +26,59 @@ class Chart_Of_Accounts_Controller extends REST_Controller {
     public function register_routes() {
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/types', [
             [
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_account_types' ],
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_account_types' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_account_lists' );
+                },
             ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_accounts' ],
-                'args'     => $this->get_collection_params(),
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_accounts' ],
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_account_lists' );
+                },
             ],
             [
-                'methods'  => WP_REST_Server::CREATABLE,
-                'callback' => [ $this, 'create_account' ],
-                'args'     => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'create_account' ],
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_create_account' );
+                },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
             [
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_account' ],
-                'args'     => [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_account' ],
+                'args'                => [
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_single_account' );
+                },
             ],
             [
-                'methods'  => WP_REST_Server::EDITABLE,
-                'callback' => [ $this, 'update_account' ],
-                'args'     => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => [ $this, 'update_account' ],
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_edit_account' );
+                },
             ],
             [
-                'methods'  => WP_REST_Server::DELETABLE,
-                'callback' => [ $this, 'delete_account' ],
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'delete_account' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_delete_account' );
+                },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );

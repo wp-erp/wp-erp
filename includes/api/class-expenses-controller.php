@@ -26,34 +26,45 @@ class Expenses_Controller extends REST_Controller {
     public function register_routes() {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_expenses' ],
-                'args'     => $this->get_collection_params(),
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_expenses' ],
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_sale' );
+                },
             ],
             [
-                'methods'  => WP_REST_Server::CREATABLE,
-                'callback' => [ $this, 'create_expense' ],
-                'args'     => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'create_expense' ],
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                'permission_callback' => [ $this, 'create_update_permission_check' ],
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
             [
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_expense' ],
-                'args'     => [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_expense' ],
+                'args'                => [
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_view_sale' );
+                },
             ],
             [
-                'methods'  => WP_REST_Server::EDITABLE,
-                'callback' => [ $this, 'update_expense' ],
-                'args'     => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => [ $this, 'update_expense' ],
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                'permission_callback' => [ $this, 'create_update_permission_check' ],
             ],
             [
-                'methods'  => WP_REST_Server::DELETABLE,
-                'callback' => [ $this, 'delete_expense' ],
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'delete_expense' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_ac_manager' );
+                },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
@@ -552,5 +563,30 @@ class Expenses_Controller extends REST_Controller {
         ];
 
         return $schema;
+    }
+
+    /**
+     * Expense create/update permission check
+     *
+     * @param  [type] $request
+     *
+     * @return boolean
+     */
+    public function create_update_permission_check( $request ) {
+        $form_type = isset( $request['form_type'] ) ? $request['form_type'] : '';
+
+        switch ( $form_type ) {
+            case 'vendor_credit':
+                return current_user_can( 'erp_ac_create_expenses_credit' );
+                break;
+
+            case 'payment_voucher':
+                return current_user_can( 'erp_ac_create_expenses_voucher' );
+                break;
+
+            default:
+                return false;
+                break;
+        }
     }
 }

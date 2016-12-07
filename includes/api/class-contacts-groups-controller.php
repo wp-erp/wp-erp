@@ -26,49 +26,73 @@ class Contacts_Groups_Controller extends REST_Controller {
     public function register_routes() {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_groups' ],
-                'args'     => $this->get_collection_params(),
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_groups' ],
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_crm_manage_groups' );
+                },
             ],
             [
-                'methods'  => WP_REST_Server::CREATABLE,
-                'callback' => [ $this, 'create_group' ],
-                'args'     => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'create_group' ],
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_crm_create_groups' );
+                },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
             [
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_group' ],
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_group' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_crm_manage_groups' );
+                },
             ],
             [
-                'methods'  => WP_REST_Server::EDITABLE,
-                'callback' => [ $this, 'update_group' ],
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => [ $this, 'update_group' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_crm_create_groups' );
+                },
             ],
             [
-                'methods'  => WP_REST_Server::DELETABLE,
-                'callback' => [ $this, 'delete_group' ],
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'delete_group' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_crm_delete_groups' );
+                },
             ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/subscribes', [
             [
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => [ $this, 'get_subscribed_contacts' ],
-                'args'     => $this->get_collection_params(),
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_subscribed_contacts' ],
+                'args'                => $this->get_collection_params(),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_crm_manage_groups' );
+                },
             ],
             [
-                'methods'  => WP_REST_Server::CREATABLE,
-                'callback' => [ $this, 'subscribe_contact' ],
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'subscribe_contact' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_crm_manage_groups' );
+                },
             ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<group_id>[\d]+)' . '/subscribes' . '/(?P<contact_id>[\d]+)', [
             [
-                'methods'  => WP_REST_Server::DELETABLE,
-                'callback' => [ $this, 'delete_subscribed_contact' ],
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'delete_subscribed_contact' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_crm_manage_groups' );
+                },
             ],
         ] );
     }
