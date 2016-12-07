@@ -38,8 +38,6 @@ class ERP_Admin_Settings {
                 $settings[] = include __DIR__ . '/settings/license.php';
             }
 
-            $settings[] = include __DIR__ . '/settings/api.php';
-
             self::$settings = $settings;
         }
 

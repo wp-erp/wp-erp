@@ -9,13 +9,6 @@ class API_Registrar {
      * Constructor
      */
     public function __construct() {
-        $options        = get_option( 'erp_settings_erp-api_general', [] );
-        $is_api_enabled = ( isset( $options['enable_api'] ) && $options['enable_api'] == 'yes' ) ? true : false;
-
-        if ( ! $is_api_enabled ) {
-            return;
-        }
-
         if ( ! class_exists( 'WP_REST_Server' ) ) {
             return;
         }
