@@ -77,6 +77,7 @@ function erp_ac_reporting_query( $start = false, $end = false ) {
 
     $where           = "( tran.status IS NULL OR tran.status NOT IN( 'draft', 'void', 'awaiting_approval' ) ) AND ( 1=1 $query )";
     $join            = '';
+
     $where           = apply_filters( 'erp_ac_trial_balance_where', $where );
     $join            = apply_filters( 'erp_ac_trial_balance_join', $join );
 
@@ -92,6 +93,29 @@ function erp_ac_reporting_query( $start = false, $end = false ) {
     GROUP BY led.id";
 
     return $wpdb->get_results( $sql );
+}
+
+function erp_ac_trial_balance_query( $start = false, $end = false ) {
+    global $wpdb;
+    $tbl_ledger      = $wpdb->prefix . 'erp_ac_ledger';
+    $tbl_type        = $wpdb->prefix . 'erp_ac_chart_types';
+    $tbl_class       = $wpdb->prefix . 'erp_ac_chart_classes';
+    $tbl_journals    = $wpdb->prefix . 'erp_ac_journals';
+    $tbl_transaction = $wpdb->prefix . 'erp_ac_transactions';
+    $query           = [];
+
+    $financial_start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+    $financial_end   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+
+    $transactions = erp_ac_get_all_transaction([
+        'type'   => 'any',
+        'status' => array( 'not_in' => array( 'draft', 'void', 'awaiting_approval' ) ),
+        'join'   => ['journals'],
+        'number' => -1,
+
+    ]);
+
+    echo '<pre>'; print_r( $transactions ); echo '</pre>';
 }
 
 function erp_ac_get_sales_tax_report( $args ) {

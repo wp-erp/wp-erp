@@ -22,7 +22,7 @@ function erp_crm_get_avatar( $id, $email = '', $user_id = 0, $size = 32 ) {
         }
     }
 
-    return ( $email ) ? get_avatar( $email, $size ) : get_avatar( $id, $size );
+    return get_avatar( $email, $size );
 }
 
 /**
@@ -34,15 +34,16 @@ function erp_crm_get_avatar( $id, $email = '', $user_id = 0, $size = 32 ) {
  */
 function erp_crm_get_avatar_url( $id, $email='', $user_id = 0, $size = 32 ) {
 
+    $user_photo_id = ( $user_id ) ? get_user_meta( $user_id, 'photo_id', true ) : erp_people_get_meta( $id, 'photo_id', true );
+
     if ( $id ) {
-        $user_photo_id = ( $user_id ) ? get_user_meta( $user_id, 'photo_id', true ) : erp_people_get_meta( $id, 'photo_id', true );
 
         if ( ! empty( $user_photo_id ) ) {
             return wp_get_attachment_thumb_url( $user_photo_id );
         }
     }
 
-    return $email ? get_avatar_url( $email, $size ) : get_avatar_url( $id, $size );
+    return get_avatar_url( $email, $size );
 }
 
 /**
