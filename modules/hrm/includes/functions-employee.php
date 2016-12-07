@@ -788,8 +788,8 @@ function erp_hr_get_pay_type() {
         'hourly'   => __( 'Hourly', 'erp' ),
         'daily'    => __( 'Daily', 'erp' ),
         'weekly'   => __( 'Weekly', 'erp' ),
+        'biweekly' => __( 'Biweekly', 'erp' ),
         'monthly'  => __( 'Monthly', 'erp' ),
-        'yearly'   => __( 'Yearly', 'erp' ),
         'contract' => __( 'Contract', 'erp' ),
     );
 

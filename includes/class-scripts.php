@@ -72,11 +72,13 @@ class Scripts {
         wp_register_script( 'erp-flotchart-orerbars', $vendor . '/flot/jquery.flot.orderBars.js', array( 'jquery' ), $this->version, true );
         wp_register_script( 'erp-flotchart-pie', $vendor . '/flot/jquery.flot.pie.min.js', array( 'jquery' ), $this->version, true );
         wp_register_script( 'erp-flotchart-axislables', $vendor . '/flot/jquery.flot.axislabels.js', array( 'jquery' ), $this->version, true );
+        wp_register_script( 'erp-flotchart-categories', $vendor . '/flot/jquery.flot.categories.js', array( 'jquery' ), $this->version, true );
         wp_register_script( 'erp-flotchart-tooltip', $vendor . '/flot/jquery.flot.tooltip.min.js', array( 'jquery' ), $this->version, true );
         wp_register_script( 'erp-flotchart-resize', $vendor . '/flot/jquery.flot.resize.min.js', array( 'jquery' ), $this->version, true );
         wp_register_script( 'erp-flotchart-valuelabel', $vendor . '/flot/jquery.flot.valuelabels.js', array( 'jquery' ), $this->version, true );
         wp_register_script( 'erp-flotchart-navigate', $vendor . '/flot/jquery.flot.navigate.js', array( 'jquery' ), $this->version, true );
         wp_register_script( 'erp-flotchart-selection', $vendor . '/flot/jquery.flot.selection.js', array( 'jquery' ), $this->version, true );
+        wp_register_script( 'erp-flotchart-stack', $vendor . '/flot/jquery.flot.stack.js', array( 'jquery' ), $this->version, true );
 
         // core js files
         wp_register_script( 'erp-popup', $js . '/jquery-popup' . $this->suffix . '.js', array( 'jquery' ), $this->version, true );
@@ -130,6 +132,7 @@ class Scripts {
      */
     public function enqueue_scripts() {
         $screen = get_current_screen();
+        $hook = str_replace( sanitize_title( __( 'HR Management', 'erp' ) ) , 'hr-management', $screen->base );
 
         wp_enqueue_script( 'erp-select2' );
         wp_enqueue_script( 'erp-popup' );
@@ -156,7 +159,7 @@ class Scripts {
         ) );
 
         // load country/state JSON on new company page
-        if ( 'toplevel_page_erp-company' == $screen->base || isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'new', 'edit' ) ) ) {
+        if ( 'toplevel_page_erp-company' == $hook || isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'new', 'edit' ) ) ) {
             wp_enqueue_script( 'post' );
             wp_enqueue_media();
 
@@ -164,7 +167,7 @@ class Scripts {
             wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
         }
 
-        if ( 'hr-management_page_erp-hr-employee' == $screen->base ) {
+        if ( 'hr-management_page_erp-hr-employee' == $hook ) {
             $country = \WeDevs\ERP\Countries::instance();
             wp_localize_script( 'erp-script', 'wpErpCountries', $country->load_country_states() );
         }

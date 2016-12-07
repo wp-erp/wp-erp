@@ -24,9 +24,11 @@ function erp_ac_dashboard_right_column() {
 function erp_ac_dashboard_banks() {
     $bank_journals = erp_ac_get_bank_journals();
     $transactions = erp_ac_get_all_transaction([
-        'type'   => ['expense', 'sales', 'journal'],
-        'status' => array( 'not_in' => array( 'draft' ) )
+        'type'   => ['expense', 'sales', 'journal', 'transfer'],
+        'status' => array( 'not_in' => array( 'draft', 'void', 'awaiting_approval' ) ),
+        'number' => -1
     ]);
+
     $transactions_id = wp_list_pluck( $transactions, 'id' );
     $all_journals    = wp_list_pluck( $transactions, 'id' );
 
@@ -52,7 +54,7 @@ function erp_ac_dashboard_banks() {
 
     $total   = 0;
     $symbole = erp_ac_get_currency_symbol();
-
+//echo '<pre>'; print_r( $bank_journals ); echo '</pre>'; die();
     ?>
     <ul>
         <?php foreach ( $bank_journals as $id => $journal ) {
@@ -89,6 +91,7 @@ function erp_ac_dashboard_invoice_payable() {
         'form_type'  => 'invoice',
         'type'       => 'sales',
         'status'     => ['in' => ['awaiting_payment', 'partial'] ],
+        'number'     => -1
     ];
 
     $invoices = erp_ac_get_all_transaction( $incomes_args );
@@ -169,10 +172,12 @@ function erp_ac_dashboard_net_income() {
         'groupby'    => 'type',
         'start_date' => $first,
         'end_date'   => $last,
-        'output_by'  => 'array'
+        'output_by'  => 'array',
+        'number'     => -1
 
     ];
 
+    $incomes_args  = apply_filters( 'erp_ac_net_income_args', $incomes_args );
     $transections  = erp_ac_get_all_transaction( $incomes_args );
     $expenses      = isset( $transections['expense'] ) ? $transections['expense'] : [];
     $sales         = isset( $transections['sales'] ) ? $transections['sales'] : [];
@@ -187,6 +192,8 @@ function erp_ac_dashboard_net_income() {
             $expense_total = $expense_total + $details->trans_total;
         }
     }
+
+    $expense_total = apply_filters( 'erp_ac_net_expense', $expense_total, $transections );
 
     foreach ( $sales as $key => $details ) {
         if ( $details->status == 'partial' ) {
@@ -212,7 +219,7 @@ function erp_ac_dashboard_income_expense() {
 
     $db    = new \WeDevs\ORM\Eloquent\Database();
     $first = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
-    $last   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+    $last  = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
 
     $incomes_args = [
         'start_date' => $first,
@@ -221,8 +228,11 @@ function erp_ac_dashboard_income_expense() {
         'status'     => ['in' => ['awaiting_payment', 'closed', 'partial'] ],
         'select'     => [ '*', $db->raw( 'MONTHNAME( issue_date ) as month' ) ],
         'groupby'    => 'month',
-        'output_by'  => 'array'
+        'output_by'  => 'array',
+        'number'     => -1
     ];
+
+    $incomes_args = apply_filters( 'erp_ac_dashboard_income_args', $incomes_args );
 
     $expense_args = [
         'start_date' => $first,
@@ -231,8 +241,11 @@ function erp_ac_dashboard_income_expense() {
         'status'     => ['in' => ['awaiting_payment', 'closed', 'partial'] ],
         'select'     => [ '*', $db->raw( 'MONTHNAME( issue_date ) as month' ) ],
         'groupby'    => 'month',
-        'output_by'  => 'array'
+        'output_by'  => 'array',
+        'number'     => -1
     ];
+
+    $expense_args = apply_filters( 'erp_ac_dashboard_expense_args', $expense_args );
 
     $current_year = date( 'Y', strtotime( current_time( 'mysql' ) ) );
     $prev_year    = date( 'Y', strtotime( '-1 year', strtotime( current_time( 'mysql' ) ) ) );
@@ -247,10 +260,9 @@ function erp_ac_dashboard_income_expense() {
         $ex_month = date_parse( $key );
         $date_ex  = strtotime( date( 'Y-m-d', strtotime(  $current_year .'-'. $ex_month['month']  ) ) ) * 1000;
         $total    = 0;
-
         foreach ( $expense as $key => $details ) {
 
-            if ( $details->status == 'partial' ) {
+            if ( $details['status'] == 'partial' ) {
                 $total = $total + $details->due;
             } else {
                 $total = $total + $details->trans_total;
@@ -266,10 +278,11 @@ function erp_ac_dashboard_income_expense() {
         $total    = 0;
 
         foreach ( $income as $key => $details ) {
-            if ( $details->status == 'partial' ) {
-                $total = $total + $details->due;
+
+            if ( $details['status'] == 'partial' ) {
+                $total = $total + $details['due'];
             } else {
-                $total = $total + $details->trans_total;
+                $total = $total + $details['trans_total'];
             }
         }
 
@@ -397,11 +410,13 @@ function erp_ac_dashboard_bills_payable() {
     $incomes_args = [
         'start_date' => $first,
         'end_date'   => $last,
-        'form_type'  => 'vendor_credit',
-        'type'       => 'expense',
+        'form_type'  => ['vendor_credit'],
+        'type'       => ['expense'],
         'status'     => ['in' => ['awaiting_payment', 'partial'] ],
+        'number'     => -1
     ];
 
+    $incomes_args = apply_filters( 'erp_ac_bill_payable_arags', $incomes_args );
     $invoices = erp_ac_get_all_transaction( $incomes_args );
 
     $priv_day = date( 'Y-m-d', strtotime( '-1 day', strtotime( current_time( 'mysql' ) ) ) );
@@ -483,9 +498,11 @@ function erp_ac_dashboard_expense_chart() {
         'status'     => ['in' => ['awaiting_payment', 'closed', 'partial'] ],
         'select'     => [ '*', $db->raw( 'MONTHNAME( issue_date ) as month' ) ],
         'groupby'    => 'month',
-        'output_by'  => 'array'
+        'output_by'  => 'array',
+        'number'     => -1
     ];
 
+    $expense_args        = apply_filters( 'erp_ac_expense_pie_chart',  $expense_args );
     $expenses            = erp_ac_get_all_transaction( $expense_args );
     $expense_ledger_attr = erp_ac_get_ledger_by_class_id( 3 );
     $expense_ledgers     = wp_list_pluck( $expense_ledger_attr, 'id' );
@@ -525,18 +542,25 @@ function erp_ac_dashboard_expense_chart() {
 
         $ledger_data[$id] = array_sum( $ledg_data );
     }
-
+    $no_result = erp_ac_message('no_result');
     ?>
     <script type="text/javascript">
         (function() {
             jQuery(function($) {
 
                 function labelFormatter(label, series) {
-                    return "<div style='font-size:8pt; text-align:center; padding:2px; color:white;'>" + label + "<br>" + Math.round(series.percent) + "%</div>";
+
+                    if ( label === false ) {
+                        return "<div style='font-size:10pt; text-align:center; padding:2px; color:white;'>"+no_result+"</div>";
+                    } else {
+                        return "<div style='font-size:8pt; text-align:center; padding:2px; color:white;'>" + label + "<br>" + Math.round(series.percent) + "%</div>";
+                    }
+
                 }
 
                 var ledgers = <?php echo json_encode( $ledger_data ); ?>,
                     labels  = <?php echo json_encode( $labels ); ?>,
+                    no_result = '<?php echo $no_result; ?>',
                     data    = [];
 
                 $.each( ledgers, function( id,val ) {
@@ -545,8 +569,15 @@ function erp_ac_dashboard_expense_chart() {
 
                 if ( data.length == 0 ) {
                     var data = [
-                        { label: "No Result Found!",  data: 11.1},
-                    ];
+                        { label: false, data: -1},
+                    ],
+                    radius = 0.1,
+                    content = '',
+                    colors = ['#0073aa'];
+                } else {
+                    var radius = 3/4,
+                        content = "%s %p.0%",
+                        colors = [ '#1abc9c', '#2ecc71', '#4aa3df', '#9b59b6', '#f39c12', '#d35400', '#2c3e50'];
                 }
 
                 $.plot('#expense-pie-chart', data, {
@@ -556,23 +587,23 @@ function erp_ac_dashboard_expense_chart() {
                             radius: 1,
                             label: {
                                 show: true,
-                                radius: 3/4,
-                                formatter: labelFormatter
+                                radius: radius,
+                                formatter: labelFormatter,
                             }
                         }
                     },
                     grid: {
                         hoverable: true
                     },
-                    colors: [ '#1abc9c', '#2ecc71', '#4aa3df', '#9b59b6', '#f39c12', '#d35400', '#2c3e50'],
+                    colors: colors,
                     tooltip: true,
                     tooltipOpts: {
                         defaultTheme: false,
-                        content: "%s %p.0%",
+                        content: content,
                     },
                     legend: {
                         show: false
-                    }
+                    },
                 });
             });
         })();

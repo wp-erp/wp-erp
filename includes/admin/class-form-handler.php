@@ -22,7 +22,8 @@ class Form_Handler {
         $this->action( 'admin_init', 'tools_general' );
         $this->action( 'admin_init', 'tools_test_mail' );
 
-        add_action( 'load-erp-settings_page_erp-audit-log', array( $this, 'audit_log_bulk_action' ) );
+        $erp_settings = sanitize_title( __( 'ERP Settings', 'erp' ) );
+        add_action( "load-{$erp_settings}_page_erp-audit-log", array( $this, 'audit_log_bulk_action' ) );
     }
 
     /**

@@ -210,8 +210,22 @@ table.vendor-list-table th.column-customer img {
 .erp-ac-journal-entry table.journal-table th {
   text-align: left;
 }
-.erp-ac-journal-entry table.journal-table th.invalid {
+.erp-ac-journal-entry table.journal-table .invalid {
+  display: block;
   color: red;
+  text-align: justify;
+}
+.erp-ac-journal-entry table.journal-table .valid {
+  display: none;
+}
+.erp-ac-list-table-form .bulkactions {
+  display: none;
+}
+.erp-ac-list-table-form .actions input:not([type="submit"]) {
+  padding: 5px;
+}
+.erp-ac-list-table-form .actions input {
+  margin-right: 5px;
 }
 .invoice-preview-wrap {
   padding: 20px;
@@ -381,6 +395,19 @@ form.erp-form .erp-form-field label {
 }
 #erp-ac-tax-popup-content .row select {
   width: 100%;
+}
+#erp-ac-tax-popup-content .erp-ac-tax-settings-field {
+  margin: 0;
+  padding: 0;
+}
+#erp-ac-tax-popup-content .erp-ac-tax-settings-field li {
+  display: inline-table;
+}
+#erp-ac-tax-popup-content .erp-ac-tax-settings-field li input {
+  width: 45% !important;
+}
+#erp-ac-tax-popup-content .erp-ac-tax-settings-field li:not(:last-child) {
+  width: 30%;
 }
 #erp-ac-tax-popup-content .erp-ac-multiple-sub-tax-field {
   margin-top: 20px;

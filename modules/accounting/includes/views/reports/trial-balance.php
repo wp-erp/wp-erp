@@ -1,5 +1,7 @@
 <?php
-$ledgers = erp_ac_reporting_query(); 
+$start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) ); //isset( $_GET['start'] ) ? $_GET['start'] : false;
+$end   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) ); //isset( $_GET['end'] ) ? $_GET['end'] : false;
+$ledgers = erp_ac_reporting_query( $start, $end );
 $charts  = [];
 
 if ( $ledgers ) {
@@ -16,11 +18,12 @@ if ( $ledgers ) {
 
 $debit_total = 0.00;
 $credit_total = 0.00;
+
 ?>
 
 <div class="wrap">
     <h2><?php _e( 'Trial Balance', 'erp' ); ?></h2>
-
+    <?php //erp_ac_report_filter_form();?>
     <table class="table widefat striped">
         <thead>
             <tr>
@@ -32,34 +35,42 @@ $credit_total = 0.00;
 
         <tbody>
             <?php if ( $charts ) {
-
                     foreach ( $charts as $class ) {
                         $report = 0;
                         ?>
 
                         <tr class="chart-head">
-                                <td colspan="3"><strong><?php echo $class['label'] ?></strong></td>
+                            <td colspan="3"><strong><?php echo $class['label'] ?></strong></td>
                         </tr>
                         <?php
                         foreach ( $class['ledgers'] as $ledger ) {
+                            $balance = $ledger->credit - $ledger->debit;
 
-                            if ( $ledger->id == 1 ) {
-                                $debit  =  floatval( $ledger->debit ) - floatval( $ledger->credit );
+                            if ( $balance < 0  ) {
                                 $credit = '0.00';
+                                $debit = abs( $balance );
                             } else {
-                                $debit        = floatval( $ledger->debit );
-                                $credit       = floatval( $ledger->credit );
+                                $credit = abs( $balance );
+                                $debit = '0.00';
                             }
 
-                            $new_balance = $debit - $credit;
+                            // if ( $ledger->id == 1 ) {
+                            //     $debit  =  floatval( $ledger->debit ) - floatval( $ledger->credit );
+                            //     $credit = '0.00';
+                            // } else {
+                            //     $debit        = floatval( $ledger->debit );
+                            //     $credit       = floatval( $ledger->credit );
+                            // }
 
-                            if ( $new_balance >= 0 ) {
-                                $debit = $new_balance;
-                                $credit = 0;
-                            } else {
-                                $credit = abs( $new_balance );
-                                $debit = 0;
-                            }
+                            // $new_balance = $debit - $credit;
+
+                            // if ( $new_balance >= 0 ) {
+                            //     $debit = $new_balance;
+                            //     $credit = 0;
+                            // } else {
+                            //     $credit = abs( $new_balance );
+                            //     $debit = 0;
+                            // }
 
                             $debit_total  += $debit;
                             $credit_total += $credit;

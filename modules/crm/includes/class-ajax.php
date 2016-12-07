@@ -42,6 +42,7 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-crm-customer-remove-company', 'customer_remove_company' );
         $this->action( 'wp_ajax_erp-search-crm-user', 'search_crm_user' );
         $this->action( 'wp_ajax_erp-crm-save-assign-contact', 'save_assign_contact' );
+        $this->action( 'wp_ajax_erp-crm-make-wp-user', 'make_wp_user' );
 
         // Contact Group
         $this->action( 'wp_ajax_erp-crm-contact-group', 'contact_group_create' );
@@ -162,7 +163,7 @@ class Ajax_Handler {
 
         if ( isset( $_REQUEST['filter_assign_contact'] ) && ! empty( $_REQUEST['filter_assign_contact'] ) ) {
             $args['meta_query'] = [
-                'meta_key' => '_assign_crm_agent',
+                'meta_key' => 'contact_owner',
                 'meta_value' => $_REQUEST['filter_assign_contact']
             ];
         }
@@ -178,7 +179,7 @@ class Ajax_Handler {
 
         foreach ( $contacts['data'] as $key => $contact ) {
             $contact_owner    = [];
-            $contact_owner_id = ( $contact['user_id'] ) ? get_user_meta( $contact['user_id'], '_assign_crm_agent', true ) : erp_people_get_meta( $contact['id'], '_assign_crm_agent', true );
+            $contact_owner_id = erp_people_get_meta( $contact['id'], 'contact_owner', true );
 
             if ( $contact_owner_id ) {
                 $user = \get_user_by( 'id', $contact_owner_id );
@@ -270,21 +271,18 @@ class Ajax_Handler {
     public function create_customer() {
         $this->verify_nonce( 'wp-erp-crm-customer-nonce' );
 
-        unset( $_POST['_wp_http_referer'] );
-        unset( $_POST['_wpnonce'] );
-        unset( $_POST['action'] );
+        $posted = array_map( 'strip_tags_deep', $_POST );
+        $data   = array_merge( $posted['contact']['main'], $posted['contact']['meta'], $posted['contact']['social'] );
 
-        $posted      = array_map( 'strip_tags_deep', $_POST );
-
-        if ( ! $posted['id'] && ! current_user_can( 'erp_crm_add_contact' ) ) {
+        if ( ! $data['id'] && ! current_user_can( 'erp_crm_add_contact' ) ) {
             $this->send_error( __( 'You don\'t have any permission to add new contact', 'erp' ) );
         }
 
-        if ( $posted['id'] && ! current_user_can( 'erp_crm_edit_contact', $posted['id'] ) ) {
+        if ( $data['id'] && ! current_user_can( 'erp_crm_edit_contact', $data['id'] ) ) {
             $this->send_error( __( 'You don\'t have any permission to edit this contact', 'erp' ) );
         }
 
-        $customer_id = erp_insert_people( $posted );
+        $customer_id = erp_insert_people( $data );
 
         if ( is_wp_error( $customer_id ) ) {
             $this->send_error( $customer_id->get_error_message() );
@@ -292,42 +290,16 @@ class Ajax_Handler {
 
         $customer = new Contact( intval( $customer_id ) );
 
-        if ( $posted['photo_id'] ) {
-            $customer->update_meta( 'photo_id', $posted['photo_id'] );
-        }
-
-        if ( $posted['life_stage'] ) {
-            $customer->update_meta( 'life_stage', $posted['life_stage'] );
-        }
-
-        if ( !empty( $posted['date_of_birth'] ) ) {
-            $customer->update_meta( 'date_of_birth', $posted['date_of_birth'] );
-        }
-
-        if ( $posted['source'] ) {
-            $customer->update_meta( 'source', $posted['source'] );
-        }
-
-        if ( $posted['assign_to'] ) {
-            $customer->update_meta( '_assign_crm_agent', $posted['assign_to'] );
-        }
-
         $group_ids = ( isset( $posted['group_id'] ) && !empty( $posted['group_id'] ) ) ? $posted['group_id'] : [];
 
         erp_crm_edit_contact_subscriber( $group_ids, $customer_id );
 
-        if ( isset( $posted['social'] ) ) {
-            foreach ( $posted['social'] as $field => $value ) {
-                $customer->update_meta( $field, $value );
-            }
-        }
+        do_action( 'erp_crm_save_contact_data', $customer, $customer_id, $data );
 
-        do_action( 'erp_crm_save_contact_data', $customer, $customer_id, $posted );
+        $customer_data = $customer->to_array();
+        $statuses = erp_crm_customer_get_status_count( $data['type'] );
 
-        $data = $customer->to_array();
-        $statuses = erp_crm_customer_get_status_count( $posted['type'] );
-
-        $this->send_success( [ 'data' => $data, 'statuses' => $statuses ] );
+        $this->send_success( [ 'data' => $customer_data, 'statuses' => $statuses ] );
     }
 
     /**
@@ -493,6 +465,7 @@ class Ajax_Handler {
 
         $id   = isset( $_POST['user_id'] ) ? $_POST['user_id'] : 0;
         $type = isset( $_POST['type'] ) ? $_POST['type'] : '';
+        $is_wp = isset( $_POST['is_wp'] ) ? $_POST['is_wp'] : 'no';
 
         if ( ! $id ) {
             $this->send_error( __( 'User not found', 'erp' ) );
@@ -502,11 +475,48 @@ class Ajax_Handler {
             $this->send_error( __( 'Type not found', 'erp' ) );
         }
 
-        $people_obj = \WeDevs\ERP\Framework\Models\People::find( $id );
-        $type_obj   = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $type )->first();
-        $people_obj->assignType( $type_obj );
+        if ( 'yes' == $is_wp ) {
+            $user = \get_user_by( 'id', $id );
 
-        $this->send_success();
+            $args = [
+                'first_name'  => $user->first_name,
+                'last_name'   => $user->last_name,
+                'email'       => $user->user_email,
+                'company'     => get_user_meta( $user->ID, 'company', true ),
+                'phone'       => get_user_meta( $user->ID, 'phone', true ),
+                'mobile'      => get_user_meta( $user->ID, 'mobile', true ),
+                'other'       => get_user_meta( $user->ID, 'other', true ),
+                'website'     => $user->user_url,
+                'fax'         => get_user_meta( $user->ID, 'fax', true ),
+                'notes'       => get_user_meta( $user->ID, 'notes', true ),
+                'street_1'    => get_user_meta( $user->ID, 'street_1', true ),
+                'street_2'    => get_user_meta( $user->ID, 'street_2', true ),
+                'city'        => get_user_meta( $user->ID, 'city', true ),
+                'state'       => get_user_meta( $user->ID, 'state', true ),
+                'postal_code' => get_user_meta( $user->ID, 'postal_code', true ),
+                'country'     => get_user_meta( $user->ID, 'country', true ),
+                'currency'    => get_user_meta( $user->ID, 'currency', true ),
+                'user_id'     => $user->ID,
+                'type'        => $type,
+                'photo_id'    => get_user_meta( $user->ID, 'photo_id', true )
+            ];
+
+            $people_id = erp_insert_people( $args );
+
+            if ( is_wp_error( $people_id ) ) {
+                $this->send_error( $people_id->get_error_message() );
+            }
+
+        } else {
+            $people_obj = \WeDevs\ERP\Framework\Models\People::find( $id );
+            $type_obj   = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $type )->first();
+            $people_obj->assignType( $type_obj );
+            $people_id = $people_obj->id;
+        }
+
+        $statuses = erp_crm_customer_get_status_count( $type );
+
+        $this->send_success( [ 'id' => $people_id, 'statuses' => $statuses ] );
     }
 
     /**
@@ -666,12 +676,52 @@ class Ajax_Handler {
         }
 
         if ( $output['assign_contact_user_id'] ) {
-            update_user_meta( $output['assign_contact_user_id'], '_assign_crm_agent', $output['erp_select_assign_contact'] );
+            update_user_meta( $output['assign_contact_user_id'], 'contact_owner', $output['erp_select_assign_contact'] );
         } else {
-            erp_people_update_meta( $output['assign_contact_id'], '_assign_crm_agent', $output['erp_select_assign_contact'] );
+            erp_people_update_meta( $output['assign_contact_id'], 'contact_owner', $output['erp_select_assign_contact'] );
         }
 
         $this->send_success( __( 'Assign to agent successfully', 'erp' ) );
+    }
+
+    /**
+    * Make crm contact to wp user
+    *
+    * @since 1.1.7
+    *
+    * @return void
+    **/
+    public function make_wp_user() {
+        $this->verify_nonce( 'erp-crm-make-wp-user' );
+
+        $customer_id  = isset( $_POST['id'] ) ? $_POST['id'] : 0;
+        $type         = isset( $_POST['type'] ) ? $_POST['type'] : '';
+        $email        = isset( $_POST['customer_email'] ) ? $_POST['customer_email'] : '';
+        $role         = isset( $_POST['customer_role'] ) ? $_POST['customer_role'] : '';
+        $notify_email = isset( $_POST['send_password_notification'] ) ? true : false;
+
+        if ( ! $customer_id ) {
+            $this->send_error( __( 'Contact not found', 'erp' ) );
+        }
+
+        if ( ! $type ) {
+            $this->send_error( __( 'Contact type not found', 'erp' ) );
+        }
+
+        $data = [
+            'email'        => $email,
+            'type'         => $type,
+            'role'         => $role,
+            'notify_email' => $notify_email
+        ];
+
+        $data = erp_crm_make_wp_user( $customer_id, $data );
+
+        if ( is_wp_error( $data ) ) {
+            $this->send_error( $data->get_error_message() );
+        }
+
+        $this->send_success();
     }
 
 

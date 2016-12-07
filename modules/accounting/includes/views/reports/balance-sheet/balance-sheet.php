@@ -1,5 +1,10 @@
 <?php
-$ledgers = erp_ac_reporting_query();
+$start = isset( $_GET['start'] ) ? $_GET['start'] : false;
+$end   = isset( $_GET['end'] ) ? $_GET['end'] : false;
+$start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+$end   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+$ledgers = erp_ac_reporting_query( false, $end );
+$charts = [];
 
 foreach ($ledgers as $ledger) {
     $charts[$ledger->class_id][$ledger->id][] = $ledger;
@@ -27,12 +32,14 @@ $net_income    = $operating - $tax_total;
 $start = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_start_date() ) ) );
 $end   = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_end_date() ) ) );
 printf( '<i class="fa fa-calendar"></i> %1$s %2$s %3$s %4$s', __( 'From', 'erp' ), $start, __( 'to', 'erp' ),  $end); ?>
+<?php //erp_ac_report_filter_form(false);?>
 </p>
 
     <div class="metabox-holder">
 
         <div class="postbox ">
             <h2 class="hndle"><span><?php _e( 'Assets', 'erp' ); ?></span></h2>
+
             <div class="inside">
                 <table class="wp-list-table widefat">
                     <thead>

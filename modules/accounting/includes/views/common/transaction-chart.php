@@ -1,15 +1,21 @@
 <?php
 $screen = get_current_screen();
 $symbol = erp_ac_get_currency_symbol();
+$financial_start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+$financial_end   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
 
-if ( $screen->base == 'accounting_page_erp-accounting-sales'  ) {
+$hook = str_replace( sanitize_title( __( 'Accounting', 'erp' ) ) , 'accounting', $screen->base );
+
+if ( $hook == 'accounting_page_erp-accounting-sales'  ) {
     $transactions = erp_ac_get_all_transaction([
-        'type'      => ['sales'],
-        'status'    => ['in' => ['closed', 'partial', 'awaiting_payment']],
-        'output_by' => 'array',
-        'join'      => ['payments'],
-        'number'    => -1,
-        'form_type' => [ 'in' => ['payment'] ]
+        'type'       => ['sales'],
+        'status'     => ['in' => ['draft','closed', 'partial', 'awaiting_payment']],
+        'output_by'  => 'array',
+        'join'       => ['payments'],
+        'start_date' =>  date( 'Y-m-d', strtotime( erp_financial_start_date() ) ),
+        'end_date'   => date( 'Y-m-d', strtotime( erp_financial_end_date() ) ),
+        'number'     => -1,
+        //'form_type'  => [ 'in' => ['payment'] ]
     ]);
 
     $current_time = current_time( 'mysql' );
@@ -27,7 +33,7 @@ if ( $screen->base == 'accounting_page_erp-accounting-sales'  ) {
             continue;
         }
 
-        if ( $current_time > $transaction['due_date'] && $transaction['due'] > 0 ) {
+        if ( ( date( 'Y-m-d', strtotime( $current_time ) ) > date( 'Y-m-d', strtotime( $transaction['due_date'] ) ) )  && $transaction['due'] > 0 ) {
             $overdue     = $overdue + 1;
         }
 
@@ -35,11 +41,16 @@ if ( $screen->base == 'accounting_page_erp-accounting-sales'  ) {
             $paid = $paid + 1;
         }
 
-        if ( $current_time <= $transaction['due_date'] && 'partial' == $transaction['status'] ) {
+        if ( 'partial' == $transaction['status'] ) {
             $partial  = $partial + 1;
         }
 
-        $received    = $received + ( $transaction['trans_total'] - $transaction['due'] );
+        if ( $transaction['status'] == 'partial' ) {
+            $received = $received + $transaction['due'];
+        } else if ( $transaction['status'] != 'draft' ) {
+            $received = $received + $transaction['trans_total'];
+        }
+
         $outstanding = $transaction['due'] + $outstanding;
 
     }
@@ -80,15 +91,17 @@ if ( $screen->base == 'accounting_page_erp-accounting-sales'  ) {
         'color' => '#6C90A2'
     ];
 
-} else if ( $screen->base == 'accounting_page_erp-accounting-expense' ) {
+} else if ( $hook == 'accounting_page_erp-accounting-expense' ) {
 
     $transactions = erp_ac_get_all_transaction([
-        'type'      => ['expense'],
-        'status'    => ['in' => ['closed', 'partial', 'awaiting_payment']],
-        'output_by' => 'array',
-        'number'    => -1,
-        'join'      => ['payments'],
-        'form_type' => [ 'in' => ['payment_voucher'] ]
+        'type'       => ['expense'],
+        'status'     => ['in' => ['draft','closed', 'partial', 'awaiting_payment']],
+        'output_by'  => 'array',
+        'number'     => -1,
+        'join'       => ['payments'],
+        'start_date' =>  date( 'Y-m-d', strtotime( erp_financial_start_date() ) ),
+        'end_date'   => date( 'Y-m-d', strtotime( erp_financial_end_date() ) )
+       // 'form_type' => [ 'in' => ['payment_voucher'] ]
     ]);
 
     $current_time = current_time( 'mysql' );
@@ -106,7 +119,7 @@ if ( $screen->base == 'accounting_page_erp-accounting-sales'  ) {
             continue;
         }
 
-        if ( $current_time > $transaction['due_date'] && $transaction['due'] > 0 ) {
+        if ( ( date( 'Y-m-d', strtotime( $current_time ) ) > date( 'Y-m-d', strtotime( $transaction['due_date'] ) ) ) && $transaction['due'] > 0 ) {
             $overdue  = $overdue + 1;
         }
 
@@ -114,13 +127,17 @@ if ( $screen->base == 'accounting_page_erp-accounting-sales'  ) {
             $expense = $expense + 1;
         }
 
-        if ( $current_time <= $transaction['due_date'] && 'partial' == $transaction['status'] ) {
+        if ( 'partial' == $transaction['status'] ) {
             $partial  = $partial + 1;
         }
 
-        $received = $received + ( $transaction['trans_total'] - $transaction['due'] );
-        $outstanding = $transaction['due'] + $outstanding;
+        if ( $transaction['status'] == 'partial' ) {
+            $received = $received + $transaction['due'];
+        } else if ( $transaction['status'] != 'draft' ) {
+            $received = $received + $transaction['trans_total'];
+        }
 
+        $outstanding = $transaction['due'] + $outstanding;
     }
 
     $payment_received[] = [
@@ -159,15 +176,17 @@ if ( $screen->base == 'accounting_page_erp-accounting-sales'  ) {
         'color' => '#6C90A2'
     ];
 
-} else if ( $screen->base == 'accounting_page_erp-accounting-customers' ) {
+} else if ( $hook == 'accounting_page_erp-accounting-customers' ) {
 
     $transactions = erp_ac_get_all_transaction([
-        'type'      => ['sales'],
-        'status'    => ['in' => ['closed', 'partial', 'awaiting_payment']],
-        'output_by' => 'array',
-        'number'    => -1,
-        'join'      => ['payments'],
-        'user_id'   => isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0,
+        'type'       => ['sales'],
+        'status'     => ['in' => ['draft', 'closed', 'partial', 'awaiting_payment']],
+        'output_by'  => 'array',
+        'start_date' =>  date( 'Y-m-d', strtotime( erp_financial_start_date() ) ),
+        'end_date'   => date( 'Y-m-d', strtotime( erp_financial_end_date() ) ),
+        'number'     => -1,
+        'join'       => ['payments'],
+        'user_id'    => isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0,
     ]);
 
     $current_time = current_time( 'mysql' );
@@ -186,7 +205,7 @@ if ( $screen->base == 'accounting_page_erp-accounting-sales'  ) {
 
         $outstanding = $transaction['due'] + $outstanding;
 
-        if ( $current_time > $transaction['due_date'] && $transaction['due'] > 0 ) {
+        if ( ( date( 'Y-m-d', strtotime( $current_time ) ) > date( 'Y-m-d', strtotime( $transaction['due_date'] ) ) ) && $transaction['due'] > 0 ) {
             $overdue     = $overdue + 1;
         }
 
@@ -194,13 +213,15 @@ if ( $screen->base == 'accounting_page_erp-accounting-sales'  ) {
             $paid = $paid + 1;
         }
 
-        if ( $current_time <= $transaction['due_date'] && 'partial' == $transaction['status'] ) {
+        if ( 'partial' == $transaction['status'] ) {
             $partial  = $partial + 1;
         }
 
-        $received = $received + ( $transaction['trans_total'] - $transaction['due'] );
-
-
+        if ( $transaction['status'] == 'partial' ) {
+            $received = $received + $transaction['due'];
+        } else if ( $transaction['status'] != 'draft' ) {
+            $received = $received + $transaction['trans_total'];
+        }
     }
 
     $payment_received[] = [
@@ -239,15 +260,17 @@ if ( $screen->base == 'accounting_page_erp-accounting-sales'  ) {
         'color' => '#6C90A2'
     ];
 
-} else if ( $screen->base == 'accounting_page_erp-accounting-vendors' ) {
+} else if ( $hook == 'accounting_page_erp-accounting-vendors' ) {
     $transactions = erp_ac_get_all_transaction([
-        'type'      => ['expense'],
-        'status'    => ['in' => ['closed', 'partial', 'awaiting_payment']],
-        'output_by' => 'array',
-        'join'      => ['payments'],
-        'number'    => -1,
-        'form_type' => 'vendor_credit',
-        'user_id'   => isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0
+        'type'       => ['expense'],
+        'status'     => ['in' => ['draft', 'closed', 'partial', 'awaiting_payment']],
+        'output_by'  => 'array',
+        'join'       => ['payments'],
+        'number'     => -1,
+        'start_date' =>  date( 'Y-m-d', strtotime( erp_financial_start_date() ) ),
+        'end_date'   => date( 'Y-m-d', strtotime( erp_financial_end_date() ) ),
+       // 'form_type'  => 'vendor_credit',
+        'user_id'    => isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0
     ]);
 
     $current_time = current_time( 'mysql' );
@@ -265,7 +288,7 @@ if ( $screen->base == 'accounting_page_erp-accounting-sales'  ) {
             continue;
         }
 
-        if ( $current_time > $transaction['due_date'] && $transaction['due'] > 0 ) {
+        if ( ( date( 'Y-m-d', strtotime( $current_time ) ) > date( 'Y-m-d', strtotime( $transaction['due_date'] ) ) ) && $transaction['due'] > 0 ) {
             $overdue  = $overdue + 1;
         }
 
@@ -273,11 +296,16 @@ if ( $screen->base == 'accounting_page_erp-accounting-sales'  ) {
             $expense = $expense + 1;
         }
 
-        if ( $current_time <= $transaction['due_date'] && 'partial' == $transaction['status'] ) {
+        if ( 'partial' == $transaction['status'] ) {
             $partial  = $partial + 1;
         }
 
-        $received    = $received + ( $transaction['trans_total'] - $transaction['due'] );
+        if ( $transaction['status'] == 'partial' ) {
+            $received = $received + $transaction['due'];
+        } else if ( $transaction['status'] != 'draft' ) {
+            $received = $received + $transaction['trans_total'];
+        }
+
         $outstanding = $transaction['due'] + $outstanding;
 
     }

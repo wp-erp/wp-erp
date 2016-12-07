@@ -58,6 +58,7 @@ class Admin_Menu {
     function hr_calendar_script() {
         wp_enqueue_script( 'erp-momentjs' );
         wp_enqueue_script( 'erp-fullcalendar' );
+        enqueue_fullcalendar_locale();
         wp_enqueue_style( 'erp-fullcalendar' );
     }
 
@@ -130,6 +131,7 @@ class Admin_Menu {
         $template = apply_filters( 'erp_hr_employee_my_profile_templates', $template, $action, $id );
 
         if ( file_exists( $template ) ) {
+            $is_my_profile_page = true;
             include $template;
         }
     }

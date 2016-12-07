@@ -39,9 +39,10 @@ class User_Profile {
     function update_user( $user_id, $post ) {
 
         // HR role we want the user to have
-        $new_role = isset( $_POST['hr_manager'] ) ? sanitize_text_field( $_POST['hr_manager'] ) : false;
+        $new_hr_employee_role   = isset( $post['hr_employee'] ) ? sanitize_text_field( $post['hr_employee'] ) : false;
+        $new_hr_manager_role    = isset( $post['hr_manager'] ) ? sanitize_text_field( $post['hr_manager'] ) : false;
 
-        if ( ! $new_role ) {
+        if ( ! $new_hr_manager_role && ! $new_hr_employee_role ) {
             return;
         }
 
@@ -53,8 +54,14 @@ class User_Profile {
         // Set the new HR role
         $user = get_user_by( 'id', $user_id );
 
-        if ( $new_role ) {
-            $user->add_role( $new_role );
+        if ( $new_hr_employee_role ) {
+            $user->add_role( $new_hr_employee_role );
+        } else {
+            $user->remove_role( erp_hr_get_employee_role() );
+        }
+
+        if ( $new_hr_manager_role ) {
+            $user->add_role( $new_hr_manager_role );
         } else {
             $user->remove_role( erp_hr_get_manager_role() );
         }
@@ -64,6 +71,14 @@ class User_Profile {
         if ( ! current_user_can( 'manage_options' ) ) {
             return;
         }
+
+        $checked = in_array( erp_hr_get_employee_role(), $profileuser->roles ) ? 'checked' : '';
+        ?>
+        <label for="erp-hr-employee">
+            <input type="checkbox" id="erp-hr-employee" <?php echo $checked; ?> name="hr_employee" value="<?php echo erp_hr_get_employee_role(); ?>">
+            <span class="description"><?php _e( 'Employee', 'erp' ); ?></span>
+        </label>
+        <?php
 
         $checked = in_array( erp_hr_get_manager_role(), $profileuser->roles ) ? 'checked' : '';
         ?>

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "83d36b4f0f3112d3821d6c980e12119b",
-    "content-hash": "b016f94c386400ff23b6e0a1f9866318",
+    "hash": "a63a7b54051705104aeb54b81d8c4a3d",
+    "content-hash": "243f530dc2355fab58b3194253a88381",
     "packages": [
         {
             "name": "danielstjules/stringy",
@@ -274,6 +274,50 @@
             "time": "2015-06-02 13:39:10"
         },
         {
+            "name": "illuminate/pagination",
+            "version": "v5.0.33",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/illuminate/pagination.git",
+                "reference": "cb0a9730ae986c4b343eaa59ab3f179447c6b308"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/illuminate/pagination/zipball/cb0a9730ae986c4b343eaa59ab3f179447c6b308",
+                "reference": "cb0a9730ae986c4b343eaa59ab3f179447c6b308",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "5.0.*",
+                "illuminate/support": "5.0.*",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Illuminate\\Pagination\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylorotwell@gmail.com"
+                }
+            ],
+            "description": "The Illuminate Pagination package.",
+            "homepage": "http://laravel.com",
+            "time": "2015-03-26 17:28:59"
+        },
+        {
             "name": "illuminate/support",
             "version": "v5.0.33",
             "source": {
@@ -328,16 +372,16 @@
         },
         {
             "name": "johngrogg/ics-parser",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/u01jmg3/ics-parser.git",
-                "reference": "6085a18242eaf98e6586e3defa7705fa207847ac"
+                "reference": "d5f44fe7e633ab81ebb07c9a637877becf50cb41"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/u01jmg3/ics-parser/zipball/6085a18242eaf98e6586e3defa7705fa207847ac",
-                "reference": "6085a18242eaf98e6586e3defa7705fa207847ac",
+                "url": "https://api.github.com/repos/u01jmg3/ics-parser/zipball/d5f44fe7e633ab81ebb07c9a637877becf50cb41",
+                "reference": "d5f44fe7e633ab81ebb07c9a637877becf50cb41",
                 "shasum": ""
             },
             "type": "library",
@@ -364,7 +408,7 @@
                 "ical",
                 "ics"
             ],
-            "time": "2016-03-16 13:31:55"
+            "time": "2016-08-20 19:07:35"
         },
         {
             "name": "nesbot/carbon",
@@ -415,16 +459,16 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.2.0",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "dff51f72b0706335131b00a7f49606168c582594"
+                "reference": "e79d363049d1c2128f133a2667e4f4190904f7f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/dff51f72b0706335131b00a7f49606168c582594",
-                "reference": "dff51f72b0706335131b00a7f49606168c582594",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/e79d363049d1c2128f133a2667e4f4190904f7f4",
+                "reference": "e79d363049d1c2128f133a2667e4f4190904f7f4",
                 "shasum": ""
             },
             "require": {
@@ -436,7 +480,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.2-dev"
+                    "dev-master": "1.3-dev"
                 }
             },
             "autoload": {
@@ -470,20 +514,20 @@
                 "portable",
                 "shim"
             ],
-            "time": "2016-05-18 14:26:46"
+            "time": "2016-11-14 01:06:16"
         },
         {
             "name": "symfony/translation",
-            "version": "v3.1.1",
+            "version": "v3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "b36e79d7bbbfa4a7e9708335082b3eba2263d356"
+                "reference": "64ab6fc0b42e5386631f408e6adcaaff8eee5ba1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/b36e79d7bbbfa4a7e9708335082b3eba2263d356",
-                "reference": "b36e79d7bbbfa4a7e9708335082b3eba2263d356",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/64ab6fc0b42e5386631f408e6adcaaff8eee5ba1",
+                "reference": "64ab6fc0b42e5386631f408e6adcaaff8eee5ba1",
                 "shasum": ""
             },
             "require": {
@@ -507,7 +551,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.1-dev"
+                    "dev-master": "3.2-dev"
                 }
             },
             "autoload": {
@@ -534,20 +578,20 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2016-06-14 11:18:07"
+            "time": "2016-11-18 21:17:59"
         },
         {
             "name": "symfony/var-dumper",
-            "version": "v2.8.12",
+            "version": "v2.8.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "08761341cc4a3b2d9d9578364f7c655b178254aa"
+                "reference": "195c6238ec319cde9204b2d7f271654ceb69b71b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/08761341cc4a3b2d9d9578364f7c655b178254aa",
-                "reference": "08761341cc4a3b2d9d9578364f7c655b178254aa",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/195c6238ec319cde9204b2d7f271654ceb69b71b",
+                "reference": "195c6238ec319cde9204b2d7f271654ceb69b71b",
                 "shasum": ""
             },
             "require": {
@@ -597,7 +641,7 @@
                 "debug",
                 "dump"
             ],
-            "time": "2016-09-29 14:06:15"
+            "time": "2016-11-03 07:52:58"
         },
         {
             "name": "tareq1988/wp-eloquent",
@@ -605,16 +649,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tareq1988/wp-eloquent.git",
-                "reference": "2345f53f1ade6393ba376b3ea8a7cc2f64c6a294"
+                "reference": "da4b3d9776cbf8ddf880196e4c7659971ec38647"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tareq1988/wp-eloquent/zipball/2345f53f1ade6393ba376b3ea8a7cc2f64c6a294",
-                "reference": "2345f53f1ade6393ba376b3ea8a7cc2f64c6a294",
+                "url": "https://api.github.com/repos/tareq1988/wp-eloquent/zipball/da4b3d9776cbf8ddf880196e4c7659971ec38647",
+                "reference": "da4b3d9776cbf8ddf880196e4c7659971ec38647",
                 "shasum": ""
             },
             "require": {
-                "illuminate/database": "5.0.*"
+                "illuminate/database": "5.0.*",
+                "illuminate/pagination": "5.0.*"
             },
             "type": "library",
             "autoload": {
@@ -641,7 +686,7 @@
                 "sql",
                 "wordpress"
             ],
-            "time": "2016-05-22 19:23:59"
+            "time": "2016-12-05 09:27:37"
         }
     ],
     "packages-dev": [],

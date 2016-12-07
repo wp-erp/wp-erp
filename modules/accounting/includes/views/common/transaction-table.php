@@ -57,7 +57,7 @@
                     <span class="erp-ac-tax-text"><?php echo $tax_label['label'] ;?></span>
                 </th>
                 <th class="col-amount">
-                    <input type="text" name="tax_total" data-tax_id="<?php echo $tax_id; ?>" class="erp-ac-tax-total" readonly value="<?php echo erp_ac_get_price_for_field( $tax_label['total_amount'], ['symbol' => false] ); ?>">
+                    <input type="text" name="tax_total" data-tax_id="<?php echo $tax_id; ?>" class="erp-ac-tax-total price-total" readonly value="<?php echo erp_ac_get_price_for_field( $tax_label['total_amount'], ['symbol' => false] ); ?>">
                 </th>
                 <th>&nbsp;</th>
             </tr>
@@ -89,7 +89,7 @@
             <span class="erp-ac-tax-text"></span>
         </th>
         <th class="col-amount">
-            <input type="text" name="tax_total" data-tax_id="" class="erp-ac-tax-total" readonly value="">
+            <input type="text" name="tax_total" data-tax_id="" class="erp-ac-tax-total sub-total" readonly value="">
         </th>
         <th>&nbsp;</th>
     </tr>

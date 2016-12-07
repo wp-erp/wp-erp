@@ -47,21 +47,24 @@
                 _.each( data.content.items, function( items, index ) {
                     #>
                     <div class="row">
+                        <ul class="erp-ac-tax-settings-field">
                         <?php erp_ac_tax_component_field_with_value(); ?>
                         <# if ( data.content.items.length > 1 ) { #>
-                            <span><i style="" class="fa fa-times-circle erp-ac-remove-field"></i></span>
+                            <li><span><i style="" class="fa fa-times-circle erp-ac-remove-field"></i></span></li>
                         <# } else { #>
-                            <span><i style="display: none;" class="fa fa-times-circle erp-ac-remove-field"></i></span>
+                            <li><span><i style="display: none;" class="fa fa-times-circle erp-ac-remove-field"></i></span></li>
                         <# } #>
-
+                        </ul>
                     </div>
                     <#
                 });
 
             } else { #>
                 <div class="row">
+                    <ul class="erp-ac-tax-settings-field">
                     <?php erp_ac_tax_component_fields(); ?>
-                    <span><i style="display: none;" class="fa fa-times-circle erp-ac-remove-field"></i></span>
+                    <li><span><i style="display: none;" class="fa fa-times-circle erp-ac-remove-field"></i></span></li>
+                    </ul>
                 </div>
             <# } #>
     </div>

@@ -426,16 +426,20 @@ class Admin_Menu {
                 break;
 
             case 'sales-tax':
+
+                $start = isset( $_GET['start'] ) ? $_GET['start'] : date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+                $end   = isset( $_GET['end'] ) ? $_GET['end'] : date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+
                 if ( isset( $_GET['action'] ) && intval( $_GET['id'] ) ) {
                     $tax_id  = $_GET['id'];
-                    $taxs    = erp_ac_normarlize_tax_from_transaction( [ 'tax_id' => [$_GET['id']], 'offset'  => $offset, 'number' => $limit] );
+                    $taxs    = erp_ac_normarlize_tax_from_transaction( [ 'start' => $start, 'end' => $end, 'tax_id' => [$_GET['id']], 'offset'  => $offset, 'number' => $limit] );
                     $taxs    = $taxs['individuals'][$_GET['id']];
                     $count   = erp_ac_get_sales_tax_report_count( ['tax_id' => [$_GET['id']] ] );
                     $taxinfo = erp_ac_get_tax_info();
 
                     $template = dirname( __FILE__ ) . '/views/reports/tax/single-sales-tax.php';
                 } else {
-                    $taxs = erp_ac_normarlize_tax_from_transaction();
+                    $taxs = erp_ac_normarlize_tax_from_transaction( [ 'start' => $start, 'end' => $end ] );
                     $taxs = $taxs['units'];
                     $template = dirname( __FILE__ ) . '/views/reports/tax/sales-tax.php';
                 }
@@ -481,6 +485,16 @@ class Admin_Menu {
 
             case 'new':
                 if ( erp_ac_create_journal() ) {
+                    $journal_id = isset( $_GET['journal_id'] ) ? intval( $_GET['journal_id'] ) : false;
+                    $journal    = [];
+
+                    if ( $journal_id ) {
+                        $journal = erp_ac_get_transaction( $journal_id, [
+                            'join' => ['journals', 'items'],
+                            'type' => 'journal'
+                        ]);
+                    }
+
                     $template = dirname( __FILE__ ) . '/views/journal/new.php';
                 }
                 break;

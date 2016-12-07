@@ -983,8 +983,9 @@ function erp_get_import_export_fields() {
  */
 function erp_import_export_javascript() {
     global $current_screen;
+    $hook = str_replace( sanitize_title( __( 'ERP Settings', 'erp' ) ) , 'erp-settings', $current_screen->base );
 
-    if ( 'erp-settings_page_erp-tools' !== $current_screen->base ) {
+    if ( 'erp-settings_page_erp-tools' !== $hook ) {
         return;
     }
 
@@ -1420,7 +1421,7 @@ function erp_process_import_export() {
                         } else {
                             $contact_owner = isset( $_POST['contact_owner'] ) ? intval( $_POST['contact_owner'] ) : get_current_user_id();
                             $life_stage    = isset( $_POST['life_stage'] ) ? sanitize_key( $_POST['life_stage'] ) : '';
-                            erp_people_update_meta( $item_insert_id, '_assign_crm_agent', $contact_owner );
+                            erp_people_update_meta( $item_insert_id, 'contact_owner', $contact_owner );
                             erp_people_update_meta( $item_insert_id, 'life_stage', $life_stage );
 
                             if ( isset( $_POST['contact_group'] ) && ! empty( $_POST['contact_group'] ) ) {
@@ -1859,4 +1860,41 @@ function erp_import_export_download_sample_action() {
     }
 
     return;
+}
+
+/**
+ * Enqueue locale scripts for fullcalendar
+ *
+ * @since 1.0.0
+ *
+ * @return void
+ */
+function enqueue_fullcalendar_locale() {
+    $locale = get_locale();
+    $script = '';
+
+    // no need to add locale for en_US
+    if ( 'en_US' === $locale ) {
+        return;
+    }
+
+    $locale = explode( '_', $locale );
+
+    // make sure we have two segments - 1.lang, 2.country
+    if ( count( $locale ) < 2 ) {
+        return;
+    }
+
+    $lang = $locale[0];
+    $country = strtolower( $locale[1] );
+
+    if ( $lang === $country ) {
+        $script = $lang;
+    } else {
+        $script = $lang . '-' . $country;
+    }
+
+    if ( file_exists( WPERP_PATH . "/assets/vendor/fullcalendar/lang/{$script}.js" ) ) {
+        wp_enqueue_script( 'erp-fullcalendar-locale', WPERP_ASSETS . "/vendor/fullcalendar/lang/{$script}.js", array( 'erp-fullcalendar' ), null, true );
+    }
 }

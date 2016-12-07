@@ -48,7 +48,7 @@ function erp_ac_get_all_transaction( $args = array() ) {
         if ( isset( $args['user_id'] ) &&  is_array( $args['user_id'] ) && array_key_exists( 'in', $args['user_id'] ) ) {
             $transaction = $transaction->whereIn( 'user_id', $args['user_id']['in'] );
         } else if ( isset( $args['user_id'] ) &&  is_array( $args['user_id'] ) && array_key_exists( 'not_in', $args['user_id'] ) ) {
-            $transaction = $transaction->whereNotIn( 'user_id', [$args['user_id']['not_in']] );
+            $transaction = $transaction->whereNotIn( 'user_id', $args['user_id']['not_in'] );
         } else if ( isset( $args['user_id'] ) &&  ! is_array( $args['user_id'] ) ) {
             $transaction = $transaction->where( 'user_id', '=', $args['user_id'] );
         }
@@ -56,7 +56,7 @@ function erp_ac_get_all_transaction( $args = array() ) {
         if ( isset( $args['created_by'] ) &&  is_array( $args['created_by'] ) && array_key_exists( 'in', $args['created_by'] ) ) {
             $transaction = $transaction->whereIn( 'created_by', $args['created_by']['in'] );
         } else if ( isset( $args['created_by'] ) &&  is_array( $args['created_by'] ) && array_key_exists( 'not_in', $args['created_by'] ) ) {
-            $transaction = $transaction->whereNotIn( 'created_by', [$args['created_by']['not_in']] );
+            $transaction = $transaction->whereNotIn( 'created_by', $args['created_by']['not_in'] );
         } else if ( isset( $args['created_by'] ) &&  ! is_array( $args['created_by'] ) ) {
             $transaction = $transaction->where( 'created_by', '=', $args['created_by'] );
         }
@@ -85,28 +85,25 @@ function erp_ac_get_all_transaction( $args = array() ) {
             $transaction = $transaction->where( 'ref', '=', $args['ref'] );
         }
 
-        if ( isset( $args['status'] ) && $args['status'] == 'deleted' ) {
-            //$transaction = $transaction->where( 'status', '==', 'deleted' );
-        } else {
-            $transaction = $transaction->where( 'status', '!=', 'deleted' );
-        }
-
         if ( isset( $args['status'] ) &&  is_array( $args['status'] ) && array_key_exists( 'in', $args['status'] ) ) {
-            $transaction = $transaction->whereIn( 'status', $args['status']['in'] );
+            $transaction = $transaction->where( function($q)use($args) {
+                $q->whereNull( 'status' )
+                  ->orWhereIn( 'status', $args['status']['in'] );
+            } );
+            //$transaction = $transaction->whereIn( 'status', $args['status']['in'] );
         } else if ( isset( $args['status'] ) &&  is_array( $args['status'] ) && array_key_exists( 'not_in', $args['status'] ) ) {
-            $transaction = $transaction->whereNotIn( 'status', [$args['status']['not_in']] );
+            $transaction = $transaction->where( function($q)use($args) {
+                $q->whereNull( 'status' )
+                  ->orWhereNotIn( 'status', $args['status']['not_in'] );
+            } );
         } else if ( isset( $args['status'] ) &&  ! is_array( $args['status'] ) ) {
             $transaction = $transaction->where( 'status', '=', $args['status'] );
-        }
-
-        if ( isset( $args['type'] ) && ( ( is_array( $args['type'] ) && in_array( 'journal', $args['type'] ) ) || $args['type'] == 'journal' )  ) {
-            $transaction = $transaction->orWhereNull( 'status' );
         }
 
         if ( isset( $args['form_type'] ) &&  is_array( $args['form_type'] ) && array_key_exists( 'in', $args['form_type'] ) ) {
             $transaction = $transaction->whereIn( 'form_type', $args['form_type']['in'] );
         } else if ( isset( $args['form_type'] ) &&  is_array( $args['form_type'] ) && array_key_exists( 'not_in', $args['form_type'] ) ) {
-            $transaction = $transaction->whereNotIn( 'form_type', [$args['form_type']['not_in']] );
+            $transaction = $transaction->whereNotIn( 'form_type', $args['form_type']['not_in'] );
         } else if ( isset( $args['form_type'] ) &&  ! is_array( $args['form_type'] ) ) {
             $transaction = $transaction->where( 'form_type', '=', $args['form_type'] );
         }
@@ -123,32 +120,26 @@ function erp_ac_get_all_transaction( $args = array() ) {
 
         if ( isset( $args['id'] ) && ! empty( $args['id'] ) ) {
             $transaction = $transaction->where( 'id', '=', $args['id'] );
+        } else if ( $args['type'] != 'any' ) {
+            $transaction = $transaction->type( $args['type'] );
+        }
+
+        if ( $args['number'] != -1 ) {
+            $transaction = $transaction->skip( $args['offset'] )->take( $args['number'] );
         }
 
         if ( isset( $args['groupby'] ) && ! empty( $args['groupby'] ) ) {
-
-            if ( $args['number'] != -1 ) {
-                $transaction = $transaction->skip( $args['offset'] )->take( $args['number'] );
-            }
-
-            $items = $transaction->type( $args['type'] )
-                ->orderBy( $args['orderby'], $args['order'] )
+            $items = $transaction->orderBy( $args['orderby'], $args['order'] )
                 ->orderBy( 'created_at', $args['order'] )
                 ->get()
                 ->groupBy( $args['groupby'] )
                 ->toArray();
+
         } else {
-
-            if ( $args['number'] != -1 ) {
-                $transaction = $transaction->skip( $args['offset'] )->take( $args['number'] );
-            }
-
-            $items = $transaction->type( $args['type'] )
-                ->orderBy( $args['orderby'], $args['order'] )
+            $items = $transaction->orderBy( $args['orderby'], $args['order'] )
                 ->orderBy( 'created_at', $args['order'] )
                 ->get()
                 ->toArray();
-
         }
 
         if ( $args['output_by'] == 'object' ) {
@@ -167,9 +158,11 @@ function erp_ac_get_all_transaction( $args = array() ) {
  * @return array
  */
 function erp_ac_get_transaction_count( $args, $user_id = 0 ) {
-    $status = isset( $args['status'] ) ? $args['status'] : false;
+    $status    = isset( $args['status'] ) ? $args['status'] : false;
     $cache_key = 'erp-ac-' . $args['type'] . '-' . $user_id . '-count';
     $count     = wp_cache_get( $cache_key, 'erp' );
+    $start = isset( $args['start_date'] ) ? $args['start_date'] :  date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+    $end = isset( $args['end_date'] ) ? $args['end_date'] : date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
 
     if ( false === $count ) {
         $trans = new WeDevs\ERP\Accounting\Model\Transaction();
@@ -182,6 +175,8 @@ function erp_ac_get_transaction_count( $args, $user_id = 0 ) {
             $trans = $trans->where( 'status', '=', $args['status'] );
         }
 
+        $trans = $trans->where( 'issue_date', '>=', $start );
+        $trans = $trans->where( 'issue_date', '<=', $end );
         $count = $trans->type( $args['type'] )->count();
     }
 
@@ -195,20 +190,29 @@ function erp_ac_get_transaction_count( $args, $user_id = 0 ) {
  *
  * @return array
  */
-function erp_ac_get_transaction( $id = 0 ) {
-    $cache_key   = 'erp-ac-transaction' . $id;
-    $transaction = wp_cache_get( $cache_key, 'erp' );
-    $results     = [];
-
-    if ( false === $transaction ) {
-        $transaction = WeDevs\ERP\Accounting\Model\Transaction::find( $id ); //->toArray();
-
-        if ( ! empty( $transaction ) ) {
-            $results = $transaction->toArray();
-        }
+function erp_ac_get_transaction( $id = 0, $args = [] ) {
+    if ( ! intval( $id ) ) {
+        return false;
     }
 
-    return $results;
+    $args['id']        = $id;
+    $args['output_by'] = isset( $args['output_by'] ) && ! empty( $args['output_by'] ) ? $args['output_by'] : 'array';
+    $cache_key         = 'erp-ac-transaction' . md5( serialize( $args ) );
+    $transaction       = wp_cache_get( $cache_key, 'erp' );
+
+    if ( false === $transaction ) {
+        $transaction = erp_ac_get_all_transaction( $args );
+        $transaction = reset( $transaction );
+
+        wp_cache_set( $cache_key, $transaction, 'erp' );
+        // $transaction = WeDevs\ERP\Accounting\Model\Transaction::find( $id ); //->toArray();
+
+        // if ( ! empty( $transaction ) ) {
+        //     $transaction = $transaction->toArray();
+        // }
+    }
+
+    return $transaction;
 }
 
 /**
@@ -365,12 +369,9 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
         'created_at'      => current_time( 'mysql' )
     );
 
-    $args = wp_parse_args( $args, $defaults ); //strpos($mystring, $findme);
-
+    $args       = wp_parse_args( $args, $defaults ); //strpos($mystring, $findme);
     $is_update  = $args['id'] && ! is_array( $args['id'] ) ? true : false;
-
     $permission = er_ac_insert_transaction_permiss( $args, $is_update );
-
     $validation = er_ac_insert_transaction_validation( $args, $items, $is_update );
 
     if ( is_wp_error( $permission ) ) {
@@ -486,8 +487,7 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
             $jor_prev_ids  = wp_list_pluck( $get_journals_line_item, 'id' );
         }
 
-        foreach ($items as $key => $item) {
-
+        foreach ( $items as $key => $item ) {
             $journal_id = erp_ac_journal_update( $item, $item_entry_type, $args, $trans_id );
 
             if ( ! $journal_id ) {
@@ -495,9 +495,7 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
             }
 
             $tax_id  = erp_ac_tax_update( $item, $item_entry_type, $args, $trans_id );
-
             $item_id = erp_ac_item_update( $item, $args, $trans_id, $journal_id, $tax_id, $order );
-
 
             if ( ! $item_id ) {
                 throw new Exception( __( 'Could not insert transaction item', 'erp' ) );
@@ -507,7 +505,6 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
         }
 
         if ( $is_update ) {
-
             $tax_jor_id = wp_list_pluck( $items, 'tax_journal' );
 
             foreach ( $jor_prev_ids as $key => $jor_prev_id ) {
@@ -517,7 +514,6 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
             }
 
             $remove_jours = $remove_items = array_diff( $jor_prev_ids, $args['journals_id'] );
-
             $tax_journal_ids = WeDevs\ERP\Accounting\Model\Transaction_Items::select('tax_journal')->whereIn( 'journal_id', $remove_jours )->get()->toArray();
             $tax_journal_ids = wp_list_pluck( $tax_journal_ids, 'tax_journal' );
             $remove_jours    = array_merge( $remove_jours, $tax_journal_ids );
@@ -537,8 +533,7 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
                 $line_total  = isset( $args['line_total'][$key] ) ? $args['line_total'][$key] : 0;
                 $transaction = erp_ac_get_transaction( $id );
                 $due         = $transaction['due'];
-
-                $new_due = $due - $line_total;
+                $new_due     = $due - $line_total;
 
                 if ( $new_due <= 0  ) {
                     $update_field['status'] = 'paid';
@@ -566,6 +561,155 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
 
     } catch (Exception $e) {
         $wpdb->query( 'ROLLBACK' );
+        return new WP_error( 'final-exception', $e->getMessage() );
+    }
+
+    return false;
+}
+
+/**
+ * Insert a new journal
+ *
+ * @since  1.1.7
+ *
+ * @param array $args
+ * @param array $items
+ *
+ * @return int/boolen
+ */
+function erp_ac_new_journal( $args = [], $items = [] ) {
+    global $wpdb;
+
+    $defaults = [
+        'type'            => 'journal',
+        'ref'             => '',
+        'issue_date'      => '',
+        'summary'         => '',
+        'conversion_rate' => 1,
+        'invoice_number'  => 0,
+        'created_by'      => get_current_user_id(),
+        'created_at'      => current_time( 'mysql' )
+    ];
+
+    $args = wp_parse_args( $args, $defaults );
+
+    $journals_id = [];
+    $items_id    = [];
+
+    if ( intval( $args['id'] ) ) {
+
+        $journal = erp_ac_get_transaction( $args['id'], [
+            'join' => ['journals', 'items'],
+            'type' => 'journal'
+        ]);
+
+        $journals_id = wp_list_pluck( $journal['journals'], 'id' );
+        $items_id    = wp_list_pluck( $journal['items'], 'id' );
+
+        $submit_journals_id = wp_list_pluck( $items, 'journal_id' );
+        $submit_items_id    = wp_list_pluck( $items, 'item_id' );
+
+        $journals_id = array_diff( $journals_id, $submit_journals_id );
+        $items_id    = array_diff( $items_id, $submit_items_id );
+
+    }
+
+    try {
+        $wpdb->query( 'START TRANSACTION' );
+
+        $transaction = new \WeDevs\ERP\Accounting\Model\Transaction();
+
+        $args['sub_total'] = array_reduce( $items, function( $total, $item ) {
+            $amount = ( isset( $item['credit'] ) && $item['credit'] > 0 ) ? $item['credit'] : 0;
+
+            return $total + $amount;
+        } );
+
+        $args['trans_total'] = $args['sub_total'];
+        $args['total']       = $args['trans_total'];
+
+        if ( intval( $args['id'] ) ) {
+            $id  = $args['id'];
+            unset( $args['id'] );
+
+            $trans = $transaction->find( $id );
+            $trans->update( $args );
+
+        } else {
+            $trans = $transaction->create( $args );
+        }
+
+        if ( ! $trans->id ) {
+            throw new \Exception( __( 'Could not create transaction', 'erp' ) );
+        }
+
+        $transaction_items = [];
+
+        $order = 1;
+        foreach ( $items as $item ) {
+            if ( isset( $item['debit'] ) && $item['debit'] > 0 ) {
+                $type   = 'debit';
+                $amount = $item['debit'];
+
+            } else {
+                $type   = 'credit';
+                $amount = $item['credit'];
+            }
+
+            if ( intval( $item['journal_id'] ) ) {
+                $journal = $trans->journals()->find( $item['journal_id'] );
+                $journal->update( [
+                        'ledger_id' => $item['ledger_id'],
+                        'type'      => 'line_item',
+                        $type       => $amount
+                    ]
+                );
+
+            } else {
+                $journal = $trans->journals()->create( [
+                    'ledger_id' => $item['ledger_id'],
+                    'type'      => 'line_item',
+                    $type       => $amount
+                ] );
+            }
+
+            $transaction_item = [
+                'journal_id'  => $journal->id,
+                'description' => isset( $item['description'] ) ? $item['description'] : '',
+                'qty'         => 1,
+                'unit_price'  => $amount,
+                'discount'    => 0,
+                'line_total'  => $amount,
+                'order'       => $order,
+            ];
+
+            if ( intval( $item['item_id'] ) ) {
+                $trans_item = $trans->items()->find($item['item_id']);
+                $trans_item->update( $transaction_item );
+
+            } else {
+                $trans_item = $trans->items()->create( $transaction_item );
+            }
+
+            if ( ! $trans_item->id ) {
+                throw new \Exception( __( 'Could not insert transaction item', 'erp' ) );
+            }
+
+            $order ++;
+        }
+
+        \WeDevs\ERP\Accounting\Model\Journal::destroy( $journals_id );
+        \WeDevs\ERP\Accounting\Model\Transaction_Items::destroy( $items_id );
+
+        $wpdb->query( 'COMMIT' );
+
+        do_action( 'erp_ac_new_journal', $trans->id, $args, [] );
+
+        return $trans->id;
+
+    } catch (Exception $e) {
+        $wpdb->query( 'ROLLBACK' );
+
         return new WP_error( 'final-exception', $e->getMessage() );
     }
 
@@ -697,7 +841,7 @@ function erp_ac_tax_update( $item, $item_entry_type, $args, $trans_id ) {
         if ( intval( $tax_account_id ) ) {
             $tax_journal = WeDevs\ERP\Accounting\Model\Journal::where( 'id', '=', $item['tax_journal'] )->update([
                 'ledger_id'      => $tax_account_id,
-                $item_entry_type => ( $item['unit_price'] * $item['tax_rate'] ) / 100
+                $item_entry_type => $item['tax_amount']
             ]);
 
             $tax_journal_id =  intval( $item['tax_journal'] );
@@ -711,7 +855,7 @@ function erp_ac_tax_update( $item, $item_entry_type, $args, $trans_id ) {
                 'transaction_id' => $trans_id,
                 'ledger_id'      => $tax_account_id,
                 'type'           => 'line_item',
-                $item_entry_type => ( $item['unit_price'] * $item['tax_rate'] ) / 100
+                $item_entry_type => $item['tax_amount']
             ]);
 
             $tax_journal_id = $tax_journal ? $tax_journal->id : false;
@@ -798,6 +942,7 @@ function erp_ac_get_ledger_transactions( $args = [], $ledger_id = false ) {
             $limit";
 
         $items = $wpdb->get_results( $sql );
+
         wp_cache_set( $cache_key, $items, 'erp' );
     }
 

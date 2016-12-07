@@ -294,6 +294,26 @@ window.wperp = window.wperp || {};
                 yearRange: '-100:+0',
             });
 
+            $( ".erp-date-picker-from" ).datepicker({
+                dateFormat: 'yy-mm-dd',
+                changeYear: true,
+                changeMonth: true,
+                numberOfMonths: 1,
+                onClose: function( selectedDate ) {
+                    $( ".erp-date-picker-to" ).datepicker( "option", "minDate", selectedDate );
+                }
+            });
+
+            $( ".erp-date-picker-to" ).datepicker({
+                dateFormat: 'yy-mm-dd',
+                changeMonth: true,
+                changeYear: true,
+                numberOfMonths: 1,
+                onClose: function( selectedDate ) {
+                    $( ".erp-date-picker-from" ).datepicker( "option", "maxDate", selectedDate );
+                }
+            });
+
             $( '.erp-select2' ).select2({
                 placeholder: $(this).attr('data-placeholder')
             });

@@ -45,7 +45,7 @@ class Commands extends \WP_CLI_Command {
             ]
         ];
 
-        foreach ( $fake_customers as $customer ) { 
+        foreach ( $fake_customers as $customer ) {
             $results[] = erp_insert_people( $customer );
         }
 
@@ -91,7 +91,7 @@ class Commands extends \WP_CLI_Command {
             ]
         ];
 
-        foreach ( $fake_vendors as $vendor ) { 
+        foreach ( $fake_vendors as $vendor ) {
             $results[] = erp_insert_people( $vendor );
         }
 
@@ -101,7 +101,7 @@ class Commands extends \WP_CLI_Command {
     public function delete() {
         global $wpdb;
         // truncate table
-        $tables = ['erp_ac_transactions', 'erp_ac_transaction_items', 'erp_ac_journals'];
+        $tables = ['erp_ac_transactions', 'erp_ac_transaction_items', 'erp_ac_journals', 'erp_ac_payments'];
         foreach ($tables as $table) {
             $wpdb->query( 'TRUNCATE TABLE ' . $wpdb->prefix . $table);
         }
@@ -113,7 +113,7 @@ class Commands extends \WP_CLI_Command {
      */
     public function seed( $args ) {
         global $wpdb, $current_user;
-    
+
         $supper_admin_email = get_option( 'admin_email' );
         $current_user       = get_user_by( 'email', $supper_admin_email );
 
@@ -126,10 +126,10 @@ class Commands extends \WP_CLI_Command {
         $args         = array( 'type'   => 'customer' );
         $customers    = erp_get_peoples( $args );
         $customers_id = wp_list_pluck( $customers, 'id' );
-        
+
         if ( ! count( $customers_id ) ) {
             $customers_id = $this->new_customers();
-        } 
+        }
 
         // insert some sales data
         $data_count     = 10;
@@ -197,10 +197,10 @@ class Commands extends \WP_CLI_Command {
         $args       = array( 'type' => 'vendor' );
         $vendors    = erp_get_peoples( $args );
         $vendors_id = wp_list_pluck( $vendors, 'id' );
-        
+
         if ( ! count( $vendors_id ) ) {
             $vendors_id = $this->new_vendors();
-        } 
+        }
 
         // insert some expense data
         for ($i = 0; $i < $data_count; $i++) {
