@@ -1,4 +1,5 @@
 === WP ERP ===
+=== WP ERP ===
 Contributors: tareq1988, wedevs, sabbir1991, asaquzzaman
 Tags: small business, SME, contact, contacts, CRM, Customer Relationship Management, employee, leave management, hr, hrm, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
@@ -150,6 +151,34 @@ If you are unable to use any of the methods due to internet connectivity and fil
   => No. We did not put any limit on anything. You can create as much entries as you want.
 
 == Changelog ==
+
+**v1.1.7 -> Dec 7, 2016**
+
+* [new] Label added in tax form
+* [new] Added editing system in journal
+* [new] Should be able to transform a CRM Contact into a WP_User
+* [new] Add localize support for fullcalendar
+* [new] Add date range in all date picker.
+* [new] Add flot chart stack and categories plugins
+* [new] Added age field in contact
+* [fix] Joining date does not display on the employee welcome email
+* [fix] Employee Privileges are Removed upon role change
+* [fix] Checkbox toggling in all list tables
+* [fix] Expense pie chart is set to 100% by default
+* [fix] Holidays editing and deleting
+* [fix] Fix screen, screen base and form handler hook for HR and Leave pages
+* [fix] Calculation in dashboard all charts
+* [fix] Calculation fixed in bank charts
+* [fix] Dejavusanscondensed font paths for FPDF
+* [fix] Change contact get query sql
+* [fix] Change people meta key `_assign_crm_agent` to `contact_owner`
+* [fix] Email duplication problem when people create
+* [fix] Conflicting with accounting customer when contact create
+* [fix] Tax amount processing during transaction
+* [fix] Discount field range only 0 to 100 at transaction time
+* [fix] Quantity field make grater than 0 at transaction time
+* [fix] Required minimum amount for bank transfer
+* [fix] Refactor & add journal new function
 
 **v1.1.6 -> Nov 9, 2016**
 

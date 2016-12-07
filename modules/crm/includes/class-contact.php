@@ -122,7 +122,7 @@ class Contact extends \WeDevs\ERP\People {
             $fields['date_of_birth']  = $this->get_meta( 'date_of_birth', true );
             $fields['source']         = $this->get_meta( 'source', true );
             $fields['contact_age']    = $this->get_meta( 'contact_age', true );
-            $fields['created']        = erp_format_date( $this->created );
+            $fields['created']        = $this->created;
             $fields['created_by']     = $this->created_by;
             $fields['details_url']    = $this->get_details_url();
         }
