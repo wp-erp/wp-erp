@@ -780,7 +780,8 @@
                 prev_value     = self.data('value'),
                 decimal_sep    = ERP_AC.decimal_separator,
                 number_decimal = ERP_AC.number_decimal,
-                decimal_count  = ( current_value.split(decimal_sep).length ) - 1;
+                decimal_count  = typeof current_value.split(decimal_sep)[1] == 'undefined' ? 0 : current_value.split(decimal_sep)[1];
+                decimal_count  = decimal_count.length - 1;
 
             if ( decimal_count > 1 ) {
                 var split      = current_value.split(decimal_sep),
@@ -808,7 +809,7 @@
             var options = {
                 symbol : ERP_AC.symbol,
                 decimal : ERP_AC.decimal_separator,
-                thousand: '',//ERP_AC.thousand_separator,
+                thousand: ERP_AC.thousand_separator,
                 precision : ERP_AC.number_decimal,
                 format: "%v" //with currency "%s%v"
             };
@@ -1562,8 +1563,6 @@
                     var tax_id     = row.find('select.line_tax').val();
                     var line_tax   = parseFloat('0.00');
                     var tax_amount = parseFloat('0.00');
-
-
 
                     qty        = ERP_Accounting.calNumNormal( qty );
                     line_price = ERP_Accounting.calNumNormal( line_price );
