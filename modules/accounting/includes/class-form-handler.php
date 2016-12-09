@@ -535,6 +535,7 @@ class Form_Handler {
         if ( ! $total ) {
             return new \WP_Error( 'required_total_amount', __( 'Error: Total is required', 'erp' ) );
         }
+        $thousand_seperator = erp_ac_get_price_thousand_separator();
 
         $fields = [
             'id'              => $transaction_id,
@@ -551,18 +552,18 @@ class Form_Handler {
             'issue_date'      => $issue_date,
             'due_date'        => $due_date,
             'summary'         => $summary,
-            'total'           => $total,
-            'sub_total'       => $sub_total,
+            'total'           => str_replace( $thousand_seperator, '', $total ),
+            'sub_total'       => str_replace( $thousand_seperator, '', $sub_total ),
             'invoice_number'  => $invoice,
-            'trans_total'     => $total,
+            'trans_total'     => str_replace( $thousand_seperator, '', $total ),
             'files'           => $files,
             'currency'        => $currency,
-            'line_total'      => isset( $postdata['line_total'] ) ? $postdata['line_total'] : array()
+            'line_total'      => isset( $postdata['line_total'] ) ? str_replace( $thousand_seperator, '', $postdata['line_total'] ) : array()
         ];
 
         // set invoice and vendor credit for due to full amount
         if ( $this->is_due_trans( $form_type, $postdata ) ) { //in_array( $form_type, [ 'invoice', 'vendor_credit' ] ) ) {
-            $fields['due'] = $total;
+            $fields['due'] = str_replace( $thousand_seperator, '', $total );
         }
 
         $items = [];
@@ -579,12 +580,12 @@ class Form_Handler {
                 'account_id'  => (int) $acc_id,
                 'description' => sanitize_text_field( $postdata['line_desc'][ $key ] ),
                 'qty'         => intval( $postdata['line_qty'][ $key ] ),
-                'unit_price'  => erp_ac_format_decimal( $postdata['line_unit_price'][ $key ] ),
+                'unit_price'  => str_replace( $thousand_seperator, '', erp_ac_format_decimal( $postdata['line_unit_price'][ $key ] ) )  ,
                 'discount'    => erp_ac_format_decimal( $postdata['line_discount'][ $key ] ),
                 'tax'         => isset( $postdata['line_tax'][$key] ) ? $postdata['line_tax'][$key] : 0,
-                'tax_rate'    => isset( $postdata['tax_rate'][$key] ) ? $postdata['tax_rate'][$key] : 0,
-                'tax_amount'  => isset( $postdata['tax_amount'][$key] ) ? $postdata['tax_amount'][$key] : 0,
-                'line_total'  => erp_ac_format_decimal( $line_total ),
+                'tax_rate'    => isset( $postdata['tax_rate'][$key] ) ? str_replace( $thousand_seperator, '', $postdata['tax_rate'][$key] ) : 0,
+                'tax_amount'  => isset( $postdata['tax_amount'][$key] ) ? str_replace( $thousand_seperator, '', $postdata['tax_amount'][$key] ) : 0,
+                'line_total'  => str_replace( $thousand_seperator, '', erp_ac_format_decimal( $line_total ) ),
                 'tax_journal' => isset( $postdata['tax_journal'][$key] ) ? $postdata['tax_journal'][$key] : 0
             ], $key, $postdata );
         }
@@ -633,8 +634,8 @@ class Form_Handler {
         $ref          = isset( $_POST['ref'] ) ? sanitize_text_field( $_POST['ref'] ) : '';
         $issue_date   = isset( $_POST['issue_date'] ) ? sanitize_text_field( $_POST['issue_date'] ) : '';
         $summary      = isset( $_POST['summary'] ) ? sanitize_text_field( $_POST['summary'] ) : '';
-        $debit_total  = isset( $_POST['debit_total'] ) ? floatval( $_POST['debit_total'] ) : 0.00;
-        $credit_total = isset( $_POST['credit_total'] ) ? floatval( $_POST['credit_total'] ) : 0.00;
+        $debit_total  = isset( $_POST['debit_total'] ) ? str_replace( $thousand_seperator, '', $_POST['debit_total'] ) : 0.00;
+        $credit_total = isset( $_POST['credit_total'] ) ? str_replace( $thousand_seperator, '', $_POST['credit_total'] ) : 0.00;
 
         if ( $debit_total < 0 || $credit_total < 0 ) {
             wp_die( __( 'Value can not be negative', 'erp' ) );
