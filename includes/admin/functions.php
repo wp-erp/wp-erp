@@ -9,6 +9,10 @@
  * @return void
  */
 function erp_admin_dash_metabox( $title = '', $callback = null, $class = '' ) {
+    if ( apply_filters( 'erp_admin_dash_metabox_hide_' . $callback, false ) ) {
+        return;
+    }
+
     $class_name = ! empty( $class ) ? ' ' . $class : '';
     ?>
     <div class="postbox<?php echo $class_name; ?>">
