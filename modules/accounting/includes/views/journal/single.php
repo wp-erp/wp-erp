@@ -107,6 +107,7 @@ $total_credit = 0;
                         <?php foreach ( $transaction->items as $line ) {
                             $total_debit  = $total_debit + $line->journal->debit;
                             $total_credit = $total_credit + $line->journal->credit;
+
                             ?>
 
                             <tr>
@@ -136,8 +137,15 @@ $total_credit = 0;
                     </tbody>
                 </table>
             </div><!-- .row -->
-                    <?php echo $transaction->summary; ?>
 
+    <!--         <div class="row">
+                <div class="col-3">
+                    <?php echo $transaction->summary; ?>
+                </div>
+                <div class="col-3">
+                    <table class="table info-table align-right">
+                        <tbody>
+                            <tr>
                                 <th><?php _e( 'Total Debit', 'erp' ); ?></th>
                                 <td><?php echo erp_ac_get_price( $transaction->total ); ?></td>
 
