@@ -111,7 +111,7 @@ $total_credit = 0;
 
                             <tr>
                                 <td class="align-left product-name">
-                                    <strong><?php echo isset( $line->journal->ledger->name ) ? $line->journal->ledger->name : ''; ?></strong>
+                                    <strong><?php echo $line->journal->ledger->name; ?></strong>
                                     <div class="product-desc"><?php echo $line->description; ?></div>
                                 </td>
 
@@ -136,15 +136,8 @@ $total_credit = 0;
                     </tbody>
                 </table>
             </div><!-- .row -->
-
-    <!--         <div class="row">
-                <div class="col-3">
                     <?php echo $transaction->summary; ?>
-                </div>
-                <div class="col-3">
-                    <table class="table info-table align-right">
-                        <tbody>
-                            <tr>
+
                                 <th><?php _e( 'Total Debit', 'erp' ); ?></th>
                                 <td><?php echo erp_ac_get_price( $transaction->total ); ?></td>
 

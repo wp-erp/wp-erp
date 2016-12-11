@@ -22,5 +22,5 @@ function erp_ac_update_1_1_8_get_tax_receivable_ledger() {
 
 
 $receivable_tax = erp_ac_update_1_1_8_get_tax_receivable_ledger();
-$receivable_taxs_id =  wp_list_pluck( $receivable_tax, 'id' ) );
+$receivable_taxs_id =  wp_list_pluck( $receivable_tax, 'id' );
 \WeDevs\ERP\Accounting\Model\Ledger::whereIn( 'id', $receivable_taxs_id )->update( ['type_id' => 1] );
