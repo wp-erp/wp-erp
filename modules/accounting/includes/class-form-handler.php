@@ -631,11 +631,12 @@ class Form_Handler {
             die( __( 'Are you cheating?', 'erp' ) );
         }
 
-        $ref          = isset( $_POST['ref'] ) ? sanitize_text_field( $_POST['ref'] ) : '';
-        $issue_date   = isset( $_POST['issue_date'] ) ? sanitize_text_field( $_POST['issue_date'] ) : '';
-        $summary      = isset( $_POST['summary'] ) ? sanitize_text_field( $_POST['summary'] ) : '';
-        $debit_total  = isset( $_POST['debit_total'] ) ? str_replace( $thousand_seperator, '', $_POST['debit_total'] ) : 0.00;
-        $credit_total = isset( $_POST['credit_total'] ) ? str_replace( $thousand_seperator, '', $_POST['credit_total'] ) : 0.00;
+        $thousand_seperator = erp_ac_get_price_thousand_separator();
+        $ref                = isset( $_POST['ref'] ) ? sanitize_text_field( $_POST['ref'] ) : '';
+        $issue_date         = isset( $_POST['issue_date'] ) ? sanitize_text_field( $_POST['issue_date'] ) : '';
+        $summary            = isset( $_POST['summary'] ) ? sanitize_text_field( $_POST['summary'] ) : '';
+        $debit_total        = isset( $_POST['debit_total'] ) ? str_replace( $thousand_seperator, '', $_POST['debit_total'] ) : 0.00;
+        $credit_total       = isset( $_POST['credit_total'] ) ? str_replace( $thousand_seperator, '', $_POST['credit_total'] ) : 0.00;
 
         if ( $debit_total < 0 || $credit_total < 0 ) {
             wp_die( __( 'Value can not be negative', 'erp' ) );
