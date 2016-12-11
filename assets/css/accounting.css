@@ -422,6 +422,29 @@ form.erp-form .erp-form-field label {
 #erp-ac-tax-popup-content .fa-times-circle {
   cursor: pointer;
 }
+.erp-ac-trial-report-header-wrap:before,
+.erp-ac-trial-report-header-wrap:after {
+  content: "";
+  display: table ;
+  clear: both;
+}
+.erp-ac-trial-report-header-wrap {
+  margin-bottom: 10px;
+}
+.erp-ac-trial-report-header-wrap .erp-ac-report-tax-date,
+.erp-ac-trial-report-header-wrap .erp-ac-report-filter-form {
+  float: left;
+}
+.erp-ac-trial-report-header-wrap .erp-ac-report-tax-date {
+  padding: 5px;
+  margin: 0;
+}
+.erp-ac-trial-report-header-wrap .erp-date-picker-to {
+  padding: 6px;
+  margin: 0;
+  margin-left: 5px;
+  margin-right: 5px;
+}
 .erp-ac-report-tax-date {
   width: 20%;
   padding: 7px 10px;

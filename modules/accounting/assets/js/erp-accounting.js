@@ -780,9 +780,10 @@
                 prev_value     = self.data('value'),
                 decimal_sep    = ERP_AC.decimal_separator,
                 number_decimal = ERP_AC.number_decimal,
-                decimal_count  = ( current_value.split(decimal_sep).length ) - 1;
+                decimal_count  = typeof current_value.split(decimal_sep)[1] == 'undefined' ? 0 : current_value.split(decimal_sep)[1];
+                decimal_count  = decimal_count.length - 1;
 
-            if ( decimal_count > 1 ) {
+            if ( decimal_count >= number_decimal ) {
                 var split      = current_value.split(decimal_sep),
                     first_term = split.shift() + decimal_sep,
                     last_term  = split.join('').slice(0, number_decimal),
@@ -808,7 +809,7 @@
             var options = {
                 symbol : ERP_AC.symbol,
                 decimal : ERP_AC.decimal_separator,
-                thousand: '',//ERP_AC.thousand_separator,
+                thousand: ERP_AC.thousand_separator,
                 precision : ERP_AC.number_decimal,
                 format: "%v" //with currency "%s%v"
             };
@@ -1451,6 +1452,7 @@
             $.each( $('.erp-ac-line-due'), function( key, line_due ) {
                 var due = $(line_due).val()  === '' ? '0' : ERP_Accounting.calNumNormal( $(line_due).val() );
                 line_due_total = parseFloat( due ) + parseFloat( line_due_total );
+                $(this).closest('.col-amount').find('.line_unit_price').val($(line_due).val());
             } );
 
             $('.erp-ac-total-due').val( ERP_Accounting.numFormating( line_due_total ) );
@@ -1562,8 +1564,6 @@
                     var tax_id     = row.find('select.line_tax').val();
                     var line_tax   = parseFloat('0.00');
                     var tax_amount = parseFloat('0.00');
-
-
 
                     qty        = ERP_Accounting.calNumNormal( qty );
                     line_price = ERP_Accounting.calNumNormal( line_price );

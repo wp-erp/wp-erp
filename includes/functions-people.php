@@ -66,12 +66,12 @@ function erp_get_peoples( $args = [] ) {
         $sql['select'][] = "GROUP_CONCAT( t.name SEPARATOR ',') AS types";
         $sql['join'][]   = "LEFT JOIN $type_rel_tb AS r ON people.id = r.people_id LEFT JOIN $types_tb AS t ON r.people_types_id = t.id";
         $sql_from_tb     = "FROM $pep_tb AS people";
-        $sql['where'][]  = "where 1=1";
-        $sql['where'][]  = "AND ( select count(*) from $types_tb
+        $sql_people_type = "where ( select count(*) from $types_tb
             inner join  $type_rel_tb
                 on $types_tb.`id` = $type_rel_tb.`people_types_id`
                 where $type_rel_tb.`people_id` = people.`id` $type_sql and $trashed_sql
           ) >= 1";
+        $sql['where'] = [''];
 
         $sql_group_by = "GROUP BY `people`.`id`";
         $sql_order_by = "ORDER BY $orderby $order";
@@ -110,7 +110,10 @@ function erp_get_peoples( $args = [] ) {
                         . implode( ' ', $sql['select'] ) . ' '
                         . $sql_from_tb . ' '
                         . implode( ' ', $sql['join'] ) . ' '
+                        . $sql_people_type . ' '
+                        . 'AND ( 1=1 '
                         . implode( ' ', $sql['where'] ) . ' '
+                        . ' )'
                         . $sql_group_by . ' '
                         . $sql_order_by . ' '
                         . $sql_limit;

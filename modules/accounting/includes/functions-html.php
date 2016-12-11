@@ -27,7 +27,7 @@ function erp_ac_view_error_message() {
 function erp_ac_report_filter_form($start = true, $end = true) {
     $start = $start ? erp_format_date( date( 'Y-m-d', strtotime( erp_financial_start_date() ) ) ) : false;
     $end   = $end ? erp_format_date( date( 'Y-m-d', strtotime( erp_financial_end_date() ) ) ) : false;
-    echo '<form action="" method="post">';
+    echo '<form class="erp-ac-report-filter-form" action="" method="post">';
 
     if ( $start ) {
         erp_html_form_input( array(

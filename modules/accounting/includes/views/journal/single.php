@@ -107,11 +107,12 @@ $total_credit = 0;
                         <?php foreach ( $transaction->items as $line ) {
                             $total_debit  = $total_debit + $line->journal->debit;
                             $total_credit = $total_credit + $line->journal->credit;
+
                             ?>
 
                             <tr>
                                 <td class="align-left product-name">
-                                    <strong><?php echo isset( $line->journal->ledger->name ) ? $line->journal->ledger->name : ''; ?></strong>
+                                    <strong><?php echo $line->journal->ledger->name; ?></strong>
                                     <div class="product-desc"><?php echo $line->description; ?></div>
                                 </td>
 
