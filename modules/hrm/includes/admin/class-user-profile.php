@@ -40,7 +40,7 @@ class User_Profile {
         // HR role we want the user to have
         $new_hr_manager_role    = isset( $post['hr_manager'] ) ? sanitize_text_field( $post['hr_manager'] ) : false;
 
-        if ( ! $new_hr_manager_role && ! $new_hr_employee_role ) {
+        if ( ! $new_hr_manager_role ) {
             return;
         }
 
