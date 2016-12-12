@@ -121,7 +121,7 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
                             dateFormat: 'yy-mm-dd',
                             changeMonth: true,
                             changeYear: true,
-                            yearRange: '-100:+0',
+                            yearRange: '-50:+5',
                         });
 
                         jQuery( '.erp-time-field' ).timepicker({

@@ -37,7 +37,7 @@ window.wpErpVue = window.wpErpVue || {};
                     dateFormat: 'yy-mm-dd',
                     changeMonth: true,
                     changeYear: true,
-                    yearRange: '-100:+0',
+                    yearRange: '-50:+5',
                     onClose: function (date) {
                         vm.$set(key, date);
                     }
@@ -48,7 +48,7 @@ window.wpErpVue = window.wpErpVue || {};
                     dateFormat: 'yy-mm-dd',
                     changeMonth: true,
                     changeYear: true,
-                    yearRange: '-100:+0',
+                    yearRange: '-50:+5',
                     onClose: function (date) {
                         vm.$set(key, date);
                     }
@@ -58,7 +58,7 @@ window.wpErpVue = window.wpErpVue || {};
                     dateFormat: 'yy-mm-dd',
                     changeMonth: true,
                     changeYear: true,
-                    yearRange: '-100:+0',
+                    yearRange: '-50:+5',
                     onClose: function (date) {
                         if ( date.match(/^(0?[1-9]|[12][0-9]|3[01])[\/\-\.](0?[1-9]|1[012])[\/\-\.]\d{4}$/) )
                             vm.$set(key, date);
