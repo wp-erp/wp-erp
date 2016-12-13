@@ -166,7 +166,14 @@ class Contact extends \WeDevs\ERP\People {
             }
         }
 
-        return get_avatar( $this->email, $size );
+        $avatar = get_avatar( $this->email, $size );
+
+        if ( ! $avatar ) {
+            $image = WPERP_ASSETS . '/images/mystery-person.png';
+            $avatar = sprintf( '<img src="%1$s" alt="" class="avatar avatar-%2$s photo" height="auto" width="%2$s" />', $image, $size );
+        }
+
+        return $avatar;
     }
 
     /**

@@ -241,7 +241,14 @@ class Employee {
             return sprintf( '<img src="%1$s" alt="" class="avatar avatar-%2$s photo" height="auto" width="%2$s" />', $image, $size );
         }
 
-        return get_avatar( $this->id, $size );
+        $avatar = get_avatar( $this->id, $size );
+
+        if ( ! $avatar ) {
+            $image = WPERP_ASSETS . '/images/mystery-person.png';
+            $avatar = sprintf( '<img src="%1$s" alt="" class="avatar avatar-%2$s photo" height="auto" width="%2$s" />', $image, $size );
+        }
+
+        return $avatar;
     }
 
     /**
