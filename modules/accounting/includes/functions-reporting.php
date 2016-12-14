@@ -167,7 +167,7 @@ function erp_ac_get_closing_income_expense( $financial_end = false ) {
         AND ( trans.status IS NULL OR trans.status NOT IN ( 'draft', 'void', 'awaiting_approval' ) )
         AND ( trans.issue_date < '%s' )", $financial_end
     );
-echo $sql;
+
     $balance = $wpdb->get_results( $sql );
     $balance = reset( $balance );
 
