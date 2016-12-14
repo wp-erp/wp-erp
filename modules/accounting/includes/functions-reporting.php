@@ -53,7 +53,157 @@ function erp_ac_get_reports() {
     return apply_filters( 'erp_ac_reports', $reports );
 }
 
-function erp_ac_reporting_query( $start = false, $end = false ) {
+/**
+ * Get closing Balnace
+ *
+ * @since  1.1.9
+ *
+ * @return array
+ */
+function erp_ac_get_asset_liability_equity_balance( $financial_end = false ) {
+    global $wpdb;
+
+    $tbl_ledger      = $wpdb->prefix . 'erp_ac_ledger';
+    $tbl_type        = $wpdb->prefix . 'erp_ac_chart_types';
+    $tbl_class       = $wpdb->prefix . 'erp_ac_chart_classes';
+    $tbl_journals    = $wpdb->prefix . 'erp_ac_journals';
+    $tbl_transaction = $wpdb->prefix . 'erp_ac_transactions';
+
+    if ( $financial_end ) {
+        $financial_end = date( 'Y-m-d', strtotime( $financial_end ) );
+
+    } else {
+        $financial_end = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+    }
+
+    $sql = $wpdb->prepare(
+        "SELECT ledger.id, ledger.code, ledger.name, ledger.type_id, type.name as type_name, type.class_id, class.name as class_name, sum(jour.debit) as debit, sum(jour.credit) as credit
+        FROM $tbl_class as class
+        LEFT JOIN $tbl_type as type ON type.class_id = class.id
+        LEFT JOIN $tbl_ledger as ledger ON ledger.type_id = type.id
+        LEFT JOIN $tbl_journals as jour ON jour.ledger_id = ledger.id
+        LEFT JOIN $tbl_transaction as trans ON trans.id = jour.transaction_id
+        WHERE class.id IN ( 1, 2, 5 )
+        AND ( trans.status IS NULL OR trans.status NOT IN ( 'draft', 'void', 'awaiting_approval' ) )
+        AND ( trans.issue_date <= '%s' )
+        GROUP BY ledger.id", $financial_end
+    );
+
+    return $wpdb->get_results( $sql );
+}
+
+/**
+ * Get closing debit and credit
+ *
+ * @since  1.1.9
+ *
+ * @return array
+ */
+function erp_ac_get_opening_income_expense( $financial_end = false ) {
+    global $wpdb;
+
+    $tbl_ledger      = $wpdb->prefix . 'erp_ac_ledger';
+    $tbl_type        = $wpdb->prefix . 'erp_ac_chart_types';
+    $tbl_class       = $wpdb->prefix . 'erp_ac_chart_classes';
+    $tbl_journals    = $wpdb->prefix . 'erp_ac_journals';
+    $tbl_transaction = $wpdb->prefix . 'erp_ac_transactions';
+
+    if ( $financial_end ) {
+        $financial_end = date( 'Y-m-d', strtotime( $financial_end ) );
+
+    } else {
+        $financial_end = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+    }
+
+    $financial_start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+
+    $sql = $wpdb->prepare(
+        "SELECT ledger.id, ledger.code, ledger.name, ledger.type_id, type.name as type_name, type.class_id, class.name as class_name, sum(jour.debit) as debit, sum(jour.credit) as credit
+        FROM $tbl_class as class
+        LEFT JOIN $tbl_type as type ON type.class_id = class.id
+        LEFT JOIN $tbl_ledger as ledger ON ledger.type_id = type.id
+        LEFT JOIN $tbl_journals as jour ON jour.ledger_id = ledger.id
+        LEFT JOIN $tbl_transaction as trans ON trans.id = jour.transaction_id
+        WHERE class.id IN ( 3, 4 )
+        AND ( trans.status IS NULL OR trans.status NOT IN ( 'draft', 'void', 'awaiting_approval' ) )
+        AND ( trans.issue_date >= '%s' AND trans.issue_date <= '%s' )
+        GROUP BY ledger.id", $financial_start, $financial_end
+    );
+
+    return $wpdb->get_results( $sql );
+}
+
+/**
+ * Get closing debit and credit
+ *
+ * @since  1.1.9
+ *
+ * @return array
+ */
+function erp_ac_get_closing_income_expense( $financial_end = false ) {
+    global $wpdb;
+
+    $tbl_ledger      = $wpdb->prefix . 'erp_ac_ledger';
+    $tbl_type        = $wpdb->prefix . 'erp_ac_chart_types';
+    $tbl_class       = $wpdb->prefix . 'erp_ac_chart_classes';
+    $tbl_journals    = $wpdb->prefix . 'erp_ac_journals';
+    $tbl_transaction = $wpdb->prefix . 'erp_ac_transactions';
+
+    if ( $financial_end ) {
+        $financial_end = date( 'Y-m-d', strtotime( $financial_end ) );
+
+    } else {
+        $financial_end = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+    }
+
+    $sql = $wpdb->prepare(
+        "SELECT sum(jour.debit) as debit, sum(jour.credit) as credit
+        FROM $tbl_class as class
+        LEFT JOIN $tbl_type as type ON type.class_id = class.id
+        LEFT JOIN $tbl_ledger as ledger ON ledger.type_id = type.id
+        LEFT JOIN $tbl_journals as jour ON jour.ledger_id = ledger.id
+        LEFT JOIN $tbl_transaction as trans ON trans.id = jour.transaction_id
+        WHERE class.id IN ( 3, 4 )
+        AND ( trans.status IS NULL OR trans.status NOT IN ( 'draft', 'void', 'awaiting_approval' ) )
+        AND ( trans.issue_date < '%s' )", $financial_end
+    );
+echo $sql;
+    $balance = $wpdb->get_results( $sql );
+    $balance = reset( $balance );
+
+    if ( $balance->credit > $balance->debit ) {
+        $balance->credit = abs( $balance->credit - $balance->debit );
+        $balance->debit  = abs( 0 );
+
+    } else if ( $balance->credit < $balance->debit ) {
+        $balance->debit  = abs( $balance->debit - $balance->credit );
+        $balance->credit = abs( 0 );
+
+    } else {
+        $balance->debit  = abs( 0 );
+        $balance->credit = abs( 0 );
+    }
+
+    return  $balance;
+}
+
+function erp_ac_reporting_query( $financial_end = false ) {
+    $financial_start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+
+    if ( $financial_end ) {
+        $financial_end = date( 'Y-m-d', strtotime( $financial_end ) );
+    } else {
+        $financial_end = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+    }
+
+    $unit_balance         = erp_ac_get_asset_liability_equity_balance( $financial_end );
+    $ope_in_ex_balance    = erp_ac_get_opening_income_expense( $financial_end );
+    $report               = array_merge( $unit_balance, $ope_in_ex_balance );
+    return $report;
+    if ( $financial_start > $financial_end ) {
+        return [];
+    }
+
     global $wpdb;
     $tbl_ledger      = $wpdb->prefix . 'erp_ac_ledger';
     $tbl_type        = $wpdb->prefix . 'erp_ac_chart_types';
@@ -62,24 +212,14 @@ function erp_ac_reporting_query( $start = false, $end = false ) {
     $tbl_transaction = $wpdb->prefix . 'erp_ac_transactions';
     $query           = [];
 
-    $financial_start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
-    $financial_end   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+    $query[] = "tran.issue_date >= '$financial_start'";
+    $query[] = "tran.issue_date <= '$financial_end'";
 
-    if ( $start ) {
-        $query[] = "tran.issue_date >= '$financial_start'";
-    }
-
-    if ( $end ) {
-        $query[] = "tran.issue_date <= '$financial_end'";
-    }
-
-    $query  = $query ? ' AND ' . implode( ' AND ', $query ) : '';
-
-    $where           = "( tran.status IS NULL OR tran.status NOT IN( 'draft', 'void', 'awaiting_approval' ) ) AND ( 1=1 $query )";
-    $join            = '';
-
-    $where           = apply_filters( 'erp_ac_trial_balance_where', $where );
-    $join            = apply_filters( 'erp_ac_trial_balance_join', $join );
+    $query = $query ? ' AND ' . implode( ' AND ', $query ) : '';
+    $where = "( tran.status IS NULL OR tran.status NOT IN ( 'draft', 'void', 'awaiting_approval' ) ) AND ( 1=1 $query )";
+    $join  = '';
+    $where = apply_filters( 'erp_ac_trial_balance_where', $where );
+    $join  = apply_filters( 'erp_ac_trial_balance_join', $join );
 
     $sql = "SELECT led.id, led.code, led.name, led.type_id, types.name as type_name, types.class_id, class.name as class_name, sum(jour.debit) as debit, sum(jour.credit) as credit
     FROM $tbl_ledger as led
@@ -93,6 +233,7 @@ function erp_ac_reporting_query( $start = false, $end = false ) {
     GROUP BY led.id";
 
     return $wpdb->get_results( $sql );
+
 }
 
 function erp_ac_trial_balance_query( $start = false, $end = false ) {
@@ -320,3 +461,6 @@ function erp_ac_get_expense_tax_total( $charts ) {
 
     return $expense_tax_total;
 }
+
+
+

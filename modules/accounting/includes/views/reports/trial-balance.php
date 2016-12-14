@@ -1,7 +1,7 @@
 <?php
-$start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) ); //isset( $_GET['start'] ) ? $_GET['start'] : false;
-$end   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) ); //isset( $_GET['end'] ) ? $_GET['end'] : false;
-$ledgers = erp_ac_reporting_query( $start, $end );
+$end     = empty( $_GET['end'] ) ? date( 'Y-m-d', strtotime( erp_financial_end_date() ) ) : $_GET['end'];
+$ledgers = erp_ac_reporting_query( $end );
+$clos_inc_exp_balance = erp_ac_get_closing_income_expense( false );
 $charts  = [];
 
 if ( $ledgers ) {
@@ -16,8 +16,8 @@ if ( $ledgers ) {
     }
 }
 
-$debit_total = 0.00;
-$credit_total = 0.00;
+$debit_total  = $clos_inc_exp_balance->debit;
+$credit_total = $clos_inc_exp_balance->credit;
 
 ?>
 
@@ -32,7 +32,7 @@ $credit_total = 0.00;
         ?>
         </p>
 
-        <?php // erp_ac_report_filter_form(false); ?>
+        <?php erp_ac_report_filter_form(false); ?>
     </div>
     <table class="table widefat striped">
         <thead>
@@ -109,7 +109,15 @@ $credit_total = 0.00;
                             <?php
                         }
                     }
+                    ?>
 
+                    <tr class="chart-head">
+                        <td><strong><?php _e( 'Balance', 'erp' ); ?></strong></td>
+
+                        <td class="col-price"><?php echo erp_ac_get_price( $clos_inc_exp_balance->debit ); ?></td>
+                        <td class="col-price"><?php echo erp_ac_get_price( $clos_inc_exp_balance->credit ); ?></td>
+                    </tr>
+                    <?php
                 } else { ?>
                     <tr><td colspan="3"><?php _e( 'No Data Found!' , 'erp'); ?></td></tr><?php
                 } ?>
