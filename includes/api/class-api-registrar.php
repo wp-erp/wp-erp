@@ -20,7 +20,7 @@ class API_Registrar {
     /**
      * Register REST API routes.
      *
-     * @since 1.1.8
+     * @since 1.2.0
      */
     public function register_rest_routes() {
         $controllers = [];
