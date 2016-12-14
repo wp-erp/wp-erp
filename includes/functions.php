@@ -482,6 +482,7 @@ function erp_performance_rating( $selected = '' ) {
  * @param  sting  $option_name name of the option
  * @param  string $section     name of the section. if it's a separate option, don't provide any
  * @param  string $default     default option
+ *
  * @return string
  */
 function erp_get_option( $option_name, $section = false, $default = '' ) {

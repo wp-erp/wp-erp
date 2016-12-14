@@ -152,6 +152,16 @@ If you are unable to use any of the methods due to internet connectivity and fil
 
 == Changelog ==
 
+**v1.1.8 -> Dec 11, 2016**
+
+* [new] Add filter for hiding dashboard metaboxes
+* [fix] Fix leave request datetime calculation
+* [fix] Fix journal entry item problem
+* [fix] Move tax receivable accounts from expense to assets
+* [fix] Update number formating for transaction unit price
+* [fix] Remove employee role checkbox from wp user edit profile
+* [Update] Update moment.js to v2.17.1
+
 **v1.1.7 -> Dec 7, 2016**
 
 * [new] Label added in tax form
