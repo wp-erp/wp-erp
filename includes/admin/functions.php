@@ -3,13 +3,19 @@
 /**
  * Dashboard metabox
  *
- * @param  string  title of the metabox
- * @param  string  function callback
+ * @param  string        title of the metabox
+ * @param  string|array  function callback
  *
  * @return void
  */
 function erp_admin_dash_metabox( $title = '', $callback = null, $class = '' ) {
-    if ( apply_filters( 'erp_admin_dash_metabox_hide_' . $callback, false ) ) {
+    if ( is_array( $callback ) && isset( $callback[1] ) ) {
+        $metabox_callback = $callback[1];
+    } else {
+        $metabox_callback = $callback;
+    }
+
+    if ( apply_filters( 'erp_admin_dash_metabox_hide_' . $metabox_callback, false ) ) {
         return;
     }
 
