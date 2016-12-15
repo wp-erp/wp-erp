@@ -4,6 +4,9 @@ $end   = isset( $_GET['end'] ) ? $_GET['end'] : false;
 $start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
 $end   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
 $ledgers = erp_ac_reporting_query( false, $end );
+$clos_inc_exp_balance = erp_ac_get_closing_income_expense( false );
+$closing_balance = ( $clos_inc_exp_balance->credit > 0 ) ? $clos_inc_exp_balance->credit : -$clos_inc_exp_balance->dibit;
+
 $charts = [];
 
 foreach ($ledgers as $ledger) {
@@ -33,7 +36,7 @@ $net_income    = $operating - $tax_total;
         $end   = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_end_date() ) ) );
         printf( '<i class="fa fa-calendar"></i> %1$s', erp_format_date( $end, 'F j, Y' ) );
         ?>
-        <?php //erp_ac_report_filter_form(false); ?>
+        <?php erp_ac_report_filter_form(false); ?>
     </p>
 
     <div class="metabox-holder">
@@ -180,11 +183,17 @@ $net_income    = $operating - $tax_total;
                                 <?php
                             }
 
+                            $liabilitie_total_balance = $liabilitie_total_balance + $closing_balance;
+
                         ?>
 
                         <tr>
                             <td><?php _e( 'Net Income', 'erp' ) ?></td>
                             <td><?php echo erp_ac_get_price( $net_income, [ 'symbol' => false ] ); ?></td>
+                        </tr>
+                        <tr>
+                            <td><?php _e( 'Balance', 'erp' ) ?></td>
+                            <td><?php echo erp_ac_get_price( $closing_balance, [ 'symbol' => false ] ); ?></td>
                         </tr>
                     </tbody>
                 </table>

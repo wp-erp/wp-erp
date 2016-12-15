@@ -1581,6 +1581,7 @@
                             line_tax =  parseFloat( tax_info.rate );
 
                         tax_amount = ( parseFloat( price ) * parseFloat( line_tax ) ) / 100;
+
                     }
 
                     var prev_tax = isNaN( total_tax[tax_id] ) ? parseFloat('0.00') : total_tax[tax_id];
@@ -1593,7 +1594,6 @@
                     row.find('input.line_tax_amount').val( ERP_Accounting.numFormating( tax_amount ) );
                     row.find('input.line_tax_rate').val( ERP_Accounting.numFormating( line_tax ) );
 
-                    // console.log(qty, line_price, discount);
                 });
 
                 var total_tax_amout = parseFloat( 0.00 );
