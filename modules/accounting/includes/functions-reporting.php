@@ -446,7 +446,7 @@ function erp_ac_get_expense_total_without_tax( $charts ) {
 }
 
 function erp_ac_get_expense_tax_total( $charts ) {
-    $expense_journals     = isset( $charts[3] ) ? $charts[3] : [];
+    $expense_journals     = isset( $charts[1] ) ? $charts[1] : [];
     $receivable_tax       = erp_ac_get_tax_receivable_ledger();
     $receivable_tax       = wp_list_pluck( $receivable_tax, 'id' );
     $payable_tax_journals = [];

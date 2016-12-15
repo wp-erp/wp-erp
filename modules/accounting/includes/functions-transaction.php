@@ -70,7 +70,7 @@ function erp_ac_get_all_transaction( $args = array() ) {
         if ( isset( $args['end_date'] ) && ! empty( $args['end_date'] ) ) {
             $transaction = $transaction->where( 'issue_date', '<=', $args['end_date'] );
         } else {
-            //$transaction = $transaction->where( 'issue_date', '<=', $financial_end );
+            $transaction = $transaction->where( 'issue_date', '<=', $financial_end );
         }
 
         if ( isset( $args['start_due'] ) && ! empty( $args['start_due'] ) ) {

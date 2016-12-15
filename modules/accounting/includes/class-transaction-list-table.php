@@ -490,11 +490,11 @@ class Transaction_List_Table extends \WP_List_Table {
 
         // search params
         if ( isset( $_REQUEST['start_date'] ) && !empty( $_REQUEST['start_date'] ) ) {
-           //$args['start_date'] = $_REQUEST['start_date'];
+           $args['start_date'] = $_REQUEST['start_date'];
         }
 
         if ( isset( $_REQUEST['end_date'] ) && !empty( $_REQUEST['end_date'] ) ) {
-           // $args['end_date'] = $_REQUEST['end_date'];
+           $args['end_date'] = $_REQUEST['end_date'];
         }
 
         if ( isset( $_REQUEST['form_type'] ) && ! empty( $_REQUEST['form_type'] ) ) {
