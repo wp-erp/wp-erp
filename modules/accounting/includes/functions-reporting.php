@@ -200,6 +200,8 @@ function erp_ac_reporting_query( $financial_end = false ) {
     $ope_in_ex_balance    = erp_ac_get_opening_income_expense( $financial_end );
     $report               = array_merge( $unit_balance, $ope_in_ex_balance );
     return $report;
+
+
     if ( $financial_start > $financial_end ) {
         return [];
     }
@@ -418,29 +420,54 @@ function erp_ac_get_sales_tax_total( $charts ) {
     return $tax_total;
 }
 
-function erp_ac_get_good_sold_total_amount( $charts ) {
-    $sales_journals = isset( $charts[3] ) ? $charts[3] : [];
-    $goods_sold     = isset( $sales_journals[24] ) ? $sales_journals[24] : [];
-    $sales_total    = 0;
-    $sales_total    = array_sum( wp_list_pluck( $goods_sold, 'debit' ) ) - array_sum( wp_list_pluck( $goods_sold, 'credit' ) );
+function erp_ac_get_good_sold_total_amount( $financial_end = false ) {
 
-    return $sales_total;
+    if ( $financial_end ) {
+        $financial_end = date( 'Y-m-d', strtotime( $financial_end ) );
+    } else {
+        $financial_end = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+    }
+
+    global $wpdb;
+
+    $tbl_journals    = $wpdb->prefix . 'erp_ac_journals';
+    $tbl_transaction = $wpdb->prefix . 'erp_ac_transactions';
+
+    $sql = $wpdb->prepare(
+                "SELECT trans.id as transaction_id
+                FROM $tbl_transaction as trans
+                LEFT JOIN $tbl_journals as jour ON jour.transaction_id = trans.id
+                WHERE jour.ledger_id = '%d'
+                AND ( trans.status IS NULL OR trans.status NOT IN ( 'draft', 'void', 'awaiting_approval' ) )
+                AND ( trans.issue_date < '%s' )", 24, $financial_end
+            );
+
+    $results   = $wpdb->get_results($sql);
+    $trans_ids = implode( "','", wp_list_pluck(  $results, 'transaction_id' ) );
+
+    $sql = "SELECT sum( jour.debit ) as debit FROM $tbl_journals as jour WHERE jour.transaction_id IN ( '$trans_ids' )";
+    $results   = $wpdb->get_var($sql);
+
+    return $results;
+
+    // $sales_journals = isset( $charts[3] ) ? $charts[3] : [];
+    // $goods_sold     = isset( $sales_journals[24] ) ? $sales_journals[24] : [];
+    // $sales_total    = 0;
+    // $sales_total    = array_sum( wp_list_pluck( $goods_sold, 'debit' ) ) - array_sum( wp_list_pluck( $goods_sold, 'credit' ) );
+
+    // return $sales_total;
 }
 
 function erp_ac_get_expense_total_without_tax( $charts ) {
     $expense_journals     = isset( $charts[3] ) ? $charts[3] : [];
-    $receivable_tax       = erp_ac_get_tax_receivable_ledger();
-    $receivable_tax       = wp_list_pluck( $receivable_tax, 'id' );
-    $payable_tax_journals = [];
+    //$receivable_tax       = erp_ac_get_tax_receivable_ledger();
+    //$receivable_tax       = wp_list_pluck( $receivable_tax, 'id' );
+    //$payable_tax_journals = [];
     $expense_total        = 0;
 
     foreach ( $expense_journals as $key => $ledger_jours ) {
-        if ( in_array( $key, $receivable_tax ) ) {
-            continue;
-        }
         $expense_total  = $expense_total + array_sum( wp_list_pluck( $ledger_jours, 'debit' ) ) - array_sum( wp_list_pluck( $ledger_jours, 'credit' ) );
     }
-
     return $expense_total;
 
 }
