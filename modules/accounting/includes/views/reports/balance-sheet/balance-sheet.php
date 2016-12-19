@@ -17,7 +17,7 @@ $equities    = isset( $charts[5] ) ? $charts[5] : [];
 
 $sales_total   = erp_ac_get_sales_total_without_tax( $charts ) + erp_ac_get_sales_tax_total( $charts );
 $goods_sold    = erp_ac_get_good_sold_total_amount( $end );
-$expense_total = erp_ac_get_expense_total_without_tax( $charts ) + erp_ac_get_expense_tax_total( $charts );
+$expense_total = erp_ac_get_expense_total_with_tax( $charts );// + erp_ac_get_expense_tax_total( $charts );
 $expense_total = $expense_total - $goods_sold;
 $tax_total     = erp_ac_get_sales_tax_total( $charts );// + erp_ac_get_expense_tax_total( $charts );
 $gross         = $sales_total - $goods_sold;

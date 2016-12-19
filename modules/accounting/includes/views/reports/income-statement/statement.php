@@ -1,7 +1,7 @@
 <?php
 $end     = empty( $_GET['end'] ) ? date( 'Y-m-d', strtotime( erp_financial_end_date() ) ) : $_GET['end'];
 $ledgers = erp_ac_reporting_query( $end );
-$charts = [];
+$charts  = [];
 
 foreach ($ledgers as $ledger) {
     $charts[$ledger->class_id][$ledger->id][] = $ledger;
@@ -9,7 +9,7 @@ foreach ($ledgers as $ledger) {
 
 $sales_total   = erp_ac_get_sales_total_without_tax( $charts ) + erp_ac_get_sales_tax_total( $charts );
 $goods_sold    = erp_ac_get_good_sold_total_amount( $end );
-$expense_total = erp_ac_get_expense_total_without_tax( $charts ) + erp_ac_get_expense_tax_total( $charts );
+$expense_total = erp_ac_get_expense_total_with_tax( $charts );// + erp_ac_get_expense_tax_total( $charts );
 $expense_total = $expense_total - $goods_sold;
 $tax_total     = erp_ac_get_sales_tax_total( $charts );// + erp_ac_get_expense_tax_total( $charts );
 
@@ -80,7 +80,3 @@ $tax_total     = erp_ac_get_sales_tax_total( $charts );// + erp_ac_get_expense_t
 
     </div>
 </div>
-
-
-
-

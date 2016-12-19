@@ -465,7 +465,7 @@ function erp_ac_get_tax_account_from_tax_id( $tax_id, $type ) {
             }])->get()->toArray();
         } else {
             $accounts = WeDevs\ERP\Accounting\Model\Ledger::where( 'tax', '=', $tax_id )->with(['charts' => function($q) {
-                return $q->where( 'class_id', '=', 1 );
+                return $q->where( 'class_id', '=', 3 );
             }])->get()->toArray();
         }
 
@@ -492,7 +492,7 @@ function erp_ac_get_tax_receivable_ledger() {
     $all_tax_id = array_keys( erp_ac_get_tax_dropdown() );
 
     $receivables = WeDevs\ERP\Accounting\Model\Ledger::whereIn( 'tax', $all_tax_id )->with(['charts' => function( $q ) {
-                return $q->where( 'class_id', '=', 1 );
+                return $q->where( 'class_id', '=', 3 );
             }])->get()->toArray();
 
     foreach ( $receivables as $key => $receivable ) {

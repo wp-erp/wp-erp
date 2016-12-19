@@ -238,29 +238,6 @@ function erp_ac_reporting_query( $financial_end = false ) {
 
 }
 
-function erp_ac_trial_balance_query( $start = false, $end = false ) {
-    global $wpdb;
-    $tbl_ledger      = $wpdb->prefix . 'erp_ac_ledger';
-    $tbl_type        = $wpdb->prefix . 'erp_ac_chart_types';
-    $tbl_class       = $wpdb->prefix . 'erp_ac_chart_classes';
-    $tbl_journals    = $wpdb->prefix . 'erp_ac_journals';
-    $tbl_transaction = $wpdb->prefix . 'erp_ac_transactions';
-    $query           = [];
-
-    $financial_start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
-    $financial_end   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
-
-    $transactions = erp_ac_get_all_transaction([
-        'type'   => 'any',
-        'status' => array( 'not_in' => array( 'draft', 'void', 'awaiting_approval' ) ),
-        'join'   => ['journals'],
-        'number' => -1,
-
-    ]);
-
-    echo '<pre>'; print_r( $transactions ); echo '</pre>';
-}
-
 function erp_ac_get_sales_tax_report( $args ) {
     $all_tax_id = array_keys( erp_ac_get_tax_dropdown() );
 
@@ -276,20 +253,26 @@ function erp_ac_get_sales_tax_report( $args ) {
         'tax_id' => $all_tax_id
     );
 
-    $args  = wp_parse_args( $args, $defaults );
-    $args['start'] = ( $args['start'] && ! empty( $args['start'] ) ) ? $args['start'] : date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
-    $args['end']   = ( $args['end'] && ! empty( $args['end'] ) ) ? $args['end'] : date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+    $args            = wp_parse_args( $args, $defaults );
+    //$args['start'] = ( $args['start'] && ! empty( $args['start'] ) ) ? $args['start'] : date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+    $args['end']     = ( $args['end'] && ! empty( $args['end'] ) ) ? $args['end'] : date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+    $cache_key       = 'erp-ac-tax-report' . md5( serialize( $args ) ) . md5( serialize( get_current_user_id() ) );
+    $tax_report      = wp_cache_get( $cache_key, 'erp' );
 
-    $cache_key  = 'erp-ac-tax-report' . md5( serialize( $args ) ) . md5( serialize( get_current_user_id() ) );
-    $tax_report = wp_cache_get( $cache_key, 'erp' );
     if ( false === $tax_report ) {
         $tax_report = WeDevs\ERP\Accounting\Model\Transaction::with([ 'journals' => function( $q ) use( $args ) {
             return $q->with([ 'ledger' => function( $l ) use( $args ) {
                 return $l->whereIn( 'tax', $args['tax_id'] );
             }]);
-        }])->where( 'issue_date', '>=', $args['start'] )
+        }])//->where( 'issue_date', '>=', $args['start'] )
         ->where( 'issue_date', '<=', $args['end'] )
-        ->skip($args['offset'])->take($args['number'])->get()->toArray();
+        ->where( function($q) {
+            $q->whereNull( 'status' )->orWhereNotIn( 'status', ['draft', 'void', 'awaiting_approval'] );
+        } )
+        ->skip($args['offset'])
+        ->take($args['number'])
+        ->get()
+        ->toArray();
 
         wp_cache_set( $cache_key, $tax_report, 'erp' );
     }
@@ -310,8 +293,7 @@ function erp_ac_get_sales_tax_report_count( $args = [] ) {
         'tax_id' => $all_tax_id
     );
 
-    $args  = wp_parse_args( $args, $defaults );
-
+    $args       = wp_parse_args( $args, $defaults );
     $cache_key  = 'erp-ac-tax-report_count' . md5( serialize( $args ) ) . md5( serialize( get_current_user_id() ) );
     $tax_report = wp_cache_get( $cache_key, 'erp' );
 
@@ -320,8 +302,11 @@ function erp_ac_get_sales_tax_report_count( $args = [] ) {
             return $q->with([ 'ledger' => function( $l ) use( $args ) {
                 return $l->whereIn( 'tax', $args['tax_id'] );
             }]);
-        }])->where( 'issue_date', '>=', $args['start'] )
+        }])//->where( 'issue_date', '>=', $args['start'] )
         ->where( 'issue_date', '<=', $args['end'] )
+        ->where( function($q) {
+            $q->whereNull( 'status' )->orWhereNotIn( 'status', ['draft', 'void', 'awaiting_approval'] );
+        })
         ->count();
 
         wp_cache_set( $cache_key, $tax_report, 'erp' );
@@ -331,9 +316,50 @@ function erp_ac_get_sales_tax_report_count( $args = [] ) {
 }
 
 function erp_ac_normarlize_tax_from_transaction( $args = [] ) {
-    $transactions = erp_ac_get_sales_tax_report( $args );
+    $transactions    = erp_ac_get_sales_tax_report( $args );
+    $tax_receivable  = wp_list_pluck( erp_ac_get_tax_receivable_ledger(), 'id' );
+    $tax_payable     = wp_list_pluck( erp_ac_get_tax_payable_ledger(), 'id' );
     $individual_info = [];
     $tax_info        = erp_ac_get_tax_info();
+    $tax_unit_info   = [];
+
+
+    foreach ( $transactions as $trans ) {
+        foreach ( $trans['journals'] as $jour ) {
+            $tax_ledger_id = isset( $jour['ledger']['id'] ) ? $jour['ledger']['id'] : false;
+            $tax_id = isset( $jour['ledger']['tax'] ) ? $jour['ledger']['tax'] : false;
+
+            if ( in_array( $tax_ledger_id, $tax_receivable ) ) {
+                if ( isset( $tax_unit_info[$tax_id]['expense']['amount'] ) ) {
+                    $tax_unit_info[$tax_id]['expense']['amount'] = $tax_unit_info[$tax_id]['expense']['amount'] + ( $jour['debit'] - $jour['credit'] );
+                } else {
+                    $tax_unit_info[$tax_id]['expense']['amount'] = ( $jour['debit'] - $jour['credit'] );
+                }
+
+                $tax_unit_info[$tax_id]['expense']['tax_id']     = $tax_info[$tax_id]['id'];
+                $tax_unit_info[$tax_id]['expense']['tax_name']   = $tax_info[$tax_id]['name'];
+                $tax_unit_info[$tax_id]['expense']['tax_number'] = $tax_info[$tax_id]['number'];
+                $tax_unit_info[$tax_id]['expense']['rate']       = $tax_info[$tax_id]['rate'];
+            }
+
+            if ( in_array( $tax_ledger_id, $tax_payable ) ) {
+                if ( isset( $tax_unit_info[$tax_id]['sales']['amount'] ) ) {
+                    $tax_unit_info[$tax_id]['sales']['amount'] = $tax_unit_info[$tax_id]['sales']['amount'] + ( $jour['credit'] - $jour['debit'] );
+                } else {
+                    $tax_unit_info[$tax_id]['sales']['amount'] = ( $jour['credit'] - $jour['debit'] );
+                }
+
+                $tax_unit_info[$tax_id]['sales']['tax_id']     = $tax_info[$tax_id]['id'];
+                $tax_unit_info[$tax_id]['sales']['tax_name']   = $tax_info[$tax_id]['name'];
+                $tax_unit_info[$tax_id]['sales']['tax_number'] = $tax_info[$tax_id]['number'];
+                $tax_unit_info[$tax_id]['sales']['rate']       = $tax_info[$tax_id]['rate'];
+            }
+        }
+    }
+
+
+return $tax_unit_info;
+
 
     foreach ( $tax_info as $tax_id => $tax_elemet ) {
 
@@ -361,7 +387,9 @@ function erp_ac_normarlize_tax_from_transaction( $args = [] ) {
     $tax_unit_info = [];
 
     foreach ( $individual_info  as $tax_id => $tax_type ) {
+
         $sales = isset( $tax_type['sales'] ) ? $tax_type['sales'] : [];
+
         $tax_unit_info[$tax_id]['sales']['trns_subtotal']   = array_sum( wp_list_pluck( $sales, 'sub_total' ) );
         $tax_unit_info[$tax_id]['sales']['trns_total']      = array_sum( wp_list_pluck( $sales, 'trans_total' ) );
         $tax_unit_info[$tax_id]['sales']['trns_due']        = array_sum( wp_list_pluck( $sales, 'due' ) );
@@ -372,7 +400,9 @@ function erp_ac_normarlize_tax_from_transaction( $args = [] ) {
         $tax_unit_info[$tax_id]['sales']['rate']            = $tax_info[$tax_id]['rate'];
         $tax_unit_info[$tax_id]['sales']['tax_debit']       = array_sum( wp_list_pluck( $sales, 'tax_debit' ) );
         $tax_unit_info[$tax_id]['sales']['tax_credit']      = array_sum( wp_list_pluck( $sales, 'tax_credit' ) );
+
         $expense                                            = isset( $tax_type['expense'] ) ? $tax_type['expense'] : [];
+
         $tax_unit_info[$tax_id]['expense']['trns_subtotal'] = array_sum( wp_list_pluck( $expense, 'sub_total' ) );
         $tax_unit_info[$tax_id]['expense']['trns_total']    = array_sum( wp_list_pluck( $expense, 'trans_total' ) );
         $tax_unit_info[$tax_id]['expense']['trns_due']      = array_sum( wp_list_pluck( $expense, 'due' ) );
@@ -383,9 +413,22 @@ function erp_ac_normarlize_tax_from_transaction( $args = [] ) {
         $tax_unit_info[$tax_id]['expense']['rate']          = $tax_info[$tax_id]['rate'];
         $tax_unit_info[$tax_id]['expense']['tax_debit']     = array_sum( wp_list_pluck( $expense, 'tax_debit' ) );
         $tax_unit_info[$tax_id]['expense']['tax_credit']    = array_sum( wp_list_pluck( $expense, 'tax_credit' ) );
+
+        $journal                                            = isset( $tax_type['journal'] ) ? $tax_type['journal'] : [];
+
+        $tax_unit_info[$tax_id]['journal']['trns_subtotal'] = array_sum( wp_list_pluck( $journal, 'sub_total' ) );
+        $tax_unit_info[$tax_id]['journal']['trns_total']    = array_sum( wp_list_pluck( $journal, 'trans_total' ) );
+        $tax_unit_info[$tax_id]['journal']['trns_due']      = array_sum( wp_list_pluck( $journal, 'due' ) );
+        $tax_unit_info[$tax_id]['journal']['total']         = array_sum( wp_list_pluck( $journal, 'total' ) );
+        $tax_unit_info[$tax_id]['journal']['tax_id']        = $tax_info[$tax_id]['id'];
+        $tax_unit_info[$tax_id]['journal']['tax_name']      = $tax_info[$tax_id]['name'];
+        $tax_unit_info[$tax_id]['journal']['tax_number']    = $tax_info[$tax_id]['number'];
+        $tax_unit_info[$tax_id]['journal']['rate']          = $tax_info[$tax_id]['rate'];
+        $tax_unit_info[$tax_id]['journal']['tax_debit']     = array_sum( wp_list_pluck( $journal, 'tax_debit' ) );
+        $tax_unit_info[$tax_id]['journal']['tax_credit']    = array_sum( wp_list_pluck( $journal, 'tax_credit' ) );
     }
 
-    return array( 'individuals' => $individual_info, 'units' => $tax_unit_info );
+
 }
 
 function erp_ac_get_sales_total_without_tax( $charts ) {
@@ -458,7 +501,7 @@ function erp_ac_get_good_sold_total_amount( $financial_end = false ) {
     // return $sales_total;
 }
 
-function erp_ac_get_expense_total_without_tax( $charts ) {
+function erp_ac_get_expense_total_with_tax( $charts ) {
     $expense_journals     = isset( $charts[3] ) ? $charts[3] : [];
     //$receivable_tax       = erp_ac_get_tax_receivable_ledger();
     //$receivable_tax       = wp_list_pluck( $receivable_tax, 'id' );
@@ -473,7 +516,7 @@ function erp_ac_get_expense_total_without_tax( $charts ) {
 }
 
 function erp_ac_get_expense_tax_total( $charts ) {
-    $expense_journals     = isset( $charts[1] ) ? $charts[1] : [];
+    $expense_journals     = isset( $charts[3] ) ? $charts[3] : [];
     $receivable_tax       = erp_ac_get_tax_receivable_ledger();
     $receivable_tax       = wp_list_pluck( $receivable_tax, 'id' );
     $payable_tax_journals = [];
@@ -488,6 +531,3 @@ function erp_ac_get_expense_tax_total( $charts ) {
 
     return $expense_tax_total;
 }
-
-
-
