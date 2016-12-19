@@ -26,7 +26,6 @@
 
             <?php
             foreach ( $taxs as $tax_id => $tax ) {
-                var_dump( $tax );
                 $net_sales_tax   =  isset( $tax['sales']['amount'] ) ? $tax['sales']['amount'] : 0;
                 $net_expense_tax =  isset( $tax['expense']['amount'] ) ? $tax['expense']['amount'] : 0;
                 $tax_name        =  isset( $tax['sales']['tax_name'] ) ? $tax['sales']['tax_name'] : $tax['expense']['tax_name'];
