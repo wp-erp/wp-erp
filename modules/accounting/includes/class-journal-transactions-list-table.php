@@ -17,7 +17,7 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
     function __construct() {
 
         $this->type = 'journal';
-        $this->slug = 'erp-accounting-journal';
+        $this->slug = ! empty( $_GET['page'] ) && ( $_GET['page'] == 'erp-accounting-journal' ) ? 'erp-accounting-journal' : 'erp-accounting-charts';
 
         parent::__construct();
 
@@ -66,7 +66,6 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
      * @return string
      */
     function column_issue_date( $item ) {
-
         $url   = admin_url( 'admin.php?page='.$this->slug.'&action=new&journal_id=' . $item->id );
         $actions['edit'] = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Edit', 'erp' ) );
         return sprintf( '<a href="%1$s">%2$s</a> %3$s', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), erp_format_date( $item->issue_date ), $this->row_actions( $actions ) );
@@ -142,12 +141,12 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
                 'placeholder' => __( 'Search for Customer', 'erp' ),
             ]);
 
-            erp_html_form_input([
-                'name'        => 'start_date',
-                'class'       => 'erp-date-picker-from',
-                'value'       => isset( $_REQUEST['start_date'] ) && !empty( $_REQUEST['start_date'] ) ? $_REQUEST['start_date'] : '',
-                'placeholder' => __( 'Start Date', 'erp' )
-            ]);
+            // erp_html_form_input([
+            //     'name'        => 'start_date',
+            //     'class'       => 'erp-date-picker-from',
+            //     'value'       => isset( $_REQUEST['start_date'] ) && !empty( $_REQUEST['start_date'] ) ? $_REQUEST['start_date'] : '',
+            //     'placeholder' => __( 'Start Date', 'erp' )
+            // ]);
 
             erp_html_form_input([
                 'name'        => 'end_date',

@@ -918,7 +918,7 @@ function erp_ac_get_ledger_transactions( $args = [], $ledger_id = false ) {
         if ( isset( $args['start_date'] ) && ! empty( $args['start_date'] ) ) {
             $where .= " AND trans.issue_date >= '{$args['start_date']}' ";
         } else {
-            $where .= " AND trans.issue_date >= '{$financial_start}' ";
+            //$where .= " AND trans.issue_date >= '{$financial_start}' ";
         }
 
         if ( isset( $args['end_date'] ) && ! empty( $args['end_date'] ) ) {
