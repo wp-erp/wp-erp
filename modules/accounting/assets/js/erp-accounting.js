@@ -780,9 +780,10 @@
                 prev_value     = self.data('value'),
                 decimal_sep    = ERP_AC.decimal_separator,
                 number_decimal = ERP_AC.number_decimal,
-                decimal_count  = ( current_value.split(decimal_sep).length ) - 1;
+                decimal_count  = typeof current_value.split(decimal_sep)[1] == 'undefined' ? 0 : current_value.split(decimal_sep)[1];
+                decimal_count  = decimal_count.length - 1;
 
-            if ( decimal_count > 1 ) {
+            if ( decimal_count >= number_decimal ) {
                 var split      = current_value.split(decimal_sep),
                     first_term = split.shift() + decimal_sep,
                     last_term  = split.join('').slice(0, number_decimal),
@@ -808,7 +809,7 @@
             var options = {
                 symbol : ERP_AC.symbol,
                 decimal : ERP_AC.decimal_separator,
-                thousand: '',//ERP_AC.thousand_separator,
+                thousand: ERP_AC.thousand_separator,
                 precision : ERP_AC.number_decimal,
                 format: "%v" //with currency "%s%v"
             };
@@ -830,15 +831,15 @@
                 dateFormat: 'yy-mm-dd',
                 changeMonth: true,
                 changeYear: true,
-                yearRange: '-100:+0',
+                yearRange: '-50:+5',
             });
 
             ERP_Accounting.dueDateField();
 
+
             $( '.erp-select2' ).select2({
                 placeholder: $(this).attr('data-placeholder'),
             });
-
 
             $('#erp-ac-hidden-new-payment').find('.erp-select2').select2('destroy');
             $('#erp-ac-new-payment-voucher').find('.erp-select2').select2('destroy');
@@ -1254,51 +1255,6 @@
             }); //popup
         },
 
-        // vendoerCreditPayment: function(e) {
-        //     e.preventDefault();
-        //     var self = $(this);
-        //     $.erpPopup({
-        //         title: 'Invoice',
-        //         button: 'submit',
-        //         id: 'erp-ac-vendor-credit-popup',
-        //         content: wperp.template('erp-ac-vendoer-credit-single-payment')({
-        //             customer_id : self.data('customer_id'),
-        //             due_amount : self.data('due_amount'),
-        //             partial_id : self.data('transaction_id'),
-        //         }).trim(),
-        //         extraClass: 'large',
-        //         onReady: function(modal) {
-        //             var type = $('.erp-ac-check-invoice-number').data('type');
-        //             wp.ajax.send( {
-        //                 data: {
-        //                     action: 'erp-ac-get-invoice-number',
-        //                     type : type,
-        //                     _wpnonce : ERP_AC.nonce
-        //                 },
-        //                 success: function(res) {
-        //                     $('.erp-ac-check-invoice-number').val( res.invoice_number );
-        //                 },
-        //                 error: function(error) {
-        //                 }
-        //             });
-        //             $('#erp-ac-invoice-payment-popup').find('.erp-ac-chart-drop-down').addClass('select2');
-        //             ERP_Accounting.initFields();
-        //         },
-        //         onSubmit: function(modal) {
-        //             wp.ajax.send( {
-        //                 data: this.serialize()+'&_wpnonce='+ERP_AC.nonce,
-        //                 success: function(res) {
-        //                     modal.closeModal();
-        //                     location.reload();
-        //                 },
-        //                 error: function(error) {
-        //                     modal.showError( error );
-        //                 }
-        //             });
-        //         }
-        //     }); //popup
-        // },
-
         vendorAddress: function(e) {
             e.preventDefault();
             var self = $(this);
@@ -1496,6 +1452,7 @@
             $.each( $('.erp-ac-line-due'), function( key, line_due ) {
                 var due = $(line_due).val()  === '' ? '0' : ERP_Accounting.calNumNormal( $(line_due).val() );
                 line_due_total = parseFloat( due ) + parseFloat( line_due_total );
+                $(this).closest('.col-amount').find('.line_unit_price').val($(line_due).val());
             } );
 
             $('.erp-ac-total-due').val( ERP_Accounting.numFormating( line_due_total ) );
@@ -1607,8 +1564,6 @@
                     var tax_id     = row.find('select.line_tax').val();
                     var line_tax   = parseFloat('0.00');
                     var tax_amount = parseFloat('0.00');
-
-
 
                     qty        = ERP_Accounting.calNumNormal( qty );
                     line_price = ERP_Accounting.calNumNormal( line_price );
@@ -1730,17 +1685,17 @@
                     credit_total += parseFloat( credit );
                 });
 
-                var diff = debit_total - credit_total;
+                var diff = Math.abs( credit_total - debit_total );
 
                 table.find('tfoot input.debit-price-total').val( ERP_Accounting.numFormating( debit_total ) );
                 table.find('tfoot input.credit-price-total').val( ERP_Accounting.numFormating( credit_total ) );
 
                 if ( diff !== 0 ) {
-                    table.find('th.col-diff').addClass('invalid').text( ERP_Accounting.numFormating( diff ) );
+                    table.find('.erp-ac-journal-diff').removeClass('valid').addClass('invalid').val( ERP_Accounting.numFormating( diff ) );
                     $( '#submit_erp_ac_journal' ).attr('disabled', 'disabled');
 
                 } else {
-                    table.find('th.col-diff').removeClass('invalid').text( ERP_Accounting.numFormating( diff ) );
+                    table.find('.erp-ac-journal-diff').removeClass('invalid').addClass('valid').val( ERP_Accounting.numFormating( diff ) );
                     $( '#submit_erp_ac_journal' ).removeAttr('disabled');
                 }
 

@@ -18,7 +18,7 @@
     ?>
     <div class="inner-table-wrap">
         <div class="list-table-inner">
-            <form method="post">
+            <form method="post" class="erp-ac-list-table-form">
                 <input type="hidden" name="page" value="ttest_list_table">
 
                 <?php

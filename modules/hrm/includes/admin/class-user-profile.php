@@ -25,7 +25,6 @@ class User_Profile {
      * @return void
      */
     function setup_actions() {
-
         // Bail if in network admin
         if ( is_network_admin() ) {
             return;
@@ -39,9 +38,9 @@ class User_Profile {
     function update_user( $user_id, $post ) {
 
         // HR role we want the user to have
-        $new_role = isset( $_POST['hr_manager'] ) ? sanitize_text_field( $_POST['hr_manager'] ) : false;
+        $new_hr_manager_role    = isset( $post['hr_manager'] ) ? sanitize_text_field( $post['hr_manager'] ) : false;
 
-        if ( ! $new_role ) {
+        if ( ! $new_hr_manager_role ) {
             return;
         }
 
@@ -53,8 +52,8 @@ class User_Profile {
         // Set the new HR role
         $user = get_user_by( 'id', $user_id );
 
-        if ( $new_role ) {
-            $user->add_role( $new_role );
+        if ( $new_hr_manager_role ) {
+            $user->add_role( $new_hr_manager_role );
         } else {
             $user->remove_role( erp_hr_get_manager_role() );
         }

@@ -60,7 +60,9 @@ foreach ( $charts as $key => $chart ) {
 
 <div class="erp-ac-tax-field-clone" style="display: none;">
     <div class="row">
-       <?php erp_ac_tax_component_fields();?>
-        <span><i class="fa fa-times-circle erp-ac-remove-field"></i></span>
+        <ul class="erp-ac-tax-settings-field">
+            <?php erp_ac_tax_component_fields();?>
+            <li><span><i class="fa fa-times-circle erp-ac-remove-field"></i></span></li>
+        </ul>
     </div>
 </div>

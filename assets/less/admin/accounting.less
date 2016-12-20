@@ -288,8 +288,27 @@ table.vendor-list-table {
             text-align: left;
         }
 
-        th.invalid {
+        .invalid {
+            display: block;
             color: red;
+            text-align: justify;
+        }
+        .valid {
+            display: none;
+        }
+    }
+}
+
+.erp-ac-list-table-form {
+    .bulkactions {
+        display: none;
+    }
+    .actions {
+        input:not([type="submit"]) {
+            padding: 5px;
+        }
+        input {
+            margin-right: 5px;
         }
     }
 }
@@ -501,7 +520,19 @@ form.erp-form {
             width: 100%;
         }
     }
-
+    .erp-ac-tax-settings-field {
+        margin: 0;
+        padding: 0;
+        li {
+            display: inline-table;
+            input {
+                width: 45% !important;
+            }
+        }
+        li:not(:last-child) {
+            width: 30%;
+        }
+    }
     .erp-ac-multiple-sub-tax-field {
         margin-top: 20px;
         .row {
@@ -517,6 +548,30 @@ form.erp-form {
 
     .fa-times-circle {
         cursor: pointer;
+    }
+}
+
+.erp-ac-trial-report-header-wrap:before,
+.erp-ac-trial-report-header-wrap:after{
+    content:"";
+    display: table ;
+    clear:both;
+}
+
+.erp-ac-trial-report-header-wrap {
+    margin-bottom: 10px;
+    .erp-ac-report-tax-date, .erp-ac-report-filter-form {
+        float: left;
+    }
+    .erp-ac-report-tax-date {
+        padding: 5px;
+        margin: 0;
+    }
+    .erp-date-picker-to {
+        padding: 6px;
+        margin: 0;
+        margin-left: 5px;
+        margin-right: 5px;
     }
 }
 

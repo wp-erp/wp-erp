@@ -1,14 +1,16 @@
 <?php
-$company = new \WeDevs\ERP\Company();
-$status = $transaction->status == 'draft' ? false : true;
-$url   = admin_url( 'admin.php?page=erp-accounting-sales&action=new&type=invoice&transaction_id=' . $transaction->id );
+$company          = new \WeDevs\ERP\Company();
+$status           = $transaction->status == 'draft' ? false : true;
+$url              = admin_url( 'admin.php?page=erp-accounting-sales&action=new&type=invoice&transaction_id=' . $transaction->id );
 $more_details_url = erp_ac_get_journal_invoice_url( $transaction->id );
+$total_debit = 0;
+$total_credit = 0;
 ?>
 <div class="wrap">
 
     <h2>
         <?php
-        _e( 'Payment', 'erp' );
+        _e( 'Journal', 'erp' );
         if ( isset( $popup_status ) ) {
             printf( '<a href="%1$s" class="erp-ac-more-details">%2$s &rarr;</a>', $more_details_url, __('More Details','accounting') );
         }
@@ -41,8 +43,8 @@ $more_details_url = erp_ac_get_journal_invoice_url( $transaction->id );
 
             <div class="row">
                 <div class="invoice-number">
-                    <?php 
-                        printf( __( 'Payment: <strong>%s</strong>', 'erp' ), $transaction->id ); 
+                    <?php
+                        printf( __( 'Journal: <strong>%s</strong>', 'erp' ), $transaction->id );
                     ?>
                 </div>
             </div>
@@ -95,31 +97,48 @@ $more_details_url = erp_ac_get_journal_invoice_url( $transaction->id );
                         <tr>
                             <th class="align-left product-name"><?php _e( 'Product', 'erp' ) ?></th>
 
-                            <th><?php _e( 'Unit Price', 'erp' ) ?></th>
+                            <th><?php _e( 'Debit', 'erp' ) ?></th>
 
-                            <th><?php _e( 'Amount', 'erp' ) ?></th>
+                            <th><?php _e( 'Credit', 'erp' ) ?></th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        <?php foreach ( $transaction->items as $line ) { ?>
+                        <?php foreach ( $transaction->items as $line ) {
+                            $total_debit  = $total_debit + $line->journal->debit;
+                            $total_credit = $total_credit + $line->journal->credit;
+
+                            ?>
 
                             <tr>
                                 <td class="align-left product-name">
-                                    <strong><?php echo isset( $line->journal->ledger->name ) ? $line->journal->ledger->name : ''; ?></strong>
+                                    <strong><?php echo $line->journal->ledger->name; ?></strong>
                                     <div class="product-desc"><?php echo $line->description; ?></div>
                                 </td>
 
-                                <td><?php echo erp_ac_get_price( $line->unit_price ); ?></td>
+                                <td><?php echo erp_ac_get_price( $line->journal->debit ); //echo erp_ac_get_price( $line->unit_price ); ?></td>
 
-                                <td><?php echo erp_ac_get_price( $line->line_total ); ?></td>
+                                <td><?php echo erp_ac_get_price( $line->journal->credit ); ?></td>
                             </tr>
+
                         <?php } ?>
+                        <tr>
+                            <td class="align-left product-name"><?php echo $transaction->summary; ?></td>
+                            <td>
+                                <strong><?php _e( 'Total', 'erp' ); ?>
+                                <?php echo erp_ac_get_price( $total_debit ); ?></strong>
+                            </td>
+                            <td>
+                                <strong><?php _e( 'Total', 'erp' ); ?>
+                                <?php echo erp_ac_get_price( $total_credit ); ?></strong>
+                            </td>
+
+                        </tr>
                     </tbody>
                 </table>
             </div><!-- .row -->
 
-            <div class="row">
+    <!--         <div class="row">
                 <div class="col-3">
                     <?php echo $transaction->summary; ?>
                 </div>
@@ -127,22 +146,16 @@ $more_details_url = erp_ac_get_journal_invoice_url( $transaction->id );
                     <table class="table info-table align-right">
                         <tbody>
                             <tr>
-                                <th><?php _e( 'Total', 'erp' ); ?></th>
+                                <th><?php _e( 'Total Debit', 'erp' ); ?></th>
                                 <td><?php echo erp_ac_get_price( $transaction->total ); ?></td>
-                            </tr>
-                            <tr>
-                                <th><?php _e( 'Total Paid', 'erp' ); ?></th>
-                                <td>
-                                    <?php
-                                    $total_paid = floatval( $transaction->total ) - floatval( $transaction->due );
-                                    echo erp_ac_get_price( $total_paid );
-                                    ?>
-                                </td>
+
+                                <th><?php _e( 'Total Credit', 'erp' ); ?></th>
+                                <td><?php echo erp_ac_get_price( $transaction->total ); ?></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </div> -->
 
         </div><!-- .erp-grid-container -->
     </div>

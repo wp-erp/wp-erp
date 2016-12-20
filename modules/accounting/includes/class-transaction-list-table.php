@@ -112,18 +112,6 @@ class Transaction_List_Table extends \WP_List_Table {
     }
 
     /**
-     * Set the bulk actions
-     *
-     * @return array
-     */
-    //function get_bulk_actions() {
-        //$actions = array(
-          //  'trash'  => __( 'Move to Trash', 'erp' ),
-        //);
-        //return $actions;
-    //}
-
-    /**
      * Render the checkbox column
      *
      * @param  object  $item
@@ -140,9 +128,6 @@ class Transaction_List_Table extends \WP_List_Table {
         $url               = admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id );
         $user_display_name = '';
         $actions           = array();
-        // $actions['view']   = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), $item->id, __( 'View this transaction', 'erp' ), __( 'View', 'erp' ) );
-        // $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=delete&id=' . $item->id ), $item->id, __( 'Delete this item', 'erp' ), __( 'Delete', 'erp' ) );
-
         if ( ! $item->user_id ) {
             $user_display_name = __( '(no vendor)', 'erp' );
         } else {
@@ -153,14 +138,6 @@ class Transaction_List_Table extends \WP_List_Table {
         return sprintf( '<a href="%1$s">%2$s</a> %3$s', $url, $user_display_name, $this->row_actions( $actions ) );
     }
 
-    // public function column_form_type( $item ) {
-    //     $types = erp_ac_get_expense_form_types();
-
-    //     if ( array_key_exists( $item->form_type, $types ) ) {
-    //         return sprintf( '<a href="%1$s">%2$s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), $types[ $item->form_type ]['label'] );
-    //     }
-    // }
-
     public function column_total( $item ) {
         return erp_ac_get_price( $item->total );
     }
@@ -168,41 +145,6 @@ class Transaction_List_Table extends \WP_List_Table {
     public function column_due( $item ) {
         return erp_ac_get_price( $item->due );
     }
-
-    /**
-     * Render the issue date column
-     *
-     * @param  object  $item
-     *
-     * @return string
-     */
-    // function column_issue_date( $item ) {
-
-    //     if ( $item->status == 'pending' || $item->status == 'draft' ) {
-    //         $actions['delete'] = sprintf( '<a href="#" class="erp-accountin-trns-row-del" data-id="%d" title="%s">%s</a>', $item->id, __( 'Delete', 'erp' ), __( 'Delete', 'erp' ) );
-    //     }
-
-
-    //     if ( $item->status == 'pending' || $item->status == 'draft' || $item->status == 'awaiting_payment' ) {
-    //         $url   = admin_url( 'admin.php?page='.$this->slug.'&action=new&type=' . $item->form_type . '&transaction_id=' . $item->id );
-    //         $actions['edit'] = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Edit', 'erp' ) );
-    //     }
-
-    //     if ( ( $item->status == 'paid' || $item->status == 'closed' ) && $item->form_type == 'invoice' ) {
-    //         //$actions['redo'] = sprintf( '<a class="erp-accounting-redo" data-type="%1$s" data-id="%2$s" href="#">%3$s</a>', $item->type, $item->id, __( 'Redo', 'erp' ) );
-    //     }
-
-    //     if ( $item->status == 'awaiting_payment' ) {
-    //         $actions['void'] = sprintf( '<a class="erp-accounting-void" data-id="%1$s" href="#">%2$s</a>', $item->id, __( 'Void', 'erp' ) );
-    //     }
-
-
-    //     if ( isset( $actions ) && count( $actions ) ) {
-    //         return sprintf( '<a href="%1$s">%2$s</a> %3$s', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), erp_format_date( $item->issue_date ), $this->row_actions( $actions ) );
-    //     } else {
-    //         return sprintf( '<a href="%1$s">%2$s</a>', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), erp_format_date( $item->issue_date ) );
-    //     }
-    // }
 
     /**
      * Render the issue date column
@@ -336,9 +278,12 @@ class Transaction_List_Table extends \WP_List_Table {
      * @return  array
      */
     function get_counts() {
+        global $wpdb;
         $cache_key = 'erp-ac-sales-trnasction-counts-' . get_current_user_id();
         $results = wp_cache_get( $cache_key, 'erp' );
         $type = isset( $_REQUEST['form_type'] ) ? $_REQUEST['form_type'] : false;
+        $start = isset( $_GET['start_date'] ) ? $_GET['start_date'] :  date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+        $end = isset( $_GET['end_date'] ) ? $_GET['end_date'] : date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
 
         if ( false === $results ) {
             $trans = new \WeDevs\ERP\Accounting\Model\Transaction();
@@ -348,11 +293,15 @@ class Transaction_List_Table extends \WP_List_Table {
                 $results = $trans->select( array( 'status', $db->raw('COUNT(id) as num') ) )
                             ->where( 'type', '=', $this->type )
                             ->where( 'form_type', '=', $type )
+                            ->where( 'issue_date', '>=', $start )
+                            ->where( 'issue_date', '<=', $end )
                             ->groupBy('status')
                             ->get()->toArray();
             } else {
                 $results = $trans->select( array( 'status', $db->raw('COUNT(id) as num') ) )
                             ->where( 'type', '=', $this->type )
+                            ->where( 'issue_date', '>=', $start )
+                            ->where( 'issue_date', '<=', $end )
                             ->groupBy('status')
                             ->get()->toArray();
             }

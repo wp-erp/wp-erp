@@ -161,6 +161,10 @@ class Ajax_Handler {
             'number' => -1
         ] );
 
+        $holiday          = (array) reset( $holiday );
+        $holiday['end']   = date( 'Y-m-d' , strtotime( $holiday['end'] . '-1day' ) );
+        $holiday['start'] = date( 'Y-m-d' , strtotime( $holiday['start'] ) );
+
         $this->send_success( array( 'holiday' => $holiday ) );
     }
 
@@ -485,7 +489,10 @@ class Ajax_Handler {
             $this->send_error( $employee_id->get_error_message() );
         }
 
-        $employee               = new Employee( $employee_id );
+        // we cached empty employee data right after creating, calling from erp_hr_employee_create method
+        wp_cache_delete( 'erp-empl-' . $employee_id, 'erp' );
+
+        $employee                = new Employee( $employee_id );
         $data                   = $employee->to_array();
         $data['work']['joined'] = $employee->get_joined_date();
         $data['work']['type']   = $employee->get_type();
@@ -1432,23 +1439,6 @@ class Ajax_Handler {
         $range_status = isset( $_POST['range'] ) ? $_POST['range'] : 'off';
         $error        = true;
 
-        $holidays = erp_hr_get_holidays( array( 'number' => '-1' ) );
-
-        if ( $holidays ) {
-            foreach ( $holidays as $holiday ) {
-                $prev_start = date( 'Y-m-d', strtotime( $holiday->start ) );
-                $prev_end   = date( 'Y-m-d', strtotime( $holiday->end ) );
-
-                if ( erp_check_date_range_in_range_exist( $prev_start, $prev_end, $start_date, $end_date ) && ( $holiday->id != $holiday_id ) ) {
-                    $error = new \WP_Error( 'msg', __( 'Holiday exist in your selected date', 'erp' ) );
-                }
-
-                if ( erp_check_date_range_in_range_exist( $start_date, $end_date, $prev_start, $prev_end ) && ( $holiday->id != $holiday_id ) ) {
-                    $error = new \WP_Error( 'msg', __( 'Holiday exist in your selected date', 'erp' ) );
-                }
-            }
-        }
-
         if ( $range_status == 'off' ) {
             $end_date = date( 'Y-m-d H:i:s', strtotime( $start_date . ' +1 day' )  );
         }
@@ -1659,7 +1649,6 @@ class Ajax_Handler {
      * @return json
      */
     public function leave_request() {
-
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'erp-leave-req-new' ) ) {
             $this->send_error( __( 'Something went wrong!', 'erp' ) );
         }
@@ -1670,8 +1659,11 @@ class Ajax_Handler {
 
         $employee_id  = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
         $leave_policy = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : 0;
-        $start_date   = isset( $_POST['leave_from'] ) ? sanitize_text_field( $_POST['leave_from'] ) : date_i18n( 'Y-m-d' );
-        $end_date     = isset( $_POST['leave_to'] ) ? sanitize_text_field( $_POST['leave_to'] ) : date_i18n( 'Y-m-d' );
+
+        // @todo: date format may need to be changed when partial leave introduced
+        $start_date   = isset( $_POST['leave_from'] ) ? sanitize_text_field( $_POST['leave_from'] . ' 00:00:00' ) : date_i18n( 'Y-m-d 00:00:00' );
+        $end_date     = isset( $_POST['leave_to'] ) ? sanitize_text_field( $_POST['leave_to'] . ' 23:59:59' ) : date_i18n( 'Y-m-d 23:59:59' );
+
         $leave_reason = isset( $_POST['leave_reason'] ) ? strip_tags( $_POST['leave_reason'] ) : '';
 
         $request_id = erp_hr_leave_insert_request( array(

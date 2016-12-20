@@ -46,6 +46,8 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
 <div class="wrap erp-ac-form-wrap">
     <h2><?php _e( 'Vendor Credit', 'erp' ); ?></h2>
 
+    <?php erp_ac_view_error_message(); ?>
+
     <?php
     $accounts_payable_id = WeDevs\ERP\Accounting\Model\Ledger::code('200')->first()->id;
     $dropdown            = erp_ac_get_chart_dropdown([
@@ -117,7 +119,7 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                             'placeholder' => date( 'Y-m-d' ),
                             'type'        => 'text',
                             'required'    => true,
-                            'class'       => 'erp-date-field',
+                            'class'       => 'erp-date-picker-from',
                             'value'       => isset( $transaction['issue_date'] ) ? $transaction['issue_date'] : date( 'Y-m-d', strtotime( current_time( 'mysql' ) ) ),
                         ) );
                         ?>
@@ -131,7 +133,7 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                             'placeholder' => date( 'Y-m-d' ),
                             'type'        => 'text',
                             'required'    => true,
-                            'class'       => 'erp-due-date-field',
+                            'class'       => 'erp-date-picker-to',
                             'value'       => isset( $transaction['due_date'] ) ? $transaction['due_date'] : '',
                         ) );
                         ?>

@@ -64,6 +64,7 @@ class Contact extends \WeDevs\ERP\People {
             'social'        => [],
             'source'        => '',
             'assign_to'     => '',
+            'contact_age'   => '',
             'group_id'      => [],
         );
 
@@ -100,7 +101,7 @@ class Contact extends \WeDevs\ERP\People {
             $fields['contact_groups'] = $contact_groups;
             $fields['group_id']       = wp_list_pluck( $contact_groups, 'group_id' );
 
-            $contact_owner_id = $this->get_meta( '_assign_crm_agent', true );
+            $contact_owner_id = $this->get_meta( 'contact_owner', true );
 
             if ( $contact_owner_id ) {
                 $user = \get_user_by( 'id', $contact_owner_id );
@@ -120,7 +121,8 @@ class Contact extends \WeDevs\ERP\People {
             $fields['life_stage']     = $this->get_meta( 'life_stage', true );
             $fields['date_of_birth']  = $this->get_meta( 'date_of_birth', true );
             $fields['source']         = $this->get_meta( 'source', true );
-            $fields['created']        = erp_format_date( $this->created );
+            $fields['contact_age']    = $this->get_meta( 'contact_age', true );
+            $fields['created']        = $this->created;
             $fields['created_by']     = $this->created_by;
             $fields['details_url']    = $this->get_details_url();
         }
@@ -164,7 +166,14 @@ class Contact extends \WeDevs\ERP\People {
             }
         }
 
-        return get_avatar( $this->email, $size );
+        $avatar = get_avatar( $this->email, $size );
+
+        if ( ! $avatar ) {
+            $image = WPERP_ASSETS . '/images/mystery-person.png';
+            $avatar = sprintf( '<img src="%1$s" alt="" class="avatar avatar-%2$s photo" height="auto" width="%2$s" />', $image, $size );
+        }
+
+        return $avatar;
     }
 
     /**
@@ -346,6 +355,18 @@ class Contact extends \WeDevs\ERP\People {
     }
 
     /**
+     * Get contact age
+     *
+     * @since 1.1.7
+     *
+     * @return string
+     */
+    public function get_contact_age() {
+        $contact_age = $this->get_meta( 'contact_age', true );
+        return $contact_age ? $contact_age : '—';
+    }
+
+    /**
      * Get the contact source
      *
      * @since 1.0
@@ -385,7 +406,7 @@ class Contact extends \WeDevs\ERP\People {
      * @return string
      */
     public function get_contact_owner() {
-        $contact_owner = $this->get_meta( '_assign_crm_agent', true );
+        $contact_owner = $this->get_meta( 'contact_owner', true );
 
         return $contact_owner;
     }

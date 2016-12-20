@@ -341,19 +341,28 @@ function erp_format_date( $date, $format = false ) {
 /**
  * Extract dates between two date range
  *
- * @param  string  $start_date
- * @param  string  $end_date
+ * @param  string  $start_date example: 2016-12-16 00:00:00
+ * @param  string  $end_date   example: 2016-12-16 23:59:59
  *
  * @return array
  */
 function erp_extract_dates( $start_date, $end_date ) {
+    // if start date has no time set, then add 00:00:00 or 12:00 AM
+    if ( ! preg_match( '/\d{2}:\d{2}:\d{2}$/' , $start_date ) ) {
+        $start_date = $start_date . ' 00:00:00';
+    }
+
+    // if end date has no time set, then add 23:59:59 or 11:59 PM
+    if ( ! preg_match( '/\d{2}:\d{2}:\d{2}$/' , $end_date ) ) {
+        $end_date = $end_date . ' 23:59:59';
+    }
+
     $start_date = new DateTime( $start_date );
     $end_date   = new DateTime( $end_date );
-    $end_date->modify( '+1 day' ); // to get proper days in duration
     $diff = $start_date->diff( $end_date );
 
     // we got a negative date
-    if ( $diff->invert || ! $diff->days ) {
+    if ( $diff->invert ) {
         return new WP_Error( 'invalid-date', __( 'Invalid date provided', 'erp' ) );
     }
 
@@ -482,6 +491,7 @@ function erp_performance_rating( $selected = '' ) {
  * @param  sting  $option_name name of the option
  * @param  string $section     name of the section. if it's a separate option, don't provide any
  * @param  string $default     default option
+ *
  * @return string
  */
 function erp_get_option( $option_name, $section = false, $default = '' ) {
@@ -983,8 +993,9 @@ function erp_get_import_export_fields() {
  */
 function erp_import_export_javascript() {
     global $current_screen;
+    $hook = str_replace( sanitize_title( __( 'ERP Settings', 'erp' ) ) , 'erp-settings', $current_screen->base );
 
-    if ( 'erp-settings_page_erp-tools' !== $current_screen->base ) {
+    if ( 'erp-settings_page_erp-tools' !== $hook ) {
         return;
     }
 
@@ -1420,7 +1431,7 @@ function erp_process_import_export() {
                         } else {
                             $contact_owner = isset( $_POST['contact_owner'] ) ? intval( $_POST['contact_owner'] ) : get_current_user_id();
                             $life_stage    = isset( $_POST['life_stage'] ) ? sanitize_key( $_POST['life_stage'] ) : '';
-                            erp_people_update_meta( $item_insert_id, '_assign_crm_agent', $contact_owner );
+                            erp_people_update_meta( $item_insert_id, 'contact_owner', $contact_owner );
                             erp_people_update_meta( $item_insert_id, 'life_stage', $life_stage );
 
                             if ( isset( $_POST['contact_group'] ) && ! empty( $_POST['contact_group'] ) ) {

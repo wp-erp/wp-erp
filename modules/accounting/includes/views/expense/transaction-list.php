@@ -28,13 +28,12 @@
     }
     ?>
 
-    <form method="get">
+    <form method="get" class="erp-ac-list-table-form">
         <input type="hidden" name="page" value="erp-accounting-expense">
 
         <?php
         $list_table = new WeDevs\ERP\Accounting\Expense_Transaction_List_Table();
         $list_table->prepare_items();
-        // $list_table->search_box( 'search', 'search_id' );
         $list_table->views();
         $list_table->display();
         ?>

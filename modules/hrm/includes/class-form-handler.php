@@ -26,16 +26,18 @@ class Form_Handler {
         add_action( 'admin_init', array( $this, 'leave_request_status_change' ) );
         add_action( 'admin_init', array( $this, 'handle_employee_status_update' ) );
         add_action( 'admin_init', array( $this, 'handle_leave_calendar_filter' ) );
-        add_action( 'load-leave_page_erp-holiday-assign', array( $this, 'holiday_action' ) );
-        add_action( 'load-hr-management_page_erp-hr-employee', array( $this, 'employee_bulk_action' ) );
-        add_action( 'load-hr-management_page_erp-hr-designation', array( $this, 'designation_bulk_action' ) );
-        add_action( 'load-hr-management_page_erp-hr-depts', array( $this, 'department_bulk_action' ) );
-        add_action( 'load-leave_page_erp-leave-policies', array( $this, 'leave_policies' ) );
-        add_action( 'load-leave_page_erp-leave-assign', array( $this, 'entitlement_bulk_action' ) );
-        add_action( 'load-toplevel_page_erp-leave', array( $this, 'leave_request_bulk_action' ) );
 
-        // ERP HR Reporting
-        add_action( 'load-hr-management_page_erp-hr-reporting', array( $this, 'reporting_headcount_bulk_action' ) );
+        $hr_management = sanitize_title( __( 'HR Management', 'erp' ) );
+        add_action( "load-{$hr_management}_page_erp-hr-employee", array( $this, 'employee_bulk_action' ) );
+        add_action( "load-{$hr_management}_page_erp-hr-designation", array( $this, 'designation_bulk_action' ) );
+        add_action( "load-{$hr_management}_page_erp-hr-depts", array( $this, 'department_bulk_action' ) );
+        add_action( "load-{$hr_management}_page_erp-hr-reporting", array( $this, 'reporting_headcount_bulk_action' ) );
+
+        $leave = sanitize_title( __( 'Leave', 'erp' ) );
+        add_action( 'load-toplevel_page_erp-leave', array( $this, 'leave_request_bulk_action' ) );
+        add_action( "load-{$leave}_page_erp-leave-assign", array( $this, 'entitlement_bulk_action' ) );
+        add_action( "load-{$leave}_page_erp-holiday-assign", array( $this, 'holiday_action' ) );
+        add_action( "load-{$leave}_page_erp-leave-policies", array( $this, 'leave_policies' ) );
     }
 
     /**
@@ -571,8 +573,11 @@ class Form_Handler {
 
         $employee_id  = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
         $leave_policy = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : 0;
-        $start_date   = isset( $_POST['leave_from'] ) ? sanitize_text_field( $_POST['leave_from'] ) : date_i18n( 'Y-m-d' );
-        $end_date     = isset( $_POST['leave_to'] ) ? sanitize_text_field( $_POST['leave_to'] ) : date_i18n( 'Y-m-d' );
+
+        // @todo: date format may need to be changed when partial leave introduced
+        $start_date   = isset( $_POST['leave_from'] ) ? sanitize_text_field( $_POST['leave_from'] . ' 00:00:00' ) : date_i18n( 'Y-m-d 00:00:00' );
+        $end_date     = isset( $_POST['leave_to'] ) ? sanitize_text_field( $_POST['leave_to'] . ' 23:59:59' ) : date_i18n( 'Y-m-d 23:59:59' );
+
         $leave_reason = isset( $_POST['leave_reason'] ) ? strip_tags( $_POST['leave_reason'] ) : '';
 
         $insert = erp_hr_leave_insert_request( array(
@@ -601,7 +606,7 @@ class Form_Handler {
      * @return void
      */
     public function leave_request_status_change() {
-        
+
         // If not leave bulk action then go out from here
         if ( ! isset( $_GET['leave_action'] ) ) {
             return;
@@ -653,24 +658,6 @@ class Form_Handler {
 
         if ( null !== $status ) {
             erp_hr_leave_request_update_status( $request_id, $status );
-
-            // notification email
-            if ( 1 === $status ) {
-
-                $approved_email = wperp()->emailer->get_email( 'Approved_Leave_Request' );
-
-                if ( is_a( $approved_email, '\WeDevs\ERP\Email') ) {
-                    $approved_email->trigger( $request_id );
-                }
-
-            } else if ( 3 === $status ) {
-
-                $rejected_email = wperp()->emailer->get_email( 'Rejected_Leave_Request' );
-
-                if ( is_a( $rejected_email, '\WeDevs\ERP\Email') ) {
-                    $rejected_email->trigger( $request_id );
-                }
-            }
 
             // redirect the user back
             $redirect_to = remove_query_arg( array('status'), admin_url( 'admin.php?page=erp-leave' ) );

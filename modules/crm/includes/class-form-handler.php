@@ -18,9 +18,11 @@ class Form_Handler {
      * @return void
      */
     public function __construct() {
-        add_action( 'load-crm_page_erp-sales-contact-groups', [ $this, 'contact_groups_bulk_action' ] );
         add_action( 'admin_head', [ $this, 'handle_canonical_url' ], 10 );
         add_action( 'erp_hr_after_employee_permission_set', [ $this, 'crm_permission_set' ], 10, 2 );
+
+        $crm = sanitize_title( __( 'CRM', 'erp' ) );
+        add_action( "load-{$crm}_page_erp-sales-contact-groups", [ $this, 'contact_groups_bulk_action' ] );
     }
 
     /**

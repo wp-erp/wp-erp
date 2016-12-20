@@ -1,4 +1,4 @@
-<table class="wp-list-table widefat fixed striped widefat erp-ac-transaction-table" style="margin: 20px 0;">
+<table class="wp-list-table widefat fixed striped widefat erp-ac-transaction-table">
     <thead>
         <tr>
             <th class="col-ac"><?php _e( 'Voucher ID', 'erp' ); ?></th>
@@ -62,6 +62,7 @@
                 <?php erp_html_form_input( array(
                     'type'        => 'hidden',
                     'name'        => 'line_unit_price[]',
+                    'class'       => 'line_unit_price',
                     'value'       => '0',
                 ) ); ?>
 
@@ -87,9 +88,9 @@
             <th class="erp-ac-total-due col-amount">
 
                 <?php erp_html_form_input( array(
-                    'type'        => 'number',
+                    'type'        => 'text',
                     'name'        => 'price_total',
-                    'value'       => $total_due,
+                    'value'       => erp_ac_get_price( $total_due, ['symbol' => false] ),
                     'class'       => 'erp-ac-total-due',
                     'custom_attr' => array( 'readonly' => true )
                 ) ); ?>

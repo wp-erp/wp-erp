@@ -1,8 +1,24 @@
 <?php
+/**
+ * Tax type
+ *
+ * @since  1.1.0
+ *
+ * @return array
+ */
 function erp_ac_tax_type() {
 	return [ 0 => __( 'Single Tax', 'erp' ), 1 => __( 'Multi Tax', 'erp' ) ];
 }
 
+/**
+ * Create new tax
+ *
+ * @param  array $postdata
+ *
+ * @since  1.1.0
+ *
+ * @return int
+ */
 function erp_ac_new_tax( $postdata ) {
 
 	global $wpdb;
@@ -23,6 +39,16 @@ function erp_ac_new_tax( $postdata ) {
     }
 }
 
+/**
+ * Update tax item
+ *
+ * @param  array  $args
+ * @param  int $tax_id
+ *
+ * @since  1.1.0
+ *
+ * @return void
+ */
 function erp_ac_update_tax_items( $args, $tax_id = false ) {
     if ( ! intval( $tax_id ) ) {
         return false;
@@ -80,6 +106,15 @@ function erp_ac_update_tax_items( $args, $tax_id = false ) {
     }
 }
 
+/**
+ * Remove tax item
+ *
+ * @param  int $items_id
+ *
+ * @since  1.1.0
+ *
+ * @return void
+ */
 function erp_ac_remove_tax_items( $items_id ) {
     $tax_items = new WeDevs\ERP\Accounting\Model\Tax_Items();
 
@@ -91,6 +126,15 @@ function erp_ac_remove_tax_items( $items_id ) {
     $tax_items->find($items_id)->delete();
 }
 
+/**
+ * Remove tax
+ *
+ * @param  int $tax_id
+ *
+ * @since  1.1.0
+ *
+ * @return boolen
+ */
 function erp_ac_delete_tax( $tax_id ) {
 
     $ledgers       = WeDevs\ERP\Accounting\Model\Ledger::with( [ 'journals' ] )->WHERE( 'tax', '=', $tax_id )->get()->toArray();
@@ -128,6 +172,13 @@ function erp_ac_delete_tax( $tax_id ) {
     return true;
 }
 
+/**
+ * Create tax dropdown
+ *
+ * @since  1.1.0
+ *
+ * @return array
+ */
 function erp_ac_get_tax_dropdown() {
     $taxs    = erp_ac_get_all_tax( [ 'number' => '-1' ] );
     $drpdown = [];
@@ -139,6 +190,13 @@ function erp_ac_get_tax_dropdown() {
     return $drpdown;
 }
 
+/**
+ * All tax information
+ *
+ * @since  1.1.0
+ *
+ * @return array
+ */
 function erp_ac_get_tax_info() {
     $cache_key       = 'erp-ac-tax-info-' . md5( serialize( get_current_user_id() ) );
     $tax_rate_info   = wp_cache_get( $cache_key, 'erp' );
@@ -163,6 +221,15 @@ function erp_ac_get_tax_info() {
     return $tax_rate_info;
 }
 
+/**
+ * Getting all tax query
+ *
+ * @param  array  $args
+ *
+ * @since  1.1.0
+ *
+ * @return array
+ */
 function erp_ac_get_all_tax( $args = [] ) {
 	global $wpdb;
 
@@ -218,35 +285,53 @@ function erp_ac_get_all_tax( $args = [] ) {
     return $items;
 }
 
+/**
+ * Field for creating new tax
+ *
+ * @since  1.1.0
+ *
+ * @return void
+ */
 function erp_ac_tax_component_fields() {
 
     erp_html_form_input( array(
         'name'        => 'items_id[]',
         'type'        => 'hidden',
     ) );
-
+    ?><li><?php
     erp_html_form_input( array(
         'name'        => 'component_name[]',
+        'label'       => __( 'Component name', 'erp' ),
         'type'        => 'text',
-        'placeholder' => __( 'Component name', 'erp' ),
+       // 'placeholder' => __( 'Component name', 'erp' ),
         'required'    => true,
     ) );
-
+    ?></li><li><?php
     erp_html_form_input( array(
         'name'        => 'agency_name[]',
+        'label'       => __( 'Agency name', 'erp' ),
         'type'        => 'text',
-        'placeholder' => __( 'Agency name', 'erp' ),
+       // 'placeholder' => __( 'Agency name', 'erp' ),
         'required'    => true
     ) );
-
+    ?></li><li><?php
     erp_html_form_input( array(
         'name'        => 'tax_rate[]',
+        'label'       => __( 'Rate(0.00%)', 'erp' ),
         'type'        => 'text',
-        'placeholder' => __( 'Rate(0.00%)', 'erp' ),
+        'placeholder' => __( '0.00%', 'erp' ),
         'required'    => true
     ) );
+    ?></li><?php
 }
 
+/**
+ * Field for update tax
+ *
+ * @since  1.1.0
+ *
+ * @return void
+ */
 function erp_ac_tax_component_field_with_value() {
 
     erp_html_form_input( array(
@@ -254,32 +339,43 @@ function erp_ac_tax_component_field_with_value() {
         'type'        => 'hidden',
         'value'       => '{{items.id}}',
     ) );
-
+    ?><li><?php
     erp_html_form_input( array(
         'name'        => 'component_name[]',
         'type'        => 'text',
-        'placeholder' => __( 'Component name', 'erp' ),
+        'label'       => __( 'Component name', 'erp' ),
+        //'placeholder' => __( 'Component name', 'erp' ),
         'required'    => true,
         'value'       => '{{items.component_name}}'
     ) );
-
+    ?></li><li><?php
     erp_html_form_input( array(
         'name'        => 'agency_name[]',
+        'label'       => __( 'Agency name', 'erp' ),
         'type'        => 'text',
         'value'       => '{{items.agency_name}}',
-        'placeholder' => __( 'Agency name', 'erp' ),
+        //'placeholder' => __( 'Agency name', 'erp' ),
         'required'    => true
     ) );
-
+    ?></li><li><?php
     erp_html_form_input( array(
         'name'        => 'tax_rate[]',
         'type'        => 'text',
+        'label'       => __( 'Rate(0.00%)', 'erp' ),
         'value'       => '{{items.tax_rate}}',
-        'placeholder' => __( 'Rate(0.00%)', 'erp' ),
+        'placeholder' => __( '0.00%', 'erp' ),
         'required'    => true
     ) );
+    ?></li><?php
 }
 
+/**
+ * Include new tax in the chat of account
+ *
+ * @since  1.1.0
+ *
+ * @return void
+ */
 function erp_ac_new_tax_account( $postdata, $tax_id ) {
     $is_update = isset( $postdata['id'] ) && $postdata['id'] ? true : false;
 
@@ -292,7 +388,7 @@ function erp_ac_new_tax_account( $postdata, $tax_id ) {
     $receivable_account = array(
         'system'  => 1,
         'name'    => $postdata['tax_name'] . ' Receivable',
-        'type_id' => 12,
+        'type_id' => 1,
         'tax'     => $tax_id,
         'code'    => $receitvable_code
     );
@@ -312,6 +408,15 @@ function erp_ac_new_tax_account( $postdata, $tax_id ) {
     erp_ac_insert_chart( $payable_account );
 }
 
+/**
+ * Get tax information according with transaction items
+ *
+ * @param  array $items
+ *
+ * @since  1.1.0
+ *
+ * @return array
+ */
 function erp_ac_get_trans_unit_tax_rate( $items ) {
     $itms_tax = [];
     $tax_info = erp_ac_get_tax_info();
@@ -339,6 +444,16 @@ function erp_ac_get_trans_unit_tax_rate( $items ) {
     return $print_tax;
 }
 
+/**
+ * Get tax account form chart of account by tax id
+ *
+ * @param  int $tax_id
+ * @param  string $type
+ *
+ * @since  1.1.0
+ *
+ * @return int
+ */
 function erp_ac_get_tax_account_from_tax_id( $tax_id, $type ) {
     $cache_key = 'erp-ac-tax-' . $tax_id . $type . md5( serialize( get_current_user_id() ) );
     $account_id = wp_cache_get( $cache_key, 'erp' );
@@ -350,7 +465,7 @@ function erp_ac_get_tax_account_from_tax_id( $tax_id, $type ) {
             }])->get()->toArray();
         } else {
             $accounts = WeDevs\ERP\Accounting\Model\Ledger::where( 'tax', '=', $tax_id )->with(['charts' => function($q) {
-                return $q->where( 'class_id', '=', 3 );
+                return $q->where( 'class_id', '=', 1 );
             }])->get()->toArray();
         }
 
@@ -366,11 +481,18 @@ function erp_ac_get_tax_account_from_tax_id( $tax_id, $type ) {
     return $account_id;
 }
 
+/**
+ * Get all receivable tax ledger
+ *
+ * @since  1.1.0
+ *
+ * @return array
+ */
 function erp_ac_get_tax_receivable_ledger() {
     $all_tax_id = array_keys( erp_ac_get_tax_dropdown() );
 
     $receivables = WeDevs\ERP\Accounting\Model\Ledger::whereIn( 'tax', $all_tax_id )->with(['charts' => function( $q ) {
-                return $q->where( 'class_id', '=', 3 );
+                return $q->where( 'class_id', '=', 1 );
             }])->get()->toArray();
 
     foreach ( $receivables as $key => $receivable ) {
@@ -382,6 +504,13 @@ function erp_ac_get_tax_receivable_ledger() {
     return $receivables;
 }
 
+/**
+ * Get all payable tax ledger
+ *
+ * @since  1.1.0
+ *
+ * @return array
+ */
 function erp_ac_get_tax_payable_ledger() {
     $all_tax_id = array_keys( erp_ac_get_tax_dropdown() );
 
@@ -397,9 +526,3 @@ function erp_ac_get_tax_payable_ledger() {
 
     return $payables;
 }
-
-
-
-
-
-

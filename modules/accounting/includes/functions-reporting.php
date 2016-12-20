@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Get all accounting reports
  *
@@ -54,20 +53,33 @@ function erp_ac_get_reports() {
     return apply_filters( 'erp_ac_reports', $reports );
 }
 
-function erp_ac_reporting_query() {
+function erp_ac_reporting_query( $start = false, $end = false ) {
     global $wpdb;
     $tbl_ledger      = $wpdb->prefix . 'erp_ac_ledger';
     $tbl_type        = $wpdb->prefix . 'erp_ac_chart_types';
     $tbl_class       = $wpdb->prefix . 'erp_ac_chart_classes';
     $tbl_journals    = $wpdb->prefix . 'erp_ac_journals';
     $tbl_transaction = $wpdb->prefix . 'erp_ac_transactions';
+    $query           = [];
 
     $financial_start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
     $financial_end   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
-    $where           = "tran.status IS NULL OR tran.status NOT IN( 'draft', 'void', 'awaiting_approval' ) AND ( tran.issue_date >= '$financial_start' AND tran.issue_date <= '$financial_end' )";
+
+    if ( $start ) {
+        $query[] = "tran.issue_date >= '$financial_start'";
+    }
+
+    if ( $end ) {
+        $query[] = "tran.issue_date <= '$financial_end'";
+    }
+
+    $query  = $query ? ' AND ' . implode( ' AND ', $query ) : '';
+
+    $where           = "( tran.status IS NULL OR tran.status NOT IN( 'draft', 'void', 'awaiting_approval' ) ) AND ( 1=1 $query )";
     $join            = '';
+
     $where           = apply_filters( 'erp_ac_trial_balance_where', $where );
-    $join           = apply_filters( 'erp_ac_trial_balance_join', $join );
+    $join            = apply_filters( 'erp_ac_trial_balance_join', $join );
 
     $sql = "SELECT led.id, led.code, led.name, led.type_id, types.name as type_name, types.class_id, class.name as class_name, sum(jour.debit) as debit, sum(jour.credit) as credit
     FROM $tbl_ledger as led
@@ -81,6 +93,29 @@ function erp_ac_reporting_query() {
     GROUP BY led.id";
 
     return $wpdb->get_results( $sql );
+}
+
+function erp_ac_trial_balance_query( $start = false, $end = false ) {
+    global $wpdb;
+    $tbl_ledger      = $wpdb->prefix . 'erp_ac_ledger';
+    $tbl_type        = $wpdb->prefix . 'erp_ac_chart_types';
+    $tbl_class       = $wpdb->prefix . 'erp_ac_chart_classes';
+    $tbl_journals    = $wpdb->prefix . 'erp_ac_journals';
+    $tbl_transaction = $wpdb->prefix . 'erp_ac_transactions';
+    $query           = [];
+
+    $financial_start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+    $financial_end   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+
+    $transactions = erp_ac_get_all_transaction([
+        'type'   => 'any',
+        'status' => array( 'not_in' => array( 'draft', 'void', 'awaiting_approval' ) ),
+        'join'   => ['journals'],
+        'number' => -1,
+
+    ]);
+
+    echo '<pre>'; print_r( $transactions ); echo '</pre>';
 }
 
 function erp_ac_get_sales_tax_report( $args ) {
@@ -99,10 +134,11 @@ function erp_ac_get_sales_tax_report( $args ) {
     );
 
     $args  = wp_parse_args( $args, $defaults );
+    $args['start'] = ( $args['start'] && ! empty( $args['start'] ) ) ? $args['start'] : date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+    $args['end']   = ( $args['end'] && ! empty( $args['end'] ) ) ? $args['end'] : date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
 
     $cache_key  = 'erp-ac-tax-report' . md5( serialize( $args ) ) . md5( serialize( get_current_user_id() ) );
     $tax_report = wp_cache_get( $cache_key, 'erp' );
-
     if ( false === $tax_report ) {
         $tax_report = WeDevs\ERP\Accounting\Model\Transaction::with([ 'journals' => function( $q ) use( $args ) {
             return $q->with([ 'ledger' => function( $l ) use( $args ) {
@@ -153,7 +189,6 @@ function erp_ac_get_sales_tax_report_count( $args = [] ) {
 
 function erp_ac_normarlize_tax_from_transaction( $args = [] ) {
     $transactions = erp_ac_get_sales_tax_report( $args );
-
     $individual_info = [];
     $tax_info        = erp_ac_get_tax_info();
 
@@ -184,42 +219,30 @@ function erp_ac_normarlize_tax_from_transaction( $args = [] ) {
 
     foreach ( $individual_info  as $tax_id => $tax_type ) {
         $sales = isset( $tax_type['sales'] ) ? $tax_type['sales'] : [];
-
-        $tax_unit_info[$tax_id]['sales']['trns_subtotal'] = array_sum( wp_list_pluck( $sales, 'sub_total' ) );
-        $tax_unit_info[$tax_id]['sales']['trns_total']    = array_sum( wp_list_pluck( $sales, 'trans_total' ) );
-        $tax_unit_info[$tax_id]['sales']['trns_due']      = array_sum( wp_list_pluck( $sales, 'due' ) );
-        $tax_unit_info[$tax_id]['sales']['total']         = array_sum( wp_list_pluck( $sales, 'total' ) );
-
-        $tax_unit_info[$tax_id]['sales']['tax_id']        = $tax_info[$tax_id]['id'];
-        $tax_unit_info[$tax_id]['sales']['tax_name']      = $tax_info[$tax_id]['name'];
-        $tax_unit_info[$tax_id]['sales']['tax_number']    = $tax_info[$tax_id]['number'];
-        $tax_unit_info[$tax_id]['sales']['rate']          = $tax_info[$tax_id]['rate'];
-
-        $tax_unit_info[$tax_id]['sales']['tax_debit'] = array_sum( wp_list_pluck( $sales, 'tax_debit' ) );
-        $tax_unit_info[$tax_id]['sales']['tax_credit'] = array_sum( wp_list_pluck( $sales, 'tax_credit' ) );
-
-
-
-        $expense = isset( $tax_type['expense'] ) ? $tax_type['expense'] : [];
-
+        $tax_unit_info[$tax_id]['sales']['trns_subtotal']   = array_sum( wp_list_pluck( $sales, 'sub_total' ) );
+        $tax_unit_info[$tax_id]['sales']['trns_total']      = array_sum( wp_list_pluck( $sales, 'trans_total' ) );
+        $tax_unit_info[$tax_id]['sales']['trns_due']        = array_sum( wp_list_pluck( $sales, 'due' ) );
+        $tax_unit_info[$tax_id]['sales']['total']           = array_sum( wp_list_pluck( $sales, 'total' ) );
+        $tax_unit_info[$tax_id]['sales']['tax_id']          = $tax_info[$tax_id]['id'];
+        $tax_unit_info[$tax_id]['sales']['tax_name']        = $tax_info[$tax_id]['name'];
+        $tax_unit_info[$tax_id]['sales']['tax_number']      = $tax_info[$tax_id]['number'];
+        $tax_unit_info[$tax_id]['sales']['rate']            = $tax_info[$tax_id]['rate'];
+        $tax_unit_info[$tax_id]['sales']['tax_debit']       = array_sum( wp_list_pluck( $sales, 'tax_debit' ) );
+        $tax_unit_info[$tax_id]['sales']['tax_credit']      = array_sum( wp_list_pluck( $sales, 'tax_credit' ) );
+        $expense                                            = isset( $tax_type['expense'] ) ? $tax_type['expense'] : [];
         $tax_unit_info[$tax_id]['expense']['trns_subtotal'] = array_sum( wp_list_pluck( $expense, 'sub_total' ) );
         $tax_unit_info[$tax_id]['expense']['trns_total']    = array_sum( wp_list_pluck( $expense, 'trans_total' ) );
         $tax_unit_info[$tax_id]['expense']['trns_due']      = array_sum( wp_list_pluck( $expense, 'due' ) );
         $tax_unit_info[$tax_id]['expense']['total']         = array_sum( wp_list_pluck( $expense, 'total' ) );
-
         $tax_unit_info[$tax_id]['expense']['tax_id']        = $tax_info[$tax_id]['id'];
         $tax_unit_info[$tax_id]['expense']['tax_name']      = $tax_info[$tax_id]['name'];
         $tax_unit_info[$tax_id]['expense']['tax_number']    = $tax_info[$tax_id]['number'];
         $tax_unit_info[$tax_id]['expense']['rate']          = $tax_info[$tax_id]['rate'];
-
-
-        $tax_unit_info[$tax_id]['expense']['tax_debit'] = array_sum( wp_list_pluck( $expense, 'tax_debit' ) );
-        $tax_unit_info[$tax_id]['expense']['tax_credit'] = array_sum( wp_list_pluck( $expense, 'tax_credit' ) );
-
+        $tax_unit_info[$tax_id]['expense']['tax_debit']     = array_sum( wp_list_pluck( $expense, 'tax_debit' ) );
+        $tax_unit_info[$tax_id]['expense']['tax_credit']    = array_sum( wp_list_pluck( $expense, 'tax_credit' ) );
     }
 
     return array( 'individuals' => $individual_info, 'units' => $tax_unit_info );
-
 }
 
 function erp_ac_get_sales_total_without_tax( $charts ) {
@@ -297,18 +320,3 @@ function erp_ac_get_expense_tax_total( $charts ) {
 
     return $expense_tax_total;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
