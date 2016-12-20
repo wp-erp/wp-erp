@@ -884,11 +884,6 @@
 
             methods: {
                 fullName: function( value, item ) {
-                    // if ( wpErpCrm.contact_type == 'contact' ) {
-                    //     var link  = '<a href="' + item.details_url + '"><strong>' + item.first_name + ' '+ item.last_name + '</strong></a>';
-                    // } else {
-                    //     var link  = '<a href="' + item.details_url + '"><strong>' + item.company + '</strong></a>';
-                    // }
                     return item.avatar.img + this.getNameLink( item );
                 },
 
@@ -898,6 +893,8 @@
                             var name = item.first_name;
                         } else if( !item.first_name && item.last_name ) {
                             var name = item.last_name;
+                        } else if ( item.first_name && item.last_name ) {
+                            var name = item.first_name + ' ' + item.last_name;
                         } else {
                             var name = '(No name)';
                         }
