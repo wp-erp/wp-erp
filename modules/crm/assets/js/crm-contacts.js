@@ -884,12 +884,37 @@
 
             methods: {
                 fullName: function( value, item ) {
+                    // if ( wpErpCrm.contact_type == 'contact' ) {
+                    //     var link  = '<a href="' + item.details_url + '"><strong>' + item.first_name + ' '+ item.last_name + '</strong></a>';
+                    // } else {
+                    //     var link  = '<a href="' + item.details_url + '"><strong>' + item.company + '</strong></a>';
+                    // }
+                    return item.avatar.img + this.getNameLink( item );
+                },
+
+                getNameLink: function( item ) {
                     if ( wpErpCrm.contact_type == 'contact' ) {
-                        var link  = '<a href="' + item.details_url + '"><strong>' + item.first_name + ' '+ item.last_name + '</strong></a>';
+                        if ( item.first_name && !item.last_name ) {
+                            var name = item.first_name;
+                        } else if( !item.first_name && item.last_name ) {
+                            var name = item.last_name;
+                        } else {
+                            var name = '(No name)';
+                        }
+
+                        var link = '<a href="' + item.details_url + '"><strong>' + name + '</strong></a>';
+
                     } else {
-                        var link  = '<a href="' + item.details_url + '"><strong>' + item.company + '</strong></a>';
+                        if ( item.company ) {
+                            var name = item.company;
+                        } else {
+                            var name = '(No name)';
+                        }
+
+                        var link = '<a href="' + item.details_url + '"><strong>' + name + '</strong></a>';
                     }
-                    return item.avatar.img + link;
+
+                    return link;
                 },
 
                 lifeStage: function( value, item ) {
