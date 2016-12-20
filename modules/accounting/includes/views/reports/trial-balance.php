@@ -1,7 +1,7 @@
 <?php
 $end     = empty( $_GET['end'] ) ? date( 'Y-m-d', strtotime( erp_financial_end_date() ) ) : $_GET['end'];
 $ledgers = erp_ac_reporting_query( $end );
-$clos_inc_exp_balance = erp_ac_get_closing_income_expense( false );
+$clos_inc_exp_balance = erp_ac_get_closing_income_expense( $end );
 $charts  = [];
 
 if ( $ledgers ) {
@@ -26,8 +26,8 @@ $credit_total = $clos_inc_exp_balance->credit;
     <div class="erp-ac-trial-report-header-wrap">
         <p class="erp-ac-report-tax-date">
         <?php
-            $start = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_start_date() ) ) );
-            $end   = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_end_date() ) ) );
+            //$start = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_start_date() ) ) );
+            //$end   = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_end_date() ) ) );
             printf( '<i class="fa fa-calendar"></i> %1$s', erp_format_date( $end, 'F j, Y' ) );
         ?>
         </p>

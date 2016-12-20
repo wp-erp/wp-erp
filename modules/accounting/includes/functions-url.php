@@ -180,12 +180,13 @@ function erp_ac_get_account_url( $account_id, $content = '' ) {
  *
  * @return str
  */
-function erp_ac_get_singe_tax_report_url( $tax_id ) {
+function erp_ac_get_singe_tax_report_url( $tax_id, $end = '' ) {
 	$url_args = [
 		'page'   => 'erp-accounting-reports',
 		'type'   => 'sales-tax',
 		'action' => 'view',
-		'id'     => $tax_id
+		'id'     => $tax_id,
+        'end'    => $end
 	];
 
 	$url = add_query_arg( $url_args, admin_url( 'admin.php' ) );

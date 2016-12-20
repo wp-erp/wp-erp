@@ -21,8 +21,8 @@ $tax_total     = erp_ac_get_sales_tax_total( $charts );// + erp_ac_get_expense_t
     <div class="erp-ac-trial-report-header-wrap">
         <p class="erp-ac-report-tax-date">
         <?php
-            $start = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_start_date() ) ) );
-            $end   = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_end_date() ) ) );
+            //$start = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_start_date() ) ) );
+            //$end   = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_end_date() ) ) );
             printf( '<i class="fa fa-calendar"></i> %1$s', erp_format_date( $end, 'F j, Y' ) );
         ?>
         </p>
