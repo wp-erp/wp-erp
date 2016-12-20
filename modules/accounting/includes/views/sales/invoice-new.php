@@ -84,7 +84,7 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                                 'required'    => true,
                                 'class'       => 'erp-select2 erp-ac-customer-drop erp-ac-not-found-in-drop',
                                 'value'       => $customer_id ? $customer_id : '',
-                                'options'     => [ '' => __( '&mdash; Select &mdash;', 'erp' ) ] + erp_get_peoples_array( ['type' => 'customer', 'number' => 100 ] ),
+                                'options'     => [ '' => __( '&mdash; Select &mdash;', 'erp' ) ] + erp_get_peoples_array( ['type' => 'customer', 'number' => '-1' ] ),
                                 'custom_attr' => [
                                     'data-content' => 'erp-ac-new-customer-content-pop',
                                 ],
