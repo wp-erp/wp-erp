@@ -67,7 +67,13 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
      */
     function column_issue_date( $item ) {
         $url   = admin_url( 'admin.php?page='.$this->slug.'&action=new&journal_id=' . $item->id );
-        $actions['edit'] = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Edit', 'erp' ) );
+
+        if ( $this->slug == 'erp-accounting-journal' ) {
+            $actions['edit'] = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Edit', 'erp' ) );
+        } else {
+            $actions = [];
+        }
+
         return sprintf( '<a href="%1$s">%2$s</a> %3$s', admin_url( 'admin.php?page=' . $this->slug . '&action=view&id=' . $item->id ), erp_format_date( $item->issue_date ), $this->row_actions( $actions ) );
     }
 
