@@ -42,6 +42,11 @@ class Accounting {
      * within our plugin.
      */
     public function __construct( $plugin ) {
+        // prevent duplicate loading
+        if ( did_action( 'erp_accounting_loaded' ) ) {
+            return;
+        }
+
         $this->plugin = $plugin;
 
         $this->deactive_addon();
