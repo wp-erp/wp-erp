@@ -3012,8 +3012,6 @@ function erp_crm_sync_people_meta_data( $meta_id, $object_id, $meta_key, $_meta_
 
     if ( false === $people_id  ) {
         $people = \WeDevs\ERP\Framework\Models\People::whereUserId( $object_id )->first();
-        error_log( print_r( $object_id, true ));
-        error_log( print_r( $people, true ));
 
         if ( null == $people ) {
             wp_cache_set( $cache_key, 'not_found', 'erp' );
