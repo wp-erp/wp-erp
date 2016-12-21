@@ -900,6 +900,12 @@ function erp_hr_leave_get_requests_count() {
 /**
  * Update leave request status
  *
+ * Statuses and their ids
+ * delete -  3
+ * reject -  3
+ * approve - 1
+ * pending - 2
+ *
  * @since 0.1
  *
  * @param  integer $request_id
@@ -910,10 +916,30 @@ function erp_hr_leave_get_requests_count() {
 function erp_hr_leave_request_update_status( $request_id, $status ) {
     global $wpdb;
 
+    $status = absint( $status );
+
     $updated = $wpdb->update( $wpdb->prefix . 'erp_hr_leave_requests',
         [ 'status' => $status ],
         [ 'id' => $request_id ]
     );
+
+    // notification email
+    if ( 1 === $status ) {
+
+        $approved_email = wperp()->emailer->get_email( 'Approved_Leave_Request' );
+
+        if ( is_a( $approved_email, '\WeDevs\ERP\Email') ) {
+            $approved_email->trigger( $request_id );
+        }
+
+    } else if ( 3 === $status ) {
+
+        $rejected_email = wperp()->emailer->get_email( 'Rejected_Leave_Request' );
+
+        if ( is_a( $rejected_email, '\WeDevs\ERP\Email') ) {
+            $rejected_email->trigger( $request_id );
+        }
+    }
 
     $status = ( $status == 1 ) ? 'approved' : 'pending';
 
@@ -1268,7 +1294,7 @@ function erp_hr_apply_policy_schedule() {
         $marital       = isset( $employee_data['personal']['marital_status'] ) ? $employee_data['personal']['marital_status'] : '';
         $hire_date     = isset( $employee_data['work']['hiring_date'] ) ? $employee_data['work']['hiring_date'] : '';
         $current_time  = current_time( 'mysql' );
-        $daydiff       = count( erp_extract_dates( $hire_date, $current_time ) ) - 1;
+        $daydiff       = count( erp_extract_dates( $hire_date, $current_time ) );
 
         foreach ( $policies as $key => $policy ) {
             if ( $policy['activate'] == 1 ) {
