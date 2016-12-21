@@ -1663,7 +1663,6 @@
             },
 
             taxDropdown: function() {
-
                 var table = $('.erp-ac-transaction-form').find('.erp-ac-transaction-form-table'),
                     taxs = table.find('.erp-ac-tax-dropdown'),
                     taxs_id = [];

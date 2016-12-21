@@ -167,7 +167,8 @@ table.erp-ac-transaction-table td:first-child {
 }
 table.erp-ac-transaction-table .line-total,
 table.erp-ac-transaction-table .sub-total,
-table.erp-ac-transaction-table .price-total {
+table.erp-ac-transaction-table .price-total,
+table.erp-ac-transaction-table .erp-ac-tax-total {
   padding: 3px 5px;
   margin: 0;
 }
