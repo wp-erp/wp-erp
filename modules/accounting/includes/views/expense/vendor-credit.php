@@ -81,11 +81,13 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                                 'name'        => 'user_id',
                                 'type'        => 'select',
                                 'required'    => true,
-                                'class'       => 'erp-select2 erp-ac-vendor-drop erp-ac-not-found-in-drop',
-                                'options'     => [ '-1' => __( '&mdash; Select &mdash;', 'erp' ) ] + erp_ac_get_vendors(),
+                                'id'          => 'erp-ac-select-user-for-assign-contact',
+                                //'class'       => 'erp-select2 erp-ac-vendor-drop erp-ac-not-found-in-drop',
+                                'options'     => [ '' => __( 'Search by vendor', 'erp' ) ] + erp_ac_get_vendors(),
                                 'custom_attr' => [
-                                    'data-placeholder' => __( 'Select a payee', 'erp' ),
+                                    'data-placeholder' => __( 'Search by vendor', 'erp' ),
                                     'data-content' => 'erp-ac-new-vendor-content-pop',
+                                    'data-type' => 'vendor'
                                 ],
                                 'value' => isset( $vendor_id ) ? $vendor_id : ''
                             ) );
