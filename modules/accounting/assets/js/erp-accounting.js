@@ -86,10 +86,7 @@
             $( '.erp-accounting' ).on( 'click', '.erp-accounting-trash', this.transaction.trash );
             $( '.erp-accounting' ).on( 'click', '.erp-accounting-void', this.transaction.void );
             $( '.erp-accounting' ).on( 'click', '.erp-accounting-redo', this.transaction.redo );
-
-
         },
-
 
         initSearchCustomerVendor: function() {
             $( 'select#erp-ac-select-user-for-assign-contact' ).select2({
