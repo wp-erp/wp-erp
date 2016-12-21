@@ -496,7 +496,7 @@ function erp_insert_people( $args = array() ) {
     if ( isset( $user->ID ) && $user->ID ) {
         // Set data for updating record
         $user_id = wp_update_user( [
-            'ID'         => $user->id,
+            'ID'         => $user->ID,
             'user_url'   => ! empty( $args['website'] ) ? $args['website'] : $user->user_url,
             'user_email' => ! empty( $args['email'] ) ? $args['email'] : $user->user_email
         ] );
@@ -507,6 +507,9 @@ function erp_insert_people( $args = array() ) {
             $people->update( [ 'user_id' => $user_id, 'email' => $args['email'], 'website' => $args['website'] ] );
 
             unset( $args['id'], $args['user_id'], $args['email'], $args['website'] );
+
+            wp_cache_delete( 'erp_people_id_user_' . $user->ID, 'erp' );
+
             foreach ( $args as $key => $value ) {
                 if ( ! update_user_meta( $user_id, $key, $value ) ) {
                     $unchanged_data[$key] = $value;

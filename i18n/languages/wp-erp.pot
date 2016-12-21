@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.1.7\n"
+"Project-Id-Version: WP ERP 1.1.8\n"
 "Report-Msgid-Bugs-To: http://wperp.com/support/\n"
-"POT-Creation-Date: 2016-12-07 07:06:00+00:00\n"
+"POT-Creation-Date: 2016-12-11 09:20:05+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4777,7 +4777,7 @@ msgid "Created At"
 msgstr ""
 
 #: includes/admin/class-form-handler.php:25 includes/admin/class-menu.php:39
-#: includes/functions.php:986
+#: includes/functions.php:987
 msgid "ERP Settings"
 msgstr ""
 
@@ -5373,7 +5373,7 @@ msgstr ""
 #: modules/accounting/includes/functions-transaction.php:985
 #: modules/accounting/includes/views/accounts/form-fields.php:48
 #: modules/accounting/includes/views/expense/single.php:22
-#: modules/accounting/includes/views/journal/new.php:50
+#: modules/accounting/includes/views/journal/new.php:55
 #: modules/crm/views/js-templates/new-contact-group.php:16
 #: modules/hrm/views/employee/tab-leave.php:115
 #: modules/hrm/views/js-templates/holiday.php:49
@@ -5596,10 +5596,6 @@ msgid "To"
 msgstr ""
 
 #: includes/admin/views/tools/misc.php:35
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:34
-#: modules/accounting/includes/views/reports/income-statement/statement.php:27
-#: modules/accounting/includes/views/reports/tax/sales-tax.php:8
-#: modules/accounting/includes/views/reports/tax/single-sales-tax.php:14
 #: modules/accounting/includes/views/sales/template-invoice-readonly.php:70
 #: modules/crm/views/js-templates/customer-email-note.php:19
 #: modules/hrm/views/employee/tab-general.php:86
@@ -5817,17 +5813,17 @@ msgid ""
 "to collect non-sensitive diagnostic data and usage information."
 msgstr ""
 
-#: includes/class-updates.php:86
+#: includes/class-updates.php:87
 msgid ""
 "<strong>WP ERP Data Update Required</strong> &#8211; We need to update your "
 "install to the latest version"
 msgstr ""
 
-#: includes/class-updates.php:87
+#: includes/class-updates.php:88
 msgid "Run the updater"
 msgstr ""
 
-#: includes/class-updates.php:92
+#: includes/class-updates.php:93
 msgid ""
 "It is strongly recommended that you backup your database before proceeding. "
 "Are you sure you wish to run the updater now?"
@@ -6209,51 +6205,51 @@ msgstr ""
 msgid " from your computer."
 msgstr ""
 
-#: includes/functions-people.php:150 includes/functions-people.php:211
+#: includes/functions-people.php:153 includes/functions-people.php:214
 msgid "No data found"
 msgstr ""
 
-#: includes/functions-people.php:154 includes/functions-people.php:215
+#: includes/functions-people.php:157 includes/functions-people.php:218
 msgid "No type found"
 msgstr ""
 
-#: includes/functions-people.php:313
+#: includes/functions-people.php:316
 msgid "No field provided"
 msgstr ""
 
-#: includes/functions-people.php:317
+#: includes/functions-people.php:320
 msgid "No value provided"
 msgstr ""
 
-#: includes/functions-people.php:408
+#: includes/functions-people.php:411
 msgid "No user type provided."
 msgstr ""
 
-#: includes/functions-people.php:416
+#: includes/functions-people.php:419
 msgid "The people type is invalid."
 msgstr ""
 
-#: includes/functions-people.php:424
+#: includes/functions-people.php:427
 msgid "You must need to fillup either first name or phone or email"
 msgstr ""
 
-#: includes/functions-people.php:432
+#: includes/functions-people.php:435
 msgid "You must need to fillup either Company name or email or phone"
 msgstr ""
 
-#: includes/functions-people.php:438
+#: includes/functions-people.php:441
 msgid "Please provide a valid email address"
 msgstr ""
 
-#: includes/functions-people.php:466
+#: includes/functions-people.php:469
 msgid "This people already exists"
 msgstr ""
 
-#: includes/functions-people.php:481
+#: includes/functions-people.php:484
 msgid "Something went wrong, please try again"
 msgstr ""
 
-#: includes/functions-people.php:487
+#: includes/functions-people.php:490
 msgid "This people email already exists"
 msgstr ""
 
@@ -6481,82 +6477,82 @@ msgstr ""
 msgid "Excellent"
 msgstr ""
 
-#: includes/functions.php:684
+#: includes/functions.php:685
 msgid "Every Minute"
 msgstr ""
 
-#: includes/functions.php:689
+#: includes/functions.php:690
 msgid "Every 2 Minutes"
 msgstr ""
 
-#: includes/functions.php:694
+#: includes/functions.php:695
 msgid "Every 5 Minutes"
 msgstr ""
 
-#: includes/functions.php:699
+#: includes/functions.php:700
 msgid "Every 10 Minutes"
 msgstr ""
 
-#: includes/functions.php:704
+#: includes/functions.php:705
 msgid "Every 15 Minutes"
 msgstr ""
 
-#: includes/functions.php:709
+#: includes/functions.php:710
 msgid "Every 30 Minutes"
 msgstr ""
 
-#: includes/functions.php:714 includes/lib/class-wedevs-insights.php:471
+#: includes/functions.php:715 includes/lib/class-wedevs-insights.php:471
 msgid "Once Weekly"
 msgstr ""
 
-#: includes/functions.php:788 includes/functions.php:828
+#: includes/functions.php:789 includes/functions.php:829
 msgid ""
 "Your license key expired on %s. Please <a href=\"%s\" target=\"_blank\" "
 "title=\"Renew your license key\">renew your license key</a>."
 msgstr ""
 
-#: includes/functions.php:797
+#: includes/functions.php:798
 msgid ""
 "Invalid license. Please <a href=\"%s\" target=\"_blank\" title=\"Visit "
 "account page\">visit your account page</a> and verify it."
 msgstr ""
 
-#: includes/functions.php:806
+#: includes/functions.php:807
 msgid ""
 "Your %s is not active for this URL. Please <a href=\"%s\" target=\"_blank\" "
 "title=\"Visit account page\">visit your account page</a> to manage your "
 "license key URLs."
 msgstr ""
 
-#: includes/functions.php:814
+#: includes/functions.php:815
 msgid "This is not a %s."
 msgstr ""
 
-#: includes/functions.php:818
+#: includes/functions.php:819
 msgid ""
 "Your license key has reached its activation limit. <a href=\"%s\">View "
 "possible upgrades</a> now."
 msgstr ""
 
-#: includes/functions.php:841
+#: includes/functions.php:842
 msgid "License key never expires."
 msgstr ""
 
-#: includes/functions.php:846
+#: includes/functions.php:847
 msgid ""
 "Your license key expires soon! It expires on %s. <a href=\"%s\" "
 "target=\"_blank\" title=\"Renew license\">Renew your license key</a>."
 msgstr ""
 
-#: includes/functions.php:854
+#: includes/functions.php:855
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/functions.php:1543
+#: includes/functions.php:1544
 msgid "Nothing to import or items are already exists."
 msgstr ""
 
-#: includes/functions.php:1546
+#: includes/functions.php:1547
 msgid "%s items successfully imported."
 msgstr ""
 
@@ -6915,7 +6911,7 @@ msgstr ""
 #: modules/accounting/includes/class-vendor-transaction-list-table.php:29
 #: modules/accounting/includes/views/bank/bank.php:107
 #: modules/accounting/includes/views/common/partial-payments.php:10
-#: modules/accounting/includes/views/journal/new.php:22
+#: modules/accounting/includes/views/journal/new.php:27
 #: modules/accounting/includes/views/js-templates/bank.php:5
 #: modules/hrm/includes/class-announcement.php:275
 #: modules/hrm/views/employee/tab-job.php:39
@@ -6975,21 +6971,21 @@ msgstr ""
 #: modules/accounting/includes/views/common/partial-payments.php:12
 #: modules/accounting/includes/views/common/transaction-table.php:77
 #: modules/accounting/includes/views/expense/payment-voucher-invoice.php:6
-#: modules/accounting/includes/views/expense/payment-voucher-invoice.php:86
+#: modules/accounting/includes/views/expense/payment-voucher-invoice.php:87
 #: modules/accounting/includes/views/expense/payment-voucher-single.php:144
 #: modules/accounting/includes/views/expense/single.php:50
 #: modules/accounting/includes/views/expense/vendor-credit-single.php:144
-#: modules/accounting/includes/views/journal/new.php:169
-#: modules/accounting/includes/views/journal/single.php:127
-#: modules/accounting/includes/views/journal/single.php:131
+#: modules/accounting/includes/views/journal/new.php:174
+#: modules/accounting/includes/views/journal/single.php:128
+#: modules/accounting/includes/views/journal/single.php:132
 #: modules/accounting/includes/views/js-templates/tax-items.php:33
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:85
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:138
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:195
-#: modules/accounting/includes/views/reports/trial-balance.php:110
+#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:86
+#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:139
+#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:196
+#: modules/accounting/includes/views/reports/trial-balance.php:120
 #: modules/accounting/includes/views/sales/bank-transfer-form.php:6
-#: modules/accounting/includes/views/sales/bank-transfer-form.php:87
-#: modules/accounting/includes/views/sales/invoice-single.php:183
+#: modules/accounting/includes/views/sales/bank-transfer-form.php:88
+#: modules/accounting/includes/views/sales/invoice-single.php:182
 #: modules/accounting/includes/views/sales/payment-single.php:144
 #: modules/accounting/includes/views/sales/template-invoice-readonly.php:123
 msgid "Total"
@@ -7072,14 +7068,14 @@ msgstr ""
 #: modules/accounting/includes/class-form-handler.php:318
 #: modules/accounting/includes/class-form-handler.php:355
 #: modules/accounting/includes/class-form-handler.php:455
-#: modules/accounting/includes/class-form-handler.php:630
+#: modules/accounting/includes/class-form-handler.php:631
 msgid "Are you cheating?"
 msgstr ""
 
 #: modules/accounting/includes/class-form-handler.php:322
 #: modules/accounting/includes/class-form-handler.php:359
 #: modules/accounting/includes/class-form-handler.php:459
-#: modules/hrm/includes/class-form-handler.php:734
+#: modules/hrm/includes/class-form-handler.php:737
 msgid "Permission Denied!"
 msgstr ""
 
@@ -7108,7 +7104,7 @@ msgstr ""
 msgid "Error: Total is required"
 msgstr ""
 
-#: modules/accounting/includes/class-form-handler.php:626
+#: modules/accounting/includes/class-form-handler.php:627
 #: modules/accounting/includes/functions-chart.php:153
 #: modules/accounting/includes/functions-chart.php:165
 #: modules/accounting/includes/functions-chart.php:497
@@ -7123,40 +7119,40 @@ msgstr ""
 msgid "You do not have sufficient permissions"
 msgstr ""
 
-#: modules/accounting/includes/class-form-handler.php:640
+#: modules/accounting/includes/class-form-handler.php:642
 msgid "Value can not be negative"
 msgstr ""
 
-#: modules/accounting/includes/class-form-handler.php:644
+#: modules/accounting/includes/class-form-handler.php:646
 msgid "Debit and credit total did not match."
 msgstr ""
 
 #: modules/accounting/includes/class-journal-transactions-list-table.php:44
 #: modules/accounting/includes/views/expense/single.php:13
-#: modules/accounting/includes/views/journal/new.php:34
 #: modules/accounting/includes/views/journal/new.php:39
+#: modules/accounting/includes/views/journal/new.php:44
 msgid "Summary"
 msgstr ""
 
 #: modules/accounting/includes/class-journal-transactions-list-table.php:51
 #: modules/accounting/includes/functions-transaction.php:960
-#: modules/accounting/includes/views/journal/new.php:51
+#: modules/accounting/includes/views/journal/new.php:56
 #: modules/accounting/includes/views/journal/single.php:100
 msgid "Debit"
 msgstr ""
 
 #: modules/accounting/includes/class-journal-transactions-list-table.php:52
 #: modules/accounting/includes/functions-transaction.php:961
-#: modules/accounting/includes/views/journal/new.php:52
+#: modules/accounting/includes/views/journal/new.php:57
 #: modules/accounting/includes/views/journal/single.php:102
 msgid "Credit"
 msgstr ""
 
 #: modules/accounting/includes/class-journal-transactions-list-table.php:53
 #: modules/accounting/includes/class-vendor-list-table.php:50
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:48
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:100
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:153
+#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:49
+#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:101
+#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:154
 msgid "Balance"
 msgstr ""
 
@@ -7546,13 +7542,13 @@ msgstr ""
 
 #: modules/accounting/includes/functions-chart.php:10
 #: modules/accounting/includes/views/chart-of-accounts.php:37
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:41
+#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:42
 msgid "Assets"
 msgstr ""
 
 #: modules/accounting/includes/functions-chart.php:11
 #: modules/accounting/includes/views/chart-of-accounts.php:38
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:94
+#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:95
 msgid "Liabilities"
 msgstr ""
 
@@ -7564,7 +7560,7 @@ msgstr ""
 
 #: modules/accounting/includes/functions-chart.php:14
 #: modules/accounting/includes/views/chart-of-accounts.php:41
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:147
+#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:148
 msgid "Equity"
 msgstr ""
 
@@ -7608,7 +7604,7 @@ msgstr ""
 
 #: modules/accounting/includes/functions-dashboard.php:20
 #: modules/accounting/includes/functions-dashboard.php:212
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:185
+#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:186
 msgid "Net Income"
 msgstr ""
 
@@ -7688,35 +7684,35 @@ msgid ""
 "(day) of the financial year."
 msgstr ""
 
-#: modules/accounting/includes/functions-tax.php:3
+#: modules/accounting/includes/functions-tax.php:10
 msgid "Single Tax"
 msgstr ""
 
-#: modules/accounting/includes/functions-tax.php:3
+#: modules/accounting/includes/functions-tax.php:10
 msgid "Multi Tax"
 msgstr ""
 
-#: modules/accounting/includes/functions-tax.php:108
+#: modules/accounting/includes/functions-tax.php:152
 msgid "The tax record can not be deleted as it contains one or more transactions."
 msgstr ""
 
-#: modules/accounting/includes/functions-tax.php:230
-#: modules/accounting/includes/functions-tax.php:265
+#: modules/accounting/includes/functions-tax.php:304
+#: modules/accounting/includes/functions-tax.php:346
 msgid "Component name"
 msgstr ""
 
-#: modules/accounting/includes/functions-tax.php:238
-#: modules/accounting/includes/functions-tax.php:273
+#: modules/accounting/includes/functions-tax.php:312
+#: modules/accounting/includes/functions-tax.php:354
 msgid "Agency name"
 msgstr ""
 
-#: modules/accounting/includes/functions-tax.php:246
-#: modules/accounting/includes/functions-tax.php:283
+#: modules/accounting/includes/functions-tax.php:320
+#: modules/accounting/includes/functions-tax.php:364
 msgid "Rate(0.00%)"
 msgstr ""
 
-#: modules/accounting/includes/functions-tax.php:248
-#: modules/accounting/includes/functions-tax.php:285
+#: modules/accounting/includes/functions-tax.php:322
+#: modules/accounting/includes/functions-tax.php:366
 msgid "0.00%"
 msgstr ""
 
@@ -7776,7 +7772,7 @@ msgstr ""
 
 #: modules/accounting/includes/functions-transaction.php:984
 #: modules/accounting/includes/views/expense/single.php:20
-#: modules/accounting/includes/views/journal/new.php:49
+#: modules/accounting/includes/views/journal/new.php:54
 msgid "Account"
 msgstr ""
 
@@ -7969,7 +7965,7 @@ msgid "Yes, do it!"
 msgstr ""
 
 #: modules/accounting/includes/functions.php:329
-#: modules/accounting/includes/views/reports/tax/sales-tax.php:50
+#: modules/accounting/includes/views/reports/tax/sales-tax.php:51
 msgid "No Result Found!"
 msgstr ""
 
@@ -8235,7 +8231,7 @@ msgid "Subtotal"
 msgstr ""
 
 #: modules/accounting/includes/views/common/transaction-table.php:76
-#: modules/accounting/includes/views/journal/new.php:168
+#: modules/accounting/includes/views/journal/new.php:173
 msgid "+ Add Line"
 msgstr ""
 
@@ -8304,7 +8300,7 @@ msgstr ""
 
 #: modules/accounting/includes/views/expense/payment-voucher-single.php:140
 #: modules/accounting/includes/views/expense/vendor-credit-single.php:140
-#: modules/accounting/includes/views/sales/invoice-single.php:179
+#: modules/accounting/includes/views/sales/invoice-single.php:178
 #: modules/accounting/includes/views/sales/payment-single.php:140
 #: modules/accounting/includes/views/sales/template-invoice-readonly.php:119
 msgid "Sub Total"
@@ -8340,7 +8336,7 @@ msgstr ""
 
 #: modules/accounting/includes/views/expense/payment-voucher.php:141
 #: modules/accounting/includes/views/expense/vendor-credit.php:100
-#: modules/accounting/includes/views/journal/new.php:10
+#: modules/accounting/includes/views/journal/new.php:15
 #: modules/accounting/includes/views/js-templates/invoice.php:15
 #: modules/accounting/includes/views/js-templates/vendor-credit-single.php:6
 #: modules/accounting/includes/views/sales/invoice-new.php:105
@@ -8372,7 +8368,7 @@ msgstr ""
 
 #: modules/accounting/includes/views/expense/single.php:26
 #: modules/accounting/includes/views/reports/income-statement/statement.php:66
-#: modules/accounting/includes/views/reports/tax/sales-tax.php:14
+#: modules/accounting/includes/views/reports/tax/sales-tax.php:15
 msgid "Tax"
 msgstr ""
 
@@ -8404,7 +8400,7 @@ msgid "Credit Date"
 msgstr ""
 
 #: modules/accounting/includes/views/expense/vendor-credit-single.php:148
-#: modules/accounting/includes/views/sales/invoice-single.php:187
+#: modules/accounting/includes/views/sales/invoice-single.php:186
 #: modules/accounting/includes/views/sales/template-invoice-readonly.php:127
 msgid "Total Related Payments"
 msgstr ""
@@ -8470,27 +8466,35 @@ msgstr ""
 msgid "New Entry"
 msgstr ""
 
-#: modules/accounting/includes/views/journal/new.php:2
+#: modules/accounting/includes/views/journal/new.php:4
 msgid "New Journal Entry"
 msgstr ""
 
-#: modules/accounting/includes/views/journal/new.php:183
+#: modules/accounting/includes/views/journal/new.php:6
+msgid "Edit Journal Entry"
+msgstr ""
+
+#: modules/accounting/includes/views/journal/new.php:188
 msgid "The amount of debit and credit are not same"
 msgstr ""
 
-#: modules/accounting/includes/views/journal/new.php:193
+#: modules/accounting/includes/views/journal/new.php:200
 msgid "Add Journal Entry"
+msgstr ""
+
+#: modules/accounting/includes/views/journal/new.php:202
+msgid "Update Journal Entry"
 msgstr ""
 
 #: modules/accounting/includes/views/journal/single.php:47
 msgid "Journal: <strong>%s</strong>"
 msgstr ""
 
-#: modules/accounting/includes/views/journal/single.php:148
+#: modules/accounting/includes/views/journal/single.php:149
 msgid "Total Debit"
 msgstr ""
 
-#: modules/accounting/includes/views/journal/single.php:151
+#: modules/accounting/includes/views/journal/single.php:152
 msgid "Total Credit"
 msgstr ""
 
@@ -8678,16 +8682,9 @@ msgstr ""
 msgid "Accounting Reports: Balance Sheet"
 msgstr ""
 
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:34
-#: modules/accounting/includes/views/reports/income-statement/statement.php:27
-#: modules/accounting/includes/views/reports/tax/sales-tax.php:8
-#: modules/accounting/includes/views/reports/tax/single-sales-tax.php:14
-msgid "to"
-msgstr ""
-
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:47
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:99
-#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:152
+#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:48
+#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:100
+#: modules/accounting/includes/views/reports/balance-sheet/balance-sheet.php:153
 msgid "Accounts"
 msgstr ""
 
@@ -8724,29 +8721,29 @@ msgstr ""
 msgid "Sales Tax Summary"
 msgstr ""
 
-#: modules/accounting/includes/views/reports/tax/sales-tax.php:15
+#: modules/accounting/includes/views/reports/tax/sales-tax.php:16
 #: modules/accounting/includes/views/reports/tax/single-sales-tax.php:22
 msgid "Tax Payable"
 msgstr ""
 
-#: modules/accounting/includes/views/reports/tax/sales-tax.php:16
+#: modules/accounting/includes/views/reports/tax/sales-tax.php:17
 #: modules/accounting/includes/views/reports/tax/single-sales-tax.php:23
 msgid "Tax Receivable"
 msgstr ""
 
-#: modules/accounting/includes/views/reports/tax/sales-tax.php:17
+#: modules/accounting/includes/views/reports/tax/sales-tax.php:18
 msgid "Net Tax"
 msgstr ""
 
-#: modules/accounting/includes/views/reports/tax/sales-tax.php:21
-#: modules/accounting/includes/views/reports/tax/sales-tax.php:23
+#: modules/accounting/includes/views/reports/tax/sales-tax.php:22
+#: modules/accounting/includes/views/reports/tax/sales-tax.php:24
 #: modules/accounting/includes/views/reports/tax/single-sales-tax.php:28
 #: modules/accounting/includes/views/reports/tax/single-sales-tax.php:30
 msgid "Transaction subtotal"
 msgstr ""
 
-#: modules/accounting/includes/views/reports/tax/sales-tax.php:22
-#: modules/accounting/includes/views/reports/tax/sales-tax.php:24
+#: modules/accounting/includes/views/reports/tax/sales-tax.php:23
+#: modules/accounting/includes/views/reports/tax/sales-tax.php:25
 #: modules/accounting/includes/views/reports/tax/single-sales-tax.php:29
 #: modules/accounting/includes/views/reports/tax/single-sales-tax.php:31
 msgid "tax amount"
@@ -8764,20 +8761,20 @@ msgstr ""
 msgid "Transaction Date"
 msgstr ""
 
-#: modules/accounting/includes/views/reports/trial-balance.php:30
+#: modules/accounting/includes/views/reports/trial-balance.php:40
 msgid "Account Name"
 msgstr ""
 
-#: modules/accounting/includes/views/reports/trial-balance.php:31
+#: modules/accounting/includes/views/reports/trial-balance.php:41
 msgid "Debit Total"
 msgstr ""
 
-#: modules/accounting/includes/views/reports/trial-balance.php:32
+#: modules/accounting/includes/views/reports/trial-balance.php:42
 msgid "Credit Total"
 msgstr ""
 
-#: modules/accounting/includes/views/reports/trial-balance.php:98
-#: modules/accounting/includes/views/reports/trial-balance.php:104
+#: modules/accounting/includes/views/reports/trial-balance.php:108
+#: modules/accounting/includes/views/reports/trial-balance.php:114
 msgid "No Data Found!"
 msgstr ""
 
@@ -9369,7 +9366,7 @@ msgstr ""
 #: modules/hrm/includes/class-ajax.php:1377
 #: modules/hrm/includes/class-ajax.php:1430
 #: modules/hrm/includes/class-ajax.php:1476
-#: modules/hrm/includes/class-ajax.php:1658
+#: modules/hrm/includes/class-ajax.php:1657
 #: modules/hrm/includes/class-form-handler.php:103
 #: modules/hrm/includes/class-form-handler.php:130
 #: modules/hrm/includes/class-form-handler.php:174
@@ -9380,8 +9377,8 @@ msgstr ""
 #: modules/hrm/includes/class-form-handler.php:436
 #: modules/hrm/includes/class-form-handler.php:470
 #: modules/hrm/includes/class-form-handler.php:571
-#: modules/hrm/includes/class-form-handler.php:619
-#: modules/hrm/includes/class-form-handler.php:706
+#: modules/hrm/includes/class-form-handler.php:622
+#: modules/hrm/includes/class-form-handler.php:709
 msgid "You do not have sufficient permissions to do this action"
 msgstr ""
 
@@ -11113,16 +11110,7 @@ msgstr ""
 msgid "Employee not found!"
 msgstr ""
 
-#: modules/hrm/includes/admin/class-user-profile.php:79
-#: modules/hrm/includes/functions-capabilities.php:46
-#: modules/hrm/views/employee/single.php:3 modules/hrm/views/employee.php:5
-#: modules/hrm/views/leave/leave-entitlements.php:71
-#: modules/hrm/views/leave/new-request.php:20
-#: modules/hrm/views/reporting/salary-history.php:13
-msgid "Employee"
-msgstr ""
-
-#: modules/hrm/includes/admin/class-user-profile.php:87
+#: modules/hrm/includes/admin/class-user-profile.php:71
 #: modules/hrm/includes/functions-capabilities.php:40
 #: modules/hrm/views/employee/tab-permission.php:10
 msgid "HR Manager"
@@ -11142,7 +11130,7 @@ msgstr ""
 #: modules/hrm/includes/class-ajax.php:623
 #: modules/hrm/includes/class-ajax.php:670
 #: modules/hrm/includes/class-ajax.php:734
-#: modules/hrm/includes/class-ajax.php:1654
+#: modules/hrm/includes/class-ajax.php:1653
 #: modules/hrm/includes/class-form-handler.php:466
 #: modules/hrm/includes/class-form-handler.php:567
 msgid "Something went wrong!"
@@ -11336,11 +11324,11 @@ msgstr ""
 msgid "days are available"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1684
+#: modules/hrm/includes/class-ajax.php:1686
 msgid "Leave request has been submitted successfully!"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1686
+#: modules/hrm/includes/class-ajax.php:1688
 msgid "Something went wrong, please try again."
 msgstr ""
 
@@ -11803,6 +11791,14 @@ msgstr ""
 
 #: modules/hrm/includes/emails/class-email-rejected-leave-request.php:20
 msgid "Leave Request Rejected"
+msgstr ""
+
+#: modules/hrm/includes/functions-capabilities.php:46
+#: modules/hrm/views/employee/single.php:3 modules/hrm/views/employee.php:5
+#: modules/hrm/views/leave/leave-entitlements.php:71
+#: modules/hrm/views/leave/new-request.php:20
+#: modules/hrm/views/reporting/salary-history.php:13
+msgid "Employee"
 msgstr ""
 
 #: modules/hrm/includes/functions-dashboard-widgets.php:6

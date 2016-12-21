@@ -22,7 +22,14 @@ function erp_crm_get_avatar( $id, $email = '', $user_id = 0, $size = 32 ) {
         }
     }
 
-    return get_avatar( $email, $size );
+    $avatar = get_avatar( $email, $size );
+
+    if ( ! $avatar ) {
+        $image = WPERP_ASSETS . '/images/mystery-person.png';
+        $avatar = sprintf( '<img src="%1$s" alt="" class="avatar avatar-%2$s photo" height="auto" width="%2$s" />', $image, $size );
+    }
+
+    return $avatar;
 }
 
 /**
@@ -41,6 +48,10 @@ function erp_crm_get_avatar_url( $id, $email='', $user_id = 0, $size = 32 ) {
         if ( ! empty( $user_photo_id ) ) {
             return wp_get_attachment_thumb_url( $user_photo_id );
         }
+    }
+
+    if ( ! $email ) {
+        return WPERP_ASSETS . '/images/mystery-person.png';
     }
 
     return get_avatar_url( $email, $size );
@@ -3069,7 +3080,7 @@ function erp_crm_make_wp_user( $customer_id, $args = [] ) {
         return $user_id;
     }
 
-    if ( $args['notify_email'] ) {
+    if ( isset( $args['notify_email'] ) && $args['notify_email'] ) {
         wp_send_new_user_notifications( $user_id );
     }
 
@@ -3100,7 +3111,7 @@ function erp_crm_make_wp_user( $customer_id, $args = [] ) {
 function erp_crm_contact_on_delete( $user_id, $hard = 0) {
     $people = \WeDevs\ERP\Framework\Models\People::where( 'user_id', $user_id )->first();
 
-    if ( $people->id ) {
+    if ( !empty( $people->id ) ) {
         \WeDevs\ERP\Framework\Models\People::find( $people->id )->update( [ 'user_id' => null ] );
     }
 }

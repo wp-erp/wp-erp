@@ -1,5 +1,10 @@
 <div class="wrap erp-ac-journal-entry erp-ac-form-wrap">
-    <h2><?php _e( 'New Journal Entry', 'erp' ); ?></h2>
+
+    <?php if ( ! $journal_id ): ?>
+        <h2><?php _e( 'New Journal Entry', 'erp' ); ?></h2>
+    <?php else: ?>
+        <h2><?php _e( 'Edit Journal Entry', 'erp' ); ?></h2>
+    <?php endif ?>
 
     <form action="" method="post" class="erp-form erp-ac-transaction-form" id="erp-journal-form">
         <ul class="erp-form-fields">
@@ -190,7 +195,12 @@
         <input type="hidden" name="erp-action" value="ac-new-journal-entry">
 
         <?php wp_nonce_field( 'erp-ac-journal-entry' ); ?>
-        <?php submit_button( __( 'Add Journal Entry', 'erp' ), 'primary', 'submit_erp_ac_journal' ); ?>
+
+        <?php if ( !$journal_id ): ?>
+            <?php submit_button( __( 'Add Journal Entry', 'erp' ), 'primary', 'submit_erp_ac_journal' ); ?>
+        <?php else: ?>
+            <?php submit_button( __( 'Update Journal Entry', 'erp' ), 'primary', 'submit_erp_ac_journal' ); ?>
+        <?php endif ?>
 
     </form>
 </div>
