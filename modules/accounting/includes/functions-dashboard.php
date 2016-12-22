@@ -17,7 +17,7 @@ function erp_ac_dashboard_left_column() {
  */
 function erp_ac_dashboard_right_column() {
     erp_admin_dash_metabox( __( 'Business Expense', 'erp' ), 'erp_ac_dashboard_expense_chart' );
-    erp_admin_dash_metabox( __( 'Net Income', 'erp' ), 'erp_ac_dashboard_net_income', 'bank-balance' );
+    erp_admin_dash_metabox( __( 'Revenues', 'erp' ), 'erp_ac_dashboard_net_income', 'bank-balance' );
     erp_admin_dash_metabox( __( 'Bills you need to pay', 'erp' ), 'erp_ac_dashboard_bills_payable' );
 }
 
@@ -184,53 +184,29 @@ function erp_ac_dashboard_invoice_payable() {
  * @return void
  */
 function erp_ac_dashboard_net_income() {
-    $first = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
-    $last  = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
 
-    $incomes_args = [
-        'type'       => ['sales', 'expense'],
-        'status'     => ['in' => ['awaiting_payment', 'closed', 'partial'] ],
-        'groupby'    => 'type',
-        'start_date' => $first,
-        'end_date'   => $last,
-        'output_by'  => 'array',
-        'number'     => -1
-
-    ];
-
-    $incomes_args  = apply_filters( 'erp_ac_net_income_args', $incomes_args );
-    $transections  = erp_ac_get_all_transaction( $incomes_args );
-    $expenses      = isset( $transections['expense'] ) ? $transections['expense'] : [];
-    $sales         = isset( $transections['sales'] ) ? $transections['sales'] : [];
-    $expense_total = 0;
+    $trans         = erp_ac_get_transaction_group_by_calss_id( [3,4] );
+    $expenses      = isset( $trans[3] ) ? $trans[3] : [];
+    $incomes       = isset( $trans[4] ) ? $trans[4] : [];
     $sales_total   = 0;
+    $expense_total = 0;
 
-    foreach ( $expenses as $key => $details ) {
-
-        if ( $details->status == 'partial' ) {
-            $expense_total = $expense_total + $details->due;
-        } else {
-            $expense_total = $expense_total + $details->trans_total;
-        }
+    foreach ( $expenses as $exp ) {
+        $expense_total = $expense_total + ( $exp->debit - $exp->credit );
     }
 
-    $expense_total = apply_filters( 'erp_ac_net_expense', $expense_total, $transections );
-
-    foreach ( $sales as $key => $details ) {
-        if ( $details->status == 'partial' ) {
-            $sales_total = $sales_total + $details->due;
-        } else {
-            $sales_total = $sales_total + $details->trans_total;
-        }
+    foreach ( $incomes as $incom ) {
+        $sales_total = $sales_total + ( $incom->credit - $incom->debit );
     }
 
     $net_income = $sales_total - $expense_total;
+
     ?>
     <ul>
         <li><span class="account-title"><?php _e( 'Income', 'erp' ); ?></span> <span class="price"><a href="<?php echo erp_ac_get_sales_menu_url(); ?>"><?php echo erp_ac_get_price( $sales_total ); ?></a></span></li>
         <li><span class="account-title"><?php _e( 'Expense', 'erp' ); ?></span> <span class="price"><a href="<?php echo erp_ac_get_expense_url(); ?>"><?php echo erp_ac_get_price( $expense_total ); ?></a></span></li>
         <li class="total">
-            <span class="account-title"><?php _e( 'Net Income', 'erp' ); ?></span> <span class="price"><?php echo erp_ac_get_price( $net_income ); ?></span>
+            <span class="account-title"><?php _e( 'Revenues', 'erp' ); ?></span> <span class="price"><?php echo erp_ac_get_price( $net_income ); ?></span>
         </li>
     </ul>
     <?php
