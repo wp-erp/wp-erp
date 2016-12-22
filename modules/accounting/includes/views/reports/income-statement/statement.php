@@ -1,34 +1,34 @@
 <?php
-$start = isset( $_GET['start'] ) ? $_GET['start'] : false;
-$end   = isset( $_GET['end'] ) ? $_GET['end'] : false;
-$start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
-$end   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
-$ledgers = erp_ac_reporting_query( $start, $end );
+$end     = empty( $_GET['end'] ) ? date( 'Y-m-d', strtotime( erp_financial_end_date() ) ) : $_GET['end'];
+$ledgers = erp_ac_reporting_query( $end );
+$charts  = [];
 
 foreach ($ledgers as $ledger) {
     $charts[$ledger->class_id][$ledger->id][] = $ledger;
 }
 
 $sales_total   = erp_ac_get_sales_total_without_tax( $charts ) + erp_ac_get_sales_tax_total( $charts );
-$goods_sold    = erp_ac_get_good_sold_total_amount( $charts );
-$expense_total = erp_ac_get_expense_total_without_tax( $charts );
+$goods_sold    = erp_ac_get_good_sold_total_amount( $end );
+$expense_total = erp_ac_get_expense_total_with_tax( $charts );// + erp_ac_get_expense_tax_total( $charts );
 $expense_total = $expense_total - $goods_sold;
-$tax_total     = erp_ac_get_sales_tax_total( $charts ) + erp_ac_get_expense_tax_total( $charts );
+$tax_total     = erp_ac_get_sales_tax_total( $charts );// + erp_ac_get_expense_tax_total( $charts );
 
 ?>
 <div class="wrap erp-ac-income-satement-wrap">
 
     <h1><?php _e( 'Accounting Reports: Income Statement', 'erp' ); ?></h1>
 
-    <p class="erp-ac-report-tax-date">
-    <?php
-    $start = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_start_date() ) ) );
-    $end   = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_end_date() ) ) );
-    printf( '<i class="fa fa-calendar"></i> %1$s', erp_format_date( $end, 'F j, Y' ) );
-    ?>
-    </p>
+    <div class="erp-ac-trial-report-header-wrap">
+        <p class="erp-ac-report-tax-date">
+        <?php
+            //$start = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_start_date() ) ) );
+            //$end   = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_end_date() ) ) );
+            printf( '<i class="fa fa-calendar"></i> %1$s', erp_format_date( $end, 'F j, Y' ) );
+        ?>
+        </p>
 
-    <?php //erp_ac_report_filter_form();?>
+        <?php erp_ac_report_filter_form(false); ?>
+    </div>
 
     <div class="metabox-holder">
         <div class="postbox">
@@ -80,7 +80,3 @@ $tax_total     = erp_ac_get_sales_tax_total( $charts ) + erp_ac_get_expense_tax_
 
     </div>
 </div>
-
-
-
-

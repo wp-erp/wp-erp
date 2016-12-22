@@ -152,6 +152,17 @@ If you are unable to use any of the methods due to internet connectivity and fil
 
 == Changelog ==
 
+**v1.1.9 -> Dec 22, 2016**
+
+* [new] Can input data from older financial year (balance c/f)
+* [new] Added email validation for new customer and vendor
+* [new] Include journal tax in sales tax report
+* [tweak] Customers and vendors are searchable and limit lifted
+* [tweak] Tax receivable accounts moved to expense
+* [tweak] Date picker range enhanced
+* [fix] ERP updater is now working
+* [fix] Removed journal edit option from individual chart list table
+
 **v1.1.8 -> Dec 11, 2016**
 
 * [new] Add filter for hiding dashboard metaboxes

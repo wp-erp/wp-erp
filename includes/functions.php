@@ -341,19 +341,28 @@ function erp_format_date( $date, $format = false ) {
 /**
  * Extract dates between two date range
  *
- * @param  string  $start_date
- * @param  string  $end_date
+ * @param  string  $start_date example: 2016-12-16 00:00:00
+ * @param  string  $end_date   example: 2016-12-16 23:59:59
  *
  * @return array
  */
 function erp_extract_dates( $start_date, $end_date ) {
+    // if start date has no time set, then add 00:00:00 or 12:00 AM
+    if ( ! preg_match( '/\d{2}:\d{2}:\d{2}$/' , $start_date ) ) {
+        $start_date = $start_date . ' 00:00:00';
+    }
+
+    // if end date has no time set, then add 23:59:59 or 11:59 PM
+    if ( ! preg_match( '/\d{2}:\d{2}:\d{2}$/' , $end_date ) ) {
+        $end_date = $end_date . ' 23:59:59';
+    }
+
     $start_date = new DateTime( $start_date );
     $end_date   = new DateTime( $end_date );
-    $end_date->modify( '+1 day' ); // to get proper days in duration
     $diff = $start_date->diff( $end_date );
 
     // we got a negative date
-    if ( $diff->invert || ! $diff->days ) {
+    if ( $diff->invert ) {
         return new WP_Error( 'invalid-date', __( 'Invalid date provided', 'erp' ) );
     }
 

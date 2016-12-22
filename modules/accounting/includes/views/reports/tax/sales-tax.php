@@ -1,46 +1,50 @@
 <div class="wrap erp-ac-tax-report-wrap">
 
     <h1><?php _e( 'Sales Tax Summary', 'erp' ); ?></h1>
-    <p class="erp-ac-report-tax-date">
-    <?php
-    $start = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_start_date() ) ) );
-    $end   = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_end_date() ) ) );
-    printf( '<i class="fa fa-calendar"></i> %1$s', erp_format_date( $end, 'F j, Y' ) );
-    ?>
-    </p>
-    <?php //erp_ac_report_filter_form();?>
+    <div class="erp-ac-trial-report-header-wrap">
+        <p class="erp-ac-report-tax-date">
+        <?php
+            //$start = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_start_date() ) ) );
+            //$end   = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_end_date() ) ) );
+            printf( '<i class="fa fa-calendar"></i> %1$s', erp_format_date( $end, 'F j, Y' ) );
+        ?>
+        </p>
+
+        <?php erp_ac_report_filter_form(false); ?>
+    </div>
     <table class="wp-list-table widefat fixed striped erp-ac-tax-report-table">
         <thead>
             <tr>
                 <th><?php _e( 'Tax', 'erp' ); ?></th>
-                <th colspan="2"><?php _e( 'Tax Payable', 'erp' ); ?></th>
-                <th colspan="2"><?php _e( 'Tax Receivable', 'erp' ); ?></th>
+                <th><?php _e( 'Tax Payable', 'erp' ); ?></th>
+                <th><?php _e( 'Tax Receivable', 'erp' ); ?></th>
                 <th><?php _e( 'Net Tax', 'erp' ); ?></th>
+                <th><?php _e( 'Balance', 'erp' ); ?></th>
             </tr>
-            <tr>
-                <th>&nbsp;</th>
-                <th><?php _e( 'Transaction subtotal', 'erp' ) ?></th>
-                <th><?php _e( 'tax amount', 'erp' ) ?></th>
-                <th><?php _e( 'Transaction subtotal', 'erp' ) ?></th>
-                <th><?php _e( 'tax amount', 'erp' ) ?></th>
-                <th>&nbsp;</th>
 
-            </tr>
         </thead>
         <tbody>
 
             <?php
+            $balance = 0;
             foreach ( $taxs as $tax_id => $tax ) {
-                $net_tax =  $tax['sales']['tax_credit'] - $tax['expense']['tax_debit'];
-
+                $net_sales_tax   =  isset( $tax['sales']['amount'] ) ? $tax['sales']['amount'] : 0;
+                $net_expense_tax =  isset( $tax['expense']['amount'] ) ? $tax['expense']['amount'] : 0;
+                $tax_name        =  isset( $tax['sales']['tax_name'] ) ? $tax['sales']['tax_name'] : $tax['expense']['tax_name'];
+                $tax_rate        =  isset( $tax['sales']['rate'] ) ? $tax['sales']['rate'] : $tax['expense']['rate'];
+                $net_tax         =  $net_sales_tax + $net_expense_tax;
+                $balance         =  $balance + $net_tax;
                 ?>
                     <tr>
-                        <td><a href="<?php echo erp_ac_get_singe_tax_report_url( $tax_id ); ?>"><?php echo $tax['sales']['tax_name'] . ' (' . $tax['sales']['rate'] . '%)'; ?></a></td>
-                        <td><?php echo erp_ac_get_price( $tax['sales']['trns_subtotal'] ); ?></td>
-                        <td><?php echo erp_ac_get_price( $tax['sales']['tax_credit'] ); ?></td>
-                        <td><?php echo erp_ac_get_price( $tax['expense']['trns_subtotal'] ); ?></td>
-                        <td><?php echo erp_ac_get_price( $tax['expense']['tax_debit'] ); ?></td>
-                        <td><?php echo $net_tax < 0 ? erp_ac_get_price( $net_tax ) : erp_ac_get_price( $net_tax ); ?></td>
+                        <td>
+                            <a href="<?php echo erp_ac_get_singe_tax_report_url( $tax_id, $end ); ?>">
+                                <?php echo $tax_name . ' (' . $tax_rate . '%)'; ?>
+                            </a>
+                        </td>
+                        <td><?php echo erp_ac_get_price( $net_sales_tax ); ?></td>
+                        <td><?php echo erp_ac_get_price( $net_expense_tax ); ?></td>
+                        <td><?php echo erp_ac_get_price( $net_tax ); ?></td>
+                        <td><?php echo erp_ac_get_price( $balance ); ?></td>
 
                     </tr>
                 <?php
@@ -58,9 +62,3 @@
     </table>
 
 </div>
-
-
-
-
-
-

@@ -326,7 +326,8 @@ function erp_ac_message( $message_ke = false ) {
         'submit'        => __( 'Submit', 'erp' ),
         'redo'          => __( 'Yes, redo it!', 'erp' ),
         'yes'           => __( 'Yes, do it!', 'erp' ),
-        'no_result'     => __( 'No Result Found!', 'erp' )
+        'no_result'     => __( 'No Result Found!', 'erp' ),
+        'search'        => __( 'Search', 'erp' )
     );
 
     if ( $message_ke ) {

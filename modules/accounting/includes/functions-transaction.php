@@ -64,7 +64,7 @@ function erp_ac_get_all_transaction( $args = array() ) {
         if ( isset( $args['start_date'] ) && ! empty( $args['start_date'] ) ) {
             $transaction = $transaction->where( 'issue_date', '>=', $args['start_date'] );
         } else {
-            $transaction = $transaction->where( 'issue_date', '>=', $financial_start );
+            //$transaction = $transaction->where( 'issue_date', '>=', $financial_start );
         }
 
         if ( isset( $args['end_date'] ) && ! empty( $args['end_date'] ) ) {
@@ -918,7 +918,7 @@ function erp_ac_get_ledger_transactions( $args = [], $ledger_id = false ) {
         if ( isset( $args['start_date'] ) && ! empty( $args['start_date'] ) ) {
             $where .= " AND trans.issue_date >= '{$args['start_date']}' ";
         } else {
-            $where .= " AND trans.issue_date >= '{$financial_start}' ";
+            //$where .= " AND trans.issue_date >= '{$financial_start}' ";
         }
 
         if ( isset( $args['end_date'] ) && ! empty( $args['end_date'] ) ) {
@@ -1100,7 +1100,7 @@ function erp_ac_remove_transaction( $id ) {
  */
 function erp_ac_get_vendors() {
     $users = [];
-    $vendors = erp_get_peoples( ['type' => 'vendor', 'number' => 100 ] );
+    $vendors = erp_get_peoples( ['type' => 'vendor', 'number' => '-1' ] );
     foreach ( $vendors as $user ) {
         if ( in_array( 'vendor', $user->types ) ) {
             $users[$user->id] = empty( $user->company ) ? __( 'No Title', 'erp' ) : $user->company;

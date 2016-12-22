@@ -20,6 +20,11 @@ class Human_Resource {
      * @param \WeDevs_ERP $plugin
      */
     public function __construct( \WeDevs_ERP $plugin ) {
+        // prevent duplicate loading
+        if ( did_action( 'erp_hrm_loaded' ) ) {
+            return;
+        }
+
         $this->plugin = $plugin;
 
         // Define constants

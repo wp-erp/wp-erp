@@ -118,7 +118,7 @@
                         <?php
                         erp_html_form_input( array(
                             'name'        => 'tax_amount[]',
-                            'type'        => 'number',
+                            'type'        => 'text',
                             'placeholder' => '0.00',
                             'class'       => 'line_tax_amount',
                             'value'       => isset( $item['tax_rate'] ) ? erp_ac_get_price_for_field( ( $item['tax_rate'] * $item['line_total'] ) /100, ['symbol' => false] ) : 0,

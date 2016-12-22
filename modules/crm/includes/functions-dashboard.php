@@ -249,7 +249,7 @@ function erp_crm_dashboard_widget_latest_contact() {
     $companies = erp_get_peoples( [ 'type' => 'company', 'orderby' => 'created', 'order' => 'DESC', 'number' => 5 ] );
     ?>
 
-    <h4><?php _e( 'Contact Lists', 'erp' ); ?></h4>
+    <h4><?php _e( 'Contacts', 'erp' ); ?></h4>
 
     <?php if ( $contacts ) { ?>
 
@@ -275,7 +275,7 @@ function erp_crm_dashboard_widget_latest_contact() {
 
     <hr>
 
-    <h4><?php _e( 'Company Lists', 'erp' ); ?></h4>
+    <h4><?php _e( 'Companies', 'erp' ); ?></h4>
 
     <?php if ( $companies ) { ?>
         <ul class="erp-list erp-latest-contact-list">
