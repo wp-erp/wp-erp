@@ -490,63 +490,27 @@ function erp_ac_dashboard_bills_payable() {
  * @return void
  */
 function erp_ac_dashboard_expense_chart() {
-    $first  = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
-    $last   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
 
-    $db     = new \WeDevs\ORM\Eloquent\Database();
-
-    $expense_args = [
-        'join'       => ['journals'],
-        'start_date' => $first,
-        'end_date'   => $last,
-        'type'       => ['expense'],
-        'status'     => ['in' => ['awaiting_payment', 'closed', 'partial'] ],
-        'select'     => [ '*', $db->raw( 'MONTHNAME( issue_date ) as month' ) ],
-        'groupby'    => 'month',
-        'output_by'  => 'array',
-        'number'     => -1
-    ];
-
-    $expense_args        = apply_filters( 'erp_ac_expense_pie_chart',  $expense_args );
-    $expenses            = erp_ac_get_all_transaction( $expense_args );
-    $expense_ledger_attr = erp_ac_get_ledger_by_class_id( 3 );
-    $expense_ledgers     = wp_list_pluck( $expense_ledger_attr, 'id' );
-    $expense_tax_ledgers = erp_ac_get_tax_receivable_ledger();
-    $expense_tax_ledgers = wp_list_pluck( $expense_tax_ledgers, 'id' );
-    $labels              = [];
-
-    foreach ( $expense_ledger_attr as $expense_acc ) {
-        $labels[$expense_acc->id] = $expense_acc->name;
-    }
-
-    $expense_data = [];
-
-    foreach ( $expenses as $key => $expense ) {
-
-        foreach ( $expense as $key => $journal_val ) {
-            foreach ( $journal_val['journals'] as $key => $journal ) {
-
-                if ( ! in_array( $journal['ledger_id'], $expense_ledgers ) ) {
-                    continue;
-                }
-
-                if ( in_array( $journal['ledger_id'], $expense_tax_ledgers ) ) {
-                    continue;
-                }
-
-                $expense_data[$journal['ledger_id']][] = ($journal['debit'] - $journal['credit']) <= 0 ? 0 : ($journal['debit'] - $journal['credit']);
-            }
-        }
-    }
     $ledger_data = [];
+    $labels      = [];
+    $trans = erp_ac_get_transaction_by_calss_id( [3] );
 
-    foreach ( $expense_data as $id => $ledg_data ) {
-        if ( array_sum( $ledg_data ) <= 0 ) {
-            continue;
+    foreach ( $trans as $tran ) {
+        if ( isset( $ledger_data[$tran->ledger_id] ) ) {
+            $ledger_data[$tran->ledger_id] = $ledger_data[$tran->ledger_id] + ( $tran->debit - $tran->credit );
+        } else {
+            $ledger_data[$tran->ledger_id] = $tran->debit - $tran->credit;
         }
 
-        $ledger_data[$id] = array_sum( $ledg_data );
+        $labels[$tran->ledger_id] = $tran->ledger_name;
     }
+
+    foreach ( $ledger_data as $key => $amount ) {
+        if ( $amount < 0 ) {
+            unset( $ledger_data[$key] );
+        }
+    }
+
     $no_result = erp_ac_message('no_result');
     ?>
     <script type="text/javascript">
