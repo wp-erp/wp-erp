@@ -34,6 +34,10 @@ class Customer_Relationship {
      * @return void
      */
     public function __construct() {
+        // prevent duplicate loading
+        if ( did_action( 'erp_crm_loaded' ) ) {
+            return;
+        }
 
         // Define constants
         $this->define_constants();
