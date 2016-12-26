@@ -74,6 +74,7 @@ function erp_get_currencies() {
         'NZD' => __( 'New Zealand Dollar', 'erp' ),
         'OMR' => __( 'Omani Rial', 'erp' ),
         'IRR' => __( 'Iranian Rial', 'erp' ),
+        'PKR' => __( 'Pakistani Rupee', 'erp' ),
         'PYG' => __( 'Paraguayan Guaraní', 'erp' ),
         'PHP' => __( 'Philippine Pesos', 'erp' ),
         'PLN' => __( 'Polish Zloty', 'erp' ),
@@ -189,6 +190,7 @@ function erp_get_currency_symbol( $currency = '' ) {
         case 'ILS' : $currency_symbol = '&#8362;'; break;
         case 'OMR' : $currency_symbol = 'ر.ع.'; break;
         case 'IRR' : $currency_symbol = '﷼'; break;
+        case 'PKR' : $currency_symbol = 'Rs'; break;
         case 'PHP' : $currency_symbol = '&#8369;'; break;
         case 'PLN' : $currency_symbol = '&#122;&#322;'; break;
         case 'SEK' : $currency_symbol = '&#107;&#114;'; break;
