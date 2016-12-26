@@ -63,7 +63,7 @@ function erp_get_peoples( $args = [] ) {
 
         $wrapper_select = "SELECT people.*, ";
 
-        $sql['select'][] = "GROUP_CONCAT( t.name SEPARATOR ',') AS types";
+        $sql['select'][] = "GROUP_CONCAT( DISTINCT t.name SEPARATOR ',') AS types";
         $sql['join'][]   = "LEFT JOIN $type_rel_tb AS r ON people.id = r.people_id LEFT JOIN $types_tb AS t ON r.people_types_id = t.id";
         $sql_from_tb     = "FROM $pep_tb AS people";
         $sql_people_type = "where ( select count(*) from $types_tb
@@ -117,7 +117,6 @@ function erp_get_peoples( $args = [] ) {
                         . $sql_group_by . ' '
                         . $sql_order_by . ' '
                         . $sql_limit;
-
 
         if ( $count ) {
             // Only filtered total count of people
