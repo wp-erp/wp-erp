@@ -22,7 +22,7 @@ $taxinfo             = erp_ac_get_tax_info();
                     <?php
                         if ( $transaction->status == 'draft' ) {
                             ?>
-                            <a href="<?php echo $url; ?>" class="button button-large"><?php _e( 'Edit Invoice', 'erp' ); ?></a>
+                            <!-- <a href="<?php echo $url; ?>" class="button button-large"><?php _e( 'Edit Invoice', 'erp' ); ?></a> -->
                             <a href="#" class="button button-large erp-ac-print erp-hide-print"><i class="fa fa-print"></i>&nbsp;<?php _e( 'Print', 'accounting' ); ?></a>
                             <?php
                         } else if ( $transaction->status == 'paid' || $transaction->status == 'closed' ) {
@@ -36,7 +36,7 @@ $taxinfo             = erp_ac_get_tax_info();
                             <?php
                         } else {
                             ?>
-                            <a href="<?php echo $url; ?>" class="button button-large"><?php _e( 'Edit Invoice', 'erp' ); ?></a>
+                            <!-- <a href="<?php echo $url; ?>" class="button button-large"><?php _e( 'Edit Invoice', 'erp' ); ?></a> -->
                             <a href="#" class="button button-large erp-ac-print erp-hide-print"><i class="fa fa-print"></i>&nbsp;<?php _e( 'Print', 'accounting' ); ?></a>
                             <?php
                         }

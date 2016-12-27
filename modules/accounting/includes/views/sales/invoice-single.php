@@ -49,13 +49,13 @@ $readonly_url        = add_query_arg( [ 'query' => 'readonly_invoice', 'trans_id
                         } else if ( $transaction->status == 'partial' || $transaction->status == 'awaiting_payment' ) {
                             ?>
                             <a data-type="payment" title="hello" href="<?php echo erp_ac_get_slaes_payment_url( $transaction->id ); ?>" data-transaction_id=<?php echo $transaction->id; ?> data-due_amount=<?php echo $transaction->due; ?> data-customer_id=<?php echo intval($transaction->user_id); ?> class="button button-primary button-large erp-hide-print"><?php _e( 'Add Payment', 'erp' ); ?></a>
-                            <a href="<?php echo $url; ?>" class="button button-large"><?php _e( 'Edit Invoice', 'erp' ); ?></a>
+                            <!-- <a href="<?php echo $url; ?>" class="button button-large"><?php _e( 'Edit Invoice', 'erp' ); ?></a> -->
                             <a href="#" class="button button-large erp-ac-print erp-hide-print"><i class="fa fa-print"></i>&nbsp;<?php _e( 'Print', 'erp' ); ?></a>
                             <a class="button button-large drop-target"><i class="fa fa-cog"></i>&nbsp;<?php _e( 'More Actions', 'erp' ); ?></a>
                             <?php
                         } else {
                             ?>
-                            <a href="<?php echo $url; ?>" class="button button-large"><?php _e( 'Edit Invoice', 'erp' ); ?></a>
+                            <!-- <a href="<?php echo $url; ?>" class="button button-large"><?php _e( 'Edit Invoice', 'erp' ); ?></a> -->
                             <a href="#" class="button button-large erp-ac-print erp-hide-print"><i class="fa fa-print"></i>&nbsp;<?php _e( 'Print', 'accounting' ); ?></a>
                             <a class="button button-large drop-target"><i class="fa fa-cog"></i>&nbsp;<?php _e( 'More Actions', 'accounting' ); ?></a>
                             <?php
