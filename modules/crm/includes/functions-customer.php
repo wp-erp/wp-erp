@@ -1593,6 +1593,28 @@ function erp_crm_get_serach_key( $type = '' ) {
                 '^'  => __( 'begins with', 'erp' ),
                 '$'  => __( 'ends with', 'erp' ),
             ]
+        ],
+
+        'life_stage' => [
+            'title'     => __( 'Life Stage', 'erp' ),
+            'type'      => 'dropdown',
+            'text'      => '',
+            'condition' => [
+                ''   => __( 'is', 'erp' ),
+                '!'  => __( 'is not', 'erp' )
+            ],
+            'options'   => erp_crm_get_life_stages_dropdown()
+        ],
+
+        'source' => [
+            'title'     => __( 'Contact Source', 'erp' ),
+            'type'      => 'dropdown',
+            'text'      => '',
+            'condition' => [
+                ''   => __( 'is', 'erp' ),
+                '!'  => __( 'is not', 'erp' )
+            ],
+            'options'   => erp_crm_contact_source_dropdown()
         ]
     ];
 
@@ -1968,9 +1990,9 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
                                 $addOr = ( $j == count( $val )-1 ) ? '' : " OR ";
 
                                 if ( 'has_not' == $search_val ) {
-                                    $custom_sql['where'][] = "( $name.meta_key='$field' AND ( $name.meta_key is null OR $name.meta_key = '' ) ) $addOr";
+                                    $custom_sql['where'][] = "( $name.meta_key='$field' AND ( $name.meta_value is null OR $name.meta_value = '' ) ) $addOr";
                                 } else if ( 'if_has' == $search_val ) {
-                                    $custom_sql['where'][] = "( $name.meta_key='$field' AND ( $name.meta_key is not null AND $name.meta_key != '' ) ) $addOr";
+                                    $custom_sql['where'][] = "( $name.meta_key='$field' AND ( $name.meta_value is not null AND $name.meta_value != '' ) ) $addOr";
                                 } else {
                                     $custom_sql['where'][] = "( $name.meta_key='$field' and $name.meta_value $search_condition '$search_val' ) $addOr";
                                 }
@@ -3002,6 +3024,26 @@ function erp_crm_contact_sources() {
     );
 
     return apply_filters( 'erp_crm_contact_sources', $sources );
+}
+
+/**
+ * Get contact source dropdown
+ *
+ * @since 1.0.0
+ *
+ * @return void
+ **/
+function erp_crm_contact_source_dropdown( $selected = '' ) {
+    $sources = erp_crm_contact_sources();
+    $dropdown    = '';
+
+    if ( $sources ) {
+        foreach ( $sources as $key => $title ) {
+            $dropdown .= sprintf( "<option value='%s'%s>%s</option>\n", $key, selected( $selected, $key, false ), $title );
+        }
+    }
+
+    return $dropdown;
 }
 
 /**
