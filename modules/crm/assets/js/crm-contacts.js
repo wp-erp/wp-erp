@@ -324,6 +324,11 @@
                                 + '<select v-if="searchFields[fieldObj.filterKey].type == \'dropdown\'" class="input-select" v-model="fieldObj.filterValue">'
                                     + '{{{ searchFields[fieldObj.filterKey].options }}}'
                                 + '</select>'
+                                + '<template v-if="searchFields[fieldObj.filterKey].type == \'date_range\'">'
+                                    + '<input type="text" v-if="ifRangeConditionActive( fieldObj.filterCondition )" v-datepicker class="input-text" v-model="dateRangeFrom">'
+                                    + '<input type="text" v-else v-datepicker class="input-text" v-model="fieldObj.filterValue">'
+                                    + '<span v-if="ifRangeConditionActive( fieldObj.filterCondition )">to</span>&nbsp;<input type="text" v-if="ifRangeConditionActive( fieldObj.filterCondition )" v-datepicker class="input-text" v-model="dateRangeTo">'
+                                + '</template>'
                             + '</template>'
                         + '</div>'
                         + '<div class="filter-right">'
@@ -341,7 +346,8 @@
                         + '<template v-else>'
                             + '<div class="filter-left">'
                                 + '{{ searchFields[field.key].title }} <span style="color:#0085ba; font-style:italic; margin:0px 2px;">{{ searchFields[field.key].condition[field.condition] }}</span> '
-                                + '<span v-if="!field.title">{{ field.value }}</span>'
+                                + '<span v-if="!field.title && !ifRangeConditionActive( field.condition )">{{ field.value }}</span>'
+                                + '<span v-if="!field.title && ifRangeConditionActive( field.condition )">{{ field.value.split(",").join(" to ") }}</span>'
                                 + '<span v-else>{{ field.title }}</span>'
                             + '</div>'
                         + '</template>'
@@ -360,7 +366,9 @@
                     },
 
                     isEditable: false,
-                    searchFields: []
+                    searchFields: [],
+                    dateRangeFrom: '',
+                    dateRangeTo: '',
                 }
             },
 
@@ -409,11 +417,26 @@
                     return true;
                 },
 
+                ifRangeConditionActive: function( condition ) {
+                    if ( condition == '<>' ) {
+                        return true;
+                    }
+                    return false;
+                },
+
                 ifSelectedTextField: function( type ) {
                     return ( type == 'text' || type == 'url' || type == 'email' ) ? true : false;
                 },
 
                 applyFilter: function() {
+                    if ( this.ifRangeConditionActive( this.fieldObj.filterCondition ) ) {
+                        if ( this.dateRangeFrom == '' || this.dateRangeFrom == '' ) {
+                            return;
+                        }
+
+                        this.fieldObj.filterValue = this.dateRangeFrom + ',' + this.dateRangeTo;
+                    }
+
                     if ( ! this.fieldObj.filterKey || ( ! this.fieldObj.filterValue && this.isSomeCondition( this.fieldObj.filterCondition ) ) ) {
                         return;
                     }
@@ -438,6 +461,13 @@
                     this.isEditable = true;
                     this.fieldObj.filterKey = field.key;
                     this.fieldObj.filterCondition = this.isHasOrHasNotViaValue( field.value ) ? this.getSymbolForSomeCondition( field.value ) : field.condition;
+
+                    if ( this.ifRangeConditionActive( field.condition ) ) {
+                        var splitDate = field.value.split(',')
+                        this.dateRangeFrom = splitDate[0];
+                        this.dateRangeTo = splitDate[1];
+                    }
+
                     this.fieldObj.filterValue = this.isHasOrHasNotViaValue( field.value ) ? '' : field.value;
                     this.field.editable = true;
 
@@ -724,7 +754,7 @@
 
                 parseCondition: function( value ) {
                     var obj = {};
-                    var res = value.split(/([a-zA-Z0-9\s\-\_\+\.\:]+)/);
+                    var res = value.split(/([a-zA-Z0-9\s\-\_\+\.\,\:]+)/);
                     if ( res[0] == '' ) {
                         obj.condition = '';
                         obj.val = res[1];
@@ -737,6 +767,7 @@
                 },
 
                 renderFilterFromUrl: function() {
+
                     this.fields = this.reRenderFilterFromUrl( window.location.search );
                 }
             },

@@ -1717,6 +1717,12 @@ function erp_crm_get_save_search_regx( $values ) {  // %%sabbir
                 $result[preg_replace( '/^\^/', '', $value ) . '%'] = 'LIKE';
             } elseif ( preg_match( '/^\$/', $value ) ) {
                 $result['%' . preg_replace( '/^\$/', '', $value )] = 'LIKE';
+            } elseif ( preg_match( '/^<(?!>)/', $value ) ) {
+                $result[preg_replace( '/^<(?!>)/', '', $value )] = '<';
+            } elseif ( preg_match( '/^>(?!>)/', $value ) ) {
+                $result[preg_replace( '/^>(?!>)/', '', $value )] = '>';
+            } elseif ( preg_match( '/^<>(?!>)/', $value ) ) {
+                $result[preg_replace( '/^<>(?!>)/', '', $value )] = 'BETWEEN';
             } else {
                 $result[$value] = '=';
             }
@@ -1732,6 +1738,12 @@ function erp_crm_get_save_search_regx( $values ) {  // %%sabbir
             $result[preg_replace( '/^\^/', '', $values ) . '%'] = 'LIKE';
         } elseif ( preg_match( '/^\$/', $values ) ) {
             $result['%' . preg_replace( '/^\$/', '', $values )] = 'LIKE';
+        } elseif ( preg_match( '/^<(?!>)/', $value ) ) {
+            $result[preg_replace( '/^<(?!>)/', '', $value )] = '<';
+        } elseif ( preg_match( '/^>(?!>)/', $value ) ) {
+            $result[preg_replace( '/^>(?!>)/', '', $value )] = '>';
+        } elseif ( preg_match( '/^<>(?!>)/', $value ) ) {
+            $result[preg_replace( '/^<>(?!>)/', '', $value )] = 'BETWEEN';
         } else {
             $result[$values] = '=';
         }
