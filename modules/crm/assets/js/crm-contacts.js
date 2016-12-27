@@ -325,9 +325,14 @@
                                     + '{{{ searchFields[fieldObj.filterKey].options }}}'
                                 + '</select>'
                                 + '<template v-if="searchFields[fieldObj.filterKey].type == \'date_range\'">'
-                                    + '<input type="text" v-if="ifRangeConditionActive( fieldObj.filterCondition )" v-datepicker class="input-text" v-model="dateRangeFrom">'
+                                    + '<input type="text" v-if="ifRangeConditionActive( fieldObj.filterCondition )" v-datepicker class="input-text" v-model="rangeFrom">'
                                     + '<input type="text" v-else v-datepicker class="input-text" v-model="fieldObj.filterValue">'
-                                    + '<span v-if="ifRangeConditionActive( fieldObj.filterCondition )">to</span>&nbsp;<input type="text" v-if="ifRangeConditionActive( fieldObj.filterCondition )" v-datepicker class="input-text" v-model="dateRangeTo">'
+                                    + '<span v-if="ifRangeConditionActive( fieldObj.filterCondition )">to</span>&nbsp;<input type="text" v-if="ifRangeConditionActive( fieldObj.filterCondition )" v-datepicker class="input-text" v-model="rangeTo">'
+                                + '</template>'
+                                + '<template v-if="searchFields[fieldObj.filterKey].type == \'number_range\'">'
+                                    + '<input type="number" v-if="ifRangeConditionActive( fieldObj.filterCondition )" step="any" class="input-text" v-model="rangeFrom">'
+                                    + '<input type="number" v-else class="input-text" step="any" v-model="fieldObj.filterValue">'
+                                    + '<span v-if="ifRangeConditionActive( fieldObj.filterCondition )">to</span>&nbsp;<input type="number" v-if="ifRangeConditionActive( fieldObj.filterCondition )" step="any" class="input-text" v-model="rangeTo">'
                                 + '</template>'
                             + '</template>'
                         + '</div>'
@@ -367,8 +372,8 @@
 
                     isEditable: false,
                     searchFields: [],
-                    dateRangeFrom: '',
-                    dateRangeTo: '',
+                    rangeFrom: '',
+                    rangeTo: '',
                 }
             },
 
@@ -430,11 +435,11 @@
 
                 applyFilter: function() {
                     if ( this.ifRangeConditionActive( this.fieldObj.filterCondition ) ) {
-                        if ( this.dateRangeFrom == '' || this.dateRangeFrom == '' ) {
+                        if ( this.rangeFrom == '' || this.rangeFrom == '' ) {
                             return;
                         }
 
-                        this.fieldObj.filterValue = this.dateRangeFrom + ',' + this.dateRangeTo;
+                        this.fieldObj.filterValue = this.rangeFrom + ',' + this.rangeTo;
                     }
 
                     if ( ! this.fieldObj.filterKey || ( ! this.fieldObj.filterValue && this.isSomeCondition( this.fieldObj.filterCondition ) ) ) {
@@ -464,8 +469,8 @@
 
                     if ( this.ifRangeConditionActive( field.condition ) ) {
                         var splitDate = field.value.split(',')
-                        this.dateRangeFrom = splitDate[0];
-                        this.dateRangeTo = splitDate[1];
+                        this.rangeFrom = splitDate[0];
+                        this.rangeTo = splitDate[1];
                     }
 
                     this.fieldObj.filterValue = this.isHasOrHasNotViaValue( field.value ) ? '' : field.value;
