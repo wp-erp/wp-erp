@@ -142,7 +142,7 @@
                         :id="<?php echo $customer->id; ?>"
                         type="company_contacts"
                         add-button-txt="<?php _e( 'Assign a contact', 'erp' ) ?>"
-                        title="<?php echo sprintf( '%s\'s %s', $customer->get_full_name(), __( 'contacts', 'erp' ) ); ?>"
+                        title="<?php _e( 'Contacts', 'erp' ); ?>"
                     ></contact-company-relation>
 
                     <contact-assign-group

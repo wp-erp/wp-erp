@@ -3,5 +3,6 @@ Gruntfile.js
 composer.json
 composer.lock
 package.json
+debug.log
 plugin-deploy.sh
 vendor/composer/autoload_static.php
