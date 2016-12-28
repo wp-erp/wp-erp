@@ -131,7 +131,7 @@
                     <?php foreach ($tabs as $key => $tab) {
                         $active_class = ( $key == $active_tab ) ? ' nav-tab-active' : '';
                         ?>
-                        <a href="<?php echo add_query_arg( array( 'tab' => $key ), erp_hr_url_single_employee( $employee->id ) ); ?>" class="nav-tab<?php echo $active_class; ?>"><?php echo $tab['title'] ?></a>
+                        <a href="<?php echo erp_hr_employee_tab_url( $key, $employee->id ); ?>" class="nav-tab<?php echo $active_class; ?>"><?php echo $tab['title'] ?></a>
                     <?php } ?>
                 </h2>
 
