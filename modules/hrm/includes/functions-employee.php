@@ -876,15 +876,17 @@ function erp_hr_url_single_employee( $employee_id, $tab = null ) {
 }
 
 /**
- * Individual employee url
+ * Individual employee tab url
  *
- * @param  int  employee id
+ * @param string $tab
+ * @param int employee id
  *
- * @return string  url of the employee details page
+ * @since  1.1.10
+ *
+ * @return string
  */
 function erp_hr_employee_tab_url( $tab, $employee_id ) {
     $emp_url = erp_hr_url_single_employee( intval( $employee_id ) );
-
     $tab_url = add_query_arg( array( 'tab' => $tab ), $emp_url );
 
     return apply_filters( 'erp_hr_employee_tab_url', $tab_url, $tab, $employee_id );
