@@ -118,7 +118,7 @@ function erp_get_peoples( $args = [] ) {
                         . $sql_order_by . ' '
                         . $sql_limit;
 
-        sql_error_log( $final_query );
+       // sql_error_log( $final_query );
 
         if ( $count ) {
             // Only filtered total count of people

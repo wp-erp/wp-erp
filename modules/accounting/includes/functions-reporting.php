@@ -149,11 +149,15 @@ function erp_ac_get_closing_income_expense( $financial_end = false ) {
     $tbl_journals    = $wpdb->prefix . 'erp_ac_journals';
     $tbl_transaction = $wpdb->prefix . 'erp_ac_transactions';
 
+    $financial_start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
     if ( $financial_end ) {
         $financial_end = date( 'Y-m-d', strtotime( $financial_end ) );
 
+        if ( $financial_end >= $financial_start ) {
+            $financial_end = $financial_start;
+        }
     } else {
-        $financial_end = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+        $financial_end = $financial_start;
     }
 
     $sql = $wpdb->prepare(
