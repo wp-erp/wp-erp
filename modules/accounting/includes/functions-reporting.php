@@ -149,11 +149,15 @@ function erp_ac_get_closing_income_expense( $financial_end = false ) {
     $tbl_journals    = $wpdb->prefix . 'erp_ac_journals';
     $tbl_transaction = $wpdb->prefix . 'erp_ac_transactions';
 
+    $financial_start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
     if ( $financial_end ) {
         $financial_end = date( 'Y-m-d', strtotime( $financial_end ) );
 
+        if ( $financial_end >= $financial_start ) {
+            $financial_end = $financial_start;
+        }
     } else {
-        $financial_end = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+        $financial_end = $financial_start;
     }
 
     $sql = $wpdb->prepare(
@@ -245,6 +249,106 @@ function erp_ac_reporting_query( $financial_end = false ) {
 
     return $wpdb->get_results( $sql );
 
+}
+
+/**
+ * Get transaction by class id
+ *
+ * @param  array  $class_id
+ * @param  date   $financial_start
+ * @param  date   $financial_end
+ *
+ * @since  1.1.9
+ *
+ * @return array
+ */
+function erp_ac_get_transaction_by_calss_id( $class_id = [], $financial_start = false, $financial_end = false ) {
+    global $wpdb;
+
+    $cache_key       = 'erp-ac-transaction-by-calss-id-' . md5( serialize( $class_id ) ) . $financial_start . $financial_end;
+    $items           = wp_cache_get( $cache_key, 'erp' );
+
+    if ( false === $items ) {
+        $tbl_ledger      = $wpdb->prefix . 'erp_ac_ledger';
+        $tbl_type        = $wpdb->prefix . 'erp_ac_chart_types';
+        $tbl_class       = $wpdb->prefix . 'erp_ac_chart_classes';
+        $tbl_journals    = $wpdb->prefix . 'erp_ac_journals';
+        $tbl_transaction = $wpdb->prefix . 'erp_ac_transactions';
+
+        $financial_start = $financial_start ? date( 'Y-m-d', strtotime( $financial_start ) ) : date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+        $financial_end   = $financial_end ? date( 'Y-m-d', strtotime( $financial_end ) ) : date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+
+        if ( count( $class_id ) ) {
+            $class_id = implode( "','", $class_id );
+            $where    = " AND class.id IN ( '$class_id' ) ";
+        } else {
+            $where = '';
+        }
+
+        $sql = $wpdb->prepare(
+            "SELECT trans.id as transaction_id, trans.issue_date, trans.status as trans_status, trans.type as trans_type, jour.debit, jour.credit, ledger.id as ledger_id,
+            ledger.code, ledger.name as ledger_name, ledger.type_id, type.name as type_name, type.class_id,
+            class.name as class_name
+            FROM $tbl_class as class
+            LEFT JOIN $tbl_type as type ON type.class_id = class.id
+            LEFT JOIN $tbl_ledger as ledger ON ledger.type_id = type.id
+            LEFT JOIN $tbl_journals as jour ON jour.ledger_id = ledger.id
+            LEFT JOIN $tbl_transaction as trans ON trans.id = jour.transaction_id
+            WHERE ( trans.status IS NULL OR trans.status NOT IN ( 'draft', 'void', 'awaiting_approval' ) )
+            AND ( trans.issue_date >= '%s' AND trans.issue_date <= '%s' )
+            $where", $financial_start, $financial_end
+        );
+
+        $items = $wpdb->get_results( $sql );
+        wp_cache_set( $cache_key, $items, 'erp' );
+    }
+
+    return $items;
+}
+
+/**
+ * Get transaction group by class id
+ *
+ * @param  array  $class_id
+ * @param  date   $financial_start
+ * @param  date   $financial_end
+ *
+ * @since  1.1.9
+ *
+ * @return array
+ */
+function erp_ac_get_transaction_group_by_calss_id( $class_id = [], $financial_start = false, $financial_end = false ) {
+    $trans = erp_ac_get_transaction_by_calss_id( $class_id, $financial_start = false, $financial_end = false );
+    $group = [];
+
+    foreach ( $trans as $tran ) {
+        $group[$tran->class_id][] = $tran;
+    }
+
+    return $group;
+}
+
+/**
+ * Get transaction group by month from class id
+ *
+ * @param  array  $class_id
+ * @param  date   $financial_start
+ * @param  date   $financial_end
+ *
+ * @since  1.1.9
+ *
+ * @return array
+ */
+function erp_ac_get_transaction_group_by_month_from_calss_id( $class_id = [], $financial_start = false, $financial_end = false ) {
+    $trans = erp_ac_get_transaction_by_calss_id( $class_id, $financial_start = false, $financial_end = false );
+    $group = [];
+
+    foreach ( $trans as $tran ) {
+        $date = date( 'm', strtotime( $tran->issue_date ) );
+        $group[$tran->class_id][$date][] = $tran;
+    }
+
+    return $group;
 }
 
 /**
