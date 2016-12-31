@@ -340,178 +340,89 @@
 
         }
 
-        // Vue.component( 'search-multi-select', {
-        //     props: {
-        //         options: String,
-        //         datafields: Array
-        //     },
+        Vue.component( 'search-multi-select', {
 
-        //     template:
-        //         '<select class="erp-crm-search-segment-select2" multiple="multiple" data-placeholder="Select.." v-model="datamodel">'
-        //             + '{{{ options }}}'
-        //         + '</select>',
+            props: [ 'action', 'selected' ],
 
-        //     data: function(){
-        //         return {
-        //             datamodel: []
-        //         }
-        //     },
+            template:
+                '<select class="erp-segment-search-select2" multiple="multiple" width:"100%">'
+                + '</select>',
 
-        //     methods: {
-        //         init: function() {
-        //             var self = this;
+            data: function() {
+                return {
+                    options : []
+                }
+            },
 
-        //             $(this.$el).select2().select2('destroy').off('change');
+            methods: {
+                init: function() {
+                    var self = this;
 
-        //             $(this.$el).select2();
+                    $( 'select.erp-segment-search-select2' ).on('change', function() {
+                        if ( $(this).val() ) {
+                            var value = $(this).val();
+                        } else {
+                            var value = _.pluck( self.options, 'id' );
+                        }
+                        self.$dispatch('select2-data-change', value, self );
+                    });
 
-        //             $(this.$el).on( 'change', function() {
-        //                 var newVal = $(this).val();
-        //                 self.$dispatch( 'changeFieldObject', newVal );
-        //             });
+                    $( 'select.erp-segment-search-select2' ).trigger('change');
 
-        //             // $(this.$el).val( this.selectedValue );
+                    $( 'select.erp-segment-search-select2' ).select2({
+                        initSelection: function (element, callback) {
+                            callback( self.options );
+                        },
+                        width: 'resolve',
+                        allowClear: true,
+                        placeholder: 'Search..',
+                        minimumInputLength: 3,
+                        ajax: {
+                            url: wpErpCrm.ajaxurl,
+                            dataType: 'json',
+                            delay: 250,
+                            escapeMarkup: function( m ) {
+                                return m;
+                            },
+                            data: function (params) {
+                                return {
+                                    q: params.term, // search term
+                                    _wpnonce: wpErpCrm.nonce,
+                                    action: self.action
+                                };
+                            },
+                            processResults: function ( data, params ) {
+                                var terms = [];
 
-        //             $(this.$el).trigger('change');
-        //         }
-        //     },
+                                if ( data) {
+                                    $.each( data.data, function( id, text ) {
+                                        terms.push({
+                                            id: id,
+                                            text: text
+                                        });
+                                    });
+                                }
 
-        //     watch: {
-        //         datafields: {
-        //             deep: true,
-        //             immediate: true,
-        //             handler: function (newFields) {
-        //                 console.log( newFields );
-        //                 // $(this.$el).select2().select2('destroy').off('change');
-        //                 // $(this.$el).val( newFields ).trigger('change');
-        //                 $(this.$el).select2( 'val', newFields );
-        //                 $(this.$el).trigger('change');
-        //                 // $(this.$el);
-        //                 // this.$dispatch( 'changeFieldObject', newFields );
-        //                 // this.init();
-        //             }
-        //         },
+                                if ( terms.length ) {
+                                    return { results: terms };
+                                } else {
+                                    return { results: '' };
+                                }
+                            },
+                            cache: true
+                        }
+                    });
+                }
+            },
 
-        //         // datafields: {
-        //         //     deep: true,
-        //         //     immediate: true,
-        //         //     handler: function (newFields) {
-        //         //         this.datamodel = newFields.value.split(',')
-        //         //     }
-        //         // }
-        //     },
+            ready: function(){
+                if ( this.selected ) {
+                    this.options = this.selected;
+                }
 
-        //     ready: function() {
-        //         this.init();
-        //     }
-        // } );
-
-        // Vue.component('search-multi-select', {
-        //     template: '<select></select>',
-        //     props: ['data', 'placeholder', 'width'],
-
-        //     ready: function () {
-        //         this.init();
-        //     },
-
-        //     methods: {
-        //         init: function () {
-        //             var self = this;
-
-
-        //             // set placeholder if we provide placeholder via attribute.
-        //             // we can also provide placeholder with data object
-        //             if (this.placeholder) {
-        //                 this.data.placeholder = this.placeholder;
-        //             }
-
-        //             // first reset any previous binding
-        //             $(this.$el).select2().select2('destroy').off('change');
-        //             this.$el.options.length = 0;
-
-        //             // select2 instance
-        //             $(this.$el).select2({
-        //                 placeholder: this.data.placeholder ? this.data.placeholder : '',
-        //                 multiple: this.data.multiple,
-        //                 data: this.data.options,
-        //                 minimumResultsForSearch: this.data.hideSearch ? -1 : 0,
-        //             });
-
-        //             console.log( self.data );
-
-        //             // on change the selected option, we will dispatch some data
-        //             // and this component object itself to the parent
-        //             $(this.$el).on('change', function () {
-        //                 var newVal = $(this).val(),
-        //                     name = $(this).attr('name'),
-        //                     id = $(this).attr('id'),
-        //                     classNames = $(this).attr('class');
-
-        //                 // console.log( self.data );
-
-        //                 if ( self.data.hasOwnProperty('selected') && newVal !== self.data.selected && self.data.selected != 'undefined') {
-        //                     self.$set('data.selected', $(this).val());
-
-        //                     var selectData = {
-        //                         selected: newVal,
-        //                         name: name,
-        //                         id: id,
-        //                         classNames: classNames
-        //                     };
-
-        //                     self.$dispatch('sabbir-vselect-change', selectData, self);
-        //                 }
-        //             });
-
-        //             if (this.data.hasOwnProperty('options')) {
-        //                 this.isSelectedInOptions();
-        //             }
-
-        //             $(this.$el).val(this.data.selected);
-        //             $(this.$el).trigger('change');
-        //         },
-
-        //         isSelectedInOptions: function () {
-        //             var i = 0,
-        //                 contains = false;
-
-        //             for (i = 0; i < this.data.options.length; i++) {
-        //                 if (this.data.selected === this.data.options[i].id) {
-        //                     contains = true;
-        //                     break;
-        //                 }
-        //             }
-
-        //             if (!contains) {
-        //                 this.data.selected = null;
-        //             }
-        //         }
-        //     },
-
-        //     watch: {
-        //         data: {
-        //             deep: true,
-        //             handler: function (newValue, oldValue) {
-        //                 // console.log( oldValue );
-        //                 // console.log( newValue );
-        //                 // this.$set('data', newValue);
-        //                 this.data = newValue;
-        //                     this.init();
-
-        //                 // if ( newValue && !oldValue ) {
-        //                 //     console.log( newValue );
-        //                 //     t
-        //                 //     this.$set('data', newData);
-        //                 //     // re-initialize
-        //                 //     this.init();
-        //                 //     // select.val(newValue);
-        //                 //     // select.trigger('change');
-        //                 // }
-
-        //             }
-        //         }
-        //     }
-        // });
+                this.init()
+            }
+        });
 
 
         Vue.component( 'filter-item', {
@@ -521,7 +432,7 @@
                 '<div class="filter-item">'
                     + '<div class="filter-content" v-if="field.editable">'
                         + '<div class="filter-left">'
-                            + '<select id="filter-key" v-model="fieldObj.filterKey" @change="triggerChangeFieldKey">'
+                            + '<select id="filter-key" v-model="fieldObj.filterKey">'
                                 + '<option value="">--Select a field--</option>'
                                 + '<option v-for="( searchKey, searchField ) in searchFields" value="{{ searchKey }}">{{ searchField.title }}</option>'
                             + '</select>'
@@ -535,10 +446,10 @@
                                 + '<select v-if="searchFields[fieldObj.filterKey].type == \'dropdown\'" class="input-select" v-model="fieldObj.filterValue">'
                                     + '{{{ searchFields[fieldObj.filterKey].options }}}'
                                 + '</select>'
-                                // + '<search-multi-select v-if="searchFields[fieldObj.filterKey].type == \'dropdown_mulitple_select2\'" :data="selectData"></search-multi-select>'
-                                + '<select v-if="ifDropDownMultipleSelect( searchFields[fieldObj.filterKey].type )" class="erp-crm-search-segment-select2" multiple="multiple" data-placeholder="Select.." v-model="fieldObj.filterValue">'
-                                    + '{{{ searchFields[fieldObj.filterKey].options }}}'
-                                + '</select>'
+                                + '<search-multi-select v-if="searchFields[fieldObj.filterKey].type == \'dropdown_mulitple_select2\'" :action="searchFields[fieldObj.filterKey].action" :selected="select2Ajaxselected"></search-multi-select>'
+                                // + '<select v-if="ifDropDownMultipleSelect( searchFields[fieldObj.filterKey].type )" class="erp-crm-search-segment-select2" multiple="multiple" data-placeholder="Select.." v-model="fieldObj.filterValue">'
+                                //     + '{{{ searchFields[fieldObj.filterKey].options }}}'
+                                // + '</select>'
                                 + '<template v-if="searchFields[fieldObj.filterKey].type == \'date_range\'">'
                                     + '<input type="text" v-if="ifRangeConditionActive( fieldObj.filterCondition )" v-datepicker class="input-text" v-model="rangeFrom">'
                                     + '<input type="text" v-else v-datepicker class="input-text" v-model="fieldObj.filterValue">'
@@ -589,7 +500,8 @@
                     searchFields: [],
                     rangeFrom: '',
                     rangeTo: '',
-                    selectData: {}
+                    selectData: {},
+                    select2Ajaxselected: []
                 }
             },
 
@@ -600,67 +512,12 @@
             },
 
             events: {
-                'sabbir-vselect-change' : function( newVal ) {
-                    this.fieldObj.filterValue = newVal.selected;
-                }
+                'select2-data-change' : function( newVal ) {
+                    this.fieldObj.filterValue = newVal;
+                },
             },
 
-            // watch: {
-            //     'fieldObj.filterKey': function (filterKey) {
-            //         if ( this.searchFields[filterKey].type == 'dropdown_mulitple_select2' ) {
-            //             var options = [];
-
-            //             for ( var key in this.searchFields[filterKey].options ) {
-            //                if ( this.searchFields[filterKey].options.hasOwnProperty(key) ) {
-            //                   options.push({
-            //                     id: key,
-            //                     text: this.searchFields[filterKey].options[key]
-            //                   });
-            //                }
-            //             }
-
-            //             // console.log( this.fieldObj.filterValue );
-            //             this.selectData = {
-            //                 options: options,
-            //                 multiple: true,
-            //             }
-
-            //             // Vue.set( this.selectData, 'selected', this.fieldObj.filterValue )
-            //             // this.selectData.selected = this.fieldObj.filterValue
-
-            //             // console.log( this.selectData );
-            //         }
-            //     }
-            // },
-
             methods: {
-
-                triggerChangeFieldKey: function() {
-                    if ( this.searchFields[this.fieldObj.filterKey].type == 'dropdown_mulitple_select2' ) {
-                        var options = [];
-
-                        for ( var key in this.searchFields[this.fieldObj.filterKey].options ) {
-                           if ( this.searchFields[this.fieldObj.filterKey].options.hasOwnProperty(key) ) {
-                              options.push({
-                                id: key,
-                                text: this.searchFields[this.fieldObj.filterKey].options[key]
-                              });
-                           }
-                        }
-
-                        // console.log( this.fieldObj.filterValue );
-                        this.selectData = {
-                            options: options,
-                            multiple: true,
-                            selected: ['wc-pending']
-                        }
-
-                        // Vue.set( this.selectData, 'selected', this.fieldObj.filterValue )
-                        // this.selectData.selected = this.fieldObj.filterValue
-
-                        // console.log( this.selectData );
-                    }
-                },
 
                 ifDropDownMultipleSelect: function(type) {
                     return type == 'dropdown_mulitple_select2';
@@ -744,6 +601,7 @@
                 },
 
                 editFilterItem: function( field ) {
+                    var self = this;
                     if ( this.editableMode ) {
                         return;
                     }
@@ -760,30 +618,29 @@
 
                     this.fieldObj.filterValue = this.isHasOrHasNotViaValue( field.value ) ? '' : field.value.split(',');
 
-                    // if ( this.searchFields[field.key].type == 'dropdown_mulitple_select2' ) {
-                    //     var options = [];
+                    if ( this.searchFields[this.fieldObj.filterKey].type == 'dropdown_mulitple_select2' ) {
+                        var data = {
+                            action: this.searchFields[this.fieldObj.filterKey].editaction,
+                            selected: this.fieldObj.filterValue,
+                            _wpnonce: wpErpCrm.nonce
+                        }
 
-                    //     for ( var key in this.searchFields[field.key].options ) {
-                    //        if ( this.searchFields[field.key].options.hasOwnProperty(key) ) {
-                    //           options.push({
-                    //             id: key,
-                    //             text: this.searchFields[field.key].options[key]
-                    //           });
-                    //        }
-                    //     }
+                        $.post( wpErpCrm.ajaxurl, data, function( resp ) {
+                            if ( resp.success ) {
+                                self.select2Ajaxselected = resp.data;
+                                self.field.editable = true;
+                                self.fieldObj.filterValue = field.value.split(',');
+                                self.$dispatch( 'isEditableMode', true, self.fieldObj, self.searchFields );
+                            } else {
+                                alert( resp.data );
+                            };
+                        });
+                    } else {
+                        this.field.editable = true;
+                        this.$dispatch( 'isEditableMode', true, this.fieldObj, this.searchFields );
+                    }
 
-                    //     this.selectData = {
-                    //         options: options,
-                    //         multiple: true,
-                    //         selected: ['wc-pending']
-                    //     }
-                    // }
-
-                    // this.fieldObj.filterValue = ;
-
-                    this.field.editable = true;
-                    this.$dispatch( 'isEditableMode', true );
-                }
+                },
             }
         });
 
@@ -1124,7 +981,7 @@
                     this.editableMode = false;
                 },
 
-                isEditableMode: function( isEditable ) {
+                isEditableMode: function( isEditable, fieldObj, searchFields ) {
                     this.editableMode = isEditable;
                 }
             },
@@ -1145,14 +1002,24 @@
                                     component.fields[i][j].title = select.find( '[value="' + component.fields[i][j].value + '"]' ).html();
                                 }
 
-                                if ( field && 'dropdown_mulitple_select2' === field.type && field.options ) {
-                                    var select = $( '<select>' + field.options + '</select>' );
+                                if ( field && 'dropdown_mulitple_select2' === field.type ) {
+                                    var dropdownTextVal = '';
 
-                                    var dropdownTextVal = component.fields[i][j].value.split(',').map( function( arr ) {
-                                        return select.find( '[value="' + arr + '"]' ).html()
+                                    var data = {
+                                        action: field.editaction,
+                                        selected: component.fields[i][j].value.split(','),
+                                        _wpnonce: wpErpCrm.nonce
+                                    }
+
+                                    $.post( wpErpCrm.ajaxurl, data, function( resp ) {
+                                        if ( resp.success ) {
+                                            dropdownTextVal = _.pluck( resp.data, 'text' );
+                                            // component.fields[i][j].title = dropdownTextVal.join(',');
+                                        } else {
+                                            alert( resp.data );
+                                        };
                                     });
 
-                                    component.fields[i][j].title = dropdownTextVal.join(',');
                                 }
                             });
                         }
