@@ -161,8 +161,7 @@ function erp_ac_get_transaction_count( $args, $user_id = 0 ) {
     $status    = isset( $args['status'] ) ? $args['status'] : false;
     $cache_key = 'erp-ac-' . $args['type'] . '-' . $user_id . '-count';
     $count     = wp_cache_get( $cache_key, 'erp' );
-    $start = isset( $args['start_date'] ) ? $args['start_date'] :  date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
-    $end = isset( $args['end_date'] ) ? $args['end_date'] : date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+    $end       = isset( $args['end_date'] ) ? $args['end_date'] : date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
 
     if ( false === $count ) {
         $trans = new WeDevs\ERP\Accounting\Model\Transaction();
@@ -175,7 +174,10 @@ function erp_ac_get_transaction_count( $args, $user_id = 0 ) {
             $trans = $trans->where( 'status', '=', $args['status'] );
         }
 
-        $trans = $trans->where( 'issue_date', '>=', $start );
+        if ( isset( $args['start_date'] ) ) {
+            $trans = $trans->where( 'issue_date', '>=', $args['start_date'] );
+        }
+
         $trans = $trans->where( 'issue_date', '<=', $end );
         $count = $trans->type( $args['type'] )->count();
     }
