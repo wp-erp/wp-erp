@@ -69,7 +69,7 @@
             } else {
                 ?>
                 <tr class="alternate">
-                    <td colspan="4"><?php _e( 'No performance reviews found!', 'erp' ); ?></td>
+                    <td colspan="8"><?php _e( 'No performance reviews found!', 'erp' ); ?></td>
                 </tr>
             <?php } ?>
         </tbody>
@@ -175,7 +175,7 @@
             } else {
                 ?>
                 <tr class="alternate">
-                    <td colspan="4"><?php _e( 'No performance goals found!', 'erp' ); ?></td>
+                    <td colspan="7"><?php _e( 'No performance goals found!', 'erp' ); ?></td>
                 </tr>
             <?php } ?>
         </tbody>

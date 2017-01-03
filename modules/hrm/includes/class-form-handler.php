@@ -712,6 +712,7 @@ class Form_Handler {
      * @return void
      */
     public function employee_permission() {
+
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'wp-erp-hr-employee-permission-nonce' ) ) {
             return;
         }
