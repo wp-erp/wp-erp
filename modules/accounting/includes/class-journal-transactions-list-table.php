@@ -185,7 +185,7 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
         $sortable              = $this->get_sortable_columns();
         $this->_column_headers = array( $columns, $hidden, $sortable );
 
-        $per_page              = 25;
+        $per_page              = 2;
         $current_page          = $this->get_pagenum();
         $offset                = ( $current_page -1 ) * $per_page;
         $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '2';
@@ -229,12 +229,9 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
 
         if ( $ledger_id ) {
             $this->ledger_id = true;
-            // $this->chart_group = erp_ac_chart_grouping();
-            // var_dump( $this->chart_group ); die();
-            // $individual_ledger = \WeDevs\ERP\Accounting\Model\Ledger::select('type_id')->find( $ledger_id );
-            // $this->type_id     = isset( $individual_ledger->type_id ) ? $individual_ledger->type_id : false;
-
             $this->items = erp_ac_get_ledger_transactions( $args, $ledger_id );
+            $total_count = $this->items['count'];
+            unset( $this->items['count'] );
 
         } else {
             $args['type'] = $this->type;
@@ -242,7 +239,7 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
         }
 
         $this->set_pagination_args( array(
-            'total_items' => $ledger_id ? 0 : $this->get_transaction_count( $args ),
+            'total_items' => $ledger_id ? $total_count : $this->get_transaction_count( $args ),
             'per_page'    => $per_page
         ) );
     }
