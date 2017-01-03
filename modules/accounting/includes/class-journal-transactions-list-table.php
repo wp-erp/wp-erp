@@ -29,7 +29,6 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
 
     }
 
-
     /**
      * Get the column names
      *
@@ -38,7 +37,7 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
     function get_columns() {
         $ledger_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : false;
         $columns = array(
-            'cb'         => '<input type="checkbox" />',
+            //'cb'         => '<input type="checkbox" />',
             'issue_date' => __( 'Date', 'erp' ),
             'ref'        => __( 'Ref', 'erp' ),
             'summary'    => __( 'Summary', 'erp' ),
@@ -66,6 +65,10 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
      * @return string
      */
     function column_issue_date( $item ) {
+        if ( empty( $item->id ) ) {
+            return $item->issue_date;
+        }
+
         $url   = admin_url( 'admin.php?page='.$this->slug.'&action=new&journal_id=' . $item->id );
 
         if ( $this->slug == 'erp-accounting-journal' ) {
@@ -87,7 +90,7 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
      * @return string
      */
     function column_debit( $item ) {
-        return empty( $item->debit ) ? '&#8212' : erp_ac_get_price( $item->debit, ['symbol' => false] );
+        return erp_ac_get_price( $item->debit, ['symbol' => false] );
     }
 
     /**
@@ -100,7 +103,7 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
      * @return string
      */
     function column_credit( $item ) {
-        return empty( $item->credit ) ? '&#8212' : erp_ac_get_price( $item->credit, ['symbol' => false] );
+        return erp_ac_get_price( $item->credit, ['symbol' => false] );
     }
 
     /**
@@ -112,7 +115,6 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
      */
     function column_balance( $item ) {
         $balance = 0;
-
         $balance =  ( $item->debit + $this->account_prev_balance ) - $item->credit;
         $this->account_prev_balance = $balance;
 
@@ -147,12 +149,12 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
                 'placeholder' => __( 'Search for Customer', 'erp' ),
             ]);
 
-            // erp_html_form_input([
-            //     'name'        => 'start_date',
-            //     'class'       => 'erp-date-picker-from',
-            //     'value'       => isset( $_REQUEST['start_date'] ) && !empty( $_REQUEST['start_date'] ) ? $_REQUEST['start_date'] : '',
-            //     'placeholder' => __( 'Start Date', 'erp' )
-            // ]);
+            erp_html_form_input([
+                'name'        => 'start_date',
+                'class'       => 'erp-date-picker-from',
+                'value'       => isset( $_REQUEST['start_date'] ) && !empty( $_REQUEST['start_date'] ) ? $_REQUEST['start_date'] : '',
+                'placeholder' => __( 'Start Date', 'erp' )
+            ]);
 
             erp_html_form_input([
                 'name'        => 'end_date',
@@ -185,7 +187,7 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
         $sortable              = $this->get_sortable_columns();
         $this->_column_headers = array( $columns, $hidden, $sortable );
 
-        $per_page              = 2;
+        $per_page              = 25;
         $current_page          = $this->get_pagenum();
         $offset                = ( $current_page -1 ) * $per_page;
         $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '2';
@@ -232,6 +234,19 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
             $this->items = erp_ac_get_ledger_transactions( $args, $ledger_id );
             $total_count = $this->items['count'];
             unset( $this->items['count'] );
+            $start_date = empty( $args['start_date'] ) ? date( 'Y-m-d', strtotime( erp_financial_start_date() ) ) : $args['start_date'];
+
+            $closing = erp_ac_get_closing_ledger( $ledger_id, $start_date );
+            $balance = $closing->debit - $closing->credit;
+
+            $closing_balance             = new \stdClass();
+            $closing_balance->issue_date = sprintf( '<strong>%s</strong>',__( 'Closing Balnace', 'erp' ) );
+            $closing_balance->ref        = '&#8212';
+            $closing_balance->debit      = floatval( $closing->debit );
+            $closing_balance->credit     = floatval( $closing->credit );
+
+
+           array_unshift( $this->items, $closing_balance );
 
         } else {
             $args['type'] = $this->type;

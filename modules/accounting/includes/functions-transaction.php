@@ -161,7 +161,6 @@ function erp_ac_get_transaction_count( $args, $user_id = 0 ) {
     $status    = isset( $args['status'] ) ? $args['status'] : false;
     $cache_key = 'erp-ac-' . $args['type'] . '-' . $user_id . '-count';
     $count     = wp_cache_get( $cache_key, 'erp' );
-    //$start     = isset( $args['start_date'] ) ? $args['start_date'] :  date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
     $end       = isset( $args['end_date'] ) ? $args['end_date'] : date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
 
     if ( false === $count ) {
@@ -175,7 +174,10 @@ function erp_ac_get_transaction_count( $args, $user_id = 0 ) {
             $trans = $trans->where( 'status', '=', $args['status'] );
         }
 
-        //$trans = $trans->where( 'issue_date', '>=', $start );
+        if ( isset( $args['start_date'] ) ) {
+            $trans = $trans->where( 'issue_date', '>=', $args['start_date'] );
+        }
+
         $trans = $trans->where( 'issue_date', '<=', $end );
         $count = $trans->type( $args['type'] )->count();
     }
@@ -897,7 +899,7 @@ function erp_ac_get_ledger_transactions( $args = [], $ledger_id = false ) {
         'number'     => 20,
         'offset'     => 0,
         'orderby'    => 'issue_date',
-        'order'      => 'DESC',
+        'order'      => 'ASC',
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -948,6 +950,44 @@ function erp_ac_get_ledger_transactions( $args = [], $ledger_id = false ) {
     }
 
     return $items;
+}
+
+/**
+ * Get closing balance for individul ledger
+ *
+ * @since  1.1.10
+ *
+ * @param  string $close_date
+ *
+ * @return array
+ */
+function erp_ac_get_closing_ledger( $ledger_id, $close_date = false ) {
+    global $wpdb;
+
+    if ( empty( $close_date ) ) {
+        $close_date   = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+    } else {
+        $close_date   = date( 'Y-m-d', strtotime( $close_date ) );
+    }
+
+    $cache_key = 'erp-ac-ledger-closing-' . $close_date . $ledger_id ;
+    $items     = wp_cache_get( $cache_key, 'erp' );
+
+    if ( false === $items ) {
+        $where = sprintf( 'WHERE jour.ledger_id = %d', absint( $ledger_id ) );
+        $where .= " AND trans.issue_date < '{$close_date}' AND trans.status NOT IN ('draft', 'void', 'awaiting_approval')";
+
+        $sql = "SELECT sum( jour.debit ) as debit, sum( jour.credit ) as credit FROM {$wpdb->prefix}erp_ac_journals as jour
+            LEFT JOIN {$wpdb->prefix}erp_ac_transactions as trans ON trans.id = jour.transaction_id
+            $where
+            ORDER BY 'issue_date' ASC";
+
+        $items = $wpdb->get_results( $sql );
+
+        wp_cache_set( $cache_key, $items, 'erp' );
+    }
+
+    return reset( $items );
 }
 
 function erp_ac_toltip_per_transaction_ledgers( $transaction ) {
