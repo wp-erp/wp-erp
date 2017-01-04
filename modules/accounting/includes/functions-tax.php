@@ -388,7 +388,7 @@ function erp_ac_new_tax_account( $postdata, $tax_id ) {
     $receivable_account = array(
         'system'  => 1,
         'name'    => $postdata['tax_name'] . ' Receivable',
-        'type_id' => 1,
+        'type_id' => 12,
         'tax'     => $tax_id,
         'code'    => $receitvable_code
     );
