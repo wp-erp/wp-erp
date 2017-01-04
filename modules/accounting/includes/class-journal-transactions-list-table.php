@@ -69,11 +69,14 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
             return $item->issue_date;
         }
 
-        $url   = admin_url( 'admin.php?page='.$this->slug.'&action=new&journal_id=' . $item->id );
+        if ( $this->slug == 'erp-accounting-charts' ) {
+            return sprintf( '<a data-transaction_id="%d" class="erp-ac-transaction-report" href="#">%s</a>', $item->id, erp_format_date( $item->issue_date ) );
+        }
 
         if ( $this->slug == 'erp-accounting-journal' ) {
             $actions['edit'] = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Edit', 'erp' ) );
         } else {
+            $url   = admin_url( 'admin.php?page='.$this->slug.'&action=new&journal_id=' . $item->id );
             $actions = [];
         }
 
@@ -90,6 +93,9 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
      * @return string
      */
     function column_debit( $item ) {
+        if ( isset( $item->is_opening ) && $item->is_opening ) {
+            return '&#8212';
+        }
         return erp_ac_get_price( $item->debit, ['symbol' => false] );
     }
 
@@ -103,6 +109,9 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
      * @return string
      */
     function column_credit( $item ) {
+        if ( isset( $item->is_opening ) && $item->is_opening ) {
+            return '&#8212';
+        }
         return erp_ac_get_price( $item->credit, ['symbol' => false] );
     }
 
@@ -140,6 +149,9 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
      * @return void
      */
     public function extra_tablenav( $which ) {
+        $financial_start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+        $financial_end   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+
         if ( 'top' == $which ) {
             echo '<div class="alignleft actions">';
             erp_html_form_input([
@@ -152,22 +164,22 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
             erp_html_form_input([
                 'name'        => 'start_date',
                 'class'       => 'erp-date-picker-from',
-                'value'       => isset( $_REQUEST['start_date'] ) && !empty( $_REQUEST['start_date'] ) ? $_REQUEST['start_date'] : '',
+                'value'       => isset( $_REQUEST['start_date'] ) && !empty( $_REQUEST['start_date'] ) ? $_REQUEST['start_date'] : $financial_start,
                 'placeholder' => __( 'Start Date', 'erp' )
             ]);
 
             erp_html_form_input([
                 'name'        => 'end_date',
                 'class'       => 'erp-date-picker-to',
-                'value'       => isset( $_REQUEST['end_date'] ) && !empty( $_REQUEST['end_date'] ) ? $_REQUEST['end_date'] : '',
+                'value'       => isset( $_REQUEST['end_date'] ) && !empty( $_REQUEST['end_date'] ) ? $_REQUEST['end_date'] : $financial_end,
                 'placeholder' => __( 'End Date', 'erp' )
             ]);
 
-            erp_html_form_input([
-                'name'        => 'ref',
-                'value'       => isset( $_REQUEST['ref'] ) && ! empty( $_REQUEST['ref'] ) ? $_REQUEST['ref'] : '',
-                'placeholder' => __( 'Ref No.', 'erp' )
-            ]);
+            // erp_html_form_input([
+            //     'name'        => 'ref',
+            //     'value'       => isset( $_REQUEST['ref'] ) && ! empty( $_REQUEST['ref'] ) ? $_REQUEST['ref'] : '',
+            //     'placeholder' => __( 'Ref No.', 'erp' )
+            // ]);
 
             submit_button( __( 'Filter', 'erp' ), 'button', 'submit_filter_sales', false );
 
@@ -189,7 +201,7 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
 
         $per_page              = 25;
         $current_page          = $this->get_pagenum();
-        $offset                = ( $current_page -1 ) * $per_page;
+        $offset                = ( $current_page - 1 ) * $per_page;
         $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '2';
 
         // only ncessary because we have sample data
@@ -236,17 +248,17 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
             unset( $this->items['count'] );
             $start_date = empty( $args['start_date'] ) ? date( 'Y-m-d', strtotime( erp_financial_start_date() ) ) : $args['start_date'];
 
-            $closing = erp_ac_get_closing_ledger( $ledger_id, $start_date );
-            $balance = $closing->debit - $closing->credit;
+            $closing    = erp_ac_get_opening_ledger( $ledger_id, $start_date );
+            $pagination = erp_ac_get_ledger_opening_pagination( $offset, $ledger_id, $args );
 
             $closing_balance             = new \stdClass();
-            $closing_balance->issue_date = sprintf( '<strong>%s</strong>',__( 'Closing Balnace', 'erp' ) );
+            $closing_balance->issue_date = sprintf( '<strong>%s</strong>',__( 'Opening Balnace', 'erp' ) );
             $closing_balance->ref        = '&#8212';
-            $closing_balance->debit      = floatval( $closing->debit );
-            $closing_balance->credit     = floatval( $closing->credit );
+            $closing_balance->debit      = floatval( $closing->debit + $pagination['debit'] );
+            $closing_balance->credit     = floatval( $closing->credit + $pagination['credit'] );
+            $closing_balance->is_opening = true;
 
-
-           array_unshift( $this->items, $closing_balance );
+            array_unshift( $this->items, $closing_balance );
 
         } else {
             $args['type'] = $this->type;

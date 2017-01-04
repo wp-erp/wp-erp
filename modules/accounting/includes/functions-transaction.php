@@ -920,7 +920,7 @@ function erp_ac_get_ledger_transactions( $args = [], $ledger_id = false ) {
         if ( isset( $args['start_date'] ) && ! empty( $args['start_date'] ) ) {
             $where .= " AND trans.issue_date >= '{$args['start_date']}' ";
         } else {
-            //$where .= " AND trans.issue_date >= '{$financial_start}' ";
+            $where .= " AND trans.issue_date >= '{$financial_start}' ";
         }
 
         if ( isset( $args['end_date'] ) && ! empty( $args['end_date'] ) ) {
@@ -961,7 +961,7 @@ function erp_ac_get_ledger_transactions( $args = [], $ledger_id = false ) {
  *
  * @return array
  */
-function erp_ac_get_closing_ledger( $ledger_id, $close_date = false ) {
+function erp_ac_get_opening_ledger( $ledger_id, $close_date = false ) {
     global $wpdb;
 
     if ( empty( $close_date ) ) {
@@ -988,6 +988,34 @@ function erp_ac_get_closing_ledger( $ledger_id, $close_date = false ) {
     }
 
     return reset( $items );
+}
+
+/**
+ * Get individual ledger opening balance for pagination
+ *
+ * @since   1.1.10
+ *
+ * @param  int $current_page
+ * @param  int $ledger_id
+ * @param  array $args
+ *
+ * @return array
+ */
+function erp_ac_get_ledger_opening_pagination( $current_page, $ledger_id, $args = []  ) {
+
+    $args['offset'] = 0;
+    $args['number'] = $current_page;
+
+    $transaction = erp_ac_get_ledger_transactions( $args, $ledger_id );
+    unset( $transaction['count'] );
+
+    $debit       = array_sum( wp_list_pluck( $transaction, 'debit' ) );
+    $credit      = array_sum( wp_list_pluck( $transaction, 'credit' ) );
+
+    return [
+        'debit'  => $debit,
+        'credit' => $credit
+    ];
 }
 
 function erp_ac_toltip_per_transaction_ledgers( $transaction ) {
@@ -1113,7 +1141,7 @@ function erp_ac_update_transaction( $id, $args ) {
 }
 
 /**
- * Remove transaction. Only for draft and pending
+ * Remove transaction.
  *
  * @param  int $id
  *
