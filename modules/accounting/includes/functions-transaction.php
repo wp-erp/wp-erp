@@ -995,16 +995,16 @@ function erp_ac_get_opening_ledger( $ledger_id, $close_date = false ) {
  *
  * @since   1.1.10
  *
- * @param  int $current_page
+ * @param  int $offset
  * @param  int $ledger_id
  * @param  array $args
  *
  * @return array
  */
-function erp_ac_get_ledger_opening_pagination( $current_page, $ledger_id, $args = []  ) {
+function erp_ac_get_ledger_opening_pagination( $offset, $ledger_id, $args = []  ) {
 
     $args['offset'] = 0;
-    $args['number'] = $current_page;
+    $args['number'] = $offset;
 
     $transaction = erp_ac_get_ledger_transactions( $args, $ledger_id );
     unset( $transaction['count'] );

@@ -126,8 +126,8 @@ function erp_ac_get_opening_income_expense( $financial_end = false ) {
         LEFT JOIN $tbl_transaction as trans ON trans.id = jour.transaction_id
         WHERE class.id IN ( 3, 4 )
         AND ( trans.status IS NULL OR trans.status NOT IN ( 'draft', 'void', 'awaiting_approval' ) )
-        AND ( trans.issue_date >= '%s' AND trans.issue_date <= '%s' )
-        GROUP BY ledger.id", $financial_start, $financial_end
+        AND ( trans.issue_date <= '%s' )
+        GROUP BY ledger.id", $financial_end
     );
 
     return $wpdb->get_results( $sql );

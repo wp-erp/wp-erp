@@ -19,6 +19,7 @@ class Transaction_List_Table extends \WP_List_Table {
             'plural'   => 'transactions',
             'ajax'     => false
         ) );
+
     }
 
     function get_table_classes() {
