@@ -224,7 +224,7 @@ function erp_get_currency_symbol( $currency = '' ) {
 function erp_get_js_template( $file_path, $id ) {
     if ( file_exists( $file_path ) ) {
         echo '<script type="text/html" id="tmpl-' . $id . '">' . "\n";
-        include_once $file_path;
+        include_once apply_filters( 'erp_crm_js_template_file_path', $file_path, $id );
         echo "\n" . '</script>' . "\n";
     }
 }
