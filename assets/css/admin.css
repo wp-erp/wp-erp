@@ -405,6 +405,14 @@
   vertical-align: middle;
   margin-right: 5px;
 }
+.erp-crm-customer #erp-contact-advance-search-segment .erp-advance-search-filters .erp-advance-search-or-wrapper .filter-item .filter-content .select2-container {
+  width: auto !important;
+  min-width: 270px !important;
+}
+.erp-crm-customer #erp-contact-advance-search-segment .erp-advance-search-filters .erp-advance-search-or-wrapper .filter-item .filter-content .select2-container--default .select2-selection--multiple {
+  border: 1px solid #ddd;
+  height: 19px;
+}
 .erp-crm-customer #erp-contact-advance-search-segment .erp-advance-search-filters .erp-advance-search-or-wrapper .filter-item .filter-content .filter-left {
   padding: 4px 10px;
   float: left;
