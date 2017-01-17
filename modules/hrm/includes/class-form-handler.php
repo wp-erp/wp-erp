@@ -187,7 +187,7 @@ class Form_Handler {
 
                     if ( isset( $_GET['request_id'] ) && !empty( $_GET['request_id'] ) ) {
                         foreach ( $_GET['request_id'] as $key => $request_id ) {
-                            erp_hr_leave_request_update_status( $request_id, 3 );
+                            \WeDevs\ERP\HRM\Models\Leave_request::find( $request_id )->delete();
                         }
                     }
 
@@ -634,13 +634,16 @@ class Form_Handler {
             return;
         }
 
-        // @TODO: Permission check
-        $request_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
+        if ( empty( $_GET['id'] ) ) {
+            return;
+        }
+
+        $request_id = absint( $_GET['id'] );
         $status     = null;
 
         switch ( $action ) {
             case 'delete':
-                $status = 3;
+                \WeDevs\ERP\HRM\Models\Leave_request::find( $_GET['id'] )->delete();
                 break;
 
             case 'reject':
@@ -658,14 +661,14 @@ class Form_Handler {
 
         if ( null !== $status ) {
             erp_hr_leave_request_update_status( $request_id, $status );
-
-            // redirect the user back
-            $redirect_to = remove_query_arg( array('status'), admin_url( 'admin.php?page=erp-leave' ) );
-            $redirect_to = add_query_arg( array( 'status' => $status ), $redirect_to );
-
-            wp_redirect( $redirect_to );
-            exit;
         }
+
+        // redirect the user back
+        $redirect_to = remove_query_arg( array('status'), admin_url( 'admin.php?page=erp-leave' ) );
+        $redirect_to = add_query_arg( array( 'status' => $status ), $redirect_to );
+
+        wp_redirect( $redirect_to );
+        exit;
     }
 
     /**
@@ -709,6 +712,7 @@ class Form_Handler {
      * @return void
      */
     public function employee_permission() {
+
         if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'wp-erp-hr-employee-permission-nonce' ) ) {
             return;
         }

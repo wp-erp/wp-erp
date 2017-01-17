@@ -33,7 +33,17 @@ class Updates {
         '1.1.6' => 'updates/update-1.1.6.php',
         '1.1.7' => 'updates/update-1.1.7.php',
         '1.1.8' => 'updates/update-1.1.8.php',
+        '1.1.9' => 'updates/update-1.1.9.php',
     ];
+
+    /**
+     * Current active erp modules
+     *
+     * @since 1.1.9
+     *
+     * @var array
+     */
+    private $active_modules = [];
 
     /**
      * Binding all events
@@ -129,6 +139,8 @@ class Updates {
 
         $installed_version = get_option( 'wp_erp_version' );
 
+        $this->enable_all_erp_modules();
+
         foreach ( self::$updates as $version => $path ) {
             if ( version_compare( $installed_version, $version, '<' ) ) {
                 include $path;
@@ -136,8 +148,41 @@ class Updates {
             }
         }
 
+        $this->enable_active_erp_modules();
+
         $location = remove_query_arg( ['wperp_do_update'], $_SERVER['REQUEST_URI'] );
         wp_redirect( $location );
         exit();
+    }
+
+    /**
+     * Enable all erp modules before run the updaters
+     *
+     * @since 1.1.9
+     *
+     * @return void
+     */
+    private function enable_all_erp_modules() {
+        // Let's remember the active modules.
+        $this->active_modules = wperp()->modules->get_active_modules();
+
+        $all_modules = wperp()->modules->get_modules();
+
+        update_option( 'erp_modules', $all_modules );
+
+        wperp()->load_module();
+    }
+
+    /**
+     * Enable modules that were active before running the updater
+     *
+     * @since 1.1.9
+     *
+     * @return void
+     */
+    private function enable_active_erp_modules() {
+        update_option( 'erp_modules', $this->active_modules );
+
+        wperp()->load_module();
     }
 }

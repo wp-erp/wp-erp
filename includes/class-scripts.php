@@ -132,7 +132,8 @@ class Scripts {
      */
     public function enqueue_scripts() {
         $screen = get_current_screen();
-        $hook = str_replace( sanitize_title( __( 'HR Management', 'erp' ) ) , 'hr-management', $screen->base );
+        $screen_base = isset( $screen->base ) ? $screen->base : false;
+        $hook = str_replace( sanitize_title( __( 'HR Management', 'erp' ) ) , 'hr-management', $screen_base );
 
         wp_enqueue_script( 'erp-select2' );
         wp_enqueue_script( 'erp-popup' );

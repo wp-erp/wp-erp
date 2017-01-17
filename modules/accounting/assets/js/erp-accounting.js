@@ -8,6 +8,8 @@
             this.incrementField();
             this.select2AddMoreContent();
             this.initFields();
+            //Select2 ajax search
+            this.initSearchCustomerVendor();
             $('.erp-color-picker').wpColorPicker();
 
             // journal entry
@@ -84,6 +86,49 @@
             $( '.erp-accounting' ).on( 'click', '.erp-accounting-trash', this.transaction.trash );
             $( '.erp-accounting' ).on( 'click', '.erp-accounting-void', this.transaction.void );
             $( '.erp-accounting' ).on( 'click', '.erp-accounting-redo', this.transaction.redo );
+        },
+
+        initSearchCustomerVendor: function() {
+            $( 'select#erp-ac-select-user-for-assign-contact' ).select2({
+                allowClear: true,
+                placeholder: ERP_AC.message.search,
+                minimumInputLength: 3,
+                ajax: {
+                    url: ERP_AC.ajaxurl,
+                    dataType: 'json',
+                    delay: 250,
+                    escapeMarkup: function( m ) {
+                        return m;
+                    },
+                    data: function (params) {
+                        return {
+                            q: params.term, // search term
+                            type: $(this).data('type'),
+                            _wpnonce: ERP_AC.nonce,
+                            action: 'erp-search-ac-user'
+                        };
+                    },
+                    processResults: function ( data, params ) {
+                        var terms = [];
+
+                        if ( data) {
+                            $.each( data.data, function( id, text ) {
+                                terms.push({
+                                    id: id,
+                                    text: text
+                                });
+                            });
+                        }
+
+                        if ( terms.length ) {
+                            return { results: terms };
+                        } else {
+                            return { results: '' };
+                        }
+                    },
+                    cache: true
+                }
+            });
         },
 
         transaction: {
@@ -1148,7 +1193,7 @@
 
             delete_action: function( self ) {
 
-                if ( confirm( wpErpCrm.delConfirmCustomer ) ) {
+                if ( confirm( ERP_AC.message.delete ) ) {
                     wp.ajax.send( 'erp-ac-customer-delete', {
                         data: {
                             '_wpnonce': ERP_AC.nonce,
@@ -1181,7 +1226,7 @@
 
                 var self = $(this);
 
-                if ( confirm( wpErpCrm.confirm ) ) {
+                if ( confirm( ERP_AC.message.confirm ) ) {
                     wp.ajax.send( 'erp-ac-customer-restore', {
                         data: {
                             '_wpnonce': ERP_AC.nonce,
@@ -1581,6 +1626,7 @@
                             line_tax =  parseFloat( tax_info.rate );
 
                         tax_amount = ( parseFloat( price ) * parseFloat( line_tax ) ) / 100;
+
                     }
 
                     var prev_tax = isNaN( total_tax[tax_id] ) ? parseFloat('0.00') : total_tax[tax_id];
@@ -1593,7 +1639,6 @@
                     row.find('input.line_tax_amount').val( ERP_Accounting.numFormating( tax_amount ) );
                     row.find('input.line_tax_rate').val( ERP_Accounting.numFormating( line_tax ) );
 
-                    // console.log(qty, line_price, discount);
                 });
 
                 var total_tax_amout = parseFloat( 0.00 );
@@ -1618,7 +1663,6 @@
             },
 
             taxDropdown: function() {
-
                 var table = $('.erp-ac-transaction-form').find('.erp-ac-transaction-form-table'),
                     taxs = table.find('.erp-ac-tax-dropdown'),
                     taxs_id = [];

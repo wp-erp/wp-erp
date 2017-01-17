@@ -1,9 +1,10 @@
 <?php
-$start = isset( $_GET['start'] ) ? $_GET['start'] : false;
-$end   = isset( $_GET['end'] ) ? $_GET['end'] : false;
-$start = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
-$end   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
-$ledgers = erp_ac_reporting_query( false, $end );
+$end     = empty( $_GET['end'] ) ? date( 'Y-m-d', strtotime( erp_financial_end_date() ) ) : $_GET['end'];
+$ledgers = erp_ac_reporting_query( $end );
+$clos_inc_exp_balance = erp_ac_get_closing_income_expense( $end );
+
+$closing_balance = ( $clos_inc_exp_balance->credit > 0 ) ? $clos_inc_exp_balance->credit : -$clos_inc_exp_balance->debit;
+
 $charts = [];
 
 foreach ($ledgers as $ledger) {
@@ -15,10 +16,10 @@ $liabilities = isset( $charts[2] ) ? $charts[2] : [];
 $equities    = isset( $charts[5] ) ? $charts[5] : [];
 
 $sales_total   = erp_ac_get_sales_total_without_tax( $charts ) + erp_ac_get_sales_tax_total( $charts );
-$goods_sold    = erp_ac_get_good_sold_total_amount( $charts );
-$expense_total = erp_ac_get_expense_total_without_tax( $charts );
+$goods_sold    = erp_ac_get_good_sold_total_amount( $end );
+$expense_total = erp_ac_get_expense_total_with_tax( $charts );// + erp_ac_get_expense_tax_total( $charts );
 $expense_total = $expense_total - $goods_sold;
-$tax_total     = erp_ac_get_sales_tax_total( $charts ) + erp_ac_get_expense_tax_total( $charts );
+$tax_total     = erp_ac_get_sales_tax_total( $charts );// + erp_ac_get_expense_tax_total( $charts );
 $gross         = $sales_total - $goods_sold;
 $operating     = $gross - $expense_total;
 $net_income    = $operating - $tax_total;
@@ -27,14 +28,17 @@ $net_income    = $operating - $tax_total;
 
 <div class="warp erp-ac-balance-sheet-wrap">
     <h1><?php _e( 'Accounting Reports: Balance Sheet', 'erp' ); ?></h1>
-    <p class="erp-ac-report-tax-date">
+    <div class="erp-ac-trial-report-header-wrap">
+        <!-- <p class="erp-ac-report-tax-date"> -->
         <?php
-        $start = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_start_date() ) ) );
-        $end   = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_end_date() ) ) );
-        printf( '<i class="fa fa-calendar"></i> %1$s', erp_format_date( $end, 'F j, Y' ) );
+            //$start = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_start_date() ) ) );
+            //$end   = erp_format_date( date( 'Y-m-d', strtotime( erp_financial_end_date() ) ) );
+           // printf( '<i class="fa fa-calendar"></i> %1$s', erp_format_date( $end, 'F j, Y' ) );
         ?>
-        <?php //erp_ac_report_filter_form(false); ?>
-    </p>
+        <!-- </p> -->
+
+        <?php erp_ac_report_filter_form(false); ?>
+    </div>
 
     <div class="metabox-holder">
 
@@ -180,11 +184,17 @@ $net_income    = $operating - $tax_total;
                                 <?php
                             }
 
+                            $liabilitie_total_balance = $liabilitie_total_balance + $closing_balance;
+
                         ?>
 
                         <tr>
                             <td><?php _e( 'Net Income', 'erp' ) ?></td>
                             <td><?php echo erp_ac_get_price( $net_income, [ 'symbol' => false ] ); ?></td>
+                        </tr>
+                        <tr>
+                            <td><?php _e( 'Balance', 'erp' ) ?></td>
+                            <td><?php echo erp_ac_get_price( $closing_balance, [ 'symbol' => false ] ); ?></td>
                         </tr>
                     </tbody>
                 </table>

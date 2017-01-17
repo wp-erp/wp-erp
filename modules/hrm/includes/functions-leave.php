@@ -1294,7 +1294,7 @@ function erp_hr_apply_policy_schedule() {
         $marital       = isset( $employee_data['personal']['marital_status'] ) ? $employee_data['personal']['marital_status'] : '';
         $hire_date     = isset( $employee_data['work']['hiring_date'] ) ? $employee_data['work']['hiring_date'] : '';
         $current_time  = current_time( 'mysql' );
-        $daydiff       = count( erp_extract_dates( $hire_date, $current_time ) ) - 1;
+        $daydiff       = count( erp_extract_dates( $hire_date, $current_time ) );
 
         foreach ( $policies as $key => $policy ) {
             if ( $policy['activate'] == 1 ) {

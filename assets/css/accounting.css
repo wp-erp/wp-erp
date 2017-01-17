@@ -167,7 +167,8 @@ table.erp-ac-transaction-table td:first-child {
 }
 table.erp-ac-transaction-table .line-total,
 table.erp-ac-transaction-table .sub-total,
-table.erp-ac-transaction-table .price-total {
+table.erp-ac-transaction-table .price-total,
+table.erp-ac-transaction-table .erp-ac-tax-total {
   padding: 3px 5px;
   margin: 0;
 }
@@ -259,6 +260,9 @@ table.vendor-list-table th.column-customer img {
   border-collapse: collapse;
   border-spacing: 0;
 }
+.invoice-preview-wrap .table * {
+  word-wrap: break-word;
+}
 .invoice-preview-wrap .table td,
 .invoice-preview-wrap .table th {
   vertical-align: middle;
@@ -266,7 +270,7 @@ table.vendor-list-table th.column-customer img {
 }
 .invoice-preview-wrap .table td.product-name,
 .invoice-preview-wrap .table th.product-name {
-  width: 30%;
+  width: 20%;
 }
 .invoice-preview-wrap .table.info-table th,
 .invoice-preview-wrap .table.info-table td {

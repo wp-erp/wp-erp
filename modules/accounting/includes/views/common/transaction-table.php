@@ -89,7 +89,7 @@
             <span class="erp-ac-tax-text"></span>
         </th>
         <th class="col-amount">
-            <input type="text" name="tax_total" data-tax_id="" class="erp-ac-tax-total sub-total" readonly value="">
+            <input type="text" name="tax_total" data-tax_id="" class="erp-ac-tax-total" readonly value="">
         </th>
         <th>&nbsp;</th>
     </tr>

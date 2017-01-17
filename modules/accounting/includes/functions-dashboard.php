@@ -17,13 +17,20 @@ function erp_ac_dashboard_left_column() {
  */
 function erp_ac_dashboard_right_column() {
     erp_admin_dash_metabox( __( 'Business Expense', 'erp' ), 'erp_ac_dashboard_expense_chart' );
-    erp_admin_dash_metabox( __( 'Net Income', 'erp' ), 'erp_ac_dashboard_net_income', 'bank-balance' );
+    erp_admin_dash_metabox( __( 'Revenues', 'erp' ), 'erp_ac_dashboard_net_income', 'bank-balance' );
     erp_admin_dash_metabox( __( 'Bills you need to pay', 'erp' ), 'erp_ac_dashboard_bills_payable' );
 }
 
+/**
+ * Dashboard cash and bank
+ *
+ * @since  1.0
+ *
+ * @return void
+ */
 function erp_ac_dashboard_banks() {
     $bank_journals = erp_ac_get_bank_journals();
-    $transactions = erp_ac_get_all_transaction([
+    $transactions  = erp_ac_get_all_transaction([
         'type'   => ['expense', 'sales', 'journal', 'transfer'],
         'status' => array( 'not_in' => array( 'draft', 'void', 'awaiting_approval' ) ),
         'number' => -1
@@ -54,7 +61,7 @@ function erp_ac_dashboard_banks() {
 
     $total   = 0;
     $symbole = erp_ac_get_currency_symbol();
-//echo '<pre>'; print_r( $bank_journals ); echo '</pre>'; die();
+
     ?>
     <ul>
         <?php foreach ( $bank_journals as $id => $journal ) {
@@ -81,6 +88,13 @@ function erp_ac_dashboard_banks() {
     <?php
 }
 
+/**
+ * Dashboard invoice payable
+ *
+ * @since  1.0
+ *
+ * @return void
+ */
 function erp_ac_dashboard_invoice_payable() {
     $first = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
     $last  = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
@@ -162,128 +176,82 @@ function erp_ac_dashboard_invoice_payable() {
     <?php
 }
 
+/**
+ * Dashboard net income
+ *
+ * @since  1.0
+ *
+ * @return void
+ */
 function erp_ac_dashboard_net_income() {
-    $first = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
-    $last  = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
 
-    $incomes_args = [
-        'type'       => ['sales', 'expense'],
-        'status'     => ['in' => ['awaiting_payment', 'closed', 'partial'] ],
-        'groupby'    => 'type',
-        'start_date' => $first,
-        'end_date'   => $last,
-        'output_by'  => 'array',
-        'number'     => -1
-
-    ];
-
-    $incomes_args  = apply_filters( 'erp_ac_net_income_args', $incomes_args );
-    $transections  = erp_ac_get_all_transaction( $incomes_args );
-    $expenses      = isset( $transections['expense'] ) ? $transections['expense'] : [];
-    $sales         = isset( $transections['sales'] ) ? $transections['sales'] : [];
-    $expense_total = 0;
+    $trans         = erp_ac_get_transaction_group_by_calss_id( [3,4] );
+    $expenses      = isset( $trans[3] ) ? $trans[3] : [];
+    $incomes       = isset( $trans[4] ) ? $trans[4] : [];
     $sales_total   = 0;
+    $expense_total = 0;
 
-    foreach ( $expenses as $key => $details ) {
-
-        if ( $details->status == 'partial' ) {
-            $expense_total = $expense_total + $details->due;
-        } else {
-            $expense_total = $expense_total + $details->trans_total;
-        }
+    foreach ( $expenses as $exp ) {
+        $expense_total = $expense_total + ( $exp->debit - $exp->credit );
     }
 
-    $expense_total = apply_filters( 'erp_ac_net_expense', $expense_total, $transections );
-
-    foreach ( $sales as $key => $details ) {
-        if ( $details->status == 'partial' ) {
-            $sales_total = $sales_total + $details->due;
-        } else {
-            $sales_total = $sales_total + $details->trans_total;
-        }
+    foreach ( $incomes as $incom ) {
+        $sales_total = $sales_total + ( $incom->credit - $incom->debit );
     }
 
     $net_income = $sales_total - $expense_total;
+
     ?>
     <ul>
         <li><span class="account-title"><?php _e( 'Income', 'erp' ); ?></span> <span class="price"><a href="<?php echo erp_ac_get_sales_menu_url(); ?>"><?php echo erp_ac_get_price( $sales_total ); ?></a></span></li>
         <li><span class="account-title"><?php _e( 'Expense', 'erp' ); ?></span> <span class="price"><a href="<?php echo erp_ac_get_expense_url(); ?>"><?php echo erp_ac_get_price( $expense_total ); ?></a></span></li>
         <li class="total">
-            <span class="account-title"><?php _e( 'Net Income', 'erp' ); ?></span> <span class="price"><?php echo erp_ac_get_price( $net_income ); ?></span>
+            <span class="account-title"><?php _e( 'Revenues', 'erp' ); ?></span> <span class="price"><?php echo erp_ac_get_price( $net_income ); ?></span>
         </li>
     </ul>
     <?php
 }
 
+/**
+ * Dashboard income expense bar chart
+ *
+ * @since  1.0
+ *
+ * @return void
+ */
 function erp_ac_dashboard_income_expense() {
 
-    $db    = new \WeDevs\ORM\Eloquent\Database();
-    $first = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
-    $last  = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+    $class_id = [3,4];
 
-    $incomes_args = [
-        'start_date' => $first,
-        'end_date'   => $last,
-        'type'       => ['sales'],
-        'status'     => ['in' => ['awaiting_payment', 'closed', 'partial'] ],
-        'select'     => [ '*', $db->raw( 'MONTHNAME( issue_date ) as month' ) ],
-        'groupby'    => 'month',
-        'output_by'  => 'array',
-        'number'     => -1
-    ];
-
-    $incomes_args = apply_filters( 'erp_ac_dashboard_income_args', $incomes_args );
-
-    $expense_args = [
-        'start_date' => $first,
-        'end_date'   => $last,
-        'type'       => ['expense'],
-        'status'     => ['in' => ['awaiting_payment', 'closed', 'partial'] ],
-        'select'     => [ '*', $db->raw( 'MONTHNAME( issue_date ) as month' ) ],
-        'groupby'    => 'month',
-        'output_by'  => 'array',
-        'number'     => -1
-    ];
-
-    $expense_args = apply_filters( 'erp_ac_dashboard_expense_args', $expense_args );
-
+    $trans        = erp_ac_get_transaction_group_by_month_from_calss_id( $class_id );
     $current_year = date( 'Y', strtotime( current_time( 'mysql' ) ) );
     $prev_year    = date( 'Y', strtotime( '-1 year', strtotime( current_time( 'mysql' ) ) ) );
-
-    $incomes  = erp_ac_get_all_transaction( $incomes_args );
-    $expenses = erp_ac_get_all_transaction( $expense_args );
-
+    $expenses     = isset( $trans[3] ) ? $trans[3] : [];
+    $incomes      = isset( $trans[4] ) ? $trans[4] : [];
     $expense_data = [];
     $income_data  = [];
+    $total        = 0;
 
-    foreach ( $expenses as $key => $expense ) {
-        $ex_month = date_parse( $key );
-        $date_ex  = strtotime( date( 'Y-m-d', strtotime(  $current_year .'-'. $ex_month['month']  ) ) ) * 1000;
-        $total    = 0;
-        foreach ( $expense as $key => $details ) {
 
-            if ( $details['status'] == 'partial' ) {
-                $total = $total + $details->due;
-            } else {
-                $total = $total + $details->trans_total;
-            }
+    foreach ( $expenses as $month => $expense ) {
+        $date_ex = strtotime( date( 'Y-' .$month ) ) * 1000;
+        $total   = 0;
+
+        foreach ( $expense as $exp ) {
+            $total   = $total + ( $exp->debit - $exp->credit );
         }
 
         $expense_data[$date_ex] = $total;
     }
 
-    foreach ( $incomes as $key => $income ) {
-        $in_month = date_parse( $key );
-        $date_in  = strtotime( date( 'Y-m-d', strtotime(  $current_year .'-'. $in_month['month']  ) ) ) * 1000;
+    $total = 0;
+
+    foreach ( $incomes as $month => $income ) {
+        $date_in  = strtotime( date( 'Y-' . $month ) ) * 1000;
         $total    = 0;
 
-        foreach ( $income as $key => $details ) {
-
-            if ( $details['status'] == 'partial' ) {
-                $total = $total + $details['due'];
-            } else {
-                $total = $total + $details['trans_total'];
-            }
+        foreach ( $income as $incom ) {
+            $total = $total + ( $incom->credit - $incom->debit );
         }
 
         $income_data[$date_in] = $total;
@@ -402,7 +370,13 @@ function erp_ac_dashboard_income_expense() {
     <?php
 }
 
-
+/**
+ * Dashboard bill you need to pay
+ *
+ * @since  1.0
+ *
+ * @return void
+ */
 function erp_ac_dashboard_bills_payable() {
     $first = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
     $last  = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
@@ -484,64 +458,35 @@ function erp_ac_dashboard_bills_payable() {
     <?php
 }
 
+/**
+ * Dashboard expense pie chart
+ *
+ * @since  1.0
+ *
+ * @return void
+ */
 function erp_ac_dashboard_expense_chart() {
-    $first  = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
-    $last   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
 
-    $db     = new \WeDevs\ORM\Eloquent\Database();
-
-    $expense_args = [
-        'join'       => ['journals'],
-        'start_date' => $first,
-        'end_date'   => $last,
-        'type'       => ['expense'],
-        'status'     => ['in' => ['awaiting_payment', 'closed', 'partial'] ],
-        'select'     => [ '*', $db->raw( 'MONTHNAME( issue_date ) as month' ) ],
-        'groupby'    => 'month',
-        'output_by'  => 'array',
-        'number'     => -1
-    ];
-
-    $expense_args        = apply_filters( 'erp_ac_expense_pie_chart',  $expense_args );
-    $expenses            = erp_ac_get_all_transaction( $expense_args );
-    $expense_ledger_attr = erp_ac_get_ledger_by_class_id( 3 );
-    $expense_ledgers     = wp_list_pluck( $expense_ledger_attr, 'id' );
-    $expense_tax_ledgers = erp_ac_get_tax_receivable_ledger();
-    $expense_tax_ledgers = wp_list_pluck( $expense_tax_ledgers, 'id' );
-    $labels              = [];
-
-    foreach ( $expense_ledger_attr as $expense_acc ) {
-        $labels[$expense_acc->id] = $expense_acc->name;
-    }
-
-    $expense_data = [];
-
-    foreach ( $expenses as $key => $expense ) {
-
-        foreach ( $expense as $key => $journal_val ) {
-            foreach ( $journal_val['journals'] as $key => $journal ) {
-
-                if ( ! in_array( $journal['ledger_id'], $expense_ledgers ) ) {
-                    continue;
-                }
-
-                if ( in_array( $journal['ledger_id'], $expense_tax_ledgers ) ) {
-                    continue;
-                }
-
-                $expense_data[$journal['ledger_id']][] = ($journal['debit'] - $journal['credit']) <= 0 ? 0 : ($journal['debit'] - $journal['credit']);
-            }
-        }
-    }
     $ledger_data = [];
+    $labels      = [];
+    $trans = erp_ac_get_transaction_by_calss_id( [3] );
 
-    foreach ( $expense_data as $id => $ledg_data ) {
-        if ( array_sum( $ledg_data ) <= 0 ) {
-            continue;
+    foreach ( $trans as $tran ) {
+        if ( isset( $ledger_data[$tran->ledger_id] ) ) {
+            $ledger_data[$tran->ledger_id] = $ledger_data[$tran->ledger_id] + ( $tran->debit - $tran->credit );
+        } else {
+            $ledger_data[$tran->ledger_id] = $tran->debit - $tran->credit;
         }
 
-        $ledger_data[$id] = array_sum( $ledg_data );
+        $labels[$tran->ledger_id] = $tran->ledger_name;
     }
+
+    foreach ( $ledger_data as $key => $amount ) {
+        if ( $amount < 0 ) {
+            unset( $ledger_data[$key] );
+        }
+    }
+
     $no_result = erp_ac_message('no_result');
     ?>
     <script type="text/javascript">

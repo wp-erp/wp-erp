@@ -264,3 +264,24 @@ function erp_hr_dashboard_widget_leave_calendar() {
     </script>
     <?php
 }
+
+/**
+ * Employee list url
+ *
+ * @since  1.1.10
+ *
+ * @return  string
+ */
+function erp_hr_employee_list_url() {
+    $args = [
+        'page' => 'erp-hr-employee'
+    ];
+
+    $url = add_query_arg( $args, admin_url( 'admin.php' ) );
+    $url = apply_filters( 'erp_hr_employee_list_url', $url, $args );
+
+    return $url;
+}
+
+
+

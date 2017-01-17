@@ -63,7 +63,7 @@ function erp_get_peoples( $args = [] ) {
 
         $wrapper_select = "SELECT people.*, ";
 
-        $sql['select'][] = "GROUP_CONCAT( t.name SEPARATOR ',') AS types";
+        $sql['select'][] = "GROUP_CONCAT( DISTINCT t.name SEPARATOR ',') AS types";
         $sql['join'][]   = "LEFT JOIN $type_rel_tb AS r ON people.id = r.people_id LEFT JOIN $types_tb AS t ON r.people_types_id = t.id";
         $sql_from_tb     = "FROM $pep_tb AS people";
         $sql_people_type = "where ( select count(*) from $types_tb
@@ -118,6 +118,7 @@ function erp_get_peoples( $args = [] ) {
                         . $sql_order_by . ' '
                         . $sql_limit;
 
+       // sql_error_log( $final_query );
 
         if ( $count ) {
             // Only filtered total count of people
@@ -496,7 +497,7 @@ function erp_insert_people( $args = array() ) {
     if ( isset( $user->ID ) && $user->ID ) {
         // Set data for updating record
         $user_id = wp_update_user( [
-            'ID'         => $user->id,
+            'ID'         => $user->ID,
             'user_url'   => ! empty( $args['website'] ) ? $args['website'] : $user->user_url,
             'user_email' => ! empty( $args['email'] ) ? $args['email'] : $user->user_email
         ] );
@@ -507,6 +508,9 @@ function erp_insert_people( $args = array() ) {
             $people->update( [ 'user_id' => $user_id, 'email' => $args['email'], 'website' => $args['website'] ] );
 
             unset( $args['id'], $args['user_id'], $args['email'], $args['website'] );
+
+            wp_cache_delete( 'erp_people_id_user_' . $user->ID, 'erp' );
+
             foreach ( $args as $key => $value ) {
                 if ( ! update_user_meta( $user_id, $key, $value ) ) {
                     $unchanged_data[$key] = $value;

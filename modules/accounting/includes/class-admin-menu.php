@@ -427,20 +427,20 @@ class Admin_Menu {
 
             case 'sales-tax':
 
-                $start = isset( $_GET['start'] ) ? $_GET['start'] : date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
-                $end   = isset( $_GET['end'] ) ? $_GET['end'] : date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+                $start = ! empty( $_GET['start'] ) ? $_GET['start'] : date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+                $end   = ! empty( $_GET['end'] ) ? $_GET['end'] : date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
 
                 if ( isset( $_GET['action'] ) && intval( $_GET['id'] ) ) {
                     $tax_id  = $_GET['id'];
-                    $taxs    = erp_ac_normarlize_tax_from_transaction( [ 'start' => $start, 'end' => $end, 'tax_id' => [$_GET['id']], 'offset'  => $offset, 'number' => $limit] );
-                    $taxs    = $taxs['individuals'][$_GET['id']];
+                    $taxs    = erp_ac_normarlize_individual_tax( [ 'start' => $start, 'end' => $end, 'tax_id' => [$_GET['id']], 'offset'  => $offset, 'number' => $limit] );
+                   // echo '<pre>'; print_r( $taxs ); echo '</pre>'; die();
+                    //$taxs    = $taxs['individuals'][$_GET['id']];
                     $count   = erp_ac_get_sales_tax_report_count( ['tax_id' => [$_GET['id']] ] );
                     $taxinfo = erp_ac_get_tax_info();
 
                     $template = dirname( __FILE__ ) . '/views/reports/tax/single-sales-tax.php';
                 } else {
                     $taxs = erp_ac_normarlize_tax_from_transaction( [ 'start' => $start, 'end' => $end ] );
-                    $taxs = $taxs['units'];
                     $template = dirname( __FILE__ ) . '/views/reports/tax/sales-tax.php';
                 }
                 break;

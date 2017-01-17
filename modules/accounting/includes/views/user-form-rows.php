@@ -66,7 +66,7 @@
             'name'        => 'email',
             'id'          => 'email',
             'required'    => true,
-            'type'        => 'text',
+            'type'        => 'email',
             'placeholder' => __( 'you@domain.com', 'erp' ),
             'class'       => 'regular-text',
             'value'       => isset( $item->email ) ? $item->email : '',

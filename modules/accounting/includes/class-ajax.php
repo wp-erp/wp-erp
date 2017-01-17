@@ -50,6 +50,43 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-ac-trns-restore', 'transaction_restore' );
         $this->action( 'wp_ajax_erp-ac-trns-void', 'transaction_void' );
         $this->action( 'wp_ajax_erp-ac-trns-redo', 'transaction_redo' );
+        $this->action( 'wp_ajax_erp-search-ac-user', 'search_user' );
+    }
+
+    /**
+     * Search accounting users
+     *
+     * @since 1.1.9
+     *
+     * @return void
+     */
+    public function search_user() {
+        $this->verify_nonce( 'erp-ac-nonce' );
+        $peoples = [];
+
+
+        $term = ! empty( $_REQUEST['q'] ) ? stripslashes( $_REQUEST['q'] ) : false;
+        $type = ! empty( $_REQUEST['type'] ) ? $_REQUEST['type'] : false;
+
+
+
+        if ( ! $term || ! $type ) {
+            $this->send_error( __( 'User not found', 'erp' )  );
+        }
+
+        $args = [
+            'type'   => $type,
+            'number' => '-1',
+            's'      => $term
+        ];
+
+        $users = erp_get_peoples( $args );
+
+        foreach ( $users as $key => $user ) {
+            $peoples[$user->id] = in_array( 'vendor', $user->types ) ? $user->company : $user->first_name . ' ' . $user->last_name;
+        }
+
+        $this->send_success( $peoples );
     }
 
     /**
@@ -63,6 +100,7 @@ class Ajax_Handler {
         $this->verify_nonce( 'erp-ac-nonce' );
         $trns_id = isset( $_POST['id'] ) ? $_POST['id'] : false;
         $update  = false;
+
         if ( $trns_id ) {
             $update = erp_ac_update_transaction( $trns_id, ['status' => 'awaiting_payment'] );
         }

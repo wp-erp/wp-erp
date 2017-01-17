@@ -1597,6 +1597,28 @@ function erp_crm_get_serach_key( $type = '' ) {
                 '^'  => __( 'begins with', 'erp' ),
                 '$'  => __( 'ends with', 'erp' ),
             ]
+        ],
+
+        'life_stage' => [
+            'title'     => __( 'Life Stage', 'erp' ),
+            'type'      => 'dropdown',
+            'text'      => '',
+            'condition' => [
+                ''   => __( 'is', 'erp' ),
+                '!'  => __( 'is not', 'erp' )
+            ],
+            'options'   => erp_crm_get_life_stages_dropdown()
+        ],
+
+        'source' => [
+            'title'     => __( 'Contact Source', 'erp' ),
+            'type'      => 'dropdown',
+            'text'      => '',
+            'condition' => [
+                ''   => __( 'is', 'erp' ),
+                '!'  => __( 'is not', 'erp' )
+            ],
+            'options'   => erp_crm_contact_source_dropdown()
         ]
     ];
 
@@ -1608,7 +1630,7 @@ function erp_crm_get_serach_key( $type = '' ) {
         $fields = erp_crm_get_company_serach_key() + $fields;
     }
 
-    return apply_filters( 'erp_crm_global_serach_fields', $fields );
+    return apply_filters( 'erp_crm_global_serach_fields', $fields, $type );
 }
 
 /**
@@ -1699,6 +1721,12 @@ function erp_crm_get_save_search_regx( $values ) {  // %%sabbir
                 $result[preg_replace( '/^\^/', '', $value ) . '%'] = 'LIKE';
             } elseif ( preg_match( '/^\$/', $value ) ) {
                 $result['%' . preg_replace( '/^\$/', '', $value )] = 'LIKE';
+            } elseif ( preg_match( '/^<(?!>)/', $value ) ) {
+                $result[preg_replace( '/^<(?!>)/', '', $value )] = '<';
+            } elseif ( preg_match( '/^>(?!>)/', $value ) ) {
+                $result[preg_replace( '/^>(?!>)/', '', $value )] = '>';
+            } elseif ( preg_match( '/^<>(?!>)/', $value ) ) {
+                $result[preg_replace( '/^<>(?!>)/', '', $value )] = 'BETWEEN';
             } else {
                 $result[$value] = '=';
             }
@@ -1714,6 +1742,12 @@ function erp_crm_get_save_search_regx( $values ) {  // %%sabbir
             $result[preg_replace( '/^\^/', '', $values ) . '%'] = 'LIKE';
         } elseif ( preg_match( '/^\$/', $values ) ) {
             $result['%' . preg_replace( '/^\$/', '', $values )] = 'LIKE';
+        } elseif ( preg_match( '/^<(?!>)/', $value ) ) {
+            $result[preg_replace( '/^<(?!>)/', '', $value )] = '<';
+        } elseif ( preg_match( '/^>(?!>)/', $value ) ) {
+            $result[preg_replace( '/^>(?!>)/', '', $value )] = '>';
+        } elseif ( preg_match( '/^<>(?!>)/', $value ) ) {
+            $result[preg_replace( '/^<>(?!>)/', '', $value )] = 'BETWEEN';
         } else {
             $result[$values] = '=';
         }
@@ -1844,6 +1878,7 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
     global $wpdb;
 
     $pep_fileds  = [ 'first_name', 'last_name', 'email', 'website', 'company', 'phone', 'mobile', 'other', 'fax', 'notes', 'street_1', 'street_2', 'city', 'postal_code', 'currency' ];
+    $people_meta_fields = erp_crm_get_contact_meta_fields();
 
     if ( !isset( $args['erpadvancefilter'] ) || empty( $args['erpadvancefilter'] ) ) {
         return $custom_sql;
@@ -1863,17 +1898,20 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
 
     if ( $query_data ) {
         $is_contact_group_joined = false;
+        $table_alias = 1;
 
         foreach ( $query_data as $key=>$or_query ) {
             if ( $or_query ) {
                 $i=0;
                 $custom_sql['where'][] = ( $key == 0 ) ? "AND (" : 'OR (';
+
                 foreach ( $or_query as $field => $value ) {
                     if ( in_array( $field, $pep_fileds ) ) {
                         if ( $value ) {
                             $val = erp_crm_get_save_search_regx( $value );
                             $custom_sql['where'][] = "(";
                             $j=0;
+
                             foreach ( $val as $search_val => $search_condition ) {
                                 $addOr = ( $j == count( $val )-1 ) ? '' : " OR ";
 
@@ -1887,6 +1925,7 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
 
                                 $j++;
                             }
+
                             $custom_sql['where'][] = ( $i == count( $or_query )-1 ) ? ")" : " ) AND";
                         }
                     } else if ( $field == 'country_state' ) {
@@ -1908,7 +1947,6 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
                             $j++;
                         }
                         $custom_sql['where'][] = ( $i == count( $or_query )-1 ) ? ")" : " ) AND";
-
                     } else if ( $field == 'contact_group' ) {
                         if ( ! $is_contact_group_joined ) {
                             $custom_sql['join'][] = "LEFT JOIN {$wpdb->prefix}erp_crm_contact_subscriber as subscriber ON people.id = subscriber.user_id";
@@ -1952,6 +1990,35 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
                         }
 
                         $custom_sql['where'][] = ( $i == count( $or_query )-1 ) ? ")" : " ) AND";
+                    } else if ( in_array( $field, $people_meta_fields ) ) {
+                        $pepmeta_tb  = $wpdb->prefix . 'erp_peoplemeta';
+                        $name = "people_meta_" . ( $table_alias ) . "_" . ($i+1);
+                        $custom_sql['join'][] = "LEFT JOIN $pepmeta_tb as $name on people.id = $name.`erp_people_id`";
+
+                        if ( $value ) {
+                            $val = erp_crm_get_save_search_regx( $value );
+
+                            $custom_sql['where'][] = "(";
+                            $j=0;
+
+                            foreach ( $val as $search_val => $search_condition ) {
+
+                                $addOr = ( $j == count( $val )-1 ) ? '' : " OR ";
+
+                                if ( 'has_not' == $search_val ) {
+                                    $custom_sql['where'][] = "( $name.meta_key='$field' AND ( $name.meta_value is null OR $name.meta_value = '' ) ) $addOr";
+                                } else if ( 'if_has' == $search_val ) {
+                                    $custom_sql['where'][] = "( $name.meta_key='$field' AND ( $name.meta_value is not null AND $name.meta_value != '' ) ) $addOr";
+                                } else {
+                                    $custom_sql['where'][] = "( $name.meta_key='$field' and $name.meta_value $search_condition '$search_val' ) $addOr";
+                                }
+
+                                $j++;
+                            }
+                            $custom_sql['where'][] = ( $i == count( $or_query )-1 ) ? ")" : " ) AND";
+                        }
+                    } else {
+                        $custom_sql = apply_filters( 'erp_crm_customer_segmentation_sql', $custom_sql, $field, $value, $or_query, $i, $table_alias );
                     }
 
                     $i++;
@@ -1959,7 +2026,10 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
 
                 $custom_sql['where'][] = ")";
             }
+
+            $table_alias++;
         }
+
     }
 
     return $custom_sql;
@@ -2973,6 +3043,26 @@ function erp_crm_contact_sources() {
 }
 
 /**
+ * Get contact source dropdown
+ *
+ * @since 1.0.0
+ *
+ * @return void
+ **/
+function erp_crm_contact_source_dropdown( $selected = '' ) {
+    $sources = erp_crm_contact_sources();
+    $dropdown    = '';
+
+    if ( $sources ) {
+        foreach ( $sources as $key => $title ) {
+            $dropdown .= sprintf( "<option value='%s'%s>%s</option>\n", $key, selected( $selected, $key, false ), $title );
+        }
+    }
+
+    return $dropdown;
+}
+
+/**
  * Get contact all meta fields
  *
  * @since 1.1.7
@@ -3084,7 +3174,7 @@ function erp_crm_make_wp_user( $customer_id, $args = [] ) {
         return $user_id;
     }
 
-    if ( $args['notify_email'] ) {
+    if ( isset( $args['notify_email'] ) && $args['notify_email'] ) {
         wp_send_new_user_notifications( $user_id );
     }
 
@@ -3115,7 +3205,7 @@ function erp_crm_make_wp_user( $customer_id, $args = [] ) {
 function erp_crm_contact_on_delete( $user_id, $hard = 0) {
     $people = \WeDevs\ERP\Framework\Models\People::where( 'user_id', $user_id )->first();
 
-    if ( $people->id ) {
+    if ( !empty( $people->id ) ) {
         \WeDevs\ERP\Framework\Models\People::find( $people->id )->update( [ 'user_id' => null ] );
     }
 }

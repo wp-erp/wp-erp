@@ -5,7 +5,7 @@
  * Plugin URI: https://wperp.com
  * Author: weDevs
  * Author URI: https://wedevs.com
- * Version: 1.1.8
+ * Version: 1.1.9
  * License: GPL2
  * Text Domain: erp
  * Domain Path: /i18n/languages/
@@ -52,7 +52,7 @@ final class WeDevs_ERP {
      *
      * @var string
      */
-    public $version = '1.1.8';
+    public $version = '1.1.9';
 
     /**
      * Minimum PHP version required
@@ -199,9 +199,8 @@ final class WeDevs_ERP {
      */
     private function includes() {
         include dirname( __FILE__ ) . '/vendor/autoload.php';
-
-        require_once WPERP_INCLUDES . '/class-install.php';
         require_once WPERP_INCLUDES . '/functions.php';
+        require_once WPERP_INCLUDES . '/class-install.php';
         require_once WPERP_INCLUDES . '/actions-filters.php';
         require_once WPERP_INCLUDES . '/functions-html.php';
         require_once WPERP_INCLUDES . '/functions-company.php';

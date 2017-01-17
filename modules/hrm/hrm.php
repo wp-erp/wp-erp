@@ -20,6 +20,12 @@ class Human_Resource {
      * @param \WeDevs_ERP $plugin
      */
     public function __construct( \WeDevs_ERP $plugin ) {
+
+        // prevent duplicate loading
+        if ( did_action( 'erp_hrm_loaded' ) ) {
+            return;
+        }
+
         $this->plugin = $plugin;
 
         // Define constants
@@ -130,7 +136,7 @@ class Human_Resource {
 
         $hook = str_replace( sanitize_title( __( 'HR Management', 'erp' ) ) , 'hr-management', $hook );
 
-        $suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '';
+        $suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
         wp_enqueue_media();
         wp_enqueue_script( 'erp-tiptip' );

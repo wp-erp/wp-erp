@@ -1,11 +1,15 @@
 <div class="wrap erp erp-hr-employees erp-employee-single">
 
-    <h2 class="erp-hide-print"><?php empty( $is_my_profile_page ) ? _e( 'Employee', 'erp' ) : _e( 'My Profile', 'erp' );
-
-     if ( empty( $is_my_profile_page ) && current_user_can( 'erp_create_employee' ) ) {
+    <?php
+    if ( is_admin() ) {
         ?>
-        <a href="#" id="erp-employee-new" class="add-new-h2 erp-hide-print"><?php _e( 'Add New', 'erp' ); ?></a>
-        <?php
+        <h2 class="erp-hide-print"><?php empty( $is_my_profile_page ) ? _e( 'Employee', 'erp' ) : _e( 'My Profile', 'erp' );
+
+        if ( empty( $is_my_profile_page ) && current_user_can( 'erp_create_employee' ) ) {
+            ?>
+            <a href="#" id="erp-employee-new" class="add-new-h2 erp-hide-print"><?php _e( 'Add New', 'erp' ); ?></a>
+            <?php
+        }
     }
     ?>
     </h2>
@@ -131,7 +135,7 @@
                     <?php foreach ($tabs as $key => $tab) {
                         $active_class = ( $key == $active_tab ) ? ' nav-tab-active' : '';
                         ?>
-                        <a href="<?php echo add_query_arg( array( 'tab' => $key ), erp_hr_url_single_employee( $employee->id ) ); ?>" class="nav-tab<?php echo $active_class; ?>"><?php echo $tab['title'] ?></a>
+                        <a href="<?php echo erp_hr_employee_tab_url( $key, $employee->id ); ?>" class="nav-tab<?php echo $active_class; ?>"><?php echo $tab['title'] ?></a>
                     <?php } ?>
                 </h2>
 

@@ -81,12 +81,14 @@ $tax_labels    = erp_ac_get_trans_unit_tax_rate( $items_for_tax );
                                 'name'        => 'user_id',
                                 'placeholder' => __( 'Select a payee', 'erp' ),
                                 'type'        => 'select',
+                                'id'          => 'erp-ac-select-user-for-assign-contact',
                                 'required'    => true,
-                                'class'       => 'erp-select2 erp-ac-customer-drop erp-ac-not-found-in-drop',
+                                //'class'       => 'erp-select2 erp-ac-customer-drop erp-ac-not-found-in-drop',
                                 'value'       => $customer_id ? $customer_id : '',
-                                'options'     => [ '' => __( '&mdash; Select &mdash;', 'erp' ) ] + erp_get_peoples_array( ['type' => 'customer', 'number' => 100 ] ),
+                                'options'     => [ '' => __( 'Search', 'erp' ) ] + erp_get_peoples_array( ['type' => 'customer', 'number' => '-1' ] ),
                                 'custom_attr' => [
                                     'data-content' => 'erp-ac-new-customer-content-pop',
+                                    'data-type'    => 'customer'
                                 ],
                             ) );
 

@@ -1,6 +1,5 @@
 === WP ERP ===
-=== WP ERP ===
-Contributors: tareq1988, wedevs, sabbir1991, asaquzzaman
+Contributors: tareq1988, wedevs, ediamin, sabbir1991, asaquzzaman
 Tags: small business, SME, contact, contacts, CRM, Customer Relationship Management, employee, leave management, hr, hrm, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
 Tested up to: 4.7
@@ -151,6 +150,17 @@ If you are unable to use any of the methods due to internet connectivity and fil
   => No. We did not put any limit on anything. You can create as much entries as you want.
 
 == Changelog ==
+
+**v1.1.9 -> Dec 22, 2016**
+
+* [new] Can input data from older financial year (balance c/f)
+* [new] Added email validation for new customer and vendor
+* [new] Include journal tax in sales tax report
+* [tweak] Customers and vendors are searchable and limit lifted
+* [tweak] Tax receivable accounts moved to expense
+* [tweak] Date picker range enhanced
+* [fix] ERP updater is now working
+* [fix] Removed journal edit option from individual chart list table
 
 **v1.1.8 -> Dec 11, 2016**
 
