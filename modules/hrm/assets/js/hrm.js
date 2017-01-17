@@ -598,8 +598,8 @@
                         attachment = attachment.toJSON();
 
                         var html = '<img src="' + attachment.url + '" alt="" />';
-                            html += '<input type="hidden" id="emp-photo-id" name="personal[photo_id]" value="' + attachment.id + '" />';
-                            html += '<a href="#" class="erp-remove-photo">&times;</a>';
+                        html += '<input type="hidden" id="emp-photo-id" name="personal[photo_id]" value="' + attachment.id + '" />';
+                        html += '<a href="#" class="erp-remove-photo">&times;</a>';
 
                         $( '.photo-container', '.erp-employee-form' ).html( html );
                     });
@@ -617,7 +617,7 @@
                 e.preventDefault();
 
                 var html = '<a href="#" id="erp-set-emp-photo" class="button button-small">' + wpErpHr.emp_upload_photo + '</a>';
-                    html += '<input type="hidden" name="personal[photo_id]" id="emp-photo-id" value="0">';
+                html += '<input type="hidden" name="personal[photo_id]" id="emp-photo-id" value="0">';
 
                 $( '.photo-container', '.erp-employee-form' ).html( html );
             },
@@ -689,7 +689,7 @@
             select2AddMoreContent: function() {
                 var selects = $('.erp-hrm-select2-add-more');
                 $.each( selects, function( key, element ) {
-                   WeDevs_ERP_HR.employee.select2AddMoreActive(element);
+                    WeDevs_ERP_HR.employee.select2AddMoreActive(element);
                 });
             },
 
@@ -704,7 +704,7 @@
                     width: 'element',
                     "language": {
                         noResults: function(){
-                           return '<a href="#" class="button button-primary" id="'+id+'">Add New</a>';
+                            return '<a href="#" class="button button-primary" id="'+id+'">Add New</a>';
                         }
                     },
                     escapeMarkup: function (markup) {
@@ -762,6 +762,12 @@
 
                                     if ( selected !== '' ) {
                                         self.find( 'select' ).val( selected ).trigger('change');
+                                        self.find("input[type=radio][value='"+selected+"']").prop("checked",true);
+                                        $.each(self.find("input[type=checkbox]"), function(index, data) {
+                                            if($.inArray($(data).val(), selected.split(',')) != -1) {
+                                                $(data).prop('checked', true);
+                                            }
+                                        });
                                     }
                                 });
 

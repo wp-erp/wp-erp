@@ -1,43 +1,6 @@
 ;( function($, wperp) {
     Vue.config.debug = 1;
 
-    // Select2 Direcetive
-    Vue.directive('sabbirselecttwo', {
-        bind:function() {
-            var self   = this;
-            var vm     = this.vm;
-            var key    = this.expression;
-            var select = jQuery(this.el);
-       
-            select.on('change', function() {
-                var search_key = jQuery(this).attr('data-searchkey');
-                var search_key_index = jQuery(this).attr('data-searchkeyindex');
-                if ( search_key && search_key_index ) {
-                    key = key.replace('search_key', search_key);
-                    key = key.replace('search_field_key', search_key_index);
-                }
-                vm.$set(key, select.val());
-           });
-
-
-            select.select2({
-                width : 'resolve',
-                placeholder: jQuery(this.el).attr('data-placeholder'),
-                allowClear: true
-            });
-        },
-
-        update: function (newValue, oldValue) {
-            var self   = this;
-            var select = jQuery(self.el);
-
-            if ( newValue && !oldValue ) {
-                select.val(newValue);
-                select.trigger('change');
-            }
-        },
-    });
-
     var mixin = {
         methods: {
             initFields: function() {
@@ -1238,7 +1201,7 @@
                                         this.$broadcast('vtable:reload');
                                         self.$refs.vtable.topNavFilter.data = res.statuses;
                                     });
-                                 },
+                                },
                                 error: function(error) {
                                     modal.enableButton();
                                     modal.showError( error );
@@ -1280,19 +1243,34 @@
                                     $('select#erp-customer-type').trigger('change');
                                     $( 'select.erp-country-select').change();
 
+                                    //$( 'li[data-selected]', modal ).each(function() {
+                                    //    var self = $(this),
+                                    //        selected = self.data('selected');
+                                    //
+                                    //    if ( selected !== '' ) {
+                                    //        self.find( 'select' ).val( selected );
+                                    //    }
+                                    //});
+                                    //
+                                    //_.each( $( 'input[type=checkbox].erp-crm-contact-group-class' ), function( el, i) {
+                                    //    var optionsVal = $(el).val();
+                                    //    if( _.contains( response.group_id, optionsVal ) ) {
+                                    //        $(el).prop('checked', true );
+                                    //    }
+                                    //});
+
                                     $( 'li[data-selected]', modal ).each(function() {
                                         var self = $(this),
                                             selected = self.data('selected');
 
                                         if ( selected !== '' ) {
-                                            self.find( 'select' ).val( selected );
-                                        }
-                                    });
-
-                                    _.each( $( 'input[type=checkbox].erp-crm-contact-group-class' ), function( el, i) {
-                                        var optionsVal = $(el).val();
-                                        if( _.contains( response.group_id, optionsVal ) ) {
-                                            $(el).prop('checked', true );
+                                            self.find( 'select' ).val( selected ).trigger('change');
+                                            self.find("input[type=radio][value='"+selected+"']").prop("checked",true);
+                                            $.each(self.find("input[type=checkbox]"), function(index, data) {
+                                                if($.inArray($(data).val(), selected.split(',')) != -1) {
+                                                    $(data).prop('checked', true);
+                                                }
+                                            });
                                         }
                                     });
 
@@ -1943,7 +1921,7 @@
 
                 assigContactGroup: function() {
                     var self = this,
-                    query_id = self.id;
+                        query_id = self.id;
 
                     $.erpPopup({
                         title: self.title,
@@ -2068,16 +2046,22 @@
                                             selected = self.data('selected');
 
                                         if ( selected !== '' ) {
-                                            self.find( 'select' ).val( selected );
+                                            self.find( 'select' ).val( selected ).trigger('change');
+                                            self.find("input[type=radio][value='"+selected+"']").prop("checked",true);
+                                            $.each(self.find("input[type=checkbox]"), function(index, data) {
+                                                if($.inArray($(data).val(), selected.split(',')) != -1) {
+                                                    $(data).prop('checked', true);
+                                                }
+                                            });
                                         }
                                     });
-
-                                    _.each( $( 'input[type=checkbox].erp-crm-contact-group-class' ), function( el, i) {
-                                        var optionsVal = $(el).val();
-                                        if( _.contains( response.group_id, optionsVal ) ) {
-                                            $(el).prop('checked', true );
-                                        }
-                                    });
+                                    //
+                                    //_.each( $( 'input[type=checkbox].erp-crm-contact-group-class' ), function( el, i) {
+                                    //    var optionsVal = $(el).val();
+                                    //    if( _.contains( response.group_id, optionsVal ) ) {
+                                    //        $(el).prop('checked', true );
+                                    //    }
+                                    //});
 
                                     self.initFields();
                                 }
@@ -2133,18 +2117,18 @@
                                     modal.enableButton();
                                     modal.closeModal();
                                     swal({
-                                        title: '',
-                                        text: wpErpCrm.successfully_created_wpuser,
-                                        type: 'success',
-                                        confirmButtonText: 'OK',
-                                        confirmButtonColor: '#008ec2',
-                                        closeOnConfirm: false
-                                    },
-                                    function(isConfirm){
-                                        if (isConfirm) {
-                                            window.location.reload();
-                                        }
-                                    });
+                                            title: '',
+                                            text: wpErpCrm.successfully_created_wpuser,
+                                            type: 'success',
+                                            confirmButtonText: 'OK',
+                                            confirmButtonColor: '#008ec2',
+                                            closeOnConfirm: false
+                                        },
+                                        function(isConfirm){
+                                            if (isConfirm) {
+                                                window.location.reload();
+                                            }
+                                        });
                                 },
                                 error: function(error) {
                                     modal.enableButton();

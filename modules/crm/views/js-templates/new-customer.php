@@ -234,7 +234,7 @@
         <legend><?php _e( 'Contact Group', 'erp' ) ?></legend>
 
         <ol class="form-fields two-col">
-            <li class="row" id="erp-crm-contact-subscriber-group-checkbox" data-checked = "{{ data.group_id }}">
+            <li class="row" id="erp-crm-contact-subscriber-group-checkbox" data-selected = "{{ data.group_id }}">
                 <?php erp_html_form_input( array(
                     'label'       => __( 'Assign Group', 'erp' ),
                     'name'        => 'group_id[]',
