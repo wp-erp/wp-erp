@@ -14,7 +14,7 @@ class Settings extends ERP_Settings_Page {
     public function __construct() {
         $this->id            = 'erp-hr';
         $this->label         = __( 'HR', 'erp' );
-
+        $this->single_option = true;
         $this->sections      = $this->get_sections();
     }
 

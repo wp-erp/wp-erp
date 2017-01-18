@@ -5,7 +5,7 @@
  * Plugin URI: https://wperp.com
  * Author: weDevs
  * Author URI: https://wedevs.com
- * Version: 1.1.9
+ * Version: 1.1.10
  * License: GPL2
  * Text Domain: erp
  * Domain Path: /i18n/languages/
@@ -52,7 +52,7 @@ final class WeDevs_ERP {
      *
      * @var string
      */
-    public $version = '1.1.9';
+    public $version = '1.1.10';
 
     /**
      * Minimum PHP version required
@@ -206,6 +206,7 @@ final class WeDevs_ERP {
         require_once WPERP_INCLUDES . '/functions-company.php';
         require_once WPERP_INCLUDES . '/functions-people.php';
         require_once WPERP_INCLUDES . '/lib/class-wedevs-insights.php';
+        require_once WPERP_INCLUDES . '/api/class-api-registrar.php';
 
         if ( is_admin() ) {
             require_once WPERP_INCLUDES . '/admin/functions.php';
@@ -225,6 +226,7 @@ final class WeDevs_ERP {
         new \WeDevs\ERP\Scripts();
         new \WeDevs\ERP\Updates();
         new \WeDevs\ERP\Tracker();
+        new \WeDevs\ERP\API\API_Registrar();
 
         $this->container['modules']     = new \WeDevs\ERP\Framework\Modules();
         $this->container['emailer']     = \WeDevs\ERP\Emailer::init();
@@ -295,7 +297,6 @@ final class WeDevs_ERP {
             }
         }
     }
-
 } // WeDevs_ERP
 
 /**

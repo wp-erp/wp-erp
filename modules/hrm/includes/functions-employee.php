@@ -859,7 +859,7 @@ function erp_hr_employee_remove_history( $history_id ) {
 }
 
 /**
- * [erp_hr_url_single_employee description]
+ * Individual employee url
  *
  * @param  int  employee id
  *
@@ -873,6 +873,23 @@ function erp_hr_url_single_employee( $employee_id, $tab = null ) {
     $url = admin_url( 'admin.php?page=erp-hr-employee&action=view&id=' . $employee_id . $tab );
 
     return apply_filters( 'erp_hr_url_single_employee', $url, $employee_id );
+}
+
+/**
+ * Individual employee tab url
+ *
+ * @param string $tab
+ * @param int employee id
+ *
+ * @since  1.1.10
+ *
+ * @return string
+ */
+function erp_hr_employee_tab_url( $tab, $employee_id ) {
+    $emp_url = erp_hr_url_single_employee( intval( $employee_id ) );
+    $tab_url = add_query_arg( array( 'tab' => $tab ), $emp_url );
+
+    return apply_filters( 'erp_hr_employee_tab_url', $tab_url, $tab, $employee_id );
 }
 
 /**

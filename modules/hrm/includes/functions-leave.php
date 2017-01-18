@@ -354,13 +354,11 @@ function erp_hr_leave_get_policies( $args = array() ) {
  * @return \stdClass
  */
 function erp_hr_leave_get_policy( $policy_id ) {
-    global $wpdb;
-
-    $policy = \WeDevs\ERP\HRM\Models\Leave_Policies::select( array( 'id', 'name', 'value', 'color' ) )
+    $policy = \WeDevs\ERP\HRM\Models\Leave_Policies::select( array( 'id', 'name', 'value', 'color', 'department', 'designation', 'gender', 'marital', 'activate', 'execute_day', 'effective_date', 'location', 'description' ) )
                 ->find( $policy_id )
                 ->toArray();
 
-    return  (object) $policy;
+    return (object) $policy;
 }
 
 /**
@@ -386,8 +384,10 @@ function erp_hr_count_leave_policies() {
 function erp_hr_get_holidays( $args = [] ) {
 
     $defaults = array(
-        'number' => 20,
-        'offset' => 0,
+        'number'  => 20,
+        'offset'  => 0,
+        'orderby' => 'created_at',
+        'order'   => 'DESC',
     );
 
     $args  = wp_parse_args( $args, $defaults );

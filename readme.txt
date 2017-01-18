@@ -1,9 +1,8 @@
 === WP ERP ===
-=== WP ERP ===
-Contributors: tareq1988, wedevs, sabbir1991, asaquzzaman
+Contributors: tareq1988, wedevs, ediamin, sabbir1991, asaquzzaman
 Tags: small business, SME, contact, contacts, CRM, Customer Relationship Management, employee, leave management, hr, hrm, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 4.7
+Tested up to: 4.7.1
 Stable tag: trunk
 License: GPLv2
 Donate Link: https://tareq.co/donate
@@ -151,6 +150,20 @@ If you are unable to use any of the methods due to internet connectivity and fil
   => No. We did not put any limit on anything. You can create as much entries as you want.
 
 == Changelog ==
+
+**v1.1.10 -> Jan 18, 2017**
+
+* [new] Meta query support in advance search segmentaion
+* [new] Date and number range type filter in crm search segmentation
+* [new] Pakistani Rupee currency
+* [new] Contact age filter in advance search filter CRM
+* [new] Pagination system for individual ledger
+* [new] Closing balance for individual ledger
+* [new] Added filter `erp_crm_js_template_file_path` in js template path
+* [tweak] Remove edit functionality from single transaction page
+* [tweak] Change label for dashboard net income
+* [tweak] Update select2 v4.0.3
+* [fix] Leave request deleting issue
 
 **v1.1.9 -> Dec 22, 2016**
 

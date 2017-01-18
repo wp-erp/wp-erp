@@ -74,6 +74,7 @@ function erp_get_currencies() {
         'NZD' => __( 'New Zealand Dollar', 'erp' ),
         'OMR' => __( 'Omani Rial', 'erp' ),
         'IRR' => __( 'Iranian Rial', 'erp' ),
+        'PKR' => __( 'Pakistani Rupee', 'erp' ),
         'PYG' => __( 'Paraguayan Guaraní', 'erp' ),
         'PHP' => __( 'Philippine Pesos', 'erp' ),
         'PLN' => __( 'Polish Zloty', 'erp' ),
@@ -189,6 +190,7 @@ function erp_get_currency_symbol( $currency = '' ) {
         case 'ILS' : $currency_symbol = '&#8362;'; break;
         case 'OMR' : $currency_symbol = 'ر.ع.'; break;
         case 'IRR' : $currency_symbol = '﷼'; break;
+        case 'PKR' : $currency_symbol = 'Rs'; break;
         case 'PHP' : $currency_symbol = '&#8369;'; break;
         case 'PLN' : $currency_symbol = '&#122;&#322;'; break;
         case 'SEK' : $currency_symbol = '&#107;&#114;'; break;
@@ -222,7 +224,7 @@ function erp_get_currency_symbol( $currency = '' ) {
 function erp_get_js_template( $file_path, $id ) {
     if ( file_exists( $file_path ) ) {
         echo '<script type="text/html" id="tmpl-' . $id . '">' . "\n";
-        include_once $file_path;
+        include_once apply_filters( 'erp_crm_js_template_file_path', $file_path, $id );
         echo "\n" . '</script>' . "\n";
     }
 }
@@ -1268,8 +1270,8 @@ function erp_process_import_export() {
     $is_crm_activated = erp_is_module_active( 'crm' );
     $is_hrm_activated = erp_is_module_active( 'hrm' );
 
-    $departments  = erp_hr_get_departments_dropdown_raw();
-    $designations = erp_hr_get_designation_dropdown_raw();
+    $departments  = $is_hrm_activated ? erp_hr_get_departments_dropdown_raw() : [];
+    $designations = $is_hrm_activated ? erp_hr_get_designation_dropdown_raw() : [];
 
     $field_builder_contact_options = get_option( 'erp-contact-fields' );
 
@@ -1406,22 +1408,6 @@ function erp_process_import_export() {
                         if ( ! isset( $data[ $x ]['email'] ) ) {
                             $rand = substr( sha1( uniqid( time() ) ), 0, 8 );
                             $data[ $x ]['email'] = "rand_{$rand}@example.com";
-                        }
-
-                        if ( empty( $data[ $x ]['last_name'] ) ) {
-                            $name_parts = explode( ' ' , trim( $data[ $x ]['first_name'] ) );
-
-                            if ( count( $name_parts ) > 1 ) {
-                                $last_name = trim( array_pop( $name_parts ) );
-                            }
-
-                            if ( ! empty( $last_name ) ) {
-                                $data[ $x ]['first_name'] = implode( ' ' , $name_parts );
-                                $data[ $x ]['last_name']  = $last_name;
-
-                            } else {
-                                $data[ $x ]['last_name'] = '_';
-                            }
                         }
 
                         $item_insert_id = erp_insert_people( $data[ $x ] );
@@ -1907,4 +1893,21 @@ function enqueue_fullcalendar_locale() {
     if ( file_exists( WPERP_PATH . "/assets/vendor/fullcalendar/lang/{$script}.js" ) ) {
         wp_enqueue_script( 'erp-fullcalendar-locale', WPERP_ASSETS . "/vendor/fullcalendar/lang/{$script}.js", array( 'erp-fullcalendar' ), null, true );
     }
+}
+
+/**
+ * Generate random key
+ *
+ * @since 1.1.8
+ *
+ * @return string
+ */
+function erp_generate_key() {
+    if ( function_exists( 'openssl_random_pseudo_bytes' ) ) {
+        $key = bin2hex( openssl_random_pseudo_bytes( 20 ) );
+    } else {
+        $key = sha1( wp_rand() );
+    }
+
+    return $key;
 }

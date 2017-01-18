@@ -12,6 +12,9 @@
   box-shadow: 0 1px 0 #ba281e !important;
   text-shadow: 0 -1px 1px #ba281e, 1px 0 1px #ba281e, 0 1px 1px #ba281e, -1px 0 1px #ba281e !important;
 }
+.select2-container--default .select2-selection--single {
+  border: 1px solid #ddd;
+}
 .crm-dashboard .badge-container {
   margin-bottom: 40px;
 }
@@ -404,6 +407,14 @@
 .erp-crm-customer #erp-contact-advance-search-segment .erp-advance-search-filters .erp-advance-search-or-wrapper .filter-item .filter-content select {
   vertical-align: middle;
   margin-right: 5px;
+}
+.erp-crm-customer #erp-contact-advance-search-segment .erp-advance-search-filters .erp-advance-search-or-wrapper .filter-item .filter-content .select2-container {
+  width: auto !important;
+  min-width: 270px !important;
+}
+.erp-crm-customer #erp-contact-advance-search-segment .erp-advance-search-filters .erp-advance-search-or-wrapper .filter-item .filter-content .select2-container--default .select2-selection--multiple {
+  border: 1px solid #ddd;
+  height: 19px;
 }
 .erp-crm-customer #erp-contact-advance-search-segment .erp-advance-search-filters .erp-advance-search-or-wrapper .filter-item .filter-content .filter-left {
   padding: 4px 10px;
@@ -857,9 +868,9 @@
   border: none;
   height: 32px;
 }
-.erp-single-customer .erp-customer-feeds #log-activity p span.select2-selection--multiple input,
-.erp-single-customer .erp-customer-feeds #tasks p span.select2-selection--multiple input {
-  width: 100% !important;
+.erp-single-customer .erp-customer-feeds #log-activity p span.select2-selection--multiple .select2-search__field,
+.erp-single-customer .erp-customer-feeds #tasks p span.select2-selection--multiple .select2-search__field {
+  width: auto !important;
 }
 .erp-single-customer .erp-customer-feeds #log-activity p label,
 .erp-single-customer .erp-customer-feeds #tasks p label {
@@ -1226,6 +1237,10 @@
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-body ul {
   list-style-type: disc;
   margin-left: 2em;
+}
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-body ul.select2-selection__rendered {
+  list-style-type: none;
+  margin-left: 0;
 }
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-body .timeline-email-subject {
   padding: 0px 0px 10px;

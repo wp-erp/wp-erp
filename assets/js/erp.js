@@ -88,7 +88,7 @@ window.wperp = window.wperp || {};
 
     wperp.parseCondition = function( value ) {
         var obj = {};
-        var res = value.split(/([a-zA-Z0-9\s\-\_\+\.\:]+)/);
+        var res = value.split(/([a-zA-Z0-9\s\-\_\+\.\,\:]+)/);
         if ( res[0] == '' ) {
             obj.condition = '';
             obj.val = res[1];

@@ -88,6 +88,7 @@ class Admin_Page {
         include WPERP_INCLUDES . '/admin/views/erp-modal.php';
 
         erp_get_js_template( WPERP_INCLUDES . '/admin/views/address.php', 'erp-address' );
+        erp_get_js_template( WPERP_INCLUDES . '/admin/views/api.php', 'erp-api' );
     }
 }
 

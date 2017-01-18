@@ -1,5 +1,5 @@
 ;( function($, wperp) {
-    // Vue.config.debug = 1;
+    Vue.config.debug = 1;
 
     var mixin = {
         methods: {
@@ -303,6 +303,91 @@
 
         }
 
+        Vue.component( 'search-multi-select', {
+
+            props: [ 'action', 'selected' ],
+
+            template:
+                '<select class="erp-segment-search-select2" multiple="multiple" width:"100%">'
+                + '</select>',
+
+            data: function() {
+                return {
+                    options : []
+                }
+            },
+
+            methods: {
+                init: function() {
+                    var self = this;
+
+                    $( 'select.erp-segment-search-select2' ).on('change', function() {
+                        if ( $(this).val() ) {
+                            var value = $(this).val();
+                        } else {
+                            var value = _.pluck( self.options, 'id' );
+                        }
+                        self.$dispatch('select2-data-change', value, self );
+                    });
+
+                    $( 'select.erp-segment-search-select2' ).trigger('change');
+
+                    $( 'select.erp-segment-search-select2' ).select2({
+                        initSelection: function (element, callback) {
+                            callback( self.options );
+                        },
+                        width: 'resolve',
+                        allowClear: true,
+                        placeholder: 'Search..',
+                        minimumInputLength: 3,
+                        ajax: {
+                            url: wpErpCrm.ajaxurl,
+                            dataType: 'json',
+                            delay: 250,
+                            escapeMarkup: function( m ) {
+                                return m;
+                            },
+                            data: function (params) {
+                                return {
+                                    q: params.term, // search term
+                                    _wpnonce: wpErpCrm.nonce,
+                                    action: self.action
+                                };
+                            },
+                            processResults: function ( data, params ) {
+                                var terms = [];
+
+                                if ( data) {
+                                    $.each( data.data, function( id, text ) {
+                                        terms.push({
+                                            id: id,
+                                            text: text
+                                        });
+                                    });
+                                }
+
+                                if ( terms.length ) {
+                                    return { results: terms };
+                                } else {
+                                    return { results: '' };
+                                }
+                            },
+                            cache: true
+                        }
+                    });
+                }
+            },
+
+            ready: function(){
+                if ( this.selected ) {
+                    this.options = this.selected;
+                }
+
+                this.init()
+            }
+        });
+
+
         Vue.component( 'filter-item', {
             props: [ 'field', 'fieldIndex', 'index', 'editableMode' ],
 
@@ -324,6 +409,20 @@
                                 + '<select v-if="searchFields[fieldObj.filterKey].type == \'dropdown\'" class="input-select" v-model="fieldObj.filterValue">'
                                     + '{{{ searchFields[fieldObj.filterKey].options }}}'
                                 + '</select>'
+                                + '<search-multi-select v-if="searchFields[fieldObj.filterKey].type == \'dropdown_mulitple_select2\'" :action="searchFields[fieldObj.filterKey].action" :selected="select2Ajaxselected"></search-multi-select>'
+                                // + '<select v-if="ifDropDownMultipleSelect( searchFields[fieldObj.filterKey].type )" class="erp-crm-search-segment-select2" multiple="multiple" data-placeholder="Select.." v-model="fieldObj.filterValue">'
+                                //     + '{{{ searchFields[fieldObj.filterKey].options }}}'
+                                // + '</select>'
+                                + '<template v-if="searchFields[fieldObj.filterKey].type == \'date_range\'">'
+                                    + '<input type="text" v-if="ifRangeConditionActive( fieldObj.filterCondition )" v-datepicker class="input-text" v-model="rangeFrom">'
+                                    + '<input type="text" v-else v-datepicker class="input-text" v-model="fieldObj.filterValue">'
+                                    + '<span v-if="ifRangeConditionActive( fieldObj.filterCondition )">to</span>&nbsp;<input type="text" v-if="ifRangeConditionActive( fieldObj.filterCondition )" v-datepicker class="input-text" v-model="rangeTo">'
+                                + '</template>'
+                                + '<template v-if="searchFields[fieldObj.filterKey].type == \'number_range\'">'
+                                    + '<input type="number" v-if="ifRangeConditionActive( fieldObj.filterCondition )" step="any" class="input-text" v-model="rangeFrom">'
+                                    + '<input type="number" v-else class="input-text" step="any" v-model="fieldObj.filterValue">'
+                                    + '<span v-if="ifRangeConditionActive( fieldObj.filterCondition )">to</span>&nbsp;<input type="number" v-if="ifRangeConditionActive( fieldObj.filterCondition )" step="any" class="input-text" v-model="rangeTo">'
+                                + '</template>'
                             + '</template>'
                         + '</div>'
                         + '<div class="filter-right">'
@@ -341,7 +440,8 @@
                         + '<template v-else>'
                             + '<div class="filter-left">'
                                 + '{{ searchFields[field.key].title }} <span style="color:#0085ba; font-style:italic; margin:0px 2px;">{{ searchFields[field.key].condition[field.condition] }}</span> '
-                                + '<span v-if="!field.title">{{ field.value }}</span>'
+                                + '<span v-if="!field.title && !ifRangeConditionActive( field.condition )">{{ field.value }}</span>'
+                                + '<span v-if="!field.title && ifRangeConditionActive( field.condition )">{{ field.value.split(",").join(" to ") }}</span>'
                                 + '<span v-else>{{ field.title }}</span>'
                             + '</div>'
                         + '</template>'
@@ -360,7 +460,11 @@
                     },
 
                     isEditable: false,
-                    searchFields: []
+                    searchFields: [],
+                    rangeFrom: '',
+                    rangeTo: '',
+                    selectData: {},
+                    select2Ajaxselected: []
                 }
             },
 
@@ -370,7 +474,17 @@
                 }
             },
 
+            events: {
+                'select2-data-change' : function( newVal ) {
+                    this.fieldObj.filterValue = newVal;
+                },
+            },
+
             methods: {
+
+                ifDropDownMultipleSelect: function(type) {
+                    return type == 'dropdown_mulitple_select2';
+                },
 
                 setCondiationWiseValue: function( condition ) {
                     if ( condition == '!%' ) {
@@ -409,11 +523,30 @@
                     return true;
                 },
 
+                ifRangeConditionActive: function( condition ) {
+                    if ( condition == '<>' ) {
+                        return true;
+                    }
+                    return false;
+                },
+
                 ifSelectedTextField: function( type ) {
                     return ( type == 'text' || type == 'url' || type == 'email' ) ? true : false;
                 },
 
                 applyFilter: function() {
+                    if ( this.ifRangeConditionActive( this.fieldObj.filterCondition ) ) {
+                        if ( this.rangeFrom == '' || this.rangeFrom == '' ) {
+                            return;
+                        }
+
+                        this.fieldObj.filterValue = this.rangeFrom + ',' + this.rangeTo;
+                    }
+
+                    if ( _.isArray( this.fieldObj.filterValue ) ) {
+                        this.fieldObj.filterValue = this.fieldObj.filterValue.join(',');
+                    }
+
                     if ( ! this.fieldObj.filterKey || ( ! this.fieldObj.filterValue && this.isSomeCondition( this.fieldObj.filterCondition ) ) ) {
                         return;
                     }
@@ -431,6 +564,7 @@
                 },
 
                 editFilterItem: function( field ) {
+                    var self = this;
                     if ( this.editableMode ) {
                         return;
                     }
@@ -438,11 +572,38 @@
                     this.isEditable = true;
                     this.fieldObj.filterKey = field.key;
                     this.fieldObj.filterCondition = this.isHasOrHasNotViaValue( field.value ) ? this.getSymbolForSomeCondition( field.value ) : field.condition;
-                    this.fieldObj.filterValue = this.isHasOrHasNotViaValue( field.value ) ? '' : field.value;
-                    this.field.editable = true;
 
-                    this.$dispatch( 'isEditableMode', true );
-                }
+                    if ( this.ifRangeConditionActive( field.condition ) ) {
+                        var splitDate = field.value.split(',')
+                        this.rangeFrom = splitDate[0];
+                        this.rangeTo = splitDate[1];
+                    }
+
+                    this.fieldObj.filterValue = this.isHasOrHasNotViaValue( field.value ) ? '' : field.value.split(',');
+
+                    if ( this.searchFields[this.fieldObj.filterKey].type == 'dropdown_mulitple_select2' ) {
+                        var data = {
+                            action: this.searchFields[this.fieldObj.filterKey].editaction,
+                            selected: this.fieldObj.filterValue,
+                            _wpnonce: wpErpCrm.nonce
+                        }
+
+                        $.post( wpErpCrm.ajaxurl, data, function( resp ) {
+                            if ( resp.success ) {
+                                self.select2Ajaxselected = resp.data;
+                                self.field.editable = true;
+                                self.fieldObj.filterValue = field.value.split(',');
+                                self.$dispatch( 'isEditableMode', true, self.fieldObj, self.searchFields );
+                            } else {
+                                alert( resp.data );
+                            };
+                        });
+                    } else {
+                        this.field.editable = true;
+                        this.$dispatch( 'isEditableMode', true, this.fieldObj, this.searchFields );
+                    }
+
+                },
             }
         });
 
@@ -473,11 +634,13 @@
                             + '<input type="submit" class="button button-primary" v-if="!isUpdate" @click.prevent="searchSave(\'save\')" value="Save">'
                             + '<input type="submit" class="button" v-if="isUpdate" @click.prevent="cancelSave(\'update\')" value="Cancel">'
                             + '<input type="submit" class="button" v-if="!isUpdate" @click.prevent="cancelSave(\'save\')" value="Cancel">'
+                            + '<span class="erp-loader" v-show="isLoading" style="margin-top: 4px;"></span>'
                         + '</div>'
                         + '<button :disabled="editableMode" class="button button-primary" v-show="!isNewSave" @click.prevent="saveAsNew()">Save new Segment</button>'
                         + '<button :disabled="editableMode" class="button" v-show="isUpdateSaveSearch && !isNewSave" @click.prevent="updateSave()">Update this Segment</button>'
                         + '<button :disabled="editableMode" class="erp-button-danger button" style="float:right;" v-show="isUpdateSaveSearch && !isNewSave" @click.prevent="removeSegment()">Delete this Segment</button>'
                         + '<button :disabled="editableMode" class="button" style="float:right;" v-show="!isNewSave" @click.prevent="resetFilter()">Reset all filter</button>'
+                        + '<span class="erp-loader" v-show="isLoading && !isNewSave" style="margin-top: 4px;"></span>'
                     + '</div>'
                 + '</div>',
 
@@ -494,12 +657,12 @@
                     saveSearchObj: {
                         searchName: '',
                         searchItGlobal: false,
-                    }
+                    },
+                    isLoading: false
                 }
             },
 
             methods: {
-
                 resetFilter: function() {
                     this.$dispatch('resetAllFilters');
                     this.fields = [[]];
@@ -562,6 +725,8 @@
                             _wpnonce: wpErpCrm.nonce
                         }
 
+                    self.isLoading = true;
+
                     $.post( wpErpCrm.ajaxurl, data, function( resp ) {
                         if ( resp.success ) {
                             self.isUpdateSaveSearch = false;
@@ -569,7 +734,9 @@
                             self.isUpdate = true;
                             self.saveSearchObj.searchName     = resp.data.search_name;
                             self.saveSearchObj.searchItGlobal = ( resp.data.global == 0 ) ? false : true;
+                            self.isLoading = false;
                         } else {
+                            self.isLoading = false;
                             alert( resp.data );
                         };
                     });
@@ -593,6 +760,8 @@
                     if ( ! queryUrl ) {
                         alert( 'You have not any filter for saving' );
                     }
+
+                    self.isLoading = true;
 
                     jQuery.post( wpErpCrm.ajaxurl, data, function( resp ) {
                         if ( resp.success ) {
@@ -671,8 +840,9 @@
                                 self.isNewSave = false;
                                 self.isUpdateSaveSearch = true;
                             }
-
+                            self.isLoading = false;
                         } else {
+                            self.isLoading = false;
                             alert( resp.data );
                         };
                     });
@@ -724,7 +894,7 @@
 
                 parseCondition: function( value ) {
                     var obj = {};
-                    var res = value.split(/([a-zA-Z0-9\s\-\_\+\.\:]+)/);
+                    var res = value.split(/([a-zA-Z0-9\s\-\_\+\.\,\:]+)/);
                     if ( res[0] == '' ) {
                         obj.condition = '';
                         obj.val = res[1];
@@ -737,6 +907,7 @@
                 },
 
                 renderFilterFromUrl: function() {
+
                     this.fields = this.reRenderFilterFromUrl( window.location.search );
                 }
             },
@@ -783,7 +954,7 @@
                     this.editableMode = false;
                 },
 
-                isEditableMode: function( isEditable ) {
+                isEditableMode: function( isEditable, fieldObj, searchFields ) {
                     this.editableMode = isEditable;
                 }
             },
@@ -802,6 +973,26 @@
                                 if ( field && 'dropdown' === field.type && field.options ) {
                                     var select = $( '<select>' + field.options + '</select>' );
                                     component.fields[i][j].title = select.find( '[value="' + component.fields[i][j].value + '"]' ).html();
+                                }
+
+                                if ( field && 'dropdown_mulitple_select2' === field.type ) {
+                                    var dropdownTextVal = '';
+
+                                    var data = {
+                                        action: field.editaction,
+                                        selected: component.fields[i][j].value.split(','),
+                                        _wpnonce: wpErpCrm.nonce
+                                    }
+
+                                    $.post( wpErpCrm.ajaxurl, data, function( resp ) {
+                                        if ( resp.success ) {
+                                            dropdownTextVal = _.pluck( resp.data, 'text' );
+                                            // component.fields[i][j].title = dropdownTextVal.join(',');
+                                        } else {
+                                            alert( resp.data );
+                                        };
+                                    });
+
                                 }
                             });
                         }
@@ -1020,7 +1211,7 @@
                                         this.$broadcast('vtable:reload');
                                         self.$refs.vtable.topNavFilter.data = res.statuses;
                                     });
-                                 },
+                                },
                                 error: function(error) {
                                     modal.enableButton();
                                     modal.showError( error );
@@ -1062,19 +1253,34 @@
                                     $('select#erp-customer-type').trigger('change');
                                     $( 'select.erp-country-select').change();
 
+                                    //$( 'li[data-selected]', modal ).each(function() {
+                                    //    var self = $(this),
+                                    //        selected = self.data('selected');
+                                    //
+                                    //    if ( selected !== '' ) {
+                                    //        self.find( 'select' ).val( selected );
+                                    //    }
+                                    //});
+                                    //
+                                    //_.each( $( 'input[type=checkbox].erp-crm-contact-group-class' ), function( el, i) {
+                                    //    var optionsVal = $(el).val();
+                                    //    if( _.contains( response.group_id, optionsVal ) ) {
+                                    //        $(el).prop('checked', true );
+                                    //    }
+                                    //});
+
                                     $( 'li[data-selected]', modal ).each(function() {
                                         var self = $(this),
                                             selected = self.data('selected');
 
                                         if ( selected !== '' ) {
-                                            self.find( 'select' ).val( selected );
-                                        }
-                                    });
-
-                                    _.each( $( 'input[type=checkbox].erp-crm-contact-group-class' ), function( el, i) {
-                                        var optionsVal = $(el).val();
-                                        if( _.contains( response.group_id, optionsVal ) ) {
-                                            $(el).prop('checked', true );
+                                            self.find( 'select' ).val( selected ).trigger('change');
+                                            self.find("input[type=radio][value='"+selected+"']").prop("checked",true);
+                                            $.each(self.find("input[type=checkbox]"), function(index, data) {
+                                                if($.inArray($(data).val(), selected.split(',')) != -1) {
+                                                    $(data).prop('checked', true);
+                                                }
+                                            });
                                         }
                                     });
 
@@ -1725,7 +1931,7 @@
 
                 assigContactGroup: function() {
                     var self = this,
-                    query_id = self.id;
+                        query_id = self.id;
 
                     $.erpPopup({
                         title: self.title,
@@ -1850,16 +2056,22 @@
                                             selected = self.data('selected');
 
                                         if ( selected !== '' ) {
-                                            self.find( 'select' ).val( selected );
+                                            self.find( 'select' ).val( selected ).trigger('change');
+                                            self.find("input[type=radio][value='"+selected+"']").prop("checked",true);
+                                            $.each(self.find("input[type=checkbox]"), function(index, data) {
+                                                if($.inArray($(data).val(), selected.split(',')) != -1) {
+                                                    $(data).prop('checked', true);
+                                                }
+                                            });
                                         }
                                     });
-
-                                    _.each( $( 'input[type=checkbox].erp-crm-contact-group-class' ), function( el, i) {
-                                        var optionsVal = $(el).val();
-                                        if( _.contains( response.group_id, optionsVal ) ) {
-                                            $(el).prop('checked', true );
-                                        }
-                                    });
+                                    //
+                                    //_.each( $( 'input[type=checkbox].erp-crm-contact-group-class' ), function( el, i) {
+                                    //    var optionsVal = $(el).val();
+                                    //    if( _.contains( response.group_id, optionsVal ) ) {
+                                    //        $(el).prop('checked', true );
+                                    //    }
+                                    //});
 
                                     self.initFields();
                                 }
@@ -1915,18 +2127,18 @@
                                     modal.enableButton();
                                     modal.closeModal();
                                     swal({
-                                        title: '',
-                                        text: wpErpCrm.successfully_created_wpuser,
-                                        type: 'success',
-                                        confirmButtonText: 'OK',
-                                        confirmButtonColor: '#008ec2',
-                                        closeOnConfirm: false
-                                    },
-                                    function(isConfirm){
-                                        if (isConfirm) {
-                                            window.location.reload();
-                                        }
-                                    });
+                                            title: '',
+                                            text: wpErpCrm.successfully_created_wpuser,
+                                            type: 'success',
+                                            confirmButtonText: 'OK',
+                                            confirmButtonColor: '#008ec2',
+                                            closeOnConfirm: false
+                                        },
+                                        function(isConfirm){
+                                            if (isConfirm) {
+                                                window.location.reload();
+                                            }
+                                        });
                                 },
                                 error: function(error) {
                                     modal.enableButton();

@@ -8,8 +8,8 @@ $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
             <input type="text" v-model="feedData.task_title" placeholder="<?php _e( 'Enter your task title here..') ?>">
         </p>
         <p class="assign-taskes-users">
-            <select name="selected_contact" v-model="feedData.inviteContact" v-selecttwo="feedData.inviteContact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="Select Users...">
-                <?php echo erp_crm_get_employees_with_own( get_current_user_id() ); ?>
+            <select name="selected_contact" v-model="feedData.inviteContact" v-selecttwo="feedData.inviteContact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="<?php _e( 'Agents or managers..', 'erp' ) ?>">
+                <?php echo erp_crm_get_crm_user_html_dropdown(); ?>
             </select>
         </p>
         <div class="assign-task-datetime">
