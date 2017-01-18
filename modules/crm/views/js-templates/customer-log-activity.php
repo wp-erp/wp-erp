@@ -26,7 +26,7 @@ $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
 
     <p v-if="feedData.log_type == 'meeting'">
         <select name="selected_contact" id="erp-crm-activity-invite-contact" v-model="feedData.inviteContact" v-selecttwo="feedData.inviteContact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="Select agents...">
-            <?php echo erp_crm_get_employees_dropdown(); ?>
+            <?php echo erp_crm_get_crm_user_html_dropdown(); ?>
         </select>
     </p>
 

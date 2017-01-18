@@ -1235,6 +1235,10 @@
   list-style-type: disc;
   margin-left: 2em;
 }
+.erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-body ul.select2-selection__rendered {
+  list-style-type: none;
+  margin-left: 0;
+}
 .erp-single-customer .erp-customer-feeds .activity-content .timeline > li > .timeline-item > .timeline-body .timeline-email-subject {
   padding: 0px 0px 10px;
   border-bottom: 1px solid #eee;

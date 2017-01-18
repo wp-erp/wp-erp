@@ -128,41 +128,19 @@ function erp_crm_get_employees( $args = [] ) {
  *
  * @return html
  */
-function erp_crm_get_employees_dropdown( $selected = '' ) {
-    $employees = erp_crm_get_employees( [ 'status' => 'active', 'number' => -1, 'no_object' => true ] );
+function erp_crm_get_crm_user_html_dropdown( $selected = '' ) {
+    $crm_users = erp_crm_get_crm_user();
     $dropdown  = '';
 
-    if ( $employees ) {
-        foreach ( $employees as $key => $employee ) {
-            $dropdown .= sprintf( "<option value='%s'%s>%s</option>\n", $employee->user_id, selected( $selected, $employee->user_id, false ), $employee->display_name );
-        }
-    }
-
-    return $dropdown;
-}
-
-/**
- * Get employees including his own name
- *
- * @since 1.0
- *
- * @param  string $selected
- *
- * @return string
- */
-function erp_crm_get_employees_with_own( $selected = '' ) {
-    $employees = erp_crm_get_employees( [ 'status' => 'active', 'number' => -1, 'no_object' => true ] );
-    $dropdown  = '';
-
-    if ( $employees ) {
-        foreach ( $employees as $key => $employee ) {
-            if ( $employee->user_id == get_current_user_id() ) {
-                $title = sprintf( '%s ( %s )', __( 'Me', 'erp' ), $employee->display_name );
+    if ( $crm_users ) {
+        foreach ( $crm_users as $key => $user ) {
+            if ( $user->ID == get_current_user_id() ) {
+                $title = sprintf( '%s ( %s )', __( 'Me', 'erp' ), $user->display_name );
             } else {
-                $title = $employee->display_name;
+                $title = $user->display_name;
             }
 
-            $dropdown .= sprintf( "<option value='%s'%s>%s</option>\n", $employee->user_id, selected( $selected, $employee->user_id, false ), $title );
+            $dropdown .= sprintf( "<option value='%s'%s>%s</option>\n", $user->ID, selected( $selected, $user->ID, false ), $title );
         }
     }
 

@@ -9,7 +9,7 @@ $customer_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
         </p>
         <p class="assign-taskes-users">
             <select name="selected_contact" v-model="feedData.inviteContact" v-selecttwo="feedData.inviteContact" class="select2" multiple="multiple" style="width: 100%" data-placeholder="Select Users...">
-                <?php echo erp_crm_get_employees_with_own( get_current_user_id() ); ?>
+                <?php echo erp_crm_get_crm_user_html_dropdown(); ?>
             </select>
         </p>
         <div class="assign-task-datetime">
