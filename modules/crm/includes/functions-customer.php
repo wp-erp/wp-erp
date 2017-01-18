@@ -1597,7 +1597,20 @@ function erp_crm_get_serach_key( $type = '' ) {
                 '!'  => __( 'is not', 'erp' )
             ],
             'options'   => erp_crm_contact_source_dropdown()
-        ]
+        ],
+
+        'contact_age' => [
+            'title'     => __( 'Contact age', 'erp' ),
+            'type'      => 'number_range',
+            'text'      => '',
+            'condition' => [
+                ''   => __( 'exactly', 'erp' ),
+                '>'  => __( 'grater', 'erp' ),
+                '<'  => __( 'less', 'erp' ),
+                '<>'  => __( 'Between', 'erp' ),
+            ]
+        ],
+
     ];
 
     if ( 'contact' == $type ) {
@@ -1684,7 +1697,7 @@ function erp_crm_get_company_serach_key() {
  *
  * @return array
  */
-function erp_crm_get_save_search_regx( $values ) {  // %%sabbir
+function erp_crm_get_save_search_regx( $values ) {
     $result = [];
 
     if ( is_array( $values ) ) {
@@ -1987,8 +2000,11 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
                                     $custom_sql['where'][] = "( $name.meta_key='$field' AND ( $name.meta_value is null OR $name.meta_value = '' ) ) $addOr";
                                 } else if ( 'if_has' == $search_val ) {
                                     $custom_sql['where'][] = "( $name.meta_key='$field' AND ( $name.meta_value is not null AND $name.meta_value != '' ) ) $addOr";
+                                } else if ( 'BETWEEN' == $search_condition ) {
+                                    $formatted_val = explode( ',', $search_val );
+                                    $custom_sql['where'][] = "( $name.meta_key='$field' AND ( $name.meta_value >= '$formatted_val[0]' AND $name.meta_value <= '$formatted_val[1]' ) ) $addOr";
                                 } else {
-                                    $custom_sql['where'][] = "( $name.meta_key='$field' and $name.meta_value $search_condition '$search_val' ) $addOr";
+                                    $custom_sql['where'][] = "( $name.meta_key='$field' AND $name.meta_value $search_condition '$search_val' ) $addOr";
                                 }
 
                                 $j++;
@@ -3050,7 +3066,7 @@ function erp_crm_contact_source_dropdown( $selected = '' ) {
 function erp_crm_get_contact_meta_fields() {
     // core meta keys
     $core_fields = [
-        'life_stage', 'contact_owner', 'date_of_birth', 'age', 'source'
+        'life_stage', 'contact_owner', 'date_of_birth', 'contact_age', 'source'
     ];
 
     $social_fields = array_keys( erp_crm_get_social_field() ) ;
