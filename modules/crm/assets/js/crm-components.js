@@ -121,9 +121,7 @@ window.wpErpVue = window.wpErpVue || {};
                 vm.$set(key, select.val());
            });
 
-
             select.select2({
-                width : 'resolve',
                 placeholder: jQuery(this.el).attr('data-placeholder'),
                 allowClear: true
             });
