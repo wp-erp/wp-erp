@@ -12,6 +12,9 @@
   box-shadow: 0 1px 0 #ba281e !important;
   text-shadow: 0 -1px 1px #ba281e, 1px 0 1px #ba281e, 0 1px 1px #ba281e, -1px 0 1px #ba281e !important;
 }
+.select2-container--default .select2-selection--single {
+  border: 1px solid #ddd;
+}
 .crm-dashboard .badge-container {
   margin-bottom: 40px;
 }

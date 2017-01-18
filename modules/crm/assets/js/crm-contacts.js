@@ -634,11 +634,13 @@
                             + '<input type="submit" class="button button-primary" v-if="!isUpdate" @click.prevent="searchSave(\'save\')" value="Save">'
                             + '<input type="submit" class="button" v-if="isUpdate" @click.prevent="cancelSave(\'update\')" value="Cancel">'
                             + '<input type="submit" class="button" v-if="!isUpdate" @click.prevent="cancelSave(\'save\')" value="Cancel">'
+                            + '<span class="erp-loader" v-show="isLoading" style="margin-top: 4px;"></span>'
                         + '</div>'
                         + '<button :disabled="editableMode" class="button button-primary" v-show="!isNewSave" @click.prevent="saveAsNew()">Save new Segment</button>'
                         + '<button :disabled="editableMode" class="button" v-show="isUpdateSaveSearch && !isNewSave" @click.prevent="updateSave()">Update this Segment</button>'
                         + '<button :disabled="editableMode" class="erp-button-danger button" style="float:right;" v-show="isUpdateSaveSearch && !isNewSave" @click.prevent="removeSegment()">Delete this Segment</button>'
                         + '<button :disabled="editableMode" class="button" style="float:right;" v-show="!isNewSave" @click.prevent="resetFilter()">Reset all filter</button>'
+                        + '<span class="erp-loader" v-show="isLoading && !isNewSave" style="margin-top: 4px;"></span>'
                     + '</div>'
                 + '</div>',
 
@@ -655,7 +657,8 @@
                     saveSearchObj: {
                         searchName: '',
                         searchItGlobal: false,
-                    }
+                    },
+                    isLoading: false
                 }
             },
 
@@ -722,6 +725,8 @@
                             _wpnonce: wpErpCrm.nonce
                         }
 
+                    self.isLoading = true;
+
                     $.post( wpErpCrm.ajaxurl, data, function( resp ) {
                         if ( resp.success ) {
                             self.isUpdateSaveSearch = false;
@@ -729,7 +734,9 @@
                             self.isUpdate = true;
                             self.saveSearchObj.searchName     = resp.data.search_name;
                             self.saveSearchObj.searchItGlobal = ( resp.data.global == 0 ) ? false : true;
+                            self.isLoading = false;
                         } else {
+                            self.isLoading = false;
                             alert( resp.data );
                         };
                     });
@@ -753,6 +760,8 @@
                     if ( ! queryUrl ) {
                         alert( 'You have not any filter for saving' );
                     }
+
+                    self.isLoading = true;
 
                     jQuery.post( wpErpCrm.ajaxurl, data, function( resp ) {
                         if ( resp.success ) {
@@ -831,8 +840,9 @@
                                 self.isNewSave = false;
                                 self.isUpdateSaveSearch = true;
                             }
-
+                            self.isLoading = false;
                         } else {
+                            self.isLoading = false;
                             alert( resp.data );
                         };
                     });
