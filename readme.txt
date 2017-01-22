@@ -151,6 +151,10 @@ If you are unable to use any of the methods due to internet connectivity and fil
 
 == Changelog ==
 
+**v1.1.11 -> Jan 22, 2017**
+
+* [fix] Update minified JavaScript files
+
 **v1.1.10 -> Jan 18, 2017**
 
 * [new] Meta query support in advance search segmentaion

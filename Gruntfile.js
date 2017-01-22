@@ -8,7 +8,8 @@ module.exports = function(grunt) {
             css: 'assets/css',
             images: 'assets/images',
             js: 'assets/js',
-            less: 'assets/less'
+            less: 'assets/less',
+            hrmJS: 'modules/hrm/assets/js/'
         },
 
         // Compile all .less files.
@@ -36,6 +37,8 @@ module.exports = function(grunt) {
                         '<%= dirs.js %>/settings.min.js',
                         '<%= dirs.js %>/upload.min.js',
                     ],
+                    '<%= dirs.hrmJS %>/hrm.min.js': ['<%= dirs.hrmJS %>/hrm.js'],
+                    '<%= dirs.hrmJS %>/leave.min.js': ['<%= dirs.hrmJS %>/leave.js'],
                 }
             }
         },
@@ -74,6 +77,14 @@ module.exports = function(grunt) {
                 options: {
                     livereload: true
                 }
+            },
+
+            js: {
+                files: [
+                    '<%= dirs.js %>/*',
+                    '<%= dirs.hrmJS %>/*',
+                ],
+                tasks: ['uglify']
             }
         },
 
@@ -144,7 +155,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks( 'grunt-contrib-compress' );
     grunt.loadNpmTasks( 'grunt-text-replace' );
 
-    grunt.registerTask('default', ['less']);
+    grunt.registerTask('default', [
+        'less', 'uglify'
+    ]);
 
     grunt.registerTask( 'release', [
         'makepot',
