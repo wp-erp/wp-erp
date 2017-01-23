@@ -3227,6 +3227,16 @@ trix-editor ul {
   list-style-type: disc;
   margin-left: 2em;
 }
+.wp-admin #toast-container.toast-top-right {
+  top: 40px;
+  right: 18px;
+}
+.wp-admin #toast-container > div {
+  opacity: 1;
+}
+.wp-admin #toast-container > :hover {
+  opacity: .9;
+}
 /*****/
 /**
 * Media Query for responsive
