@@ -101,7 +101,7 @@ function erp_get_peoples( $args = [] ) {
         if ( $count ) {
             $sql_order_by = '';
             $sql_group_by = '';
-            $wrapper_select = 'SELECT COUNT(people.id) as total_number';
+            $wrapper_select = 'SELECT COUNT( DISTINCT people.id ) as total_number';
             unset( $sql['select'][0] );
         }
 
@@ -117,8 +117,6 @@ function erp_get_peoples( $args = [] ) {
                         . $sql_group_by . ' '
                         . $sql_order_by . ' '
                         . $sql_limit;
-
-       // sql_error_log( $final_query );
 
         if ( $count ) {
             // Only filtered total count of people
