@@ -387,9 +387,11 @@
 
                 wp.ajax.send( 'erp_people_convert', {
                     data: {
-                        '_wpnonce': ERP_AC.nonce,
-                        'type'    : self.data('type'),
-                        'people_id': self.data('people_id')
+                        '_wpnonce':     ERP_AC.nonce,
+                        'type':         self.data('type'),
+                        'people_id':    self.data('people_id'),
+                        'is_wp_user':   self.data('is_wp_user'),
+                        'wp_user_id':   self.data('wp_user_id'),
                     },
                     success: function(res) {
                         window.location.href = res.redirect;
@@ -425,23 +427,38 @@
                     data: {
                         email: email
                     },
-                    success: function(res) {
-                        $('#message').slideUp(500);
-                        $('input[name="submit_erp_ac_customer"]').prop('disabled', false);
-                    },
-                    error: function(res) {
-                        if ( $.inArray( 'customer', res.types ) != -1 || $.inArray( 'vendor', res.types ) != -1 ) {
+                    success: function(response) {
+                        var data = response.data ? response.data : response,
+                            converterButton = $('.erp-ac-convert-user-info');
+
+                        converterButton.removeAttr('data-people_id');
+                        converterButton.removeAttr('data-is_wp_user');
+                        converterButton.removeAttr('data-wp_user_id');
+
+                        if ( $.inArray( 'customer', data.types ) != -1 || $.inArray( 'vendor', data.types ) != -1 ) {
                             $('#message').slideUp(100);
                             $('#message').html( '<p><span class="erp-ac-user-exsitance-notice">' + ERP_AC.message.alreadyExist + '</span></p>' );
                             $('#message').slideDown(500);
                             $('input[name="submit_erp_ac_customer"]').prop('disabled', true);
+
+                        } else if ( typeof data.data !== undefined && 'wp_user' == data.types ) {
+                            $('#message').slideUp(100);
+                            converterButton.attr( 'data-is_wp_user', true );
+                            converterButton.attr( 'data-wp_user_id', data.ID );
+                            $('#message').slideDown(500);
+                            $('input[name="submit_erp_ac_customer"]').prop('disabled', true);
+
                         } else {
                             $('#message').slideUp(100);
-                            $('.erp-ac-convert-user-info').attr( 'data-people_id', res.id );
+                            converterButton.attr( 'data-people_id', data.id );
                             $('#message').slideDown(500);
                             $('input[name="submit_erp_ac_customer"]').prop('disabled', true);
                         }
-                    }
+                    },
+                    error: function() {
+                        $('#message').slideUp(500);
+                        $('input[name="submit_erp_ac_customer"]').prop('disabled', false);
+                    },
                 });
 
             },

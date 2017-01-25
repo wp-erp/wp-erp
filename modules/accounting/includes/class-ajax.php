@@ -285,25 +285,28 @@ class Ajax_Handler {
     public function convert_user() {
         $this->verify_nonce( 'erp-ac-nonce' );
 
-        $id = isset( $_POST['people_id'] ) ? $_POST['people_id'] : 0;
-        $type = isset( $_POST['type'] ) ? $_POST['type'] : '';
+        $type       = isset( $_POST['type'] ) ? $_POST['type'] : '';
+        $people_id  = isset( $_POST['people_id'] ) ? absint( $_POST['people_id'] ) : 0;
+        $is_wp_user = isset( $_POST['is_wp_user'] ) ? filter_var( $_POST['is_wp_user'], FILTER_VALIDATE_BOOLEAN ) : false;
+        $wp_user_id = isset( $_POST['wp_user_id'] ) ? absint( $_POST['wp_user_id'] ) : 0;
 
-        if ( ! $id ) {
-            $this->send_error( __( 'User not found', 'erp' ) );
+        $args = [
+            'type'       => $type,
+            'is_wp_user' => $is_wp_user,
+            'wp_user_id' => $wp_user_id,
+            'people_id'  => $people_id
+        ];
+
+        $people_id = erp_convert_to_people( $args );
+
+        if ( is_wp_error( $people_id ) ) {
+            $this->send_error( $people_id->get_error_message() );
         }
-
-        if ( empty( $type ) ) {
-            $this->send_error( __( 'Type not found', 'erp' ) );
-        }
-
-        $people_obj = \WeDevs\ERP\Framework\Models\People::find( $id );
-        $type_obj   = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $type )->first();
-        $people_obj->assignType( $type_obj );
 
         if ( $type == 'customer' ) {
-            $redirect = erp_ac_customer_edit_url( $id ) . '&status=new';
+            $redirect = erp_ac_customer_edit_url( $people_id ) . '&status=new';
         } else {
-            $redirect = erp_ac_vendor_edit_url( $id ) . '&status=new';
+            $redirect = erp_ac_vendor_edit_url( $people_id ) . '&status=new';
         }
 
         $this->send_success( array( 'redirect' => $redirect ) );
