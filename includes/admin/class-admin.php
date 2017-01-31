@@ -2,9 +2,6 @@
 namespace WeDevs\ERP\Admin;
 use WeDevs\ERP\Framework\Traits\Hooker;
 
-/**
- * sdlfkj
- */
 class Admin_Page {
 
     use Hooker;
@@ -85,7 +82,7 @@ class Admin_Page {
      * @return void
      */
     public function erp_modal_markup() {
-        include WPERP_INCLUDES . '/admin/views/erp-modal.php';
+        include_once WPERP_INCLUDES . '/admin/views/erp-modal.php';
 
         erp_get_js_template( WPERP_INCLUDES . '/admin/views/address.php', 'erp-address' );
         erp_get_js_template( WPERP_INCLUDES . '/admin/views/api.php', 'erp-api' );
