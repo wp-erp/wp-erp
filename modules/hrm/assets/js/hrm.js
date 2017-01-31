@@ -755,6 +755,9 @@
                                 $( '.loader', modal).remove();
 
                                 WeDevs_ERP_HR.initDateField();
+                                $('.select2').select2();
+                                WeDevs_ERP_HR.employee.select2Action('erp-hrm-select2');
+                                WeDevs_ERP_HR.employee.select2AddMoreContent();
 
                                 $( 'li[data-selected]', modal ).each(function() {
                                     var self = $(this),
