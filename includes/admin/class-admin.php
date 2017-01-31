@@ -17,10 +17,9 @@ class Admin_Page {
      * @return void
      */
     public function init_actions() {
-
         $this->action( 'init', 'includes' );
         $this->action( 'admin_init', 'admin_redirects' );
-        $this->action( 'admin_footer', 'erp_modal_markup' );
+        add_action( 'admin_footer', 'erp_include_popup_markup' );
     }
 
     /**
@@ -74,18 +73,6 @@ class Admin_Page {
             wp_safe_redirect( admin_url( 'index.php?page=erp-welcome' ) );
             exit;
         }
-    }
-
-    /**
-     * Prints the ERP modal window markup
-     *
-     * @return void
-     */
-    public function erp_modal_markup() {
-        include_once WPERP_INCLUDES . '/admin/views/erp-modal.php';
-
-        erp_get_js_template( WPERP_INCLUDES . '/admin/views/address.php', 'erp-address' );
-        erp_get_js_template( WPERP_INCLUDES . '/admin/views/api.php', 'erp-api' );
     }
 }
 
