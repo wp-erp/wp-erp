@@ -2574,11 +2574,14 @@ ul.erp-dashboard-announcement li {
   padding: 5px;
   position: relative;
 }
-ul.erp-dashboard-announcement li div.announcement-title a {
+ul.erp-dashboard-announcement li .announcement-title {
+  padding-right: 90px;
+}
+ul.erp-dashboard-announcement li .announcement-title a {
   font-size: 15px;
   text-decoration: none;
 }
-ul.erp-dashboard-announcement li div.announcement-title span.announcement-date {
+ul.erp-dashboard-announcement li .announcement-title span.announcement-date {
   font-size: 12px;
   font-weight: normal;
   margin-right: 50px;
@@ -2589,13 +2592,22 @@ ul.erp-dashboard-announcement li p {
 ul.erp-dashboard-announcement li .announcement-row-actions {
   visibility: hidden;
   position: absolute;
-  top: 10px;
-  right: 12px;
+  top: 5px;
+  right: 10px;
 }
 ul.erp-dashboard-announcement li .announcement-row-actions a {
-  margin-left: 3px;
-  font-size: 10px;
   color: #222;
+  text-decoration: none;
+  width: auto;
+  display: inline-block;
+  margin-left: 10px;
+}
+ul.erp-dashboard-announcement li .announcement-row-actions a .dashicons {
+  font-size: 18px;
+  line-height: 1.2;
+}
+ul.erp-dashboard-announcement li.read .announcement-row-actions .mark-read {
+  display: none;
 }
 ul.erp-dashboard-announcement li:first-child {
   border-bottom: 1px solid #eee;
@@ -2885,6 +2897,10 @@ table.audit-log-table th.col-date {
   display: block;
   margin-left: 130px;
   padding: 5px 0 0 0;
+}
+.erp-modal .content img {
+  max-width: 100%;
+  height: auto;
 }
 .erp-modal p {
   font-size: 1.10em;

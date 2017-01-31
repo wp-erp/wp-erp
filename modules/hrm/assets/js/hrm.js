@@ -194,7 +194,7 @@
                         _wpnonce: wpErpHr.nonce
                     },
                     success: function(res) {
-                        self.closest( 'li' ).removeClass( 'unread' );
+                        self.closest( 'li' ).removeClass( 'unread' ).addClass( 'read' );
                         self.addClass( 'erp-hide' );
                     },
                     error: function(error) {

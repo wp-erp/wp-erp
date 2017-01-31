@@ -97,15 +97,18 @@ function erp_hr_dashboard_widget_latest_announcement() {
         <?php
         $i = 0;
         foreach ( $announcements as $key => $announcement ): ?>
-            <li>
+            <li class="<?php echo ($announcement->status !== 'read') ? 'unread' : 'read'; ?>">
                 <div class="announcement-title">
-                    <a href="#" <?php echo ( $announcement->status == 'read' ) ? 'class="read"' : ''; ?>><?php echo $announcement->post_title; ?></a>
-                    | <span class="announcement-date"><?php echo erp_format_date( $announcement->post_date ); ?></span>
+                    <a href="#" <?php echo ( $announcement->status == 'read' ) ? 'class="read"' : ''; ?>>
+                        <?php echo $announcement->post_title; ?>
+                    </a> | <span class="announcement-date"><?php echo erp_format_date( $announcement->post_date ); ?></span>
                 </div >
+
                 <?php echo ( 0 == $i ) ? '<p>' . wp_trim_words( $announcement->post_content, 50 ) . '</p>' : ''; ?>
+
                 <div class="announcement-row-actions">
-                    <a href="#" class="mark-read erp-tips <?php echo ( $announcement->status == 'read' ) ? 'erp-hide' : ''; ?>" title="<?php _e( 'Mark as Read', 'erp' ); ?>" data-row_id="<?php echo $announcement->id; ?>"><i class="fa fa-circle-o-notch"></i></a>
-                    <a href="#" class="view-full erp-tips" title="<?php _e( 'View full announcement', 'erp' ); ?>" data-row_id="<?php echo $announcement->ID; ?>"><i class="fa fa-book"></i></a>
+                    <a href="#" class="mark-read erp-tips <?php echo ( $announcement->status == 'read' ) ? 'erp-hide' : ''; ?>" title="<?php _e( 'Mark as Read', 'erp' ); ?>" data-row_id="<?php echo $announcement->id; ?>"><i class="dashicons dashicons-yes"></i></a>
+                    <a href="#" class="view-full erp-tips" title="<?php _e( 'View full announcement', 'erp' ); ?>" data-row_id="<?php echo $announcement->ID; ?>"><i class="dashicons dashicons-editor-expand"></i></a>
                 </div>
             </li>
         <?php $i++;
