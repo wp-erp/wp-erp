@@ -80,7 +80,7 @@ function erp_hr_dashboard_widget_birthday() {
 function erp_hr_dashboard_widget_latest_announcement() {
 
     //if user is admin then show latest 5 announcements
-    if ( current_user_can( 'manage_options' ) ) {
+    if ( current_user_can( erp_hr_get_manager_role() ) ) {
         $query = new WP_Query( array(
             'post_type'      => 'erp_hr_announcement',
             'posts_per_page' => '5',
@@ -107,7 +107,9 @@ function erp_hr_dashboard_widget_latest_announcement() {
                 <?php echo ( 0 == $i ) ? '<p>' . wp_trim_words( $announcement->post_content, 50 ) . '</p>' : ''; ?>
 
                 <div class="announcement-row-actions">
-                    <a href="#" class="mark-read erp-tips <?php echo ( $announcement->status == 'read' ) ? 'erp-hide' : ''; ?>" title="<?php _e( 'Mark as Read', 'erp' ); ?>" data-row_id="<?php echo $announcement->id; ?>"><i class="dashicons dashicons-yes"></i></a>
+                    <?php if ( ! current_user_can( erp_hr_get_manager_role() ) ): ?>
+                        <a href="#" class="mark-read erp-tips <?php echo ( $announcement->status == 'read' ) ? 'erp-hide' : ''; ?>" title="<?php _e( 'Mark as Read', 'erp' ); ?>" data-row_id="<?php echo $announcement->id; ?>"><i class="dashicons dashicons-yes"></i></a>
+                    <?php endif; ?>
                     <a href="#" class="view-full erp-tips" title="<?php _e( 'View full announcement', 'erp' ); ?>" data-row_id="<?php echo $announcement->ID; ?>"><i class="dashicons dashicons-editor-expand"></i></a>
                 </div>
             </li>
