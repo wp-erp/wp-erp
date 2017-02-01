@@ -119,7 +119,8 @@
                         'name'    => 'work[location]',
                         'value'   => '{{ data.work.location }}',
                         'custom_attr' => array( 'data-id' => 'erp-company-new-location' ),
-                        'class'   => 'erp-hrm-select2-add-more erp-hr-location-drop-down',
+                        // 'class'   => 'erp-hrm-select2-add-more erp-hr-location-drop-down',
+                        'class'   => 'erp-hrm-select2',
                         'type'    => 'select',
                         'options' => erp_company_get_location_dropdown_raw()
                     ) ); ?>
