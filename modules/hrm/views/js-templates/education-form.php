@@ -36,9 +36,10 @@
             'name'        => 'finished',
             'type'        => 'number',
             'value'       => '{{ data.finished }}',
-            'placeholder' => '2010',
+            'required'    => true,
+            'placeholder' => date( 'Y' ),
             'custom_attr' => [
-                'min'  => 1900,
+                'min'  => 1970,
                 'max'  => 2099,
                 'step' => 1
             ]
