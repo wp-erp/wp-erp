@@ -174,7 +174,7 @@ class Human_Resource {
                 'holiday_create'     => __( 'Create Holiday', 'erp' ),
                 'holiday_update'     => __( 'Update Holiday', 'erp' ),
                 'new_leave_req'      => __( 'Leave Request', 'erp' ),
-                'take_leave'         => __( 'Send Leve Request', 'erp' ),
+                'take_leave'         => __( 'Send Leave Request', 'erp' ),
                 'terminate'          => __( 'Terminate', 'erp' ),
                 'leave_reject'       => __( 'Reject Reason', 'erp' ),
                 'already_terminate'  => __( 'Sorry, this employee is already terminated', 'erp' ),

@@ -209,12 +209,12 @@ class Ajax {
         }
 
         // we didn't found any user with this email address
-        if ( false === $people ) {
-            $this->send_success();
+        if ( !$people ) {
+            $this->send_error();
         }
 
         // seems like we found one
-        $this->send_error( $people );
+        $this->send_success( $people );
     }
 
     /**

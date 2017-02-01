@@ -25,11 +25,32 @@ function erp_company_location_delete( $location_id ) {
 function erp_company_get_locations() {
     global $wpdb;
 
-    $cache_key = 'erp_company-location';
+    $cache_key = 'erp_company-locations';
     $locations = wp_cache_get( $cache_key, 'erp' );
 
-    if ( false === $locations ) {
+    if ( ! $locations ) {
         $locations = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}erp_company_locations" );
+
+        $company = new \WeDevs\ERP\Company();
+
+        $main_location = (object) [
+            'id' => -1,
+            'company_id' => null,
+            'name' => erp_get_company_default_location_name(),
+            'address_1' => $company->address['address_1'],
+            'address_2' => $company->address['address_2'],
+            'city' => $company->address['city'],
+            'state' => $company->address['state'],
+            'zip' => $company->address['zip'],
+            'country' => $company->address['country'],
+            'fax' => $company->fax,
+            'phone' => $company->phone,
+            'created_at' => null,
+            'updated_at' => null,
+        ];
+
+        array_unshift( $locations , $main_location );
+
         wp_cache_set( $cache_key, $locations, 'erp' );
     }
 
@@ -46,13 +67,13 @@ function erp_company_get_locations() {
  */
 function erp_company_get_location_dropdown_raw( $select_label = null ) {
     $locations = erp_company_get_locations();
-    $dropdown  = array( '-1' => __( 'Main Location', 'erp' ) );
+    $dropdown  = [];
 
     if ( $select_label ) {
         $dropdown    = array( '-1' => $select_label );
     }
 
-    foreach ($locations as $location) {
+    foreach ( $locations as $location ) {
         $dropdown[ $location->id ] = $location->name;
     }
 
@@ -83,4 +104,17 @@ function erp_company_get_working_days() {
     }
 
     return array_map( 'absint', $saved );
+}
+
+/**
+ * Company's default location name
+ *
+ * You can filter this and change it to "Head Office" or something like that
+ *
+ * @since 1.1.12
+ *
+ * @return string
+ */
+function erp_get_company_default_location_name() {
+    return apply_filters( 'erp-company-default-name', __( 'Main Location', 'erp' ) );
 }

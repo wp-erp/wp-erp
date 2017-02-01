@@ -35,11 +35,29 @@ class Form_Handler {
      *
      * @return void
      */
-    public function crm_permission_set( $post, $user ) {
-        $user_profile = new \WeDevs\ERP\CRM\User_Profile();
-        $post['crm_manager'] = isset( $post['crm_manager'] ) && $post['crm_manager'] == 'on' ? erp_crm_get_manager_role() : false;
-        $post['crm_agent']   = isset( $post['crm_agent'] ) && $post['crm_agent'] == 'on' ? erp_crm_get_agent_role() : false;
-        $user_profile->update_user( $user->ID, $post );
+    public static function crm_permission_set( $post, $user ) {
+        $enable_crm_manager = isset( $post['crm_manager'] ) ? filter_var( $post['crm_manager'], FILTER_VALIDATE_BOOLEAN ) : false;
+        $enable_crm_agent   = isset( $post['crm_agent'] ) ? filter_var( $post['crm_agent'], FILTER_VALIDATE_BOOLEAN ) : false;
+
+        $crm_manager_role = erp_crm_get_manager_role();
+        $crm_agent_role = erp_crm_get_agent_role();
+
+        // TODO::We are duplicating \WeDevs\ERP\CRM\User_Profile->update_user() process here,
+        // which we shouldn't. We should update above method and use that.
+        if ( current_user_can( $crm_manager_role ) ) {
+            if ( $enable_crm_manager ) {
+                $user->add_role( $crm_manager_role );
+            } else {
+                $user->remove_role( $crm_manager_role );
+            }
+
+            if ( $enable_crm_agent ) {
+                $user->add_role( $crm_agent_role );
+            } else {
+                $user->remove_role( $crm_agent_role );
+            }
+
+        }
     }
 
     /**

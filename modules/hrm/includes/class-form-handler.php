@@ -723,20 +723,16 @@ class Form_Handler {
             wp_die( __( 'Permission Denied!', 'erp' ) );
         }
 
-        $employee_id    = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
-        $enable_manager = isset( $_POST['enable_manager'] ) ? sanitize_text_field( $_POST['enable_manager'] ) : 'off';
-
-        if ( ! in_array( $enable_manager, [ 'on', 'off' ] ) ) {
-            return;
-        }
+        $employee_id    = isset( $_POST['employee_id'] ) ? absint( $_POST['employee_id'] ) : 0;
+        $enable_manager = isset( $_POST['enable_manager'] ) ? filter_var( $_POST['enable_manager'], FILTER_VALIDATE_BOOLEAN ) : false;
 
         $user = get_user_by( 'id', $employee_id );
 
-        if ( 'on' == $enable_manager && ! user_can( $user, $hr_manager_role ) ) {
+        if ( $enable_manager && ! user_can( $user, $hr_manager_role ) ) {
 
             $user->add_role( $hr_manager_role );
 
-        } else if ( 'off' == $enable_manager && user_can( $user, $hr_manager_role ) ) {
+        } else if ( ! $enable_manager && user_can( $user, $hr_manager_role ) ) {
 
             $user->remove_role( $hr_manager_role );
         }

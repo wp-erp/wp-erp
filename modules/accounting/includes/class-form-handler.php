@@ -160,10 +160,19 @@ class Form_Handler {
      *
      * @return void
      */
-    function employee_permission_set( $post, $user ) {
-        $user_profile = new \WeDevs\ERP\Accounting\User_Profile();
-        $post['ac_manager'] = isset( $post['ac_manager'] ) && $post['ac_manager'] == 'on' ? erp_ac_get_manager_role() : false;
-        $user_profile->update_user( $user->ID, $post );
+    public static function employee_permission_set( $post, $user ) {
+        $enable_ac_manager = isset( $post['ac_manager'] ) ? filter_var( $post['ac_manager'], FILTER_VALIDATE_BOOLEAN ) : false;
+        $ac_manager_role = erp_ac_get_manager_role();
+
+        // TODO::We are duplicating \WeDevs\ERP\Accounting\User_Profile->update_user() process here,
+        // which we shouldn't. We should update above method and use that.
+        if ( current_user_can( $ac_manager_role ) ) {
+            if ( $enable_ac_manager ) {
+                $user->add_role( $ac_manager_role );
+            } else {
+                $user->remove_role( $ac_manager_role );
+            }
+        }
     }
 
     /**

@@ -92,6 +92,9 @@ class Scripts {
 
         // clipboard.js
         wp_register_script( 'erp-clipboard', $vendor . '/clipboard/clipboard.min.js', array( 'jquery' ), $this->version, true );
+
+        // toastr.js
+        wp_register_script( 'erp-toastr', $vendor . '/toastr/toastr.min.js', array(), $this->version, true );
     }
 
     /**
@@ -121,8 +124,12 @@ class Scripts {
         // tether drop theme
         wp_register_style( 'erp-tether-drop-theme', $vendor . '/tether/drop-theme.min.css', false, $this->version );
 
+        // toastr.js
+        wp_register_style( 'erp-toastr', $vendor . '/toastr/toastr.min.css', false, $this->version );
+
         // core css files
         wp_register_style( 'erp-styles', $css . '/admin.css', false, $this->version );
+
     }
 
     /**

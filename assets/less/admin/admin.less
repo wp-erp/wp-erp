@@ -546,7 +546,10 @@ ul.erp-dashboard-announcement {
     li {
         padding:5px;
         position:relative;
-        div.announcement-title {
+
+        .announcement-title {
+            padding-right: 90px;
+
             a {
                 font-size: 15px;
                 text-decoration: none;
@@ -558,6 +561,7 @@ ul.erp-dashboard-announcement {
                 margin-right: 50px;
             }
         }
+
         p {
             margin: 2px 0px 0px;
         }
@@ -565,12 +569,30 @@ ul.erp-dashboard-announcement {
         .announcement-row-actions {
             visibility: hidden;
             position: absolute;
-            top:10px;
-            right: 12px;
+            top: 5px;
+            right: 10px;
+
             a {
-                margin-left: 3px;
-                font-size: 10px;
                 color: #222;
+                text-decoration: none;
+                width: auto;
+                display: inline-block;
+                margin-left: 10px;
+
+                .dashicons {
+                    font-size: 18px;
+                    line-height: 1.2;
+                }
+            }
+        }
+
+        &.read {
+
+            .announcement-row-actions {
+
+                .mark-read {
+                    display: none;
+                }
             }
         }
 
@@ -892,6 +914,11 @@ table.audit-log-table {
                 margin-left: 130px;
                 padding: 5px 0 0 0;
             }
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
         }
     }
 
@@ -1254,6 +1281,24 @@ ul.edit-address {
 trix-editor ul {
     list-style-type: disc;
     margin-left: 2em;
+}
+
+// toastr - notification
+// --------------------------------------------------
+.wp-admin #toast-container {
+
+    &.toast-top-right {
+        top: 40px;
+        right: 18px;
+    }
+
+    & > div {
+        opacity: 1;
+    }
+
+    & > :hover {
+        opacity: .9;
+    }
 }
 
 @import "responsive.less";

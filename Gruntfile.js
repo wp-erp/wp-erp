@@ -73,10 +73,7 @@ module.exports = function(grunt) {
         watch: {
             less: {
                 files: ['<%= dirs.less %>/*.less', '<%= dirs.less %>/admin/*.less' ],
-                tasks: ['less:admin'],
-                options: {
-                    livereload: true
-                }
+                tasks: ['less:admin']
             },
 
             js: {

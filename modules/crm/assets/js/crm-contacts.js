@@ -1448,20 +1448,13 @@
                             email: val,
                             _wpnonce: wpErpCrm.nonce
                         },
-                        success: function() {
-                            form.find('.modal-suggession').fadeOut( 300, function() {
-                                $(this).remove();
-                                form.find('.content-container').css({ 'marginTop': '0px' });
-                            });
-                            form.find('button[type=submit]' ).removeAttr( 'disabled' );
-                        },
-                        error: function( response ) {
+                        success: function( response ) {
                             form.find('button[type=submit]' ).attr( 'disabled', 'disabled');
 
                             if ( $.inArray( 'contact', response.types ) != -1 || $.inArray( 'company', response.types ) != -1 ) {
                                 form.find('.modal-suggession').remove();
                                 form.find('header.modal-header').append('<div class="modal-suggession">' + wpErpCrm.contact_exit + '</div>');
-                            } else if ( typeof response.data != 'undefined' && 'wp_user' == response.data.types ) {
+                            } else if ( typeof response.data !== undefined && 'wp_user' == response.data.types ) {
                                 form.find('.modal-suggession').remove();
                                 form.find('header.modal-header').append('<div class="modal-suggession">' + wpErpCrm.wpuser_make_contact_text + ' ' + type + ' ? <a href="#" id="erp-crm-create-contact-other-type" data-type="'+ type +'" data-is_wp="yes" data-user_id="'+ response.data.ID +'">' + wpErpCrm.create_contact_text + ' ' + type + '</a></div>');
                             } else {
@@ -1473,7 +1466,14 @@
                                 form.find('.content-container').css({ 'marginTop': '15px' });
                             });
 
-                        }
+                        },
+                        error: function() {
+                            form.find('.modal-suggession').fadeOut( 300, function() {
+                                $(this).remove();
+                                form.find('.content-container').css({ 'marginTop': '0px' });
+                            });
+                            form.find('button[type=submit]' ).removeAttr( 'disabled' );
+                        },
                     });
                 },
 
@@ -1508,7 +1508,7 @@
                             $('.erp-modal-backdrop').remove();
 
                             selfVue.$nextTick(function() {
-                                this.$broadcast('vtable:reload')
+                                this.$broadcast('vtable:reload');
                             });
                             selfVue.$refs.vtable.topNavFilter.data = resp.statuses;
 
@@ -1576,6 +1576,7 @@
                                             modal.closeModal();
                                             selfVue.$refs.vtable.tableData.unshift(response.data);
                                             selfVue.$refs.vtable.topNavFilter.data = response.statuses;
+                                            selfVue.$broadcast('vtable:reload');
                                         },
                                         error: function(error) {
                                             modal.enableButton();

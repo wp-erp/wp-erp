@@ -1911,3 +1911,15 @@ function erp_generate_key() {
 
     return $key;
 }
+
+/**
+ * Include required HTML form erp-popup
+ *
+ * @since 1.1.12
+ *
+ * @return void
+ */
+function erp_include_popup_markup() {
+    include_once WPERP_INCLUDES . '/admin/views/erp-modal.php';
+    erp_get_js_template( WPERP_INCLUDES . '/admin/views/address.php', 'erp-address' );
+}

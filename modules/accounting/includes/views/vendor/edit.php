@@ -1,5 +1,8 @@
 <div class="wrap">
-    <h2><?php _e( 'Update Vendor', 'erp-accounting' ); ?></h2>
+    <h2>
+        <?php _e( 'Edit Vendor', 'erp-accounting' ); ?>
+        <a href="<?php echo admin_url( 'admin.php?page=erp-accounting-vendors&action=new' ); ?>" class="add-new-h2"><?php _e( 'Add New', 'erp-accounting' ); ?></a>
+    </h2>
 
     <?php $item = erp_ac_get_customer( $id ); ?>
 

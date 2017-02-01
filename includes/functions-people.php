@@ -101,7 +101,7 @@ function erp_get_peoples( $args = [] ) {
         if ( $count ) {
             $sql_order_by = '';
             $sql_group_by = '';
-            $wrapper_select = 'SELECT COUNT(people.id) as total_number';
+            $wrapper_select = 'SELECT COUNT( DISTINCT people.id ) as total_number';
             unset( $sql['select'][0] );
         }
 
@@ -117,8 +117,6 @@ function erp_get_peoples( $args = [] ) {
                         . $sql_group_by . ' '
                         . $sql_order_by . ' '
                         . $sql_limit;
-
-       // sql_error_log( $final_query );
 
         if ( $count ) {
             // Only filtered total count of people
@@ -645,4 +643,66 @@ function erp_get_people_main_field() {
     return apply_filters( 'erp_get_people_main_field', [
         'user_id', 'first_name', 'last_name', 'company', 'email', 'phone', 'mobile', 'other', 'website', 'fax', 'notes', 'street_1', 'street_2', 'city', 'state', 'postal_code', 'country', 'currency', 'created_by', 'created'
     ] );
+}
+
+/**
+ * Convert to ERP People
+ *
+ * Convert one people type to another or convert wp user to erp people
+ *
+ * @since 1.1.12
+ *
+ * @param array $args
+ *
+ * @return int|object people_id on success and WP_Error object on fail
+ */
+function erp_convert_to_people( $args = [] ) {
+
+    $type = ! empty( $args['type'] ) ? $args['type'] : 'contact';
+
+    if ( $args['is_wp_user'] && $args['wp_user_id'] ) {
+            $wp_user = \get_user_by( 'id', $args['wp_user_id'] );
+
+            $params = [
+                'first_name'  => $wp_user->first_name,
+                'last_name'   => $wp_user->last_name,
+                'email'       => $wp_user->user_email,
+                'company'     => get_user_meta( $wp_user->ID, 'company', true ),
+                'phone'       => get_user_meta( $wp_user->ID, 'phone', true ),
+                'mobile'      => get_user_meta( $wp_user->ID, 'mobile', true ),
+                'other'       => get_user_meta( $wp_user->ID, 'other', true ),
+                'website'     => $wp_user->user_url,
+                'fax'         => get_user_meta( $wp_user->ID, 'fax', true ),
+                'notes'       => get_user_meta( $wp_user->ID, 'notes', true ),
+                'street_1'    => get_user_meta( $wp_user->ID, 'street_1', true ),
+                'street_2'    => get_user_meta( $wp_user->ID, 'street_2', true ),
+                'city'        => get_user_meta( $wp_user->ID, 'city', true ),
+                'state'       => get_user_meta( $wp_user->ID, 'state', true ),
+                'postal_code' => get_user_meta( $wp_user->ID, 'postal_code', true ),
+                'country'     => get_user_meta( $wp_user->ID, 'country', true ),
+                'currency'    => get_user_meta( $wp_user->ID, 'currency', true ),
+                'user_id'     => $wp_user->ID,
+                'type'        => $type,
+                'photo_id'    => get_user_meta( $wp_user->ID, 'photo_id', true )
+            ];
+
+            $people_id = erp_insert_people( $params );
+
+            if ( is_wp_error( $people_id ) ) {
+                return $people_id;
+            }
+
+    } else {
+        $people_obj = \WeDevs\ERP\Framework\Models\People::find( $args['people_id'] );
+
+        if ( empty( $people_obj ) ) {
+            return new \WP_Error( 'no-erp-people', __( 'People not exists', 'erp' ) );
+        }
+
+        $type_obj   = \WeDevs\ERP\Framework\Models\PeopleTypes::name( $type )->first();
+        $people_obj->assignType( $type_obj );
+        $people_id = $people_obj->id;
+    }
+
+    return $people_id;
 }

@@ -159,7 +159,7 @@
                     <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
                         <td><?php echo erp_format_date( $row->date ); ?></td>
                         <td>
-                            <?php echo ( ! empty( $row->type ) ) ? $row->type : '--'; ?>
+                            <?php echo ( ! empty( $row->type ) ) ? $row->type : erp_get_company_default_location_name(); ?>
                         </td>
                         <td>
                             <?php echo ( ! empty( $row->category ) ) ? $row->category : '--'; ?>
