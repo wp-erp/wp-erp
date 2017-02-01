@@ -151,6 +151,17 @@ If you are unable to use any of the methods due to internet connectivity and fil
 
 == Changelog ==
 
+**v1.1.12 -> Feb 01, 2017**
+
+* [fix] Fix employee editor popup country dropdown
+* [fix] Fix announcement mark as read process
+* [fix] Fix people conversion from another type or from WP User
+* [fix] Fix people total counting issues in `erp_get_peoples` function
+* [new] `erp_include_popup_markup` function to include erp-popup markup
+* [new] Add toastr.js plugin
+* [new] Add filterable company default location name
+* [tweak] Refactor single employee permissions update process
+
 **v1.1.11 -> Jan 22, 2017**
 
 * [fix] Update minified JavaScript files
