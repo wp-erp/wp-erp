@@ -40,7 +40,7 @@ class Company {
                 'address_2' => __( 'Address Line 2', 'erp' ),
                 'city'      => __( 'City', 'erp' ),
                 'state'     => __( 'State', 'erp' ),
-                'postcode'  => '12345',
+                'postcode'  => '',
                 'country'   => 'US'
             ],
             'phone'    => '',

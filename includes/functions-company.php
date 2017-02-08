@@ -41,7 +41,7 @@ function erp_company_get_locations() {
             'address_2' => $company->address['address_2'],
             'city' => $company->address['city'],
             'state' => $company->address['state'],
-            'zip' => $company->address['zip'],
+            'zip' => isset( $company->address['zip'] ) ? $company->address['zip'] : $company->address['postcode'],
             'country' => $company->address['country'],
             'fax' => $company->fax,
             'phone' => $company->phone,
