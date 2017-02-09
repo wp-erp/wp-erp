@@ -2837,8 +2837,30 @@ function erp_handle_user_bulk_actions() {
             }
 
             foreach ( $user_ids as $user_id ) {
-                $data['type']    = 'contact';
-                $data['user_id'] = (int) $user_id;
+                $wp_user     = get_user_by( 'id', $user_id );
+                $phone       = get_user_meta( $user_id, 'phone', true );
+                $street_1    = get_user_meta( $user_id, 'street_1', true );
+                $street_2    = get_user_meta( $user_id, 'street_2', true );
+                $city        = get_user_meta( $user_id, 'city', true );
+                $state       = get_user_meta( $user_id, 'state', true );
+                $postal_code = get_user_meta( $user_id, 'postal_code', true );
+                $country     = get_user_meta( $user_id, 'country', true );
+
+                $data = [
+                    'type'          => 'contact',
+                    'user_id'       => absint( $user_id ),
+                    'first_name'    => $wp_user->first_name,
+                    'last_name'     => $wp_user->last_name,
+                    'email'         => $wp_user->user_email,
+                    'phone'         => $phone,
+                    'street_1'      => $street_1,
+                    'street_2'      => $street_2,
+                    'city'          => $city,
+                    'state'         => $state,
+                    'postal_code'   => $postal_code,
+                    'country'       => $country,
+                    'contact_owner' => $contact_owner
+                ];
 
                 $contact_id = erp_insert_people( $data );
 
