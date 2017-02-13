@@ -269,6 +269,16 @@ class Customer_Relationship {
         wp_enqueue_script( 'erp-crm-contact', WPERP_CRM_ASSETS . "/js/crm-contacts$suffix.js", array( 'erp-vue-table', 'erp-script', 'erp-vuejs', 'underscore', 'erp-tiptip', 'jquery', 'erp-select2' ), date( 'Ymd' ), true );
         wp_localize_script( 'erp-crm', 'wpErpCrm', $localize_script );
         wp_localize_script( 'erp-crm-contact', 'wpErpCrm', $localize_script );
+
+        $pages_hooks = [
+            'toplevel_page_erp-sales', 'crm_page_erp-sales-schedules', 'crm_page_erp-sales-activities',
+            'crm_page_erp-sales-customers', 'crm_page_erp-sales-customers', 'crm_page_erp-sales-companies',
+            'erp-settings_page_erp-settings',
+        ];
+
+        if ( in_array( $hook , $pages_hooks ) ) {
+            erp_remove_other_select2_sources();
+        }
     }
 
     /**
