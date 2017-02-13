@@ -1530,9 +1530,9 @@ class Ajax_Handler {
             $this->send_error( sprintf( __( 'Date range must be within %s to %s', 'erp' ), erp_format_date( $financial_start_date ), erp_format_date( $financial_end_date ) ) );
         }
 
-        $leave_record_exisst = erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $id );
+        $leave_record_exist = erp_hrm_is_leave_recored_exist_between_date( $start_date, $end_date, $id );
 
-        if ( $leave_record_exisst ) {
+        if ( $leave_record_exist ) {
             $this->send_error( __( 'Existing Leave Record found within selected range!', 'erp' ) );
         }
 
