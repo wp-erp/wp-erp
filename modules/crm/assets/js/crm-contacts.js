@@ -1276,8 +1276,10 @@
                                         if ( selected !== '' ) {
                                             self.find( 'select' ).val( selected ).trigger('change');
                                             self.find("input[type=radio][value='"+selected+"']").prop("checked",true);
+
+                                            var selectedData = selected.toString().split(',');
                                             $.each(self.find("input[type=checkbox]"), function(index, data) {
-                                                if($.inArray($(data).val(), selected.split(',')) != -1) {
+                                                if($.inArray($(data).val(), selectedData) != -1) {
                                                     $(data).prop('checked', true);
                                                 }
                                             });

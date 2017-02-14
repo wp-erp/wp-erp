@@ -392,7 +392,7 @@ function erp_crm_customer_get_company( $postdata ) {
  *
  * @since 1.0
  *
- * @param [type] $[name] [<description>]
+ * @param array $postdata
  *
  * @return array
  */
@@ -431,7 +431,7 @@ function erp_crm_company_get_customers( $postdata ) {
  *
  * @param  integer $id
  *
- * @return string [url]
+ * @return string admin url
  */
 function erp_crm_get_customer_details_url( $id ) {
     return admin_url( 'admin.php?page=erp-sales-customers&action=view&id=' . $id );
