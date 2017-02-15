@@ -3,10 +3,12 @@
         <# if( data.schedule.created_by.ID == wpErpCrm.current_user_id ) { #>
             <?php _e( 'You', 'erp' ); ?>
         <# } else { #>
-            {{ data.schedule.created_by.display_name }}
+            <strong>{{ data.schedule.created_by.display_name }}</strong>
         <# } #>
 
-        <# if( ( data.schedule.type == 'log_activity' ) && ( new Date() < new Date( data.schedule.start_date ) ) ) { #>
+        <# if ( data.schedule.type == 'tasks' ) { #>
+            <?php _e( 'assigned a task', 'erp' ); ?>
+        <# } else if( ( data.schedule.type == 'log_activity' ) && ( new Date() < new Date( data.schedule.start_date ) ) ) { #>
             <?php _e( 'have scheduled', 'erp' ) ?>
         <# } else { #>
             <?php _e( 'logged', 'erp' ) ?>
@@ -25,30 +27,44 @@
             <strong>{{ data.schedule.contact.first_name }} {{ data.schedule.contact.last_name }}</strong>
         <# } #>
 
-        <# if( data.schedule.extra.invited_user.length > 1 ) { #>
-            and
-            <# var users = data.schedule.extra.invited_user.map( function( elm ) {
-                if ( elm.id == wpErpCrm.current_user_id ) {
-                    if ( self.feed.type == 'tasks' ) {
-                        return 'Yourself';
-                    }
-                    return 'You';
-                } else {
-                    return elm.name;
-                }
-            } ).join("<br>") #>
+        <# if ( 'tasks' === data.schedule.type ) { #>
 
-            <strong class="erp-tips" title="{{ users }}">{{ data.schedule.extra.invited_user.length }} others</strong>
-
-        <# } else if ( data.schedule.extra.invited_user.length == 1 ) { #>
-            <# if ( data.schedule.extra.invited_user[0].id == wpErpCrm.current_user_id ) {
-                    var users = 'You';
-                } else {
-                    var users = data.schedule.extra.invited_user[0].name;
-                }
+            <br><br>
+            Assigned To:
+            <#
+                var names = data.schedule.extra.invited_user.map(function (user) {
+                    return user.name;
+                });
             #>
-            and
-            <strong>{{ users }}</strong>
+
+            <strong>{{{ names.join('</strong>, <strong>') }}}</strong>
+
+        <# } else { #>
+            <# if( data.schedule.extra.invited_user.length > 1 ) { #>
+                and
+                <# var users = data.schedule.extra.invited_user.map( function( elm ) {
+                    if ( elm.id == wpErpCrm.current_user_id ) {
+                        if ( self.feed.type == 'tasks' ) {
+                            return 'Yourself';
+                        }
+                        return 'You';
+                    } else {
+                        return elm.name;
+                    }
+                } ).join("<br>") #>
+
+                <strong class="erp-tips" title="{{ users }}">{{ data.schedule.extra.invited_user.length }} others</strong>
+
+            <# } else if ( data.schedule.extra.invited_user.length == 1 ) { #>
+                <# if ( data.schedule.extra.invited_user[0].id == wpErpCrm.current_user_id ) {
+                        var users = 'You';
+                    } else {
+                        var users = data.schedule.extra.invited_user[0].name;
+                    }
+                #>
+                and
+                <strong>{{ users }}</strong>
+            <# } #>
         <# } #>
     </p>
     <hr>

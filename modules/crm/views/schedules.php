@@ -6,10 +6,12 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
 
     <h1><?php _e( 'Schedules', 'erp' ); ?></h1>
 
-    <h2 class="nav-tab-wrapper erp-nav-tab-wrapper">
-        <a class="nav-tab <?php echo $tab == 'own' ? 'nav-tab-active': ''; ?>" href="<?php echo add_query_arg( [ 'page'=>'erp-sales-schedules', 'tab' => 'own' ], admin_url( 'admin.php' ) ); ?>"><?php _e( 'My Schedules', 'erp' ); ?></a>
-        <a class="nav-tab <?php echo $tab == 'all' ? 'nav-tab-active': ''; ?>" href="<?php echo add_query_arg( [ 'page'=>'erp-sales-schedules', 'tab' => 'all' ], admin_url( 'admin.php' ) ); ?>"><?php _e( 'All Schedules', 'erp' ); ?></a>
-    </h2>
+    <?php if ( current_user_can( erp_crm_get_manager_role() ) ): ?>
+        <h2 class="nav-tab-wrapper erp-nav-tab-wrapper">
+            <a class="nav-tab <?php echo $tab == 'own' ? 'nav-tab-active': ''; ?>" href="<?php echo add_query_arg( [ 'page'=>'erp-sales-schedules', 'tab' => 'own' ], admin_url( 'admin.php' ) ); ?>"><?php _e( 'My Schedules', 'erp' ); ?></a>
+            <a class="nav-tab <?php echo $tab == 'all' ? 'nav-tab-active': ''; ?>" href="<?php echo add_query_arg( [ 'page'=>'erp-sales-schedules', 'tab' => 'all' ], admin_url( 'admin.php' ) ); ?>"><?php _e( 'All Schedules', 'erp' ); ?></a>
+        </h2>
+    <?php endif; ?>
 
 
     <div class="erp-crm-schedule-wrapper">
@@ -42,8 +44,14 @@ $schedules_data = erp_crm_get_schedule_data( $tab );
             events: <?php echo json_encode( $schedules_data ); ?>,
             eventClick: function(calEvent, jsEvent, view) {
                 var scheduleId = calEvent.schedule.id;
+                var title      = ( calEvent.schedule.extra.schedule_title ) ? calEvent.schedule.extra.schedule_title : '<?php _e( 'Log Details', 'erp' ) ?>';
+
+                if ( 'tasks' === calEvent.schedule.type ) {
+                    title = calEvent.schedule.extra.task_title
+                }
+
                 $.erpPopup({
-                    title: ( calEvent.schedule.extra.schedule_title ) ? calEvent.schedule.extra.schedule_title : '<?php _e( 'Log Details', 'erp' ) ?>',
+                    title: title,
                     button: '',
                     id: 'erp-customer-edit',
                     onReady: function() {
