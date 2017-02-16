@@ -1923,3 +1923,31 @@ function erp_include_popup_markup() {
     include_once WPERP_INCLUDES . '/admin/views/erp-modal.php';
     erp_get_js_template( WPERP_INCLUDES . '/admin/views/address.php', 'erp-address' );
 }
+
+/**
+ * Dequeue/Deregister select2 from other plugins
+ *
+ * @since 1.1.13
+ *
+ * @return void
+ */
+function erp_dequeue_other_select2_sources() {
+    // select2 handle is used by woocommerce
+    wp_deregister_script( 'select2' );
+    wp_dequeue_script( 'select2' );
+}
+
+/**
+ * Remove select2 enqueued by other plugins
+ *
+ * Whenever enqueue erp-select2, call this function to
+ * make sure only one select2 is loaded
+ *
+ * @since 1.1.13
+ *
+ * @return void
+ */
+function erp_remove_other_select2_sources() {
+    add_action( 'admin_enqueue_scripts', 'erp_dequeue_other_select2_sources', 999999 );
+    add_action( 'wp_enqueue_scripts', 'erp_dequeue_other_select2_sources', 999999 );
+}

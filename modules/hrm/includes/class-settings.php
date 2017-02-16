@@ -12,10 +12,11 @@ class Settings extends ERP_Settings_Page {
      * [__construct description]
      */
     public function __construct() {
-        $this->id            = 'erp-hr';
-        $this->label         = __( 'HR', 'erp' );
-        $this->single_option = true;
-        $this->sections      = $this->get_sections();
+        $this->id             = 'erp-hr';
+        $this->label          = __( 'HR', 'erp' );
+        $this->single_option  = true;
+        $this->arrayed_option = 'erp_settings_erp-hr_workdays';
+        $this->sections       = $this->get_sections();
     }
 
     /**
@@ -44,13 +45,13 @@ class Settings extends ERP_Settings_Page {
         );
 
         $week_days = array(
-            'mon' => __( 'Monday', 'erp' ),
-            'tue' => __( 'Tuesday', 'erp' ),
-            'wed' => __( 'Wednesday', 'erp' ),
-            'thu' => __( 'Thursday', 'erp' ),
-            'fri' => __( 'Friday', 'erp' ),
-            'sat' => __( 'Saturday', 'erp' ),
-            'sun' => __( 'Sunday', 'erp' )
+            'erp_settings_erp-hr_workdays[mon]' => __( 'Monday', 'erp' ),
+            'erp_settings_erp-hr_workdays[tue]' => __( 'Tuesday', 'erp' ),
+            'erp_settings_erp-hr_workdays[wed]' => __( 'Wednesday', 'erp' ),
+            'erp_settings_erp-hr_workdays[thu]' => __( 'Thursday', 'erp' ),
+            'erp_settings_erp-hr_workdays[fri]' => __( 'Friday', 'erp' ),
+            'erp_settings_erp-hr_workdays[sat]' => __( 'Saturday', 'erp' ),
+            'erp_settings_erp-hr_workdays[sun]' => __( 'Sunday', 'erp' )
         );
 
         $fields = [];

@@ -63,7 +63,14 @@ class Contact extends \WeDevs\ERP\People {
             'currency'      => '',
             'social'        => [],
             'source'        => '',
-            'assign_to'     => '',
+            'assign_to'     => [
+                'id'           => 0,
+                'avatar'       => '',
+                'first_name'   => '',
+                'last_name'    => '',
+                'display_name' => '',
+                'email'        => '',
+            ],
             'contact_age'   => '',
             'group_id'      => [],
         );

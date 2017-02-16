@@ -392,7 +392,7 @@ function erp_crm_customer_get_company( $postdata ) {
  *
  * @since 1.0
  *
- * @param [type] $[name] [<description>]
+ * @param array $postdata
  *
  * @return array
  */
@@ -431,7 +431,7 @@ function erp_crm_company_get_customers( $postdata ) {
  *
  * @param  integer $id
  *
- * @return string [url]
+ * @return string admin url
  */
 function erp_crm_get_customer_details_url( $id ) {
     return admin_url( 'admin.php?page=erp-sales-customers&action=view&id=' . $id );
@@ -619,6 +619,8 @@ function erp_crm_format_activity_feed_message( $message, $activity ) {
  * Get all customer feeds
  *
  * @since 1.0
+ * @since 1.1.13 Add activity 'type' filtering
+ *               For tasks type activity return activities depends on assgined to users
  *
  * @param  integer $customer_id
  *
@@ -653,7 +655,11 @@ function erp_crm_get_feed_activity( $postdata ) {
         } else if ( $postdata['type'] == 'logs' ) {
             $results = $results->where( 'type', 'log_activity' )->where( 'start_date', '<', current_time('mysql') );
         } else {
-            $results = $results->where( 'type', $postdata['type'] );
+            if ( is_array( $postdata['type'] ) ) {
+                $results = $results->whereIn( 'type', $postdata['type'] );
+            } else {
+                $results = $results->where( 'type', $postdata['type'] );
+            }
         }
     }
 
@@ -675,6 +681,12 @@ function erp_crm_get_feed_activity( $postdata ) {
 
     foreach ( $results as $key => $value ) {
         $value['extra'] = json_decode( base64_decode( $value['extra'] ), true );
+
+        if ( isset( $value['extra']['invite_contact'] ) && ! empty( $postdata['assigned_to'] ) ) {
+            if ( ! in_array( $postdata['assigned_to'] , $value['extra']['invite_contact'] ) ) {
+                continue;
+            }
+        }
 
         if ( isset( $value['extra']['invite_contact'] ) && count( $value['extra']['invite_contact'] ) > 0 ) {
             foreach ( $value['extra']['invite_contact'] as $user_id ) {
@@ -2217,6 +2229,7 @@ function erp_crm_save_contact_owner_email_activity( $email, $inbound_email_addre
  * Prepare schedule data for calendar
  *
  * @since 1.0
+ * @since 1.1.13 Display tasks title beside datetime
  *
  * @param  array $schedule
  *
@@ -2240,7 +2253,12 @@ function erp_crm_prepare_calendar_schedule_data( $schedules ) {
                 }
             }
 
-            $title = $time . ' ' .ucfirst( $schedule['log_type'] );
+            if ( 'tasks' === $schedule['type'] && ! empty( $schedule['extra']['task_title'] ) ) {
+                $title = $time . ' | ' . $schedule['extra']['task_title'];
+            } else {
+                $title = $time . ' ' .ucfirst( $schedule['log_type'] );
+            }
+
             $color = $schedule['start_date'] < current_time( 'mysql' ) ? '#f05050' : '#03c756';
 
             $schedules_data[] = [
@@ -2260,17 +2278,23 @@ function erp_crm_prepare_calendar_schedule_data( $schedules ) {
  * Get schedule data in schedule page
  *
  * @since 1.0
+ * @since 1.1.13 i) Fetch tasks activities also. ii) Display data based on permission and current tab
  *
  * @return array
  */
 function erp_crm_get_schedule_data( $tab = '' ) {
     $args = [
         'number' => -1,
-        'type'   => 'log_activity'
+        'type'   => [ 'log_activity', 'tasks' ]
     ];
 
-    if ( $tab == 'own' ) {
-        $args['created_by'] = get_current_user_id();
+    /**
+     * If user is not a CRM Manager then he/she should always see only activities assigned to him/her.
+     * For CRM Managers, in "My Schedules" tab should only show the activities assigned to him/her.
+     * "All Schedules" should show all activities
+     */
+    if ( ! current_user_can( erp_crm_get_manager_role() ) || 'own' === $tab ) {
+        $args['assigned_to'] = get_current_user_id();
     }
 
     $schedules      = erp_crm_get_feed_activity( $args );
@@ -2837,8 +2861,30 @@ function erp_handle_user_bulk_actions() {
             }
 
             foreach ( $user_ids as $user_id ) {
-                $data['type']    = 'contact';
-                $data['user_id'] = (int) $user_id;
+                $wp_user     = get_user_by( 'id', $user_id );
+                $phone       = get_user_meta( $user_id, 'phone', true );
+                $street_1    = get_user_meta( $user_id, 'street_1', true );
+                $street_2    = get_user_meta( $user_id, 'street_2', true );
+                $city        = get_user_meta( $user_id, 'city', true );
+                $state       = get_user_meta( $user_id, 'state', true );
+                $postal_code = get_user_meta( $user_id, 'postal_code', true );
+                $country     = get_user_meta( $user_id, 'country', true );
+
+                $data = [
+                    'type'          => 'contact',
+                    'user_id'       => absint( $user_id ),
+                    'first_name'    => $wp_user->first_name,
+                    'last_name'     => $wp_user->last_name,
+                    'email'         => $wp_user->user_email,
+                    'phone'         => $phone,
+                    'street_1'      => $street_1,
+                    'street_2'      => $street_2,
+                    'city'          => $city,
+                    'state'         => $state,
+                    'postal_code'   => $postal_code,
+                    'country'       => $country,
+                    'contact_owner' => $contact_owner
+                ];
 
                 $contact_id = erp_insert_people( $data );
 

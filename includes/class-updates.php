@@ -91,7 +91,9 @@ class Updates {
             return;
         }
 
-        if ( ! is_null( WPERP_VERSION ) && version_compare( WPERP_VERSION, max( array_keys( self::$updates ) ), '<=' ) ) {
+        $installed_version = get_option( 'wp_erp_version' );
+
+        if ( ! is_null( $installed_version ) && version_compare( $installed_version, max( array_keys( self::$updates ) ), '<' ) ) {
             ?>
                 <div id="message" class="updated">
                     <p><?php _e( '<strong>WP ERP Data Update Required</strong> &#8211; We need to update your install to the latest version', 'erp' ); ?></p>
@@ -107,9 +109,6 @@ class Updates {
         } else {
             update_option( 'wp_erp_version', WPERP_VERSION );
         }
-
-        ?>
-        <?php
     }
 
     /**
@@ -147,6 +146,8 @@ class Updates {
                 update_option( 'wp_erp_version', $version );
             }
         }
+
+        update_option( 'wp_erp_version', WPERP_VERSION );
 
         $this->enable_active_erp_modules();
 
