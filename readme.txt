@@ -2,7 +2,7 @@
 Contributors: tareq1988, wedevs, ediamin, sabbir1991, asaquzzaman
 Tags: small business, SME, contact, contacts, CRM, Customer Relationship Management, employee, leave management, hr, hrm, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 4.7.1
+Tested up to: 4.7.2
 Stable tag: trunk
 License: GPLv2
 Donate Link: https://tareq.co/donate
@@ -150,6 +150,16 @@ If you are unable to use any of the methods due to internet connectivity and fil
   => No. We did not put any limit on anything. You can create as much entries as you want.
 
 == Changelog ==
+
+**v1.1.13 -> Feb 16, 2017**
+
+* [fix] Show tasks based on permission and tab in CRM Schedule calendar
+* [fix] Fix contact editor error when assigned to one group
+* [fix] Update ERP_Settings_Page class. Fix #409.
+* [fix] Fix core Updates class
+* [fix] Fix WP User to CRM importer meta sync error
+* [fix] Fix comapny default address zip error
+* [new] Add function to remove select2 enqueued by other plugins
 
 **v1.1.12 -> Feb 01, 2017**
 
