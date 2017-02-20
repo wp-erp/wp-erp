@@ -3,12 +3,13 @@
 /**
  * Get company work days
  *
- * @param  int  $company_id
+ * @since 1.0.0
+ * @since 1.1.14 Using settings saved in ERP Settings > HR > Workdays tab
  *
  * @return array
  */
 function erp_hr_get_work_days() {
-    $default = array(
+    $default = [
         'mon' => 8,
         'tue' => 8,
         'wed' => 8,
@@ -16,11 +17,21 @@ function erp_hr_get_work_days() {
         'fri' => 8,
         'sat' => 0,
         'sun' => 0
-    );
+    ];
 
     $option_key = 'erp_settings_erp-hr_workdays';
 
-    return get_option( $option_key, $default );
+    $wizard_settings = get_option( $option_key, $default );
+
+    return [
+        'mon' => get_option( 'mon', $wizard_settings['mon'] ),
+        'tue' => get_option( 'tue', $wizard_settings['tue'] ),
+        'wed' => get_option( 'wed', $wizard_settings['wed'] ),
+        'thu' => get_option( 'thu', $wizard_settings['thu'] ),
+        'fri' => get_option( 'fri', $wizard_settings['fri'] ),
+        'sat' => get_option( 'sat', $wizard_settings['sat'] ),
+        'sun' => get_option( 'sun', $wizard_settings['sun'] )
+    ];
 }
 
 /**
