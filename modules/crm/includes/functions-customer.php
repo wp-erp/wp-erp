@@ -2056,7 +2056,7 @@ function erp_crm_is_people_belongs_to_saved_search( $sql, $args ) {
         return $sql;
     }
 
-    $sql['where'][] = "AND people.id = " . $args['test_user'];
+    $sql['post_where_queries'][] = "AND people.id = " . $args['test_user'];
 
     return $sql;
 }
