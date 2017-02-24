@@ -37,62 +37,202 @@ function erp_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = ar
 /**
  * Get full list of currency codes.
  *
+ * @since 1.0.0
+ * @since 1.1.14 Add most of the current circulating currencies
+ *
  * @return array
  */
 function erp_get_currencies() {
-    return array_unique( apply_filters( 'erp_currencies', array(
-        'AED' => __( 'United Arab Emirates Dirham', 'erp' ),
-        'AUD' => __( 'Australian Dollars', 'erp' ),
-        'AZD' => __( 'Argentine Peso', 'erp' ),
+    return apply_filters( 'erp_currencies', [
+        'AFN' => __( 'Afghan Afghani', 'erp' ),
+        'ALL' => __( 'Albanian Lek', 'erp' ),
+        'DZD' => __( 'Algerian Dinar', 'erp' ),
+        'ADP' => __( 'Andorran Peseta', 'erp' ),
+        'AOA' => __( 'Angolan Kwanza', 'erp' ),
+        'ARA' => __( 'Argentine Austral', 'erp' ),
+        'ARS' => __( 'Argentine Peso', 'erp' ),
+        'AMD' => __( 'Armenian Dram', 'erp' ),
+        'AWG' => __( 'Aruban Florin', 'erp' ),
+        'AUD' => __( 'Australian Dollar', 'erp' ),
+        'ATS' => __( 'Austrian Schilling', 'erp' ),
+        'AZN' => __( 'Azerbaijani Manat', 'erp' ),
+        'BSD' => __( 'Bahamian Dollar', 'erp' ),
+        'BHD' => __( 'Bahraini Dinar', 'erp' ),
         'BDT' => __( 'Bangladeshi Taka', 'erp' ),
+        'BBD' => __( 'Barbadian Dollar', 'erp' ),
+        'BYR' => __( 'Belarusian Ruble', 'erp' ),
+        'BEF' => __( 'Belgian Franc', 'erp' ),
+        'BZD' => __( 'Belize Dollar', 'erp' ),
+        'BMD' => __( 'Bermudan Dollar', 'erp' ),
+        'BTN' => __( 'Bhutanese Ngultrum', 'erp' ),
+        'BOB' => __( 'Bolivian Boliviano', 'erp' ),
+        'BOV' => __( 'Bolivian Mvdol', 'erp' ),
+        'BOP' => __( 'Bolivian Peso', 'erp' ),
+        'BAM' => __( 'Bosnia-Herzegovina Convertible Mark', 'erp' ),
+        'BWP' => __( 'Botswanan Pula', 'erp' ),
         'BRL' => __( 'Brazilian Real', 'erp' ),
+        'GBP' => __( 'British Pound Sterling', 'erp' ),
+        'BND' => __( 'Brunei Dollar', 'erp' ),
         'BGN' => __( 'Bulgarian Lev', 'erp' ),
-        'CAD' => __( 'Canadian Dollars', 'erp' ),
+        'BUK' => __( 'Burmese Kyat', 'erp' ),
+        'BIF' => __( 'Burundian Franc', 'erp' ),
+        'KHR' => __( 'Cambodian Riel', 'erp' ),
+        'CAD' => __( 'Canadian Dollar', 'erp' ),
+        'CVE' => __( 'Cape Verdean Escudo', 'erp' ),
+        'KYD' => __( 'Cayman Islands Dollar', 'erp' ),
+        'XOF' => __( 'CFA Franc BCEAO', 'erp' ),
+        'XAF' => __( 'CFA Franc BEAC', 'erp' ),
+        'XPF' => __( 'CFP Franc', 'erp' ),
         'CLP' => __( 'Chilean Peso', 'erp' ),
         'CNY' => __( 'Chinese Yuan', 'erp' ),
         'COP' => __( 'Colombian Peso', 'erp' ),
-        'CZK' => __( 'Czech Koruna', 'erp' ),
+        'KMF' => __( 'Comorian Franc', 'erp' ),
+        'CDF' => __( 'Congolese Franc', 'erp' ),
+        'CRC' => __( 'Costa Rican Colón', 'erp' ),
+        'HRK' => __( 'Croatian Kuna', 'erp' ),
+        'CUP' => __( 'Cuban Peso', 'erp' ),
+        'CYP' => __( 'Cypriot Pound', 'erp' ),
+        'CZK' => __( 'Czech Republic Koruna', 'erp' ),
         'DKK' => __( 'Danish Krone', 'erp' ),
+        'DJF' => __( 'Djiboutian Franc', 'erp' ),
         'DOP' => __( 'Dominican Peso', 'erp' ),
-        'DZD' => __( 'Algerian Dinar', 'erp' ),
-        'EUR' => __( 'Euros', 'erp' ),
+        'NLG' => __( 'Dutch Guilder', 'erp' ),
+        'XCD' => __( 'East Caribbean Dollar', 'erp' ),
+        'ECS' => __( 'Ecuadorian Sucre', 'erp' ),
+        'EGP' => __( 'Egyptian Pound', 'erp' ),
+        'GQE' => __( 'Equatorial Guinean Ekwele', 'erp' ),
+        'ERN' => __( 'Eritrean Nakfa', 'erp' ),
+        'EEK' => __( 'Estonian Kroon', 'erp' ),
+        'ETB' => __( 'Ethiopian Birr', 'erp' ),
+        'EUR' => __( 'Euro', 'erp' ),
+        'FKP' => __( 'Falkland Islands Pound', 'erp' ),
+        'FJD' => __( 'Fijian Dollar', 'erp' ),
+        'FIM' => __( 'Finnish Markka', 'erp' ),
+        'FRF' => __( 'French Franc', 'erp' ),
+        'GMD' => __( 'Gambian Dalasi', 'erp' ),
+        'GEL' => __( 'Georgian Lari', 'erp' ),
+        'DEM' => __( 'German Mark', 'erp' ),
+        'GHS' => __( 'Ghanaian Cedi', 'erp' ),
+        'GIP' => __( 'Gibraltar Pound', 'erp' ),
+        'GRD' => __( 'Greek Drachma', 'erp' ),
+        'GTQ' => __( 'Guatemalan Quetzal', 'erp' ),
+        'GWP' => __( 'Guinea-Bissau Peso', 'erp' ),
+        'GNF' => __( 'Guinean Franc', 'erp' ),
+        'GYD' => __( 'Guyanaese Dollar', 'erp' ),
+        'HTG' => __( 'Haitian Gourde', 'erp' ),
+        'HNL' => __( 'Honduran Lempira', 'erp' ),
         'HKD' => __( 'Hong Kong Dollar', 'erp' ),
-        'HRK' => __( 'Croatia kuna', 'erp' ),
         'HUF' => __( 'Hungarian Forint', 'erp' ),
-        'ISK' => __( 'Icelandic krona', 'erp' ),
-        'IDR' => __( 'Indonesia Rupiah', 'erp' ),
+        'ISK' => __( 'Icelandic Króna', 'erp' ),
         'INR' => __( 'Indian Rupee', 'erp' ),
-        'NPR' => __( 'Nepali Rupee', 'erp' ),
-        'ILS' => __( 'Israeli Shekel', 'erp' ),
-        'JPY' => __( 'Japanese Yen', 'erp' ),
-        'KIP' => __( 'Lao Kip', 'erp' ),
-        'KRW' => __( 'South Korean Won', 'erp' ),
-        'MYR' => __( 'Malaysian Ringgits', 'erp' ),
-        'MXN' => __( 'Mexican Peso', 'erp' ),
-        'NGN' => __( 'Nigerian Naira', 'erp' ),
-        'NOK' => __( 'Norwegian Krone', 'erp' ),
-        'NZD' => __( 'New Zealand Dollar', 'erp' ),
-        'OMR' => __( 'Omani Rial', 'erp' ),
+        'IDR' => __( 'Indonesian Rupiah', 'erp' ),
         'IRR' => __( 'Iranian Rial', 'erp' ),
+        'IQD' => __( 'Iraqi Dinar', 'erp' ),
+        'IEP' => __( 'Irish Pound', 'erp' ),
+        'ILS' => __( 'Israeli New Sheqel', 'erp' ),
+        'ITL' => __( 'Italian Lira', 'erp' ),
+        'JMD' => __( 'Jamaican Dollar', 'erp' ),
+        'JPY' => __( 'Japanese Yen', 'erp' ),
+        'JOD' => __( 'Jordanian Dinar', 'erp' ),
+        'KZT' => __( 'Kazakhstani Tenge', 'erp' ),
+        'KES' => __( 'Kenyan Shilling', 'erp' ),
+        'KWD' => __( 'Kuwaiti Dinar', 'erp' ),
+        'KGS' => __( 'Kyrgystani Som', 'erp' ),
+        'LAK' => __( 'Laotian Kip', 'erp' ),
+        'LVL' => __( 'Latvian Lats', 'erp' ),
+        'LBP' => __( 'Lebanese Pound', 'erp' ),
+        'LSL' => __( 'Lesotho Loti', 'erp' ),
+        'LRD' => __( 'Liberian Dollar', 'erp' ),
+        'LYD' => __( 'Libyan Dinar', 'erp' ),
+        'LTL' => __( 'Lithuanian Litas', 'erp' ),
+        'LTT' => __( 'Lithuanian Talonas', 'erp' ),
+        'LUF' => __( 'Luxembourgian Franc', 'erp' ),
+        'MOP' => __( 'Macanese Pataca', 'erp' ),
+        'MKD' => __( 'Macedonian Denar', 'erp' ),
+        'MGA' => __( 'Malagasy Ariary', 'erp' ),
+        'MWK' => __( 'Malawian Kwacha', 'erp' ),
+        'MYR' => __( 'Malaysian Ringgit', 'erp' ),
+        'MVR' => __( 'Maldivian Rufiyaa', 'erp' ),
+        'MLF' => __( 'Malian Franc', 'erp' ),
+        'MTL' => __( 'Maltese Lira', 'erp' ),
+        'MRO' => __( 'Mauritanian Ouguiya', 'erp' ),
+        'MUR' => __( 'Mauritian Rupee', 'erp' ),
+        'MXN' => __( 'Mexican Peso', 'erp' ),
+        'MDL' => __( 'Moldovan Leu', 'erp' ),
+        'MCF' => __( 'Monegasque Franc', 'erp' ),
+        'MNT' => __( 'Mongolian Tugrik', 'erp' ),
+        'MAD' => __( 'Moroccan Dirham', 'erp' ),
+        'MZN' => __( 'Mozambican Metical', 'erp' ),
+        'MMK' => __( 'Myanmar Kyat', 'erp' ),
+        'NAD' => __( 'Namibian Dollar', 'erp' ),
+        'NPR' => __( 'Nepalese Rupee', 'erp' ),
+        'ANG' => __( 'Netherlands Antillean Guilder', 'erp' ),
+        'TWD' => __( 'New Taiwan Dollar', 'erp' ),
+        'NZD' => __( 'New Zealand Dollar', 'erp' ),
+        'NIO' => __( 'Nicaraguan Córdoba', 'erp' ),
+        'NGN' => __( 'Nigerian Naira', 'erp' ),
+        'KPW' => __( 'North Korean Won', 'erp' ),
+        'NOK' => __( 'Norwegian Krone', 'erp' ),
+        'OMR' => __( 'Omani Rial', 'erp' ),
         'PKR' => __( 'Pakistani Rupee', 'erp' ),
-        'PYG' => __( 'Paraguayan Guaraní', 'erp' ),
-        'PHP' => __( 'Philippine Pesos', 'erp' ),
+        'PAB' => __( 'Panamanian Balboa', 'erp' ),
+        'PGK' => __( 'Papua New Guinean Kina', 'erp' ),
+        'PYG' => __( 'Paraguayan Guarani', 'erp' ),
+        'PEI' => __( 'Peruvian Inti', 'erp' ),
+        'PHP' => __( 'Philippine Peso', 'erp' ),
         'PLN' => __( 'Polish Zloty', 'erp' ),
-        'GBP' => __( 'Pounds Sterling', 'erp' ),
+        'PTE' => __( 'Portuguese Escudo', 'erp' ),
+        'QAR' => __( 'Qatari Rial', 'erp' ),
+        'RHD' => __( 'Rhodesian Dollar', 'erp' ),
         'RON' => __( 'Romanian Leu', 'erp' ),
         'RUB' => __( 'Russian Ruble', 'erp' ),
-        'SR'  => __( 'Saudi Riyal', 'erp'),
+        'RWF' => __( 'Rwandan Franc', 'erp' ),
+        'SVC' => __( 'Salvadoran Colón', 'erp' ),
+        'WST' => __( 'Samoan Tala', 'erp' ),
+        'STD' => __( 'São Tomé & Príncipe Dobra', 'erp' ),
+        'SAR' => __( 'Saudi Riyal', 'erp' ),
+        'RSD' => __( 'Serbian Dinar', 'erp' ),
+        'SCR' => __( 'Seychellois Rupee', 'erp' ),
+        'SLL' => __( 'Sierra Leonean Leone', 'erp' ),
         'SGD' => __( 'Singapore Dollar', 'erp' ),
-        'ZAR' => __( 'South African rand', 'erp' ),
+        'SKK' => __( 'Slovak Koruna', 'erp' ),
+        'SIT' => __( 'Slovenian Tolar', 'erp' ),
+        'SBD' => __( 'Solomon Islands Dollar', 'erp' ),
+        'SOS' => __( 'Somali Shilling', 'erp' ),
+        'ZAR' => __( 'South African Rand', 'erp' ),
+        'KRW' => __( 'South Korean Won', 'erp' ),
+        'SSP' => __( 'South Sudanese Pound', 'erp' ),
+        'ESP' => __( 'Spanish Peseta', 'erp' ),
+        'LKR' => __( 'Sri Lankan Rupee', 'erp' ),
+        'SHP' => __( 'St. Helena Pound', 'erp' ),
+        'SDG' => __( 'Sudanese Pound', 'erp' ),
+        'SRD' => __( 'Surinamese Dollar', 'erp' ),
+        'SZL' => __( 'Swazi Lilangeni', 'erp' ),
         'SEK' => __( 'Swedish Krona', 'erp' ),
         'CHF' => __( 'Swiss Franc', 'erp' ),
-        'TWD' => __( 'Taiwan New Dollars', 'erp' ),
+        'SYP' => __( 'Syrian Pound', 'erp' ),
+        'TJS' => __( 'Tajikistani Somoni', 'erp' ),
+        'TZS' => __( 'Tanzanian Shilling', 'erp' ),
         'THB' => __( 'Thai Baht', 'erp' ),
+        'TPE' => __( 'Timorese Escudo', 'erp' ),
+        'TOP' => __( 'Tongan Paʻanga', 'erp' ),
+        'TTD' => __( 'Trinidad & Tobago Dollar', 'erp' ),
+        'TND' => __( 'Tunisian Dinar', 'erp' ),
         'TRY' => __( 'Turkish Lira', 'erp' ),
+        'TMT' => __( 'Turkmenistani Manat', 'erp' ),
+        'UGX' => __( 'Ugandan Shilling', 'erp' ),
+        'UAH' => __( 'Ukrainian Hryvnia', 'erp' ),
+        'AED' => __( 'United Arab Emirates Dirham', 'erp' ),
+        'UYU' => __( 'Uruguayan Peso', 'erp' ),
         'USD' => __( 'US Dollar', 'erp' ),
+        'UZS' => __( 'Uzbekistan Som', 'erp' ),
+        'VUV' => __( 'Vanuatu Vatu', 'erp' ),
+        'VEF' => __( 'Venezuelan Bolívar', 'erp' ),
         'VND' => __( 'Vietnamese Dong', 'erp' ),
-        'EGP' => __( 'Egyptian Pound', 'erp' ),
-    ) ) );
+        'YER' => __( 'Yemeni Rial', 'erp' ),
+        'ZMW' => __( 'Zambian Kwacha', 'erp' ),
+        'ZWL' => __( 'Zimbabwean Dollar', 'erp' ),
+    ] );
 }
 
 /**
@@ -101,14 +241,17 @@ function erp_get_currencies() {
  * @return array
  */
 function erp_get_currency_list_with_symbol() {
-    $currencies      = erp_get_currencies();
-    $currency_symbol = [];
+    $currencies       = erp_get_currencies();
+    $currency_symbols = erp_get_currency_symbol();
+    $currency_list    = [];
 
     foreach ( $currencies as $iso => $currency ) {
-        $currency_symbol[$iso] = sprintf( '%1$s (%2$s)', $currency, erp_get_currency_symbol( $iso ) );
+        $symbol = isset( $currency_symbols[ $iso ] ) ? $currency_symbols[ $iso ] : $iso;
+
+        $currency_list[$iso] = sprintf( '%1$s (%2$s)', $currency, $symbol );
     }
 
-    return $currency_symbol;
+    return $currency_list;
 }
 
 /**
@@ -145,72 +288,196 @@ function erp_get_currency() {
 /**
  * Get Currency symbol.
  *
- * @param string $currency (default: '')
- * @return string
+ * @since 1.0.0
+ * @since 1.1.14 Add most of the current circulating currencies.
+ *               If no $currency provided, full symbol list will be returned.
+ *
+ * @param string $currency
+ *
+ * @return string|array
  */
 function erp_get_currency_symbol( $currency = '' ) {
 
-    switch ( $currency ) {
-        case 'AED' : $currency_symbol = 'د.إ'; break;
-        case 'BDT' : $currency_symbol = '&#2547;'; break;
-        case 'BRL' : $currency_symbol = '&#82;&#36;'; break;
-        case 'BGN' : $currency_symbol = '&#1083;&#1074;.'; break;
-        case 'AUD' :
-        case 'AZD' :
-        case 'CAD' :
-        case 'CLP' :
-        case 'COP' :
-        case 'MXN' :
-        case 'NZD' :
-        case 'HKD' :
-        case 'SGD' :
-        case 'USD' :
-            $currency_symbol = '&#36;';
-            break;
-        case 'EUR' : $currency_symbol = '&euro;'; break;
-        case 'CNY' :
-        case 'RMB' :
-        case 'JPY' :
-            $currency_symbol = '&yen;';
-            break;
-        case 'RUB' : $currency_symbol = '&#1088;&#1091;&#1073;.'; break;
-        case 'KRW' : $currency_symbol = '&#8361;'; break;
-        case 'PYG' : $currency_symbol = '&#8370;'; break;
-        case 'TRY' : $currency_symbol = '&#8378;'; break;
-        case 'NOK' : $currency_symbol = '&#107;&#114;'; break;
-        case 'ZAR' : $currency_symbol = '&#82;'; break;
-        case 'CZK' : $currency_symbol = '&#75;&#269;'; break;
-        case 'MYR' : $currency_symbol = '&#82;&#77;'; break;
-        case 'DKK' : $currency_symbol = 'kr.'; break;
-        case 'HUF' : $currency_symbol = '&#70;&#116;'; break;
-        case 'IDR' : $currency_symbol = 'Rp'; break;
-        case 'INR' : $currency_symbol = '&#8377;'; break;
-        case 'NPR' : $currency_symbol = 'Rs.'; break;
-        case 'ISK' : $currency_symbol = 'Kr.'; break;
-        case 'ILS' : $currency_symbol = '&#8362;'; break;
-        case 'OMR' : $currency_symbol = 'ر.ع.'; break;
-        case 'IRR' : $currency_symbol = '﷼'; break;
-        case 'PKR' : $currency_symbol = 'Rs'; break;
-        case 'PHP' : $currency_symbol = '&#8369;'; break;
-        case 'PLN' : $currency_symbol = '&#122;&#322;'; break;
-        case 'SEK' : $currency_symbol = '&#107;&#114;'; break;
-        case 'SR'  : $currency_symbol = 'SR'; break;
-        case 'CHF' : $currency_symbol = '&#67;&#72;&#70;'; break;
-        case 'TWD' : $currency_symbol = '&#78;&#84;&#36;'; break;
-        case 'THB' : $currency_symbol = '&#3647;'; break;
-        case 'GBP' : $currency_symbol = '&pound;'; break;
-        case 'RON' : $currency_symbol = 'lei'; break;
-        case 'VND' : $currency_symbol = '&#8363;'; break;
-        case 'NGN' : $currency_symbol = '&#8358;'; break;
-        case 'HRK' : $currency_symbol = 'Kn'; break;
-        case 'EGP' : $currency_symbol = 'EGP'; break;
-        case 'DOP' : $currency_symbol = 'RD&#36;'; break;
-        case 'DZD' : $currency_symbol = 'DA;'; break;
-        case 'KIP' : $currency_symbol = '&#8365;'; break;
-        default    : $currency_symbol = ''; break;
+    /**
+     * Source: https://en.wikipedia.org/wiki/List_of_circulating_currencies
+     *
+     * In wikipedia some of the symbols are in SVG image like 'AMD'
+     * or not supported by UTF-8 like 'GEL'. For those symbols currency codes
+     * are used as symbols
+     */
+
+    $currency_symbols = [
+        'AED' => 'د.إ',
+        'AFN' => '؋',
+        'ALL' => 'L',
+        'AMD' => 'AMD',
+        'ANG' => 'ƒ',
+        'AOA' => 'Kz',
+        'ARS' => '$',
+        'AUD' => '$',
+        'AWG' => 'ƒ',
+        'AZN' => '₼',
+        'BAM' => 'KM',
+        'BBD' => '$',
+        'BDT' => '৳',
+        'BGN' => 'лв',
+        'BHD' => '.د.ب',
+        'BIF' => 'Fr',
+        'BMD' => '$',
+        'BND' => '$',
+        'BOB' => 'Bs.',
+        'BRL' => 'R$',
+        'BSD' => '$',
+        'BTN' => 'Nu.',
+        'BWP' => 'P',
+        'BYN' => 'Br',
+        'BYR' => 'Br',
+        'BZD' => '$',
+        'CAD' => '$',
+        'CDF' => 'Fr',
+        'CHF' => 'Fr',
+        'CLP' => '$',
+        'CNY' => '¥',
+        'COP' => '$',
+        'CRC' => '₡',
+        'CUC' => '$',
+        'CUP' => '$',
+        'CVE' => '$',
+        'CZK' => 'Kč',
+        'DJF' => 'Fr',
+        'DKK' => 'kr',
+        'DOP' => '$',
+        'DZD' => 'د.ج',
+        'EGP' => '£',
+        'ERN' => 'Nfk',
+        'ETB' => 'Br',
+        'EUR' => '€',
+        'FJD' => '$',
+        'FKP' => '£',
+        'GBP' => '£',
+        'GEL' => 'GEL',
+        'GGP' => '£',
+        'GHS' => '₵',
+        'GIP' => '£',
+        'GMD' => 'D',
+        'GNF' => 'Fr',
+        'GTQ' => 'Q',
+        'GYD' => '$',
+        'HKD' => '$',
+        'HNL' => 'L',
+        'HRK' => 'kn',
+        'HTG' => 'G',
+        'HUF' => 'Ft',
+        'IDR' => 'Rp',
+        'ILS' => '₪',
+        'IMP' => '£',
+        'INR' => '₹',
+        'IQD' => 'ع.د',
+        'IRR' => '﷼',
+        'ISK' => 'kr',
+        'JEP' => '£',
+        'JMD' => '$',
+        'JOD' => 'د.ا',
+        'JPY' => '¥',
+        'KES' => 'Sh',
+        'KGS' => 'с',
+        'KHR' => '៛',
+        'KMF' => 'Fr',
+        'KPW' => '₩',
+        'KRW' => '₩',
+        'KWD' => 'د.ك',
+        'KYD' => '$',
+        'KZT' => 'KZT',
+        'LAK' => '₭',
+        'LBP' => 'ل.ل',
+        'LKR' => 'Rs',
+        'LRD' => '$',
+        'LSL' => 'L',
+        'LYD' => 'ل.د',
+        'MAD' => 'د.م.',
+        'MDL' => 'L',
+        'MGA' => 'Ar',
+        'MKD' => 'ден',
+        'MMK' => 'Ks',
+        'MNT' => '₮',
+        'MOP' => 'P',
+        'MRO' => 'UM',
+        'MUR' => '₨',
+        'MVR' => 'MVR',
+        'MWK' => 'MK',
+        'MXN' => '$',
+        'MYR' => 'RM',
+        'MZN' => 'MT',
+        'NAD' => '$',
+        'NGN' => '₦',
+        'NIO' => 'C$',
+        'NOK' => 'kr',
+        'NPR' => '₨',
+        'NZD' => '$',
+        'OMR' => 'ر.ع.',
+        'PAB' => 'B/.',
+        'PEN' => 'S/.',
+        'PGK' => 'K',
+        'PHP' => '₱',
+        'PKR' => '₨',
+        'PLN' => 'zł',
+        'PRB' => 'р.',
+        'PYG' => '₲',
+        'QAR' => 'ر.ق',
+        'RON' => 'lei',
+        'RSD' => 'дин',
+        'RUB' => '₽',
+        'RWF' => 'Fr',
+        'SAR' => 'ر.س',
+        'SBD' => '$',
+        'SCR' => '₨',
+        'SDG' => 'ج.س.',
+        'SEK' => 'kr',
+        'SGD' => '$',
+        'SHP' => '£',
+        'SLL' => 'Le',
+        'SOS' => 'Sh',
+        'SRD' => '$',
+        'SSP' => '£',
+        'STD' => 'Db',
+        'SYP' => '£',
+        'SZL' => 'L',
+        'THB' => '฿',
+        'TJS' => 'ЅМ',
+        'TMT' => 'm',
+        'TND' => 'د.ت',
+        'TOP' => 'T$',
+        'TRY' => 'TRY',
+        'TTD' => '$',
+        'TVD' => '$',
+        'TWD' => '$',
+        'TZS' => 'Sh',
+        'UAH' => '₴',
+        'UGX' => 'Sh',
+        'USD' => '$',
+        'UYU' => '$',
+        'UZS' => 'UZS',
+        'VEF' => 'Bs',
+        'VND' => '₫',
+        'VUV' => 'Vt',
+        'WST' => 'T',
+        'XAF' => 'Fr',
+        'XCD' => '$',
+        'XOF' => 'Fr',
+        'XPF' => 'Fr',
+        'YER' => '﷼',
+        'ZAR' => 'Rs',
+        'ZMW' => 'ZK',
+        'ZWL' => '$',
+    ];
+
+    if ( ! empty( $currency ) ) {
+        $symbol = ! empty( $currency_symbols[ $currency ] ) ? $currency_symbols[ $currency ] : $currency;
+        return apply_filters( 'erp_currency_symbol', $symbol, $currency );
+    } else {
+        return apply_filters( 'erp_currency_symbol_list', $currency_symbols );
     }
 
-    return apply_filters( 'erp_currency_symbol', $currency_symbol, $currency );
 }
 
 /**
