@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: WP ERP
+ * Plugin Name: WP ERP Test
  * Description: An Open Source ERP Solution for WordPress. Built-in HR, CRM and Accounting system for WordPress
  * Plugin URI: https://wperp.com
  * Author: weDevs
