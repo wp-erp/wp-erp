@@ -129,6 +129,10 @@
                     unset( $tabs['leave'] );
                     unset( $tabs['job'] );
                 }
+
+                if ( absint( $employee->id ) === get_current_user_id() ) {
+                    unset( $tabs['permission'] );
+                }
                 ?>
 
                 <h2 class="nav-tab-wrapper erp-hide-print" style="margin-bottom: 15px;">
