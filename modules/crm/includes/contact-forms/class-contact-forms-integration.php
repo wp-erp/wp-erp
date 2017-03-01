@@ -114,7 +114,9 @@ class Contact_Forms_Integration {
                 }
             }
 
-            if ( $people_id = erp_insert_people( $contact ) ) {
+            $people_id = erp_insert_people( $contact );
+
+            if ( ! is_wp_error( $people_id ) ) {
                 $customer = new \WeDevs\ERP\CRM\Contact( absint( $people_id ), 'contact' );
 
                 $customer->update_meta( 'life_stage', 'lead' );
