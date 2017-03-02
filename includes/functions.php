@@ -560,14 +560,26 @@ if ( ! function_exists( 'trim_deep' ) ) {
 /**
  * Helper function to print a label and value with a separator
  *
- * @param  string  the label
- * @param  string  the value to print
- * @param  string  separator
+ * @since 1.0.0
+ * @since 1.1.14 Add $type param
+ *
+ * @param  string  $label the label
+ * @param  string  $value the value to print
+ * @param  string  $sep   separator
+ * @param  string  $type  field type
  *
  * @return void
  */
-function erp_print_key_value( $label, $value, $sep = ' : ' ) {
+function erp_print_key_value( $label, $value, $sep = ' : ', $type = 'text' ) {
     $value = empty( $value ) ? '&mdash;' : $value;
+
+    switch ( $type ) {
+        case 'email':
+        case 'url':
+        case 'phone':
+            $value = erp_get_clickable( $type, $value );
+            break;
+    }
 
     printf( '<label>%s</label> <span class="sep">%s</span> <span class="value">%s</span>', $label, $sep, $value );
 }
@@ -584,7 +596,7 @@ function erp_get_clickable( $type = 'email', $value = '' ) {
     if ( 'email' == $type ) {
         return sprintf( '<a href="mailto:%1$s">%1$s</a>', $value );
     } elseif ( 'url' == $type ) {
-        return sprintf( '<a href="%1$s">%1$s</a>', $value );
+        return sprintf( '<a target="_blank" href="%1$s">%1$s</a>', $value );
     } elseif ( 'phone' == $type ) {
         return sprintf( '<a href="tel:%1$s">%1$s</a>', $value );
     }
