@@ -462,8 +462,9 @@ function erp_employee_delete( $employee_ids, $hard = false ) {
  * Get Todays Birthday
  *
  * @since 0.1
+ * @since 1.1.14 Add where condition to remove terminated employees
  *
- * @return object [collection of user_id]
+ * @return object collection of user_id
  */
 function erp_hr_get_todays_birthday() {
 
@@ -471,6 +472,7 @@ function erp_hr_get_todays_birthday() {
 
     return erp_array_to_object( \WeDevs\ERP\HRM\Models\Employee::select('user_id')
             ->where( $db->raw("DATE_FORMAT( `date_of_birth`, '%m %d' )" ), \Carbon\Carbon::today()->format('m d') )
+            ->where( 'termination_date', '0000-00-00' )
             ->get()
             ->toArray() );
 }
@@ -479,8 +481,9 @@ function erp_hr_get_todays_birthday() {
  * Get next seven days birthday
  *
  * @since 0.1
+ * @since 1.1.14 Add where condition to remove terminated employees
  *
- * @return object [user_id, date_of_birth]
+ * @return object user_id, date_of_birth
  */
 function erp_hr_get_next_seven_days_birthday() {
 
@@ -489,6 +492,7 @@ function erp_hr_get_next_seven_days_birthday() {
     return erp_array_to_object( \WeDevs\ERP\HRM\Models\Employee::select( array( 'user_id', 'date_of_birth' ) )
             ->where( $db->raw("DATE_FORMAT( `date_of_birth`, '%m %d' )" ), '>', \Carbon\Carbon::today()->format('m d') )
             ->where( $db->raw("DATE_FORMAT( `date_of_birth`, '%m %d' )" ), '<=', \Carbon\Carbon::tomorrow()->addWeek()->format('m d') )
+            ->where( 'termination_date', '0000-00-00' )
             ->get()
             ->toArray() );
 }
