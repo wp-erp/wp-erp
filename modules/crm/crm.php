@@ -83,6 +83,11 @@ class Customer_Relationship {
         require_once WPERP_CRM_PATH . '/includes/functions-dashboard.php';
         require_once WPERP_CRM_PATH . '/includes/functions-capabilities.php';
         require_once WPERP_CRM_PATH . '/includes/contact-forms/class-contact-forms-integration.php';
+
+        // cli command
+        if ( defined('WP_CLI') && WP_CLI ) {
+            include WPERP_CRM_PATH . '/includes/cli/commands.php';
+        }
     }
 
     /**
