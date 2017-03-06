@@ -11,7 +11,7 @@ use WeDevs\ERP\Framework\Model;
 class Activity extends Model {
     protected $table = 'erp_crm_customer_activities';
 
-    protected $fillable = [ 'user_id', 'type', 'message', 'email_subject', 'log_type', 'start_date', 'end_date', 'sent_notification', 'created_by', 'extra' ];
+    protected $fillable = [ 'user_id', 'type', 'message', 'email_subject', 'log_type', 'start_date', 'end_date', 'sent_notification', 'created_by', 'extra', 'created_at' ];
 
     public $timestamps = true;
 
