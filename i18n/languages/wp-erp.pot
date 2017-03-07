@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.1.13\n"
+"Project-Id-Version: WP ERP 1.1.14\n"
 "Report-Msgid-Bugs-To: http://wperp.com/support/\n"
-"POT-Creation-Date: 2017-02-16 05:35:25+00:00\n"
+"POT-Creation-Date: 2017-03-07 05:58:34+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4777,7 +4777,7 @@ msgid "Created At"
 msgstr ""
 
 #: includes/admin/class-form-handler.php:25 includes/admin/class-menu.php:39
-#: includes/functions.php:998
+#: includes/functions.php:1277
 msgid "ERP Settings"
 msgstr ""
 
@@ -4868,7 +4868,7 @@ msgid "Designations"
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:75
-#: modules/hrm/includes/class-settings.php:60
+#: modules/hrm/includes/class-settings.php:59
 msgid "Work Days"
 msgstr ""
 
@@ -4980,7 +4980,7 @@ msgstr ""
 #: modules/accounting/includes/views/customer/list.php:3
 #: modules/accounting/includes/views/customers.php:2
 #: modules/accounting/includes/views/vendor/edit.php:4
-#: modules/accounting/includes/views/vendor/list.php:3 modules/crm/crm.php:141
+#: modules/accounting/includes/views/vendor/list.php:3 modules/crm/crm.php:146
 #: modules/hrm/views/departments.php:3 modules/hrm/views/designation.php:3
 #: modules/hrm/views/employee/single.php:10 modules/hrm/views/employee.php:9
 #: modules/hrm/views/leave/holiday.php:250
@@ -5009,52 +5009,52 @@ msgid "Designation name"
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:418
-#: modules/hrm/includes/class-settings.php:42
+#: modules/hrm/includes/class-settings.php:41
 msgid "Full Day"
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:419
-#: modules/hrm/includes/class-settings.php:43
+#: modules/hrm/includes/class-settings.php:42
 msgid "Half Day"
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:420
-#: modules/hrm/includes/class-settings.php:44
+#: modules/hrm/includes/class-settings.php:43
 msgid "Non-working Day"
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:423
-#: modules/hrm/includes/class-settings.php:48
+#: modules/hrm/includes/class-settings.php:47
 msgid "Monday"
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:424
-#: modules/hrm/includes/class-settings.php:49
+#: modules/hrm/includes/class-settings.php:48
 msgid "Tuesday"
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:425
-#: modules/hrm/includes/class-settings.php:50
+#: modules/hrm/includes/class-settings.php:49
 msgid "Wednesday"
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:426
-#: modules/hrm/includes/class-settings.php:51
+#: modules/hrm/includes/class-settings.php:50
 msgid "Thursday"
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:427
-#: modules/hrm/includes/class-settings.php:52
+#: modules/hrm/includes/class-settings.php:51
 msgid "Friday"
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:428
-#: modules/hrm/includes/class-settings.php:53
+#: modules/hrm/includes/class-settings.php:52
 msgid "Saturday"
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:429
-#: modules/hrm/includes/class-settings.php:54
+#: modules/hrm/includes/class-settings.php:53
 msgid "Sunday"
 msgstr ""
 
@@ -5062,15 +5062,15 @@ msgstr ""
 msgid "Workdays Setup"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:478
+#: includes/admin/class-setup-wizard.php:486
 msgid "Your Site is Ready!"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:482
+#: includes/admin/class-setup-wizard.php:490
 msgid "Next Steps &rarr;"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:484
+#: includes/admin/class-setup-wizard.php:492
 msgid "Add your employees!"
 msgstr ""
 
@@ -6289,13 +6289,13 @@ msgstr ""
 msgid "Create"
 msgstr ""
 
-#: includes/class-scripts.php:157 modules/crm/crm.php:142
+#: includes/class-scripts.php:157 modules/crm/crm.php:147
 #: modules/hrm/hrm.php:170 modules/hrm/views/employee/tab-job.php:25
 msgid "Update"
 msgstr ""
 
-#: includes/class-scripts.php:158 modules/crm/crm.php:146
-#: modules/crm/crm.php:165 modules/hrm/hrm.php:185
+#: includes/class-scripts.php:158 modules/crm/crm.php:151
+#: modules/crm/crm.php:170 modules/hrm/hrm.php:185
 msgid "Are you sure?"
 msgstr ""
 
@@ -6326,19 +6326,19 @@ msgid ""
 "Are you sure you wish to run the updater now?"
 msgstr ""
 
-#: includes/framework/class-settings-page.php:419
+#: includes/framework/class-settings-page.php:408
 msgid "Delete this image?"
 msgstr ""
 
-#: includes/framework/class-settings-page.php:423
+#: includes/framework/class-settings-page.php:412
 msgid "Upload Image"
 msgstr ""
 
-#: includes/framework/class-settings-page.php:676
+#: includes/framework/class-settings-page.php:665
 msgid "Hard Crop?"
 msgstr ""
 
-#: includes/framework/class-settings-page.php:703
+#: includes/framework/class-settings-page.php:692
 msgid "Select a page&hellip;"
 msgstr ""
 
@@ -6702,362 +6702,910 @@ msgstr ""
 msgid " from your computer."
 msgstr ""
 
-#: includes/functions-people.php:152 includes/functions-people.php:213
+#: includes/functions-people.php:162 includes/functions-people.php:223
 msgid "No data found"
 msgstr ""
 
-#: includes/functions-people.php:156 includes/functions-people.php:217
+#: includes/functions-people.php:166 includes/functions-people.php:227
 msgid "No type found"
 msgstr ""
 
-#: includes/functions-people.php:315
+#: includes/functions-people.php:325
 msgid "No field provided"
 msgstr ""
 
-#: includes/functions-people.php:319
+#: includes/functions-people.php:329
 msgid "No value provided"
 msgstr ""
 
-#: includes/functions-people.php:410
+#: includes/functions-people.php:420
 msgid "No user type provided."
 msgstr ""
 
-#: includes/functions-people.php:418
+#: includes/functions-people.php:428
 msgid "The people type is invalid."
 msgstr ""
 
-#: includes/functions-people.php:426
+#: includes/functions-people.php:436
 msgid "You must need to fillup either first name or phone or email"
 msgstr ""
 
-#: includes/functions-people.php:434
+#: includes/functions-people.php:444
 msgid "You must need to fillup either Company name or email or phone"
 msgstr ""
 
-#: includes/functions-people.php:440
+#: includes/functions-people.php:450
 msgid "Please provide a valid email address"
 msgstr ""
 
-#: includes/functions-people.php:468
+#: includes/functions-people.php:478
 msgid "This people already exists"
 msgstr ""
 
-#: includes/functions-people.php:483
+#: includes/functions-people.php:493
 msgid "Something went wrong, please try again"
 msgstr ""
 
-#: includes/functions-people.php:489
+#: includes/functions-people.php:499
 msgid "This people email already exists"
 msgstr ""
 
-#: includes/functions-people.php:699
+#: includes/functions-people.php:709
 msgid "People not exists"
 msgstr ""
 
-#: includes/functions.php:44
-msgid "United Arab Emirates Dirham"
-msgstr ""
-
-#: includes/functions.php:45
-msgid "Australian Dollars"
-msgstr ""
-
-#: includes/functions.php:46
-msgid "Argentine Peso"
-msgstr ""
-
 #: includes/functions.php:47
-msgid "Bangladeshi Taka"
+msgid "Afghan Afghani"
 msgstr ""
 
 #: includes/functions.php:48
-msgid "Brazilian Real"
+msgid "Albanian Lek"
 msgstr ""
 
 #: includes/functions.php:49
-msgid "Bulgarian Lev"
-msgstr ""
-
-#: includes/functions.php:50
-msgid "Canadian Dollars"
-msgstr ""
-
-#: includes/functions.php:51
-msgid "Chilean Peso"
-msgstr ""
-
-#: includes/functions.php:52
-msgid "Chinese Yuan"
-msgstr ""
-
-#: includes/functions.php:53
-msgid "Colombian Peso"
-msgstr ""
-
-#: includes/functions.php:54
-msgid "Czech Koruna"
-msgstr ""
-
-#: includes/functions.php:55
-msgid "Danish Krone"
-msgstr ""
-
-#: includes/functions.php:56
-msgid "Dominican Peso"
-msgstr ""
-
-#: includes/functions.php:57
 msgid "Algerian Dinar"
 msgstr ""
 
+#: includes/functions.php:50
+msgid "Andorran Peseta"
+msgstr ""
+
+#: includes/functions.php:51
+msgid "Angolan Kwanza"
+msgstr ""
+
+#: includes/functions.php:52
+msgid "Argentine Austral"
+msgstr ""
+
+#: includes/functions.php:53
+msgid "Argentine Peso"
+msgstr ""
+
+#: includes/functions.php:54
+msgid "Armenian Dram"
+msgstr ""
+
+#: includes/functions.php:55
+msgid "Aruban Florin"
+msgstr ""
+
+#: includes/functions.php:56
+msgid "Australian Dollar"
+msgstr ""
+
+#: includes/functions.php:57
+msgid "Austrian Schilling"
+msgstr ""
+
 #: includes/functions.php:58
-msgid "Euros"
+msgid "Azerbaijani Manat"
 msgstr ""
 
 #: includes/functions.php:59
-msgid "Hong Kong Dollar"
+msgid "Bahamian Dollar"
 msgstr ""
 
 #: includes/functions.php:60
-msgid "Croatia kuna"
+msgid "Bahraini Dinar"
 msgstr ""
 
 #: includes/functions.php:61
-msgid "Hungarian Forint"
+msgid "Bangladeshi Taka"
 msgstr ""
 
 #: includes/functions.php:62
-msgid "Icelandic krona"
+msgid "Barbadian Dollar"
 msgstr ""
 
 #: includes/functions.php:63
-msgid "Indonesia Rupiah"
+msgid "Belarusian Ruble"
 msgstr ""
 
 #: includes/functions.php:64
-msgid "Indian Rupee"
+msgid "Belgian Franc"
 msgstr ""
 
 #: includes/functions.php:65
-msgid "Nepali Rupee"
+msgid "Belize Dollar"
 msgstr ""
 
 #: includes/functions.php:66
-msgid "Israeli Shekel"
+msgid "Bermudan Dollar"
 msgstr ""
 
 #: includes/functions.php:67
-msgid "Japanese Yen"
+msgid "Bhutanese Ngultrum"
 msgstr ""
 
 #: includes/functions.php:68
-msgid "Lao Kip"
+msgid "Bolivian Boliviano"
 msgstr ""
 
 #: includes/functions.php:69
-msgid "South Korean Won"
+msgid "Bolivian Mvdol"
 msgstr ""
 
 #: includes/functions.php:70
-msgid "Malaysian Ringgits"
+msgid "Bolivian Peso"
 msgstr ""
 
 #: includes/functions.php:71
-msgid "Mexican Peso"
+msgid "Bosnia-Herzegovina Convertible Mark"
 msgstr ""
 
 #: includes/functions.php:72
-msgid "Nigerian Naira"
+msgid "Botswanan Pula"
 msgstr ""
 
 #: includes/functions.php:73
-msgid "Norwegian Krone"
+msgid "Brazilian Real"
 msgstr ""
 
 #: includes/functions.php:74
-msgid "New Zealand Dollar"
+msgid "British Pound Sterling"
 msgstr ""
 
 #: includes/functions.php:75
-msgid "Omani Rial"
+msgid "Brunei Dollar"
 msgstr ""
 
 #: includes/functions.php:76
-msgid "Iranian Rial"
+msgid "Bulgarian Lev"
 msgstr ""
 
 #: includes/functions.php:77
-msgid "Pakistani Rupee"
+msgid "Burmese Kyat"
 msgstr ""
 
 #: includes/functions.php:78
-msgid "Paraguayan Guaraní"
+msgid "Burundian Franc"
 msgstr ""
 
 #: includes/functions.php:79
-msgid "Philippine Pesos"
+msgid "Cambodian Riel"
 msgstr ""
 
 #: includes/functions.php:80
-msgid "Polish Zloty"
+msgid "Canadian Dollar"
 msgstr ""
 
 #: includes/functions.php:81
-msgid "Pounds Sterling"
+msgid "Cape Verdean Escudo"
 msgstr ""
 
 #: includes/functions.php:82
-msgid "Romanian Leu"
+msgid "Cayman Islands Dollar"
 msgstr ""
 
 #: includes/functions.php:83
-msgid "Russian Ruble"
+msgid "CFA Franc BCEAO"
 msgstr ""
 
 #: includes/functions.php:84
-msgid "Saudi Riyal"
+msgid "CFA Franc BEAC"
 msgstr ""
 
 #: includes/functions.php:85
-msgid "Singapore Dollar"
+msgid "CFP Franc"
 msgstr ""
 
 #: includes/functions.php:86
-msgid "South African rand"
+msgid "Chilean Peso"
 msgstr ""
 
 #: includes/functions.php:87
-msgid "Swedish Krona"
+msgid "Chinese Yuan"
 msgstr ""
 
 #: includes/functions.php:88
-msgid "Swiss Franc"
+msgid "Colombian Peso"
 msgstr ""
 
 #: includes/functions.php:89
-msgid "Taiwan New Dollars"
+msgid "Comorian Franc"
 msgstr ""
 
 #: includes/functions.php:90
-msgid "Thai Baht"
+msgid "Congolese Franc"
 msgstr ""
 
 #: includes/functions.php:91
-msgid "Turkish Lira"
+msgid "Costa Rican Colón"
 msgstr ""
 
 #: includes/functions.php:92
-msgid "US Dollar"
+msgid "Croatian Kuna"
 msgstr ""
 
 #: includes/functions.php:93
-msgid "Vietnamese Dong"
+msgid "Cuban Peso"
 msgstr ""
 
 #: includes/functions.php:94
+msgid "Cypriot Pound"
+msgstr ""
+
+#: includes/functions.php:95
+msgid "Czech Republic Koruna"
+msgstr ""
+
+#: includes/functions.php:96
+msgid "Danish Krone"
+msgstr ""
+
+#: includes/functions.php:97
+msgid "Djiboutian Franc"
+msgstr ""
+
+#: includes/functions.php:98
+msgid "Dominican Peso"
+msgstr ""
+
+#: includes/functions.php:99
+msgid "Dutch Guilder"
+msgstr ""
+
+#: includes/functions.php:100
+msgid "East Caribbean Dollar"
+msgstr ""
+
+#: includes/functions.php:101
+msgid "Ecuadorian Sucre"
+msgstr ""
+
+#: includes/functions.php:102
 msgid "Egyptian Pound"
 msgstr ""
 
-#: includes/functions.php:368
+#: includes/functions.php:103
+msgid "Equatorial Guinean Ekwele"
+msgstr ""
+
+#: includes/functions.php:104
+msgid "Eritrean Nakfa"
+msgstr ""
+
+#: includes/functions.php:105
+msgid "Estonian Kroon"
+msgstr ""
+
+#: includes/functions.php:106
+msgid "Ethiopian Birr"
+msgstr ""
+
+#: includes/functions.php:107
+msgid "Euro"
+msgstr ""
+
+#: includes/functions.php:108
+msgid "Falkland Islands Pound"
+msgstr ""
+
+#: includes/functions.php:109
+msgid "Fijian Dollar"
+msgstr ""
+
+#: includes/functions.php:110
+msgid "Finnish Markka"
+msgstr ""
+
+#: includes/functions.php:111
+msgid "French Franc"
+msgstr ""
+
+#: includes/functions.php:112
+msgid "Gambian Dalasi"
+msgstr ""
+
+#: includes/functions.php:113
+msgid "Georgian Lari"
+msgstr ""
+
+#: includes/functions.php:114
+msgid "German Mark"
+msgstr ""
+
+#: includes/functions.php:115
+msgid "Ghanaian Cedi"
+msgstr ""
+
+#: includes/functions.php:116
+msgid "Gibraltar Pound"
+msgstr ""
+
+#: includes/functions.php:117
+msgid "Greek Drachma"
+msgstr ""
+
+#: includes/functions.php:118
+msgid "Guatemalan Quetzal"
+msgstr ""
+
+#: includes/functions.php:119
+msgid "Guinea-Bissau Peso"
+msgstr ""
+
+#: includes/functions.php:120
+msgid "Guinean Franc"
+msgstr ""
+
+#: includes/functions.php:121
+msgid "Guyanaese Dollar"
+msgstr ""
+
+#: includes/functions.php:122
+msgid "Haitian Gourde"
+msgstr ""
+
+#: includes/functions.php:123
+msgid "Honduran Lempira"
+msgstr ""
+
+#: includes/functions.php:124
+msgid "Hong Kong Dollar"
+msgstr ""
+
+#: includes/functions.php:125
+msgid "Hungarian Forint"
+msgstr ""
+
+#: includes/functions.php:126
+msgid "Icelandic Króna"
+msgstr ""
+
+#: includes/functions.php:127
+msgid "Indian Rupee"
+msgstr ""
+
+#: includes/functions.php:128
+msgid "Indonesian Rupiah"
+msgstr ""
+
+#: includes/functions.php:129
+msgid "Iranian Rial"
+msgstr ""
+
+#: includes/functions.php:130
+msgid "Iraqi Dinar"
+msgstr ""
+
+#: includes/functions.php:131
+msgid "Irish Pound"
+msgstr ""
+
+#: includes/functions.php:132
+msgid "Israeli New Sheqel"
+msgstr ""
+
+#: includes/functions.php:133
+msgid "Italian Lira"
+msgstr ""
+
+#: includes/functions.php:134
+msgid "Jamaican Dollar"
+msgstr ""
+
+#: includes/functions.php:135
+msgid "Japanese Yen"
+msgstr ""
+
+#: includes/functions.php:136
+msgid "Jordanian Dinar"
+msgstr ""
+
+#: includes/functions.php:137
+msgid "Kazakhstani Tenge"
+msgstr ""
+
+#: includes/functions.php:138
+msgid "Kenyan Shilling"
+msgstr ""
+
+#: includes/functions.php:139
+msgid "Kuwaiti Dinar"
+msgstr ""
+
+#: includes/functions.php:140
+msgid "Kyrgystani Som"
+msgstr ""
+
+#: includes/functions.php:141
+msgid "Laotian Kip"
+msgstr ""
+
+#: includes/functions.php:142
+msgid "Latvian Lats"
+msgstr ""
+
+#: includes/functions.php:143
+msgid "Lebanese Pound"
+msgstr ""
+
+#: includes/functions.php:144
+msgid "Lesotho Loti"
+msgstr ""
+
+#: includes/functions.php:145
+msgid "Liberian Dollar"
+msgstr ""
+
+#: includes/functions.php:146
+msgid "Libyan Dinar"
+msgstr ""
+
+#: includes/functions.php:147
+msgid "Lithuanian Litas"
+msgstr ""
+
+#: includes/functions.php:148
+msgid "Lithuanian Talonas"
+msgstr ""
+
+#: includes/functions.php:149
+msgid "Luxembourgian Franc"
+msgstr ""
+
+#: includes/functions.php:150
+msgid "Macanese Pataca"
+msgstr ""
+
+#: includes/functions.php:151
+msgid "Macedonian Denar"
+msgstr ""
+
+#: includes/functions.php:152
+msgid "Malagasy Ariary"
+msgstr ""
+
+#: includes/functions.php:153
+msgid "Malawian Kwacha"
+msgstr ""
+
+#: includes/functions.php:154
+msgid "Malaysian Ringgit"
+msgstr ""
+
+#: includes/functions.php:155
+msgid "Maldivian Rufiyaa"
+msgstr ""
+
+#: includes/functions.php:156
+msgid "Malian Franc"
+msgstr ""
+
+#: includes/functions.php:157
+msgid "Maltese Lira"
+msgstr ""
+
+#: includes/functions.php:158
+msgid "Mauritanian Ouguiya"
+msgstr ""
+
+#: includes/functions.php:159
+msgid "Mauritian Rupee"
+msgstr ""
+
+#: includes/functions.php:160
+msgid "Mexican Peso"
+msgstr ""
+
+#: includes/functions.php:161
+msgid "Moldovan Leu"
+msgstr ""
+
+#: includes/functions.php:162
+msgid "Monegasque Franc"
+msgstr ""
+
+#: includes/functions.php:163
+msgid "Mongolian Tugrik"
+msgstr ""
+
+#: includes/functions.php:164
+msgid "Moroccan Dirham"
+msgstr ""
+
+#: includes/functions.php:165
+msgid "Mozambican Metical"
+msgstr ""
+
+#: includes/functions.php:166
+msgid "Myanmar Kyat"
+msgstr ""
+
+#: includes/functions.php:167
+msgid "Namibian Dollar"
+msgstr ""
+
+#: includes/functions.php:168
+msgid "Nepalese Rupee"
+msgstr ""
+
+#: includes/functions.php:169
+msgid "Netherlands Antillean Guilder"
+msgstr ""
+
+#: includes/functions.php:170
+msgid "New Taiwan Dollar"
+msgstr ""
+
+#: includes/functions.php:171
+msgid "New Zealand Dollar"
+msgstr ""
+
+#: includes/functions.php:172
+msgid "Nicaraguan Córdoba"
+msgstr ""
+
+#: includes/functions.php:173
+msgid "Nigerian Naira"
+msgstr ""
+
+#: includes/functions.php:174
+msgid "North Korean Won"
+msgstr ""
+
+#: includes/functions.php:175
+msgid "Norwegian Krone"
+msgstr ""
+
+#: includes/functions.php:176
+msgid "Omani Rial"
+msgstr ""
+
+#: includes/functions.php:177
+msgid "Pakistani Rupee"
+msgstr ""
+
+#: includes/functions.php:178
+msgid "Panamanian Balboa"
+msgstr ""
+
+#: includes/functions.php:179
+msgid "Papua New Guinean Kina"
+msgstr ""
+
+#: includes/functions.php:180
+msgid "Paraguayan Guarani"
+msgstr ""
+
+#: includes/functions.php:181
+msgid "Peruvian Inti"
+msgstr ""
+
+#: includes/functions.php:182
+msgid "Philippine Peso"
+msgstr ""
+
+#: includes/functions.php:183
+msgid "Polish Zloty"
+msgstr ""
+
+#: includes/functions.php:184
+msgid "Portuguese Escudo"
+msgstr ""
+
+#: includes/functions.php:185
+msgid "Qatari Rial"
+msgstr ""
+
+#: includes/functions.php:186
+msgid "Rhodesian Dollar"
+msgstr ""
+
+#: includes/functions.php:187
+msgid "Romanian Leu"
+msgstr ""
+
+#: includes/functions.php:188
+msgid "Russian Ruble"
+msgstr ""
+
+#: includes/functions.php:189
+msgid "Rwandan Franc"
+msgstr ""
+
+#: includes/functions.php:190
+msgid "Salvadoran Colón"
+msgstr ""
+
+#: includes/functions.php:191
+msgid "Samoan Tala"
+msgstr ""
+
+#: includes/functions.php:192
+msgid "São Tomé & Príncipe Dobra"
+msgstr ""
+
+#: includes/functions.php:193
+msgid "Saudi Riyal"
+msgstr ""
+
+#: includes/functions.php:194
+msgid "Serbian Dinar"
+msgstr ""
+
+#: includes/functions.php:195
+msgid "Seychellois Rupee"
+msgstr ""
+
+#: includes/functions.php:196
+msgid "Sierra Leonean Leone"
+msgstr ""
+
+#: includes/functions.php:197
+msgid "Singapore Dollar"
+msgstr ""
+
+#: includes/functions.php:198
+msgid "Slovak Koruna"
+msgstr ""
+
+#: includes/functions.php:199
+msgid "Slovenian Tolar"
+msgstr ""
+
+#: includes/functions.php:200
+msgid "Solomon Islands Dollar"
+msgstr ""
+
+#: includes/functions.php:201
+msgid "Somali Shilling"
+msgstr ""
+
+#: includes/functions.php:202
+msgid "South African Rand"
+msgstr ""
+
+#: includes/functions.php:203
+msgid "South Korean Won"
+msgstr ""
+
+#: includes/functions.php:204
+msgid "South Sudanese Pound"
+msgstr ""
+
+#: includes/functions.php:205
+msgid "Spanish Peseta"
+msgstr ""
+
+#: includes/functions.php:206
+msgid "Sri Lankan Rupee"
+msgstr ""
+
+#: includes/functions.php:207
+msgid "St. Helena Pound"
+msgstr ""
+
+#: includes/functions.php:208
+msgid "Sudanese Pound"
+msgstr ""
+
+#: includes/functions.php:209
+msgid "Surinamese Dollar"
+msgstr ""
+
+#: includes/functions.php:210
+msgid "Swazi Lilangeni"
+msgstr ""
+
+#: includes/functions.php:211
+msgid "Swedish Krona"
+msgstr ""
+
+#: includes/functions.php:212
+msgid "Swiss Franc"
+msgstr ""
+
+#: includes/functions.php:213
+msgid "Syrian Pound"
+msgstr ""
+
+#: includes/functions.php:214
+msgid "Tajikistani Somoni"
+msgstr ""
+
+#: includes/functions.php:215
+msgid "Tanzanian Shilling"
+msgstr ""
+
+#: includes/functions.php:216
+msgid "Thai Baht"
+msgstr ""
+
+#: includes/functions.php:217
+msgid "Timorese Escudo"
+msgstr ""
+
+#: includes/functions.php:218
+msgid "Tongan Paʻanga"
+msgstr ""
+
+#: includes/functions.php:219
+msgid "Trinidad & Tobago Dollar"
+msgstr ""
+
+#: includes/functions.php:220
+msgid "Tunisian Dinar"
+msgstr ""
+
+#: includes/functions.php:221
+msgid "Turkish Lira"
+msgstr ""
+
+#: includes/functions.php:222
+msgid "Turkmenistani Manat"
+msgstr ""
+
+#: includes/functions.php:223
+msgid "Ugandan Shilling"
+msgstr ""
+
+#: includes/functions.php:224
+msgid "Ukrainian Hryvnia"
+msgstr ""
+
+#: includes/functions.php:225
+msgid "United Arab Emirates Dirham"
+msgstr ""
+
+#: includes/functions.php:226
+msgid "Uruguayan Peso"
+msgstr ""
+
+#: includes/functions.php:227
+msgid "US Dollar"
+msgstr ""
+
+#: includes/functions.php:228
+msgid "Uzbekistan Som"
+msgstr ""
+
+#: includes/functions.php:229
+msgid "Vanuatu Vatu"
+msgstr ""
+
+#: includes/functions.php:230
+msgid "Venezuelan Bolívar"
+msgstr ""
+
+#: includes/functions.php:231
+msgid "Vietnamese Dong"
+msgstr ""
+
+#: includes/functions.php:232
+msgid "Yemeni Rial"
+msgstr ""
+
+#: includes/functions.php:233
+msgid "Zambian Kwacha"
+msgstr ""
+
+#: includes/functions.php:234
+msgid "Zimbabwean Dollar"
+msgstr ""
+
+#: includes/functions.php:647
 msgid "Invalid date provided"
 msgstr ""
 
-#: includes/functions.php:476
+#: includes/functions.php:755
 msgid "Very Bad"
 msgstr ""
 
-#: includes/functions.php:477
+#: includes/functions.php:756
 msgid "Poor"
 msgstr ""
 
-#: includes/functions.php:478
+#: includes/functions.php:757
 msgid "Average"
 msgstr ""
 
-#: includes/functions.php:479
+#: includes/functions.php:758
 msgid "Good"
 msgstr ""
 
-#: includes/functions.php:480
+#: includes/functions.php:759
 msgid "Excellent"
 msgstr ""
 
-#: includes/functions.php:696
+#: includes/functions.php:975
 msgid "Every Minute"
 msgstr ""
 
-#: includes/functions.php:701
+#: includes/functions.php:980
 msgid "Every 2 Minutes"
 msgstr ""
 
-#: includes/functions.php:706
+#: includes/functions.php:985
 msgid "Every 5 Minutes"
 msgstr ""
 
-#: includes/functions.php:711
+#: includes/functions.php:990
 msgid "Every 10 Minutes"
 msgstr ""
 
-#: includes/functions.php:716
+#: includes/functions.php:995
 msgid "Every 15 Minutes"
 msgstr ""
 
-#: includes/functions.php:721
+#: includes/functions.php:1000
 msgid "Every 30 Minutes"
 msgstr ""
 
-#: includes/functions.php:726 includes/lib/class-wedevs-insights.php:471
+#: includes/functions.php:1005 includes/lib/class-wedevs-insights.php:471
 msgid "Once Weekly"
 msgstr ""
 
-#: includes/functions.php:800 includes/functions.php:840
+#: includes/functions.php:1079 includes/functions.php:1119
 msgid ""
 "Your license key expired on %s. Please <a href=\"%s\" target=\"_blank\" "
 "title=\"Renew your license key\">renew your license key</a>."
 msgstr ""
 
-#: includes/functions.php:809
+#: includes/functions.php:1088
 msgid ""
 "Invalid license. Please <a href=\"%s\" target=\"_blank\" title=\"Visit "
 "account page\">visit your account page</a> and verify it."
 msgstr ""
 
-#: includes/functions.php:818
+#: includes/functions.php:1097
 msgid ""
 "Your %s is not active for this URL. Please <a href=\"%s\" target=\"_blank\" "
 "title=\"Visit account page\">visit your account page</a> to manage your "
 "license key URLs."
 msgstr ""
 
-#: includes/functions.php:826
+#: includes/functions.php:1105
 msgid "This is not a %s."
 msgstr ""
 
-#: includes/functions.php:830
+#: includes/functions.php:1109
 msgid ""
 "Your license key has reached its activation limit. <a href=\"%s\">View "
 "possible upgrades</a> now."
 msgstr ""
 
-#: includes/functions.php:853
+#: includes/functions.php:1132
 msgid "License key never expires."
 msgstr ""
 
-#: includes/functions.php:858
+#: includes/functions.php:1137
 msgid ""
 "Your license key expires soon! It expires on %s. <a href=\"%s\" "
 "target=\"_blank\" title=\"Renew license\">Renew your license key</a>."
 msgstr ""
 
-#: includes/functions.php:866
+#: includes/functions.php:1145
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/functions.php:1539
+#: includes/functions.php:1818
 msgid "Nothing to import or items are already exists."
 msgstr ""
 
-#: includes/functions.php:1542
+#: includes/functions.php:1821
 msgid "%s items successfully imported."
 msgstr ""
 
@@ -7699,8 +8247,8 @@ msgstr ""
 #: modules/accounting/includes/class-log.php:75
 #: modules/accounting/includes/class-log.php:76
 #: modules/accounting/includes/views/accounts/form-fields.php:95
-#: modules/hrm/includes/functions-employee.php:548
-#: modules/hrm/includes/functions-employee.php:564
+#: modules/hrm/includes/functions-employee.php:552
+#: modules/hrm/includes/functions-employee.php:568
 msgid "Active"
 msgstr ""
 
@@ -8747,7 +9295,7 @@ msgid "+ Add Line"
 msgstr ""
 
 #: modules/accounting/includes/views/customer/edit.php:3
-#: modules/crm/crm.php:137
+#: modules/crm/crm.php:142
 msgid "Edit Customer"
 msgstr ""
 
@@ -8926,7 +9474,7 @@ msgstr ""
 
 #: modules/accounting/includes/views/expense/vendor-credit.php:209
 #: modules/accounting/includes/views/sales/invoice-new.php:214
-#: modules/crm/crm.php:143
+#: modules/crm/crm.php:148
 msgid "Save"
 msgstr ""
 
@@ -9500,9 +10048,9 @@ msgid "(541) 754-3010"
 msgstr ""
 
 #: modules/accounting/includes/views/user-form-rows.php:112
-#: modules/hrm/includes/functions-employee.php:608
-#: modules/hrm/includes/functions-employee.php:768
-#: modules/hrm/includes/functions-employee.php:774
+#: modules/hrm/includes/functions-employee.php:612
+#: modules/hrm/includes/functions-employee.php:772
+#: modules/hrm/includes/functions-employee.php:778
 msgid "Other"
 msgstr ""
 
@@ -9577,62 +10125,62 @@ msgstr ""
 msgid "Add Vendor"
 msgstr ""
 
-#: modules/crm/crm.php:123 modules/crm/crm.php:293
+#: modules/crm/crm.php:128 modules/crm/crm.php:298
 #: modules/crm/includes/admin/class-menu.php:31
 #: modules/crm/includes/admin/class-settings.php:16
 #: modules/crm/includes/class-form-handler.php:24
 msgid "CRM"
 msgstr ""
 
-#: modules/crm/crm.php:136
+#: modules/crm/crm.php:141
 msgid "Add New Customer"
 msgstr ""
 
-#: modules/crm/crm.php:138
+#: modules/crm/crm.php:143
 msgid "Customer Social Profile"
 msgstr ""
 
-#: modules/crm/crm.php:139
+#: modules/crm/crm.php:144
 msgid "Add to Contact groups"
 msgstr ""
 
-#: modules/crm/crm.php:144 modules/crm/views/js-templates/new-customer.php:28
+#: modules/crm/crm.php:149 modules/crm/views/js-templates/new-customer.php:28
 msgid "Upload Photo"
 msgstr ""
 
-#: modules/crm/crm.php:145 modules/hrm/hrm.php:184
+#: modules/crm/crm.php:150 modules/hrm/hrm.php:184
 msgid "Set Photo"
 msgstr ""
 
-#: modules/crm/crm.php:147
+#: modules/crm/crm.php:152
 msgid "Are you sure to delete?"
 msgstr ""
 
-#: modules/crm/crm.php:148
+#: modules/crm/crm.php:153
 msgid "Are you sure to delete this?"
 msgstr ""
 
-#: modules/crm/crm.php:149
+#: modules/crm/crm.php:154
 msgid "Select atleast one group"
 msgstr ""
 
-#: modules/crm/crm.php:150
+#: modules/crm/crm.php:155
 msgid "Already exists as a contact or company"
 msgstr ""
 
-#: modules/crm/crm.php:151
+#: modules/crm/crm.php:156
 msgid "This user already exists! Do you want to make this user as a"
 msgstr ""
 
-#: modules/crm/crm.php:152
+#: modules/crm/crm.php:157
 msgid "This is wp user! Do you want to create this user as a"
 msgstr ""
 
-#: modules/crm/crm.php:153
+#: modules/crm/crm.php:158
 msgid "Create new"
 msgstr ""
 
-#: modules/crm/crm.php:155
+#: modules/crm/crm.php:160
 msgid "WP User created successfully"
 msgstr ""
 
@@ -9854,9 +10402,9 @@ msgstr ""
 #: modules/crm/includes/class-ajax.php:714
 #: modules/crm/includes/class-ajax.php:763
 #: modules/crm/includes/class-ajax.php:985
-#: modules/crm/includes/class-ajax.php:1173
-#: modules/crm/includes/class-ajax.php:1196
-#: modules/crm/includes/class-ajax.php:1273
+#: modules/crm/includes/class-ajax.php:1174
+#: modules/crm/includes/class-ajax.php:1197
+#: modules/crm/includes/class-ajax.php:1274
 #: modules/hrm/includes/class-ajax.php:111
 #: modules/hrm/includes/class-ajax.php:142
 #: modules/hrm/includes/class-ajax.php:245
@@ -9911,8 +10459,8 @@ msgid "Contact group save successfully"
 msgstr ""
 
 #: modules/crm/includes/class-ajax.php:767
-#: modules/crm/includes/class-ajax.php:1347
-#: modules/crm/includes/class-ajax.php:1373
+#: modules/crm/includes/class-ajax.php:1348
+#: modules/crm/includes/class-ajax.php:1374
 msgid "Somthing wrong, Please try later"
 msgstr ""
 
@@ -9986,59 +10534,59 @@ msgid "Content must be required"
 msgstr ""
 
 #: modules/crm/includes/class-ajax.php:1008
-#: modules/crm/includes/class-ajax.php:1071
-#: modules/crm/includes/class-ajax.php:1101
-#: modules/crm/includes/class-ajax.php:1117
-#: modules/crm/includes/class-ajax.php:1145
+#: modules/crm/includes/class-ajax.php:1072
+#: modules/crm/includes/class-ajax.php:1102
+#: modules/crm/includes/class-ajax.php:1118
+#: modules/crm/includes/class-ajax.php:1146
 msgid "Somthing is wrong, Please try later"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1177
+#: modules/crm/includes/class-ajax.php:1178
 msgid "Feeds Not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1182
+#: modules/crm/includes/class-ajax.php:1183
 msgid "Feed Deleted successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1202
+#: modules/crm/includes/class-ajax.php:1203
 msgid "No data not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1206
-#: modules/crm/includes/class-ajax.php:1254
+#: modules/crm/includes/class-ajax.php:1207
+#: modules/crm/includes/class-ajax.php:1255
 msgid "Search name not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1210
+#: modules/crm/includes/class-ajax.php:1211
 msgid "Contact Type not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1214
+#: modules/crm/includes/class-ajax.php:1215
 msgid "Search filters not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1220
+#: modules/crm/includes/class-ajax.php:1221
 msgid "Query not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1235
+#: modules/crm/includes/class-ajax.php:1236
 msgid "Search does not save"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1279
+#: modules/crm/includes/class-ajax.php:1280
 msgid "Search segment not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1302
+#: modules/crm/includes/class-ajax.php:1303
 msgid "Schedule data no found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1356
+#: modules/crm/includes/class-ajax.php:1357
 msgid "No results found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1382
+#: modules/crm/includes/class-ajax.php:1383
 msgid "Save reply item delete successfully"
 msgstr ""
 
@@ -10570,7 +11118,7 @@ msgid "%s contacts created."
 msgstr ""
 
 #: modules/crm/includes/functions-customer.php:3060
-#: modules/hrm/includes/functions-employee.php:606
+#: modules/hrm/includes/functions-employee.php:610
 msgid "Advertisement"
 msgstr ""
 
@@ -12244,11 +12792,11 @@ msgstr ""
 msgid "HR"
 msgstr ""
 
-#: modules/hrm/includes/class-settings.php:29
+#: modules/hrm/includes/class-settings.php:28
 msgid "Workdays"
 msgstr ""
 
-#: modules/hrm/includes/class-settings.php:62
+#: modules/hrm/includes/class-settings.php:61
 msgid "Week day settings for this company."
 msgstr ""
 
@@ -12431,212 +12979,212 @@ msgstr ""
 msgid "Please provide a valid email address."
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:505
+#: modules/hrm/includes/functions-employee.php:509
 msgid "- Select Employee -"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:549
-#: modules/hrm/includes/functions-employee.php:565
+#: modules/hrm/includes/functions-employee.php:553
+#: modules/hrm/includes/functions-employee.php:569
 #: modules/hrm/views/employee/tab-job.php:48
 msgid "Terminated"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:550
-#: modules/hrm/includes/functions-employee.php:566
+#: modules/hrm/includes/functions-employee.php:554
+#: modules/hrm/includes/functions-employee.php:570
 msgid "Deceased"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:551
-#: modules/hrm/includes/functions-employee.php:567
+#: modules/hrm/includes/functions-employee.php:555
+#: modules/hrm/includes/functions-employee.php:571
 msgid "Resigned"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:585
+#: modules/hrm/includes/functions-employee.php:589
 msgid "Full Time"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:586
+#: modules/hrm/includes/functions-employee.php:590
 msgid "Part Time"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:587
+#: modules/hrm/includes/functions-employee.php:591
 msgid "On Contract"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:588
+#: modules/hrm/includes/functions-employee.php:592
 msgid "Temporary"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:589
+#: modules/hrm/includes/functions-employee.php:593
 msgid "Trainee"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:602
+#: modules/hrm/includes/functions-employee.php:606
 msgid "Direct"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:603
+#: modules/hrm/includes/functions-employee.php:607
 msgid "Referral"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:604
+#: modules/hrm/includes/functions-employee.php:608
 msgid "Web"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:605
+#: modules/hrm/includes/functions-employee.php:609
 msgid "Newspaper"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:607
+#: modules/hrm/includes/functions-employee.php:611
 msgid "Social Network"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:624
-#: modules/hrm/includes/functions-employee.php:630
+#: modules/hrm/includes/functions-employee.php:628
+#: modules/hrm/includes/functions-employee.php:634
 msgid "Single"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:625
-#: modules/hrm/includes/functions-employee.php:631
+#: modules/hrm/includes/functions-employee.php:629
+#: modules/hrm/includes/functions-employee.php:635
 msgid "Married"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:626
-#: modules/hrm/includes/functions-employee.php:632
+#: modules/hrm/includes/functions-employee.php:630
+#: modules/hrm/includes/functions-employee.php:636
 msgid "Widowed"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:646
+#: modules/hrm/includes/functions-employee.php:650
 msgid "Voluntary"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:647
+#: modules/hrm/includes/functions-employee.php:651
 msgid "Involuntary"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:664
+#: modules/hrm/includes/functions-employee.php:668
 msgid "Attendance"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:665
+#: modules/hrm/includes/functions-employee.php:669
 msgid "Better Employment Conditions"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:666
+#: modules/hrm/includes/functions-employee.php:670
 msgid "Career Prospect"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:667
+#: modules/hrm/includes/functions-employee.php:671
 msgid "Death"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:668
+#: modules/hrm/includes/functions-employee.php:672
 msgid "Desertion"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:669
+#: modules/hrm/includes/functions-employee.php:673
 msgid "Dismissed"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:670
+#: modules/hrm/includes/functions-employee.php:674
 msgid "Dissatisfaction with the job"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:671
+#: modules/hrm/includes/functions-employee.php:675
 msgid "Higher Pay"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:672
+#: modules/hrm/includes/functions-employee.php:676
 msgid "Other Employment"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:673
+#: modules/hrm/includes/functions-employee.php:677
 msgid "Personality Conflicts"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:674
+#: modules/hrm/includes/functions-employee.php:678
 msgid "Relocation"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:675
+#: modules/hrm/includes/functions-employee.php:679
 msgid "Retirement"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:692
+#: modules/hrm/includes/functions-employee.php:696
 msgid "Yes"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:693
+#: modules/hrm/includes/functions-employee.php:697
 msgid "No"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:694
+#: modules/hrm/includes/functions-employee.php:698
 msgid "Upon Review"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:734
+#: modules/hrm/includes/functions-employee.php:738
 #: modules/hrm/views/employee/tab-general.php:242
 #: modules/hrm/views/js-templates/employee-terminate.php:16
 msgid "Termination Type"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:736
+#: modules/hrm/includes/functions-employee.php:740
 #: modules/hrm/views/employee/tab-general.php:243
 #: modules/hrm/views/js-templates/employee-terminate.php:29
 msgid "Termination Reason"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:738
+#: modules/hrm/includes/functions-employee.php:742
 #: modules/hrm/views/employee/tab-general.php:244
 msgid "Eligible for Hire"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:766
-#: modules/hrm/includes/functions-employee.php:772
+#: modules/hrm/includes/functions-employee.php:770
+#: modules/hrm/includes/functions-employee.php:776
 #: modules/hrm/views/reporting/gender-profile.php:84
 msgid "Male"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:767
-#: modules/hrm/includes/functions-employee.php:773
+#: modules/hrm/includes/functions-employee.php:771
+#: modules/hrm/includes/functions-employee.php:777
 #: modules/hrm/views/reporting/gender-profile.php:85
 msgid "Female"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:788
+#: modules/hrm/includes/functions-employee.php:792
 msgid "Hourly"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:789
+#: modules/hrm/includes/functions-employee.php:793
 msgid "Daily"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:790
+#: modules/hrm/includes/functions-employee.php:794
 msgid "Weekly"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:791
+#: modules/hrm/includes/functions-employee.php:795
 msgid "Biweekly"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:792
+#: modules/hrm/includes/functions-employee.php:796
 msgid "Monthly"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:793
+#: modules/hrm/includes/functions-employee.php:797
 msgid "Contract"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:806
+#: modules/hrm/includes/functions-employee.php:810
 msgid "Promotion"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:807
+#: modules/hrm/includes/functions-employee.php:811
 #: modules/hrm/views/employee/single.php:113
 msgid "Performance"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:808
+#: modules/hrm/includes/functions-employee.php:812
 msgid "Increment"
 msgstr ""
 
