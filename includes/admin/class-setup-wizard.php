@@ -457,14 +457,22 @@ class Setup_Wizard {
         <?php
     }
 
+    /**
+     * Save company working days data
+     *
+     * @since 1.0.0
+     * @since 1.1.14 Saving data in sun, mon etc keys, instead of `erp_settings_erp-hr_workdays`
+     *               since ERP Settings saves data with these keys
+     *
+     * @return void
+     */
     public function setup_step_workdays_save() {
         check_admin_referer( 'erp-setup' );
 
-        $option_key = 'erp_settings_erp-hr_workdays';
-        $days       = array_map( 'absint', $_POST['day'] );
-
-        if ( count( $days ) == 7 ) {
-            update_option( $option_key, $days );
+        if ( 7 === count( $_POST['day'] ) ) {
+            foreach ( $_POST['day'] as $day => $hour_limit ) {
+                update_option( $day, $hour_limit );
+            }
         }
 
         wp_redirect( esc_url_raw( $this->get_next_step_link() ) );

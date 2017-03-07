@@ -2,7 +2,7 @@
 Contributors: tareq1988, wedevs, ediamin, sabbir1991, asaquzzaman
 Tags: small business, SME, contact, contacts, CRM, Customer Relationship Management, employee, leave management, hr, hrm, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 4.7.2
+Tested up to: 4.7.3
 Stable tag: trunk
 License: GPLv2
 Donate Link: https://tareq.co/donate
@@ -151,6 +151,19 @@ If you are unable to use any of the methods due to internet connectivity and fil
 
 == Changelog ==
 
+**v1.1.14 -> Mar 07, 2017**
+
+* [new] Added CRM cli command for clearing up the contacts
+* [new] Add most of the current circulating currencies
+* [new] Add `post_where_queries` optoin for erp_get_peoples query
+* [new] Add param to print erp meta values
+* [fix] Fix contact editor error when assigned to one group in single page
+* [fix] Email Template adding back slash (\) on edit with single and double quote
+* [fix] Proper error handle for contact form integration
+* [tweak] Hide HR Permission tab in own profile page
+* [tweak] Remove terminated employees from Birthday Buddies list
+* [tweak] Added created_at field to enable adding log in a past date
+
 **v1.1.13 -> Feb 16, 2017**
 
 * [fix] Show tasks based on permission and tab in CRM Schedule calendar
@@ -177,7 +190,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
 * [fix] Update minified JavaScript files
 
 **v1.1.10 -> Jan 18, 2017**
-
+* [new] Introduce REST API
 * [new] Meta query support in advance search segmentaion
 * [new] Date and number range type filter in crm search segmentation
 * [new] Pakistani Rupee currency

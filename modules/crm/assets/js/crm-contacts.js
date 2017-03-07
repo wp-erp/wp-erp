@@ -2061,8 +2061,10 @@
                                         if ( selected !== '' ) {
                                             self.find( 'select' ).val( selected ).trigger('change');
                                             self.find("input[type=radio][value='"+selected+"']").prop("checked",true);
+
+                                            var selectedData = selected.toString().split(',');
                                             $.each(self.find("input[type=checkbox]"), function(index, data) {
-                                                if($.inArray($(data).val(), selected.split(',')) != -1) {
+                                                if($.inArray($(data).val(), selectedData) != -1) {
                                                     $(data).prop('checked', true);
                                                 }
                                             });
@@ -2086,9 +2088,10 @@
                             wp.ajax.send( {
                                 data: this.serialize(),
                                 success: function(response) {
-                                    modal.enableButton();
-                                    modal.closeModal();
-                                    $( '.erp-single-customer-row' ).load( window.location.href + ' .left-content' );
+                                    window.location.href = window.location.href;
+                                    // modal.enableButton();
+                                    // modal.closeModal();
+                                    // $( '.erp-single-customer-row' ).load( window.location.href + ' .left-content' );
                                 },
                                 error: function(error) {
                                     modal.enableButton();

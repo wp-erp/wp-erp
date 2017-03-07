@@ -1013,11 +1013,12 @@ class Ajax_Handler {
                 break;
 
             case 'email':
+                $message = wp_unslash( $postdata['message'] );
 
                 $save_data = [
                     'user_id'       => $postdata['user_id'],
                     'created_by'    => $postdata['created_by'],
-                    'message'       => $postdata['message'],
+                    'message'       => $message,
                     'type'          => $postdata['type'],
                     'email_subject' => $postdata['email_subject']
                 ];
@@ -1052,7 +1053,7 @@ class Ajax_Handler {
                 $email_url  = add_query_arg( $query, admin_url('admin-ajax.php') );
                 $img_url    = '<img src="' . $email_url . '" width="1" height="1" style="display:none;" />';
 
-                $email_body = $postdata['message'] . $img_url;
+                $email_body = $message . $img_url;
 
                 $message_id = md5( uniqid( time() ) ) . '.' . $postdata['user_id'] . '.' . $postdata['created_by'] . '.r1@' . $_SERVER['HTTP_HOST'];
 

@@ -4,15 +4,12 @@ namespace WeDevs\ERP\Framework;
 
 /**
  * Erp Settings page main class
- *
- * @since 1.1.13 Added `$arrayed_option` parameter. For example uses please see modules/hrm/includes/class-settings.php settings
  */
 class ERP_Settings_Page {
 
-    protected $id             = '';
-    protected $label          = '';
-    protected $single_option  = false;
-    protected $arrayed_option = false;
+    protected $id            = '';
+    protected $label         = '';
+    protected $single_option = false;
     protected $section_fields = [];
 
     /**
@@ -76,14 +73,6 @@ class ERP_Settings_Page {
                 $from_sections = true;
             } else {
                 $options = $this->get_settings();
-            }
-
-            if ( $this->arrayed_option && isset( $_POST[ $this->arrayed_option ] ) ) {
-                update_option( $this->arrayed_option, $_POST[ $this->arrayed_option ], false );
-
-                do_action( 'erp_after_save_settings' );
-
-                return;
             }
 
             // Options to update will be stored here
@@ -744,17 +733,7 @@ class ERP_Settings_Page {
      */
     public function get_option( $option_name, $default = '' ) {
 
-        if ( $this->arrayed_option ) {
-            $options = get_option( $this->arrayed_option, [] );
-            $key = str_replace( [ $this->arrayed_option, '[', ']' ], '', $option_name );
-
-            if ( isset ( $options[ $key ] ) ) {
-                $option_value = $options[ $key ];
-            } else {
-                $option_value = $default;
-            }
-
-        } else if ( $this->single_option ) {
+        if ( $this->single_option ) {
 
             $option_value = get_option( $option_name, $default );
 

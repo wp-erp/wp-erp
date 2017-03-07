@@ -16,6 +16,7 @@
  * Get all peoples
  *
  * @since 1.0
+ * @since 1.1.14 Add `post_where_queries`
  *
  * @param $args array
  *
@@ -105,7 +106,15 @@ function erp_get_peoples( $args = [] ) {
             unset( $sql['select'][0] );
         }
 
-        $sql             = apply_filters( 'erp_get_people_pre_query', $sql, $args );
+        $sql = apply_filters( 'erp_get_people_pre_query', $sql, $args );
+
+        $post_where_queries = '';
+        if ( ! empty( $sql['post_where_queries'] ) ) {
+            $post_where_queries = 'AND ( 1 = 1 '
+                                . implode( ' ', $sql['post_where_queries'] )
+                                . ' )';
+        }
+
         $final_query     = $wrapper_select . ' '
                         . implode( ' ', $sql['select'] ) . ' '
                         . $sql_from_tb . ' '
@@ -114,6 +123,7 @@ function erp_get_peoples( $args = [] ) {
                         . 'AND ( 1=1 '
                         . implode( ' ', $sql['where'] ) . ' '
                         . ' )'
+                        . $post_where_queries
                         . $sql_group_by . ' '
                         . $sql_order_by . ' '
                         . $sql_limit;
