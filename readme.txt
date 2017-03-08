@@ -190,6 +190,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
 * [fix] Update minified JavaScript files
 
 **v1.1.10 -> Jan 18, 2017**
+
 * [new] Introduce REST API
 * [new] Meta query support in advance search segmentaion
 * [new] Date and number range type filter in crm search segmentation
