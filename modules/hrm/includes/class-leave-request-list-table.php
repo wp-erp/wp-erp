@@ -233,11 +233,12 @@ class Leave_Requests_List_Table extends \WP_List_Table {
         $offset                = ( $current_page -1 ) * $per_page;
         $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '2';
 
-        // only ncessary because we have sample data
+        // only necessary because we have sample data
         $args = array(
             'offset' => $offset,
             'number' => $per_page,
             'status' => $this->page_status,
+            'year'   => ''
         );
 
         $this->counts = erp_hr_leave_get_requests_count();

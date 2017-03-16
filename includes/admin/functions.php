@@ -15,7 +15,7 @@ function erp_admin_dash_metabox( $title = '', $callback = null, $class = '' ) {
         $metabox_callback = $callback;
     }
 
-    if ( apply_filters( 'erp_admin_dash_metabox_hide_' . $metabox_callback, false ) ) {
+    if ( is_string( $metabox_callback ) && apply_filters( 'erp_admin_dash_metabox_hide_' . $metabox_callback, false ) ) {
         return;
     }
 

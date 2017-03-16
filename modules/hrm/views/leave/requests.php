@@ -1,8 +1,7 @@
 <div class="wrap erp-hr-leave-requests">
+    <h2><?php _e( 'Leave Requests', 'erp' ); ?> <a href="<?php echo add_query_arg( array( 'view' => 'new' ) ); ?>" class="add-new-h2"><?php _e( 'New Request', 'erp' ); ?></a></h2>
+
     <div class="erp-hr-leave-requests-inner">
-
-        <h2><?php _e( 'Leave Requests', 'erp' ); ?> <a href="<?php echo add_query_arg( array( 'view' => 'new' ) ); ?>" class="add-new-h2"><?php _e( 'New Request', 'erp' ); ?></a></h2>
-
         <div class="list-table-wrap">
             <div class="list-table-inner">
 
