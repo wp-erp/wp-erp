@@ -1539,6 +1539,9 @@ function erp_import_export_javascript() {
 /**
  * Process or handle import/export submit.
  *
+ * @since 1.0.0
+ * @since 1.1.15 Declare `field_builder_contacts_fields` with empty an array
+ *
  * @return void
  */
 function erp_process_import_export() {
@@ -1553,6 +1556,7 @@ function erp_process_import_export() {
     $designations = $is_hrm_activated ? erp_hr_get_designation_dropdown_raw() : [];
 
     $field_builder_contact_options = get_option( 'erp-contact-fields' );
+    $field_builder_contacts_fields = [];
 
     if ( ! empty( $field_builder_contact_options ) ) {
         foreach ( $field_builder_contact_options as $field ) {
