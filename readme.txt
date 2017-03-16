@@ -151,6 +151,13 @@ If you are unable to use any of the methods due to internet connectivity and fil
 
 == Changelog ==
 
+**v1.1.15 -> Mar 16, 2017**
+
+* [fix] Allow export fields like checkbox or multiselect for Contact or Company
+* [fix] Fix import export undefined field_builder_contacts_fields error
+* [fix] Fix condition to hide dashboard metabox
+* [fix] Pagination problem on leave request page. Fixes #419
+
 **v1.1.14 -> Mar 07, 2017**
 
 * [new] Added CRM cli command for clearing up the contacts
