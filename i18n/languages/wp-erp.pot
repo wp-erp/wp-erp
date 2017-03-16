@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.1.14\n"
+"Project-Id-Version: WP ERP 1.1.15\n"
 "Report-Msgid-Bugs-To: http://wperp.com/support/\n"
-"POT-Creation-Date: 2017-03-07 05:58:34+00:00\n"
+"POT-Creation-Date: 2017-03-16 17:13:17+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4608,56 +4608,70 @@ msgstr ""
 msgid "Western Cape"
 msgstr ""
 
-#: includes/admin/class-ajax.php:146 includes/admin/class-ajax.php:154
-msgid "Field/Items"
+#: includes/admin/class-admin.php:100
+msgid ""
+"<h2><span class=\"dashicons dashicons-awards\"></span> weDevs 4th Year "
+"Anniversary Offer</h2>"
+msgstr ""
+
+#: includes/admin/class-admin.php:101
+msgid ""
+"<p>Get <strong class=\"highlight-text\">44&#37; discount</strong> on all "
+"extensions also <a target=\"_blank\" href=\"%1$s\"><strong>WIN any "
+"product</strong></a> from our 4th year anniversary giveaway. Offer ending "
+"soon!</p>"
 msgstr ""
 
 #: includes/admin/class-ajax.php:147 includes/admin/class-ajax.php:155
-msgid "Old Value"
+msgid "Field/Items"
 msgstr ""
 
 #: includes/admin/class-ajax.php:148 includes/admin/class-ajax.php:156
+msgid "Old Value"
+msgstr ""
+
+#: includes/admin/class-ajax.php:149 includes/admin/class-ajax.php:157
 msgid "New Value"
 msgstr ""
 
-#: includes/admin/class-ajax.php:176
+#: includes/admin/class-ajax.php:177
 msgid "Log changes"
 msgstr ""
 
-#: includes/admin/class-ajax.php:192 includes/admin/class-ajax.php:238
-#: includes/admin/class-ajax.php:327 modules/hrm/includes/class-ajax.php:885
+#: includes/admin/class-ajax.php:193 includes/admin/class-ajax.php:239
+#: includes/admin/class-ajax.php:328 modules/hrm/includes/class-ajax.php:885
 msgid "No email address provided"
 msgstr ""
 
-#: includes/admin/class-ajax.php:229 includes/admin/class-ajax.php:323
+#: includes/admin/class-ajax.php:230 includes/admin/class-ajax.php:324
 msgid "No host address provided"
 msgstr ""
 
-#: includes/admin/class-ajax.php:233 includes/admin/class-ajax.php:335
+#: includes/admin/class-ajax.php:234 includes/admin/class-ajax.php:336
 msgid "No port address provided"
 msgstr ""
 
-#: includes/admin/class-ajax.php:242 includes/admin/class-ajax.php:331
+#: includes/admin/class-ajax.php:243 includes/admin/class-ajax.php:332
 msgid "No email password provided"
 msgstr ""
 
-#: includes/admin/class-ajax.php:247
+#: includes/admin/class-ajax.php:248
 msgid "No testing email address provided"
 msgstr ""
 
-#: includes/admin/class-ajax.php:265
+#: includes/admin/class-ajax.php:266
 msgid "ERP SMTP Test Mail"
 msgstr ""
 
-#: includes/admin/class-ajax.php:266
+#: includes/admin/class-ajax.php:267
 msgid "This is a test email by WP ERP."
 msgstr ""
 
-#: includes/admin/class-ajax.php:308
+#: includes/admin/class-ajax.php:309
 msgid "Test email has been sent."
 msgstr ""
 
-#: includes/admin/class-ajax.php:349
+#: includes/admin/class-ajax.php:350
 msgid "Your IMAP connection is established."
 msgstr ""
 
@@ -7601,11 +7615,11 @@ msgstr ""
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/functions.php:1818
+#: includes/functions.php:1822
 msgid "Nothing to import or items are already exists."
 msgstr ""
 
-#: includes/functions.php:1821
+#: includes/functions.php:1825
 msgid "%s items successfully imported."
 msgstr ""
 
@@ -13991,11 +14005,11 @@ msgstr ""
 msgid "Submit Request"
 msgstr ""
 
-#: modules/hrm/views/leave/requests.php:4
+#: modules/hrm/views/leave/requests.php:2
 msgid "Leave Requests"
 msgstr ""
 
-#: modules/hrm/views/leave/requests.php:4
+#: modules/hrm/views/leave/requests.php:2
 msgid "New Request"
 msgstr ""
 
