@@ -31,6 +31,7 @@ class Ajax {
         $this->action( 'wp_ajax_erp_import_users_as_contacts', 'import_users_as_contacts' );
         $this->action( 'wp_ajax_erp-api-key', 'new_api_key');
         $this->action( 'wp_ajax_erp-api-delete-key', 'delete_api_key');
+        $this->action( 'wp_ajax_erp-dismiss-promotional-offer-notice', 'dismiss_promotional_offer');
     }
 
     function file_delete() {
@@ -500,6 +501,19 @@ class Ajax {
         }
 
         $this->send_success();
+    }
+
+    /**
+     * Dismiss promotional offer
+     *
+     * @since 1.1.15
+     *
+     * @return void
+     */
+    public function dismiss_promotional_offer() {
+        if ( ! empty( $_POST['dismissed'] ) ) {
+            update_option( 'erp_promotional_offer_notice', 'hide' );
+        }
     }
 }
 
