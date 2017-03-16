@@ -2101,8 +2101,18 @@ function erp_make_csv_file( $items, $file_name, $field_data = true ) {
     fputcsv( $output, $columns );
 
     if ( $field_data ) {
-        foreach ( $items as $row ) {
-            fputcsv( $output, $row );
+        foreach ( $items as $item ) {
+            $csv_row = array_map( function ( $item_val ) {
+
+                if ( is_array( $item_val ) ) {
+                    return implode( ', ' , $item_val );
+                }
+
+                return $item_val;
+
+            }, $item );
+
+            fputcsv( $output, $csv_row );
         }
     }
 
