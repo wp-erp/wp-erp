@@ -177,6 +177,7 @@ function erp_crm_get_details_url( $id, $type ) {
  * Get CRM life statges
  *
  * @since 1.0
+ * @since 1.1.16 Append extra `label` after the filter applied
  *
  * @param array $label
  *
@@ -191,11 +192,13 @@ function erp_crm_get_life_stages_dropdown_raw( $label = [] ) {
         'subscriber'  => __( 'Subscriber', 'wp-erp' )
     ];
 
+    $life_stages = apply_filters( 'erp_crm_life_stages', $life_stages );
+
     if ( $label ) {
         $life_stages = $label + $life_stages;
     }
 
-    return apply_filters( 'erp_crm_life_stages', $life_stages );
+    return $life_stages;
 }
 
 /**
