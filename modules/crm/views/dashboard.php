@@ -31,15 +31,12 @@
                                             <li>
                                                 <a href="<?php echo add_query_arg( [ 'page' => 'erp-sales-customers', 'status' => $contact_key ], admin_url( 'admin.php' ) ); ?>">
                                                     <?php
-                                                        if ( $contact_key == 'customer' ) {
-                                                            echo sprintf( _n( '%s Customer', '%s Customers', $contact_value['count'], 'erp' ), number_format_i18n( $contact_value['count'] ), 0 );
-                                                        } else if ( $contact_key == 'opportunity' ) {
-                                                            echo sprintf( _n( '%s Opportunity', '%s Opportunites', $contact_value['count'], 'erp' ), number_format_i18n( $contact_value['count'] ), 0 );
-                                                        } elseif( $contact_key == 'subscriber' ) {
-                                                            echo sprintf( _n( '%s Subscriber', '%s Subscribers', $contact_value['count'], 'erp' ), number_format_i18n( $contact_value['count'] ), 0 );
-                                                        } else {
-                                                            echo sprintf( _n( '%s Lead', '%s Leads', $contact_value['count'], 'erp' ), number_format_i18n( $contact_value['count'] ), 0 );
-                                                        }
+                                                        $singular = $contact_value['label'];
+                                                        $plural = erp_pluralize( $singular );
+
+                                                        $plural = apply_filters( "erp_crm_life_stage_plural_of_{$contact_key}", $plural, $singular );
+
+                                                        echo sprintf( _n( "%s {$singular}", "%s {$plural}", $contact_value['count'], 'erp' ), number_format_i18n( $contact_value['count'] ), 0 );
                                                     ?>
                                                 </a>
                                             </li>
@@ -72,17 +69,14 @@
                                             }
                                             ?>
                                             <li>
-                                                <a href="<?php echo add_query_arg( [ 'page' => 'erp-sales-companies', 'status' => $company_key ], admin_url( 'admin.php' ) ); ?>">
+                                                <a href="<?php echo add_query_arg( [ 'page' => 'erp-sales-customers', 'status' => $company_key ], admin_url( 'admin.php' ) ); ?>">
                                                     <?php
-                                                        if ( $company_key == 'customer' ) {
-                                                            echo sprintf( _n( '%s Customer', '%s Customers', $company_value['count'], 'erp' ), number_format_i18n( $company_value['count'] ), 0 );
-                                                        } else if ( $company_key == 'opportunity' ) {
-                                                            echo sprintf( _n( '%s Opportunity', '%s Opportunites', $company_value['count'], 'erp' ), number_format_i18n( $company_value['count'] ), 0 );
-                                                        } elseif ( $company_key == 'subscriber' ) {
-                                                            echo sprintf( _n( '%s Subscriber', '%s Subscribers', $company_value['count'], 'erp' ), number_format_i18n( $company_value['count'] ), 0 );
-                                                        } else {
-                                                            echo sprintf( _n( '%s Lead', '%s Leads', $company_value['count'], 'erp' ), number_format_i18n( $company_value['count'] ), 0 );
-                                                        }
+                                                        $singular = $company_value['label'];
+                                                        $plural = erp_pluralize( $singular );
+
+                                                        $plural = apply_filters( "erp_crm_life_stage_plural_of_{$company_key}", $plural, $singular );
+
+                                                        echo sprintf( _n( "%s {$singular}", "%s {$plural}", $company_value['count'], 'erp' ), number_format_i18n( $company_value['count'] ), 0 );
                                                     ?>
                                                 </a>
                                             </li>

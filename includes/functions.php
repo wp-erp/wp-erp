@@ -2244,3 +2244,16 @@ function erp_remove_other_select2_sources() {
     add_action( 'admin_enqueue_scripts', 'erp_dequeue_other_select2_sources', 999999 );
     add_action( 'wp_enqueue_scripts', 'erp_dequeue_other_select2_sources', 999999 );
 }
+
+/**
+ * Returns a word in plural form.
+ *
+ * @since 1.1.16
+ *
+ * @param string $word The word in singular form.
+ *
+ * @return string The word in plural form.
+ */
+function erp_pluralize( $word ) {
+    return \Doctrine\Common\Inflector\Inflector::pluralize( $word );
+}
