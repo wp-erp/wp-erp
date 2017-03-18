@@ -247,6 +247,8 @@ function erp_crm_dashboard_widget_my_schedules() {
 function erp_crm_dashboard_widget_latest_contact() {
     $contacts  = erp_get_peoples( [ 'type' => 'contact', 'orderby' => 'created', 'order' => 'DESC', 'number' => 5 ] );
     $companies = erp_get_peoples( [ 'type' => 'company', 'orderby' => 'created', 'order' => 'DESC', 'number' => 5 ] );
+
+    $crm_life_stages = erp_crm_get_life_stages_dropdown_raw();
     ?>
 
     <h4><?php _e( 'Contacts', 'erp' ); ?></h4>
@@ -255,14 +257,17 @@ function erp_crm_dashboard_widget_latest_contact() {
 
         <ul class="erp-list erp-latest-contact-list">
             <?php foreach ( $contacts as $contact ) : ?>
-                <?php $contact_obj = new WeDevs\ERP\CRM\Contact( (int)$contact->id ); ?>
+                <?php
+                    $contact_obj = new WeDevs\ERP\CRM\Contact( (int)$contact->id );
+                    $life_stage = $contact_obj->get_meta( 'life_stage', true );
+                ?>
                 <li>
                     <div class="avatar">
                         <?php echo $contact_obj->get_avatar(28); ?>
                     </div>
                     <div class="details">
                         <p class="contact-name"><a href="<?php echo $contact_obj->get_details_url(); ?>"><?php echo $contact_obj->get_full_name(); ?></a></p>
-                        <p class="contact-stage"><?php echo $contact_obj->get_meta( 'life_stage', true ); ?></p>
+                        <p class="contact-stage"><?php echo isset( $crm_life_stages[ $life_stage ] ) ? $crm_life_stages[ $life_stage ] : ''; ?></p>
                     </div>
                     <span class="contact-created-time erp-tips" title="<?php echo sprintf( '%s %s', __( 'Created on', 'erp' ), erp_format_date( $contact->created ) )  ?>"><i class="fa fa-clock-o"></i></span>
                 </li>
@@ -280,7 +285,10 @@ function erp_crm_dashboard_widget_latest_contact() {
     <?php if ( $companies ) { ?>
         <ul class="erp-list erp-latest-contact-list">
             <?php foreach ( $companies as $company ) : ?>
-                <?php $company_obj = new WeDevs\ERP\CRM\Contact( intval( $company->id ) ) ?>
+                <?php
+                    $company_obj = new WeDevs\ERP\CRM\Contact( intval( $company->id ) );
+                    $life_stage = $company_obj->get_meta( 'life_stage', true );
+                ?>
                 <li>
                     <div class="avatar">
                         <?php echo $company_obj->get_avatar(28); ?>
@@ -288,7 +296,7 @@ function erp_crm_dashboard_widget_latest_contact() {
 
                     <div class="details">
                         <p class="contact-name"><a href="<?php echo $company_obj->get_details_url(); ?>"><?php echo $company_obj->get_full_name(); ?></a></p>
-                        <p class="contact-stage"><?php echo $company_obj->get_meta( 'life_stage', true ); ?></p>
+                        <p class="contact-stage"><?php echo isset( $crm_life_stages[ $life_stage ] ) ? $crm_life_stages[ $life_stage ] : ''; ?></p>
                     </div>
                     <span class="contact-created-time erp-tips" title="<?php echo sprintf( '%s %s', __( 'Created on', 'erp' ), erp_format_date( $company->created ) )  ?>"><i class="fa fa-clock-o"></i></span>
                 </li>
