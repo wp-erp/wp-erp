@@ -562,6 +562,7 @@ if ( ! function_exists( 'trim_deep' ) ) {
  *
  * @since 1.0.0
  * @since 1.1.14 Add $type param
+ * @since 1.1.16 Apply if-else condition to set `$value`
  *
  * @param  string  $label the label
  * @param  string  $value the value to print
@@ -571,14 +572,17 @@ if ( ! function_exists( 'trim_deep' ) ) {
  * @return void
  */
 function erp_print_key_value( $label, $value, $sep = ' : ', $type = 'text' ) {
-    $value = empty( $value ) ? '&mdash;' : $value;
+    if ( empty( $value ) ) {
+        $value = '&mdash;';
 
-    switch ( $type ) {
-        case 'email':
-        case 'url':
-        case 'phone':
-            $value = erp_get_clickable( $type, $value );
-            break;
+    } else {
+        switch ( $type ) {
+            case 'email':
+            case 'url':
+            case 'phone':
+                $value = erp_get_clickable( $type, $value );
+                break;
+        }
     }
 
     printf( '<label>%s</label> <span class="sep">%s</span> <span class="value">%s</span>', $label, $sep, $value );

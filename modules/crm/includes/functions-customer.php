@@ -1269,7 +1269,13 @@ function erp_crm_get_user_assignable_groups( $user_id ) {
         return new WP_Error( 'no-user-id', __( 'No contact found', 'erp' ) );
     }
 
-    $data = \WeDevs\ERP\CRM\Models\ContactSubscriber::with('groups')->where( 'user_id', $user_id )->distinct()->get()->toArray();
+    $data = \WeDevs\ERP\CRM\Models\ContactSubscriber::with('groups')
+                ->where( [
+                    'user_id' => $user_id,
+                    'status'  => 'subscribe'
+                ] )
+                ->whereNotNull( 'subscribe_at' )
+                ->distinct()->get()->toArray();
     return $data;
 }
 
@@ -1335,7 +1341,13 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
 
     if ( ! empty( $unsubscribe_group ) ) {
         foreach ( $unsubscribe_group as $unsubscribe_group_key => $unsubscribe_group_id ) {
-            \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )->where( 'group_id', $unsubscribe_group_id )->update( [ 'status' => 'subscribe' ] );
+            \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )
+                ->where( 'group_id', $unsubscribe_group_id )
+                ->update( [
+                    'status'         => 'subscribe',
+                    'subscribe_at'   => current_time( 'mysql' ),
+                    'unsubscribe_at' => null
+                ] );
         }
     }
 
@@ -1353,7 +1365,14 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
 
     if ( ! empty( $del_group ) ) {
         foreach ( $del_group as $del_group_key => $del_group_id ) {
-            \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )->where( 'group_id', $del_group_id )->where( 'status', 'subscribe' )->delete();
+            \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )
+                ->where( 'group_id', $del_group_id )
+                ->where( 'status', 'subscribe' )
+                ->update( [
+                    'status'         => 'unsubscribe',
+                    'subscribe_at'   => null,
+                    'unsubscribe_at' => current_time( 'mysql' )
+                ] );
         }
     }
 }
