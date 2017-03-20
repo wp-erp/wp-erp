@@ -1804,6 +1804,7 @@ function erp_crm_insert_save_search( $data ) {
  * Get save search Item
  *
  * @since 1.0
+ * @since 1.1.16 Make sure returned array remains array to use in JS
  *
  * @param  array  $args
  *
@@ -1837,21 +1838,32 @@ function erp_crm_get_save_search_item( $args = [] ) {
                 ->toArray();
 
     foreach ( $search_keys as $key => $search_values ) {
+        $item = [];
+
         if ( $key == 0 ) {
-            $results[$key]['id'] = __( 'own_search', 'erp' );
-            $results[$key]['name'] = __( 'Own Search', 'erp' );
+            $item = [
+                'id'        => __( 'own_search', 'erp' ),
+                'name'      => __( 'Own Search', 'erp' ),
+                'options'   => []
+            ];
+
         } else {
-            $results[$key]['id'] = __( 'global_search', 'erp' );
-            $results[$key]['name'] = __( 'Global Search', 'erp' );
+            $item = [
+                'id'        => __( 'global_search', 'erp' ),
+                'name'      => __( 'Global Search', 'erp' ),
+                'options'   => []
+            ];
         }
 
         foreach ( $search_values as $index => $value ) {
-            $results[$key]['options'][] = [
-                'id' => $value['id'],
-                'text' => $value['search_name'],
+            $item['options'][] = [
+                'id'    => $value['id'],
+                'text'  => $value['search_name'],
                 'value' => $value['search_val']
             ];
         }
+
+        array_push( $results, $item );
     }
 
     return $results;
