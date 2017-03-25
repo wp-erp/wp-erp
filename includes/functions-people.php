@@ -196,6 +196,7 @@ function erp_delete_people( $data = [] ) {
             if ( empty( $types ) ) {
                 $people->delete();
                 \WeDevs\ERP\Framework\Models\Peoplemeta::where( 'erp_people_id', $people_id )->delete();
+                \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $people_id )->delete();
             }
 
         } else {
