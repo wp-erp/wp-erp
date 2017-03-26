@@ -9,7 +9,7 @@
  * @return void
  */
 function erp_crm_dashboard_right_widgets_area() {
-    erp_admin_dash_metabox( __( '<i class="fa fa-calendar-check-o"></i> Todays Schedules', 'erp' ), 'erp_crm_dashboard_widget_todays_schedules' );
+    erp_admin_dash_metabox( __( '<i class="fa fa-calendar-check-o"></i> Today\'s Schedules', 'erp' ), 'erp_crm_dashboard_widget_todays_schedules' );
     erp_admin_dash_metabox( __( '<i class="fa fa-calendar-check-o"></i> Upcoming Schedules', 'erp' ), 'erp_crm_dashboard_widget_upcoming_schedules' );
     erp_admin_dash_metabox( __( '<i class="fa fa-users"></i> Recently Added', 'erp' ), 'erp_crm_dashboard_widget_latest_contact' );
 
@@ -34,7 +34,7 @@ function erp_crm_dashboard_left_widgets_area() {
  *
  * @since 1.0
  *
- * @return void [html]
+ * @return void
  */
 function erp_crm_dashboard_widget_todays_schedules() {
     $todays_schedules = erp_crm_get_todays_schedules_activity( get_current_user_id() );
@@ -64,14 +64,63 @@ function erp_crm_dashboard_widget_todays_schedules() {
                         $users_text = sprintf( '%s <span class="erp-tips" title="%s">%d %s</span>', __( 'and', 'erp' ), implode( '<br>', $invite_users ), count( $invite_users ), __( 'Others') );
                     }
 
-                    if ( $schedule['log_type'] == 'meeting' ) {
-                        echo sprintf( '%s <a href="%s">%s</a> %s %s %s', __( '<i class="fa fa-calendar"></i> Meeting with', 'erp' ), erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['types'] ), $contact_user, $users_text, __( 'at', 'erp' ), date( 'g:ia', strtotime( $schedule['start_date'] ) ) ) . " <a href='#' data-schedule_id=' " . $schedule['id'] . " ' data-title='" . $schedule['extra']['schedule_title'] . "' class='erp-crm-dashbaord-show-details-schedule'>" . __( 'Details &rarr;', 'erp' ) . "</a>";
+
+                    switch ( $schedule['log_type'] ) {
+                        case 'meeting':
+                            $icon = 'calendar';
+                            $text = __( 'Meeting with', 'erp' );
+                            $data_title = __( 'Log Activity - Meeting', 'erp' );
+                            break;
+
+                        case 'call':
+                            $icon = 'phone';
+                            $text = __( 'Call', 'erp' );
+                            $data_title = __( 'Log Activity - Call', 'erp' );
+                            break;
+
+                        case 'email':
+                            $icon = 'envelope-o';
+                            $text = __( 'Send email to', 'erp' );
+                            $data_title = __( 'Log Activity - Email', 'erp' );
+                            break;
+
+                        case 'sms':
+                            $icon = 'comment-o';
+                            $text = __( 'Send sms to', 'erp' );
+                            $data_title = __( 'Log Activity - SMS', 'erp' );
+                            break;
+
+                        default:
+                            $icon = '';
+                            $text = '';
+                            $data_title = '';
+                            break;
                     }
 
-                    if ( $schedule['log_type'] == 'call' ) {
-                        echo sprintf( '%s <a href="%s">%s</a> %s %s %s', __( '<i class="fa fa-phone"></i> Call to', 'erp' ), erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['types'] ), $contact_user, $users_text, __( 'at', 'erp' ), date( 'g:ia', strtotime( $schedule['start_date'] ) ) ) . " <a href='#' data-schedule_id=' " . $schedule['id'] . " ' data-title='" . $schedule['extra']['schedule_title'] . "' class='erp-crm-dashbaord-show-details-schedule'>" . __( 'Details &rarr;', 'erp' ) . "</a>";
-                    }
+
+                    printf(
+                        '<i class="fa fa-%s"></i> %s <a href="%s">%s</a> %s %s %s',
+                        $icon,
+                        $text,
+                        erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['types'] ),
+                        $contact_user,
+                        $users_text,
+                        __( 'at', 'erp' ),
+                        date( 'g:ia', strtotime( $schedule['start_date'] ) )
+                    );
+
+                    do_action( 'erp_crm_dashboard_widget_todays_schedules', $schedule );
+
+                    $data_title = apply_filters( 'erp_crm_dashboard_widget_todays_schedules_title', $data_title, $schedule );
+
                 ?>
+                | <a
+                    href="#"
+                    data-schedule_id="<?php echo $schedule['id']; ?>"
+                    data-title="<?php echo $data_title ?>"
+                    class="erp-crm-dashbaord-show-details-schedule"
+                ><?php echo __( 'Details', 'erp' ); ?></a>
+
             </li>
         <?php endforeach ?>
     </ul>

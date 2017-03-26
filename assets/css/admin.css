@@ -136,10 +136,6 @@
 .crm-dashboard ul.erp-crm-dashbaord-upcoming-schedules li a:hover {
   text-decoration: underline;
 }
-.crm-dashboard ul.erp-crm-dashbaord-todays-schedules li a.erp-crm-dashbaord-show-details-schedule,
-.crm-dashboard ul.erp-crm-dashbaord-upcoming-schedules li a.erp-crm-dashbaord-show-details-schedule {
-  display: block;
-}
 .crm-dashboard ul.erp-crm-dashbaord-todays-schedules li span,
 .crm-dashboard ul.erp-crm-dashbaord-upcoming-schedules li span {
   display: inline-block;
