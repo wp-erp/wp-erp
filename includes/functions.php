@@ -562,6 +562,7 @@ if ( ! function_exists( 'trim_deep' ) ) {
  *
  * @since 1.0.0
  * @since 1.1.14 Add $type param
+ * @since 1.1.16 Apply if-else condition to set `$value`
  *
  * @param  string  $label the label
  * @param  string  $value the value to print
@@ -571,14 +572,17 @@ if ( ! function_exists( 'trim_deep' ) ) {
  * @return void
  */
 function erp_print_key_value( $label, $value, $sep = ' : ', $type = 'text' ) {
-    $value = empty( $value ) ? '&mdash;' : $value;
+    if ( empty( $value ) ) {
+        $value = '&mdash;';
 
-    switch ( $type ) {
-        case 'email':
-        case 'url':
-        case 'phone':
-            $value = erp_get_clickable( $type, $value );
-            break;
+    } else {
+        switch ( $type ) {
+            case 'email':
+            case 'url':
+            case 'phone':
+                $value = erp_get_clickable( $type, $value );
+                break;
+        }
     }
 
     printf( '<label>%s</label> <span class="sep">%s</span> <span class="value">%s</span>', $label, $sep, $value );
@@ -2243,4 +2247,46 @@ function erp_dequeue_other_select2_sources() {
 function erp_remove_other_select2_sources() {
     add_action( 'admin_enqueue_scripts', 'erp_dequeue_other_select2_sources', 999999 );
     add_action( 'wp_enqueue_scripts', 'erp_dequeue_other_select2_sources', 999999 );
+}
+
+/**
+ * Returns a word in plural form.
+ *
+ * @since 1.1.16
+ *
+ * @param string $word The word in singular form.
+ *
+ * @return string The word in plural form.
+ */
+function erp_pluralize( $word ) {
+    return \Doctrine\Common\Inflector\Inflector::pluralize( $word );
+}
+
+/**
+ * Get the client IP address
+ *
+ * @since 1.1.16
+ *
+ * @return string
+ */
+function erp_get_client_ip() {
+    $ipaddress = '';
+
+    if ( isset($_SERVER['HTTP_CLIENT_IP'] ) ) {
+        $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+    } else if ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+        $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    } else if ( isset( $_SERVER['HTTP_X_FORWARDED'] ) ) {
+        $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+    } else if ( isset( $_SERVER['HTTP_FORWARDED_FOR'] ) ) {
+        $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+    } else if ( isset( $_SERVER['HTTP_FORWARDED'] ) ) {
+        $ipaddress = $_SERVER['HTTP_FORWARDED'];
+    } else if ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
+        $ipaddress = $_SERVER['REMOTE_ADDR'];
+    } else {
+        $ipaddress = 'UNKNOWN';
+    }
+
+    return $ipaddress;
 }

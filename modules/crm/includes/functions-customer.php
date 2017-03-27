@@ -177,6 +177,7 @@ function erp_crm_get_details_url( $id, $type ) {
  * Get CRM life statges
  *
  * @since 1.0
+ * @since 1.1.16 Append extra `label` after the filter applied
  *
  * @param array $label
  *
@@ -191,11 +192,13 @@ function erp_crm_get_life_stages_dropdown_raw( $label = [] ) {
         'subscriber'  => __( 'Subscriber', 'wp-erp' )
     ];
 
+    $life_stages = apply_filters( 'erp_crm_life_stages', $life_stages );
+
     if ( $label ) {
         $life_stages = $label + $life_stages;
     }
 
-    return apply_filters( 'erp_crm_life_stages', $life_stages );
+    return $life_stages;
 }
 
 /**
@@ -1266,7 +1269,13 @@ function erp_crm_get_user_assignable_groups( $user_id ) {
         return new WP_Error( 'no-user-id', __( 'No contact found', 'erp' ) );
     }
 
-    $data = \WeDevs\ERP\CRM\Models\ContactSubscriber::with('groups')->where( 'user_id', $user_id )->distinct()->get()->toArray();
+    $data = \WeDevs\ERP\CRM\Models\ContactSubscriber::with('groups')
+                ->where( [
+                    'user_id' => $user_id,
+                    'status'  => 'subscribe'
+                ] )
+                ->whereNotNull( 'subscribe_at' )
+                ->distinct()->get()->toArray();
     return $data;
 }
 
@@ -1332,7 +1341,13 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
 
     if ( ! empty( $unsubscribe_group ) ) {
         foreach ( $unsubscribe_group as $unsubscribe_group_key => $unsubscribe_group_id ) {
-            \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )->where( 'group_id', $unsubscribe_group_id )->update( [ 'status' => 'subscribe' ] );
+            \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )
+                ->where( 'group_id', $unsubscribe_group_id )
+                ->update( [
+                    'status'         => 'subscribe',
+                    'subscribe_at'   => current_time( 'mysql' ),
+                    'unsubscribe_at' => null
+                ] );
         }
     }
 
@@ -1350,7 +1365,14 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
 
     if ( ! empty( $del_group ) ) {
         foreach ( $del_group as $del_group_key => $del_group_id ) {
-            \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )->where( 'group_id', $del_group_id )->where( 'status', 'subscribe' )->delete();
+            \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )
+                ->where( 'group_id', $del_group_id )
+                ->where( 'status', 'subscribe' )
+                ->update( [
+                    'status'         => 'unsubscribe',
+                    'subscribe_at'   => null,
+                    'unsubscribe_at' => current_time( 'mysql' )
+                ] );
         }
     }
 }
@@ -1782,6 +1804,7 @@ function erp_crm_insert_save_search( $data ) {
  * Get save search Item
  *
  * @since 1.0
+ * @since 1.1.16 Make sure returned array remains array to use in JS
  *
  * @param  array  $args
  *
@@ -1815,21 +1838,32 @@ function erp_crm_get_save_search_item( $args = [] ) {
                 ->toArray();
 
     foreach ( $search_keys as $key => $search_values ) {
+        $item = [];
+
         if ( $key == 0 ) {
-            $results[$key]['id'] = __( 'own_search', 'erp' );
-            $results[$key]['name'] = __( 'Own Search', 'erp' );
+            $item = [
+                'id'        => __( 'own_search', 'erp' ),
+                'name'      => __( 'Own Search', 'erp' ),
+                'options'   => []
+            ];
+
         } else {
-            $results[$key]['id'] = __( 'global_search', 'erp' );
-            $results[$key]['name'] = __( 'Global Search', 'erp' );
+            $item = [
+                'id'        => __( 'global_search', 'erp' ),
+                'name'      => __( 'Global Search', 'erp' ),
+                'options'   => []
+            ];
         }
 
         foreach ( $search_values as $index => $value ) {
-            $results[$key]['options'][] = [
-                'id' => $value['id'],
-                'text' => $value['search_name'],
+            $item['options'][] = [
+                'id'    => $value['id'],
+                'text'  => $value['search_name'],
                 'value' => $value['search_val']
             ];
         }
+
+        array_push( $results, $item );
     }
 
     return $results;

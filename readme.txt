@@ -151,6 +151,17 @@ If you are unable to use any of the methods due to internet connectivity and fil
 
 == Changelog ==
 
+**v1.1.16 -> Mar 27, 2017**
+* [new] added function `erp_get_client_ip()` for getting client IP address
+* [fix] Fix CRM dashboard Today's Schedule metabox
+* [fix] Remove a contact from all groups after delete it
+* [fix] TypeError when deleting search segment. Fixes #421.
+* [fix] Update unsubscribed contact/company data properly
+* [fix] Fixes CRM Dashboard metaboxes display issue.
+* [fix] Using dynamic life stages instead of statics in CRM dashboard
+* [fix] Append extra life stage label after the filter applied
+* [tweak] Added some file types in file_upload option
+
 **v1.1.15 -> Mar 16, 2017**
 
 * [fix] Allow export fields like checkbox or multiselect for Contact or Company

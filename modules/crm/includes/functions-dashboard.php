@@ -9,7 +9,7 @@
  * @return void
  */
 function erp_crm_dashboard_right_widgets_area() {
-    erp_admin_dash_metabox( __( '<i class="fa fa-calendar-check-o"></i> Todays Schedules', 'erp' ), 'erp_crm_dashboard_widget_todays_schedules' );
+    erp_admin_dash_metabox( __( '<i class="fa fa-calendar-check-o"></i> Today\'s Schedules', 'erp' ), 'erp_crm_dashboard_widget_todays_schedules' );
     erp_admin_dash_metabox( __( '<i class="fa fa-calendar-check-o"></i> Upcoming Schedules', 'erp' ), 'erp_crm_dashboard_widget_upcoming_schedules' );
     erp_admin_dash_metabox( __( '<i class="fa fa-users"></i> Recently Added', 'erp' ), 'erp_crm_dashboard_widget_latest_contact' );
 
@@ -34,7 +34,7 @@ function erp_crm_dashboard_left_widgets_area() {
  *
  * @since 1.0
  *
- * @return void [html]
+ * @return void
  */
 function erp_crm_dashboard_widget_todays_schedules() {
     $todays_schedules = erp_crm_get_todays_schedules_activity( get_current_user_id() );
@@ -64,14 +64,63 @@ function erp_crm_dashboard_widget_todays_schedules() {
                         $users_text = sprintf( '%s <span class="erp-tips" title="%s">%d %s</span>', __( 'and', 'erp' ), implode( '<br>', $invite_users ), count( $invite_users ), __( 'Others') );
                     }
 
-                    if ( $schedule['log_type'] == 'meeting' ) {
-                        echo sprintf( '%s <a href="%s">%s</a> %s %s %s', __( '<i class="fa fa-calendar"></i> Meeting with', 'erp' ), erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['types'] ), $contact_user, $users_text, __( 'at', 'erp' ), date( 'g:ia', strtotime( $schedule['start_date'] ) ) ) . " <a href='#' data-schedule_id=' " . $schedule['id'] . " ' data-title='" . $schedule['extra']['schedule_title'] . "' class='erp-crm-dashbaord-show-details-schedule'>" . __( 'Details &rarr;', 'erp' ) . "</a>";
+
+                    switch ( $schedule['log_type'] ) {
+                        case 'meeting':
+                            $icon = 'calendar';
+                            $text = __( 'Meeting with', 'erp' );
+                            $data_title = __( 'Log Activity - Meeting', 'erp' );
+                            break;
+
+                        case 'call':
+                            $icon = 'phone';
+                            $text = __( 'Call', 'erp' );
+                            $data_title = __( 'Log Activity - Call', 'erp' );
+                            break;
+
+                        case 'email':
+                            $icon = 'envelope-o';
+                            $text = __( 'Send email to', 'erp' );
+                            $data_title = __( 'Log Activity - Email', 'erp' );
+                            break;
+
+                        case 'sms':
+                            $icon = 'comment-o';
+                            $text = __( 'Send sms to', 'erp' );
+                            $data_title = __( 'Log Activity - SMS', 'erp' );
+                            break;
+
+                        default:
+                            $icon = '';
+                            $text = '';
+                            $data_title = '';
+                            break;
                     }
 
-                    if ( $schedule['log_type'] == 'call' ) {
-                        echo sprintf( '%s <a href="%s">%s</a> %s %s %s', __( '<i class="fa fa-phone"></i> Call to', 'erp' ), erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['types'] ), $contact_user, $users_text, __( 'at', 'erp' ), date( 'g:ia', strtotime( $schedule['start_date'] ) ) ) . " <a href='#' data-schedule_id=' " . $schedule['id'] . " ' data-title='" . $schedule['extra']['schedule_title'] . "' class='erp-crm-dashbaord-show-details-schedule'>" . __( 'Details &rarr;', 'erp' ) . "</a>";
-                    }
+
+                    printf(
+                        '<i class="fa fa-%s"></i> %s <a href="%s">%s</a> %s %s %s',
+                        $icon,
+                        $text,
+                        erp_crm_get_details_url( $schedule['contact']['id'], $schedule['contact']['types'] ),
+                        $contact_user,
+                        $users_text,
+                        __( 'at', 'erp' ),
+                        date( 'g:ia', strtotime( $schedule['start_date'] ) )
+                    );
+
+                    do_action( 'erp_crm_dashboard_widget_todays_schedules', $schedule );
+
+                    $data_title = apply_filters( 'erp_crm_dashboard_widget_todays_schedules_title', $data_title, $schedule );
+
                 ?>
+                | <a
+                    href="#"
+                    data-schedule_id="<?php echo $schedule['id']; ?>"
+                    data-title="<?php echo $data_title ?>"
+                    class="erp-crm-dashbaord-show-details-schedule"
+                ><?php echo __( 'Details', 'erp' ); ?></a>
+
             </li>
         <?php endforeach ?>
     </ul>
@@ -247,6 +296,8 @@ function erp_crm_dashboard_widget_my_schedules() {
 function erp_crm_dashboard_widget_latest_contact() {
     $contacts  = erp_get_peoples( [ 'type' => 'contact', 'orderby' => 'created', 'order' => 'DESC', 'number' => 5 ] );
     $companies = erp_get_peoples( [ 'type' => 'company', 'orderby' => 'created', 'order' => 'DESC', 'number' => 5 ] );
+
+    $crm_life_stages = erp_crm_get_life_stages_dropdown_raw();
     ?>
 
     <h4><?php _e( 'Contacts', 'erp' ); ?></h4>
@@ -255,14 +306,17 @@ function erp_crm_dashboard_widget_latest_contact() {
 
         <ul class="erp-list erp-latest-contact-list">
             <?php foreach ( $contacts as $contact ) : ?>
-                <?php $contact_obj = new WeDevs\ERP\CRM\Contact( (int)$contact->id ); ?>
+                <?php
+                    $contact_obj = new WeDevs\ERP\CRM\Contact( (int)$contact->id );
+                    $life_stage = $contact_obj->get_meta( 'life_stage', true );
+                ?>
                 <li>
                     <div class="avatar">
                         <?php echo $contact_obj->get_avatar(28); ?>
                     </div>
                     <div class="details">
                         <p class="contact-name"><a href="<?php echo $contact_obj->get_details_url(); ?>"><?php echo $contact_obj->get_full_name(); ?></a></p>
-                        <p class="contact-stage"><?php echo $contact_obj->get_meta( 'life_stage', true ); ?></p>
+                        <p class="contact-stage"><?php echo isset( $crm_life_stages[ $life_stage ] ) ? $crm_life_stages[ $life_stage ] : ''; ?></p>
                     </div>
                     <span class="contact-created-time erp-tips" title="<?php echo sprintf( '%s %s', __( 'Created on', 'erp' ), erp_format_date( $contact->created ) )  ?>"><i class="fa fa-clock-o"></i></span>
                 </li>
@@ -280,7 +334,10 @@ function erp_crm_dashboard_widget_latest_contact() {
     <?php if ( $companies ) { ?>
         <ul class="erp-list erp-latest-contact-list">
             <?php foreach ( $companies as $company ) : ?>
-                <?php $company_obj = new WeDevs\ERP\CRM\Contact( intval( $company->id ) ) ?>
+                <?php
+                    $company_obj = new WeDevs\ERP\CRM\Contact( intval( $company->id ) );
+                    $life_stage = $company_obj->get_meta( 'life_stage', true );
+                ?>
                 <li>
                     <div class="avatar">
                         <?php echo $company_obj->get_avatar(28); ?>
@@ -288,7 +345,7 @@ function erp_crm_dashboard_widget_latest_contact() {
 
                     <div class="details">
                         <p class="contact-name"><a href="<?php echo $company_obj->get_details_url(); ?>"><?php echo $company_obj->get_full_name(); ?></a></p>
-                        <p class="contact-stage"><?php echo $company_obj->get_meta( 'life_stage', true ); ?></p>
+                        <p class="contact-stage"><?php echo isset( $crm_life_stages[ $life_stage ] ) ? $crm_life_stages[ $life_stage ] : ''; ?></p>
                     </div>
                     <span class="contact-created-time erp-tips" title="<?php echo sprintf( '%s %s', __( 'Created on', 'erp' ), erp_format_date( $company->created ) )  ?>"><i class="fa fa-clock-o"></i></span>
                 </li>
