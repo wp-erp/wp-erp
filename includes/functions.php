@@ -2265,7 +2265,7 @@ function erp_pluralize( $word ) {
 /**
  * Get the client IP address
  *
- * @since 1.1.6
+ * @since 1.1.16
  *
  * @return string
  */
