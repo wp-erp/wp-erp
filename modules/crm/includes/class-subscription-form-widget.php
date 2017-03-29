@@ -19,7 +19,7 @@ class Subscription_Form_Widget extends \WP_Widget {
             'description' => __( 'Add a newsletter subscription form', 'erp' ),
         );
 
-        parent::__construct( 'erp-subscription-from-widget', __( 'ERP Subscribe Newsletter', 'erp' ), $widget_ops );
+        parent::__construct( 'erp-subscription-from-widget', __( 'ERP Subscription Form', 'erp' ), $widget_ops );
     }
 
     /**

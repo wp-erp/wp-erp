@@ -24,16 +24,17 @@ class Updates {
 
     /** @var array DB updates that need to be run */
     private static $updates = [
-        '1.0' => 'updates/update-1.0.php',
-        '1.1.0' => 'updates/update-1.1.0.php',
-        '1.1.1' => 'updates/update-1.1.1.php',
-        '1.1.2' => 'updates/update-1.1.2.php',
-        '1.1.3' => 'updates/update-1.1.3.php',
-        '1.1.5' => 'updates/update-1.1.5.php',
-        '1.1.6' => 'updates/update-1.1.6.php',
-        '1.1.7' => 'updates/update-1.1.7.php',
-        '1.1.8' => 'updates/update-1.1.8.php',
-        '1.1.9' => 'updates/update-1.1.9.php',
+        '1.0'    => 'updates/update-1.0.php',
+        '1.1.0'  => 'updates/update-1.1.0.php',
+        '1.1.1'  => 'updates/update-1.1.1.php',
+        '1.1.2'  => 'updates/update-1.1.2.php',
+        '1.1.3'  => 'updates/update-1.1.3.php',
+        '1.1.5'  => 'updates/update-1.1.5.php',
+        '1.1.6'  => 'updates/update-1.1.6.php',
+        '1.1.7'  => 'updates/update-1.1.7.php',
+        '1.1.8'  => 'updates/update-1.1.8.php',
+        '1.1.9'  => 'updates/update-1.1.9.php',
+        '1.1.17' => 'updates/update-1.1.17.php',
     ];
 
     /**
@@ -91,9 +92,10 @@ class Updates {
             return;
         }
 
-        $installed_version = get_option( 'wp_erp_version' );
+        $installed_version  = get_option( 'wp_erp_version' );
+        $updatable_versions = array_keys( self::$updates );
 
-        if ( ! is_null( $installed_version ) && version_compare( $installed_version, max( array_keys( self::$updates ) ), '<' ) ) {
+        if ( ! is_null( $installed_version ) && version_compare( $installed_version, end( $updatable_versions ), '<' ) ) {
             ?>
                 <div id="message" class="updated">
                     <p><?php _e( '<strong>WP ERP Data Update Required</strong> &#8211; We need to update your install to the latest version', 'erp' ); ?></p>

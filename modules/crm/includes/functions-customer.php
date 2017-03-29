@@ -3338,14 +3338,3 @@ function erp_crm_get_default_contact_owner() {
 
     return absint( $contact_owner );
 }
-
-/**
- * Register widgets related to CRM
- *
- * @since 1.1.17
- *
- * @return void
- */
-function erp_crm_register_widgets() {
-    register_widget( '\WeDevs\ERP\CRM\Subscription_Form_Widget' );
-}

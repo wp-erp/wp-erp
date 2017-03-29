@@ -50,6 +50,9 @@ class Subscription_Form {
             return;
         }
 
+        // register widget
+        $this->action( 'widgets_init', 'register_widget' );
+
         // frontend css and js
         $this->action( 'wp_enqueue_scripts', 'wp_enqueue_scripts' );
 
@@ -62,6 +65,10 @@ class Subscription_Form {
 
         // frontend subscription related page
         $this->action( 'pre_get_posts', 'subscription_page_frontend' );
+    }
+
+    public function register_widget() {
+        register_widget( '\WeDevs\ERP\CRM\Subscription_Form_Widget' );
     }
 
     /**
