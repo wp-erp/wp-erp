@@ -1096,7 +1096,7 @@ function erp_crm_contact_group_delete( $id ) {
 }
 
 /**
- * Get susbcriber contact
+ * Get subscriber contact
  *
  * @since 1.0
  *
@@ -1214,10 +1214,13 @@ function erp_crm_get_assign_subscriber_contact() {
  * Create Contact subscriber
  *
  * @since 1.0
+ * @since 1.1.17 Return $subscriber object. Previously it was returning
+ *               do_action function's returned data, but do_action
+ *               returns void
  *
  * @param  array $data
  *
- * @return return collection|obejct
+ * @return return object ContactSubscriber model or WP_Error
  */
 function erp_crm_create_new_contact_subscriber( $args = [] ) {
     $defaults = array(
@@ -1238,7 +1241,9 @@ function erp_crm_create_new_contact_subscriber( $args = [] ) {
 
     $subscriber = \WeDevs\ERP\CRM\Models\ContactSubscriber::create( $args );
 
-    return do_action( 'erp_crm_create_contact_subscriber', $subscriber );
+    do_action( 'erp_crm_create_contact_subscriber', $subscriber );
+
+    return $subscriber;
 }
 
 /**
@@ -1375,6 +1380,21 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
                 ] );
         }
     }
+}
+
+/**
+ * Contact Group subscription statuses
+ *
+ * @since 1.1.17
+ *
+ * @return array
+ */
+function erp_crm_get_subscription_statuses() {
+    return apply_filters( 'erp_crm_get_subscription_statuses', [
+        'subscribe'     => __( 'Subscribed', 'erp' ),
+        'unsubscribe'   => __( 'Unsubscribe', 'erp' ),
+        'unconfirmed'   => __( 'Unconfirmed', 'erp' ),
+    ] );
 }
 
 /**
@@ -1767,12 +1787,12 @@ function erp_crm_get_save_search_regx( $values ) {
             $result[preg_replace( '/^\^/', '', $values ) . '%'] = 'LIKE';
         } elseif ( preg_match( '/^\$/', $values ) ) {
             $result['%' . preg_replace( '/^\$/', '', $values )] = 'LIKE';
-        } elseif ( preg_match( '/^<(?!>)/', $value ) ) {
-            $result[preg_replace( '/^<(?!>)/', '', $value )] = '<';
-        } elseif ( preg_match( '/^>(?!>)/', $value ) ) {
-            $result[preg_replace( '/^>(?!>)/', '', $value )] = '>';
-        } elseif ( preg_match( '/^<>(?!>)/', $value ) ) {
-            $result[preg_replace( '/^<>(?!>)/', '', $value )] = 'BETWEEN';
+        } elseif ( preg_match( '/^<(?!>)/', $values ) ) {
+            $result[preg_replace( '/^<(?!>)/', '', $values )] = '<';
+        } elseif ( preg_match( '/^>(?!>)/', $values ) ) {
+            $result[preg_replace( '/^>(?!>)/', '', $values )] = '>';
+        } elseif ( preg_match( '/^<>(?!>)/', $values ) ) {
+            $result[preg_replace( '/^<>(?!>)/', '', $values )] = 'BETWEEN';
         } else {
             $result[$values] = '=';
         }
@@ -3282,4 +3302,50 @@ function erp_crm_contact_on_delete( $user_id, $hard = 0) {
     if ( !empty( $people->id ) ) {
         \WeDevs\ERP\Framework\Models\People::find( $people->id )->update( [ 'user_id' => null ] );
     }
+}
+
+/**
+ * Get default contact owner
+ *
+ * @since 1.1.17
+ *
+ * @return int
+ */
+function erp_crm_get_default_contact_owner() {
+    $contact_owner = erp_get_option( 'contact_owner', 'erp_settings_erp-crm_contacts', 0 );
+
+    if ( empty( $contact_owner ) ) {
+        $args = [
+            'role'    => 'Administrator',
+            'fields'  => ['ID'],
+            'orderby' => 'ID',
+            'order'   => 'ASC',
+            'number'  => 1
+        ];
+
+        $user_query = new WP_User_Query( $args );
+
+        // User Loop
+        if ( ! empty( $user_query->results ) ) {
+            foreach ( $user_query->results as $user ) {
+                $contact_owner = $user->ID;
+            }
+
+        } else {
+            $contact_owner = 0;
+        }
+    }
+
+    return absint( $contact_owner );
+}
+
+/**
+ * Register widgets related to CRM
+ *
+ * @since 1.1.17
+ *
+ * @return void
+ */
+function erp_crm_register_widgets() {
+    register_widget( '\WeDevs\ERP\CRM\Subscription_Form_Widget' );
 }

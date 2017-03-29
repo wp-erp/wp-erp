@@ -3108,6 +3108,12 @@ ul.edit-address li.city-wrap span {
   color: #000;
   font-weight: 600;
 }
+.erp-settings .erp-settings-title-before-field {
+  margin: 6px 0;
+}
+.erp-settings .erp-settings-radio {
+  margin-top: 3px;
+}
 .erp-attachment-area {
   overflow: auto;
   padding: 2px 2px;

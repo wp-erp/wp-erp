@@ -103,6 +103,8 @@ class Customer_Relationship {
             new \WeDevs\ERP\CRM\User_Profile();
             new Emailer();
         }
+
+        Subscription_Form::instance();
     }
 
     /**

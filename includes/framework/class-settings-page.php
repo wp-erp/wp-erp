@@ -376,6 +376,9 @@ class ERP_Settings_Page {
                             <?php echo $tip; ?>
                         </th>
                         <td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
+                            <?php if ( ! empty( $value['title_before_field'] ) ): ?>
+                                <h4 class="erp-settings-title-before-field"><?php echo $value['title_before_field']; ?></h4>
+                            <?php endif; ?>
                             <input
                                 name="<?php echo esc_attr( $value['id'] ); ?>"
                                 id="<?php echo esc_attr( $value['id'] ); ?>"
@@ -430,6 +433,9 @@ class ERP_Settings_Page {
                             <?php echo $tip; ?>
                         </th>
                         <td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
+                            <?php if ( ! empty( $value['title_before_field'] ) ): ?>
+                                <h4 class="erp-settings-title-before-field"><?php echo $value['title_before_field']; ?></h4>
+                            <?php endif; ?>
 
                             <textarea
                                 name="<?php echo esc_attr( $value['id'] ); ?>"
@@ -518,8 +524,7 @@ class ERP_Settings_Page {
                         </th>
                         <td class="forminp forminp-<?php echo sanitize_title( $value['type'] ) ?>">
                             <fieldset>
-                                <?php echo $description; ?>
-                                <ul>
+                                <ul class="erp-settings-radio">
                                 <?php
                                     foreach ( $value['options'] as $key => $val ) {
                                         ?>
@@ -538,6 +543,7 @@ class ERP_Settings_Page {
                                     }
                                 ?>
                                 </ul>
+                                <?php echo $description; ?>
                             </fieldset>
                         </td>
                     </tr><?php

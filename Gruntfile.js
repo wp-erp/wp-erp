@@ -9,17 +9,23 @@ module.exports = function(grunt) {
             images: 'assets/images',
             js: 'assets/js',
             less: 'assets/less',
-            hrmJS: 'modules/hrm/assets/js/'
+            hrmJS: 'modules/hrm/assets/js/',
+            crm: 'modules/crm/assets'
         },
 
         // Compile all .less files.
         less: {
-
             admin: {
                 files: {
                     '<%= dirs.css %>/admin.css': '<%= dirs.less %>/admin/admin.less',
                     '<%= dirs.css %>/setup.css': '<%= dirs.less %>/admin/setup.less',
                     '<%= dirs.css %>/accounting.css': '<%= dirs.less %>/admin/accounting.less'
+                }
+            },
+
+            frontend: {
+                files: {
+                    '<%= dirs.crm %>/css/erp-subscription-form.css': '<%= dirs.crm %>/less/erp-subscription-form.less'
                 }
             }
         },
@@ -72,8 +78,13 @@ module.exports = function(grunt) {
 
         watch: {
             less: {
-                files: ['<%= dirs.less %>/*.less', '<%= dirs.less %>/admin/*.less' ],
-                tasks: ['less:admin']
+                files: [
+                    '<%= dirs.less %>/*.less',
+                    '<%= dirs.less %>/admin/*.less',
+                    '<%= dirs.crm %>/less/erp-subscription-form.less'
+                ],
+
+                tasks: ['less:admin', 'less:frontend']
             },
 
             js: {

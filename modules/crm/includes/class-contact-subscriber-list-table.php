@@ -9,8 +9,17 @@ namespace WeDevs\ERP\CRM;
 class Contact_Subscriber_List_Table extends \WP_List_Table {
 
     private $counts = array();
+    private $subscription_statuses = array();
 
-    function __construct( $type = null ) {
+    /**
+     * Class constructor
+     *
+     * @since 1.0
+     * @since 1.1.17 Add `subscription_statuses`
+     *
+     * @return void
+     */
+    function __construct() {
         global $status, $page;
 
         parent::__construct( array(
@@ -18,6 +27,8 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
             'plural'   => 'contactsubscribers',
             'ajax'     => false
         ) );
+
+        $this->subscription_statuses = erp_crm_get_subscription_statuses();
     }
 
     /**
@@ -35,21 +46,20 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
             return;
         }
 
-        $groups         = erp_crm_get_contact_group_dropdown();
-        $selected_group = ( isset( $_GET['filter_contact_group'] ) ) ? $_GET['filter_contact_group'] : 0;
+        $groups          = erp_crm_get_contact_group_dropdown();
+        $selected_group  = ( isset( $_GET['filter_contact_group'] ) ) ? $_GET['filter_contact_group'] : 0;
         ?>
-        <div class="alignleft actions">
+            <div class="alignleft actions">
 
-            <label class="screen-reader-text" for="new_role"><?php _e( 'Filter by Group', 'erp' ) ?></label>
-            <select name="filter_contact_group" id="filter_contact_group">
-                <?php foreach ( $groups as $key => $group ) : ?>
-                    <option value="<?php echo $key; ?>" <?php selected( $selected_group, $key ); ?>><?php echo $group; ?></option>
-                <?php endforeach ?>
-            </select>
-
-            <?php
-            submit_button( __( 'Filter', 'erp' ), 'button', 'filter_group', false );
-        echo '</div>';
+                <label class="screen-reader-text" for="new_role"><?php _e( 'Filter by Group', 'erp' ) ?></label>
+                <select name="filter_contact_group" id="filter_contact_group">
+                    <?php foreach ( $groups as $key => $group ) : ?>
+                        <option value="<?php echo $key; ?>" <?php selected( $selected_group, $key ); ?>><?php echo $group; ?></option>
+                    <?php endforeach ?>
+                </select>
+                <?php submit_button( __( 'Filter', 'erp' ), 'button', 'filter_group', false ); ?>
+            </div>
+        <?php
     }
 
     /**
@@ -227,16 +237,18 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
      * Subscribed or unsubscribed status for a contact
      *
      * @since 1.1.2
+     * @since 1.1.17 Return status based on registered subscription statuses
+     *               and return capitalized status by default
      *
      * @param  object  $item
      *
      * @return string
      */
     function column_subscription_status( $item ) {
-        if ( !empty( $item->data[0]->unsubscribe_at ) ) {
-            return __( 'Unsubscribed', 'erp' );
+        if ( isset( $this->subscription_statuses[ $item->data[0]->status ] ) ) {
+            return $this->subscription_statuses[ $item->data[0]->status ];
         } else {
-            return __( 'Subscribed', 'erp' );
+            return ucwords( $item->data[0]->status );
         }
     }
 

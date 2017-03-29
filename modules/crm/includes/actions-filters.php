@@ -18,7 +18,7 @@ add_action( 'erp_crm_inbound_email_scheduled_events', 'erp_crm_check_new_inbound
 add_action( 'updated_user_meta', 'erp_crm_sync_people_meta_data', 10, 4 );
 add_action( 'added_user_meta', 'erp_crm_sync_people_meta_data', 10, 4 );
 add_action( 'delete_user', 'erp_crm_contact_on_delete' );
-
+add_action( 'widgets_init', 'erp_crm_register_widgets' );
 
 // Filters *****************************************************************/
 add_filter( 'erp_map_meta_caps', 'erp_crm_map_meta_caps', 10, 4 );
