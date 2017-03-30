@@ -106,6 +106,7 @@ class Subscription_Form {
 
         $args = [
             'group'      => isset( $attrs['group'] ) ? $attrs['group'] : null,
+            'life_stage' => isset( $attrs['life_stage'] ) ? $attrs['life_stage'] : null,
             'button_lbl' => isset( $attrs['button'] ) ? $attrs['button'] : __( 'Subscribe', 'erp' ),
             'email_lbl'  => isset( $attrs['email'] ) ? $attrs['email'] : __( 'Email', 'erp' ),
             'extra_arg'  => isset( $attrs['extra_arg'] ) ? $attrs['extra_arg'] : null,
@@ -213,6 +214,19 @@ class Subscription_Form {
         $default_owner      = erp_crm_get_default_contact_owner();
         $default_life_stage = erp_get_option( 'life_stage', 'erp_settings_erp-crm_contacts', 'subscriber' );
 
+        if ( ! empty( $form_data['life_stage'] ) ) {
+            $registered_life_stages = erp_crm_get_life_stages_dropdown_raw();
+
+            if ( ! array_key_exists( $form_data['life_stage'], $registered_life_stages ) ) {
+                $this->send_error( [ 'msg' => __( 'Invalid operation', 'erp' ) ] );
+            } else {
+                $life_stage = $form_data['life_stage'];
+            }
+
+        } else {
+            $life_stage = $default_life_stage;
+        }
+
         $contact = [
             'type'  => 'contact',
             'email' => $form_data['contact']['email'],
@@ -260,7 +274,7 @@ class Subscription_Form {
 
         // insert metadata for new contact
         if ( empty( $existing_contact ) ) {
-            $contact->update_meta( 'life_stage', $default_life_stage );
+            $contact->update_meta( 'life_stage', $life_stage );
             $contact->update_meta( 'source', 'optin_form' );
             $contact->update_meta( 'contact_owner', $default_owner );
         }

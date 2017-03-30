@@ -45,6 +45,7 @@ class Subscription_Form_Widget extends \WP_Widget {
             'title'                 => __( 'Subscribe to Newsletter', 'erp' ),
             'description'           => __( 'Subscribe to our newsletter and we will inform you about our newest project.', 'erp' ),
             'contact_groups'        => [],
+            'life_stage'            => erp_get_option( 'life_stage', 'erp_settings_erp-crm_contacts', 'subscriber' ),
             'show_name_fields'      => 'no',
             'button_label'          => __( 'Subscribe', 'erp' )
         ];
@@ -54,6 +55,7 @@ class Subscription_Form_Widget extends \WP_Widget {
         $title              = sanitize_text_field( $instance['title'] );
         $description        = sanitize_text_field( $instance['description'] );
         $selected_groups    = $instance['contact_groups'];
+        $life_stage         = $instance['life_stage'];
         $show_name_fields   = $instance['show_name_fields'];
         $button_label       = $instance['button_label'];
         ?>
@@ -100,6 +102,15 @@ class Subscription_Form_Widget extends \WP_Widget {
 
         <p>
             <label>
+                <?php _e( 'Life Stage', 'erp' ); ?>:<br>
+                <select name="<?php echo $this->get_field_name( 'life_stage' ); ?>" class="widefat">
+                    <?php echo erp_crm_get_life_stages_dropdown( [], $life_stage ); ?>
+                </select>
+            </label>
+        </p>
+
+        <p>
+            <label>
                 <?php _e( 'Button Label', 'erp' ); ?>:
                 <input class="widefat" name="<?php echo $this->get_field_name( 'button_label' ); ?>" type="text" value="<?php echo esc_attr( $button_label ); ?>">
             </label>
@@ -123,6 +134,7 @@ class Subscription_Form_Widget extends \WP_Widget {
         $instance['title']            = sanitize_text_field( $new_instance['title'] );
         $instance['description']      = sanitize_text_field( $new_instance['description'] );
         $instance['contact_groups']   = ! empty( $new_instance['contact_groups'] ) ? $new_instance['contact_groups'] : [];
+        $instance['life_stage']       = ! empty( $new_instance['life_stage'] ) ? $new_instance['life_stage'] : 'subscriber';
         $instance['show_name_fields'] = ! empty( $new_instance['show_name_fields'] ) ? $new_instance['show_name_fields'] : 'no';
         $instance['button_label']     = sanitize_text_field( $new_instance['button_label'] );
 
@@ -152,8 +164,11 @@ class Subscription_Form_Widget extends \WP_Widget {
             echo wpautop( $instance['description'], true );
         }
 
+        $default_life_stage = erp_get_option( 'life_stage', 'erp_settings_erp-crm_contacts', 'subscriber' );
+
         $attrs = [
             'group'  => ! empty( $instance['contact_groups'] ) ? $instance['contact_groups'] : [],
+            'life_stage'  => ! empty( $instance['life_stage'] ) ? $instance['life_stage'] : $default_life_stage,
             'button' => ! empty( $instance['button_label'] ) ? $instance['button_label'] : __( 'Subscribe', 'erp' ),
         ];
 

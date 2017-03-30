@@ -36,6 +36,10 @@
         <input type="hidden" name="groups[]" value="<?php echo $group_id; ?>">
     <?php endforeach; ?>
 
+    <?php if ( $args['life_stage'] ): ?>
+        <input type="hidden" name="life_stage" value="<?php echo $args['life_stage']; ?>">
+    <?php endif; ?>
+
     <button type="submit">
         <span class="submit-btn-label"><?php echo $args['button_lbl']; ?></span>
         <span class="erp-spinner"></span>
