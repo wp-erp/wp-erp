@@ -1,0 +1,88 @@
+@wpRed:       #d54e21;
+@wpGreen:     #46b450;
+@wpYellow:    #ffb900;
+
+.erp-subscription-form {
+    margin-bottom: 20px;
+
+    label {
+        margin-bottom: 12px;
+        display: block;
+    }
+
+    p {
+        margin: 0;
+
+        input[type="email"] {
+            margin-bottom: 12px;
+        }
+    }
+
+    button {
+        margin-bottom: 12px;
+        position: relative;
+    }
+
+    .error-msg, .warning-msg, .success-msg {
+        padding: 10px;
+        border: 1px solid #ddd;
+        margin-bottom: 12px;
+    }
+
+    .error-msg {
+        color: darken(@wpRed, 10%);
+        background-color: lighten(@wpRed, 40%);
+        border-color: darken(@wpRed, 5%);
+    }
+
+    .warning-msg {
+        color: darken(@wpYellow, 10%);
+        background-color: lighten(@wpYellow, 40%);
+        border-color: darken(@wpYellow, 5%);
+    }
+
+    .success-msg {
+        color: darken(@wpGreen, 10%);
+        background-color: lighten(@wpGreen, 40%);
+        border-color: darken(@wpGreen, 5%);
+    }
+
+    .erp-spinner {
+        display: inline-block;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -9px;
+        margin-left: -9px;
+        opacity: 0;
+        width: 18px;
+        height: 18px;
+        box-sizing: border-box;
+        border: solid 2px transparent;
+        border-top-color: #fff;
+        border-left-color: #fff;
+        border-radius: 50%;
+        -webkit-animation: erp-subscription-form-spinner 1000ms linear infinite;
+        animation: erp-subscription-form-spinner 1000ms linear infinite;
+    }
+
+    &.doing-ajax {
+
+        .submit-btn-label {
+            opacity: 0;
+        }
+
+        .erp-spinner {
+            opacity: 1;
+        }
+    }
+}
+
+@-webkit-keyframes erp-subscription-form-spinner {
+  0%   { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+@keyframes erp-subscription-form-spinner {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

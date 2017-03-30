@@ -620,6 +620,7 @@ Company'
               `status` varchar(25) DEFAULT NULL,
               `subscribe_at` datetime DEFAULT NULL,
               `unsubscribe_at` datetime DEFAULT NULL,
+              `hash` varchar(40) DEFAULT NULL,
               PRIMARY KEY (`id`),
               UNIQUE KEY `user_group` (`user_id`,`group_id`)
             ) $collate;",

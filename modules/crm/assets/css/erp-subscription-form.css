@@ -1,0 +1,79 @@
+.erp-subscription-form {
+  margin-bottom: 20px;
+}
+.erp-subscription-form label {
+  margin-bottom: 12px;
+  display: block;
+}
+.erp-subscription-form p {
+  margin: 0;
+}
+.erp-subscription-form p input[type="email"] {
+  margin-bottom: 12px;
+}
+.erp-subscription-form button {
+  margin-bottom: 12px;
+  position: relative;
+}
+.erp-subscription-form .error-msg,
+.erp-subscription-form .warning-msg,
+.erp-subscription-form .success-msg {
+  padding: 10px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+.erp-subscription-form .error-msg {
+  color: #a93e1a;
+  background-color: #f7d6cb;
+  border-color: #bf461e;
+}
+.erp-subscription-form .warning-msg {
+  color: #cc9400;
+  background-color: #fff1cc;
+  border-color: #e6a700;
+}
+.erp-subscription-form .success-msg {
+  color: #388f40;
+  background-color: #d7efd9;
+  border-color: #3fa248;
+}
+.erp-subscription-form .erp-spinner {
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -9px;
+  margin-left: -9px;
+  opacity: 0;
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+  border: solid 2px transparent;
+  border-top-color: #fff;
+  border-left-color: #fff;
+  border-radius: 50%;
+  -webkit-animation: erp-subscription-form-spinner 1000ms linear infinite;
+  animation: erp-subscription-form-spinner 1000ms linear infinite;
+}
+.erp-subscription-form.doing-ajax .submit-btn-label {
+  opacity: 0;
+}
+.erp-subscription-form.doing-ajax .erp-spinner {
+  opacity: 1;
+}
+@-webkit-keyframes erp-subscription-form-spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@keyframes erp-subscription-form-spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

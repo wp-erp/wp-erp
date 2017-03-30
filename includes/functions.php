@@ -1862,6 +1862,9 @@ function erp_parse_args_recursive( &$args, $defaults = [] ) {
 /**
  * ERP Email sender
  *
+ * @since 1.1.0
+ * @since 1.1.17 Use site name instead of current user name for default From header
+ *
  * @param string|array $to
  * @param string       $subject
  * @param string       $message
@@ -1884,9 +1887,7 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
         }
 
         if ( ! isset( $erp_email_settings['from_name'] ) ) {
-            global $current_user;
-
-            $from_name = $current_user->display_name;
+            $from_name = get_bloginfo( 'name' );
         } else {
             $from_name = $erp_email_settings['from_name'];
         }

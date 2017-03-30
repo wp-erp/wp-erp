@@ -19,7 +19,6 @@ add_action( 'updated_user_meta', 'erp_crm_sync_people_meta_data', 10, 4 );
 add_action( 'added_user_meta', 'erp_crm_sync_people_meta_data', 10, 4 );
 add_action( 'delete_user', 'erp_crm_contact_on_delete' );
 
-
 // Filters *****************************************************************/
 add_filter( 'erp_map_meta_caps', 'erp_crm_map_meta_caps', 10, 4 );
 add_filter( 'erp_get_people_pre_query', 'erp_crm_contact_advance_filter', 10, 2 );

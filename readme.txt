@@ -151,7 +151,13 @@ If you are unable to use any of the methods due to internet connectivity and fil
 
 == Changelog ==
 
+**v1.1.17 -> Mar 30, 2017**
+
+* [new] Add email opt-in with subscription form
+* [tweak] Change employee pay_rate column int to decimal in db
+
 **v1.1.16 -> Mar 27, 2017**
+
 * [new] added function `erp_get_client_ip()` for getting client IP address
 * [fix] Fix CRM dashboard Today's Schedule metabox
 * [fix] Remove a contact from all groups after delete it

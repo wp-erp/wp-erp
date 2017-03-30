@@ -640,7 +640,7 @@ class Ajax_Handler {
 
         $date        = ( empty( $_POST['date'] ) ) ? current_time( 'mysql' ) : $_POST['date'];
         $comment     = strip_tags( $_POST['comment'] );
-        $pay_rate    = intval( $_POST['pay_rate'] );
+        $pay_rate    = number_format( $_POST['pay_rate'], 2 );
         $pay_type    = strip_tags( $_POST['pay_type'] );
         $reason      = strip_tags( $_POST['change-reason'] );
 

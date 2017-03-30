@@ -26,8 +26,9 @@ class CRM_Settings extends ERP_Settings_Page {
      */
     public function get_sections() {
         $sections = array(
-            'contacts'  => __( 'Contacts', 'erp' ),
-            'templates' => __( 'Templates', 'erp' ),
+            'contacts'     => __( 'Contacts', 'erp' ),
+            'templates'    => __( 'Templates', 'erp' ),
+            'subscription' => __( 'Subscription', 'erp' ),
         );
 
         return apply_filters( 'erp_settings_crm_sections', $sections );
@@ -115,6 +116,99 @@ class CRM_Settings extends ERP_Settings_Page {
         ];
 
         $fields['templates']['submit_button'] = false;
+
+        $fields['subscription'][] = [
+            'title' => __( 'Contact Group subscription settings', 'erp' ),
+            'type'  => 'title',
+            'id'    => 'general_options'
+        ];
+
+        $fields['subscription'][] = [
+            'title'   => __( 'Enable signup confirmation', 'erp' ),
+            'id'      => 'is_enabled',
+            'type'    => 'checkbox',
+            'desc'    => __( 'Yes', 'erp' ),
+            'options' => [
+                'yes' => __( 'Yes', 'erp' ),
+            ],
+            'default' => 'yes',
+            'tooltip' => __( 'If you enable this option, your subscribers will first receive a confirmation email after they subscribe. Once they confirm their subscription (via this email), they will be marked as \'subscribed\'.', 'erp' ),
+        ];
+
+        $fields['subscription'][] = [
+            'title'   => __( 'Email subject', 'erp' ),
+            'id'      => 'email_subject',
+            'type'    => 'text',
+            'default' => sprintf( __( 'Confirm your subscription to %s', 'erp' ), get_bloginfo( 'name' ) ),
+        ];
+
+        $fields['subscription'][] = [
+            'title'   => __( 'Email content', 'erp' ),
+            'id'      => 'email_content',
+            'type'    => 'textarea',
+            'default' => sprintf(
+                __( "Hello!\n\nThanks so much for signing up for our newsletter.\nWe need you to activate your subscription to the list(s): [contact_groups_to_confirm] by clicking the link below: \n\n[activation_link]Click here to confirm your subscription.[/activation_link]\n\nThank you,\n\n%s", 'erp' ),
+                get_bloginfo( 'name' )
+            ),
+            'custom_attributes' => [
+                'rows' => 12,
+                'cols' => 90
+            ],
+            'desc'    => sprintf( __( "Don't forget to include: <code>[activation_link]Confirm your subscription.[/activation_link]</code>. <br><br>Optional: <code>[contact_groups_to_confirm]</code>.", 'erp' ) )
+        ];
+
+        $wp_pages = get_pages();
+
+        $fields['subscription'][] = [
+            'title'   => __( 'Subscription Page', 'erp' ),
+            'id'      => 'page_id',
+            'type'    => 'select',
+            'options' => wp_list_pluck( $wp_pages, 'post_title', 'ID' ),
+            'desc'    => __( 'When subscribers click on the activation link, they will be redirected to this page.', 'erp' ),
+        ];
+
+        $fields['subscription'][] = [
+            'title'              => __( 'Confirmation Page', 'erp' ),
+            'title_before_field' => __( 'Title', 'erp' ),
+            'id'                 => 'confirm_page_title',
+            'type'               => 'text',
+            'default'            => __( 'You are now subscribed!', 'erp' )
+        ];
+
+        $fields['subscription'][] = [
+            'title_before_field' => __( 'Content', 'erp' ),
+            'id'                 => 'confirm_page_content',
+            'type'               => 'textarea',
+            'default'            => __( "We've added you to our email list. You'll hear from us shortly.", 'erp' ),
+            'custom_attributes'  => [
+                'rows' => 5,
+                'cols' => 46
+            ],
+        ];
+
+        $fields['subscription'][] = [
+            'title'              => __( 'Unsubscribe Page', 'erp' ),
+            'title_before_field' => __( 'Title', 'erp' ),
+            'id'                 => 'unsubs_page_title',
+            'type'               => 'text',
+            'default'            => __( 'You are now unsubscribed', 'erp' )
+        ];
+
+        $fields['subscription'][] = [
+            'title_before_field' => __( 'Content', 'erp' ),
+            'id'                 => 'unsubs_page_content',
+            'type'               => 'textarea',
+            'default'            => __( 'You are successfully unsubscribed from list(s):', 'erp' ),
+            'custom_attributes'  => [
+                'rows' => 5,
+                'cols' => 46
+            ],
+        ];
+
+        $fields['subscription'][] = [
+            'type' => 'sectionend',
+            'id'   => 'script_styling_options'
+        ];
 
         $fields = apply_filters( 'erp_settings_crm_section_fields', $fields, $section );
 

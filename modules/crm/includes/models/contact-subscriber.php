@@ -11,7 +11,7 @@ use WeDevs\ERP\Framework\Model;
 class ContactSubscriber extends Model {
     protected $table = 'erp_crm_contact_subscriber';
 
-    protected $fillable = [ 'user_id', 'group_id', 'status', 'subscribe_at', 'unsubscribe_at' ];
+    protected $fillable = [ 'user_id', 'group_id', 'status', 'subscribe_at', 'unsubscribe_at', 'hash' ];
 
     public $timestamps = false;
 
