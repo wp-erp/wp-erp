@@ -298,6 +298,11 @@ class Subscription_Form {
             $this->send_mail( $contact, $subscribed_groups, $form_data );
         }
 
+        // when contact is existing and already subscribed to every groups given in settings
+        if ( $exisiting_subscriber && empty( $subscribed_groups ) ) {
+            $this->send_success( [ 'msg' => __( 'You are already subscribed. Thank you!', 'erp' ) ] );
+        }
+
         do_action( 'erp_subscription_form_save_form_data', $contact, $subscribed_groups, $form_data );
 
         $success_msg = apply_filters( 'erp_subscription_form_success_message', __( 'Thank you! Your sign-up request was successful. Please check your email inbox to confirm.', 'erp' ) );
