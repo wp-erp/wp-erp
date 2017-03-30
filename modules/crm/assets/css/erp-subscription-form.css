@@ -3,6 +3,7 @@
 }
 .erp-subscription-form label {
   margin-bottom: 12px;
+  display: block;
 }
 .erp-subscription-form p {
   margin: 0;
