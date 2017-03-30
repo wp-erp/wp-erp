@@ -151,14 +151,15 @@ class Subscription_Form {
             return new \WP_Error( 'erp_subs_form_no_group_found', __( 'Group attribute is required', 'erp' ) );
         }
 
-
         $groups         = is_array( $args['group'] ) ? $args['group'] : explode( ',', $args['group'] );
         $contact_groups = [];
 
         foreach ( $groups as $group_id ) {
             $group_id = absint( $group_id );
 
-            if ( $group_id ) {
+            $group = Models\ContactGroup::find( $group_id );
+
+            if ( $group ) {
                 $contact_groups[] = $group_id;
             }
         }
@@ -270,7 +271,13 @@ class Subscription_Form {
         // subscribe to contact group
         $subscribed_groups = [];
         foreach ( $form_data['groups'] as $group_id ) {
-            $exisiting_subscriber = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( [
+            $contact_group = Models\ContactGroup::find( $group_id );
+
+            if ( empty( $contact_group ) ) {
+                continue;
+            }
+
+            $exisiting_subscriber = Models\ContactSubscriber::where( [
                 'user_id'  => $contact_id,
                 'group_id' => $group_id
             ] )->first();
@@ -295,11 +302,11 @@ class Subscription_Form {
         }
 
         if ( $is_double_optin_enabled && ! empty( $subscribed_groups ) ) {
-            $this->send_mail( $contact, $subscribed_groups, $form_data );
+            // $this->send_mail( $contact, $subscribed_groups, $form_data );
         }
 
         // when contact is existing and already subscribed to every groups given in settings
-        if ( $exisiting_subscriber && empty( $subscribed_groups ) ) {
+        if ( $existing_contact && empty( $subscribed_groups ) ) {
             $this->send_success( [ 'msg' => __( 'You are already subscribed. Thank you!', 'erp' ) ] );
         }
 
