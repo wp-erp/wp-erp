@@ -1545,6 +1545,7 @@ function erp_import_export_javascript() {
  *
  * @since 1.0.0
  * @since 1.1.15 Declare `field_builder_contacts_fields` with empty an array
+ * @since 1.1.18 Handle exporting when no field is given.
  *
  * @return void
  */
@@ -1736,77 +1737,87 @@ function erp_process_import_export() {
     }
 
     if ( isset( $_POST['erp_export_csv'] ) ) {
-        $type   = $_POST['type'];
-        $fields = $_POST['fields'];
+        if ( ! empty( $_POST['type'] ) && ! empty( $_POST['fields'] ) ) {
+            $type   = $_POST['type'];
+            $fields = $_POST['fields'];
 
-        if ( $type == 'employee' && $is_hrm_activated ) {
-            $args = [
-                'number' => -1,
-            ];
+            if ( $type == 'employee' && $is_hrm_activated ) {
+                $args = [
+                    'number' => -1,
+                ];
 
-            $items = erp_hr_get_employees( $args );
-        }
+                $items = erp_hr_get_employees( $args );
+            }
 
-        if( ($type == 'contact' || $type == 'company') && $is_crm_activated ) {
-            $args = [
-                'type'   => $type,
-                'count'  => true,
-            ];
-            $total_items = erp_get_peoples( $args );
+            if( ($type == 'contact' || $type == 'company') && $is_crm_activated ) {
+                $args = [
+                    'type'   => $type,
+                    'count'  => true,
+                ];
+                $total_items = erp_get_peoples( $args );
 
-            $args = [
-                'type'   => $type,
-                'offset' => 0,
-                'number' => -1,
-            ];
-            $items = erp_get_peoples( $args );
-        }
+                $args = [
+                    'type'   => $type,
+                    'offset' => 0,
+                    'number' => -1,
+                ];
+                $items = erp_get_peoples( $args );
+            }
 
-        //@todo do_action()
+            //@todo do_action()
 
-        $csv_items = [];
+            $csv_items = [];
 
-        $x = 0;
-        foreach ( $items as $item ) {
+            $x = 0;
+            foreach ( $items as $item ) {
 
-            foreach ( $fields as $field ) {
-                if ( $type == 'employee' ) {
+                if ( empty( $fields ) ) {
+                    continue;
+                }
 
-                    if ( in_array( $field, $field_builder_employees_fields ) ) {
-                        $csv_items[ $x ][ $field ] = get_user_meta( $item->id, $field, true );
-                    } else {
-                        switch ( $field ) {
-                            case 'department':
-                                $csv_items[ $x ][ $field ] = $item->get_department_title();
-                                break;
+                foreach ( $fields as $field ) {
+                    if ( $type == 'employee' ) {
 
-                            case 'designation':
-                                $csv_items[ $x ][ $field ] = $item->get_job_title();
-                                break;
+                        if ( in_array( $field, $field_builder_employees_fields ) ) {
+                            $csv_items[ $x ][ $field ] = get_user_meta( $item->id, $field, true );
+                        } else {
+                            switch ( $field ) {
+                                case 'department':
+                                    $csv_items[ $x ][ $field ] = $item->get_department_title();
+                                    break;
 
-                            default:
-                                $csv_items[ $x ][ $field ] = $item->{$field};
-                                break;
+                                case 'designation':
+                                    $csv_items[ $x ][ $field ] = $item->get_job_title();
+                                    break;
+
+                                default:
+                                    $csv_items[ $x ][ $field ] = $item->{$field};
+                                    break;
+                            }
                         }
-                    }
 
-                } else {
-                    if ( in_array( $field, $field_builder_contacts_fields ) ) {
-                        $csv_items[ $x ][ $field ] = erp_people_get_meta( $item->id, $field, true );
                     } else {
-                        if ( isset( $item->{$field} ) ) {
-                            $csv_items[ $x ][ $field ] = $item->{$field};
+                        if ( in_array( $field, $field_builder_contacts_fields ) ) {
+                            $csv_items[ $x ][ $field ] = erp_people_get_meta( $item->id, $field, true );
+                        } else {
+                            if ( isset( $item->{$field} ) ) {
+                                $csv_items[ $x ][ $field ] = $item->{$field};
+                            }
                         }
                     }
                 }
+
+                $x++;
             }
 
-            $x++;
+            $file_name = 'export_' . date( 'd_m_Y' ) . '.csv';
+
+            erp_make_csv_file( $csv_items, $file_name );
+
+        } else {
+            wp_redirect( admin_url( "admin.php?page=erp-tools&tab=export" ) );
+            exit();
         }
-
-        $file_name = 'export_' . date( 'd_m_Y' ) . '.csv';
-
-        erp_make_csv_file( $csv_items, $file_name );
     }
 }
 
