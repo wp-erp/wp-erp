@@ -8,3 +8,6 @@ add_action( 'erp_hr_permission_management', 'erp_ac_permission_management_field'
 
 // Read Only Invoice template
 add_action( 'template_redirect', 'erp_ac_readonly_invoice_template' );
+
+// Filters *****************************************************************/
+add_filter( 'woocommerce_prevent_admin_access', 'erp_ac_wc_prevent_admin_access' );

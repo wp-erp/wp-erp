@@ -23,3 +23,4 @@ add_action( 'delete_user', 'erp_crm_contact_on_delete' );
 add_filter( 'erp_map_meta_caps', 'erp_crm_map_meta_caps', 10, 4 );
 add_filter( 'erp_get_people_pre_query', 'erp_crm_contact_advance_filter', 10, 2 );
 add_filter( 'erp_get_people_pre_query', 'erp_crm_is_people_belongs_to_saved_search', 10, 2 );
+add_filter( 'woocommerce_prevent_admin_access', 'erp_crm_wc_prevent_admin_access' );

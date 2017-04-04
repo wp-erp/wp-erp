@@ -3338,3 +3338,20 @@ function erp_crm_get_default_contact_owner() {
 
     return absint( $contact_owner );
 }
+
+/**
+ * Prevent redirect to woocommerce my account page
+ *
+ * @param boolean $prevent_access
+ *
+ * @since 1.1.18
+ *
+ * @return boolean
+ */
+function erp_crm_wc_prevent_admin_access( $prevent_access ) {
+    if ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) {
+        return false;
+    }
+
+    return $prevent_access;
+}
