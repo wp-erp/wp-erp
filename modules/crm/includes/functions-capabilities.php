@@ -286,4 +286,22 @@ function erp_crm_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args 
 
 }
 
+/**
+ * Check permission to make WordPress User
+ *
+ * @since 1.1.18
+ *
+ * @return boolean
+ */
+function erp_crm_current_user_can_make_wp_user() {
+    $has_permission = false;
 
+    if ( current_user_can( 'administrator' ) || erp_crm_is_current_user_manager() ) {
+        $has_permission = true;
+
+    } else if ( erp_crm_is_current_user_crm_agent() && apply_filters( 'erp_crm_agent_can_make_wp_user', true ) ) {
+        $has_permission = true;
+    }
+
+    return $has_permission;
+}

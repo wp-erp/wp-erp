@@ -3226,13 +3226,18 @@ function erp_crm_sync_people_meta_data( $meta_id, $object_id, $meta_key, $_meta_
  * Make crm contact to wp user
  *
  * @since 1.1.7
+ * @since 1.1.18 Check if current user has permission to create wp user
  *
  * @param integer $customer_id
- * @param array $args [ default : [] ]
+ * @param array   $args        Optional parameter
  *
  * @return void
  **/
 function erp_crm_make_wp_user( $customer_id, $args = [] ) {
+
+    if ( ! erp_crm_current_user_can_make_wp_user() ) {
+        return new WP_Error( 'invalid-permission', __( 'You do not have permission to make WP User', 'erp' ) );
+    }
 
     if ( ! $customer_id ) {
         return new WP_Error( 'no-ids', __( 'No contact found', 'erp' ) );
