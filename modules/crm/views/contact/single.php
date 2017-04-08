@@ -94,12 +94,13 @@
                                                 if ( !empty( $crm_user_id ) ) {
                                                     $user        = get_user_by( 'id', $crm_user_id );
                                                     $user_string = esc_html( $user->display_name );
+                                                    $user_email  = $user->get('user_email');
                                                 } else {
                                                     $user_string = '';
                                                 }
                                             ?>
-                                            <?php if ( $crm_user_id ): ?>
-                                                <?php echo erp_crm_get_avatar( $crm_user_id, 32 ); ?>
+                                            <?php if ( $crm_user_id && ! empty( $user ) ): ?>
+                                                <?php echo erp_crm_get_avatar( $crm_user_id, $user_email, $crm_user_id, 32 ); ?>
                                                 <div class="user-details">
                                                     <a href="#"><?php echo get_the_author_meta( 'display_name', $crm_user_id ); ?></a>
                                                     <span><?php echo  get_the_author_meta( 'user_email', $crm_user_id ); ?></span>
