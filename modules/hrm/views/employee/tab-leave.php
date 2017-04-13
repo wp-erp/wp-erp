@@ -29,7 +29,7 @@ if ( $policies ) {
                 $name      = esc_html( $policy->name );
                 $current   = 0;
                 $scheduled = 0;
-                $available = 0;
+                $available = $policy->value;
 
 
                 if ( array_key_exists( $policy->id, $balance ) ) {

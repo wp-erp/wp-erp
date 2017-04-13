@@ -656,3 +656,20 @@ function erp_ac_get_invoice_number( $invoice_number, $invoice_format ) {
         return $invoice_format;
     }
 }
+
+/**
+ * Prevent redirect to woocommerce my account page
+ *
+ * @param boolean $prevent_access
+ *
+ * @since 1.1.18
+ *
+ * @return boolean
+ */
+function erp_ac_wc_prevent_admin_access( $prevent_access ) {
+    if ( current_user_can( erp_ac_get_manager_role() ) ) {
+        return false;
+    }
+
+    return $prevent_access;
+}

@@ -3226,13 +3226,18 @@ function erp_crm_sync_people_meta_data( $meta_id, $object_id, $meta_key, $_meta_
  * Make crm contact to wp user
  *
  * @since 1.1.7
+ * @since 1.1.18 Check if current user has permission to create wp user
  *
  * @param integer $customer_id
- * @param array $args [ default : [] ]
+ * @param array   $args        Optional parameter
  *
  * @return void
  **/
 function erp_crm_make_wp_user( $customer_id, $args = [] ) {
+
+    if ( ! erp_crm_current_user_can_make_wp_user() ) {
+        return new WP_Error( 'invalid-permission', __( 'You do not have permission to make WP User', 'erp' ) );
+    }
 
     if ( ! $customer_id ) {
         return new WP_Error( 'no-ids', __( 'No contact found', 'erp' ) );
@@ -3337,4 +3342,21 @@ function erp_crm_get_default_contact_owner() {
     }
 
     return absint( $contact_owner );
+}
+
+/**
+ * Prevent redirect to woocommerce my account page
+ *
+ * @param boolean $prevent_access
+ *
+ * @since 1.1.18
+ *
+ * @return boolean
+ */
+function erp_crm_wc_prevent_admin_access( $prevent_access ) {
+    if ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) {
+        return false;
+    }
+
+    return $prevent_access;
 }

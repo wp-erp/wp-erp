@@ -170,3 +170,20 @@ function erp_hr_schedule_check_todays_birthday() {
 
     return $birthdays;
 }
+
+/**
+ * Prevent redirect to woocommerce my account page
+ *
+ * @param boolean $prevent_access
+ *
+ * @since 1.1.18
+ *
+ * @return boolean
+ */
+function erp_hr_wc_prevent_admin_access( $prevent_access ) {
+    if ( current_user_can( erp_hr_get_manager_role() ) || current_user_can( erp_hr_get_employee_role() ) ) {
+        return false;
+    }
+
+    return $prevent_access;
+}

@@ -128,6 +128,21 @@ class Customer_Relationship {
 
     public function admin_scripts( $hook ) {
         $hook = str_replace( sanitize_title( __( 'CRM', 'erp' ) ) , 'crm', $hook );
+
+        $crm_pages = [
+            'toplevel_page_erp-sales',
+            'crm_page_erp-sales-customers',
+            'crm_page_erp-sales-companies',
+            'crm_page_erp-sales-schedules',
+            'crm_page_erp-sales-activities',
+            'erp-settings_page_erp-settings',
+            'crm_page_erp-sales-contact-groups'
+        ];
+
+        if ( ! in_array( $hook , $crm_pages ) ) {
+            return;
+        }
+
         $suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '';
 
         wp_enqueue_media();

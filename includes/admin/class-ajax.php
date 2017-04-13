@@ -356,10 +356,15 @@ class Ajax {
     /**
      * Import users as crm contacts.
      *
+     * @since 1.1.2
+     * @since 1.1.18 Introduce `ERP_IS_IMPORTING`
+     *
      * @return void
      */
     public function import_users_as_contacts() {
         $this->verify_nonce( 'erp-import-export-nonce' );
+
+        define( 'ERP_IS_IMPORTING' , true );
 
         $limit = 50; // Limit to import per request
 
