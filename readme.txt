@@ -151,6 +151,16 @@ If you are unable to use any of the methods due to internet connectivity and fil
 
 == Changelog ==
 
+**v1.1.18 -> Apr 13, 2017**
+
+[fix] Fix owner avatar in contact and company single pages
+[fix] Fix export error handle when no field is given
+[fix] Fix leave available count in employee profile Leave tab
+[fix] Fix erp_hr_leave_get_balance query
+[tweak] Load CRM scripts only in specific pages
+[tweak] Check permission before convert a contact to WP User
+[tweak] Prevent woocommerce from redirecting ERP users to my account page
+
 **v1.1.17 -> Mar 30, 2017**
 
 * [new] Add email opt-in with subscription form

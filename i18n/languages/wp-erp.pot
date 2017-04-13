@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.1.17\n"
+"Project-Id-Version: WP ERP 1.1.18\n"
 "Report-Msgid-Bugs-To: http://wperp.com/support/\n"
-"POT-Creation-Date: 2017-03-30 09:16:49+00:00\n"
+"POT-Creation-Date: 2017-04-13 08:16:13+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4994,7 +4994,7 @@ msgstr ""
 #: modules/accounting/includes/views/customer/list.php:3
 #: modules/accounting/includes/views/customers.php:2
 #: modules/accounting/includes/views/vendor/edit.php:4
-#: modules/accounting/includes/views/vendor/list.php:3 modules/crm/crm.php:148
+#: modules/accounting/includes/views/vendor/list.php:3 modules/crm/crm.php:163
 #: modules/hrm/views/departments.php:3 modules/hrm/views/designation.php:3
 #: modules/hrm/views/employee/single.php:10 modules/hrm/views/employee.php:9
 #: modules/hrm/views/leave/holiday.php:250
@@ -5565,8 +5565,8 @@ msgstr ""
 #: includes/admin/views/tools/import.php:171
 #: modules/crm/includes/contact-forms/class-erp-settings-contact-forms.php:77
 #: modules/crm/includes/functions-customer.php:1609
-#: modules/crm/views/company/single.php:151
-#: modules/crm/views/contact/single.php:156
+#: modules/crm/views/company/single.php:152
+#: modules/crm/views/contact/single.php:157
 #: modules/crm/views/js-templates/new-customer.php:234
 msgid "Contact Group"
 msgstr ""
@@ -6308,13 +6308,13 @@ msgstr ""
 msgid "Create"
 msgstr ""
 
-#: includes/class-scripts.php:157 modules/crm/crm.php:149
+#: includes/class-scripts.php:157 modules/crm/crm.php:164
 #: modules/hrm/hrm.php:170 modules/hrm/views/employee/tab-job.php:25
 msgid "Update"
 msgstr ""
 
-#: includes/class-scripts.php:158 modules/crm/crm.php:153
-#: modules/crm/crm.php:172 modules/hrm/hrm.php:185
+#: includes/class-scripts.php:158 modules/crm/crm.php:168
+#: modules/crm/crm.php:187 modules/hrm/hrm.php:185
 msgid "Are you sure?"
 msgstr ""
 
@@ -7622,11 +7622,11 @@ msgstr ""
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/functions.php:1826
+#: includes/functions.php:1840
 msgid "Nothing to import or items are already exists."
 msgstr ""
 
-#: includes/functions.php:1829
+#: includes/functions.php:1843
 msgid "%s items successfully imported."
 msgstr ""
 
@@ -9056,8 +9056,8 @@ msgstr ""
 #: modules/accounting/includes/views/expense/vendor-credit.php:284
 #: modules/accounting/includes/views/sales/invoice-new.php:289
 #: modules/accounting/includes/views/sales/payment-new.php:230
-#: modules/crm/views/company/single.php:132
-#: modules/crm/views/contact/single.php:137
+#: modules/crm/views/company/single.php:133
+#: modules/crm/views/contact/single.php:138
 #: modules/crm/views/js-templates/customer-email-note.php:52
 #: modules/crm/views/js-templates/customer-log-activity.php:47
 #: modules/crm/views/js-templates/customer-newnote.php:19
@@ -9367,7 +9367,7 @@ msgid "+ Add Line"
 msgstr ""
 
 #: modules/accounting/includes/views/customer/edit.php:3
-#: modules/crm/crm.php:144
+#: modules/crm/crm.php:159
 msgid "Edit Customer"
 msgstr ""
 
@@ -9546,7 +9546,7 @@ msgstr ""
 
 #: modules/accounting/includes/views/expense/vendor-credit.php:209
 #: modules/accounting/includes/views/sales/invoice-new.php:214
-#: modules/crm/crm.php:150
+#: modules/crm/crm.php:165
 msgid "Save"
 msgstr ""
 
@@ -10201,62 +10201,62 @@ msgstr ""
 msgid "Add Vendor"
 msgstr ""
 
-#: modules/crm/crm.php:130 modules/crm/crm.php:300
+#: modules/crm/crm.php:130 modules/crm/crm.php:315
 #: modules/crm/includes/admin/class-menu.php:31
 #: modules/crm/includes/admin/class-settings.php:16
 #: modules/crm/includes/class-form-handler.php:24
 msgid "CRM"
 msgstr ""
 
-#: modules/crm/crm.php:143
+#: modules/crm/crm.php:158
 msgid "Add New Customer"
 msgstr ""
 
-#: modules/crm/crm.php:145
+#: modules/crm/crm.php:160
 msgid "Customer Social Profile"
 msgstr ""
 
-#: modules/crm/crm.php:146
+#: modules/crm/crm.php:161
 msgid "Add to Contact groups"
 msgstr ""
 
-#: modules/crm/crm.php:151 modules/crm/views/js-templates/new-customer.php:28
+#: modules/crm/crm.php:166 modules/crm/views/js-templates/new-customer.php:28
 msgid "Upload Photo"
 msgstr ""
 
-#: modules/crm/crm.php:152 modules/hrm/hrm.php:184
+#: modules/crm/crm.php:167 modules/hrm/hrm.php:184
 msgid "Set Photo"
 msgstr ""
 
-#: modules/crm/crm.php:154
+#: modules/crm/crm.php:169
 msgid "Are you sure to delete?"
 msgstr ""
 
-#: modules/crm/crm.php:155
+#: modules/crm/crm.php:170
 msgid "Are you sure to delete this?"
 msgstr ""
 
-#: modules/crm/crm.php:156
+#: modules/crm/crm.php:171
 msgid "Select atleast one group"
 msgstr ""
 
-#: modules/crm/crm.php:157
+#: modules/crm/crm.php:172
 msgid "Already exists as a contact or company"
 msgstr ""
 
-#: modules/crm/crm.php:158
+#: modules/crm/crm.php:173
 msgid "This user already exists! Do you want to make this user as a"
 msgstr ""
 
-#: modules/crm/crm.php:159
+#: modules/crm/crm.php:174
 msgid "This is wp user! Do you want to create this user as a"
 msgstr ""
 
-#: modules/crm/crm.php:160
+#: modules/crm/crm.php:175
 msgid "Create new"
 msgstr ""
 
-#: modules/crm/crm.php:162
+#: modules/crm/crm.php:177
 msgid "WP User created successfully"
 msgstr ""
 
@@ -10268,13 +10268,13 @@ msgstr ""
 #: modules/crm/includes/admin/class-menu.php:34
 #: modules/crm/includes/admin/class-settings.php:29
 #: modules/crm/includes/functions-dashboard.php:303
-#: modules/crm/views/company/single.php:145
+#: modules/crm/views/company/single.php:146
 msgid "Contacts"
 msgstr ""
 
 #: modules/crm/includes/admin/class-menu.php:35
 #: modules/crm/includes/functions-dashboard.php:332
-#: modules/crm/views/contact/single.php:150
+#: modules/crm/views/contact/single.php:151
 msgid "Companies"
 msgstr ""
 
@@ -10507,7 +10507,7 @@ msgstr ""
 #: modules/crm/includes/functions-customer.php:370
 #: modules/crm/includes/functions-customer.php:1274
 #: modules/crm/includes/functions-customer.php:2812
-#: modules/crm/includes/functions-customer.php:3238
+#: modules/crm/includes/functions-customer.php:3243
 msgid "No contact found"
 msgstr ""
 
@@ -10782,14 +10782,14 @@ msgid "Select from saved searches"
 msgstr ""
 
 #: modules/crm/includes/class-contact-list-table.php:92
-#: modules/crm/views/company/single.php:122
-#: modules/crm/views/contact/single.php:126
+#: modules/crm/views/company/single.php:123
+#: modules/crm/views/contact/single.php:127
 msgid "Search a crm agent"
 msgstr ""
 
 #: modules/crm/includes/class-contact-list-table.php:93
-#: modules/crm/views/company/single.php:123
-#: modules/crm/views/contact/single.php:127
+#: modules/crm/views/company/single.php:124
+#: modules/crm/views/contact/single.php:128
 msgid "Select a agent"
 msgstr ""
 
@@ -11415,7 +11415,11 @@ msgstr ""
 msgid "Web Research"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3248
+#: modules/crm/includes/functions-customer.php:3239
+msgid "You do not have permission to make WP User"
+msgstr ""
+
+#: modules/crm/includes/functions-customer.php:3253
 msgid "No email found for creating wp user"
 msgstr ""
 
@@ -11701,22 +11705,22 @@ msgstr ""
 msgid "Source"
 msgstr ""
 
-#: modules/crm/views/company/single.php:107
-#: modules/crm/views/contact/single.php:109
+#: modules/crm/views/company/single.php:108
+#: modules/crm/views/contact/single.php:110
 msgid "Nobody"
 msgstr ""
 
-#: modules/crm/views/company/single.php:131
-#: modules/crm/views/contact/single.php:136
+#: modules/crm/views/company/single.php:132
+#: modules/crm/views/contact/single.php:137
 msgid "Assign"
 msgstr ""
 
-#: modules/crm/views/company/single.php:144
+#: modules/crm/views/company/single.php:145
 msgid "Assign a contact"
 msgstr ""
 
-#: modules/crm/views/company/single.php:150
-#: modules/crm/views/contact/single.php:155
+#: modules/crm/views/company/single.php:151
+#: modules/crm/views/contact/single.php:156
 msgid "Assign Contact Groups"
 msgstr ""
 
@@ -11765,7 +11769,7 @@ msgstr ""
 msgid "Life stage"
 msgstr ""
 
-#: modules/crm/views/contact/single.php:149
+#: modules/crm/views/contact/single.php:150
 msgid "Assign a company"
 msgstr ""
 
