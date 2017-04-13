@@ -10,7 +10,7 @@ class Commands extends \WP_CLI_Command {
         global $wpdb;
 
         // truncate table
-        $tables = [ 'erp_peoples', 'erp_peoplemeta', 'erp_people_type_relations', 'erp_crm_customer_activities' ];
+        $tables = [ 'erp_peoples', 'erp_peoplemeta', 'erp_people_type_relations', 'erp_crm_customer_activities', 'erp_crm_contact_subscriber' ];
         foreach ($tables as $table) {
             $wpdb->query( 'TRUNCATE TABLE ' . $wpdb->prefix . $table);
         }
