@@ -1546,6 +1546,7 @@ function erp_import_export_javascript() {
  * @since 1.0.0
  * @since 1.1.15 Declare `field_builder_contacts_fields` with empty an array
  * @since 1.1.18 Handle exporting when no field is given.
+ *               Introduce `ERP_IS_IMPORTING` while importing data
  *
  * @return void
  */
@@ -1578,6 +1579,8 @@ function erp_process_import_export() {
     }
 
     if ( isset( $_POST['erp_import_csv'] ) ) {
+        define( 'ERP_IS_IMPORTING' , true );
+
         $fields = ! empty( $_POST['fields'] ) ? $_POST['fields'] : [];
         $type   = isset( $_POST['type'] ) ? $_POST['type'] : '';
 
