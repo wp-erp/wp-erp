@@ -967,6 +967,7 @@ class Ajax_Handler {
      * Create a new activity feeds
      *
      * @since 1.0
+     * @since 1.1.19 Filter the from name to set current user display name
      *
      * @return json success|error
      */
@@ -1040,16 +1041,17 @@ class Ajax_Handler {
                     $reply_to = $imap_options['username'];
                     $headers .= "Reply-To: WP ERP <$reply_to>" . "\r\n";
                 } else {
-                    $from_name = erp_crm_get_email_from_name();
-                    $reply_to  = erp_crm_get_email_from_address();
+                    $reply_to_name = erp_crm_get_email_from_name();
+                    $reply_to      = erp_crm_get_email_from_address();
 
-                    $headers .= "Reply-To: {$from_name} <$reply_to>" . "\r\n";
+                    $headers .= "Reply-To: {$reply_to_name} <$reply_to>" . "\r\n";
                 }
 
                 $query = [
                     'action' => 'erp_crm_track_email_opened',
                     'aid'    => $data['id'],
                 ];
+
                 $email_url  = add_query_arg( $query, admin_url('admin-ajax.php') );
                 $img_url    = '<img src="' . $email_url . '" width="1" height="1" style="display:none;" />';
 
@@ -1062,6 +1064,8 @@ class Ajax_Handler {
                     "In-Reply-To" => "<{$message_id}>",
                     "References" => "<{$message_id}>",
                 ];
+
+                add_filter( 'erp_mail_from_name', 'erp_crm_get_email_from_name' );
 
                 // Send email a contact
                 erp_mail( $contact->email, $postdata['email_subject'], $email_body, $headers, [], $custom_headers );
