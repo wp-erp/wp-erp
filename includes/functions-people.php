@@ -377,7 +377,7 @@ function erp_get_people_by( $field, $value ) {
  *
  * @return mixed integer on success, false otherwise
  */
-function erp_insert_people( $args = array() ) {
+function erp_insert_people( $args = array(), $return_object = false ) {
 
     if ( empty( $args['id'] ) ) {
         $args['id'] = 0;
@@ -476,9 +476,13 @@ function erp_insert_people( $args = array() ) {
         $existing_people_by_email = \WeDevs\ERP\Framework\Models\People::where( 'email', $args['email'] )->first();
 
         if ( ! empty( $existing_people_by_email->email ) && $existing_people_by_email->hasType( $people_type) ) {
-            return new WP_Error( 'email-already-exist', __( 'This people already exists', 'erp' ) );
-        } else if ( ! empty( $existing_people_by_email->email ) && ! $existing_people_by_email->hasType( $people_type) ) {
+            $is_existing_people = true;
             $people = $existing_people_by_email;
+
+        } else if ( ! empty( $existing_people_by_email->email ) && ! $existing_people_by_email->hasType( $people_type) ) {
+            $is_existing_people = true;
+            $people = $existing_people_by_email;
+
         } else {
             $people = \WeDevs\ERP\Framework\Models\People::create( [
                     'user_id'    => $user->ID,
@@ -497,7 +501,7 @@ function erp_insert_people( $args = array() ) {
         $existing_people_by_email = \WeDevs\ERP\Framework\Models\People::type( $people_type )->where( 'email', $args['email'] )->first();
 
         if ( !empty( $existing_people_by_email->email ) && $existing_people_by_email->id != $existing_people->id ) {
-            return new WP_Error( 'email-already-exist', __( 'This people email already exists', 'erp' ) );
+            $is_existing_people = true;
         }
 
         $people = $existing_people;
@@ -547,7 +551,7 @@ function erp_insert_people( $args = array() ) {
         $people->update( $main_fields );
     }
 
-    if ( ! empty( $type_obj ) && ! $people->hasType( $type_obj ) ) {
+    if ( ! empty( $type_obj ) && ! $people->hasType( $type_obj ) && empty( $is_existing_people ) ) {
         $people->assignType( $type_obj );
     }
 
@@ -563,7 +567,11 @@ function erp_insert_people( $args = array() ) {
         do_action( 'erp_update_people', $people->id, $args );
     }
 
-    return $people->id;
+    if ( ! empty( $is_existing_people ) ) {
+        $people->existing = true;
+    }
+
+    return $return_object ? $people : $people->id;
 }
 
 /**
