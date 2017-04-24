@@ -299,7 +299,16 @@ window.wpErpVue = window.wpErpVue || {};
 
             emailViewedTime: function() {
                 if ( this.feed.extra.email_opened_at ) {
-                    return this.i18n.viewdOn.replace( '{{viewdOn}}', vm.$options.filters.formatDateTime( this.feed.extra.email_opened_at ) );
+                    if ( ! $.isArray(this.feed.extra.email_opened_at) ) {
+                        this.feed.extra.email_opened_at = [this.feed.extra.email_opened_at];
+                    }
+
+                    var dateTime = this.feed.extra.email_opened_at.map(function (viewedAt) {
+                        return vm.$options.filters.formatDateTime( viewedAt );
+                    });
+
+                    return this.i18n.viewedAt.replace( '{{ emailViewedTime }}', dateTime.join(', ') );
+
                 } else {
                     return false;
                 }

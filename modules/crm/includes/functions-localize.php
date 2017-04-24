@@ -20,7 +20,7 @@ function erp_crm_get_contact_feeds_localize_string() {
         'emailSubject'                 => __( 'Subject', 'erp' ),
         'reply'                        => __( 'Reply', 'erp' ),
         'replyThisEmail'               => __( 'Reply this email', 'erp' ),
-        'viewdOn'                      => sprintf( __( 'Viewd on %s', 'erp' ), '{{viewdOn}}' ),
+        'viewedAt'                     => sprintf( __( 'Viewed at: %s', 'erp' ), '{{ emailViewedTime }}' ),
         'emailHeadertext'              => sprintf( __( '<strong>%1s</strong> sent an email to <strong>%2s</strong>', 'erp' ), '{{createdUserName}}', '{{createdForUser}}' ),
         'replyEmailHeadertext'         => sprintf( __( '<strong>%1s</strong> replied to <strong>%2s</strong>', 'erp' ), '{{createdForUser}}', '{{createdUserName}}' ),
         'logHeaderText'                => sprintf( __( '<strong>%1s</strong> logged %2s on %3s for <strong>%4s</strong>', 'erp' ), '{{createdUserName}}', '{{logType}}', '{{logDateTime}}', '{{createdForUser}}' ),
