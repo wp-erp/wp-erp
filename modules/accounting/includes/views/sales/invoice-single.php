@@ -137,7 +137,7 @@ $readonly_url        = add_query_arg( [ 'query' => 'readonly_invoice', 'trans_id
                 <table class="table fixed striped">
                     <thead>
                         <tr>
-                            <th class="align-left product-name"><?php _e( 'Product', 'erp' ) ?></th>
+                            <th class="align-left product-name"><?php _e( 'Description', 'erp' ) ?></th>
                             <th><?php _e( 'Quantity', 'erp' ) ?></th>
                             <th><?php _e( 'Unit Price', 'erp' ) ?></th>
                             <th><?php _e( 'Discount(%)', 'erp' ) ?></th>
