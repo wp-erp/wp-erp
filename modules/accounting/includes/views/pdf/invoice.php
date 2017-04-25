@@ -64,12 +64,13 @@ $invoice->set_to_title( __( 'TO', 'erp' ) );
 $invoice->set_to_address( $to_address );
 
 // Set Table Column Headers
-$invoice->set_table_headers( [__( 'PRODUCT', 'erp'), __( 'QUANTITY', 'erp'), __( 'UNIT PRICE', 'erp'), __( 'DISCOUNT', 'erp'), __( 'TAX(%)', 'erp'), __( 'AMOUNT', 'erp')] );
+$invoice->set_table_headers( [__( 'DESCRIPTION', 'erp'), __( 'QUANTITY', 'erp'), __( 'UNIT PRICE', 'erp'), __( 'DISCOUNT', 'erp'), __( 'TAX(%)', 'erp'), __( 'AMOUNT', 'erp')] );
 $invoice->set_first_column_width(60);
 
 // Add Table Items
 foreach ( $transaction->items as $line ) {
     $invoice->add_item( [$line->journal->ledger->name], $line->qty, html_entity_decode( erp_ac_get_price( $line->unit_price ) ), $line->discount, '', html_entity_decode( erp_ac_get_price( $line->line_total ) ) );
+	$invoice->add_item( [$line->description]);
 }
 
 // Subtotal and Total
