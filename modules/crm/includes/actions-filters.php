@@ -3,6 +3,7 @@
 // Actions *****************************************************************/
 add_action( 'user_register', 'erp_crm_new_admin_as_manager' );
 add_action( 'erp_per_minute_scheduled_events', 'erp_crm_customer_schedule_notification' );
+add_action( 'wp_ajax_erp_crm_track_email_opened', 'erp_crm_track_email_opened' );
 add_action( 'wp_ajax_nopriv_erp_crm_track_email_opened', 'erp_crm_track_email_opened' );
 add_action( 'erp_crm_dashboard_widgets_right', 'erp_crm_dashboard_right_widgets_area' );
 add_action( 'erp_crm_dashboard_widgets_left', 'erp_crm_dashboard_left_widgets_area' );

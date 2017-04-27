@@ -2399,15 +2399,39 @@ function erp_crm_track_email_opened() {
         $activity = \WeDevs\ERP\CRM\Models\Activity::find( $_GET['aid'] );
         $extra = json_decode( base64_decode( $activity->extra ), true );
 
-        if ( ! isset( $extra['email_opened_at'] ) ) {
-            $extra['email_opened_at'] = current_time( 'mysql' );
-            $data = [
-                'extra' => base64_encode( json_encode( $extra ) )
-            ];
-
-            $activity->update( $data );
+        if ( isset( $extra['email_opened_at'] ) && ! is_array( $extra['email_opened_at'] ) ) {
+            $tmp = $extra['email_opened_at'];
+            $extra['email_opened_at'] = [];
+            $extra['email_opened_at'][] = $tmp;
         }
+
+        $extra['email_opened_at'][] = current_time( 'mysql' );
+
+        $data = [
+            'extra' => base64_encode( json_encode( $extra ) )
+        ];
+
+
+        $activity->update( $data );
     }
+
+    header( 'Cache-Control: no-store, no-cache, must-revalidate' );
+    header( 'Cache-Control: post-check=0, pre-check=0', false );
+    header( 'Pragma: no-cache' );
+    header( 'Content-type: image/png' );
+
+    $image = WPERP_PATH . '/assets/images/one-by-one-pixel.png';
+    $handle = fopen( $image, 'r' );
+
+    if ( !$handle ) {
+        exit;
+    }
+
+    $contents = fread( $handle, filesize( $image ) );
+    fclose( $handle );
+    echo $contents;
+
+    exit;
 }
 
 /**

@@ -316,7 +316,7 @@ class Subscription_Form {
         }
 
         if ( $is_double_optin_enabled && ! empty( $subscribed_groups ) ) {
-            // $this->send_mail( $contact, $subscribed_groups, $form_data );
+            $this->send_mail( $contact, $subscribed_groups, $form_data );
         }
 
         // when contact is existing and already subscribed to every groups given in settings
