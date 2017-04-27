@@ -1547,6 +1547,7 @@ function erp_import_export_javascript() {
  * @since 1.1.15 Declare `field_builder_contacts_fields` with empty an array
  * @since 1.1.18 Handle exporting when no field is given.
  *               Introduce `ERP_IS_IMPORTING` while importing data
+ * @since 1.1.19 Import partial people data in case of existing people
  *
  * @return void
  */
@@ -1701,26 +1702,53 @@ function erp_process_import_export() {
                             $data[ $x ]['email'] = "rand_{$rand}@example.com";
                         }
 
-                        $item_insert_id = erp_insert_people( $data[ $x ] );
+                        $people = erp_insert_people( $data[ $x ], true );
 
-                        if ( is_wp_error( $item_insert_id ) ) {
+                        if ( is_wp_error( $people ) ) {
                             continue;
                         } else {
-                            $contact_owner = isset( $_POST['contact_owner'] ) ? intval( $_POST['contact_owner'] ) : get_current_user_id();
+                            $contact       = new \WeDevs\ERP\CRM\Contact( absint( $people->id ), 'contact' );
+                            $contact_owner = isset( $_POST['contact_owner'] ) ? absint( $_POST['contact_owner'] ) : erp_crm_get_default_contact_owner();
                             $life_stage    = isset( $_POST['life_stage'] ) ? sanitize_key( $_POST['life_stage'] ) : '';
-                            erp_people_update_meta( $item_insert_id, 'contact_owner', $contact_owner );
-                            erp_people_update_meta( $item_insert_id, 'life_stage', $life_stage );
 
-                            if ( isset( $_POST['contact_group'] ) && ! empty( $_POST['contact_group'] ) ) {
-                                $contact_group = intval( $_POST['contact_group'] );
-                                erp_crm_create_new_contact_subscriber( ['user_id' => (int) $item_insert_id, 'group_id' => $contact_group] );
+                            if ( ! $people->existing ) {
+                                $contact->update_meta( 'life_stage', $life_stage );
+                                $contact->update_meta( 'contact_owner', $contact_owner );
+
+                            } else {
+                                if ( ! $contact->get_life_stage() ) {
+                                    $contact->update_meta( 'life_stage', $life_stage );
+                                }
+
+                                if ( ! $contact->get_contact_owner() ) {
+                                    $contact->update_meta( 'contact_owner', $contact_owner );
+                                }
+                            }
+
+                            if ( ! empty( $_POST['contact_group'] ) ) {
+                                $contact_group = absint( $_POST['contact_group'] );
+
+                                $existing_data = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( [ 'group_id' => $contact_group, 'user_id' => $people->id ] )->first();
+
+                                if ( empty( $existing_data ) ) {
+                                    $hash = sha1( microtime() . 'erp-subscription-form' . $contact_group . $people->id );
+
+                                    erp_crm_create_new_contact_subscriber([
+                                        'group_id'          => $contact_group,
+                                        'user_id'           => $people->id,
+                                        'status'            => 'subscribe',
+                                        'subscribe_at'      => current_time( 'mysql' ),
+                                        'unsubscribe_at'    => null,
+                                        'hash'              => $hash
+                                    ]);
+                                }
                             }
 
 
                             if ( ! empty( $field_builder_contacts_fields ) ) {
                                 foreach ( $field_builder_contacts_fields as $field ) {
                                     if ( isset( $data[ $x ][ $field ] ) ) {
-                                        erp_people_update_meta( $item_insert_id, $field, $data[ $x ][ $field ] );
+                                        erp_people_update_meta( $people->id, $field, $data[ $x ][ $field ] );
                                     }
                                 }
                             }
