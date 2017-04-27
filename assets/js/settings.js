@@ -40,10 +40,7 @@ jQuery(function($) {
             file_frame.on( 'select', function() {
                 var attachment = file_frame.state().get('selection').first().toJSON();
 
-                console.log(attachment);
-
                 var wrap = self.closest('td');
-                console.log(wrap, self);
 
                 wrap.find('input.erp-file-field').val(attachment.id);
 

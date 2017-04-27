@@ -25,7 +25,7 @@
             container: container,
            // multipart: true,
             multipart_params: {
-                action: action, 
+                action: action,
                 file_id: $( '#' + browse_button ).data('file_id'),
                 _wpnonce: wpErp.nonce
             },
@@ -62,14 +62,14 @@
         this.uploader.bind('UploadProgress', $.proxy(this, 'progress'));
         this.uploader.bind('Error', $.proxy(this, 'error'));
         this.uploader.bind('FileUploaded', $.proxy(this, 'uploaded'));
-        
+
         this.uploader.init();
         this.callback = callback;
 
         $('#' + container).on('click', 'a.attachment-delete', $.proxy(this.removeAttachment, this));
     };
 
-               
+
     ERP_Uploader.prototype = {
 
         init: function (up, params) {
@@ -95,12 +95,12 @@
         },
 
         added: function (up, files) {
-             
+
             var $container = $('#' + this.container).find('.erp-attachment-upload-filelist');
             var $container_wrap = $('#' + this.container).find('.erp-attachment-list');
-                
+
             $.each(files, function(i, file) {
-                
+
                 $container_wrap.append('<li class="erp-image-wrap thumbnail '+file.id+'">'+
                     '<div class="attachment-name erp-img-progress">'+
                         '<div class="upload-item" id="' + file.id + '">'+
@@ -129,9 +129,9 @@
         },
 
         progress: function (up, file) {
-            var item = $('#' + file.id);    
+            var item = $('#' + file.id);
             $('.bar', item).css({ width: file.percent + '%' });
-            $('.percent', item).html( file.percent + '%' );  
+            $('.percent', item).html( file.percent + '%' );
         },
 
         error: function (up, error) {
@@ -158,19 +158,18 @@
         },
 
         uploaded: function ( up, file, response ) {
-            console.log(file.id);
             var res = $.parseJSON(response.response),
                 data  = {
                     up : up,
                     file: file,
                     response: response
                 };
-                
+
             var callback = this.executeFunctionByName( this.callback.after_uploaded, window, data );
             if ( callback !== false ) {
                 return;
-            } 
-                
+            }
+
             $('#' + file.id + " b").html("100%");
             $('#' + file.id).remove();
 
