@@ -2,7 +2,7 @@
 Contributors: tareq1988, wedevs, ediamin, sabbir1991, asaquzzaman
 Tags: small business, SME, contact, contacts, CRM, Customer Relationship Management, employee, leave management, hr, hrm, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 4.7.3
+Tested up to: 4.7.4
 Stable tag: trunk
 License: GPLv2
 Donate Link: https://tareq.co/donate
@@ -150,6 +150,13 @@ If you are unable to use any of the methods due to internet connectivity and fil
   => No. We did not put any limit on anything. You can create as much entries as you want.
 
 == Changelog ==
+
+**v1.1.19 -> Apr 27, 2017**
+
+[tweak] Import partial data in case of existing contacts during WP User to CRM import or CSV import
+[tweak] Log each time a contact opens an email.
+[tweak] Improve insert_people function
+[fix] `From` name mismatch in emails sending from CRM single contact page
 
 **v1.1.18 -> Apr 13, 2017**
 
