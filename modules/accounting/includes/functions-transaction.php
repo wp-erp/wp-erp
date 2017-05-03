@@ -439,9 +439,13 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
 
         if ( $is_update ) {
 
-            $trans = WeDevs\ERP\Accounting\Model\Transaction::find( $args['id'] )->update( $args );
-            $trans_id    = $trans ? $args['id'] : false;
-            erp_ac_update_invoice_number( $args['form_type'] );
+            $trans = WeDevs\ERP\Accounting\Model\Transaction::find( $args['id'] );
+
+            if ( $trans ) {
+                $trans->update( $args );
+                $trans_id    = $trans ? $args['id'] : false;
+                erp_ac_update_invoice_number( $args['form_type'] );
+            }
         } else {
 
             $trans    = WeDevs\ERP\Accounting\Model\Transaction::create( $args );
