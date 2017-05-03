@@ -62,6 +62,9 @@ class Human_Resource {
     /**
      * Include the required files
      *
+     * @since 1.0.0
+     * @since 1.2.0 Include CLI class
+     *
      * @return void
      */
     private function includes() {
@@ -76,6 +79,11 @@ class Human_Resource {
         require_once WPERP_HRM_PATH . '/includes/functions-reporting.php';
         require_once WPERP_HRM_PATH . '/includes/functions-announcement.php';
         require_once WPERP_HRM_PATH . '/includes/actions-filters.php';
+
+        // cli command
+        if ( defined( 'WP_CLI' ) && WP_CLI ) {
+            include WPERP_HRM_PATH . '/includes/cli/commands.php';
+        }
     }
 
     /**
