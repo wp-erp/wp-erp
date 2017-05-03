@@ -341,6 +341,8 @@ function er_ac_insert_transaction_permiss( $args, $is_update ) {
  * @param array $args
  * @param array $items
  *
+ * @since 1.2.0 In case of update transaction, check if exists before update
+ *
  * @return int/boolen
  */
 function erp_ac_insert_transaction( $args = [], $items = [] ) {
