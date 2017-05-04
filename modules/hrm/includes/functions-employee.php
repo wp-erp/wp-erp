@@ -411,6 +411,10 @@ function erp_employee_restore( $employee_ids ) {
 /**
  * Employee Delete
  *
+ * @since 1.0.0
+ * @since 1.2.0 After delete an employee, remove HR roles instead of
+ *              remove the related wp user
+ *
  * @param  array|int $employee_ids
  *
  * @return void
@@ -437,23 +441,25 @@ function erp_employee_delete( $employee_ids, $hard = false ) {
     }
 
     // seems like we got some
-    foreach ($employees as $employee_id) {
+    foreach ( $employees as $employee_wp_user_id ) {
 
-        do_action( 'erp_hr_delete_employee', $employee_id, $hard );
+        do_action( 'erp_hr_delete_employee', $employee_wp_user_id, $hard );
 
         if ( $hard ) {
-            \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $employee_id )->withTrashed()->forceDelete();
-            wp_delete_user( $employee_id );
+            \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $employee_wp_user_id )->withTrashed()->forceDelete();
+            $wp_user = get_userdata( $employee_wp_user_id );
+            $wp_user->remove_role( erp_hr_get_manager_role() );
+            $wp_user->remove_role( erp_hr_get_employee_role() );
 
             // find leave entitlements and leave requests and delete them as well
-            \WeDevs\ERP\HRM\Models\Leave_request::where( 'user_id', '=', $employee_id )->delete();
-            \WeDevs\ERP\HRM\Models\Leave_Entitlement::where( 'user_id', '=', $employee_id )->delete();
+            \WeDevs\ERP\HRM\Models\Leave_request::where( 'user_id', '=', $employee_wp_user_id )->delete();
+            \WeDevs\ERP\HRM\Models\Leave_Entitlement::where( 'user_id', '=', $employee_wp_user_id )->delete();
 
         } else {
-            \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $employee_id )->delete();
+            \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $employee_wp_user_id )->delete();
         }
 
-        do_action( 'erp_hr_after_delete_employee', $employee_id, $hard );
+        do_action( 'erp_hr_after_delete_employee', $employee_wp_user_id, $hard );
     }
 
 }

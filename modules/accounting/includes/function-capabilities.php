@@ -316,7 +316,14 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
         return current_user_can( 'erp_ac_publish_sales_invoice' );
     }
 
-    //expenses
+    /**
+     * Check capability to view expenses created by other managers
+     *
+     * @since 1.0.0
+     * @since 1.2.0 Fix capability spelling
+     *
+     * @return boolean
+     */
     function erp_ac_view_other_expenses() {
         return current_user_can( 'erp_ac_view_other_expenses' );
     }
