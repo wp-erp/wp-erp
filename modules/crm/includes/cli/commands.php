@@ -2,7 +2,7 @@
 namespace WeDevs\ERP\CRM\CLI;
 
 /**
- * Accounting CLI class
+ * CRM CLI class
  */
 class Commands extends \WP_CLI_Command {
 

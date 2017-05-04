@@ -358,6 +358,7 @@ class Ajax {
      *
      * @since 1.1.2
      * @since 1.1.18 Introduce `ERP_IS_IMPORTING`
+     * @since 1.1.19 Import partial data in case of existing contacts
      *
      * @return void
      */
@@ -389,16 +390,6 @@ class Ajax {
 
         $user_ids = [];
         $user_ids = wp_list_pluck( $users, 'ID' );
-        $contacts = erp_get_people_by( 'user_id', $user_ids );
-
-        $exists = get_option( 'erp_users_to_contacts_import_exists', 0 );
-
-        if ( ! empty( $contacts ) && is_array( $contacts ) ) {
-            $contact_ids = wp_list_pluck( $contacts, 'user_id' );
-            $user_ids    = array_diff( $user_ids, $contact_ids );
-            $exists      += count( $contact_ids );
-            update_option( 'erp_users_to_contacts_import_exists', $exists );
-        }
 
         foreach ( $user_ids as $user_id ) {
             $wp_user     = get_user_by( 'id', $user_id );
@@ -426,19 +417,41 @@ class Ajax {
                 'contact_owner' => $contact_owner
             ];
 
-            $contact_id = erp_insert_people( $data );
+            $people = erp_insert_people( $data, true );
 
-            if ( is_wp_error( $contact_id ) ) {
+            if ( is_wp_error( $people ) ) {
                 continue;
             } else {
-                update_user_meta( $data['user_id'], 'contact_owner', $contact_owner );
-                update_user_meta( $data['user_id'], 'life_stage', $life_stage );
-                erp_people_update_meta( $contact_id, 'life_stage', $life_stage );
-            }
+                $contact = new \WeDevs\ERP\CRM\Contact( absint( $people->id ), 'contact' );
 
-            // Subscribe to a group if any group has been selected
-            if ( ! empty( $contact_group ) && ! is_wp_error( $contact_id ) ) {
-                erp_crm_create_new_contact_subscriber( ['user_id' => (int) $contact_id, 'group_id' => (int) $contact_group] );
+                if ( ! $people->existing ) {
+                    $contact->update_meta( 'life_stage', $life_stage );
+                    $contact->update_meta( 'contact_owner', $contact_owner );
+
+                } else {
+                    if ( ! $contact->get_life_stage() ) {
+                        $contact->update_meta( 'life_stage', $life_stage );
+                    }
+
+                    if ( ! $contact->get_contact_owner() ) {
+                        $contact->update_meta( 'contact_owner', $contact_owner );
+                    }
+                }
+
+                $existing_data = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( [ 'group_id' => $contact_group, 'user_id' => $people->id ] )->first();
+
+                if ( empty( $existing_data ) ) {
+                    $hash = sha1( microtime() . 'erp-subscription-form' . $contact_group . $people->id );
+
+                    erp_crm_create_new_contact_subscriber([
+                        'group_id'          => $contact_group,
+                        'user_id'           => $people->id,
+                        'status'            => 'subscribe',
+                        'subscribe_at'      => current_time( 'mysql' ),
+                        'unsubscribe_at'    => null,
+                        'hash'              => $hash
+                    ]);
+                }
             }
         }
 
@@ -451,10 +464,9 @@ class Ajax {
 
         if ( $left === 0 ) {
             delete_option( 'erp_users_to_contacts_import_attempt' );
-            delete_option( 'erp_users_to_contacts_import_exists' );
         }
 
-        $this->send_success( ['left' => $left, 'total_items' => $total_items, 'exists' => $exists] );
+        $this->send_success( [ 'left' => $left, 'total_items' => $total_items, 'exists' => 0 ] );
     }
 
     /**

@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.1.18\n"
+"Project-Id-Version: WP ERP 1.1.19\n"
 "Report-Msgid-Bugs-To: http://wperp.com/support/\n"
-"POT-Creation-Date: 2017-04-13 08:16:13+00:00\n"
+"POT-Creation-Date: 2017-04-27 06:36:24+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4806,7 +4806,7 @@ msgstr ""
 #: includes/admin/class-form-handler.php:99 includes/admin/views/address.php:37
 #: includes/admin/views/company-editor.php:75
 #: modules/accounting/includes/views/user-form-rows.php:194
-#: modules/crm/includes/functions-customer.php:2690
+#: modules/crm/includes/functions-customer.php:2714
 #: modules/crm/views/company/single.php:78
 #: modules/crm/views/contact/single.php:79
 #: modules/crm/views/js-templates/new-customer.php:198
@@ -5221,7 +5221,7 @@ msgstr ""
 #: modules/accounting/includes/views/vendor/vendor-details.php:6
 #: modules/crm/includes/class-contact-list-table.php:199
 #: modules/crm/includes/functions-customer.php:1486
-#: modules/crm/includes/functions-customer.php:2660
+#: modules/crm/includes/functions-customer.php:2684
 #: modules/crm/views/company/single.php:71
 #: modules/crm/views/contact/single.php:72
 #: modules/hrm/views/js-templates/new-employee.php:246
@@ -5232,7 +5232,7 @@ msgstr ""
 #: modules/accounting/includes/views/customer/user-details.php:8
 #: modules/accounting/includes/views/user-form-rows.php:135
 #: modules/accounting/includes/views/vendor/vendor-details.php:8
-#: modules/crm/includes/functions-customer.php:2675
+#: modules/crm/includes/functions-customer.php:2699
 #: modules/crm/views/company/single.php:72
 #: modules/crm/views/contact/single.php:73
 msgid "Fax"
@@ -5243,7 +5243,7 @@ msgstr ""
 #: modules/accounting/includes/views/user-form-rows.php:101
 #: modules/accounting/includes/views/vendor/vendor-details.php:7
 #: modules/crm/includes/functions-customer.php:1500
-#: modules/crm/includes/functions-customer.php:2665
+#: modules/crm/includes/functions-customer.php:2689
 #: modules/crm/views/js-templates/new-customer.php:151
 #: modules/hrm/views/employee/tab-general.php:55
 #: modules/hrm/views/js-templates/new-employee.php:238
@@ -5255,7 +5255,7 @@ msgstr ""
 #: modules/accounting/includes/views/user-form-rows.php:123
 #: modules/accounting/includes/views/vendor/vendor-details.php:9
 #: modules/crm/includes/functions-customer.php:1514
-#: modules/crm/includes/functions-customer.php:2670
+#: modules/crm/includes/functions-customer.php:2694
 #: modules/crm/views/company/single.php:73
 #: modules/crm/views/contact/single.php:74
 #: modules/crm/views/js-templates/new-customer.php:159
@@ -5393,6 +5393,8 @@ msgstr ""
 #: modules/accounting/includes/views/accounts/form-fields.php:48
 #: modules/accounting/includes/views/expense/single.php:22
 #: modules/accounting/includes/views/journal/new.php:55
+#: modules/accounting/includes/views/sales/invoice-single.php:140
+#: modules/accounting/includes/views/sales/payment-single.php:105
 #: modules/crm/includes/class-subscription-form-widget.php:71
 #: modules/crm/views/js-templates/new-contact-group.php:16
 #: modules/hrm/views/employee/tab-leave.php:115
@@ -6181,7 +6183,7 @@ msgid "Street Address 1"
 msgstr ""
 
 #: includes/class-company.php:42
-#: modules/crm/includes/functions-customer.php:2695
+#: modules/crm/includes/functions-customer.php:2719
 #: modules/crm/views/company/single.php:77
 #: modules/crm/views/contact/single.php:78
 #: modules/hrm/views/employee/tab-general.php:52
@@ -6532,8 +6534,8 @@ msgstr ""
 #: modules/crm/includes/class-subscription-form.php:111
 #: modules/crm/includes/functions-customer.php:517
 #: modules/crm/includes/functions-customer.php:1474
-#: modules/crm/includes/functions-customer.php:2562
-#: modules/crm/includes/functions-customer.php:2655
+#: modules/crm/includes/functions-customer.php:2586
+#: modules/crm/includes/functions-customer.php:2679
 #: modules/crm/views/js-templates/customer-add-schedules.php:81
 #: modules/crm/views/js-templates/new-customer.php:71
 #: modules/hrm/views/employee/tab-general.php:11
@@ -6759,19 +6761,11 @@ msgstr ""
 msgid "Please provide a valid email address"
 msgstr ""
 
-#: includes/functions-people.php:479
-msgid "This people already exists"
-msgstr ""
-
-#: includes/functions-people.php:494
+#: includes/functions-people.php:498
 msgid "Something went wrong, please try again"
 msgstr ""
 
-#: includes/functions-people.php:500
-msgid "This people email already exists"
-msgstr ""
-
-#: includes/functions-people.php:710
+#: includes/functions-people.php:718
 msgid "People not exists"
 msgstr ""
 
@@ -7622,11 +7616,11 @@ msgstr ""
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/functions.php:1840
+#: includes/functions.php:1868
 msgid "Nothing to import or items are already exists."
 msgstr ""
 
-#: includes/functions.php:1843
+#: includes/functions.php:1871
 msgid "%s items successfully imported."
 msgstr ""
 
@@ -9272,8 +9266,6 @@ msgstr ""
 #: modules/accounting/includes/views/expense/single.php:21
 #: modules/accounting/includes/views/expense/vendor-credit-single.php:105
 #: modules/accounting/includes/views/journal/single.php:98
-#: modules/accounting/includes/views/sales/invoice-single.php:140
-#: modules/accounting/includes/views/sales/payment-single.php:105
 #: modules/accounting/includes/views/sales/template-invoice-readonly.php:87
 msgid "Product"
 msgstr ""
@@ -9749,7 +9741,7 @@ msgstr ""
 
 #: modules/accounting/includes/views/pdf/invoice.php:67
 #: modules/accounting/includes/views/pdf/payment.php:70
-msgid "PRODUCT"
+msgid "DESCRIPTION"
 msgstr ""
 
 #: modules/accounting/includes/views/pdf/invoice.php:67
@@ -9777,13 +9769,13 @@ msgstr ""
 msgid "AMOUNT"
 msgstr ""
 
-#: modules/accounting/includes/views/pdf/invoice.php:76
-#: modules/accounting/includes/views/pdf/payment.php:81
+#: modules/accounting/includes/views/pdf/invoice.php:77
+#: modules/accounting/includes/views/pdf/payment.php:82
 msgid "SUB TOTAL"
 msgstr ""
 
-#: modules/accounting/includes/views/pdf/invoice.php:77
-#: modules/accounting/includes/views/pdf/payment.php:82
+#: modules/accounting/includes/views/pdf/invoice.php:78
+#: modules/accounting/includes/views/pdf/payment.php:83
 msgid "TOTAL"
 msgstr ""
 
@@ -9803,11 +9795,11 @@ msgstr ""
 msgid "AMOUNT DUE"
 msgstr ""
 
-#: modules/accounting/includes/views/pdf/payment.php:83
+#: modules/accounting/includes/views/pdf/payment.php:84
 msgid "TOTAL RP"
 msgstr ""
 
-#: modules/accounting/includes/views/pdf/payment.php:86
+#: modules/accounting/includes/views/pdf/payment.php:87
 msgid "PAID"
 msgstr ""
 
@@ -10082,7 +10074,7 @@ msgstr ""
 #: modules/crm/includes/class-subscription-form-widget.php:176
 #: modules/crm/includes/class-subscription-form.php:119
 #: modules/crm/includes/functions-customer.php:1691
-#: modules/crm/includes/functions-customer.php:2640
+#: modules/crm/includes/functions-customer.php:2664
 #: modules/crm/views/contact/single.php:68
 #: modules/crm/views/js-templates/new-customer.php:38
 #: modules/hrm/views/employee/tab-general.php:8
@@ -10098,7 +10090,7 @@ msgstr ""
 #: modules/crm/includes/class-subscription-form-widget.php:177
 #: modules/crm/includes/class-subscription-form.php:126
 #: modules/crm/includes/functions-customer.php:1705
-#: modules/crm/includes/functions-customer.php:2645
+#: modules/crm/includes/functions-customer.php:2669
 #: modules/crm/views/contact/single.php:69
 #: modules/crm/views/js-templates/new-customer.php:47
 #: modules/hrm/views/employee/tab-general.php:9
@@ -10149,7 +10141,7 @@ msgstr ""
 
 #: modules/accounting/includes/views/user-form-rows.php:158
 #: modules/accounting/includes/views/user-form-rows.php:163
-#: modules/crm/includes/functions-customer.php:2680
+#: modules/crm/includes/functions-customer.php:2704
 #: modules/crm/views/company/single.php:74
 #: modules/crm/views/contact/single.php:75
 msgid "Street 1"
@@ -10157,7 +10149,7 @@ msgstr ""
 
 #: modules/accounting/includes/views/user-form-rows.php:170
 #: modules/accounting/includes/views/user-form-rows.php:175
-#: modules/crm/includes/functions-customer.php:2685
+#: modules/crm/includes/functions-customer.php:2709
 #: modules/crm/views/company/single.php:75
 #: modules/crm/views/contact/single.php:76
 msgid "Street 2"
@@ -10173,7 +10165,7 @@ msgstr ""
 
 #: modules/accounting/includes/views/user-form-rows.php:223
 #: modules/crm/includes/functions-customer.php:1579
-#: modules/crm/includes/functions-customer.php:2700
+#: modules/crm/includes/functions-customer.php:2724
 #: modules/crm/views/company/single.php:79
 #: modules/crm/views/contact/single.php:80
 #: modules/hrm/views/employee/tab-general.php:53
@@ -10506,8 +10498,8 @@ msgstr ""
 #: modules/crm/includes/class-ajax.php:649
 #: modules/crm/includes/functions-customer.php:370
 #: modules/crm/includes/functions-customer.php:1274
-#: modules/crm/includes/functions-customer.php:2812
-#: modules/crm/includes/functions-customer.php:3243
+#: modules/crm/includes/functions-customer.php:2836
+#: modules/crm/includes/functions-customer.php:3267
 msgid "No contact found"
 msgstr ""
 
@@ -10541,10 +10533,10 @@ msgstr ""
 
 #: modules/crm/includes/class-ajax.php:714
 #: modules/crm/includes/class-ajax.php:763
-#: modules/crm/includes/class-ajax.php:985
-#: modules/crm/includes/class-ajax.php:1174
-#: modules/crm/includes/class-ajax.php:1197
-#: modules/crm/includes/class-ajax.php:1274
+#: modules/crm/includes/class-ajax.php:986
+#: modules/crm/includes/class-ajax.php:1178
+#: modules/crm/includes/class-ajax.php:1201
+#: modules/crm/includes/class-ajax.php:1278
 #: modules/hrm/includes/class-ajax.php:111
 #: modules/hrm/includes/class-ajax.php:142
 #: modules/hrm/includes/class-ajax.php:245
@@ -10599,8 +10591,8 @@ msgid "Contact group save successfully"
 msgstr ""
 
 #: modules/crm/includes/class-ajax.php:767
-#: modules/crm/includes/class-ajax.php:1348
-#: modules/crm/includes/class-ajax.php:1374
+#: modules/crm/includes/class-ajax.php:1352
+#: modules/crm/includes/class-ajax.php:1378
 msgid "Somthing wrong, Please try later"
 msgstr ""
 
@@ -10665,68 +10657,68 @@ msgstr ""
 msgid "Succesfully added social profiles"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:980
+#: modules/crm/includes/class-ajax.php:981
 msgid "Customer not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:989
+#: modules/crm/includes/class-ajax.php:990
 msgid "Content must be required"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1008
-#: modules/crm/includes/class-ajax.php:1072
-#: modules/crm/includes/class-ajax.php:1102
-#: modules/crm/includes/class-ajax.php:1118
-#: modules/crm/includes/class-ajax.php:1146
+#: modules/crm/includes/class-ajax.php:1009
+#: modules/crm/includes/class-ajax.php:1076
+#: modules/crm/includes/class-ajax.php:1106
+#: modules/crm/includes/class-ajax.php:1122
+#: modules/crm/includes/class-ajax.php:1150
 msgid "Somthing is wrong, Please try later"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1178
+#: modules/crm/includes/class-ajax.php:1182
 msgid "Feeds Not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1183
+#: modules/crm/includes/class-ajax.php:1187
 msgid "Feed Deleted successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1203
+#: modules/crm/includes/class-ajax.php:1207
 msgid "No data not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1207
-#: modules/crm/includes/class-ajax.php:1255
+#: modules/crm/includes/class-ajax.php:1211
+#: modules/crm/includes/class-ajax.php:1259
 msgid "Search name not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1211
+#: modules/crm/includes/class-ajax.php:1215
 msgid "Contact Type not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1215
+#: modules/crm/includes/class-ajax.php:1219
 msgid "Search filters not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1221
+#: modules/crm/includes/class-ajax.php:1225
 msgid "Query not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1236
+#: modules/crm/includes/class-ajax.php:1240
 msgid "Search does not save"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1280
+#: modules/crm/includes/class-ajax.php:1284
 msgid "Search segment not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1303
+#: modules/crm/includes/class-ajax.php:1307
 msgid "Schedule data no found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1357
+#: modules/crm/includes/class-ajax.php:1361
 msgid "No results found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1383
+#: modules/crm/includes/class-ajax.php:1387
 msgid "Save reply item delete successfully"
 msgstr ""
 
@@ -11273,7 +11265,7 @@ msgid "Between"
 msgstr ""
 
 #: modules/crm/includes/functions-customer.php:1730
-#: modules/crm/includes/functions-customer.php:2650
+#: modules/crm/includes/functions-customer.php:2674
 #: modules/crm/views/js-templates/new-assign-company.php:6
 #: modules/crm/views/js-templates/new-customer.php:57
 #: modules/hrm/includes/class-ajax.php:1146
@@ -11296,130 +11288,130 @@ msgstr ""
 msgid "Global Search"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2577
+#: modules/crm/includes/functions-customer.php:2601
 msgid "Template name and body content are required"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2596
+#: modules/crm/includes/functions-customer.php:2620
 msgid "Template name is required"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2600
+#: modules/crm/includes/functions-customer.php:2624
 msgid "Template body is required"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2609
+#: modules/crm/includes/functions-customer.php:2633
 msgid "<strong>%s</strong> has been updated"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2618
+#: modules/crm/includes/functions-customer.php:2642
 msgid "<strong>%s</strong> has been created"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2767
-#: modules/crm/includes/functions-customer.php:2786
+#: modules/crm/includes/functions-customer.php:2791
+#: modules/crm/includes/functions-customer.php:2810
 msgid "No record found"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2808
+#: modules/crm/includes/functions-customer.php:2832
 msgid "No template found"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2856
-#: modules/crm/includes/functions-customer.php:2857
+#: modules/crm/includes/functions-customer.php:2880
+#: modules/crm/includes/functions-customer.php:2881
 msgid "Import into CRM"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:2980
+#: modules/crm/includes/functions-customer.php:3004
 msgid "%s contacts created."
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3114
+#: modules/crm/includes/functions-customer.php:3138
 #: modules/hrm/includes/functions-employee.php:610
 msgid "Advertisement"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3115
+#: modules/crm/includes/functions-customer.php:3139
 msgid "Chat"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3116
+#: modules/crm/includes/functions-customer.php:3140
 msgid "Contact Form"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3117
+#: modules/crm/includes/functions-customer.php:3141
 msgid "Employee Referral"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3118
+#: modules/crm/includes/functions-customer.php:3142
 msgid "External Referral"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3119
+#: modules/crm/includes/functions-customer.php:3143
 msgid "Marketing campaign"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3120
+#: modules/crm/includes/functions-customer.php:3144
 msgid "Newsletter"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3121
+#: modules/crm/includes/functions-customer.php:3145
 msgid "OnlineStore"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3122
+#: modules/crm/includes/functions-customer.php:3146
 msgid "Optin Forms"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3123
+#: modules/crm/includes/functions-customer.php:3147
 msgid "Partner"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3124
+#: modules/crm/includes/functions-customer.php:3148
 msgid "Phone Call"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3125
+#: modules/crm/includes/functions-customer.php:3149
 msgid "Public Relations"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3126
+#: modules/crm/includes/functions-customer.php:3150
 msgid "Sales Mail Alias"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3127
+#: modules/crm/includes/functions-customer.php:3151
 msgid "Search Engine"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3128
+#: modules/crm/includes/functions-customer.php:3152
 msgid "Seminar-Internal"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3129
+#: modules/crm/includes/functions-customer.php:3153
 msgid "Seminar Partner"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3130
+#: modules/crm/includes/functions-customer.php:3154
 msgid "Social Media"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3131
+#: modules/crm/includes/functions-customer.php:3155
 msgid "Trade Show"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3132
+#: modules/crm/includes/functions-customer.php:3156
 msgid "Web Download"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3133
+#: modules/crm/includes/functions-customer.php:3157
 msgid "Web Research"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3239
+#: modules/crm/includes/functions-customer.php:3263
 msgid "You do not have permission to make WP User"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3253
+#: modules/crm/includes/functions-customer.php:3277
 msgid "No email found for creating wp user"
 msgstr ""
 
@@ -11575,7 +11567,7 @@ msgid "Reply this email"
 msgstr ""
 
 #: modules/crm/includes/functions-localize.php:23
-msgid "Viewd on %s"
+msgid "Viewed at: %s"
 msgstr ""
 
 #: modules/crm/includes/functions-localize.php:24
