@@ -1638,133 +1638,138 @@ function erp_process_import_export() {
             ]
         ];
 
-        $csv_file    = $_FILES['csv_file']['tmp_name'];
-        $handle      = fopen( $csv_file, 'r' );
-        $csv_content = fread( $handle, filesize( $csv_file ) );
-        fclose( $handle );
+        require_once WPERP_INCLUDES . '/lib/parsecsv.lib.php';
+
+        $csv = new parseCSV( $_FILES['csv_file']['tmp_name'] );
+
+        if ( empty( $csv->data ) ) {
+            wp_redirect( admin_url( "admin.php?page=erp-tools&tab=import" ) );
+            exit;
+        }
 
         $csv_data = [];
 
-        $csv_data = array_map( function( $csv_line ) {
-            return str_getcsv( $csv_line );
-        }, preg_split("/((\r?\n)|(\r\n?))/", $csv_content ) );
+        $csv_data[] = array_keys( $csv->data[0] );
 
-        unset( $csv_data[0] );
+        foreach ( $csv->data as $data_item ) {
+            $csv_data[] = array_values( $data_item );
+        }
 
         if ( ! empty( $csv_data ) ) {
-            $data = [];
-
-            $x = 0;
+            $count = 0;
 
             foreach ( $csv_data as $line ){
-                if ( ! empty( $line ) ) {
+                if ( empty( $line ) ) {
+                    continue;
+                }
 
-                    foreach ( $fields as $key => $value ) {
-                        if ( is_numeric( $value ) ) {
-                            if ( $type == 'employee' ) {
-                                if ( in_array( $key, $employee_fields['work'] ) ) {
-                                    if ( $key == 'designation' ) {
-                                        $data[ $x ]['work'][ $key ] = array_search( $line[ $value ], $designations );
-                                    } else if ( $key == 'department' ) {
-                                        $data[ $x ]['work'][ $key ] = array_search( $line[ $value ], $departments );
-                                    } else {
-                                        $data[ $x ]['work'][ $key ] = $line[ $value ];
-                                    }
+                $line_data = [];
 
-                                } else if ( in_array( $key, $employee_fields['personal'] ) ) {
-                                    $data[ $x ]['personal'][ $key ] = $line[ $value ];
+                foreach ( $fields as $key => $value ) {
+
+                    if ( ! empty( $line[ $value ] ) && is_numeric( $value ) ) {
+                        if ( $type == 'employee' ) {
+                            if ( in_array( $key, $employee_fields['work'] ) ) {
+                                if ( $key == 'designation' ) {
+                                    $line_data['work'][ $key ] = array_search( $line[ $value ], $designations );
+                                } else if ( $key == 'department' ) {
+                                    $line_data['work'][ $key ] = array_search( $line[ $value ], $departments );
                                 } else {
-                                    $data[ $x ][ $key ] = $line[ $value ];
+                                    $line_data['work'][ $key ] = $line[ $value ];
                                 }
+
+                            } else if ( in_array( $key, $employee_fields['personal'] ) ) {
+                                $line_data['personal'][ $key ] = $line[ $value ];
                             } else {
-                                $data[ $x ][ $key ] = isset( $line[ $value ] ) ? $line[ $value ] : '';
-                                $data[ $x ]['type'] = $type;
+                                $line_data[ $key ] = $line[ $value ];
                             }
-                        }
-                    }
-
-                    if ( $type == 'employee' && $is_hrm_activated ) {
-                        if ( ! isset( $data[ $x ]['work']['status'] ) ) {
-                            $data[ $x ]['work']['status'] = 'active';
-                        }
-
-                        $item_insert_id = erp_hr_employee_create( $data[ $x ] );
-
-                        if ( is_wp_error( $item_insert_id ) ) {
-                            continue;
-                        }
-                    }
-
-                    if ( ( $type == 'contact' || $type == 'company' ) && $is_crm_activated ) {
-                        // If not exist any email address then generate a dummy one.
-                        if ( ! isset( $data[ $x ]['email'] ) ) {
-                            $rand = substr( sha1( uniqid( time() ) ), 0, 8 );
-                            $data[ $x ]['email'] = "rand_{$rand}@example.com";
-                        }
-
-                        $people = erp_insert_people( $data[ $x ], true );
-
-                        if ( is_wp_error( $people ) ) {
-                            continue;
                         } else {
-                            $contact       = new \WeDevs\ERP\CRM\Contact( absint( $people->id ), 'contact' );
-                            $contact_owner = isset( $_POST['contact_owner'] ) ? absint( $_POST['contact_owner'] ) : erp_crm_get_default_contact_owner();
-                            $life_stage    = isset( $_POST['life_stage'] ) ? sanitize_key( $_POST['life_stage'] ) : '';
+                            $line_data[ $key ] = isset( $line[ $value ] ) ? $line[ $value ] : '';
+                            $line_data['type'] = $type;
+                        }
+                    }
 
-                            if ( ! $people->existing ) {
+                }
+
+                if ( $type == 'employee' && $is_hrm_activated ) {
+                    if ( ! isset( $line_data['work']['status'] ) ) {
+                        $line_data['work']['status'] = 'active';
+                    }
+
+                    $item_insert_id = erp_hr_employee_create( $line_data );
+
+                    if ( is_wp_error( $item_insert_id ) ) {
+                        continue;
+                    }
+                }
+
+                if ( ( $type == 'contact' || $type == 'company' ) && $is_crm_activated ) {
+                    // If not exist any email address then generate a dummy one.
+                    if ( ! isset( $line_data['email'] ) ) {
+                        $rand = substr( sha1( uniqid( time() ) ), 0, 8 );
+                        $line_data['email'] = "rand_{$rand}@example.com";
+                    }
+
+                    $people = erp_insert_people( $line_data, true );
+
+                    if ( is_wp_error( $people ) ) {
+                        continue;
+                    } else {
+                        $contact       = new \WeDevs\ERP\CRM\Contact( absint( $people->id ), 'contact' );
+                        $contact_owner = isset( $_POST['contact_owner'] ) ? absint( $_POST['contact_owner'] ) : erp_crm_get_default_contact_owner();
+                        $life_stage    = isset( $_POST['life_stage'] ) ? sanitize_key( $_POST['life_stage'] ) : '';
+
+                        if ( ! $people->existing ) {
+                            $contact->update_meta( 'life_stage', $life_stage );
+                            $contact->update_meta( 'contact_owner', $contact_owner );
+
+                        } else {
+                            if ( ! $contact->get_life_stage() ) {
                                 $contact->update_meta( 'life_stage', $life_stage );
+                            }
+
+                            if ( ! $contact->get_contact_owner() ) {
                                 $contact->update_meta( 'contact_owner', $contact_owner );
-
-                            } else {
-                                if ( ! $contact->get_life_stage() ) {
-                                    $contact->update_meta( 'life_stage', $life_stage );
-                                }
-
-                                if ( ! $contact->get_contact_owner() ) {
-                                    $contact->update_meta( 'contact_owner', $contact_owner );
-                                }
                             }
+                        }
 
-                            if ( ! empty( $_POST['contact_group'] ) ) {
-                                $contact_group = absint( $_POST['contact_group'] );
+                        if ( ! empty( $_POST['contact_group'] ) ) {
+                            $contact_group = absint( $_POST['contact_group'] );
 
-                                $existing_data = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( [ 'group_id' => $contact_group, 'user_id' => $people->id ] )->first();
+                            $existing_data = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( [ 'group_id' => $contact_group, 'user_id' => $people->id ] )->first();
 
-                                if ( empty( $existing_data ) ) {
-                                    $hash = sha1( microtime() . 'erp-subscription-form' . $contact_group . $people->id );
+                            if ( empty( $existing_data ) ) {
+                                $hash = sha1( microtime() . 'erp-subscription-form' . $contact_group . $people->id );
 
-                                    erp_crm_create_new_contact_subscriber([
-                                        'group_id'          => $contact_group,
-                                        'user_id'           => $people->id,
-                                        'status'            => 'subscribe',
-                                        'subscribe_at'      => current_time( 'mysql' ),
-                                        'unsubscribe_at'    => null,
-                                        'hash'              => $hash
-                                    ]);
-                                }
+                                erp_crm_create_new_contact_subscriber([
+                                    'group_id'          => $contact_group,
+                                    'user_id'           => $people->id,
+                                    'status'            => 'subscribe',
+                                    'subscribe_at'      => current_time( 'mysql' ),
+                                    'unsubscribe_at'    => null,
+                                    'hash'              => $hash
+                                ]);
                             }
+                        }
 
 
-                            if ( ! empty( $field_builder_contacts_fields ) ) {
-                                foreach ( $field_builder_contacts_fields as $field ) {
-                                    if ( isset( $data[ $x ][ $field ] ) ) {
-                                        erp_people_update_meta( $people->id, $field, $data[ $x ][ $field ] );
-                                    }
+                        if ( ! empty( $field_builder_contacts_fields ) ) {
+                            foreach ( $field_builder_contacts_fields as $field ) {
+                                if ( isset( $line_data[ $field ] ) ) {
+                                    erp_people_update_meta( $people->id, $field, $line_data[ $field ] );
                                 }
                             }
                         }
                     }
                 }
 
-                $x++;
+                ++$count;
             }
 
         }
 
-        // $arg = ( $x ) ? "&imported=$x" : null;
-
-        wp_redirect( admin_url( "admin.php?page=erp-tools&tab=import&imported=$x" ) );
-        exit();
+        wp_redirect( admin_url( "admin.php?page=erp-tools&tab=import&imported=$count" ) );
+        exit;
     }
 
     if ( isset( $_POST['erp_export_csv'] ) ) {
