@@ -318,7 +318,7 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
 
     //expenses
     function erp_ac_view_other_expenses() {
-        return current_user_can( 'erp_ac_view_other_expensess' );
+        return current_user_can( 'erp_ac_view_other_expenses' );
     }
 
     function erp_ac_view_expenses_summary() {
