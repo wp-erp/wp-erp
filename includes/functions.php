@@ -1780,6 +1780,7 @@ function erp_process_import_export() {
             if ( $type == 'employee' && $is_hrm_activated ) {
                 $args = [
                     'number' => -1,
+                    'status' => 'all'
                 ];
 
                 $items = erp_hr_get_employees( $args );
