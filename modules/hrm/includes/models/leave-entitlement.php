@@ -4,7 +4,7 @@ namespace WeDevs\ERP\HRM\Models;
 use WeDevs\ERP\Framework\Model;
 
 /**
- * Class Work_Experience
+ * Class Leave_Entitlement
  *
  * @package WeDevs\ERP\HRM\Models
  */

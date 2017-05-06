@@ -5,7 +5,7 @@ use WeDevs\ERP\Email;
 use WeDevs\ERP\Framework\Traits\Hooker;
 
 /**
- * Employee welcome
+ * Rejected Leave Request
  */
 class Rejected_Leave_Request extends Email {
 
