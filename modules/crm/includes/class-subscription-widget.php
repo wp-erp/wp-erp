@@ -2,9 +2,9 @@
 namespace WeDevs\ERP\CRM;
 
 /**
- * Widget definition form ERP Subscription form
+ * Widget definition for ERP Subscription form
  */
-class Subscription_Form_Widget extends \WP_Widget {
+class Subscription_Widget extends \WP_Widget {
 
     /**
      * Class constructor
@@ -180,7 +180,7 @@ class Subscription_Form_Widget extends \WP_Widget {
             $attrs['full_name'] = __( 'Full Name', 'erp' );
         }
 
-        echo Subscription_Form::instance()->shortcode( $attrs );
+        echo Subscription::instance()->shortcode( $attrs );
 
         echo $args['after_widget'];
     }

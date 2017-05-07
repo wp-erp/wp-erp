@@ -5,9 +5,9 @@ use WeDevs\ERP\Framework\Traits\Hooker;
 use WeDevs\ERP\Framework\Traits\Ajax;
 
 /**
- * ERP Subscription Form
+ * ERP Subscription
  */
-class Subscription_Form {
+class Subscription {
 
     use Hooker;
     use Ajax;
@@ -68,7 +68,7 @@ class Subscription_Form {
     }
 
     public function register_widget() {
-        register_widget( '\WeDevs\ERP\CRM\Subscription_Form_Widget' );
+        register_widget( '\WeDevs\ERP\CRM\Subscription_Widget' );
     }
 
     /**
@@ -211,16 +211,42 @@ class Subscription_Form {
             $this->send_error( [ 'msg' => __( 'Invalid operation', 'erp' ) ] );
         }
 
+        $success = $this->create_subsciber( $form_data );
+
+        if ( is_wp_error( $success ) ) {
+            $this->send_error( $success->get_error_message() );
+
+        } else if ( 'already-subscribed' === $success ) {
+            $this->send_success( [ 'msg' => __( 'You are already subscribed. Thank you!', 'erp' ) ] );
+        }
+
+        $success_msg = apply_filters( 'erp_subscription_form_success_message', __( 'Thank you! Your sign-up request was successful. Please check your email inbox to confirm.', 'erp' ) );
+
+        $this->send_success( [ 'msg' => $success_msg ] );
+    }
+
+    /**
+     * Create contact group subscriber
+     *
+     * Send confirmation mail if we have to
+     *
+     * @since 1.2.0
+     *
+     * @param array $args
+     *
+     * @return mixed WP_Error, true on success, 'already-subscribed' if subscriber already subscribed to provided group
+     */
+    public function create_subsciber( $args ) {
         $default_owner      = erp_crm_get_default_contact_owner();
         $default_life_stage = erp_get_option( 'life_stage', 'erp_settings_erp-crm_contacts', 'subscriber' );
 
-        if ( ! empty( $form_data['life_stage'] ) ) {
+        if ( ! empty( $args['life_stage'] ) ) {
             $registered_life_stages = erp_crm_get_life_stages_dropdown_raw();
 
-            if ( ! array_key_exists( $form_data['life_stage'], $registered_life_stages ) ) {
+            if ( ! array_key_exists( $args['life_stage'], $registered_life_stages ) ) {
                 $this->send_error( [ 'msg' => __( 'Invalid operation', 'erp' ) ] );
             } else {
-                $life_stage = $form_data['life_stage'];
+                $life_stage = $args['life_stage'];
             }
 
         } else {
@@ -229,11 +255,11 @@ class Subscription_Form {
 
         $contact = [
             'type'  => 'contact',
-            'email' => $form_data['contact']['email'],
+            'email' => $args['contact']['email'],
         ];
 
-        if ( ! empty( $form_data['contact']['full_name'] ) ) {
-            $name_arr = explode( ' ', $form_data['contact']['full_name'] );
+        if ( ! empty( $args['contact']['full_name'] ) ) {
+            $name_arr = explode( ' ', $args['contact']['full_name'] );
 
             if ( count( $name_arr ) > 1 ) {
                 $contact['last_name']  = array_pop( $name_arr );
@@ -243,12 +269,12 @@ class Subscription_Form {
                 $contact['first_name'] = implode( ' ' , $name_arr );
             }
 
-        } else if ( ! empty( $form_data['contact']['first_name'] ) ){
-            $contact['first_name'] = $form_data['contact']['first_name'];
-            $contact['last_name']  = isset( $form_data['contact']['last_name'] ) ? $form_data['contact']['last_name'] : '';
+        } else if ( ! empty( $args['contact']['first_name'] ) ){
+            $contact['first_name'] = $args['contact']['first_name'];
+            $contact['last_name']  = isset( $args['contact']['last_name'] ) ? $args['contact']['last_name'] : '';
         }
 
-        $contact = apply_filters( 'erp_subscription_form_save_form_data_args', $contact, $form_data );
+        $contact = apply_filters( 'erp_subscription_form_save_form_data_args', $contact, $args );
 
         // check if any people exists with this email
         $existing_contact = erp_get_people_by( 'email', $contact['email'] );
@@ -267,7 +293,7 @@ class Subscription_Form {
         $contact_id = erp_insert_people( $contact );
 
         if ( is_wp_error( $contact_id ) ) {
-            $this->send_error( [ 'msg' => __( 'Unable to save data, please try again', 'erp' ) ] );
+            return new \WP_Error( 'error-insert-people', __( 'Unable to save data, please try again', 'erp' ) );
         }
 
         $contact = new \WeDevs\ERP\CRM\Contact( absint( $contact_id ), 'contact' );
@@ -284,21 +310,21 @@ class Subscription_Form {
 
         // subscribe to contact group
         $subscribed_groups = [];
-        foreach ( $form_data['groups'] as $group_id ) {
+        foreach ( $args['groups'] as $group_id ) {
             $contact_group = Models\ContactGroup::find( $group_id );
 
             if ( empty( $contact_group ) ) {
                 continue;
             }
 
-            $exisiting_subscriber = Models\ContactSubscriber::where( [
+            $existing_subscriber = Models\ContactSubscriber::where( [
                 'user_id'  => $contact_id,
                 'group_id' => $group_id
             ] )->first();
 
             $hash = sha1( microtime() . 'erp-subscription-form' . $group_id . $contact_id );
 
-            if ( empty( $exisiting_subscriber ) ) {
+            if ( empty( $existing_subscriber ) ) {
                 $args = [
                     'group_id' => $group_id,
                     'user_id'  => $contact_id,
@@ -309,26 +335,24 @@ class Subscription_Form {
                 $subscribed_groups[] = erp_crm_create_new_contact_subscriber( $args );
 
             } else {
-                if ( ! $exisiting_subscriber->hash ) {
-                    $exisiting_subscriber->hash = $hash;
+                if ( ! $existing_subscriber->hash ) {
+                    $existing_subscriber->hash = $hash;
                 }
             }
         }
 
         if ( $is_double_optin_enabled && ! empty( $subscribed_groups ) ) {
-            $this->send_mail( $contact, $subscribed_groups, $form_data );
+            $this->send_mail( $contact, $subscribed_groups, $args );
         }
 
         // when contact is existing and already subscribed to every groups given in settings
         if ( $existing_contact && empty( $subscribed_groups ) ) {
-            $this->send_success( [ 'msg' => __( 'You are already subscribed. Thank you!', 'erp' ) ] );
+            return 'already-subscribed';
         }
 
-        do_action( 'erp_subscription_form_save_form_data', $contact, $subscribed_groups, $form_data );
+        do_action( 'erp_subscription_form_save_form_data', $contact, $subscribed_groups, $args );
 
-        $success_msg = apply_filters( 'erp_subscription_form_success_message', __( 'Thank you! Your sign-up request was successful. Please check your email inbox to confirm.', 'erp' ) );
-
-        $this->send_success( [ 'msg' => $success_msg ] );
+        return true;
     }
 
     /**
