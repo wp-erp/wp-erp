@@ -99,12 +99,12 @@ class Customer_Relationship {
         if ( is_admin() ) {
             new Ajax_Handler();
             new Form_Handler();
-            new \WeDevs\ERP\CRM\Admin_Menu();
-            new \WeDevs\ERP\CRM\User_Profile();
+            new Admin_Menu();
+            new User_Profile();
             new Emailer();
         }
 
-        Subscription_Form::instance();
+        Subscription::instance();
     }
 
     /**

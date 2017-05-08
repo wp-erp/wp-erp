@@ -4,7 +4,7 @@ namespace WeDevs\ERP\HRM\Models;
 use WeDevs\ERP\Framework\Model;
 
 /**
- * Class Dependents
+ * Class Employee_Note
  *
  * @package WeDevs\ERP\HRM\Models
  */

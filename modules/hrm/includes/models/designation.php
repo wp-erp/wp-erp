@@ -4,7 +4,7 @@ namespace WeDevs\ERP\HRM\Models;
 use WeDevs\ERP\Framework\Model;
 
 /**
- * Class Department
+ * Class Designation
  *
  * @package WeDevs\ERP\HRM\Models
  */

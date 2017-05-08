@@ -118,7 +118,25 @@ function erp_hr_employee_create( $args = array() ) {
     }
 
     $userdata = apply_filters( 'erp_hr_employee_args', $userdata );
-    $user_id  = wp_insert_user( $userdata );
+
+    $wp_user = get_user_by( 'email', $userdata['user_login'] );
+
+    /**
+     * We hook `erp_hr_existing_role_to_employee` to the `set_user_role` action
+     * in action-fiters.php file. Since we have set `$userdata['role'] = 'employee'`
+     * after insert/update a wp user, `erp_hr_existing_role_to_employee` function will
+     * create an employee immediately
+     */
+    if ( $wp_user ) {
+        unset( $userdata['user_url'] );
+        unset( $userdata['user_pass'] );
+        $userdata['ID'] = $wp_user->ID;
+
+        $user_id = wp_update_user( $userdata );
+
+    } else {
+        $user_id  = wp_insert_user( $userdata );
+    }
 
     if ( is_wp_error( $user_id ) ) {
         return $user_id;

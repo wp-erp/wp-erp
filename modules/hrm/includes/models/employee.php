@@ -5,7 +5,7 @@ use WeDevs\ERP\Framework\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * Class Dependents
+ * Class Employee
  *
  * @package WeDevs\ERP\HRM\Models
  */

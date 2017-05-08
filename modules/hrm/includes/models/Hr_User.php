@@ -5,7 +5,7 @@ use WeDevs\ORM\WP\User;
 use WeDevs\ERP\Framework\Model;
 
 /**
- * Class Dependents
+ * Class Hr_User
  *
  * @package WeDevs\ERP\HRM\Models
  */
