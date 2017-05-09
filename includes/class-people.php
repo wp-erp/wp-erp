@@ -46,23 +46,30 @@ class People extends Item {
     /**
      * Get full name
      *
+     * @since 1.0.0
+     * @since 1.2.0 Return trimmed string
+     *
      * @return string
      */
     function get_full_name() {
+        $full_name = '';
+
         if ( in_array( 'company', $this->types ) ) {
-            return $this->company;
+            $full_name = $this->company;
 
         } elseif ( $this->is_wp_user() ) {
             $user = \get_user_by( 'id', $this->user_id );
 
             if ( ! empty( $user->first_name ) ) {
-                return $user->first_name . ' ' . $user->last_name;
+                $full_name = $user->first_name . ' ' . $user->last_name;
             }
 
-            return $user->display_name;
+            $full_name = $user->display_name;
         } else {
-            return $this->first_name . ' ' . $this->last_name;
+            $full_name = $this->first_name . ' ' . $this->last_name;
         }
+}
+        return trim( $full_name );
     }
 
     /**

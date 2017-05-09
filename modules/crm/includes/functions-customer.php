@@ -996,6 +996,7 @@ function erp_crm_save_contact_group( $data ) {
  * Get all contact group
  *
  * @since 1.0
+ * @since 1.2.0 Add `unconfirmed` count
  *
  * @return object
  */
@@ -1041,6 +1042,10 @@ function erp_crm_get_contact_groups( $args = [] ) {
                 return 'subscribe' === $subscriber['status'];
             } );
 
+            $unconfirmed = array_filter( $group['contact_subscriber'], function ( $subscriber ) {
+                return 'unconfirmed' === $subscriber['status'];
+            } );
+
             $unsubscribers = array_filter( $group['contact_subscriber'], function ( $subscriber ) {
                 return $subscriber['unsubscribe_at'];
             } );
@@ -1048,8 +1053,9 @@ function erp_crm_get_contact_groups( $args = [] ) {
             unset( $group['contact_subscriber'] );
 
             $items[$key] = $group;
+            $items[$key]['subscriber']   = count( $subscribers );
+            $items[$key]['unconfirmed']  = count( $unconfirmed );
             $items[$key]['unsubscriber'] = count( $unsubscribers );
-            $items[$key]['subscriber'] = count( $subscribers );
         }
 
         $items = erp_array_to_object( $items );
