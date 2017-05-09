@@ -898,7 +898,13 @@ function erp_hr_url_single_employee( $employee_id, $tab = null ) {
         $tab = '&tab=' . $tab;
     }
 
-    $url = admin_url( 'admin.php?page=erp-hr-employee&action=view&id=' . $employee_id . $tab );
+    $user = wp_get_current_user();
+    
+    if (in_array( 'employee' , (array) $user->roles)) {
+        $url = admin_url( 'admin.php?page=erp-hr-my-profile&action=view&id=' . $employee_id . $tab );
+    } else {
+        $url = admin_url( 'admin.php?page=erp-hr-employee&action=view&id=' . $employee_id . $tab );
+    }
 
     return apply_filters( 'erp_hr_url_single_employee', $url, $employee_id );
 }
