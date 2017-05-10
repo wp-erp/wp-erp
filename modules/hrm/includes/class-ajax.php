@@ -113,14 +113,13 @@ class Ajax_Handler {
 
         $request_id = isset( $_POST['leave_request_id'] ) ? intval( $_POST['leave_request_id'] ) : 0;
         $comments   = isset( $_POST['reason'] ) ? $_POST['reason'] : '';
-        erp_hr_leave_request_update_status( $request_id, 3 );
-
+        
         global $wpdb;
-
         $update = $wpdb->update( $wpdb->prefix . 'erp_hr_leave_requests',
             array( 'comments' => $comments ),
             array( 'id' => $request_id )
         );
+        erp_hr_leave_request_update_status( $request_id, 3 );
 
         if ( $update ) {
             $this->send_success();
