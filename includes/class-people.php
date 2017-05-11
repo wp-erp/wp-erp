@@ -68,7 +68,7 @@ class People extends Item {
         } else {
             $full_name = $this->first_name . ' ' . $this->last_name;
         }
-}
+
         return trim( $full_name );
     }
 
