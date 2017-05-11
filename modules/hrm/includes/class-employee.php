@@ -326,6 +326,17 @@ class Employee {
     }
 
     /**
+     * Get the work location id
+     *
+     * @since 1.2.0
+     *
+     * @return int
+     */
+    public function get_work_location_id() {
+        return $this->location;
+    }
+
+    /**
      * Get the employee status
      *
      * @return string
