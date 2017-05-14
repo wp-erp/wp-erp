@@ -1801,10 +1801,10 @@ table.leaves td.column-status .status-1 {
   background: #7ad03a;
 }
 table.leaves td.column-status .status-2 {
-  background: #dd3d36;
+  background: #ffba00;
 }
 table.leaves td.column-status .status-3 {
-  background: #ffba00;
+  background: #dd3d36;
 }
 .erp-hr-leave-request-new .show-days {
   width: 97%;
