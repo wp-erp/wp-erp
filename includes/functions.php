@@ -838,23 +838,26 @@ function erp_months_dropdown( $title = false ) {
  * Get Company financial start date
  *
  * @since  0.1
+ * @since 1.2.0 Using `erp_get_financial_year_dates` function
  *
  * @return string date
  */
 function erp_financial_start_date() {
-    return date( 'Y-m-d H:i:s', mktime( 0, 0, 0,  erp_get_option( 'gen_financial_month', 'erp_settings_general', 1 ), 1 ) );
+    $financial_year_dates = erp_get_financial_year_dates();
+    return $financial_year_dates['start'];
 }
 
 /**
  * Get Company financial end date
  *
  * @since  0.1
+ * @since 1.2.0 Using `erp_get_financial_year_dates` function
  *
  * @return string date
  */
 function erp_financial_end_date() {
-    $start_date = erp_financial_start_date();
-    return  date( 'Y-m-t H:i:s', strtotime( '+11 month', strtotime( $start_date ) ) );
+    $financial_year_dates = erp_get_financial_year_dates();
+    return $financial_year_dates['end'];
 }
 
 /**
@@ -1912,6 +1915,7 @@ function erp_parse_args_recursive( &$args, $defaults = [] ) {
  *
  * @since 1.1.0
  * @since 1.1.17 Use site name instead of current user name for default From header
+ * @since 1.2.0  Always return true during any importing process
  *
  * @param string|array $to
  * @param string       $subject
@@ -1923,6 +1927,10 @@ function erp_parse_args_recursive( &$args, $defaults = [] ) {
  * @return boolean
  */
 function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $custom_headers = [] ) {
+
+    if ( defined( 'ERP_IS_IMPORTING' ) && ERP_IS_IMPORTING ) {
+        return true;
+    }
 
     $callback = function( $phpmailer ) use( $custom_headers ) {
         $erp_email_settings      = get_option( 'erp_settings_erp-email_general', [] );
@@ -2338,4 +2346,51 @@ function erp_get_client_ip() {
     }
 
     return $ipaddress;
+}
+
+/**
+ * Converts any value to boolean true or false
+ *
+ * @since 1.2.0
+ *
+ * @param mixed $value
+ *
+ * @return boolean
+ */
+function erp_validate_boolean( $value ) {
+    return filter_var( $value, FILTER_VALIDATE_BOOLEAN );
+}
+
+/**
+ * Get financial year start and end dates
+ *
+ * @since 1.2.0
+ *
+ * @return array
+ */
+function erp_get_financial_year_dates() {
+    $start_month = erp_get_option( 'gen_financial_month', 'erp_settings_general', 1 );
+
+    $year = date( 'Y' );
+    $current_month = date( 'n' );
+
+    /**
+     * Suppose, $start_month is July and today is May 2017. Then we should get
+     * start = 2016-07-01 00:00:00 and end = 2017-06-30 23:59:59.
+     *
+     * On the other hand, if $start_month = January, then we should get
+     * start = 2017-01-01 00:00:00 and end = 2017-12-31 23:59:59.
+     */
+    if ( $current_month < $start_month ) {
+        $year = $year - 1;
+    }
+
+    $months = erp_months_dropdown();
+    $start  = date( 'Y-m-d 00:00:00', strtotime( "first day of $months[$start_month] $year" ) );
+    $end    = date( 'Y-m-d 23:59:59', strtotime( "$start + 12 months - 1 day" ) );
+
+    return [
+        'start' => $start,
+        'end'   => $end
+    ];
 }

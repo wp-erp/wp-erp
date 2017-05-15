@@ -704,20 +704,14 @@ class Hr_Log {
      * Adding log when policy deleted
      *
      * @since 0.1
+     * @since 1.2.0 Using $policy eloquent object instead of $policy_id
      *
-     * @param  integer $policy_id
+     * @param  object $policy
      *
      * @return void
      */
-    public function delete_policy( $policy_id ) {
-
-        if ( ! $policy_id ) {
-            return;
-        }
-
-        $policy = \WeDevs\ERP\HRM\Models\Leave_Policies::find( $policy_id );
-
-        if ( !$policy ) {
+    public function delete_policy( $policy ) {
+        if ( ! $policy ) {
             return;
         }
 
@@ -805,7 +799,7 @@ class Hr_Log {
                 }
 
                 if ( isset( $key['activate'] ) ) {
-                    $activate = array( '1' => __( 'Immediately', 'erp'), '2' => __('After X Days', 'erp'), '3' => __( 'Manually', 'erp') );
+                    $activate = array( '1' => __( 'Immediately apply after hiring', 'erp' ), '2' => __( 'Apply after X days from hiring', 'erp' ), '3' => __( 'Manually', 'erp' ) );
 
                     if ( $key['activate'] == 2 ) {
                         $key['activation']   = str_replace( 'X', $key['execute_day'], $activate[$key['activate']] );

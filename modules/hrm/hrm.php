@@ -192,7 +192,7 @@ class Human_Resource {
             'emp_set_photo'          => __( 'Set Photo', 'erp' ),
             'confirm'                => __( 'Are you sure?', 'erp' ),
             'delConfirmDept'         => __( 'Are you sure to delete this department?', 'erp' ),
-            'delConfirmPolicy'       => __( 'Are you sure to delete this policy?', 'erp' ),
+            'delConfirmPolicy'       => __( 'If you delete this policy, the leave entitlements and requests related to it will also be deleted. Are you sure to delete this policy?', 'erp' ),
             'delConfirmHoliday'      => __( 'Are you sure to delete this Holiday?', 'erp' ),
             'delConfirmEmployee'     => __( 'Are you sure to delete this employee?', 'erp' ),
             'restoreConfirmEmployee' => __( 'Are you sure to restore this employee?', 'erp' ),

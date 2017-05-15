@@ -20,27 +20,31 @@ class Entitlement_List_Table extends \WP_List_Table {
         return array( 'widefat', 'fixed', 'striped', 'entitlement-list-table', $this->_args['plural'] );
     }
 
+    /**
+     * Extra filters for the list table
+     *
+     * @since 0.1
+     *
+     * @param string $which
+     *
+     * @return void
+     */
     function extra_tablenav( $which ) {
         if ( $which != 'top' ) {
             return;
         }
-        $filter_by_year = ( isset( $_REQUEST['filter_by_year'] ) ) ? $_REQUEST['filter_by_year'] : '';
-        $date = \WeDevs\ERP\HRM\Models\Leave_Entitlement::select( 'to_date' )->distinct()->get()->toArray();
-        if ( ! $date ) {
-            return;
-        }
+
+        $date_ranges = $this->get_date_ranges();
+        $from_date   = date( 'Y-m-d', strtotime( $date_ranges['from_date'] ) );
+        $to_date     = date( 'Y-m-d', strtotime( $date_ranges['to_date'] ) );
         ?>
         <div class="alignleft actions">
-            <label class="screen-reader-text" for="filter_by_year"><?php _e( 'Filter by Year', 'erp' ) ?></label>
-            <select name="filter_by_year" id="filter_by_year">
-                <?php foreach ( $date as $year ): ?>
-                    <?php $year_val = date( 'Y', strtotime( $year['to_date'] ) ); ?>
-                    <option value="<?php echo $year_val; ?>" <?php selected( $filter_by_year, $year_val ); ?>><?php echo $year_val; ?></option>
-                <?php endforeach ?>
-            </select>
-            <?php
-            submit_button( __( 'Filter' ), 'button', 'filter_entitlement', false );
-        echo '</div>';
+            <label><?php _e( 'From', 'erp' ) ?> <input type="text" class="erp-date-field" name="from" value="<?php echo $from_date; ?>"></label>
+            <label><?php _e( 'To', 'erp' ) ?> <input type="text" class="erp-date-field" name="to" value="<?php echo $to_date; ?>"></label>
+            <?php submit_button( __( 'Filter' ), 'button', 'filter_entitlement', false ); ?>
+        </div>
+        <?php
+
     }
 
 
@@ -201,6 +205,9 @@ class Entitlement_List_Table extends \WP_List_Table {
     /**
      * Prepare the class items
      *
+     * @since 0.1
+     * @since 1.2.0 Using `erp_get_financial_year_dates` for financial start and end dates
+     *
      * @return void
      */
     function prepare_items() {
@@ -215,9 +222,7 @@ class Entitlement_List_Table extends \WP_List_Table {
         $offset                = ( $current_page -1 ) * $per_page;
         $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '2';
 
-        // only ncessary because we have sample data
         $args = [
-            'year'   => date( 'Y' ),
             'offset' => $offset,
             'number' => $per_page,
         ];
@@ -227,15 +232,43 @@ class Entitlement_List_Table extends \WP_List_Table {
             $args['order']   = $_REQUEST['order'] ;
         }
 
-        if ( isset( $_REQUEST['filter_by_year'] ) && $_REQUEST['filter_by_year'] ) {
-            $args['year'] = $_REQUEST['filter_by_year'];
-        }
+        $date_ranges = $this->get_date_ranges();
+
+        $args['from_date'] = $date_ranges['from_date'];
+        $args['to_date'] = $date_ranges['to_date'];
 
         $this->items  = erp_hr_leave_get_entitlements( $args );
 
         $this->set_pagination_args( array(
-            'total_items' => erp_hr_leave_count_entitlements( date( 'Y' ) ),
+            'total_items' => erp_hr_leave_count_entitlements( $args ),
             'per_page'    => $per_page
         ) );
+    }
+
+    /**
+     * Get date range
+     *
+     * @since 1.2.0
+     *
+     * @return array
+     */
+    private function get_date_ranges() {
+        $financial_year_dates = erp_get_financial_year_dates();
+
+        $from_date  = $financial_year_dates['start'];
+        $to_date    = $financial_year_dates['end'];
+
+        if ( ! empty( $_GET['from'] ) ) {
+            $from_date = date( 'Y-m-d 00:00:00', strtotime( $_GET['from'] ) );
+        }
+
+        if ( ! empty( $_GET['to'] ) ) {
+            $to_date = date( 'Y-m-d 23:59:59', strtotime( $_GET['to'] ) );
+        }
+
+        return [
+            'from_date' => $from_date,
+            'to_date'   => $to_date
+        ];
     }
 }

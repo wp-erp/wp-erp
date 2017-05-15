@@ -265,13 +265,24 @@
 
         policy: {
             periodField: function() {
+                if (3 == $('.erp-hr-leave-period').val()) {
+                    $('.hide-if-manual').hide();
+                }
+
                 $('.erp-hr-leave-period').on( 'change', function() {
-                    var self = $(this).val();
-                    if ( self == 2 ) {
+                    var type = $(this).val();
+
+                    if ( type == 2 ) {
                         $('.showifschedule').slideDown();
                     } else {
                         $('.showifschedule').slideUp();
                     };
+
+                    if (3 != type) {
+                        $('.hide-if-manual').slideDown();
+                    } else {
+                        $('.hide-if-manual').slideUp();
+                    }
                 });
             },
 

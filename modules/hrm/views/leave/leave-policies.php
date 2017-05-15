@@ -108,11 +108,15 @@ class Leave_Policies_List_Table extends WP_List_Table {
     /**
      * Modify single row element
      *
+     * @since 0.1
+     * @since 1.2.0 Remove time from effective date
+     *
      * @param  array $item
      *
      * @return void
      */
     function single_row( $item ) {
+        $item->effective_date = preg_replace( '/\s.+$/', '', $item->effective_date );
         ?>
             <tr data-json='<?php echo json_encode( $item ); ?>'>
                 <?php $this->single_row_columns( $item ); ?>
