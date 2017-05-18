@@ -365,14 +365,14 @@ function erp_hr_apply_leave_policy( $user_id, $policy ) {
         $to_date = date( 'Y-m-d 23:59:59', $financial_year_end_timestamp );
     }
 
-    $policy = array(
+    $policy = [
         'user_id'    => $user_id,
         'policy_id'  => $policy->id,
         'days'       => $policy->value,
         'from_date'  => $from_date,
         'to_date'    => $to_date,
         'comments'   => $policy->description
-    );
+    ];
 
     erp_hr_leave_insert_entitlement( $policy );
 }
@@ -582,17 +582,14 @@ function erp_hr_leave_get_policies( $args = array() ) {
  * Fetch a leave policy by policy id
  *
  * @since 0.1
+ * @since 1.2.0 Return Eloquent Leave_Policies model
  *
  * @param integer $policy_id
  *
  * @return \stdClass
  */
 function erp_hr_leave_get_policy( $policy_id ) {
-    $policy = \WeDevs\ERP\HRM\Models\Leave_Policies::select( array( 'id', 'name', 'value', 'color', 'department', 'designation', 'gender', 'marital', 'activate', 'execute_day', 'effective_date', 'location', 'description' ) )
-                ->find( $policy_id )
-                ->toArray();
-
-    return (object) $policy;
+    return \WeDevs\ERP\HRM\Models\Leave_Policies::find( $policy_id );
 }
 
 /**
@@ -1530,4 +1527,50 @@ function erp_hr_get_calendar_leave_events( $get = false, $user_id = false, $appr
     }
 
     return $leave_requests;
+}
+
+/**
+ * Get year ranges based on available financial years
+ *
+ * @since 1.2.0
+ *
+ * @return array
+ */
+function get_entitlement_financial_years() {
+    $db = \WeDevs\ORM\Eloquent\Facades\DB::instance();
+    $prefix = $db->db->prefix;
+
+    $min_max_dates = $db->table( 'erp_hr_leave_entitlements' )
+                        ->select( $db->raw( 'min( `from_date` ) as min' ), $db->raw( 'max( `to_date` ) max' ) )
+                        ->first();
+
+    $start_year = $end_year = current_time( 'Y' );
+
+    if ( ! empty( $min_max_dates->min ) ) {
+        $min_date_fy_year = get_financial_year_from_date( $min_max_dates->min );
+
+        $start_year = $min_date_fy_year['start'];
+        $end_year = date( 'Y', strtotime( $min_max_dates->max ) );
+
+    } else {
+        return [];
+    }
+
+    $start_month = erp_get_option( 'gen_financial_month', 'erp_settings_general', 1 );
+
+    $years = [];
+
+    for ( $i = $start_year; $i <= $end_year; $i++ ) {
+        if ( 1 === $start_month ) {
+            $years[] = $i;
+
+        } else if ( ! ( ( $i + 1 ) > $end_year ) ) {
+            $years[] = $i . '-' . ($i+1);
+
+        } else if ( $start_year === $end_year ) {
+            $years[] = ($i - 1) . '-' . $i;
+        }
+    }
+
+    return $years;
 }

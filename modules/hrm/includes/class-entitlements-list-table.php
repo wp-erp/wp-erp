@@ -24,6 +24,7 @@ class Entitlement_List_Table extends \WP_List_Table {
      * Extra filters for the list table
      *
      * @since 0.1
+     * @since 1.2.0 Using financial year or years instead of single year filtering
      *
      * @param string $which
      *
@@ -34,15 +35,39 @@ class Entitlement_List_Table extends \WP_List_Table {
             return;
         }
 
-        $date_ranges = $this->get_date_ranges();
-        $from_date   = date( 'Y-m-d', strtotime( $date_ranges['from_date'] ) );
-        $to_date     = date( 'Y-m-d', strtotime( $date_ranges['to_date'] ) );
+        $entitlement_years = get_entitlement_financial_years();
+
+        if ( empty( $entitlement_years ) ) {
+            return;
+        }
+
+        $years = [];
+        $selected = '';
+
+        foreach ( $entitlement_years as $year ) {
+            $years[ $year ] = $year;
+        }
+
+        if ( ! empty( $_GET['financial_year'] ) ) {
+            $selected = $_GET['financial_year'];
+        } else {
+            $financial_year = erp_get_financial_year_dates();
+
+            $start = date( 'Y', strtotime( $financial_year['start'] ) );
+            $end   = date( 'Y', strtotime( $financial_year['end'] ) );
+
+            if ( $start === $end ) {
+                $selected = $start;
+            } else {
+                $selected = $start . '-' . $end;
+            }
+        }
+
         ?>
-        <div class="alignleft actions">
-            <label><?php _e( 'From', 'erp' ) ?> <input type="text" class="erp-date-field" name="from" value="<?php echo $from_date; ?>"></label>
-            <label><?php _e( 'To', 'erp' ) ?> <input type="text" class="erp-date-field" name="to" value="<?php echo $to_date; ?>"></label>
-            <?php submit_button( __( 'Filter' ), 'button', 'filter_entitlement', false ); ?>
-        </div>
+            <div class="alignleft actions">
+                <select name="financial_year"><?php echo erp_html_generate_dropdown( $years, $selected ); ?></select>
+                <?php submit_button( __( 'Filter' ), 'button', 'filter_entitlement', false ); ?>
+            </div>
         <?php
 
     }
@@ -211,7 +236,6 @@ class Entitlement_List_Table extends \WP_List_Table {
      * @return void
      */
     function prepare_items() {
-
         $columns               = $this->get_columns();
         $hidden                = array( );
         $sortable              = $this->get_sortable_columns();
@@ -232,11 +256,29 @@ class Entitlement_List_Table extends \WP_List_Table {
             $args['order']   = $_REQUEST['order'] ;
         }
 
-        $date_ranges = $this->get_date_ranges();
+        // calculate start and end dates
+        $financial_year_dates = erp_get_financial_year_dates();
 
-        $args['from_date'] = $date_ranges['from_date'];
-        $args['to_date'] = $date_ranges['to_date'];
+        $from_date  = $financial_year_dates['start'];
+        $to_date    = $financial_year_dates['end'];
 
+        if ( ! empty( $_GET['financial_year'] ) ) {
+            preg_match_all( '/^(\d{4})-(\d{4})|(\d{4})$/', $_GET['financial_year'], $matches );
+
+            if ( ! empty( $matches[3][0] ) ) {
+                $from_date  = $matches[3][0] . '-01-01 00:00:00';
+                $to_date    = $matches[3][0] . '-12-31 23:59:59';
+
+            } else if ( ! empty( $matches[1][0] ) && ! empty( $matches[2][0] ) ) {
+                $from_date  = $matches[1][0] . '-01-01 00:00:00';
+                $to_date    = $matches[2][0] . '-12-31 23:59:59';
+            }
+        }
+
+        $args['from_date'] = $from_date;
+        $args['to_date'] = $to_date;
+
+        // get the items
         $this->items  = erp_hr_leave_get_entitlements( $args );
 
         $this->set_pagination_args( array(
@@ -245,30 +287,4 @@ class Entitlement_List_Table extends \WP_List_Table {
         ) );
     }
 
-    /**
-     * Get date range
-     *
-     * @since 1.2.0
-     *
-     * @return array
-     */
-    private function get_date_ranges() {
-        $financial_year_dates = erp_get_financial_year_dates();
-
-        $from_date  = $financial_year_dates['start'];
-        $to_date    = $financial_year_dates['end'];
-
-        if ( ! empty( $_GET['from'] ) ) {
-            $from_date = date( 'Y-m-d 00:00:00', strtotime( $_GET['from'] ) );
-        }
-
-        if ( ! empty( $_GET['to'] ) ) {
-            $to_date = date( 'Y-m-d 23:59:59', strtotime( $_GET['to'] ) );
-        }
-
-        return [
-            'from_date' => $from_date,
-            'to_date'   => $to_date
-        ];
-    }
 }

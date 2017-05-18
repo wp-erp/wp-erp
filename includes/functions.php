@@ -2394,3 +2394,37 @@ function erp_get_financial_year_dates() {
         'end'   => $end
     ];
 }
+
+/**
+ * Get finanicial start and end years that a date belongs to
+ *
+ * @since 1.2.0
+ *
+ * @param string $date
+ *
+ * @return array
+ */
+function get_financial_year_from_date( $date ) {
+    $fy_start_month = erp_get_option( 'gen_financial_month', 'erp_settings_general', 1 );
+    $fy_start_month = absint( $fy_start_month );
+
+    $date_timestamp = strtotime( $date );
+    $date_year      = absint( date( 'Y', $date_timestamp ) );
+    $date_month     = absint( date( 'n', $date_timestamp ) );
+
+    if ( 1 === $fy_start_month ) {
+        return [
+            'start' => $date_year, 'end' => $date_year
+        ];
+
+    } else if ( $date_month <= ( $fy_start_month - 1 ) ) {
+        return [
+            'start' => ( $date_year - 1 ), 'end' => $date_year
+        ];
+
+    } else {
+        return [
+            'start' => $date_year, 'end' => ( $date_year + 1 )
+        ];
+    }
+}
