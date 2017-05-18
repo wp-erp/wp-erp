@@ -1354,33 +1354,44 @@ function erp_hr_leave_get_balance( $user_id ) {
  * Get cuurent month approve leave request list
  *
  * @since 0.1
+ * @since 1.2.0 Ignore terminated employees
  *
  * @return array
  */
 function erp_hr_get_current_month_leave_list() {
     $db = new \WeDevs\ORM\Eloquent\Database();
-    return erp_array_to_object( \WeDevs\ERP\HRM\Models\Leave_request::select('user_id', 'start_date', 'end_date' )
-            ->where( $db->raw("DATE_FORMAT( `start_date`, '%m %Y' )" ), \Carbon\Carbon::today()->format('m Y') )
-            ->where( $db->raw("DATE_FORMAT( `end_date`, '%d-%m-%Y' )" ), '>=', \Carbon\Carbon::today()->format('d-m-Y') )
-            ->where('status', 1 )
-            ->get()
-            ->toArray() );
+    $prefix = $db->db->prefix;
+
+    return $db->table( 'erp_hr_leave_requests as req' )
+              ->select( 'req.user_id', 'req.start_date', 'req.end_date' )
+              ->leftJoin( "{$prefix}erp_hr_employees as em", 'req.user_id', '=', 'em.user_id' )
+              ->where( 'em.status', '!=', 'terminated' )
+              ->where( 'req.start_date', '>=', date( 'Y-m-d 00:00:00', strtotime( 'first day of this month' ) ) )
+              ->where( 'req.start_date', '<=', date( 'Y-m-d 23:59:59', strtotime( 'last day of this month' ) ) )
+              ->where( 'req.status', 1 )
+              ->get();
 }
 
 /**
- * Get newxt month leave request approved list
+ * Get next month leave request approved list
  *
  * @since 0.1
+ * @since 1.2.0 Ignore terminated employees
  *
  * @return array
  */
 function erp_hr_get_next_month_leave_list() {
     $db = new \WeDevs\ORM\Eloquent\Database();
-    return erp_array_to_object( \WeDevs\ERP\HRM\Models\Leave_request::select('user_id', 'start_date', 'end_date' )
-            ->where( $db->raw("DATE_FORMAT( `start_date`, '%m %Y' )" ), \Carbon\Carbon::today()->addMonth(1)->format('m Y') )
-            ->where('status', 1 )
-            ->get()
-            ->toArray());
+    $prefix = $db->db->prefix;
+
+    return $db->table( 'erp_hr_leave_requests as req' )
+              ->select( 'req.user_id', 'req.start_date', 'req.end_date' )
+              ->leftJoin( "{$prefix}erp_hr_employees as em", 'req.user_id', '=', 'em.user_id' )
+              ->where( 'em.status', '!=', 'terminated' )
+              ->where( 'req.start_date', '>=', date( 'Y-m-d 00:00:00', strtotime( 'first day of next month' ) ) )
+              ->where( 'req.start_date', '<=', date( 'Y-m-d 23:59:59', strtotime( 'last day of next month' ) ) )
+              ->where( 'req.status', 1 )
+              ->get();
 }
 
 

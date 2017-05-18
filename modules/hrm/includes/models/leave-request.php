@@ -36,4 +36,15 @@ class Leave_request extends Model {
     public function policy() {
         return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Leave_Policies', 'policy_id' );
     }
+
+    /**
+     * Relation to Leave model
+     *
+     * @since 1.2.0
+     *
+     * @return object
+     */
+    public function employee() {
+        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Employee', 'user_id', 'user_id' );
+    }
 }
