@@ -42,13 +42,15 @@ class Log {
 	/**
 	 * Get logs base on criteria
 	 *
-	 * @since 0.1
+     * @since 0.1
+	 * @since 1.2.0 Returns log count when $count param is true
 	 *
-	 * @param  array $data
+     * @param  array   $data
+	 * @param  boolean $count
 	 *
-	 * @return object [collection of log]
+	 * @return object Collection of log
 	 */
-	public function get( $args = array() ) {
+	public function get( $args = array(), $count = false ) {
 		global $wpdb;
 
 	    $defaults = array(
@@ -107,13 +109,17 @@ class Log {
 	    if ( false === $results ) {
 	        $results = $audit_log->skip( $args['offset'] )
 	                    ->take( $args['number'] )
-                        ->orderBy( $args['orderby'], $args['order'] )
-	                    ->get()
-	                    ->toArray();
+                        ->orderBy( $args['orderby'], $args['order'] );
+
+            $results = $results->get()->toArray();
 
 	        $results = erp_array_to_object( $results );
+
 	        wp_cache_set( $cache_key, $results, 'erp', HOUR_IN_SECONDS );
-	    }
+
+	    } else if ( $count ) {
+            return $audit_log->skip( $args['offset'] )->take( $args['number'] )->count();
+        }
 
 	    return $results;
 	}
@@ -157,42 +163,6 @@ class Log {
 	    do_action( 'erp_after_insert_audit_log', $id, $fields );
 
 	    return $id;
-	}
-
-	public function count( $args = array() ) {
-
-	    $audit_log = new \WeDevs\ERP\Admin\Models\Audit_Log();
-
-	    if ( isset( $args['component'] ) && ! empty( $args['component'] ) ) {
-	        $audit_log = $audit_log->where( 'component', $args['component'] );
-	    }
-
-        if ( isset( $args['sub_component'] ) && ! empty( $args['sub_component'] ) ) {
-            $audit_log = $audit_log->where( 'sub_component', $args['sub_component'] );
-        }
-
-	    if ( isset( $args['data_id'] ) && ! empty( $args['data_id'] ) ) {
-	        $audit_log = $audit_log->where( 'data_id', $args['data_id'] );
-	    }
-
-	    if ( isset( $args['old_value'] ) && ! empty( $args['old_value'] ) ) {
-	        $audit_log = $audit_log->where( 'old_value', $args['old_value'] );
-	    }
-
-	    if ( isset( $args['new_value'] ) && ! empty( $args['new_value'] ) ) {
-	        $audit_log = $audit_log->where( 'new_value', $args['new_value'] );
-	    }
-
-		if ( isset( $args['changetype'] ) && ! empty( $args['changetype'] ) ) {
-	        $audit_log = $audit_log->where( 'changetype', $args['changetype'] );
-	    }
-
-		if ( isset( $args['created_by'] ) && ! empty( $args['created_by'] ) ) {
-	        $audit_log = $audit_log->where( 'created_by', (int)$args['created_by'] );
-	    }
-
-	    return $audit_log->count();
-
 	}
 
 }

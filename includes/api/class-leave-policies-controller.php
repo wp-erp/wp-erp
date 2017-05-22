@@ -144,15 +144,16 @@ class Leave_Policies_Controller extends REST_Controller {
     /**
      * Create an policy
      *
+     * @since 1.1.10
+     * @since 1.2.0  erp_hr_leave_insert_policy is now returns Leave_Policies model
+     *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Request
      */
     public function create_policy( $request ) {
-        $item      = $this->prepare_item_for_database( $request );
-        $policy_id = erp_hr_leave_insert_policy( $item );
-
-        $policy = erp_hr_leave_get_policy( $policy_id );
+        $item   = $this->prepare_item_for_database( $request );
+        $policy = erp_hr_leave_insert_policy( $item );
 
         $request->set_param( 'context', 'edit' );
         $response = $this->prepare_item_for_response( $policy, $request );

@@ -5,7 +5,7 @@ use WeDevs\ERP\Email;
 use WeDevs\ERP\Framework\Traits\Hooker;
 
 /**
- * Employee welcome
+ * New Leave Request
  */
 class New_Leave_Request extends Email {
 
@@ -42,6 +42,17 @@ class New_Leave_Request extends Email {
         ];
     }
 
+    /**
+     * Trigger sending email
+     *
+     * @since 1.0.0
+     * @since 1.2.0 Send single email to multiple recipients.
+     *              Add `erp_new_leave_request_notification_recipients` filter
+     *
+     * @param int $request_id
+     *
+     * @return boolean
+     */
     public function trigger( $request_id = null ) {
         $request = erp_hr_get_leave_request( $request_id );
 
@@ -63,20 +74,25 @@ class New_Leave_Request extends Email {
             'requests_url' => sprintf( '<a class="button green" href="%s">%s</a>', admin_url( 'admin.php?page=erp-leave' ), __( 'View Request', 'erp' ) ),
         ];
 
+        $subject     = $this->get_subject();
+        $content     = $this->get_content();
+        $headers     = $this->get_headers();
+        $attachments = $this->get_attachments();
+        $recipients  = [];
+
         $managers = get_users( [ 'role' => erp_hr_get_manager_role() ] );
 
         if ( ! $managers ) {
             return;
         }
 
-        $subject     = $this->get_subject();
-        $content     = $this->get_content();
-        $headers     = $this->get_headers();
-        $attachments = $this->get_attachments();
-
-        foreach ($managers as $hr) {
-            $this->send( $hr->user_email, $subject, $content, $headers, $attachments );
+        foreach ( $managers as $hr ) {
+            $recipients[] = $hr->user_email;
         }
+
+        $recipients = apply_filters( 'erp_new_leave_request_notification_recipients', $recipients, $request );
+
+        return $this->send( $hr->user_email, $subject, $content, $headers, $attachments );
     }
 
     /**

@@ -118,7 +118,25 @@ function erp_hr_employee_create( $args = array() ) {
     }
 
     $userdata = apply_filters( 'erp_hr_employee_args', $userdata );
-    $user_id  = wp_insert_user( $userdata );
+
+    $wp_user = get_user_by( 'email', $userdata['user_login'] );
+
+    /**
+     * We hook `erp_hr_existing_role_to_employee` to the `set_user_role` action
+     * in action-fiters.php file. Since we have set `$userdata['role'] = 'employee'`
+     * after insert/update a wp user, `erp_hr_existing_role_to_employee` function will
+     * create an employee immediately
+     */
+    if ( $wp_user ) {
+        unset( $userdata['user_url'] );
+        unset( $userdata['user_pass'] );
+        $userdata['ID'] = $wp_user->ID;
+
+        $user_id = wp_update_user( $userdata );
+
+    } else {
+        $user_id  = wp_insert_user( $userdata );
+    }
 
     if ( is_wp_error( $user_id ) ) {
         return $user_id;
@@ -411,6 +429,10 @@ function erp_employee_restore( $employee_ids ) {
 /**
  * Employee Delete
  *
+ * @since 1.0.0
+ * @since 1.2.0 After delete an employee, remove HR roles instead of
+ *              remove the related wp user
+ *
  * @param  array|int $employee_ids
  *
  * @return void
@@ -437,23 +459,25 @@ function erp_employee_delete( $employee_ids, $hard = false ) {
     }
 
     // seems like we got some
-    foreach ($employees as $employee_id) {
+    foreach ( $employees as $employee_wp_user_id ) {
 
-        do_action( 'erp_hr_delete_employee', $employee_id, $hard );
+        do_action( 'erp_hr_delete_employee', $employee_wp_user_id, $hard );
 
         if ( $hard ) {
-            \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $employee_id )->withTrashed()->forceDelete();
-            wp_delete_user( $employee_id );
+            \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $employee_wp_user_id )->withTrashed()->forceDelete();
+            $wp_user = get_userdata( $employee_wp_user_id );
+            $wp_user->remove_role( erp_hr_get_manager_role() );
+            $wp_user->remove_role( erp_hr_get_employee_role() );
 
             // find leave entitlements and leave requests and delete them as well
-            \WeDevs\ERP\HRM\Models\Leave_request::where( 'user_id', '=', $employee_id )->delete();
-            \WeDevs\ERP\HRM\Models\Leave_Entitlement::where( 'user_id', '=', $employee_id )->delete();
+            \WeDevs\ERP\HRM\Models\Leave_request::where( 'user_id', '=', $employee_wp_user_id )->delete();
+            \WeDevs\ERP\HRM\Models\Leave_Entitlement::where( 'user_id', '=', $employee_wp_user_id )->delete();
 
         } else {
-            \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $employee_id )->delete();
+            \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $employee_wp_user_id )->delete();
         }
 
-        do_action( 'erp_hr_after_delete_employee', $employee_id, $hard );
+        do_action( 'erp_hr_after_delete_employee', $employee_wp_user_id, $hard );
     }
 
 }
@@ -874,7 +898,13 @@ function erp_hr_url_single_employee( $employee_id, $tab = null ) {
         $tab = '&tab=' . $tab;
     }
 
-    $url = admin_url( 'admin.php?page=erp-hr-employee&action=view&id=' . $employee_id . $tab );
+    $user = wp_get_current_user();
+    
+    if (in_array( 'employee' , (array) $user->roles)) {
+        $url = admin_url( 'admin.php?page=erp-hr-my-profile&action=view&id=' . $employee_id . $tab );
+    } else {
+        $url = admin_url( 'admin.php?page=erp-hr-employee&action=view&id=' . $employee_id . $tab );
+    }
 
     return apply_filters( 'erp_hr_url_single_employee', $url, $employee_id );
 }

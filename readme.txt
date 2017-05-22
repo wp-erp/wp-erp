@@ -2,7 +2,7 @@
 Contributors: tareq1988, wedevs, ediamin, sabbir1991, asaquzzaman
 Tags: small business, SME, contact, contacts, CRM, Customer Relationship Management, employee, leave management, hr, hrm, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 4.7.4
+Tested up to: 4.7.5
 Stable tag: trunk
 License: GPLv2
 Donate Link: https://tareq.co/donate
@@ -150,6 +150,31 @@ If you are unable to use any of the methods due to internet connectivity and fil
   => No. We did not put any limit on anything. You can create as much entries as you want.
 
 == Changelog ==
+
+**v1.2.0 -> May 22, 2017**
+
+[new] Add function to get employee work location id
+[new] Show unconfirmed column in contact group list tables
+[new] Add support for importing employee when related WP users exist
+[new] Add new leave request notification recipients filter
+[new] Add HR CLI class
+[tweak] Refactor and fix queries for leave management
+[tweak] Employee tabs URL changed to erp-my-profile. Fixes #451
+[tweak] Hide message when change email address in accounting - customer page
+[tweak] Remove setup_database hook from init action and call immediately
+[tweak] Refactor Subscription class.
+[tweak] Export employee with all kind of status
+[tweak] After delete an employee, remove HR roles instead of delete the related wp user
+[tweak] Improve CSV parsing during import ERP data
+[fix] Audit log erroneous pagination. Fix #460
+[fix] Remove rejected requests from calendar. Fixes #449
+[fix] Fix request list table ordering. Fixes #450
+[fix] Remove terminated employee on Who is Out widget. Fixes #455
+[fix] Leave request status colors CSS. Fixes #458
+[fix] Fix entitlements list table filter
+[fix] Leave rejection message in Leave rejection email .Fixes #453
+[fix] Template names in comments corrected
+[fix] Dix expense created by one manager can be seen by other managers too. Issue#444
 
 **v1.1.19 -> Apr 27, 2017**
 

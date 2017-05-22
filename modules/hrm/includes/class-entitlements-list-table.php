@@ -20,27 +20,56 @@ class Entitlement_List_Table extends \WP_List_Table {
         return array( 'widefat', 'fixed', 'striped', 'entitlement-list-table', $this->_args['plural'] );
     }
 
+    /**
+     * Extra filters for the list table
+     *
+     * @since 0.1
+     * @since 1.2.0 Using financial year or years instead of single year filtering
+     *
+     * @param string $which
+     *
+     * @return void
+     */
     function extra_tablenav( $which ) {
         if ( $which != 'top' ) {
             return;
         }
-        $filter_by_year = ( isset( $_REQUEST['filter_by_year'] ) ) ? $_REQUEST['filter_by_year'] : '';
-        $date = \WeDevs\ERP\HRM\Models\Leave_Entitlement::select( 'to_date' )->distinct()->get()->toArray();
-        if ( ! $date ) {
+
+        $entitlement_years = get_entitlement_financial_years();
+
+        if ( empty( $entitlement_years ) ) {
             return;
         }
+
+        $years = [];
+        $selected = '';
+
+        foreach ( $entitlement_years as $year ) {
+            $years[ $year ] = $year;
+        }
+
+        if ( ! empty( $_GET['financial_year'] ) ) {
+            $selected = $_GET['financial_year'];
+        } else {
+            $financial_year = erp_get_financial_year_dates();
+
+            $start = date( 'Y', strtotime( $financial_year['start'] ) );
+            $end   = date( 'Y', strtotime( $financial_year['end'] ) );
+
+            if ( $start === $end ) {
+                $selected = $start;
+            } else {
+                $selected = $start . '-' . $end;
+            }
+        }
+
         ?>
-        <div class="alignleft actions">
-            <label class="screen-reader-text" for="filter_by_year"><?php _e( 'Filter by Year', 'erp' ) ?></label>
-            <select name="filter_by_year" id="filter_by_year">
-                <?php foreach ( $date as $year ): ?>
-                    <?php $year_val = date( 'Y', strtotime( $year['to_date'] ) ); ?>
-                    <option value="<?php echo $year_val; ?>" <?php selected( $filter_by_year, $year_val ); ?>><?php echo $year_val; ?></option>
-                <?php endforeach ?>
-            </select>
-            <?php
-            submit_button( __( 'Filter' ), 'button', 'filter_entitlement', false );
-        echo '</div>';
+            <div class="alignleft actions">
+                <select name="financial_year"><?php echo erp_html_generate_dropdown( $years, $selected ); ?></select>
+                <?php submit_button( __( 'Filter' ), 'button', 'filter_entitlement', false ); ?>
+            </div>
+        <?php
+
     }
 
 
@@ -201,10 +230,12 @@ class Entitlement_List_Table extends \WP_List_Table {
     /**
      * Prepare the class items
      *
+     * @since 0.1
+     * @since 1.2.0 Using `erp_get_financial_year_dates` for financial start and end dates
+     *
      * @return void
      */
     function prepare_items() {
-
         $columns               = $this->get_columns();
         $hidden                = array( );
         $sortable              = $this->get_sortable_columns();
@@ -215,9 +246,7 @@ class Entitlement_List_Table extends \WP_List_Table {
         $offset                = ( $current_page -1 ) * $per_page;
         $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '2';
 
-        // only ncessary because we have sample data
         $args = [
-            'year'   => date( 'Y' ),
             'offset' => $offset,
             'number' => $per_page,
         ];
@@ -227,15 +256,35 @@ class Entitlement_List_Table extends \WP_List_Table {
             $args['order']   = $_REQUEST['order'] ;
         }
 
-        if ( isset( $_REQUEST['filter_by_year'] ) && $_REQUEST['filter_by_year'] ) {
-            $args['year'] = $_REQUEST['filter_by_year'];
+        // calculate start and end dates
+        $financial_year_dates = erp_get_financial_year_dates();
+
+        $from_date  = $financial_year_dates['start'];
+        $to_date    = $financial_year_dates['end'];
+
+        if ( ! empty( $_GET['financial_year'] ) ) {
+            preg_match_all( '/^(\d{4})-(\d{4})|(\d{4})$/', $_GET['financial_year'], $matches );
+
+            if ( ! empty( $matches[3][0] ) ) {
+                $from_date  = $matches[3][0] . '-01-01 00:00:00';
+                $to_date    = $matches[3][0] . '-12-31 23:59:59';
+
+            } else if ( ! empty( $matches[1][0] ) && ! empty( $matches[2][0] ) ) {
+                $from_date  = $matches[1][0] . '-01-01 00:00:00';
+                $to_date    = $matches[2][0] . '-12-31 23:59:59';
+            }
         }
 
+        $args['from_date'] = $from_date;
+        $args['to_date'] = $to_date;
+
+        // get the items
         $this->items  = erp_hr_leave_get_entitlements( $args );
 
         $this->set_pagination_args( array(
-            'total_items' => erp_hr_leave_count_entitlements( date( 'Y' ) ),
+            'total_items' => erp_hr_leave_count_entitlements( $args ),
             'per_page'    => $per_page
         ) );
     }
+
 }
