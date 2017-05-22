@@ -53,7 +53,7 @@ class User_Profile {
 
         ?>
 
-        <h3><?php esc_html_e( 'WP-ERP Role', 'erp' ); ?></h3>
+        <h3><?php esc_html_e( 'WP ERP Role', 'erp' ); ?></h3>
 
         <table class="form-table">
             <tbody>
