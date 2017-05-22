@@ -261,7 +261,7 @@ class Auditlog_List_Table extends \WP_List_Table {
         }
 
         $this->items  = erp_log()->get( $args );
-        $total_items  = erp_log()->count( $args );
+        $total_items  = erp_log()->get( $args, true );
 
         $this->set_pagination_args( array(
             'total_items' => $total_items,
