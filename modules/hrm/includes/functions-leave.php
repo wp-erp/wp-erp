@@ -1076,17 +1076,20 @@ function erp_hr_leave_get_requests_count() {
  * @param  integer $request_id
  * @param  string $status
  *
- * @return array
+ * @return object Eloquent Leave_request model
  */
 function erp_hr_leave_request_update_status( $request_id, $status ) {
-    global $wpdb;
+    $request = \WeDevs\ERP\HRM\Models\Leave_request::find( $request_id );
+
+    if ( empty( $request ) ) {
+        return new WP_Error( 'no-request-found', __( 'Invalid leave request', 'erp' ) );
+    }
 
     $status = absint( $status );
 
-    $updated = $wpdb->update( $wpdb->prefix . 'erp_hr_leave_requests',
-        [ 'status' => $status ],
-        [ 'id' => $request_id ]
-    );
+    $request->status = $status;
+    $request->updated_by = get_current_user_id();
+    $request->save();
 
     // notification email
     if ( 1 === $status ) {
@@ -1108,9 +1111,9 @@ function erp_hr_leave_request_update_status( $request_id, $status ) {
 
     $status = ( $status == 1 ) ? 'approved' : 'pending';
 
-    do_action( "erp_hr_leave_request_{$status}", $request_id );
+    do_action( "erp_hr_leave_request_{$status}", $request_id, $request );
 
-    return $updated;
+    return $request;
 }
 
 /**
