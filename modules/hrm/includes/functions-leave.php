@@ -1483,6 +1483,8 @@ function erp_hr_get_calendar_leave_events( $get = false, $user_id = false, $appr
     $department    = isset( $get['department'] ) && ! empty( $get['department'] ) && $get['department'] != '-1' ? intval( $get['department'] ) : false;
     $designation   = isset( $get['designation'] ) && ! empty( $get['designation'] ) && $get['designation'] != '-1' ? intval( $get['designation'] ) : false;
 
+    $leave_request = $leave_request->where( $request_tb . '.status', '!=', 3 );
+
     if ( ! $get ) {
         $request = $leave_request->leftJoin( $users_tb, $request_tb . '.user_id', '=', $users_tb . '.ID' )
                 ->leftJoin( $policy_tb, $request_tb . '.policy_id', '=', $policy_tb . '.id' )
