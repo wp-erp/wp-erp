@@ -30,7 +30,8 @@ if ( $transaction->invoice_number ) {
 
 // Set reference
 if ( $transaction->invoice_number ) {
-    $invoice->set_reference( $transaction->invoice_number, __( 'PAYMENT NUMBER', 'erp' ) );
+    $inv_number = erp_ac_get_invoice_number( $transaction->invoice_number, $transaction->invoice_format );
+    $invoice->set_reference( $inv_number, __( 'PAYMENT NUMBER', 'erp' ) );
 }
 
 // Set VAT No
