@@ -52,6 +52,7 @@
 
             //checking user existance
             $('.erp-ac-users-wrap').on('focusout', 'input[name="email"]', this.users.checkUsers );
+            $('.erp-ac-users-wrap').on('input', 'input[name="email"]', this.users.removeExistingUserNotice );
             $('.erp-ac-users-wrap').on('click', '.erp-ac-convert-user-info', this.users.convertUser );
 
             //tax
@@ -403,6 +404,12 @@
                         $('input[name="submit_erp_ac_customer"]').prop('disabled', false);
                     }
                 });
+            },
+
+            removeExistingUserNotice: function () {
+                if ($('#message').is(':visible')) {
+                    $('#message').slideUp();
+                }
             },
 
             checkUsers: function(e) {

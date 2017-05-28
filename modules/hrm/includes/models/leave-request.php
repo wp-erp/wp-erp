@@ -9,6 +9,56 @@ use WeDevs\ERP\Framework\Model;
  * @package WeDevs\ERP\HRM\Models
  */
 class Leave_request extends Model {
+    /**
+     * Custom created_at field
+     *
+     * @since 1.2.0
+     */
+    const CREATED_AT = 'created_on';
+
+    /**
+     * Custom updated_at field
+     *
+     * @since 1.2.0
+     */
+    const UPDATED_AT = 'updated_on';
+
     protected $table = 'erp_hr_leave_requests';
-    protected $fillable = [ 'user_id', 'policy_id', 'days', 'start_date', 'end_date', 'comments', 'reason', 'status'];
+    protected $fillable = [
+        'user_id', 'policy_id', 'days', 'start_date',
+        'end_date', 'comments', 'reason', 'status'
+    ];
+
+    /**
+     * Relation to Leave model
+     *
+     * @since 1.2.0
+     *
+     * @return object
+     */
+    public function leave() {
+        return $this->hasOne( 'WeDevs\ERP\HRM\Models\Leave', 'request_id' );
+    }
+
+    /**
+     * Relation to Leave_Policies model
+     *
+     * @since 1.2.0
+     *
+     * @return object
+     */
+    public function policy() {
+        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Leave_Policies', 'policy_id' );
+    }
+
+    /**
+     * Relation to Leave model
+     *
+     * @since 1.2.0
+     *
+     * @return object
+     */
+    public function employee() {
+        return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Employee', 'user_id', 'user_id' );
+    }
 }

@@ -200,7 +200,9 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
             $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" data-group_id="%d" title="%s">%s</a>', $delete_url, $subscriber_contact->user_id, $group_id, __( 'Delete this item', 'erp' ), __( 'Delete', 'erp' ) );
         }
 
-        return sprintf( '%4$s <a href="%3$s"><strong>%1$s</strong></a> %2$s', $contact->get_full_name(), $this->row_actions( $actions ), erp_crm_get_details_url( $contact->id, $contact->types ) , $contact->get_avatar() );
+        $full_name = $contact->get_full_name();
+        $full_name = ! empty( $full_name ) ? $full_name : '(' . __( 'No name', 'erp' ) . ')';
+        return sprintf( '%4$s <a href="%3$s"><strong>%1$s</strong></a> %2$s', $full_name, $this->row_actions( $actions ), erp_crm_get_details_url( $contact->id, $contact->types ) , $contact->get_avatar() );
     }
 
     /**

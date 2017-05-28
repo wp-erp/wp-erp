@@ -107,10 +107,13 @@
         </div>
     <# } else { #>
         <div class="row">
+            <?php
+                $financial_year_dates = erp_get_financial_year_dates();
+            ?>
             <?php erp_html_form_input( array(
                 'label'    => __( 'Effective Date', 'erp' ),
                 'name'     => 'effective_date',
-                'value'    => date( 'Y-m-d' ),
+                'value'    => date( 'Y-m-d', strtotime( $financial_year_dates['start'] ) ),
                 'class'    => 'erp-leave-date-field',
                 'help'    => __( 'The date when the policy will be applicable from', 'erp' )
             ) ); ?>
@@ -125,7 +128,7 @@
             'class'   => 'erp-hrm-select2-add-more erp-hr-desi-drop-down erp-hr-leave-period',
             'type'    => 'select',
             'help'    => __( '', 'erp' ),
-            'options' => array( '1' => __( 'Immediately', 'erp'), '2' => __('After X Days', 'erp'), '3' => __( 'Manually', 'erp') )
+            'options' => array( '1' => __( 'Immediately apply after hiring', 'erp' ), '2' => __( 'Apply after X days from hiring', 'erp' ), '3' => __( 'Manually', 'erp' ) )
         ) ); ?>
     </div>
 
@@ -139,12 +142,13 @@
         ) ); ?>
     </div>
     <# if ( ! data.id ) { #>
-        <div class="row">
+        <div class="row hide-if-manual">
             <?php erp_html_form_input( array(
-                'label'    => __( 'Apply', 'erp' ),
+                'label'    => '&nbsp;',
                 'name'     => 'apply',
                 'type'     => 'checkbox',
-                'help'    => __('Apply immediately for existing users', 'erp')
+                'help'     => __( 'Apply for existing users', 'erp' ),
+                'value'    => 'on'
             ) ); ?>
         </div>
     <# } #>

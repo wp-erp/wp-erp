@@ -92,7 +92,6 @@ class Leave_Requests_List_Table extends \WP_List_Table {
      */
     function get_sortable_columns() {
         $sortable_columns = array(
-            'date' => array( 'created_on', true ),
             'days' => array( 'days', false ),
         );
 
@@ -235,10 +234,12 @@ class Leave_Requests_List_Table extends \WP_List_Table {
 
         // only necessary because we have sample data
         $args = array(
-            'offset' => $offset,
-            'number' => $per_page,
-            'status' => $this->page_status,
-            'year'   => ''
+            'offset'  => $offset,
+            'number'  => $per_page,
+            'status'  => $this->page_status,
+            'year'    => '',
+            'orderby' => isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'created_on',
+            'order'   => isset( $_GET['order'] ) ? $_GET['order'] : 'DESC',
         );
 
         $this->counts = erp_hr_leave_get_requests_count();

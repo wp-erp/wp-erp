@@ -113,14 +113,13 @@ class Ajax_Handler {
 
         $request_id = isset( $_POST['leave_request_id'] ) ? intval( $_POST['leave_request_id'] ) : 0;
         $comments   = isset( $_POST['reason'] ) ? $_POST['reason'] : '';
-        erp_hr_leave_request_update_status( $request_id, 3 );
-
+        
         global $wpdb;
-
         $update = $wpdb->update( $wpdb->prefix . 'erp_hr_leave_requests',
             array( 'comments' => $comments ),
             array( 'id' => $request_id )
         );
+        erp_hr_leave_request_update_status( $request_id, 3 );
 
         if ( $update ) {
             $this->send_success();
@@ -1390,7 +1389,7 @@ class Ajax_Handler {
         $after_x_day    = isset( $_POST['no_of_days'] ) ? intval( $_POST['no_of_days'] ) : '';
         $effective_date = isset( $_POST['effective_date'] ) ? $_POST['effective_date'] : '';
         $location       = isset( $_POST['location'] ) ? $_POST['location'] : '';
-        $instant_apply  = ( isset( $_POST['apply'] ) ) && ( $_POST['apply'] == 'on' ) ? true : false;
+        $instant_apply  = isset( $_POST['apply'] ) ? $_POST['apply'] : '';
 
         $policy_id = erp_hr_leave_insert_policy( array(
             'id'             => $policy_id,
@@ -1478,11 +1477,7 @@ class Ajax_Handler {
 
         $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
         if ( $id ) {
-            $deleted = erp_hr_leave_policy_delete( $id );
-
-            if ( is_wp_error( $deleted ) ) {
-                $this->send_error( $deleted->get_error_message() );
-            }
+            erp_hr_leave_policy_delete( $id );
 
             $this->send_success( __( 'Policy has been deleted', 'erp' ) );
         }

@@ -5,7 +5,7 @@
  * Plugin URI: https://wperp.com
  * Author: weDevs
  * Author URI: https://wedevs.com
- * Version: 1.1.19
+ * Version: 1.2.0
  * License: GPL2
  * Text Domain: erp
  * Domain Path: /i18n/languages/
@@ -52,7 +52,7 @@ final class WeDevs_ERP {
      *
      * @var string
      */
-    public $version = '1.1.19';
+    public $version = '1.2.0';
 
     /**
      * Minimum PHP version required
@@ -218,9 +218,13 @@ final class WeDevs_ERP {
     /**
      * Instantiate classes
      *
+     * @since 1.0.0
+     * @since 1.2.0 Call `setup_database` to setup db immediately
+     *
      * @return void
      */
     private function instantiate() {
+        $this->setup_database();
 
         new \WeDevs\ERP\Admin\User_Profile();
         new \WeDevs\ERP\Scripts();
@@ -236,13 +240,14 @@ final class WeDevs_ERP {
     /**
      * Initialize WordPress action hooks
      *
+     * @since 1.0.0
+     * @since 1.2.0 Remove `setup_database` hook from `init` action
+     *
      * @return void
      */
     private function init_actions() {
-
         // Localize our plugin
         add_action( 'init', array( $this, 'localization_setup' ) );
-        add_action( 'init', array( $this, 'setup_database' ) );
 
         // initialize emailer class
         add_action( 'erp_loaded', array( $this->container['emailer'], 'init_emails' ) );

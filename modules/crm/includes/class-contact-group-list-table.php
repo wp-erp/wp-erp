@@ -36,32 +36,47 @@ class Contact_Group_List_Table extends \WP_List_Table {
     /**
      * Default column values if no callback found
      *
+     * @since 1.0.0
+     * @since 1.2.0 Add unconfirmed column value
+     *
      * @param  object  $item
      * @param  string  $column_name
      *
      * @return string
      */
     function column_default( $contact_group, $column_name ) {
+        $data = '';
 
         switch ( $column_name ) {
-            case 'name':
-
             case 'subscribed':
-                return $contact_group->subscriber;
+                $data = $contact_group->subscriber;
+                break;
+
+            case 'unconfirmed':
+                $data = $contact_group->unconfirmed;
+                break;
 
             case 'unsubscribed':
-                return $contact_group->unsubscriber;
+                $data = $contact_group->unsubscriber;
+                break;
 
             case 'created_at':
-                return erp_format_date( $contact_group->created_at );
+                $data = erp_format_date( $contact_group->created_at );
+                break;
 
             default:
-                return isset( $contact_group->$column_name ) ? $contact_group->$column_name : '';
+                $data = isset( $contact_group->$column_name ) ? $contact_group->$column_name : '';
+                break;
         }
+
+        return $data;
     }
 
     /**
      * Get the column names
+     *
+     * @since 1.0.0
+     * @since 1.2.0 Add unconfirmed column
      *
      * @return array
      */
@@ -70,6 +85,7 @@ class Contact_Group_List_Table extends \WP_List_Table {
             'cb'           => '<input type="checkbox" />',
             'name'         => __( 'Name', 'erp' ),
             'subscribed'   => __( 'Subscribed', 'erp' ),
+            'unconfirmed'  => __( 'Unconfirmed', 'erp' ),
             'unsubscribed' => __( 'Unsubscribed', 'erp' ),
             'created_at'   => __( 'Created At', 'erp' )
         );
@@ -91,13 +107,13 @@ class Contact_Group_List_Table extends \WP_List_Table {
         $view_subscriber_url = add_query_arg( [ 'page'=>'erp-sales-contact-groups', 'groupaction' => 'view-subscriber', 'filter_contact_group' => $contact_group->id ], admin_url( 'admin.php' ) );
 
         if ( current_user_can( 'erp_crm_edit_groups' ) ) {
-            $actions['edit']     = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $contact_group->id, __( 'Edit this Contact Group', 'erp' ), __( 'Edit', 'erp' ) );
+            $actions['edit'] = sprintf( '<a href="%s" data-id="%d" title="%s">%s</a>', $delete_url, $contact_group->id, __( 'Edit this Contact Group', 'erp' ), __( 'Edit', 'erp' ) );
         }
 
-        $actions['view-subscriber']     = sprintf( '<a href="%s" title="%s">%s</a>', $view_subscriber_url, __( 'View Subscriber in this group', 'erp' ), __( 'View Subscriber', 'erp' ) );
+        $actions['view-subscriber'] = sprintf( '<a href="%s" title="%s">%s</a>', $view_subscriber_url, __( 'View Subscriber in this group', 'erp' ), __( 'View Subscriber', 'erp' ) );
 
         if ( current_user_can( 'erp_crm_edit_groups' ) ) {
-            $actions['delete']   = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $contact_group->id, __( 'Delete this Contact Group', 'erp' ), __( 'Delete', 'erp' ) );
+            $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $contact_group->id, __( 'Delete this Contact Group', 'erp' ), __( 'Delete', 'erp' ) );
         }
 
         return sprintf( '<a href="%3$s"><strong>%1$s</strong></a> %2$s', $contact_group->name, $this->row_actions( $actions ), $view_subscriber_url );
