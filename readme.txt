@@ -149,6 +149,10 @@ If you are unable to use any of the methods due to internet connectivity and fil
 
   => No. We did not put any limit on anything. You can create as much entries as you want.
 
+**Q.** Does WP ERP support WordPress multisite installation?
+
+  => No, WP ERP and its add-ons do not support multisite WordPress installation.
+
 == Changelog ==
 
 **v1.2.0 -> May 22, 2017**
