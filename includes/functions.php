@@ -291,6 +291,7 @@ function erp_get_currency() {
  * @since 1.0.0
  * @since 1.1.14 Add most of the current circulating currencies.
  *               If no $currency provided, full symbol list will be returned.
+ * @since 1.2.1  Fix symbol for South African rand
  *
  * @param string $currency
  *
@@ -466,7 +467,7 @@ function erp_get_currency_symbol( $currency = '' ) {
         'XOF' => 'Fr',
         'XPF' => 'Fr',
         'YER' => '﷼',
-        'ZAR' => 'Rs',
+        'ZAR' => 'R',
         'ZMW' => 'ZK',
         'ZWL' => '$',
     ];
