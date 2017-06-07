@@ -588,7 +588,7 @@ class Form_Handler {
                 'journal_id'  => isset( $postdata['journals_id'][$key] ) ? $postdata['journals_id'][$key] : [],
                 'account_id'  => (int) $acc_id,
                 'description' => sanitize_text_field( $postdata['line_desc'][ $key ] ),
-                'qty'         => intval( $postdata['line_qty'][ $key ] ),
+                'qty'         => $postdata['line_qty'][ $key ],
                 'unit_price'  => str_replace( $thousand_seperator, '', erp_ac_format_decimal( $postdata['line_unit_price'][ $key ] ) )  ,
                 'discount'    => erp_ac_format_decimal( $postdata['line_discount'][ $key ] ),
                 'tax'         => isset( $postdata['line_tax'][$key] ) ? $postdata['line_tax'][$key] : 0,
