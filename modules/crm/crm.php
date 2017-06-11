@@ -129,7 +129,7 @@ class Customer_Relationship {
     public function admin_scripts( $hook ) {
         $hook = str_replace( sanitize_title( __( 'CRM', 'erp' ) ) , 'crm', $hook );
 
-        $crm_pages = [
+        $crm_pages = apply_filters( 'erp_crm_pages_list', [
             'toplevel_page_erp-sales',
             'crm_page_erp-sales-customers',
             'crm_page_erp-sales-companies',
@@ -137,7 +137,7 @@ class Customer_Relationship {
             'crm_page_erp-sales-activities',
             'erp-settings_page_erp-settings',
             'crm_page_erp-sales-contact-groups'
-        ];
+        ]);
 
         if ( ! in_array( $hook , $crm_pages ) ) {
             return;
