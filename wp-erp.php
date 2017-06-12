@@ -69,28 +69,43 @@ final class WeDevs_ERP {
     private $container = array();
 
     /**
+     * @var object
+     *
+     * @since 1.2.1
+     */
+    private static $instance;
+
+    /**
      * Initializes the WeDevs_ERP() class
+     *
+     * @since 0.1
+     * @since 1.2.1 Rename `__construct` function to `setup` and call it only once
      *
      * Checks for an existing WeDevs_ERP() instance
      * and if it doesn't find one, creates it.
+     *
+     * @return object
      */
     public static function init() {
-        static $instance = false;
-
-        if ( ! $instance ) {
-            $instance = new self();
+        if ( ! isset( self::$instance ) && ! ( self::$instance instanceof WeDevs_ERP ) ) {
+            self::$instance = new WeDevs_ERP;
+            self::$instance->setup();
         }
 
-        return $instance;
+        return self::$instance;
     }
 
     /**
-     * Constructor for the WeDevs_ERP class
+     * Setup the plugin
      *
-     * Sets up all the appropriate hooks and actions
-     * within our plugin.
+     * Sets up all the appropriate hooks and actions within our plugin.
+     *
+     * @since 1.2.1
+     *
+     * @return void
+     *
      */
-    public function __construct() {
+    private function setup() {
         // dry check on older PHP versions, if found deactivate itself with an error
         register_activation_hook( __FILE__, array( $this, 'auto_deactivate' ) );
 
