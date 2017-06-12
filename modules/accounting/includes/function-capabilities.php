@@ -24,9 +24,8 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
      */
     function erp_ac_new_admin_as_manager( $user_id ) {
         $user = get_user_by( 'id', $user_id );
-        $role = reset( $user->roles );
 
-        if ( 'administrator' == $role ) {
+        if ( $user && in_array('administrator', $user->roles) ) {
             $user->add_role( erp_ac_get_manager_role() );
         }
     }
