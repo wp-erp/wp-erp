@@ -1292,6 +1292,7 @@ function erp_hr_delete_entitlement( $id, $user_id, $policy_id ) {
  *
  * @since 0.1
  * @since 1.1.18 Add start_date in where clause
+ * @since 1.2.1  Fix main query statement
  *
  * @param  integer $user_id
  *
@@ -1300,13 +1301,13 @@ function erp_hr_delete_entitlement( $id, $user_id, $policy_id ) {
 function erp_hr_leave_get_balance( $user_id ) {
     global $wpdb;
 
-    $financial_start_date = erp_financial_start_date();
-    $financial_end_date   = erp_financial_end_date();
+    $financial_start_date = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+    $financial_end_date   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
 
-    $query = "SELECT req.id, req.days, req.policy_id, req.start_date, en.days as entitlement
-        FROM {$wpdb->prefix}erp_hr_leave_requests AS req
-        LEFT JOIN {$wpdb->prefix}erp_hr_leave_entitlements AS en ON ( ( en.policy_id = req.policy_id ) AND (en.user_id = req.user_id ) )
-        WHERE req.status = 1 and req.user_id = %d and req.start_date >= '$financial_start_date' and ( en.`from_date`<= '$financial_start_date' AND en.`to_date` >= '$financial_end_date' )";
+    $query  = "SELECT req.id, req.days, req.policy_id, req.start_date, en.days as entitlement";
+    $query .= " FROM {$wpdb->prefix}erp_hr_leave_requests AS req";
+    $query .= " LEFT JOIN {$wpdb->prefix}erp_hr_leave_entitlements AS en ON ( ( en.policy_id = req.policy_id ) AND (en.user_id = req.user_id ) )";
+    $query .= " WHERE req.status = 1 and req.user_id = %d and ( en.`from_date`<= '$financial_start_date' AND en.`to_date` >= '$financial_end_date' )";
 
     $sql     = $wpdb->prepare( $query, $user_id );
     $results = $wpdb->get_results( $sql );

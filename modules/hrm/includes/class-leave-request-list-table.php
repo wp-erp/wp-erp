@@ -47,8 +47,8 @@ class Leave_Requests_List_Table extends \WP_List_Table {
             $scheduled = $balance[ $item->policy_id ]['scheduled'];
             $available = $balance[ $item->policy_id ]['entitlement'] - $balance[ $item->policy_id ]['total'];
         } else {
-            $scheduled = '';
-            $available = '';
+            $scheduled = 0;
+            $available = 0;
         }
 
         switch ( $column_name ) {
