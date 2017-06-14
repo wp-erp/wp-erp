@@ -1034,18 +1034,16 @@ class Ajax_Handler {
                 $headers .= "Content-Type: text/html; charset=UTF-8" . "\r\n";
 
                 $erp_is_imap_active = erp_is_imap_active();
+                $reply_to_name      = erp_crm_get_email_from_name();
 
                 if ( $erp_is_imap_active ) {
                     $imap_options = get_option( 'erp_settings_erp-email_imap', [] );
-
-                    $reply_to = $imap_options['username'];
-                    $headers .= "Reply-To: WP ERP <$reply_to>" . "\r\n";
+                    $reply_to     = $imap_options['username'];
                 } else {
-                    $reply_to_name = erp_crm_get_email_from_name();
                     $reply_to      = erp_crm_get_email_from_address();
-
-                    $headers .= "Reply-To: {$reply_to_name} <$reply_to>" . "\r\n";
                 }
+
+                $headers .= "Reply-To: {$reply_to_name} <$reply_to>" . "\r\n";
 
                 $query = [
                     'action' => 'erp_crm_track_email_opened',
