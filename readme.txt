@@ -10,6 +10,8 @@ Donate Link: https://tareq.co/donate
 An Open Source HR, CRM & Accounting Solution for WordPress
 
 == Description ==
+
+= First Full-fledged Open Source ERP System for WordPress =
 WP ERP is the framework for weDevs's enterprise resource management system. This plugin includes -
 
 = Core Modules =
