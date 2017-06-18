@@ -3114,6 +3114,10 @@ ul.edit-address li.city-wrap span {
 .erp-settings .erp-settings-radio {
   margin-top: 3px;
 }
+.erp-settings p.description {
+  font-size: 12px;
+  color: #777;
+}
 .erp-attachment-area {
   overflow: auto;
   padding: 2px 2px;

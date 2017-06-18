@@ -325,14 +325,20 @@ class Subscription {
             $hash = sha1( microtime() . 'erp-subscription-form' . $group_id . $contact_id );
 
             if ( empty( $existing_subscriber ) ) {
-                $args = [
+                $status = $is_double_optin_enabled ? 'unconfirmed' : 'subscribe';
+
+                if ( isset( $args['force_subscribe_to'] ) && in_array( $group_id, $args['force_subscribe_to'] ) ) {
+                    $status = 'subscribe';
+                }
+
+                $subs_args = [
                     'group_id' => $group_id,
                     'user_id'  => $contact_id,
-                    'status'   => $is_double_optin_enabled ? 'unconfirmed' : 'subscribe',
+                    'status'   => $status,
                     'hash'     => $hash
                 ];
 
-                $subscribed_groups[] = erp_crm_create_new_contact_subscriber( $args );
+                $subscribed_groups[] = erp_crm_create_new_contact_subscriber( $subs_args );
 
             } else {
                 if ( ! $existing_subscriber->hash ) {
@@ -366,12 +372,16 @@ class Subscription {
      *
      * @return void
      */
-    private function send_mail( $contact, $subscribed_groups, $form_data ) {
-        $confirmation_page_url = $this->get_confirmation_page_url( $subscribed_groups );
+    private function send_mail( $contact, $subscribed_groups, $args ) {
+        $groups = array_filter( $subscribed_groups, function ( $group ) {
+            return ! ( 'subscribe' === $group->status );
+        } );
 
-        if ( empty( $confirmation_page_url ) ) {
+        if ( empty( $groups ) ) {
             return;
         }
+
+        $confirmation_page_url = $this->get_confirmation_page_url( $groups );
 
         $subject_default = sprintf( __( 'Confirm your subscription to %s', 'erp' ), get_bloginfo( 'name' ) );
         $content_default = sprintf(
@@ -386,7 +396,7 @@ class Subscription {
         if ( preg_match( '/\[contact_groups_to_confirm\]/', $content ) ) {
             $group_names = array_map( function ( $group ) {
                 return $group->groups->name;
-            }, $subscribed_groups );
+            }, $groups );
 
             $group_names =  '<strong>' . implode( '</strong>, <strong>', $group_names ) . '</strong>';
 
@@ -400,7 +410,7 @@ class Subscription {
         }
 
         $content = wpautop( $content, true );
-        $content = apply_filters( 'erp_subscription_confirmation_mail_content', $content, $subscribed_groups, $form_data );
+        $content = apply_filters( 'erp_subscription_confirmation_mail_content', $content, $subscribed_groups, $args );
 
         erp_mail( $to, $subject, $content );
     }
@@ -410,11 +420,11 @@ class Subscription {
      *
      * @since 1.1.17
      *
-     * @param array $subscribed_groups Array of ContactSubscriber models
+     * @param array $groups Array of ContactSubscriber models
      *
      * @return string
      */
-    public function get_confirmation_page_url( $subscribed_groups ) {
+    public function get_confirmation_page_url( $groups ) {
         $page_id = erp_get_option( 'page_id', 'erp_settings_erp-crm_subscription', 0 );
 
         $url = get_permalink( $page_id );
@@ -423,7 +433,7 @@ class Subscription {
             return '';
         }
 
-        $hashes  = wp_list_pluck( $subscribed_groups, 'hash' );
+        $hashes  = wp_list_pluck( $groups, 'hash' );
 
         $url .= '?erp-subscription-action=confirm&subscription-id=' . implode( ':', $hashes );
 

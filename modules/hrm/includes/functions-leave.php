@@ -1292,6 +1292,7 @@ function erp_hr_delete_entitlement( $id, $user_id, $policy_id ) {
  *
  * @since 0.1
  * @since 1.1.18 Add start_date in where clause
+ * @since 1.2.1  Fix main query statement
  *
  * @param  integer $user_id
  *
@@ -1300,30 +1301,49 @@ function erp_hr_delete_entitlement( $id, $user_id, $policy_id ) {
 function erp_hr_leave_get_balance( $user_id ) {
     global $wpdb;
 
+    $query  = "select policy_id, days";
+    $query .= " from {$wpdb->prefix}erp_hr_leave_entitlements";
+    $query .= " where user_id = %d";
+
+    $results = $wpdb->get_results( $wpdb->prepare( $query, $user_id ) );
+
+    $balance = [];
+
+    if ( ! empty( $results ) ) {
+        foreach ( $results as $result ) {
+            $balance[ $result->policy_id ] = array(
+                'policy_id'   => $result->policy_id,
+                'scheduled'   => 0,
+                'entitlement' => $result->days,
+                'total'       => 0,
+                'available'   => $result->days
+            );
+        }
+    }
+
     $financial_start_date = erp_financial_start_date();
     $financial_end_date   = erp_financial_end_date();
 
-    $query = "SELECT req.id, req.days, req.policy_id, req.start_date, en.days as entitlement
-        FROM {$wpdb->prefix}erp_hr_leave_requests AS req
-        LEFT JOIN {$wpdb->prefix}erp_hr_leave_entitlements AS en ON ( ( en.policy_id = req.policy_id ) AND (en.user_id = req.user_id ) )
-        WHERE req.status = 1 and req.user_id = %d and req.start_date >= '$financial_start_date' and ( en.`from_date`<= '$financial_start_date' AND en.`to_date` >= '$financial_end_date' )";
+    $query  = "SELECT req.id, req.days, req.policy_id, req.start_date, en.days as entitlement";
+    $query .= " FROM {$wpdb->prefix}erp_hr_leave_requests AS req";
+    $query .= " LEFT JOIN {$wpdb->prefix}erp_hr_leave_entitlements as en on (req.user_id = en.user_id and req.policy_id = en.policy_id and en.from_date >= '$financial_start_date' )";
+    $query .= " WHERE req.status = 1 and req.user_id = %d AND ( req.start_date >= '$financial_start_date' AND req.end_date <= '$financial_end_date' )";
 
     $sql     = $wpdb->prepare( $query, $user_id );
     $results = $wpdb->get_results( $sql );
 
     $temp         = [];
-    $balance      = [];
     $current_time = current_time( 'timestamp' );
 
     if ( $results ) {
         // group by policy
-        foreach ($results as $request) {
+        foreach ( $results as $request ) {
             $temp[ $request->policy_id ][] = $request;
         }
 
         // calculate each policy
-        foreach ($temp as $policy_id => $requests) {
-            $balance[$policy_id] = array(
+        foreach ( $temp as $policy_id => $requests ) {
+            $balance[ $policy_id ] = array(
                 'policy_id'   => $policy_id,
                 'scheduled'   => 0,
                 'entitlement' => 0,
@@ -1331,23 +1351,21 @@ function erp_hr_leave_get_balance( $user_id ) {
                 'available'   => 0
             );
 
-            foreach ($requests as $request) {
-                $balance[$policy_id]['entitlement'] = (int) $request->entitlement;
-                $balance[$policy_id]['total']       += $request->days;
+            foreach ( $requests as $request ) {
+                $balance[ $policy_id ]['entitlement'] = (int) $request->entitlement;
+                $balance[ $policy_id ]['total']       += $request->days;
 
                 if ( $current_time < strtotime( $request->start_date ) ) {
-                    $balance[$policy_id]['scheduled'] += $request->days;
+                    $balance[ $policy_id ]['scheduled'] += $request->days;
                 }
             }
         }
 
         // calculate available
-        foreach ($balance as &$policy) {
+        foreach ( $balance as &$policy ) {
             $available = $policy['entitlement'] - $policy['total'];
             $policy['available'] = $available < 0 ? 0 : $available;
         }
-
-        return $balance;
     }
 
     return $balance;
@@ -1577,7 +1595,7 @@ function get_entitlement_financial_years() {
     $years = [];
 
     for ( $i = $start_year; $i <= $end_year; $i++ ) {
-        if ( 1 === $start_month ) {
+        if ( 1 === absint( $start_month ) ) {
             $years[] = $i;
 
         } else if ( ! ( ( $i + 1 ) > $end_year ) ) {

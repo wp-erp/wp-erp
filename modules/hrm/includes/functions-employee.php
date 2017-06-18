@@ -227,40 +227,50 @@ function erp_hr_get_employees( $args = array() ) {
     $args  = wp_parse_args( $args, $defaults );
     $where = array();
 
-    $employee = new \WeDevs\ERP\HRM\Models\Employee();
-    $employee_result = $employee->leftjoin( $wpdb->users, 'user_id', '=', $wpdb->users . '.ID' )->select( array( 'user_id', 'display_name' ) );
+    $employee_tbl = $wpdb->prefix . 'erp_hr_employees';
+    $employees = \WeDevs\ERP\HRM\Models\Employee::select( array( $employee_tbl. '.user_id', 'display_name' ) )
+                    ->leftJoin( $wpdb->users, $employee_tbl . '.user_id', '=', $wpdb->users . '.ID' );
 
     if ( isset( $args['designation'] ) && $args['designation'] != '-1' ) {
-        $employee_result = $employee_result->where( 'designation', $args['designation'] );
+        $employees = $employees->where( 'designation', $args['designation'] );
     }
 
     if ( isset( $args['department'] ) && $args['department'] != '-1' ) {
-        $employee_result = $employee_result->where( 'department', $args['department'] );
+        $employees = $employees->where( 'department', $args['department'] );
     }
 
     if ( isset( $args['location'] ) && $args['location'] != '-1' ) {
-        $employee_result = $employee_result->where( 'location', $args['location'] );
+        $employees = $employees->where( 'location', $args['location'] );
     }
 
     if ( isset( $args['type'] ) && $args['type'] != '-1' ) {
-        $employee_result = $employee_result->where( 'type', $args['type'] );
+        $employees = $employees->where( 'type', $args['type'] );
     }
 
     if ( isset( $args['status'] ) && ! empty( $args['status'] ) ) {
         if ( $args['status'] == 'trash' ) {
-            $employee_result = $employee_result->onlyTrashed();
+            $employees = $employees->onlyTrashed();
         } else {
             if ( $args['status'] != 'all' ) {
-                $employee_result = $employee_result->where( 'status', $args['status'] );
+                $employees = $employees->where( 'status', $args['status'] );
             }
         }
     } else {
-        $employee_result = $employee_result->where( 'status', 'active' );
+        $employees = $employees->where( 'status', 'active' );
     }
 
     if ( isset( $args['s'] ) && ! empty( $args['s'] ) ) {
         $arg_s = $args['s'];
-        $employee_result = $employee_result->where( 'display_name', 'LIKE', "%$arg_s%" );
+        $employees = $employees->where( 'display_name', 'LIKE', "%$arg_s%" );
+    }
+
+    if ( 'employee_name' === $args['orderby'] ) {
+        $employees = $employees->leftJoin( $wpdb->usermeta .' as umeta', function ( $join ) use ( $wpdb, $employee_tbl ) {
+                        $join->on( $employee_tbl . '.user_id', '=', 'umeta.user_id' )
+                             ->where( 'umeta.meta_key', '=', 'first_name' );
+                     } );
+
+        $args['orderby'] = 'umeta.meta_value';
     }
 
     $cache_key = 'erp-get-employees-' . md5( serialize( $args ) );
@@ -269,17 +279,17 @@ function erp_hr_get_employees( $args = array() ) {
 
     // Check if want all data without any pagination
     if ( $args['number'] != '-1' && ! $args['count'] ) {
-        $employee_result = $employee_result->skip( $args['offset'] )->take( $args['number'] );
+        $employees = $employees->skip( $args['offset'] )->take( $args['number'] );
     }
 
     // Check if args count true, then return total count customer according to above filter
     if ( $args['count'] ) {
-        return $employee_result->count();
+        return $employees->count();
     }
 
     if ( false === $results ) {
 
-        $results = $employee_result
+        $results = $employees
                     ->orderBy( $args['orderby'], $args['order'] )
                     ->get()
                     ->toArray();
@@ -899,7 +909,7 @@ function erp_hr_url_single_employee( $employee_id, $tab = null ) {
     }
 
     $user = wp_get_current_user();
-    
+
     if (in_array( 'employee' , (array) $user->roles)) {
         $url = admin_url( 'admin.php?page=erp-hr-my-profile&action=view&id=' . $employee_id . $tab );
     } else {

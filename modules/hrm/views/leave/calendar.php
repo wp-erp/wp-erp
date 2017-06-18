@@ -75,7 +75,7 @@ foreach ( $leave_requests as $key => $leave_request ) {
                 right: 'month,agendaWeek,agendaDay'
             },
             editable: false,
-            eventLimit: true, // allow "more" link when too many events
+            eventLimit: 4, // allow "more" link when too many events
             events: <?php echo json_encode( $events ); ?>,
             eventRender: function( event, element, calEvent ) {
                 if( event.img != 'undefined' ) {

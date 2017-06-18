@@ -127,6 +127,7 @@ class Employee_List_Table extends \WP_List_Table {
      */
     function get_sortable_columns() {
         $sortable_columns = array(
+            'name'         => array( 'employee_name', false ),
             'date_of_hire' => array( 'hiring_date', false ),
         );
 
