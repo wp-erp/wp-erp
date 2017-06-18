@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.2.0\n"
+"Project-Id-Version: WP ERP 1.2.1\n"
 "Report-Msgid-Bugs-To: http://wperp.com/support/\n"
-"POT-Creation-Date: 2017-05-22 06:38:56+00:00\n"
+"POT-Creation-Date: 2017-06-18 08:08:50+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4791,7 +4791,7 @@ msgid "Created At"
 msgstr ""
 
 #: includes/admin/class-form-handler.php:25 includes/admin/class-menu.php:39
-#: includes/functions.php:1284
+#: includes/functions.php:1285
 msgid "ERP Settings"
 msgstr ""
 
@@ -5308,7 +5308,7 @@ msgstr ""
 #: modules/hrm/includes/class-announcement.php:157
 #: modules/hrm/includes/class-department-list-table.php:211
 #: modules/hrm/includes/class-designation-list-table.php:83
-#: modules/hrm/includes/class-employee-list-table.php:169
+#: modules/hrm/includes/class-employee-list-table.php:170
 #: modules/hrm/includes/class-walker-department.php:44
 #: modules/hrm/views/employee/single.php:73
 #: modules/hrm/views/js-templates/row-dept.php:10
@@ -5685,12 +5685,12 @@ msgid "The type of activities."
 msgstr ""
 
 #: includes/api/class-activities-controller.php:489
-#: includes/api/class-rest-controller.php:86
+#: includes/api/class-rest-controller.php:93
 msgid "Current page of the collection."
 msgstr ""
 
 #: includes/api/class-activities-controller.php:497
-#: includes/api/class-rest-controller.php:94
+#: includes/api/class-rest-controller.php:101
 msgid "Maximum number of items to be returned in result set."
 msgstr ""
 
@@ -6151,11 +6151,11 @@ msgstr ""
 msgid "Reason for the resource."
 msgstr ""
 
-#: includes/api/class-rest-controller.php:103
+#: includes/api/class-rest-controller.php:110
 msgid "Limit results to those matching a string."
 msgstr ""
 
-#: includes/api/class-rest-controller.php:121
+#: includes/api/class-rest-controller.php:128
 msgid ""
 "Scope under which the request is made; determines fields present in "
 "response."
@@ -6331,17 +6331,17 @@ msgid ""
 "to collect non-sensitive diagnostic data and usage information."
 msgstr ""
 
-#: includes/class-updates.php:101
+#: includes/class-updates.php:102
 msgid ""
 "<strong>WP ERP Data Update Required</strong> &#8211; We need to update your "
 "install to the latest version"
 msgstr ""
 
-#: includes/class-updates.php:102
+#: includes/class-updates.php:103
 msgid "Run the updater"
 msgstr ""
 
-#: includes/class-updates.php:107
+#: includes/class-updates.php:108
 msgid ""
 "It is strongly recommended that you backup your database before proceeding. "
 "Are you sure you wish to run the updater now?"
@@ -6571,7 +6571,7 @@ msgstr ""
 #: modules/accounting/includes/views/common/transaction-chart.php:361
 #: modules/accounting/includes/views/js-templates/trash.php:1
 #: modules/crm/includes/class-contact-subscriber-list-table.php:176
-#: modules/hrm/includes/class-employee-list-table.php:149
+#: modules/hrm/includes/class-employee-list-table.php:150
 #: modules/hrm/includes/class-leave-request-list-table.php:115
 #: modules/hrm/views/reporting/headcount.php:162
 msgid "Status"
@@ -7521,106 +7521,106 @@ msgstr ""
 msgid "Zimbabwean Dollar"
 msgstr ""
 
-#: includes/functions.php:651
+#: includes/functions.php:652
 msgid "Invalid date provided"
 msgstr ""
 
-#: includes/functions.php:759
+#: includes/functions.php:760
 msgid "Very Bad"
 msgstr ""
 
-#: includes/functions.php:760
+#: includes/functions.php:761
 msgid "Poor"
 msgstr ""
 
-#: includes/functions.php:761
+#: includes/functions.php:762
 msgid "Average"
 msgstr ""
 
-#: includes/functions.php:762
+#: includes/functions.php:763
 msgid "Good"
 msgstr ""
 
-#: includes/functions.php:763
+#: includes/functions.php:764
 msgid "Excellent"
 msgstr ""
 
-#: includes/functions.php:982
+#: includes/functions.php:983
 msgid "Every Minute"
 msgstr ""
 
-#: includes/functions.php:987
+#: includes/functions.php:988
 msgid "Every 2 Minutes"
 msgstr ""
 
-#: includes/functions.php:992
+#: includes/functions.php:993
 msgid "Every 5 Minutes"
 msgstr ""
 
-#: includes/functions.php:997
+#: includes/functions.php:998
 msgid "Every 10 Minutes"
 msgstr ""
 
-#: includes/functions.php:1002
+#: includes/functions.php:1003
 msgid "Every 15 Minutes"
 msgstr ""
 
-#: includes/functions.php:1007
+#: includes/functions.php:1008
 msgid "Every 30 Minutes"
 msgstr ""
 
-#: includes/functions.php:1012 includes/lib/class-wedevs-insights.php:471
+#: includes/functions.php:1013 includes/lib/class-wedevs-insights.php:471
 msgid "Once Weekly"
 msgstr ""
 
-#: includes/functions.php:1086 includes/functions.php:1126
+#: includes/functions.php:1087 includes/functions.php:1127
 msgid ""
 "Your license key expired on %s. Please <a href=\"%s\" target=\"_blank\" "
 "title=\"Renew your license key\">renew your license key</a>."
 msgstr ""
 
-#: includes/functions.php:1095
+#: includes/functions.php:1096
 msgid ""
 "Invalid license. Please <a href=\"%s\" target=\"_blank\" title=\"Visit "
 "account page\">visit your account page</a> and verify it."
 msgstr ""
 
-#: includes/functions.php:1104
+#: includes/functions.php:1105
 msgid ""
 "Your %s is not active for this URL. Please <a href=\"%s\" target=\"_blank\" "
 "title=\"Visit account page\">visit your account page</a> to manage your "
 "license key URLs."
 msgstr ""
 
-#: includes/functions.php:1112
+#: includes/functions.php:1113
 msgid "This is not a %s."
 msgstr ""
 
-#: includes/functions.php:1116
+#: includes/functions.php:1117
 msgid ""
 "Your license key has reached its activation limit. <a href=\"%s\">View "
 "possible upgrades</a> now."
 msgstr ""
 
-#: includes/functions.php:1139
+#: includes/functions.php:1140
 msgid "License key never expires."
 msgstr ""
 
-#: includes/functions.php:1144
+#: includes/functions.php:1145
 msgid ""
 "Your license key expires soon! It expires on %s. <a href=\"%s\" "
 "target=\"_blank\" title=\"Renew license\">Renew your license key</a>."
 msgstr ""
 
-#: includes/functions.php:1152
+#: includes/functions.php:1153
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/functions.php:1877
+#: includes/functions.php:1878
 msgid "Nothing to import or items are already exists."
 msgstr ""
 
-#: includes/functions.php:1880
+#: includes/functions.php:1881
 msgid "%s items successfully imported."
 msgstr ""
 
@@ -7685,13 +7685,13 @@ msgstr ""
 
 #: includes/updates/update-1.1.17.php:33
 #: modules/crm/includes/admin/class-settings.php:142
-#: modules/crm/includes/class-subscription.php:376
+#: modules/crm/includes/class-subscription.php:386
 msgid "Confirm your subscription to %s"
 msgstr ""
 
 #: includes/updates/update-1.1.17.php:35
 #: modules/crm/includes/admin/class-settings.php:150
-#: modules/crm/includes/class-subscription.php:378
+#: modules/crm/includes/class-subscription.php:388
 msgid ""
 "Hello!\n"
 "\n"
@@ -7708,25 +7708,25 @@ msgstr ""
 
 #: includes/updates/update-1.1.17.php:39
 #: modules/crm/includes/admin/class-settings.php:175
-#: modules/crm/includes/class-subscription.php:536
+#: modules/crm/includes/class-subscription.php:546
 msgid "You are now subscribed!"
 msgstr ""
 
 #: includes/updates/update-1.1.17.php:40
 #: modules/crm/includes/admin/class-settings.php:182
-#: modules/crm/includes/class-subscription.php:566
+#: modules/crm/includes/class-subscription.php:576
 msgid "We've added you to our email list. You'll hear from us shortly."
 msgstr ""
 
 #: includes/updates/update-1.1.17.php:41
 #: modules/crm/includes/admin/class-settings.php:194
-#: modules/crm/includes/class-subscription.php:541
+#: modules/crm/includes/class-subscription.php:551
 msgid "You are now unsubscribed"
 msgstr ""
 
 #: includes/updates/update-1.1.17.php:42
 #: modules/crm/includes/admin/class-settings.php:201
-#: modules/crm/includes/class-subscription.php:571
+#: modules/crm/includes/class-subscription.php:581
 msgid "You are successfully unsubscribed from list(s):"
 msgstr ""
 
@@ -7891,8 +7891,8 @@ msgstr ""
 #: modules/accounting/includes/class-vendor-list-table.php:100
 #: modules/crm/includes/class-contact-list-table.php:223
 #: modules/crm/includes/class-contact-list-table.php:261
-#: modules/hrm/includes/class-employee-list-table.php:166
-#: modules/hrm/includes/class-employee-list-table.php:202
+#: modules/hrm/includes/class-employee-list-table.php:167
+#: modules/hrm/includes/class-employee-list-table.php:203
 msgid "Permanent Delete"
 msgstr ""
 
@@ -7919,7 +7919,7 @@ msgstr ""
 #: modules/hrm/includes/class-department-list-table.php:212
 #: modules/hrm/includes/class-designation-list-table.php:84
 #: modules/hrm/includes/class-designation-list-table.php:109
-#: modules/hrm/includes/class-employee-list-table.php:166
+#: modules/hrm/includes/class-employee-list-table.php:167
 #: modules/hrm/includes/class-entitlements-list-table.php:172
 #: modules/hrm/includes/class-entitlements-list-table.php:212
 #: modules/hrm/includes/class-leave-request-list-table.php:142
@@ -7941,7 +7941,7 @@ msgstr ""
 #: modules/crm/includes/class-contact-subscriber-list-table.php:199
 #: modules/hrm/includes/class-department-list-table.php:211
 #: modules/hrm/includes/class-designation-list-table.php:83
-#: modules/hrm/includes/class-employee-list-table.php:169
+#: modules/hrm/includes/class-employee-list-table.php:170
 #: modules/hrm/includes/class-walker-department.php:44
 #: modules/hrm/views/leave/holiday.php:112
 #: modules/hrm/views/leave/leave-policies.php:102
@@ -7958,7 +7958,7 @@ msgstr ""
 #: modules/crm/includes/class-contact-subscriber-list-table.php:200
 #: modules/hrm/includes/class-department-list-table.php:212
 #: modules/hrm/includes/class-designation-list-table.php:84
-#: modules/hrm/includes/class-employee-list-table.php:173
+#: modules/hrm/includes/class-employee-list-table.php:174
 #: modules/hrm/includes/class-entitlements-list-table.php:172
 #: modules/hrm/views/js-templates/row-dept.php:11
 #: modules/hrm/views/js-templates/row-desig.php:11
@@ -7970,7 +7970,7 @@ msgstr ""
 #: modules/accounting/includes/class-customer-list-table.php:119
 #: modules/accounting/includes/class-vendor-list-table.php:121
 #: modules/crm/includes/class-contact-list-table.php:239
-#: modules/hrm/includes/class-employee-list-table.php:177
+#: modules/hrm/includes/class-employee-list-table.php:178
 msgid "Restore this item"
 msgstr ""
 
@@ -7979,15 +7979,15 @@ msgstr ""
 #: modules/accounting/includes/class-vendor-list-table.php:121
 #: modules/crm/includes/class-contact-list-table.php:239
 #: modules/crm/includes/class-contact-list-table.php:262
-#: modules/hrm/includes/class-employee-list-table.php:177
-#: modules/hrm/includes/class-employee-list-table.php:203
+#: modules/hrm/includes/class-employee-list-table.php:178
+#: modules/hrm/includes/class-employee-list-table.php:204
 msgid "Restore"
 msgstr ""
 
 #: modules/accounting/includes/class-customer-list-table.php:163
 #: modules/crm/includes/class-contact-list-table.php:254
 #: modules/hrm/includes/class-department-list-table.php:283
-#: modules/hrm/includes/class-employee-list-table.php:196
+#: modules/hrm/includes/class-employee-list-table.php:197
 #: modules/hrm/views/leave/leave-policies.php:147
 msgid "Move to Trash"
 msgstr ""
@@ -8003,7 +8003,7 @@ msgstr ""
 #: modules/crm/views/activities.php:25
 #: modules/hrm/includes/class-hr-log.php:792
 #: modules/hrm/includes/class-hr-log.php:797
-#: modules/hrm/includes/functions-employee.php:357
+#: modules/hrm/includes/functions-employee.php:367
 #: modules/hrm/includes/functions-leave.php:1130
 #: modules/hrm/views/js-templates/leave-policy.php:83
 #: modules/hrm/views/js-templates/leave-policy.php:94
@@ -8014,7 +8014,7 @@ msgstr ""
 #: modules/accounting/includes/class-vendor-list-table.php:142
 #: modules/accounting/includes/functions.php:97
 #: modules/crm/includes/functions-customer.php:322
-#: modules/hrm/includes/class-employee-list-table.php:236
+#: modules/hrm/includes/class-employee-list-table.php:237
 msgid "Trash"
 msgstr ""
 
@@ -8313,8 +8313,8 @@ msgstr ""
 #: modules/accounting/includes/class-log.php:75
 #: modules/accounting/includes/class-log.php:76
 #: modules/accounting/includes/views/accounts/form-fields.php:95
-#: modules/hrm/includes/functions-employee.php:576
-#: modules/hrm/includes/functions-employee.php:592
+#: modules/hrm/includes/functions-employee.php:586
+#: modules/hrm/includes/functions-employee.php:602
 msgid "Active"
 msgstr ""
 
@@ -8602,8 +8602,8 @@ msgid "Paid"
 msgstr ""
 
 #: modules/accounting/includes/class-user-profile.php:71
-#: modules/accounting/includes/function-capabilities.php:75
-#: modules/accounting/includes/function-capabilities.php:170
+#: modules/accounting/includes/function-capabilities.php:74
+#: modules/accounting/includes/function-capabilities.php:169
 msgid "Accounting Manager"
 msgstr ""
 
@@ -8641,7 +8641,7 @@ msgstr ""
 msgid "Vendor Credit"
 msgstr ""
 
-#: modules/accounting/includes/function-capabilities.php:175
+#: modules/accounting/includes/function-capabilities.php:174
 msgid "This Employee is Accounting Manager"
 msgstr ""
 
@@ -9708,70 +9708,70 @@ msgstr ""
 msgid "INVOICE"
 msgstr ""
 
-#: modules/accounting/includes/views/pdf/invoice.php:31
+#: modules/accounting/includes/views/pdf/invoice.php:32
 msgid "INVOICE NUMBER"
 msgstr ""
 
-#: modules/accounting/includes/views/pdf/invoice.php:36
+#: modules/accounting/includes/views/pdf/invoice.php:37
 msgid "REFERENCE"
 msgstr ""
 
-#: modules/accounting/includes/views/pdf/invoice.php:44
+#: modules/accounting/includes/views/pdf/invoice.php:45
 msgid "ISSUE DATE"
 msgstr ""
 
-#: modules/accounting/includes/views/pdf/invoice.php:49
-#: modules/accounting/includes/views/pdf/payment.php:46
+#: modules/accounting/includes/views/pdf/invoice.php:50
+#: modules/accounting/includes/views/pdf/payment.php:47
 msgid "DUE DATE"
 msgstr ""
 
-#: modules/accounting/includes/views/pdf/invoice.php:56
-#: modules/accounting/includes/views/pdf/payment.php:58
+#: modules/accounting/includes/views/pdf/invoice.php:57
+#: modules/accounting/includes/views/pdf/payment.php:59
 msgid "FROM"
 msgstr ""
 
-#: modules/accounting/includes/views/pdf/invoice.php:63
-#: modules/accounting/includes/views/pdf/payment.php:65
+#: modules/accounting/includes/views/pdf/invoice.php:64
+#: modules/accounting/includes/views/pdf/payment.php:66
 msgid "TO"
 msgstr ""
 
-#: modules/accounting/includes/views/pdf/invoice.php:67
-#: modules/accounting/includes/views/pdf/payment.php:70
+#: modules/accounting/includes/views/pdf/invoice.php:68
+#: modules/accounting/includes/views/pdf/payment.php:71
 msgid "DESCRIPTION"
 msgstr ""
 
-#: modules/accounting/includes/views/pdf/invoice.php:67
-#: modules/accounting/includes/views/pdf/payment.php:70
+#: modules/accounting/includes/views/pdf/invoice.php:68
+#: modules/accounting/includes/views/pdf/payment.php:71
 msgid "QUANTITY"
 msgstr ""
 
-#: modules/accounting/includes/views/pdf/invoice.php:67
-#: modules/accounting/includes/views/pdf/payment.php:70
+#: modules/accounting/includes/views/pdf/invoice.php:68
+#: modules/accounting/includes/views/pdf/payment.php:71
 msgid "UNIT PRICE"
 msgstr ""
 
-#: modules/accounting/includes/views/pdf/invoice.php:67
-#: modules/accounting/includes/views/pdf/payment.php:70
+#: modules/accounting/includes/views/pdf/invoice.php:68
+#: modules/accounting/includes/views/pdf/payment.php:71
 msgid "DISCOUNT"
 msgstr ""
 
-#: modules/accounting/includes/views/pdf/invoice.php:67
-#: modules/accounting/includes/views/pdf/payment.php:70
+#: modules/accounting/includes/views/pdf/invoice.php:68
+#: modules/accounting/includes/views/pdf/payment.php:71
 msgid "TAX(%)"
 msgstr ""
 
-#: modules/accounting/includes/views/pdf/invoice.php:67
-#: modules/accounting/includes/views/pdf/payment.php:70
+#: modules/accounting/includes/views/pdf/invoice.php:68
+#: modules/accounting/includes/views/pdf/payment.php:71
 msgid "AMOUNT"
-msgstr ""
-
-#: modules/accounting/includes/views/pdf/invoice.php:77
-#: modules/accounting/includes/views/pdf/payment.php:82
-msgid "SUB TOTAL"
 msgstr ""
 
 #: modules/accounting/includes/views/pdf/invoice.php:78
 #: modules/accounting/includes/views/pdf/payment.php:83
+msgid "SUB TOTAL"
+msgstr ""
+
+#: modules/accounting/includes/views/pdf/invoice.php:79
+#: modules/accounting/includes/views/pdf/payment.php:84
 msgid "TOTAL"
 msgstr ""
 
@@ -9779,23 +9779,23 @@ msgstr ""
 msgid "PAYMENT"
 msgstr ""
 
-#: modules/accounting/includes/views/pdf/payment.php:33
+#: modules/accounting/includes/views/pdf/payment.php:34
 msgid "PAYMENT NUMBER"
 msgstr ""
 
-#: modules/accounting/includes/views/pdf/payment.php:41
+#: modules/accounting/includes/views/pdf/payment.php:42
 msgid "PAYMENT DATE"
 msgstr ""
 
-#: modules/accounting/includes/views/pdf/payment.php:51
+#: modules/accounting/includes/views/pdf/payment.php:52
 msgid "AMOUNT DUE"
 msgstr ""
 
-#: modules/accounting/includes/views/pdf/payment.php:84
+#: modules/accounting/includes/views/pdf/payment.php:85
 msgid "TOTAL RP"
 msgstr ""
 
-#: modules/accounting/includes/views/pdf/payment.php:87
+#: modules/accounting/includes/views/pdf/payment.php:88
 msgid "PAID"
 msgstr ""
 
@@ -10112,9 +10112,9 @@ msgid "(541) 754-3010"
 msgstr ""
 
 #: modules/accounting/includes/views/user-form-rows.php:112
-#: modules/hrm/includes/functions-employee.php:636
-#: modules/hrm/includes/functions-employee.php:796
-#: modules/hrm/includes/functions-employee.php:802
+#: modules/hrm/includes/functions-employee.php:646
+#: modules/hrm/includes/functions-employee.php:806
+#: modules/hrm/includes/functions-employee.php:812
 msgid "Other"
 msgstr ""
 
@@ -10357,7 +10357,7 @@ msgstr ""
 
 #: modules/crm/includes/admin/class-settings.php:130
 #: modules/crm/includes/admin/class-settings.php:132
-#: modules/hrm/includes/functions-employee.php:720
+#: modules/hrm/includes/functions-employee.php:730
 msgid "Yes"
 msgstr ""
 
@@ -10423,14 +10423,14 @@ msgid "No templates found"
 msgstr ""
 
 #: modules/crm/includes/admin/class-user-profile.php:100
-#: modules/crm/includes/functions-capabilities.php:92
-#: modules/crm/includes/functions-capabilities.php:214
+#: modules/crm/includes/functions-capabilities.php:91
+#: modules/crm/includes/functions-capabilities.php:213
 msgid "CRM Manager"
 msgstr ""
 
 #: modules/crm/includes/admin/class-user-profile.php:105
-#: modules/crm/includes/functions-capabilities.php:98
-#: modules/crm/includes/functions-capabilities.php:223
+#: modules/crm/includes/functions-capabilities.php:97
+#: modules/crm/includes/functions-capabilities.php:222
 msgid "CRM Agent"
 msgstr ""
 
@@ -10530,9 +10530,9 @@ msgstr ""
 #: modules/crm/includes/class-ajax.php:714
 #: modules/crm/includes/class-ajax.php:763
 #: modules/crm/includes/class-ajax.php:986
-#: modules/crm/includes/class-ajax.php:1178
-#: modules/crm/includes/class-ajax.php:1201
-#: modules/crm/includes/class-ajax.php:1278
+#: modules/crm/includes/class-ajax.php:1176
+#: modules/crm/includes/class-ajax.php:1199
+#: modules/crm/includes/class-ajax.php:1276
 #: modules/hrm/includes/class-ajax.php:111
 #: modules/hrm/includes/class-ajax.php:141
 #: modules/hrm/includes/class-ajax.php:244
@@ -10587,8 +10587,8 @@ msgid "Contact group save successfully"
 msgstr ""
 
 #: modules/crm/includes/class-ajax.php:767
-#: modules/crm/includes/class-ajax.php:1352
-#: modules/crm/includes/class-ajax.php:1378
+#: modules/crm/includes/class-ajax.php:1350
+#: modules/crm/includes/class-ajax.php:1376
 msgid "Somthing wrong, Please try later"
 msgstr ""
 
@@ -10662,59 +10662,59 @@ msgid "Content must be required"
 msgstr ""
 
 #: modules/crm/includes/class-ajax.php:1009
-#: modules/crm/includes/class-ajax.php:1076
-#: modules/crm/includes/class-ajax.php:1106
-#: modules/crm/includes/class-ajax.php:1122
-#: modules/crm/includes/class-ajax.php:1150
+#: modules/crm/includes/class-ajax.php:1074
+#: modules/crm/includes/class-ajax.php:1104
+#: modules/crm/includes/class-ajax.php:1120
+#: modules/crm/includes/class-ajax.php:1148
 msgid "Somthing is wrong, Please try later"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1182
+#: modules/crm/includes/class-ajax.php:1180
 msgid "Feeds Not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1187
+#: modules/crm/includes/class-ajax.php:1185
 msgid "Feed Deleted successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1207
+#: modules/crm/includes/class-ajax.php:1205
 msgid "No data not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1211
-#: modules/crm/includes/class-ajax.php:1259
+#: modules/crm/includes/class-ajax.php:1209
+#: modules/crm/includes/class-ajax.php:1257
 msgid "Search name not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1215
+#: modules/crm/includes/class-ajax.php:1213
 msgid "Contact Type not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1219
+#: modules/crm/includes/class-ajax.php:1217
 msgid "Search filters not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1225
+#: modules/crm/includes/class-ajax.php:1223
 msgid "Query not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1240
+#: modules/crm/includes/class-ajax.php:1238
 msgid "Search does not save"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1284
+#: modules/crm/includes/class-ajax.php:1282
 msgid "Search segment not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1307
+#: modules/crm/includes/class-ajax.php:1305
 msgid "Schedule data no found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1361
+#: modules/crm/includes/class-ajax.php:1359
 msgid "No results found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1387
+#: modules/crm/includes/class-ajax.php:1385
 msgid "Save reply item delete successfully"
 msgstr ""
 
@@ -10892,7 +10892,7 @@ msgid "Show name fields"
 msgstr ""
 
 #: modules/crm/includes/class-subscription-widget.php:91
-#: modules/hrm/includes/functions-employee.php:721
+#: modules/hrm/includes/functions-employee.php:731
 msgid "No"
 msgstr ""
 
@@ -11024,11 +11024,11 @@ msgstr ""
 msgid "New task has been assigned to you"
 msgstr ""
 
-#: modules/crm/includes/functions-capabilities.php:219
+#: modules/crm/includes/functions-capabilities.php:218
 msgid "This Employee is CRM Manager"
 msgstr ""
 
-#: modules/crm/includes/functions-capabilities.php:228
+#: modules/crm/includes/functions-capabilities.php:227
 msgid "This Employee is CRM agent"
 msgstr ""
 
@@ -11328,7 +11328,7 @@ msgid "%s contacts created."
 msgstr ""
 
 #: modules/crm/includes/functions-customer.php:3144
-#: modules/hrm/includes/functions-employee.php:634
+#: modules/hrm/includes/functions-employee.php:644
 msgid "Advertisement"
 msgstr ""
 
@@ -12728,7 +12728,7 @@ msgid "Select %s"
 msgstr ""
 
 #: modules/hrm/includes/class-department-list-table.php:267
-#: modules/hrm/includes/class-employee-list-table.php:146
+#: modules/hrm/includes/class-employee-list-table.php:147
 #: modules/hrm/views/employee/tab-general.php:24
 #: modules/hrm/views/employee/tab-job.php:145
 #: modules/hrm/views/js-templates/job-info.php:26
@@ -12772,23 +12772,23 @@ msgstr ""
 msgid "No employee found."
 msgstr ""
 
-#: modules/hrm/includes/class-employee-list-table.php:144
+#: modules/hrm/includes/class-employee-list-table.php:145
 #: modules/hrm/includes/class-entitlements-list-table.php:147
 #: modules/hrm/includes/class-leave-request-list-table.php:109
 msgid "Employee Name"
 msgstr ""
 
-#: modules/hrm/includes/class-employee-list-table.php:145
+#: modules/hrm/includes/class-employee-list-table.php:146
 #: modules/hrm/views/dashboard.php:48 modules/hrm/views/designation.php:3
 #: modules/hrm/views/js-templates/leave-policy.php:57
 msgid "Designation"
 msgstr ""
 
-#: modules/hrm/includes/class-employee-list-table.php:147
+#: modules/hrm/includes/class-employee-list-table.php:148
 msgid "Employment Type"
 msgstr ""
 
-#: modules/hrm/includes/class-employee-list-table.php:148
+#: modules/hrm/includes/class-employee-list-table.php:149
 msgid "Joined"
 msgstr ""
 
@@ -13205,204 +13205,204 @@ msgstr ""
 msgid "Please provide a valid email address."
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:533
+#: modules/hrm/includes/functions-employee.php:543
 msgid "- Select Employee -"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:577
-#: modules/hrm/includes/functions-employee.php:593
+#: modules/hrm/includes/functions-employee.php:587
+#: modules/hrm/includes/functions-employee.php:603
 #: modules/hrm/views/employee/tab-job.php:48
 msgid "Terminated"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:578
-#: modules/hrm/includes/functions-employee.php:594
+#: modules/hrm/includes/functions-employee.php:588
+#: modules/hrm/includes/functions-employee.php:604
 msgid "Deceased"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:579
-#: modules/hrm/includes/functions-employee.php:595
+#: modules/hrm/includes/functions-employee.php:589
+#: modules/hrm/includes/functions-employee.php:605
 msgid "Resigned"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:613
+#: modules/hrm/includes/functions-employee.php:623
 msgid "Full Time"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:614
+#: modules/hrm/includes/functions-employee.php:624
 msgid "Part Time"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:615
+#: modules/hrm/includes/functions-employee.php:625
 msgid "On Contract"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:616
+#: modules/hrm/includes/functions-employee.php:626
 msgid "Temporary"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:617
+#: modules/hrm/includes/functions-employee.php:627
 msgid "Trainee"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:630
+#: modules/hrm/includes/functions-employee.php:640
 msgid "Direct"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:631
+#: modules/hrm/includes/functions-employee.php:641
 msgid "Referral"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:632
+#: modules/hrm/includes/functions-employee.php:642
 msgid "Web"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:633
+#: modules/hrm/includes/functions-employee.php:643
 msgid "Newspaper"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:635
+#: modules/hrm/includes/functions-employee.php:645
 msgid "Social Network"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:652
-#: modules/hrm/includes/functions-employee.php:658
+#: modules/hrm/includes/functions-employee.php:662
+#: modules/hrm/includes/functions-employee.php:668
 msgid "Single"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:653
-#: modules/hrm/includes/functions-employee.php:659
+#: modules/hrm/includes/functions-employee.php:663
+#: modules/hrm/includes/functions-employee.php:669
 msgid "Married"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:654
-#: modules/hrm/includes/functions-employee.php:660
+#: modules/hrm/includes/functions-employee.php:664
+#: modules/hrm/includes/functions-employee.php:670
 msgid "Widowed"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:674
+#: modules/hrm/includes/functions-employee.php:684
 msgid "Voluntary"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:675
+#: modules/hrm/includes/functions-employee.php:685
 msgid "Involuntary"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:692
+#: modules/hrm/includes/functions-employee.php:702
 msgid "Attendance"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:693
+#: modules/hrm/includes/functions-employee.php:703
 msgid "Better Employment Conditions"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:694
+#: modules/hrm/includes/functions-employee.php:704
 msgid "Career Prospect"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:695
+#: modules/hrm/includes/functions-employee.php:705
 msgid "Death"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:696
+#: modules/hrm/includes/functions-employee.php:706
 msgid "Desertion"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:697
+#: modules/hrm/includes/functions-employee.php:707
 msgid "Dismissed"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:698
+#: modules/hrm/includes/functions-employee.php:708
 msgid "Dissatisfaction with the job"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:699
+#: modules/hrm/includes/functions-employee.php:709
 msgid "Higher Pay"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:700
+#: modules/hrm/includes/functions-employee.php:710
 msgid "Other Employment"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:701
+#: modules/hrm/includes/functions-employee.php:711
 msgid "Personality Conflicts"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:702
+#: modules/hrm/includes/functions-employee.php:712
 msgid "Relocation"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:703
+#: modules/hrm/includes/functions-employee.php:713
 msgid "Retirement"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:722
+#: modules/hrm/includes/functions-employee.php:732
 msgid "Upon Review"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:762
+#: modules/hrm/includes/functions-employee.php:772
 #: modules/hrm/views/employee/tab-general.php:242
 #: modules/hrm/views/js-templates/employee-terminate.php:16
 msgid "Termination Type"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:764
+#: modules/hrm/includes/functions-employee.php:774
 #: modules/hrm/views/employee/tab-general.php:243
 #: modules/hrm/views/js-templates/employee-terminate.php:29
 msgid "Termination Reason"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:766
+#: modules/hrm/includes/functions-employee.php:776
 #: modules/hrm/views/employee/tab-general.php:244
 msgid "Eligible for Hire"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:794
-#: modules/hrm/includes/functions-employee.php:800
+#: modules/hrm/includes/functions-employee.php:804
+#: modules/hrm/includes/functions-employee.php:810
 #: modules/hrm/views/reporting/gender-profile.php:84
 msgid "Male"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:795
-#: modules/hrm/includes/functions-employee.php:801
+#: modules/hrm/includes/functions-employee.php:805
+#: modules/hrm/includes/functions-employee.php:811
 #: modules/hrm/views/reporting/gender-profile.php:85
 msgid "Female"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:816
+#: modules/hrm/includes/functions-employee.php:826
 msgid "Hourly"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:817
+#: modules/hrm/includes/functions-employee.php:827
 msgid "Daily"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:818
+#: modules/hrm/includes/functions-employee.php:828
 msgid "Weekly"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:819
+#: modules/hrm/includes/functions-employee.php:829
 msgid "Biweekly"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:820
+#: modules/hrm/includes/functions-employee.php:830
 msgid "Monthly"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:821
+#: modules/hrm/includes/functions-employee.php:831
 msgid "Contract"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:834
+#: modules/hrm/includes/functions-employee.php:844
 msgid "Promotion"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:835
+#: modules/hrm/includes/functions-employee.php:845
 #: modules/hrm/views/employee/single.php:113
 msgid "Performance"
 msgstr ""
 
-#: modules/hrm/includes/functions-employee.php:836
+#: modules/hrm/includes/functions-employee.php:846
 msgid "Increment"
 msgstr ""
 
@@ -14321,37 +14321,37 @@ msgid_plural "Years"
 msgstr[0] ""
 msgstr[1] ""
 
-#: wp-erp.php:171
+#: wp-erp.php:186
 msgid "<h1>An Error Occured</h1>"
 msgstr ""
 
-#: wp-erp.php:172
+#: wp-erp.php:187
 msgid "<h2>Your installed PHP Version is: "
 msgstr ""
 
-#: wp-erp.php:173
+#: wp-erp.php:188
 msgid "<p>The <strong>WP ERP</strong> plugin requires PHP version <strong>"
 msgstr ""
 
-#: wp-erp.php:173
+#: wp-erp.php:188
 msgid "</strong> or greater"
 msgstr ""
 
-#: wp-erp.php:174
+#: wp-erp.php:189
 msgid "<p>The version of your PHP is "
 msgstr ""
 
-#: wp-erp.php:174
+#: wp-erp.php:189
 msgid "unsupported and old"
 msgstr ""
 
-#: wp-erp.php:175
+#: wp-erp.php:190
 msgid ""
 "You should update your PHP software or contact your host regarding this "
 "matter.</p>"
 msgstr ""
 
-#: wp-erp.php:176
+#: wp-erp.php:191
 msgid "Plugin Activation Error"
 msgstr ""
 
