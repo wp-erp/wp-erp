@@ -488,7 +488,7 @@ class Form_Handler {
             $errors[] = 'invalid-policy';
         }
 
-        if ( ! in_array( $leave_period, array( $cur_year, $cur_year + 1 ) ) ) {
+        if ( ! in_array( $leave_period, array( $cur_year - 1, $cur_year, $cur_year + 1 ) ) ) {
             $errors[] = 'invalid-period';
         }
 

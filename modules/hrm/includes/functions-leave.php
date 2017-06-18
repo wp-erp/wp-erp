@@ -1326,7 +1326,7 @@ function erp_hr_leave_get_balance( $user_id ) {
 
     $query  = "SELECT req.id, req.days, req.policy_id, req.start_date, en.days as entitlement";
     $query .= " FROM {$wpdb->prefix}erp_hr_leave_requests AS req";
-    $query .= " LEFT JOIN wp_erp_hr_leave_entitlements as en on (req.user_id = en.user_id and req.policy_id = en.policy_id and en.from_date >= '$financial_start_date' )";
+    $query .= " LEFT JOIN {$wpdb->prefix}erp_hr_leave_entitlements as en on (req.user_id = en.user_id and req.policy_id = en.policy_id and en.from_date >= '$financial_start_date' )";
     $query .= " WHERE req.status = 1 and req.user_id = %d AND ( req.start_date >= '$financial_start_date' AND req.end_date <= '$financial_end_date' )";
 
     $sql     = $wpdb->prepare( $query, $user_id );
