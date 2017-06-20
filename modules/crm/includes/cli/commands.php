@@ -6,16 +6,21 @@ namespace WeDevs\ERP\CRM\CLI;
  */
 class Commands extends \WP_CLI_Command {
 
-    public function delete() {
+    public function delete( $args, $assoc_args ) {
         global $wpdb;
 
         // truncate table
         $tables = [ 'erp_peoples', 'erp_peoplemeta', 'erp_people_type_relations', 'erp_crm_customer_activities', 'erp_crm_contact_subscriber' ];
-        foreach ($tables as $table) {
-            $wpdb->query( 'TRUNCATE TABLE ' . $wpdb->prefix . $table);
+
+        if ( in_array( 'with-groups', $assoc_args ) ) {
+            $tables[] = 'erp_crm_contact_group';
         }
 
-        \WP_CLI::success( "Table deleted successfully!" );
+        foreach ( $tables as $table ) {
+            $wpdb->query( 'TRUNCATE TABLE ' . $wpdb->prefix . $table );
+        }
+
+        \WP_CLI::success( "Tables deleted successfully!" );
     }
 
 }

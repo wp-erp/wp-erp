@@ -60,10 +60,17 @@ abstract class REST_Controller {
     /**
      * Get the item's schema for display / public consumption purposes.
      *
+     * @since 1.1.10
+     * @since 1.2.1  Return empty array if no schema found
+     *
      * @return array
      */
     public function get_public_item_schema() {
         $schema = $this->get_item_schema();
+
+        if ( empty( $schema ) ) {
+            return [];
+        }
 
         foreach ( $schema['properties'] as &$property ) {
             if ( isset( $property['arg_options'] ) ) {

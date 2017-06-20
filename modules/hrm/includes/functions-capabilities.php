@@ -266,9 +266,8 @@ function erp_hr_existing_role_to_employee( $user_id, $role ) {
  */
 function erp_hr_new_admin_as_manager( $user_id ) {
     $user = get_user_by( 'id', $user_id );
-    $role = reset( $user->roles );
 
-    if ( 'administrator' == $role ) {
+    if ( $user && in_array('administrator', $user->roles) ) {
         $user->add_role( erp_hr_get_manager_role() );
     }
 }

@@ -2,7 +2,7 @@
 Contributors: tareq1988, wedevs, ediamin, sabbir1991, asaquzzaman
 Tags: small business, SME, contact, contacts, CRM, Customer Relationship Management, employee, leave management, hr, hrm, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 4.7.5
+Tested up to: 4.8
 Stable tag: trunk
 License: GPLv2
 Donate Link: https://tareq.co/donate
@@ -10,6 +10,8 @@ Donate Link: https://tareq.co/donate
 An Open Source HR, CRM & Accounting Solution for WordPress
 
 == Description ==
+
+= First Full-fledged Open Source ERP System for WordPress =
 WP ERP is the framework for weDevs's enterprise resource management system. This plugin includes -
 
 = Core Modules =
@@ -149,7 +151,26 @@ If you are unable to use any of the methods due to internet connectivity and fil
 
   => No. We did not put any limit on anything. You can create as much entries as you want.
 
+**Q.** Does WP ERP support WordPress multisite installation?
+
+  => No, WP ERP and its add-ons do not support multisite WordPress installation.
+
 == Changelog ==
+
+**v1.2.1 -> Jun 18, 2017**
+
+[new] Add force_subscribe_to option for subscribing users
+[new] Add with-groups optional parameter for CRM delete command
+[tweak] Sort employee list table by employee name.
+[tweak] Improve assinging Admin as HR, CRM and Accounting Manager logic
+[tweak] db schema changed for fractional qty
+[fix] Fix erp_hr_leave_get_balance query.
+[fix] Fix 'From Name' for emails sending from CRM single pages.
+[fix] Fix main plugin class singleton instance call
+[fix] Fix symbol for South African rand
+[fix] Fix eventLimit for Leave Calendar
+[fix] Fix warning issue due to run loop on an empty array
+[fix] Fix invoice number in exported Sales Invoice
 
 **v1.2.0 -> May 22, 2017**
 

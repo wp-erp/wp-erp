@@ -34,9 +34,8 @@ function erp_crm_get_agent_role() {
  */
 function erp_crm_new_admin_as_manager( $user_id ) {
     $user = get_user_by( 'id', $user_id );
-    $role = reset( $user->roles );
 
-    if ( 'administrator' == $role ) {
+    if ( $user && in_array('administrator', $user->roles) ) {
         $user->add_role( erp_crm_get_manager_role() );
     }
 }

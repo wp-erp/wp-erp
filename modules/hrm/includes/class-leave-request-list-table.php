@@ -39,18 +39,6 @@ class Leave_Requests_List_Table extends \WP_List_Table {
      * @return string
      */
     function column_default( $item, $column_name ) {
-
-        $balance   = erp_hr_leave_get_balance( $item->user_id );
-        $policy = erp_hr_leave_get_policy( $item->policy_id );
-
-        if ( isset( $balance[ $item->policy_id ] ) ) {
-            $scheduled = $balance[ $item->policy_id ]['scheduled'];
-            $available = $balance[ $item->policy_id ]['entitlement'] - $balance[ $item->policy_id ]['total'];
-        } else {
-            $scheduled = '';
-            $available = '';
-        }
-
         switch ( $column_name ) {
 
             case 'policy':
@@ -65,6 +53,18 @@ class Leave_Requests_List_Table extends \WP_List_Table {
                 return '<span class="status-' . $item->status . '">' . erp_hr_leave_request_get_statuses( $item->status ) . '</span>';
 
             case 'available':
+                $balance = erp_hr_leave_get_balance( $item->user_id );
+                $policy  = erp_hr_leave_get_policy( $item->policy_id );
+
+                if ( isset( $balance[ $item->policy_id ] ) ) {
+                    $scheduled = $balance[ $item->policy_id ]['scheduled'];
+                    $available = $balance[ $item->policy_id ]['entitlement'] - $balance[ $item->policy_id ]['total'];
+                } else {
+                    $scheduled = 0;
+                    $available = 0;
+                }
+
+
                 if ( $available < 0 ) {
                     return sprintf( '<span class="red">%d %s</span>', number_format_i18n( $available ), __( 'days', 'erp' ) );
                 } elseif ( $available > 0 ) {
