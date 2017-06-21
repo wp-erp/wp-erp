@@ -92,7 +92,7 @@ class New_Leave_Request extends Email {
 
         $recipients = apply_filters( 'erp_new_leave_request_notification_recipients', $recipients, $request );
 
-        return $this->send( $hr->user_email, $subject, $content, $headers, $attachments );
+        return $this->send( $recipients, $subject, $content, $headers, $attachments );
     }
 
     /**
