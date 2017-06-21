@@ -304,6 +304,19 @@
                                 modal.showError( error );
                             }
                         });
+                    },
+
+                    onReady: function () {
+                        var modal = this;
+
+                        $( 'div.row[data-checked]', modal ).each(function( key, val ) {
+                            var self = $(this),
+                                checked = self.data('checked');
+
+                            if ( checked !== '' ) {
+                                self.find( 'input[value="'+checked+'"]' ).attr( 'checked', 'checked' );
+                            }
+                        });
                     }
                 }); //popup
             },
@@ -333,6 +346,15 @@
                                 var html = wp.template( 'erp-crm-new-contact-group' )( res );
                                 $( '.content', modal ).html( html );
                                 $( '.loader', modal ).remove();
+
+                                $( 'div.row[data-checked]', modal ).each(function( key, val ) {
+                                    var self = $(this),
+                                        checked = self.data('checked');
+
+                                    if ( checked !== '' ) {
+                                        self.find( 'input[value="'+checked+'"]' ).attr( 'checked', 'checked' );
+                                    }
+                                });
                             }
                         });
                     },

@@ -11,7 +11,7 @@ use WeDevs\ERP\Framework\Model;
 class ContactGroup extends Model {
     protected $table = 'erp_crm_contact_group';
 
-    protected $fillable = [ 'name', 'description' ];
+    protected $fillable = [ 'name', 'private', 'description' ];
 
     public $timestamps = true;
 

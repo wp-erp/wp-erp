@@ -721,7 +721,8 @@ class Ajax_Handler {
         $data = [
             'id'          => ( isset( $_POST['id'] ) && !empty( $_POST['id'] ) ) ? $_POST['id'] : '',
             'name'        => $_POST['group_name'],
-            'description' => $_POST['group_description']
+            'description' => $_POST['group_description'],
+            'private'     => erp_validate_boolean( $_POST['group_private'] ),
         ];
 
         erp_crm_save_contact_group( $data );

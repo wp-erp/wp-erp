@@ -608,6 +608,7 @@ Company'
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
                 `name` varchar(255) DEFAULT NULL,
                 `description` text,
+                `private` TINYINT(1) NOT NULL DEFAULT '0';
                 `created_at` datetime DEFAULT NULL,
                 `updated_at` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`)
