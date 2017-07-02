@@ -126,6 +126,16 @@ class Customer_Relationship {
 
     }
 
+    /**
+     * Enqueue admin scripts
+     *
+     * @since 1.0.0
+     * @since 1.2.2 Remove other select2 sources from contact groups page
+     *
+     * @param string $hook
+     *
+     * @return void
+     */
     public function admin_scripts( $hook ) {
         $hook = str_replace( sanitize_title( __( 'CRM', 'erp' ) ) , 'crm', $hook );
 
@@ -295,7 +305,7 @@ class Customer_Relationship {
         $pages_hooks = [
             'toplevel_page_erp-sales', 'crm_page_erp-sales-schedules', 'crm_page_erp-sales-activities',
             'crm_page_erp-sales-customers', 'crm_page_erp-sales-customers', 'crm_page_erp-sales-companies',
-            'erp-settings_page_erp-settings',
+            'erp-settings_page_erp-settings', 'crm_page_erp-sales-contact-groups'
         ];
 
         if ( in_array( $hook , $pages_hooks ) ) {

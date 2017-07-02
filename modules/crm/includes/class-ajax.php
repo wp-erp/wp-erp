@@ -703,6 +703,7 @@ class Ajax_Handler {
      * Create Contact Group
      *
      * @since 1.0
+     * @since 1.2.2 Add `private` column
      *
      * @return json
      */
@@ -722,7 +723,7 @@ class Ajax_Handler {
             'id'          => ( isset( $_POST['id'] ) && !empty( $_POST['id'] ) ) ? $_POST['id'] : '',
             'name'        => $_POST['group_name'],
             'description' => $_POST['group_description'],
-            'private'     => erp_validate_boolean( $_POST['group_private'] ),
+            'private'     => erp_validate_boolean( $_POST['group_private'] ) ? 1 : null,
         ];
 
         erp_crm_save_contact_group( $data );

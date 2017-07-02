@@ -1321,6 +1321,7 @@ function erp_crm_contact_subscriber_delete( $id, $group_id ) {
  * create new one.
  *
  * @since 1.0
+ * @since 1.2.2 Add hash in case of new subscriber
  *
  * @param  array $groups
  * @param  integer $user_id
@@ -1368,7 +1369,9 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
             $data = [
                 'user_id'  => $user_id,
                 'group_id' => $new_group_id,
+                'hash'     => sha1( microtime() . 'erp-subscription' . $new_group_id . $user_id )
             ];
+
             erp_crm_create_new_contact_subscriber( $data );
         }
 

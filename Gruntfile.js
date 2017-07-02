@@ -25,7 +25,8 @@ module.exports = function(grunt) {
 
             frontend: {
                 files: {
-                    '<%= dirs.crm %>/css/erp-subscription-form.css': '<%= dirs.crm %>/less/erp-subscription-form.less'
+                    '<%= dirs.crm %>/css/erp-subscription-form.css': '<%= dirs.crm %>/less/erp-subscription-form.less',
+                    '<%= dirs.crm %>/css/erp-subscription-edit.css': '<%= dirs.crm %>/less/erp-subscription-edit.less'
                 }
             }
         },
@@ -81,7 +82,8 @@ module.exports = function(grunt) {
                 files: [
                     '<%= dirs.less %>/*.less',
                     '<%= dirs.less %>/admin/*.less',
-                    '<%= dirs.crm %>/less/erp-subscription-form.less'
+                    '<%= dirs.crm %>/less/erp-subscription-form.less',
+                    '<%= dirs.crm %>/less/erp-subscription-edit.less'
                 ],
 
                 tasks: ['less:admin', 'less:frontend']

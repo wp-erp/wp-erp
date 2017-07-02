@@ -12,9 +12,59 @@ class Subscription {
     use Hooker;
     use Ajax;
 
-    private $page_action          = 'unsubscribe';
-    private $subscribed_groups    = [];
-    private $sub_page_id          = 0;
+    /**
+     * Current subscription page action
+     *
+     * @since 1.1.17
+     *
+     * @var string
+     */
+    public $page_action = 'unsubscribe';
+
+    /**
+     * Subscribed contact groups
+     *
+     * @since 1.1.17
+     *
+     * @var array
+     */
+    public $subscribed_groups = [];
+
+    /**
+     * Unsubscribed contact groups
+     *
+     * @since 1.2.2
+     *
+     * @var array
+     */
+    public $unsubscribed_groups = [];
+
+    /**
+     * Subscription page id
+     *
+     * @since 1.1.17
+     *
+     * @var integer
+     */
+    public $sub_page_id = 0;
+
+    /**
+     * CRM people_id for the subscriber
+     *
+     * @since 1.2.2
+     *
+     * @var integer
+     */
+    public  $people_id = 0;
+
+    /**
+     * Subscriber hash that stored in erp_peoplemeta table
+     *
+     * @since 1.2.2
+     *
+     * @var string
+     */
+    public  $hash = '';
 
     /**
      * Initializes the class
@@ -40,6 +90,7 @@ class Subscription {
      * Class constructor
      *
      * @since 1.1.17
+     * @since 1.2.2  Add edit subscription ajax hooks
      *
      * @return void
      */
@@ -62,6 +113,8 @@ class Subscription {
         // handle the ajax submission
         $this->action( 'wp_ajax_erp_subscript_form_save_data', 'save_form_data' );
         $this->action( 'wp_ajax_nopriv_erp_subscript_form_save_data', 'save_form_data' );
+        $this->action( 'wp_ajax_erp_subscript_edit_save_data', 'save_edit_form_data' );
+        $this->action( 'wp_ajax_nopriv_erp_subscript_edit_save_data', 'save_edit_form_data' );
 
         // frontend subscription related page
         $this->action( 'pre_get_posts', 'subscription_page_frontend' );
@@ -231,6 +284,8 @@ class Subscription {
      * Send confirmation mail if we have to
      *
      * @since 1.2.0
+     * @since 1.2.1 Add `force_subscribe_to` option
+     * @since 1.2.2 Always subscribe when the group is private
      *
      * @param array $args
      *
@@ -331,6 +386,10 @@ class Subscription {
                     $status = 'subscribe';
                 }
 
+                if ( $contact_group->private ) {
+                    $status = 'subscribe';
+                }
+
                 $subs_args = [
                     'group_id' => $group_id,
                     'user_id'  => $contact_id,
@@ -365,6 +424,7 @@ class Subscription {
      * Send confirmation mail to new subscribers
      *
      * @since 1.1.17
+     * @since 1.2.2  Do not send mail when confirmation page is set up
      *
      * @param object $contact           \WeDevs\ERP\CRM\Contact object
      * @param array  $subscribed_groups Array of ContactSubscriber models
@@ -382,6 +442,10 @@ class Subscription {
         }
 
         $confirmation_page_url = $this->get_confirmation_page_url( $groups );
+
+        if ( empty( $confirmation_page_url ) ) {
+            return;
+        }
 
         $subject_default = sprintf( __( 'Confirm your subscription to %s', 'erp' ), get_bloginfo( 'name' ) );
         $content_default = sprintf(
@@ -419,6 +483,7 @@ class Subscription {
      * Confirmation page URL
      *
      * @since 1.1.17
+     * @since 1.2.2  Exclude hashes for the private groups
      *
      * @param array $groups Array of ContactSubscriber models
      *
@@ -433,11 +498,19 @@ class Subscription {
             return '';
         }
 
-        $hashes  = wp_list_pluck( $groups, 'hash' );
+        $groups = array_filter( $groups, function ( $group ) {
+            return ! $group->groups->private;
+        } );
 
-        $url .= '?erp-subscription-action=confirm&subscription-id=' . implode( ':', $hashes );
+        if ( ! empty( $groups ) ) {
+            $hashes  = wp_list_pluck( $groups, 'hash' );
 
-        return $url;
+            $url .= '?erp-subscription-action=confirm&subscription-id=' . implode( ':', $hashes );
+
+            return $url;
+        }
+
+        return '';
     }
 
     /**
@@ -452,13 +525,14 @@ class Subscription {
      * subscription-id=FIRSTHASH:SECONDHASH:THIRDHASH:ETC
      *
      * @since 1.1.17
+     * @since 1.2.2  Add edit subscription page
      *
      * @param object $query
      *
      * @return void
      */
     public function subscription_page_frontend( $query ) {
-        if ( $query->is_main_query() && ! empty( $_GET['erp-subscription-action'] ) && ! empty( $_GET['subscription-id'] ) ) {
+        if ( $query->is_main_query() && ! empty( $_GET['erp-subscription-action'] ) ) {
             $page              = $query->get_queried_object();
             $this->sub_page_id = absint( erp_get_option( 'page_id', 'erp_settings_erp-crm_subscription', 0 ) );
 
@@ -467,25 +541,49 @@ class Subscription {
             }
 
             if ( ! empty( $this->sub_page_id ) && absint( $page->ID ) === $this->sub_page_id ) {
-                $subscription_ids = explode( ':', $_GET['subscription-id'] );
 
-                $this->subscribed_groups = Models\ContactSubscriber::whereIn( 'hash', $subscription_ids )->get();
+                if ( ! empty( $_GET['subscription-id'] ) ) {
+                    $subscription_ids = explode( ':', $_GET['subscription-id'] );
 
-                if ( ! count( $this->subscribed_groups ) ) {
-                    return;
-                }
+                    $this->subscribed_groups = Models\ContactSubscriber::whereIn( 'hash', $subscription_ids )->get();
 
-                switch ( $_GET['erp-subscription-action'] ) {
-                    case 'confirm':
-                        $this->page_action = 'confirm';
-                        $this->confirm_subscription();
-                        break;
+                    if ( ! count( $this->subscribed_groups ) ) {
+                        return;
+                    }
 
-                    case 'unsubscribe':
-                    default:
-                        $this->page_action = 'unsubscribe';
-                        $this->unsubscribe_contact();
-                        break;
+                    $this->page_action = 'confirm';
+                    $this->confirm_subscription();
+
+                } else if ( ! empty( $_GET['id'] ) ) {
+                    $meta = \WeDevs\ERP\Framework\Models\Peoplemeta::where( 'meta_value', $_GET['id'] )
+                                ->where( 'meta_key', 'hash' )
+                                ->first();
+
+                    if ( empty( $meta ) ) {
+                        return;
+                    }
+
+                    $this->people_id = $meta->erp_people_id;
+                    $this->hash      = $meta->meta_value;
+
+                    switch ( $_GET['erp-subscription-action'] ) {
+                        case 'edit':
+                            $this->page_action = 'edit';
+                            $erp_subscription_edit = [
+                                'ajaxurl'  => admin_url( 'admin-ajax.php' ),
+                                'nonce'    => wp_create_nonce( 'erp-subscription-edit' ),
+                            ];
+
+                            wp_enqueue_script( 'erp-subscription-edit', WPERP_CRM_ASSETS . '/js/erp-subscription-edit.js', [ 'jquery' ], WPERP_VERSION, true );
+                            wp_localize_script( 'erp-subscription-edit', 'erpSubscriptionEdit', $erp_subscription_edit );
+                            break;
+
+                        case 'unsubscribe':
+                        default:
+                            $this->page_action = 'unsubscribe';
+                            $this->unsubscribe_contact();
+                            break;
+                    }
                 }
 
                 $this->action( 'the_title', 'subscription_page_title', 10, 2 );
@@ -508,28 +606,55 @@ class Subscription {
             $group->unsubscribe_at  = null;
             $group->save();
         }
+
+        $people_id = $this->subscribed_groups->first()->user_id;
+
+        if ( ! erp_people_get_meta( $people_id, 'hash' ) ) {
+            $hash = sha1( microtime() . 'erp-confirm-subscription' . $people_id );
+            erp_people_update_meta( $people_id, 'hash', $hash );
+        }
     }
 
     /**
      * Unsubscribe contact
      *
+     * URL stucture: http://example.com/ERP_SUBSCRIPTION_PG_SLUG/?erp-subscription-action=unsubscribe&id=PEOPLE_META_HASH&g=GRP_ID1:GRP_ID2:GRP_ID3
+     *
      * @since 1.1.17
+     * @since 1.2.2 Check for private group and use group ids instead of hashes
+     *              Add `erp_subscription_unsubscribe` hook
      *
      * @return void
      */
     private function unsubscribe_contact() {
-        foreach ( $this->subscribed_groups as $group ) {
-            $group->status          = 'unsubscribe';
-            $group->subscribe_at    = null;
-            $group->unsubscribe_at  = current_time( 'mysql' );
-            $group->save();
+        if ( ! empty( $_GET['g'] ) ) {
+            $group_ids = explode( ':', $_GET['g'] );
+
+            $groups = Models\ContactGroup::whereIn( 'id', $group_ids )->get();
+
+            if ( $groups->count() ) {
+                $groups->each( function ( $group ) {
+                    if ( empty( $group->private ) ) {
+                        $subscriber = $group->contact_subscriber()->where( 'user_id', $this->people_id )->first();
+                        $subscriber->status          = 'unsubscribe';
+                        $subscriber->subscribe_at    = null;
+                        $subscriber->unsubscribe_at  = current_time( 'mysql' );
+                        $subscriber->save();
+
+                        $this->unsubscribed_groups[] = $group;
+                    }
+                } );
+            }
         }
+
+        do_action( 'erp_subscription_unsubscribe', $_GET, $this );
     }
 
     /**
      * Method to filter subscription page title
      *
      * @since 1.1.17
+     * @since 1.2.2  Add edit subscription page
      *
      * @param string $title
      * @param int    $id
@@ -546,6 +671,10 @@ class Subscription {
                 $title = erp_get_option( 'confirm_page_title', 'erp_settings_erp-crm_subscription', __( 'You are now subscribed!', 'erp' ) );
                 break;
 
+            case 'edit':
+                $title = erp_get_option( 'edit_sub_page_title', 'erp_settings_erp-crm_subscription', __( 'Edit Your Subscription', 'erp' ) );
+                break;
+
             case 'unsubscribe':
             default:
                 $title = erp_get_option( 'unsubs_page_title', 'erp_settings_erp-crm_subscription', __( 'You are now unsubscribed', 'erp' ) );
@@ -559,6 +688,7 @@ class Subscription {
      * Method to filter subscription page content
      *
      * @since 1.1.17
+     * @since 1.2.2  Add edit subscription page
      *
      * @param string $content
      *
@@ -576,24 +706,108 @@ class Subscription {
                 $content = erp_get_option( 'confirm_page_content', 'erp_settings_erp-crm_subscription', __( "We've added you to our email list. You'll hear from us shortly.", 'erp' ) );
                 break;
 
+            case 'edit':
+                $page_content   = erp_get_option( 'edit_sub_page_content', 'erp_settings_erp-crm_subscription', __( 'Update your preferences', 'erp' ) );
+                $template       = apply_filters( 'erp_subscription_edit_page_template', WPERP_CRM_VIEWS . '/edit-subscription-form.php' );
+                $class_names    = apply_filters( 'erp_subscription_edit_page_template_class_names', ['erp-subscription-edit'] );
+                $contact_lists  = $this->get_lists_subscriber_belongs_to( $this->people_id );
+                $hash           = $this->hash;
+
+                ob_start();
+                include $template;
+                $content = ob_get_clean();
+                break;
+
             case 'unsubscribe':
             default:
                 $content = erp_get_option( 'unsubs_page_content', 'erp_settings_erp-crm_subscription', __( 'You are successfully unsubscribed from list(s):', 'erp' ) );
+                if ( ! empty( $this->unsubscribed_groups ) ) {
+                    $group_names = [];
 
-                if ( ! empty( $this->subscribed_groups ) ) {
-                    $groups = [];
-
-                    foreach ( $this->subscribed_groups as $subscribed_group ) {
-                        $groups[] = $subscribed_group->groups->name;
+                    foreach ( $this->unsubscribed_groups as $unsubscribed_group ) {
+                        $group_names[] = $unsubscribed_group->name;
                     }
 
-                    $content .= ' '. implode( ', ', $groups );
+                    $group_names = apply_filters( 'erp_subscription_unsubscribe_group_list', $group_names, $_GET, $this );
+
+                    $content .= '<ul><li>' . implode( '</li><li>', $group_names ) . '</li></ul>';
                 }
 
                 break;
         }
 
-        return apply_filters( 'erp_subscription_page_content', $content, $this->page_action, $this->subscribed_groups );
+        return apply_filters( 'erp_subscription_page_content', $content, $this->page_action, $this->subscribed_groups, $this->unsubscribed_groups );
+    }
+
+    /**
+     * Get lists that a subscriber belongs to
+     *
+     * @since 1.2.2
+     *
+     * @param integer $people_id
+     *
+     * @return object Eloquent collection object of related models
+     */
+    public function get_lists_subscriber_belongs_to( $people_id, $with_private = false ) {
+        $lists = [
+            'contact_group' => Models\ContactGroup::getGroupSubscriber( $people_id, $with_private )->get()
+        ];
+
+        return apply_filters( 'erp_subscription_lists_subscriber_belongs_to', $lists, $with_private, $this );
+    }
+
+
+    /**
+     * Save edit subscription page data
+     *
+     * @since 1.2.2
+     *
+     * @return void
+     */
+    public function save_edit_form_data() {
+        $this->verify_nonce( 'erp-subscription-edit' );
+
+        // validations
+        if ( empty( $_POST['form_data'] ) ) {
+            $this->send_error( [ 'msg' => __( 'Invalid operation', 'erp' ) ] );
+
+        } else {
+            parse_str( $_POST['form_data'], $form_data );
+        }
+
+        if ( empty( $form_data['id'] ) ) {
+            $this->send_error( [ 'msg' => __( 'Invalid subscriber', 'erp' ) ] );
+        }
+
+        $meta = \WeDevs\ERP\Framework\Models\Peoplemeta::where( 'meta_value', $form_data['id'] )
+                    ->where( 'meta_key', 'hash' )
+                    ->first();
+
+        if ( empty( $meta ) ) {
+            $this->send_error( [ 'msg' => __( 'Subscriber does not exists', 'erp' ) ] );
+        }
+
+        $this->people_id = $meta->erp_people_id;
+        $this->hash      = $meta->meta_value;
+
+        $contact_lists = $this->get_lists_subscriber_belongs_to( $this->people_id, true );
+
+        $contact_groups = $contact_lists['contact_group'];
+        $subscribed_groups = [];
+
+        $contact_groups->each( function ( $contact_group ) use ( $form_data, &$subscribed_groups ) {
+            if ( $contact_group->private || ! empty( $form_data['contact_group'][ $contact_group->id ] ) ) {
+                $subscribed_groups[] = $contact_group->id;
+            }
+        } );
+
+        erp_crm_edit_contact_subscriber( $subscribed_groups, $this->people_id );
+
+        do_action( 'erp_subscription_edit', $form_data, $contact_lists, $this );
+
+        $success_msg = apply_filters( 'erp_subscription_edit_success_message', __( 'Thank you! Your subscription preference has updated.', 'erp' ) );
+
+        $this->send_success( [ 'msg' => $success_msg ] );
     }
 
 }

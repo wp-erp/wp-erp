@@ -1,0 +1,77 @@
+.erp-subscription-edit {
+  margin-bottom: 20px;
+}
+.erp-subscription-edit label {
+  margin-bottom: 12px;
+  display: block;
+  cursor: pointer;
+}
+.erp-subscription-edit ul {
+  list-style-type: none;
+}
+.erp-subscription-edit button {
+  margin-bottom: 12px;
+  position: relative;
+}
+.erp-subscription-edit .error-msg,
+.erp-subscription-edit .warning-msg,
+.erp-subscription-edit .success-msg {
+  padding: 10px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+.erp-subscription-edit .error-msg {
+  color: #a93e1a;
+  background-color: #f7d6cb;
+  border-color: #bf461e;
+}
+.erp-subscription-edit .warning-msg {
+  color: #cc9400;
+  background-color: #fff1cc;
+  border-color: #e6a700;
+}
+.erp-subscription-edit .success-msg {
+  color: #388f40;
+  background-color: #d7efd9;
+  border-color: #3fa248;
+}
+.erp-subscription-edit .erp-spinner {
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -9px;
+  margin-left: -9px;
+  opacity: 0;
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+  border: solid 2px transparent;
+  border-top-color: #fff;
+  border-left-color: #fff;
+  border-radius: 50%;
+  -webkit-animation: erp-subscription-edit-spinner 1000ms linear infinite;
+  animation: erp-subscription-edit-spinner 1000ms linear infinite;
+}
+.erp-subscription-edit.doing-ajax .submit-btn-label {
+  opacity: 0;
+}
+.erp-subscription-edit.doing-ajax .erp-spinner {
+  opacity: 1;
+}
+@-webkit-keyframes erp-subscription-edit-spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@keyframes erp-subscription-edit-spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

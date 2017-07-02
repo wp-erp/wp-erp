@@ -252,7 +252,6 @@ class Auditlog_List_Table extends \WP_List_Table {
                     $args['end']   = isset( $_REQUEST['end'] ) ? $_REQUEST['end'] : '';
                 } else {
                     $duration      = $this->erp_log_get_start_end_date( $args['filter_duration'] );
-                    //var_dump($duration);
                     $args['start'] = $duration['start'];
                     $args['end']   = $duration['end'];
                 }
