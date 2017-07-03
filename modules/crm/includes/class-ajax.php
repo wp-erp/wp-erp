@@ -135,7 +135,7 @@ class Ajax_Handler {
 
         // Filter for serach
         if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
-            $args['s'] = $_REQUEST['s'];
+            $args['s'] = trim( $_REQUEST['s'] );
         }
 
         // Filter for order & order by

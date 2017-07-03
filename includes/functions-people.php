@@ -17,6 +17,7 @@
  *
  * @since 1.0
  * @since 1.1.14 Add `post_where_queries`
+ * @since 1.2.2  Use `erpadvancefilter` filter for $arg['s'] filter
  *
  * @param $args array
  *
@@ -92,10 +93,22 @@ function erp_get_peoples( $args = [] ) {
 
         // Check is the row want to search
         if ( ! empty( $s ) ) {
-            $sql['where'][] = "AND first_name LIKE '%$s%'";
-            $sql['where'][] = "OR last_name LIKE '%$s%'";
-            $sql['where'][] = "OR company LIKE '%$s%'";
-            $sql['where'][] = "OR email LIKE '%$s%'";
+            $words = explode( ' ', $s );
+
+            if ( $args['type'] === 'contact' ) {
+                $last_name = array_pop( $words );
+                $first_name = implode( ' ' , $words );
+
+                $args['erpadvancefilter'] = sprintf(
+                    'first_name[]=~%1$s&last_name[]=~%2$s&or&email[]=~%1$s&or&email[]=~%2$s',
+                    $first_name,
+                    $last_name
+                );
+
+            } else if ( $args['type'] === 'company' ) {
+                $args['erpadvancefilter'] = 'company[]=~' . implode( '&or&company[]=~', $words )
+                                          . '&or&email[]=~' . implode( '&or&email[]=~', $words );
+            }
         }
 
         // Check if args count true, then return total count customer according to above filter
