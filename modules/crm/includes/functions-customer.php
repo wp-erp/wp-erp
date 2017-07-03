@@ -275,6 +275,7 @@ function erp_crm_get_contact_dropdown( $label = [] ) {
  * Get customer life statges status count
  *
  * @since 1.0
+ * @since 1.2.2 Change query to fix count for `All` status
  *
  * @return array
  */
@@ -292,29 +293,32 @@ function erp_crm_customer_get_status_count( $type = null ) {
     $results = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $results ) {
+        $people_tbl = $wpdb->prefix . 'erp_peoples';
+        $meta_tbl   = $wpdb->prefix . 'erp_peoplemeta';
+        $rel_tbl    = $wpdb->prefix . 'erp_people_type_relations';
+        $type_tbl   = $wpdb->prefix . 'erp_people_types';
 
-        $people           = new \WeDevs\ERP\Framework\Models\People();
-        $db               = new \WeDevs\ORM\Eloquent\Database();
-        $people_table     = $wpdb->prefix . 'erp_peoples';
-        $peoplemeta_table = $wpdb->prefix . 'erp_peoplemeta';
+        $sql = " select {$meta_tbl}.meta_value as status, count({$people_tbl}.id) as count"
+             . " from {$people_tbl}"
+             . " left join {$rel_tbl} on {$people_tbl}.id = {$rel_tbl}.id"
+             . " left join {$type_tbl} on {$rel_tbl}.people_types_id = {$type_tbl}.id"
+             . " left join {$meta_tbl} on {$people_tbl}.id = {$meta_tbl}.erp_people_id and {$meta_tbl}.meta_key = %s"
+             . " where {$type_tbl}.name = %s"
+             . " group by {$meta_tbl}.meta_value";
 
-        $results = $people->select( array( $db->raw( $peoplemeta_table . '.meta_value as `status`, COUNT( ' . $people_table . '.id ) as `num`') ) )
-                    ->leftjoin( $peoplemeta_table, $peoplemeta_table . '.erp_people_id', '=', $people_table . '.id')
-                    ->where( $peoplemeta_table . '.meta_key', '=', 'life_stage' )
-                    ->type( $type )
-                    ->groupBy( $peoplemeta_table. '.meta_value')
-                    ->get()
-                    ->toArray();
+        $results = $wpdb->get_results( $wpdb->prepare( $sql, 'life_stage', $type ) );
 
         wp_cache_set( $cache_key, $results, 'erp' );
     }
 
-    foreach ( $results as $row ) {
-        if ( array_key_exists( $row['status'], $counts ) ) {
-            $counts[ $row['status'] ]['count'] = (int) $row['num'];
+    foreach ( $results as $result ) {
+        $count = absint( $result->count );
+
+        if ( array_key_exists( $result->status, $counts ) ) {
+            $counts[ $result->status ]['count'] = $count;
         }
 
-        $counts['all']['count'] += (int) $row['num'];
+        $counts['all']['count'] += $count;
     }
 
     $counts['trash'] = [
