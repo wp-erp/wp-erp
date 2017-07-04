@@ -805,7 +805,7 @@ class Subscription {
 
         do_action( 'erp_subscription_edit', $form_data, $contact_lists, $this );
 
-        $success_msg = apply_filters( 'erp_subscription_edit_success_message', __( 'Thank you! Your subscription preference has updated.', 'erp' ) );
+        $success_msg = apply_filters( 'erp_subscription_edit_success_message', __( 'Thank you! Your subscription preference has been updated.', 'erp' ) );
 
         $this->send_success( [ 'msg' => $success_msg ] );
     }
