@@ -381,6 +381,9 @@ function erp_get_people_by( $field, $value ) {
 /**
  * Insert a new people
  *
+ * @since 1.0.0
+ * @since 1.2.2 Insert people hash key if not exists one
+ *
  * @param array $args
  *
  * @return mixed integer on success, false otherwise
@@ -577,6 +580,14 @@ function erp_insert_people( $args = array(), $return_object = false ) {
 
     if ( ! empty( $is_existing_people ) ) {
         $people->existing = true;
+    }
+
+    $hash = erp_people_get_meta( $people->id, 'hash', true );
+
+    if ( empty( $hash ) ) {
+        $hash_id = sha1( microtime() . 'erp-unique-hash-id' . $people->id );
+
+        erp_people_update_meta( $people->id, 'hash', $hash_id );
     }
 
     return $return_object ? $people : $people->id;

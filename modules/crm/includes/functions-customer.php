@@ -1227,6 +1227,7 @@ function erp_crm_get_assign_subscriber_contact() {
  * @since 1.1.17 Return $subscriber object. Previously it was returning
  *               do_action function's returned data, but do_action
  *               returns void
+ * @since 1.2.2  Insert people hash key if not exists one
  *
  * @param  array $data
  *
@@ -1251,7 +1252,15 @@ function erp_crm_create_new_contact_subscriber( $args = [] ) {
 
     $subscriber = \WeDevs\ERP\CRM\Models\ContactSubscriber::create( $args );
 
-    do_action( 'erp_crm_create_contact_subscriber', $subscriber );
+    $hash = erp_people_get_meta( $args['user_id'], 'hash', true );
+
+    if ( empty( $hash ) ) {
+        $hash_id = sha1( microtime() . 'erp-subscription' . $args['group_id'] . $args['user_id'] );
+
+        erp_people_update_meta( $args['user_id'], 'hash', $hash_id );
+    }
+
+    do_action( 'erp_crm_create_contact_subscriber', $subscriber, $hash );
 
     return $subscriber;
 }
