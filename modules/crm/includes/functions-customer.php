@@ -300,10 +300,10 @@ function erp_crm_customer_get_status_count( $type = null ) {
 
         $sql = " select {$meta_tbl}.meta_value as status, count({$people_tbl}.id) as count"
              . " from {$people_tbl}"
-             . " left join {$rel_tbl} on {$people_tbl}.id = {$rel_tbl}.id"
+             . " left join {$rel_tbl} on {$people_tbl}.id = {$rel_tbl}.people_id"
              . " left join {$type_tbl} on {$rel_tbl}.people_types_id = {$type_tbl}.id"
              . " left join {$meta_tbl} on {$people_tbl}.id = {$meta_tbl}.erp_people_id and {$meta_tbl}.meta_key = %s"
-             . " where {$type_tbl}.name = %s"
+             . " where {$type_tbl}.name = %s and {$rel_tbl}.deleted_at is null"
              . " group by {$meta_tbl}.meta_value";
 
         $results = $wpdb->get_results( $wpdb->prepare( $sql, 'life_stage', $type ) );
