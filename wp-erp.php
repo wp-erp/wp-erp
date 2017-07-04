@@ -228,6 +228,11 @@ final class WeDevs_ERP {
             require_once WPERP_INCLUDES . '/admin/class-menu.php';
             require_once WPERP_INCLUDES . '/admin/class-admin.php';
         }
+
+        // cli command
+        if ( defined( 'WP_CLI' ) && WP_CLI ) {
+            include WPERP_INCLUDES . '/cli/commands.php';
+        }
     }
 
     /**
