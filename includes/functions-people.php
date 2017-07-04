@@ -95,17 +95,12 @@ function erp_get_peoples( $args = [] ) {
         if ( ! empty( $s ) ) {
             $words = explode( ' ', $s );
 
-            if ( $args['type'] === 'contact' ) {
-                $last_name = array_pop( $words );
-                $first_name = implode( ' ' , $words );
+            if ( $type === 'contact' ) {
+                $args['erpadvancefilter'] = 'first_name[]=~' . implode( '&or&first_name[]=~', $words )
+                                          . '&or&last_name[]=~' . implode( '&or&last_name[]=~', $words )
+                                          . '&or&email[]=~' . implode( '&or&email[]=~', $words );
 
-                $args['erpadvancefilter'] = sprintf(
-                    'first_name[]=~%1$s&last_name[]=~%2$s&or&email[]=~%1$s&or&email[]=~%2$s',
-                    $first_name,
-                    $last_name
-                );
-
-            } else if ( $args['type'] === 'company' ) {
+            } else if ( $type === 'company' ) {
                 $args['erpadvancefilter'] = 'company[]=~' . implode( '&or&company[]=~', $words )
                                           . '&or&email[]=~' . implode( '&or&email[]=~', $words );
             }
