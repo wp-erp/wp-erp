@@ -457,7 +457,7 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
             }
         }
 
-        if ( ! $trans_id ) {
+        if ( empty( $trans_id ) ) {
             throw new Exception( __( 'Could not create transaction', 'erp' ) );
         }
 
