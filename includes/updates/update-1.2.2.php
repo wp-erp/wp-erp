@@ -2,11 +2,11 @@
 /**
  * Add private column in erp_crm_contact_group
  *
- * @since 1.2.2-rc.1
+ * @since 1.2.2
  *
  * @return void
  */
-function erp_crm_contact_group_add_private_column_1_2_2_rc_1() {
+function erp_crm_contact_group_add_private_column_1_2_2() {
     global $wpdb;
 
     $table = $wpdb->prefix . 'erp_crm_contact_group';
@@ -16,16 +16,16 @@ function erp_crm_contact_group_add_private_column_1_2_2_rc_1() {
     }
 }
 
-erp_crm_contact_group_add_private_column_1_2_2_rc_1();
+erp_crm_contact_group_add_private_column_1_2_2();
 
 /**
  * Get hash from contact subscriber table and store them in meta tahble as `hash`
  *
- * @since 1.2.2-rc.1
+ * @since 1.2.2
  *
  * @return void
  */
-function erp_crm_contact_subscriber_get_hashes_1_2_2_rc_1() {
+function erp_crm_contact_subscriber_get_hashes_1_2_2() {
     global $wpdb;
 
     $table = $wpdb->prefix . 'erp_crm_contact_subscriber';
@@ -48,4 +48,4 @@ function erp_crm_contact_subscriber_get_hashes_1_2_2_rc_1() {
     }
 }
 
-erp_crm_contact_subscriber_get_hashes_1_2_2_rc_1();
+erp_crm_contact_subscriber_get_hashes_1_2_2();

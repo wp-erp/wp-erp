@@ -157,6 +157,20 @@ If you are unable to use any of the methods due to internet connectivity and fil
 
 == Changelog ==
 
+**v1.2.2 -> Jul 13, 2017**
+
+[new] Add private option for contact groups
+[new] Add edit subscription page
+[new] Add module activate and deactivate CLI commands
+[tweak] Improve people search query
+[tweak] Exclude past requests from Who is out metabox
+[tweak] Insert people hash key when insert new people or assign a group
+[fix] Remove assigning dummy email address when importing contacts
+[fix] Fix new leave request notification email recipients filter
+[fix] Fix erp_crm_customer_get_status_count query
+[fix] Change _assign_crm_agent meta key to contact_owner in API function
+[fix] Throw exception if accounting transaction failed
+
 **v1.2.1 -> Jun 18, 2017**
 
 [new] Add force_subscribe_to option for subscribing users
