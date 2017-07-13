@@ -110,7 +110,7 @@ class Vendors_Controller extends REST_Controller {
                 $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
 
                 if ( in_array( 'owner', $include_params ) ) {
-                    $vendor_owner_id = ( $item->user_id ) ? get_user_meta( $item->user_id, '_assign_crm_agent', true ) : erp_people_get_meta( $item->id, '_assign_crm_agent', true );
+                    $vendor_owner_id = ( $item->user_id ) ? get_user_meta( $item->user_id, 'contact_owner', true ) : erp_people_get_meta( $item->id, 'contact_owner', true );
 
                     $item->owner = $this->get_user( $vendor_owner_id );
                     $additional_fields = ['owner' => $item->owner];
@@ -147,7 +147,7 @@ class Vendors_Controller extends REST_Controller {
             $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
 
             if ( in_array( 'owner', $include_params ) ) {
-                $vendor_owner_id = ( $item->user_id ) ? get_user_meta( $item->user_id, '_assign_crm_agent', true ) : erp_people_get_meta( $item->id, '_assign_crm_agent', true );
+                $vendor_owner_id = ( $item->user_id ) ? get_user_meta( $item->user_id, 'contact_owner', true ) : erp_people_get_meta( $item->id, 'contact_owner', true );
 
                 $item->owner = $this->get_user( $vendor_owner_id );
                 $additional_fields = ['owner' => $item->owner];

@@ -275,6 +275,7 @@ function erp_crm_get_contact_dropdown( $label = [] ) {
  * Get customer life statges status count
  *
  * @since 1.0
+ * @since 1.2.2 Change query to fix count for `All` status
  *
  * @return array
  */
@@ -292,29 +293,32 @@ function erp_crm_customer_get_status_count( $type = null ) {
     $results = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $results ) {
+        $people_tbl = $wpdb->prefix . 'erp_peoples';
+        $meta_tbl   = $wpdb->prefix . 'erp_peoplemeta';
+        $rel_tbl    = $wpdb->prefix . 'erp_people_type_relations';
+        $type_tbl   = $wpdb->prefix . 'erp_people_types';
 
-        $people           = new \WeDevs\ERP\Framework\Models\People();
-        $db               = new \WeDevs\ORM\Eloquent\Database();
-        $people_table     = $wpdb->prefix . 'erp_peoples';
-        $peoplemeta_table = $wpdb->prefix . 'erp_peoplemeta';
+        $sql = " select {$meta_tbl}.meta_value as status, count({$people_tbl}.id) as count"
+             . " from {$people_tbl}"
+             . " left join {$rel_tbl} on {$people_tbl}.id = {$rel_tbl}.people_id"
+             . " left join {$type_tbl} on {$rel_tbl}.people_types_id = {$type_tbl}.id"
+             . " left join {$meta_tbl} on {$people_tbl}.id = {$meta_tbl}.erp_people_id and {$meta_tbl}.meta_key = %s"
+             . " where {$type_tbl}.name = %s and {$rel_tbl}.deleted_at is null"
+             . " group by {$meta_tbl}.meta_value";
 
-        $results = $people->select( array( $db->raw( $peoplemeta_table . '.meta_value as `status`, COUNT( ' . $people_table . '.id ) as `num`') ) )
-                    ->leftjoin( $peoplemeta_table, $peoplemeta_table . '.erp_people_id', '=', $people_table . '.id')
-                    ->where( $peoplemeta_table . '.meta_key', '=', 'life_stage' )
-                    ->type( $type )
-                    ->groupBy( $peoplemeta_table. '.meta_value')
-                    ->get()
-                    ->toArray();
+        $results = $wpdb->get_results( $wpdb->prepare( $sql, 'life_stage', $type ) );
 
         wp_cache_set( $cache_key, $results, 'erp' );
     }
 
-    foreach ( $results as $row ) {
-        if ( array_key_exists( $row['status'], $counts ) ) {
-            $counts[ $row['status'] ]['count'] = (int) $row['num'];
+    foreach ( $results as $result ) {
+        $count = absint( $result->count );
+
+        if ( array_key_exists( $result->status, $counts ) ) {
+            $counts[ $result->status ]['count'] = $count;
         }
 
-        $counts['all']['count'] += (int) $row['num'];
+        $counts['all']['count'] += $count;
     }
 
     $counts['trash'] = [
@@ -1223,6 +1227,7 @@ function erp_crm_get_assign_subscriber_contact() {
  * @since 1.1.17 Return $subscriber object. Previously it was returning
  *               do_action function's returned data, but do_action
  *               returns void
+ * @since 1.2.2  Insert people hash key if not exists one
  *
  * @param  array $data
  *
@@ -1247,7 +1252,15 @@ function erp_crm_create_new_contact_subscriber( $args = [] ) {
 
     $subscriber = \WeDevs\ERP\CRM\Models\ContactSubscriber::create( $args );
 
-    do_action( 'erp_crm_create_contact_subscriber', $subscriber );
+    $hash = erp_people_get_meta( $args['user_id'], 'hash', true );
+
+    if ( empty( $hash ) ) {
+        $hash_id = sha1( microtime() . 'erp-subscription' . $args['group_id'] . $args['user_id'] );
+
+        erp_people_update_meta( $args['user_id'], 'hash', $hash_id );
+    }
+
+    do_action( 'erp_crm_create_contact_subscriber', $subscriber, $hash );
 
     return $subscriber;
 }
@@ -1321,6 +1334,7 @@ function erp_crm_contact_subscriber_delete( $id, $group_id ) {
  * create new one.
  *
  * @since 1.0
+ * @since 1.2.2 Add hash in case of new subscriber
  *
  * @param  array $groups
  * @param  integer $user_id
@@ -1368,7 +1382,9 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
             $data = [
                 'user_id'  => $user_id,
                 'group_id' => $new_group_id,
+                'hash'     => sha1( microtime() . 'erp-subscription' . $new_group_id . $user_id )
             ];
+
             erp_crm_create_new_contact_subscriber( $data );
         }
 

@@ -96,6 +96,9 @@ class Contact_Group_List_Table extends \WP_List_Table {
     /**
      * Render the designation name column
      *
+     * @since 1.0.0
+     * @since 1.2.2 Add private icon
+     *
      * @param  object  $item
      *
      * @return string
@@ -116,7 +119,13 @@ class Contact_Group_List_Table extends \WP_List_Table {
             $actions['delete'] = sprintf( '<a href="%s" class="submitdelete" data-id="%d" title="%s">%s</a>', $delete_url, $contact_group->id, __( 'Delete this Contact Group', 'erp' ), __( 'Delete', 'erp' ) );
         }
 
-        return sprintf( '<a href="%3$s"><strong>%1$s</strong></a> %2$s', $contact_group->name, $this->row_actions( $actions ), $view_subscriber_url );
+        if ( $contact_group->private ) {
+            $private = '<span title="' . __( 'This group is private', 'erp' ) . '" class="dashicons dashicons-hidden"></span>';
+        } else {
+            $private = '';
+        }
+
+        return sprintf( '<a href="%3$s"><strong>%1$s</strong></a> %4$s %2$s', $contact_group->name, $this->row_actions( $actions ), $view_subscriber_url, $private );
     }
 
     /**

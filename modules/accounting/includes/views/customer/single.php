@@ -7,7 +7,6 @@ $edit_url = admin_url( 'admin.php?page=' . $page . '&action=edit&id=' . $custome
     <h2><?php echo $customer->get_full_name(); ?> <a href="<?php echo $edit_url; ?>" class="add-new-h2"><?php _e( 'Edit', 'erp' ); ?></a></h2>
 
     <?php
-    // var_dump( $customer );
     $current_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'transactions';
 
     $trans = WeDevs\ERP\Accounting\Model\Transaction::OfUser( $customer->id )->with( 'items' )->get();

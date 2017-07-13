@@ -433,7 +433,6 @@ class Admin_Menu {
                 if ( isset( $_GET['action'] ) && intval( $_GET['id'] ) ) {
                     $tax_id  = $_GET['id'];
                     $taxs    = erp_ac_normarlize_individual_tax( [ 'start' => $start, 'end' => $end, 'tax_id' => [$_GET['id']], 'offset'  => $offset, 'number' => $limit] );
-                   // echo '<pre>'; print_r( $taxs ); echo '</pre>'; die();
                     //$taxs    = $taxs['individuals'][$_GET['id']];
                     $count   = erp_ac_get_sales_tax_report_count( ['tax_id' => [$_GET['id']] ] );
                     $taxinfo = erp_ac_get_tax_info();

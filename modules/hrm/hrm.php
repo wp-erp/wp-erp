@@ -140,8 +140,6 @@ class Human_Resource {
      * @return void
      */
     public function admin_scripts( $hook ) {
-        // var_dump( $hook );
-
         $hook = str_replace( sanitize_title( __( 'HR Management', 'erp' ) ) , 'hr-management', $hook );
 
         $suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';

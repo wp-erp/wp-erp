@@ -1,9 +1,3 @@
-<?php
-
-// var_dump( $transaction->toArray() );
-// $items = $transaction->items->toArray();
-// var_dump( $items );
-?>
 <div class="wrap">
 
     <div class="transaction-to">

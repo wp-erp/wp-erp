@@ -1708,12 +1708,6 @@ function erp_process_import_export() {
                 }
 
                 if ( ( $type == 'contact' || $type == 'company' ) && $is_crm_activated ) {
-                    // If not exist any email address then generate a dummy one.
-                    if ( ! isset( $line_data['email'] ) ) {
-                        $rand = substr( sha1( uniqid( time() ) ), 0, 8 );
-                        $line_data['email'] = "rand_{$rand}@example.com";
-                    }
-
                     $people = erp_insert_people( $line_data, true );
 
                     if ( is_wp_error( $people ) ) {

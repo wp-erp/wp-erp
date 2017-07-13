@@ -52,7 +52,7 @@ final class WeDevs_ERP {
      *
      * @var string
      */
-    public $version = '1.2.1';
+    public $version = '1.2.2';
 
     /**
      * Minimum PHP version required
@@ -227,6 +227,11 @@ final class WeDevs_ERP {
             require_once WPERP_INCLUDES . '/admin/functions.php';
             require_once WPERP_INCLUDES . '/admin/class-menu.php';
             require_once WPERP_INCLUDES . '/admin/class-admin.php';
+        }
+
+        // cli command
+        if ( defined( 'WP_CLI' ) && WP_CLI ) {
+            include WPERP_INCLUDES . '/cli/commands.php';
         }
     }
 

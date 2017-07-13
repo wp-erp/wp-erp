@@ -608,6 +608,7 @@ Company'
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
                 `name` varchar(255) DEFAULT NULL,
                 `description` text,
+                `private` TINYINT(1) DEFAULT NULL,
                 `created_at` datetime DEFAULT NULL,
                 `updated_at` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`)
@@ -620,7 +621,6 @@ Company'
               `status` varchar(25) DEFAULT NULL,
               `subscribe_at` datetime DEFAULT NULL,
               `unsubscribe_at` datetime DEFAULT NULL,
-              `hash` varchar(40) DEFAULT NULL,
               PRIMARY KEY (`id`),
               UNIQUE KEY `user_group` (`user_id`,`group_id`)
             ) $collate;",
@@ -916,6 +916,39 @@ Company'
                     VALUES  (1,7,'',''), (2,62,'012345689','ABC Bank');";
 
             $wpdb->query( $sql );
+        }
+
+        // Subscription pages
+        $subscription_settings = get_option( 'erp_settings_erp-crm_subscription', [] );
+
+        if ( empty( $subscription_settings ) ) {
+            // insert default erp subscription form settings
+            $args = [
+                'post_title' => __( 'ERP Subscription', 'erp' ),
+                'post_content' => '',
+                'post_status' => 'publish',
+                'post_type' => 'page',
+                'comment_status' => 'closed',
+                'ping_status' => 'closed',
+            ];
+
+            $page_id = wp_insert_post( $args );
+
+            $settings = [
+                'is_enabled'            => 'yes',
+                'email_subject'         => sprintf( __( 'Confirm your subscription to %s', 'erp' ), get_bloginfo( 'name' ) ),
+                'email_content'         => sprintf(
+                    __( "Hello!\n\nThanks so much for signing up for our newsletter.\nWe need you to activate your subscription to the list(s): [contact_groups_to_confirm] by clicking the link below: \n\n[activation_link]Click here to confirm your subscription.[/activation_link]\n\nThank you,\n\n%s", 'erp' ),
+                    get_bloginfo( 'name' )
+                ),
+                'page_id'               => $page_id,
+                'confirm_page_title'    => __( 'You are now subscribed!', 'erp' ),
+                'confirm_page_content'  => __( "We've added you to our email list. You'll hear from us shortly.", 'erp' ),
+                'unsubs_page_title'     => __( 'You are now unsubscribed', 'erp' ),
+                'unsubs_page_content'   => __( 'You are successfully unsubscribed from list(s):', 'erp' ),
+            ];
+
+            update_option( 'erp_settings_erp-crm_subscription', $settings );
         }
     }
 

@@ -17,6 +17,7 @@
  *
  * @since 1.0
  * @since 1.1.14 Add `post_where_queries`
+ * @since 1.2.2  Use `erpadvancefilter` filter for $arg['s'] filter
  *
  * @param $args array
  *
@@ -92,10 +93,17 @@ function erp_get_peoples( $args = [] ) {
 
         // Check is the row want to search
         if ( ! empty( $s ) ) {
-            $sql['where'][] = "AND first_name LIKE '%$s%'";
-            $sql['where'][] = "OR last_name LIKE '%$s%'";
-            $sql['where'][] = "OR company LIKE '%$s%'";
-            $sql['where'][] = "OR email LIKE '%$s%'";
+            $words = explode( ' ', $s );
+
+            if ( $type === 'contact' ) {
+                $args['erpadvancefilter'] = 'first_name[]=~' . implode( '&or&first_name[]=~', $words )
+                                          . '&or&last_name[]=~' . implode( '&or&last_name[]=~', $words )
+                                          . '&or&email[]=~' . implode( '&or&email[]=~', $words );
+
+            } else if ( $type === 'company' ) {
+                $args['erpadvancefilter'] = 'company[]=~' . implode( '&or&company[]=~', $words )
+                                          . '&or&email[]=~' . implode( '&or&email[]=~', $words );
+            }
         }
 
         // Check if args count true, then return total count customer according to above filter
@@ -373,6 +381,9 @@ function erp_get_people_by( $field, $value ) {
 /**
  * Insert a new people
  *
+ * @since 1.0.0
+ * @since 1.2.2 Insert people hash key if not exists one
+ *
  * @param array $args
  *
  * @return mixed integer on success, false otherwise
@@ -569,6 +580,14 @@ function erp_insert_people( $args = array(), $return_object = false ) {
 
     if ( ! empty( $is_existing_people ) ) {
         $people->existing = true;
+    }
+
+    $hash = erp_people_get_meta( $people->id, 'hash', true );
+
+    if ( empty( $hash ) ) {
+        $hash_id = sha1( microtime() . 'erp-unique-hash-id' . $people->id );
+
+        erp_people_update_meta( $people->id, 'hash', $hash_id );
     }
 
     return $return_object ? $people : $people->id;

@@ -37,6 +37,10 @@ class CRM_Settings extends ERP_Settings_Page {
     /**
      * Get sections fields
      *
+     * @since 1.0.0
+     * @since 1.1.17 Add subscription page settings
+     * @since 1.2.2  Add edit subscription page settings
+     *
      * @return array
      */
     public function get_section_fields( $section = '' ) {
@@ -199,6 +203,25 @@ class CRM_Settings extends ERP_Settings_Page {
             'id'                 => 'unsubs_page_content',
             'type'               => 'textarea',
             'default'            => __( 'You are successfully unsubscribed from list(s):', 'erp' ),
+            'custom_attributes'  => [
+                'rows' => 5,
+                'cols' => 46
+            ],
+        ];
+
+        $fields['subscription'][] = [
+            'title'              => __( 'Edit Subscription Page', 'erp' ),
+            'title_before_field' => __( 'Title', 'erp' ),
+            'id'                 => 'edit_sub_page_title',
+            'type'               => 'text',
+            'default'            =>  __( 'Edit Your Subscription', 'erp' )
+        ];
+
+        $fields['subscription'][] = [
+            'title_before_field' => __( 'Content', 'erp' ),
+            'id'                 => 'edit_sub_page_content',
+            'type'               => 'textarea',
+            'default'            => __( 'Update your preferences', 'erp' ),
             'custom_attributes'  => [
                 'rows' => 5,
                 'cols' => 46

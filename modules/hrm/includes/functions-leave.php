@@ -1376,6 +1376,8 @@ function erp_hr_leave_get_balance( $user_id ) {
  *
  * @since 0.1
  * @since 1.2.0 Ignore terminated employees
+ * @since 1.2.2 Exclude past requests
+ *              Sort results by start_date
  *
  * @return array
  */
@@ -1387,9 +1389,10 @@ function erp_hr_get_current_month_leave_list() {
               ->select( 'req.user_id', 'req.start_date', 'req.end_date' )
               ->leftJoin( "{$prefix}erp_hr_employees as em", 'req.user_id', '=', 'em.user_id' )
               ->where( 'em.status', '!=', 'terminated' )
-              ->where( 'req.start_date', '>=', date( 'Y-m-d 00:00:00', strtotime( 'first day of this month' ) ) )
+              ->where( 'req.start_date', '>=', current_time( 'mysql' ) )
               ->where( 'req.start_date', '<=', date( 'Y-m-d 23:59:59', strtotime( 'last day of this month' ) ) )
               ->where( 'req.status', 1 )
+              ->orderBy( 'req.start_date', 'asc' )
               ->get();
 }
 
@@ -1398,6 +1401,7 @@ function erp_hr_get_current_month_leave_list() {
  *
  * @since 0.1
  * @since 1.2.0 Ignore terminated employees
+ * @since 1.2.2 Sort results by start_date
  *
  * @return array
  */
@@ -1412,6 +1416,7 @@ function erp_hr_get_next_month_leave_list() {
               ->where( 'req.start_date', '>=', date( 'Y-m-d 00:00:00', strtotime( 'first day of next month' ) ) )
               ->where( 'req.start_date', '<=', date( 'Y-m-d 23:59:59', strtotime( 'last day of next month' ) ) )
               ->where( 'req.status', 1 )
+              ->orderBy( 'req.start_date', 'asc' )
               ->get();
 }
 

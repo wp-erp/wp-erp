@@ -665,8 +665,6 @@ Vue.component('vtable', {
         },
 
         searchAction: function( query ) {
-            var query = query.trim();
-
             if ( typeof this.additionalParams === 'undefined' ) {
                 this.additionalParams = {};
             }

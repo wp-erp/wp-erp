@@ -45,7 +45,6 @@ class ERP_License_Settings extends ERP_Settings_Page {
      */
     function integrations() {
         $licenses = erp_addon_licenses();
-        // var_dump( $licenses );
         ?>
         <tr valign="top">
             <td class="erp-settings-table-wrapper" colspan="2">

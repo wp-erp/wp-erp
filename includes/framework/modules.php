@@ -200,4 +200,95 @@ class Modules {
         }
     }
 
+    /**
+     * Check for valid ERP modules
+     *
+     * @since 1.2.2
+     *
+     * @param array $modules Name of the module or modules
+     *
+     * @return mixed WP_Error if an invalid name is given or true on success
+     */
+    public function is_valid_module( $modules ) {
+        if ( ! is_array( $modules ) ) {
+            $modules = [ $modules ];
+        }
+
+        $erp_module_names = array_keys( $this->modules );
+
+        foreach ( $modules as $module_name ) {
+            if ( ! in_array( $module_name , $erp_module_names ) ) {
+                return new \WP_Error( 'invalid-module-name', sprintf( __( 'Invalid module name %s', 'erp' ), $module_name ) );
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Activate single or multiple modules
+     *
+     * @since 1.2.2
+     *
+     * @param array $modules Name of the module or modules
+     *
+     * @return mixed WP_Error if an invalid name is given or true on success
+     */
+    public function activate_modules( $modules ) {
+        if ( ! is_array( $modules ) ) {
+            $modules = [ $modules ];
+        }
+
+        $is_valid_module = $this->is_valid_module( $modules );
+
+        if ( is_wp_error( $is_valid_module ) ) {
+            return $is_valid_module;
+        }
+
+        $active_modules = $this->get_active_modules();
+
+        foreach ( $modules as $module_name ) {
+            if ( ! in_array( $module_name, $active_modules ) ) {
+                $active_modules[ $module_name ] = $this->modules[ $module_name ];
+            }
+        }
+
+        update_option( 'erp_modules', $active_modules );
+
+        return true;
+    }
+
+    /**
+     * Deactivate single or multiple modules
+     *
+     * @since 1.2.2
+     *
+     * @param array $modules Name of the module or modules
+     *
+     * @return mixed WP_Error if an invalid name is given or true on success
+     */
+    public function deactivate_modules( $modules ) {
+        if ( ! is_array( $modules ) ) {
+            $modules = [ $modules ];
+        }
+
+        $is_valid_module = $this->is_valid_module( $modules );
+
+        if ( is_wp_error( $is_valid_module ) ) {
+            return $is_valid_module;
+        }
+
+        $active_modules = $this->get_active_modules();
+
+        foreach ( $active_modules as $module_name => $active_module ) {
+            if ( in_array( $module_name, $modules ) ) {
+                unset( $active_modules[ $module_name ] );
+            }
+        }
+
+        update_option( 'erp_modules', $active_modules );
+
+        return true;
+    }
+
 }
