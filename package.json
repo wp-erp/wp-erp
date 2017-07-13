@@ -1,6 +1,6 @@
 {
   "name": "WP-ERP",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "An open-source ERP (Enterprise Resource Planning) solution for WordPress",
   "author": "Tareq Hasan",
   "license": "GPL",
@@ -15,7 +15,6 @@
     "grunt-contrib-less": "^0.11.4",
     "grunt-contrib-uglify": "^0.5.1",
     "grunt-contrib-watch": "^0.6.1",
-    "grunt-phplint": "0.0.5",
     "grunt-text-replace": "^0.4.0",
     "grunt-wp-i18n": "^0.4.8"
   }
