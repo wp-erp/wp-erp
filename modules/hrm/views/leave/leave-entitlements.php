@@ -54,7 +54,8 @@ $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : '';
                 'class'    => 'leave-policy-select',
                 'tag'      => 'li',
                 'required' => true,
-                'options'  => array( 0 => __( '- Select -', 'erp' ) ) + erp_hr_leave_get_policies_dropdown_raw()
+                'options'  => array( 0 => __( '- Select -', 'erp' ) ) + erp_hr_leave_get_policies_dropdown_raw(),
+                'help'     => __( 'Select A Policy. <a href="?page=erp-leave-policies">Create A New Policy if Needed</a>', 'erp' ),
             ) );
 
             erp_html_form_input( array(
