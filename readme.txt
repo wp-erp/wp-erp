@@ -1,5 +1,5 @@
 === WP ERP ===
-Contributors: tareq1988, wedevs, ediamin, sabbir1991, asaquzzaman
+Contributors: tareq1988, wedevs, ediamin, sabbir1991, asaquzzaman, shawon786
 Tags: small business, SME, contact, contacts, CRM, Customer Relationship Management, employee, leave management, hr, hrm, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
 Tested up to: 4.8
