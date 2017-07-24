@@ -81,11 +81,23 @@ class PDF_Invoicer extends tFPDF {
 		];
 	}
 
+    /**
+     * Set logo for the PDF
+     *
+     * @since 1.1.1
+     * @since 1.2.3 Using image file path instead of image url
+     *
+     * @param string $logo Logo URL
+     * @param integer $maxWidth
+     * @param integer $maxHeight
+     */
 	public function set_logo( $logo = 0, $maxWidth = 0, $maxHeight = 0 ) {
 
 		if ( $maxWidth and $maxHeight ) {
 			$this->maxImageDimensions = [ $maxWidth, $maxHeight ];
 		}
+
+        $logo = str_replace( WP_CONTENT_URL, WP_CONTENT_DIR, $logo );
 
 		$this->logo       = $logo;
 		$this->dimensions = $this->resizeToFit( $logo );
