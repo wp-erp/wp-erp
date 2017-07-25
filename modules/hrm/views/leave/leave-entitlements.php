@@ -33,6 +33,14 @@ $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : '';
         if ( isset( $_GET['error'] ) && array_key_exists( $_GET['error'], $errors ) ) {
             erp_html_show_notice( $errors[ $_GET['error'] ], 'error' );
         }
+
+        $policy_dropdown = erp_hr_leave_get_policies_dropdown_raw();
+
+        if ( empty( $policy_dropdown ) ) {
+            $help_text = sprintf( '<a href="?page=erp-leave-policies">%s</a>', __( 'Create A new policy first', 'erp' ) );
+        } else {
+            $help_text = __( 'Select A Policy', 'erp' );
+        }
         ?>
 
         <form action="" method="post">
@@ -55,7 +63,7 @@ $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : '';
                 'tag'      => 'li',
                 'required' => true,
                 'options'  => array( 0 => __( '- Select -', 'erp' ) ) + erp_hr_leave_get_policies_dropdown_raw(),
-                'help'     => __( 'Select A Policy. <a href="?page=erp-leave-policies">Create A New Policy if Needed</a>', 'erp' ),
+                'help'     => $help_text
             ) );
 
             erp_html_form_input( array(
