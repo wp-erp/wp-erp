@@ -452,7 +452,7 @@
             requestDates: function() {
                 var from = $('#erp-hr-leave-req-from-date').val(),
                     to = $('#erp-hr-leave-req-to-date').val(),
-                    submit = $(this).closest('form').find('input[type=submit]'),
+                    submit = $(this).closest('form').find('button[type=submit]'),
                     user_id = parseInt( $( '#erp-hr-leave-req-employee-id').val() ),
                     type = $('#erp-hr-leave-req-leave-policy').val();
 
