@@ -150,6 +150,8 @@ class Contact_Forms_Integration {
 
                     }
                 }
+
+                do_action( 'erp_save_contact_form_data', $customer, $data, $plugin, $form_id );
             }
 
         }
