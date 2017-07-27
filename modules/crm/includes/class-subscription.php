@@ -605,6 +605,8 @@ class Subscription {
             $group->subscribe_at    = $group->unsubscribe_at ? $group->unsubscribe_at : current_time( 'mysql' );
             $group->unsubscribe_at  = null;
             $group->save();
+
+            do_action( 'erp_crm_edit_contact_subscriber', $group );
         }
 
         $people_id = $this->subscribed_groups->first()->user_id;

@@ -1366,13 +1366,22 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
 
     if ( ! empty( $unsubscribe_group ) ) {
         foreach ( $unsubscribe_group as $unsubscribe_group_key => $unsubscribe_group_id ) {
-            \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )
-                ->where( 'group_id', $unsubscribe_group_id )
-                ->update( [
-                    'status'         => 'subscribe',
-                    'subscribe_at'   => current_time( 'mysql' ),
-                    'unsubscribe_at' => null
-                ] );
+            $updated = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )
+                                ->where( 'group_id', $unsubscribe_group_id )
+                                ->update( [
+                                    'status'         => 'subscribe',
+                                    'subscribe_at'   => current_time( 'mysql' ),
+                                    'unsubscribe_at' => null
+                                ] );
+
+            if ( $updated ) {
+                $subscriber = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )
+                                     ->where( 'group_id', $unsubscribe_group_id )
+                                     ->where( 'status', 'subscribe' )
+                                     ->first();
+
+                do_action( 'erp_crm_edit_contact_subscriber', $subscriber );
+            }
         }
     }
 
