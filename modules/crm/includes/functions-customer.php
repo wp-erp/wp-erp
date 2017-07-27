@@ -1335,6 +1335,7 @@ function erp_crm_contact_subscriber_delete( $id, $group_id ) {
  *
  * @since 1.0
  * @since 1.2.2 Add hash in case of new subscriber
+ * @since 1.2.3 Add hook after subscriber confirmation
  *
  * @param  array $groups
  * @param  integer $user_id

@@ -596,6 +596,7 @@ class Subscription {
      * Confirm subscription
      *
      * @since 1.1.17
+     * @since 1.2.3  Add hook after subscriber confirmation
      *
      * @return void
      */
