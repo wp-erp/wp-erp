@@ -3302,7 +3302,11 @@ function erp_crm_make_wp_user( $customer_id, $args = [] ) {
     $people = (array) erp_get_people_by( 'id', intval( $customer_id ) );
 
     $email = ! empty( $people['email'] ) ? $people['email'] : $args['email'];
-    $role = ! empty( $args['role'] ) ? $args['role'] : 'subscriber';
+    if ( current_user_can( 'administrator' ) ) {
+    	$role = ! empty( $args['role'] ) ? $args['role'] : 'subscriber';
+    } else {
+    	$role = 'subscriber';
+    }
     $type = ! empty( $args['type'] ) ? $args['type'] : '';
 
     if ( empty( $email ) ) {
