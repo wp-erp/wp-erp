@@ -1,7 +1,7 @@
 ;(function($) {
     'use strict';
 
-    $('.erp-subscription-form').on('submit', function (e) {
+    $('body').on('submit', '.erp-subscription-form', function (e) {
         e.preventDefault();
 
         var self      = $(this),

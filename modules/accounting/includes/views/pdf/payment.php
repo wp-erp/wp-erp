@@ -42,11 +42,6 @@ if ( $transaction-> issue_date ) {
     $invoice->set_reference( erp_format_date( $transaction->issue_date ), __( 'PAYMENT DATE', 'erp' ) );
 }
 
-// Set Due Date
-if ( $transaction->due_date ) {
-    $invoice->set_reference( erp_format_date( $transaction->due_date ), __( 'DUE DATE', 'erp' ) );
-}
-
 // Set Due Amount
 if ( $transaction->due ) {
     $invoice->set_reference( html_entity_decode( erp_ac_get_price( $transaction->due ) ), __( 'AMOUNT DUE', 'erp' ) );

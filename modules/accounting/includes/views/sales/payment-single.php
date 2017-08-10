@@ -84,10 +84,6 @@ $email_subject = __( 'Payment#', 'erp' ) . $transaction->invoice_number . __( ' 
                                 <td><?php echo erp_format_date( $transaction->issue_date ); ?></td>
                             </tr>
                             <tr>
-                                <th><?php _e( 'Due Date', 'erp' ); ?>:</th>
-                                <td><?php echo erp_format_date( $transaction->due_date ); ?></td>
-                            </tr>
-                            <tr>
                                 <th><?php _e( 'Amount Due', 'erp' ); ?>:</th>
                                 <td><?php echo erp_ac_get_price( $transaction->due ); ?></td>
                             </tr>

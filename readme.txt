@@ -1,8 +1,8 @@
 === WP ERP ===
-Contributors: tareq1988, wedevs, ediamin, sabbir1991, asaquzzaman
+Contributors: tareq1988, wedevs, ediamin, sabbir1991, asaquzzaman, shawon786
 Tags: small business, SME, contact, contacts, CRM, Customer Relationship Management, employee, leave management, hr, hrm, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 4.8
+Tested up to: 4.8.1
 Stable tag: trunk
 License: GPLv2
 Donate Link: https://tareq.co/donate
@@ -156,6 +156,20 @@ If you are unable to use any of the methods due to internet connectivity and fil
   => No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 == Changelog ==
+
+**v1.2.3 -> Aug 10, 2017**
+
+[new] Add hook after subscriber confirmation
+[new] Add erp_save_contact_form_data hook
+[new] Make sure employees can make only one leave request per day. Fixes #485.
+[new] Added help text for leave policy option.
+[new] Add support for Saudi Arabia regions (states).
+[new] Added help text for leave policy option.
+[tweak] Use image file path instead of url for PDF Invoice logo.
+[tweak] Bind subscription form submit action to body.
+[tweak] Check for valid subscriber before unsubscribe it.
+[fix] While importing contacts WP ERP is adding dump email address. Fixes #475.
+[fix] Removed due date from the payment. Fixes #481.
 
 **v1.2.2 -> Jul 13, 2017**
 

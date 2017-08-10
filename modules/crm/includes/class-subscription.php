@@ -596,6 +596,7 @@ class Subscription {
      * Confirm subscription
      *
      * @since 1.1.17
+     * @since 1.2.3  Add hook after subscriber confirmation
      *
      * @return void
      */
@@ -605,6 +606,8 @@ class Subscription {
             $group->subscribe_at    = $group->unsubscribe_at ? $group->unsubscribe_at : current_time( 'mysql' );
             $group->unsubscribe_at  = null;
             $group->save();
+
+            do_action( 'erp_crm_edit_contact_subscriber', $group );
         }
 
         $people_id = $this->subscribed_groups->first()->user_id;
@@ -623,6 +626,7 @@ class Subscription {
      * @since 1.1.17
      * @since 1.2.2 Check for private group and use group ids instead of hashes
      *              Add `erp_subscription_unsubscribe` hook
+     * @since 1.2.3 Check if $subscriber is empty or not before save its data
      *
      * @return void
      */
@@ -636,12 +640,15 @@ class Subscription {
                 $groups->each( function ( $group ) {
                     if ( empty( $group->private ) ) {
                         $subscriber = $group->contact_subscriber()->where( 'user_id', $this->people_id )->first();
-                        $subscriber->status          = 'unsubscribe';
-                        $subscriber->subscribe_at    = null;
-                        $subscriber->unsubscribe_at  = current_time( 'mysql' );
-                        $subscriber->save();
 
-                        $this->unsubscribed_groups[] = $group;
+                        if ($subscriber) {
+                            $subscriber->status          = 'unsubscribe';
+                            $subscriber->subscribe_at    = null;
+                            $subscriber->unsubscribe_at  = current_time( 'mysql' );
+                            $subscriber->save();
+
+                            $this->unsubscribed_groups[] = $group;
+                        }
                     }
                 } );
             }
