@@ -529,7 +529,7 @@ class Ajax {
      */
     public function dismiss_promotional_offer() {
         if ( ! empty( $_POST['dismissed'] ) ) {
-            update_option( 'erp_promotional_offer_notice', 'hide' );
+            update_option( 'erp_promotional_offer_notice_quiz-aug17', 'hide' );
         }
     }
 }
