@@ -1,0 +1,135 @@
+.erp-acc-statement {
+  background-color: #fff;
+  color: #444;
+  font-family: 'DejaVu Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4em;
+}
+.erp-acc-statement table {
+  font-family: 'DejaVu Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4em;
+  border-collapse: collapse;
+  width: 100%;
+  border: 0;
+}
+.erp-acc-statement table td,
+.erp-acc-statement table th {
+  font-family: 'DejaVu Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4em;
+}
+.erp-acc-statement.acc-admin-panel,
+.erp-acc-statement.acc-front-end {
+  max-width: 800px;
+  padding: 35px;
+}
+.erp-acc-statement.acc-front-end {
+  margin: 0 auto;
+}
+.erp-acc-statement.acc-front-end table {
+  color: #444;
+  font-size: 13px;
+  line-height: 1.4em;
+}
+.erp-acc-statement .statement-title h3 {
+  text-align: center;
+  font-size: 28px;
+  text-transform: uppercase;
+  line-height: 1;
+  margin: 10px 0 50px;
+}
+.erp-acc-statement .statement-header .company table td {
+  vertical-align: top;
+}
+.erp-acc-statement .statement-header .company table td.company-logo {
+  width: 150px;
+  padding-right: 12px;
+}
+.erp-acc-statement .statement-header .company table td.company-logo img {
+  width: 100%;
+  height: auto;
+}
+.erp-acc-statement .statement-header .company table td.company-info strong {
+  font-size: 20px;
+  display: block;
+  margin-bottom: 8px;
+}
+.erp-acc-statement .statement-header .statement-summery {
+  vertical-align: top;
+}
+.erp-acc-statement .statement-header .statement-summery .statement-amount-summery table {
+  border: 1px solid #a2a2a2;
+}
+.erp-acc-statement .statement-header .statement-summery .statement-amount-summery table th {
+  border: 1px solid #a2a2a2;
+  text-align: left;
+  font-weight: 700;
+  background-color: #f1f1f1;
+  padding: 3px;
+}
+.erp-acc-statement .statement-header .statement-summery .statement-amount-summery table td {
+  border: 1px solid #a2a2a2;
+  padding: 3px;
+  text-align: right;
+}
+.erp-acc-statement .statement-address {
+  border-top: 1px solid #ececec;
+  border-bottom: 1px solid #ececec;
+  padding: 15px 0px;
+  margin: 22px 0 16px;
+}
+.erp-acc-statement .statement-address .address-billing h5 {
+  font-size: 15px;
+  color: #777;
+  margin: 0 0 10px;
+}
+.erp-acc-statement .statement-address .address-billing h3 {
+  margin: 0 0 5px;
+}
+.erp-acc-statement .statement-address .address-billing p {
+  margin: 0 0 5px;
+}
+.erp-acc-statement .statement-item-table table tr th {
+  font-weight: 700;
+  white-space: nowrap;
+  padding: 0 4px 15px;
+  text-align: right;
+  min-width: 85px;
+}
+.erp-acc-statement .statement-item-table table tr th.item-name {
+  text-align: left;
+}
+.erp-acc-statement .statement-item-table table tr td {
+  padding: 5px;
+}
+.erp-acc-statement .statement-item-table table tr td .item-name {
+  font-weight: 700;
+}
+.erp-acc-statement .statement-item-table table tr td .item-description {
+  margin: 5px 0;
+}
+.erp-acc-statement .statement-item-table table tr td.not-item-name {
+  white-space: nowrap;
+  text-align: right;
+}
+.erp-acc-statement .statement-item-table table tr.item-row-even td {
+  background-color: #f1f1f1;
+}
+.erp-acc-statement .statement-item-table table tfoot tr th {
+  text-align: right;
+  padding: 5px;
+}
+.erp-acc-statement .statement-item-table table tfoot tr td {
+  text-align: right;
+}
+.erp-acc-statement .statement-item-table table tfoot tr td.statement-memo {
+  text-align: left;
+  vertical-align: top;
+}
+.erp-acc-statement .statement-item-table table tfoot tr td.statement-memo p {
+  margin: 0;
+}

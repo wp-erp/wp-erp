@@ -228,57 +228,17 @@ table.vendor-list-table th.column-customer img {
 .erp-ac-list-table-form .actions input {
   margin-right: 5px;
 }
-.invoice-preview-wrap {
-  padding: 20px;
-  background-color: #fff;
-  max-width: 800px;
-  margin-top: 30px;
-  border: 1px solid #e5e5e5;
-  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+.invoice-preview-wrap .faded {
+  opacity: 0.6;
+}
+.invoice-preview-wrap h3 {
+  display: inline-block;
 }
 .invoice-preview-wrap .invoice-buttons {
-  background-color: #F1F1F1;
-  margin: -20px -20px 20px -20px;
-  border-bottom: 1px solid #E5E5E5;
-  padding: 15px;
-}
-.invoice-preview-wrap hr {
-  border-bottom: none;
-  border-top: 1px solid #eee;
-  margin: 20px 0;
-}
-.invoice-preview-wrap .invoice-number {
-  float: right;
-  padding: 8px 20px;
-  background-color: #eee;
-  margin: -20px 0 20px 0;
-  text-transform: uppercase;
-}
-.invoice-preview-wrap .table {
-  width: 100%;
-  border-collapse: collapse;
-  border-spacing: 0;
-}
-.invoice-preview-wrap .table * {
-  word-wrap: break-word;
-}
-.invoice-preview-wrap .table td,
-.invoice-preview-wrap .table th {
-  vertical-align: middle;
-  padding: 12px;
-}
-.invoice-preview-wrap .table td.product-name,
-.invoice-preview-wrap .table th.product-name {
-  width: 20%;
-}
-.invoice-preview-wrap .table.info-table th,
-.invoice-preview-wrap .table.info-table td {
-  padding: 4px;
-}
-.invoice-preview-wrap .company-logo img {
-  max-width: 120px;
-  height: auto;
+  display: inline-block;
+  position: absolute;
+  top: 18px;
+  margin-left: 10px;
 }
 .erp-single-transaction-attachment-area .erp-attachment-list li {
   display: inline-block;

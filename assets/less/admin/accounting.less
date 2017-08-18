@@ -314,67 +314,19 @@ table.vendor-list-table {
 }
 
 .invoice-preview-wrap {
-    padding: 20px;
-    background-color: #fff;
-    max-width: 800px;
-    margin-top: 30px;
-    border: 1px solid #e5e5e5;
-    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
-    box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+    .faded {
+        opacity: 0.6;
+    }
+
+    h3 {
+        display: inline-block;
+    }
 
     .invoice-buttons {
-        background-color: #F1F1F1;
-        margin: -20px -20px 20px -20px;
-        border-bottom: 1px solid #E5E5E5;
-        padding: 15px;
-    }
-
-    hr {
-        border-bottom: none;
-        border-top: 1px solid #eee;
-        margin: 20px 0;
-    }
-
-    .invoice-number {
-        float: right;
-        padding: 8px 20px;
-        background-color: #eee;
-        margin: -20px 0 20px 0;
-        text-transform: uppercase;
-    }
-
-    .table {
-        width: 100%;
-        border-collapse: collapse;
-        border-spacing: 0;
-
-        * {
-            word-wrap: break-word
-        }
-
-        td,
-        th {
-            vertical-align: middle;
-            padding: 12px;
-
-            &.product-name {
-                width: 20%;
-            }
-        }
-
-        &.info-table {
-            th,
-            td {
-                padding: 4px;
-            }
-        }
-    }
-
-    .company-logo {
-        img {
-            max-width: 120px;
-            height: auto;
-        }
+        display: inline-block;
+        position: absolute;
+        top: 18px;
+        margin-left: 10px;
     }
 }
 
@@ -742,4 +694,3 @@ form.erp-form {
         width: 50%;
     }
 }
-

@@ -1201,7 +1201,7 @@ function erp_ac_send_invoice_pdf( $transaction_id, $output_method = 'D' ) {
     $file_name      = sprintf( '%s_%s.pdf', $transaction->invoice_number, $transaction->issue_date );
 
     if ( $transaction ) {
-        include WPERP_ACCOUNTING_VIEWS . '/pdf/invoice.php';
+        erp_acc_generate_invoice( $file_name, $transaction );
     }
 }
 
@@ -1291,4 +1291,10 @@ function erp_ac_update_transaction_to_void( $transaction_id ) {
     }
 
     erp_ac_update_transaction( $transaction_id, ['status' => 'void'] );
+}
+
+function erp_acc_generate_invoice( $file_name, $transaction, $stream = true ) {
+    $invoice = new WeDevs\ERP\Accounting\Statement( $transaction, 'pdf' );
+
+    $invoice->generate_pdf()->stream( $file_name );
 }

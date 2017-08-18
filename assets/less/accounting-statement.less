@@ -1,0 +1,208 @@
+.erp-acc-statement {
+    background-color: #fff;
+    color: #444;
+    font-family: 'DejaVu Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.4em;
+
+    table {
+        font-family: 'DejaVu Sans', sans-serif;
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 1.4em;
+        border-collapse: collapse;
+        width: 100%;
+        border: 0;
+
+        td, th {
+            font-family: 'DejaVu Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 1.4em;
+        }
+    }
+
+    &.acc-admin-panel,
+    &.acc-front-end {
+        max-width: 800px;
+        padding: 35px;
+    }
+
+    &.acc-front-end {
+        margin: 0 auto;
+
+        table {
+            color: #444;
+            font-size: 13px;
+            line-height: 1.4em;
+        }
+    }
+
+    .statement-title {
+
+        h3 {
+            text-align: center;
+            font-size: 28px;
+            text-transform: uppercase;
+            line-height: 1;
+            margin: 10px 0 50px;
+        }
+    }
+
+    .statement-header {
+
+        .company {
+
+            table {
+
+                td {
+                    vertical-align: top;
+
+                    &.company-logo {
+                        width: 150px;
+                        padding-right: 12px;
+
+                        img {
+                            width: 100%;
+                            height: auto;
+                        }
+
+                    }
+
+                    &.company-info {
+
+                        strong {
+                            font-size: 20px;
+                            display: block;
+                            margin-bottom: 8px;
+                        }
+                    }
+
+                }
+            }
+
+        }
+
+        .statement-summery {
+            vertical-align: top;
+
+            .statement-amount-summery {
+
+                table {
+                    border: 1px solid #a2a2a2;
+
+                    th {
+                        border: 1px solid #a2a2a2;
+                        text-align: left;
+                        font-weight: 700;
+                        background-color: #f1f1f1;
+                        padding: 3px;
+                    }
+
+                    td {
+                        border: 1px solid #a2a2a2;
+                        padding: 3px;
+                        text-align: right;
+                    }
+                }
+            }
+        }
+
+    }
+
+    .statement-address {
+        border-top: 1px solid #ececec;
+        border-bottom: 1px solid #ececec;
+        padding: 15px 0px;
+        margin: 22px 0 16px;
+
+        .address-billing {
+
+            h5 {
+                font-size: 15px;
+                color: #777;
+                margin: 0 0 10px;
+            }
+
+            h3 {
+                margin: 0 0 5px;
+            }
+
+            p {
+                margin: 0 0 5px;
+            }
+        }
+    }
+
+    .statement-item-table {
+
+        table {
+
+            tr {
+
+                th {
+                    font-weight: 700;
+                    white-space: nowrap;
+                    padding: 0 4px 15px;
+                    text-align: right;
+                    min-width: 85px;
+
+                    &.item-name {
+                        text-align: left;
+                    }
+                }
+
+                td {
+
+                    padding: 5px;
+
+                    .item-name {
+                        font-weight: 700;
+                    }
+
+                    .item-description {
+                        margin: 5px 0;
+                    }
+
+                    &.not-item-name {
+                        white-space: nowrap;
+                        text-align: right;
+                    }
+                }
+
+                &.item-row-even {
+                    td {
+                        background-color: #f1f1f1;
+                    }
+                }
+            }
+
+            tfoot {
+
+                tr {
+
+                    th {
+                        text-align: right;
+                        padding: 5px;
+                    }
+
+                    td {
+                        text-align: right;
+
+                        &.statement-memo {
+                            text-align: left;
+                            vertical-align: top;
+
+                            p {
+                                margin: 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+}
