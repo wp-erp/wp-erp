@@ -21,7 +21,7 @@ class Admin_Page {
         $this->action( 'admin_init', 'admin_redirects' );
         add_action( 'admin_footer', 'erp_include_popup_markup' );
 
-        // $this->action( 'admin_notices', 'promotional_offer' );
+        $this->action( 'admin_notices', 'promotional_offer' );
     }
 
     /**
@@ -91,14 +91,11 @@ class Admin_Page {
         }
 
         // check if it has already been dismissed
-        $hide_notice = get_option( 'erp_promotional_offer_notice', 'no' );
+        $hide_notice = get_option( 'erp_promotional_offer_notice_quiz-aug17', 'no' );
 
         if ( 'hide' == $hide_notice ) {
             return;
         }
-
-        $offer_msg  = __( '<h2><span class="dashicons dashicons-awards"></span> weDevs 4th Year Anniversary Offer</h2>', 'erp' );
-        $offer_msg .= sprintf( __( '<p>Get <strong class="highlight-text">44&#37; discount</strong> on all extensions also <a target="_blank" href="%1$s"><strong>WIN any product</strong></a> from our 4th year anniversary giveaway. Offer ending soon!</p>', 'erp' ), 'https://wedevs.com/in/4years' );
         ?>
             <div class="notice is-dismissible" id="erp-promotional-offer-notice">
                 <table>
@@ -108,7 +105,10 @@ class Admin_Page {
                                 <img src="https://ps.w.org/erp/assets/icon-256x256.png" alt="">
                             </td>
                             <td class="message-container">
-                                <?php echo $offer_msg; ?>
+                                <h2><span class="dashicons dashicons-awards"></span> Big Discount!</h2>
+                                <p>
+                                    <a href="https://wperp.com/in/WPERP-Quiz" class="highlight-text" target="_blank">Play This Quiz</a> on WP ERP and Win Massive 50% Discount. Hurry Up! Limited Time Offer!
+                                </p>
                             </td>
                         </tr>
                     </tbody>
@@ -155,7 +155,7 @@ class Admin_Page {
                     padding: 0 10px;
                 }
 
-                #erp-promotional-offer-notice h2{
+                #erp-promotional-offer-notice h2 {
                     color: rgba(250, 250, 250, 0.77);
                     margin-bottom: 10px;
                     font-weight: normal;
@@ -172,7 +172,7 @@ class Admin_Page {
                     top: 0;
                 }
 
-                #erp-promotional-offer-notice p{
+                #erp-promotional-offer-notice p {
                     color: rgba(250, 250, 250, 0.77);
                     font-size: 14px;
                     margin-bottom: 10px;
