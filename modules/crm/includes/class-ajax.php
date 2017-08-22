@@ -662,7 +662,8 @@ class Ajax_Handler {
     * Make crm contact to wp user
     *
     * @since 1.1.7
-    *
+    * @since 1.2.4 Check if current user has permission to higher level wp user
+     *
     * @return void
     **/
     public function make_wp_user() {
@@ -680,6 +681,11 @@ class Ajax_Handler {
 
         if ( ! $type ) {
             $this->send_error( __( 'Contact type not found', 'erp' ) );
+        }
+
+        $allowed_roles_to_create = array_keys( erp_get_editable_roles() );
+        if ( ! in_array( $role, $allowed_roles_to_create ) ) {
+            $this->send_error( __( 'Not allowed to crated user with the selected role', 'erp' ) );
         }
 
         $data = [
