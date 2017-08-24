@@ -157,6 +157,11 @@ If you are unable to use any of the methods due to internet connectivity and fil
 
 == Changelog ==
 
+**v1.2.4 -> Aug 24, 2017**
+
+[new] `erp_get_editable_roles` provides a filtered list of user roles.
+[fix] Prevent CRM Manager to convert a contact as administrator. Fixes #497.
+
 **v1.2.3 -> Aug 10, 2017**
 
 [new] Add hook after subscriber confirmation
