@@ -8,7 +8,7 @@
     <div class="row">
         <label for="wp-user-role"><?php _e( 'Role', 'erp' ) ?></label>
         <select name="customer_role" id="wp-user-role">
-            <?php wp_dropdown_roles( get_option('default_role') ); ?>
+            <?php erp_dropdown_roles( get_option('default_role') ); ?>
         </select>
     </div>
 

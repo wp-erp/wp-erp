@@ -3416,3 +3416,49 @@ function erp_crm_wc_prevent_admin_access( $prevent_access ) {
 
     return $prevent_access;
 }
+
+
+/**
+ * Fetch a filtered list of user roles that the current user is
+ * allowed to edit.
+ *
+ * @since 1.2.4
+ *
+ * @return array
+ */
+function erp_get_editable_roles (){
+    $wp_roles = get_editable_roles();
+
+    if( !current_user_can( 'administrator' ) ){
+        unset( $wp_roles['administrator'] );
+    }
+
+    $roles =  apply_filters( 'erp_editable_roles', $wp_roles );
+
+    return $roles;
+}
+
+/**
+ * Print out option html elements for role selectors.
+ *
+ * @since 1.2.4
+ *
+ * @param string $selected
+ */
+function erp_dropdown_roles( $selected = '' ){
+    $r = '';
+
+    $editable_roles = array_reverse( erp_get_editable_roles() );
+
+    foreach ( $editable_roles as $role => $details ) {
+        $name = translate_user_role($details['name'] );
+        // preselect specified role
+        if ( $selected == $role ) {
+            $r .= "\n\t<option selected='selected' value='" . esc_attr( $role ) . "'>$name</option>";
+        } else {
+            $r .= "\n\t<option value='" . esc_attr( $role ) . "'>$name</option>";
+        }
+    }
+
+    echo $r;
+}
