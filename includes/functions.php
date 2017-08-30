@@ -1737,15 +1737,12 @@ function erp_process_import_export() {
                             $existing_data = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( [ 'group_id' => $contact_group, 'user_id' => $people->id ] )->first();
 
                             if ( empty( $existing_data ) ) {
-                                $hash = sha1( microtime() . 'erp-subscription-form' . $contact_group . $people->id );
-
                                 erp_crm_create_new_contact_subscriber([
                                     'group_id'          => $contact_group,
                                     'user_id'           => $people->id,
                                     'status'            => 'subscribe',
                                     'subscribe_at'      => current_time( 'mysql' ),
-                                    'unsubscribe_at'    => null,
-                                    'hash'              => $hash
+                                    'unsubscribe_at'    => null
                                 ]);
                             }
                         }
