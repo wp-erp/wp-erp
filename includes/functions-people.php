@@ -338,7 +338,7 @@ function erp_get_people_by( $field, $value ) {
         return new WP_Error( 'no-value', __( 'No value provided', 'erp' ) );
     }
 
-    $cache_key = 'erp-people-by-' . md5( serialize( $value ) );
+    $cache_key = 'erp-people-by-' . $field . md5( serialize( $value ) );
     $people    = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $people ) {
