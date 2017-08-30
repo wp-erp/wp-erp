@@ -1391,8 +1391,7 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
         foreach ( $new_group as $new_group_key => $new_group_id ) {
             $data = [
                 'user_id'  => $user_id,
-                'group_id' => $new_group_id,
-                'hash'     => sha1( microtime() . 'erp-subscription' . $new_group_id . $user_id )
+                'group_id' => $new_group_id
             ];
 
             erp_crm_create_new_contact_subscriber( $data );
