@@ -8,7 +8,7 @@
                 </p>
 
                 <p class="erp-left schedule-assign-user">
-                    <select name="user_id" required class="erp-crm-contact-list-dropdown" id="assign-contact" style="width: 100%" data-types="contact,company" data-placeholder="<?php _e( 'Assign to a contact or company..', 'erp' ) ?>">
+                    <select name="user_id" required class="erp-crm-contact-list-dropdown" id="assign-contact" style="width: 100%" data-types="contact,company" data-placeholder="<?php _e( 'Assign to a contact..', 'erp' ) ?>">
                         <option value=""></option>
                     </select>
                 </p>
@@ -104,7 +104,7 @@
     <# } else { #>
         <div class="feed-log-activity">
             <p>
-                <select required name="user_id" class="erp-crm-contact-list-dropdown" id="assign-contact"  data-types="contact,company" style="width: 100%" data-placeholder="<?php _e( 'Assign to a contact or company..', 'erp' ) ?>">
+                <select required name="user_id" class="erp-crm-contact-list-dropdown" id="assign-contact"  data-types="contact,company" style="width: 100%" data-placeholder="<?php _e( 'Assign to a contact..', 'erp' ) ?>">
                     <option value=""></option>
                 </select>
             </p>
