@@ -70,7 +70,7 @@
                                             }
                                             ?>
                                             <li>
-                                                <a href="<?php echo add_query_arg( [ 'page' => 'erp-sales-customers', 'status' => $company_key ], admin_url( 'admin.php' ) ); ?>">
+                                                <a href="<?php echo add_query_arg( [ 'page' => 'erp-sales-companies', 'status' => $company_key ], admin_url( 'admin.php' ) ); ?>">
                                                     <i class="fa fa-square" aria-hidden="true"></i>&nbsp;
                                                     <?php
                                                         $singular = $company_value['label'];
