@@ -2,7 +2,7 @@
     $contacts_count  = erp_crm_customer_get_status_count( 'contact' );
     $companies_count = erp_crm_customer_get_status_count( 'company' );
 ?>
-<div class="wrap erp crm-dashboard erp-grid-container">
+<div class="wrap erp crm-dashboard">
     <h2><?php _e( 'CRM Dashboard', 'erp' ); ?></h2>
 
     <div class="erp-single-container">
