@@ -28,7 +28,7 @@ class Admin_Menu {
 
         $capabilities = erp_crm_get_manager_role();
 
-        add_menu_page( __( 'CRM', 'erp' ), __( 'CRM', 'erp' ), 'erp_crm_manage_dashboard', 'erp-sales', [ $this, 'dashboard_page' ], 'dashicons-chart-bar', null );
+        add_menu_page( __( 'CRM', 'erp' ), 'CRM', 'erp_crm_manage_dashboard', 'erp-sales', [ $this, 'dashboard_page' ], 'dashicons-chart-bar', null );
 
         $overview = add_submenu_page( 'erp-sales', __( 'Overview', 'erp' ), __( 'Overview', 'erp' ), 'erp_crm_manage_dashboard', 'erp-sales', [ $this, 'dashboard_page' ] );
         add_submenu_page( 'erp-sales', __( 'Contacts', 'erp' ), __( 'Contacts', 'erp' ), 'erp_crm_list_contact', 'erp-sales-customers', [ $this, 'contact_page' ] );

@@ -36,7 +36,7 @@ class Admin_Menu {
      */
     public function admin_menu() {
 
-        add_menu_page( __( 'ERP', 'erp' ), __( 'ERP Settings', 'erp' ), 'manage_options', 'erp-company', array( $this, 'company_page' ), 'dashicons-admin-settings', $this->get_menu_position() );
+        add_menu_page( __( 'ERP', 'erp' ), 'ERP Settings', 'manage_options', 'erp-company', array( $this, 'company_page' ), 'dashicons-admin-settings', $this->get_menu_position() );
 
         add_submenu_page( 'erp-company', __( 'Company', 'erp' ), __( 'Company', 'erp' ), 'manage_options', 'erp-company', array( $this, 'company_page' ) );
         add_submenu_page( 'erp-company', __( 'Tools', 'erp' ), __( 'Tools', 'erp' ), 'manage_options', 'erp-tools', array( $this, 'tools_page' ) );
