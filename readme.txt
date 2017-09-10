@@ -1,13 +1,16 @@
 === WP ERP ===
 Contributors: tareq1988, wedevs, ediamin, sabbir1991, asaquzzaman, shawon786
+Donate Link: https://tareq.co/donate
 Tags: small business, SME, contact, contacts, CRM, Customer Relationship Management, employee, leave management, hr, hrm, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
 Tested up to: 4.8.1
+Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2
-Donate Link: https://tareq.co/donate
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-An Open Source HR, CRM & Accounting Solution for WordPress
+An Open Source Human Resource, CRM & Accounting Solution for WordPress
 
 == Description ==
 
@@ -80,9 +83,10 @@ This may have bugs and lack of many features. If you want to contribute on this 
 
 
 = Checkout Our Other Products =
-* [Dokan - Multivendor Plugin](https://wedevs.com/products/plugins/dokan/?utm_medium=referral&utm_source=wporg&utm_campaign=WP+ERP+Readme&utm_content=Dokan)
-* [WP User Frontend Pro](https://wedevs.com/products/plugins/wp-user-frontend-pro/?utm_medium=referral&utm_source=wporg&utm_campaign=WP+ERP+Readme&utm_content=WP+User+Frontend+Pro)
-* [WP Project Manager](https://wedevs.com/products/plugins/wp-project-manager-pro/?utm_medium=referral&utm_source=wporg&utm_campaign=WP+ERP+Readme&utm_content=WP+Project+Manager)
+* [Dokan - Multivendor Plugin](https://wedevs.com/dokan/?utm_medium=referral&utm_source=wporg&utm_campaign=WP+ERP+Readme&utm_content=Dokan)
+* [weForms - Best Contact Form Plugin](https://wedevs.com/weforms/?utm_medium=referral&utm_source=wporg&utm_campaign=WP+ERP+Readme&utm_content=weForms)
+* [WP User Frontend Pro](https://wedevs.com/wp-user-frontend-pro/?utm_medium=referral&utm_source=wporg&utm_campaign=WP+ERP+Readme&utm_content=WP+User+Frontend+Pro)
+* [WP Project Manager](https://wedevs.com/wp-project-manager-pro/?utm_medium=referral&utm_source=wporg&utm_campaign=WP+ERP+Readme&utm_content=WP+Project+Manager)
 
 
 == Installation ==
@@ -147,22 +151,49 @@ If you are unable to use any of the methods due to internet connectivity and fil
 30. Chart of accounts listing
 
 == Frequently Asked Questions ==
-**Q.** Do you have any limit on customers, users or clients?
 
-  => No. We did not put any limit on anything. You can create as much entries as you want.
+= Can I use only one module (like- only HRM or CRM or Accounting)? =
+Yes, you definitely can! The whole plugin is divided into three parts- HR, CRM, Accounting based on features and the source code is separated for each module. So you can turn on/off any module you like from- “ERP Settings -> Modules.”
 
-**Q.** Does WP ERP support WordPress multisite installation?
+= Can I Translate WP ERP? =
+Yes, the plugin is fully translation ready. You can [translate the plugin](https://translate.wordpress.org/projects/wp-plugins/erp) if your language is missing.
 
-  => No, WP ERP and its add-ons do not support multisite WordPress installation.
+= Do you have any video tutorial on WP ERP? =
+Yes, we have some helpful videos on our [youtube channel](https://www.youtube.com/channel/UC7PaXj-qWPOM378L11QJyIQ).
+
+= How can I suggest for new features? =
+We would love to hear your suggestions! Feel free to [submit them here](https://wperp.com/submit-ideas/).
+
+= Can I bulk import employees, contacts etc? =
+Yes, you can import employees, contacts via CSV file by just navigating to-
+“ERP Settings -> Tools -> Import”
+
+= Can I use WP ERP from the front end? =
+You can use HR module from the frontend by using “HR Frontend” extension. The CRM & Accounting module does not have a frontend right now.
+
+= Is WP ERP capable to handle attendance? =
+Yes! We have an extension- Attendance that has the check-in, check-out feature along with attendance report generator and much more.
+
+= Is WP ERP capable to handle a huge amount of data? =
+Yes, of course! Many of our clients are using WP ERP to manage their business with 3000+ employees,2000+ customers/contacts without any hessle.
+
+= What are your support timings? =
+Our general live support hours are Saturday to Thursday, 07:00 to 15:00 (GMT +6).
+
+= What is the average response time in your support thread? =
+We strive to respond all queries within 12 hours. Our response time may be just 1 hour if you reach us in our working hours!
+
+It may take longer to respond to more advanced or technical queries. We promise to serve and support you in the best way possible, which can sometimes take time, but you will be assured the best service.
+
 
 == Changelog ==
 
-**v1.2.4 -> Aug 24, 2017**
+= v1.2.4 -> Aug 24, 2017 =
 
 [new] `erp_get_editable_roles` provides a filtered list of user roles.
 [fix] Prevent CRM Manager to convert a contact as administrator. Fixes #497.
 
-**v1.2.3 -> Aug 10, 2017**
+= v1.2.3 -> Aug 10, 2017 =
 
 [new] Add hook after subscriber confirmation
 [new] Add erp_save_contact_form_data hook
@@ -176,7 +207,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
 [fix] While importing contacts WP ERP is adding dump email address. Fixes #475.
 [fix] Removed due date from the payment. Fixes #481.
 
-**v1.2.2 -> Jul 13, 2017**
+= v1.2.2 -> Jul 13, 2017 =
 
 [new] Add private option for contact groups
 [new] Add edit subscription page
@@ -190,7 +221,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
 [fix] Change _assign_crm_agent meta key to contact_owner in API function
 [fix] Throw exception if accounting transaction failed
 
-**v1.2.1 -> Jun 18, 2017**
+= v1.2.1 -> Jun 18, 2017 =
 
 [new] Add force_subscribe_to option for subscribing users
 [new] Add with-groups optional parameter for CRM delete command
@@ -205,7 +236,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
 [fix] Fix warning issue due to run loop on an empty array
 [fix] Fix invoice number in exported Sales Invoice
 
-**v1.2.0 -> May 22, 2017**
+= v1.2.0 -> May 22, 2017 =
 
 [new] Add function to get employee work location id
 [new] Show unconfirmed column in contact group list tables
@@ -230,14 +261,14 @@ If you are unable to use any of the methods due to internet connectivity and fil
 [fix] Template names in comments corrected
 [fix] Dix expense created by one manager can be seen by other managers too. Issue#444
 
-**v1.1.19 -> Apr 27, 2017**
+= v1.1.19 -> Apr 27, 2017 =
 
 [tweak] Import partial data in case of existing contacts during WP User to CRM import or CSV import
 [tweak] Log each time a contact opens an email.
 [tweak] Improve insert_people function
 [fix] `From` name mismatch in emails sending from CRM single contact page
 
-**v1.1.18 -> Apr 13, 2017**
+= v1.1.18 -> Apr 13, 2017 =
 
 [fix] Fix owner avatar in contact and company single pages
 [fix] Fix export error handle when no field is given
@@ -247,12 +278,12 @@ If you are unable to use any of the methods due to internet connectivity and fil
 [tweak] Check permission before convert a contact to WP User
 [tweak] Prevent woocommerce from redirecting ERP users to my account page
 
-**v1.1.17 -> Mar 30, 2017**
+= v1.1.17 -> Mar 30, 2017 =
 
 * [new] Add email opt-in with subscription form
 * [tweak] Change employee pay_rate column int to decimal in db
 
-**v1.1.16 -> Mar 27, 2017**
+= v1.1.16 -> Mar 27, 2017 =
 
 * [new] added function `erp_get_client_ip()` for getting client IP address
 * [fix] Fix CRM dashboard Today's Schedule metabox
@@ -264,14 +295,14 @@ If you are unable to use any of the methods due to internet connectivity and fil
 * [fix] Append extra life stage label after the filter applied
 * [tweak] Added some file types in file_upload option
 
-**v1.1.15 -> Mar 16, 2017**
+= v1.1.15 -> Mar 16, 2017 =
 
 * [fix] Allow export fields like checkbox or multiselect for Contact or Company
 * [fix] Fix import export undefined field_builder_contacts_fields error
 * [fix] Fix condition to hide dashboard metabox
 * [fix] Pagination problem on leave request page. Fixes #419
 
-**v1.1.14 -> Mar 07, 2017**
+= v1.1.14 -> Mar 07, 2017 =
 
 * [new] Added CRM cli command for clearing up the contacts
 * [new] Add most of the current circulating currencies
@@ -284,7 +315,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
 * [tweak] Remove terminated employees from Birthday Buddies list
 * [tweak] Added created_at field to enable adding log in a past date
 
-**v1.1.13 -> Feb 16, 2017**
+= v1.1.13 -> Feb 16, 2017 =
 
 * [fix] Show tasks based on permission and tab in CRM Schedule calendar
 * [fix] Fix contact editor error when assigned to one group
@@ -294,7 +325,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
 * [fix] Fix comapny default address zip error
 * [new] Add function to remove select2 enqueued by other plugins
 
-**v1.1.12 -> Feb 01, 2017**
+= v1.1.12 -> Feb 01, 2017 =
 
 * [fix] Fix employee editor popup country dropdown
 * [fix] Fix announcement mark as read process
@@ -305,11 +336,11 @@ If you are unable to use any of the methods due to internet connectivity and fil
 * [new] Add filterable company default location name
 * [tweak] Refactor single employee permissions update process
 
-**v1.1.11 -> Jan 22, 2017**
+= v1.1.11 -> Jan 22, 2017 =
 
 * [fix] Update minified JavaScript files
 
-**v1.1.10 -> Jan 18, 2017**
+= v1.1.10 -> Jan 18, 2017 =
 
 * [new] Introduce REST API
 * [new] Meta query support in advance search segmentaion
@@ -324,7 +355,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
 * [tweak] Update select2 v4.0.3
 * [fix] Leave request deleting issue
 
-**v1.1.9 -> Dec 22, 2016**
+= v1.1.9 -> Dec 22, 2016 =
 
 * [new] Can input data from older financial year (balance c/f)
 * [new] Added email validation for new customer and vendor
@@ -335,7 +366,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
 * [fix] ERP updater is now working
 * [fix] Removed journal edit option from individual chart list table
 
-**v1.1.8 -> Dec 11, 2016**
+= v1.1.8 -> Dec 11, 2016 =
 
 * [new] Add filter for hiding dashboard metaboxes
 * [fix] Fix leave request datetime calculation
@@ -345,7 +376,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
 * [fix] Remove employee role checkbox from wp user edit profile
 * [Update] Update moment.js to v2.17.1
 
-**v1.1.7 -> Dec 7, 2016**
+= v1.1.7 -> Dec 7, 2016 =
 
 * [new] Label added in tax form
 * [new] Added editing system in journal
@@ -373,7 +404,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
 * [fix] Required minimum amount for bank transfer
 * [fix] Refactor & add journal new function
 
-**v1.1.6 -> Nov 9, 2016**
+= v1.1.6 -> Nov 9, 2016 =
 
 * [Fix] Query fix dashboard income & expense, business expense, net income, invoice payable to and bill you need to pay
 * [Fix] Fix overdue payment problem
@@ -397,7 +428,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
 * [Update] Improve announcement functionality
 * [Update] Chosen js removed from core
 
-**v1.1.5 -> Sep 19, 2016**
+= v1.1.5 -> Sep 19, 2016 =
 
  * [fix] Holiday date calculation problem fixed
  * [fix] Ajax request for edit holiday
@@ -416,7 +447,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
  * [new] Added erp_create_new_people hook if people is an existing wp user
  * [new] Added Saudi Riyal currency
 
-**v1.1.4 -> Aug 28, 2016**
+= v1.1.4 -> Aug 28, 2016 =
 
  * [fix] New expense time undefined invoice_number problem fixed
  * [fix] Ignore rejected leaves during validating duration
@@ -432,7 +463,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
  * [new] Voucher create time from account is required
  * [new] Action hook 'erp_crm_contact_inbound_email' added
 
-**v1.1.3 -> Aug 4, 2016**
+= v1.1.3 -> Aug 4, 2016 =
 
  * [fix] Added loading feedback when submitting form for all popup
  * [fix] Invoice number formatting functionality
@@ -443,7 +474,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
  * [new] Life stage, contact owner & group added on CSV contact importer form
  * [new] added some hooks and filters
 
-**v1.1.2 -> June 26, 2016**
+= v1.1.2 -> June 26, 2016 =
 
  * [new] Settings for invoice formatting
  * [new] Set submit group button for sales payment and invoice
@@ -487,7 +518,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
  * [update] Change invoice url format for sharing
  * [update] Set wp mysql timezone instead of carbon
 
-**v1.1.1 -> June 22, 2016**
+= v1.1.1 -> June 22, 2016 =
 
  * [fix] Accounting report query optimzation
  * [fix] Partial payment amount problem fixed
@@ -514,7 +545,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
  * [Update] Accounting dashaboard updated
  * [Update] Updated filter and hook for people query sql
 
-**v1.1.0 -> June 8, 2016**
+= v1.1.0 -> June 8, 2016 =
 
  * [new] Merge accounting module
  * [new] Currency formating
@@ -548,7 +579,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
  * [update] Select2 updated
  * [update] Trix editor js updated
 
-**v1.0.1 -> April 27, 2016**
+= v1.0.1 -> April 27, 2016 =
 
  * [fix] Employee performance fetching was returning all entries
  * [fix] WP_User importing into contact was not refering the right WP_User
@@ -556,7 +587,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
  * [fix] Imported contact counting issues
  * [fix] Social field url issues in contact profile
 
-**v1.0 -> April 25, 2016**
+= v1.0 -> April 25, 2016 =
 
  * [improved] Change people table structure.
  * [new] New CRM agent role added
@@ -595,7 +626,7 @@ If you are unable to use any of the methods due to internet connectivity and fil
  * [fix] Employee and Contact record duplication remove with better UX
  * [update] - Trix editor js, Select2, Vuejs
 
-**v0.1 -> March 18, 2016**
+= v0.1 -> March 18, 2016 =
 
 * Beta Release
 
