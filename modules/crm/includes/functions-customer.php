@@ -3061,11 +3061,20 @@ function erp_create_contact_from_created_user( $user_id ) {
     if ( empty ( $matched_roles ) ) {
         return;
     }
+    
+    $people = erp_get_people_by( 'email', $user->user_email );
+    if ( false !== $people ) {
+        return;
+    }
 
     $data = [];
 
-    $data['type']    = 'contact';
-    $data['user_id'] = $user_id;
+    $data['type']       = 'contact';
+    $data['user_id']    = $user_id;
+    $data['first_name'] = $user->first_name;
+    $data['last_name']  = $user->last_name;
+    $data['email']      = $user->user_email;
+    $data['website']    = $user->user_url;
 
     $contact_id    = erp_insert_people( $data );
     $contact_owner = erp_get_option( 'contact_owner', 'erp_settings_erp-crm_contacts', null );

@@ -29,7 +29,7 @@ class Admin_Menu {
         $journal        = 'erp_ac_view_journal';
         $reports        = 'erp_ac_view_reports';
 
-        add_menu_page( __( 'Accounting', 'erp' ), __( 'Accounting', 'erp' ), $dashboard, 'erp-accounting', array( $this, 'dashboard_page' ), 'dashicons-chart-pie', null );
+        add_menu_page( __( 'Accounting', 'erp' ), 'Accounting', $dashboard, 'erp-accounting', array( $this, 'dashboard_page' ), 'dashicons-chart-pie', null );
 
         $dashboard      = add_submenu_page( 'erp-accounting', __( 'Dashboard', 'erp' ), __( 'Dashboard', 'erp' ), $dashboard, 'erp-accounting', array( $this, 'dashboard_page' ) );
         $customer       = add_submenu_page( 'erp-accounting', __( 'Customers', 'erp' ), __( 'Customers', 'erp' ), $customer, 'erp-accounting-customers', array( $this, 'page_customers' ) );

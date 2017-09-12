@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.2.3\n"
+"Project-Id-Version: WP ERP 1.2.4\n"
 "Report-Msgid-Bugs-To: http://wperp.com/support/\n"
-"POT-Creation-Date: 2017-08-10 06:32:19+00:00\n"
+"POT-Creation-Date: 2017-08-24 14:31:45+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -7781,6 +7781,20 @@ msgstr ""
 msgid "Canel"
 msgstr ""
 
+#: includes/lib/class-weforms-upsell.php:77
+msgid "Install Now"
+msgstr ""
+
+#: includes/lib/class-weforms-upsell.php:80
+#: includes/lib/class-weforms-upsell.php:81
+#: modules/accounting/includes/functions-html.php:15
+msgid "Dismiss this notice."
+msgstr ""
+
+#: includes/lib/class-weforms-upsell.php:353
+msgid "You don't have permission to install the plugins"
+msgstr ""
+
 #: modules/accounting/includes/class-admin-menu.php:35
 #: modules/accounting/includes/views/customer/list.php:3
 #: modules/accounting/includes/views/customers.php:2
@@ -8793,10 +8807,6 @@ msgstr ""
 #: modules/accounting/includes/functions-dashboard.php:172
 #: modules/accounting/includes/functions-dashboard.php:454
 msgid "> 90 days overdue"
-msgstr ""
-
-#: modules/accounting/includes/functions-html.php:15
-msgid "Dismiss this notice."
 msgstr ""
 
 #: modules/accounting/includes/functions-html.php:37
@@ -10575,20 +10585,24 @@ msgstr ""
 msgid "Assign to agent successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:678
+#: modules/crm/includes/class-ajax.php:679
 msgid "Contact not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:682
+#: modules/crm/includes/class-ajax.php:683
 msgid "Contact type not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:715
-#: modules/crm/includes/class-ajax.php:765
-#: modules/crm/includes/class-ajax.php:988
-#: modules/crm/includes/class-ajax.php:1178
-#: modules/crm/includes/class-ajax.php:1201
-#: modules/crm/includes/class-ajax.php:1278
+#: modules/crm/includes/class-ajax.php:688
+msgid "Not allowed to crated user with the selected role"
+msgstr ""
+
+#: modules/crm/includes/class-ajax.php:721
+#: modules/crm/includes/class-ajax.php:771
+#: modules/crm/includes/class-ajax.php:994
+#: modules/crm/includes/class-ajax.php:1184
+#: modules/crm/includes/class-ajax.php:1207
+#: modules/crm/includes/class-ajax.php:1284
 #: modules/hrm/includes/class-ajax.php:111
 #: modules/hrm/includes/class-ajax.php:141
 #: modules/hrm/includes/class-ajax.php:244
@@ -10634,143 +10648,143 @@ msgstr ""
 msgid "You do not have sufficient permissions to do this action"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:719
+#: modules/crm/includes/class-ajax.php:725
 msgid "Contact Group Name must be required"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:731
+#: modules/crm/includes/class-ajax.php:737
 msgid "Contact group save successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:769
-#: modules/crm/includes/class-ajax.php:1352
-#: modules/crm/includes/class-ajax.php:1378
+#: modules/crm/includes/class-ajax.php:775
+#: modules/crm/includes/class-ajax.php:1358
+#: modules/crm/includes/class-ajax.php:1384
 msgid "Somthing wrong, Please try later"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:774
-#: modules/crm/includes/class-ajax.php:886
+#: modules/crm/includes/class-ajax.php:780
+#: modules/crm/includes/class-ajax.php:892
 msgid "Contact group delete successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:806
+#: modules/crm/includes/class-ajax.php:812
 msgid "Contact not found. Try again"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:816
+#: modules/crm/includes/class-ajax.php:822
 msgid "Subscribed on"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:817
+#: modules/crm/includes/class-ajax.php:823
 msgid "Unsubscribed on"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:840
+#: modules/crm/includes/class-ajax.php:846
 msgid "No user data found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:844
+#: modules/crm/includes/class-ajax.php:850
 msgid "You don't have any permission to assign this contact in a group"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:856
+#: modules/crm/includes/class-ajax.php:862
 msgid "Succesfully subscriber for this user"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:873
+#: modules/crm/includes/class-ajax.php:879
 msgid "You don't have any permission to remove this contact from a group"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:877
+#: modules/crm/includes/class-ajax.php:883
 msgid "No subscriber contact found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:881
+#: modules/crm/includes/class-ajax.php:887
 msgid "No subscriber group found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:903
+#: modules/crm/includes/class-ajax.php:909
 msgid "You don't have any permission to assign this contact"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:907
+#: modules/crm/includes/class-ajax.php:913
 msgid "No subscriber user found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:912
+#: modules/crm/includes/class-ajax.php:918
 msgid "Contact group edit successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:944
+#: modules/crm/includes/class-ajax.php:950
 msgid "No customer found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:953
+#: modules/crm/includes/class-ajax.php:959
 msgid "Succesfully added social profiles"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:983
+#: modules/crm/includes/class-ajax.php:989
 msgid "Customer not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:992
+#: modules/crm/includes/class-ajax.php:998
 msgid "Content must be required"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1011
-#: modules/crm/includes/class-ajax.php:1076
-#: modules/crm/includes/class-ajax.php:1106
-#: modules/crm/includes/class-ajax.php:1122
-#: modules/crm/includes/class-ajax.php:1150
+#: modules/crm/includes/class-ajax.php:1017
+#: modules/crm/includes/class-ajax.php:1082
+#: modules/crm/includes/class-ajax.php:1112
+#: modules/crm/includes/class-ajax.php:1128
+#: modules/crm/includes/class-ajax.php:1156
 msgid "Somthing is wrong, Please try later"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1182
+#: modules/crm/includes/class-ajax.php:1188
 msgid "Feeds Not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1187
+#: modules/crm/includes/class-ajax.php:1193
 msgid "Feed Deleted successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1207
+#: modules/crm/includes/class-ajax.php:1213
 msgid "No data not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1211
-#: modules/crm/includes/class-ajax.php:1259
+#: modules/crm/includes/class-ajax.php:1217
+#: modules/crm/includes/class-ajax.php:1265
 msgid "Search name not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1215
+#: modules/crm/includes/class-ajax.php:1221
 msgid "Contact Type not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1219
+#: modules/crm/includes/class-ajax.php:1225
 msgid "Search filters not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1225
+#: modules/crm/includes/class-ajax.php:1231
 msgid "Query not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1240
+#: modules/crm/includes/class-ajax.php:1246
 msgid "Search does not save"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1284
+#: modules/crm/includes/class-ajax.php:1290
 msgid "Search segment not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1307
+#: modules/crm/includes/class-ajax.php:1313
 msgid "Schedule data no found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1361
+#: modules/crm/includes/class-ajax.php:1367
 msgid "No results found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1387
+#: modules/crm/includes/class-ajax.php:1393
 msgid "Save reply item delete successfully"
 msgstr ""
 
