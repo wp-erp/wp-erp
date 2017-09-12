@@ -113,7 +113,7 @@ class Ajax_Handler {
 
         $request_id = isset( $_POST['leave_request_id'] ) ? intval( $_POST['leave_request_id'] ) : 0;
         $comments   = isset( $_POST['reason'] ) ? $_POST['reason'] : '';
-        
+
         global $wpdb;
         $update = $wpdb->update( $wpdb->prefix . 'erp_hr_leave_requests',
             array( 'comments' => $comments ),
@@ -1531,10 +1531,14 @@ class Ajax_Handler {
             $this->send_error( __( 'Existing Leave Record found within selected range!', 'erp' ) );
         }
 
-        $is_policy_valid = erp_hrm_is_valid_leave_duration( $start_date, $end_date, $policy_id, $id );
+        $is_extra_leave_enabled = get_option('enable_extra_leave', 'no');
 
-        if ( ! $is_policy_valid ) {
-            $this->send_error( __( 'Sorry! You do not have any leave left under this leave policy', 'erp' ) );
+        if( $is_extra_leave_enabled !== 'yes' ){
+            $is_policy_valid = erp_hrm_is_valid_leave_duration( $start_date, $end_date, $policy_id, $id );
+
+            if ( ! $is_policy_valid ) {
+                $this->send_error( __( 'Sorry! You do not have any leave left under this leave policy', 'erp' ) );
+            }
         }
 
         $days = erp_hr_get_work_days_between_dates( $start_date, $end_date );
@@ -1621,7 +1625,7 @@ class Ajax_Handler {
             $available = $balance[ $policy_id ]['entitlement'] - $balance[ $policy_id ]['total'];
         }
 
-        if ( $available < 0 ) {
+        if ( $available <= 0 ) {
             $content = sprintf( '<span class="description red">%d %s</span>', number_format_i18n( $available ), __( 'days are available', 'erp' ) );
         } elseif ( $available > 0 ) {
             $content = sprintf( '<span class="description green">%d %s</span>', number_format_i18n( $available ), __( 'days are available', 'erp' ) );
