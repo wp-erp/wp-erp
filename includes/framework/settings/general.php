@@ -64,13 +64,21 @@ class ERP_Settings_General extends ERP_Settings_Page {
                 'options' => erp_get_currency_list_with_symbol(),
                 'default' => 'USD'
             ),
-
+            array(
+                'title'   => __( 'Role Based Login Redirection', 'erp' ),
+                'id'      => 'role_based_login_redirection',
+                'type'    => 'select',
+                'options' => [ 1 => __('On', 'erp'), 0 => __( 'Off', 'erp') ],
+                'desc'    => __( 'User will be redirected to the related page regrading their role after login.', 'erp' ),
+                'tooltip' =>  true,
+                'default' =>  0,
+            ),
             array(
                 'title'   => __( 'Enable Debug Mode', 'erp' ),
                 'id'      => 'erp_debug_mode',
                 'type'    => 'select',
                 'options' => [ 1 => __('On', 'erp'), 0 => __( 'Off', 'erp') ],
-                'desc'    => __( 'Switching testing or producting mode', 'erp' ),
+                'desc'    => __( 'Switching testing or production mode', 'erp' ),
                 'tooltip' =>  true,
                 'default' =>  0,
             ),

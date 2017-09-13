@@ -3061,7 +3061,7 @@ function erp_create_contact_from_created_user( $user_id ) {
     if ( empty ( $matched_roles ) ) {
         return;
     }
-    
+
     $people = erp_get_people_by( 'email', $user->user_email );
     if ( false !== $people ) {
         return;
@@ -3470,4 +3470,25 @@ function erp_dropdown_roles( $selected = '' ){
     }
 
     echo $r;
+}
+
+/**
+ * Redirect crm role based user to their page
+ *
+ * @since 1.2.5
+ *
+ * @param $redirect_to
+ * @param $roles
+ *
+ * @return string
+ */
+function erp_crm_login_redirect( $redirect_to, $roles ) {
+    $crm_manager = erp_crm_get_manager_role();
+    $crm_agent   = erp_crm_get_agent_role();
+
+    if ( in_array( $crm_manager, $roles ) || in_array( $crm_agent, $roles ) ) {
+        $redirect_to = get_admin_url( null, 'admin.php?page=erp-sales' );
+    }
+
+    return $redirect_to;
 }

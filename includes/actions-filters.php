@@ -14,3 +14,6 @@ add_action( 'admin_init', 'erp_import_export_download_sample_action' );
 add_filter( 'map_meta_cap', 'erp_map_meta_caps', 10, 4 );
 add_filter( 'cron_schedules', 'erp_cron_intervals', 10, 1 );
 add_filter( 'ajax_query_attachments_args', 'erp_show_users_own_attachments', 1, 1 );
+
+//login redirect hook
+add_filter( 'login_redirect', 'erp_login_redirect_manager', 10, 3 );

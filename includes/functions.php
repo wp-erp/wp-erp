@@ -2423,3 +2423,24 @@ function get_financial_year_from_date( $date ) {
         ];
     }
 }
+
+/**
+ * Redirect erp role based user to their page
+ *
+ * @since 1.2.5
+ *
+ * @param $redirect_to
+ * @param $request
+ * @param $user
+ *
+ * @return string
+ */
+function erp_login_redirect_manager( $redirect_to, $request, $user ) {
+    $is_erp_redirect = erp_get_option( 'role_based_login_redirection', 'erp_settings_general', false );
+
+    if ( $is_erp_redirect && isset( $user->roles ) && is_array( $user->roles ) && ! in_array( 'administrator', $user->roles ) ) {
+        return $redirect_to = apply_filters( 'erp_login_redirect', $redirect_to, $user->roles );
+    } else {
+        return $redirect_to;
+    }
+}
