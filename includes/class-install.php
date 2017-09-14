@@ -326,7 +326,11 @@ Company'
                 `status` varchar(10) NOT NULL DEFAULT '',
                 `deleted_at` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`),
-                KEY `user_id` (`user_id`)
+                KEY `user_id` (`user_id`),
+                KEY `employee_id` (`employee_id`),
+                KEY `designation` (`designation`),
+                KEY `department` (`department`),
+                KEY `status` (`status`)
             ) $collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_employee_history` (
@@ -396,7 +400,8 @@ Company'
                 `created_by` bigint(20) unsigned DEFAULT NULL,
                 `created_on` datetime NOT NULL,
                 PRIMARY KEY (`id`),
-                KEY `user_id` (`user_id`)
+                KEY `user_id` (`user_id`),
+                KEY `policy_id` (`policy_id`)
             ) $collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_leaves` (
@@ -409,7 +414,8 @@ Company'
                 `end_time` time NOT NULL,
                 `duration_type` tinyint(4) unsigned NOT NULL,
                 PRIMARY KEY (`id`),
-                KEY `request_id` (`request_id`)
+                KEY `request_id` (`request_id`),
+                KEY `date` (`date`)
             ) $collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_leave_requests` (
@@ -429,7 +435,10 @@ Company'
                 `last_date` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`),
                 KEY `user_id` (`user_id`),
-                KEY `policy_id` (`policy_id`)
+                KEY `policy_id` (`policy_id`),
+                KEY `status` (`status`),
+                KEY `created_by` (`created_by`),
+                KEY `updated_by` (`updated_by`)
             ) $collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_hr_work_exp` (
@@ -501,7 +510,10 @@ Company'
                 `post_id` bigint(11) NOT NULL,
                 `status` varchar(30) NOT NULL,
                 `email_status` varchar(30) NOT NULL,
-                PRIMARY KEY (id)
+                PRIMARY KEY (id),
+                KEY `user_id` (`user_id`),
+                KEY `post_id` (`post_id`),
+                KEY `status` (`status`)
             ) $collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_peoples` (
@@ -527,7 +539,10 @@ Company'
                 `created_by` BIGINT(20) DEFAULT NULL,
                 `created` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`),
-                KEY `user_id` (`user_id`)
+                KEY `user_id` (`user_id`),
+                KEY `first_name` (`first_name`),
+                KEY `last_name` (`last_name`),
+                KEY `email` (`email`)
             ) $collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_peoplemeta` (
@@ -570,14 +585,20 @@ Company'
                 `created_by` bigint(20) unsigned DEFAULT NULL,
                 `created_at` datetime DEFAULT NULL,
                 `updated_at` datetime DEFAULT NULL,
-                PRIMARY KEY (`id`)
+                PRIMARY KEY (`id`),
+                KEY `component` (`component`),
+                KEY `sub_component` (`sub_component`),
+                KEY `changetype` (`changetype`),
+                KEY `created_by` (`created_by`)
             ) $collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_customer_companies` (
                 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
                 `customer_id` bigint(20) DEFAULT NULL,
                 `company_id` bigint(50) DEFAULT NULL,
-                PRIMARY KEY (`id`)
+                PRIMARY KEY (`id`),
+                KEY `customer_id` (`customer_id`),
+                KEY `company_id` (`company_id`)
             ) $collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_customer_activities` (
@@ -594,14 +615,20 @@ Company'
                 `sent_notification` tinyint(4) DEFAULT '0',
                 `created_at` datetime DEFAULT NULL,
                 `updated_at` datetime DEFAULT NULL,
-                PRIMARY KEY (`id`)
+                PRIMARY KEY (`id`),
+                KEY `user_id` (`user_id`),
+                KEY `type` (`type`),
+                KEY `log_type` (`log_type`),
+                KEY `created_by` (`created_by`)
             ) $collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_activities_task` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
                 `activity_id` int(11) DEFAULT NULL,
                 `user_id` int(11) DEFAULT NULL,
-                PRIMARY KEY (`id`)
+                PRIMARY KEY (`id`),
+                KEY `activity_id` (`activity_id`),
+                KEY `user_id` (`user_id`)
             ) $collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_contact_group` (
@@ -615,31 +642,17 @@ Company'
             ) $collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_contact_subscriber` (
-              `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-              `user_id` int(11) DEFAULT NULL,
-              `group_id` int(11) DEFAULT NULL,
-              `status` varchar(25) DEFAULT NULL,
-              `subscribe_at` datetime DEFAULT NULL,
-              `unsubscribe_at` datetime DEFAULT NULL,
-              `hash` VARCHAR(40) NULL DEFAULT NULL,
-              PRIMARY KEY (`id`),
-              UNIQUE KEY `user_group` (`user_id`,`group_id`)
-            ) $collate;",
-
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_campaigns` (
-              `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-              `title` text,
-              `description` longtext,
-              `created_at` datetime DEFAULT NULL,
-              `updated_at` datetime DEFAULT NULL,
-              PRIMARY KEY (`id`)
-            ) $collate;",
-
-            "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_campaign_group` (
-              `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-              `campaign_id` int(11) DEFAULT NULL,
-              `group_id` int(11) DEFAULT NULL,
-              PRIMARY KEY (`id`)
+                `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+                `user_id` int(11) DEFAULT NULL,
+                `group_id` int(11) DEFAULT NULL,
+                `status` varchar(25) DEFAULT NULL,
+                `subscribe_at` datetime DEFAULT NULL,
+                `unsubscribe_at` datetime DEFAULT NULL,
+                `hash` VARCHAR(40) NULL DEFAULT NULL,
+                PRIMARY KEY (`id`),
+                UNIQUE KEY `user_group` (`user_id`,`group_id`),
+                KEY `status` (`status`),
+                KEY `hash` (`hash`)
             ) $collate;",
 
             "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}erp_crm_save_search` (
