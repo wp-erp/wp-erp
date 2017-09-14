@@ -1,6 +1,6 @@
 # WP ERP
 
-An open-source ERP (Enterprise Resource Planning) solution for WordPress
+An open-source ERP (Enterprise Resource Planning) solution for WordPress. View [documentation](https://wperp.com/documentation/?utm_medium=referral&utm_source=github&utm_campaign=WP+ERP+Readme&utm_content=Home+Page)
 
 ## Core Components
 
@@ -10,7 +10,7 @@ An open-source ERP (Enterprise Resource Planning) solution for WordPress
 
 ## Other Components
 
-* [Project Management](https://wedevs.com/products/plugins/wp-project-manager-pro/)
+* [Project Management](https://wedevs.com/wp-project-manager-pro/?utm_medium=referral&utm_source=github&utm_campaign=WP+ERP+Readme&utm_content=WP+Project+Manager)
 
 ## Available Add-ons
 
@@ -20,7 +20,7 @@ An open-source ERP (Enterprise Resource Planning) solution for WordPress
 * Attendance Management
 
 ## Minimum Requirement
- - PHP 5.4.0
+ - PHP 5.6
  - WordPress 4.4+
 
 ## Installation
@@ -33,7 +33,7 @@ An open-source ERP (Enterprise Resource Planning) solution for WordPress
 ## Who's behind?
 
 * Project Lead: [Tareq Hasan](https://github.com/tareq1988)
-* Core Developers: [Edi Amin](https://github.com/ediamin), [Sabbir Ahmed](https://github.com/sabbir1991), [Asaquzzaman Mishu](https://github.com/asaquzzaman), [Shawon Chowdhury](https://github.com/shawon786)
-* Contributors: [List of Contributors](https://github.com/wp-erp/wp-erp/graphs/contributors)
+* Core Developers: [Edi Amin](https://github.com/ediamin), [Sultan Nasir Uddin](https://github.com/sultann)
+* Contributors: [Shawon Chowdhury](https://github.com/shawon786) and [List of Contributors](https://github.com/wp-erp/wp-erp/graphs/contributors)
 
 An open-source project by [weDevs](https://wedevs.com/?utm_source=github&utm_medium=credit&utm_term=opensource&utm_content=wperp&utm_campaign=product)

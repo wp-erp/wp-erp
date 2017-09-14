@@ -614,7 +614,7 @@ class Ajax_Handler {
 
         $found_crm_contact = [];
         $type              = ( count( $types ) > 1 ) ? $types : reset( $types );
-        $crm_contacts      = erp_get_peoples( [ 's' => $term, 'type' => $type ] );
+        $crm_contacts      = erp_get_peoples( [ 's' => $term, 'type' => 'contact' ] );
 
         if ( ! empty( $crm_contacts ) ) {
             foreach ( $crm_contacts as $user ) {

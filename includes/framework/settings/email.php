@@ -18,6 +18,7 @@ class ERP_Email_Settings extends ERP_Settings_Page {
         add_action( 'erp_admin_field_imap_status', [ $this, 'imap_status' ] );
 
         add_action( 'erp_update_option', [ $this, 'cron_schedule' ] );
+        add_action( 'admin_footer', 'erp_email_settings_javascript' );
     }
 
     /**

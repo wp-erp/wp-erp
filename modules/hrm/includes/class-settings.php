@@ -26,6 +26,7 @@ class Settings extends ERP_Settings_Page {
     public function get_sections() {
         $sections = array(
             'workdays' => __( 'Workdays', 'erp' ),
+            'leave' => __( 'Leave', 'erp' ),
         );
 
         return apply_filters( 'erp_settings_hr_sections', $sections );
@@ -58,7 +59,7 @@ class Settings extends ERP_Settings_Page {
         $fields['workdays'][] = [
             'title' => __( 'Work Days', 'erp' ),
             'type'  => 'title',
-            'desc'  => __( 'Week day settings for this company.', 'domain' ),
+            'desc'  => __( 'Week day settings for this company.', 'erp' ),
             'id'    => 'general_options'
         ];
 
@@ -72,6 +73,24 @@ class Settings extends ERP_Settings_Page {
         }
 
         $fields['workdays'][] = [
+            'type'  => 'sectionend',
+            'id'    => 'script_styling_options'
+        ];
+
+
+        $fields['leave'][] = [
+            'title' => __( 'Leave', 'erp' ),
+            'type'  => 'title',
+            'desc'  => __( 'Leave settings for this company.', 'erp' ),
+            'id'    => 'general_options'
+        ];
+        $fields['leave'][] = [
+            'title' => __( 'Extra Leave', 'erp' ),
+            'type'  => 'checkbox',
+            'id'    => 'enable_extra_leave',
+            'desc'  => __( 'Employees can apply for leave, even when there is no entitlement left.', 'erp' )
+        ];
+        $fields['leave'][] = [
             'type'  => 'sectionend',
             'id'    => 'script_styling_options'
         ];

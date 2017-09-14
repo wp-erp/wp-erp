@@ -3062,10 +3062,19 @@ function erp_create_contact_from_created_user( $user_id ) {
         return;
     }
 
+    $people = erp_get_people_by( 'email', $user->user_email );
+    if ( false !== $people ) {
+        return;
+    }
+
     $data = [];
 
-    $data['type']    = 'contact';
-    $data['user_id'] = $user_id;
+    $data['type']       = 'contact';
+    $data['user_id']    = $user_id;
+    $data['first_name'] = $user->first_name;
+    $data['last_name']  = $user->last_name;
+    $data['email']      = $user->user_email;
+    $data['website']    = $user->user_url;
 
     $contact_id    = erp_insert_people( $data );
     $contact_owner = erp_get_option( 'contact_owner', 'erp_settings_erp-crm_contacts', null );
@@ -3461,4 +3470,25 @@ function erp_dropdown_roles( $selected = '' ){
     }
 
     echo $r;
+}
+
+/**
+ * Redirect crm role based user to their page
+ *
+ * @since 1.2.5
+ *
+ * @param $redirect_to
+ * @param $roles
+ *
+ * @return string
+ */
+function erp_crm_login_redirect( $redirect_to, $roles ) {
+    $crm_manager = erp_crm_get_manager_role();
+    $crm_agent   = erp_crm_get_agent_role();
+
+    if ( in_array( $crm_manager, $roles ) || in_array( $crm_agent, $roles ) ) {
+        $redirect_to = get_admin_url( null, 'admin.php?page=erp-sales' );
+    }
+
+    return $redirect_to;
 }

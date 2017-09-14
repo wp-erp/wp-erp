@@ -11,3 +11,4 @@ add_action( 'template_redirect', 'erp_ac_readonly_invoice_template' );
 
 // Filters *****************************************************************/
 add_filter( 'woocommerce_prevent_admin_access', 'erp_ac_wc_prevent_admin_access' );
+add_filter( 'erp_login_redirect', 'erp_ac_login_redirect', 10, 2);

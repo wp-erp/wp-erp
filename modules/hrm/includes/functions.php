@@ -187,3 +187,24 @@ function erp_hr_wc_prevent_admin_access( $prevent_access ) {
 
     return $prevent_access;
 }
+
+/**
+ * Redirect hr role based user to their page
+ *
+ * @since 1.2.5
+ *
+ * @param $redirect_to
+ * @param $roles
+ *
+ * @return string
+ */
+function erp_hr_login_redirect( $redirect_to, $roles ) {
+    $hr_role       = erp_hr_get_manager_role();
+    $employee_role = erp_hr_get_employee_role();
+
+    if ( in_array( $hr_role, $roles ) || in_array( $employee_role, $roles ) ) {
+        $redirect_to = get_admin_url( null, 'admin.php?page=erp-hr' );
+    }
+
+    return $redirect_to;
+}

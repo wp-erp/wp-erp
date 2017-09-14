@@ -277,7 +277,7 @@ class WeForms_Upsell {
                     modal.addClass('show');
                     modalBackdrop.addClass('show');
 
-                    iframe.attr( 'src', 'https://www.youtube.com/embed/NJvjy9WFyAM?rel=0&amp;controls=0&amp;showinfo=0&amp;autoplay=1' );
+                    iframe.attr( 'src', 'https://www.youtube.com/embed/sqP-nvyqUdQ?rel=0&amp;controls=0&amp;showinfo=0&amp;autoplay=1' );
                 });
 
                 $('body').on('click', '.weforms-upsell-modal a.close', function(e) {

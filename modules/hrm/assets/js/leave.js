@@ -452,7 +452,7 @@
             requestDates: function() {
                 var from = $('#erp-hr-leave-req-from-date').val(),
                     to = $('#erp-hr-leave-req-to-date').val(),
-                    submit = $(this).closest('form').find('button[type=submit]'),
+                    submit = $(this).closest('form').find('*[type="submit"]'),
                     user_id = parseInt( $( '#erp-hr-leave-req-employee-id').val() ),
                     type = $('#erp-hr-leave-req-leave-policy').val();
 
@@ -481,7 +481,7 @@
                         error: function(response) {
                             $('div.erp-hr-leave-req-show-days').empty();
                             submit.attr( 'disabled', 'disable' );
-                            if ( typeof response != 'undefined' ) {
+                            if ( typeof response !== 'undefined' ) {
                                 alert( response );
                             }
                         }

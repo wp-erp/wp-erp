@@ -673,3 +673,24 @@ function erp_ac_wc_prevent_admin_access( $prevent_access ) {
 
     return $prevent_access;
 }
+
+
+/**
+ * Redirect accounting role based user to their page
+ *
+ * @since 1.2.5
+ *
+ * @param $redirect_to
+ * @param $roles
+ *
+ * @return string
+ */
+function erp_ac_login_redirect( $redirect_to, $roles ) {
+    $employee_role = erp_ac_get_manager_role();
+
+    if ( in_array( $employee_role, $roles ) ) {
+        $redirect_to = get_admin_url( null, 'admin.php?page=erp-accounting' );
+    }
+
+    return $redirect_to;
+}
