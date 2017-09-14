@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.2.4\n"
+"Project-Id-Version: WP ERP 1.2.5\n"
 "Report-Msgid-Bugs-To: http://wperp.com/support/\n"
-"POT-Creation-Date: 2017-08-24 14:31:45+00:00\n"
+"POT-Creation-Date: 2017-09-14 13:25:00+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4827,8 +4827,7 @@ msgstr ""
 msgid "Created At"
 msgstr ""
 
-#: includes/admin/class-form-handler.php:25 includes/admin/class-menu.php:39
-#: includes/functions.php:1285
+#: includes/admin/class-form-handler.php:25 includes/functions.php:1285
 msgid "ERP Settings"
 msgstr ""
 
@@ -4919,7 +4918,7 @@ msgid "Designations"
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:75
-#: modules/hrm/includes/class-settings.php:59
+#: modules/hrm/includes/class-settings.php:60
 msgid "Work Days"
 msgstr ""
 
@@ -5060,52 +5059,52 @@ msgid "Designation name"
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:418
-#: modules/hrm/includes/class-settings.php:41
+#: modules/hrm/includes/class-settings.php:42
 msgid "Full Day"
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:419
-#: modules/hrm/includes/class-settings.php:42
+#: modules/hrm/includes/class-settings.php:43
 msgid "Half Day"
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:420
-#: modules/hrm/includes/class-settings.php:43
+#: modules/hrm/includes/class-settings.php:44
 msgid "Non-working Day"
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:423
-#: modules/hrm/includes/class-settings.php:47
+#: modules/hrm/includes/class-settings.php:48
 msgid "Monday"
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:424
-#: modules/hrm/includes/class-settings.php:48
+#: modules/hrm/includes/class-settings.php:49
 msgid "Tuesday"
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:425
-#: modules/hrm/includes/class-settings.php:49
+#: modules/hrm/includes/class-settings.php:50
 msgid "Wednesday"
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:426
-#: modules/hrm/includes/class-settings.php:50
+#: modules/hrm/includes/class-settings.php:51
 msgid "Thursday"
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:427
-#: modules/hrm/includes/class-settings.php:51
+#: modules/hrm/includes/class-settings.php:52
 msgid "Friday"
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:428
-#: modules/hrm/includes/class-settings.php:52
+#: modules/hrm/includes/class-settings.php:53
 msgid "Saturday"
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:429
-#: modules/hrm/includes/class-settings.php:53
+#: modules/hrm/includes/class-settings.php:54
 msgid "Sunday"
 msgstr ""
 
@@ -5192,7 +5191,7 @@ msgstr ""
 #: modules/accounting/includes/views/common/transaction-table-tr-render.php:99
 #: modules/accounting/includes/views/user-form-rows.php:211
 #: modules/crm/views/js-templates/new-customer.php:212
-#: modules/hrm/includes/class-ajax.php:1585
+#: modules/hrm/includes/class-ajax.php:1589
 #: modules/hrm/views/employee/tab-job.php:19
 #: modules/hrm/views/js-templates/compensation.php:27
 #: modules/hrm/views/js-templates/compensation.php:37
@@ -5423,7 +5422,7 @@ msgid "Title"
 msgstr ""
 
 #: includes/admin/views/module.php:31 includes/admin/views/module.php:39
-#: includes/framework/settings/email.php:206
+#: includes/framework/settings/email.php:207
 #: includes/framework/settings/integration.php:57
 #: modules/accounting/includes/functions-transaction.php:1060
 #: modules/accounting/includes/views/accounts/form-fields.php:48
@@ -5631,7 +5630,7 @@ msgid "Selected user role are considered to import."
 msgstr ""
 
 #: includes/admin/views/tools/misc.php:3
-#: includes/framework/settings/email.php:277
+#: includes/framework/settings/email.php:278
 msgid "Send Test Email"
 msgstr ""
 
@@ -5674,7 +5673,7 @@ msgstr ""
 msgid "Send Email"
 msgstr ""
 
-#: includes/admin/views/tools.php:27 includes/framework/settings/email.php:30
+#: includes/admin/views/tools.php:27 includes/framework/settings/email.php:31
 #: includes/framework/settings/general.php:12
 msgid "General"
 msgstr ""
@@ -6291,17 +6290,17 @@ msgid ""
 "will be replaced by original values"
 msgstr ""
 
-#: includes/class-install.php:928 includes/updates/update-1.1.17.php:21
+#: includes/class-install.php:941 includes/updates/update-1.1.17.php:21
 msgid "ERP Subscription"
 msgstr ""
 
-#: includes/class-install.php:940 includes/updates/update-1.1.17.php:33
+#: includes/class-install.php:953 includes/updates/update-1.1.17.php:33
 #: modules/crm/includes/admin/class-settings.php:146
 #: modules/crm/includes/class-subscription.php:450
 msgid "Confirm your subscription to %s"
 msgstr ""
 
-#: includes/class-install.php:942 includes/updates/update-1.1.17.php:35
+#: includes/class-install.php:955 includes/updates/update-1.1.17.php:35
 #: modules/crm/includes/admin/class-settings.php:154
 #: modules/crm/includes/class-subscription.php:452
 msgid ""
@@ -6318,51 +6317,50 @@ msgid ""
 "%s"
 msgstr ""
 
-#: includes/class-install.php:946 includes/updates/update-1.1.17.php:39
+#: includes/class-install.php:959 includes/updates/update-1.1.17.php:39
 #: modules/crm/includes/admin/class-settings.php:179
 #: modules/crm/includes/class-subscription.php:678
 msgid "You are now subscribed!"
 msgstr ""
 
-#: includes/class-install.php:947 includes/updates/update-1.1.17.php:40
+#: includes/class-install.php:960 includes/updates/update-1.1.17.php:40
 #: modules/crm/includes/admin/class-settings.php:186
 #: modules/crm/includes/class-subscription.php:713
 msgid "We've added you to our email list. You'll hear from us shortly."
 msgstr ""
 
-#: includes/class-install.php:948 includes/updates/update-1.1.17.php:41
+#: includes/class-install.php:961 includes/updates/update-1.1.17.php:41
 #: modules/crm/includes/admin/class-settings.php:198
 #: modules/crm/includes/class-subscription.php:687
 msgid "You are now unsubscribed"
 msgstr ""
 
-#: includes/class-install.php:949 includes/updates/update-1.1.17.php:42
+#: includes/class-install.php:962 includes/updates/update-1.1.17.php:42
 #: modules/crm/includes/admin/class-settings.php:205
 #: modules/crm/includes/class-subscription.php:730
 msgid "You are successfully unsubscribed from list(s):"
 msgstr ""
 
-#: includes/class-install.php:971 includes/class-scripts.php:143
+#: includes/class-install.php:984 includes/class-scripts.php:143
 #: includes/framework/modules.php:38 modules/hrm/hrm.php:143
-#: modules/hrm/hrm.php:241 modules/hrm/includes/admin/class-menu.php:25
-#: modules/hrm/includes/class-form-handler.php:30
+#: modules/hrm/hrm.php:241 modules/hrm/includes/class-form-handler.php:30
 #: modules/hrm/views/dashboard.php:2
 msgid "HR Management"
 msgstr ""
 
-#: includes/class-install.php:973
+#: includes/class-install.php:986
 msgid "Human Resource Mnanagement"
 msgstr ""
 
-#: includes/class-install.php:979 includes/framework/modules.php:45
+#: includes/class-install.php:992 includes/framework/modules.php:45
 msgid "CR Management"
 msgstr ""
 
-#: includes/class-install.php:981 includes/framework/modules.php:47
+#: includes/class-install.php:994 includes/framework/modules.php:47
 msgid "Client Resource Management"
 msgstr ""
 
-#: includes/class-install.php:987 includes/class-install.php:989
+#: includes/class-install.php:1000 includes/class-install.php:1002
 #: includes/updates/update-1.1.0.php:415 includes/updates/update-1.1.0.php:417
 msgid "Accountig Management"
 msgstr ""
@@ -6418,17 +6416,17 @@ msgid ""
 "to collect non-sensitive diagnostic data and usage information."
 msgstr ""
 
-#: includes/class-updates.php:103
+#: includes/class-updates.php:104
 msgid ""
 "<strong>WP ERP Data Update Required</strong> &#8211; We need to update your "
 "install to the latest version"
 msgstr ""
 
-#: includes/class-updates.php:104
+#: includes/class-updates.php:105
 msgid "Run the updater"
 msgstr ""
 
-#: includes/class-updates.php:109
+#: includes/class-updates.php:110
 msgid ""
 "It is strongly recommended that you backup your database before proceeding. "
 "Are you sure you wish to run the updater now?"
@@ -6487,146 +6485,146 @@ msgstr ""
 msgid "Emails"
 msgstr ""
 
-#: includes/framework/settings/email.php:31
+#: includes/framework/settings/email.php:32
 msgid "SMTP"
 msgstr ""
 
-#: includes/framework/settings/email.php:32
+#: includes/framework/settings/email.php:33
 msgid "IMAP/POP3"
 msgstr ""
 
-#: includes/framework/settings/email.php:46
+#: includes/framework/settings/email.php:47
 msgid "Email Sender Options"
 msgstr ""
 
-#: includes/framework/settings/email.php:48
+#: includes/framework/settings/email.php:49
 msgid ""
 "Email notification settings for ERP. Customize the look and feel of "
 "outgoing emails."
 msgstr ""
 
-#: includes/framework/settings/email.php:52
+#: includes/framework/settings/email.php:53
 msgid "\"From\" Name"
 msgstr ""
 
-#: includes/framework/settings/email.php:57
+#: includes/framework/settings/email.php:58
 msgid "The senders name appears on the outgoing emails"
 msgstr ""
 
-#: includes/framework/settings/email.php:61
+#: includes/framework/settings/email.php:62
 msgid "\"From\" Address"
 msgstr ""
 
-#: includes/framework/settings/email.php:66
+#: includes/framework/settings/email.php:67
 msgid "The senders email appears on the outgoing emails"
 msgstr ""
 
-#: includes/framework/settings/email.php:70
+#: includes/framework/settings/email.php:71
 msgid "Header Image"
 msgstr ""
 
-#: includes/framework/settings/email.php:73
+#: includes/framework/settings/email.php:74
 msgid "Upload a logo/banner and provide the URL here."
 msgstr ""
 
-#: includes/framework/settings/email.php:81
+#: includes/framework/settings/email.php:82
 msgid "Footer Text"
 msgstr ""
 
-#: includes/framework/settings/email.php:87
+#: includes/framework/settings/email.php:88
 msgid "The text apears on each emails footer area."
 msgstr ""
 
-#: includes/framework/settings/email.php:95
+#: includes/framework/settings/email.php:96
 msgid "Notification Emails"
 msgstr ""
 
-#: includes/framework/settings/email.php:96
+#: includes/framework/settings/email.php:97
 msgid ""
 "Email notifications sent from WP ERP are listed below. Click on an email to "
 "configure it."
 msgstr ""
 
-#: includes/framework/settings/email.php:112
+#: includes/framework/settings/email.php:113
 msgid "SMTP Options"
 msgstr ""
 
-#: includes/framework/settings/email.php:114
+#: includes/framework/settings/email.php:115
 msgid "Email outgoing settings for ERP."
 msgstr ""
 
-#: includes/framework/settings/email.php:118
+#: includes/framework/settings/email.php:119
 msgid "Enable SMTP"
 msgstr ""
 
-#: includes/framework/settings/email.php:126
-#: includes/framework/settings/email.php:380
+#: includes/framework/settings/email.php:127
+#: includes/framework/settings/email.php:381
 msgid "Mail Server"
 msgstr ""
 
-#: includes/framework/settings/email.php:132
+#: includes/framework/settings/email.php:133
 msgid "SMTP host address."
 msgstr ""
 
-#: includes/framework/settings/email.php:136
-#: includes/framework/settings/email.php:416
+#: includes/framework/settings/email.php:137
+#: includes/framework/settings/email.php:417
 msgid "Port"
 msgstr ""
 
-#: includes/framework/settings/email.php:139
+#: includes/framework/settings/email.php:140
 msgid "SSL: 465<br> TLS: 587"
 msgstr ""
 
-#: includes/framework/settings/email.php:143
-#: includes/framework/settings/email.php:423
+#: includes/framework/settings/email.php:144
+#: includes/framework/settings/email.php:424
 msgid "Authentication"
 msgstr ""
 
-#: includes/framework/settings/email.php:146
-#: includes/framework/settings/email.php:428
+#: includes/framework/settings/email.php:147
+#: includes/framework/settings/email.php:429
 msgid "Authentication type."
 msgstr ""
 
-#: includes/framework/settings/email.php:147
-#: includes/framework/settings/email.php:426
+#: includes/framework/settings/email.php:148
+#: includes/framework/settings/email.php:427
 msgid "None"
 msgstr ""
 
-#: includes/framework/settings/email.php:147
-#: includes/framework/settings/email.php:426
+#: includes/framework/settings/email.php:148
+#: includes/framework/settings/email.php:427
 msgid "SSL"
 msgstr ""
 
-#: includes/framework/settings/email.php:147
-#: includes/framework/settings/email.php:426
+#: includes/framework/settings/email.php:148
+#: includes/framework/settings/email.php:427
 msgid "TLS"
 msgstr ""
 
-#: includes/framework/settings/email.php:151
-#: includes/framework/settings/email.php:390
+#: includes/framework/settings/email.php:152
+#: includes/framework/settings/email.php:391
 msgid "Username"
 msgstr ""
 
-#: includes/framework/settings/email.php:157
-#: includes/framework/settings/email.php:393
+#: includes/framework/settings/email.php:158
+#: includes/framework/settings/email.php:394
 msgid "Your email id."
 msgstr ""
 
-#: includes/framework/settings/email.php:161
-#: includes/framework/settings/email.php:400
+#: includes/framework/settings/email.php:162
+#: includes/framework/settings/email.php:401
 msgid "Password"
 msgstr ""
 
-#: includes/framework/settings/email.php:164
-#: includes/framework/settings/email.php:403
+#: includes/framework/settings/email.php:165
+#: includes/framework/settings/email.php:404
 msgid "Your email password."
 msgstr ""
 
-#: includes/framework/settings/email.php:168
+#: includes/framework/settings/email.php:169
 msgid "Debug"
 msgstr ""
 
-#: includes/framework/settings/email.php:205
+#: includes/framework/settings/email.php:206
 #: modules/accounting/includes/class-customer-list-table.php:85
 #: modules/accounting/includes/class-vendor-list-table.php:48
 #: modules/accounting/includes/views/customer/user-details.php:5
@@ -6645,25 +6643,25 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: includes/framework/settings/email.php:245
+#: includes/framework/settings/email.php:246
 #: includes/framework/settings/integration.php:96
 msgid "Configure"
 msgstr ""
 
-#: includes/framework/settings/email.php:276
+#: includes/framework/settings/email.php:277
 msgid "An email address to test the connection."
 msgstr ""
 
-#: includes/framework/settings/email.php:279
-#: includes/framework/settings/email.php:299
+#: includes/framework/settings/email.php:280
+#: includes/framework/settings/email.php:300
 msgid "Click on the above button before saving the settings."
 msgstr ""
 
-#: includes/framework/settings/email.php:297
+#: includes/framework/settings/email.php:298
 msgid "Test Connection"
 msgstr ""
 
-#: includes/framework/settings/email.php:316
+#: includes/framework/settings/email.php:317
 #: modules/accounting/includes/class-customer-transaction-list-table.php:35
 #: modules/accounting/includes/class-sales-transaction-list-table.php:42
 #: modules/accounting/includes/class-transaction-list-table.php:91
@@ -6679,63 +6677,63 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: includes/framework/settings/email.php:319
+#: includes/framework/settings/email.php:320
 msgid "Connected"
 msgstr ""
 
-#: includes/framework/settings/email.php:319
+#: includes/framework/settings/email.php:320
 msgid "Not Connected"
 msgstr ""
 
-#: includes/framework/settings/email.php:333
-#: includes/framework/settings/email.php:346
+#: includes/framework/settings/email.php:334
+#: includes/framework/settings/email.php:347
 msgid "IMAP/POP3 Options"
 msgstr ""
 
-#: includes/framework/settings/email.php:336
+#: includes/framework/settings/email.php:337
 msgid ""
 "Your server does not have PHP IMAP extension loaded. To enable this "
 "feature, please contact your hosting provider and ask to enable PHP IMAP "
 "extension."
 msgstr ""
 
-#: includes/framework/settings/email.php:348
+#: includes/framework/settings/email.php:349
 msgid "Email incoming settings for ERP."
 msgstr ""
 
-#: includes/framework/settings/email.php:356
+#: includes/framework/settings/email.php:357
 msgid "Enable IMAP"
 msgstr ""
 
-#: includes/framework/settings/email.php:371
+#: includes/framework/settings/email.php:372
 msgid "Cron Schedule"
 msgstr ""
 
-#: includes/framework/settings/email.php:374
+#: includes/framework/settings/email.php:375
 msgid "Interval time to run cron."
 msgstr ""
 
-#: includes/framework/settings/email.php:386
+#: includes/framework/settings/email.php:387
 msgid "IMAP/POP3 host address."
 msgstr ""
 
-#: includes/framework/settings/email.php:407
+#: includes/framework/settings/email.php:408
 msgid "Protocol"
 msgstr ""
 
-#: includes/framework/settings/email.php:410
+#: includes/framework/settings/email.php:411
 msgid "Protocol type."
 msgstr ""
 
-#: includes/framework/settings/email.php:411
+#: includes/framework/settings/email.php:412
 msgid "IMAP"
 msgstr ""
 
-#: includes/framework/settings/email.php:411
+#: includes/framework/settings/email.php:412
 msgid "POP3"
 msgstr ""
 
-#: includes/framework/settings/email.php:419
+#: includes/framework/settings/email.php:420
 msgid "IMAP: 993<br> POP3: 995"
 msgstr ""
 
@@ -6743,22 +6741,34 @@ msgstr ""
 msgid "General Options"
 msgstr ""
 
-#: includes/framework/settings/general.php:69
-msgid "Enable Debug Mode"
+#: includes/framework/settings/general.php:68
+msgid "Role Based Login Redirection"
 msgstr ""
 
-#: includes/framework/settings/general.php:72
+#: includes/framework/settings/general.php:71
+#: includes/framework/settings/general.php:80
 #: modules/crm/includes/admin/class-settings.php:60
 msgid "On"
 msgstr ""
 
-#: includes/framework/settings/general.php:72
+#: includes/framework/settings/general.php:71
+#: includes/framework/settings/general.php:80
 #: modules/crm/includes/admin/class-settings.php:60
 msgid "Off"
 msgstr ""
 
-#: includes/framework/settings/general.php:73
-msgid "Switching testing or producting mode"
+#: includes/framework/settings/general.php:72
+msgid ""
+"User will be redirected to the related page regrading their role after "
+"login."
+msgstr ""
+
+#: includes/framework/settings/general.php:77
+msgid "Enable Debug Mode"
+msgstr ""
+
+#: includes/framework/settings/general.php:81
+msgid "Switching testing or production mode"
 msgstr ""
 
 #: includes/framework/settings/integration.php:14
@@ -7982,8 +7992,8 @@ msgstr ""
 #: modules/hrm/includes/class-designation-list-table.php:84
 #: modules/hrm/includes/class-designation-list-table.php:109
 #: modules/hrm/includes/class-employee-list-table.php:167
-#: modules/hrm/includes/class-entitlements-list-table.php:172
-#: modules/hrm/includes/class-entitlements-list-table.php:212
+#: modules/hrm/includes/class-entitlements-list-table.php:171
+#: modules/hrm/includes/class-entitlements-list-table.php:210
 #: modules/hrm/includes/class-leave-request-list-table.php:142
 #: modules/hrm/includes/class-leave-request-list-table.php:168
 #: modules/hrm/includes/class-walker-department.php:45
@@ -8020,7 +8030,7 @@ msgstr ""
 #: modules/hrm/includes/class-department-list-table.php:212
 #: modules/hrm/includes/class-designation-list-table.php:84
 #: modules/hrm/includes/class-employee-list-table.php:174
-#: modules/hrm/includes/class-entitlements-list-table.php:172
+#: modules/hrm/includes/class-entitlements-list-table.php:171
 #: modules/hrm/views/js-templates/row-dept.php:11
 #: modules/hrm/views/js-templates/row-desig.php:11
 #: modules/hrm/views/leave/holiday.php:113
@@ -10561,7 +10571,7 @@ msgstr ""
 #: modules/crm/includes/functions-customer.php:374
 #: modules/crm/includes/functions-customer.php:1293
 #: modules/crm/includes/functions-customer.php:2868
-#: modules/crm/includes/functions-customer.php:3299
+#: modules/crm/includes/functions-customer.php:3308
 msgid "No contact found"
 msgstr ""
 
@@ -10632,7 +10642,7 @@ msgstr ""
 #: modules/hrm/includes/class-ajax.php:1376
 #: modules/hrm/includes/class-ajax.php:1429
 #: modules/hrm/includes/class-ajax.php:1475
-#: modules/hrm/includes/class-ajax.php:1652
+#: modules/hrm/includes/class-ajax.php:1656
 #: modules/hrm/includes/class-form-handler.php:103
 #: modules/hrm/includes/class-form-handler.php:130
 #: modules/hrm/includes/class-form-handler.php:174
@@ -11349,92 +11359,92 @@ msgstr ""
 msgid "%s contacts created."
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3170
+#: modules/crm/includes/functions-customer.php:3179
 #: modules/hrm/includes/functions-employee.php:644
 msgid "Advertisement"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3171
+#: modules/crm/includes/functions-customer.php:3180
 msgid "Chat"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3172
+#: modules/crm/includes/functions-customer.php:3181
 msgid "Contact Form"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3173
+#: modules/crm/includes/functions-customer.php:3182
 msgid "Employee Referral"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3174
+#: modules/crm/includes/functions-customer.php:3183
 msgid "External Referral"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3175
+#: modules/crm/includes/functions-customer.php:3184
 msgid "Marketing campaign"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3176
+#: modules/crm/includes/functions-customer.php:3185
 msgid "Newsletter"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3177
+#: modules/crm/includes/functions-customer.php:3186
 msgid "OnlineStore"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3178
+#: modules/crm/includes/functions-customer.php:3187
 msgid "Optin Forms"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3179
+#: modules/crm/includes/functions-customer.php:3188
 msgid "Partner"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3180
+#: modules/crm/includes/functions-customer.php:3189
 msgid "Phone Call"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3181
+#: modules/crm/includes/functions-customer.php:3190
 msgid "Public Relations"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3182
+#: modules/crm/includes/functions-customer.php:3191
 msgid "Sales Mail Alias"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3183
+#: modules/crm/includes/functions-customer.php:3192
 msgid "Search Engine"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3184
+#: modules/crm/includes/functions-customer.php:3193
 msgid "Seminar-Internal"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3185
+#: modules/crm/includes/functions-customer.php:3194
 msgid "Seminar Partner"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3186
+#: modules/crm/includes/functions-customer.php:3195
 msgid "Social Media"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3187
+#: modules/crm/includes/functions-customer.php:3196
 msgid "Trade Show"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3188
+#: modules/crm/includes/functions-customer.php:3197
 msgid "Web Download"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3189
+#: modules/crm/includes/functions-customer.php:3198
 msgid "Web Research"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3295
+#: modules/crm/includes/functions-customer.php:3304
 msgid "You do not have permission to make WP User"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3309
+#: modules/crm/includes/functions-customer.php:3318
 msgid "No email found for creating wp user"
 msgstr ""
 
@@ -11865,7 +11875,7 @@ msgstr ""
 
 #: modules/crm/views/js-templates/customer-add-schedules.php:11
 #: modules/crm/views/js-templates/customer-add-schedules.php:107
-msgid "Assign to a contact or company.."
+msgid "Assign to a contact.."
 msgstr ""
 
 #: modules/crm/views/js-templates/customer-add-schedules.php:20
@@ -11953,7 +11963,7 @@ msgstr ""
 
 #: modules/crm/views/js-templates/customer-add-schedules.php:96
 #: modules/crm/views/js-templates/customer-schedule-note.php:96
-#: modules/hrm/includes/class-ajax.php:1553
+#: modules/hrm/includes/class-ajax.php:1557
 #: modules/hrm/views/js-templates/leave-days.php:7
 msgid "day"
 msgstr ""
@@ -12401,8 +12411,9 @@ msgstr ""
 msgid "Create Entitlement"
 msgstr ""
 
-#: modules/hrm/hrm.php:279 modules/hrm/includes/admin/class-menu.php:40
-#: modules/hrm/includes/class-form-handler.php:36
+#: modules/hrm/hrm.php:279 modules/hrm/includes/class-form-handler.php:36
+#: modules/hrm/includes/class-settings.php:29
+#: modules/hrm/includes/class-settings.php:82
 #: modules/hrm/views/employee/single.php:105
 #: modules/hrm/views/employee/tab-leave.php:15
 msgid "Leave"
@@ -12479,7 +12490,7 @@ msgstr ""
 #: modules/hrm/includes/class-ajax.php:622
 #: modules/hrm/includes/class-ajax.php:669
 #: modules/hrm/includes/class-ajax.php:733
-#: modules/hrm/includes/class-ajax.php:1648
+#: modules/hrm/includes/class-ajax.php:1652
 #: modules/hrm/includes/class-form-handler.php:466
 #: modules/hrm/includes/class-form-handler.php:567
 msgid "Something went wrong!"
@@ -12630,13 +12641,13 @@ msgid "Policy has been deleted"
 msgstr ""
 
 #: modules/hrm/includes/class-ajax.php:1505
-#: modules/hrm/includes/class-ajax.php:1571
-#: modules/hrm/includes/class-ajax.php:1611
+#: modules/hrm/includes/class-ajax.php:1575
+#: modules/hrm/includes/class-ajax.php:1615
 msgid "Please select an employee"
 msgstr ""
 
 #: modules/hrm/includes/class-ajax.php:1511
-#: modules/hrm/includes/class-ajax.php:1615
+#: modules/hrm/includes/class-ajax.php:1619
 msgid "Please select a policy"
 msgstr ""
 
@@ -12652,32 +12663,32 @@ msgstr ""
 msgid "Existing Leave Record found within selected range!"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1537
+#: modules/hrm/includes/class-ajax.php:1540
 msgid "Sorry! You do not have any leave left under this leave policy"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1579
+#: modules/hrm/includes/class-ajax.php:1583
 #: modules/hrm/views/js-templates/new-leave-request.php:9
 msgid "Leave Type"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1592
+#: modules/hrm/includes/class-ajax.php:1596
 msgid ""
 "Selected user is not entitled to any leave policy. Set leave entitlement to "
 "apply for leave"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1625
-#: modules/hrm/includes/class-ajax.php:1627
-#: modules/hrm/includes/class-ajax.php:1630
+#: modules/hrm/includes/class-ajax.php:1629
+#: modules/hrm/includes/class-ajax.php:1631
+#: modules/hrm/includes/class-ajax.php:1634
 msgid "days are available"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1681
+#: modules/hrm/includes/class-ajax.php:1685
 msgid "Leave request has been submitted successfully!"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1683
+#: modules/hrm/includes/class-ajax.php:1687
 msgid "Something went wrong, please try again."
 msgstr ""
 
@@ -13062,8 +13073,20 @@ msgstr ""
 msgid "Workdays"
 msgstr ""
 
-#: modules/hrm/includes/class-settings.php:61
+#: modules/hrm/includes/class-settings.php:62
 msgid "Week day settings for this company."
+msgstr ""
+
+#: modules/hrm/includes/class-settings.php:84
+msgid "Leave settings for this company."
+msgstr ""
+
+#: modules/hrm/includes/class-settings.php:88
+msgid "Extra Leave"
+msgstr ""
+
+#: modules/hrm/includes/class-settings.php:91
+msgid "Employees can apply for leave, even when there is no entitlement left."
 msgstr ""
 
 #: modules/hrm/includes/emails/class-email-approved-leave-request.php:16
