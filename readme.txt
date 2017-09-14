@@ -183,11 +183,10 @@ Our general live support hours are Saturday to Thursday, 07:00 to 15:00 (GMT +6)
 = What is the average response time in your support thread? =
 We strive to respond all queries within 12 hours. Our response time may be just 1 hour if you reach us in our working hours!
 
+It may take longer to respond to more advanced or technical queries. We promise to serve and support you in the best way possible, which can sometimes take time, but you will be assured the best service.
+
 = Does WP ERP support WordPress multisite installation? =
 No, WP ERP and its add-ons do not support multisite WordPress installation.
-
-
-It may take longer to respond to more advanced or technical queries. We promise to serve and support you in the best way possible, which can sometimes take time, but you will be assured the best service.
 
 
 == Changelog ==
