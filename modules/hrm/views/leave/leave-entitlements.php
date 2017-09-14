@@ -2,7 +2,7 @@
 $cur_year   = date( 'Y' );
 $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : '';
 ?>
-<div class="wrap erp-hr-employees" id="wp-erp">
+<div class="wrap" id="wp-erp">
 
     <h2>
         <?php _e( 'Leave Entitlements', 'erp' ); ?>
