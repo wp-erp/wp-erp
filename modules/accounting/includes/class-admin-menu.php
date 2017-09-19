@@ -41,6 +41,9 @@ class Admin_Menu {
         $journal        = add_submenu_page( 'erp-accounting', __( 'Journal Entry', 'erp' ), __( 'Journal Entry', 'erp' ), $journal, 'erp-accounting-journal', array( $this, 'page_journal_entry' ) );
         $reports        = add_submenu_page( 'erp-accounting', __( 'Reports', 'erp' ), __( 'Reports', 'erp' ), $reports, 'erp-accounting-reports', array( $this, 'page_reports' ) );
 
+        //Help page
+        add_submenu_page( 'erp-accounting', __( 'Help', 'erp' ), __( '<span style="color:#f18500">Help</span>', 'erp' ), 'erp_ac_view_dashboard', 'erp-ac-help', array( $this, 'help_page' ) );
+
         add_action( 'admin_print_styles-' . $dashboard, array( $this, 'dashboard_script' ) );
         add_action( 'admin_print_styles-' . $customer, array( $this, 'sales_chart_script' ) );
         add_action( 'admin_print_styles-' . $vendor, array( $this, 'sales_chart_script' ) );
@@ -592,5 +595,13 @@ class Admin_Menu {
         if ( file_exists( $template ) ) {
             include $template;
         }
+    }
+
+    /**
+     * Show CRM Help Page
+     * @since 1.0.0
+     */
+    public function help_page(){
+        include WPERP_ACCOUNTING_PATH . '/includes/views/help.php';
     }
 }
