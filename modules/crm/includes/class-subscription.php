@@ -163,6 +163,11 @@ class Subscription {
             'button_lbl' => isset( $attrs['button'] ) ? $attrs['button'] : __( 'Subscribe', 'erp' ),
             'email_lbl'  => isset( $attrs['email'] ) ? $attrs['email'] : __( 'Email', 'erp' ),
             'extra_arg'  => isset( $attrs['extra_arg'] ) ? $attrs['extra_arg'] : null,
+            //placeholder support
+            'email_placeholder' => isset( $attrs['email_placeholder'] ) ? $attrs['email_placeholder'] : '',
+            'first_name_placeholder' => isset( $attrs['first_name_placeholder'] ) ? $attrs['first_name_placeholder'] : '',
+            'last_name_placeholder' => isset( $attrs['last_name_placeholder'] ) ? $attrs['last_name_placeholder'] : '',
+            'full_name_placeholder' => isset( $attrs['full_name_placeholder'] ) ? $attrs['full_name_placeholder'] : '',
         ];
 
         if ( ! empty( $attrs['first_name'] ) ) {
