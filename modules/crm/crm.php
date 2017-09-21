@@ -102,6 +102,7 @@ class Customer_Relationship {
             new Admin_Menu();
             new User_Profile();
             new Emailer();
+            new Admin_Dashboard();
         }
 
         Subscription::instance();

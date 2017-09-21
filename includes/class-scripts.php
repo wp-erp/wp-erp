@@ -62,6 +62,8 @@ class Scripts {
         wp_register_script( 'erp-vuejs', $vendor . '/vue/vue' . $this->suffix . '.js', array( 'jquery' ), $this->version, true );
         wp_register_script( 'erp-trix-editor', $vendor . '/trix/trix.js', array( 'jquery' ), $this->version, true );
         wp_register_script( 'erp-nprogress', $vendor . '/nprogress/nprogress.js', array( 'jquery' ), $this->version, true );
+        wp_register_script( 'erp-jvectormap', $vendor . '/jvectormap/jvectormap.min.js', array( 'jquery' ), $this->version, true );
+        wp_register_script( 'erp-jvectormap-world-mill', $vendor . '/jvectormap/jvectormap-world-mill.js', array( 'jquery' ), $this->version, true );
 
         // sweet alert
         wp_register_script( 'erp-sweetalert', $vendor . '/sweetalert/sweetalert.min.js', array( 'jquery' ), $this->version, true );
@@ -114,6 +116,7 @@ class Scripts {
         wp_register_style( 'erp-trix-editor', $vendor . '/trix/trix.css', false, $this->version );
         wp_register_style( 'erp-flotchart-valuelabel-css', $vendor . '/flot/plot.css', false, $this->version );
         wp_register_style( 'erp-nprogress', $vendor . '/nprogress/nprogress.css', false, $this->version );
+        wp_register_style( 'erp-jvectormap', $vendor . '/jvectormap/jvectormap.css', false, $this->version );
 
         // jquery UI
         wp_register_style( 'jquery-ui', $vendor . '/jquery-ui/jquery-ui-1.9.1.custom.css' );
@@ -148,7 +151,6 @@ class Scripts {
 
         wp_localize_script( 'erp-script', 'wpErp', array(
             'nonce'           => wp_create_nonce( 'erp-nonce' ),
-            'ajaxurl'         => admin_url( 'admin-ajax.php' ),
             'set_logo'        => __( 'Set company logo', 'erp' ),
             'upload_logo'     => __( 'Upload company logo', 'erp' ),
             'remove_logo'     => __( 'Remove company logo', 'erp' ),

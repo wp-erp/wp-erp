@@ -1,6 +1,5 @@
 <?php
 namespace WeDevs\ERP\CRM;
-
 /**
  * Admin Menu
  */
