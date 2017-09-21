@@ -668,9 +668,11 @@
                         wp.ajax.send( 'erp-hr-employee-new', {
                             data: this.serialize(),
                             success: function(response) {
-                                WeDevs_ERP_HR.employee.reload();
                                 modal.enableButton();
                                 modal.closeModal();
+                                if( response.url !== undefined ){
+                                    window.location.href = response.url;
+                                }
                             },
                             error: function(error) {
                                 modal.enableButton();

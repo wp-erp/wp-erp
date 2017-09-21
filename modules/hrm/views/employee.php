@@ -33,4 +33,19 @@
         </div><!-- .list-table-inner -->
     </div><!-- .list-table-wrap -->
 
+    <?php
+
+    if( empty($employee_table->items) ){
+        ob_start();
+        echo '<style>.erp-hr-employees-wrap{display: none;}</style>';
+        include WPERP_HRM_VIEWS . '/employee/empty-employee.php';
+        $output = ob_get_contents();
+        ob_get_clean();
+        echo $output;
+
+        return;
+    }
+    ?>
+
+
 </div>
