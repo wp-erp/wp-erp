@@ -31,6 +31,7 @@ class Admin_Dashboard {
         if ( false == get_transient( 'erp_customer_countries_widget' ) ) {
             global $wpdb;
             $countries = $wpdb->get_results( 'SELECT country FROM ' . $wpdb->prefix . 'erp_peoples', OBJECT );
+
             $codes     = array();
             foreach ( $countries as $code_of ) {
                 $codes[] = $code_of->country;
