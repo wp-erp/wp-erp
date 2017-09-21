@@ -32,40 +32,41 @@
     $sections = apply_filters( 'erp_crm_help_docs', $erp_doc_sections );
 
     if ( ! empty( $sections ) ):?>
-        <?php foreach ( $sections as $section_title => $docs ): ?>
-            <div id="dashboard-widgets-wrap" class="erp-help-section">
-                <div id="dashboard-widgets" class="metabox-holder">
-                    <div class="postbox-container">
-                        <div class="meta-box-sortables">
+        <div id="dashboard-widgets-wrap">
+            <div id="dashboard-widgets" class="metabox-holder">
+                <?php foreach ( $sections as $section_title => $docs ): ?>
+                    <div class="erp-help-section postbox-container">
+                        <div class="metabox-holder">
 
-                            <div class="postbox">
-                                <h2 class="hndle"><?php echo esc_html( $section_title ); ?></h2>
+                            <div class="meta-box-sortables">
 
-                                <?php if ( ! empty( $docs ) ) { ?>
-                                    <div class="erp-help-questions">
-                                        <ul>
-                                            <?php foreach ( $docs as $title => $link ) { ?>
-                                                <li>
-                                                    <a href="<?php echo esc_url( add_query_arg( array( 'ref' => 'erp_help_doc' ), $link ) ); ?>"
-                                                       target="_blank"><?php echo esc_html( $title ); ?> <span
-                                                            class="dashicons dashicons-arrow-right-alt2"></span></a>
-                                                </li>
-                                            <?php } ?>
-                                        </ul>
-                                    </div>
-                                <?php } ?>
+                                <div class="postbox">
+                                    <h2 class="hndle"><?php echo esc_html( $section_title ); ?></h2>
+
+                                    <?php if ( !empty($docs) ) { ?>
+                                        <div class="erp-help-questions">
+                                            <ul>
+                                                <?php foreach ($docs as $title => $link) { ?>
+                                                    <li><a href="<?php echo esc_url( add_query_arg(array('' =>'utm_source=doc&utm_medium=erp&utm_campaign=manik&utm_content=aion'), $link) ); ?>" target="_blank"><?php echo esc_html( $title ); ?> <span class="dashicons dashicons-arrow-right-alt2"></span></a></li>
+                                                <?php } ?>
+                                            </ul>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+
                             </div>
 
                         </div>
                     </div>
-                </div>
+                <?php endforeach; ?>
             </div>
-        <?php endforeach; ?>
+        </div>
     <?php else: ?>
 
     <?php endif; ?>
 
 </div>
+
 
 
 <style type="text/css" media="screen">
@@ -94,18 +95,12 @@
     }
 
     @media screen and (min-width: 960px) {
-        .erp-help-section {
-            width: 46%;
-            float: left;
-            margin-right: 2% !important;
-        }
-
-        .erp-help-section .postbox-container {
+        .erp-help-section .postbox-container{
             width: 100% !important;
         }
 
-        .erp-help-section:nth-child(odd) {
-            clear: both !important;
+        .erp-help-section:nth-child(odd){
+            clear:both !important;
         }
 
     }
