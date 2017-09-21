@@ -101,7 +101,7 @@
             <a href="<?php echo admin_url('admin.php?page=erp-tools&tab=import');?>" class="button"><?php _e('Import employee from CSV', 'erp'); ?></a>
         </div>
 
-        <h2 class="feature-headline"><?php _e('With employees, you can', 'erp'); ?></h2>
+        <h2 class="feature-headline"><?php _e('What You Can Do With A Complete HR Solution', 'erp'); ?></h2>
 
         <ul class="features-box">
 
