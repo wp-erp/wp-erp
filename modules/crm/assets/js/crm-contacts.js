@@ -636,11 +636,18 @@
                             + '<input type="submit" class="button" v-if="!isUpdate" @click.prevent="cancelSave(\'save\')" value="Cancel">'
                             + '<span class="erp-loader" v-show="isLoading" style="margin-top: 4px;"></span>'
                         + '</div>'
-                        + '<button :disabled="editableMode" class="button button-primary" v-show="!isNewSave" @click.prevent="saveAsNew()">Save new Segment</button>'
+                        + '<div class="saveasnew-wrapper" v-show="isNewGroup">'
+                            + '<input type="text" class="save-group-name" v-model="groupName" placeholder="Name this Group..">'
+                            + '<input type="submit" class="button button-primary" @click.prevent="saveGroup(\'save\')" value="Save">'
+                            + '<input type="submit" class="button" @click.prevent="cancelGroupSave(\'save\')" value="Cancel">'
+                            + '<span class="erp-loader" v-show="isLoading" style="margin-top: 4px;"></span>'
+                        + '</div>'
+                        + '<button :disabled="editableMode" class="button button-primary" v-show="!isNewSave && !isNewGroup" @click.prevent="saveAsNew()">Save new Segment</button>'
+                        + '<button :disabled="editableMode" class="button button-secondary" v-show="!isNewSave && !isNewGroup" @click.prevent="saveAsGroup()">Save Contact Group</button>'
                         + '<button :disabled="editableMode" class="button" v-show="isUpdateSaveSearch && !isNewSave" @click.prevent="updateSave()">Update this Segment</button>'
                         + '<button :disabled="editableMode" class="erp-button-danger button" style="float:right;" v-show="isUpdateSaveSearch && !isNewSave" @click.prevent="removeSegment()">Delete this Segment</button>'
-                        + '<button :disabled="editableMode" class="button" style="float:right;" v-show="!isNewSave" @click.prevent="resetFilter()">Reset all filter</button>'
-                        + '<span class="erp-loader" v-show="isLoading && !isNewSave" style="margin-top: 4px;"></span>'
+                        + '<button :disabled="editableMode" class="button" style="float:right;" v-show="!isNewSave && !isNewGroup" @click.prevent="resetFilter()">Reset all filter</button>'
+                        + '<span class="erp-loader" v-show="isLoading && !isNewSave && !isNewGroup" style="margin-top: 4px;"></span>'
                     + '</div>'
                 + '</div>',
 
@@ -653,6 +660,8 @@
                     ],
                     isNewSave: false,
                     isUpdate: false,
+                    isNewGroup:false,
+                    groupName:'',
                     isUpdateSaveSearch: false,
                     saveSearchObj: {
                         searchName: '',
@@ -717,6 +726,14 @@
                     this.saveSearchObj.searchItGlobal = false;
                 },
 
+                cancelGroupSave: function( flag ) {
+                    if ( flag == 'save' ) {
+                        this.isNewGroup = false;
+                    } else {
+                        this.isNewGroup = false;
+                    }
+                },
+
                 updateSave: function() {
                     var self = this,
                         data = {
@@ -739,6 +756,34 @@
                             self.isLoading = false;
                             alert( resp.data );
                         };
+                    });
+                },
+
+                saveGroup: function( flag ) {
+                    var self = this;
+                    var queryUrl = contact.makeQueryStringFromFilter( this.fields );
+                    var data = {
+                        action : 'erp_crm_create_new_save_group',
+                        form_data : {
+                            group_name: self.groupName,
+                            search_fields: queryUrl,
+                            type: wpErpCrm.contact_type
+                        },
+                        _wpnonce : wpErpCrm.nonce
+                    };
+
+                    if ( ! queryUrl ) {
+                        alert( 'You have not any filter for saving' );
+                    }
+
+                    self.isLoading = true;
+
+                    jQuery.post( wpErpCrm.ajaxurl, data, function( resp ) {
+                        self.isLoading = false;
+                        self.isNewGroup = false;
+                        self.groupName = '';
+                        alert( resp.data );
+
                     });
                 },
 
@@ -851,6 +896,10 @@
                 saveAsNew: function() {
                     this.isNewSave = true;
                     this.isUpdate = false;
+                },
+                saveAsGroup: function() {
+                    this.isNewGroup = true;
+                    // this.isUpdate = false;
                 },
 
                 ifHasAnyFilter: function() {
