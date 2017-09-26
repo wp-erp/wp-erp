@@ -26,7 +26,9 @@ class Announcement {
         $this->assign_type = array(
             ''                  => __( '-- Select --', 'erp' ),
             'all_employee'      => __( 'All Employees', 'erp' ),
-            'selected_employee' => __( 'Selected Employee', 'erp' )
+            'selected_employee' => __( 'Selected Employee', 'erp' ),
+            'by_department'     => __( 'By Department', 'erp' ),
+            'by_designation'     => __( 'By Designation', 'erp' )
         );
 
         $this->action( 'init', 'post_types' ) ;
@@ -188,11 +190,24 @@ class Announcement {
     function meta_boxes_cb( $post_id ) {
         global $post;
 
-        $employees = erp_hr_get_employees( [ 'number' => -1, 'no_object' => true ] );
+        $employees    = erp_hr_get_employees( [ 'number' => -1, 'no_object' => true ] );
+        $departments  = erp_hr_get_departments( [ 'number' => -1, 'no_object' => true ] );
+        $designations = erp_hr_get_designations( [ 'number' => -1, 'no_object' => true ] );
 
-        $announcement_type     = get_post_meta( $post->ID, '_announcement_type', true );
-        $announcement_users    = get_post_meta( $post->ID, '_announcement_selected_user', true );
-        $announcement_employee = ( $announcement_users ) ? $announcement_users : array();
+        $announcement_type        = get_post_meta( $post->ID, '_announcement_type', true );
+        $announcement_users       = get_post_meta( $post->ID, '_announcement_selected_user', true );
+        $announcement_employee    = ( $announcement_users ) ? $announcement_users : array();
+        $announcement_department  = [];
+        $announcement_designation = [];
+
+        // Get users department and designation
+        if ( !empty($announcement_users) ) {
+			foreach ( $announcement_users as $user_id ) {
+				$user = \WeDevs\ERP\HRM\Models\Employee::whereUserId( $user_id )->first();
+				$announcement_department[] = $user->department;
+				$announcement_designation[] = $user->designation;
+			}
+		}
 
         ?>
             <table class="form-table erp-hr-announcement-meta-wrap-table">
@@ -217,8 +232,41 @@ class Announcement {
                                 if ( $user->user_id == get_current_user_id() ) {
                                     continue;
                                 }
+
                                 ?>
                                     <option <?php echo in_array( $user->user_id, $announcement_employee ) ? 'selected="selected"' : ''; ?> value='<?php echo $user->user_id  ?>'><?php echo $user->display_name; ?></option>
+                                <?php
+                            }
+                            ?>
+                        </select>
+                    </td>
+                </tr>
+
+                <tr class="by_department_field">
+                    <th><?php _e( 'Select Departments', 'erp' ); ?></th>
+                    <td>
+                        <select name="hr_announcement_assign_department[]" data-placeholder= '<?php echo __( 'Select Departments...', 'erp' ); ?>' id="hr_announcement_assign_department" class="erp-select2" multiple="multiple">
+                            <option></option>
+                            <?php
+                            foreach ( $departments as $department ) {
+                                ?>
+                                <option <?php echo in_array( $department->id, $announcement_department ) ? 'selected="selected"' : ''; ?> value='<?php echo $department->id; ?>'><?php echo $department->title; ?></option>
+                                <?php
+                            }
+                            ?>
+                        </select>
+                    </td>
+                </tr>
+
+                <tr class="by_designation_field">
+                    <th><?php _e( 'Select Designations', 'erp' ); ?></th>
+                    <td>
+                        <select name="hr_announcement_assign_designation[]" data-placeholder= '<?php echo __( 'Select Designations...', 'erp' ); ?>' id="hr_announcement_assign_designation" class="erp-select2" multiple="multiple">
+                            <option></option>
+                            <?php
+                            foreach ( $designations as $designation ) {
+                                ?>
+                                <option <?php echo in_array( $designation->id, $announcement_designation ) ? 'selected="selected"' : ''; ?> value='<?php echo $designation->id; ?>'><?php echo $designation->title; ?></option>
                                 <?php
                             }
                             ?>
@@ -232,29 +280,74 @@ class Announcement {
             <?php wp_nonce_field( 'hr_announcement_meta_action', 'hr_announcement_meta_action_nonce' ); ?>
 
             <script>
-                (function($){
-                    $(document).ready( function() {
+                (function( $ ){
+                    $( document ).ready( function() {
+
+                        // Remove selected value other than the currently active one.
+                        switch ( $('select#hr_announcement_assign_type').val() ) {
+                            case 'selected_employee':
+                                $( 'tr.by_department_field select' ).val(null).trigger('change');
+                                $( 'tr.by_designation_field  select' ).val(null).trigger('change');
+                                break;
+
+                            case 'by_department':
+                                $( 'tr.selected_employee_field  select' ).val(null).trigger('change');
+                                $( 'tr.by_designation_field  select' ).val(null).trigger('change');
+                                break;
+
+                            case 'by_designation':
+                                $( 'tr.selected_employee_field  select' ).val(null).trigger('change');
+                                $( 'tr.by_department_field  select' ).val(null).trigger('change');
+                        }
 
                         $('table.erp-hr-announcement-meta-wrap-table').on( 'change', 'select#hr_announcement_assign_type', function() {
-                            var self = $(this);
+                            var self = $( this );
 
-                            if ( self.val() == 'selected_employee' ) {
-                                $( 'tr.selected_employee_field' ).show();
-                            } else {
-                                $( 'tr.selected_employee_field' ).hide();
+                            switch ( self.val() ) {
+                                case 'all_employee':
+                                    $( 'tr.selected_employee_field' ).hide();
+                                    $( 'tr.by_department_field' ).hide();
+                                    $( 'tr.by_designation_field' ).hide();
+                                    break;
+
+                                case 'selected_employee':
+                                    $( 'tr.by_department_field' ).hide();
+                                    $( 'tr.by_designation_field' ).hide();
+                                    $( 'tr.selected_employee_field' ).show();
+                                    break;
+
+                                case 'by_department':
+                                    $( 'tr.selected_employee_field' ).hide();
+                                    $( 'tr.by_department_field' ).show();
+                                    $( 'tr.by_designation_field' ).hide();
+                                    break;
+
+                                case 'by_designation':
+                                    $( 'tr.selected_employee_field' ).hide();
+                                    $( 'tr.by_department_field' ).hide();
+                                    $( 'tr.by_designation_field' ).show();
                             }
                         });
 
-                        $('select#hr_announcement_assign_type').trigger('change')
+                        $( 'select#hr_announcement_assign_type' ).trigger( 'change' )
                     });
-                })(jQuery);
+                })( jQuery );
             </script>
             <style>
-                #hr_announcement_assign_employee {
+                #hr_announcement_assign_employee,
+                #hr_announcement_assign_department,
+                #hr_announcement_assign_designation {
                     width: 315px;
                 }
-                tr.selected_employee_field{
+
+                tr.selected_employee_field,
+                tr.by_department_field,
+                tr.by_designation_field {
                     display: none;
+                }
+
+                .erp-hr-announcement-meta-wrap-table .select2-search__field {
+                    width: 100% !important;
                 }
             </style>
         <?php
@@ -341,12 +434,74 @@ class Announcement {
             return $post_id;
         }
 
-        $type      = ( isset( $_POST['hr_announcement_assign_type'] ) ) ? $_POST['hr_announcement_assign_type']: '';
-        $employees = ( isset( $_POST['hr_announcement_assign_employee'] ) ) ? $_POST['hr_announcement_assign_employee']: array();
+        $type         = ( isset( $_POST['hr_announcement_assign_type'] ) ) ? $_POST['hr_announcement_assign_type']: '';
+        $employees    = ( isset( $_POST['hr_announcement_assign_employee'] ) ) ? $_POST['hr_announcement_assign_employee']: array();
+        $departments  = ( isset( $_POST['hr_announcement_assign_department'] ) ) ? $_POST['hr_announcement_assign_department']: array();
+        $designations = ( isset( $_POST['hr_announcement_assign_designation'] ) ) ? $_POST['hr_announcement_assign_designation']: array();
 
-        // Assign / Send announcements to the employee(s)
+        // Use departments & designations post data to find employee
+        if ( $type == 'by_department' ) {
+            $employees = $this->get_by_department( $departments );
+        } elseif ( $type == 'by_designation' ) {
+            $employees = $this->get_by_designation( $designations );
+        }
+
+		// Assign / Send announcements to the employee(s)
         erp_hr_assign_announcements_to_employees( $post_id, $type, $employees );
 
         do_action( 'hr_annoucement_save', $post_id );
     }
+
+
+    /**
+     * Send multi-dimensonal departments id to get associated user
+     * @param array $departments selected departments id
+     */
+    public function get_by_department( $departments ) {
+        $data = [];
+
+        foreach ( $departments as $department ) {
+            $data[] = erp_hr_get_employees( array(
+                 'no_object'  => true,
+                 'department' => $department
+             ) );
+        }
+
+        return $this->format_data_as_employee( $data );
+    }
+
+    /**
+     * Send multi-dimensonal designations id to get associated user
+     * @param array $designations selected designations id
+     */
+    public function get_by_designation( $designations ) {
+        $data = [];
+
+        foreach ( $designations as $designation ) {
+            $data[] = erp_hr_get_employees( array(
+                 'no_object'  => true,
+                 'designation' => $designation
+             ) );
+        }
+
+        return $this->format_data_as_employee( $data );
+    }
+
+    /**
+     * Process ids and return a flat array of unique user id
+     * @param array $data [description]
+     * @return array unique user id
+     */
+    public function format_data_as_employee( $data ) {
+        $temp_users = [];
+
+        foreach ( $data as $employee ) {
+            foreach ( $employee as $employee_data ) {
+                $temp_users[] = $employee_data->user_id;
+            }
+        }
+
+        return array_unique($temp_users);
+    }
+
 }
