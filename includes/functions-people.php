@@ -342,12 +342,12 @@ function erp_get_people_by( $field, $value ) {
     $people    = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $people ) {
-
-        $sql = "SELECT people.*, ";
+        $sql = "SELECT people.*, p_meta.*, ";
         $sql .= "GROUP_CONCAT(DISTINCT p_types.name) as types
         FROM {$wpdb->prefix}erp_peoples as people
         LEFT JOIN {$wpdb->prefix}erp_people_type_relations as p_types_rel on p_types_rel.people_id = people.id
         LEFT JOIN {$wpdb->prefix}erp_people_types as p_types on p_types.id = p_types_rel.people_types_id
+        LEFT JOIN {$wpdb->prefix}erp_peoplemeta as p_meta on p_meta.erp_people_id = people.id
         ";
 
         if ( is_array( $value ) ) {
@@ -357,7 +357,7 @@ function erp_get_people_by( $field, $value ) {
             $sql .= " WHERE `people`.$field = '$value'";
         }
 
-        $sql .= " GROUP BY people.id ";
+        $sql .= "  AND `p_meta`.meta_key = 'life_stage' GROUP BY people.id ";
 
         $results = $wpdb->get_results( $sql );
 

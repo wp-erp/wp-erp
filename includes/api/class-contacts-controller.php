@@ -154,6 +154,7 @@ class Contacts_Controller extends REST_Controller {
         }
 
         $item  = $this->prepare_item_for_response( $item, $request, $additional_fields );
+
         $response = rest_ensure_response( $item );
 
         return $response;
@@ -372,7 +373,7 @@ class Contacts_Controller extends REST_Controller {
             'currency'      => $item->currency,
             'types'         => $item->types,
             'user_id'       => (int) $item->user_id,
-            'life_stage'    => $item->life_stage,
+            'life_stage'    => $item->meta_value,
         ];
 
         $data = array_merge( $data, $additional_fields );
