@@ -9,30 +9,58 @@
  *
  * @return void
  */
-function erp_hr_assign_announcements_to_employees( $post_id, $type, $employees = [] ) {
+function erp_hr_assign_announcements_to_employees( $post_id, $type, $selected = [] ) {
     $post      = get_post( $post_id );
     $post_type = $post->post_status;
 
+    $data      = [];
+
+    if ( $type == 'by_department' ) {
+        update_post_meta( $post_id, '_announcement_department', $selected );
+
+        foreach ( $selected as $department ) {
+            $data[] = erp_hr_get_employees( array(
+                 'no_object'  => true,
+                 'department' => $department
+             ) );
+        }
+
+        $selected = format_data_as_employee( $data );
+    }
+
+    if ( $type == 'by_designation' ) {
+        update_post_meta( $post_id, '_announcement_designation', $selected );
+
+        foreach ( $selected as $designation ) {
+            $data[] = erp_hr_get_employees( array(
+                 'no_object'  => true,
+                 'designation' => $designation
+             ) );
+        }
+
+        $selected = format_data_as_employee( $data );
+    }
+
     update_post_meta( $post_id, '_announcement_type', $type );
-    update_post_meta( $post_id, '_announcement_selected_user', $employees );
+    update_post_meta( $post_id, '_announcement_selected_user', $selected );
 
     if ( $type == 'all_employee' ) {
         $empls = erp_hr_get_employees( array( 'no_object' => true ) );
 
         if ( $empls ) {
             foreach ( $empls as $user ) {
-                $employees[] = (int) $user->user_id;
+                $selected[] = (int) $user->user_id;
             }
         }
     }
 
-    $announces_object = \WeDevs\ERP\HRM\Models\Announcement::where( 'post_id', $post_id )->whereIn( 'user_id', $employees );
+    $announces_object = \WeDevs\ERP\HRM\Models\Announcement::where( 'post_id', $post_id )->whereIn( 'user_id', $selected );
 
     $announcements      = $announces_object->get();
     $existing_employees = array_pluck( $announcements->toArray(), 'user_id' );
 
 
-    $new_employees = array_diff( $employees, $existing_employees );
+    $new_employees = array_diff( $selected, $existing_employees );
 
     $data = [];
     foreach ( $new_employees as $item ) {
@@ -63,6 +91,25 @@ function erp_hr_assign_announcements_to_employees( $post_id, $type, $employees =
     }
 
     do_action( 'hr_announcement_insert_assignment', $new_employees, $post_id );
+}
+
+/**
+ * Process ids and return a flat array of unique user id
+ *
+ * @param array $data [description]
+ *
+ * @return array unique user id
+ */
+function format_data_as_employee( $data ) {
+    $temp_users = [];
+
+    foreach ( $data as $employee ) {
+        foreach ( $employee as $employee_data ) {
+            $temp_users[] = $employee_data->user_id;
+        }
+    }
+
+    return array_unique($temp_users);
 }
 
 /**
