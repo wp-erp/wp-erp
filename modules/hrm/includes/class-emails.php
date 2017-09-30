@@ -20,6 +20,7 @@ class Emailer {
         $emails['New_Leave_Request']      = new Emails\New_Leave_Request();
         $emails['Approved_Leave_Request'] = new Emails\Approved_Leave_Request();
         $emails['Rejected_Leave_Request'] = new Emails\Rejected_Leave_Request();
+        $emails['Birthday_Wish']          = new Emails\Birthday_Wish();
 
         return apply_filters( 'erp_hr_email_classes', $emails );
     }
