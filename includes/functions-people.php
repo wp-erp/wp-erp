@@ -361,6 +361,11 @@ function erp_get_people_by( $field, $value ) {
 
         $results = $wpdb->get_results( $sql );
 
+        if ( $field == 'id' ) {
+            // Include the life stage meta value dynamically inside the first result for API call
+            $results[0]->life_stage = erp_people_get_meta( $value, 'life_stage', true );
+        }
+
         $results = array_map( function( $item ) {
             $item->types = explode( ',', $item->types );
             return $item;
