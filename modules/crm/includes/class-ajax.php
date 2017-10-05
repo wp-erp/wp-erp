@@ -75,6 +75,8 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp_crm_get_save_search_data', 'get_save_search' );
         // $this->action( 'wp_ajax_erp_crm_delete_save_search_data', 'delete_save_search' );
         $this->action( 'wp_ajax_erp-crm-delete-search-segment', 'delete_save_search' );
+        //save group
+        $this->action( 'wp_ajax_erp_crm_create_new_save_group', 'create_save_group' );
 
         // CRM Dashboard
         $this->action( 'wp_ajax_erp-crm-get-single-schedule-details', 'get_single_schedule_details' );
@@ -1240,6 +1242,8 @@ class Ajax_Handler {
             'search_val'  => $search_fields,
         ];
 
+
+
         $result = erp_crm_insert_save_search( $data );
 
         if ( ! $result ) {
@@ -1247,6 +1251,71 @@ class Ajax_Handler {
         }
 
         $this->send_success( $result );
+    }
+
+    /**
+     * Save contact group
+     *
+     * @since 1.2.5
+     */
+    public function create_save_group(){
+        global $wpdb;
+        $this->verify_nonce( 'wp-erp-crm-nonce' );
+
+        if ( ! ( current_user_can( erp_crm_get_manager_role() ) || current_user_can( erp_crm_get_agent_role() ) ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
+
+        $postdata = $_POST['form_data'];
+
+        if ( ! $postdata ) {
+            $this->send_error( __( 'No data not found', 'erp' ) );
+        }
+
+        if ( isset( $postdata['group_name'] ) && empty( $postdata['group_name'] ) ) {
+            $this->send_error( __( 'Group name not found', 'erp' ) );
+        }
+
+        if ( isset( $postdata['search_fields'] ) && empty( $postdata['search_fields'] ) ) {
+            $this->send_error( __( 'No search fields found', 'erp' ) );
+        }
+
+        $type = isset($postdata['type'])?$postdata['type']:'contact';
+
+        $contacts = [];
+
+        $args = [
+            'type'      => $type,
+            'offset'    => 0,
+            'number'    => '-1',
+            'no_object' => false,
+            'erpadvancefilter' => $postdata['search_fields'],
+        ];
+
+        $group = erp_crm_save_contact_group( array('name' => $postdata['group_name'] ) );
+
+        if( ! $group ){
+            $this->send_error( __( 'Could not create group.', 'erp' ) );
+        }
+
+        $contacts = erp_get_peoples( $args );
+
+        $imported = 0;
+        foreach ( $contacts as $contact){
+            $data = [
+                'user_id'  => $contact->id,
+                'group_id' => $group->id,
+            ];
+
+            erp_crm_create_new_contact_subscriber( $data );
+            $imported++;
+        }
+
+        if( $imported > 0){
+            $this->send_success( __( 'Successfully created group and assigned selected contacts to the group.', 'erp' ) );
+        }
+
+        $this->send_error( __( 'Could not import contacts to the group.', 'erp' ) );
     }
 
     /**

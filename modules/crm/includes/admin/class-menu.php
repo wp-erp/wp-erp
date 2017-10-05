@@ -1,6 +1,5 @@
 <?php
 namespace WeDevs\ERP\CRM;
-
 /**
  * Admin Menu
  */
@@ -36,6 +35,10 @@ class Admin_Menu {
         add_submenu_page( 'erp-sales', __( 'Activities', 'erp' ), __( 'Activities', 'erp' ), 'erp_crm_manage_activites', 'erp-sales-activities', [ $this, 'activity_page' ] );
         $schedule = add_submenu_page( 'erp-sales', __( 'Schedules', 'erp' ), __( 'Schedules', 'erp' ), 'erp_crm_manage_schedules', 'erp-sales-schedules', [ $this, 'schedules_page' ] );
         add_submenu_page( 'erp-sales', __( 'Contact Groups', 'erp' ), __( 'Contact Groups', 'erp' ), 'erp_crm_manage_groups', 'erp-sales-contact-groups', [ $this, 'contact_group_page' ] );
+
+        //Help page
+        add_submenu_page( 'erp-sales', __( 'Help', 'erp' ), __( '<span style="color:#f18500">Help</span>', 'erp' ), 'erp_crm_manage_dashboard', 'erp-crm-help', array( $this, 'help_page' ) );
+
 
         add_action( 'admin_print_styles-' . $overview, array( $this, 'crm_calendar_script' ) );
         add_action( 'admin_print_styles-' . $schedule, array( $this, 'crm_calendar_script' ) );
@@ -261,6 +264,15 @@ class Admin_Menu {
         if ( file_exists( $template ) ) {
             include $template;
         }
+    }
+
+
+    /**
+     * Show CRM Help Page
+     * @since 1.0.0
+     */
+    public function help_page(){
+        include WPERP_CRM_VIEWS . '/help.php';
     }
 }
 

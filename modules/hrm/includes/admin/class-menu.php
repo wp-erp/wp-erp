@@ -36,6 +36,9 @@ class Admin_Menu {
         add_submenu_page( 'erp-hr', __( 'Announcement', 'erp' ), __( 'Announcement', 'erp' ), 'erp_manage_announcement', 'edit.php?post_type=erp_hr_announcement' );
         add_submenu_page( 'erp-hr', __( 'Reporting', 'erp' ), __( 'Reporting', 'erp' ), 'erp_hr_manager', 'erp-hr-reporting', array( $this, 'reporting_page' ) );
 
+        //Help page
+        add_submenu_page( 'erp-hr', __( 'Help', 'erp' ), __( '<span style="color:#f18500">Help</span>', 'erp' ), 'erp_hr_manager', 'erp-hr-help', array( $this, 'help_page' ) );
+
         /** Leave Management **/
         add_menu_page( __( 'Leave Management', 'erp' ), 'Leave', 'erp_leave_manage', 'erp-leave', array( $this, 'empty_page' ), 'dashicons-arrow-right-alt', null );
 
@@ -267,6 +270,14 @@ class Admin_Menu {
                 include WPERP_HRM_VIEWS . '/leave/requests.php';
                 break;
         }
+    }
+
+    /**
+     * Show HRM Help Page
+     * @since 1.0.0
+     */
+    public function help_page(){
+        include WPERP_HRM_VIEWS . '/help.php';
     }
 
     /**
