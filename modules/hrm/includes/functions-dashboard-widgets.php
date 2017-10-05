@@ -27,16 +27,25 @@ function erp_hr_dashboard_widget_birthday() {
     $todays_birthday  = erp_hr_get_todays_birthday();
     $upcoming_birtday = erp_hr_get_next_seven_days_birthday();
     ?>
+
     <?php if ( $todays_birthday ) { ?>
 
         <h4><?php _e( 'Today\'s Birthday', 'erp' ); ?></h4>
+        <span class="wait"><?php _e( 'please wait ...', 'erp' ); ?></span>
 
         <ul class="erp-list list-inline">
             <?php
             foreach ( $todays_birthday as $key => $user ) {
                 $employee = new \WeDevs\ERP\HRM\Employee( intval( $user->user_id ) );
                 ?>
-                <li><a href="<?php echo $employee->get_details_url(); ?>" class="erp-tips" title="<?php echo $employee->get_full_name(); ?>"><?php echo $employee->get_avatar( 32 ); ?></a></li>
+                <li>
+                    <a href="<?php echo $employee->get_details_url(); ?>" class="erp-tips" title="<?php echo $employee->get_full_name(); ?>"><?php echo $employee->get_avatar( 32 ); ?></a> &nbsp;
+                    <?php if ( !isset($_COOKIE[$user->user_id]) ) : ?>
+                        <a href="#" title="Send birthday wish email to <?php echo $employee->get_full_name(); ?>" class="send-wish" data-user_id="<?php echo intval( $user->user_id ); ?>">
+                            <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                        </a>
+                    <?php endif; ?>
+                </li>
             <?php } ?>
         </ul>
 
@@ -62,12 +71,29 @@ function erp_hr_dashboard_widget_birthday() {
             <?php endforeach; ?>
 
         </ul>
+
         <?php
     }
 
     if ( ! $todays_birthday && ! $upcoming_birtday ) {
         _e( 'No one has birthdays this week!', 'erp' );
     }
+    ?>
+    <style>
+        span.wait {
+            display: none;
+            float: right;
+        }
+
+        .erp-list .send-wish {
+            box-shadow: none;
+        }
+
+        .erp-list .send-wish i {
+            color: #fbc02d;
+        }
+    </style>
+    <?php
 }
 
 /**
@@ -287,6 +313,3 @@ function erp_hr_employee_list_url() {
 
     return $url;
 }
-
-
-
