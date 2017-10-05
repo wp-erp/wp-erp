@@ -3,7 +3,7 @@ Contributors: tareq1988, wedevs, ediamin, sabbir1991, asaquzzaman, shawon786
 Donate Link: https://tareq.co/donate
 Tags: small business, SME, contact, contacts, CRM, Customer Relationship Management, employee, leave management, hr, hrm, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 4.8.1
+Tested up to: 4.8.2
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2
@@ -190,6 +190,16 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.2.6 -> Oct 05, 2017 =
+
+[new] Add help submenu pages under HRM, CRM and Accounting menu.
+[new] Add subscription form shortcode placeholder support.
+[new] Add get started employee page.
+[new] Add customer statics admin widget. Closes #26.
+[new] Capability to create a contact group with the result (list of contacts) of a search (filter search). Closes #516.
+[new] Add 'By Departments' and 'By Designations' option to create/send an announcement. Closes #519.
+[fix] Accounting insert transaction discount issue.
 
 = v1.2.5 -> Sep 14, 2017 =
 
