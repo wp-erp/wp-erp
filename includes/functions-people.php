@@ -103,6 +103,12 @@ function erp_get_peoples( $args = [] ) {
             } else if ( $type === 'company' ) {
                 $args['erpadvancefilter'] = 'company[]=~' . implode( '&or&company[]=~', $words )
                                             . '&or&email[]=~' . implode( '&or&email[]=~', $words );
+            } else if ( $type === 'customer' ) {
+                $search_term = '%' . $wpdb->esc_like( $s ) . '%';
+                $sql['where'][] = $wpdb->prepare(
+                    'AND ( people.first_name ) LIKE %s OR ' .
+                    '( people.last_name ) LIKE %s',
+                    array( $search_term, $search_term ));
             }
         }
 
