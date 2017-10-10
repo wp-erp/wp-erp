@@ -155,19 +155,13 @@ class Ajax_Handler {
                 if ( $_REQUEST['status'] == 'trash' ) {
                     $args['trashed'] = true;
                 } else {
-                    $args['meta_query'] = [
-                        'meta_key' => 'life_stage',
-                        'meta_value' => $_REQUEST['status']
-                    ];
+                    $args['life_stage'] = $_REQUEST['status'];
                 }
             }
         }
 
-        if ( isset( $_REQUEST['filter_assign_contact'] ) && ! empty( $_REQUEST['filter_assign_contact'] ) ) {
-            $args['meta_query'] = [
-                'meta_key' => 'contact_owner',
-                'meta_value' => $_REQUEST['filter_assign_contact']
-            ];
+        if( isset( $_REQUEST['filter_assign_contact']) && !empty( $_REQUEST['filter_assign_contact']) ){
+            $args['contact_owner'] = $_REQUEST['filter_assign_contact'];
         }
 
         if ( isset( $_REQUEST['erpadvancefilter'] ) && ! empty( $_REQUEST['erpadvancefilter'] ) ) {
@@ -181,7 +175,8 @@ class Ajax_Handler {
 
         foreach ( $contacts['data'] as $key => $contact ) {
             $contact_owner    = [];
-            $contact_owner_id = erp_people_get_meta( $contact['id'], 'contact_owner', true );
+//            $contact_owner_id = erp_people_get_meta( $contact['id'], 'contact_owner', true );
+            $contact_owner_id = $contact['contact_owner'];
 
             if ( $contact_owner_id ) {
                 $user = \get_user_by( 'id', $contact_owner_id );
@@ -198,7 +193,7 @@ class Ajax_Handler {
             $contacts['data'][$key]['details_url']   = erp_crm_get_details_url( $contact['id'], $contact['types'] );
             $contacts['data'][$key]['avatar']['url'] = erp_crm_get_avatar_url( $contact['id'], $contact['email'], $contact['user_id'] );
             $contacts['data'][$key]['avatar']['img'] = erp_crm_get_avatar( $contact['id'], $contact['email'], $contact['user_id'] );
-            $contacts['data'][$key]['life_stage']    = ( $contact['user_id'] ) ? get_user_meta( $contact['user_id'], 'life_stage', true ) : erp_people_get_meta( $contact['id'], 'life_stage', true );
+            $contacts['data'][$key]['life_stage']    = $contact['life_stage'];
             $contacts['data'][$key]['assign_to']     = $contact_owner;
             $contacts['data'][$key]['created']       = erp_format_date( $contact['created'] );
         }
@@ -652,9 +647,9 @@ class Ajax_Handler {
         }
 
         if ( $output['assign_contact_user_id'] ) {
-            update_user_meta( $output['assign_contact_user_id'], 'contact_owner', $output['erp_select_assign_contact'] );
+            erp_crm_update_contact_owner( $output['erp_select_assign_contact'],$output['assign_contact_user_id'] );
         } else {
-            erp_people_update_meta( $output['assign_contact_id'], 'contact_owner', $output['erp_select_assign_contact'] );
+            erp_crm_update_contact_owner( $output['erp_select_assign_contact'],$output['assign_contact_id'] );
         }
 
         $this->send_success( __( 'Assign to agent successfully', 'erp' ) );

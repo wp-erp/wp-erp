@@ -314,8 +314,9 @@ class Subscription {
         }
 
         $contact = [
-            'type'  => 'contact',
-            'email' => $args['contact']['email'],
+            'type'       => 'contact',
+            'email'      => $args['contact']['email'],
+            'life_stage' => $life_stage,
         ];
 
         if ( ! empty( $args['contact']['full_name'] ) ) {
@@ -360,7 +361,6 @@ class Subscription {
 
         // insert metadata for new contact
         if ( empty( $existing_contact ) ) {
-            $contact->update_meta( 'life_stage', $life_stage );
             $contact->update_meta( 'source', 'optin_form' );
             $contact->update_meta( 'contact_owner', $default_owner );
         }

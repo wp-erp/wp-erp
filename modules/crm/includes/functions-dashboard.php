@@ -308,7 +308,7 @@ function erp_crm_dashboard_widget_latest_contact() {
             <?php foreach ( $contacts as $contact ) : ?>
                 <?php
                     $contact_obj = new WeDevs\ERP\CRM\Contact( (int)$contact->id );
-                    $life_stage = $contact_obj->get_meta( 'life_stage', true );
+                    $life_stage = $contact_obj->get_life_stage();
                 ?>
                 <li>
                     <div class="avatar">
@@ -336,7 +336,7 @@ function erp_crm_dashboard_widget_latest_contact() {
             <?php foreach ( $companies as $company ) : ?>
                 <?php
                     $company_obj = new WeDevs\ERP\CRM\Contact( intval( $company->id ) );
-                    $life_stage = $company_obj->get_meta( 'life_stage', true );
+                    $life_stage = $company_obj->get_life_stage();
                 ?>
                 <li>
                     <div class="avatar">

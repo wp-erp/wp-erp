@@ -61,6 +61,7 @@ class Contact extends \WeDevs\ERP\People {
             'notes'         => '',
             'other'         => '',
             'currency'      => '',
+            'contact_owner'      => '',
             'social'        => [],
             'source'        => '',
             'assign_to'     => [
@@ -108,7 +109,7 @@ class Contact extends \WeDevs\ERP\People {
             $fields['contact_groups'] = $contact_groups;
             $fields['group_id']       = wp_list_pluck( $contact_groups, 'group_id' );
 
-            $contact_owner_id = $this->get_meta( 'contact_owner', true );
+            $contact_owner_id = $this->contact_owner;
 
             if ( $contact_owner_id ) {
                 $user = \get_user_by( 'id', $contact_owner_id );
@@ -125,7 +126,7 @@ class Contact extends \WeDevs\ERP\People {
                 $fields['assign_to']      = $contact_owner;
             }
 
-            $fields['life_stage']     = $this->get_meta( 'life_stage', true );
+            $fields['life_stage']     = $this->life_stage;
             $fields['date_of_birth']  = $this->get_meta( 'date_of_birth', true );
             $fields['source']         = $this->get_meta( 'source', true );
             $fields['contact_age']    = $this->get_meta( 'contact_age', true );
@@ -399,10 +400,27 @@ class Contact extends \WeDevs\ERP\People {
      * @return string
      */
     public function get_life_stage() {
-        $life_stages = erp_crm_get_life_stages_dropdown_raw();
-        $life_stage  = $this->get_meta( 'life_stage', true );
+        return $this->life_stage;
+    }
 
-        return isset( $life_stages[$life_stage] ) ? $life_stages[$life_stage] : '—';
+    /**
+     * Update life stage
+     * @since 1.2.7
+     *
+     * @param $stage
+     *
+     * @return bool|string|\WP_Error
+     */
+    public function update_life_stage( $stage ) {
+        if( $this->life_stage == $stage ){
+            return true;
+        }
+
+        if( ! in_array( $stage, array_keys(erp_crm_get_life_stages_dropdown_raw())) ){
+            return new \WP_Error( 'unknown-erp-life-stage', __( 'Life stage does not exists', 'erp' ) );
+        }
+
+        $this->update_property('life_stage', $stage);
     }
 
     /**
@@ -413,8 +431,19 @@ class Contact extends \WeDevs\ERP\People {
      * @return string
      */
     public function get_contact_owner() {
-        $contact_owner = $this->get_meta( 'contact_owner', true );
+        $contact_owner = $this->contact_owner;
 
         return $contact_owner;
     }
+
+    /**
+     * @since 1.2.7
+     *
+     * @param $contact_owner
+     */
+    public function update_contact_owner($contact_owner){
+
+        $this->update_property('contact_owner', $contact_owner);
+    }
+
 }
