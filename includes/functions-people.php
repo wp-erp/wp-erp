@@ -590,7 +590,7 @@ function erp_insert_people( $args = array(), $return_object = false ) {
     }
 
     if ( ! empty( $is_existing_people ) ) {
-        $people->existing = true;
+        $people->exists = true;
     }
 
     $hash = $people->hash;
