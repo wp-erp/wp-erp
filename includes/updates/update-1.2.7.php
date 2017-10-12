@@ -26,7 +26,7 @@ function erp_crm_alter_peoples_table_1_2_7() {
     if ( ! in_array( 'hash', $people_table_columns ) ) {
         $alter_peoples_table_sql = "ALTER TABLE {$people_table} 
 				  	ADD COLUMN  
-					`hash` VARCHAR(40) NULL DEFAULT NULL,
+					`hash` VARCHAR(40) NULL DEFAULT NULL
 					AFTER currency";
         $wpdb->query( $alter_peoples_table_sql );
     }
