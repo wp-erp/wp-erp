@@ -446,4 +446,26 @@ class Contact extends \WeDevs\ERP\People {
         $this->update_property('contact_owner', $contact_owner);
     }
 
+    /**
+     * Get contact hash
+     *
+     * @since 1.2.7
+     *
+     * @return string
+     */
+    public function get_contact_hash() {
+        $contact_hash = $this->hash;
+
+        return $contact_hash;
+    }
+
+    /**
+     * @since 1.2.7
+     *
+     * @param $hash
+     */
+    public function update_contact_hash( $hash ){
+
+        $this->update_property('hash', $hash );
+    }
 }

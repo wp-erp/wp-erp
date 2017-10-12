@@ -617,9 +617,10 @@ class Subscription {
 
         $people_id = $this->subscribed_groups->first()->user_id;
 
-        if ( ! erp_people_get_meta( $people_id, 'hash' ) ) {
+        $contact = new Contact( $people_id );
+        if ( ! $contact->hash ) {
             $hash = sha1( microtime() . 'erp-confirm-subscription' . $people_id );
-            erp_people_update_meta( $people_id, 'hash', $hash );
+            $contact->update_contact_hash( $hash );
         }
     }
 
