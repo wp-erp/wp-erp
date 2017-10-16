@@ -1,4 +1,7 @@
 <style>
+    #erp-employee-new{
+        display: none;
+    }
     img.employee-list {
         width: 100%;
         max-width: 650px;

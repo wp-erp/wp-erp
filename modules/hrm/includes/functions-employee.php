@@ -80,6 +80,9 @@ function erp_hr_employee_create( $args = array() ) {
     $posted = array_map( 'trim_deep', $posted );
     $data   = erp_parse_args_recursive( $posted, $defaults );
 
+    //change email to lowercase
+    $data['user_email'] = strtolower( $data['user_email'] );
+
     // some basic validation
     if ( empty( $data['personal']['first_name'] ) ) {
         return new WP_Error( 'empty-first-name', __( 'Please provide the first name.', 'erp' ) );
