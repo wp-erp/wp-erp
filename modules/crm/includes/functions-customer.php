@@ -1011,12 +1011,16 @@ function erp_crm_get_contact_groups( $args = [] ) {
         'order'      => 'DESC',
         'count'      => false,
     ];
-
     $args      = wp_parse_args( $args, $defaults );
     $cache_key = 'erp-crm-contact-group-' . md5( serialize( $args ) );
     $items     = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $items ) {
+        // Check if args count true, then return total count customer according to above filter
+        if ( $args['count'] ) {
+            return WeDevs\ERP\CRM\Models\ContactGroup::count();
+        }
+
         $results               = [];
         $contact_group         = new WeDevs\ERP\CRM\Models\ContactGroup();
 
@@ -1062,10 +1066,6 @@ function erp_crm_get_contact_groups( $args = [] ) {
 
         $items = erp_array_to_object( $items );
 
-        // Check if args count true, then return total count customer according to above filter
-        if ( $args['count'] ) {
-            $items = WeDevs\ERP\CRM\Models\ContactGroup::count();
-        }
 
         wp_cache_set( $cache_key, $items, 'erp' );
     }
@@ -1191,6 +1191,7 @@ function erp_crm_get_subscriber_contact( $args = [] ) {
  */
 function erp_crm_get_contact_group_dropdown( $label = [] ) {
     $groups = erp_crm_get_contact_groups( [ 'number' => '-1' ] );
+//    $groups = [];
     $list   = [];
     $unsubscribe_text = '';
 
