@@ -15,7 +15,7 @@ class Admin_Dashboard {
      * @since 1.2.6
      */
     public function init() {
-        wp_add_dashboard_widget( 'erp_dashboard_customer_statics', __( 'Customer Statics', 'erp' ), array(
+        wp_add_dashboard_widget( 'erp_dashboard_customer_statics', __( 'Customer Statistics', 'erp' ), array(
             $this,
             'customer_statics'
         ) );
