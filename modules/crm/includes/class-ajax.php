@@ -1060,18 +1060,10 @@ class Ajax_Handler {
 
                 $email_body = $message . $img_url;
 
-                $message_id = md5( uniqid( time() ) ) . '.' . $postdata['user_id'] . '.' . $postdata['created_by'] . '.r1@' . $_SERVER['HTTP_HOST'];
-
-                $custom_headers = [
-                    "Message-ID" => "<{$message_id}>",
-                    "In-Reply-To" => "<{$message_id}>",
-                    "References" => "<{$message_id}>",
-                ];
-
                 add_filter( 'erp_mail_from_name', 'erp_crm_get_email_from_name' );
 
                 // Send email a contact
-                erp_mail( $contact->email, $postdata['email_subject'], $email_body, $headers, [], $custom_headers );
+                erp_mail( $contact->email, $postdata['email_subject'], $email_body, $headers, [] );
 
                 do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
 

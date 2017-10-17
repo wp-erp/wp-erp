@@ -1190,14 +1190,19 @@ function erp_crm_get_subscriber_contact( $args = [] ) {
  * @return array
  */
 function erp_crm_get_contact_group_dropdown( $label = [] ) {
-    $groups = erp_crm_get_contact_groups( [ 'number' => '-1' ] );
-//    $groups = [];
+    $cache_key = 'erp_crm_contact_groups';
+    $groups = wp_cache_get( $cache_key, 'erp' );
+
+    if( false == $groups){
+        $groups = WeDevs\ERP\CRM\Models\ContactGroup::select('id', 'name')->get();
+        wp_cache_set( $cache_key, $groups, 'erp');
+    }
+
     $list   = [];
     $unsubscribe_text = '';
 
     foreach ( $groups as $key => $group ) {
         $list[$group->id] = '<span class="group-name">' . $group->name . '</span>';
-        // $list[$group->id] = $group->name;
     }
 
     if ( $label ) {
