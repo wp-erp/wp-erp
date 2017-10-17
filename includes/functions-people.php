@@ -390,6 +390,7 @@ function erp_get_people_by( $field, $value ) {
  * @since 1.0.0
  * @since 1.2.2 Insert people hash key if not exists one
  * @since 1.2.7 contact_owner, life_stage, hash brought to main table
+ * @since 1.2.7 Assign first name as company name for accounting customer search
  *
  * @param array $args
  *
@@ -438,6 +439,12 @@ function erp_insert_people( $args = array(), $return_object = false ) {
 
     //sensitization
     $args['email'] = strtolower( trim( $args['email'] ));
+
+    // Assign first name as company name for accounting customer search
+    if ( $people_type == 'company' ) {
+        $args['first_name'] = $args['company'];
+        $args['last_name'] = '(company)';
+    }
 
     if ( ! $existing_people->id ) {
         // if an empty type provided

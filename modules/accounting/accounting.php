@@ -143,6 +143,7 @@ class Accounting {
         require_once WPERP_ACCOUNTING_PATH . '/includes/functions-url.php';
         require_once WPERP_ACCOUNTING_PATH . '/includes/functions-tax.php';
         require_once WPERP_ACCOUNTING_PATH . '/includes/functions-html.php';
+        require_once WPERP_ACCOUNTING_PATH . '/includes/functions-auto-customer-create.php';
 
         // cli command
         if ( defined('WP_CLI') && WP_CLI ) {
