@@ -25,6 +25,7 @@ class Settings extends ERP_Settings_Page {
      */
     public function get_sections() {
         $sections = array(
+            'customers' => __( 'Customers', 'erp' ),
             'currency_option' => __( 'Currency Settings', 'erp' ),
             'general'         => __( 'Invoice Formatting', 'erp' ),
             'erp_ac_tax'      => __( 'Sales Tax', 'erp' )
@@ -86,6 +87,40 @@ class Settings extends ERP_Settings_Page {
             array( 'type' => 'sectionend', 'id' => 'script_styling_options' ),
         );
 
+        $fields['customers'] = array(
+            array( 'title' => __( '', 'erp' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
+
+            array(
+                'title' => __( 'Customer Settings', 'erp' ),
+                'type'  => 'title',
+                'desc'  => __( 'Settings for Accounting customers.', 'erp' ),
+                'id'    => 'customer_settings'
+            ),
+
+            array(
+                'title'   => __( 'Auto Import', 'erp' ),
+                'id'      => 'customer_auto_import',
+                'type'    => 'select',
+                'desc'    => __( 'Allow to auto import new crm user as accounting customer.', 'erp' ),
+                'options' => [ 1 => __('On', 'erp'), 0 => __( 'Off', 'erp') ],
+                'default' =>  0,
+            ),
+
+            array(
+                'title'   => __( 'Import User\'s From', 'erp' ),
+                'id'      => 'crm_user_type',
+                'type'    => 'multicheck',
+                'desc'    => __( 'Selected user type are considered to auto import.', 'erp' ),
+                'options' => [ 'contact' => __('Contact', 'erp'), 'company' => __( 'Company', 'erp') ],
+                'default' => []
+            ),
+
+            array(
+                'type' => 'sectionend',
+                'id'   => 'script_styling_options'
+            )
+        );
+
         $fields['currency_option'] = array(
 
             array( 'title' => __( '', 'erp' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
@@ -109,7 +144,6 @@ class Settings extends ERP_Settings_Page {
                 'id'      => 'erp_ac_th_separator',
                 'default' => ','
             ),
-
 
             array(
                 'title'   => __( 'Decimal Separator', 'erp' ),
