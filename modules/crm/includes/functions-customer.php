@@ -1018,7 +1018,10 @@ function erp_crm_get_contact_groups( $args = [] ) {
     if ( false === $items ) {
         // Check if args count true, then return total count customer according to above filter
         if ( $args['count'] ) {
-            return WeDevs\ERP\CRM\Models\ContactGroup::count();
+            $result = WeDevs\ERP\CRM\Models\ContactGroup::count();
+            wp_cache_set( $cache_key, $result, 'erp' );
+
+            return $result;
         }
 
         $results               = [];
