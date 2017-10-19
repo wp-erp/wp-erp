@@ -68,7 +68,7 @@ $taxinfo             = erp_ac_get_tax_info();
 
             <div class="row">
                 <div class="col-3">
-                    <div class="bill-to"><?php _e( 'Bill to:', 'erp' ); ?></div>
+                    <div class="bill-to"><?php _e( 'Credit to:', 'erp' ); ?></div>
                     <strong><?php echo $user->get_full_name(); ?></strong>
                     <div class="billing-address"><?php echo nl2br( $transaction->billing_address ); ?></div>
                 </div>
