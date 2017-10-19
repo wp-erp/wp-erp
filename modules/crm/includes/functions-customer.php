@@ -1570,7 +1570,7 @@ function erp_crm_get_serach_key( $type = '' ) {
         ],
 
         'street_1' => [
-            'title'     => __( 'Stree 1', 'erp' ),
+            'title'     => __( 'Street 1', 'erp' ),
             'type'      => 'text',
             'text'      => '',
             'condition' => [
@@ -1584,7 +1584,7 @@ function erp_crm_get_serach_key( $type = '' ) {
         ],
 
         'street_2' => [
-            'title'     => __( 'Stree 2', 'erp' ),
+            'title'     => __( 'Street 2', 'erp' ),
             'type'      => 'text',
             'text'      => '',
             'condition' => [
