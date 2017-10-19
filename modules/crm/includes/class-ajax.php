@@ -175,7 +175,6 @@ class Ajax_Handler {
 
         foreach ( $contacts['data'] as $key => $contact ) {
             $contact_owner    = [];
-//            $contact_owner_id = erp_people_get_meta( $contact['id'], 'contact_owner', true );
             $contact_owner_id = $contact['contact_owner'];
 
             if ( $contact_owner_id ) {

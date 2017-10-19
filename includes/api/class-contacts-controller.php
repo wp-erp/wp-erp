@@ -109,7 +109,7 @@ class Contacts_Controller extends REST_Controller {
                 $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
 
                 if ( in_array( 'owner', $include_params ) ) {
-                    $contact_owner_id = ( $item->user_id ) ? get_user_meta( $item->user_id, 'contact_owner', true ) : erp_people_get_meta( $item->id, 'contact_owner', true );
+                    $contact_owner_id = erp_crm_get_contact_owner( $item->id );
 
                     $item->owner = $this->get_user( $contact_owner_id );
                     $additional_fields = ['owner' => $item->owner];
@@ -146,7 +146,7 @@ class Contacts_Controller extends REST_Controller {
             $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
 
             if ( in_array( 'owner', $include_params ) ) {
-                $contact_owner_id = ( $item->user_id ) ? get_user_meta( $item->user_id, 'contact_owner', true ) : erp_people_get_meta( $item->id, 'contact_owner', true );
+                $contact_owner_id = erp_crm_get_contact_owner( $item->id );
 
                 $item->owner = $this->get_user( $contact_owner_id );
                 $additional_fields = ['owner' => $item->owner];

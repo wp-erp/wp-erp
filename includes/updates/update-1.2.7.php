@@ -26,7 +26,7 @@ function erp_crm_alter_peoples_table_1_2_7() {
     if ( ! in_array( 'hash', $people_table_columns ) ) {
         $alter_peoples_table_sql = "ALTER TABLE {$people_table} 
 				  	ADD COLUMN  
-					`hash` VARCHAR(40) NULL DEFAULT NULL,
+					`hash` VARCHAR(40) NULL DEFAULT NULL
 					AFTER currency";
         $wpdb->query( $alter_peoples_table_sql );
     }
@@ -76,6 +76,8 @@ function erp_crm_move_people_life_stage_from_meta_to_base_table_1_2_7() {
         $wpdb->query( $migrate_contact_owner_sql );
 
         $metas_to_remove[] = 'contact_owner';
+        $metas_to_remove[] = 'created_by';
+        $metas_to_remove[] = '_assign_crm_agent';
     }
 
     if ( in_array( 'hash', $people_table_columns ) ) {

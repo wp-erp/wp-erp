@@ -88,7 +88,7 @@
                                     <div class="user-wrap">
                                         <div class="user-wrap-content">
                                             <?php
-                                                $crm_user_id = erp_people_get_meta( $customer->id, 'contact_owner', true );
+                                                $crm_user_id = $customer->get_contact_owner();
                                                 if ( !empty( $crm_user_id ) ) {
                                                     $user        = get_user_by( 'id', $crm_user_id );
                                                     $user_string = esc_html( $user->display_name );

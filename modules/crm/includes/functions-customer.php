@@ -1253,15 +1253,14 @@ function erp_crm_create_new_contact_subscriber( $args = [] ) {
 
     $subscriber = \WeDevs\ERP\CRM\Models\ContactSubscriber::create( $args );
 
-    $hash = erp_people_get_meta( $args['user_id'], 'hash', true );
+    $contact = new \WeDevs\ERP\CRM\Contact( $subscriber->user_id );
+    $hash_id = sha1( microtime() . 'erp-subscription' . $args['group_id'] . $args['user_id'] );
 
-    if ( empty( $hash ) ) {
-        $hash_id = sha1( microtime() . 'erp-subscription' . $args['group_id'] . $args['user_id'] );
-
-        erp_people_update_meta( $args['user_id'], 'hash', $hash_id );
+    if ( ! $contact->hash ){
+        $contact->update_contact_hash( $hash_id );
     }
 
-    do_action( 'erp_crm_create_contact_subscriber', $subscriber, $hash );
+    do_action( 'erp_crm_create_contact_subscriber', $subscriber, $hash_id );
 
     return $subscriber;
 }
@@ -3494,7 +3493,7 @@ function erp_crm_login_redirect( $redirect_to, $roles ) {
 /**
  * Get customer life stage
  *
- * @since 1.2.6
+ * @since 1.2.7
  *
  * @param $contact_id
  *
@@ -3587,4 +3586,42 @@ function erp_crm_get_contact_groups_list(){
     }
 
     return $list;
+}
+/*
+ * Get contact hash
+ *
+ * @since 1.2.7
+ *
+ * @param $contact_id
+ *
+ * @return string|WP_Error
+ */
+function erp_crm_get_contact_hash( $contact_id ){
+    $contact = new \WeDevs\ERP\CRM\Contact( $contact_id );
+
+    if ( empty( $contact ) ) {
+        return new \WP_Error( 'no-erp-people', __( 'People not exists', 'erp' ) );
+    }
+
+    return $contact->get_contact_hash();
+}
+
+/**
+ * Update contact hash
+ *
+ * @since 1.2.7
+ *
+ * @param $contact_id
+ * @param $hash
+ *
+ * @return WP_Error|void
+ */
+function erp_crm_update_contact_hash( $contact_id, $hash ){
+    $contact = new \WeDevs\ERP\CRM\Contact( $contact_id );
+
+    if ( empty( $contact ) ) {
+        return new \WP_Error( 'no-erp-people', __( 'People not exists', 'erp' ) );
+    }
+
+    $contact->update_contact_hash( $hash );
 }

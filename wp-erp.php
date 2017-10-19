@@ -52,7 +52,7 @@ final class WeDevs_ERP {
      *
      * @var string
      */
-    public $version = '1.2.6';
+    public $version = '1.2.7';
 
     /**
      * Minimum PHP version required

@@ -425,7 +425,7 @@ class Ajax {
             } else {
                 $contact = new \WeDevs\ERP\CRM\Contact( absint( $people->id ), 'contact' );
 
-                if ( ! $people->existing ) {
+                if ( ! $people->exists) {
                     $contact->update_life_stage($life_stage);
                     $contact->update_meta( 'contact_owner', $contact_owner );
 
