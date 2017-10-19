@@ -86,20 +86,4 @@ trait ContactForms {
         return $options;
     }
 
-    /**
-     * Get CRM Contact Groups
-     *
-     * @return array
-     */
-    public function get_contact_groups() {
-        $groups = erp_crm_get_contact_groups( [ 'number' => '-1' ] );
-        $list   = [];
-
-        foreach ( $groups as $group ) {
-            $list[ $group->id ] = $group->name;
-        }
-
-        return $list;
-    }
-
 }

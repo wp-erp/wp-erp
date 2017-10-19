@@ -1193,13 +1193,7 @@ function erp_crm_get_subscriber_contact( $args = [] ) {
  * @return array
  */
 function erp_crm_get_contact_group_dropdown( $label = [] ) {
-    $cache_key = 'erp_crm_contact_groups';
-    $groups = wp_cache_get( $cache_key, 'erp' );
-
-    if( false == $groups){
-        $groups = WeDevs\ERP\CRM\Models\ContactGroup::select('id', 'name')->get();
-        wp_cache_set( $cache_key, $groups, 'erp');
-    }
+    $groups = erp_crm_get_contact_groups_list();
 
     $list   = [];
     $unsubscribe_text = '';
@@ -3574,4 +3568,23 @@ function erp_crm_update_contact_owner( $contact_id, $owner_id ){
     }
 
     $contact->update_contact_owner( $owner_id );
+}
+
+/**
+ * Get all contact groups
+ *
+ * @since 1.2.7
+ * @return array
+ */
+function erp_crm_get_contact_groups_list(){
+    $groups = \WeDevs\ERP\CRM\Models\ContactGroup::select('id', 'name')->get();
+    $contact_groups = apply_filters( 'erp_crm_get_contact_group_list', $groups );
+
+    $list   = [];
+
+    foreach ( $contact_groups as $group ) {
+        $list[ $group->id ] = $group->name;
+    }
+
+    return $list;
 }
