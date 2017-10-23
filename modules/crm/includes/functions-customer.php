@@ -1195,11 +1195,11 @@ function erp_crm_get_subscriber_contact( $args = [] ) {
 function erp_crm_get_contact_group_dropdown( $label = [] ) {
     $groups = erp_crm_get_contact_groups_list();
 
-    $list   = [];
+    $list             = [];
     $unsubscribe_text = '';
 
     foreach ( $groups as $key => $group ) {
-        $list[$group->id] = '<span class="group-name">' . $group->name . '</span>';
+        $list[ $key ] = '<span class="group-name">' . $group . '</span>';
     }
 
     if ( $label ) {
