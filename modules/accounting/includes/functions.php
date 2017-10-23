@@ -719,7 +719,12 @@ function erp_ac_customer_create_from_crm( $customer, $customer_id, $data ) {
         return;
     }
 
-    if ( is_null( $data['company'] ) ) {
+    // no need to add wordpress `user id` again
+    // [ `user id` already added when contact is created ]
+    $data['is_wp_user'] = false;
+    $data['wp_user_id'] = '';
+
+    if ( ! isset( $data['company'] ) ) {
         // the created crm user type is NOT a company
         if ( ! in_array( 'contact', $crm_user_type ) ) {
             return;
