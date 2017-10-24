@@ -34,7 +34,9 @@ class Admin_Dashboard {
 
             $codes     = array();
             foreach ( $countries as $code_of ) {
-                $codes[] = $code_of->country;
+                if( !is_null($code_of->country)){
+                    $codes[] = $code_of->country;
+                }
             }
 
             $customer_countries = array_count_values( $codes );

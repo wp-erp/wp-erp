@@ -40,7 +40,7 @@ class WeDevs_ERP_Installer {
      * Nothing being called here yet.
      *
      * @since 1.0
-     *
+     * @since save plugin install date
      * @return void
      */
     public function activate() {
@@ -70,6 +70,11 @@ class WeDevs_ERP_Installer {
         $latest_version = erp_get_version();
         update_option( 'wp_erp_version', $latest_version );
         update_option( 'wp_erp_db_version', $latest_version );
+
+        //save install date
+        if ( false == get_option( 'wp_erp_install_date' ) ) {
+            update_option( 'wp_erp_install_date', current_time( 'timestamp' ) );
+        }
     }
 
     /**

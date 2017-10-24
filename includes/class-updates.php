@@ -121,6 +121,7 @@ class Updates {
      * Do all updates when Run updater btn click
      *
      * @since 1.0
+     * @since 1.2.7 save plugin install date
      *
      * @return void
      */
@@ -154,6 +155,11 @@ class Updates {
         }
 
         update_option( 'wp_erp_version', WPERP_VERSION );
+
+        //save install date
+        if ( false == get_option( 'wp_erp_install_date' ) ) {
+            update_option( 'wp_erp_install_date', current_time( 'timestamp' ) );
+        }
 
         $this->enable_active_erp_modules();
 
