@@ -414,7 +414,8 @@ class Ajax {
                 'state'         => $state,
                 'postal_code'   => $postal_code,
                 'country'       => $country,
-                'contact_owner' => $contact_owner
+                'contact_owner' => $contact_owner,
+                'life_stage'    => $life_stage
             ];
 
             $people = erp_insert_people( $data, true );
@@ -424,13 +425,13 @@ class Ajax {
             } else {
                 $contact = new \WeDevs\ERP\CRM\Contact( absint( $people->id ), 'contact' );
 
-                if ( ! $people->existing ) {
-                    $contact->update_meta( 'life_stage', $life_stage );
+                if ( ! $people->exists) {
+                    $contact->update_life_stage($life_stage);
                     $contact->update_meta( 'contact_owner', $contact_owner );
 
                 } else {
                     if ( ! $contact->get_life_stage() ) {
-                        $contact->update_meta( 'life_stage', $life_stage );
+                        $contact->update_life_stage($life_stage);
                     }
 
                     if ( ! $contact->get_contact_owner() ) {

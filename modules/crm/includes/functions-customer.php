@@ -292,23 +292,21 @@ function erp_crm_customer_get_status_count( $type = null ) {
     $cache_key = 'erp-crm-customer-status-counts-'. $type;
     $results = wp_cache_get( $cache_key, 'erp' );
 
-    if ( false === $results ) {
+    if ( false == $results ) {
         $people_tbl = $wpdb->prefix . 'erp_peoples';
-        $meta_tbl   = $wpdb->prefix . 'erp_peoplemeta';
         $rel_tbl    = $wpdb->prefix . 'erp_people_type_relations';
         $type_tbl   = $wpdb->prefix . 'erp_people_types';
 
-        $sql = " select {$meta_tbl}.meta_value as status, count({$people_tbl}.id) as count"
-             . " from {$people_tbl}"
-             . " left join {$rel_tbl} on {$people_tbl}.id = {$rel_tbl}.people_id"
-             . " left join {$type_tbl} on {$rel_tbl}.people_types_id = {$type_tbl}.id"
-             . " left join {$meta_tbl} on {$people_tbl}.id = {$meta_tbl}.erp_people_id and {$meta_tbl}.meta_key = %s"
-             . " where {$type_tbl}.name = %s and {$rel_tbl}.deleted_at is null"
-             . " group by {$meta_tbl}.meta_value";
+        $sql = "select life_stage as status, count(*) as count"
+            . " from {$people_tbl}"
+            . " left join {$rel_tbl} on {$people_tbl}.id = {$rel_tbl}.people_id"
+            . " left join {$type_tbl} on {$rel_tbl}.people_types_id = {$type_tbl}.id"
+            . " WHERE {$type_tbl}.name = %s AND {$rel_tbl}.deleted_at IS NULL"
+            . " group by life_stage";
+        $results = $wpdb->get_results( $wpdb->prepare( $sql,  $type ) );
 
-        $results = $wpdb->get_results( $wpdb->prepare( $sql, 'life_stage', $type ) );
+       wp_cache_set( $cache_key, $results, 'erp' );
 
-        wp_cache_set( $cache_key, $results, 'erp' );
     }
 
     foreach ( $results as $result ) {
@@ -1013,12 +1011,19 @@ function erp_crm_get_contact_groups( $args = [] ) {
         'order'      => 'DESC',
         'count'      => false,
     ];
-
     $args      = wp_parse_args( $args, $defaults );
     $cache_key = 'erp-crm-contact-group-' . md5( serialize( $args ) );
     $items     = wp_cache_get( $cache_key, 'erp' );
 
     if ( false === $items ) {
+        // Check if args count true, then return total count customer according to above filter
+        if ( $args['count'] ) {
+            $result = WeDevs\ERP\CRM\Models\ContactGroup::count();
+            wp_cache_set( $cache_key, $result, 'erp' );
+
+            return $result;
+        }
+
         $results               = [];
         $contact_group         = new WeDevs\ERP\CRM\Models\ContactGroup();
 
@@ -1064,10 +1069,6 @@ function erp_crm_get_contact_groups( $args = [] ) {
 
         $items = erp_array_to_object( $items );
 
-        // Check if args count true, then return total count customer according to above filter
-        if ( $args['count'] ) {
-            $items = WeDevs\ERP\CRM\Models\ContactGroup::count();
-        }
 
         wp_cache_set( $cache_key, $items, 'erp' );
     }
@@ -1192,13 +1193,13 @@ function erp_crm_get_subscriber_contact( $args = [] ) {
  * @return array
  */
 function erp_crm_get_contact_group_dropdown( $label = [] ) {
-    $groups = erp_crm_get_contact_groups( [ 'number' => '-1' ] );
-    $list   = [];
+    $groups = erp_crm_get_contact_groups_list();
+
+    $list             = [];
     $unsubscribe_text = '';
 
     foreach ( $groups as $key => $group ) {
-        $list[$group->id] = '<span class="group-name">' . $group->name . '</span>';
-        // $list[$group->id] = $group->name;
+        $list[ $key ] = '<span class="group-name">' . $group . '</span>';
     }
 
     if ( $label ) {
@@ -1252,15 +1253,14 @@ function erp_crm_create_new_contact_subscriber( $args = [] ) {
 
     $subscriber = \WeDevs\ERP\CRM\Models\ContactSubscriber::create( $args );
 
-    $hash = erp_people_get_meta( $args['user_id'], 'hash', true );
+    $contact = new \WeDevs\ERP\CRM\Contact( $subscriber->user_id );
+    $hash_id = sha1( microtime() . 'erp-subscription' . $args['group_id'] . $args['user_id'] );
 
-    if ( empty( $hash ) ) {
-        $hash_id = sha1( microtime() . 'erp-subscription' . $args['group_id'] . $args['user_id'] );
-
-        erp_people_update_meta( $args['user_id'], 'hash', $hash_id );
+    if ( ! $contact->hash ){
+        $contact->update_contact_hash( $hash_id );
     }
 
-    do_action( 'erp_crm_create_contact_subscriber', $subscriber, $hash );
+    do_action( 'erp_crm_create_contact_subscriber', $subscriber, $hash_id );
 
     return $subscriber;
 }
@@ -1569,7 +1569,7 @@ function erp_crm_get_serach_key( $type = '' ) {
         ],
 
         'street_1' => [
-            'title'     => __( 'Stree 1', 'erp' ),
+            'title'     => __( 'Street 1', 'erp' ),
             'type'      => 'text',
             'text'      => '',
             'condition' => [
@@ -1583,7 +1583,7 @@ function erp_crm_get_serach_key( $type = '' ) {
         ],
 
         'street_2' => [
-            'title'     => __( 'Stree 2', 'erp' ),
+            'title'     => __( 'Street 2', 'erp' ),
             'type'      => 'text',
             'text'      => '',
             'condition' => [
@@ -1966,7 +1966,7 @@ function erp_crm_get_search_by_already_saved( $save_search_id ) {
 function erp_crm_contact_advance_filter( $custom_sql, $args ) {
     global $wpdb;
 
-    $pep_fileds  = [ 'first_name', 'last_name', 'email', 'website', 'company', 'phone', 'mobile', 'other', 'fax', 'notes', 'street_1', 'street_2', 'city', 'postal_code', 'currency' ];
+    $pep_fileds  = [ 'first_name', 'last_name', 'email', 'website', 'company', 'phone', 'mobile', 'other', 'fax', 'notes', 'street_1', 'street_2', 'city', 'postal_code', 'currency', 'contact_owner', 'created_by', 'life_stage' ];
     $people_meta_fields = erp_crm_get_contact_meta_fields();
 
     if ( !isset( $args['erpadvancefilter'] ) || empty( $args['erpadvancefilter'] ) ) {
@@ -2993,7 +2993,8 @@ function erp_handle_user_bulk_actions() {
                     'state'         => $state,
                     'postal_code'   => $postal_code,
                     'country'       => $country,
-                    'contact_owner' => $contact_owner
+                    'contact_owner' => $contact_owner,
+                    'life_stage' => $life_stage,
                 ];
 
                 $contact_id = erp_insert_people( $data );
@@ -3001,9 +3002,7 @@ function erp_handle_user_bulk_actions() {
                 if ( is_wp_error( $contact_id ) ) {
                     continue;
                 } else {
-                    update_user_meta( $user_id, 'contact_owner', $contact_owner );
-                    update_user_meta( $user_id, 'life_stage', $life_stage );
-                    erp_people_update_meta( $contact_id, 'life_stage', $life_stage );
+                    erp_crm_update_contact_owner( $user_id,$contact_owner );
                 }
 
                 $created++;
@@ -3042,6 +3041,7 @@ function erp_user_bulk_actions_notices() {
  * Create contact from created user.
  *
  * @since 1.0
+ * @since 1.2.7 create accounting customer from wp user
  *
  * @param  int $user_id
  *
@@ -3067,23 +3067,24 @@ function erp_create_contact_from_created_user( $user_id ) {
         return;
     }
 
-    $data = [];
-
-    $data['type']       = 'contact';
-    $data['user_id']    = $user_id;
-    $data['first_name'] = $user->first_name;
-    $data['last_name']  = $user->last_name;
-    $data['email']      = $user->user_email;
-    $data['website']    = $user->user_url;
-
-    $contact_id    = erp_insert_people( $data );
     $contact_owner = erp_get_option( 'contact_owner', 'erp_settings_erp-crm_contacts', null );
     $contact_owner = ( $contact_owner ) ? $contact_owner : get_current_user_id();
     $life_stage    = erp_get_option( 'life_stage', 'erp_settings_erp-crm_contacts', 'opportunity' );
 
-    update_user_meta( $user_id, 'contact_owner', $contact_owner );
-    update_user_meta( $user_id, 'life_stage', $life_stage );
-    erp_people_update_meta( $contact_id, 'life_stage', $life_stage );
+    $data = [];
+
+    $data['type']          = 'contact';
+    $data['user_id']       = $user_id;
+    $data['first_name']    = $user->first_name;
+    $data['last_name']     = $user->last_name;
+    $data['email']         = $user->user_email;
+    $data['website']       = $user->user_url;
+    $data['contact_owner'] = $contact_owner;
+    $data['life_stage']    = $life_stage;
+    $contact_id            = erp_insert_people( $data );
+	
+    // create accounting customer from wp user
+    erp_ac_customer_create_from_crm( [], $contact_id, $data );
 
     return;
 }
@@ -3345,7 +3346,7 @@ function erp_crm_make_wp_user( $customer_id, $args = [] ) {
     $people_meta = \WeDevs\ERP\Framework\Models\Peoplemeta::where( 'erp_people_id', $customer_id )->get()->toArray();
     $meta_array = wp_list_pluck( $people_meta, 'meta_value', 'meta_key' );
 
-    unset( $people['id'], $people['user_id'], $people['website'], $people['email'], $people['created'], $people['types'], $people['first_name'], $people['last_name'] );
+    unset( $people['id'], $people['user_id'], $people['website'], $people['email'], $people['created'], $people['types'], $people['first_name'], $people['last_name'], $people['life_stage'], $people['contact_owner'] );
     $people_array = array_merge( $people, $meta_array );
 
     if ( $people_array ) {
@@ -3491,4 +3492,140 @@ function erp_crm_login_redirect( $redirect_to, $roles ) {
     }
 
     return $redirect_to;
+}
+
+/**
+ * Get customer life stage
+ *
+ * @since 1.2.7
+ *
+ * @param $contact_id
+ *
+ * @return WP_Error | string
+ */
+function erp_crm_get_life_stage( $contact_id ){
+    $contact = new \WeDevs\ERP\CRM\Contact( $contact_id );
+
+    if ( empty( $contact ) ) {
+        return new \WP_Error( 'no-erp-people', __( 'People not exists', 'erp' ) );
+    }
+
+    return $contact->get_life_stage();
+
+}
+
+/**
+ * Update life stage of a customer
+ *
+ * @since 1.2.7
+ *
+ * @param $contact_id
+ * @param $stage
+ *
+ * @return bool|string|WP_Error
+ */
+function erp_crm_update_life_stage( $contact_id, $stage ){
+    $contact = new \WeDevs\ERP\CRM\Contact( $contact_id );
+
+    if ( empty( $contact ) ) {
+        return new \WP_Error( 'no-erp-people', __( 'People not exists', 'erp' ) );
+    }
+
+    return $contact->update_life_stage( $stage );
+}
+
+/**
+ * Get contact owner
+ *
+ * @since 1.2.7
+ *
+ * @param $contact_id
+ *
+ * @return string|WP_Error
+ */
+function erp_crm_get_contact_owner( $contact_id ){
+    $contact = new \WeDevs\ERP\CRM\Contact( $contact_id );
+
+    if ( empty( $contact ) ) {
+        return new \WP_Error( 'no-erp-people', __( 'People not exists', 'erp' ) );
+    }
+
+    return $contact->get_contact_owner();
+}
+
+/**
+ * Update contact owner
+ *
+ * @since 1.2.7
+ *
+ * @param $contact_id
+ * @param $owner_id
+ *
+ * @return WP_Error|void
+ */
+function erp_crm_update_contact_owner( $contact_id, $owner_id ){
+    $contact = new \WeDevs\ERP\CRM\Contact( $contact_id );
+
+    if ( empty( $contact ) ) {
+        return new \WP_Error( 'no-erp-people', __( 'People not exists', 'erp' ) );
+    }
+
+    $contact->update_contact_owner( $owner_id );
+}
+
+/**
+ * Get all contact groups
+ *
+ * @since 1.2.7
+ * @return array
+ */
+function erp_crm_get_contact_groups_list(){
+    $groups = \WeDevs\ERP\CRM\Models\ContactGroup::select('id', 'name')->get();
+    $contact_groups = apply_filters( 'erp_crm_get_contact_group_list', $groups );
+
+    $list   = [];
+
+    foreach ( $contact_groups as $group ) {
+        $list[ $group->id ] = $group->name;
+    }
+
+    return $list;
+}
+/*
+ * Get contact hash
+ *
+ * @since 1.2.7
+ *
+ * @param $contact_id
+ *
+ * @return string|WP_Error
+ */
+function erp_crm_get_contact_hash( $contact_id ){
+    $contact = new \WeDevs\ERP\CRM\Contact( $contact_id );
+
+    if ( empty( $contact ) ) {
+        return new \WP_Error( 'no-erp-people', __( 'People not exists', 'erp' ) );
+    }
+
+    return $contact->get_contact_hash();
+}
+
+/**
+ * Update contact hash
+ *
+ * @since 1.2.7
+ *
+ * @param $contact_id
+ * @param $hash
+ *
+ * @return WP_Error|void
+ */
+function erp_crm_update_contact_hash( $contact_id, $hash ){
+    $contact = new \WeDevs\ERP\CRM\Contact( $contact_id );
+
+    if ( empty( $contact ) ) {
+        return new \WP_Error( 'no-erp-people', __( 'People not exists', 'erp' ) );
+    }
+
+    $contact->update_contact_hash( $hash );
 }

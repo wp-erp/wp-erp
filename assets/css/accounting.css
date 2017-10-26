@@ -219,9 +219,6 @@ table.vendor-list-table th.column-customer img {
 .erp-ac-journal-entry table.journal-table .valid {
   display: none;
 }
-.erp-ac-list-table-form .bulkactions {
-  display: none;
-}
 .erp-ac-list-table-form .actions input:not([type="submit"]) {
   padding: 5px;
 }

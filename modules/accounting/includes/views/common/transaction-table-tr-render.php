@@ -21,7 +21,9 @@
                         erp_html_form_input( array(
                             'name'  => 'line_desc[]',
                             'type'  => 'text',
-                            'value' => isset( $item['description'] ) ? $item['description'] : ''
+                            'value' => isset( $item['description'] ) ? $item['description'] : '',
+                            'custom_attr' => array( 'maxlength' => '40' )
+
                         ) );
                         ?>
                     </td>

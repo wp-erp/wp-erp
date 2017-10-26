@@ -35,7 +35,7 @@
 
     <?php
 
-    if( empty($employee_table->items) ){
+    if ( empty( \WeDevs\ERP\HRM\Models\Employee::count() ) ) {
         ob_start();
         echo '<style>.erp-hr-employees-wrap{display: none;}</style>';
         include WPERP_HRM_VIEWS . '/employee/empty-employee.php';

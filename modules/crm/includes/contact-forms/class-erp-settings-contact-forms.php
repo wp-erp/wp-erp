@@ -69,7 +69,7 @@ class ERP_Settings_Contact_Forms extends ERP_Settings_Page {
             'mappedData'        => get_option( 'wperp_crm_contact_forms', '' ),
             'crmOptions'        => $this->crm_options,
             'scriptDebug'       => defined( 'SCRIPT_DEBUG' ) ? SCRIPT_DEBUG : false,
-            'contactGroups'     => $this->get_contact_groups(),
+            'contactGroups'     => erp_crm_get_contact_groups_list(),
             'contactOwners'     => erp_crm_get_crm_user_dropdown(),
             'i18n' => [
                 'notMapped'             => __( 'Not Set', 'erp' ),

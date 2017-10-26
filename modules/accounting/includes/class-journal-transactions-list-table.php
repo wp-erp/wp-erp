@@ -271,7 +271,7 @@ class Journal_Transactions_List_Table extends Transaction_List_Table {
             $pagination = erp_ac_get_ledger_opening_pagination( $offset, $ledger_id, $args );
 
             $closing_balance             = new \stdClass();
-            $closing_balance->issue_date = sprintf( '<strong>%s</strong>',__( 'Opening Balnace', 'erp' ) );
+            $closing_balance->issue_date = sprintf( '<strong>%s</strong>',__( 'Opening Balance', 'erp' ) );
             $closing_balance->ref        = '&#8212';
             $closing_balance->debit      = floatval( $closing->debit + $pagination['debit'] );
             $closing_balance->credit     = floatval( $closing->credit + $pagination['credit'] );

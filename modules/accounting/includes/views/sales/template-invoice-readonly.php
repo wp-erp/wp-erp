@@ -88,7 +88,7 @@ $invoice     = isset( $transaction['invoice_number'] ) && ! empty( $transaction[
                         <th scope="col"><?php _e( 'Quantity', 'erp' ) ?></th>
                         <th scope="col"><?php _e( 'Unit Price', 'erp' ) ?></th>
                         <th scope="col"><?php _e( 'Discount', 'erp' ) ?></th>
-                        <th scope="col"><?php _e( 'Tax (%)', 'erp' ) ?></th>
+                        <th scope="col"><?php _e( 'Tax', 'erp' ) ?></th>
                         <th scope="col"><?php _e( 'Amount', 'erp' ) ?></th>
                     </tr>
                     </thead>
@@ -102,8 +102,8 @@ $invoice     = isset( $transaction['invoice_number'] ) && ! empty( $transaction[
                             </td>
                             <td class="align-right"><?php echo $line->qty; ?></td>
                             <td class="align-right"><?php echo erp_ac_get_price( $line->unit_price ); ?></td>
-                            <td class="align-right"><?php echo $line->discount; ?></td>
-                            <td class="align-right"><?php echo ( $line->tax_rate * $line->line_total ) / 100; ?></td>
+                            <td class="align-right"><?php echo $line->discount.'%'; ?></td>
+                            <td class="align-right"><?php echo ( $line->tax_rate * $line->line_total ) / 100 .' '. '('.number_format(( float )$line->tax_rate, 2, '.','').'%)' ?></td>
                             <td class="align-right"><?php echo erp_ac_get_price( $line->line_total ); ?></td>
                         </tr>
                     <?php } ?>

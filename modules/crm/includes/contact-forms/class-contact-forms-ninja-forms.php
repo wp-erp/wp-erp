@@ -127,6 +127,8 @@ class Ninja_Forms {
     /**
      * After Ninja Forms submission hook
      *
+     * @since 1.2.7 stripping slashes from formData
+     *
      * @return void
      */
     public function after_form_submit( $sub_id ) {
@@ -144,7 +146,7 @@ class Ninja_Forms {
             /* Support for version >= 3.0 */
             $sub = $nf->form()->get_sub( $sub_id );
 
-            $formData = $_POST['formData'];
+            $formData = stripslashes( $_POST['formData'] );
             $formData = str_replace( '\"' , '"', $formData);
             $formData = json_decode( $formData, true );
 

@@ -15,7 +15,7 @@ class Admin_Dashboard {
      * @since 1.2.6
      */
     public function init() {
-        wp_add_dashboard_widget( 'erp_dashboard_customer_statics', __( 'Customer Statics', 'erp' ), array(
+        wp_add_dashboard_widget( 'erp_dashboard_customer_statics', __( 'Customer Statistics', 'erp' ), array(
             $this,
             'customer_statics'
         ) );
@@ -34,7 +34,9 @@ class Admin_Dashboard {
 
             $codes     = array();
             foreach ( $countries as $code_of ) {
-                $codes[] = $code_of->country;
+                if( !is_null($code_of->country)){
+                    $codes[] = $code_of->country;
+                }
             }
 
             $customer_countries = array_count_values( $codes );

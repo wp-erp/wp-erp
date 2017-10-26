@@ -199,6 +199,11 @@ class Contact_Group_List_Table extends \WP_List_Table {
             $args['order'] = $_REQUEST['order'];
         }
 
+        // Filter for search
+        if ( isset( $_REQUEST['s'] ) && !empty( $_REQUEST['s'] ) ) {
+            $args['s'] = $_REQUEST['s'];
+        }
+
         // Prepare all item after all filtering
         $this->items  = erp_crm_get_contact_groups( $args );
 

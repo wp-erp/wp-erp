@@ -357,7 +357,9 @@ class Customer_Relationship {
 
             case 'crm_page_erp-sales-contact-groups':
                 erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-contact-group.php', 'erp-crm-new-contact-group' );
-                erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-subscriber-contact.php', 'erp-crm-assign-subscriber-contact' );
+                if( isset($_GET['groupaction']) && $_GET['groupaction'] == 'view-subscriber'){
+                    erp_get_js_template( WPERP_CRM_JS_TMPL . '/new-subscriber-contact.php', 'erp-crm-assign-subscriber-contact' );
+                }
                 break;
 
             case 'toplevel_page_erp-sales':

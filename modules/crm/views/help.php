@@ -47,7 +47,21 @@
                                         <div class="erp-help-questions">
                                             <ul>
                                                 <?php foreach ($docs as $title => $link) { ?>
-                                                    <li><a href="<?php echo esc_url( add_query_arg(array('' =>'utm_source=doc&utm_medium=erp&utm_campaign=manik&utm_content=aion'), $link) ); ?>" target="_blank"><?php echo esc_html( $title ); ?> <span class="dashicons dashicons-arrow-right-alt2"></span></a></li>
+                                                    <?php
+                                                    $tracking_url = add_query_arg(
+                                                        array(
+                                                            'utm_source'   => 'doc',
+                                                            'utm_medium'   => 'erp',
+                                                            'utm_campaign' => 'manik',
+                                                            'utm_content'  => 'aion',
+                                                        ),
+                                                        untrailingslashit($link)
+                                                    );
+                                                    ?>
+
+                                                    <li>
+                                                        <a href="<?php echo esc_url_raw( $tracking_url ); ?>" target="_blank"><?php echo esc_html( $title ); ?> <span class="dashicons dashicons-arrow-right-alt2"></span></a>
+                                                    </li>
                                                 <?php } ?>
                                             </ul>
                                         </div>

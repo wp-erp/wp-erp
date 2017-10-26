@@ -727,6 +727,8 @@ function erp_ac_new_journal( $args = [], $items = [] ) {
 /**
  * Check validation before new transaction
  *
+ * @since 1.2.7 added discount cant be more than unit price
+ *
  * @param  array $args
  * @param  array $items
  * @param  boleen $update
@@ -735,8 +737,8 @@ function erp_ac_new_journal( $args = [], $items = [] ) {
  */
 function er_ac_insert_transaction_validation( $args, $items, $update ) {
     foreach ( $items as $key => $item ) {
-        if ( $item['discount'] > 100 ) {
-            return new WP_Error( 'error', __( 'Discount value must be less than or equal to 100', 'erp' ) );
+        if ( $item['discount'] > $item['unit_price'] ) {
+            return new WP_Error( 'error', __( 'Discount value must be less than item\'s total price', 'erp' ) );
         }
     }
 }
