@@ -544,7 +544,7 @@ Company'
                 `currency` varchar(5) DEFAULT NULL,
                 `life_stage` VARCHAR(100) DEFAULT NULL,
                 `contact_owner` bigint(20) DEFAULT NULL,
-                `hash` VARCHAR(40) NULL DEFAULT NULL
+                `hash` VARCHAR(40) NULL DEFAULT NULL,
                 `created_by` BIGINT(20) DEFAULT NULL,
                 `created` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`),
