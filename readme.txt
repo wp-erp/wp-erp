@@ -1,5 +1,5 @@
 === WP ERP ===
-Contributors: tareq1988, wedevs, ediamin, sabbir1991, asaquzzaman, shawon786
+Contributors: tareq1988, wedevs, ediamin, sabbir1991, asaquzzaman, shawon786, manikmist09
 Donate Link: https://tareq.co/donate
 Tags: small business, SME, contact, contacts, CRM, Customer Relationship Management, employee, leave management, hr, hrm, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
@@ -190,6 +190,23 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.2.7 -> Oct 26, 2017 =
+
+[new] Import CRM users into accounting module. Closes #394.
+[new] Send emails to different users from different email address. Closes #465.
+[new] Add Bulk Action in accounting module. Closes #538.
+[new] Database SQL query optimization.
+[fix] Help pages link fixed.
+[fix] Create employee form data sanitization. Closes #473.
+[fix] Exported (pdf) Invoice does not show TAX (%) and TAX amount. Closes #493.
+[fix] Contact adding issue from frontend with Ninja Forms. Closes #501.
+[fix] CRM contact groups search option. Closes #524.
+[fix] Woocommerce order synchronization issue when the discount is more than 100. Closes #526.
+[fix] Accounting sales page customer search issue. Closes #527.
+[fix] Large description is not aligned in PDF. Closes #528.
+[fix] Searching for a non listed employee takes to a different page. Closes #532.
+[fix] Load time increases for unnecessary query on the settings page. Closes #533.
 
 = v1.2.6 -> Oct 05, 2017 =
 
