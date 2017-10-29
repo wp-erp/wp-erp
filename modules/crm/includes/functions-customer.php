@@ -3084,7 +3084,9 @@ function erp_create_contact_from_created_user( $user_id ) {
     $contact_id            = erp_insert_people( $data );
 	
     // create accounting customer from wp user
-    erp_ac_customer_create_from_crm( [], $contact_id, $data );
+    if ( erp_is_module_active( 'accounting' ) ) {
+        erp_ac_customer_create_from_crm( [], $contact_id, $data );
+    }
 
     return;
 }
