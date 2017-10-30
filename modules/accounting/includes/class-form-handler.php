@@ -513,7 +513,7 @@ class Form_Handler {
         $type            = isset( $postdata['type'] ) ? sanitize_text_field( $postdata['type'] ) : '';
         $form_type       = isset( $postdata['form_type'] ) ? sanitize_text_field( $postdata['form_type'] ) : '';
         $account_id      = isset( $postdata['account_id'] ) ? intval( $postdata['account_id'] ) : 0;
-        //$status          = isset( $postdata['status'] ) ? sanitize_text_field( $postdata['status'] ) : 'closed';
+        $status          = isset( $postdata['status'] ) ? sanitize_text_field( $postdata['status'] ) : 'closed';
         $user_id         = isset( $postdata['user_id'] ) ? intval( $postdata['user_id'] ) : 0;
         $billing_address = isset( $postdata['billing_address'] ) ? wp_kses_post( $postdata['billing_address'] ) : '';
         $ref             = isset( $postdata['ref'] ) ? sanitize_text_field( $postdata['ref'] ) : '';
