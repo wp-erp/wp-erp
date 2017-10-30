@@ -93,7 +93,8 @@ function erp_get_peoples( $args = [] ) {
 
         // Check is the row want to search
         if ( ! empty( $s ) ) {
-            $words = explode( ' ', $s );
+            $search_like = '%' . $wpdb->esc_like( $s ) . '%';
+            $words       = explode( ' ', $s );
 
             if ( $type === 'contact' ) {
                 $args['erpadvancefilter'] = 'first_name[]=~' . implode( '&or&first_name[]=~', $words )
@@ -103,12 +104,31 @@ function erp_get_peoples( $args = [] ) {
             } else if ( $type === 'company' ) {
                 $args['erpadvancefilter'] = 'company[]=~' . implode( '&or&company[]=~', $words )
                                             . '&or&email[]=~' . implode( '&or&email[]=~', $words );
-            } else if ( $type === 'customer' ) {
-                $search_term = '%' . $wpdb->esc_like( $s ) . '%';
-                $sql['where'][] = $wpdb->prepare(
-                    'AND ( people.first_name ) LIKE %s OR ' .
-                    '( people.last_name ) LIKE %s',
-                    array( $search_term, $search_term ));
+
+            } else if ( $type === 'customer' || $type === 'vendor' ) {
+                if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+
+                    if ( $type === 'customer' ) {
+                        $sql['where'][] = $wpdb->prepare(
+                            'AND ( people.first_name ) LIKE %s OR ' .
+                            '( people.last_name ) LIKE %s',
+                            array( $search_like, $search_like )
+                        );
+
+                    } else {
+                        $sql['where'][] = $wpdb->prepare( 'AND ( people.company ) LIKE %s', array( $search_like ) );
+                    }
+
+                } else {
+                    $sql['where'][] = $wpdb->prepare(
+                        'AND ( people.first_name ) LIKE %s OR ' .
+                        '( people.last_name ) LIKE %s OR ' .
+                        '( people.email ) LIKE %s OR ' .
+                        '( people.company ) LIKE %s',
+                        array( $search_like, $search_like, $search_like, $search_like )
+                    );
+                }
+
             }
         }
 

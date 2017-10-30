@@ -41,6 +41,7 @@ class WeDevs_ERP_Installer {
      *
      * @since 1.0
      * @since save plugin install date
+     * @since save plugin install date
      * @return void
      */
     public function activate() {
@@ -541,6 +542,9 @@ Company'
                 `postal_code` varchar(10) DEFAULT NULL,
                 `country` varchar(20) DEFAULT NULL,
                 `currency` varchar(5) DEFAULT NULL,
+                `life_stage` VARCHAR(100) DEFAULT NULL,
+                `contact_owner` bigint(20) DEFAULT NULL,
+                `hash` VARCHAR(40) NULL DEFAULT NULL,
                 `created_by` BIGINT(20) DEFAULT NULL,
                 `created` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`),

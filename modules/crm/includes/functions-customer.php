@@ -3041,7 +3041,7 @@ function erp_user_bulk_actions_notices() {
  * Create contact from created user.
  *
  * @since 1.0
- * @since 1.2.7 create accounting customer from wp user
+ * @since 1.2.8 erp_crm_contact_created action
  *
  * @param  int $user_id
  *
@@ -3082,9 +3082,8 @@ function erp_create_contact_from_created_user( $user_id ) {
     $data['contact_owner'] = $contact_owner;
     $data['life_stage']    = $life_stage;
     $contact_id            = erp_insert_people( $data );
-	
-    // create accounting customer from wp user
-    erp_ac_customer_create_from_crm( [], $contact_id, $data );
+
+    do_action( 'erp_crm_contact_created', $contact_id, $data );
 
     return;
 }
