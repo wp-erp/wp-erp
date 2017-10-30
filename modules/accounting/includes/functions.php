@@ -741,3 +741,17 @@ function erp_ac_customer_create_from_crm( $customer, $customer_id, $data ) {
     erp_convert_to_people( $data );
 }
 
+/**
+ * Accounting customer auto create from crm
+ *
+ * @since  1.2.8
+ * 
+ * @param  int    $contact_id
+ * @param  object $data
+ * 
+ * @return void
+ */
+function erp_ac_customer_auto_create_from_crm( $contact_id, $data ) {
+    return erp_ac_customer_create_from_crm( [],  $contact_id, $data );
+}
+
