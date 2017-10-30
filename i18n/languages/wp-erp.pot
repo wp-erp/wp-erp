@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.2.7\n"
+"Project-Id-Version: WP ERP 1.2.8\n"
 "Report-Msgid-Bugs-To: http://wperp.com/support/\n"
-"POT-Creation-Date: 2017-10-26 04:55:17+00:00\n"
+"POT-Creation-Date: 2017-10-30 04:35:19+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5686,7 +5686,7 @@ msgstr ""
 msgid "Misc."
 msgstr ""
 
-#: includes/admin/views/welcome-screen.php:4 includes/class-install.php:227
+#: includes/admin/views/welcome-screen.php:4 includes/class-install.php:228
 msgid "Welcome to WP ERP"
 msgstr ""
 
@@ -6294,17 +6294,17 @@ msgid ""
 "will be replaced by original values"
 msgstr ""
 
-#: includes/class-install.php:946 includes/updates/update-1.1.17.php:21
+#: includes/class-install.php:950 includes/updates/update-1.1.17.php:21
 msgid "ERP Subscription"
 msgstr ""
 
-#: includes/class-install.php:958 includes/updates/update-1.1.17.php:33
+#: includes/class-install.php:962 includes/updates/update-1.1.17.php:33
 #: modules/crm/includes/admin/class-settings.php:146
 #: modules/crm/includes/class-subscription.php:455
 msgid "Confirm your subscription to %s"
 msgstr ""
 
-#: includes/class-install.php:960 includes/updates/update-1.1.17.php:35
+#: includes/class-install.php:964 includes/updates/update-1.1.17.php:35
 #: modules/crm/includes/admin/class-settings.php:154
 #: modules/crm/includes/class-subscription.php:457
 msgid ""
@@ -6321,50 +6321,50 @@ msgid ""
 "%s"
 msgstr ""
 
-#: includes/class-install.php:964 includes/updates/update-1.1.17.php:39
+#: includes/class-install.php:968 includes/updates/update-1.1.17.php:39
 #: modules/crm/includes/admin/class-settings.php:179
 #: modules/crm/includes/class-subscription.php:684
 msgid "You are now subscribed!"
 msgstr ""
 
-#: includes/class-install.php:965 includes/updates/update-1.1.17.php:40
+#: includes/class-install.php:969 includes/updates/update-1.1.17.php:40
 #: modules/crm/includes/admin/class-settings.php:186
 #: modules/crm/includes/class-subscription.php:719
 msgid "We've added you to our email list. You'll hear from us shortly."
 msgstr ""
 
-#: includes/class-install.php:966 includes/updates/update-1.1.17.php:41
+#: includes/class-install.php:970 includes/updates/update-1.1.17.php:41
 #: modules/crm/includes/admin/class-settings.php:198
 #: modules/crm/includes/class-subscription.php:693
 msgid "You are now unsubscribed"
 msgstr ""
 
-#: includes/class-install.php:967 includes/updates/update-1.1.17.php:42
+#: includes/class-install.php:971 includes/updates/update-1.1.17.php:42
 #: modules/crm/includes/admin/class-settings.php:205
 #: modules/crm/includes/class-subscription.php:736
 msgid "You are successfully unsubscribed from list(s):"
 msgstr ""
 
-#: includes/class-install.php:989 includes/class-scripts.php:146
+#: includes/class-install.php:993 includes/class-scripts.php:146
 #: includes/framework/modules.php:38 modules/hrm/hrm.php:143
 #: modules/hrm/hrm.php:241 modules/hrm/includes/class-form-handler.php:30
 #: modules/hrm/views/dashboard.php:2
 msgid "HR Management"
 msgstr ""
 
-#: includes/class-install.php:991
+#: includes/class-install.php:995
 msgid "Human Resource Mnanagement"
 msgstr ""
 
-#: includes/class-install.php:997 includes/framework/modules.php:45
+#: includes/class-install.php:1001 includes/framework/modules.php:45
 msgid "CR Management"
 msgstr ""
 
-#: includes/class-install.php:999 includes/framework/modules.php:47
+#: includes/class-install.php:1003 includes/framework/modules.php:47
 msgid "Client Resource Management"
 msgstr ""
 
-#: includes/class-install.php:1005 includes/class-install.php:1007
+#: includes/class-install.php:1009 includes/class-install.php:1011
 #: includes/updates/update-1.1.0.php:415 includes/updates/update-1.1.0.php:417
 msgid "Accountig Management"
 msgstr ""
@@ -6846,54 +6846,54 @@ msgstr ""
 msgid " from your computer."
 msgstr ""
 
-#: includes/functions-people.php:175 includes/functions-people.php:237
+#: includes/functions-people.php:195 includes/functions-people.php:257
 msgid "No data found"
 msgstr ""
 
-#: includes/functions-people.php:179 includes/functions-people.php:241
+#: includes/functions-people.php:199 includes/functions-people.php:261
 msgid "No type found"
 msgstr ""
 
-#: includes/functions-people.php:339
+#: includes/functions-people.php:359
 msgid "No field provided"
 msgstr ""
 
-#: includes/functions-people.php:343
+#: includes/functions-people.php:363
 msgid "No value provided"
 msgstr ""
 
-#: includes/functions-people.php:452
+#: includes/functions-people.php:472
 msgid "No user type provided."
 msgstr ""
 
-#: includes/functions-people.php:460
+#: includes/functions-people.php:480
 msgid "The people type is invalid."
 msgstr ""
 
-#: includes/functions-people.php:468
+#: includes/functions-people.php:488
 msgid "You must need to fillup either first name or phone or email"
 msgstr ""
 
-#: includes/functions-people.php:476
+#: includes/functions-people.php:496
 msgid "You must need to fillup either Company name or email or phone"
 msgstr ""
 
-#: includes/functions-people.php:482
+#: includes/functions-people.php:502
 #: modules/crm/includes/class-subscription.php:265
 msgid "Please provide a valid email address"
 msgstr ""
 
-#: includes/functions-people.php:532
+#: includes/functions-people.php:552
 msgid "Something went wrong, please try again"
 msgstr ""
 
-#: includes/functions-people.php:779
-#: modules/crm/includes/functions-customer.php:3510
-#: modules/crm/includes/functions-customer.php:3531
-#: modules/crm/includes/functions-customer.php:3550
-#: modules/crm/includes/functions-customer.php:3570
-#: modules/crm/includes/functions-customer.php:3607
-#: modules/crm/includes/functions-customer.php:3627
+#: includes/functions-people.php:799
+#: modules/crm/includes/functions-customer.php:3509
+#: modules/crm/includes/functions-customer.php:3530
+#: modules/crm/includes/functions-customer.php:3549
+#: modules/crm/includes/functions-customer.php:3569
+#: modules/crm/includes/functions-customer.php:3606
+#: modules/crm/includes/functions-customer.php:3626
 msgid "People not exists"
 msgstr ""
 
@@ -10736,7 +10736,7 @@ msgstr ""
 #: modules/crm/includes/functions-customer.php:372
 #: modules/crm/includes/functions-customer.php:1293
 #: modules/crm/includes/functions-customer.php:2868
-#: modules/crm/includes/functions-customer.php:3309
+#: modules/crm/includes/functions-customer.php:3308
 msgid "No contact found"
 msgstr ""
 
@@ -11537,92 +11537,92 @@ msgstr ""
 msgid "%s contacts created."
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3180
+#: modules/crm/includes/functions-customer.php:3179
 #: modules/hrm/includes/functions-employee.php:647
 msgid "Advertisement"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3181
+#: modules/crm/includes/functions-customer.php:3180
 msgid "Chat"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3182
+#: modules/crm/includes/functions-customer.php:3181
 msgid "Contact Form"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3183
+#: modules/crm/includes/functions-customer.php:3182
 msgid "Employee Referral"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3184
+#: modules/crm/includes/functions-customer.php:3183
 msgid "External Referral"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3185
+#: modules/crm/includes/functions-customer.php:3184
 msgid "Marketing campaign"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3186
+#: modules/crm/includes/functions-customer.php:3185
 msgid "Newsletter"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3187
+#: modules/crm/includes/functions-customer.php:3186
 msgid "OnlineStore"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3188
+#: modules/crm/includes/functions-customer.php:3187
 msgid "Optin Forms"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3189
+#: modules/crm/includes/functions-customer.php:3188
 msgid "Partner"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3190
+#: modules/crm/includes/functions-customer.php:3189
 msgid "Phone Call"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3191
+#: modules/crm/includes/functions-customer.php:3190
 msgid "Public Relations"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3192
+#: modules/crm/includes/functions-customer.php:3191
 msgid "Sales Mail Alias"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3193
+#: modules/crm/includes/functions-customer.php:3192
 msgid "Search Engine"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3194
+#: modules/crm/includes/functions-customer.php:3193
 msgid "Seminar-Internal"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3195
+#: modules/crm/includes/functions-customer.php:3194
 msgid "Seminar Partner"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3196
+#: modules/crm/includes/functions-customer.php:3195
 msgid "Social Media"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3197
+#: modules/crm/includes/functions-customer.php:3196
 msgid "Trade Show"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3198
+#: modules/crm/includes/functions-customer.php:3197
 msgid "Web Download"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3199
+#: modules/crm/includes/functions-customer.php:3198
 msgid "Web Research"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3305
+#: modules/crm/includes/functions-customer.php:3304
 msgid "You do not have permission to make WP User"
 msgstr ""
 
-#: modules/crm/includes/functions-customer.php:3319
+#: modules/crm/includes/functions-customer.php:3318
 msgid "No email found for creating wp user"
 msgstr ""
 
