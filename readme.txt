@@ -190,6 +190,11 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+= v1.2.8 -> Oct 30, 2017 =
+
+[fix] Partially created invoice can't be approved, void or deleted. Closes #522.
+[fix] The search function is not working on accounting customers and vendors list page. Closes #540.
+[fix] Deactivated Accounting module gives a fatal error. Closes #545.
 
 = v1.2.7 -> Oct 26, 2017 =
 
