@@ -94,12 +94,12 @@ function erp_crm_move_people_life_stage_from_meta_to_base_table_1_2_7() {
         $metas_to_remove[] = 'hash';
     }
 
-
-    if ( ! empty( $metas_to_remove ) ) {
-        $array_string = implode( "','", $metas_to_remove );
-        $sql          = "DELETE FROM {$peoplemeta_table} WHERE meta_key IN ('{$array_string}')";
-        $wpdb->query( $sql );
-    }
+        //@todo remove residual data on more updated version
+//    if ( ! empty( $metas_to_remove ) ) {
+//        $array_string = implode( "','", $metas_to_remove );
+//        $sql          = "DELETE FROM {$peoplemeta_table} WHERE meta_key IN ('{$array_string}')";
+//        $wpdb->query( $sql );
+//    }
 
 }
 
