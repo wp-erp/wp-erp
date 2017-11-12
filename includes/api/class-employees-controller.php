@@ -233,7 +233,6 @@ class Employees_Controller extends REST_Controller {
         $formated_items = [];
         foreach ( $items as $item ) {
             $additional_fields = [];
-
             $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
             $formated_items[] = $this->prepare_response_for_collection( $data );
         }
@@ -581,6 +580,11 @@ class Employees_Controller extends REST_Controller {
                     $reporting_to = $this->get_employee( ['id' => $reporting_to_id ] );
                     $data['reporting_to'] = ! is_wp_error( $reporting_to ) ? $reporting_to->get_data() : null;
                 }
+            }
+
+            if ( in_array( 'avatar', $include_params ) ) {
+                $employee_user         = new \WeDevs\ERP\HRM\Employee( intval( $item->id ) );
+                $data['avatar'] = $employee_user->get_avatar( 32 );
             }
         }
 

@@ -39,6 +39,7 @@ class API_Registrar {
                 '\WeDevs\ERP\API\Departments_Controller',
                 '\WeDevs\ERP\API\Designations_Controller',
                 '\WeDevs\ERP\API\Employees_Controller',
+                '\WeDevs\ERP\API\Birthdays_Controller',
                 '\WeDevs\ERP\API\Announcements_Controller',
                 '\WeDevs\ERP\API\Leave_Policies_Controller',
                 '\WeDevs\ERP\API\Leave_Entitlements_Controller',
