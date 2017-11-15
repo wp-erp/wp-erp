@@ -216,9 +216,9 @@ class Employees_Controller extends REST_Controller {
     /**
      * Get a collection of employees
      *
-     * @param WP_REST_Request $request
+     * @param $request WP_REST_Request
      *
-     * @return WP_Error|WP_REST_Response
+     * @return WP_REST_Response
      */
     public function get_employees( $request ) {
         $args = [
@@ -258,9 +258,8 @@ class Employees_Controller extends REST_Controller {
         if ( $request['page'] < $total_pages && $request['page'] >= 1 ) {
             $formatted_data['next_page'] = (int) $request['page'] + 1;
         }
-
         $response = rest_ensure_response( $formatted_data );
-        $response = $this->format_collection_response( $response, $request, $total_items );
+        $response = $this->format_collection_response( $response, $request, (int) $total_items );
 
         return $response;
     }
