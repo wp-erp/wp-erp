@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\API;
 
 use WP_REST_Server;
@@ -25,6 +26,7 @@ abstract class REST_Controller {
      * Prepare a response for inserting into a collection.
      *
      * @param WP_REST_Response $response Response object.
+     *
      * @return array Response data, ready for insertion into collection data.
      */
     public function prepare_response_for_collection( $response ) {
@@ -32,7 +34,7 @@ abstract class REST_Controller {
             return $response;
         }
 
-        $data = (array) $response->get_data();
+        $data   = (array) $response->get_data();
         $server = rest_get_server();
 
         if ( method_exists( $server, 'get_compact_response_links' ) ) {
@@ -88,29 +90,29 @@ abstract class REST_Controller {
      */
     public function get_collection_params() {
         return [
-            'context'                => $this->get_context_param(),
-            'page'                   => [
-                'description'        => __( 'Current page of the collection.' ),
-                'type'               => 'integer',
-                'default'            => 1,
-                'sanitize_callback'  => 'absint',
-                'validate_callback'  => 'rest_validate_request_arg',
-                'minimum'            => 1,
+            'context'  => $this->get_context_param(),
+            'page'     => [
+                'description'       => __( 'Current page of the collection.' ),
+                'type'              => 'integer',
+                'default'           => 1,
+                'sanitize_callback' => 'absint',
+                'validate_callback' => 'rest_validate_request_arg',
+                'minimum'           => 1,
             ],
-            'per_page'               => [
-                'description'        => __( 'Maximum number of items to be returned in result set.' ),
-                'type'               => 'integer',
-                'default'            => 20,
-                'minimum'            => 1,
-                'maximum'            => 100,
-                'sanitize_callback'  => 'absint',
-                'validate_callback'  => 'rest_validate_request_arg',
+            'per_page' => [
+                'description'       => __( 'Maximum number of items to be returned in result set.' ),
+                'type'              => 'integer',
+                'default'           => 20,
+                'minimum'           => 1,
+                'maximum'           => 100,
+                'sanitize_callback' => 'absint',
+                'validate_callback' => 'rest_validate_request_arg',
             ],
-            'search'                 => [
-                'description'        => __( 'Limit results to those matching a string.' ),
-                'type'               => 'string',
-                'sanitize_callback'  => 'sanitize_text_field',
-                'validate_callback'  => 'rest_validate_request_arg',
+            'search'   => [
+                'description'       => __( 'Limit results to those matching a string.' ),
+                'type'              => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
             ],
         ];
     }
@@ -120,17 +122,18 @@ abstract class REST_Controller {
      *
      * Ensures consistent description between endpoints, and populates enum from schema.
      *
-     * @param array     $args
+     * @param array $args
+     *
      * @return array
      */
     public function get_context_param( $args = [] ) {
         $param_details = [
-            'description'        => __( 'Scope under which the request is made; determines fields present in response.' ),
-            'type'               => 'string',
-            'sanitize_callback'  => 'sanitize_key',
-            'validate_callback'  => 'rest_validate_request_arg',
+            'description'       => __( 'Scope under which the request is made; determines fields present in response.' ),
+            'type'              => 'string',
+            'sanitize_callback' => 'sanitize_key',
+            'validate_callback' => 'rest_validate_request_arg',
         ];
-        $schema = $this->get_item_schema();
+        $schema        = $this->get_item_schema();
         if ( empty( $schema['properties'] ) ) {
             return array_merge( $param_details, $args );
         }
@@ -144,6 +147,7 @@ abstract class REST_Controller {
             $param_details['enum'] = array_unique( $contexts );
             rsort( $param_details['enum'] );
         }
+
         return array_merge( $param_details, $args );
     }
 
@@ -170,13 +174,14 @@ abstract class REST_Controller {
      *                       values and may fall-back to a given default, this
      *                       is not done on `EDITABLE` requests. Default is
      *                       WP_REST_Server::CREATABLE.
+     *
      * @return array $endpoint_args
      */
     public function get_endpoint_args_for_item_schema( $method = WP_REST_Server::CREATABLE ) {
 
         $schema            = $this->get_item_schema();
         $schema_properties = ! empty( $schema['properties'] ) ? $schema['properties'] : [];
-        $endpoint_args = [];
+        $endpoint_args     = [];
 
         foreach ( $schema_properties as $field_id => $params ) {
 
@@ -213,7 +218,10 @@ abstract class REST_Controller {
 
                 // Only use required / default from arg_options on CREATABLE endpoints.
                 if ( WP_REST_Server::CREATABLE !== $method ) {
-                    $params['arg_options'] = array_diff_key( $params['arg_options'], [ 'required' => '', 'default' => '' ] );
+                    $params['arg_options'] = array_diff_key( $params['arg_options'], [
+                        'required' => '',
+                        'default'  => ''
+                    ] );
                 }
 
                 $endpoint_args[ $field_id ] = array_merge( $endpoint_args[ $field_id ], $params['arg_options'] );
@@ -258,8 +266,8 @@ abstract class REST_Controller {
      *
      * @param  object $response
      * @param  object $request
-     * @param  array  $items
-     * @param  int    $total_items
+     * @param  array $items
+     * @param  int $total_items
      *
      * @return object
      */
@@ -269,11 +277,13 @@ abstract class REST_Controller {
         }
 
         // Store pagation values for headers then unset for count query.
-        $per_page = (int) $request['per_page'];
-        $page     = (int) $request['page'];
+        $per_page = (int) ( ! empty( $request['per_page'] ) ? $request['per_page'] : 20 );
+        $page     = (int) ( ! empty( $request['page'] ) ? $request['page'] : 1 );
 
         $response->header( 'X-WP-Total', (int) $total_items );
+
         $max_pages = ceil( $total_items / $per_page );
+
         $response->header( 'X-WP-TotalPages', (int) $max_pages );
         $base = add_query_arg( $request->get_query_params(), rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ) );
 
