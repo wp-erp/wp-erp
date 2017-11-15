@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\API;
 
 use WP_REST_Server;
@@ -221,11 +222,15 @@ class Employees_Controller extends REST_Controller {
      */
     public function get_employees( $request ) {
         $args = [
-            'number' => $request['per_page'],
-            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+            'number'      => $request['per_page'],
+            'offset'      => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+            'status'      => ( $request['status'] ) ? $request['status'] : 'active',
+            'department'  => ( $request['department'] ) ? $request['department'] : '-1',
+            'designation' => ( $request['designation'] ) ? $request['designation'] : '-1',
+            'location'    => ( $request['location'] ) ? $request['location'] : '-1',
         ];
 
-        $items         = erp_hr_get_employees( $args );
+        $items = erp_hr_get_employees( $args );
 
         $args['count'] = true;
         $total_items   = erp_hr_get_employees( $args );
@@ -233,11 +238,28 @@ class Employees_Controller extends REST_Controller {
         $formated_items = [];
         foreach ( $items as $item ) {
             $additional_fields = [];
-            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
-            $formated_items[] = $this->prepare_response_for_collection( $data );
+            $data              = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $formated_items[]  = $this->prepare_response_for_collection( $data );
+        }
+        $total_pages           = ceil( $total_items / $request['per_page'] );
+        $formatted_data         = array();
+        $formatted_data['data'] = $formated_items;
+
+        $formatted_data['total']        = $total_items;
+        $formatted_data['total_page']   = $total_pages;
+        $formatted_data['prev_page']    = false;
+        $formatted_data['next_page']    = false;
+        $formatted_data['current_page'] = $request['page'];
+
+        if ( $request['page'] <= $total_pages && $request['page'] >= 2 ) {
+            $formatted_data['prev_page'] = (int) $request['page'] - 1;
         }
 
-        $response = rest_ensure_response( $formated_items );
+        if ( $request['page'] < $total_pages && $request['page'] >= 1 ) {
+            $formatted_data['next_page'] = (int) $request['page'] + 1;
+        }
+
+        $response = rest_ensure_response( $formatted_data );
         $response = $this->format_collection_response( $response, $request, $total_items );
 
         return $response;
@@ -555,7 +577,7 @@ class Employees_Controller extends REST_Controller {
                 $data['department'] = null;
 
                 if ( $department_id ) {
-                    $department = $departments_controller->get_department( ['id' => $department_id ] );
+                    $department         = $departments_controller->get_department( [ 'id' => $department_id ] );
                     $data['department'] = ! is_wp_error( $department ) ? $department->get_data() : null;
                 }
             }
@@ -567,7 +589,7 @@ class Employees_Controller extends REST_Controller {
                 $data['designation'] = null;
 
                 if ( $designation_id ) {
-                    $designation = $designations_controller->get_designation( ['id' => $designation_id ] );
+                    $designation         = $designations_controller->get_designation( [ 'id' => $designation_id ] );
                     $data['designation'] = ! is_wp_error( $designation ) ? $designation->get_data() : null;
                 }
             }
@@ -577,14 +599,15 @@ class Employees_Controller extends REST_Controller {
                 $data['reporting_to'] = null;
 
                 if ( $reporting_to_id ) {
-                    $reporting_to = $this->get_employee( ['id' => $reporting_to_id ] );
+                    $reporting_to         = $this->get_employee( [ 'id' => $reporting_to_id ] );
                     $data['reporting_to'] = ! is_wp_error( $reporting_to ) ? $reporting_to->get_data() : null;
                 }
             }
 
             if ( in_array( 'avatar', $include_params ) ) {
-                $employee_user         = new \WeDevs\ERP\HRM\Employee( intval( $item->id ) );
-                $data['avatar'] = $employee_user->get_avatar( 32 );
+                $employee_user      = new \WeDevs\ERP\HRM\Employee( intval( $item->id ) );
+                $data['avatar']     = $employee_user->get_avatar( 32 );
+                $data['avatar_url'] = $employee_user->get_avatar_url( 32 );
             }
         }
 
@@ -612,7 +635,7 @@ class Employees_Controller extends REST_Controller {
 
         $formated_items = [];
         foreach ( $items as $item ) {
-            $data = $this->prepare_experience_for_response( $item, $request );
+            $data             = $this->prepare_experience_for_response( $item, $request );
             $formated_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -633,13 +656,13 @@ class Employees_Controller extends REST_Controller {
         $exp_id      = (int) $request['exp_id'];
         $employee_id = (int) $request['id'];
 
-        $experience = Work_Experience::where( ['id' => $exp_id, 'employee_id' => $employee_id] )->first();
+        $experience = Work_Experience::where( [ 'id' => $exp_id, 'employee_id' => $employee_id ] )->first();
 
         if ( ! $experience ) {
             return new WP_Error( 'rest_invalid_experience', __( 'Invalid experience id.' ), array( 'status' => 404 ) );
         }
 
-        $response   = $this->prepare_experience_for_response( $experience, $request );
+        $response = $this->prepare_experience_for_response( $experience, $request );
 
         return $response;
     }
@@ -811,7 +834,7 @@ class Employees_Controller extends REST_Controller {
 
         $formated_items = [];
         foreach ( $items as $item ) {
-            $data = $this->prepare_education_for_response( $item, $request );
+            $data             = $this->prepare_education_for_response( $item, $request );
             $formated_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -832,13 +855,13 @@ class Employees_Controller extends REST_Controller {
         $edu_id      = (int) $request['edu_id'];
         $employee_id = (int) $request['id'];
 
-        $education = Education::where( ['id' => $edu_id, 'employee_id' => $employee_id] )->first();
+        $education = Education::where( [ 'id' => $edu_id, 'employee_id' => $employee_id ] )->first();
 
         if ( ! $education ) {
             return new WP_Error( 'rest_invalid_education', __( 'Invalid education id.' ), array( 'status' => 404 ) );
         }
 
-        $response  = $this->prepare_education_for_response( $education, $request );
+        $response = $this->prepare_education_for_response( $education, $request );
 
         return $response;
     }
@@ -1011,7 +1034,7 @@ class Employees_Controller extends REST_Controller {
 
         $formated_items = [];
         foreach ( $items as $item ) {
-            $data = $this->prepare_dependent_for_response( $item, $request );
+            $data             = $this->prepare_dependent_for_response( $item, $request );
             $formated_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -1032,13 +1055,13 @@ class Employees_Controller extends REST_Controller {
         $dep_id      = (int) $request['dep_id'];
         $employee_id = (int) $request['id'];
 
-        $dependent = Dependents::where( ['id' => $dep_id, 'employee_id' => $employee_id] )->first();
+        $dependent = Dependents::where( [ 'id' => $dep_id, 'employee_id' => $employee_id ] )->first();
 
         if ( ! $dependent ) {
             return new WP_Error( 'rest_invalid_dependent', __( 'Invalid dependent id.' ), array( 'status' => 404 ) );
         }
 
-        $response  = $this->prepare_dependent_for_response( $dependent, $request );
+        $response = $this->prepare_dependent_for_response( $dependent, $request );
 
         return $response;
     }
@@ -1189,13 +1212,13 @@ class Employees_Controller extends REST_Controller {
             'title'      => 'employee',
             'type'       => 'object',
             'properties' => [
-                'id'          => [
+                'id'            => [
                     'description' => __( 'Unique identifier for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'first_name'  => [
+                'first_name'    => [
                     'description' => __( 'First name for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -1204,7 +1227,7 @@ class Employees_Controller extends REST_Controller {
                     ],
                     'required'    => true,
                 ],
-                'middle_name'  => [
+                'middle_name'   => [
                     'description' => __( 'Middle name for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -1212,7 +1235,7 @@ class Employees_Controller extends REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'last_name'   => [
+                'last_name'     => [
                     'description' => __( 'Last name for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -1221,14 +1244,14 @@ class Employees_Controller extends REST_Controller {
                     ],
                     'required'    => true,
                 ],
-                'email'       => [
+                'email'         => [
                     'description' => __( 'The email address for the resource.' ),
                     'type'        => 'string',
                     'format'      => 'email',
                     'context'     => [ 'edit' ],
                     'required'    => true,
                 ],
-                'location'    => [
+                'location'      => [
                     'description' => __( 'Location for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -1260,7 +1283,7 @@ class Employees_Controller extends REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'pay_rate' => [
+                'pay_rate'      => [
                     'description' => __( 'Pay rate for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -1268,7 +1291,7 @@ class Employees_Controller extends REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'pay_type' => [
+                'pay_type'      => [
                     'description' => __( 'Pay type for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -1276,7 +1299,7 @@ class Employees_Controller extends REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'type'        => [
+                'type'          => [
                     'description' => __( 'Type for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -1285,7 +1308,7 @@ class Employees_Controller extends REST_Controller {
                     ],
                     'required'    => true,
                 ],
-                'status'      => [
+                'status'        => [
                     'description' => __( 'Status for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -1294,7 +1317,7 @@ class Employees_Controller extends REST_Controller {
                     ],
                     'required'    => true,
                 ],
-                'phone'       => [
+                'phone'         => [
                     'description' => __( 'Phone for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -1302,7 +1325,7 @@ class Employees_Controller extends REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'work_phone'   => [
+                'work_phone'    => [
                     'description' => __( 'Work phone for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -1310,7 +1333,7 @@ class Employees_Controller extends REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'mobile'      => [
+                'mobile'        => [
                     'description' => __( 'Mobile for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -1318,7 +1341,7 @@ class Employees_Controller extends REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'other'       => [
+                'other'         => [
                     'description' => __( 'Other for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -1326,13 +1349,13 @@ class Employees_Controller extends REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'user_url'    => [
+                'user_url'      => [
                     'description' => __( 'Website of the resource.' ),
                     'type'        => 'string',
                     'format'      => 'uri',
                     'context'     => [ 'embed', 'view', 'edit' ],
                 ],
-                'street_1'        => [
+                'street_1'      => [
                     'description' => __( 'Street 1 of the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'embed', 'view', 'edit' ],
@@ -1340,7 +1363,7 @@ class Employees_Controller extends REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'street_2'        => [
+                'street_2'      => [
                     'description' => __( 'Street 1 of the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'embed', 'view', 'edit' ],
@@ -1348,7 +1371,7 @@ class Employees_Controller extends REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'city'            => [
+                'city'          => [
                     'description' => __( 'City of the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'embed', 'view', 'edit' ],
@@ -1356,7 +1379,7 @@ class Employees_Controller extends REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'state'           => [
+                'state'         => [
                     'description' => __( 'State of the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'embed', 'view', 'edit' ],
@@ -1364,7 +1387,7 @@ class Employees_Controller extends REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'postal_code'     => [
+                'postal_code'   => [
                     'description' => __( 'Postal Code of the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'embed', 'view', 'edit' ],
@@ -1372,7 +1395,7 @@ class Employees_Controller extends REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'country'         => [
+                'country'       => [
                     'description' => __( 'Country of the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'embed', 'view', 'edit' ],
