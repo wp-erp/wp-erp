@@ -235,15 +235,15 @@ class Employees_Controller extends REST_Controller {
         $args['count'] = true;
         $total_items   = erp_hr_get_employees( $args );
 
-        $formated_items = [];
+        $formatted_items = [];
         foreach ( $items as $item ) {
             $additional_fields = [];
             $data              = $this->prepare_item_for_response( $item, $request, $additional_fields );
-            $formated_items[]  = $this->prepare_response_for_collection( $data );
+            $formatted_items[]  = $this->prepare_response_for_collection( $data );
         }
-        $total_pages           = ceil( $total_items / $request['per_page'] );
+        $total_pages            = ceil( $total_items / $request['per_page'] );
         $formatted_data         = array();
-        $formatted_data['data'] = $formated_items;
+        $formatted_data['data'] = $formatted_items;
 
         $formatted_data['total']        = $total_items;
         $formatted_data['total_page']   = $total_pages;
@@ -632,14 +632,14 @@ class Employees_Controller extends REST_Controller {
         $employee    = new Employee( $employee_id );
         $items       = $employee->get_experiences();
 
-        $formated_items = [];
+        $formatted_items = [];
         foreach ( $items as $item ) {
             $data             = $this->prepare_experience_for_response( $item, $request );
-            $formated_items[] = $this->prepare_response_for_collection( $data );
+            $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
-
-        $response = rest_ensure_response( $formated_items );
-        $response = $this->format_collection_response( $response, $request, $total_items );
+        $total_items = count( $formatted_items );
+        $response    = rest_ensure_response( $formatted_items );
+        $response    = $this->format_collection_response( $response, $request, $total_items );
 
         return $response;
     }
@@ -831,13 +831,13 @@ class Employees_Controller extends REST_Controller {
         $employee    = new Employee( $employee_id );
         $items       = $employee->get_educations();
 
-        $formated_items = [];
+        $formatted_items = [];
         foreach ( $items as $item ) {
             $data             = $this->prepare_education_for_response( $item, $request );
-            $formated_items[] = $this->prepare_response_for_collection( $data );
+            $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
-        $response = rest_ensure_response( $formated_items );
+        $response = rest_ensure_response( $formatted_items );
         $response = $this->format_collection_response( $response, $request, $total_items );
 
         return $response;
@@ -1031,13 +1031,13 @@ class Employees_Controller extends REST_Controller {
         $employee    = new Employee( $employee_id );
         $items       = $employee->get_dependents();
 
-        $formated_items = [];
+        $formatted_items = [];
         foreach ( $items as $item ) {
             $data             = $this->prepare_dependent_for_response( $item, $request );
-            $formated_items[] = $this->prepare_response_for_collection( $data );
+            $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
-        $response = rest_ensure_response( $formated_items );
+        $response = rest_ensure_response( $formatted_items );
         $response = $this->format_collection_response( $response, $request, $total_items );
 
         return $response;
