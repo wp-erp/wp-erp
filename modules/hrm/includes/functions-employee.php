@@ -229,7 +229,7 @@ function erp_hr_get_employees( $args = array() ) {
 
     $args  = wp_parse_args( $args, $defaults );
     $where = array();
-    
+
     $employee_tbl = $wpdb->prefix . 'erp_hr_employees';
     $employees = \WeDevs\ERP\HRM\Models\Employee::select( array( $employee_tbl. '.user_id', 'display_name' ) )
                     ->leftJoin( $wpdb->users, $employee_tbl . '.user_id', '=', $wpdb->users . '.ID' );
