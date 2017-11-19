@@ -8,14 +8,20 @@ $taxinfo = erp_ac_get_tax_info();
 $current_user  = wp_get_current_user();
 $sender        = $current_user->user_email;
 $email_subject = __( 'Payment#', 'erp' ) . $transaction->invoice_number . __( ' from ', 'erp' ) . $company->name;
+$more_details_url = erp_ac_get_slaes_payment_invoice_url( $transaction->id );
 ?>
 <div class="wrap">
 
-    <h2><?php _e( 'Payment', 'erp' ); ?></h2>
+    <h2><?php _e( 'Payment', 'erp' ); 
+    if ( isset( $popup_status ) ) {
+    printf( '<a href="%1$s" class="erp-ac-more-details">%2$s →</a>', $more_details_url, __('More Details','erp') );
+    } ?>
+    </h2>
 
     <div class="invoice-preview-wrap">
 
         <div class="erp-grid-container">
+            <?php if ( ! isset( $popup_status ) ) { ?>
             <div class="row payment-buttons erp-hide-print" id="payment-button-container" data-theme="drop-theme-hubspot-popovers">
                 <div class="col-6">
                     <?php if ( $status ) {
@@ -40,6 +46,9 @@ $email_subject = __( 'Payment#', 'erp' ) . $transaction->invoice_number . __( ' 
                 </template>
 
             </div>
+                        <?php 
+                    } 
+                    ?>
             <div class="row">
                 <div class="invoice-number">
                     <?php
