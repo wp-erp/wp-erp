@@ -86,7 +86,6 @@ function erp_ac_get_status_label( $items, $slug ) {
         case 'awaiting_payment':
             $url   = admin_url( 'admin.php?page='.$slug.'&action=new&type=' . $items->form_type . '&transaction_id=' . $items->id );
             $label = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Awaiting for Payment', 'erp' ) );
-            //$label = __( 'Awaiting for Payment', 'erp' );
             break;
 
         case 'overdue':
