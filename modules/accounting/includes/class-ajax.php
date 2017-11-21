@@ -374,7 +374,13 @@ class Ajax_Handler {
         ob_start();
 
         if ( $transaction->type == 'sales' ) {
-            require_once WPERP_ACCOUNTING_VIEWS . '/sales/invoice-single.php';
+        if( $transaction->form_type == 'invoice' ) {
+        require_once WPERP_ACCOUNTING_VIEWS . '/sales/invoice-single.php';
+        }
+        else {
+        require_once WPERP_ACCOUNTING_VIEWS . '/sales/payment-single.php';
+        }
+
         } else if ( $transaction->type == 'expense' ) {
             require_once WPERP_ACCOUNTING_VIEWS . '/expense/payment-voucher-single.php';
         } else if ( $transaction->type == 'journal' ) {
