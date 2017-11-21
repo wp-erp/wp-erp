@@ -21,7 +21,8 @@ $more_details_url = erp_ac_get_slaes_payment_invoice_url( $transaction->id );
     <div class="invoice-preview-wrap">
 
         <div class="erp-grid-container">
-            <?php if ( ! isset( $popup_status ) ) { ?>
+            <?php if ( ! isset( $popup_status ) ) : ?>
+            
             <div class="row payment-buttons erp-hide-print" id="payment-button-container" data-theme="drop-theme-hubspot-popovers">
                 <div class="col-6">
                     <?php if ( $status ) {
@@ -36,7 +37,7 @@ $more_details_url = erp_ac_get_slaes_payment_invoice_url( $transaction->id );
                     }
                     ?>
                 </div>
-
+                
                 <template class="more-action-content">
                     <ul>
                         <li><a href="#" class="payment-duplicate"><?php _e( 'Duplicate', 'erp' ); ?></a></li>
@@ -44,11 +45,10 @@ $more_details_url = erp_ac_get_slaes_payment_invoice_url( $transaction->id );
                         <li><a href="#" data-transaction-id="<?php echo $transaction->id; ?>" data-sender="<?php echo $sender; ?>" data-receiver="<?php echo $user->email; ?>" data-subject="<?php echo $email_subject; ?>" data-title="<?php _e( 'Send Bill', 'erp' ); ?>" data-button="<?php _e( 'Send', 'erp' ); ?>" data-type="payment" class="payment-send-email"><?php _e( 'Send Via Email', 'erp' ); ?></a></li>
                     </ul>
                 </template>
-
             </div>
-                        <?php 
-                    } 
-                    ?>
+            
+              <?php endif; ?>
+            
             <div class="row">
                 <div class="invoice-number">
                     <?php
