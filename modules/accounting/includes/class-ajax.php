@@ -374,8 +374,6 @@ class Ajax_Handler {
         ob_start();
 
         if ( $transaction->type == 'sales' ) {
-/*            require_once WPERP_ACCOUNTING_VIEWS . '/sales/invoice-single.php';
-*/
         if( $transaction->form_type == 'invoice' ) {
         require_once WPERP_ACCOUNTING_VIEWS . '/sales/invoice-single.php';
         }
