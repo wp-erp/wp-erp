@@ -376,14 +376,9 @@ function erp_ac_insert_transaction( $args = [], $items = [] ) {
     $args       = wp_parse_args( $args, $defaults ); //strpos($mystring, $findme);
     $is_update  = $args['id'] && ! is_array( $args['id'] ) ? true : false;
     $permission = er_ac_insert_transaction_permiss( $args, $is_update );
-    $validation = er_ac_insert_transaction_validation( $args, $items, $is_update );
 
     if ( is_wp_error( $permission ) ) {
         return $permission;
-    }
-
-    if ( is_wp_error( $validation ) ) {
-        return $validation;
     }
 
     $invoice = erp_ac_get_invoice_num_fromat_from_submit_invoice( $args['invoice_number'], $args['invoice_format'] );
@@ -724,24 +719,6 @@ function erp_ac_new_journal( $args = [], $items = [] ) {
     return false;
 }
 
-/**
- * Check validation before new transaction
- *
- * @since 1.2.7 added discount cant be more than unit price
- *
- * @param  array $args
- * @param  array $items
- * @param  boleen $update
- *
- * @return  boolen
- */
-function er_ac_insert_transaction_validation( $args, $items, $update ) {
-    foreach ( $items as $key => $item ) {
-        if ( $item['discount'] > $item['unit_price'] ) {
-            return new WP_Error( 'error', __( 'Discount value must be less than item\'s total price', 'erp' ) );
-        }
-    }
-}
 
 /**
  * Check is the payment type partial or not
