@@ -534,6 +534,7 @@ class Employees_Controller extends REST_Controller {
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $data = [
             'id'              => (int) $item->id,
+            'employee_id'     => (int) $item->employee_id,
             'first_name'      => $item->first_name,
             'middle_name'     => $item->middle_name,
             'last_name'       => $item->last_name,
