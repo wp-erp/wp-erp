@@ -1049,6 +1049,15 @@ class Ajax_Handler {
 
                 $headers .= "Reply-To: {$reply_to_name} <$reply_to>" . "\r\n";
 
+                $contact_owner_id = $contact->get_contact_owner();
+
+                $message_id = md5( uniqid( time() ) ) . '.' . $contact_id . '.' . $contact_owner_id . '.r2@' . $_SERVER['HTTP_HOST'];
+
+                $custom_headers = [
+                    "In-Reply-To" => "<{$message_id}>",
+                    "References" => "<{$message_id}>",
+                ];
+
                 $query = [
                     'action' => 'erp_crm_track_email_opened',
                     'aid'    => $data['id'],
@@ -1062,7 +1071,7 @@ class Ajax_Handler {
                 add_filter( 'erp_mail_from_name', 'erp_crm_get_email_from_name' );
 
                 // Send email a contact
-                erp_mail( $contact->email, $postdata['email_subject'], $email_body, $headers, [] );
+                erp_mail( $contact->email, $postdata['email_subject'], $email_body, $headers, [], $custom_headers );
 
                 do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
 
