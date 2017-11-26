@@ -14,6 +14,8 @@ class Employee extends Model {
     use SoftDeletes;
 
     protected $table = 'erp_hr_employees';
+    protected $primaryKey = 'id';
+
     public $timestamps = false;
     protected $fillable = [
         'user_id', 'employee_id', 'designation', 'department', 'location',

@@ -754,10 +754,14 @@ class Employee {
      * @param string  $note the note to be added
      * @param int  $comment_by
      *
-     * @return int note id
+     * @return int|object note id
      */
-    public function add_note( $note, $comment_by ) {
+    public function add_note( $note, $comment_by = null, $return_object = false ) {
         global $wpdb;
+
+        if( $comment_by == null ){
+            $comment_by = get_current_user_id();
+        }
 
         $data = array(
             'user_id'    => $this->id,
@@ -770,6 +774,10 @@ class Employee {
         if ( $inserted->id ) {
             $note_id = $inserted->id;
             do_action( 'erp_hr_employee_note_new', $note_id, $this->id );
+
+            if( $return_object ){
+                return $inserted;
+            }
 
             return $note_id;
         }

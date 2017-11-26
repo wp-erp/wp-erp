@@ -2,13 +2,14 @@
 
 namespace WeDevs\ERP\API;
 
-use WP_REST_Server;
-use WP_REST_Response;
-use WP_Error;
 use WeDevs\ERP\HRM\Employee;
-use WeDevs\ERP\HRM\Models\Work_Experience;
-use WeDevs\ERP\HRM\Models\Education;
 use WeDevs\ERP\HRM\Models\Dependents;
+use WeDevs\ERP\HRM\Models\Education;
+use WeDevs\ERP\HRM\Models\Work_Experience;
+use WeDevs\ERP\HRM\Models\Employee_Note;
+use WP_Error;
+use WP_REST_Response;
+use WP_REST_Server;
 
 class Employees_Controller extends REST_Controller {
     /**
@@ -211,12 +212,59 @@ class Employees_Controller extends REST_Controller {
                 },
             ],
         ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/policies', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_policies' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
+            ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/leaves', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_leaves' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
+            ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/notes', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_notes' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
+            ],
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'create_note' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
+            ],
+        ] );
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/notes' . '/(?P<note_id>[\d]+)', [
+            [
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'delete_note' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
+            ],
+        ] );
+
     }
 
     /**
      * Get a collection of employees
      *
-     * @param $request WP_REST_Request
+     * @param $request \WP_REST_Request
      *
      * @return WP_REST_Response
      */
@@ -239,7 +287,7 @@ class Employees_Controller extends REST_Controller {
         foreach ( $items as $item ) {
             $additional_fields = [];
             $data              = $this->prepare_item_for_response( $item, $request, $additional_fields );
-            $formatted_items[]  = $this->prepare_response_for_collection( $data );
+            $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
         $total_pages            = ceil( $total_items / $request['per_page'] );
         $formatted_data         = array();
@@ -267,7 +315,7 @@ class Employees_Controller extends REST_Controller {
     /**
      * Get a specific employee
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
@@ -288,9 +336,9 @@ class Employees_Controller extends REST_Controller {
     /**
      * Create an employee
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
-     * @return WP_Error|WP_REST_Request
+     * @return WP_Error|\WP_REST_Request
      */
     public function create_employee( $request ) {
         $item = $this->prepare_item_for_database( $request );
@@ -310,9 +358,9 @@ class Employees_Controller extends REST_Controller {
     /**
      * Create employees
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
-     * @return WP_Error|WP_REST_Request
+     * @return WP_Error|\WP_REST_Request
      */
     public function create_employees( $request ) {
         $employees = json_decode( $request->get_body(), true );
@@ -332,9 +380,9 @@ class Employees_Controller extends REST_Controller {
     /**
      * Update an employee
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
-     * @return WP_Error|WP_REST_Request
+     * @return WP_Error|\WP_REST_Request
      */
     public function update_employee( $request ) {
         $id = (int) $request['id'];
@@ -359,9 +407,9 @@ class Employees_Controller extends REST_Controller {
     /**
      * Delete an employee
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
-     * @return WP_Error|WP_REST_Request
+     * @return WP_Error|\WP_REST_Request
      */
     public function delete_employee( $request ) {
         $id = (int) $request['id'];
@@ -374,7 +422,7 @@ class Employees_Controller extends REST_Controller {
     /**
      * Prepare a single item for create or update
      *
-     * @param WP_REST_Request $request Request object.
+     * @param \WP_REST_Request $request Request object.
      *
      * @return array $prepared_item
      */
@@ -525,9 +573,9 @@ class Employees_Controller extends REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param object $item
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
+     * @param object          $item
+     * @param \WP_REST_Request $request Request object.
+     * @param array           $additional_fields (optional)
      *
      * @return WP_REST_Response $response Response data.
      */
@@ -624,7 +672,7 @@ class Employees_Controller extends REST_Controller {
     /**
      * Get a collection of employee's experiences
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
@@ -635,7 +683,7 @@ class Employees_Controller extends REST_Controller {
 
         $formatted_items = [];
         foreach ( $items as $item ) {
-            $data             = $this->prepare_experience_for_response( $item, $request );
+            $data              = $this->prepare_experience_for_response( $item, $request );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
         $total_items = count( $formatted_items );
@@ -648,7 +696,7 @@ class Employees_Controller extends REST_Controller {
     /**
      * Get a specific experience of an employee
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
@@ -670,9 +718,9 @@ class Employees_Controller extends REST_Controller {
     /**
      * Create an experience
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
-     * @return WP_Error|WP_REST_Request
+     * @return WP_Error|\WP_REST_Request
      */
     public function create_experience( $request ) {
         $request['employee_id'] = $request['id'];
@@ -710,14 +758,11 @@ class Employees_Controller extends REST_Controller {
     /**
      * Update an experience
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
-     * @return WP_Error|WP_REST_Request
+     * @return WP_Error|\WP_REST_Request
      */
     public function update_experience( $request ) {
-        $request['employee_id'] = $request['id'];
-        unset( $request['id'] );
-        $request['id'] = (int) $request['exp_id'];
 
         $item       = $this->prepare_experience_for_database( $request );
         $experience = Work_Experience::find( $request['id'] );
@@ -730,7 +775,7 @@ class Employees_Controller extends REST_Controller {
 
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
-        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $request['id'] ) ) );
 
         return $response;
     }
@@ -738,9 +783,9 @@ class Employees_Controller extends REST_Controller {
     /**
      * Delete an experience
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
-     * @return WP_Error|WP_REST_Request
+     * @return WP_Error|\WP_REST_Request
      */
     public function delete_experience( $request ) {
         $id = (int) $request['exp_id'];
@@ -753,7 +798,7 @@ class Employees_Controller extends REST_Controller {
     /**
      * Prepare a single experience for create or update
      *
-     * @param WP_REST_Request $request Request object.
+     * @param \WP_REST_Request $request Request object.
      *
      * @return array $prepared_item
      */
@@ -796,9 +841,9 @@ class Employees_Controller extends REST_Controller {
     /**
      * Prepare a single experience output for response
      *
-     * @param object $item
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
+     * @param object          $item
+     * @param \WP_REST_Request $request Request object.
+     * @param array           $additional_fields (optional)
      *
      * @return WP_REST_Response $response Response data.
      */
@@ -823,7 +868,7 @@ class Employees_Controller extends REST_Controller {
     /**
      * Get a collection of employee's educations
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
@@ -834,7 +879,7 @@ class Employees_Controller extends REST_Controller {
 
         $formatted_items = [];
         foreach ( $items as $item ) {
-            $data             = $this->prepare_education_for_response( $item, $request );
+            $data              = $this->prepare_education_for_response( $item, $request );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -847,7 +892,7 @@ class Employees_Controller extends REST_Controller {
     /**
      * Get a specific education of an employee
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
@@ -869,9 +914,9 @@ class Employees_Controller extends REST_Controller {
     /**
      * Create an education
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
-     * @return WP_Error|WP_REST_Request
+     * @return WP_Error|\WP_REST_Request
      */
     public function create_education( $request ) {
         $request['employee_id'] = $request['id'];
@@ -905,9 +950,9 @@ class Employees_Controller extends REST_Controller {
     /**
      * Update an education
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
-     * @return WP_Error|WP_REST_Request
+     * @return WP_Error|\WP_REST_Request
      */
     public function update_education( $request ) {
         $request['employee_id'] = $request['id'];
@@ -933,9 +978,9 @@ class Employees_Controller extends REST_Controller {
     /**
      * Delete an education
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
-     * @return WP_Error|WP_REST_Request
+     * @return WP_Error|\WP_REST_Request
      */
     public function delete_education( $request ) {
         $id = (int) $request['edu_id'];
@@ -948,7 +993,7 @@ class Employees_Controller extends REST_Controller {
     /**
      * Prepare a single education for create or update
      *
-     * @param WP_REST_Request $request Request object.
+     * @param \WP_REST_Request $request Request object.
      *
      * @return array $prepared_item
      */
@@ -995,9 +1040,9 @@ class Employees_Controller extends REST_Controller {
     /**
      * Prepare a single education output for response
      *
-     * @param object $item
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
+     * @param object          $item
+     * @param \WP_REST_Request $request Request object.
+     * @param array           $additional_fields (optional)
      *
      * @return WP_REST_Response $response Response data.
      */
@@ -1023,7 +1068,7 @@ class Employees_Controller extends REST_Controller {
     /**
      * Get a collection of employee's dependents
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
@@ -1034,7 +1079,7 @@ class Employees_Controller extends REST_Controller {
 
         $formatted_items = [];
         foreach ( $items as $item ) {
-            $data             = $this->prepare_dependent_for_response( $item, $request );
+            $data              = $this->prepare_dependent_for_response( $item, $request );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -1047,7 +1092,7 @@ class Employees_Controller extends REST_Controller {
     /**
      * Get a specific dependent of an employee
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
@@ -1069,9 +1114,9 @@ class Employees_Controller extends REST_Controller {
     /**
      * Create a dependent
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
-     * @return WP_Error|WP_REST_Request
+     * @return WP_Error|\WP_REST_Request
      */
     public function create_dependent( $request ) {
         $request['employee_id'] = $request['id'];
@@ -1101,9 +1146,9 @@ class Employees_Controller extends REST_Controller {
     /**
      * Update a dependent
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
-     * @return WP_Error|WP_REST_Request
+     * @return WP_Error|\WP_REST_Request
      */
     public function update_dependent( $request ) {
         $request['employee_id'] = $request['id'];
@@ -1129,9 +1174,9 @@ class Employees_Controller extends REST_Controller {
     /**
      * Delete a dependent
      *
-     * @param WP_REST_Request $request
+     * @param \WP_REST_Request $request
      *
-     * @return WP_Error|WP_REST_Request
+     * @return WP_Error|\WP_REST_Request
      */
     public function delete_dependent( $request ) {
         $id = (int) $request['dep_id'];
@@ -1142,9 +1187,202 @@ class Employees_Controller extends REST_Controller {
     }
 
     /**
+     * Get Available leaves of a single employee
+     *
+     * @since 1.2.9
+     *
+     * @param \WP_REST_Request $request
+     *
+     * @return array
+     */
+    public function get_policies( $request ) {
+        $id       = (int) $request['id'];
+        $employee = new Employee( $id );
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
+        }
+        $found_policies   = array();
+        $policies         = erp_hr_leave_get_policies();
+        $entitlements     = erp_hr_leave_get_entitlements( array( 'employee_id' => $employee->id ) );
+        $entitlements_pol = wp_list_pluck( $entitlements, 'policy_id' );
+        $balance          = erp_hr_leave_get_balance( $employee->id );
+        if ( $policies ) {
+            foreach ( $policies as $num => $policy ) {
+
+                $key       = array_search( $policy->id, $entitlements_pol );
+                $en        = false;
+                $name      = esc_html( $policy->name );
+                $current   = 0;
+                $scheduled = 0;
+                $available = $policy->value;
+
+                if ( array_key_exists( $policy->id, $balance ) ) {
+                    $current   = $balance[ $policy->id ]['entitlement'];
+                    $scheduled = $balance[ $policy->id ]['scheduled'];
+                    $available = $balance[ $policy->id ]['entitlement'] - $balance[ $policy->id ]['total'];
+                }
+
+                if ( false !== $key ) {
+                    $en = $entitlements[ $key ];
+                }
+
+                $found_policies[] = array(
+                    'policy'      => $policy->name,
+                    'total'       => $en ? sprintf( __( '%d days', 'erp' ), number_format_i18n( $en->days ) ) : 0,
+                    'scheduled'   => $en ? sprintf( __( '%d days', 'erp' ), number_format_i18n( $scheduled ) ) : 0,
+                    'available'   => sprintf( __( '%d days', 'erp' ), number_format_i18n( $available ) ),
+                    'preiod_from' => erp_format_date( $en->from_date ),
+                    'preiod_to'   => erp_format_date( $en->to_date ),
+                );
+            }
+        }
+        $response = rest_ensure_response( $found_policies );
+        $response = $this->format_collection_response( $response, $request, count( $found_policies ) );
+
+        return $response;
+    }
+
+    /**
+     * Get all leaves of a single employee
+     *
+     * @since 1.2.9
+     *
+     * @param \WP_REST_Request $request
+     *
+     * @return array|WP_Error|object
+     */
+    public function get_leaves( $request ) {
+        $id       = (int) $request['id'];
+        $employee = new Employee( $id );
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
+        }
+
+        $args = array(
+            'user_id' => $employee->user_id,
+            'orderby' => 'req.start_date',
+        );
+
+        $items = erp_hr_get_leave_requests( $args );
+
+        $formatted_items = [];
+        foreach ( $items as $item ) {
+            $data              = $this->prepare_leave_for_response( $item, $request );
+            $formatted_items[] = $this->prepare_response_for_collection( $data );
+        }
+
+        $response = rest_ensure_response( $formatted_items );
+        $response = $this->format_collection_response( $response, $request, count( $items ) );
+
+        return $response;
+    }
+
+    /**
+     * Get all notes of a single employee
+     *
+     * @since 1.2.9
+     *
+     * @param \WP_REST_Request $request
+     *
+     * @return array
+     */
+    public function get_notes( $request ) {
+        $args = array(
+            'total'  => isset( $request['perpage'] ) ? $request['perpage'] : 20,
+            'offset' => isset( $request['offset'] ) ? $request['offset'] : 0,
+        );
+
+        $id       = (int) $request['id'];
+        $employee = new Employee( $id );
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
+        }
+
+        $notes           = $employee->get_notes( $args['total'], $args['offset'] );
+        $formatted_items = [];
+
+        if ( ! empty( $notes ) ) {
+            foreach ( $notes as $note ) {
+                $data              = $this->prepare_note_for_response( $note, $request );
+                $formatted_items[] = $this->prepare_response_for_collection( $data );
+            }
+        }
+
+        $response = rest_ensure_response( $formatted_items );
+        $response = $this->format_collection_response( $response, $request, count( $items ) );
+
+        return $response;
+    }
+
+    /**
+     * Create a note for employee
+     *
+     * @since 1.2.9
+     *
+     * @param $request
+     *
+     * @return array|mixed|WP_Error|WP_REST_Response
+     */
+    public function create_note( $request ) {
+        $id       = (int) $request['id'];
+        $employee = new Employee( $id );
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
+        }
+        $note = $employee->add_note( $request['note'], null, true );
+
+        $request->set_param( 'context', 'edit' );
+        $response = $this->prepare_note_for_response( $note, $request );
+
+        $response = rest_ensure_response( $response );
+        $response->set_status( 201 );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
+
+        return $response;
+    }
+
+    /**
+     * Delete a note
+     *
+     * @param \WP_REST_Request $request
+     *
+     * @return WP_Error|\WP_REST_Request
+     */
+    public function delete_note( $request ) {
+        $id = (int) $request['note_id'];
+
+        Employee_Note::find( $id )->delete();
+
+        return new WP_REST_Response( true, 204 );
+    }
+
+    /**
+     * Prepare note for response
+     *
+     * @since  1.2.9
+     *
+     * @param  array          $note
+     * @param  WP_Rest_Rquest $request
+     *
+     * @return array
+     */
+    protected function prepare_note_for_response( $note, $request ) {
+        $commenter_user = get_user_by( 'ID', $note['comment_by'] );
+        $user           = get_user_by( 'ID', $note['user_id'] );
+
+        $note['comment_by_display_name'] = $commenter_user->display_name;
+        $note['comment_by_avatar_url']   = get_avatar_url( $note['comment_by'] );
+
+        $note['comment_by_display_name'] = $user->display_name;
+        $note['comment_by_avatar_url']   = get_avatar_url( $note['user_id'] );
+
+        return $note;
+    }
+
+    /**
      * Prepare a single dependent for create or update
      *
-     * @param WP_REST_Request $request Request object.
+     * @param \WP_REST_Request $request Request object.
      *
      * @return array $prepared_item
      */
@@ -1179,9 +1417,9 @@ class Employees_Controller extends REST_Controller {
     /**
      * Prepare a single dependent output for response
      *
-     * @param object $item
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
+     * @param object          $item
+     * @param \WP_REST_Request $request Request object.
+     * @param array           $additional_fields (optional)
      *
      * @return WP_REST_Response $response Response data.
      */
@@ -1191,6 +1429,39 @@ class Employees_Controller extends REST_Controller {
             'name'          => $item->name,
             'relation'      => $item->relation,
             'date_of_birth' => $item->dob,
+        ];
+
+        $data = array_merge( $data, $additional_fields );
+
+        // Wrap the data in a response object
+        $response = rest_ensure_response( $data );
+
+        return $response;
+    }
+
+    /**
+     * Prepare a single leave output for response
+     *
+     * @param object          $item
+     * @param \WP_REST_Request $request Request object.
+     * @param array           $additional_fields (optional)
+     *
+     * @return WP_REST_Response $response Response data.
+     */
+    public function prepare_leave_for_response( $item, $request, $additional_fields = [] ) {
+        $data = [
+            'id'           => (int) $item->id,
+            'user_id'      => $item->user_id,
+            'display_name' => $item->display_name,
+            'policy_id'    => $item->policy_id,
+            'policy_name'  => $item->policy_name,
+            'status'       => $item->status,
+            'reason'       => $item->reason,
+            'comments'     => $item->comments,
+            'created_on'   => $item->created_on,
+            'days'         => $item->days,
+            'start_date'   => $item->start_date,
+            'end_date'     => $item->end_date,
         ];
 
         $data = array_merge( $data, $additional_fields );
