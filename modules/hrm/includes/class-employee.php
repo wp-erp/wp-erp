@@ -579,10 +579,10 @@ class Employee {
      *
      * @return array
      */
-    public function get_performance( $emp_id, $type = '' ) {
+    public function get_performance( $type = '' ) {
 
         $performance = array( 'reviews' => array(), 'comments' => array(), 'goals' => array() );
-        $results = erp_array_to_object( \WeDevs\ERP\HRM\Models\Performance::where( 'employee_id', $emp_id )->get()->toArray() );
+        $results = erp_array_to_object( \WeDevs\ERP\HRM\Models\Performance::where( 'employee_id', $this->id )->get()->toArray() );
 
         if ( $results ) {
 
