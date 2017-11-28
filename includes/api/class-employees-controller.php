@@ -5,6 +5,7 @@ namespace WeDevs\ERP\API;
 use WeDevs\ERP\HRM\Employee;
 use WeDevs\ERP\HRM\Models\Dependents;
 use WeDevs\ERP\HRM\Models\Education;
+use WeDevs\ERP\HRM\Models\Performance;
 use WeDevs\ERP\HRM\Models\Work_Experience;
 use WeDevs\ERP\HRM\Models\Employee_Note;
 use WP_Error;
@@ -259,6 +260,33 @@ class Employees_Controller extends REST_Controller {
             ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/performances', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_performances' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
+            ],
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'create_performance' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
+            ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/performances' . '/(?P<performance_id>[\d]+)', [
+            [
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'delete_performance' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
+            ],
+        ] );
+
     }
 
     /**
@@ -289,24 +317,9 @@ class Employees_Controller extends REST_Controller {
             $data              = $this->prepare_item_for_response( $item, $request, $additional_fields );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
-        $total_pages            = ceil( $total_items / $request['per_page'] );
-        $formatted_data         = array();
-        $formatted_data['data'] = $formatted_items;
+        $total_pages = ceil( $total_items / $request['per_page'] );
 
-        $formatted_data['total']        = $total_items;
-        $formatted_data['total_page']   = $total_pages;
-        $formatted_data['prev_page']    = false;
-        $formatted_data['next_page']    = false;
-        $formatted_data['current_page'] = $request['page'];
-
-        if ( $request['page'] <= $total_pages && $request['page'] >= 2 ) {
-            $formatted_data['prev_page'] = (int) $request['page'] - 1;
-        }
-
-        if ( $request['page'] < $total_pages && $request['page'] >= 1 ) {
-            $formatted_data['next_page'] = (int) $request['page'] + 1;
-        }
-        $response = rest_ensure_response( $formatted_data );
+        $response = rest_ensure_response( $formatted_items );
         $response = $this->format_collection_response( $response, $request, (int) $total_items );
 
         return $response;
@@ -573,9 +586,9 @@ class Employees_Controller extends REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param object          $item
+     * @param object           $item
      * @param \WP_REST_Request $request Request object.
-     * @param array           $additional_fields (optional)
+     * @param array            $additional_fields (optional)
      *
      * @return WP_REST_Response $response Response data.
      */
@@ -841,9 +854,9 @@ class Employees_Controller extends REST_Controller {
     /**
      * Prepare a single experience output for response
      *
-     * @param object          $item
+     * @param object           $item
      * @param \WP_REST_Request $request Request object.
-     * @param array           $additional_fields (optional)
+     * @param array            $additional_fields (optional)
      *
      * @return WP_REST_Response $response Response data.
      */
@@ -1040,9 +1053,9 @@ class Employees_Controller extends REST_Controller {
     /**
      * Prepare a single education output for response
      *
-     * @param object          $item
+     * @param object           $item
      * @param \WP_REST_Request $request Request object.
-     * @param array           $additional_fields (optional)
+     * @param array            $additional_fields (optional)
      *
      * @return WP_REST_Response $response Response data.
      */
@@ -1357,12 +1370,227 @@ class Employees_Controller extends REST_Controller {
     }
 
     /**
+     * Get all performance of a single employee
+     *
+     * @since 1.2.9
+     *
+     * @param $request
+     *
+     * @return mixed|object|WP_Error|WP_REST_Response
+     */
+    public function get_performances( $request ) {
+        $id       = (int) $request['id'];
+        $employee = new Employee( $id );
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
+        }
+
+        $performances_collection = $employee->get_performance();
+        $formatted_items         = [];
+
+        foreach ( $performances_collection as $type => $performances ) {
+            if ( ! empty( $performances ) ) {
+                $group = [];
+                foreach ( $performances as $performance ) {
+                    $data    = $this->prepare_performance_for_response( (array) $performance, $request );
+                    $group[] = $this->prepare_response_for_collection( $data );
+                }
+                $formatted_items[ $type ] = $group;
+            }
+        }
+
+        $response = rest_ensure_response( $formatted_items );
+        $response = $this->format_collection_response( $response, $request, count( $formatted_items ) );
+
+        return $response;
+    }
+
+    /**
+     * Create a performance
+     *
+     * @param \WP_REST_Request $request
+     *
+     * @return WP_Error|\WP_REST_Request
+     */
+    public function create_performance( $request ) {
+        $id       = (int) $request['id'];
+        $type     = sanitize_key( $request['type'] );
+        $employee = new Employee( $id );
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
+        }
+        if ( ! isset( $request['type'] ) ) {
+            return new WP_Error( 'rest_performance_required_fields', __( 'Review type is missing' ), array( 'status' => 400 ) );
+        }
+
+        $requires = array();
+        $fields   = array();
+
+        if ( $type == 'reviews' ) {
+            $employee_id      = isset( $request['employee_id'] ) ? intval( $request['employee_id'] ) : 0;
+            $performance_date = ( ! empty( $request['performance_date'] ) ) ? current_time( 'mysql' ) : $request['performance_date'];
+            $reporting_to     = ( ! empty( $request['reporting_to'] ) ) ? intval( $request['reporting_to'] ) : 0;
+            $job_knowledge    = ( ! empty( $request['job_knowledge'] ) ) ? intval( $request['job_knowledge'] ) : 0;
+            $work_quality     = ( ! empty( $request['work_quality'] ) ) ? intval( $request['work_quality'] ) : 0;
+            $attendance       = ( ! empty( $request['attendance'] ) ) ? intval( $request['attendance'] ) : 0;
+            $communication    = ( ! empty( $request['communication'] ) ) ? intval( $request['communication'] ) : 0;
+            $dependablity     = ( ! empty( $request['dependablity'] ) ) ? intval( $request['dependablity'] ) : 0;
+
+            // some basic validations
+            $requires = [
+                'performance_date' => __( 'Review Date', 'erp' ),
+                'reporting_to'     => __( 'Reporting To', 'erp' ),
+                'job_knowledge'    => __( 'Job Knowledge', 'erp' ),
+                'work_quality'     => __( 'Work Quality', 'erp' ),
+                'attendance'       => __( 'Attendance', 'erp' ),
+                'communication'    => __( 'Communication', 'erp' ),
+                'dependablity'     => __( 'Dependability', 'erp' ),
+            ];
+
+            $fields = [
+                'employee_id'      => $employee_id,
+                'reporting_to'     => $reporting_to,
+                'job_knowledge'    => $job_knowledge,
+                'work_quality'     => $work_quality,
+                'attendance'       => $attendance,
+                'communication'    => $communication,
+                'dependablity'     => $dependablity,
+                'type'             => $type,
+                'performance_date' => $performance_date
+            ];
+        }
+
+        if ( $type && $type == 'comments' ) {
+
+            $employee_id      = isset( $request['employee_id'] ) ? intval( $request['employee_id'] ) : 0;
+            $performance_date = ( empty( $request['performance_date'] ) ) ? current_time( 'mysql' ) : $request['performance_date'];
+
+            // some basic validations
+            $requires = [
+                'performance_date' => __( 'Reference Date', 'erp' ),
+                'reviewer'         => __( 'Reviewer', 'erp' ),
+                'comments'         => __( 'Comments', 'erp' ),
+            ];
+
+            $fields = [
+                'employee_id'      => $employee_id,
+                'reviewer'         => $request['reviewer'],
+                'comments'         => $request['comments'],
+                'type'             => $type,
+                'performance_date' => $performance_date
+            ];
+        }
+
+        if ( $type && $type == 'goals' ) {
+
+            $employee_id           = isset( $request['employee_id'] ) ? intval( $request['employee_id'] ) : 0;
+            $review_id             = isset( $request['review_id'] ) ? intval( $request['review_id'] ) : 0;
+            $completion_date       = ( empty( $request['completion_date'] ) ) ? current_time( 'mysql' ) : $request['completion_date'];
+            $goal_description      = isset( $request['goal_description'] ) ? esc_textarea( $request['goal_description'] ) : '';
+            $employee_assessment   = isset( $request['employee_assessment'] ) ? esc_textarea( $request['employee_assessment'] ) : '';
+            $supervisor            = isset( $request['supervisor'] ) ? intval( $request['supervisor'] ) : 0;
+            $supervisor_assessment = isset( $request['supervisor_assessment'] ) ? esc_textarea( $request['supervisor_assessment'] ) : '';
+            $performance_date      = ( empty( $request['performance_date'] ) ) ? current_time( 'mysql' ) : $request['performance_date'];
+
+            // some basic validations
+            $requires = [
+                'performance_date' => __( 'Reference Date', 'erp' ),
+                'completion_date'  => __( 'Completion Date', 'erp' ),
+            ];
+
+            $fields = [
+                'employee_id'           => $employee_id,
+                'completion_date'       => $completion_date,
+                'goal_description'      => $goal_description,
+                'employee_assessment'   => $employee_assessment,
+                'supervisor'            => $supervisor,
+                'supervisor_assessment' => $supervisor_assessment,
+                'type'                  => $type,
+                'performance_date'      => $performance_date
+            ];
+        }
+
+
+        foreach ( $requires as $field => $label ) {
+            if ( empty( $fields[ $field ] ) ) {
+                return new WP_Error( 'rest_performance_required_fields', sprintf( __( '%s is required', 'erp' ), $label ), array( 'status' => 400 ) );
+            }
+        }
+
+        $performance = Performance::create( $fields );
+
+        $request->set_param( 'context', 'edit' );
+        $response = $this->prepare_performance_for_response( $performance->toArray(), $request );
+
+        $response = rest_ensure_response( $response );
+        $response->set_status( 201 );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
+
+        return $response;
+    }
+
+    /**
+     * Delete performance
+     *
+     * @since 1.2.9
+     *
+     * @param $request
+     *
+     * @return WP_REST_Response
+     */
+    public function delete_performance( $request ) {
+        $id = (int) $request['performance_id'];
+        Performance::find( $id )->delete();
+
+        return new WP_REST_Response( true, 204 );
+    }
+
+    /**
+     * Prepare performance for response
+     *
+     * @since  1.2.9
+     *
+     * @param  array            $performance
+     * @param  \WP_REST_Request $request
+     *
+     * @return array
+     */
+    protected function prepare_performance_for_response( $performance, $request ) {
+        $formatted = array();
+        if( $performance['type'] == 'review' ){
+            $formatted['job_knowledge'] = erp_performance_rating( $performance['job_knowledge'] ? $performance['job_knowledge'] : '-' );
+            $formatted['work_quality']  = erp_performance_rating( $performance['work_quality'] ? $performance['work_quality'] : '-' );
+            $formatted['attendance']    = erp_performance_rating( $performance['attendance'] ? $performance['attendance'] : '-' );
+            $formatted['dependablity']  = erp_performance_rating( $performance['dependablity'] ? $performance['dependablity'] : '-' );
+            $formatted['communication'] = erp_performance_rating( $performance['communication'] ? $performance['communication'] : '-' );
+        }
+
+
+        if ( ! empty( $performance['reviewer'] ) ) {
+            $reviewer_user                     = new \WeDevs\ERP\HRM\Employee( intval( $performance['reviewer'] ) );
+            $performance['reviewer_full_name'] = $reviewer_user->get_full_name();
+        }
+
+        if ( ! empty( $performance['reporting_to'] ) ) {
+            $reporting_to_user                     = new \WeDevs\ERP\HRM\Employee( intval( $performance['reporting_to'] ) );
+            $performance['reporting_to_full_name'] = $reporting_to_user->get_full_name();
+        }
+
+        if ( ! empty( $performance['supervisor'] ) ) {
+            $supervisor_user                     = new \WeDevs\ERP\HRM\Employee( intval( $performance['supervisor'] ) );
+            $performance['supervisor_full_name'] = $supervisor_user->get_full_name();
+        }
+
+        return $performance;
+    }
+
+    /**
      * Prepare note for response
      *
      * @since  1.2.9
      *
-     * @param  array          $note
-     * @param  WP_Rest_Rquest $request
+     * @param  array            $note
+     * @param  \WP_REST_Request $request
      *
      * @return array
      */
@@ -1417,9 +1645,9 @@ class Employees_Controller extends REST_Controller {
     /**
      * Prepare a single dependent output for response
      *
-     * @param object          $item
+     * @param object           $item
      * @param \WP_REST_Request $request Request object.
-     * @param array           $additional_fields (optional)
+     * @param array            $additional_fields (optional)
      *
      * @return WP_REST_Response $response Response data.
      */
@@ -1442,9 +1670,9 @@ class Employees_Controller extends REST_Controller {
     /**
      * Prepare a single leave output for response
      *
-     * @param object          $item
+     * @param object           $item
      * @param \WP_REST_Request $request Request object.
-     * @param array           $additional_fields (optional)
+     * @param array            $additional_fields (optional)
      *
      * @return WP_REST_Response $response Response data.
      */
