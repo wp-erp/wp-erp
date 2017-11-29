@@ -3436,6 +3436,9 @@ function erp_crm_wc_prevent_admin_access( $prevent_access ) {
  * @return array
  */
 function erp_get_editable_roles (){
+    if(!  function_exists('get_editable_roles')){
+        require_once str_replace( get_bloginfo( 'url' ) . '/', ABSPATH, get_admin_url() ) .'/includes/user.php';
+    }
     $wp_roles = get_editable_roles();
 
     if( !current_user_can( 'administrator' ) ){

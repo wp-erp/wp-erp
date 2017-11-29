@@ -757,15 +757,17 @@ class Employee {
      *
      * @return array|null|object
      */
-    function get_history_by_id($id){
+    function get_history_by_id( $id ) {
         global $wpdb;
         $history_id = intval( $id );
-        $sql = "SELECT * FROM {$wpdb->prefix}erp_hr_employee_history WHERE id='{$history_id}' AND user_id='{$this->id}';";
+        $sql        = "SELECT * FROM {$wpdb->prefix}erp_hr_employee_history WHERE id='{$history_id}' AND user_id='{$this->id}';";
 
         return $wpdb->get_results( $sql );
     }
+
     /**
      * Delete history of an employee
+     *
      * @since 1.2.9
      *
      * @param $id
@@ -775,7 +777,7 @@ class Employee {
     public function delete_history( $id ) {
         global $wpdb;
         $history_id = intval( $id );
-        $sql = "DELETE FROM {$wpdb->prefix}erp_hr_employee_history WHERE id='{$history_id}' AND user_id='{$this->id}';";
+        $sql        = "DELETE FROM {$wpdb->prefix}erp_hr_employee_history WHERE id='{$history_id}' AND user_id='{$this->id}';";
 
         return $wpdb->get_results( $sql );
     }
@@ -857,6 +859,65 @@ class Employee {
         return \WeDevs\ERP\HRM\Models\Hr_User::find( $this->id )
                                              ->notes()
                                              ->count();
+    }
+
+    /**
+     * Get employee roles and caps
+     *
+     * @since 1.2.9
+     *
+     * @param bool $include_erp_only
+     *
+     * @return array
+     */
+    public function get_roles( $include_erp_only = true ) {
+        $wp_user         = new \WP_User( $this->id );
+        $user_roles      = isset( $wp_user->roles ) ? $wp_user->roles : [];
+        $all_caps        = isset( $wp_user->allcaps ) ? $wp_user->allcaps : [];
+        $roles = erp_get_editable_roles();
+        if( $include_erp_only ){
+            $roles = array_merge(erp_hr_get_roles(), erp_crm_get_roles(), erp_ac_get_roles());
+        }
+        $available_roles = [];
+        foreach ( $roles as $key => $role ) {
+            $available_roles[ $key ] = $role['name'];
+        }
+        $result = [
+            'roles'           => $user_roles,
+            'caps'            => $all_caps,
+            'available_roles' => $available_roles
+        ];
+
+        return $result;
+    }
+
+    /**
+     * Update employee roles
+     * accepts associative array eg. ['erp_hr_manager' => true, 'erp_crm_manager' => false ]
+     *
+     * @since 1.2.9
+     *
+     * @param array $roles
+     *
+     * @return $this
+     */
+    public function update_role( $roles = [] ) {
+        $erp_roles = $this->get_roles();
+        $available_roles = array_keys( $erp_roles['available_roles'] );
+        $wp_user         = new \WP_User( $this->id );
+
+        foreach ( $roles as $role => $boolean ){
+            if( !in_array( $role, $available_roles ) ) continue;
+            $add_roles = filter_var( $boolean, FILTER_VALIDATE_BOOLEAN );
+            if( $add_roles ){
+                $wp_user->add_role( $role );
+            }else{
+                $wp_user->remove_role( $role );
+            }
+        }
+        do_action( 'erp_hr_after_employee_permission_set', $roles, $wp_user );
+
+        return $this;
     }
 
 }
