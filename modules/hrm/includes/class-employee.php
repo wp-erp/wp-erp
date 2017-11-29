@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\HRM;
 
 use WeDevs\ERP\HRM\Models\Dependents;
@@ -103,19 +104,19 @@ class Employee {
      */
     public function to_array() {
         $fields = array(
-            'id'              => 0,
-            'employee_id'     => '',
-            'name'            => array(
-                'first_name'      => '',
-                'middle_name'     => '',
-                'last_name'       => ''
+            'id'          => 0,
+            'employee_id' => '',
+            'name'        => array(
+                'first_name'  => '',
+                'middle_name' => '',
+                'last_name'   => ''
             ),
-            'avatar'          => array(
+            'avatar'      => array(
                 'id'  => 0,
                 'url' => ''
             ),
-            'user_email'      => '',
-            'work'            => array(
+            'user_email'  => '',
+            'work'        => array(
                 'designation'   => 0,
                 'department'    => 0,
                 'location'      => '',
@@ -128,7 +129,7 @@ class Employee {
                 'type'          => '',
                 'status'        => '',
             ),
-            'personal'        => array(
+            'personal'    => array(
                 'other_email'     => '',
                 'phone'           => '',
                 'work_phone'      => '',
@@ -170,11 +171,11 @@ class Employee {
                 $fields['avatar']['url'] = $this->get_avatar_url( $avatar_id );
             }
 
-            foreach ($fields['work'] as $key => $value) {
+            foreach ( $fields['work'] as $key => $value ) {
                 $fields['work'][ $key ] = $this->$key;
             }
 
-            foreach ($fields['personal'] as $key => $value) {
+            foreach ( $fields['personal'] as $key => $value ) {
                 $fields['personal'][ $key ] = $this->user->$key;
             }
         }
@@ -238,13 +239,14 @@ class Employee {
     public function get_avatar( $size = 32 ) {
         if ( $this->id && ! empty( $this->user->photo_id ) ) {
             $image = wp_get_attachment_thumb_url( $this->user->photo_id );
+
             return sprintf( '<img src="%1$s" alt="" class="avatar avatar-%2$s photo" height="auto" width="%2$s" />', $image, $size );
         }
 
         $avatar = get_avatar( $this->id, $size );
 
         if ( ! $avatar ) {
-            $image = WPERP_ASSETS . '/images/mystery-person.png';
+            $image  = WPERP_ASSETS . '/images/mystery-person.png';
             $avatar = sprintf( '<img src="%1$s" alt="" class="avatar avatar-%2$s photo" height="auto" width="%2$s" />', $image, $size );
         }
 
@@ -443,7 +445,7 @@ class Employee {
      * @return string
      */
     public function get_birthday() {
-        if ( $this->date_of_birth != '0000-00-00') {
+        if ( $this->date_of_birth != '0000-00-00' ) {
             return erp_format_date( $this->date_of_birth );
         }
     }
@@ -582,7 +584,7 @@ class Employee {
     public function get_performance( $type = '' ) {
 
         $performance = array( 'reviews' => array(), 'comments' => array(), 'goals' => array() );
-        $results = erp_array_to_object( \WeDevs\ERP\HRM\Models\Performance::where( 'employee_id', $this->id )->get()->toArray() );
+        $results     = erp_array_to_object( \WeDevs\ERP\HRM\Models\Performance::where( 'employee_id', $this->id )->get()->toArray() );
 
         if ( $results ) {
 
@@ -605,15 +607,15 @@ class Employee {
     /**
      * Update employment status
      *
-     * @param string  $new_status   the employee status
-     * @param string  $date         date in mysql format
-     * @param string  $comment      comment
+     * @param string $new_status the employee status
+     * @param string $date date in mysql format
+     * @param string $comment comment
      */
     public function update_employment_status( $new_status, $date = '', $comment = '' ) {
         global $wpdb;
 
         $wpdb->update( $wpdb->prefix . 'erp_hr_employees', array(
-            'type'      => $new_status
+            'type' => $new_status
         ), array(
             'user_id' => $this->id,
         ), array(
@@ -630,17 +632,17 @@ class Employee {
             'date'    => $date
         );
 
-        erp_hr_employee_add_history( $data );
+       erp_hr_employee_add_history( $data );
     }
 
     /**
      * Update compensation of the employee
      *
-     * @param  integer  $rate   the salary
-     * @param  string   $type   the pay type
-     * @param  string   $reason reason to change the salary
-     * @param  string   $date   changed date
-     * @param  string   $comment
+     * @param  integer $rate the salary
+     * @param  string  $type the pay type
+     * @param  string  $reason reason to change the salary
+     * @param  string  $date changed date
+     * @param  string  $comment
      *
      * @return void
      */
@@ -648,10 +650,10 @@ class Employee {
         global $wpdb;
 
         $wpdb->update( $wpdb->prefix . 'erp_hr_employees', array(
-            'pay_rate'    => $rate,
-            'pay_type'    => $type
+            'pay_rate' => $rate,
+            'pay_type' => $type
         ), array(
-            'user_id'     => $this->id,
+            'user_id' => $this->id,
         ), array(
             '%f',
             '%s'
@@ -660,13 +662,13 @@ class Employee {
         // add in history
         $date = empty( $date ) ? current_time( 'mysql' ) : $date;
         $data = array(
-            'user_id'     => $this->id,
-            'module'      => 'compensation',
-            'category'    => $type,
-            'type'        => $rate,
-            'comment'     => $comment,
-            'data'        => $reason,
-            'date'        => $date
+            'user_id'  => $this->id,
+            'module'   => 'compensation',
+            'category' => $type,
+            'type'     => $rate,
+            'comment'  => $comment,
+            'data'     => $reason,
+            'date'     => $date
         );
 
         erp_hr_employee_add_history( $data );
@@ -675,10 +677,10 @@ class Employee {
     /**
      * Update job info
      *
-     * @param  int   $department_id
-     * @param  int   $designation_id
-     * @param  int   $reporting_to
-     * @param  int   $location the location id
+     * @param  int $department_id
+     * @param  int $designation_id
+     * @param  int $reporting_to
+     * @param  int $location the location id
      *
      * @return void
      */
@@ -691,7 +693,7 @@ class Employee {
             'location'     => $location,
             'reporting_to' => $reporting_to,
         ), array(
-            'user_id'      => $this->id,
+            'user_id' => $this->id,
         ), array(
             '%d',
             '%d',
@@ -701,16 +703,16 @@ class Employee {
 
         // force update the value if cached
         $this->erp = $this->get_erp_row( true );
-        $date = empty( $date ) ? current_time( 'mysql' ) : $date;
+        $date      = empty( $date ) ? current_time( 'mysql' ) : $date;
 
         $data = array(
-            'user_id'     => $this->id,
-            'module'      => 'job',
-            'category'    => $this->get_department_title(),
-            'type'        => $this->get_work_location(),
-            'comment'     => $this->get_job_title(),
-            'data'        => $reporting_to,
-            'date'        => $date
+            'user_id'  => $this->id,
+            'module'   => 'job',
+            'category' => $this->get_department_title(),
+            'type'     => $this->get_work_location(),
+            'comment'  => $this->get_job_title(),
+            'data'     => $reporting_to,
+            'date'     => $date
         );
         erp_hr_employee_add_history( $data );
     }
@@ -718,7 +720,7 @@ class Employee {
     /**
      * Get various hob history
      *
-     * @param  string  $module the name of module or empty to get all
+     * @param  string $module the name of module or empty to get all
      *
      * @return array
      */
@@ -731,11 +733,11 @@ class Employee {
                 ORDER BY id DESC";
 
         $history = array( 'job' => array(), 'compensation' => array(), 'employment' => array() );
-        $results = $wpdb->get_results( $wpdb->prepare( $sql , $this->id ) );
+        $results = $wpdb->get_results( $wpdb->prepare( $sql, $this->id ) );
 
         if ( $results ) {
-            foreach ($results as $key => $value) {
-                if ( isset( $history[ $value->module ]) ) {
+            foreach ( $results as $key => $value ) {
+                if ( isset( $history[ $value->module ] ) ) {
                     $history[ $value->module ][] = $value;
                 }
             }
@@ -749,17 +751,48 @@ class Employee {
     }
 
     /**
+     * @since 1.2.9
+     *
+     * @param $id
+     *
+     * @return array|null|object
+     */
+    function get_history_by_id($id){
+        global $wpdb;
+        $history_id = intval( $id );
+        $sql = "SELECT * FROM {$wpdb->prefix}erp_hr_employee_history WHERE id='{$history_id}' AND user_id='{$this->id}';";
+
+        return $wpdb->get_results( $sql );
+    }
+    /**
+     * Delete history of an employee
+     * @since 1.2.9
+     *
+     * @param $id
+     *
+     * @return array|null|object
+     */
+    public function delete_history( $id ) {
+        global $wpdb;
+        $history_id = intval( $id );
+        $sql = "DELETE FROM {$wpdb->prefix}erp_hr_employee_history WHERE id='{$history_id}' AND user_id='{$this->id}';";
+
+        return $wpdb->get_results( $sql );
+    }
+
+    /**
      * Add a new note
      *
-     * @param string  $note the note to be added
-     * @param int  $comment_by
+     * @param string $note the note to be added
+     * @param int    $comment_by
+     * @$return_object boolean
      *
      * @return int|object note id
      */
     public function add_note( $note, $comment_by = null, $return_object = false ) {
         global $wpdb;
 
-        if( $comment_by == null ){
+        if ( $comment_by == null ) {
             $comment_by = get_current_user_id();
         }
 
@@ -775,7 +808,7 @@ class Employee {
             $note_id = $inserted->id;
             do_action( 'erp_hr_employee_note_new', $note_id, $this->id );
 
-            if( $return_object ){
+            if ( $return_object ) {
                 return $inserted;
             }
 
@@ -788,18 +821,18 @@ class Employee {
     /**
      * Get all notes
      *
-     * @param  int  $limit
-     * @param  int  $offset
+     * @param  int $limit
+     * @param  int $offset
      *
      * @return array
      */
     public function get_notes( $limit = 30, $offset = 0 ) {
 
         return \WeDevs\ERP\HRM\Models\Hr_User::find( $this->id )
-                ->notes()
-                ->skip($offset)
-                ->take($limit)
-                ->get();
+                                             ->notes()
+                                             ->skip( $offset )
+                                             ->take( $limit )
+                                             ->get();
     }
 
     /**
@@ -822,8 +855,8 @@ class Employee {
     public function count_notes() {
 
         return \WeDevs\ERP\HRM\Models\Hr_User::find( $this->id )
-                ->notes()
-                ->count();
+                                             ->notes()
+                                             ->count();
     }
 
 }

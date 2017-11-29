@@ -3,7 +3,9 @@
 namespace WeDevs\ERP\API;
 
 use WeDevs\ERP\HRM\Employee;
+use WeDevs\ERP\HRM\Models\Department;
 use WeDevs\ERP\HRM\Models\Dependents;
+use WeDevs\ERP\HRM\Models\Designation;
 use WeDevs\ERP\HRM\Models\Education;
 use WeDevs\ERP\HRM\Models\Performance;
 use WeDevs\ERP\HRM\Models\Work_Experience;
@@ -281,6 +283,33 @@ class Employees_Controller extends REST_Controller {
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_performance' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
+            ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/histories', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_histories' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
+            ],
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'create_history' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
+            ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/histories' . '/(?P<history_id>[\d]+)', [
+            [
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'delete_history' ],
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_edit_employee' );
                 },
@@ -897,7 +926,7 @@ class Employees_Controller extends REST_Controller {
         }
 
         $response = rest_ensure_response( $formatted_items );
-        $response = $this->format_collection_response( $response, $request, $total_items );
+        $response = $this->format_collection_response( $response, $request, count( $items ) );
 
         return $response;
     }
@@ -1097,7 +1126,7 @@ class Employees_Controller extends REST_Controller {
         }
 
         $response = rest_ensure_response( $formatted_items );
-        $response = $this->format_collection_response( $response, $request, $total_items );
+        $response = $this->format_collection_response( $response, $request, count( $items ) );
 
         return $response;
     }
@@ -1119,7 +1148,8 @@ class Employees_Controller extends REST_Controller {
             return new WP_Error( 'rest_invalid_dependent', __( 'Invalid dependent id.' ), array( 'status' => 404 ) );
         }
 
-        $response = $this->prepare_dependent_for_response( $dependent, $request );
+        $dependents = $this->prepare_dependent_for_response( $dependent, $request );
+        $response   = rest_ensure_response( $dependents );
 
         return $response;
     }
@@ -1322,7 +1352,7 @@ class Employees_Controller extends REST_Controller {
         }
 
         $response = rest_ensure_response( $formatted_items );
-        $response = $this->format_collection_response( $response, $request, count( $items ) );
+        $response = $this->format_collection_response( $response, $request, count( $notes ) );
 
         return $response;
     }
@@ -1357,9 +1387,11 @@ class Employees_Controller extends REST_Controller {
     /**
      * Delete a note
      *
-     * @param \WP_REST_Request $request
+     * @since 1.2.9
      *
-     * @return WP_Error|\WP_REST_Request
+     * @param $request
+     *
+     * @return WP_REST_Response
      */
     public function delete_note( $request ) {
         $id = (int) $request['note_id'];
@@ -1413,21 +1445,23 @@ class Employees_Controller extends REST_Controller {
      * @return WP_Error|\WP_REST_Request
      */
     public function create_performance( $request ) {
-        $id       = (int) $request['id'];
-        $type     = sanitize_key( $request['type'] );
-        $employee = new Employee( $id );
+        $employee_id = (int) trim( $request['id'] );
+        $employee    = new Employee( $employee_id );
         if ( ! $employee ) {
             return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
         }
-        if ( ! isset( $request['type'] ) ) {
+        if ( empty( $request['type'] ) ) {
             return new WP_Error( 'rest_performance_required_fields', __( 'Review type is missing' ), array( 'status' => 400 ) );
         }
+        if ( ! in_array( $request['type'], [ 'reviews', 'comments', 'goals' ] ) ) {
+            return new WP_Error( 'rest_performance_invalid_type', __( 'Invalid review type' ), array( 'status' => 400 ) );
+        }
 
+        $type     = sanitize_key( $request['type'] );
         $requires = array();
         $fields   = array();
 
         if ( $type == 'reviews' ) {
-            $employee_id      = isset( $request['employee_id'] ) ? intval( $request['employee_id'] ) : 0;
             $performance_date = ( ! empty( $request['performance_date'] ) ) ? current_time( 'mysql' ) : $request['performance_date'];
             $reporting_to     = ( ! empty( $request['reporting_to'] ) ) ? intval( $request['reporting_to'] ) : 0;
             $job_knowledge    = ( ! empty( $request['job_knowledge'] ) ) ? intval( $request['job_knowledge'] ) : 0;
@@ -1483,23 +1517,21 @@ class Employees_Controller extends REST_Controller {
 
         if ( $type && $type == 'goals' ) {
 
-            $employee_id           = isset( $request['employee_id'] ) ? intval( $request['employee_id'] ) : 0;
-            $review_id             = isset( $request['review_id'] ) ? intval( $request['review_id'] ) : 0;
-            $completion_date       = ( empty( $request['completion_date'] ) ) ? current_time( 'mysql' ) : $request['completion_date'];
-            $goal_description      = isset( $request['goal_description'] ) ? esc_textarea( $request['goal_description'] ) : '';
-            $employee_assessment   = isset( $request['employee_assessment'] ) ? esc_textarea( $request['employee_assessment'] ) : '';
-            $supervisor            = isset( $request['supervisor'] ) ? intval( $request['supervisor'] ) : 0;
-            $supervisor_assessment = isset( $request['supervisor_assessment'] ) ? esc_textarea( $request['supervisor_assessment'] ) : '';
-            $performance_date      = ( empty( $request['performance_date'] ) ) ? current_time( 'mysql' ) : $request['performance_date'];
+            $completion_date       = ! empty( $request['completion_date'] ) ? current_time( 'mysql' ) : $request['completion_date'];
+            $goal_description      = ! empty( $request['goal_description'] ) ? esc_textarea( $request['goal_description'] ) : '';
+            $employee_assessment   = ! empty( $request['employee_assessment'] ) ? esc_textarea( $request['employee_assessment'] ) : '';
+            $supervisor            = ! empty( $request['supervisor'] ) ? intval( $request['supervisor'] ) : 0;
+            $supervisor_assessment = ! empty( $request['supervisor_assessment'] ) ? esc_textarea( $request['supervisor_assessment'] ) : '';
+            $performance_date      = ! empty( $request['performance_date'] ) ? current_time( 'mysql' ) : $request['performance_date'];
 
             // some basic validations
             $requires = [
                 'performance_date' => __( 'Reference Date', 'erp' ),
                 'completion_date'  => __( 'Completion Date', 'erp' ),
+                'supervisor'       => __( 'Supervisor', 'erp' ),
             ];
 
             $fields = [
-                'employee_id'           => $employee_id,
                 'completion_date'       => $completion_date,
                 'goal_description'      => $goal_description,
                 'employee_assessment'   => $employee_assessment,
@@ -1510,6 +1542,8 @@ class Employees_Controller extends REST_Controller {
             ];
         }
 
+        //global fields
+        $fields['employee_id'] = $employee_id;
 
         foreach ( $requires as $field => $label ) {
             if ( empty( $fields[ $field ] ) ) {
@@ -1518,13 +1552,12 @@ class Employees_Controller extends REST_Controller {
         }
 
         $performance = Performance::create( $fields );
-
         $request->set_param( 'context', 'edit' );
         $response = $this->prepare_performance_for_response( $performance->toArray(), $request );
 
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
-        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $employee_id ) ) );
 
         return $response;
     }
@@ -1556,32 +1589,206 @@ class Employees_Controller extends REST_Controller {
      * @return array
      */
     protected function prepare_performance_for_response( $performance, $request ) {
-        $formatted = array();
-        if( $performance['type'] == 'review' ){
-            $formatted['job_knowledge'] = erp_performance_rating( $performance['job_knowledge'] ? $performance['job_knowledge'] : '-' );
-            $formatted['work_quality']  = erp_performance_rating( $performance['work_quality'] ? $performance['work_quality'] : '-' );
-            $formatted['attendance']    = erp_performance_rating( $performance['attendance'] ? $performance['attendance'] : '-' );
-            $formatted['dependablity']  = erp_performance_rating( $performance['dependablity'] ? $performance['dependablity'] : '-' );
-            $formatted['communication'] = erp_performance_rating( $performance['communication'] ? $performance['communication'] : '-' );
+        $formatted                     = array();
+        $formatted['id']               = $performance['id'];
+        $formatted['type']             = $performance['type'];
+        $formatted['performance_date'] = $performance['performance_date'];
+        if ( $performance['type'] == 'reviews' ) {
+            $formatted['job_knowledge']          = erp_performance_rating( $performance['job_knowledge'] ? $performance['job_knowledge'] : '-' );
+            $formatted['work_quality']           = erp_performance_rating( $performance['work_quality'] ? $performance['work_quality'] : '-' );
+            $formatted['attendance']             = erp_performance_rating( $performance['attendance'] ? $performance['attendance'] : '-' );
+            $formatted['dependablity']           = erp_performance_rating( $performance['dependablity'] ? $performance['dependablity'] : '-' );
+            $formatted['communication']          = erp_performance_rating( $performance['communication'] ? $performance['communication'] : '-' );
+            $reporting_to_user                   = new \WeDevs\ERP\HRM\Employee( intval( $performance['reporting_to'] ) );
+            $formatted['reporting_to']           = intval( $performance['reporting_to'] );
+            $formatted['reporting_to_full_name'] = $reporting_to_user->get_full_name();
+        } elseif ( $performance['type'] == 'comments' ) {
+            $formatted['comments']           = $performance['comments'];
+            $formatted['reviewer']           = intval( $performance['reviewer'] );
+            $reviewer_user                   = new \WeDevs\ERP\HRM\Employee( intval( $performance['reviewer'] ) );
+            $formatted['reviewer_full_name'] = $reviewer_user->get_full_name();
+        } else {
+            $formatted['completion_date']       = $performance['completion_date'];
+            $formatted['goal_description']      = $performance['goal_description'];
+            $formatted['employee_assessment']   = $performance['employee_assessment'];
+            $formatted['supervisor']            = $performance['supervisor'];
+            $formatted['supervisor_assessment'] = $performance['supervisor_assessment'];
+            $supervisor_user                    = new \WeDevs\ERP\HRM\Employee( intval( $performance['supervisor'] ) );
+            $formatted['supervisor_full_name']  = $supervisor_user->get_full_name();
         }
 
+        return $formatted;
+    }
 
-        if ( ! empty( $performance['reviewer'] ) ) {
-            $reviewer_user                     = new \WeDevs\ERP\HRM\Employee( intval( $performance['reviewer'] ) );
-            $performance['reviewer_full_name'] = $reviewer_user->get_full_name();
+    /**
+     * Get employee histories
+     *
+     * @since 1.2.9
+     *
+     * @param $request
+     *
+     * @return mixed|object|WP_Error|WP_REST_Response
+     */
+    public function get_histories( $request ) {
+        $id       = (int) $request['id'];
+        $module   = ! empty( $request['module'] ) ? sanitize_key( $request['module'] ) : 0;
+        $employee = new Employee( $id );
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
         }
 
-        if ( ! empty( $performance['reporting_to'] ) ) {
-            $reporting_to_user                     = new \WeDevs\ERP\HRM\Employee( intval( $performance['reporting_to'] ) );
-            $performance['reporting_to_full_name'] = $reporting_to_user->get_full_name();
+        $histories = $employee->get_history();
+        if ( ! empty( $module ) && isset( $histories[ $module ] ) ) {
+            $histories = $histories[ $module ];
         }
 
-        if ( ! empty( $performance['supervisor'] ) ) {
-            $supervisor_user                     = new \WeDevs\ERP\HRM\Employee( intval( $performance['supervisor'] ) );
-            $performance['supervisor_full_name'] = $supervisor_user->get_full_name();
+        $response = rest_ensure_response( $histories );
+        $response = $this->format_collection_response( $response, $request, count( $histories ) );
+
+        return $response;
+    }
+
+    /**
+     * Create employee history
+     *
+     * @since 1.2.9
+     *
+     * @param $request
+     *
+     * @return mixed|WP_Error|WP_REST_Response
+     */
+    public function create_history( $request ) {
+        global $wpdb;
+        $id       = (int) $request['id'];
+        $module   = ! empty( $request['module'] ) ? sanitize_key( $request['module'] ) : 0;
+        $employee = new Employee( $id );
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
+        }
+        if ( empty( $module ) || ( ! in_array( $module, [ 'status', 'compensation', 'information' ] ) ) ) {
+            return new WP_Error( 'rest_no_module_type', __( 'Invalid/No module type' ), array( 'status' => 404 ) );
         }
 
-        return $performance;
+        $date = ( empty( $request['date'] ) ) ? current_time( 'mysql' ) : $request['date'];
+
+        if ( $module == 'status' ) {
+            $required = [
+                'status' => __( 'Employment Status', 'erp' ),
+            ];
+            $fields   = [
+                'status'  => ! empty( $request['status'] ) ? sanitize_key( $request['status'] ) : 0,
+                'comment' => ! empty( $request['comment'] ) ? sanitize_textarea_field( $request['comment'] ) : '',
+            ];
+
+            $error = $this->check_required_fields( $required, $fields );
+            if ( $error instanceof WP_Error ) {
+                return $error;
+            }
+
+            $types = erp_hr_get_employee_types();
+            if ( ! array_key_exists( $fields['status'], $types ) ) {
+                return new WP_Error( 'rest_invalid_employee_status', __( 'Invalid employee type', 'erp' ), array( 'status' => 400 ) );
+            }
+
+            $employee->update_employment_status( $fields['status'], $date, $fields['comment'] );
+            $history = $employee->get_history_by_id( $wpdb->insert_id );
+
+            return rest_ensure_response( $history );
+
+        } elseif ( $module == 'compensation' ) {
+            $required = [
+                'reason'   => __( 'Change Reason', 'erp' ),
+                'pay_type' => __( 'Pay Type', 'erp' ),
+                'pay_rate' => __( 'Pay Rate', 'erp' ),
+            ];
+            $fields   = [
+                'comment'  => ! empty( $request['comment'] ) ? sanitize_textarea_field( $request['comment'] ) : '',
+                'status'   => ! empty( $request['status'] ) ? sanitize_key( $request['status'] ) : 0,
+                'reason'   => ! empty( $request['reason'] ) ? sanitize_key( $request['reason'] ) : 0,
+                'pay_type' => ! empty( $request['pay_type'] ) ? sanitize_key( $request['pay_type'] ) : 0,
+                'pay_rate' => ! empty( $request['pay_rate'] ) ? number_format( $request['pay_rate'], 2 ) : 0,
+            ];
+
+            $error = $this->check_required_fields( $required, $fields );
+            if ( $error instanceof WP_Error ) {
+                return $error;
+            }
+
+            if ( ! $fields['pay_rate'] ) {
+                return new WP_Error( 'rest_invalid_pay_rate', __( 'Invalid pay rate', 'erp' ), array( 'status' => 400 ) );
+            }
+
+            $types   = erp_hr_get_pay_type();
+            $reasons = erp_hr_get_pay_change_reasons();
+            if ( ! array_key_exists( $fields['pay_type'], $types ) ) {
+                return new WP_Error( 'rest_invalid_pay_type', __( 'Invalid pay type', 'erp' ), array( 'status' => 400 ) );
+            }
+
+            if ( ! array_key_exists( $fields['reason'], $reasons ) ) {
+                return new WP_Error( 'rest_invalid_reason', __( 'Reason does not exists', 'erp' ), array( 'status' => 400 ) );
+            }
+
+            $employee->update_compensation( $fields['pay_rate'], $fields['pay_type'], $fields['reason'], $fields['comment'] );
+            $history = $employee->get_history_by_id( $wpdb->insert_id );
+
+            return rest_ensure_response( $history );
+
+
+        } else {
+            $required = [
+                'designation'  => __( 'Designation', 'erp' ),
+                'department'   => __( 'Department', 'erp' ),
+                'location'     => __( 'Location', 'erp' ),
+                'reporting_to' => __( 'Reporting To', 'erp' ),
+            ];
+
+            $fields = [
+                'comment'      => ! empty( $request['comment'] ) ? sanitize_textarea_field( $request['comment'] ) : '',
+                'designation'  => ! empty( $request['designation'] ) ? intval( $request['designation'] ) : 0,
+                'department'   => ! empty( $request['department'] ) ? intval( $request['department'] ) : 0,
+                'location'     => ! empty( $request['location'] ) ? sanitize_key( $request['location'] ) : 0,
+                'reporting_to' => ! empty( $request['reporting_to'] ) ? intval( $request['reporting_to'] ) : 0,
+                'pay_rate'     => ! empty( $request['pay_rate'] ) ? number_format( $request['pay_rate'], 2 ) : 0,
+            ];
+
+            $error = $this->check_required_fields( $required, $fields );
+            if ( $error instanceof WP_Error ) {
+                return $error;
+            }
+
+            if ( ! Designation::find( $fields['designation'] ) ) {
+                return new WP_Error( 'rest_invalid_designation', __( 'Invalid designation ID', 'erp' ), array( 'status' => 400 ) );
+            }
+
+            if ( ! Department::find( $fields['department'] ) ) {
+                return new WP_Error( 'rest_invalid_department', __( 'Invalid department ID', 'erp' ), array( 'status' => 400 ) );
+            }
+            $reporting_user = \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $fields['reporting_to'] )->first();
+            if ( ! $reporting_user ) {
+                return new WP_Error( 'rest_invalid_reporting_to', __( 'Invalid Reporting to user id', 'erp' ), array( 'status' => 400 ) );
+            }
+
+            $employee->update_job_info( $fields['department'], $fields['designation'], $fields['reporting_to'], $fields['location'], $date );
+            $history = $employee->get_history_by_id( $wpdb->insert_id );
+
+            return rest_ensure_response( $history );
+        }
+    }
+
+    /**
+     * Delete a history
+     *
+     * @since 1.2.9
+     *
+     * @param $request
+     *
+     * @return WP_REST_Response
+     */
+    public function delete_history( $request ) {
+        $id = (int) $request['history_id'];
+        Performance::find( $id )->delete();
+
+        return new WP_REST_Response( true, 204 );
     }
 
     /**
@@ -1698,6 +1905,26 @@ class Employees_Controller extends REST_Controller {
         $response = rest_ensure_response( $data );
 
         return $response;
+    }
+
+    /**
+     * Checks required fields in fields
+     *
+     * @since 1.2.9
+     *
+     * @param array $requires
+     * @param array $fields
+     *
+     * @return bool|WP_Error
+     */
+    protected function check_required_fields( array $requires, array $fields ) {
+        foreach ( $requires as $field => $label ) {
+            if ( empty( $fields[ $field ] ) ) {
+                return new WP_Error( 'rest_required_fields', sprintf( __( '%s is required', 'erp' ), $label ), array( 'status' => 400 ) );
+            }
+        }
+
+        return true;
     }
 
     /**

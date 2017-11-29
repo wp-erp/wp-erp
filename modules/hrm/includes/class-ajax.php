@@ -948,8 +948,8 @@ class Ajax_Handler {
     public function mark_read_announcement() {
         $this->verify_nonce( 'wp-erp-hr-nonce' );
         $row_id = intval( $_POST['id'] );
-
-        \WeDevs\ERP\HRM\Models\Announcement::find( $row_id )->update( ['status' => 'read' ] );
+        $user_id = get_current_user_id();
+        \WeDevs\ERP\HRM\Models\Announcement::find( $row_id )->where('user_id', $user_id)->update( ['status' => 'read' ] );
 
         return $this->send_success();
     }
