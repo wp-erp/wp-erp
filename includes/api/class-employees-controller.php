@@ -316,6 +316,23 @@ class Employees_Controller extends REST_Controller {
             ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/roles', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_roles' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( erp_hr_get_manager_role() );
+                },
+            ],
+            [
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => [ $this, 'update_role' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( erp_hr_get_manager_role() );
+                },
+            ],
+        ] );
+
     }
 
     /**
@@ -1576,6 +1593,57 @@ class Employees_Controller extends REST_Controller {
         Performance::find( $id )->delete();
 
         return new WP_REST_Response( true, 204 );
+    }
+
+    /**
+     * Get roles of an employee
+     *
+     * @since 1.2.9
+     *
+     * @param $request
+     *
+     * @return mixed|WP_Error|WP_REST_Response
+     */
+    public function get_roles( $request ){
+        $employee_id = (int) trim( $request['id'] );
+        $employee    = new Employee( $employee_id );
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
+        }
+        $response = rest_ensure_response( $employee->get_roles() );
+        return $response;
+    }
+
+    /**
+     * Update employee roles
+     * accepts associative array eg. ['erp_hr_manager' => true, 'erp_crm_manager' => false ]
+     * @since 1.2.9
+     *
+     * @param $request
+     *
+     * @return array|mixed|WP_Error|WP_REST_Response
+     */
+    public function update_role( $request ) {
+        $hr_manager_role = erp_hr_get_manager_role();
+        if ( ! current_user_can( $hr_manager_role ) ) {
+            return new WP_Error( 'rest_invalid_user_permission', __( 'User do not have permission for the action.' ), array( 'status' => 404 ) );
+        }
+        $employee_id = (int) trim( $request['id'] );
+        $employee    = new Employee( $employee_id );
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
+        }
+        if( !is_array($request['roles']) || empty( $request['roles'] ) ){
+            return new WP_Error( 'rest_performance_invalid_permission_type', __( 'Invalid role format' ), array( 'status' => 400 ) );
+        }
+
+        $roles = $employee->update_role($request['roles'])->get_roles();
+        $request->set_param( 'context', 'edit' );
+        $response = rest_ensure_response( $roles );
+        $response->set_status( 201 );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $employee_id ) ) );
+
+        return $response;
     }
 
     /**
