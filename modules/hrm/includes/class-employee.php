@@ -905,17 +905,16 @@ class Employee {
         $erp_roles = $this->get_roles();
         $available_roles = array_keys( $erp_roles['available_roles'] );
         $wp_user         = new \WP_User( $this->id );
-
         foreach ( $roles as $role => $boolean ){
             if( !in_array( $role, $available_roles ) ) continue;
             $add_roles = filter_var( $boolean, FILTER_VALIDATE_BOOLEAN );
+
             if( $add_roles ){
                 $wp_user->add_role( $role );
             }else{
                 $wp_user->remove_role( $role );
             }
         }
-        do_action( 'erp_hr_after_employee_permission_set', $roles, $wp_user );
 
         return $this;
     }
