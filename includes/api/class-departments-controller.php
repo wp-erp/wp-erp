@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\API;
 
 use WP_REST_Server;
@@ -36,7 +37,6 @@ class Departments_Controller extends REST_Controller {
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_department' ],
-                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_manage_department' );
                 },
@@ -94,7 +94,7 @@ class Departments_Controller extends REST_Controller {
         foreach ( $items as $item ) {
             $additional_fields = [];
 
-            $data = $this->prepare_item_for_response( $item, $request, $additional_fields );
+            $data             = $this->prepare_item_for_response( $item, $request, $additional_fields );
             $formated_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -133,8 +133,10 @@ class Departments_Controller extends REST_Controller {
      * @return WP_Error|WP_REST_Request
      */
     public function create_department( $request ) {
-        $item = $this->prepare_item_for_database( $request );
-        $id   = erp_hr_create_department( $item );
+        error_log(print_r($request, true ));
+        $item       = $this->prepare_item_for_database( $request );
+        error_log(print_r($item, true ));
+        $id         = erp_hr_create_department( $item );
         $department = new \WeDevs\ERP\HRM\Department( $id );
 
         $request->set_param( 'context', 'edit' );
@@ -176,9 +178,11 @@ class Departments_Controller extends REST_Controller {
     /**
      * Delete a department
      *
-     * @param WP_REST_Request $request
+     * @since 1.0.0
      *
-     * @return WP_Error|WP_REST_Request
+     * @param $request
+     *
+     * @return WP_REST_Response
      */
     public function delete_department( $request ) {
         $id = (int) $request['id'];
@@ -191,7 +195,7 @@ class Departments_Controller extends REST_Controller {
     /**
      * Prepare a single item for create or update
      *
-     * @param WP_REST_Request $request Request object.
+     * @param \WP_REST_Request $request Request object.
      *
      * @return array $prepared_item
      */
@@ -199,24 +203,24 @@ class Departments_Controller extends REST_Controller {
         $prepared_item = [];
 
         // required arguments.
-        if ( isset( $request['title'] ) ) {
+        if ( ! empty( $request['title'] ) ) {
             $prepared_item['title'] = $request['title'];
         }
 
         // optional arguments.
-        if ( isset( $request['id'] ) ) {
+        if ( ! empty( $request['id'] ) ) {
             $prepared_item['id'] = absint( $request['id'] );
         }
 
-        if ( isset( $request['description'] ) ) {
+        if ( ! empty( $request['description'] ) ) {
             $prepared_item['description'] = $request['description'];
         }
 
-        if ( isset( $request['parent'] ) ) {
+        if ( ! empty( $request['parent'] ) ) {
             $prepared_item['parent'] = absint( $request['parent'] );
         }
 
-        if ( isset( $request['head'] ) ) {
+        if ( ! empty( $request['head'] ) ) {
             $prepared_item['lead'] = absint( $request['head'] );
         }
 
@@ -226,9 +230,9 @@ class Departments_Controller extends REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param object $item
+     * @param object          $item
      * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
+     * @param array           $additional_fields (optional)
      *
      * @return WP_REST_Response $response Response data.
      */
@@ -242,7 +246,6 @@ class Departments_Controller extends REST_Controller {
 
         if ( isset( $request['include'] ) ) {
             $include_params = explode( ',', str_replace( ' ', '', $request['include'] ) );
-
             if ( in_array( 'parent', $include_params ) ) {
                 $data['parent'] = $this->get_parent_department( $item );
             }
@@ -296,13 +299,13 @@ class Departments_Controller extends REST_Controller {
             'title'      => 'department',
             'type'       => 'object',
             'properties' => [
-                'id'    => [
+                'id'          => [
                     'description' => __( 'Unique identifier for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'title'  => [
+                'title'       => [
                     'description' => __( 'Title for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -311,7 +314,7 @@ class Departments_Controller extends REST_Controller {
                     ],
                     'required'    => true,
                 ],
-                'description'  => [
+                'description' => [
                     'description' => __( 'Description for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -319,12 +322,12 @@ class Departments_Controller extends REST_Controller {
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
                 ],
-                'parent' => [
+                'parent'      => [
                     'description' => __( 'Parent for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
                 ],
-                'head'   => [
+                'head'        => [
                     'description' => __( 'Head for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'edit' ],
