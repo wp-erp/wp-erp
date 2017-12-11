@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\API;
 
 use WP_REST_Server;
@@ -48,6 +49,7 @@ class HRM_Reports_Controller extends REST_Controller {
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_head_counts' ],
+                'args'                => $this->get_collection_params(),
                 'permission_callback' => function ( $request ) {
                     return current_user_can( 'erp_hr_manager' );
                 },
@@ -94,7 +96,7 @@ class HRM_Reports_Controller extends REST_Controller {
         $employees = new \WeDevs\ERP\HRM\Models\Employee();
 
         if ( $args['dimension'] == 'department' ) {
-            $departments  = erp_hr_get_departments();
+            $departments = erp_hr_get_departments();
 
             $emp_all_data = [];
             foreach ( $departments as $department ) {
@@ -131,7 +133,7 @@ class HRM_Reports_Controller extends REST_Controller {
         ];
 
         if ( $args['dimension'] == 'department' ) {
-            $departments  = erp_hr_get_departments();
+            $departments = erp_hr_get_departments();
 
             $gender_ratio = [];
             foreach ( $departments as $department ) {
@@ -154,33 +156,64 @@ class HRM_Reports_Controller extends REST_Controller {
     /**
      * Get a collection of head counts
      *
-     * @param WP_REST_Request $request
+     * @since 1.0.0
      *
-     * @return WP_Error|WP_REST_Response
+     * @param $request
+     *
+     * @return mixed|object|WP_Error|WP_REST_Response
      */
     public function get_head_counts( $request ) {
         $args = [
             'number' => $request['per_page'],
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+            'type'   => isset( $request['type'] ) ? $request['type'] : 'summary'
         ];
 
-        $this_month = current_time( 'Y-m-01' );
-
-        for ( $i = 0; $i <= 11; $i++ ) {
-            $month        = date( "Y-m", strtotime( $this_month ." -$i months" ) );
-            $js_month     = strtotime( $month. '-01' ) * 1000;
-            $count        = erp_hr_get_headcount( $month, '', 'month' );
-
-            $chart_data[] = (object) [
-                'month' => $month,
-                'count' => $count
-            ];
+        if ( ! in_array( $request['type'], [ 'summary', 'list' ] ) ) {
+            return new WP_Error( 'rest_performance_invalid_type', __( 'Invalid Type received' ), array( 'status' => 400 ) );
         }
 
-        $formated_items = $chart_data;
+        $formatted_items = [];
+        $total           = 0;
+        if ( $args['type'] == 'summary' ) {
+            $this_month = current_time( 'Y-m-01' );
+            $chart_data = [];
+            for ( $i = 0; $i <= 11; $i ++ ) {
+                $month    = date( "Y-m", strtotime( $this_month . " -$i months" ) );
+                $js_month = strtotime( $month . '-01' ) * 1000;
+                $count    = erp_hr_get_headcount( $month, '', 'month' );
 
-        $response = rest_ensure_response( $formated_items );
-        $response = $this->format_collection_response( $response, $request, 0 );
+                $chart_data[] = (object) [
+                    'month' => $month,
+                    'count' => $count
+                ];
+            }
+            $formatted_items = $chart_data;
+            $total           = count( $chart_data );
+        } else {
+            global $wpdb;
+
+            $user_ids    = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees LIMIT {$args['number']} OFFSET {$args['offset']}" );
+            $total = (int) $wpdb->get_var( "SELECT count(*) FROM {$wpdb->prefix}erp_hr_employees" );
+
+            foreach ( $user_ids as $user_id ) {
+                $data               = [];
+                $employee           = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
+                $data['id']         = $user_id;
+                $data['name']       = $employee->get_full_name();
+                $data['hiring_date']  = $employee->hiring_date;
+                $data['job_title']  = $employee->get_job_title();
+                $data['department'] = $employee->get_department_title();
+                $data['location']     = $employee->get_work_location();
+                $data['status']     = $employee->get_status();
+                $formatted_items[] = $data;
+            }
+
+
+        }
+
+        $response = rest_ensure_response( $formatted_items );
+        $response = $this->format_collection_response( $response, $request, $total );
 
         return $response;
     }
@@ -201,8 +234,8 @@ class HRM_Reports_Controller extends REST_Controller {
         global $wpdb;
 
         $user_ids    = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees LIMIT {$args['number']} OFFSET {$args['offset']}" );
-
         $total_items = (int) $wpdb->get_var( "SELECT count(*) FROM {$wpdb->prefix}erp_hr_employees" );
+
 
         $date_format = get_option( 'date_format' );
 
@@ -212,7 +245,6 @@ class HRM_Reports_Controller extends REST_Controller {
             $compensations = $employee->get_history( 'compensation' );
 
             $data = [];
-
             foreach ( $compensations as $compensation ) {
                 $data[] = [
                     'employee_id'   => (int) esc_attr( $employee->id ),
@@ -227,7 +259,6 @@ class HRM_Reports_Controller extends REST_Controller {
                 $formated_items[] = $data;
             }
         }
-
         $response = rest_ensure_response( $formated_items );
         $response = $this->format_collection_response( $response, $request, $total_items );
 
