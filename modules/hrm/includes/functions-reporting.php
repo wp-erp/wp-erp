@@ -45,7 +45,7 @@ function get_employee_breakdown_by_age( $employees ) {
     $_36_to_45 = 0;
     $_46_to_55 = 0;
     $_56_to_65 = 0;
-    $_65plus   = 0;
+    $_65_plus   = 0;
 
     foreach ( $employees as $employee ) {
 
@@ -96,7 +96,7 @@ function get_employee_breakdown_by_age( $employees ) {
 
          if ( $age > 65 ) {
 
-            $_65plus++;
+            $_65_plus++;
          }
     }
 
@@ -107,7 +107,7 @@ function get_employee_breakdown_by_age( $employees ) {
         '_36_to_45' => $_36_to_45,
         '_46_to_55' => $_46_to_55,
         '_56_to_65' => $_56_to_65,
-        '_65plus'   => $_65plus,
+        '_65_plus'   => $_65_plus,
     ];
 
     return $count;
