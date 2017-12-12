@@ -133,9 +133,7 @@ class Departments_Controller extends REST_Controller {
      * @return WP_Error|WP_REST_Request
      */
     public function create_department( $request ) {
-        error_log(print_r($request, true ));
         $item       = $this->prepare_item_for_database( $request );
-        error_log(print_r($item, true ));
         $id         = erp_hr_create_department( $item );
         $department = new \WeDevs\ERP\HRM\Department( $id );
 
