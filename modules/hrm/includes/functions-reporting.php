@@ -132,12 +132,14 @@ function erp_hr_get_gender_count( $department = null ) {
     if ( $all_user_id ) {
 
         foreach ( $all_user_id as $user_id ) {
+            $gender_single = get_user_meta( $user_id, 'gender', true );
 
-            $gender_single = get_user_meta( $user_id, 'gender' );
-            $gender_all[]  = $gender_single[0];
+            if ( is_string( $gender_single ) ) {
+                $gender_all[]  = $gender_single;
+            }
         }
 
-        $gender_counted   = array_count_values( $gender_all );
+        $gender_counted = array_count_values( $gender_all );
     }
 
     $gender['male']   = isset( $gender_counted['male'] ) ? $gender_counted['male'] : 0;
