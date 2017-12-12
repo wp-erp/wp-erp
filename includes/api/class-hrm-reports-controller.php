@@ -139,7 +139,7 @@ class HRM_Reports_Controller extends REST_Controller {
             foreach ( $departments as $department ) {
                 $count_by_dept = erp_hr_get_gender_count( $department->id );
 
-                $gender_ratio[ $department->name ][] = $count_by_dept;
+                $gender_ratio[ $department->name ] = $count_by_dept;
             }
         } else {
             $gender_ratio = erp_hr_get_gender_ratio_data();
@@ -193,20 +193,21 @@ class HRM_Reports_Controller extends REST_Controller {
         } else {
             global $wpdb;
 
-            $user_ids    = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees LIMIT {$args['number']} OFFSET {$args['offset']}" );
-            $total = (int) $wpdb->get_var( "SELECT count(*) FROM {$wpdb->prefix}erp_hr_employees" );
+            $user_ids = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}erp_hr_employees LIMIT {$args['number']} OFFSET {$args['offset']}" );
+            $total    = (int) $wpdb->get_var( "SELECT count(*) FROM {$wpdb->prefix}erp_hr_employees" );
 
             foreach ( $user_ids as $user_id ) {
-                $data               = [];
-                $employee           = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
-                $data['id']         = $user_id;
-                $data['name']       = $employee->get_full_name();
-                $data['hiring_date']  = $employee->hiring_date;
-                $data['job_title']  = $employee->get_job_title();
-                $data['department'] = $employee->get_department_title();
-                $data['location']     = $employee->get_work_location();
-                $data['status']     = $employee->get_status();
-                $formatted_items[] = $data;
+                $data                = [];
+                $employee            = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
+                $data['id']          = $user_id;
+                $data['name']        = $employee->get_full_name();
+                $data['avatar_url']  = $employee->get_avatar_url();
+                $data['hiring_date'] = $employee->hiring_date;
+                $data['job_title']   = $employee->get_job_title();
+                $data['department']  = $employee->get_department_title();
+                $data['location']    = $employee->get_work_location();
+                $data['status']      = $employee->get_status();
+                $formatted_items[]   = $data;
             }
 
 
@@ -249,6 +250,7 @@ class HRM_Reports_Controller extends REST_Controller {
                 $data[] = [
                     'employee_id'   => (int) esc_attr( $employee->id ),
                     'employee_name' => $employee->display_name,
+                    'avatar_url'    => $employee->get_avatar_url(),
                     'date'          => date( $date_format, strtotime( esc_attr( $compensation->date ) ) ),
                     'pay_rate'      => (int) esc_attr( $compensation->type ),
                     'pay_type'      => esc_attr( $compensation->category ),
