@@ -261,11 +261,16 @@ class Announcements_Controller extends REST_Controller {
      * @return WP_REST_Response $response Response data.
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
+        $post_date   = new \DateTime($item->post_date);
+        $post_author = get_user_by('id', $item->post_author);
+
         $data = [
             'id'     => (int) $item->id,
             'title'  => $item->post_title,
             'body'   => $item->post_content,
             'status' => $item->post_status,
+            'date'   => $post_date->format('Y-m-d'),
+            'author' => $post_author->user_login
         ];
 
         $data = array_merge( $data, $additional_fields );
