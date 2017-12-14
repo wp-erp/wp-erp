@@ -1011,6 +1011,7 @@ function erp_hr_get_leave_requests( $args = array() ) {
         $where
         ORDER BY {$args['orderby']} {$args['order']}
         $limit";
+
     if ( $requests === false ) {
         if ( $args['number'] == '-1' ) {
             $requests = $wpdb->get_results( $sql );

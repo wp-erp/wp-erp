@@ -23,7 +23,9 @@ class API_Registrar {
      * @since 1.2.0
      */
     public function register_rest_routes() {
-        $controllers = [];
+        $controllers = [
+            '\WeDevs\ERP\API\Utility_Controller'
+        ];
 
         if ( erp_is_module_active( 'crm' ) ) {
             $controllers = array_merge( $controllers, [
