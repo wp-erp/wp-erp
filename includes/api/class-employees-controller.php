@@ -333,6 +333,16 @@ class Employees_Controller extends REST_Controller {
             ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/events', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_events' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
+            ]
+        ] );
+
     }
 
     /**
@@ -713,8 +723,12 @@ class Employees_Controller extends REST_Controller {
 
             if ( in_array( 'avatar', $include_params ) ) {
                 $employee_user      = new \WeDevs\ERP\HRM\Employee( intval( $item->id ) );
-                $data['avatar']     = $employee_user->get_avatar( 32 );
                 $data['avatar_url'] = $employee_user->get_avatar_url( 32 );
+            }
+
+            if ( in_array( 'roles', $include_params ) ) {
+                $employee_user = new \WeDevs\ERP\HRM\Employee( intval( $item->id ) );
+                $data['roles'] = $employee_user->get_roles();
             }
         }
 
@@ -1604,19 +1618,21 @@ class Employees_Controller extends REST_Controller {
      *
      * @return mixed|WP_Error|WP_REST_Response
      */
-    public function get_roles( $request ){
+    public function get_roles( $request ) {
         $employee_id = (int) trim( $request['id'] );
         $employee    = new Employee( $employee_id );
         if ( ! $employee ) {
             return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
         }
         $response = rest_ensure_response( $employee->get_roles() );
+
         return $response;
     }
 
     /**
      * Update employee roles
      * accepts associative array eg. ['erp_hr_manager' => true, 'erp_crm_manager' => false ]
+     *
      * @since 1.2.9
      *
      * @param $request
@@ -1633,11 +1649,11 @@ class Employees_Controller extends REST_Controller {
         if ( ! $employee ) {
             return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
         }
-        if( !is_array($request['roles']) || empty( $request['roles'] ) ){
+        if ( ! is_array( $request['roles'] ) || empty( $request['roles'] ) ) {
             return new WP_Error( 'rest_performance_invalid_permission_type', __( 'Invalid role format' ), array( 'status' => 400 ) );
         }
 
-        $roles = $employee->update_role($request['roles'])->get_roles();
+        $roles = $employee->update_role( $request['roles'] )->get_roles();
         $request->set_param( 'context', 'edit' );
         $response = rest_ensure_response( $roles );
         $response->set_status( 201 );
@@ -1857,6 +1873,66 @@ class Employees_Controller extends REST_Controller {
         Performance::find( $id )->delete();
 
         return new WP_REST_Response( true, 204 );
+    }
+
+    /**
+     * Get all the events of a single user
+     *
+     * @since 1.2.9
+     *
+     * @param $request
+     *
+     * @return mixed|object|WP_Error|WP_REST_Response
+     */
+    public function get_events( $request ) {
+        $user_id  = (int) $request['id'];
+        $employee = new Employee( $user_id );
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
+        }
+
+        $leave_requests = erp_hr_get_calendar_leave_events( false, $user_id, false );
+        $holidays       = erp_array_to_object( \WeDevs\ERP\HRM\Models\Leave_Holiday::all()->toArray() );
+        $events         = [];
+        $holiday_events = [];
+        $event_data     = [];
+
+        foreach ( $leave_requests as $key => $leave_request ) {
+            //if status pending
+            $policy      = erp_hr_leave_get_policy( $leave_request->policy_id );
+            $event_label = $policy->name;
+            if ( 2 == $leave_request->status ) {
+                $policy      = erp_hr_leave_get_policy( $leave_request->policy_id );
+                $event_label .= sprintf( ' ( %s ) ', __( 'Pending', 'erp' ) );
+            }
+            $events[] = array(
+                'id'    => $leave_request->id,
+                'title' => $event_label,
+                'start' => $leave_request->start_date,
+                'end'   => $leave_request->end_date,
+                'url'   => erp_hr_url_single_employee( $leave_request->user_id, 'leave' ),
+                'color' => $leave_request->color,
+            );
+        }
+
+        foreach ( $holidays as $key => $holiday ) {
+            $holiday_events[] = [
+                'id'      => $holiday->id,
+                'title'   => $holiday->title,
+                'start'   => $holiday->start,
+                'end'     => $holiday->end,
+                'color'   => '#FF5354',
+                'img'     => '',
+                'holiday' => true
+            ];
+        }
+
+        $event_data = array_merge( $events, $holiday_events );
+
+        $response = rest_ensure_response( $event_data );
+        $response = $this->format_collection_response( $response, $request, count( $event_data ) );
+
+        return $response;
     }
 
     /**
