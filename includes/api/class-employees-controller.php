@@ -1934,7 +1934,7 @@ class Employees_Controller extends REST_Controller {
         if ( empty($history_id) ) {
             return new WP_Error( 'rest_invalid_history_id', __( 'Invalid history id received', 'erp' ), array( 'status' => 400 ) );
         }
-        
+
         $employee->delete_history($history_id);
 
         return new WP_REST_Response( true, 204 );

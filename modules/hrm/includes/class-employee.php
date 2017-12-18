@@ -632,7 +632,7 @@ class Employee {
             'date'    => $date
         );
 
-       erp_hr_employee_add_history( $data );
+        erp_hr_employee_add_history( $data );
     }
 
     /**
@@ -734,18 +734,59 @@ class Employee {
 
         $history = array( 'job' => array(), 'compensation' => array(), 'employment' => array() );
         $results = $wpdb->get_results( $wpdb->prepare( $sql, $this->id ) );
-
         if ( $results ) {
             foreach ( $results as $key => $value ) {
-                if ( isset( $history[ $value->module ] ) ) {
-                    $history[ $value->module ][] = $value;
+                $item         = array();
+                $item['date'] = $value->date;
+
+                if ( $value->module == 'job' ) {
+                    $item['location']     = ( ! empty( $value->type ) ) ? $value->type : erp_get_company_default_location_name();
+                    $item['department']   = ( ! empty( $value->category ) ) ? $value->category : '--';
+                    $item['job_title']    = ( ! empty( $value->comment ) ) ? $value->comment : '--';
+                    $item['reporting_to'] = null;
+
+                    if ( ! empty( $value->data ) ) {
+                        $emp = new \WeDevs\ERP\HRM\Employee( intval( $value->data ) );
+                        if ( $emp->id ) {
+                            $item['reporting_to_id'] = $emp->id;
+                            $item['reporting_to']    = $emp->get_full_name();
+                        }
+                    }
+
                 }
+
+                if ( $value->module == 'compensation' ) {
+                    $types    = erp_hr_get_pay_type();
+                    $pay_type = null;
+                    if ( ! empty( $value->category ) && array_key_exists( $value->category, $types ) ) {
+                        $pay_type = $types[ $value->category ];
+                    }
+                    $item['pay_rate'] = $value->type;
+                    $item['pay_type'] = $pay_type;
+                    $item['reason']   = $value->data;
+                    $item['comment']  = $value->comment;
+                }
+
+                if ( $value->module == 'employment' ) {
+                    $types             = erp_hr_get_employee_types() + [ 'terminated' => __( 'Terminated', 'erp' ) ];
+                    $employment_status = null;
+
+                    if ( ! empty( $value->type ) && array_key_exists( $value->type, $types ) ) {
+                        $employment_status = $types[ $value->type ];
+                    }
+                    $item['employment_status'] = $employment_status;
+                    $item['comment']           = $value->comment;
+                }
+
+
+                $history[ $value->module ][] = $item;
             }
         }
 
         if ( ! empty( $module ) && isset( $history[ $module ] ) ) {
             return $history[ $module ];
         }
+
 
         return $history;
     }
@@ -871,12 +912,12 @@ class Employee {
      * @return array
      */
     public function get_roles( $include_erp_only = true ) {
-        $wp_user         = new \WP_User( $this->id );
-        $user_roles      = isset( $wp_user->roles ) ? $wp_user->roles : [];
-        $all_caps        = isset( $wp_user->allcaps ) ? $wp_user->allcaps : [];
-        $roles = erp_get_editable_roles();
-        if( $include_erp_only ){
-            $roles = array_merge(erp_hr_get_roles(), erp_crm_get_roles(), erp_ac_get_roles());
+        $wp_user    = new \WP_User( $this->id );
+        $user_roles = isset( $wp_user->roles ) ? $wp_user->roles : [];
+        $all_caps   = isset( $wp_user->allcaps ) ? $wp_user->allcaps : [];
+        $roles      = erp_get_editable_roles();
+        if ( $include_erp_only ) {
+            $roles = array_merge( erp_hr_get_roles(), erp_crm_get_roles(), erp_ac_get_roles() );
         }
         $available_roles = [];
         foreach ( $roles as $key => $role ) {
@@ -902,16 +943,18 @@ class Employee {
      * @return $this
      */
     public function update_role( $roles = [] ) {
-        $erp_roles = $this->get_roles();
+        $erp_roles       = $this->get_roles();
         $available_roles = array_keys( $erp_roles['available_roles'] );
         $wp_user         = new \WP_User( $this->id );
-        foreach ( $roles as $role => $boolean ){
-            if( !in_array( $role, $available_roles ) ) continue;
+        foreach ( $roles as $role => $boolean ) {
+            if ( ! in_array( $role, $available_roles ) ) {
+                continue;
+            }
             $add_roles = filter_var( $boolean, FILTER_VALIDATE_BOOLEAN );
 
-            if( $add_roles ){
+            if ( $add_roles ) {
                 $wp_user->add_role( $role );
-            }else{
+            } else {
                 $wp_user->remove_role( $role );
             }
         }
