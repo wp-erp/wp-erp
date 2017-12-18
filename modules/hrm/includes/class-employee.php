@@ -966,4 +966,58 @@ class Employee {
         return $this;
     }
 
+    /**
+     * Terminate Employee
+     *
+     * @since 1.2.9
+     *
+     * @param array $args
+     *
+     * @return $this|\WP_Error
+     */
+    public function terminate( $args = array() ) {
+
+        if ( ! $args['terminate_date'] ) {
+            return new \WP_Error( 'no-date', 'Termination date is required' );
+        }
+
+        if ( ! $args['termination_type'] ) {
+            return new \WP_Error( 'no-type', 'Termination type is required' );
+        }
+
+        if ( ! $args['termination_reason'] ) {
+            return new \WP_Error( 'no-reason', 'Termination reason is required' );
+        }
+
+        if ( ! $args['eligible_for_rehire'] ) {
+            return new \WP_Error( 'no-eligible-for-rehire', 'Eligible for rehire field is required' );
+        }
+
+        \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $this->id )->update( [ 'status'           => 'terminated',
+                                                                                  'termination_date' => $args['terminate_date']
+        ] );
+
+        $comments = sprintf( '%s: %s; %s: %s; %s: %s',
+            __( 'Termination Type', 'erp' ),
+            erp_hr_get_terminate_type( $args['termination_type'] ),
+            __( 'Termination Reason', 'erp' ),
+            erp_hr_get_terminate_reason( $args['termination_reason'] ),
+            __( 'Eligible for Hire', 'erp' ),
+            erp_hr_get_terminate_rehire_options( $args['eligible_for_rehire'] ) );
+
+        erp_hr_employee_add_history( [
+            'user_id'  => $this->id,
+            'module'   => 'employment',
+            'category' => '',
+            'type'     => 'terminated',
+            'comment'  => $comments,
+            'data'     => '',
+            'date'     => $args['terminate_date']
+        ] );
+
+        update_user_meta( $this->id, '_erp_hr_termination', $args );
+
+        return $this;
+    }
+
 }
