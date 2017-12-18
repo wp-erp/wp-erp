@@ -234,6 +234,13 @@ class Employees_Controller extends REST_Controller {
                     return current_user_can( 'erp_list_employee' );
                 },
             ],
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'create_leave' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
+            ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/notes', [
@@ -823,7 +830,9 @@ class Employees_Controller extends REST_Controller {
 
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
-        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
+        $response->header( 'Location', 
+            rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $request['id'] ) )
+        );
 
         return $response;
     }
@@ -1015,7 +1024,9 @@ class Employees_Controller extends REST_Controller {
 
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
-        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
+        $response->header( 'Location',
+            rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $request['id'] ) )
+        );
 
         return $response;
     }
@@ -1043,7 +1054,9 @@ class Employees_Controller extends REST_Controller {
 
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
-        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
+        $response->header( 'Location',
+            rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $request['id'] ) )
+        );
 
         return $response;
     }
@@ -1212,7 +1225,9 @@ class Employees_Controller extends REST_Controller {
 
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
-        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
+        $response->header( 'Location',
+            rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $request['id'] ) )
+        );
 
         return $response;
     }
@@ -1347,6 +1362,35 @@ class Employees_Controller extends REST_Controller {
 
         $response = rest_ensure_response( $formatted_items );
         $response = $this->format_collection_response( $response, $request, count( $items ) );
+
+        return $response;
+    }
+
+    /**
+     * Create leave request
+     *
+     * @since 1.2.9
+     *
+     * @param \WP_REST_Request $request
+     *
+     * @return array|WP_Error|object
+     */
+    public function create_leave( $request ) {
+
+        erp_hr_leave_insert_request(
+            array(
+                'user_id'      => $request['id'],
+                'leave_policy' => 0,
+                'start_date'   => current_time('mysql'),
+                'end_date'     => current_time('mysql'),
+                'reason'       => '',
+                'status'       => 0
+            )
+        );
+
+        $response = rest_ensure_response( $response );
+        $response->set_status( 201 );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $request['id'] ) ) );
 
         return $response;
     }
