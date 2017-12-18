@@ -737,6 +737,7 @@ class Employee {
         if ( $results ) {
             foreach ( $results as $key => $value ) {
                 $item         = array();
+                $item['id']   = $value->id;
                 $item['date'] = $value->date;
 
                 if ( $value->module == 'job' ) {
@@ -748,8 +749,11 @@ class Employee {
                     if ( ! empty( $value->data ) ) {
                         $emp = new \WeDevs\ERP\HRM\Employee( intval( $value->data ) );
                         if ( $emp->id ) {
-                            $item['reporting_to_id'] = $emp->id;
-                            $item['reporting_to']    = $emp->get_full_name();
+                            $item['reporting_to'] = [
+                                'id'        => $emp->id,
+                                'full_name' => $emp->get_full_name(),
+                                'link'      => $emp->get_link()
+                            ];
                         }
                     }
 
