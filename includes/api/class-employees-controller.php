@@ -1316,6 +1316,7 @@ class Employees_Controller extends REST_Controller {
                 }
 
                 $found_policies[] = array(
+                    'id'      => $policy->id,
                     'policy'      => $policy->name,
                     'total'       => $en ? sprintf( __( '%d days', 'erp' ), number_format_i18n( $en->days ) ) : 0,
                     'scheduled'   => $en ? sprintf( __( '%d days', 'erp' ), number_format_i18n( $scheduled ) ) : 0,
@@ -1376,22 +1377,33 @@ class Employees_Controller extends REST_Controller {
      * @return array|WP_Error|object
      */
     public function create_leave( $request ) {
-
-        erp_hr_leave_insert_request(
+        $id       = (int) $request['id'];
+        $employee = new Employee( $id );
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
+        }
+        if(empty($request['policy_id'])){
+            return new WP_Error( 'rest_invalid_policy_id', __( 'Invalid Policy id.' ), array( 'status' => 404 ) );
+        }
+        if(empty($request['start_date'])){
+            return new WP_Error( 'rest_invalid_start_date', __( 'Invalid Leave Start Date.' ), array( 'status' => 404 ) );
+        }
+        if(empty($request['end_date'])){
+            return new WP_Error( 'rest_invalid_end_date', __( 'Invalid Leave End Date.' ), array( 'status' => 404 ) );
+        }
+        $request_id = erp_hr_leave_insert_request(
             array(
                 'user_id'      => $request['id'],
-                'leave_policy' => 0,
-                'start_date'   => current_time('mysql'),
-                'end_date'     => current_time('mysql'),
-                'reason'       => '',
+                'leave_policy' => $request['policy_id'],
+                'start_date'   => $request['start_date'],
+                'end_date'     => $request['end_date'],
+                'reason'       => $request['reason'],
                 'status'       => 0
             )
         );
-
-        $response = rest_ensure_response( $response );
+        $response = rest_ensure_response( $request_id );
         $response->set_status( 201 );
-        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $request['id'] ) ) );
-
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $request_id ) ) );
         return $response;
     }
 
@@ -1905,16 +1917,26 @@ class Employees_Controller extends REST_Controller {
 
     /**
      * Delete a history
-     *
      * @since 1.2.9
-     *
      * @param $request
      *
-     * @return WP_REST_Response
+     * @return \WP_Error|\WP_REST_Response
+     * @throws \Exception
      */
     public function delete_history( $request ) {
-        $id = (int) $request['history_id'];
-        Performance::find( $id )->delete();
+        $id       = (int) $request['id'];
+
+        $employee = new Employee( $id );
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
+        }
+
+        $history_id = (int) $request['history_id'];
+        if ( empty($history_id) ) {
+            return new WP_Error( 'rest_invalid_history_id', __( 'Invalid history id received', 'erp' ), array( 'status' => 400 ) );
+        }
+
+        $employee->delete_history($history_id);
 
         return new WP_REST_Response( true, 204 );
     }
