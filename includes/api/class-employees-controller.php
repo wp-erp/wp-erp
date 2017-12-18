@@ -234,6 +234,13 @@ class Employees_Controller extends REST_Controller {
                     return current_user_can( 'erp_list_employee' );
                 },
             ],
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'create_leave' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
+            ],
         ] );
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/notes', [
@@ -1301,6 +1308,7 @@ class Employees_Controller extends REST_Controller {
                 }
 
                 $found_policies[] = array(
+                    'id'      => $policy->id,
                     'policy'      => $policy->name,
                     'total'       => $en ? sprintf( __( '%d days', 'erp' ), number_format_i18n( $en->days ) ) : 0,
                     'scheduled'   => $en ? sprintf( __( '%d days', 'erp' ), number_format_i18n( $scheduled ) ) : 0,
@@ -1347,6 +1355,53 @@ class Employees_Controller extends REST_Controller {
 
         $response = rest_ensure_response( $formatted_items );
         $response = $this->format_collection_response( $response, $request, count( $items ) );
+
+        return $response;
+    }
+
+    /**
+     * Create leave request
+     *
+     * @since 1.2.9
+     *
+     * @param \WP_REST_Request $request
+     *
+     * @return array|WP_Error|object
+     */
+    public function create_leave( $request ) {
+        $id       = (int) $request['id'];
+        $employee = new Employee( $id );
+
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
+        }
+
+        if(empty($request['policy_id'])){
+            return new WP_Error( 'rest_invalid_policy_id', __( 'Invalid Policy id.' ), array( 'status' => 404 ) );
+        }
+
+        if(empty($request['start_date'])){
+            return new WP_Error( 'rest_invalid_start_date', __( 'Invalid Leave Start Date.' ), array( 'status' => 404 ) );
+        }
+
+        if(empty($request['end_date'])){
+            return new WP_Error( 'rest_invalid_end_date', __( 'Invalid Leave End Date.' ), array( 'status' => 404 ) );
+        }
+
+        $request_id = erp_hr_leave_insert_request(
+            array(
+                'user_id'      => $request['id'],
+                'leave_policy' => $request['policy_id'],
+                'start_date'   => $request['start_date'],
+                'end_date'     => $request['end_date'],
+                'reason'       => $request['reason'],
+                'status'       => 0
+            )
+        );
+
+        $response = rest_ensure_response( $request_id );
+        $response->set_status( 201 );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $request_id ) ) );
 
         return $response;
     }
