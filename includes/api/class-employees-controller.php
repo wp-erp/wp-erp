@@ -1916,16 +1916,26 @@ class Employees_Controller extends REST_Controller {
 
     /**
      * Delete a history
-     *
      * @since 1.2.9
-     *
      * @param $request
      *
-     * @return WP_REST_Response
+     * @return \WP_Error|\WP_REST_Response
+     * @throws \Exception
      */
     public function delete_history( $request ) {
-        $id = (int) $request['history_id'];
-        Performance::find( $id )->delete();
+        $id       = (int) $request['id'];
+
+        $employee = new Employee( $id );
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
+        }
+
+        $history_id = (int) $request['history_id'];
+        if ( empty($history_id) ) {
+            return new WP_Error( 'rest_invalid_history_id', __( 'Invalid history id received', 'erp' ), array( 'status' => 400 ) );
+        }
+        
+        $employee->delete_history($history_id);
 
         return new WP_REST_Response( true, 204 );
     }
