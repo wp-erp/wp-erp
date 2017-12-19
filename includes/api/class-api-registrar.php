@@ -38,6 +38,7 @@ class API_Registrar {
 
         if ( erp_is_module_active( 'hrm' ) ) {
             $controllers = array_merge( $controllers, [
+                '\WeDevs\ERP\API\Company_Controller',
                 '\WeDevs\ERP\API\Departments_Controller',
                 '\WeDevs\ERP\API\Designations_Controller',
                 '\WeDevs\ERP\API\Employees_Controller',
