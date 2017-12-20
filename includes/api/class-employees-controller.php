@@ -840,9 +840,7 @@ class Employees_Controller extends REST_Controller {
 
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
-        $response->header( 'Location', 
-            rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $request['id'] ) )
-        );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
 
         return $response;
     }
@@ -1034,9 +1032,7 @@ class Employees_Controller extends REST_Controller {
 
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
-        $response->header( 'Location',
-            rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $request['id'] ) )
-        );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
 
         return $response;
     }
@@ -1064,9 +1060,7 @@ class Employees_Controller extends REST_Controller {
 
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
-        $response->header( 'Location',
-            rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $request['id'] ) )
-        );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
 
         return $response;
     }
@@ -1235,9 +1229,7 @@ class Employees_Controller extends REST_Controller {
 
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
-        $response->header( 'Location',
-            rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $request['id'] ) )
-        );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
 
         return $response;
     }
@@ -1389,18 +1381,10 @@ class Employees_Controller extends REST_Controller {
     public function create_leave( $request ) {
         $id       = (int) $request['id'];
         $employee = new Employee( $id );
+
         if ( ! $employee ) {
             return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
         }
-<<<<<<< HEAD
-        if(empty($request['policy_id'])){
-            return new WP_Error( 'rest_invalid_policy_id', __( 'Invalid Policy id.' ), array( 'status' => 404 ) );
-        }
-        if(empty($request['start_date'])){
-            return new WP_Error( 'rest_invalid_start_date', __( 'Invalid Leave Start Date.' ), array( 'status' => 404 ) );
-        }
-        if(empty($request['end_date'])){
-=======
 
         if ( empty( $request['policy_id'] ) ) {
             return new WP_Error( 'rest_invalid_policy_id', __( 'Invalid Policy id.' ), array( 'status' => 404 ) );
@@ -1411,9 +1395,9 @@ class Employees_Controller extends REST_Controller {
         }
 
         if ( empty( $request['end_date'] ) ) {
->>>>>>> 1d5c5ad70e31841c96cef5634508c7c2efb6c5a5
             return new WP_Error( 'rest_invalid_end_date', __( 'Invalid Leave End Date.' ), array( 'status' => 404 ) );
         }
+
         $request_id = erp_hr_leave_insert_request(
             array(
                 'user_id'      => $request['id'],
@@ -1424,9 +1408,11 @@ class Employees_Controller extends REST_Controller {
                 'status'       => 0
             )
         );
+
         $response = rest_ensure_response( $request_id );
         $response->set_status( 201 );
         $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $request_id ) ) );
+
         return $response;
     }
 
