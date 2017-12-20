@@ -726,72 +726,22 @@ class Employee {
      */
     public function get_history( $module = '' ) {
         global $wpdb;
-
         $sql = "SELECT *
                 FROM {$wpdb->prefix}erp_hr_employee_history
                 WHERE user_id = %d
                 ORDER BY id DESC";
-
         $history = array( 'job' => array(), 'compensation' => array(), 'employment' => array() );
         $results = $wpdb->get_results( $wpdb->prepare( $sql, $this->id ) );
         if ( $results ) {
             foreach ( $results as $key => $value ) {
-                $item         = array();
-                $item['id']   = $value->id;
-                $item['date'] = $value->date;
-
-                if ( $value->module == 'job' ) {
-                    $item['location']     = ( ! empty( $value->type ) ) ? $value->type : erp_get_company_default_location_name();
-                    $item['department']   = ( ! empty( $value->category ) ) ? $value->category : '--';
-                    $item['job_title']    = ( ! empty( $value->comment ) ) ? $value->comment : '--';
-                    $item['reporting_to'] = null;
-
-                    if ( ! empty( $value->data ) ) {
-                        $emp = new \WeDevs\ERP\HRM\Employee( intval( $value->data ) );
-                        if ( $emp->id ) {
-                            $item['reporting_to'] = [
-                                'id'        => $emp->id,
-                                'full_name' => $emp->get_full_name(),
-                                'link'      => $emp->get_link()
-                            ];
-                        }
-                    }
-
+                if ( isset( $history[ $value->module ] ) ) {
+                    $history[ $value->module ][] = $value;
                 }
-
-                if ( $value->module == 'compensation' ) {
-                    $types    = erp_hr_get_pay_type();
-                    $pay_type = null;
-                    if ( ! empty( $value->category ) && array_key_exists( $value->category, $types ) ) {
-                        $pay_type = $types[ $value->category ];
-                    }
-                    $item['pay_rate'] = $value->type;
-                    $item['pay_type'] = $pay_type;
-                    $item['reason']   = $value->data;
-                    $item['comment']  = $value->comment;
-                }
-
-                if ( $value->module == 'employment' ) {
-                    $types             = erp_hr_get_employee_types() + [ 'terminated' => __( 'Terminated', 'erp' ) ];
-                    $employment_status = null;
-
-                    if ( ! empty( $value->type ) && array_key_exists( $value->type, $types ) ) {
-                        $employment_status = $types[ $value->type ];
-                    }
-                    $item['employment_status'] = $employment_status;
-                    $item['comment']           = $value->comment;
-                }
-
-
-                $history[ $value->module ][] = $item;
             }
         }
-
         if ( ! empty( $module ) && isset( $history[ $module ] ) ) {
             return $history[ $module ];
         }
-
-
         return $history;
     }
 
