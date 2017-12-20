@@ -412,7 +412,7 @@ function erp_get_people_by( $field, $value ) {
  * @since 1.2.7 contact_owner, life_stage, hash brought to main table
  * @since 1.2.7 Assign first name as company name for accounting customer search
  *
- * @param array $args
+ * @param array $argserp_insert_people
  *
  * @return mixed integer on success, false otherwise
  */
