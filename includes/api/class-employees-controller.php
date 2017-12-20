@@ -350,6 +350,16 @@ class Employees_Controller extends REST_Controller {
             ]
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/terminate', [
+            [
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => [ $this, 'create_terminate' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( erp_hr_get_manager_role() );
+                },
+            ],
+        ] );
+
     }
 
     /**
@@ -1316,7 +1326,7 @@ class Employees_Controller extends REST_Controller {
                 }
 
                 $found_policies[] = array(
-                    'id'      => $policy->id,
+                    'id'          => $policy->id,
                     'policy'      => $policy->name,
                     'total'       => $en ? sprintf( __( '%d days', 'erp' ), number_format_i18n( $en->days ) ) : 0,
                     'scheduled'   => $en ? sprintf( __( '%d days', 'erp' ), number_format_i18n( $scheduled ) ) : 0,
@@ -1382,6 +1392,7 @@ class Employees_Controller extends REST_Controller {
         if ( ! $employee ) {
             return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
         }
+<<<<<<< HEAD
         if(empty($request['policy_id'])){
             return new WP_Error( 'rest_invalid_policy_id', __( 'Invalid Policy id.' ), array( 'status' => 404 ) );
         }
@@ -1389,6 +1400,18 @@ class Employees_Controller extends REST_Controller {
             return new WP_Error( 'rest_invalid_start_date', __( 'Invalid Leave Start Date.' ), array( 'status' => 404 ) );
         }
         if(empty($request['end_date'])){
+=======
+
+        if ( empty( $request['policy_id'] ) ) {
+            return new WP_Error( 'rest_invalid_policy_id', __( 'Invalid Policy id.' ), array( 'status' => 404 ) );
+        }
+
+        if ( empty( $request['start_date'] ) ) {
+            return new WP_Error( 'rest_invalid_start_date', __( 'Invalid Leave Start Date.' ), array( 'status' => 404 ) );
+        }
+
+        if ( empty( $request['end_date'] ) ) {
+>>>>>>> 1d5c5ad70e31841c96cef5634508c7c2efb6c5a5
             return new WP_Error( 'rest_invalid_end_date', __( 'Invalid Leave End Date.' ), array( 'status' => 404 ) );
         }
         $request_id = erp_hr_leave_insert_request(
@@ -1917,14 +1940,16 @@ class Employees_Controller extends REST_Controller {
 
     /**
      * Delete a history
+     *
      * @since 1.2.9
+     *
      * @param $request
      *
      * @return \WP_Error|\WP_REST_Response
      * @throws \Exception
      */
     public function delete_history( $request ) {
-        $id       = (int) $request['id'];
+        $id = (int) $request['id'];
 
         $employee = new Employee( $id );
         if ( ! $employee ) {
@@ -1932,11 +1957,11 @@ class Employees_Controller extends REST_Controller {
         }
 
         $history_id = (int) $request['history_id'];
-        if ( empty($history_id) ) {
+        if ( empty( $history_id ) ) {
             return new WP_Error( 'rest_invalid_history_id', __( 'Invalid history id received', 'erp' ), array( 'status' => 400 ) );
         }
 
-        $employee->delete_history($history_id);
+        $employee->delete_history( $history_id );
 
         return new WP_REST_Response( true, 204 );
     }
@@ -1999,6 +2024,51 @@ class Employees_Controller extends REST_Controller {
         $response = $this->format_collection_response( $response, $request, count( $event_data ) );
 
         return $response;
+    }
+
+    /**
+     * Terminate the employee
+     *
+     * @since 1.2.9
+     *
+     * @param $request
+     *
+     * @return mixed|\WP_Error|\WP_REST_Response
+     */
+    public function create_terminate( $request ) {
+        $user_id  = (int) $request['id'];
+        $employee = new Employee( $user_id );
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
+        }
+
+        $employee_id         = isset( $request['employee_id'] ) ? intval( $request['employee_id'] ) : 0;
+        $terminate_date      = ( empty( $request['terminate_date'] ) ) ? current_time( 'mysql' ) : $request['terminate_date'];
+        $termination_type    = isset( $request['termination_type'] ) ? $request['termination_type'] : '';
+        $termination_reason  = isset( $request['termination_reason'] ) ? $request['termination_reason'] : '';
+        $eligible_for_rehire = isset( $request['eligible_for_rehire'] ) ? $request['eligible_for_rehire'] : '';
+
+        $fields = [
+            'employee_id'         => $employee_id,
+            'terminate_date'      => $terminate_date,
+            'termination_type'    => $termination_type,
+            'termination_reason'  => $termination_reason,
+            'eligible_for_rehire' => $eligible_for_rehire
+        ];
+
+        $result = $employee->terminate( $fields );
+
+        if ( is_wp_error( $result ) ) {
+            return new WP_Error( 'rest_insufficient_data', $result->get_error_messages(), array( 'status' => 401 ) );
+        }
+
+        $request->set_param( 'context', 'edit' );
+        $response = rest_ensure_response( true );
+        $response->set_status( 201 );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $user_id ) ) );
+
+        return $response;
+
     }
 
     /**
