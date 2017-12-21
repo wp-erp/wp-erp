@@ -377,6 +377,7 @@ class Employees_Controller extends REST_Controller {
             'department'  => ( $request['department'] ) ? $request['department'] : '-1',
             'designation' => ( $request['designation'] ) ? $request['designation'] : '-1',
             'location'    => ( $request['location'] ) ? $request['location'] : '-1',
+            // 's'           => ( $request['s'] ) ? $request['s'] : '',
         ];
 
         $items = erp_hr_get_employees( $args );
