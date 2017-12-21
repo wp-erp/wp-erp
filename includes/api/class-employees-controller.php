@@ -860,7 +860,7 @@ class Employees_Controller extends REST_Controller {
 
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
-        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $request['id'] ) ) );
 
         return $response;
     }
@@ -1052,7 +1052,7 @@ class Employees_Controller extends REST_Controller {
 
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
-        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $request['id'] ) ) );
 
         return $response;
     }
@@ -1249,7 +1249,7 @@ class Employees_Controller extends REST_Controller {
 
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
-        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $request['id'] ) ) );
 
         return $response;
     }
