@@ -600,6 +600,10 @@ class Employees_Controller extends REST_Controller {
             $prepared_item['work']['status'] = $request['status'];
         }
 
+        if ( isset( $request['employee_id'] ) ) {
+            $prepared_item['personal']['employee_id'] = $request['employee_id'];
+        }
+
         if ( isset( $request['other_email'] ) ) {
             $prepared_item['personal']['other_email'] = $request['other_email'];
         }
@@ -2337,7 +2341,7 @@ class Employees_Controller extends REST_Controller {
                 ],
                 'pay_rate'      => [
                     'description' => __( 'Pay rate for the resource.' ),
-                    'type'        => 'string',
+                    'type'        => 'number',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
