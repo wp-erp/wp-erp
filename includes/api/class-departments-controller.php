@@ -187,8 +187,8 @@ class Departments_Controller extends REST_Controller {
         $id = (int) $request['id'];
 
         erp_hr_delete_department( $id );
-
-        return new WP_REST_Response( true, 204 );
+        $response = rest_ensure_response(true);
+        return new WP_REST_Response( $response, 204 );
     }
 
     /**

@@ -47,19 +47,18 @@
             if ( $history['employment'] ) {
 
                 $types = erp_hr_get_employee_types() + ['terminated' => __( 'Terminated', 'erp' ) ];
-                foreach ($history['employment'] as $num => $employment_history) {
-                    ?>
+                foreach ($history['employment'] as $num => $employment_history) {?>
                     <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
-                        <td><?php echo erp_format_date( $employment_history['date'] ); ?></td>
+                        <td><?php echo erp_format_date( $employment_history->date ); ?></td>
                         <td>
-                            <?php echo ( ! empty( $employment_history['employment_status'] ) ) ? wp_kses_post( $employment_history['employment_status'] ) : '--'; ?>
+                            <?php echo ( ! empty( $employment_history->type ) ) ? wp_kses_post( $employment_history->type ) : '--'; ?>
                         </td>
                         <td>
-                            <?php echo ( ! empty( $employment_history['comment'] ) ) ? wp_kses_post( $employment_history['comment'] ) : '--'; ?>
+                            <?php echo ( ! empty( $employment_history->comment ) ) ? wp_kses_post( $employment_history->comment ) : '--'; ?>
                         </td>
                         <td class="action">
                             <?php if ( current_user_can( 'erp_manage_jobinfo', $employee->id ) ) : ?>
-                                <a href="#" class="remove" data-id="<?php echo $employment_history['id']; ?>"><span class="dashicons dashicons-trash"></span></a>
+                                <a href="#" class="remove" data-id="<?php echo $employment_history->id; ?>"><span class="dashicons dashicons-trash"></span></a>
                             <?php endif; ?>
                         </td>
                     </tr>
@@ -102,22 +101,22 @@
                     foreach ($history['compensation'] as $num => $compensation) {
                         ?>
                         <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
-                            <td><?php echo erp_format_date( $compensation['date'] ); ?></td>
+                            <td><?php echo erp_format_date( $compensation->date ); ?></td>
                             <td>
-                                <?php echo ( ! empty( $compensation['pay_rate'] ) ) ? wp_kses_post( $compensation['pay_rate'] ) : '--'; ?>
+                                <?php echo ( ! empty( $compensation->category ) ) ? wp_kses_post( $compensation->category ) : '--'; ?>
                             </td>
                             <td>
-                                <?php echo ( ! empty( $compensation['pay_type'] ) ) ? wp_kses_post( $compensation['pay_type'] ) : '--'; ?>
+                                <?php echo ( ! empty( $compensation->type ) ) ? wp_kses_post( $compensation->type ) : '--'; ?>
                             </td>
                             <td>
-                                <?php echo ( ! empty( $compensation['reason'] ) ) ? wp_kses_post( $compensation['reason'] ) : '--'; ?>
+                                <?php echo ( ! empty( $compensation->data ) ) ? wp_kses_post( $compensation->data ) : '--'; ?>
                             </td>
                             <td>
-                                <?php echo ( ! empty( $compensation['comment'] ) ) ? wp_kses_post( $compensation['comment'] ) : '--'; ?>
+                                <?php echo ( ! empty( $compensation->comment ) ) ? wp_kses_post( $compensation->comment ) : '--'; ?>
                             </td>
                             <td class="action">
                                 <?php if ( current_user_can( 'erp_manage_jobinfo', $employee->id ) ) : ?>
-                                    <a href="#" class="remove" data-id="<?php echo $compensation['id']; ?>"><span class="dashicons dashicons-trash"></span></a>
+                                    <a href="#" class="remove" data-id="<?php echo $compensation->id; ?>"><span class="dashicons dashicons-trash"></span></a>
                                 <?php endif; ?>
                             </td>
                         </tr>
@@ -152,41 +151,44 @@
             </tr>
         </thead>
         <tbody>
-
-            <?php
-            if ( $history['job'] ) {
-                $types = erp_hr_get_pay_type();
-
-                foreach ($history['job'] as $num => $job) {
-                    ?>
-                    <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
-                        <td><?php echo erp_format_date( $job['date'] ); ?></td>
-                        <td>
-                            <?php echo ( ! empty( $job['location'] ) ) ? wp_kses_post( $job['location'] ) : '--'; ?>
-                        </td>
-                        <td>
-                            <?php echo ( ! empty( $job['department'] ) ) ? wp_kses_post( $job['department'] ) : '--'; ?>
-                        </td>
-                        <td>
-                            <?php echo ( ! empty( $job['job_title'] ) ) ? wp_kses_post( $job['job_title'] ) : '--'; ?>
-                        </td>
-                        <td>
-                            <?php echo ( ! empty( $job['reporting_to'] ) ) ? $job['reporting_to']['link'] : '--'; ?>
-                        </td>
-                        <td class="action">
-                            <?php if ( current_user_can( 'erp_manage_jobinfo', $employee->id ) ) : ?>
-                                <a href="#" class="remove" data-id="<?php echo $job['id']; ?>"><span class="dashicons dashicons-trash"></span></a>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-                    <?php
-                }
-            } else {
+        <?php
+        if ( $history['job'] ) {
+            $types = erp_hr_get_pay_type();
+            foreach ($history['job'] as $num => $row) {
                 ?>
-                <tr class="alternate">
-                    <td colspan="6"><?php _e( 'No history found!', 'erp' ); ?></td>
+                <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
+                    <td><?php echo erp_format_date( $row->date ); ?></td>
+                    <td>
+                        <?php echo ( ! empty( $row->type ) ) ? $row->type : erp_get_company_default_location_name(); ?>
+                    </td>
+                    <td>
+                        <?php echo ( ! empty( $row->category ) ) ? $row->category : '--'; ?>
+                    </td>
+                    <td>
+                        <?php echo ( ! empty( $row->comment ) ) ? $row->comment : '--'; ?>
+                    </td>
+                    <td>
+                        <?php if ( ! empty( $row->data ) ) {
+                            $emp = new \WeDevs\ERP\HRM\Employee( intval( $row->data ) );
+                            if ( $emp->id ) {
+                                echo $emp->get_link();
+                            }
+                        } ?>
+                    </td>
+                    <td class="action">
+                        <?php if ( current_user_can( 'erp_manage_jobinfo', $employee->id ) ) : ?>
+                            <a href="#" class="remove" data-id="<?php echo $row->id; ?>"><span class="dashicons dashicons-trash"></span></a>
+                        <?php endif; ?>
+                    </td>
                 </tr>
-            <?php } ?>
+                <?php
+            }
+        } else {
+            ?>
+            <tr class="alternate">
+                <td colspan="6"><?php _e( 'No history found!', 'erp' ); ?></td>
+            </tr>
+        <?php } ?>
         </tbody>
     </table>
 

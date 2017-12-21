@@ -64,6 +64,14 @@ class Announcements_Controller extends REST_Controller {
                 },
             ],
             [
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => [ $this, 'update_announcement' ],
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_manage_announcement' );
+                },
+            ],
+            [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_announcement' ],
                 'permission_callback' => function ( $request ) {
