@@ -360,6 +360,24 @@ class Employees_Controller extends REST_Controller {
             ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/announcements', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_announcements' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
+            ],
+            [
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => [ $this, 'update_status' ],
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
+            ],
+        ] );
+
     }
 
     /**
@@ -494,16 +512,17 @@ class Employees_Controller extends REST_Controller {
     /**
      * Delete an employee
      *
-     * @param \WP_REST_Request $request
+     * @param $request
      *
-     * @return WP_Error|\WP_REST_Request
+     * @return \WP_REST_Response
      */
     public function delete_employee( $request ) {
         $id = (int) $request['id'];
 
         erp_employee_delete( $id );
+        $response = rest_ensure_response( true );
 
-        return new WP_REST_Response( true, 204 );
+        return new WP_REST_Response( $response, 204 );
     }
 
     /**
@@ -1279,7 +1298,7 @@ class Employees_Controller extends REST_Controller {
     }
 
     /**
-     * Get Available leaves of a single employee
+     * Get Available leaves policies of a single employee
      *
      * @since 1.2.9
      *
@@ -1300,13 +1319,14 @@ class Employees_Controller extends REST_Controller {
         $balance          = erp_hr_leave_get_balance( $employee->id );
         if ( $policies ) {
             foreach ( $policies as $num => $policy ) {
-
                 $key       = array_search( $policy->id, $entitlements_pol );
                 $en        = false;
                 $name      = esc_html( $policy->name );
                 $current   = 0;
                 $scheduled = 0;
                 $available = $policy->value;
+
+                if( !$entitlements ) continue;
 
                 if ( array_key_exists( $policy->id, $balance ) ) {
                     $current   = $balance[ $policy->id ]['entitlement'];
@@ -1316,6 +1336,7 @@ class Employees_Controller extends REST_Controller {
 
                 if ( false !== $key ) {
                     $en = $entitlements[ $key ];
+
                 }
 
                 $found_policies[] = array(
@@ -1344,7 +1365,7 @@ class Employees_Controller extends REST_Controller {
      *
      * @return array|WP_Error|object
      */
-    public function get_leaves( $request ) {
+    public function get_leaves( \WP_REST_Request $request ) {
         $id       = (int) $request['id'];
         $employee = new Employee( $id );
         if ( ! $employee ) {
@@ -1352,7 +1373,7 @@ class Employees_Controller extends REST_Controller {
         }
 
         $args = array(
-            'user_id' => $employee->user_id,
+            'user_id' => $id,
             'orderby' => 'req.start_date',
         );
 
@@ -1807,7 +1828,8 @@ class Employees_Controller extends REST_Controller {
      *
      * @return mixed|WP_Error|WP_REST_Response
      */
-    public function create_history( $request ) {
+    public function create_history( \WP_REST_Request $request ) {
+
         global $wpdb;
         $id       = (int) $request['id'];
         $module   = ! empty( $request['module'] ) ? sanitize_key( $request['module'] ) : 0;
@@ -1878,7 +1900,7 @@ class Employees_Controller extends REST_Controller {
                 return new WP_Error( 'rest_invalid_reason', __( 'Reason does not exists', 'erp' ), array( 'status' => 400 ) );
             }
 
-            $employee->update_compensation( $fields['pay_rate'], $fields['pay_type'], $fields['reason'], $fields['comment'] );
+            $employee->update_compensation( $fields['pay_rate'], $fields['pay_type'], $fields['reason'], $date, $fields['comment'] );
             $history = $employee->get_history_by_id( $wpdb->insert_id );
 
             return rest_ensure_response( $history );
@@ -2056,6 +2078,44 @@ class Employees_Controller extends REST_Controller {
 
         return $response;
 
+    }
+
+    /**
+     * Get announcement of an employee
+     *
+     * @since 1.2.9
+     *
+     * @param $request
+     *
+     * @return mixed|object|\WP_Error|\WP_REST_Response
+     */
+    public function get_announcements( $request ) {
+        $user_id  = (int) $request['id'];
+        $employee = new Employee( $user_id );
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
+        }
+        $announcements = erp_hr_employee_dashboard_announcement( $user_id );
+
+        $formatted_items = [];
+        foreach ( $announcements as $announcement ) {
+
+            $author          = new Employee( $announcement->post_author );
+            $item            = [];
+            $item['id']      = $announcement->ID;
+            $item['author']  = $author->get_full_name();
+            $item['date']    = $announcement->post_date;
+            $item['status']  = $announcement->status;
+            $item['title']   = $announcement->post_title;
+            $item['content'] = $announcement->post_content;
+
+            $formatted_items[] = $item;
+        }
+
+        $response = rest_ensure_response( $formatted_items );
+        $response = $this->format_collection_response( $response, $request, count( $formatted_items ) );
+
+        return $response;
     }
 
     /**
