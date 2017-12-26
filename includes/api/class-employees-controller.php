@@ -548,8 +548,8 @@ class Employees_Controller extends REST_Controller {
             $prepared_item['personal']['employee_id'] = $request['employee_id'];
         }
 
-        if ( isset( $request['employee_id'] ) ) {
-            $prepared_item['employee_id'] = $request['employee_id'];
+        if ( isset( $request['email'] ) ) {
+            $prepared_item['user_email'] = $request['email'];
         }
 
         // optional arguments.
