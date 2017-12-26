@@ -2437,6 +2437,7 @@ table.erp-settings-table tr:nth-child(odd) td {
 .erp .erp-single-container .erp-area-left .erp-profile-top .erp-avatar img {
   max-width: 100%;
   margin-top: 15px;
+  height: auto;
 }
 .erp .erp-single-container .erp-area-left .erp-profile-top .erp-user-info {
   float: left;
