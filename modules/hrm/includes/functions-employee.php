@@ -32,7 +32,6 @@ function erp_hr_employee_on_delete( $user_id, $hard = 0 ) {
  */
 function erp_hr_employee_create( $args = array() ) {
     global $wpdb;
-
     $defaults = array(
         'user_email'      => '',
         'work'            => array(
@@ -79,7 +78,6 @@ function erp_hr_employee_create( $args = array() ) {
     $posted = array_map( 'strip_tags_deep', $args );
     $posted = array_map( 'trim_deep', $posted );
     $data   = erp_parse_args_recursive( $posted, $defaults );
-
     //change email to lowercase
     $data['user_email'] = strtolower( $data['user_email'] );
 
@@ -105,11 +103,9 @@ function erp_hr_employee_create( $args = array() ) {
         'user_url'     => $data['personal']['user_url'],
         'display_name' => $data['personal']['first_name'] . ' ' . $data['personal']['middle_name'] . ' ' . $data['personal']['last_name'],
     );
-
     // if user id exists, do an update
     $user_id = isset( $posted['user_id'] ) ? intval( $posted['user_id'] ) : 0;
     $update  = false;
-
     if ( $user_id ) {
         $update = true;
         $userdata['ID'] = $user_id;
@@ -119,9 +115,7 @@ function erp_hr_employee_create( $args = array() ) {
         $userdata['user_pass'] = wp_generate_password( 12 );
         $userdata['role'] = 'employee';
     }
-
     $userdata = apply_filters( 'erp_hr_employee_args', $userdata );
-
     $wp_user = get_user_by( 'email', $userdata['user_login'] );
 
     /**
@@ -140,7 +134,6 @@ function erp_hr_employee_create( $args = array() ) {
     } else {
         $user_id  = wp_insert_user( $userdata );
     }
-
     if ( is_wp_error( $user_id ) ) {
         return $user_id;
     }
@@ -189,7 +182,6 @@ function erp_hr_employee_create( $args = array() ) {
     $wpdb->update( $wpdb->prefix . 'erp_hr_employees', $employee_table_data, array( 'user_id' => $user_id ) );
 
     foreach ( $data['personal'] as $key => $value ) {
-
         if ( in_array( $key, [ 'employee_id', 'user_url' ] ) ) {
             continue;
         }

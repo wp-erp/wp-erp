@@ -223,7 +223,7 @@ class Employee {
      */
     public function get_avatar_url( $size = 32 ) {
         if ( $this->id && ! empty( $this->user->photo_id ) ) {
-            return wp_get_attachment_url( $this->user->photo_id, [ 'size' => $size ] );
+            return wp_get_attachment_url( $this->user->photo_id);
         }
 
         return get_avatar_url( $this->id, [ 'size' => $size ] );
