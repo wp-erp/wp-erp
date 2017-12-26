@@ -2328,7 +2328,7 @@ class Employees_Controller extends REST_Controller {
                 ],
                 'pay_rate'      => [
                     'description' => __( 'Pay rate for the resource.' ),
-                    'type'        => 'string',
+                    'type'        => 'int',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
