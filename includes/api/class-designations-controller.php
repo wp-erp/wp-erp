@@ -85,6 +85,7 @@ class Designations_Controller extends REST_Controller {
         $args = [
             'number' => $request['per_page'],
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+            's'      => $request['s'] ? $request['s'] : '',
         ];
 
         $items       = erp_hr_get_designations( $args );

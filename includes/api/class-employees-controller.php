@@ -395,6 +395,7 @@ class Employees_Controller extends REST_Controller {
             'department'  => ( $request['department'] ) ? $request['department'] : '-1',
             'designation' => ( $request['designation'] ) ? $request['designation'] : '-1',
             'location'    => ( $request['location'] ) ? $request['location'] : '-1',
+            's'           => ( $request['s'] ) ? $request['s'] : '',
         ];
 
         $items = erp_hr_get_employees( $args );
@@ -859,7 +860,7 @@ class Employees_Controller extends REST_Controller {
 
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
-        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $request['id'] ) ) );
 
         return $response;
     }
@@ -1051,7 +1052,7 @@ class Employees_Controller extends REST_Controller {
 
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
-        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $request['id'] ) ) );
 
         return $response;
     }
@@ -1248,7 +1249,7 @@ class Employees_Controller extends REST_Controller {
 
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
-        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $request['id'] ) ) );
 
         return $response;
     }
@@ -1828,7 +1829,6 @@ class Employees_Controller extends REST_Controller {
      * @return mixed|WP_Error|WP_REST_Response
      */
     public function create_history( \WP_REST_Request $request ) {
-
         global $wpdb;
         $id       = (int) $request['id'];
         $module   = ! empty( $request['module'] ) ? sanitize_key( $request['module'] ) : 0;
@@ -1907,19 +1907,17 @@ class Employees_Controller extends REST_Controller {
 
         } else {
             $required = [
-                'designation'  => __( 'Designation', 'erp' ),
-                'department'   => __( 'Department', 'erp' ),
-                'location'     => __( 'Location', 'erp' ),
-                'reporting_to' => __( 'Reporting To', 'erp' ),
+                'comment'      => __( 'Job Title', 'erp' ),
+                'category'     => __( 'Department', 'erp' ),
+                'type'         => __( 'Location', 'erp' ),
+                'data'         => __( 'Reporting To', 'erp' ),
             ];
 
             $fields = [
-                'comment'      => ! empty( $request['comment'] ) ? sanitize_textarea_field( $request['comment'] ) : '',
-                'designation'  => ! empty( $request['designation'] ) ? intval( $request['designation'] ) : 0,
-                'department'   => ! empty( $request['department'] ) ? intval( $request['department'] ) : 0,
-                'location'     => ! empty( $request['location'] ) ? sanitize_key( $request['location'] ) : 0,
-                'reporting_to' => ! empty( $request['reporting_to'] ) ? intval( $request['reporting_to'] ) : 0,
-                'pay_rate'     => ! empty( $request['pay_rate'] ) ? number_format( $request['pay_rate'], 2 ) : 0,
+                'category'     => ! empty( $request['category'] ) ? intval( $request['category'] ) : 0,
+                'comment'      => ! empty( $request['comment'] ) ? intval( $request['comment'] ) : 0,
+                'type'         => ! empty( $request['type'] ) ? intval( $request['type'] ) : 0,
+                'data'         => ! empty( $request['data'] ) ? intval( $request['data'] ) : 0,
             ];
 
             $error = $this->check_required_fields( $required, $fields );
@@ -1927,19 +1925,12 @@ class Employees_Controller extends REST_Controller {
                 return $error;
             }
 
-            if ( ! Designation::find( $fields['designation'] ) ) {
-                return new WP_Error( 'rest_invalid_designation', __( 'Invalid designation ID', 'erp' ), array( 'status' => 400 ) );
-            }
-
-            if ( ! Department::find( $fields['department'] ) ) {
-                return new WP_Error( 'rest_invalid_department', __( 'Invalid department ID', 'erp' ), array( 'status' => 400 ) );
-            }
-            $reporting_user = \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $fields['reporting_to'] )->first();
+            $reporting_user = \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $fields['data'] )->first();
             if ( ! $reporting_user ) {
                 return new WP_Error( 'rest_invalid_reporting_to', __( 'Invalid Reporting to user id', 'erp' ), array( 'status' => 400 ) );
             }
 
-            $employee->update_job_info( $fields['department'], $fields['designation'], $fields['reporting_to'], $fields['location'], $date );
+            $employee->update_job_info( $fields['category'], $fields['comment'], $fields['data'], $fields['type'], $date );
             $history = $employee->get_history_by_id( $wpdb->insert_id );
 
             return rest_ensure_response( $history );

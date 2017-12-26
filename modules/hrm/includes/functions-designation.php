@@ -93,7 +93,6 @@ function erp_hr_get_designations( $args = array() ) {
         wp_cache_set( $cache_key, $designations, 'erp' );
     }
 
-
     return $designations;
 }
 
