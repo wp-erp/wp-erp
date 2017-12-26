@@ -76,7 +76,7 @@ function erp_hr_get_departments( $args = [] ) {
 
     $department = new \WeDevs\ERP\HRM\Models\Department();
 
-    if ( isset( $args['s'] ) ) {
+    if ( !empty( $args['s'] ) ) {
         $results = $department
                 ->where( 'title', 'LIKE', '%'.$_GET['s'].'%' )
                 ->get()
