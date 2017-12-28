@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\HRM\Models;
 
 use WeDevs\ERP\Framework\Model;
@@ -18,9 +19,21 @@ class Employee extends Model {
 
     public $timestamps = false;
     protected $fillable = [
-        'user_id', 'employee_id', 'designation', 'department', 'location',
-        'hiring_source', 'hiring_date', 'termination_data', 'date_of_birth',
-        'reporting_to', 'pay_rate', 'pay_type', 'type', 'status', 'delete_at'
+        'user_id',
+        'employee_id',
+        'designation',
+        'department',
+        'location',
+        'hiring_source',
+        'hiring_date',
+        'termination_data',
+        'date_of_birth',
+        'reporting_to',
+        'pay_rate',
+        'pay_type',
+        'type',
+        'status',
+        'delete_at'
     ];
 
     /**
@@ -28,7 +41,7 @@ class Employee extends Model {
      *
      * @var array
      */
-    protected $dates = ['deleted_at', 'date_of_birth'];
+    protected $dates = [ 'deleted_at', 'date_of_birth' ];
 
     /**
      * Relation to Leave_request model
@@ -39,6 +52,22 @@ class Employee extends Model {
      */
     public function leave_requests() {
         return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_request', 'user_id', 'user_id' );
+    }
+
+    public function educations(){
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Education', 'employee_id', 'user_id' );
+    }
+
+    public function dependents(){
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Dependents', 'employee_id', 'user_id' );
+    }
+
+    public function experiences(){
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Work_Experience', 'employee_id', 'user_id' );
+    }
+
+    public function histories(){
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Employee_History', 'user_id', 'user_id' );
     }
 }
 
