@@ -220,7 +220,7 @@ function erp_hr_login_redirect( $redirect_to, $roles ) {
  *
  * @return \Illuminate\Database\Eloquent\Builder
  */
-function erp_hr_filter_collection_by_date( Illuminate\Database\Eloquent\Builder $collection, $date, string $field = 'created_at' ) {
+function erp_hr_filter_collection_by_date( $collection, $date,  $field = 'created_at' ) {
     if ( $collection && is_array( $date ) ) {
         $default     = [
             'Y' => null,
