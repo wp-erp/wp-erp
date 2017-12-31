@@ -69,5 +69,14 @@ class Employee extends Model {
     public function histories(){
         return $this->hasMany( 'WeDevs\ERP\HRM\Models\Employee_History', 'user_id', 'user_id' );
     }
+    public function performances() {
+        return $this->hasMany( '\WeDevs\ERP\HRM\Models\Performance', 'employee_id', 'user_id' );
+    }
+    public function announcements() {
+        return $this->hasMany( '\WeDevs\ERP\HRM\Models\Announcement', 'user_id', 'user_id' );
+    }
+    public function entitlements(){
+        return $this->hasMany( '\WeDevs\ERP\HRM\Models\Leave_Entitlement', 'user_id', 'user_id' );
+    }
 }
 

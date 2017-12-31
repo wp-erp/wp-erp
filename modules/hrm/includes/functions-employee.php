@@ -737,54 +737,23 @@ function erp_hr_get_terminate_rehire_options( $selected = null ) {
 /**
  * Employee terminated action
  *
- * @since 1.0
+ * @since 1.0.0
  *
- * @param  array $data
+ * @param $data
  *
- * @return void | WP_Error
+ * @return $this|string|\WP_Error
  */
 function erp_hr_employee_terminate( $data ) {
 
-    if ( ! $data['terminate_date'] ) {
-        return new WP_Error( 'no-date', 'Termination date is required' );
+    if ( ! $data['user_id'] ) {
+        return new WP_Error( 'no-user-id', 'No User id found' );
     }
+    $employee = new \WeDevs\ERP\HRM\Employee( intval( $data['user_id'] ) );
+    $result   = $employee->terminate( $data );
 
-    if ( ! $data['termination_type'] ) {
-        return new WP_Error( 'no-type', 'Termination type is required' );
+    if ( is_wp_error( $result ) ) {
+        return $result->get_error_message();
     }
-
-    if ( ! $data['termination_reason'] ) {
-        return new WP_Error( 'no-reason', 'Termination reason is required' );
-    }
-
-    if ( ! $data['eligible_for_rehire'] ) {
-        return new WP_Error( 'no-eligible-for-rehire', 'Eligible for rehire field is required' );
-    }
-
-    $result = \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $data['employee_id'] )->update( [
-        'status'           => 'terminated',
-        'termination_date' => $data['terminate_date']
-    ] );
-
-    $comments = sprintf( '%s: %s; %s: %s; %s: %s',
-        __( 'Termination Type', 'erp' ),
-        erp_hr_get_terminate_type( $data['termination_type'] ),
-        __( 'Termination Reason', 'erp' ),
-        erp_hr_get_terminate_reason( $data['termination_reason'] ),
-        __( 'Eligible for Hire', 'erp' ),
-        erp_hr_get_terminate_rehire_options( $data['eligible_for_rehire'] ) );
-
-    erp_hr_employee_add_history( [
-        'user_id'  => $data['employee_id'],
-        'module'   => 'employment',
-        'category' => '',
-        'type'     => 'terminated',
-        'comment'  => $comments,
-        'data'     => '',
-        'date'     => $data['terminate_date']
-    ] );
-
-    update_user_meta( $data['employee_id'], '_erp_hr_termination', $data );
 
     return $result;
 }
@@ -850,35 +819,23 @@ function erp_hr_get_pay_change_reasons() {
 /**
  * Add a new item in employee history table
  *
- * @param  array $args
+ * @param array $args
  *
- * @return void
+ * @return array|bool|string|\WP_Error
  */
 function erp_hr_employee_add_history( $args = array() ) {
-    global $wpdb;
 
-    $defaults = array(
-        'user_id'  => 0,
-        'module'   => '',
-        'category' => '',
-        'type'     => '',
-        'comment'  => '',
-        'data'     => '',
-        'date'     => current_time( 'mysql' )
-    );
+    if ( ! $args['user_id'] ) {
+        return new WP_Error( 'no-user-id', 'No User id found' );
+    }
+    $employee = new \WeDevs\ERP\HRM\Employee( intval( $args['user_id'] ) );
+    $result   = $employee->create_or_update_history( $args );
 
-    $data   = wp_parse_args( $args, $defaults );
-    $format = array(
-        '%d',
-        '%s',
-        '%s',
-        '%s',
-        '%s',
-        '%s',
-        '%s'
-    );
+    if ( is_wp_error( $result ) ) {
+        return $result->get_error_message();
+    }
 
-    $wpdb->insert( $wpdb->prefix . 'erp_hr_employee_history', $data, $format );
+    return $result;
 }
 
 /**
@@ -1029,20 +986,21 @@ function erp_hr_employee_history_modules() {
  * Translate generic module data to readable format
  *
  * @param array $history
- * @param bool  $invert if inserting data then true
+ * @param bool  $inserting if inserting data then true
  *
- * @return array|bool
+ * @return array|WP_Error
  */
-function erp_hr_translate_employee_history( array $history = array(), $invert = false ) {
+function erp_hr_translate_employee_history( array $history = array(), $inserting = false ) {
     $available_modules = erp_hr_employee_history_modules();
+
     if ( empty( $history['module'] ) || ! in_array( $history['module'], $available_modules ) ) {
-        return false;
+        return new \WP_Error( 'invalid-module-type', __( 'Unsupported module type', 'erp' ) );
     }
 
     $translators = array(
         'employment'   => array(
             'date'    => 'date',
-            'type'    => 'employment_status',
+            'type'    => 'type',
             'comment' => 'comment',
         ),
         'compensation' => array(
@@ -1054,7 +1012,7 @@ function erp_hr_translate_employee_history( array $history = array(), $invert = 
         ),
         'job'          => array(
             'date'     => 'date',
-            'comment'  => 'job_title',
+            'comment'  => 'designation',
             'category' => 'department',
             'data'     => 'reporting_to',
             'type'     => 'location',
@@ -1065,7 +1023,7 @@ function erp_hr_translate_employee_history( array $history = array(), $invert = 
 
     $translator = $translators[ $history['module'] ];
 
-    if ( $invert ) {
+    if ( $inserting ) {
         $translator = array_flip( $translator );
     }
 
@@ -1074,11 +1032,11 @@ function erp_hr_translate_employee_history( array $history = array(), $invert = 
         $formatted_history[ $val ] = '';
 
         if ( ! empty( $history[ $key ] ) ) {
-
-            $formatted_history['id']     = ! empty( $history['id'] ) ? intval( $history['id'] ) : null;
+            if ( ! $inserting ) {
+                $formatted_history['id'] = ! empty( $history['id'] ) ? intval( $history['id'] ) : null;
+            }
             $formatted_history['module'] = $history['module'];
             $formatted_history[ $val ]   = $history[ $key ];
-
         }
     }
 

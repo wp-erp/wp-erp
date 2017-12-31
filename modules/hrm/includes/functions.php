@@ -59,7 +59,7 @@ function erp_hr_get_work_days_without_off_day( $start_date, $end_date ) {
     foreach ( $between_dates as $date ) {
 
         $key       = strtolower( date( 'D', strtotime( $date ) ) );
-        $is_holidy = ( $work_days[$key] === 0 ) ? true : false;
+        $is_holidy = ( $work_days[ $key ] === 0 ) ? true : false;
 
         if ( ! $is_holidy ) {
             $is_holidy = in_array( $date, $holiday_exist ) ? true : false;
@@ -104,7 +104,7 @@ function erp_hr_get_work_days_between_dates( $start_date, $end_date ) {
     foreach ( $between_dates as $date ) {
 
         $key       = strtolower( date( 'D', strtotime( $date ) ) );
-        $is_holidy = ( $work_days[$key] == '0' ) ? true : false;
+        $is_holidy = ( $work_days[ $key ] == '0' ) ? true : false;
 
         if ( ! $is_holidy ) {
             $is_holidy = in_array( $date, $holiday_exist ) ? true : false;
@@ -124,28 +124,28 @@ function erp_hr_get_work_days_between_dates( $start_date, $end_date ) {
 }
 
 
-
 /**
  * Sort parents before children
  *
  * @since 1.0
  *
  * @param array   $objects input objects with attributes 'id' and 'parent'
- * @param array   $result  (optional, reference) internal
- * @param integer $parent  (optional) internal
- * @param integer $depth   (optional) internal
+ * @param array   $result (optional, reference) internal
+ * @param integer $parent (optional) internal
+ * @param integer $depth (optional) internal
  *
  * @return array           output
  */
-function erp_parent_sort( array $objects, array &$result=array(), $parent=0, $depth=0 ) {
-    foreach ($objects as $key => $object) {
-        if ($object->parent == $parent) {
+function erp_parent_sort( array $objects, array &$result = array(), $parent = 0, $depth = 0 ) {
+    foreach ( $objects as $key => $object ) {
+        if ( $object->parent == $parent ) {
             $object->depth = $depth;
-            array_push($result, $object);
-            unset($objects[$key]);
-            erp_parent_sort($objects, $result, $object->id, $depth + 1);
+            array_push( $result, $object );
+            unset( $objects[ $key ] );
+            erp_parent_sort( $objects, $result, $object->id, $depth + 1 );
         }
     }
+
     return $result;
 }
 
@@ -207,4 +207,38 @@ function erp_hr_login_redirect( $redirect_to, $roles ) {
     }
 
     return $redirect_to;
+}
+
+/**
+ * Filter collection by date
+ *
+ * @since 1.2.9
+ *
+ * @param \Illuminate\Database\Eloquent\Builder $collection
+ * @param  $date
+ * @param $field string
+ *
+ * @return \Illuminate\Database\Eloquent\Builder
+ */
+function erp_hr_filter_collection_by_date( Illuminate\Database\Eloquent\Builder $collection, $date, string $field = 'created_at' ) {
+    if ( $collection && is_array( $date ) ) {
+        $default     = [
+            'Y' => null,
+            'm' => null,
+            'd' => null,
+        ];
+        $parsed_date = wp_parse_args( $date, $default );
+
+        if ( ! empty( $date['Y'] ) ) {
+            $collection = $collection->whereYear( $field, '=', intval( $parsed_date['Y'] ) );
+        }
+        if ( ! empty( $date['m'] ) ) {
+            $collection = $collection->whereMonth( $field, '=', intval( $parsed_date['m'] ) );
+        }
+        if ( ! empty( $date['d'] ) ) {
+            $collection = $collection->whereDay( $field, '=', intval( $parsed_date['d'] ) );
+        }
+    }
+
+    return $collection;
 }
