@@ -2,7 +2,6 @@
 
 namespace WeDevs\ERP\HRM;
 
-use Carbon\Carbon;
 use WeDevs\ERP\Admin\Models\Company_Locations;
 use WeDevs\ERP\HRM\Models\Department;
 use WeDevs\ERP\HRM\Models\Designation;
@@ -41,22 +40,23 @@ class Employee {
     protected $data = array(
         'user_email' => '',
         'work'       => array(
-            'designation'   => 0,
-            'department'    => 0,
-            'location'      => '',
-            'hiring_source' => '',
-            'hiring_date'   => '',
-            'date_of_birth' => '',
-            'reporting_to'  => 0,
-            'pay_rate'      => '',
-            'pay_type'      => '',
-            'type'          => '',
-            'status'        => '',
+            'employee_id'      => '',
+            'designation'      => 0,
+            'department'       => 0,
+            'location'         => '',
+            'hiring_source'    => '',
+            'hiring_date'      => '',
+            'termination_date' => '',
+            'date_of_birth'    => '',
+            'reporting_to'     => 0,
+            'pay_rate'         => '',
+            'pay_type'         => '',
+            'type'             => '',
+            'status'           => '',
         ),
         'personal'   => array(
             'photo_id'        => 0,
             'user_id'         => 0,
-            'employee_id'     => '',
             'first_name'      => '',
             'middle_name'     => '',
             'last_name'       => '',
@@ -80,6 +80,12 @@ class Employee {
             'postal_code'     => '',
         )
     );
+
+    /**
+     * @since 1.0.0
+     * @var array
+     */
+    protected $changes = array();
 
     /**
      * Employee constructor.
@@ -135,6 +141,20 @@ class Employee {
     /**
      * Magic method to get item data values
      *
+     * @param      $key
+     * @param      $value
+     */
+    public function set_prop( $key, $value ) {
+        if ( array_key_exists( $key, $this->data['work'] ) ) {
+            $this->changes['work'][ $key ] = $value;
+        } else {
+            $this->changes['personal'][ $key ] = $value;
+        }
+    }
+
+    /**
+     * Magic method to get item data values
+     *
      * @param  string
      *
      * @return string
@@ -166,7 +186,7 @@ class Employee {
      *
      * @return $this|\WP_Error
      */
-    public function create_employee( $args = array() ) {
+    public function create( $args = array() ) {
         global $wpdb;
         $posted = array_map( 'strip_tags_deep', $args );
         $posted = array_map( 'trim_deep', $posted );
@@ -256,61 +276,74 @@ class Employee {
             $this->update_job_info( $work['department'], $work['designation'], $work['reporting_to'], $work['location'], $hiring_date );
         }
 
+        $this->set_prop( 'hiring_source', $data['work']['hiring_source'] );
+        $this->set_prop( 'hiring_date', $hiring_date );
+        $this->set_prop( 'date_of_birth', $data['work']['date_of_birth'] );
+        $this->set_prop( 'employee_id', $data['personal']['employee_id'] );
 
-        $employee_table_data = array(
-            'hiring_source' => $data['work']['hiring_source'],
-            'hiring_date'   => $hiring_date,
-            'date_of_birth' => $data['work']['date_of_birth'],
-            'employee_id'   => $data['personal']['employee_id']
-        );
 
         // employees should not be able to change hiring date, unset when their profile
         if ( $update && ! current_user_can( erp_hr_get_manager_role() ) ) {
-            unset( $employee_table_data['hiring_date'] );
+            unset( $this->hiring_date );
         }
 
         if ( ! $update ) {
-            $employee_table_data['status'] = $data['work']['status'];
+            $this->status = $data['work']['status'];
         }
 
-        // update the erp table
-        $wpdb->update( $wpdb->prefix . 'erp_hr_employees', $employee_table_data, array( 'user_id' => $user_id ) );
-
-        foreach ( $data['personal'] as $key => $value ) {
-            if ( in_array( $key, [ 'employee_id', 'user_url' ] ) ) {
-                continue;
-            }
-
-            update_user_meta( $user_id, $key, $value );
-        }
+        $this->save();
 
         if ( $update ) {
-            do_action( 'erp_hr_employee_update', $user_id, $data );
+            do_action( 'erp_hr_employee_update', $this->id, $data );
         } else {
-            do_action( 'erp_hr_employee_new', $user_id, $data );
+            do_action( 'erp_hr_employee_new', $this->id, $data );
         }
 
         return $this;
     }
 
     /**
-     * Update employee data
+     * Validate data before saving
      *
-     * @param array $data
-     *
-     * @return $this
+     * @since 1.2.9
+     * @return bool|\WP_Error
      */
-    public function update( $data = array() ) {
-        $fill_able = $this->employee->getFillable();
-        $update_able = array();
-        foreach ( $data as $key => $val ){
-            if( in_array($key, $fill_able)){
-                $update_able[$key] = $val;
+    protected function validate() {
+        foreach ( $this->changes['work'] as $key => $val ) {
+            if ( $key == 'employee_id' ) {
+                $is_exist = \WeDevs\ERP\HRM\Models\Employee::where( 'employee_id', $val )->first();
+                if ( $is_exist ) {
+                    return new \WP_Error( 'invalid-employee-id', __( sprintf( 'Employee id %d already has been assigned to another employee.', $val ), 'erp' ) );
+                }
             }
         }
-        if( !empty($updatable)){
-            $this->employee->update( $data );
+
+        return true;
+    }
+
+    /**
+     * Update employee data
+     *
+     * @since 1.2.9
+     * @return $this
+     */
+    public function save() {
+        $this->validate();
+
+        if ( ! empty( $this->changes['work'] ) ) {
+            $this->employee->update( $this->changes['work'] );
         }
+
+        if ( ! empty( $this->changes['personal'] ) ) {
+            foreach ( $this->changes['personal'] as $key => $value ) {
+                if ( in_array( $key, [ 'employee_id', 'user_url' ] ) ) {
+                    continue;
+                }
+                update_user_meta( $this->id, $key, $value );
+            }
+        }
+
+        $this->changes = array();
         return $this;
     }
 
@@ -320,36 +353,37 @@ class Employee {
      * @return array
      */
     public function to_array() {
+        $data = array();
         if ( $this->id ) {
-            $this->data['id']          = $this->id;
-            $this->data['employee_id'] = $this->employee_id;
-            $this->data['user_email']  = $this->user->user_email;
+            $data['id']          = $this->id;
+            $data['employee_id'] = $this->employee_id;
+            $data['user_email']  = $this->user->user_email;
 
-            $this->data['name'] = array(
+            $data['name'] = array(
                 'first_name'  => $this->first_name,
                 'last_name'   => $this->last_name,
                 'middle_name' => $this->middle_name,
                 'full_name'   => $this->get_full_name()
             );
 
-            $avatar_id                     = (int) $this->user->photo_id;
-            $this->data['avatar']['id']    = $avatar_id;
-            $this->data['avatar']['image'] = $this->get_avatar();
+            $avatar_id               = (int) $this->user->photo_id;
+            $data['avatar']['id']    = $avatar_id;
+            $data['avatar']['image'] = $this->get_avatar();
 
             if ( $avatar_id ) {
-                $this->data['avatar']['url'] = $this->get_avatar_url( $avatar_id );
+                $data['avatar']['url'] = $this->get_avatar_url( $avatar_id );
             }
 
             foreach ( $this->data['work'] as $key => $value ) {
-                $this->data['work'][ $key ] = $this->$key;
+                $data['work'][ $key ] = $this->$key;
             }
 
             foreach ( $this->data['personal'] as $key => $value ) {
-                $this->data['personal'][ $key ] = $this->user->$key;
+                $data['personal'][ $key ] = $this->user->$key;
             }
         }
 
-        return apply_filters( 'erp_hr_get_employee_fields', $this->data, $this->id, $this->user );
+        return apply_filters( 'erp_hr_get_employee_fields', $data, $this->id, $this->user );
     }
 
     /**
@@ -779,31 +813,14 @@ class Employee {
         if ( ! in_array( $module, $modules ) ) {
             return new \WP_Error( 'invalid-module-type', __( 'Invalid module or module does not exist', 'erp' ) );
         }
-        $accepted_base_fields = [
-            'designation',
-            'department',
-            'location',
-            'hiring_source',
-            'hiring_date',
-            'termination_data',
-            'date_of_birth',
-            'reporting_to',
-            'pay_rate',
-            'pay_type',
-            'type',
-            'status',
-        ];
 
-        $updatable_base_fields = array();
-
+        //update employee data
         foreach ( $history as $key => $val ) {
-            if ( in_array( $key, $accepted_base_fields ) ) {
-                $updatable_base_fields[ $key ] = $val;
+            if ( array_key_exists( $key, $this->data['work'] ) ) {
+                $this->set_prop( $key, $val );
             }
         }
-
-        //update employee table
-        $this->update( $updatable_base_fields );
+        $this->save();
 
         if ( ! empty( $history['designation'] ) ) {
             $history['designation'] = $this->get_job_title();
@@ -1100,10 +1117,9 @@ class Employee {
             return new \WP_Error( 'no-eligible-for-rehire', 'Eligible for rehire field is required' );
         }
 
-        $this->update( [
-            'status'           => 'terminated',
-            'termination_date' => $args['terminate_date']
-        ] );
+        $this->set_prop( 'status', 'terminated' );
+        $this->set_prop( 'termination_date', $args['terminate_date'] );
+        $this->save();
 
         $comments = sprintf( '%s: %s; %s: %s; %s: %s',
             __( 'Termination Type', 'erp' ),

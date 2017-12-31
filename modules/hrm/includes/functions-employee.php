@@ -31,171 +31,15 @@ function erp_hr_employee_on_delete( $user_id, $hard = 0 ) {
  * @return int  employee id
  */
 function erp_hr_employee_create( $args = array() ) {
-    global $wpdb;
-    $defaults = array(
-        'user_email' => '',
-        'work'       => array(
-            'designation'   => 0,
-            'department'    => 0,
-            'location'      => '',
-            'hiring_source' => '',
-            'hiring_date'   => '',
-            'date_of_birth' => '',
-            'reporting_to'  => 0,
-            'pay_rate'      => '',
-            'pay_type'      => '',
-            'type'          => '',
-            'status'        => '',
-        ),
-        'personal'   => array(
-            'photo_id'        => 0,
-            'user_id'         => 0,
-            'employee_id'     => '',
-            'first_name'      => '',
-            'middle_name'     => '',
-            'last_name'       => '',
-            'other_email'     => '',
-            'phone'           => '',
-            'work_phone'      => '',
-            'mobile'          => '',
-            'address'         => '',
-            'gender'          => '',
-            'marital_status'  => '',
-            'nationality'     => '',
-            'driving_license' => '',
-            'hobbies'         => '',
-            'user_url'        => '',
-            'description'     => '',
-            'street_1'        => '',
-            'street_2'        => '',
-            'city'            => '',
-            'country'         => '',
-            'state'           => '',
-            'postal_code'     => '',
-        )
-    );
+    $employee = new \WeDevs\ERP\HRM\Employee( null );
+    $result   = $employee->create( $args );
 
-    $posted = array_map( 'strip_tags_deep', $args );
-    $posted = array_map( 'trim_deep', $posted );
-    $data   = erp_parse_args_recursive( $posted, $defaults );
-    //change email to lowercase
-    $data['user_email'] = strtolower( $data['user_email'] );
-
-    // some basic validation
-    if ( empty( $data['personal']['first_name'] ) ) {
-        return new WP_Error( 'empty-first-name', __( 'Please provide the first name.', 'erp' ) );
+    if ( is_wp_error( $result ) ) {
+        return $result->get_error_message();
     }
 
-    if ( empty( $data['personal']['last_name'] ) ) {
-        return new WP_Error( 'empty-last-name', __( 'Please provide the last name.', 'erp' ) );
-    }
+    return $result->id;
 
-    if ( ! is_email( $data['user_email'] ) ) {
-        return new WP_Error( 'invalid-email', __( 'Please provide a valid email address.', 'erp' ) );
-    }
-
-    // attempt to create the user
-    $userdata = array(
-        'user_login'   => $data['user_email'],
-        'user_email'   => $data['user_email'],
-        'first_name'   => $data['personal']['first_name'],
-        'last_name'    => $data['personal']['last_name'],
-        'user_url'     => $data['personal']['user_url'],
-        'display_name' => $data['personal']['first_name'] . ' ' . $data['personal']['middle_name'] . ' ' . $data['personal']['last_name'],
-    );
-    // if user id exists, do an update
-    $user_id = isset( $posted['user_id'] ) ? intval( $posted['user_id'] ) : 0;
-    $update  = false;
-    if ( $user_id ) {
-        $update         = true;
-        $userdata['ID'] = $user_id;
-
-    } else {
-        // when creating a new user, assign role and passwords
-        $userdata['user_pass'] = wp_generate_password( 12 );
-        $userdata['role']      = 'employee';
-    }
-    $userdata = apply_filters( 'erp_hr_employee_args', $userdata );
-    $wp_user  = get_user_by( 'email', $userdata['user_login'] );
-
-    /**
-     * We hook `erp_hr_existing_role_to_employee` to the `set_user_role` action
-     * in action-fiters.php file. Since we have set `$userdata['role'] = 'employee'`
-     * after insert/update a wp user, `erp_hr_existing_role_to_employee` function will
-     * create an employee immediately
-     */
-    if ( $wp_user ) {
-        unset( $userdata['user_url'] );
-        unset( $userdata['user_pass'] );
-        $userdata['ID'] = $wp_user->ID;
-
-        $user_id = wp_update_user( $userdata );
-
-    } else {
-        $user_id = wp_insert_user( $userdata );
-    }
-    if ( is_wp_error( $user_id ) ) {
-        return $user_id;
-    }
-
-    // if reached here, seems like we have success creating the user
-    $employee = new \WeDevs\ERP\HRM\Employee( $user_id );
-
-    // inserting the user for the first time
-    $hiring_date = ! empty( $data['work']['hiring_date'] ) ? $data['work']['hiring_date'] : current_time( 'mysql' );
-    if ( ! $update ) {
-
-        $work = $data['work'];
-
-        if ( ! empty( $work['type'] ) ) {
-            $employee->update_employment_status( $work['type'], $hiring_date );
-        }
-
-        // update compensation
-        if ( ! empty( $work['pay_rate'] ) ) {
-            $pay_type = ( ! empty( $work['pay_type'] ) ) ? $work['pay_type'] : 'monthly';
-            $employee->update_compensation( $work['pay_rate'], $pay_type, '', $hiring_date );
-        }
-
-        // update job info
-        $employee->update_job_info( $work['department'], $work['designation'], $work['reporting_to'], $work['location'], $hiring_date );
-    }
-
-
-    $employee_table_data = array(
-        'hiring_source' => $data['work']['hiring_source'],
-        'hiring_date'   => $hiring_date,
-        'date_of_birth' => $data['work']['date_of_birth'],
-        'employee_id'   => $data['personal']['employee_id']
-    );
-
-    // employees should not be able to change hiring date, unset when their profile
-    if ( $update && ! current_user_can( erp_hr_get_manager_role() ) ) {
-        unset( $employee_table_data['hiring_date'] );
-    }
-
-    if ( ! $update ) {
-        $employee_table_data['status'] = $data['work']['status'];
-    }
-
-    // update the erp table
-    $wpdb->update( $wpdb->prefix . 'erp_hr_employees', $employee_table_data, array( 'user_id' => $user_id ) );
-
-    foreach ( $data['personal'] as $key => $value ) {
-        if ( in_array( $key, [ 'employee_id', 'user_url' ] ) ) {
-            continue;
-        }
-
-        update_user_meta( $user_id, $key, $value );
-    }
-
-    if ( $update ) {
-        do_action( 'erp_hr_employee_update', $user_id, $data );
-    } else {
-        do_action( 'erp_hr_employee_new', $user_id, $data );
-    }
-
-    return $user_id;
 }
 
 /**
@@ -878,7 +722,7 @@ function erp_hr_url_single_employee( $employee_id, $tab = null ) {
  * Individual employee tab url
  *
  * @param string $tab
- * @param int employee id
+ * @param        int employee id
  *
  * @since  1.1.10
  *
