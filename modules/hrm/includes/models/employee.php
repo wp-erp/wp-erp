@@ -54,28 +54,31 @@ class Employee extends Model {
         return $this->hasMany( 'WeDevs\ERP\HRM\Models\Leave_request', 'user_id', 'user_id' );
     }
 
-    public function educations(){
+    public function educations() {
         return $this->hasMany( 'WeDevs\ERP\HRM\Models\Education', 'employee_id', 'user_id' );
     }
 
-    public function dependents(){
+    public function dependents() {
         return $this->hasMany( 'WeDevs\ERP\HRM\Models\Dependents', 'employee_id', 'user_id' );
     }
 
-    public function experiences(){
+    public function experiences() {
         return $this->hasMany( 'WeDevs\ERP\HRM\Models\Work_Experience', 'employee_id', 'user_id' );
     }
 
-    public function histories(){
+    public function histories() {
         return $this->hasMany( 'WeDevs\ERP\HRM\Models\Employee_History', 'user_id', 'user_id' );
     }
+
     public function performances() {
         return $this->hasMany( '\WeDevs\ERP\HRM\Models\Performance', 'employee_id', 'user_id' );
     }
+
     public function announcements() {
         return $this->hasMany( '\WeDevs\ERP\HRM\Models\Announcement', 'user_id', 'user_id' );
     }
-    public function entitlements(){
+
+    public function entitlements() {
         return $this->hasMany( '\WeDevs\ERP\HRM\Models\Leave_Entitlement', 'user_id', 'user_id' );
     }
 }

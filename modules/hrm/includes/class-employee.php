@@ -15,7 +15,7 @@ class Employee {
      *
      * @var int
      */
-    protected $id;
+    public $id;
     /**
      * wp user
      *
@@ -109,6 +109,7 @@ class Employee {
      * @param $employee
      */
     protected function load_employee( $employee ) {
+
         if ( is_int( $employee ) ) {
 
             $user = get_user_by( 'id', $employee );
@@ -133,9 +134,7 @@ class Employee {
             }
 
         }
-        if ( $this->id ) {
-            $this->employee = \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $this->id )->first();
-        }
+        $this->employee = \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $this->id )->first();
     }
 
     /**
@@ -344,6 +343,20 @@ class Employee {
         $this->changes = array();
 
         return $this;
+    }
+
+    /**
+     * Checks wheather the use is employee or not
+     *
+     * @since 1.2.9
+     * @return bool
+     */
+    public function is_employee() {
+        if ( $this->employee ) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -936,6 +949,24 @@ class Employee {
     }
 
     /**
+     * Get employee performance list
+     *
+     * @param int $limit
+     * @param int $offset
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function get_dependents( $limit = 30, $offset = 0 ) {
+
+        $dependants = $this->employee->dependents()
+                                     ->skip( $offset )
+                                     ->take( $limit )
+                                     ->get();
+
+        return $dependants;
+    }
+
+    /**
      * Add a new note
      *
      * @param string $note the note to be added
@@ -1022,8 +1053,49 @@ class Employee {
         return erp_array_to_object( $announcements );
     }
 
-    public function get_entitlements( $date = null, $return_array = false, $limit = 30, $offset = 0 ) {
-        return $this->employee->entitlements()->toSql();
+    /**
+     * Get assigned entitlements
+     *
+     * @since 1.2.9
+     *
+     * @return array
+     */
+    public function get_entitlements( $args = array() ) {
+        $financial_year_dates = erp_get_financial_year_dates();
+        $defaults             = array(
+            'policy_id' => 0,
+            'from_date' => $financial_year_dates['start'],
+            'to_date'   => $financial_year_dates['end'],
+            'number'    => 20,
+            'offset'    => 0,
+            'orderby'   => 'created_on',
+            'order'     => 'DESC',
+        );
+
+        $args = wp_parse_args( $args, $defaults );
+
+        $entitlements = $this->employee->entitlements();
+        if ( ! empty( $args['policy_id'] ) ) {
+            $entitlements = $entitlements->where( 'policy_id', intval( $args['policy_id'] ) );
+        }
+        $entitlements = $entitlements->where( 'from_date', $args['from_date'] )
+                                     ->where( 'to_date', $args['to_date'] )
+                                     ->skip( $args['offset'] )
+                                     ->take( $args['number'] )
+                                     ->orderBy( $args['orderby'], $args['order'] )
+                                     ->get();
+
+        return $entitlements;
+    }
+
+    /**
+     * Get leave balances
+     *
+     * @since 1.2.9
+     * @return bool|float
+     */
+    public function get_leave_balance() {
+        return erp_hr_leave_get_balance( $this->id );
     }
 
     /**
