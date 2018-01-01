@@ -167,13 +167,11 @@ class Employee {
         if ( isset( $this->employee->$key ) ) {
             return stripslashes( $this->employee->$key );
         }
-
         if ( isset( $this->user->$key ) ) {
             return stripslashes( $this->user->$key );
         }
-
-        if ( method_exists( $this->employee, $key ) ) {
-            return $this->employee->$key();
+        if ( method_exists( $this->user, $key ) ) {
+            return $this->user->$key();
         }
     }
 
@@ -344,6 +342,7 @@ class Employee {
         }
 
         $this->changes = array();
+
         return $this;
     }
 
@@ -353,34 +352,32 @@ class Employee {
      * @return array
      */
     public function to_array() {
-        $data = array();
-        if ( $this->id ) {
-            $data['id']          = $this->id;
-            $data['employee_id'] = $this->employee_id;
-            $data['user_email']  = $this->user->user_email;
+        $data                = array();
+        $data['id']          = $this->id;
+        $data['employee_id'] = $this->employee_id;
+        $data['user_email']  = $this->user_email;
 
-            $data['name'] = array(
-                'first_name'  => $this->first_name,
-                'last_name'   => $this->last_name,
-                'middle_name' => $this->middle_name,
-                'full_name'   => $this->get_full_name()
-            );
+        $data['name'] = array(
+            'first_name'  => $this->first_name,
+            'last_name'   => $this->last_name,
+            'middle_name' => $this->middle_name,
+            'full_name'   => $this->get_full_name()
+        );
 
-            $avatar_id               = (int) $this->user->photo_id;
-            $data['avatar']['id']    = $avatar_id;
-            $data['avatar']['image'] = $this->get_avatar();
+        $avatar_id               = (int) $this->photo_id;
+        $data['avatar']['id']    = $avatar_id;
+        $data['avatar']['image'] = $this->get_avatar();
 
-            if ( $avatar_id ) {
-                $data['avatar']['url'] = $this->get_avatar_url( $avatar_id );
-            }
+        if ( $avatar_id ) {
+            $data['avatar']['url'] = $this->get_avatar_url( $avatar_id );
+        }
 
-            foreach ( $this->data['work'] as $key => $value ) {
-                $data['work'][ $key ] = $this->$key;
-            }
+        foreach ( $this->data['work'] as $key => $value ) {
+            $data['work'][ $key ] = $this->$key;
+        }
 
-            foreach ( $this->data['personal'] as $key => $value ) {
-                $data['personal'][ $key ] = $this->user->$key;
-            }
+        foreach ( $this->data['personal'] as $key => $value ) {
+            $data['personal'][ $key ] = $this->$key;
         }
 
         return apply_filters( 'erp_hr_get_employee_fields', $data, $this->id, $this->user );
@@ -394,8 +391,8 @@ class Employee {
      * @return string   image with HTML tag
      */
     public function get_avatar_url( $size = 32 ) {
-        if ( $this->id && ! empty( $this->user->photo_id ) ) {
-            return wp_get_attachment_url( $this->user->photo_id );
+        if ( $this->id && ! empty( $this->photo_id ) ) {
+            return wp_get_attachment_url( $this->photo_id );
         }
 
         return get_avatar_url( $this->id, [ 'size' => $size ] );
@@ -409,8 +406,8 @@ class Employee {
      * @return string   image with HTML tag
      */
     public function get_avatar( $size = 32 ) {
-        if ( $this->id && ! empty( $this->user->photo_id ) ) {
-            $image = wp_get_attachment_thumb_url( $this->user->photo_id );
+        if ( $this->id && ! empty( $this->photo_id ) ) {
+            $image = wp_get_attachment_thumb_url( $this->photo_id );
 
             return sprintf( '<img src="%1$s" alt="" class="avatar avatar-%2$s photo" height="auto" width="%2$s" />', $image, $size );
         }
@@ -443,17 +440,16 @@ class Employee {
      */
     public function get_full_name() {
         $name = array();
-
-        if ( ! empty( $this->user->first_name ) ) {
-            $name[] = $this->user->first_name;
+        if ( $this->first_name ) {
+            $name[] = $this->first_name;
         }
 
-        if ( ! empty( $this->user->middle_name ) ) {
-            $name[] = $this->user->middle_name;
+        if ( $this->middle_name ) {
+            $name[] = $this->middle_name;
         }
 
-        if ( ! empty( $this->user->last_name ) ) {
-            $name[] = $this->user->last_name;
+        if ( $this->last_name ) {
+            $name[] = $this->last_name;
         }
 
         return implode( ' ', $name );
