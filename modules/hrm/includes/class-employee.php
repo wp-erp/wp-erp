@@ -15,7 +15,7 @@ class Employee {
      *
      * @var int
      */
-    protected $id;
+    public $id;
     /**
      * wp user
      *
@@ -131,8 +131,8 @@ class Employee {
                 $this->id   = $employee;
                 $this->user = $user;
             }
-
         }
+
         if ( $this->id ) {
             $this->employee = \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $this->id )->first();
         }
@@ -168,8 +168,8 @@ class Employee {
             return stripslashes( $this->employee->$key );
         }
 
-        if ( isset( $this->user->$key ) ) {
-            return stripslashes( $this->user->$key );
+        if ( isset( $this->$key ) ) {
+            return stripslashes( $this->$key );
         }
 
         if ( method_exists( $this->employee, $key ) ) {
@@ -354,10 +354,10 @@ class Employee {
      */
     public function to_array() {
         $data = array();
-        if ( $this->id ) {
+        // if ( $this->id ) {
             $data['id']          = $this->id;
             $data['employee_id'] = $this->employee_id;
-            $data['user_email']  = $this->user->user_email;
+            $data['user_email']  = $this->user_email;
 
             $data['name'] = array(
                 'first_name'  => $this->first_name,
@@ -366,7 +366,7 @@ class Employee {
                 'full_name'   => $this->get_full_name()
             );
 
-            $avatar_id               = (int) $this->user->photo_id;
+            $avatar_id               = (int) $this->photo_id;
             $data['avatar']['id']    = $avatar_id;
             $data['avatar']['image'] = $this->get_avatar();
 
@@ -379,9 +379,9 @@ class Employee {
             }
 
             foreach ( $this->data['personal'] as $key => $value ) {
-                $data['personal'][ $key ] = $this->user->$key;
+                $data['personal'][ $key ] = $this->$key;
             }
-        }
+        // }
 
         return apply_filters( 'erp_hr_get_employee_fields', $data, $this->id, $this->user );
     }
@@ -394,8 +394,8 @@ class Employee {
      * @return string   image with HTML tag
      */
     public function get_avatar_url( $size = 32 ) {
-        if ( $this->id && ! empty( $this->user->photo_id ) ) {
-            return wp_get_attachment_url( $this->user->photo_id );
+        if ( $this->id && ! empty( $this->photo_id ) ) {
+            return wp_get_attachment_url( $this->photo_id );
         }
 
         return get_avatar_url( $this->id, [ 'size' => $size ] );
@@ -409,8 +409,8 @@ class Employee {
      * @return string   image with HTML tag
      */
     public function get_avatar( $size = 32 ) {
-        if ( $this->id && ! empty( $this->user->photo_id ) ) {
-            $image = wp_get_attachment_thumb_url( $this->user->photo_id );
+        if ( $this->id && ! empty( $this->photo_id ) ) {
+            $image = wp_get_attachment_thumb_url( $this->photo_id );
 
             return sprintf( '<img src="%1$s" alt="" class="avatar avatar-%2$s photo" height="auto" width="%2$s" />', $image, $size );
         }
@@ -444,16 +444,16 @@ class Employee {
     public function get_full_name() {
         $name = array();
 
-        if ( ! empty( $this->user->first_name ) ) {
-            $name[] = $this->user->first_name;
+        if ( ! empty( $this->first_name ) ) {
+            $name[] = $this->first_name;
         }
 
-        if ( ! empty( $this->user->middle_name ) ) {
-            $name[] = $this->user->middle_name;
+        if ( ! empty( $this->middle_name ) ) {
+            $name[] = $this->middle_name;
         }
 
-        if ( ! empty( $this->user->last_name ) ) {
-            $name[] = $this->user->last_name;
+        if ( ! empty( $this->last_name ) ) {
+            $name[] = $this->last_name;
         }
 
         return implode( ' ', $name );
@@ -474,7 +474,7 @@ class Employee {
      * @return string
      */
     public function get_job_title() {
-        if ( $this->id && $this->designation ) {
+        if ( $this->id && $this->designation && $this->designation !== '-1' ) {
             $designation = Designation::find( $this->designation );
 
             return stripslashes( $designation->title );
@@ -487,7 +487,7 @@ class Employee {
      * @return string
      */
     public function get_department_title() {
-        if ( $this->id && $this->department ) {
+        if ( $this->id && $this->department && $this->department !== '-1' ) {
             $department = Department::find( $this->department );
 
             return stripslashes( $department->title );
@@ -500,7 +500,7 @@ class Employee {
      * @return string
      */
     public function get_work_location() {
-        if ( $this->id && $this->location ) {
+        if ( $this->id && $this->location && $this->location !== '-1' ) {
             $location = Company_Locations::find( $this->location );
 
             return stripslashes( $location->name );
@@ -571,11 +571,11 @@ class Employee {
      * @return string
      */
     public function get_gender() {
-        if ( ! empty( $this->user->gender ) ) {
+        if ( ! empty( $this->gender ) ) {
             $genders = erp_hr_get_genders();
 
-            if ( array_key_exists( $this->user->gender, $genders ) ) {
-                return $genders[ $this->user->gender ];
+            if ( array_key_exists( $this->gender, $genders ) ) {
+                return $genders[ $this->gender ];
             }
         }
     }
@@ -586,11 +586,11 @@ class Employee {
      * @return string
      */
     public function get_marital_status() {
-        if ( ! empty( $this->user->marital_status ) ) {
+        if ( ! empty( $this->marital_status ) ) {
             $statuses = erp_hr_get_marital_statuses();
 
-            if ( array_key_exists( $this->user->marital_status, $statuses ) ) {
-                return $statuses[ $this->user->marital_status ];
+            if ( array_key_exists( $this->marital_status, $statuses ) ) {
+                return $statuses[ $this->marital_status ];
             }
         }
     }
@@ -601,11 +601,11 @@ class Employee {
      * @return string
      */
     public function get_nationality() {
-        if ( ! empty( $this->user->nationality ) ) {
+        if ( ! empty( $this->nationality ) ) {
             $countries = \WeDevs\ERP\Countries::instance()->get_countries();
 
-            if ( array_key_exists( $this->user->nationality, $countries ) ) {
-                return $countries[ $this->user->nationality ];
+            if ( array_key_exists( $this->nationality, $countries ) ) {
+                return $countries[ $this->nationality ];
             }
         }
     }
@@ -716,15 +716,15 @@ class Employee {
 
         switch ( $which ) {
             case 'mobile':
-                $phone = isset( $this->user->mobile ) ? $this->user->mobile : '';
+                $phone = isset( $this->mobile ) ? $this->mobile : '';
                 break;
 
             case 'phone':
-                $phone = isset( $this->user->phone ) ? $this->user->phone : '';
+                $phone = isset( $this->phone ) ? $this->phone : '';
                 break;
 
             default:
-                $phone = isset( $this->user->work_phone ) ? $this->user->work_phone : '';
+                $phone = isset( $this->work_phone ) ? $this->work_phone : '';
                 break;
         }
 
