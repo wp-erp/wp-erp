@@ -825,7 +825,7 @@ class Employee {
     }
 
     /**
-     * Create Experience
+     * Create / Update Experience
      *
      * @since 1.2.9
      *
@@ -843,27 +843,47 @@ class Employee {
             'to'           => '',
             'description'  => ''
         ];
-
+        
         $args     = wp_parse_args( $data, $default );
+
         $requires = [
             'company_name' => __( 'Company Name', 'erp' ),
             'job_title'    => __( 'Job Title', 'erp' ),
             'from'         => __( 'From date', 'erp' ),
             'to'           => __( 'To date', 'erp' ),
         ];
+
         foreach ( $requires as $key => $value ) {
             if ( empty( $args[ $key ] ) ) {
                 return $this->send_error( "empty-" . $key, __( sprintf( '%s is required.', $value ), 'erp' ) );
             }
         }
 
-        $experience = $this->erp_user->experiences()->updateOrCreate($args)->toArray();
+        if ( ! $args['id'] ) {
+            // experience will update
+            do_action( 'erp_hr_employee_experience_new', $args );
+        }
+
+        $experience = $this->erp_user->experiences()->updateOrCreate(['id' => $args['id']], $args)->toArray();
 
         if ( ! $experience ) {
             return $this->send_error( 'error-creating-experience', __( 'Could not create work experience.', 'erp' ) );
         }
 
         return $experience;
+    }
+
+    /**
+     * Remove Experience
+     *
+     * @since 1.2.9
+     *
+     * @param array $id
+     *
+     * @return array|\WP_Error
+     */
+    public function delete_experience( $id ) {
+        $this->erp_user->experiences()->where('id', $id)->delete();
     }
 
     /**

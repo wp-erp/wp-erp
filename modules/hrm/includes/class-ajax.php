@@ -1140,22 +1140,8 @@ class Ajax_Handler {
         $to           = isset( $_POST['to'] ) ? strip_tags( $_POST['to'] ) : '';
         $description  = isset( $_POST['description'] ) ? strip_tags( $_POST['description'] ) : '';
 
-        // some basic validations
-        $requires = [
-            'company_name' => __( 'Company Name', 'erp' ),
-            'job_title'    => __( 'Job Title', 'erp' ),
-            'from'         => __( 'From date', 'erp' ),
-            'to'           => __( 'To date', 'erp' ),
-        ];
-
-        foreach ($requires as $var_name => $label) {
-            if ( ! $$var_name ) {
-                $this->send_error( sprintf( __( '%s is required', 'erp' ), $label ) );
-            }
-        }
-
         $fields = [
-            'employee_id'  => $employee_id,
+            'id'           => $exp_id,
             'company_name' => $company_name,
             'job_title'    => $job_title,
             'from'         => $from,
@@ -1163,12 +1149,13 @@ class Ajax_Handler {
             'description'  => $description
         ];
 
-        if ( ! $exp_id ) {
-            do_action( 'erp_hr_employee_experience_new', $fields );
-            Work_Experience::create( $fields );
-        } else {
-            Work_Experience::find( $exp_id )->update( $fields );
+        $employee = new Employee( $employee_id );
+
+        if ( ! $employee->is_employee() ) {
+            $this->send_error( __( 'You have to be an employee to do this action', 'erp' ) );
         }
+
+        $employee->add_experience( $fields );
 
         $this->send_success();
     }
@@ -1183,8 +1170,10 @@ class Ajax_Handler {
 
         $id          = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
         $employee_id = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+            
+        $employee = new Employee( $employee_id );
 
-        if ( ! $employee_id ) {
+        if ( ! $employee->is_employee() ) {
             $this->send_error( __( 'No employee found', 'erp' ) );
         }
 
@@ -1195,7 +1184,7 @@ class Ajax_Handler {
 
         if ( $id ) {
             do_action( 'erp_hr_employee_experience_delete', $id );
-            Work_Experience::find( $id )->delete();
+            $employee->delete_experience( $id );
         }
 
         $this->send_success();
