@@ -14,7 +14,7 @@
         </ul>
     </div>
 </div><!-- .postbox -->
-<?php if ( current_user_can( 'erp_edit_employee' ) || get_current_user_id() == $employee->id ) : ?>
+<?php if ( current_user_can( 'erp_edit_employee' ) || get_current_user_id() == $employee->user_id ) : ?>
 
     <div class="postbox leads-actions">
         <div class="handlediv" title="<?php _e( 'Click to toggle', 'erp' ); ?>"><br></div>
