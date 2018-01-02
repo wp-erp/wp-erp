@@ -102,7 +102,7 @@ class Employee {
     }
 
     /**
-     * Magic method to get item data values
+     * Magic method to set item data values
      *
      * @param      $key
      * @param      $value
