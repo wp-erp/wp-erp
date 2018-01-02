@@ -100,7 +100,7 @@ class Employee_List_Table extends \WP_List_Table {
                 return $employee->get_joined_date();
 
             case 'status':
-                return erp_hr_get_employee_statuses_icons( $employee->status );
+                return erp_hr_get_employee_statuses_icons( strtolower($employee->status) );
 
             default:
                 return isset( $employee->$column_name ) ? $employee->$column_name : '';
