@@ -7,6 +7,7 @@ use WeDevs\ERP\HRM\Models\Department;
 use WeDevs\ERP\HRM\Models\Designation;
 use WeDevs\ERP\HRM\Models\Employee_History;
 use WeDevs\ERP\HRM\Models\Hr_User;
+use WeDevs\ERP\HRM\Models\Work_Experience;
 
 class Employee {
 
@@ -102,7 +103,7 @@ class Employee {
     }
 
     /**
-     * Magic method to set item data values
+     * Magic method to get item data values
      *
      * @param      $key
      * @param      $value
@@ -266,6 +267,7 @@ class Employee {
         $this->update_employee( array_merge( $data['work'], $data['personal'] ) );
 
         do_action( 'erp_hr_employee_new', $this->id, $data );
+
         return $this;
     }
 
@@ -320,6 +322,7 @@ class Employee {
         //reset changes
 
         $this->changes = array();
+
         return $this;
     }
 
@@ -334,6 +337,7 @@ class Employee {
      */
     function get_data( $data = array() ) {
         $employee_data = array_merge( $data, $this->data );
+
         return apply_filters( 'erp_hr_get_employee_fields', $employee_data, $this->user_id, $this->wp_user );
     }
 
@@ -386,6 +390,7 @@ class Employee {
         if ( isset( $this->user->photo_id ) ) {
             return (int) $this->user->photo_id;
         }
+
         return null;
     }
 
@@ -482,6 +487,7 @@ class Employee {
                 return stripslashes( $designation->title );
             }
         }
+
         return null;
     }
 
@@ -637,6 +643,7 @@ class Employee {
         if ( isset( $this->erp_user->date_of_birth ) && ( $this->erp_user->date_of_birth != '0000-00-00' ) ) {
             $date = erp_format_date( $this->erp_user->date_of_birth );
         }
+
         return $date;
     }
 
@@ -815,6 +822,49 @@ class Employee {
             ->skip( $offset )
             ->take( $limit )
             ->get();
+    }
+
+    /**
+     * Create Experience
+     *
+     * @since 1.2.9
+     *
+     * @param array $data
+     * @param bool  $return_id
+     *
+     * @return array|\WP_Error
+     */
+    public function add_experience( $data = array(), $return_id = true ) {
+        $default = [
+            'id'           => '',
+            'company_name' => '',
+            'job_title'    => '',
+            'from'         => '',
+            'to'           => '',
+            'description'  => ''
+        ];
+
+        $args     = wp_parse_args( $data, $default );
+        $requires = [
+            'company_name' => __( 'Company Name', 'erp' ),
+            'job_title'    => __( 'Job Title', 'erp' ),
+            'from'         => __( 'From date', 'erp' ),
+            'to'           => __( 'To date', 'erp' ),
+        ];
+        foreach ( $requires as $key => $value ) {
+            if ( empty( $args[ $key ] ) ) {
+                return $this->send_error( "empty-" . $key, __( sprintf( '%s is required.', $value ), 'erp' ) );
+            }
+        }
+
+
+        $experience = $this->erp_user->experiences()->updateOrCreate($args)->toArray();
+
+        if ( ! $experience ) {
+            return $this->send_error( 'error-creating-experience', __( 'Could not create work experience.', 'erp' ) );
+        }
+
+        return $experience;
     }
 
     /**
@@ -1252,5 +1302,20 @@ class Employee {
 
         return $this;
     }
+
+    /**
+     * Send error
+     *
+     * @since 1.2.9
+     *
+     * @param $code
+     * @param $message
+     *
+     * @return \WP_Error
+     */
+    protected function send_error( $code, $message ) {
+        return new \WP_Error( $code, $message );
+    }
+
 
 }
