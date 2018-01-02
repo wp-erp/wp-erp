@@ -88,13 +88,13 @@ class Employee_List_Table extends \WP_List_Table {
 
         switch ( $column_name ) {
             case 'designation':
-                return $employee->get_job_title();
+                return $employee->get_designation('view');
 
             case 'department':
-                return $employee->get_department_title();
+                return $employee->get_department('view');
 
             case 'type':
-                return $employee->get_type();
+                return $employee->get_type('view');
 
             case 'date_of_hire':
                 return $employee->get_joined_date();

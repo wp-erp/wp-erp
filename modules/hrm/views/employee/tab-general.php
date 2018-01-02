@@ -25,10 +25,10 @@
                 <li><?php erp_print_key_value( __( 'Title', 'erp' ), $employee->get_job_title() ); ?></li>
 
                 <?php
-                $reporting_to = $employee->get_reporting_to();
-                $reporting_to = $reporting_to ? $reporting_to->get_link() : '-';
+                $reporting_to = new \WeDevs\ERP\HRM\Employee($employee->get_reporting_to());
+                $reporting_to_link = $reporting_to->is_employee()?$reporting_to->get_link(): '-';
                 ?>
-                <li><?php erp_print_key_value( __( 'Reporting To', 'erp' ), $reporting_to ); ?></li>
+                <li><?php erp_print_key_value( __( 'Reporting To', 'erp' ), $reporting_to_link ); ?></li>
                 <li><?php erp_print_key_value( __( 'Date of Hire', 'erp' ), $employee->get_joined_date() ); ?></li>
                 <li><?php erp_print_key_value( __( 'Source of Hire', 'erp' ), $employee->get_hiring_source() ); ?></li>
                 <li><?php erp_print_key_value( __( 'Employee Status', 'erp' ), $employee->get_status() ); ?></li>

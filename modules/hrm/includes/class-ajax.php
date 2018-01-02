@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\HRM;
 
 use WeDevs\ERP\Framework\Traits\Ajax;
@@ -57,8 +58,8 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp_hr_check_user_exist', 'check_user' );
 
         // Dashaboard
-        $this->action ( 'wp_ajax_erp_hr_announcement_mark_read', 'mark_read_announcement' );
-        $this->action ( 'wp_ajax_erp_hr_announcement_view', 'view_announcement' );
+        $this->action( 'wp_ajax_erp_hr_announcement_mark_read', 'mark_read_announcement' );
+        $this->action( 'wp_ajax_erp_hr_announcement_view', 'view_announcement' );
 
         // Performance
         $this->action( 'wp_ajax_erp-hr-emp-update-performance-reviews', 'employee_update_performance' );
@@ -157,12 +158,12 @@ class Ajax_Handler {
 
         $holiday = erp_hr_get_holidays( [
             'id'     => absint( $_POST['id'] ),
-            'number' => -1
+            'number' => - 1
         ] );
 
         $holiday          = (array) reset( $holiday );
-        $holiday['end']   = date( 'Y-m-d' , strtotime( $holiday['end'] . '-1day' ) );
-        $holiday['start'] = date( 'Y-m-d' , strtotime( $holiday['start'] ) );
+        $holiday['end']   = date( 'Y-m-d', strtotime( $holiday['end'] . '-1day' ) );
+        $holiday['start'] = date( 'Y-m-d', strtotime( $holiday['start'] ) );
 
         $this->send_success( array( 'holiday' => $holiday ) );
     }
@@ -186,7 +187,7 @@ class Ajax_Handler {
          * We'll import only events from current year
          */
         $first_day_of_year = strtotime( date( 'Y-01-01 00:00:00' ) );
-        $last_day_of_year = strtotime( date( 'Y-12-31 23:59:59' ) );
+        $last_day_of_year  = strtotime( date( 'Y-12-31 23:59:59' ) );
 
 
         /*
@@ -196,17 +197,17 @@ class Ajax_Handler {
         $holiday_model = new \WeDevs\ERP\HRM\Models\Leave_Holiday();
 
         // create the ical parser object
-        $ical = new \ICal( $_FILES['ics']['tmp_name'] );
+        $ical   = new \ICal( $_FILES['ics']['tmp_name'] );
         $events = $ical->events();
 
-        foreach ($events as $event) {
+        foreach ( $events as $event ) {
             $start = strtotime( $event['DTSTART'] );
-            $end = strtotime( $event['DTEND'] );
+            $end   = strtotime( $event['DTEND'] );
 
             if ( ( $start >= $first_day_of_year ) && ( $end <= $last_day_of_year ) ) {
-                $title = sanitize_text_field( $event['SUMMARY'] );
-                $start = date( 'Y-m-d H:i:s', $start );
-                $end = date( 'Y-m-d H:i:s', $end );
+                $title       = sanitize_text_field( $event['SUMMARY'] );
+                $start       = date( 'Y-m-d H:i:s', $start );
+                $end         = date( 'Y-m-d H:i:s', $end );
                 $description = ( ! empty( $event['DESCRIPTION'] ) ) ? $event['DESCRIPTION'] : $event['SUMMARY'];
 
                 // check for duplicate entries
@@ -468,11 +469,11 @@ class Ajax_Handler {
         unset( $_POST['_wpnonce'] );
         unset( $_POST['action'] );
 
-        $posted               = array_map( 'strip_tags_deep', $_POST );
-        $posted['type']       = 'customer';
-
+        $posted         = array_map( 'strip_tags_deep', $_POST );
+        $user_id        = null;
         // Check permission for editing and adding new employee
         if ( isset( $posted['user_id'] ) && $posted['user_id'] ) {
+            $user_id = absint( $posted['user_id'] );
             if ( ! current_user_can( 'erp_edit_employee', $posted['user_id'] ) ) {
                 $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
             }
@@ -481,17 +482,15 @@ class Ajax_Handler {
                 $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
             }
         }
-
-        $employee_id  = erp_hr_employee_create( $posted );
-
-        if ( is_wp_error( $employee_id ) ) {
-            $this->send_error( $employee_id->get_error_message() );
+        $employee = new Employee( $user_id );
+        $employee->create_employee( $posted );
+        if ( ! $employee->is_employee() ) {
+            $this->send_error( __( 'Could not create employee. Please try again.', 'erp' ) );
         }
 
         // we cached empty employee data right after creating, calling from erp_hr_employee_create method
-        wp_cache_delete( 'erp-empl-' . $employee_id, 'erp' );
+        wp_cache_delete( 'erp-empl-' . $employee->get_user_id(), 'erp' );
 
-        $employee                = new Employee( $employee_id );
         $data                   = $employee->to_array();
         $data['work']['joined'] = $employee->get_joined_date();
         $data['work']['type']   = $employee->get_type();
@@ -502,8 +501,8 @@ class Ajax_Handler {
             $emailer    = wperp()->emailer->get_email( 'New_Employee_Welcome' );
             $send_login = isset( $posted['login_info'] ) ? true : false;
 
-            if ( is_a( $emailer, '\WeDevs\ERP\Email') ) {
-                $emailer->trigger( $employee_id, $send_login );
+            if ( is_a( $emailer, '\WeDevs\ERP\Email' ) ) {
+                $emailer->trigger( $employee->get_user_id(), $send_login );
             }
         }
 
@@ -519,8 +518,8 @@ class Ajax_Handler {
         $this->verify_nonce( 'wp-erp-hr-nonce' );
 
         $employee_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
-        $employee = new Employee($employee_id);
-        
+        $employee    = new Employee( $employee_id );
+
 
         if ( ! $employee->is_employee() ) {
             $this->send_error( __( 'Employee does not exists.', 'erp' ) );
@@ -602,10 +601,10 @@ class Ajax_Handler {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $date        = ( empty( $_POST['date'] ) ) ? current_time( 'mysql' ) : $_POST['date'];
-        $comment     = strip_tags( $_POST['comment'] );
-        $status      = strip_tags( $_POST['status'] );
-        $types       = erp_hr_get_employee_types();
+        $date    = ( empty( $_POST['date'] ) ) ? current_time( 'mysql' ) : $_POST['date'];
+        $comment = strip_tags( $_POST['comment'] );
+        $status  = strip_tags( $_POST['status'] );
+        $types   = erp_hr_get_employee_types();
 
         if ( ! array_key_exists( $status, $types ) ) {
             $this->send_error( __( 'Status error', 'erp' ) );
@@ -637,14 +636,14 @@ class Ajax_Handler {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $date        = ( empty( $_POST['date'] ) ) ? current_time( 'mysql' ) : $_POST['date'];
-        $comment     = strip_tags( $_POST['comment'] );
-        $pay_rate    = number_format( $_POST['pay_rate'], 2 );
-        $pay_type    = strip_tags( $_POST['pay_type'] );
-        $reason      = strip_tags( $_POST['change-reason'] );
+        $date     = ( empty( $_POST['date'] ) ) ? current_time( 'mysql' ) : $_POST['date'];
+        $comment  = strip_tags( $_POST['comment'] );
+        $pay_rate = number_format( $_POST['pay_rate'], 2 );
+        $pay_type = strip_tags( $_POST['pay_type'] );
+        $reason   = strip_tags( $_POST['change-reason'] );
 
-        $types       = erp_hr_get_pay_type();
-        $reasons     = erp_hr_get_pay_change_reasons();
+        $types   = erp_hr_get_pay_type();
+        $reasons = erp_hr_get_pay_change_reasons();
 
         if ( ! $pay_rate ) {
             $this->send_error( __( 'Enter a valid pay rate.', 'erp' ) );
@@ -679,9 +678,9 @@ class Ajax_Handler {
 
         $this->verify_nonce( 'wp-erp-hr-nonce' );
 
-        $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
-        $query = "SELECT module, user_id FROM {$wpdb->prefix}erp_hr_employee_history WHERE id=" . $id;
-        $get_module = $wpdb->get_row($query);
+        $id         = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+        $query      = "SELECT module, user_id FROM {$wpdb->prefix}erp_hr_employee_history WHERE id=" . $id;
+        $get_module = $wpdb->get_row( $query );
 
         // Check permission
         if ( ! current_user_can( 'erp_edit_employee', $get_module->user_id ) ) {
@@ -709,7 +708,7 @@ class Ajax_Handler {
     public function employee_update_job_info() {
         $this->verify_nonce( 'employee_update_jobinfo' );
 
-        $employee_id  = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+        $employee_id = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
 
         $location     = isset( $_POST['location'] ) ? intval( $_POST['location'] ) : 0;
         $department   = isset( $_POST['department'] ) ? intval( $_POST['department'] ) : 0;
@@ -766,8 +765,8 @@ class Ajax_Handler {
      */
     public function employee_load_note() {
         $employee_id = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
-        $total_no = isset( $_POST['total_no'] ) ? intval( $_POST['total_no'] ) : 0;
-        $offset_no = isset( $_POST['offset_no'] ) ? intval( $_POST['offset_no'] ) : 0;
+        $total_no    = isset( $_POST['total_no'] ) ? intval( $_POST['total_no'] ) : 0;
+        $offset_no   = isset( $_POST['offset_no'] ) ? intval( $_POST['offset_no'] ) : 0;
 
         $employee = new Employee( $employee_id );
 
@@ -788,7 +787,7 @@ class Ajax_Handler {
     public function employee_delete_note() {
         check_admin_referer( 'wp-erp-hr-nonce' );
 
-        $note_id     = isset( $_POST['note_id'] ) ? intval( $_POST['note_id'] ) : 0;
+        $note_id  = isset( $_POST['note_id'] ) ? intval( $_POST['note_id'] ) : 0;
         $employee = new Employee();
 
         // Check permission
@@ -815,8 +814,8 @@ class Ajax_Handler {
 
         $employee_id         = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
         $terminate_date      = ( empty( $_POST['terminate_date'] ) ) ? current_time( 'mysql' ) : $_POST['terminate_date'];
-        $termination_type    = isset( $_POST['termination_type'] ) ?  $_POST['termination_type'] : '';
-        $termination_reason  = isset( $_POST['termination_reason'] ) ?  $_POST['termination_reason'] : '';
+        $termination_type    = isset( $_POST['termination_type'] ) ? $_POST['termination_type'] : '';
+        $termination_reason  = isset( $_POST['termination_reason'] ) ? $_POST['termination_reason'] : '';
         $eligible_for_rehire = isset( $_POST['eligible_for_rehire'] ) ? $_POST['eligible_for_rehire'] : '';
 
         $fields = [
@@ -863,7 +862,7 @@ class Ajax_Handler {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $id )->update( ['status'=>'active'] );
+        \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $id )->update( [ 'status' => 'active' ] );
 
         delete_user_meta( $id, '_erp_hr_termination' );
 
@@ -918,18 +917,18 @@ class Ajax_Handler {
 
         $user = get_user_by( 'id', intval( $id ) );
 
-        $user->add_role('employee');
+        $user->add_role( 'employee' );
 
         $employee = new \WeDevs\ERP\HRM\Models\Employee();
-        $exists = $employee->where( 'user_id', '=', $user->ID )->first();
+        $exists   = $employee->where( 'user_id', '=', $user->ID )->first();
 
         if ( null === $exists ) {
-            $employee = $employee->create([
+            $employee = $employee->create( [
                 'user_id'     => $user->ID,
                 'designation' => 0,
                 'department'  => 0,
                 'status'      => 'active'
-            ]);
+            ] );
 
             $this->send_success( $employee );
 
@@ -947,9 +946,9 @@ class Ajax_Handler {
      */
     public function mark_read_announcement() {
         $this->verify_nonce( 'wp-erp-hr-nonce' );
-        $row_id = intval( $_POST['id'] );
+        $row_id  = intval( $_POST['id'] );
         $user_id = get_current_user_id();
-        \WeDevs\ERP\HRM\Models\Announcement::find( $row_id )->where('user_id', $user_id)->update( ['status' => 'read' ] );
+        \WeDevs\ERP\HRM\Models\Announcement::find( $row_id )->where( 'user_id', $user_id )->update( [ 'status' => 'read' ] );
 
         return $this->send_success();
     }
@@ -970,13 +969,13 @@ class Ajax_Handler {
             $this->send_error();
         }
 
-        \WeDevs\ERP\HRM\Models\Announcement::where( 'post_id', $post_id )->update( ['status' => 'read' ] );
+        \WeDevs\ERP\HRM\Models\Announcement::where( 'post_id', $post_id )->update( [ 'status' => 'read' ] );
 
         $post = get_post( $post_id );
         setup_postdata( $post );
 
         $post_data = [
-            'title' => get_the_title(),
+            'title'   => get_the_title(),
             'content' => wpautop( get_the_content() )
         ];
 
@@ -1068,7 +1067,7 @@ class Ajax_Handler {
             // some basic validations
             $requires = [
                 'performance_date' => __( 'Reference Date', 'erp' ),
-                'completion_date' => __( 'Completion Date', 'erp' ),
+                'completion_date'  => __( 'Completion Date', 'erp' ),
             ];
 
             $fields = [
@@ -1126,7 +1125,7 @@ class Ajax_Handler {
     public function employee_work_experience_create() {
         $this->verify_nonce( 'erp-work-exp-form' );
 
-        $employee_id  = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+        $employee_id = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
 
         // Check permission
         if ( ! current_user_can( 'erp_edit_employee', $employee_id ) ) {
@@ -1148,7 +1147,7 @@ class Ajax_Handler {
             'to'           => __( 'To date', 'erp' ),
         ];
 
-        foreach ($requires as $var_name => $label) {
+        foreach ( $requires as $var_name => $label ) {
             if ( ! $$var_name ) {
                 $this->send_error( sprintf( __( '%s is required', 'erp' ), $label ) );
             }
@@ -1216,13 +1215,13 @@ class Ajax_Handler {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $edu_id      = isset( $_POST['edu_id'] ) ? intval( $_POST['edu_id'] ) : 0;
-        $school      = isset( $_POST['school'] ) ? strip_tags( $_POST['school'] ) : '';
-        $degree      = isset( $_POST['degree'] ) ? strip_tags( $_POST['degree'] ) : '';
-        $field       = isset( $_POST['field'] ) ? strip_tags( $_POST['field'] ) : '';
-        $finished    = isset( $_POST['finished'] ) ? intval( $_POST['finished'] ) : '';
-        $notes       = isset( $_POST['notes'] ) ? strip_tags( $_POST['notes'] ) : '';
-        $interest    = isset( $_POST['interest'] ) ? strip_tags( $_POST['interest'] ) : '';
+        $edu_id   = isset( $_POST['edu_id'] ) ? intval( $_POST['edu_id'] ) : 0;
+        $school   = isset( $_POST['school'] ) ? strip_tags( $_POST['school'] ) : '';
+        $degree   = isset( $_POST['degree'] ) ? strip_tags( $_POST['degree'] ) : '';
+        $field    = isset( $_POST['field'] ) ? strip_tags( $_POST['field'] ) : '';
+        $finished = isset( $_POST['finished'] ) ? intval( $_POST['finished'] ) : '';
+        $notes    = isset( $_POST['notes'] ) ? strip_tags( $_POST['notes'] ) : '';
+        $interest = isset( $_POST['interest'] ) ? strip_tags( $_POST['interest'] ) : '';
 
         // some basic validations
         $requires = [
@@ -1232,7 +1231,7 @@ class Ajax_Handler {
             'finished' => __( 'Completion date', 'erp' ),
         ];
 
-        foreach ($requires as $var_name => $label) {
+        foreach ( $requires as $var_name => $label ) {
             if ( ! $$var_name ) {
                 $this->send_error( sprintf( __( '%s is required', 'erp' ), $label ) );
             }
@@ -1300,10 +1299,10 @@ class Ajax_Handler {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $dep_id      = isset( $_POST['dep_id'] ) ? intval( $_POST['dep_id'] ) : 0;
-        $name        = isset( $_POST['name'] ) ? strip_tags( $_POST['name'] ) : '';
-        $relation    = isset( $_POST['relation'] ) ? strip_tags( $_POST['relation'] ) : '';
-        $dob         = isset( $_POST['dob'] ) ? strip_tags( $_POST['dob'] ) : '';
+        $dep_id   = isset( $_POST['dep_id'] ) ? intval( $_POST['dep_id'] ) : 0;
+        $name     = isset( $_POST['name'] ) ? strip_tags( $_POST['name'] ) : '';
+        $relation = isset( $_POST['relation'] ) ? strip_tags( $_POST['relation'] ) : '';
+        $dob      = isset( $_POST['dob'] ) ? strip_tags( $_POST['dob'] ) : '';
 
         // some basic validations
         $requires = [
@@ -1311,7 +1310,7 @@ class Ajax_Handler {
             'relation' => __( 'Relation', 'erp' ),
         ];
 
-        foreach ($requires as $var_name => $label) {
+        foreach ( $requires as $var_name => $label ) {
             if ( ! $$var_name ) {
                 $this->send_error( sprintf( __( '%s is required', 'erp' ), $label ) );
             }
@@ -1382,7 +1381,7 @@ class Ajax_Handler {
         $color          = isset( $_POST['color'] ) ? sanitize_text_field( $_POST['color'] ) : '';
         $department     = isset( $_POST['department'] ) ? intval( $_POST['department'] ) : 0;
         $designation    = isset( $_POST['designation'] ) ? intval( $_POST['designation'] ) : 0;
-        $gender         = isset( $_POST['gender'] ) ?  $_POST['gender']  : 0;
+        $gender         = isset( $_POST['gender'] ) ? $_POST['gender'] : 0;
         $marital_status = isset( $_POST['maritial'] ) ? $_POST['maritial'] : 0;
         $activate       = isset( $_POST['rateTransitions'] ) ? intval( $_POST['rateTransitions'] ) : 1;
         $description    = isset( $_POST['description'] ) ? $_POST['description'] : '';
@@ -1431,15 +1430,15 @@ class Ajax_Handler {
 
         $holiday_id   = isset( $_POST['holiday_id'] ) ? intval( $_POST['holiday_id'] ) : 0;
         $title        = isset( $_POST['title'] ) ? sanitize_text_field( $_POST['title'] ) : '';
-        $start_date   = isset( $_POST['start_date'] ) ? $_POST['start_date']  : '';
+        $start_date   = isset( $_POST['start_date'] ) ? $_POST['start_date'] : '';
         $end_date     = isset( $_POST['end_date'] ) && ! empty( $_POST['end_date'] ) ? $_POST['end_date'] : $start_date;
-        $end_date     = date( 'Y-m-d H:i:s', strtotime( $end_date . ' +1 day' )  );
+        $end_date     = date( 'Y-m-d H:i:s', strtotime( $end_date . ' +1 day' ) );
         $description  = isset( $_POST['description'] ) ? $_POST['description'] : '';
         $range_status = isset( $_POST['range'] ) ? $_POST['range'] : 'off';
         $error        = true;
 
         if ( $range_status == 'off' ) {
-            $end_date = date( 'Y-m-d H:i:s', strtotime( $start_date . ' +1 day' )  );
+            $end_date = date( 'Y-m-d H:i:s', strtotime( $start_date . ' +1 day' ) );
         }
 
         if ( is_wp_error( $error ) ) {
@@ -1502,7 +1501,7 @@ class Ajax_Handler {
         $id = isset( $_POST['employee_id'] ) && $_POST['employee_id'] ? intval( $_POST['employee_id'] ) : false;
 
         if ( ! $id ) {
-           $this->send_error( __( 'Please select an employee', 'erp' ) );
+            $this->send_error( __( 'Please select an employee', 'erp' ) );
         }
 
         $policy_id = isset( $_POST['type'] ) && $_POST['type'] ? $_POST['type'] : false;
@@ -1517,7 +1516,7 @@ class Ajax_Handler {
         $financial_start_date = date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
         $financial_end_date   = date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
 
-        if ( $start_date >  $end_date ) {
+        if ( $start_date > $end_date ) {
             $this->send_error( __( 'Invalid date range', 'erp' ) );
         }
 
@@ -1531,9 +1530,9 @@ class Ajax_Handler {
             $this->send_error( __( 'Existing Leave Record found within selected range!', 'erp' ) );
         }
 
-        $is_extra_leave_enabled = get_option('enable_extra_leave', 'no');
+        $is_extra_leave_enabled = get_option( 'enable_extra_leave', 'no' );
 
-        if( $is_extra_leave_enabled !== 'yes' ){
+        if ( $is_extra_leave_enabled !== 'yes' ) {
             $is_policy_valid = erp_hrm_is_valid_leave_duration( $start_date, $end_date, $policy_id, $id );
 
             if ( ! $is_policy_valid ) {
@@ -1553,7 +1552,7 @@ class Ajax_Handler {
             $date['date'] = erp_format_date( $date['date'], 'D, M d' );
         }
 
-        $leave_count = $days['total'];
+        $leave_count   = $days['total'];
         $days['total'] = sprintf( '%d %s', $days['total'], _n( 'day', 'days', $days['total'], 'erp' ) );
 
         $this->send_success( array( 'print' => $days, 'leave_count' => $leave_count ) );
@@ -1572,7 +1571,7 @@ class Ajax_Handler {
         $employee_id = isset( $_POST['employee_id'] ) && $_POST['employee_id'] ? intval( $_POST['employee_id'] ) : false;
 
         if ( ! $employee_id ) {
-           $this->send_error( __( 'Please select an employee', 'erp' ) );
+            $this->send_error( __( 'Please select an employee', 'erp' ) );
         }
 
         $policies = erp_hr_get_assign_policy_from_entitlement( $employee_id );
@@ -1612,11 +1611,11 @@ class Ajax_Handler {
         $available   = 0;
 
         if ( ! $employee_id ) {
-           $this->send_error( __( 'Please select an employee', 'erp' ) );
+            $this->send_error( __( 'Please select an employee', 'erp' ) );
         }
 
         if ( ! $policy_id ) {
-           $this->send_error( __( 'Please select a policy', 'erp' ) );
+            $this->send_error( __( 'Please select a policy', 'erp' ) );
         }
 
         $balance = erp_hr_leave_get_balance( $employee_id );
@@ -1630,8 +1629,8 @@ class Ajax_Handler {
         } elseif ( $available > 0 ) {
             $content = sprintf( '<span class="description green">%d %s</span>', number_format_i18n( $available ), __( 'days are available', 'erp' ) );
         } else {
-            $leave_policy_day = \WeDevs\ERP\HRM\Models\Leave_Policies::select( 'value' )->where( 'id', $policy_id )->pluck('value');
-            $content = sprintf( '<span class="description">%d %s</span>', number_format_i18n( $leave_policy_day ), __( 'days are available', 'erp' ) );
+            $leave_policy_day = \WeDevs\ERP\HRM\Models\Leave_Policies::select( 'value' )->where( 'id', $policy_id )->pluck( 'value' );
+            $content          = sprintf( '<span class="description">%d %s</span>', number_format_i18n( $leave_policy_day ), __( 'days are available', 'erp' ) );
         }
 
         $this->send_success( $content );
@@ -1660,8 +1659,8 @@ class Ajax_Handler {
         $leave_policy = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : 0;
 
         // @todo: date format may need to be changed when partial leave introduced
-        $start_date   = isset( $_POST['leave_from'] ) ? sanitize_text_field( $_POST['leave_from'] . ' 00:00:00' ) : date_i18n( 'Y-m-d 00:00:00' );
-        $end_date     = isset( $_POST['leave_to'] ) ? sanitize_text_field( $_POST['leave_to'] . ' 23:59:59' ) : date_i18n( 'Y-m-d 23:59:59' );
+        $start_date = isset( $_POST['leave_from'] ) ? sanitize_text_field( $_POST['leave_from'] . ' 00:00:00' ) : date_i18n( 'Y-m-d 00:00:00' );
+        $end_date   = isset( $_POST['leave_to'] ) ? sanitize_text_field( $_POST['leave_to'] . ' 23:59:59' ) : date_i18n( 'Y-m-d 23:59:59' );
 
         $leave_reason = isset( $_POST['leave_reason'] ) ? strip_tags( $_POST['leave_reason'] ) : '';
 
@@ -1678,7 +1677,7 @@ class Ajax_Handler {
             // notification email
             $emailer = wperp()->emailer->get_email( 'New_Leave_Request' );
 
-            if ( is_a( $emailer, '\WeDevs\ERP\Email') ) {
+            if ( is_a( $emailer, '\WeDevs\ERP\Email' ) ) {
                 $emailer->trigger( $request_id );
             }
 
@@ -1703,10 +1702,10 @@ class Ajax_Handler {
         $policy      = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : 'all';
 
         $args = array(
-            'year'      => $year,
-            'user_id'   => $employee_id,
-            'status'    => 1,
-            'orderby'   => 'req.start_date'
+            'year'    => $year,
+            'user_id' => $employee_id,
+            'status'  => 1,
+            'orderby' => 'req.start_date'
         );
 
         if ( $policy != 'all' ) {
