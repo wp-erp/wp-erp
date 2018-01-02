@@ -857,7 +857,6 @@ class Employee {
             }
         }
 
-
         $experience = $this->erp_user->experiences()->updateOrCreate($args)->toArray();
 
         if ( ! $experience ) {
