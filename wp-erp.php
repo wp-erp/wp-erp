@@ -228,8 +228,6 @@ final class WeDevs_ERP {
             require_once WPERP_INCLUDES . '/admin/class-menu.php';
             require_once WPERP_INCLUDES . '/admin/class-admin.php';
 
-            include_once WPERP_INCLUDES . '/lib/class-weforms-upsell.php';
-            new \WeForms_Upsell( '408' );
         }
 
         // cli command
