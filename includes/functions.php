@@ -2444,3 +2444,25 @@ function erp_login_redirect_manager( $redirect_to, $request, $user ) {
         return $redirect_to;
     }
 }
+
+/**
+ * Flatten any multi dimensional array
+ * @since 1.2.9
+ * @param $array
+ *
+ * @return array|bool
+ */
+function erp_array_flatten($array) {
+    if (!is_array($array)) {
+        return false;
+    }
+    $result = array();
+    foreach ($array as $key => $value) {
+        if (is_array($value)) {
+            $result = array_merge($result, erp_array_flatten($value));
+        } else {
+            $result[$key] = $value;
+        }
+    }
+    return $result;
+}

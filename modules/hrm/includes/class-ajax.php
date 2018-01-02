@@ -519,13 +519,13 @@ class Ajax_Handler {
         $this->verify_nonce( 'wp-erp-hr-nonce' );
 
         $employee_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
-        $user        = get_user_by( 'id', $employee_id );
+        $employee = new Employee($employee_id);
+        
 
-        if ( ! $user ) {
+        if ( ! $employee->is_employee() ) {
             $this->send_error( __( 'Employee does not exists.', 'erp' ) );
         }
 
-        $employee = new Employee( $user );
         $this->send_success( $employee->to_array() );
     }
 

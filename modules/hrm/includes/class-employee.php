@@ -15,14 +15,14 @@ class Employee {
      *
      * @var int
      */
-    public $id;
+    public $user_id;
     /**
      * wp user
      *
      * @type \WP_User
      * @var \stdClass
      */
-    protected $user;
+    protected $wp_user;
 
     /**
      * Model Instance
@@ -30,7 +30,7 @@ class Employee {
      * @type \WeDevs\ERP\HRM\Models\Employee
      * @var
      */
-    protected $employee;
+    protected $erp_user;
 
     /**
      * Employee data
@@ -38,6 +38,7 @@ class Employee {
      * @var array
      */
     protected $data = array(
+        'user_id'    => '',
         'user_email' => '',
         'work'       => array(
             'employee_id'      => '',
@@ -56,7 +57,6 @@ class Employee {
         ),
         'personal'   => array(
             'photo_id'        => 0,
-            'user_id'         => 0,
             'first_name'      => '',
             'middle_name'     => '',
             'last_name'       => '',
@@ -93,48 +93,11 @@ class Employee {
      * @param null $employee
      */
     public function __construct( $employee = null ) {
-        $this->id       = 0;
-        $this->user     = new \stdClass();
-        $this->employee = new \stdClass();
-        if ( $employee !== null ) {
+        $this->user_id  = 0;
+        $this->wp_user  = new \WP_User();
+        $this->erp_user = new \WeDevs\ERP\HRM\Models\Employee();
+        if ( $employee != null ) {
             $this->load_employee( $employee );
-        }
-    }
-
-    /**
-     * Load employee
-     *
-     * @since 1.2.9
-     *
-     * @param $employee
-     */
-    protected function load_employee( $employee ) {
-        if ( is_int( $employee ) ) {
-
-            $user = get_user_by( 'id', $employee );
-
-            if ( $user ) {
-                $this->id   = $employee;
-                $this->user = $user;
-            }
-
-        } elseif ( is_a( $employee, 'WP_User' ) ) {
-
-            $this->id   = $employee->id;
-            $this->user = $employee;
-
-        } elseif ( is_email( $employee ) ) {
-
-            $user = get_user_by( 'email', $employee );
-
-            if ( $user ) {
-                $this->id   = $employee;
-                $this->user = $user;
-            }
-        }
-
-        if ( $this->id ) {
-            $this->employee = \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $this->id )->first();
         }
     }
 
@@ -144,8 +107,10 @@ class Employee {
      * @param      $key
      * @param      $value
      */
-    public function set_prop( $key, $value ) {
-        if ( array_key_exists( $key, $this->data['work'] ) ) {
+    public function __set( $key, $value ) {
+        if ( is_callable( array( $this, "set_{$key}" ) ) ) {
+            $this->{"set_{$key}"}( $value );
+        } elseif ( array_key_exists( $key, $this->data['work'] ) ) {
             $this->changes['work'][ $key ] = $value;
         } else {
             $this->changes['personal'][ $key ] = $value;
@@ -160,56 +125,107 @@ class Employee {
      * @return string
      */
     public function __get( $key ) {
-
-        if ( isset( $this->$key ) ) {
-            return stripslashes( $this->$key );
+        if ( is_callable( array( $this, "get_{$key}" ) ) ) {
+            return $this->{"get_{$key}"}();
+        } elseif ( isset( $this->$key ) ) {
+            return stripslashes( $this->key );
+        } elseif ( isset( $this->erp_user->$key ) ) {
+            return stripslashes( $this->erp_user->$key );
+        } elseif ( isset( $this->wp_user->$key ) ) {
+            return stripslashes( $this->wp_user->$key );
+        } else {
+            return null;
         }
-        if ( isset( $this->employee->$key ) ) {
-            return stripslashes( $this->employee->$key );
+    }
+
+
+    /**
+     * Load employee
+     *
+     * @param $employee
+     *
+     * @return mixed|void
+     */
+    protected function load_employee( $employee ) {
+
+        if ( is_int( $employee ) ) {
+
+            $user = get_user_by( 'id', $employee );
+
+            if ( $user ) {
+                $this->user_id = $employee;
+                $this->wp_user = $user;
+            }
+
+        } elseif ( is_a( $employee, 'WP_User' ) ) {
+
+            $this->user_id = $employee->id;
+            $this->wp_user = $employee;
+
+        } elseif ( is_email( $employee ) ) {
+
+            $user = get_user_by( 'email', $employee );
+
+            if ( $user ) {
+                $this->user_id = $employee;
+                $this->wp_user = $user;
+            }
+
         }
 
-        if ( isset( $this->$key ) ) {
-            return stripslashes( $this->$key );
-        }
+        if ( $this->user_id ) {
+            $this->erp_user = \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $this->user_id )->first();
+            if ( $this->is_employee() ) {
+                $this->data['user_id']    = $this->user_id;
+                $this->data['user_email'] = $this->wp_user->user_email;
 
-        if ( method_exists( $this->employee, $key ) ) {
-            return $this->employee->$key();
+                foreach ( $this->data['work'] as $key => $value ) {
+                    $this->data['work'][ $key ] = $this->$key;
+                }
+
+                foreach ( $this->data['personal'] as $key => $value ) {
+                    $this->data['personal'][ $key ] = $this->$key;
+                }
+            }
         }
     }
 
     /**
-     * Create employee
-     *
-     * @since 1.2.9
      *
      * @param array $args
      *
-     * @return $this|\WP_Error
+     * @return $this|int|\WP_Error
      */
-    public function create( $args = array() ) {
-        global $wpdb;
+    public function create_employee( $args = array() ) {
         $posted = array_map( 'strip_tags_deep', $args );
-        $posted = array_map( 'trim_deep', $posted );
-        $data   = erp_parse_args_recursive( $posted, $this->data );
+        $data   = array_map( 'trim_deep', $posted );
 
-        //change email to lowercase
+        //if user found by id then update the user
+        if ( ! empty( $data['user_id'] ) ) {
+            if ( get_user_by( 'ID', absint( $data['user_id'] ) ) ) {
+                return $this->update_employee( $data );
+            }
+        }
+
+        //if user found by email then update the user
+        if ( ! empty( $data['user_email'] ) ) {
+            if ( get_user_by( 'email', absint( $data['user_email'] ) ) ) {
+                return $this->update_employee( $data );
+            }
+        }
+
         $data['user_email'] = strtolower( $data['user_email'] );
 
-        // some basic validation
         if ( empty( $data['personal']['first_name'] ) ) {
             return new \WP_Error( 'empty-first-name', __( 'Please provide the first name.', 'erp' ) );
         }
-
         if ( empty( $data['personal']['last_name'] ) ) {
             return new \WP_Error( 'empty-last-name', __( 'Please provide the last name.', 'erp' ) );
         }
-
         if ( ! is_email( $data['user_email'] ) ) {
             return new \WP_Error( 'invalid-email', __( 'Please provide a valid email address.', 'erp' ) );
         }
 
-
-        // attempt to create the user
         $userdata = array(
             'user_login'   => $data['user_email'],
             'user_email'   => $data['user_email'],
@@ -217,173 +233,160 @@ class Employee {
             'last_name'    => $data['personal']['last_name'],
             'user_url'     => $data['personal']['user_url'],
             'display_name' => $data['personal']['first_name'] . ' ' . $data['personal']['middle_name'] . ' ' . $data['personal']['last_name'],
+            'user_pass'    => wp_generate_password( 12 ),
+            'role'         => 'employee',
         );
-        // if user id exists, do an update
-        $user_id = isset( $posted['user_id'] ) ? intval( $posted['user_id'] ) : 0;
-        $update  = false;
-        if ( $user_id ) {
-            $update         = true;
-            $userdata['ID'] = $user_id;
 
-        } else {
-            // when creating a new user, assign role and passwords
-            $userdata['user_pass'] = wp_generate_password( 12 );
-            $userdata['role']      = 'employee';
-        }
         $userdata = apply_filters( 'erp_hr_employee_args', $userdata );
-        $wp_user  = get_user_by( 'email', $userdata['user_login'] );
-
-        /**
-         * We hook `erp_hr_existing_role_to_employee` to the `set_user_role` action
-         * in action-fiters.php file. Since we have set `$userdata['role'] = 'employee'`
-         * after insert/update a wp user, `erp_hr_existing_role_to_employee` function will
-         * create an employee immediately
-         */
-        if ( $wp_user ) {
-            unset( $userdata['user_url'] );
-            unset( $userdata['user_pass'] );
-            $userdata['ID'] = $wp_user->ID;
-
-            $user_id = wp_update_user( $userdata );
-
-        } else {
-            $user_id = wp_insert_user( $userdata );
-        }
+        $user_id  = wp_insert_user( $userdata );
         if ( is_wp_error( $user_id ) ) {
             return $user_id;
         }
-
         // if reached here, seems like we have success creating the user
         $this->load_employee( $user_id );
 
         // inserting the user for the first time
         $hiring_date = ! empty( $data['work']['hiring_date'] ) ? $data['work']['hiring_date'] : current_time( 'mysql' );
-        if ( ! $update ) {
 
-            $work = $data['work'];
+        $work = $data['work'];
 
-            if ( ! empty( $work['type'] ) ) {
-                $this->update_employment_status( $work['type'], $hiring_date );
-            }
-
-            // update compensation
-            if ( ! empty( $work['pay_rate'] ) ) {
-                $pay_type = ( ! empty( $work['pay_type'] ) ) ? $work['pay_type'] : 'monthly';
-                $this->update_compensation( $work['pay_rate'], $pay_type, '', $hiring_date );
-            }
-
-            // update job info
-            $this->update_job_info( $work['department'], $work['designation'], $work['reporting_to'], $work['location'], $hiring_date );
+        if ( ! empty( $work['type'] ) ) {
+            $this->update_employment_status( $work['type'], $hiring_date );
         }
 
-        $this->set_prop( 'hiring_source', $data['work']['hiring_source'] );
-        $this->set_prop( 'hiring_date', $hiring_date );
-        $this->set_prop( 'date_of_birth', $data['work']['date_of_birth'] );
-        $this->set_prop( 'employee_id', $data['personal']['employee_id'] );
-
-
-        // employees should not be able to change hiring date, unset when their profile
-        if ( $update && ! current_user_can( erp_hr_get_manager_role() ) ) {
-            unset( $this->hiring_date );
+        // update compensation
+        if ( ! empty( $work['pay_rate'] ) ) {
+            $pay_type = ( ! empty( $work['pay_type'] ) ) ? $work['pay_type'] : 'monthly';
+            $this->update_compensation( $work['pay_rate'], $pay_type, '', $hiring_date );
         }
 
-        if ( ! $update ) {
-            $this->status = $data['work']['status'];
-        }
+        // update job info
+        $this->update_job_info( $work['department'], $work['designation'], $work['reporting_to'], $work['location'], $hiring_date );
 
-        $this->save();
+        $this->update_employee( array_merge( $data['work'], $data['personal'] ) );
 
-        if ( $update ) {
-            do_action( 'erp_hr_employee_update', $this->id, $data );
-        } else {
-            do_action( 'erp_hr_employee_new', $this->id, $data );
-        }
-
+        do_action( 'erp_hr_employee_new', $this->id, $data );
         return $this;
     }
 
     /**
-     * Validate data before saving
+     * Update employee
      *
      * @since 1.2.9
-     * @return bool|\WP_Error
+     *
+     * @param array $data
+     *
+     * @return $this
      */
-    protected function validate() {
-        foreach ( $this->changes['work'] as $key => $val ) {
-            if ( $key == 'employee_id' ) {
-                $is_exist = \WeDevs\ERP\HRM\Models\Employee::where( 'employee_id', $val )->first();
-                if ( $is_exist ) {
-                    return new \WP_Error( 'invalid-employee-id', __( sprintf( 'Employee id %d already has been assigned to another employee.', $val ), 'erp' ) );
+    public function update_employee( $data = array() ) {
+        $restricted = [
+            'user_id',
+            'user_email',
+            'user_url',
+            'id',
+            'ID',
+        ];
+
+        $posted = array_map( 'strip_tags_deep', $data );
+        $posted = erp_array_flatten( $posted );
+        $posted = array_except( $posted, $restricted );
+
+        foreach ( $posted as $key => $value ) {
+            if ( ! empty( $value ) && ( $this->$key != $value ) ) {
+                if ( array_key_exists( $key, $this->data['work'] ) ) {
+                    $this->changes['work'][ $key ] = $value;
+                } else {
+                    $this->changes['personal'][ $key ] = $value;
                 }
             }
         }
 
-        return true;
-    }
+        if ( empty( $this->changes ) ) {
+            return $this;
+        }
 
-    /**
-     * Update employee data
-     *
-     * @since 1.2.9
-     * @return $this
-     */
-    public function save() {
-        $this->validate();
+        do_action( 'erp_hr_employee_update', $this->user_id, wp_parse_args( $this->data, $this->changes ) );
 
         if ( ! empty( $this->changes['work'] ) ) {
-            $this->employee->update( $this->changes['work'] );
+            $this->erp_user->update( $this->changes['work'] );
         }
 
         if ( ! empty( $this->changes['personal'] ) ) {
             foreach ( $this->changes['personal'] as $key => $value ) {
-                if ( in_array( $key, [ 'employee_id', 'user_url' ] ) ) {
-                    continue;
-                }
                 update_user_meta( $this->id, $key, $value );
             }
         }
+
+        //reset changes
 
         $this->changes = array();
         return $this;
     }
 
     /**
-     * Get the user info as an array
+     * Get employee data
      *
-     * @return array
+     * @since 1.2.9
+     *
+     * @param array $data
+     *
+     * @return array|void|mixed|string
+     */
+    function get_data( $data = array() ) {
+        $employee_data = array_merge( $data, $this->data );
+        return apply_filters( 'erp_hr_get_employee_fields', $employee_data, $this->user_id, $this->wp_user );
+    }
+
+    /**
+     *  Get the user info as an array
+     *
+     * @deprecated 1.2.9
+     * @return array|mixed|string|void
      */
     public function to_array() {
-        $data = array();
-        // if ( $this->id ) {
-            $data['id']          = $this->id;
-            $data['employee_id'] = $this->employee_id;
-            $data['user_email']  = $this->user_email;
+        $data['user_id']         = $this->user_id;
+        $data['employee_id']     = $this->employee_id;
+        $data['user_email']      = $this->user_email;
+        $data['name']            = array(
+            'first_name'  => $this->first_name,
+            'last_name'   => $this->last_name,
+            'middle_name' => $this->middle_name,
+            'full_name'   => $this->get_full_name()
+        );
+        $avatar_id               = $this->avatar_id;
+        $data['avatar']['id']    = $avatar_id;
+        $data['avatar']['image'] = $this->get_avatar();
+        if ( $avatar_id ) {
+            $data['avatar']['url'] = $this->get_avatar_url( $avatar_id );
+        }
 
-            $data['name'] = array(
-                'first_name'  => $this->first_name,
-                'last_name'   => $this->last_name,
-                'middle_name' => $this->middle_name,
-                'full_name'   => $this->get_full_name()
-            );
+        return $this->get_data( $data );
+    }
 
-            $avatar_id               = (int) $this->photo_id;
-            $data['avatar']['id']    = $avatar_id;
-            $data['avatar']['image'] = $this->get_avatar();
 
-            if ( $avatar_id ) {
-                $data['avatar']['url'] = $this->get_avatar_url( $avatar_id );
-            }
+    /**
+     * Checks whether the use is employee or not
+     *
+     * @since 1.2.9
+     * @return bool
+     */
+    public function is_employee() {
+        if ( $this->erp_user ) {
+            return true;
+        }
 
-            foreach ( $this->data['work'] as $key => $value ) {
-                $data['work'][ $key ] = $this->$key;
-            }
+        return false;
+    }
 
-            foreach ( $this->data['personal'] as $key => $value ) {
-                $data['personal'][ $key ] = $this->$key;
-            }
-        // }
+    public function get_id() {
+        return $this->user_id;
+    }
 
-        return apply_filters( 'erp_hr_get_employee_fields', $data, $this->id, $this->user );
+    public function get_photo_id() {
+        if ( isset( $this->user->photo_id ) ) {
+            return (int) $this->user->photo_id;
+        }
+        return null;
     }
 
     /**
@@ -394,11 +397,11 @@ class Employee {
      * @return string   image with HTML tag
      */
     public function get_avatar_url( $size = 32 ) {
-        if ( $this->id && ! empty( $this->photo_id ) ) {
+        if ( $this->user_id && ! empty( $this->photo_id ) ) {
             return wp_get_attachment_url( $this->photo_id );
         }
 
-        return get_avatar_url( $this->id, [ 'size' => $size ] );
+        return get_avatar_url( $this->user_id, [ 'size' => $size ] );
     }
 
     /**
@@ -409,13 +412,13 @@ class Employee {
      * @return string   image with HTML tag
      */
     public function get_avatar( $size = 32 ) {
-        if ( $this->id && ! empty( $this->photo_id ) ) {
+        if ( $this->user_id && ! empty( $this->photo_id ) ) {
             $image = wp_get_attachment_thumb_url( $this->photo_id );
 
             return sprintf( '<img src="%1$s" alt="" class="avatar avatar-%2$s photo" height="auto" width="%2$s" />', $image, $size );
         }
 
-        $avatar = get_avatar( $this->id, $size );
+        $avatar = get_avatar( $this->user_id, $size );
 
         if ( ! $avatar ) {
             $image  = WPERP_ASSETS . '/images/mystery-person.png';
@@ -431,8 +434,8 @@ class Employee {
      * @return string the url
      */
     public function get_details_url() {
-        if ( $this->id ) {
-            return admin_url( 'admin.php?page=erp-hr-employee&action=view&id=' . $this->id );
+        if ( $this->user_id ) {
+            return admin_url( 'admin.php?page=erp-hr-employee&action=view&id=' . $this->user_id );
         }
     }
 
@@ -443,16 +446,15 @@ class Employee {
      */
     public function get_full_name() {
         $name = array();
-
-        if ( ! empty( $this->first_name ) ) {
+        if ( $this->first_name ) {
             $name[] = $this->first_name;
         }
 
-        if ( ! empty( $this->middle_name ) ) {
+        if ( $this->middle_name ) {
             $name[] = $this->middle_name;
         }
 
-        if ( ! empty( $this->last_name ) ) {
+        if ( $this->last_name ) {
             $name[] = $this->last_name;
         }
 
@@ -474,11 +476,13 @@ class Employee {
      * @return string
      */
     public function get_job_title() {
-        if ( $this->id && $this->designation && $this->designation !== '-1' ) {
+        if ( $this->user_id && $this->designation ) {
             $designation = Designation::find( $this->designation );
-
-            return stripslashes( $designation->title );
+            if ( $designation ) {
+                return stripslashes( $designation->title );
+            }
         }
+        return null;
     }
 
     /**
@@ -487,11 +491,14 @@ class Employee {
      * @return string
      */
     public function get_department_title() {
-        if ( $this->id && $this->department && $this->department !== '-1' ) {
+        if ( $this->id && $this->department ) {
             $department = Department::find( $this->department );
-
-            return stripslashes( $department->title );
+            if ( $department ) {
+                return stripslashes( $department->title );
+            }
         }
+
+        return null;
     }
 
     /**
@@ -500,11 +507,14 @@ class Employee {
      * @return string
      */
     public function get_work_location() {
-        if ( $this->id && $this->location && $this->location !== '-1' ) {
+        if ( $this->user_id && $this->erp_user->location ) {
             $location = Company_Locations::find( $this->location );
-
-            return stripslashes( $location->name );
+            if ( $location ) {
+                return stripslashes( $location->name );
+            }
         }
+
+        return null;
     }
 
     /**
@@ -514,8 +524,10 @@ class Employee {
      *
      * @return int
      */
-    public function get_work_location_id() {
-        return $this->location;
+    public function get_location() {
+        if ( $this->erp_user->location ) {
+            return $this->erp_user->location;
+        }
     }
 
     /**
@@ -524,15 +536,14 @@ class Employee {
      * @return string
      */
     public function get_status() {
-        if ( $this->status ) {
+        if ( $this->erp_user->status ) {
             $statuses = erp_hr_get_employee_statuses();
 
-            if ( array_key_exists( $this->status, $statuses ) ) {
-                return $statuses[ $this->status ];
+            if ( array_key_exists( $this->erp_user->status, $statuses ) ) {
+                return $statuses[ $this->erp_user->status ];
             }
         }
     }
-
 
     /**
      * Get the employee type
@@ -540,11 +551,11 @@ class Employee {
      * @return string
      */
     public function get_type() {
-        if ( $this->type ) {
+        if ( $this->erp_user->type ) {
             $types = erp_hr_get_employee_types();
 
-            if ( array_key_exists( $this->type, $types ) ) {
-                return $types[ $this->type ];
+            if ( array_key_exists( $this->erp_user->type, $types ) ) {
+                return $types[ $this->erp_user->type ];
             }
         }
     }
@@ -555,15 +566,14 @@ class Employee {
      * @return string
      */
     public function get_hiring_source() {
-        if ( $this->hiring_source ) {
+        if ( ! empty( $this->erp_user->hiring_source ) ) {
             $sources = erp_hr_get_employee_sources();
 
-            if ( array_key_exists( $this->hiring_source, $sources ) ) {
-                return $sources[ $this->hiring_source ];
+            if ( array_key_exists( $this->erp_user->hiring_source, $sources ) ) {
+                return $sources[ $this->erp_user->hiring_source ];
             }
         }
     }
-
 
     /**
      * Get the employee gender
@@ -571,11 +581,11 @@ class Employee {
      * @return string
      */
     public function get_gender() {
-        if ( ! empty( $this->gender ) ) {
+        if ( ! empty( $this->user->gender ) ) {
             $genders = erp_hr_get_genders();
 
-            if ( array_key_exists( $this->gender, $genders ) ) {
-                return $genders[ $this->gender ];
+            if ( array_key_exists( $this->user->gender, $genders ) ) {
+                return $genders[ $this->user->gender ];
             }
         }
     }
@@ -586,14 +596,15 @@ class Employee {
      * @return string
      */
     public function get_marital_status() {
-        if ( ! empty( $this->marital_status ) ) {
+        if ( ! empty( $this->user->marital_status ) ) {
             $statuses = erp_hr_get_marital_statuses();
 
-            if ( array_key_exists( $this->marital_status, $statuses ) ) {
-                return $statuses[ $this->marital_status ];
+            if ( array_key_exists( $this->user->marital_status, $statuses ) ) {
+                return $statuses[ $this->user->marital_status ];
             }
         }
     }
+
 
     /**
      * Get the employee nationalit
@@ -601,11 +612,11 @@ class Employee {
      * @return string
      */
     public function get_nationality() {
-        if ( ! empty( $this->nationality ) ) {
+        if ( ! empty( $this->user->nationality ) ) {
             $countries = \WeDevs\ERP\Countries::instance()->get_countries();
 
-            if ( array_key_exists( $this->nationality, $countries ) ) {
-                return $countries[ $this->nationality ];
+            if ( array_key_exists( $this->user->nationality, $countries ) ) {
+                return $countries[ $this->user->nationality ];
             }
         }
     }
@@ -616,19 +627,22 @@ class Employee {
      * @return string
      */
     public function get_joined_date() {
-        if ( $this->hiring_date != '0000-00-00' ) {
-            return erp_format_date( $this->hiring_date );
+        if ( $this->erp_user->hiring_date != '0000-00-00' ) {
+            return erp_format_date( $this->erp_user->hiring_date );
         }
     }
 
-    /**
-     * Get birth date
-     *
-     * @return string
-     */
-    public function get_birthday() {
-        if ( $this->date_of_birth != '0000-00-00' ) {
-            return erp_format_date( $this->date_of_birth );
+    public function get_date_of_birth() {
+        $date = '';
+        if ( isset( $this->erp_user->date_of_birth ) && ( $this->erp_user->date_of_birth != '0000-00-00' ) ) {
+            $date = erp_format_date( $this->erp_user->date_of_birth );
+        }
+        return $date;
+    }
+
+    public function set_date_of_birth( $date ) {
+        if ( ! empty( $date ) ) {
+            $this->changes['work']['date_of_birth'] = date( 'Y-m-d H:i:s', strtotime( $date ) );
         }
     }
 
@@ -638,7 +652,9 @@ class Employee {
      * @return string
      */
     public function get_street_1() {
-        return ( $this->street_1 ) ? $this->street_1 : '—';
+        if ( ! empty( $this->erp_user->street_1 ) ) {
+            return $this->erp_user->street_1;
+        }
     }
 
     /**
@@ -647,7 +663,9 @@ class Employee {
      * @return string
      */
     public function get_street_2() {
-        return ( $this->street_2 ) ? $this->street_2 : '—';
+        if ( ! empty( $this->erp_user->street_2 ) ) {
+            return $this->erp_user->street_2;
+        }
     }
 
     /**
@@ -656,25 +674,9 @@ class Employee {
      * @return string
      */
     public function get_city() {
-        return ( $this->city ) ? $this->city : '—';
-    }
-
-    /**
-     * Get Country
-     *
-     * @return string
-     */
-    public function get_country() {
-        return erp_get_country_name( $this->country );
-    }
-
-    /**
-     * Get State
-     *
-     * @return string
-     */
-    public function get_state() {
-        return erp_get_state_name( $this->country, $this->state );
+        if ( ! empty( $this->erp_user->city ) ) {
+            return $this->erp_user->city;
+        }
     }
 
     /**
@@ -683,7 +685,28 @@ class Employee {
      * @return string
      */
     public function get_postal_code() {
-        return ( $this->postal_code ) ? $this->postal_code : '—';
+        if ( ! empty( $this->wp_user->postal_code ) ) {
+            return $this->wp_user->postal_code;
+        }
+    }
+
+    /**
+     * Get Country
+     *
+     * @return string
+     */
+    public function get_country() {
+        return erp_get_country_name( $this->wp_user->country );
+    }
+
+
+    /**
+     * Get State
+     *
+     * @return string
+     */
+    public function get_state() {
+        return erp_get_state_name( $this->wp_user->country, $this->wp_user->state );
     }
 
     /**
@@ -692,11 +715,11 @@ class Employee {
      * @return string
      */
     public function get_reporting_to() {
-        if ( $this->reporting_to ) {
-            $user_id = (int) $this->reporting_to;
+        if ( $this->erp_user->reporting_to ) {
+            $user_id = (int) $this->erp_user->reporting_to;
             $user    = new Employee( $user_id );
 
-            if ( $user->id ) {
+            if ( $user->user_id ) {
                 return $user;
             }
         }
@@ -716,19 +739,29 @@ class Employee {
 
         switch ( $which ) {
             case 'mobile':
-                $phone = isset( $this->mobile ) ? $this->mobile : '';
+                $phone = isset( $this->user->mobile ) ? $this->user->mobile : '';
                 break;
 
             case 'phone':
-                $phone = isset( $this->phone ) ? $this->phone : '';
+                $phone = isset( $this->user->phone ) ? $this->user->phone : '';
                 break;
 
             default:
-                $phone = isset( $this->work_phone ) ? $this->work_phone : '';
+                $phone = isset( $this->user->work_phone ) ? $this->user->work_phone : '';
                 break;
         }
 
         return $phone;
+    }
+
+    /**
+     * Get birth date
+     *
+     * @deprecated 1.2.9
+     * @return string
+     */
+    public function get_birthday() {
+        return $this->get_date_of_birth();
     }
 
     /**
@@ -737,11 +770,17 @@ class Employee {
      * @return array the qualifications
      */
     public function get_educations( $limit = 30, $offset = 0 ) {
-        return $this->employee
+        return $this->erp_user
             ->educations()
             ->skip( $offset )
             ->take( $limit )
             ->get();
+    }
+
+    public function add_education( $data ) {
+    }
+
+    public function delete_education( $id ) {
     }
 
     /**
@@ -750,12 +789,20 @@ class Employee {
      * @return array the dependents
      */
     public function get_dependants( $limit = 30, $offset = 0 ) {
-        return $this->employee
+        return $this->erp_user
             ->dependents()
             ->skip( $offset )
             ->take( $limit )
             ->get();
     }
+
+
+    public function add_dependants( $data ) {
+    }
+
+    public function delete_dependants( $id ) {
+    }
+
 
     /**
      * Get work experiences
@@ -763,7 +810,7 @@ class Employee {
      * @return array
      */
     public function get_experiences( $limit = 30, $offset = 0 ) {
-        return $this->employee
+        return $this->erp_user
             ->experiences()
             ->skip( $offset )
             ->take( $limit )
@@ -777,7 +824,7 @@ class Employee {
      */
     public function get_histories( $module = 'all', $limit = 30, $offset = 0 ) {
         $modules   = erp_hr_employee_history_modules();
-        $histories = $this->employee->histories();
+        $histories = $this->erp_user->histories();
         if ( ( $module !== 'all' ) && ( in_array( $module, $modules ) ) ) {
             $histories = $histories->where( 'module', $module );
         }
@@ -797,16 +844,8 @@ class Employee {
         return $formatted_histories;
     }
 
-    /**
-     * Create or update a history
-     *
-     * @since 1.2.9
-     *
-     * @param $history
-     *
-     * @return array|bool|\WP_Error
-     */
-    public function create_or_update_history( $history ) {
+
+    public function add_history( $data ) {
         $modules = erp_hr_employee_history_modules();
 
         $module = empty( $history['module'] ) ? '' : $history['module'];
@@ -815,12 +854,13 @@ class Employee {
         }
 
         //update employee data
+        $update = [];
         foreach ( $history as $key => $val ) {
             if ( array_key_exists( $key, $this->data['work'] ) ) {
-                $this->set_prop( $key, $val );
+                $update[ $key ] = $val;
             }
         }
-        $this->save();
+        $this->update_employee( $update );
 
         if ( ! empty( $history['designation'] ) ) {
             $history['designation'] = $this->get_job_title();
@@ -852,6 +892,10 @@ class Employee {
         return $created_parsed_history;
     }
 
+    public function delete_history( $id ) {
+
+    }
+
     /**
      * Update employment status
      *
@@ -863,7 +907,7 @@ class Employee {
      */
     public function update_employment_status( $new_status, $date = '', $comment = '' ) {
 
-        return $this->create_or_update_history( [
+        return $this->add_history( [
             'date'    => $date,
             'type'    => $new_status,
             'comment' => $comment,
@@ -883,7 +927,7 @@ class Employee {
      * @return array|bool|\WP_Error
      */
     public function update_compensation( $rate = 0, $type = '', $reason = '', $date = '', $comment = '' ) {
-        return $this->create_or_update_history( [
+        return $this->add_history( [
             'date'     => $date,
             'comment'  => $comment,
             'pay_type' => $type,
@@ -905,7 +949,7 @@ class Employee {
      * @return array|bool|\WP_Error
      */
     public function update_job_info( $department_id, $designation_id, $reporting_to = 0, $location = 0, $date = '' ) {
-        return $this->create_or_update_history( [
+        return $this->add_history( [
             'date'         => $date,
             'designation'  => $designation_id,
             'department'   => $department_id,
@@ -927,7 +971,7 @@ class Employee {
     public function get_performances( $type = 'all', $limit = 30, $offset = 0 ) {
         $types = [ 'reviews', 'comments', 'goals' ];
 
-        $performances = $this->employee->performances();
+        $performances = $this->erp_user->performances();
         if ( ( $type !== 'all' ) && ( in_array( $type, $types ) ) ) {
             $performances = $performances->where( 'type', $type );
         }
@@ -939,15 +983,55 @@ class Employee {
         return $performances;
     }
 
+    public function add_performance( $data ) {
+    }
+
+    public function delete_performance( $id ) {
+    }
+
     /**
-     * Add a new note
+     * Get employee performance list
      *
-     * @param string $note the note to be added
-     * @param int    $comment_by
-     * @$return_object boolean
+     * @param int $limit
+     * @param int $offset
      *
-     * @return int|object note id
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+    public function get_dependents( $limit = 30, $offset = 0 ) {
+
+        $dependants = $this->erp_user
+            ->dependents()
+            ->skip( $offset )
+            ->take( $limit )
+            ->get();
+
+        return $dependants;
+    }
+
+    public function add_dependents( $data ) {
+    }
+
+    public function delete_dependents( $id ) {
+    }
+
+    /**
+     * Get all notes
+     *
+     * @param  int $limit
+     * @param  int $offset
+     *
+     * @return array
+     */
+    public function get_notes( $limit = 30, $offset = 0 ) {
+
+        return $this->erp_user
+            ->notes()
+            ->skip( $offset )
+            ->take( $limit )
+            ->get();
+    }
+
+
     public function add_note( $note, $comment_by = null, $return_object = false ) {
         global $wpdb;
 
@@ -977,21 +1061,8 @@ class Employee {
         return false;
     }
 
-    /**
-     * Get all notes
-     *
-     * @param  int $limit
-     * @param  int $offset
-     *
-     * @return array
-     */
-    public function get_notes( $limit = 30, $offset = 0 ) {
 
-        return Hr_User::find( $this->id )
-                      ->notes()
-                      ->skip( $offset )
-                      ->take( $limit )
-                      ->get();
+    public function delete_note( $id ) {
     }
 
     /**
@@ -1026,8 +1097,49 @@ class Employee {
         return erp_array_to_object( $announcements );
     }
 
-    public function get_entitlements( $date = null, $return_array = false, $limit = 30, $offset = 0 ) {
-        return $this->employee->entitlements()->toSql();
+    /**
+     * Get assigned entitlements
+     *
+     * @since 1.2.9
+     *
+     * @return array
+     */
+    public function get_entitlements( $args = array() ) {
+        $financial_year_dates = erp_get_financial_year_dates();
+        $defaults             = array(
+            'policy_id' => 0,
+            'from_date' => $financial_year_dates['start'],
+            'to_date'   => $financial_year_dates['end'],
+            'number'    => 20,
+            'offset'    => 0,
+            'orderby'   => 'created_on',
+            'order'     => 'DESC',
+        );
+
+        $args = wp_parse_args( $args, $defaults );
+
+        $entitlements = $this->employee->entitlements();
+        if ( ! empty( $args['policy_id'] ) ) {
+            $entitlements = $entitlements->where( 'policy_id', intval( $args['policy_id'] ) );
+        }
+        $entitlements = $entitlements->where( 'from_date', $args['from_date'] )
+                                     ->where( 'to_date', $args['to_date'] )
+                                     ->skip( $args['offset'] )
+                                     ->take( $args['number'] )
+                                     ->orderBy( $args['orderby'], $args['order'] )
+                                     ->get();
+
+        return $entitlements;
+    }
+
+    /**
+     * Get leave balances
+     *
+     * @since 1.2.9
+     * @return bool|float
+     */
+    public function get_leave_balance() {
+        return erp_hr_leave_get_balance( $this->id );
     }
 
     /**
@@ -1116,10 +1228,10 @@ class Employee {
         if ( ! $args['eligible_for_rehire'] ) {
             return new \WP_Error( 'no-eligible-for-rehire', 'Eligible for rehire field is required' );
         }
-
-        $this->set_prop( 'status', 'terminated' );
-        $this->set_prop( 'termination_date', $args['terminate_date'] );
-        $this->save();
+        $this->update_employee( [
+            'status'           => 'terminated',
+            'termination_date' => $args['terminate_date']
+        ] );
 
         $comments = sprintf( '%s: %s; %s: %s; %s: %s',
             __( 'Termination Type', 'erp' ),
@@ -1129,7 +1241,7 @@ class Employee {
             __( 'Eligible for Hire', 'erp' ),
             erp_hr_get_terminate_rehire_options( $args['eligible_for_rehire'] ) );
 
-        $this->create_or_update_history( [
+        $this->add_history( [
             'module'  => 'employment',
             'date'    => $args['terminate_date'],
             'type'    => 'terminated',
@@ -1140,6 +1252,5 @@ class Employee {
 
         return $this;
     }
-
 
 }
