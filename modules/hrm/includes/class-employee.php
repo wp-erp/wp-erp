@@ -587,11 +587,11 @@ class Employee {
      * @return string
      */
     public function get_gender() {
-        if ( ! empty( $this->user->gender ) ) {
+        if ( ! empty( $this->wp_user->gender ) ) {
             $genders = erp_hr_get_genders();
 
-            if ( array_key_exists( $this->user->gender, $genders ) ) {
-                return $genders[ $this->user->gender ];
+            if ( array_key_exists( $this->wp_user->gender, $genders ) ) {
+                return $genders[ $this->wp_user->gender ];
             }
         }
     }
@@ -602,11 +602,11 @@ class Employee {
      * @return string
      */
     public function get_marital_status() {
-        if ( ! empty( $this->user->marital_status ) ) {
+        if ( ! empty( $this->wp_user->marital_status ) ) {
             $statuses = erp_hr_get_marital_statuses();
 
-            if ( array_key_exists( $this->user->marital_status, $statuses ) ) {
-                return $statuses[ $this->user->marital_status ];
+            if ( array_key_exists( $this->wp_user->marital_status, $statuses ) ) {
+                return $statuses[ $this->wp_user->marital_status ];
             }
         }
     }
@@ -618,11 +618,11 @@ class Employee {
      * @return string
      */
     public function get_nationality() {
-        if ( ! empty( $this->user->nationality ) ) {
+        if ( ! empty( $this->wp_user->nationality ) ) {
             $countries = \WeDevs\ERP\Countries::instance()->get_countries();
 
-            if ( array_key_exists( $this->user->nationality, $countries ) ) {
-                return $countries[ $this->user->nationality ];
+            if ( array_key_exists( $this->wp_user->nationality, $countries ) ) {
+                return $countries[ $this->wp_user->nationality ];
             }
         }
     }
@@ -654,24 +654,24 @@ class Employee {
     }
 
     /**
-     * Get Address 1
+     * Get Street 1
      *
      * @return string
      */
     public function get_street_1() {
-        if ( ! empty( $this->erp_user->street_1 ) ) {
-            return $this->erp_user->street_1;
+        if ( ! empty( $this->wp_user->street_1 ) ) {
+            return $this->wp_user->street_1;
         }
     }
 
     /**
-     * Get Address 2
+     * Get Street 2
      *
      * @return string
      */
     public function get_street_2() {
-        if ( ! empty( $this->erp_user->street_2 ) ) {
-            return $this->erp_user->street_2;
+        if ( ! empty( $this->wp_user->street_2 ) ) {
+            return $this->wp_user->street_2;
         }
     }
 
@@ -681,8 +681,8 @@ class Employee {
      * @return string
      */
     public function get_city() {
-        if ( ! empty( $this->erp_user->city ) ) {
-            return $this->erp_user->city;
+        if ( ! empty( $this->wp_user->city ) ) {
+            return $this->wp_user->city;
         }
     }
 
@@ -746,15 +746,15 @@ class Employee {
 
         switch ( $which ) {
             case 'mobile':
-                $phone = isset( $this->user->mobile ) ? $this->user->mobile : '';
+                $phone = isset( $this->wp_user->mobile ) ? $this->wp_user->mobile : '';
                 break;
 
             case 'phone':
-                $phone = isset( $this->user->phone ) ? $this->user->phone : '';
+                $phone = isset( $this->wp_user->phone ) ? $this->wp_user->phone : '';
                 break;
 
             default:
-                $phone = isset( $this->user->work_phone ) ? $this->user->work_phone : '';
+                $phone = isset( $this->wp_user->work_phone ) ? $this->wp_user->work_phone : '';
                 break;
         }
 
@@ -1316,6 +1316,5 @@ class Employee {
     protected function send_error( $code, $message ) {
         return new \WP_Error( $code, $message );
     }
-
 
 }

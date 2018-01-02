@@ -32,14 +32,13 @@ function erp_hr_employee_on_delete( $user_id, $hard = 0 ) {
  */
 function erp_hr_employee_create( $args = array() ) {
     $employee = new \WeDevs\ERP\HRM\Employee( null );
-    $result   = $employee->create( $args );
+    $result   = $employee->create_employee( $args );
 
     if ( is_wp_error( $result ) ) {
         return $result->get_error_message();
     }
 
-    return $result->id;
-
+    return $result->user_id;
 }
 
 /**
