@@ -865,10 +865,65 @@ class Employee {
             ->get();
     }
 
-    public function add_education( $data ) {
+    /**
+     * Create / Update Education
+     *
+     * @since 1.2.9
+     *
+     * @param array $data
+     * @param bool  $return_id
+     *
+     * @return array|\WP_Error
+     */
+    public function add_education( $data, $return_id = true ) {
+        $default = [
+            'id'          => '',
+            'school'      => '',
+            'degree'      => '',
+            'field'       => '',
+            'finished'    => '',
+            'notes'       => '',
+            'interest'    => ''
+        ];
+
+        $args     = wp_parse_args( $data, $default );
+
+        $requires = [
+            'school'   => __( 'School Name', 'erp' ),
+            'degree'   => __( 'Degree', 'erp' ),
+            'field'    => __( 'Field', 'erp' ),
+            'finished' => __( 'Completion date', 'erp' ),
+        ];
+
+        foreach ( $requires as $key => $value ) {
+            if ( empty( $args[ $key ] ) ) {
+                return $this->send_error( "empty-" . $key, __( sprintf( '%s is required.', $value ), 'erp' ) );
+            }
+        }
+
+        if ( ! $args['id'] ) {
+            // education will update
+            do_action( 'erp_hr_employee_education_create', $args );
+        }
+
+        $education = $this->erp_user->educations()->updateOrCreate(['id' => $args['id']], $args)->toArray();
+
+        if ( ! $education ) {
+            return $this->send_error( 'error-creating-education', __( 'Could not create education.', 'erp' ) );
+        }
+
+        return $education;
     }
 
+
+    /**
+     * Delete Education
+     *
+     * @since 1.2.9
+     * 
+     */
     public function delete_education( $id ) {
+        $this->erp_user->educations()->find( $id )->delete();
     }
 
     /**
@@ -876,7 +931,7 @@ class Employee {
      *
      * @return array the dependents
      */
-    public function get_dependants( $limit = 30, $offset = 0 ) {
+    public function get_dependents( $limit = 30, $offset = 0 ) {
         return $this->erp_user
             ->dependents()
             ->skip( $offset )
@@ -884,13 +939,55 @@ class Employee {
             ->get();
     }
 
+    /**
+     * Add dependent
+     *
+     * @since 1.2.9
+     *
+     * @param array $data
+     * @param bool  $return_id
+     *
+     * @return array|\WP_Error
+     */
 
-    public function add_dependants( $data ) {
+    public function add_dependent( $data, $return_id = true ) {
+        $default = [
+            'id'          => '',
+            'name'        => '',
+            'relation'    => '',
+            'dob'         => ''
+        ];
+
+        $args     = wp_parse_args( $data, $default );
+
+        $requires = [
+            'name'     => __( 'Name', 'erp' ),
+            'relation' => __( 'Relation', 'erp' )
+        ];
+
+        if ( ! $args['id'] ) {
+            // education will update
+            do_action( 'erp_hr_employee_dependents_create', $args );
+        }
+
+        $dependent = $this->erp_user->dependents()->updateOrCreate(['id' => $args['id']], $args)->toArray();
+
+        if ( ! $dependent ) {
+            return $this->send_error( 'error-creating-dependent', __( 'Could not create dependent.', 'erp' ) );
+        }
+
+        return $dependent;
     }
 
-    public function delete_dependants( $id ) {
+    /**
+     *  Delete dependent
+     *
+     * @since 1.2.9
+     * 
+     */
+    public function delete_dependent( $id ) {
+        $this->erp_user->dependents()->find( $id )->delete();
     }
-
 
     /**
      * Get work experiences
@@ -924,7 +1021,7 @@ class Employee {
             'to'           => '',
             'description'  => ''
         ];
-        
+
         $args     = wp_parse_args( $data, $default );
 
         $requires = [
@@ -964,7 +1061,7 @@ class Employee {
      * @return array|\WP_Error
      */
     public function delete_experience( $id ) {
-        $this->erp_user->experiences()->where('id', $id)->delete();
+        $this->erp_user->experiences()->find( $id )->delete();
     }
 
     /**
@@ -1137,31 +1234,6 @@ class Employee {
     }
 
     public function delete_performance( $id ) {
-    }
-
-    /**
-     * Get employee performance list
-     *
-     * @param int $limit
-     * @param int $offset
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function get_dependents( $limit = 30, $offset = 0 ) {
-
-        $dependants = $this->erp_user
-            ->dependents()
-            ->skip( $offset )
-            ->take( $limit )
-            ->get();
-
-        return $dependants;
-    }
-
-    public function add_dependents( $data ) {
-    }
-
-    public function delete_dependents( $id ) {
     }
 
     /**
