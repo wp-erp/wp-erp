@@ -382,10 +382,31 @@ class Employee {
         return false;
     }
 
-    public function get_id() {
+    /**
+     * Get user id
+     *
+     * @since 1.2.9
+     * @return int
+     */
+    public function get_user_id() {
         return $this->user_id;
     }
 
+    /**
+     * Get user id
+     *
+     * @deprecated 1.2.9
+     * @return int
+     */
+    public function get_id() {
+        return $this->get_user_id();
+    }
+
+    /**
+     * get photo id
+     *
+     * @return int|null
+     */
     public function get_photo_id() {
         if ( isset( $this->user->photo_id ) ) {
             return (int) $this->user->photo_id;
@@ -476,35 +497,65 @@ class Employee {
     }
 
     /**
-     * Get the job title
+     * Get designation
      *
-     * @return string
+     * @since 1.2.9
+     *
+     * @param string $context
+     *
+     * @return mixed|string
      */
-    public function get_job_title() {
-        if ( $this->user_id && $this->designation ) {
+    public function get_designation( $context = 'edit' ) {
+        if ( $this->is_employee() && $this->erp_user->designation ) {
+            if ( $context == 'edit' ) {
+                return $this->erp_user->designation;
+            }
             $designation = Designation::find( $this->designation );
             if ( $designation ) {
                 return stripslashes( $designation->title );
             }
         }
-
-        return null;
     }
 
     /**
-     * Get the department title
+     * Get the job title
      *
+     * @since 1.2.9
      * @return string
      */
-    public function get_department_title() {
-        if ( $this->id && $this->department ) {
+    public function get_job_title() {
+        return $this->get_designation( 'view' );
+    }
+
+    /**
+     * Get department
+     *
+     * @since 1.2.9
+     *
+     * @param string $context
+     *
+     * @return mixed|string
+     */
+    public function get_department( $context = 'edit' ) {
+        if ( $this->is_employee() && $this->erp_user->department ) {
+            if ( $context == 'edit' ) {
+                return $this->erp_user->department;
+            }
             $department = Department::find( $this->department );
             if ( $department ) {
                 return stripslashes( $department->title );
             }
         }
+    }
 
-        return null;
+    /**
+     * Get the department title
+     *
+     * @deprecated 1.2.9
+     * @return string
+     */
+    public function get_department_title() {
+        return $this->get_department( 'view' );
     }
 
     /**
@@ -513,14 +564,7 @@ class Employee {
      * @return string
      */
     public function get_work_location() {
-        if ( $this->user_id && $this->erp_user->location ) {
-            $location = Company_Locations::find( $this->location );
-            if ( $location ) {
-                return stripslashes( $location->name );
-            }
-        }
-
-        return null;
+        return $this->get_location( 'view' );
     }
 
     /**
@@ -530,9 +574,15 @@ class Employee {
      *
      * @return int
      */
-    public function get_location() {
-        if ( $this->erp_user->location ) {
-            return $this->erp_user->location;
+    public function get_location( $context = 'edit' ) {
+        if ( $this->is_employee() && $this->erp_user->location ) {
+            if ( $context == 'edit' ) {
+                return $this->erp_user->location;
+            }
+            $location = Company_Locations::find( $this->location );
+            if ( $location ) {
+                return stripslashes( $location->name );
+            }
         }
     }
 
@@ -541,12 +591,16 @@ class Employee {
      *
      * @return string
      */
-    public function get_status() {
+    public function get_status( $context = 'edit' ) {
         if ( $this->erp_user->status ) {
+            $status = $this->erp_user->status;
+            if ( $context == 'edit' ) {
+                return $status;
+            }
             $statuses = erp_hr_get_employee_statuses();
 
-            if ( array_key_exists( $this->erp_user->status, $statuses ) ) {
-                return $statuses[ $this->erp_user->status ];
+            if ( array_key_exists( $status, $statuses ) ) {
+                return $statuses[ $status ];
             }
         }
     }
@@ -554,10 +608,17 @@ class Employee {
     /**
      * Get the employee type
      *
-     * @return string
+     * @param string $context
+     *
+     * @return mixed
      */
-    public function get_type() {
-        if ( $this->erp_user->type ) {
+    public function get_type( $context = 'edit' ) {
+        if ( $this->is_employee() && $this->erp_user->type ) {
+            $type = $this->erp_user->type;
+            if ( $context == 'edit' ) {
+                return $type;
+            }
+
             $types = erp_hr_get_employee_types();
 
             if ( array_key_exists( $this->erp_user->type, $types ) ) {
@@ -571,8 +632,11 @@ class Employee {
      *
      * @return string
      */
-    public function get_hiring_source() {
-        if ( ! empty( $this->erp_user->hiring_source ) ) {
+    public function get_hiring_source( $context = 'edit' ) {
+        if ( $this->is_employee() && ! empty( $this->erp_user->hiring_source ) ) {
+            if ( $context == 'edit' ) {
+                return $this->erp_user->hiring_source;
+            }
             $sources = erp_hr_get_employee_sources();
 
             if ( array_key_exists( $this->erp_user->hiring_source, $sources ) ) {
@@ -586,14 +650,19 @@ class Employee {
      *
      * @return string
      */
-    public function get_gender() {
-        if ( ! empty( $this->wp_user->gender ) ) {
+    public function get_gender( $context = 'edit' ) {
+        if ( $this->is_employee() && ! empty( $this->wp_user->gender ) ) {
+            if ( $context == 'edit' ) {
+                return $this->wp_user->gender;
+            }
             $genders = erp_hr_get_genders();
 
             if ( array_key_exists( $this->wp_user->gender, $genders ) ) {
                 return $genders[ $this->wp_user->gender ];
             }
         }
+
+        return null;
     }
 
     /**
@@ -601,14 +670,19 @@ class Employee {
      *
      * @return string
      */
-    public function get_marital_status() {
-        if ( ! empty( $this->wp_user->marital_status ) ) {
-            $statuses = erp_hr_get_marital_statuses();
+    public function get_marital_status( $context = 'edit' ) {
+        if ( $this->is_employee() && ! empty( $this->wp_user->marital_status ) ) {
+            if ( $context == 'edit' ) {
+                return $this->wp_user->marital_status;
+            }
 
+            $statuses = erp_hr_get_marital_statuses();
             if ( array_key_exists( $this->wp_user->marital_status, $statuses ) ) {
                 return $statuses[ $this->wp_user->marital_status ];
             }
         }
+
+        return null;
     }
 
 
@@ -617,8 +691,12 @@ class Employee {
      *
      * @return string
      */
-    public function get_nationality() {
-        if ( ! empty( $this->wp_user->nationality ) ) {
+    public function get_nationality( $context = 'edit' ) {
+        if ( $this->is_employee() && ! empty( $this->wp_user->nationality ) ) {
+            if ( $context == 'edit' ) {
+                return $this->wp_user->nationality;
+            }
+
             $countries = \WeDevs\ERP\Countries::instance()->get_countries();
 
             if ( array_key_exists( $this->wp_user->nationality, $countries ) ) {
@@ -702,8 +780,13 @@ class Employee {
      *
      * @return string
      */
-    public function get_country() {
-        return erp_get_country_name( $this->wp_user->country );
+    public function get_country($context = 'edit') {
+        if( $this->is_employee() && isset($this->wp_user->country)){
+            if( $context == 'edit'){
+                return $this->wp_user->country;
+            }
+            return erp_get_country_name( $this->wp_user->country );
+        }
     }
 
 
@@ -722,16 +805,14 @@ class Employee {
      * @return string
      */
     public function get_reporting_to() {
-        if ( $this->erp_user->reporting_to ) {
+        if ( $this->is_employee() && $this->erp_user->reporting_to ) {
             $user_id = (int) $this->erp_user->reporting_to;
             $user    = new Employee( $user_id );
-
-            if ( $user->user_id ) {
-                return $user;
+            if ( ! $user->is_employee() ) {
+                return null;
             }
+            return $user->get_user_id();
         }
-
-        return false;
     }
 
     /**
@@ -1334,6 +1415,17 @@ class Employee {
      */
     protected function send_error( $code, $message ) {
         return new \WP_Error( $code, $message );
+    }
+
+    function test(){
+        $r = $this->erp_user->experiences()->updateOrCreate(['id' => null],[
+            'company_name' => 'weDevs ops updated 2',
+            'job_title'    => 'Job Title',
+            'from'         => '2015-07-11',
+            'to'           => '2016-08-10',
+            'description'  => 'Great description'
+        ]);
+        echo($r);
     }
 
 }
