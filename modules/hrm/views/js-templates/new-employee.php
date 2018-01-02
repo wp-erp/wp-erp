@@ -419,7 +419,7 @@
 
     <?php do_action( 'erp-hr-employee-form-bottom' ); ?>
 
-    <input type="hidden" name="user_id" id="erp-employee-id" value="{{ data.id }}">
+    <input type="hidden" name="user_id" id="erp-employee-id" value="{{ data.user_id }}">
     <input type="hidden" name="action" id="erp-employee-action" value="erp-hr-employee-new">
     <?php wp_nonce_field( 'wp-erp-hr-employee-nonce' ); ?>
     <?php do_action( 'erp_hr_employee_form' ); ?>
