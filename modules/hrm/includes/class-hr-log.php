@@ -43,16 +43,16 @@ class Hr_Log {
         $this->action( 'erp_hr_employee_dependents_delete', 'delete_dependents' );
 
         // Employee employment status
-        $this->action( 'erp_hr_employee_employment_status_create', 'create_employment_status' );
-        $this->action( 'erp_hr_employee_employment_status_delete', 'delete_employment_status' );
+        $this->action( 'erp_hr_employee_employment_history_create', 'create_employment_status' );
+        $this->action( 'erp_hr_employee_employment_history_delete', 'delete_employment_status' );
 
         // Employee compensation
-        $this->action( 'erp_hr_employee_compensation_create', 'create_compensation' );
-        $this->action( 'erp_hr_employee_compensation_delete', 'delete_compensation' );
+        $this->action( 'erp_hr_employee_compensation_history_create', 'create_compensation' );
+        $this->action( 'erp_hr_employee_compensation_history_delete', 'delete_compensation' );
 
         // Employee job info
-        $this->action( 'erp_hr_employee_job_info_create', 'create_job_info' );
-        $this->action( 'erp_hr_employee_job_info_delete', 'delete_job_info' );
+        $this->action( 'erp_hr_employee_job_history_create', 'create_job_info' );
+        $this->action( 'erp_hr_employee_job_history_delete', 'delete_job_info' );
 
         // Department
         $this->action( 'erp_hr_dept_new', 'create_department', 10, 2 );

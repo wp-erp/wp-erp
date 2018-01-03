@@ -1,7 +1,8 @@
 <?php
 
-namespace WeDevs\ERP\API;
+namespace WeDevs\ERP\HRM\API;
 
+use WeDevs\ERP\API\REST_Controller;
 use WeDevs\ERP\HRM\Employee;
 use WeDevs\ERP\HRM\Models\Department;
 use WeDevs\ERP\HRM\Models\Dependents;
@@ -13,6 +14,7 @@ use WeDevs\ERP\HRM\Models\Employee_Note;
 use WP_Error;
 use WP_REST_Response;
 use WP_REST_Server;
+
 
 class Employees_Controller extends REST_Controller {
     /**

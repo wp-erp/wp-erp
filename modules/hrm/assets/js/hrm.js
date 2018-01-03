@@ -961,7 +961,8 @@
                 if ( confirm( wpErpHr.confirm ) ) {
                     wp.ajax.send( 'erp-hr-emp-delete-history', {
                         data: {
-                            id: $(this).data('id'),
+                            history_id: $(this).data('id'),
+                            user_id: wpErpCurrentEmployee.user_id,
                             _wpnonce: wpErpHr.nonce
                         },
                         success: function() {
