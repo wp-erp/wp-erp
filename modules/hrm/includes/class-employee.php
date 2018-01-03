@@ -1281,6 +1281,7 @@ class Employee {
         $note = $this->erp_user->notes()->create( $data );
         if ( $note ) {
             do_action( 'erp_hr_employee_note_new', $note->id, $this->user_id );
+
             if ( $return_object ) {
                 return $note;
             }
@@ -1299,7 +1300,7 @@ class Employee {
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function delete_note( $id ) {
-        return $this->erp_user->notes() - where( 'id', $id )->delete();
+        return $this->erp_user->notes()->where( $id )->delete();
     }
 
     /**

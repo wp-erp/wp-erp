@@ -19,7 +19,7 @@
                 'options' => array( 0 => __( '- Select -', 'erp' ) ) + erp_hr_get_employee_statuses()
             ) ); ?>
 
-            <input type="hidden" name="user_id" id="erp-employee-id" value="<?php echo $employee->id; ?>">
+            <input type="hidden" name="user_id" id="erp-employee-id" value="<?php echo $employee->get_user_id(); ?>">
             <input type="hidden" name="action" id="erp-employee-status-action" value="erp-hr-employee-status">
             <?php wp_nonce_field( 'wp-erp-hr-employee-update-nonce' ); ?>
             <input type="submit" class="button" data-title="<?php _e( 'Terminate Employee', 'erp' ); ?>" id="erp-hr-employee-status-update" name="employee_update_status" value="<?php esc_attr_e( 'Update', 'erp' ); ?>">
@@ -28,10 +28,9 @@
     }
     ?>
 
-
     <h3><?php _e( 'Employment Status', 'erp' ) ?></h3>
     <?php if ( current_user_can( 'erp_manage_jobinfo' ) ) { ?>
-        <a href="#" id="erp-empl-status" class="action button" data-id="<?php echo $employee->id; ?>"
+        <a href="#" id="erp-empl-status" class="action button" data-id="<?php echo $employee->get_user_id(); ?>"
             data-template="erp-employment-status"
             data-title="<?php _e( 'Employment Status', 'erp' ); ?>"><?php _e( 'Update Status', 'erp' ); ?></a>
     <?php } ?>
@@ -77,11 +76,11 @@
 
     <hr />
 
-    <?php if ( current_user_can( 'erp_edit_employee', $employee->id ) ) : ?>
+    <?php if ( current_user_can( 'erp_edit_employee', $employee->get_user_id() ) ) : ?>
 
         <h3><?php _e( 'Compensation', 'erp' ) ?></h3>
         <?php if ( current_user_can( 'erp_manage_jobinfo' ) ) { ?>
-            <a href="#" id="erp-empl-compensation" class="action button" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-compensation" data-title="<?php _e( 'Update Compensation', 'erp' ); ?>"><?php _e( 'Update Compensation', 'erp' ); ?></a>
+            <a href="#" id="erp-empl-compensation" class="action button" data-id="<?php echo $employee->get_user_id(); ?>" data-template="erp-employment-compensation" data-title="<?php _e( 'Update Compensation', 'erp' ); ?>"><?php _e( 'Update Compensation', 'erp' ); ?></a>
         <?php } ?>
 
         <table class="widefat">
@@ -116,7 +115,7 @@
                                 <?php echo ( ! empty( $compensation['comment'] ) ) ? wp_kses_post( $compensation['comment'] ) : '--'; ?>
                             </td>
                             <td class="action">
-                                <?php if ( current_user_can( 'erp_manage_jobinfo', $employee->id ) ) : ?>
+                                <?php if ( current_user_can( 'erp_manage_jobinfo', $employee->get_user_id() ) ) : ?>
                                     <a href="#" class="remove" data-id="<?php echo $compensation['id']; ?>"><span class="dashicons dashicons-trash"></span></a>
                                 <?php endif; ?>
                             </td>
@@ -138,7 +137,7 @@
 
     <h3><?php _e( 'Job Information', 'erp' ) ?></h3>
     <?php if ( current_user_can( 'erp_manage_jobinfo' ) ) { ?>
-        <a href="#" id="erp-empl-jobinfo" class="action button" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-jobinfo" data-title="<?php _e( 'Update Job Information', 'erp' ); ?>"><?php _e( 'Update Job Information', 'erp' ); ?></a>
+        <a href="#" id="erp-empl-jobinfo" class="action button" data-id="<?php echo $employee->get_user_id(); ?>" data-template="erp-employment-jobinfo" data-title="<?php _e( 'Update Job Information', 'erp' ); ?>"><?php _e( 'Update Job Information', 'erp' ); ?></a>
     <?php } ?>
     <table class="widefat">
         <thead>
