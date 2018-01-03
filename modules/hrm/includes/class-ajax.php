@@ -1144,22 +1144,8 @@ class Ajax_Handler {
         $to           = isset( $_POST['to'] ) ? strip_tags( $_POST['to'] ) : '';
         $description  = isset( $_POST['description'] ) ? strip_tags( $_POST['description'] ) : '';
 
-        // some basic validations
-        $requires = [
-            'company_name' => __( 'Company Name', 'erp' ),
-            'job_title'    => __( 'Job Title', 'erp' ),
-            'from'         => __( 'From date', 'erp' ),
-            'to'           => __( 'To date', 'erp' ),
-        ];
-
-        foreach ( $requires as $var_name => $label ) {
-            if ( ! $$var_name ) {
-                $this->send_error( sprintf( __( '%s is required', 'erp' ), $label ) );
-            }
-        }
-
         $fields = [
-            'employee_id'  => $employee_id,
+            'id'           => $exp_id,
             'company_name' => $company_name,
             'job_title'    => $job_title,
             'from'         => $from,
@@ -1167,12 +1153,13 @@ class Ajax_Handler {
             'description'  => $description
         ];
 
-        if ( ! $exp_id ) {
-            do_action( 'erp_hr_employee_experience_new', $fields );
-            Work_Experience::create( $fields );
-        } else {
-            Work_Experience::find( $exp_id )->update( $fields );
+        $employee = new Employee( $employee_id );
+
+        if ( ! $employee->is_employee() ) {
+            $this->send_error( __( 'You have to be an employee to do this action', 'erp' ) );
         }
+
+        $employee->add_experience( $fields );
 
         $this->send_success();
     }
@@ -1187,8 +1174,10 @@ class Ajax_Handler {
 
         $id          = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
         $employee_id = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+            
+        $employee = new Employee( $employee_id );
 
-        if ( ! $employee_id ) {
+        if ( ! $employee->is_employee() ) {
             $this->send_error( __( 'No employee found', 'erp' ) );
         }
 
@@ -1199,7 +1188,7 @@ class Ajax_Handler {
 
         if ( $id ) {
             do_action( 'erp_hr_employee_experience_delete', $id );
-            Work_Experience::find( $id )->delete();
+            $employee->delete_experience( $id );
         }
 
         $this->send_success();
@@ -1228,22 +1217,8 @@ class Ajax_Handler {
         $notes    = isset( $_POST['notes'] ) ? strip_tags( $_POST['notes'] ) : '';
         $interest = isset( $_POST['interest'] ) ? strip_tags( $_POST['interest'] ) : '';
 
-        // some basic validations
-        $requires = [
-            'school'   => __( 'School Name', 'erp' ),
-            'degree'   => __( 'Degree', 'erp' ),
-            'field'    => __( 'Field', 'erp' ),
-            'finished' => __( 'Completion date', 'erp' ),
-        ];
-
-        foreach ( $requires as $var_name => $label ) {
-            if ( ! $$var_name ) {
-                $this->send_error( sprintf( __( '%s is required', 'erp' ), $label ) );
-            }
-        }
-
         $fields = [
-            'employee_id' => $employee_id,
+            'id'          => $edu_id,
             'school'      => $school,
             'degree'      => $degree,
             'field'       => $field,
@@ -1252,12 +1227,13 @@ class Ajax_Handler {
             'interest'    => $interest
         ];
 
-        if ( ! $edu_id ) {
-            do_action( 'erp_hr_employee_education_create', $fields );
-            Education::create( $fields );
-        } else {
-            Education::find( $edu_id )->update( $fields );
+        $employee = new Employee( $employee_id );
+
+        if ( ! $employee->is_employee() ) {
+            $this->send_error( __( 'You have to be an employee to do this action', 'erp' ) );
         }
+
+        $employee->add_education( $fields );
 
         $this->send_success();
     }
@@ -1273,7 +1249,9 @@ class Ajax_Handler {
         $id          = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
         $employee_id = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
 
-        if ( ! $employee_id ) {
+        $employee = new Employee( $employee_id );
+
+        if ( ! $employee->is_employee() ) {
             $this->send_error( __( 'No employee found', 'erp' ) );
         }
 
@@ -1284,7 +1262,7 @@ class Ajax_Handler {
 
         if ( $id ) {
             do_action( 'erp_hr_employee_education_delete', $id );
-            Education::find( $id )->delete();
+            $employee->delete_education( $id );
         }
 
         $this->send_success();
@@ -1309,31 +1287,20 @@ class Ajax_Handler {
         $relation = isset( $_POST['relation'] ) ? strip_tags( $_POST['relation'] ) : '';
         $dob      = isset( $_POST['dob'] ) ? strip_tags( $_POST['dob'] ) : '';
 
-        // some basic validations
-        $requires = [
-            'name'     => __( 'Name', 'erp' ),
-            'relation' => __( 'Relation', 'erp' ),
-        ];
-
-        foreach ( $requires as $var_name => $label ) {
-            if ( ! $$var_name ) {
-                $this->send_error( sprintf( __( '%s is required', 'erp' ), $label ) );
-            }
-        }
-
         $fields = [
-            'employee_id' => $employee_id,
+            'id'          => $dep_id,
             'name'        => $name,
             'relation'    => $relation,
             'dob'         => $dob,
         ];
 
-        if ( ! $dep_id ) {
-            do_action( 'erp_hr_employee_dependents_create', $fields );
-            Dependents::create( $fields );
-        } else {
-            Dependents::find( $dep_id )->update( $fields );
+        $employee = new Employee( $employee_id );
+
+        if ( ! $employee->is_employee() ) {
+            $this->send_error( __( 'You have to be an employee to do this action', 'erp' ) );
         }
+
+        $employee->add_dependent( $fields );
 
         $this->send_success();
     }
@@ -1349,7 +1316,9 @@ class Ajax_Handler {
         $id          = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
         $employee_id = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
 
-        if ( ! $employee_id ) {
+        $employee = new Employee( $employee_id );
+
+        if ( ! $employee->is_employee() ) {
             $this->send_error( __( 'No employee found', 'erp' ) );
         }
 
@@ -1360,7 +1329,7 @@ class Ajax_Handler {
 
         if ( $id ) {
             do_action( 'erp_hr_employee_dependents_delete', $id );
-            Dependents::find( $id )->delete();
+            $employee->delete_dependent( $id );
         }
 
         $this->send_success();
