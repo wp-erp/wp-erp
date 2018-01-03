@@ -36,22 +36,6 @@ class API_Registrar {
             ] );
         }
 
-        if ( erp_is_module_active( 'hrm' ) ) {
-            $controllers = array_merge( $controllers, [
-                '\WeDevs\ERP\API\Company_Controller',
-                '\WeDevs\ERP\API\Departments_Controller',
-                '\WeDevs\ERP\API\Designations_Controller',
-                '\WeDevs\ERP\API\Employees_Controller',
-                '\WeDevs\ERP\API\Birthdays_Controller',
-                '\WeDevs\ERP\API\Announcements_Controller',
-                '\WeDevs\ERP\API\Leave_Policies_Controller',
-                '\WeDevs\ERP\API\Leave_Entitlements_Controller',
-                '\WeDevs\ERP\API\Leave_Holidays_Controller',
-                '\WeDevs\ERP\API\Leave_Requests_Controller',
-                '\WeDevs\ERP\API\HRM_Reports_Controller',
-            ] );
-        }
-
         if ( erp_is_module_active( 'accounting' ) ) {
             $controllers = array_merge( $controllers, [
                 '\WeDevs\ERP\API\Customers_Controller',

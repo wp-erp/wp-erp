@@ -674,31 +674,27 @@ class Ajax_Handler {
      * @return void
      */
     public function employee_remove_history() {
-        global $wpdb;
 
         $this->verify_nonce( 'wp-erp-hr-nonce' );
 
-        $id         = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
-        $query      = "SELECT module, user_id FROM {$wpdb->prefix}erp_hr_employee_history WHERE id=" . $id;
-        $get_module = $wpdb->get_row( $query );
+        $history_id         = isset( $_POST['history_id'] ) ? intval( $_POST['history_id'] ) : 0;
+        $user_id            = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
 
         // Check permission
-        if ( ! current_user_can( 'erp_edit_employee', $get_module->user_id ) ) {
+        if ( ! current_user_can( 'erp_edit_employee', $user_id ) ) {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        if ( $get_module->module == 'employment' ) {
-            do_action( 'erp_hr_employee_employment_status_delete', $id );
-        } elseif ( $get_module->module == 'compensation' ) {
-            do_action( 'erp_hr_employee_compensation_delete', $id );
-        } elseif ( $get_module->module == 'job' ) {
-            do_action( 'erp_hr_employee_job_info_delete', $id );
+        $employee = new Employee( $user_id );
+
+        if ( ! $employee->is_employee() ) {
+            $this->send_error( __( 'Invalid Employee received.', 'erp' ) );
         }
 
-        $employee = new Employee( $get_module->user_id );
+        $delete = $employee->delete_job_history($history_id);
 
-        if ( $employee->is_employee() ) {
-            $employee->delete_history($id);
+        if( is_wp_error($delete)){
+            $this->send_error( $delete->get_error_message() );
         }
 
         $this->send_success();

@@ -94,6 +94,7 @@ class Human_Resource {
     private function init_actions() {
         $this->action( 'admin_enqueue_scripts', 'admin_scripts' );
         $this->action( 'admin_footer', 'admin_js_templates' );
+        $this->filter('erp_rest_api_controllers', 'load_hrm_rest_controllers');
     }
 
     /**
@@ -296,6 +297,23 @@ class Human_Resource {
                 break;
         }
 
+    }
+
+
+    /**
+     * Load HRM rest controllers
+     *
+     * @since 1.2.9
+     * @param $controller
+     *
+     * @return array
+     */
+    public function load_hrm_rest_controllers($controller){
+        $hrm_controller = [
+            '\WeDevs\ERP\HRM\API\Employees_Controller',
+        ];
+        $hrm_controller = apply_filters('erp_hrm_rest_api_controllers', $hrm_controller);
+        return array_merge($controller, $hrm_controller);
     }
 }
 
