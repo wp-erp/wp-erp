@@ -1230,7 +1230,6 @@ function erp_hr_leave_get_entitlements( $args = array() ) {
         ORDER BY {$args['orderby']} {$args['order']}
         LIMIT %d,%d;";
 
-    error_log(print_r($query));
     $sql     = $wpdb->prepare( $query, absint( $args['offset'] ), absint( $args['number'] ) );
     $results = $wpdb->get_results( $sql );
 
