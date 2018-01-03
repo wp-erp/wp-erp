@@ -1078,7 +1078,7 @@ class Employee {
      *
      * @return array
      */
-    public function get_histories( $module = 'all', $limit = 30, $offset = 0 ) {
+    public function get_job_histories( $module = 'all', $limit = 30, $offset = 0 ) {
         $modules   = erp_hr_employee_history_modules();
         $histories = $this->erp_user->histories();
         if ( ( $module !== 'all' ) && ( in_array( $module, $modules ) ) ) {
@@ -1100,7 +1100,7 @@ class Employee {
         return $formatted_histories;
     }
 
-    public function add_history( $data ) {
+    public function add_job_history( $data ) {
         $modules = erp_hr_employee_history_modules();
 
         $module = empty( $data['module'] ) ? '' : $data['module'];
@@ -1122,11 +1122,11 @@ class Employee {
         }
 
         if ( ! empty( $data['department'] ) ) {
-            $data['department'] = $this->get_department_title();
+            $data['department'] = $this->get_department('view');
         }
 
         if ( ! empty( $data['location'] ) ) {
-            $data['location'] = $this->get_work_location();
+            $data['location'] = $this->get_location('view');
         }
 
         //prepare for inserting history
@@ -1137,18 +1137,39 @@ class Employee {
             'date'    => current_time( 'mysql' )
         ], $employee_history );
 
-        $created = $this->erp_user->histories()->updateOrCreate(['id' => $parsed_history['user_id']], $parsed_history);
+        $created = $this->erp_user->histories()->updateOrCreate( [ 'id' => $parsed_history['user_id'] ], $parsed_history );
 
         if ( ! $created ) {
             return new \WP_Error( 'employee-history-update-failed', __( 'Employee history updating failed', 'erp' ) );
         }
+        do_action( "erp_hr_employee_{$module}_history_delete", $created->id );
         $created_parsed_history = erp_hr_translate_employee_history( $created->toArray() );
 
         return $created_parsed_history;
     }
 
-    public function delete_history( $id ) {
-        $this->erp_user->histories()->find( $id)->delete();
+    /**
+     * Delete employee's job history
+     *
+     * @since 1.2.9
+     *
+     * @param $id
+     *
+     * @return \WP_Error
+     */
+    public function delete_job_history( $id ) {
+        $history = $this->erp_user->histories()->find( $id );
+        if ( ! $history ) {
+            return new \WP_Error( 'invalid-history-id', __( 'This job history does not exist or does not belongs to the supplied user', 'erp' ) );
+        }
+
+        $result = $history->delete();
+        if ( $result ) {
+            do_action( "erp_hr_employee_{$history->module}_history_delete", $id );
+
+            return $result;
+        }
+
     }
 
     /**
@@ -1161,7 +1182,7 @@ class Employee {
      * @return array|bool|\WP_Error
      */
     public function update_employment_status( $new_status, $date = '', $comment = '' ) {
-        return $this->add_history( [
+        return $this->add_job_history( [
             'date'    => $date,
             'type'    => $new_status,
             'comment' => $comment,
@@ -1181,7 +1202,7 @@ class Employee {
      * @return array|bool|\WP_Error
      */
     public function update_compensation( $rate = 0, $type = '', $reason = '', $date = '', $comment = '' ) {
-        return $this->add_history( [
+        return $this->add_job_history( [
             'date'     => $date,
             'comment'  => $comment,
             'pay_type' => $type,
@@ -1203,7 +1224,7 @@ class Employee {
      * @return array|bool|\WP_Error
      */
     public function update_job_info( $department_id, $designation_id, $reporting_to = 0, $location = 0, $date = '' ) {
-        return $this->add_history( [
+        return $this->add_job_history( [
             'date'         => $date,
             'designation'  => $designation_id,
             'department'   => $department_id,
@@ -1594,7 +1615,7 @@ class Employee {
             __( 'Eligible for Hire', 'erp' ),
             erp_hr_get_terminate_rehire_options( $args['eligible_for_rehire'] ) );
 
-        $this->add_history( [
+        $this->add_job_history( [
             'module'  => 'employment',
             'date'    => $args['terminate_date'],
             'type'    => 'terminated',
