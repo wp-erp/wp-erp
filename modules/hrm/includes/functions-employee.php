@@ -587,10 +587,10 @@ function erp_hr_get_terminate_rehire_options( $selected = null ) {
  * @return $this|string|\WP_Error
  */
 function erp_hr_employee_terminate( $data ) {
-
     if ( ! $data['user_id'] ) {
         return new WP_Error( 'no-user-id', 'No User id found' );
     }
+
     $employee = new \WeDevs\ERP\HRM\Employee( intval( $data['user_id'] ) );
     $result   = $employee->terminate( $data );
 
