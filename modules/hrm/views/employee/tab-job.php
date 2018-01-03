@@ -1,7 +1,7 @@
 <div class="job-tab-wrap">
 
-    <?php $histories = $employee->get_histories(); ?>
-
+    <?php $histories = $employee->get_job_histories(); ?>
+    
     <?php
     if ( current_user_can( 'erp_manage_jobinfo' ) ) {
         ?>
@@ -11,11 +11,11 @@
             <?php erp_html_form_input( array(
                 'label'   => __( 'Employee Status : ', 'erp' ),
                 'name'    => 'employee_status',
-                'value'   => $employee->erp_user->status,
+                'value'   => $employee->get_status(),
                 'class'   => 'select2',
                 'type'    => 'select',
                 'id'      => 'erp-hr-employee-status-option',
-                'custom_attr' => [ 'data-selected' => $employee->erp_user->status ],
+                'custom_attr' => [ 'data-selected' => $employee->get_status() ],
                 'options' => array( 0 => __( '- Select -', 'erp' ) ) + erp_hr_get_employee_statuses()
             ) ); ?>
 
@@ -27,6 +27,7 @@
         <?php
     }
     ?>
+
 
     <h3><?php _e( 'Employment Status', 'erp' ) ?></h3>
     <?php if ( current_user_can( 'erp_manage_jobinfo' ) ) { ?>
@@ -159,7 +160,7 @@
                 <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
                     <td><?php echo erp_format_date( $row['date'] ); ?></td>
                     <td>
-                        <?php echo ( ! empty( $row['type'] ) ) ? $row['type'] : erp_get_company_default_location_name(); ?>
+                        <?php echo ( ! empty( $row['location'] ) ) ? $row['location'] : erp_get_company_default_location_name(); ?>
                     </td>
                     <td>
                         <?php echo ( ! empty( $row['department'] ) ) ? $row['department'] : '--'; ?>
