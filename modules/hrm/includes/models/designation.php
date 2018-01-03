@@ -11,4 +11,8 @@ use WeDevs\ERP\Framework\Model;
 class Designation extends Model {
     protected $table = 'erp_hr_designations';
     protected $fillable = [ 'title', 'description', 'status' ];
+
+    public function employees() {
+        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Employee', 'designation', 'id' );
+    }
 }
