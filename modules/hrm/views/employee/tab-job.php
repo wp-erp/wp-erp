@@ -1,6 +1,10 @@
 <div class="job-tab-wrap">
 
-    <?php $history = $employee->get_history(); ?>
+    <?php $histories = $employee->get_histories(); ?>
+
+    <?php
+
+    ?>
 
     <?php
     if ( current_user_can( 'erp_manage_jobinfo' ) ) {
@@ -11,11 +15,11 @@
             <?php erp_html_form_input( array(
                 'label'   => __( 'Employee Status : ', 'erp' ),
                 'name'    => 'employee_status',
-                'value'   => $employee->erp->status,
+                'value'   => $employee->erp_user->status,
                 'class'   => 'select2',
                 'type'    => 'select',
                 'id'      => 'erp-hr-employee-status-option',
-                'custom_attr' => [ 'data-selected' => $employee->erp->status ],
+                'custom_attr' => [ 'data-selected' => $employee->erp_user->status ],
                 'options' => array( 0 => __( '- Select -', 'erp' ) ) + erp_hr_get_employee_statuses()
             ) ); ?>
 
@@ -31,7 +35,9 @@
 
     <h3><?php _e( 'Employment Status', 'erp' ) ?></h3>
     <?php if ( current_user_can( 'erp_manage_jobinfo' ) ) { ?>
-        <a href="#" id="erp-empl-status" class="action button" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-status" data-title="<?php _e( 'Employment Status', 'erp' ); ?>"><?php _e( 'Update Status', 'erp' ); ?></a>
+        <a href="#" id="erp-empl-status" class="action button" data-id="<?php echo $employee->id; ?>"
+            data-template="erp-employment-status"
+            data-title="<?php _e( 'Employment Status', 'erp' ); ?>"><?php _e( 'Update Status', 'erp' ); ?></a>
     <?php } ?>
     <table class="widefat">
         <thead>
@@ -44,21 +50,20 @@
         </thead>
         <tbody>
             <?php
-            if ( $history['employment'] ) {
-
+            if ( ! empty( $histories['employment'] ) ) {
                 $types = erp_hr_get_employee_types() + ['terminated' => __( 'Terminated', 'erp' ) ];
-                foreach ($history['employment'] as $num => $employment_history) {?>
+                foreach ($histories['employment'] as $num => $employment_history) {?>
                     <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
-                        <td><?php echo erp_format_date( $employment_history->date ); ?></td>
+                        <td><?php echo erp_format_date( $employment_history['date'] ); ?></td>
                         <td>
-                            <?php echo ( ! empty( $employment_history->type ) ) ? wp_kses_post( $employment_history->type ) : '--'; ?>
+                            <?php echo ( ! empty( $employment_history['type'] ) ) ? wp_kses_post( $employment_history['type'] ) : '--'; ?>
                         </td>
                         <td>
-                            <?php echo ( ! empty( $employment_history->comment ) ) ? wp_kses_post( $employment_history->comment ) : '--'; ?>
+                            <?php echo ( ! empty( $employment_history['comment'] ) ) ? wp_kses_post( $employment_history['comment'] ) : '--'; ?>
                         </td>
                         <td class="action">
-                            <?php if ( current_user_can( 'erp_manage_jobinfo', $employee->id ) ) : ?>
-                                <a href="#" class="remove" data-id="<?php echo $employment_history->id; ?>"><span class="dashicons dashicons-trash"></span></a>
+                            <?php if ( current_user_can( 'erp_manage_jobinfo', $employee->get_user_id() ) ) : ?>
+                                <a href="#" class="remove" data-id="<?php echo $employment_history['id']; ?>"><span class="dashicons dashicons-trash"></span></a>
                             <?php endif; ?>
                         </td>
                     </tr>
@@ -96,9 +101,9 @@
             </thead>
             <tbody>
                 <?php
-                if ( $history['compensation'] ) {
+                if ( ! empty( $histories['compensation'] ) ) {
 
-                    foreach ($history['compensation'] as $num => $compensation) {
+                    foreach ($histories['compensation'] as $num => $compensation) {
                         ?>
                         <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
                             <td><?php echo erp_format_date( $compensation->date ); ?></td>
@@ -152,9 +157,9 @@
         </thead>
         <tbody>
         <?php
-        if ( $history['job'] ) {
+        if ( ! empty( $histories['job'] ) ) {
             $types = erp_hr_get_pay_type();
-            foreach ($history['job'] as $num => $row) {
+            foreach ($histories['job'] as $num => $row) {
                 ?>
                 <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
                     <td><?php echo erp_format_date( $row->date ); ?></td>
