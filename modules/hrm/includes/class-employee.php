@@ -1169,7 +1169,6 @@ class Employee {
 
             return $result;
         }
-
     }
 
     /**
@@ -1321,7 +1320,12 @@ class Employee {
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function delete_note( $id ) {
-        return $this->erp_user->notes()->where( $id )->delete();
+        $note = $this->erp_user->notes()->find( $id );
+        if ( ! $note ) {
+            return new \WP_Error( 'invalid-note-id', __( 'This note does not exist or does not belongs to the supplied user', 'erp' ) );
+        }
+
+        return $note->delete();
     }
 
     /**

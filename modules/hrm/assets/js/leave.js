@@ -551,7 +551,7 @@
                 wp.ajax.send( 'erp-hr-empl-leave-history', {
                     data: form.serializeObject(),
                     success: function(resp) {
-                        $('table#erp-hr-empl-leave-history tbody').html(resp);
+                        $('table#erp-hr-empl-leave-history-table tbody').html(resp);
                     }
                 } );
             },

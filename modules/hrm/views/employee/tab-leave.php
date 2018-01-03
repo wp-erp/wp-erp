@@ -5,7 +5,6 @@ $balance = $employee->get_leave_balance();
 
 if ( $balance ) {
     ?>
-
     <table class="widefat">
         <thead>
             <tr>
@@ -81,7 +80,7 @@ $requests   = $employee->get_leave_requests();
     <?php submit_button( __( 'Filter', 'erp' ), 'secondary', 'submit', false ); ?>
 </form>
 
-<table class="widefat" id="erp-hr-empl-leave-history">
+<table class="widefat" id="erp-hr-empl-leave-history-table">
     <thead>
         <tr>
             <th><?php _e( 'Date', 'erp' ) ?></th>
