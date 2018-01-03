@@ -1,4 +1,4 @@
-<?php $employee_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : null; ?>
+<?php $user_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : null; ?>
 
 <div class="terminate-form-wrap">
     <div class="row">
@@ -52,5 +52,5 @@
 
     <?php wp_nonce_field( 'employee_update_terminate' ); ?>
     <input type="hidden" name="action" id="employee-terminate-action" value="erp-hr-emp-update-terminate-reason">
-    <input type="hidden" name="employee_id" id="emp-id" value="<?php echo $employee_id; ?>">
+    <input type="hidden" name="user_id" id="emp-id" value="<?php echo $user_id; ?>">
 </div>

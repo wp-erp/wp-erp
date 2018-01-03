@@ -594,10 +594,10 @@ class Ajax_Handler {
     public function employee_update_employment() {
         $this->verify_nonce( 'employee_update_employment' );
 
-        $employee_id = isset( $_REQUEST['employee_id'] ) ? intval( $_REQUEST['employee_id'] ) : 0;
+        $user_id = isset( $_REQUEST['user_id'] ) ? intval( $_REQUEST['user_id'] ) : 0;
 
         // Check permission
-        if ( ! current_user_can( 'erp_edit_employee', $employee_id ) ) {
+        if ( ! current_user_can( 'erp_edit_employee', $user_id ) ) {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
@@ -610,10 +610,10 @@ class Ajax_Handler {
             $this->send_error( __( 'Status error', 'erp' ) );
         }
 
-        $employee = new Employee( $employee_id );
+        $employee = new Employee( $user_id );
 
-        if ( $employee->id ) {
-            do_action( 'erp_hr_employee_employment_status_create', $employee->id );
+        if ( $employee->is_employee() ) {
+            do_action( 'erp_hr_employee_employment_status_create', $employee->get_user_id() );
             $employee->update_employment_status( $status, $date, $comment );
             $this->send_success();
         }
@@ -695,7 +695,11 @@ class Ajax_Handler {
             do_action( 'erp_hr_employee_job_info_delete', $id );
         }
 
-        erp_hr_employee_remove_history( $id );
+        $employee = new Employee( $get_module->user_id );
+
+        if ( $employee->is_employee() ) {
+            $employee->delete_history($id);
+        }
 
         $this->send_success();
     }
@@ -817,14 +821,14 @@ class Ajax_Handler {
     public function employee_terminate() {
         $this->verify_nonce( 'employee_update_terminate' );
 
-        $employee_id         = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+        $user_id             = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
         $terminate_date      = ( empty( $_POST['terminate_date'] ) ) ? current_time( 'mysql' ) : $_POST['terminate_date'];
         $termination_type    = isset( $_POST['termination_type'] ) ? $_POST['termination_type'] : '';
         $termination_reason  = isset( $_POST['termination_reason'] ) ? $_POST['termination_reason'] : '';
         $eligible_for_rehire = isset( $_POST['eligible_for_rehire'] ) ? $_POST['eligible_for_rehire'] : '';
 
         $fields = [
-            'employee_id'         => $employee_id,
+            'user_id'             => $user_id,
             'terminate_date'      => $terminate_date,
             'termination_type'    => $termination_type,
             'termination_reason'  => $termination_reason,
@@ -832,7 +836,7 @@ class Ajax_Handler {
         ];
 
         // Check permission
-        if ( ! current_user_can( 'erp_edit_employee', $employee_id ) ) {
+        if ( ! current_user_can( 'erp_edit_employee', $user_id ) ) {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 

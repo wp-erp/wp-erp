@@ -1090,53 +1090,52 @@ class Employee {
         foreach ( $histories as $history ) {
             $parsed_history = erp_hr_translate_employee_history( $history->toArray() );
             if ( $parsed_history ) {
-                $formatted_histories[] = $parsed_history;
+                $formatted_histories[ $parsed_history['module'] ][] = $parsed_history;
             }
         }
 
         return $formatted_histories;
     }
 
-
     public function add_history( $data ) {
         $modules = erp_hr_employee_history_modules();
 
-        $module = empty( $history['module'] ) ? '' : $history['module'];
+        $module = empty( $data['module'] ) ? '' : $data['module'];
         if ( ! in_array( $module, $modules ) ) {
             return new \WP_Error( 'invalid-module-type', __( 'Invalid module or module does not exist', 'erp' ) );
         }
 
         //update employee data
         $update = [];
-        foreach ( $history as $key => $val ) {
+        foreach ( $data as $key => $val ) {
             if ( array_key_exists( $key, $this->data['work'] ) ) {
                 $update[ $key ] = $val;
             }
         }
         $this->update_employee( $update );
 
-        if ( ! empty( $history['designation'] ) ) {
-            $history['designation'] = $this->get_job_title();
+        if ( ! empty( $data['designation'] ) ) {
+            $data['designation'] = $this->get_job_title();
         }
 
-        if ( ! empty( $history['department'] ) ) {
-            $history['department'] = $this->get_department_title();
+        if ( ! empty( $data['department'] ) ) {
+            $data['department'] = $this->get_department_title();
         }
 
-        if ( ! empty( $history['location'] ) ) {
-            $history['location'] = $this->get_work_location();
+        if ( ! empty( $data['location'] ) ) {
+            $data['location'] = $this->get_work_location();
         }
 
         //prepare for inserting history
-        $employee_history = erp_hr_translate_employee_history( apply_filters( 'erp_update_employee_history_data', $history, $this->id ), true );
-
+        $employee_history = erp_hr_translate_employee_history( apply_filters( 'erp_update_employee_history_data', $data, $this->id ), true );
 
         $parsed_history = wp_parse_args( [
             'user_id' => $this->id,
             'date'    => current_time( 'mysql' )
         ], $employee_history );
 
-        $created = Employee_History::updateOrCreate( $parsed_history );
+        $created = $this->erp_user->histories()->updateOrCreate(['id' => $parsed_history['user_id']], $parsed_history);
+
         if ( ! $created ) {
             return new \WP_Error( 'employee-history-update-failed', __( 'Employee history updating failed', 'erp' ) );
         }
@@ -1146,7 +1145,7 @@ class Employee {
     }
 
     public function delete_history( $id ) {
-
+        $this->erp_user->histories()->find( $id)->delete();
     }
 
     /**
@@ -1159,7 +1158,6 @@ class Employee {
      * @return array|bool|\WP_Error
      */
     public function update_employment_status( $new_status, $date = '', $comment = '' ) {
-
         return $this->add_history( [
             'date'    => $date,
             'type'    => $new_status,
