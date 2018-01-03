@@ -1189,6 +1189,7 @@
                         data = {
                             action: 'erp-delete-employee-note',
                             note_id: self.data('note_id'),
+                            user_id: wpErp.wpErpCurrentEmployee.user_id,
                             _wpnonce : wpErpHr.nonce
                         };
 

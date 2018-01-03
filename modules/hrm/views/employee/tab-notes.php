@@ -10,7 +10,7 @@
             'custom_attr' => array( 'rows' => 3, 'cols' => 30 )
         ) ); ?>
 
-        <input type="hidden" name="user_id" value="<?php echo $employee->id; ?>">
+        <input type="hidden" name="user_id" value="<?php echo $employee->get_user_id(); ?>">
         <input type="hidden" name="action" id="erp-employee-action" value="erp-hr-employee-new-note">
 
         <?php wp_nonce_field( 'wp-erp-hr-employee-nonce' ); ?>
@@ -19,9 +19,8 @@
     </form>
 
     <?php
-    $no_of_notes = 10;
-    $total_notes = $employee->count_notes();
-    $notes = $employee->get_notes( $no_of_notes );
+//    $total_notes = ;
+    $notes = $employee->get_notes();
 
     if ( $notes ) {
         ?>

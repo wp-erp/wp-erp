@@ -7,6 +7,8 @@ use WeDevs\ERP\HRM\Models\Department;
 use WeDevs\ERP\HRM\Models\Designation;
 use WeDevs\ERP\HRM\Models\Employee_History;
 use WeDevs\ERP\HRM\Models\Hr_User;
+use WeDevs\ERP\HRM\Models\Leave_Entitlement;
+use WeDevs\ERP\HRM\Models\Leave_Policies;
 use WeDevs\ERP\HRM\Models\Work_Experience;
 
 class Employee {
@@ -18,18 +20,16 @@ class Employee {
      */
     public $user_id;
     /**
-     * wp user
+     * wp user \WP_User
      *
-     * @type \WP_User
-     * @var \stdClass
+     * @type object
      */
     protected $wp_user;
 
     /**
-     * Model Instance
+     * Employee Model Instance
      *
-     * @type \WeDevs\ERP\HRM\Models\Employee
-     * @var
+     * @var object
      */
     protected $erp_user;
 
@@ -400,6 +400,10 @@ class Employee {
      */
     public function get_id() {
         return $this->get_user_id();
+    }
+
+    public function get_erp_user() {
+        return $this->erp_user;
     }
 
     /**
@@ -780,11 +784,12 @@ class Employee {
      *
      * @return string
      */
-    public function get_country($context = 'edit') {
-        if( $this->is_employee() && isset($this->wp_user->country)){
-            if( $context == 'edit'){
+    public function get_country( $context = 'edit' ) {
+        if ( $this->is_employee() && isset( $this->wp_user->country ) ) {
+            if ( $context == 'edit' ) {
                 return $this->wp_user->country;
             }
+
             return erp_get_country_name( $this->wp_user->country );
         }
     }
@@ -811,6 +816,7 @@ class Employee {
             if ( ! $user->is_employee() ) {
                 return null;
             }
+
             return $user->get_user_id();
         }
     }
@@ -1153,7 +1159,6 @@ class Employee {
      * @return array
      */
     public function get_notes( $limit = 30, $offset = 0 ) {
-
         return $this->erp_user
             ->notes()
             ->skip( $offset )
@@ -1161,38 +1166,46 @@ class Employee {
             ->get();
     }
 
-
+    /**
+     * Add note
+     *
+     * @param      $note
+     * @param null $comment_by
+     * @param bool $return_object
+     *
+     * @return bool|mixed|static
+     */
     public function add_note( $note, $comment_by = null, $return_object = false ) {
-        global $wpdb;
-
         if ( $comment_by == null ) {
             $comment_by = get_current_user_id();
         }
 
         $data = array(
-            'user_id'    => $this->id,
             'comment'    => $note,
             'comment_by' => $comment_by,
         );
-
-        $note = \WeDevs\ERP\HRM\Models\Employee_Note::create( $data );
-
-        if ( $note->id ) {
-            $note_id = $note->id;
-            do_action( 'erp_hr_employee_note_new', $note_id, $this->id );
-
+        $note = $this->erp_user->notes()->create( $data );
+        if ( $note ) {
+            do_action( 'erp_hr_employee_note_new', $note->id, $this->user_id );
             if ( $return_object ) {
                 return $note;
             }
 
-            return $note_id;
+            return $note->id;
         }
 
         return false;
     }
 
-
+    /**
+     * delete note
+     *
+     * @param $id
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function delete_note( $id ) {
+        return $this->erp_user->notes() - where( 'id', $id )->delete();
     }
 
     /**
@@ -1228,6 +1241,26 @@ class Employee {
     }
 
     /**
+     * Get leave policies
+     *
+     * @since 1.2.9
+     * @return mixed
+     */
+    public function get_leave_policies() {
+        $financial_year_dates = erp_get_financial_year_dates();
+        $entitlements         = $this->erp_user
+            ->entitlements()
+            ->where( 'from_date', $financial_year_dates['start'] )
+            ->where( 'to_date', $financial_year_dates['end'] )
+            ->JoinWithPolicy()
+            ->orderBy( 'created_on', 'DESC' )
+            ->select( array( 'days', 'policy_id', 'from_date', 'to_date', 'color', 'name' ) )
+            ->get();
+
+        return $entitlements;
+    }
+
+    /**
      * Get assigned entitlements
      *
      * @since 1.2.9
@@ -1248,28 +1281,79 @@ class Employee {
 
         $args = wp_parse_args( $args, $defaults );
 
-        $entitlements = $this->employee->entitlements();
+        $entitlements = $this->erp_user->entitlements();
         if ( ! empty( $args['policy_id'] ) ) {
             $entitlements = $entitlements->where( 'policy_id', intval( $args['policy_id'] ) );
         }
         $entitlements = $entitlements->where( 'from_date', $args['from_date'] )
                                      ->where( 'to_date', $args['to_date'] )
+                                     ->JoinWithPolicy()
                                      ->skip( $args['offset'] )
                                      ->take( $args['number'] )
                                      ->orderBy( $args['orderby'], $args['order'] )
+                                     ->select( array( 'days', 'policy_id', 'from_date', 'to_date', 'color', 'name' ) )
                                      ->get();
 
         return $entitlements;
     }
 
+
     /**
      * Get leave balances
      *
      * @since 1.2.9
-     * @return bool|float
+     *
+     * @param null $policy_id
+     *
+     * @return array
      */
-    public function get_leave_balance() {
-        return erp_hr_leave_get_balance( $this->id );
+    public function get_leave_balance( $policy_id = null ) {
+        $balances             = [];
+        $financial_start_date = erp_financial_start_date();
+        $financial_end_date   = erp_financial_end_date();
+        $user_id              = $this->user_id;
+        $results              = $this->erp_user->entitlements()->with( [
+            'leaves' => function ( $q ) use ( $user_id, $financial_start_date, $financial_end_date ) {
+                $q->where( 'status', '=', '1' )
+                  ->where( 'user_id', $user_id )
+                  ->whereDate( 'start_date', '>=', $financial_start_date )
+                  ->whereDate( 'end_date', '<=', $financial_end_date );
+            }
+        ] )->with( 'policy' )->get();
+        foreach ( $results as $result ) {
+            $balance      = array(
+                'entitlement_id' => $result->id,
+                'entitlement'    => $result->days,
+                'policy'         => isset( $result->policy ) ? $result->policy->name : '',
+                'policy_id'      => isset( $result->policy ) ? $result->policy->id : '',
+            );
+            $total        = 0;
+            $scheduled    = 0;
+            $available    = $result->days;
+            $current_time = current_time( 'timestamp' );
+            foreach ( $result->leaves as $leave ) {
+                $total     += $leave->days;
+                $available = $available - $leave->days;
+                if ( $current_time < strtotime( $leave->start_date ) ) {
+                    $scheduled += $leave->days;
+                }
+            }
+            $balance['total']     = $total;
+            $balance['scheduled'] = $scheduled;
+            $balance['available'] = $available;
+
+            $balances[] = $balance;
+
+        }
+
+        return $balances;
+    }
+
+    public function get_leave_requests( $year = null, $limit = null, $offset = 0 ) {
+        return $this->erp_user
+            ->leave_requests()
+            ->where( 'status', '1' )
+            ->get();
     }
 
     /**
@@ -1395,17 +1479,6 @@ class Employee {
      */
     protected function send_error( $code, $message ) {
         return new \WP_Error( $code, $message );
-    }
-
-    function test(){
-        $r = $this->erp_user->experiences()->updateOrCreate(['id' => null],[
-            'company_name' => 'weDevs ops updated 2',
-            'job_title'    => 'Job Title',
-            'from'         => '2015-07-11',
-            'to'           => '2016-08-10',
-            'description'  => 'Great description'
-        ]);
-        echo($r);
     }
 
 }

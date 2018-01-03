@@ -17,4 +17,8 @@ class Employee_Note extends Model {
     public function user() {
         return $this->belongsTo('\WeDevs\ERP\HRM\Models\Hr_User', 'comment_by' );
     }
+
+    public function employee(){
+        return $this->belongsTo('\WeDevs\ERP\HRM\Models\Employee', 'user_id', 'user_id' );
+    }
 }
