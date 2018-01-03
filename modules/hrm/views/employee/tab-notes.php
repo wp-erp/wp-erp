@@ -19,7 +19,6 @@
     </form>
 
     <?php
-//    $total_notes = ;
     $notes = $employee->get_notes();
 
     if ( $notes ) {
@@ -50,10 +49,8 @@
             <?php } ?>
         </ul>
 
-
-
     <?php } ?>
-     <?php  $display_class =  ( $no_of_notes < $total_notes ) ? 'show':'hide' ; ?>
+     <?php     $no_of_notes = 0; $total_notes = 0;     $display_class =  ( $no_of_notes < $total_notes ) ? 'show':'hide' ; ?>
     <div class="wperp-load-more-btn <?php echo $display_class?>">
             <?php submit_button( 'Load More', false, 'erp-load-notes', true, array( 'id' => 'erp-load-notes', 'data-total_no' => $total_notes, 'data-offset_no' => $no_of_notes, 'data-user_id' => $employee->id ) ); ?>
     </div>

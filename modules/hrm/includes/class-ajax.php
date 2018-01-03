@@ -744,15 +744,15 @@ class Ajax_Handler {
     public function employee_add_note() {
         $this->verify_nonce( 'wp-erp-hr-employee-nonce' );
 
-        $employee_id = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
+        $user_id     = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
         $note        = isset( $_POST['note'] ) ? strip_tags( $_POST['note'] ) : 0;
         $note_by     = get_current_user_id();
 
-        $employee = new Employee( $employee_id );
+        $employee = new Employee( $user_id );
 
         if ( $employee->is_employee() ) {
             // Check permission
-            if ( ! current_user_can( 'erp_edit_employee', $employee_id ) ) {
+            if ( ! current_user_can( 'erp_edit_employee', $user_id ) ) {
                 $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
             }
 
@@ -794,20 +794,18 @@ class Ajax_Handler {
         $note_id  = isset( $_POST['note_id'] ) ? intval( $_POST['note_id'] ) : 0;
         $user_id  = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
 
+        $employee = new Employee( $user_id );
 
+        // Check permission
+        if ( ! current_user_can( 'erp_edit_employee', $employee->get_user_id() ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
 
-//        $employee = new Employee();
-//
-//        // Check permission
-//        if ( ! current_user_can( 'erp_edit_employee', $employee->id ) ) {
-//            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
-//        }
-//
-//        if ( $employee->delete_note( $note_id ) ) {
-//            $this->send_success();
-//        } else {
-//            $this->send_error();
-//        }
+        if ( $employee->delete_note( $note_id ) ) {
+            $this->send_success();
+        } else {
+            $this->send_error();
+        }
     }
 
     /**
