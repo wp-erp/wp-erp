@@ -22,6 +22,7 @@ class Leave_request extends Model {
      * @since 1.2.0
      */
     const UPDATED_AT = 'updated_on';
+    protected $primaryKey = 'id';
 
     protected $table = 'erp_hr_leave_requests';
     protected $fillable = [

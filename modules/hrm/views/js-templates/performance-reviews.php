@@ -73,7 +73,7 @@
 
     <div class="row">
         <?php erp_html_form_input( array(
-            'label'   => __( 'Dependablity', 'erp' ),
+            'label'   => __( 'Dependability', 'erp' ),
             'name'    => 'dependablity',
             'value'   => '',
             'class'   => 'erp-hrm-select2',
@@ -86,5 +86,5 @@
     <?php wp_nonce_field( 'employee_update_performance' ); ?>
     <input type="hidden" name="type" value="reviews">
     <input type="hidden" name="action" id="performance-reviews-action" value="erp-hr-emp-update-performance-reviews">
-    <input type="hidden" name="employee_id" id="emp-id" value="{{ data.id }}">
+    <input type="hidden" name="employee_id" id="emp-id" value="{{ data.user_id }}">
 </div>

@@ -348,6 +348,9 @@ class Employee {
      * @return array|mixed|string|void
      */
     public function to_array() {
+        //backward compatibility
+        $data['id'] = $this->user_id;
+
         $data['user_id']         = $this->user_id;
         $data['employee_id']     = $this->employee_id;
         $data['user_email']      = $this->user_email;
@@ -883,16 +886,16 @@ class Employee {
      */
     public function add_education( $data, $return_id = true ) {
         $default = [
-            'id'          => '',
-            'school'      => '',
-            'degree'      => '',
-            'field'       => '',
-            'finished'    => '',
-            'notes'       => '',
-            'interest'    => ''
+            'id'       => '',
+            'school'   => '',
+            'degree'   => '',
+            'field'    => '',
+            'finished' => '',
+            'notes'    => '',
+            'interest' => ''
         ];
 
-        $args     = wp_parse_args( $data, $default );
+        $args = wp_parse_args( $data, $default );
 
         $requires = [
             'school'   => __( 'School Name', 'erp' ),
@@ -912,7 +915,7 @@ class Employee {
             do_action( 'erp_hr_employee_education_create', $args );
         }
 
-        $education = $this->erp_user->educations()->updateOrCreate(['id' => $args['id']], $args)->toArray();
+        $education = $this->erp_user->educations()->updateOrCreate( [ 'id' => $args['id'] ], $args )->toArray();
 
         if ( ! $education ) {
             return $this->send_error( 'error-creating-education', __( 'Could not create education.', 'erp' ) );
@@ -926,7 +929,7 @@ class Employee {
      * Delete Education
      *
      * @since 1.2.9
-     * 
+     *
      */
     public function delete_education( $id ) {
         $this->erp_user->educations()->find( $id )->delete();
@@ -958,13 +961,13 @@ class Employee {
 
     public function add_dependent( $data, $return_id = true ) {
         $default = [
-            'id'          => '',
-            'name'        => '',
-            'relation'    => '',
-            'dob'         => ''
+            'id'       => '',
+            'name'     => '',
+            'relation' => '',
+            'dob'      => ''
         ];
 
-        $args     = wp_parse_args( $data, $default );
+        $args = wp_parse_args( $data, $default );
 
         $requires = [
             'name'     => __( 'Name', 'erp' ),
@@ -976,7 +979,7 @@ class Employee {
             do_action( 'erp_hr_employee_dependents_create', $args );
         }
 
-        $dependent = $this->erp_user->dependents()->updateOrCreate(['id' => $args['id']], $args)->toArray();
+        $dependent = $this->erp_user->dependents()->updateOrCreate( [ 'id' => $args['id'] ], $args )->toArray();
 
         if ( ! $dependent ) {
             return $this->send_error( 'error-creating-dependent', __( 'Could not create dependent.', 'erp' ) );
@@ -989,7 +992,7 @@ class Employee {
      *  Delete dependent
      *
      * @since 1.2.9
-     * 
+     *
      */
     public function delete_dependent( $id ) {
         $this->erp_user->dependents()->find( $id )->delete();
@@ -1028,7 +1031,7 @@ class Employee {
             'description'  => ''
         ];
 
-        $args     = wp_parse_args( $data, $default );
+        $args = wp_parse_args( $data, $default );
 
         $requires = [
             'company_name' => __( 'Company Name', 'erp' ),
@@ -1048,7 +1051,7 @@ class Employee {
             do_action( 'erp_hr_employee_experience_new', $args );
         }
 
-        $experience = $this->erp_user->experiences()->updateOrCreate(['id' => $args['id']], $args)->toArray();
+        $experience = $this->erp_user->experiences()->updateOrCreate( [ 'id' => $args['id'] ], $args )->toArray();
 
         if ( ! $experience ) {
             return $this->send_error( 'error-creating-experience', __( 'Could not create work experience.', 'erp' ) );
@@ -1229,7 +1232,8 @@ class Employee {
 
         $performances = $performances->skip( $offset )
                                      ->take( $limit )
-                                     ->get();
+                                     ->get()
+                                     ->groupBy( 'type' );
 
         return $performances;
     }
@@ -1389,46 +1393,51 @@ class Employee {
 
 
     /**
-     * Get leave balances
+     * Get leave balances of the current year
      *
      * @since 1.2.9
      *
-     * @param null $policy_id
-     *
      * @return array
      */
-    public function get_leave_balance( $policy_id = null ) {
+    public function get_leave_balance() {
         $balances             = [];
         $financial_start_date = erp_financial_start_date();
         $financial_end_date   = erp_financial_end_date();
         $user_id              = $this->user_id;
-        $results              = $this->erp_user->entitlements()->with( [
-            'leaves' => function ( $q ) use ( $user_id, $financial_start_date, $financial_end_date ) {
-                $q->where( 'status', '=', '1' )
-                  ->where( 'user_id', $user_id )
-                  ->whereDate( 'start_date', '>=', $financial_start_date )
-                  ->whereDate( 'end_date', '<=', $financial_end_date );
-            }
-        ] )->with( 'policy' )->get();
+        $results              = $this->erp_user
+            ->entitlements()
+            ->with( [
+                'leaves' => function ( $q ) use ( $user_id, $financial_start_date, $financial_end_date ) {
+                    $q->where( 'status', '=', '1' )
+                      ->where( 'user_id', $user_id )
+                      ->whereDate( 'start_date', '>=', $financial_start_date )
+                      ->whereDate( 'end_date', '<=', $financial_end_date );
+                }
+            ] )
+            ->with( 'policy' )
+            ->get();
+
         foreach ( $results as $result ) {
             $balance      = array(
                 'entitlement_id' => $result->id,
-                'entitlement'    => $result->days,
+                'days'           => intval( $result->days ),
+                'from_date'      => $result->from_date,
+                'to_date'        => $result->to_date,
                 'policy'         => isset( $result->policy ) ? $result->policy->name : '',
                 'policy_id'      => isset( $result->policy ) ? $result->policy->id : '',
             );
-            $total        = 0;
+            $spent        = 0;
             $scheduled    = 0;
             $available    = $result->days;
             $current_time = current_time( 'timestamp' );
             foreach ( $result->leaves as $leave ) {
-                $total     += $leave->days;
+                $spent     += $leave->days;
                 $available = $available - $leave->days;
                 if ( $current_time < strtotime( $leave->start_date ) ) {
                     $scheduled += $leave->days;
                 }
             }
-            $balance['total']     = $total;
+            $balance['spent']     = $spent;
             $balance['scheduled'] = $scheduled;
             $balance['available'] = $available;
 
@@ -1436,14 +1445,54 @@ class Employee {
 
         }
 
-        return $balances;
+        return erp_array_to_object( $balances );
     }
 
-    public function get_leave_requests( $year = null, $limit = null, $offset = 0 ) {
-        return $this->erp_user
-            ->leave_requests()
-            ->where( 'status', '1' )
-            ->get();
+    /**
+     * Get leave requests
+     *
+     * @since 1.2.9
+     *
+     * @param array $args
+     *
+     * @return mixed
+     */
+    public function get_leave_requests( $args = array() ) {
+        $default = array(
+            'year'      => date( 'Y' ),
+            'status'    => 1,
+            'orderby'   => 'start_date',
+            'policy_id' => null,
+            'number'    => 0,
+            'offset'    => 0,
+        );
+        $args    = wp_parse_args( $args, $default );
+
+        $requests = $this->get_erp_user()
+                         ->leave_requests();
+        if ( ! empty( $args['year'] ) ) {
+            $requests = $requests->whereYear( 'start_date', '=', intval( $args['year'] ) );
+        }
+        if ( ! empty( $args['policy_id'] ) ) {
+            $requests = $requests->where( 'policy_id', intval( $args['policy_id'] ) );
+        }
+        if ( ! empty( $args['status'] ) ) {
+            $requests = $requests->where( 'status', intval( $args['status'] ) );
+        }
+        if ( ! empty( $args['offset'] ) ) {
+            $requests = $requests->skip( intval( $args['offset'] ) );
+        }
+        if ( ! empty( $args['number'] ) ) {
+            $requests = $requests->skip( intval( $args['number'] ) );
+        }
+
+        return $requests->JoinWithPolicy()->orderBy( 'start_date' )->select( [
+            'start_date',
+            'end_date',
+            'reason',
+            'days',
+            'name'
+        ] )->get();
     }
 
     /**

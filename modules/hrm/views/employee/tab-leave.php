@@ -1,19 +1,16 @@
 <h3><?php _e( 'Balances', 'erp' ) ?></h3>
 
 <?php
-$policies         = erp_hr_leave_get_policies();
-$entitlements     = erp_hr_leave_get_entitlements( array( 'employee_id' => $employee->id ) );
-$entitlements_pol = wp_list_pluck( $entitlements, 'policy_id' );
-$balance          = erp_hr_leave_get_balance( $employee->id );
+$balance = $employee->get_leave_balance();
 
-if ( $policies ) {
+if ( $balance ) {
     ?>
 
     <table class="widefat">
         <thead>
             <tr>
                 <th><?php _e( 'Leave', 'erp' ) ?></th>
-                <th><?php _e( 'Current', 'erp' ) ?></th>
+                <th><?php _e( 'Days', 'erp' ) ?></th>
                 <th><?php _e( 'Scheduled', 'erp' ) ?></th>
                 <th><?php _e( 'Available', 'erp' ) ?></th>
                 <th><?php _e( 'Period', 'erp' ) ?></th>
@@ -22,37 +19,18 @@ if ( $policies ) {
 
         <tbody>
 
-            <?php foreach ($policies as $num => $policy) {
-
-                $key       = array_search( $policy->id, $entitlements_pol );
-                $en        = false;
-                $name      = esc_html( $policy->name );
-                $current   = 0;
-                $scheduled = 0;
-                $available = $policy->value;
-
-
-                if ( array_key_exists( $policy->id, $balance ) ) {
-                    $current   = $balance[ $policy->id ]['entitlement'];
-                    $scheduled = $balance[ $policy->id ]['scheduled'];
-                    $available = $balance[ $policy->id ]['entitlement'] - $balance[ $policy->id ]['total'];
-                }
-
-                if ( false !== $key ) {
-                    $en = $entitlements[ $key ];
-                }
-                ?>
-
+            <?php if( $balance ):?>
+            <?php foreach ($balance as $num => $entitlement) { ?>
             <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
-                <td><?php echo esc_html( $policy->name ); ?></td>
-                <td><?php echo $en ? sprintf( __( '%d days', 'erp' ), number_format_i18n( $en->days ) ) : '-'; ?></td>
-                <td><?php echo $scheduled ? sprintf( __( '%d days', 'erp' ), number_format_i18n( $scheduled ) ) : '-'; ?></td>
+                <td><?php echo esc_html( $entitlement->policy ); ?></td>
+                <td><?php echo $entitlement->days ? sprintf( __( '%d days', 'erp' ), number_format_i18n( $entitlement->days ) ) : '-'; ?></td>
+                <td><?php echo $entitlement->scheduled ? sprintf( __( '%d days', 'erp' ), number_format_i18n( $entitlement->scheduled ) ) : '-'; ?></td>
                 <td>
                     <?php
-                    if ( $available < 0 ) {
-                        printf( '<span class="red">%d %s</span>', number_format_i18n( $available ), __( 'days', 'erp' ) );
-                    } elseif ( $available > 0 ) {
-                        printf( '<span class="green">%d %s</span>', number_format_i18n( $available ), __( 'days', 'erp' ) );
+                    if ( $entitlement->available < 0 ) {
+                        printf( '<span class="red">%d %s</span>', number_format_i18n( $entitlement->available ), __( 'days', 'erp' ) );
+                    } elseif ( $entitlement->available > 0 ) {
+                        printf( '<span class="green">%d %s</span>', number_format_i18n( $entitlement->available ), __( 'days', 'erp' ) );
                     } else {
                         echo '-';
                     }
@@ -60,15 +38,17 @@ if ( $policies ) {
                 </td>
                 <td>
                     <?php
-                    if ( $en ) {
-                        printf( '%s - %s', erp_format_date( $en->from_date ), erp_format_date( $en->to_date ) );
-                    } else {
-                        _e( 'No Policy', 'erp' );
-                    } ?>
+                    printf( '%s - %s', erp_format_date( $entitlement->from_date ), erp_format_date( $entitlement->to_date ) );
+                    ?>
                 </td>
             </tr>
 
             <?php } ?>
+            <?php else :?>
+            <tr class="alternate">
+                <td colspan="4"><?php _e( 'No leave policy found!', 'erp' ); ?></td>
+            </tr>
+            <?php endif; ?>
         </tbody>
 
     </table>
@@ -79,13 +59,7 @@ if ( $policies ) {
 
 <?php
 $cur_year   = date( 'Y' );
-$requests   = erp_hr_get_leave_requests( array(
-    'year'    => $cur_year,
-    'user_id' => $employee->id,
-    'status'  => 1,
-    'orderby' => 'req.start_date',
-    'number'  => -1
-) );
+$requests   = $employee->get_leave_requests();
 ?>
 
 <form action="#" id="erp-hr-empl-leave-history">
@@ -101,7 +75,7 @@ $requests   = erp_hr_get_leave_requests( array(
         <?php } ?>
     </select>
 
-    <input type="hidden" name="employee_id" value="<?php echo esc_attr( $employee->id ); ?>">
+    <input type="hidden" name="employee_id" value="<?php echo esc_attr( $employee->get_user_id() ); ?>">
 
     <?php wp_nonce_field( 'erp-hr-empl-leave-history' ); ?>
     <?php submit_button( __( 'Filter', 'erp' ), 'secondary', 'submit', false ); ?>
