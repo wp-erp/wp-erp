@@ -1116,7 +1116,7 @@
                     data: form.serializeObject(),
                     success: function() {
                         $.get( window.location.href, function( data ) {
-                            if( $('ul.notes-list li').length < 0 ){
+                            if( $('ul.notes-list li').length < 0 ) {
                                 $('ul.notes-list').prepend( $(data).find( 'ul.notes-list' ).after() );
                             }else {
                                 $('ul.notes-list').prepend( $(data).find( 'ul.notes-list li' ).first() );
@@ -1140,7 +1140,7 @@
             },
 
             showLoadMoreBtn: function(){
-                if( $('ul.notes-list li').length >= 10 ){
+                if( $('ul.notes-list li').length > 10 ){
                     $('.wperp-load-more-btn').show();
                 }else {
                     $('.wperp-load-more-btn').hide();
@@ -1185,12 +1185,11 @@
                 e.preventDefault();
 
                 if ( confirm( wpErpHr.delConfirmEmployeeNote ) ) {
-
                     var self = $(this),
                         data = {
                             action: 'erp-delete-employee-note',
                             note_id: self.data('note_id'),
-                            user_id: wpErp.wpErpCurrentEmployee.user_id,
+                            user_id: wpErpCurrentEmployee.user_id,
                             _wpnonce : wpErpHr.nonce
                         };
 

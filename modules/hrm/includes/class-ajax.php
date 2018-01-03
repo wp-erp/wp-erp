@@ -693,7 +693,7 @@ class Ajax_Handler {
 
         $delete = $employee->delete_job_history($history_id);
 
-        if( is_wp_error($delete)){
+        if ( is_wp_error($delete)){
             $this->send_error( $delete->get_error_message() );
         }
 
@@ -1668,12 +1668,12 @@ class Ajax_Handler {
         $this->verify_nonce( 'erp-hr-empl-leave-history' );
 
         $year        = isset( $_POST['year'] ) ? intval( $_POST['year'] ) : date( 'Y' );
-        $employee_id = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+        $user_id     = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
         $policy      = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : 'all';
 
         $args = array(
             'year'    => $year,
-            'user_id' => $employee_id,
+            'user_id' => $user_id,
             'status'  => 1,
             'orderby' => 'req.start_date'
         );
@@ -1682,7 +1682,13 @@ class Ajax_Handler {
             $args['policy_id'] = $policy;
         }
 
-        $requests = erp_hr_get_leave_requests( $args );
+        $employee = new Employee( $user_id );
+
+        if ( ! $employee->is_employee() ) {
+            $this->send_error( __( 'Invalid request permission.', 'erp' ) );
+        }
+
+        $requests = $employee->get_leave_requests( $args );
 
         ob_start();
         include WPERP_HRM_VIEWS . '/employee/tab-leave-history.php';
