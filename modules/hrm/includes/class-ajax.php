@@ -790,7 +790,6 @@ class Ajax_Handler {
         $note_id  = isset( $_POST['note_id'] ) ? intval( $_POST['note_id'] ) : 0;
         $user_id  = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
 
-        error_log(print_r($_POST, true));
 
 
 //        $employee = new Employee();
@@ -1174,7 +1173,7 @@ class Ajax_Handler {
 
         $id          = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
         $employee_id = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
-            
+
         $employee = new Employee( $employee_id );
 
         if ( ! $employee->is_employee() ) {
