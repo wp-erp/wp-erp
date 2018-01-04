@@ -68,15 +68,15 @@
                             <h3 class="hndle"><span><?php _e( 'Actions', 'erp' ); ?></span></h3>
                             <div class="inside">
                                 <?php
-                                if ( current_user_can( 'erp_edit_employee', $employee->id ) ) {
+                                if ( current_user_can( 'erp_edit_employee', $employee->get_user_id() ) ) {
                                     ?>
-                                    <span class="edit"><a class="button button-primary" data-id="<?php echo $employee->id; ?>" data-single="true" href="#"><?php _e( 'Edit', 'erp' ); ?></a></span>
+                                    <span class="edit"><a class="button button-primary" data-id="<?php echo $employee->get_user_id(); ?>" data-single="true" href="#"><?php _e( 'Edit', 'erp' ); ?></a></span>
                                     <?php
                                 }
                                 ?>
 
                                 <?php if ( $employee->get_status() != 'Terminated' && current_user_can( 'erp_create_employee' ) ): ?>
-                                    <a class="button" href="#" id="erp-employee-terminate" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-terminate" data-title="<?php _e( 'Terminate Employee', 'erp' ); ?>"><?php _e( 'Terminate', 'erp' ); ?></a>
+                                    <a class="button" href="#" id="erp-employee-terminate" data-id="<?php echo $employee->get_user_id(); ?>" data-template="erp-employment-terminate" data-title="<?php _e( 'Terminate Employee', 'erp' ); ?>"><?php _e( 'Terminate', 'erp' ); ?></a>
                                 <?php endif; ?>
 
                                 <?php if ( ( isset( $_GET['tab'] ) && $_GET['tab'] == 'general' ) || !isset( $_GET['tab'] )  ): ?>
@@ -125,12 +125,12 @@
                     unset( $tabs['notes'] );
                 }
 
-                if ( ! current_user_can( 'erp_edit_employee', $employee->id ) ) {
+                if ( ! current_user_can( 'erp_edit_employee', $employee->get_user_id() ) ) {
                     unset( $tabs['leave'] );
                     unset( $tabs['job'] );
                 }
 
-                if ( absint( $employee->id ) === get_current_user_id() ) {
+                if ( absint( $employee->get_user_id() ) === get_current_user_id() ) {
                     unset( $tabs['permission'] );
                 }
                 ?>
@@ -139,7 +139,7 @@
                     <?php foreach ($tabs as $key => $tab) {
                         $active_class = ( $key == $active_tab ) ? ' nav-tab-active' : '';
                         ?>
-                        <a href="<?php echo erp_hr_employee_tab_url( $key, $employee->id ); ?>" class="nav-tab<?php echo $active_class; ?>"><?php echo $tab['title'] ?></a>
+                        <a href="<?php echo erp_hr_employee_tab_url( $key, $employee->get_user_id() ); ?>" class="nav-tab<?php echo $active_class; ?>"><?php echo $tab['title'] ?></a>
                     <?php } ?>
                 </h2>
 

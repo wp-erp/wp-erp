@@ -160,7 +160,7 @@ class Employee {
 
         } elseif ( is_a( $employee, 'WP_User' ) ) {
 
-            $this->user_id = $employee->id;
+            $this->user_id = $employee->get_user_id();
             $this->wp_user = $employee;
 
         } elseif ( is_email( $employee ) ) {

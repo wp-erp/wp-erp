@@ -520,7 +520,6 @@ class Ajax_Handler {
         $employee_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
         $employee    = new Employee( $employee_id );
 
-
         if ( ! $employee->is_employee() ) {
             $this->send_error( __( 'Employee does not exists.', 'erp' ) );
         }
@@ -840,7 +839,6 @@ class Ajax_Handler {
         }
 
         $this->send_success();
-
     }
 
     /**

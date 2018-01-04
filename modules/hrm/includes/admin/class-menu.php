@@ -86,7 +86,7 @@ class Admin_Menu {
         switch ($action) {
             case 'view':
                 $employee = new Employee( $id );
-                if ( ! $employee->id ) {
+                if ( ! $employee->get_user_id() ) {
                     wp_die( __( 'Employee not found!', 'erp' ) );
                 }
 
