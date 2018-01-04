@@ -1,5 +1,3 @@
-<?php $employee_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : null; ?>
-
 <div class="info-form-wrap">
     <div class="row">
         <?php erp_html_form_input( array(
@@ -11,7 +9,7 @@
         ) ); ?>
     </div>
 
-    <div class="row" data-selected="{{ data.work.location }}">
+    <div class="row">
         <?php erp_html_form_input( array(
             'label'    => __( 'Location', 'erp' ),
             'name'     => 'location',
@@ -21,7 +19,7 @@
         ) ); ?>
     </div>
 
-    <div class="row" data-selected="{{ data.work.department }}">
+    <div class="row">
         <?php erp_html_form_input( array(
             'label'   => __( 'Department', 'erp' ),
             'name'    => 'department',
@@ -31,7 +29,7 @@
         ) ); ?>
     </div>
 
-    <div class="row" data-selected="{{ data.work.designation }}">
+    <div class="row">
         <?php erp_html_form_input( array(
             'label'   => __( 'Job Title', 'erp' ),
             'name'    => 'designation',
@@ -41,17 +39,19 @@
         ) ); ?>
     </div>
 
-    <div class="row" data-selected="{{ data.work.reporting_to }}">
+    <div class="row">
         <?php erp_html_form_input( array(
             'label'   => __( 'Reporting To', 'erp' ),
             'name'    => 'reporting_to',
             'value'   => '',
+            'class'   => 'erp-hrm-select2',
             'type'    => 'select',
-            'options' => erp_hr_get_employees_dropdown_raw( $employee_id )
+            'id'      => 'performance_reporting_to',
+            'options' => erp_hr_get_employees_dropdown_raw()
         ) ); ?>
     </div>
 
     <?php wp_nonce_field( 'employee_update_jobinfo' ); ?>
     <input type="hidden" name="action" id="status-action" value="erp-hr-emp-update-jobinfo">
-    <input type="hidden" name="employee_id" id="emp-id" value="{{ data.id }}">
+    <input type="hidden" name="user_id" id="emp-id" value="{{ data.user_id }}">
 </div>

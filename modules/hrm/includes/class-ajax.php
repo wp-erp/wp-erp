@@ -629,10 +629,10 @@ class Ajax_Handler {
     public function employee_update_compensation() {
         $this->verify_nonce( 'employee_update_compensation' );
 
-        $employee_id = isset( $_REQUEST['employee_id'] ) ? intval( $_REQUEST['employee_id'] ) : 0;
+        $user_id = isset( $_REQUEST['user_id'] ) ? intval( $_REQUEST['user_id'] ) : 0;
 
         // Check permission
-        if ( ! current_user_can( 'erp_edit_employee', $employee_id ) ) {
+        if ( ! current_user_can( 'erp_edit_employee', $user_id ) ) {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
@@ -657,10 +657,10 @@ class Ajax_Handler {
             $this->send_error( __( 'Reason does not exists.', 'erp' ) );
         }
 
-        $employee = new Employee( $employee_id );
+        $employee = new Employee( $user_id );
 
-        if ( $employee->id ) {
-            do_action( 'erp_hr_employee_compensation_create', $employee->id );
+        if ( $employee->is_employee() ) {
+            do_action( 'erp_hr_employee_compensation_create', $employee->get_user_id() );
             $employee->update_compensation( $pay_rate, $pay_type, $reason, $date, $comment );
             $this->send_success();
         }
@@ -693,7 +693,7 @@ class Ajax_Handler {
 
         $delete = $employee->delete_job_history($history_id);
 
-        if( is_wp_error($delete)){
+        if ( is_wp_error($delete)){
             $this->send_error( $delete->get_error_message() );
         }
 
@@ -708,7 +708,7 @@ class Ajax_Handler {
     public function employee_update_job_info() {
         $this->verify_nonce( 'employee_update_jobinfo' );
 
-        $employee_id = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+        $user_id = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
 
         $location     = isset( $_POST['location'] ) ? intval( $_POST['location'] ) : 0;
         $department   = isset( $_POST['department'] ) ? intval( $_POST['department'] ) : 0;
@@ -716,15 +716,15 @@ class Ajax_Handler {
         $reporting_to = isset( $_POST['reporting_to'] ) ? intval( $_POST['reporting_to'] ) : 0;
         $date         = ( empty( $_POST['date'] ) ) ? current_time( 'mysql' ) : $_POST['date'];
 
-        $employee = new Employee( $employee_id );
+        $employee = new Employee( $user_id );
 
-        if ( $employee->id ) {
+        if ( $employee->is_employee() ) {
             // Check permission
-            if ( ! current_user_can( 'erp_edit_employee', $employee->id ) ) {
+            if ( ! current_user_can( 'erp_edit_employee', $employee->get_user_id() ) ) {
                 $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
             }
 
-            do_action( 'erp_hr_employee_job_info_create', $employee->id );
+            do_action( 'erp_hr_employee_job_info_create', $employee->get_user_id() );
             $employee->update_job_info( $department, $designation, $reporting_to, $location, $date );
             $this->send_success();
         }
@@ -740,15 +740,15 @@ class Ajax_Handler {
     public function employee_add_note() {
         $this->verify_nonce( 'wp-erp-hr-employee-nonce' );
 
-        $employee_id = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
+        $user_id     = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
         $note        = isset( $_POST['note'] ) ? strip_tags( $_POST['note'] ) : 0;
         $note_by     = get_current_user_id();
 
-        $employee = new Employee( $employee_id );
+        $employee = new Employee( $user_id );
 
         if ( $employee->is_employee() ) {
             // Check permission
-            if ( ! current_user_can( 'erp_edit_employee', $employee_id ) ) {
+            if ( ! current_user_can( 'erp_edit_employee', $user_id ) ) {
                 $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
             }
 
@@ -790,20 +790,18 @@ class Ajax_Handler {
         $note_id  = isset( $_POST['note_id'] ) ? intval( $_POST['note_id'] ) : 0;
         $user_id  = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
 
+        $employee = new Employee( $user_id );
 
+        // Check permission
+        if ( ! current_user_can( 'erp_edit_employee', $employee->get_user_id() ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
+        }
 
-//        $employee = new Employee();
-//
-//        // Check permission
-//        if ( ! current_user_can( 'erp_edit_employee', $employee->id ) ) {
-//            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
-//        }
-//
-//        if ( $employee->delete_note( $note_id ) ) {
-//            $this->send_success();
-//        } else {
-//            $this->send_error();
-//        }
+        if ( $employee->delete_note( $note_id ) ) {
+            $this->send_success();
+        } else {
+            $this->send_error();
+        }
     }
 
     /**
@@ -1670,12 +1668,12 @@ class Ajax_Handler {
         $this->verify_nonce( 'erp-hr-empl-leave-history' );
 
         $year        = isset( $_POST['year'] ) ? intval( $_POST['year'] ) : date( 'Y' );
-        $employee_id = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+        $user_id     = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
         $policy      = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : 'all';
 
         $args = array(
             'year'    => $year,
-            'user_id' => $employee_id,
+            'user_id' => $user_id,
             'status'  => 1,
             'orderby' => 'req.start_date'
         );
@@ -1684,7 +1682,13 @@ class Ajax_Handler {
             $args['policy_id'] = $policy;
         }
 
-        $requests = erp_hr_get_leave_requests( $args );
+        $employee = new Employee( $user_id );
+
+        if ( ! $employee->is_employee() ) {
+            $this->send_error( __( 'Invalid request permission.', 'erp' ) );
+        }
+
+        $requests = $employee->get_leave_requests( $args );
 
         ob_start();
         include WPERP_HRM_VIEWS . '/employee/tab-leave-history.php';

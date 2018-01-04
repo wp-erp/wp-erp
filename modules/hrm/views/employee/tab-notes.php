@@ -19,8 +19,11 @@
     </form>
 
     <?php
-//    $total_notes = ;
-    $notes = $employee->get_notes();
+    $no_of_notes = 10;
+
+    $notes = $employee->get_notes( $no_of_notes );
+
+    $total_notes = $employee->notes->count();
 
     if ( $notes ) {
         ?>
@@ -40,7 +43,7 @@
                     <div class="note-body">
                         <?php echo wpautop( $note->comment ); ?>
                     </div>
-                    <?php if( current_user_can( 'manage_options' ) OR (wp_get_current_user()->ID == $note->comment_by ) ) { ?>
+                    <?php if ( current_user_can( 'manage_options' ) OR (wp_get_current_user()->ID == $note->comment_by ) ) { ?>
                         <div class="row-action">
                             <span class="delete"><a href="#" class="delete_note" data-note_id="<?php echo $note->id; ?>"><?php _e( 'Delete', 'erp' ); ?></a></span>
                         </div>
@@ -50,12 +53,21 @@
             <?php } ?>
         </ul>
 
-
-
     <?php } ?>
-     <?php  $display_class =  ( $no_of_notes < $total_notes ) ? 'show':'hide' ; ?>
+
+    <?php $display_class = ( $total_notes > $no_of_notes ) ? 'show':'hide' ; ?>
     <div class="wperp-load-more-btn <?php echo $display_class?>">
-            <?php submit_button( 'Load More', false, 'erp-load-notes', true, array( 'id' => 'erp-load-notes', 'data-total_no' => $total_notes, 'data-offset_no' => $no_of_notes, 'data-user_id' => $employee->id ) ); ?>
+            <?php submit_button(
+                'Load More',
+                false,
+                'erp-load-notes',
+                true,
+                array(
+                    'id' => 'erp-load-notes',
+                    'data-total_no' => $total_notes,
+                    'data-offset_no' => $no_of_notes,
+                    'data-user_id' => $employee->get_user_id() )
+                ); ?>
     </div>
 
 </div>
