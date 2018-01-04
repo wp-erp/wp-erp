@@ -885,3 +885,29 @@ function erp_hr_translate_employee_history( array $history = array(), $inserting
 
     return $formatted_history;
 }
+
+/**
+ * control user data visibility
+ *
+ * @since  1.2.9
+ *
+ * @param $data
+ * @param $user_id (of browsing user)
+ *
+ * @return array;
+ */
+function erp_hr_control_restricted_data( $data, $user_id ) {
+    global $current_user;
+    if ( ( ! current_user_can( erp_hr_get_manager_role() ) && ( $current_user->ID !== $user_id ) ) ) {
+        $restricted = [
+            'pay_rate',
+            'pay_type',
+            'hiring_source',
+            'hiring_date',
+        ];
+
+        return array_merge( $data, $restricted );
+    }
+
+    return array();
+}

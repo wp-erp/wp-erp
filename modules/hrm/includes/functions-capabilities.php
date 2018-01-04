@@ -77,12 +77,15 @@ function erp_hr_get_caps_for_role( $role = '' ) {
                 'erp_create_employee'      => true,
                 'erp_view_employee'        => true,
                 'erp_edit_employee'        => true,
+                'erp_edit_employees'        => true,
                 'erp_delete_employee'      => true,
 
                 'erp_create_review'        => true,
                 'erp_delete_review'        => true,
                 'erp_manage_review'        => true,
 
+                'erp_crate_announcement'  => true,
+                'erp_view_announcement'  => true,
                 'erp_manage_announcement'  => true,
 
                 'erp_manage_jobinfo'       => true,
