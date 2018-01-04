@@ -99,10 +99,10 @@
                                 <td><?php echo erp_format_date( $experience->to ); ?></td>
                                 <td><?php echo esc_html( $experience->description ); ?></td>
                                 <td width="10%">
-                                    <?php if ( current_user_can( 'erp_edit_employee', $employee->id ) ) : ?>
+                                    <?php if ( current_user_can( 'erp_edit_employee', $employee->get_user_id() ) ) : ?>
                                         <div class="row-actions erp-hide-print">
                                             <a href="#" class="work-experience-edit" data-template="erp-employment-work-experience" data-title="<?php esc_attr_e( 'Work Experience', 'erp' ); ?>" data-data='<?php echo json_encode( $experience ); ?>' data-button="<?php esc_attr_e( 'Update Experience', 'erp' ); ?>"><span class="dashicons dashicons-edit"></span></a>
-                                            <a href="#" class="work-experience-delete" data-employee_id="<?php echo $employee->id; ?>" data-id="<?php echo $experience->id; ?>" data-action="erp-hr-emp-delete-exp"><span class="dashicons dashicons-trash"></span></a>
+                                            <a href="#" class="work-experience-delete" data-employee_id="<?php echo $employee->get_user_id(); ?>" data-id="<?php echo $experience->id; ?>" data-action="erp-hr-emp-delete-exp"><span class="dashicons dashicons-trash"></span></a>
                                         </div>
                                     <?php endif; ?>
                                 </td>
@@ -116,8 +116,8 @@
                 <?php _e( 'No work experiences found.', 'erp' ); ?>
 
             <?php } ?>
-            <?php if ( current_user_can( 'erp_edit_employee', $employee->id ) ) : ?>
-                <a class="button button-secondary erp-hide-print" id="erp-empl-add-exp" href="#" data-data='<?php echo json_encode( [ 'employee_id' => $employee->id ] ); ?>' data-button="<?php esc_attr_e( 'Create Experience', 'erp' ); ?>"  data-template="erp-employment-work-experience" data-title="<?php esc_attr_e( 'Work Experience', 'erp' ); ?>"><?php _e( '+ Add Experience', 'erp' ); ?></a>
+            <?php if ( current_user_can( 'erp_edit_employee', $employee->get_user_id() ) ) : ?>
+                <a class="button button-secondary erp-hide-print" id="erp-empl-add-exp" href="#" data-data='<?php echo json_encode( [ 'employee_id' => $employee->get_user_id() ] ); ?>' data-button="<?php esc_attr_e( 'Create Experience', 'erp' ); ?>"  data-template="erp-employment-work-experience" data-title="<?php esc_attr_e( 'Work Experience', 'erp' ); ?>"><?php _e( '+ Add Experience', 'erp' ); ?></a>
             <?php endif; ?>
         </div>
     </div><!-- .postbox -->
@@ -154,10 +154,10 @@
                                 <td><?php echo $education->notes ? esc_html( $education->notes ) : '-'; ?></td>
                                 <td><?php echo $education->interest ? esc_html( $education->interest ) : '-'; ?></td>
                                 <td width="10%">
-                                    <?php if ( current_user_can( 'erp_edit_employee', $employee->id ) ) : ?>
+                                    <?php if ( current_user_can( 'erp_edit_employee', $employee->get_user_id() ) ) : ?>
                                         <div class="row-actions erp-hide-print">
                                             <a href="#" class="education-edit" data-template="erp-employment-education" data-title="<?php esc_attr_e( 'Education', 'erp' ); ?>" data-data='<?php echo json_encode( $education ); ?>' data-button="<?php esc_attr_e( 'Update Info', 'erp' ); ?>"><span class="dashicons dashicons-edit"></span></a>
-                                            <a href="#" class="education-delete" data-employee_id="<?php echo $employee->id; ?>" data-id="<?php echo $education->id; ?>" data-action="erp-hr-emp-delete-education"><span class="dashicons dashicons-trash"></span></a>
+                                            <a href="#" class="education-delete" data-employee_id="<?php echo $employee->get_user_id(); ?>" data-id="<?php echo $education->id; ?>" data-action="erp-hr-emp-delete-education"><span class="dashicons dashicons-trash"></span></a>
                                         </div>
                                     <?php endif; ?>
                                 </td>
@@ -172,8 +172,8 @@
 
             <?php } ?>
 
-            <?php if ( current_user_can( 'erp_edit_employee', $employee->id ) ) : ?>
-                <a class="button button-secondary erp-hide-print" id="erp-empl-add-education" href="#" data-data='<?php echo json_encode( array( 'employee_id' => $employee->id ) ); ?>'  data-template="erp-employment-education" data-title="<?php esc_attr_e( 'Education', 'erp' ); ?>" data-button="<?php esc_attr_e( 'Add Education', 'erp' ); ?>"><?php _e( '+ Add Education', 'erp' ); ?></a>
+            <?php if ( current_user_can( 'erp_edit_employee', $employee->get_user_id() ) ) : ?>
+                <a class="button button-secondary erp-hide-print" id="erp-empl-add-education" href="#" data-data='<?php echo json_encode( array( 'employee_id' => $employee->get_user_id() ) ); ?>'  data-template="erp-employment-education" data-title="<?php esc_attr_e( 'Education', 'erp' ); ?>" data-button="<?php esc_attr_e( 'Add Education', 'erp' ); ?>"><?php _e( '+ Add Education', 'erp' ); ?></a>
             <?php endif; ?>
         </div>
     </div><!-- .postbox -->
@@ -205,10 +205,10 @@
                                 <td><?php echo esc_html( $dependent->relation ); ?></td>
                                 <td><?php echo erp_format_date( $dependent->dob ); ?></td>
                                 <td width="10%">
-                                    <?php if ( current_user_can( 'erp_edit_employee', $employee->id ) ) : ?>
+                                    <?php if ( current_user_can( 'erp_edit_employee', $employee->get_user_id() ) ) : ?>
                                         <div class="row-actions erp-hide-print">
                                             <a href="#" class="dependent-edit" data-template="erp-employment-dependent" data-title="<?php esc_attr_e( 'Dependents', 'erp' ); ?>" data-data='<?php echo json_encode( $dependent ); ?>' data-button="<?php esc_attr_e( 'Update Dependent', 'erp' ); ?>"><span class="dashicons dashicons-edit"></span></a>
-                                            <a href="#" class="dependent-delete" data-employee_id="<?php echo $employee->id; ?>" data-id="<?php echo $dependent->id; ?>" data-action="erp-hr-emp-delete-dependent"><span class="dashicons dashicons-trash"></span></a>
+                                            <a href="#" class="dependent-delete" data-employee_id="<?php echo $employee->get_user_id(); ?>" data-id="<?php echo $dependent->id; ?>" data-action="erp-hr-emp-delete-dependent"><span class="dashicons dashicons-trash"></span></a>
                                         </div>
                                     <?php endif; ?>
                                 </td>
@@ -223,8 +223,8 @@
 
             <?php } ?>
 
-            <?php if ( current_user_can( 'erp_edit_employee', $employee->id ) ) : ?>
-                <a class="button button-secondary erp-hide-print" id="erp-empl-add-dependent" href="#" data-data='<?php echo json_encode( array( 'employee_id' => $employee->id ) ); ?>'  data-template="erp-employment-dependent" data-title="<?php esc_attr_e( 'Dependent', 'erp' ); ?>" data-button="<?php esc_attr_e( 'Add Dependent', 'erp' ); ?>"><?php _e( '+ Add Dependents', 'erp' ); ?></a>
+            <?php if ( current_user_can( 'erp_edit_employee', $employee->get_user_id() ) ) : ?>
+                <a class="button button-secondary erp-hide-print" id="erp-empl-add-dependent" href="#" data-data='<?php echo json_encode( array( 'employee_id' => $employee->get_user_id() ) ); ?>'  data-template="erp-employment-dependent" data-title="<?php esc_attr_e( 'Dependent', 'erp' ); ?>" data-button="<?php esc_attr_e( 'Add Dependent', 'erp' ); ?>"><?php _e( '+ Add Dependents', 'erp' ); ?></a>
             <?php endif; ?>
         </div>
     </div><!-- .postbox -->
@@ -236,15 +236,15 @@
             <h3 class="hndle"><span><?php _e( 'Termination', 'erp' ); ?></span></h3>
             <div class="inside">
 
-                <?php $termination_data = get_user_meta( $employee->id, '_erp_hr_termination', true ); ?>
+                <?php $termination_data = get_user_meta( $employee->get_user_id(), '_erp_hr_termination', true ); ?>
 
                 <p><?php _e( 'Termination Date', 'erp' ); ?> : <?php echo isset( $termination_data['terminate_date'] ) ? erp_format_date( $termination_data['terminate_date'] ) : ''; ?></p>
                 <p><?php _e( 'Termination Type', 'erp' ); ?> : <?php echo isset( $termination_data['termination_type'] ) ? erp_hr_get_terminate_type( $termination_data['termination_type'] ) : ''; ?></p>
                 <p><?php _e( 'Termination Reason', 'erp' ); ?> : <?php echo isset( $termination_data['termination_reason'] ) ? erp_hr_get_terminate_reason( $termination_data['termination_reason'] ) : ''; ?></p>
                 <p><?php _e( 'Eligible for Hire', 'erp' ); ?> : <?php echo isset( $termination_data['eligible_for_rehire'] ) ? erp_hr_get_terminate_rehire_options( $termination_data['eligible_for_rehire'] ) : ''; ?></p>
 
-                <?php if ( current_user_can( 'erp_edit_employee', $employee->id ) ) : ?>
-                    <a class="button button-secondary erp-hide-print" id="erp-employee-terminate" href="#" data-id="<?php echo $employee->id; ?>" data-template="erp-employment-terminate" data-data='<?php echo json_encode( $termination_data ); ?>' data-title="<?php esc_attr_e( 'Update Termination', 'erp' ); ?>" data-button="<?php esc_attr_e( 'Change Termination', 'erp' ); ?>"><?php _e( 'Change Termination', 'erp' ); ?></a>
+                <?php if ( current_user_can( 'erp_edit_employee', $employee->get_user_id() ) ) : ?>
+                    <a class="button button-secondary erp-hide-print" id="erp-employee-terminate" href="#" data-id="<?php echo $employee->get_user_id(); ?>" data-template="erp-employment-terminate" data-data='<?php echo json_encode( $termination_data ); ?>' data-title="<?php esc_attr_e( 'Update Termination', 'erp' ); ?>" data-button="<?php esc_attr_e( 'Change Termination', 'erp' ); ?>"><?php _e( 'Change Termination', 'erp' ); ?></a>
                 <?php endif; ?>
             </div>
         </div><!-- .postbox -->
