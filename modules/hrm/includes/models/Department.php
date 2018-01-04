@@ -13,7 +13,7 @@ class Department extends Model {
     protected $table = 'erp_hr_depts';
     protected $fillable = [ 'title', 'description', 'lead', 'parent', 'status' ];
 
-    public function employees(){
-        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Employee', 'department', 'id' );
-    }
+//    public function employees(){
+//        return $this->hasMany( 'WeDevs\ERP\HRM\Models\Employee', 'department', 'id' );
+//    }
 }
