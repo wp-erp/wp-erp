@@ -1,6 +1,6 @@
 <?php
-namespace WeDevs\ERP\API;
-
+namespace WeDevs\ERP\HRM\API;
+use WeDevs\ERP\API\REST_Controller;
 use WP_REST_Server;
 use WP_REST_Response;
 use WP_Error;

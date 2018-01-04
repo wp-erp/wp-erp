@@ -81,6 +81,10 @@ class Employee {
             'postal_code'     => '',
         )
     );
+    /**
+     * @var array
+     */
+    protected $restricted_data;
 
     /**
      * @since 1.0.0
@@ -94,9 +98,10 @@ class Employee {
      * @param null $employee
      */
     public function __construct( $employee = null ) {
-        $this->user_id  = 0;
-        $this->wp_user  = new \WP_User();
-        $this->erp_user = new \WeDevs\ERP\HRM\Models\Employee();
+        $this->user_id         = 0;
+        $this->wp_user         = new \WP_User();
+        $this->erp_user        = new \WeDevs\ERP\HRM\Models\Employee();
+        $this->restricted_data = $this->get_restricted_employee_data();
         if ( $employee != null ) {
             $this->load_employee( $employee );
         }
@@ -126,6 +131,9 @@ class Employee {
      * @return string
      */
     public function __get( $key ) {
+        if ( in_array( $key, $this->restricted_data ) ) {
+            return null;
+        }
         if ( is_callable( array( $this, "get_{$key}" ) ) ) {
             return $this->{"get_{$key}"}();
         } elseif ( isset( $this->$key ) ) {
@@ -187,6 +195,7 @@ class Employee {
                 foreach ( $this->data['personal'] as $key => $value ) {
                     $this->data['personal'][ $key ] = $this->$key;
                 }
+                $this->data['personal'][ 'full_name' ] = $this->get_full_name();
             }
         }
     }
@@ -332,20 +341,24 @@ class Employee {
      * @since 1.2.9
      *
      * @param array $data
-     *
-     * @return array|void|mixed|string
+     * @param $flat boolean
+     * @return array
      */
-    function get_data( $data = array() ) {
+    function get_data( $data = array(), $flat = false ) {
         $employee_data = array_merge( $data, $this->data );
 
-        return apply_filters( 'erp_hr_get_employee_fields', $employee_data, $this->user_id, $this->wp_user );
+        $employee_data = apply_filters( 'erp_hr_get_employee_fields', $employee_data, $this->user_id, $this->wp_user );
+        if( $flat ){
+            $employee_data = erp_array_flatten($employee_data);
+        }
+        return $employee_data;
     }
 
     /**
      *  Get the user info as an array
      *
      * @deprecated 1.2.9
-     * @return array|mixed|string|void
+     * @return array|mixed|string
      */
     public function to_array() {
         //backward compatibility
@@ -1122,11 +1135,11 @@ class Employee {
         }
 
         if ( ! empty( $data['department'] ) ) {
-            $data['department'] = $this->get_department('view');
+            $data['department'] = $this->get_department( 'view' );
         }
 
         if ( ! empty( $data['location'] ) ) {
-            $data['location'] = $this->get_location('view');
+            $data['location'] = $this->get_location( 'view' );
         }
 
         //prepare for inserting history
@@ -1630,6 +1643,17 @@ class Employee {
         update_user_meta( $this->id, '_erp_hr_termination', $args );
 
         return $this;
+    }
+
+    /**
+     * get restricted data
+     *
+     * @since 1.29
+     * @return array
+     */
+    protected function get_restricted_employee_data() {
+        $restricted_data = array();
+        return apply_filters( 'erp_hr_employee_restricted_data', $restricted_data, $this->user_id, $this );
     }
 
     /**
