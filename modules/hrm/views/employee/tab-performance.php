@@ -138,7 +138,7 @@
 
     <h3><?php _e( 'Performance Goals', 'erp' ); ?></h3>
     <?php if ( current_user_can( 'erp_create_review' ) ) { ?>
-        <a href="#" id="erp-empl-performance-goals" class="action button" data-id="<?php echo $employee->id; ?>"
+        <a href="#" id="erp-empl-performance-goals" class="action button" data-id="<?php echo $employee->get_user_id(); ?>"
            data-template="erp-employment-performance-goals"
            data-title="<?php _e( 'Performance Goals', 'erp' ); ?>"><span
                 class="dashicons dashicons-plus erp-performance-dashicon"></span> <?php _e( 'Add Performance Goals', 'erp' ); ?>

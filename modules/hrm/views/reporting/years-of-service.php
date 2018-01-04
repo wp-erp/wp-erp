@@ -18,7 +18,7 @@
 
                 $hire_data[$month][$day][] = [
                     'emp_name'    => $employee->display_name,
-                                        'emp_id'      => $employee->id,
+                    'emp_id'      => $employee->get_user_id(),
                     'hiring_date' => $employee->hiring_date
                 ];
             }

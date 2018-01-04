@@ -36,7 +36,7 @@ class Department extends \WeDevs\ERP\Item {
 
         $employee = new Employee( intval( $this->lead ) );
 
-        if ( ! $employee->id ) {
+        if ( ! $employee->get_user_id() ) {
             return false;
         }
 

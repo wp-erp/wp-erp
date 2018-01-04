@@ -31,13 +31,13 @@ $date_format = get_option( 'date_format' );
 
                         foreach ( $compensations as $compensation ) {
 
-                            $employee_url = '<a href="'. admin_url( 'admin.php?page=erp-hr-employee&action=view&id=' . $employee->id ) . '">' . $employee->display_name . '</a>';
+                            $employee_url = '<a href="'. admin_url( 'admin.php?page=erp-hr-employee&action=view&id=' . $employee->get_user_id() ) . '">' . $employee->display_name . '</a>';
                             echo '<tr>';
                             echo '<td>' . ( 0 == $line ? wp_kses_post( $employee_url ) : '' ) . '</td>';
                             echo '<td>' . date( $date_format, strtotime( esc_attr( $compensation->date ) ) ) . '</td>';
                             echo '<td>' . esc_attr( $compensation->type ) . '</td>';
                             echo '<td>' . esc_attr( $compensation->category ) . '</td>';
-                            echo '<td>' . esc_attr( $employee->id ) . '</td>';
+                            echo '<td>' . esc_attr( $employee->get_user_id() ) . '</td>';
                             echo '</tr>';
 
                             $line++;
