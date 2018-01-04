@@ -1,11 +1,7 @@
 <div class="job-tab-wrap">
 
     <?php $histories = $employee->get_job_histories(); ?>
-
-    <?php
-
-    ?>
-
+    
     <?php
     if ( current_user_can( 'erp_manage_jobinfo' ) ) {
         ?>
