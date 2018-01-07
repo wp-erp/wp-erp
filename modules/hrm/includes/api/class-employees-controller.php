@@ -65,7 +65,7 @@ class Employees_Controller extends REST_Controller {
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)', [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_employee' ],
@@ -94,7 +94,47 @@ class Employees_Controller extends REST_Controller {
             'schema' => [ $this, 'get_public_item_schema' ],
         ] );
 
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/experiences', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_experiences' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
+            ],
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'create_experience' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
+            ],
+        ] );
 
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/experiences' . '/(?P<id>[\d]+)', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_experience' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
+            ],
+            [
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => [ $this, 'update_experience' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
+            ],
+            [
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'delete_experience' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
+            ],
+        ] );
     }
 
 
@@ -141,8 +181,8 @@ class Employees_Controller extends REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_employee( \WP_REST_Request $request ) {
-        $id   = (int) $request['id'];
-        $item = new Employee( $id );
+        $user_id = (int) $request['user_id'];
+        $item    = new Employee( $user_id );
 
         if ( ! $item->is_employee() ) {
             return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid Employee id.' ), [ 'status' => 404 ] );
@@ -192,7 +232,8 @@ class Employees_Controller extends REST_Controller {
             return $created;
         }
         $request->set_param( 'context', 'edit' );
-        $response = $this->prepare_item_for_response( $employee, $request );
+        $item     = new Employee( $created->user_id );
+        $response = $this->prepare_item_for_response( $item, $request );
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
         $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $employee->get_user_id() ) ) );
@@ -200,6 +241,153 @@ class Employees_Controller extends REST_Controller {
         return $response;
     }
 
+    /**
+     * Update an employee
+     *
+     * @param \WP_REST_Request $request
+     *
+     * @return $this|mixed|object|\WP_Error|\WP_REST_Response
+     */
+    public function update_employee( \WP_REST_Request $request ) {
+        $id = (int) $request['user_id'];
+
+        $employee = new Employee( $id );
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
+        }
+
+        $data    = $this->prepare_item_for_database( $request );
+        $updated = $employee->update_employee( $data );
+
+        if ( is_wp_error( $updated ) ) {
+            return $updated;
+        }
+
+        $request->set_param( 'context', 'edit' );
+        $updated_user = new Employee( $updated->user_id );
+        $response     = $this->prepare_item_for_response( $updated_user, $request );
+
+        $response = rest_ensure_response( $response );
+        $response->set_status( 201 );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
+
+        return $response;
+    }
+
+    /**
+     * Delete an employee
+     *
+     * @param $request
+     *
+     * @return \WP_REST_Response
+     */
+    public function delete_employee( \WP_REST_Request $request ) {
+        $id = (int) $request['user_id'];
+
+        erp_employee_delete( $id );
+        $response = rest_ensure_response( true );
+
+        return new WP_REST_Response( $response, 204 );
+    }
+
+
+    /**
+     * Get a collection of employee's experiences
+     *
+     * @param \WP_REST_Request $request
+     *
+     * @return mixed|object|\WP_Error|\WP_REST_Response
+     */
+    public function get_experiences( \WP_REST_Request $request ) {
+        $employee_id = (int) $request['user_id'];
+        $employee    = new Employee( $employee_id );
+
+        if ( ! $employee->is_employee() ) {
+            return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
+        }
+
+        $items = $employee->get_experiences();
+
+        $total_items = $employee->get_erp_user()->experiences()->count();
+        $response    = rest_ensure_response( $items );
+        $response    = $this->format_collection_response( $response, $request, $total_items );
+
+        return $response;
+    }
+
+    /**
+     * Create an experience
+     *
+     * @param \WP_REST_Request $request
+     *
+     * @return WP_Error|\WP_REST_Request
+     */
+    public function create_experience( \WP_REST_Request $request ) {
+        $employee_id = (int) $request['user_id'];
+        $employee    = new Employee( $employee_id );
+
+        if ( ! $employee->is_employee() ) {
+            return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
+        }
+        $experience = $employee->add_experience( $request->get_params() );
+
+        if ( is_wp_error( $experience ) ) {
+            return $experience;
+        }
+
+        $request->set_param( 'context', 'edit' );
+        $response = rest_ensure_response( $experience );
+        $response->set_status( 201 );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $experience['id'] ) ) );
+
+        return $response;
+    }
+    /**
+     * Update an experience
+     *
+     * @param \WP_REST_Request $request
+     *
+     * @return WP_Error|\WP_REST_Request
+     */
+    public function update_experience(\WP_REST_Request $request ) {
+        $employee_id = (int) $request['user_id'];
+        $employee    = new Employee( $employee_id );
+
+        if ( ! $employee->is_employee() ) {
+            return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
+        }
+        $experience = $employee->add_experience( $request->get_params() );
+
+        if ( is_wp_error( $experience ) ) {
+            return $experience;
+        }
+
+        $request->set_param( 'context', 'edit' );
+        $response = rest_ensure_response( $experience );
+        $response->set_status( 201 );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $experience['id'] ) ) );
+
+        return $response;
+    }
+
+    /**
+     * Delete an experience
+     *
+     * @param \WP_REST_Request $request
+     *
+     * @return WP_Error|\WP_REST_Request
+     */
+    public function delete_experience( $request ) {
+        $employee_id = (int) $request['user_id'];
+        $employee    = new Employee( $employee_id );
+
+        if ( ! $employee->is_employee() ) {
+            return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
+        }
+        $employee->delete_experience($request['id']);
+
+        return new WP_REST_Response( true, 204 );
+    }
 
     /**
      * Prepare a single user output for response
