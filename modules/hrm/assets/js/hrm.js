@@ -1139,8 +1139,8 @@
                 });
             },
 
-            showLoadMoreBtn: function(){
-                if( $('ul.notes-list li').length > 10 ){
+            showLoadMoreBtn: function() {
+                if( $('ul.notes-list li').length >= 10 ){
                     $('.wperp-load-more-btn').show();
                 }else {
                     $('.wperp-load-more-btn').hide();
