@@ -1098,8 +1098,8 @@ class Employee {
         if ( ! is_valid_date( $args['from'] ) && $args['from'] ) {
             return new \WP_Error( 'invalid-required-params', __( 'Invalid date format', 'erp' ) );
         }
-        $args['from'] = date('Y-m-d', strtotime($args['from']));
-        $args['to'] = date('Y-m-d', strtotime($args['to']));
+        $args['from'] = date( 'Y-m-d', strtotime( $args['from'] ) );
+        $args['to']   = date( 'Y-m-d', strtotime( $args['to'] ) );
 
         $experience = $this->erp_user->experiences()->updateOrCreate( [ 'id' => $args['id'] ], $args )->toArray();
 
@@ -1314,10 +1314,82 @@ class Employee {
         return $performances;
     }
 
-    public function add_performance( $data ) {
+    /**
+     * add Performance
+     * @param $type
+     * @param $args
+     *
+     * @return array|\WP_Error
+     */
+    public function add_performance( $type, $args ) {
+        $fields = array();
+        if ( $type == 'reviews' ) {
+            $fields       = [
+                'reporting_to'     => isset( $args['reporting_to'] ) ? intval( $args['reporting_to'] ) : 0,
+                'job_knowledge'    => isset( $args['job_knowledge'] ) ? intval( $args['job_knowledge'] ) : 0,
+                'work_quality'     => isset( $args['work_quality'] ) ? intval( $args['work_quality'] ) : 0,
+                'attendance'       => isset( $args['attendance'] ) ? intval( $args['attendance'] ) : 0,
+                'communication'    => isset( $args['communication'] ) ? intval( $args['communication'] ) : 0,
+                'dependablity'     => isset( $args['dependability'] ) ? intval( $args['dependability'] ) : 0,
+                'type'             => $type,
+                'performance_date' => ( empty( $args['performance_date'] ) ) ? current_time( 'mysql' ) : $args['performance_date']
+            ];
+            $reporting_to = new Employee( $fields['reporting_to'] );
+            if ( ! $reporting_to->is_employee() ) {
+                return new \WP_Error( 'invalid-user-id', __( 'Invalid reporting to used.', 'erp' ) );
+            }
+
+        }
+
+        if ( $type == 'comments' ) {
+            $fields = [
+                'reviewer'         => isset( $_POST['review_id'] ) ? intval( $_POST['review_id'] ) : 0,
+                'comments'         => isset( $_POST['comments'] ) ? esc_textarea( $_POST['comments'] ) : '',
+                'type'             => $type,
+                'performance_date' => ( empty( $_POST['performance_date'] ) ) ? current_time( 'mysql' ) : $_POST['performance_date']
+            ];
+
+            $reviewer = new Employee( $fields['reviewer'] );
+            if ( ! $reviewer->is_employee() ) {
+                return new \WP_Error( 'invalid-user-id', __( 'Invalid reviewer user.', 'erp' ) );
+            }
+        }
+
+        if ( $type == 'goals' ) {
+            $fields = [
+                'completion_date'       => ( empty( $_POST['completion_date'] ) ) ? current_time( 'mysql' ) : $_POST['completion_date'],
+                'goal_description'      => isset( $_POST['goal_description'] ) ? esc_textarea( $_POST['goal_description'] ) : '',
+                'employee_assessment'   => isset( $_POST['employee_assessment'] ) ? esc_textarea( $_POST['employee_assessment'] ) : '',
+                'supervisor'            => isset( $_POST['supervisor'] ) ? intval( $_POST['supervisor'] ) : 0,
+                'supervisor_assessment' => isset( $_POST['supervisor_assessment'] ) ? esc_textarea( $_POST['supervisor_assessment'] ) : '',
+                'type'                  => $type,
+                'performance_date'      => ( empty( $_POST['performance_date'] ) ) ? current_time( 'mysql' ) : $_POST['performance_date']
+            ];
+
+            $supervisor = new Employee( $fields['supervisor'] );
+            if ( ! $supervisor->is_employee() ) {
+                return new \WP_Error( 'invalid-user-id', __( 'Invalid supervisor user.', 'erp' ) );
+            }
+        }
+
+        $fields['id'] = isset( $fields['id'] ) ? intval( $fields['id'] ) : 0;
+
+        return $this->get_erp_user()->performances()->updateOrCreate( [ 'id' => $args['id'] ], $args )->toArray();
     }
 
+    /**
+     * Delete performance
+     *
+     * @param $id
+     *
+     * @return \WP_Error
+     */
     public function delete_performance( $id ) {
+        $performance = $this->get_erp_user()->performances()->find( $id );
+        if ( ! $performance ) {
+            return new \WP_Error( 'invalid-note-id', __( 'This note does not exist or does not belongs to the supplied user', 'erp' ) );
+        }
+        return $performance->delete();
     }
 
     /**
