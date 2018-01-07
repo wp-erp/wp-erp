@@ -986,13 +986,9 @@ class Ajax_Handler {
 
     /**
      * Employee Update Performance Reviews
-     *
      * @since 0.1
-     *
-     * @return json
      */
     public function employee_update_performance() {
-
         // check permission for adding performance
         if ( isset( $_POST['employee_id'] ) && $_POST['employee_id'] && ! current_user_can( 'erp_edit_employee', $_POST['employee_id'] ) ) {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
@@ -1000,99 +996,20 @@ class Ajax_Handler {
 
         $type = isset( $_POST['type'] ) ? $_POST['type'] : '';
 
-        if ( $type && $type == 'reviews' ) {
-            $employee_id      = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
-            $review_id        = isset( $_POST['review_id'] ) ? intval( $_POST['review_id'] ) : 0;
-            $reporting_to     = isset( $_POST['reporting_to'] ) ? intval( $_POST['reporting_to'] ) : 0;
-            $job_knowledge    = isset( $_POST['job_knowledge'] ) ? intval( $_POST['job_knowledge'] ) : 0;
-            $work_quality     = isset( $_POST['work_quality'] ) ? intval( $_POST['work_quality'] ) : 0;
-            $attendance       = isset( $_POST['attendance'] ) ? intval( $_POST['attendance'] ) : 0;
-            $communication    = isset( $_POST['communication'] ) ? intval( $_POST['communication'] ) : 0;
-            $dependablity     = isset( $_POST['dependablity'] ) ? intval( $_POST['dependablity'] ) : 0;
-            $performance_date = ( empty( $_POST['performance_date'] ) ) ? current_time( 'mysql' ) : $_POST['performance_date'];
-
-            // some basic validations
-            $requires = [
-                'performance_date' => __( 'Review Date', 'erp' ),
-                'reporting_to'     => __( 'Reporting To', 'erp' ),
-            ];
-
-            $fields = [
-                'employee_id'      => $employee_id,
-                'reporting_to'     => $reporting_to,
-                'job_knowledge'    => $job_knowledge,
-                'work_quality'     => $work_quality,
-                'attendance'       => $attendance,
-                'communication'    => $communication,
-                'dependablity'     => $dependablity,
-                'type'             => $type,
-                'performance_date' => $performance_date
-            ];
+        if( empty($type)){
+            $this->send_error(__('No performance type selected', 'erp'));
         }
 
-        if ( $type && $type == 'comments' ) {
+        $employee = new Employee( intval($_POST['employee_id']));
 
-            $employee_id      = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
-            $review_id        = isset( $_POST['review_id'] ) ? intval( $_POST['review_id'] ) : 0;
-            $reviewer         = isset( $_POST['reviewer'] ) ? intval( $_POST['reviewer'] ) : 0;
-            $comments         = isset( $_POST['comments'] ) ? esc_textarea( $_POST['comments'] ) : '';
-            $performance_date = ( empty( $_POST['performance_date'] ) ) ? current_time( 'mysql' ) : $_POST['performance_date'];
-
-            // some basic validations
-            $requires = [
-                'performance_date' => __( 'Reference Date', 'erp' ),
-                'reviewer'         => __( 'Reviewer', 'erp' ),
-            ];
-
-            $fields = [
-                'employee_id'      => $employee_id,
-                'reviewer'         => $reviewer,
-                'comments'         => $comments,
-                'type'             => $type,
-                'performance_date' => $performance_date
-            ];
+        if( !$employee->is_employee()){
+            $this->send_error(__('Could not find the employee', 'erp'));
         }
 
-        if ( $type && $type == 'goals' ) {
+        $performance = $employee->add_performance($type, $_POST);
 
-            $employee_id           = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
-            $review_id             = isset( $_POST['review_id'] ) ? intval( $_POST['review_id'] ) : 0;
-            $completion_date       = ( empty( $_POST['completion_date'] ) ) ? current_time( 'mysql' ) : $_POST['completion_date'];
-            $goal_description      = isset( $_POST['goal_description'] ) ? esc_textarea( $_POST['goal_description'] ) : '';
-            $employee_assessment   = isset( $_POST['employee_assessment'] ) ? esc_textarea( $_POST['employee_assessment'] ) : '';
-            $supervisor            = isset( $_POST['supervisor'] ) ? intval( $_POST['supervisor'] ) : 0;
-            $supervisor_assessment = isset( $_POST['supervisor_assessment'] ) ? esc_textarea( $_POST['supervisor_assessment'] ) : '';
-            $performance_date      = ( empty( $_POST['performance_date'] ) ) ? current_time( 'mysql' ) : $_POST['performance_date'];
-
-            // some basic validations
-            $requires = [
-                'performance_date' => __( 'Reference Date', 'erp' ),
-                'completion_date'  => __( 'Completion Date', 'erp' ),
-            ];
-
-            $fields = [
-                'employee_id'           => $employee_id,
-                'completion_date'       => $completion_date,
-                'goal_description'      => $goal_description,
-                'employee_assessment'   => $employee_assessment,
-                'supervisor'            => $supervisor,
-                'supervisor_assessment' => $supervisor_assessment,
-                'type'                  => $type,
-                'performance_date'      => $performance_date
-            ];
-        }
-
-
-        foreach ( $requires as $var_name => $label ) {
-            if ( ! $$var_name ) {
-                $this->send_error( sprintf( __( '%s is required', 'erp' ), $label ) );
-            }
-        }
-
-        if ( ! $review_id ) {
-            \WeDevs\ERP\HRM\Models\Performance::create( $fields );
-        } else {
-            \WeDevs\ERP\HRM\Models\Performance::find( $review_id )->update( $fields );
+        if( is_wp_error($performance)){
+            $this->send_error($performance->get_error_message());
         }
 
         $this->send_success();
