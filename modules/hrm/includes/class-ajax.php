@@ -469,8 +469,8 @@ class Ajax_Handler {
         unset( $_POST['_wpnonce'] );
         unset( $_POST['action'] );
 
-        $posted         = array_map( 'strip_tags_deep', $_POST );
-        $user_id        = null;
+        $posted  = array_map( 'strip_tags_deep', $_POST );
+        $user_id = null;
         // Check permission for editing and adding new employee
         if ( isset( $posted['user_id'] ) && $posted['user_id'] ) {
             $user_id = absint( $posted['user_id'] );
@@ -592,7 +592,6 @@ class Ajax_Handler {
      */
     public function employee_update_employment() {
         $this->verify_nonce( 'employee_update_employment' );
-
         $user_id = isset( $_REQUEST['user_id'] ) ? intval( $_REQUEST['user_id'] ) : 0;
 
         // Check permission
@@ -600,24 +599,21 @@ class Ajax_Handler {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $date    = ( empty( $_POST['date'] ) ) ? current_time( 'mysql' ) : $_POST['date'];
-        $comment = strip_tags( $_POST['comment'] );
-        $status  = strip_tags( $_POST['status'] );
-        $types   = erp_hr_get_employee_types();
-
-        if ( ! array_key_exists( $status, $types ) ) {
-            $this->send_error( __( 'Status error', 'erp' ) );
-        }
-
         $employee = new Employee( $user_id );
-
-        if ( $employee->is_employee() ) {
-            do_action( 'erp_hr_employee_employment_status_create', $employee->get_user_id() );
-            $employee->update_employment_status( $status, $date, $comment );
-            $this->send_success();
+        if ( ! $employee->is_employee() ) {
+            $this->send_error( __( 'No employee found', 'erp' ) );
         }
 
-        $this->send_error( __( 'Something went wrong!', 'erp' ) );
+        $created = $employee->update_employment_status( [
+            'status'   => $_POST['status'],
+            'comments' => $_POST['comment'],
+            'date'     => $_POST['date'],
+        ] );
+
+        if ( is_wp_error( $created ) ) {
+            $this->send_error( $created->get_error_message() );
+        }
+        $this->send_success();
     }
 
     /**
@@ -635,36 +631,23 @@ class Ajax_Handler {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $date     = ( empty( $_POST['date'] ) ) ? current_time( 'mysql' ) : $_POST['date'];
-        $comment  = strip_tags( $_POST['comment'] );
-        $pay_rate = number_format( $_POST['pay_rate'], 2 );
-        $pay_type = strip_tags( $_POST['pay_type'] );
-        $reason   = strip_tags( $_POST['change-reason'] );
-
-        $types   = erp_hr_get_pay_type();
-        $reasons = erp_hr_get_pay_change_reasons();
-
-        if ( ! $pay_rate ) {
-            $this->send_error( __( 'Enter a valid pay rate.', 'erp' ) );
-        }
-
-        if ( ! array_key_exists( $pay_type, $types ) ) {
-            $this->send_error( __( 'Pay Type does not exists.', 'erp' ) );
-        }
-
-        if ( ! array_key_exists( $reason, $reasons ) ) {
-            $this->send_error( __( 'Reason does not exists.', 'erp' ) );
-        }
-
         $employee = new Employee( $user_id );
-
-        if ( $employee->is_employee() ) {
-            do_action( 'erp_hr_employee_compensation_create', $employee->get_user_id() );
-            $employee->update_compensation( $pay_rate, $pay_type, $reason, $date, $comment );
-            $this->send_success();
+        if ( ! $employee->is_employee() ) {
+            $this->send_error( __( 'No employee found', 'erp' ) );
         }
 
-        $this->send_error( __( 'Something went wrong!', 'erp' ) );
+        $created = $employee->update_compensation( [
+            'comment'  => $_POST['comment'],
+            'pay_type' => $_POST['pay_type'],
+            'reason'   => $_POST['change-reason'],
+            'pay_rate' => $_POST['pay_rate'],
+            'date'     => $_POST['date'],
+        ] );
+
+        if ( is_wp_error( $created ) ) {
+            $this->send_error( $created->get_error_message() );
+        }
+        $this->send_success();
     }
 
     /**
@@ -676,8 +659,8 @@ class Ajax_Handler {
 
         $this->verify_nonce( 'wp-erp-hr-nonce' );
 
-        $history_id         = isset( $_POST['history_id'] ) ? intval( $_POST['history_id'] ) : 0;
-        $user_id            = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
+        $history_id = isset( $_POST['history_id'] ) ? intval( $_POST['history_id'] ) : 0;
+        $user_id    = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
 
         // Check permission
         if ( ! current_user_can( 'erp_edit_employee', $user_id ) ) {
@@ -690,9 +673,9 @@ class Ajax_Handler {
             $this->send_error( __( 'Invalid Employee received.', 'erp' ) );
         }
 
-        $delete = $employee->delete_job_history($history_id);
+        $delete = $employee->delete_job_history( $history_id );
 
-        if ( is_wp_error($delete)){
+        if ( is_wp_error( $delete ) ) {
             $this->send_error( $delete->get_error_message() );
         }
 
@@ -708,27 +691,28 @@ class Ajax_Handler {
         $this->verify_nonce( 'employee_update_jobinfo' );
 
         $user_id = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
-
-        $location     = isset( $_POST['location'] ) ? intval( $_POST['location'] ) : 0;
-        $department   = isset( $_POST['department'] ) ? intval( $_POST['department'] ) : 0;
-        $designation  = isset( $_POST['designation'] ) ? intval( $_POST['designation'] ) : 0;
-        $reporting_to = isset( $_POST['reporting_to'] ) ? intval( $_POST['reporting_to'] ) : 0;
-        $date         = ( empty( $_POST['date'] ) ) ? current_time( 'mysql' ) : $_POST['date'];
-
-        $employee = new Employee( $user_id );
-
-        if ( $employee->is_employee() ) {
-            // Check permission
-            if ( ! current_user_can( 'erp_edit_employee', $employee->get_user_id() ) ) {
-                $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
-            }
-
-            do_action( 'erp_hr_employee_job_info_create', $employee->get_user_id() );
-            $employee->update_job_info( $department, $designation, $reporting_to, $location, $date );
-            $this->send_success();
+        // Check permission
+        if ( ! current_user_can( 'erp_edit_employee', $user_id ) ) {
+            $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $this->send_error( __( 'Something went wrong!', 'erp' ) );
+        $employee = new Employee( $user_id );
+        if ( ! $employee->is_employee() ) {
+            $this->send_error( __( 'No employee found', 'erp' ) );
+        }
+
+        $created = $employee->update_job_info( [
+            'date'         => $_POST['date'],
+            'designation'  => $_POST['designation'],
+            'department'   => $_POST['department'],
+            'reporting_to' => $_POST['reporting_to'],
+            'location'     => $_POST['location'],
+        ] );
+
+        if ( is_wp_error( $created ) ) {
+            $this->send_error( $created->get_error_message() );
+        }
+        $this->send_success();
     }
 
     /**
@@ -739,9 +723,9 @@ class Ajax_Handler {
     public function employee_add_note() {
         $this->verify_nonce( 'wp-erp-hr-employee-nonce' );
 
-        $user_id     = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
-        $note        = isset( $_POST['note'] ) ? strip_tags( $_POST['note'] ) : 0;
-        $note_by     = get_current_user_id();
+        $user_id = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
+        $note    = isset( $_POST['note'] ) ? strip_tags( $_POST['note'] ) : 0;
+        $note_by = get_current_user_id();
 
         $employee = new Employee( $user_id );
 
@@ -786,8 +770,8 @@ class Ajax_Handler {
     public function employee_delete_note() {
         check_admin_referer( 'wp-erp-hr-nonce' );
 
-        $note_id  = isset( $_POST['note_id'] ) ? intval( $_POST['note_id'] ) : 0;
-        $user_id  = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
+        $note_id = isset( $_POST['note_id'] ) ? intval( $_POST['note_id'] ) : 0;
+        $user_id = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
 
         $employee = new Employee( $user_id );
 
@@ -986,6 +970,7 @@ class Ajax_Handler {
 
     /**
      * Employee Update Performance Reviews
+     *
      * @since 0.1
      */
     public function employee_update_performance() {
@@ -996,20 +981,20 @@ class Ajax_Handler {
 
         $type = isset( $_POST['type'] ) ? $_POST['type'] : '';
 
-        if( empty($type)){
-            $this->send_error(__('No performance type selected', 'erp'));
+        if ( empty( $type ) ) {
+            $this->send_error( __( 'No performance type selected', 'erp' ) );
         }
 
-        $employee = new Employee( intval($_POST['employee_id']));
+        $employee = new Employee( intval( $_POST['employee_id'] ) );
 
-        if( !$employee->is_employee()){
-            $this->send_error(__('Could not find the employee', 'erp'));
+        if ( ! $employee->is_employee() ) {
+            $this->send_error( __( 'Could not find the employee', 'erp' ) );
         }
 
-        $performance = $employee->add_performance($type, $_POST);
+        $performance = $employee->add_performance( $_POST );
 
-        if( is_wp_error($performance)){
-            $this->send_error($performance->get_error_message());
+        if ( is_wp_error( $performance ) ) {
+            $this->send_error( $performance->get_error_message() );
         }
 
         $this->send_success();
@@ -1130,13 +1115,13 @@ class Ajax_Handler {
         $interest = isset( $_POST['interest'] ) ? strip_tags( $_POST['interest'] ) : '';
 
         $fields = [
-            'id'          => $edu_id,
-            'school'      => $school,
-            'degree'      => $degree,
-            'field'       => $field,
-            'finished'    => $finished,
-            'notes'       => $notes,
-            'interest'    => $interest
+            'id'       => $edu_id,
+            'school'   => $school,
+            'degree'   => $degree,
+            'field'    => $field,
+            'finished' => $finished,
+            'notes'    => $notes,
+            'interest' => $interest
         ];
 
         $employee = new Employee( $employee_id );
@@ -1200,10 +1185,10 @@ class Ajax_Handler {
         $dob      = isset( $_POST['dob'] ) ? strip_tags( $_POST['dob'] ) : '';
 
         $fields = [
-            'id'          => $dep_id,
-            'name'        => $name,
-            'relation'    => $relation,
-            'dob'         => $dob,
+            'id'       => $dep_id,
+            'name'     => $name,
+            'relation' => $relation,
+            'dob'      => $dob,
         ];
 
         $employee = new Employee( $employee_id );
@@ -1582,9 +1567,9 @@ class Ajax_Handler {
     public function get_employee_leave_history() {
         $this->verify_nonce( 'erp-hr-empl-leave-history' );
 
-        $year        = isset( $_POST['year'] ) ? intval( $_POST['year'] ) : date( 'Y' );
-        $user_id     = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
-        $policy      = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : 'all';
+        $year    = isset( $_POST['year'] ) ? intval( $_POST['year'] ) : date( 'Y' );
+        $user_id = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+        $policy  = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : 'all';
 
         $args = array(
             'year'    => $year,

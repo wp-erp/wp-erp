@@ -1,7 +1,7 @@
 <div class="job-tab-wrap">
 
     <?php $histories = $employee->get_job_histories(); ?>
-    
+
     <?php
     if ( current_user_can( 'erp_manage_jobinfo' ) ) {
         ?>
@@ -52,10 +52,10 @@
                     <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
                         <td><?php echo erp_format_date( $employment_history['date'] ); ?></td>
                         <td>
-                            <?php echo ( ! empty( $employment_history['type'] ) ) ? wp_kses_post( $employment_history['type'] ) : '--'; ?>
+                            <?php echo ( ! empty( $employment_history['status'] ) ) ? wp_kses_post( $employment_history['status'] ) : '--'; ?>
                         </td>
                         <td>
-                            <?php echo ( ! empty( $employment_history['comment'] ) ) ? wp_kses_post( $employment_history['comment'] ) : '--'; ?>
+                            <?php echo ( ! empty( $employment_history['comments'] ) ) ? wp_kses_post( $employment_history['comments'] ) : '--'; ?>
                         </td>
                         <td class="action">
                             <?php if ( current_user_can( 'erp_manage_jobinfo', $employee->get_user_id() ) ) : ?>
