@@ -507,12 +507,15 @@ class Employees_Controller extends REST_Controller {
      */
     public function update_experience( \WP_REST_Request $request ) {
         $employee_id = (int) $request['user_id'];
+        $exp_id = (int) $request['id'];
         $employee    = new Employee( $employee_id );
 
         if ( ! $employee->is_employee() ) {
             return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
         }
-        $experience = $employee->add_experience( $request->get_params() );
+        $args = $request->get_params();
+        $args['id'] = $exp_id;
+        $experience = $employee->add_experience( $args );
 
         if ( is_wp_error( $experience ) ) {
             return $experience;
