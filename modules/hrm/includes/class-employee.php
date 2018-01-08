@@ -413,7 +413,7 @@ class Employee {
      */
     public function is_employee() {
         //exceptional case for admin
-        if( in_array( 'administrator', $this->get_roles()['roles'])){
+        if ( in_array( 'administrator', $this->get_roles()['roles'] ) ) {
             return true;
         }
 
@@ -561,7 +561,7 @@ class Employee {
      * @return mixed|string
      */
     public function get_designation( $context = 'edit' ) {
-        if ( $this->is_employee() && isset($this->erp_user->designation) ) {
+        if ( $this->is_employee() && isset( $this->erp_user->designation ) ) {
             if ( $context == 'edit' ) {
                 return $this->erp_user->designation;
             }
@@ -592,7 +592,7 @@ class Employee {
      * @return mixed|string
      */
     public function get_department( $context = 'edit' ) {
-        if ( $this->is_employee() && isset($this->erp_user->department) ) {
+        if ( $this->is_employee() && isset( $this->erp_user->department ) ) {
             if ( $context == 'edit' ) {
                 return $this->erp_user->department;
             }
@@ -630,7 +630,7 @@ class Employee {
      * @return int
      */
     public function get_location( $context = 'edit' ) {
-        if ( $this->is_employee() && isset($this->erp_user->location) ) {
+        if ( $this->is_employee() && isset( $this->erp_user->location ) ) {
             if ( $context == 'edit' ) {
                 return $this->erp_user->location;
             }
@@ -647,7 +647,7 @@ class Employee {
      * @return string
      */
     public function get_status( $context = 'edit' ) {
-        if ( isset($this->erp_user->status) ) {
+        if ( isset( $this->erp_user->status ) ) {
             $status = $this->erp_user->status;
             if ( $context == 'edit' ) {
                 return $status;
@@ -668,7 +668,7 @@ class Employee {
      * @return mixed
      */
     public function get_type( $context = 'edit' ) {
-        if ( $this->is_employee() && isset($this->erp_user->type) ) {
+        if ( $this->is_employee() && isset( $this->erp_user->type ) ) {
             $type = $this->erp_user->type;
             if ( $context == 'edit' ) {
                 return $type;
@@ -778,7 +778,7 @@ class Employee {
      * @return string
      */
     public function get_hiring_date() {
-        if ( isset($this->erp_user->hiring_date) && $this->erp_user->hiring_date != '0000-00-00' ) {
+        if ( isset( $this->erp_user->hiring_date ) && $this->erp_user->hiring_date != '0000-00-00' ) {
             return erp_format_date( $this->erp_user->hiring_date );
         }
     }
@@ -884,7 +884,7 @@ class Employee {
      * @return string
      */
     public function get_reporting_to() {
-        if ( $this->is_employee() && isset($this->erp_user->reporting_to) ) {
+        if ( $this->is_employee() && isset( $this->erp_user->reporting_to ) ) {
             $user_id = (int) $this->erp_user->reporting_to;
             $user    = new Employee( $user_id );
             if ( ! $user->is_employee() ) {
@@ -983,8 +983,8 @@ class Employee {
 
         if ( ! $args['id'] ) {
             // education will update
-            $data = $args;
-            $data['user_id']  = $this->user_id;
+            $data            = $args;
+            $data['user_id'] = $this->user_id;
             do_action( 'erp_hr_employee_education_create', $data );
         }
 
@@ -1063,8 +1063,8 @@ class Employee {
 
         if ( ! $args['id'] ) {
             // education will update
-            $data = $args;
-            $data['user_id']  = $this->user_id;
+            $data            = $args;
+            $data['user_id'] = $this->user_id;
             do_action( 'erp_hr_employee_dependents_create', $data );
         }
 
@@ -1148,9 +1148,9 @@ class Employee {
         }
 
         if ( $experience['id'] ) {
-            $data = (array) $experience;
-            $data = $args;
-            $data['user_id']  = $this->user_id;
+            $data            = (array) $experience;
+            $data            = $args;
+            $data['user_id'] = $this->user_id;
             do_action( 'erp_hr_employee_experience_new', $data );
         }
 
@@ -1674,6 +1674,7 @@ class Employee {
         $user_id              = $this->user_id;
         $results              = $this->erp_user
             ->entitlements()
+            ->whereDate('from_date', '=', $financial_start_date)
             ->with( [
                 'leaves' => function ( $q ) use ( $user_id, $financial_start_date, $financial_end_date ) {
                     $q->where( 'status', '=', '1' )
@@ -1682,7 +1683,7 @@ class Employee {
                       ->whereDate( 'end_date', '<=', $financial_end_date );
                 }
             ] )
-            ->with( 'policy' )
+            ->with( 'policy')
             ->get();
 
         foreach ( $results as $result ) {
