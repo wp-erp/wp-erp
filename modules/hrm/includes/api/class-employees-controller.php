@@ -5,11 +5,6 @@ namespace WeDevs\ERP\HRM\API;
 use WeDevs\ERP\API\REST_Controller;
 use WeDevs\ERP\HRM\Employee;
 use WeDevs\ERP\HRM\Models\Department;
-use WeDevs\ERP\HRM\Models\Dependents;
-use WeDevs\ERP\HRM\Models\Education;
-use WeDevs\ERP\HRM\Models\Performance;
-use WeDevs\ERP\HRM\Models\Work_Experience;
-use WeDevs\ERP\HRM\Models\Employee_Note;
 use WP_Error;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -135,6 +130,166 @@ class Employees_Controller extends REST_Controller {
                 },
             ],
         ] );
+
+        //education
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/educations', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_educations' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
+            ],
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'create_education' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
+            ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/educations' . '/(?P<id>[\d]+)', [
+            [
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => [ $this, 'update_education' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
+            ],
+            [
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'delete_education' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
+            ],
+        ] );
+
+        //dependents
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/dependents', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_dependents' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
+            ],
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'create_dependent' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
+            ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/dependents' . '/(?P<id>[\d]+)', [
+            [
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => [ $this, 'update_dependent' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
+            ],
+            [
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'delete_dependent' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
+            ],
+        ] );
+
+        //job histories
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/job_histories', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_histories' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
+            ],
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'create_history' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
+            ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/job_histories' . '/(?P<id>[\d]+)', [
+            [
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'delete_history' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
+            ],
+        ] );
+
+        //performances
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/performances', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_performances' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
+            ],
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'create_performance' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
+            ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/performances' . '/(?P<id>[\d]+)', [
+            [
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'delete_performance' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
+            ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/events', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_events' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
+            ]
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/terminate', [
+            [
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => [ $this, 'create_terminate' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( erp_hr_get_manager_role() );
+                },
+            ],
+        ] );
+
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/announcements', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_announcements' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
+            ]
+        ] );
+
+
     }
 
 
@@ -342,6 +497,7 @@ class Employees_Controller extends REST_Controller {
 
         return $response;
     }
+
     /**
      * Update an experience
      *
@@ -349,7 +505,7 @@ class Employees_Controller extends REST_Controller {
      *
      * @return WP_Error|\WP_REST_Request
      */
-    public function update_experience(\WP_REST_Request $request ) {
+    public function update_experience( \WP_REST_Request $request ) {
         $employee_id = (int) $request['user_id'];
         $employee    = new Employee( $employee_id );
 
@@ -373,9 +529,9 @@ class Employees_Controller extends REST_Controller {
     /**
      * Delete an experience
      *
-     * @param \WP_REST_Request $request
+     * @param $request
      *
-     * @return WP_Error|\WP_REST_Request
+     * @return \WP_Error|\WP_REST_Response
      */
     public function delete_experience( $request ) {
         $employee_id = (int) $request['user_id'];
@@ -384,9 +540,671 @@ class Employees_Controller extends REST_Controller {
         if ( ! $employee->is_employee() ) {
             return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
         }
-        $employee->delete_experience($request['id']);
+        $result   = $employee->delete_experience( $request['id'] );
+        $response = rest_ensure_response( $result );
 
-        return new WP_REST_Response( true, 204 );
+        return $response;
+    }
+
+    /**
+     * Get a collection of employee's educations
+     *
+     * @param $request
+     *
+     * @return mixed|object|\WP_Error|\WP_REST_Response
+     */
+    public function get_educations( $request ) {
+        $employee_id = (int) $request['user_id'];
+        $employee    = new Employee( $employee_id );
+        if ( ! $employee->is_employee() ) {
+            return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid Employee id.' ), [ 'status' => 400 ] );
+        }
+        $items    = $employee->get_educations();
+        $total    = $employee->get_erp_user()->educations()->count();
+        $response = rest_ensure_response( $items );
+        $response = $this->format_collection_response( $response, $request, $total );
+
+        return $response;
+    }
+
+    /**
+     * Create an education
+     *
+     * @param \WP_REST_Request $request
+     *
+     * @return WP_Error|\WP_REST_Request
+     */
+    public function create_education( $request ) {
+        $employee_id = (int) $request['user_id'];
+        $employee    = new Employee( $employee_id );
+        if ( ! $employee->is_employee() ) {
+            return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid Employee id.' ), [ 'status' => 400 ] );
+        }
+        $education = $employee->add_education( $request->get_params() );
+
+        if ( is_wp_error( $education ) ) {
+            return $education;
+        }
+
+        $request->set_param( 'context', 'edit' );
+
+        $response = rest_ensure_response( $education );
+        $response->set_status( 201 );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $education['id'] ) ) );
+
+        return $response;
+    }
+
+    /**
+     * Update an education
+     *
+     * @param \WP_REST_Request $request
+     *
+     * @return WP_Error|\WP_REST_Request
+     */
+    public function update_education( $request ) {
+        $employee_id = (int) $request['user_id'];
+        $employee    = new Employee( $employee_id );
+        if ( ! $employee->is_employee() ) {
+            return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid Employee id.' ), [ 'status' => 400 ] );
+        }
+        $education = $employee->add_education( $request->get_params() );
+
+        if ( is_wp_error( $education ) ) {
+            return $education;
+        }
+
+        $request->set_param( 'context', 'edit' );
+
+        $response = rest_ensure_response( $education );
+        $response->set_status( 201 );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $education['id'] ) ) );
+
+        return $response;
+    }
+
+    /**
+     * Delete an education
+     *
+     * @param \WP_REST_Request $request
+     *
+     * @return WP_Error|\WP_REST_Request
+     */
+    public function delete_education( $request ) {
+        $employee_id = (int) $request['user_id'];
+        $employee    = new Employee( $employee_id );
+
+        if ( ! $employee->is_employee() ) {
+            return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
+        }
+        $result   = $employee->delete_education( $request['id'] );
+        $response = rest_ensure_response( $result );
+
+        return $response;
+    }
+
+    /**
+     * Get a collection of employee's dependents
+     *
+     * @param \WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response|mixed
+     */
+    public function get_dependents( $request ) {
+        $employee_id = (int) $request['user_id'];
+        $employee    = new Employee( $employee_id );
+        if ( ! $employee->is_employee() ) {
+            return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid Employee id.' ), [ 'status' => 400 ] );
+        }
+        $items    = $employee->get_dependents();
+        $total    = $employee->get_erp_user()->dependents()->count();
+        $response = rest_ensure_response( $items );
+        $response = $this->format_collection_response( $response, $request, $total );
+
+        return $response;
+    }
+
+    /**
+     * Create a dependent
+     *
+     * @param \WP_REST_Request $request
+     *
+     * @return WP_Error|\WP_REST_Request
+     */
+    public function create_dependent( $request ) {
+        $employee_id = (int) $request['user_id'];
+        $employee    = new Employee( $employee_id );
+        if ( ! $employee->is_employee() ) {
+            return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid Employee id.' ), [ 'status' => 400 ] );
+        }
+        $dependent = $employee->add_dependent( $request->get_params() );
+
+        if ( is_wp_error( $dependent ) ) {
+            return $dependent;
+        }
+
+        $request->set_param( 'context', 'edit' );
+
+        $response = rest_ensure_response( $dependent );
+        $response->set_status( 201 );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $dependent['id'] ) ) );
+
+        return $response;
+    }
+
+    /**
+     * Update a dependent
+     *
+     * @param \WP_REST_Request $request
+     *
+     * @return WP_Error|\WP_REST_Request
+     */
+    public function update_dependent( $request ) {
+        $employee_id = (int) $request['user_id'];
+        $employee    = new Employee( $employee_id );
+        if ( ! $employee->is_employee() ) {
+            return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid Employee id.' ), [ 'status' => 400 ] );
+        }
+        $dependent = $employee->add_dependent( $request->get_params() );
+
+        if ( is_wp_error( $dependent ) ) {
+            return $dependent;
+        }
+
+        $request->set_param( 'context', 'edit' );
+
+        $response = rest_ensure_response( $dependent );
+        $response->set_status( 201 );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $dependent['id'] ) ) );
+
+        return $response;
+    }
+
+    /**
+     * Delete a dependent
+     *
+     * @param \WP_REST_Request $request
+     *
+     * @return WP_Error|\WP_REST_Request
+     */
+    public function delete_dependent( $request ) {
+        $employee_id = (int) $request['user_id'];
+        $employee    = new Employee( $employee_id );
+
+        if ( ! $employee->is_employee() ) {
+            return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
+        }
+        $result   = $employee->delete_dependent( $request['id'] );
+        $response = rest_ensure_response( $result );
+
+        return $response;
+    }
+
+    /**
+     * Get employee histories
+     *
+     * @since 1.2.9
+     *
+     * @param $request
+     *
+     * @return mixed|object|WP_Error|WP_REST_Response
+     */
+    public function get_histories( $request ) {
+        $employee_id = (int) $request['user_id'];
+        $employee    = new Employee( $employee_id );
+        if ( ! $employee->is_employee() ) {
+            return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid Employee id.' ), [ 'status' => 400 ] );
+        }
+        $module = ! empty( $request['module'] ) ? sanitize_key( $request['module'] ) : 'all';
+
+        $histories = $employee->get_job_histories( $module );
+        $total     = $employee->get_erp_user()->histories()->count();
+        $response  = rest_ensure_response( $histories );
+        $response  = $this->format_collection_response( $response, $request, $total );
+
+        return $response;
+    }
+
+    /**
+     * Create employee history
+     *
+     * @since 1.2.9
+     *
+     * @param $request
+     *
+     * @return mixed|WP_Error|WP_REST_Response
+     */
+    public function create_history( \WP_REST_Request $request ) {
+        $employee_id = (int) $request['user_id'];
+        $module      = ! empty( $request['module'] ) ? sanitize_key( $request['module'] ) : 0;
+        $employee    = new Employee( $employee_id );
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
+        }
+        if ( empty( $module ) || ( ! in_array( $module, [ 'employment', 'compensation', 'job' ] ) ) ) {
+            return new WP_Error( 'rest_no_module_type', __( 'Invalid/No module type' ), array( 'status' => 404 ) );
+        }
+
+        $history = new WP_Error();
+
+        if ( $request['module'] == 'employment' ) {
+            $history = $employee->update_employment_status( $request->get_params() );
+        }
+        if ( $request['module'] == 'compensation' ) {
+            $history = $employee->update_compensation( $request->get_params() );
+        }
+        if ( $request['module'] == 'job' ) {
+            $history = $employee->update_job_info( $request->get_params() );
+        }
+        if ( is_wp_error( $history ) ) {
+            return $history;
+        }
+        $response = rest_ensure_response( $history );
+
+        return $response;
+    }
+
+    /**
+     * Delete a history
+     *
+     * @since 1.2.9
+     *
+     * @param $request
+     *
+     * @return \WP_Error|\WP_REST_Response
+     * @throws \Exception
+     */
+    public function delete_history( $request ) {
+        $employee_id = (int) $request['user_id'];
+        $employee    = new Employee( $employee_id );
+
+        if ( ! $employee->is_employee() ) {
+            return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
+        }
+        $result   = $employee->delete_job_history( $request['id'] );
+        $response = rest_ensure_response( $result );
+
+        return $response;
+    }
+
+    /**
+     * Get all performance of a single employee
+     *
+     * @since 1.3.0
+     *
+     * @param $request
+     *
+     * @return mixed|object|WP_Error|WP_REST_Response
+     */
+    public function get_performances( \WP_REST_Request $request ) {
+        $employee_id = (int) $request['user_id'];
+        $employee    = new Employee( $employee_id );
+        if ( ! $employee->is_employee() ) {
+            return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid Employee id.' ), [ 'status' => 400 ] );
+        }
+        $items = $employee->get_performances( $request->get_params() );
+
+        $total    = $employee->get_erp_user()->performances()->count();
+        $response = rest_ensure_response( $items );
+        $response = $this->format_collection_response( $response, $request, $total );
+
+        return $response;
+    }
+
+    /**
+     * Create a performance
+     *
+     * @param \WP_REST_Request $request
+     *
+     * @return WP_Error|\WP_REST_Request
+     */
+    public function create_performance( $request ) {
+        $employee_id = (int) trim( $request['user_id'] );
+        $employee    = new Employee( $employee_id );
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
+        }
+
+        $performance = $employee->add_performance( $request->get_params() );
+        $request->set_param( 'context', 'edit' );
+        $response = rest_ensure_response( $performance );
+        $response->set_status( 201 );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $performance['id'] ) ) );
+
+        return $response;
+    }
+
+    /**
+     * Delete performance
+     *
+     * @since 1.3.0
+     *
+     * @param $request
+     *
+     * @return mixed|\WP_Error|\WP_REST_Response
+     */
+    public function delete_performance( $request ) {
+        $employee_id = (int) $request['user_id'];
+        $employee    = new Employee( $employee_id );
+
+        if ( ! $employee->is_employee() ) {
+            return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
+        }
+        $result   = $employee->delete_experience( $request['id'] );
+        $response = rest_ensure_response( $result );
+
+        return $response;
+    }
+
+    /**
+     * Get all the events of a single user
+     *
+     * @since 1.2.9
+     *
+     * @param $request
+     *
+     * @return mixed|object|WP_Error|WP_REST_Response
+     */
+    public function get_events( $request ) {
+        $user_id  = (int) $request['id'];
+        $employee = new Employee( $user_id );
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
+        }
+        $event_data = $employee->get_events();
+        $response   = rest_ensure_response( $event_data );
+        $response   = $this->format_collection_response( $response, $request, count( $event_data ) );
+
+        return $response;
+    }
+
+    /**
+     * Get Available leaves policies of a single employee
+     *
+     * @since 1.3.0
+     *
+     * @param $request
+     *
+     * @return mixed|object|\WP_Error|\WP_REST_Response
+     */
+    public function get_policies( $request ) {
+        $user_id  = (int) $request['id'];
+        $employee = new Employee( $user_id );
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
+        }
+        $policies = $employee->get_leave_policies();
+        $response = rest_ensure_response( $policies );
+        $response = $this->format_collection_response( $response, $request, count( $policies ) );
+
+        return $response;
+    }
+
+    /**
+     * Get all leaves of a single employee
+     *
+     * @since 1.2.9
+     *
+     * @param \WP_REST_Request $request
+     *
+     * @return array|WP_Error|object
+     */
+    public function get_leaves( \WP_REST_Request $request ) {
+        $user_id  = (int) $request['id'];
+        $employee = new Employee( $user_id );
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
+        }
+        $leaves   = $employee->get_leave_requests();
+        $response = rest_ensure_response( $leaves );
+        $response = $this->format_collection_response( $response, $request, count( $leaves ) );
+
+        return $response;
+    }
+
+    /**
+     * Create leave request
+     *
+     * @since 1.2.9
+     *
+     * @param \WP_REST_Request $request
+     *
+     * @return array|WP_Error|object
+     */
+    public function create_leave( $request ) {
+        $id       = (int) $request['user_id'];
+        $employee = new Employee( $id );
+
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
+        }
+
+        if ( empty( $request['policy_id'] ) ) {
+            return new WP_Error( 'rest_invalid_policy_id', __( 'Invalid Policy id.' ), array( 'status' => 404 ) );
+        }
+
+        if ( empty( $request['start_date'] ) ) {
+            return new WP_Error( 'rest_invalid_start_date', __( 'Invalid Leave Start Date.' ), array( 'status' => 404 ) );
+        }
+
+        if ( empty( $request['end_date'] ) ) {
+            return new WP_Error( 'rest_invalid_end_date', __( 'Invalid Leave End Date.' ), array( 'status' => 404 ) );
+        }
+
+        $request_id = erp_hr_leave_insert_request(
+            array(
+                'user_id'      => $request['id'],
+                'leave_policy' => $request['policy_id'],
+                'start_date'   => $request['start_date'],
+                'end_date'     => $request['end_date'],
+                'reason'       => $request['reason'],
+                'status'       => 0
+            )
+        );
+
+        $response = rest_ensure_response( $request_id );
+        $response->set_status( 201 );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $request_id ) ) );
+
+        return $response;
+    }
+
+
+    /**
+     * Get all notes of a single employee
+     *
+     * @since 1.3.0
+     *
+     * @param $request
+     *
+     * @return mixed|object|\WP_Error|\WP_REST_Response
+     */
+    public function get_notes( $request ) {
+        $args = array(
+            'total'  => isset( $request['perpage'] ) ? $request['perpage'] : 20,
+            'offset' => isset( $request['offset'] ) ? $request['offset'] : 0,
+        );
+
+        $id       = (int) $request['id'];
+        $employee = new Employee( $id );
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
+        }
+
+        $notes    = $employee->get_notes( $args['total'], $args['offset'] );
+        $total    = $employee->get_erp_user()->notes()->count();
+        $response = rest_ensure_response( $notes );
+        $response = $this->format_collection_response( $response, $request, $total );
+
+        return $response;
+    }
+
+    /**
+     * Create a note for employee
+     *
+     * @since 1.2.9
+     *
+     * @param $request
+     *
+     * @return array|mixed|WP_Error|WP_REST_Response
+     */
+    public function create_note( $request ) {
+        $id       = (int) $request['user_id'];
+        $employee = new Employee( $id );
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
+        }
+        $note = $employee->add_note( $request['note'], null, true );
+
+        $request->set_param( 'context', 'edit' );
+        $response = rest_ensure_response( $note );
+        $response->set_status( 201 );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $note['id'] ) ) );
+
+        return $response;
+    }
+
+    /**
+     * Delete a note
+     *
+     * @since 1.2.9
+     *
+     * @param $request
+     *
+     * @return WP_REST_Response|WP_Error
+     */
+    public function delete_note( $request ) {
+        $employee_id = (int) $request['user_id'];
+        $note_id     = (int) $request['id'];
+        $employee    = new Employee( $employee_id );
+
+        if ( ! $employee->is_employee() ) {
+            return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
+        }
+        $result   = $employee->delete_note( $note_id );
+        $response = rest_ensure_response( $result );
+
+        return $response;
+    }
+
+    /**
+     * Get roles of an employee
+     *
+     * @since 1.2.9
+     *
+     * @param $request
+     *
+     * @return mixed|WP_Error|WP_REST_Response
+     */
+    public function get_roles( $request ) {
+        $employee_id = (int) trim( $request['user_id'] );
+        $employee    = new Employee( $employee_id );
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
+        }
+        $response = rest_ensure_response( $employee->get_roles() );
+
+        return $response;
+    }
+
+    /**
+     * Update employee roles
+     * accepts associative array eg. ['erp_hr_manager' => true, 'erp_crm_manager' => false ]
+     *
+     * @since 1.2.9
+     *
+     * @param $request
+     *
+     * @return array|mixed|WP_Error|WP_REST_Response
+     */
+    public function update_role( $request ) {
+        $hr_manager_role = erp_hr_get_manager_role();
+        if ( ! current_user_can( $hr_manager_role ) ) {
+            return new WP_Error( 'rest_invalid_user_permission', __( 'User do not have permission for the action.' ), array( 'status' => 404 ) );
+        }
+        $employee_id = (int) trim( $request['id'] );
+        $employee    = new Employee( $employee_id );
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
+        }
+        if ( ! is_array( $request['roles'] ) || empty( $request['roles'] ) ) {
+            return new WP_Error( 'rest_performance_invalid_permission_type', __( 'Invalid role format' ), array( 'status' => 400 ) );
+        }
+
+        $roles = $employee->update_role( $request['roles'] )->get_roles();
+        $request->set_param( 'context', 'edit' );
+        $response = rest_ensure_response( $roles );
+        $response->set_status( 201 );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $employee_id ) ) );
+
+        return $response;
+    }
+
+    /**
+     * Get announcement of an employee
+     *
+     * @since 1.2.9
+     *
+     * @param $request
+     *
+     * @return mixed|object|\WP_Error|\WP_REST_Response
+     */
+    public function get_announcements( $request ) {
+        $user_id  = (int) $request['user_id'];
+        $employee = new Employee( $user_id );
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
+        }
+        $announcements = $employee->get_announcements();
+        $response      = rest_ensure_response( $announcements );
+        $response      = $this->format_collection_response( $response, $request, count( $announcements ) );
+
+        return $response;
+    }
+
+    /**
+     * Terminate the employee
+     *
+     * @since 1.2.9
+     *
+     * @param $request
+     *
+     * @return mixed|\WP_Error|\WP_REST_Response
+     */
+    public function create_terminate( $request ) {
+        $user_id  = (int) $request['id'];
+        $employee = new Employee( $user_id );
+        if ( ! $employee ) {
+            return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
+        }
+
+        $employee_id         = isset( $request['employee_id'] ) ? intval( $request['employee_id'] ) : 0;
+        $terminate_date      = ( empty( $request['terminate_date'] ) ) ? current_time( 'mysql' ) : $request['terminate_date'];
+        $termination_type    = isset( $request['termination_type'] ) ? $request['termination_type'] : '';
+        $termination_reason  = isset( $request['termination_reason'] ) ? $request['termination_reason'] : '';
+        $eligible_for_rehire = isset( $request['eligible_for_rehire'] ) ? $request['eligible_for_rehire'] : '';
+
+        $fields = [
+            'employee_id'         => $employee_id,
+            'terminate_date'      => $terminate_date,
+            'termination_type'    => $termination_type,
+            'termination_reason'  => $termination_reason,
+            'eligible_for_rehire' => $eligible_for_rehire
+        ];
+
+        $result = $employee->terminate( $fields );
+
+        if ( is_wp_error( $result ) ) {
+            return new WP_Error( 'rest_insufficient_data', $result->get_error_messages(), array( 'status' => 401 ) );
+        }
+
+        $request->set_param( 'context', 'edit' );
+        $response = rest_ensure_response( true );
+        $response->set_status( 201 );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $user_id ) ) );
+
+        return $response;
+
     }
 
     /**
