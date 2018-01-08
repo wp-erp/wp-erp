@@ -412,6 +412,11 @@ class Employee {
      * @return bool
      */
     public function is_employee() {
+        //exceptional case for admin
+        if( in_array( 'administrator', $this->get_roles()['roles'])){
+            return true;
+        }
+
         if ( $this->erp_user ) {
             return true;
         }
@@ -556,7 +561,7 @@ class Employee {
      * @return mixed|string
      */
     public function get_designation( $context = 'edit' ) {
-        if ( $this->is_employee() && $this->erp_user->designation ) {
+        if ( $this->is_employee() && isset($this->erp_user->designation) ) {
             if ( $context == 'edit' ) {
                 return $this->erp_user->designation;
             }
@@ -587,7 +592,7 @@ class Employee {
      * @return mixed|string
      */
     public function get_department( $context = 'edit' ) {
-        if ( $this->is_employee() && $this->erp_user->department ) {
+        if ( $this->is_employee() && isset($this->erp_user->department) ) {
             if ( $context == 'edit' ) {
                 return $this->erp_user->department;
             }
@@ -625,7 +630,7 @@ class Employee {
      * @return int
      */
     public function get_location( $context = 'edit' ) {
-        if ( $this->is_employee() && $this->erp_user->location ) {
+        if ( $this->is_employee() && isset($this->erp_user->location) ) {
             if ( $context == 'edit' ) {
                 return $this->erp_user->location;
             }
@@ -642,7 +647,7 @@ class Employee {
      * @return string
      */
     public function get_status( $context = 'edit' ) {
-        if ( $this->erp_user->status ) {
+        if ( isset($this->erp_user->status) ) {
             $status = $this->erp_user->status;
             if ( $context == 'edit' ) {
                 return $status;
@@ -663,7 +668,7 @@ class Employee {
      * @return mixed
      */
     public function get_type( $context = 'edit' ) {
-        if ( $this->is_employee() && $this->erp_user->type ) {
+        if ( $this->is_employee() && isset($this->erp_user->type) ) {
             $type = $this->erp_user->type;
             if ( $context == 'edit' ) {
                 return $type;
@@ -773,7 +778,7 @@ class Employee {
      * @return string
      */
     public function get_hiring_date() {
-        if ( $this->erp_user->hiring_date != '0000-00-00' ) {
+        if ( isset($this->erp_user->hiring_date) && $this->erp_user->hiring_date != '0000-00-00' ) {
             return erp_format_date( $this->erp_user->hiring_date );
         }
     }
@@ -879,7 +884,7 @@ class Employee {
      * @return string
      */
     public function get_reporting_to() {
-        if ( $this->is_employee() && $this->erp_user->reporting_to ) {
+        if ( $this->is_employee() && isset($this->erp_user->reporting_to) ) {
             $user_id = (int) $this->erp_user->reporting_to;
             $user    = new Employee( $user_id );
             if ( ! $user->is_employee() ) {
