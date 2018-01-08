@@ -3,7 +3,7 @@
 namespace WeDevs\ERP\HRM;
 
 use WeDevs\ERP\Admin\Models\Company_Locations;
-use WeDevs\ERP\HRM\Models\Department;
+use WeDevs\ERP\HRM\Models\Department as HRDepartment;
 use WeDevs\ERP\HRM\Models\Designation;
 use WeDevs\ERP\HRM\Models\Employee_History;
 use WeDevs\ERP\HRM\Models\Hr_User;
@@ -596,7 +596,7 @@ class Employee {
             if ( $context == 'edit' ) {
                 return $this->erp_user->department;
             }
-            $department = Department::find( $this->department );
+            $department = HRDepartment::find( $this->department );
             if ( $department ) {
                 return stripslashes( $department->title );
             }
