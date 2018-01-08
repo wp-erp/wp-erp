@@ -178,7 +178,7 @@ function erp_hr_get_age_breakdown_data() {
         $tot_36_to_45 += $emp_by_dept_data['_36_to_45'];
         $tot_46_to_55 += $emp_by_dept_data['_46_to_55'];
         $tot_56_to_65 += $emp_by_dept_data['_56_to_65'];
-        $tot_65plus   += $emp_by_dept_data['_65plus'];
+        $tot_65plus   += $emp_by_dept_data['_65_plus'];
 
         $age_breakdown_data[] = [
             'department' => $department->title,
@@ -188,7 +188,7 @@ function erp_hr_get_age_breakdown_data() {
             '_36_to_45'  => $emp_by_dept_data['_36_to_45'],
             '_46_to_55'  => $emp_by_dept_data['_46_to_55'],
             '_56_to_65'  => $emp_by_dept_data['_56_to_65'],
-            '_65plus'    => $emp_by_dept_data['_65plus']
+            '_65_plus'    => $emp_by_dept_data['_65_plus']
         ];
     }
 
@@ -200,7 +200,7 @@ function erp_hr_get_age_breakdown_data() {
         '_36_to_45'  => $tot_36_to_45,
         '_46_to_55'  => $tot_46_to_55,
         '_56_to_65'  => $tot_56_to_65,
-        '_65plus'    => $tot_65plus
+        '_65_plus'    => $tot_65plus
     ];
 
     $age_breakdown_data = erp_array_to_object( $age_breakdown_data );
