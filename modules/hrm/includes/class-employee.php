@@ -263,17 +263,33 @@ class Employee {
         $work = $data['work'];
 
         if ( ! empty( $work['type'] ) ) {
-            $this->update_employment_status( $work['type'], $hiring_date );
+
+            $this->update_employment_status( [
+                'type' => $work['type'],
+                'date' => $hiring_date,
+            ] );
         }
 
         // update compensation
         if ( ! empty( $work['pay_rate'] ) ) {
             $pay_type = ( ! empty( $work['pay_type'] ) ) ? $work['pay_type'] : 'monthly';
-            $this->update_compensation( $work['pay_rate'], $pay_type, '', $hiring_date );
+            $this->update_compensation( [
+                'comment'  => '',
+                'pay_type' => $pay_type,
+                'reason'   => '',
+                'pay_rate' => $work['pay_rate'],
+                'date'     => $hiring_date,
+            ] );
         }
 
         // update job info
-        $this->update_job_info( $work['department'], $work['designation'], $work['reporting_to'], $work['location'], $hiring_date );
+        $this->update_job_info( [
+            'date'         => $hiring_date,
+            'designation'  => $work['designation'],
+            'department'   => $work['department'],
+            'reporting_to' => $work['reporting_to'],
+            'location'     => $work['location'],
+        ] );
 
         $this->update_employee( array_merge( $data['work'], $data['personal'] ) );
 
@@ -962,7 +978,9 @@ class Employee {
 
         if ( ! $args['id'] ) {
             // education will update
-            do_action( 'erp_hr_employee_education_create', $args );
+            $data = $args;
+            $data['user_id']  = $this->user_id;
+            do_action( 'erp_hr_employee_education_create', $data );
         }
 
         $education = $this->erp_user->educations()->updateOrCreate( [ 'id' => $args['id'] ], $args )->toArray();
@@ -1040,7 +1058,9 @@ class Employee {
 
         if ( ! $args['id'] ) {
             // education will update
-            do_action( 'erp_hr_employee_dependents_create', $args );
+            $data = $args;
+            $data['user_id']  = $this->user_id;
+            do_action( 'erp_hr_employee_dependents_create', $data );
         }
 
         $dependent = $this->erp_user->dependents()->updateOrCreate( [ 'id' => $args['id'] ], $args )->toArray();
@@ -1124,6 +1144,8 @@ class Employee {
 
         if ( $experience['id'] ) {
             $data = (array) $experience;
+            $data = $args;
+            $data['user_id']  = $this->user_id;
             do_action( 'erp_hr_employee_experience_new', $data );
         }
 
@@ -1164,7 +1186,7 @@ class Employee {
             if ( $history['module'] == 'employment' ) {
                 $item                                        = array(
                     'id'       => $history['id'],
-                    'status'   => $history['type'],
+                    'type'     => $history['type'],
                     'comments' => $history['comment'],
                     'date'     => $history['date'],
                     'module'   => $history['module'],
@@ -1233,7 +1255,7 @@ class Employee {
     public function update_employment_status( $args = array() ) {
         $default = array(
             'id'       => '',
-            'status'   => '',
+            'type'     => '',
             'comments' => '',
             'date'     => current_time( 'mysql' ),
         );
@@ -1241,25 +1263,25 @@ class Employee {
         $args = wp_parse_args( $args, $default );
 
         $types = erp_hr_get_employee_types();
-        if ( empty( $args['status'] ) || ! array_key_exists( $args['status'], $types ) ) {
-            return new \WP_Error( 'invalid-status-type', __( 'Invalid status submitted', 'erp' ) );
+        if ( empty( $args['type'] ) || ! array_key_exists( $args['type'], $types ) ) {
+            return new \WP_Error( 'invalid-employment-type', __( 'Invalid Employment Type', 'erp' ) );
         }
 
         do_action( 'erp_hr_employee_employment_status_create', $this->get_user_id() );
         $this->update_employee( [
-            'type' => $args['status']
+            'type' => $args['type']
         ] );
 
         $history = $this->get_erp_user()->histories()->updateOrCreate( [ 'id' => $args['id'] ], [
             'module'  => 'employment',
-            'type'    => $args['status'],
+            'type'    => $args['type'],
             'comment' => $args['comments'],
             'date'    => $args['date']
         ] );
 
         return [
             'id'       => $history['id'],
-            'status'   => $history['type'],
+            'type'     => $history['type'],
             'comments' => $history['comment'],
             'date'     => $history['date'],
             'module'   => $history['module'],
@@ -1404,6 +1426,7 @@ class Employee {
                                      ->take( $limit )
                                      ->get()
                                      ->groupBy( 'type' );
+
         return $performances;
     }
 

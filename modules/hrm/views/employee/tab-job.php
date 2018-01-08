@@ -52,7 +52,7 @@
                     <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
                         <td><?php echo erp_format_date( $employment_history['date'] ); ?></td>
                         <td>
-                            <?php echo ( ! empty( $employment_history['status'] ) ) ? wp_kses_post( $employment_history['status'] ) : '--'; ?>
+                            <?php echo ( ! empty( $employment_history['type'] ) ) ? wp_kses_post( $employment_history['type'] ) : '--'; ?>
                         </td>
                         <td>
                             <?php echo ( ! empty( $employment_history['comments'] ) ) ? wp_kses_post( $employment_history['comments'] ) : '--'; ?>
