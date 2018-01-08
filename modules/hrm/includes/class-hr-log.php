@@ -210,7 +210,7 @@ class Hr_Log {
      */
     public function create_experience( $fields ) {
 
-        $employee = new \WeDevs\ERP\HRM\Employee( intval( $fields['employee_id'] ) );
+        $employee = new \WeDevs\ERP\HRM\Employee( intval( $fields['user_id'] ) );
 
         erp_log()->add([
             'sub_component' => 'employee',
