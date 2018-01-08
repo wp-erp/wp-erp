@@ -605,7 +605,7 @@ class Ajax_Handler {
         }
 
         $created = $employee->update_employment_status( [
-            'status'   => $_POST['status'],
+            'type'   => $_POST['status'],
             'comments' => $_POST['comment'],
             'date'     => $_POST['date'],
         ] );
