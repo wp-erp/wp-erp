@@ -10,6 +10,7 @@ if ( $balance ) {
             <tr>
                 <th><?php _e( 'Leave', 'erp' ) ?></th>
                 <th><?php _e( 'Days', 'erp' ) ?></th>
+                <th><?php _e( 'Spent', 'erp' ) ?></th>
                 <th><?php _e( 'Scheduled', 'erp' ) ?></th>
                 <th><?php _e( 'Available', 'erp' ) ?></th>
                 <th><?php _e( 'Period', 'erp' ) ?></th>
@@ -20,9 +21,11 @@ if ( $balance ) {
 
             <?php if( $balance ):?>
             <?php foreach ($balance as $num => $entitlement) { ?>
+
             <tr class="<?php echo $num % 2 == 0 ? 'alternate' : 'odd'; ?>">
                 <td><?php echo esc_html( $entitlement->policy ); ?></td>
                 <td><?php echo $entitlement->days ? sprintf( __( '%d days', 'erp' ), number_format_i18n( $entitlement->days ) ) : '-'; ?></td>
+                <td><?php echo ($entitlement->spent - $entitlement->scheduled) ? sprintf( __( '%d days', 'erp' ), number_format_i18n( ($entitlement->spent - $entitlement->scheduled) ) ) : '-'; ?></td>
                 <td><?php echo $entitlement->scheduled ? sprintf( __( '%d days', 'erp' ), number_format_i18n( $entitlement->scheduled ) ) : '-'; ?></td>
                 <td>
                     <?php
