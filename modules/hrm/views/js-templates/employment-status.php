@@ -32,5 +32,5 @@
 
     <?php wp_nonce_field( 'employee_update_employment' ); ?>
     <input type="hidden" name="action" id="status-action" value="erp-hr-emp-update-status">
-    <input type="hidden" name="employee_id" id="emp-id" value="{{ data.id }}">
+    <input type="hidden" name="user_id" id="emp-id" value="{{ data.user_id }}">
 </div>

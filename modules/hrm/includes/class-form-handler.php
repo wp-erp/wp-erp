@@ -532,7 +532,7 @@ class Form_Handler {
 
             foreach ($employees as $employee) {
                 $data = array(
-                    'user_id'   => $employee->id,
+                    'user_id'   => $employee->get_user_id(),
                     'policy_id' => $leave_policy,
                     'days'      => $policy->value,
                     'from_date' => $from_date,

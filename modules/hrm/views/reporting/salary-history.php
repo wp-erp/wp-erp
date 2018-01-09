@@ -23,21 +23,21 @@ $date_format = get_option( 'date_format' );
                 foreach ( $all_user_id as $user_id ) {
 
                     $employee      = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
-                    $compensations = $employee->get_history( 'compensation' );
+                    $compensations = $employee->get_job_histories( 'compensation' );
 
-                    if ( $compensations ) {
+                    if ( !empty($compensations['compensation']) ) {
 
                         $line = 0;
 
-                        foreach ( $compensations as $compensation ) {
+                        foreach ( $compensations['compensation'] as $compensation ) {
 
-                            $employee_url = '<a href="'. admin_url( 'admin.php?page=erp-hr-employee&action=view&id=' . $employee->id ) . '">' . $employee->display_name . '</a>';
+                            $employee_url = '<a href="'. admin_url( 'admin.php?page=erp-hr-employee&action=view&id=' . $employee->get_user_id() ) . '">' . $employee->display_name . '</a>';
                             echo '<tr>';
                             echo '<td>' . ( 0 == $line ? wp_kses_post( $employee_url ) : '' ) . '</td>';
-                            echo '<td>' . date( $date_format, strtotime( esc_attr( $compensation->date ) ) ) . '</td>';
-                            echo '<td>' . esc_attr( $compensation->type ) . '</td>';
-                            echo '<td>' . esc_attr( $compensation->category ) . '</td>';
-                            echo '<td>' . esc_attr( $employee->id ) . '</td>';
+                            echo '<td>' . date( $date_format, strtotime( esc_attr( $compensation['date'] ) ) ) . '</td>';
+                            echo '<td>' . esc_attr( $compensation['pay_rate'] ) . '</td>';
+                            echo '<td>' . esc_attr( $compensation['pay_type'] ) . '</td>';
+                            echo '<td>' . esc_attr( $employee->get_user_id() ) . '</td>';
                             echo '</tr>';
 
                             $line++;

@@ -2997,7 +2997,7 @@ function erp_handle_user_bulk_actions() {
                     'life_stage' => $life_stage,
                 ];
 
-                $contact_id = erp_insert_people( $data );
+                $contact_id = ( $data );
 
                 if ( is_wp_error( $contact_id ) ) {
                     continue;
@@ -3436,6 +3436,9 @@ function erp_crm_wc_prevent_admin_access( $prevent_access ) {
  * @return array
  */
 function erp_get_editable_roles (){
+    if(!  function_exists('get_editable_roles')){
+        require_once(ABSPATH . 'wp-admin/includes/user.php');
+    }
     $wp_roles = get_editable_roles();
 
     if( !current_user_can( 'administrator' ) ){

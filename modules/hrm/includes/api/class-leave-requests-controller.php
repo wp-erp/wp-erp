@@ -1,6 +1,8 @@
 <?php
-namespace WeDevs\ERP\API;
+namespace WeDevs\ERP\HRM\API;
 
+use WeDevs\ERP\API\REST_Controller;
+use WeDevs\ERP\HRM\Employee;
 use WP_REST_Server;
 use WP_REST_Response;
 use WP_Error;
@@ -30,7 +32,7 @@ class Leave_Requests_Controller extends REST_Controller {
                 'callback'            => [ $this, 'get_leave_requests' ],
                 'args'                => $this->get_collection_params(),
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_leave_manage' );
+                    return current_user_can( 'erp_list_employee' );
                 },
             ],
             [
@@ -52,7 +54,7 @@ class Leave_Requests_Controller extends REST_Controller {
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_leave_manage' );
+                    return current_user_can( 'erp_list_employee' );
                 },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
@@ -70,20 +72,35 @@ class Leave_Requests_Controller extends REST_Controller {
         $args = [
             'number' => $request['per_page'],
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+            'type'   => $request['per_page'] == 'upcoming' ? 'upcoming' : '',
         ];
 
-        $items       = erp_hr_get_leave_requests( $args );
-        $leave_count = erp_hr_leave_get_requests_count();
-        $total_items = $leave_count['all']['count'];
+        $items = [];
+        $formatted_items = [];
+        $total = 0;
 
-        $formated_items = [];
-        foreach ( $items as $item ) {
-            $data             = $this->prepare_item_for_response( $item, $request );
-            $formated_items[] = $this->prepare_response_for_collection( $data );
+        if ( $args['type'] == 'upcoming' ) {
+            $items = \WeDevs\ERP\HRM\Models\Leave_request::where( 'start_date', '>=', date( 'Y-m-d' ) . ' 00:00:00' )
+                                                         ->where( 'status', '1' )
+                                                         ->offset( $args['offset'] )
+                                                         ->take( $args['number'] )
+                                                         ->get();
+            $total = count($items);
+        } else {
+            $items       = erp_hr_get_leave_requests( $args );
+            $leave_count = erp_hr_leave_get_requests_count();
+            $total = $leave_count['all']['count'];
+
+            $formatted_items = [];
         }
 
-        $response = rest_ensure_response( $formated_items );
-        $response = $this->format_collection_response( $response, $request, $total_items );
+        foreach ( $items as $item ) {
+            $data              = $this->prepare_item_for_response( $item, $request );
+            $formatted_items[] = $this->prepare_response_for_collection( $data );
+        }
+
+        $response = rest_ensure_response( $formatted_items );
+        $response = $this->format_collection_response( $response, $request, $total );
 
         return $response;
     }
@@ -185,10 +202,12 @@ class Leave_Requests_Controller extends REST_Controller {
      * @return WP_REST_Response $response Response data.
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
+        $employee = new Employee($item->user_id);
         $data = [
             'id'            => (int) $item->id,
             'employee_id'   => (int) $item->user_id,
             'employee_name' => $item->display_name,
+            'avatar_url'    => $employee->get_avatar_url(),
             'start_date'    => date( 'Y-m-d', strtotime( $item->start_date ) ),
             'end_date'      => date( 'Y-m-d', strtotime( $item->end_date ) ),
             'reason'        => $item->reason,

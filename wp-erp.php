@@ -5,7 +5,7 @@
  * Plugin URI: https://wperp.com
  * Author: weDevs
  * Author URI: https://wedevs.com
- * Version: 1.2.8
+ * Version: 1.3.0
  * License: GPL2
  * Text Domain: erp
  * Domain Path: /i18n/languages/
@@ -52,7 +52,7 @@ final class WeDevs_ERP {
      *
      * @var string
      */
-    public $version = '1.2.8';
+    public $version = '1.3.0';
 
     /**
      * Minimum PHP version required
@@ -228,8 +228,6 @@ final class WeDevs_ERP {
             require_once WPERP_INCLUDES . '/admin/class-menu.php';
             require_once WPERP_INCLUDES . '/admin/class-admin.php';
 
-            include_once WPERP_INCLUDES . '/lib/class-weforms-upsell.php';
-            new \WeForms_Upsell( '408' );
         }
 
         // cli command

@@ -76,7 +76,7 @@ function erp_hr_get_departments( $args = [] ) {
 
     $department = new \WeDevs\ERP\HRM\Models\Department();
 
-    if ( isset( $args['s'] ) ) {
+    if ( !empty( $args['s'] ) ) {
         $results = $department
                 ->where( 'title', 'LIKE', '%'.$_GET['s'].'%' )
                 ->get()
@@ -131,11 +131,34 @@ function erp_hr_count_departments() {
  * @return bool
  */
 function erp_hr_delete_department( $department_id ) {
+    
+    if ( is_array( $department_id ) ) {
+        $exist_employee = [];
+        $not_exist_employee = [];
+
+        foreach ( $department_id as $key => $department ) {
+            $dept = new \WeDevs\ERP\HRM\Department( intval( $department ) );
+
+            if ( $dept->num_of_employees() ) {
+                $exist_employee[] = $department;
+            } else {
+                do_action( 'erp_hr_dept_delete', $dept );
+                $not_exist_employee[] = $department;
+            }
+        }
+
+        if ( $not_exist_employee ) {
+            \WeDevs\ERP\HRM\Models\Department::destroy( $not_exist_employee );
+        }
+
+        return $exist_employee;
+
+    }
 
     $department = new \WeDevs\ERP\HRM\Department( intval( $department_id ) );
 
     if ( $department->num_of_employees() ) {
-        return false;
+        return new WP_Error( 'not-empty', __( 'You can not delete this department because it contains employees.', 'erp' ) );
     }
 
     do_action( 'erp_hr_dept_delete', $department_id );

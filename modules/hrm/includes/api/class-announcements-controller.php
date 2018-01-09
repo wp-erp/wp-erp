@@ -1,11 +1,12 @@
 <?php
-namespace WeDevs\ERP\API;
+namespace WeDevs\ERP\HRM\API;
 
 use WP_REST_Server;
 use WP_REST_Response;
 use WP_Error;
+use WeDevs\ERP\API\REST_Controller;
 
-class Designations_Controller extends REST_Controller {
+class Announcements_Controller extends REST_Controller {
     /**
      * Endpoint namespace.
      *
@@ -18,7 +19,7 @@ class Designations_Controller extends REST_Controller {
      *
      * @var string
      */
-    protected $rest_base = 'hrm/designations';
+    protected $rest_base = 'hrm/announcements';
 
     /**
      * Register the routes for the objects of the controller.
@@ -27,18 +28,18 @@ class Designations_Controller extends REST_Controller {
         register_rest_route( $this->namespace, '/' . $this->rest_base, [
             [
                 'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_designations' ],
+                'callback'            => [ $this, 'get_announcements' ],
                 'args'                => $this->get_collection_params(),
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_manage_designation' );
+                    return current_user_can( 'erp_manage_announcement' );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => [ $this, 'create_designation' ],
+                'callback'            => [ $this, 'create_announcement' ],
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_manage_designation' );
+                    return current_user_can( 'erp_manage_announcement' );
                 },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
@@ -47,27 +48,35 @@ class Designations_Controller extends REST_Controller {
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', [
             [
                 'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_designation' ],
+                'callback'            => [ $this, 'get_announcement' ],
                 'args'                => [
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_manage_designation' );
+                    return current_user_can( 'erp_manage_announcement' );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => [ $this, 'update_designation' ],
+                'callback'            => [ $this, 'update_announcement' ],
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_manage_designation' );
+                    return current_user_can( 'erp_manage_announcement' );
+                },
+            ],
+            [
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => [ $this, 'update_announcement' ],
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_manage_announcement' );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => [ $this, 'delete_designation' ],
+                'callback'            => [ $this, 'delete_announcement' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_manage_designation' );
+                    return current_user_can( 'erp_manage_announcement' );
                 },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
@@ -75,24 +84,29 @@ class Designations_Controller extends REST_Controller {
     }
 
     /**
-     * Get a collection of designations
+     * Get a collection of announcements
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_designations( $request ) {
+    public function get_announcements( $request ) {
         $args = [
-            'number' => $request['per_page'],
-            'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
+            'posts_per_page' => $request['per_page'],
+            'offset'         => ( $request['per_page'] * ( $request['page'] - 1 ) ),
         ];
 
-        $items       = erp_hr_get_designations( $args );
-        $total_items = erp_hr_count_designation();
+        $args['post_type'] = 'erp_hr_announcement';
+
+        $items = get_posts( $args );
+
+        $count_items = wp_count_posts( $args['post_type'] );
+        $total_items = (int) $count_items->publish;
 
         $formated_items = [];
         foreach ( $items as $item ) {
-            $data = $this->prepare_item_for_response( $item, $request );
+            $item->id         = $item->ID;
+            $data             = $this->prepare_item_for_response( $item, $request );
             $formated_items[] = $this->prepare_response_for_collection( $data );
         }
 
@@ -103,18 +117,19 @@ class Designations_Controller extends REST_Controller {
     }
 
     /**
-     * Get a specific designation
+     * Get a specific announcement
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function get_designation( $request ) {
-        $id   = (int) $request['id'];
-        $item = new \WeDevs\ERP\HRM\Designation( $id );
+    public function get_announcement( $request ) {
+        $id       = (int) $request['id'];
+        $item     = get_post( $id );
+        $item->id = $item->ID;
 
         if ( empty( $id ) || empty( $item->id ) ) {
-            return new WP_Error( 'rest_designation_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
+            return new WP_Error( 'rest_announcement_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 404 ] );
         }
 
         $item     = $this->prepare_item_for_response( $item, $request );
@@ -124,20 +139,31 @@ class Designations_Controller extends REST_Controller {
     }
 
     /**
-     * Create a designation
+     * Create an announcement
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function create_designation( $request ) {
+    public function create_announcement( $request ) {
         $item = $this->prepare_item_for_database( $request );
-        $id   = erp_hr_create_designation( $item );
 
-        $designation = new \WeDevs\ERP\HRM\Designation( $id );
+        $id   = wp_insert_post( $item );
+
+        $type = ( $request['recipient_type'] == 'all_employees' ) ? 'all_employee' : 'selected_employee';
+
+        $employees = [];
+        if ( $type == 'selected_employee' ) {
+            $employees = explode( ',', str_replace( ' ', '', $request['employees'] ) );
+        }
+
+        erp_hr_assign_announcements_to_employees( $id, $type, $employees );
+
+        $announcement     = get_post( $id );
+        $announcement->id = $announcement->ID;
 
         $request->set_param( 'context', 'edit' );
-        $response = $this->prepare_item_for_response( $designation, $request );
+        $response = $this->prepare_item_for_response( $announcement, $request );
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
         $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
@@ -146,25 +172,38 @@ class Designations_Controller extends REST_Controller {
     }
 
     /**
-     * Update a designation
+     * Update an announcement
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function update_designation( $request ) {
+    public function update_announcement( $request ) {
         $id = (int) $request['id'];
 
-        $designation = new \WeDevs\ERP\HRM\Designation( $id );
-        if ( ! $designation ) {
-            return new WP_Error( 'rest_designation_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
+        $announcement = get_post( $id );
+        if ( empty( $id ) || empty( $announcement->ID ) ) {
+            return new WP_Error( 'rest_announcement_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
         }
 
         $item = $this->prepare_item_for_database( $request );
-        $id   = erp_hr_create_designation( $item );
+
+        $id   = wp_insert_post( $item );
+        $announcement = get_post( $id );
+
+        $type = ( $request['recipient_type'] == 'all_employees' ) ? 'all_employee' : 'selected_employee';
+
+        $employees = [];
+        if ( $type == 'selected_employee' ) {
+            $employees = explode( ',', str_replace( ' ', '', $request['employees'] ) );
+        }
+
+        erp_hr_assign_announcements_to_employees( $id, $type, $employees );
+
+        $announcement->id = $announcement->ID;
 
         $request->set_param( 'context', 'edit' );
-        $response = $this->prepare_item_for_response( $designation, $request );
+        $response = $this->prepare_item_for_response( $announcement, $request );
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
         $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
@@ -173,16 +212,17 @@ class Designations_Controller extends REST_Controller {
     }
 
     /**
-     * Delete a designation
+     * Delete an announcement
      *
      * @param WP_REST_Request $request
      *
      * @return WP_Error|WP_REST_Request
      */
-    public function delete_designation( $request ) {
+    public function delete_announcement( $request ) {
         $id = (int) $request['id'];
 
-        erp_hr_delete_designation( $id );
+        $force_delete = true;
+        wp_delete_post( $id );
 
         return new WP_REST_Response( true, 204 );
     }
@@ -199,17 +239,23 @@ class Designations_Controller extends REST_Controller {
 
         // required arguments.
         if ( isset( $request['title'] ) ) {
-            $prepared_item['title'] = $request['title'];
+            $prepared_item['post_title'] = $request['title'];
+        }
+
+        if ( isset( $request['body'] ) ) {
+            $prepared_item['post_content'] = $request['body'];
         }
 
         // optional arguments.
         if ( isset( $request['id'] ) ) {
-            $prepared_item['id'] = absint( $request['id'] );
+            $prepared_item['ID'] = absint( $request['id'] );
         }
 
-        if ( isset( $request['description'] ) ) {
-            $prepared_item['description'] = $request['description'];
+        if ( isset( $request['status'] ) ) {
+            $prepared_item['post_status'] = $request['status'];
         }
+
+        $prepared_item['post_type'] = 'erp_hr_announcement';
 
         return $prepared_item;
     }
@@ -224,13 +270,16 @@ class Designations_Controller extends REST_Controller {
      * @return WP_REST_Response $response Response data.
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
-        $total_employees = \WeDevs\ERP\HRM\Models\Employee::where( array( 'status' => 'active', 'designation' => $item->id ) )->count();
+        $post_date   = new \DateTime($item->post_date);
+        $post_author = get_user_by('id', $item->post_author);
 
         $data = [
-            'id'              => (int) $item->id,
-            'title'           => $item->title,
-            'description'     => $item->description,
-            'total_employees' => $total_employees,
+            'id'     => (int) $item->id,
+            'title'  => $item->post_title,
+            'body'   => $item->post_content,
+            'status' => $item->post_status,
+            'date'   => $post_date->format('Y-m-d'),
+            'author' => $post_author->user_login
         ];
 
         $data = array_merge( $data, $additional_fields );
@@ -251,16 +300,16 @@ class Designations_Controller extends REST_Controller {
     public function get_item_schema() {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
-            'title'      => 'designation',
+            'title'      => 'announcement',
             'type'       => 'object',
             'properties' => [
-                'id'            => [
+                'id'              => [
                     'description' => __( 'Unique identifier for the resource.' ),
                     'type'        => 'integer',
                     'context'     => [ 'embed', 'view', 'edit' ],
                     'readonly'    => true,
                 ],
-                'title'         => [
+                'title'           => [
                     'description' => __( 'Title for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
@@ -269,13 +318,31 @@ class Designations_Controller extends REST_Controller {
                     ],
                     'required'    => true,
                 ],
-                'description'  => [
-                    'description' => __( 'Description for the resource.' ),
+                'body'            => [
+                    'description' => __( 'Body for the resource.' ),
                     'type'        => 'string',
                     'context'     => [ 'edit' ],
                     'arg_options' => [
                         'sanitize_callback' => 'sanitize_text_field',
                     ],
+                    'required'    => true,
+                ],
+                'status'          => [
+                    'description' => __( 'Status for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ],
+                'recipient_type'  => [
+                    'description' => __( 'Recipient type for the resource.' ),
+                    'type'        => 'string',
+                    'context'     => [ 'edit' ],
+                    'arg_options' => [
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                    'required'    => true,
                 ],
             ],
         ];
