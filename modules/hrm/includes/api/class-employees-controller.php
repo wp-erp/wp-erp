@@ -229,34 +229,6 @@ class Employees_Controller extends REST_Controller {
             ],
         ] );
 
-        // leave
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/policies', [
-            [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [ $this, 'get_policies' ],
-                'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_list_employee' );
-                },
-            ],
-            // [
-            //     'methods'             => WP_REST_Server::CREATABLE,
-            //     'callback'            => [ $this, 'create_history' ],
-            //     'permission_callback' => function ( $request ) {
-            //         return current_user_can( 'erp_edit_employee' );
-            //     },
-            // ],
-        ] );
-
-        // register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/job_histories' . '/(?P<id>[\d]+)', [
-        //     [
-        //         'methods'             => WP_REST_Server::DELETABLE,
-        //         'callback'            => [ $this, 'delete_history' ],
-        //         'permission_callback' => function ( $request ) {
-        //             return current_user_can( 'erp_edit_employee' );
-        //         },
-        //     ],
-        // ] );
-
         //performances
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/performances', [
@@ -928,7 +900,7 @@ class Employees_Controller extends REST_Controller {
         if ( ! $employee->is_employee() ) {
             return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
         }
-        $result   = $employee->delete_experience( $request['id'] );
+        $result   = $employee->delete_performance( $request['id'] );
         $response = rest_ensure_response( $result );
 
         return $response;
