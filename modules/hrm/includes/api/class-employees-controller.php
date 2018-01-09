@@ -258,6 +258,7 @@ class Employees_Controller extends REST_Controller {
             ],
         ] );
 
+        //events
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/events', [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -268,6 +269,7 @@ class Employees_Controller extends REST_Controller {
             ]
         ] );
 
+        //terminate
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/terminate', [
             [
                 'methods'             => WP_REST_Server::EDITABLE,
@@ -278,7 +280,7 @@ class Employees_Controller extends REST_Controller {
             ],
         ] );
 
-
+        //announcements
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/announcements', [
             [
                 'methods'             => WP_REST_Server::READABLE,
@@ -287,6 +289,96 @@ class Employees_Controller extends REST_Controller {
                     return current_user_can( 'erp_list_employee' );
                 },
             ]
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/announcements', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_announcements' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
+            ],
+            [
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => [ $this, 'update_status' ],
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
+            ],
+        ] );
+
+        //policies
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/policies', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_policies' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
+            ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/leaves', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_leaves' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
+            ],
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'create_leave' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
+            ],
+        ] );
+
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/notes', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_notes' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
+            ],
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [ $this, 'create_note' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
+            ],
+        ] );
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/notes' . '/(?P<note_id>[\d]+)', [
+            [
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => [ $this, 'delete_note' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_edit_employee' );
+                },
+            ],
+        ] );
+
+        //roles
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/roles', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_roles' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( erp_hr_get_manager_role() );
+                },
+            ],
+            [
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => [ $this, 'update_role' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( erp_hr_get_manager_role() );
+                },
+            ],
         ] );
 
 
@@ -931,12 +1023,12 @@ class Employees_Controller extends REST_Controller {
      * @return mixed|object|\WP_Error|\WP_REST_Response
      */
     public function get_policies( $request ) {
-        $user_id  = (int) $request['id'];
+        $user_id  = (int) $request['user_id'];
         $employee = new Employee( $user_id );
         if ( ! $employee ) {
             return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
         }
-        $policies = $employee->get_leave_policies();
+        $policies = $employee->get_leave_balance();
         $response = rest_ensure_response( $policies );
         $response = $this->format_collection_response( $response, $request, count( $policies ) );
 
@@ -953,7 +1045,7 @@ class Employees_Controller extends REST_Controller {
      * @return array|WP_Error|object
      */
     public function get_leaves( \WP_REST_Request $request ) {
-        $user_id  = (int) $request['id'];
+        $user_id  = (int) $request['user_id'];
         $employee = new Employee( $user_id );
         if ( ! $employee ) {
             return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
@@ -1125,7 +1217,7 @@ class Employees_Controller extends REST_Controller {
         if ( ! current_user_can( $hr_manager_role ) ) {
             return new WP_Error( 'rest_invalid_user_permission', __( 'User do not have permission for the action.' ), array( 'status' => 404 ) );
         }
-        $employee_id = (int) trim( $request['id'] );
+        $employee_id = (int) trim( $request['user_id'] );
         $employee    = new Employee( $employee_id );
         if ( ! $employee ) {
             return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );

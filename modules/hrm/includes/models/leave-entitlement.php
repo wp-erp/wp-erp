@@ -33,4 +33,9 @@ class Leave_Entitlement extends Model {
     public function employee(){
         return $this->belongsTo('\WeDevs\ERP\HRM\Models\Employee', 'user_id', 'user_id' );
     }
+
+    public function scopeJoinWithPolicy( $query ) {
+        global $wpdb;
+        return $query->leftJoin( "{$wpdb->prefix}erp_hr_leave_policies", "{$wpdb->prefix}erp_hr_leave_policies.id", "=", "{$wpdb->prefix}erp_hr_leave_entitlements.policy_id" );
+    }
 }
