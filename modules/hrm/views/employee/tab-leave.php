@@ -1,7 +1,7 @@
 <h3><?php _e( 'Balances', 'erp' ) ?></h3>
 
 <?php
-$balance = $employee->get_leave_balance();
+$balance = $employee->get_leave_summary();
 
 if ( $balance ) {
     ?>
