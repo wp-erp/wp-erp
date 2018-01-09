@@ -25,10 +25,10 @@ function erp_get_version() {
  * Maps various caps to built in WordPress caps
  *
  *
- * @param array $caps Capabilities for meta capability
+ * @param array  $caps Capabilities for meta capability
  * @param string $cap Capability name
- * @param int $user_id User id
- * @param mixed $args Arguments
+ * @param int    $user_id User id
+ * @param mixed  $args Arguments
  */
 function erp_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
     return apply_filters( 'erp_map_meta_caps', $caps, $cap, $user_id, $args );
@@ -248,7 +248,7 @@ function erp_get_currency_list_with_symbol() {
     foreach ( $currencies as $iso => $currency ) {
         $symbol = isset( $currency_symbols[ $iso ] ) ? $currency_symbols[ $iso ] : $iso;
 
-        $currency_list[$iso] = sprintf( '%1$s (%2$s)', $currency, $symbol );
+        $currency_list[ $iso ] = sprintf( '%1$s (%2$s)', $currency, $symbol );
     }
 
     return $currency_list;
@@ -265,7 +265,7 @@ function erp_get_currencies_dropdown( $selected = '' ) {
     $options    = '';
     $currencies = erp_get_currencies();
 
-    foreach ($currencies as $key => $value) {
+    foreach ( $currencies as $key => $value ) {
         $select  = ( $key == $selected ) ? ' selected="selected"' : '';
         $options .= sprintf( "<option value='%s'%s>%s</option>\n", esc_attr( $key ), $select, $value );
     }
@@ -474,6 +474,7 @@ function erp_get_currency_symbol( $currency = '' ) {
 
     if ( ! empty( $currency ) ) {
         $symbol = ! empty( $currency_symbols[ $currency ] ) ? $currency_symbols[ $currency ] : $currency;
+
         return apply_filters( 'erp_currency_symbol', $symbol, $currency );
     } else {
         return apply_filters( 'erp_currency_symbol_list', $currency_symbols );
@@ -507,7 +508,7 @@ function erp_get_js_template( $file_path, $id ) {
  */
 function erp_get_vue_component_template( $file_path, $id ) {
     if ( file_exists( $file_path ) ) {
-        echo '<script type="text/x-template" id="'. $id . '">' . "\n";
+        echo '<script type="text/x-template" id="' . $id . '">' . "\n";
         include_once $file_path;
         echo "\n" . '</script>' . "\n";
     }
@@ -525,7 +526,7 @@ if ( ! function_exists( 'strip_tags_deep' ) ) {
      */
     function strip_tags_deep( $value ) {
         if ( is_array( $value ) ) {
-            foreach ($value as $key => $val) {
+            foreach ( $value as $key => $val ) {
                 $value[ $key ] = strip_tags_deep( $val );
             }
         } elseif ( is_string( $value ) ) {
@@ -547,7 +548,7 @@ if ( ! function_exists( 'trim_deep' ) ) {
      */
     function trim_deep( $value ) {
         if ( is_array( $value ) ) {
-            foreach ($value as $key => $val) {
+            foreach ( $value as $key => $val ) {
                 $value[ $key ] = trim_deep( $val );
             }
         } elseif ( is_string( $value ) ) {
@@ -565,10 +566,10 @@ if ( ! function_exists( 'trim_deep' ) ) {
  * @since 1.1.14 Add $type param
  * @since 1.1.16 Apply if-else condition to set `$value`
  *
- * @param  string  $label the label
- * @param  string  $value the value to print
- * @param  string  $sep   separator
- * @param  string  $type  field type
+ * @param  string $label the label
+ * @param  string $value the value to print
+ * @param  string $sep separator
+ * @param  string $type field type
  *
  * @return void
  */
@@ -610,7 +611,7 @@ function erp_get_clickable( $type = 'email', $value = '' ) {
 /**
  * Get a formatted date from WordPress format
  *
- * @param  string  $date the date
+ * @param  string $date the date
  *
  * @return string  formatted date
  */
@@ -627,25 +628,25 @@ function erp_format_date( $date, $format = false ) {
 /**
  * Extract dates between two date range
  *
- * @param  string  $start_date example: 2016-12-16 00:00:00
- * @param  string  $end_date   example: 2016-12-16 23:59:59
+ * @param  string $start_date example: 2016-12-16 00:00:00
+ * @param  string $end_date example: 2016-12-16 23:59:59
  *
  * @return array
  */
 function erp_extract_dates( $start_date, $end_date ) {
     // if start date has no time set, then add 00:00:00 or 12:00 AM
-    if ( ! preg_match( '/\d{2}:\d{2}:\d{2}$/' , $start_date ) ) {
+    if ( ! preg_match( '/\d{2}:\d{2}:\d{2}$/', $start_date ) ) {
         $start_date = $start_date . ' 00:00:00';
     }
 
     // if end date has no time set, then add 23:59:59 or 11:59 PM
-    if ( ! preg_match( '/\d{2}:\d{2}:\d{2}$/' , $end_date ) ) {
+    if ( ! preg_match( '/\d{2}:\d{2}:\d{2}$/', $end_date ) ) {
         $end_date = $end_date . ' 23:59:59';
     }
 
     $start_date = new DateTime( $start_date );
     $end_date   = new DateTime( $end_date );
-    $diff = $start_date->diff( $end_date );
+    $diff       = $start_date->diff( $end_date );
 
     // we got a negative date
     if ( $diff->invert ) {
@@ -667,7 +668,7 @@ function erp_extract_dates( $start_date, $end_date ) {
 /**
  * Convert an two dimentational array to one dimentional array object
  *
- * @param  array   $array array of arrays
+ * @param  array $array array of arrays
  *
  * @return array
  */
@@ -675,7 +676,7 @@ function erp_array_to_object( $array = [] ) {
     $new_array = [];
 
     if ( $array ) {
-        foreach ($array as $key => $value) {
+        foreach ( $array as $key => $value ) {
             $new_array[] = (object) $value;
         }
     }
@@ -686,9 +687,9 @@ function erp_array_to_object( $array = [] ) {
 /**
  * Check date in range or not
  *
- * @param  date   $start_date
- * @param  date   $end_date
- * @param  date   $date_from_user
+ * @param  date $start_date
+ * @param  date $end_date
+ * @param  date $date_from_user
  *
  * @return boolen
  */
@@ -699,7 +700,7 @@ function erp_check_date_in_range( $start_date, $end_date, $date_from_user ) {
     $user_ts  = strtotime( $date_from_user );
 
     // Check that user date is between start & end
-    if ( ($user_ts >= $start_ts) && ($user_ts <= $end_ts) ) {
+    if ( ( $user_ts >= $start_ts ) && ( $user_ts <= $end_ts ) ) {
         return true;
     }
 
@@ -709,10 +710,10 @@ function erp_check_date_in_range( $start_date, $end_date, $date_from_user ) {
 /**
  * Check date range any point in range or not
  *
- * @param  date   $start_date
- * @param  date   $end_date
- * @param  date   $user_date_start
- * @param  date   $user_date_end
+ * @param  date $start_date
+ * @param  date $end_date
+ * @param  date $user_date_start
+ * @param  date $user_date_end
  *
  * @return boolen
  */
@@ -732,8 +733,8 @@ function erp_check_date_range_in_range_exist( $start_date, $end_date, $user_date
 /**
  * Get durataion between two date
  *
- * @param  date   $start_date
- * @param  date   $end_date
+ * @param  date $start_date
+ * @param  date $end_date
  *
  * @return integer
  */
@@ -742,7 +743,7 @@ function erp_date_duration( $start_date, $end_date ) {
     $datetime2 = new DateTime( $end_date );
     $interval  = $datetime1->diff( $datetime2 );
 
-    return $interval->format('%a');
+    return $interval->format( '%a' );
 }
 
 /**
@@ -765,7 +766,7 @@ function erp_performance_rating( $selected = '' ) {
     ) );
 
     if ( $selected ) {
-        return isset( $rating[$selected] ) ? $rating[$selected] : '';
+        return isset( $rating[ $selected ] ) ? $rating[ $selected ] : '';
     }
 
     return $rating;
@@ -775,8 +776,8 @@ function erp_performance_rating( $selected = '' ) {
  * Get erp option from settings framework
  *
  * @param  sting  $option_name name of the option
- * @param  string $section     name of the section. if it's a separate option, don't provide any
- * @param  string $default     default option
+ * @param  string $section name of the section. if it's a separate option, don't provide any
+ * @param  string $default default option
  *
  * @return string
  */
@@ -785,8 +786,8 @@ function erp_get_option( $option_name, $section = false, $default = '' ) {
     if ( $section ) {
         $option = get_option( $section );
 
-        if ( isset( $option[$option_name] ) ) {
-            return $option[$option_name];
+        if ( isset( $option[ $option_name ] ) ) {
+            return $option[ $option_name ];
         } else {
             return $default;
         }
@@ -827,8 +828,8 @@ function erp_months_dropdown( $title = false ) {
         $months['-1'] = $title;
     }
 
-    for ( $m = 1; $m <= 12; $m++ ) {
-        $months[$m] = date( 'F', mktime( 0, 0, 0, $m ) );
+    for ( $m = 1; $m <= 12; $m ++ ) {
+        $months[ $m ] = date( 'F', mktime( 0, 0, 0, $m ) );
     }
 
     return $months;
@@ -845,6 +846,7 @@ function erp_months_dropdown( $title = false ) {
  */
 function erp_financial_start_date() {
     $financial_year_dates = erp_get_financial_year_dates();
+
     return $financial_year_dates['start'];
 }
 
@@ -858,6 +860,7 @@ function erp_financial_start_date() {
  */
 function erp_financial_end_date() {
     $financial_year_dates = erp_get_financial_year_dates();
+
     return $financial_year_dates['end'];
 }
 
@@ -899,8 +902,8 @@ function erp_log() {
  *
  * @since 0.1
  *
- * @param  string  $message
- * @param  string  $type
+ * @param  string $message
+ * @param  string $type
  *
  * @return void
  */
@@ -935,7 +938,7 @@ function erp_get_people_types() {
 function erp_get_country_name( $country ) {
 
     $load_cuntries_states = \WeDevs\ERP\Countries::instance();
-    $countries = $load_cuntries_states->countries;
+    $countries            = $load_cuntries_states->countries;
 
     // Handle full country name
     if ( '-1' != $country ) {
@@ -959,10 +962,10 @@ function erp_get_country_name( $country ) {
  */
 function erp_get_state_name( $country, $state ) {
     $load_cuntries_states = \WeDevs\ERP\Countries::instance();
-    $states = $load_cuntries_states->states;
+    $states               = $load_cuntries_states->states;
 
     // Handle full state name
-    $full_state   = ( $country && $state && isset( $states[ $country ][ $state ] ) ) ? $states[ $country ][ $state ] : $state;
+    $full_state = ( $country && $state && isset( $states[ $country ][ $state ] ) ) ? $states[ $country ][ $state ] : $state;
 
     return $full_state;
 }
@@ -979,41 +982,41 @@ function erp_get_state_name( $country, $state ) {
 function erp_cron_intervals( $schedules ) {
 
     $schedules['per_minute'] = array(
-        'interval'  => MINUTE_IN_SECONDS,
-        'display'   => __( 'Every Minute', 'erp' )
+        'interval' => MINUTE_IN_SECONDS,
+        'display'  => __( 'Every Minute', 'erp' )
     );
 
     $schedules['two_min'] = array(
-        'interval'  => MINUTE_IN_SECONDS * 2,
-        'display'   => __( 'Every 2 Minutes', 'erp' )
+        'interval' => MINUTE_IN_SECONDS * 2,
+        'display'  => __( 'Every 2 Minutes', 'erp' )
     );
 
     $schedules['five_min'] = array(
-        'interval'  => MINUTE_IN_SECONDS * 5,
-        'display'   => __( 'Every 5 Minutes', 'erp' )
+        'interval' => MINUTE_IN_SECONDS * 5,
+        'display'  => __( 'Every 5 Minutes', 'erp' )
     );
 
     $schedules['ten_min'] = array(
-        'interval'  => MINUTE_IN_SECONDS * 10,
-        'display'   => __( 'Every 10 Minutes', 'erp' )
+        'interval' => MINUTE_IN_SECONDS * 10,
+        'display'  => __( 'Every 10 Minutes', 'erp' )
     );
 
     $schedules['fifteen_min'] = array(
-        'interval'  => MINUTE_IN_SECONDS * 15,
-        'display'   => __( 'Every 15 Minutes', 'erp' )
+        'interval' => MINUTE_IN_SECONDS * 15,
+        'display'  => __( 'Every 15 Minutes', 'erp' )
     );
 
     $schedules['thirty_min'] = array(
-        'interval'  => MINUTE_IN_SECONDS * 30,
-        'display'   => __( 'Every 30 Minutes', 'erp' )
+        'interval' => MINUTE_IN_SECONDS * 30,
+        'display'  => __( 'Every 30 Minutes', 'erp' )
     );
 
     $schedules['weekly'] = array(
-        'interval'  => DAY_IN_SECONDS * 7,
+        'interval' => DAY_IN_SECONDS * 7,
         'display'  => __( 'Once Weekly', 'erp' )
     );
 
-    return (array)$schedules;
+    return (array) $schedules;
 }
 
 /**
@@ -1034,9 +1037,9 @@ function erp_show_users_own_attachments( $query ) {
 
     if ( ! current_user_can( 'manage_options' ) ) {
         if ( current_user_can( 'erp_hr_manager' )
-            || current_user_can( 'employee' )
-            || current_user_can( 'erp_crm_manager' )
-            || current_user_can( 'erp_crm_agent' )
+             || current_user_can( 'employee' )
+             || current_user_can( 'erp_crm_manager' )
+             || current_user_can( 'erp_crm_agent' )
         ) {
             $query['author'] = $id;
         }
@@ -1063,7 +1066,7 @@ function erp_addon_licenses() {
  *
  * @since 1.0
  *
- * @param  array  $addon
+ * @param  array $addon
  *
  * @return string
  */
@@ -1079,7 +1082,7 @@ function erp_get_license_status( $addon ) {
 
     if ( false === $license->success ) {
 
-        switch( $license->error ) {
+        switch ( $license->error ) {
 
             case 'expired' :
 
@@ -1120,7 +1123,7 @@ function erp_get_license_status( $addon ) {
         }
     } else {
 
-        switch( $license->license ) {
+        switch ( $license->license ) {
             case 'expired' :
 
                 $messages[] = sprintf(
@@ -1139,7 +1142,7 @@ function erp_get_license_status( $addon ) {
 
                     $messages[] = __( 'License key never expires.', 'erp' );
 
-                } elseif( $expiration > $now && $expiration - $now < ( DAY_IN_SECONDS * 30 ) ) {
+                } elseif ( $expiration > $now && $expiration - $now < ( DAY_IN_SECONDS * 30 ) ) {
 
                     $messages[] = sprintf(
                         __( 'Your license key expires soon! It expires on %s. <a href="%s" target="_blank" title="Renew license">Renew your license key</a>.', 'erp' ),
@@ -1161,10 +1164,10 @@ function erp_get_license_status( $addon ) {
     }
 
     if ( ! empty( $messages ) ) {
-        foreach( $messages as $message ) {
+        foreach ( $messages as $message ) {
 
             $html .= '<div class="erp-license-status ' . $status_class . '">';
-                $html .= '<p class="help">' . $message . '</p>';
+            $html .= '<p class="help">' . $message . '</p>';
             $html .= '</div>';
 
         }
@@ -1179,12 +1182,12 @@ function erp_get_license_status( $addon ) {
  * @return array
  */
 function erp_get_import_export_fields() {
-     $erp_fields = [
-        'contact' => [
+    $erp_fields = [
+        'contact'  => [
             'required_fields' => [
                 'first_name',
             ],
-            'fields' => [
+            'fields'          => [
                 'first_name',
                 'last_name',
                 'email',
@@ -1203,12 +1206,12 @@ function erp_get_import_export_fields() {
                 'currency',
             ]
         ],
-        'company' => [
+        'company'  => [
             'required_fields' => [
                 'email',
                 'company',
             ],
-            'fields' => [
+            'fields'          => [
                 'email',
                 'company',
                 'phone',
@@ -1232,7 +1235,7 @@ function erp_get_import_export_fields() {
                 'last_name',
                 'user_email',
             ],
-            'fields' => [
+            'fields'          => [
                 'first_name',
                 'middle_name',
                 'last_name',
@@ -1282,94 +1285,94 @@ function erp_get_import_export_fields() {
  */
 function erp_import_export_javascript() {
     global $current_screen;
-    $hook = str_replace( sanitize_title( __( 'ERP Settings', 'erp' ) ) , 'erp-settings', $current_screen->base );
+    $hook = str_replace( sanitize_title( __( 'ERP Settings', 'erp' ) ), 'erp-settings', $current_screen->base );
 
     if ( 'erp-settings_page_erp-tools' !== $hook ) {
         return;
     }
 
-    if ( ! isset( $_GET['tab'] ) || ! in_array( $_GET['tab'], ['import', 'export'] ) ) {
+    if ( ! isset( $_GET['tab'] ) || ! in_array( $_GET['tab'], [ 'import', 'export' ] ) ) {
         return;
     }
 
     $erp_fields = erp_get_import_export_fields();
     ?>
     <script type="text/javascript">
-        jQuery( document ).ready( function( $ ) {
+        jQuery(document).ready(function ($) {
 
-            function erp_str_title_case( string ) {
-                var str = string.replace( /_/g, ' ' );
+            function erp_str_title_case(string) {
+                var str = string.replace(/_/g, ' ');
 
-                return str.toLowerCase().split( ' ' ).map( function ( word ) {
-                    return ( word.charAt( 0 ).toUpperCase() + word.slice( 1 ) );
-                } ).join(' ');
+                return str.toLowerCase().split(' ').map(function (word) {
+                    return (word.charAt(0).toUpperCase() + word.slice(1));
+                }).join(' ');
             }
 
-            function erp_csv_field_mapper( file_selector, fields_selector ) {
+            function erp_csv_field_mapper(file_selector, fields_selector) {
                 var file = file_selector.files[0];
 
                 var reader = new FileReader();
 
-                var first5000 = file.slice( 0, 5000 );
-                reader.readAsText( first5000 );
+                var first5000 = file.slice(0, 5000);
+                reader.readAsText(first5000);
 
-                reader.onload = function( e ) {
+                reader.onload = function (e) {
                     var csv = reader.result;
                     // Split the input into lines
                     lines = csv.split('\n'),
-                    // Extract column names from the first line
-                    columnNamesLine = lines[0];
+                        // Extract column names from the first line
+                        columnNamesLine = lines[0];
                     columnNames = columnNamesLine.split(',');
 
                     var html = '';
 
                     html += '<option value="">&mdash; Select Field &mdash;</option>';
-                    columnNames.forEach( function( item, index ) {
-                        item = item.replace( /"/g, "" );
+                    columnNames.forEach(function (item, index) {
+                        item = item.replace(/"/g, "");
 
                         html += '<option value="' + index + '">' + item + '</option>';
-                    } );
+                    });
 
-                    if ( html ) {
-                        $( fields_selector ).html( html );
+                    if (html) {
+                        $(fields_selector).html(html);
 
                         var field, field_label;
-                        $( fields_selector ).each( function() {
-                            field_label = $( this ).parent().parent().find( 'label' ).text();
+                        $(fields_selector).each(function () {
+                            field_label = $(this).parent().parent().find('label').text();
 
-                            var options = $( this ).find( 'option' );
-                            var targetOption = $( options ).filter ( function () {
-                                var option_text = $( this ).html();
+                            var options = $(this).find('option');
+                            var targetOption = $(options).filter(function () {
+                                var option_text = $(this).html();
 
-                                var re = new RegExp( field_label, 'i' );
+                                var re = new RegExp(field_label, 'i');
 
-                                return re.test( option_text );
-                            } );
+                                return re.test(option_text);
+                            });
 
-                            if ( targetOption ) {
-                                $( options ).removeAttr( "selected" );
-                                $( this ).val( $( targetOption ).val() );
+                            if (targetOption) {
+                                $(options).removeAttr("selected");
+                                $(this).val($(targetOption).val());
                             }
-                        } );
+                        });
                     }
                 };
             }
 
-            function erp_csv_importer_field_handler( file_selector ) {
-                $( '#fields_container' ).show();
+            function erp_csv_importer_field_handler(file_selector) {
+                $('#fields_container').show();
 
                 var fields_html = '';
 
-                var type = $( 'form#import_form #type' ).val();
+                var type = $('form#import_form #type').val();
 
-                fields = erp_fields[ type ] ? erp_fields[ type ].fields : [];
-                required_fields = erp_fields[ type ] ? erp_fields[ type ].required_fields : [];
+                fields = erp_fields[type] ? erp_fields[type].fields : [];
+                required_fields = erp_fields[type] ? erp_fields[type].required_fields : [];
 
                 var required = '';
                 var red_span = '';
-                for ( var i = 0;  i < fields.length; i++ ) {
+                for (var i = 0; i < fields.length; i++) {
 
-                    if ( required_fields.indexOf( fields[i] ) !== -1 ) {
+                    if (required_fields.indexOf(fields[i]) !== -1) {
                         required = 'required';
                         red_span = ' <span class="required">*</span>';
                     } else {
@@ -1380,7 +1383,7 @@ function erp_import_export_javascript() {
                     fields_html += `
                         <tr>
                             <th>
-                                <label for="fields[` + fields[i] + `]" class="csv_field_labels">` + erp_str_title_case( fields[i] ) + red_span + `</label>
+                                <label for="fields[` + fields[i] + `]" class="csv_field_labels">` + erp_str_title_case(fields[i]) + red_span + `</label>
                             </th>
                             <td>
                                 <select name="fields[` + fields[i] + `]" class="csv_fields" ` + required + `>
@@ -1389,101 +1392,101 @@ function erp_import_export_javascript() {
                         </tr>`;
                 }
 
-                $( '#fields_container' ).html( fields_html );
+                $('#fields_container').html(fields_html);
 
-                erp_csv_field_mapper( file_selector, '.csv_fields' );
+                erp_csv_field_mapper(file_selector, '.csv_fields');
             }
 
             var fields = [];
             var required_fields = [];
 
-            var erp_fields = <?php echo json_encode( $erp_fields ) ; ?>;
+            var erp_fields = <?php echo json_encode( $erp_fields ); ?>;
 
-            var type = $( 'form#export_form #type' ).val();
+            var type = $('form#export_form #type').val();
 
-            fields = erp_fields[ type ] ? erp_fields[ type ].fields : [];
+            fields = erp_fields[type] ? erp_fields[type].fields : [];
 
             var html = '<ul class="erp-list list-inline">';
-            for ( var i = 0;  i < fields.length; i++ ) {
-                html += '<li><label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + erp_str_title_case( fields[i] ) + '</label></li>';
+            for (var i = 0; i < fields.length; i++) {
+                html += '<li><label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + erp_str_title_case(fields[i]) + '</label></li>';
             }
 
             html += '<ul>';
 
-            if ( html ) {
-                $( '#fields' ).html( html );
+            if (html) {
+                $('#fields').html(html);
             }
 
-            $( 'form#export_form #type' ).on( 'change', function( e ) {
+            $('form#export_form #type').on('change', function (e) {
                 e.preventDefault();
 
-                $( "#export_form #selecctall" ).prop( 'checked', false );
-                var type = $( this ).val();
-                fields = erp_fields[ type ] ? erp_fields[ type ].fields : [];
+                $("#export_form #selecctall").prop('checked', false);
+                var type = $(this).val();
+                fields = erp_fields[type] ? erp_fields[type].fields : [];
 
                 html = '<ul class="erp-list list-inline">';
-                for ( var i = 0;  i < fields.length; i++ ) {
-                    html += '<li><label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + erp_str_title_case( fields[i] ) + '</label></li>';
+                for (var i = 0; i < fields.length; i++) {
+                    html += '<li><label><input type="checkbox" name="fields[]" value="' + fields[i] + '"> ' + erp_str_title_case(fields[i]) + '</label></li>';
                 }
 
                 html += '<ul>';
 
-                if ( html ) {
-                    $( 'form#export_form #fields' ).html( html );
+                if (html) {
+                    $('form#export_form #fields').html(html);
                 }
             });
 
-            $( 'form#import_form #csv_file' ).on( 'change', function( e ) {
+            $('form#import_form #csv_file').on('change', function (e) {
                 e.preventDefault();
 
-                if ( ! this ) {
+                if (!this) {
                     return;
                 }
 
-                erp_csv_importer_field_handler( this );
+                erp_csv_importer_field_handler(this);
             });
 
-            if ( $( 'form#import_form' ).find( '#type' ).val() == 'employee' ) {
-                $( 'form#import_form' ).find( '#crm_contact_lifestage_owner_wrap' ).hide();
+            if ($('form#import_form').find('#type').val() == 'employee') {
+                $('form#import_form').find('#crm_contact_lifestage_owner_wrap').hide();
             } else {
-                $( 'form#import_form' ).find( '#crm_contact_lifestage_owner_wrap' ).show();
+                $('form#import_form').find('#crm_contact_lifestage_owner_wrap').show();
             }
 
-            $( 'form#import_form #type' ).on( 'change', function( e ) {
-                $( '#fields_container' ).html( '' );
-                $( '#fields_container' ).hide();
+            $('form#import_form #type').on('change', function (e) {
+                $('#fields_container').html('');
+                $('#fields_container').hide();
 
-                if ( $( this ).val() == 'employee' ) {
-                    $( 'form#import_form' ).find( '#crm_contact_lifestage_owner_wrap' ).hide();
+                if ($(this).val() == 'employee') {
+                    $('form#import_form').find('#crm_contact_lifestage_owner_wrap').hide();
                 } else {
-                    $( 'form#import_form' ).find( '#crm_contact_lifestage_owner_wrap' ).show();
+                    $('form#import_form').find('#crm_contact_lifestage_owner_wrap').show();
                 }
 
-                var sample_csv_url = $( 'form#import_form' ).find( '#download_sample_wrap input' ).val();
-                $( 'form#import_form' ).find( '#download_sample_wrap a' ).attr( 'href', sample_csv_url + '&type=' + $( this ).val() );
+                var sample_csv_url = $('form#import_form').find('#download_sample_wrap input').val();
+                $('form#import_form').find('#download_sample_wrap a').attr('href', sample_csv_url + '&type=' + $(this).val());
 
-                if ( $( 'form#import_form #csv_file' ).val() == "" ) {
+                if ($('form#import_form #csv_file').val() == "") {
                     return;
                 } else {
-                    erp_csv_importer_field_handler( $( 'form#import_form #csv_file' ).get(0) );
+                    erp_csv_importer_field_handler($('form#import_form #csv_file').get(0));
                 }
-            } );
-
-            $( "#export_form #selecctall" ).change( function(e) {
-                e.preventDefault();
-
-                $( "#export_form #fields input[type=checkbox]" ).prop( 'checked', $(this).prop( "checked" ) );
             });
 
-            $( "#users_import_form" ).on( 'submit', function(e) {
+            $("#export_form #selecctall").change(function (e) {
                 e.preventDefault();
-                statusDiv = $( "div#import-status-indicator" );
+
+                $("#export_form #fields input[type=checkbox]").prop('checked', $(this).prop("checked"));
+            });
+
+            $("#users_import_form").on('submit', function (e) {
+                e.preventDefault();
+                statusDiv = $("div#import-status-indicator");
 
                 statusDiv.show();
 
                 var form = $(this),
-                    submit = form.find( 'input[type=submit]' );
-                submit.attr( 'disabled', 'disabled' );
+                    submit = form.find('input[type=submit]');
+                submit.attr('disabled', 'disabled');
 
                 var data = {
                     'action': 'erp_import_users_as_contacts',
@@ -1496,16 +1499,16 @@ function erp_import_export_javascript() {
 
                 var total_items = 0, left = 0, imported = 0, exists = 0, percent = 0, type = 'success', message = '';
 
-                $.post( ajaxurl, data, function(response) {
-                    if ( response.success ) {
+                $.post(ajaxurl, data, function (response) {
+                    if (response.success) {
                         total_items = response.data.total_items;
                         left = response.data.left;
                         exists = response.data.exists;
                         imported = total_items - left;
                         done = imported - exists;
 
-                        if ( imported > 0 || total_items > 0 ) {
-                            percent = Math.floor( ( 100 / total_items ) * ( imported ) );
+                        if (imported > 0 || total_items > 0) {
+                            percent = Math.floor((100 / total_items) * (imported));
 
                             type = 'success';
                             message = 'Successfully imported all users!';
@@ -1514,18 +1517,18 @@ function erp_import_export_javascript() {
                             type = 'error';
                         }
 
-                        statusDiv.find( '#progress-total' ).html( percent + '%' );
-                        statusDiv.find( '#progressbar-total' ).val( percent );
-                        statusDiv.find( '#completed-total' ).html( 'Imported ' + done + ' out of ' + response.data.total_items );
-                        if ( exists > 0 ) {
-                            statusDiv.find( '#failed-total' ).html( 'Already Exist ' + exists );
+                        statusDiv.find('#progress-total').html(percent + '%');
+                        statusDiv.find('#progressbar-total').val(percent);
+                        statusDiv.find('#completed-total').html('Imported ' + done + ' out of ' + response.data.total_items);
+                        if (exists > 0) {
+                            statusDiv.find('#failed-total').html('Already Exist ' + exists);
                         }
 
-                        if ( response.data.left > 0 ) {
+                        if (response.data.left > 0) {
                             form.submit();
                             return;
                         } else {
-                            submit.removeAttr( 'disabled' );
+                            submit.removeAttr('disabled');
 
                             swal({
                                 title: '',
@@ -1584,7 +1587,7 @@ function erp_process_import_export() {
     }
 
     if ( isset( $_POST['erp_import_csv'] ) ) {
-        define( 'ERP_IS_IMPORTING' , true );
+        define( 'ERP_IS_IMPORTING', true );
 
         $fields = ! empty( $_POST['fields'] ) ? $_POST['fields'] : [];
         $type   = isset( $_POST['type'] ) ? $_POST['type'] : '';
@@ -1593,16 +1596,16 @@ function erp_process_import_export() {
             return;
         }
 
-        $data = ['type' => $type, 'fields' => $fields, 'file' => $_FILES['csv_file'] ];
+        $data = [ 'type' => $type, 'fields' => $fields, 'file' => $_FILES['csv_file'] ];
 
         do_action( 'erp_tool_import_csv_action', $data );
 
-        if ( ! in_array( $type, ['contact', 'company', 'employee'] ) ) {
+        if ( ! in_array( $type, [ 'contact', 'company', 'employee' ] ) ) {
             return;
         }
 
         $employee_fields = [
-            'work' => [
+            'work'     => [
                 'designation',
                 'department',
                 'location',
@@ -1662,7 +1665,7 @@ function erp_process_import_export() {
         if ( ! empty( $csv_data ) ) {
             $count = 0;
 
-            foreach ( $csv_data as $line ){
+            foreach ( $csv_data as $line ) {
                 if ( empty( $line ) ) {
                     continue;
                 }
@@ -1718,12 +1721,12 @@ function erp_process_import_export() {
                         $life_stage    = isset( $_POST['life_stage'] ) ? sanitize_key( $_POST['life_stage'] ) : '';
 
                         if ( ! $people->exists ) {
-                            $contact->update_life_stage($life_stage);
+                            $contact->update_life_stage( $life_stage );
                             $contact->update_meta( 'contact_owner', $contact_owner );
 
                         } else {
                             if ( ! $contact->get_life_stage() ) {
-                                $contact->update_life_stage($life_stage);
+                                $contact->update_life_stage( $life_stage );
                             }
 
                             if ( ! $contact->get_contact_owner() ) {
@@ -1734,19 +1737,22 @@ function erp_process_import_export() {
                         if ( ! empty( $_POST['contact_group'] ) ) {
                             $contact_group = absint( $_POST['contact_group'] );
 
-                            $existing_data = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( [ 'group_id' => $contact_group, 'user_id' => $people->id ] )->first();
+                            $existing_data = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( [
+                                'group_id' => $contact_group,
+                                'user_id'  => $people->id
+                            ] )->first();
 
                             if ( empty( $existing_data ) ) {
                                 $hash = sha1( microtime() . 'erp-subscription-form' . $contact_group . $people->id );
 
-                                erp_crm_create_new_contact_subscriber([
-                                    'group_id'          => $contact_group,
-                                    'user_id'           => $people->id,
-                                    'status'            => 'subscribe',
-                                    'subscribe_at'      => current_time( 'mysql' ),
-                                    'unsubscribe_at'    => null,
-                                    'hash'              => $hash
-                                ]);
+                                erp_crm_create_new_contact_subscriber( [
+                                    'group_id'       => $contact_group,
+                                    'user_id'        => $people->id,
+                                    'status'         => 'subscribe',
+                                    'subscribe_at'   => current_time( 'mysql' ),
+                                    'unsubscribe_at' => null,
+                                    'hash'           => $hash
+                                ] );
                             }
                         }
 
@@ -1761,7 +1767,7 @@ function erp_process_import_export() {
                     }
                 }
 
-                ++$count;
+                ++ $count;
             }
 
         }
@@ -1777,24 +1783,24 @@ function erp_process_import_export() {
 
             if ( $type == 'employee' && $is_hrm_activated ) {
                 $args = [
-                    'number' => -1,
+                    'number' => - 1,
                     'status' => 'all'
                 ];
 
                 $items = erp_hr_get_employees( $args );
             }
 
-            if( ($type == 'contact' || $type == 'company') && $is_crm_activated ) {
-                $args = [
-                    'type'   => $type,
-                    'count'  => true,
+            if ( ( $type == 'contact' || $type == 'company' ) && $is_crm_activated ) {
+                $args        = [
+                    'type'  => $type,
+                    'count' => true,
                 ];
                 $total_items = erp_get_peoples( $args );
 
-                $args = [
+                $args  = [
                     'type'   => $type,
                     'offset' => 0,
-                    'number' => -1,
+                    'number' => - 1,
                 ];
                 $items = erp_get_peoples( $args );
             }
@@ -1842,7 +1848,7 @@ function erp_process_import_export() {
                     }
                 }
 
-                $x++;
+                $x ++;
             }
 
             $file_name = 'export_' . date( 'd_m_Y' ) . '.csv';
@@ -1927,7 +1933,7 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
         return true;
     }
 
-    $callback = function( $phpmailer ) use( $custom_headers ) {
+    $callback = function ( $phpmailer ) use ( $custom_headers ) {
         $erp_email_settings      = get_option( 'erp_settings_erp-email_general', [] );
         $erp_email_smtp_settings = get_option( 'erp_settings_erp-email_smtp', [] );
 
@@ -1943,7 +1949,7 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
             $from_name = $erp_email_settings['from_name'];
         }
 
-        $content_type           = 'text/html';
+        $content_type = 'text/html';
 
         $phpmailer->From        = apply_filters( 'erp_mail_from', $from_email );
         $phpmailer->FromName    = apply_filters( 'erp_mail_from_name', $from_name );
@@ -1963,16 +1969,16 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
         }
 
         if ( isset( $erp_email_smtp_settings['enable_smtp'] ) && $erp_email_smtp_settings['enable_smtp'] == 'yes' ) {
-            $phpmailer->Mailer     = 'smtp'; //'smtp', 'mail', or 'sendmail'
+            $phpmailer->Mailer = 'smtp'; //'smtp', 'mail', or 'sendmail'
 
             $phpmailer->Host       = $erp_email_smtp_settings['mail_server'];
             $phpmailer->SMTPSecure = ( $erp_email_smtp_settings['authentication'] != '' ) ? $erp_email_smtp_settings['authentication'] : 'smtp';
             $phpmailer->Port       = $erp_email_smtp_settings['port'];
 
             if ( $erp_email_smtp_settings['authentication'] != '' ) {
-                $phpmailer->SMTPAuth   = true;
-                $phpmailer->Username   = $erp_email_smtp_settings['username'];
-                $phpmailer->Password   = $erp_email_smtp_settings['password'];
+                $phpmailer->SMTPAuth = true;
+                $phpmailer->Username = $erp_email_smtp_settings['username'];
+                $phpmailer->Password = $erp_email_smtp_settings['password'];
             }
         }
     };
@@ -1981,7 +1987,7 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
 
     ob_start();
     $is_mail_sent = wp_mail( $to, $subject, $message, $headers, $attachments );
-    $debug_log = ob_get_clean();
+    $debug_log    = ob_get_clean();
     if ( ! $is_mail_sent ) {
         error_log( $debug_log );
     }
@@ -2001,11 +2007,11 @@ function erp_email_settings_javascript() {
     wp_enqueue_script( 'erp-sweetalert' );
     ?>
     <script type="text/javascript">
-        jQuery( document ).ready( function($) {
-            $( "a#smtp-test-connection" ).click( function(e) {
+        jQuery(document).ready(function ($) {
+            $("a#smtp-test-connection").click(function (e) {
                 e.preventDefault();
-                $( "a#smtp-test-connection" ).attr( 'disabled', 'disabled' );
-                $( "a#smtp-test-connection" ).parent().find( '.erp-loader' ).show();
+                $("a#smtp-test-connection").attr('disabled', 'disabled');
+                $("a#smtp-test-connection").parent().find('.erp-loader').show();
 
                 var data = {
                     'action': 'erp_smtp_test_connection',
@@ -2015,13 +2021,13 @@ function erp_email_settings_javascript() {
                     'authentication': $('select[name=authentication]').val(),
                     'username': $('input[name=username]').val(),
                     'password': $('input[name=password]').val(),
-                    'to' : $('#smtp_test_email_address').val(),
+                    'to': $('#smtp_test_email_address').val(),
                     '_wpnonce': '<?php echo wp_create_nonce( "erp-smtp-test-connection-nonce" ); ?>'
                 };
 
-                $.post( ajaxurl, data, function(response) {
-                    $( "a#smtp-test-connection" ).removeAttr( 'disabled' );
-                    $( "a#smtp-test-connection" ).parent().find( '.erp-loader' ).hide();
+                $.post(ajaxurl, data, function (response) {
+                    $("a#smtp-test-connection").removeAttr('disabled');
+                    $("a#smtp-test-connection").parent().find('.erp-loader').hide();
 
                     var type = response.success ? 'success' : 'error';
 
@@ -2038,11 +2044,11 @@ function erp_email_settings_javascript() {
             });
         });
 
-        jQuery( document ).ready( function($) {
-            $( "a#imap-test-connection" ).click( function(e) {
+        jQuery(document).ready(function ($) {
+            $("a#imap-test-connection").click(function (e) {
                 e.preventDefault();
-                $( "a#imap-test-connection" ).attr( 'disabled', 'disabled' );
-                $( "a#imap-test-connection" ).parent().find( '.erp-loader' ).show();
+                $("a#imap-test-connection").attr('disabled', 'disabled');
+                $("a#imap-test-connection").parent().find('.erp-loader').show();
 
                 var data = {
                     'action': 'erp_imap_test_connection',
@@ -2055,13 +2061,13 @@ function erp_email_settings_javascript() {
                     '_wpnonce': '<?php echo wp_create_nonce( "erp-imap-test-connection-nonce" ); ?>'
                 };
 
-                $.post( ajaxurl, data, function(response) {
-                    $( "a#imap-test-connection" ).removeAttr( 'disabled' );
-                    $( "a#imap-test-connection" ).parent().find( '.erp-loader' ).hide();
+                $.post(ajaxurl, data, function (response) {
+                    $("a#imap-test-connection").removeAttr('disabled');
+                    $("a#imap-test-connection").parent().find('.erp-loader').hide();
 
                     var type = response.success ? 'success' : 'error';
 
-                    if ( response.data ) {
+                    if (response.data) {
                         var status = response.success ? 1 : 0;
                         $('#imap_status').val(status);
 
@@ -2148,7 +2154,7 @@ function erp_make_csv_file( $items, $file_name, $field_data = true ) {
 
     $output = fopen( 'php://output', 'w' );
 
-    $columns = array_map( function( $column ) {
+    $columns = array_map( function ( $column ) {
         $column = ucwords( str_replace( '_', ' ', $column ) );
 
         return $column;
@@ -2161,7 +2167,7 @@ function erp_make_csv_file( $items, $file_name, $field_data = true ) {
             $csv_row = array_map( function ( $item_val ) {
 
                 if ( is_array( $item_val ) ) {
-                    return implode( ', ' , $item_val );
+                    return implode( ', ', $item_val );
                 }
 
                 return $item_val;
@@ -2230,7 +2236,7 @@ function enqueue_fullcalendar_locale() {
         return;
     }
 
-    $lang = $locale[0];
+    $lang    = $locale[0];
     $country = strtolower( $locale[1] );
 
     if ( $lang === $country ) {
@@ -2324,7 +2330,7 @@ function erp_pluralize( $word ) {
 function erp_get_client_ip() {
     $ipaddress = '';
 
-    if ( isset($_SERVER['HTTP_CLIENT_IP'] ) ) {
+    if ( isset( $_SERVER['HTTP_CLIENT_IP'] ) ) {
         $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
     } else if ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
         $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
@@ -2358,16 +2364,20 @@ function erp_validate_boolean( $value ) {
 
 /**
  * Get financial year start and end dates
- *
+ * @param $date
  * @since 1.2.0
- *
+ * since 1.3.0 $date added
  * @return array
  */
-function erp_get_financial_year_dates() {
+function erp_get_financial_year_dates( $date = null ) {
     $start_month = erp_get_option( 'gen_financial_month', 'erp_settings_general', 1 );
-
-    $year = date( 'Y' );
-    $current_month = date( 'n' );
+    if ( $date == null ) {
+        $year  = date( 'Y' );
+        $month = date( 'n' );
+    } else {
+        $year  = date( 'Y', strtotime( $date ) );
+        $month = date( 'n', strtotime( $date ) );
+    }
 
     /**
      * Suppose, $start_month is July and today is May 2017. Then we should get
@@ -2376,7 +2386,7 @@ function erp_get_financial_year_dates() {
      * On the other hand, if $start_month = January, then we should get
      * start = 2017-01-01 00:00:00 and end = 2017-12-31 23:59:59.
      */
-    if ( $current_month < $start_month ) {
+    if ( $month < $start_month ) {
         $year = $year - 1;
     }
 
@@ -2409,17 +2419,20 @@ function get_financial_year_from_date( $date ) {
 
     if ( 1 === $fy_start_month ) {
         return [
-            'start' => $date_year, 'end' => $date_year
+            'start' => $date_year,
+            'end'   => $date_year
         ];
 
     } else if ( $date_month <= ( $fy_start_month - 1 ) ) {
         return [
-            'start' => ( $date_year - 1 ), 'end' => $date_year
+            'start' => ( $date_year - 1 ),
+            'end'   => $date_year
         ];
 
     } else {
         return [
-            'start' => $date_year, 'end' => ( $date_year + 1 )
+            'start' => $date_year,
+            'end'   => ( $date_year + 1 )
         ];
     }
 }
@@ -2447,22 +2460,25 @@ function erp_login_redirect_manager( $redirect_to, $request, $user ) {
 
 /**
  * Flatten any multi dimensional array
+ *
  * @since 1.2.9
+ *
  * @param $array
  *
  * @return array|bool
  */
-function erp_array_flatten($array) {
-    if (!is_array($array)) {
+function erp_array_flatten( $array ) {
+    if ( ! is_array( $array ) ) {
         return false;
     }
     $result = array();
-    foreach ($array as $key => $value) {
-        if (is_array($value)) {
-            $result = array_merge($result, erp_array_flatten($value));
+    foreach ( $array as $key => $value ) {
+        if ( is_array( $value ) ) {
+            $result = array_merge( $result, erp_array_flatten( $value ) );
         } else {
-            $result[$key] = $value;
+            $result[ $key ] = $value;
         }
     }
+
     return $result;
 }

@@ -324,6 +324,7 @@ class Human_Resource {
             '\WeDevs\ERP\HRM\API\Leave_Holidays_Controller',
             '\WeDevs\ERP\HRM\API\Leave_Policies_Controller',
             '\WeDevs\ERP\HRM\API\Leave_Requests_Controller',
+            '\WeDevs\ERP\HRM\API\Announcements_Controller',
         ];
         $hrm_controller = apply_filters( 'erp_hrm_rest_api_controllers', $hrm_controller );
 
