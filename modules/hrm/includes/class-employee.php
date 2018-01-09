@@ -1614,7 +1614,6 @@ class Employee {
             ->entitlements()
             ->where( 'from_date', $financial_year_dates['start'] )
             ->where( 'to_date', $financial_year_dates['end'] )
-            ->JoinWithPolicy()
             ->orderBy( 'created_on', 'DESC' )
             ->select( array( 'days', 'policy_id', 'from_date', 'to_date', 'color', 'name' ) )
             ->get();
