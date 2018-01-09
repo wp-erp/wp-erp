@@ -229,6 +229,34 @@ class Employees_Controller extends REST_Controller {
             ],
         ] );
 
+        // leave
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/policies', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [ $this, 'get_policies' ],
+                'permission_callback' => function ( $request ) {
+                    return current_user_can( 'erp_list_employee' );
+                },
+            ],
+            // [
+            //     'methods'             => WP_REST_Server::CREATABLE,
+            //     'callback'            => [ $this, 'create_history' ],
+            //     'permission_callback' => function ( $request ) {
+            //         return current_user_can( 'erp_edit_employee' );
+            //     },
+            // ],
+        ] );
+
+        // register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/job_histories' . '/(?P<id>[\d]+)', [
+        //     [
+        //         'methods'             => WP_REST_Server::DELETABLE,
+        //         'callback'            => [ $this, 'delete_history' ],
+        //         'permission_callback' => function ( $request ) {
+        //             return current_user_can( 'erp_edit_employee' );
+        //         },
+        //     ],
+        // ] );
+
         //performances
 
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/performances', [
@@ -599,7 +627,7 @@ class Employees_Controller extends REST_Controller {
      */
     public function update_experience( \WP_REST_Request $request ) {
         $employee_id = (int) $request['user_id'];
-        $exp_id = (int) $request['id'];
+        $exp_id      = (int) $request['id'];
         $employee    = new Employee( $employee_id );
 
         if ( ! $employee->is_employee() ) {
@@ -607,6 +635,7 @@ class Employees_Controller extends REST_Controller {
         }
         $args = $request->get_params();
         $args['id'] = $exp_id;
+
         $experience = $employee->add_experience( $args );
 
         if ( is_wp_error( $experience ) ) {
@@ -699,10 +728,13 @@ class Employees_Controller extends REST_Controller {
      */
     public function update_education( $request ) {
         $employee_id = (int) $request['user_id'];
+        $edu_id      = (int) $request['id'];
         $employee    = new Employee( $employee_id );
         if ( ! $employee->is_employee() ) {
             return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid Employee id.' ), [ 'status' => 400 ] );
         }
+
+        $args['id'] = $edu_id;
         $education = $employee->add_education( $request->get_params() );
 
         if ( is_wp_error( $education ) ) {
@@ -796,10 +828,13 @@ class Employees_Controller extends REST_Controller {
      */
     public function update_dependent( $request ) {
         $employee_id = (int) $request['user_id'];
+        $depen_id    = (int) $request['id'];
         $employee    = new Employee( $employee_id );
         if ( ! $employee->is_employee() ) {
             return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid Employee id.' ), [ 'status' => 400 ] );
         }
+        
+        $args['id'] = $depen_id;
         $dependent = $employee->add_dependent( $request->get_params() );
 
         if ( is_wp_error( $dependent ) ) {
@@ -1025,6 +1060,7 @@ class Employees_Controller extends REST_Controller {
     public function get_policies( $request ) {
         $user_id  = (int) $request['user_id'];
         $employee = new Employee( $user_id );
+
         if ( ! $employee ) {
             return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
         }

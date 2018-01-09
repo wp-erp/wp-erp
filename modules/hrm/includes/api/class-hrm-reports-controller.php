@@ -243,18 +243,21 @@ class HRM_Reports_Controller extends REST_Controller {
         $formated_items = [];
         foreach ( $user_ids as $user_id ) {
             $employee      = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
-            $compensations = $employee->get_history( 'compensation' );
+            $compensations = $employee->get_job_histories( 'compensation' );
 
             $data = [];
-            foreach ( $compensations as $compensation ) {
-                $data[] = [
-                    'employee_id'   => (int) esc_attr( $employee->id ),
-                    'employee_name' => $employee->display_name,
-                    'avatar_url'    => $employee->get_avatar_url(),
-                    'date'          => date( $date_format, strtotime( esc_attr( $compensation->date ) ) ),
-                    'pay_rate'      => (int) esc_attr( $compensation->type ),
-                    'pay_type'      => esc_attr( $compensation->category ),
-                ];
+
+            if (!empty( $compensations['compensation']) ) {
+                foreach ( $compensations['compensation'] as $compensation ) {
+                    $data[] = [
+                        'employee_id'   => (int) esc_attr( $employee->id ),
+                        'employee_name' => $employee->display_name,
+                        'avatar_url'    => $employee->get_avatar_url(),
+                        'date'          => date( $date_format, strtotime( esc_attr( $compensation['date'] ) ) ),
+                        'pay_rate'      => (int) esc_attr( $compensation['pay_rate'] ),
+                        'pay_type'      => esc_attr( $compensation['pay_type'] ),
+                    ];
+                }
             }
 
             if ( $data ) {
