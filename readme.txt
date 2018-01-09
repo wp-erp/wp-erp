@@ -3,7 +3,7 @@ Contributors: tareq1988, wedevs, ediamin, sabbir1991, asaquzzaman, shawon786, ma
 Donate Link: https://tareq.co/donate
 Tags: small business, SME, contact, contacts, CRM, Customer Relationship Management, employee, leave management, hr, hrm, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 4.8.2
+Tested up to: 4.9.1
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2
@@ -190,6 +190,33 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+= v1.3.0 -> Jan 09, 2018 =
+
+[tweak] Improved employee API.
+[tweak] Remove unnecessary validation with security improvement.
+[tweak] Job information tab improvement.
+[tweak] Employee class optimized.
+[tweak] Reports API improvement.
+[tweak] HRM endpoints optimized.
+[tweak] Leave balance view improvement.
+[tweak] Updater improved.
+
+[new]   Add HRM birthday API support.
+[new]   Add HRM leave API support.
+[new]   Add HRM upcoming leave request API support.
+[new]   Add HRM note API support support.
+[new]   Add HRM job history rest API support.
+[new]   Add HRM permission/roles rest API support.
+[new]   Add HRM head counts rest API support.
+[new]   Add HRM employee termination API.
+
+[fix]	Employee and Department API search option. Closes #569.
+[fix]   Payments are shown as invoice in popup. Closes #552.
+[fix]   HRM gender reporting count error. Closes #565.
+[fix]   Fix CRM contact inbound mail tracker.
+[fix]	Employee full name not showing.
+[fix]   Fix alert on department delete which contains employees.
+
 = v1.2.8 -> Oct 30, 2017 =
 
 [fix] Partially created invoice can't be approved, void or deleted. Closes #522.
