@@ -11,7 +11,7 @@ if ( ! $requests->isEmpty() ) {
                 ?>
             </td>
             <td><?php echo esc_html( $request->name ); ?></td>
-            <td><?php echo !empty( $request->reason ) ? esc_html( $request->reason ) : '-'; ?></td>
+            <td><?php echo !empty( $request->reason ) ? stripslashes($request->reason ) : '-'; ?></td>
             <td><?php echo number_format_i18n( $request->days ); ?></td>
         </tr>
 

@@ -811,7 +811,7 @@ function erp_hr_employee_single_tab_permission( $employee ) {
 /**
  * Get employee's available history module
  *
- * @since 1.2.9
+ * @since 1.3.0
  *
  * @return array
  */
@@ -889,7 +889,7 @@ function erp_hr_translate_employee_history( array $history = array(), $inserting
 /**
  * control user data visibility
  *
- * @since  1.2.9
+ * @since  1.3.0
  *
  * @param $data
  * @param $user_id (of browsing user)
