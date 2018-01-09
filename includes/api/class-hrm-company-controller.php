@@ -88,7 +88,7 @@ class Company_Controller extends REST_Controller {
     /**
      * Get company locations
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param $request
      *
@@ -105,7 +105,7 @@ class Company_Controller extends REST_Controller {
     /**
      * Get employee statuses
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param $request
      *
@@ -122,7 +122,7 @@ class Company_Controller extends REST_Controller {
     /**
      * Get employee pay types
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param $request
      *
@@ -139,7 +139,7 @@ class Company_Controller extends REST_Controller {
     /**
      * Get employee types
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param $request
      *
@@ -156,7 +156,7 @@ class Company_Controller extends REST_Controller {
     /**
      * Get hiring source
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param $request
      *

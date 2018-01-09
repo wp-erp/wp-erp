@@ -301,7 +301,7 @@ class Employee {
     /**
      * Update employee
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param array $data
      *
@@ -357,7 +357,7 @@ class Employee {
     /**
      * Get employee data
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param array $data
      * @param       $flat boolean
@@ -378,7 +378,7 @@ class Employee {
     /**
      *  Get the user info as an array
      *
-     * @deprecated 1.2.9
+     * @deprecated 1.3.0
      * @return array|mixed|string
      */
     public function to_array() {
@@ -408,7 +408,7 @@ class Employee {
     /**
      * Checks whether the use is employee or not
      *
-     * @since 1.2.9
+     * @since 1.3.0
      * @return bool
      */
     public function is_employee() {
@@ -427,7 +427,7 @@ class Employee {
     /**
      * Get user id
      *
-     * @since 1.2.9
+     * @since 1.3.0
      * @return int
      */
     public function get_user_id() {
@@ -437,7 +437,7 @@ class Employee {
     /**
      * Get user id
      *
-     * @deprecated 1.2.9
+     * @deprecated 1.3.0
      * @return int
      */
     public function get_id() {
@@ -554,7 +554,7 @@ class Employee {
     /**
      * Get designation
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param string $context
      *
@@ -575,7 +575,7 @@ class Employee {
     /**
      * Get the job title
      *
-     * @since 1.2.9
+     * @since 1.3.0
      * @return string
      */
     public function get_job_title() {
@@ -585,7 +585,7 @@ class Employee {
     /**
      * Get department
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param string $context
      *
@@ -606,7 +606,7 @@ class Employee {
     /**
      * Get the department title
      *
-     * @deprecated 1.2.9
+     * @deprecated 1.3.0
      * @return string
      */
     public function get_department_title() {
@@ -774,7 +774,7 @@ class Employee {
     /**
      * get hiring date
      *
-     * @since 1.2.9
+     * @since 1.3.0
      * @return string
      */
     public function get_hiring_date() {
@@ -925,7 +925,7 @@ class Employee {
     /**
      * Get birth date
      *
-     * @deprecated 1.2.9
+     * @deprecated 1.3.0
      * @return string
      */
     public function get_birthday() {
@@ -948,7 +948,7 @@ class Employee {
     /**
      * Create / Update Education
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param array $data
      * @param bool  $return_id
@@ -1001,7 +1001,7 @@ class Employee {
     /**
      * Delete Education
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      */
     public function delete_education( $id ) {
@@ -1024,7 +1024,7 @@ class Employee {
     /**
      * Add dependent
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param array $data
      * @param bool  $return_id
@@ -1080,7 +1080,7 @@ class Employee {
     /**
      *  Delete dependent
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      */
     public function delete_dependent( $id ) {
@@ -1103,7 +1103,7 @@ class Employee {
     /**
      * Create / Update Experience
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param array $data
      * @param bool  $return_id
@@ -1160,7 +1160,7 @@ class Employee {
     /**
      * Remove Experience
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param array $id
      *
@@ -1230,7 +1230,7 @@ class Employee {
     /**
      * Delete employee's job history
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param $id
      *
@@ -1574,7 +1574,7 @@ class Employee {
     /**
      * Get announcements
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param null $date
      * @param bool $return_array
@@ -1606,15 +1606,16 @@ class Employee {
     /**
      * Get leave policies
      *
-     * @since 1.2.9
+     * @since 1.3.0
      * @return mixed
      */
     public function get_leave_policies() {
         $financial_year_dates = erp_get_financial_year_dates();
         $entitlements         = $this->erp_user
             ->entitlements()
-            ->where( 'from_date', $financial_year_dates['start'] )
-            ->where( 'to_date', $financial_year_dates['end'] )
+            ->whereDate( 'from_date', '>=', $financial_year_dates['start'] )
+            ->whereDate( 'to_date', '<=', $financial_year_dates['end'] )
+            ->JoinWithPolicy()
             ->orderBy( 'created_on', 'DESC' )
             ->select( array( 'days', 'policy_id', 'from_date', 'to_date', 'color', 'name' ) )
             ->get();
@@ -1625,7 +1626,7 @@ class Employee {
     /**
      * Get assigned entitlements
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @return array
      */
@@ -1647,8 +1648,8 @@ class Employee {
         if ( ! empty( $args['policy_id'] ) ) {
             $entitlements = $entitlements->where( 'policy_id', intval( $args['policy_id'] ) );
         }
-        $entitlements = $entitlements->where( 'from_date', $args['from_date'] )
-                                     ->where( 'to_date', $args['to_date'] )
+        $entitlements = $entitlements->whereDate( 'from_date', '>=', $args['from_date'] )
+                                     ->whereDate( 'to_date', '<=', $args['to_date'] )
                                      ->JoinWithPolicy()
                                      ->skip( $args['offset'] )
                                      ->take( $args['number'] )
@@ -1663,27 +1664,36 @@ class Employee {
     /**
      * Get leave balances of the current year
      *
-     * @since 1.2.9
+     * @since 1.3.0
+     *
+     * @param null $date
+     * @param null $policy_id
      *
      * @return array
      */
-    public function get_leave_balance() {
-        $balances             = [];
-        $financial_start_date = erp_financial_start_date();
-        $financial_end_date   = erp_financial_end_date();
-        $user_id              = $this->user_id;
-        $results              = $this->erp_user
+    public function get_leave_summary( $date = null, $policy_id = null ) {
+        $date       = $date == null ? current_time( 'mysql' ) : $date;
+        $year_dates = erp_get_financial_year_dates( $date );
+
+
+        $balances = [];
+        $start    = isset( $year_dates['start'] ) ? $year_dates['start'] : null;
+        $end      = isset( $year_dates['end'] ) ? $year_dates['end'] : null;
+        $user_id  = $this->user_id;
+        $results  = $this->erp_user
             ->entitlements()
-            ->whereDate('from_date', '=', $financial_start_date)
+            ->whereDate( 'from_date', '>=', $start )
+            ->whereDate( 'to_date', '<=', $end )
             ->with( [
-                'leaves' => function ( $q ) use ( $user_id, $financial_start_date, $financial_end_date ) {
+                'leaves' => function ( $q ) use ( $user_id, $start, $end ) {
                     $q->where( 'status', '=', '1' )
                       ->where( 'user_id', $user_id )
-                      ->whereDate( 'start_date', '>=', $financial_start_date )
-                      ->whereDate( 'end_date', '<=', $financial_end_date );
+                      ->whereDate( 'start_date', '>=', $start )
+                      ->whereDate( 'end_date', '<=', $end );
                 }
             ] )
-            ->with( 'policy')
+            ->with( 'policy' )
+//            ->where('policy_id', '1')
             ->get();
 
         foreach ( $results as $result ) {
@@ -1720,7 +1730,7 @@ class Employee {
     /**
      * Get leave requests
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param array $args
      *
@@ -1815,7 +1825,7 @@ class Employee {
     /**
      * Get employee roles and caps
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param bool $include_erp_only
      *
@@ -1846,7 +1856,7 @@ class Employee {
      * Update employee roles
      * accepts associative array eg. ['erp_hr_manager' => true, 'erp_crm_manager' => false ]
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param array $roles
      *
@@ -1875,7 +1885,7 @@ class Employee {
     /**
      * Terminate Employee
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param array $args
      *
@@ -1925,7 +1935,7 @@ class Employee {
     /**
      * get restricted data
      *
-     * @since 1.29
+     * @since 1.3.0
      * @return array
      */
     protected function get_restricted_employee_data() {
@@ -1937,7 +1947,7 @@ class Employee {
     /**
      * Send error
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param $code
      * @param $message

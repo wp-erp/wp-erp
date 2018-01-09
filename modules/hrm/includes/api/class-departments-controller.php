@@ -165,6 +165,9 @@ class Departments_Controller extends REST_Controller {
 
         $item = $this->prepare_item_for_database( $request );
         $id   = erp_hr_create_department( $item );
+        if( is_wp_error( $id ) ){
+            return $id;
+        }
 
         $request->set_param( 'context', 'edit' );
         $response = $this->prepare_item_for_response( $department, $request );

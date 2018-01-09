@@ -212,7 +212,7 @@ function erp_hr_login_redirect( $redirect_to, $roles ) {
 /**
  * Filter collection by date
  *
- * @since 1.2.9
+ * @since 1.3.0
  *
  * @param \Illuminate\Database\Eloquent\Builder $collection
  * @param  $date
