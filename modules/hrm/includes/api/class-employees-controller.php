@@ -833,7 +833,7 @@ class Employees_Controller extends REST_Controller {
         if ( ! $employee->is_employee() ) {
             return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid Employee id.' ), [ 'status' => 400 ] );
         }
-        
+
         $args['id'] = $depen_id;
         $dependent = $employee->add_dependent( $request->get_params() );
 
@@ -873,7 +873,7 @@ class Employees_Controller extends REST_Controller {
     /**
      * Get employee histories
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param $request
      *
@@ -898,7 +898,7 @@ class Employees_Controller extends REST_Controller {
     /**
      * Create employee history
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param $request
      *
@@ -937,7 +937,7 @@ class Employees_Controller extends REST_Controller {
     /**
      * Delete a history
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param $request
      *
@@ -1029,7 +1029,7 @@ class Employees_Controller extends REST_Controller {
     /**
      * Get all the events of a single user
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param $request
      *
@@ -1064,7 +1064,7 @@ class Employees_Controller extends REST_Controller {
         if ( ! $employee ) {
             return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
         }
-        $policies = $employee->get_leave_balance();
+        $policies = $employee->get_leave_summary();
         $response = rest_ensure_response( $policies );
         $response = $this->format_collection_response( $response, $request, count( $policies ) );
 
@@ -1074,7 +1074,7 @@ class Employees_Controller extends REST_Controller {
     /**
      * Get all leaves of a single employee
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param \WP_REST_Request $request
      *
@@ -1096,7 +1096,7 @@ class Employees_Controller extends REST_Controller {
     /**
      * Create leave request
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param \WP_REST_Request $request
      *
@@ -1173,7 +1173,7 @@ class Employees_Controller extends REST_Controller {
     /**
      * Create a note for employee
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param $request
      *
@@ -1198,7 +1198,7 @@ class Employees_Controller extends REST_Controller {
     /**
      * Delete a note
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param $request
      *
@@ -1221,7 +1221,7 @@ class Employees_Controller extends REST_Controller {
     /**
      * Get roles of an employee
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param $request
      *
@@ -1242,7 +1242,7 @@ class Employees_Controller extends REST_Controller {
      * Update employee roles
      * accepts associative array eg. ['erp_hr_manager' => true, 'erp_crm_manager' => false ]
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param $request
      *
@@ -1274,7 +1274,7 @@ class Employees_Controller extends REST_Controller {
     /**
      * Get announcement of an employee
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param $request
      *
@@ -1296,7 +1296,7 @@ class Employees_Controller extends REST_Controller {
     /**
      * Terminate the employee
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param $request
      *

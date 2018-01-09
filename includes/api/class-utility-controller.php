@@ -39,7 +39,7 @@ class Utility_Controller extends REST_Controller {
     /**
      * Get the list of active plugins
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param $request
      *

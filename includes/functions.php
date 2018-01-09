@@ -2461,7 +2461,7 @@ function erp_login_redirect_manager( $redirect_to, $request, $user ) {
 /**
  * Flatten any multi dimensional array
  *
- * @since 1.2.9
+ * @since 1.3.0
  *
  * @param $array
  *

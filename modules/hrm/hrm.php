@@ -307,7 +307,7 @@ class Human_Resource {
     /**
      * Load HRM rest controllers
      *
-     * @since 1.2.9
+     * @since 1.3.0
      *
      * @param $controller
      *
