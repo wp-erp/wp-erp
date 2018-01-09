@@ -961,7 +961,8 @@
                 if ( confirm( wpErpHr.confirm ) ) {
                     wp.ajax.send( 'erp-hr-emp-delete-history', {
                         data: {
-                            id: $(this).data('id'),
+                            history_id: $(this).data('id'),
+                            user_id: wpErpCurrentEmployee.user_id,
                             _wpnonce: wpErpHr.nonce
                         },
                         success: function() {
@@ -1115,7 +1116,7 @@
                     data: form.serializeObject(),
                     success: function() {
                         $.get( window.location.href, function( data ) {
-                            if( $('ul.notes-list li').length < 0 ){
+                            if( $('ul.notes-list li').length < 0 ) {
                                 $('ul.notes-list').prepend( $(data).find( 'ul.notes-list' ).after() );
                             }else {
                                 $('ul.notes-list').prepend( $(data).find( 'ul.notes-list li' ).first() );
@@ -1138,7 +1139,7 @@
                 });
             },
 
-            showLoadMoreBtn: function(){
+            showLoadMoreBtn: function() {
                 if( $('ul.notes-list li').length >= 10 ){
                     $('.wperp-load-more-btn').show();
                 }else {
@@ -1184,11 +1185,11 @@
                 e.preventDefault();
 
                 if ( confirm( wpErpHr.delConfirmEmployeeNote ) ) {
-
                     var self = $(this),
                         data = {
                             action: 'erp-delete-employee-note',
                             note_id: self.data('note_id'),
+                            user_id: wpErpCurrentEmployee.user_id,
                             _wpnonce : wpErpHr.nonce
                         };
 

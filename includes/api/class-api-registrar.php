@@ -23,7 +23,9 @@ class API_Registrar {
      * @since 1.2.0
      */
     public function register_rest_routes() {
-        $controllers = [];
+        $controllers = [
+            '\WeDevs\ERP\API\Utility_Controller'
+        ];
 
         if ( erp_is_module_active( 'crm' ) ) {
             $controllers = array_merge( $controllers, [
@@ -31,20 +33,6 @@ class API_Registrar {
                 '\WeDevs\ERP\API\Contacts_Groups_Controller',
                 '\WeDevs\ERP\API\Activities_Controller',
                 '\WeDevs\ERP\API\Schedules_Controller',
-            ] );
-        }
-
-        if ( erp_is_module_active( 'hrm' ) ) {
-            $controllers = array_merge( $controllers, [
-                '\WeDevs\ERP\API\Departments_Controller',
-                '\WeDevs\ERP\API\Designations_Controller',
-                '\WeDevs\ERP\API\Employees_Controller',
-                '\WeDevs\ERP\API\Announcements_Controller',
-                '\WeDevs\ERP\API\Leave_Policies_Controller',
-                '\WeDevs\ERP\API\Leave_Entitlements_Controller',
-                '\WeDevs\ERP\API\Leave_Holidays_Controller',
-                '\WeDevs\ERP\API\Leave_Requests_Controller',
-                '\WeDevs\ERP\API\HRM_Reports_Controller',
             ] );
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\HRM;
 
 use WeDevs\ERP\Framework\Traits\Hooker;
@@ -94,6 +95,7 @@ class Human_Resource {
     private function init_actions() {
         $this->action( 'admin_enqueue_scripts', 'admin_scripts' );
         $this->action( 'admin_footer', 'admin_js_templates' );
+        $this->filter( 'erp_rest_api_controllers', 'load_hrm_rest_controllers' );
     }
 
     /**
@@ -140,7 +142,7 @@ class Human_Resource {
      * @return void
      */
     public function admin_scripts( $hook ) {
-        $hook = str_replace( sanitize_title( __( 'HR Management', 'erp' ) ) , 'hr-management', $hook );
+        $hook = str_replace( sanitize_title( __( 'HR Management', 'erp' ) ), 'hr-management', $hook );
 
         $suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
@@ -159,32 +161,32 @@ class Human_Resource {
         ), date( 'Ymd' ), true );
 
         $localize_script = apply_filters( 'erp_hr_localize_script', array(
-            'nonce'              => wp_create_nonce( 'wp-erp-hr-nonce' ),
-            'popup'              => array(
-                'dept_title'         => __( 'New Department', 'erp' ),
-                'dept_submit'        => __( 'Create Department', 'erp' ),
-                'location_title'     => __( 'New Location', 'erp' ),
-                'location_submit'    => __( 'Create Location', 'erp' ),
-                'dept_update'        => __( 'Update Department', 'erp' ),
-                'desig_title'        => __( 'New Designation', 'erp' ),
-                'desig_submit'       => __( 'Create Designation', 'erp' ),
-                'desig_update'       => __( 'Update Designation', 'erp' ),
-                'employee_title'     => __( 'New Employee', 'erp' ),
-                'employee_create'    => __( 'Create Employee', 'erp' ),
-                'employee_update'    => __( 'Update Employee', 'erp' ),
-                'employment_status'  => __( 'Employment Status', 'erp' ),
-                'update_status'      => __( 'Update', 'erp' ),
-                'policy'             => __( 'Leave Policy', 'erp' ),
-                'policy_create'      => __( 'Create Policy', 'erp' ),
-                'holiday'            => __( 'Holiday', 'erp' ),
-                'holiday_create'     => __( 'Create Holiday', 'erp' ),
-                'holiday_update'     => __( 'Update Holiday', 'erp' ),
-                'new_leave_req'      => __( 'Leave Request', 'erp' ),
-                'take_leave'         => __( 'Send Leave Request', 'erp' ),
-                'terminate'          => __( 'Terminate', 'erp' ),
-                'leave_reject'       => __( 'Reject Reason', 'erp' ),
-                'already_terminate'  => __( 'Sorry, this employee is already terminated', 'erp' ),
-                'already_active'     => __( 'Sorry, this employee is already active', 'erp' )
+            'nonce'                  => wp_create_nonce( 'wp-erp-hr-nonce' ),
+            'popup'                  => array(
+                'dept_title'        => __( 'New Department', 'erp' ),
+                'dept_submit'       => __( 'Create Department', 'erp' ),
+                'location_title'    => __( 'New Location', 'erp' ),
+                'location_submit'   => __( 'Create Location', 'erp' ),
+                'dept_update'       => __( 'Update Department', 'erp' ),
+                'desig_title'       => __( 'New Designation', 'erp' ),
+                'desig_submit'      => __( 'Create Designation', 'erp' ),
+                'desig_update'      => __( 'Update Designation', 'erp' ),
+                'employee_title'    => __( 'New Employee', 'erp' ),
+                'employee_create'   => __( 'Create Employee', 'erp' ),
+                'employee_update'   => __( 'Update Employee', 'erp' ),
+                'employment_status' => __( 'Employment Status', 'erp' ),
+                'update_status'     => __( 'Update', 'erp' ),
+                'policy'            => __( 'Leave Policy', 'erp' ),
+                'policy_create'     => __( 'Create Policy', 'erp' ),
+                'holiday'           => __( 'Holiday', 'erp' ),
+                'holiday_create'    => __( 'Create Holiday', 'erp' ),
+                'holiday_update'    => __( 'Update Holiday', 'erp' ),
+                'new_leave_req'     => __( 'Leave Request', 'erp' ),
+                'take_leave'        => __( 'Send Leave Request', 'erp' ),
+                'terminate'         => __( 'Terminate', 'erp' ),
+                'leave_reject'      => __( 'Reject Reason', 'erp' ),
+                'already_terminate' => __( 'Sorry, this employee is already terminated', 'erp' ),
+                'already_active'    => __( 'Sorry, this employee is already active', 'erp' )
             ),
             'emp_upload_photo'       => __( 'Upload Employee Photo', 'erp' ),
             'emp_set_photo'          => __( 'Set Photo', 'erp' ),
@@ -200,7 +202,10 @@ class Human_Resource {
             'employee_exit'          => __( 'This employee already exists', 'erp' ),
             'employee_created'       => __( 'Employee successfully created', 'erp' ),
             'create_employee_text'   => __( 'Click to create employee', 'erp' ),
-            'empty_entitlement_text' => sprintf( '<span>%s <a href="%s" title="%s">%s</a></span>', __( 'Please create entitlement first', 'erp' ), add_query_arg( [ 'page' => 'erp-leave-assign', 'tab' => 'assignment' ], admin_url( 'admin.php' ) ), __( 'Create Entitlement', 'erp' ), __( 'Create Entitlement', 'erp' ) ),
+            'empty_entitlement_text' => sprintf( '<span>%s <a href="%s" title="%s">%s</a></span>', __( 'Please create entitlement first', 'erp' ), add_query_arg( [
+                'page' => 'erp-leave-assign',
+                'tab'  => 'assignment'
+            ], admin_url( 'admin.php' ) ), __( 'Create Entitlement', 'erp' ), __( 'Create Entitlement', 'erp' ) ),
         ) );
 
         // if its an employee page
@@ -238,9 +243,9 @@ class Human_Resource {
         global $current_screen;
 
         // main HR menu
-        $hook = str_replace( sanitize_title( __( 'HR Management', 'erp' ) ) , 'hr-management', $current_screen->base );
+        $hook = str_replace( sanitize_title( __( 'HR Management', 'erp' ) ), 'hr-management', $current_screen->base );
 
-        switch ($hook) {
+        switch ( $hook ) {
             case 'toplevel_page_erp-hr':
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/new-leave-request.php', 'erp-new-leave-req' );
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/leave-days.php', 'erp-leave-days' );
@@ -276,9 +281,9 @@ class Human_Resource {
         }
 
         // leave menu
-        $hook = str_replace( sanitize_title( __( 'Leave', 'erp' ) ) , 'leave', $current_screen->base );
+        $hook = str_replace( sanitize_title( __( 'Leave', 'erp' ) ), 'leave', $current_screen->base );
 
-        switch ($hook) {
+        switch ( $hook ) {
             case 'leave_page_erp-leave-policies':
                 erp_get_js_template( WPERP_HRM_JS_TMPL . '/leave-policy.php', 'erp-leave-policy' );
                 break;
@@ -296,6 +301,34 @@ class Human_Resource {
                 break;
         }
 
+    }
+
+
+    /**
+     * Load HRM rest controllers
+     *
+     * @since 1.3.0
+     *
+     * @param $controller
+     *
+     * @return array
+     */
+    public function load_hrm_rest_controllers( $controller ) {
+        $hrm_controller = [
+            '\WeDevs\ERP\HRM\API\Employees_Controller',
+            '\WeDevs\ERP\HRM\API\Departments_Controller',
+            '\WeDevs\ERP\HRM\API\Designations_Controller',
+            '\WeDevs\ERP\HRM\API\Birthdays_Controller',
+            '\WeDevs\ERP\HRM\API\HRM_Reports_Controller',
+            '\WeDevs\ERP\HRM\API\Leave_Entitlements_Controller',
+            '\WeDevs\ERP\HRM\API\Leave_Holidays_Controller',
+            '\WeDevs\ERP\HRM\API\Leave_Policies_Controller',
+            '\WeDevs\ERP\HRM\API\Leave_Requests_Controller',
+            '\WeDevs\ERP\HRM\API\Announcements_Controller',
+        ];
+        $hrm_controller = apply_filters( 'erp_hrm_rest_api_controllers', $hrm_controller );
+
+        return array_merge( $controller, $hrm_controller );
     }
 }
 

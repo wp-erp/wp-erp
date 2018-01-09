@@ -22,6 +22,7 @@ class Leave_request extends Model {
      * @since 1.2.0
      */
     const UPDATED_AT = 'updated_on';
+    protected $primaryKey = 'id';
 
     protected $table = 'erp_hr_leave_requests';
     protected $fillable = [
@@ -61,4 +62,16 @@ class Leave_request extends Model {
     public function employee() {
         return $this->belongsTo( 'WeDevs\ERP\HRM\Models\Employee', 'user_id', 'user_id' );
     }
+
+    public function scopeJoinWithPolicy( $query ) {
+        global $wpdb;
+        return $query->leftJoin( "{$wpdb->prefix}erp_hr_leave_policies", "{$wpdb->prefix}erp_hr_leave_policies.id", "=", "{$wpdb->prefix}erp_hr_leave_requests.policy_id" );
+    }
+
+    public function scopeJoinWithEn( $query ) {
+        global $wpdb;
+        return $query->leftJoin( "{$wpdb->prefix}erp_hr_leave_entitlements", "{$wpdb->prefix}erp_hr_leave_entitlements.policy_id", "=", "{$wpdb->prefix}erp_hr_leave_requests.policy_id" );
+    }
+
+
 }

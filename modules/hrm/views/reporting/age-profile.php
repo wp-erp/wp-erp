@@ -16,13 +16,14 @@
 
             $emp_by_dept      = $employees->where( 'department', $department->id )->get();
             $emp_by_dept_data = get_employee_breakdown_by_age( $emp_by_dept );
+
             $_under18[]       = [$emp_by_dept_data['_under_18'], $index];
             $_18_to_25[]      = [$emp_by_dept_data['_18_to_25'], $index];
             $_26_to_35[]      = [$emp_by_dept_data['_26_to_35'], $index];
             $_36_to_45[]      = [$emp_by_dept_data['_36_to_45'], $index];
             $_46_to_55[]      = [$emp_by_dept_data['_46_to_55'], $index];
             $_56_to_65[]      = [$emp_by_dept_data['_56_to_65'], $index];
-            $_65plus[]        = [$emp_by_dept_data['_65plus'], $index];
+            $_65_plus[]        = [$emp_by_dept_data['_65_plus'], $index];
 
             $index++;
         }
@@ -70,7 +71,7 @@
                     echo '<td>' . esc_attr( $emp->_36_to_45 ) . '</td>';
                     echo '<td>' . esc_attr( $emp->_46_to_55 ) . '</td>';
                     echo '<td>' . esc_attr( $emp->_56_to_65 ) . '</td>';
-                    echo '<td>' . esc_attr( $emp->_65plus ) . '</td>';
+                    echo '<td>' . esc_attr( $emp->_65_plus ) . '</td>';
                     echo '</tr>';
                 }
             ?>
@@ -88,7 +89,7 @@
                 [3, <?php echo esc_attr( $emp_all_data['_36_to_45'] ); ?>],
                 [4, <?php echo esc_attr( $emp_all_data['_46_to_55'] ); ?>],
                 [5, <?php echo esc_attr( $emp_all_data['_56_to_65'] ); ?>],
-                [6, <?php echo esc_attr( $emp_all_data['_65plus'] ); ?>]
+                [6, <?php echo esc_attr( $emp_all_data['_65_plus'] ); ?>]
             ] ;
 
             var dataset = [{ label: "<?php _e( 'Employee by age', 'erp' ); ?>", data: ageBreakdown }];
@@ -207,7 +208,7 @@
                 {label: '36-45', color:'#DFABBF', data: <?php echo json_encode( $_36_to_45 ); ?>},
                 {label: '46-55', color:'#AAC6D4', data: <?php echo json_encode( $_46_to_55 ); ?>},
                 {label: '56-65', color:'#AAC6D4', data: <?php echo json_encode( $_56_to_65 ); ?>},
-                {label: '65+', color:'#5E606E', data: <?php echo json_encode( $_65plus ); ?>}
+                {label: '65+', color:'#5E606E', data: <?php echo json_encode( $_65_plus ); ?>}
             ];
 
             $(document).ready(function() {

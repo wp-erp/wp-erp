@@ -93,7 +93,6 @@ function erp_hr_get_designations( $args = array() ) {
         wp_cache_set( $cache_key, $designations, 'erp' );
     }
 
-
     return $designations;
 }
 
@@ -137,8 +136,7 @@ function erp_hr_delete_designation( $designation_id ) {
 
         return \WeDevs\ERP\HRM\Models\Designation::find( $designation_id )->delete();
     }
-
-
+    
 }
 
 /**
