@@ -131,9 +131,9 @@ class Employee {
      * @return string
      */
     public function __get( $key ) {
-        if ( in_array( $key, $this->restricted_data ) ) {
-              return null;
-        }
+//        if ( in_array( $key, $this->restricted_data ) ) {
+//              return null;
+//        }
         if ( is_callable( array( $this, "get_{$key}" ) ) ) {
             return $this->{"get_{$key}"}();
         } elseif ( isset( $this->$key ) ) {
@@ -157,7 +157,7 @@ class Employee {
      */
     protected function load_employee( $employee ) {
 
-        if ( is_int( $employee ) ) {
+        if ( is_numeric( $employee ) ) {
 
             $user = get_user_by( 'id', $employee );
 
