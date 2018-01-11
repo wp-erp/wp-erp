@@ -2482,3 +2482,28 @@ function erp_array_flatten( $array ) {
 
     return $result;
 }
+
+
+
+/**
+ * Fetch a filtered list of user roles that the current user is
+ * allowed to edit.
+ * @since 1.3.1 function has been from crm
+ * @since 1.2.4
+ *
+ * @return array
+ */
+function erp_get_editable_roles (){
+    if(!  function_exists('get_editable_roles')){
+        require_once(ABSPATH . 'wp-admin/includes/user.php');
+    }
+    $wp_roles = get_editable_roles();
+
+    if( !current_user_can( 'administrator' ) ){
+        unset( $wp_roles['administrator'] );
+    }
+
+    $roles =  apply_filters( 'erp_editable_roles', $wp_roles );
+
+    return $roles;
+}
