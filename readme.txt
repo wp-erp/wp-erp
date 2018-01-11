@@ -190,6 +190,10 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+= v1.3.1 -> Jan 11, 2018 =
+
+[Fix] HRM Overview page blank when CRM module is not active.Closes #575
+
 = v1.3.0 -> Jan 09, 2018 =
 
 [tweak] Improved employee API.
