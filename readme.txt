@@ -190,6 +190,10 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+= v1.3.1 -> Jan 11, 2018 =
+
+[Fix] HRM Overview page blank when CRM module is not active.Closes #575
+
 = v1.3.0 -> Jan 09, 2018 =
 
 [tweak] Improved employee API.
@@ -204,14 +208,14 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 [new]   Add HRM birthday API support.
 [new]   Add HRM leave API support.
 [new]   Add HRM upcoming leave request API support.
-[new]   Add HRM note API support support.
+[new]   Add HRM note API support.
 [new]   Add HRM job history rest API support.
 [new]   Add HRM permission/roles rest API support.
 [new]   Add HRM head counts rest API support.
 [new]   Add HRM employee termination API.
 
 [fix]	Employee and Department API search option. Closes #569.
-[fix]   Payments are shown as invoice in popup. Closes #552.
+[fix]   Payments are shown on an invoice in the popup. Closes #552.
 [fix]   HRM gender reporting count error. Closes #565.
 [fix]   Fix CRM contact inbound mail tracker.
 [fix]	Employee full name not showing.
