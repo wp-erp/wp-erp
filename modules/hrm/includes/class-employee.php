@@ -132,7 +132,7 @@ class Employee {
      */
     public function __get( $key ) {
         if ( in_array( $key, $this->restricted_data ) ) {
-            return null;
+              return null;
         }
         if ( is_callable( array( $this, "get_{$key}" ) ) ) {
             return $this->{"get_{$key}"}();
@@ -1447,10 +1447,10 @@ class Employee {
             'id'                  => '',
             'reporting_to'        => '',
             'job_knowledge'       => '',
-            'work_quality'       => '',
+            'work_quality'        => '',
             'attendance'          => '',
             'communication'       => '',
-            'dependablity'       => '',
+            'dependablity'        => '',
             'reviewer'            => '',
             'comments'            => '',
             'completion_date'     => '',
@@ -1837,7 +1837,16 @@ class Employee {
         $all_caps   = isset( $wp_user->allcaps ) ? $wp_user->allcaps : [];
         $roles      = erp_get_editable_roles();
         if ( $include_erp_only ) {
-            $roles = array_merge( erp_hr_get_roles(), erp_crm_get_roles(), erp_ac_get_roles() );
+            $roles = array();
+            if ( function_exists( 'erp_hr_get_roles' ) ) {
+                $roles = array_merge( $roles, erp_hr_get_roles() );
+            }
+            if ( function_exists( 'erp_crm_get_roles' ) ) {
+                $roles = array_merge( $roles, erp_crm_get_roles() );
+            }
+            if ( function_exists( 'erp_ac_get_roles' ) ) {
+                $roles = array_merge( $roles, erp_ac_get_roles() );
+            }
         }
         $available_roles = [];
         foreach ( $roles as $key => $role ) {
