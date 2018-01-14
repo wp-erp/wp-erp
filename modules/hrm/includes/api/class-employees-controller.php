@@ -5,6 +5,7 @@ namespace WeDevs\ERP\HRM\API;
 use WeDevs\ERP\API\REST_Controller;
 use WeDevs\ERP\HRM\Employee;
 use WeDevs\ERP\HRM\Models\Department;
+use WeDevs\ERP\HRM\Models\Designation;
 use WP_Error;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -1327,7 +1328,6 @@ class Employees_Controller extends REST_Controller {
             'middle_name'     => '',
             'last_name'       => '',
             'full_name'       => '',
-//            'email'           => '',
             'location'        => '',
             'date_of_birth'   => '',
             'pay_rate'        => '',
@@ -1366,7 +1366,7 @@ class Employees_Controller extends REST_Controller {
             }
 
             if ( in_array( 'designation', $include_params ) && ! empty( $item->get_designation() ) ) {
-                $data['designation'] = Department::find( $item->get_designation() );
+                $data['designation'] = Designation::find( $item->get_designation() );
             }
 
             if ( in_array( 'reporting_to', $include_params ) && $item->get_reporting_to() ) {
