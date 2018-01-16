@@ -72,7 +72,7 @@ class Leave_Requests_Controller extends REST_Controller {
         $args = [
             'number' => $request['per_page'],
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
-            'type'   => $request['per_page'] == 'upcoming' ? 'upcoming' : '',
+            'type'   => $request['type'] == 'upcoming' ? 'upcoming' : ''
         ];
 
         $items = [];
