@@ -9,3 +9,4 @@ nbproject
 debug.log
 .netbeans.xml
 plugin-deploy.sh
+composer.lock
