@@ -1189,7 +1189,7 @@ class Employee {
         $formatted_histories = array();
         foreach ( $histories as $history ) {
             if ( $history['module'] == 'employment' ) {
-                $item                                        = array(
+                $item = array(
                     'id'       => $history['id'],
                     'type'     => $history['type'],
                     'comments' => $history['comment'],
@@ -1199,7 +1199,7 @@ class Employee {
                 $formatted_histories[ $history['module'] ][] = $item;
             }
             if ( $history['module'] == 'compensation' ) {
-                $item                                        = array(
+                $item = array(
                     'id'       => $history['id'],
                     'comment'  => $history['comment'],
                     'pay_type' => $history['category'],
@@ -1211,7 +1211,7 @@ class Employee {
                 $formatted_histories[ $history['module'] ][] = $item;
             }
             if ( $history['module'] == 'job' ) {
-                $item                                        = array(
+                $item = array(
                     'id'           => $history['id'],
                     'date'         => $history['date'],
                     'designation'  => $history['comment'],
@@ -1465,8 +1465,16 @@ class Employee {
         if ( empty( $args['type'] ) || ! in_array( $args['type'], [ 'reviews', 'comments', 'goals' ] ) ) {
             return new \WP_Error( 'invalid-performance-type', __( 'Invalid Performance Type received', 'erp' ) );
         }
-        if ( $args['type'] ) {
 
+        if ( empty( $args['performance_date'] ) ) {
+            return new \WP_Error( 'missing-required-params', __( 'Missing Date', 'erp' ) );
+        }
+
+        if ( ! is_valid_date( $args['performance_date'] ) && $args['performance_date'] ) {
+            return new \WP_Error( 'invalid-required-params', __( 'Invalid date format', 'erp' ) );
+        }
+
+        if ( $args['type'] == 'reviews' ) {
             $reporting_to = new Employee( $args['reporting_to'] );
             if ( ! $reporting_to->is_employee() ) {
                 return new \WP_Error( 'invalid-user-id', __( 'Invalid reporting to used.', 'erp' ) );
@@ -1481,6 +1489,14 @@ class Employee {
         }
 
         if ( $args['type'] == 'goals' ) {
+
+            if ( empty( $args['completion_date'] ) ) {
+                return new \WP_Error( 'missing-required-params', __( 'Missing Date', 'erp' ) );
+            }
+
+            if ( ! is_valid_date( $args['completion_date'] ) && $args['completion_date'] ) {
+                return new \WP_Error( 'invalid-required-params', __( 'Invalid date format', 'erp' ) );
+            }
 
             $supervisor = new Employee( $args['supervisor'] );
             if ( ! $supervisor->is_employee() ) {
@@ -1675,11 +1691,11 @@ class Employee {
         $date       = $date == null ? current_time( 'mysql' ) : $date;
         $year_dates = erp_get_financial_year_dates( $date );
 
-
         $balances = [];
         $start    = isset( $year_dates['start'] ) ? $year_dates['start'] : null;
         $end      = isset( $year_dates['end'] ) ? $year_dates['end'] : null;
         $user_id  = $this->user_id;
+
         $results  = $this->erp_user
             ->entitlements()
             ->whereDate( 'from_date', '>=', $start )
