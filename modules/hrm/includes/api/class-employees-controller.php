@@ -338,7 +338,7 @@ class Employees_Controller extends REST_Controller {
             ],
         ] );
 
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/notes', [
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/notes', [
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_notes' ],
@@ -354,7 +354,7 @@ class Employees_Controller extends REST_Controller {
                 },
             ],
         ] );
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)' . '/notes' . '/(?P<note_id>[\d]+)', [
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<user_id>[\d]+)' . '/notes' . '/(?P<note_id>[\d]+)', [
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_note' ],
@@ -861,6 +861,15 @@ class Employees_Controller extends REST_Controller {
         $module = ! empty( $request['module'] ) ? sanitize_key( $request['module'] ) : 'all';
 
         $histories = $employee->get_job_histories( $module );
+
+        for ($i = 0; $i < count($histories['job']); $i++) { 
+            $reports_to = new Employee( $histories['job'][$i]['reporting_to'] );
+
+            if ( $employee->is_employee() ) {
+                $histories['job'][$i]['reporting_to_full_name'] = $reports_to->display_name;
+            } 
+        }
+
         $total     = $employee->get_erp_user()->histories()->count();
         $response  = rest_ensure_response( $histories );
         $response  = $this->format_collection_response( $response, $request, $total );
@@ -947,6 +956,28 @@ class Employees_Controller extends REST_Controller {
         }
         $items = $employee->get_performances( $request->get_params() );
 
+        foreach ($items as $item) {
+            foreach ($item as $performance) {
+                $user_id = 0;
+
+                if ( $performance['reporting_to'] ) {
+                    $user_id = $performance['reporting_to'];
+                } elseif ( $performance['reviewer'] ) {
+                    $user_id = $performance['reviewer'];
+                } elseif ( $performance['supervisor'] ) {
+                    $user_id = $performance['supervisor'];
+                }
+
+                $associate_employee = new Employee( $user_id );
+                if ( $associate_employee->is_employee() ) {
+                    $performance->reporting_to_full_name = $associate_employee->display_name;
+                    $performance->supervisor_full_name   = $associate_employee->display_name;
+                    $performance->reviewer_full_name     = $associate_employee->display_name;
+                }
+
+            }
+        }
+
         $total    = $employee->get_erp_user()->performances()->count();
         $response = rest_ensure_response( $items );
         $response = $this->format_collection_response( $response, $request, $total );
@@ -969,6 +1000,10 @@ class Employees_Controller extends REST_Controller {
         }
 
         $performance = $employee->add_performance( $request->get_params() );
+        
+        if ( is_wp_error( $performance ) ) {
+            return $performance;
+        }
         $request->set_param( 'context', 'edit' );
         $response = rest_ensure_response( $performance );
         $response->set_status( 201 );
@@ -1136,6 +1171,13 @@ class Employees_Controller extends REST_Controller {
         }
 
         $notes    = $employee->get_notes( $args['total'], $args['offset'] );
+
+        foreach ($notes as $note) {
+            $user                          = get_user_by( 'id', $note->comment_by );
+            $note->comment_by_display_name = $user->display_name;
+            $note->comment_by_avatar_url   = get_avatar_url($user->comment_by);
+        }
+
         $total    = $employee->get_erp_user()->notes()->count();
         $response = rest_ensure_response( $notes );
         $response = $this->format_collection_response( $response, $request, $total );
