@@ -2521,7 +2521,7 @@ function erp_get_editable_roles (){
  * @return array
  *
  */
-function erp_get_dates_in_range($first, $last, $step = '+1 day', $output_format = 'Y/m/d' ) {
+function erp_get_dates_in_range($first, $last, $step = '+1 day', $output_format = 'Y-m-d' ) {
 
     $dates = array();
     $current = strtotime($first);
