@@ -34,6 +34,11 @@ class Employee {
     protected $erp_user;
 
     /**
+     * @var string
+     */
+    protected $erp_user_model = "\\WeDevs\\ERP\\HRM\\Models\\Employee";
+
+    /**
      * Employee data
      *
      * @var array
@@ -100,7 +105,7 @@ class Employee {
     public function __construct( $employee = null ) {
         $this->user_id         = 0;
         $this->wp_user         = new \WP_User();
-        $this->erp_user        = new \WeDevs\ERP\HRM\Models\Employee();
+        $this->erp_user        = new $this->erp_user_model;
         $this->restricted_data = $this->get_restricted_employee_data();
         if ( $employee != null ) {
             $this->load_employee( $employee );
@@ -131,9 +136,9 @@ class Employee {
      * @return string
      */
     public function __get( $key ) {
-//        if ( in_array( $key, $this->restricted_data ) ) {
-//              return null;
-//        }
+        if ( in_array( $key, $this->restricted_data ) ) {
+            return null;
+        }
         if ( is_callable( array( $this, "get_{$key}" ) ) ) {
             return $this->{"get_{$key}"}();
         } elseif ( isset( $this->$key ) ) {
@@ -183,7 +188,8 @@ class Employee {
         }
 
         if ( $this->user_id ) {
-            $this->erp_user = \WeDevs\ERP\HRM\Models\Employee::withTrashed()->where( 'user_id', $this->user_id )->first();
+            $employee_model = $this->erp_user_model;
+            $this->erp_user = $employee_model::withTrashed()->where( 'user_id', $this->user_id )->first();
             if ( $this->is_employee() ) {
                 $this->data['user_id']    = $this->user_id;
                 $this->data['user_email'] = $this->wp_user->user_email;
@@ -951,7 +957,7 @@ class Employee {
      * @since 1.3.0
      *
      * @param array $data
-     * @param bool  $return_id
+     * @param bool $return_id
      *
      * @return array|\WP_Error
      */
@@ -1027,7 +1033,7 @@ class Employee {
      * @since 1.3.0
      *
      * @param array $data
-     * @param bool  $return_id
+     * @param bool $return_id
      *
      * @return array|\WP_Error
      */
@@ -1106,7 +1112,7 @@ class Employee {
      * @since 1.3.0
      *
      * @param array $data
-     * @param bool  $return_id
+     * @param bool $return_id
      *
      * @return array|\WP_Error
      */
@@ -1414,8 +1420,8 @@ class Employee {
      * Get employee performance list
      *
      * @param string $type
-     * @param int    $limit
-     * @param int    $offset
+     * @param int $limit
+     * @param int $offset
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -1578,8 +1584,8 @@ class Employee {
      *
      * @param null $date
      * @param bool $return_array
-     * @param int  $limit
-     * @param int  $offset
+     * @param int $limit
+     * @param int $offset
      *
      * @return array
      */
@@ -1780,7 +1786,12 @@ class Employee {
      * @since 1.3.0
      * @return array
      */
-    public function get_events() {
+    //@todo have to rewrite the method
+    public function get_events( $year = null ) {
+        if( !$year ){
+            $year = date('Y');
+        }
+
         $leave_requests = erp_hr_get_calendar_leave_events( false, $this->user_id, false );
         $holidays       = erp_array_to_object( \WeDevs\ERP\HRM\Models\Leave_Holiday::all()->toArray() );
         $events         = [];
@@ -1788,6 +1799,10 @@ class Employee {
         $event_data     = [];
 
         foreach ( $leave_requests as $key => $leave_request ) {
+
+            if( $year != date('Y', strtotime($leave_request->start_date))){
+                continue;
+            }
             //if status pending
             $policy      = erp_hr_leave_get_policy( $leave_request->policy_id );
             $event_label = $policy->name;
