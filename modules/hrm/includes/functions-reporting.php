@@ -26,6 +26,10 @@ function erp_hr_get_reports() {
         'years-of-service' => [
             'title' => __( 'Years of Service', 'erp' ),
             'description' => __( 'Shows longevity and experience report of the employees of your company.', 'erp' )
+        ],
+        'leaves' => [
+            'title' => __( 'Leaves Reports', 'erp' ),
+            'description' => __( 'Shows leaves report.', 'erp' )
         ]
     ];
 
