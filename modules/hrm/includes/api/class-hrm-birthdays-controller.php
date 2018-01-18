@@ -48,7 +48,6 @@ class Birthdays_Controller extends REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_birthdays( $request ) {
-
         $args = [
             'upcoming' => empty($request['upcoming']) ? false : true,
             'number' => $request['per_page'] ? $request['per_page'] : 20,

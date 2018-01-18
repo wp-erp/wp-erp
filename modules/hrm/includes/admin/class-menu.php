@@ -204,6 +204,10 @@ class Admin_Menu {
                 $template = WPERP_HRM_VIEWS . '/reporting/years-of-service.php';
                 break;
 
+            case 'leaves':
+                $template = WPERP_HRM_VIEWS . '/reporting/leave.php';
+                break;
+
             default:
                 $template = WPERP_HRM_VIEWS . '/reporting.php';
                 break;
