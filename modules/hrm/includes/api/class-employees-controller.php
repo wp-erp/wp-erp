@@ -1419,7 +1419,7 @@ class Employees_Controller extends REST_Controller {
             }
 
             if ( in_array( 'avatar', $include_params ) ) {
-                $data['avatar_url'] = $item->get_avatar_url( 32 );
+                $data['avatar_url'] = $item->get_avatar_url( 80 );
             }
 
             if ( in_array( 'roles', $include_params ) ) {
