@@ -216,6 +216,23 @@ class Employee {
         $posted = array_map( 'strip_tags_deep', $args );
         $data   = array_map( 'trim_deep', $posted );
 
+
+        //if is set employee id
+        $employee_id = null;
+        if( ! empty( $data['work']['employee_id'] ) ){
+            $employee_id = intval( $data['work']['employee_id'] );
+        }
+        if( ! empty( $data['personal']['employee_id'] ) ){
+            $employee_id = intval( $data['personal']['employee_id'] );
+        }
+
+        if ( $employee_id ) {
+            $exist = \WeDevs\ERP\HRM\Models\Employee::where( 'employee_id', $employee_id )->first();
+            if ( $exist ) {
+                return new \WP_Error( 'employee-id-exist', sprintf( __( 'Employee with the employee id %s already exist.Please use different one.', 'erp' ), $employee_id ) );
+            }
+        }
+
         //if user found by id then update the user
         if ( ! empty( $data['user_id'] ) ) {
             if ( get_user_by( 'ID', absint( $data['user_id'] ) ) ) {
@@ -298,7 +315,6 @@ class Employee {
         ] );
 
         $this->update_employee( array_merge( $data['work'], $data['personal'] ) );
-
         do_action( 'erp_hr_employee_new', $this->id, $data );
 
         return $this;
@@ -311,7 +327,7 @@ class Employee {
      *
      * @param array $data
      *
-     * @return $this
+     * @return $this | \WP_Error
      */
     public function update_employee( $data = array() ) {
         $restricted = [
@@ -1195,7 +1211,7 @@ class Employee {
         $formatted_histories = array();
         foreach ( $histories as $history ) {
             if ( $history['module'] == 'employment' ) {
-                $item = array(
+                $item                                        = array(
                     'id'       => $history['id'],
                     'type'     => $history['type'],
                     'comments' => $history['comment'],
@@ -1205,7 +1221,7 @@ class Employee {
                 $formatted_histories[ $history['module'] ][] = $item;
             }
             if ( $history['module'] == 'compensation' ) {
-                $item = array(
+                $item                                        = array(
                     'id'       => $history['id'],
                     'comment'  => $history['comment'],
                     'pay_type' => $history['category'],
@@ -1217,7 +1233,7 @@ class Employee {
                 $formatted_histories[ $history['module'] ][] = $item;
             }
             if ( $history['module'] == 'job' ) {
-                $item = array(
+                $item                                        = array(
                     'id'           => $history['id'],
                     'date'         => $history['date'],
                     'designation'  => $history['comment'],
@@ -1702,7 +1718,7 @@ class Employee {
         $end      = isset( $year_dates['end'] ) ? $year_dates['end'] : null;
         $user_id  = $this->user_id;
 
-        $results  = $this->erp_user
+        $results = $this->erp_user
             ->entitlements()
             ->whereDate( 'from_date', '>=', $start )
             ->whereDate( 'to_date', '<=', $end )
@@ -1804,8 +1820,8 @@ class Employee {
      */
     //@todo have to rewrite the method
     public function get_events( $year = null ) {
-        if( !$year ){
-            $year = date('Y');
+        if ( ! $year ) {
+            $year = date( 'Y' );
         }
 
         $leave_requests = erp_hr_get_calendar_leave_events( false, $this->user_id, false );
@@ -1816,7 +1832,7 @@ class Employee {
 
         foreach ( $leave_requests as $key => $leave_request ) {
 
-            if( $year != date('Y', strtotime($leave_request->start_date))){
+            if ( $year != date( 'Y', strtotime( $leave_request->start_date ) ) ) {
                 continue;
             }
             //if status pending
