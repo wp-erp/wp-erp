@@ -190,6 +190,7 @@ class Employee {
         if ( $this->user_id ) {
             $employee_model = $this->erp_user_model;
             $this->erp_user = $employee_model::withTrashed()->where( 'user_id', $this->user_id )->first();
+
             if ( $this->is_employee() ) {
                 $this->data['user_id']    = $this->user_id;
                 $this->data['user_email'] = $this->wp_user->user_email;
@@ -476,8 +477,8 @@ class Employee {
      * @return int|null
      */
     public function get_photo_id() {
-        if ( isset( $this->user->photo_id ) ) {
-            return (int) $this->user->photo_id;
+        if ( isset( $this->wp_user->photo_id ) ) {
+            return (int) $this->wp_user->photo_id;
         }
 
         return null;
@@ -491,7 +492,7 @@ class Employee {
      * @return string   image with HTML tag
      */
     public function get_avatar_url( $size = 32 ) {
-        if ( $this->user_id && ! empty( $this->photo_id ) ) {
+        if ( $this->user_id && ! empty( $this->get_photo_id() ) ) {
             return wp_get_attachment_url( $this->photo_id );
         }
 
@@ -506,7 +507,7 @@ class Employee {
      * @return string   image with HTML tag
      */
     public function get_avatar( $size = 32 ) {
-        if ( $this->user_id && ! empty( $this->photo_id ) ) {
+        if ( $this->user_id && ! empty( $this->get_photo_id() ) ) {
             $image = wp_get_attachment_thumb_url( $this->photo_id );
 
             return sprintf( '<img src="%1$s" alt="" class="avatar avatar-%2$s photo" height="auto" width="%2$s" />', $image, $size );
