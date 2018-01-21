@@ -483,7 +483,13 @@ class Ajax_Handler {
             }
         }
         $employee = new Employee( $user_id );
-        $employee->create_employee( $posted );
+
+        $result   = $employee->create_employee( $posted );
+
+        if ( is_wp_error( $result ) ) {
+            $this->send_error( $result->get_error_message() );
+        }
+
         if ( ! $employee->is_employee() ) {
             $this->send_error( __( 'Could not create employee. Please try again.', 'erp' ) );
         }
@@ -605,7 +611,7 @@ class Ajax_Handler {
         }
 
         $created = $employee->update_employment_status( [
-            'type'   => $_POST['status'],
+            'type'     => $_POST['status'],
             'comments' => $_POST['comment'],
             'date'     => $_POST['date'],
         ] );
