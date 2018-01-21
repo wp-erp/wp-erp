@@ -65,8 +65,9 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
      */
     function column_default( $item, $column_name ) {
         $employee = new Employee( absint( $item->user_id ) );
-        $report   = $employee->get_attendance_report( $this->duration['start'], $this->duration['end'] );
-//        var_dump($report);
+
+
+
         switch ( $column_name ) {
             case 'name':
                 return $employee->get_full_name();
@@ -104,14 +105,6 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
      * @return void
      */
     function prepare_items() {
-
-        if ( 'custom' == $selected_query_time ) {
-            $this->duration['start'] = $selected_start;
-            $this->duration['end']   = $selected_end;
-        } else {
-            $this->duration = erp_att_get_start_end_date( $selected_query_time );
-        }
-
         $columns               = $this->get_columns();
         $hidden                = array();
         $sortable              = $this->get_sortable_columns();
@@ -121,17 +114,7 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
         $current_page = $this->get_pagenum();
         $offset       = ( $current_page - 1 ) * $per_page;
 
-
         $query = \WeDevs\ERP\HRM\Attendance\Models\Employee::where( 'status', 'active' );
-
-        //if filter by location
-        if ( $selected_location && '-1' != $selected_location ) {
-            $query->where( 'location', $selected_location );
-        }
-
-        if ( $selected_department && '-1' != $selected_department ) {
-            $query->where( 'department', $selected_department );
-        }
 
         $this->items = $query->skip( $offset )->take( $per_page )->get();
 
