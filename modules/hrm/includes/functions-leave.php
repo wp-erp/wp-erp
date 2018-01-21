@@ -211,6 +211,10 @@ function erp_hr_leave_insert_policy( $args = array() ) {
         return new WP_Error( 'no-name', __( 'No name provided.', 'erp' ) );
     }
 
+    if ( erp_hr_leave_get_policy_by_name( $args['name'] ) ) {
+        return new WP_Error( 'policy_name_exists', __( 'Policy name already exists, please use a different one.', 'erp' ) );
+    }
+
     if ( ! intval( $args['value'] ) ) {
         return new WP_Error( 'no-value', __( 'No duration provided.', 'erp' ) );
     }
@@ -576,6 +580,19 @@ function erp_hr_leave_get_policies( $args = array() ) {
     }
 
     return $policies;
+}
+
+/**
+ * Fetch a leave policy by match policy name
+ *
+ * @since 1.3.2
+ *
+ * @param string $name
+ *
+ * @return \stdClass
+ */
+function erp_hr_leave_get_policy_by_name( $name ) {
+    return \WeDevs\ERP\HRM\Models\Leave_Policies::where('name', $name)->first();
 }
 
 /**
