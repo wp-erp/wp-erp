@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\HRM;
 
 /**
@@ -10,6 +11,8 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 }
 
 class Leave_Report_Employee_Based extends \WP_List_Table {
+    protected $reports;
+    protected $policies;
 
     function __construct() {
         parent::__construct( array(
@@ -17,8 +20,8 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
             'plural'   => 'leaves',
             'ajax'     => false
         ) );
-
         $this->table_css();
+        $this->policies = \WeDevs\ERP\HRM\Models\Leave_Policies::select( 'name', 'id' )->get();
     }
 
 
@@ -43,13 +46,10 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
      */
     function get_columns() {
 
-        $columns = array();
+        $columns = array( 'name' => 'Name' );
 
-        $policies = \WeDevs\ERP\HRM\Models\Leave_Policies::select('name')->get();
-
-        foreach ($policies as $policy) {
-            $column_slug = sanitize_title($policy->name);
-            $columns[$column_slug] = __($policy->name, 'erp');
+        foreach ( $this->policies as $policy ) {
+            $columns[ $policy->id ] = __( $policy->name, 'erp' );
         }
 
         return $columns;
@@ -64,40 +64,40 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
      * @return string
      */
     function column_default( $item, $column_name ) {
-        $employee = new Employee( absint( $item->user_id ) );
+        $report = isset( $this->reports[ $item ] ) ? $this->reports[ $item ] : [];
+        if ( isset( $report[ $column_name ] ) ) {
+            $summary = $report[ $column_name ];
 
+            return $summary['spent'] . '/' . $summary['days'];
+        } elseif ( $column_name == 'name' ) {
+            $user = get_user_by( 'ID', $item );
+            $url  = admin_url( "admin.php?page=erp-hr-employee&amp;action=view&amp;id={$item}" );
+            $name = $user->first_name . ' ' . $user->middle_name . ' ' . $user->last_name;
 
-
-        switch ( $column_name ) {
-            case 'name':
-                return $employee->get_full_name();
-                break;
-            case 'days':
-                return ! empty( $report['total_days'] ) ? $report['total_days'] : ' - ';
-                break;
-            case 'present':
-                return ! empty( $report['total_present'] ) ? $report['total_present'] : ' - ';
-                break;
-            case 'absent':
-                return ! empty( $report['total_absent'] ) ? $report['total_absent'] : ' - ';
-                break;
-            case 'leave':
-                return ! empty( $report['total_leaves'] ) ? $report['total_leaves'] : ' - ';
-                break;
-            case 'worked':
-                return erp_att_second_to_hour_min($report['total_worked']);
-                break;
-            case 'avg_work':
-                return erp_att_second_to_hour_min($report['avg_work_time']) ;
-                break;
-            case 'checkin':
-                return ! empty( $report['avg_check_in'] ) ? $report['avg_check_in'] : ' - ';
-                break;
-            case 'checkout':
-                return ! empty( $report['avg_check_out'] ) ? $report['avg_check_out'] : ' - ';
-                break;
+            return "<a href='{$url}'><strong>{$name}</strong></a>";
+        } else {
+            return ' - ';
         }
+
     }
+
+    protected function get_user_full_name( \WP_User $user ) {
+        $name = array();
+        if ( $user->first_name ) {
+            $name[] = $user->first_name;
+        }
+
+        if ( $user->middle_name ) {
+            $name[] = $user->middle_name;
+        }
+
+        if ( $user->last_name ) {
+            $name[] = $user->last_name;
+        }
+
+        return implode( ' ', $name );
+    }
+
 
     /**
      * Prepare the class items
@@ -114,10 +114,13 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
         $current_page = $this->get_pagenum();
         $offset       = ( $current_page - 1 ) * $per_page;
 
-        $query = \WeDevs\ERP\HRM\Attendance\Models\Employee::where( 'status', 'active' );
+        $query         = \WeDevs\ERP\HRM\Models\Employee::where( 'status', 'active' )->select( 'user_id' );
+        $employees_obj = $query->skip( $offset )->take( $per_page )->get()->toArray();
 
-        $this->items = $query->skip( $offset )->take( $per_page )->get();
-
+        $employees     = wp_list_pluck( $employees_obj, 'user_id' );
+        $reports       = erp_get_leave_report( $employees, '2017-01-01', '2017-12-31' );
+        $this->reports = $reports;
+        $this->items   = $employees;
         $this->set_pagination_args( array(
             'total_items' => $query->count(),
             'per_page'    => $per_page
