@@ -30,10 +30,10 @@
                 ?>
                 <li><?php erp_print_key_value( __( 'Reporting To', 'erp' ), $reporting_to_link ); ?></li>
                 <li><?php erp_print_key_value( __( 'Date of Hire', 'erp' ), $employee->get_joined_date() ); ?></li>
-                <li><?php erp_print_key_value( __( 'Source of Hire', 'erp' ), $employee->get_hiring_source() ); ?></li>
-                <li><?php erp_print_key_value( __( 'Employee Status', 'erp' ), $employee->get_status() ); ?></li>
+                <li><?php erp_print_key_value( __( 'Source of Hire', 'erp' ), $employee->get_hiring_source( 'view' ) ); ?></li>
+                <li><?php erp_print_key_value( __( 'Employee Status', 'erp' ), $employee->get_status( 'view' ) ); ?></li>
                 <li><?php erp_print_key_value( __( 'Work Phone', 'erp' ), erp_get_clickable( 'phone', $employee->get_phone( 'work' ) ) ); ?></li>
-                <li><?php erp_print_key_value( __( 'Employee Type', 'erp' ), $employee->get_type() ); ?></li>
+                <li><?php erp_print_key_value( __( 'Employee Type', 'erp' ), $employee->get_type( 'view' ) ); ?></li>
 
                 <?php do_action( 'erp-hr-employee-single-work', $employee ); ?>
             </ul>
@@ -45,19 +45,19 @@
         <h3 class="hndle"><span><?php _e( 'Personal Details', 'erp' ); ?></span></h3>
         <div class="inside">
             <ul class="erp-list two-col separated">
-                <li><?php erp_print_key_value( __( 'Address 1', 'erp' ), $employee->get_street_1() ); ?></li>
-                <li><?php erp_print_key_value( __( 'Address 2', 'erp' ), $employee->get_street_2() ); ?></li>
+                <li><?php erp_print_key_value( __( 'Address 1', 'erp' ), $employee->get_street_1( 'view' ) ); ?></li>
+                <li><?php erp_print_key_value( __( 'Address 2', 'erp' ), $employee->get_street_2( 'view' ) ); ?></li>
                 <li><?php erp_print_key_value( __( 'City', 'erp' ), $employee->get_city() ); ?></li>
-                <li><?php erp_print_key_value( __( 'Country', 'erp' ), $employee->get_country() ); ?></li>
-                <li><?php erp_print_key_value( __( 'State', 'erp' ), $employee->get_state() ); ?></li>
+                <li><?php erp_print_key_value( __( 'Country', 'erp' ), $employee->get_country( 'view' ) ); ?></li>
+                <li><?php erp_print_key_value( __( 'State', 'erp' ), $employee->get_state( 'view' ) ); ?></li>
                 <li><?php erp_print_key_value( __( 'Postal Code', 'erp' ), $employee->get_postal_code() ); ?></li>
 
                 <li><?php erp_print_key_value( __( 'Mobile', 'erp' ), erp_get_clickable( 'phone', $employee->get_phone( 'mobile' ) ) ); ?></li>
                 <li><?php erp_print_key_value( __( 'Other Email', 'erp' ), erp_get_clickable( 'email', $employee->other_email ) ); ?></li>
                 <li><?php erp_print_key_value( __( 'Date of Birth', 'erp' ), $employee->get_birthday() ); ?></li>
-                <li><?php erp_print_key_value( __( 'Gender', 'erp' ), $employee->get_gender() ); ?></li>
-                <li><?php erp_print_key_value( __( 'Nationality', 'erp' ), $employee->get_nationality() ); ?></li>
-                <li><?php erp_print_key_value( __( 'Marital Status', 'erp' ), $employee->get_marital_status() ); ?></li>
+                <li><?php erp_print_key_value( __( 'Gender', 'erp' ), $employee->get_gender( 'view' ) ); ?></li>
+                <li><?php erp_print_key_value( __( 'Nationality', 'erp' ), $employee->get_nationality( 'view' ) ); ?></li>
+                <li><?php erp_print_key_value( __( 'Marital Status', 'erp' ), $employee->get_marital_status( 'view' ) ); ?></li>
                 <li><?php erp_print_key_value( __( 'Driving License', 'erp' ), $employee->driving_license ); ?></li>
                 <li><?php erp_print_key_value( __( 'Hobbies', 'erp' ), $employee->hobbies ); ?></li>
 
