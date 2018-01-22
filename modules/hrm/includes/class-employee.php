@@ -897,8 +897,14 @@ class Employee {
      *
      * @return string
      */
-    public function get_state() {
-        return erp_get_state_name( $this->wp_user->country, $this->wp_user->state );
+    public function get_state( $context = 'edit' ) {
+        if ( $this->is_employee() && isset( $this->wp_user->state ) ) {
+            if ( $context == 'edit' ) {
+                return $this->wp_user->state;
+            }
+
+            return erp_get_state_name( $this->wp_user->country, $this->wp_user->state );
+        }
     }
 
     /**
