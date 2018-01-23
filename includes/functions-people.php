@@ -91,7 +91,7 @@ function erp_get_peoples( $args = [] ) {
             $sql['where'][] = "AND people_meta.meta_key='$meta_key' and people_meta.meta_value='$meta_value'";
         }
 
-        // Check is the row want to search
+        // Check if the row want to search
         if ( ! empty( $s ) ) {
             $search_like = '%' . $wpdb->esc_like( $s ) . '%';
             $words       = explode( ' ', $s );
