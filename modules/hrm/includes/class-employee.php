@@ -227,10 +227,10 @@ class Employee {
             $employee_id = intval( $data['personal']['employee_id'] );
         }
 
-        if ( $employee_id ) {
+        if ( $employee_id && $employee_id != $this->employee_id) {
             $exist = \WeDevs\ERP\HRM\Models\Employee::where( 'employee_id', $employee_id )->first();
             if ( $exist ) {
-                return new \WP_Error( 'employee-id-exist', sprintf( __( 'Employee with the employee id %s already exist.Please use different one.', 'erp' ), $employee_id ) );
+                return new \WP_Error( 'employee-id-exist', sprintf( __( 'Employee with the employee id %s already exist. Please use different one.', 'erp' ), $employee_id ) );
             }
         }
 
