@@ -984,11 +984,16 @@ function erp_hr_get_leave_requests( $args = array() ) {
         'number'    => 20,
         'offset'    => 0,
         'orderby'   => 'created_on',
-        'order'     => 'DESC',
+        'order'     => 'DESC'
     );
 
     $args  = wp_parse_args( $args, $defaults );
     $where = '';
+
+    // Check if the row want to search
+    if ( ! empty( $args['s'] ) ) {
+        $where .= " WHERE u.display_name LIKE '%{$args['s']}%'";
+    }
 
     if ( 'all' != $args['status'] && $args['status'] != '' ) {
 

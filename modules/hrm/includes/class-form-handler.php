@@ -179,7 +179,10 @@ class Form_Handler {
 
         if ( $action ) {
 
-            $redirect = remove_query_arg( array( '_wp_http_referer', '_wpnonce' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
+            $redirect = remove_query_arg( array(
+                '_wp_http_referer', '_wpnonce',
+                'action', 'action2', 'paged', 'filter_by_year'
+            ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
 
             switch ( $action ) {
 
@@ -234,6 +237,14 @@ class Form_Handler {
                         }
                     }
 
+                    wp_redirect( $redirect );
+                    exit();
+
+                case 'filter_by_year':
+                    wp_redirect( $redirect );
+                    exit();
+
+                case 'search_request':
                     wp_redirect( $redirect );
                     exit();
 
