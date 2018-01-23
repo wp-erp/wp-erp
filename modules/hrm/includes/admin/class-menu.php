@@ -12,6 +12,12 @@ class Admin_Menu {
      */
     public function __construct() {
         add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+
+        remove_role( 'erp_hr_manager' );
+        remove_role( 'employee' );
+
+        $installer = new \WeDevs_ERP_Installer();
+        $installer->create_roles();
     }
 
     /**
@@ -134,7 +140,11 @@ class Admin_Menu {
         $template = apply_filters( 'erp_hr_employee_my_profile_templates', $template, $action, $id );
 
         if ( file_exists( $template ) ) {
-            $is_my_profile_page = true;
+            $is_my_profile_page = false;
+            if( get_current_user_id() == $id ){
+                $is_my_profile_page = true;
+            }
+
             include $template;
         }
     }
