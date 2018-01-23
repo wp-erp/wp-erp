@@ -30,7 +30,7 @@ class Designations_Controller extends REST_Controller {
                 'callback'            => [ $this, 'get_designations' ],
                 'args'                => $this->get_collection_params(),
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_list_employee' );
+                    return current_user_can( 'erp_view_list' );
                 },
             ],
             [
@@ -52,7 +52,7 @@ class Designations_Controller extends REST_Controller {
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_list_employee' );
+                    return current_user_can( 'erp_view_list' );
                 },
             ],
             [

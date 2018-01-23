@@ -29,7 +29,7 @@ class Utility_Controller extends REST_Controller {
                 'callback'            => [ $this, 'get_active_plugins' ],
                 'args'                => $this->get_collection_params(),
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_list_employee' );
+                    return current_user_can('erp_view_list' );
                 },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],

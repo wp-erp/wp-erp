@@ -32,7 +32,7 @@ class Company_Controller extends REST_Controller {
                 'callback'            => [ $this, 'get_company_locations' ],
                 'args'                => $this->get_collection_params(),
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_list_employee' );
+                    return current_user_can( 'erp_view_list' );
                 },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
@@ -56,7 +56,7 @@ class Company_Controller extends REST_Controller {
                 'callback'            => [ $this, 'get_employee_types' ],
                 'args'                => $this->get_collection_params(),
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_list_employee' );
+                    return current_user_can( 'erp_view_list' );
                 },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
@@ -68,7 +68,7 @@ class Company_Controller extends REST_Controller {
                 'callback'            => [ $this, 'get_employee_pay_types' ],
                 'args'                => $this->get_collection_params(),
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_list_employee' );
+                    return current_user_can( 'erp_view_list' );
                 },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
@@ -79,7 +79,7 @@ class Company_Controller extends REST_Controller {
                 'callback'            => [ $this, 'get_source_of_hire' ],
                 'args'                => $this->get_collection_params(),
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_list_employee' );
+                    return current_user_can( 'erp_view_list' );
                 },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
