@@ -12,12 +12,6 @@ class Admin_Menu {
      */
     public function __construct() {
         add_action( 'admin_menu', array( $this, 'admin_menu' ) );
-
-        remove_role( 'erp_hr_manager' );
-        remove_role( 'employee' );
-
-        $installer = new \WeDevs_ERP_Installer();
-        $installer->create_roles();
     }
 
     /**
