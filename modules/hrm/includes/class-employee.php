@@ -801,7 +801,9 @@ class Employee {
      * @return string
      */
     public function get_hiring_date() {
-        if ( isset( $this->erp_user->hiring_date ) && $this->erp_user->hiring_date != '0000-00-00' ) {
+        if ( isset( $this->erp_user->hiring_date )
+             &&  is_valid_date( $this->erp_user->hiring_date )
+             && $this->erp_user->hiring_date != '0000-00-00' ) {
             return erp_format_date( $this->erp_user->hiring_date );
         }
     }
@@ -819,7 +821,9 @@ class Employee {
 
     public function get_date_of_birth() {
         $date = '';
-        if ( isset( $this->erp_user->date_of_birth ) && ( $this->erp_user->date_of_birth != '0000-00-00' ) ) {
+        if ( isset( $this->erp_user->date_of_birth )
+             &&  is_valid_date( $this->erp_user->date_of_birth )
+             && ( $this->erp_user->date_of_birth != '0000-00-00' ) ) {
             $date = erp_format_date( $this->erp_user->date_of_birth );
         }
 

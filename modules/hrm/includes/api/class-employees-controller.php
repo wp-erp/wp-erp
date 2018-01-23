@@ -36,7 +36,7 @@ class Employees_Controller extends REST_Controller {
                 'callback'            => [ $this, 'get_employees' ],
                 'args'                => $this->get_collection_params(),
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_list_employee' );
+                    return current_user_can( 'erp_view_list' );
                 },
             ],
             [
@@ -77,7 +77,7 @@ class Employees_Controller extends REST_Controller {
                 'callback'            => [ $this, 'update_employee' ],
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_edit_employee' );
+                    return current_user_can( 'erp_edit_employee', $request['user_id'] );
                 },
             ],
             [
@@ -95,14 +95,14 @@ class Employees_Controller extends REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_experiences' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_list_employee' );
+                    return current_user_can( 'erp_view_experience', $request['user_id'] );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_experience' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_edit_employee' );
+                    return current_user_can( 'erp_create_experience', $request['user_id'] );
                 },
             ],
         ] );
@@ -113,21 +113,21 @@ class Employees_Controller extends REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_experience' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_list_employee' );
+                    return current_user_can( 'erp_view_experience', $request['user_id'] );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'update_experience' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_edit_employee' );
+                    return current_user_can( 'erp_edit_experience', $request['user_id'] );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_experience' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_edit_employee' );
+                    return current_user_can( 'erp_delete_experience', $request['user_id'] );
                 },
             ],
         ] );
@@ -138,14 +138,14 @@ class Employees_Controller extends REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_educations' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_list_employee' );
+                    return current_user_can( 'erp_view_education', $request['user_id'] );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_education' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_edit_employee' );
+                    return current_user_can( 'erp_create_education', $request['user_id'] );
                 },
             ],
         ] );
@@ -155,14 +155,14 @@ class Employees_Controller extends REST_Controller {
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'update_education' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_edit_employee' );
+                    return current_user_can( 'erp_edit_education', $request['user_id'] );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_education' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_edit_employee' );
+                    return current_user_can( 'erp_delete_education', $request['user_id'] );
                 },
             ],
         ] );
@@ -173,14 +173,14 @@ class Employees_Controller extends REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_dependents' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_list_employee' );
+                    return current_user_can( 'erp_view_dependent', $request['user_id'] );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_dependent' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_edit_employee' );
+                    return current_user_can( 'erp_create_dependent', $request['user_id'] );
                 },
             ],
         ] );
@@ -190,14 +190,14 @@ class Employees_Controller extends REST_Controller {
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'update_dependent' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_edit_employee' );
+                    return current_user_can( 'erp_edit_dependent', $request['user_id'] );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_dependent' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_edit_employee' );
+                    return current_user_can( 'erp_delete_dependent', $request['user_id'] );
                 },
             ],
         ] );
@@ -208,14 +208,14 @@ class Employees_Controller extends REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_histories' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_list_employee' );
+                    return current_user_can( 'erp_view_jobinfo', $request['user_id'] );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_history' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_edit_employee' );
+                    return current_user_can( 'erp_manage_jobinfo' );
                 },
             ],
         ] );
@@ -225,7 +225,7 @@ class Employees_Controller extends REST_Controller {
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_history' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_edit_employee' );
+                    return current_user_can( 'erp_manage_jobinfo' );
                 },
             ],
         ] );
@@ -237,14 +237,14 @@ class Employees_Controller extends REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_performances' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_list_employee' );
+                    return current_user_can( 'erp_view_jobinfo', $request['user_id'] );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_performance' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_edit_employee' );
+                    return current_user_can( 'erp_manage_jobinfo' );
                 },
             ],
         ] );
@@ -254,7 +254,7 @@ class Employees_Controller extends REST_Controller {
                 'methods'             => WP_REST_Server::DELETABLE,
                 'callback'            => [ $this, 'delete_performance' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_edit_employee' );
+                    return current_user_can( 'erp_manage_jobinfo' );
                 },
             ],
         ] );
@@ -265,7 +265,7 @@ class Employees_Controller extends REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_events' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_list_employee' );
+                    return current_user_can( 'erp_edit_employee', $request['user_id'] );
                 },
             ]
         ] );
@@ -276,7 +276,7 @@ class Employees_Controller extends REST_Controller {
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => [ $this, 'create_terminate' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( erp_hr_get_manager_role() );
+                    return current_user_can( 'erp_can_terminate' );
                 },
             ],
         ] );
@@ -287,7 +287,7 @@ class Employees_Controller extends REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_announcements' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_list_employee' );
+                    return current_user_can( 'erp_view_announcement', $request['user_id'] );
                 },
             ]
         ] );
@@ -297,7 +297,7 @@ class Employees_Controller extends REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_announcements' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_list_employee' );
+                    return current_user_can( 'erp_view_announcement', $request['user_id'] );
                 },
             ],
             [
@@ -305,7 +305,7 @@ class Employees_Controller extends REST_Controller {
                 'callback'            => [ $this, 'update_status' ],
                 'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_list_employee' );
+                    return current_user_can( 'erp_view_announcement', $request['user_id'] );
                 },
             ],
         ] );
@@ -316,7 +316,7 @@ class Employees_Controller extends REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_policies' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_list_employee' );
+                    return current_user_can( 'erp_edit_employee' , $request['user_id']);
                 },
             ],
         ] );
@@ -326,14 +326,14 @@ class Employees_Controller extends REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_leaves' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_list_employee' );
+                    return current_user_can( 'erp_edit_employee' , $request['user_id'] );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_leave' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_list_employee' );
+                    return current_user_can( 'erp_edit_employee' , $request['user_id'] );
                 },
             ],
         ] );
@@ -343,14 +343,14 @@ class Employees_Controller extends REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_notes' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_list_employee' );
+                    return current_user_can( 'erp_manage_review');
                 },
             ],
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_note' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_edit_employee' );
+                    return current_user_can( 'erp_manage_review' );
                 },
             ],
         ] );
@@ -606,7 +606,7 @@ class Employees_Controller extends REST_Controller {
         if ( ! $employee->is_employee() ) {
             return new WP_Error( 'rest_employee_invalid_id', __( 'Invalid resource id.' ), [ 'status' => 400 ] );
         }
-        $args = $request->get_params();
+        $args       = $request->get_params();
         $args['id'] = $exp_id;
 
         $experience = $employee->add_experience( $args );
@@ -708,7 +708,7 @@ class Employees_Controller extends REST_Controller {
         }
 
         $args['id'] = $edu_id;
-        $education = $employee->add_education( $request->get_params() );
+        $education  = $employee->add_education( $request->get_params() );
 
         if ( is_wp_error( $education ) ) {
             return $education;
@@ -808,7 +808,7 @@ class Employees_Controller extends REST_Controller {
         }
 
         $args['id'] = $depen_id;
-        $dependent = $employee->add_dependent( $request->get_params() );
+        $dependent  = $employee->add_dependent( $request->get_params() );
 
         if ( is_wp_error( $dependent ) ) {
             return $dependent;
@@ -862,17 +862,17 @@ class Employees_Controller extends REST_Controller {
 
         $histories = $employee->get_job_histories( $module );
 
-        for ($i = 0; $i < count($histories['job']); $i++) { 
-            $reports_to = new Employee( $histories['job'][$i]['reporting_to'] );
+        for ( $i = 0; $i < count( $histories['job'] ); $i ++ ) {
+            $reports_to = new Employee( $histories['job'][ $i ]['reporting_to'] );
 
             if ( $employee->is_employee() ) {
-                $histories['job'][$i]['reporting_to_full_name'] = $reports_to->display_name;
-            } 
+                $histories['job'][ $i ]['reporting_to_full_name'] = $reports_to->display_name;
+            }
         }
 
-        $total     = $employee->get_erp_user()->histories()->count();
-        $response  = rest_ensure_response( $histories );
-        $response  = $this->format_collection_response( $response, $request, $total );
+        $total    = $employee->get_erp_user()->histories()->count();
+        $response = rest_ensure_response( $histories );
+        $response = $this->format_collection_response( $response, $request, $total );
 
         return $response;
     }
@@ -956,8 +956,8 @@ class Employees_Controller extends REST_Controller {
         }
         $items = $employee->get_performances( $request->get_params() );
 
-        foreach ($items as $item) {
-            foreach ($item as $performance) {
+        foreach ( $items as $item ) {
+            foreach ( $item as $performance ) {
                 $user_id = 0;
 
                 if ( $performance['reporting_to'] ) {
@@ -1000,7 +1000,7 @@ class Employees_Controller extends REST_Controller {
         }
 
         $performance = $employee->add_performance( $request->get_params() );
-        
+
         if ( is_wp_error( $performance ) ) {
             return $performance;
         }
@@ -1170,12 +1170,12 @@ class Employees_Controller extends REST_Controller {
             return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
         }
 
-        $notes    = $employee->get_notes( $args['total'], $args['offset'] );
+        $notes = $employee->get_notes( $args['total'], $args['offset'] );
 
-        foreach ($notes as $note) {
+        foreach ( $notes as $note ) {
             $user                          = get_user_by( 'id', $note->comment_by );
             $note->comment_by_display_name = $user->display_name;
-            $note->comment_by_avatar_url   = get_avatar_url($user->comment_by);
+            $note->comment_by_avatar_url   = get_avatar_url( $user->comment_by );
         }
 
         $total    = $employee->get_erp_user()->notes()->count();
@@ -1357,8 +1357,8 @@ class Employees_Controller extends REST_Controller {
      * Prepare a single user output for response
      *
      * @param \WeDevs\ERP\HRM\Employee $item
-     * @param \WP_REST_Request|null    $request
-     * @param array                    $additional_fields
+     * @param \WP_REST_Request|null $request
+     * @param array $additional_fields
      *
      * @return mixed|object|\WP_REST_Response
      */
