@@ -220,14 +220,14 @@ class Employee {
 
         //if is set employee id
         $employee_id = null;
-        if( ! empty( $data['work']['employee_id'] ) ){
+        if ( ! empty( $data['work']['employee_id'] ) ) {
             $employee_id = intval( $data['work']['employee_id'] );
         }
-        if( ! empty( $data['personal']['employee_id'] ) ){
+        if ( ! empty( $data['personal']['employee_id'] ) ) {
             $employee_id = intval( $data['personal']['employee_id'] );
         }
 
-        if ( $employee_id && $employee_id != $this->employee_id) {
+        if ( $employee_id && $employee_id != $this->employee_id ) {
             $exist = \WeDevs\ERP\HRM\Models\Employee::where( 'employee_id', $employee_id )->first();
             if ( $exist ) {
                 return new \WP_Error( 'employee-id-exist', sprintf( __( 'Employee with the employee id %s already exist. Please use different one.', 'erp' ), $employee_id ) );
@@ -333,7 +333,6 @@ class Employee {
     public function update_employee( $data = array() ) {
         $restricted = [
             'user_id',
-            'user_email',
             'user_url',
             'id',
             'ID',
@@ -343,6 +342,22 @@ class Employee {
         $posted = array_map( 'strip_tags_deep', $data );
         $posted = erp_array_flatten( $posted );
         $posted = array_except( $posted, $restricted );
+
+        //update user email
+        if ( isset( $posted['user_email'] )
+             && $posted['user_email'] !== $this->wp_user->user_email
+             && filter_var($posted['user_email'], FILTER_VALIDATE_EMAIL)
+             && ! get_user_by( 'user_email', $posted['user_email'] ) ) {
+            $user_email = esc_attr( $posted['user_email'] );
+            $result     = wp_update_user( array(
+                'ID'         => $this->user_id,
+                'user_email' => strtolower( $user_email ),
+            ) );
+
+            if ( is_wp_error( $result ) ) {
+                return $result;
+            }
+        }
 
         foreach ( $posted as $key => $value ) {
             if ( ! empty( $value ) && ( $this->$key != $value ) ) {
@@ -802,7 +817,7 @@ class Employee {
      */
     public function get_hiring_date() {
         if ( isset( $this->erp_user->hiring_date )
-             &&  is_valid_date( $this->erp_user->hiring_date )
+             && is_valid_date( $this->erp_user->hiring_date )
              && $this->erp_user->hiring_date != '0000-00-00' ) {
             return erp_format_date( $this->erp_user->hiring_date );
         }
@@ -822,7 +837,7 @@ class Employee {
     public function get_date_of_birth() {
         $date = '';
         if ( isset( $this->erp_user->date_of_birth )
-             &&  is_valid_date( $this->erp_user->date_of_birth )
+             && is_valid_date( $this->erp_user->date_of_birth )
              && ( $this->erp_user->date_of_birth != '0000-00-00' ) ) {
             $date = erp_format_date( $this->erp_user->date_of_birth );
         }
