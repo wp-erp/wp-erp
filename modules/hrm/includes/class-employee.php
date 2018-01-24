@@ -346,7 +346,7 @@ class Employee {
         //update user email
         if ( isset( $posted['user_email'] )
              && $posted['user_email'] !== $this->wp_user->user_email
-             && filter_var($posted['user_email'], FILTER_VALIDATE_EMAIL)
+             && filter_var( $posted['user_email'], FILTER_VALIDATE_EMAIL )
              && ! get_user_by( 'user_email', $posted['user_email'] ) ) {
             $user_email = esc_attr( $posted['user_email'] );
             $result     = wp_update_user( array(
@@ -928,15 +928,22 @@ class Employee {
 
     /**
      * Get the name of reporting user
+     * @since 1.3.2 return object
+     *
+     * @param $return_object boolean
      *
      * @return string
      */
-    public function get_reporting_to() {
+    public function get_reporting_to( $return_object = false ) {
         if ( $this->is_employee() && isset( $this->erp_user->reporting_to ) ) {
             $user_id = (int) $this->erp_user->reporting_to;
             $user    = new Employee( $user_id );
             if ( ! $user->is_employee() ) {
                 return null;
+            }
+
+            if ( $return_object ) {
+                return $user;
             }
 
             return $user->get_user_id();
