@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\HRM;
 
 /**
@@ -55,7 +56,7 @@ class Form_Handler {
         }
         $designation = isset( $_POST['designation'] ) ? $_POST['designation'] : '';
         $department  = isset( $_POST['department'] ) ? $_POST['department'] : '';
-        $url = admin_url("admin.php?page=erp-leave-calendar&designation=$designation&department=$department");
+        $url         = admin_url( "admin.php?page=erp-leave-calendar&designation=$designation&department=$department" );
         wp_redirect( $url );
         exit();
     }
@@ -133,10 +134,14 @@ class Form_Handler {
         }
 
         $employee_table = new \WeDevs\ERP\HRM\Entitlement_List_Table();
-        $action = $employee_table->current_action();
+        $action         = $employee_table->current_action();
 
         if ( $action ) {
-            $redirect = remove_query_arg( array('_wp_http_referer', '_wpnonce', 'filter_entitlement' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
+            $redirect = remove_query_arg( array(
+                '_wp_http_referer',
+                '_wpnonce',
+                'filter_entitlement'
+            ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
 
             if ( $action == 'filter_entitlement' ) {
                 wp_redirect( $redirect );
@@ -144,9 +149,9 @@ class Form_Handler {
             }
 
             if ( $action == 'entitlement_delete' ) {
-                if ( isset( $_GET['entitlement_id'] ) && !empty( $_GET['entitlement_id'] ) ) {
+                if ( isset( $_GET['entitlement_id'] ) && ! empty( $_GET['entitlement_id'] ) ) {
                     foreach ( $_GET['entitlement_id'] as $key => $ent_id ) {
-                        $entitlement_data = \WeDevs\ERP\HRM\Models\Leave_Entitlement::select( 'user_id','policy_id' )->find( $ent_id )->toArray();
+                        $entitlement_data = \WeDevs\ERP\HRM\Models\Leave_Entitlement::select( 'user_id', 'policy_id' )->find( $ent_id )->toArray();
                         erp_hr_delete_entitlement( $ent_id, $entitlement_data['user_id'], $entitlement_data['policy_id'] );
                     }
                 }
@@ -182,15 +187,19 @@ class Form_Handler {
         if ( $action ) {
 
             $redirect = remove_query_arg( array(
-                '_wp_http_referer', '_wpnonce',
-                'action', 'action2', 'paged', 'filter_by_year'
+                '_wp_http_referer',
+                '_wpnonce',
+                'action',
+                'action2',
+                'paged',
+                'filter_by_year'
             ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
 
             switch ( $action ) {
 
                 case 'delete' :
 
-                    if ( isset( $_GET['request_id'] ) && !empty( $_GET['request_id'] ) ) {
+                    if ( isset( $_GET['request_id'] ) && ! empty( $_GET['request_id'] ) ) {
                         foreach ( $_GET['request_id'] as $key => $request_id ) {
                             \WeDevs\ERP\HRM\Models\Leave_request::find( $request_id )->delete();
                         }
@@ -200,13 +209,13 @@ class Form_Handler {
                     exit();
 
                 case 'approved' :
-                    if ( isset( $_GET['request_id'] ) && !empty( $_GET['request_id'] ) ) {
+                    if ( isset( $_GET['request_id'] ) && ! empty( $_GET['request_id'] ) ) {
                         foreach ( $_GET['request_id'] as $key => $request_id ) {
                             erp_hr_leave_request_update_status( $request_id, 1 );
 
                             $approved_email = wperp()->emailer->get_email( 'Approved_Leave_Request' );
 
-                            if ( is_a( $approved_email, '\WeDevs\ERP\Email') ) {
+                            if ( is_a( $approved_email, '\WeDevs\ERP\Email' ) ) {
                                 $approved_email->trigger( $request_id );
                             }
 
@@ -217,13 +226,13 @@ class Form_Handler {
                     exit();
 
                 case 'reject' :
-                    if ( isset( $_GET['request_id'] ) && !empty( $_GET['request_id'] ) ) {
+                    if ( isset( $_GET['request_id'] ) && ! empty( $_GET['request_id'] ) ) {
                         foreach ( $_GET['request_id'] as $key => $request_id ) {
                             erp_hr_leave_request_update_status( $request_id, 3 );
 
                             $rejected_email = wperp()->emailer->get_email( 'Rejected_Leave_Request' );
 
-                            if ( is_a( $rejected_email, '\WeDevs\ERP\Email') ) {
+                            if ( is_a( $rejected_email, '\WeDevs\ERP\Email' ) ) {
                                 $rejected_email->trigger( $request_id );
                             }
                         }
@@ -233,7 +242,7 @@ class Form_Handler {
                     exit();
 
                 case 'pending':
-                    if ( isset( $_GET['request_id'] ) && !empty( $_GET['request_id'] ) ) {
+                    if ( isset( $_GET['request_id'] ) && ! empty( $_GET['request_id'] ) ) {
                         foreach ( $_GET['request_id'] as $key => $request_id ) {
                             erp_hr_leave_request_update_status( $request_id, 2 );
                         }
@@ -274,17 +283,21 @@ class Form_Handler {
         }
 
         $employee_table = new \WeDevs\ERP\HRM\Employee_List_Table();
-        $action = $employee_table->current_action();
+        $action         = $employee_table->current_action();
 
         if ( $action ) {
 
-            $redirect = remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'filter_employee' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
+            $redirect = remove_query_arg( array(
+                '_wp_http_referer',
+                '_wpnonce',
+                'filter_employee'
+            ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
 
             switch ( $action ) {
 
                 case 'delete' :
 
-                    if ( isset( $_GET['employee_id'] ) && !empty( $_GET['employee_id'] ) ) {
+                    if ( isset( $_GET['employee_id'] ) && ! empty( $_GET['employee_id'] ) ) {
                         erp_employee_delete( $_GET['employee_id'], false );
                     }
 
@@ -292,7 +305,7 @@ class Form_Handler {
                     exit();
 
                 case 'permanent_delete' :
-                    if ( isset( $_GET['employee_id'] ) && !empty( $_GET['employee_id'] ) ) {
+                    if ( isset( $_GET['employee_id'] ) && ! empty( $_GET['employee_id'] ) ) {
                         erp_employee_delete( $_GET['employee_id'], true );
                     }
 
@@ -300,7 +313,7 @@ class Form_Handler {
                     exit();
 
                 case 'restore' :
-                    if ( isset( $_GET['employee_id'] ) && !empty( $_GET['employee_id'] ) ) {
+                    if ( isset( $_GET['employee_id'] ) && ! empty( $_GET['employee_id'] ) ) {
                         erp_employee_restore( $_GET['employee_id'] );
                     }
 
@@ -337,17 +350,22 @@ class Form_Handler {
         }
 
         $employee_table = new \WeDevs\ERP\HRM\Designation_List_Table();
-        $action = $employee_table->current_action();
+        $action         = $employee_table->current_action();
 
         if ( $action ) {
 
-            $redirect = remove_query_arg( array('_wp_http_referer', '_wpnonce', 'action', 'action2' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
+            $redirect = remove_query_arg( array(
+                '_wp_http_referer',
+                '_wpnonce',
+                'action',
+                'action2'
+            ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
 
             switch ( $action ) {
 
                 case 'designation_delete' :
 
-                    if ( isset( $_GET['desig'] ) && !empty( $_GET['desig'] ) ) {
+                    if ( isset( $_GET['desig'] ) && ! empty( $_GET['desig'] ) ) {
                         $not_deleted_item = erp_hr_delete_designation( $_GET['desig'] );
                     }
 
@@ -385,7 +403,12 @@ class Form_Handler {
 
         if ( $action ) {
 
-            $redirect = remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'action', 'action2' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
+            $redirect = remove_query_arg( array(
+                '_wp_http_referer',
+                '_wpnonce',
+                'action',
+                'action2'
+            ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
             $resp     = [];
 
             switch ( $action ) {
@@ -398,7 +421,7 @@ class Form_Handler {
                         }
                     }
 
-                    if ( in_array ( false, $resp ) ) {
+                    if ( in_array( false, $resp ) ) {
                         $redirect = add_query_arg( array( 'department_delete' => 'item_deleted' ), $redirect );
                     }
 
@@ -428,7 +451,11 @@ class Form_Handler {
 
         $this->remove_holiday( $_GET );
 
-        $query_arg = add_query_arg( array( 's' => $_GET['s'], 'from' => $_GET['from'], 'to' => $_GET['to'] ), $_GET['_wp_http_referer'] );
+        $query_arg = add_query_arg( array(
+            's'    => $_GET['s'],
+            'from' => $_GET['from'],
+            'to'   => $_GET['to']
+        ), $_GET['_wp_http_referer'] );
         wp_redirect( $query_arg );
         exit();
     }
@@ -452,6 +479,7 @@ class Form_Handler {
         if ( isset( $get['action'] ) && $get['action'] == 'trash' ) {
             if ( isset( $get['holiday_id'] ) ) {
                 erp_hr_delete_holidays( $get['holiday_id'] );
+
                 return true;
             }
         }
@@ -459,6 +487,7 @@ class Form_Handler {
         if ( isset( $get['action2'] ) && $get['action2'] == 'trash' ) {
             if ( isset( $get['holiday_id'] ) ) {
                 erp_hr_delete_holidays( $get['holiday_id'] );
+
                 return true;
             }
         }
@@ -483,11 +512,11 @@ class Form_Handler {
             wp_die( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $affected        = 0;
-        $errors          = array();
-        $employees       = array();
-        $cur_year        = (int) date( 'Y' );
-        $page_url        = admin_url( 'admin.php?page=erp-leave-assign&tab=assignment' );
+        $affected  = 0;
+        $errors    = array();
+        $employees = array();
+        $cur_year  = (int) date( 'Y' );
+        $page_url  = admin_url( 'admin.php?page=erp-leave-assign&tab=assignment' );
 
         $is_single       = ! isset( $_POST['assignment_to'] );
         $leave_policy    = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : '-1';
@@ -522,13 +551,14 @@ class Form_Handler {
 
             $employees = erp_hr_get_employees( array(
                 'location'   => $location,
-                'department' => $department
+                'department' => $department,
+                'number'     => '-1',
             ) );
         } else {
 
             $user              = get_user_by( 'id', $single_employee );
             $emp               = new \stdClass();
-            $emp->id      = $user->ID;
+            $emp->id           = $user->ID;
             $emp->display_name = $user->display_name;
 
             $employees[] = $emp;
@@ -543,9 +573,9 @@ class Form_Handler {
                 return;
             }
 
-            foreach ($employees as $employee) {
+            foreach ( $employees as $employee ) {
                 $data = array(
-                    'user_id'   => $employee->get_user_id(),
+                    'user_id'   => $employee->id,
                     'policy_id' => $leave_policy,
                     'days'      => $policy->value,
                     'from_date' => $from_date,
@@ -588,8 +618,8 @@ class Form_Handler {
         $leave_policy = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : 0;
 
         // @todo: date format may need to be changed when partial leave introduced
-        $start_date   = isset( $_POST['leave_from'] ) ? sanitize_text_field( $_POST['leave_from'] . ' 00:00:00' ) : date_i18n( 'Y-m-d 00:00:00' );
-        $end_date     = isset( $_POST['leave_to'] ) ? sanitize_text_field( $_POST['leave_to'] . ' 23:59:59' ) : date_i18n( 'Y-m-d 23:59:59' );
+        $start_date = isset( $_POST['leave_from'] ) ? sanitize_text_field( $_POST['leave_from'] . ' 00:00:00' ) : date_i18n( 'Y-m-d 00:00:00' );
+        $end_date   = isset( $_POST['leave_to'] ) ? sanitize_text_field( $_POST['leave_to'] . ' 23:59:59' ) : date_i18n( 'Y-m-d 23:59:59' );
 
         $leave_reason = isset( $_POST['leave_reason'] ) ? strip_tags( $_POST['leave_reason'] ) : '';
 
@@ -677,7 +707,7 @@ class Form_Handler {
         }
 
         // redirect the user back
-        $redirect_to = remove_query_arg( array('status'), admin_url( 'admin.php?page=erp-leave' ) );
+        $redirect_to = remove_query_arg( array( 'status' ), admin_url( 'admin.php?page=erp-leave' ) );
         $redirect_to = add_query_arg( array( 'status' => $status ), $redirect_to );
 
         wp_redirect( $redirect_to );
@@ -708,9 +738,15 @@ class Form_Handler {
         }
 
         if ( $_POST['employee_status'] == 'terminated' ) {
-            \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', '=', $_POST['user_id'] )->update( [ 'status' => $_POST['employee_status'], 'termination_date' => current_time( 'mysql' ) ] );
+            \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', '=', $_POST['user_id'] )->update( [
+                'status'           => $_POST['employee_status'],
+                'termination_date' => current_time( 'mysql' )
+            ] );
         } else {
-            \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', '=', $_POST['user_id'] )->update( ['status' => $_POST['employee_status'],  'termination_date' => '' ] );
+            \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', '=', $_POST['user_id'] )->update( [
+                'status'           => $_POST['employee_status'],
+                'termination_date' => ''
+            ] );
         }
 
         wp_redirect( $_POST['_wp_http_referer'] );
@@ -768,7 +804,11 @@ class Form_Handler {
                 return;
             }
 
-            $redirect = remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'filter_headcount' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
+            $redirect = remove_query_arg( array(
+                '_wp_http_referer',
+                '_wpnonce',
+                'filter_headcount'
+            ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
 
             wp_redirect( $redirect );
         }
