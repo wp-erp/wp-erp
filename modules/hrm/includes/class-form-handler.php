@@ -267,7 +267,7 @@ class Form_Handler {
         }
 
         // Check permission if not hr manager then go out from here
-        if ( ! current_user_can( erp_hr_get_manager_role() ) ) {
+        if ( ! current_user_can( 'erp_view_list' ) ) {
             wp_die( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
