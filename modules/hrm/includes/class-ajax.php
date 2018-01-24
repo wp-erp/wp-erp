@@ -1527,12 +1527,13 @@ class Ajax_Handler {
             $this->send_error( __( 'Something went wrong!', 'erp' ) );
         }
 
-        if ( ! current_user_can( 'erp_leave_create_request' ) ) {
+        $employee_id  = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+        $leave_policy = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : 0;
+
+        if ( ! current_user_can( 'erp_leave_create_request', $employee_id ) ) {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $employee_id  = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
-        $leave_policy = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : 0;
 
         // @todo: date format may need to be changed when partial leave introduced
         $start_date = isset( $_POST['leave_from'] ) ? sanitize_text_field( $_POST['leave_from'] . ' 00:00:00' ) : date_i18n( 'Y-m-d 00:00:00' );
