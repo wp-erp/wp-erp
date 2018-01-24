@@ -394,6 +394,11 @@ class Ajax_Handler {
         $desc     = isset( $_POST['desig-desc'] ) ? trim( strip_tags( $_POST['desig-desc'] ) ) : '';
         $desig_id = isset( $_POST['desig_id'] ) ? intval( $_POST['desig_id'] ) : 0;
 
+        $exist = \WeDevs\ERP\HRM\Models\Designation::where('title', 'Like', $title)->first();
+        if( $exist && $desig_id !== $exist->id ){
+            $this->send_error( __('Multiple designation with the same name is not allowed.', 'erp') );
+        }
+
         $desig_id = erp_hr_create_designation( array(
             'id'          => $desig_id,
             'title'       => $title,
