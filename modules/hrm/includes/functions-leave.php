@@ -1425,11 +1425,11 @@ function erp_hr_get_current_month_leave_list() {
     $prefix = $db->db->prefix;
 
     return $db->table( 'erp_hr_leave_requests as req' )
-              ->select( 'req.user_id', 'req.start_date', 'req.end_date' )
+              ->select( 'req.user_id', 'req.start_date', 'req.end_date', 'req.status', 'req.id' )
               ->leftJoin( "{$prefix}erp_hr_employees as em", 'req.user_id', '=', 'em.user_id' )
-              ->where( 'em.status', '!=', 'terminated' )
-              ->where( 'req.start_date', '>=', current_time( 'mysql' ) )
-              ->where( 'req.start_date', '<=', date( 'Y-m-d 23:59:59', strtotime( 'last day of this month' ) ) )
+              ->where( 'em.status', '=', 'active' )
+              ->whereDate( 'req.start_date', '>=', date( 'Y-m-d 00:00:00',  current_time( 'timestamp' ) ) )
+              ->whereDate( 'req.start_date', '<=', date( 'Y-m-d 23:59:59', strtotime( 'last day of this month' ) ) )
               ->where( 'req.status', 1 )
               ->orderBy( 'req.start_date', 'asc' )
               ->get();
