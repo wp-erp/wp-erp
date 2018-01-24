@@ -324,6 +324,11 @@ class Ajax_Handler {
         $lead    = isset( $_POST['lead'] ) ? intval( $_POST['lead'] ) : 0;
         $parent  = isset( $_POST['parent'] ) ? intval( $_POST['parent'] ) : 0;
 
+        $exist = \WeDevs\ERP\HRM\Models\Department::where('title', 'like', $title)->first();
+        if( $exist && $dept_id !== $exist->id ){
+            $this->send_error( __('Multiple department with the same name is not allowed.', 'erp') );
+        }
+
         // on update, ensure $parent != $dept_id
         if ( $dept_id == $parent ) {
             $parent = 0;
