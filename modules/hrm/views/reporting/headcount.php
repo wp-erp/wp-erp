@@ -1,11 +1,5 @@
 <div class="wrap">
     <h3><?php _e( 'Headcount', 'erp' ); ?></h3>
-
-    <?php
-
-
-    ?>
-
     <?php
         global $wpdb;
 

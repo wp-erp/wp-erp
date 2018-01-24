@@ -31,13 +31,15 @@ class Form_Handler {
         add_action( "load-{$hr_management}_page_erp-hr-employee", array( $this, 'employee_bulk_action' ) );
         add_action( "load-{$hr_management}_page_erp-hr-designation", array( $this, 'designation_bulk_action' ) );
         add_action( "load-{$hr_management}_page_erp-hr-depts", array( $this, 'department_bulk_action' ) );
-        add_action( "load-{$hr_management}_page_erp-hr-reporting", array( $this, 'reporting_headcount_bulk_action' ) );
+        add_action( "load-{$hr_management}_page_erp-hr-reporting", array( $this, 'reporting_bulk_action' ) );
 
         $leave = sanitize_title( __( 'Leave', 'erp' ) );
         add_action( 'load-toplevel_page_erp-leave', array( $this, 'leave_request_bulk_action' ) );
         add_action( "load-{$leave}_page_erp-leave-assign", array( $this, 'entitlement_bulk_action' ) );
         add_action( "load-{$leave}_page_erp-holiday-assign", array( $this, 'holiday_action' ) );
         add_action( "load-{$leave}_page_erp-leave-policies", array( $this, 'leave_policies' ) );
+        add_action( "load-leaves_page_erp-hr-reporting", array( $this, 'reporting_leaves_bulk_action' ) );
+
     }
 
     /**
@@ -752,13 +754,13 @@ class Form_Handler {
     }
 
     /**
-     * Reporting Headcount Form Submit Handler
+     * Reporting Form Submit Handler
      *
      * @since 0.1
      *
      * @return void
      */
-    public function reporting_headcount_bulk_action() {
+    public function reporting_bulk_action() {
 
         if ( isset( $_REQUEST['filter_headcount'] ) ) {
 
@@ -770,8 +772,20 @@ class Form_Handler {
 
             wp_redirect( $redirect );
         }
+        
+        if ( isset( $_REQUEST['filter_leave_report'] ) ) {
+
+            if ( ! $this->verify_current_page_screen( 'erp-hr-reporting', 'epr-rep-leaves' ) ) {
+                return;
+            }
+
+            $redirect = remove_query_arg( array( '_wp_http_referer', '_wpnonce', 'filter_leave_report' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
+
+            wp_redirect( $redirect );
+        }
 
     }
+
 }
 
 new Form_Handler();

@@ -41,7 +41,7 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
         $selected_desingnation = ( isset( $_GET['filter_designation'] ) ) ? $_GET['filter_designation'] : 0;
         $selected_department   = ( isset( $_GET['filter_department'] ) ) ? $_GET['filter_department'] : 0;
         $selected_type         = ( isset( $_GET['filter_employment_type'] ) ) ? $_GET['filter_employment_type'] : '';
-        $selected_time         = ( isset( $_GET['filter_time'] ) ) ? $_GET['filter_time'] : date( 'Y' );
+        $selected_time         = ( isset( $_GET['filter_year'] ) ) ? $_GET['filter_year'] : date( 'Y' );
         $current_year          = date( 'Y' );
         ?>
         <div class="actions alignleft">
@@ -177,9 +177,10 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
         $selected_desingnation = ( isset( $_GET['filter_designation'] ) ) ? $_GET['filter_designation'] : 0;
         $selected_department   = ( isset( $_GET['filter_department'] ) ) ? $_GET['filter_department'] : 0;
         $selected_type         = ( isset( $_GET['filter_employment_type'] ) ) ? $_GET['filter_employment_type'] : '';
-        $selected_time         = ( isset( $_GET['filter_time'] ) ) ? $_GET['filter_time'] : date( 'Y' );
+        $selected_time         = ( isset( $_GET['filter_year'] ) ) ? $_GET['filter_year'] : date( 'Y' );
 
         $query         = \WeDevs\ERP\HRM\Models\Employee::where( 'status', 'active' )->select( 'user_id' );
+
         if ( $selected_department && '-1' != $selected_department ) {
             $query->where( 'department', intval( $selected_department ) );
         }
@@ -192,17 +193,21 @@ class Leave_Report_Employee_Based extends \WP_List_Table {
             $query->where( 'type', $selected_type );
         }
 
+        $total_count   = $query->count();
+
         $employees_obj = $query->skip( $offset )->take( $per_page )->get()->toArray();
 
         $employees     = wp_list_pluck( $employees_obj, 'user_id' );
         $reports       = erp_get_leave_report( $employees, $selected_time.'-01-01', $selected_time.'-12-31' );
+
         $this->reports = $reports;
         $this->items   = $employees;
         $this->set_pagination_args( array(
-            'total_items' => $query->count(),
+            'total_items' => $total_count,
             'per_page'    => $per_page
         ) );
 
     }
+
 }
 
