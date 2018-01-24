@@ -343,10 +343,10 @@ function erp_hr_get_todays_birthday() {
     $db = new \WeDevs\ORM\Eloquent\Database();
 
     return erp_array_to_object( \WeDevs\ERP\HRM\Models\Employee::select( 'user_id' )
-                   ->where( $db->raw( "DATE_FORMAT( `date_of_birth`, '%m %d' )" ), \Carbon\Carbon::today()->format( 'm d' ) )
-                   ->where( 'termination_date', '0000-00-00' )
-                   ->get()
-                   ->toArray() );
+                                                               ->where( $db->raw( "DATE_FORMAT( `date_of_birth`, '%m %d' )" ), \Carbon\Carbon::today()->format( 'm d' ) )
+                                                               ->where( 'termination_date', '0000-00-00' )
+                                                               ->get()
+                                                               ->toArray() );
 }
 
 /**
@@ -829,7 +829,7 @@ function erp_hr_employee_history_modules() {
  * Translate generic module data to readable format
  *
  * @param array $history
- * @param bool  $inserting if inserting data then true
+ * @param bool $inserting if inserting data then true
  *
  * @return array|WP_Error
  */
@@ -910,4 +910,36 @@ function erp_hr_control_restricted_data( $data, $user_id ) {
     }
 
     return array();
+}
+
+/**
+ * Get employee full name
+ *
+ * @since 1.3.2
+ *
+ * @param $user_id
+ *
+ * @return string
+ *
+ */
+function erp_hr_get_employee_name( $user_id ) {
+    if ( ! $user_id instanceof WP_User ) {
+        $user = new WP_User( $user_id );
+    }
+
+    $name = array();
+    if ( $user->first_name ) {
+        $name[] = $user->first_name;
+    }
+
+    if ( $user->middle_name ) {
+        $name[] = $user->middle_name;
+    }
+
+    if ( $user->last_name ) {
+        $name[] = $user->last_name;
+    }
+
+    return implode( ' ', $name );
+
 }
