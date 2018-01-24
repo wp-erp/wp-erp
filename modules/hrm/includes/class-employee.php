@@ -955,9 +955,11 @@ class Employee {
      *
      * @param  string  type of phone. work|mobile|phone
      *
+     * @deprecated 1.3.2
+     *
      * @return string
      */
-    public function get_phone( $which = 'work' ) {
+    public function get_contact_details( $which = 'work' ) {
         $phone = '';
 
         switch ( $which ) {
@@ -976,6 +978,26 @@ class Employee {
 
         return $phone;
     }
+
+
+    public function get_phone() {
+        if ( $this->is_employee() && isset( $this->wp_user->phone ) ) {
+            return $this->wp_user->phone;
+        }
+    }
+
+    public function get_work_phone() {
+        if ( $this->is_employee() && isset( $this->wp_user->work_phone ) ) {
+            return $this->wp_user->work_phone;
+        }
+    }
+
+    public function get_mobile() {
+        if ( $this->is_employee() && isset( $this->wp_user->mobile ) ) {
+            return $this->wp_user->mobile;
+        }
+    }
+
 
     /**
      * Get birth date
