@@ -359,6 +359,14 @@ class Employee {
             }
         }
 
+        //check if something removed
+        foreach ( $this->data['personal'] as $p_key => $p_val){
+            if( empty( $posted[$p_key]) ){
+                $this->changes['personal'][$p_key] = '';
+            }
+        }
+
+
         foreach ( $posted as $key => $value ) {
             if ( ! empty( $value ) && ( $this->$key != $value ) ) {
                 if ( array_key_exists( $key, $this->data['work'] ) ) {
