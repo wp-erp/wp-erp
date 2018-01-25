@@ -3,7 +3,7 @@ Contributors: tareq1988, wedevs, ediamin, sabbir1991, asaquzzaman, shawon786, ma
 Donate Link: https://tareq.co/donate
 Tags: small business, SME, contact, contacts, CRM, Customer Relationship Management, employee, leave management, hr, hrm, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 4.9.1
+Tested up to: 4.9.2
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2
@@ -190,6 +190,26 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+= v1.3.2 -> Jan 25, 2018 =
+
+[fix] Leave report filters are not working as expected. Closes #600
+[fix] Employee profile fields are not updating when empty. Closes #599
+[fix] Employee create leave request permission denied. Closes #598
+[fix] Employee is not receiving email notification on leave request rejection. Closes #589
+[fix] Employees on Leave on the same date is not showing in 'Who is out' postbox. Closes #587
+[fix] 500 Internal Server Error when filtering and searching employees. Closes #586
+[fix] Duplicate department title. Closes #584
+[fix] Duplicate designation title. Closes #585
+[fix] HR overview page is taking long time to load. Closes #583
+[fix] Employee custom avatar image not working. Closes #580
+[fix] Assigning Leave policy to employee generates fatal error. Closes #577
+[fix] Leave entitlements should not be generated for inactive employees. Closes #573
+[fix] Fix single employee performance required fields.
+[fix] Fix upcoming birthdays for next week.
+[fix] Leave report filters add.
+
+[new] Search option in Leave Requests. Closes #574
+
 = v1.3.1 -> Jan 11, 2018 =
 
 [Fix] HRM Overview page blank when CRM module is not active.Closes #575
