@@ -31,7 +31,7 @@ class Leave_Holidays_Controller extends REST_Controller {
                 'callback'            => [ $this, 'get_holidays' ],
                 'args'                => $this->get_collection_params(),
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_leave_manage' );
+                    return current_user_can( 'erp_view_list' );
                 },
             ],
             [
@@ -53,7 +53,7 @@ class Leave_Holidays_Controller extends REST_Controller {
                     'context' => $this->get_context_param( [ 'default' => 'view' ] ),
                 ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_leave_manage' );
+                    return current_user_can( 'erp_view_list' );
                 },
             ],
             [

@@ -70,7 +70,7 @@ class New_Leave_Request extends Email {
             'date_from'    => erp_format_date( $request->start_date ),
             'date_to'      => erp_format_date( $request->end_date ),
             'no_days'      => $request->days,
-            'reason'       => $request->reason,
+            'reason'       => stripslashes($request->reason),
             'requests_url' => sprintf( '<a class="button green" href="%s">%s</a>', admin_url( 'admin.php?page=erp-leave' ), __( 'View Request', 'erp' ) ),
         ];
 

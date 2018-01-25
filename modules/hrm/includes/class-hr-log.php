@@ -883,8 +883,7 @@ class Hr_Log {
             return;
         }
 
-        $employee = new \WeDevs\ERP\HRM\Employee( intval( $fields['user_id'] ) );
-        $message  = sprintf( '%s <strong>%s</strong>', __( 'A new entitlement has been created for', 'erp' ), $employee->get_full_name() );
+        $message  = sprintf( '%s <strong>%s</strong>', __( 'A new entitlement has been created for', 'erp' ), erp_hr_get_employee_name( intval( $fields['user_id'] ) ) );
 
         erp_log()->add([
             'sub_component' => 'leave',

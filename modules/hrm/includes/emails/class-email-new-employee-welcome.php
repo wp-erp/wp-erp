@@ -49,7 +49,7 @@ class New_Employee_Welcome extends Email {
         // setup variables
         $this->employee_id = $employee_id;
 
-        $employee          = new \WeDevs\ERP\HRM\Employee( $this->employee_id );
+        $employee          = new \WeDevs\ERP\HRM\Employee( $employee_id );
         $company           = new \WeDevs\ERP\Company();
 
         $this->recipient   = $employee->user_email;
@@ -61,17 +61,18 @@ class New_Employee_Welcome extends Email {
             'first-name'      => $employee->first_name,
             'last-name'       => $employee->last_name,
             'job-title'       => $employee->get_job_title(),
-            'dept-title'      => $employee->get_department_title(),
+            'dept-title'      => $employee->get_department('view'),
             'status'          => $employee->get_status(),
             'type'            => $employee->get_type(),
             'joined-date'     => $employee->get_joined_date(),
-            'reporting-to'    => $employee->get_reporting_to() ? $employee->get_reporting_to()->get_full_name() : '',
+            'reporting-to'    => $employee->get_reporting_to() ? $employee->get_reporting_to(true)->get_full_name() : '',
             'compnay-name'    => $company->name,
             'compnay-address' => $company->get_formatted_address(),
             'compnay-phone'   => $company->phone,
             'compnay-website' => $company->website,
             'login-info'      => ''
         ];
+
 
         if ( $send_login ) {
             global $wpdb, $wp_hasher;
@@ -82,7 +83,7 @@ class New_Employee_Welcome extends Email {
             // Now insert the key, hashed, into the DB.
             if ( empty( $wp_hasher ) ) {
                 require_once ABSPATH . WPINC . '/class-phpass.php';
-                $wp_hasher = new PasswordHash( 8, true );
+                $wp_hasher = new \PasswordHash( 8, true );
             }
 
             $hashed = time() . ':' . $wp_hasher->HashPassword( $key );
@@ -96,6 +97,7 @@ class New_Employee_Welcome extends Email {
 
             $this->replace['login-info'] = $login_info;
         }
+
 
         $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
     }

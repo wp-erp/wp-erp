@@ -324,6 +324,11 @@ class Ajax_Handler {
         $lead    = isset( $_POST['lead'] ) ? intval( $_POST['lead'] ) : 0;
         $parent  = isset( $_POST['parent'] ) ? intval( $_POST['parent'] ) : 0;
 
+        $exist = \WeDevs\ERP\HRM\Models\Department::where('title', 'like', $title)->first();
+        if( $exist && $dept_id !== $exist->id ){
+            $this->send_error( __('Multiple department with the same name is not allowed.', 'erp') );
+        }
+
         // on update, ensure $parent != $dept_id
         if ( $dept_id == $parent ) {
             $parent = 0;
@@ -393,6 +398,11 @@ class Ajax_Handler {
         $title    = isset( $_POST['title'] ) ? trim( strip_tags( $_POST['title'] ) ) : '';
         $desc     = isset( $_POST['desig-desc'] ) ? trim( strip_tags( $_POST['desig-desc'] ) ) : '';
         $desig_id = isset( $_POST['desig_id'] ) ? intval( $_POST['desig_id'] ) : 0;
+
+        $exist = \WeDevs\ERP\HRM\Models\Designation::where('title', 'Like', $title)->first();
+        if( $exist && $desig_id !== $exist->id ){
+            $this->send_error( __('Multiple designation with the same name is not allowed.', 'erp') );
+        }
 
         $desig_id = erp_hr_create_designation( array(
             'id'          => $desig_id,
@@ -483,7 +493,13 @@ class Ajax_Handler {
             }
         }
         $employee = new Employee( $user_id );
-        $employee->create_employee( $posted );
+
+        $result   = $employee->create_employee( $posted );
+
+        if ( is_wp_error( $result ) ) {
+            $this->send_error( $result->get_error_message() );
+        }
+
         if ( ! $employee->is_employee() ) {
             $this->send_error( __( 'Could not create employee. Please try again.', 'erp' ) );
         }
@@ -605,7 +621,7 @@ class Ajax_Handler {
         }
 
         $created = $employee->update_employment_status( [
-            'type'   => $_POST['status'],
+            'type'     => $_POST['status'],
             'comments' => $_POST['comment'],
             'date'     => $_POST['date'],
         ] );
@@ -1521,12 +1537,13 @@ class Ajax_Handler {
             $this->send_error( __( 'Something went wrong!', 'erp' ) );
         }
 
-        if ( ! current_user_can( 'erp_leave_create_request' ) ) {
+        $employee_id  = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
+        $leave_policy = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : 0;
+
+        if ( ! current_user_can( 'erp_leave_create_request', $employee_id ) ) {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
-        $employee_id  = isset( $_POST['employee_id'] ) ? intval( $_POST['employee_id'] ) : 0;
-        $leave_policy = isset( $_POST['leave_policy'] ) ? intval( $_POST['leave_policy'] ) : 0;
 
         // @todo: date format may need to be changed when partial leave introduced
         $start_date = isset( $_POST['leave_from'] ) ? sanitize_text_field( $_POST['leave_from'] . ' 00:00:00' ) : date_i18n( 'Y-m-d 00:00:00' );
