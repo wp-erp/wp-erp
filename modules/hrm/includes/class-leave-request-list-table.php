@@ -22,6 +22,43 @@ class Leave_Requests_List_Table extends \WP_List_Table {
     }
 
     /**
+     * Render extra filtering option in
+     * top of the table
+     *
+     * @since 1.3.2
+     *
+     * @param string $which
+     *
+     * @return void
+     */
+    function extra_tablenav( $which ) {
+        if ( $which != 'top' ) {
+            return;
+        }
+
+        $current_year  = date( 'Y' );
+        $selected_year = ( isset( $_GET['filter_year'] ) ) ? $_GET['filter_year'] : '';
+        ?>
+        <div class="alignleft actions">
+
+            <label class="screen-reader-text" for="filter_year"><?php _e( 'Filter by year', 'erp' ) ?></label>
+            <input type="hidden" name="status" value="<?php echo $this->page_status; ?>">
+            <select name="filter_year" id="filter_year">
+                <option value="">select year</option>
+                <?php
+                for ( $i = 0; $i <= 5; $i ++ ) {
+                    $year = $current_year - $i;
+                    echo sprintf( "<option value='%s'%s>%s</option>\n", $year, selected( $selected_year, $year, false ), $year );
+                }
+                ?>
+            </select>
+
+            <?php
+            submit_button( __( 'Filter' ), 'button', 'filter_by_year', false );
+        echo '</div>';
+    }
+
+    /**
      * Message to show if no requests found
      *
      * @return void
@@ -64,7 +101,6 @@ class Leave_Requests_List_Table extends \WP_List_Table {
                     $available = 0;
                 }
 
-
                 if ( $available < 0 ) {
                     return sprintf( '<span class="red">%d %s</span>', number_format_i18n( $available ), __( 'days', 'erp' ) );
                 } elseif ( $available > 0 ) {
@@ -83,6 +119,23 @@ class Leave_Requests_List_Table extends \WP_List_Table {
             default:
                 return isset( $item->$column_name ) ? $item->$column_name : '';
         }
+    }
+
+    /**
+     * Filter action
+     * @return string
+     */
+    public function current_action() {
+
+        if ( isset( $_REQUEST['filter_by_year'] ) ) {
+            return 'filter_by_year';
+        }
+
+        if ( isset( $_REQUEST['s'] ) ) {
+            return 'search_request';
+        }
+
+        return parent::current_action();
     }
 
     /**
@@ -237,9 +290,10 @@ class Leave_Requests_List_Table extends \WP_List_Table {
             'offset'  => $offset,
             'number'  => $per_page,
             'status'  => $this->page_status,
-            'year'    => '',
+            'year'    => isset( $_GET['filter_year'] ) ? $_GET['filter_year'] : '',
             'orderby' => isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'created_on',
             'order'   => isset( $_GET['order'] ) ? $_GET['order'] : 'DESC',
+            's'       => isset( $_GET['s'] ) ? $_GET['s'] : ''
         );
 
         $this->counts = erp_hr_leave_get_requests_count();

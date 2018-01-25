@@ -2507,3 +2507,31 @@ function erp_get_editable_roles (){
 
     return $roles;
 }
+
+/**
+ * Get dates in range
+ *
+ * @since 1.3.2
+ *
+ * @param $first
+ * @param $last
+ * @param string $step
+ * @param string $output_format
+ *
+ * @return array
+ *
+ */
+function erp_get_dates_in_range($first, $last, $step = '+1 day', $output_format = 'Y-m-d' ) {
+
+    $dates = array();
+    $current = strtotime($first);
+    $last = strtotime($last);
+
+    while( $current <= $last ) {
+
+        $dates[] = date($output_format, $current);
+        $current = strtotime($step, $current);
+    }
+
+    return $dates;
+}

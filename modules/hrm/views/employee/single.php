@@ -18,7 +18,7 @@
             <div id="erp-area-left-inner">
 
                 <script type="text/javascript">
-                    window.wpErpCurrentEmployee = <?php echo json_encode( $employee->to_array() ); ?>
+                    window.wpErpCurrentEmployee = <?php echo json_encode( $employee->to_array() ); ?>;
                 </script>
 
                 <div class="erp-profile-top">

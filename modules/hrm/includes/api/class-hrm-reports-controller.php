@@ -6,6 +6,7 @@ use WP_REST_Server;
 use WP_REST_Response;
 use WP_Error;
 use WeDevs\ERP\API\REST_Controller;
+
 class HRM_Reports_Controller extends REST_Controller {
     /**
      * Endpoint namespace.
@@ -201,7 +202,7 @@ class HRM_Reports_Controller extends REST_Controller {
                 $employee            = new \WeDevs\ERP\HRM\Employee( intval( $user_id ) );
                 $data['id']          = $user_id;
                 $data['name']        = $employee->get_full_name();
-                $data['avatar_url']  = $employee->get_avatar_url();
+                $data['avatar_url']  = $employee->get_avatar_url(80);
                 $data['hiring_date'] = $employee->hiring_date;
                 $data['job_title']   = $employee->get_job_title();
                 $data['department']  = $employee->get_department_title();
@@ -252,7 +253,7 @@ class HRM_Reports_Controller extends REST_Controller {
                     $data[] = [
                         'employee_id'   => (int) esc_attr( $employee->id ),
                         'employee_name' => $employee->display_name,
-                        'avatar_url'    => $employee->get_avatar_url(),
+                        'avatar_url'    => $employee->get_avatar_url(80),
                         'date'          => date( $date_format, strtotime( esc_attr( $compensation['date'] ) ) ),
                         'pay_rate'      => (int) esc_attr( $compensation['pay_rate'] ),
                         'pay_type'      => esc_attr( $compensation['pay_type'] ),

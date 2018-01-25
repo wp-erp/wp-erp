@@ -33,7 +33,7 @@ class Birthdays_Controller extends REST_Controller {
                 'callback'            => [ $this, 'get_birthdays' ],
                 'args'                => $this->get_collection_params(),
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_list_employee' );
+                    return current_user_can( 'erp_view_list' );
                 },
             ],
             'schema' => [ $this, 'get_public_item_schema' ],
@@ -48,7 +48,6 @@ class Birthdays_Controller extends REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_birthdays( $request ) {
-
         $args = [
             'upcoming' => empty($request['upcoming']) ? false : true,
             'number' => $request['per_page'] ? $request['per_page'] : 20,
@@ -59,6 +58,7 @@ class Birthdays_Controller extends REST_Controller {
         if ( empty( $args['upcoming'] ) ) {
             $from_date = '01 01';
         }
+
         $db = new \WeDevs\ORM\Eloquent\Database();
         $employees =  erp_array_to_object ( \WeDevs\ERP\HRM\Models\Employee::select('*')
             ->where( $db->raw("DATE_FORMAT( `date_of_birth`, '%m %d' )" ), '>=', $from_date )
@@ -66,6 +66,7 @@ class Birthdays_Controller extends REST_Controller {
             ->orderByRaw('MONTH(date_of_birth)')
             ->orderByRaw('DAYOFMONTH(date_of_birth)')
             ->where( 'termination_date', '0000-00-00' )
+            ->where( $db->raw( "DATE_FORMAT( `date_of_birth`, '%m %d' )" ), '<=', \Carbon\Carbon::now()->addWeek()->format( 'm d' ) )
             ->limit( $args['number'] )
             ->offset( $args['offset'] )
             ->get()
@@ -73,7 +74,7 @@ class Birthdays_Controller extends REST_Controller {
 
         $total_items = count( $employees );
         $formated_items = [];
-        foreach ( $employees as $employee ){
+        foreach ( $employees as $employee ) {
             $item                  = [];
             $item['id']            = $employee->id;
             $item['user_id']       = $employee->user_id;
@@ -85,13 +86,14 @@ class Birthdays_Controller extends REST_Controller {
 
             $employee_user         = new \WeDevs\ERP\HRM\Employee( intval( $employee->user_id ) );
             $item['name']   = $employee_user->get_full_name();
-            $item['avatar'] = $employee_user->get_avatar( 32 );
+            $item['avatar'] = $employee_user->get_avatar( 80 );
             $item['job_title'] = $employee_user->get_job_title();
             $item['department_title'] = $employee_user->get_department_title();
             $item['url']    = $employee_user->get_details_url();
 
             $formated_items[] = $item;
         }
+
         $response = rest_ensure_response( $formated_items );
         $response = $this->format_collection_response( $response, $request, $total_items );
 

@@ -134,7 +134,11 @@ class Admin_Menu {
         $template = apply_filters( 'erp_hr_employee_my_profile_templates', $template, $action, $id );
 
         if ( file_exists( $template ) ) {
-            $is_my_profile_page = true;
+            $is_my_profile_page = false;
+            if( get_current_user_id() == $id ){
+                $is_my_profile_page = true;
+            }
+
             include $template;
         }
     }
@@ -202,6 +206,10 @@ class Admin_Menu {
 
             case 'years-of-service':
                 $template = WPERP_HRM_VIEWS . '/reporting/years-of-service.php';
+                break;
+
+            case 'leaves':
+                $template = WPERP_HRM_VIEWS . '/reporting/leave.php';
                 break;
 
             default:

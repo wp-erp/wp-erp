@@ -34,6 +34,11 @@ class Employee {
     protected $erp_user;
 
     /**
+     * @var string
+     */
+    protected $erp_user_model = "\\WeDevs\\ERP\\HRM\\Models\\Employee";
+
+    /**
      * Employee data
      *
      * @var array
@@ -100,7 +105,7 @@ class Employee {
     public function __construct( $employee = null ) {
         $this->user_id         = 0;
         $this->wp_user         = new \WP_User();
-        $this->erp_user        = new \WeDevs\ERP\HRM\Models\Employee();
+        $this->erp_user        = new $this->erp_user_model;
         $this->restricted_data = $this->get_restricted_employee_data();
         if ( $employee != null ) {
             $this->load_employee( $employee );
@@ -132,7 +137,7 @@ class Employee {
      */
     public function __get( $key ) {
         if ( in_array( $key, $this->restricted_data ) ) {
-              return null;
+            return null;
         }
         if ( is_callable( array( $this, "get_{$key}" ) ) ) {
             return $this->{"get_{$key}"}();
@@ -157,7 +162,7 @@ class Employee {
      */
     protected function load_employee( $employee ) {
 
-        if ( is_int( $employee ) ) {
+        if ( is_numeric( $employee ) ) {
 
             $user = get_user_by( 'id', $employee );
 
@@ -183,7 +188,9 @@ class Employee {
         }
 
         if ( $this->user_id ) {
-            $this->erp_user = \WeDevs\ERP\HRM\Models\Employee::withTrashed()->where( 'user_id', $this->user_id )->first();
+            $employee_model = $this->erp_user_model;
+            $this->erp_user = $employee_model::withTrashed()->where( 'user_id', $this->user_id )->first();
+
             if ( $this->is_employee() ) {
                 $this->data['user_id']    = $this->user_id;
                 $this->data['user_email'] = $this->wp_user->user_email;
@@ -209,6 +216,23 @@ class Employee {
     public function create_employee( $args = array() ) {
         $posted = array_map( 'strip_tags_deep', $args );
         $data   = array_map( 'trim_deep', $posted );
+
+
+        //if is set employee id
+        $employee_id = null;
+        if ( ! empty( $data['work']['employee_id'] ) ) {
+            $employee_id = intval( $data['work']['employee_id'] );
+        }
+        if ( ! empty( $data['personal']['employee_id'] ) ) {
+            $employee_id = intval( $data['personal']['employee_id'] );
+        }
+
+        if ( $employee_id && $employee_id != $this->employee_id ) {
+            $exist = \WeDevs\ERP\HRM\Models\Employee::where( 'employee_id', $employee_id )->first();
+            if ( $exist ) {
+                return new \WP_Error( 'employee-id-exist', sprintf( __( 'Employee with the employee id %s already exist. Please use different one.', 'erp' ), $employee_id ) );
+            }
+        }
 
         //if user found by id then update the user
         if ( ! empty( $data['user_id'] ) ) {
@@ -292,7 +316,6 @@ class Employee {
         ] );
 
         $this->update_employee( array_merge( $data['work'], $data['personal'] ) );
-
         do_action( 'erp_hr_employee_new', $this->id, $data );
 
         return $this;
@@ -305,12 +328,11 @@ class Employee {
      *
      * @param array $data
      *
-     * @return $this
+     * @return $this | \WP_Error
      */
     public function update_employee( $data = array() ) {
         $restricted = [
             'user_id',
-            'user_email',
             'user_url',
             'id',
             'ID',
@@ -320,6 +342,30 @@ class Employee {
         $posted = array_map( 'strip_tags_deep', $data );
         $posted = erp_array_flatten( $posted );
         $posted = array_except( $posted, $restricted );
+
+        //update user email
+        if ( isset( $posted['user_email'] )
+             && $posted['user_email'] !== $this->wp_user->user_email
+             && filter_var( $posted['user_email'], FILTER_VALIDATE_EMAIL )
+             && ! get_user_by( 'user_email', $posted['user_email'] ) ) {
+            $user_email = esc_attr( $posted['user_email'] );
+            $result     = wp_update_user( array(
+                'ID'         => $this->user_id,
+                'user_email' => strtolower( $user_email ),
+            ) );
+
+            if ( is_wp_error( $result ) ) {
+                return $result;
+            }
+        }
+
+        //check if something removed
+        foreach ( $this->data['personal'] as $p_key => $p_val){
+            if( empty( $posted[$p_key]) ){
+                $this->changes['personal'][$p_key] = '';
+            }
+        }
+
 
         foreach ( $posted as $key => $value ) {
             if ( ! empty( $value ) && ( $this->$key != $value ) ) {
@@ -454,8 +500,8 @@ class Employee {
      * @return int|null
      */
     public function get_photo_id() {
-        if ( isset( $this->user->photo_id ) ) {
-            return (int) $this->user->photo_id;
+        if ( isset( $this->wp_user->photo_id ) ) {
+            return (int) $this->wp_user->photo_id;
         }
 
         return null;
@@ -469,7 +515,7 @@ class Employee {
      * @return string   image with HTML tag
      */
     public function get_avatar_url( $size = 32 ) {
-        if ( $this->user_id && ! empty( $this->photo_id ) ) {
+        if ( $this->user_id && ! empty( $this->get_photo_id() ) ) {
             return wp_get_attachment_url( $this->photo_id );
         }
 
@@ -484,7 +530,7 @@ class Employee {
      * @return string   image with HTML tag
      */
     public function get_avatar( $size = 32 ) {
-        if ( $this->user_id && ! empty( $this->photo_id ) ) {
+        if ( $this->user_id && ! empty( $this->get_photo_id() ) ) {
             $image = wp_get_attachment_thumb_url( $this->photo_id );
 
             return sprintf( '<img src="%1$s" alt="" class="avatar avatar-%2$s photo" height="auto" width="%2$s" />', $image, $size );
@@ -778,7 +824,9 @@ class Employee {
      * @return string
      */
     public function get_hiring_date() {
-        if ( isset( $this->erp_user->hiring_date ) && $this->erp_user->hiring_date != '0000-00-00' ) {
+        if ( isset( $this->erp_user->hiring_date )
+             && is_valid_date( $this->erp_user->hiring_date )
+             && $this->erp_user->hiring_date != '0000-00-00' ) {
             return erp_format_date( $this->erp_user->hiring_date );
         }
     }
@@ -796,7 +844,9 @@ class Employee {
 
     public function get_date_of_birth() {
         $date = '';
-        if ( isset( $this->erp_user->date_of_birth ) && ( $this->erp_user->date_of_birth != '0000-00-00' ) ) {
+        if ( isset( $this->erp_user->date_of_birth )
+             && is_valid_date( $this->erp_user->date_of_birth )
+             && ( $this->erp_user->date_of_birth != '0000-00-00' ) ) {
             $date = erp_format_date( $this->erp_user->date_of_birth );
         }
 
@@ -874,21 +924,34 @@ class Employee {
      *
      * @return string
      */
-    public function get_state() {
-        return erp_get_state_name( $this->wp_user->country, $this->wp_user->state );
+    public function get_state( $context = 'edit' ) {
+        if ( $this->is_employee() && isset( $this->wp_user->state ) ) {
+            if ( $context == 'edit' ) {
+                return $this->wp_user->state;
+            }
+
+            return erp_get_state_name( $this->wp_user->country, $this->wp_user->state );
+        }
     }
 
     /**
      * Get the name of reporting user
+     * @since 1.3.2 return object
+     *
+     * @param $return_object boolean
      *
      * @return string
      */
-    public function get_reporting_to() {
+    public function get_reporting_to( $return_object = false ) {
         if ( $this->is_employee() && isset( $this->erp_user->reporting_to ) ) {
             $user_id = (int) $this->erp_user->reporting_to;
             $user    = new Employee( $user_id );
             if ( ! $user->is_employee() ) {
                 return null;
+            }
+
+            if ( $return_object ) {
+                return $user;
             }
 
             return $user->get_user_id();
@@ -900,9 +963,11 @@ class Employee {
      *
      * @param  string  type of phone. work|mobile|phone
      *
+     * @deprecated 1.3.2
+     *
      * @return string
      */
-    public function get_phone( $which = 'work' ) {
+    public function get_contact_details( $which = 'work' ) {
         $phone = '';
 
         switch ( $which ) {
@@ -921,6 +986,26 @@ class Employee {
 
         return $phone;
     }
+
+
+    public function get_phone() {
+        if ( $this->is_employee() && isset( $this->wp_user->phone ) ) {
+            return $this->wp_user->phone;
+        }
+    }
+
+    public function get_work_phone() {
+        if ( $this->is_employee() && isset( $this->wp_user->work_phone ) ) {
+            return $this->wp_user->work_phone;
+        }
+    }
+
+    public function get_mobile() {
+        if ( $this->is_employee() && isset( $this->wp_user->mobile ) ) {
+            return $this->wp_user->mobile;
+        }
+    }
+
 
     /**
      * Get birth date
@@ -951,7 +1036,7 @@ class Employee {
      * @since 1.3.0
      *
      * @param array $data
-     * @param bool  $return_id
+     * @param bool $return_id
      *
      * @return array|\WP_Error
      */
@@ -1027,7 +1112,7 @@ class Employee {
      * @since 1.3.0
      *
      * @param array $data
-     * @param bool  $return_id
+     * @param bool $return_id
      *
      * @return array|\WP_Error
      */
@@ -1106,7 +1191,7 @@ class Employee {
      * @since 1.3.0
      *
      * @param array $data
-     * @param bool  $return_id
+     * @param bool $return_id
      *
      * @return array|\WP_Error
      */
@@ -1414,8 +1499,8 @@ class Employee {
      * Get employee performance list
      *
      * @param string $type
-     * @param int    $limit
-     * @param int    $offset
+     * @param int $limit
+     * @param int $offset
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -1465,8 +1550,16 @@ class Employee {
         if ( empty( $args['type'] ) || ! in_array( $args['type'], [ 'reviews', 'comments', 'goals' ] ) ) {
             return new \WP_Error( 'invalid-performance-type', __( 'Invalid Performance Type received', 'erp' ) );
         }
-        if ( $args['type'] ) {
 
+        if ( empty( $args['performance_date'] ) ) {
+            return new \WP_Error( 'missing-required-params', __( 'Missing Date', 'erp' ) );
+        }
+
+        if ( ! is_valid_date( $args['performance_date'] ) && $args['performance_date'] ) {
+            return new \WP_Error( 'invalid-required-params', __( 'Invalid date format', 'erp' ) );
+        }
+
+        if ( $args['type'] == 'reviews' ) {
             $reporting_to = new Employee( $args['reporting_to'] );
             if ( ! $reporting_to->is_employee() ) {
                 return new \WP_Error( 'invalid-user-id', __( 'Invalid reporting to used.', 'erp' ) );
@@ -1481,6 +1574,14 @@ class Employee {
         }
 
         if ( $args['type'] == 'goals' ) {
+
+            if ( empty( $args['completion_date'] ) ) {
+                return new \WP_Error( 'missing-required-params', __( 'Missing Date', 'erp' ) );
+            }
+
+            if ( ! is_valid_date( $args['completion_date'] ) && $args['completion_date'] ) {
+                return new \WP_Error( 'invalid-required-params', __( 'Invalid date format', 'erp' ) );
+            }
 
             $supervisor = new Employee( $args['supervisor'] );
             if ( ! $supervisor->is_employee() ) {
@@ -1578,8 +1679,8 @@ class Employee {
      *
      * @param null $date
      * @param bool $return_array
-     * @param int  $limit
-     * @param int  $offset
+     * @param int $limit
+     * @param int $offset
      *
      * @return array
      */
@@ -1675,12 +1776,12 @@ class Employee {
         $date       = $date == null ? current_time( 'mysql' ) : $date;
         $year_dates = erp_get_financial_year_dates( $date );
 
-
         $balances = [];
         $start    = isset( $year_dates['start'] ) ? $year_dates['start'] : null;
         $end      = isset( $year_dates['end'] ) ? $year_dates['end'] : null;
         $user_id  = $this->user_id;
-        $results  = $this->erp_user
+
+        $results = $this->erp_user
             ->entitlements()
             ->whereDate( 'from_date', '>=', $start )
             ->whereDate( 'to_date', '<=', $end )
@@ -1780,7 +1881,12 @@ class Employee {
      * @since 1.3.0
      * @return array
      */
-    public function get_events() {
+    //@todo have to rewrite the method
+    public function get_events( $year = null ) {
+        if ( ! $year ) {
+            $year = date( 'Y' );
+        }
+
         $leave_requests = erp_hr_get_calendar_leave_events( false, $this->user_id, false );
         $holidays       = erp_array_to_object( \WeDevs\ERP\HRM\Models\Leave_Holiday::all()->toArray() );
         $events         = [];
@@ -1788,6 +1894,10 @@ class Employee {
         $event_data     = [];
 
         foreach ( $leave_requests as $key => $leave_request ) {
+
+            if ( $year != date( 'Y', strtotime( $leave_request->start_date ) ) ) {
+                continue;
+            }
             //if status pending
             $policy      = erp_hr_leave_get_policy( $leave_request->policy_id );
             $event_label = $policy->name;

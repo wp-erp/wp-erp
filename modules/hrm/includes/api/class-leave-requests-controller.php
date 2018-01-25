@@ -32,7 +32,7 @@ class Leave_Requests_Controller extends REST_Controller {
                 'callback'            => [ $this, 'get_leave_requests' ],
                 'args'                => $this->get_collection_params(),
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_list_employee' );
+                    return current_user_can( 'erp_view_list' );
                 },
             ],
             [
@@ -72,7 +72,7 @@ class Leave_Requests_Controller extends REST_Controller {
         $args = [
             'number' => $request['per_page'],
             'offset' => ( $request['per_page'] * ( $request['page'] - 1 ) ),
-            'type'   => $request['per_page'] == 'upcoming' ? 'upcoming' : '',
+            'type'   => $request['type'] == 'upcoming' ? 'upcoming' : ''
         ];
 
         $items = [];
@@ -94,7 +94,7 @@ class Leave_Requests_Controller extends REST_Controller {
             $formatted_items = [];
         }
 
-        foreach ( $items as $item ) {
+        foreach( $items as $item ) {
             $data              = $this->prepare_item_for_response( $item, $request );
             $formatted_items[] = $this->prepare_response_for_collection( $data );
         }
@@ -203,11 +203,13 @@ class Leave_Requests_Controller extends REST_Controller {
      */
     public function prepare_item_for_response( $item, $request, $additional_fields = [] ) {
         $employee = new Employee($item->user_id);
+
         $data = [
             'id'            => (int) $item->id,
-            'employee_id'   => (int) $item->user_id,
-            'employee_name' => $item->display_name,
-            'avatar_url'    => $employee->get_avatar_url(),
+            'user_id'       => (int) $item->user_id,
+            'employee_id'   => (int) $employee->employee_id,
+            'employee_name' => $employee->display_name,
+            'avatar_url'    => $employee->get_avatar_url(80),
             'start_date'    => date( 'Y-m-d', strtotime( $item->start_date ) ),
             'end_date'      => date( 'Y-m-d', strtotime( $item->end_date ) ),
             'reason'        => $item->reason,
