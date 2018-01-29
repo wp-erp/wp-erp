@@ -739,11 +739,10 @@ function erp_check_date_range_in_range_exist( $start_date, $end_date, $user_date
  * @return integer
  */
 function erp_date_duration( $start_date, $end_date ) {
-    $datetime1 = new DateTime( $start_date );
-    $datetime2 = new DateTime( $end_date );
-    $interval  = $datetime1->diff( $datetime2 );
+    $diff       = abs( strtotime( $start_date ) - strtotime( $end_date ) );
+    $hours_diff = ceil( $diff / ( 60 * 60 ) );
 
-    return $interval->format( '%a' );
+    return ceil( $hours_diff / 24 );
 }
 
 /**
