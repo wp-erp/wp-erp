@@ -66,7 +66,7 @@ class Leave_Holiday_List_Table extends WP_List_Table {
                 return erp_format_date( $holiday->start );
 
             case 'end':
-                return erp_format_date( date( 'Y-m-d' , strtotime( $holiday->end . '-1day' ) ) );
+                return erp_format_date( date( 'Y-m-d' , strtotime( $holiday->end ) ) );
 
             case 'duration':
 
