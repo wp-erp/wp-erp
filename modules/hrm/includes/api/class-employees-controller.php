@@ -316,7 +316,7 @@ class Employees_Controller extends REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_policies' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_edit_employee' , $request['user_id']);
+                    return current_user_can( 'erp_edit_employee', $request['user_id'] );
                 },
             ],
         ] );
@@ -326,14 +326,14 @@ class Employees_Controller extends REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_leaves' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_edit_employee' , $request['user_id'] );
+                    return current_user_can( 'erp_edit_employee', $request['user_id'] );
                 },
             ],
             [
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => [ $this, 'create_leave' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_edit_employee' , $request['user_id'] );
+                    return current_user_can( 'erp_edit_employee', $request['user_id'] );
                 },
             ],
         ] );
@@ -343,7 +343,7 @@ class Employees_Controller extends REST_Controller {
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [ $this, 'get_notes' ],
                 'permission_callback' => function ( $request ) {
-                    return current_user_can( 'erp_manage_review');
+                    return current_user_can( 'erp_manage_review' );
                 },
             ],
             [
@@ -1045,11 +1045,14 @@ class Employees_Controller extends REST_Controller {
      */
     public function get_events( $request ) {
         $user_id  = (int) $request['id'];
+        $start    = ! empty( $request['start'] ) ? $request['start'] : date( 'Y-01-01' );
+        $end      = ! empty( $request['end'] ) ? $request['end'] : date( 'Y-12-31' );
+
         $employee = new Employee( $user_id );
         if ( ! $employee ) {
             return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
         }
-        $event_data = $employee->get_events();
+        $event_data = $employee->get_calender_events(['start' => $start, 'end' => $end]);
         $response   = rest_ensure_response( $event_data );
         $response   = $this->format_collection_response( $response, $request, count( $event_data ) );
 

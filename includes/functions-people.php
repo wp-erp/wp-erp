@@ -35,6 +35,7 @@ function erp_get_peoples( $args = [] ) {
         'trashed'    => false,
         'meta_query' => [],
         'count'      => false,
+        'life_stage' => '',
         'include'    => [],
         'exclude'    => [],
         's'          => '',
@@ -45,7 +46,6 @@ function erp_get_peoples( $args = [] ) {
     $people_type = is_array( $args['type'] ) ? implode( '-', $args['type'] ) : $args['type'];
     $cache_key   = 'erp-people-' . $people_type . '-' . md5( serialize( $args ) );
     $items       = wp_cache_get( $cache_key, 'erp' );
-
     $pep_tb      = $wpdb->prefix . 'erp_peoples';
     $pepmeta_tb  = $wpdb->prefix . 'erp_peoplemeta';
     $types_tb    = $wpdb->prefix . 'erp_people_types';
@@ -89,6 +89,14 @@ function erp_get_peoples( $args = [] ) {
             $compare    = isset( $meta_query['compare'] ) ? $meta_query['compare'] : '=';
 
             $sql['where'][] = "AND people_meta.meta_key='$meta_key' and people_meta.meta_value='$meta_value'";
+        }
+
+        if( !empty($life_stage) ){
+            $sql['where'][] = "AND people.life_stage='$life_stage'";
+        }
+
+        if( !empty($contact_owner) ){
+            $sql['where'][] = "AND people.contact_owner='$contact_owner'";
         }
 
         // Check if the row want to search
