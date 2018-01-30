@@ -173,7 +173,7 @@ class People extends Item {
             return new \WP_Error( 'unauthorized-erp-people-property', __( 'Unauthorized people property', 'erp' ) );
         }
         $people = \WeDevs\ERP\Framework\Models\People::find( $this->id  );
-        $people->update([$property => $value]);
+        $wor = $people->update([$property => $value]);
     }
 
 

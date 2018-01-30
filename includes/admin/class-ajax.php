@@ -427,7 +427,7 @@ class Ajax {
 
                 if ( ! $people->exists) {
                     $contact->update_life_stage($life_stage);
-                    $contact->update_meta( 'contact_owner', $contact_owner );
+                    $contact->update_contact_owner(  $contact_owner );
 
                 } else {
                     if ( ! $contact->get_life_stage() ) {
@@ -435,7 +435,7 @@ class Ajax {
                     }
 
                     if ( ! $contact->get_contact_owner() ) {
-                        $contact->update_meta( 'contact_owner', $contact_owner );
+                        $contact->update_contact_owner(  $contact_owner );
                     }
                 }
 
