@@ -636,18 +636,20 @@ class Ajax_Handler {
 
         parse_str( $_POST['formData'], $output );
 
+        //contact Owner
         if ( isset( $output['erp_select_assign_contact'] ) && empty( $output['erp_select_assign_contact'] ) ) {
             $this->send_error( __( 'Please select a user', 'erp' ) );
         }
 
+        //contact id
         if ( empty( $output['assign_contact_id'] ) ) {
             $this->send_error( __( 'No contact found', 'erp' ) );
         }
 
         if ( $output['assign_contact_user_id'] ) {
-            erp_crm_update_contact_owner( $output['erp_select_assign_contact'],$output['assign_contact_user_id'] );
+            erp_crm_update_contact_owner( $output['assign_contact_user_id'], $output['erp_select_assign_contact'] );
         } else {
-            erp_crm_update_contact_owner( $output['erp_select_assign_contact'],$output['assign_contact_id'] );
+            erp_crm_update_contact_owner($output['assign_contact_id'], $output['erp_select_assign_contact'] );
         }
 
         $this->send_success( __( 'Assign to agent successfully', 'erp' ) );
