@@ -3342,6 +3342,32 @@ trix-editor ul {
 .erp-info-box .erp-info-box-item .erp-info-box-item-inner .erp-info-box-footer a:hover {
   background-color: #005177;
 }
+.erp-table {
+  border: 1px solid #ccc;
+  border-collapse: collapse;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  table-layout: fixed;
+}
+.erp-table caption {
+  font-size: 1.5em;
+  margin: .5em 0 .75em;
+}
+.erp-table tr {
+  border: 1px solid #ddd;
+  padding: .35em;
+}
+.erp-table th,
+.erp-table td {
+  padding: .625em;
+  text-align: center;
+}
+.erp-table th {
+  font-size: .85em;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
 /*****/
 /**
 * Media Query for responsive
@@ -3427,5 +3453,41 @@ trix-editor ul {
   .content-container .content select,
   .content-container .content textarea {
     width: 95%;
+  }
+  .erp-table {
+    border: 0;
+  }
+  .erp-table caption {
+    font-size: 1.3em;
+  }
+  .erp-table thead {
+    border: none;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+  .erp-table tr {
+    border-bottom: 3px solid #ddd;
+    display: block;
+    margin-bottom: .625em;
+  }
+  .erp-table td {
+    border-bottom: 1px solid #ddd;
+    display: block;
+    font-size: .8em;
+    text-align: right;
+  }
+  .erp-table td:before {
+    content: attr(data-label);
+    float: left;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  .erp-table td:last-child {
+    border-bottom: 0;
   }
 }
