@@ -95,6 +95,10 @@ function erp_get_peoples( $args = [] ) {
             $sql['where'][] = "AND people.life_stage='$life_stage'";
         }
 
+        if( !empty($contact_owner) ){
+            $sql['where'][] = "AND people.contact_owner='$contact_owner'";
+        }
+
         // Check if the row want to search
         if ( ! empty( $s ) ) {
             $search_like = '%' . $wpdb->esc_like( $s ) . '%';
