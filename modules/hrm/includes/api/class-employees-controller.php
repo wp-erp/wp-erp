@@ -1302,6 +1302,12 @@ class Employees_Controller extends REST_Controller {
             return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
         }
         $announcements = $employee->get_announcements();
+
+        foreach ($announcements as $announcement) {
+            $user = get_user_by('id', $announcement['post_author']);
+            $announcement['post_author'] = $user->data->display_name;
+        }
+
         $response      = rest_ensure_response( $announcements );
         $response      = $this->format_collection_response( $response, $request, count( $announcements ) );
 
