@@ -117,7 +117,7 @@ class Ajax_Handler {
             'type'      => '',
             'offset'    => 0,
             'number'    => 20,
-            'no_object' => true
+            'no_object' => true,
         ];
 
         // Set type. By defaul it sets to contact :p
@@ -169,7 +169,6 @@ class Ajax_Handler {
         }
 
         $contacts['data']  = erp_get_peoples( $args );
-
         $args['count'] = true;
         $total_items = erp_get_peoples( $args );
 
