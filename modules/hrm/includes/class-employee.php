@@ -923,7 +923,12 @@ class Employee {
     /**
      * Get State
      *
-     * @return string
+     * @since 1.3.0
+     *
+     * @param string $context
+     *
+     * @return mixed|string
+     *
      */
     public function get_state( $context = 'edit' ) {
         if ( $this->is_employee() && isset( $this->wp_user->state ) ) {
@@ -931,7 +936,12 @@ class Employee {
                 return $this->wp_user->state;
             }
 
-            return erp_get_state_name( $this->wp_user->country, $this->wp_user->state );
+            if ( $this->wp_user->country
+                 && ($this->wp_user->country !== '-1')
+                 && ($this->wp_user->state !== '-1')
+                 && $this->wp_user->state ) {
+                return erp_get_state_name( $this->wp_user->country, $this->wp_user->state );
+            }
         }
     }
 
@@ -1004,6 +1014,12 @@ class Employee {
     public function get_mobile() {
         if ( $this->is_employee() && isset( $this->wp_user->mobile ) ) {
             return $this->wp_user->mobile;
+        }
+    }
+
+    public function get_driving_license() {
+        if ( $this->is_employee() && isset( $this->wp_user->driving_license ) ) {
+            return $this->wp_user->driving_license;
         }
     }
 
