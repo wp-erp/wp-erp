@@ -190,6 +190,18 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+= v1.3.3 -> Feb 1, 2018 =
+
+[fix] Employee API returns wrong event data. Closes #605
+[fix] CRM overview links are not working as expected. Closes #596
+[fix] CRM contact owner is not updating. Closes #606
+[fix[ CRM filter by Owner is not working. Closes #597
+[fix] CRM selected life stage is not assigned while importing. Closes #603
+[fix] Showing phone number twice in HRM -> My Profile. Closes #607
+[fix] Months are not showing properly in ERP Settings. Closes #608
+[fix] Add announcement author name in the API response.
+[fix] API date response fix.
+
 = v1.3.2 -> Jan 25, 2018 =
 
 [fix] Leave report filters are not working as expected. Closes #600
