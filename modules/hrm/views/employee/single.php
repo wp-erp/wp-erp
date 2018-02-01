@@ -44,10 +44,10 @@
 
                             <?php
                             $phones = array();
-                            if ( $work_phone = $employee->get_phone( 'work' ) ) {
+                            if ( $work_phone = $employee->get_work_phone() ) {
                                 $phones[] = $work_phone;
                             }
-                            if ( $mobile_phone = $employee->get_phone( 'mobile' ) ) {
+                            if ( $mobile_phone = $employee->get_mobile() ) {
                                 $phones[] = $mobile_phone;
                             }
 

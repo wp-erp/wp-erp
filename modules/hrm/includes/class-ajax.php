@@ -324,9 +324,9 @@ class Ajax_Handler {
         $lead    = isset( $_POST['lead'] ) ? intval( $_POST['lead'] ) : 0;
         $parent  = isset( $_POST['parent'] ) ? intval( $_POST['parent'] ) : 0;
 
-        $exist = \WeDevs\ERP\HRM\Models\Department::where('title', 'like', $title)->first();
-        if( $exist && $dept_id !== $exist->id ){
-            $this->send_error( __('Multiple department with the same name is not allowed.', 'erp') );
+        $exist = \WeDevs\ERP\HRM\Models\Department::where( 'title', 'like', $title )->first();
+        if ( $exist && $dept_id !== $exist->id ) {
+            $this->send_error( __( 'Multiple department with the same name is not allowed.', 'erp' ) );
         }
 
         // on update, ensure $parent != $dept_id
@@ -399,9 +399,9 @@ class Ajax_Handler {
         $desc     = isset( $_POST['desig-desc'] ) ? trim( strip_tags( $_POST['desig-desc'] ) ) : '';
         $desig_id = isset( $_POST['desig_id'] ) ? intval( $_POST['desig_id'] ) : 0;
 
-        $exist = \WeDevs\ERP\HRM\Models\Designation::where('title', 'Like', $title)->first();
-        if( $exist && $desig_id !== $exist->id ){
-            $this->send_error( __('Multiple designation with the same name is not allowed.', 'erp') );
+        $exist = \WeDevs\ERP\HRM\Models\Designation::where( 'title', 'Like', $title )->first();
+        if ( $exist && $desig_id !== $exist->id ) {
+            $this->send_error( __( 'Multiple designation with the same name is not allowed.', 'erp' ) );
         }
 
         $desig_id = erp_hr_create_designation( array(
@@ -494,7 +494,7 @@ class Ajax_Handler {
         }
         $employee = new Employee( $user_id );
 
-        $result   = $employee->create_employee( $posted );
+        $result = $employee->create_employee( $posted );
 
         if ( is_wp_error( $result ) ) {
             $this->send_error( $result->get_error_message() );
@@ -1319,13 +1319,13 @@ class Ajax_Handler {
         $title        = isset( $_POST['title'] ) ? sanitize_text_field( $_POST['title'] ) : '';
         $start_date   = isset( $_POST['start_date'] ) ? $_POST['start_date'] : '';
         $end_date     = isset( $_POST['end_date'] ) && ! empty( $_POST['end_date'] ) ? $_POST['end_date'] : $start_date;
-        $end_date     = date( 'Y-m-d H:i:s', strtotime( $end_date . ' +1 day' ) );
+        $end_date     = date( 'Y-m-d 23:59:59', strtotime($end_date) );
         $description  = isset( $_POST['description'] ) ? $_POST['description'] : '';
         $range_status = isset( $_POST['range'] ) ? $_POST['range'] : 'off';
         $error        = true;
 
         if ( $range_status == 'off' ) {
-            $end_date = date( 'Y-m-d H:i:s', strtotime( $start_date . ' +1 day' ) );
+            $end_date = date( 'Y-m-d H:i:s', date($start_date) );
         }
 
         if ( is_wp_error( $error ) ) {

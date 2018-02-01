@@ -8,6 +8,7 @@ use WeDevs\ERP\HRM\Models\Designation;
 use WeDevs\ERP\HRM\Models\Employee_History;
 use WeDevs\ERP\HRM\Models\Hr_User;
 use WeDevs\ERP\HRM\Models\Leave_Entitlement;
+use WeDevs\ERP\HRM\Models\Leave_Holiday;
 use WeDevs\ERP\HRM\Models\Leave_Policies;
 use WeDevs\ERP\HRM\Models\Work_Experience;
 
@@ -360,9 +361,9 @@ class Employee {
         }
 
         //check if something removed
-        foreach ( $this->data['personal'] as $p_key => $p_val){
-            if( empty( $posted[$p_key]) ){
-                $this->changes['personal'][$p_key] = '';
+        foreach ( $this->data['personal'] as $p_key => $p_val ) {
+            if ( empty( $posted[ $p_key ] ) ) {
+                $this->changes['personal'][ $p_key ] = '';
             }
         }
 
@@ -922,7 +923,12 @@ class Employee {
     /**
      * Get State
      *
-     * @return string
+     * @since 1.3.0
+     *
+     * @param string $context
+     *
+     * @return mixed|string
+     *
      */
     public function get_state( $context = 'edit' ) {
         if ( $this->is_employee() && isset( $this->wp_user->state ) ) {
@@ -930,7 +936,12 @@ class Employee {
                 return $this->wp_user->state;
             }
 
-            return erp_get_state_name( $this->wp_user->country, $this->wp_user->state );
+            if ( $this->wp_user->country
+                 && ($this->wp_user->country !== '-1')
+                 && ($this->wp_user->state !== '-1')
+                 && $this->wp_user->state ) {
+                return erp_get_state_name( $this->wp_user->country, $this->wp_user->state );
+            }
         }
     }
 
@@ -1003,6 +1014,12 @@ class Employee {
     public function get_mobile() {
         if ( $this->is_employee() && isset( $this->wp_user->mobile ) ) {
             return $this->wp_user->mobile;
+        }
+    }
+
+    public function get_driving_license() {
+        if ( $this->is_employee() && isset( $this->wp_user->driving_license ) ) {
+            return $this->wp_user->driving_license;
         }
     }
 
@@ -1879,57 +1896,74 @@ class Employee {
      * Get all the events of a single user
      *
      * @since 1.3.0
+     *
+     * @param array $date_range
+     *
      * @return array
+     *
      */
-    //@todo have to rewrite the method
-    public function get_events( $year = null ) {
-        if ( ! $year ) {
-            $year = date( 'Y' );
-        }
-
-        $leave_requests = erp_hr_get_calendar_leave_events( false, $this->user_id, false );
-        $holidays       = erp_array_to_object( \WeDevs\ERP\HRM\Models\Leave_Holiday::all()->toArray() );
-        $events         = [];
-        $holiday_events = [];
-        $event_data     = [];
-
-        foreach ( $leave_requests as $key => $leave_request ) {
-
-            if ( $year != date( 'Y', strtotime( $leave_request->start_date ) ) ) {
-                continue;
-            }
-            //if status pending
-            $policy      = erp_hr_leave_get_policy( $leave_request->policy_id );
-            $event_label = $policy->name;
-            if ( 2 == $leave_request->status ) {
-                $policy      = erp_hr_leave_get_policy( $leave_request->policy_id );
-                $event_label .= sprintf( ' ( %s ) ', __( 'Pending', 'erp' ) );
-            }
-            $events[] = array(
-                'id'    => $leave_request->id,
-                'title' => $event_label,
-                'start' => $leave_request->start_date,
-                'end'   => $leave_request->end_date,
-                'url'   => erp_hr_url_single_employee( $leave_request->user_id, 'leave' ),
-                'color' => $leave_request->color,
-            );
-        }
-
-        foreach ( $holidays as $key => $holiday ) {
-            $holiday_events[] = [
-                'id'      => $holiday->id,
-                'title'   => $holiday->title,
-                'start'   => $holiday->start,
-                'end'     => $holiday->end,
-                'color'   => '#FF5354',
-                'img'     => '',
-                'holiday' => true
+    public function get_calender_events( array $date_range = array() ) {
+        global $wpdb;
+        if ( empty( $date_range ) || empty( $date_range['start'] ) || empty( $date_range['end'] ) ) {
+            $date_range = [
+                'start' => date( "Y-01-01" ),
+                'end'   => date( "Y-12-31" ),
             ];
         }
+        $leave_requests = $this->get_erp_user()
+                               ->leave_requests()
+                               ->whereDate( 'start_date', '>=', $date_range['start'] )
+                               ->whereDate( 'end_date', '<=', $date_range['end'] )->JoinWithPolicy()->orderBy( 'start_date' )
+                               ->select( [
+                                   "{$wpdb->prefix}erp_hr_leave_requests.id",
+                                   'start_date',
+                                   'end_date',
+                                   'color',
+                                   'status',
+                                   'days',
+                                   'name'
+                               ] )
+                               ->get();
+        $holidays       = Leave_Holiday::whereDate( 'start', '>=', $date_range['start'] )
+                                       ->whereDate( 'end', '<=', $date_range['end'] )
+                                       ->get();
 
-        $event_data = array_merge( $events, $holiday_events );
+        $events = [];
 
-        return $event_data;
+        foreach ( $leave_requests as $leave_request ) {
+            $title = $leave_request->name;
+            if ( $leave_request->status == 2 ) {
+                $title .= sprintf( ' ( %s ) ', __( 'Pending', 'erp' ) );
+            }
+            $event = [
+                'id'      => $leave_request->id,
+                'start'   => date( 'Y-m-d', strtotime( $leave_request->start_date ) ),
+                'end'     => date( 'Y-m-d', strtotime( $leave_request->end_date ) ),
+                'color'   => $leave_request->color,
+                'title'   => $title,
+                'img'     => '',
+                'holiday' => false,
+            ];
+
+            $events[] = $event;
+        }
+
+        foreach ( $holidays as $holiday ) {
+            $event = [
+                'id'      => $holiday->id,
+                'start'   => date( 'Y-m-d', strtotime( $holiday->start ) ),
+                'end'     => date( 'Y-m-d', strtotime( $holiday->end ) ),
+                'color'   => '#FF5354',
+                'title'   => $holiday->title,
+                'img'     => '',
+                'holiday' => true,
+            ];
+
+            $events[] = $event;
+        }
+
+
+        return $events;
     }
 
     /**

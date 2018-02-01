@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.3.2\n"
+"Project-Id-Version: WP ERP 1.3.3\n"
 "Report-Msgid-Bugs-To: http://wperp.com/support/\n"
-"POT-Creation-Date: 2018-01-25 05:24:15+00:00\n"
+"POT-Creation-Date: 2018-02-01 04:47:24+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4829,7 +4829,7 @@ msgstr ""
 msgid "Created At"
 msgstr ""
 
-#: includes/admin/class-form-handler.php:25 includes/functions.php:1288
+#: includes/admin/class-form-handler.php:25 includes/functions.php:1287
 msgid "ERP Settings"
 msgstr ""
 
@@ -5726,13 +5726,13 @@ msgstr ""
 
 #: includes/api/class-activities-controller.php:489
 #: includes/api/class-rest-controller.php:95
-#: modules/hrm/includes/api/class-employees-controller.php:1608
+#: modules/hrm/includes/api/class-employees-controller.php:1617
 msgid "Current page of the collection."
 msgstr ""
 
 #: includes/api/class-activities-controller.php:497
 #: includes/api/class-rest-controller.php:103
-#: modules/hrm/includes/api/class-employees-controller.php:1616
+#: modules/hrm/includes/api/class-employees-controller.php:1625
 msgid "Maximum number of items to be returned in result set."
 msgstr ""
 
@@ -5768,7 +5768,7 @@ msgstr ""
 #: modules/hrm/includes/api/class-employees-controller.php:838
 #: modules/hrm/includes/api/class-employees-controller.php:934
 #: modules/hrm/includes/api/class-employees-controller.php:1029
-#: modules/hrm/includes/api/class-employees-controller.php:1228
+#: modules/hrm/includes/api/class-employees-controller.php:1231
 #: modules/hrm/includes/api/class-leave-entitlements-controller.php:110
 #: modules/hrm/includes/api/class-leave-holidays-controller.php:118
 #: modules/hrm/includes/api/class-leave-holidays-controller.php:161
@@ -6066,7 +6066,7 @@ msgid "Items for the resource."
 msgstr ""
 
 #: includes/api/class-rest-controller.php:112
-#: modules/hrm/includes/api/class-employees-controller.php:1625
+#: modules/hrm/includes/api/class-employees-controller.php:1634
 msgid "Limit results to those matching a string."
 msgstr ""
 
@@ -6301,17 +6301,17 @@ msgid ""
 "to collect non-sensitive diagnostic data and usage information."
 msgstr ""
 
-#: includes/class-updates.php:106
+#: includes/class-updates.php:107
 msgid ""
 "<strong>WP ERP Data Update Required</strong> &#8211; We need to update your "
 "install to the latest version"
 msgstr ""
 
-#: includes/class-updates.php:107
+#: includes/class-updates.php:108
 msgid "Run the updater"
 msgstr ""
 
-#: includes/class-updates.php:112
+#: includes/class-updates.php:113
 msgid ""
 "It is strongly recommended that you backup your database before proceeding. "
 "Are you sure you wish to run the updater now?"
@@ -6723,48 +6723,48 @@ msgstr ""
 msgid " from your computer."
 msgstr ""
 
-#: includes/functions-people.php:195 includes/functions-people.php:257
+#: includes/functions-people.php:203 includes/functions-people.php:265
 msgid "No data found"
 msgstr ""
 
-#: includes/functions-people.php:199 includes/functions-people.php:261
+#: includes/functions-people.php:207 includes/functions-people.php:269
 msgid "No type found"
 msgstr ""
 
-#: includes/functions-people.php:359
+#: includes/functions-people.php:367
 msgid "No field provided"
 msgstr ""
 
-#: includes/functions-people.php:363
+#: includes/functions-people.php:371
 msgid "No value provided"
 msgstr ""
 
-#: includes/functions-people.php:472
+#: includes/functions-people.php:480
 msgid "No user type provided."
 msgstr ""
 
-#: includes/functions-people.php:480
+#: includes/functions-people.php:488
 msgid "The people type is invalid."
 msgstr ""
 
-#: includes/functions-people.php:488
+#: includes/functions-people.php:496
 msgid "You must need to fillup either first name or phone or email"
 msgstr ""
 
-#: includes/functions-people.php:496
+#: includes/functions-people.php:504
 msgid "You must need to fillup either Company name or email or phone"
 msgstr ""
 
-#: includes/functions-people.php:502
+#: includes/functions-people.php:510
 #: modules/crm/includes/class-subscription.php:265
 msgid "Please provide a valid email address"
 msgstr ""
 
-#: includes/functions-people.php:552
+#: includes/functions-people.php:560
 msgid "Something went wrong, please try again"
 msgstr ""
 
-#: includes/functions-people.php:799
+#: includes/functions-people.php:807
 #: modules/crm/includes/functions-customer.php:3488
 #: modules/crm/includes/functions-customer.php:3509
 #: modules/crm/includes/functions-customer.php:3528
@@ -7530,102 +7530,102 @@ msgstr ""
 msgid "Invalid date provided"
 msgstr ""
 
-#: includes/functions.php:761
+#: includes/functions.php:760
 msgid "Very Bad"
 msgstr ""
 
-#: includes/functions.php:762
+#: includes/functions.php:761
 msgid "Poor"
 msgstr ""
 
-#: includes/functions.php:763
+#: includes/functions.php:762
 msgid "Average"
 msgstr ""
 
-#: includes/functions.php:764
+#: includes/functions.php:763
 msgid "Good"
 msgstr ""
 
-#: includes/functions.php:765
+#: includes/functions.php:764
 msgid "Excellent"
 msgstr ""
 
-#: includes/functions.php:986
+#: includes/functions.php:985
 msgid "Every Minute"
 msgstr ""
 
-#: includes/functions.php:991
+#: includes/functions.php:990
 msgid "Every 2 Minutes"
 msgstr ""
 
-#: includes/functions.php:996
+#: includes/functions.php:995
 msgid "Every 5 Minutes"
 msgstr ""
 
-#: includes/functions.php:1001
+#: includes/functions.php:1000
 msgid "Every 10 Minutes"
 msgstr ""
 
-#: includes/functions.php:1006
+#: includes/functions.php:1005
 msgid "Every 15 Minutes"
 msgstr ""
 
-#: includes/functions.php:1011
+#: includes/functions.php:1010
 msgid "Every 30 Minutes"
 msgstr ""
 
-#: includes/functions.php:1016 includes/lib/class-wedevs-insights.php:471
+#: includes/functions.php:1015 includes/lib/class-wedevs-insights.php:471
 msgid "Once Weekly"
 msgstr ""
 
-#: includes/functions.php:1090 includes/functions.php:1130
+#: includes/functions.php:1089 includes/functions.php:1129
 msgid ""
 "Your license key expired on %s. Please <a href=\"%s\" target=\"_blank\" "
 "title=\"Renew your license key\">renew your license key</a>."
 msgstr ""
 
-#: includes/functions.php:1099
+#: includes/functions.php:1098
 msgid ""
 "Invalid license. Please <a href=\"%s\" target=\"_blank\" title=\"Visit "
 "account page\">visit your account page</a> and verify it."
 msgstr ""
 
-#: includes/functions.php:1108
+#: includes/functions.php:1107
 msgid ""
 "Your %s is not active for this URL. Please <a href=\"%s\" target=\"_blank\" "
 "title=\"Visit account page\">visit your account page</a> to manage your "
 "license key URLs."
 msgstr ""
 
-#: includes/functions.php:1116
+#: includes/functions.php:1115
 msgid "This is not a %s."
 msgstr ""
 
-#: includes/functions.php:1120
+#: includes/functions.php:1119
 msgid ""
 "Your license key has reached its activation limit. <a href=\"%s\">View "
 "possible upgrades</a> now."
 msgstr ""
 
-#: includes/functions.php:1143
+#: includes/functions.php:1142
 msgid "License key never expires."
 msgstr ""
 
-#: includes/functions.php:1148
+#: includes/functions.php:1147
 msgid ""
 "Your license key expires soon! It expires on %s. <a href=\"%s\" "
 "target=\"_blank\" title=\"Renew license\">Renew your license key</a>."
 msgstr ""
 
-#: includes/functions.php:1156
+#: includes/functions.php:1155
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/functions.php:1878
+#: includes/functions.php:1877
 msgid "Nothing to import or items are already exists."
 msgstr ""
 
-#: includes/functions.php:1881
+#: includes/functions.php:1880
 msgid "%s items successfully imported."
 msgstr ""
 
@@ -7779,7 +7779,7 @@ msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
 #: modules/accounting/includes/class-ajax.php:74
-#: modules/crm/includes/class-ajax.php:467
+#: modules/crm/includes/class-ajax.php:466
 #: modules/hrm/includes/class-ajax.php:915
 msgid "User not found"
 msgstr ""
@@ -9109,7 +9109,7 @@ msgstr ""
 #: modules/crm/views/company/single.php:70
 #: modules/crm/views/js-templates/new-contact-group.php:5
 #: modules/crm/views/js-templates/new-save-replies.php:5
-#: modules/hrm/includes/class-employee.php:1131
+#: modules/hrm/includes/class-employee.php:1148
 #: modules/hrm/views/employee/tab-general.php:194
 #: modules/hrm/views/js-templates/dependents.php:5
 #: modules/hrm/views/reporting/headcount.php:151
@@ -10549,64 +10549,64 @@ msgstr ""
 msgid "CRM Agent"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:217
+#: modules/crm/includes/class-ajax.php:216
 msgid "Type must be required"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:248
+#: modules/crm/includes/class-ajax.php:247
 msgid "No company or contact found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:274
+#: modules/crm/includes/class-ajax.php:273
 msgid "You don't have any permission to add new contact"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:278
+#: modules/crm/includes/class-ajax.php:277
 msgid "You don't have any permission to edit this contact"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:316
+#: modules/crm/includes/class-ajax.php:315
 msgid "Cotact does not exists."
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:347
+#: modules/crm/includes/class-ajax.php:346
 msgid "You don't have any permission to delete this contact"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:353
+#: modules/crm/includes/class-ajax.php:352
 msgid "Can not delete - You do not own this contact(s)"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:418
+#: modules/crm/includes/class-ajax.php:417
 msgid "Contact must be required"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:422
+#: modules/crm/includes/class-ajax.php:421
 msgid "Atleast one group must be selected"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:434
+#: modules/crm/includes/class-ajax.php:433
 msgid "Can not assign any group - You do not own this contact(s)"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:448
+#: modules/crm/includes/class-ajax.php:447
 msgid "Selected contact are successfully subscribed"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:471
+#: modules/crm/includes/class-ajax.php:470
 msgid "Type not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:509
+#: modules/crm/includes/class-ajax.php:508
 msgid "Company already assigned. Choose another company"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:513
+#: modules/crm/includes/class-ajax.php:512
 msgid "Contact already assigned. Choose another contact"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:517
-#: modules/crm/includes/class-ajax.php:645
+#: modules/crm/includes/class-ajax.php:516
+#: modules/crm/includes/class-ajax.php:646
 #: modules/crm/includes/functions-customer.php:372
 #: modules/crm/includes/functions-customer.php:1293
 #: modules/crm/includes/functions-customer.php:2868
@@ -10614,15 +10614,15 @@ msgstr ""
 msgid "No contact found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:528
+#: modules/crm/includes/class-ajax.php:527
 msgid "Company has been added successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:543
+#: modules/crm/includes/class-ajax.php:542
 msgid "Company has been updated successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:559
+#: modules/crm/includes/class-ajax.php:558
 msgid "hello"
 msgstr ""
 
@@ -10630,29 +10630,29 @@ msgstr ""
 msgid "Please select a user"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:654
+#: modules/crm/includes/class-ajax.php:655
 msgid "Assign to agent successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:675
+#: modules/crm/includes/class-ajax.php:676
 msgid "Contact not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:679
+#: modules/crm/includes/class-ajax.php:680
 msgid "Contact type not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:684
+#: modules/crm/includes/class-ajax.php:685
 msgid "Not allowed to crated user with the selected role"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:717
-#: modules/crm/includes/class-ajax.php:767
-#: modules/crm/includes/class-ajax.php:990
-#: modules/crm/includes/class-ajax.php:1181
-#: modules/crm/includes/class-ajax.php:1204
-#: modules/crm/includes/class-ajax.php:1261
-#: modules/crm/includes/class-ajax.php:1348
+#: modules/crm/includes/class-ajax.php:718
+#: modules/crm/includes/class-ajax.php:768
+#: modules/crm/includes/class-ajax.php:991
+#: modules/crm/includes/class-ajax.php:1182
+#: modules/crm/includes/class-ajax.php:1205
+#: modules/crm/includes/class-ajax.php:1262
+#: modules/crm/includes/class-ajax.php:1349
 #: modules/hrm/includes/class-ajax.php:112
 #: modules/hrm/includes/class-ajax.php:142
 #: modules/hrm/includes/class-ajax.php:245
@@ -10698,164 +10698,164 @@ msgstr ""
 msgid "You do not have sufficient permissions to do this action"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:721
+#: modules/crm/includes/class-ajax.php:722
 msgid "Contact Group Name must be required"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:733
+#: modules/crm/includes/class-ajax.php:734
 msgid "Contact group save successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:771
-#: modules/crm/includes/class-ajax.php:1422
-#: modules/crm/includes/class-ajax.php:1448
+#: modules/crm/includes/class-ajax.php:772
+#: modules/crm/includes/class-ajax.php:1423
+#: modules/crm/includes/class-ajax.php:1449
 msgid "Somthing wrong, Please try later"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:776
-#: modules/crm/includes/class-ajax.php:888
+#: modules/crm/includes/class-ajax.php:777
+#: modules/crm/includes/class-ajax.php:889
 msgid "Contact group delete successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:808
+#: modules/crm/includes/class-ajax.php:809
 msgid "Contact not found. Try again"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:818
+#: modules/crm/includes/class-ajax.php:819
 msgid "Subscribed on"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:819
+#: modules/crm/includes/class-ajax.php:820
 msgid "Unsubscribed on"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:842
+#: modules/crm/includes/class-ajax.php:843
 msgid "No user data found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:846
+#: modules/crm/includes/class-ajax.php:847
 msgid "You don't have any permission to assign this contact in a group"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:858
+#: modules/crm/includes/class-ajax.php:859
 msgid "Succesfully subscriber for this user"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:875
+#: modules/crm/includes/class-ajax.php:876
 msgid "You don't have any permission to remove this contact from a group"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:879
+#: modules/crm/includes/class-ajax.php:880
 msgid "No subscriber contact found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:883
+#: modules/crm/includes/class-ajax.php:884
 msgid "No subscriber group found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:905
+#: modules/crm/includes/class-ajax.php:906
 msgid "You don't have any permission to assign this contact"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:909
+#: modules/crm/includes/class-ajax.php:910
 msgid "No subscriber user found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:914
+#: modules/crm/includes/class-ajax.php:915
 msgid "Contact group edit successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:946
+#: modules/crm/includes/class-ajax.php:947
 msgid "No customer found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:955
+#: modules/crm/includes/class-ajax.php:956
 msgid "Succesfully added social profiles"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:985
+#: modules/crm/includes/class-ajax.php:986
 msgid "Customer not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:994
+#: modules/crm/includes/class-ajax.php:995
 msgid "Content must be required"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1013
-#: modules/crm/includes/class-ajax.php:1079
-#: modules/crm/includes/class-ajax.php:1109
-#: modules/crm/includes/class-ajax.php:1125
-#: modules/crm/includes/class-ajax.php:1153
+#: modules/crm/includes/class-ajax.php:1014
+#: modules/crm/includes/class-ajax.php:1080
+#: modules/crm/includes/class-ajax.php:1110
+#: modules/crm/includes/class-ajax.php:1126
+#: modules/crm/includes/class-ajax.php:1154
 msgid "Somthing is wrong, Please try later"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1185
+#: modules/crm/includes/class-ajax.php:1186
 msgid "Feeds Not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1190
+#: modules/crm/includes/class-ajax.php:1191
 msgid "Feed Deleted successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1210
-#: modules/crm/includes/class-ajax.php:1267
+#: modules/crm/includes/class-ajax.php:1211
+#: modules/crm/includes/class-ajax.php:1268
 msgid "No data not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1214
-#: modules/crm/includes/class-ajax.php:1329
+#: modules/crm/includes/class-ajax.php:1215
+#: modules/crm/includes/class-ajax.php:1330
 msgid "Search name not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1218
+#: modules/crm/includes/class-ajax.php:1219
 msgid "Contact Type not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1222
+#: modules/crm/includes/class-ajax.php:1223
 msgid "Search filters not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1228
+#: modules/crm/includes/class-ajax.php:1229
 msgid "Query not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1245
+#: modules/crm/includes/class-ajax.php:1246
 msgid "Search does not save"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1271
+#: modules/crm/includes/class-ajax.php:1272
 msgid "Group name not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1275
+#: modules/crm/includes/class-ajax.php:1276
 msgid "No search fields found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1293
+#: modules/crm/includes/class-ajax.php:1294
 msgid "Could not create group."
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1310
+#: modules/crm/includes/class-ajax.php:1311
 msgid "Successfully created group and assigned selected contacts to the group."
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1313
+#: modules/crm/includes/class-ajax.php:1314
 msgid "Could not import contacts to the group."
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1354
+#: modules/crm/includes/class-ajax.php:1355
 msgid "Search segment not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1377
+#: modules/crm/includes/class-ajax.php:1378
 msgid "Schedule data no found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1431
+#: modules/crm/includes/class-ajax.php:1432
 msgid "No results found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1457
+#: modules/crm/includes/class-ajax.php:1458
 msgid "Save reply item delete successfully"
 msgstr ""
 
@@ -12607,16 +12607,16 @@ msgstr ""
 #: modules/hrm/includes/api/class-employees-controller.php:894
 #: modules/hrm/includes/api/class-employees-controller.php:955
 #: modules/hrm/includes/api/class-employees-controller.php:999
-#: modules/hrm/includes/api/class-employees-controller.php:1050
-#: modules/hrm/includes/api/class-employees-controller.php:1073
-#: modules/hrm/includes/api/class-employees-controller.php:1095
-#: modules/hrm/includes/api/class-employees-controller.php:1118
-#: modules/hrm/includes/api/class-employees-controller.php:1170
-#: modules/hrm/includes/api/class-employees-controller.php:1201
-#: modules/hrm/includes/api/class-employees-controller.php:1249
-#: modules/hrm/includes/api/class-employees-controller.php:1274
-#: modules/hrm/includes/api/class-employees-controller.php:1302
-#: modules/hrm/includes/api/class-employees-controller.php:1324
+#: modules/hrm/includes/api/class-employees-controller.php:1053
+#: modules/hrm/includes/api/class-employees-controller.php:1076
+#: modules/hrm/includes/api/class-employees-controller.php:1098
+#: modules/hrm/includes/api/class-employees-controller.php:1121
+#: modules/hrm/includes/api/class-employees-controller.php:1173
+#: modules/hrm/includes/api/class-employees-controller.php:1204
+#: modules/hrm/includes/api/class-employees-controller.php:1252
+#: modules/hrm/includes/api/class-employees-controller.php:1277
+#: modules/hrm/includes/api/class-employees-controller.php:1305
+#: modules/hrm/includes/api/class-employees-controller.php:1333
 msgid "Invalid Employee id."
 msgstr ""
 
@@ -12624,23 +12624,23 @@ msgstr ""
 msgid "Invalid/No module type"
 msgstr ""
 
-#: modules/hrm/includes/api/class-employees-controller.php:1122
+#: modules/hrm/includes/api/class-employees-controller.php:1125
 msgid "Invalid Policy id."
 msgstr ""
 
-#: modules/hrm/includes/api/class-employees-controller.php:1126
+#: modules/hrm/includes/api/class-employees-controller.php:1129
 msgid "Invalid Leave Start Date."
 msgstr ""
 
-#: modules/hrm/includes/api/class-employees-controller.php:1130
+#: modules/hrm/includes/api/class-employees-controller.php:1133
 msgid "Invalid Leave End Date."
 msgstr ""
 
-#: modules/hrm/includes/api/class-employees-controller.php:1269
+#: modules/hrm/includes/api/class-employees-controller.php:1272
 msgid "User do not have permission for the action."
 msgstr ""
 
-#: modules/hrm/includes/api/class-employees-controller.php:1277
+#: modules/hrm/includes/api/class-employees-controller.php:1280
 msgid "Invalid role format"
 msgstr ""
 
@@ -13017,158 +13017,158 @@ msgstr ""
 msgid "Joined"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:233
+#: modules/hrm/includes/class-employee.php:234
 msgid "Employee with the employee id %s already exist. Please use different one."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:256
+#: modules/hrm/includes/class-employee.php:257
 msgid "Please provide the first name."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:259
+#: modules/hrm/includes/class-employee.php:260
 msgid "Please provide the last name."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:262
+#: modules/hrm/includes/class-employee.php:263
 msgid "Please provide a valid email address."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1057
+#: modules/hrm/includes/class-employee.php:1074
 #: modules/hrm/views/employee/tab-general.php:137
 #: modules/hrm/views/js-templates/education-form.php:5
 msgid "School Name"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1058
+#: modules/hrm/includes/class-employee.php:1075
 #: modules/hrm/views/employee/tab-general.php:138
 #: modules/hrm/views/js-templates/education-form.php:15
 msgid "Degree"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1059
+#: modules/hrm/includes/class-employee.php:1076
 msgid "Field"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1060
+#: modules/hrm/includes/class-employee.php:1077
 msgid "Completion date"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1079
+#: modules/hrm/includes/class-employee.php:1096
 msgid "Could not create education."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1132
+#: modules/hrm/includes/class-employee.php:1149
 msgid "Relation"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1143
-#: modules/hrm/includes/class-employee.php:1223
-#: modules/hrm/includes/class-employee.php:1559
-#: modules/hrm/includes/class-employee.php:1583
+#: modules/hrm/includes/class-employee.php:1160
+#: modules/hrm/includes/class-employee.php:1240
+#: modules/hrm/includes/class-employee.php:1576
+#: modules/hrm/includes/class-employee.php:1600
 msgid "Invalid date format"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1159
+#: modules/hrm/includes/class-employee.php:1176
 msgid "Could not create dependent."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1211
+#: modules/hrm/includes/class-employee.php:1228
 msgid "Missing Company Name"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1214
+#: modules/hrm/includes/class-employee.php:1231
 msgid "Missing Job Title"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1217
+#: modules/hrm/includes/class-employee.php:1234
 msgid "Missing From Date"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1220
+#: modules/hrm/includes/class-employee.php:1237
 msgid "Missing To Date"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1232
+#: modules/hrm/includes/class-employee.php:1249
 msgid "Could not create work experience."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1327
+#: modules/hrm/includes/class-employee.php:1344
 msgid "This job history does not exist or does not belongs to the supplied user"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1357
+#: modules/hrm/includes/class-employee.php:1374
 msgid "Invalid Employment Type"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1403
+#: modules/hrm/includes/class-employee.php:1420
 msgid "Invalid Pay Type"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1406
+#: modules/hrm/includes/class-employee.php:1423
 msgid "Invalid Pay Rate"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1409
+#: modules/hrm/includes/class-employee.php:1426
 msgid "Invalid Reason Type"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1458
+#: modules/hrm/includes/class-employee.php:1475
 msgid "Invalid Designation Type"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1462
+#: modules/hrm/includes/class-employee.php:1479
 msgid "Invalid Department Type"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1466
+#: modules/hrm/includes/class-employee.php:1483
 msgid "Invalid Reporting To User"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1551
+#: modules/hrm/includes/class-employee.php:1568
 msgid "Invalid Performance Type received"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1555
-#: modules/hrm/includes/class-employee.php:1579
+#: modules/hrm/includes/class-employee.php:1572
+#: modules/hrm/includes/class-employee.php:1596
 msgid "Missing Date"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1565
+#: modules/hrm/includes/class-employee.php:1582
 msgid "Invalid reporting to used."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1572
+#: modules/hrm/includes/class-employee.php:1589
 msgid "Invalid reviewer user."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1588
+#: modules/hrm/includes/class-employee.php:1605
 msgid "Invalid supervisor user."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1605
-#: modules/hrm/includes/class-employee.php:1669
+#: modules/hrm/includes/class-employee.php:1622
+#: modules/hrm/includes/class-employee.php:1686
 msgid "This note does not exist or does not belongs to the supplied user"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1906
+#: modules/hrm/includes/class-employee.php:1936
 #: modules/hrm/includes/functions-dashboard-widgets.php:197
 #: modules/hrm/includes/functions-leave.php:1171
 msgid "Pending"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:2036
+#: modules/hrm/includes/class-employee.php:2070
 #: modules/hrm/views/employee/tab-general.php:242
 #: modules/hrm/views/js-templates/employee-terminate.php:16
 msgid "Termination Type"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:2038
+#: modules/hrm/includes/class-employee.php:2072
 #: modules/hrm/views/employee/tab-general.php:243
 #: modules/hrm/views/js-templates/employee-terminate.php:29
 msgid "Termination Reason"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:2040
+#: modules/hrm/includes/class-employee.php:2074
 #: modules/hrm/views/employee/tab-general.php:244
 msgid "Eligible for Hire"
 msgstr ""
@@ -13362,7 +13362,7 @@ msgstr ""
 msgid "<strong>%s</strong> announcement has been created"
 msgstr ""
 
-#: modules/hrm/includes/class-leave-report-employee.php:99
+#: modules/hrm/includes/class-leave-report-employee.php:98
 msgid "No Record Found"
 msgstr ""
 
