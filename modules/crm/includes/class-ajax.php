@@ -117,7 +117,7 @@ class Ajax_Handler {
             'type'      => '',
             'offset'    => 0,
             'number'    => 20,
-            'no_object' => true
+            'no_object' => true,
         ];
 
         // Set type. By defaul it sets to contact :p
@@ -169,7 +169,6 @@ class Ajax_Handler {
         }
 
         $contacts['data']  = erp_get_peoples( $args );
-
         $args['count'] = true;
         $total_items = erp_get_peoples( $args );
 
@@ -637,18 +636,20 @@ class Ajax_Handler {
 
         parse_str( $_POST['formData'], $output );
 
+        //contact Owner
         if ( isset( $output['erp_select_assign_contact'] ) && empty( $output['erp_select_assign_contact'] ) ) {
             $this->send_error( __( 'Please select a user', 'erp' ) );
         }
 
+        //contact id
         if ( empty( $output['assign_contact_id'] ) ) {
             $this->send_error( __( 'No contact found', 'erp' ) );
         }
 
         if ( $output['assign_contact_user_id'] ) {
-            erp_crm_update_contact_owner( $output['erp_select_assign_contact'],$output['assign_contact_user_id'] );
+            erp_crm_update_contact_owner( $output['assign_contact_user_id'], $output['erp_select_assign_contact'] );
         } else {
-            erp_crm_update_contact_owner( $output['erp_select_assign_contact'],$output['assign_contact_id'] );
+            erp_crm_update_contact_owner($output['assign_contact_id'], $output['erp_select_assign_contact'] );
         }
 
         $this->send_success( __( 'Assign to agent successfully', 'erp' ) );
