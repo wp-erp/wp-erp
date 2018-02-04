@@ -441,7 +441,7 @@ class Employee {
             'middle_name' => $this->middle_name,
             'full_name'   => $this->get_full_name()
         );
-        $avatar_id               = $this->avatar_id;
+        $avatar_id               = $this->get_photo_id();
         $data['avatar']['id']    = $avatar_id;
         $data['avatar']['image'] = $this->get_avatar();
         if ( $avatar_id ) {
