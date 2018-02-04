@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\Accounting;
 
 /**
@@ -9,6 +10,7 @@ namespace WeDevs\ERP\Accounting;
  */
 class Form_Handler {
     public static $errors;
+
     /**
      * Hook 'em all
      */
@@ -22,13 +24,13 @@ class Form_Handler {
         add_action( 'erp_action_ac-new-journal-entry', array( $this, 'journal_entry' ) );
 
         $accounting = sanitize_title( __( 'Accounting', 'erp' ) );
-        add_action( "load-{$accounting}_page_erp-accounting-customers", array( $this, 'customer_bulk_action') );
-        add_action( "load-{$accounting}_page_erp-accounting-vendors", array( $this, 'vendor_bulk_action') );
-        add_action( "load-{$accounting}_page_erp-accounting-sales", array( $this, 'sales_bulk_action') );
-        add_action( "load-{$accounting}_page_erp-accounting-expense", array( $this, 'expense_bulk_action') );
-        add_action( 'load-{$accounting}_page_erp-accounting-journal', array( $this, 'journal_bulk_action') );
+        add_action( "load-{$accounting}_page_erp-accounting-customers", array( $this, 'customer_bulk_action' ) );
+        add_action( "load-{$accounting}_page_erp-accounting-vendors", array( $this, 'vendor_bulk_action' ) );
+        add_action( "load-{$accounting}_page_erp-accounting-sales", array( $this, 'sales_bulk_action' ) );
+        add_action( "load-{$accounting}_page_erp-accounting-expense", array( $this, 'expense_bulk_action' ) );
+        add_action( 'load-{$accounting}_page_erp-accounting-journal', array( $this, 'journal_bulk_action' ) );
 
-        add_action( 'erp_hr_after_employee_permission_set', array( $this, 'employee_permission_set'), 10, 2 );
+        add_action( 'erp_hr_after_employee_permission_set', array( $this, 'employee_permission_set' ), 10, 2 );
     }
 
     /**
@@ -104,7 +106,7 @@ class Form_Handler {
                     break;
 
                 default:
-                    erp_ac_update_transaction( $trans_id, ['status' => $action] );
+                    erp_ac_update_transaction( $trans_id, [ 'status' => $action ] );
                     break;
             }
         }
@@ -142,7 +144,7 @@ class Form_Handler {
                     break;
 
                 default:
-                    erp_ac_update_transaction( $trans_id, ['status' => $action] );
+                    erp_ac_update_transaction( $trans_id, [ 'status' => $action ] );
                     break;
             }
         }
@@ -162,7 +164,7 @@ class Form_Handler {
      */
     public static function employee_permission_set( $post, $user ) {
         $enable_ac_manager = isset( $post['ac_manager'] ) ? filter_var( $post['ac_manager'], FILTER_VALIDATE_BOOLEAN ) : false;
-        $ac_manager_role = erp_ac_get_manager_role();
+        $ac_manager_role   = erp_ac_get_manager_role();
 
         // TODO::We are duplicating \WeDevs\ERP\Accounting\User_Profile->update_user() process here,
         // which we shouldn't. We should update above method and use that.
@@ -194,7 +196,7 @@ class Form_Handler {
 
         if ( isset( $_POST['action'] ) && $_POST['action'] == 'trash' ) {
             $customer_id = isset( $_POST['customer_id'] ) && is_array( $_POST['customer_id'] ) ? $_POST['customer_id'] : false;
-            $data = [
+            $data        = [
                 'id'   => $customer_id,
                 'hard' => 0,
                 'type' => 'customer'
@@ -204,7 +206,7 @@ class Form_Handler {
 
         if ( isset( $_POST['action'] ) && $_POST['action'] == 'restore' ) {
             $customer_id = isset( $_POST['customer_id'] ) && is_array( $_POST['customer_id'] ) ? $_POST['customer_id'] : false;
-            $data = [
+            $data        = [
                 'id'   => $customer_id,
                 'type' => 'customer'
             ];
@@ -213,7 +215,7 @@ class Form_Handler {
 
         if ( isset( $_POST['action'] ) && $_POST['action'] == 'delete' ) {
             $customer_id = isset( $_POST['customer_id'] ) && is_array( $_POST['customer_id'] ) ? $_POST['customer_id'] : false;
-            $data = [
+            $data        = [
                 'id'   => $customer_id,
                 'hard' => 1,
                 'type' => 'customer'
@@ -242,7 +244,7 @@ class Form_Handler {
 
         if ( isset( $_POST['action'] ) && $_POST['action'] == 'trash' ) {
             $customer_id = isset( $_POST['customer_id'] ) && is_array( $_POST['customer_id'] ) ? $_POST['customer_id'] : false;
-            $data = [
+            $data        = [
                 'id'   => $customer_id,
                 'hard' => 0,
                 'type' => 'vendor'
@@ -253,7 +255,7 @@ class Form_Handler {
 
         if ( isset( $_POST['action'] ) && $_POST['action'] == 'restore' ) {
             $customer_id = isset( $_POST['customer_id'] ) && is_array( $_POST['customer_id'] ) ? $_POST['customer_id'] : false;
-            $data = [
+            $data        = [
                 'id'   => $customer_id,
                 'type' => 'vendor'
             ];
@@ -262,7 +264,7 @@ class Form_Handler {
 
         if ( isset( $_POST['action'] ) && $_POST['action'] == 'delete' ) {
             $customer_id = isset( $_POST['customer_id'] ) && is_array( $_POST['customer_id'] ) ? $_POST['customer_id'] : false;
-            $data = [
+            $data        = [
                 'id'   => $customer_id,
                 'hard' => 1,
                 'type' => 'vendor'
@@ -335,9 +337,9 @@ class Form_Handler {
         $message   = __( 'new', 'erp' );
 
         if ( $_POST['type'] == 'customer' ) {
-            $page_url    = admin_url( 'admin.php?page=erp-accounting-customers' );
+            $page_url = admin_url( 'admin.php?page=erp-accounting-customers' );
         } else {
-            $page_url    = admin_url( 'admin.php?page=erp-accounting-vendors' );
+            $page_url = admin_url( 'admin.php?page=erp-accounting-vendors' );
         }
 
         if ( is_wp_error( $insert_id ) ) {
@@ -423,10 +425,10 @@ class Form_Handler {
             if ( $insert_id && $account_type_id == 6 ) {
 
                 $ledger = Model\Ledger::find( $insert_id );
-                $ledger->bank_details()->create([
+                $ledger->bank_details()->create( [
                     'account_number' => sanitize_text_field( $_POST['bank']['account_number'] ),
                     'bank_name'      => sanitize_text_field( $_POST['bank']['bank_name'] )
-                ]);
+                ] );
             }
 
         } else {
@@ -436,10 +438,10 @@ class Form_Handler {
             $insert_id    = erp_ac_insert_chart( $fields );
 
             $ledger = Model\Ledger::find( $field_id );
-            $ledger->bank_details()->update([
+            $ledger->bank_details()->update( [
                 'account_number' => sanitize_text_field( $_POST['bank']['account_number'] ),
                 'bank_name'      => sanitize_text_field( $_POST['bank']['bank_name'] )
-            ]);
+            ] );
         }
 
         if ( is_wp_error( $insert_id ) ) {
@@ -482,7 +484,7 @@ class Form_Handler {
         }
 
         if ( $_POST['redirect'] == 'same_page' ) {
-            $redirect_to = remove_query_arg( ['transaction_id'], wp_unslash( $_SERVER['REQUEST_URI'] ) );
+            $redirect_to = remove_query_arg( [ 'transaction_id' ], wp_unslash( $_SERVER['REQUEST_URI'] ) );
 
         } else if ( $_POST['redirect'] == 'single_page' ) {
 
@@ -520,7 +522,7 @@ class Form_Handler {
         $issue_date      = isset( $postdata['issue_date'] ) ? sanitize_text_field( $postdata['issue_date'] ) : '';
         $due_date        = isset( $postdata['due_date'] ) ? sanitize_text_field( $postdata['due_date'] ) : '';
         $summary         = isset( $postdata['summary'] ) ? wp_kses_post( $postdata['summary'] ) : '';
-        $total           = isset( $postdata['price_total'] ) ? sanitize_text_field( erp_ac_format_decimal( $postdata['price_total'] ) ) : '';
+        $total           = isset( $postdata['price_total'] ) ? sanitize_text_field( $postdata['price_total'] ) : '';
         $files           = isset( $postdata['files'] ) ? maybe_serialize( $postdata['files'] ) : '';
         $currency        = isset( $postdata['currency'] ) ? sanitize_text_field( $postdata['currency'] ) : 'USD';
         $transaction_id  = isset( $postdata['id'] ) ? $postdata['id'] : false;
@@ -531,6 +533,10 @@ class Form_Handler {
         $partial_id      = isset( $postdata['partial_id'] ) ? $postdata['partial_id'] : [];
         $sub_total       = isset( $postdata['sub_total'] ) ? $postdata['sub_total'] : '0.00';
         $invoice         = isset( $postdata['invoice'] ) ? $postdata['invoice'] : 0;
+
+        //clean price data and format as default setup
+        $total     = erp_ac_format_decimal( erp_ac_remove_thousand_sep( $total ), 2 );
+        $sub_total = erp_ac_format_decimal( erp_ac_remove_thousand_sep( $sub_total ), 2 );
 
         // some basic validation
         if ( ! $issue_date ) {
@@ -544,7 +550,6 @@ class Form_Handler {
         if ( ! $total ) {
             return new \WP_Error( 'required_total_amount', __( 'Error: Total is required', 'erp' ) );
         }
-        $thousand_seperator = erp_ac_get_price_thousand_separator();
 
         $fields = [
             'id'              => $transaction_id,
@@ -561,41 +566,47 @@ class Form_Handler {
             'issue_date'      => $issue_date,
             'due_date'        => $due_date,
             'summary'         => $summary,
-            'total'           => str_replace( $thousand_seperator, '', $total ),
-            'sub_total'       => str_replace( $thousand_seperator, '', $sub_total ),
+            'total'           => $total,
+            'sub_total'       => $sub_total,
             'invoice_number'  => $invoice,
-            'trans_total'     => str_replace( $thousand_seperator, '', $total ),
+            'trans_total'     => $total,
             'files'           => $files,
             'currency'        => $currency,
-            'line_total'      => isset( $postdata['line_total'] ) ? str_replace( $thousand_seperator, '', $postdata['line_total'] ) : array()
+            'line_total'      => isset( $postdata['line_total'] ) ? array_map( 'erp_ac_remove_thousand_sep', $postdata['line_total'] ) : array()
         ];
 
         // set invoice and vendor credit for due to full amount
         if ( $this->is_due_trans( $form_type, $postdata ) ) { //in_array( $form_type, [ 'invoice', 'vendor_credit' ] ) ) {
-            $fields['due'] = str_replace( $thousand_seperator, '', $total );
+            $fields['due'] = $total;
         }
 
         $items = [];
-        foreach ( $line_account as $key => $acc_id) {
-            $line_total = erp_ac_format_decimal( $postdata['line_total'][ $key ] );
-
+        foreach ( $line_account as $key => $acc_id ) {
+            $line_total = erp_ac_format_decimal( erp_ac_remove_thousand_sep( $postdata['line_total'][ $key ] ), 2 );
             if ( ! $acc_id || ! $line_total ) {
                 continue;
             }
 
+            $unit_price    = erp_ac_format_decimal( erp_ac_remove_thousand_sep( $postdata['line_unit_price'][ $key ] ), 2 );
+            $tax_rate      = erp_ac_format_decimal( erp_ac_remove_thousand_sep( $postdata['tax_rate'][ $key ] ), 2 );
+            $line_tax      = erp_ac_format_decimal( erp_ac_remove_thousand_sep( $postdata['line_tax'][ $key ] ), 2 );
+            $tax_amount    = erp_ac_format_decimal( erp_ac_remove_thousand_sep( $postdata['tax_amount'][ $key ] ), 2 );
+            $line_discount = erp_ac_format_decimal( erp_ac_remove_thousand_sep( $postdata['line_discount'][ $key ] ), 2 );
+
+
             $items[] = apply_filters( 'erp_ac_transaction_lines', [
-                'item_id'     => isset( $postdata['items_id'][$key] ) ? $postdata['items_id'][$key] : [],
-                'journal_id'  => isset( $postdata['journals_id'][$key] ) ? $postdata['journals_id'][$key] : [],
+                'item_id'     => isset( $postdata['items_id'][ $key ] ) ? $postdata['items_id'][ $key ] : [],
+                'journal_id'  => isset( $postdata['journals_id'][ $key ] ) ? $postdata['journals_id'][ $key ] : [],
                 'account_id'  => (int) $acc_id,
                 'description' => sanitize_text_field( $postdata['line_desc'][ $key ] ),
                 'qty'         => $postdata['line_qty'][ $key ],
-                'unit_price'  => str_replace( $thousand_seperator, '', erp_ac_format_decimal( $postdata['line_unit_price'][ $key ] ) )  ,
-                'discount'    => erp_ac_format_decimal( $postdata['line_discount'][ $key ] ),
-                'tax'         => isset( $postdata['line_tax'][$key] ) ? $postdata['line_tax'][$key] : 0,
-                'tax_rate'    => isset( $postdata['tax_rate'][$key] ) ? str_replace( $thousand_seperator, '', $postdata['tax_rate'][$key] ) : 0,
-                'tax_amount'  => isset( $postdata['tax_amount'][$key] ) ? str_replace( $thousand_seperator, '', $postdata['tax_amount'][$key] ) : 0,
-                'line_total'  => str_replace( $thousand_seperator, '', erp_ac_format_decimal( $line_total ) ),
-                'tax_journal' => isset( $postdata['tax_journal'][$key] ) ? $postdata['tax_journal'][$key] : 0
+                'unit_price'  => $unit_price,
+                'discount'    => $line_discount,
+                'tax'         => isset( $postdata['line_tax'][ $key ] ) ? $line_tax : 0,
+                'tax_rate'    => isset( $postdata['tax_rate'][ $key ] ) ? $tax_rate : 0,
+                'tax_amount'  => isset( $postdata['tax_amount'][ $key ] ) ? $tax_amount : 0,
+                'line_total'  => $line_total,
+                'tax_journal' => isset( $postdata['tax_journal'][ $key ] ) ? $postdata['tax_journal'][ $key ] : 0
             ], $key, $postdata );
         }
 
@@ -615,7 +626,7 @@ class Form_Handler {
      * @return  boolen
      */
     function is_due_trans( $form_type, $postdata ) {
-        $due = apply_filters( 'erp_ac_is_due_trans', ['invoice', 'vendor_credit'], $postdata );
+        $due = apply_filters( 'erp_ac_is_due_trans', [ 'invoice', 'vendor_credit' ], $postdata );
 
         if ( in_array( $form_type, $due ) ) {
             return true;

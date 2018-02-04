@@ -8,7 +8,7 @@ function erp_ac_get_expense_form_types() {
             'description' => __( 'A purchase that has been made through bank or cash.', 'erp' ),
             'type'        => 'credit'
         ],
-        'vendor_credit' => [
+        'vendor_credit'   => [
             'name'        => 'vendor_credit',
             'label'       => __( 'Vendor Credit', 'erp' ),
             'description' => __( 'A purchase that has been made as credit from vendor.', 'erp' ),
@@ -66,7 +66,7 @@ function erp_ac_get_bank_form_types() {
 /**
  * Get transaction status label
  *
- * @param  string  $status
+ * @param  string $status
  *
  * @return string
  */
@@ -84,7 +84,7 @@ function erp_ac_get_status_label( $items, $slug ) {
             break;
 
         case 'awaiting_payment':
-            $url   = admin_url( 'admin.php?page='.$slug.'&action=new&type=' . $items->form_type . '&transaction_id=' . $items->id );
+            $url   = admin_url( 'admin.php?page=' . $slug . '&action=new&type=' . $items->form_type . '&transaction_id=' . $items->id );
             $label = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Awaiting for Payment', 'erp' ) );
             break;
 
@@ -105,17 +105,17 @@ function erp_ac_get_status_label( $items, $slug ) {
             break;
 
         case 'pending':
-            $url   = admin_url( 'admin.php?page='.$slug.'&action=new&type=' . $items->form_type . '&transaction_id=' . $items->id );
+            $url   = admin_url( 'admin.php?page=' . $slug . '&action=new&type=' . $items->form_type . '&transaction_id=' . $items->id );
             $label = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Awaiting for approval', 'erp' ) );
             break;
 
         case 'draft':
-            $url   = admin_url( 'admin.php?page='.$slug.'&action=new&type=' . $items->form_type . '&transaction_id=' . $items->id );
+            $url   = admin_url( 'admin.php?page=' . $slug . '&action=new&type=' . $items->form_type . '&transaction_id=' . $items->id );
             $label = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Draft', 'erp' ) );
             break;
 
         case 'awaiting_approval':
-            $url   = admin_url( 'admin.php?page='.$slug.'&action=new&type=' . $items->form_type . '&transaction_id=' . $items->id );
+            $url   = admin_url( 'admin.php?page=' . $slug . '&action=new&type=' . $items->form_type . '&transaction_id=' . $items->id );
             $label = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Awaiting for approval', 'erp' ) );
             break;
     }
@@ -154,21 +154,21 @@ function erp_ac_get_currency() {
  */
 function erp_ac_get_price_format() {
     $currency_pos = erp_get_option( 'erp_ac_currency_position', false, 'left' );
-    $format = '%1$s%2$s';
+    $format       = '%1$s%2$s';
 
     switch ( $currency_pos ) {
         case 'left' :
             $format = '%1$s%2$s';
-        break;
+            break;
         case 'right' :
             $format = '%2$s%1$s';
-        break;
+            break;
         case 'left_space' :
             $format = '%1$s&nbsp;%2$s';
-        break;
+            break;
         case 'right_space' :
             $format = '%2$s&nbsp;%1$s';
-        break;
+            break;
     }
 
     return apply_filters( 'erp_ac_price_format', $format, $currency_pos );
@@ -181,24 +181,24 @@ function erp_ac_get_price_format() {
  */
 function erp_ac_get_symbol_format_for_label( $label ) {
     $currency_pos = erp_get_option( 'erp_ac_currency_position', false, 'left' );
-    $format = '(%1$s)%2$s';
+    $format       = '(%1$s)%2$s';
 
     switch ( $currency_pos ) {
         case 'left' :
             $format = '(%1$s)%2$s';
-        break;
+            break;
         case 'right' :
             $format = '%2$s(%1$s)';
-        break;
+            break;
         case 'left_space' :
             $format = '(%1$s)&nbsp;%2$s';
-        break;
+            break;
         case 'right_space' :
             $format = '%2$s&nbsp;(%1$s)';
-        break;
+            break;
     }
 
-    $print_label = sprintf( $format, erp_ac_get_currency_symbol() , $label );
+    $print_label = sprintf( $format, erp_ac_get_currency_symbol(), $label );
 
     return apply_filters( 'erp_ac_label_symbol_format', $print_label, $format, $label );
 }
@@ -212,6 +212,7 @@ function erp_ac_get_symbol_format_for_label( $label ) {
  */
 function erp_ac_get_price_thousand_separator() {
     $separator = stripslashes( erp_get_option( 'erp_ac_th_separator', false, ',' ) );
+
     return $separator;
 }
 
@@ -224,6 +225,7 @@ function erp_ac_get_price_thousand_separator() {
  */
 function erp_ac_get_price_decimal_separator() {
     $separator = stripslashes( erp_get_option( 'erp_ac_de_separator', false, '.' ) );
+
     return $separator ? $separator : '.';
 }
 
@@ -265,6 +267,15 @@ function erp_ac_get_price( $main_price, $args = array() ) {
     return apply_filters( 'erp_ac_price', $formatted_price, $price, $args );
 }
 
+/**
+ * @since 1.2.3
+ *
+ * @param $price
+ * @param array $args
+ *
+ * @return mixed|void
+ *
+ */
 function erp_ac_get_price_for_field( $price, $args = array() ) {
     extract( apply_filters( 'erp_ac_price_args', wp_parse_args( $args, array(
         'currency'           => erp_ac_get_currency(),
@@ -276,61 +287,85 @@ function erp_ac_get_price_for_field( $price, $args = array() ) {
         'currency_symbol'    => erp_ac_get_currency_symbol()
     ) ) ) );
 
-    $price  = number_format( $price, $decimals, $decimal_separator, $thousand_separator );
+    $price = number_format( $price, $decimals, $decimal_separator, $thousand_separator );
 
     $formatted_price = $symbol ? sprintf( $price_format, $currency_symbol, $price ) : $price;
+
     return apply_filters( 'erp_ac_price', $formatted_price, $price, $args );
 }
 
-function erp_ac_format_decimal( $number ) {
-    $locale   = localeconv();
 
+function erp_ac_format_decimal( $number, $dp = false, $trim_zeros = false) {
+    $locale   = localeconv();
     $decimals = array( erp_ac_get_price_decimal_separator(), $locale['decimal_point'], $locale['mon_decimal_point'] );
 
     // Remove locale from string
     if ( ! is_float( $number ) ) {
         $number = sanitize_text_field( str_replace( $decimals, '.', $number ) );
     }
+    if ( false !== $dp ) {
+        $dp     = intval( '' == $dp ? erp_ac_get_price_decimals() : $dp );
+        $number = number_format( floatval( $number ), $dp, '.', '' );
+        // DP is false - don't use number format, just return a string in our format
+    } elseif ( is_float( $number ) ) {
+        // DP is false - don't use number format, just return a string using whatever is given. Remove scientific notation using sprintf.
+        $number     = str_replace( $decimals, '.', sprintf( '%.' . 4 . 'f', $number ) );
+        // We already had a float, so trailing zeros are not needed.
+        $trim_zeros = true;
+    }
 
     if ( is_float( $number ) ) {
         $number = sanitize_text_field( str_replace( $decimals, '.', strval( $number ) ) );
     }
 
+    if ( $trim_zeros && strstr( $number, '.' ) ) {
+        $number = rtrim( rtrim( $number, '0' ), '.' );
+    }
+
     return $number;
 }
 
-function erp_ac_get_customer($id) {
+function erp_ac_remove_thousand_sep( $number ) {
+    $sep = erp_ac_get_price_thousand_separator();
+    if ( $sep ) {
+        $number = str_replace( $sep, '', $number );
+    }
+
+    return $number;
+}
+
+function erp_ac_get_customer( $id ) {
     return erp_get_people( $id );
 }
 
 function erp_ac_message( $message_ke = false ) {
     $message = array(
-        'confirm'       => __( 'Are you sure!', 'erp' ),
-        'new_customer'  => __( 'New Customer', 'erp' ),
-        'new_vendor'    => __( 'New Vendor', 'erp' ),
-        'new'           => __( 'Create New', 'erp' ),
-        'transaction'   => __( 'Transaction History', 'erp' ),
-        'processing'    => __( 'Processing please wait!', 'erp' ),
-        'new_tax'       => __( 'Tax Rates', 'erp' ),
-        'tax_item'      => __( 'Tax item details', 'erp' ),
-        'tax_update'    => __( 'Tax Update', 'erp' ),
-        'tax_deleted'   => __( 'Your tax record has been deleted successfully', 'erp' ),
-        'delete'        => __( 'Are you sure you want to delete this? This cannot be undone.', 'erp' ),
-        'void'          => __( 'Are you sure you want to mark this transaction as void? This action can not be reversed!', 'erp' ),
-        'restore'       => __( 'Yes, restore it!', 'erp' ),
-        'cancel'        => __( 'Cancel', 'erp' ),
-        'error'         => __( 'Error!', 'erp' ),
-        'alreadyExist'  => __( 'Already exists as a customer or vendor', 'erp' ),
+        'confirm'            => __( 'Are you sure!', 'erp' ),
+        'new_customer'       => __( 'New Customer', 'erp' ),
+        'new_vendor'         => __( 'New Vendor', 'erp' ),
+        'new'                => __( 'Create New', 'erp' ),
+        'transaction'        => __( 'Transaction History', 'erp' ),
+        'processing'         => __( 'Processing please wait!', 'erp' ),
+        'new_tax'            => __( 'Tax Rates', 'erp' ),
+        'tax_item'           => __( 'Tax item details', 'erp' ),
+        'tax_update'         => __( 'Tax Update', 'erp' ),
+        'tax_deleted'        => __( 'Your tax record has been deleted successfully', 'erp' ),
+        'delete'             => __( 'Are you sure you want to delete this? This cannot be undone.', 'erp' ),
+        'void'               => __( 'Are you sure you want to mark this transaction as void? This action can not be reversed!', 'erp' ),
+        'restore'            => __( 'Yes, restore it!', 'erp' ),
+        'cancel'             => __( 'Cancel', 'erp' ),
+        'error'              => __( 'Error!', 'erp' ),
+        'alreadyExist'       => __( 'Already exists as a customer or vendor', 'erp' ),
         'transaction_status' => __( 'Transaction Status', 'erp' ),
-        'submit'        => __( 'Submit', 'erp' ),
-        'redo'          => __( 'Yes, redo it!', 'erp' ),
-        'yes'           => __( 'Yes, do it!', 'erp' ),
-        'no_result'     => __( 'No Result Found!', 'erp' ),
-        'search'        => __( 'Search', 'erp' )
+        'submit'             => __( 'Submit', 'erp' ),
+        'redo'               => __( 'Yes, redo it!', 'erp' ),
+        'yes'                => __( 'Yes, do it!', 'erp' ),
+        'no_result'          => __( 'No Result Found!', 'erp' ),
+        'search'             => __( 'Search', 'erp' )
     );
 
     if ( $message_ke ) {
-        return apply_filters( 'erp_ac_message', $message[$message_ke] );
+        return apply_filters( 'erp_ac_message', $message[ $message_ke ] );
     } else {
         return apply_filters( 'erp_ac_message', $message );
     }
@@ -343,7 +378,7 @@ function erp_ac_get_version() {
 
 function erp_ac_pagination( $total, $limit, $pagenum ) {
     $num_of_pages = ceil( $total / $limit );
-    $page_links = paginate_links( array(
+    $page_links   = paginate_links( array(
         'base'      => add_query_arg( 'pagenum', '%#%' ),
         'format'    => '',
         'prev_text' => __( '&laquo;', 'aag' ),
@@ -372,6 +407,7 @@ function erp_ac_get_auto_generated_invoice( $form_type ) {
     $invoice_number = erp_ac_generate_invoice_id( $form_type );
     $invoice_number = erp_ac_invoice_num_str_pad( $invoice_number );
     $prefix         = erp_ac_get_invoice_format( $form_type );
+
     return str_replace( '{id}', $invoice_number, $prefix );
 }
 
@@ -410,7 +446,7 @@ function erp_ac_check_invoice_existance( $type, $invoice_number, $prefix ) {
 
     $invoice_number = erp_ac_invoice_num_str_pad( $invoice_number );
     $invoice        = str_replace( '{id}', $invoice_number, $prefix );
-    $form_type = '';
+    $form_type      = '';
 
     if ( $type == 'erp_ac_invoice' ) {
         $form_type = 'invoice';
@@ -419,10 +455,10 @@ function erp_ac_check_invoice_existance( $type, $invoice_number, $prefix ) {
     }
 
 
-    $check_number = \WeDevs\ERP\Accounting\Model\Transaction::select(['invoice_number'])->where( 'invoice_number', '=', $invoice )->where('form_type', '=', $form_type )->get()->toArray();
+    $check_number = \WeDevs\ERP\Accounting\Model\Transaction::select( [ 'invoice_number' ] )->where( 'invoice_number', '=', $invoice )->where( 'form_type', '=', $form_type )->get()->toArray();
 
     if ( $check_number ) {
-        $check_number = \WeDevs\ERP\Accounting\Model\Transaction::select(['invoice_number'])->where('form_type', '=', $form_type )->get()->toArray();
+        $check_number = \WeDevs\ERP\Accounting\Model\Transaction::select( [ 'invoice_number' ] )->where( 'form_type', '=', $form_type )->get()->toArray();
         $check_number = wp_list_pluck( $check_number, 'invoice_number' );
         $check_status = true;
 
@@ -493,14 +529,14 @@ function erp_ac_update_invoice_number( $form_type ) {
     } else if ( $form_type == 'payment' ) {
         $invoice_number = get_option( 'erp_ac_sales_payment_number', 1 );
     }
-    $get_invoice_number = WeDevs\ERP\Accounting\Model\Transaction::select('invoice_number')
-        ->where( 'form_type', '=', $form_type )
-        ->where( 'invoice_number', '>=', $invoice_number )
-        ->get()->toArray();
+    $get_invoice_number = WeDevs\ERP\Accounting\Model\Transaction::select( 'invoice_number' )
+                                                                 ->where( 'form_type', '=', $form_type )
+                                                                 ->where( 'invoice_number', '>=', $invoice_number )
+                                                                 ->get()->toArray();
     $get_invoice_number = wp_list_pluck( $get_invoice_number, 'invoice_number' );
-    $status = true;
+    $status             = true;
 
-    while( $status ) {
+    while ( $status ) {
         if ( in_array( $invoice_number, $get_invoice_number ) ) {
             $invoice_number = $invoice_number + 1;
         } else {
@@ -535,7 +571,7 @@ function erp_ac_get_default_invoice_prefix( $type = false ) {
         'erp_ac_journal'         => 'JRNN-{id}'
     ];
 
-    return $type ? $prefix[$type] : $prefix;
+    return $type ? $prefix[ $type ] : $prefix;
 }
 
 /**
@@ -543,6 +579,7 @@ function erp_ac_get_default_invoice_prefix( $type = false ) {
  *
  * @param object $transaction
  * @param string $algo
+ *
  * @since 1.1.2
  * @return string
  */
@@ -562,10 +599,11 @@ function erp_ac_get_invoice_link_hash( $transaction = '', $algo = 'sha256' ) {
  *
  * @param object $transaction
  * @param string $hash_to_verify
+ *
  * @since 1.1.2
  * @return bool
  */
-function erp_ac_verify_invoice_link_hash( $transaction = '', $hash_to_verify = '',  $algo = 'sha256' ) {
+function erp_ac_verify_invoice_link_hash( $transaction = '', $hash_to_verify = '', $algo = 'sha256' ) {
 
     if ( $transaction && $hash_to_verify ) {
 
@@ -594,7 +632,7 @@ function erp_ac_readonly_invoice_template() {
     $auth_id        = isset( $_REQUEST['auth'] ) ? esc_attr( $_REQUEST['auth'] ) : '';
     $verified       = false;
 
-    if ( !$query || !$transaction_id || !$auth_id ) {
+    if ( ! $query || ! $transaction_id || ! $auth_id ) {
         return;
     }
 
@@ -650,7 +688,7 @@ function erp_ac_get_invoice_num_fromat_from_submit_invoice( $submit_invoice, $in
  */
 function erp_ac_get_invoice_number( $invoice_number, $invoice_format ) {
     if ( $invoice_number != 0 ) {
-        return  str_replace( '{id}', erp_ac_invoice_num_str_pad( $invoice_number ), $invoice_format );
+        return str_replace( '{id}', erp_ac_invoice_num_str_pad( $invoice_number ), $invoice_format );
     } else {
         return $invoice_format;
     }
@@ -696,13 +734,13 @@ function erp_ac_login_redirect( $redirect_to, $roles ) {
 
 /**
  * Auto create customer when creating CRM contact/company
- * 
+ *
  * @param  $customer
  * @param  $customer_id
  * @param  $data
- * 
+ *
  * @since  1.2.7
- * 
+ *
  * @return void
  */
 function erp_ac_customer_create_from_crm( $customer, $customer_id, $data ) {
@@ -735,7 +773,7 @@ function erp_ac_customer_create_from_crm( $customer, $customer_id, $data ) {
     }
 
     $data['people_id'] = $customer_id;
-    $data['type'] = 'customer';
+    $data['type']      = 'customer';
 
     erp_convert_to_people( $data );
 }
@@ -744,13 +782,13 @@ function erp_ac_customer_create_from_crm( $customer, $customer_id, $data ) {
  * Accounting customer auto create from crm
  *
  * @since  1.2.8
- * 
- * @param  int    $contact_id
+ *
+ * @param  int $contact_id
  * @param  object $data
- * 
+ *
  * @return void
  */
 function erp_ac_customer_auto_create_from_crm( $contact_id, $data ) {
-    return erp_ac_customer_create_from_crm( [],  $contact_id, $data );
+    return erp_ac_customer_create_from_crm( [], $contact_id, $data );
 }
 
