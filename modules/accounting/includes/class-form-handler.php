@@ -588,11 +588,24 @@ class Form_Handler {
             }
 
             $unit_price    = erp_ac_format_decimal( erp_ac_remove_thousand_sep( $postdata['line_unit_price'][ $key ] ), 2 );
-            $tax_rate      = erp_ac_format_decimal( erp_ac_remove_thousand_sep( $postdata['tax_rate'][ $key ] ), 2 );
-            $line_tax      = erp_ac_format_decimal( erp_ac_remove_thousand_sep( $postdata['line_tax'][ $key ] ), 2 );
-            $tax_amount    = erp_ac_format_decimal( erp_ac_remove_thousand_sep( $postdata['tax_amount'][ $key ] ), 2 );
-            $line_discount = erp_ac_format_decimal( erp_ac_remove_thousand_sep( $postdata['line_discount'][ $key ] ), 2 );
 
+            $tax_rate      = 0;
+            $line_tax      = 0;
+            $tax_amount    = 0;
+
+            if ( isset( $postdata['tax_rate'] ) ) {
+                $tax_rate  = erp_ac_format_decimal( erp_ac_remove_thousand_sep( $postdata['tax_rate'][ $key ] ), 2 );
+            }
+
+            if ( isset( $postdata['line_tax'] )) {
+                $lien_tax  = erp_ac_format_decimal( erp_ac_remove_thousand_sep( $postdata['line_tax'][ $key ] ), 2 );
+            }
+
+            if ( isset( $postdata['tax_amount'] )) {
+                $lien_tax  = erp_ac_format_decimal( erp_ac_remove_thousand_sep( $postdata['tax_amount'][ $key ] ), 2 );
+            }
+
+            $line_discount = erp_ac_format_decimal( erp_ac_remove_thousand_sep( $postdata['line_discount'][ $key ] ), 2 );
 
             $items[] = apply_filters( 'erp_ac_transaction_lines', [
                 'item_id'     => isset( $postdata['items_id'][ $key ] ) ? $postdata['items_id'][ $key ] : [],
