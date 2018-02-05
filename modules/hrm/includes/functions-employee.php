@@ -282,11 +282,10 @@ function erp_employee_restore( $employee_ids ) {
  *              remove the related wp user
  *
  * @param  array|int $employee_ids
- *
+ * @param $force boolean
  * @return void
  */
-function erp_employee_delete( $employee_ids, $hard = false ) {
-
+function erp_employee_delete( $employee_ids, $force = false ) {
     if ( empty( $employee_ids ) ) {
         return;
     }
@@ -309,23 +308,37 @@ function erp_employee_delete( $employee_ids, $hard = false ) {
     // seems like we got some
     foreach ( $employees as $employee_wp_user_id ) {
 
-        do_action( 'erp_hr_delete_employee', $employee_wp_user_id, $hard );
+        do_action( 'erp_hr_delete_employee', $employee_wp_user_id, $force );
 
-        if ( $hard ) {
+        if ( $force ) {
+
+            // find leave entitlements and leave requests and delete them as well
+            \WeDevs\ERP\HRM\Models\Leave_request::where( 'user_id', '=', $employee_wp_user_id )->delete();
+            \WeDevs\ERP\HRM\Models\Leave_Entitlement::where( 'user_id', '=', $employee_wp_user_id )->delete();
+            \WeDevs\ERP\HRM\Models\Education::where( 'employee_id', '=', $employee_wp_user_id )->delete();
+            \WeDevs\ERP\HRM\Models\Performance::where( 'employee_id', '=', $employee_wp_user_id )->delete();
+            \WeDevs\ERP\HRM\Models\Work_Experience::where( 'employee_id', '=', $employee_wp_user_id )->delete();
+            \WeDevs\ERP\HRM\Models\Employee_History::where( 'user_id', '=', $employee_wp_user_id )->delete();
+            \WeDevs\ERP\HRM\Models\Employee_Note::where( 'user_id', '=', $employee_wp_user_id )->delete();
+            \WeDevs\ERP\HRM\Models\Announcement::where( 'user_id', '=', $employee_wp_user_id )->delete();
+
             \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $employee_wp_user_id )->withTrashed()->forceDelete();
             $wp_user = get_userdata( $employee_wp_user_id );
             $wp_user->remove_role( erp_hr_get_manager_role() );
             $wp_user->remove_role( erp_hr_get_employee_role() );
 
-            // find leave entitlements and leave requests and delete them as well
-            \WeDevs\ERP\HRM\Models\Leave_request::where( 'user_id', '=', $employee_wp_user_id )->delete();
-            \WeDevs\ERP\HRM\Models\Leave_Entitlement::where( 'user_id', '=', $employee_wp_user_id )->delete();
+            //finally remove from wordpress user
+            $remove_wp_user = get_option('erp_hrm_remove_wp_user', 'no');
+            if('yes' == $remove_wp_user ){
+                $current_user = get_current_user_id();
+                wp_delete_user($employee_wp_user_id, $current_user);
+            }
 
         } else {
             \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $employee_wp_user_id )->delete();
         }
 
-        do_action( 'erp_hr_after_delete_employee', $employee_wp_user_id, $hard );
+        do_action( 'erp_hr_after_delete_employee', $employee_wp_user_id, $force );
     }
 
 }
