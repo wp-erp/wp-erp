@@ -76,16 +76,27 @@ function erp_ac_get_status_label( $items, $slug ) {
 
     switch ( $status ) {
         case 'closed':
-            $label = __( 'Paid', 'erp' );
+            if ( $_GET['page'] === 'erp-accounting-sales' ) {
+                $label = __( 'Received', 'erp' );
+            } else {
+                $label = __( 'Paid', 'erp' );
+            }
+
             break;
 
         case 'paid':
-            $label = __( 'Paid', 'erp' );
+            $label = __( 'Completed', 'erp' );
             break;
 
         case 'awaiting_payment':
             $url   = admin_url( 'admin.php?page=' . $slug . '&action=new&type=' . $items->form_type . '&transaction_id=' . $items->id );
-            $label = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Awaiting for Payment', 'erp' ) );
+
+           if ( $_GET['page'] === 'erp-accounting-sales' ) {
+                $label = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Awaiting Payment', 'erp' ) );
+            } else {
+                $label = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Payment Pending', 'erp' ) );
+            }
+
             break;
 
         case 'overdue':
@@ -97,7 +108,12 @@ function erp_ac_get_status_label( $items, $slug ) {
             break;
 
         case 'partial':
-            $label = __( 'Partially Paid', 'erp' );
+            if ( $_GET['page'] === 'erp-accounting-sales' ) {
+                $label = __( 'Partially Received', 'erp' );
+            } else {
+                $label = __( 'Partially Paid', 'erp' );
+            }
+
             break;
 
         case 'void':
@@ -106,7 +122,7 @@ function erp_ac_get_status_label( $items, $slug ) {
 
         case 'pending':
             $url   = admin_url( 'admin.php?page=' . $slug . '&action=new&type=' . $items->form_type . '&transaction_id=' . $items->id );
-            $label = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Awaiting for approval', 'erp' ) );
+            $label = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Awaiting Approval', 'erp' ) );
             break;
 
         case 'draft':
@@ -116,7 +132,7 @@ function erp_ac_get_status_label( $items, $slug ) {
 
         case 'awaiting_approval':
             $url   = admin_url( 'admin.php?page=' . $slug . '&action=new&type=' . $items->form_type . '&transaction_id=' . $items->id );
-            $label = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Awaiting for approval', 'erp' ) );
+            $label = sprintf( '<a href="%1s">%2s</a>', $url, __( 'Awaiting Approval', 'erp' ) );
             break;
     }
 
