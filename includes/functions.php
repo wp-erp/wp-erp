@@ -2535,3 +2535,68 @@ function erp_get_dates_in_range($first, $last, $step = '+1 day', $output_format 
 
     return $dates;
 }
+
+/**
+ * Sanitize a string destined to be a tooltip.
+ * Tooltips are encoded with htmlspecialchars to prevent XSS. Should not be used in conjunction with esc_attr()
+ * 
+ * @param string $var
+ * @return string
+ * @since 1.3.4
+ */
+function erp_sanitize_tooltip( $var ) {
+    return htmlspecialchars( wp_kses( html_entity_decode( $var ), array(
+        'br'     => array(),
+        'em'     => array(),
+        'strong' => array(),
+        'small'  => array(),
+        'span'   => array(),
+        'ul'     => array(),
+        'li'     => array(),
+        'ol'     => array(),
+        'p'      => array(),
+    ) ) );
+}
+
+/**
+ * Display an ERP help tip.
+ *
+ * @param  string $tip        Help tip text
+ * @param  bool   $allow_html Allow sanitized HTML if true or escape
+ * @return string
+ * @since 1.3.4
+ */
+function erp_help_tip( $tip, $allow_html = false ) {
+    if ( $allow_html ) {
+        $tip = erp_sanitize_tooltip( $tip );
+    } else {
+        $tip = esc_attr( $tip );
+    }
+
+    return '<span class="erp-help-tip" data-tip="' . $tip . '"></span>';
+}
+
+/**
+ * Letter to number converter
+ * @param  $size
+ * @return $ret
+ * @since 1.3.4
+ */
+function erp_let_to_num( $size ) {
+    $l   = substr( $size, -1 );
+    $ret = substr( $size, 0, -1 );
+    switch ( strtoupper( $l ) ) {
+        case 'P':
+            $ret *= 1024;
+        case 'T':
+            $ret *= 1024;
+        case 'G':
+            $ret *= 1024;
+        case 'M':
+            $ret *= 1024;
+        case 'K':
+            $ret *= 1024;
+    }
+
+    return $ret;
+}
