@@ -87,6 +87,7 @@ class Scripts {
         wp_register_script( 'erp-script', $js . '/erp' . $this->suffix . '.js', array( 'jquery', 'backbone', 'underscore', 'wp-util', 'jquery-ui-datepicker' ), $this->version, true );
         wp_register_script( 'erp-file-upload', $js . '/upload' . $this->suffix . '.js', array( 'jquery', 'plupload-handlers' ), $this->version, true );
         wp_register_script( 'erp-admin-settings', $js . '/settings' . $this->suffix . '.js', array( 'jquery' ), $this->version, true );
+        wp_register_script( 'erp-system-status', $js . '/system-status' . $this->suffix . '.js', array( 'jquery' ), $this->version, true );
 
         // tether.js
         wp_register_script( 'erp-tether-main', $vendor . '/tether/tether.min.js', array( 'jquery' ), $this->version, true );
