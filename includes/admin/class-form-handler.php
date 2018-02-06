@@ -126,10 +126,11 @@ class Form_Handler {
                 'zip'       => $posted['address']['zip'],
                 'country'   => $posted['address']['country'],
             ],
-            'phone'     => $posted['phone'],
-            'fax'       => $posted['fax'],
-            'mobile'    => $posted['mobile'],
-            'website'   => $posted['website'],
+            'phone'   => $posted['phone'],
+            'fax'     => $posted['fax'],
+            'mobile'  => $posted['mobile'],
+            'website' => $posted['website'],
+            'business_type' => $posted['business_type']
         ];
 
         $company = new Company();
