@@ -1702,6 +1702,7 @@ function erp_process_import_export() {
                         $line_data['work']['status'] = 'active';
                     }
 
+
                     $item_insert_id = erp_hr_employee_create( $line_data );
 
                     if ( is_wp_error( $item_insert_id ) ) {
