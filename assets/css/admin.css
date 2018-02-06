@@ -3368,126 +3368,88 @@ trix-editor ul {
   letter-spacing: .1em;
   text-transform: uppercase;
 }
-/*****/
-/**
-* Media Query for responsive
-*
-**/
-/* Tab and small screen (portrait and landscape ) ----------- */
-@media only screen and (max-width: 960px) {
-  .erp-modal,
-  .erp-modal.smaller {
-    top: 8%;
-    bottom: 1%;
-    right: 2%;
-    left: 4%;
-  }
-  .content-container {
-    padding: 1.25em !important;
-  }
+/*----------------------------------------
+  Status page styles
+----------------------------------------*/
+#debug-report {
+  display: none;
 }
-/* Smartphones (portrait and landscape) ----------- */
-@media only screen and (max-width: 640px) {
-  .erp-modal,
-  .erp-modal.smaller {
-    top: 8%;
-    bottom: 1%;
-    right: 2%;
-    left: 2%;
-  }
-  .content-container {
-    padding: 1em !important;
-  }
-  .content-container .content {
-    margin: 0 0;
-  }
-  .content-container .content li label {
-    display: block !important;
-    width: 100% !important;
-  }
-  .content-container .content li select {
-    width: 100%;
-  }
-  .content-container .content li .select2-container {
-    width: 95% !important;
-  }
-  .content-container .content .name-container ol {
-    width: 100% !important;
-  }
-  .content-container .content .name-container ol li {
-    width: 100%;
-  }
-  .content-container .content .name-container li.middle-name {
-    width: 100% !important;
-  }
-  .content-container .content .name-container input {
-    width: 95% !important;
-  }
-  .content-container .content .name-container label:first-child {
-    display: none;
-  }
-  .content-container .content .two-col li {
-    width: 100% !important ;
-  }
-  .content-container .content .two-col label {
-    display: block;
-    width: 100% !important;
-  }
-  .content-container .content input[type="text"],
-  .content-container .content input[type="password"],
-  .content-container .content input[type="color"],
-  .content-container .content input[type="date"],
-  .content-container .content input[type="datetime"],
-  .content-container .content input[type="datetime-local"],
-  .content-container .content input[type="email"],
-  .content-container .content input[type="month"],
-  .content-container .content input[type="number"],
-  .content-container .content input[type="password"],
-  .content-container .content input[type="search"],
-  .content-container .content input[type="radio"],
-  .content-container .content input[type="tel"],
-  .content-container .content input[type="text"],
-  .content-container .content input[type="time"],
-  .content-container .content input[type="url"],
-  .content-container .content input[type="week"],
-  .content-container .content select,
-  .content-container .content textarea {
-    width: 95%;
-  }
-  .erp-table {
-    border: 0;
-  }
-  .erp-table caption {
-    font-size: 1.3em;
-  }
-  .erp-table thead {
-    border: none;
-    clip: rect(0 0 0 0);
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    padding: 0;
-    position: absolute;
-    width: 1px;
-  }
-  .erp-table tr {
-    border-bottom: 3px solid #ddd;
-    display: block;
-    margin-bottom: .625em;
-  }
-  .erp-table td {
-    border-bottom: 1px solid #ddd;
-    display: block;
-    font-size: .8em;
-    text-align: right;
-  }
-  .erp-table td:before {
-    content: attr(data-label);
-    float: left;
-    font-weight: bold;
-    text-transform: uppercase;
-  }
-  .erp-table td:last-child {
-    border-bottom: 0;
-  }
+#debug-report textarea {
+  width: 100%;
+  margin: 0;
+  height: 300px;
+  padding: 20px;
+  border-radius: 0;
+  resize: none;
+  font-size: 12px;
+  line-height: 20px;
+  outline: 0;
+}
+table.erp_status_table {
+  margin-bottom: 1em;
+}
+table.erp_status_table td,
+table.erp_status_table th {
+  font-size: 1.1em;
+}
+table.erp_status_table td mark {
+  background-color: transparent;
+}
+table.erp_status_table td mark.yes {
+  color: #7ad03a;
+}
+table.erp_status_table tr:nth-child(2n) td,
+table.erp_status_table tr:nth-child(2n) th {
+  background: #fcfcfc;
+}
+table.erp_status_table td:first-child {
+  width: 33%;
+}
+table.erp_status_table td.help {
+  width: 1em;
+}
+table.erp_status_table h2 {
+  font-size: 14px;
+  margin: 0;
+}
+code,
+kbd {
+  padding: 3px 5px 2px;
+  margin: 0 1px;
+  background: rgba(0, 0, 0, 0.07);
+  font-size: 13px;
+}
+.erp-help-tip {
+  color: #666;
+  display: inline-block;
+  font-size: 1.1em;
+  font-style: normal;
+  height: 16px;
+  line-height: 16px;
+  position: relative;
+  vertical-align: middle;
+  width: 16px;
+}
+.erp-help-tip::after {
+  font-family: Dashicons;
+  speak: none;
+  font-weight: 400;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  text-indent: 0px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  content: "";
+  cursor: help;
+  font-variant: normal normal;
+  margin: 0px;
+}
+.erp-mini-title {
+  font-size: 14px;
+  color: #03a9f4;
 }

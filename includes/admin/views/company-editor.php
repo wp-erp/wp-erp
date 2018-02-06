@@ -152,6 +152,31 @@
                                     )); ?>
                                 </td>
                             </tr>
+                            <tr>
+                                <td scope="row">
+                                    <label for="business_type"><?php _e( 'What sort of business do you do?', 'erp' ); ?></label>
+                                </td>
+                                <td>
+                                    <?php erp_html_form_input([
+                                        'name'    => 'business_type',
+                                        'type'    => 'select',
+                                        'value'   => $company->business_type,
+                                        'options' => [
+                                            ''                 => '-- select --',
+                                            'Freelance'        => 'Freelance',
+                                            'FreelanceDev'     => 'Freelance (Developer)',
+                                            'FreelanceDes'     => 'Freelance (Design)',
+                                            'SmallBLocal'      => 'Small Business: Local Service (e.g. Hairdresser)',
+                                            'SmallBWeb'        => 'Small Business: Web Business',
+                                            'SmallBOther'      => 'Small Business (Other)',
+                                            'ecommerceWoo'     => 'eCommerce (WooCommerce)',
+                                            'ecommerceShopify' => 'eCommerce (Shopify)',
+                                            'ecommerceOther'   => 'eCommerce (Other)',
+                                            'Other'            => 'Other'
+                                        ]
+                                    ]); ?>
+                                </td>
+                            </tr>
                         </table>
                     </div><!-- .inside -->
                 </div><!-- .postbox -->

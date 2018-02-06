@@ -42,6 +42,7 @@ class Admin_Menu {
         add_submenu_page( 'erp-company', __( 'Tools', 'erp' ), __( 'Tools', 'erp' ), 'manage_options', 'erp-tools', array( $this, 'tools_page' ) );
         add_submenu_page( 'erp-company', __( 'Audit Log', 'erp' ), __( 'Audit Log', 'erp' ), 'manage_options', 'erp-audit-log', array( $this, 'log_page' ) );
         add_submenu_page( 'erp-company', __( 'Settings', 'erp' ), __( 'Settings', 'erp' ), 'manage_options', 'erp-settings', array( $this, 'settings_page' ) );
+        add_submenu_page( 'erp-company', __( 'Status', 'erp' ), __( 'Status', 'erp' ), 'manage_options', 'erp-status', array( $this, 'status_page' ) );
         add_submenu_page( 'erp-company', __( 'Modules', 'erp' ), __( 'Modules', 'erp' ), 'manage_options', 'erp-modules', array( $this, 'module' ) );
         add_submenu_page( 'erp-company', __( 'Add-Ons', 'erp' ), __( 'Add-Ons', 'erp' ), 'manage_options', 'erp-addons', array( $this, 'addon_page' ) );
 
@@ -54,6 +55,15 @@ class Admin_Menu {
      */
     function settings_page() {
         new \WeDevs\ERP\Settings();
+    }
+
+    /**
+     * Erp Status page
+     *
+     * @return void
+     */
+    function status_page() {
+        new \WeDevs\ERP\Status();
     }
 
     /**
