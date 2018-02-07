@@ -329,6 +329,28 @@
                     }
                 }
 
+                // we don't need extra payment
+
+                var url      = new URL(window.location.href);
+                var type     = url.searchParams.get('type');
+                var trans_id = url.searchParams.get('transaction_id');
+
+                if ( type === 'payment' && trans_id !== null ) {
+                    var totalPay = $('#price_total').val();
+                    totalPay     = totalPay.replace(ERP_AC.thousand_separator, '');
+                    totalPay     = totalPay.replace(ERP_AC.decimal_separator, '.');
+
+                    var totalDue = $('#total_due').val();
+                    totalDue     = totalDue.replace(ERP_AC.thousand_separator, '');
+                    totalDue     = totalDue.replace(ERP_AC.decimal_separator, '.');
+
+                    if ( parseFloat(totalPay) > parseFloat(totalDue) ) {
+                        alert( 'Error: Payment amount is more than Due!' );
+                        return false;
+                    }
+                }
+
+                // we are okey to continue
                 $('#erp-ac-redirect').val(redirect);
                 $('#erp-ac-btn-status').val(btn_status);
                 form.find( 'input[name="submit_erp_ac_trans"]' ).trigger('click');
