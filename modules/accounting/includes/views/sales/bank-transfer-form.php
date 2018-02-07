@@ -77,8 +77,16 @@
 
         </tr>
         <?php
-        $total_due = $result['due'] + $total_due;
-        } ?>
+            $total_due = $result['due'] + $total_due;
+        }
+
+        erp_html_form_input( array(
+            'type'        => 'hidden',
+            'id'          => 'total_due',
+            'name'        => 'total_due',
+            'value'       => erp_ac_get_price( $total_due, ['symbol' => false] )
+        ) );
+        ?>
     </tbody>
     <tfoot>
         <tr>
