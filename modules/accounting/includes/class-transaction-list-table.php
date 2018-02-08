@@ -167,7 +167,7 @@ class Transaction_List_Table extends \WP_List_Table {
 
         if ( $item->status == 'awaiting_payment' || $item->status == 'partial' ) {
             $url = $this->slug == 'erp-accounting-expense' ? erp_ac_get_vendor_credit_payment_url( $item->id ) : erp_ac_get_slaes_payment_url( $item->id );
-            $actions['paid'] = sprintf( '<a href="%1$s">%2$s</a>', $url, __( 'Pay Now', 'erp' ) );
+            $actions['paid'] = sprintf( '<a href="%1$s">%2$s</a>', $url, __( 'Receive Payment', 'erp' ) );
         }
 
         if ( $item->status == 'awaiting_approval' || $item->status == 'awaiting_payment' || $item->status == 'closed' || $item->status == 'partial' || $item->status == 'paid' ) {

@@ -25,8 +25,9 @@ class Settings extends ERP_Settings_Page {
      */
     public function get_sections() {
         $sections = array(
-            'workdays' => __( 'Workdays', 'erp' ),
-            'leave' => __( 'Leave', 'erp' ),
+            'workdays'      => __( 'Workdays', 'erp' ),
+            'leave'         => __( 'Leave', 'erp' ),
+            'miscellaneous' => __( 'Miscellaneous', 'erp' ),
         );
 
         return apply_filters( 'erp_settings_hr_sections', $sections );
@@ -95,6 +96,22 @@ class Settings extends ERP_Settings_Page {
             'id'    => 'script_styling_options'
         ];
 
+        $fields['miscellaneous'][] =[
+            'title' => __( 'Miscellaneous', 'erp' ),
+            'type'  => 'title',
+            'desc'  => __( 'HRM miscellaneous settings.', 'erp' ),
+            'id'    => 'hrm_miscellaneous'
+        ];
+        $fields['miscellaneous'][] = [
+            'title' => __( 'Remove WP User', 'erp' ),
+            'type'  => 'checkbox',
+            'id'    => 'erp_hrm_remove_wp_user',
+            'desc'  => __( 'Remove wp user on removing employee.', 'erp' )
+        ];
+        $fields['miscellaneous'][] =[
+            'type'  => 'sectionend',
+            'id'    => 'hrm_miscellaneous'
+        ];
         $fields = apply_filters( 'erp_settings_hr_section_fields', $fields, $section );
 
         $section = $section === false ? $fields['workdays'] : $fields[$section];
