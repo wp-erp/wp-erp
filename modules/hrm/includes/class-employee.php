@@ -301,7 +301,7 @@ class Employee {
         $pay_type            = ( ! empty( $work['pay_type'] ) ) ? $work['pay_type'] : 'monthly';
         $work['pay_type']    = $pay_type;
 
-        $erp_user = \WeDevs\ERP\HRM\Models\Employee::where('user_id', $user_id)->first();
+        $erp_user = \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $user_id )->first();
 
         //if user_id and erp_user is found then load user and update data
         if ( $wp_user && $erp_user ) {
@@ -310,7 +310,7 @@ class Employee {
             return $this->update_employee( $data );
         }
 
-        if( !$erp_user ){
+        if ( ! $erp_user ) {
             \WeDevs\ERP\HRM\Models\Employee::create( [
                 'user_id'     => $user_id,
                 'designation' => 0,
@@ -435,6 +435,7 @@ class Employee {
 
         return $this;
     }
+
 
     /**
      * Get employee data
@@ -1410,7 +1411,8 @@ class Employee {
         }
 
         do_action( 'erp_hr_employee_employment_status_create', $this->get_user_id() );
-        $this->update_employee( [
+
+        $this->erp_user->update( [
             'type' => $args['type']
         ] );
 
@@ -1462,7 +1464,7 @@ class Employee {
         }
         do_action( 'erp_hr_employee_compensation_create', $this->get_user_id() );
 
-        $this->update_employee( [
+        $this->erp_user->update( [
             'pay_rate' => floatval( $args['pay_rate'] ),
             'pay_type' => $args['pay_type']
         ] );
@@ -1520,7 +1522,7 @@ class Employee {
 
         do_action( 'erp_hr_employee_job_info_create', $this->get_user_id() );
 
-        $this->update_employee( [
+        $this->erp_user->update( [
             'designation'  => $args['designation'],
             'department'   => $args['department'],
             'reporting_to' => $args['reporting_to'],
@@ -2096,7 +2098,7 @@ class Employee {
         if ( ! $args['eligible_for_rehire'] ) {
             return new \WP_Error( 'no-eligible-for-rehire', 'Eligible for rehire field is required' );
         }
-        $this->update_employee( [
+        $this->erp_user->update( [
             'status'           => 'terminated',
             'termination_date' => $args['terminate_date']
         ] );
