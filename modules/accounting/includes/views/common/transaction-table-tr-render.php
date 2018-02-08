@@ -183,8 +183,9 @@
             case 'action':
                 ?>
                     <td class="<?php echo $row_class; ?>">
-                        <a href="#" class="remove-line"><span class="dashicons dashicons-trash"></span></a>
-                        <!-- <a href="#" class="move-line"><span class="dashicons dashicons-menu"></span></a> -->
+                        <a href="#" class="remove-line">
+                            <span class="icon-line-remove dashicons dashicons-trash"></span>
+                        </a>
                     </td>
                 <?php
                 break;

@@ -11,7 +11,7 @@
                     <input type="hidden" name="personal[photo_id]" id="emp-photo-id" value="{{ data.avatar.id }}">
 
                     <# if ( data.avatar.id ) { #>
-                        <img src="{{ data.avatar.url }}" alt="" />
+                        <img src="{{ data.avatar.url }}" alt="Image">
                         <a href="#" class="erp-remove-photo">&times;</a>
                     <# } else { #>
                         <a href="#" id="erp-set-emp-photo" class="button button-small"><?php _e( 'Upload Employee Photo', 'erp' ); ?></a>

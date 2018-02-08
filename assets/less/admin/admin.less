@@ -1442,4 +1442,102 @@ trix-editor ul {
         text-transform: uppercase;
     }
 }
-@import "responsive.less";
+
+/*----------------------------------------
+  Status page styles
+----------------------------------------*/
+
+#debug-report {
+    display: none;
+
+    textarea {
+        width: 100%;
+        margin: 0;
+        height: 300px;
+        padding: 20px;
+        border-radius: 0;
+        resize: none;
+        font-size: 12px;
+        line-height: 20px;
+        outline: 0;
+    }
+}
+
+table.erp_status_table {
+    margin-bottom: 1em;
+
+    td,
+    th {
+        font-size: 1.1em;
+    }
+
+    td mark {
+        background-color: transparent;
+    }
+
+    td mark.yes {
+        color: #7ad03a;
+    }
+
+    tr:nth-child(2n) td,
+    tr:nth-child(2n) th {
+        background: #fcfcfc;
+    }
+
+    td:first-child {
+        width: 33%;
+    }
+
+    td.help {
+        width: 1em;
+    }
+
+    h2 {
+        font-size: 14px;
+        margin: 0;
+    }
+}
+
+code, kbd {
+    padding: 3px 5px 2px;
+    margin: 0 1px;
+    background: rgba(0,0,0,.07);
+    font-size: 13px;
+}
+
+.erp-help-tip {
+    color: #666;
+    display: inline-block;
+    font-size: 1.1em;
+    font-style: normal;
+    height: 16px;
+    line-height: 16px;
+    position: relative;
+    vertical-align: middle;
+    width: 16px;
+}
+
+.erp-help-tip::after {
+    font-family: Dashicons;
+    speak: none;
+    font-weight: 400;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    text-indent: 0px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    content: "";
+    cursor: help;
+    font-variant: normal normal;
+    margin: 0px;
+}
+
+.erp-mini-title {
+    font-size: 14px;
+    color: #03a9f4;
+}

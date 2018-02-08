@@ -168,31 +168,33 @@ class Employee {
             $user = get_user_by( 'id', $employee );
 
             if ( $user ) {
-                $this->user_id = $employee;
                 $this->wp_user = $user;
+                $this->user_id = $employee;
             }
 
         } elseif ( is_a( $employee, 'WP_User' ) ) {
-
-            $this->user_id = $employee->get_user_id();
             $this->wp_user = $employee;
+            $this->user_id = $employee->ID;
 
         } elseif ( is_email( $employee ) ) {
 
             $user = get_user_by( 'email', $employee );
-
             if ( $user ) {
-                $this->user_id = $employee;
                 $this->wp_user = $user;
+                $this->user_id = $user->ID;
             }
 
         }
 
         if ( $this->user_id ) {
             $employee_model = $this->erp_user_model;
-            $this->erp_user = $employee_model::withTrashed()->where( 'user_id', $this->user_id )->first();
+            $erp_user       = $employee_model::withTrashed()->where( 'user_id', $this->user_id )->first();
+            if ( $erp_user ) {
+                $this->erp_user = $erp_user;
+            }
 
             if ( $this->is_employee() ) {
+
                 $this->data['user_id']    = $this->user_id;
                 $this->data['user_email'] = $this->wp_user->user_email;
 
@@ -218,9 +220,16 @@ class Employee {
         $posted = array_map( 'strip_tags_deep', $args );
         $data   = array_map( 'trim_deep', $posted );
 
+        $data = wp_parse_args( $data, $this->data );
 
         //if is set employee id
-        $employee_id = null;
+        $employee_id        = null;
+        $user_id            = ! empty( $data['user_id'] ) ? $data['user_id'] : null;
+        $user_email         = ! empty( $data['user_email'] ) ? strtolower( $data['user_email'] ) : null;
+        $erp_user           = null;
+        $wp_user            = null;
+        $data['user_email'] = $user_email;
+
         if ( ! empty( $data['work']['employee_id'] ) ) {
             $employee_id = intval( $data['work']['employee_id'] );
         }
@@ -228,31 +237,29 @@ class Employee {
             $employee_id = intval( $data['personal']['employee_id'] );
         }
 
+        //if duplicate employee id
         if ( $employee_id && $employee_id != $this->employee_id ) {
-            $exist = \WeDevs\ERP\HRM\Models\Employee::where( 'employee_id', $employee_id )->first();
-            if ( $exist ) {
+            $erp_user = \WeDevs\ERP\HRM\Models\Employee::where( 'employee_id', $employee_id )->first();
+            if ( $erp_user ) {
                 return new \WP_Error( 'employee-id-exist', sprintf( __( 'Employee with the employee id %s already exist. Please use different one.', 'erp' ), $employee_id ) );
             }
         }
 
-        //if user found by id then update the user
-        if ( ! empty( $data['user_id'] ) ) {
-            if ( get_user_by( 'ID', absint( $data['user_id'] ) ) ) {
-                $this->load_employee( absint( $data['user_id'] ) );
+        //if we received user_id
+        if ( $user_id ) {
+            $wp_user = get_user_by( 'ID', $user_id );
+        }
 
-                return $this->update_employee( $data );
+        //if wp user is not initiated yet and we received email
+        if ( ! $wp_user && $user_email ) {
+            $wp_user = get_user_by( 'email', $user_email );
+            if ( $wp_user && ! is_wp_error( $wp_user ) ) {
+                $user_id = $wp_user->ID;
             }
         }
 
-        //if user found by email then update the user
-        if ( ! empty( $data['user_email'] ) ) {
-            if ( get_user_by( 'email', absint( $data['user_email'] ) ) ) {
-                return $this->update_employee( $data );
-            }
-        }
 
-        $data['user_email'] = strtolower( $data['user_email'] );
-
+        //if yet not wp user found then we have to create wp user and erp user
         if ( empty( $data['personal']['first_name'] ) ) {
             return new \WP_Error( 'empty-first-name', __( 'Please provide the first name.', 'erp' ) );
         }
@@ -262,58 +269,86 @@ class Employee {
         if ( ! is_email( $data['user_email'] ) ) {
             return new \WP_Error( 'invalid-email', __( 'Please provide a valid email address.', 'erp' ) );
         }
+        $first_name  = isset( $data['personal']['first_name'] ) ? $data['personal']['first_name'] : '';
+        $middle_name = isset( $data['personal']['middle_name'] ) ? $data['personal']['middle_name'] : '';
+        $last_name   = isset( $data['personal']['last_name'] ) ? $data['personal']['last_name'] : '';
 
-        $userdata = array(
-            'user_login'   => $data['user_email'],
-            'user_email'   => $data['user_email'],
-            'first_name'   => $data['personal']['first_name'],
-            'last_name'    => $data['personal']['last_name'],
-            'user_url'     => isset( $data['personal']['user_url'] ) ? $data['personal']['user_url'] : '',
-            'display_name' => $data['personal']['first_name'] . ' ' . $data['personal']['middle_name'] . ' ' . $data['personal']['last_name'],
-            'user_pass'    => wp_generate_password( 12 ),
-            'role'         => 'employee',
-        );
 
-        $userdata = apply_filters( 'erp_hr_employee_args', $userdata );
-        $user_id  = wp_insert_user( $userdata );
-        if ( is_wp_error( $user_id ) ) {
-            return $user_id;
+        if ( ! $wp_user ) {
+            $userdata = array(
+                'user_login'   => $data['user_email'],
+                'user_email'   => $data['user_email'],
+                'first_name'   => $data['personal']['first_name'],
+                'last_name'    => $data['personal']['last_name'],
+                'user_url'     => isset( $data['personal']['user_url'] ) ? $data['personal']['user_url'] : '',
+                'display_name' => $first_name . ' ' . $middle_name . ' ' . $last_name,
+                'user_pass'    => wp_generate_password( 12 ),
+                'role'         => 'employee',
+            );
+
+            $userdata = apply_filters( 'erp_hr_employee_args', $userdata );
+            $user_id  = wp_insert_user( $userdata );
+            if ( is_wp_error( $user_id ) ) {
+                return $user_id;
+            }
         }
+
+
+        // inserting the user for the first time
+        $work                = $data['work'];
+        $hiring_date         = ! empty( $data['work']['hiring_date'] ) ? $data['work']['hiring_date'] : current_time( 'mysql' );
+        $work['hiring_date'] = $hiring_date;
+        $pay_type            = ( ! empty( $work['pay_type'] ) ) ? $work['pay_type'] : 'monthly';
+        $work['pay_type']    = $pay_type;
+
+        $erp_user = \WeDevs\ERP\HRM\Models\Employee::where( 'user_id', $user_id )->first();
+
+        //if user_id and erp_user is found then load user and update data
+        if ( $wp_user && $erp_user ) {
+            $this->load_employee( absint( $user_id ) );
+
+            return $this->update_employee( $data );
+        }
+
+        if ( ! $erp_user ) {
+            \WeDevs\ERP\HRM\Models\Employee::create( [
+                'user_id'     => $user_id,
+                'designation' => 0,
+                'department'  => 0,
+                'status'      => 'active'
+            ] );
+        }
+
         // if reached here, seems like we have success creating the user
         $this->load_employee( $user_id );
 
-        // inserting the user for the first time
-        $hiring_date = ! empty( $data['work']['hiring_date'] ) ? $data['work']['hiring_date'] : current_time( 'mysql' );
-
-        $work = $data['work'];
 
         if ( ! empty( $work['type'] ) ) {
 
             $this->update_employment_status( [
                 'type' => $work['type'],
-                'date' => $hiring_date,
+                'date' => $work['hiring_date'],
             ] );
         }
 
         // update compensation
         if ( ! empty( $work['pay_rate'] ) ) {
-            $pay_type = ( ! empty( $work['pay_type'] ) ) ? $work['pay_type'] : 'monthly';
             $this->update_compensation( [
                 'comment'  => '',
-                'pay_type' => $pay_type,
+                'pay_type' => $work['pay_type'],
                 'reason'   => '',
                 'pay_rate' => $work['pay_rate'],
-                'date'     => $hiring_date,
+                'date'     => $work['hiring_date'],
             ] );
         }
 
         // update job info
         $this->update_job_info( [
-            'date'         => $hiring_date,
+            'date'         => $work['hiring_date'],
             'designation'  => $work['designation'],
             'department'   => $work['department'],
-            'reporting_to' => $work['reporting_to'],
-            'location'     => $work['location'],
+            'reporting_to' => ! empty( $work['reporting_to'] ) ? $work['reporting_to'] : 0,
+            'location'     => ! empty( $work['location'] ) ? $work['location'] : - 1,
         ] );
 
         $this->update_employee( array_merge( $data['work'], $data['personal'] ) );
@@ -401,6 +436,7 @@ class Employee {
         return $this;
     }
 
+
     /**
      * Get employee data
      *
@@ -441,7 +477,7 @@ class Employee {
             'middle_name' => $this->middle_name,
             'full_name'   => $this->get_full_name()
         );
-        $avatar_id               = $this->avatar_id;
+        $avatar_id               = $this->get_photo_id();
         $data['avatar']['id']    = $avatar_id;
         $data['avatar']['image'] = $this->get_avatar();
         if ( $avatar_id ) {
@@ -844,7 +880,7 @@ class Employee {
 
 
     public function get_date_of_birth() {
-        $date = '';
+        $date = null;
         if ( isset( $this->erp_user->date_of_birth )
              && is_valid_date( $this->erp_user->date_of_birth )
              && ( $this->erp_user->date_of_birth != '0000-00-00' ) ) {
@@ -937,8 +973,8 @@ class Employee {
             }
 
             if ( $this->wp_user->country
-                 && ($this->wp_user->country !== '-1')
-                 && ($this->wp_user->state !== '-1')
+                 && ( $this->wp_user->country !== '-1' )
+                 && ( $this->wp_user->state !== '-1' )
                  && $this->wp_user->state ) {
                 return erp_get_state_name( $this->wp_user->country, $this->wp_user->state );
             }
@@ -1375,7 +1411,8 @@ class Employee {
         }
 
         do_action( 'erp_hr_employee_employment_status_create', $this->get_user_id() );
-        $this->update_employee( [
+
+        $this->erp_user->update( [
             'type' => $args['type']
         ] );
 
@@ -1427,7 +1464,7 @@ class Employee {
         }
         do_action( 'erp_hr_employee_compensation_create', $this->get_user_id() );
 
-        $this->update_employee( [
+        $this->erp_user->update( [
             'pay_rate' => floatval( $args['pay_rate'] ),
             'pay_type' => $args['pay_type']
         ] );
@@ -1485,7 +1522,7 @@ class Employee {
 
         do_action( 'erp_hr_employee_job_info_create', $this->get_user_id() );
 
-        $this->update_employee( [
+        $this->erp_user->update( [
             'designation'  => $args['designation'],
             'department'   => $args['department'],
             'reporting_to' => $args['reporting_to'],
@@ -2061,7 +2098,7 @@ class Employee {
         if ( ! $args['eligible_for_rehire'] ) {
             return new \WP_Error( 'no-eligible-for-rehire', 'Eligible for rehire field is required' );
         }
-        $this->update_employee( [
+        $this->erp_user->update( [
             'status'           => 'terminated',
             'termination_date' => $args['terminate_date']
         ] );

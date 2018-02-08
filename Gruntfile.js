@@ -38,6 +38,7 @@ module.exports = function(grunt) {
                     '<%= dirs.js %>/jquery-popup.min.js': ['<%= dirs.js %>/jquery-popup.js'],
                     '<%= dirs.js %>/settings.min.js': ['<%= dirs.js %>/settings.js'],
                     '<%= dirs.js %>/upload.min.js': ['<%= dirs.js %>/upload.js'],
+                    '<%= dirs.js %>/system-status.min.js': ['<%= dirs.js %>/system-status.js'],
                     '<%= dirs.js %>/erp-all.min.js': [
                         '<%= dirs.js %>/erp.min.js',
                         '<%= dirs.js %>/jquery-popup.min.js',

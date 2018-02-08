@@ -35,7 +35,7 @@
 
     <?php
 
-    $employee_count = \WeDevs\ERP\HRM\Models\Employee::count();
+    $employee_count = \WeDevs\ERP\HRM\Models\Employee::withTrashed()->count();
 
     if ( empty( $employee_count ) ) {
         ob_start();

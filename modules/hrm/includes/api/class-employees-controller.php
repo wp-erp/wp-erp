@@ -404,6 +404,7 @@ class Employees_Controller extends REST_Controller {
             's'           => ( $request['s'] ) ? $request['s'] : '',
         ];
 
+
         $items = erp_hr_get_employees( $args );
 
         $args['count'] = true;
