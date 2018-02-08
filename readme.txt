@@ -3,7 +3,7 @@ Contributors: tareq1988, wedevs, ediamin, sabbir1991, asaquzzaman, shawon786, ma
 Donate Link: https://tareq.co/donate
 Tags: small business, SME, contact, contacts, CRM, Customer Relationship Management, employee, leave management, hr, hrm, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 4.9.2
+Tested up to: 4.9.4
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2
@@ -190,6 +190,22 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+= v1.3.4 -> Feb 8, 2018 =
+
+[tweak] Sales and expenses status text change. Closes #401
+[tweak] Invoice formatting. Closes #397
+[fix]   Employee avatar get reset on employee edit when update other information. Closes #610
+[fix]   Invoice Amount (USD works fine. EURO doesn't work). Closes #512
+[fix]   Assign to company is searching for contacts instead of companies. Closes #609
+[fix]   Accounting invoice add payment issue with thousand separator. Closes #615
+[fix]   WP existing user is not importing as employee. Closes #616
+[fix]   Update Setup wizard. Closes #611
+[fix]   Leave entitlements is being created for non active employees. Closes #617
+[fix]   Accounting Issue with Partial Payment. Closes #578
+[fix]   Updating employee job history removes employee's meta data. Closes #619
+[new]   Remove WP user when removing employee. Closes #614
+[new]   System status report. Closes #250
+
 = v1.3.3 -> Feb 1, 2018 =
 
 [fix] Employee API returns wrong event data. Closes #605
