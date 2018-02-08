@@ -992,6 +992,9 @@ class Employee {
     public function get_reporting_to( $return_object = false ) {
         if ( $this->is_employee() && isset( $this->erp_user->reporting_to ) ) {
             $user_id = (int) $this->erp_user->reporting_to;
+            if($user_id == $this->user_id ) {
+                return null;
+            }
             $user    = new Employee( $user_id );
             if ( ! $user->is_employee() ) {
                 return null;
@@ -1500,25 +1503,25 @@ class Employee {
         $default = array(
             'id'           => '',
             'date'         => current_time( 'mysql' ),
-            'designation'  => $args['designation'],
-            'department'   => $args['department'],
-            'reporting_to' => $args['reporting_to'],
-            'location'     => $args['location'],
+            'designation'  => '',
+            'department'   => '',
+            'reporting_to' => '',
+            'location'     => '-1',
             'module'       => 'job',
         );
 
         $args = wp_parse_args( $args, $default );
-        if ( empty( $args['designation'] ) || ! is_numeric( $args['designation'] ) ) {
-            return new \WP_Error( 'invalid-designation-id', __( 'Invalid Designation Type', 'erp' ) );
-        }
-
-        if ( empty( $args['department'] ) || ! is_numeric( $args['department'] ) ) {
-            return new \WP_Error( 'invalid-department-id', __( 'Invalid Department Type', 'erp' ) );
-        }
-
-        if ( empty( $args['reporting_to'] ) || ! is_numeric( $args['reporting_to'] ) ) {
-            return new \WP_Error( 'invalid-reporting-to-user', __( 'Invalid Reporting To User', 'erp' ) );
-        }
+//        if ( empty( $args['designation'] ) || ! is_numeric( $args['designation'] ) ) {
+//            return new \WP_Error( 'invalid-designation-id', __( 'Invalid Designation Type', 'erp' ) );
+//        }
+//
+//        if ( empty( $args['department'] ) || ! is_numeric( $args['department'] ) ) {
+//            return new \WP_Error( 'invalid-department-id', __( 'Invalid Department Type', 'erp' ) );
+//        }
+//
+//        if ( empty( $args['reporting_to'] ) || ! is_numeric( $args['reporting_to'] ) ) {
+//            return new \WP_Error( 'invalid-reporting-to-user', __( 'Invalid Reporting To User', 'erp' ) );
+//        }
 
         do_action( 'erp_hr_employee_job_info_create', $this->get_user_id() );
 
