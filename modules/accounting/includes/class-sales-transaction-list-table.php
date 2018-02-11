@@ -61,11 +61,13 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
      */
     function get_counts() {
         global $wpdb;
-        $cache_key = 'erp-ac-sales-trnasction-counts-' . get_current_user_id();
-        $results = wp_cache_get( $cache_key, 'erp' );
-        $type = isset( $_REQUEST['form_type'] ) ? $_REQUEST['form_type'] : false;
-        $start = isset( $_GET['start_date'] ) ? $_GET['start_date'] :  date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
-        $end = isset( $_GET['end_date'] ) ? $_GET['end_date'] : date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+
+        $cache_key   = 'erp-ac-sales-trnasction-counts-' . get_current_user_id();
+        $results     = wp_cache_get( $cache_key, 'erp' );
+        $type        = !empty( $_REQUEST['form_type'] ) ? $_REQUEST['form_type'] : false;
+        $start       = !empty( $_GET['start_date'] ) ? $_GET['start_date'] :  date( 'Y-m-d', strtotime( erp_financial_start_date() ) );
+        $end         = !empty( $_GET['end_date'] ) ? $_GET['end_date'] : date( 'Y-m-d', strtotime( erp_financial_end_date() ) );
+        $customer_id = !empty( $_GET['customer_id'] ) ? $_GET['customer_id'] : '';
 
         if ( false === $results ) {
             $trans = new \WeDevs\ERP\Accounting\Model\Transaction();
@@ -82,6 +84,11 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
             } else {
                 $results = $trans->select( array( 'status', $db->raw('COUNT(id) as num') ) )
                             ->where( 'type', '=', $this->type )
+                            ->where(function($query) use( $customer_id ) {
+                                if (!empty ( $customer_id )) {
+                                    $query->where( 'user_id', $customer_id );
+                                }
+                            })
                             ->where( 'issue_date', '>=', $start )
                             ->where( 'issue_date', '<=', $end )
                             ->groupBy('status')
@@ -171,11 +178,47 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
             $type = [];
 
             $all_types = $this->get_form_types();
-            $types = [];
+            $all_sects = $this->get_section();
+            $types     = [];
+            $statuses  = [];
 
             foreach ($all_types as $key => $type) {
                 $types[ $key ] = $type['label'];
             }
+
+            foreach ( $all_sects as $key => $status ) {
+                $statuses[$key] = $status['label'];
+            }
+
+            // $selected_customer = '';
+
+            // if ( ! empty( $_GET['customer_id'] ) ) {
+            //     $user = \erp_get_people( intval( $_GET['customer_id'] ) );
+            //     $selected_customer = array($user->id => $user->first_name + ' ' + $user->last_name);
+            // }
+
+            erp_html_form_input( array(
+                'name'        => 'customer_id',
+                'placeholder' => __( 'Select a name', 'erp' ),
+                'type'        => 'select',
+                'class'       => 'filter-customer',
+                'id'          => 'erp-ac-select-user-for-assign-contact',
+                // 'value'       => array(
+                //     'id' => 2,
+                //     'text' => 'Mustak Ahmed'
+                // ),
+                'options'     => [
+                        '' => __( '&mdash; Select &mdash;', 'erp' )
+                ], erp_get_peoples_array(
+                        ['type' => 'customer', 'number' => '-1' ]
+                    ),
+                    'custom_attr' => [
+                        'data-placeholder' => __( 'Search by customer', 'erp' ),
+                        'data-content' => 'erp-ac-new-customer-content-pop',
+                        'data-type'    => 'customer'
+                    ]
+                )
+            );
 
             erp_html_form_input([
                 'name'    => 'form_type',
@@ -209,6 +252,13 @@ class Sales_Transaction_List_Table extends Transaction_List_Table {
                 'name'        => 'ref',
                 'value'       => isset( $_REQUEST['ref'] ) && ! empty( $_REQUEST['ref'] ) ? $_REQUEST['ref'] : '',
                 'placeholder' => __( 'Ref No.', 'erp' )
+            ]);
+
+            erp_html_form_input([
+                'name'    => 'section',
+                'type'    => 'select',
+                'value'   => isset( $_REQUEST['section'] ) && !empty( $_REQUEST['section'] ) ? $_REQUEST['section'] : '',
+                'options' => $statuses
             ]);
 
             submit_button( __( 'Filter', 'erp' ), 'button', 'submit_filter_sales', false );
