@@ -1239,9 +1239,12 @@ class Ajax_Handler {
         ];
 
 
+        $exists = erp_crm_check_segment_exists( $data['search_name'] );
+        if ( $exists ) {
+            $this->send_error( __( 'Segment name alreday exists.', 'erp' ) );
+        }
 
         $result = erp_crm_insert_save_search( $data );
-
         if ( ! $result ) {
             $this->send_error( __( 'Search does not save', 'erp' ) );
         }
