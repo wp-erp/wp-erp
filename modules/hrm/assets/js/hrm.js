@@ -18,6 +18,9 @@
             $( 'ul.erp-dashboard-announcement' ).on( 'click', 'a.view-full', this.dashboard.viewAnnouncement );
             $( 'ul.erp-dashboard-announcement' ).on( 'click', '.announcement-title a', this.dashboard.viewAnnouncementTitle );
 
+            // Birthday Wish
+            $( 'ul.erp-list' ).on( 'click', '.send-wish', this.dashboard.sendBirthdayWish );
+
             // Department
             $( 'body' ).on( 'click', 'a#erp-new-dept', this.department.create );
             $( '.erp-hr-depts' ).on( 'click', 'a.submitdelete', this.department.remove );
@@ -250,6 +253,29 @@
                     },
                     error: function(error) {
                         alert( error );
+                    }
+                });
+            },
+
+            sendBirthdayWish: function(e) {
+                e.preventDefault();
+                var self = $(this);
+
+                $('.wait').show();
+
+                self.find('i').hide();
+
+                wp.ajax.send('erp_hr_birthday_wish', {
+                    data: {
+                        employee_user_id: self.data('user_id'),
+                        _wpnonce: wpErpHr.nonce
+                    },
+                    success: function(res) {
+                        $('.wait').hide();
+                        alert(res);
+                    },
+                    error: function(error) {
+                        alert(error);
                     }
                 });
             }
