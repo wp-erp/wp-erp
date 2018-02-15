@@ -72,7 +72,6 @@ jQuery( function ( $ ) {
                 return false;
             } catch ( e ) {
                 /* jshint devel: true */
-                console.log( e );
             }
 
             return false;

@@ -1136,7 +1136,7 @@ class Employees_Controller extends REST_Controller {
 
         $request_id = erp_hr_leave_insert_request(
             array(
-                'user_id'      => $request['id'],
+                'user_id'      => $request['user_id'],
                 'leave_policy' => $request['policy_id'],
                 'start_date'   => $request['start_date'],
                 'end_date'     => $request['end_date'],
