@@ -185,6 +185,8 @@ $security         = $system_status->get_security_info();
 			<td class="help"></td>
 			<td><?php echo erp_get_option( 'erp_ac_currency_position', false, 'left' ); ?></td>
 		</tr>
+
+		<?php if ( erp_is_module_active( 'accounting' ) ) : ?>
 		<tr>
 			<td data-export-label="Thousand Separator"><?php _e( 'Thousand Separator', 'erp' ); ?>:</td>
 			<td class="help"></td>
@@ -200,6 +202,8 @@ $security         = $system_status->get_security_info();
 			<td class="help"></td>
 			<td><?php echo erp_ac_get_price_decimals(); ?></td>
 		</tr>
+		<?php endif; ?>
+
 	</tbody>
 </table>
 

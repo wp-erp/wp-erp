@@ -552,7 +552,9 @@ class Employee {
      * @return string   image with HTML tag
      */
     public function get_avatar_url( $size = 32 ) {
-        if ( $this->user_id && ! empty( $this->get_photo_id() ) ) {
+        $photo_id = $this->get_photo_id();
+
+        if ( $this->user_id && ! empty( $photo_id ) ) {
             return wp_get_attachment_url( $this->photo_id );
         }
 
@@ -567,7 +569,9 @@ class Employee {
      * @return string   image with HTML tag
      */
     public function get_avatar( $size = 32 ) {
-        if ( $this->user_id && ! empty( $this->get_photo_id() ) ) {
+        $photo_id = $this->get_photo_id();
+
+        if ( $this->user_id && ! empty( $photo_id ) ) {
             $image = wp_get_attachment_thumb_url( $this->photo_id );
 
             return sprintf( '<img src="%1$s" alt="" class="avatar avatar-%2$s photo" height="auto" width="%2$s" />', $image, $size );
