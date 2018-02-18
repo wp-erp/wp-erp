@@ -54,7 +54,7 @@ class People extends Item {
     function get_full_name() {
         $full_name = '';
 
-        if ( in_array( 'company', $this->types ) ) {
+        if ( ! empty( $this->types ) && in_array( 'company', $this->types ) ) {
             $full_name = $this->company;
 
         } elseif ( $this->is_wp_user() ) {
