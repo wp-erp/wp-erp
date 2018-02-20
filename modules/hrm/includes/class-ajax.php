@@ -1353,7 +1353,7 @@ class Ajax_Handler {
         $error        = true;
 
         if ( $range_status == 'off' ) {
-            $end_date = date( 'Y-m-d H:i:s', date($start_date) );
+            $end_date = date( 'Y-m-d 23:59:59', strtotime($start_date) );
         }
 
         if ( is_wp_error( $error ) ) {
