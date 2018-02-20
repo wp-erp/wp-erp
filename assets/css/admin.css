@@ -3453,3 +3453,7 @@ kbd {
   font-size: 14px;
   color: #03a9f4;
 }
+.erp-employee-form .select2.select2-container.select2-container--default,
+.erp-employee-form ol.form-fields > li select {
+  width: 175px !important;
+}
