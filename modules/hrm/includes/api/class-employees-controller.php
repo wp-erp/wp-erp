@@ -1045,7 +1045,7 @@ class Employees_Controller extends REST_Controller {
      * @return mixed|object|WP_Error|WP_REST_Response
      */
     public function get_events( $request ) {
-        $user_id  = (int) $request['id'];
+        $user_id  = (int) $request['user_id'];
         $start    = ! empty( $request['start'] ) ? $request['start'] : date( 'Y-01-01' );
         $end      = ! empty( $request['end'] ) ? $request['end'] : date( 'Y-12-31' );
 
@@ -1054,6 +1054,7 @@ class Employees_Controller extends REST_Controller {
             return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
         }
         $event_data = $employee->get_calender_events(['start' => $start, 'end' => $end]);
+
         $response   = rest_ensure_response( $event_data );
         $response   = $this->format_collection_response( $response, $request, count( $event_data ) );
 
