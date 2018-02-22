@@ -1466,9 +1466,10 @@ class Employee {
         if ( empty( $args['pay_rate'] ) ) {
             return new \WP_Error( 'invalid-pay-rate', __( 'Invalid Pay Rate', 'erp' ) );
         }
-        if ( empty( $args['reason'] ) || ! array_key_exists( $args['reason'], $reasons ) ) {
+        if ( !empty( $args['reason'] ) && ! array_key_exists( $args['reason'], $reasons ) ) {
             return new \WP_Error( 'invalid-reason', __( 'Invalid Reason Type', 'erp' ) );
         }
+
         do_action( 'erp_hr_employee_compensation_create', $this->get_user_id() );
 
         $this->erp_user->update( [
