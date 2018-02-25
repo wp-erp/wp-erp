@@ -149,6 +149,7 @@ $active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : '';
                     <?php
                     $entitlement = new \WeDevs\ERP\HRM\Entitlement_List_Table();
                     $entitlement->prepare_items();
+                    $entitlement->search_box('Search Employee', 'search');
                     $entitlement->views();
 
                     $entitlement->display();

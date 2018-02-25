@@ -1204,7 +1204,7 @@ function erp_ac_send_email_with_pdf_attached( $transaction_id, $args = [] ) {
 
     $transaction = \WeDevs\ERP\Accounting\Model\Transaction::find( $transaction_id );
 
-    $file_name     = erp_ac_pdf_link_generator( $transaction );
+    $file_name     = erp_ac_pdf_link_generator( $transaction, $type );
     $invoice_email = new \WeDevs\ERP\Accounting\Emails\Accounting_Invoice_Email();
     $file_name     = $attach_pdf ? $file_name : '';
 

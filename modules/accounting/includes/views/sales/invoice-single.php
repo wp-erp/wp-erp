@@ -104,7 +104,13 @@ $readonly_url        = add_query_arg( [ 'query' => 'readonly_invoice', 'trans_id
             <div class="row">
                 <div class="col-3">
                     <div class="bill-to"><?php _e( 'Bill to:', 'erp' ); ?></div>
-                    <strong><?php echo $user->get_full_name(); ?></strong>
+                    <strong><?php
+                    if ( $user->get_full_name() ) {
+                        echo $user->get_full_name();
+                    } else {
+                        echo 'Customer name not available.';
+                    }
+                    ?></strong>
                     <div class="billing-address"><?php echo nl2br( $transaction->billing_address ); ?></div>
                 </div>
                 <div class="col-3 align-right">

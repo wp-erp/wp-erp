@@ -1,3 +1,4 @@
+<?php $profile_user_id = isset($_GET['id']) ? $_GET['id'] : null; ?>
 <div class="info-form-wrap">
     <div class="row">
         <?php erp_html_form_input( array(
@@ -47,7 +48,7 @@
             'class'   => 'erp-hrm-select2',
             'type'    => 'select',
             'id'      => 'performance_reporting_to',
-            'options' => erp_hr_get_employees_dropdown_raw()
+            'options' => erp_hr_get_employees_dropdown_raw($profile_user_id)
         ) ); ?>
     </div>
 

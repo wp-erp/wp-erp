@@ -1834,6 +1834,21 @@ function erp_crm_get_save_search_regx( $values ) {
 }
 
 /**
+ * Check if already segment name exists
+ *
+ * @since 1.3.5
+ *
+ * @param  string $name
+ *
+ * @return bool
+ */
+function erp_crm_check_segment_exists( $name ) {
+    $exists = WeDevs\ERP\CRM\Models\SaveSearch::where( 'search_name', $name )->first();
+
+    return $exists ? true : false;
+}
+
+/**
  * Insert save search
  *
  * @since 1.0

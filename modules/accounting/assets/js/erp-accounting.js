@@ -424,6 +424,7 @@
                         ERP_Accounting.users.clickOn();
                         $('.erp-loader').hide();
                         $('input[name="submit_erp_ac_customer"]').prop('disabled', false);
+                        $('.button-primary').prop('disabled', false);
                     }
                 });
             },
@@ -436,6 +437,7 @@
 
             checkUsers: function(e) {
                 e.preventDefault();
+
                 var self = $(this),
                     form = self.closest('form'),
                     email = self.val(),
@@ -469,6 +471,7 @@
                             $('#message').html( '<p><span class="erp-ac-user-exsitance-notice">' + ERP_AC.message.alreadyExist + '</span></p>' );
                             $('#message').slideDown(500);
                             $('input[name="submit_erp_ac_customer"]').prop('disabled', true);
+                            $('.button-primary').prop('disabled', true);
 
                         } else if ( typeof data.data !== undefined && 'wp_user' == data.types ) {
                             $('#message').slideUp(100);
@@ -476,17 +479,20 @@
                             converterButton.attr( 'data-wp_user_id', data.ID );
                             $('#message').slideDown(500);
                             $('input[name="submit_erp_ac_customer"]').prop('disabled', true);
+                            $('.button-primary').prop('disabled', true);
 
                         } else {
                             $('#message').slideUp(100);
                             converterButton.attr( 'data-people_id', data.id );
                             $('#message').slideDown(500);
                             $('input[name="submit_erp_ac_customer"]').prop('disabled', true);
+                            $('.button-primary').prop('disabled', true);
                         }
                     },
                     error: function() {
                         $('#message').slideUp(500);
                         $('input[name="submit_erp_ac_customer"]').prop('disabled', false);
+                        $('.button-primary').prop('disabled', false);
                     },
                 });
 
@@ -1027,6 +1033,13 @@
                 onReady: function(modal) {
                     $('form.erp-modal-form').addClass('erp-form');
                     $('#'+modal.id).css({ 'z-index': '9999'});
+
+                    // Checking user existance on modal
+                    var customerVendorPopup = $('#erp-ac-customer-vendor-popup');
+
+                    customerVendorPopup.on('focusout', 'input[name="email"]', ERP_Accounting.users.checkUsers );
+                    customerVendorPopup.on('input',    'input[name="email"]', ERP_Accounting.users.removeExistingUserNotice );
+                    customerVendorPopup.on('click',    '.erp-ac-convert-user-info', ERP_Accounting.users.convertUser );
                 },
                 onSubmit: function(modal) {
 
