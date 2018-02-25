@@ -190,6 +190,19 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+= v1.3.5 -> Feb 25, 2018 =
+[fix]   CRM segment is saved with the same name multiple times and there is no way to delete. Closes #318
+[fix]   When a payment is mailed, it is automatically changed to invoice. Closes #482
+[fix]   Create New (Customer) on the Add Payment form will remove info from an existing CRM Contact. Closes #554
+[fix]   Invoice and payment section 'Bill to' name error. Closes #622
+[fix]   Holidays created without any range are generating wrong end date. Closes #623
+[fix]   Employee Get Events API not returning leaves. Closes #624
+[fix]   New employee compensation data missing. Closes #625
+[new]   Send birthday wish email to the employee. Closes #150
+[new]   Add invoice filtering based on customer name, status and date. Closes #310
+[new]   Add search fields on leave entitlements page. Closes #618
+[tweak] Fix input field width on employee create form.
+
 = v1.3.4 -> Feb 8, 2018 =
 
 [tweak] Sales and expenses status text change. Closes #401
