@@ -1,5 +1,9 @@
 <?php
-    if( isset( $_GET['page'] ) && $_GET['page'] == 'erp-accounting-customers' ) {
+    if (
+        isset( $_GET['page'] )
+        && $_GET['page'] == 'erp-accounting-customers'
+        || $_GET['page'] == 'erp-accounting-sales'
+    ) {
         $message = __( 'User already exists. Do you want to import as a customer?', 'erp' );
         $user    = __('Import Customer', 'accounting');
         $type    = 'customer';
@@ -23,7 +27,6 @@
     if ( isset( $item ) && $item ) {
         $item_type = in_array( 'customer', $item->types ) ? 'customer' : 'vendor';
     };
-
 
 ?>
 

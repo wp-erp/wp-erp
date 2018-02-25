@@ -61,6 +61,9 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp_hr_announcement_mark_read', 'mark_read_announcement' );
         $this->action( 'wp_ajax_erp_hr_announcement_view', 'view_announcement' );
 
+        // Birthday Wish
+        $this->action ( 'wp_ajax_erp_hr_birthday_wish', 'birthday_wish' );
+
         // Performance
         $this->action( 'wp_ajax_erp-hr-emp-update-performance-reviews', 'employee_update_performance' );
         $this->action( 'wp_ajax_erp-hr-emp-update-performance-comments', 'employee_update_performance' );
@@ -985,6 +988,31 @@ class Ajax_Handler {
     }
 
     /**
+     * Send birthday wish
+     *
+     * @since 1.3.5
+     *
+     * @return string
+     */
+     public function birthday_wish() {
+        $this->verify_nonce( 'wp-erp-hr-nonce' );
+
+        $employee_user_id = intval( $_POST[ 'employee_user_id' ] );
+
+        // To prevent sending wish multiple time
+        // set email already sent status: true
+        setcookie( $employee_user_id, true, strtotime( 'tomorrow' ) );
+
+        $emailer = wperp()->emailer->get_email( 'Birthday_Wish' );
+
+        if ( is_a( $emailer, '\WeDevs\ERP\Email') ) {
+            $emailer->trigger( $employee_user_id );
+        }
+
+        $this->send_success( 'Email sent!' );
+    }
+
+    /**
      * Employee Update Performance Reviews
      *
      * @since 0.1
@@ -1325,7 +1353,7 @@ class Ajax_Handler {
         $error        = true;
 
         if ( $range_status == 'off' ) {
-            $end_date = date( 'Y-m-d H:i:s', date($start_date) );
+            $end_date = date( 'Y-m-d 23:59:59', strtotime($start_date) );
         }
 
         if ( is_wp_error( $error ) ) {

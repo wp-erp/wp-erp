@@ -1257,6 +1257,10 @@ function erp_hr_leave_get_entitlements( $args = array() ) {
         $where .= " AND en.user_id = " . intval( $args['employee_id'] );
     }
 
+    if ( ! empty( $args['search'] ) ) {
+        $where .= $wpdb->prepare(" AND u.display_name LIKE '%%%s%%' ", $args['search'] );
+    }
+
     if ( $args['policy_id'] ) {
         $where .= " AND en.policy_id = " . intval( $args['policy_id'] );
     }

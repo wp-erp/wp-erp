@@ -243,10 +243,12 @@ class Entitlement_List_Table extends \WP_List_Table {
         $current_page          = $this->get_pagenum();
         $offset                = ( $current_page -1 ) * $per_page;
         $this->page_status     = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '2';
+        $search                = ( isset( $_REQUEST['s'] ) ) ? $_REQUEST['s'] : false;
 
         $args = [
             'offset' => $offset,
             'number' => $per_page,
+            'search' => $search
         ];
 
         if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {

@@ -552,7 +552,9 @@ class Employee {
      * @return string   image with HTML tag
      */
     public function get_avatar_url( $size = 32 ) {
-        if ( $this->user_id && ! empty( $this->get_photo_id() ) ) {
+        $photo_id = $this->get_photo_id();
+
+        if ( $this->user_id && ! empty( $photo_id ) ) {
             return wp_get_attachment_url( $this->photo_id );
         }
 
@@ -567,7 +569,9 @@ class Employee {
      * @return string   image with HTML tag
      */
     public function get_avatar( $size = 32 ) {
-        if ( $this->user_id && ! empty( $this->get_photo_id() ) ) {
+        $photo_id = $this->get_photo_id();
+
+        if ( $this->user_id && ! empty( $photo_id ) ) {
             $image = wp_get_attachment_thumb_url( $this->photo_id );
 
             return sprintf( '<img src="%1$s" alt="" class="avatar avatar-%2$s photo" height="auto" width="%2$s" />', $image, $size );
@@ -992,6 +996,9 @@ class Employee {
     public function get_reporting_to( $return_object = false ) {
         if ( $this->is_employee() && isset( $this->erp_user->reporting_to ) ) {
             $user_id = (int) $this->erp_user->reporting_to;
+            if($user_id == $this->user_id ) {
+                return null;
+            }
             $user    = new Employee( $user_id );
             if ( ! $user->is_employee() ) {
                 return null;
@@ -1459,9 +1466,10 @@ class Employee {
         if ( empty( $args['pay_rate'] ) ) {
             return new \WP_Error( 'invalid-pay-rate', __( 'Invalid Pay Rate', 'erp' ) );
         }
-        if ( empty( $args['reason'] ) || ! array_key_exists( $args['reason'], $reasons ) ) {
+        if ( !empty( $args['reason'] ) && ! array_key_exists( $args['reason'], $reasons ) ) {
             return new \WP_Error( 'invalid-reason', __( 'Invalid Reason Type', 'erp' ) );
         }
+
         do_action( 'erp_hr_employee_compensation_create', $this->get_user_id() );
 
         $this->erp_user->update( [
@@ -1500,25 +1508,25 @@ class Employee {
         $default = array(
             'id'           => '',
             'date'         => current_time( 'mysql' ),
-            'designation'  => $args['designation'],
-            'department'   => $args['department'],
-            'reporting_to' => $args['reporting_to'],
-            'location'     => $args['location'],
+            'designation'  => '',
+            'department'   => '',
+            'reporting_to' => '',
+            'location'     => '-1',
             'module'       => 'job',
         );
 
         $args = wp_parse_args( $args, $default );
-        if ( empty( $args['designation'] ) || ! is_numeric( $args['designation'] ) ) {
-            return new \WP_Error( 'invalid-designation-id', __( 'Invalid Designation Type', 'erp' ) );
-        }
-
-        if ( empty( $args['department'] ) || ! is_numeric( $args['department'] ) ) {
-            return new \WP_Error( 'invalid-department-id', __( 'Invalid Department Type', 'erp' ) );
-        }
-
-        if ( empty( $args['reporting_to'] ) || ! is_numeric( $args['reporting_to'] ) ) {
-            return new \WP_Error( 'invalid-reporting-to-user', __( 'Invalid Reporting To User', 'erp' ) );
-        }
+//        if ( empty( $args['designation'] ) || ! is_numeric( $args['designation'] ) ) {
+//            return new \WP_Error( 'invalid-designation-id', __( 'Invalid Designation Type', 'erp' ) );
+//        }
+//
+//        if ( empty( $args['department'] ) || ! is_numeric( $args['department'] ) ) {
+//            return new \WP_Error( 'invalid-department-id', __( 'Invalid Department Type', 'erp' ) );
+//        }
+//
+//        if ( empty( $args['reporting_to'] ) || ! is_numeric( $args['reporting_to'] ) ) {
+//            return new \WP_Error( 'invalid-reporting-to-user', __( 'Invalid Reporting To User', 'erp' ) );
+//        }
 
         do_action( 'erp_hr_employee_job_info_create', $this->get_user_id() );
 

@@ -581,6 +581,14 @@ form.erp-form .erp-form-field label {
 .erp-accounting-tbl-form #issue_date {
   width: 16%;
 }
+#erp-accounting .select2.select2-container.select2-container--default {
+  width: 180px !important;
+  vertical-align: bottom;
+  border-radius: 0;
+}
+#erp-accounting #ref {
+  width: 100px;
+}
 @media print {
   .erp-grid-container .col-3 {
     width: 50%;
