@@ -20,7 +20,7 @@ $security         = $system_status->get_security_info();
 		<a href="#" class="button-primary debug-report">
 			<?php _e( 'Get system report', 'erp' ); ?>
 		</a>
-		<a class="button-secondary docs" href="https://docs.erp.com/document/understanding-the-erp-system-status-report/" target="_blank">
+		<a class="button-secondary docs" href="https://wperp.com/docs/erp-core/understanding-the-erp-system-status-report/" target="_blank">
 			<?php _e( 'Understanding the status report', 'erp' ); ?>
 		</a>
 	</p>
