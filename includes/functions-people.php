@@ -109,11 +109,17 @@ function erp_get_peoples( $args = [] ) {
                                             . '&or&last_name[]=~' . implode( '&or&last_name[]=~', $words )
                                             . '&or&email[]=~' . implode( '&or&email[]=~', $words );
 
-            } else if ( $type === 'company' ) {
+            } elseif ( $type === 'company' ) {
                 $args['erpadvancefilter'] = 'company[]=~' . implode( '&or&company[]=~', $words )
                                             . '&or&email[]=~' . implode( '&or&email[]=~', $words );
 
-            } else if ( $type === 'customer' || $type === 'vendor' ) {
+            } elseif ( is_array( $type ) ) {
+                $sql['where'][] = $wpdb->prepare(
+                    'AND ( people.first_name ) LIKE %s OR ' .
+                    '( people.last_name ) LIKE %s',
+                    array( $search_like, $search_like )
+                );
+            } elseif ( $type === 'customer' || $type === 'vendor' ) {
                 if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 
                     if ( $type === 'customer' ) {
