@@ -1630,116 +1630,6 @@ span.green {
   text-decoration: none;
   display: block;
 }
-.erp-employee-form ol,
-.erp-employee-form li {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.erp-employee-form .photo-container {
-  display: inline-block;
-  width: 128px;
-  position: relative;
-}
-.erp-employee-form .photo-container img {
-  max-width: 80px;
-  height: auto;
-}
-.erp-employee-form .photo-container .erp-remove-photo {
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: rgba(0, 0, 0, 0.5);
-  width: 80px;
-  height: 80px;
-  color: red;
-  text-align: center;
-  text-decoration: none;
-  font-size: 50px;
-  padding-top: 30px;
-  display: none;
-}
-.erp-employee-form .photo-container:hover .erp-remove-photo {
-  display: inline-block;
-}
-.erp-employee-form ol.form-fields:before,
-.erp-employee-form ol.form-fields:after {
-  content: " ";
-  display: table;
-}
-.erp-employee-form ol.form-fields:after {
-  clear: both;
-}
-.erp-employee-form ol.form-fields:before,
-.erp-employee-form ol.form-fields:after {
-  content: " ";
-  display: table;
-}
-.erp-employee-form ol.form-fields:after {
-  clear: both;
-}
-.erp-employee-form ol.form-fields > li {
-  float: left;
-  width: 100%;
-  padding-bottom: 5px;
-}
-.erp-employee-form ol.form-fields > li > label {
-  width: 15%;
-  display: inline-block;
-  vertical-align: top;
-}
-.erp-employee-form ol.form-fields > li select {
-  max-width: 55%;
-}
-.erp-employee-form ol.form-fields.two-col li {
-  width: 50%;
-}
-.erp-employee-form ol.form-fields.two-col li label {
-  width: 30%;
-}
-.erp-employee-form ol.form-fields.two-col li:nth-child(2n+1) {
-  clear: both;
-}
-.erp-employee-form ol.form-fields li.name-container {
-  width: 100%;
-  float: none;
-}
-.erp-employee-form ol.form-fields li.name-container > label {
-  float: left;
-  width: 15%;
-  margin-top: 22px;
-}
-.erp-employee-form ol.form-fields li.name-container ol {
-  float: left;
-  width: 85%;
-}
-.erp-employee-form ol.form-fields li.name-container ol label {
-  display: block;
-  color: #aaa;
-  width: 100%;
-}
-.erp-employee-form ol.form-fields li.name-container ol li.middle-name {
-  width: 185px;
-}
-.erp-employee-form ol.form-fields li.name-container ol li.middle-name input {
-  width: 98%;
-}
-.erp-employee-form fieldset {
-  margin-bottom: 20px;
-  padding-top: 15px;
-  border-top: 1px solid #eee;
-}
-.erp-employee-form fieldset.no-border {
-  border-top: none;
-}
-.erp-employee-form fieldset legend {
-  font-weight: bold;
-  padding-right: 20px;
-  margin-bottom: 10px;
-}
-.erp-employee-form ol.fields-inline li {
-  display: inline-block;
-}
 .job-tab-wrap table.widefat,
 .performance-tab-wrap table.widefat {
   margin-bottom: 20px;
@@ -2025,6 +1915,18 @@ table.leaves td.column-status .status-3 {
   #wpcontent {
     margin-left: 0px;
   }
+}
+.erp-employee-form .photo-container {
+  height: 200px;
+  width: 200px;
+  border: 1px solid #ddd;
+}
+.erp-employee-form .photo-container img {
+  max-width: 100%;
+  height: auto;
+}
+.erp-employee-form .erp-employee-modal-right {
+  border: 1px solid #ddd;
 }
 .caret {
   display: inline-block;
@@ -3012,6 +2914,41 @@ form.erp-form .block .erp-form-field > label {
   float: none;
   display: block;
   margin-bottom: 10px;
+}
+.erp-form label {
+  display: block;
+  font-weight: 700;
+  line-height: 1.5;
+  margin-bottom: 5px;
+}
+.erp-form input[type='email'],
+.erp-form input[type='number'],
+.erp-form input[type='password'],
+.erp-form input[type='search'],
+.erp-form input[type='tel'],
+.erp-form input[type='text'],
+.erp-form input[type='url'],
+.erp-form textarea,
+.erp-form select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: transparent;
+  border: 1px solid #d1d1d1;
+  border-radius: 3px;
+  box-shadow: none;
+  box-sizing: inherit;
+  padding: 5px;
+  width: 100%;
+  line-height: 1.5;
+}
+.erp-employee-modal-right {
+  overflow: hidden;
+}
+.modal-section-title {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
+  margin: 0;
 }
 ul.edit-address li {
   display: block;
