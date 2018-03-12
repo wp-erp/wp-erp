@@ -409,10 +409,9 @@ window.wperp = window.wperp || {};
                 return false;
             }
 
-
             var self = $(this),
                 country = self.val(),
-                parent = self.closest( self.data('parent') ),
+                state_field = $( '.state-field' ).find('#erp-state'),
                 empty = '<option value="-1">- Select -</option>';
 
             if ( wpErpCountries[ country ] ) {
@@ -424,13 +423,13 @@ window.wperp = window.wperp || {};
                 }
 
                 if ( $.isArray( wpErpCountries[ country ] ) ) {
-                    parent.find('select.erp-state-select').html( empty );
+                    state_field.html( empty );
                 } else {
-                    parent.find('select.erp-state-select').html( options );
+                    state_field.html( options );
                 }
 
             } else {
-                parent.find('select.erp-state-select').html( empty );
+                state_field.html( empty );
             }
         },
 

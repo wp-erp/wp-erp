@@ -4,15 +4,27 @@
 
     <div class="erp-grid-container">
         <div class="row">
-            <div class="col-2">
+            <div class="col-2 left-column">
                 <div class="erp-employee-modal-left">
                     <div class="photo-container">
                         <img src="<?php echo WPERP_ASSETS . '/images/mystery-person.png'; ?>" alt="">
+
+                        <input type="hidden" name="personal[photo_id]" id="emp-photo-id" value="{{ data.avatar.id }}">
+
+                        <# if ( data.avatar.id ) { #>
+                            <img src="{{ data.avatar.url }}" alt="Image">
+                            <a href="#" class="erp-remove-photo">&times;</a>
+                        <# } else { #>
+                            <a href="#" id="erp-set-emp-photo" class="button-primary">
+                                <i class="fa fa-cloud-upload"></i>
+                                <?php _e( 'Upload Photo', 'erp' ); ?>
+                            </a>
+                        <# } #>
                     </div>
                 </div>
             </div>
 
-            <div class="col-4">
+            <div class="col-4 right-column">
                 <div class="erp-employee-modal-right">
 
                     <div class="erp-grid-container employee-basic">
@@ -75,9 +87,42 @@
                                 ) ); ?>
                             </div>
 
+                            <div class="col-3" data-selected="{{ data.work.type }}" style="clear:both">
+                                <?php
+                                erp_html_form_input( array(
+                                    'label'    => __( 'Employee Type', 'erp' ),
+                                    'name'     => 'work[type]',
+                                    'value'    => '{{ data.work.type }}',
+                                    'class'    => 'erp-hrm-select2',
+                                    'type'     => 'select',
+                                    'required' => true,
+                                    'options'  => array( '' => __( '- Select -', 'erp' ) ) + erp_hr_get_employee_types()
+                                ) );
+                                ?>
+                            </div>
+
+                            <div class="col-3" data-selected="{{ data.work.status }}">
+                                <?php
+                                erp_html_form_input( array(
+                                    'label'    => __( 'Employee Status', 'erp' ),
+                                    'name'     => 'work[status]',
+                                    'value'    => '{{ data.work.status }}',
+                                    'class'    => 'erp-hrm-select2',
+                                    'type'     => 'select',
+                                    'required' => true,
+                                    'options'  => array( '' => __( '- Select -', 'erp' ) ) + erp_hr_get_employee_statuses()
+                                ) );
+                                ?>
+                            </div>
+
                         </div>
                         <?php do_action( 'erp-hr-employee-form-basic' ); ?>
                     </div>
+
+                    <p class="advanced-fields">
+                        <input type="checkbox" id="advanced_fields">
+                        <label for="advanced_fields">Show Advanced Fields</label>
+                    </p>
 
                     <?php if ( current_user_can( 'erp_edit_employee' ) ): ?>
 
@@ -136,35 +181,6 @@
                                         'options' => erp_hr_get_employees_dropdown_raw()
                                     ) ); ?>
                                 </div>
-
-                                <div class="col-3" data-selected="{{ data.work.type }}">
-                                    <?php
-                                    erp_html_form_input( array(
-                                        'label'    => __( 'Employee Type', 'erp' ),
-                                        'name'     => 'work[type]',
-                                        'value'    => '{{ data.work.type }}',
-                                        'class'    => 'erp-hrm-select2',
-                                        'type'     => 'select',
-                                        'required' => true,
-                                        'options'  => array( '' => __( '- Select -', 'erp' ) ) + erp_hr_get_employee_types()
-                                    ) );
-                                    ?>
-                                </div>
-
-                                <div class="col-3" data-selected="{{ data.work.status }}">
-                                    <?php
-                                    erp_html_form_input( array(
-                                        'label'    => __( 'Employee Status', 'erp' ),
-                                        'name'     => 'work[status]',
-                                        'value'    => '{{ data.work.status }}',
-                                        'class'    => 'erp-hrm-select2',
-                                        'type'     => 'select',
-                                        'required' => true,
-                                        'options'  => array( '' => __( '- Select -', 'erp' ) ) + erp_hr_get_employee_statuses()
-                                    ) );
-                                    ?>
-                                </div>
-
                                 <# } #>
 
                             </div>
@@ -303,7 +319,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-3" data-selected="{{ data.personal.state }}">
+                            <div class="col-3 state-field" data-selected="{{ data.personal.state }}">
                                 <?php erp_html_form_input( array(
                                     'label'   => __( 'Province / State', 'erp' ),
                                     'name'    => 'personal[state]',
@@ -333,6 +349,38 @@
                         </div>
 
                         <?php do_action( 'erp-hr-employee-form-personal' ); ?>
+
+                       <# if ( ! data.id ) { #>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <?php erp_html_form_input( array(
+                                    'label'       => __( 'Notification', 'erp' ),
+                                    'name'        => 'user_notification',
+                                    'help'        => __( 'Send the employee an welcome email.', 'erp' ),
+                                    'type'        => 'checkbox',
+                                ) ); ?>
+                            </div>
+
+                            <div class=" col-6 show-if-notification" style="display:none">
+                                <?php erp_html_form_input( array(
+                                    'label'       => '&nbsp;',
+                                    'name'        => 'login_info',
+                                    'help'        => __( 'Send the login details as well. If <code>{login_info}</code> present.', 'erp' ),
+                                    'type'        => 'checkbox',
+                                ) ); ?>
+                            </div>
+                        </fieldset>
+
+                        <# } #>
+
+                        <?php do_action( 'erp-hr-employee-form-bottom' ); ?>
+
+                        <input type="hidden" name="user_id" id="erp-employee-id" value="{{ data.user_id }}">
+                        <input type="hidden" name="action" id="erp-employee-action" value="erp-hr-employee-new">
+                        <?php wp_nonce_field( 'wp-erp-hr-employee-nonce' ); ?>
+                        <?php do_action( 'erp_hr_employee_form' ); ?>
+
                     </div>
 
                 </div>

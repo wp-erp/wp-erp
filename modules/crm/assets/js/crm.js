@@ -26,6 +26,10 @@
             // handle postbox toggle
             $('body').on( 'click', 'div.erp-handlediv', this.handlePostboxToggle );
 
+            // When create modal open
+            $('body').on( 'click', '#erp-customer-new', this.whenOpenCRMModal );
+            $('body').on( 'click', '#erp-crm-new-contact', this.whenOpenCRMModal );
+            
             // CRM Dashboard
             $( '.crm-dashboard' ).on( 'click', 'a.erp-crm-dashbaord-show-details-schedule', this.dashboard.showScheduleDetails );
 
@@ -91,6 +95,29 @@
             } else {
                 postboxDiv.addClass('closed');
             }
+        },
+
+         /**
+         * When open CRM modal to create contact
+         *
+         * @param  {object} e
+         *
+         * @return {void}
+         */
+        whenOpenCRMModal: function(e) {
+            $( '#advanced_fields' ).click( function() {
+                if ( $( this ).is(' :checked ')) {
+                    $( '.others-info' ).show();
+                    $( '.contact-group' ).show();
+                    $( '.additional-info' ).show();
+                    $( '.social-info' ).show();
+                } else {
+                    $( '.others-info' ).hide();
+                    $( '.contact-group' ).hide();
+                    $( '.social-info' ).hide();
+                    $( '.additional-info' ).hide();
+                }
+            } );
         },
 
         initContactListAjax: function() {
