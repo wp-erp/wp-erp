@@ -107,10 +107,10 @@ class Auditlog_List_Table extends \WP_List_Table {
             'this_month'   => __( 'This Month',   'erp' ),
             'last_month'   => __( 'Last Month',   'erp' ),
             'this_quarter' => __( 'This Quarter', 'erp' ),
-            'last_quarter' => __( 'Last Quarter',  'erp' ),
+            'last_quarter' => __( 'Last Quarter', 'erp' ),
             'this_year'    => __( 'This Year',    'erp' ),
             'last_year'    => __( 'Last Year',    'erp' ),
-            'custom'    => __( 'Custom',    'erp' )
+            'custom'       => __( 'Custom',       'erp' )
         );
 
         return $filters;
