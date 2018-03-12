@@ -81,6 +81,7 @@ class Customer_Relationship {
         require_once WPERP_CRM_PATH . '/includes/functions-localize.php';
         require_once WPERP_CRM_PATH . '/includes/functions-customer.php';
         require_once WPERP_CRM_PATH . '/includes/functions-dashboard.php';
+        require_once WPERP_CRM_PATH . '/includes/functions-reporting.php';
         require_once WPERP_CRM_PATH . '/includes/functions-capabilities.php';
         require_once WPERP_CRM_PATH . '/includes/contact-forms/class-contact-forms-integration.php';
 
@@ -147,7 +148,8 @@ class Customer_Relationship {
             'crm_page_erp-sales-schedules',
             'crm_page_erp-sales-activities',
             'erp-settings_page_erp-settings',
-            'crm_page_erp-sales-contact-groups'
+            'crm_page_erp-sales-contact-groups',
+            'crm_page_erp-sales-reports'
         ];
 
         if ( ! in_array( $hook , $crm_pages ) ) {
@@ -311,6 +313,12 @@ class Customer_Relationship {
 
         if ( in_array( $hook , $pages_hooks ) ) {
             erp_remove_other_select2_sources();
+        }
+        
+        // Report
+        if ( $hook === 'crm_page_erp-sales-reports' ) {
+            wp_enqueue_script( 'erp-crm-chart', WPERP_CRM_ASSETS . "/js/chart$suffix.min.js", array(), date( 'Ymd' ), true );
+            wp_enqueue_script( 'erp-crm-report', WPERP_CRM_ASSETS . "/js/report$suffix.js", array(), date( 'Ymd' ), true );
         }
     }
 

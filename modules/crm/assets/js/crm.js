@@ -40,6 +40,13 @@
 
             $('body').on('change', 'select#erp-crm-template-shortcodes', this.saveReplies.setShortcodes );
 
+            // Report
+            if ( 'this_year' == $('#crm-filter-duration').val() ) {
+                $('.custom-filter').hide();
+            }
+
+            $( 'body').on( 'change', '#crm-filter-duration', this.report.customFilter );
+
             // Erp ToolTips using tiptip
             this.initContactListAjax();
             this.initTipTips();
@@ -684,6 +691,16 @@
                 self.val('');
             }
 
+        },
+
+        report: {
+            customFilter: function () {
+                if ( 'custom' == this.value ) {
+                    $('.custom-filter').show();
+                } else {
+                    $('.custom-filter').hide();
+                }
+            }
         }
     }
 
