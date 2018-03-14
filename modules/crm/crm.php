@@ -147,7 +147,8 @@ class Customer_Relationship {
             'crm_page_erp-sales-schedules',
             'crm_page_erp-sales-activities',
             'erp-settings_page_erp-settings',
-            'crm_page_erp-sales-contact-groups'
+            'crm_page_erp-sales-contact-groups',
+            'crm_page_erp-sales-contact-tags'
         ];
 
         if ( ! in_array( $hook , $crm_pages ) ) {
