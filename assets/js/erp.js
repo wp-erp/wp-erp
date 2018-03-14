@@ -277,6 +277,9 @@ window.wperp = window.wperp || {};
             $( '.erp-hr-audit-log' ).on( 'click', 'a.erp-audit-log-view-changes', this.viewLogChanges );
             $( 'body').on( 'change', '#filter_duration', this.customFilter );
 
+            // PDF plugin notice
+            $( 'body' ).on( 'click', '.notice-pdf .notice-dismiss', this.pdfNotice.dismiss );
+
             this.initFields();
         },
 
@@ -431,6 +434,17 @@ window.wperp = window.wperp || {};
 
             } else {
                 parent.find('select.erp-state-select').html( empty );
+            }
+        },
+
+        pdfNotice: {
+            dismiss: function(e) {
+                $.ajax({
+                    url: ajaxurl,
+                    data: {
+                        action: 'dismiss_pdf_notice'
+                    }
+                });
             }
         },
 
