@@ -314,7 +314,7 @@ class Customer_Relationship {
         if ( in_array( $hook , $pages_hooks ) ) {
             erp_remove_other_select2_sources();
         }
-        
+
         // Report
         if ( $hook === 'crm_page_erp-sales-reports' ) {
             wp_enqueue_script( 'erp-crm-chart', WPERP_CRM_ASSETS . "/js/chart$suffix.min.js", array(), date( 'Ymd' ), true );
