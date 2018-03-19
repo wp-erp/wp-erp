@@ -2053,10 +2053,7 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
     if ( $query_data ) {
         $is_contact_group_joined = false;
         $table_alias             = 1;
-<<<<<<< HEAD
         $tag_table_joined        = 0;
-=======
->>>>>>> 8a205149
 
         foreach ( $query_data as $key => $or_query ) {
             if ( $or_query ) {
@@ -2148,7 +2145,6 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
                         }
 
                         $custom_sql['where'][] = ( $i == count( $or_query ) - 1 ) ? ")" : " ) AND";
-<<<<<<< HEAD
                     }else if( $field == 'tags' ){
                         if( ! $tag_table_joined ){
                             $custom_sql['join'][] = "INNER JOIN {$wpdb->prefix}term_relationships as term_relation on (people.id = term_relation.object_id)";
@@ -2187,8 +2183,6 @@ function erp_crm_contact_advance_filter( $custom_sql, $args ) {
                         $custom_sql['where'][] = "AND term_taxonomy.taxonomy = 'erp_crm_tag'";
                         $custom_sql['where'][] = ( $i == count( $or_query ) - 1 ) ? ")" : " ) AND";
 
-=======
->>>>>>> 8a205149
                     } else if ( in_array( $field, $people_meta_fields ) ) {
                         $pepmeta_tb           = $wpdb->prefix . 'erp_peoplemeta';
                         $name                 = "people_meta_" . ( $table_alias ) . "_" . ( $i + 1 );
@@ -3731,8 +3725,6 @@ function erp_crm_update_contact_hash( $contact_id, $hash ) {
     $contact->update_contact_hash( $hash );
 }
 
-<<<<<<< HEAD
-
 /**
  * Get contact tags
  *
@@ -3766,163 +3758,15 @@ function erp_crm_get_contact_tags( $list = true ) {
 }
 
 /**
- * Register taxonomy for contact tags
- *
+ * Add crm taxonomy
  * @since 1.3.6
  *
  * @return void
  */
-function erp_crm_add_tag_taxonomy() {
-    new \WeDevs\ERP\CRM\Contact_Taxonomy( 'erp_crm_tag', 'erp_crm_tag', array(
-        'singular' => __( 'Tag', 'erp' ),
-        'plural'   => __( 'Tags', 'erp' ),
-        'show_ui'  => true,
-=======
-/**
- * Get CRM tags
- *
- * @since 1.3.6
- *
- * @param null $contact_id
- *
- * @return array|\WP_Error
- *
- */
-function erp_crm_get_contact_tags( $contact_id = null ) {
-
-    if ( $contact_id == null ) {
-        $tags = \WeDevs\ERP\CRM\Models\CRMTag::select( [ 'id', 'name' ] )->get();
-    } else {
-        $contact = \WeDevs\ERP\CRM\Models\Contact::find( $contact_id );
-        if ( ! $contact ) {
-            return new WP_Error( 'invalid-contact-id', __( 'Invalid contact id supplied', 'erp' ) );
-        }
-
-        $tags = $contact->tags()->get();
-    }
-
-    $tag_list = [];
-    foreach ( $tags as $tag ) {
-        $tag_list[ $tag->id ] = $tag->name;
-    }
-
-    return $tag_list;
-}
-
-/**
- * Add tags for contact
- *
- * @since 1.3.6
- *
- * @param $contact_id
- * @param array $tags tag id or tag name
- *
- * @return \WP_Error|boolean
- *
- */
-function erp_crm_sync_contact_tags( $contact_id, array $tags ) {
-//    $contact = \WeDevs\ERP\CRM\Models\Contact::find( $contact_id );
-//    if ( ! $contact ) {
-//        return new WP_Error( 'invalid-contact-id', __( 'Invalid contact id supplied', 'erp' ) );
-//    }
-//
-//    $tag_ids = [];
-//
-//    foreach ( $tags as $tag ) {
-//        if ( is_string( $tag ) ) {
-//            $new_tag = \WeDevs\ERP\CRM\Models\CRMTag::firstOrCreate( [ 'name' => $tag ] );
-//            if ( $new_tag ) {
-//                $tag_ids[] = $new_tag->id;
-//            }
-//        } else {
-//            $tag_ids[] = $tag;
-//        }
-//    }
-//
-//    $tag_ids = array_values( $tag_ids );
-//    if ( $tag_ids ) {
-//        $contact->tags()->sync( array_values( $tag_ids ) );
-//    }
-
-    return true;
-}
-
-
-/**
- * Detach tag from contact
- * @since 1.3.6
- *
- * @param $contact_id
- * @param array $tags
- *
- * @return \WP_Error|boolean
- *
- */
-function erp_crm_remove_contact_tags( $contact_id, array $tags ) {
-//    $contact = \WeDevs\ERP\CRM\Models\Contact::find( $contact_id );
-//    if ( ! $contact ) {
-//        return new WP_Error( 'invalid-contact-id', __( 'Invalid contact id supplied', 'erp' ) );
-//    }
-//
-//    $contact->tags()->detach( $tags );
-//
-//    return true;
-}
-
-
-function erp_crm_get_tags( $args = array() ) {
-  /*  $defaults  = [
-        'number'        => 20,
-        'offset'        => 0,
-        'orderby'       => 'id',
-        'order'         => 'DESC',
-        'count_contact' => false,
-    ];
-    $args      = wp_parse_args( $args, $defaults );
-    $cache_key = 'erp-crm-contact-tags-' . md5( serialize( $args ) );
-    $items     = wp_cache_get( $cache_key, 'erp' );
-    if ( false === $items ) {
-        $results = [];
-        $tags    = new \WeDevs\ERP\CRM\Models\CRMTag();
-
-        // Check if want all data without any pagination
-        if ( $args['number'] != '-1' ) {
-            $tags = $tags->skip( $args['offset'] )->take( $args['number'] );
-        }
-
-        // Check is the row want to search
-        if ( isset( $args['s'] ) && ! empty( $args['s'] ) ) {
-            $arg_s = $args['s'];
-            $tags  = $tags->where( 'name', 'LIKE', "%$arg_s%" );
-        }
-
-        // Render all collection of data according to above filter (Main query)
-        $results = $tags->orderBy( $args['orderby'], $args['order'] )
-                        ->get()
-                        ->toArray();
-
-        if ( $args['count_contact'] == true ) {
-            foreach ( $results as $key => $tag ) {
-                $total_contacts              = \WeDevs\ERP\CRM\Models\CRMTag::find( $tag['id'] )->contacts()->count();
-                $results[ $key ]['contacts'] = $total_contacts;
-            }
-        }
-
-
-        $items = erp_array_to_object( $results );
-
-        wp_cache_set( $cache_key, $items, 'erp' );
-    }*/
-
-//    return $items;
-}
-
-
 function erp_crm_add_tag_taxonomy(){
     new \WeDevs\ERP\CRM\Contact_Taxonomy( 'erp_crm_tag', 'erp_crm_tag', array(
         'singular' => __( 'Tag',  'erp' ),
         'plural'   => __( 'Tags', 'erp' ),
         'show_ui'   => true,
->>>>>>> 8a205149
     ) );
 }
