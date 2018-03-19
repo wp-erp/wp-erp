@@ -41,8 +41,8 @@ function erp_get_peoples( $args = [] ) {
         's'          => '',
         'no_object'  => false
     ];
-
     $args        = wp_parse_args( $args, $defaults );
+
     $people_type = is_array( $args['type'] ) ? implode( '-', $args['type'] ) : $args['type'];
     $cache_key   = 'erp-people-' . $people_type . '-' . md5( serialize( $args ) );
     $items       = wp_cache_get( $cache_key, 'erp' );
@@ -97,6 +97,10 @@ function erp_get_peoples( $args = [] ) {
 
         if( !empty($contact_owner) ){
             $sql['where'][] = "AND people.contact_owner='$contact_owner'";
+        }
+
+        if(!empty($tags)){
+
         }
 
         // Check if the row want to search
