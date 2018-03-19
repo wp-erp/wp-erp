@@ -595,6 +595,9 @@
 
                 });
             },
+            remove: function (e) {
+                e.preventDefault();
+            }
         },
 
         saveReplies: {
