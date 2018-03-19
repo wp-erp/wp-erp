@@ -16,10 +16,9 @@
             $('.erp-crm-contact-group').on('click', 'a.submitdelete', this.contactGroup.remove);
 
             //contact Tag
-            $('#tagsdiv-erp-crm-tag').on('click', '#add-crm-tag', this.contactTag.add);
-            $('#tagsdiv-erp-crm-tag').on('change', '.the-tags', this.contactTag.update);
-            // $('body').on('erp-crm-contact-tag-changed', this.contactTag.update);
-            // $( window ).on( 'load',  this.contactTag.initSelect2 );
+            $('document').ready(this.contactTag.init);
+            $('#add-crm-tag').on('click', this.contactTag.add);
+            $('.erp-customer-tag-div').on('keypress', '.newtag', this.contactTag.add);
 
             // Subscriber contact
             $('.erp-crm-subscriber-contact').on('click', 'a.erp-new-subscriber-contact', this.subscriberContact.create);
@@ -416,6 +415,23 @@
         },
 
         contactTag: {
+            init:function () {
+                $(document).on('click', '.ntdelbutton', function () {
+                    var tags = $('#tax-input-erp_crm_tag').val();
+                    var contact_id = $('#contact_id').val();
+
+                    wp.ajax.send('erp_crm_update_contact_tag', {
+                        data: {
+                            _wpnonce: wpErpCrm.nonce,
+                            tags: tags,
+                            contact_id: contact_id,
+                        },
+                        success: function (res) {
+
+                        }
+                    });
+                });
+            },
             add: function () {
                 var tags = $('#tax-input-erp_crm_tag').val();
                 var contact_id = $('#contact_id').val();
@@ -431,11 +447,6 @@
                     }
                 });
             },
-
-            update: function () {
-                console.log('changeed');
-            }
-
         },
 
         subscriberContact: {
