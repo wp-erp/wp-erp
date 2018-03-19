@@ -134,6 +134,8 @@ function erp_crm_get_caps_for_role( $role = '' ) {
                 'erp_crm_create_groups'    => true,
                 'erp_crm_edit_groups'      => true,
                 'erp_crm_delete_groups'    => true,
+                
+                // 'erp_crm_view_reports'     => true,
             ];
 
             break;
