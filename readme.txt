@@ -1,7 +1,7 @@
-=== WP ERP ===
+=== WP ERP - HRM, CRM & Accounting Solution For WordPress ===
 Contributors: tareq1988, wedevs, ediamin, sabbir1991, asaquzzaman, shawon786, manikmist09
 Donate Link: https://tareq.co/donate
-Tags: small business, SME, contact, contacts, CRM, Customer Relationship Management, employee, leave management, hr, hrm, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
+Tags: ERP, CRM, HRM, Accounting, Project Management, business manager, small business, SME, contact, contacts, Customer Relationship Management, employee, leave management, hr, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
 Tested up to: 4.9.4
 Requires PHP: 5.6
@@ -190,6 +190,20 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+= v1.3.6 -> Mar 20, 2018 =
+[fix] Status report guide URL. Closes #630
+[fix] CRM activity search is not working properly. Closes #628
+[fix] The calendar function on ERP doesn't go back than 1968. Closes #633
+[fix] Unable to assign Department lead. Closes #634
+[fix] Unable to edit/update designation. Closes #636
+[new] CRM reporting. Closes #560
+[new] Company wise activity. Closes #626
+[new] CRM contact tagging add.
+[new] Add CRM tag in save search.
+[tweak] PDF separated as extension.
+[tweak] Employee modal elements placement change.
+[tweak] Modify pop-up modal design.
+
 = v1.3.5 -> Feb 25, 2018 =
 [fix]   CRM segment is saved with the same name multiple times and there is no way to delete. Closes #318
 [fix]   When a payment is mailed, it is automatically changed to invoice. Closes #482

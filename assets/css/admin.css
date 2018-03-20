@@ -12,9 +12,6 @@
   box-shadow: 0 1px 0 #ba281e !important;
   text-shadow: 0 -1px 1px #ba281e, 1px 0 1px #ba281e, 0 1px 1px #ba281e, -1px 0 1px #ba281e !important;
 }
-.select2-container--default .select2-selection--single {
-  border: 1px solid #ddd;
-}
 .crm-dashboard .badge-container {
   margin-bottom: 40px;
 }
@@ -323,6 +320,7 @@
   font-weight: bold;
   padding-right: 20px;
   margin-bottom: 10px;
+  padding-left: 10px;
 }
 .erp-customer-form ol.fields-inline li {
   display: inline-block;
@@ -1630,116 +1628,6 @@ span.green {
   text-decoration: none;
   display: block;
 }
-.erp-employee-form ol,
-.erp-employee-form li {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.erp-employee-form .photo-container {
-  display: inline-block;
-  width: 128px;
-  position: relative;
-}
-.erp-employee-form .photo-container img {
-  max-width: 80px;
-  height: auto;
-}
-.erp-employee-form .photo-container .erp-remove-photo {
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: rgba(0, 0, 0, 0.5);
-  width: 80px;
-  height: 80px;
-  color: red;
-  text-align: center;
-  text-decoration: none;
-  font-size: 50px;
-  padding-top: 30px;
-  display: none;
-}
-.erp-employee-form .photo-container:hover .erp-remove-photo {
-  display: inline-block;
-}
-.erp-employee-form ol.form-fields:before,
-.erp-employee-form ol.form-fields:after {
-  content: " ";
-  display: table;
-}
-.erp-employee-form ol.form-fields:after {
-  clear: both;
-}
-.erp-employee-form ol.form-fields:before,
-.erp-employee-form ol.form-fields:after {
-  content: " ";
-  display: table;
-}
-.erp-employee-form ol.form-fields:after {
-  clear: both;
-}
-.erp-employee-form ol.form-fields > li {
-  float: left;
-  width: 100%;
-  padding-bottom: 5px;
-}
-.erp-employee-form ol.form-fields > li > label {
-  width: 15%;
-  display: inline-block;
-  vertical-align: top;
-}
-.erp-employee-form ol.form-fields > li select {
-  max-width: 55%;
-}
-.erp-employee-form ol.form-fields.two-col li {
-  width: 50%;
-}
-.erp-employee-form ol.form-fields.two-col li label {
-  width: 30%;
-}
-.erp-employee-form ol.form-fields.two-col li:nth-child(2n+1) {
-  clear: both;
-}
-.erp-employee-form ol.form-fields li.name-container {
-  width: 100%;
-  float: none;
-}
-.erp-employee-form ol.form-fields li.name-container > label {
-  float: left;
-  width: 15%;
-  margin-top: 22px;
-}
-.erp-employee-form ol.form-fields li.name-container ol {
-  float: left;
-  width: 85%;
-}
-.erp-employee-form ol.form-fields li.name-container ol label {
-  display: block;
-  color: #aaa;
-  width: 100%;
-}
-.erp-employee-form ol.form-fields li.name-container ol li.middle-name {
-  width: 185px;
-}
-.erp-employee-form ol.form-fields li.name-container ol li.middle-name input {
-  width: 98%;
-}
-.erp-employee-form fieldset {
-  margin-bottom: 20px;
-  padding-top: 15px;
-  border-top: 1px solid #eee;
-}
-.erp-employee-form fieldset.no-border {
-  border-top: none;
-}
-.erp-employee-form fieldset legend {
-  font-weight: bold;
-  padding-right: 20px;
-  margin-bottom: 10px;
-}
-.erp-employee-form ol.fields-inline li {
-  display: inline-block;
-}
 .job-tab-wrap table.widefat,
 .performance-tab-wrap table.widefat {
   margin-bottom: 20px;
@@ -2025,6 +1913,129 @@ table.leaves td.column-status .status-3 {
   #wpcontent {
     margin-left: 0px;
   }
+}
+.erp-employee-form ol,
+.erp-employee-form li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.erp-employee-form .photo-container {
+  display: inline-block;
+  width: 128px;
+  position: relative;
+}
+.erp-employee-form .photo-container img {
+  max-width: 80px;
+  height: auto;
+}
+.erp-employee-form .photo-container .erp-remove-photo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.5);
+  width: 80px;
+  height: 80px;
+  color: red;
+  text-align: center;
+  text-decoration: none;
+  font-size: 50px;
+  padding-top: 30px;
+  display: none;
+}
+.erp-employee-form .photo-container:hover .erp-remove-photo {
+  display: inline-block;
+}
+.erp-employee-form ol.form-fields:before,
+.erp-employee-form ol.form-fields:after {
+  content: " ";
+  display: table;
+}
+.erp-employee-form ol.form-fields:after {
+  clear: both;
+}
+.erp-employee-form ol.form-fields:before,
+.erp-employee-form ol.form-fields:after {
+  content: " ";
+  display: table;
+}
+.erp-employee-form ol.form-fields:after {
+  clear: both;
+}
+.erp-employee-form ol.form-fields > li {
+  float: left;
+  width: 100%;
+  padding-bottom: 5px;
+}
+.erp-employee-form ol.form-fields > li > label {
+  width: 15%;
+  display: inline-block;
+  vertical-align: top;
+}
+.erp-employee-form ol.form-fields > li select {
+  max-width: 55%;
+}
+.erp-employee-form ol.form-fields.two-col li {
+  width: 50%;
+}
+.erp-employee-form ol.form-fields.two-col li label {
+  width: 30%;
+}
+.erp-employee-form ol.form-fields.two-col li:nth-child(2n+1) {
+  clear: both;
+}
+.erp-employee-form ol.form-fields li.name-container {
+  width: 100%;
+  float: none;
+}
+.erp-employee-form ol.form-fields li.name-container > label {
+  float: left;
+  width: 15%;
+  margin-top: 22px;
+}
+.erp-employee-form ol.form-fields li.name-container ol {
+  float: left;
+  width: 85%;
+}
+.erp-employee-form ol.form-fields li.name-container ol label {
+  display: block;
+  color: #aaa;
+  width: 100%;
+}
+.erp-employee-form ol.form-fields li.name-container ol li.middle-name {
+  width: 185px;
+}
+.erp-employee-form ol.form-fields li.name-container ol li.middle-name input {
+  width: 98%;
+}
+.erp-employee-form fieldset {
+  margin-bottom: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+}
+.erp-employee-form fieldset.no-border {
+  border-top: none;
+}
+.erp-employee-form fieldset legend {
+  font-weight: bold;
+  padding-right: 20px;
+  margin-bottom: 10px;
+  padding-left: 10px;
+}
+.erp-employee-form ol.fields-inline li {
+  display: inline-block;
+}
+.erp-employee-form .photo-container {
+  height: 200px;
+  width: 200px;
+  border: 1px solid #ddd;
+}
+.erp-employee-form .photo-container img {
+  max-width: 100%;
+  height: auto;
+}
+.erp-employee-form .erp-employee-modal-right {
+  border: 1px solid #ddd;
 }
 .caret {
   display: inline-block;
@@ -3013,6 +3024,50 @@ form.erp-form .block .erp-form-field > label {
   display: block;
   margin-bottom: 10px;
 }
+.erp-form label {
+  display: block;
+  font-weight: 700;
+  line-height: 1.5;
+  margin-bottom: 5px;
+}
+.erp-employee-form input[type='email'],
+.erp-customer-form input[type='email'],
+.erp-employee-form input[type='number'],
+.erp-customer-form input[type='number'],
+.erp-employee-form input[type='password'],
+.erp-customer-form input[type='password'],
+.erp-employee-form input[type='search'],
+.erp-customer-form input[type='search'],
+.erp-employee-form input[type='tel'],
+.erp-customer-form input[type='tel'],
+.erp-employee-form input[type='text'],
+.erp-customer-form input[type='text'],
+.erp-employee-form input[type='url'],
+.erp-customer-form input[type='url'],
+.erp-employee-form textarea,
+.erp-customer-form textarea,
+.erp-employee-form select,
+.erp-customer-form select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: transparent;
+  border: 1px solid #d1d1d1;
+  border-radius: 3px;
+  box-shadow: none;
+  box-sizing: inherit;
+  padding: 5px;
+  width: 100%;
+  line-height: 1.5;
+}
+.erp-employee-modal-right {
+  overflow: hidden;
+}
+.modal-section-title {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
+  margin: 0;
+}
 ul.edit-address li {
   display: block;
   clear: both;
@@ -3453,7 +3508,114 @@ kbd {
   font-size: 14px;
   color: #03a9f4;
 }
-.erp-employee-form .select2.select2-container.select2-container--default,
-.erp-employee-form ol.form-fields > li select {
-  width: 175px !important;
+.erp-employee-form .photo-container,
+.erp-customer-form .photo-container {
+  height: 150px;
+  width: 150px;
+}
+.erp-employee-form .left-column,
+.erp-customer-form .left-column {
+  width: 22%;
+  min-width: 180px;
+}
+.erp-employee-form .right-column,
+.erp-customer-form .right-column {
+  width: 78%;
+  min-width: 180px;
+}
+.erp-employee-form .right-column .erp-employee-modal-right,
+.erp-customer-form .right-column .erp-employee-modal-right,
+.erp-employee-form .right-column .erp-crm-modal-right,
+.erp-customer-form .right-column .erp-crm-modal-right {
+  border: 1px solid rgba(221, 221, 221, 0.4) !important;
+}
+.erp-employee-form #erp-set-emp-photo,
+.erp-customer-form #erp-set-emp-photo,
+.erp-employee-form #erp-set-customer-photo,
+.erp-customer-form #erp-set-customer-photo {
+  width: 150px;
+  margin-top: 10px;
+  text-align: center;
+}
+.erp-employee-form .advanced-fields,
+.erp-customer-form .advanced-fields {
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+}
+.erp-employee-form .advanced-fields label,
+.erp-customer-form .advanced-fields label {
+  float: none;
+  margin-top: 3px;
+}
+.erp-employee-form .employee-work,
+.erp-customer-form .employee-work,
+.erp-employee-form .employee-personal,
+.erp-customer-form .employee-personal,
+.erp-employee-form .others-info,
+.erp-customer-form .others-info,
+.erp-employee-form .contact-group,
+.erp-customer-form .contact-group,
+.erp-employee-form .additional-info,
+.erp-customer-form .additional-info,
+.erp-employee-form .social-info,
+.erp-customer-form .social-info {
+  display: none;
+}
+#erp-new-employee-popup .select2.select2-container.select2-container--default,
+#erp-employee-edit .select2.select2-container.select2-container--default,
+#erp-customer-edit .select2.select2-container.select2-container--default,
+#erp-crm-new-contact .select2.select2-container.select2-container--default {
+  width: 100% !important;
+}
+#erp-new-employee-popup .select2-selection--single,
+#erp-employee-edit .select2-selection--single,
+#erp-customer-edit .select2-selection--single,
+#erp-crm-new-contact .select2-selection--single {
+  border: 1px solid #d1d1d1;
+  border-radius: 3px;
+  height: 33px;
+}
+#erp-new-employee-popup .select2-selection--single .select2-selection__arrow,
+#erp-employee-edit .select2-selection--single .select2-selection__arrow,
+#erp-customer-edit .select2-selection--single .select2-selection__arrow,
+#erp-crm-new-contact .select2-selection--single .select2-selection__arrow {
+  height: 30px;
+}
+#erp-new-employee-popup .select2-selection--single .select2-selection__rendered,
+#erp-employee-edit .select2-selection--single .select2-selection__rendered,
+#erp-customer-edit .select2-selection--single .select2-selection__rendered,
+#erp-crm-new-contact .select2-selection--single .select2-selection__rendered {
+  height: 32px;
+  line-height: 31px;
+}
+#erp-new-employee-popup .content-container,
+#erp-employee-edit .content-container,
+#erp-customer-edit .content-container,
+#erp-crm-new-contact .content-container {
+  padding: 1em;
+}
+#erp-new-employee-popup .state-field,
+#erp-employee-edit .state-field,
+#erp-customer-edit .state-field,
+#erp-crm-new-contact .state-field {
+  clear: left;
+}
+#erp-new-employee-popup .state-field select,
+#erp-employee-edit .state-field select,
+#erp-customer-edit .state-field select,
+#erp-crm-new-contact .state-field select {
+  max-width: 100%;
+  height: 33px;
+}
+.erp-customer-form span.required {
+  margin: 10px 10px 0;
+  display: inline-block;
+}
+.erp-customer-form input[type='number'] {
+  height: 33px;
+}
+.erp-customer-form #erp-source {
+  max-width: 100%;
+  height: 32px;
 }

@@ -327,7 +327,9 @@ class Ajax_Handler {
         $lead    = isset( $_POST['lead'] ) ? intval( $_POST['lead'] ) : 0;
         $parent  = isset( $_POST['parent'] ) ? intval( $_POST['parent'] ) : 0;
 
-        $exist = \WeDevs\ERP\HRM\Models\Department::where( 'title', 'like', $title )->first();
+        $exist = \WeDevs\ERP\HRM\Models\Department::where( 'id', '!=', $dept_id )
+                    ->where( 'title', 'like', $title )->first();
+
         if ( $exist && $dept_id !== $exist->id ) {
             $this->send_error( __( 'Multiple department with the same name is not allowed.', 'erp' ) );
         }
@@ -402,7 +404,8 @@ class Ajax_Handler {
         $desc     = isset( $_POST['desig-desc'] ) ? trim( strip_tags( $_POST['desig-desc'] ) ) : '';
         $desig_id = isset( $_POST['desig_id'] ) ? intval( $_POST['desig_id'] ) : 0;
 
-        $exist = \WeDevs\ERP\HRM\Models\Designation::where( 'title', 'Like', $title )->first();
+        $exist = \WeDevs\ERP\HRM\Models\Designation::where( 'id', '!=', $desig_id )
+                    ->where( 'title', 'Like', $title )->first();
         if ( $exist && $desig_id !== $exist->id ) {
             $this->send_error( __( 'Multiple designation with the same name is not allowed.', 'erp' ) );
         }

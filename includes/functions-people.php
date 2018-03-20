@@ -41,8 +41,8 @@ function erp_get_peoples( $args = [] ) {
         's'          => '',
         'no_object'  => false
     ];
-
     $args        = wp_parse_args( $args, $defaults );
+
     $people_type = is_array( $args['type'] ) ? implode( '-', $args['type'] ) : $args['type'];
     $cache_key   = 'erp-people-' . $people_type . '-' . md5( serialize( $args ) );
     $items       = wp_cache_get( $cache_key, 'erp' );
@@ -99,6 +99,10 @@ function erp_get_peoples( $args = [] ) {
             $sql['where'][] = "AND people.contact_owner='$contact_owner'";
         }
 
+        if(!empty($tags)){
+
+        }
+
         // Check if the row want to search
         if ( ! empty( $s ) ) {
             $search_like = '%' . $wpdb->esc_like( $s ) . '%';
@@ -109,11 +113,17 @@ function erp_get_peoples( $args = [] ) {
                                             . '&or&last_name[]=~' . implode( '&or&last_name[]=~', $words )
                                             . '&or&email[]=~' . implode( '&or&email[]=~', $words );
 
-            } else if ( $type === 'company' ) {
+            } elseif ( $type === 'company' ) {
                 $args['erpadvancefilter'] = 'company[]=~' . implode( '&or&company[]=~', $words )
                                             . '&or&email[]=~' . implode( '&or&email[]=~', $words );
 
-            } else if ( $type === 'customer' || $type === 'vendor' ) {
+            } elseif ( is_array( $type ) ) {
+                $sql['where'][] = $wpdb->prepare(
+                    'AND ( people.first_name ) LIKE %s OR ' .
+                    '( people.last_name ) LIKE %s',
+                    array( $search_like, $search_like )
+                );
+            } elseif ( $type === 'customer' || $type === 'vendor' ) {
                 if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 
                     if ( $type === 'customer' ) {
