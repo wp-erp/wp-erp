@@ -37,18 +37,20 @@ $more_details_url = erp_ac_get_slaes_payment_invoice_url( $transaction->id );
                     }
                     ?>
                 </div>
-                
+
                 <template class="more-action-content">
                     <ul>
                         <li><a href="#" class="payment-duplicate"><?php _e( 'Duplicate', 'erp' ); ?></a></li>
-                        <li><a href="<?php echo wp_nonce_url( admin_url( "admin-ajax.php?action=erp-ac-sales-payment-export&transaction_id={$transaction->id}" ), 'accounting-payment-export' ); ?>" class="payment-export-pdf"><?php _e( 'Export as PDF', 'erp' ); ?></a></li>
+                        <?php if ( is_plugin_active( 'erp-pdf-invoice/wp-erp-pdf.php' ) ) : ?>
+                            <li><a href="<?php echo wp_nonce_url( admin_url( "admin-ajax.php?action=erp-ac-sales-payment-export&transaction_id={$transaction->id}" ), 'accounting-payment-export' ); ?>" class="payment-export-pdf"><?php _e( 'Export as PDF', 'erp' ); ?></a></li>
+                        <?php endif; ?>
                         <li><a href="#" data-transaction-id="<?php echo $transaction->id; ?>" data-sender="<?php echo $sender; ?>" data-receiver="<?php echo $user->email; ?>" data-subject="<?php echo $email_subject; ?>" data-title="<?php _e( 'Send Bill', 'erp' ); ?>" data-button="<?php _e( 'Send', 'erp' ); ?>" data-type="payment" class="payment-send-email"><?php _e( 'Send Via Email', 'erp' ); ?></a></li>
                     </ul>
                 </template>
             </div>
-            
-              <?php endif; ?>
-            
+
+            <?php endif; ?>
+
             <div class="row">
                 <div class="invoice-number">
                     <?php

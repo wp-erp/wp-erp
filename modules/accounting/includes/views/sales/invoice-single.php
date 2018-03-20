@@ -67,7 +67,13 @@ $readonly_url        = add_query_arg( [ 'query' => 'readonly_invoice', 'trans_id
                 <template class="more-action-content">
                     <ul>
 <!--                        <li><a href="#" class="invoice-duplicate">--><?php //_e( 'Duplicate', 'erp' ); ?><!--</a></li>-->
-                        <li><a href="<?php echo wp_nonce_url( admin_url( "admin-ajax.php?action=erp-ac-sales-invoice-export&transaction_id={$transaction->id}" ), 'accounting-invoice-export' ); ?>" class="invoice-export-pdf"><?php _e( 'Export as PDF', 'erp' ); ?></a></li>
+                        <?php if ( is_plugin_active( 'erp-pdf-invoice/wp-erp-pdf.php' ) ) : ?>
+                            <li>
+                                <a href="<?php echo wp_nonce_url( admin_url( "admin-ajax.php?action=erp-ac-sales-invoice-export&transaction_id={$transaction->id}" ), 'accounting-invoice-export' ); ?>" class="invoice-export-pdf">
+                                    <?php _e( 'Export as PDF', 'erp' ); ?>
+                                </a>
+                            </li>
+                        <?php endif; ?>
                         <li id="get-readonly-link"><a href="#" data-title="<?php _e( 'Get Invoice Link', 'erp' ); ?>" class="invoice-get-link"><?php _e( 'Get Link', 'erp' ); ?></a></li>
                         <li id="copy-readonly-link" style="display: none"><input onClick="this.select();" type="text" value="<?php echo esc_url( $readonly_url ); ?>" id="invoice-readonly-link">&nbsp;<a data-clipboard-target="#invoice-readonly-link" class="copy-readonly-invoice" title="<?php _e('Click to copy', 'erp' ); ?>" id="erp-tips-get-link" style="cursor: pointer"><i class="fa fa-copy"></i></a></li>
                         <li><a href="#" data-url="<?php echo esc_url( $readonly_url ); ?>" data-transaction-id="<?php echo $transaction->id; ?>" data-sender="<?php echo $sender; ?>" data-receiver="<?php echo $user->email; ?>" data-subject="<?php echo $email_subject; ?>" data-title="<?php _e( 'Send Invoice', 'erp' ); ?>" data-button="<?php _e( 'Send', 'erp' ); ?>" data-type="invoice" class="invoice-send-email"><?php _e( 'Send Via Email', 'erp' ); ?></a></li>
