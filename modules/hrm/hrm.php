@@ -188,7 +188,8 @@ class Human_Resource {
                 'already_terminate' => __( 'Sorry, this employee is already terminated', 'erp' ),
                 'already_active'    => __( 'Sorry, this employee is already active', 'erp' )
             ),
-            'emp_upload_photo'       => __( 'Upload Employee Photo', 'erp' ),
+            'asset_url'              => WPERP_ASSETS,
+            'emp_upload_photo'       => __( 'Upload Photo', 'erp' ),
             'emp_set_photo'          => __( 'Set Photo', 'erp' ),
             'confirm'                => __( 'Are you sure?', 'erp' ),
             'delConfirmDept'         => __( 'Are you sure to delete this department?', 'erp' ),

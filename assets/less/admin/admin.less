@@ -143,6 +143,7 @@
             font-weight: bold;
             padding-right: 20px;
             margin-bottom: 10px;
+            padding-left: 10px;
         }
     }
 
@@ -150,12 +151,6 @@
         li {
             display: inline-block;
         }
-    }
-}
-
-.select2-container--default {
-    .select2-selection--single {
-        border: 1px solid #ddd;
     }
 }
 
@@ -1020,6 +1015,53 @@ form.erp-form {
             }
         }
     }
+
+}
+
+.erp-form {
+    label{
+        display: block;
+        font-weight: 700;
+        line-height: 1.5;
+        margin-bottom: 5px;
+    }
+}
+
+.erp-employee-form,
+.erp-customer-form {
+
+    input[type='email'],
+    input[type='number'],
+    input[type='password'],
+    input[type='search'], 
+    input[type='tel'], 
+    input[type='text'], 
+    input[type='url'],
+    textarea, 
+    select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-color: transparent;
+        border: 1px solid #d1d1d1;
+        border-radius: 3px;
+        box-shadow: none;
+        box-sizing: inherit;
+        //height: 38px;
+        padding: 5px;
+        width: 100%;
+        line-height: 1.5;
+    }
+
+}
+
+.erp-employee-modal-right{
+    overflow: hidden;
+}
+.modal-section-title{
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+    margin: 0;
 }
 
 ul.edit-address {
@@ -1542,9 +1584,105 @@ code, kbd {
     color: #03a9f4;
 }
 
-.erp-employee-form {
-    .select2.select2-container.select2-container--default,
-    ol.form-fields > li select {
-        width: 175px !important;
+.erp-employee-form,
+.erp-customer-form {
+
+    .photo-container {
+        height: 150px;
+        width: 150px;
+    }
+
+    .left-column {
+        width: 22%;
+        min-width: 180px;
+    }
+
+    .right-column {
+        width: 78%;
+        min-width: 180px;
+
+        .erp-employee-modal-right,
+        .erp-crm-modal-right {
+            border: 1px solid rgba(221, 221, 221, .4) !important;
+        }
+    }
+
+    #erp-set-emp-photo,
+    #erp-set-customer-photo {
+        width: 150px;
+        margin-top: 10px;
+        text-align: center;
+    }
+
+    .advanced-fields {
+        margin-left: 10px;
+        display: flex;
+        align-items: center;
+
+        label {
+            float: none;
+            margin-top: 3px;
+        }
+    }
+
+   .employee-work,
+   .employee-personal,
+   .others-info,
+   .contact-group,
+   .additional-info,
+   .social-info {
+        display: none;
+    }
+
+}
+
+#erp-new-employee-popup,
+#erp-crm-new-contact {
+    .select2.select2-container.select2-container--default {
+        width: 100% !important;
+    }
+
+    .select2-selection--single {
+        border: 1px solid #d1d1d1;
+        border-radius: 3px;
+        height: 33px;
+
+        .select2-selection__arrow {
+            height: 30px;
+        }
+
+        .select2-selection__rendered {
+            height: 32px;
+            line-height: 31px;
+        }
+    }
+
+    .content-container {
+        padding: 1em;
+    }
+
+    .state-field {
+        clear: left;
+
+        select {
+            max-width: 100%;
+            height: 33px;
+        }
+    }
+}
+
+.erp-customer-form {
+    span.required {
+        margin: 10px 10px 0;
+        display: inline-block;
+    }
+
+    input[type='number'] {
+        height: 33px;
+    }
+
+    #erp-source {
+        max-width: 100%;
+        height: 32px;
     }
 }
