@@ -33,6 +33,7 @@
 
             // When create modal open
             $('body').on( 'click', '#erp-customer-new', this.whenOpenCRMModal );
+            $('body').on( 'click', '#erp-customer-edit', this.whenOpenCRMModal );
             $('body').on( 'click', '#erp-crm-new-contact', this.whenOpenCRMModal );
 
             // CRM Dashboard

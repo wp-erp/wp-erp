@@ -7,14 +7,14 @@
             <div class="col-2 left-column">
                 <div class="erp-employee-modal-left">
                     <div class="photo-container">
-                        <img src="<?php echo WPERP_ASSETS . '/images/mystery-person.png'; ?>" alt="">
-
                         <input type="hidden" name="personal[photo_id]" id="emp-photo-id" value="{{ data.avatar.id }}">
 
                         <# if ( data.avatar.id ) { #>
                             <img src="{{ data.avatar.url }}" alt="Image">
                             <a href="#" class="erp-remove-photo">&times;</a>
                         <# } else { #>
+                            <img src="<?php echo WPERP_ASSETS . '/images/mystery-person.png'; ?>" alt="">
+
                             <a href="#" id="erp-set-emp-photo" class="button-primary">
                                 <i class="fa fa-cloud-upload"></i>
                                 <?php _e( 'Upload Photo', 'erp' ); ?>
