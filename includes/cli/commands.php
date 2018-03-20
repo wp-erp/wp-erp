@@ -41,7 +41,7 @@ class Commands extends \WP_CLI_Command {
         }
 
         $count   = count( $modules );
-        $message = sprintf( _n( 'Aactivated module %s', 'Activated modules %s', $count, 'erp' ), implode( ', ', $modules ) );
+        $message = sprintf( _n( 'Activated module %s', 'Activated modules %s', $count, 'erp' ), implode( ', ', $modules ) );
 
         \WP_CLI::success( $message );
     }
