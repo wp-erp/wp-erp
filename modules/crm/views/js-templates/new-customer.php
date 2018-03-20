@@ -13,13 +13,13 @@
                         <?php //erp_html_form_label( __( 'Contact Photo', 'erp' ), 'full-name' ); ?>
                     <# } #>
                     <div class="photo-container">
-                        <img src="<?php echo WPERP_ASSETS . '/images/mystery-person.png'; ?>" alt="">
                         <input type="hidden" name="contact[meta][photo_id]" id="customer-photo-id" value="{{ data.avatar.id }}">
 
                         <# if ( data.avatar.id ) { #>
                             <img src="{{ data.avatar.url }}" alt="Image">
                             <a href="#" class="erp-remove-photo">&times;</a>
                         <# } else { #>
+                            <img src="<?php echo WPERP_ASSETS . '/images/mystery-person.png'; ?>" alt="">
                             <a href="#" id="erp-set-customer-photo" class="button button-primary">
                                 <i class="fa fa-cloud-upload"></i>
                                 <?php _e( 'Upload Photo', 'erp' ); ?>

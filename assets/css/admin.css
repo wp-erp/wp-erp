@@ -3563,33 +3563,47 @@ kbd {
   display: none;
 }
 #erp-new-employee-popup .select2.select2-container.select2-container--default,
+#erp-employee-edit .select2.select2-container.select2-container--default,
+#erp-customer-edit .select2.select2-container.select2-container--default,
 #erp-crm-new-contact .select2.select2-container.select2-container--default {
   width: 100% !important;
 }
 #erp-new-employee-popup .select2-selection--single,
+#erp-employee-edit .select2-selection--single,
+#erp-customer-edit .select2-selection--single,
 #erp-crm-new-contact .select2-selection--single {
   border: 1px solid #d1d1d1;
   border-radius: 3px;
   height: 33px;
 }
 #erp-new-employee-popup .select2-selection--single .select2-selection__arrow,
+#erp-employee-edit .select2-selection--single .select2-selection__arrow,
+#erp-customer-edit .select2-selection--single .select2-selection__arrow,
 #erp-crm-new-contact .select2-selection--single .select2-selection__arrow {
   height: 30px;
 }
 #erp-new-employee-popup .select2-selection--single .select2-selection__rendered,
+#erp-employee-edit .select2-selection--single .select2-selection__rendered,
+#erp-customer-edit .select2-selection--single .select2-selection__rendered,
 #erp-crm-new-contact .select2-selection--single .select2-selection__rendered {
   height: 32px;
   line-height: 31px;
 }
 #erp-new-employee-popup .content-container,
+#erp-employee-edit .content-container,
+#erp-customer-edit .content-container,
 #erp-crm-new-contact .content-container {
   padding: 1em;
 }
 #erp-new-employee-popup .state-field,
+#erp-employee-edit .state-field,
+#erp-customer-edit .state-field,
 #erp-crm-new-contact .state-field {
   clear: left;
 }
 #erp-new-employee-popup .state-field select,
+#erp-employee-edit .state-field select,
+#erp-customer-edit .state-field select,
 #erp-crm-new-contact .state-field select {
   max-width: 100%;
   height: 33px;
