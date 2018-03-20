@@ -31,6 +31,10 @@
             // handle postbox toggle
             $('body').on('click', 'div.erp-handlediv', this.handlePostboxToggle);
 
+            // When create modal open
+            $('body').on( 'click', '#erp-customer-new', this.whenOpenCRMModal );
+            $('body').on( 'click', '#erp-crm-new-contact', this.whenOpenCRMModal );
+
             // CRM Dashboard
             $('.crm-dashboard').on('click', 'a.erp-crm-dashbaord-show-details-schedule', this.dashboard.showScheduleDetails);
 
@@ -105,9 +109,8 @@
                 postboxDiv.addClass('closed');
             }
         },
-
-        initContactListAjax: function () {
-            $('select.erp-crm-contact-list-dropdown').select2({
+        initContactListAjax: function() {
+            $( 'select.erp-crm-contact-list-dropdown' ).select2({
                 allowClear: true,
                 placeholder: $(this).attr('data-placeholder'),
                 minimumInputLength: 3,
@@ -149,6 +152,28 @@
             });
         },
 
+        /**
+         * When open CRM modal to create contact
+         *
+         * @param  {object} e
+         *
+         * @return {void}
+         */
+        whenOpenCRMModal: function(e) {
+            $( '#advanced_fields' ).click( function() {
+                if ( $( this ).is(' :checked ')) {
+                    $( '.others-info' ).show();
+                    $( '.contact-group' ).show();
+                    $( '.additional-info' ).show();
+                    $( '.social-info' ).show();
+                } else {
+                    $( '.others-info' ).hide();
+                    $( '.contact-group' ).hide();
+                    $( '.social-info' ).hide();
+                    $( '.additional-info' ).hide();
+                }
+            } );
+        },
         /**
          * Populate the state dropdown based on selected country
          *

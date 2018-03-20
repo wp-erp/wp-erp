@@ -640,10 +640,13 @@
              * @param  {event}
              */
             removePhoto: function(e) {
-                e.preventDefault();
+                e.preventDefault();                
 
-                var html = '<a href="#" id="erp-set-emp-photo" class="button button-small">' + wpErpHr.emp_upload_photo + '</a>';
+                var mystery_person = wpErpHr.asset_url + '/images/mystery-person.png';
+
+                var html = '<img src="' + mystery_person + '" alt="">';
                 html += '<input type="hidden" name="personal[photo_id]" id="emp-photo-id" value="0">';
+                html += '<a href="#" id="erp-set-emp-photo" class="button-primary"><i class="fa fa-cloud-upload"></i>' + wpErpHr.emp_upload_photo + '</a>';
 
                 $( '.photo-container', '.erp-employee-form' ).html( html );
             },
@@ -681,6 +684,16 @@
                                 $('.show-if-notification').hide();
                             }
                         });
+
+                        $( '#advanced_fields' ).click( function() {
+                            if ( $( this ).is(' :checked ')) {
+                                $( '.employee-work' ).show();
+                                $( '.employee-personal' ).show();
+                            } else {
+                                $( '.employee-work' ).hide();
+                                $( '.employee-personal' ).hide();
+                            }
+                        } );
                     },
 
                     /**
@@ -694,6 +707,7 @@
                         wp.ajax.send( 'erp-hr-employee-new', {
                             data: this.serialize(),
                             success: function(response) {
+
                                 modal.enableButton();
                                 modal.closeModal();
                                 if( response.url !== undefined ){
