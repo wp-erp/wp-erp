@@ -63,7 +63,7 @@ class Accounting {
         // trigger after accounting module loaded
         do_action('erp_accounting_loaded');
         
-        // pdf plugin is not installed notice
+        // pdf plugin is not installed notice    
         if ( empty( get_option( 'pdf-notice-dismissed' ) ) ) {
             add_action( 'admin_notices', array( $this, 'admin_notice' ) );
         }
@@ -239,22 +239,26 @@ class Accounting {
      * @return void
      */
     public function admin_notice() {
-        $action      = empty( $_GET['erp-pdf'] ) ? '' : \sanitize_text_field( $_GET['erp-pdf'] );
-        $plugin      = 'erp-pdf-invoice/wp-erp-pdf.php';
-        $pdf_install = new \WeDevs\ERP\Accounting\PDF_Install();
+        if ( current_user_can( 'install_plugins' ) ) {
 
-        if ( $action === 'install' ) {
-            $pdf_install->install_plugin( 'https://downloads.wordpress.org/plugin/erp-pdf-invoice.1.0.0.zip' );
-        } elseif ( $action === 'active' ) {
-            $pdf_install->activate_pdf_plugin( $plugin );
-        }
+            $action      = empty($_GET['erp-pdf']) ? '' : \sanitize_text_field($_GET['erp-pdf']);
+            $plugin      = 'erp-pdf-invoice/wp-erp-pdf.php';
+            $pdf_install = new \WeDevs\ERP\Accounting\PDF_Install();
 
-        if ( \file_exists( WP_PLUGIN_DIR . '/' . $plugin ) ) {
-            if ( ! \is_plugin_active( $plugin ) ) {
-                $this->pdf_notice_message( 'active' );
+            if ($action === 'install') {
+                $pdf_install->install_plugin('https://downloads.wordpress.org/plugin/erp-pdf-invoice.1.0.0.zip');
+            } elseif ($action === 'active') {
+                $pdf_install->activate_pdf_plugin($plugin);
             }
-        } else {
-            $this->pdf_notice_message( 'install' );
+
+            if (\file_exists(WP_PLUGIN_DIR . '/' . $plugin)) {
+                if (! \is_plugin_active($plugin)) {
+                    $this->pdf_notice_message('active');
+                }
+            } else {
+                $this->pdf_notice_message('install');
+            }
+
         }
     }
 
