@@ -3767,6 +3767,6 @@ function erp_crm_add_tag_taxonomy(){
     new \WeDevs\ERP\CRM\Contact_Taxonomy( 'erp_crm_tag', 'erp_crm_tag', array(
         'singular' => __( 'Tag',  'erp' ),
         'plural'   => __( 'Tags', 'erp' ),
-        'show_ui'   => true,
+        'show_ui'   => false,
     ) );
 }
