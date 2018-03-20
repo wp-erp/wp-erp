@@ -4,8 +4,13 @@ $transaction = WeDevs\ERP\Accounting\Model\Transaction::find( $transaction['id']
 $user        = new \WeDevs\ERP\People( intval( $transaction->user_id ) );
 $theme_color = erp_get_option( 'erp_ac_pdf_theme_color', false, '#9e9e9e' );
 
+if( !defined('WPERP_PDF_VERSION')){
+    wp_die(__('ERP PDF extension is not installed. Please install the extension for PDF support', 'erp'));
+}
+
+
 //Create a new instance
-$invoice = new WeDevs\ERP\PDF_Invoicer("A4","$","en");
+$invoice = new \WeDevs\ERP_PDF\PDF_Invoicer("A4","$","en");
 
 //Set theme color
 $invoice->set_theme_color( $theme_color );
