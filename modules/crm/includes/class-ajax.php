@@ -86,6 +86,9 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-crm-edit-save-replies', 'edit_save_replies' );
         $this->action( 'wp_ajax_erp-crm-delete-save-replies', 'delete_save_replies' );
         $this->action( 'wp_ajax_erp-crm-load-save-replies-data', 'load_save_replies' );
+
+        //update tags
+        $this->action( 'wp_ajax_erp_crm_update_contact_tag', 'update_contact_tags' );
     }
 
     /**
@@ -1481,6 +1484,33 @@ class Ajax_Handler {
         }
 
         $this->send_success( $result );
+    }
+
+    /**
+     * Update contact tags
+     * @since 1.3.6
+     *
+     */
+    public function update_contact_tags(){
+        $this->verify_nonce( 'wp-erp-crm-nonce' );
+
+        if( empty(intval($_POST['contact_id']))){
+            wp_send_json_error(['message' => __('could not find contact id', 'erp')]);
+        }
+
+        $tags = !empty( $_POST['tags'] )? explode(',', $_POST['tags']) : [];
+
+
+        $tags = array_map('trim', $tags);
+        $tags = array_map('sanitize_text_field', $tags);
+
+        $inserted =  wp_set_object_terms(intval($_POST['contact_id']), $tags, 'erp_crm_tag');
+
+        if( !is_wp_error($inserted) ){
+            wp_send_json(['message' => __('tags updated successfully', 'erp')]);
+        }else{
+            wp_send_json(['message' => __('tags update failed please try again', 'erp')]);
+        }
     }
 
 }

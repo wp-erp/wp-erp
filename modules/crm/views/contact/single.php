@@ -1,3 +1,7 @@
+<?php
+$contact_tags = wp_get_object_terms( $customer->id, 'erp_crm_tag', array('orderby' => 'name', 'order' => 'ASC'));
+$contact_tags = wp_list_pluck($contact_tags, 'name');
+?>
 <div class="wrap erp erp-crm-customer erp-single-customer" id="wp-erp" v-cloak>
     <h2><?php _e( 'Contact #', 'erp' ); echo $customer->id; ?>
         <a href="<?php echo add_query_arg( ['page' => 'erp-sales-customers'], admin_url( 'admin.php' ) ); ?>" id="erp-contact-list" class="add-new-h2"><?php _e( 'Back to Contact list', 'erp' ); ?></a>
@@ -133,6 +137,7 @@
                                             </div>
 
                                             <input type="hidden" name="assign_contact_id" value="<?php echo $customer->id; ?>">
+                                            <input type="hidden" id="contact_id" name="contact_id" value="<?php echo $customer->id; ?>">
                                             <input type="hidden" name="assign_contact_user_id" value="<?php echo $customer->user_id; ?>">
                                             <input type="submit" @click.prevent="saveAssignContact()" class="button button-primary save-edit-assign-contact" name="erp_assign_contacts" value="<?php _e( 'Assign', 'erp' ); ?>">
                                             <input type="submit" @click.prevent="cancelAssignContact()" class="button cancel-edit-assign-contact" value="<?php _e( 'Cancel', 'erp' ); ?>">
@@ -143,6 +148,35 @@
                             </div>
                         </div>
                     </div><!-- .postbox -->
+
+                    <div class="postbox erp-customer-tag-div" id="tagsdiv-post_tag">
+                        <div class="erp-handlediv" title="<?php _e( 'Click to toggle', 'erp' ); ?>"><br></div>
+                        <h3 class="erp-hndle"><span><?php _e( 'Tag', 'erp' ); ?></span></h3>
+                        <div class="inside">
+                            <div class="tagsdiv" id="tagsdiv-erp-crm-tag">
+                                <div class="nojs-tags hide-if-js">
+                                    <label for="tax-input-post_tag">Add or remove tags</label>
+                                    <p><textarea name="tax_input[erp_crm_tag]" rows="3" cols="20" class="the-tags" id="tax-input-erp_crm_tag" aria-describedby="new-tag-post_tag-desc">
+                                            <?php echo implode(',', $contact_tags);?>
+                                        </textarea></p>
+                                </div>
+
+                                <div class="jaxtag">
+                                    <div class="ajaxtag hide-if-no-js">
+                                        <label class="screen-reader-text" for="new-tag-erp-crm-tag"></label>
+                                        <p>
+                                            <input style="width: 82%;" data-wp-taxonomy="erp_crm_tag" type="text" id="new-tag-erp-crm-tag" name="newtag[erp_crm_tag]" class="newtag form-input-tip" size="16" autocomplete="on" aria-describedby="new-tag-erp-crm-tag-desc" value="" />
+                                            <input type="button" id="add-crm-tag" class="button tagadd" value="<?php esc_attr_e('Add'); ?>" /></p>
+                                    </div>
+                                    <p class="howto" id="new-tag-erp-crm-tag-desc"><?php _e('Separate tags with commas', 'erp') ?></p>
+
+                                    <p><?php ?></p>
+                                </div>
+                                <ul class="tagchecklist" role="list" style="margin-bottom: 0;"></ul>
+                            </div>
+                        </div>
+                    </div>
+
 
                     <contact-company-relation
                         :id="<?php echo $customer->id; ?>"

@@ -30,7 +30,7 @@ $crm_users = erp_crm_get_crm_user();
             </div>
 
             <div class="filters">
-                <select style="width:260px;" v-selecttwo="filterFeeds.customer_id" data-types="contact,company"  class="erp-crm-contact-list-dropdown" v-model="filterFeeds.customer_id" id="activity-created-for"  data-placeholder="<?php _e( 'Created for..', 'erp' ) ?>">
+                <select style="width:260px;" v-selecttwo="filterFeeds.customer_id" data-types="contact,company"  class="erp-crm-contact-list-dropdown" v-model="filterFeeds.customer_id" id="activity-created-for"  data-placeholder="<?php _e( 'Created for contact or company ..', 'erp' ) ?>">
                     <option value=""></option>
                 </select>
             </div>

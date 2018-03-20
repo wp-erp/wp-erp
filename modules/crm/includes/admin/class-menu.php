@@ -35,6 +35,7 @@ class Admin_Menu {
         add_submenu_page( 'erp-sales', __( 'Activities', 'erp' ), __( 'Activities', 'erp' ), 'erp_crm_manage_activites', 'erp-sales-activities', [ $this, 'activity_page' ] );
         $schedule = add_submenu_page( 'erp-sales', __( 'Schedules', 'erp' ), __( 'Schedules', 'erp' ), 'erp_crm_manage_schedules', 'erp-sales-schedules', [ $this, 'schedules_page' ] );
         add_submenu_page( 'erp-sales', __( 'Contact Groups', 'erp' ), __( 'Contact Groups', 'erp' ), 'erp_crm_manage_groups', 'erp-sales-contact-groups', [ $this, 'contact_group_page' ] );
+        add_submenu_page( 'erp-sales', __( 'Reports', 'erp' ), __( 'Reports', 'erp' ), 'erp_crm_manage_dashboard', 'erp-sales-reports', array( $this, 'page_reports' ) );
 
         //Help page
         add_submenu_page( 'erp-sales', __( 'Help', 'erp' ), __( '<span style="color:#f18500">Help</span>', 'erp' ), 'erp_crm_manage_dashboard', 'erp-crm-help', array( $this, 'help_page' ) );
@@ -266,6 +267,43 @@ class Admin_Menu {
         }
     }
 
+    /**
+     * Render page reports
+     *
+     * @since 1.3.6
+     *
+     * @return void
+     */
+    public function page_reports() {
+        $type    = isset( $_GET['type'] ) ? $_GET['type'] : '';
+        $pagenum = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
+        $limit   = 20;
+        $offset  = ( $pagenum - 1 ) * $limit;
+
+        switch ( $type ) {
+            case 'customer-report':
+                $template = WPERP_CRM_VIEWS . '/reports/customer-report.php';
+                break;
+
+                case 'activity-report':
+                $template = WPERP_CRM_VIEWS . '/reports/activity-report.php';
+                break;
+
+            case 'growth-report':
+                $template = WPERP_CRM_VIEWS . '/reports/growth-report.php';
+                break;
+
+            default:
+                $template = WPERP_CRM_VIEWS . '/reports.php';
+                break;
+        }
+
+        $template = apply_filters( 'erp_crm_reporting_pages', $template, $type );
+
+        if ( file_exists( $template ) ) {
+            include $template;
+        }
+    }
 
     /**
      * Show CRM Help Page

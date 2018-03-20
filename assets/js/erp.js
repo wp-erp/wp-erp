@@ -277,6 +277,9 @@ window.wperp = window.wperp || {};
             $( '.erp-hr-audit-log' ).on( 'click', 'a.erp-audit-log-view-changes', this.viewLogChanges );
             $( 'body').on( 'change', '#filter_duration', this.customFilter );
 
+            // PDF plugin notice
+            $( 'body' ).on( 'click', '.notice-pdf .notice-dismiss', this.pdfNotice.dismiss );
+
             this.initFields();
         },
 
@@ -409,10 +412,9 @@ window.wperp = window.wperp || {};
                 return false;
             }
 
-
             var self = $(this),
                 country = self.val(),
-                parent = self.closest( self.data('parent') ),
+                state_field = $( '.state-field' ).find('#erp-state'),
                 empty = '<option value="-1">- Select -</option>';
 
             if ( wpErpCountries[ country ] ) {
@@ -424,13 +426,24 @@ window.wperp = window.wperp || {};
                 }
 
                 if ( $.isArray( wpErpCountries[ country ] ) ) {
-                    parent.find('select.erp-state-select').html( empty );
+                    state_field.html( empty );
                 } else {
-                    parent.find('select.erp-state-select').html( options );
+                    state_field.html( options );
                 }
 
             } else {
-                parent.find('select.erp-state-select').html( empty );
+                state_field.html( empty );
+            }
+        },
+
+        pdfNotice: {
+            dismiss: function(e) {
+                $.ajax({
+                    url: ajaxurl,
+                    data: {
+                        action: 'dismiss_pdf_notice'
+                    }
+                });
             }
         },
 

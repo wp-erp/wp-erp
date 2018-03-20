@@ -62,6 +62,13 @@ class Accounting {
 
         // trigger after accounting module loaded
         do_action('erp_accounting_loaded');
+        
+        // pdf plugin is not installed notice    
+        if ( empty( get_option( 'pdf-notice-dismissed' ) ) ) {
+            add_action( 'admin_notices', array( $this, 'admin_notice' ) );
+        }
+
+        add_action( 'wp_ajax_dismiss_pdf_notice', array( $this, 'dismiss_pdf_notice' ) );
     }
 
     /**
@@ -222,6 +229,66 @@ class Accounting {
         if ( $hook == 'accounting_page_erp-accounting-sales' || $hook == 'accounting_page_erp-accounting-expense' ) {
             erp_get_js_template( WPERP_ACCOUNTING_JS_TMPL . '/trash.php', 'erp-ac-trash-form-popup' );
         }
+    }
+
+    /**
+     * Show notice if PDF plugin is not installed
+     *
+     * @since 1.3.6
+     *
+     * @return void
+     */
+    public function admin_notice() {
+        if ( current_user_can( 'install_plugins' ) ) {
+
+            $action      = empty($_GET['erp-pdf']) ? '' : \sanitize_text_field($_GET['erp-pdf']);
+            $plugin      = 'erp-pdf-invoice/wp-erp-pdf.php';
+            $pdf_install = new \WeDevs\ERP\Accounting\PDF_Install();
+
+            if ($action === 'install') {
+                $pdf_install->install_plugin('https://downloads.wordpress.org/plugin/erp-pdf-invoice.1.0.0.zip');
+            } elseif ($action === 'active') {
+                $pdf_install->activate_pdf_plugin($plugin);
+            }
+
+            if (\file_exists(WP_PLUGIN_DIR . '/' . $plugin)) {
+                if (! \is_plugin_active($plugin)) {
+                    $this->pdf_notice_message('active');
+                }
+            } else {
+                $this->pdf_notice_message('install');
+            }
+
+        }
+    }
+
+    /**
+     * PDF notice message
+     *
+     * @since 1.3.6
+     *
+     * @param String $type
+     *
+     * @return void
+     */
+    public function pdf_notice_message( $type ) {
+        $actual_link = esc_url( (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]" );
+        $sign = empty( $_GET ) ? '?' : '&';
+
+        echo '<div class="updated notice is-dismissible notice-pdf"><p>';
+        echo __( 'Please ' . $type . ' <a href="' . $actual_link . $sign . 'erp-pdf=' . $type . '">erp pdf</a> plugin to get accounting pdf export feature.', 'erp' );
+        echo '</p></div>';
+    }
+
+    /**
+     * Dismiss PDF notice message
+     *
+     * @since 1.3.6
+     *
+     * @return void
+     */
+    public function dismiss_pdf_notice() {
+        update_option( 'pdf-notice-dismissed', 1 );
     }
 
 }
