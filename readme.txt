@@ -190,6 +190,20 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+= v1.3.6 -> Mar 20, 2018 =
+[fix] Status report guide URL. Closes #630
+[fix] CRM activity search is not working properly. Closes #628
+[fix] The calendar function on ERP doesn't go back than 1968. Closes #633
+[fix] Unable to assign Department lead. Closes #634
+[fix] Unable to edit/update designation. Closes #636
+[new] CRM reporting. Closes #560
+[new] Company wise activity. Closes #626
+[new] CRM contact tagging add.
+[new] Add CRM tag in save search.
+[tweak] PDF separated as extension.
+[tweak] Employee modal elements placement change.
+[tweak] Modify pop-up modal design.
+
 = v1.3.5 -> Feb 25, 2018 =
 [fix]   CRM segment is saved with the same name multiple times and there is no way to delete. Closes #318
 [fix]   When a payment is mailed, it is automatically changed to invoice. Closes #482
