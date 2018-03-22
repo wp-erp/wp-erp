@@ -183,6 +183,63 @@
                                 </div>
                                 <# } #>
 
+                                <div class="col-3" data-selected="{{ data.work.hiring_source }}">
+                                    <?php erp_html_form_input( array(
+                                        'label'   => __( 'Source of Hire', 'erp' ),
+                                        'name'    => 'work[hiring_source]',
+                                        'value'   => '{{ data.work.hiring_source }}',
+                                        'class'   => 'erp-hrm-select2',
+                                        'type'    => 'select',
+                                        'options' => array( '-1' => __( '- Select -', 'erp' ) ) + erp_hr_get_employee_sources()
+                                    ) ); ?>
+                                </div>
+
+                                <div class="col-3">
+                                    <?php
+                                        erp_html_form_input( array(
+                                            'label'    => __( 'Date of Hire', 'erp' ),
+                                            'name'     => 'work[hiring_date]',
+                                            'value'    => '{{ data.work.hiring_date }}',
+                                            'required' => true,
+                                            'type'     => 'text',
+                                            'class'    => 'erp-date-field'
+                                        ) );
+                                    ?>
+                                </div>
+
+                            <# if ( ! data.id ) { #>
+                                <div class="col-3">
+                                    <?php erp_html_form_input( array(
+                                        'label'   => __( 'Pay Rate', 'erp' ),
+                                        'name'    => 'work[pay_rate]',
+                                        'value'   => '{{ data.work.pay_rate }}',
+                                        'type'    => 'text'
+                                    ) ); ?>
+                                </div>
+
+                                <div class="col-3" data-selected="{{ data.work.pay_type }}">
+                                    <?php erp_html_form_input( array(
+                                        'label'   => __( 'Pay Type', 'erp' ),
+                                        'name'    => 'work[pay_type]',
+                                        'value'   => '{{ data.work.pay_type }}',
+                                        'class'   => 'erp-hrm-select2',
+                                        'type'    => 'select',
+                                        'options' => array( '-1' => __( '- Select -', 'erp' ) ) + erp_hr_get_pay_type()
+                                    ) ); ?>
+                                </div>
+
+                            <# } #>
+
+                                <div class="col-3" style="clear:left">
+                                    <?php erp_html_form_input( array(
+                                        'label'   => __( 'Work Phone', 'erp' ),
+                                        'name'    => 'personal[work_phone]',
+                                        'value'   => '{{ data.personal.work_phone }}'
+                                    ) ); ?>
+                                </div>
+
+                            <?php do_action( 'erp-hr-employee-form-work' ); ?>
+
                             </div>
                         </div>
 
