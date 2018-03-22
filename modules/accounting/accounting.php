@@ -62,8 +62,8 @@ class Accounting {
 
         // trigger after accounting module loaded
         do_action('erp_accounting_loaded');
-        
-        // pdf plugin is not installed notice    
+
+        // pdf plugin is not installed notice
         if ( empty( get_option( 'pdf-notice-dismissed' ) ) ) {
             add_action( 'admin_notices', array( $this, 'admin_notice' ) );
         }
@@ -276,7 +276,7 @@ class Accounting {
         $sign = empty( $_GET ) ? '?' : '&';
 
         echo '<div class="updated notice is-dismissible notice-pdf"><p>';
-        echo __( 'Please ' . $type . ' <a href="' . $actual_link . $sign . 'erp-pdf=' . $type . '">erp pdf</a> plugin to get accounting pdf export feature.', 'erp' );
+        echo __( 'Please ' . $type . ' <a href="' . $actual_link . $sign . 'erp-pdf=' . $type . '">WP ERP PDF</a> extension to get PDF export feature.', 'erp' );
         echo '</p></div>';
     }
 

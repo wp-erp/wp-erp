@@ -328,8 +328,8 @@
                 $.erpPopup({
                     title: self.attr('title'),
                     button: wpErpCrm.add_submit,
-                    id: 'erp-crm-new-contact-tag',
-                    content: wperp.template('erp-crm-new-contact-tag')({data: {}}).trim(),
+                    id: 'erp-crm-new-contact-group',
+                    content: wperp.template('erp-crm-new-contact-group')({data: {}}).trim(),
                     extraClass: 'smaller',
 
                     onSubmit: function (modal) {

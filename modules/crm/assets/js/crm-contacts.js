@@ -1293,7 +1293,7 @@
                                     $( '.content', modal ).html( html );
                                     $( '.loader', modal).remove();
 
-                                    $( 'li[data-selected]', modal ).each(function() {
+                                    $( 'div[data-selected]', modal ).each(function() {
                                         var self = $(this),
                                             selected = self.data('selected');
 
@@ -1586,7 +1586,7 @@
                                             $( '.content', modal ).html( html );
                                             $( '.loader', modal).remove();
 
-                                            $( 'li[data-selected]', modal ).each(function() {
+                                            $( 'div[data-selected]', modal ).each(function() {
                                                 var self = $(this),
                                                     selected = self.data('selected');
 
@@ -2094,7 +2094,7 @@
                                     $( '.content', modal ).html( html );
                                     $( '.loader', modal).remove();
 
-                                    $( 'li[data-selected]', modal ).each(function() {
+                                    $( 'div[data-selected]', modal ).each(function() {
                                         var self = $(this),
                                             selected = self.data('selected');
 

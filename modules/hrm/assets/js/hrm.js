@@ -811,7 +811,7 @@
                                     }
                                 } );
 
-                                $( 'li[data-selected]', modal ).each(function() {
+                                $( 'div[data-selected]', modal ).each(function() {
                                     var self = $(this),
                                         selected = self.data('selected');
 
@@ -1114,7 +1114,7 @@
 
                                         WeDevs_ERP_HR.initDateField();
 
-                                        $( 'li[data-selected]', modal ).each(function() {
+                                        $( 'div[data-selected]', modal ).each(function() {
                                             var self = $(this),
                                                 selected = self.data('selected');
 
