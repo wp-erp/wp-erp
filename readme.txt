@@ -242,6 +242,10 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+= v1.3.7 -> Mar 22 2018 =
+[fix] Missing important fields in HRM Closes #639
+[fix] Unable to add new contact group in CRM #638
+
 = v1.3.6 -> Mar 20, 2018 =
 [fix] Status report guide URL. Closes #630
 [fix] CRM activity search is not working properly. Closes #628
