@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.3.6\n"
+"Project-Id-Version: WP ERP 1.3.7\n"
 "Report-Msgid-Bugs-To: http://wperp.com/support/\n"
-"POT-Creation-Date: 2018-03-20 06:23:55+00:00\n"
+"POT-Creation-Date: 2018-03-22 08:50:02+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4856,7 +4856,7 @@ msgstr ""
 #: modules/crm/views/contact/single.php:83
 #: modules/crm/views/js-templates/new-customer.php:217
 #: modules/hrm/views/employee/tab-general.php:51
-#: modules/hrm/views/js-templates/new-employee.php:314
+#: modules/hrm/views/js-templates/new-employee.php:371
 msgid "Country"
 msgstr ""
 
@@ -5261,7 +5261,7 @@ msgstr ""
 #: modules/crm/views/contact/single.php:81
 #: modules/crm/views/js-templates/new-customer.php:210
 #: modules/hrm/views/employee/tab-general.php:50
-#: modules/hrm/views/js-templates/new-employee.php:307
+#: modules/hrm/views/js-templates/new-employee.php:364
 msgid "City"
 msgstr ""
 
@@ -5269,7 +5269,7 @@ msgstr ""
 #: includes/admin/views/company-editor.php:84
 #: modules/accounting/includes/views/user-form-rows.php:209
 #: modules/crm/views/js-templates/new-customer.php:226
-#: modules/hrm/views/js-templates/new-employee.php:324
+#: modules/hrm/views/js-templates/new-employee.php:381
 msgid "Province / State"
 msgstr ""
 
@@ -5290,7 +5290,9 @@ msgstr ""
 #: modules/hrm/views/js-templates/job-info.php:19
 #: modules/hrm/views/js-templates/new-employee.php:99
 #: modules/hrm/views/js-templates/new-employee.php:113
-#: modules/hrm/views/js-templates/new-employee.php:329
+#: modules/hrm/views/js-templates/new-employee.php:193
+#: modules/hrm/views/js-templates/new-employee.php:227
+#: modules/hrm/views/js-templates/new-employee.php:386
 #: modules/hrm/views/js-templates/new-leave-request.php:15
 #: modules/hrm/views/js-templates/performance-reviews.php:34
 #: modules/hrm/views/js-templates/performance-reviews.php:46
@@ -5345,7 +5347,7 @@ msgstr ""
 #: modules/crm/includes/functions-customer.php:2828
 #: modules/crm/views/company/single.php:75
 #: modules/crm/views/contact/single.php:76
-#: modules/hrm/views/js-templates/new-employee.php:207
+#: modules/hrm/views/js-templates/new-employee.php:264
 msgid "Phone"
 msgstr ""
 
@@ -5367,7 +5369,7 @@ msgstr ""
 #: modules/crm/includes/functions-customer.php:2833
 #: modules/crm/views/js-templates/new-customer.php:170
 #: modules/hrm/views/employee/tab-general.php:55
-#: modules/hrm/views/js-templates/new-employee.php:199
+#: modules/hrm/views/js-templates/new-employee.php:256
 msgid "Mobile"
 msgstr ""
 
@@ -5380,7 +5382,7 @@ msgstr ""
 #: modules/crm/views/company/single.php:77
 #: modules/crm/views/contact/single.php:78
 #: modules/crm/views/js-templates/new-customer.php:178
-#: modules/hrm/views/js-templates/new-employee.php:282
+#: modules/hrm/views/js-templates/new-employee.php:339
 msgid "Website"
 msgstr ""
 
@@ -6405,7 +6407,7 @@ msgid ""
 msgstr ""
 
 #: includes/cli/commands.php:44
-msgid "Aactivated module %s"
+msgid "Activated module %s"
 msgid_plural "Activated modules %s"
 msgstr[0] ""
 msgstr[1] ""
@@ -12707,7 +12709,7 @@ msgstr ""
 #: modules/hrm/views/employee/tab-general.php:57
 #: modules/hrm/views/employee/tab-general.php:196
 #: modules/hrm/views/js-templates/dependents.php:25
-#: modules/hrm/views/js-templates/new-employee.php:224
+#: modules/hrm/views/js-templates/new-employee.php:281
 msgid "Date of Birth"
 msgstr ""
 
@@ -13124,18 +13126,18 @@ msgstr ""
 
 #: modules/crm/views/js-templates/new-customer.php:194
 #: modules/hrm/views/employee/tab-general.php:48
-#: modules/hrm/views/js-templates/new-employee.php:291
+#: modules/hrm/views/js-templates/new-employee.php:348
 msgid "Address 1"
 msgstr ""
 
 #: modules/crm/views/js-templates/new-customer.php:202
 #: modules/hrm/views/employee/tab-general.php:49
-#: modules/hrm/views/js-templates/new-employee.php:299
+#: modules/hrm/views/js-templates/new-employee.php:356
 msgid "Address 2"
 msgstr ""
 
 #: modules/crm/views/js-templates/new-customer.php:237
-#: modules/hrm/views/js-templates/new-employee.php:335
+#: modules/hrm/views/js-templates/new-employee.php:392
 msgid "Post Code/Zip Code"
 msgstr ""
 
@@ -14889,10 +14891,12 @@ msgid "Reporting To"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:32
+#: modules/hrm/views/js-templates/new-employee.php:200
 msgid "Date of Hire"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:33
+#: modules/hrm/views/js-templates/new-employee.php:188
 msgid "Source of Hire"
 msgstr ""
 
@@ -14902,6 +14906,7 @@ msgid "Employee Status"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:35
+#: modules/hrm/views/js-templates/new-employee.php:235
 msgid "Work Phone"
 msgstr ""
 
@@ -14911,40 +14916,40 @@ msgid "Employee Type"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:45
-#: modules/hrm/views/js-templates/new-employee.php:195
+#: modules/hrm/views/js-templates/new-employee.php:252
 msgid "Personal Details"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:56
-#: modules/hrm/views/js-templates/new-employee.php:215
+#: modules/hrm/views/js-templates/new-employee.php:272
 msgid "Other Email"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:58
 #: modules/hrm/views/js-templates/leave-policy.php:79
-#: modules/hrm/views/js-templates/new-employee.php:244
+#: modules/hrm/views/js-templates/new-employee.php:301
 #: modules/hrm/views/reporting/gender-profile.php:52
 msgid "Gender"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:59
-#: modules/hrm/views/js-templates/new-employee.php:233
+#: modules/hrm/views/js-templates/new-employee.php:290
 msgid "Nationality"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:60
 #: modules/hrm/views/js-templates/leave-policy.php:89
-#: modules/hrm/views/js-templates/new-employee.php:255
+#: modules/hrm/views/js-templates/new-employee.php:312
 msgid "Marital Status"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:61
-#: modules/hrm/views/js-templates/new-employee.php:266
+#: modules/hrm/views/js-templates/new-employee.php:323
 msgid "Driving License"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:62
-#: modules/hrm/views/js-templates/new-employee.php:274
+#: modules/hrm/views/js-templates/new-employee.php:331
 msgid "Hobbies"
 msgstr ""
 
@@ -15113,12 +15118,14 @@ msgstr ""
 
 #: modules/hrm/views/employee/tab-job.php:91
 #: modules/hrm/views/js-templates/compensation.php:14
+#: modules/hrm/views/js-templates/new-employee.php:213
 #: modules/hrm/views/reporting/salary-history.php:15
 msgid "Pay Rate"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-job.php:92
 #: modules/hrm/views/js-templates/compensation.php:23
+#: modules/hrm/views/js-templates/new-employee.php:222
 msgid "Pay Type"
 msgstr ""
 
@@ -15506,19 +15513,19 @@ msgstr ""
 msgid "Middle Name"
 msgstr ""
 
-#: modules/hrm/views/js-templates/new-employee.php:343
+#: modules/hrm/views/js-templates/new-employee.php:400
 msgid "Biography"
 msgstr ""
 
-#: modules/hrm/views/js-templates/new-employee.php:358
+#: modules/hrm/views/js-templates/new-employee.php:415
 msgid "Notification"
 msgstr ""
 
-#: modules/hrm/views/js-templates/new-employee.php:360
+#: modules/hrm/views/js-templates/new-employee.php:417
 msgid "Send the employee an welcome email."
 msgstr ""
 
-#: modules/hrm/views/js-templates/new-employee.php:369
+#: modules/hrm/views/js-templates/new-employee.php:426
 msgid "Send the login details as well. If <code>{login_info}</code> present."
 msgstr ""
 
