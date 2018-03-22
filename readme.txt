@@ -1,5 +1,5 @@
 === WP ERP - HRM, CRM & Accounting Solution For WordPress ===
-Contributors: tareq1988, wedevs, ediamin, sabbir1991, asaquzzaman, shawon786, manikmist09
+Contributors: tareq1988, wedevs, ediamin, sabbir1991, asaquzzaman, manikmist09, shawon786,
 Donate Link: https://tareq.co/donate
 Tags: ERP, CRM, HRM, Accounting, Project Management, business manager, small business, SME, contact, contacts, Customer Relationship Management, employee, leave management, hr, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
@@ -14,80 +14,132 @@ An Open Source Human Resource, CRM & Accounting Solution for WordPress
 
 == Description ==
 
-= First Full-fledged Open Source ERP System for WordPress =
-WP ERP is the framework for weDevs's enterprise resource management system. This plugin includes -
+= Ultimate Company/ Business Management Solution for WordPress =
+Trusted by more than 4000+ in 150 countries worldwide WP ERP is the first full-fledged ERP (Enterprise Resource Planning) solution for your WordPress site. You can easily manage your day to day business operations using WP ERP and dive into a feature-rich system for completely FREE.
 
 = Core Modules =
 
-* HR Module
-* CRM Module
-* Accounting Module
+WP ERP Comes with three powerful pre-built core modules -
+
+* WordPress HRM System (Human Resource Management)
+* WordPress CRM System (Customer Relationship Management)
+* WordPress Accounting System
+
 
 = Other Modules =
 
 * Project Management via [WP Project Manager](https://wordpress.org/plugins/wedevs-project-manager/)
 
-= Links =
-* [Github](https://github.com/wp-erp/wp-erp/?utm_medium=referral&utm_source=wordpress.org&utm_campaign=WP+ERP+Readme&utm_content=Repo+Link)
-* [Documentation](https://wperp.com/documentation/?utm_medium=referral&utm_source=wordpress.org&utm_campaign=WP+ERP+Readme&utm_content=Home+Page)
-* [Project Site](https://wperp.com/?utm_medium=referral&utm_source=wordpress.org&utm_campaign=WP+ERP+Readme&utm_content=Home+Page)
-* [Extensions](https://wperp.com/?utm_medium=referral&utm_source=wordpress.org&utm_campaign=WP+ERP+Readme&utm_content=Downloads)
-
 = Core Features =
 
 * Own company profile
-* Branch Listing
+* Branch Management
 * WordPress admin dashboard customizing features
 * Audit log to check overall workflow
 * 44 Currency Support
 * Notification emails with custom templates and shortcode support
 
-= HR Module Features =
+= Complete HR Management Directly on Your WordPress Site =
 
-* Employee profile
-* Department listing
-* Designations listing
-* Announcement for specific employee
-* Leave request management
-* Leave policy
-* Holiday management
+Looking for a WordPress plugin that can help you manage your company, human resource and related assets? Your wait is over.
+WP ERP is the most powerful and dynamic solution that can allow you to create your very own HR system for your company.
+
+With WP ERP HRM, you can -
+
+* Manage all the information of your company from a single place
+* Create your own company profile
+* Manage locations
+* Adding and listing departments
+* Adding and listing designations
+* Create employees, add them to departments and assign designations
+* Make individual employee profiles with editing privilege
+* Publish and share announcements with employees, departments and designations
+* Manage holidays
+* Allow employees to request for leave
+* Manage employee leaves & leave policies
+
+= Best Customer Relationship Management for WordPress =
+
+WP ERP CRM module makes things easier for your when you are trying to manage your contacts i.e. subscribers, customers, leads and opportunity. You can create contacts and segment them using different predefined life stages. Besides that, WP ERP CRM lets you create contact groups where you can list people with similar characteristics and interest.
+
+How would a CRM system be if there is no advanced searching, filtering and analytics feature?
+
+That’s why, with WP ERP CRM you will be able to
+
+* Manage and implement a personalized approach with every customer
+* See contact with life state to prioritize and compartmentalize your service for a greater efficiency.
+* Note down the important things that are related to customer handling
+* Keep a log of every details when you are dealing with a customer
+* You can schedule a meeting/call directly from inside the CRM module
+* Assign tasks to your team members and get them done without relying on anything else
+* Make company profiles so you handle them seamlessly
+* Filter your contacts instantly using keyword related to any attributes
+* You can set a previously saved search filtering for all the times when you are in a hurry
+* Group you contact to something that they all have in common
+
+= Accounting Module Made For All The Non Accountants =
+
+This is the perfect accounting module for anyone who has never taken an accounting class, and has no idea what a balance sheet, debit, credit, income statement or statement of cash flow is. Our intuitive system makes it easy for everyone to understand it in a simple manner and execute the things that need to be done for your accounting department.
+
+* Get a quick overview of all your total cash revenue, due invoices, pending payments, expenditure and more right from your accounting dashboard
+* See all the transactions within your organization all in real time
+* There are multiple preloaded accounts for assets, Liabilities, Expenses, Income etc so you don’t have to start off from scratch
+* Manage all your sales using invoices and make payments directly using this module
+* Check reports on every stage all the calculations
+* Receive payments from any customers with in seconds
+* Get printable version of your invoices with only a click. You can even modify them
+* Keep a detailed track of your company's expenses with the associated accounts and vendor profiles.
+* See the due payments you need to make recently
+* Use payment vouchers to pay your vendors directly with cash from your company savings or petty accounts. You can even pay them partially
+* Manage your bank account, see the economics in graph, make/receive payments
+* Transfer money with a simple click any time you want
+* Journal Entry feature for all the professional accountants out there
 
 
-= CRM Module Features =
+= PAID EXTENSIONS to extend functionaries =
 
-* Lead listing
-* Opportunity listing
-* Customer listing
-* Notes for each lead which can be only viewed by employee, HR manager and Admin
-* Built in email communication system
-* Logging feature for each event. Like- call, email, meeting, SMS
-* Create a schedule and get notified via mail.
-* Company profile listing
-* Overall activity overview
-* Group contacts depending on various factors
+Supercharge your business using the extensions built for WP ERP
 
-= Accounting Module =
+* **[Payment Gateway](https://wperp.com/downloads/payment-gateway/)**: This feature extension allows you to take payments from most popular payment gateways- PayPal and Stripe.
+* **[Recruitment](https://wperp.com/downloads/recruitment/)**: With WP-ERP Recruitment addon, you can directly create, publish and manage your recruitment from your WordPress powered company website.
+* **[HR Frontend](https://wperp.com/downloads/hr-frontend/)**: Bring the powerful HR Module of WP ERP to your web front using this handy extension.
+* **[WooCommerce Integration](https://wperp.com/downloads/woocommerce-crm/)**: Sync your WooCommerce order details and customer data with WP ERP and allow your CRM agent to track your sales.
+* **[Email Campaign](https://wperp.com/downloads/wp-erp-email-campaign/)**: Create personalized, automated and beautifully designed outbound emails for marketing, campaigns or customer follow up an amazing experience.
+* **[Attendance](https://wperp.com/downloads/attendance/)**: Track work hours of your employees and balance them with their leaves with this feature extension.
+* **[Custom Field Builder](https://wperp.com/downloads/custom-field-builder/)**: Add more fields to your ERP forms.
+* **[Payroll](https://wperp.com/downloads/payroll/)**: Manage your employee salaries more easily and automate the payment system with this amazing extension of WP ERP
+* **[Deals](https://wperp.com/downloads/deals/)**: Deals is a great tool to manage and guide your CRM agents on a faster and organized sales process.
+* **[Workflow](https://wperp.com/downloads/workflow/)**: Automate actions in your ERP system with this advanced add-on. Save time and reduce the margin of error.
+* **[Reimbursement](https://wperp.com/downloads/reimbursement/)**: Manage your employee expenses and complete payments in an easy and effective way using ERP Reimbursement.
+* **[Document Manager](https://wperp.com/downloads/document-manager/)**: Store and access your company and employee documents on-site.
+* **[Inventory](https://wperp.com/downloads/inventory/)**: Stock management for your products within your accounting software.
+* **[SMS Notification](https://wperp.com/downloads/sms-notification/)**: Send SMS notifications to your CRM contacts and employees in your HR module directly from your ERP system using famous SMS gateways.
+* **[Asset Manager](https://wperp.com/downloads/asset-manager/)**: Create your company assets virtually, assign them to employees and keep track of all your company assets in one place.
+* **[Gravity Forms](https://wperp.com/downloads/crm-gravity-forms/)**: Create users in CRM module automatically with the data you receive on a form created by Gravity forms.
+* **[Salesforce Contacts Sync](https://wperp.com/downloads/salesforce-contact-sync/)**: Import and Sync all your SalesForce mailing lists into WP-ERP CRM system and vice versa.
+* **[Hubspot Contacts Sync](https://wperp.com/downloads/hubspot-contacts-sync/)**: Import and Sync all your Hubspot contacts into WP-ERP CRM system and vice versa.
+* **[Mailchimp Contacts Sync](https://wperp.com/downloads/mailchimp-contacts-sync/)**: Import and Sync all your Mailchimp mailing lists into WP-ERP CRM system and vice versa.
 
-* Invoice - Create invoice for your customer for any sales.
-* Payment - Add payments to the against the invoices.
-* Payment Voucher - Add your direct cash and bank purchases.
-* Vendor Credit - Purchase in credit from vendors.
-* Journal Entry
-* Chart of Accounts
-* Bank Accounts
-* Tax management
-* Reporting - Trial Balance, Balance Sheet, Income Statement
+Check out the most detailed documentation compared to any ERP plugins out there. It has all the information you will ever need to start using WP ERP
+
+== Read what others have to say about us ==
+
+* [Top 12 WordPress CRM Plugins to Supercharge Your Business](https://kinsta.com/blog/wordpress-crm/)
+
+* [WORDPRESS PLUGINS FOR HR & EMPLOYEE MANAGEMENT](https://wpengine.com/resources/wordpress-employee-management-plugins/)
+
+* [7 Best WordPress CRM Plugins to Boost Your Online Business in 2018](https://themegrill.com/blog/wordpress-crm-plugins/)
+
+* [Top 100 ERP Blogs and Websites for Enterprise Resource Planning Professionals](https://blog.feedspot.com/erp_blogs/)
+
+* [WORDPRESS PLUGINS FOR HR & EMPLOYEE MANAGEMENT](https://wpengine.com/resources/wordpress-employee-management-plugins/)
+
+== Visit our website to learn more ==
+
+**[WP ERP](https://wperp.com/)**  **[HR](https://wperp.com/hr/)** **[CRM](https://wperp.com/crm/)** **[Accounting](https://wperp.com/accounting/)**
 
 = Contribute =
 This may have bugs and lack of many features. If you want to contribute on this project, you are more than welcome. Please fork the repository from [Github](https://github.com/wp-erp/wp-erp).
-
-
-= Checkout Our Other Products =
-* [Dokan - Multivendor Plugin](https://wedevs.com/dokan/?utm_medium=referral&utm_source=wporg&utm_campaign=WP+ERP+Readme&utm_content=Dokan)
-* [weForms - Best Contact Form Plugin](https://wedevs.com/weforms/?utm_medium=referral&utm_source=wporg&utm_campaign=WP+ERP+Readme&utm_content=weForms)
-* [WP User Frontend Pro](https://wedevs.com/wp-user-frontend-pro/?utm_medium=referral&utm_source=wporg&utm_campaign=WP+ERP+Readme&utm_content=WP+User+Frontend+Pro)
-* [WP Project Manager](https://wedevs.com/wp-project-manager-pro/?utm_medium=referral&utm_source=wporg&utm_campaign=WP+ERP+Readme&utm_content=WP+Project+Manager)
-
 
 == Installation ==
 ###Automatic Install From WordPress Dashboard
