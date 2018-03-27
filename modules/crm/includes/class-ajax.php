@@ -60,6 +60,7 @@ class Ajax_Handler {
         add_action( 'wp_ajax_erp_crm_get_customer_activity', array( $this, 'fetch_all_activity' ) );
         add_action( 'wp_ajax_erp_customer_feeds_save_notes', array( $this, 'save_activity_feeds' ) );
         add_action( 'wp_ajax_erp_crm_delete_customer_activity', array( $this, 'delete_customer_activity_feeds' ) );
+        add_action( 'wp_ajax_email_attatchment', array( $this, 'email_attatchment' ) );
 
         // Schedule page
         add_action( 'wp_ajax_erp_crm_add_schedules_action', array( $this, 'save_activity_feeds' ) );
@@ -982,9 +983,10 @@ class Ajax_Handler {
     public function save_activity_feeds() {
         $this->verify_nonce( 'wp-erp-crm-customer-feed' );
 
-        $save_data = [];
-        $postdata  = $_POST;
-
+        $save_data      = [];
+        $postdata       = $_POST;
+        $attatchments   = ( isset( $postdata['attatchments'] ) ) ? $postdata['attatchments'] : array();
+        // error_log( print_r( $postdata, true ));
         if ( ! isset( $postdata['user_id'] ) && empty( $postdata['user_id'] ) ) {
             $this->send_error( __( 'Customer not found', 'erp' ) );
         }
@@ -1075,7 +1077,7 @@ class Ajax_Handler {
                 add_filter( 'erp_mail_from_name', 'erp_crm_get_email_from_name' );
 
                 // Send email a contact
-                erp_mail( $contact->email, $postdata['email_subject'], $email_body, $headers, [], $custom_headers );
+                erp_mail( $contact->email, $postdata['email_subject'], $email_body, $headers, $attatchments, $custom_headers );
 
                 do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
 
@@ -1511,6 +1513,40 @@ class Ajax_Handler {
         }else{
             wp_send_json(['message' => __('tags update failed please try again', 'erp')]);
         }
+    }
+
+    /**
+     * Email Attatchment
+     *
+     * @return void
+     */
+    public function email_attatchment() {
+
+        $files          =   ( ! empty( $_FILES['files'] ) ) ? $_FILES['files'] : array();
+        $wp_upload_dir  =   wp_upload_dir();
+        $path           =   $wp_upload_dir['path'] . '/';
+        $message        =   array();
+        $attatchments   =   array();
+        $file_names     =   array();
+
+        foreach ( $files['name'] as $key => $file ) {
+            $extension    = pathinfo( $file, PATHINFO_EXTENSION );
+            $new_filename = uniqid()  . '.' . $extension;
+
+            if ( $files['error'][ $key ] == 0 ) {
+                if ( move_uploaded_file( $files['tmp_name'][ $key ], $path.$new_filename ) ) {
+                    $wp_upload_dir  = wp_upload_dir();
+                    $file_name      = $path.$new_filename;
+                    $attatchments[] = $wp_upload_dir['url'] . '/' . basename( $file_name );
+                    $file_names[]   = $files['name'][ $key ];
+                }
+            }
+        }
+
+        wp_send_json_success( array(
+            'url'   => $attatchments,
+            'files' => $file_names
+        ) );
     }
 
 }
