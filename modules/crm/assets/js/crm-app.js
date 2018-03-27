@@ -295,10 +295,13 @@ Vue.component( 'email-note', {
         return {
             feedData: {
                 message: '',
-                email_subject: ''
+                email_subject: '',
+                attatchments: [],
             },
             isValid: false,
             emailTemplates: '',
+            progressbar: false,
+            files: [],
         }
     },
 
@@ -339,7 +342,56 @@ Vue.component( 'email-note', {
                     trix.editor.element.innerHTML = ' '+resp.data.template+' ';
                 }
             });
+        },
 
+        fileUpload: function() {
+            var formData = new FormData();
+            var field    = $( '#email-attatchment' );
+            var self     = ( this );
+            this.progressbar = true;
+
+            formData.append( 'action', 'email_attatchment' );
+            $( '.crm-attatchments' ).css( 'display', 'block' );
+            $.each( field, function( index, object ) {
+                $.each( object.files, function( i, file ) {
+                    formData.append( 'files[]', file );
+                } );
+            } );
+
+            jQuery.ajax({
+                url: wpCRMvue.ajaxurl,
+                data:formData,
+                cache: false,
+                processData: false,
+                contentType: false,
+                type: 'POST',
+                success: function( response ) {
+                    if ( response.success ) {
+                        self.feedData.attatchments = response.data.url;
+                        self.files = response.data.files;
+                    }
+                },
+
+                xhr: function(){
+                    //upload Progress
+                    var xhr = $.ajaxSettings.xhr();
+                    if (xhr.upload) {
+                        xhr.upload.addEventListener('progress', function(event) {
+                            var percent = 0;
+                            var position = event.loaded || event.position;
+                            var total = event.total;
+                            if (event.lengthComputable) {
+                                percent = Math.ceil(position / total * 100);
+                            }
+                            //update progressbar
+                            $( '.progress-bar' ).css( 'width', + percent +'%' );
+                            $( '.status' ).text(percent +'%');
+                        }, true);
+                    }
+
+                    return xhr;
+                },
+            });
         }
     },
 
@@ -536,6 +588,7 @@ Vue.component( 'schedule-note', {
  *
  * @return void
  */
+Vue.config.debug = true;
 var vm = new Vue({
     el: '#erp-customer-feeds',
 
@@ -572,6 +625,10 @@ var vm = new Vue({
             handler: function ( newVal ) {
                 this.fetchFeeds( newVal );
             }
+        },
+
+        fileUpload: function() {
+            console.log('Hello');
         }
     },
 
@@ -677,7 +734,7 @@ var vm = new Vue({
          */
         addCustomerFeed: function( comp, feed_id ) {
             var self = this;
-
+            progressbar = false;
             if ( feed_id ) {
                 self.feedData.id = feed_id;
                 if ( comp.isReplied ) {
@@ -713,7 +770,6 @@ var vm = new Vue({
                 self.feedData.end_time       = self.feedData.tpEnd;
                 self.feedData.invite_contact = self.feedData.inviteContact;
             };
-
             jQuery.post( wpCRMvue.ajaxurl, self.feedData, function( resp ) {
                 if ( ! resp.success ) {
                     alert( resp.data );
@@ -813,7 +869,9 @@ var vm = new Vue({
 
                     self.$broadcast( 'customerFeedAddded', resp );
                 }
-            });
+            }).done( function() {
+                $( '.crm-attatchments' ).css( 'display', 'none' );
+            } );
         },
 
         /**
@@ -908,8 +966,7 @@ var vm = new Vue({
                     self.i18n = resp.data;
                 }
             });
-        }
-
+        },
     },
 
     ready: function() {
