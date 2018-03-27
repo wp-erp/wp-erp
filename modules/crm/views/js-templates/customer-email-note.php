@@ -47,8 +47,18 @@ $save_replies = erp_crm_get_save_replies();
         <input type="hidden" name="action" v-model="feedData.action" value="erp_customer_feeds_save_notes">
         <input type="hidden" name="type" v-model="feedData.type" value="email">
         <input type="submit" v-if="!feed" :disabled = "!isValid" class="button button-primary" name="save_notes" value="<?php _e( 'Send Email', 'erp' ); ?>">
+        <input type="file" name="attatchments[]" id="email-attatchment" v-on:change="fileUpload()" multiple>
+        <label for="email-attatchment" class="attatchments-label" title="Attatch File">Attatch File</label>
         <input type="submit" v-if="feed" :disabled = "!isValid" class="button button-primary" name="edit_notes" value="<?php _e( 'Reply Email', 'erp' ); ?>">
         <input type="reset" v-if="!feed" class="button button-default" value="<?php _e( 'Discard', 'erp' ); ?>">
         <button class="button" v-if="feed" @click.prevent="cancelUpdateFeed"><?php _e( 'Cancel', 'erp' ); ?></button>
+    </div>
+    <div class="crm-attatchments">
+       <div id="progress-wrp"><div class="progress-bar"></div ><div class="status">0%</div></div>
+        <div id="output">
+            <p v-for="file in files ">
+                {{ file }}
+            </p>
+        </div>
     </div>
 </div>
