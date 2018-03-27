@@ -11,6 +11,12 @@ var data = [
 
 if ( 'this_year' == growthReport.type ) {
     labels = months;
+
+    for ( var i = 0, len = labels.length; i < len; i++ ) {
+        if ( ! growthReport.reports[ labels[i] ] ) {
+            growthReport.reports[ labels[i] ] = {};
+        }
+    }
 } else if ( 'custom' == growthReport.type ) {
     labels = Object.keys( growthReport.reports );
 }
