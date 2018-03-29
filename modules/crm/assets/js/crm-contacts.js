@@ -75,6 +75,48 @@
                 });
             },
 
+            initSearchCrmCompany: function() {
+                $( 'select#erp-select-contact-company' ).select2({
+                    allowClear: true,
+                    placeholder: 'Filter by Company',
+                    minimumInputLength: 3,
+                    ajax: {
+                        url: wpErpCrm.ajaxurl,
+                        dataType: 'json',
+                        delay: 250,
+                        escapeMarkup: function( m ) {
+                            return m;
+                        },
+                        data: function (params) {
+                            return {
+                                q: params.term, // search term
+                                _wpnonce: wpErpCrm.nonce,
+                                action: 'erp-search-crm-company'
+                            };
+                        },
+                        processResults: function ( data, params ) {
+                            var terms = [];
+
+                            if ( data) {
+                                $.each( data.data, function( id, text ) {
+                                    terms.push({
+                                        id: id,
+                                        text: text
+                                    });
+                                });
+                            }
+
+                            if ( terms.length ) {
+                                return { results: terms };
+                            } else {
+                                return { results: '' };
+                            }
+                        },
+                        cache: true
+                    }
+                });
+            },
+
             initContactListAjax: function() {
                 $( 'select.erp-crm-contact-list-dropdown' ).select2({
                     allowClear: true,
@@ -302,6 +344,20 @@
                     text: '--Select save filter --'
                 },
                 options: wpErpCrm.saveAdvanceSearch
+            },
+
+            'filterContactCompany' : {
+                name: 'filter_contact_company',
+                type: 'select',
+                id: 'erp-select-contact-company',
+                class: 'erp-filter-contact-company',
+                placeholder: 'Filter by Company',
+                options: [
+                    {
+                        id : '',
+                        text: ''
+                    }
+                ]
             }
 
         }
@@ -1652,7 +1708,15 @@
                     var value = this.$refs.vtable.getParamByName('filter_assign_contact');
                     if ( value ) {
                         $('select#erp-select-user-for-assign-contact')
-                            .append('<option value="' + this.$refs.vtable.customData.filter_assign_contact.id + '" selected>' + this.$refs.vtable.customData.filter_assign_contact.display_name + '</option>').trigger('change')
+                            .append('<option value="' + this.$refs.vtable.customData.filter_contact_company.id + '" selected>' + this.$refs.vtable.customData.filter_assign_contact.display_name + '</option>').trigger('change')
+                    }
+                },
+
+                setCompanyContactSearchValue: function() {
+                    var value = this.$refs.vtable.getParamByName('filter_contact_company');
+                    if ( value ) {
+                        $('select#erp-select-contact-company')
+                            .append('<option value="' + this.$refs.vtable.customData.filter_contact_company.id + '" selected>' + this.$refs.vtable.customData.filter_contact_company.display_name + '</option>').trigger('change')
                     }
                 },
 
@@ -1700,7 +1764,9 @@
                 $( 'body' ).on( 'focusout', 'input#erp-crm-new-contact-email', this.checkEmailForContact );
                 $( 'body' ).on( 'click', 'a#erp-crm-create-contact-other-type', this.makeUserAsContact );
                 this.initSearchCrmAgent();
+                this.initSearchCrmCompany();
                 this.setContactOwnerSearchValue();
+                this.setCompanyContactSearchValue();
                 this.setAdvanceFilter();
 
                 if ( wperp.erpGetParamByName('filter_save_filter', window.location.search ) !== null ) {
