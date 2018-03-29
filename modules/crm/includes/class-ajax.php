@@ -44,6 +44,9 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-crm-save-assign-contact', 'save_assign_contact' );
         $this->action( 'wp_ajax_erp-crm-make-wp-user', 'make_wp_user' );
 
+        // Contact by company
+        $this->action( 'wp_ajax_erp-search-crm-company', 'search_company_contact' );
+
         // Contact Group
         $this->action( 'wp_ajax_erp-crm-contact-group', 'contact_group_create' );
         $this->action( 'wp_ajax_erp-crm-edit-contact-group', 'contact_group_edit' );
@@ -164,7 +167,7 @@ class Ajax_Handler {
             }
         }
 
-        if( isset( $_REQUEST['filter_assign_contact']) && !empty( $_REQUEST['filter_assign_contact']) ){
+        if ( isset( $_REQUEST['filter_assign_contact']) && !empty( $_REQUEST['filter_assign_contact']) ){
             $args['contact_owner'] = $_REQUEST['filter_assign_contact'];
         }
 
@@ -172,9 +175,19 @@ class Ajax_Handler {
             $args['erpadvancefilter'] = $_REQUEST['erpadvancefilter'];
         }
 
-        $contacts['data']  = erp_get_peoples( $args );
-        $args['count'] = true;
-        $total_items = erp_get_peoples( $args );
+        if ( isset( $_REQUEST['filter_contact_company'] ) && ! empty( $_REQUEST['filter_contact_company'] ) ) {
+            $companies = erp_crm_company_get_customers( array( 'id' => $_REQUEST['filter_contact_company'] ) );
+
+            foreach ( $companies as $company ) {
+                $contacts['data'][] = $company['contact_details'];
+            }
+
+            $total_items = count( $contacts['data'] );
+        } else {
+            $contacts['data']  = erp_get_peoples( $args );
+            $args['count'] = true;
+            $total_items = erp_get_peoples( $args );
+        }
 
         foreach ( $contacts['data'] as $key => $contact ) {
             $contact_owner    = [];
@@ -589,6 +602,32 @@ class Ajax_Handler {
         }
 
         $this->send_success( $found_crm_user );
+    }
+
+     /**
+     * Search crm contact company
+     *
+     * @since 1.3.7
+     *
+     * @return void
+     */
+    public function search_company_contact() {
+        $term = isset( $_REQUEST['q'] ) ? stripslashes( $_REQUEST['q'] ) : '';
+
+        if ( empty( $term ) ) {
+            die();
+        }
+
+        $found_contact_company = [];
+        $crm_companies = erp_get_peoples( [ 's' => $term, 'type' => 'company' ] );
+
+        if ( ! empty( $crm_companies ) ) {
+            foreach ( $crm_companies as $company ) {
+                $found_contact_company[ $company->id ] = $company->first_name;
+            }
+        }
+
+        $this->send_success( $found_contact_company );
     }
 
     /**

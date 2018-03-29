@@ -3619,3 +3619,10 @@ kbd {
   max-width: 100%;
   height: 32px;
 }
+.erp-crm-customer .select2-container--default .select2-selection--single {
+  border-color: #ddd;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.07);
+}
+.crm_page_erp-sales-companies #erp-select-contact-company + span {
+  display: none;
+}
