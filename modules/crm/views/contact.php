@@ -8,6 +8,15 @@ if ( isset( $_GET['filter_assign_contact' ] ) && !empty( $_GET['filter_assign_co
         ],
         'searchFields' => array_keys( erp_crm_get_serach_key( 'contact' ) )
     ];
+} elseif ( isset( $_GET['filter_contact_company' ] ) && !empty( $_GET['filter_contact_company' ] ) ) {
+    $id = intval( $_GET['filter_contact_company'] );
+    $custom_data = [
+        'filter_contact_company' => [
+            'id'           => $id,
+            'display_name' => erp_get_people( $id )->company
+        ],
+        'searchFields' => array_keys( erp_crm_get_serach_key( 'contact' ) )
+    ];
 } else {
     $custom_data = [
         'searchFields' => array_keys( erp_crm_get_serach_key( 'contact' ) )
