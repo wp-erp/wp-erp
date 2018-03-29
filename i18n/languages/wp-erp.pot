@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.3.7\n"
+"Project-Id-Version: WP ERP 1.3.8\n"
 "Report-Msgid-Bugs-To: http://wperp.com/support/\n"
-"POT-Creation-Date: 2018-03-22 08:50:02+00:00\n"
+"POT-Creation-Date: 2018-03-29 05:21:00+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5290,7 +5290,7 @@ msgstr ""
 #: modules/hrm/views/js-templates/job-info.php:19
 #: modules/hrm/views/js-templates/new-employee.php:99
 #: modules/hrm/views/js-templates/new-employee.php:113
-#: modules/hrm/views/js-templates/new-employee.php:193
+#: modules/hrm/views/js-templates/new-employee.php:206
 #: modules/hrm/views/js-templates/new-employee.php:227
 #: modules/hrm/views/js-templates/new-employee.php:386
 #: modules/hrm/views/js-templates/new-leave-request.php:15
@@ -8521,7 +8521,7 @@ msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
 #: modules/accounting/includes/class-ajax.php:74
-#: modules/crm/includes/class-ajax.php:469
+#: modules/crm/includes/class-ajax.php:482
 #: modules/hrm/includes/class-ajax.php:921
 msgid "User not found"
 msgstr ""
@@ -9297,7 +9297,7 @@ msgstr ""
 
 #: modules/accounting/includes/class-settings.php:114
 #: modules/crm/includes/class-contact-subscriber-list-table.php:103
-#: modules/crm/views/contact.php:21 modules/crm/views/dashboard.php:18
+#: modules/crm/views/contact.php:30 modules/crm/views/dashboard.php:18
 msgid "Contact"
 msgstr ""
 
@@ -11259,64 +11259,64 @@ msgstr ""
 msgid "CRM Agent"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:219
+#: modules/crm/includes/class-ajax.php:232
 msgid "Type must be required"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:250
+#: modules/crm/includes/class-ajax.php:263
 msgid "No company or contact found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:276
+#: modules/crm/includes/class-ajax.php:289
 msgid "You don't have any permission to add new contact"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:280
+#: modules/crm/includes/class-ajax.php:293
 msgid "You don't have any permission to edit this contact"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:318
+#: modules/crm/includes/class-ajax.php:331
 msgid "Cotact does not exists."
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:349
+#: modules/crm/includes/class-ajax.php:362
 msgid "You don't have any permission to delete this contact"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:355
+#: modules/crm/includes/class-ajax.php:368
 msgid "Can not delete - You do not own this contact(s)"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:420
+#: modules/crm/includes/class-ajax.php:433
 msgid "Contact must be required"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:424
+#: modules/crm/includes/class-ajax.php:437
 msgid "Atleast one group must be selected"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:436
+#: modules/crm/includes/class-ajax.php:449
 msgid "Can not assign any group - You do not own this contact(s)"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:450
+#: modules/crm/includes/class-ajax.php:463
 msgid "Selected contact are successfully subscribed"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:473
+#: modules/crm/includes/class-ajax.php:486
 msgid "Type not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:511
+#: modules/crm/includes/class-ajax.php:524
 msgid "Company already assigned. Choose another company"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:515
+#: modules/crm/includes/class-ajax.php:528
 msgid "Contact already assigned. Choose another contact"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:519
-#: modules/crm/includes/class-ajax.php:649
+#: modules/crm/includes/class-ajax.php:532
+#: modules/crm/includes/class-ajax.php:688
 #: modules/crm/includes/functions-customer.php:377
 #: modules/crm/includes/functions-customer.php:1313
 #: modules/crm/includes/functions-customer.php:2980
@@ -11324,45 +11324,45 @@ msgstr ""
 msgid "No contact found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:530
+#: modules/crm/includes/class-ajax.php:543
 msgid "Company has been added successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:545
+#: modules/crm/includes/class-ajax.php:558
 msgid "Company has been updated successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:561
+#: modules/crm/includes/class-ajax.php:574
 msgid "hello"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:644
+#: modules/crm/includes/class-ajax.php:683
 msgid "Please select a user"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:658
+#: modules/crm/includes/class-ajax.php:697
 msgid "Assign to agent successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:679
+#: modules/crm/includes/class-ajax.php:718
 msgid "Contact not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:683
+#: modules/crm/includes/class-ajax.php:722
 msgid "Contact type not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:688
+#: modules/crm/includes/class-ajax.php:727
 msgid "Not allowed to crated user with the selected role"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:721
-#: modules/crm/includes/class-ajax.php:771
-#: modules/crm/includes/class-ajax.php:994
-#: modules/crm/includes/class-ajax.php:1185
-#: modules/crm/includes/class-ajax.php:1208
-#: modules/crm/includes/class-ajax.php:1268
-#: modules/crm/includes/class-ajax.php:1355
+#: modules/crm/includes/class-ajax.php:760
+#: modules/crm/includes/class-ajax.php:810
+#: modules/crm/includes/class-ajax.php:1033
+#: modules/crm/includes/class-ajax.php:1224
+#: modules/crm/includes/class-ajax.php:1247
+#: modules/crm/includes/class-ajax.php:1307
+#: modules/crm/includes/class-ajax.php:1394
 #: modules/hrm/includes/class-ajax.php:115
 #: modules/hrm/includes/class-ajax.php:145
 #: modules/hrm/includes/class-ajax.php:248
@@ -11408,180 +11408,180 @@ msgstr ""
 msgid "You do not have sufficient permissions to do this action"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:725
+#: modules/crm/includes/class-ajax.php:764
 msgid "Contact Group Name must be required"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:737
+#: modules/crm/includes/class-ajax.php:776
 msgid "Contact group save successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:775
-#: modules/crm/includes/class-ajax.php:1429
-#: modules/crm/includes/class-ajax.php:1455
+#: modules/crm/includes/class-ajax.php:814
+#: modules/crm/includes/class-ajax.php:1468
+#: modules/crm/includes/class-ajax.php:1494
 msgid "Somthing wrong, Please try later"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:780
-#: modules/crm/includes/class-ajax.php:892
+#: modules/crm/includes/class-ajax.php:819
+#: modules/crm/includes/class-ajax.php:931
 msgid "Contact group delete successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:812
+#: modules/crm/includes/class-ajax.php:851
 msgid "Contact not found. Try again"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:822
+#: modules/crm/includes/class-ajax.php:861
 msgid "Subscribed on"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:823
+#: modules/crm/includes/class-ajax.php:862
 msgid "Unsubscribed on"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:846
+#: modules/crm/includes/class-ajax.php:885
 msgid "No user data found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:850
+#: modules/crm/includes/class-ajax.php:889
 msgid "You don't have any permission to assign this contact in a group"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:862
+#: modules/crm/includes/class-ajax.php:901
 msgid "Succesfully subscriber for this user"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:879
+#: modules/crm/includes/class-ajax.php:918
 msgid "You don't have any permission to remove this contact from a group"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:883
+#: modules/crm/includes/class-ajax.php:922
 msgid "No subscriber contact found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:887
+#: modules/crm/includes/class-ajax.php:926
 msgid "No subscriber group found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:909
+#: modules/crm/includes/class-ajax.php:948
 msgid "You don't have any permission to assign this contact"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:913
+#: modules/crm/includes/class-ajax.php:952
 msgid "No subscriber user found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:918
+#: modules/crm/includes/class-ajax.php:957
 msgid "Contact group edit successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:950
+#: modules/crm/includes/class-ajax.php:989
 msgid "No customer found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:959
+#: modules/crm/includes/class-ajax.php:998
 msgid "Succesfully added social profiles"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:989
+#: modules/crm/includes/class-ajax.php:1028
 msgid "Customer not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:998
+#: modules/crm/includes/class-ajax.php:1037
 msgid "Content must be required"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1017
-#: modules/crm/includes/class-ajax.php:1083
-#: modules/crm/includes/class-ajax.php:1113
-#: modules/crm/includes/class-ajax.php:1129
-#: modules/crm/includes/class-ajax.php:1157
+#: modules/crm/includes/class-ajax.php:1056
+#: modules/crm/includes/class-ajax.php:1122
+#: modules/crm/includes/class-ajax.php:1152
+#: modules/crm/includes/class-ajax.php:1168
+#: modules/crm/includes/class-ajax.php:1196
 msgid "Somthing is wrong, Please try later"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1189
+#: modules/crm/includes/class-ajax.php:1228
 msgid "Feeds Not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1194
+#: modules/crm/includes/class-ajax.php:1233
 msgid "Feed Deleted successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1214
-#: modules/crm/includes/class-ajax.php:1274
+#: modules/crm/includes/class-ajax.php:1253
+#: modules/crm/includes/class-ajax.php:1313
 msgid "No data not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1218
-#: modules/crm/includes/class-ajax.php:1336
+#: modules/crm/includes/class-ajax.php:1257
+#: modules/crm/includes/class-ajax.php:1375
 msgid "Search name not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1222
+#: modules/crm/includes/class-ajax.php:1261
 msgid "Contact Type not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1226
+#: modules/crm/includes/class-ajax.php:1265
 msgid "Search filters not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1232
+#: modules/crm/includes/class-ajax.php:1271
 msgid "Query not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1247
+#: modules/crm/includes/class-ajax.php:1286
 msgid "Segment name alreday exists."
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1252
+#: modules/crm/includes/class-ajax.php:1291
 msgid "Search does not save"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1278
+#: modules/crm/includes/class-ajax.php:1317
 msgid "Group name not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1282
+#: modules/crm/includes/class-ajax.php:1321
 msgid "No search fields found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1300
+#: modules/crm/includes/class-ajax.php:1339
 msgid "Could not create group."
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1317
+#: modules/crm/includes/class-ajax.php:1356
 msgid "Successfully created group and assigned selected contacts to the group."
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1320
+#: modules/crm/includes/class-ajax.php:1359
 msgid "Could not import contacts to the group."
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1361
+#: modules/crm/includes/class-ajax.php:1400
 msgid "Search segment not found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1384
+#: modules/crm/includes/class-ajax.php:1423
 msgid "Schedule data no found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1438
+#: modules/crm/includes/class-ajax.php:1477
 msgid "No results found"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1464
+#: modules/crm/includes/class-ajax.php:1503
 msgid "Save reply item delete successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1498
+#: modules/crm/includes/class-ajax.php:1537
 msgid "could not find contact id"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1510
+#: modules/crm/includes/class-ajax.php:1549
 msgid "tags updated successfully"
 msgstr ""
 
-#: modules/crm/includes/class-ajax.php:1512
+#: modules/crm/includes/class-ajax.php:1551
 msgid "tags update failed please try again"
 msgstr ""
 
@@ -12574,7 +12574,7 @@ msgstr ""
 msgid "Campaigns"
 msgstr ""
 
-#: modules/crm/views/campaigns.php:4 modules/crm/views/contact.php:23
+#: modules/crm/views/campaigns.php:4 modules/crm/views/contact.php:32
 msgid "Add New Contact"
 msgstr ""
 
@@ -13820,7 +13820,7 @@ msgstr ""
 #: modules/hrm/views/employee/tab-job.php:148
 #: modules/hrm/views/js-templates/job-info.php:25
 #: modules/hrm/views/js-templates/leave-policy.php:45
-#: modules/hrm/views/js-templates/new-employee.php:138
+#: modules/hrm/views/js-templates/new-employee.php:151
 #: modules/hrm/views/leave/leave-entitlements.php:99
 #: modules/hrm/views/reporting/age-profile.php:53
 #: modules/hrm/views/reporting/gender-profile.php:83
@@ -14878,25 +14878,25 @@ msgid "Employee ID"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:21
-#: modules/hrm/views/js-templates/new-employee.php:133
+#: modules/hrm/views/js-templates/new-employee.php:146
 msgid "Work"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:31
 #: modules/hrm/views/employee/tab-performance.php:24
 #: modules/hrm/views/js-templates/job-info.php:45
-#: modules/hrm/views/js-templates/new-employee.php:175
+#: modules/hrm/views/js-templates/new-employee.php:188
 #: modules/hrm/views/js-templates/performance-reviews.php:16
 msgid "Reporting To"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:32
-#: modules/hrm/views/js-templates/new-employee.php:200
+#: modules/hrm/views/js-templates/new-employee.php:121
 msgid "Date of Hire"
 msgstr ""
 
 #: modules/hrm/views/employee/tab-general.php:33
-#: modules/hrm/views/js-templates/new-employee.php:188
+#: modules/hrm/views/js-templates/new-employee.php:201
 msgid "Source of Hire"
 msgstr ""
 
@@ -14967,7 +14967,7 @@ msgstr ""
 #: modules/hrm/views/employee/tab-general.php:85
 #: modules/hrm/views/employee/tab-job.php:149
 #: modules/hrm/views/js-templates/job-info.php:35
-#: modules/hrm/views/js-templates/new-employee.php:150
+#: modules/hrm/views/js-templates/new-employee.php:163
 #: modules/hrm/views/js-templates/work-experience.php:15
 #: modules/hrm/views/reporting/headcount.php:153
 msgid "Job Title"
@@ -15145,7 +15145,7 @@ msgstr ""
 #: modules/hrm/views/employee/tab-job.php:147
 #: modules/hrm/views/js-templates/job-info.php:15
 #: modules/hrm/views/js-templates/leave-policy.php:69
-#: modules/hrm/views/js-templates/new-employee.php:162
+#: modules/hrm/views/js-templates/new-employee.php:175
 #: modules/hrm/views/leave/leave-entitlements.php:90
 #: modules/hrm/views/reporting/headcount.php:155
 msgid "Location"
