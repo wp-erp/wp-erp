@@ -87,7 +87,7 @@
                                 ) ); ?>
                             </div>
 
-                            <div class="col-3" data-selected="{{ data.work.type }}" style="clear:both">
+                            <div class="col-3" data-selected="{{ data.work.type }}">
                                 <?php
                                 erp_html_form_input( array(
                                     'label'    => __( 'Employee Type', 'erp' ),
@@ -101,7 +101,7 @@
                                 ?>
                             </div>
 
-                            <div class="col-3" data-selected="{{ data.work.status }}">
+                            <div class="col-3" style="clear:left" data-selected="{{ data.work.status }}">
                                 <?php
                                 erp_html_form_input( array(
                                     'label'    => __( 'Employee Status', 'erp' ),
@@ -112,6 +112,19 @@
                                     'required' => true,
                                     'options'  => array( '' => __( '- Select -', 'erp' ) ) + erp_hr_get_employee_statuses()
                                 ) );
+                                ?>
+                            </div>
+
+                            <div class="col-3">
+                                <?php
+                                    erp_html_form_input( array(
+                                        'label'    => __( 'Date of Hire', 'erp' ),
+                                        'name'     => 'work[hiring_date]',
+                                        'value'    => '{{ data.work.hiring_date }}',
+                                        'required' => true,
+                                        'type'     => 'text',
+                                        'class'    => 'erp-date-field'
+                                    ) );
                                 ?>
                             </div>
 
@@ -194,19 +207,6 @@
                                     ) ); ?>
                                 </div>
 
-                                <div class="col-3">
-                                    <?php
-                                        erp_html_form_input( array(
-                                            'label'    => __( 'Date of Hire', 'erp' ),
-                                            'name'     => 'work[hiring_date]',
-                                            'value'    => '{{ data.work.hiring_date }}',
-                                            'required' => true,
-                                            'type'     => 'text',
-                                            'class'    => 'erp-date-field'
-                                        ) );
-                                    ?>
-                                </div>
-
                             <# if ( ! data.id ) { #>
                                 <div class="col-3">
                                     <?php erp_html_form_input( array(
@@ -230,7 +230,7 @@
 
                             <# } #>
 
-                                <div class="col-3" style="clear:left">
+                                <div class="col-3">
                                     <?php erp_html_form_input( array(
                                         'label'   => __( 'Work Phone', 'erp' ),
                                         'name'    => 'personal[work_phone]',
@@ -427,7 +427,7 @@
                                     'type'        => 'checkbox',
                                 ) ); ?>
                             </div>
-                        </fieldset>
+                        </div>
 
                         <# } #>
 
