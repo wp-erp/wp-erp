@@ -296,7 +296,7 @@ Vue.component( 'email-note', {
             feedData: {
                 message: '',
                 email_subject: '',
-                attatchments: [],
+                attachments: [],
             },
             isValid: false,
             emailTemplates: '',
@@ -346,12 +346,12 @@ Vue.component( 'email-note', {
 
         fileUpload: function() {
             var formData = new FormData();
-            var field    = $( '#email-attatchment' );
+            var field    = $( '#email-attachment' );
             var self     = ( this );
             this.progressbar = true;
 
-            formData.append( 'action', 'email_attatchment' );
-            $( '.crm-attatchments' ).css( 'display', 'block' );
+            formData.append( 'action', 'email_attachment' );
+            $( '.crm-attachments' ).css( 'display', 'block' );
             $.each( field, function( index, object ) {
                 $.each( object.files, function( i, file ) {
                     formData.append( 'files[]', file );
@@ -367,7 +367,7 @@ Vue.component( 'email-note', {
                 type: 'POST',
                 success: function( response ) {
                     if ( response.success ) {
-                        self.feedData.attatchments = response.data.url;
+                        self.feedData.attachments = response.data.url;
                         self.files = response.data.files;
                     }
                 },
@@ -870,7 +870,7 @@ var vm = new Vue({
                     self.$broadcast( 'customerFeedAddded', resp );
                 }
             }).done( function() {
-                $( '.crm-attatchments' ).css( 'display', 'none' );
+                $( '.crm-attachments' ).css( 'display', 'none' );
             } );
         },
 

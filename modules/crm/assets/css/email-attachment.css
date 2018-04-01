@@ -1,7 +1,8 @@
 /*
     Email Attatchment
  */
-.crm-attatchments {
+.crm-attachments {
+    border-top: 2px solid #eee;
     display: none;
 }
 #progress-wrp {
@@ -29,12 +30,12 @@
     display:inline-block;
     color: #000000;
 }
-#email-attatchment {
+#email-attachment {
     opacity: 0;
     width: 0;
     cursor: pointer;
 }
-.attatchments-label{
+.attachments-label{
     padding: 5px 15px;
     vertical-align: baseline !important;
     border-radius: 5px;
