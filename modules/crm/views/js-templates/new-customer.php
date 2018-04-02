@@ -221,7 +221,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-3" data-selected="{{ data.state }}">
+                            <div class="col-3 state-field" data-selected="{{ data.state }}">
                                 <?php erp_html_form_input( array(
                                     'label'   => __( 'Province / State', 'erp' ),
                                     'name'    => 'contact[main][state]',
@@ -249,30 +249,33 @@
                         </div>
                         </fieldset>
 
+                    <?php if ( erp_crm_get_contact_group_dropdown() ) : ?>
                         <fieldset class="contact-group">
-                        <legend><?php _e( 'Contact Group', 'erp' ) ?></legend>
+                            <legend><?php _e( 'Contact Group', 'erp' ) ?></legend>
 
-                        <div class="row">
-                            <div class="col-6" id="erp-crm-contact-subscriber-group-checkbox" data-selected = "{{ data.group_id }}">
-                                <?php erp_html_form_input( array(
-                                    'label'       => __( 'Assign Group', 'erp' ),
-                                    'name'        => 'group_id[]',
-                                    'type'        => 'multicheckbox',
-                                    'id'          => 'erp-crm-contact-group-id',
-                                    'class'       => 'erp-crm-contact-group-class',
-                                    'options'     => erp_crm_get_contact_group_dropdown()
-                                ) ); ?>
+                            <div class="row">
+                                <div class="col-6" id="erp-crm-contact-subscriber-group-checkbox" data-selected = "{{ data.group_id }}">
+                                    <?php erp_html_form_input( array(
+                                        'label'       => __( 'Assign Group', 'erp' ),
+                                        'name'        => 'group_id[]',
+                                        'type'        => 'multicheckbox',
+                                        'id'          => 'erp-crm-contact-group-id',
+                                        'class'       => 'erp-crm-contact-group-class',
+                                        'options'     => erp_crm_get_contact_group_dropdown()
+                                    ) ); ?>
+                                </div>
+
+                                <# if ( _.contains( data.types, 'company' ) ) { #>
+                                    <?php do_action( 'erp_crm_company_form_contact_group' ); ?>
+                                <# } else { #>
+                                    <?php do_action( 'erp_crm_contact_form_contact_group' ); ?>
+                                <# } #>
+
                             </div>
 
-                            <# if ( _.contains( data.types, 'company' ) ) { #>
-                                <?php do_action( 'erp_crm_company_form_contact_group' ); ?>
-                            <# } else { #>
-                                <?php do_action( 'erp_crm_contact_form_contact_group' ); ?>
-                            <# } #>
-
-                        </div>
-
                         </fieldset>
+
+                        <?php endif; ?>
 
                         <fieldset class="additional-info">
                         <legend><?php _e( 'Additional Info', 'erp' ) ?></legend>

@@ -204,7 +204,7 @@
         </select>
     </li>
 
-    <li class="erp-form-field row-state" data-selected="<?php echo isset( $item->state ) ? $item->state : ''; ?>">
+    <li class="erp-form-field row-state state-field" data-selected="<?php echo isset( $item->state ) ? $item->state : ''; ?>">
         <?php erp_html_form_input( array(
             'label'   => __( 'Province / State', 'erp' ),
             'name'    => 'state',

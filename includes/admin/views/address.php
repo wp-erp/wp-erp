@@ -41,7 +41,7 @@
         </select>
     </li>
 
-    <li class="row" data-selected="{{ data.state }}">
+    <li class="row state-field" data-selected="{{ data.state }}">
         <?php erp_html_form_input( array(
             'label'   => __( 'Province / State', 'erp' ),
             'name'    => 'state',

@@ -376,7 +376,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-3 state-field" data-selected="{{ data.personal.state }}">
+                            <div class="col-3 state-field" data-selected="{{ data.personal.state }}" style="clear:left">
                                 <?php erp_html_form_input( array(
                                     'label'   => __( 'Province / State', 'erp' ),
                                     'name'    => 'personal[state]',
