@@ -182,6 +182,8 @@
          */
         populateState: function () {
 
+            wpErpCrm.wpErpCountries = wpErpCountries;
+
             if (typeof wpErpCrm.wpErpCountries === 'undefined') {
                 return false;
             }
@@ -200,13 +202,13 @@
                 }
 
                 if ($.isArray(wpErpCrm.wpErpCountries[country])) {
-                    parent.find('select.erp-state-select').html(empty);
+                    $('.erp-state-select').html(empty);
                 } else {
-                    parent.find('select.erp-state-select').html(options);
+                    $('.erp-state-select').html(options);
                 }
 
             } else {
-                parent.find('select.erp-state-select').html(empty);
+                $('.erp-state-select').html(empty);
             }
         },
 
