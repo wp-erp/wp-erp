@@ -1,11 +1,10 @@
 <div class="wrap erp-ac-vendor-list-table-wrap">
     <?php if ( erp_ac_create_vendor() ) { ?>
         <h2><?php _e( 'Vendors', 'erp-accounting' ); ?> <a href="<?php echo admin_url( 'admin.php?page=erp-accounting-vendors&action=new' ); ?>" class="add-new-h2"><?php _e( 'Add New', 'erp-accounting' ); ?></a></h2>
-    <?php } ?>
+    <?php }
 
-
-    <?php
     if ( isset( $_GET['msg'] ) ) {
+
         switch ( $_GET['msg'] ) {
             case 'update':
                 erp_html_show_notice( __( 'Vendor info has been updated!', 'erp-accounting' ) );
@@ -13,6 +12,10 @@
 
             case 'new':
                 erp_html_show_notice( __( 'New vendor has been added!', 'erp-accounting' ) );
+                break;
+
+            case 'error':
+                erp_html_show_notice( __( 'Error: Vendor already exists', 'erp' ), 'error' );
                 break;
         }
     }

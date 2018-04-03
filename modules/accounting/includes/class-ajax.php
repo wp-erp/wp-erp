@@ -51,6 +51,7 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-ac-trns-void', 'transaction_void' );
         $this->action( 'wp_ajax_erp-ac-trns-redo', 'transaction_redo' );
         $this->action( 'wp_ajax_erp-search-ac-user', 'search_user' );
+        $this->action( 'wp_ajax_erp-check-vendor-existance', 'check_vendor_existance' );
     }
 
     /**
@@ -866,4 +867,25 @@ class Ajax_Handler {
 
         wp_send_json_success();
     }
+
+    /**
+     * Check vendor existance
+     *
+     * @since 1.3.9
+     *
+     * @return bool
+     */
+
+     public function check_vendor_existance() {
+        $vendor = sanitize_text_field( $_REQUEST['vendor'] );
+
+        if ( isset( $_REQUEST['field_id'] ) ) {
+            $people = \WeDevs\ERP\Framework\Models\People::where( 'company', $vendor )
+                        ->where( 'id', '!=', intval( $_REQUEST['field_id'] ) )->first();
+        } else {
+            $people = erp_get_people_by( 'company', $vendor );
+        }
+
+        $this->send_success( $people );
+     }
 }

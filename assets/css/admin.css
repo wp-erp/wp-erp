@@ -3620,3 +3620,9 @@ kbd {
 .crm_page_erp-sales-companies #erp-select-contact-company + span {
   display: none;
 }
+.input-error {
+  padding-left: 10px;
+  font-size: 12px;
+  color: #f44336;
+  display: none;
+}

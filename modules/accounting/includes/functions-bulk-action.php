@@ -114,6 +114,17 @@ function erp_ac_new_customer( $postdata ) {
         $page_url    = admin_url( 'admin.php?page=erp-accounting-customers' );
     } else {
         $page_url    = admin_url( 'admin.php?page=erp-accounting-vendors' );
+
+        if ( $field_id ) {
+            $people = \WeDevs\ERP\Framework\Models\People::where( 'company', $company )
+                        ->where( 'id', '!=', $field_id )->first();
+        } else {
+            $people = erp_get_people_by( 'company', $company );
+        }
+
+        if ( $people ) {
+            return new WP_Error( 'exists', __( 'Error: Vendor already exists', 'erp' ) );
+        }
     }
 
     // some basic validation
@@ -133,6 +144,7 @@ function erp_ac_new_customer( $postdata ) {
     if ( $errors ) {
         $first_error = reset( $errors );
         $redirect_to = add_query_arg( array( 'error' => $first_error ), $page_url );
+
         wp_safe_redirect( $redirect_to );
         exit;
     }
