@@ -86,6 +86,8 @@
             'class'       => 'regular-text',
             'value'       => isset( $item->company ) ? $item->company : '',
         ) ); ?>
+
+        <span class="input-error">Vendor name already exists.</span>
     </li>
     <li class="erp-form-field row-phone">
         <?php erp_html_form_input( array(
