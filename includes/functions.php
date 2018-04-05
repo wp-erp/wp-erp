@@ -2539,7 +2539,7 @@ function erp_get_dates_in_range($first, $last, $step = '+1 day', $output_format 
 /**
  * Sanitize a string destined to be a tooltip.
  * Tooltips are encoded with htmlspecialchars to prevent XSS. Should not be used in conjunction with esc_attr()
- * 
+ *
  * @param string $var
  * @return string
  * @since 1.3.4
