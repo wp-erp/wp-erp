@@ -1022,7 +1022,15 @@ class Ajax_Handler {
      */
     public function employee_update_performance() {
         // check permission for adding performance
-        if ( isset( $_POST['employee_id'] ) && $_POST['employee_id'] && ! current_user_can( 'erp_edit_employee', $_POST['employee_id'] ) ) {
+
+        $employee_id     = isset( $_POST['employee_id'] ) ? $_POST['employee_id'] : 0;
+        $department_lead_id = erp_hr_get_department_lead_by_user( $employee_id );
+
+        if (
+            ( $employee_id && ! current_user_can( 'erp_edit_employee', $employee_id ) )
+            &&
+            ( get_current_user_id() !== $department_lead_id )
+        ) {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
@@ -1055,9 +1063,15 @@ class Ajax_Handler {
     public function employee_delete_performance() {
         $this->verify_nonce( 'wp-erp-hr-nonce' );
 
-        $id = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+        $id      = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : 0;
+        $user_id = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
 
-        if ( ! current_user_can( 'erp_delete_review' ) ) {
+        $department_lead_id = erp_hr_get_department_lead_by_user( $user_id );
+
+        if ( ! current_user_can( 'erp_delete_review' )
+            &&
+            ( get_current_user_id() !== $department_lead_id )
+        ) {
             $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
         }
 
