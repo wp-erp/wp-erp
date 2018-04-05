@@ -164,6 +164,8 @@ class Customer_Relationship {
         wp_enqueue_script( 'erp-vuejs', false, [ 'jquery', 'erp-script' ], false, true );
         wp_enqueue_script( 'erp-vue-table', WPERP_CRM_ASSETS . "/js/vue-table$suffix.js", array( 'erp-vuejs', 'jquery' ), date( 'Ymd' ), true );
 
+        wp_enqueue_style( 'email-attachment', WPERP_CRM_ASSETS . "/css/email-attachment.css", array(), false );
+
         $localize_script = apply_filters( 'erp_crm_localize_script', array(
             'ajaxurl'               => admin_url( 'admin-ajax.php' ),
             'nonce'                 => wp_create_nonce( 'wp-erp-crm-nonce' ),
