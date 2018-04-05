@@ -119,10 +119,15 @@
                     ),
                 ), $employee );
 
+                $department_lead_id = erp_hr_get_department_lead_by_user( $employee->get_user_id() );
+
                 if ( ! current_user_can( 'erp_create_review' ) && isset( $tabs['permission'] ) && isset( $tabs['performance'] ) && isset( $tabs['notes'] ) ) {
                     unset( $tabs['permission'] );
-                    unset( $tabs['performance'] );
                     unset( $tabs['notes'] );
+
+                    if ( get_current_user_id() !== $department_lead_id ) {
+                        unset( $tabs['performance'] );
+                    }
                 }
 
                 if ( ! current_user_can( 'erp_edit_employee', $employee->get_user_id() ) ) {

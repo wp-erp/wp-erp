@@ -219,4 +219,20 @@ function erp_hr_get_departments_dropdown( $selected = '' ) {
     return $dropdown;
 }
 
+/**
+ * Get employee's department lead by employee's user ID
+ *
+ * @param $user_id
+ *
+ * @return int
+ */
+function erp_hr_get_department_lead_by_user( $user_id ) {
+    $employee = new \WeDevs\ERP\HRM\Employee( $user_id );
 
+    if ( $employee->get_department() ) {
+        $department = new \WeDevs\ERP\HRM\Department( intval( $employee->get_department() ) );
+        $department_lead = $department->get_lead();
+    }
+
+    return empty( $department_lead ) ? 0 : $department_lead->id;
+}
