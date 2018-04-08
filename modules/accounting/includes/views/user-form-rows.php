@@ -201,7 +201,12 @@
             <?php
                 $country = \WeDevs\ERP\Countries::instance();
                 $selected_country = isset( $item->country ) ? $item->country : '';
-                echo $country->country_dropdown( $selected_country );
+
+                if ( isset( $_GET['action'] ) && $_GET['action'] === 'edit' ) {
+                    echo $country->country_dropdown( $selected_country );
+                } else {
+                    echo $country->country_dropdown( erp_get_country() );
+                }
             ?>
         </select>
     </li>
