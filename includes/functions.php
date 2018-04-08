@@ -483,6 +483,17 @@ function erp_get_currency_symbol( $currency = '' ) {
 }
 
 /**
+ * Get default country
+ *
+ * @since 1.4.0
+ *
+ * @return string
+ */
+function erp_get_country() {
+    return erp_get_option( 'erp_country', 'erp_settings_general', -1 );
+}
+
+/**
  * Embed a JS template page with its ID
  *
  * @param  string  the file path of the file

@@ -19,6 +19,8 @@ class ERP_Settings_General extends ERP_Settings_Page {
      */
     public function get_settings() {
 
+        $country = \WeDevs\ERP\Countries::instance();
+
         $fields = array(
 
             array( 'title' => __( 'General Options', 'erp' ), 'type' => 'title', 'desc' => '', 'id' => 'general_options' ),
@@ -64,6 +66,15 @@ class ERP_Settings_General extends ERP_Settings_Page {
                 'options' => erp_get_currency_list_with_symbol(),
                 'default' => 'USD'
             ),
+
+            array(
+                'title'   => __( 'Default Country (HRM, CRM, AC)', 'erp' ),
+                'id'      => 'erp_country',
+                'type'    => 'select',
+                'class'   => 'erp-select2',
+                'options' => $country->get_countries( -1 )
+            ),
+
             array(
                 'title'   => __( 'Role Based Login Redirection', 'erp' ),
                 'id'      => 'role_based_login_redirection',
