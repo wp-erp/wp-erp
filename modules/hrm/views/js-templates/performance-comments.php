@@ -12,7 +12,9 @@
     </div>
 
     <div class="row">
-        <?php erp_html_form_input( array(
+        <?php
+
+        erp_html_form_input( array(
             'label'   => __( 'Reviewer', 'erp' ),
             'name'    => 'reviewer',
             'value'   => '',
@@ -38,3 +40,14 @@
     <input type="hidden" name="action" id="performance-comments-action" value="erp-hr-emp-update-performance-comments">
     <input type="hidden" name="employee_id" id="emp-id" value="{{ data.id }}">
 </div>
+
+<?php
+$department_lead_id = erp_hr_get_department_lead_by_user( $employee_id );
+
+if ( get_current_user_id() === $department_lead_id ) { ?>
+    <script>
+        $( '#performance_reviewer' )
+            .val( <?php echo get_current_user_id() ?> )
+            .trigger('change');
+    </script>
+<?php } ?>

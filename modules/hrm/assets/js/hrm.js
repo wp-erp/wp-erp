@@ -1311,6 +1311,7 @@
                         data: {
                             action: 'erp-hr-emp-delete-performance',
                             id: $(this).data('id'),
+                            user_id: $(this).data('userid'),
                             _wpnonce: wpErpHr.nonce
                         },
                         success: function() {

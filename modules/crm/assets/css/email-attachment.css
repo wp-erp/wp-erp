@@ -1,0 +1,43 @@
+/*
+    Email Attatchment
+ */
+.crm-attachments {
+    border-top: 2px solid #eee;
+    display: none;
+}
+#progress-wrp {
+    border: 1px solid #0099CC;
+    padding: 1px;
+    position: relative;
+    border-radius: 3px;
+    margin: 10px 0;
+    text-align: left;
+    background: #fff;
+    box-shadow: inset 1px 3px 6px rgba(0, 0, 0, 0.12);
+}
+#progress-wrp .progress-bar {
+    height: 20px;
+    border-radius: 3px;
+    background-color: #008EC2;
+    width: 0;
+    box-shadow: inset 1px 1px 10px rgba(0, 0, 0, 0.11);
+    transition: width 1s;
+}
+#progress-wrp .status {
+    top:3px;
+    left:50%;
+    position:absolute;
+    display:inline-block;
+    color: #000000;
+}
+#email-attachment {
+    opacity: 0;
+    width: 0;
+    cursor: pointer;
+}
+.attachments-label{
+    padding: 5px 15px;
+    vertical-align: baseline !important;
+    border-radius: 5px;
+    cursor: pointer !important;
+}

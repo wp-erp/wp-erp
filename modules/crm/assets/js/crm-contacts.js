@@ -1377,7 +1377,7 @@
                                     //    }
                                     //});
 
-                                    $( 'li[data-selected]', modal ).each(function() {
+                                    $( 'div[data-selected]', modal ).each(function() {
                                         var self = $(this),
                                             selected = self.data('selected');
 
@@ -1655,7 +1655,7 @@
                                             $( '.erp-select2' ).select2();
                                             $( 'select.erp-country-select').change();
 
-                                            $( 'li[data-selected]', modal ).each(function() {
+                                            $( 'div[data-selected]', modal ).each(function() {
                                                 var self = $(this),
                                                     selected = self.data('selected');
 
@@ -2172,7 +2172,7 @@
                                     $('select#erp-customer-type').trigger('change');
                                     $( 'select.erp-country-select').change();
 
-                                    $( 'li[data-selected]', modal ).each(function() {
+                                    $( 'div[data-selected]', modal ).each(function() {
                                         var self = $(this),
                                             selected = self.data('selected');
 

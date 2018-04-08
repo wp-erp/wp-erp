@@ -154,7 +154,7 @@ function erp_crm_growth_report_filter_form($start = true, $end = true, $type = f
             'name'        => 'start',
             'type'        => 'text',
             'class'       => 'erp-date-picker-from custom-filter',
-            'placeholder' => __( 'Form', 'erp' ),
+            'placeholder' => __( 'From', 'erp' ),
             'value'       => isset( $_POST['start'] ) ? $_POST['start'] : ''
         ) );
     }

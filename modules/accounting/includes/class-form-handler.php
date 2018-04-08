@@ -336,6 +336,10 @@ class Form_Handler {
         $insert_id = erp_ac_new_customer( $_POST );
         $message   = __( 'new', 'erp' );
 
+        if ( $_POST['field_id'] ) {
+            $message = __( 'update', 'erp' );
+        }
+
         if ( $_POST['type'] == 'customer' ) {
             $page_url = admin_url( 'admin.php?page=erp-accounting-customers' );
         } else {
