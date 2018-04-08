@@ -33,6 +33,7 @@
 
             // When create modal open
             $('body').on( 'click', '#erp-customer-new', this.whenOpenCRMModal );
+            $('body').on( 'click', '#erp-company-new', this.whenOpenCRMModal );
             $('body').on( 'click', '#erp-customer-edit', this.whenOpenCRMModal );
             $('body').on( 'click', '#erp-crm-new-contact', this.whenOpenCRMModal );
 
@@ -176,8 +177,8 @@
          * @return {void}
          */
         whenOpenCRMModal: function(e) {
-            $( '#advanced_fields' ).click( function() {
-                if ( $( this ).is(' :checked ')) {
+            $( '#advanced_fields' ).click( function( evt ) {
+                if ( $( this ).is(' :checked ') ) {
                     $( '.others-info' ).show();
                     $( '.contact-group' ).show();
                     $( '.additional-info' ).show();
