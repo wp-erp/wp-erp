@@ -3,7 +3,7 @@ Contributors: tareq1988, wedevs, ediamin, sabbir1991, asaquzzaman, manikmist09, 
 Donate Link: https://tareq.co/donate
 Tags: ERP, CRM, HRM, Accounting, Project Management, business manager, small business, SME, contact, contacts, Customer Relationship Management, employee, leave management, hr, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 4.9.4
+Tested up to: 4.9.5
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2
@@ -242,6 +242,14 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+= v1.3.9 -> Apr 08 2018 =
+[new] Department head review employees. Closes #334
+[new] CRM email attatchments. Closes #642
+[fix] Unable to select state. Closes #643
+[fix] Prevent duplicate vendor creation. Closes #644
+[fix] Employee profile edit permission. Closes #646
+[fix] CRM tag is not saving without clicking on "Add". Closes #647
+
 = v1.3.8 -> Mar 29 2018 =
 [new] Filter contact by company added in CRM. Closes #464
 [fix] CRM growth report graph not showing properly. Closes #640
