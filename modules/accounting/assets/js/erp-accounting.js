@@ -12,6 +12,8 @@
             this.initSearchCustomerVendor();
             $('.erp-color-picker').wpColorPicker();
 
+            this.initVendorCheck();
+
             // journal entry
             $( 'table.erp-ac-transaction-table.journal-table' ).on( 'click', '.remove-line', this.journal.onChange );
             $( 'table.erp-ac-transaction-table.journal-table' ).on( 'change', 'input.line_debit, input.line_credit', this.journal.onChange );
@@ -130,6 +132,29 @@
                     cache: true
                 }
             });
+        },
+
+        initVendorCheck: function() {
+            $( 'body' ).on( 'focusout', '#company', function ( e ) {
+
+                $.ajax({
+                    url: ajaxurl,
+                    data: {
+                        action: 'erp-check-vendor-existance',
+                        field_id: $( 'input[name="field_id"]' ).val(),
+                        vendor: $( this ).val()
+                    },
+                    success: function ( res ) {
+                        if ( res.data ) {
+                            $( '.input-error' ).show();
+                        } else {
+                            $( '.input-error' ).hide();
+                        }
+                    }
+                });
+
+            } );
+
         },
 
         transaction: {

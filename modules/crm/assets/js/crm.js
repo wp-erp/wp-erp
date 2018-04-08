@@ -58,9 +58,24 @@
 
             $( 'body').on( 'change', '#crm-filter-duration', this.report.customFilter );
 
+            // CRM tag
+            this.initTagAddByEnterPressed();
+
             // Erp ToolTips using tiptip
             this.initContactListAjax();
             this.initTipTips();
+        },
+
+        initTagAddByEnterPressed: function() {
+            var enter_key = 13;
+
+            $( '.newtag' ).on( 'keyup', function(e) {
+                var code = e.keyCode || e.which;
+
+                if ( code == enter_key ) {
+                    $( '#add-crm-tag' ).trigger('click');
+                }
+            } );
         },
 
         initTipTips: function () {
@@ -182,6 +197,8 @@
          */
         populateState: function () {
 
+            wpErpCrm.wpErpCountries = wpErpCountries;
+
             if (typeof wpErpCrm.wpErpCountries === 'undefined') {
                 return false;
             }
@@ -200,13 +217,13 @@
                 }
 
                 if ($.isArray(wpErpCrm.wpErpCountries[country])) {
-                    parent.find('select.erp-state-select').html(empty);
+                    $('.erp-state-select').html(empty);
                 } else {
-                    parent.find('select.erp-state-select').html(options);
+                    $('.erp-state-select').html(options);
                 }
 
             } else {
-                parent.find('select.erp-state-select').html(empty);
+                $('.erp-state-select').html(empty);
             }
         },
 

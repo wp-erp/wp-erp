@@ -63,18 +63,17 @@
                                 ) ); ?>
                             </div>
 
+                            <?php if ( current_user_can( 'erp_edit_employee' ) ): ?>
                             <div class="col-3">
-                                <?php if ( current_user_can( 'erp_edit_employee' ) ): ?>
-                                    <?php erp_html_form_input( array(
-                                        'label' => __( 'Employee ID', 'erp' ),
-                                        'name'  => 'personal[employee_id]',
-                                        'value' => '{{ data.employee_id }}'
-                                    ) ); ?>
-
-                                <?php else: ?>
-                                    <input type="hidden" name="personal[employee_id]" value="{{ data.employee_id }}">
-                                <?php endif; ?>
+                                <?php erp_html_form_input( array(
+                                    'label' => __( 'Employee ID', 'erp' ),
+                                    'name'  => 'personal[employee_id]',
+                                    'value' => '{{ data.employee_id }}'
+                                ) ); ?>
                             </div>
+                            <?php else: ?>
+                                <input type="hidden" name="personal[employee_id]" value="{{ data.employee_id }}">
+                            <?php endif; ?>
 
                             <div class="col-3">
                                 <?php erp_html_form_input( array(
@@ -87,6 +86,7 @@
                                 ) ); ?>
                             </div>
 
+                            <?php if ( current_user_can( 'erp_edit_employee' ) ): ?>
                             <div class="col-3" data-selected="{{ data.work.type }}">
                                 <?php
                                 erp_html_form_input( array(
@@ -127,6 +127,7 @@
                                     ) );
                                 ?>
                             </div>
+                            <?php endif; ?>
 
                         </div>
                         <?php do_action( 'erp-hr-employee-form-basic' ); ?>
@@ -376,7 +377,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-3 state-field" data-selected="{{ data.personal.state }}">
+                            <div class="col-3 state-field" data-selected="{{ data.personal.state }}" style="clear:left">
                                 <?php erp_html_form_input( array(
                                     'label'   => __( 'Province / State', 'erp' ),
                                     'name'    => 'personal[state]',

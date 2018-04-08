@@ -86,6 +86,8 @@
             'class'       => 'regular-text',
             'value'       => isset( $item->company ) ? $item->company : '',
         ) ); ?>
+
+        <span class="input-error">Vendor name already exists.</span>
     </li>
     <li class="erp-form-field row-phone">
         <?php erp_html_form_input( array(
@@ -204,7 +206,7 @@
         </select>
     </li>
 
-    <li class="erp-form-field row-state" data-selected="<?php echo isset( $item->state ) ? $item->state : ''; ?>">
+    <li class="erp-form-field row-state state-field" data-selected="<?php echo isset( $item->state ) ? $item->state : ''; ?>">
         <?php erp_html_form_input( array(
             'label'   => __( 'Province / State', 'erp' ),
             'name'    => 'state',

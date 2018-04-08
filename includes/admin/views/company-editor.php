@@ -82,7 +82,7 @@
 
                             <tr>
                                 <td><label for="state"><?php _e( 'Province / State', 'erp' ); ?></label></td>
-                                <td>
+                                <td class="state-field">
                                     <select name="address[state]" id="erp-state" class="erp-state-select">
                                         <?php
                                         if ( $company->address['country'] ) {
