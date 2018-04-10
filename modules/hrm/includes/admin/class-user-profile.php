@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\ERP\HRM\Admin;
 
 /**
@@ -33,12 +34,18 @@ class User_Profile {
         // User profile edit/display actions
         add_action( 'erp_user_profile_role', array( $this, 'role' ) );
         add_action( 'erp_update_user', array( $this, 'update_user' ), 10, 2 );
+
+        //notification disable checkbox
+        add_action( 'edit_user_profile', [ $this, 'profile_settings' ] );
+        add_action( 'show_user_profile', [ $this, 'profile_settings' ] );
+
+        add_action( 'erp_update_user', [ $this, 'update_profile_settings' ], 10, 2 );
     }
 
     function update_user( $user_id, $post ) {
 
         // HR role we want the user to have
-        $new_hr_manager_role    = isset( $post['hr_manager'] ) ? sanitize_text_field( $post['hr_manager'] ) : false;
+        $new_hr_manager_role = isset( $post['hr_manager'] ) ? sanitize_text_field( $post['hr_manager'] ) : false;
 
         if ( ! $new_hr_manager_role ) {
             return;
@@ -67,10 +74,39 @@ class User_Profile {
         $checked = in_array( erp_hr_get_manager_role(), $profileuser->roles ) ? 'checked' : '';
         ?>
         <label for="erp-hr-manager">
-            <input type="checkbox" id="erp-hr-manager" <?php echo $checked; ?> name="hr_manager" value="<?php echo erp_hr_get_manager_role(); ?>">
+            <input type="checkbox" id="erp-hr-manager" <?php echo $checked; ?> name="hr_manager"
+                   value="<?php echo erp_hr_get_manager_role(); ?>">
             <span class="description"><?php _e( 'HR Manager', 'erp' ); ?></span>
         </label>
         <?php
+    }
+
+    function profile_settings( $profileuser ) {
+        $notification = get_user_meta( $profileuser->ID, 'erp_hr_disable_notification', true );
+        $checked      = ! empty( $notification ) ? 'checked' : '';
+        ?>
+        <h3><?php _e( 'ERP Profile Settings', 'erp' ); ?></h3>
+        <table class="form-table">
+            <tbody>
+            <tr>
+                <th><label for="erp-hr-disable-notification"><?php esc_html_e( 'Notification', 'erp' ); ?></label></th>
+                <td>
+                    <input type="checkbox" id="erp-hr-disable-notification" <?php echo $checked; ?>
+                           name="erp_hr_disable_notification">
+                    <span class="description"><?php _e( 'Disable WP ERP email notifications', 'erp' ); ?></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <?php
+    }
+
+    function update_profile_settings( $user_id, $posted ) {
+
+        if ( current_user_can( 'edit_user', $user_id ) ) {
+            $erp_hr_disable_notification = isset($posted['erp_hr_disable_notification'])? $posted['erp_hr_disable_notification'] : '';
+            update_user_meta( $user_id, 'erp_hr_disable_notification', $erp_hr_disable_notification );
+        }
     }
 
 }

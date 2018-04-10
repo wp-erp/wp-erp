@@ -242,3 +242,54 @@ function erp_hr_filter_collection_by_date( $collection, $date,  $field = 'create
 
     return $collection;
 }
+
+/**
+ * get the list of email who disabled notification from wperp
+ *
+ * @since 1.3.10
+ *
+ * @return array
+ *
+ */
+function erp_hr_get_disabled_notification_users() {
+    $user_emails = wp_cache_get( 'erp_hr_get_disabled_notification_users', 'erp' );
+    if ( false == $user_emails ) {
+        $user_query  = new WP_User_Query( [
+            'fields'     => [ 'user_email' ],
+            'meta_key'   => 'erp_hr_disable_notification',
+            'meta_value' => 'on'
+        ] );
+        $user_emails = [];
+        if ( $user_query->get_total() ) {
+            $user_emails = wp_list_pluck( $user_query->get_results(), 'user_email' );
+        }
+
+        wp_cache_add( 'erp_hr_get_disabled_notification_users', $user_emails, 'erp' );
+    }
+
+    return $user_emails;
+}
+/**
+ * exclude recipients per profile settings
+ *
+ * @since 1.3.10
+ *
+ * @param $recipients
+ *
+ * @return mixed
+ *
+ */
+function erp_hr_exclude_recipients( $recipients ) {
+    $disabled_notification_user = erp_hr_get_disabled_notification_users();
+    if ( ! empty( $disabled_notification_user ) ) {
+        if ( is_string( $recipients ) ) {
+            $recipients = explode( ',', $recipients );
+        }
+        $recipients = array_map( 'trim', $recipients );
+        $recipients = array_map( 'strtolower', $recipients );
+        $disabled_notification_user = array_map( 'strtolower', $disabled_notification_user );
+        $recipients = array_diff($recipients, $disabled_notification_user);
+    }
+
+    return $recipients;
+}
