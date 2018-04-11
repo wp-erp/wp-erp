@@ -107,7 +107,6 @@ class Employee {
         $this->user_id         = 0;
         $this->wp_user         = new \WP_User();
         $this->erp_user        = new $this->erp_user_model;
-        $this->restricted_data = $this->get_restricted_employee_data();
         if ( $employee != null ) {
             $this->load_employee( $employee );
         }
@@ -137,6 +136,8 @@ class Employee {
      * @return string
      */
     public function __get( $key ) {
+        $this->restricted_data = $this->get_restricted_employee_data();
+
         if ( in_array( $key, $this->restricted_data ) ) {
             return null;
         }
