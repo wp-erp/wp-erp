@@ -107,6 +107,8 @@ class Employee {
         $this->user_id         = 0;
         $this->wp_user         = new \WP_User();
         $this->erp_user        = new $this->erp_user_model;
+        $this->restricted_data = [];
+
         if ( $employee != null ) {
             $this->load_employee( $employee );
         }
@@ -136,8 +138,6 @@ class Employee {
      * @return string
      */
     public function __get( $key ) {
-        $this->restricted_data = $this->get_restricted_employee_data();
-
         if ( in_array( $key, $this->restricted_data ) ) {
             return null;
         }
@@ -163,7 +163,6 @@ class Employee {
      * @return mixed|void
      */
     protected function load_employee( $employee ) {
-
         if ( is_numeric( $employee ) ) {
 
             $user = get_user_by( 'id', $employee );
@@ -188,6 +187,8 @@ class Employee {
         }
 
         if ( $this->user_id ) {
+            $this->restricted_data = $this->get_restricted_employee_data();
+
             $employee_model = $this->erp_user_model;
             $erp_user       = $employee_model::withTrashed()->where( 'user_id', $this->user_id )->first();
             if ( $erp_user ) {
