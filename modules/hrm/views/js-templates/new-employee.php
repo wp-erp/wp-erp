@@ -373,7 +373,7 @@
                                 <select name="personal[country]" id="erp-popup-country"
                                         class="erp-country-select select2" data-parent="ol">
                                     <?php $country = \WeDevs\ERP\Countries::instance(); ?>
-                                    <?php echo $country->country_dropdown(); ?>
+                                    <?php echo $country->country_dropdown( erp_get_country() ); ?>
                                 </select>
                             </div>
 
