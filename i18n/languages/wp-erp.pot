@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.3.9\n"
+"Project-Id-Version: WP ERP 1.3.10\n"
 "Report-Msgid-Bugs-To: http://wperp.com/support/\n"
-"POT-Creation-Date: 2018-04-08 02:38:26+00:00\n"
+"POT-Creation-Date: 2018-04-25 08:19:42+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4836,7 +4836,7 @@ msgid "Created At"
 msgstr ""
 
 #: includes/admin/class-form-handler.php:25
-#: includes/framework/views/status-report.php:133 includes/functions.php:1287
+#: includes/framework/views/status-report.php:133 includes/functions.php:1298
 msgid "ERP Settings"
 msgstr ""
 
@@ -5013,43 +5013,43 @@ msgid "This name will be shown as your company name."
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:238
-#: includes/framework/settings/general.php:36
+#: includes/framework/settings/general.php:38
 msgid "Financial Year Starts"
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:246
-#: includes/framework/settings/general.php:40
+#: includes/framework/settings/general.php:42
 #: includes/framework/views/status-report.php:155
 msgid "Financial and tax calculation starts from this month of every year."
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:251
-#: includes/framework/settings/general.php:27
+#: includes/framework/settings/general.php:29
 #: includes/framework/views/status-report.php:149
 msgid "Company Start Date"
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:257
-#: includes/framework/settings/general.php:30
+#: includes/framework/settings/general.php:32
 #: includes/framework/views/status-report.php:150
 msgid "The date the company officially started."
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:264
-#: includes/framework/settings/general.php:60
+#: includes/framework/settings/general.php:62
 #: includes/framework/views/status-report.php:179
 msgid "Currency"
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:271
 #: includes/admin/class-setup-wizard.php:289
-#: includes/framework/settings/general.php:47
+#: includes/framework/settings/general.php:49
 #: includes/framework/views/status-report.php:165
 msgid "Format of date to show accross the system."
 msgstr ""
 
 #: includes/admin/class-setup-wizard.php:276
-#: includes/framework/settings/general.php:45
+#: includes/framework/settings/general.php:47
 #: includes/framework/views/status-report.php:164
 msgid "Date Format"
 msgstr ""
@@ -5063,32 +5063,32 @@ msgstr ""
 msgid "Share Essentials"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:402
+#: includes/admin/class-setup-wizard.php:403
 #: includes/framework/views/status-report.php:138
 msgid "Active Modules"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:462
+#: includes/admin/class-setup-wizard.php:463
 msgid "Departments Setup"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:467
+#: includes/admin/class-setup-wizard.php:468
 msgid ""
 "Create some departments for your company. e.g. HR, Engineering, Marketing, "
 "Support, etc. "
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:468
+#: includes/admin/class-setup-wizard.php:469
 msgid "Leave empty for not to create any departments."
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:474
-#: includes/admin/class-setup-wizard.php:477
+#: includes/admin/class-setup-wizard.php:475
+#: includes/admin/class-setup-wizard.php:478
 msgid "Department name"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:479
-#: includes/admin/class-setup-wizard.php:546
+#: includes/admin/class-setup-wizard.php:480
+#: includes/admin/class-setup-wizard.php:547
 #: modules/accounting/includes/views/chart-of-accounts.php:5
 #: modules/accounting/includes/views/customer/edit.php:4
 #: modules/accounting/includes/views/customer/list.php:3
@@ -5103,112 +5103,112 @@ msgstr ""
 msgid "Add New"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:529
+#: includes/admin/class-setup-wizard.php:530
 msgid "Designation Setup"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:534
+#: includes/admin/class-setup-wizard.php:535
 msgid ""
 "Create some designations for your company. e.g. Manager, Senior Developer, "
 "Marketing Manager, Support Executive, etc. "
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:535
+#: includes/admin/class-setup-wizard.php:536
 msgid "Leave empty for not to create any designations."
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:541
-#: includes/admin/class-setup-wizard.php:544
+#: includes/admin/class-setup-wizard.php:542
+#: includes/admin/class-setup-wizard.php:545
 msgid "Designation name"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:580
+#: includes/admin/class-setup-wizard.php:581
 #: modules/hrm/includes/class-settings.php:43
 msgid "Full Day"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:581
+#: includes/admin/class-setup-wizard.php:582
 #: modules/hrm/includes/class-settings.php:44
 msgid "Half Day"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:582
+#: includes/admin/class-setup-wizard.php:583
 #: modules/hrm/includes/class-settings.php:45
 msgid "Non-working Day"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:585
+#: includes/admin/class-setup-wizard.php:586
 #: modules/hrm/includes/class-settings.php:49
 msgid "Monday"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:586
+#: includes/admin/class-setup-wizard.php:587
 #: modules/hrm/includes/class-settings.php:50
 msgid "Tuesday"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:587
+#: includes/admin/class-setup-wizard.php:588
 #: modules/hrm/includes/class-settings.php:51
 msgid "Wednesday"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:588
+#: includes/admin/class-setup-wizard.php:589
 #: modules/hrm/includes/class-settings.php:52
 msgid "Thursday"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:589
+#: includes/admin/class-setup-wizard.php:590
 #: modules/hrm/includes/class-settings.php:53
 msgid "Friday"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:590
+#: includes/admin/class-setup-wizard.php:591
 #: modules/hrm/includes/class-settings.php:54
 msgid "Saturday"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:591
+#: includes/admin/class-setup-wizard.php:592
 #: modules/hrm/includes/class-settings.php:55
 msgid "Sunday"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:594
+#: includes/admin/class-setup-wizard.php:595
 msgid "Workdays Setup"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:650
+#: includes/admin/class-setup-wizard.php:651
 msgid "Newsletter Setup"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:661
+#: includes/admin/class-setup-wizard.php:662
 msgid "Your Name"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:668
+#: includes/admin/class-setup-wizard.php:669
 msgid "This name will be used for newsletter name."
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:675
+#: includes/admin/class-setup-wizard.php:676
 msgid "Your Email"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:682
+#: includes/admin/class-setup-wizard.php:683
 msgid "Email to get update critical updates."
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:710
+#: includes/admin/class-setup-wizard.php:711
 msgid "Your Site is Ready!"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:714
+#: includes/admin/class-setup-wizard.php:715
 msgid "Next Steps &rarr;"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:721
+#: includes/admin/class-setup-wizard.php:722
 msgid "Add your employees!"
 msgstr ""
 
-#: includes/admin/class-setup-wizard.php:726
+#: includes/admin/class-setup-wizard.php:727
 msgid "Go to Dashboard!"
 msgstr ""
 
@@ -5267,7 +5267,7 @@ msgstr ""
 
 #: includes/admin/views/address.php:46
 #: includes/admin/views/company-editor.php:84
-#: modules/accounting/includes/views/user-form-rows.php:211
+#: modules/accounting/includes/views/user-form-rows.php:216
 #: modules/crm/views/js-templates/new-customer.php:226
 #: modules/hrm/views/js-templates/new-employee.php:382
 msgid "Province / State"
@@ -5277,7 +5277,7 @@ msgstr ""
 #: includes/admin/views/company-editor.php:93 includes/class-countries.php:58
 #: includes/class-countries.php:150
 #: modules/accounting/includes/views/common/transaction-table-tr-render.php:101
-#: modules/accounting/includes/views/user-form-rows.php:216
+#: modules/accounting/includes/views/user-form-rows.php:221
 #: modules/crm/views/js-templates/new-customer.php:231
 #: modules/hrm/includes/class-ajax.php:1519
 #: modules/hrm/views/employee/tab-job.php:19
@@ -6210,7 +6210,7 @@ msgstr ""
 msgid "Any State"
 msgstr ""
 
-#: includes/class-email.php:449
+#: includes/class-email.php:454
 #: modules/accounting/includes/views/js-templates/send-invoice.php:18
 #: modules/crm/includes/admin/class-settings.php:295
 #: modules/crm/includes/functions-localize.php:20
@@ -6223,19 +6223,19 @@ msgstr ""
 msgid "Subject"
 msgstr ""
 
-#: includes/class-email.php:452
+#: includes/class-email.php:457
 #: modules/hrm/includes/emails/class-email-new-leave-request.php:131
 msgid ""
 "This controls the email subject line. Leave blank to use the default "
 "subject: <code>%s</code>."
 msgstr ""
 
-#: includes/class-email.php:458
+#: includes/class-email.php:463
 #: modules/hrm/includes/emails/class-email-new-leave-request.php:137
 msgid "Email Heading"
 msgstr ""
 
-#: includes/class-email.php:461 includes/class-email.php:470
+#: includes/class-email.php:466 includes/class-email.php:475
 #: modules/hrm/includes/emails/class-email-new-leave-request.php:140
 #: modules/hrm/includes/emails/class-email-new-leave-request.php:149
 msgid ""
@@ -6243,17 +6243,17 @@ msgid ""
 "Leave blank to use the default heading: <code>%s</code>."
 msgstr ""
 
-#: includes/class-email.php:467
+#: includes/class-email.php:472
 #: modules/hrm/includes/emails/class-email-new-leave-request.php:146
 msgid "Email Body"
 msgstr ""
 
-#: includes/class-email.php:493
+#: includes/class-email.php:498
 #: modules/hrm/includes/emails/class-email-new-leave-request.php:172
 msgid "Template Tags"
 msgstr ""
 
-#: includes/class-email.php:495
+#: includes/class-email.php:500
 #: modules/hrm/includes/emails/class-email-new-leave-request.php:174
 msgid ""
 "You may use these template tags inside subject, heading, body and those "
@@ -6353,8 +6353,28 @@ msgstr ""
 msgid "Enter valid license key for automatic updates."
 msgstr ""
 
-#: includes/class-people.php:173
+#: includes/class-people.php:172
 msgid "Unauthorized people property"
+msgstr ""
+
+#: includes/class-promotion.php:39
+msgid ""
+"<p><strong class=\"highlight-text\" style=\"font-size: 18px\">It's Our "
+"Birthday <span class=\"erp-cake\" style=\"font-size: 20px\"> "
+"&#x1F382;</span>\n"
+"                                        But You Get The Present <span "
+"class=\"erp-gift\" style=\"font-size: 20px\"> &#x1F381;</span> "
+"</strong><br>\n"
+"                                        Get 33&#37; Discount with coupon:\n"
+"                                        <a target=\"_blank\" "
+"href=\"%1$s\"><strong> Birthday2018 </strong></a>\n"
+"                                        <br>\n"
+"                                        Offer ending soon!\n"
+"                                    </p>"
+msgstr ""
+
+#: includes/class-promotion.php:63
+msgid "Get the Offer"
 msgstr ""
 
 #: includes/class-scripts.php:155
@@ -6700,39 +6720,43 @@ msgstr ""
 msgid "IMAP: 993<br> POP3: 995"
 msgstr ""
 
-#: includes/framework/settings/general.php:24
+#: includes/framework/settings/general.php:26
 msgid "General Options"
 msgstr ""
 
-#: includes/framework/settings/general.php:68
+#: includes/framework/settings/general.php:71
+msgid "Default Country (HRM, CRM, AC)"
+msgstr ""
+
+#: includes/framework/settings/general.php:79
 msgid "Role Based Login Redirection"
 msgstr ""
 
-#: includes/framework/settings/general.php:71
-#: includes/framework/settings/general.php:80
+#: includes/framework/settings/general.php:82
+#: includes/framework/settings/general.php:91
 #: modules/accounting/includes/class-settings.php:105
 #: modules/crm/includes/admin/class-settings.php:60
 msgid "On"
 msgstr ""
 
-#: includes/framework/settings/general.php:71
-#: includes/framework/settings/general.php:80
+#: includes/framework/settings/general.php:82
+#: includes/framework/settings/general.php:91
 #: modules/accounting/includes/class-settings.php:105
 #: modules/crm/includes/admin/class-settings.php:60
 msgid "Off"
 msgstr ""
 
-#: includes/framework/settings/general.php:72
+#: includes/framework/settings/general.php:83
 msgid ""
 "User will be redirected to the related page regrading their role after "
 "login."
 msgstr ""
 
-#: includes/framework/settings/general.php:77
+#: includes/framework/settings/general.php:88
 msgid "Enable Debug Mode"
 msgstr ""
 
-#: includes/framework/settings/general.php:81
+#: includes/framework/settings/general.php:92
 msgid "Switching testing or production mode"
 msgstr ""
 
@@ -7392,7 +7416,7 @@ msgstr ""
 #: modules/crm/views/company/single.php:74
 #: modules/crm/views/js-templates/new-contact-group.php:5
 #: modules/crm/views/js-templates/new-save-replies.php:5
-#: modules/hrm/includes/class-employee.php:1191
+#: modules/hrm/includes/class-employee.php:1193
 #: modules/hrm/views/employee/tab-general.php:194
 #: modules/hrm/views/js-templates/dependents.php:5
 #: modules/hrm/views/reporting/headcount.php:151
@@ -8280,106 +8304,106 @@ msgstr ""
 msgid "Zimbabwean Dollar"
 msgstr ""
 
-#: includes/functions.php:653
+#: includes/functions.php:664
 msgid "Invalid date provided"
 msgstr ""
 
-#: includes/functions.php:760
+#: includes/functions.php:771
 msgid "Very Bad"
 msgstr ""
 
-#: includes/functions.php:761
+#: includes/functions.php:772
 msgid "Poor"
 msgstr ""
 
-#: includes/functions.php:762
+#: includes/functions.php:773
 msgid "Average"
 msgstr ""
 
-#: includes/functions.php:763
+#: includes/functions.php:774
 msgid "Good"
 msgstr ""
 
-#: includes/functions.php:764
+#: includes/functions.php:775
 msgid "Excellent"
 msgstr ""
 
-#: includes/functions.php:985
+#: includes/functions.php:996
 msgid "Every Minute"
 msgstr ""
 
-#: includes/functions.php:990
+#: includes/functions.php:1001
 msgid "Every 2 Minutes"
 msgstr ""
 
-#: includes/functions.php:995
+#: includes/functions.php:1006
 msgid "Every 5 Minutes"
 msgstr ""
 
-#: includes/functions.php:1000
+#: includes/functions.php:1011
 msgid "Every 10 Minutes"
 msgstr ""
 
-#: includes/functions.php:1005
+#: includes/functions.php:1016
 msgid "Every 15 Minutes"
 msgstr ""
 
-#: includes/functions.php:1010
+#: includes/functions.php:1021
 msgid "Every 30 Minutes"
 msgstr ""
 
-#: includes/functions.php:1015 includes/lib/class-wedevs-insights.php:471
+#: includes/functions.php:1026 includes/lib/class-wedevs-insights.php:471
 msgid "Once Weekly"
 msgstr ""
 
-#: includes/functions.php:1089 includes/functions.php:1129
+#: includes/functions.php:1100 includes/functions.php:1140
 msgid ""
 "Your license key expired on %s. Please <a href=\"%s\" target=\"_blank\" "
 "title=\"Renew your license key\">renew your license key</a>."
 msgstr ""
 
-#: includes/functions.php:1098
+#: includes/functions.php:1109
 msgid ""
 "Invalid license. Please <a href=\"%s\" target=\"_blank\" title=\"Visit "
 "account page\">visit your account page</a> and verify it."
 msgstr ""
 
-#: includes/functions.php:1107
+#: includes/functions.php:1118
 msgid ""
 "Your %s is not active for this URL. Please <a href=\"%s\" target=\"_blank\" "
 "title=\"Visit account page\">visit your account page</a> to manage your "
 "license key URLs."
 msgstr ""
 
-#: includes/functions.php:1115
+#: includes/functions.php:1126
 msgid "This is not a %s."
 msgstr ""
 
-#: includes/functions.php:1119
+#: includes/functions.php:1130
 msgid ""
 "Your license key has reached its activation limit. <a href=\"%s\">View "
 "possible upgrades</a> now."
 msgstr ""
 
-#: includes/functions.php:1142
+#: includes/functions.php:1153
 msgid "License key never expires."
 msgstr ""
 
-#: includes/functions.php:1147
+#: includes/functions.php:1158
 msgid ""
 "Your license key expires soon! It expires on %s. <a href=\"%s\" "
 "target=\"_blank\" title=\"Renew license\">Renew your license key</a>."
 msgstr ""
 
-#: includes/functions.php:1155
+#: includes/functions.php:1166
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/functions.php:1878
+#: includes/functions.php:1889
 msgid "Nothing to import or items are already exists."
 msgstr ""
 
-#: includes/functions.php:1881
+#: includes/functions.php:1892
 msgid "%s items successfully imported."
 msgstr ""
 
@@ -10998,11 +11022,11 @@ msgstr ""
 msgid "City/Town"
 msgstr ""
 
-#: modules/accounting/includes/views/user-form-rows.php:223
+#: modules/accounting/includes/views/user-form-rows.php:228
 msgid "Post Code"
 msgstr ""
 
-#: modules/accounting/includes/views/user-form-rows.php:228
+#: modules/accounting/includes/views/user-form-rows.php:233
 #: modules/crm/includes/functions-customer.php:1632
 #: modules/crm/includes/functions-customer.php:2868
 #: modules/crm/views/company/single.php:83
@@ -13457,10 +13481,23 @@ msgstr ""
 msgid "Employee not found!"
 msgstr ""
 
-#: modules/hrm/includes/admin/class-user-profile.php:71
+#: modules/hrm/includes/admin/class-user-profile.php:79
 #: modules/hrm/includes/functions-capabilities.php:40
 #: modules/hrm/views/employee/tab-permission.php:10
 msgid "HR Manager"
+msgstr ""
+
+#: modules/hrm/includes/admin/class-user-profile.php:88
+msgid "ERP Profile Settings"
+msgstr ""
+
+#: modules/hrm/includes/admin/class-user-profile.php:92
+#: modules/hrm/views/js-templates/new-employee.php:416
+msgid "Notification"
+msgstr ""
+
+#: modules/hrm/includes/admin/class-user-profile.php:96
+msgid "Disable WP ERP email notifications"
 msgstr ""
 
 #: modules/hrm/includes/api/class-departments-controller.php:331
@@ -13892,146 +13929,146 @@ msgstr ""
 msgid "Joined"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:244
+#: modules/hrm/includes/class-employee.php:246
 msgid "Employee with the employee id %s already exist. Please use different one."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:264
+#: modules/hrm/includes/class-employee.php:266
 msgid "Please provide the first name."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:267
+#: modules/hrm/includes/class-employee.php:269
 msgid "Please provide the last name."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:270
+#: modules/hrm/includes/class-employee.php:272
 msgid "Please provide a valid email address."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1117
+#: modules/hrm/includes/class-employee.php:1119
 #: modules/hrm/views/employee/tab-general.php:137
 #: modules/hrm/views/js-templates/education-form.php:5
 msgid "School Name"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1118
+#: modules/hrm/includes/class-employee.php:1120
 #: modules/hrm/views/employee/tab-general.php:138
 #: modules/hrm/views/js-templates/education-form.php:15
 msgid "Degree"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1119
+#: modules/hrm/includes/class-employee.php:1121
 msgid "Field"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1120
+#: modules/hrm/includes/class-employee.php:1122
 msgid "Completion date"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1139
+#: modules/hrm/includes/class-employee.php:1141
 msgid "Could not create education."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1192
+#: modules/hrm/includes/class-employee.php:1194
 msgid "Relation"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1203
-#: modules/hrm/includes/class-employee.php:1283
-#: modules/hrm/includes/class-employee.php:1621
-#: modules/hrm/includes/class-employee.php:1645
+#: modules/hrm/includes/class-employee.php:1205
+#: modules/hrm/includes/class-employee.php:1285
+#: modules/hrm/includes/class-employee.php:1623
+#: modules/hrm/includes/class-employee.php:1647
 msgid "Invalid date format"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1219
+#: modules/hrm/includes/class-employee.php:1221
 msgid "Could not create dependent."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1271
+#: modules/hrm/includes/class-employee.php:1273
 msgid "Missing Company Name"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1274
+#: modules/hrm/includes/class-employee.php:1276
 msgid "Missing Job Title"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1277
+#: modules/hrm/includes/class-employee.php:1279
 msgid "Missing From Date"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1280
+#: modules/hrm/includes/class-employee.php:1282
 msgid "Missing To Date"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1292
+#: modules/hrm/includes/class-employee.php:1294
 msgid "Could not create work experience."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1387
+#: modules/hrm/includes/class-employee.php:1389
 msgid "This job history does not exist or does not belongs to the supplied user"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1417
+#: modules/hrm/includes/class-employee.php:1419
 msgid "Invalid Employment Type"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1464
+#: modules/hrm/includes/class-employee.php:1466
 msgid "Invalid Pay Type"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1467
+#: modules/hrm/includes/class-employee.php:1469
 msgid "Invalid Pay Rate"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1470
+#: modules/hrm/includes/class-employee.php:1472
 msgid "Invalid Reason Type"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1613
+#: modules/hrm/includes/class-employee.php:1615
 msgid "Invalid Performance Type received"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1617
-#: modules/hrm/includes/class-employee.php:1641
+#: modules/hrm/includes/class-employee.php:1619
+#: modules/hrm/includes/class-employee.php:1643
 msgid "Missing Date"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1627
+#: modules/hrm/includes/class-employee.php:1629
 msgid "Invalid reporting to used."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1634
+#: modules/hrm/includes/class-employee.php:1636
 msgid "Invalid reviewer user."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1650
+#: modules/hrm/includes/class-employee.php:1652
 msgid "Invalid supervisor user."
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1667
-#: modules/hrm/includes/class-employee.php:1731
+#: modules/hrm/includes/class-employee.php:1669
+#: modules/hrm/includes/class-employee.php:1733
 msgid "This note does not exist or does not belongs to the supplied user"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:1981
+#: modules/hrm/includes/class-employee.php:1983
 #: modules/hrm/includes/functions-dashboard-widgets.php:222
 #: modules/hrm/includes/functions-leave.php:1171
 msgid "Pending"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:2115
+#: modules/hrm/includes/class-employee.php:2117
 #: modules/hrm/views/employee/tab-general.php:242
 #: modules/hrm/views/js-templates/employee-terminate.php:16
 msgid "Termination Type"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:2117
+#: modules/hrm/includes/class-employee.php:2119
 #: modules/hrm/views/employee/tab-general.php:243
 #: modules/hrm/views/js-templates/employee-terminate.php:29
 msgid "Termination Reason"
 msgstr ""
 
-#: modules/hrm/includes/class-employee.php:2119
+#: modules/hrm/includes/class-employee.php:2121
 #: modules/hrm/views/employee/tab-general.php:244
 msgid "Eligible for Hire"
 msgstr ""
@@ -15524,10 +15561,6 @@ msgstr ""
 
 #: modules/hrm/views/js-templates/new-employee.php:401
 msgid "Biography"
-msgstr ""
-
-#: modules/hrm/views/js-templates/new-employee.php:416
-msgid "Notification"
 msgstr ""
 
 #: modules/hrm/views/js-templates/new-employee.php:418
