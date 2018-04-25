@@ -350,8 +350,13 @@ class Email extends ERP_Settings_Page {
      * @return bool
      */
     public function send( $to, $subject, $message, $headers, $attachments ) {
-        $message = apply_filters( 'erp_mail_content', $this->style_inline( $message ) );
-        $return  = erp_mail( $to, $subject, $message, $headers, $attachments );
+        $message    = apply_filters( 'erp_mail_content', $this->style_inline( $message ) );
+        $recipients = apply_filters( 'erp_mail_recipients', $to );
+
+        $return = false;
+        if ( ! empty( $recipients ) ) {
+            $return = erp_mail( $recipients, $subject, $message, $headers, $attachments );
+        }
 
         return $return;
     }

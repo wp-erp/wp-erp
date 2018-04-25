@@ -268,7 +268,11 @@ window.wperp = window.wperp || {};
             $( '.erp-company-single').on( 'click', 'a.remove-location', this.removeCompanyLocation );
 
             // on popup, country change event
-            $( 'body' ).on('change', 'select.erp-country-select', this.populateState );
+            $( '.erp-hr-employees' ).on( 'click', 'a#erp-employee-new', this.modalOpen );
+            $( 'body').on( 'click', 'a#erp-company-new-location', this.modalOpen );
+            $( 'body' ).on( 'click', '#erp-customer-new', this.modalOpen );
+            $( 'body' ).on( 'click', '#erp-crm-new-contact', this.modalOpen );
+            $( 'body' ).on( 'change', 'select.erp-country-select', this.populateState );
 
             $( 'body' ).on( 'erp-hr-after-new-location', this.afterNewLocation );
 
@@ -399,6 +403,18 @@ window.wperp = window.wperp || {};
             var html = '<a href="#" id="set-company-thumbnail" class="thickbox">' + wpErp.upload_logo + '</a>';
 
             $( '.inside', '#postimagediv' ).html( html );
+        },
+
+        /**
+         * Populate the state dropdown based on default country
+         *
+         * @return {void}
+         */
+
+        modalOpen: function() {
+            setTimeout(function() {
+                $('select.erp-country-select').trigger('change');
+            }, 499);
         },
 
         /**

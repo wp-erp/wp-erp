@@ -242,9 +242,17 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+= v1.3.10 -> Apr 25, 2018 =
+[fix] Fix contact life stage sync.
+[fix] User ID is always 0 when check for restricted employee data. Closes #650
+[fix] Enable/Disable email notification. Closes #289
+[fix] Currency choice in setup wizard does not work. #651
+[tweak] Compatibility fix.
+
+
 = v1.3.9 -> Apr 08 2018 =
 [new] Department head review employees. Closes #334
-[new] CRM email attatchments. Closes #642
+[new] CRM email attachments. Closes #642
 [fix] Unable to select state. Closes #643
 [fix] Prevent duplicate vendor creation. Closes #644
 [fix] Employee profile edit permission. Closes #646

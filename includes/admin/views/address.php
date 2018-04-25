@@ -37,7 +37,7 @@
         <label for="erp-popup-country"><?php _e( 'Country', 'erp' ); ?> <span class="required">*</span></label>
         <select name="country" id="erp-popup-country" class="erp-country-select select2" data-parent="ul">
             <?php $country = \WeDevs\ERP\Countries::instance(); ?>
-            <?php echo $country->country_dropdown(); ?>
+            <?php echo $country->country_dropdown( erp_get_country() ); ?>
         </select>
     </li>
 

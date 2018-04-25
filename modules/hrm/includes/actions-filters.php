@@ -20,3 +20,4 @@ add_filter( 'editable_roles', 'erp_hr_filter_editable_roles' );
 add_filter( 'woocommerce_prevent_admin_access', 'erp_hr_wc_prevent_admin_access' );
 add_filter( 'erp_login_redirect', 'erp_hr_login_redirect', 10, 2 );
 add_filter( 'erp_hr_employee_restricted_data', 'erp_hr_control_restricted_data', 10, 2 );
+add_filter( 'erp_mail_recipients', 'erp_hr_exclude_recipients');
