@@ -370,7 +370,7 @@ class Setup_Wizard {
             $tracker->send_tracking_data();
         }
 
-        $company->update( array( 
+        $company->update( array(
             'name'          => $company_name,
             'business_type' => $business_type
         ) );
@@ -379,6 +379,7 @@ class Setup_Wizard {
             'gen_financial_month' => $financial_month,
             'gen_com_start'       => $company_started,
             'date_format'         => $date_format,
+            'erp_currency'        => $base_currency,
             'erp_debug_mode'      => 0
         ] );
 
@@ -645,7 +646,7 @@ class Setup_Wizard {
      * Newsletter setup step
      * @since 1.3.4
      */
-    public function setup_step_newsletter() {      
+    public function setup_step_newsletter() {
         ?>
         <h1><?php _e( 'Newsletter Setup', 'erp' ); ?></h1>
 
@@ -714,7 +715,7 @@ class Setup_Wizard {
                     <h2><?php _e( 'Next Steps &rarr;', 'erp' ); ?></h2>
                     <?php
                         $is_hrm_activated = erp_is_module_active( 'hrm' );
-                        
+
                         if ( $is_hrm_activated ) : ?>
                             <a class="button button-primary button-large"
                                 href="<?php echo esc_url( admin_url( 'admin.php?page=erp-hr-employee' ) ); ?>">
