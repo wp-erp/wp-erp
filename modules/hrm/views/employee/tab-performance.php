@@ -8,7 +8,7 @@
     <?php
     $department_lead_id = erp_hr_get_department_lead_by_user( $employee->get_user_id() );
 
-    if ( current_user_can('erp_create_review') ||
+    if ( current_user_can( 'erp_create_review', $employee->get_user_id() ) ||
         ( get_current_user_id() === $department_lead_id )
     ) {
         ?>
@@ -65,7 +65,7 @@
                     <td><?php echo isset( $performance_rating[ $row->dependablity ] ) ? $performance_rating[ $row->dependablity ] : '-'; ?></td>
 
                     <td class="action">
-                        <?php if ( current_user_can( 'erp_delete_review' ) ||
+                        <?php if ( current_user_can( 'erp_delete_review', $employee->get_user_id() ) ||
                                     ( get_current_user_id() === $department_lead_id )
                                 ) { ?>
                             <a href="#" class="performance-remove" data-userid="<?php echo $employee->get_user_id(); ?>" data-id="<?php echo $row->id; ?>"><span
@@ -88,7 +88,7 @@
 
     <?php
 
-    if ( current_user_can('erp_create_review') ||
+    if ( current_user_can( 'erp_create_review', $employee->get_user_id() ) ||
         ( get_current_user_id() === $department_lead_id )
     ) { ?>
         <a href="#" id="erp-empl-performance-comments" class="action button"
@@ -130,7 +130,7 @@
                     <td><?php echo esc_textarea( $row->comments ); ?></td>
 
                     <td class="action">
-                        <?php if ( current_user_can( 'erp_delete_review' ) ||
+                        <?php if ( current_user_can( 'erp_delete_review', $employee->get_user_id() ) ||
                                     ( get_current_user_id() === $department_lead_id )
                                 ) { ?>
                             <a href="#" class="performance-remove" data-userid="<?php echo $employee->get_user_id(); ?>" data-id="<?php echo $row->id; ?>"><span
@@ -151,7 +151,7 @@
     </table>
 
     <h3><?php _e( 'Performance Goals', 'erp' ); ?></h3>
-    <?php if ( current_user_can('erp_create_review') ||
+    <?php if ( current_user_can( 'erp_create_review', $employee->get_user_id() ) ||
         ( get_current_user_id() === $department_lead_id )
     ) { ?>
         <a href="#" id="erp-empl-performance-goals" class="action button" data-id="<?php echo $employee->get_user_id(); ?>"
@@ -195,7 +195,7 @@
                     <td><?php echo esc_textarea( $row->supervisor_assessment ); ?></td>
 
                     <td class="action">
-                        <?php if ( current_user_can( 'erp_delete_review' ) ||
+                        <?php if ( current_user_can( 'erp_delete_review', $employee->get_user_id() ) ||
                                     ( get_current_user_id() === $department_lead_id )
                                 ) { ?>
                             <a href="#" class="performance-remove" data-userid="<?php echo $employee->get_user_id(); ?>" data-id="<?php echo $row->id; ?>"><span
