@@ -121,7 +121,7 @@
 
                 $department_lead_id = erp_hr_get_department_lead_by_user( $employee->get_user_id() );
 
-                if ( ! current_user_can( 'erp_create_review' ) && isset( $tabs['permission'] ) && isset( $tabs['performance'] ) && isset( $tabs['notes'] ) ) {
+                if ( ! current_user_can( 'erp_create_review', $employee->get_user_id() ) && isset( $tabs['permission'] ) && isset( $tabs['performance'] ) && isset( $tabs['notes'] ) ) {
                     unset( $tabs['permission'] );
                     unset( $tabs['notes'] );
 

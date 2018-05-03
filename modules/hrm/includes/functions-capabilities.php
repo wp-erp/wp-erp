@@ -306,10 +306,12 @@ function erp_hr_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args =
 
         // review (note, permission, performance)
         case 'erp_create_review':
+        case 'erp_manage_review':
+        case 'erp_delete_review':
             $employee_id = isset( $args[0] ) ? $args[0] : false;
             $employee    = new \WeDevs\ERP\HRM\Employee( $employee_id );
 
-            if ( $employee->get_reporting_to() && $employee->get_reporting_to()->get_user_id() == $user_id ) {
+            if ( $employee->get_reporting_to() && $employee->get_reporting_to() == $user_id ) {
                 $caps = [ 'employee' ];
             } else {
                 $caps = [ $cap ];

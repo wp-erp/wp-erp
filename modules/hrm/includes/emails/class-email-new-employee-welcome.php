@@ -65,7 +65,7 @@ class New_Employee_Welcome extends Email {
             'status'          => $employee->get_status(),
             'type'            => $employee->get_type(),
             'joined-date'     => $employee->get_joined_date(),
-            'reporting-to'    => $employee->get_reporting_to() ? $employee->get_reporting_to(true)->get_full_name() : '',
+            'reporting-to'    => $employee->get_reporting_to() ? erp_hr_get_employee_name( $employee->get_reporting_to() ) : '',
             'compnay-name'    => $company->name,
             'compnay-address' => $company->get_formatted_address(),
             'compnay-phone'   => $company->phone,

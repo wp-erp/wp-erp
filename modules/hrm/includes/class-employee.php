@@ -993,24 +993,11 @@ class Employee {
      *
      * @param $return_object boolean
      *
-     * @return string
+     * @return int $user_id
      */
-    public function get_reporting_to( $return_object = false ) {
+    public function get_reporting_to() {
         if ( $this->is_employee() && isset( $this->erp_user->reporting_to ) ) {
-            $user_id = (int) $this->erp_user->reporting_to;
-            if($user_id == $this->user_id ) {
-                return null;
-            }
-            $user    = new Employee( $user_id );
-            if ( ! $user->is_employee() ) {
-                return null;
-            }
-
-            if ( $return_object ) {
-                return $user;
-            }
-
-            return $user->get_user_id();
+            return (int) $this->erp_user->reporting_to;
         }
     }
 
