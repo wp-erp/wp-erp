@@ -977,11 +977,10 @@ function erp_hr_get_details_url( $user_id ) {
  * @since 1.3.11
  *
  * @param $user_id
- * @param $full_name
  *
  * @return string
  *
  */
-function erp_hr_get_single_link( $user_id, $full_name ) {
-    return sprintf( '<a href="%s">%s</a>', erp_hr_get_details_url( $user_id ), $full_name );
+function erp_hr_get_single_link( $user_id ) {
+    return sprintf( '<a href="%s">%s</a>', erp_hr_get_details_url( $user_id ), erp_hr_get_employee_name($user_id) );
 }
