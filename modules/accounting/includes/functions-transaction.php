@@ -1242,7 +1242,7 @@ function erp_ac_pdf_link_generator( $transaction, $type = 'invoice' ) {
  * @return void
  */
 function erp_ac_update_transaction_to_void( $transaction_id ) {
-    $partial_id = \WeDevs\ERP\Accounting\Model\Payment::select(['child'])->where( 'transaction_id', '=', $transaction_id )->pluck('child');
+    $partial_id = \WeDevs\ERP\Accounting\Model\Payment::select(['child'])->where( 'transaction_id', '=', $transaction_id )->pluck('child')[0];
 
     if ( $partial_id ) {
         $child = erp_ac_get_transaction( $transaction_id );
