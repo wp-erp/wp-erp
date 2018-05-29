@@ -6,3 +6,7 @@ package.json
 debug.log
 plugin-deploy.sh
 vendor/composer/autoload_static.php
+.editorconfig
+.gitignore
+.github
+package-lock.json
