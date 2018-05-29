@@ -3,7 +3,7 @@ Contributors: tareq1988, wedevs, ediamin, sabbir1991, asaquzzaman, manikmist09, 
 Donate Link: https://tareq.co/donate
 Tags: ERP, CRM, HRM, Accounting, Project Management, business manager, small business, SME, contact, contacts, Customer Relationship Management, employee, leave management, hr, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 4.9.5
+Tested up to: 4.9.6
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2
@@ -242,6 +242,14 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+= v1.3.11 -> May 29, 2018 =
+[fix] Employee list conflicts with reporting to. Closes #649
+[fix] Unable to void payment entry in sales tab. Closes #658
+[fix] Payment amount is more than due. Closes #659
+[fix] Unable to import contacts from CSV.
+[tweak] NPM packages update.
+[tweak] Employee single link update.
+
 = v1.3.10 -> Apr 25, 2018 =
 [fix] Fix contact life stage sync.
 [fix] User ID is always 0 when check for restricted employee data. Closes #650
