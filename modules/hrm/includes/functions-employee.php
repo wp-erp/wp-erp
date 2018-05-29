@@ -956,3 +956,31 @@ function erp_hr_get_employee_name( $user_id ) {
     return implode( ' ', $name );
 
 }
+
+/**
+ * Get employee details admin url
+ *
+ * @since 1.3.11
+ *
+ * @param $user_id
+ *
+ * @return string
+ *
+ */
+function erp_hr_get_details_url( $user_id ) {
+    return admin_url( 'admin.php?page=erp-hr-employee&action=view&id=' . $user_id );
+}
+
+/**
+ * Get employee single url
+ *
+ * @since 1.3.11
+ *
+ * @param $user_id
+ *
+ * @return string
+ *
+ */
+function erp_hr_get_single_link( $user_id ) {
+    return sprintf( '<a href="%s">%s</a>', erp_hr_get_details_url( $user_id ), erp_hr_get_employee_name($user_id) );
+}
