@@ -1068,7 +1068,7 @@ class Ajax_Handler {
 
         $department_lead_id = erp_hr_get_department_lead_by_user( $user_id );
 
-        if ( ! current_user_can( 'erp_delete_review' )
+        if ( ! current_user_can( 'erp_delete_review', $user_id )
             &&
             ( get_current_user_id() !== $department_lead_id )
         ) {

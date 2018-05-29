@@ -90,7 +90,7 @@ function erp_hr_assign_announcements_to_employees( $post_id, $type, $selected = 
         }
     }
 
-    do_action( 'hr_announcement_insert_assignment', $new_employees, $post_id );
+    do_action( 'hr_announcement_insert_assignment', $selected, $post_id );
 }
 
 /**

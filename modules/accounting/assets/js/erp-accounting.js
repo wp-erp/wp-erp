@@ -361,13 +361,17 @@
                 var trans_id = url.searchParams.get('transaction_id');
 
                 if ( type === 'payment' && trans_id !== null ) {
-                    var totalPay = $('#price_total').val();
-                    totalPay     = totalPay.replace(ERP_AC.thousand_separator, '');
-                    totalPay     = totalPay.replace(ERP_AC.decimal_separator, '.');
+                    var separatorRegExp = new RegExp(ERP_AC.thousand_separator, 'g');
 
-                    var totalDue = $('#total_due').val();
-                    totalDue     = totalDue.replace(ERP_AC.thousand_separator, '');
-                    totalDue     = totalDue.replace(ERP_AC.decimal_separator, '.');
+                    // paying
+                    var totalPay  = $('#price_total').val();
+                    totalPay = totalPay.replace(separatorRegExp, '');
+                    totalPay = totalPay.replace(ERP_AC.decimal_separator, '.');
+
+                    // should pay or due
+                    var totalDue  = $('#total_due').val();
+                    totalDue = totalDue.replace(separatorRegExp, '');
+                    totalDue = totalDue.replace(ERP_AC.decimal_separator, '.');
 
                     if ( parseFloat(totalPay) > parseFloat(totalDue) ) {
                         alert( 'Error: Payment amount is more than Due!' );
