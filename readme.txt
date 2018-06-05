@@ -15,8 +15,7 @@ An Open Source Human Resource, CRM & Accounting Solution for WordPress
 == Description ==
 
 = Ultimate Company/ Business Management Solution for WordPress =
-Trusted by more than 4000+ in 150 countries worldwide WP ERP is the first full-fledged ERP (Enterprise Resource Planning) solution for your WordPress site. You can easily manage your day to day business operations using WP ERP and dive into a feature-rich system for completely FREE.
-
+Trusted by more than 6000+ businesses and companies in 150 countries worldwide, WP ERP is the first full-fledged ERP (Enterprise Resource Planning) solution for your WordPress site that provides powerful CRM, HRM, Accounting & Project Management capabilities.
 = Core Modules =
 
 WP ERP Comes with three powerful pre-built core modules -

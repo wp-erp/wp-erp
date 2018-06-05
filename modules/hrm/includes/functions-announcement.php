@@ -21,8 +21,9 @@ function erp_hr_assign_announcements_to_employees( $post_id, $type, $selected = 
         foreach ( $selected as $department ) {
             $data[] = erp_hr_get_employees( array(
                  'no_object'  => true,
-                 'department' => $department
-             ) );
+                 'department' => $department,
+                 'number' => '-1'
+            ) );
         }
 
         $selected = format_data_as_employee( $data );
@@ -34,8 +35,9 @@ function erp_hr_assign_announcements_to_employees( $post_id, $type, $selected = 
         foreach ( $selected as $designation ) {
             $data[] = erp_hr_get_employees( array(
                  'no_object'  => true,
-                 'designation' => $designation
-             ) );
+                 'designation' => $designation,
+                 'number' => '-1'
+            ) );
         }
 
         $selected = format_data_as_employee( $data );
@@ -45,7 +47,7 @@ function erp_hr_assign_announcements_to_employees( $post_id, $type, $selected = 
     update_post_meta( $post_id, '_announcement_selected_user', $selected );
 
     if ( $type == 'all_employee' ) {
-        $empls = erp_hr_get_employees( array( 'no_object' => true ) );
+        $empls = erp_hr_get_employees( array( 'no_object' => true, 'number' => '-1' ) );
 
         if ( $empls ) {
             foreach ( $empls as $user ) {
