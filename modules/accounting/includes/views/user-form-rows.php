@@ -37,8 +37,11 @@
         <span class="erp-loader" style="padding-left: 40px; display: none;"></span>
     </p>
 </div>
-
 <ul class="erp-form-fields erp-list">
+    <?php 
+        // Top action
+        do_action( 'erp_accounting_' . $item_type . '_form_top', $item );
+    ?>
     <li class="erp-form-field row-first-name">
         <?php erp_html_form_input( array(
             'label'       => __( 'First Name', 'erp' ),
@@ -112,6 +115,12 @@
             'value'    => isset( $item->mobile ) ? $item->mobile : '',
         ) ); ?>
     </li>
+
+    <?php 
+        // Middle Action
+        do_action( 'erp_accounting_' . $item_type . '_form_middle', $item );
+    ?>
+
     <li class="erp-form-field row-other">
         <?php erp_html_form_input( array(
             'label'    => __( 'Other', 'erp' ),
@@ -235,7 +244,10 @@
             'value'       => isset( $item->postal_code ) ? $item->postal_code : '',
         ) ); ?>
     </li>
-
+    <?php 
+        // Bottom action
+        do_action( 'erp_accounting_' . $item_type . '_form_bottom', $item );
+    ?>
     <!-- <li class="erp-form-field row-currency"> -->
         <?php
             // erp_html_form_input( array(
