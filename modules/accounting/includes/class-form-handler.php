@@ -555,6 +555,10 @@ class Form_Handler {
             return new \WP_Error( 'required_total_amount', __( 'Error: Total is required', 'erp' ) );
         }
 
+        if ( $total < 1 ) {
+            return new \WP_Error( 'ntotal_amount_greater_than_zero', __( 'Error: Total amount should be greater than zero', 'erp' ) );
+        }
+
         $fields = [
             'id'              => $transaction_id,
             'partial_id'      => $partial_id,
@@ -592,7 +596,6 @@ class Form_Handler {
             }
 
             $unit_price    = erp_ac_format_decimal( erp_ac_remove_thousand_sep( $postdata['line_unit_price'][ $key ] ), 2 );
-
             $tax_rate      = 0;
             $line_tax      = 0;
             $tax_amount    = 0;
