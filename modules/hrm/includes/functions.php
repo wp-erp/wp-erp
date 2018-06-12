@@ -59,7 +59,7 @@ function erp_hr_get_work_days_without_off_day( $start_date, $end_date ) {
     foreach ( $between_dates as $date ) {
 
         $key       = strtolower( date( 'D', strtotime( $date ) ) );
-        $is_holidy = ( $work_days[ $key ] === 0 ) ? true : false;
+        $is_holidy = ( $work_days[ $key ] == 0 ) ? true : false;
 
         if ( ! $is_holidy ) {
             $is_holidy = in_array( $date, $holiday_exist ) ? true : false;
