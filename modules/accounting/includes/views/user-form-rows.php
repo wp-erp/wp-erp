@@ -80,7 +80,7 @@
     </li>
     <li class="erp-form-field row-company">
         <?php erp_html_form_input( array(
-            'label'       => __( 'Vendor', 'erp' ),
+            'label'       => __( 'Company', 'erp' ),
             'name'        => 'company',
             'id'          => 'company',
             'required'    => ( $item_type == 'vendor' ) ? true : false,
