@@ -207,6 +207,8 @@ function erp_ac_new_customer( $postdata ) {
         }
     }
 
-    return $insert_id;
+    $new_fields = array_diff_key( $postdata, $fields );
+
+    return apply_filters( 'erp_ac_customer_new_save_field', $insert_id, $new_fields );
 }
 

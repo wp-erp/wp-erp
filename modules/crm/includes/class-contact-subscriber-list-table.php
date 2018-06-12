@@ -247,8 +247,8 @@ class Contact_Subscriber_List_Table extends \WP_List_Table {
      * @return string
      */
     function column_subscription_status( $item ) {
-        if ( isset( $this->subscription_statuses[ $item->data[0]->status ] ) ) {
-            return $this->subscription_statuses[ $item->data[0]->status ];
+        if ( isset( $this->subscription_statuses[ $item->data[0]['status'] ] ) ) {
+            return $this->subscription_statuses[ $item->data[0]['status'] ];
         } else {
             return ucwords( $item->data[0]->status );
         }
