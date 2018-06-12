@@ -142,7 +142,7 @@ $taxinfo          = erp_ac_get_tax_info();
                             </tr>
                             <tr>
                                 <th><?php _e( 'Total', 'erp' ); ?></th>
-                                <td><?php echo $transaction->total; ?></td>
+                                <td><?php echo erp_ac_get_price( $transaction->total ); ?></td>
                             </tr>
                             <tr>
                                 <th><?php _e( 'Total Paid', 'erp' ); ?></th>
