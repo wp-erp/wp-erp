@@ -984,3 +984,20 @@ function erp_hr_get_details_url( $user_id ) {
 function erp_hr_get_single_link( $user_id ) {
     return sprintf( '<a href="%s">%s</a>', erp_hr_get_details_url( $user_id ), erp_hr_get_employee_name($user_id) );
 }
+
+/**
+ * check if employee exist by email
+ *
+ * @since 1.3.12
+ *
+ * @param $email
+ *
+ * @return array
+ *
+ */
+function erp_is_employee_exist( $email ) {
+    global $wpdb;
+    $user_email = sanitize_email($email);
+    $sql    = "select user.ID from {$wpdb->prefix}erp_hr_employees as employee inner join {$wpdb->prefix}users as user on user.ID=employee.user_id where user.user_email='{$user_email}'";
+    return $wpdb->get_col( $sql );
+}
