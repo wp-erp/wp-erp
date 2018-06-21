@@ -498,6 +498,15 @@ class Ajax_Handler {
                 $this->send_error( __( 'You do not have sufficient permissions to do this action', 'erp' ) );
             }
         }
+
+        if ( ! empty( $posted['user_email'] ) ) {
+            if ( erp_is_employee_exist( $posted['user_email'] ) ) {
+                $this->send_error( __( 'User with the same email address already exist. Please try with different email.', 'erp' ) );
+            }
+
+        }
+
+
         $employee = new Employee( $user_id );
 
         $result = $employee->create_employee( $posted );
