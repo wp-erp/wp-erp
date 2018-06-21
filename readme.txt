@@ -241,6 +241,18 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+= v1.3.12 -> June 21, 2018 =
+[fix] Postal Code does not appear on a customer's user details tab. Closes #591
+[fix] A Payment voucher's total amount is not formatted as currency. Closes #592
+[tweak] A vendor text field on an add customer form is confusing. Closes #593
+[fix] Department delete not working. Closes #661
+[fix] Not all the employees are receiving announcement. Closes #663
+[fix] Can't create leave request with api. Closes #664
+[fix] Contact Owner is assigned as "Nobody" for newly imported contacts. Closes #665
+[fix] Creating multiple employees with the same email address replace the previous employee and keep the last one. Closes #666
+[fix] Invoice total price should not be zero. Closes #667
+[fix] Fix state select on click when add new contact.
+
 = v1.3.11 -> May 29, 2018 =
 [fix] Employee list conflicts with reporting to. Closes #649
 [fix] Unable to void payment entry in sales tab. Closes #658
