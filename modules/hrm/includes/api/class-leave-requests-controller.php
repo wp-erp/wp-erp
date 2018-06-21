@@ -134,9 +134,10 @@ class Leave_Requests_Controller extends REST_Controller {
      * @return WP_Error|WP_REST_Request
      */
     public function create_leave_request( $request ) {
-        $item = $this->prepare_item_for_database( $request );
+        $item = $this->prepare_item_for_database( $request->get_body_params() );
+        $data = $request->get_body_params();
 
-        $policies = erp_hr_get_assign_policy_from_entitlement( $request['employee_id'] );
+        $policies = erp_hr_get_assign_policy_from_entitlement( $data['employee_id'] );
         if ( ! $policies ) {
             return new WP_Error( 'rest_leave_request_required_entitlement', __( 'Set entitlement to the employee first.' ), [ 'status' => 400 ] );
         }
@@ -145,7 +146,8 @@ class Leave_Requests_Controller extends REST_Controller {
         $leave_request = erp_hr_get_leave_request( $id );
 
         $request->set_param( 'context', 'edit' );
-        $response = $this->prepare_item_for_response( $leave_request, $request );
+
+        $response = $this->prepare_item_for_response( $leave_request, $data );
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
         $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $id ) ) );
