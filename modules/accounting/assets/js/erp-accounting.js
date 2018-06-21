@@ -908,7 +908,10 @@
                 number_decimal = ERP_AC.number_decimal,
                 decimal_count  = typeof current_value.split(decimal_sep)[1] == 'undefined' ? 0 : current_value.split(decimal_sep)[1];
                 decimal_count  = decimal_count.length - 1;
-
+            if ( self.val() == 0 ) {
+                self.val( '' );
+                alert( 'Line price should be greater than zero' );
+            }
             if ( decimal_count >= number_decimal ) {
                 var split      = current_value.split(decimal_sep),
                     first_term = split.shift() + decimal_sep,

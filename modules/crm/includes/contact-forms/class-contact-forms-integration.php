@@ -85,7 +85,9 @@ class Contact_Forms_Integration {
         $cfi_settings = get_option( 'wperp_crm_contact_forms', '' );
 
         if ( ! empty( $cfi_settings[ $plugin ][ $form_id ] ) ) {
-            $settings = $cfi_settings[ $plugin ][ $form_id ]['map'];
+            $settings       =  $cfi_settings[ $plugin ][ $form_id ]['map'];
+            $contact_owner  =  $cfi_settings[ $plugin ][ $form_id ]['contact_owner'];
+            $contact_group  =  $cfi_settings[ $plugin ][ $form_id ]['contact_group'];
 
             $contact = [
                 'type' => 'contact'
@@ -112,6 +114,14 @@ class Contact_Forms_Integration {
 
                     }
                 }
+            }
+
+            if ( ! empty( $contact_group ) ) {
+                $contact['contact_group'] = $contact_group;
+            }
+
+            if ( ! empty( $contact_owner ) ) {
+                $contact['contact_owner'] = $contact_owner;
             }
 
             $people_id = erp_insert_people( $contact );

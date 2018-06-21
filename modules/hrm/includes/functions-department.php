@@ -131,7 +131,7 @@ function erp_hr_count_departments() {
  * @return bool
  */
 function erp_hr_delete_department( $department_id ) {
-    
+
     if ( is_array( $department_id ) ) {
         $exist_employee = [];
         $not_exist_employee = [];
@@ -162,7 +162,8 @@ function erp_hr_delete_department( $department_id ) {
     }
 
     do_action( 'erp_hr_dept_delete', $department_id );
-    $parent_id = \WeDevs\ERP\HRM\Models\Department::where( 'id', '=', $department_id )->pluck('parent');
+
+    $parent_id = \WeDevs\ERP\HRM\Models\Department::where( 'id', '=', $department_id )->pluck('parent')[0];
 
     if ( $parent_id ) {
         \WeDevs\ERP\HRM\Models\Department::where( 'parent', '=', $department_id )->update( ['parent' => $parent_id ] );
