@@ -269,14 +269,11 @@ window.wperp = window.wperp || {};
 
             // on popup, country change event
             $( '.erp-hr-employees' ).on( 'click', 'a#erp-employee-new', this.modalOpen );
-            $( 'body').on( 'click', 'a#erp-company-new-location', this.modalOpen );
+            $( 'body' ).on( 'click', 'a#erp-company-new-location', this.modalOpen );
             $( 'body' ).on( 'click', '#erp-customer-new', this.modalOpen );
-            $( 'body' ).on( 'click', '#erp-crm-new-contact', this.modalOpen );
             $( 'body' ).on( 'change', 'select.erp-country-select', this.populateState );
 
             $( 'body' ).on( 'erp-hr-after-new-location', this.afterNewLocation );
-
-            // $('select.erp-country-select').trigger('change');
 
             $( '.erp-hr-audit-log' ).on( 'click', 'a.erp-audit-log-view-changes', this.viewLogChanges );
             $( 'body').on( 'change', '#filter_duration', this.customFilter );
@@ -336,7 +333,6 @@ window.wperp = window.wperp || {};
                     _wpnonce: wpErpHr.nonce
                 },
                 success: function(res) {
-                    // console.log( res );
                     $.erpPopup({
                         title: res.title,
                         button: '',
