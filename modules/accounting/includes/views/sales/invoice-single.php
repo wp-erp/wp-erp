@@ -118,6 +118,7 @@ $readonly_url        = add_query_arg( [ 'query' => 'readonly_invoice', 'trans_id
                     }
                     ?></strong>
                     <div class="billing-address"><?php echo nl2br( $transaction->billing_address ); ?></div>
+
                 </div>
                 <div class="col-3 align-right">
                     <table class="table info-table">
@@ -215,4 +216,3 @@ $readonly_url        = add_query_arg( [ 'query' => 'readonly_invoice', 'trans_id
     <?php include_once WPERP_ACCOUNTING_VIEWS . '/common/partial-payments.php'; ?>
 
 </div>
-
