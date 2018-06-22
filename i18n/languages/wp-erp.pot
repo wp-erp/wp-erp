@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.3.11\n"
+"Project-Id-Version: WP ERP 1.3.12\n"
 "Report-Msgid-Bugs-To: http://wperp.com/support/\n"
-"POT-Creation-Date: 2018-05-29 03:38:06+00:00\n"
+"POT-Creation-Date: 2018-06-21 08:38:05+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4677,7 +4677,7 @@ msgid "Log changes"
 msgstr ""
 
 #: includes/admin/class-ajax.php:193 includes/admin/class-ajax.php:239
-#: includes/admin/class-ajax.php:328 modules/hrm/includes/class-ajax.php:889
+#: includes/admin/class-ajax.php:328 modules/hrm/includes/class-ajax.php:898
 msgid "No email address provided"
 msgstr ""
 
@@ -4850,7 +4850,7 @@ msgstr ""
 
 #: includes/admin/class-form-handler.php:99 includes/admin/views/address.php:37
 #: includes/admin/views/company-editor.php:75
-#: modules/accounting/includes/views/user-form-rows.php:199
+#: modules/accounting/includes/views/user-form-rows.php:208
 #: modules/crm/includes/functions-customer.php:2858
 #: modules/crm/views/company/single.php:82
 #: modules/crm/views/contact/single.php:83
@@ -4879,6 +4879,7 @@ msgstr ""
 #: includes/admin/class-menu.php:41 includes/admin/views/company-editor.php:2
 #: modules/accounting/includes/class-customer-list-table.php:84
 #: modules/accounting/includes/class-settings.php:114
+#: modules/accounting/includes/views/user-form-rows.php:83
 #: modules/crm/includes/class-contact-subscriber-list-table.php:99
 #: modules/crm/includes/functions-customer.php:221
 #: modules/crm/views/company.php:20 modules/crm/views/dashboard.php:61
@@ -5255,7 +5256,7 @@ msgstr ""
 
 #: includes/admin/views/address.php:30
 #: includes/admin/views/company-editor.php:64 includes/class-company.php:41
-#: modules/accounting/includes/views/user-form-rows.php:187
+#: modules/accounting/includes/views/user-form-rows.php:196
 #: modules/crm/includes/functions-customer.php:1581
 #: modules/crm/views/company/single.php:80
 #: modules/crm/views/contact/single.php:81
@@ -5267,7 +5268,7 @@ msgstr ""
 
 #: includes/admin/views/address.php:46
 #: includes/admin/views/company-editor.php:84
-#: modules/accounting/includes/views/user-form-rows.php:216
+#: modules/accounting/includes/views/user-form-rows.php:225
 #: modules/crm/views/js-templates/new-customer.php:226
 #: modules/hrm/views/js-templates/new-employee.php:382
 msgid "Province / State"
@@ -5277,9 +5278,9 @@ msgstr ""
 #: includes/admin/views/company-editor.php:93 includes/class-countries.php:58
 #: includes/class-countries.php:150
 #: modules/accounting/includes/views/common/transaction-table-tr-render.php:101
-#: modules/accounting/includes/views/user-form-rows.php:221
+#: modules/accounting/includes/views/user-form-rows.php:230
 #: modules/crm/views/js-templates/new-customer.php:231
-#: modules/hrm/includes/class-ajax.php:1519
+#: modules/hrm/includes/class-ajax.php:1528
 #: modules/hrm/views/employee/tab-job.php:19
 #: modules/hrm/views/js-templates/compensation.php:27
 #: modules/hrm/views/js-templates/compensation.php:37
@@ -5341,7 +5342,7 @@ msgstr ""
 #: modules/accounting/includes/class-customer-list-table.php:86
 #: modules/accounting/includes/class-vendor-list-table.php:49
 #: modules/accounting/includes/views/customer/user-details.php:6
-#: modules/accounting/includes/views/user-form-rows.php:94
+#: modules/accounting/includes/views/user-form-rows.php:97
 #: modules/accounting/includes/views/vendor/vendor-details.php:6
 #: modules/crm/includes/functions-customer.php:1539
 #: modules/crm/includes/functions-customer.php:2828
@@ -5353,7 +5354,7 @@ msgstr ""
 
 #: includes/admin/views/company-editor.php:123
 #: modules/accounting/includes/views/customer/user-details.php:8
-#: modules/accounting/includes/views/user-form-rows.php:140
+#: modules/accounting/includes/views/user-form-rows.php:149
 #: modules/accounting/includes/views/vendor/vendor-details.php:8
 #: modules/crm/includes/functions-customer.php:2843
 #: modules/crm/views/company/single.php:76
@@ -5363,7 +5364,7 @@ msgstr ""
 
 #: includes/admin/views/company-editor.php:134
 #: modules/accounting/includes/views/customer/user-details.php:7
-#: modules/accounting/includes/views/user-form-rows.php:106
+#: modules/accounting/includes/views/user-form-rows.php:109
 #: modules/accounting/includes/views/vendor/vendor-details.php:7
 #: modules/crm/includes/functions-customer.php:1553
 #: modules/crm/includes/functions-customer.php:2833
@@ -5375,7 +5376,7 @@ msgstr ""
 
 #: includes/admin/views/company-editor.php:145
 #: modules/accounting/includes/views/customer/user-details.php:9
-#: modules/accounting/includes/views/user-form-rows.php:128
+#: modules/accounting/includes/views/user-form-rows.php:137
 #: modules/accounting/includes/views/vendor/vendor-details.php:9
 #: modules/crm/includes/functions-customer.php:1567
 #: modules/crm/includes/functions-customer.php:2838
@@ -5883,7 +5884,7 @@ msgstr ""
 #: modules/hrm/includes/api/class-leave-entitlements-controller.php:251
 #: modules/hrm/includes/api/class-leave-holidays-controller.php:266
 #: modules/hrm/includes/api/class-leave-policies-controller.php:352
-#: modules/hrm/includes/api/class-leave-requests-controller.php:257
+#: modules/hrm/includes/api/class-leave-requests-controller.php:259
 msgid "Unique identifier for the resource."
 msgstr ""
 
@@ -6626,7 +6627,7 @@ msgstr ""
 #: modules/accounting/includes/class-customer-list-table.php:85
 #: modules/accounting/includes/class-vendor-list-table.php:48
 #: modules/accounting/includes/views/customer/user-details.php:5
-#: modules/accounting/includes/views/user-form-rows.php:68
+#: modules/accounting/includes/views/user-form-rows.php:71
 #: modules/accounting/includes/views/vendor/vendor-details.php:5
 #: modules/crm/includes/class-contact-subscriber-list-table.php:173
 #: modules/crm/includes/class-subscription.php:164
@@ -8547,7 +8548,7 @@ msgstr ""
 
 #: modules/accounting/includes/class-ajax.php:75
 #: modules/crm/includes/class-ajax.php:483
-#: modules/hrm/includes/class-ajax.php:921
+#: modules/hrm/includes/class-ajax.php:930
 msgid "User not found"
 msgstr ""
 
@@ -8927,7 +8928,7 @@ msgstr ""
 #: modules/accounting/includes/class-form-handler.php:329
 #: modules/accounting/includes/class-form-handler.php:370
 #: modules/accounting/includes/class-form-handler.php:470
-#: modules/accounting/includes/class-form-handler.php:668
+#: modules/accounting/includes/class-form-handler.php:671
 msgid "Are you cheating?"
 msgstr ""
 
@@ -8967,7 +8968,11 @@ msgstr ""
 msgid "Error: Total is required"
 msgstr ""
 
-#: modules/accounting/includes/class-form-handler.php:664
+#: modules/accounting/includes/class-form-handler.php:559
+msgid "Error: Total amount should be greater than zero"
+msgstr ""
+
+#: modules/accounting/includes/class-form-handler.php:667
 #: modules/accounting/includes/functions-chart.php:153
 #: modules/accounting/includes/functions-chart.php:165
 #: modules/accounting/includes/functions-chart.php:497
@@ -8982,11 +8987,11 @@ msgstr ""
 msgid "You do not have sufficient permissions"
 msgstr ""
 
-#: modules/accounting/includes/class-form-handler.php:679
+#: modules/accounting/includes/class-form-handler.php:682
 msgid "Value can not be negative"
 msgstr ""
 
-#: modules/accounting/includes/class-form-handler.php:683
+#: modules/accounting/includes/class-form-handler.php:686
 msgid "Debit and credit total did not match."
 msgstr ""
 
@@ -9116,7 +9121,6 @@ msgstr ""
 #: modules/accounting/includes/class-vendor-list-table.php:46
 #: modules/accounting/includes/views/expense/payment-voucher.php:84
 #: modules/accounting/includes/views/expense/vendor-credit.php:80
-#: modules/accounting/includes/views/user-form-rows.php:80
 msgid "Vendor"
 msgstr ""
 
@@ -10930,7 +10934,7 @@ msgstr ""
 msgid "create successfull"
 msgstr ""
 
-#: modules/accounting/includes/views/user-form-rows.php:44
+#: modules/accounting/includes/views/user-form-rows.php:47
 #: modules/crm/includes/class-subscription-widget.php:176
 #: modules/crm/includes/class-subscription.php:177
 #: modules/crm/includes/functions-customer.php:1753
@@ -10942,11 +10946,11 @@ msgstr ""
 msgid "First Name"
 msgstr ""
 
-#: modules/accounting/includes/views/user-form-rows.php:49
+#: modules/accounting/includes/views/user-form-rows.php:52
 msgid "John"
 msgstr ""
 
-#: modules/accounting/includes/views/user-form-rows.php:56
+#: modules/accounting/includes/views/user-form-rows.php:59
 #: modules/crm/includes/class-subscription-widget.php:177
 #: modules/crm/includes/class-subscription.php:184
 #: modules/crm/includes/functions-customer.php:1767
@@ -10958,35 +10962,35 @@ msgstr ""
 msgid "Last Name"
 msgstr ""
 
-#: modules/accounting/includes/views/user-form-rows.php:61
+#: modules/accounting/includes/views/user-form-rows.php:64
 msgid "Doe"
 msgstr ""
 
-#: modules/accounting/includes/views/user-form-rows.php:73
+#: modules/accounting/includes/views/user-form-rows.php:76
 msgid "you@domain.com"
 msgstr ""
 
-#: modules/accounting/includes/views/user-form-rows.php:85
+#: modules/accounting/includes/views/user-form-rows.php:88
 #: modules/hrm/views/js-templates/work-experience.php:9
 msgid "ABC Corporation"
 msgstr ""
 
-#: modules/accounting/includes/views/user-form-rows.php:99
+#: modules/accounting/includes/views/user-form-rows.php:102
 msgid "(541) 754-3010"
 msgstr ""
 
-#: modules/accounting/includes/views/user-form-rows.php:117
+#: modules/accounting/includes/views/user-form-rows.php:126
 #: modules/hrm/includes/functions-employee.php:497
 #: modules/hrm/includes/functions-employee.php:629
 #: modules/hrm/includes/functions-employee.php:635
 msgid "Other"
 msgstr ""
 
-#: modules/accounting/includes/views/user-form-rows.php:133
+#: modules/accounting/includes/views/user-form-rows.php:142
 msgid "http://domain.com"
 msgstr ""
 
-#: modules/accounting/includes/views/user-form-rows.php:151
+#: modules/accounting/includes/views/user-form-rows.php:160
 #: modules/crm/includes/functions-customer.php:1648
 #: modules/crm/views/js-templates/new-customer.php:306
 #: modules/hrm/views/employee/empty-employee.php:126
@@ -10996,12 +11000,12 @@ msgstr ""
 msgid "Notes"
 msgstr ""
 
-#: modules/accounting/includes/views/user-form-rows.php:156
+#: modules/accounting/includes/views/user-form-rows.php:165
 msgid "Some information about this user"
 msgstr ""
 
-#: modules/accounting/includes/views/user-form-rows.php:163
-#: modules/accounting/includes/views/user-form-rows.php:168
+#: modules/accounting/includes/views/user-form-rows.php:172
+#: modules/accounting/includes/views/user-form-rows.php:177
 #: modules/crm/includes/functions-customer.php:1593
 #: modules/crm/includes/functions-customer.php:2848
 #: modules/crm/views/company/single.php:78
@@ -11009,8 +11013,8 @@ msgstr ""
 msgid "Street 1"
 msgstr ""
 
-#: modules/accounting/includes/views/user-form-rows.php:175
-#: modules/accounting/includes/views/user-form-rows.php:180
+#: modules/accounting/includes/views/user-form-rows.php:184
+#: modules/accounting/includes/views/user-form-rows.php:189
 #: modules/crm/includes/functions-customer.php:1607
 #: modules/crm/includes/functions-customer.php:2853
 #: modules/crm/views/company/single.php:79
@@ -11018,15 +11022,15 @@ msgstr ""
 msgid "Street 2"
 msgstr ""
 
-#: modules/accounting/includes/views/user-form-rows.php:192
+#: modules/accounting/includes/views/user-form-rows.php:201
 msgid "City/Town"
 msgstr ""
 
-#: modules/accounting/includes/views/user-form-rows.php:228
+#: modules/accounting/includes/views/user-form-rows.php:237
 msgid "Post Code"
 msgstr ""
 
-#: modules/accounting/includes/views/user-form-rows.php:233
+#: modules/accounting/includes/views/user-form-rows.php:242
 #: modules/crm/includes/functions-customer.php:1632
 #: modules/crm/includes/functions-customer.php:2868
 #: modules/crm/views/company/single.php:83
@@ -11405,27 +11409,27 @@ msgstr ""
 #: modules/hrm/includes/class-ajax.php:458
 #: modules/hrm/includes/class-ajax.php:494
 #: modules/hrm/includes/class-ajax.php:498
-#: modules/hrm/includes/class-ajax.php:564
-#: modules/hrm/includes/class-ajax.php:621
-#: modules/hrm/includes/class-ajax.php:653
-#: modules/hrm/includes/class-ajax.php:689
-#: modules/hrm/includes/class-ajax.php:718
-#: modules/hrm/includes/class-ajax.php:757
-#: modules/hrm/includes/class-ajax.php:802
-#: modules/hrm/includes/class-ajax.php:838
-#: modules/hrm/includes/class-ajax.php:868
-#: modules/hrm/includes/class-ajax.php:1034
-#: modules/hrm/includes/class-ajax.php:1075
-#: modules/hrm/includes/class-ajax.php:1095
-#: modules/hrm/includes/class-ajax.php:1144
-#: modules/hrm/includes/class-ajax.php:1167
-#: modules/hrm/includes/class-ajax.php:1218
-#: modules/hrm/includes/class-ajax.php:1240
-#: modules/hrm/includes/class-ajax.php:1285
-#: modules/hrm/includes/class-ajax.php:1307
-#: modules/hrm/includes/class-ajax.php:1360
-#: modules/hrm/includes/class-ajax.php:1406
-#: modules/hrm/includes/class-ajax.php:1589
+#: modules/hrm/includes/class-ajax.php:573
+#: modules/hrm/includes/class-ajax.php:630
+#: modules/hrm/includes/class-ajax.php:662
+#: modules/hrm/includes/class-ajax.php:698
+#: modules/hrm/includes/class-ajax.php:727
+#: modules/hrm/includes/class-ajax.php:766
+#: modules/hrm/includes/class-ajax.php:811
+#: modules/hrm/includes/class-ajax.php:847
+#: modules/hrm/includes/class-ajax.php:877
+#: modules/hrm/includes/class-ajax.php:1043
+#: modules/hrm/includes/class-ajax.php:1084
+#: modules/hrm/includes/class-ajax.php:1104
+#: modules/hrm/includes/class-ajax.php:1153
+#: modules/hrm/includes/class-ajax.php:1176
+#: modules/hrm/includes/class-ajax.php:1227
+#: modules/hrm/includes/class-ajax.php:1249
+#: modules/hrm/includes/class-ajax.php:1294
+#: modules/hrm/includes/class-ajax.php:1316
+#: modules/hrm/includes/class-ajax.php:1369
+#: modules/hrm/includes/class-ajax.php:1415
+#: modules/hrm/includes/class-ajax.php:1598
 #: modules/hrm/includes/class-form-handler.php:106
 #: modules/hrm/includes/class-form-handler.php:133
 #: modules/hrm/includes/class-form-handler.php:181
@@ -12971,7 +12975,7 @@ msgstr ""
 
 #: modules/crm/views/js-templates/customer-add-schedules.php:96
 #: modules/crm/views/js-templates/customer-schedule-note.php:96
-#: modules/hrm/includes/class-ajax.php:1488
+#: modules/hrm/includes/class-ajax.php:1497
 #: modules/hrm/views/js-templates/leave-days.php:7
 msgid "day"
 msgstr ""
@@ -13561,8 +13565,8 @@ msgid "Invalid Type received"
 msgstr ""
 
 #: modules/hrm/includes/api/class-leave-entitlements-controller.php:257
-#: modules/hrm/includes/api/class-leave-requests-controller.php:263
-#: modules/hrm/includes/api/class-leave-requests-controller.php:269
+#: modules/hrm/includes/api/class-leave-requests-controller.php:265
+#: modules/hrm/includes/api/class-leave-requests-controller.php:271
 msgid "Employee id for the resource."
 msgstr ""
 
@@ -13577,13 +13581,13 @@ msgstr ""
 
 #: modules/hrm/includes/api/class-leave-entitlements-controller.php:275
 #: modules/hrm/includes/api/class-leave-holidays-controller.php:281
-#: modules/hrm/includes/api/class-leave-requests-controller.php:275
+#: modules/hrm/includes/api/class-leave-requests-controller.php:277
 msgid "Start date for the resource."
 msgstr ""
 
 #: modules/hrm/includes/api/class-leave-entitlements-controller.php:284
 #: modules/hrm/includes/api/class-leave-holidays-controller.php:290
-#: modules/hrm/includes/api/class-leave-requests-controller.php:284
+#: modules/hrm/includes/api/class-leave-requests-controller.php:286
 msgid "End date for the resource."
 msgstr ""
 
@@ -13591,11 +13595,11 @@ msgstr ""
 msgid "Color for the resource."
 msgstr ""
 
-#: modules/hrm/includes/api/class-leave-requests-controller.php:141
+#: modules/hrm/includes/api/class-leave-requests-controller.php:142
 msgid "Set entitlement to the employee first."
 msgstr ""
 
-#: modules/hrm/includes/api/class-leave-requests-controller.php:293
+#: modules/hrm/includes/api/class-leave-requests-controller.php:295
 msgid "Reason for the resource."
 msgstr ""
 
@@ -13610,7 +13614,7 @@ msgstr ""
 #: modules/hrm/includes/class-ajax.php:306
 #: modules/hrm/includes/class-ajax.php:445
 #: modules/hrm/includes/class-ajax.php:473
-#: modules/hrm/includes/class-ajax.php:1582
+#: modules/hrm/includes/class-ajax.php:1591
 #: modules/hrm/includes/class-form-handler.php:508
 #: modules/hrm/includes/class-form-handler.php:610
 msgid "Something went wrong!"
@@ -13625,7 +13629,7 @@ msgid "Department has been deleted"
 msgstr ""
 
 #: modules/hrm/includes/class-ajax.php:387
-#: modules/hrm/includes/class-ajax.php:1416
+#: modules/hrm/includes/class-ajax.php:1425
 msgid "Something went worng!"
 msgstr ""
 
@@ -13637,116 +13641,122 @@ msgstr ""
 msgid "Designation has been deleted"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:510
+#: modules/hrm/includes/class-ajax.php:504
+msgid ""
+"User with the same email address already exist. Please try with different "
+"email."
+msgstr ""
+
+#: modules/hrm/includes/class-ajax.php:519
 msgid "Could not create employee. Please try again."
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:546
+#: modules/hrm/includes/class-ajax.php:555
 msgid "Employee does not exists."
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:572
-#: modules/hrm/includes/class-ajax.php:599
-#: modules/hrm/includes/class-ajax.php:626
-#: modules/hrm/includes/class-ajax.php:658
-#: modules/hrm/includes/class-ajax.php:723
-#: modules/hrm/includes/class-ajax.php:1139
-#: modules/hrm/includes/class-ajax.php:1213
-#: modules/hrm/includes/class-ajax.php:1280
+#: modules/hrm/includes/class-ajax.php:581
+#: modules/hrm/includes/class-ajax.php:608
+#: modules/hrm/includes/class-ajax.php:635
+#: modules/hrm/includes/class-ajax.php:667
+#: modules/hrm/includes/class-ajax.php:732
+#: modules/hrm/includes/class-ajax.php:1148
+#: modules/hrm/includes/class-ajax.php:1222
+#: modules/hrm/includes/class-ajax.php:1289
 msgid "No employee found"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:580
+#: modules/hrm/includes/class-ajax.php:589
 msgid "Employee has been removed successfully"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:606
+#: modules/hrm/includes/class-ajax.php:615
 msgid "Employee has been restore successfully"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:695
+#: modules/hrm/includes/class-ajax.php:704
 msgid "Invalid Employee received."
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:863
+#: modules/hrm/includes/class-ajax.php:872
 msgid "Something wrong"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:942
+#: modules/hrm/includes/class-ajax.php:951
 msgid "Employee already exist."
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1040
+#: modules/hrm/includes/class-ajax.php:1049
 msgid "No performance type selected"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1046
+#: modules/hrm/includes/class-ajax.php:1055
 msgid "Could not find the employee"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1117
-#: modules/hrm/includes/class-ajax.php:1191
-#: modules/hrm/includes/class-ajax.php:1258
+#: modules/hrm/includes/class-ajax.php:1126
+#: modules/hrm/includes/class-ajax.php:1200
+#: modules/hrm/includes/class-ajax.php:1267
 msgid "You have to be an employee to do this action"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1413
+#: modules/hrm/includes/class-ajax.php:1422
 msgid "Policy has been deleted"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1436
-#: modules/hrm/includes/class-ajax.php:1506
-#: modules/hrm/includes/class-ajax.php:1545
+#: modules/hrm/includes/class-ajax.php:1445
+#: modules/hrm/includes/class-ajax.php:1515
+#: modules/hrm/includes/class-ajax.php:1554
 msgid "Please select an employee"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1442
-#: modules/hrm/includes/class-ajax.php:1549
+#: modules/hrm/includes/class-ajax.php:1451
+#: modules/hrm/includes/class-ajax.php:1558
 msgid "Please select a policy"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1452
+#: modules/hrm/includes/class-ajax.php:1461
 msgid "Invalid date range"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1456
+#: modules/hrm/includes/class-ajax.php:1465
 msgid "Date range must be within %s to %s"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1462
+#: modules/hrm/includes/class-ajax.php:1471
 msgid "Existing Leave Record found within selected range!"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1471
+#: modules/hrm/includes/class-ajax.php:1480
 msgid "Sorry! You do not have any leave left under this leave policy"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1513
+#: modules/hrm/includes/class-ajax.php:1522
 #: modules/hrm/views/js-templates/new-leave-request.php:9
 msgid "Leave Type"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1526
+#: modules/hrm/includes/class-ajax.php:1535
 msgid ""
 "Selected user is not entitled to any leave policy. Set leave entitlement to "
 "apply for leave"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1559
-#: modules/hrm/includes/class-ajax.php:1561
-#: modules/hrm/includes/class-ajax.php:1564
+#: modules/hrm/includes/class-ajax.php:1568
+#: modules/hrm/includes/class-ajax.php:1570
+#: modules/hrm/includes/class-ajax.php:1573
 msgid "days are available"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1616
+#: modules/hrm/includes/class-ajax.php:1625
 msgid "Leave request has been submitted successfully!"
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1618
+#: modules/hrm/includes/class-ajax.php:1627
 msgid "Something went wrong, please try again."
 msgstr ""
 
-#: modules/hrm/includes/class-ajax.php:1650
+#: modules/hrm/includes/class-ajax.php:1659
 msgid "Invalid request permission."
 msgstr ""
 
@@ -14511,7 +14521,7 @@ msgstr ""
 msgid "You can not delete this department because it contains employees."
 msgstr ""
 
-#: modules/hrm/includes/functions-department.php:188
+#: modules/hrm/includes/functions-department.php:189
 msgid "- Select Department -"
 msgstr ""
 
@@ -15815,6 +15825,10 @@ msgid "Year"
 msgid_plural "Years"
 msgstr[0] ""
 msgstr[1] ""
+
+#: vendor/a5hleyrich/wp-background-processing/classes/wp-background-process.php:425
+msgid "Every %d Minutes"
+msgstr ""
 
 #: wp-erp.php:186
 msgid "<h1>An Error Occured</h1>"
