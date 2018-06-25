@@ -35,7 +35,17 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
     </div>
 
     <div class="activity-content">
-
+        <div class="activity-feed" style="margin-bottom: 10px">
+            <select name="" id="" v-model="findFeeds.type"> 
+                <option value="email">Email</option>
+                <option value="tasks">Task</option>
+                <option value="log_activity">Schedule</option>
+                <option value="new_note">Note</option>
+            </select>
+            <input type="text" placeholder="From" class="erp-date-field" v-model="findFeeds.created_from">
+            <input type="text" placeholder="To" class="erp-date-field" v-model="findFeeds.created_to">
+            <input type="submit" value="Filter" class="button action" @click="searchFeeds">
+        </div>
         <ul class="timeline" v-if = "feeds.length">
             <template v-for="( month, feed_obj ) in feeds | formatFeeds">
 
@@ -49,9 +59,7 @@ $feeds_tab = erp_crm_get_customer_feeds_nav();
                 </li>
 
             </template>
-
         </ul>
-
         <div class="feed-load-more" v-show="( feeds.length >= limit ) && !loadingFinish">
             <button @click="loadMoreContent( feeds )" class="button">
                 <i class="fa fa-cog fa-spin" v-if="loading"></i>
