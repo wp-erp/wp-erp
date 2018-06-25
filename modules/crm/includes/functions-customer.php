@@ -1002,8 +1002,10 @@ function erp_crm_assign_task_to_users( $data, $save_data ) {
 function erp_crm_save_contact_group( $data ) {
     if ( ! empty ( $data['id'] ) ) {
         $result = WeDevs\ERP\CRM\Models\ContactGroup::find( $data['id'] )->update( $data );
+	    do_action( 'erp_crm_update_contact_group', $result );
     } else {
         $result = WeDevs\ERP\CRM\Models\ContactGroup::create( $data );
+	    do_action( 'erp_crm_create_contact_group', $result );
     }
 
     return $result;
@@ -1119,6 +1121,8 @@ function erp_crm_contact_group_delete( $id ) {
     } else {
         WeDevs\ERP\CRM\Models\ContactGroup::find( $id )->delete();
     }
+
+	do_action( 'erp_crm_delete_contact_group', $id );
 }
 
 /**
