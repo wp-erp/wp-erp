@@ -1450,7 +1450,8 @@ class Ajax_Handler {
             $this->send_error( $results->get_error_message() );
         }
 
-        $this->send_success( $results );
+
+        $this->send_success( stripslashes_deep($results) );
     }
 
     /**
@@ -1472,7 +1473,7 @@ class Ajax_Handler {
         $result = erp_crm_get_save_replies_by_id( $query_id );
 
         if ( $result ) {
-            $this->send_success( $result );
+            $this->send_success( stripslashes_deep($result) );
         }
 
         $this->send_error( __( 'No results found', 'erp' ) );

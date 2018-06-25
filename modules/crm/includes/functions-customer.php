@@ -2942,7 +2942,7 @@ function erp_crm_get_save_replies_by_id( $id ) {
     if ( is_array( $id ) ) {
         return WeDevs\ERP\CRM\Models\Save_Replies::whereIn( 'id', $id )->get()->toArray();
     } else {
-        return WeDevs\ERP\CRM\Models\Save_Replies::find( $id );
+        return WeDevs\ERP\CRM\Models\Save_Replies::find( $id )->toArray();
     }
 }
 
