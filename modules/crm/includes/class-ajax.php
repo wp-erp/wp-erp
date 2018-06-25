@@ -773,8 +773,6 @@ class Ajax_Handler {
         ];
 
         erp_crm_save_contact_group( $data );
-		
-		do_action( 'erp_crm_save_contact_group', $data );
 
         $this->send_success( __( 'Contact group save successfully', 'erp' ) );
     }
@@ -792,8 +790,6 @@ class Ajax_Handler {
         $query_id = isset( $_REQUEST['id'] ) ? intval( $_REQUEST['id'] ) : 0;
 
         $result = erp_crm_get_contact_group_by_id( $query_id );
-		
-		do_action( 'erp_crm_edit_contact_group', $result );
 
         $this->send_success( $result );
     }
@@ -820,8 +816,6 @@ class Ajax_Handler {
         }
 
         erp_crm_contact_group_delete( $query_id );
-
-		do_action( 'erp_crm_delete_contact_group', $query_id );
 
         $this->send_success( __( 'Contact group delete successfully', 'erp' ) );
     }
