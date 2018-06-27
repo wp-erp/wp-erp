@@ -1361,6 +1361,7 @@ function erp_crm_contact_subscriber_delete( $id, $group_id ) {
  * @since 1.0
  * @since 1.2.2 Add hash in case of new subscriber
  * @since 1.2.3 Add hook after subscriber confirmation
+ * @since 1.3.13 Add hook after unsubscribed from a group
  *
  * @param  array $groups
  * @param  integer $user_id
@@ -1427,7 +1428,7 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
 
     if ( ! empty( $del_group ) ) {
         foreach ( $del_group as $del_group_key => $del_group_id ) {
-            \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )
+            $subscriber = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )
                                                     ->where( 'group_id', $del_group_id )
                                                     ->where( 'status', 'subscribe' )
                                                     ->update( [
@@ -1435,6 +1436,8 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
                                                         'subscribe_at'   => null,
                                                         'unsubscribe_at' => current_time( 'mysql' )
                                                     ] );
+
+            do_action( 'erp_crm_delete_contact_subscriber', $subscriber );
         }
     }
 }
