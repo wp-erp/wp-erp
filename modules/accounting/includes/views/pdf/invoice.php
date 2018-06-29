@@ -46,7 +46,7 @@ if ( $transaction->ref ) {
 //$invoice->set_reference( '2034802394', __( 'VAT NO', 'erp' ) );
 
 // Set Issue Date
-if ( $transaction-> issue_date ) {
+if ( $transaction->issue_date ) {
     $invoice->set_reference( $transaction->issue_date, __( 'ISSUE DATE', 'erp' ) );
 }
 
@@ -77,6 +77,11 @@ $invoice->set_first_column_width(60);
 foreach ( $transaction->items as $line ) {
     $invoice->add_item( [$line->journal->ledger->name], $line->qty, html_entity_decode( erp_ac_get_price( $line->unit_price ) ), $line->discount.'%', ( $line->tax_rate * $line->line_total ) / 100 .' '. '('.number_format(( float )$line->tax_rate, 2, '.','').'%)', html_entity_decode( erp_ac_get_price( $line->line_total ) ) );
     $invoice->add_item( [$line->description]);
+}
+
+// Invoice add memo
+if ( $transaction->summary ) {
+    $invoice->set_memo( $transaction->summary );
 }
 
 // Subtotal and Total

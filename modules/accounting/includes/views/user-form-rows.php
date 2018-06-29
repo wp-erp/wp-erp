@@ -26,7 +26,9 @@
 
     if ( isset( $item ) && $item ) {
         $item_type = in_array( 'customer', $item->types ) ? 'customer' : 'vendor';
-    };
+    } else {
+        $item = new stdClass();
+    }
 
 ?>
 
@@ -38,7 +40,7 @@
     </p>
 </div>
 <ul class="erp-form-fields erp-list">
-    <?php 
+    <?php
         // Top action
         do_action( 'erp_accounting_' . $item_type . '_form_top', $item );
     ?>
@@ -116,7 +118,7 @@
         ) ); ?>
     </li>
 
-    <?php 
+    <?php
         // Middle Action
         do_action( 'erp_accounting_' . $item_type . '_form_middle', $item );
     ?>
@@ -244,7 +246,7 @@
             'value'       => isset( $item->postal_code ) ? $item->postal_code : '',
         ) ); ?>
     </li>
-    <?php 
+    <?php
         // Bottom action
         do_action( 'erp_accounting_' . $item_type . '_form_bottom', $item );
     ?>

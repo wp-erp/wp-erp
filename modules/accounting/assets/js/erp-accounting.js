@@ -132,6 +132,26 @@
                     cache: true
                 }
             });
+
+            $( 'select#erp-ac-select-user-for-assign-contact' ).on( 'select2:select', function (e) {
+                if ( $(this).data('type') === 'customer' ) {
+                    var customer_id = e.params.data.id;
+
+                    wp.ajax.send('get-customer-address', {
+                        data: {
+                            'id': customer_id,
+                            '_wpnonce': ERP_AC.nonce
+                        },
+                        success: function(res) {
+                            $('#billing_address').val('');
+
+                            if (res.join('')) {
+                                $('#billing_address').val(res.join(''));
+                            }
+                        }
+                    });
+                }
+            } );
         },
 
         initVendorCheck: function() {
@@ -1937,4 +1957,3 @@
     });
 
 })(jQuery);
-
