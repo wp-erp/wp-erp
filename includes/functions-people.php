@@ -426,9 +426,10 @@ function erp_get_people_by( $field, $value ) {
  * Insert a new people
  *
  * @since 1.0.0
- * @since 1.2.2 Insert people hash key if not exists one
- * @since 1.2.7 contact_owner, life_stage, hash brought to main table
- * @since 1.2.7 Assign first name as company name for accounting customer search
+ * @since 1.2.2  Insert people hash key if not exists one
+ * @since 1.2.7  contact_owner, life_stage, hash brought to main table
+ * @since 1.2.7  Assign first name as company name for accounting customer search
+ * @since 1.3.13 Pass $people_type in create and update people hooks
  *
  * @param array $argserp_insert_people
  *
@@ -635,9 +636,9 @@ function erp_insert_people( $args = array(), $return_object = false ) {
     }
 
     if ( ! $existing_people->id ) {
-        do_action( 'erp_create_new_people', $people->id, $args );
+        do_action( 'erp_create_new_people', $people->id, $args, $people_type );
     } else {
-        do_action( 'erp_update_people', $people->id, $args );
+        do_action( 'erp_update_people', $people->id, $args, $people_type );
     }
 
     if ( ! empty( $is_existing_people ) ) {
