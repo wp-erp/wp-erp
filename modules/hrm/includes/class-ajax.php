@@ -500,7 +500,7 @@ class Ajax_Handler {
         }
 
         if ( ! empty( $posted['user_email'] ) ) {
-            if ( erp_is_employee_exist( $posted['user_email'] ) ) {
+            if ( erp_is_employee_exist( $posted['user_email'], $user_id ) ) {
                 $this->send_error( __( 'User with the same email address already exist. Please try with different email.', 'erp' ) );
             }
 
