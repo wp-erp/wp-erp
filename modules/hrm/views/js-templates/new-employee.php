@@ -1,7 +1,4 @@
 <div class="erp-employee-form erp-form">
-
-    <?php do_action( 'erp-hr-employee-form-top' ); ?>
-
     <div class="erp-grid-container">
         <div class="row">
             <div class="col-2 left-column">
@@ -29,6 +26,7 @@
 
                     <div class="erp-grid-container employee-basic">
                         <div class="row">
+                            <?php do_action( 'erp-hr-employee-form-top' ); ?>
                             <div class="col-3">
                                 <?php erp_html_form_input( array(
                                     'label'       => __( 'First Name', 'erp' ),
@@ -128,9 +126,9 @@
                                 ?>
                             </div>
                             <?php endif; ?>
-
+                            
+                            <?php do_action( 'erp-hr-employee-form-basic' ); ?>
                         </div>
-                        <?php do_action( 'erp-hr-employee-form-basic' ); ?>
                     </div>
 
                     <p class="advanced-fields">
