@@ -188,11 +188,13 @@ function erp_html_form_input( $args = array() ) {
             break;
 
         case 'radio':
+            echo '<span class="checkbox">';
             if ( $field['options'] ) {
-                foreach ( $field['options'] as $key => $value) {
-                    echo '<input type="radio" '.checked( $field['value'], $key, false ).' value="'.$key.'" ' . implode( ' ', $custom_attributes ) . ' />'. $value . '&nbsp;';
+                foreach ( $field['options'] as $key => $value) { 
+                    echo '<input type="radio" '.checked( $field['value'], $key, false ).' value="'.$key.'" ' . implode( ' ', $custom_attributes ) . ' id="'. esc_attr( $field_attributes['id'] ) . '-' . $key . '"/>'. $value . '&nbsp; <br><br>';
                 }
             }
+             echo '</span>';
             break;
 
         case 'file':
