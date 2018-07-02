@@ -1329,13 +1329,13 @@ class Employees_Controller extends REST_Controller {
      * @return mixed|\WP_Error|\WP_REST_Response
      */
     public function create_terminate( $request ) {
-        $user_id  = (int) $request['id'];
+        $user_id  = (int) $request['user_id'];
         $employee = new Employee( $user_id );
         if ( ! $employee ) {
             return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
         }
 
-        $employee_id         = isset( $request['employee_id'] ) ? intval( $request['employee_id'] ) : 0;
+        $employee_id         = isset( $request['user_id'] ) ? intval( $request['user_id'] ) : 0;
         $terminate_date      = ( empty( $request['terminate_date'] ) ) ? current_time( 'mysql' ) : $request['terminate_date'];
         $termination_type    = isset( $request['termination_type'] ) ? $request['termination_type'] : '';
         $termination_reason  = isset( $request['termination_reason'] ) ? $request['termination_reason'] : '';
@@ -1348,7 +1348,6 @@ class Employees_Controller extends REST_Controller {
             'termination_reason'  => $termination_reason,
             'eligible_for_rehire' => $eligible_for_rehire
         ];
-
         $result = $employee->terminate( $fields );
 
         if ( is_wp_error( $result ) ) {
