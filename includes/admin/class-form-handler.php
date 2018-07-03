@@ -30,6 +30,7 @@ class Form_Handler {
      * Save all settings
      *
      * @since 0.1
+     * @since 1.3.13 create_active_module_tables()
      *
      * @return void
      */
@@ -57,6 +58,12 @@ class Form_Handler {
             $all_modules    = array_merge( $all_modules, $active_modules );
         }
         update_option( 'erp_modules', $all_modules );
+
+        // Create active module wise database creation
+        $db_setup = new \WeDevs\ERP\WPERP_DB_Setup();
+        $db_setup->create_active_module_tables();
+        $db_setup->populate_initial_data();
+
         wp_redirect( $_POST['_wp_http_referer'] );
         exit();
     }

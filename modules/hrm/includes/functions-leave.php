@@ -475,6 +475,10 @@ function erp_hr_apply_policy_on_new_employee( $user_id ) {
  * @return void
  */
 function erp_hr_apply_scheduled_policies() {
+    if ( get_option( 'erp_setup_wizard_ran' ) != '1' ) {
+        return;
+    }
+
     $policies = \WeDevs\ERP\HRM\Models\Leave_Policies::where( 'activate', 2 )->get();
 
     $policies->each( function ( $policy ) {
@@ -1492,6 +1496,9 @@ function erp_hr_leave_period() {
  * @return void
  */
 function erp_hr_apply_entitlement_yearly() {
+    if ( get_option( 'erp_setup_wizard_ran' ) != '1' ) {
+        return;
+    }
 
     $financial_start_date = erp_financial_start_date();
     $financial_end_date   = erp_financial_end_date();
