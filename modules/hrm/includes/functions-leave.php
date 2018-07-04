@@ -984,7 +984,9 @@ function erp_hr_get_leave_requests( $args = array() ) {
         'number'    => 20,
         'offset'    => 0,
         'orderby'   => 'created_on',
-        'order'     => 'DESC'
+        'order'     => 'DESC',
+        'start_date' => '',
+        'end_date'   => ''
     );
 
     $args  = wp_parse_args( $args, $defaults );
@@ -1031,6 +1033,17 @@ function erp_hr_get_leave_requests( $args = array() ) {
     if ( ! empty( $args['year'] ) ) {
         $from_date = $args['year'] . '-01-01';
         $to_date   = $args['year'] . '-12-31';
+
+        if ( empty( $where ) ) {
+            $where .= " WHERE req.start_date >= date('$from_date') AND req.start_date <= date('$to_date')";
+        } else {
+            $where .= " AND req.start_date >= date('$from_date') AND req.start_date <= date('$to_date')";
+        }
+    }
+
+    if ( $args['start_date']  && $args['end_date'] ) {
+        $from_date = $args['start_date'];
+        $to_date   = $args['end_date'];
 
         if ( empty( $where ) ) {
             $where .= " WHERE req.start_date >= date('$from_date') AND req.start_date <= date('$to_date')";
@@ -1119,12 +1132,20 @@ function erp_hr_leave_get_requests_count() {
  */
 function erp_hr_leave_request_update_status( $request_id, $status ) {
     $request = \WeDevs\ERP\HRM\Models\Leave_request::find( $request_id );
-
     if ( empty( $request ) ) {
         return new WP_Error( 'no-request-found', __( 'Invalid leave request', 'erp' ) );
     }
-
     $status = absint( $status );
+    $existing_request = erp_hr_get_leave_requests( array( 
+        'user_id'     => $request->user_id,
+        'status'      => 1,
+        'start_date'  => $request->start_date,  
+        'end_date'    => $request->end_date,  
+    ) );
+
+    if ( count( $existing_request ) ) {
+        return new WP_Error( 'existing-request-found', __( 'Leave request already approved', 'erp' ) );
+    }
 
     $request->status     = $status;
     $request->updated_by = get_current_user_id();
