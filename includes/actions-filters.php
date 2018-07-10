@@ -8,6 +8,7 @@ add_action( 'admin_footer', 'erp_import_export_javascript' );
 add_action( 'admin_init', 'erp_process_import_export' );
 add_action( 'admin_notices', 'erp_importer_notices' );
 add_action( 'admin_init', 'erp_import_export_download_sample_action' );
+add_action( 'admin_init', 'create_all_db_tables' );
 
 /** Filters *******************************************************************/
 

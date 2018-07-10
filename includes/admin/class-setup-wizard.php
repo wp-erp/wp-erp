@@ -114,7 +114,21 @@ class Setup_Wizard {
         exit;
     }
 
+    /**
+     * Get next step link
+     *
+     * @since 1.3.13 create_active_module_tables()
+     *
+     * @return string
+     */
     public function get_next_step_link() {
+        if ( $this->step == 'department' ) {
+            // Create active module wise database creation
+            $db_setup = new \WeDevs\ERP\WPERP_DB_Setup();
+            $db_setup->create_active_module_tables();
+            $db_setup->populate_initial_data();
+        }
+
         $keys = array_keys( $this->steps );
         return add_query_arg( 'step', $keys[ array_search( $this->step, array_keys( $this->steps ) ) + 1 ], remove_query_arg( 'translation_updated' ) );
     }
@@ -208,7 +222,15 @@ class Setup_Wizard {
         <?php
     }
 
+    /**
+     * Basic step setup
+     *
+     * @since 1.3.13 create_base_tables()
+     */
     public function setup_step_basic() {
+        $db_setup = new \WeDevs\ERP\WPERP_DB_Setup();
+        $db_setup->create_base_tables();
+
         $general         = get_option( 'erp_settings_general', array() );
         $accounting      = get_option( 'erp_settings_accounting', array() );
         $company         = new \WeDevs\ERP\Company();
@@ -364,10 +386,6 @@ class Setup_Wizard {
             update_option( 'erp_tracking_notice', 'hide' );
 
             wp_clear_scheduled_hook( 'erp_tracker_send_event' );
-            wp_schedule_event( time(), 'weekly', 'erp_tracker_send_event' );
-
-            $tracker = new \WeDevs\ERP\Tracker();
-            $tracker->send_tracking_data();
         }
 
         $company->update( array(
@@ -431,13 +449,20 @@ class Setup_Wizard {
 
     /**
      * Module setup step save
+     *
      * @since 1.3.4
+     * @since 1.3.13 create_active_module_tables()
+     * @since 1.3.13 schedule track event
      */
     public function setup_step_module_save() {
         check_admin_referer( 'erp-setup' );
 
         $all_modules = wperp()->modules->get_modules();
         $modules     = array_map( 'sanitize_text_field', wp_unslash( $_POST['modules'] ) );
+
+        if ( empty( $modules ) ) {
+            die( 'You have to select at least one module.' );
+        }
 
         foreach ( $all_modules as $key => $module ) {
             if ( ! in_array( $key, $modules ) ) {
@@ -452,6 +477,23 @@ class Setup_Wizard {
             unset( $this->steps['department'] );
             unset( $this->steps['designation'] );
             unset( $this->steps['workdays'] );
+        }
+
+        // Create active module wise database creation
+        $db_setup = new \WeDevs\ERP\WPERP_DB_Setup();
+        $db_setup->create_active_module_tables();
+        $db_setup->populate_initial_data();
+
+        // Tracking
+
+        if ( 'yes' == get_option('erp_allow_tracking') &&
+            erp_is_module_active('crm') &&
+            erp_is_module_active( 'accounting' )
+        ) {
+            wp_schedule_event( time(), 'weekly', 'erp_tracker_send_event' );
+
+            $tracker = new \WeDevs\ERP\Tracker();
+            $tracker->send_tracking_data();
         }
 
         wp_redirect( esc_url_raw( $this->get_next_step_link() ) );

@@ -93,6 +93,15 @@ class ERP_Settings_General extends ERP_Settings_Page {
                 'tooltip' =>  true,
                 'default' =>  0,
             ),
+            array(
+                'title'   => __( 'Remove erp tables on uninstallation', 'erp' ),
+                'id'      => 'erp_remove_tables',
+                'type'    => 'checkbox',
+                'options' => [ 1 => __('On', 'erp'), 0 => __( 'Off', 'erp') ],
+                'desc'    => __( 'Delete all tables created by erp when uninstalling ERP', 'erp' ),
+                'tooltip' =>  true,
+                'default' =>  0
+            ),
 
             array( 'type' => 'sectionend', 'id' => 'script_styling_options' ),
 

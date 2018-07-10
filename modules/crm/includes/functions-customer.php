@@ -878,6 +878,14 @@ function erp_crm_customer_delete_activity_feed( $feed_id ) {
  * @return void
  */
 function erp_crm_customer_schedule_notification() {
+    if ( get_option( 'erp_setup_wizard_ran' ) != '1' ) {
+        return;
+    }
+
+    if ( ! erp_is_module_active( 'crm' ) ) {
+        return;
+    }
+
     $schedules = \WeDevs\ERP\CRM\Models\Activity::schedules()->get()->toArray();
 
     if ( empty( $schedules ) ) {
@@ -3376,6 +3384,9 @@ function erp_crm_get_contact_meta_fields() {
  * @return void
  */
 function erp_crm_sync_people_meta_data( $meta_id, $object_id, $meta_key, $_meta_value ) {
+    if ( get_option( 'erp_setup_wizard_ran' ) != '1' ) {
+        return;
+    }
 
     $cache_key          = 'erp_people_id_user_' . $object_id;
     $people_id          = wp_cache_get( $cache_key, 'erp' );
