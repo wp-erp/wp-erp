@@ -98,6 +98,27 @@ class WeDevs_ERP_Installer {
                 }
             }
 
+            $options = [
+                "erp_modules",
+                "erp_email_settings_employee-welcome",
+                "erp_email_settings_new-leave-request",
+                "erp_email_settings_approved-leave-request",
+                "erp_email_settings_rejected-leave-request",
+                "erp_email_settings_new-task-assigned",
+                "erp_setup_wizard_ran",
+                "wp_erp_version",
+                "wp_erp_db_version",
+                "wp_erp_install_date",
+                "_erp_company",
+                "erp_settings_general",
+                "erp_settings_accounting",
+                "erp_settings_erp-crm_subscription"
+            ];
+
+            foreach ( $options as $option ) {
+                delete_option( $option );
+            }
+
         }
     }
 
