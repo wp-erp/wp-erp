@@ -2109,9 +2109,10 @@ class Employee {
             erp_hr_get_terminate_rehire_options( $args['eligible_for_rehire'] ) );
 
         $this->update_employment_status( [
+            'type'     => $this->erp_user->type,
             'status'   => 'terminated',
             'comments' => $comments,
-            'date'     => $args['terminate_date'],
+            'date'     => $args['terminate_date']
         ] );
 
         update_user_meta( $this->id, '_erp_hr_termination', $args );
