@@ -2330,9 +2330,6 @@ table.erp-settings-table tr:nth-child(odd) td {
 .erp-grid-container .col-3 {
   width: 50%;
 }
-.erp-field-clear-fix{
-  clear: both;
-}
 .erp-grid-container .col-4 {
   width: 66.66%;
 }
@@ -2893,7 +2890,7 @@ table.audit-log-table th.col-date {
   clear: both;
 }
 .erp-modal .content .row label {
-  width: 150px;
+  min-width: 130px;
   line-height: 1.5em;
   display: inline-block;
   vertical-align: top;
@@ -2907,7 +2904,7 @@ table.audit-log-table th.col-date {
 }
 .erp-modal .content .row span.checkbox {
   float: left;
-  width: 50%;
+  width: 63%;
 }
 .erp-modal .content .row span.checkbox label {
   margin-bottom: 10px;
