@@ -1136,11 +1136,11 @@ function erp_hr_leave_request_update_status( $request_id, $status ) {
         return new WP_Error( 'no-request-found', __( 'Invalid leave request', 'erp' ) );
     }
     $status = absint( $status );
-    $existing_request = erp_hr_get_leave_requests( array( 
+    $existing_request = erp_hr_get_leave_requests( array(
         'user_id'     => $request->user_id,
         'status'      => 1,
-        'start_date'  => $request->start_date,  
-        'end_date'    => $request->end_date,  
+        'start_date'  => $request->start_date,
+        'end_date'    => $request->end_date,
     ) );
 
     if ( count( $existing_request ) ) {
@@ -1336,19 +1336,21 @@ function erp_hr_leave_count_entitlements( $args = array() ) {
  * @return void
  */
 function erp_hr_delete_entitlement( $id, $user_id, $policy_id ) {
-    $leave_recored = \WeDevs\ERP\HRM\Models\Leave_request::where( 'user_id', '=', $user_id )
-                                                         ->where( 'policy_id', '=', $policy_id )->get()->toArray();
-    $leave_recored = wp_list_pluck( $leave_recored, 'status' );
+//    $leave_recored = \WeDevs\ERP\HRM\Models\Leave_request::where( 'user_id', '=', $user_id )
+//                                                         ->where( 'policy_id', '=', $policy_id )->get()->toArray();
+//    $leave_recored = wp_list_pluck( $leave_recored, 'status' );
+//
+//    if ( in_array( '1', $leave_recored ) ) {
+//        return;
+//    }
+//
+//    if ( \WeDevs\ERP\HRM\Models\Leave_Entitlement::find( $id )->delete() ) {
+//        return \WeDevs\ERP\HRM\Models\Leave_request::where( 'user_id', '=', $user_id )
+//                                                   ->where( 'policy_id', '=', $policy_id )
+//                                                   ->delete();
+//    }
 
-    if ( in_array( '1', $leave_recored ) ) {
-        return;
-    }
-
-    if ( \WeDevs\ERP\HRM\Models\Leave_Entitlement::find( $id )->delete() ) {
-        return \WeDevs\ERP\HRM\Models\Leave_request::where( 'user_id', '=', $user_id )
-                                                   ->where( 'policy_id', '=', $policy_id )
-                                                   ->delete();
-    }
+    return \WeDevs\ERP\HRM\Models\Leave_Entitlement::find( $id )->delete();
 }
 
 /**
