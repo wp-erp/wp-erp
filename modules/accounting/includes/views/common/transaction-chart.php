@@ -95,7 +95,7 @@ if ( $hook == 'accounting_page_erp-accounting-sales'  ) {
 
     $transactions = erp_ac_get_all_transaction([
         'type'       => ['expense'],
-        'status'     => ['in' => ['draft','closed', 'partial', 'awaiting_payment']],
+        'status'     => ['in' => ['draft','closed', 'partial', 'awaiting_payment', 'paid']],
         'output_by'  => 'array',
         'number'     => -1,
         'join'       => ['payments'],
@@ -131,9 +131,7 @@ if ( $hook == 'accounting_page_erp-accounting-sales'  ) {
             $partial  = $partial + 1;
         }
 
-        if ( $transaction['status'] == 'partial' ) {
-            $received = $received + $transaction['due'];
-        } else if ( $transaction['status'] != 'draft' ) {
+        if ( $transaction['status'] == 'paid' ) {
             $received = $received + $transaction['trans_total'];
         }
 
