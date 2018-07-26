@@ -2614,3 +2614,23 @@ function erp_let_to_num( $size ) {
 
     return $ret;
 }
+
+/**
+ *
+ * Create db table for redirect from
+ * setup wizard by clicking `not right now`
+ *
+ * @since 1.3.13
+ *
+ * @return void
+ */
+function create_all_db_tables() {
+    global $pagenow;
+
+    if ( $pagenow == 'plugins.php' && get_option( 'erp_setup_wizard_ran' ) == '1' ) {
+        $db_setup = new \WeDevs\ERP\WPERP_DB_Setup();
+        $db_setup->create_base_tables();
+        $db_setup->create_active_module_tables();
+        $db_setup->populate_initial_data();
+    }
+}

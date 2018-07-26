@@ -216,6 +216,7 @@ final class WeDevs_ERP {
         include dirname( __FILE__ ) . '/vendor/autoload.php';
         require_once WPERP_INCLUDES . '/functions.php';
         require_once WPERP_INCLUDES . '/class-install.php';
+        require_once WPERP_INCLUDES . '/class-db-setup.php';
         require_once WPERP_INCLUDES . '/actions-filters.php';
         require_once WPERP_INCLUDES . '/functions-html.php';
         require_once WPERP_INCLUDES . '/functions-company.php';
@@ -241,12 +242,11 @@ final class WeDevs_ERP {
      *
      * @since 1.0.0
      * @since 1.2.0 Call `setup_database` to setup db immediately
+     * @since 1.3.13 remove `setup_database`
      *
      * @return void
      */
     private function instantiate() {
-        $this->setup_database();
-
         new \WeDevs\ERP\Admin\User_Profile();
         new \WeDevs\ERP\Scripts();
         new \WeDevs\ERP\Updates();

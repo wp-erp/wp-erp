@@ -157,6 +157,10 @@ function erp_parent_sort( array $objects, array &$result = array(), $parent = 0,
  * @return array
  */
 function erp_hr_schedule_check_todays_birthday() {
+    if ( get_option( 'erp_setup_wizard_ran' ) != '1' ) {
+        return;
+    }
+
     $birthdays = erp_hr_get_todays_birthday();
 
     // Do the action if someone's birthday today run only in cron
