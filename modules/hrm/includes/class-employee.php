@@ -1523,6 +1523,7 @@ class Employee {
             'designation'  => $args['designation'],
             'department'   => $args['department'],
             'reporting_to' => $args['reporting_to'],
+            'location'     => $args['location'],
         ] );
 
         $history = $this->get_erp_user()->histories()->updateOrCreate( [ 'id' => $args['id'] ], [
