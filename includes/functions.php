@@ -2198,6 +2198,9 @@ function erp_make_csv_file( $items, $file_name, $field_data = true ) {
  * @param void
  */
 function erp_import_export_download_sample_action() {
+
+    $type = isset( $_POST['type'] ) ? $_POST['type'] : '';
+
     if ( ! isset( $_GET['action'] ) || $_GET['action'] != 'download_sample' ) {
         return;
     }
@@ -2206,11 +2209,11 @@ function erp_import_export_download_sample_action() {
         return;
     }
 
-    if ( ! isset( $_GET['type'] ) ) {
+    if ( ! isset( $type ) ) {
         return;
     }
 
-    $type   = strtolower( $_GET['type'] );
+    $type   = strtolower( $type );
     $fields = erp_get_import_export_fields();
 
     if ( isset( $fields[ $type ] ) ) {

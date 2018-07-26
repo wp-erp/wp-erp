@@ -382,10 +382,64 @@ class Employees_Controller extends REST_Controller {
             ],
         ] );
 
+        // Upload Photo
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/upload', [
+            [
+                'methods'               => WP_REST_Server::CREATABLE,
+                'callback'              => [ $this, 'upload_photo' ],
+                'permission_callback'   => function( $request ) {
+                    return current_user_can( 'erp_create_employee' );
+                }
+            ],
+            [
+                'methods'               => WP_REST_Server::EDITABLE,
+                'callback'              => [ $this, 'update_photo' ],
+                'permission_callback'   => function() {
+                    return current_user_can( 'erp_create_employee' );
+                }
+            ]
+        ] );
 
     }
 
+    /**
+     * Upload employee photo
+     * 
+     * @param  \WP_REST_Request $request
+     * @return array         
+     */
+    public function upload_photo( \WP_REST_Request $request ) {
+        $file = isset( $_FILES['image'] ) ? $_FILES['image'] : array();
 
+        if ( ! $file ) {
+            return;
+        }
+
+        require_once( ABSPATH . 'wp-admin/includes/image.php' );
+        require_once( ABSPATH . 'wp-admin/includes/file.php' );
+        require_once( ABSPATH . 'wp-admin/includes/media.php' );
+        
+        $attachment_id =  media_handle_upload( 'image', 0 );
+
+        $response = array( 
+            'photo_id'  => $attachment_id
+        );
+        return $response ;
+    }
+
+    /**
+     * Update Photo
+     * 
+     * @param  \WP_REST_Request $request 
+     * @return bool
+     */
+    public function update_photo( \WP_REST_Request $request ) {
+        $photo_id   = isset( $request['photo_id'] ) ? $request['photo_id'] : 0;
+        $user_id    = isset( $request['user_id'] ) ? $request['user_id'] : 0;
+
+        update_user_meta( $user_id, 'photo_id', $photo_id );
+    }
+    
     /**
      * Get a collection of employees
      *
