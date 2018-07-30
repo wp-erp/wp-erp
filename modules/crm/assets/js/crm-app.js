@@ -610,7 +610,13 @@ var vm = new Vue({
             customer_id: '',
             created_at: ''
         },
-        i18n: {}
+        i18n: {},
+        findFeeds: {
+            type: 'email',
+            created_from: '',
+            created_to: ''
+        },
+        dataFeeds: [],
     },
 
     events: {
@@ -911,7 +917,8 @@ var vm = new Vue({
             }
 
             jQuery.post( wpCRMvue.ajaxurl, data, function( resp ) {
-                vm.feeds = resp.data;
+                vm.feeds     = resp.data;
+                vm.dataFeeds = resp.data;
                 if ( filter ) {
                     vm.progreassDone();
                 }
@@ -967,6 +974,17 @@ var vm = new Vue({
                 }
             });
         },
+
+        searchFeeds: function() {
+            vm.feeds = vm.dataFeeds.filter( function( item ) {
+                if ( vm.findFeeds.created_from != '' && vm.findFeeds.created_to != '' ) {
+                    var created_date = moment( item.created_at ).format('YYYY-MM-DD');
+                    return ( item.type == vm.findFeeds.type )  && ( created_date >= vm.findFeeds.created_from  &&  created_date <= vm.findFeeds.created_to );
+                } else {
+                    return item.type == vm.findFeeds.type;
+                }
+            } );
+        }
     },
 
     ready: function() {

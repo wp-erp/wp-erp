@@ -52,6 +52,7 @@ class Ajax_Handler {
         $this->action( 'wp_ajax_erp-ac-trns-redo', 'transaction_redo' );
         $this->action( 'wp_ajax_erp-search-ac-user', 'search_user' );
         $this->action( 'wp_ajax_erp-check-vendor-existance', 'check_vendor_existance' );
+        $this->action( 'wp_ajax_get-customer-address', 'get_customer_formatted_address' );
     }
 
     /**
@@ -887,5 +888,44 @@ class Ajax_Handler {
         }
 
         $this->send_success( $people );
+     }
+
+     /**
+      * Get customer address for billing
+      * @return string
+      */
+     public function get_customer_formatted_address() {
+        $this->verify_nonce( 'erp-ac-nonce' );
+
+        $customer = erp_get_people( $_REQUEST['id'] );
+        $customer_address = [];
+
+        // Street
+        $street = '';
+        $street .= !empty($customer->street_1) ? $customer->street_1 . ', ' : '';
+        $street .= !empty($customer->street_2) ? $customer->street_2 : '';
+
+        if ($street) {
+            $street .= "\n";
+        }
+        array_push($customer_address, $street);
+
+        // City
+        $city = !empty($customer->city) ? $customer->city . "\n" : '';
+        array_push($customer_address, $city);
+
+        // State
+        $state = ($customer->state !== '-1') ? erp_get_state_name( $customer->country, $customer->state ) . "\n" : '';
+        array_push($customer_address, $state);
+
+        // Postal code
+        $postal_code = !empty($customer->postal_code) ? $customer->postal_code . "\n" : '';
+        array_push($customer_address, $postal_code);
+
+        // Country
+        $country = ($customer->country !== '-1') ? erp_get_country_name( $customer->country) : '';
+        array_push($customer_address, $country);
+
+        $this->send_success( $customer_address );
      }
 }
