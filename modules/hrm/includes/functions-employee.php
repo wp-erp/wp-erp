@@ -995,9 +995,9 @@ function erp_hr_get_single_link( $user_id ) {
  * @return array
  *
  */
-function erp_is_employee_exist( $email ) {
+function erp_is_employee_exist( $email, $user_id ) {
     global $wpdb;
     $user_email = sanitize_email($email);
-    $sql    = "select user.ID from {$wpdb->prefix}erp_hr_employees as employee inner join {$wpdb->prefix}users as user on user.ID=employee.user_id where user.user_email='{$user_email}'";
+    $sql    = "select user.ID from {$wpdb->prefix}erp_hr_employees as employee inner join {$wpdb->prefix}users as user on user.ID=employee.user_id where user.user_email='{$user_email}' AND user.ID !='{$user_id}'";
     return $wpdb->get_col( $sql );
 }

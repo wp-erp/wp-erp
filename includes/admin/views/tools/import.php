@@ -32,7 +32,7 @@
     <div class="inside">
         <h3><?php _e( 'Import CSV', 'erp' ); ?></h3>
 
-        <form method="post" action="<?php echo admin_url( 'admin.php?page=erp-tools' ); ?>" enctype="multipart/form-data" id="import_form">
+        <form method="post" action="<?php echo $csv_sample_url; ?>" enctype="multipart/form-data" id="import_form">
 
             <table class="form-table">
                 <tbody>
@@ -58,7 +58,7 @@
                             <p class="description"><?php _e( 'Upload a csv file.', 'erp' ); ?></p>
                             <p id="download_sample_wrap">
                                 <input type="hidden" value="<?php echo $csv_sample_url; ?>" />
-                                <a href="<?php echo $csv_sample_url; ?>&type=contact">Download Sample CSV</a>
+                                <button class="button button-primary"> Download Sample CSV</button>
                             </p>
                         </td>
                     </tr>

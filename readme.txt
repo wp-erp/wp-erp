@@ -3,7 +3,7 @@ Contributors: tareq1988, wedevs, ediamin, sabbir1991, asaquzzaman, manikmist09, 
 Donate Link: https://tareq.co/donate
 Tags: ERP, CRM, HRM, Accounting, Project Management, business manager, small business, SME, contact, contacts, Customer Relationship Management, employee, leave management, hr, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 4.9.6
+Tested up to: 4.9.7
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2
@@ -15,7 +15,7 @@ An Open Source Human Resource, CRM & Accounting Solution for WordPress
 == Description ==
 
 = Ultimate Company/ Business Management Solution for WordPress =
-Trusted by more than 6000+ businesses and companies in 150 countries worldwide, WP ERP is the first full-fledged ERP (Enterprise Resource Planning) solution for your WordPress site that provides powerful CRM, HRM, Accounting & Project Management capabilities.
+Trusted by more than 7000+ businesses and companies in 150 countries worldwide, WP ERP is the first full-fledged ERP (Enterprise Resource Planning) solution for your WordPress site that provides powerful CRM, HRM, Accounting & Project Management capabilities.
 = Core Modules =
 
 WP ERP Comes with three powerful pre-built core modules -
@@ -241,6 +241,21 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+= v1.3.13 -> Jul 30, 2018 =
+[new] Search functionality for email, tasks, schedules etc in CRM contact. Closes #670
+[new] Employee image upload API added.
+[new] Add memo for invoice pdf.
+[fix] Fix employee import problem.
+[fix] Expense chart information update.
+[fix] Leave entitlement remopve system add.
+[fix] Autofill customer address to the invoice billing address.
+[fix] Email Template is adding back slash (\) on edit with single and double quote. Closes #672
+[fix] Unable to apply for leave longer than 1 day. Closes #668
+[fix] Unable to edit an existing employee. Closes #678
+[fix] Unable to terminate an employee. Closes #679
+[fix] An Employee can send multiple leave requests on the same date. Closes #682
+[tweak] Update pot file
+
 = v1.3.12 -> June 21, 2018 =
 [fix] Postal Code does not appear on a customer's user details tab. Closes #591
 [fix] A Payment voucher's total amount is not formatted as currency. Closes #592

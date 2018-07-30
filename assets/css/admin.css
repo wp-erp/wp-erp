@@ -2330,6 +2330,9 @@ table.erp-settings-table tr:nth-child(odd) td {
 .erp-grid-container .col-3 {
   width: 50%;
 }
+.erp-field-clear-fix{
+  clear: both;
+}
 .erp-grid-container .col-4 {
   width: 66.66%;
 }
@@ -2890,7 +2893,7 @@ table.audit-log-table th.col-date {
   clear: both;
 }
 .erp-modal .content .row label {
-  min-width: 130px;
+  width: 150px;
   line-height: 1.5em;
   display: inline-block;
   vertical-align: top;
@@ -2904,7 +2907,7 @@ table.audit-log-table th.col-date {
 }
 .erp-modal .content .row span.checkbox {
   float: left;
-  width: 63%;
+  width: 50%;
 }
 .erp-modal .content .row span.checkbox label {
   margin-bottom: 10px;
@@ -3634,4 +3637,7 @@ kbd {
   font-size: 12px;
   color: #f44336;
   display: none;
+}
+.billing-address {
+  margin-top: 10px;
 }

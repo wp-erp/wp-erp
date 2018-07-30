@@ -382,10 +382,64 @@ class Employees_Controller extends REST_Controller {
             ],
         ] );
 
+        // Upload Photo
+        register_rest_route( $this->namespace, '/' . $this->rest_base . '/upload', [
+            [
+                'methods'               => WP_REST_Server::CREATABLE,
+                'callback'              => [ $this, 'upload_photo' ],
+                'permission_callback'   => function( $request ) {
+                    return current_user_can( 'erp_create_employee' );
+                }
+            ],
+            [
+                'methods'               => WP_REST_Server::EDITABLE,
+                'callback'              => [ $this, 'update_photo' ],
+                'permission_callback'   => function() {
+                    return current_user_can( 'erp_create_employee' );
+                }
+            ]
+        ] );
 
     }
 
+    /**
+     * Upload employee photo
+     * 
+     * @param  \WP_REST_Request $request
+     * @return array         
+     */
+    public function upload_photo( \WP_REST_Request $request ) {
+        $file = isset( $_FILES['image'] ) ? $_FILES['image'] : array();
 
+        if ( ! $file ) {
+            return;
+        }
+
+        require_once( ABSPATH . 'wp-admin/includes/image.php' );
+        require_once( ABSPATH . 'wp-admin/includes/file.php' );
+        require_once( ABSPATH . 'wp-admin/includes/media.php' );
+        
+        $attachment_id =  media_handle_upload( 'image', 0 );
+
+        $response = array( 
+            'photo_id'  => $attachment_id
+        );
+        return $response ;
+    }
+
+    /**
+     * Update Photo
+     * 
+     * @param  \WP_REST_Request $request 
+     * @return bool
+     */
+    public function update_photo( \WP_REST_Request $request ) {
+        $photo_id   = isset( $request['photo_id'] ) ? $request['photo_id'] : 0;
+        $user_id    = isset( $request['user_id'] ) ? $request['user_id'] : 0;
+
+        update_user_meta( $user_id, 'photo_id', $photo_id );
+    }
+    
     /**
      * Get a collection of employees
      *
@@ -1329,13 +1383,13 @@ class Employees_Controller extends REST_Controller {
      * @return mixed|\WP_Error|\WP_REST_Response
      */
     public function create_terminate( $request ) {
-        $user_id  = (int) $request['id'];
+        $user_id  = (int) $request['user_id'];
         $employee = new Employee( $user_id );
         if ( ! $employee ) {
             return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
         }
 
-        $employee_id         = isset( $request['employee_id'] ) ? intval( $request['employee_id'] ) : 0;
+        $employee_id         = isset( $request['user_id'] ) ? intval( $request['user_id'] ) : 0;
         $terminate_date      = ( empty( $request['terminate_date'] ) ) ? current_time( 'mysql' ) : $request['terminate_date'];
         $termination_type    = isset( $request['termination_type'] ) ? $request['termination_type'] : '';
         $termination_reason  = isset( $request['termination_reason'] ) ? $request['termination_reason'] : '';
@@ -1348,7 +1402,6 @@ class Employees_Controller extends REST_Controller {
             'termination_reason'  => $termination_reason,
             'eligible_for_rehire' => $eligible_for_rehire
         ];
-
         $result = $employee->terminate( $fields );
 
         if ( is_wp_error( $result ) ) {

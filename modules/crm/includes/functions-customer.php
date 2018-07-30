@@ -1002,8 +1002,10 @@ function erp_crm_assign_task_to_users( $data, $save_data ) {
 function erp_crm_save_contact_group( $data ) {
     if ( ! empty ( $data['id'] ) ) {
         $result = WeDevs\ERP\CRM\Models\ContactGroup::find( $data['id'] )->update( $data );
+	    do_action( 'erp_crm_update_contact_group', $result );
     } else {
         $result = WeDevs\ERP\CRM\Models\ContactGroup::create( $data );
+	    do_action( 'erp_crm_create_contact_group', $result );
     }
 
     return $result;
@@ -1119,6 +1121,8 @@ function erp_crm_contact_group_delete( $id ) {
     } else {
         WeDevs\ERP\CRM\Models\ContactGroup::find( $id )->delete();
     }
+
+	do_action( 'erp_crm_delete_contact_group', $id );
 }
 
 /**
@@ -1357,6 +1361,7 @@ function erp_crm_contact_subscriber_delete( $id, $group_id ) {
  * @since 1.0
  * @since 1.2.2 Add hash in case of new subscriber
  * @since 1.2.3 Add hook after subscriber confirmation
+ * @since 1.3.13 Add hook after unsubscribed from a group
  *
  * @param  array $groups
  * @param  integer $user_id
@@ -1423,7 +1428,7 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
 
     if ( ! empty( $del_group ) ) {
         foreach ( $del_group as $del_group_key => $del_group_id ) {
-            \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )
+            $subscriber = \WeDevs\ERP\CRM\Models\ContactSubscriber::where( 'user_id', $user_id )
                                                     ->where( 'group_id', $del_group_id )
                                                     ->where( 'status', 'subscribe' )
                                                     ->update( [
@@ -1431,6 +1436,8 @@ function erp_crm_edit_contact_subscriber( $groups, $user_id ) {
                                                         'subscribe_at'   => null,
                                                         'unsubscribe_at' => current_time( 'mysql' )
                                                     ] );
+
+            do_action( 'erp_crm_delete_contact_subscriber', $subscriber );
         }
     }
 }
@@ -2938,7 +2945,7 @@ function erp_crm_get_save_replies_by_id( $id ) {
     if ( is_array( $id ) ) {
         return WeDevs\ERP\CRM\Models\Save_Replies::whereIn( 'id', $id )->get()->toArray();
     } else {
-        return WeDevs\ERP\CRM\Models\Save_Replies::find( $id );
+        return WeDevs\ERP\CRM\Models\Save_Replies::find( $id )->toArray();
     }
 }
 
