@@ -1966,6 +1966,13 @@ class Employee {
         $events = [];
 
         foreach ( $leave_requests as $leave_request ) {
+
+            $request_rejected   =   3;
+
+            if ( $leave_request->status == $request_rejected ) {
+                continue;
+            }
+
             $title = $leave_request->name;
             if ( $leave_request->status == 2 ) {
                 $title .= sprintf( ' ( %s ) ', __( 'Pending', 'erp' ) );
