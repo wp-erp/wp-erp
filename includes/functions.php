@@ -1589,6 +1589,7 @@ function erp_process_import_export() {
     }
 
     $field_builder_employee_options = get_option( 'erp-employee-fields' );
+    $field_builder_employees_fields = array();
 
     if ( ! empty( $field_builder_employee_options ) ) {
         foreach ( $field_builder_employee_options as $field ) {
