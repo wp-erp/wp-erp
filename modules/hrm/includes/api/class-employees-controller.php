@@ -536,6 +536,18 @@ class Employees_Controller extends REST_Controller {
         }
         $request->set_param( 'context', 'edit' );
         $item     = new Employee( $created->user_id );
+
+        // User Notification
+        if ( isset( $request['user_notification'] ) && $request['user_notification'] == true ) {
+
+            $emailer    = wperp()->emailer->get_email( 'New_Employee_Welcome' );
+            $send_login = isset( $request['login_info'] ) ? true : false;
+
+            if ( is_a( $emailer, '\WeDevs\ERP\Email' ) ) {
+                $emailer->trigger( $employee->get_user_id(), $send_login );
+            }
+        }
+
         $response = $this->prepare_item_for_response( $item, $request );
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
