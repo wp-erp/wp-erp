@@ -1361,6 +1361,25 @@
                                     $('select#erp-customer-type').trigger('change');
                                     $( 'select.erp-country-select').change();
 
+                                    selectedGroup = _.pluck( response.contact_groups, 'group_id' );
+
+                                    _.each($('input[type=checkbox].erp-crm-contact-group-class'), function (el, i) {
+                                        var optionsVal = $(el).val();
+
+                                        if ( _.contains(selectedGroup, optionsVal) ) {
+                                            var index = (_.invert(selectedGroup))[optionsVal];
+
+                                            if ( response.contact_groups[index].status == 'subscribe') {
+                                                $(el).prop('checked', true);
+                                            }
+                                            if ( response.contact_groups[index].status == 'unsubscribe') {
+                                                $(el).closest('label').find('span.checkbox-value')
+                                                    .append('<span class="unsubscribe-group">' + ' ( Unsubscribed on ' + response.contact_groups[index].unsubscribe_at + ' ) </span>');
+                                            };
+                                        }
+
+
+                                    });
                                     //$( 'li[data-selected]', modal ).each(function() {
                                     //    var self = $(this),
                                     //        selected = self.data('selected');
