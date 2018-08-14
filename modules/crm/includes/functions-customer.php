@@ -2988,7 +2988,7 @@ function erp_crm_render_save_replies( $template_id, $contact_id ) {
     }
 
     $contacts   = new \WeDevs\ERP\CRM\Contact( $contact_id );
-    $templates  = erp_crm_get_save_replies_by_id( $template_id );
+    $templates  = (object) erp_crm_get_save_replies_by_id( $template_id );
     $shortcodes = erp_crm_get_save_replies_shortcodes();
 
     $data = [];
