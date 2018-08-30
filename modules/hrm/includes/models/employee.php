@@ -26,7 +26,7 @@ class Employee extends Model {
         'location',
         'hiring_source',
         'hiring_date',
-        'termination_data',
+        'termination_date',
         'date_of_birth',
         'reporting_to',
         'pay_rate',
