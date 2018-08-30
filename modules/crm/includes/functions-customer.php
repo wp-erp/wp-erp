@@ -3116,7 +3116,7 @@ function erp_handle_user_bulk_actions() {
                     'life_stage'    => $life_stage,
                 ];
 
-                $contact_id = ( $data );
+                $contact_id = erp_insert_people( $data );
 
                 if ( is_wp_error( $contact_id ) ) {
                     continue;

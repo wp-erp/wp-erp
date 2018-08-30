@@ -1143,9 +1143,6 @@ function erp_hr_leave_request_update_status( $request_id, $status ) {
         'end_date'    => $request->end_date,
     ) );
 
-    if ( count( $existing_request ) ) {
-        return new WP_Error( 'existing-request-found', __( 'Leave request already approved', 'erp' ) );
-    }
 
     $request->status     = $status;
     $request->updated_by = get_current_user_id();
