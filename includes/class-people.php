@@ -169,8 +169,7 @@ class People extends Item {
      */
     public function update_property( $property, $value ) {
         $data_array = json_decode( json_encode( $this->data ), true );
-
-        if ( ! array_key_exists( $property, $data_array ) ) {
+        if ( $data_array && ! array_key_exists( $property, $data_array ) ) {
             return new \WP_Error( 'unauthorized-erp-people-property', __( 'Unauthorized people property', 'erp' ) );
         }
 
