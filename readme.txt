@@ -1,11 +1,11 @@
 === WP ERP - HRM, CRM & Accounting Solution For WordPress ===
-Contributors: tareq1988, wedevs, ediamin, sabbir1991, asaquzzaman, manikmist09, shawon786, rafsuntaskin
+Contributors: tareq1988, wedevs, ediamin, sabbir1991, asaquzzaman, rafsuntaskin
 Donate Link: https://tareq.co/donate
 Tags: ERP, CRM, HRM, Accounting, Project Management, business manager, small business, SME, contact, contacts, Customer Relationship Management, employee, leave management, hr, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
 Tested up to: 4.9.8
 Requires PHP: 5.6
-Stable tag: trunk
+Stable tag: 1.3.14
 License: GPLv2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
