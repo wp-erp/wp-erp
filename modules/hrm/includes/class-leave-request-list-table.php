@@ -191,6 +191,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
         $reject_url  = wp_nonce_url( sprintf( $tpl, 'reject', $item->id ), $nonce );
         $approve_url = wp_nonce_url( sprintf( $tpl, 'approve', $item->id ), $nonce );
         $pending_url = wp_nonce_url( sprintf( $tpl, 'pending', $item->id ), $nonce );
+        
         if ( erp_get_option( 'erp_debug_mode', 'erp_settings_general', 0 ) ) {
             $actions['delete'] = sprintf( '<a href="%s">%s</a>', $delete_url, __( 'Delete', 'erp' ) );
         }
@@ -206,6 +207,7 @@ class Leave_Requests_List_Table extends \WP_List_Table {
 
         } elseif ( $item->status == '3') {
             $actions['approved'] = sprintf( '<a href="%s">%s</a>', $approve_url, __( 'Approve', 'erp' ) );
+            $actions['pending'] = sprintf( '<a href="%s">%s</a>', $pending_url, __( 'Mark Pending', 'erp' ) );
         }
 
         return sprintf( '<a href="%3$s"><strong>%1$s</strong></a> %2$s', $item->display_name, $this->row_actions( $actions ), erp_hr_url_single_employee( $item->user_id ) );

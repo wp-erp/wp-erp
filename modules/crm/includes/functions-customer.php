@@ -2451,7 +2451,7 @@ function erp_crm_prepare_calendar_schedule_data( $schedules ) {
             if ( $schedule['start_date'] < current_time( 'mysql' ) ) {
                 $time = date( 'g:i a', strtotime( $schedule['start_date'] ) );
             } else {
-                if ( date( 'g:i a', strtotime( $schedule['start_date'] ) ) == date( 'g:i a', strtotime( $schedule['end_date'] ) ) ) {
+                if ( date( 'g:i a', strtotime( $schedule['start_date'] ) ) == date( 'g:i a', strtotime( $schedule['end_date'] ) )  || ! $schedule['end_date'] ) {
                     $time = date( 'g:i a', strtotime( $schedule['start_date'] ) );
                 } else {
                     $time = date( 'g:i a', strtotime( $schedule['start_date'] ) ) . ' to ' . date( 'g:i a', strtotime( $schedule['end_date'] ) );
@@ -2988,7 +2988,7 @@ function erp_crm_render_save_replies( $template_id, $contact_id ) {
     }
 
     $contacts   = new \WeDevs\ERP\CRM\Contact( $contact_id );
-    $templates  = erp_crm_get_save_replies_by_id( $template_id );
+    $templates  = (object) erp_crm_get_save_replies_by_id( $template_id );
     $shortcodes = erp_crm_get_save_replies_shortcodes();
 
     $data = [];
@@ -3116,7 +3116,7 @@ function erp_handle_user_bulk_actions() {
                     'life_stage'    => $life_stage,
                 ];
 
-                $contact_id = ( $data );
+                $contact_id = erp_insert_people( $data );
 
                 if ( is_wp_error( $contact_id ) ) {
                     continue;
