@@ -1157,7 +1157,7 @@ function erp_get_license_status( $addon ) {
                     $messages[] = sprintf(
                         __( 'Your license key expires soon! It expires on %s. <a href="%s" target="_blank" title="Renew license">Renew your license key</a>.', 'erp' ),
                         date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
-                        'https://wperp.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=renew'
+                        'https://wperp.com/checkout/?edd_license_key=' . $addon['license'] . '&utm_campaign=admin&utm_source=licenses&utm_medium=renew'
                     );
 
                 } else {
@@ -1589,6 +1589,7 @@ function erp_process_import_export() {
     }
 
     $field_builder_employee_options = get_option( 'erp-employee-fields' );
+    $field_builder_employees_fields = array();
 
     if ( ! empty( $field_builder_employee_options ) ) {
         foreach ( $field_builder_employee_options as $field ) {

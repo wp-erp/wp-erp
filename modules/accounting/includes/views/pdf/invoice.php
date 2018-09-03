@@ -81,7 +81,7 @@ foreach ( $transaction->items as $line ) {
 
 // Invoice add memo
 if ( $transaction->summary ) {
-    $invoice->set_memo( $transaction->summary );
+    $invoice->add_paragraph($transaction->summary );
 }
 
 // Subtotal and Total
