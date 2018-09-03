@@ -3,7 +3,7 @@ Contributors: tareq1988, wedevs, ediamin, sabbir1991, asaquzzaman, manikmist09, 
 Donate Link: https://tareq.co/donate
 Tags: ERP, CRM, HRM, Accounting, Project Management, business manager, small business, SME, contact, contacts, Customer Relationship Management, employee, leave management, hr, human resource management, job, jobs, job listing, lead management, opportunity, schedule, task, lead, holiday, company
 Requires at least: 4.4
-Tested up to: 4.9.7
+Tested up to: 4.9.8
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2
@@ -241,6 +241,18 @@ No, WP ERP and its add-ons do not support multisite WordPress installation.
 
 
 == Changelog ==
+
+= v1.3.14 -> September 03, 2018 =
+[new] New employee login details api added
+[new] Assign pending status to rejected/approved leave request, resolved #696
+[fix] Fixed employee report generation issue showing warnings
+[fix] Fixed showing invalid end time in calendar if not set, resolved #687
+[fix] Fixed CRM contact quick edit not showing unsubscribe message, resolved #674
+[fix] Unable to import users to CRM contacts, fixed #695
+[fix] CRM email template loading issue fixed
+[fix] HRM Headcount report doesn't exclude terminated employees, resolved #655
+[tweak] No Information about Settings update is displayed upon saving the settings from "ERP Settings" Menu, resolved #697
+
 = v1.3.13 -> Jul 30, 2018 =
 [new] Search functionality for email, tasks, schedules etc in CRM contact. Closes #670
 [new] Employee image upload API added.
