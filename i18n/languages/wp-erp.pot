@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP ERP 1.3.13\n"
+"Project-Id-Version: WP ERP 1.3.14\n"
 "Report-Msgid-Bugs-To: http://wperp.com/support/\n"
-"POT-Creation-Date: 2018-07-30 07:02:10+00:00\n"
+"POT-Creation-Date: 2018-09-03 05:27:10+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5816,13 +5816,13 @@ msgstr ""
 
 #: includes/api/class-activities-controller.php:489
 #: includes/api/class-rest-controller.php:95
-#: modules/hrm/includes/api/class-employees-controller.php:1672
+#: modules/hrm/includes/api/class-employees-controller.php:1684
 msgid "Current page of the collection."
 msgstr ""
 
 #: includes/api/class-activities-controller.php:497
 #: includes/api/class-rest-controller.php:103
-#: modules/hrm/includes/api/class-employees-controller.php:1680
+#: modules/hrm/includes/api/class-employees-controller.php:1692
 msgid "Maximum number of items to be returned in result set."
 msgstr ""
 
@@ -5849,16 +5849,16 @@ msgstr ""
 #: modules/hrm/includes/api/class-departments-controller.php:163
 #: modules/hrm/includes/api/class-designations-controller.php:118
 #: modules/hrm/includes/api/class-designations-controller.php:161
-#: modules/hrm/includes/api/class-employees-controller.php:559
-#: modules/hrm/includes/api/class-employees-controller.php:609
-#: modules/hrm/includes/api/class-employees-controller.php:633
-#: modules/hrm/includes/api/class-employees-controller.php:662
-#: modules/hrm/includes/api/class-employees-controller.php:693
-#: modules/hrm/includes/api/class-employees-controller.php:793
-#: modules/hrm/includes/api/class-employees-controller.php:893
-#: modules/hrm/includes/api/class-employees-controller.php:989
-#: modules/hrm/includes/api/class-employees-controller.php:1084
-#: modules/hrm/includes/api/class-employees-controller.php:1287
+#: modules/hrm/includes/api/class-employees-controller.php:571
+#: modules/hrm/includes/api/class-employees-controller.php:621
+#: modules/hrm/includes/api/class-employees-controller.php:645
+#: modules/hrm/includes/api/class-employees-controller.php:674
+#: modules/hrm/includes/api/class-employees-controller.php:705
+#: modules/hrm/includes/api/class-employees-controller.php:805
+#: modules/hrm/includes/api/class-employees-controller.php:905
+#: modules/hrm/includes/api/class-employees-controller.php:1001
+#: modules/hrm/includes/api/class-employees-controller.php:1096
+#: modules/hrm/includes/api/class-employees-controller.php:1299
 #: modules/hrm/includes/api/class-leave-entitlements-controller.php:110
 #: modules/hrm/includes/api/class-leave-holidays-controller.php:118
 #: modules/hrm/includes/api/class-leave-holidays-controller.php:161
@@ -6156,7 +6156,7 @@ msgid "Items for the resource."
 msgstr ""
 
 #: includes/api/class-rest-controller.php:112
-#: modules/hrm/includes/api/class-employees-controller.php:1689
+#: modules/hrm/includes/api/class-employees-controller.php:1701
 msgid "Limit results to those matching a string."
 msgstr ""
 
@@ -6328,7 +6328,7 @@ msgstr ""
 msgid "CR Management"
 msgstr ""
 
-#: includes/class-install.php:1003 includes/framework/modules.php:47
+#: includes/class-install.php:1003
 msgid "Client Resource Management"
 msgstr ""
 
@@ -6354,7 +6354,7 @@ msgstr ""
 msgid "Enter valid license key for automatic updates."
 msgstr ""
 
-#: includes/class-people.php:174
+#: includes/class-people.php:173
 msgid "Unauthorized people property"
 msgstr ""
 
@@ -6440,24 +6440,32 @@ msgid_plural "Deactivated modules %s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/framework/class-settings-page.php:411
+#: includes/framework/class-settings-page.php:133
+msgid "Settings saved."
+msgstr ""
+
+#: includes/framework/class-settings-page.php:414
 msgid "Delete this image?"
 msgstr ""
 
-#: includes/framework/class-settings-page.php:415
+#: includes/framework/class-settings-page.php:418
 msgid "Upload Image"
 msgstr ""
 
-#: includes/framework/class-settings-page.php:671
+#: includes/framework/class-settings-page.php:674
 msgid "Hard Crop?"
 msgstr ""
 
-#: includes/framework/class-settings-page.php:698
+#: includes/framework/class-settings-page.php:701
 msgid "Select a page&hellip;"
 msgstr ""
 
 #: includes/framework/modules.php:40
 msgid "Human Resource Management"
+msgstr ""
+
+#: includes/framework/modules.php:47
+msgid "Customer Relationship Management"
 msgstr ""
 
 #: includes/framework/modules.php:52
@@ -8400,11 +8408,11 @@ msgstr ""
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/functions.php:1889
+#: includes/functions.php:1890
 msgid "Nothing to import or items are already exists."
 msgstr ""
 
-#: includes/functions.php:1892
+#: includes/functions.php:1893
 msgid "%s items successfully imported."
 msgstr ""
 
@@ -8671,8 +8679,8 @@ msgstr ""
 #: modules/hrm/includes/class-employee-list-table.php:167
 #: modules/hrm/includes/class-entitlements-list-table.php:171
 #: modules/hrm/includes/class-entitlements-list-table.php:210
-#: modules/hrm/includes/class-leave-request-list-table.php:195
-#: modules/hrm/includes/class-leave-request-list-table.php:221
+#: modules/hrm/includes/class-leave-request-list-table.php:196
+#: modules/hrm/includes/class-leave-request-list-table.php:223
 #: modules/hrm/includes/class-walker-department.php:45
 #: modules/hrm/views/employee/tab-notes-row.php:19
 #: modules/hrm/views/employee/tab-notes.php:48
@@ -8748,7 +8756,7 @@ msgstr ""
 #: modules/hrm/includes/class-hr-log.php:792
 #: modules/hrm/includes/class-hr-log.php:797
 #: modules/hrm/includes/functions-employee.php:205
-#: modules/hrm/includes/functions-leave.php:1190
+#: modules/hrm/includes/functions-leave.php:1187
 #: modules/hrm/views/js-templates/leave-policy.php:83
 #: modules/hrm/views/js-templates/leave-policy.php:94
 msgid "All"
@@ -9176,11 +9184,11 @@ msgstr ""
 #: modules/accounting/includes/class-transaction-list-table.php:165
 #: modules/accounting/includes/class-transaction-list-table.php:211
 #: modules/accounting/includes/class-transaction-list-table.php:228
-#: modules/hrm/includes/class-leave-request-list-table.php:201
-#: modules/hrm/includes/class-leave-request-list-table.php:208
-#: modules/hrm/includes/class-leave-request-list-table.php:226
-#: modules/hrm/includes/class-leave-request-list-table.php:231
-#: modules/hrm/includes/class-leave-request-list-table.php:235
+#: modules/hrm/includes/class-leave-request-list-table.php:202
+#: modules/hrm/includes/class-leave-request-list-table.php:209
+#: modules/hrm/includes/class-leave-request-list-table.php:228
+#: modules/hrm/includes/class-leave-request-list-table.php:233
+#: modules/hrm/includes/class-leave-request-list-table.php:237
 msgid "Approve"
 msgstr ""
 
@@ -13513,50 +13521,50 @@ msgid "Head for the resource."
 msgstr ""
 
 #: modules/hrm/includes/api/class-employees-controller.php:491
-#: modules/hrm/includes/api/class-employees-controller.php:712
-#: modules/hrm/includes/api/class-employees-controller.php:733
-#: modules/hrm/includes/api/class-employees-controller.php:762
-#: modules/hrm/includes/api/class-employees-controller.php:812
-#: modules/hrm/includes/api/class-employees-controller.php:833
-#: modules/hrm/includes/api/class-employees-controller.php:862
-#: modules/hrm/includes/api/class-employees-controller.php:914
-#: modules/hrm/includes/api/class-employees-controller.php:949
-#: modules/hrm/includes/api/class-employees-controller.php:1010
-#: modules/hrm/includes/api/class-employees-controller.php:1054
-#: modules/hrm/includes/api/class-employees-controller.php:1108
-#: modules/hrm/includes/api/class-employees-controller.php:1132
-#: modules/hrm/includes/api/class-employees-controller.php:1154
-#: modules/hrm/includes/api/class-employees-controller.php:1177
-#: modules/hrm/includes/api/class-employees-controller.php:1229
-#: modules/hrm/includes/api/class-employees-controller.php:1260
-#: modules/hrm/includes/api/class-employees-controller.php:1308
-#: modules/hrm/includes/api/class-employees-controller.php:1333
-#: modules/hrm/includes/api/class-employees-controller.php:1361
-#: modules/hrm/includes/api/class-employees-controller.php:1389
+#: modules/hrm/includes/api/class-employees-controller.php:724
+#: modules/hrm/includes/api/class-employees-controller.php:745
+#: modules/hrm/includes/api/class-employees-controller.php:774
+#: modules/hrm/includes/api/class-employees-controller.php:824
+#: modules/hrm/includes/api/class-employees-controller.php:845
+#: modules/hrm/includes/api/class-employees-controller.php:874
+#: modules/hrm/includes/api/class-employees-controller.php:926
+#: modules/hrm/includes/api/class-employees-controller.php:961
+#: modules/hrm/includes/api/class-employees-controller.php:1022
+#: modules/hrm/includes/api/class-employees-controller.php:1066
+#: modules/hrm/includes/api/class-employees-controller.php:1120
+#: modules/hrm/includes/api/class-employees-controller.php:1144
+#: modules/hrm/includes/api/class-employees-controller.php:1166
+#: modules/hrm/includes/api/class-employees-controller.php:1189
+#: modules/hrm/includes/api/class-employees-controller.php:1241
+#: modules/hrm/includes/api/class-employees-controller.php:1272
+#: modules/hrm/includes/api/class-employees-controller.php:1320
+#: modules/hrm/includes/api/class-employees-controller.php:1345
+#: modules/hrm/includes/api/class-employees-controller.php:1373
+#: modules/hrm/includes/api/class-employees-controller.php:1401
 msgid "Invalid Employee id."
 msgstr ""
 
-#: modules/hrm/includes/api/class-employees-controller.php:952
+#: modules/hrm/includes/api/class-employees-controller.php:964
 msgid "Invalid/No module type"
 msgstr ""
 
-#: modules/hrm/includes/api/class-employees-controller.php:1181
+#: modules/hrm/includes/api/class-employees-controller.php:1193
 msgid "Invalid Policy id."
 msgstr ""
 
-#: modules/hrm/includes/api/class-employees-controller.php:1185
+#: modules/hrm/includes/api/class-employees-controller.php:1197
 msgid "Invalid Leave Start Date."
 msgstr ""
 
-#: modules/hrm/includes/api/class-employees-controller.php:1189
+#: modules/hrm/includes/api/class-employees-controller.php:1201
 msgid "Invalid Leave End Date."
 msgstr ""
 
-#: modules/hrm/includes/api/class-employees-controller.php:1328
+#: modules/hrm/includes/api/class-employees-controller.php:1340
 msgid "User do not have permission for the action."
 msgstr ""
 
-#: modules/hrm/includes/api/class-employees-controller.php:1336
+#: modules/hrm/includes/api/class-employees-controller.php:1348
 msgid "Invalid role format"
 msgstr ""
 
@@ -14062,7 +14070,7 @@ msgstr ""
 
 #: modules/hrm/includes/class-employee.php:1978
 #: modules/hrm/includes/functions-dashboard-widgets.php:222
-#: modules/hrm/includes/functions-leave.php:1192
+#: modules/hrm/includes/functions-leave.php:1189
 msgid "Pending"
 msgstr ""
 
@@ -14301,17 +14309,18 @@ msgstr ""
 msgid "Leave Reason"
 msgstr ""
 
-#: modules/hrm/includes/class-leave-request-list-table.php:200
-#: modules/hrm/includes/class-leave-request-list-table.php:225
-#: modules/hrm/includes/class-leave-request-list-table.php:229
-#: modules/hrm/includes/class-leave-request-list-table.php:234
+#: modules/hrm/includes/class-leave-request-list-table.php:201
+#: modules/hrm/includes/class-leave-request-list-table.php:227
+#: modules/hrm/includes/class-leave-request-list-table.php:231
+#: modules/hrm/includes/class-leave-request-list-table.php:236
 msgid "Reject"
 msgstr ""
 
-#: modules/hrm/includes/class-leave-request-list-table.php:205
-#: modules/hrm/includes/class-leave-request-list-table.php:228
-#: modules/hrm/includes/class-leave-request-list-table.php:232
-#: modules/hrm/includes/class-leave-request-list-table.php:236
+#: modules/hrm/includes/class-leave-request-list-table.php:206
+#: modules/hrm/includes/class-leave-request-list-table.php:210
+#: modules/hrm/includes/class-leave-request-list-table.php:230
+#: modules/hrm/includes/class-leave-request-list-table.php:234
+#: modules/hrm/includes/class-leave-request-list-table.php:238
 msgid "Mark Pending"
 msgstr ""
 
@@ -14774,15 +14783,11 @@ msgstr ""
 msgid "Invalid leave request"
 msgstr ""
 
-#: modules/hrm/includes/functions-leave.php:1147
-msgid "Leave request already approved"
-msgstr ""
-
-#: modules/hrm/includes/functions-leave.php:1191
+#: modules/hrm/includes/functions-leave.php:1188
 msgid "Approved"
 msgstr ""
 
-#: modules/hrm/includes/functions-leave.php:1193
+#: modules/hrm/includes/functions-leave.php:1190
 msgid "Rejected"
 msgstr ""
 
@@ -15829,10 +15834,6 @@ msgid "Year"
 msgid_plural "Years"
 msgstr[0] ""
 msgstr[1] ""
-
-#: vendor/a5hleyrich/wp-background-processing/classes/wp-background-process.php:425
-msgid "Every %d Minutes"
-msgstr ""
 
 #: wp-erp.php:186
 msgid "<h1>An Error Occured</h1>"
