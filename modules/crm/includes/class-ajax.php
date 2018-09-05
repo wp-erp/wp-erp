@@ -1114,8 +1114,13 @@ class Ajax_Handler {
 
                 add_filter( 'erp_mail_from_name', 'erp_crm_get_email_from_name' );
 
-                // Send email a contact
-                erp_mail( $contact->email, $postdata['email_subject'], $email_body, $headers, $attachments, $custom_headers );
+                if ( wperp()->google_auth->is_active() ){
+                    //send using gmail api
+                    erp_mail_send_via_gmail( $contact->email, $postdata['email_subject'], $email_body, $headers, $attachments, $custom_headers  );
+                } else {
+                    // Send email at contact
+                    erp_mail( $contact->email, $postdata['email_subject'], $email_body, $headers, $attachments, $custom_headers );
+                }
 
                 do_action( 'erp_crm_save_customer_email_feed', $save_data, $postdata );
 

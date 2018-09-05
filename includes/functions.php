@@ -2009,6 +2009,77 @@ function erp_mail( $to, $subject, $message, $headers = '', $attachments = [], $c
     return $is_mail_sent;
 }
 
+function erp_mail_send_via_gmail( $to, $subject, $message, $headers = '', $attachments = [], $custom_headers = [] ) {
+
+    global $phpmailer;
+
+    // (Re)create it, if it's gone missing
+    if ( ! ( $phpmailer instanceof PHPMailer ) ) {
+        require_once ABSPATH . WPINC . '/class-phpmailer.php';
+        require_once ABSPATH . WPINC . '/class-smtp.php';
+        $phpmailer = new PHPMailer( true );
+    }
+    $phpmailer->clearAllRecipients();
+    $phpmailer->clearAttachments();
+    $phpmailer->clearCustomHeaders();
+    $phpmailer->clearReplyTos();
+
+    $erp_email_settings      = get_option( 'erp_settings_erp-email_general', [] );
+    $erp_email_smtp_settings = get_option( 'erp_settings_erp-email_smtp', [] );
+
+    $from_email = $erp_email_settings['from_email'];
+    $from_name  = $erp_email_settings['from_name'];
+
+    if ( ! isset( $erp_email_settings['from_email'] ) ) {
+        $from_email = get_option( 'admin_email' );
+    }
+
+    if ( ! isset( $erp_email_settings['from_name'] ) ) {
+        $from_name = get_bloginfo( 'name' );
+    }
+
+    $content_type = 'text/html';
+
+    $phpmailer->From        = apply_filters( 'erp_mail_from', $from_email );
+    $phpmailer->FromName    = apply_filters( 'erp_mail_from_name', $from_name );
+    $phpmailer->ContentType = apply_filters( 'erp_mail_content_type', $content_type );
+
+    //Return-Path
+    $phpmailer->Sender = apply_filters( 'erp_mail_return_path', $phpmailer->From );
+
+    if ( ! empty( $custom_headers ) ) {
+        foreach ( $custom_headers as $key => $value ) {
+            $phpmailer->addCustomHeader( $key, $value );
+        }
+    }
+
+    // Set mail's subject and body
+    $phpmailer->Subject = $subject;
+    $phpmailer->Body    = $message;
+    $phpmailer->addAddress( $to );
+    $phpmailer->preSend();
+
+    $message = new \Google_Service_Gmail_Message();
+
+    $base64 = str_replace(
+        array( '+', '/', '=' ),
+        array( '-', '_', '' ),
+        base64_encode( $phpmailer->getSentMIMEMessage() )
+    ); // url safe.
+
+    $message->setRaw( $base64 );
+
+    $service = new \Google_Service_Gmail( wperp()->google_auth->get_client() );
+    try {
+        $response = $service->users_messages->send( 'me', $message );
+    } catch ( Google_Service_Exception $exception ) {
+        error_log( print_r( $exception->getMessage(), 1));
+        return false;
+    }
+
+    return true;
+}
+
 /**
  * Email JavaScript enqueue.
  *
