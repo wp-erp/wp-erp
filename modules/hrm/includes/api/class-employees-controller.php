@@ -1235,7 +1235,7 @@ class Employees_Controller extends REST_Controller {
             'offset' => isset( $request['offset'] ) ? $request['offset'] : 0,
         );
 
-        $id       = (int) $request['id'];
+        $id       = (int) $request['user_id'];
         $employee = new Employee( $id );
         if ( ! $employee ) {
             return new WP_Error( 'rest_invalid_employee_id', __( 'Invalid Employee id.' ), array( 'status' => 404 ) );
