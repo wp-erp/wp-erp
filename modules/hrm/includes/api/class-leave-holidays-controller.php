@@ -89,7 +89,7 @@ class Leave_Holidays_Controller extends REST_Controller {
         ];
 
         $items       = erp_hr_get_holidays( $args );
-        $total_items = erp_hr_count_holidays();
+        $total_items = erp_hr_count_holidays( $args );
 
         $formated_items = [];
         foreach ( $items as $item ) {
