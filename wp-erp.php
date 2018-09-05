@@ -257,6 +257,7 @@ final class WeDevs_ERP {
         $this->container['modules']     = new \WeDevs\ERP\Framework\Modules();
         $this->container['emailer']     = \WeDevs\ERP\Emailer::init();
         $this->container['integration'] = \WeDevs\ERP\Integration::init();
+        $this->container['google_auth'] = \WeDevs\ERP\CRM\Google_Auth::init();
     }
 
     /**
