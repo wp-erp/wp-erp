@@ -134,7 +134,7 @@ function erp_crm_get_caps_for_role( $role = '' ) {
                 'erp_crm_create_groups'    => true,
                 'erp_crm_edit_groups'      => true,
                 'erp_crm_delete_groups'    => true,
-                
+
                 // 'erp_crm_view_reports'     => true,
             ];
 
@@ -305,4 +305,34 @@ function erp_crm_current_user_can_make_wp_user() {
     }
 
     return $has_permission;
+}
+
+
+/**
+ * Removes the non-public CRM roles from the editable roles array
+ *
+ * @param array $all_roles All registered roles
+ *
+ * @return array
+ */
+function erp_crm_filter_editable_roles( $all_roles = [] ) {
+    $roles = erp_crm_get_roles();
+
+    foreach ( $roles as $crm_role_key => $crm_role ) {
+
+        if ( isset( $crm_role['public'] ) && $crm_role['public'] === false ) {
+
+            // Loop through WordPress roles
+            foreach ( array_keys( $all_roles ) as $wp_role ) {
+
+                // If keys match, unset
+                if ( $wp_role === $crm_role_key ) {
+                    unset( $all_roles[ $wp_role ] );
+                }
+            }
+        }
+
+    }
+
+    return $all_roles;
 }
