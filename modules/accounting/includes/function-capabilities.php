@@ -379,3 +379,33 @@ if ( ! function_exists( 'erp_ac_get_manager_role' ) ) {
 
 
 }
+
+
+/**
+ * Removes the non-public AC roles from the editable roles array
+ *
+ * @param array $all_roles All registered roles
+ *
+ * @return array
+ */
+function erp_ac_filter_editable_roles( $all_roles = [] ) {
+    $roles = erp_ac_get_roles();
+
+    foreach ( $roles as $ac_role_key => $ac_role ) {
+
+        if ( isset( $ac_role['public'] ) && $ac_role['public'] === false ) {
+
+            // Loop through WordPress roles
+            foreach ( array_keys( $all_roles ) as $wp_role ) {
+
+                // If keys match, unset
+                if ( $wp_role === $ac_role_key ) {
+                    unset( $all_roles[ $wp_role ] );
+                }
+            }
+        }
+
+    }
+
+    return $all_roles;
+}
